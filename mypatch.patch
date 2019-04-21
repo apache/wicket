@@ -1,0 +1,4303 @@
+diff --git a/wicket-core/src/main/java/org/apache/wicket/Application.java b/wicket-core/src/main/java/org/apache/wicket/Application.java
+index 035ee0b3ec..61a3116054 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/Application.java
++++ b/wicket-core/src/main/java/org/apache/wicket/Application.java
+@@ -17,13 +17,13 @@
+ package org.apache.wicket;
+ 
+ import java.net.URLConnection;
++import java.time.Duration;
+ import java.util.Collections;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.ServiceLoader;
+ import java.util.Set;
+ import java.util.function.Supplier;
+-
+ import org.apache.wicket.application.ComponentInitializationListenerCollection;
+ import org.apache.wicket.application.ComponentInstantiationListenerCollection;
+ import org.apache.wicket.application.ComponentOnAfterRenderListenerCollection;
+@@ -91,7 +91,6 @@ import org.apache.wicket.settings.SecuritySettings;
+ import org.apache.wicket.settings.StoreSettings;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.lang.Generics;
+-import org.apache.wicket.util.time.Duration;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -281,7 +280,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
+ 		switch (getConfigurationType())
+ 		{
+ 			case DEVELOPMENT : {
+-				getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
++				getResourceSettings().setResourcePollFrequency(Duration.ofSeconds(1));
+ 				getResourceSettings().setJavaScriptCompressor(null);
+ 				getResourceSettings().setUseMinifiedResources(false);
+ 				getMarkupSettings().setStripWicketTags(false);
+diff --git a/wicket-core/src/main/java/org/apache/wicket/Session.java b/wicket-core/src/main/java/org/apache/wicket/Session.java
+index 60f5676792..a6c395b879 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/Session.java
++++ b/wicket-core/src/main/java/org/apache/wicket/Session.java
+@@ -17,6 +17,7 @@
+ package org.apache.wicket;
+ 
+ import java.io.Serializable;
++import java.time.Duration;
+ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.HashMap;
+@@ -26,7 +27,6 @@ import java.util.Map;
+ import java.util.concurrent.atomic.AtomicInteger;
+ import java.util.concurrent.atomic.AtomicReference;
+ import java.util.function.Supplier;
+-
+ import org.apache.wicket.application.IClassResolver;
+ import org.apache.wicket.authorization.IAuthorizationStrategy;
+ import org.apache.wicket.core.request.ClientInfo;
+@@ -38,7 +38,6 @@ import org.apache.wicket.feedback.FeedbackMessages;
+ import org.apache.wicket.feedback.IFeedbackContributor;
+ import org.apache.wicket.page.IPageManager;
+ import org.apache.wicket.page.PageAccessSynchronizer;
+-import org.apache.wicket.pageStore.IPageStore;
+ import org.apache.wicket.request.Request;
+ import org.apache.wicket.request.cycle.RequestCycle;
+ import org.apache.wicket.session.ISessionStore;
+@@ -46,7 +45,6 @@ import org.apache.wicket.util.LazyInitializer;
+ import org.apache.wicket.util.io.IClusterable;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.lang.Objects;
+-import org.apache.wicket.util.time.Duration;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -991,7 +989,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
+ 			}
+ 			else
+ 			{
+-				timeout = Duration.minutes(1);
++				timeout = Duration.ofMinutes(1);
+ 				log.warn(
+ 					"PageAccessSynchronizer created outside of application thread, using default timeout: {}",
+ 					timeout);
+diff --git a/wicket-core/src/main/java/org/apache/wicket/ajax/AbstractAjaxTimerBehavior.java b/wicket-core/src/main/java/org/apache/wicket/ajax/AbstractAjaxTimerBehavior.java
+index da947eefc1..20ea241999 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/ajax/AbstractAjaxTimerBehavior.java
++++ b/wicket-core/src/main/java/org/apache/wicket/ajax/AbstractAjaxTimerBehavior.java
+@@ -16,13 +16,13 @@
+  */
+ package org.apache.wicket.ajax;
+ 
++import java.time.Duration;
+ import org.apache.wicket.Component;
+ import org.apache.wicket.Page;
+ import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
+ import org.apache.wicket.markup.head.IHeaderResponse;
+ import org.apache.wicket.markup.head.OnLoadHeaderItem;
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Duration;
+ import org.danekja.java.util.function.serializable.SerializableConsumer;
+ 
+ /**
+@@ -69,7 +69,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
+ 	 */
+ 	protected final void setUpdateInterval(Duration updateInterval)
+ 	{
+-		if (updateInterval == null || updateInterval.getMilliseconds() <= 0)
++		if (updateInterval == null || updateInterval.toMillis() <= 0)
+ 		{
+ 			throw new IllegalArgumentException("Invalid update interval");
+ 		}
+@@ -202,7 +202,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
+ 
+ 		headerResponse.render(
+ 			OnLoadHeaderItem.forScript(String.format("Wicket.Timer.set('%s', function(){%s}, %d);",
+-				timerId, js, updateInterval.getMilliseconds())));
++				timerId, js, updateInterval.toMillis())));
+ 	}
+ 
+ 	private void clearTimeout(IHeaderResponse headerResponse)
+diff --git a/wicket-core/src/main/java/org/apache/wicket/ajax/AbstractDefaultAjaxBehavior.java b/wicket-core/src/main/java/org/apache/wicket/ajax/AbstractDefaultAjaxBehavior.java
+index ae0857f347..291303f6f1 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/ajax/AbstractDefaultAjaxBehavior.java
++++ b/wicket-core/src/main/java/org/apache/wicket/ajax/AbstractDefaultAjaxBehavior.java
+@@ -16,11 +16,8 @@
+  */
+ package org.apache.wicket.ajax;
+ 
++import java.time.Duration;
+ import java.util.List;
+-
+-import com.github.openjson.JSONArray;
+-import com.github.openjson.JSONException;
+-import com.github.openjson.JSONObject;
+ import org.apache.wicket.Component;
+ import org.apache.wicket.Page;
+ import org.apache.wicket.WicketRuntimeException;
+@@ -43,7 +40,9 @@ import org.apache.wicket.request.resource.PackageResourceReference;
+ import org.apache.wicket.request.resource.ResourceReference;
+ import org.apache.wicket.resource.CoreLibrariesContributor;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Duration;
++import com.github.openjson.JSONArray;
++import com.github.openjson.JSONException;
++import com.github.openjson.JSONObject;
+ 
+ /**
+  * The base class for Wicket's default AJAX implementation.
+@@ -370,7 +369,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
+ 			if (requestTimeout != null)
+ 			{
+ 				attributesJson.put(AjaxAttributeName.REQUEST_TIMEOUT.jsonName(),
+-					requestTimeout.getMilliseconds());
++					requestTimeout.toMillis());
+ 			}
+ 
+ 			boolean wicketAjaxResponse = attributes.isWicketAjaxResponse();
+@@ -396,7 +395,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
+ 				}
+ 				throttlingSettingsJson.put(AjaxAttributeName.THROTTLING_ID.jsonName(), throttleId);
+ 				throttlingSettingsJson.put(AjaxAttributeName.THROTTLING_DELAY.jsonName(),
+-					throttlingSettings.getDelay().getMilliseconds());
++					throttlingSettings.getDelay().toMillis());
+ 				if (throttlingSettings.getPostponeTimerOnUpdate())
+ 				{
+ 					throttlingSettingsJson.put(
+diff --git a/wicket-core/src/main/java/org/apache/wicket/ajax/AjaxClientInfoBehavior.java b/wicket-core/src/main/java/org/apache/wicket/ajax/AjaxClientInfoBehavior.java
+index f51f8a4c06..9429d72987 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/ajax/AjaxClientInfoBehavior.java
++++ b/wicket-core/src/main/java/org/apache/wicket/ajax/AjaxClientInfoBehavior.java
+@@ -16,6 +16,7 @@
+  */
+ package org.apache.wicket.ajax;
+ 
++import java.time.Duration;
+ import org.apache.wicket.Component;
+ import org.apache.wicket.Session;
+ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+@@ -26,7 +27,6 @@ import org.apache.wicket.protocol.http.request.WebClientInfo;
+ import org.apache.wicket.request.IRequestParameters;
+ import org.apache.wicket.request.cycle.RequestCycle;
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Duration;
+ import org.danekja.java.util.function.serializable.SerializableBiConsumer;
+ 
+ /**
+@@ -46,7 +46,7 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
+ 	 */
+ 	public AjaxClientInfoBehavior()
+ 	{
+-		this(Duration.milliseconds(50));
++		this(Duration.ofMillis(50));
+ 	}
+ 
+ 	/**
+diff --git a/wicket-core/src/main/java/org/apache/wicket/ajax/AjaxSelfUpdatingTimerBehavior.java b/wicket-core/src/main/java/org/apache/wicket/ajax/AjaxSelfUpdatingTimerBehavior.java
+index 6d40901619..a12d563fa7 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/ajax/AjaxSelfUpdatingTimerBehavior.java
++++ b/wicket-core/src/main/java/org/apache/wicket/ajax/AjaxSelfUpdatingTimerBehavior.java
+@@ -17,7 +17,7 @@
+ package org.apache.wicket.ajax;
+ 
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ import org.danekja.java.util.function.serializable.SerializableConsumer;
+ 
+ /**
+diff --git a/wicket-core/src/main/java/org/apache/wicket/ajax/attributes/AjaxRequestAttributes.java b/wicket-core/src/main/java/org/apache/wicket/ajax/attributes/AjaxRequestAttributes.java
+index 76e2f0c912..7ced97dae0 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/ajax/attributes/AjaxRequestAttributes.java
++++ b/wicket-core/src/main/java/org/apache/wicket/ajax/attributes/AjaxRequestAttributes.java
+@@ -23,7 +23,7 @@ import java.util.Map;
+ 
+ import org.apache.wicket.ajax.AjaxChannel;
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ 
+ /**
+  * Attributes of an Ajax Request.
+diff --git a/wicket-core/src/main/java/org/apache/wicket/ajax/attributes/ThrottlingSettings.java b/wicket-core/src/main/java/org/apache/wicket/ajax/attributes/ThrottlingSettings.java
+index 42c6d7d86f..efdf5421ab 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/ajax/attributes/ThrottlingSettings.java
++++ b/wicket-core/src/main/java/org/apache/wicket/ajax/attributes/ThrottlingSettings.java
+@@ -19,7 +19,7 @@ package org.apache.wicket.ajax.attributes;
+ import org.apache.wicket.markup.html.WebComponent;
+ import org.apache.wicket.util.io.IClusterable;
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ 
+ /**
+  * Class to keep track of throttling settings.
+diff --git a/wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormValidatingBehavior.java b/wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormValidatingBehavior.java
+index 1900e6d41e..fc6022ffd5 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormValidatingBehavior.java
++++ b/wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormValidatingBehavior.java
+@@ -26,7 +26,7 @@ import org.apache.wicket.feedback.IFeedback;
+ import org.apache.wicket.markup.html.form.Form;
+ import org.apache.wicket.markup.html.form.FormComponent;
+ import org.apache.wicket.util.io.IClusterable;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ import org.apache.wicket.util.visit.IVisit;
+ import org.apache.wicket.util.visit.IVisitor;
+ 
+diff --git a/wicket-core/src/main/java/org/apache/wicket/application/ReloadingClassLoader.java b/wicket-core/src/main/java/org/apache/wicket/application/ReloadingClassLoader.java
+index 8501519334..2a1e1c66a9 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/application/ReloadingClassLoader.java
++++ b/wicket-core/src/main/java/org/apache/wicket/application/ReloadingClassLoader.java
+@@ -29,7 +29,7 @@ import java.util.TreeSet;
+ import org.apache.wicket.util.collections.UrlExternalFormComparator;
+ import org.apache.wicket.util.file.File;
+ import org.apache.wicket.util.listener.IChangeListener;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ import org.apache.wicket.util.watch.IModifiable;
+ import org.apache.wicket.util.watch.IModificationWatcher;
+ import org.apache.wicket.util.watch.ModificationWatcher;
+@@ -203,7 +203,7 @@ public class ReloadingClassLoader extends URLClassLoader
+ 		{
+ 			addURL(url);
+ 		}
+-		Duration pollFrequency = Duration.seconds(3);
++		Duration pollFrequency = Duration.ofSeconds(3);
+ 		watcher = new ModificationWatcher(pollFrequency);
+ 	}
+ 
+diff --git a/wicket-core/src/main/java/org/apache/wicket/core/util/resource/PackageResourceStream.java b/wicket-core/src/main/java/org/apache/wicket/core/util/resource/PackageResourceStream.java
+index 4a1a4e6f51..d619a225bf 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/core/util/resource/PackageResourceStream.java
++++ b/wicket-core/src/main/java/org/apache/wicket/core/util/resource/PackageResourceStream.java
+@@ -18,8 +18,8 @@ package org.apache.wicket.core.util.resource;
+ 
+ import java.io.IOException;
+ import java.io.InputStream;
++import java.time.Instant;
+ import java.util.Locale;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.WicketRuntimeException;
+ import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
+@@ -28,7 +28,6 @@ import org.apache.wicket.util.lang.Packages;
+ import org.apache.wicket.util.resource.AbstractResourceStream;
+ import org.apache.wicket.util.resource.IResourceStream;
+ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+-import org.apache.wicket.util.time.Time;
+ 
+ 
+ /**
+@@ -117,7 +116,7 @@ public class PackageResourceStream extends AbstractResourceStream
+ 	}
+ 
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		return resourceStream.lastModifiedTime();
+ 	}
+diff --git a/wicket-core/src/main/java/org/apache/wicket/core/util/resource/UrlResourceStream.java b/wicket-core/src/main/java/org/apache/wicket/core/util/resource/UrlResourceStream.java
+index cb905df221..7f36cbec83 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/core/util/resource/UrlResourceStream.java
++++ b/wicket-core/src/main/java/org/apache/wicket/core/util/resource/UrlResourceStream.java
+@@ -20,9 +20,9 @@ import java.io.IOException;
+ import java.io.InputStream;
+ import java.net.URL;
+ import java.net.URLConnection;
++import java.time.Instant;
+ import java.util.ArrayList;
+ import java.util.List;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.util.io.Connections;
+ import org.apache.wicket.util.io.IOUtils;
+@@ -32,7 +32,6 @@ import org.apache.wicket.util.lang.Objects;
+ import org.apache.wicket.util.resource.AbstractResourceStream;
+ import org.apache.wicket.util.resource.IFixedLocationResourceStream;
+ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -63,7 +62,7 @@ public class UrlResourceStream extends AbstractResourceStream
+ 	private final URL url;
+ 
+ 	/** Last known time the stream was last modified. */
+-	private Time lastModified;
++	private Instant lastModified;
+ 
+ 	/**
+ 	 * Meta data class for the stream attributes
+@@ -202,12 +201,12 @@ public class UrlResourceStream extends AbstractResourceStream
+ 	 * @return The last time this resource was modified
+ 	 */
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		try
+ 		{
+ 			// get url modification timestamp
+-			final Time time = Connections.getLastModified(url);
++			final Instant time = Connections.getLastModified(url);
+ 
+ 			// if timestamp changed: update content length and last modified date
+ 			if (Objects.equal(time, lastModified) == false)
+diff --git a/wicket-core/src/main/java/org/apache/wicket/core/util/resource/WebExternalResourceStream.java b/wicket-core/src/main/java/org/apache/wicket/core/util/resource/WebExternalResourceStream.java
+index 9697a189b0..2b725e40d1 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/core/util/resource/WebExternalResourceStream.java
++++ b/wicket-core/src/main/java/org/apache/wicket/core/util/resource/WebExternalResourceStream.java
+@@ -20,9 +20,8 @@ import java.io.FileNotFoundException;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.net.URL;
+-
++import java.time.Instant;
+ import javax.servlet.ServletContext;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.protocol.http.WebApplication;
+ import org.apache.wicket.util.io.Connections;
+@@ -30,7 +29,6 @@ import org.apache.wicket.util.io.IOUtils;
+ import org.apache.wicket.util.lang.Bytes;
+ import org.apache.wicket.util.resource.AbstractResourceStream;
+ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -79,7 +77,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
+ 	}
+ 
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		try
+ 		{
+diff --git a/wicket-core/src/main/java/org/apache/wicket/core/util/watch/Nio2ModificationWatcher.java b/wicket-core/src/main/java/org/apache/wicket/core/util/watch/Nio2ModificationWatcher.java
+index 158ffa2caf..c25d71232d 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/core/util/watch/Nio2ModificationWatcher.java
++++ b/wicket-core/src/main/java/org/apache/wicket/core/util/watch/Nio2ModificationWatcher.java
+@@ -41,7 +41,7 @@ import org.apache.wicket.util.io.IOUtils;
+ import org.apache.wicket.util.string.Strings;
+ import org.apache.wicket.util.thread.ICode;
+ import org.apache.wicket.util.thread.Task;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ import org.apache.wicket.util.watch.ModificationWatcher;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+diff --git a/wicket-core/src/main/java/org/apache/wicket/markup/MarkupResourceStream.java b/wicket-core/src/main/java/org/apache/wicket/markup/MarkupResourceStream.java
+index d2efdd9c5e..c848367b93 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/markup/MarkupResourceStream.java
++++ b/wicket-core/src/main/java/org/apache/wicket/markup/MarkupResourceStream.java
+@@ -18,10 +18,10 @@ package org.apache.wicket.markup;
+ 
+ import java.io.IOException;
+ import java.io.InputStream;
++import java.time.Instant;
+ import java.util.Locale;
+ import java.util.regex.Matcher;
+ import java.util.regex.Pattern;
+-
+ import org.apache.wicket.Component;
+ import org.apache.wicket.core.util.lang.WicketObjects;
+ import org.apache.wicket.util.lang.Args;
+@@ -30,7 +30,6 @@ import org.apache.wicket.util.resource.IFixedLocationResourceStream;
+ import org.apache.wicket.util.resource.IResourceStream;
+ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -143,7 +142,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
+ 	}
+ 
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		return resourceStream.lastModifiedTime();
+ 	}
+diff --git a/wicket-core/src/main/java/org/apache/wicket/markup/html/image/resource/RenderedDynamicImageResource.java b/wicket-core/src/main/java/org/apache/wicket/markup/html/image/resource/RenderedDynamicImageResource.java
+index 5982a26a82..3d007357f1 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/markup/html/image/resource/RenderedDynamicImageResource.java
++++ b/wicket-core/src/main/java/org/apache/wicket/markup/html/image/resource/RenderedDynamicImageResource.java
+@@ -19,9 +19,8 @@ package org.apache.wicket.markup.html.image.resource;
+ import java.awt.Graphics2D;
+ import java.awt.image.BufferedImage;
+ import java.lang.ref.SoftReference;
+-
++import java.time.Instant;
+ import org.apache.wicket.request.resource.DynamicImageResource;
+-import org.apache.wicket.util.time.Time;
+ 
+ 
+ /**
+@@ -163,7 +162,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
+ 		{
+ 			data = render(attributes);
+ 			imageData = new SoftReference<byte[]>(data);
+-			setLastModifiedTime(Time.now());
++			setLastModifiedTime(Instant.now());
+ 		}
+ 		return data;
+ 	}
+diff --git a/wicket-core/src/main/java/org/apache/wicket/markup/html/link/DownloadLink.java b/wicket-core/src/main/java/org/apache/wicket/markup/html/link/DownloadLink.java
+index b44e534018..88e55dacb8 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/markup/html/link/DownloadLink.java
++++ b/wicket-core/src/main/java/org/apache/wicket/markup/html/link/DownloadLink.java
+@@ -28,7 +28,7 @@ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.resource.FileResourceStream;
+ import org.apache.wicket.util.resource.IResourceStream;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ 
+ /**
+  * A link that streams a file to the client. When clicked this link will prompt the save as dialog
+diff --git a/wicket-core/src/main/java/org/apache/wicket/mock/MockWebRequest.java b/wicket-core/src/main/java/org/apache/wicket/mock/MockWebRequest.java
+index ffbbd6f908..39758e4c56 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/mock/MockWebRequest.java
++++ b/wicket-core/src/main/java/org/apache/wicket/mock/MockWebRequest.java
+@@ -17,21 +17,20 @@
+ package org.apache.wicket.mock;
+ 
+ import java.nio.charset.Charset;
++import java.sql.Time;
++import java.time.Instant;
+ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.HashMap;
+ import java.util.List;
+ import java.util.Locale;
+ import java.util.Map;
+-
+ import javax.servlet.http.Cookie;
+-
+ import org.apache.wicket.WicketRuntimeException;
+ import org.apache.wicket.request.Url;
+ import org.apache.wicket.request.Url.QueryParameter;
+ import org.apache.wicket.request.UrlUtils;
+ import org.apache.wicket.request.http.WebRequest;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * Mutable mock {@link WebRequest}.
+@@ -138,7 +137,7 @@ public class MockWebRequest extends WebRequest
+ 
+ 
+ 	@Override
+-	public Time getDateHeader(String name)
++	public Instant getDateHeader(String name)
+ 	{
+ 		List<Object> dates = headers.get(name);
+ 		if (dates == null || dates.isEmpty())
+@@ -148,12 +147,12 @@ public class MockWebRequest extends WebRequest
+ 
+ 		Object date = dates.get(0);
+ 
+-		if (date instanceof Time == false)
++		if (date instanceof Instant == false)
+ 		{
+ 			throw new WicketRuntimeException("Date header with name '" + name +
+ 				"' is not a valid Time.");
+ 		}
+-		return (Time)date;
++		return (Instant)date;
+ 	}
+ 
+ 	private void addHeaderObject(String name, Object value)
+diff --git a/wicket-core/src/main/java/org/apache/wicket/mock/MockWebResponse.java b/wicket-core/src/main/java/org/apache/wicket/mock/MockWebResponse.java
+index ba09a16ba6..ba65975cc1 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/mock/MockWebResponse.java
++++ b/wicket-core/src/main/java/org/apache/wicket/mock/MockWebResponse.java
+@@ -18,18 +18,16 @@ package org.apache.wicket.mock;
+ 
+ import java.io.ByteArrayOutputStream;
+ import java.io.IOException;
++import java.time.Instant;
+ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.List;
+ import java.util.Set;
+-
+ import javax.servlet.http.Cookie;
+-
+ import org.apache.wicket.WicketRuntimeException;
+ import org.apache.wicket.request.HttpHeaderCollection;
+ import org.apache.wicket.request.http.WebResponse;
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * Mocked {@link WebResponse}.
+@@ -145,7 +143,7 @@ public class MockWebResponse extends WebResponse
+ 	}
+ 
+ 	@Override
+-	public void setDateHeader(String name, Time date)
++	public void setDateHeader(String name, Instant date)
+ 	{
+ 		Args.notNull(date, "date");
+ 		headers.setDateHeader(name, date);
+@@ -156,9 +154,9 @@ public class MockWebResponse extends WebResponse
+ 	 * 
+ 	 * @return date header with specified name
+ 	 */
+-	public Time getDateHeader(String name)
++	public Instant getDateHeader(String name)
+ 	{
+-		final Time time = headers.getDateHeader(name);
++		final Instant time = headers.getDateHeader(name);
+ 
+ 		if (time == null)
+ 		{
+diff --git a/wicket-core/src/main/java/org/apache/wicket/page/CouldNotLockPageException.java b/wicket-core/src/main/java/org/apache/wicket/page/CouldNotLockPageException.java
+index 15ff1f9cf1..4e2ee15601 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/page/CouldNotLockPageException.java
++++ b/wicket-core/src/main/java/org/apache/wicket/page/CouldNotLockPageException.java
+@@ -16,7 +16,7 @@
+  */
+ package org.apache.wicket.page;
+ 
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ 
+ /**
+  * An exception that is being thrown when a second thread attempts to get
+diff --git a/wicket-core/src/main/java/org/apache/wicket/page/PageAccessSynchronizer.java b/wicket-core/src/main/java/org/apache/wicket/page/PageAccessSynchronizer.java
+index 8d69fdab6f..829a0737d6 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/page/PageAccessSynchronizer.java
++++ b/wicket-core/src/main/java/org/apache/wicket/page/PageAccessSynchronizer.java
+@@ -17,18 +17,17 @@
+ package org.apache.wicket.page;
+ 
+ import java.io.Serializable;
++import java.time.Duration;
++import java.time.Instant;
+ import java.util.Iterator;
+ import java.util.concurrent.ConcurrentHashMap;
+ import java.util.concurrent.ConcurrentMap;
+ import java.util.function.Supplier;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.pageStore.IPageStore;
+ import org.apache.wicket.settings.ExceptionSettings.ThreadDumpStrategy;
+ import org.apache.wicket.util.LazyInitializer;
+ import org.apache.wicket.util.lang.Threads;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -69,9 +68,10 @@ public class PageAccessSynchronizer implements Serializable
+ 		this.timeout = timeout;
+ 	}
+ 
+-	private static long remaining(Time start, Duration timeout)
++	private static long remaining(Instant start, Duration timeout)
+ 	{
+-		return Math.max(0, timeout.subtract(start.elapsedSince()).getMilliseconds());
++	  Duration elapsedTime = elapsedSince(start);
++      return Math.max(0, timeout.minus(elapsedTime).toMillis());
+ 	}
+ 
+ 	/**
+@@ -96,7 +96,7 @@ public class PageAccessSynchronizer implements Serializable
+ 	{
+ 		final Thread thread = Thread.currentThread();
+ 		final PageLock lock = new PageLock(pageId, thread);
+-		final Time start = Time.now();
++		final Instant start = Instant.now();
+ 
+ 		boolean locked = false;
+ 
+@@ -106,7 +106,7 @@ public class PageAccessSynchronizer implements Serializable
+ 
+ 		Duration timeout = getTimeout(pageId);
+ 
+-		while (!locked && start.elapsedSince().lessThan(timeout))
++		while (!locked && elapsedSince(start).compareTo(timeout) < 0)
+ 		{
+ 			if (isDebugEnabled)
+ 			{
+@@ -145,7 +145,7 @@ public class PageAccessSynchronizer implements Serializable
+ 				logger.warn(
+ 					"Thread '{}' failed to acquire lock to page with id '{}', attempted for {} out of allowed {}." +
+ 							" The thread that holds the lock has name '{}'.",
+-					thread.getName(), pageId, start.elapsedSince(), timeout,
++					thread.getName(), pageId, Duration.between(start, Instant.now()), timeout,
+ 							previous.thread.getName());
+ 				if (Application.exists())
+ 				{
+@@ -381,7 +381,7 @@ public class PageAccessSynchronizer implements Serializable
+ 			if (isDebugEnabled)
+ 			{
+ 				logger.debug("{} waiting for lock to page {} for {}",
+-					thread.getName(), pageId, Duration.milliseconds(remaining));
++					thread.getName(), pageId, Duration.ofMillis(remaining));
+ 			}
+ 			try
+ 			{
+@@ -403,4 +403,9 @@ public class PageAccessSynchronizer implements Serializable
+ 			notifyAll();
+ 		}
+ 	}
++	
++	public static Duration elapsedSince(Instant start)
++    {
++        return Duration.between(start, Instant.now());
++    }
+ }
+diff --git a/wicket-core/src/main/java/org/apache/wicket/page/PartialPageUpdate.java b/wicket-core/src/main/java/org/apache/wicket/page/PartialPageUpdate.java
+index 37a05bbd41..2e026bd624 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/page/PartialPageUpdate.java
++++ b/wicket-core/src/main/java/org/apache/wicket/page/PartialPageUpdate.java
+@@ -16,6 +16,7 @@
+  */
+ package org.apache.wicket.page;
+ 
++import java.time.Instant;
+ import java.util.ArrayList;
+ import java.util.Collection;
+ import java.util.Collections;
+@@ -23,9 +24,7 @@ import java.util.Iterator;
+ import java.util.LinkedHashMap;
+ import java.util.List;
+ import java.util.Map;
+-
+ import javax.servlet.http.Cookie;
+-
+ import org.apache.wicket.Component;
+ import org.apache.wicket.Page;
+ import org.apache.wicket.feedback.FeedbackDelay;
+@@ -49,7 +48,6 @@ import org.apache.wicket.request.http.WebResponse;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.lang.Generics;
+ import org.apache.wicket.util.string.AppendingStringBuffer;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -811,7 +809,7 @@ public abstract class PartialPageUpdate
+ 		}
+ 
+ 		@Override
+-		public void setDateHeader(String name, Time date)
++		public void setDateHeader(String name, Instant date)
+ 		{
+ 			originalResponse.setDateHeader(name, date);
+ 		}
+diff --git a/wicket-core/src/main/java/org/apache/wicket/protocol/http/AbstractRequestLogger.java b/wicket-core/src/main/java/org/apache/wicket/protocol/http/AbstractRequestLogger.java
+index dda4147356..e39ca47672 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/protocol/http/AbstractRequestLogger.java
++++ b/wicket-core/src/main/java/org/apache/wicket/protocol/http/AbstractRequestLogger.java
+@@ -17,22 +17,20 @@
+ package org.apache.wicket.protocol.http;
+ 
+ import static java.lang.System.arraycopy;
+-
+ import java.util.Arrays;
+ import java.util.Calendar;
+ import java.util.Date;
+ import java.util.List;
+ import java.util.Map;
++import java.util.TimeZone;
+ import java.util.concurrent.ConcurrentHashMap;
+ import java.util.concurrent.atomic.AtomicInteger;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.MetaDataKey;
+ import org.apache.wicket.Session;
+ import org.apache.wicket.request.IRequestHandler;
+ import org.apache.wicket.request.cycle.RequestCycle;
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -496,7 +494,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
+ 	{
+ 		Args.notNull(date, "date");
+ 
+-		final Calendar cal = Calendar.getInstance(Time.GMT);
++		final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+ 		final StringBuilder buf = new StringBuilder(32);
+ 
+ 		cal.setTimeInMillis(date.getTime());
+diff --git a/wicket-core/src/main/java/org/apache/wicket/protocol/http/BufferedWebResponse.java b/wicket-core/src/main/java/org/apache/wicket/protocol/http/BufferedWebResponse.java
+index 27f56cd344..23de6ea6de 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/protocol/http/BufferedWebResponse.java
++++ b/wicket-core/src/main/java/org/apache/wicket/protocol/http/BufferedWebResponse.java
+@@ -19,13 +19,12 @@ package org.apache.wicket.protocol.http;
+ import java.io.ByteArrayOutputStream;
+ import java.io.IOException;
+ import java.io.OutputStream;
++import java.time.Instant;
+ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.List;
+ import java.util.function.Consumer;
+-
+ import javax.servlet.http.Cookie;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.WicketRuntimeException;
+ import org.apache.wicket.request.Response;
+@@ -33,7 +32,6 @@ import org.apache.wicket.request.http.WebResponse;
+ import org.apache.wicket.response.filter.IResponseFilter;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.string.AppendingStringBuffer;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * Subclass of {@link WebResponse} that buffers the actions and performs those on another response.
+@@ -188,7 +186,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
+ 	}
+ 
+ 	@Override
+-	public void setDateHeader(String name, Time date)
++	public void setDateHeader(String name, Instant date)
+ 	{
+ 		Args.notNull(date, "date");
+ 		actions.add(ActionType.HEADER.action(res -> res.setDateHeader(name, date)));
+diff --git a/wicket-core/src/main/java/org/apache/wicket/protocol/http/HeaderBufferingWebResponse.java b/wicket-core/src/main/java/org/apache/wicket/protocol/http/HeaderBufferingWebResponse.java
+index ac116d92a2..993f959974 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/protocol/http/HeaderBufferingWebResponse.java
++++ b/wicket-core/src/main/java/org/apache/wicket/protocol/http/HeaderBufferingWebResponse.java
+@@ -16,12 +16,11 @@
+  */
+ package org.apache.wicket.protocol.http;
+ 
++import java.time.Instant;
+ import javax.servlet.http.Cookie;
+ import javax.servlet.http.HttpServletResponse;
+-
+ import org.apache.wicket.request.http.WebResponse;
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * Response that keeps headers in buffers until the first content is written.
+@@ -130,7 +129,7 @@ class HeaderBufferingWebResponse extends WebResponse implements IMetaDataBufferi
+ 	}
+ 
+ 	@Override
+-	public void setDateHeader(String name, Time date)
++	public void setDateHeader(String name, Instant date)
+ 	{
+ 		Args.notNull(date, "date");
+ 		getMetaResponse().setDateHeader(name, date);
+diff --git a/wicket-core/src/main/java/org/apache/wicket/protocol/http/StoredResponsesMap.java b/wicket-core/src/main/java/org/apache/wicket/protocol/http/StoredResponsesMap.java
+index 343bffa43c..699fe0ce83 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/protocol/http/StoredResponsesMap.java
++++ b/wicket-core/src/main/java/org/apache/wicket/protocol/http/StoredResponsesMap.java
+@@ -16,11 +16,10 @@
+  */
+ package org.apache.wicket.protocol.http;
+ 
++import java.time.Duration;
++import java.time.Instant;
+ import java.util.Map;
+-
+ import org.apache.wicket.util.collections.MostRecentlyUsedMap;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * A map that contains the buffered responses. It has a constraint on the maximum entries that it
+@@ -40,7 +39,7 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
+ 		private BufferedWebResponse response;
+ 
+ 		/** the time when this response is stored */
+-		private Time creationTime;
++		private Instant creationTime;
+ 	}
+ 
+ 	/**
+@@ -72,8 +71,8 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
+ 			Value value = (Value)eldest.getValue();
+ 			if (value != null)
+ 			{
+-				Duration elapsedTime = Time.now().subtract(value.creationTime);
+-				if (lifetime.lessThanOrEqual(elapsedTime))
++				Duration elapsedTime = Duration.between(value.creationTime, Instant.now());
++				if (lifetime.compareTo(elapsedTime) <= 0)
+ 				{
+ 					removedValue = value.response;
+ 					removed = true;
+@@ -93,7 +92,7 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
+ 		}
+ 
+ 		Value value = new Value();
+-		value.creationTime = Time.now();
++		value.creationTime = Instant.now();
+ 		value.response = (BufferedWebResponse)bufferedResponse;
+ 
+ 		Value oldValue;
+@@ -116,8 +115,8 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
+ 		}
+ 		if (value != null)
+ 		{
+-			Duration elapsedTime = Time.now().subtract(value.creationTime);
+-			if (lifetime.greaterThan(elapsedTime))
++			Duration elapsedTime =  Duration.between(value.creationTime, Instant.now());
++			if (lifetime.compareTo(elapsedTime) > 0)
+ 			{
+ 				result = value.response;
+ 			}
+diff --git a/wicket-core/src/main/java/org/apache/wicket/protocol/http/WebApplication.java b/wicket-core/src/main/java/org/apache/wicket/protocol/http/WebApplication.java
+index 503f793b6a..0f3177ffb8 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/protocol/http/WebApplication.java
++++ b/wicket-core/src/main/java/org/apache/wicket/protocol/http/WebApplication.java
+@@ -77,7 +77,7 @@ import org.apache.wicket.util.file.Path;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.lang.PackageName;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ import org.apache.wicket.util.watch.IModificationWatcher;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+@@ -963,7 +963,7 @@ public abstract class WebApplication extends Application
+ 	 * is no need to configure these parameters externally.
+ 	 */
+ 	private final StoredResponsesMap storedResponses = new StoredResponsesMap(1000,
+-		Duration.seconds(60));
++		Duration.ofSeconds(60));
+ 
+ 	/**
+ 	 * 
+diff --git a/wicket-core/src/main/java/org/apache/wicket/protocol/http/servlet/ServletWebRequest.java b/wicket-core/src/main/java/org/apache/wicket/protocol/http/servlet/ServletWebRequest.java
+index 45b0544bbd..e8fb6692a2 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/protocol/http/servlet/ServletWebRequest.java
++++ b/wicket-core/src/main/java/org/apache/wicket/protocol/http/servlet/ServletWebRequest.java
+@@ -17,6 +17,7 @@
+ package org.apache.wicket.protocol.http.servlet;
+ 
+ import java.nio.charset.Charset;
++import java.time.Instant;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.Collections;
+@@ -26,11 +27,9 @@ import java.util.List;
+ import java.util.Locale;
+ import java.util.Map;
+ import java.util.Set;
+-
+ import javax.servlet.http.Cookie;
+ import javax.servlet.http.HttpServletRequest;
+ import javax.servlet.http.HttpServletResponse;
+-
+ import org.apache.commons.fileupload.FileItemFactory;
+ import org.apache.commons.fileupload.FileUploadException;
+ import org.apache.wicket.protocol.http.RequestUtils;
+@@ -45,7 +44,6 @@ import org.apache.wicket.util.lang.Bytes;
+ import org.apache.wicket.util.string.PrependingStringBuffer;
+ import org.apache.wicket.util.string.StringValue;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -236,7 +234,7 @@ public class ServletWebRequest extends WebRequest
+ 	}
+ 
+ 	@Override
+-	public Time getDateHeader(String name)
++	public Instant getDateHeader(String name)
+ 	{
+ 		try
+ 		{
+@@ -247,7 +245,7 @@ public class ServletWebRequest extends WebRequest
+ 				return null;
+ 			}
+ 
+-			return Time.millis(value);
++			return Instant.ofEpochMilli(value);
+ 		}
+ 		catch (IllegalArgumentException e)
+ 		{
+diff --git a/wicket-core/src/main/java/org/apache/wicket/protocol/http/servlet/ServletWebResponse.java b/wicket-core/src/main/java/org/apache/wicket/protocol/http/servlet/ServletWebResponse.java
+index a1e5c8c3ff..8f11fa0730 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/protocol/http/servlet/ServletWebResponse.java
++++ b/wicket-core/src/main/java/org/apache/wicket/protocol/http/servlet/ServletWebResponse.java
+@@ -17,18 +17,16 @@
+ package org.apache.wicket.protocol.http.servlet;
+ 
+ import java.io.IOException;
+-
++import java.time.Instant;
+ import javax.servlet.http.Cookie;
+ import javax.servlet.http.HttpServletRequest;
+ import javax.servlet.http.HttpServletResponse;
+-
+ import org.apache.wicket.WicketRuntimeException;
+ import org.apache.wicket.request.Url;
+ import org.apache.wicket.request.UrlRenderer;
+ import org.apache.wicket.request.cycle.RequestCycle;
+ import org.apache.wicket.request.http.WebResponse;
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * WebResponse that wraps a {@link ServletWebResponse}.
+@@ -84,10 +82,10 @@ public class ServletWebResponse extends WebResponse
+ 	}
+ 
+ 	@Override
+-	public void setDateHeader(String name, Time date)
++	public void setDateHeader(String name, Instant date)
+ 	{
+ 		Args.notNull(date, "date");
+-		httpServletResponse.setDateHeader(name, date.getMilliseconds());
++		httpServletResponse.setDateHeader(name, date.toEpochMilli());
+ 	}
+ 
+ 	@Override
+diff --git a/wicket-core/src/main/java/org/apache/wicket/protocol/http/servlet/UploadInfo.java b/wicket-core/src/main/java/org/apache/wicket/protocol/http/servlet/UploadInfo.java
+index 89a1bbdb70..00a3c6f352 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/protocol/http/servlet/UploadInfo.java
++++ b/wicket-core/src/main/java/org/apache/wicket/protocol/http/servlet/UploadInfo.java
+@@ -16,10 +16,10 @@
+  */
+ package org.apache.wicket.protocol.http.servlet;
+ 
++import java.time.Duration;
+ import org.apache.wicket.Session;
+ import org.apache.wicket.util.io.IClusterable;
+ import org.apache.wicket.util.lang.Bytes;
+-import org.apache.wicket.util.time.Duration;
+ 
+ 
+ /**
+@@ -152,7 +152,7 @@ public class UploadInfo implements IClusterable
+ 	 */
+ 	public String getRemainingTimeString()
+ 	{
+-		return Duration.milliseconds(getRemainingMilliseconds())
++		return Duration.ofMillis(getRemainingMilliseconds())
+ 			.toString(Session.get().getLocale());
+ 	}
+ 
+diff --git a/wicket-core/src/main/java/org/apache/wicket/request/handler/resource/ResourceStreamRequestHandler.java b/wicket-core/src/main/java/org/apache/wicket/request/handler/resource/ResourceStreamRequestHandler.java
+index 2fedc45f83..1f2ee18342 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/request/handler/resource/ResourceStreamRequestHandler.java
++++ b/wicket-core/src/main/java/org/apache/wicket/request/handler/resource/ResourceStreamRequestHandler.java
+@@ -26,7 +26,7 @@ import org.apache.wicket.request.resource.ResourceStreamResource;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.resource.IResourceStream;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+diff --git a/wicket-core/src/main/java/org/apache/wicket/request/resource/AbstractResource.java b/wicket-core/src/main/java/org/apache/wicket/request/resource/AbstractResource.java
+index 7957c90bcc..a4ec9ec54f 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/request/resource/AbstractResource.java
++++ b/wicket-core/src/main/java/org/apache/wicket/request/resource/AbstractResource.java
+@@ -18,12 +18,13 @@ package org.apache.wicket.request.resource;
+ 
+ import java.io.IOException;
+ import java.io.InputStream;
++import java.time.Duration;
++import java.time.Instant;
++import java.time.temporal.ChronoUnit;
+ import java.util.HashSet;
+ import java.util.Locale;
+ import java.util.Set;
+-
+ import javax.servlet.http.HttpServletResponse;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.MetaDataKey;
+ import org.apache.wicket.WicketRuntimeException;
+@@ -39,8 +40,6 @@ import org.apache.wicket.util.io.Streams;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.lang.Classes;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * Convenience resource implementation. The subclass must implement
+@@ -140,7 +139,7 @@ public abstract class AbstractResource implements IResource
+ 		private ContentRangeType contentRangeType = null;
+ 		private String textEncoding;
+ 		private long contentLength = -1;
+-		private Time lastModified = null;
++		private Instant lastModified = null;
+ 		private WriteCallback writeCallback;
+ 		private Duration cacheDuration;
+ 		private WebResponse.CacheScope cacheScope;
+@@ -407,7 +406,7 @@ public abstract class AbstractResource implements IResource
+ 		 *
+ 		 * @return {@code this}, for chaining.
+ 		 */
+-		public ResourceResponse setLastModified(Time lastModified)
++		public ResourceResponse setLastModified(Instant lastModified)
+ 		{
+ 			this.lastModified = lastModified;
+ 			return this;
+@@ -416,7 +415,7 @@ public abstract class AbstractResource implements IResource
+ 		/**
+ 		 * @return last modification timestamp
+ 		 */
+-		public Time getLastModified()
++		public Instant getLastModified()
+ 		{
+ 			return lastModified;
+ 		}
+@@ -434,18 +433,18 @@ public abstract class AbstractResource implements IResource
+ 		public boolean dataNeedsToBeWritten(Attributes attributes)
+ 		{
+ 			WebRequest request = (WebRequest)attributes.getRequest();
+-			Time ifModifiedSince = request.getIfModifiedSinceHeader();
++			Instant ifModifiedSince = request.getIfModifiedSinceHeader();
+ 
+-			if (cacheDuration != Duration.NONE && ifModifiedSince != null && lastModified != null)
++			if (cacheDuration != Duration.ZERO && ifModifiedSince != null && lastModified != null)
+ 			{
+ 				// [Last-Modified] headers have a maximum precision of one second
+ 				// so we have to truncate the milliseconds part for a proper compare.
+ 				// that's stupid, since changes within one second will not be reliably
+ 				// detected by the client ... any hint or clarification to improve this
+ 				// situation will be appreciated...
+-				Time roundedLastModified = Time.millis(lastModified.getMilliseconds() / 1000 * 1000);
++			    Instant roundedLastModified = lastModified.truncatedTo(ChronoUnit.SECONDS);
+ 
+-				return ifModifiedSince.before(roundedLastModified);
++				return ifModifiedSince.isBefore(roundedLastModified);
+ 			}
+ 			else
+ 			{
+@@ -460,7 +459,7 @@ public abstract class AbstractResource implements IResource
+ 		 */
+ 		public ResourceResponse disableCaching()
+ 		{
+-			return setCacheDuration(Duration.NONE);
++			return setCacheDuration(Duration.ZERO);
+ 		}
+ 
+ 		/**
+@@ -600,7 +599,7 @@ public abstract class AbstractResource implements IResource
+ 		{
+ 			Duration duration = data.getCacheDuration();
+ 			WebResponse webResponse = (WebResponse)response;
+-			if (duration.compareTo(Duration.NONE) > 0)
++			if (duration.compareTo(Duration.ZERO) > 0)
+ 			{
+ 				webResponse.enableCaching(duration, data.getCacheScope());
+ 			}
+@@ -771,7 +770,7 @@ public abstract class AbstractResource implements IResource
+ 			WebResponse webResponse = (WebResponse)response;
+ 
+ 			// 1. Last Modified
+-			Time lastModified = resourceResponse.getLastModified();
++			Instant lastModified = resourceResponse.getLastModified();
+ 			if (lastModified != null)
+ 			{
+ 				webResponse.setLastModifiedTime(lastModified);
+diff --git a/wicket-core/src/main/java/org/apache/wicket/request/resource/BaseDataResource.java b/wicket-core/src/main/java/org/apache/wicket/request/resource/BaseDataResource.java
+index eff98e4169..6874b94c22 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/request/resource/BaseDataResource.java
++++ b/wicket-core/src/main/java/org/apache/wicket/request/resource/BaseDataResource.java
+@@ -17,11 +17,9 @@
+ package org.apache.wicket.request.resource;
+ 
+ import java.net.URLConnection;
+-
++import java.time.Instant;
+ import javax.servlet.http.HttpServletResponse;
+-
+ import org.apache.wicket.request.Response;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * An abstract resource that can deliver static data - passed to the constructor, or dynamic -
+@@ -41,7 +39,7 @@ public abstract class BaseDataResource<T> extends AbstractResource
+ 	private T data;
+ 
+ 	/** the time that this resource was last modified; same as construction time. */
+-	private final Time lastModified = Time.now();
++	private final Instant lastModified = Instant.now();
+ 
+ 	private final String filename;
+ 
+diff --git a/wicket-core/src/main/java/org/apache/wicket/request/resource/DynamicImageResource.java b/wicket-core/src/main/java/org/apache/wicket/request/resource/DynamicImageResource.java
+index 26ab5a0664..8eeb845905 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/request/resource/DynamicImageResource.java
++++ b/wicket-core/src/main/java/org/apache/wicket/request/resource/DynamicImageResource.java
+@@ -19,13 +19,12 @@ package org.apache.wicket.request.resource;
+ import java.awt.image.BufferedImage;
+ import java.io.ByteArrayOutputStream;
+ import java.io.IOException;
+-
++import java.sql.Time;
++import java.time.Instant;
+ import javax.imageio.ImageIO;
+ import javax.servlet.http.HttpServletResponse;
+-
+ import org.apache.wicket.WicketRuntimeException;
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * Base class for dynamically generated ImageResources.
+@@ -38,7 +37,7 @@ public abstract class DynamicImageResource extends AbstractResource
+ 	private String format = "png";
+ 
+ 	/** The last modified time of this resource */
+-	private Time lastModifiedTime;
++	private Instant lastModifiedTime;
+ 
+ 
+ 	/**
+@@ -84,7 +83,7 @@ public abstract class DynamicImageResource extends AbstractResource
+ 	 * 
+ 	 * @param time
+ 	 */
+-	protected synchronized void setLastModifiedTime(Time time)
++	protected synchronized void setLastModifiedTime(Instant time)
+ 	{
+ 		lastModifiedTime = time;
+ 	}
+@@ -143,7 +142,7 @@ public abstract class DynamicImageResource extends AbstractResource
+ 		}
+ 		else
+ 		{
+-			response.setLastModified(Time.now());
++			response.setLastModified(Instant.now());
+ 		}
+ 
+ 		if (response.dataNeedsToBeWritten(attributes))
+diff --git a/wicket-core/src/main/java/org/apache/wicket/request/resource/PackageResource.java b/wicket-core/src/main/java/org/apache/wicket/request/resource/PackageResource.java
+index 614d6f228d..60e76f124f 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/request/resource/PackageResource.java
++++ b/wicket-core/src/main/java/org/apache/wicket/request/resource/PackageResource.java
+@@ -22,11 +22,10 @@ import java.io.InputStream;
+ import java.io.Serializable;
+ import java.nio.charset.Charset;
+ import java.nio.charset.StandardCharsets;
++import java.time.Instant;
+ import java.util.Locale;
+ import java.util.Objects;
+-
+ import javax.servlet.http.HttpServletResponse;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.IWicketInternalException;
+ import org.apache.wicket.Session;
+@@ -50,7 +49,6 @@ import org.apache.wicket.util.resource.IResourceStream;
+ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+ import org.apache.wicket.util.resource.ResourceStreamWrapper;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -331,7 +329,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
+ 		}
+ 
+ 		// add Last-Modified header (to support HEAD requests and If-Modified-Since)
+-		final Time lastModified = resourceStream.lastModifiedTime();
++		final Instant lastModified = resourceStream.lastModifiedTime();
+ 
+ 		resourceResponse.setLastModified(lastModified);
+ 
+diff --git a/wicket-core/src/main/java/org/apache/wicket/request/resource/ResourceStreamResource.java b/wicket-core/src/main/java/org/apache/wicket/request/resource/ResourceStreamResource.java
+index b781206880..0c81570ed5 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/request/resource/ResourceStreamResource.java
++++ b/wicket-core/src/main/java/org/apache/wicket/request/resource/ResourceStreamResource.java
+@@ -18,17 +18,15 @@ package org.apache.wicket.request.resource;
+ 
+ import java.io.IOException;
+ import java.io.InputStream;
+-
++import java.time.Duration;
++import java.time.Instant;
+ import javax.servlet.http.HttpServletResponse;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.util.lang.Bytes;
+ import org.apache.wicket.util.lang.Checks;
+ import org.apache.wicket.util.resource.IResourceStream;
+ import org.apache.wicket.util.resource.IResourceStreamWriter;
+ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -141,7 +139,7 @@ public class ResourceStreamResource extends AbstractResource
+ 	{
+ 		final IResourceStream resourceStream = internalGetResourceStream(attributes);
+ 		ResourceResponse data = new ResourceResponse();
+-		Time lastModifiedTime = resourceStream.lastModifiedTime();
++		Instant lastModifiedTime = resourceStream.lastModifiedTime();
+ 		if (lastModifiedTime != null)
+ 		{
+ 			data.setLastModified(lastModifiedTime);
+diff --git a/wicket-core/src/main/java/org/apache/wicket/request/resource/caching/version/LastModifiedResourceVersion.java b/wicket-core/src/main/java/org/apache/wicket/request/resource/caching/version/LastModifiedResourceVersion.java
+index 76f0f19cee..f7a4196ab5 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/request/resource/caching/version/LastModifiedResourceVersion.java
++++ b/wicket-core/src/main/java/org/apache/wicket/request/resource/caching/version/LastModifiedResourceVersion.java
+@@ -16,11 +16,10 @@
+  */
+ package org.apache.wicket.request.resource.caching.version;
+ 
++import java.time.Instant;
+ import java.util.regex.Pattern;
+-
+ import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
+ import org.apache.wicket.util.resource.IResourceStream;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * Uses the last modified timestamp of a {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} 
+@@ -49,7 +48,7 @@ public class LastModifiedResourceVersion implements IResourceVersion
+ 			return null;
+ 		}
+ 
+-		final Time lastModified = stream.lastModifiedTime();
++		final Instant lastModified = stream.lastModifiedTime();
+ 
+ 		// if no timestamp is available we can not provide a version
+ 		if (lastModified == null)
+@@ -57,7 +56,7 @@ public class LastModifiedResourceVersion implements IResourceVersion
+ 			return null;
+ 		}
+ 		// version string = last modified timestamp converted to milliseconds
+-		return String.valueOf(lastModified.getMilliseconds()).intern();
++		return String.valueOf(lastModified.toEpochMilli()).intern();
+ 	}
+ 
+ 	@Override
+diff --git a/wicket-core/src/main/java/org/apache/wicket/resource/TextTemplateResourceReference.java b/wicket-core/src/main/java/org/apache/wicket/resource/TextTemplateResourceReference.java
+index 6d761d9d80..1a9089a989 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/resource/TextTemplateResourceReference.java
++++ b/wicket-core/src/main/java/org/apache/wicket/resource/TextTemplateResourceReference.java
+@@ -16,9 +16,10 @@
+  */
+ package org.apache.wicket.resource;
+ 
++import java.time.Duration;
++import java.time.Instant;
+ import java.util.Locale;
+ import java.util.Map;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.model.IModel;
+ import org.apache.wicket.request.resource.IResource;
+@@ -30,8 +31,6 @@ import org.apache.wicket.util.resource.IResourceStream;
+ import org.apache.wicket.util.resource.StringResourceStream;
+ import org.apache.wicket.util.template.PackageTextTemplate;
+ import org.apache.wicket.util.template.TextTemplate;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * A class which adapts a {@link PackageTextTemplate} to a {@link ResourceReference}.
+@@ -151,12 +150,12 @@ public class TextTemplateResourceReference extends ResourceReference implements
+ 
+ 				StringResourceStream resourceStream = new StringResourceStream(stringValue,
+ 						textTemplate.getContentType());
+-				resourceStream.setLastModified(Time.now());
++				resourceStream.setLastModified(Instant.now());
+ 
+ 				return resourceStream;
+ 			}
+ 		};
+-		resource.setCacheDuration(Duration.NONE);
++		resource.setCacheDuration(Duration.ZERO);
+ 
+ 		if (Application.exists())
+ 		{
+diff --git a/wicket-core/src/main/java/org/apache/wicket/resource/bundles/ConcatBundleResource.java b/wicket-core/src/main/java/org/apache/wicket/resource/bundles/ConcatBundleResource.java
+index 95087c470d..b73911d61c 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/resource/bundles/ConcatBundleResource.java
++++ b/wicket-core/src/main/java/org/apache/wicket/resource/bundles/ConcatBundleResource.java
+@@ -20,12 +20,11 @@ import java.io.ByteArrayInputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.io.Serializable;
++import java.time.Instant;
+ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.MissingResourceException;
+-
+ import javax.servlet.http.HttpServletResponse;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.markup.head.IReferenceHeaderItem;
+ import org.apache.wicket.request.resource.AbstractResource;
+@@ -41,7 +40,6 @@ import org.apache.wicket.util.lang.Classes;
+ import org.apache.wicket.util.resource.AbstractResourceStream;
+ import org.apache.wicket.util.resource.IResourceStream;
+ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -95,7 +93,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
+ 				resourceResponse.setContentType(findContentType(resources));
+ 
+ 				// add Last-Modified header (to support HEAD requests and If-Modified-Since)
+-				final Time lastModified = findLastModified(resources);
++				final Instant lastModified = findLastModified(resources);
+ 
+ 				if (lastModified != null)
+ 					resourceResponse.setLastModified(lastModified);
+@@ -157,13 +155,13 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
+ 		return null;
+ 	}
+ 
+-	protected Time findLastModified(List<IResourceStream> resources)
++	protected Instant findLastModified(List<IResourceStream> resources)
+ 	{
+-		Time ret = null;
++	    Instant ret = null;
+ 		for (IResourceStream curStream : resources)
+ 		{
+-			Time curLastModified = curStream.lastModifiedTime();
+-			if (ret == null || curLastModified.after(ret))
++		    Instant curLastModified = curStream.lastModifiedTime();
++			if (ret == null || curLastModified.isAfter(ret))
+ 				ret = curLastModified;
+ 		}
+ 		return ret;
+@@ -278,7 +276,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
+ 		}
+ 
+ 		final String contentType = findContentType(resources);
+-		final Time lastModified = findLastModified(resources);
++		final Instant lastModified = findLastModified(resources);
+ 		final ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+ 		final long length = bytes.length;
+ 		AbstractResourceStream ret = new AbstractResourceStream()
+@@ -304,7 +302,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
+ 			}
+ 
+ 			@Override
+-			public Time lastModifiedTime()
++			public Instant lastModifiedTime()
+ 			{
+ 				return lastModified;
+ 			}
+diff --git a/wicket-core/src/main/java/org/apache/wicket/settings/RequestCycleSettings.java b/wicket-core/src/main/java/org/apache/wicket/settings/RequestCycleSettings.java
+index 784ac385d9..b40317b9a1 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/settings/RequestCycleSettings.java
++++ b/wicket-core/src/main/java/org/apache/wicket/settings/RequestCycleSettings.java
+@@ -16,13 +16,12 @@
+  */
+ package org.apache.wicket.settings;
+ 
++import java.time.Duration;
+ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.List;
+-
+ import org.apache.wicket.response.filter.IResponseFilter;
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Duration;
+ 
+ /**
+  * Class for request related settings
+@@ -169,7 +168,7 @@ public class RequestCycleSettings
+ 	 * The time that a request will by default be waiting for the previous request to be handled
+ 	 * before giving up. Defaults to one minute.
+ 	 */
+-	private Duration timeout = Duration.ONE_MINUTE;
++	private Duration timeout = Duration.ofMinutes(1);
+ 
+ 	private int exceptionRetryCount = 10;
+ 
+diff --git a/wicket-core/src/main/java/org/apache/wicket/settings/ResourceSettings.java b/wicket-core/src/main/java/org/apache/wicket/settings/ResourceSettings.java
+index 72c80d648b..b76fbcd68c 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/settings/ResourceSettings.java
++++ b/wicket-core/src/main/java/org/apache/wicket/settings/ResourceSettings.java
+@@ -56,7 +56,7 @@ import org.apache.wicket.util.file.IResourceFinder;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.lang.Generics;
+ import org.apache.wicket.util.resource.IResourceStream;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ import org.apache.wicket.util.watch.IModificationWatcher;
+ import org.apache.wicket.util.watch.ModificationWatcher;
+ 
+diff --git a/wicket-core/src/main/java/org/apache/wicket/util/cookies/CookieUtils.java b/wicket-core/src/main/java/org/apache/wicket/util/cookies/CookieUtils.java
+index 5bce94f856..055472b033 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/util/cookies/CookieUtils.java
++++ b/wicket-core/src/main/java/org/apache/wicket/util/cookies/CookieUtils.java
+@@ -16,6 +16,7 @@
+  */
+ package org.apache.wicket.util.cookies;
+ 
++import java.time.Instant;
+ import javax.servlet.http.Cookie;
+ import org.apache.wicket.markup.html.form.FormComponent;
+ import org.apache.wicket.protocol.http.WebApplication;
+@@ -25,7 +26,6 @@ import org.apache.wicket.request.cycle.RequestCycle;
+ import org.apache.wicket.request.http.WebRequest;
+ import org.apache.wicket.request.http.WebResponse;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -369,6 +369,6 @@ public class CookieUtils
+ 	{
+ 		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue() +
+ 			", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() + ", maxAge = " +
+-			Time.millis(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")" + "]";
++			Instant.millis(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")" + "]";
+ 	}
+ }
+diff --git a/wicket-core/src/main/java/org/apache/wicket/util/template/TextTemplateDecorator.java b/wicket-core/src/main/java/org/apache/wicket/util/template/TextTemplateDecorator.java
+index 6a1ef32dab..3737bbe593 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/util/template/TextTemplateDecorator.java
++++ b/wicket-core/src/main/java/org/apache/wicket/util/template/TextTemplateDecorator.java
+@@ -19,13 +19,12 @@ package org.apache.wicket.util.template;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.nio.charset.Charset;
++import java.time.Instant;
+ import java.util.Collections;
+ import java.util.Locale;
+ import java.util.Map;
+-
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+-import org.apache.wicket.util.time.Time;
+ 
+ 
+ /**
+@@ -167,7 +166,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
+ 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#lastModifiedTime()
+ 	 */
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		return decorated.lastModifiedTime();
+ 	}
+@@ -185,7 +184,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
+ 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#setLastModified(org.apache.wicket.util.time.Time)
+ 	 */
+ 	@Override
+-	public void setLastModified(Time lastModified)
++	public void setLastModified(Instant lastModified)
+ 	{
+ 		decorated.setLastModified(lastModified);
+ 	}
+diff --git a/wicket-core/src/main/java/org/apache/wicket/util/tester/BaseWicketTester.java b/wicket-core/src/main/java/org/apache/wicket/util/tester/BaseWicketTester.java
+index 03a3d08579..3cf02f962e 100644
+--- a/wicket-core/src/main/java/org/apache/wicket/util/tester/BaseWicketTester.java
++++ b/wicket-core/src/main/java/org/apache/wicket/util/tester/BaseWicketTester.java
+@@ -130,7 +130,7 @@ import org.apache.wicket.util.lang.Classes;
+ import org.apache.wicket.util.lang.Generics;
+ import org.apache.wicket.util.resource.StringResourceStream;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ import org.apache.wicket.util.visit.IVisit;
+ import org.apache.wicket.util.visit.IVisitor;
+ import org.slf4j.Logger;
+diff --git a/wicket-core/src/test/java/org/apache/wicket/ajax/AjaxBehaviorAndMetaDataPage.java b/wicket-core/src/test/java/org/apache/wicket/ajax/AjaxBehaviorAndMetaDataPage.java
+index 0f311a73b3..4c84e3408b 100644
+--- a/wicket-core/src/test/java/org/apache/wicket/ajax/AjaxBehaviorAndMetaDataPage.java
++++ b/wicket-core/src/test/java/org/apache/wicket/ajax/AjaxBehaviorAndMetaDataPage.java
+@@ -16,9 +16,9 @@
+  */
+ package org.apache.wicket.ajax;
+ 
++import java.time.Duration;
+ import org.apache.wicket.markup.html.WebMarkupContainer;
+ import org.apache.wicket.markup.html.WebPage;
+-import org.apache.wicket.util.time.Duration;
+ 
+ 
+ /**	 */
+@@ -36,7 +36,7 @@ public class AjaxBehaviorAndMetaDataPage extends WebPage implements IAjaxIndicat
+ 		ajaxContainer.setMarkupId("menu");
+ 		ajaxContainer.setOutputMarkupId(true);
+ 
+-		ajaxIndicatorAppender = new AjaxSelfUpdatingTimerBehavior(Duration.ONE_MINUTE);
++		ajaxIndicatorAppender = new AjaxSelfUpdatingTimerBehavior(Duration.ofMinutes(1));
+ 		ajaxContainer.add(ajaxIndicatorAppender);
+ 
+ 		add(ajaxContainer);
+diff --git a/wicket-core/src/test/java/org/apache/wicket/ajax/AjaxRequestHandlerTest.java b/wicket-core/src/test/java/org/apache/wicket/ajax/AjaxRequestHandlerTest.java
+index eace93cd3f..db8672b06c 100644
+--- a/wicket-core/src/test/java/org/apache/wicket/ajax/AjaxRequestHandlerTest.java
++++ b/wicket-core/src/test/java/org/apache/wicket/ajax/AjaxRequestHandlerTest.java
+@@ -42,7 +42,7 @@ import org.apache.wicket.util.resource.IResourceStream;
+ import org.apache.wicket.util.resource.StringResourceStream;
+ import org.apache.wicket.util.tester.DiffUtil;
+ import org.apache.wicket.util.tester.WicketTestCase;
+-import org.apache.wicket.util.time.Time;
++import java.time.Instant;
+ import org.junit.jupiter.api.Test;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+diff --git a/wicket-core/src/test/java/org/apache/wicket/ajax/AjaxTimerBehaviorTest.java b/wicket-core/src/test/java/org/apache/wicket/ajax/AjaxTimerBehaviorTest.java
+index db459b62e8..9a6a3d6bb6 100644
+--- a/wicket-core/src/test/java/org/apache/wicket/ajax/AjaxTimerBehaviorTest.java
++++ b/wicket-core/src/test/java/org/apache/wicket/ajax/AjaxTimerBehaviorTest.java
+@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.basic.Label;
+ import org.apache.wicket.markup.html.link.Link;
+ import org.apache.wicket.model.Model;
+ import org.apache.wicket.util.tester.WicketTestCase;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ import org.junit.jupiter.api.Test;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+@@ -48,7 +48,7 @@ class AjaxTimerBehaviorTest extends WicketTestCase
+ 	@Test
+     void addedInAjaxSetsTimout()
+ 	{
+-		Duration dur = Duration.seconds(20);
++		Duration dur = Duration.ofSeconds(20);
+ 		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
+ 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
+ 
+@@ -90,7 +90,7 @@ class AjaxTimerBehaviorTest extends WicketTestCase
+ 	@Test
+     void pageRenderSetsTimeout()
+ 	{
+-		Duration dur = Duration.seconds(20);
++		Duration dur = Duration.ofSeconds(20);
+ 		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
+ 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
+ 		Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
+@@ -127,7 +127,7 @@ class AjaxTimerBehaviorTest extends WicketTestCase
+ 	@Test
+     void ajaxUpdateDoesNotSetTimeout()
+ 	{
+-		Duration dur = Duration.seconds(20);
++		Duration dur = Duration.ofSeconds(20);
+ 		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
+ 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
+ 		final Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
+@@ -164,7 +164,7 @@ class AjaxTimerBehaviorTest extends WicketTestCase
+ 	@Test
+     void setVisibleSetsTimeout()
+ 	{
+-		Duration dur = Duration.seconds(20);
++		Duration dur = Duration.ofSeconds(20);
+ 		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
+ 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
+ 		final Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
+@@ -203,7 +203,7 @@ class AjaxTimerBehaviorTest extends WicketTestCase
+ 	@Test
+     void setDisabledClearsTimeout()
+ 	{
+-		final AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(20))
++		final AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.ofSeconds(20))
+ 		{
+ 			private boolean enabled = true;
+ 			
+@@ -260,7 +260,7 @@ class AjaxTimerBehaviorTest extends WicketTestCase
+ 
+ 		// the duration doesn't matter because we manually trigger the behavior
+ 		final AbstractAjaxTimerBehavior timerBehavior = new AbstractAjaxTimerBehavior(
+-			Duration.seconds(2))
++			Duration.ofSeconds(2))
+ 		{
+ 			private static final long serialVersionUID = 1L;
+ 
+diff --git a/wicket-core/src/test/java/org/apache/wicket/ajax/markup/html/componentMap/SimpleTestPanel.java b/wicket-core/src/test/java/org/apache/wicket/ajax/markup/html/componentMap/SimpleTestPanel.java
+index e57ae07df2..d0ccef582b 100644
+--- a/wicket-core/src/test/java/org/apache/wicket/ajax/markup/html/componentMap/SimpleTestPanel.java
++++ b/wicket-core/src/test/java/org/apache/wicket/ajax/markup/html/componentMap/SimpleTestPanel.java
+@@ -20,7 +20,7 @@ import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
+ import org.apache.wicket.behavior.AbstractAjaxBehavior;
+ import org.apache.wicket.markup.html.basic.Label;
+ import org.apache.wicket.model.PropertyModel;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ 
+ /**
+  * 
+@@ -43,7 +43,7 @@ public class SimpleTestPanel extends SimpleTestPanelBase
+ 		super(name);
+ 
+ 		Label ajaxLabel = new Label("linja1", new PropertyModel<Integer>(this, "count"));
+-		timer = new AjaxSelfUpdatingTimerBehavior(Duration.seconds(2));
++		timer = new AjaxSelfUpdatingTimerBehavior(Duration.ofSeconds(2));
+ 
+ 		ajaxLabel.add(timer);
+ 		baseSpan.add(ajaxLabel);
+diff --git a/wicket-core/src/test/java/org/apache/wicket/page/PageAccessSynchronizerTest.java b/wicket-core/src/test/java/org/apache/wicket/page/PageAccessSynchronizerTest.java
+index ad697ede58..85a5b03db4 100644
+--- a/wicket-core/src/test/java/org/apache/wicket/page/PageAccessSynchronizerTest.java
++++ b/wicket-core/src/test/java/org/apache/wicket/page/PageAccessSynchronizerTest.java
+@@ -19,20 +19,18 @@ package org.apache.wicket.page;
+ import static org.junit.jupiter.api.Assertions.assertNotNull;
+ import static org.junit.jupiter.api.Assertions.assertNull;
+ import static org.junit.jupiter.api.Assertions.assertTrue;
+-
++import java.time.Duration;
++import java.time.Instant;
+ import java.util.Random;
+ import java.util.concurrent.ConcurrentLinkedQueue;
+ import java.util.concurrent.ConcurrentMap;
+ import java.util.concurrent.CountDownLatch;
+ import java.util.concurrent.atomic.AtomicInteger;
+-
+ import org.apache.wicket.MockPage;
+ import org.apache.wicket.core.util.lang.WicketObjects;
+ import org.apache.wicket.mock.MockPageManager;
+ import org.apache.wicket.page.PageAccessSynchronizer.PageLock;
+ import org.apache.wicket.util.WicketTestTag;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ import org.junit.jupiter.api.Tag;
+ import org.junit.jupiter.api.Test;
+ import org.slf4j.Logger;
+@@ -54,7 +52,7 @@ class PageAccessSynchronizerTest
+ 	@Test
+ 	void testReentrant() throws Exception
+ 	{
+-		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(5));
++		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.ofSeconds(5));
+ 		sync.lockPage(0);
+ 		sync.lockPage(0);
+ 	}
+@@ -65,10 +63,10 @@ class PageAccessSynchronizerTest
+ 	@Test
+ 	void testBlocking() throws Exception
+ 	{
+-		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(5));
+-		final Duration hold = Duration.seconds(1);
+-		final Time t1locks[] = new Time[1];
+-		final Time t2locks[] = new Time[1];
++		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.ofSeconds(5));
++		final Duration hold = Duration.ofSeconds(1);
++		final Instant t1locks[] = new Instant[1];
++		final Instant t2locks[] = new Instant[1];
+ 
+ 		class T1 extends Thread
+ 		{
+@@ -76,8 +74,15 @@ class PageAccessSynchronizerTest
+ 			public void run()
+ 			{
+ 				sync.lockPage(1);
+-				t1locks[0] = Time.now();
+-				hold.sleep();
++				t1locks[0] = Instant.now();
++                try
++                {
++                    Thread.sleep(hold.toMillis());
++                }
++                catch (InterruptedException e)
++                {
++                    throw new RuntimeException(e);
++                }
+ 				sync.unlockAllPages();
+ 			}
+ 		}
+@@ -88,7 +93,7 @@ class PageAccessSynchronizerTest
+ 			public void run()
+ 			{
+ 				sync.lockPage(1);
+-				t2locks[0] = Time.now();
++				t2locks[0] = Instant.now();
+ 				sync.unlockAllPages();
+ 			}
+ 		}
+@@ -98,13 +103,13 @@ class PageAccessSynchronizerTest
+ 		T2 t2 = new T2();
+ 		t2.setName("t2");
+ 		t1.start();
+-		Duration.milliseconds(100).sleep();
++		Thread.sleep(100);
+ 		t2.start();
+ 
+ 		t1.join();
+ 		t2.join();
+ 
+-		assertTrue(!t2locks[0].before(t1locks[0].add(hold)));
++		assertTrue(!t2locks[0].isBefore(t1locks[0].plus(hold)));
+ 	}
+ 
+ 	/**
+@@ -116,7 +121,7 @@ class PageAccessSynchronizerTest
+ 	private void runContentionTest(final int pages, final int workers, final Duration duration)
+ 		throws Exception
+ 	{
+-		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(1));
++		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.ofSeconds(1));
+ 
+ 		final AtomicInteger[] counts = new AtomicInteger[pages];
+ 		for (int i = 0; i < counts.length; i++)
+@@ -134,12 +139,12 @@ class PageAccessSynchronizerTest
+ 			public void run()
+ 			{
+ 				Random random = new Random();
+-				Time start = Time.now();
++				Instant start = Instant.now();
+ 
+-				while (start.elapsedSince().lessThan(duration) && error[0] == null)
++				while (PageAccessSynchronizer.elapsedSince(start).compareTo(duration) < 0 && error[0] == null)
+ 				{
+ 					logger.info("{} elapsed: {}, duration: {}", new Object[] {
+-							Thread.currentThread().getName(), start.elapsedSince(), duration });
++							Thread.currentThread().getName(), PageAccessSynchronizer.elapsedSince(start), duration });
+ 					int page1 = random.nextInt(counts.length);
+ 					int page2 = random.nextInt(counts.length);
+ 					int count = 0;
+@@ -252,7 +257,7 @@ class PageAccessSynchronizerTest
+ 	@Test
+ 	void testConcurrency() throws Exception
+ 	{
+-		runContentionTest(20, 10, Duration.seconds(10));
++		runContentionTest(20, 10, Duration.ofSeconds(10));
+ 	}
+ 
+ 	/**
+@@ -261,7 +266,7 @@ class PageAccessSynchronizerTest
+ 	@Test
+ 	void testContention() throws Exception
+ 	{
+-		runContentionTest(10, 20, Duration.seconds(10));
++		runContentionTest(10, 20, Duration.ofSeconds(10));
+ 	}
+ 
+ 	/**
+@@ -288,7 +293,7 @@ class PageAccessSynchronizerTest
+ 		}
+ 
+ 		// set up a synchronizer and lock page 5 with locker1
+-		final Duration timeout = Duration.seconds(30);
++		final Duration timeout = Duration.ofSeconds(30);
+ 		final PageAccessSynchronizer sync = new PageAccessSynchronizer(timeout);
+ 		Locker locker1 = new Locker(sync);
+ 
+@@ -304,7 +309,7 @@ class PageAccessSynchronizerTest
+ 		// locker2
+ 		Locker locker2 = new Locker(sync2);
+ 		locker2.run();
+-		assertTrue(Duration.milliseconds(System.currentTimeMillis() - start).lessThan(timeout));
++		assertTrue(Duration.ofMillis(System.currentTimeMillis() - start).compareTo(timeout) < 0);
+ 	}
+ 
+ 	/**
+@@ -313,7 +318,7 @@ class PageAccessSynchronizerTest
+ 	@Test
+ 	void unlockIfNoSuchPage()
+ 	{
+-		PageAccessSynchronizer synchronizer = new PageAccessSynchronizer(Duration.seconds(2));
++		PageAccessSynchronizer synchronizer = new PageAccessSynchronizer(Duration.ofSeconds(2));
+ 		IPageManager pageManager = new MockPageManager();
+ 		IPageManager synchronizedPageManager = synchronizer.adapt(pageManager);
+ 		synchronizedPageManager.getPage(0);
+@@ -337,14 +342,14 @@ class PageAccessSynchronizerTest
+ 	@Test
+ 	void failToReleaseUnderLoad() throws Exception
+ 	{
+-		final Duration duration = Duration.seconds(20); /* seconds */
++		final Duration duration = Duration.ofSeconds(20); /* seconds */
+ 		final ConcurrentLinkedQueue<Exception> errors = new ConcurrentLinkedQueue<Exception>();
+-		final long endTime = System.currentTimeMillis() + duration.getMilliseconds();
++		final long endTime = System.currentTimeMillis() + duration.toMillis();
+ 
+ 		// set the synchronizer timeout one second longer than the test runs to prevent
+ 		// starvation to become an issue
+ 		final PageAccessSynchronizer sync = new PageAccessSynchronizer(
+-			duration.add(Duration.ONE_SECOND));
++			duration.plus(Duration.ofSeconds(1)));
+ 
+ 		final CountDownLatch latch = new CountDownLatch(100);
+ 		for (int count = 0; count < 100; count++)
+diff --git a/wicket-core/src/test/java/org/apache/wicket/protocol/http/StoredResponsesMapTest.java b/wicket-core/src/test/java/org/apache/wicket/protocol/http/StoredResponsesMapTest.java
+index f5253146ed..75f157a5b1 100644
+--- a/wicket-core/src/test/java/org/apache/wicket/protocol/http/StoredResponsesMapTest.java
++++ b/wicket-core/src/test/java/org/apache/wicket/protocol/http/StoredResponsesMapTest.java
+@@ -20,16 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
+ import static org.junit.jupiter.api.Assertions.assertNull;
+ import static org.junit.jupiter.api.Assertions.assertThrows;
+ import static org.junit.jupiter.api.Assertions.assertTrue;
+-
+ import java.security.SecureRandom;
++import java.time.Duration;
++import java.time.Instant;
+ import java.util.List;
+ import java.util.concurrent.CopyOnWriteArrayList;
+ import java.util.concurrent.CountDownLatch;
+ import java.util.concurrent.TimeUnit;
+-
+ import org.apache.wicket.util.WicketTestTag;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ import org.junit.jupiter.api.Tag;
+ import org.junit.jupiter.api.Test;
+ 
+@@ -48,7 +46,7 @@ class StoredResponsesMapTest
+ 	@Test
+ 	void entriesLife2Seconds() throws Exception
+ 	{
+-		StoredResponsesMap map = new StoredResponsesMap(1000, Duration.seconds(2));
++		StoredResponsesMap map = new StoredResponsesMap(1000, Duration.ofSeconds(2));
+ 		assertEquals(0, map.size());
+ 		map.put("1", new BufferedWebResponse(null));
+ 		assertEquals(1, map.size());
+@@ -66,14 +64,14 @@ class StoredResponsesMapTest
+ 	@Test
+ 	void getExpiredValue() throws Exception
+ 	{
+-		Time start = Time.now();
+-		Duration timeout = Duration.milliseconds(50);
++	    Instant start = Instant.now();
++		Duration timeout = Duration.ofMillis(50);
+ 		StoredResponsesMap map = new StoredResponsesMap(1000, timeout);
+ 		assertEquals(0, map.size());
+ 		map.put("1", new BufferedWebResponse(null));
+ 		assertEquals(1, map.size());
+-		TimeUnit.MILLISECONDS.sleep(timeout.getMilliseconds() * 2); // sleep for twice longer than the timeout
+-		assertTrue(Time.now().subtract(start).compareTo(timeout) == 1, "The timeout has passed.");
++		TimeUnit.MILLISECONDS.sleep(timeout.toMillis() * 2); // sleep for twice longer than the timeout
++		assertTrue(Duration.between(start, Instant.now()).compareTo(timeout) == 1, "The timeout has passed.");
+ 		Object value = map.get("1");
+ 		assertNull(value);
+ 	}
+@@ -84,7 +82,7 @@ class StoredResponsesMapTest
+ 	@Test
+ 	void cannotPutArbitraryValue()
+ 	{
+-		StoredResponsesMap map = new StoredResponsesMap(1000, Duration.days(1));
++		StoredResponsesMap map = new StoredResponsesMap(1000, Duration.ofDays(1));
+ 		assertThrows(IllegalArgumentException.class, () -> {
+ 			map.put("1", new Object());
+ 		});
+@@ -107,7 +105,7 @@ class StoredResponsesMapTest
+ 		final CountDownLatch startLatch = new CountDownLatch(numberOfThreads);
+ 		final CountDownLatch endLatch = new CountDownLatch(numberOfThreads);
+ 		final SecureRandom rnd = new SecureRandom();
+-		final StoredResponsesMap map = new StoredResponsesMap(1000, Duration.seconds(60));
++		final StoredResponsesMap map = new StoredResponsesMap(1000, Duration.ofSeconds(60));
+ 		final List<String> keys = new CopyOnWriteArrayList<String>();
+ 
+ 		final Runnable r = new Runnable()
+diff --git a/wicket-core/src/test/java/org/apache/wicket/protocol/http/servlet/WicketSessionFilterTest.java b/wicket-core/src/test/java/org/apache/wicket/protocol/http/servlet/WicketSessionFilterTest.java
+index 0e05b72beb..de28a486d9 100644
+--- a/wicket-core/src/test/java/org/apache/wicket/protocol/http/servlet/WicketSessionFilterTest.java
++++ b/wicket-core/src/test/java/org/apache/wicket/protocol/http/servlet/WicketSessionFilterTest.java
+@@ -18,9 +18,9 @@ package org.apache.wicket.protocol.http.servlet;
+ 
+ import static org.junit.jupiter.api.Assertions.assertFalse;
+ import static org.junit.jupiter.api.Assertions.assertTrue;
+-
+ import java.io.IOException;
+ import java.lang.Thread.UncaughtExceptionHandler;
++import java.time.Duration;
+ import java.util.Enumeration;
+ import java.util.concurrent.atomic.AtomicBoolean;
+ import javax.servlet.FilterChain;
+@@ -29,7 +29,6 @@ import javax.servlet.ServletContext;
+ import javax.servlet.ServletException;
+ import javax.servlet.ServletRequest;
+ import javax.servlet.ServletResponse;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.Session;
+ import org.apache.wicket.mock.MockApplication;
+@@ -37,7 +36,6 @@ import org.apache.wicket.protocol.http.WebApplication;
+ import org.apache.wicket.session.HttpSessionStore;
+ import org.apache.wicket.util.tester.WicketTestCase;
+ import org.apache.wicket.util.tester.WicketTester;
+-import org.apache.wicket.util.time.Duration;
+ import org.junit.jupiter.api.Test;
+ 
+ /**
+@@ -114,7 +112,7 @@ class WicketSessionFilterTest extends WicketTestCase
+ 			}
+ 		});
+ 		testThread.start();
+-		testThread.join(Duration.seconds(1).getMilliseconds());
++		testThread.join(Duration.ofSeconds(1).toMillis());
+ 
+ 		assertTrue(passed.get(), failMessage.toString());
+ 	}
+diff --git a/wicket-core/src/test/java/org/apache/wicket/request/cycle/RerenderPage.java b/wicket-core/src/test/java/org/apache/wicket/request/cycle/RerenderPage.java
+index fc0ed3e812..6adba974f1 100644
+--- a/wicket-core/src/test/java/org/apache/wicket/request/cycle/RerenderPage.java
++++ b/wicket-core/src/test/java/org/apache/wicket/request/cycle/RerenderPage.java
+@@ -17,13 +17,12 @@
+ package org.apache.wicket.request.cycle;
+ 
+ import java.io.Serializable;
+-
++import java.time.Duration;
+ import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
+ import org.apache.wicket.markup.head.IHeaderResponse;
+ import org.apache.wicket.markup.head.StringHeaderItem;
+ import org.apache.wicket.markup.html.WebPage;
+ import org.apache.wicket.request.mapper.parameter.PageParameters;
+-import org.apache.wicket.util.time.Duration;
+ 
+ @SuppressWarnings("javadoc")
+ public class RerenderPage extends WebPage
+@@ -47,7 +46,7 @@ public class RerenderPage extends WebPage
+ 		this.newValue = pars.get("value").toInteger();
+ 		
+ 		// make page statefull
+-		add(new AjaxSelfUpdatingTimerBehavior(Duration.ONE_DAY));
++		add(new AjaxSelfUpdatingTimerBehavior(Duration.ofDays(1)));
+ 	}
+ 
+ 	@Override
+diff --git a/wicket-core/src/test/java/org/apache/wicket/request/resource/caching/FilenameWithVersionResourceCachingStrategyTest.java b/wicket-core/src/test/java/org/apache/wicket/request/resource/caching/FilenameWithVersionResourceCachingStrategyTest.java
+index 0d37fbb044..21f807f2ef 100644
+--- a/wicket-core/src/test/java/org/apache/wicket/request/resource/caching/FilenameWithVersionResourceCachingStrategyTest.java
++++ b/wicket-core/src/test/java/org/apache/wicket/request/resource/caching/FilenameWithVersionResourceCachingStrategyTest.java
+@@ -17,7 +17,7 @@
+ package org.apache.wicket.request.resource.caching;
+ 
+ import static org.junit.jupiter.api.Assertions.assertEquals;
+-
++import java.time.Duration;
+ import org.apache.wicket.Application;
+ import org.apache.wicket.ThreadContext;
+ import org.apache.wicket.request.cycle.RequestCycle;
+@@ -28,7 +28,6 @@ import org.apache.wicket.request.resource.caching.version.IResourceVersion;
+ import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
+ import org.apache.wicket.util.tester.BaseWicketTester;
+ import org.apache.wicket.util.tester.WicketTester;
+-import org.apache.wicket.util.time.Duration;
+ import org.junit.jupiter.api.Test;
+ 
+ /**
+@@ -82,7 +81,7 @@ class FilenameWithVersionResourceCachingStrategyTest
+ 	@Test
+ 	void testDecorateResponse() throws Exception
+ 	{
+-		Duration defaultDuration = Duration.minutes(60);
++		Duration defaultDuration = Duration.ofMinutes(60);
+ 
+ 		// setup RequestCycle
+ 		BaseWicketTester tester = new BaseWicketTester();
+diff --git a/wicket-core/src/test/java/org/apache/wicket/request/resource/caching/QueryStringWithVersionResourceCachingStrategyTest.java b/wicket-core/src/test/java/org/apache/wicket/request/resource/caching/QueryStringWithVersionResourceCachingStrategyTest.java
+index 0eabafe606..c0268d0d31 100644
+--- a/wicket-core/src/test/java/org/apache/wicket/request/resource/caching/QueryStringWithVersionResourceCachingStrategyTest.java
++++ b/wicket-core/src/test/java/org/apache/wicket/request/resource/caching/QueryStringWithVersionResourceCachingStrategyTest.java
+@@ -18,7 +18,7 @@ package org.apache.wicket.request.resource.caching;
+ 
+ import static org.junit.jupiter.api.Assertions.assertEquals;
+ import static org.junit.jupiter.api.Assertions.assertNull;
+-
++import java.time.Duration;
+ import org.apache.wicket.Application;
+ import org.apache.wicket.ThreadContext;
+ import org.apache.wicket.request.cycle.RequestCycle;
+@@ -30,7 +30,6 @@ import org.apache.wicket.request.resource.caching.version.IResourceVersion;
+ import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
+ import org.apache.wicket.util.tester.BaseWicketTester;
+ import org.apache.wicket.util.tester.WicketTester;
+-import org.apache.wicket.util.time.Duration;
+ import org.junit.jupiter.api.Test;
+ 
+ /**
+@@ -70,7 +69,7 @@ class QueryStringWithVersionResourceCachingStrategyTest
+ 	@Test
+ 	void testDecorateResponse() throws Exception
+ 	{
+-		Duration defaultDuration = Duration.minutes(60);
++		Duration defaultDuration = Duration.ofMinutes(60);
+ 
+ 		// setup RequestCycle
+ 		BaseWicketTester tester = new BaseWicketTester();
+diff --git a/wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/AjaxLazyLoadPanel.java b/wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/AjaxLazyLoadPanel.java
+index cdf39ab837..346213ec89 100644
+--- a/wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/AjaxLazyLoadPanel.java
++++ b/wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/AjaxLazyLoadPanel.java
+@@ -16,9 +16,9 @@
+  */
+ package org.apache.wicket.extensions.ajax.markup.html;
+ 
++import java.time.Duration;
+ import java.util.List;
+ import java.util.Optional;
+-
+ import org.apache.wicket.Component;
+ import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
+ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+@@ -29,7 +29,6 @@ import org.apache.wicket.model.IModel;
+ import org.apache.wicket.request.IRequestHandler;
+ import org.apache.wicket.request.cycle.RequestCycle;
+ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+-import org.apache.wicket.util.time.Duration;
+ import org.apache.wicket.util.visit.IVisit;
+ import org.apache.wicket.util.visit.IVisitor;
+ 
+@@ -187,7 +186,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
+ 	 * @return update interval, must not be {@value null}
+ 	 */
+ 	protected Duration getUpdateInterval() {
+-		return Duration.seconds(1);
++		return Duration.ofSeconds(1);
+ 	}
+ 
+ 	/**
+@@ -239,7 +238,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
+ 
+ 		public AjaxLazyLoadTimer()
+ 		{
+-			super(Duration.ONE_SECOND);
++			super(Duration.ofSeconds(1));
+ 		}
+ 
+ 		@Override
+@@ -250,7 +249,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
+ 
+ 		public void load(AjaxRequestTarget target)
+ 		{
+-			setUpdateInterval(Duration.MAXIMUM);
++			setUpdateInterval(Duration.ofMillis(Long.MAX_VALUE));
+ 			
+ 			getComponent().getPage().visitChildren(AjaxLazyLoadPanel.class, new IVisitor<AjaxLazyLoadPanel<?>, Void>()
+ 			{
+@@ -269,7 +268,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
+ 			});
+ 
+ 			// all panels have completed their replacements, we can stop the timer
+-			if (Duration.MAXIMUM.equals(getUpdateInterval()))
++			if (Duration.ofMillis(Long.MAX_VALUE).equals(getUpdateInterval()))
+ 			{
+ 				stop(target);
+ 				
+diff --git a/wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/AjaxLazyLoadPanelTester.java b/wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/AjaxLazyLoadPanelTester.java
+index b136707b2a..b4775f2255 100644
+--- a/wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/AjaxLazyLoadPanelTester.java
++++ b/wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/AjaxLazyLoadPanelTester.java
+@@ -21,7 +21,7 @@ import java.util.List;
+ import org.apache.wicket.Page;
+ import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel.AjaxLazyLoadTimer;
+ import org.apache.wicket.util.tester.BaseWicketTester;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+diff --git a/wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/form/upload/UploadStatusResource.java b/wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/form/upload/UploadStatusResource.java
+index 92d9a4b0f1..bd0a366949 100644
+--- a/wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/form/upload/UploadStatusResource.java
++++ b/wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/form/upload/UploadStatusResource.java
+@@ -16,8 +16,8 @@
+  */
+ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
+ 
++import java.time.Duration;
+ import javax.servlet.http.HttpServletRequest;
+-
+ import org.apache.wicket.Application;
+ import org.apache.wicket.Component;
+ import org.apache.wicket.model.Model;
+@@ -26,7 +26,6 @@ import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl;
+ import org.apache.wicket.protocol.http.servlet.UploadInfo;
+ import org.apache.wicket.request.mapper.parameter.PageParameters;
+ import org.apache.wicket.request.resource.AbstractResource;
+-import org.apache.wicket.util.time.Duration;
+ 
+ /**
+  * A resource that prints out basic statistics about the current upload. This resource is used to
+@@ -63,7 +62,7 @@ class UploadStatusResource extends AbstractResource
+ 
+ 		ResourceResponse response = new ResourceResponse();
+ 		response.setContentType("text/html; charset=" + encoding);
+-		response.setCacheDuration(Duration.NONE);
++		response.setCacheDuration(Duration.ZERO);
+ 
+ 		final String status = getStatus(attributes);
+ 		response.setWriteCallback(new WriteCallback()
+diff --git a/wicket-extensions/src/main/java/org/apache/wicket/extensions/captcha/kittens/KittenCaptchaPanel.java b/wicket-extensions/src/main/java/org/apache/wicket/extensions/captcha/kittens/KittenCaptchaPanel.java
+index efe7d82b83..287573dca1 100644
+--- a/wicket-extensions/src/main/java/org/apache/wicket/extensions/captcha/kittens/KittenCaptchaPanel.java
++++ b/wicket-extensions/src/main/java/org/apache/wicket/extensions/captcha/kittens/KittenCaptchaPanel.java
+@@ -24,14 +24,13 @@ import java.awt.image.RescaleOp;
+ import java.io.IOException;
+ import java.io.Serializable;
+ import java.lang.ref.SoftReference;
++import java.time.Instant;
+ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.List;
+ import java.util.Random;
+-
+ import javax.imageio.ImageIO;
+ import javax.imageio.stream.MemoryCacheImageInputStream;
+-
+ import org.apache.wicket.Component;
+ import org.apache.wicket.ajax.AjaxEventBehavior;
+ import org.apache.wicket.ajax.AjaxRequestTarget;
+@@ -49,7 +48,6 @@ import org.apache.wicket.request.cycle.RequestCycle;
+ import org.apache.wicket.request.http.WebResponse;
+ import org.apache.wicket.request.mapper.parameter.PageParameters;
+ import org.apache.wicket.request.resource.DynamicImageResource;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -428,7 +426,7 @@ public class KittenCaptchaPanel extends Panel
+ 		protected byte[] getImageData(final Attributes attributes)
+ 		{
+ 			// Handle caching
+-			setLastModifiedTime(Time.now());
++			setLastModifiedTime(Instant.now());
+ 			final WebResponse response = (WebResponse)RequestCycle.get().getResponse();
+ 			response.setHeader("Cache-Control", "no-cache, must-revalidate, max-age=0, no-store");
+ 
+@@ -466,7 +464,7 @@ public class KittenCaptchaPanel extends Panel
+ 		private void clearData()
+ 		{
+ 			invalidate();
+-			setLastModifiedTime(Time.now());
++			setLastModifiedTime(Instant.now());
+ 		}
+ 
+ 		/**
+diff --git a/wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/captcha/CaptchaImageResource.java b/wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/captcha/CaptchaImageResource.java
+index 3208116ada..01e056104a 100644
+--- a/wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/captcha/CaptchaImageResource.java
++++ b/wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/captcha/CaptchaImageResource.java
+@@ -31,16 +31,15 @@ import java.security.NoSuchAlgorithmException;
+ import java.security.Provider;
+ import java.security.SecureRandom;
+ import java.security.Security;
++import java.time.Instant;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.List;
+ import java.util.Random;
+-
+ import org.apache.wicket.model.IModel;
+ import org.apache.wicket.model.Model;
+ import org.apache.wicket.request.resource.DynamicImageResource;
+ import org.apache.wicket.util.io.IClusterable;
+-import org.apache.wicket.util.time.Time;
+ 
+ 
+ /**
+@@ -254,7 +253,7 @@ public class CaptchaImageResource extends DynamicImageResource
+ 		{
+ 			data = render();
+ 			imageData = new SoftReference<>(data);
+-			setLastModifiedTime(Time.now());
++			setLastModifiedTime(Instant.now());
+ 		}
+ 		return data;
+ 	}
+diff --git a/wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/image/resource/ThumbnailImageResource.java b/wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/image/resource/ThumbnailImageResource.java
+index e80ef29621..1f9bb17f53 100644
+--- a/wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/image/resource/ThumbnailImageResource.java
++++ b/wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/image/resource/ThumbnailImageResource.java
+@@ -22,16 +22,14 @@ import java.awt.image.BufferedImage;
+ import java.io.ByteArrayInputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
+-
++import java.time.Instant;
+ import javax.imageio.ImageIO;
+-
+ import org.apache.wicket.WicketRuntimeException;
+ import org.apache.wicket.request.resource.DynamicImageResource;
+ import org.apache.wicket.request.resource.IResource;
+ import org.apache.wicket.response.ByteArrayResponse;
+ import org.apache.wicket.util.io.IOUtils;
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * Image resource that dynamically scales the given original resource to a thumbnail. It is scaled
+@@ -81,7 +79,7 @@ public class ThumbnailImageResource extends DynamicImageResource
+ 		{
+ 			final BufferedImage image = getScaledImageInstance(attributes);
+ 			thumbnail = toImageData(image);
+-			setLastModifiedTime(Time.now());
++			setLastModifiedTime(Instant.now());
+ 		}
+ 		return thumbnail;
+ 	}
+diff --git a/wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/export/ExportToolbar.java b/wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/export/ExportToolbar.java
+index 1763848bc3..8b2bca4883 100644
+--- a/wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/export/ExportToolbar.java
++++ b/wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/export/ExportToolbar.java
+@@ -18,9 +18,9 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.export;
+ 
+ import java.io.IOException;
+ import java.io.OutputStream;
++import java.time.Duration;
+ import java.util.LinkedList;
+ import java.util.List;
+-
+ import org.apache.wicket.AttributeModifier;
+ import org.apache.wicket.Component;
+ import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
+@@ -39,7 +39,6 @@ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
+ import org.apache.wicket.util.resource.IResourceStream;
+ import org.apache.wicket.util.resource.IResourceStreamWriter;
+-import org.apache.wicket.util.time.Duration;
+ 
+ /**
+  * A toolbar that provides links to download the data represented by all {@link IExportableColumn}s in the table
+@@ -230,7 +229,7 @@ public class ExportToolbar extends AbstractToolbar
+ 	 * @return default is {@link Duration#NONE}
+ 	 */
+ 	protected Duration getCacheDuration() {
+-		return Duration.NONE;
++		return Duration.ZERO;
+ 	}
+ 
+ 	@Override
+diff --git a/wicket-request/src/main/java/org/apache/wicket/request/HttpHeaderCollection.java b/wicket-request/src/main/java/org/apache/wicket/request/HttpHeaderCollection.java
+index 126e8d179e..94b3a21c23 100644
+--- a/wicket-request/src/main/java/org/apache/wicket/request/HttpHeaderCollection.java
++++ b/wicket-request/src/main/java/org/apache/wicket/request/HttpHeaderCollection.java
+@@ -16,6 +16,7 @@
+  */
+ package org.apache.wicket.request;
+ 
++import java.time.Instant;
+ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.HashMap;
+@@ -25,9 +26,7 @@ import java.util.List;
+ import java.util.Locale;
+ import java.util.Map;
+ import java.util.Set;
+-
+ import org.apache.wicket.util.lang.Args;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * A multivalue map of headers names and header values suitable for processing http request and
+@@ -115,7 +114,7 @@ public class HttpHeaderCollection
+ 	 * @param time
+ 	 *            timestamp
+ 	 */
+-	public void addDateHeader(String name, Time time)
++	public void addDateHeader(String name, Instant time)
+ 	{
+ 		internalAdd(name, time);
+ 	}
+@@ -128,7 +127,7 @@ public class HttpHeaderCollection
+ 	 * @param time
+ 	 *            timestamp
+ 	 */
+-	public void setDateHeader(String name, Time time)
++	public void setDateHeader(String name, Instant time)
+ 	{
+ 		// remove previous values
+ 		removeHeader(name);
+@@ -161,9 +160,9 @@ public class HttpHeaderCollection
+ 
+ 	private String valueToString(Object value)
+ 	{
+-		if (value instanceof Time)
++		if (value instanceof Instant)
+ 		{
+-			return ((Time)value).toRfc1123TimestampString();
++			return ((Instant)value).toRfc1123TimestampString();
+ 		}
+ 		else
+ 		{
+@@ -261,7 +260,7 @@ public class HttpHeaderCollection
+ 	 * @param name
+ 	 * @return {@code null} when the header was not found
+ 	 */
+-	public Time getDateHeader(String name)
++	public Instant getDateHeader(String name)
+ 	{
+ 		final List<Object> objects = headers.get(new HeaderKey(name));
+ 
+@@ -271,11 +270,11 @@ public class HttpHeaderCollection
+ 		}
+ 		Object object = objects.get(0);
+ 
+-		if ((object instanceof Time) == false)
++		if ((object instanceof Instant) == false)
+ 		{
+ 			throw new IllegalStateException("header value is not of type date");
+ 		}
+-		return (Time)object;
++		return (Instant)object;
+ 	}
+ 
+ 	/**
+diff --git a/wicket-request/src/main/java/org/apache/wicket/request/http/WebRequest.java b/wicket-request/src/main/java/org/apache/wicket/request/http/WebRequest.java
+index 1ac1596f99..f1ef96779a 100644
+--- a/wicket-request/src/main/java/org/apache/wicket/request/http/WebRequest.java
++++ b/wicket-request/src/main/java/org/apache/wicket/request/http/WebRequest.java
+@@ -17,17 +17,15 @@
+ package org.apache.wicket.request.http;
+ 
+ import java.nio.charset.Charset;
++import java.time.Instant;
+ import java.util.List;
+ import java.util.Locale;
+-
+ import javax.servlet.http.Cookie;
+-
+ import org.apache.wicket.request.IRequestParameters;
+ import org.apache.wicket.request.Request;
+ import org.apache.wicket.request.Url;
+ import org.apache.wicket.util.string.StringValueConversionException;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * Base class for request that provides additional web-related information.
+@@ -97,14 +95,14 @@ public abstract class WebRequest extends Request
+ 	 * @param name
+ 	 * @return date value of request header or <code>null</code> if not found
+ 	 */
+-	public abstract Time getDateHeader(String name);
++	public abstract Instant getDateHeader(String name);
+ 
+ 	/**
+ 	 * Convenience method for retrieving If-Modified-Since header.
+ 	 * 
+ 	 * @return date representing the header or <code>null</code> if not set
+ 	 */
+-	public final Time getIfModifiedSinceHeader()
++	public final Instant getIfModifiedSinceHeader()
+ 	{
+ 		return getDateHeader("If-Modified-Since");
+ 	}
+@@ -181,7 +179,7 @@ public abstract class WebRequest extends Request
+ 			}
+ 
+ 			@Override
+-			public Time getDateHeader(final String name)
++			public Instant getDateHeader(final String name)
+ 			{
+ 				return WebRequest.this.getDateHeader(name);
+ 			}
+diff --git a/wicket-request/src/main/java/org/apache/wicket/request/http/WebResponse.java b/wicket-request/src/main/java/org/apache/wicket/request/http/WebResponse.java
+index 5b508f7ed4..322f4ff9fd 100644
+--- a/wicket-request/src/main/java/org/apache/wicket/request/http/WebResponse.java
++++ b/wicket-request/src/main/java/org/apache/wicket/request/http/WebResponse.java
+@@ -17,15 +17,13 @@
+ package org.apache.wicket.request.http;
+ 
+ import java.io.IOException;
+-
++import java.time.Duration;
++import java.time.Instant;
+ import javax.servlet.http.Cookie;
+-
+ import org.apache.wicket.request.Response;
+ import org.apache.wicket.util.encoding.UrlEncoder;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * Base class for web-related responses.
+@@ -36,7 +34,7 @@ public abstract class WebResponse extends Response
+ {
+ 	/** Recommended value for cache duration */
+ 	// one year, maximum recommended cache duration in RFC-2616
+-	public static final Duration MAX_CACHE_DURATION = Duration.days(365);
++	public static final Duration MAX_CACHE_DURATION = Duration.ofDays(365);
+ 
+ 	/**
+ 	 * Add a cookie to the web response
+@@ -76,7 +74,7 @@ public abstract class WebResponse extends Response
+ 	 * @param name
+ 	 * @param date
+ 	 */
+-	public abstract void setDateHeader(String name, Time date);
++	public abstract void setDateHeader(String name, Instant date);
+ 
+ 	/**
+ 	 * Set the content length on the response, if appropriate in the subclass. This default
+@@ -128,7 +126,7 @@ public abstract class WebResponse extends Response
+ 	 * @param time
+ 	 *            The last modified time
+ 	 */
+-	public void setLastModifiedTime(final Time time)
++	public void setLastModifiedTime(final Instant time)
+ 	{
+ 		setDateHeader("Last-Modified", time);
+ 	}
+@@ -230,8 +228,8 @@ public abstract class WebResponse extends Response
+ 	 */
+ 	public void disableCaching()
+ 	{
+-		setDateHeader("Date", Time.now());
+-		setDateHeader("Expires", Time.START_OF_UNIX_TIME);
++		setDateHeader("Date", Instant.now());
++		setDateHeader("Expires", Instant.EPOCH);
+ 		setHeader("Pragma", "no-cache");
+ 		setHeader("Cache-Control", "no-cache, no-store");
+ 	}
+@@ -263,19 +261,19 @@ public abstract class WebResponse extends Response
+ 		}
+ 
+ 		// Get current time
+-		Time now = Time.now();
++		Instant now = Instant.now();
+ 
+ 		// Time of message generation
+ 		setDateHeader("Date", now);
+ 
+ 		// Time for cache expiry = now + duration
+-		setDateHeader("Expires", now.add(duration));
++		setDateHeader("Expires", now.plus(duration));
+ 
+ 		// Set cache scope
+ 		setHeader("Cache-Control", scope.cacheControl);
+ 
+ 		// Set maximum age for caching in seconds (rounded)
+-		addHeader("Cache-Control", "max-age=" + Math.round(duration.seconds()));
++		addHeader("Cache-Control", "max-age=" + Math.round(duration.getSeconds()));
+ 
+ 		// Though 'cache' is not an official value it will eliminate an eventual 'no-cache' header
+ 		setHeader("Pragma", "cache");
+diff --git a/wicket-request/src/test/java/org/apache/wicket/request/HttpHeaderCollectionTest.java b/wicket-request/src/test/java/org/apache/wicket/request/HttpHeaderCollectionTest.java
+index faabc4bb86..6d5e35f18b 100644
+--- a/wicket-request/src/test/java/org/apache/wicket/request/HttpHeaderCollectionTest.java
++++ b/wicket-request/src/test/java/org/apache/wicket/request/HttpHeaderCollectionTest.java
+@@ -22,12 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
+ import static org.junit.jupiter.api.Assertions.assertNull;
+ import static org.junit.jupiter.api.Assertions.assertTrue;
+ import static org.junit.jupiter.api.Assertions.fail;
+-
++import java.time.Instant;
+ import java.util.Locale;
+ import java.util.Set;
+ import java.util.TimeZone;
+-
+-import org.apache.wicket.util.time.Time;
+ import org.junit.jupiter.api.Test;
+ 
+ @SuppressWarnings("javadoc")
+@@ -89,8 +87,8 @@ public class HttpHeaderCollectionTest
+ 	{
+ 		final HttpHeaderCollection headers = new HttpHeaderCollection();
+ 
+-		final Time time1 = Time.millis(1000000);
+-		final Time time2 = Time.millis(2000000);
++		final Instant time1 = Instant.ofEpochMilli(1000000);
++		final Instant time2 = Instant.ofEpochMilli(2000000);
+ 
+ 		headers.setDateHeader("date", time1);
+ 		headers.addDateHeader("date", time2);
+@@ -128,7 +126,7 @@ public class HttpHeaderCollectionTest
+ 		headers.setHeader("date", "foobar");
+ 		try
+ 		{
+-			Time date = headers.getDateHeader("date");
++		    Instant date = headers.getDateHeader("date");
+ 			fail();
+ 		}
+ 		catch (IllegalStateException e)
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/file/File.java b/wicket-util/src/main/java/org/apache/wicket/util/file/File.java
+index b48bbdea5d..00d52f783a 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/file/File.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/file/File.java
+@@ -29,9 +29,8 @@ import java.io.ObjectOutputStream;
+ import java.io.OutputStream;
+ import java.io.Serializable;
+ import java.net.URI;
+-
++import java.time.Instant;
+ import org.apache.wicket.util.io.Streams;
+-import org.apache.wicket.util.time.Time;
+ import org.apache.wicket.util.watch.IModifiable;
+ 
+ 
+@@ -167,7 +166,7 @@ public class File extends java.io.File implements IModifiable
+ 	 * that information is not available
+ 	 */
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		final long time = lastModified();
+ 		
+@@ -175,7 +174,7 @@ public class File extends java.io.File implements IModifiable
+ 		{
+ 			return null;
+ 		}
+-		return Time.millis(time);
++		return Instant.ofEpochMilli(time);
+ 	}
+ 
+ 	/**
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/file/Files.java b/wicket-util/src/main/java/org/apache/wicket/util/file/Files.java
+index 8091dd8fe7..11bfccd3b0 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/file/Files.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/file/Files.java
+@@ -24,13 +24,12 @@ import java.io.FileOutputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.net.URL;
+-
++import java.time.Instant;
+ import org.apache.wicket.util.encoding.UrlDecoder;
+ import org.apache.wicket.util.io.IOUtils;
+ import org.apache.wicket.util.io.Streams;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -413,7 +412,7 @@ public class Files
+ 	 * 
+ 	 * @return timestamp
+ 	 */
+-	public static Time getLastModified(File file)
++	public static Instant getLastModified(File file)
+ 	{
+ 		// get file modification timestamp
+ 		long millis = file.lastModified();
+@@ -425,7 +424,7 @@ public class Files
+ 		}
+ 
+ 		// last file modification timestamp
+-		return Time.millis(millis);
++		return Instant.ofEpochMilli(millis);
+ 	}
+ 
+ 	/**
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/io/Connections.java b/wicket-util/src/main/java/org/apache/wicket/util/io/Connections.java
+index 167cefd71c..13d50c2a00 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/io/Connections.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/io/Connections.java
+@@ -22,9 +22,8 @@ import java.net.HttpURLConnection;
+ import java.net.JarURLConnection;
+ import java.net.URL;
+ import java.net.URLConnection;
+-
++import java.time.Instant;
+ import org.apache.wicket.util.file.Files;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * {@link URLConnection} related utilities
+@@ -44,7 +43,7 @@ public class Connections
+ 	 * @return last modified timestamp or <code>null</code> if not available
+ 	 * @throws IOException
+ 	 */
+-	public static Time getLastModified(final URL url) throws IOException
++	public static Instant getLastModified(final URL url) throws IOException
+ 	{
+ 		// check if url points to a local file
+ 		final File file = Files.getLocalFileFromUrl(url);
+@@ -84,7 +83,7 @@ public class Connections
+ 			}
+ 
+ 			// return UNIX timestamp
+-			return Time.millis(milliseconds);
++			return Instant.ofEpochMilli(milliseconds);
+ 
+ 		}
+ 		finally
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/resource/AbstractResourceStream.java b/wicket-util/src/main/java/org/apache/wicket/util/resource/AbstractResourceStream.java
+index a4ec5d4baf..e06146326b 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/resource/AbstractResourceStream.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/resource/AbstractResourceStream.java
+@@ -16,10 +16,9 @@
+  */
+ package org.apache.wicket.util.resource;
+ 
++import java.time.Instant;
+ import java.util.Locale;
+-
+ import org.apache.wicket.util.lang.Bytes;
+-import org.apache.wicket.util.time.Time;
+ 
+ 
+ /**
+@@ -84,7 +83,7 @@ public abstract class AbstractResourceStream implements IResourceStream
+ 	}
+ 
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		return null;
+ 	}
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/resource/AbstractResourceStreamWriter.java b/wicket-util/src/main/java/org/apache/wicket/util/resource/AbstractResourceStreamWriter.java
+index abbd3db325..ef93536aa3 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/resource/AbstractResourceStreamWriter.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/resource/AbstractResourceStreamWriter.java
+@@ -18,10 +18,9 @@ package org.apache.wicket.util.resource;
+ 
+ import java.io.IOException;
+ import java.io.InputStream;
++import java.time.Instant;
+ import java.util.Locale;
+-
+ import org.apache.wicket.util.lang.Bytes;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * Base implementation of an IResourceStreamWriter so that you only have to override the
+@@ -67,9 +66,9 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
+ 	 * Just returns now.
+ 	 */
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+-		return Time.now();
++		return Instant.now();
+ 	}
+ 
+ 	/**
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/resource/AbstractStringResourceStream.java b/wicket-util/src/main/java/org/apache/wicket/util/resource/AbstractStringResourceStream.java
+index a0489efa50..1b6bc4316b 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/resource/AbstractStringResourceStream.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/resource/AbstractStringResourceStream.java
+@@ -23,12 +23,11 @@ import java.io.InputStreamReader;
+ import java.io.Reader;
+ import java.io.UnsupportedEncodingException;
+ import java.nio.charset.Charset;
+-
++import java.time.Instant;
+ import org.apache.wicket.util.io.IOUtils;
+ import org.apache.wicket.util.io.Streams;
+ import org.apache.wicket.util.lang.Bytes;
+ import org.apache.wicket.util.string.Strings;
+-import org.apache.wicket.util.time.Time;
+ 
+ 
+ /**
+@@ -52,7 +51,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
+ 	private final String contentType;
+ 
+ 	/** The last time this stylesheet was modified */
+-	private Time lastModified = null;
++	private Instant lastModified = null;
+ 
+ 	/**
+ 	 * Constructor.
+@@ -73,7 +72,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
+ 		// TODO null for contentType is allowed? or should the default be applied instead?
+ 		this.contentType = contentType;
+ 
+-		lastModified = Time.now();
++		lastModified = Instant.now();
+ 	}
+ 
+ 	/**
+@@ -178,7 +177,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
+ 	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
+ 	 */
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		return lastModified;
+ 	}
+@@ -187,7 +186,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
+ 	 * @param lastModified
+ 	 *            The lastModified to set.
+ 	 */
+-	public void setLastModified(final Time lastModified)
++	public void setLastModified(final Instant lastModified)
+ 	{
+ 		this.lastModified = lastModified;
+ 	}
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/resource/FileResourceStream.java b/wicket-util/src/main/java/org/apache/wicket/util/resource/FileResourceStream.java
+index 499df49fe5..87e2b20171 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/resource/FileResourceStream.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/resource/FileResourceStream.java
+@@ -21,11 +21,10 @@ import java.io.FileNotFoundException;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.net.URLConnection;
+-
++import java.time.Instant;
+ import org.apache.wicket.util.file.File;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.lang.Bytes;
+-import org.apache.wicket.util.time.Time;
+ 
+ 
+ /**
+@@ -134,7 +133,7 @@ public class FileResourceStream extends AbstractResourceStream
+ 	 * @return The last time this resource was modified
+ 	 */
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		if (file != null)
+ 		{
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/resource/FileSystemResourceStream.java b/wicket-util/src/main/java/org/apache/wicket/util/resource/FileSystemResourceStream.java
+index 12ef3eb4c6..aae172bc41 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/resource/FileSystemResourceStream.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/resource/FileSystemResourceStream.java
+@@ -23,11 +23,10 @@ import java.nio.file.Files;
+ import java.nio.file.Path;
+ import java.nio.file.attribute.BasicFileAttributes;
+ import java.nio.file.attribute.FileTime;
+-
++import java.time.Instant;
+ import org.apache.wicket.util.file.File;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.lang.Bytes;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * A FileSystemResourceStream is an IResourceStream implementation for Java NIO paths.
+@@ -140,14 +139,14 @@ public class FileSystemResourceStream extends AbstractResourceStream
+ 	}
+ 
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		try
+ 		{
+ 			BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
+ 			FileTime lastModifiedTime = attributes.lastModifiedTime();
+ 			long millis = lastModifiedTime.toMillis();
+-			return Time.millis(millis);
++			return Instant.ofEpochMilli(millis);
+ 		}
+ 		catch (IOException e)
+ 		{
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/resource/ResourceStreamWrapper.java b/wicket-util/src/main/java/org/apache/wicket/util/resource/ResourceStreamWrapper.java
+index d0c23b6e5c..bc5a6119b1 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/resource/ResourceStreamWrapper.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/resource/ResourceStreamWrapper.java
+@@ -18,11 +18,10 @@ package org.apache.wicket.util.resource;
+ 
+ import java.io.IOException;
+ import java.io.InputStream;
++import java.time.Instant;
+ import java.util.Locale;
+-
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.lang.Bytes;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * A IResourceStream that wraps another resource stream
+@@ -114,7 +113,7 @@ public class ResourceStreamWrapper implements IResourceStream
+ 	}
+ 
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		return delegate.lastModifiedTime();
+ 	}
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/resource/StringBufferResourceStream.java b/wicket-util/src/main/java/org/apache/wicket/util/resource/StringBufferResourceStream.java
+index 8ae3551211..c95a297ff2 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/resource/StringBufferResourceStream.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/resource/StringBufferResourceStream.java
+@@ -16,8 +16,8 @@
+  */
+ package org.apache.wicket.util.resource;
+ 
++import java.time.Instant;
+ import org.apache.wicket.util.string.AppendingStringBuffer;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * A string resource that can be appended to.
+@@ -59,7 +59,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
+ 	public StringBufferResourceStream append(final CharSequence s)
+ 	{
+ 		buffer.append(s);
+-		setLastModified(Time.now());
++		setLastModified(Instant.now());
+ 		return this;
+ 	}
+ 
+@@ -73,7 +73,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
+ 	public StringBufferResourceStream prepend(final CharSequence s)
+ 	{
+ 		buffer.insert(0, s);
+-		setLastModified(Time.now());
++		setLastModified(Instant.now());
+ 		return this;
+ 	}
+ 
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/resource/XSLTResourceStream.java b/wicket-util/src/main/java/org/apache/wicket/util/resource/XSLTResourceStream.java
+index 9e74cbb6af..5fe6250d01 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/resource/XSLTResourceStream.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/resource/XSLTResourceStream.java
+@@ -20,12 +20,11 @@ import java.io.ByteArrayInputStream;
+ import java.io.ByteArrayOutputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
++import java.time.Instant;
+ import java.util.Map;
+ import java.util.Map.Entry;
+-
+ import org.apache.wicket.util.io.IOUtils;
+ import org.apache.wicket.util.lang.Bytes;
+-import org.apache.wicket.util.time.Time;
+ 
+ /**
+  * {@link IResourceStream} that applies XSLT on an input {@link IResourceStream}. The XSL stylesheet
+@@ -146,7 +145,7 @@ public class XSLTResourceStream extends AbstractResourceStream
+ 	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
+ 	 */
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		return null;
+ 	}
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/resource/ZipResourceStream.java b/wicket-util/src/main/java/org/apache/wicket/util/resource/ZipResourceStream.java
+index 270dd67667..d0b46f2b3f 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/resource/ZipResourceStream.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/resource/ZipResourceStream.java
+@@ -22,13 +22,12 @@ import java.io.ByteArrayOutputStream;
+ import java.io.FileInputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
++import java.time.Instant;
+ import java.util.zip.ZipEntry;
+ import java.util.zip.ZipOutputStream;
+-
+ import org.apache.wicket.util.file.File;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.lang.Bytes;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -214,7 +213,7 @@ public class ZipResourceStream extends AbstractResourceStream
+ 	 * @see org.apache.wicket.util.resource.AbstractResourceStream#lastModifiedTime()
+ 	 */
+ 	@Override
+-	public Time lastModifiedTime()
++	public Instant lastModifiedTime()
+ 	{
+ 		return null;
+ 	}
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/string/StringValue.java b/wicket-util/src/main/java/org/apache/wicket/util/string/StringValue.java
+index 1f94e55c74..40db54de1f 100755
+--- a/wicket-util/src/main/java/org/apache/wicket/util/string/StringValue.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/string/StringValue.java
+@@ -20,13 +20,13 @@ import java.text.DecimalFormat;
+ import java.text.DecimalFormatSymbols;
+ import java.text.NumberFormat;
+ import java.text.ParseException;
++import java.time.Duration;
++import java.time.Instant;
++import java.time.format.DateTimeParseException;
+ import java.util.Locale;
+-
+ import org.apache.wicket.util.io.IClusterable;
+ import org.apache.wicket.util.lang.Args;
+ import org.apache.wicket.util.lang.Objects;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -346,7 +346,7 @@ public class StringValue implements IClusterable
+ 			return (T)toCharacter();
+ 		}
+ 
+-		if (type == Time.class)
++		if (type == Instant.class)
+ 		{
+ 			return (T)toTime();
+ 		}
+@@ -548,7 +548,7 @@ public class StringValue implements IClusterable
+ 	 */
+ 	public final Duration toDuration() throws StringValueConversionException
+ 	{
+-		return Duration.valueOf(text, locale);
++		return Duration.parse(text, locale);
+ 	}
+ 
+ 	/**
+@@ -796,7 +796,7 @@ public class StringValue implements IClusterable
+ 	 * @return converted
+ 	 * @throws StringValueConversionException
+ 	 */
+-	public final Time toOptionalTime() throws StringValueConversionException
++	public final Instant toOptionalTime() throws StringValueConversionException
+ 	{
+ 		return Strings.isEmpty(text) ? null : toTime();
+ 	}
+@@ -828,13 +828,13 @@ public class StringValue implements IClusterable
+ 	 * @return Converted text
+ 	 * @throws StringValueConversionException
+ 	 */
+-	public final Time toTime() throws StringValueConversionException
++	public final Instant toTime() throws StringValueConversionException
+ 	{
+ 		try
+ 		{
+-			return Time.valueOf(text);
++			return Instant.parse(text);
+ 		}
+-		catch (ParseException e)
++		catch (DateTimeParseException e)
+ 		{
+ 			throw new StringValueConversionException("Unable to convert '" + text
+ 				+ "' to a Time value", e);
+@@ -848,7 +848,7 @@ public class StringValue implements IClusterable
+ 	 *            the default value
+ 	 * @return the converted text as a time or the default value if text is inconvertible.
+ 	 */
+-	public final Time toTime(final Time defaultValue)
++	public final Instant toTime(final Instant defaultValue)
+ 	{
+ 		if (text != null)
+ 		{
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/thread/Task.java b/wicket-util/src/main/java/org/apache/wicket/util/thread/Task.java
+index 003c1198b6..2d8696bfea 100755
+--- a/wicket-util/src/main/java/org/apache/wicket/util/thread/Task.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/thread/Task.java
+@@ -16,8 +16,8 @@
+  */
+ package org.apache.wicket.util.thread;
+ 
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
++import java.time.Duration;
++import java.time.Instant;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -54,7 +54,7 @@ public final class Task
+ 	private final String name;
+ 
+ 	/** the <code>Time</code> at which the task should start */
+-	private Time startTime = Time.now();
++	private Instant startTime = Instant.now();
+ 
+ 	/** When set the task will stop as soon as possible */
+ 	private boolean stop;
+@@ -95,7 +95,13 @@ public final class Task
+ 				public void run()
+ 				{
+ 					// Sleep until start time
+-					startTime.fromNow().sleep();
++				    Duration untilStart = Duration.between(startTime, Instant.now());
++					
++				    if (!untilStart.isNegative()) 
++				    {                      
++				      Thread.sleep(untilStart.toMillis());
++                    }
++					
+ 					final Logger log = getLog();
+ 
+ 					try
+@@ -103,7 +109,7 @@ public final class Task
+ 						while (!stop)
+ 						{
+ 							// Get the start of the current period
+-							final Time startOfPeriod = Time.now();
++							final Instant startOfPeriod = Instant.now();
+ 
+ 							if (log.isTraceEnabled())
+ 							{
+@@ -128,7 +134,15 @@ public final class Task
+ 
+ 							// Sleep until the period is over (or not at all if it's
+ 							// already passed)
+-							startOfPeriod.add(frequency).fromNow().sleep();
++							Instant nextExecution = startOfPeriod.plus(frequency);
++							
++							Duration timeToNextExecution = Duration.between(nextExecution, Instant.now());
++		                    
++		                    if (!timeToNextExecution.isNegative()) 
++		                    {                      
++		                      Thread.sleep(timeToNextExecution.toMillis());
++		                    }
++							
+ 						}
+ 					}
+ 					catch (Exception x)
+@@ -198,7 +212,7 @@ public final class Task
+ 	 * @throws IllegalStateException
+ 	 *             Thrown if task is already running
+ 	 */
+-	public synchronized void setStartTime(final Time startTime)
++	public synchronized void setStartTime(final Instant startTime)
+ 	{
+ 		if (isStarted)
+ 		{
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/time/Duration.java b/wicket-util/src/main/java/org/apache/wicket/util/time/Duration.java
+index bd2bb9e617..d4cf6dc383 100755
+--- a/wicket-util/src/main/java/org/apache/wicket/util/time/Duration.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/time/Duration.java
+@@ -36,7 +36,7 @@ import org.slf4j.Logger;
+  * <p>
+  * <ul>
+  * <li><code>Duration.milliseconds(long)</code>
+- * <li><code>Duration.seconds(int)</code>
++ * <li><code>Duration.ofSeconds(int)</code>
+  * <li><code>Duration.minutes(int)</code>
+  * <li><code>Duration.hours(int)</code>
+  * <li><code>Duration.days(int)</code>
+@@ -46,7 +46,7 @@ import org.slf4j.Logger;
+  * <p>
+  * <ul>
+  * <li><code>Duration.milliseconds(double)</code>
+- * <li><code>Duration.seconds(double)</code>
++ * <li><code>Duration.ofSeconds(double)</code>
+  * <li><code>Duration.minutes(double)</code>
+  * <li><code>Duration.hours(double)</code>
+  * <li><code>Duration.days(double)</code>
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/time/TimeOfDay.java b/wicket-util/src/main/java/org/apache/wicket/util/time/TimeOfDay.java
+deleted file mode 100755
+index c48840414e..0000000000
+--- a/wicket-util/src/main/java/org/apache/wicket/util/time/TimeOfDay.java
++++ /dev/null
+@@ -1,418 +0,0 @@
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one or more
+- * contributor license agreements.  See the NOTICE file distributed with
+- * this work for additional information regarding copyright ownership.
+- * The ASF licenses this file to You under the Apache License, Version 2.0
+- * (the "License"); you may not use this file except in compliance with
+- * the License.  You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.apache.wicket.util.time;
+-
+-import java.text.ParseException;
+-import java.util.Calendar;
+-
+-import org.apache.wicket.util.lang.EnumeratedType;
+-
+-
+-/**
+- * An immutable time of day value represented as milliseconds since the most recent midnight.
+- * <p>
+- * Values can be constructed using various factory methods:
+- * <ul>
+- * <li><code>valueOf(long)</code> where <code>long</code> is milliseconds since midnight
+- * <li><code>valueOf(String)</code> where the <code>String</code> is in 'h.mma' format
+- * <li><code>valueOf(Calendar, String)</code> where the <code>String</code> is in 'h.mma' format
+- * <li><code>valueOf(Duration)</code> where <code>Duration</code> is time since midnight
+- * <li><code>valueOf(Time)</code> where <code>Time</code> is some point in time today
+- * <li><code>valueOf(Calendar, Time)</code> where <code>Time</code> is some point in time today
+- * <li><code>militaryTime(int hour, int minute, int second)</code> for 24-hour time
+- * <li><code>time(int hour, int minute, Meridian)</code> where <code>Meridian</code> is AM or PM
+- * <li><code>time(int hour, int minute, int second, Meridian)</code> where <code>Meridian</code> is
+- * AM or PM
+- * <li><code>now()</code> to construct the current time of day
+- * <li><code>now(Calendar)</code> to construct the current time of day using a given
+- * <code>Calendar</code>
+- * </ul>
+- * <p>
+- * If an attempt is made to construct an illegal time of day value (one that is greater than 24
+- * hours worth of milliseconds), an <code>IllegalArgumentException</code> will be thrown.
+- * <p>
+- * Military hours, minutes and seconds of the time of day can be retrieved by calling the
+- * <code>hour</code>, <code>minute</code>, and <code>second</code> methods.
+- * <p>
+- * The next occurrence of a given <code>TimeOfDay</code> can be retrieved by calling
+- * <code>next()</code> or <code>next(Calendar)</code>.
+- * 
+- * @author Jonathan Locke
+- * @since 1.2.6
+- */
+-public final class TimeOfDay extends AbstractTime
+-{
+-	private static final long serialVersionUID = 1L;
+-
+-	/** Constant for AM time. */
+-	public static final Meridian AM = new Meridian("AM");
+-
+-	/** Constant for midnight. */
+-	public static final TimeOfDay MIDNIGHT = time(12, 0, AM);
+-
+-	/** Constant for PM time. */
+-	public static final Meridian PM = new Meridian("PM");
+-
+-	/** Constant for noon. */
+-	public static final TimeOfDay NOON = time(12, 0, PM);
+-
+-	/** Typesafe AM/PM enumeration. */
+-	public static final class Meridian extends EnumeratedType
+-	{
+-		private static final long serialVersionUID = 1L;
+-
+-		/**
+-		 * Constructor.
+-		 * 
+-		 * @param name
+-		 *            the meridian name (value)
+-		 */
+-		Meridian(final String name)
+-		{
+-			super(name);
+-		}
+-	}
+-
+-	/**
+-	 * Retrieves a <code>TimeOfDay</code> value on a 24-hour clock.
+-	 * 
+-	 * @param hour
+-	 *            the hour (0-23)
+-	 * @param minute
+-	 *            the minute (0-59)
+-	 * @param second
+-	 *            the second (0-59)
+-	 * @return the time of day
+-	 */
+-	public static TimeOfDay militaryTime(final int hour, final int minute, final int second)
+-	{
+-		if ((hour > 23) || (hour < 0))
+-		{
+-			throw new IllegalArgumentException("Hour " + hour + " is not valid");
+-		}
+-
+-		if ((minute > 59) || (minute < 0))
+-		{
+-			throw new IllegalArgumentException("Minute " + minute + " is not valid");
+-		}
+-
+-		if ((second > 59) || (second < 0))
+-		{
+-			throw new IllegalArgumentException("Second " + second + " is not valid");
+-		}
+-
+-		return valueOf(Duration.hours(hour)
+-			.add(Duration.minutes(minute))
+-			.add(Duration.seconds(second)));
+-	}
+-
+-	/**
+-	 * Retrieves the <code>TimeOfDay</code> representing 'now'.
+-	 * 
+-	 * @return the time of day it is now
+-	 */
+-	public static TimeOfDay now()
+-	{
+-		return valueOf(Time.now());
+-	}
+-
+-	/**
+-	 * Retrieves the <code>TimeOfDay</code> representing 'now' on the given <code>Calendar</code>.
+-	 * 
+-	 * @param calendar
+-	 *            the <code>Calendar</code> to use
+-	 * @return the time of day it is now on the given <code>Calendar</code>
+-	 */
+-	public static TimeOfDay now(final Calendar calendar)
+-	{
+-		return valueOf(calendar, Time.now());
+-	}
+-
+-	/**
+-	 * Retrieves a <code>TimeOfDay</code> on a 12-hour clock.
+-	 * 
+-	 * @param hour
+-	 *            the hour (1-12)
+-	 * @param minute
+-	 *            the minute (0-59)
+-	 * @param second
+-	 *            the second (0-59)
+-	 * @param meridian
+-	 *            AM or PM
+-	 * @return the <code>TimeOfDay</code> value
+-	 */
+-	public static TimeOfDay time(final int hour, final int minute, final int second,
+-		final Meridian meridian)
+-	{
+-		if (meridian == PM)
+-		{
+-			if (hour == 12)
+-			{
+-				return militaryTime(12, minute, second);
+-			}
+-			else
+-			{
+-				return militaryTime(hour + 12, minute, second);
+-			}
+-		}
+-		else
+-		{
+-			if (hour == 12)
+-			{
+-				return militaryTime(0, minute, second);
+-			}
+-			else
+-			{
+-				return militaryTime(hour, minute, second);
+-			}
+-		}
+-	}
+-
+-	/**
+-	 * Retrieves a <code>TimeOfDay</code> on a 12-hour clock.
+-	 * 
+-	 * @param hour
+-	 *            the hour (1-12)
+-	 * @param minute
+-	 *            the minute (0-59)
+-	 * @param meridian
+-	 *            AM of PM
+-	 * @return the <code>TimeOfDay</code> value
+-	 */
+-	public static TimeOfDay time(final int hour, final int minute, final Meridian meridian)
+-	{
+-		return time(hour, minute, 0, meridian);
+-	}
+-
+-	/**
+-	 * Converts a time <code>String</code> and <code>Calendar</code> to a <code>TimeOfDay</code>
+-	 * instance.
+-	 * 
+-	 * @param calendar
+-	 *            the <code>Calendar</code> to use when parsing time <code>String</code>
+-	 * @param time
+-	 *            a <code>String</code> in 'h.mma' format
+-	 * @return the <code>TimeOfDay</code> on the given <code>Calendar</code>
+-	 * @throws ParseException
+-	 */
+-	public static TimeOfDay valueOf(final Calendar calendar, final String time)
+-		throws ParseException
+-	{
+-		synchronized (timeFormat)
+-		{
+-			synchronized (calendar)
+-			{
+-				timeFormat.setCalendar(calendar);
+-				return new TimeOfDay(timeFormat.parse(time).getTime());
+-			}
+-		}
+-	}
+-
+-	/**
+-	 * Converts a <code>Time</code> instance and <code>Calendar</code> to a <code>TimeOfDay</code>
+-	 * instance.
+-	 * 
+-	 * @param calendar
+-	 *            the <code>Calendar</code> to use
+-	 * @param time
+-	 *            a <code>Time</code> instance
+-	 * @return the <code>TimeOfDay</code> on the given <code>Calendar</code>
+-	 */
+-	public static TimeOfDay valueOf(final Calendar calendar, final Time time)
+-	{
+-		return militaryTime(time.getHour(calendar), time.getMinute(calendar),
+-			time.getSecond(calendar));
+-	}
+-
+-	/**
+-	 * Converts a <code>Duration</code> instance to a <code>TimeOfDay</code> instance.
+-	 * 
+-	 * @param duration
+-	 *            the <code>Duration</code> to use
+-	 * @return the <code>TimeOfDay</code> of the given <code>Duration</code>
+-	 */
+-	public static TimeOfDay valueOf(final Duration duration)
+-	{
+-		return new TimeOfDay(duration.getMilliseconds());
+-	}
+-
+-	/**
+-	 * Converts a <code>long</code> value to a <code>TimeOfDay</code> instance.
+-	 * 
+-	 * @param time
+-	 *            the time in milliseconds today
+-	 * @return the <code>TimeOfDay</code>
+-	 */
+-	public static TimeOfDay valueOf(final long time)
+-	{
+-		return new TimeOfDay(time);
+-	}
+-
+-	/**
+-	 * Converts a <code>String</code> value to a <code>TimeOfDay</code> instance.
+-	 * 
+-	 * @param time
+-	 *            a <code>String</code> in 'h.mma' format
+-	 * @return the <code>TimeOfDay</code>
+-	 * @throws ParseException
+-	 */
+-	public static TimeOfDay valueOf(final String time) throws ParseException
+-	{
+-		return valueOf(localtime, time);
+-	}
+-
+-	/**
+-	 * Converts a <code>String</code> value to a <code>TimeOfDay</code> instance.
+-	 * 
+-	 * @param time
+-	 *            a <code>Time</code> to convert to <code>TimeOfDay</code>
+-	 * @return the <code>TimeOfDay</code> in the current time zone
+-	 */
+-	public static TimeOfDay valueOf(final Time time)
+-	{
+-		return valueOf(AbstractTime.localtime, time);
+-	}
+-
+-	/**
+-	 * Private utility constructor forces use of static factory methods.
+-	 * 
+-	 * @param time
+-	 *            the time today in milliseconds
+-	 */
+-	private TimeOfDay(final long time)
+-	{
+-		super(time);
+-
+-		// A time of day value must be less than 1 day of milliseconds
+-		if (Duration.valueOf(time).greaterThan(Duration.ONE_DAY))
+-		{
+-			throw new IllegalArgumentException("Time " + this + " is not a time of day value");
+-		}
+-	}
+-
+-	/**
+-	 * Retrieves the hour of the day.
+-	 * 
+-	 * @return the hour (0-23) of this <code>TimeOfDay</code>
+-	 */
+-	public int hour()
+-	{
+-		return toHours(getMilliseconds());
+-	}
+-
+-	/**
+-	 * Retrieves the minute.
+-	 * 
+-	 * @return the minute (0-59) of this <code>TimeOfDay</code>
+-	 */
+-	public int minute()
+-	{
+-		return toMinutes(getMilliseconds()) % 60;
+-	}
+-
+-	/**
+-	 * Retrieves the next occurrence of this <code>TimeOfDay</code> in local time.
+-	 * 
+-	 * @return the next occurrence of this <code>TimeOfDay</code> in local time
+-	 */
+-	public Time next()
+-	{
+-		return next(AbstractTime.localtime);
+-	}
+-
+-	/**
+-	 * Retrieves the next occurrence of this <code>TimeOfDay</code> on the given
+-	 * <code>Calendar</code>.
+-	 * 
+-	 * @param calendar
+-	 *            the <code>Calendar</code> to use
+-	 * @return the next occurrence of this <code>TimeOfDay</code> on the given <code>Calendar</code>
+-	 */
+-	public Time next(final Calendar calendar)
+-	{
+-		// Get this time of day today
+-		final Time timeToday = Time.valueOf(calendar, this);
+-
+-		// If it has already passed
+-		if (timeToday.before(Time.now()))
+-		{
+-			// Return the time tomorrow
+-			return Time.valueOf(calendar, this).add(Duration.ONE_DAY);
+-		}
+-		else
+-		{
+-			// Time hasn't happened yet today
+-			return timeToday;
+-		}
+-	}
+-
+-	/**
+-	 * Retrieves the second.
+-	 * 
+-	 * @return the second (0-59)
+-	 */
+-	public int second()
+-	{
+-		return toSeconds(getMilliseconds()) % 60;
+-	}
+-
+-	/**
+-	 * @see Object#toString()
+-	 */
+-	@Override
+-	public String toString()
+-	{
+-		final int second = second();
+-		return "" + hour() + ":" + minute() + (second != 0 ? ":" + second : "");
+-	}
+-
+-	/**
+-	 * Retrieves milliseconds as hours.
+-	 * 
+-	 * @param milliseconds
+-	 *            milliseconds to convert
+-	 * @return converted input
+-	 */
+-	private int toHours(final long milliseconds)
+-	{
+-		return toMinutes(milliseconds) / 60;
+-	}
+-
+-	/**
+-	 * Retrieves milliseconds as minutes.
+-	 * 
+-	 * @param milliseconds
+-	 *            milliseconds to convert
+-	 * @return converted input
+-	 */
+-	private int toMinutes(final long milliseconds)
+-	{
+-		return toSeconds(milliseconds) / 60;
+-	}
+-
+-	/**
+-	 * Retrieves milliseconds as seconds.
+-	 * 
+-	 * @param milliseconds
+-	 *            milliseconds to convert
+-	 * @return converted input
+-	 */
+-	private int toSeconds(final long milliseconds)
+-	{
+-		return (int)(milliseconds / 1000);
+-	}
+-}
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/value/CopyOnWriteValueMap.java b/wicket-util/src/main/java/org/apache/wicket/util/value/CopyOnWriteValueMap.java
+index 6cbe048986..1743bab0aa 100755
+--- a/wicket-util/src/main/java/org/apache/wicket/util/value/CopyOnWriteValueMap.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/value/CopyOnWriteValueMap.java
+@@ -17,14 +17,13 @@
+ package org.apache.wicket.util.value;
+ 
+ import java.io.Serializable;
++import java.time.Duration;
++import java.time.Instant;
+ import java.util.Collection;
+ import java.util.Map;
+ import java.util.Set;
+-
+ import org.apache.wicket.util.string.StringValue;
+ import org.apache.wicket.util.string.StringValueConversionException;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ 
+ 
+ /**
+@@ -259,7 +258,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
+ 	 * @see IValueMap#getTime(String)
+ 	 */
+ 	@Override
+-	public Time getTime(final String key) throws StringValueConversionException
++	public Instant getTime(final String key) throws StringValueConversionException
+ 	{
+ 		return wrapped.getTime(key);
+ 	}
+@@ -449,7 +448,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
+ 	 * @see IValueMap#getAsTime(String)
+ 	 */
+ 	@Override
+-	public Time getAsTime(final String key)
++	public Instant getAsTime(final String key)
+ 	{
+ 		return wrapped.getAsTime(key);
+ 	}
+@@ -458,7 +457,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
+ 	 * @see IValueMap#getAsTime(String, Time)
+ 	 */
+ 	@Override
+-	public Time getAsTime(final String key, final Time defaultValue)
++	public Instant getAsTime(final String key, final Instant defaultValue)
+ 	{
+ 		return wrapped.getAsTime(key, defaultValue);
+ 	}
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/value/IValueMap.java b/wicket-util/src/main/java/org/apache/wicket/util/value/IValueMap.java
+index 00acdbb755..c37d18615b 100755
+--- a/wicket-util/src/main/java/org/apache/wicket/util/value/IValueMap.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/value/IValueMap.java
+@@ -16,12 +16,11 @@
+  */
+ package org.apache.wicket.util.value;
+ 
++import java.time.Duration;
++import java.time.Instant;
+ import java.util.Map;
+-
+ import org.apache.wicket.util.string.StringValue;
+ import org.apache.wicket.util.string.StringValueConversionException;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ 
+ 
+ /**
+@@ -180,7 +179,7 @@ public interface IValueMap extends Map<String, Object>
+ 	 * @return the <code>Time</code> object
+ 	 * @throws StringValueConversionException
+ 	 */
+-	Time getTime(final String key) throws StringValueConversionException;
++	Instant getTime(final String key) throws StringValueConversionException;
+ 
+ 	/**
+ 	 * Returns whether or not this <code>IValueMap</code> is immutable.
+@@ -359,7 +358,7 @@ public interface IValueMap extends Map<String, Object>
+ 	 *         <code>IValueMap</code>
+ 	 * 
+ 	 */
+-	Time getAsTime(String key);
++	Instant getAsTime(String key);
+ 
+ 	/**
+ 	 * Retrieves a <code>Time</code> value by key.
+@@ -374,7 +373,7 @@ public interface IValueMap extends Map<String, Object>
+ 	 *         <code>IValueMap</code>
+ 	 * 
+ 	 */
+-	Time getAsTime(String key, Time defaultValue);
++	Instant getAsTime(String key, Instant defaultValue);
+ 
+ 	/**
+ 	 * Retrieves an <code>Enum</code> value by key.
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/value/ValueMap.java b/wicket-util/src/main/java/org/apache/wicket/util/value/ValueMap.java
+index ede0d3f263..a0f2722e8d 100755
+--- a/wicket-util/src/main/java/org/apache/wicket/util/value/ValueMap.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/value/ValueMap.java
+@@ -19,18 +19,18 @@ package org.apache.wicket.util.value;
+ import java.lang.reflect.Array;
+ import java.lang.reflect.InvocationTargetException;
+ import java.lang.reflect.Method;
++import java.sql.Time;
++import java.time.Duration;
++import java.time.Instant;
+ import java.util.Arrays;
+ import java.util.LinkedHashMap;
+ import java.util.Map;
+-
+ import org.apache.wicket.util.parse.metapattern.MetaPattern;
+ import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
+ import org.apache.wicket.util.string.IStringIterator;
+ import org.apache.wicket.util.string.StringList;
+ import org.apache.wicket.util.string.StringValue;
+ import org.apache.wicket.util.string.StringValueConversionException;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ 
+ 
+ /**
+@@ -422,7 +422,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
+ 	 * @see IValueMap#getTime(String)
+ 	 */
+ 	@Override
+-	public final Time getTime(final String key) throws StringValueConversionException
++	public final Instant getTime(final String key) throws StringValueConversionException
+ 	{
+ 		return getStringValue(key).toTime();
+ 	}
+@@ -757,7 +757,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
+ 	 * @see IValueMap#getAsTime(String)
+ 	 */
+ 	@Override
+-	public Time getAsTime(final String key)
++	public Instant getAsTime(final String key)
+ 	{
+ 		return getAsTime(key, null);
+ 	}
+@@ -766,7 +766,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
+ 	 * @see IValueMap#getAsTime(String, Time)
+ 	 */
+ 	@Override
+-	public Time getAsTime(final String key, final Time defaultValue)
++	public Instant getAsTime(final String key, final Instant defaultValue)
+ 	{
+ 		if (!containsKey(key))
+ 		{
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/watch/IModifiable.java b/wicket-util/src/main/java/org/apache/wicket/util/watch/IModifiable.java
+index 77905af04d..556d30bd94 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/watch/IModifiable.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/watch/IModifiable.java
+@@ -16,7 +16,7 @@
+  */
+ package org.apache.wicket.util.watch;
+ 
+-import org.apache.wicket.util.time.Time;
++import java.time.Instant;
+ 
+ /**
+  * Interface to get the last time something was modified.
+@@ -32,5 +32,5 @@ public interface IModifiable
+ 	 * @return the last modification <code>Time</code> or 
+ 	 * <code>null</code> if that information is not available
+ 	 */
+-	Time lastModifiedTime();
++	Instant lastModifiedTime();
+ }
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/watch/IModificationWatcher.java b/wicket-util/src/main/java/org/apache/wicket/util/watch/IModificationWatcher.java
+index 8afe2210a1..fc3e485e80 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/watch/IModificationWatcher.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/watch/IModificationWatcher.java
+@@ -19,7 +19,7 @@ package org.apache.wicket.util.watch;
+ import java.util.Set;
+ 
+ import org.apache.wicket.util.listener.IChangeListener;
+-import org.apache.wicket.util.time.Duration;
++import java.time.Duration;
+ 
+ 
+ /**
+diff --git a/wicket-util/src/main/java/org/apache/wicket/util/watch/ModificationWatcher.java b/wicket-util/src/main/java/org/apache/wicket/util/watch/ModificationWatcher.java
+index c37317a062..c95ac203dc 100644
+--- a/wicket-util/src/main/java/org/apache/wicket/util/watch/ModificationWatcher.java
++++ b/wicket-util/src/main/java/org/apache/wicket/util/watch/ModificationWatcher.java
+@@ -16,16 +16,15 @@
+  */
+ package org.apache.wicket.util.watch;
+ 
++import java.time.Duration;
++import java.time.Instant;
+ import java.util.Set;
+ import java.util.concurrent.ConcurrentHashMap;
+-
+ import org.apache.wicket.util.lang.Generics;
+ import org.apache.wicket.util.listener.ChangeListenerSet;
+ import org.apache.wicket.util.listener.IChangeListener;
+ import org.apache.wicket.util.thread.ICode;
+ import org.apache.wicket.util.thread.Task;
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -54,7 +53,7 @@ public class ModificationWatcher implements IModificationWatcher
+ 	protected static final class Entry
+ 	{
+ 		// The most recent lastModificationTime polled on the object
+-		public Time lastModifiedTime;
++		public Instant lastModifiedTime;
+ 
+ 		// The set of listeners to call when the modifiable changes
+ 		public final ChangeListenerSet<IModifiable> listeners = new ChangeListenerSet<>();
+@@ -90,7 +89,7 @@ public class ModificationWatcher implements IModificationWatcher
+ 		// Found it?
+ 		if (entry == null)
+ 		{
+-			Time lastModifiedTime = modifiable.lastModifiedTime();
++		    Instant lastModifiedTime = modifiable.lastModifiedTime();
+ 			if (lastModifiedTime != null)
+ 			{
+ 				// Construct new entry
+@@ -154,9 +153,9 @@ public class ModificationWatcher implements IModificationWatcher
+ 		{
+ 			// If the modifiable has been modified after the last known
+ 			// modification time
+-			final Time modifiableLastModified = entry.modifiable.lastModifiedTime();
++			final Instant modifiableLastModified = entry.modifiable.lastModifiedTime();
+ 			if ((modifiableLastModified != null) &&
+-					modifiableLastModified.after(entry.lastModifiedTime))
++					modifiableLastModified.isAfter(entry.lastModifiedTime))
+ 			{
+ 				// Notify all listeners that the modifiable was modified
+ 				entry.listeners.notifyListeners(entry.modifiable);
+diff --git a/wicket-util/src/test/java/org/apache/wicket/util/io/ConnectionsTest.java b/wicket-util/src/test/java/org/apache/wicket/util/io/ConnectionsTest.java
+index b0b0c0f212..5ea6f25fc5 100644
+--- a/wicket-util/src/test/java/org/apache/wicket/util/io/ConnectionsTest.java
++++ b/wicket-util/src/test/java/org/apache/wicket/util/io/ConnectionsTest.java
+@@ -16,16 +16,14 @@
+  */
+ package org.apache.wicket.util.io;
+ 
++import static org.junit.jupiter.api.Assertions.assertNotEquals;
++import static org.junit.jupiter.api.Assertions.assertNotNull;
++import java.net.URL;
++import java.time.Instant;
+ import org.apache.wicket.util.WicketTestTag;
+-import org.apache.wicket.util.time.Time;
+ import org.junit.jupiter.api.Tag;
+ import org.junit.jupiter.api.Test;
+ 
+-import java.net.URL;
+-
+-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+-import static org.junit.jupiter.api.Assertions.assertNotNull;
+-
+ /**
+  * Tests for {@link Connections}
+  */
+@@ -39,8 +37,8 @@ public class ConnectionsTest
+ 	public void getLastModified() throws Exception
+ 	{
+ 		URL url = new URL("http://wicket.apache.org/learn/books/wia.png");
+-		Time lastModified = Connections.getLastModified(url);
++		Instant lastModified = Connections.getLastModified(url);
+ 		assertNotNull(lastModified);
+-		assertNotEquals(lastModified.getMilliseconds(), 0L);
++		assertNotEquals(lastModified.toEpochMilli(), 0L);
+ 	}
+ }
+diff --git a/wicket-util/src/test/java/org/apache/wicket/util/io/LastModifiedTest.java b/wicket-util/src/test/java/org/apache/wicket/util/io/LastModifiedTest.java
+index 481ef87b96..2ed37103ac 100644
+--- a/wicket-util/src/test/java/org/apache/wicket/util/io/LastModifiedTest.java
++++ b/wicket-util/src/test/java/org/apache/wicket/util/io/LastModifiedTest.java
+@@ -16,15 +16,15 @@
+  */
+ package org.apache.wicket.util.io;
+ 
+-import org.apache.wicket.util.file.Files;
+-import org.apache.wicket.util.time.Time;
+-import org.junit.jupiter.api.Test;
+-
++import static org.junit.jupiter.api.Assertions.assertEquals;
++import static org.junit.jupiter.api.Assertions.assertNull;
++import static org.junit.jupiter.api.Assertions.assertTrue;
+ import java.io.File;
+ import java.io.IOException;
+ import java.net.URL;
+-
+-import static org.junit.jupiter.api.Assertions.*;
++import java.time.Instant;
++import org.apache.wicket.util.file.Files;
++import org.junit.jupiter.api.Test;
+ 
+ /**
+  * @author pertl
+@@ -82,7 +82,7 @@ public class LastModifiedTest
+ 			// it could be the case that the current system does not support last-modified at all
+ 			if (lm != 0)
+ 			{
+-				final Time expected = Time.millis(lm);
++				final Instant expected = Instant.ofEpochMilli(lm);
+ 				assertEquals(expected, Files.getLastModified(file));
+ 				assertEquals(expected,
+ 					Connections.getLastModified(new URL("file:" + file.getAbsolutePath())));
+diff --git a/wicket-util/src/test/java/org/apache/wicket/util/string/StringValueTest.java b/wicket-util/src/test/java/org/apache/wicket/util/string/StringValueTest.java
+index 527b3adbfe..bd61b2c354 100644
+--- a/wicket-util/src/test/java/org/apache/wicket/util/string/StringValueTest.java
++++ b/wicket-util/src/test/java/org/apache/wicket/util/string/StringValueTest.java
+@@ -16,13 +16,16 @@
+  */
+ package org.apache.wicket.util.string;
+ 
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+-import org.junit.jupiter.api.Test;
+-
++import static org.junit.jupiter.api.Assertions.assertEquals;
++import static org.junit.jupiter.api.Assertions.assertFalse;
++import static org.junit.jupiter.api.Assertions.assertNull;
++import static org.junit.jupiter.api.Assertions.assertThrows;
++import static org.junit.jupiter.api.Assertions.assertTrue;
++import static org.junit.jupiter.api.Assertions.fail;
++import java.time.Duration;
++import java.time.Instant;
+ import java.util.Locale;
+-
+-import static org.junit.jupiter.api.Assertions.*;
++import org.junit.jupiter.api.Test;
+ 
+ @SuppressWarnings("javadoc")
+ public class StringValueTest
+@@ -89,8 +92,8 @@ public class StringValueTest
+ 		assertEquals(4, sv.toInt(4));
+ 		assertEquals(4.0, sv.toDouble(4.0), 0.005);
+ 		assertEquals('c', sv.toChar('c'));
+-		assertEquals(Duration.seconds(3), sv.toDuration(Duration.seconds(3)));
+-		assertEquals(Time.millis(5), sv.toTime(Time.millis(5)));
++		assertEquals(Duration.ofSeconds(3), sv.toDuration(Duration.ofSeconds(3)));
++		assertEquals(Instant.ofEpochMilli(5), sv.toTime(Instant.ofEpochMilli(5)));
+ 		assertEquals(40L, sv.toLong(40));
+ 
+ 		assertEquals("unknown", sv.toString("def"));
+diff --git a/wicket-util/src/test/java/org/apache/wicket/util/time/DurationTest.java b/wicket-util/src/test/java/org/apache/wicket/util/time/DurationTest.java
+deleted file mode 100644
+index 1ff1460263..0000000000
+--- a/wicket-util/src/test/java/org/apache/wicket/util/time/DurationTest.java
++++ /dev/null
+@@ -1,153 +0,0 @@
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one or more
+- * contributor license agreements.  See the NOTICE file distributed with
+- * this work for additional information regarding copyright ownership.
+- * The ASF licenses this file to You under the Apache License, Version 2.0
+- * (the "License"); you may not use this file except in compliance with
+- * the License.  You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.apache.wicket.util.time;
+-
+-import org.apache.wicket.util.string.StringValueConversionException;
+-import org.junit.jupiter.api.Test;
+-
+-import java.text.NumberFormat;
+-import java.util.Locale;
+-import java.util.Locale.Category;
+-
+-import static org.junit.jupiter.api.Assertions.assertEquals;
+-import static org.junit.jupiter.api.Assertions.assertTrue;
+-
+-/**
+- * Test cases for this object
+- * 
+- * @author Jonathan Locke
+- */
+-public final class DurationTest
+-{
+-	/**
+-	 * @throws StringValueConversionException
+-	 */
+-	@Test
+-	public void values() throws StringValueConversionException
+-	{
+-		assertEquals(Duration.milliseconds(3000), Duration.seconds(3));
+-		assertEquals(Duration.seconds(120), Duration.minutes(2));
+-		assertEquals(Duration.minutes(1440), Duration.hours(24));
+-		assertEquals(Duration.hours(48), Duration.days(2));
+-		assertEquals(Duration.minutes(90), Duration.valueOf("90 minutes"));
+-		assertEquals(Duration.days(9), Duration.valueOf("9 days"));
+-		assertEquals(Duration.hours(1), Duration.valueOf("1 hour"));
+-		assertTrue(9 == Duration.days(9).days());
+-		assertTrue(11 == Duration.hours(11).hours());
+-		assertTrue(21 == Duration.minutes(21).minutes());
+-		assertTrue(51 == Duration.seconds(51).seconds());
+-	}
+-
+-	/** */
+-	@Test
+-	public void operations()
+-	{
+-		assertTrue(Duration.milliseconds(3001).greaterThan(Duration.seconds(3)));
+-		assertTrue(Duration.milliseconds(3001).greaterThanOrEqual(Duration.seconds(3)));
+-		assertTrue(Duration.milliseconds(3000).greaterThanOrEqual(Duration.seconds(3)));
+-		assertTrue(Duration.milliseconds(2999).lessThan(Duration.seconds(3)));
+-		assertTrue(Duration.milliseconds(2999).lessThanOrEqual(Duration.seconds(3)));
+-		assertTrue(Duration.milliseconds(3000).lessThanOrEqual(Duration.seconds(3)));
+-		assertEquals(-1, Duration.milliseconds(2999).compareTo(Duration.seconds(3)));
+-		assertEquals(1, Duration.milliseconds(3001).compareTo(Duration.seconds(3)));
+-		assertEquals(0, Duration.milliseconds(3000).compareTo(Duration.seconds(3)));
+-		assertEquals(Duration.minutes(10), Duration.minutes(4).add(Duration.minutes(6)));
+-		assertEquals(Duration.ONE_HOUR, Duration.minutes(90).subtract(Duration.minutes(30)));
+-
+-		String value = NumberFormat.getNumberInstance().format(1.5);
+-
+-		assertEquals(value + " minutes", Duration.seconds(90).toString());
+-		assertEquals("12 hours", Duration.days(0.5).toString());
+-	}
+-
+-	@Test
+-	public void formatLocale() throws Exception
+-	{
+-		final Locale oldFormatLocale = Locale.getDefault(Category.FORMAT);
+-		final Locale oldDefaultLocale = Locale.getDefault();
+-		try
+-		{
+-			Locale.setDefault(Locale.US);
+-			Locale.setDefault(Category.FORMAT, Locale.GERMANY);
+-			assertEquals("1,5 minutes", Duration.seconds(90)
+-					.toString(), "should take formatting locale into account");
+-		} finally
+-		{
+-			Locale.setDefault(oldDefaultLocale);
+-			Locale.setDefault(Category.FORMAT, oldFormatLocale);
+-		}
+-	}
+-
+-	/** */
+-	@Test
+-	public void testSleep()
+-	{
+-		assertTrue(Duration.seconds(0.5).lessThan(Duration.benchmark(new Runnable()
+-		{
+-			@Override
+-			public void run()
+-			{
+-				Duration.seconds(1.5).sleep();
+-			}
+-		})));
+-
+-		assertTrue(Duration.seconds(1).greaterThan(Duration.benchmark(new Runnable()
+-		{
+-			@Override
+-			public void run()
+-			{
+-				Duration.hours(-1).sleep();
+-			}
+-		})));
+-	}
+-
+-	/**
+-	 * @throws StringValueConversionException
+-	 */
+-	@Test
+-	public void locale() throws StringValueConversionException
+-	{
+-		assertEquals(Duration.minutes(90), Duration.valueOf("90 minutes"));
+-		assertEquals(Duration.hours(1.5), Duration.valueOf("1.5 hour", Locale.US));
+-		assertEquals(Duration.hours(1.5), Duration.valueOf("1,5 hour", Locale.GERMAN));
+-		assertEquals("1.5 hours", Duration.hours(1.5).toString(Locale.US));
+-		assertEquals("1,5 hours", Duration.hours(1.5).toString(Locale.GERMAN));
+-	}
+-
+-
+-	/**
+-	 * Check if toString(Locale locale) respects the appropriate value and format (in English).
+-	 */
+-	@Test
+-	public void toStringValues()
+-	{
+-		assertEquals("1 day", Duration.days(1).toString(Locale.ENGLISH));
+-		assertEquals("5 days", Duration.days(5).toString(Locale.ENGLISH));
+-
+-		assertEquals("1 hour", Duration.hours(1).toString(Locale.ENGLISH));
+-		assertEquals("23 hours", Duration.hours(23).toString(Locale.ENGLISH));
+-
+-		assertEquals("1 minute", Duration.minutes(1).toString(Locale.ENGLISH));
+-		assertEquals("2 minutes", Duration.minutes(2).toString(Locale.ENGLISH));
+-
+-		assertEquals("1 second", Duration.seconds(1).toString(Locale.ENGLISH));
+-		assertEquals("2 seconds", Duration.seconds(2).toString(Locale.ENGLISH));
+-
+-		assertEquals("1 millisecond", Duration.milliseconds(1).toString(Locale.ENGLISH));
+-		assertEquals("955 milliseconds", Duration.milliseconds(955).toString(Locale.ENGLISH));
+-	}
+-}
+diff --git a/wicket-util/src/test/java/org/apache/wicket/util/time/TimeFrameTest.java b/wicket-util/src/test/java/org/apache/wicket/util/time/TimeFrameTest.java
+deleted file mode 100644
+index 9b23927d3e..0000000000
+--- a/wicket-util/src/test/java/org/apache/wicket/util/time/TimeFrameTest.java
++++ /dev/null
+@@ -1,100 +0,0 @@
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one or more
+- * contributor license agreements.  See the NOTICE file distributed with
+- * this work for additional information regarding copyright ownership.
+- * The ASF licenses this file to You under the Apache License, Version 2.0
+- * (the "License"); you may not use this file except in compliance with
+- * the License.  You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.apache.wicket.util.time;
+-
+-import org.junit.jupiter.api.Test;
+-
+-import static org.junit.jupiter.api.Assertions.*;
+-
+-/**
+- * @author v857829
+- */
+-public class TimeFrameTest
+-{
+-
+-	private final TimeOfDay three = TimeOfDay.time(3, 0, TimeOfDay.PM);
+-	private final TimeOfDay four = TimeOfDay.time(4, 0, TimeOfDay.PM);
+-	private final TimeOfDay five = TimeOfDay.time(5, 0, TimeOfDay.PM);
+-
+-	/**
+-	 * Test method for
+-	 * {@link org.apache.wicket.util.time.TimeFrame#eachDay(org.apache.wicket.util.time.TimeOfDay, org.apache.wicket.util.time.TimeOfDay)}
+-	 * .
+-	 */
+-	@Test
+-	public void eachDay()
+-	{
+-		ITimeFrameSource test = TimeFrame.eachDay(three, five);
+-		assertTrue(test.getTimeFrame().contains(Time.valueOf(four)));
+-	}
+-
+-	/**
+-	 * Test method for
+-	 * {@link org.apache.wicket.util.time.TimeFrame#valueOf(org.apache.wicket.util.time.Time, org.apache.wicket.util.time.Duration)}
+-	 * .
+-	 */
+-	@Test
+-	public void valueOfTimeDuration()
+-	{
+-		TimeFrame test = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(60));
+-		assertEquals(test.getStart(), Time.valueOf(three));
+-		assertEquals(test.getEnd(), Time.valueOf(four));
+-	}
+-
+-	/**
+-	 * Test method for
+-	 * {@link org.apache.wicket.util.time.TimeFrame#contains(org.apache.wicket.util.time.Time)}.
+-	 */
+-	@Test
+-	public void contains()
+-	{
+-		TimeFrame test = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(70));
+-		assertTrue(test.contains(Time.valueOf(four)));
+-	}
+-
+-	/**
+-	 * Test method for
+-	 * {@link org.apache.wicket.util.time.TimeFrame#overlaps(org.apache.wicket.util.time.TimeFrame)}
+-	 * .
+-	 */
+-	@Test
+-	public void overlaps()
+-	{
+-		TimeFrame test = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(70));
+-		TimeFrame test2 = TimeFrame.valueOf(Time.valueOf(four), Duration.minutes(50));
+-		TimeFrame test3 = TimeFrame.valueOf(Time.valueOf(four), Time.valueOf(five));
+-		TimeFrame test4 = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(20));
+-		assertTrue(test.overlaps(test2));
+-		assertTrue(test3.overlaps(test2));
+-		assertTrue(test.overlaps(test3));
+-		assertFalse(test4.overlaps(test3));
+-	}
+-
+-	/**
+-	 * Test method for {@link org.apache.wicket.util.time.TimeFrame#equals(java.lang.Object)}.
+-	 */
+-	@Test
+-	public void testEquals()
+-	{
+-		TimeFrame test = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(60));
+-		TimeFrame test2 = TimeFrame.valueOf(Time.valueOf(three), Time.valueOf(four));
+-		TimeFrame test3 = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(59));
+-		assertEquals(test, test2);
+-		assertNotSame(test2, test3);
+-	}
+-
+-}
+diff --git a/wicket-util/src/test/java/org/apache/wicket/util/time/TimeMapTest.java b/wicket-util/src/test/java/org/apache/wicket/util/time/TimeMapTest.java
+deleted file mode 100644
+index 508f2ff3ea..0000000000
+--- a/wicket-util/src/test/java/org/apache/wicket/util/time/TimeMapTest.java
++++ /dev/null
+@@ -1,58 +0,0 @@
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one or more
+- * contributor license agreements.  See the NOTICE file distributed with
+- * this work for additional information regarding copyright ownership.
+- * The ASF licenses this file to You under the Apache License, Version 2.0
+- * (the "License"); you may not use this file except in compliance with
+- * the License.  You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.apache.wicket.util.time;
+-
+-import org.junit.jupiter.api.Test;
+-
+-import java.text.ParseException;
+-import java.util.GregorianCalendar;
+-import java.util.Locale;
+-
+-import static org.junit.jupiter.api.Assertions.assertEquals;
+-import static org.junit.jupiter.api.Assertions.assertNull;
+-
+-/**
+- * Test cases for this object
+- * 
+- * @author Jonathan Locke
+- */
+-public final class TimeMapTest
+-{
+-	/**
+-	 * 
+-	 * @throws ParseException
+-	 */
+-	@Test
+-	public void simpleStaticTimeFrame() throws ParseException
+-	{
+-		final TimeMap map = new TimeMap();
+-		final Time start = Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH),
+-			"3.14pm"));
+-		final Time end = Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH),
+-			"3.20pm"));
+-		final String value = "test";
+-
+-		map.put(TimeFrame.valueOf(start, end), value);
+-		assertEquals(
+-			value,
+-			map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH), "3.15pm"))));
+-		assertNull(map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH),
+-			"3.21pm"))));
+-		assertNull(map.get(Time.valueOf(TimeOfDay.valueOf(new GregorianCalendar(Locale.ENGLISH),
+-			"3.13pm"))));
+-	}
+-}
+diff --git a/wicket-util/src/test/java/org/apache/wicket/util/time/TimeOfDayTest.java b/wicket-util/src/test/java/org/apache/wicket/util/time/TimeOfDayTest.java
+deleted file mode 100644
+index e7cea80dad..0000000000
+--- a/wicket-util/src/test/java/org/apache/wicket/util/time/TimeOfDayTest.java
++++ /dev/null
+@@ -1,46 +0,0 @@
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one or more
+- * contributor license agreements.  See the NOTICE file distributed with
+- * this work for additional information regarding copyright ownership.
+- * The ASF licenses this file to You under the Apache License, Version 2.0
+- * (the "License"); you may not use this file except in compliance with
+- * the License.  You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.apache.wicket.util.time;
+-
+-import org.junit.jupiter.api.Test;
+-
+-import static org.junit.jupiter.api.Assertions.assertEquals;
+-import static org.junit.jupiter.api.Assertions.assertTrue;
+-
+-/**
+- * Test cases for {@link TimeOfDay}.
+- * 
+- * @author Jonathan Locke
+- */
+-public final class TimeOfDayTest
+-{
+-	/**
+-	 * 
+-	 */
+-	@Test
+-	public void test()
+-	{
+-		assertEquals(0, TimeOfDay.MIDNIGHT.hour());
+-		assertEquals(21, TimeOfDay.time(9, 30, TimeOfDay.PM).hour());
+-		assertEquals(TimeOfDay.MIDNIGHT, TimeOfDay.valueOf(TimeOfDay.MIDNIGHT.next()));
+-
+-		final TimeOfDay three = TimeOfDay.time(3, 0, TimeOfDay.PM);
+-		final TimeOfDay five = TimeOfDay.time(5, 0, TimeOfDay.PM);
+-
+-		assertTrue(five.after(three));
+-	}
+-}
+diff --git a/wicket-util/src/test/java/org/apache/wicket/util/time/TimeTest.java b/wicket-util/src/test/java/org/apache/wicket/util/time/TimeTest.java
+deleted file mode 100644
+index 5593ed05f2..0000000000
+--- a/wicket-util/src/test/java/org/apache/wicket/util/time/TimeTest.java
++++ /dev/null
+@@ -1,54 +0,0 @@
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one or more
+- * contributor license agreements.  See the NOTICE file distributed with
+- * this work for additional information regarding copyright ownership.
+- * The ASF licenses this file to You under the Apache License, Version 2.0
+- * (the "License"); you may not use this file except in compliance with
+- * the License.  You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package org.apache.wicket.util.time;
+-
+-import org.junit.jupiter.api.Test;
+-
+-import java.text.ParseException;
+-import java.util.Calendar;
+-
+-import static org.junit.jupiter.api.Assertions.assertEquals;
+-
+-@SuppressWarnings("javadoc")
+-public final class TimeTest
+-{
+-	@Test
+-	public void test() throws ParseException
+-	{
+-		Time.now();
+-
+-		final Time birthday = Time.parseDate("1966.06.01");
+-
+-		assertEquals(1966, birthday.getYear());
+-		assertEquals(Calendar.JUNE, birthday.getMonth());
+-		assertEquals(1, birthday.getDayOfMonth());
+-
+-		final String y2k = "2000.01.01-12.00am";
+-
+-		assertEquals(y2k, Time.valueOf(y2k).toString());
+-	}
+-
+-	/**
+-	 * WICKET-5442 getHour() should be on 24-hour clock
+-	 */
+-	@Test
+-	public void hour() throws ParseException
+-	{
+-		Time time = Time.valueOf("2000.10.30-9.30PM");
+-		assertEquals(21, time.getHour());
+-	}
+-}
+diff --git a/wicket-util/src/test/java/org/apache/wicket/util/value/ValueMapTest.java b/wicket-util/src/test/java/org/apache/wicket/util/value/ValueMapTest.java
+index 2b5671b24b..7df2b5662f 100644
+--- a/wicket-util/src/test/java/org/apache/wicket/util/value/ValueMapTest.java
++++ b/wicket-util/src/test/java/org/apache/wicket/util/value/ValueMapTest.java
+@@ -16,13 +16,12 @@
+  */
+ package org.apache.wicket.util.value;
+ 
+-import org.apache.wicket.util.time.Duration;
+-import org.apache.wicket.util.time.Time;
+-import org.junit.jupiter.api.Test;
+-
+ import static org.junit.jupiter.api.Assertions.assertEquals;
+ import static org.junit.jupiter.api.Assertions.assertNull;
+ import static org.junit.jupiter.api.Assertions.fail;
++import java.time.Duration;
++import java.time.Instant;
++import org.junit.jupiter.api.Test;
+ 
+ /**
+  * @author jcompagner
+@@ -181,15 +180,15 @@ public class ValueMapTest
+ 		Integer integerValue = 42;
+ 		Long longValue = integerValue * 1L;
+ 		Double doubleValue = integerValue * 1.0D;
+-		Time timeValue = Time.now();
+-		Duration durationValue = Duration.hours(1);
++		Instant timeValue = Instant.now();
++		Duration durationValue = Duration.ofHours(1);
+ 
+ 		boolean defBoolean = !booleanValue;
+ 		int defInteger = 10101;
+ 		long defLong = defInteger * 1L;
+ 		double defDouble = defInteger * 1.0D;
+-		Time defTime = Time.now();
+-		Duration defDuration = Duration.hours(42);
++		Instant defTime = Instant.now();
++		Duration defDuration = Duration.ofHours(42);
+ 
+ 		vm.put("num", integerValue.toString());
+ 		vm.put("num.bad", "xxx");

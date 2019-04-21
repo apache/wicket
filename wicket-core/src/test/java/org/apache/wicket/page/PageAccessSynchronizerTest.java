@@ -19,20 +19,18 @@ package org.apache.wicket.page;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.page.PageAccessSynchronizer.PageLock;
 import org.apache.wicket.util.WicketTestTag;
-import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.time.Time;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -54,7 +52,7 @@ class PageAccessSynchronizerTest
 	@Test
 	void testReentrant() throws Exception
 	{
-		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(5));
+		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.ofSeconds(5));
 		sync.lockPage(0);
 		sync.lockPage(0);
 	}
@@ -65,10 +63,10 @@ class PageAccessSynchronizerTest
 	@Test
 	void testBlocking() throws Exception
 	{
-		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(5));
-		final Duration hold = Duration.seconds(1);
-		final Time t1locks[] = new Time[1];
-		final Time t2locks[] = new Time[1];
+		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.ofSeconds(5));
+		final Duration hold = Duration.ofSeconds(1);
+		final Instant t1locks[] = new Instant[1];
+		final Instant t2locks[] = new Instant[1];
 
 		class T1 extends Thread
 		{
@@ -76,8 +74,15 @@ class PageAccessSynchronizerTest
 			public void run()
 			{
 				sync.lockPage(1);
-				t1locks[0] = Time.now();
-				hold.sleep();
+				t1locks[0] = Instant.now();
+                try
+                {
+                    Thread.sleep(hold.toMillis());
+                }
+                catch (InterruptedException e)
+                {
+                    throw new RuntimeException(e);
+                }
 				sync.unlockAllPages();
 			}
 		}
@@ -88,7 +93,7 @@ class PageAccessSynchronizerTest
 			public void run()
 			{
 				sync.lockPage(1);
-				t2locks[0] = Time.now();
+				t2locks[0] = Instant.now();
 				sync.unlockAllPages();
 			}
 		}
@@ -98,13 +103,13 @@ class PageAccessSynchronizerTest
 		T2 t2 = new T2();
 		t2.setName("t2");
 		t1.start();
-		Duration.milliseconds(100).sleep();
+		Thread.sleep(100);
 		t2.start();
 
 		t1.join();
 		t2.join();
 
-		assertTrue(!t2locks[0].before(t1locks[0].add(hold)));
+		assertTrue(!t2locks[0].isBefore(t1locks[0].plus(hold)));
 	}
 
 	/**
@@ -116,7 +121,7 @@ class PageAccessSynchronizerTest
 	private void runContentionTest(final int pages, final int workers, final Duration duration)
 		throws Exception
 	{
-		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(1));
+		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.ofSeconds(1));
 
 		final AtomicInteger[] counts = new AtomicInteger[pages];
 		for (int i = 0; i < counts.length; i++)
@@ -134,12 +139,12 @@ class PageAccessSynchronizerTest
 			public void run()
 			{
 				Random random = new Random();
-				Time start = Time.now();
+				Instant start = Instant.now();
 
-				while (start.elapsedSince().lessThan(duration) && error[0] == null)
+				while (PageAccessSynchronizer.elapsedSince(start).compareTo(duration) < 0 && error[0] == null)
 				{
 					logger.info("{} elapsed: {}, duration: {}", new Object[] {
-							Thread.currentThread().getName(), start.elapsedSince(), duration });
+							Thread.currentThread().getName(), PageAccessSynchronizer.elapsedSince(start), duration });
 					int page1 = random.nextInt(counts.length);
 					int page2 = random.nextInt(counts.length);
 					int count = 0;
@@ -252,7 +257,7 @@ class PageAccessSynchronizerTest
 	@Test
 	void testConcurrency() throws Exception
 	{
-		runContentionTest(20, 10, Duration.seconds(10));
+		runContentionTest(20, 10, Duration.ofSeconds(10));
 	}
 
 	/**
@@ -261,7 +266,7 @@ class PageAccessSynchronizerTest
 	@Test
 	void testContention() throws Exception
 	{
-		runContentionTest(10, 20, Duration.seconds(10));
+		runContentionTest(10, 20, Duration.ofSeconds(10));
 	}
 
 	/**
@@ -288,7 +293,7 @@ class PageAccessSynchronizerTest
 		}
 
 		// set up a synchronizer and lock page 5 with locker1
-		final Duration timeout = Duration.seconds(30);
+		final Duration timeout = Duration.ofSeconds(30);
 		final PageAccessSynchronizer sync = new PageAccessSynchronizer(timeout);
 		Locker locker1 = new Locker(sync);
 
@@ -304,7 +309,7 @@ class PageAccessSynchronizerTest
 		// locker2
 		Locker locker2 = new Locker(sync2);
 		locker2.run();
-		assertTrue(Duration.milliseconds(System.currentTimeMillis() - start).lessThan(timeout));
+		assertTrue(Duration.ofMillis(System.currentTimeMillis() - start).compareTo(timeout) < 0);
 	}
 
 	/**
@@ -313,7 +318,7 @@ class PageAccessSynchronizerTest
 	@Test
 	void unlockIfNoSuchPage()
 	{
-		PageAccessSynchronizer synchronizer = new PageAccessSynchronizer(Duration.seconds(2));
+		PageAccessSynchronizer synchronizer = new PageAccessSynchronizer(Duration.ofSeconds(2));
 		IPageManager pageManager = new MockPageManager();
 		IPageManager synchronizedPageManager = synchronizer.adapt(pageManager);
 		synchronizedPageManager.getPage(0);
@@ -337,14 +342,14 @@ class PageAccessSynchronizerTest
 	@Test
 	void failToReleaseUnderLoad() throws Exception
 	{
-		final Duration duration = Duration.seconds(20); /* seconds */
+		final Duration duration = Duration.ofSeconds(20); /* seconds */
 		final ConcurrentLinkedQueue<Exception> errors = new ConcurrentLinkedQueue<Exception>();
-		final long endTime = System.currentTimeMillis() + duration.getMilliseconds();
+		final long endTime = System.currentTimeMillis() + duration.toMillis();
 
 		// set the synchronizer timeout one second longer than the test runs to prevent
 		// starvation to become an issue
 		final PageAccessSynchronizer sync = new PageAccessSynchronizer(
-			duration.add(Duration.ONE_SECOND));
+			duration.plus(Duration.ofSeconds(1)));
 
 		final CountDownLatch latch = new CountDownLatch(100);
 		for (int count = 0; count < 100; count++)

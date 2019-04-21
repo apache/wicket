@@ -16,13 +16,16 @@
  */
 package org.apache.wicket.util.value;
 
-import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.time.Time;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Locale;
+import org.apache.wicket.util.time.Durations;
+import org.apache.wicket.util.time.Instants;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
@@ -181,21 +184,21 @@ public class ValueMapTest
 		Integer integerValue = 42;
 		Long longValue = integerValue * 1L;
 		Double doubleValue = integerValue * 1.0D;
-		Time timeValue = Time.now();
-		Duration durationValue = Duration.hours(1);
+		Instant timeValue = Instant.now();
+		Duration durationValue = Duration.ofHours(1);
 
 		boolean defBoolean = !booleanValue;
 		int defInteger = 10101;
 		long defLong = defInteger * 1L;
 		double defDouble = defInteger * 1.0D;
-		Time defTime = Time.now();
-		Duration defDuration = Duration.hours(42);
+		Instant defTime = Instant.now();
+		Duration defDuration = Duration.ofHours(42);
 
 		vm.put("num", integerValue.toString());
 		vm.put("num.bad", "xxx");
-		vm.put("time", timeValue.toString());
+		vm.put("time", Instants.toString(timeValue));
 		vm.put("time.bad", "xxx");
-		vm.put("duration", durationValue.toString());
+		vm.put("duration", Durations.toString(durationValue, Locale.ENGLISH));
 		vm.put("duration.bad", "xxx");
 		vm.put("boolean", booleanValue.toString());
 		vm.put("boolean.bad", "xxx");
@@ -230,7 +233,7 @@ public class ValueMapTest
 		assertEquals(defDouble, vm.getAsDouble("num.missing", defDouble), 0.001);
 
 		// time
-		assertEquals(timeValue.toString(), vm.getAsTime("time").toString()); // use toSTring since
+		assertEquals(timeValue.truncatedTo(ChronoUnit.MINUTES).toString(), vm.getAsTime("time").toString()); // use toSTring since
 		// equals seems
 		// broken
 		assertNull(vm.getAsTime("time.bad"));

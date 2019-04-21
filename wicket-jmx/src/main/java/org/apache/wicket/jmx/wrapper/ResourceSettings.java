@@ -16,14 +16,13 @@
  */
 package org.apache.wicket.jmx.wrapper;
 
+import java.time.Duration;
 import java.util.List;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.jmx.ResourceSettingsMBean;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.util.time.Duration;
 
 
 /**

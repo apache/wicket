@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ class AjaxTimerBehaviorTest extends WicketTestCase
 	@Test
     void addedInAjaxSetsTimout()
 	{
-		Duration dur = Duration.seconds(20);
+		Duration dur = Duration.ofSeconds(20);
 		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 
@@ -90,7 +90,7 @@ class AjaxTimerBehaviorTest extends WicketTestCase
 	@Test
     void pageRenderSetsTimeout()
 	{
-		Duration dur = Duration.seconds(20);
+		Duration dur = Duration.ofSeconds(20);
 		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 		Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
@@ -127,7 +127,7 @@ class AjaxTimerBehaviorTest extends WicketTestCase
 	@Test
     void ajaxUpdateDoesNotSetTimeout()
 	{
-		Duration dur = Duration.seconds(20);
+		Duration dur = Duration.ofSeconds(20);
 		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 		final Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
@@ -164,7 +164,7 @@ class AjaxTimerBehaviorTest extends WicketTestCase
 	@Test
     void setVisibleSetsTimeout()
 	{
-		Duration dur = Duration.seconds(20);
+		Duration dur = Duration.ofSeconds(20);
 		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 		final Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
@@ -203,7 +203,7 @@ class AjaxTimerBehaviorTest extends WicketTestCase
 	@Test
     void setDisabledClearsTimeout()
 	{
-		final AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(20))
+		final AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.ofSeconds(20))
 		{
 			private boolean enabled = true;
 			
@@ -260,7 +260,7 @@ class AjaxTimerBehaviorTest extends WicketTestCase
 
 		// the duration doesn't matter because we manually trigger the behavior
 		final AbstractAjaxTimerBehavior timerBehavior = new AbstractAjaxTimerBehavior(
-			Duration.seconds(2))
+			Duration.ofSeconds(2))
 		{
 			private static final long serialVersionUID = 1L;
 

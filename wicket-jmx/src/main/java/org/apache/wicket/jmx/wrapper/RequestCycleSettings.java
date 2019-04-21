@@ -17,10 +17,9 @@
 package org.apache.wicket.jmx.wrapper;
 
 import java.io.UnsupportedEncodingException;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.jmx.RequestCycleSettingsMBean;
-import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Durations;
 
 
 /**
@@ -119,7 +118,7 @@ public class RequestCycleSettings implements RequestCycleSettingsMBean
 	@Override
 	public void setTimeout(final String timeout)
 	{
-		application.getRequestCycleSettings().setTimeout(Duration.valueOf(timeout));
+		application.getRequestCycleSettings().setTimeout(Durations.valueOf(timeout));
 	}
 
 	@Override

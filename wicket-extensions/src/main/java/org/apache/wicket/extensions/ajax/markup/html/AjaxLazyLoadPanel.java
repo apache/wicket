@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -29,7 +29,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
-import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.lang.Comparators;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
@@ -187,7 +187,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * @return update interval, must not be {@value null}
 	 */
 	protected Duration getUpdateInterval() {
-		return Duration.seconds(1);
+		return Duration.ofSeconds(1);
 	}
 
 	/**
@@ -239,7 +239,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 
 		public AjaxLazyLoadTimer()
 		{
-			super(Duration.ONE_SECOND);
+			super(Duration.ofSeconds(1));
 		}
 
 		@Override
@@ -250,7 +250,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 
 		public void load(AjaxRequestTarget target)
 		{
-			setUpdateInterval(Duration.MAXIMUM);
+			setUpdateInterval(Duration.ofMillis(Long.MAX_VALUE));
 			
 			getComponent().getPage().visitChildren(AjaxLazyLoadPanel.class, new IVisitor<AjaxLazyLoadPanel<?>, Void>()
 			{
@@ -263,13 +263,13 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 							throw new IllegalArgumentException("update interval must not ben null");
 						}
 						
-						setUpdateInterval(Duration.min(getUpdateInterval(), updateInterval));
+						setUpdateInterval(Comparators.min(getUpdateInterval(), updateInterval));
 					}						
 				}
 			});
 
 			// all panels have completed their replacements, we can stop the timer
-			if (Duration.MAXIMUM.equals(getUpdateInterval()))
+			if (Duration.ofMillis(Long.MAX_VALUE).equals(getUpdateInterval()))
 			{
 				stop(target);
 				

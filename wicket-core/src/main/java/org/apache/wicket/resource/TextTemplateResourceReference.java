@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.resource;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.Map;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.IResource;
@@ -30,8 +31,6 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.template.PackageTextTemplate;
 import org.apache.wicket.util.template.TextTemplate;
-import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.time.Time;
 
 /**
  * A class which adapts a {@link PackageTextTemplate} to a {@link ResourceReference}.
@@ -151,12 +150,12 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 
 				StringResourceStream resourceStream = new StringResourceStream(stringValue,
 						textTemplate.getContentType());
-				resourceStream.setLastModified(Time.now());
+				resourceStream.setLastModified(Instant.now());
 
 				return resourceStream;
 			}
 		};
-		resource.setCacheDuration(Duration.NONE);
+		resource.setCacheDuration(Duration.ZERO);
 
 		if (Application.exists())
 		{

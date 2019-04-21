@@ -16,15 +16,15 @@
  */
 package org.apache.wicket.util.io;
 
-import org.apache.wicket.util.file.Files;
-import org.apache.wicket.util.time.Time;
-import org.junit.jupiter.api.Test;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.Instant;
+import org.apache.wicket.util.file.Files;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author pertl
@@ -82,7 +82,7 @@ public class LastModifiedTest
 			// it could be the case that the current system does not support last-modified at all
 			if (lm != 0)
 			{
-				final Time expected = Time.millis(lm);
+				final Instant expected = Instant.ofEpochMilli(lm);
 				assertEquals(expected, Files.getLastModified(file));
 				assertEquals(expected,
 					Connections.getLastModified(new URL("file:" + file.getAbsolutePath())));
