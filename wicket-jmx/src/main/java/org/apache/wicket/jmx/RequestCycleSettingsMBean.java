@@ -17,7 +17,6 @@
 package org.apache.wicket.jmx;
 
 import java.io.UnsupportedEncodingException;
-import java.time.Duration;
 
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 
@@ -58,7 +57,7 @@ public interface RequestCycleSettingsMBean
 	 * 
 	 * @return The time out
 	 */
-	Duration getTimeout();
+	String getTimeout();
 
 	/**
 	 * @param bufferResponse
@@ -98,7 +97,7 @@ public interface RequestCycleSettingsMBean
 	 * 
 	 * @param timeout
 	 */
-	void setTimeout(Duration timeout);
+	void setTimeout(String timeout);
 
 
 	/**

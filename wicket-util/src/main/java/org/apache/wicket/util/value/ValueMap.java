@@ -25,7 +25,6 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import org.apache.wicket.util.string.IStringIterator;
@@ -420,10 +419,10 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	}
 
 	/**
-	 * @see IValueMap#getInstant(String)
+	 * @see IValueMap#getTime(String)
 	 */
 	@Override
-	public final Instant getInstant(final String key) throws StringValueConversionException
+	public final Instant getTime(final String key) throws StringValueConversionException
 	{
 		return getStringValue(key).toTime();
 	}
@@ -776,7 +775,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 
 		try
 		{
-			return getInstant(key);
+			return getTime(key);
 		}
 		catch (StringValueConversionException ignored)
 		{

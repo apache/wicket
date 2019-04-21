@@ -17,13 +17,11 @@
 package org.apache.wicket.util.value;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.StringValueConversionException;
 
@@ -257,12 +255,12 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	}
 
 	/**
-	 * @see IValueMap#getInstant(String)
+	 * @see IValueMap#getTime(String)
 	 */
 	@Override
-	public Instant getInstant(final String key) throws StringValueConversionException
+	public Instant getTime(final String key) throws StringValueConversionException
 	{
-		return wrapped.getInstant(key);
+		return wrapped.getTime(key);
 	}
 
 	/**

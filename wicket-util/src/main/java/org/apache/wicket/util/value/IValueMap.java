@@ -19,7 +19,6 @@ package org.apache.wicket.util.value;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
-
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.StringValueConversionException;
 
@@ -180,7 +179,7 @@ public interface IValueMap extends Map<String, Object>
 	 * @return the <code>Time</code> object
 	 * @throws StringValueConversionException
 	 */
-	Instant getInstant(final String key) throws StringValueConversionException;
+	Instant getTime(final String key) throws StringValueConversionException;
 
 	/**
 	 * Returns whether or not this <code>IValueMap</code> is immutable.
