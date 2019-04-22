@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.util.thread;
 
-import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.time.Time;
+import java.time.Duration;
+import java.time.Instant;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +54,8 @@ public final class Task
 	/** the name of this <code>Task</code> */
 	private final String name;
 
-	/** the <code>Time</code> at which the task should start */
-	private Time startTime = Time.now();
+	/** the <code>Instant</code> at which the task should start */
+	private Instant startTime = Instant.now();
 
 	/** When set the task will stop as soon as possible */
 	private boolean stop;
@@ -95,15 +96,27 @@ public final class Task
 				public void run()
 				{
 					// Sleep until start time
-					startTime.fromNow().sleep();
-					final Logger log = getLog();
+				    Duration untilStart = Duration.between(startTime, Instant.now());
+					
+				    final Logger log = getLog();
+
+				    if (!untilStart.isNegative()) 
+				    {                      
+				      try 
+				      {
+                        Thread.sleep(untilStart.toMillis());
+                      } catch (InterruptedException e) 
+				      {
+                        log.error("An error occurred during sleeping phase.", e);
+                      }
+                    }
 
 					try
 					{
 						while (!stop)
 						{
 							// Get the start of the current period
-							final Time startOfPeriod = Time.now();
+							final Instant startOfPeriod = Instant.now();
 
 							if (log.isTraceEnabled())
 							{
@@ -128,7 +141,15 @@ public final class Task
 
 							// Sleep until the period is over (or not at all if it's
 							// already passed)
-							startOfPeriod.add(frequency).fromNow().sleep();
+							Instant nextExecution = startOfPeriod.plus(frequency);
+							
+							Duration timeToNextExecution = Duration.between(nextExecution, Instant.now());
+		                    
+		                    if (!timeToNextExecution.isNegative()) 
+		                    {                      
+		                      Thread.sleep(timeToNextExecution.toMillis());
+		                    }
+							
 						}
 					}
 					catch (Exception x)
@@ -198,7 +219,7 @@ public final class Task
 	 * @throws IllegalStateException
 	 *             Thrown if task is already running
 	 */
-	public synchronized void setStartTime(final Time startTime)
+	public synchronized void setStartTime(final Instant startTime)
 	{
 		if (isStarted)
 		{

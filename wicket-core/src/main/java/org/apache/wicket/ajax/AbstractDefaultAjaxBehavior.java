@@ -16,11 +16,8 @@
  */
 package org.apache.wicket.ajax;
 
+import java.time.Duration;
 import java.util.List;
-
-import com.github.openjson.JSONArray;
-import com.github.openjson.JSONException;
-import com.github.openjson.JSONObject;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -43,7 +40,9 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Duration;
+import com.github.openjson.JSONArray;
+import com.github.openjson.JSONException;
+import com.github.openjson.JSONObject;
 
 /**
  * The base class for Wicket's default AJAX implementation.
@@ -370,7 +369,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			if (requestTimeout != null)
 			{
 				attributesJson.put(AjaxAttributeName.REQUEST_TIMEOUT.jsonName(),
-					requestTimeout.getMilliseconds());
+					requestTimeout.toMillis());
 			}
 
 			boolean wicketAjaxResponse = attributes.isWicketAjaxResponse();
@@ -396,7 +395,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				}
 				throttlingSettingsJson.put(AjaxAttributeName.THROTTLING_ID.jsonName(), throttleId);
 				throttlingSettingsJson.put(AjaxAttributeName.THROTTLING_DELAY.jsonName(),
-					throttlingSettings.getDelay().getMilliseconds());
+					throttlingSettings.getDelay().toMillis());
 				if (throttlingSettings.getPostponeTimerOnUpdate())
 				{
 					throttlingSettingsJson.put(

@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.util.value;
 
-import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.time.Time;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
+
+import java.time.Duration;
+import java.time.Instant;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
@@ -181,20 +182,20 @@ public class ValueMapTest
 		Integer integerValue = 42;
 		Long longValue = integerValue * 1L;
 		Double doubleValue = integerValue * 1.0D;
-		Time timeValue = Time.now();
-		Duration durationValue = Duration.hours(1);
+		Instant timeValue = Instant.now();
+		Duration durationValue = Duration.ofHours(1);
 
 		boolean defBoolean = !booleanValue;
 		int defInteger = 10101;
 		long defLong = defInteger * 1L;
 		double defDouble = defInteger * 1.0D;
-		Time defTime = Time.now();
-		Duration defDuration = Duration.hours(42);
+		Instant defTime = Instant.now();
+		Duration defDuration = Duration.ofHours(42);
 
 		vm.put("num", integerValue.toString());
 		vm.put("num.bad", "xxx");
-		vm.put("time", timeValue.toString());
-		vm.put("time.bad", "xxx");
+		vm.put("instant", timeValue.toString());
+		vm.put("instant.bad", "xxx");
 		vm.put("duration", durationValue.toString());
 		vm.put("duration.bad", "xxx");
 		vm.put("boolean", booleanValue.toString());
@@ -229,14 +230,13 @@ public class ValueMapTest
 		assertNull(vm.getAsDouble("num.missing"));
 		assertEquals(defDouble, vm.getAsDouble("num.missing", defDouble), 0.001);
 
-		// time
-		assertEquals(timeValue.toString(), vm.getAsTime("time").toString()); // use toSTring since
-		// equals seems
-		// broken
-		assertNull(vm.getAsTime("time.bad"));
-		assertEquals(defTime, vm.getAsTime("time.bad", defTime));
-		assertNull(vm.getAsTime("time.missing"));
-		assertEquals(defTime, vm.getAsTime("time.missing", defTime));
+		// instant
+		assertEquals(timeValue, vm.getAsInstant("instant"));
+
+		assertNull(vm.getAsInstant("instant.bad"));
+		assertEquals(defTime, vm.getAsTime("instant.bad", defTime));
+		assertNull(vm.getAsInstant("instant.missing"));
+		assertEquals(defTime, vm.getAsTime("instant.missing", defTime));
 
 		// duration
 		assertEquals(durationValue, vm.getAsDuration("duration"));

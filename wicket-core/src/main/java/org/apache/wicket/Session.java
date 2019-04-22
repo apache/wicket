@@ -17,6 +17,7 @@
 package org.apache.wicket;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,7 +27,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
-
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.core.request.ClientInfo;
@@ -38,7 +38,6 @@ import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedbackContributor;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageAccessSynchronizer;
-import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
@@ -46,7 +45,6 @@ import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -991,7 +989,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 			}
 			else
 			{
-				timeout = Duration.minutes(1);
+				timeout = Duration.ofMinutes(1);
 				log.warn(
 					"PageAccessSynchronizer created outside of application thread, using default timeout: {}",
 					timeout);

@@ -56,7 +56,7 @@ import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
 

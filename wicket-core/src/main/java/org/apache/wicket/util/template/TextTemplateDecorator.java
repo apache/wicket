@@ -19,13 +19,12 @@ package org.apache.wicket.util.template;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
-
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.util.time.Time;
 
 
 /**
@@ -167,7 +166,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#lastModifiedTime()
 	 */
 	@Override
-	public Time lastModifiedTime()
+	public Instant lastModifiedTime()
 	{
 		return decorated.lastModifiedTime();
 	}
@@ -185,7 +184,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#setLastModified(org.apache.wicket.util.time.Time)
 	 */
 	@Override
-	public void setLastModified(Time lastModified)
+	public void setLastModified(Instant lastModified)
 	{
 		decorated.setLastModified(lastModified);
 	}

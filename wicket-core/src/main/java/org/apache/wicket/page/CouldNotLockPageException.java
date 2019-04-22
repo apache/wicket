@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.page;
 
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 
 /**
  * An exception that is being thrown when a second thread attempts to get

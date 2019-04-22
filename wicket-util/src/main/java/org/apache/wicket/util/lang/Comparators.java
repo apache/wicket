@@ -14,33 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.time;
+package org.apache.wicket.util.lang;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-/**
- * Test cases for {@link TimeOfDay}.
- * 
- * @author Jonathan Locke
- */
-public final class TimeOfDayTest
+public class Comparators 
 {
-	/**
-	 * 
-	 */
-	@Test
-	public void test()
-	{
-		assertEquals(0, TimeOfDay.MIDNIGHT.hour());
-		assertEquals(21, TimeOfDay.time(9, 30, TimeOfDay.PM).hour());
-		assertEquals(TimeOfDay.MIDNIGHT, TimeOfDay.valueOf(TimeOfDay.MIDNIGHT.next()));
 
-		final TimeOfDay three = TimeOfDay.time(3, 0, TimeOfDay.PM);
-		final TimeOfDay five = TimeOfDay.time(5, 0, TimeOfDay.PM);
+  public static <T extends Comparable<? super T>> T min(T firstComp, T secondComp) 
+  {
+    return firstComp.compareTo(secondComp) < 0 ? firstComp : secondComp;
+  }
 
-		assertTrue(five.after(three));
-	}
+  public static <T extends Comparable<? super T>> T max(T firstComp, T secondComp) 
+  {
+    return firstComp.compareTo(secondComp) > 0 ? firstComp : secondComp;
+  }
 }

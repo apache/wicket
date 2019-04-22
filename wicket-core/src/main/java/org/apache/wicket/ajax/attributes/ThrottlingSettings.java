@@ -19,7 +19,7 @@ package org.apache.wicket.ajax.attributes;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 
 /**
  * Class to keep track of throttling settings.

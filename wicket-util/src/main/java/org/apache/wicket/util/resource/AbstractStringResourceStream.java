@@ -23,12 +23,11 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-
+import java.time.Instant;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Time;
 
 
 /**
@@ -52,7 +51,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	private final String contentType;
 
 	/** The last time this stylesheet was modified */
-	private Time lastModified = null;
+	private Instant lastModified = null;
 
 	/**
 	 * Constructor.
@@ -73,7 +72,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 		// TODO null for contentType is allowed? or should the default be applied instead?
 		this.contentType = contentType;
 
-		lastModified = Time.now();
+		lastModified = Instant.now();
 	}
 
 	/**
@@ -178,7 +177,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
 	 */
 	@Override
-	public Time lastModifiedTime()
+	public Instant lastModifiedTime()
 	{
 		return lastModified;
 	}
@@ -187,7 +186,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	 * @param lastModified
 	 *            The lastModified to set.
 	 */
-	public void setLastModified(final Time lastModified)
+	public void setLastModified(final Instant lastModified)
 	{
 		this.lastModified = lastModified;
 	}

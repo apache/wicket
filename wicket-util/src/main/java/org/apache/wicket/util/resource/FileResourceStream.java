@@ -21,11 +21,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
-
+import java.time.Instant;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.time.Time;
 
 
 /**
@@ -134,7 +133,7 @@ public class FileResourceStream extends AbstractResourceStream
 	 * @return The last time this resource was modified
 	 */
 	@Override
-	public Time lastModifiedTime()
+	public Instant lastModifiedTime()
 	{
 		if (file != null)
 		{

@@ -16,10 +16,11 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import java.time.Duration;
 import org.apache.wicket.Session;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Durations;
 
 
 /**
@@ -152,9 +153,7 @@ public class UploadInfo implements IClusterable
 	 */
 	public String getRemainingTimeString()
 	{
-		return Duration.milliseconds(getRemainingMilliseconds())
-			.toString(Session.get().getLocale());
+		return Durations.toString(Duration.ofMillis(getRemainingMilliseconds()), 
+		    Session.get().getLocale());
 	}
-
-
 }
