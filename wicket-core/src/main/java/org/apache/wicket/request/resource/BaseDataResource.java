@@ -17,11 +17,9 @@
 package org.apache.wicket.request.resource;
 
 import java.net.URLConnection;
-
+import java.time.Instant;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.wicket.request.Response;
-import org.apache.wicket.util.time.Time;
 
 /**
  * An abstract resource that can deliver static data - passed to the constructor, or dynamic -
@@ -41,7 +39,7 @@ public abstract class BaseDataResource<T> extends AbstractResource
 	private T data;
 
 	/** the time that this resource was last modified; same as construction time. */
-	private final Time lastModified = Time.now();
+	private final Instant lastModified = Instant.now();
 
 	private final String filename;
 

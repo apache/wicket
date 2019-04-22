@@ -22,16 +22,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.time.Instant;
 import javax.imageio.ImageIO;
-
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Time;
 
 /**
  * Image resource that dynamically scales the given original resource to a thumbnail. It is scaled
@@ -81,7 +79,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 		{
 			final BufferedImage image = getScaledImageInstance(attributes);
 			thumbnail = toImageData(image);
-			setLastModifiedTime(Time.now());
+			setLastModifiedTime(Instant.now());
 		}
 		return thumbnail;
 	}

@@ -28,7 +28,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 
 /**
  * A link that streams a file to the client. When clicked this link will prompt the save as dialog

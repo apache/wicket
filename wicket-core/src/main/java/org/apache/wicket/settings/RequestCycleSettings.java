@@ -16,13 +16,12 @@
  */
 package org.apache.wicket.settings;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Duration;
 
 /**
  * Class for request related settings
@@ -169,7 +168,7 @@ public class RequestCycleSettings
 	 * The time that a request will by default be waiting for the previous request to be handled
 	 * before giving up. Defaults to one minute.
 	 */
-	private Duration timeout = Duration.ONE_MINUTE;
+	private Duration timeout = Duration.ofMinutes(1);
 
 	private int exceptionRetryCount = 10;
 

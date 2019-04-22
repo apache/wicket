@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.ajax;
 
+import java.time.Duration;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Duration;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
@@ -69,7 +69,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	protected final void setUpdateInterval(Duration updateInterval)
 	{
-		if (updateInterval == null || updateInterval.getMilliseconds() <= 0)
+		if (updateInterval == null || updateInterval.toMillis() <= 0)
 		{
 			throw new IllegalArgumentException("Invalid update interval");
 		}
@@ -202,7 +202,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 		headerResponse.render(
 			OnLoadHeaderItem.forScript(String.format("Wicket.Timer.set('%s', function(){%s}, %d);",
-				timerId, js, updateInterval.getMilliseconds())));
+				timerId, js, updateInterval.toMillis())));
 	}
 
 	private void clearTimeout(IHeaderResponse headerResponse)

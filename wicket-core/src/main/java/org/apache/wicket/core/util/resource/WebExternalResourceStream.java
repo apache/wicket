@@ -20,9 +20,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
+import java.time.Instant;
 import javax.servlet.ServletContext;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.io.Connections;
@@ -30,7 +29,6 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +77,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
 	}
 
 	@Override
-	public Time lastModifiedTime()
+	public Instant lastModifiedTime()
 	{
 		try
 		{

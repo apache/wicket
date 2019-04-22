@@ -26,7 +26,7 @@ import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.io.IClusterable;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 

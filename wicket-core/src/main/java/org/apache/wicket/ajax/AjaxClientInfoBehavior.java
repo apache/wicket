@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax;
 
+import java.time.Duration;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -26,7 +27,6 @@ import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Duration;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 /**
@@ -46,7 +46,7 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 	 */
 	public AjaxClientInfoBehavior()
 	{
-		this(Duration.milliseconds(50));
+		this(Duration.ofMillis(50));
 	}
 
 	/**

@@ -130,7 +130,7 @@ import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
