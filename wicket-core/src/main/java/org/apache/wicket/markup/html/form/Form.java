@@ -1575,10 +1575,10 @@ public class Form<T> extends WebMarkupContainer
 	{
 		super.onComponentTag(tag);
 
-		checkComponentTag(tag, "form");
-
 		if (isRootForm())
 		{
+			checkComponentTag(tag, "form");
+
 			String method = getMethod().toLowerCase(Locale.ROOT);
 			tag.put("method", method);
 			String url = getActionUrl().toString();
@@ -1631,7 +1631,11 @@ public class Form<T> extends WebMarkupContainer
 		}
 		else
 		{
-			tag.setName("div");
+			// WICKET-6658 form is not allowed, anything else can stay as is
+			if ("form".equals(tag.getName()))
+			{
+				tag.setName("div");
+			}
 			tag.remove("method");
 			tag.remove("action");
 			tag.remove("enctype");
