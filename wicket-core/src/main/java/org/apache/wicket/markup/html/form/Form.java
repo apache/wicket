@@ -1625,7 +1625,7 @@ public class Form<T> extends WebMarkupContainer
 		else
 		{
 			// WICKET-6658 form is not allowed, anything else can stay as is
-			if ("form".equals(tag.getName()))
+			if ("form".equalsIgnoreCase(tag.getName()))
 			{
 				tag.setName("div");
 			}
