@@ -21,36 +21,39 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 import java.util.Collections;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Tests for {@link Args}
  */
-public class ArgsTest
+class ArgsTest
 {
-
-
 	/**
 	 * Test for {@link Args#notEmpty(java.util.Collection, String, Object...)}
 	 */
 	@Test
-	public void notNullCollection()
+	void notNullCollection()
 	{
 		assertThrows(IllegalArgumentException.class, () -> {
 			Args.notEmpty((Collection<?>)null, "col");
 		});
-
 	}
 
 	/**
 	 * Test for {@link Args#notEmpty(java.util.Collection, String, Object...)}
 	 */
 	@Test
-	public void notEmptyCollection()
+	void notEmptyCollection()
 	{
 		assertThrows(IllegalArgumentException.class, () -> {
 			Args.notEmpty(Collections.emptySet(), "col");
 		});
 	}
 
+	@Test
+	void format()
+	{
+		assertEquals("Hello world", Args.format("Hello {}", "world"));
+	}
 }
