@@ -126,7 +126,7 @@
     <asm.version>7.1</asm.version>
 		<cglib.version>3.2.10</cglib.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
-		<commons-collections4.version>4.2</commons-collections4.version>
+		<commons-collections4.version>4.3</commons-collections4.version>
 		<commons-fileupload.version>1.4</commons-fileupload.version>
 		<commons-lang3.version>3.6</commons-lang3.version>
 		<jacoco.version>0.8.2</jacoco.version>
@@ -242,6 +242,12 @@
 				<groupId>commons-fileupload</groupId>
 				<artifactId>commons-fileupload</artifactId>
 				<version>${commons-fileupload.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>commons-io</groupId>
+						<artifactId>commons-io</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>commons-io</groupId>
