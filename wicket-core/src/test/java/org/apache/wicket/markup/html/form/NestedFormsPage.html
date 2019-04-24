@@ -42,13 +42,14 @@
 			<a wicket:id="toggle">[toggle]</a><br/>
 			<input type="button" wicket:id="submit"/>
 		
-			<form wicket:id="innerForm">
+			<!-- WICKET-6658 for nested forms any tag is allowed -->
+			<span wicket:id="innerForm">
 				<input type="text" wicket:id="first"/>
 				<input type="text" wicket:id="second"/><br/>
 				<a wicket:id="ajaxSubmit">submit via ajax</a><br/>
 				<a wicket:id="toggle">[toggle]</a><br/>
 				<input type="button" wicket:id="submit"/>
-			</form>
+			</span>
 		</form>
 	</form>
 </body>
