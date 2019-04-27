@@ -1,4 +1,4 @@
-= Wicket 8.x Reference Guide
+= Wicket 9.x Reference Guide
 The Apache Software Foundation
 :toc: left
 :icons: font
