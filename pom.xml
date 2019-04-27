@@ -956,6 +956,7 @@
 						</links>
 						<failOnError>false</failOnError>
 						<doclint>none</doclint>
+						<additionalJOption>--no-module-directories</additionalJOption>
 					</configuration>
 					<executions>
 						<execution>
@@ -1195,6 +1196,7 @@
 						<inherited>true</inherited>
 						<configuration>
 							<aggregate>true</aggregate>
+							<additionalJOption>--no-module-directories</additionalJOption>
 						</configuration>
 					</plugin>
 					<plugin>
