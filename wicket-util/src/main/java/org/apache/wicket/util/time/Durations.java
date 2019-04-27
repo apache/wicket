@@ -17,18 +17,13 @@
 package org.apache.wicket.util.time;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import org.apache.wicket.util.string.StringValue;
 
 public class Durations
 {
-
-	/** pattern to match strings */
-	private static final Pattern pattern = Pattern.compile(
-		"([0-9]+([.,][0-9]+)?)\\s+(millisecond|second|minute|hour|day)s?",
-		Pattern.CASE_INSENSITIVE);
 
 	public static String toString(final Duration duration, final Locale locale)
 	{
@@ -76,5 +71,10 @@ public class Durations
 	private static String unitString(final double value, final String units, final Locale locale)
 	{
 		return StringValue.valueOf(value, locale) + " " + units + ((value > 1.0) ? "s" : "");
+	}
+
+	public static Duration elapsedSince(Instant start)
+	{
+	    return Duration.between(start, Instant.now());
 	}
 }

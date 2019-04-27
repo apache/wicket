@@ -19,6 +19,7 @@ package org.apache.wicket.page;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Random;
@@ -26,11 +27,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.page.PageAccessSynchronizer.PageLock;
 import org.apache.wicket.util.WicketTestTag;
+import org.apache.wicket.util.time.Durations;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -141,10 +144,10 @@ class PageAccessSynchronizerTest
 				Random random = new Random();
 				Instant start = Instant.now();
 
-				while (PageAccessSynchronizer.elapsedSince(start).compareTo(duration) < 0 && error[0] == null)
+				while (Durations.elapsedSince(start).compareTo(duration) < 0 && error[0] == null)
 				{
 					logger.info("{} elapsed: {}, duration: {}", new Object[] {
-							Thread.currentThread().getName(), PageAccessSynchronizer.elapsedSince(start), duration });
+							Thread.currentThread().getName(), Durations.elapsedSince(start), duration });
 					int page1 = random.nextInt(counts.length);
 					int page2 = random.nextInt(counts.length);
 					int count = 0;

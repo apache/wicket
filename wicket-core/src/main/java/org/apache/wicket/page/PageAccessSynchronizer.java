@@ -23,11 +23,13 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.settings.ExceptionSettings.ThreadDumpStrategy;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Threads;
+import org.apache.wicket.util.time.Durations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +72,7 @@ public class PageAccessSynchronizer implements Serializable
 
 	private static long remaining(Instant start, Duration timeout)
 	{
-	  Duration elapsedTime = elapsedSince(start);
+	  Duration elapsedTime = Durations.elapsedSince(start);
       return Math.max(0, timeout.minus(elapsedTime).toMillis());
 	}
 
@@ -106,7 +108,7 @@ public class PageAccessSynchronizer implements Serializable
 
 		Duration timeout = getTimeout(pageId);
 
-		while (!locked && elapsedSince(start).compareTo(timeout) < 0)
+		while (!locked && Durations.elapsedSince(start).compareTo(timeout) < 0)
 		{
 			if (isDebugEnabled)
 			{
@@ -403,9 +405,4 @@ public class PageAccessSynchronizer implements Serializable
 			notifyAll();
 		}
 	}
-	
-	public static Duration elapsedSince(Instant start)
-    {
-        return Duration.between(start, Instant.now());
-    }
 }
