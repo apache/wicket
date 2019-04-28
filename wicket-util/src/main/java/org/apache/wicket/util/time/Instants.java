@@ -21,17 +21,28 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+/**
+ * 
+ * Utility class for {@link Instant}
+ *
+ */
 public class Instants
 {
 
-	public static final DateTimeFormatter RFC7231Formatter = DateTimeFormatter
+	public static final DateTimeFormatter RFC7231DateFormatter = DateTimeFormatter
 		.ofPattern("EEE, dd MMM yyyy HH:mm:ss O").withZone(ZoneId.of("UTC"));
 
 	public static final DateTimeFormatter localDateFormatter = DateTimeFormatter
 		.ofPattern("yyyy.MM.dd", Locale.ENGLISH);
 
+	/**
+	 * Formats a given {@link Instant} as required by RFC7231 for dates.
+	 * 
+	 * @param instant
+	 * @return the instant properly formatted
+	 */
 	public static String toRFC7231Format(final Instant instant)
 	{
-		return RFC7231Formatter.format(instant);
+		return RFC7231DateFormatter.format(instant);
 	}
 }

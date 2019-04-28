@@ -22,6 +22,11 @@ import java.util.Locale;
 
 import org.apache.wicket.util.string.StringValue;
 
+/**
+ * 
+ * Utility class for {@link Duration}
+ *
+ */
 public class Durations
 {
 
@@ -73,6 +78,12 @@ public class Durations
 		return StringValue.valueOf(value, locale) + " " + units + ((value > 1.0) ? "s" : "");
 	}
 
+	/**
+	 * Calculates the duration between a given {@link Instant} and the current one.
+	 * @param start 
+	 * 			a given instant
+	 * @return the duration between a given Instant and the current one
+	 */
 	public static Duration elapsedSince(Instant start)
 	{
 	    return Duration.between(start, Instant.now());
