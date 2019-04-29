@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -68,6 +69,16 @@ class PasswordTextFieldTest extends WicketTestCase
 
 		assertEquals("test", model.password);
 		assertTrue(model.detached);
+	}
+
+	@Test
+	void passwordsShouldNotBeTrimmed()
+	{
+		TestModel model = new TestModel();
+
+		PasswordTextField field = new PasswordTextField("password", model);
+
+		assertFalse(field.shouldTrimInput());
 	}
 
 	private class TestModel implements IModel<String>

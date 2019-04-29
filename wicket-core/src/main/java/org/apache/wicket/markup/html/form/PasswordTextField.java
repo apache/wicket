@@ -129,6 +129,18 @@ public class PasswordTextField extends TextField<String>
 			}
 		}
 
-		super.onDetach();
-	}
+        super.onDetach();
+    }
+
+    /**
+     * Overridden to prevent passwords from being trimmed
+     *
+     * @return false
+     * @see FormComponent#shouldTrimInput()
+     */
+    @Override
+    protected boolean shouldTrimInput()
+    {
+        return false;
+    }
 }
