@@ -26,7 +26,7 @@ public class InSessionPageStoreSizeTest extends AbstractPageStoreTest
 	@Override
 	protected IPageStore createPageStore(int maxEntries)
 	{
-		return new InSessionPageStore(new NoopPageStore(), Bytes.bytes(pageData.length * maxEntries));
+		return new InSessionPageStore(Bytes.bytes(pageData.length * maxEntries));
 	}
 
 }
