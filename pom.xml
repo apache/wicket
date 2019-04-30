@@ -132,7 +132,7 @@
 		<maven.compiler.target>11</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<cglib.version>3.2.10</cglib.version>
+		<cglib.version>3.2.11</cglib.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.3</commons-collections4.version>
 		<commons-fileupload.version>1.4</commons-fileupload.version>
@@ -140,7 +140,7 @@
 		<commons-lang3.version>3.8.1</commons-lang3.version>
 		<jacoco.version>0.8.2</jacoco.version>
 		<jackson.version>2.9.8</jackson.version>
-		<jetty.version>9.4.15.v20190215</jetty.version>
+		<jetty.version>9.4.18.v20190429</jetty.version>
 		<junit.version>5.4.2</junit.version>
 		<spring.version>5.1.6.RELEASE</spring.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
