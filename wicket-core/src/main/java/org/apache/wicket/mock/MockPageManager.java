@@ -56,17 +56,23 @@ public class MockPageManager implements IPageManager
 	}
 
 	@Override
-	public void addPage(IManageablePage page)
+	public void touchPage(IManageablePage page)
 	{
 		pages.put(page.getPageId(), page);
 	}
 
 	@Override
-	public void removeAllPages()
+	public void clear()
 	{
 		pages.clear();
 	}
 
+	@Override
+	public void untouchPage(IManageablePage page)
+	{
+		pages.remove(page.getPageId());
+	}
+	
 	@Override
 	public void detach()
 	{

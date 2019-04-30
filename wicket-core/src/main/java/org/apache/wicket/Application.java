@@ -1523,7 +1523,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 		{
 			session = newSession(requestCycle.getRequest(), requestCycle.getResponse());
 			ThreadContext.setSession(session);
-			internalGetPageManager().removeAllPages();
+			internalGetPageManager().clear();
 			sessionListeners.onCreated(session);
 		}
 		else

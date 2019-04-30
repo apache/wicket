@@ -34,7 +34,7 @@ public class RequestPageStoreTest
 {
 
 	@Test
-	void test()
+	void testAdd()
 	{
 		MockPageStore mockStore = new MockPageStore();
 		
@@ -42,9 +42,9 @@ public class RequestPageStoreTest
 
 		RequestPageStore store = new RequestPageStore(mockStore);
 		
-		MockPage page1 = new MockPage(2);
-		MockPage page2 = new MockPage(3);
-		MockPage page3 = new MockPage(4);
+		MockPage page1 = new MockPage(1);
+		MockPage page2 = new MockPage(2);
+		MockPage page3 = new MockPage(3);
 		
 		store.addPage(context, page1);
 		store.addPage(context, page2);
@@ -58,8 +58,32 @@ public class RequestPageStoreTest
 		
 		mockStore.getPages().clear();
 		
+		assertNull(store.getPage(context, 1), "no page in request store");
 		assertNull(store.getPage(context, 2), "no page in request store");
 		assertNull(store.getPage(context, 3), "no page in request store");
-		assertNull(store.getPage(context, 4), "no page in request store");
+	}
+	
+	@Test
+	void testUntouch()
+	{
+		MockPageStore mockStore = new MockPageStore();
+		
+		MockPageContext context = new MockPageContext();
+
+		RequestPageStore store = new RequestPageStore(mockStore);
+		
+		MockPage page = new MockPage(1);
+		
+		store.addPage(context, page);
+		
+		store.revertPage(context, page);
+		
+		assertTrue(mockStore.getPages().isEmpty(), "no page delegated before detach");
+		
+		store.detach(context);
+		
+		assertEquals(0, mockStore.getPages().size(), "untouched page not delegated on detach");
+		
+		assertNull(store.getPage(context, 1), "no page in request store");
 	}
 }

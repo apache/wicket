@@ -74,6 +74,15 @@ public interface IPageStore
 	void removeAllPages(IPageContext context);
 
 	/**
+	 * Revert adding a page - optional operation. 
+	 *
+	 * @param page
+	 *      the page that should be reverted
+	 */
+	default void revertPage(IPageContext context, IManageablePage page) {
+	}
+
+	/**
 	 * Restores a page from storage.
 	 * 
 	 * @param context

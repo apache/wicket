@@ -287,7 +287,7 @@ public abstract class Page extends MarkupContainer
 
 			if (isInitialization == false)
 			{
-				pageManager.addPage(this);
+				pageManager.touchPage(this);
 			}
 		}
 	}
@@ -298,7 +298,7 @@ public abstract class Page extends MarkupContainer
 		super.onInitialize();
 
 		final IPageManager pageManager = getSession().getPageManager();
-		pageManager.addPage(this);
+		pageManager.touchPage(this);
 	}
 
 	/**
@@ -825,7 +825,7 @@ public abstract class Page extends MarkupContainer
 			getSession().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
 
 			// Add/touch the response page in the session.
-			getSession().getPageManager().addPage(this);
+			getSession().getPageManager().touchPage(this);
 		}
 
 		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
@@ -936,7 +936,7 @@ public abstract class Page extends MarkupContainer
 		setStatelessHint(false);
 
 		// make sure the page will be available on following request
-		getSession().getPageManager().addPage(this);
+		getSession().getPageManager().touchPage(this);
 
 		return new PageReference(numericId);
 	}

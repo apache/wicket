@@ -65,7 +65,7 @@ class PersistentPageManagerTest
 
 		// add a page
 		TestPage toSerializePage = new TestPage();
-		pageManager.addPage(toSerializePage);
+		pageManager.touchPage(toSerializePage);
 		pageManager.detach();
 
 		// get the stored SessionEntry

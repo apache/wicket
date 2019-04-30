@@ -56,12 +56,21 @@ public interface IPageManager
 	 * @param page
 	 *            page to add
 	 */
-	void addPage(IManageablePage page);
+	void touchPage(IManageablePage page);
 	
 	/**
-	 * Remove all pages.
+	 * Marks page as non-changed.
+	 * Could be used in Ajax requests to avoid storing the page if no changes have happened.
+	 *
+	 * @param page
+	 *      the page that should <strong>not</strong> be stored in the page stores at the end of the request.
 	 */
-	void removeAllPages();
+	void untouchPage(IManageablePage page);
+
+	/**
+	 * Clear all pages.
+	 */
+	void clear();
 
 	/**
 	 * Detach at end of request.
@@ -79,18 +88,4 @@ public interface IPageManager
 	 * @return store or <code>null</code>
 	 */
 	IPageStore getPageStore();
-
-	/**
-	 * @deprecated will be removed in Wicket 10
-	 */
-	default void touchPage(IManageablePage page) {
-		addPage(page);
-	}
-
-	/**
-	 * @deprecated will be removed in Wicket 10
-	 */
-	default void clear() {
-		removeAllPages();
-	}
 }

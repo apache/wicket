@@ -136,7 +136,7 @@ public class RenderPageRequestHandler
 			if (Session.exists())
 			{
 				// WICKET-5499
-				Session.get().getPageManager().addPage(pageProvider.getPageInstance());
+				Session.get().getPageManager().touchPage(pageProvider.getPageInstance());
 			}
 		}
 	}

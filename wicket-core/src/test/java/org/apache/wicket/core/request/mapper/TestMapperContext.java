@@ -78,7 +78,7 @@ public class TestMapperContext implements IMapperContext
 		pageContext.clearRequest();
 		MockPage other = new MockPage();
 		other.setPageId(Integer.MAX_VALUE);
-		getPageManager().addPage(other);
+		getPageManager().touchPage(other);
 		pageManager.detach();
 	}
 

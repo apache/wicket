@@ -70,6 +70,12 @@ public abstract class DelegatingPageStore implements IPageStore
 	}
 
 	@Override
+	public void revertPage(IPageContext context, IManageablePage page)
+	{
+		delegate.revertPage(context, page);
+	}
+	
+	@Override
 	public void detach(IPageContext context)
 	{
 		delegate.detach(context);
