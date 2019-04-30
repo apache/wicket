@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.pageStore;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.apache.wicket.MetaDataKey;
@@ -78,6 +79,14 @@ public class RequestPageStore extends DelegatingPageStore
 	}
 
 	@Override
+	public void revertPage(IPageContext context, IManageablePage page)
+	{
+		getRequestData(context).remove(page);
+		
+		getDelegate().revertPage(context, page);
+	}
+	
+	@Override
 	public void detach(IPageContext context)
 	{
 		RequestData requestData = getRequestData(context);
@@ -125,7 +134,8 @@ public class RequestPageStore extends DelegatingPageStore
 
 		public Iterable<IManageablePage> pages()
 		{
-			return pages;
+			// must work on copy to prevent concurrent modification when page is re-added during detaching 
+			return new ArrayList<>(pages);
 		}
 
 		public IManageablePage get(int id)

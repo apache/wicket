@@ -62,17 +62,23 @@ public class PageManager implements IPageManager
 	}
 
 	@Override
-	public void addPage(IManageablePage page)
+	public void touchPage(IManageablePage page)
 	{
 		store.addPage(createPageContext(), page);
 	}
 
 	@Override
-	public void removeAllPages()
+	public void clear()
 	{
 		store.removeAllPages(createPageContext());
 	}
 
+	@Override
+	public void untouchPage(IManageablePage page)
+	{
+		store.revertPage(createPageContext(), page);
+	}
+	
 	@Override
 	public void detach()
 	{

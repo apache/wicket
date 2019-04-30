@@ -282,17 +282,23 @@ public class PageAccessSynchronizer implements Serializable
 			}
 
 			@Override
-			public void addPage(IManageablePage page)
+			public void touchPage(IManageablePage page)
 			{
 				lockPage(page.getPageId());
 				
-				manager.addPage(page);
+				manager.touchPage(page);
 			}
 
 			@Override
-			public void removeAllPages()
+			public void clear()
 			{
-				manager.removeAllPages();
+				manager.clear();
+			}
+			
+			@Override
+			public void untouchPage(IManageablePage page)
+			{
+				manager.untouchPage(page);
 			}
 			
 			@Override

@@ -1044,7 +1044,7 @@ public class ModalWindow extends Panel
 			CharSequence pageUrl;
 			RequestCycle requestCycle = RequestCycle.get();
 
-			page.getSession().getPageManager().addPage(page);
+			page.getSession().getPageManager().touchPage(page);
 			if (page.isPageStateless())
 			{
 				pageUrl = requestCycle.urlFor(page.getClass(), page.getPageParameters());

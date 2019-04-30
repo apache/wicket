@@ -290,7 +290,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	{
 		if (isTemporary() == false)
 		{
-			getPageManager().removeAllPages();
+			getPageManager().clear();
 		}
 	}
 

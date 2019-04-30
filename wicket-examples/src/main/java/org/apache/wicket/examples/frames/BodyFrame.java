@@ -41,7 +41,7 @@ public class BodyFrame extends WebPage
 	{
 		// create a new page instance, passing this 'master page' as an argument
 		LeftFrame leftFrame = new LeftFrame(this);
-		getSession().getPageManager().addPage(leftFrame);
+		getSession().getPageManager().touchPage(leftFrame);
 		// get the url to that page
 		IRequestHandler leftFrameHandler = new RenderPageRequestHandler(new PageProvider(leftFrame));
 		// and create a simple component that modifies it's src attribute to

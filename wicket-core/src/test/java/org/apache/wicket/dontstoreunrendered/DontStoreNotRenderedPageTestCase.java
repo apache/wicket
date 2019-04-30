@@ -58,10 +58,10 @@ public abstract class DontStoreNotRenderedPageTestCase extends WicketTestCase
 					return new MockPageManager()
 					{
 						@Override
-						public void addPage(IManageablePage page)
+						public void touchPage(IManageablePage page)
 						{
 							assertFalse(page instanceof PageB, "PageB should not be touched!");
-							super.addPage(page);
+							super.touchPage(page);
 						}
 					};
 				};
