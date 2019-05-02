@@ -25,7 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.servlet.http.Cookie;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
@@ -150,7 +152,7 @@ public class MockWebRequest extends WebRequest
 		if (date instanceof Instant == false)
 		{
 			throw new WicketRuntimeException("Date header with name '" + name +
-				"' is not a valid Time.");
+				"' is not a valid Instant.");
 		}
 		return (Instant)date;
 	}
