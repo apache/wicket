@@ -108,7 +108,7 @@ module.exports = function(grunt) {
 					urls: [
 						'http://localhost:38887/test/js/all.html?1.12.4',
 						'http://localhost:38887/test/js/all.html?2.2.4',
-						'http://localhost:38887/test/js/all.html?3.4.0'
+						'http://localhost:38887/test/js/all.html?3.4.1'
 					]
 				}
 			},
@@ -121,7 +121,7 @@ module.exports = function(grunt) {
 					urls: [
 						'http://localhost:38887/test/js/amd.html?1.12.4',
 						'http://localhost:38887/test/js/amd.html?2.2.4',
-						'http://localhost:38887/test/js/amd.html?3.4.0'
+						'http://localhost:38887/test/js/amd.html?3.4.1'
 					]
 				}
 			}
