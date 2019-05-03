@@ -55,13 +55,16 @@
 	so that if there is an error, we can simply change 
 	the class and it will use the error colors instead.
 */
-.wicketDebugBarError {
-	background-color: red;
-	opacity: 0.8;
-}
 .wicketDebugBar {
 	background-color: #DDDDDD;
 	opacity: 0.8;
+}
+.wicketDebugBarError {
+	animation: wicketDebugBarFlicker 1s;
+}
+@keyframes wicketDebugBarFlicker {
+	25%, 75% {background-color: red;}
+	0%, 50%, 100% {background-color: #DDDDDD;}	
 }
 
 #wicketDebugBarCollapse {

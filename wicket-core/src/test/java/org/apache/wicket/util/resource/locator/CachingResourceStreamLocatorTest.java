@@ -82,7 +82,7 @@ class CachingResourceStreamLocatorTest
 		Locale locale = null;
 		String extension = null;
 
-		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
+		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js";
 
 		// a strict lookup for the resource with no specific locale results in a match
 		IResourceStream strictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
@@ -113,7 +113,7 @@ class CachingResourceStreamLocatorTest
 		Locale locale = new Locale("nl", "NL");
 		String extension = null;
 
-		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
+		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js";
 
 		// a strict lookup of a localized resource should not find the non-localized resource
 		IResourceStream strictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
@@ -143,7 +143,7 @@ class CachingResourceStreamLocatorTest
 		Locale locale = new Locale("nl", "NL");
 		String extension = null;
 
-		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
+		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js";
 
 		// a non-strict lookup with a specific locale should find the non-localized resource
 		IResourceStream nonStrictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
