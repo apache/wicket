@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.listener.ChangeListenerSet;
 import org.apache.wicket.util.listener.IChangeListener;
@@ -89,7 +90,7 @@ public class ModificationWatcher implements IModificationWatcher
 		// Found it?
 		if (entry == null)
 		{
-		    Instant lastModifiedTime = modifiable.lastModifiedTime();
+			Instant lastModifiedTime = modifiable.lastModifiedTime();
 			if (lastModifiedTime != null)
 			{
 				// Construct new entry

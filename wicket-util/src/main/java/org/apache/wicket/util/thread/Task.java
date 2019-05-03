@@ -96,20 +96,21 @@ public final class Task
 				public void run()
 				{
 					// Sleep until start time
-				    Duration untilStart = Duration.between(startTime, Instant.now());
-					
-				    final Logger log = getLog();
+					Duration untilStart = Duration.between(startTime, Instant.now());
 
-				    if (!untilStart.isNegative()) 
-				    {                      
-				      try 
-				      {
-                        Thread.sleep(untilStart.toMillis());
-                      } catch (InterruptedException e) 
-				      {
-                        log.error("An error occurred during sleeping phase.", e);
-                      }
-                    }
+					final Logger log = getLog();
+
+					if (!untilStart.isNegative())
+					{
+						try
+						{
+							Thread.sleep(untilStart.toMillis());
+						}
+						catch (InterruptedException e)
+						{
+							log.error("An error occurred during sleeping phase.", e);
+						}
+					}
 
 					try
 					{
@@ -145,10 +146,10 @@ public final class Task
 							
 							Duration timeToNextExecution = Duration.between(nextExecution, Instant.now());
 		                    
-		                    if (!timeToNextExecution.isNegative()) 
-		                    {                      
-		                      Thread.sleep(timeToNextExecution.toMillis());
-		                    }
+							if (!timeToNextExecution.isNegative())
+							{
+								Thread.sleep(timeToNextExecution.toMillis());
+							}
 							
 						}
 					}

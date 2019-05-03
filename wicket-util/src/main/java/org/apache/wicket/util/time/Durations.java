@@ -80,12 +80,13 @@ public class Durations
 
 	/**
 	 * Calculates the duration between a given {@link Instant} and the current one.
-	 * @param start 
-	 * 			a given instant
+	 * 
+	 * @param start
+	 *            a given instant
 	 * @return the duration between a given Instant and the current one
 	 */
 	public static Duration elapsedSince(Instant start)
 	{
-	    return Duration.between(start, Instant.now());
+		return Duration.between(start, Instant.now());
 	}
 }

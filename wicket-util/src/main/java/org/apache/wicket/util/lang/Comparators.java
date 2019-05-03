@@ -16,16 +16,16 @@
  */
 package org.apache.wicket.util.lang;
 
-public class Comparators 
+public class Comparators
 {
 
-  public static <T extends Comparable<? super T>> T min(T firstComp, T secondComp) 
-  {
-    return firstComp.compareTo(secondComp) < 0 ? firstComp : secondComp;
-  }
+	public static <T extends Comparable<? super T>> T min(T firstComp, T secondComp)
+	{
+		return firstComp.compareTo(secondComp) < 0 ? firstComp : secondComp;
+	}
 
-  public static <T extends Comparable<? super T>> T max(T firstComp, T secondComp) 
-  {
-    return firstComp.compareTo(secondComp) > 0 ? firstComp : secondComp;
-  }
+	public static <T extends Comparable<? super T>> T max(T firstComp, T secondComp)
+	{
+		return firstComp.compareTo(secondComp) > 0 ? firstComp : secondComp;
+	}
 }

@@ -18,13 +18,16 @@ package org.apache.wicket.request.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Time;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
@@ -442,7 +445,7 @@ public abstract class AbstractResource implements IResource
 				// that's stupid, since changes within one second will not be reliably
 				// detected by the client ... any hint or clarification to improve this
 				// situation will be appreciated...
-			    Instant roundedLastModified = lastModified.truncatedTo(ChronoUnit.SECONDS);
+				Instant roundedLastModified = lastModified.truncatedTo(ChronoUnit.SECONDS);
 
 				return ifModifiedSince.isBefore(roundedLastModified);
 			}

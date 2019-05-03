@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.wicket.util.WicketTestTag;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -65,7 +67,7 @@ class StoredResponsesMapTest
 	@Test
 	void getExpiredValue() throws Exception
 	{
-	    Instant start = Instant.now();
+		Instant start = Instant.now();
 		Duration timeout = Duration.ofMillis(50);
 		StoredResponsesMap map = new StoredResponsesMap(1000, timeout);
 		assertEquals(0, map.size());
@@ -75,7 +77,7 @@ class StoredResponsesMapTest
 		Duration elapsedTime = Duration.between(start, Instant.now());
 		elapsedTime = elapsedTime.truncatedTo(ChronoUnit.MILLIS);
 		
-        assertTrue(elapsedTime.compareTo(timeout) > 0, "The timeout has passed.");
+		assertTrue(elapsedTime.compareTo(timeout) > 0, "The timeout has passed.");
 		Object value = map.get("1");
 		assertNull(value);
 	}

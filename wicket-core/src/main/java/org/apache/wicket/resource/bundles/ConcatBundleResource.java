@@ -24,7 +24,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.IReferenceHeaderItem;
 import org.apache.wicket.request.resource.AbstractResource;
@@ -157,10 +159,10 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 
 	protected Instant findLastModified(List<IResourceStream> resources)
 	{
-	    Instant ret = null;
+		Instant ret = null;
 		for (IResourceStream curStream : resources)
 		{
-		    Instant curLastModified = curStream.lastModifiedTime();
+			Instant curLastModified = curStream.lastModifiedTime();
 			if (ret == null || curLastModified.isAfter(ret))
 				ret = curLastModified;
 		}
