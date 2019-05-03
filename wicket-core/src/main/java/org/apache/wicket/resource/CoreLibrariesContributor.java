@@ -59,17 +59,13 @@ public class CoreLibrariesContributor
 	{
 		JavaScriptLibrarySettings jsLibrarySettings = application.getJavaScriptLibrarySettings();
 
+		ResourceReference wicketAjaxReference = jsLibrarySettings.getWicketAjaxReference();
+		response.render(JavaScriptHeaderItem.forReference(wicketAjaxReference));
+		
 		final DebugSettings debugSettings = application.getDebugSettings();
 		if (debugSettings.isAjaxDebugModeEnabled())
 		{
-			response.render(JavaScriptHeaderItem.forReference(jsLibrarySettings.getWicketAjaxDebugReference()));
-			response.render(JavaScriptHeaderItem.forScript("Wicket.Ajax.DebugWindow.enabled=true;",
-				"wicket-ajax-debug-enable"));
-		}
-		else
-		{
-			ResourceReference wicketAjaxReference = jsLibrarySettings.getWicketAjaxReference();
-			response.render(JavaScriptHeaderItem.forReference(wicketAjaxReference));
+			response.render(JavaScriptHeaderItem.forScript("Wicket.Log.enabled=true;", "wicket-ajax-debug-enable"));
 		}
 	}
 }

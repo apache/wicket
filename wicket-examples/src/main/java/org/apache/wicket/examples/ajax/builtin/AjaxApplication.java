@@ -42,8 +42,6 @@ public class AjaxApplication extends WicketExampleApplication
 
 		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 
-		getDebugSettings().setAjaxDebugModeEnabled(true);
-		
 		getComponentInitializationListeners().add(new IComponentInitializationListener()
 		{
 			@Override

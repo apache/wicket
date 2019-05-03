@@ -225,28 +225,36 @@
 	 * Logging functionality.
 	 */
 	Wicket.Log = {
+			
+		enabled: false,
 
-		enabled: function () {
-			return Wicket.Ajax.DebugWindow && Wicket.Ajax.DebugWindow.enabled;
+		log: function (msg) {
+			if (Wicket.Log.enabled && typeof(console) !== "undefined" && typeof(console.log) === 'function') {
+				console.log('Wicket: ', msg);
+			}
+		},
+
+		debug: function (msg) {
+			if (Wicket.Log.enabled && typeof(console) !== "undefined" && typeof(console.debug) === 'function') {
+				console.debug('Wicket: ', msg);
+			}
 		},
 
 		info: function (msg) {
-			if (Wicket.Log.enabled()) {
-				Wicket.Ajax.DebugWindow.logInfo(msg);
+			if (Wicket.Log.enabled && typeof(console) !== "undefined" && typeof(console.info) === 'function') {
+				console.info('Wicket: ', msg);
+			}
+		},
+
+		warn: function (msg) {
+			if (Wicket.Log.enabled && typeof(console) !== "undefined" && typeof(console.warn) === 'function') {
+				console.warn('Wicket: ', msg);
 			}
 		},
 
 		error: function (msg) {
-			if (Wicket.Log.enabled()) {
-				Wicket.Ajax.DebugWindow.logError(msg);
-			} else if (typeof(console) !== "undefined" && typeof(console.error) === 'function') {
-				console.error('Wicket.Ajax: ', msg);
-			}
-		},
-
-		log: function (msg) {
-			if (Wicket.Log.enabled()) {
-				Wicket.Ajax.DebugWindow.log(msg);
+			if (Wicket.Log.enabled && typeof(console) !== "undefined" && typeof(console.error) === 'function') {
+				console.error('Wicket: ', msg);
 			}
 		}
 	};
@@ -688,6 +696,9 @@
 				}
 			}
 
+			Wicket.Log.info("Executing Ajax request");
+			Wicket.Log.debug(attrs);
+
 			// execute the request
 			var jqXHR = jQuery.ajax({
 				url: url,
@@ -829,11 +840,9 @@
 				}
 				else {
 					// no redirect, just regular response
-					if (Wicket.Log.enabled()) {
-						var responseAsText = jqXHR.responseText;
-						Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
-						Wicket.Log.info("\n" + responseAsText);
-					}
+					var responseAsText = jqXHR.responseText;
+					Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
+					Wicket.Log.debug(jqXHR.responseXML);
 
 					// invoke the loaded callback with an xml document
 					return this.loadedCallback(data, context);
@@ -926,7 +935,7 @@
 		failure: function (context, jqXHR, errorMessage, textStatus) {
 			context.steps.push(jQuery.proxy(function (notify) {
 				if (errorMessage) {
-					Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + errorMessage);
+					Wicket.Log.error("Ajax.Call.failure: Error while parsing response: " + errorMessage);
 				}
 				var attrs = context.attrs;
 				this._executeHandlers(attrs.fh, attrs, jqXHR, errorMessage, textStatus);
@@ -953,7 +962,7 @@
 				var element = Wicket.$(compId);
 
 				if (isUndef(element)) {
-					Wicket.Log.error("Wicket.Ajax.Call.processComponent: Component with id [[" +
+					Wicket.Log.error("Ajax.Call.processComponent: Component with id [[" +
 						compId + "]] was not found while trying to perform markup update. " +
 						"Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.");
 				} else {
@@ -1000,7 +1009,7 @@
 						var f = window.eval(toExecute);
 						f(notify);
 					} catch (exception) {
-						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
+						log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
 					}
 					return FunctionsExecuter.ASYNC;
 				};
@@ -1013,7 +1022,7 @@
 						// do the evaluation in global scope
 						window.eval(script);
 					} catch (exception) {
-						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
+						log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
 					}
 					// continue to next step
 					return FunctionsExecuter.DONE;
@@ -1993,7 +2002,7 @@
 										document.createStyleSheet().cssText = content;
 									}
 									catch(e) {
-										Wicket.Log.error("Wicket.Head.Contributor.processStyle: " + e);
+										Wicket.Log.error("Head.Contributor.processStyle: " + e);
 									}
 									notify();
 								};
@@ -2093,7 +2102,7 @@
 									// do the evaluation in global scope
 									window.eval(text);
 								} catch (e) {
-									Wicket.Log.error("Wicket.Head.Contributor.processScript: " + e + ": eval -> " + text);
+									Wicket.Log.error("Head.Contributor.processScript: " + e + ": eval -> " + text);
 								}
 							}
 
@@ -2279,170 +2288,6 @@
 						for (var i = 0; i < scripts.length; ++i) {
 							add(scripts[i]);
 						}
-					}
-				}
-			}
-		},
-
-		/**
-		 * Flexible dragging support.
-		 */
-		Drag: {
-
-			/**
-			 * Initializes dragging on the specified element.
-			 * 
-			 * @param element {Element}
-			 *            element clicking on which
-			 *            the drag should begin
-			 * @param onDragBegin {Function}
-			 *            called at the begin of dragging - passed element and event as parameters,
-			 *            may return false to prevent the start
-			 * @param onDragEnd {Function}
-			 *            handler called at the end of dragging - passed element as parameter
-			 * @param onDrag {Function}
-			 *            handler called during dragging - passed element and mouse deltas as parameters
-			 */
-			init: function(element, onDragBegin, onDragEnd, onDrag) {
-
-				if (typeof(onDragBegin) === "undefined") {
-					onDragBegin = jQuery.noop;
-				}
-
-				if (typeof(onDragEnd) === "undefined") {
-					onDragEnd = jQuery.noop;
-				}
-
-				if (typeof(onDrag) === "undefined") {
-					onDrag = jQuery.noop;
-				}
-
-				element.wicketOnDragBegin = onDragBegin;
-				element.wicketOnDrag = onDrag;
-				element.wicketOnDragEnd = onDragEnd;
-
-
-				// set the mousedown handler
-				Wicket.Event.add(element, "mousedown", Wicket.Drag.mouseDownHandler);
-			},
-
-			mouseDownHandler: function (e) {
-				e = Wicket.Event.fix(e);
-
-				var element = this;
-
-				if (element.wicketOnDragBegin(element, e) === false) {
-					return;
-				}
-
-				if (e.preventDefault) {
-					e.preventDefault();
-				}
-
-				element.lastMouseX = e.clientX;
-				element.lastMouseY = e.clientY;
-
-				element.old_onmousemove = document.onmousemove;
-				element.old_onmouseup = document.onmouseup;
-				element.old_onselectstart = document.onselectstart;
-				element.old_onmouseout = document.onmouseout;
-
-				document.onselectstart = function () {
-					return false;
-				};
-				document.onmousemove = Wicket.Drag.mouseMove;
-				document.onmouseup = Wicket.Drag.mouseUp;
-				document.onmouseout = Wicket.Drag.mouseOut;
-
-				Wicket.Drag.current = element;
-			},
-
-			/**
-			 * Deinitializes the dragging support on given element.
-			 */
-			clean: function (element) {
-				element.onmousedown = null;
-			},
-
-			/**
-			 * Called when mouse is moved. This method fires the onDrag event
-			 * with element instance, deltaX and deltaY (the distance
-			 * between this call and the previous one).
-
-			 * The onDrag handler can optionally return an array of two integers
-			 * - the delta correction. This is used, for example, if there is
-			 * element being resized and the size limit has been reached (but the
-			 * mouse can still move).
-			 *
-			 * @param {Event} e
-			 */
-			mouseMove: function (e) {
-				e = Wicket.Event.fix(e);
-				var o = Wicket.Drag.current;
-
-				// this happens sometimes in Safari
-				if (e.clientX < 0 || e.clientY < 0) {
-					return;
-				}
-
-				if (o !== null) {
-					var deltaX = e.clientX - o.lastMouseX;
-					var deltaY = e.clientY - o.lastMouseY;
-
-					var res = o.wicketOnDrag(o, deltaX, deltaY, e);
-
-					if (isUndef(res)) {
-						res = [0, 0];
-					}
-
-					o.lastMouseX = e.clientX + res[0];
-					o.lastMouseY = e.clientY + res[1];
-				}
-
-				return false;
-			},
-
-			/**
-			 * Called when the mouse button is released.
-			 * Cleans all temporary variables and callback methods.
-			 */
-			mouseUp: function () {
-				var o = Wicket.Drag.current;
-
-				if (o) {
-					o.wicketOnDragEnd(o);
-
-					o.lastMouseX = null;
-					o.lastMouseY = null;
-
-					document.onmousemove = o.old_onmousemove;
-					document.onmouseup = o.old_onmouseup;
-					document.onselectstart = o.old_onselectstart;
-
-					document.onmouseout = o.old_onmouseout;
-
-					o.old_mousemove = null;
-					o.old_mouseup = null;
-					o.old_onselectstart = null;
-					o.old_onmouseout = null;
-
-					Wicket.Drag.current = null;
-				}
-			},
-
-			/**
-			 * Called when mouse leaves an element. We need this for firefox, as otherwise
-			 * the dragging would continue after mouse leaves the document.
-			 * Unfortunately this break dragging in firefox immediately after the mouse leaves
-			 * page.
-			 */
-			mouseOut: function (e) {
-				if (false && Wicket.Browser.isGecko()) {
-					// other browsers handle this more gracefully
-					e = Wicket.Event.fix(e);
-
-					if (e.target.tagName === "HTML") {
-						Wicket.Drag.mouseUp(e);
 					}
 				}
 			}
