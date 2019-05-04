@@ -124,7 +124,7 @@
 
 		<!-- Project Versions -->
     <asm.version>7.1</asm.version>
-		<cglib.version>3.2.11</cglib.version>
+		<cglib.version>3.2.12</cglib.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.3</commons-collections4.version>
 		<commons-fileupload.version>1.4</commons-fileupload.version>
@@ -799,12 +799,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-archetype-plugin</artifactId>
-					<version>3.0.1</version>
+					<version>3.1.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.6.2</version>
+					<version>3.8.1</version>
 					<inherited>true</inherited>
 				</plugin>
 				<plugin>
