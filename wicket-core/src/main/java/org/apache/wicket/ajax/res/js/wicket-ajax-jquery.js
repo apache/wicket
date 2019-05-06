@@ -36,19 +36,6 @@
 		return;
 	}
 
-	/**
-	 * Add a check for old Safari. It should not be our responsibility to check the
-	 * browser's version, but it's a minor version that makes a difference here,
-	 * so we try to be at least user friendly.
-	 */
-	if (typeof(DOMParser) === "undefined" && Wicket.Browser.isSafari()) {
-		DOMParser = function () {};
-
-		DOMParser.prototype.parseFromString = function () {
-			window.alert('You are using an old version of Safari.\nTo be able to use this page you need at least version 2.0.1.');
-		};
-	}
-
 	var getAjaxBaseUrl,
 		isUndef,
 		replaceAll,
@@ -2467,15 +2454,6 @@
 	jQuery.extend(true, Wicket, {
 
 		Browser: {
-			_isSafari: null,
-			isSafari: function () {
-				var wb = Wicket.Browser;
-				if (wb._isSafari === null) {
-					wb._isSafari = !/Chrome/.test(window.navigator.userAgent) && /KHTML/.test(window.navigator.userAgent) && /Apple/.test(window.navigator.userAgent);
-				}
-				return wb._isSafari;
-			},
-
 			_isChrome: null,
 			isChrome: function () {
 				var wb = Wicket.Browser;
@@ -2489,7 +2467,7 @@
 			isIE: function () {
 				var wb = Wicket.Browser;
 				if (wb._isIE === null) {
-					wb._isIE = !Wicket.Browser.isSafari() && (typeof(document.all) !== "undefined" || window.navigator.userAgent.indexOf("Trident/")>-1) && typeof(window.opera) === "undefined";
+					wb._isIE = (typeof(document.all) !== "undefined" || window.navigator.userAgent.indexOf("Trident/")>-1) && typeof(window.opera) === "undefined";
 				}
 				return wb._isIE;
 			},
@@ -2519,7 +2497,7 @@
 			isIELessThan11: function () {
 				var wb = Wicket.Browser;
 				if (wb._isIELessThan11 === null) {
-					wb._isIELessThan11 = !Wicket.Browser.isSafari() && typeof(document.all) !== "undefined" && typeof(window.opera) === "undefined";
+					wb._isIELessThan11 = typeof(document.all) !== "undefined" && typeof(window.opera) === "undefined";
 				}
 				return wb._isIELessThan11;
 			},
