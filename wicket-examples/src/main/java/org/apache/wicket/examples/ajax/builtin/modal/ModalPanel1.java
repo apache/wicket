@@ -16,8 +16,13 @@
  */
 package org.apache.wicket.examples.ajax.builtin.modal;
 
-import org.apache.wicket.extensions.markup.html.form.datetime.LocalDateTimeField;
+import java.util.Arrays;
+import java.util.Iterator;
+
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteSettings;
+import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 
 /**
  * @author Matej Knopp
@@ -32,6 +37,17 @@ public class ModalPanel1 extends Panel
 	public ModalPanel1(String id)
 	{
 		super(id);
-		add(new LocalDateTimeField("dateTimeField"));
+		
+		AutoCompleteSettings settings = new AutoCompleteSettings();
+		settings.setShowListOnEmptyInput(true);
+		
+		add(new AutoCompleteTextField<String>("edit", new Model<>(), settings)
+		{
+			@Override
+			protected Iterator<String> getChoices(String input)
+			{
+				return Arrays.asList("A", "B", "C").iterator();
+			}
+		});
 	}
 }
