@@ -488,14 +488,7 @@
 				this.update = window.setInterval(Wicket.bind(this.updateTitle, this), 100);
 			}
 
-			// opera seems to have problem accessing contentWindow here
-			if (Wicket.Browser.isOpera()) {
-				this.content.onload = Wicket.bind(function() {
-					this.content.contentWindow.name = this.settings.iframeName;
-				}, this);
-			} else {
-				this.content.contentWindow.name = this.settings.iframeName;
-			}
+			this.content.contentWindow.name = this.settings.iframeName;
 
 			try
 			{
