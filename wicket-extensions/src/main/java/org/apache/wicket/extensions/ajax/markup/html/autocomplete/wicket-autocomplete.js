@@ -128,9 +128,6 @@
 						}
 						render(true, false);
 
-						if (Wicket.Browser.isSafari()) {
-							return jqEvent.stopPropagation();
-						}
 						break;
 					case KEY_DOWN:
 						if (selected < elementCount-1) {
@@ -144,9 +141,6 @@
 						} else {
 							render(true, false);
 							showAutoComplete();
-						}
-						if (Wicket.Browser.isSafari()) {
-							return jqEvent.stopPropagation();
 						}
 						break;
 					case KEY_ESC:
