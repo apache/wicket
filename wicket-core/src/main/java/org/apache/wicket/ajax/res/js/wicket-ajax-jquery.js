@@ -829,11 +829,6 @@
 						}
 						calculatedRedirect += "/" + redirectUrl;
 
-						if (Wicket.Browser.isGecko()) {
-							// firefox 3 has problem with window.location setting relative url
-							calculatedRedirect = window.location.protocol + "//" + window.location.host + calculatedRedirect;
-						}
-
 						context.isRedirecting = true;
 						Wicket.Ajax.redirect(calculatedRedirect);
 					}
@@ -2067,9 +2062,6 @@
 										onScriptReady();
 									}
 								};
-							} else if (Wicket.Browser.isGecko()) {
-								// Firefox doesn't react on the checks above but still supports 'onload'
-								scriptDomNode.onload = onScriptReady;
 							} else {
 								// as a final resort notify after the current function execution
 								window.setTimeout(onScriptReady, 10);
@@ -2551,15 +2543,6 @@
 					wb._isIE11 = isTrident && is11;
 				}
 				return wb._isIE11;
-			},
-
-			_isGecko: null,
-			isGecko: function () {
-				var wb = Wicket.Browser;
-				if (wb._isGecko === null) {
-					wb._isGecko = (/Gecko/).test(window.navigator.userAgent) && !Wicket.Browser.isSafari();
-				}
-				return wb._isGecko;
 			}
 		},
 
@@ -2611,7 +2594,6 @@
 			},
 
 			fire: function (element, event) {
-				event = (event === 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : event;
 				jQuery(element).trigger(event);
 			},
 
@@ -2638,7 +2620,6 @@
 						jQuery(fn);
 					});
 				} else {
-					type = (type === 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : type;
 					var el = element;
 					if (typeof(element) === 'string') {
 						el = document.getElementById(element);

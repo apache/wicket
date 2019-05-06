@@ -253,7 +253,7 @@
 			// HACK - IE doesn't support position:fixed. Gecko does, however for a reason
 			// we need to have background position: absolute, which makes the movement of
 			// the window really jerky if the window stays position: fixed
-			if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
+			if (Wicket.Browser.isIELessThan11()) {
 				this.window.style.position = "absolute";
 			}
 
@@ -350,7 +350,7 @@
 			var scTop = 0;
 			var scLeft = 0;
 
-			if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
+			if (Wicket.Browser.isIELessThan11()) {
 				scLeft = Wicket.Window.getScrollX();
 				scTop = Wicket.Window.getScrollY();
 			}
@@ -575,15 +575,7 @@
 
 			this.adjustOpenWindowsStatusOnShow();
 
-			// show the window
-			if (false && Wicket.Browser.isGecko() && this.isIframe()) {
-				// HACK
-				// gecko flickers when showing the window
-				// unless the showing is postponed a little
-				window.setTimeout(function() { doShow(); }, 0);
-			} else {
-				doShow();
-			}
+			doShow();
 
 			// if the content supports focus and blur it, which means
 			// that the already focused element will lose it's focus
@@ -1144,7 +1136,7 @@
 				// HACK - it really sucks that we have to set this to absolute even for gecko.
 				// however background with position:fixed makes the text cursor in textfieds
 				// in modal window disappear
-				if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
+				if (Wicket.Browser.isIELessThan11()) {
 					e.style.position = "absolute";
 				}
 
@@ -1687,14 +1679,6 @@
 		 * page.
 		 */
 		mouseOut: function (e) {
-			if (false && Wicket.Browser.isGecko()) {
-				// other browsers handle this more gracefully
-				e = Wicket.Event.fix(e);
-
-				if (e.target.tagName === "HTML") {
-					Wicket.Drag.mouseUp(e);
-				}
-			}
 		}
 	};
 	
