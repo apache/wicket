@@ -2485,15 +2485,6 @@
 				return wb._isChrome;
 			},
 
-			_isOpera: null,
-			isOpera: function () {
-				var wb = Wicket.Browser;
-				if (wb._isOpera === null) {
-					wb._isOpera = !Wicket.Browser.isSafari() && typeof(window.opera) !== "undefined";
-				}
-				return wb._isOpera;
-			},
-
 			_isIE: null,
 			isIE: function () {
 				var wb = Wicket.Browser;
