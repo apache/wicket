@@ -71,7 +71,7 @@
 		var Win;
 
 		// if it is an iframe window...
-		if (typeof(settings.src) !== "undefined" && Wicket.Browser.isKHTML() === false) {
+		if (typeof(settings.src) !== "undefined") {
 			// attempt to get class from parent
 			try {
 				Win = window.parent.Wicket.Window;
@@ -757,13 +757,6 @@
 						this.captionText.innerHTML = this.content.contentWindow.document.title;
 						// http://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby
 						this.window.setAttribute('aria-labelledBy', this.content.contentWindow.document.title);
-
-						// konqueror doesn't refresh caption text properly
-						if (Wicket.Browser.isKHTML()) {
-							this.captionText.style.display = 'none';
-							window.setTimeout(Wicket.bind(function() { this.captionText.style.display="block";}, this), 0);
-						}
-
 					}
 				}
 			} catch (ignore) {
@@ -791,7 +784,7 @@
 		onEnd: function(object) {
 			jQuery(this.window).find('iframe').css('pointer-events', 'auto');
 
-			if (Wicket.Browser.isKHTML() || this.content.style.visibility==='hidden') {
+			if (this.content.style.visibility==='hidden') {
 				this.content.style.visibility='hidden';
 				window.setTimeout(Wicket.bind(function() { this.content.style.visibility='visible'; }, this),  0 );
 			}
@@ -1143,16 +1136,9 @@
 
 				e.style.zIndex = Wicket.Window.Mask.zIndex;
 
-				// HACK - KHTML doesn't support colors with alpha transparency
-				// if the mask is not transparent we have to either
-				// make the background image visible (setting color to transparent) - for KHTML
-				// or make the background-image invisible (setting it to null) - for other browsers
+				// if the mask is not transparent we have to make the background-image invisible (setting it to null)
 				if (this.transparent === false) {
-					if (Wicket.Browser.isKHTML() === false) {
-						e.style.backgroundImage = "none";
-					} else {
-						e.style.backgroundColor = "transparent";
-					}
+					e.style.backgroundImage = "none";
 				}
 
 				// HACK - it really sucks that we have to set this to absolute even for gecko.
