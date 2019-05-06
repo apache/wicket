@@ -1854,12 +1854,6 @@
 					// get the header contribution text and unescape it if necessary
 					var text = Wicket.DOM.text(headerNode);
 
-					if (Wicket.Browser.isKHTML()) {
-						// konqueror crashes if there is a <script element in the xml, but <SCRIPT is fine.
-						text = text.replace(/<script/g, "<SCRIPT");
-						text = text.replace(/<\/script>/g, "</SCRIPT>");
-					}
-
 					// build a DOM tree of the contribution
 					var xmldoc = Wicket.Xml.parse(text);
 					return xmldoc;
@@ -2481,15 +2475,6 @@
 	jQuery.extend(true, Wicket, {
 
 		Browser: {
-			_isKHTML: null,
-			isKHTML: function () {
-				var wb = Wicket.Browser;
-				if (wb._isKHTML === null) {
-					wb._isKHTML = (/Konqueror|KHTML/).test(window.navigator.userAgent) && !/Apple/.test(window.navigator.userAgent);
-				}
-				return wb._isKHTML;
-			},
-
 			_isSafari: null,
 			isSafari: function () {
 				var wb = Wicket.Browser;
