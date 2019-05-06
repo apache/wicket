@@ -32,10 +32,9 @@ define(
 			runTests: function () {
 				qunit.test("Wicket object is successfully loaded via RequireJs", function () {
 
-					qunit.expect(15);
+					qunit.expect(14);
 
 					// test for one member for each Wicket.** module
-					qunit.ok($.isFunction(w.Browser.isChrome), "Wicket Browser (from wicket-ajax-jquery.js) is imported");
 					qunit.ok($.isFunction(w.Event.fix), "Wicket Event (from wicket-ajax-jquery.js) is imported");
 					qunit.ok($.isFunction(w.Ajax.ajax), "Wicket Ajax (from wicket-ajax-jquery.js) is imported");
 					qunit.ok($.isFunction(w.DOM.get), "Wicket DOM (from wicket-ajax-jquery.js) is imported");
