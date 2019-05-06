@@ -329,25 +329,15 @@ jQuery(document).ready(function() {
 
 		stop();
 
-		if (Wicket.Browser.isIELessThan11()) {
-			expect(3);
-		} else {
-			expect(1);
-		}
+		expect(1);
 
 		var $input = jQuery("#inputChangeInput");
 		$input.on("inputchange", function() {
 			ok(true, "inputchange event is triggered!");
 		});
 
-		if (Wicket.Browser.isIELessThan11()) {
-			$input.trigger("paste");
-			$input.trigger("keyup");
-			$input.trigger("cut");
-		} else {
-			$input.trigger("input");
-		}
+		$input.trigger("input");
+		
 		start();
-
 	});
 });

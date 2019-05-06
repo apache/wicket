@@ -668,14 +668,6 @@
 
 			Wicket.Log.info("Response processed successfully.");
 			hideIndicator();
-
-			// hack for a focus issue in IE, WICKET-2279
-			if (Wicket.Browser.isIELessThan11()) {
-				var range = document.selection.createRange();
-				if (range !== null) {
-					range.select();
-				}
-			}
 		}
 
 		function scheduleEmptyCheck() {
