@@ -1966,37 +1966,16 @@
 						// serialize the style to string
 						var content = Wicket.DOM.serializeNodeChildren(node);
 
-						// create stylesheet
-						if (Wicket.Browser.isIELessThan11()) {
-							try  {
-								document.createStyleSheet().cssText = content;
-								return FunctionsExecuter.DONE;
-							}
-							catch (ignore) {
-								var run = function() {
-									try {
-										document.createStyleSheet().cssText = content;
-									}
-									catch(e) {
-										Wicket.Log.error("Head.Contributor.processStyle: " + e);
-									}
-									notify();
-								};
-								window.setTimeout(run, 1);
-								return FunctionsExecuter.ASYNC;
-							}
-						} else {
-							// create style element
-							var style = Wicket.Head.createElement("style");
+						// create style element
+						var style = Wicket.Head.createElement("style");
 
-							// copy id attribute
-							style.id = node.getAttribute("id");
+						// copy id attribute
+						style.id = node.getAttribute("id");
 
-							var textNode = document.createTextNode(content);
-							style.appendChild(textNode);
+						var textNode = document.createTextNode(content);
+						style.appendChild(textNode);
 
-							Wicket.Head.addElement(style);
-						}
+						Wicket.Head.addElement(style);
 
 						// continue to next step
 						return FunctionsExecuter.DONE;
@@ -2471,26 +2450,6 @@
 					wb._isIEQuirks = Wicket.Browser.isIE() && window.document.documentElement.clientHeight === 0;
 				}
 				return wb._isIEQuirks;
-			},
-
-			_isIELessThan9: null,
-			isIELessThan9: function () {
-				var wb = Wicket.Browser;
-				if (wb._isIELessThan9 === null) {
-					var index = window.navigator.userAgent.indexOf("MSIE");
-					var version = parseFloat(window.navigator.userAgent.substring(index + 5));
-					wb._isIELessThan9 = Wicket.Browser.isIE() && version < 9;
-				}
-				return wb._isIELessThan9;
-			},
-
-			_isIELessThan11: null,
-			isIELessThan11: function () {
-				var wb = Wicket.Browser;
-				if (wb._isIELessThan11 === null) {
-					wb._isIELessThan11 = typeof(document.all) !== "undefined" && typeof(window.opera) === "undefined";
-				}
-				return wb._isIELessThan11;
 			},
 
 			_isIE11: null,
