@@ -2454,15 +2454,6 @@
 	jQuery.extend(true, Wicket, {
 
 		Browser: {
-			_isChrome: null,
-			isChrome: function () {
-				var wb = Wicket.Browser;
-				if (wb._isChrome === null) {
-					wb._isChrome = (/KHTML/).test(window.navigator.userAgent) && /Apple/.test(window.navigator.userAgent) && /Chrome/.test(window.navigator.userAgent);
-				}
-				return wb._isChrome;
-			},
-
 			_isIE: null,
 			isIE: function () {
 				var wb = Wicket.Browser;
