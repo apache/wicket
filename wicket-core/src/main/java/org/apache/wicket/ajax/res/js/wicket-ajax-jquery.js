@@ -2432,39 +2432,6 @@
 
 	jQuery.extend(true, Wicket, {
 
-		Browser: {
-			_isIE: null,
-			isIE: function () {
-				var wb = Wicket.Browser;
-				if (wb._isIE === null) {
-					wb._isIE = (typeof(document.all) !== "undefined" || window.navigator.userAgent.indexOf("Trident/")>-1) && typeof(window.opera) === "undefined";
-				}
-				return wb._isIE;
-			},
-
-			_isIEQuirks: null,
-			isIEQuirks: function () {
-				var wb = Wicket.Browser;
-				if (wb._isIEQuirks === null) {
-					// is the browser internet explorer in quirks mode (we could use document.compatMode too)
-					wb._isIEQuirks = Wicket.Browser.isIE() && window.document.documentElement.clientHeight === 0;
-				}
-				return wb._isIEQuirks;
-			},
-
-			_isIE11: null,
-			isIE11: function () {
-				var wb = Wicket.Browser;
-				if (wb._isIE11 === null) {
-					var userAgent = window.navigator.userAgent;
-					var isTrident = userAgent.indexOf("Trident") > -1;
-					var is11 = userAgent.indexOf("rv:11") > -1;
-					wb._isIE11 = isTrident && is11;
-				}
-				return wb._isIE11;
-			}
-		},
-
 		/**
 		 * Events related code
 		 * Based on code from Mootools (http://mootools.net)
@@ -2634,91 +2601,6 @@
 			}
 		}
 	});
-	/**
-	 * A special event that is used to listen for immediate changes in input fields.
-	 */
-	jQuery.event.special.inputchange = {
-
-		keys : {
-			BACKSPACE	: 8,
-			TAB			: 9,
-			ENTER		: 13,
-			ESC			: 27,
-			LEFT		: 37,
-			UP			: 38,
-			RIGHT		: 39,
-			DOWN		: 40,
-			SHIFT		: 16,
-			CTRL		: 17,
-			ALT			: 18,
-			END			: 35,
-			HOME		: 36
-		},
-
-		keyDownPressed : false,
-
-		setup: function () {
-
-			if (Wicket.Browser.isIE()) {
-				// WICKET-5959: IE >= 11 supports "input" events, but triggers too often
-				// to be reliable
-
-				jQuery(this).on('keydown', function (event) {
-					jQuery.event.special.inputchange.keyDownPressed = true;
-				});
-
-				jQuery(this).on("cut paste", function (evt) {
-
-					var self = this;
-
-					if (false === jQuery.event.special.inputchange.keyDownPressed) {
-						window.setTimeout(function() {
-							jQuery.event.special.inputchange.handler.call(self, evt);
-						}, 10);
-					}
-				});
-
-				jQuery(this).on("keyup", function (evt) {
-					jQuery.event.special.inputchange.keyDownPressed = false; // reset
-					jQuery.event.special.inputchange.handler.call(this, evt);
-				});
-
-			} else {
-
-				jQuery(this).on("input", jQuery.event.special.inputchange.handler);
-			}
-		},
-
-		teardown: function() {
-			jQuery(this).off("input keyup cut paste", jQuery.event.special.inputchange.handler);
-		},
-
-		handler: function( evt ) {
-			var WE = Wicket.Event;
-			var k = jQuery.event.special.inputchange.keys;
-
-			var kc = WE.keyCode(WE.fix(evt));
-			switch (kc) {
-				case k.ENTER:
-				case k.UP:
-				case k.DOWN:
-				case k.ESC:
-				case k.TAB:
-				case k.RIGHT:
-				case k.LEFT:
-				case k.SHIFT:
-				case k.ALT:
-				case k.CTRL:
-				case k.HOME:
-				case k.END:
-					return WE.stop(evt);
-				default:
-					evt.type = "inputchange";
-					var args = Array.prototype.slice.call( arguments, 0 );
-					return jQuery(this).trigger(evt.type, args);
-			}
-		}
-	};
 
 	// MISC FUNCTIONS
 
