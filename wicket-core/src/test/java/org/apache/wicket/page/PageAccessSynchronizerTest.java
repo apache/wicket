@@ -19,15 +19,14 @@ package org.apache.wicket.page;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.mock.MockPageManager;
