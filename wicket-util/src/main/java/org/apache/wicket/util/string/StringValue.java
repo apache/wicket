@@ -558,7 +558,7 @@ public class StringValue implements IClusterable
 		}
 		catch (Exception e)
 		{
-			throw new StringValueConversionException("xxx", e);
+			throw new StringValueConversionException("Unable to convert '" + text + "' to a Duration value", e);
 		}
 	}
 

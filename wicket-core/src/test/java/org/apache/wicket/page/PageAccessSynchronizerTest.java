@@ -106,7 +106,7 @@ class PageAccessSynchronizerTest
 		T2 t2 = new T2();
 		t2.setName("t2");
 		t1.start();
-		Thread.sleep(100);
+		TimeUnit.MILLISECONDS.sleep(100);
 		t2.start();
 
 		t1.join();
