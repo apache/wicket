@@ -39,7 +39,6 @@
 	var getAjaxBaseUrl,
 		isUndef,
 		replaceAll,
-		htmlToDomDocument,
 		nodeListToArray;
 
 	isUndef = function (target) {
@@ -60,20 +59,6 @@
 	getAjaxBaseUrl = function () {
 		var baseUrl = Wicket.Ajax.baseUrl || '.';
 		return baseUrl;
-	};
-
-	/**
-	 * Helper method that serializes HtmlDocument to string and then
-	 * creates a DOMDocument by parsing this string.
-	 * It is used as a workaround for the problem described at https://issues.apache.org/jira/browse/WICKET-4332
-	 * @param htmlDocument (DispHtmlDocument) the document object created by IE from the XML response in the iframe
-	 */
-	htmlToDomDocument = function (htmlDocument) {
-		var xmlAsString = htmlDocument.body.outerText;
-		xmlAsString = xmlAsString.replace(/^\s+|\s+$/g, ''); // trim
-		xmlAsString = xmlAsString.replace(/(\n|\r)-*/g, ''); // remove '\r\n-'. The dash is optional.
-		var xmldoc = Wicket.Xml.parse(xmlAsString);
-		return xmldoc;
 	};
 
 	/**
@@ -842,11 +827,6 @@
 			// loaded.
 			try {
 				var root = envelope.getElementsByTagName("ajax-response")[0];
-
-				if (isUndef(root) && envelope.compatMode === 'BackCompat') {
-					envelope = htmlToDomDocument(envelope);
-					root = envelope.getElementsByTagName("ajax-response")[0];
-				}
 
 				// the root element must be <ajax-response
 				if (isUndef(root) || root.tagName !== "ajax-response") {
