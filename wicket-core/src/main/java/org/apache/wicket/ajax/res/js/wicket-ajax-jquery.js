@@ -36,11 +36,7 @@
 		return;
 	}
 
-	var getAjaxBaseUrl,
-		isUndef,
-		nodeListToArray;
-
-	isUndef = function (target) {
+	var isUndef = function (target) {
 		return (typeof(target) === 'undefined' || target === null);
 	};
 
@@ -50,7 +46,7 @@
 	 * return '.' (current folder) as base URL.
 	 * Used for request header and parameter
 	 */
-	getAjaxBaseUrl = function () {
+	var getAjaxBaseUrl = function () {
 		var baseUrl = Wicket.Ajax.baseUrl || '.';
 		return baseUrl;
 	};
@@ -61,7 +57,7 @@
 	 * @param nodeList The NodeList to convert
 	 * @returns {Array} The array with document nodes
 	 */
-	nodeListToArray = function (nodeList) {
+	var nodeListToArray = function (nodeList) {
 		var arr = [],
 			nodeId;
 		if (nodeList && nodeList.length) {
@@ -2385,12 +2381,8 @@
 					}
 				}
 			}
-		}
-	});
-
-
-	jQuery.extend(true, Wicket, {
-
+		},
+		
 		/**
 		 * Events related code
 		 * Based on code from Mootools (http://mootools.net)
