@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.base.Stopwatch;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.ISerializer;
@@ -334,8 +333,6 @@ public class AsynchronousPageStoreTest
 
 		IPageStore asyncPageStore = new AsynchronousPageStore(pageStore, asyncPageStoreCapacity);
 
-		Stopwatch stopwatch = Stopwatch.createUnstarted();
-
 		for (int pageId = 1; pageId <= pages; pageId++)
 		{
 			for (int i = 1; i <= sessions; i++)
@@ -343,19 +340,17 @@ public class AsynchronousPageStoreTest
 				String sessionId = String.valueOf(i);
 				Metrics metrics = new Metrics();
 
-				stopwatch.reset();
 				DummyPage page = new DummyPage(pageId, around(writeMillis), around(readMillis),
 						sessionId);
-				stopwatch.start();
+				final long startStoring = System.currentTimeMillis();
 				asyncPageStore.storePage(sessionId, page);
 				metrics.storedPage = page;
-				metrics.storingMillis = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+				metrics.storingMillis = System.currentTimeMillis() - startStoring;
 
-				stopwatch.reset();
-				stopwatch.start();
+				final long startRestoring = System.currentTimeMillis();
 				metrics.restoredPage = DummyPage.class
 						.cast(asyncPageStore.getPage(sessionId, pageId));
-				metrics.restoringMillis = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+				metrics.restoringMillis = System.currentTimeMillis() - startRestoring;
 
 				results.add(metrics);
 			}
