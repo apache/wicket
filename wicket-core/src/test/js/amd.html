@@ -10,17 +10,12 @@
             paths: {
                 'jquery': '../../main/java/org/apache/wicket/resource/jquery/jquery-'+location.search.substring(1), // no .js extension
                 'Wicket': '../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery',
-                'WicketDebugWindow': '../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug',
                 "qunit": "qunit/qunit"
             },
             shim: {
                 'Wicket': {
                 	deps: ['jquery'],
                     exports: 'Wicket'
-                },
-                'WicketDebugWindow': {
-                    deps: ['Wicket'],
-                    exports: 'WicketDebugWindow'
                 }
             }
         };
@@ -30,7 +25,7 @@
     <!-- the module under test -->
     <script>
         require(["amd", "qunit"], function (amdModule, qunit) {
-                amdModule.runTests();   
+                amdModule.runTests();
                 qunit.start();
             }
         );
