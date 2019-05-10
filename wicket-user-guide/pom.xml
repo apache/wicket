@@ -65,7 +65,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>1.4</version>
+					<version>3.0.0-M2</version>
 					<inherited>false</inherited>
 					<configuration>
 						<skip>true</skip>
@@ -74,7 +74,7 @@
 						<dependency>
 							<groupId>com.github.ferstl</groupId>
 							<artifactId>pedantic-pom-enforcers</artifactId>
-							<version>1.2.0</version>
+							<version>1.3.2</version>
 						</dependency>
 					</dependencies>
 				</plugin>
@@ -159,12 +159,12 @@
 						<dependency>
 							<groupId>org.asciidoctor</groupId>
 							<artifactId>asciidoctorj-diagram</artifactId>
-							<version>1.5.4</version>
+							<version>1.5.16</version>
 						</dependency>
 						<dependency>
 							<groupId>org.asciidoctor</groupId>
 							<artifactId>asciidoctorj</artifactId>
-							<version>1.5.5</version>
+							<version>${asciidoctor.version}</version>
 						</dependency>
 						<dependency>
 							<groupId>org.jruby</groupId>
