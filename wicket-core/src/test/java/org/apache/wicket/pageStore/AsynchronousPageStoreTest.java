@@ -40,8 +40,6 @@ import org.apache.wicket.util.WicketTestTag;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.google.common.base.Stopwatch;
-
 
 /**
  * AsynchronousPageStoreTest
@@ -449,8 +447,6 @@ public class AsynchronousPageStoreTest
 
 		IPageStore asyncPageStore = new AsynchronousPageStore(pageStore, asyncPageStoreCapacity);
 
-		Stopwatch stopwatch = Stopwatch.createUnstarted();
-
 		for (int pageId = 1; pageId <= pages; pageId++)
 		{
 			for (int i = 1; i <= sessions; i++)
@@ -459,18 +455,17 @@ public class AsynchronousPageStoreTest
 				IPageContext context = new MockPageContext(sessionId);
 				Metrics metrics = new Metrics();
 
-				stopwatch.reset();
-				DummyPage page = new DummyPage(pageId, around(writeMillis), around(readMillis), sessionId);
-				stopwatch.start();
+				DummyPage page = new DummyPage(pageId, around(writeMillis), around(readMillis),
+						sessionId);
+				final long startStoring = System.currentTimeMillis();
 				asyncPageStore.addPage(context, page);
 				metrics.storedPage = page;
-				metrics.storingMillis = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+				metrics.storingMillis = System.currentTimeMillis() - startStoring;
 
-				stopwatch.reset();
-				stopwatch.start();
+				final long startRestoring = System.currentTimeMillis();
 				metrics.restoredPage = DummyPage.class
 						.cast(asyncPageStore.getPage(context, pageId));
-				metrics.restoringMillis = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+				metrics.restoringMillis = System.currentTimeMillis() - startRestoring;
 
 				results.add(metrics);
 			}
