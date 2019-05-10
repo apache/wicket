@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/*global DOMParser: true, ActiveXObject: true, console: true */
+/*global DOMParser: true, console: true */
 
 /*
  * Wicket Ajax Support
@@ -1167,40 +1167,9 @@
 
 		Xml: {
 			parse: function (text) {
-				var xmlDocument;
-				if (window.DOMParser) {
-					var parser = new DOMParser();
-					xmlDocument = parser.parseFromString(text, "text/xml");
-				} else if (window.ActiveXObject) {
-					try {
-						xmlDocument = new ActiveXObject("Msxml2.DOMDocument.6.0");
-					} catch (err6) {
-						try {
-							xmlDocument = new ActiveXObject("Msxml2.DOMDocument.5.0");
-						} catch (err5) {
-							try {
-								xmlDocument = new ActiveXObject("Msxml2.DOMDocument.4.0");
-							} catch (err4) {
-								try {
-									xmlDocument = new ActiveXObject("MSXML2.DOMDocument.3.0");
-								} catch (err3) {
-									try {
-										xmlDocument = new ActiveXObject("Microsoft.XMLDOM");
-									} catch (err2) {
-										Wicket.Log.error("Cannot create DOM document: " + err2);
-									}
-								}
-							}
-						}
-					}
+				var parser = new DOMParser();
 
-					if (xmlDocument) {
-						xmlDocument.async = "false";
-						if (!xmlDocument.loadXML(text)) {
-							Wicket.Log.error("Error parsing response: "+text);
-						}
-					}
-				}
+				var xmlDocument = parser.parseFromString(text, "text/xml");
 
 				return xmlDocument;
 			}
