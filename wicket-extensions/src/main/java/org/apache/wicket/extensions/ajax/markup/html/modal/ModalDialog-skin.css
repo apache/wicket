@@ -1,0 +1,24 @@
+body.modal-dialog-open {
+	
+}
+
+body.modal-dialog-no-scroll {
+}
+
+.modal-dialog-overlay {
+	background: rgba(0, 0, 0, 0.2);
+}
+
+.modal-dialog {
+	max-width: 800px;
+	background: white;
+	box-shadow: 0 0 60px 10px rgba(0, 0, 0, 0.7);
+}
+
+.modal-dialog-scroll-area {
+	overflow: auto;
+}
+
+.modal-dialog-content {
+	padding: 20px;
+}

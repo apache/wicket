@@ -1,0 +1,43 @@
+body.modal-dialog-open {
+	
+}
+
+body.modal-dialog-no-scroll {
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+}
+
+body.modal-dialog-open-ios {
+	position: fixed;
+}
+
+.modal-dialog-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	z-index: 1000000;
+}
+
+.modal-dialog {
+	position: relative;
+	width: 100%;
+	margin: auto;
+	overflow: hidden;
+	z-index: 1000010;
+}
+
+.modal-dialog-scroll-area {
+	overflow: auto;
+}
+
+.modal-dialog-content {
+}
