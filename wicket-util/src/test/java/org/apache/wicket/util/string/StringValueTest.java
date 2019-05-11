@@ -16,13 +16,18 @@
  */
 package org.apache.wicket.util.string;
 
-import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.time.Time;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("javadoc")
 public class StringValueTest
@@ -55,7 +60,7 @@ public class StringValueTest
 		assertNull(sv.toOptionalInteger());
 		assertNull(sv.toOptionalLong());
 		assertEquals("", sv.toOptionalString());
-		assertNull(sv.toOptionalTime());
+		assertNull(sv.toOptionalInstant());
 	}
 
 	/**
@@ -72,7 +77,7 @@ public class StringValueTest
 		assertNull(sv.toOptionalInteger());
 		assertNull(sv.toOptionalLong());
 		assertNull(sv.toOptionalString());
-		assertNull(sv.toOptionalTime());
+		assertNull(sv.toOptionalInstant());
 	}
 
 	/**
@@ -89,8 +94,8 @@ public class StringValueTest
 		assertEquals(4, sv.toInt(4));
 		assertEquals(4.0, sv.toDouble(4.0), 0.005);
 		assertEquals('c', sv.toChar('c'));
-		assertEquals(Duration.seconds(3), sv.toDuration(Duration.seconds(3)));
-		assertEquals(Time.millis(5), sv.toTime(Time.millis(5)));
+		assertEquals(Duration.ofSeconds(3), sv.toDuration(Duration.ofSeconds(3)));
+		assertEquals(Instant.ofEpochMilli(5), sv.toInstant(Instant.ofEpochMilli(5)));
 		assertEquals(40L, sv.toLong(40));
 
 		assertEquals("unknown", sv.toString("def"));

@@ -17,13 +17,13 @@
 package org.apache.wicket;
 
 import java.net.URLConnection;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Supplier;
-
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.application.ComponentInstantiationListenerCollection;
 import org.apache.wicket.application.ComponentOnAfterRenderListenerCollection;
@@ -91,7 +91,6 @@ import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.settings.StoreSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -281,7 +280,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 		switch (getConfigurationType())
 		{
 			case DEVELOPMENT : {
-				getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
+				getResourceSettings().setResourcePollFrequency(Duration.ofSeconds(1));
 				getResourceSettings().setJavaScriptCompressor(null);
 				getResourceSettings().setUseMinifiedResources(false);
 				getMarkupSettings().setStripWicketTags(false);

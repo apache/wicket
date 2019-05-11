@@ -20,7 +20,6 @@ import java.util.Locale;
 import java.util.Locale.Category;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.thread.ICode;
@@ -87,6 +86,8 @@ import org.slf4j.Logger;
  * 
  * @author Jonathan Locke
  * @since 1.2.6
+ * 
+ * @deprecated Since Wicket 9 this class is obsolete and no more used. It will be removed in Wicket 10
  */
 public class Duration extends AbstractTimeValue
 {

@@ -29,7 +29,7 @@ import java.util.TreeSet;
 import org.apache.wicket.util.collections.UrlExternalFormComparator;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.listener.IChangeListener;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 import org.apache.wicket.util.watch.IModifiable;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
@@ -203,7 +203,7 @@ public class ReloadingClassLoader extends URLClassLoader
 		{
 			addURL(url);
 		}
-		Duration pollFrequency = Duration.seconds(3);
+		Duration pollFrequency = Duration.ofSeconds(3);
 		watcher = new ModificationWatcher(pollFrequency);
 	}
 

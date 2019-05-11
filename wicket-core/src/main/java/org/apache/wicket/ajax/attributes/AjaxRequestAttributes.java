@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 
 /**
  * Attributes of an Ajax Request.

@@ -77,7 +77,7 @@ import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -963,7 +963,7 @@ public abstract class WebApplication extends Application
 	 * is no need to configure these parameters externally.
 	 */
 	private final StoredResponsesMap storedResponses = new StoredResponsesMap(1000,
-		Duration.seconds(60));
+		Duration.ofSeconds(60));
 
 	/**
 	 * 

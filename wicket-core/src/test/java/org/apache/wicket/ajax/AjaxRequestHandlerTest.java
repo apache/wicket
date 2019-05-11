@@ -21,14 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
+import java.time.Instant;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MockPageWithLinkAndComponent;
@@ -42,7 +41,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.util.time.Time;
+import org.apache.wicket.util.time.Instants;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -284,14 +283,14 @@ class AjaxRequestHandlerTest extends WicketTestCase
 		tester.startPage(new Wicket3921());
 
 		tester.clickLink("updatePage");
-		assertEquals(Time.START_OF_UNIX_TIME.toRfc1123TimestampString(),
+		assertEquals(Instants.toRFC7231Format(Instant.EPOCH),
 			tester.getLastResponse().getHeader("Expires"));
 		assertEquals("no-cache", tester.getLastResponse().getHeader("Pragma"));
 		assertEquals("no-cache, no-store", tester.getLastResponse().getHeader("Cache-Control"));
 
 
 		tester.clickLink("updateComponent");
-		assertEquals(Time.START_OF_UNIX_TIME.toRfc1123TimestampString(),
+		assertEquals(Instants.toRFC7231Format(Instant.EPOCH),
 			tester.getLastResponse().getHeader("Expires"));
 		assertEquals("no-cache", tester.getLastResponse().getHeader("Pragma"));
 		assertEquals("no-cache, no-store", tester.getLastResponse().getHeader("Cache-Control"));

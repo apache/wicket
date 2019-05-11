@@ -33,6 +33,8 @@ import java.util.TimeZone;
  * 
  * @author Jonathan Locke
  * @since 1.2.6
+ * 
+ * @deprecated Since Wicket 9 this class is obsolete and no more used. It will be removed in Wicket 10
  */
 public final class Time extends AbstractTime
 {

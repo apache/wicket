@@ -22,14 +22,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.security.SecureRandom;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.util.WicketTestTag;
-import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.time.Time;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +49,7 @@ class StoredResponsesMapTest
 	@Test
 	void entriesLife2Seconds() throws Exception
 	{
-		StoredResponsesMap map = new StoredResponsesMap(1000, Duration.seconds(2));
+		StoredResponsesMap map = new StoredResponsesMap(1000, Duration.ofSeconds(2));
 		assertEquals(0, map.size());
 		map.put("1", new BufferedWebResponse(null));
 		assertEquals(1, map.size());
@@ -66,14 +67,17 @@ class StoredResponsesMapTest
 	@Test
 	void getExpiredValue() throws Exception
 	{
-		Time start = Time.now();
-		Duration timeout = Duration.milliseconds(50);
+		Instant start = Instant.now();
+		Duration timeout = Duration.ofMillis(50);
 		StoredResponsesMap map = new StoredResponsesMap(1000, timeout);
 		assertEquals(0, map.size());
 		map.put("1", new BufferedWebResponse(null));
 		assertEquals(1, map.size());
-		TimeUnit.MILLISECONDS.sleep(timeout.getMilliseconds() * 2); // sleep for twice longer than the timeout
-		assertTrue(Time.now().subtract(start).compareTo(timeout) == 1, "The timeout has passed.");
+		TimeUnit.MILLISECONDS.sleep(timeout.toMillis() * 2); // sleep for twice longer than the timeout
+		Duration elapsedTime = Duration.between(start, Instant.now());
+		elapsedTime = elapsedTime.truncatedTo(ChronoUnit.MILLIS);
+		
+		assertTrue(elapsedTime.compareTo(timeout) > 0, "The timeout has passed.");
 		Object value = map.get("1");
 		assertNull(value);
 	}
@@ -84,7 +88,7 @@ class StoredResponsesMapTest
 	@Test
 	void cannotPutArbitraryValue()
 	{
-		StoredResponsesMap map = new StoredResponsesMap(1000, Duration.days(1));
+		StoredResponsesMap map = new StoredResponsesMap(1000, Duration.ofDays(1));
 		assertThrows(IllegalArgumentException.class, () -> {
 			map.put("1", new Object());
 		});
@@ -107,7 +111,7 @@ class StoredResponsesMapTest
 		final CountDownLatch startLatch = new CountDownLatch(numberOfThreads);
 		final CountDownLatch endLatch = new CountDownLatch(numberOfThreads);
 		final SecureRandom rnd = new SecureRandom();
-		final StoredResponsesMap map = new StoredResponsesMap(1000, Duration.seconds(60));
+		final StoredResponsesMap map = new StoredResponsesMap(1000, Duration.ofSeconds(60));
 		final List<String> keys = new CopyOnWriteArrayList<String>();
 
 		final Runnable r = new Runnable()

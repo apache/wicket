@@ -16,39 +16,33 @@
  */
 package org.apache.wicket.util.time;
 
-import org.junit.jupiter.api.Test;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
-import java.text.ParseException;
-import java.util.Calendar;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-@SuppressWarnings("javadoc")
-public final class TimeTest
+/**
+ * 
+ * Utility class for {@link Instant}
+ *
+ */
+public class Instants
 {
-	@Test
-	public void test() throws ParseException
-	{
-		Time.now();
 
-		final Time birthday = Time.parseDate("1966.06.01");
+	public static final DateTimeFormatter RFC7231DateFormatter = DateTimeFormatter
+		.ofPattern("EEE, dd MMM yyyy HH:mm:ss O").withZone(ZoneId.of("UTC"));
 
-		assertEquals(1966, birthday.getYear());
-		assertEquals(Calendar.JUNE, birthday.getMonth());
-		assertEquals(1, birthday.getDayOfMonth());
-
-		final String y2k = "2000.01.01-12.00am";
-
-		assertEquals(y2k, Time.valueOf(y2k).toString());
-	}
+	public static final DateTimeFormatter localDateFormatter = DateTimeFormatter
+		.ofPattern("yyyy.MM.dd", Locale.ENGLISH);
 
 	/**
-	 * WICKET-5442 getHour() should be on 24-hour clock
+	 * Formats a given {@link Instant} as required by RFC7231 for dates.
+	 * 
+	 * @param instant
+	 * @return the instant properly formatted
 	 */
-	@Test
-	public void hour() throws ParseException
+	public static String toRFC7231Format(final Instant instant)
 	{
-		Time time = Time.valueOf("2000.10.30-9.30PM");
-		assertEquals(21, time.getHour());
+		return RFC7231DateFormatter.format(instant);
 	}
 }

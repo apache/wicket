@@ -19,7 +19,7 @@ package org.apache.wicket.util.watch;
 import java.util.Set;
 
 import org.apache.wicket.util.listener.IChangeListener;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 
 
 /**

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import java.time.Duration;
 import org.apache.wicket.ajax.AjaxPreventSubmitBehavior;
 import org.apache.wicket.ajax.form.AjaxFormValidatingBehavior;
 import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
@@ -28,7 +29,6 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.io.IClusterable;
-import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.apache.wicket.validation.validator.StringValidator;
 
@@ -102,7 +102,7 @@ public class FormPage extends BasePage
 		// attach an ajax validation behavior to all form component's keydown
 		// event and throttle it down to once per second
 
-		form.add(new AjaxFormValidatingBehavior("keydown", Duration.ONE_SECOND));
+		form.add(new AjaxFormValidatingBehavior("keydown", Duration.ofSeconds(1)));
 	}
 
 	private void addFormComponents(final Form<Bean> form) {
