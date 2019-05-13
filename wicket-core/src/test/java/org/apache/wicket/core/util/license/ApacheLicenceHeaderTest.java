@@ -44,6 +44,9 @@ class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		htmlIgnore.add("src/test/js/all.html");
 		htmlIgnore.add("src/test/js/amd.html");
 
+		// node_modules
+		htmlIgnore.add("src/main/typescript/node_modules");
+
 		/*
 		 * See NOTICE.txt
 		 */
@@ -52,12 +55,17 @@ class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		xmlPrologIgnore.add("src/test/js/all.html");
 		xmlPrologIgnore.add("src/test/js/amd.html");
 
+		xmlPrologIgnore.add("src/main/typescript/node_modules");
+
 		/*
 		 * .css in test is very test specific and a license header would confuse and make it unclear
 		 * what the test is about.
 		 */
 		cssIgnore.add("src/test/java");
 		cssIgnore.add("src/test/js/qunit/qunit.css");
+
+		// node_modules
+		cssIgnore.add("src/main/typescript/node_modules");
 
 		xmlIgnore.add("src/assembly/bin.xml");
 
@@ -107,5 +115,13 @@ class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		javaScriptIgnore.add("src/test/js/qunit/blanket.min.js");
 		javaScriptIgnore.add("src/test/js/amd/require.js");
 		javaScriptIgnore.add("src/test/js/data/ajax/nonWicketResponse.json"); // no way to add licence in JSON
+
+		javaScriptIgnore.add("src/main/typescript/tsconfig.json");
+		javaScriptIgnore.add("src/main/typescript/package.json");
+		javaScriptIgnore.add("src/main/typescript/package-lock.json");
+
+		// node_modules
+		javaScriptIgnore.add("src/main/typescript/dist"); //intermediate dir
+		javaScriptIgnore.add("src/main/typescript/node_modules");
 	}
 }
