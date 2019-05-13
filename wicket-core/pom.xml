@@ -111,4 +111,69 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>ts-transpile</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.eirslett</groupId>
+						<artifactId>frontend-maven-plugin</artifactId>
+						<version>1.7.5</version>
+						<configuration>
+							<workingDirectory>src/main/typescript</workingDirectory>
+							<installDirectory>target</installDirectory>
+						</configuration>
+						<executions>
+							<execution>
+								<id>install node and npm</id>
+								<goals>
+									<goal>install-node-and-npm</goal>
+								</goals>
+								<phase>generate-resources</phase>
+								<configuration>
+									<npmVersion>6.9.0</npmVersion>
+									<nodeVersion>v10.15.3</nodeVersion>
+								</configuration>
+							</execution>
+							<execution>
+								<id>npm install</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<configuration>
+									<arguments>install</arguments>
+								</configuration>
+							</execution>
+							<!--
+								this one does TS transpilation and then rollup instead of using rollup ts plugin,
+								because the plugin is swallowing all type checks and it's unwanted behaviour
+							-->
+							<execution>
+								<id>build-ts</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<configuration>
+									<arguments>run tsc</arguments>
+								</configuration>
+							</execution>
+							<execution>
+								<id>rollup-ts</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<configuration>
+									<arguments>run rollup</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

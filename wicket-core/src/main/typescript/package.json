@@ -1,0 +1,17 @@
+{
+  "name": "wicket-ajax-jquery",
+  "version": "0.0.1",
+  "description": "",
+  "main": "wicket-ajax-jquery.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "rollup": "rollup --config"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "rollup": "^1.10.1",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "typescript": "^3.4.5"
+  }
+}
