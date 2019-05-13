@@ -1751,12 +1751,9 @@
 
 				// Parses the header contribution element (returns a DOM tree with the contribution)
 				parse: function (headerNode) {
-					// the header contribution is stored as CDATA section in the header-contribution element.
-					// even though we need to parse it (and we have aleady parsed the response), header
-					// contribution needs to be treated separately. The reason for this is that
-					// Konqueror crashes when it there is a <script element in the parsed string. So we
-					// need to replace that first
-
+					// the header contribution is stored as CDATA section in the header-contribution element,
+					// we need to parse it since each header contribution needs to be treated separately
+					
 					// get the header contribution text and unescape it if necessary
 					var text = Wicket.DOM.text(headerNode);
 

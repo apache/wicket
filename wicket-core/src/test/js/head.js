@@ -87,12 +87,6 @@ jQuery(document).ready(function() {
 		equal(false, Wicket.Head.containsElement(scriptElement, 'unknown').contains, 'There shouldn\'t be an element with such attribute name');
 	});
 
-	test('Wicket.Head.containsElement - check existence of wicket-ajax-debug.js with "src"', function() {
-		var scriptElement = Wicket.Head.createElement('script');
-		scriptElement.src = "../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
-		ok(Wicket.Head.containsElement(scriptElement, 'src').contains, 'There should be an element for wicket-ajax-debug.js');
-	});
-
 	test('Wicket.Head.containsElement - check existence of data/test.js with "src_"', function() {
 		var $script = jQuery('<script>', {
 			type: 'text/javascript',
