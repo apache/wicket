@@ -112,6 +112,10 @@ public class ModalDialog extends Panel
 
 		this.options = options;
 
+
+		// the use of prepend here is purposeful. it makes sure that any javascript contributed that
+		// affects elements inside the modal is executed after said elements have been
+		// placed in their correct dom location
 		target.prependJavaScript(getOpenJavascript());
 		return this;
 	}

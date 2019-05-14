@@ -15,13 +15,21 @@ import org.apache.wicket.resource.JQueryPluginResourceReference;
  */
 public class ModalDialogReferences
 {
+	/** Contains layout css for the modal, is included automatically */
 	public static final ResourceReference CSS = new CssResourceReference(
 		ModalDialogReferences.class, "ModalDialog.css");
 
+	/**
+	 * Contains visual look and feel of the modal, this css resource is not included automatically
+	 * since applications will most likely want to provide their own look and feel. This resource
+	 * here is an example only. It can be included manually to receive the default look and feel for
+	 * the modal.
+	 */
 	public static final ResourceReference CSS_SKIN = new CssResourceReference(
 		ModalDialogReferences.class, "ModalDialog-skin.css");
 
 
+	/** Contains javascript that implements modal behavior, is included automatically */
 	public static final ResourceReference JS = new JQueryPluginResourceReference(
 		ModalDialogReferences.class, "ModalDialog.js")
 	{

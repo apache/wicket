@@ -58,11 +58,11 @@
 
 	/** Retreives id of the element, creates one if none */
 	var getOrCreateIdCounter = 0;
-	function getOrCreateId(element) {
-		if (!element.attr("id")) {
-			element.attr("id", "modal-autoid-" + (getOrCreateIdCounter++));
+	function getOrCreateId($element) {
+		if (!$element.attr("id")) {
+			$element.attr("id", "modal-autoid-" + (getOrCreateIdCounter++));
 		}
-		return element.attr("id");
+		return $element.attr("id");
 	}
 
 	/**
@@ -235,7 +235,7 @@
 			}
 			if (data.options.closeOnEscape) {
 				overlay.on("keydown", function (event) {
-					if (event.which == 27) {
+					if (event.which === 27) {
 						event.preventDefault();
 						event.stopPropagation();
 						findAndClickCloseButton(element);
