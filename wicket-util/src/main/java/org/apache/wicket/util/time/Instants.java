@@ -30,7 +30,7 @@ public class Instants
 {
 
 	public static final DateTimeFormatter RFC7231DateFormatter = DateTimeFormatter
-		.ofPattern("EEE, dd MMM yyyy HH:mm:ss O").withZone(ZoneId.of("UTC"));
+		.ofPattern("EEE, dd MMM yyyy HH:mm:ss O", Locale.ENGLISH).withZone(ZoneId.of("UTC"));
 
 	public static final DateTimeFormatter localDateFormatter = DateTimeFormatter
 		.ofPattern("yyyy.MM.dd", Locale.ENGLISH);
