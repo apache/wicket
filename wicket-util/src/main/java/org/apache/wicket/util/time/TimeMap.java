@@ -38,6 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * @deprecated Since Wicket 9 this class is obsolete and no more used. It will be removed in Wicket 10
  */
+@Deprecated
 public final class TimeMap implements Serializable
 {
 	private static final long serialVersionUID = 1L;

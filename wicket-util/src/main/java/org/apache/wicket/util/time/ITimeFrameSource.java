@@ -29,6 +29,7 @@ import java.io.Serializable;
  * 
  * @deprecated Since Wicket 9 this class is obsolete and no more used. It will be removed in Wicket 10
  */
+@Deprecated
 public interface ITimeFrameSource extends Serializable
 {
 	/**

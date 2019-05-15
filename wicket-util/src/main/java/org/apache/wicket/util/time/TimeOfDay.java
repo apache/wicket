@@ -55,6 +55,7 @@ import org.apache.wicket.util.lang.EnumeratedType;
  * 
  * @deprecated Since Wicket 9 this class is obsolete and no more used. It will be removed in Wicket 10
  */
+@Deprecated
 public final class TimeOfDay extends AbstractTime
 {
 	private static final long serialVersionUID = 1L;

@@ -30,6 +30,7 @@ import java.util.Locale;
  * 
  * @deprecated Since Wicket 9 this class is obsolete and no more used. It will be removed in Wicket 10
  */
+@Deprecated
 abstract class AbstractTime extends AbstractTimeValue
 {
 	private static final long serialVersionUID = 1L;
