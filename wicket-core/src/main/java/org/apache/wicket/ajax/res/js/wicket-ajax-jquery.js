@@ -1946,8 +1946,8 @@ var Wicket = (function (exports) {
         function Ajax() {
         }
         Ajax.baseUrl = undefined;
-        Ajax.Channel = Channel;
         Ajax.redirect = redirect;
+        Ajax.Call = Call;
         Ajax._handleEventCancelation = function (attrs) {
             var evt = attrs.event;
             if (evt) {

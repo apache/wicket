@@ -19,7 +19,6 @@ import {jQuery, bind, redirect} from "./WicketUtils"
 import {Event} from "./Event";
 import {Call} from "./Ajax/Call";
 import {Throttler} from "./Throttler";
-import {Channel} from "./Channel";
 
 /**
  * The Ajax.Request class encapsulates a XmlHttpRequest.
@@ -28,8 +27,8 @@ import {Channel} from "./Channel";
 export class Ajax {
 
     static baseUrl: string = undefined;
-    static Channel = Channel;
     static redirect = redirect;
+    static Call = Call;
 
     private static _handleEventCancelation = function(attrs) {
         let evt = attrs.event;
