@@ -168,7 +168,7 @@ the src/ folder.
 
  - wicket-guice:
 
-    Google Guice (http://code.google.com/p/google-guice/)
+    Google Guice (https://github.com/google/guice)
 
  - wicket-cdi:
 	Component Dependency Injection 2.0
