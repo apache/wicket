@@ -36,6 +36,8 @@
     </description>
 
 	<properties>
+		<automatic-module-name>org.apache.wicket.arquillian.tests</automatic-module-name>
+
 		<!-- port configuration -->
 		<wicket.arquillian.server.port>18787</wicket.arquillian.server.port>
 		<java.debug.wire.protocol.port>48787</java.debug.wire.protocol.port>

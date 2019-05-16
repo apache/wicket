@@ -29,6 +29,7 @@
 	<description>Test project</description>
 
 	<properties>
+		<automatic-module-name>org.apache.wicket.thread.tests</automatic-module-name>
 		<clirr.skip>true</clirr.skip>
 	</properties>
 

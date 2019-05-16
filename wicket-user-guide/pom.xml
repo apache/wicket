@@ -31,6 +31,7 @@
 	</description>
 
 	<properties>
+		<automatic-module-name>org.apache.wicket.userguide</automatic-module-name>
 		<asciidoctor.version>1.5.5</asciidoctor.version>
 		<clirr.skip>true</clirr.skip>
 		<!-- because of windows we need this particular version -->

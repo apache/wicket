@@ -29,6 +29,7 @@
 	<description>JavaScript tests for all Wicket modules</description>
 
 	<properties>
+		<automatic-module-name>org.apache.wicket.js.tests</automatic-module-name>
 		<clirr.skip>true</clirr.skip>
 	</properties>
 
