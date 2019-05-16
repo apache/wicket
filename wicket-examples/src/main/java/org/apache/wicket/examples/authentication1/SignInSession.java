@@ -27,6 +27,8 @@ import org.apache.wicket.request.Request;
  */
 public final class SignInSession extends AuthenticatedWebSession
 {
+	private static final String USERNAME_PASSWORD = "wicket";
+
 	/** Trivial user representation */
 	private String user;
 
@@ -53,15 +55,11 @@ public final class SignInSession extends AuthenticatedWebSession
 	@Override
 	public final boolean authenticate(final String username, final String password)
 	{
-		final String WICKET = "wicket";
+		user = null;
 
-		if (user == null)
+		if (USERNAME_PASSWORD.equalsIgnoreCase(username) && USERNAME_PASSWORD.equalsIgnoreCase(password))
 		{
-			// Trivial password "db"
-			if (WICKET.equalsIgnoreCase(username) && WICKET.equalsIgnoreCase(password))
-			{
-				user = username;
-			}
+			user = username;
 		}
 
 		return user != null;

@@ -29,6 +29,8 @@ import org.apache.wicket.request.Request;
  */
 public class MyAuthenticatedWebSession extends AuthenticatedWebSession
 {
+	private static final String USERNAME_PASSWORD = "wicket";
+
 	/**
 	 * Construct.
 	 * 
@@ -47,10 +49,7 @@ public class MyAuthenticatedWebSession extends AuthenticatedWebSession
 	@Override
 	public boolean authenticate(final String username, final String password)
 	{
-		final String WICKET = "wicket";
-
-		// Check username and password
-		return WICKET.equals(username) && WICKET.equals(password);
+		return USERNAME_PASSWORD.equals(username) && USERNAME_PASSWORD.equals(password);
 	}
 
 	/**
