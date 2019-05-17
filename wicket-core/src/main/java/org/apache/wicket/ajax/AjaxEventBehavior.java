@@ -27,6 +27,8 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An ajax behavior that is attached to a certain client-side (usually javascript) event, such as
@@ -62,6 +64,8 @@ import org.danekja.java.util.function.serializable.SerializableConsumer;
  */
 public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(AjaxEventBehavior.class);
+
 	private static final long serialVersionUID = 1L;
 
 	private final String event;
@@ -75,6 +79,13 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	public AjaxEventBehavior(String event)
 	{
 		Args.notEmpty(event, "event");
+
+		if ("inputchange".equals(event))
+		{
+			// TODO Wicket 10 remove (see WICKET-6667)
+			event = "input";
+			LOGGER.warn("Since version 9.0.0 Wicket no longer supports 'inputchange' events, please use 'input' instead");
+		}
 
 		this.event = event;
 	}
