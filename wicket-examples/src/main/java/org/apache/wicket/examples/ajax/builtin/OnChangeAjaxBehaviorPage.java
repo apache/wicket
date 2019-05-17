@@ -91,4 +91,10 @@ public class OnChangeAjaxBehaviorPage extends BasePage
 		field.add(onChangeAjaxBehavior);
 	}
 
+	@Override
+	public void detachModels() {
+		super.detachModels();
+		inputModel.detach();
+	}
+
 }
