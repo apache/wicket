@@ -144,7 +144,7 @@ public final class Task
 							// already passed)
 							Instant nextExecution = startOfPeriod.plus(frequency);
 							
-							Duration timeToNextExecution = Duration.between(nextExecution, Instant.now());
+							Duration timeToNextExecution = Duration.between(Instant.now(), nextExecution);
 		                    
 							if (!timeToNextExecution.isNegative())
 							{
