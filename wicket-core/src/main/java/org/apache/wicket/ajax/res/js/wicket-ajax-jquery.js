@@ -654,7 +654,7 @@
 					data = formData;
 					wwwFormUrlEncoded = false;
 				} catch (exception) {
-					Wicket.Log.error("Ajax multipat not supported:", exception);
+					Wicket.Log.error("Ajax multipart not supported:", exception);
 				}
 			}
 
