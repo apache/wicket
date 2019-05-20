@@ -69,8 +69,8 @@
 		}
 		
 		var original = Wicket.Log.error;
-		Wicket.Log.error = function(msg) {
-			original(msg);
+		Wicket.Log.error = function() {
+			original.apply(Wicket.Log, arguments);
 			
 			jQuery('#wicketDebugBar')
 				.addClass('wicketDebugBarError')

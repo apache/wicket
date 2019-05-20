@@ -110,7 +110,7 @@
 						return f(n);
 					}
 					catch (e) {
-						Wicket.Log.error("FunctionsExecuter.processNext: " + e);
+						Wicket.Log.error("FunctionsExecuter.processNext:", e);
 						return FunctionsExecuter.FAIL;
 					}
 				};
@@ -190,33 +190,33 @@
 			
 		enabled: false,
 
-		log: function (msg) {
+		log: function () {
 			if (Wicket.Log.enabled && typeof(console) !== "undefined" && typeof(console.log) === 'function') {
-				console.log('Wicket: ', msg);
+				console.log.apply(console, arguments);
 			}
 		},
 
-		debug: function (msg) {
+		debug: function () {
 			if (Wicket.Log.enabled && typeof(console) !== "undefined" && typeof(console.debug) === 'function') {
-				console.debug('Wicket: ', msg);
+				console.debug.apply(console, arguments);
 			}
 		},
 
-		info: function (msg) {
+		info: function () {
 			if (Wicket.Log.enabled && typeof(console) !== "undefined" && typeof(console.info) === 'function') {
-				console.info('Wicket: ', msg);
+				console.info.apply(console, arguments);
 			}
 		},
 
-		warn: function (msg) {
+		warn: function () {
 			if (Wicket.Log.enabled && typeof(console) !== "undefined" && typeof(console.warn) === 'function') {
-				console.warn('Wicket: ', msg);
+				console.warn.apply(console, arguments);
 			}
 		},
 
-		error: function (msg) {
+		error: function () {
 			if (Wicket.Log.enabled && typeof(console) !== "undefined" && typeof(console.error) === 'function') {
-				console.error('Wicket: ', msg);
+				console.error.apply(console, arguments);
 			}
 		}
 	};
@@ -259,20 +259,20 @@
 					return callback();
 				} catch (exception) {
 					this.busy = false;
-					Wicket.Log.error("An error occurred while executing Ajax request:" + exception);
+					Wicket.Log.error("An error occurred while executing Ajax request:", exception);
 				}
 			} else {
 				var busyChannel = "Channel '"+ this.name+"' is busy";
 				if (this.type === 's') { // stack/queue
-					Wicket.Log.info(busyChannel + " - scheduling the callback to be executed when the previous request finish.");
+					Wicket.Log.info("%s - scheduling the callback to be executed when the previous request finish.", busyChannel);
 					this.callbacks.push(callback);
 				}
 				else if (this.type === 'd') { // drop
-					Wicket.Log.info(busyChannel + " - dropping all previous scheduled callbacks and scheduling a new one to be executed when the current request finish.");
+					Wicket.Log.info("%s - dropping all previous scheduled callbacks and scheduling a new one to be executed when the current request finish.", busyChannel);
 					this.callbacks = [];
 					this.callbacks.push(callback);
 				} else if (this.type === 'a') { // active
-					Wicket.Log.info(busyChannel + " - ignoring the Ajax call because there is a running request.");
+					Wicket.Log.info("%s - ignoring the Ajax call because there is a running request.", busyChannel);
 				}
 				return null;
 			}
@@ -607,7 +607,7 @@
 						result = new Function(precondition).call(that, attrs);
 					}
 					if (result === false) {
-						Wicket.Log.info("Ajax request stopped because of precondition check, url: " + attrs.u);
+						Wicket.Log.info("Ajax request stopped because of precondition check, url: %s", attrs.u);
 						self.done(attrs);
 						return false;
 					}
@@ -654,7 +654,7 @@
 					data = formData;
 					wwwFormUrlEncoded = false;
 				} catch (exception) {
-					Wicket.Log.error("Ajax multipat not supported:" + exception);
+					Wicket.Log.error("Ajax multipat not supported:", exception);
 				}
 			}
 
@@ -797,8 +797,7 @@
 				}
 				else {
 					// no redirect, just regular response
-					var responseAsText = jqXHR.responseText;
-					Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
+					Wicket.Log.info("Received ajax response (%s characters)", jqXHR.responseText.length);
 					Wicket.Log.debug(jqXHR.responseXML);
 
 					// invoke the loaded callback with an xml document
@@ -887,7 +886,7 @@
 		failure: function (context, jqXHR, errorMessage, textStatus) {
 			context.steps.push(jQuery.proxy(function (notify) {
 				if (errorMessage) {
-					Wicket.Log.error("Ajax.Call.failure: Error while parsing response: " + errorMessage);
+					Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: %s", errorMessage);
 				}
 				var attrs = context.attrs;
 				this._executeHandlers(attrs.fh, attrs, jqXHR, errorMessage, textStatus);
@@ -914,9 +913,8 @@
 				var element = Wicket.$(compId);
 
 				if (isUndef(element)) {
-					Wicket.Log.error("Ajax.Call.processComponent: Component with id [[" +
-						compId + "]] was not found while trying to perform markup update. " +
-						"Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.");
+					Wicket.Log.error("Wicket.Ajax.Call.processComponent: Component with id '%s' was not found while trying to perform markup update. " +
+						"Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.", compId);
 				} else {
 					var text = Wicket.DOM.text(node);
 
@@ -961,7 +959,7 @@
 						var f = window.eval(toExecute);
 						f(notify);
 					} catch (exception) {
-						log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
+						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
 					}
 					return FunctionsExecuter.ASYNC;
 				};
@@ -974,7 +972,7 @@
 						// do the evaluation in global scope
 						window.eval(script);
 					} catch (exception) {
-						log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
+						log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
 					}
 					// continue to next step
 					return FunctionsExecuter.DONE;
@@ -1018,7 +1016,7 @@
 		// Adds a closure that processes a redirect
 		processRedirect: function (context, node) {
 			var text = Wicket.DOM.text(node);
-			Wicket.Log.info("Redirecting to: " + text);
+			Wicket.Log.info("Redirecting to: %s", text);
 			context.isRedirecting = true;
 			Wicket.Ajax.redirect(text);
 		},
@@ -1769,7 +1767,7 @@
 					var result = false;
 
 					if (!isUndef(node.tagName) && node.tagName.toLowerCase() === "parsererror") {
-						Wicket.Log.error("Error in parsing: " + node.textContent);
+						Wicket.Log.error("Error in parsing: %s", node.textContent);
 						result = true;
 					}
 					return result;
@@ -1975,7 +1973,7 @@
 									// do the evaluation in global scope
 									window.eval(text);
 								} catch (e) {
-									Wicket.Log.error("Head.Contributor.processScript: " + e + ": eval -> " + text);
+									Wicket.Log.error("Wicket.Head.Contributor.processScript: %s", text, e);
 								}
 							}
 
@@ -2182,7 +2180,7 @@
 					WF.refocusLastFocusedComponentAfterResponse = false;
 					var id = target.id;
 					WF.lastFocusId = id;
-					Wicket.Log.info("focus set on " + id);
+					Wicket.Log.info("focus set on '%s'", id);
 				}
 			},
 
@@ -2195,10 +2193,10 @@
 					var id = target.id;
 					if (WF.refocusLastFocusedComponentAfterResponse) {
 						// replaced components seem to blur when replaced only on Safari - so do not modify lastFocusId so it gets refocused
-						Wicket.Log.info("focus removed from " + id + " but ignored because of component replacement");
+						Wicket.Log.info("focus removed from '%s' but ignored because of component replacement", id);
 					} else {
 						WF.lastFocusId = null;
-						Wicket.Log.info("focus removed from " + id);
+						Wicket.Log.info("focus removed from '%s'", id);
 					}
 				}
 			},
@@ -2207,7 +2205,7 @@
 				var lastFocusId = Wicket.Focus.lastFocusId;
 				if (lastFocusId) {
 					var focusedElement = Wicket.$(lastFocusId);
-					Wicket.Log.info("returned focused element: " + focusedElement);
+					Wicket.Log.info("returned focused element:", focusedElement);
 					return  focusedElement;
 				}
 			},
@@ -2218,7 +2216,7 @@
 					WF.refocusLastFocusedComponentAfterResponse = true;
 					WF.focusSetFromServer = true;
 					WF.lastFocusId = id;
-					Wicket.Log.info("focus set on " + id + " from server side");
+					Wicket.Log.info("focus set on '%s' from server side", id);
 				} else {
 					WF.refocusLastFocusedComponentAfterResponse = false;
 					Wicket.Log.info("refocus focused component after request stopped from server side");
@@ -2267,7 +2265,7 @@
 					var toFocus = Wicket.$(WF.lastFocusId);
 
 					if (toFocus) {
-						Wicket.Log.info("Calling focus on " + WF.lastFocusId);
+						Wicket.Log.info("Calling focus on '%s'", WF.lastFocusId);
 
 						var safeFocus = function() {
 							try {
@@ -2290,7 +2288,7 @@
 						}
 					} else {
 						WF.lastFocusId = "";
-						Wicket.Log.info("Couldn't set focus on element with id '" + WF.lastFocusId + "' because it is not in the page anymore");
+						Wicket.Log.info("Couldn't set focus on element with id '%s' because it is not in the page anymore", WF.lastFocusId);
 					}
 				} else if (WF.refocusLastFocusedComponentAfterResponse) {
 					Wicket.Log.info("last focus id was not set");
@@ -2429,8 +2427,7 @@
 					}
 
 					if (!el && Wicket.Log) {
-						Wicket.Log.error('Cannot bind a listener for event "' + type +
-							'" on element "' + element + '" because the element is not in the DOM');
+						Wicket.Log.error("Cannot bind a listener for event '%s' because the element is not in the DOM", type, element);
 					}
 
 					jQuery(el).on(type, selector, data, fn);

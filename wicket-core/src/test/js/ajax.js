@@ -150,8 +150,8 @@ jQuery(document).ready(function() {
 
 			var oldWicketLogError = Wicket.Log.error;
 
-			Wicket.Log.error = function(msg) {
-				equal(msg, 'Ajax.Call.processComponent: Component with id [[componentToReplaceDoesNotExist]] was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.');
+			Wicket.Log.error = function() {
+				equal(arguments[1], "componentToReplaceDoesNotExist");
 
 				// restore the original method
 				Wicket.Log.error = oldWicketLogError;
