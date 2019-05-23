@@ -33,6 +33,7 @@ import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
+import org.apache.wicket.resource.IScopeAwareTextResourceProcessor;
 import org.apache.wicket.resource.ITextResourceCompressor;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
@@ -174,14 +175,28 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	{
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		for (IResourceStream curStream : resources)
+		{
 			IOUtils.copy(curStream.getInputStream(), output);
+		}
 
 		byte[] bytes = output.toByteArray();
 
-		if (getCompressor() != null)
+		final ITextResourceCompressor textResourceCompressor = getCompressor();
+		if (textResourceCompressor != null)
 		{
 			String nonCompressed = new String(bytes, "UTF-8");
-			bytes = getCompressor().compress(nonCompressed).getBytes("UTF-8");
+
+			if (textResourceCompressor instanceof IScopeAwareTextResourceProcessor)
+			{
+				final ResourceReference reference = providedResources.get(0).getReference();
+				final Class<?> scope = reference.getScope();
+				final String name = reference.getName();
+				bytes = ((IScopeAwareTextResourceProcessor) textResourceCompressor).process(nonCompressed, scope, name).getBytes("UTF-8");
+			}
+			else
+			{
+				bytes = textResourceCompressor.compress(nonCompressed).getBytes("UTF-8");
+			}
 		}
 
 		return bytes;
