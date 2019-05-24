@@ -942,6 +942,9 @@
 					<configuration>
 						<pushChanges>false</pushChanges>
 						<tagNameFormat>wicket-@{project.version}</tagNameFormat>
+						<checkModificationExcludes>
+					           <checkModificationExclude>release.out</checkModificationExclude>
+					    	</checkModificationExcludes>
 					</configuration>
 				</plugin>
 				<plugin>
