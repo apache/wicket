@@ -2,6 +2,20 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.14.0
+
+** Bug
+
+    * [WICKET-6611] - Missing check for IScopeAwareTextResourceProcessor when concatenating resources
+    * [WICKET-6639] - PageStoreManager$SessionEntry.clear produces NullPointerException
+    * [WICKET-6669] - CSS Resource Bundling throws exception when used with CssUrlReplacer
+
+** Improvement
+
+    * [WICKET-6668] - Sign out the existing session if a sign in attempt has failed
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.13.0
 
 ** Bug
