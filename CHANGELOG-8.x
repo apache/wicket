@@ -2,6 +2,32 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.5.0
+
+** Bug
+
+    * [WICKET-6611] - Missing check for IScopeAwareTextResourceProcessor when concatenating resources
+    * [WICKET-6650] - Url decode the name of the file after AjaxDownload with Location == Blob
+    * [WICKET-6651] - Redirecting with ResetResponseException does not work anymore
+    * [WICKET-6669] - CSS Resource Bundling throws exception when used with CssUrlReplacer
+
+** Improvement
+
+    * [WICKET-6648] - It is impossible to initiate AjaxDownloadBehavior with IPartialPageRequestHandler
+    * [WICKET-6655] - ExportToolbar should set cache duration to none on the served file and also provide a way to easily change that
+    * [WICKET-6656] - JSR 303 - @NotNull validation problems 
+    * [WICKET-6658] - Allow nested forms on non-<form> tag
+    * [WICKET-6659] - commons-io:commons-io is used in multiple versions at same time
+    * [WICKET-6668] - Sign out the existing session if a sign in attempt has failed
+
+** Task
+
+    * [WICKET-6654] - Upgrade JQuery to 3.4.0
+    * [WICKET-6661] - Upgrade jquery to 3.4.x
+    * [WICKET-6665] - Upgrade various dependencies
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.4.0
 
 ** Bug
