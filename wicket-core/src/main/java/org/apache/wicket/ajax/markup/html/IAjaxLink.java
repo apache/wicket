@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax.markup.html;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Interface for Ajax callback links.
@@ -27,7 +28,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  * @author Martijn Dashorst
  */
 @FunctionalInterface
-public interface IAjaxLink
+public interface IAjaxLink extends IClusterable
 {
 	/**
 	 * Listener method invoked on the ajax request generated when the user clicks the link

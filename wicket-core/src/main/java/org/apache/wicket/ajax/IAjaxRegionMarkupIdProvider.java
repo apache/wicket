@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * A mixin that allows behaviors and components to override the id of the markup region that will be
@@ -92,7 +93,7 @@ import org.apache.wicket.markup.html.form.TextField;
  * @author Igor Vaynberg (ivaynberg)
  */
 @FunctionalInterface
-public interface IAjaxRegionMarkupIdProvider
+public interface IAjaxRegionMarkupIdProvider extends IClusterable
 {
 	/**
 	 * @param component
