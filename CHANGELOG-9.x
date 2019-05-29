@@ -2,6 +2,34 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.0.0-M2
+
+** Bug
+
+    * [WICKET-6611] - Missing check for IScopeAwareTextResourceProcessor when concatenating resources
+    * [WICKET-6669] - CSS Resource Bundling throws exception when used with CssUrlReplacer
+    * [WICKET-6671] - IAjaxLink should be serializable
+
+** Improvement
+
+    * [WICKET-6618] - Stateless pages and access to unconfigured components
+    * [WICKET-6656] - JSR 303 - @NotNull validation problems 
+    * [WICKET-6657] - change replaceAll() to replace() when a regex is not used
+    * [WICKET-6658] - Allow nested forms on non-<form> tag
+    * [WICKET-6659] - commons-io:commons-io is used in multiple versions at same time
+    * [WICKET-6662] - Remove legacy package org.apache.wicket.util.time from wicket-util
+    * [WICKET-6667] - Ajax JavaScript clean-up
+    * [WICKET-6668] - Sign out the existing session if a sign in attempt has failed
+
+** Task
+
+    * [WICKET-6653] - Upgrade Velocity to 2.x
+    * [WICKET-6654] - Upgrade JQuery to 3.4.0
+    * [WICKET-6661] - Upgrade jquery to 3.4.x
+    * [WICKET-6665] - Upgrade various dependencies
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.0.0-M1
 
 ** Bug
@@ -87,5 +115,4 @@ Release Notes - Wicket - Version 9.0.0-M1
     * [WICKET-6647] - Upgrade asm to 7.1
 
 =======================================================================
-
 
