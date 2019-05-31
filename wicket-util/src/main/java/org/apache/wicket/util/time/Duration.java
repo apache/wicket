@@ -538,6 +538,16 @@ public class Duration extends AbstractTimeValue
 	}
 
 	/**
+	 * Builds a {@link java.time.Duration} out of a wicket {@link Duration}.
+	 *
+	 * @return returns a {@link java.time.Duration}
+	 */
+	public java.time.Duration toJavaDuration()
+	{
+		return java.time.Duration.ofMillis(getMilliseconds());
+	}
+
+	/**
 	 * Converts a value to a unit-suffixed value, taking care of English singular/plural suffix.
 	 * 
 	 * @param value
