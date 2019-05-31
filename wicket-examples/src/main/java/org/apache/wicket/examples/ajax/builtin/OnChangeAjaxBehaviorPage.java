@@ -23,6 +23,7 @@ import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.string.Strings;
 
@@ -31,6 +32,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public class OnChangeAjaxBehaviorPage extends BasePage
 {
+
+	private final IModel<String> inputModel = Model.of("");
 
 	private String getValue(String input)
 	{
@@ -65,8 +68,12 @@ public class OnChangeAjaxBehaviorPage extends BasePage
 		Form<Void> form = new Form<>("form");
 		add(form);
 
-		final TextField<String> field = new TextField<>("field", new Model<>(""));
+		final TextField<String> field = new TextField<>("field", inputModel);
 		form.add(field);
+
+		final Label userInput = new Label("userInput", inputModel);
+		userInput.setOutputMarkupId(true);
+		form.add(userInput);
 
 		final Label label = new Label("selectedValue", new Model<>(""));
 		label.setOutputMarkupId(true);
@@ -78,10 +85,16 @@ public class OnChangeAjaxBehaviorPage extends BasePage
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 				label.setDefaultModelObject(getValue(field.getDefaultModelObjectAsString()));
-				target.add(label);
+				target.add(label, userInput);
 			}
 		};
 		field.add(onChangeAjaxBehavior);
+	}
+
+	@Override
+	public void detachModels() {
+		super.detachModels();
+		inputModel.detach();
 	}
 
 }

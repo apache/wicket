@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.examples.homepage.HomePage;
+
 /**
  * Wicket ajax example index page
  * 
@@ -29,4 +32,10 @@ public class Index extends BasePage
 	public Index()
 	{
 	}
+
+	@Override
+	protected Class<? extends WicketExamplePage> getBackPage() {
+		return HomePage.class;
+	}
+
 }
