@@ -100,7 +100,7 @@ public void testDisableDatePickerWithButton(){
 
 === Testing components in isolation
 
-Method _startComponent(Component)_ can be used to test a component in isolation without having to create a container page for this purpose. The target component is rendered and both its methods _onInitialize()_ and _onBeforeRender()_ are executed. In the test case from project _CustomFormComponentPanel_ we used this method to check if our custom form component correctly renders its internal label:
+Method _startComponentInPage(Component)_ can be used to test a component in isolation. The target component is rendered in an automatically generated page and both _onInitialize()_ and _onBeforeRender()_ are executed. In the test case from project _CustomFormComponentPanel_ we used this method to check if our custom form component correctly renders its internal label:
 
 [source,java]
 ----
@@ -108,15 +108,13 @@ Method _startComponent(Component)_ can be used to test a component in isolation 
 @Test
 public void testCustomPanelContainsLabel(){
 	TemperatureDegreeField field = new TemperatureDegreeField("field", Model.of(0.00));
-	//Use standard JUnit class Assert	
-	Assert.assertNull(field.get("mesuramentUnit"));		
-	tester.startComponent(field);		
+	//Use standard JUnit class Assert
+	Assert.assertNull(field.get("mesuramentUnit"));
+	tester.startComponentInPage(field);
 	Assert.assertNotNull(field.get("mesuramentUnit"));
 }
 //...
 ----
-
-If test requires a page we can use _startComponentInPage(Component)_ which automatically generates a page for our component.
 
 === Testing the response
 
