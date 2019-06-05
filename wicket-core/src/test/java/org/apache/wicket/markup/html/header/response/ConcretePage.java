@@ -41,8 +41,8 @@ public class ConcretePage extends AbstractPage
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-		response.render(StringHeaderItem.forString("<title>HeaderContributionInConcretePage</title>\n"));
+		response.render(StringHeaderItem.forString("<title>ConcretePage-HeaderItem</title>\n"));
 		response.render(new PriorityHeaderItem(
-			StringHeaderItem.forString("<title>PriorityHeaderContributionInConcretePage</title>\n")));
+			StringHeaderItem.forString("<title>ConcretePage-PriorityHeaderItem</title>\n")));
 	}
 }
