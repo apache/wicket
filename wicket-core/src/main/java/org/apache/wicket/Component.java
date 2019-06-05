@@ -2619,7 +2619,8 @@ public abstract class Component
 			IHeaderResponse response = container.getHeaderResponse();
 
 			// Allow component to contribute
-			if (response.wasRendered(this) == false)
+			boolean wasRendered = response.wasRendered(this);
+			if (wasRendered == false)
 			{
 				StringResponse markupHeaderResponse = new StringResponse();
 				Response oldResponse = getResponse();
@@ -2641,8 +2642,6 @@ public abstract class Component
 				}
 				// Then let the component itself to contribute to the header
 				renderHead(response);
-
-				response.markRendered(this);
 			}
 
 			// Then ask all behaviors
@@ -2657,6 +2656,11 @@ public abstract class Component
 						response.markRendered(pair);
 					}
 				}
+			}
+			
+			if (wasRendered == false)
+			{
+				response.markRendered(this);
 			}
 		}
 	}

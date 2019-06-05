@@ -27,14 +27,12 @@ import java.util.Set;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CircularDependencyException;
 import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
-import org.apache.wicket.util.lang.Classes;
 
 /**
  * {@code ResourceAggregator} implements resource dependencies, resource bundles and sorting of
@@ -46,66 +44,47 @@ import org.apache.wicket.util.lang.Classes;
 public class ResourceAggregator extends DecoratingHeaderResponse
 {
 	/**
-	 * The location in which a {@link HeaderItem} is added, consisting of the component/behavior
-	 * that added the item, the index in the list for that component/behavior at which the item was
-	 * added and the index in the request.
+	 * The location in which a {@link HeaderItem} is added, i.e. the responsible component.
 	 * 
 	 * @author papegaaij
 	 */
 	public static class RecordedHeaderItemLocation
 	{
-		private final Object renderBase;
-		private final int indexInRenderBase;
-		private final int indexInRequest;
+		private final Component renderBase;
+		
+		private int depth = -1;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param renderBase
-		 *            The component or behavior that added the item.
-		 * @param indexInRenderBase
-		 *            Indicates the number of items added before this one on the same component or
-		 *            behavior.
-		 * @param indexInRequest
-		 *            Indicates the number of items added before this one in the same request.
+		 *            the component that added the item.
 		 */
-		public RecordedHeaderItemLocation(Object renderBase, int indexInRenderBase,
-			int indexInRequest)
+		public RecordedHeaderItemLocation(Component renderBase)
 		{
 			this.renderBase = renderBase;
-			this.indexInRenderBase = indexInRenderBase;
-			this.indexInRequest = indexInRequest;
 		}
 
 		/**
 		 * @return the component or behavior that added the item.
 		 */
-		public Object getRenderBase()
+		public Component getRenderBase()
 		{
 			return renderBase;
 		}
 
-		/**
-		 * @return the number of items added before this one on the same component or behavior.
-		 */
-		public int getIndexInRenderBase()
+		public int getDepth()
 		{
-			return indexInRenderBase;
-		}
-
-		/**
-		 * @return the number of items added before this one in the same request.
-		 */
-		public int getIndexInRequest()
-		{
-			return indexInRequest;
-		}
-
-		@Override
-		public String toString()
-		{
-			return (renderBase == null ? "null" : Classes.simpleName(renderBase.getClass())) + '@' +
-				indexInRenderBase;
+			if (depth == -1) {
+				Component d = renderBase;
+				while (d != null)  {
+					depth++;
+					
+					d = d.getParent();
+				}
+			}
+			
+			return depth;
 		}
 	}
 
@@ -135,17 +114,11 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		 * Records a location at which the item was added.
 		 * 
 		 * @param renderBase
-		 *            The component or behavior that added the item.
-		 * @param indexInRenderBase
-		 *            Indicates the number of items added before this one on the same component or
-		 *            behavior.
-		 * @param indexInRequest
-		 *            Indicates the number of items added before this one in this request.
+		 *            the component that added the item.
 		 */
-		public void addLocation(Object renderBase, int indexInRenderBase, int indexInRequest)
+		public void addLocation(Component renderBase)
 		{
-			locations.add(new RecordedHeaderItemLocation(renderBase, indexInRenderBase,
-				indexInRequest));
+			locations.add(new RecordedHeaderItemLocation(renderBase));
 		}
 
 		/**
@@ -180,9 +153,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	private final List<HeaderItem> domReadyItemsToBeRendered;
 	private final List<OnLoadHeaderItem> loadItemsToBeRendered;
 
-	private Object renderBase;
-	private int indexInRenderBase;
-	private int indexInRequest;
+	private Component renderBase;
 
 	/**
 	 * Construct.
@@ -202,10 +173,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	public void markRendered(Object object)
 	{
 		super.markRendered(object);
-		if (object instanceof Component || object instanceof Behavior)
+		if (object instanceof Component)
 		{
 			renderBase = null;
-			indexInRenderBase = 0;
 		}
 	}
 
@@ -213,10 +183,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	public boolean wasRendered(Object object)
 	{
 		boolean ret = super.wasRendered(object);
-		if (!ret && object instanceof Component || object instanceof Behavior)
+		if (!ret && object instanceof Component)
 		{
-			renderBase = object;
-			indexInRenderBase = 0;
+			renderBase = (Component)object;
 		}
 		return ret;
 	}
@@ -230,9 +199,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 			recordedItem = new RecordedHeaderItem(item);
 			itemsToBeRendered.put(item, recordedItem);
 		}
-		recordedItem.addLocation(renderBase, indexInRenderBase, indexInRequest);
-		indexInRenderBase++;
-		indexInRequest++;
+		recordedItem.addLocation(renderBase);
 	}
 
 	private void renderDependencies(HeaderItem item, Set<HeaderItem> depsDone)
