@@ -28,7 +28,7 @@ Our custom component will contain two children components: a text field to let u
 	<wicket:panel>
 		Registered temperature: <input size="3" maxlength="3"         
                              wicket:id="registeredTemperature"/> 
-		<label wicket:id="mesuramentUnit"></label> 
+		<label wicket:id="measurementUnit"></label> 
 	</wicket:panel>
 </body>
 </html>
@@ -63,7 +63,7 @@ public class TemperatureDegreeField extends FormComponentPanel<Double> {
 			}
 		};
 		
-		add(new Label("mesuramentUnit", labelModel));
+		add(new Label("measurementUnit", labelModel));
 		add(userDegree=new TextField<Double>("registeredTemperature", new 
                         Model<Double>()));
 		userDegree.setType(Double.class);
