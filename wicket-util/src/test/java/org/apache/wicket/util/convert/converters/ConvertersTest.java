@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.math.BigDecimal;
 import java.text.ChoiceFormat;
 import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -49,7 +50,7 @@ final class ConvertersTest
 	private static final Locale DUTCH_LOCALE = new Locale("nl", "NL");
 
 	@Test
-	void thousandSeperator() {
+	void thousandSeparator() {
 		BigDecimalConverter bdc = new BigDecimalConverter();
 		assertEquals(new BigDecimal(3000), bdc.convertToObject("3 000", Locale.FRENCH));
 
@@ -61,7 +62,7 @@ final class ConvertersTest
 	 * WICKET-4988 nbsp between digits only
 	 */
 	@Test
-	public void thousandSeperatorWithCurrency()
+	public void thousandSeparatorWithCurrency()
 	{
 		FloatConverter fc = new FloatConverter()
 		{
@@ -78,7 +79,7 @@ final class ConvertersTest
 		// \u00A4 = currency symbol (unspecified currency)
 		String string = "1\u00A0234,00\u00A0\u00A4";
 
-		assertEquals(string, fc.convertToString(Float.valueOf(1234f), Locale.FRENCH));
+		assertEquals(string, fc.convertToString(1234f, Locale.FRENCH));
 		assertEquals(Float.valueOf(1234f), fc.convertToObject(string, Locale.FRENCH));
 	}
 
