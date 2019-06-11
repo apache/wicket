@@ -81,11 +81,13 @@ public class PriorityFirstComparator implements Comparator<RecordedHeaderItem>, 
 	}
 
 	/**
-	 * Compares two priority header items, converting the child-first order into parent-first.
+	 * Compare two recorded {@link PriorityHeaderItem}s, converting the child-first order into parent-first.
 	 * 
-	 * @param item1
-	 * @param item2
+	 * @param item1 first item
+	 * @param item2 second item
 	 * @return -1, 0 or 1 if item1 needs to be rendered before, unchanged or after item2.
+	 * 
+	 * @see RecordedHeaderItemLocation#getDepth()
 	 */
 	protected int inversedComponentOrder(RecordedHeaderItem item1, RecordedHeaderItem item2)
 	{
