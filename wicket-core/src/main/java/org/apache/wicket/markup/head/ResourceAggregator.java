@@ -66,13 +66,20 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 
 		/**
-		 * @return the component or behavior that added the item.
+		 * @return the component that rendered the item.
 		 */
 		public Component getRenderBase()
 		{
 			return renderBase;
 		}
 
+		/**
+		 * Get the depth of this location's component in the component tree.
+		 * <p>
+		 * Used by {@link ResourceAggregator} to give precedence to {@link PriorityHeaderItem}s that are closer to the page.
+		 * 
+		 * @return depth
+		 */
 		public int getDepth()
 		{
 			if (depth == -1) {
@@ -114,7 +121,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		 * Records a location at which the item was added.
 		 * 
 		 * @param renderBase
-		 *            the component that added the item.
+		 *            the component that rendered the item.
 		 */
 		public void addLocation(Component renderBase)
 		{
@@ -153,6 +160,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	private final List<HeaderItem> domReadyItemsToBeRendered;
 	private final List<OnLoadHeaderItem> loadItemsToBeRendered;
 
+	/**
+	 * The currently rendered component
+	 */
 	private Component renderBase;
 
 	/**
@@ -169,16 +179,11 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		loadItemsToBeRendered = new ArrayList<>();
 	}
 
-	@Override
-	public void markRendered(Object object)
-	{
-		super.markRendered(object);
-		if (object instanceof Component)
-		{
-			renderBase = null;
-		}
-	}
-
+	/**
+	 * Overridden to keep track of the currently rendered component.
+	 * 
+	 * @see Component#internalRenderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
+	 */
 	@Override
 	public boolean wasRendered(Object object)
 	{
@@ -188,6 +193,21 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 			renderBase = (Component)object;
 		}
 		return ret;
+	}
+
+	/**
+	 * Overridden to keep track of the currently rendered component.
+	 * 
+	 * @see Component#internalRenderHead(org.apache.wicket.markup.html.internal.HtmlHeaderContainer)
+	 */
+	@Override
+	public void markRendered(Object object)
+	{
+		super.markRendered(object);
+		if (object instanceof Component)
+		{
+			renderBase = null;
+		}
 	}
 
 	private void recordHeaderItem(HeaderItem item, Set<HeaderItem> depsDone)
