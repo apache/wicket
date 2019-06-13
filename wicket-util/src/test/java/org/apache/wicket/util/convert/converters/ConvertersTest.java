@@ -17,14 +17,15 @@
 
 package org.apache.wicket.util.convert.converters;
 
+import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.text.ChoiceFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.text.ParsePosition;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -42,6 +43,8 @@ import org.apache.wicket.util.convert.converter.IntegerConverter;
 import org.apache.wicket.util.convert.converter.LongConverter;
 import org.apache.wicket.util.convert.converter.ShortConverter;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 
 @SuppressWarnings("javadoc")
 final class ConvertersTest
@@ -74,13 +77,15 @@ final class ConvertersTest
 				return NumberFormat.getCurrencyInstance(locale);
 			}
 		};
+		final Locale locale = Locale.FRENCH;
+		final DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance(locale);
+		char groupingSeparator = decimalFormatSymbols.getGroupingSeparator();
+		String currencySymbol = decimalFormatSymbols.getCurrencySymbol();
 
-		// \u00A0 = nbsp
-		// \u00A4 = currency symbol (unspecified currency)
-		String string = "1\u00A0234,00\u00A0\u00A4";
+		String expected = format("1%s234,00\u00A0%s", groupingSeparator, currencySymbol);
 
-		assertEquals(string, fc.convertToString(1234f, Locale.FRENCH));
-		assertEquals(Float.valueOf(1234f), fc.convertToObject(string, Locale.FRENCH));
+		assertEquals(expected, fc.convertToString(1234f, locale));
+		assertEquals(Float.valueOf(1234f), fc.convertToObject(expected, locale));
 	}
 
 	@Test
@@ -383,8 +388,9 @@ final class ConvertersTest
 		});
 	}
 
+	@EnabledOnJre({JRE.JAVA_11, JRE.JAVA_12})
 	@Test
-	void validDateConverters()
+	void validDateConverters_upToJava12()
 	{
 		DateConverter converter = new DateConverter();
 
@@ -396,6 +402,26 @@ final class ConvertersTest
 		Date date = cal.getTime();
 
 		assertEquals("24-10-02", converter.convertToString(date, DUTCH_LOCALE));
+		assertEquals(date, converter.convertToObject("24-10-02", DUTCH_LOCALE));
+
+		assertEquals("10/24/02", converter.convertToString(date, Locale.US));
+		assertEquals(date, converter.convertToObject("10/24/02", Locale.US));
+	}
+
+	@EnabledOnJre({JRE.JAVA_13})
+	@Test
+	void validDateConverters_Java13()
+	{
+		DateConverter converter = new DateConverter();
+
+		assertNull(new DateConverter().convertToObject("", Locale.US));
+
+		Calendar cal = Calendar.getInstance(DUTCH_LOCALE);
+		cal.clear();
+		cal.set(2002, Calendar.OCTOBER, 24);
+		Date date = cal.getTime();
+
+		assertEquals("24-10-2002", converter.convertToString(date, DUTCH_LOCALE));
 		assertEquals(date, converter.convertToObject("24-10-02", DUTCH_LOCALE));
 
 		assertEquals("10/24/02", converter.convertToString(date, Locale.US));
@@ -420,8 +446,9 @@ final class ConvertersTest
 		});
 	}
 
+	@EnabledOnJre({JRE.JAVA_11, JRE.JAVA_12})
 	@Test
-	void calendarConverter()
+	void calendarConverter_upToJava12()
 	{
 		CalendarConverter converter = new CalendarConverter();
 
@@ -430,6 +457,26 @@ final class ConvertersTest
 		cal.set(2011, Calendar.MAY, 1);
 
 		assertEquals("01-05-11", converter.convertToString(cal, DUTCH_LOCALE));
+		assertEquals(cal, converter.convertToObject("1-5-11", DUTCH_LOCALE));
+
+		cal = Calendar.getInstance(Locale.US);
+		cal.clear();
+		cal.set(2011, Calendar.MAY, 1);
+		assertEquals("5/1/11", converter.convertToString(cal, Locale.US));
+		assertEquals(cal, converter.convertToObject("5/1/11", Locale.US));
+	}
+
+	@EnabledOnJre({JRE.JAVA_13})
+	@Test
+	void calendarConverter_Java13()
+	{
+		CalendarConverter converter = new CalendarConverter();
+
+		Calendar cal = Calendar.getInstance(DUTCH_LOCALE);
+		cal.clear();
+		cal.set(2011, Calendar.MAY, 1);
+
+		assertEquals("01-05-2011", converter.convertToString(cal, DUTCH_LOCALE));
 		assertEquals(cal, converter.convertToObject("1-5-11", DUTCH_LOCALE));
 
 		cal = Calendar.getInstance(Locale.US);

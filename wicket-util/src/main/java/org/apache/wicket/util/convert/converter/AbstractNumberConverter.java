@@ -18,6 +18,7 @@ package org.apache.wicket.util.convert.converter;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
@@ -102,9 +103,10 @@ public abstract class AbstractNumberConverter<N extends Number> extends Abstract
 		}
 		else if (value instanceof String)
 		{
-			// Convert spaces to no-break space (U+00A0) as required by Java formats:
+			char groupingSeparator = DecimalFormatSymbols.getInstance(locale).getGroupingSeparator();
+			// Convert spaces to no-break space (groupingSeparator) as required by Java formats:
 			// http://bugs.sun.com/view_bug.do?bug_id=4510618
-			value = ((String)value).replaceAll("(\\d+)\\s(?=\\d)", "$1\u00A0");
+			value = ((String)value).replaceAll("(\\d+)\\s(?=\\d)", "$1" + groupingSeparator);
 		}
 
 		final NumberFormat numberFormat = getNumberFormat(locale);
