@@ -41,6 +41,7 @@ public class AjaxSelfUpdatingTimerBehavior extends AbstractAjaxTimerBehavior
 	 *
 	 * @deprecated Since Wicket 9 this constructor is deprecated. It will be removed in Wicket 10. Use {@link AjaxSelfUpdatingTimerBehavior#AjaxSelfUpdatingTimerBehavior(Duration)} instead
 	 */
+	@Deprecated
 	public AjaxSelfUpdatingTimerBehavior(final org.apache.wicket.util.time.Duration updateInterval)
 	{
 		super(updateInterval);

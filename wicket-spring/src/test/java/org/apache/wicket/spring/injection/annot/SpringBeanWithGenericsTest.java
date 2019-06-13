@@ -39,16 +39,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Andrea Del Bene
  *
  */
-public class SpringBeanWithGenericsTest
+class SpringBeanWithGenericsTest
 {
 	private WicketTester tester;
 	private AnnotationConfigApplicationContext ctx;
 
-	/**
-	 * @throws Exception
-	 */
 	@BeforeEach
-	public void before() throws Exception
+	void before()
 	{
 		tester = new WicketTester();
 
@@ -63,7 +60,7 @@ public class SpringBeanWithGenericsTest
 	}
 
 	@Test
-	public void genericAsQualifier() throws Exception
+	void genericAsQualifier()
 	{
 		AnnotatedBeanGenericQualifier page = 
 			tester.startPage(new AnnotatedBeanGenericQualifier());
@@ -72,7 +69,7 @@ public class SpringBeanWithGenericsTest
 	}
 
 	@Test
-	public void listOfGenerics() throws Exception
+	void listOfGenerics()
 	{
 		AnnotatedListOfBeanGenericQualifier page = 
 			tester.startPage(new AnnotatedListOfBeanGenericQualifier());
@@ -87,7 +84,7 @@ public class SpringBeanWithGenericsTest
 	}
 
 	@Test
-	public void listOfStringGenerics() throws Exception
+	void listOfStringGenerics()
 	{
 		AnnotatedListOfBeanStringGenericQualifier page =
 				tester.startPage(new AnnotatedListOfBeanStringGenericQualifier());
@@ -102,7 +99,7 @@ public class SpringBeanWithGenericsTest
 	}
 	
 	@Test
-	public void mapOfGenerics() throws Exception
+	void mapOfGenerics()
 	{
 		AnnotatedMapOfBeanGenericQualifier page = 
 			tester.startPage(new AnnotatedMapOfBeanGenericQualifier());
@@ -117,7 +114,7 @@ public class SpringBeanWithGenericsTest
 	}
 	
 	@Test
-	public void setOfGenerics() throws Exception
+	void setOfGenerics()
 	{
 		AnnotatedSetOfBeanGenericQualifier page = 
 			tester.startPage(new AnnotatedSetOfBeanGenericQualifier());
@@ -132,7 +129,7 @@ public class SpringBeanWithGenericsTest
 	}
 	
 	@Test
-	public void listField() throws Exception
+	void listField()
 	{
 		AnnotatedListField page =
 			tester.startPage(new AnnotatedListField());
@@ -165,7 +162,7 @@ public class SpringBeanWithGenericsTest
 	}
 
 	@Test
-	public void listOfTypedGenerics() throws Exception
+	void listOfTypedGenerics()
 	{
 		AnnotatedListOfBeanTypeQualifier page = 
 			tester.startPage(new AnnotatedListOfBeanTypeQualifier());
@@ -299,7 +296,7 @@ public class SpringBeanWithGenericsTest
 		@Bean
 		public ArrayList<String> arrayListStrings()
 		{
-			ArrayList<String> arrayList = new ArrayList();
+			ArrayList<String> arrayList = new ArrayList<>();
 			arrayList.add("one");
 			arrayList.add("two");
 			arrayList.add("three");
@@ -309,7 +306,7 @@ public class SpringBeanWithGenericsTest
 		@Bean
 		public ArrayList<Integer> arrayListIntegers()
 		{
-			ArrayList<Integer> arrayList = new ArrayList();
+			ArrayList<Integer> arrayList = new ArrayList<>();
 			arrayList.add(1);
 			arrayList.add(2);
 			arrayList.add(3);
