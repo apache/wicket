@@ -23,13 +23,13 @@ import org.junit.jupiter.api.Test;
 /**
  * jWebUnit test for Hello World.
  */
-public class FormInputTest extends WicketTestCase
+class FormInputTest extends WicketTestCase
 {
 	/**
 	 * Test page.
 	 */
 	@Test
-	public void test_1()
+	void test_1()
 	{
 		tester.startPage(FormInput.class);
 
