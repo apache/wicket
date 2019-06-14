@@ -186,7 +186,7 @@
 				}
 			});
 
-			Wicket.Event.add(obj, 'inputchange', function (jqEvent) {
+			Wicket.Event.add(obj, 'input change', function (jqEvent) {
 				var kc = Wicket.Event.keyCode(jqEvent);
 				switch(kc) {
 					case KEY_TAB:
