@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html>
+	<body>
+		<wicket:extend xmlns:wicket="http://wicket.apache.org">
+		
+			<p wicket:id="stacked">
+				<input type="radio" wicket:id="no" /> <label wicket:for="no">nested</label>
+				<input type="radio" wicket:id="yes" /> <label wicket:for="yes">stacked dialogs</label> 
+			</p>
+			
+			<div wicket:id="start"></div>
+			
+			<div wicket:id="stackedDialogs"></div>	
+			
+			<wicket:fragment wicket:id="fragment">
+				<form wicket:id="form" class="modal-dialog-form">
+					<h1 class="modal-dialog-header">Header</h1>
+						
+					<div class="modal-dialog-body">
+						<p>
+							<input type="text" wicket:id="text" placeholder="Focus and press ENTER to open dialog" size="32" autofocus="autofocus"/>
+						</p>
+					
+						<div wicket:id="lorem"></div>	
+						<a wicket:id="ipsum">Lorem...</a>	
+			
+						<div wicket:id="nestedDialog"></div>
+					</div>
+						
+					<div class="modal-dialog-footer">
+						<a wicket:id="openDialog">Open dialog</a>
+							|
+						<a wicket:id="ajaxOpenDialog">via Ajax</a>
+							
+						<span wicket:id="closing">
+							|
+							<a wicket:id="close">Close dialog</a>
+							|
+							via Ajax by pressing ESC
+						</span>
+					</div>
+				</form>
+			</wicket:fragment>
+		
+		</wicket:extend>
+	</body>
+</html>

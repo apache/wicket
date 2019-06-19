@@ -1455,6 +1455,31 @@
 					we.publish(topic.DOM_NODE_ADDED, newElement);
 				}
 			},
+			
+			add: function (element, text) {
+				var we = Wicket.Event;
+				var topic = we.Topic;
+
+				// jQuery 1.9+ expects '<' as the very first character in text
+				var cleanedText = jQuery.trim(text);
+
+				var $newElement = jQuery(cleanedText);
+				jQuery(element).append($newElement);
+
+				var newElement = Wicket.$(element.id);
+				if (newElement) {
+					we.publish(topic.DOM_NODE_ADDED, newElement);
+				}
+			},
+
+			remove: function (element) {
+				var we = Wicket.Event;
+				var topic = we.Topic;
+
+				we.publish(topic.DOM_NODE_REMOVING, element);
+
+				jQuery(element).remove();
+			},
 
 			// Method for serializing DOM nodes to string
 			// original taken from Tacos (http://tacoscomponents.jot.com)
