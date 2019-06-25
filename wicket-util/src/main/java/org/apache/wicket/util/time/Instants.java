@@ -17,23 +17,18 @@
 package org.apache.wicket.util.time;
 
 import java.time.Instant;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /**
- * 
  * Utility class for {@link Instant}
- *
  */
 public class Instants
 {
 
-	public static final DateTimeFormatter RFC7231DateFormatter = DateTimeFormatter
-		.ofPattern("EEE, dd MMM yyyy HH:mm:ss O", Locale.ENGLISH).withZone(ZoneId.of("UTC"));
-
-	public static final DateTimeFormatter localDateFormatter = DateTimeFormatter
-		.ofPattern("yyyy.MM.dd", Locale.ENGLISH);
+	public static final DateTimeFormatter RFC_7231_DATE_FORMATTER = DateTimeFormatter
+		.ofPattern("EEE, dd MMM yyyy HH:mm:ss O", Locale.ENGLISH).withZone(ZoneOffset.UTC);
 
 	/**
 	 * Formats a given {@link Instant} as required by RFC7231 for dates.
@@ -43,6 +38,6 @@ public class Instants
 	 */
 	public static String toRFC7231Format(final Instant instant)
 	{
-		return RFC7231DateFormatter.format(instant);
+		return RFC_7231_DATE_FORMATTER.format(instant);
 	}
 }
