@@ -138,7 +138,7 @@
 		<maven.javadoc.version>2.10.4</maven.javadoc.version>
 		<maven.surefire.version>3.0.0-M1</maven.surefire.version>
 		<mockito.version>2.27.0</mockito.version>
-		<slf4j.version>1.7.26</slf4j.version>
+		<slf4j.version>1.7.25</slf4j.version>
 		<logback.version>1.2.3</logback.version>
 		<hamcrest.version>2.0.0.0</hamcrest.version>
 		<objenesis.version>2.6</objenesis.version>
