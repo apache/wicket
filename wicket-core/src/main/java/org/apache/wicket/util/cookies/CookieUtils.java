@@ -17,7 +17,7 @@
 package org.apache.wicket.util.cookies;
 
 import java.time.Instant;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import javax.servlet.http.Cookie;
@@ -370,9 +370,9 @@ public class CookieUtils
 	 */
 	private String cookieToDebugString(final Cookie cookie)
 	{
-		final LocalDate localDate = Instant.ofEpochMilli(cookie.getMaxAge()).atZone(ZoneId.systemDefault()).toLocalDate();
+		final LocalDateTime localDateTime = Instant.ofEpochMilli(cookie.getMaxAge()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue() +
 			", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() + ", maxAge = " +
-			localDate + "(" + cookie.getMaxAge() + ")" + "]";
+			localDateTime + "(" + cookie.getMaxAge() + ")" + "]";
 	}
 }
