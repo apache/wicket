@@ -170,7 +170,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**	https://issues.apache.org/jira/browse/WICKET-6680 */
 	@Test
-	void templateLiteralWithTwoForwardSlashes() {
+	public void templateLiteralWithTwoForwardSlashes() {
 		final String before = "const url = `${protocol}//${hostname}:${port}`;";
 		final String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
 
