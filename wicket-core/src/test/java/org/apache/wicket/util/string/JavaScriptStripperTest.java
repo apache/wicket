@@ -22,7 +22,7 @@ import org.junit.Test;
 
 /**
  * Tests {@link JavaScriptStripper}
- * 
+ *
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 public class JavaScriptStripperTest extends Assert
@@ -167,5 +167,15 @@ public class JavaScriptStripperTest extends Assert
 
 		System.out.println(result);
 	}
+
+	/**	https://issues.apache.org/jira/browse/WICKET-6680 */
+	@Test
+	void templateLiteralWithTwoForwardSlashes() {
+		final String before = "const url = `${protocol}//${hostname}:${port}`;";
+		final String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
+
+		assertEquals(before, after);
+	}
+
 
 }

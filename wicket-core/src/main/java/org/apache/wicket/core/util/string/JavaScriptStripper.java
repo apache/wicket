@@ -50,6 +50,9 @@ public class JavaScriptStripper
 	/** Inside a regular expression */
 	private final static int REG_EXP = 7;
 
+	/** Inside a template literal */
+	private final static int TEMPLATE_LITERAL = 8;
+
 	private int getPrevCount(String s, int fromIndex, char c)
 	{
 		int count = 0;
@@ -164,6 +167,10 @@ public class JavaScriptStripper
 				{
 					state = STRING_DOUBLE_QUOTES;
 				}
+				else if (c == '`')
+				{
+					state = TEMPLATE_LITERAL;
+				}
 				result.append(c);
 				continue;
 			}
@@ -221,6 +228,16 @@ public class JavaScriptStripper
 					state = REGULAR_TEXT;
 				}
 				result.append(c);
+			}
+
+			if (state == TEMPLATE_LITERAL) {
+				// to leave a template literal expression we need even (or zero) number of backslashes
+				int count = getPrevCount(original, i, '\\');
+				if (c == '`' && count % 2 == 0) {
+					state = REGULAR_TEXT;
+				}
+				result.append(c);
+				continue;
 			}
 		}
 
