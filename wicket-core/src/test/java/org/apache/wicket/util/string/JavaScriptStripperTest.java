@@ -16,16 +16,16 @@
  */
 package org.apache.wicket.util.string;
 
+import org.apache.wicket.core.util.string.JavaScriptStripper;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.apache.wicket.core.util.string.JavaScriptStripper;
-import org.junit.jupiter.api.Test;
-
 /**
  * Tests {@link JavaScriptStripper}
- * 
+ *
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
 class JavaScriptStripperTest
@@ -170,5 +170,15 @@ class JavaScriptStripperTest
 
 		System.out.println(result);
 	}
+
+	/**	*/
+	@Test
+	void templateLiteralWithTwoForwardSlashes() {
+		final String before = "const url = `${protocol}//${hostname}:${port}`;";
+		final String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
+
+		assertEquals(before, after);
+	}
+
 
 }
