@@ -151,7 +151,7 @@
 		<javax.websocket-api.version>1.1</javax.websocket-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
 		<jetty.version>9.4.19.v20190610</jetty.version>
-		<junit.version>5.4.2</junit.version>
+		<junit.version>5.5.0</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.3</logback.version>
 		<hamcrest.version>2.1</hamcrest.version>
