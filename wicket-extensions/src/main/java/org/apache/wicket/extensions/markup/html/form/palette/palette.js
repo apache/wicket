@@ -124,7 +124,7 @@
 			}
 		}
 
-		jQuery(recorder).triggerHandler('change');
+		jQuery(recorder).trigger('change');
 	};
 
 	Wicket.Palette.clearSelectionHelper=function(box) {

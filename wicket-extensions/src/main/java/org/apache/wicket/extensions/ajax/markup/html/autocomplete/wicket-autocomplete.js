@@ -444,7 +444,7 @@
 			
 			if (triggerChangeOnHide) {
 				var input = Wicket.$(ajaxAttributes.c);
-				jQuery(input).triggerHandler('change');
+				jQuery(input).trigger('change');
 				triggerChangeOnHide = false;
 			}
 		}
