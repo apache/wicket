@@ -93,18 +93,24 @@ public class AutoLabelResolver implements IComponentResolver
 			return null;
 		}
 
-		final String id = tag.getAttribute(getWicketNamespace(markupStream) + WICKET_FOR).trim();
+		// retrieve the relative path to the component
+		final String path = tag.getAttribute(getWicketNamespace(markupStream) + WICKET_FOR).trim();
 
-		Component component = findRelatedComponent(container, id);
+		Component component = findRelatedComponent(container, path);
 		if (component == null)
 		{
-			throw new ComponentNotFoundException("Could not find form component with id '" + id +
+			throw new ComponentNotFoundException("Could not find form component with path '" + path +
 				"' while trying to resolve wicket:for attribute");
+		}
+		// check if component implements ILabelProviderLocator
+		if (component instanceof ILabelProviderLocator)
+		{
+			component = ((ILabelProviderLocator) component).getAutoLabelComponent();
 		}
 
 		if (!(component instanceof ILabelProvider))
 		{
-			throw new WicketRuntimeException("Component pointed to by wicket:for attribute '" + id +
+			throw new WicketRuntimeException("Component pointed to by wicket:for attribute '" + path +
 				"' does not implement " + ILabelProvider.class.getName());
 		}
 
@@ -134,15 +140,15 @@ public class AutoLabelResolver implements IComponentResolver
 
 	/**
 	 * 
-	 * @param container
-	 * @param id
+	 * @param container The container
+	 * @param path The relative path to the component
 	 * @return Component
 	 */
-	static Component findRelatedComponent(MarkupContainer container, final String id)
+	static Component findRelatedComponent(MarkupContainer container, final String path)
 	{
 		// try the quick and easy route first
 
-		Component component = container.get(id);
+		Component component = container.get(path);
 		if (component != null)
 		{
 			return component;
@@ -165,7 +171,7 @@ public class AutoLabelResolver implements IComponentResolver
 							visit.dontGoDeeper();
 							return;
 						}
-						if (id.equals(child.getId()))
+						if (path.equals(child.getId()))
 						{
 							visit.stop(child);
 							return;
