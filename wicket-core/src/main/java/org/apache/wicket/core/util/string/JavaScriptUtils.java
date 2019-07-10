@@ -19,6 +19,7 @@ package org.apache.wicket.core.util.string;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
+import static org.apache.wicket.markup.head.nonce.CspUtils.getNonceAttribute;
 
 /**
  * Provide some helpers to write javascript related tags to the response object.
@@ -152,7 +153,9 @@ public class JavaScriptUtils
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 		final String id, boolean defer, String charset, boolean async)
 	{
-		response.write("<script type=\"text/javascript\" ");
+		response.write("<script ");
+		getNonceAttribute().ifPresent(response::write);
+		response.write("type=\"text/javascript\" ");
 		if (id != null)
 		{
 			response.write("id=\"" + Strings.escapeMarkup(id) + "\" ");
@@ -227,7 +230,9 @@ public class JavaScriptUtils
 	 */
 	public static void writeOpenTag(final Response response, String id)
 	{
-		response.write("<script type=\"text/javascript\" ");
+		response.write("<script ");
+		getNonceAttribute().ifPresent(response::write);
+		response.write("type=\"text/javascript\" ");
 		if (id != null)
 		{
 			response.write("id=\"" + Strings.escapeMarkup(id) + "\"");

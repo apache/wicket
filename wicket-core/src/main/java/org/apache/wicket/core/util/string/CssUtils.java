@@ -20,6 +20,8 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
 
+import static org.apache.wicket.markup.head.nonce.CspUtils.getNonceAttribute;
+
 /**
  * Utility methods for CSS.
  *
@@ -68,6 +70,7 @@ public final class CssUtils
 	public static void writeOpenTag(final Response response, String id)
 	{
 		response.write(INLINE_OPEN_TAG_START);
+		getNonceAttribute().ifPresent(nonce -> response.write(" "+nonce));
 		if (id != null)
 		{
 			response.write(" id=\"" + id + "\"");
@@ -119,7 +122,9 @@ public final class CssUtils
 	public static void writeLinkUrl(final Response response, final CharSequence url,
 		final CharSequence media, final String markupId, final String rel)
 	{
-		response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+		response.write("<link ");
+		getNonceAttribute().ifPresent(response::write);
+		response.write("rel=\"stylesheet\" type=\"text/css\" href=\"");
 		response.write(Strings.escapeMarkup(url));
 		response.write("\"");
 		if (Strings.isEmpty(media) == false)

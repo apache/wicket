@@ -25,6 +25,7 @@ import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListen
 import org.apache.wicket.authorization.IUnauthorizedResourceRequestListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory;
+import org.apache.wicket.markup.head.INonceStrategy;
 import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.lang.Args;
 
@@ -52,6 +53,9 @@ public class SecuritySettings
 
 	/** The authentication strategy. */
 	private IAuthenticationStrategy authenticationStrategy;
+
+	/** The CSP nonce strategy */
+	private INonceStrategy nonceStrategy;
 
 	/** factory for creating crypt objects */
 	private ICryptFactory cryptFactory;
@@ -243,4 +247,26 @@ public class SecuritySettings
 		authenticationStrategy = strategy;
 		return this;
 	}
+
+	/**
+	 * Get CSP nonce strategy.
+	 *
+	 * @return returns the CSP nonce strategy. Null if not configured.
+	 */
+	public INonceStrategy getNonceStrategy() {
+		return nonceStrategy;
+	}
+
+	/**
+	 * Sets the CSP nonce strategy.
+	 *
+	 * @param nonceStrategy
+	 * 				new CSP nonce strategy
+	 * @return {@code this} object for chaining
+	 */
+	public SecuritySettings setNonceStrategy(INonceStrategy nonceStrategy) {
+		this.nonceStrategy = nonceStrategy;
+		return this;
+	}
+
 }
