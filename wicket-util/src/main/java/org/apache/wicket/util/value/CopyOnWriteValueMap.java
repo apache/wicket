@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.util.value;
 
+import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.StringValueConversionException;
+
 import java.io.Serializable;
 import java.sql.Time;
 import java.time.Duration;
@@ -23,9 +26,6 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.wicket.util.string.StringValue;
-import org.apache.wicket.util.string.StringValueConversionException;
 
 
 /**
@@ -491,4 +491,10 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	{
 		return wrapped.getAsEnum(key, eClass, defaultValue);
 	}
+
+	@Override
+	public String toString() {
+		return wrapped.toString();
+	}
+
 }

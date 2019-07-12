@@ -16,11 +16,6 @@
  */
 package org.apache.wicket.markup.head;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -29,8 +24,11 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.IResourceBundle;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.Strings;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * {@link HeaderItem} for script tags that are rendered using a {@link ResourceReference}.
@@ -125,7 +123,7 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 		return "JavaScriptReferenceHeaderItem(" + getReference() + ", " + getPageParameters() + ')';
 	}
 
-	private String getUrl()
+	public String getUrl()
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(getReference(),
 			getPageParameters());

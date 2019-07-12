@@ -18,6 +18,9 @@ package org.apache.wicket.core.util.string;
 
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.HeaderItemAttribute;
+import org.apache.wicket.util.value.HeaderItemAttributeMap;
+import org.apache.wicket.util.value.IValueMap;
 
 
 /**
@@ -152,28 +155,48 @@ public class JavaScriptUtils
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 		final String id, boolean defer, String charset, boolean async)
 	{
-		response.write("<script type=\"text/javascript\" ");
-		if (id != null)
-		{
-			response.write("id=\"" + Strings.escapeMarkup(id) + "\" ");
+		response.write("<script ");
+		HeaderItemAttributeMap attributes = new HeaderItemAttributeMap();
+		// XXX JS mimetype can be omitted (also see below)
+		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
+		attributes.add(HeaderItemAttribute.SCRIPT_SRC, url.toString());
+		if (id != null) {
+			attributes.add(HeaderItemAttribute.ID, String.valueOf(Strings.escapeMarkup(id)));
 		}
 		if (defer)
 		{
-			response.write("defer=\"defer\" ");
+			attributes.add(HeaderItemAttribute.SCRIPT_DEFER, "defer");
 		}
 
 		if (async)
 		{
-			response.write("async=\"async\" ");
+			attributes.add(HeaderItemAttribute.SCRIPT_ASYNC, "async");
 		}
 
 		if (charset != null)
 		{
-			response.write("charset=\"" + Strings.escapeMarkup(charset) + "\" ");
+			// FIXME charset attr is deprecated
+			// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#Deprecated_attributes
+			attributes.add("charset", Strings.escapeMarkup(charset).toString());
 		}
-		response.write("src=\"");
-		response.write(url);
-		response.write("\"></script>");
+		response.write(attributes.toString());
+		response.write("></script>");
+		response.write("\n");
+	}
+
+	/**
+	 * Write a reference to a javascript file to the response object
+	 *
+	 * @param response
+	 *            The HTTP response
+	 * @param attributes
+	 *            Extra tag attributes
+	 */
+	public static void writeJavaScriptUrl(final Response response, IValueMap attributes)
+	{
+		response.write("<script ");
+		response.write(attributes.toString());
+		response.write("></script>");
 		response.write("\n");
 	}
 
@@ -209,6 +232,23 @@ public class JavaScriptUtils
 
 	/**
 	 * Write the simple text to the response object surrounded by a script tag.
+	 *
+	 * @param response
+	 *            The HTTP: response
+	 * @param text
+	 *            The text to added in between the script tags
+	 * @param attributes
+	 *            Extra tag attributes
+	 */
+	public static void writeJavaScript(final Response response, final CharSequence text, IValueMap attributes)
+	{
+		writeOpenTag(response, attributes);
+		response.write(Strings.replaceAll(text, "</", "<\\/"));
+		writeCloseTag(response);
+	}
+
+	/**
+	 * Write the simple text to the response object surrounded by a script tag.
 	 * 
 	 * @param response
 	 *            The HTTP: response
@@ -217,7 +257,9 @@ public class JavaScriptUtils
 	 */
 	public static void writeJavaScript(final Response response, final CharSequence text)
 	{
-		writeJavaScript(response, text, null);
+		HeaderItemAttributeMap attributes = new HeaderItemAttributeMap();
+		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
+		writeJavaScript(response, text, attributes);
 	}
 
 	/**
@@ -227,10 +269,23 @@ public class JavaScriptUtils
 	 */
 	public static void writeOpenTag(final Response response, String id)
 	{
-		response.write("<script type=\"text/javascript\" ");
-		if (id != null)
-		{
-			response.write("id=\"" + Strings.escapeMarkup(id) + "\"");
+		HeaderItemAttributeMap attributes = new HeaderItemAttributeMap();
+		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
+		if (id != null) {
+			attributes.add(HeaderItemAttribute.ID, id);
+		}
+		writeOpenTag(response, attributes);
+	}
+
+	/**
+	 * @param response
+	 * @param attributes
+	 */
+	public static void writeOpenTag(final Response response, IValueMap attributes)
+	{
+		response.write("<script ");
+		if (attributes != null) {
+			response.write(attributes.toString());
 		}
 		response.write(">");
 		response.write(SCRIPT_CONTENT_PREFIX);
@@ -242,7 +297,9 @@ public class JavaScriptUtils
 	 */
 	public static void writeOpenTag(final Response response)
 	{
-		writeOpenTag(response, null);
+		HeaderItemAttributeMap attributes = new HeaderItemAttributeMap();
+		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
+		writeOpenTag(response, attributes);
 	}
 
 	/**

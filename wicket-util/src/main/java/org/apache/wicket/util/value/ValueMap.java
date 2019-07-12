@@ -16,6 +16,13 @@
  */
 package org.apache.wicket.util.value;
 
+import org.apache.wicket.util.parse.metapattern.MetaPattern;
+import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
+import org.apache.wicket.util.string.IStringIterator;
+import org.apache.wicket.util.string.StringList;
+import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.StringValueConversionException;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,13 +32,6 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.apache.wicket.util.parse.metapattern.MetaPattern;
-import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
-import org.apache.wicket.util.string.IStringIterator;
-import org.apache.wicket.util.string.StringList;
-import org.apache.wicket.util.string.StringValue;
-import org.apache.wicket.util.string.StringValueConversionException;
 
 
 /**
@@ -555,7 +555,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 			first = false;
 
 			buffer.append(entry.getKey());
-			buffer.append(" = \"");
+			buffer.append("=\"");
 			final Object value = entry.getValue();
 			if (value == null)
 			{

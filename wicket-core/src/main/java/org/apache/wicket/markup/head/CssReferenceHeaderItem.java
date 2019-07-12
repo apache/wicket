@@ -16,10 +16,6 @@
  */
 package org.apache.wicket.markup.head;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -28,6 +24,10 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.IResourceBundle;
 import org.apache.wicket.util.string.Strings;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * {@link HeaderItem} for style tags that are rendered using a {@link ResourceReference}.
@@ -155,7 +155,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 		return "CSSReferenceHeaderItem(" + getReference() + ", " + getPageParameters() + ")";
 	}
 
-	private String getUrl()
+	protected String getUrl()
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(getReference(),
 			getPageParameters());

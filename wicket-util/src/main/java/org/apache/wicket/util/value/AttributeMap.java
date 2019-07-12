@@ -24,7 +24,7 @@ import java.util.Map;
  * @author Eelco Hillenius
  * @since 1.2.6
  */
-public final class AttributeMap extends ValueMap
+public class AttributeMap extends ValueMap
 {
 	private static final long serialVersionUID = 1L;
 

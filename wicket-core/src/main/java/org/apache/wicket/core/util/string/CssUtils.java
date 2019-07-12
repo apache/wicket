@@ -19,6 +19,9 @@ package org.apache.wicket.core.util.string;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.HeaderItemAttribute;
+import org.apache.wicket.util.value.HeaderItemAttributeMap;
+import org.apache.wicket.util.value.IValueMap;
 
 /**
  * Utility methods for CSS.
@@ -27,6 +30,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public final class CssUtils
 {
+	// FIXME type text/css can be omitted for the style tag in supported browsers
 	/** start of CSS inline open tag */
 	public final static String INLINE_OPEN_TAG_START = "<style type=\"text/css\"";
 
@@ -61,16 +65,44 @@ public final class CssUtils
 	}
 
 	/**
+	 * Write the simple text to the response object surrounded by a style tag.
+	 *
+	 * @param response
+	 *            The HTTP: response
+	 * @param text
+	 *            The text to added in between the style tags
+	 * @param attributes
+	 *            Extra style attributes
+	 */
+	public static void writeCss(final Response response, final CharSequence text, IValueMap attributes)
+	{
+		writeOpenTag(response, attributes);
+		response.write(text);
+		writeCloseTag(response);
+	}
+
+	/**
 	 *
 	 * @param response
 	 * @param id
 	 */
 	public static void writeOpenTag(final Response response, String id)
 	{
+		HeaderItemAttributeMap attributes = new HeaderItemAttributeMap();
+		attributes.add(HeaderItemAttribute.ID, id);
+		writeOpenTag(response, attributes);
+	}
+
+	/**
+	 *
+	 * @param response
+	 * @param attributes
+	 */
+	public static void writeOpenTag(final Response response, IValueMap attributes)
+	{
 		response.write(INLINE_OPEN_TAG_START);
-		if (id != null)
-		{
-			response.write(" id=\"" + id + "\"");
+		if (attributes != null) {
+			response.write(" "+attributes.toString());
 		}
 		response.write(">\n");
 	}
@@ -119,27 +151,33 @@ public final class CssUtils
 	public static void writeLinkUrl(final Response response, final CharSequence url,
 		final CharSequence media, final String markupId, final String rel)
 	{
-		response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-		response.write(Strings.escapeMarkup(url));
-		response.write("\"");
+		HeaderItemAttributeMap attributes = new HeaderItemAttributeMap();
+
+		if (Strings.isEmpty(rel) == false)
+		{
+			attributes.add(HeaderItemAttribute.LINK_REL, rel);
+		} else {
+			attributes.add(HeaderItemAttribute.LINK_REL, "stylesheet");
+		}
+
+		attributes.add(HeaderItemAttribute.LINK_HREF, String.valueOf(Strings.escapeMarkup(url)));
+
 		if (Strings.isEmpty(media) == false)
 		{
-			response.write(" media=\"");
-			response.write(Strings.escapeMarkup(media));
-			response.write("\"");
+			attributes.add(HeaderItemAttribute.LINK_MEDIA, media.toString());
 		}
 		if (Strings.isEmpty(markupId) == false)
 		{
-			response.write(" id=\"");
-			response.write(Strings.escapeMarkup(markupId));
-			response.write("\"");
+			attributes.add(HeaderItemAttribute.ID, markupId);
 		}
-		if (Strings.isEmpty(rel) == false)
-		{
-			response.write(" rel=\"");
-			response.write(Strings.escapeMarkup(rel));
-			response.write("\"");
-		}
+
+		writeLinkUrl(response, attributes);
+	}
+
+	public static void writeLinkUrl(final Response response, IValueMap attributes)
+	{
+		response.write("<link type=\"text/css\" ");
+		response.write(attributes.toString());
 		response.write(" />");
 	}
 
