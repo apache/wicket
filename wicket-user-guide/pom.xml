@@ -153,6 +153,12 @@
 					</executions>
 					<dependencies>
 						<dependency>
+							<groupId>org.jruby</groupId>
+							<artifactId>jruby-complete</artifactId>
+							<version>9.2.7.0</version>
+							<type>bundle</type>
+						</dependency>
+						<dependency>
 							<groupId>org.asciidoctor</groupId>
 							<artifactId>asciidoctorj-pdf</artifactId>
 							<version>1.5.0-alpha.15</version>
