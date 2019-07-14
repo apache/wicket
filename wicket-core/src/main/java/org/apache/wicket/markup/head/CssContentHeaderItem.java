@@ -16,13 +16,15 @@
  */
 package org.apache.wicket.markup.head;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
+import org.apache.wicket.util.value.HeaderItemAttribute;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
 
 /**
  * {@link HeaderItem} for internal (embedded in the header) css content.
@@ -72,7 +74,10 @@ public class CssContentHeaderItem extends CssHeaderItem
 			response.write("]>");
 		}
 
-		CssUtils.writeCss(response, getCss(), getId());
+		AttributeMap attributes = new AttributeMap();
+		attributes.compute(HeaderItemAttribute.ID, this::getId);
+		attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
+		CssUtils.writeCss(response, getCss(), attributes);
 
 		if (hasCondition)
 		{

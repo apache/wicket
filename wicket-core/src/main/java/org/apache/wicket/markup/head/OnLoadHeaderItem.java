@@ -16,16 +16,19 @@
  */
 package org.apache.wicket.markup.head;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.JavaScriptLibrarySettings;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
+import org.apache.wicket.util.value.HeaderItemAttribute;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * {@link HeaderItem} for scripts that need to be executed after the entire page is loaded.
@@ -35,6 +38,11 @@ import org.apache.wicket.util.string.Strings;
 public class OnLoadHeaderItem extends HeaderItem
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * CSP Nonce
+	 */
+	private String nonce;
 
 	/**
 	 * Creates a {@link OnLoadHeaderItem} for the script.
@@ -86,8 +94,11 @@ public class OnLoadHeaderItem extends HeaderItem
 		CharSequence js = getJavaScript();
 		if (Strings.isEmpty(js) == false)
 		{
+			AttributeMap attributes = new AttributeMap();
+			attributes.add(org.apache.wicket.util.value.HeaderItemAttribute.TYPE, "text/javascript");
+			attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
 			JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"load\", " +
-				"function(event) { " + js + ";});");
+					"function(event) { " + js + ";});", attributes);
 		}
 	}
 
@@ -101,6 +112,24 @@ public class OnLoadHeaderItem extends HeaderItem
 	public String toString()
 	{
 		return "OnLoadHeaderItem('" + getJavaScript() + "')";
+	}
+
+	/**
+	 * @return CSP nonce
+	 */
+	public String getNonce() {
+		return nonce;
+	}
+
+	/**
+	 * Set the CSP nonce
+	 * @param nonce
+	 * @return {@code this} object, for method chaining
+	 */
+	public OnLoadHeaderItem setNonce(String nonce) {
+		Args.notNull(nonce, "nonce");
+		this.nonce = nonce;
+		return this;
 	}
 
 	@Override

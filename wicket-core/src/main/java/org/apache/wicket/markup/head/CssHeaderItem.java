@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup.head;
 
-import java.util.Objects;
-
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.request.Response;
@@ -26,8 +24,12 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
+import org.apache.wicket.util.value.HeaderItemAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Objects;
 
 /**
  * Base class for all {@link HeaderItem}s that represent stylesheets. This class mainly contains
@@ -61,7 +63,12 @@ public abstract class CssHeaderItem extends HeaderItem
 	private final String condition;
 
 	private String markupId;
-	
+
+	/**
+	 * CSP Nonce
+	 */
+	private String nonce;
+
 	protected CssHeaderItem(String condition)
 	{
 		this.condition = condition;
@@ -355,14 +362,45 @@ public abstract class CssHeaderItem extends HeaderItem
 			response.write(condition);
 			response.write("]>");
 		}
-
-		CssUtils.writeLinkUrl(response, url, media, getId(), rel);
+		AttributeMap attributes = AttributeMap.of(
+				HeaderItemAttribute.TYPE, "text/css",
+				HeaderItemAttribute.LINK_REL, rel == null ? "stylesheet" : rel,
+				HeaderItemAttribute.LINK_HREF, url
+		);
+		attributes.compute(HeaderItemAttribute.ID, this::getId);
+		if (media != null)
+		{
+			attributes.add(HeaderItemAttribute.LINK_MEDIA, media);
+		}
+		attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
+		CssUtils.writeLinkUrl(response, attributes);
 
 		if (hasCondition)
 		{
 			response.write("<![endif]-->");
 		}
 		response.write("\n");
+	}
+
+	/**
+	 * @return CSP nonce
+	 */
+	public String getNonce()
+	{
+		return nonce;
+	}
+
+	/**
+	 * Set the CSP nonce
+	 *
+	 * @param nonce
+	 * @return {@code this} object, for method chaining
+	 */
+	public CssHeaderItem setNonce(String nonce)
+	{
+		Args.notNull(nonce, "nonce");
+		this.nonce = nonce;
+		return this;
 	}
 
 	@Override

@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup.head;
 
-import java.util.Objects;
-
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
@@ -26,6 +24,10 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
+import org.apache.wicket.util.value.HeaderItemAttribute;
+
+import java.util.Objects;
 
 /**
  * Base class for all {@link HeaderItem}s that represent javascripts. This class mainly contains
@@ -46,6 +48,11 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	 * this header item
 	 */
 	private String markupId;
+
+	/**
+	 * CSP Nonce
+	 */
+	private String nonce;
 
 	protected JavaScriptHeaderItem(String condition)
 	{
@@ -365,13 +372,52 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 		boolean isAjax = RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent();
 		// the url needs to be escaped when Ajax, because it will break the Ajax Response XML (WICKET-4777)
 		CharSequence escapedUrl = isAjax ? Strings.escapeMarkup(url): url;
-
-		JavaScriptUtils.writeJavaScriptUrl(response, escapedUrl, id, defer, charset, async);
+		AttributeMap attributes = AttributeMap.of(
+				HeaderItemAttribute.TYPE, "text/javascript",
+				HeaderItemAttribute.SCRIPT_SRC, String.valueOf(escapedUrl)
+		);
+		if (id != null)
+		{
+			attributes.add(HeaderItemAttribute.ID, id);
+		}
+		if (defer)
+		{
+			attributes.add(HeaderItemAttribute.SCRIPT_DEFER, "defer");
+		}
+		if (charset != null)
+		{
+			// XXX this attribute is not necessary for modern browsers
+			attributes.add("charset", charset);
+		}
+		if (async)
+		{
+			attributes.add(HeaderItemAttribute.SCRIPT_ASYNC, "async");
+		}
+		attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
+		JavaScriptUtils.writeJavaScriptUrl(response, attributes);
 
 		if (hasCondition)
 		{
 			response.write("<![endif]-->\n");
 		}
+	}
+
+	/**
+	 * @return CSP nonce
+	 */
+	public String getNonce() {
+		return nonce;
+	}
+
+	/**
+	 * Set the CSP nonce
+	 * @param nonce
+	 * @return {@code this} object, for method chaining
+	 */
+	public JavaScriptHeaderItem setNonce(String nonce) {
+		Args.notNull(nonce, "nonce");
+		this.nonce = nonce;
+		return this;
 	}
 
 	@Override

@@ -16,13 +16,15 @@
  */
 package org.apache.wicket.markup.head;
 
+import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
+import org.apache.wicket.util.value.HeaderItemAttribute;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
-
-import org.apache.wicket.request.Response;
-import org.apache.wicket.core.util.string.JavaScriptUtils;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link HeaderItem} for internal (embedded in the header) javascript content.
@@ -69,7 +71,10 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 			response.write(getCondition());
 			response.write("]>");
 		}
-		JavaScriptUtils.writeJavaScript(response, getJavaScript(), getId());
+		AttributeMap attributes = AttributeMap.of(HeaderItemAttribute.TYPE, "text/javascript");
+		attributes.compute(HeaderItemAttribute.ID, this::getId);
+		attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
+		JavaScriptUtils.writeJavaScript(response, getJavaScript(), attributes);
 
 		if (hasCondition)
 		{

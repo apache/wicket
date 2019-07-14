@@ -123,7 +123,7 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 		return "JavaScriptReferenceHeaderItem(" + getReference() + ", " + getPageParameters() + ')';
 	}
 
-	public String getUrl()
+	private String getUrl()
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(getReference(),
 			getPageParameters());

@@ -30,67 +30,69 @@ import org.apache.wicket.request.http.WebResponse;
 /**
  * Page which disallows execution of inline scripts without nonce
  */
-public class NonceDemoPage extends WicketExamplePage {
+public class NonceDemoPage extends WicketExamplePage
+{
+	private final IModel<Integer> clickMeCountModel = Model.of(0);
 
-    private final IModel<Integer> clickMeCountModel = Model.of(0);
+	public NonceDemoPage()
+	{
+		super();
+		add(new Label("testNonceScript", getString("testNonceScript")));
+		add(new Label("testNoNonceScript", getString("testNoNonceScript")));
+		final Label clickMeCount = new Label("clickMeCount", clickMeCountModel);
+		clickMeCount.setOutputMarkupId(true);
+		add(clickMeCount);
+		add(new AjaxLink<String>("clickMe")
+		{
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				// target.add (works even without unsafe-eval)
+				clickMeCountModel.setObject(clickMeCountModel.getObject() + 1);
+				target.add(clickMeCount);
+				// Append javascript (won't work without unsafe-eval)
+				target.appendJavaScript("document.querySelector(\".click-me-text\").innerHTML = \"replaced\";");
+			}
+		}.setOutputMarkupId(true));
+	}
 
-    public NonceDemoPage() {
-        super();
-        add(new Label("testNonceScript", getString("testNonceScript")));
-        add(new Label("testNoNonceScript", getString("testNoNonceScript")));
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		// Add inline script with nonce
+		response.render(JavaScriptHeaderItem.forScript(
+				"$(function(){$(\".test-nonce-script\").html(\"Text injected by script with nonce: success\");});",
+				"test-nonce-script"
+		));
+		// Add inline css with nonce
+		response.render(CssHeaderItem.forCSS(
+				".injected-style--with-nonce{color: green; font-weight: bold;}",
+				"injected-style-with-nonce")
+		);
+	}
 
-        final Label clickMeCount = new Label("clickMeCount", clickMeCountModel);
-        clickMeCount.setOutputMarkupId(true);
-        add(clickMeCount);
-        add(new AjaxLink<String>("clickMe") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                // target.add (works even without unsafe-eval)
-                clickMeCountModel.setObject(clickMeCountModel.getObject()+1);
-                target.add(clickMeCount);
+	@Override
+	protected void setHeaders(WebResponse response)
+	{
+		super.setHeaders(response);
+		String nonce = CspApplication.getNonce();
+		// There is a variety of CSP configurations, this is a very simple one
+		response.setHeader("Content-Security-Policy",
+				String.format(
+						// Unfortunately wicket-ajax does not work without unsafe-eval,
+						// however it's less critical when inline script injections are not possible because of nonce
+						"script-src 'unsafe-eval' 'nonce-%s'; style-src 'nonce-%s';",
+						nonce,
+						nonce
+				)
+		);
+	}
 
-                // Append javascript (won't work without unsafe-eval)
-                target.appendJavaScript("document.querySelector(\".click-me-text\").innerHTML = \"replaced\";");
-            }
-        }.setOutputMarkupId(true));
-    }
-
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
-
-        // Add inline script with nonce
-        response.render(JavaScriptHeaderItem.forScript(
-                "$(function(){$(\".test-nonce-script\").html(\"Text injected by script with nonce: success\");});",
-                "test-nonce-script"
-        ));
-
-        // Add inline css with nonce
-        response.render(CssHeaderItem.forCSS(
-                ".injected-style--with-nonce{color: green; font-weight: bold;}",
-                "injected-style-with-nonce")
-        );
-    }
-
-    @Override
-    protected void setHeaders(WebResponse response) {
-        super.setHeaders(response);
-        String nonce = CspApplication.getNonce();
-        // There is a variety of CSP configurations, this is a very simple one
-        response.setHeader("Content-Security-Policy",
-                String.format(
-                        // Unfortunately wicket-ajax does not work without unsafe-eval,
-                        // however it's less critical when inline script injections are not possible because of nonce
-                        "script-src 'unsafe-eval' 'nonce-%s'; style-src 'nonce-%s';",
-                        nonce,
-                        nonce
-                )
-        );
-    }
-
-    @Override
-    public void detachModels() {
-        super.detachModels();
-        clickMeCountModel.detach();
-    }
+	@Override
+	public void detachModels()
+	{
+		super.detachModels();
+		clickMeCountModel.detach();
+	}
 }

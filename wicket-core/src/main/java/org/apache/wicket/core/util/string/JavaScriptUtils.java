@@ -18,8 +18,8 @@ package org.apache.wicket.core.util.string;
 
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
 import org.apache.wicket.util.value.HeaderItemAttribute;
-import org.apache.wicket.util.value.HeaderItemAttributeMap;
 import org.apache.wicket.util.value.IValueMap;
 
 
@@ -151,28 +151,29 @@ public class JavaScriptUtils
 	 *            a non null value specifies the charset attribute of the script tag
 	 * @param async
 	 *            specifies that the script can be loaded asynchronously by the browser
+	 * @deprecated please use {@link #writeJavaScriptUrl(Response, IValueMap)} instead
 	 */
+	@Deprecated
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 		final String id, boolean defer, String charset, boolean async)
 	{
 		response.write("<script ");
-		HeaderItemAttributeMap attributes = new HeaderItemAttributeMap();
+		AttributeMap attributes = new AttributeMap();
 		// XXX JS mimetype can be omitted (also see below)
 		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
 		attributes.add(HeaderItemAttribute.SCRIPT_SRC, url.toString());
-		if (id != null) {
+		if (id != null)
+		{
 			attributes.add(HeaderItemAttribute.ID, String.valueOf(Strings.escapeMarkup(id)));
 		}
 		if (defer)
 		{
 			attributes.add(HeaderItemAttribute.SCRIPT_DEFER, "defer");
 		}
-
 		if (async)
 		{
 			attributes.add(HeaderItemAttribute.SCRIPT_ASYNC, "async");
 		}
-
 		if (charset != null)
 		{
 			// FIXME charset attr is deprecated
@@ -234,11 +235,11 @@ public class JavaScriptUtils
 	 * Write the simple text to the response object surrounded by a script tag.
 	 *
 	 * @param response
-	 *            The HTTP: response
+	 * 		The HTTP: response
 	 * @param text
-	 *            The text to added in between the script tags
+	 * 		The text to added in between the script tags
 	 * @param attributes
-	 *            Extra tag attributes
+	 * 		Extra tag attributes
 	 */
 	public static void writeJavaScript(final Response response, final CharSequence text, IValueMap attributes)
 	{
@@ -257,7 +258,7 @@ public class JavaScriptUtils
 	 */
 	public static void writeJavaScript(final Response response, final CharSequence text)
 	{
-		HeaderItemAttributeMap attributes = new HeaderItemAttributeMap();
+		AttributeMap attributes = new AttributeMap();
 		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
 		writeJavaScript(response, text, attributes);
 	}
@@ -269,22 +270,28 @@ public class JavaScriptUtils
 	 */
 	public static void writeOpenTag(final Response response, String id)
 	{
-		HeaderItemAttributeMap attributes = new HeaderItemAttributeMap();
+		AttributeMap attributes = new AttributeMap();
 		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
-		if (id != null) {
+		if (id != null)
+		{
 			attributes.add(HeaderItemAttribute.ID, id);
 		}
 		writeOpenTag(response, attributes);
 	}
 
 	/**
+	 * Write open script tag for inline script
+	 *
 	 * @param response
+	 * 		the response to write to
 	 * @param attributes
+	 * 		Tag attributes map
 	 */
 	public static void writeOpenTag(final Response response, IValueMap attributes)
 	{
 		response.write("<script ");
-		if (attributes != null) {
+		if (attributes != null)
+		{
 			response.write(attributes.toString());
 		}
 		response.write(">");
@@ -297,7 +304,7 @@ public class JavaScriptUtils
 	 */
 	public static void writeOpenTag(final Response response)
 	{
-		HeaderItemAttributeMap attributes = new HeaderItemAttributeMap();
+		AttributeMap attributes = new AttributeMap();
 		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
 		writeOpenTag(response, attributes);
 	}

@@ -155,7 +155,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 		return "CSSReferenceHeaderItem(" + getReference() + ", " + getPageParameters() + ")";
 	}
 
-	protected String getUrl()
+	private String getUrl()
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(getReference(),
 			getPageParameters());

@@ -23,52 +23,54 @@ import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.head.filter.CspNonceHeaderResponse;
 
-import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class CspApplication extends WicketExampleApplication {
+public class CspApplication extends WicketExampleApplication
+{
+	private static final int NONCE_LENGTH = 24;
+	public static MetaDataKey<String> NONCE_KEY = new MetaDataKey<String>()
+	{
+	};
 
-    private static final int NONCE_LENGTH = 24;
+	@Override
+	public Class<? extends Page> getHomePage()
+	{
+		return NonceDemoPage.class;
+	}
 
-    public static MetaDataKey<String> NONCE_KEY = new MetaDataKey<String>() {};
+	@Override
+	protected void init()
+	{
+		super.init();
+		setHeaderResponseDecorator(response -> new ResourceAggregator(new CspNonceHeaderResponse(response)
+		{
+			@Override
+			protected String getNonce()
+			{
+				return CspApplication.getNonce();
+			}
+		}));
+		mountPage("noncedemo", NonceDemoPage.class);
+	}
 
-    private static final SecureRandom RND = new SecureRandom();
+	protected static String generateNonce()
+	{
+		byte[] randomBytes = new byte[NONCE_LENGTH];
+		ThreadLocalRandom.current().nextBytes(randomBytes);
+		return Base64.getUrlEncoder().encodeToString(randomBytes);
+	}
 
-    private static final Base64.Encoder BASE_64_ENCODER = Base64.getUrlEncoder();
-
-    @Override
-    public Class<? extends Page> getHomePage() {
-        return NonceDemoPage.class;
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-
-        setHeaderResponseDecorator(response -> new ResourceAggregator(new CspNonceHeaderResponse(response) {
-            @Override
-            protected String getNonce() {
-                return CspApplication.getNonce();
-            }
-        }));
-
-        mountPage("noncedemo", NonceDemoPage.class);
-    }
-
-    protected static String generateNonce() {
-        byte[] randomBytes = new byte[NONCE_LENGTH];
-        RND.nextBytes(randomBytes);
-        return BASE_64_ENCODER.encodeToString(randomBytes);
-    }
-
-    public static String getNonce() {
-        Session session = Session.get();
-        String nonce = session.getMetaData(NONCE_KEY);
-        if (nonce == null) {
-            nonce = generateNonce();
-            session.setMetaData(NONCE_KEY, nonce);
-        }
-        return nonce;
-    }
-
+	public static String getNonce()
+	{
+		Session session = Session.get();
+		session.bind();
+		String nonce = session.getMetaData(NONCE_KEY);
+		if (nonce == null)
+		{
+			nonce = generateNonce();
+			session.setMetaData(NONCE_KEY, nonce);
+		}
+		return nonce;
+	}
 }

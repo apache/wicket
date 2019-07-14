@@ -19,8 +19,8 @@ package org.apache.wicket.core.util.string;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
 import org.apache.wicket.util.value.HeaderItemAttribute;
-import org.apache.wicket.util.value.HeaderItemAttributeMap;
 import org.apache.wicket.util.value.IValueMap;
 
 /**
@@ -72,7 +72,7 @@ public final class CssUtils
 	 * @param text
 	 *            The text to added in between the style tags
 	 * @param attributes
-	 *            Extra style attributes
+	 *            Tag attributes map
 	 */
 	public static void writeCss(final Response response, final CharSequence text, IValueMap attributes)
 	{
@@ -82,27 +82,32 @@ public final class CssUtils
 	}
 
 	/**
+	 * Write open style tag for the inline CSS
 	 *
 	 * @param response
 	 * @param id
 	 */
 	public static void writeOpenTag(final Response response, String id)
 	{
-		HeaderItemAttributeMap attributes = new HeaderItemAttributeMap();
+		AttributeMap attributes = new AttributeMap();
 		attributes.add(HeaderItemAttribute.ID, id);
 		writeOpenTag(response, attributes);
 	}
 
 	/**
+	 * Write open style tag for the inline CSS
 	 *
 	 * @param response
+	 * 		the response to write to
 	 * @param attributes
+	 * 		Tag attributes map
 	 */
 	public static void writeOpenTag(final Response response, IValueMap attributes)
 	{
 		response.write(INLINE_OPEN_TAG_START);
-		if (attributes != null) {
-			response.write(" "+attributes.toString());
+		if (attributes != null)
+		{
+			response.write(" " + attributes);
 		}
 		response.write(">\n");
 	}
@@ -151,17 +156,10 @@ public final class CssUtils
 	public static void writeLinkUrl(final Response response, final CharSequence url,
 		final CharSequence media, final String markupId, final String rel)
 	{
-		HeaderItemAttributeMap attributes = new HeaderItemAttributeMap();
-
-		if (Strings.isEmpty(rel) == false)
-		{
-			attributes.add(HeaderItemAttribute.LINK_REL, rel);
-		} else {
-			attributes.add(HeaderItemAttribute.LINK_REL, "stylesheet");
-		}
-
-		attributes.add(HeaderItemAttribute.LINK_HREF, String.valueOf(Strings.escapeMarkup(url)));
-
+		AttributeMap attributes = new AttributeMap();
+		attributes.add(HeaderItemAttribute.LINK_REL, Strings.isEmpty(rel) ? "stylesheet" : rel);
+		attributes.add(HeaderItemAttribute.TYPE, "text/css");
+		attributes.add(HeaderItemAttribute.LINK_HREF, String.valueOf(url));
 		if (Strings.isEmpty(media) == false)
 		{
 			attributes.add(HeaderItemAttribute.LINK_MEDIA, media.toString());
@@ -170,13 +168,20 @@ public final class CssUtils
 		{
 			attributes.add(HeaderItemAttribute.ID, markupId);
 		}
-
 		writeLinkUrl(response, attributes);
 	}
 
+	/**
+	 * Writes a reference to a css file in the response object
+	 *
+	 * @param response
+	 * 		the response to write to
+	 * @param attributes
+	 * 		Attributes map
+	 */
 	public static void writeLinkUrl(final Response response, IValueMap attributes)
 	{
-		response.write("<link type=\"text/css\" ");
+		response.write("<link ");
 		response.write(attributes.toString());
 		response.write(" />");
 	}
