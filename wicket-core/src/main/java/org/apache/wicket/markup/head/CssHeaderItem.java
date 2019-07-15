@@ -25,10 +25,10 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.AttributeMap;
-import org.apache.wicket.util.value.HeaderItemAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -362,17 +362,16 @@ public abstract class CssHeaderItem extends HeaderItem
 			response.write(condition);
 			response.write("]>");
 		}
-		AttributeMap attributes = AttributeMap.of(
-				HeaderItemAttribute.TYPE, "text/css",
-				HeaderItemAttribute.LINK_REL, rel == null ? "stylesheet" : rel,
-				HeaderItemAttribute.LINK_HREF, url
-		);
-		attributes.compute(HeaderItemAttribute.ID, this::getId);
+		AttributeMap attributes = new AttributeMap(Collections.singleton(CssUtils.ATTR_LINK_HREF));
+		attributes.add(CssUtils.ATTR_LINK_REL, rel == null ? "stylesheet" : rel);
+		attributes.add(CssUtils.ATTR_TYPE, "text/css");
+		attributes.add(CssUtils.ATTR_LINK_HREF, url);
+		attributes.compute(CssUtils.ATTR_ID, (s, o) -> getId());
 		if (media != null)
 		{
-			attributes.add(HeaderItemAttribute.LINK_MEDIA, media);
+			attributes.add(CssUtils.ATTR_LINK_MEDIA, media);
 		}
-		attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
+		attributes.compute(CssUtils.ATTR_CSP_NONCE, (s, o) -> getNonce());
 		CssUtils.writeLink(response, attributes);
 
 		if (hasCondition)
@@ -398,7 +397,6 @@ public abstract class CssHeaderItem extends HeaderItem
 	 */
 	public CssHeaderItem setNonce(String nonce)
 	{
-		Args.notEmpty(nonce, "nonce");
 		this.nonce = nonce;
 		return this;
 	}

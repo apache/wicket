@@ -20,7 +20,6 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.AttributeMap;
-import org.apache.wicket.util.value.HeaderItemAttribute;
 import org.apache.wicket.util.value.IValueMap;
 
 /**
@@ -39,6 +38,15 @@ public final class CssUtils
 
 	/** CSS inline close tag */
 	public final static String INLINE_CLOSE_TAG = "</style>\n";
+
+	public static final String ATTR_ID = "id";
+	public static final String ATTR_TYPE = "type";
+	public static final String ATTR_LINK_HREF = "href";
+	public static final String ATTR_LINK_MEDIA = "media";
+	public static final String ATTR_LINK_REL = "rel";
+	public static final String ATTR_CSP_NONCE = "nonce";
+	public static final String ATTR_SRI_INTEGRITY = "integrity";
+	public static final String ATTR_SRI_CROSSORIGIN = "crossorigin";
 
 	/**
 	 * Hidden constructor.
@@ -94,7 +102,7 @@ public final class CssUtils
 	public static void writeOpenTag(final Response response, String id)
 	{
 		AttributeMap attributes = new AttributeMap();
-		attributes.add(HeaderItemAttribute.ID, id);
+		attributes.add(ATTR_ID, id);
 		writeOpenTag(response, attributes);
 	}
 
@@ -164,17 +172,18 @@ public final class CssUtils
 	public static void writeLinkUrl(final Response response, final CharSequence url,
 		final CharSequence media, final String markupId, final String rel)
 	{
+		// TODO to decide something on escaping URLs
 		AttributeMap attributes = new AttributeMap();
-		attributes.add(HeaderItemAttribute.LINK_REL, Strings.isEmpty(rel) ? "stylesheet" : rel);
-		attributes.add(HeaderItemAttribute.TYPE, "text/css");
-		attributes.add(HeaderItemAttribute.LINK_HREF, String.valueOf(url));
+		attributes.add(ATTR_LINK_REL, Strings.isEmpty(rel) ? "stylesheet" : rel);
+		attributes.add(ATTR_TYPE, "text/css");
+		attributes.add(ATTR_LINK_HREF, String.valueOf(url));
 		if (Strings.isEmpty(media) == false)
 		{
-			attributes.add(HeaderItemAttribute.LINK_MEDIA, media.toString());
+			attributes.add(ATTR_LINK_MEDIA, media.toString());
 		}
 		if (Strings.isEmpty(markupId) == false)
 		{
-			attributes.add(HeaderItemAttribute.ID, markupId);
+			attributes.add(ATTR_ID, markupId);
 		}
 		writeLink(response, attributes);
 	}
@@ -192,7 +201,7 @@ public final class CssUtils
 	{
 		response.write("<link ");
 		response.write(attributes.toString());
-		response.write(" />");
+		response.write("/>");
 	}
 
 	/**

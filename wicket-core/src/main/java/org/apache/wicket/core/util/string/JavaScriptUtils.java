@@ -19,9 +19,9 @@ package org.apache.wicket.core.util.string;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.AttributeMap;
-import org.apache.wicket.util.value.HeaderItemAttribute;
 import org.apache.wicket.util.value.IValueMap;
 
+import java.util.Collections;
 
 /**
  * Provide some helpers to write javascript related tags to the response object.
@@ -48,6 +48,17 @@ public class JavaScriptUtils
 
 	/** Script close tag including content suffix */
 	public final static String SCRIPT_CLOSE_TAG = SCRIPT_CONTENT_SUFFIX + "</script>\n";
+
+	public static final String ATTR_ID = "id";
+	public static final String ATTR_TYPE = "type";
+	public static final String ATTR_SCRIPT_SRC = "src";
+	public static final String ATTR_SCRIPT_DEFER = "defer";
+	public static final String ATTR_SCRIPT_ASYNC = "async";
+	public static final String ATTR_SCRIPT_NOMODULE = "nomodule";
+	public static final String ATTR_SCRIPT_REFERRERPOLICY = "referrerpolicy";
+	public static final String ATTR_CSP_NONCE = "nonce";
+	public static final String ATTR_SRI_INTEGRITY = "integrity";
+	public static final String ATTR_SRI_CROSSORIGIN = "crossorigin";
 
 	/** The response object */
 	private final Response response;
@@ -162,27 +173,27 @@ public class JavaScriptUtils
 		final String id, boolean defer, String charset, boolean async)
 	{
 		response.write("<script ");
-		AttributeMap attributes = new AttributeMap();
+		AttributeMap attributes = new AttributeMap(Collections.singleton(JavaScriptUtils.ATTR_SCRIPT_SRC));
 		// XXX JS mimetype can be omitted (also see below)
-		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
-		attributes.add(HeaderItemAttribute.SCRIPT_SRC, url.toString());
+		attributes.add(ATTR_TYPE, "text/javascript");
+		attributes.add(ATTR_SCRIPT_SRC, String.valueOf(url));
 		if (id != null)
 		{
-			attributes.add(HeaderItemAttribute.ID, String.valueOf(Strings.escapeMarkup(id)));
+			attributes.add(ATTR_ID, id);
 		}
 		if (defer)
 		{
-			attributes.add(HeaderItemAttribute.SCRIPT_DEFER, "defer");
+			attributes.add(ATTR_SCRIPT_DEFER, "defer");
 		}
 		if (async)
 		{
-			attributes.add(HeaderItemAttribute.SCRIPT_ASYNC, "async");
+			attributes.add(ATTR_SCRIPT_ASYNC, "async");
 		}
 		if (charset != null)
 		{
 			// FIXME charset attr is deprecated
 			// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#Deprecated_attributes
-			attributes.add("charset", Strings.escapeMarkup(charset).toString());
+			attributes.add("charset", charset);
 		}
 		response.write(attributes.toString());
 		response.write("></script>");
@@ -252,7 +263,7 @@ public class JavaScriptUtils
 	{
 		writeInlineScriptOpenTag(response, attributes);
 		response.write(Strings.replaceAll(text, "</", "<\\/"));
-		writeCloseTag(response);
+		writeInlineScriptCloseTag(response);
 	}
 
 	/**
@@ -266,7 +277,7 @@ public class JavaScriptUtils
 	public static void writeJavaScript(final Response response, final CharSequence text)
 	{
 		AttributeMap attributes = new AttributeMap();
-		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
+		attributes.add(ATTR_TYPE, "text/javascript");
 		writeInlineScript(response, text, attributes);
 	}
 
@@ -280,10 +291,10 @@ public class JavaScriptUtils
 	public static void writeOpenTag(final Response response, String id)
 	{
 		AttributeMap attributes = new AttributeMap();
-		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
+		attributes.add(ATTR_TYPE, "text/javascript");
 		if (id != null)
 		{
-			attributes.add(HeaderItemAttribute.ID, id);
+			attributes.add(ATTR_ID, id);
 		}
 		writeInlineScriptOpenTag(response, attributes);
 	}
@@ -317,7 +328,7 @@ public class JavaScriptUtils
 	public static void writeOpenTag(final Response response)
 	{
 		AttributeMap attributes = new AttributeMap();
-		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
+		attributes.add(ATTR_TYPE, "text/javascript");
 		writeInlineScriptOpenTag(response, attributes);
 	}
 

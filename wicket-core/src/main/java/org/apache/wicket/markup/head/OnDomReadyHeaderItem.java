@@ -21,10 +21,8 @@ import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.JavaScriptLibrarySettings;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.AttributeMap;
-import org.apache.wicket.util.value.HeaderItemAttribute;
 
 import java.util.Collections;
 import java.util.List;
@@ -95,8 +93,8 @@ public class OnDomReadyHeaderItem extends HeaderItem
 		if (Strings.isEmpty(js) == false)
 		{
 			AttributeMap attributes = new AttributeMap();
-			attributes.add(org.apache.wicket.util.value.HeaderItemAttribute.TYPE, "text/javascript");
-			attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
+			attributes.add(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+			attributes.compute(JavaScriptUtils.ATTR_CSP_NONCE, (s, o) -> getNonce());
 			JavaScriptUtils.writeInlineScript(response, "Wicket.Event.add(window, \"domready\", " +
 					"function(event) { " + js + ";});", attributes);
 		}
@@ -151,8 +149,8 @@ public class OnDomReadyHeaderItem extends HeaderItem
 	 * @param nonce
 	 * @return {@code this} object, for method chaining
 	 */
-	public OnDomReadyHeaderItem setNonce(String nonce) {
-		Args.notEmpty(nonce, "nonce");
+	public OnDomReadyHeaderItem setNonce(String nonce)
+	{
 		this.nonce = nonce;
 		return this;
 	}

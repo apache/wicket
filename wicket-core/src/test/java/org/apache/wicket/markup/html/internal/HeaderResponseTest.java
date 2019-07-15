@@ -16,14 +16,6 @@
  */
 package org.apache.wicket.markup.html.internal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.nio.charset.Charset;
-import java.util.Optional;
-
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -41,6 +33,14 @@ import org.apache.wicket.response.StringResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.nio.charset.Charset;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link IHeaderResponse}'s methods
@@ -113,7 +113,7 @@ class HeaderResponseTest
     {
         headerResponse.render(CssHeaderItem.forReference(reference, null, "screen", "lt IE 8"));
         String expected = "<!--[if lt IE 8]><link rel=\"stylesheet\" type=\"text/css\" href=\"" +
-            RESOURCE_NAME + "\" media=\"screen\" /><![endif]-->\n";
+            RESOURCE_NAME + "\" media=\"screen\"/><![endif]-->\n";
         String actual = headerResponse.getResponse().toString();
         assertEquals(expected, actual);
     }
@@ -125,7 +125,7 @@ class HeaderResponseTest
     void conditionalRenderCSSReferenceWithUrl()
     {
         headerResponse.render(CssHeaderItem.forUrl("resource.css", "screen", "lt IE 8"));
-        String expected = "<!--[if lt IE 8]><link rel=\"stylesheet\" type=\"text/css\" href=\""+RESOURCE_NAME+"\" media=\"screen\" /><![endif]-->\n";
+        String expected = "<!--[if lt IE 8]><link rel=\"stylesheet\" type=\"text/css\" href=\""+RESOURCE_NAME+"\" media=\"screen\"/><![endif]-->\n";
         String actual = headerResponse.getResponse().toString();
         assertEquals(expected, actual);
     }

@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.markup.html.form.formComponentPanel;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 
@@ -54,6 +54,6 @@ class SimplePageTest extends WicketTestCase
 		tester.startComponentInPage(MyFormComponentPanel.class);
 		String doc = tester.getLastResponse().getDocument();
 		// log.error(doc);
-		assertTrue(doc.contains("<link rel=\"stylesheet\" type=\"text/css\" href=\"../some.css\" />"));
+		assertTrue(doc.contains("<link rel=\"stylesheet\" type=\"text/css\" href=\"../some.css\"/>"));
 	}
 }

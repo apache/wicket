@@ -25,8 +25,8 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.AttributeMap;
-import org.apache.wicket.util.value.HeaderItemAttribute;
 
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -371,18 +371,17 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 
 		boolean isAjax = RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent();
 		// the url needs to be escaped when Ajax, because it will break the Ajax Response XML (WICKET-4777)
-		CharSequence escapedUrl = isAjax ? Strings.escapeMarkup(url): url;
-		AttributeMap attributes = AttributeMap.of(
-				HeaderItemAttribute.TYPE, "text/javascript",
-				HeaderItemAttribute.SCRIPT_SRC, String.valueOf(escapedUrl)
-		);
+		AttributeMap attributes = isAjax
+				? new AttributeMap()
+				: new AttributeMap(Collections.singleton(JavaScriptUtils.ATTR_SCRIPT_SRC));
+		attributes.add(JavaScriptUtils.ATTR_TYPE, "text/javascript");
 		if (id != null)
 		{
-			attributes.add(HeaderItemAttribute.ID, id);
+			attributes.add(JavaScriptUtils.ATTR_ID, id);
 		}
 		if (defer)
 		{
-			attributes.add(HeaderItemAttribute.SCRIPT_DEFER, "defer");
+			attributes.add(JavaScriptUtils.ATTR_SCRIPT_DEFER, "defer");
 		}
 		if (charset != null)
 		{
@@ -391,9 +390,10 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 		}
 		if (async)
 		{
-			attributes.add(HeaderItemAttribute.SCRIPT_ASYNC, "async");
+			attributes.add(JavaScriptUtils.ATTR_SCRIPT_ASYNC, "async");
 		}
-		attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
+		attributes.add(JavaScriptUtils.ATTR_SCRIPT_SRC, url);
+		attributes.compute(JavaScriptUtils.ATTR_CSP_NONCE, (s, o) -> getNonce());
 		JavaScriptUtils.writeScript(response, attributes);
 
 		if (hasCondition)
@@ -414,8 +414,8 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	 * @param nonce
 	 * @return {@code this} object, for method chaining
 	 */
-	public JavaScriptHeaderItem setNonce(String nonce) {
-		Args.notEmpty(nonce, "nonce");
+	public JavaScriptHeaderItem setNonce(String nonce)
+	{
 		this.nonce = nonce;
 		return this;
 	}
