@@ -77,7 +77,7 @@ public class CssContentHeaderItem extends CssHeaderItem
 		AttributeMap attributes = new AttributeMap();
 		attributes.compute(HeaderItemAttribute.ID, this::getId);
 		attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
-		CssUtils.writeCss(response, getCss(), attributes);
+		CssUtils.writeInlineStyle(response, getCss(), attributes);
 
 		if (hasCondition)
 		{

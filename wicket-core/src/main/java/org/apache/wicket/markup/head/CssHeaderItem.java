@@ -373,7 +373,7 @@ public abstract class CssHeaderItem extends HeaderItem
 			attributes.add(HeaderItemAttribute.LINK_MEDIA, media);
 		}
 		attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
-		CssUtils.writeLinkUrl(response, attributes);
+		CssUtils.writeLink(response, attributes);
 
 		if (hasCondition)
 		{
@@ -398,7 +398,7 @@ public abstract class CssHeaderItem extends HeaderItem
 	 */
 	public CssHeaderItem setNonce(String nonce)
 	{
-		Args.notNull(nonce, "nonce");
+		Args.notEmpty(nonce, "nonce");
 		this.nonce = nonce;
 		return this;
 	}

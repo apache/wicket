@@ -97,7 +97,7 @@ public class OnLoadHeaderItem extends HeaderItem
 			AttributeMap attributes = new AttributeMap();
 			attributes.add(org.apache.wicket.util.value.HeaderItemAttribute.TYPE, "text/javascript");
 			attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
-			JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"load\", " +
+			JavaScriptUtils.writeInlineScript(response, "Wicket.Event.add(window, \"load\", " +
 					"function(event) { " + js + ";});", attributes);
 		}
 	}
@@ -127,7 +127,7 @@ public class OnLoadHeaderItem extends HeaderItem
 	 * @return {@code this} object, for method chaining
 	 */
 	public OnLoadHeaderItem setNonce(String nonce) {
-		Args.notNull(nonce, "nonce");
+		Args.notEmpty(nonce, "nonce");
 		this.nonce = nonce;
 		return this;
 	}

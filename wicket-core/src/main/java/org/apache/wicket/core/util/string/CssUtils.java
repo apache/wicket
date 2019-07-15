@@ -56,7 +56,9 @@ public final class CssUtils
 	 *            The text to added in between the style tags
 	 * @param id
 	 *            Unique identifier of element
+	 * @deprecated please use {@link #writeInlineStyle(Response, CharSequence, IValueMap)} instead
 	 */
+	@Deprecated
 	public static void writeCss(final Response response, final CharSequence text, String id)
 	{
 		writeOpenTag(response, id);
@@ -66,15 +68,17 @@ public final class CssUtils
 
 	/**
 	 * Write the simple text to the response object surrounded by a style tag.
+	 * In most cases the text simply an inline CSS.
 	 *
 	 * @param response
-	 *            The HTTP: response
+	 * 		The HTTP: response
 	 * @param text
-	 *            The text to added in between the style tags
+	 * 		The text to added in between the style tags
 	 * @param attributes
-	 *            Tag attributes map
+	 * 		Tag attributes map
+	 * @see <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style">Style HTML Element</a>
 	 */
-	public static void writeCss(final Response response, final CharSequence text, IValueMap attributes)
+	public static void writeInlineStyle(final Response response, final CharSequence text, IValueMap attributes)
 	{
 		writeOpenTag(response, attributes);
 		response.write(text);
@@ -132,7 +136,9 @@ public final class CssUtils
 	 *            the CSS media
 	 * @param markupId
 	 *            the markupId
+	 * @deprecated please use {@link #writeLink(Response, IValueMap)} instead
 	 */
+	@Deprecated
 	public static void writeLinkUrl(final Response response, final CharSequence url,
 		final CharSequence media, final String markupId)
 	{
@@ -152,7 +158,9 @@ public final class CssUtils
 	 *            the markupId
 	 * @param rel
 	 *            the rel attribute
+	 * @deprecated please use {@link #writeLink(Response, IValueMap)} instead
 	 */
+	@Deprecated
 	public static void writeLinkUrl(final Response response, final CharSequence url,
 		final CharSequence media, final String markupId, final String rel)
 	{
@@ -168,7 +176,7 @@ public final class CssUtils
 		{
 			attributes.add(HeaderItemAttribute.ID, markupId);
 		}
-		writeLinkUrl(response, attributes);
+		writeLink(response, attributes);
 	}
 
 	/**
@@ -178,8 +186,9 @@ public final class CssUtils
 	 * 		the response to write to
 	 * @param attributes
 	 * 		Attributes map
+	 * @see <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link">Link HTML Element</a>
 	 */
-	public static void writeLinkUrl(final Response response, IValueMap attributes)
+	public static void writeLink(final Response response, IValueMap attributes)
 	{
 		response.write("<link ");
 		response.write(attributes.toString());

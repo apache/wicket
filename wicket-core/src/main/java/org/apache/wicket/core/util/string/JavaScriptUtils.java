@@ -107,7 +107,9 @@ public class JavaScriptUtils
 	 *            The javascript file URL
 	 * @param id
 	 *            Unique identifier of element
+	 * @deprecated please use {@link #writeScript(Response, IValueMap)} instead
 	 */
+	@Deprecated
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 		final String id)
 	{
@@ -128,7 +130,9 @@ public class JavaScriptUtils
 	 *            the page has been loaded.
 	 * @param charset
 	 *            a non null value specifies the charset attribute of the script tag
+	 * @deprecated please use {@link #writeScript(Response, IValueMap)} instead
 	 */
+	@Deprecated
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 	                                      final String id, boolean defer, String charset)
 	{
@@ -151,7 +155,7 @@ public class JavaScriptUtils
 	 *            a non null value specifies the charset attribute of the script tag
 	 * @param async
 	 *            specifies that the script can be loaded asynchronously by the browser
-	 * @deprecated please use {@link #writeJavaScriptUrl(Response, IValueMap)} instead
+	 * @deprecated please use {@link #writeScript(Response, IValueMap)} instead
 	 */
 	@Deprecated
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
@@ -193,7 +197,7 @@ public class JavaScriptUtils
 	 * @param attributes
 	 *            Extra tag attributes
 	 */
-	public static void writeJavaScriptUrl(final Response response, IValueMap attributes)
+	public static void writeScript(final Response response, IValueMap attributes)
 	{
 		response.write("<script ");
 		response.write(attributes.toString());
@@ -208,7 +212,9 @@ public class JavaScriptUtils
 	 *            The HTTP response
 	 * @param url
 	 *            The javascript file URL
+	 * @deprecated please use {@link #writeScript(Response, IValueMap)} instead
 	 */
+	@Deprecated
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url)
 	{
 		writeJavaScriptUrl(response, url, null);
@@ -223,6 +229,7 @@ public class JavaScriptUtils
 	 *            The text to added in between the script tags
 	 * @param id
 	 *            Unique identifier of element
+	 * @deprecated please use {@link #writeInlineScript(Response, CharSequence, IValueMap)} instead
 	 */
 	public static void writeJavaScript(final Response response, final CharSequence text, String id)
 	{
@@ -241,9 +248,9 @@ public class JavaScriptUtils
 	 * @param attributes
 	 * 		Extra tag attributes
 	 */
-	public static void writeJavaScript(final Response response, final CharSequence text, IValueMap attributes)
+	public static void writeInlineScript(final Response response, final CharSequence text, IValueMap attributes)
 	{
-		writeOpenTag(response, attributes);
+		writeInlineScriptOpenTag(response, attributes);
 		response.write(Strings.replaceAll(text, "</", "<\\/"));
 		writeCloseTag(response);
 	}
@@ -260,14 +267,16 @@ public class JavaScriptUtils
 	{
 		AttributeMap attributes = new AttributeMap();
 		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
-		writeJavaScript(response, text, attributes);
+		writeInlineScript(response, text, attributes);
 	}
 
 	/**
 	 * 
 	 * @param response
 	 * @param id
+	 * @deprecated please use {@link #writeInlineScriptOpenTag(Response, IValueMap)}
 	 */
+	@Deprecated
 	public static void writeOpenTag(final Response response, String id)
 	{
 		AttributeMap attributes = new AttributeMap();
@@ -276,18 +285,19 @@ public class JavaScriptUtils
 		{
 			attributes.add(HeaderItemAttribute.ID, id);
 		}
-		writeOpenTag(response, attributes);
+		writeInlineScriptOpenTag(response, attributes);
 	}
 
 	/**
-	 * Write open script tag for inline script
+	 * Write open script tag for inline script.
+	 * Content is prefixed with {@link #SCRIPT_CONTENT_PREFIX}.
 	 *
 	 * @param response
 	 * 		the response to write to
 	 * @param attributes
 	 * 		Tag attributes map
 	 */
-	public static void writeOpenTag(final Response response, IValueMap attributes)
+	public static void writeInlineScriptOpenTag(final Response response, IValueMap attributes)
 	{
 		response.write("<script ");
 		if (attributes != null)
@@ -301,19 +311,33 @@ public class JavaScriptUtils
 	/**
 	 * 
 	 * @param response
+	 * @deprecated please use {@link #writeInlineScriptOpenTag(Response, IValueMap)}
 	 */
+	@Deprecated
 	public static void writeOpenTag(final Response response)
 	{
 		AttributeMap attributes = new AttributeMap();
 		attributes.add(HeaderItemAttribute.TYPE, "text/javascript");
-		writeOpenTag(response, attributes);
+		writeInlineScriptOpenTag(response, attributes);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param response
+	 * @deprecated use {@link #writeInlineScriptCloseTag(Response)} instead
 	 */
 	public static void writeCloseTag(final Response response)
+	{
+		writeInlineScriptCloseTag(response);
+	}
+
+	/**
+	 * Write close script tag for inline script. The close tag is prefixed with {@link #SCRIPT_CONTENT_SUFFIX}
+	 *
+	 * @param response
+	 * 		the response to write to
+	 */
+	public static void writeInlineScriptCloseTag(final Response response)
 	{
 		response.write(SCRIPT_CONTENT_SUFFIX);
 		response.write("</script>\n");
@@ -338,10 +362,12 @@ public class JavaScriptUtils
 	}
 
 	/**
-	 * Write the script close tag to the response. The response output stream remains open.
+	 * Write the inline script close tag to the response. The response output stream remains open.
+	 * Calls {@link #writeInlineScriptCloseTag(Response)} internally.
+	 * The close tag is prefixed with {@link #SCRIPT_CONTENT_SUFFIX}.
 	 */
 	public void close()
 	{
-		writeCloseTag(response);
+		writeInlineScriptCloseTag(response);
 	}
 }

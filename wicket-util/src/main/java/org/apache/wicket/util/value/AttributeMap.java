@@ -109,15 +109,26 @@ public final class AttributeMap extends ValueMap
 	}
 
 	/**
-	 * Convenience method computing value for {@link IAttributeMapKey}.
-	 * A convenience method for {@link #compute(Object, BiFunction)},
-	 * Which accepts simple supplier as value.
+	 * Convenience method computing value for {@link IAttributeMapKey},
+	 * which accepts simple supplier for value.
+	 * Calls {@link #compute(Object, BiFunction)} internally.
 	 * <p>
 	 * Doesn't add a mapping if computed value is <code>null</code>
 	 */
 	public Object compute(IAttributeMapKey key, Supplier supplier)
 	{
 		return compute(key.getAttributeKey(), (s, o) -> supplier.get());
+	}
+
+	/**
+	 * Convenience method computing value for {@link IAttributeMapKey}.
+	 * Calls {@link #compute(Object, BiFunction)} internally.
+	 * <p>
+	 * Doesn't add a mapping if computed value is <code>null</code>
+	 */
+	public Object compute(IAttributeMapKey key, java.util.function.BiFunction<? super String, ? super Object, ?> remappingFunction)
+	{
+		return super.compute(key.getAttributeKey(), remappingFunction);
 	}
 
 }

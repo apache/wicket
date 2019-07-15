@@ -74,7 +74,7 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 		AttributeMap attributes = AttributeMap.of(HeaderItemAttribute.TYPE, "text/javascript");
 		attributes.compute(HeaderItemAttribute.ID, this::getId);
 		attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
-		JavaScriptUtils.writeJavaScript(response, getJavaScript(), attributes);
+		JavaScriptUtils.writeInlineScript(response, getJavaScript(), attributes);
 
 		if (hasCondition)
 		{

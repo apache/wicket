@@ -394,7 +394,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 			attributes.add(HeaderItemAttribute.SCRIPT_ASYNC, "async");
 		}
 		attributes.compute(HeaderItemAttribute.CSP_NONCE, this::getNonce);
-		JavaScriptUtils.writeJavaScriptUrl(response, attributes);
+		JavaScriptUtils.writeScript(response, attributes);
 
 		if (hasCondition)
 		{
@@ -415,7 +415,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	 * @return {@code this} object, for method chaining
 	 */
 	public JavaScriptHeaderItem setNonce(String nonce) {
-		Args.notNull(nonce, "nonce");
+		Args.notEmpty(nonce, "nonce");
 		this.nonce = nonce;
 		return this;
 	}
