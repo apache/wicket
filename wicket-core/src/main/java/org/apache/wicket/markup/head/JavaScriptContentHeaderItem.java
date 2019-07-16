@@ -71,9 +71,9 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 			response.write("]>");
 		}
 		AttributeMap attributes = new AttributeMap();
-		attributes.add(JavaScriptUtils.ATTR_TYPE, "text/javascript");
-		attributes.compute(JavaScriptUtils.ATTR_ID, (s, o) -> getId());
-		attributes.compute(JavaScriptUtils.ATTR_CSP_NONCE, (s, o) -> getNonce());
+		attributes.put(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		attributes.putIfNotNull(JavaScriptUtils.ATTR_ID, getId());
+		attributes.putIfNotNull(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
 		JavaScriptUtils.writeInlineScript(response, getJavaScript(), attributes);
 
 		if (hasCondition)

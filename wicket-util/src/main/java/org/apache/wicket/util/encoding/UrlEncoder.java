@@ -16,14 +16,14 @@
  */
 package org.apache.wicket.util.encoding;
 
+import org.apache.wicket.util.lang.Args;
+
 import java.io.CharArrayWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.BitSet;
-
-import org.apache.wicket.util.lang.Args;
 
 /**
  * Adapted from java.net.URLEncoder, but defines instances for query string encoding versus URL path
@@ -44,7 +44,8 @@ public class UrlEncoder
 	public enum Type {
 		QUERY,
 		PATH,
-		HEADER
+		HEADER,
+		FULL
 	}
 
 	/**
@@ -76,6 +77,10 @@ public class UrlEncoder
 	 * Encoder used to encode a header.
 	 */
 	public static final UrlEncoder HEADER_INSTANCE = new UrlEncoder(Type.HEADER);
+	/**
+	 * Encoder used to encode a full url similar to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI
+	 */
+	public static final UrlEncoder FULL_URL_INSTANCE = new UrlEncoder(Type.FULL);
 
 	/**
 	 * Allow subclass to call constructor.
@@ -219,6 +224,21 @@ public class UrlEncoder
 				dontNeedEncoding.set('^');
 				dontNeedEncoding.set('`');
 				dontNeedEncoding.set('|');
+				break;
+			case FULL:
+				// in combination of PATH and QUERY below should produce output similar to
+				// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI
+				dontNeedEncoding.set(' ');
+				dontNeedEncoding.set('/');
+				dontNeedEncoding.set('*');
+				dontNeedEncoding.set('&');
+				dontNeedEncoding.set('+');
+				dontNeedEncoding.set(',');
+				dontNeedEncoding.set(';');
+				dontNeedEncoding.set('=');
+				dontNeedEncoding.set(':');
+				dontNeedEncoding.set('@');
+				dontNeedEncoding.set('?');
 				break;
 		}
 	}

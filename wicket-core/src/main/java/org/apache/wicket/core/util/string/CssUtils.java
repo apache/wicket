@@ -102,7 +102,7 @@ public final class CssUtils
 	public static void writeOpenTag(final Response response, String id)
 	{
 		AttributeMap attributes = new AttributeMap();
-		attributes.add(ATTR_ID, id);
+		attributes.put(ATTR_ID, id);
 		writeOpenTag(response, attributes);
 	}
 
@@ -174,16 +174,16 @@ public final class CssUtils
 	{
 		// TODO to decide something on escaping URLs
 		AttributeMap attributes = new AttributeMap();
-		attributes.add(ATTR_LINK_REL, Strings.isEmpty(rel) ? "stylesheet" : rel);
-		attributes.add(ATTR_TYPE, "text/css");
-		attributes.add(ATTR_LINK_HREF, String.valueOf(url));
+		attributes.put(ATTR_LINK_REL, Strings.isEmpty(rel) ? "stylesheet" : rel);
+		attributes.put(ATTR_TYPE, "text/css");
+		attributes.put(ATTR_LINK_HREF, String.valueOf(url));
 		if (Strings.isEmpty(media) == false)
 		{
-			attributes.add(ATTR_LINK_MEDIA, media.toString());
+			attributes.put(ATTR_LINK_MEDIA, media.toString());
 		}
 		if (Strings.isEmpty(markupId) == false)
 		{
-			attributes.add(ATTR_ID, markupId);
+			attributes.put(ATTR_ID, markupId);
 		}
 		writeLink(response, attributes);
 	}

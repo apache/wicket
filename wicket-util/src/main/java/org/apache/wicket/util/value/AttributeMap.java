@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.util.value;
 
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -38,15 +37,6 @@ public final class AttributeMap extends ValueMap
 	}
 
 	/**
-	 *
-	 * @param noEscapeMarkupKeys
-	 */
-	public AttributeMap(Collection<String> noEscapeMarkupKeys)
-	{
-		super(noEscapeMarkupKeys);
-	}
-
-	/**
 	 * Copy constructor.
 	 *
 	 * @param map
@@ -55,6 +45,15 @@ public final class AttributeMap extends ValueMap
 	public AttributeMap(final Map<String, Object> map)
 	{
 		super(map);
+	}
+
+	public Object putIfNotNull(final String key, final Object value)
+	{
+		if (value != null)
+		{
+			return put(key, value);
+		}
+		return null;
 	}
 
 }

@@ -26,7 +26,6 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.AttributeMap;
 
-import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -373,27 +372,21 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 		// the url needs to be escaped when Ajax, because it will break the Ajax Response XML (WICKET-4777)
 		AttributeMap attributes = isAjax
 				? new AttributeMap()
-				: new AttributeMap(Collections.singleton(JavaScriptUtils.ATTR_SCRIPT_SRC));
-		attributes.add(JavaScriptUtils.ATTR_TYPE, "text/javascript");
-		if (id != null)
-		{
-			attributes.add(JavaScriptUtils.ATTR_ID, id);
-		}
+				: new AttributeMap();
+		attributes.put(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		attributes.putIfNotNull(JavaScriptUtils.ATTR_ID, id);
 		if (defer)
 		{
-			attributes.add(JavaScriptUtils.ATTR_SCRIPT_DEFER, "defer");
+			attributes.put(JavaScriptUtils.ATTR_SCRIPT_DEFER, "defer");
 		}
-		if (charset != null)
-		{
-			// XXX this attribute is not necessary for modern browsers
-			attributes.add("charset", charset);
-		}
+		// XXX this attribute is not necessary for modern browsers
+		attributes.putIfNotNull("charset", charset);
 		if (async)
 		{
-			attributes.add(JavaScriptUtils.ATTR_SCRIPT_ASYNC, "async");
+			attributes.put(JavaScriptUtils.ATTR_SCRIPT_ASYNC, "async");
 		}
-		attributes.add(JavaScriptUtils.ATTR_SCRIPT_SRC, url);
-		attributes.compute(JavaScriptUtils.ATTR_CSP_NONCE, (s, o) -> getNonce());
+		attributes.put(JavaScriptUtils.ATTR_SCRIPT_SRC, url);
+		attributes.putIfNotNull(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
 		JavaScriptUtils.writeScript(response, attributes);
 
 		if (hasCondition)

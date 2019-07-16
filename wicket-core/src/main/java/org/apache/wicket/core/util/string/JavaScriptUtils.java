@@ -21,8 +21,6 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.AttributeMap;
 import org.apache.wicket.util.value.IValueMap;
 
-import java.util.Collections;
-
 /**
  * Provide some helpers to write javascript related tags to the response object.
  * 
@@ -173,27 +171,27 @@ public class JavaScriptUtils
 		final String id, boolean defer, String charset, boolean async)
 	{
 		response.write("<script ");
-		AttributeMap attributes = new AttributeMap(Collections.singleton(JavaScriptUtils.ATTR_SCRIPT_SRC));
+		AttributeMap attributes = new AttributeMap();
 		// XXX JS mimetype can be omitted (also see below)
-		attributes.add(ATTR_TYPE, "text/javascript");
-		attributes.add(ATTR_SCRIPT_SRC, String.valueOf(url));
+		attributes.put(ATTR_TYPE, "text/javascript");
+		attributes.put(ATTR_SCRIPT_SRC, String.valueOf(url));
 		if (id != null)
 		{
-			attributes.add(ATTR_ID, id);
+			attributes.put(ATTR_ID, id);
 		}
 		if (defer)
 		{
-			attributes.add(ATTR_SCRIPT_DEFER, "defer");
+			attributes.put(ATTR_SCRIPT_DEFER, "defer");
 		}
 		if (async)
 		{
-			attributes.add(ATTR_SCRIPT_ASYNC, "async");
+			attributes.put(ATTR_SCRIPT_ASYNC, "async");
 		}
 		if (charset != null)
 		{
 			// FIXME charset attr is deprecated
 			// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#Deprecated_attributes
-			attributes.add("charset", charset);
+			attributes.put("charset", charset);
 		}
 		response.write(attributes.toString());
 		response.write("></script>");
@@ -277,7 +275,7 @@ public class JavaScriptUtils
 	public static void writeJavaScript(final Response response, final CharSequence text)
 	{
 		AttributeMap attributes = new AttributeMap();
-		attributes.add(ATTR_TYPE, "text/javascript");
+		attributes.put(ATTR_TYPE, "text/javascript");
 		writeInlineScript(response, text, attributes);
 	}
 
@@ -291,10 +289,10 @@ public class JavaScriptUtils
 	public static void writeOpenTag(final Response response, String id)
 	{
 		AttributeMap attributes = new AttributeMap();
-		attributes.add(ATTR_TYPE, "text/javascript");
+		attributes.put(ATTR_TYPE, "text/javascript");
 		if (id != null)
 		{
-			attributes.add(ATTR_ID, id);
+			attributes.put(ATTR_ID, id);
 		}
 		writeInlineScriptOpenTag(response, attributes);
 	}
@@ -328,7 +326,7 @@ public class JavaScriptUtils
 	public static void writeOpenTag(final Response response)
 	{
 		AttributeMap attributes = new AttributeMap();
-		attributes.add(ATTR_TYPE, "text/javascript");
+		attributes.put(ATTR_TYPE, "text/javascript");
 		writeInlineScriptOpenTag(response, attributes);
 	}
 

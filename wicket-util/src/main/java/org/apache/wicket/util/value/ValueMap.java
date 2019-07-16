@@ -16,18 +16,17 @@
  */
 package org.apache.wicket.util.value;
 
+import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import org.apache.wicket.util.string.IStringIterator;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.StringValueConversionException;
-import org.apache.wicket.util.string.Strings;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Time;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
@@ -64,9 +63,6 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	/** an empty <code>ValueMap</code>. */
 	public static final ValueMap EMPTY_MAP;
 
-	/** keys values of which not to be escaped */
-	private final Collection<String> noEscapeMarkupKeys = new HashSet<>();
-
 	/** create EMPTY_MAP, make immutable * */
 	static
 	{
@@ -87,20 +83,6 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	public ValueMap()
 	{
 		super();
-	}
-
-	/**
-	 * Constructs empty <code>ValueMap</code>.
-	 * @param noEscapeMarkupKeys
-	 * 		a set of keys to not aply
-	 */
-	public ValueMap(Collection<String> noEscapeMarkupKeys)
-	{
-		super();
-		if (noEscapeMarkupKeys != null)
-		{
-			this.noEscapeMarkupKeys.addAll(noEscapeMarkupKeys);
-		}
 	}
 
 	/**
@@ -189,13 +171,6 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 				equalsIndex = -1;
 			}
 		}
-	}
-
-	/**
-	 * Add a key which should not be escaped when map is rendered wit {@link #toString()}
-	 */
-	public void addNoEscapeKey(String key) {
-		noEscapeMarkupKeys.add(key);
 	}
 
 	/**
@@ -592,11 +567,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 			}
 			else
 			{
-				buffer.append(
-						!noEscapeMarkupKeys.isEmpty() && noEscapeMarkupKeys.contains(key)
-								? value
-								: Strings.escapeMarkup(String.valueOf(value))
-				);
+				buffer.append(UrlEncoder.FULL_URL_INSTANCE.encode(String.valueOf(value), "UTF-8"));
 			}
 
 			buffer.append('\"');
@@ -793,7 +764,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	}
 
 	/**
-	 * @see IValueMap#getAsTime(String, Time)
+	 * @see IValueMap#getAsTime(String, Instant)
 	 */
 	@Override
 	public Instant getAsTime(final String key, final Instant defaultValue)

@@ -28,7 +28,6 @@ import org.apache.wicket.util.value.AttributeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -362,16 +361,13 @@ public abstract class CssHeaderItem extends HeaderItem
 			response.write(condition);
 			response.write("]>");
 		}
-		AttributeMap attributes = new AttributeMap(Collections.singleton(CssUtils.ATTR_LINK_HREF));
-		attributes.add(CssUtils.ATTR_LINK_REL, rel == null ? "stylesheet" : rel);
-		attributes.add(CssUtils.ATTR_TYPE, "text/css");
-		attributes.add(CssUtils.ATTR_LINK_HREF, url);
-		attributes.compute(CssUtils.ATTR_ID, (s, o) -> getId());
-		if (media != null)
-		{
-			attributes.add(CssUtils.ATTR_LINK_MEDIA, media);
-		}
-		attributes.compute(CssUtils.ATTR_CSP_NONCE, (s, o) -> getNonce());
+		AttributeMap attributes = new AttributeMap();
+		attributes.put(CssUtils.ATTR_LINK_REL, rel == null ? "stylesheet" : rel);
+		attributes.put(CssUtils.ATTR_TYPE, "text/css");
+		attributes.put(CssUtils.ATTR_LINK_HREF, url);
+		attributes.putIfNotNull(CssUtils.ATTR_ID, getId());
+		attributes.putIfNotNull(CssUtils.ATTR_LINK_MEDIA, media);
+		attributes.putIfNotNull(CssUtils.ATTR_CSP_NONCE, getNonce());
 		CssUtils.writeLink(response, attributes);
 
 		if (hasCondition)

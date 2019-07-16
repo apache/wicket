@@ -20,8 +20,6 @@ import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.value.AttributeMap;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -37,17 +35,17 @@ class JavaScriptUtilsTest
 	@Test
 	public void writeJavaScript() throws Exception
 	{
-		AttributeMap attributes = new AttributeMap(Collections.singleton(JavaScriptUtils.ATTR_SCRIPT_SRC));
-		attributes.add(JavaScriptUtils.ATTR_TYPE, "text/javascript");
-		attributes.add(JavaScriptUtils.ATTR_ID, "some&bad%id");
-		attributes.add(JavaScriptUtils.ATTR_SCRIPT_DEFER, "defer");
-		attributes.add("charset", "some&bad%%charset");
-		attributes.add(JavaScriptUtils.ATTR_SCRIPT_SRC, "some/url;jsessionid=1234?p1=v1&p2=v2");
+		AttributeMap attributes = new AttributeMap();
+		attributes.put(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		attributes.put(JavaScriptUtils.ATTR_ID, "some&bad%id");
+		attributes.put(JavaScriptUtils.ATTR_SCRIPT_DEFER, "defer");
+		attributes.put("charset", "some&bad%%charset");
+		attributes.put(JavaScriptUtils.ATTR_SCRIPT_SRC, "some/url;jsessionid=1234?p1=v1&p2=v2");
 		StringResponse response = new StringResponse();
 		JavaScriptUtils.writeScript(response, attributes);
 
 		assertEquals(
-			"<script type=\"text/javascript\" id=\"some&amp;bad%id\" defer=\"defer\" charset=\"some&amp;bad%%charset\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2\"></script>\n",
+				"<script type=\"text/javascript\" id=\"some&bad%25id\" defer=\"defer\" charset=\"some&bad%25%25charset\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2\"></script>\n",
 			response.toString());
 	}
 
@@ -57,18 +55,18 @@ class JavaScriptUtilsTest
 	@Test
 	public void writeJavaScriptAsync()
 	{
-		AttributeMap attributes = new AttributeMap(Collections.singleton(JavaScriptUtils.ATTR_SCRIPT_SRC));
-		attributes.add(JavaScriptUtils.ATTR_TYPE, "text/javascript");
-		attributes.add(JavaScriptUtils.ATTR_ID, "some&bad%id");
-		attributes.add(JavaScriptUtils.ATTR_SCRIPT_DEFER, "defer");
-		attributes.add(JavaScriptUtils.ATTR_SCRIPT_ASYNC, "async");
-		attributes.add("charset", "some&bad%%charset");
-		attributes.add(JavaScriptUtils.ATTR_SCRIPT_SRC, "some/url;jsessionid=1234?p1=v1&p2=v2");
+		AttributeMap attributes = new AttributeMap();
+		attributes.put(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		attributes.put(JavaScriptUtils.ATTR_ID, "some{bad\"<>id");
+		attributes.put(JavaScriptUtils.ATTR_SCRIPT_DEFER, "defer");
+		attributes.put(JavaScriptUtils.ATTR_SCRIPT_ASYNC, "async");
+		attributes.put("charset", "some{bad\"<>%charset");
+		attributes.put(JavaScriptUtils.ATTR_SCRIPT_SRC, "some/url;jsessionid=1234?p1=v1&p2=v2&p3=v3");
 		StringResponse response = new StringResponse();
 		JavaScriptUtils.writeScript(response, attributes);
 
 		assertEquals(
-				"<script type=\"text/javascript\" id=\"some&amp;bad%id\" defer=\"defer\" async=\"async\" charset=\"some&amp;bad%%charset\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2\"></script>\n",
+				"<script type=\"text/javascript\" id=\"some%7Bbad%22%3C%3Eid\" defer=\"defer\" async=\"async\" charset=\"some%7Bbad%22%3C%3E%25charset\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2&p3=v3\"></script>\n",
 				response.toString());
 	}
 
@@ -79,7 +77,7 @@ class JavaScriptUtilsTest
 	{
 		StringResponse response = new StringResponse();
 		AttributeMap attributes = new AttributeMap();
-		attributes.add(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		attributes.put(JavaScriptUtils.ATTR_TYPE, "text/javascript");
 		JavaScriptUtils.writeInlineScript(response,
 			"var message = 'Scripts are written to the <script></script> tag'", attributes);
 

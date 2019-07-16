@@ -93,8 +93,8 @@ public class OnDomReadyHeaderItem extends HeaderItem
 		if (Strings.isEmpty(js) == false)
 		{
 			AttributeMap attributes = new AttributeMap();
-			attributes.add(JavaScriptUtils.ATTR_TYPE, "text/javascript");
-			attributes.compute(JavaScriptUtils.ATTR_CSP_NONCE, (s, o) -> getNonce());
+			attributes.put(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+			attributes.putIfNotNull(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
 			JavaScriptUtils.writeInlineScript(response, "Wicket.Event.add(window, \"domready\", " +
 					"function(event) { " + js + ";});", attributes);
 		}

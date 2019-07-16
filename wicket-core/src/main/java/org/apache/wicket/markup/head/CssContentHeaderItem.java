@@ -74,8 +74,8 @@ public class CssContentHeaderItem extends CssHeaderItem
 		}
 
 		AttributeMap attributes = new AttributeMap();
-		attributes.compute(CssUtils.ATTR_ID, (s, o) -> getId());
-		attributes.compute(CssUtils.ATTR_CSP_NONCE, (s, o) -> getNonce());
+		attributes.putIfNotNull(CssUtils.ATTR_ID, getId());
+		attributes.putIfNotNull(CssUtils.ATTR_CSP_NONCE, getNonce());
 		CssUtils.writeInlineStyle(response, getCss(), attributes);
 
 		if (hasCondition)
