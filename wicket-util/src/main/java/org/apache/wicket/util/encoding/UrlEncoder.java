@@ -77,6 +77,7 @@ public class UrlEncoder
 	 * Encoder used to encode a header.
 	 */
 	public static final UrlEncoder HEADER_INSTANCE = new UrlEncoder(Type.HEADER);
+
 	/**
 	 * Encoder used to encode a full url similar to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI
 	 */
