@@ -37,7 +37,8 @@ class CssUtilsTest
 	{
 		StringResponse response = new StringResponse();
 		String url = "some/url;jsessionid=1234?with=parameters&p1=v1";
-		String media = "some<>media";
+		// Media may contain funny things, and it's OK
+		String media = "(min-height: 680px), screen and (orientation: portrait)";
 		AttributeMap attributes = new AttributeMap();
 		attributes.put(CssUtils.ATTR_LINK_REL, "stylesheet");
 		attributes.put(CssUtils.ATTR_TYPE, "text/css");
@@ -45,6 +46,6 @@ class CssUtilsTest
 		attributes.put(CssUtils.ATTR_LINK_MEDIA, media);
 		attributes.put(CssUtils.ATTR_ID, "markupId");
 		CssUtils.writeLink(response, attributes);
-		assertEquals("<link rel=\"stylesheet\" type=\"text/css\" href=\"some/url;jsessionid=1234?with=parameters&p1=v1\" media=\"some%3C%3Emedia\" id=\"markupId\"/>", response.toString());
+		assertEquals("<link rel=\"stylesheet\" type=\"text/css\" href=\"some/url;jsessionid=1234?with=parameters&p1=v1\" media=\"(min-height: 680px), screen and (orientation: portrait)\" id=\"markupId\"/>", response.toString());
 	}
 }

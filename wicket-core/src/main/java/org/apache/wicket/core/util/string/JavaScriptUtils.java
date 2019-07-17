@@ -17,6 +17,7 @@
 package org.apache.wicket.core.util.string;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.AttributeMap;
 import org.apache.wicket.util.value.IValueMap;
@@ -174,7 +175,7 @@ public class JavaScriptUtils
 		AttributeMap attributes = new AttributeMap();
 		// XXX JS mimetype can be omitted (also see below)
 		attributes.put(ATTR_TYPE, "text/javascript");
-		attributes.put(ATTR_SCRIPT_SRC, String.valueOf(url));
+		attributes.put(ATTR_SCRIPT_SRC, UrlEncoder.FULL_URL_INSTANCE.encode(String.valueOf(url), "UTF-8"));
 		if (id != null)
 		{
 			attributes.put(ATTR_ID, id);

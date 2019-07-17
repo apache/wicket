@@ -22,6 +22,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.AttributeMap;
@@ -385,7 +386,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 		{
 			attributes.put(JavaScriptUtils.ATTR_SCRIPT_ASYNC, "async");
 		}
-		attributes.put(JavaScriptUtils.ATTR_SCRIPT_SRC, url);
+		attributes.put(JavaScriptUtils.ATTR_SCRIPT_SRC, UrlEncoder.FULL_URL_INSTANCE.encode(url, "UTF-8"));
 		attributes.putIfNotNull(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
 		JavaScriptUtils.writeScript(response, attributes);
 

@@ -17,6 +17,7 @@
 package org.apache.wicket.core.util.string;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.AttributeMap;
@@ -176,7 +177,7 @@ public final class CssUtils
 		AttributeMap attributes = new AttributeMap();
 		attributes.put(ATTR_LINK_REL, Strings.isEmpty(rel) ? "stylesheet" : rel);
 		attributes.put(ATTR_TYPE, "text/css");
-		attributes.put(ATTR_LINK_HREF, String.valueOf(url));
+		attributes.put(ATTR_LINK_HREF, UrlEncoder.FULL_URL_INSTANCE.encode(String.valueOf(url),"UTF-8"));
 		if (Strings.isEmpty(media) == false)
 		{
 			attributes.put(ATTR_LINK_MEDIA, media.toString());

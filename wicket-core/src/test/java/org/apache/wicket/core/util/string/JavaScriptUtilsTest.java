@@ -37,15 +37,15 @@ class JavaScriptUtilsTest
 	{
 		AttributeMap attributes = new AttributeMap();
 		attributes.put(JavaScriptUtils.ATTR_TYPE, "text/javascript");
-		attributes.put(JavaScriptUtils.ATTR_ID, "some&bad%id");
+		attributes.put(JavaScriptUtils.ATTR_ID, "some\"funny<id&%");
 		attributes.put(JavaScriptUtils.ATTR_SCRIPT_DEFER, "defer");
-		attributes.put("charset", "some&bad%%charset");
+		attributes.put("charset", "some\"funny<charset&%");
 		attributes.put(JavaScriptUtils.ATTR_SCRIPT_SRC, "some/url;jsessionid=1234?p1=v1&p2=v2");
 		StringResponse response = new StringResponse();
 		JavaScriptUtils.writeScript(response, attributes);
 
 		assertEquals(
-				"<script type=\"text/javascript\" id=\"some&bad%25id\" defer=\"defer\" charset=\"some&bad%25%25charset\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2\"></script>\n",
+				"<script type=\"text/javascript\" id=\"some&#34;funny<id&%\" defer=\"defer\" charset=\"some&#34;funny<charset&%\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2\"></script>\n",
 			response.toString());
 	}
 
@@ -57,16 +57,16 @@ class JavaScriptUtilsTest
 	{
 		AttributeMap attributes = new AttributeMap();
 		attributes.put(JavaScriptUtils.ATTR_TYPE, "text/javascript");
-		attributes.put(JavaScriptUtils.ATTR_ID, "some{bad\"<>id");
+		attributes.put(JavaScriptUtils.ATTR_ID, "some\"funny<id&%");
 		attributes.put(JavaScriptUtils.ATTR_SCRIPT_DEFER, "defer");
 		attributes.put(JavaScriptUtils.ATTR_SCRIPT_ASYNC, "async");
-		attributes.put("charset", "some{bad\"<>%charset");
+		attributes.put("charset", "some\"funny<charset&%");
 		attributes.put(JavaScriptUtils.ATTR_SCRIPT_SRC, "some/url;jsessionid=1234?p1=v1&p2=v2&p3=v3");
 		StringResponse response = new StringResponse();
 		JavaScriptUtils.writeScript(response, attributes);
 
 		assertEquals(
-				"<script type=\"text/javascript\" id=\"some%7Bbad%22%3C%3Eid\" defer=\"defer\" async=\"async\" charset=\"some%7Bbad%22%3C%3E%25charset\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2&p3=v3\"></script>\n",
+				"<script type=\"text/javascript\" id=\"some&#34;funny<id&%\" defer=\"defer\" async=\"async\" charset=\"some&#34;funny<charset&%\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2&p3=v3\"></script>\n",
 				response.toString());
 	}
 

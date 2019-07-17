@@ -22,6 +22,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.AttributeMap;
@@ -364,7 +365,7 @@ public abstract class CssHeaderItem extends HeaderItem
 		AttributeMap attributes = new AttributeMap();
 		attributes.put(CssUtils.ATTR_LINK_REL, rel == null ? "stylesheet" : rel);
 		attributes.put(CssUtils.ATTR_TYPE, "text/css");
-		attributes.put(CssUtils.ATTR_LINK_HREF, url);
+		attributes.put(CssUtils.ATTR_LINK_HREF, UrlEncoder.FULL_URL_INSTANCE.encode(url, "UTF-8"));
 		attributes.putIfNotNull(CssUtils.ATTR_ID, getId());
 		attributes.putIfNotNull(CssUtils.ATTR_LINK_MEDIA, media);
 		attributes.putIfNotNull(CssUtils.ATTR_CSP_NONCE, getNonce());

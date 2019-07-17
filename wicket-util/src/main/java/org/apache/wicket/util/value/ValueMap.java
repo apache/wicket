@@ -566,7 +566,9 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 			}
 			else
 			{
-				buffer.append(UrlEncoder.FULL_URL_INSTANCE.encode(String.valueOf(value), "UTF-8"));
+				// This replaceAll only takes care about not breaking the HTML,
+				// Any other validation and escaping should be done before the value is added
+				buffer.append(String.valueOf(value).replaceAll("\"","&#34;"));
 			}
 
 			buffer.append('\"');
