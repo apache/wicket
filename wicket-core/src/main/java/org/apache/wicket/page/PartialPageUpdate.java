@@ -81,6 +81,18 @@ public abstract class PartialPageUpdate
 	protected final List<CharSequence> appendJavaScripts = Generics.newArrayList();
 
 	/**
+	 * A list of json strings for remote function calls which should be executed on the client side before the
+	 * components' replacement
+	 */
+	protected final List<CharSequence> prependRemoteFunctionCalls = Generics.newArrayList();
+
+	/**
+	 * A list of json strings for remote function calls which should be executed on the client side after the
+	 * components' replacement
+	 */
+	protected final List<CharSequence> appendRemoteFunctionCalls = Generics.newArrayList();
+
+	/**
 	 * A list of scripts (JavaScript) which should be executed on the client side after the
 	 * components' replacement.
 	 * Executed immediately after the replacement of the components, and before appendJavaScripts
@@ -162,6 +174,7 @@ public abstract class PartialPageUpdate
 
 			// queue up prepend javascripts. unlike other steps these are executed out of order so that
 			// components can contribute them from inside their onbeforerender methods.
+			writePriorityRemoteFunctionCalls(response, prependRemoteFunctionCalls);
 			writePriorityEvaluations(response, prependJavaScripts);
 
 			// execute the dom ready javascripts as first javascripts
@@ -170,6 +183,7 @@ public abstract class PartialPageUpdate
 			evaluationScripts.addAll(domReadyJavaScripts);
 			evaluationScripts.addAll(appendJavaScripts);
 			writeNormalEvaluations(response, evaluationScripts);
+			writeNormalRemoteFunctionCalls(response, appendRemoteFunctionCalls);
 
 			writeFooter(response, encoding);
 		} finally {
@@ -218,10 +232,28 @@ public abstract class PartialPageUpdate
 	 *
 	 * @param response
 	 *      the response to write to
+	 * @param json
+	 *      the JSON to pass to RFC
+	 */
+	protected abstract void writePriorityRemoteFunctionCalls(Response response, Collection<CharSequence> json);
+
+	/**
+	 *
+	 * @param response
+	 *      the response to write to
 	 * @param js
 	 *      the JavaScript to evaluate
 	 */
 	protected abstract void writeNormalEvaluations(Response response, Collection<CharSequence> js);
+
+	/**
+	 *
+	 * @param response
+	 *      the response to write to
+	 * @param json
+	 *      the JSON to pass to RFC
+	 */
+	protected abstract void writeNormalRemoteFunctionCalls(Response response, Collection<CharSequence> json);
 
 	/**
 	 * Processes components added to the target. This involves attaching components, rendering
@@ -406,6 +438,33 @@ public abstract class PartialPageUpdate
 		Args.notNull(javascript, "javascript");
 
 		prependJavaScripts.add(javascript);
+	}
+
+
+	/**
+	 * Adds script to the ones which are executed after the component replacement.
+	 *
+	 * @param javascript
+	 *      the javascript to execute
+	 */
+	public final void appendRemoteFunctionCall(final CharSequence javascript)
+	{
+		Args.notNull(javascript, "javascript");
+
+		appendRemoteFunctionCalls.add(javascript);
+	}
+
+	/**
+	 * Adds JSON for RFC  before the component replacement.
+	 *
+	 * @param json
+	 *      the json to pass to RFC
+	 */
+	public final void prependRemoteFunctionCall(CharSequence json)
+	{
+		Args.notNull(json, "json");
+
+		prependRemoteFunctionCalls.add(json);
 	}
 
 	/**
@@ -612,7 +671,7 @@ public abstract class PartialPageUpdate
 		/**
 		 * Constructor.
 		 *
-		 * @param update
+		 * @param pageUpdate
 		 *      the partial page update
 		 */
 		public PartialHtmlHeaderContainer(PartialPageUpdate pageUpdate)

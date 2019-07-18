@@ -37,6 +37,8 @@ import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.apache.wicket.ajax.RemoteFunctionCallUtils.createFunctionJsonString;
+
 /**
  * A handler of WebSocket requests.
  *
@@ -155,9 +157,23 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 	}
 
 	@Override
+	public void appendRemoteFunctionCall(CharSequence functionName, Object... args)
+	{
+		String jsonString = createFunctionJsonString(functionName, args);
+		getUpdate().appendRemoteFunctionCall(jsonString);
+	}
+
+	@Override
 	public void prependJavaScript(CharSequence javascript)
 	{
 		getUpdate().prependJavaScript(javascript);
+	}
+
+	@Override
+	public void prependRemoteFunctionCall(CharSequence functionName, Object... args)
+	{
+		String jsonString = createFunctionJsonString(functionName, args);
+		getUpdate().prependRemoteFunctionCall(jsonString);
 	}
 
 	@Override

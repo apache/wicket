@@ -340,6 +340,8 @@
 	 */
 	Wicket.Ajax = {};
 
+	Wicket.Ajax.RMF = {};
+
 	/**
 	 * Ajax call fires a Wicket Ajax request and processes the response.
 	 * The response can contain
@@ -832,6 +834,8 @@
 						this.processHeaderContribution(context, childNode);
 					} else if (childNode.tagName === "priority-evaluate") {
 						this.processEvaluation(context, childNode);
+					} else if (childNode.tagName === "priority-rfc") {
+						this.processRemoteFunctionCall(context, childNode);
 					}
 				}
 
@@ -851,7 +855,10 @@
 						this.processEvaluation(context, node);
 					} else if (node.tagName === "redirect") {
 						this.processRedirect(context, node);
+					} else if (node.tagName === "rfc") {
+						this.processRemoteFunctionCall(context, node);
 					}
+
 
 				}
 				if (stepIndexOfLastReplacedComponent !== -1) {
@@ -1004,6 +1011,24 @@
 				}
 			} else {
 				steps.push(evaluate(text));
+			}
+		},
+
+		// execute Remote Function Call (RFC) with no eval
+		processRemoteFunctionCall: function(context, node) {
+			// get the javascript body
+			var text = Wicket.DOM.text(node);
+			var functions = JSON.parse(text);
+			for (var f = 0; f < functions.length; f++) {
+				/**
+				 * @type {{func: string, args: []}}
+				 */
+				var fn = functions[f];
+				if (fn && fn.func && Wicket.Ajax.RMF[fn.func]) {
+					Wicket.Ajax.RMF[fn.func].apply(context, fn.args);
+				} else {
+					Wicket.Log.error("Remote functions Wicket.Ajax.RMF.%s does not exist");
+				}
 			}
 		},
 
