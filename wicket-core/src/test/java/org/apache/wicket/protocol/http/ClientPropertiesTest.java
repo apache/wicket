@@ -136,4 +136,17 @@ class ClientPropertiesTest
 
 		assertTrue(props.toString().contains("browserHeight=666"));
 	}
+
+	/**
+	 * WICKET-6689.
+	 */
+	@Test
+	void timezoneAET()
+	{
+		ClientProperties props = new ClientProperties();
+		props.setUtcOffset("11");
+		props.setUtcDSTOffset("10");
+
+		assertEquals(TimeZone.getTimeZone("AET"), props.getTimeZone());
+	}
 }
