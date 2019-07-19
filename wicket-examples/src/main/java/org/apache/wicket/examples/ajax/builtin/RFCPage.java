@@ -121,11 +121,11 @@ public class RFCPage extends BasePage
 						"var cnt = document.getElementById('resultsContainer');" +
 						"cnt.innerHTML = fn + ':' + JSON.stringify(args) + \"\\n\" + cnt.innerHTML;" +
 				"};" +
-				"Wicket.Ajax.RMF.testFunc1 = function(){otherGlobalFunction('testFunc1', arguments)};" +
-				"Wicket.Ajax.RMF.testFuncFunc = function(){otherGlobalFunction('testFuncFunc', arguments)};" +
-				"Wicket.Ajax.RMF.testFunc1Pre = function(){otherGlobalFunction('testFunc1Pre', arguments)};" +
-				"Wicket.Ajax.RMF.testFunc2 = function(){otherGlobalFunction('testFunc2', arguments)};" +
-				"Wicket.Ajax.RMF.testFunc2Pre = function(){otherGlobalFunction('testFunc2Pre', arguments)};" +
+				"Wicket.Ajax.RFC.testFunc1 = function(){otherGlobalFunction('testFunc1', arguments)};" +
+				"Wicket.Ajax.RFC.testFuncFunc = function(){otherGlobalFunction('testFuncFunc', arguments)};" +
+				"Wicket.Ajax.RFC.testFunc1Pre = function(){otherGlobalFunction('testFunc1Pre', arguments)};" +
+				"Wicket.Ajax.RFC.testFunc2 = function(){otherGlobalFunction('testFunc2', arguments)};" +
+				"Wicket.Ajax.RFC.testFunc2Pre = function(){otherGlobalFunction('testFunc2Pre', arguments)};" +
 				"eval('alert(\"this popup should not be displayed\")');"
 		));
 	}

@@ -49,10 +49,12 @@ public class AjaxHeaderContributionPage extends WebPage
 			{
 				targetOptional.ifPresent(target -> {
 					target.prependJavaScript("prepend();");
+					target.prependRemoteFunctionCall("prepend",1, "a");
 					target.add(test1);
 					target.add(test2);
 					target.add(test3);
 					target.appendJavaScript("append();");
+					target.appendRemoteFunctionCall("append","b", false);
 				});
 			}
 		});

@@ -56,6 +56,7 @@ public class AjaxHeaderContributionPage2 extends WebPage
 			{
 				targetOptional.ifPresent(target -> {
 					target.prependJavaScript("prepend();");
+					target.prependRemoteFunctionCall("prepend",1, "a");
 					target.add(test1);
 					target.add(test2);
 					target.add(test3);
@@ -63,6 +64,7 @@ public class AjaxHeaderContributionPage2 extends WebPage
 					target.add(btest2);
 					target.add(btest3);
 					target.appendJavaScript("append();");
+					target.appendRemoteFunctionCall("append","b", false);
 				});
 			}
 		});

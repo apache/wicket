@@ -340,7 +340,7 @@
 	 */
 	Wicket.Ajax = {};
 
-	Wicket.Ajax.RMF = {};
+	Wicket.Ajax.RFC = {};
 
 	/**
 	 * Ajax call fires a Wicket Ajax request and processes the response.
@@ -1024,10 +1024,10 @@
 				 * @type {{func: string, args: []}}
 				 */
 				var fn = functions[f];
-				if (fn && fn.func && Wicket.Ajax.RMF[fn.func]) {
-					Wicket.Ajax.RMF[fn.func].apply(context, fn.args);
+				if (fn && fn.func && Wicket.Ajax.RFC[fn.func]) {
+					Wicket.Ajax.RFC[fn.func].apply(context, fn.args);
 				} else {
-					Wicket.Log.error("Remote functions Wicket.Ajax.RMF.%s does not exist");
+					Wicket.Log.error("Remote functions Wicket.Ajax.RFC.%s does not exist");
 				}
 			}
 		},
