@@ -369,11 +369,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 			response.write("]>");
 		}
 
-		boolean isAjax = RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent();
-		// the url needs to be escaped when Ajax, because it will break the Ajax Response XML (WICKET-4777)
-		AttributeMap attributes = isAjax
-				? new AttributeMap()
-				: new AttributeMap();
+		AttributeMap attributes = new AttributeMap();
 		attributes.put(JavaScriptUtils.ATTR_TYPE, "text/javascript");
 		attributes.putIfNotNull(JavaScriptUtils.ATTR_ID, id);
 		if (defer)
