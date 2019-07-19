@@ -1,5 +1,7 @@
 = Wicket 9.x Reference Guide
 The Apache Software Foundation
+:description: Official User Guide for Apache Wicket framework. 
+:keywords: Apache Wicket, User Guide, examples, AJAX, stateless
 :toc: left
 :icons: font
 :sectlinks:
