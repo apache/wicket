@@ -317,8 +317,8 @@ public class ClientProperties implements IClusterable
 					if (dstTimeZone != null &&
 						dstTimeZone.getRawOffset() != timeZone.getRawOffset())
 					{
-						int dstSaving = dstTimeZone.getRawOffset() - timeZone.getRawOffset();
-						String[] availableIDs = TimeZone.getAvailableIDs(timeZone.getRawOffset());
+						int dstSaving = Math.abs(dstTimeZone.getRawOffset() - timeZone.getRawOffset());
+						String[] availableIDs = TimeZone.getAvailableIDs(dstTimeZone.getRawOffset() < timeZone.getRawOffset() ? dstTimeZone.getRawOffset() : timeZone.getRawOffset());
 						for (String availableID : availableIDs)
 						{
 							TimeZone zone = TimeZone.getTimeZone(availableID);
