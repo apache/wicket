@@ -64,7 +64,8 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 	{
 		this.cryptMethod = Args.notNull(cryptMethod, "Crypt method");
 
-		if (Security.getProviders("Cipher." + cryptMethod).length == 0)
+		final Provider[] providers = Security.getProviders("Cipher." + cryptMethod);
+		if (providers == null || providers.length == 0)
 		{
 			try
 			{
