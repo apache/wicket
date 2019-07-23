@@ -26,6 +26,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author papegaaij
  */
-public abstract class CssHeaderItem extends HeaderItem
+public abstract class CssHeaderItem extends AbstractCspHeaderItem
 {
 	private static final long serialVersionUID = 1L;
 
@@ -61,7 +62,7 @@ public abstract class CssHeaderItem extends HeaderItem
 	private final String condition;
 
 	private String markupId;
-	
+
 	protected CssHeaderItem(String condition)
 	{
 		this.condition = condition;
@@ -355,8 +356,14 @@ public abstract class CssHeaderItem extends HeaderItem
 			response.write(condition);
 			response.write("]>");
 		}
-
-		CssUtils.writeLinkUrl(response, url, media, getId(), rel);
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(CssUtils.ATTR_LINK_REL, rel == null ? "stylesheet" : rel);
+		attributes.putAttribute(CssUtils.ATTR_TYPE, "text/css");
+		attributes.putAttribute(CssUtils.ATTR_LINK_HREF, url);
+		attributes.putAttribute(CssUtils.ATTR_ID, getId());
+		attributes.putAttribute(CssUtils.ATTR_LINK_MEDIA, media);
+		attributes.putAttribute(CssUtils.ATTR_CSP_NONCE, getNonce());
+		CssUtils.writeLink(response, attributes);
 
 		if (hasCondition)
 		{

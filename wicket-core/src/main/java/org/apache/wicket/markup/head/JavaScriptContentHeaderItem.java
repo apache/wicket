@@ -20,9 +20,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
-import org.apache.wicket.request.Response;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
 
 /**
  * {@link HeaderItem} for internal (embedded in the header) javascript content.
@@ -69,7 +70,11 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 			response.write(getCondition());
 			response.write("]>");
 		}
-		JavaScriptUtils.writeJavaScript(response, getJavaScript(), getId());
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
+		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
+		JavaScriptUtils.writeInlineScript(response, getJavaScript(), attributes);
 
 		if (hasCondition)
 		{

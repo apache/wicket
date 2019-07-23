@@ -1,0 +1,34 @@
+<html xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+<head>
+    <title>CSP Nonce Demo</title>
+</head>
+<body>
+<wicket:extend>
+    <h3>CSP Nonce Demo</h3>
+    <div wicket:id="testNonceScript" class="test-nonce-script"></div>
+    <div wicket:id="testNoNonceScript" class="test-no-nonce-script"></div>
+    <div class="injected-style"><wicket:message key="styleInjectionContainer"/></div>
+    <div class="injected-style--with-nonce"><wicket:message key="styleInjectionContainerWithNonce"/></div>
+    <p></p>
+    <button wicket:id="clickMe"><wicket:message key="clickMe" /></button>
+    <div class="click-me-text">Click a button above to replace this text</div>
+    <div><wicket:message key="clickMeCount" /> <span wicket:id="clickMeCount"></span></div>
+    <p></p>
+    <p><wicket:message key="ieDisclaimer"/></p>
+
+    <!-- Injections below will work in IE11, because IE 11 doesn't support nonce -->
+
+    <!-- script injection (won't work when CSP nonce is in header) -->
+    <script>document.querySelector(".test-no-nonce-script").innerHTML = "This is text injected by no nonce script: fail";</script>
+
+    <!-- style injection (won't work when CSP nonce is in header) -->
+    <style>
+        .injected-style {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+
+</wicket:extend>
+</body>
+</html>

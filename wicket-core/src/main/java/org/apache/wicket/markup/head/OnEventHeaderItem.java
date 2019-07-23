@@ -28,13 +28,14 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
 
 /**
  * {@link HeaderItem} for event triggered scripts.
  *
  * @author papegaaij
  */
-public class OnEventHeaderItem extends HeaderItem
+public class OnEventHeaderItem extends AbstractCspHeaderItem
 {
 	private static final long serialVersionUID = 1L;
 
@@ -118,7 +119,10 @@ public class OnEventHeaderItem extends HeaderItem
 	{
 		if (Strings.isEmpty(getJavaScript()) == false)
 		{
-			JavaScriptUtils.writeJavaScript(response, getCompleteJavaScript());
+			AttributeMap attributes = new AttributeMap();
+			attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+			attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
+			JavaScriptUtils.writeInlineScript(response, getCompleteJavaScript(), attributes);
 		}
 	}
 

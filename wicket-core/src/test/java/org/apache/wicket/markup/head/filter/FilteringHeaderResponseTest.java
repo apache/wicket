@@ -94,4 +94,15 @@ class FilteringHeaderResponseTest extends WicketTestCase
 			response -> new ResourceAggregator(new JavaScriptDeferHeaderResponse(response)));
 		executeTest(DeferredPage.class, "DeferredPageExpected.html");
 	}
+	
+	/**
+	 * WICKET-6682
+	 */
+	@Test
+	void nonce() throws Exception
+	{
+		tester.getApplication().setHeaderResponseDecorator(
+			response -> new ResourceAggregator(new CspNonceHeaderResponse(response, "NONCE")));
+		executeTest(CspNoncePage.class, "CspNoncePageExpected.html");
+	}
 }

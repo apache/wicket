@@ -18,7 +18,7 @@ package org.apache.wicket.core.util.string;
 
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
-
+import org.apache.wicket.util.value.AttributeMap;
 
 /**
  * Provide some helpers to write javascript related tags to the response object.
@@ -45,6 +45,13 @@ public class JavaScriptUtils
 
 	/** Script close tag including content suffix */
 	public final static String SCRIPT_CLOSE_TAG = SCRIPT_CONTENT_SUFFIX + "</script>\n";
+
+	public static final String ATTR_ID = "id";
+	public static final String ATTR_TYPE = "type";
+	public static final String ATTR_SCRIPT_SRC = "src";
+	public static final String ATTR_SCRIPT_DEFER = "defer";
+	public static final String ATTR_SCRIPT_ASYNC = "async";
+	public static final String ATTR_CSP_NONCE = "nonce";
 
 	/** The response object */
 	private final Response response;
@@ -104,7 +111,9 @@ public class JavaScriptUtils
 	 *            The javascript file URL
 	 * @param id
 	 *            Unique identifier of element
+	 * @deprecated please use {@link #writeScript(Response, AttributeMap)} instead
 	 */
+	@Deprecated
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 		final String id)
 	{
@@ -125,7 +134,9 @@ public class JavaScriptUtils
 	 *            the page has been loaded.
 	 * @param charset
 	 *            a non null value specifies the charset attribute of the script tag
+	 * @deprecated please use {@link #writeScript(Response, AttributeMap)} instead
 	 */
+	@Deprecated
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 	                                      final String id, boolean defer, String charset)
 	{
@@ -148,32 +159,38 @@ public class JavaScriptUtils
 	 *            a non null value specifies the charset attribute of the script tag
 	 * @param async
 	 *            specifies that the script can be loaded asynchronously by the browser
+	 * @deprecated please use {@link #writeScript(Response, AttributeMap)} instead
 	 */
+	@Deprecated
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 		final String id, boolean defer, String charset, boolean async)
 	{
-		response.write("<script type=\"text/javascript\" ");
-		if (id != null)
-		{
-			response.write("id=\"" + Strings.escapeMarkup(id) + "\" ");
-		}
-		if (defer)
-		{
-			response.write("defer=\"defer\" ");
-		}
+		AttributeMap attributes = new AttributeMap();
+		// XXX JS mimetype can be omitted (also see below)
+		attributes.putAttribute(ATTR_TYPE, "text/javascript");
+		attributes.putAttribute(ATTR_SCRIPT_SRC, url);
+		attributes.putAttribute(ATTR_ID, id);
+		attributes.putAttribute(ATTR_SCRIPT_DEFER, defer);
+		attributes.putAttribute(ATTR_SCRIPT_ASYNC, async);
+		// FIXME charset attr is deprecated
+		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#Deprecated_attributes
+		attributes.putAttribute("charset", charset);
+		writeScript(response, attributes);
+	}
 
-		if (async)
-		{
-			response.write("async=\"async\" ");
-		}
-
-		if (charset != null)
-		{
-			response.write("charset=\"" + Strings.escapeMarkup(charset) + "\" ");
-		}
-		response.write("src=\"");
-		response.write(url);
-		response.write("\"></script>");
+	/**
+	 * Write a reference to a javascript file to the response object
+	 *
+	 * @param response
+	 *            The HTTP response
+	 * @param attributes
+	 *            Extra tag attributes
+	 */
+	public static void writeScript(final Response response, AttributeMap attributes)
+	{
+		response.write("<script");
+		response.write(attributes.toCharSequence());
+		response.write("></script>");
 		response.write("\n");
 	}
 
@@ -184,7 +201,9 @@ public class JavaScriptUtils
 	 *            The HTTP response
 	 * @param url
 	 *            The javascript file URL
+	 * @deprecated please use {@link #writeScript(Response, AttributeMap)} instead
 	 */
+	@Deprecated
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url)
 	{
 		writeJavaScriptUrl(response, url, null);
@@ -199,10 +218,28 @@ public class JavaScriptUtils
 	 *            The text to added in between the script tags
 	 * @param id
 	 *            Unique identifier of element
+	 * @deprecated please use {@link #writeInlineScript(Response, CharSequence, AttributeMap)} instead
 	 */
 	public static void writeJavaScript(final Response response, final CharSequence text, String id)
 	{
 		writeOpenTag(response, id);
+		response.write(Strings.replaceAll(text, "</", "<\\/"));
+		writeCloseTag(response);
+	}
+
+	/**
+	 * Write the simple text to the response object surrounded by a script tag.
+	 *
+	 * @param response
+	 * 		The HTTP: response
+	 * @param text
+	 * 		The text to added in between the script tags
+	 * @param attributes
+	 * 		Extra tag attributes
+	 */
+	public static void writeInlineScript(final Response response, final CharSequence text, AttributeMap attributes)
+	{
+		writeOpenTag(response, attributes);
 		response.write(Strings.replaceAll(text, "</", "<\\/"));
 		writeCloseTag(response);
 	}
@@ -217,21 +254,39 @@ public class JavaScriptUtils
 	 */
 	public static void writeJavaScript(final Response response, final CharSequence text)
 	{
-		writeJavaScript(response, text, null);
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(ATTR_TYPE, "text/javascript");
+		writeInlineScript(response, text, attributes);
 	}
 
 	/**
 	 * 
 	 * @param response
 	 * @param id
+	 * @deprecated please use {@link #writeOpenTag(Response, AttributeMap)}
 	 */
+	@Deprecated
 	public static void writeOpenTag(final Response response, String id)
 	{
-		response.write("<script type=\"text/javascript\" ");
-		if (id != null)
-		{
-			response.write("id=\"" + Strings.escapeMarkup(id) + "\"");
-		}
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(ATTR_TYPE, "text/javascript");
+		attributes.putAttribute(ATTR_ID, id);
+		writeOpenTag(response, attributes);
+	}
+
+	/**
+	 * Write open script tag for inline script.
+	 * Content is prefixed with {@link #SCRIPT_CONTENT_PREFIX}.
+	 *
+	 * @param response
+	 * 		the response to write to
+	 * @param attributes
+	 * 		Tag attributes map
+	 */
+	public static void writeOpenTag(final Response response, AttributeMap attributes)
+	{
+		response.write("<script");
+		response.write(attributes.toCharSequence());
 		response.write(">");
 		response.write(SCRIPT_CONTENT_PREFIX);
 	}
@@ -239,15 +294,21 @@ public class JavaScriptUtils
 	/**
 	 * 
 	 * @param response
+	 * @deprecated please use {@link #writeOpenTag(Response, AttributeMap)}
 	 */
+	@Deprecated
 	public static void writeOpenTag(final Response response)
 	{
-		writeOpenTag(response, null);
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(ATTR_TYPE, "text/javascript");
+		writeOpenTag(response, attributes);
 	}
 
 	/**
-	 * 
+	 * Write close script tag for inline script. The close tag is prefixed with {@link #SCRIPT_CONTENT_SUFFIX}
+	 *
 	 * @param response
+	 * 		the response to write to
 	 */
 	public static void writeCloseTag(final Response response)
 	{
@@ -274,10 +335,12 @@ public class JavaScriptUtils
 	}
 
 	/**
-	 * Write the script close tag to the response. The response output stream remains open.
+	 * Write the inline script close tag to the response. The response output stream remains open.
+	 * Calls {@link #writeCloseTag(Response)} internally.
+	 * The close tag is prefixed with {@link #SCRIPT_CONTENT_SUFFIX}.
 	 */
 	public void close()
 	{
 		writeCloseTag(response);
-	}
+	}	
 }

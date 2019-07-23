@@ -26,13 +26,14 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
 
 /**
  * {@link HeaderItem} for scripts that need to be executed after the entire page is loaded.
  *
  * @author papegaaij
  */
-public class OnLoadHeaderItem extends HeaderItem
+public class OnLoadHeaderItem extends AbstractCspHeaderItem
 {
 	private static final long serialVersionUID = 1L;
 
@@ -86,8 +87,11 @@ public class OnLoadHeaderItem extends HeaderItem
 		CharSequence js = getJavaScript();
 		if (Strings.isEmpty(js) == false)
 		{
-			JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"load\", " +
-				"function(event) { " + js + ";});");
+			AttributeMap attributes = new AttributeMap();
+			attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+			attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
+			JavaScriptUtils.writeInlineScript(response, "Wicket.Event.add(window, \"load\", " +
+					"function(event) { " + js + ";});", attributes);
 		}
 	}
 
