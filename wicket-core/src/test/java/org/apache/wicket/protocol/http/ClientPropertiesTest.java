@@ -138,7 +138,7 @@ public class ClientPropertiesTest extends Assert
 	 * WICKET-6689.
 	 */
 	@Test
-	void timezoneAET()
+	public void timezoneAET()
 	{
 		ClientProperties props = new ClientProperties();
 		props.setUtcOffset("11");
