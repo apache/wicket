@@ -17,12 +17,17 @@
 package org.apache.wicket.pageStore.crypt;
 
 import java.io.Serializable;
+import java.security.SecureRandom;
+
+import javax.crypto.SecretKey;
 
 /**
  * An encrypter and decrypter of pages.
  */
-public interface ICrypter extends Serializable {
-	byte[] encrypt(byte[] bytes);
+public interface ICrypter {
+	SecretKey generateKey(SecureRandom random);
 	
-	byte[] decrypt(byte[] bytes);
+	byte[] encrypt(byte[] bytes, SecretKey key, SecureRandom random);
+	
+	byte[] decrypt(byte[] bytes, SecretKey key);
 }

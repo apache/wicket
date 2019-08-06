@@ -18,41 +18,23 @@ package org.apache.wicket.pageStore.crypt;
 
 import java.security.AlgorithmParameters;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.wicket.WicketRuntimeException;
 
 /**
- * Default encryption and decryption implementation. 
+ * Default encryption and decryption implementation.
  */
 public class DefaultCrypter implements ICrypter
 {
-	private final SecureRandom random;
-
-	private final SecretKey key;
-
 	public DefaultCrypter()
 	{
-		try
-		{
-			random = SecureRandom.getInstance("SHA1PRNG", "SUN");
-
-			KeyGenerator generator = KeyGenerator.getInstance("AES");
-			generator.init(256, random);
-			key = generator.generateKey();
-		}
-		catch (GeneralSecurityException ex)
-		{
-			throw new WicketRuntimeException(ex);
-		}
 	}
 
 	protected Cipher getCipher() throws GeneralSecurityException
@@ -61,7 +43,22 @@ public class DefaultCrypter implements ICrypter
 	}
 
 	@Override
-	public byte[] encrypt(byte[] decrypted)
+	public SecretKey generateKey(SecureRandom random)
+	{
+		try
+		{
+			KeyGenerator generator = KeyGenerator.getInstance("AES");
+			generator.init(256, random);
+			return generator.generateKey();
+		}
+		catch (GeneralSecurityException ex)
+		{
+			throw new WicketRuntimeException(ex);
+		}
+	}
+
+	@Override
+	public byte[] encrypt(byte[] decrypted, SecretKey key, SecureRandom random)
 	{
 		try
 		{
@@ -72,10 +69,10 @@ public class DefaultCrypter implements ICrypter
 			byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
 
 			byte[] ciphertext = cipher.doFinal(decrypted);
-			
+
 			byte[] encrypted = Arrays.copyOf(iv, iv.length + ciphertext.length);
 			System.arraycopy(ciphertext, 0, encrypted, iv.length, ciphertext.length);
-			
+
 			return encrypted;
 		}
 		catch (GeneralSecurityException ex)
@@ -85,7 +82,7 @@ public class DefaultCrypter implements ICrypter
 	}
 
 	@Override
-	public byte[] decrypt(byte[] encrypted)
+	public byte[] decrypt(byte[] encrypted, SecretKey key)
 	{
 		try
 		{
@@ -93,11 +90,11 @@ public class DefaultCrypter implements ICrypter
 			byte[] ciphertext = new byte[encrypted.length - 16];
 			System.arraycopy(encrypted, 0, iv, 0, iv.length);
 			System.arraycopy(encrypted, 16, ciphertext, 0, ciphertext.length);
-	
+
 			Cipher cipher = getCipher();
 			cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
 			byte[] decrypted = cipher.doFinal(ciphertext);
-			
+
 			return decrypted;
 		}
 		catch (GeneralSecurityException ex)
