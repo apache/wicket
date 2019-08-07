@@ -303,6 +303,12 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 			private static final long serialVersionUID = 1L;
 
 			@Override
+			protected boolean shouldTrimInput()
+			{
+				return AjaxEditableLabel.this.shouldTrimInput();
+			}
+
+			@Override
 			public <C> IConverter<C> getConverter(final Class<C> type)
 			{
 				IConverter<C> c = AjaxEditableLabel.this.getConverter(type);
@@ -357,6 +363,17 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 			}
 		});
 		return editor;
+	}
+
+	/**
+	 * Determines whether or not the textfield should trim its input prior to processing it. The
+	 * default value is <code>true</code>
+	 * 
+	 * @return True if the input should be trimmed.
+	 */
+	protected boolean shouldTrimInput()
+	{
+		return true;
 	}
 
 	/**
