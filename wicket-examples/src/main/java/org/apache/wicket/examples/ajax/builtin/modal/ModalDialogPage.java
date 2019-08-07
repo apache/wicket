@@ -28,6 +28,7 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalDialog;
 import org.apache.wicket.extensions.ajax.markup.html.modal.theme.DefaultTheme;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.AjaxListPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
@@ -146,13 +147,25 @@ public class ModalDialogPage extends BasePage
 					findParent(ModalDialog.class).close(null);
 				}
 			});
+			
+			final MultiLineLabel lorem = new MultiLineLabel("lorem", "");
+			lorem.setOutputMarkupId(true);
+			queue(lorem);
+			
+			queue(new AjaxLink<Void>("ipsum") {
+				@Override
+				public void onClick(AjaxRequestTarget target)
+				{
+					lorem.setDefaultModelObject(lorem.getDefaultModelObject() + "\n\n" + getString("lorem"));
+					
+					target.add(lorem);
+				}
+			});
 		}
 
 		private void openDialog(AjaxRequestTarget target)
 		{
-			Component content = new MyDialogLayout(ModalDialog.CONTENT_ID, Model.of("Dialog"),
-				new ModalFragment(ModalDialog.CONTENT_ID));
-
+			ModalFragment fragment = new ModalFragment(ModalDialog.CONTENT_ID);
 			if (stacked)
 			{
 				// stack a new dialog
@@ -167,13 +180,13 @@ public class ModalDialogPage extends BasePage
 				dialog.add(new DefaultTheme());
 				dialog.trapFocus();
 				dialog.closeOnEscape();
-				dialog.setContent(content);
+				dialog.setContent(fragment);
 				stackedDialogs.append(dialog, target).open(target);
 			}
 			else
 			{
 				// use the nested dialog
-				nestedDialog.open(content, target);
+				nestedDialog.open(fragment, target);
 			}
 		}
 	}

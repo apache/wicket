@@ -23,66 +23,82 @@
 	margin: 0;
 	padding: 0;
 	z-index: 1000;
+	
+	background: rgba(0, 0, 0, 0.2);
 
 	/* flex-box to center .modal-dialog */
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	flex-direction: column;
-}
-
-.dialog-theme-default .modal-dialog-overlay::before {
-  	content: "";
-	display: block;
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	margin: 0;
-
-	background: rgba(0, 0, 0, 0.2);
 }
 
 .dialog-theme-default .modal-dialog {
 	position: absolute;
 	top: 10%;
-
+	
 	background: white;
 	box-shadow: 0 0 60px 10px rgba(0, 0, 0, 0.7);
 }
 
+/* content */
 .dialog-theme-default .modal-dialog-content {
+	/* re-sizing */
+	min-width: 20vw;
+	max-width: 80vw;
+	min-height: 20vh;
+	max-height: 80vh;
+	overflow: hidden;
+	resize: both;
+					
+	/* flex children */
+	display: flex;
+	flex-direction: column;
+}
+			
+.dialog-theme-default .modal-dialog-header {
+}
+				
+.dialog-theme-default .modal-dialog-body {
+	overflow-y: auto;
+					
+	/* flex grow */
+	flex: 1;
+}
+				
+.dialog-theme-default .modal-dialog-footer {
 }
 
 /* shift nested dialogs */
 
 .dialog-theme-default .modal-dialog .modal-dialog {
+	margin-top: 16px;
+	margin-left: 16px;
+}
+
+.dialog-theme-default .modal-dialog .modal-dialog .modal-dialog {
 	margin-top: 32px;
 	margin-left: 32px;
 }
 
-.dialog-theme-default .modal-dialog .modal-dialog .modal-dialog {
-	margin-top: 64px;
-	margin-left: 64px;
-}
-
 .dialog-theme-default .modal-dialog .modal-dialog .modal-dialog .modal-dialog {
-	margin-top: 96px;
-	margin-left: 96px;
+	margin-top: 48px;
+	margin-left: 48px;
 }
 
 /* shift sibling dialogs */
 
 .dialog-theme-default ~ .dialog-theme-default .modal-dialog {
+	margin-top: 16px;
+	margin-left: 16px;
+}
+
+.dialog-theme-default ~ .dialog-theme-default ~ .dialog-theme-default .modal-dialog {
 	margin-top: 32px;
 	margin-left: 32px;
 }
 
-.dialog-theme-default ~ .dialog-theme-default ~ .dialog-theme-default .modal-dialog {
-	margin-top: 64px;
-	margin-left: 64px;
-}
-
 .dialog-theme-default ~ .dialog-theme-default ~ .dialog-theme-default ~ .dialog-theme-default .modal-dialog {
-	margin-top: 96px;
-	margin-left: 96px;
+	margin-top: 48px;
+	margin-left: 48px;
 }
