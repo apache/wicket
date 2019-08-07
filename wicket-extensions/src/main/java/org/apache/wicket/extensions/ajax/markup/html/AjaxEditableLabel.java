@@ -225,19 +225,6 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 	}
 
 	/**
-	 * Implementation that returns null by default (panels don't typically need converters anyway).
-	 * This is used by the embedded default instances of label and form field to determine whether
-	 * they should use a converter like they normally would (when this method returns null), or
-	 * whether they should use a custom converter (when this method is overridden and returns not
-	 * null).
-	 */
-	@Override
-	public <C> IConverter<C> getConverter(final Class<C> type)
-	{
-		return null;
-	}
-
-	/**
 	 * The value will be made available to the validator property by means of ${label}. It does not
 	 * have any specific meaning to FormComponent itself.
 	 * 
@@ -308,11 +295,13 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 				return AjaxEditableLabel.this.shouldTrimInput();
 			}
 
+			/**
+			 * {@inheritDoc}
+			 */
 			@Override
 			public <C> IConverter<C> getConverter(final Class<C> type)
 			{
-				IConverter<C> c = AjaxEditableLabel.this.getConverter(type);
-				return c != null ? c : super.getConverter(type);
+				return AjaxEditableLabel.this.getConverter(type);
 			}
 
 			@Override
@@ -394,11 +383,13 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 		{
 			private static final long serialVersionUID = 1L;
 
+			/**
+			 * {@inheritDoc}
+			 */
 			@Override
 			public <C> IConverter<C> getConverter(final Class<C> type)
 			{
-				IConverter<C> c = AjaxEditableLabel.this.getConverter(type);
-				return c != null ? c : super.getConverter(type);
+				return AjaxEditableLabel.this.getConverter(type);
 			}
 
 			/**

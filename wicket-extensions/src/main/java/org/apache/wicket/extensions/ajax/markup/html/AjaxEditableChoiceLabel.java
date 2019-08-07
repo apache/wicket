@@ -251,8 +251,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			@Override
 			public <C> IConverter<C> getConverter(final Class<C> type)
 			{
-				IConverter<C> c = AjaxEditableChoiceLabel.this.getConverter(type);
-				return c != null ? c : super.getConverter(type);
+				return AjaxEditableChoiceLabel.this.getConverter(type);
 			}
 
 			/**

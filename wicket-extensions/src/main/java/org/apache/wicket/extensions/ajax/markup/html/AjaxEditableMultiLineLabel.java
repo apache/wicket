@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.convert.IConverter;
 
 /**
  * An inplace editor much like {@link AjaxEditableLabel}, but now with support for multi line
@@ -90,6 +91,15 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			 * {@inheritDoc}
 			 */
 			@Override
+			public <C> IConverter<C> getConverter(final Class<C> type)
+			{
+				return AjaxEditableMultiLineLabel.this.getConverter(type);
+			}
+			
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
 			public void onComponentTagBody(final MarkupStream markupStream,
 				final ComponentTag openTag)
 			{
@@ -129,6 +139,15 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 		{
 			private static final long serialVersionUID = 1L;
 
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public <C> IConverter<C> getConverter(final Class<C> type)
+			{
+				return AjaxEditableMultiLineLabel.this.getConverter(type);
+			}
+			
 			@Override
 			protected boolean shouldTrimInput()
 			{
