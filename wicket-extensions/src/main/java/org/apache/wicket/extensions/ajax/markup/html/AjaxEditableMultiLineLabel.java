@@ -130,6 +130,12 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
+			protected boolean shouldTrimInput()
+			{
+				return AjaxEditableMultiLineLabel.this.shouldTrimInput();
+			}
+			
+			@Override
 			protected void onModelChanged()
 			{
 				AjaxEditableMultiLineLabel.this.onModelChanged();
