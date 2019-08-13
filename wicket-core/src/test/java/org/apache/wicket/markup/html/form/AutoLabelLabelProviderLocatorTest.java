@@ -28,13 +28,13 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 /**
  * Tests {@code wicket:for} attribute functionality using {@link ILabelProviderLocator}
  */
 @SuppressWarnings({ "rawtypes", "serial" })
-class AutoLabelLabelProviderLocatorTest extends WicketTestCase
+public class AutoLabelLabelProviderLocatorTest extends WicketTestCase
 {
 	static class ILabelProviderLocatorPanel1 extends Panel implements ILabelProviderLocator
 	{
@@ -110,7 +110,7 @@ class AutoLabelLabelProviderLocatorTest extends WicketTestCase
 	}
 
 	@Test
-	void testILabelProviderLocator()
+	public void testILabelProviderLocator()
 	{
 		List<IEditPanelProvider> providers = new ArrayList<>();
 
