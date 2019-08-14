@@ -25,6 +25,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.text.ParseException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -123,14 +124,12 @@ import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.settings.ApplicationSettings;
 import org.apache.wicket.settings.RequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
-import java.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
@@ -495,12 +494,21 @@ public class BaseWicketTester
 	 */
 	protected void cleanupFeedbackMessages(IFeedbackMessageFilter filter)
 	{
-		ApplicationSettings applicationSettings = application.getApplicationSettings();
-		IFeedbackMessageFilter old = applicationSettings.getFeedbackMessageCleanupFilter();
-		applicationSettings.setFeedbackMessageCleanupFilter(filter);
-		getLastRenderedPage().detach();
-		getSession().detach();
-		applicationSettings.setFeedbackMessageCleanupFilter(old);
+		
+		IVisitor<Component, Void> clearer = new IVisitor<Component, Void>()
+		{
+			@Override
+			public void component(Component component, IVisit<Void> visit)
+			{
+				if (component.hasFeedbackMessage()) {
+					component.getFeedbackMessages().clear(filter);
+				}
+			}
+		};
+		clearer.component(getLastRenderedPage(), null);
+		getLastRenderedPage().visitChildren(clearer);
+		
+		getSession().getFeedbackMessages().clear(filter);
 	}
 
 	/**

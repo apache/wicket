@@ -1569,23 +1569,12 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 			@Override
 			public void onDetach(final RequestCycle requestCycle)
 			{
-				IPageManager pageManager;
-				
-				if (Session.exists())
-				{
-					pageManager = Session.get().getPageManager();
-				} else {
-					pageManager = internalGetPageManager();
-				}
-				pageManager.detach();
+				internalGetPageManager().detach();
 
-				if (Application.exists())
+				IRequestLogger requestLogger = getRequestLogger();
+				if (requestLogger != null)
 				{
-					IRequestLogger requestLogger = Application.get().getRequestLogger();
-					if (requestLogger != null)
-					{
-						requestLogger.requestTime((System.currentTimeMillis() - requestCycle.getStartTime()));
-					}
+					requestLogger.requestTime((System.currentTimeMillis() - requestCycle.getStartTime()));
 				}
 			}
 		});
