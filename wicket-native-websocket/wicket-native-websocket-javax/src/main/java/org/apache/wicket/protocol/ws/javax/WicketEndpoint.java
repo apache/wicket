@@ -74,9 +74,15 @@ public class WicketEndpoint extends Endpoint
 	{
 		super.onClose(session, closeReason);
 
+		final int closeCode = closeReason.getCloseCode().getCode();
+		final String reasonPhrase = closeReason.getReasonPhrase();
+
+		LOG.debug("Web Socket connection with id '{}' has been closed with code '{}' and reason: {}",
+				session.getId(), closeCode, reasonPhrase);
+
 		if (isApplicationAlive())
 		{
-			javaxWebSocketProcessor.onClose(closeReason.getCloseCode().getCode(), closeReason.getReasonPhrase());
+			javaxWebSocketProcessor.onClose(closeCode, reasonPhrase);
 		}
 	}
 

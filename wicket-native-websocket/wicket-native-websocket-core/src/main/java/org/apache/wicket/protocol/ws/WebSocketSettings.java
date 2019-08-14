@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 /**
  * Web Socket related settings.
@@ -49,7 +50,6 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class WebSocketSettings
 {
-
 	private static final Logger LOG = LoggerFactory.getLogger(WebSocketSettings.class);
 
 	private static final MetaDataKey<WebSocketSettings> KEY = new MetaDataKey<WebSocketSettings>()
@@ -131,6 +131,22 @@ public class WebSocketSettings
 	 * A filter that may reject an incoming connection
 	 */
 	private IWebSocketConnectionFilter connectionFilter;
+
+	/**
+	 * A function that decides whether to notify the page/resource on
+	 * web socket connection closed event.
+	 * The page notification leads to deserialization of the page instance from
+	 * the page store and sometimes this is not wanted.
+	 */
+	private Function<Integer, Boolean> notifyOnCloseEvent = (code) -> true;
+
+	public boolean shouldNotifyOnCloseEvent(int closeCode) {
+		return notifyOnCloseEvent == null || notifyOnCloseEvent.apply(closeCode);
+	}
+
+	public void setNotifyOnCloseEvent(Function<Integer, Boolean> notifyOnCloseEvent) {
+		this.notifyOnCloseEvent = notifyOnCloseEvent;
+	}
 
 	/**
 	 * Set the executor for processing websocket push messages broadcasted to all sessions.
