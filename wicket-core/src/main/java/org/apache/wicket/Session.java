@@ -113,6 +113,12 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	/** Logging object */
 	private static final Logger log = LoggerFactory.getLogger(Session.class);
 
+	/** records if pages have been unlocked for the current request */
+	private static final MetaDataKey<Boolean> PAGES_UNLOCKED = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+	
 	/** records if session has been invalidated by the current request */
 	private static final MetaDataKey<Boolean> SESSION_INVALIDATED = new MetaDataKey<>()
 	{
@@ -670,6 +676,9 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	{
 		detachFeedback();
 
+		pageAccessSynchronizer.get().unlockAllPages();
+		RequestCycle.get().setMetaData(PAGES_UNLOCKED, true);
+
 		if (isSessionInvalidated())
 		{
 			invalidateNow();
@@ -915,6 +924,10 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 */
 	public final IPageManager getPageManager()
 	{
+		if (Boolean.TRUE.equals(RequestCycle.get().getMetaData(PAGES_UNLOCKED))) {
+			throw new WicketRuntimeException("The request has been processed. Access to pages is no longer allowed");
+		}
+		
 		IPageManager manager = Application.get().internalGetPageManager();
 		return pageAccessSynchronizer.get().adapt(manager);
 	}
