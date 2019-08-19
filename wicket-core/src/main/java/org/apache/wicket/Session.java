@@ -925,7 +925,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	public final IPageManager getPageManager()
 	{
 		if (Boolean.TRUE.equals(RequestCycle.get().getMetaData(PAGES_UNLOCKED))) {
-			throw new WicketRuntimeException("pages have already been unlocked - synchronized access is no longer possible");
+			throw new WicketRuntimeException("The request has been processed. Access to pages is no longer allowed");
 		}
 		
 		IPageManager manager = Application.get().internalGetPageManager();
