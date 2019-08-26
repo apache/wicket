@@ -19,6 +19,7 @@ package org.apache.wicket.pageStore;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.StreamCorruptedException;
 import java.security.GeneralSecurityException;
 
 import org.apache.wicket.MockPage;
@@ -75,14 +76,17 @@ public class CryptingPageStoreTest
 
 		try
 		{
-			SerializedPage serializedGot = (SerializedPage)store.getPage(context, p);
+			SerializedPage serializedGot = (SerializedPage) store.getPage(context, p);
 
-			MockPage got = (MockPage)serializer.deserialize(serializedGot.getData());
+			MockPage got = (MockPage) serializer.deserialize(serializedGot.getData());
 			assertEquals(p, got.getPageId());
 		}
-		catch (WicketRuntimeException ex)
+		catch (RuntimeException ex)
 		{
-			assertTrue(ex.getCause() instanceof GeneralSecurityException, "unable to decrypt with new key");
+			assertTrue(
+				ex.getCause() instanceof GeneralSecurityException
+					|| ex.getCause() instanceof StreamCorruptedException,
+				"unable to decrypt with new key");
 		}
 	}
 }

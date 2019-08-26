@@ -18,14 +18,13 @@ package org.apache.wicket.markup.head;
 
 import java.util.Objects;
 
-import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
 
 /**
  * Base class for all {@link HeaderItem}s that represent javascripts. This class mainly contains
@@ -33,8 +32,10 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author papegaaij
  */
-public abstract class JavaScriptHeaderItem extends HeaderItem
+public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 * {@code null} or empty string for no condition.
@@ -362,11 +363,16 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 			response.write("]>");
 		}
 
-		boolean isAjax = RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent();
-		// the url needs to be escaped when Ajax, because it will break the Ajax Response XML (WICKET-4777)
-		CharSequence escapedUrl = isAjax ? Strings.escapeMarkup(url): url;
-
-		JavaScriptUtils.writeJavaScriptUrl(response, escapedUrl, id, defer, charset, async);
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		attributes.putAttribute(JavaScriptUtils.ATTR_ID, id);
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_DEFER, defer);
+		// XXX this attribute is not necessary for modern browsers
+		attributes.putAttribute("charset", charset);
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_ASYNC, async);
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_SRC, url);
+		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
+		JavaScriptUtils.writeScript(response, attributes);
 
 		if (hasCondition)
 		{

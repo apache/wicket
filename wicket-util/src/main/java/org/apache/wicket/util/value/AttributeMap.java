@@ -18,11 +18,16 @@ package org.apache.wicket.util.value;
 
 import java.util.Map;
 
+import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
+
 /**
- * <code>ValueMap</code> for attributes.
+ * Map of values, extending {@link ValueMap} with methods for generating (HTML) markup attributes.
  * 
  * @author Eelco Hillenius
  * @since 1.2.6
+ * 
+ * @see Strings#escapeMarkup(CharSequence)
  */
 public final class AttributeMap extends ValueMap
 {
@@ -45,5 +50,85 @@ public final class AttributeMap extends ValueMap
 	public AttributeMap(final Map<String, Object> map)
 	{
 		super(map);
+	}
+
+	/**
+	 * Put a boolean attribute, removing it if {@code value} is false or using the key as value otherwise,
+	 * i.e. {@code value="value"}. 
+	 * 
+	 * @param key
+	 *            key of attribute
+	 * @param value
+	 * @return previous value
+	 */
+	public boolean putAttribute(final String key, final boolean value)
+	{
+		Object previous = get(key);
+		if (value)
+		{
+			put(key, key);
+		}
+		else
+		{
+			remove(key);
+		}
+		return key.equals(previous);
+	}
+
+	/**
+	 * Put a string attribute, removing it if the string is empty (nor null).
+	 * 
+	 * @param key
+	 *            key of attribute
+	 * @param value
+	 * @return previous value
+	 */
+	public String putAttribute(String key, CharSequence value)
+	{
+		if (Strings.isEmpty(value))
+		{
+			return (String)remove(key);
+		}
+		else
+		{
+			return (String)put(key, value);
+		}
+	}
+
+	/**
+	 * Representation as encoded markup attributes.
+	 * 
+	 * @see Strings#escapeMarkup(CharSequence)
+	 */
+	public String toString()
+	{
+		return toCharSequence().toString();
+	}
+
+	/**
+	 * Representation as encoded markup attributes.
+	 * 
+	 * @see Strings#escapeMarkup(CharSequence)
+	 */
+	public CharSequence toCharSequence()
+	{
+		final AppendingStringBuffer buffer = new AppendingStringBuffer();
+
+		for (String key : keySet())
+		{
+			if (key != null) {
+				buffer.append(' ');
+				buffer.append(Strings.escapeMarkup(key));
+				
+				CharSequence value = getCharSequence(key);
+				if (value != null) {
+					buffer.append("=\"");
+					buffer.append(Strings.escapeMarkup(value));
+					buffer.append('"');
+				}
+			}
+		}
+
+		return buffer;
 	}
 }

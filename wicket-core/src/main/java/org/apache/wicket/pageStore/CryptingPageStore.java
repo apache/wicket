@@ -17,6 +17,10 @@
 package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
+import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+
+import javax.crypto.SecretKey;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
@@ -39,7 +43,12 @@ public class CryptingPageStore extends DelegatingPageStore
 {
 	private static final MetaDataKey<SessionData> KEY = new MetaDataKey<SessionData>()
 	{
+		private static final long serialVersionUID = 1L;
 	};
+
+	private final SecureRandom random;
+
+	private final ICrypter crypter;
 
 	/**
 	 * @param delegate
@@ -50,6 +59,15 @@ public class CryptingPageStore extends DelegatingPageStore
 	public CryptingPageStore(IPageStore delegate)
 	{
 		super(delegate);
+		try
+		{
+			random = SecureRandom.getInstance("SHA1PRNG", "SUN");
+		}
+		catch (GeneralSecurityException ex)
+		{
+			throw new WicketRuntimeException(ex);
+		}
+		crypter = newCrypter();
 	}
 
 	/**
@@ -76,13 +94,14 @@ public class CryptingPageStore extends DelegatingPageStore
 
 	private SessionData getSessionData(IPageContext context)
 	{
-		return context.getSessionData(KEY, () -> new SessionData(newCrypter(context))); 
+		return context.getSessionData(KEY, () -> new SessionData(crypter.generateKey(random)));
 	}
 
 	/**
-	 * Create a new {@link ICrypter} for the given context.
+	 * Create a new {@link ICrypter}.
 	 */
-	protected ICrypter newCrypter(IPageContext context) {
+	protected ICrypter newCrypter()
+	{
 		return new DefaultCrypter();
 	}
 
@@ -97,10 +116,10 @@ public class CryptingPageStore extends DelegatingPageStore
 			{
 				throw new WicketRuntimeException("CryptingPageStore expects serialized pages");
 			}
-			SerializedPage serializedPage = (SerializedPage)page;
+			SerializedPage serializedPage = (SerializedPage) page;
 
 			byte[] encrypted = serializedPage.getData();
-			byte[] decrypted = getSessionData(context).decrypt(encrypted);
+			byte[] decrypted = getSessionData(context).decrypt(encrypted, crypter);
 
 			page = new SerializedPage(page.getPageId(), serializedPage.getPageType(), decrypted);
 		}
@@ -116,10 +135,10 @@ public class CryptingPageStore extends DelegatingPageStore
 			throw new WicketRuntimeException("CryptingPageStore works with serialized pages only");
 		}
 
-		SerializedPage serializedPage = (SerializedPage)page;
+		SerializedPage serializedPage = (SerializedPage) page;
 
 		byte[] decrypted = serializedPage.getData();
-		byte[] encrypted = getSessionData(context).encrypt(decrypted);
+		byte[] encrypted = getSessionData(context).encrypt(decrypted, crypter, random);
 
 		page = new SerializedPage(page.getPageId(), serializedPage.getPageType(), encrypted);
 
@@ -128,24 +147,25 @@ public class CryptingPageStore extends DelegatingPageStore
 
 	private static class SessionData implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
 
-		private final ICrypter cypter;
+		private final SecretKey key;
 
-		public SessionData(ICrypter crypter)
+		public SessionData(SecretKey key)
 		{
-			Args.notNull(crypter, "crypter");
-			
-			this.cypter= crypter;
+			Args.notNull(key, "key");
+
+			this.key = key;
 		}
 
-		public byte[] encrypt(byte[] decrypted)
+		public byte[] encrypt(byte[] decrypted, ICrypter crypter, SecureRandom random)
 		{
-			return cypter.encrypt(decrypted);
+			return crypter.encrypt(decrypted, key, random);
 		}
 
-		public byte[] decrypt(byte[] encrypted)
+		public byte[] decrypt(byte[] encrypted, ICrypter crypter)
 		{
-			return cypter.decrypt(encrypted);
+			return crypter.decrypt(encrypted, key);
 		}
 	}
 }

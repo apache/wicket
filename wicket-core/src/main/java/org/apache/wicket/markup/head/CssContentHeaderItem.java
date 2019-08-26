@@ -23,6 +23,7 @@ import java.util.Objects;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
 
 /**
  * {@link HeaderItem} for internal (embedded in the header) css content.
@@ -72,7 +73,10 @@ public class CssContentHeaderItem extends CssHeaderItem
 			response.write("]>");
 		}
 
-		CssUtils.writeCss(response, getCss(), getId());
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(CssUtils.ATTR_ID, getId());
+		attributes.putAttribute(CssUtils.ATTR_CSP_NONCE, getNonce());
+		CssUtils.writeInlineStyle(response, getCss(), attributes);
 
 		if (hasCondition)
 		{

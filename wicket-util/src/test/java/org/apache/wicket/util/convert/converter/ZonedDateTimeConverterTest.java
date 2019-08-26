@@ -18,6 +18,8 @@ package org.apache.wicket.util.convert.converter;
 
 import org.apache.wicket.util.convert.ConversionException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -30,22 +32,32 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class ZonedDateTimeConverterTest
 {
-	private ZoneId zone = ZoneId.of("Etc/UCT");
+	private final ZoneId zoneUCT = ZoneId.of("Etc/UCT");
+	private final ZoneId zoneUTC = ZoneId.of("Etc/UTC");
 
 	@Test
 	public void convertToString() {
 		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
-		String date = converter.convertToString(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zone), Locale.ENGLISH);
+		String date = converter.convertToString(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zoneUCT), Locale.ENGLISH);
 		assertEquals(date, "Jul 11, 2016, 1:02:03 AM Coordinated Universal Time");
 	}
 
+	@EnabledOnJre({JRE.JAVA_11, JRE.JAVA_12})
 	@Test
-	public void convertToObject() {
+	public void convertToObject_java12Minus() {
 		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
 		ZonedDateTime date = converter.convertToObject("Jul 11, 2016, 1:02:03 AM Coordinated Universal Time", Locale.ENGLISH);
-		assertEquals(date, ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zone));
+		assertEquals(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zoneUCT), date);
 	}
-	
+
+	@EnabledOnJre({JRE.JAVA_13})
+	@Test
+	public void convertToObject_java13Plus() {
+		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
+		ZonedDateTime date = converter.convertToObject("Jul 11, 2016, 1:02:03 AM Coordinated Universal Time", Locale.ENGLISH);
+		assertEquals(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zoneUTC), date);
+	}
+
 	@Test
 	public void convertFails() {
 		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();

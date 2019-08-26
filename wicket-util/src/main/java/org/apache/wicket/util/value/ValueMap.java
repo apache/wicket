@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
+import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.IStringIterator;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValue;
@@ -544,7 +545,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	@Override
 	public String toString()
 	{
-		final StringBuilder buffer = new StringBuilder();
+		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		boolean first = true;
 		for (Map.Entry<String, Object> entry : entrySet())
 		{

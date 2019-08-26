@@ -244,6 +244,9 @@ public class ValueMapTest
 		assertEquals(defDuration, vm.getAsDuration("duration.bad", defDuration));
 		assertNull(vm.getAsDuration("duration.missing"));
 		assertEquals(defDuration, vm.getAsDuration("duration.missing", defDuration));
+		
+		vm.remove("instant");
+		assertEquals("num = \"42\" num.bad = \"xxx\" instant.bad = \"xxx\" duration = \"PT1H\" duration.bad = \"xxx\" boolean = \"true\" boolean.bad = \"xxx\"", vm.toString());
 	}
 
 	/**

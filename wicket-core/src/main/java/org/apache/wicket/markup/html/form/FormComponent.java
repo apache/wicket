@@ -1030,6 +1030,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 *
 	 * Sets the value for a form component.
 	 * 
 	 * @param value

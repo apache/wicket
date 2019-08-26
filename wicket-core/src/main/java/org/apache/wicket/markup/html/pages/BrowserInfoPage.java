@@ -139,7 +139,7 @@ public class BrowserInfoPage extends WebPage
 		{
 			String content = "0; url=" + getURL();
 
-			response.render(new MetaDataHeaderItem(MetaDataHeaderItem.META_TAG).addTagAttribute("http-equiv", "refresh").addTagAttribute("content", content));
+			response.render(MetaDataHeaderItem.forHttpEquiv("refresh", content));
 		}
 		
 		@Override

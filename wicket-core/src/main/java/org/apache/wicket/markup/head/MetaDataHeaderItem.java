@@ -162,6 +162,41 @@ public class MetaDataHeaderItem extends HeaderItem
 	/**
 	 * Factory method to create &lt;meta&gt; tag.
 	 * 
+	 * @param httpEquiv
+	 * 		the 'httpEquiv' attribute of the tag
+	 * @param content
+	 * 		the 'content' attribute of the tag
+	 * @return
+	 * 		A new {@link MetaDataHeaderItem}
+	 */
+	public static MetaDataHeaderItem forHttpEquiv(String httpEquiv, String content)
+	{
+		return forHttpEquiv(Model.of(httpEquiv), Model.of(content));
+	}
+
+	/**
+	 * Factory method to create &lt;meta&gt; tag.
+	 * 
+	 * @param httpEquiv
+	 * 		the 'httpEquiv' attribute of the tag
+	 * @param content
+	 * 		the 'content' attribute of the tag
+	 * @return
+	 * 		A new {@link MetaDataHeaderItem}
+	 */
+	public static MetaDataHeaderItem forHttpEquiv(IModel<String> httpEquiv, IModel<String> content)
+	{
+		MetaDataHeaderItem headerItem = new MetaDataHeaderItem(META_TAG);
+
+		headerItem.addTagAttribute("http-equiv", httpEquiv);
+		headerItem.addTagAttribute("content", content);
+
+		return headerItem;
+	}
+
+	/**
+	 * Factory method to create &lt;meta&gt; tag.
+	 * 
 	 * @param name
 	 * 		the 'name' attribute of the tag
 	 * @param content
