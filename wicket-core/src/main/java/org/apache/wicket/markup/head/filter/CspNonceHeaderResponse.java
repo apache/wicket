@@ -63,11 +63,15 @@ public class CspNonceHeaderResponse extends DecoratingHeaderResponse
 		{
 			if (policyRendered == false)
 			{
+				// FIXME this one doesn't work with ajax requests, it attempts to re-render the meta with every ajax request
 				policyRendered = true;
 
 				String policy = getContentSecurityPolicy(nonce);
 
-				super.render(MetaDataHeaderItem.forHttpEquiv(CONTENT_SECURITY_POLICY, policy));
+				super.render(
+						MetaDataHeaderItem.forHttpEquiv(CONTENT_SECURITY_POLICY, policy)
+						                  .addTagAttribute("id", "meta-csp")
+				);
 			}
 
 			((AbstractCspHeaderItem)item).setNonce(nonce);

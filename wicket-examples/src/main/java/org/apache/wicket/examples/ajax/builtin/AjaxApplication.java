@@ -71,7 +71,6 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("world-clock", WorldClockPage.class);
 		mountPage("upload", FileUploadPage.class);
 		mountPage("download", AjaxDownloadPage.class);
-		mountPage("rfc", RFCPage.class);
 	}
 
 	/**

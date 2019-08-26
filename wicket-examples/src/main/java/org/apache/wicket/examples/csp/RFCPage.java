@@ -14,17 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.ajax.builtin;
+package org.apache.wicket.examples.csp;
 
 import com.github.openjson.JSONObject;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.examples.ajax.builtin.BasePage;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.string.Strings;
 
 import java.util.Optional;
 
@@ -75,7 +78,28 @@ public class RFCPage extends BasePage
 	 */
 	public RFCPage()
 	{
-		final Label c1 = new Label("c1", LambdaModel.of(this::getCounter1));
+		final Label c1 = new Label("c1", LambdaModel.of(this::getCounter1)) {
+
+//			@Override
+//			public void renderHead(IHeaderResponse response)
+//			{
+//				super.renderHead(response);
+//				response.render(OnDomReadyHeaderItem.forScript("console.log('c1 rendered')"));
+//			}
+
+			@Override
+			public void renderHead(IHeaderResponse response)
+			{
+				super.renderHead(response);
+				if (Math.random() > 0.5)
+				{
+					response.render(OnDomReadyHeaderItem.forScript("console.log('c1 rendered more')"));
+				} else {
+					response.render(OnDomReadyHeaderItem.forScript("console.log('c1 rendered less')"));
+				}
+			}
+		};
+		c1.setVisible(false);
 		c1.setOutputMarkupId(true);
 		add(c1);
 		final Label c2 = new Label("c2", LambdaModel.of(this::getCounter2));
@@ -84,9 +108,23 @@ public class RFCPage extends BasePage
 		add(new AjaxLink<Void>("c1-link")
 		{
 			@Override
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				if (isEnabledInHierarchy()) {
+					// XXX this is another issue which should be fixed globally, href="javascript:;" should go
+					// XXX there's no need in no-op href if there's actually no link
+					if (!Strings.isEmpty(tag.getAttribute("href"))) {
+						tag.remove("href");
+					}
+				}
+			}
+
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
+				c1.setVisible(true);
 				target.add(c1);
 				target.prependRemoteFunctionCall("testFunc1Pre", "something1", 1.5);
 				target.appendRemoteFunctionCall("testFunc1", "something2", 1);
@@ -138,7 +176,7 @@ public class RFCPage extends BasePage
 		response.setHeader(
 				"Content-Security-Policy",
 				// No unsafe eval in this policy
-				"script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
+				String.format("script-src 'nonce-%1$s'; style-src 'nonce-%1$s';", CspApplication.getNonce())
 		);
 	}
 }

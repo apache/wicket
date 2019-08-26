@@ -48,6 +48,7 @@ public class CspApplication extends WicketExampleApplication
 		setHeaderResponseDecorator(response -> new ResourceAggregator(new CspNonceHeaderResponse(response, getNonce())));
 		
 		mountPage("noncedemo", NonceDemoPage.class);
+		mountPage("rfc", RFCPage.class);
 	}
 
 	protected static String generateNonce()

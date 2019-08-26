@@ -2004,14 +2004,18 @@
 
 							var id = node.getAttribute("id");
 							var type = node.getAttribute("type");
+							var nonce = node.getAttribute("nonce");
 
 							if (typeof(id) === "string" && id.length > 0) {
 								// add javascript to document head
-								Wicket.Head.addJavascript(text, id, "", type);
+								Wicket.Head.addJavascript(text, id, "", type, nonce);
 							} else {
 								try {
-									// do the evaluation in global scope
-									window.eval(text);
+									if (nonce) {
+										Wicket.Head.addJavascript(text, null, "", type, nonce);
+									} else {
+										window.eval(text);
+									}
 								} catch (e) {
 									Wicket.Log.error("Wicket.Head.Contributor.processScript: %s", text, e);
 								}
@@ -2028,11 +2032,15 @@
 						var meta = Wicket.Head.createElement("meta"),
 							$meta = jQuery(meta),
 							attrs = jQuery(node).prop("attributes"),
-							name = node.getAttribute("name");
+							name = node.getAttribute("name"),
+							id = node.getAttribute("id");
 
-						if(name) {
+						if(id) {
+							jQuery('meta[id="' + id + '"]').remove();
+						} else if (name) {
 							jQuery('meta[name="' + name + '"]').remove();
 						}
+
 						jQuery.each(attrs, function() {
 							$meta.attr(this.name, this.value);
 						});
@@ -2134,10 +2142,15 @@
 			// attribute to filter out duplicates. However, since we set the body of the element, we can't assign
 			// also a src value. Therefore we put the url to the src_ (notice the underscore)  attribute.
 			// Wicket.Head.containsElement is aware of that and takes also the underscored attributes into account.
-			addJavascript: function (content, id, fakeSrc, type) {
+			addJavascript: function (content, id, fakeSrc, type, nonce) {
 				var script = Wicket.Head.createElement("script");
 				if (id) {
 					script.id = id;
+				} else if (nonce) {
+					// XXX what other solutions we could use?
+					// generate random id and make this one-off script clean up after itself
+					script.id = Date.now()+Math.random().toString(36).slice(2);
+					content += "; document.getElementById('"+script.id+"').remove()";
 				}
 
 				// WICKET-5047: encloses the content with a try...catch... block if the content is javascript
@@ -2149,6 +2162,9 @@
 
 				script.setAttribute("src_", fakeSrc);
 				script.setAttribute("type", type);
+				if (nonce) {
+					script.setAttribute("nonce", nonce);
+				}
 
 				// set the javascript as element content
 				if (null === script.canHaveChildren || script.canHaveChildren) {

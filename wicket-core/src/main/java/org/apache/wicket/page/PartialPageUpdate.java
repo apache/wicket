@@ -720,7 +720,8 @@ public abstract class PartialPageUpdate
 			{
 				if (!wasItemRendered(item))
 				{
-					PartialPageUpdate.this.appendJavaScript(((OnLoadHeaderItem) item).getJavaScript());
+					// PartialPageUpdate.this.appendJavaScript(((OnLoadHeaderItem) item).getJavaScript());
+					super.render(item);
 					markItemRendered(item);
 				}
 			}
@@ -728,7 +729,8 @@ public abstract class PartialPageUpdate
 			{
 				if (!wasItemRendered(item))
 				{
-					PartialPageUpdate.this.appendJavaScript(((OnEventHeaderItem) item).getCompleteJavaScript());
+					// PartialPageUpdate.this.appendJavaScript(((OnEventHeaderItem) item).getCompleteJavaScript());
+					super.render(item);
 					markItemRendered(item);
 				}
 			}
@@ -736,14 +738,15 @@ public abstract class PartialPageUpdate
 			{
 				if (!wasItemRendered(item))
 				{
-					if (priorityHeaderItem != null)
-					{
-						PartialPageUpdate.this.domReadyJavaScripts.add(0, ((OnDomReadyHeaderItem)item).getJavaScript());
-					}
-					else
-					{
-						PartialPageUpdate.this.domReadyJavaScripts.add(((OnDomReadyHeaderItem)item).getJavaScript());
-					}
+					super.render(item);
+//					if (priorityHeaderItem != null)
+//					{
+//						PartialPageUpdate.this.domReadyJavaScripts.add(0, ((OnDomReadyHeaderItem)item).getJavaScript());
+//					}
+//					else
+//					{
+//						PartialPageUpdate.this.domReadyJavaScripts.add(((OnDomReadyHeaderItem)item).getJavaScript());
+//					}
 					markItemRendered(item);
 				}
 			}
