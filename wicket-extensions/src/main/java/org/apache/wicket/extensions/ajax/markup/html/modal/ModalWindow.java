@@ -1022,7 +1022,8 @@ public class ModalWindow extends Panel
 		}
 		else
 		{
-			settings.put("height", (Object)null);
+			// WICKET-6613 null would remove the key, so use false instead 
+			settings.put("height", false);
 		}
 
 		settings.put("resizable", isResizable());
