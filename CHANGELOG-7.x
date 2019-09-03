@@ -2,6 +2,20 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.15.0
+
+** Bug
+
+    * [WICKET-6680] - JavaScriptStripper chokes on template literals that contain two forward slashes
+    * [WICKET-6689] - ClientProperties.getTimeZone() has some issue when DST and UTC offsets are different
+    * [WICKET-6690] - NullPointerException in KeyInSessionSunJceCryptFactory.<init>
+
+** Improvement
+
+    * [WICKET-6695] - Add AjaxEditable*Label#shouldTrimInput() 
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.14.0
 
 ** Bug
