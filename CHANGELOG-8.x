@@ -2,6 +2,26 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.6.0
+
+** Bug
+
+    * [WICKET-6613] - Wicket 8.1 ModalWindow autosizing problem 
+    * [WICKET-6671] - IAjaxLink should be serializable
+    * [WICKET-6676] - Quickstart application won't deploy to GlassFish
+    * [WICKET-6680] - JavaScriptStripper chokes on template literals that contain two forward slashes
+    * [WICKET-6689] - ClientProperties.getTimeZone() has some issue when DST and UTC offsets are different
+    * [WICKET-6690] - NullPointerException in KeyInSessionSunJceCryptFactory.<init>
+    * [WICKET-6692] - Page deserialization on websocket close - possible performance issue
+
+** Improvement
+
+    * [WICKET-6675] - log4j-slf4j-impl requires version 1.7.25 of slf4j-api while Wicket 8.5 requires version 1.7.26
+    * [WICKET-6684] - Make autolabel functionality more flexible by introducing a locator interface that allows to specify the component the wicket:for refers to
+    * [WICKET-6695] - Add AjaxEditable*Label#shouldTrimInput() 
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.5.0
 
 ** Bug
