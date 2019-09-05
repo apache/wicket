@@ -1,30 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <html>
-	<head>
-		<wicket:head>
-			<style>
-				.modal-dialog {
-					border-radius: 5px;
-				}
-			
-				.modal-dialog .modal-dialog-header {
-					border-radius: 5px 5px 0px 0px;
-					background: #ffb158;
-					margin: 0;
-					padding-top: 4px;
-					text-align: center;
-				}
-				
-				.modal-dialog .modal-dialog-body {
-					padding: 20px;
-				}
-				
-				.modal-dialog .modal-dialog-footer {
-					padding: 5px;
-				}
-			</style>
-		</wicket:head>
-	</head>
 	<body>
 		<wicket:extend xmlns:wicket="http://wicket.apache.org">
 		
@@ -38,31 +13,33 @@
 			<div wicket:id="stackedDialogs"></div>	
 			
 			<wicket:fragment wicket:id="fragment">
-				<h1 class="modal-dialog-header">Header</h1>
-					
-				<div class="modal-dialog-body">
-					<p>
-						<input type="text" wicket:id="text" placeholder="Focus and press ENTER to open dialog" size="32" autofocus="autofocus"/>
-					</p>
-				
-					<div wicket:id="lorem"></div>	
-					<a wicket:id="ipsum">Lorem...</a>	
-		
-					<div wicket:id="nestedDialog"></div>
-				</div>
-					
-				<div class="modal-dialog-footer">
-					<a wicket:id="openDialog">Open dialog</a>
-						|
-					<a wicket:id="ajaxOpenDialog">via Ajax</a>
+				<form wicket:id="form" class="modal-dialog-form">
+					<h1 class="modal-dialog-header">Header</h1>
 						
-					<span wicket:id="closing">
+					<div class="modal-dialog-body">
+						<p>
+							<input type="text" wicket:id="text" placeholder="Focus and press ENTER to open dialog" size="32" autofocus="autofocus"/>
+						</p>
+					
+						<div wicket:id="lorem"></div>	
+						<a wicket:id="ipsum">Lorem...</a>	
+			
+						<div wicket:id="nestedDialog"></div>
+					</div>
+						
+					<div class="modal-dialog-footer">
+						<a wicket:id="openDialog">Open dialog</a>
 							|
-						<a wicket:id="close">Close dialog</a>
-						|
-						via Ajax by pressing ESC
-					</span>
-				</div>
+						<a wicket:id="ajaxOpenDialog">via Ajax</a>
+							
+						<span wicket:id="closing">
+							|
+							<a wicket:id="close">Close dialog</a>
+							|
+							via Ajax by pressing ESC
+						</span>
+					</div>
+				</form>
 			</wicket:fragment>
 		
 		</wicket:extend>

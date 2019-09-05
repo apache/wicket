@@ -26,7 +26,7 @@
 	
 	background: rgba(0, 0, 0, 0.2);
 
-	/* flex-box to center .modal-dialog */
+	/* center .modal-dialog */
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -39,34 +39,6 @@
 	
 	background: white;
 	box-shadow: 0 0 60px 10px rgba(0, 0, 0, 0.7);
-}
-
-/* content */
-.dialog-theme-default .modal-dialog-content {
-	/* re-sizing */
-	min-width: 20vw;
-	max-width: 80vw;
-	min-height: 20vh;
-	max-height: 80vh;
-	overflow: hidden;
-	resize: both;
-					
-	/* flex children */
-	display: flex;
-	flex-direction: column;
-}
-			
-.dialog-theme-default .modal-dialog-header {
-}
-				
-.dialog-theme-default .modal-dialog-body {
-	overflow-y: auto;
-					
-	/* flex grow */
-	flex: 1;
-}
-				
-.dialog-theme-default .modal-dialog-footer {
 }
 
 /* shift nested dialogs */
@@ -86,7 +58,7 @@
 	margin-left: 48px;
 }
 
-/* shift sibling dialogs */
+/* shift stacked dialogs */
 
 .dialog-theme-default ~ .dialog-theme-default .modal-dialog {
 	margin-top: 16px;

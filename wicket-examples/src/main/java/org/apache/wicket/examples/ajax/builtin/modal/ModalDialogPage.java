@@ -27,8 +27,11 @@ import org.apache.wicket.examples.ajax.builtin.BasePage;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalDialog;
 import org.apache.wicket.extensions.ajax.markup.html.modal.theme.DefaultTheme;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.AjaxListPanel;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextField;
@@ -36,6 +39,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.resource.CssResourceReference;
 
 /**
  * @author Igor Vaynberg (ivaynberg)
@@ -71,6 +75,15 @@ public class ModalDialogPage extends BasePage
 		queue(stackedDialogs);
 	}
 
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		
+		response.render(CssHeaderItem.forReference(new CssResourceReference(ModalDialogPage.class,
+			"dialog.css")));
+	}
+	
 	private class ModalFragment extends Fragment
 	{
 
@@ -80,6 +93,9 @@ public class ModalDialogPage extends BasePage
 		{
 			super(id, "fragment", ModalDialogPage.this);
 
+			Form<Void> form = new Form<Void>("form");
+			queue(form);
+			
 			nestedDialog = new ModalDialog("nestedDialog");
 			nestedDialog.add(new DefaultTheme());
 			nestedDialog.trapFocus();
@@ -110,13 +126,13 @@ public class ModalDialogPage extends BasePage
 				protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 				{
 					super.updateAjaxAttributes(attributes);
-
+					
 					attributes.getAjaxCallListeners().add(new AjaxCallListener()
 					{
 						@Override
 						public CharSequence getPrecondition(Component component)
 						{
-							return "return Wicket.Event.keyCode(attrs.event) == 13;";
+							return "if (Wicket.Event.keyCode(attrs.event) != 13) return false; Wicket.Event.fix(attrs.event).preventDefault(); return true;";
 						}
 					});
 				}
