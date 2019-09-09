@@ -72809,3 +72809,5 @@
 [INFO] Finished at: 2019-04-01T21:26:15+02:00
 [INFO] Final Memory: 27M/100M
 [INFO] ------------------------------------------------------------------------
+Deleted branch build/wicket-8.6.1 (was 30de69de89).
+M	release.out
