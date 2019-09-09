@@ -125,11 +125,12 @@
 		<asm.version>7.1</asm.version>
 		<cglib.version>3.2.12</cglib.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
-		<commons-collections4.version>4.3</commons-collections4.version>
+		<commons-collections4.version>4.4</commons-collections4.version>
 		<commons-fileupload.version>1.4</commons-fileupload.version>
 		<commons-lang3.version>3.9</commons-lang3.version>
 		<jacoco.version>0.8.2</jacoco.version>
-		<jackson.version>2.9.8</jackson.version>
+		<jackson.version>2.9.9</jackson.version>
+		<jdk-serializable-functional.version>1.8.6</jdk-serializable-functional.version>
 		<jetty.version>9.4.18.v20190429</jetty.version>
 		<joda-time.version>2.10.1</joda-time.version>
 		<junit.version>4.12</junit.version>
@@ -142,6 +143,7 @@
 		<logback.version>1.2.3</logback.version>
 		<hamcrest.version>2.0.0.0</hamcrest.version>
 		<objenesis.version>2.6</objenesis.version>
+		<openjson.version>1.0.11</openjson.version>
 		<aspectj.version>1.8.13</aspectj.version>
 		<metrics.version>3.2.3</metrics.version>
 		<forbiddenapis.version>2.6</forbiddenapis.version>
@@ -219,7 +221,7 @@
 			<dependency>
 				<groupId>com.github.openjson</groupId>
 				<artifactId>openjson</artifactId>
-				<version>1.0.10</version>
+				<version>${openjson.version}</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
@@ -433,7 +435,7 @@
 			<dependency>
 				<groupId>org.danekja</groupId>
 				<artifactId>jdk-serializable-functional</artifactId>
-				<version>1.8.5</version>
+				<version>${jdk-serializable-functional.version}</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
