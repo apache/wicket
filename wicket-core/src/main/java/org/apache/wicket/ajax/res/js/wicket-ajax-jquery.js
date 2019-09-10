@@ -341,6 +341,11 @@
 	Wicket.Ajax = {};
 
 	/**
+	 * A registry of remote functions for Wicket RFC
+	 */
+	Wicket.Ajax.RFC = {};
+
+	/**
 	 * Ajax call fires a Wicket Ajax request and processes the response.
 	 * The response can contain
 	 *   - javascript that should be invoked
@@ -823,15 +828,26 @@
 					return;
 				}
 
+				var nonce;
+				var meta = root.getElementsByTagName("meta")[0];
+				if (!isUndef(meta)) {
+					var nonceEl = meta.getElementsByTagName("nonce")[0];
+					if (!isUndef(nonceEl)) {
+						nonce = nonceEl.textContent;
+					}
+				}
+
 				var steps = context.steps;
 
 				// go through the ajax response and execute all priority-invocations first
 				for (var i = 0; i < root.childNodes.length; ++i) {
 					var childNode = root.childNodes[i];
 					if (childNode.tagName === "header-contribution") {
-						this.processHeaderContribution(context, childNode);
+						this.processHeaderContribution(context, childNode, nonce);
 					} else if (childNode.tagName === "priority-evaluate") {
-						this.processEvaluation(context, childNode);
+						this.processEvaluation(context, childNode, nonce);
+					} else if (childNode.tagName === "priority-rfc") {
+						this.processRemoteFunctionCall(context, childNode);
 					}
 				}
 
@@ -848,9 +864,11 @@
 						stepIndexOfLastReplacedComponent = steps.length;
 						this.processComponent(context, node);
 					} else if (node.tagName === "evaluate") {
-						this.processEvaluation(context, node);
+						this.processEvaluation(context, node, nonce);
 					} else if (node.tagName === "redirect") {
 						this.processRedirect(context, node);
+					} else if (node.tagName === "rfc") {
+						this.processRemoteFunctionCall(context, node);
 					}
 
 				}
@@ -929,9 +947,10 @@
 		/**
 		 * Adds a closure that evaluates javascript code.
 		 * @param context {Object} - the object that brings the executer's steps and the attributes
-		 * @param node {XmlElement} - the <[priority-]evaluate> element with the script to evaluate
+		 * @param node {Element} - the <[priority-]evaluate> element with the script to evaluate
+		 * @param nonce {String} - optional CSP nonce
 		 */
-		processEvaluation: function (context, node) {
+		processEvaluation: function (context, node, nonce) {
 
 			// used to match evaluation scripts which manually call FunctionsExecuter's notify() when ready
 			var scriptWithIdentifierR = new RegExp("\\(function\\(\\)\\{([a-zA-Z_]\\w*)\\|((.|\\n)*)?\\}\\)\\(\\);$");
@@ -956,7 +975,7 @@
 
 					try {
 						// do the evaluation in global scope
-						var f = window.eval(toExecute);
+						var f = jQuery.globalEval(toExecute, {nonce: nonce});
 						f(notify);
 					} catch (exception) {
 						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
@@ -970,7 +989,7 @@
 					// just evaluate the javascript
 					try {
 						// do the evaluation in global scope
-						window.eval(script);
+						var f = jQuery.globalEval(script, {nonce: nonce});
 					} catch (exception) {
 						log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
 					}
@@ -1007,10 +1026,32 @@
 			}
 		},
 
+		/**
+		 * execute Remote Function Call (RFC) with no eval
+		 * @param context {Object} - the object that brings the executer's steps and the attributes
+		 * @param node {Element} - the <[priority-]rfc> element with the script to evaluate
+		 */
+		processRemoteFunctionCall: function(context, node) {
+			// get the javascript body
+			var text = Wicket.DOM.text(node);
+			var functions = JSON.parse(text);
+			for (var f = 0; f < functions.length; f++) {
+				/**
+				 * @type {{func: string, args: []}}
+				 */
+				var fn = functions[f];
+				if (fn && fn.func && Wicket.Ajax.RFC[fn.func]) {
+					Wicket.Ajax.RFC[fn.func].apply(context, fn.args);
+				} else {
+					Wicket.Log.error("Remote functions Wicket.Ajax.RFC.%s does not exist");
+				}
+			}
+		},
+
 		// Adds a closure that processes a header contribution
-		processHeaderContribution: function (context, node) {
+		processHeaderContribution: function (context, node, nonce) {
 			var c = Wicket.Head.Contributor;
-			c.processContribution(context, node);
+			c.processContribution(context, node, nonce);
 		},
 
 		// Adds a closure that processes a redirect
@@ -1608,7 +1649,7 @@
 			 * Reads the text from the node's children nodes.
 			 * Used instead of jQuery.text() because it is very slow in IE10/11.
 			 * WICKET-5132, WICKET-5510
-			 * @param node {DOMElement} the root node
+			 * @param node {Element} the root node
 			 */
 			text: function (node) {
 				if (isUndef(node)) {
@@ -1789,7 +1830,7 @@
 				},
 
 				// Processes the parsed header contribution
-				processContribution: function (context, headerNode) {
+				processContribution: function (context, headerNode, nonce) {
 					var xmldoc = this.parse(headerNode);
 					var rootNode = xmldoc.documentElement;
 
@@ -1828,9 +1869,9 @@
 							if (name === "link") {
 								this.processLink(context, node);
 							} else if (name === "script") {
-								this.processScript(context, node);
+								this.processScript(context, node, nonce);
 							} else if (name === "style") {
-								this.processStyle(context, node);
+								this.processStyle(context, node, nonce);
 							} else if (name === "meta") {
 								this.processMeta(context, node);
 							}
@@ -1891,7 +1932,7 @@
 				},
 
 				// Process an inline style element
-				processStyle: function (context, node) {
+				processStyle: function (context, node, nonce) {
 					context.steps.push(function (notify) {
 						// if element with same id is already in document, skip it
 						if (Wicket.DOM.containsElement(node)) {
@@ -1905,6 +1946,7 @@
 
 						// copy id attribute
 						style.id = node.getAttribute("id");
+						style.nonce = nonce;
 
 						var textNode = document.createTextNode(content);
 						style.appendChild(textNode);
@@ -1917,7 +1959,7 @@
 				},
 
 				// Process a script element (both inline and external)
-				processScript: function (context, node) {
+				processScript: function (context, node, nonce) {
 					context.steps.push(function (notify) {
 
 						if (!node.getAttribute("src") && Wicket.DOM.containsElement(node)) {
@@ -1982,11 +2024,11 @@
 
 							if (typeof(id) === "string" && id.length > 0) {
 								// add javascript to document head
-								Wicket.Head.addJavascript(text, id, "", type);
+								Wicket.Head.addJavascript(text, id, "", type, nonce);
 							} else {
 								try {
 									// do the evaluation in global scope
-									window.eval(text);
+									jQuery.globalEval(text, {nonce: nonce});
 								} catch (e) {
 									Wicket.Log.error("Wicket.Head.Contributor.processScript: %s", text, e);
 								}
@@ -2003,9 +2045,11 @@
 						var meta = Wicket.Head.createElement("meta"),
 							$meta = jQuery(meta),
 							attrs = jQuery(node).prop("attributes"),
-							name = node.getAttribute("name");
-
-						if(name) {
+							name = node.getAttribute("name"),
+							id = node.getAttribute("id");
+						if (id) {
+							jQuery('meta[id="' + id + '"]').remove();
+						} else if (name) {
 							jQuery('meta[name="' + name + '"]').remove();
 						}
 						jQuery.each(attrs, function() {
@@ -2109,7 +2153,7 @@
 			// attribute to filter out duplicates. However, since we set the body of the element, we can't assign
 			// also a src value. Therefore we put the url to the src_ (notice the underscore)  attribute.
 			// Wicket.Head.containsElement is aware of that and takes also the underscored attributes into account.
-			addJavascript: function (content, id, fakeSrc, type) {
+			addJavascript: function (content, id, fakeSrc, type, nonce) {
 				var script = Wicket.Head.createElement("script");
 				if (id) {
 					script.id = id;
@@ -2124,6 +2168,9 @@
 
 				script.setAttribute("src_", fakeSrc);
 				script.setAttribute("type", type);
+				if (nonce) {
+					script.setAttribute("nonce", nonce);
+				}
 
 				// set the javascript as element content
 				if (null === script.canHaveChildren || script.canHaveChildren) {

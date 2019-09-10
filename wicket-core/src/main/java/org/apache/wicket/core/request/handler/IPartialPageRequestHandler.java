@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.core.request.handler;
 
-import java.util.Collection;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.head.IHeaderResponse;
+
+import java.util.Collection;
 
 /**
  * Request handler that allows partial updates of the current page instance.
@@ -79,6 +79,26 @@ public interface IPartialPageRequestHandler extends IPageRequestHandler
 	void appendJavaScript(CharSequence javascript);
 
 	/**
+	 * Add function for remote call execution on client side after components are replaced.
+	 * <p>
+	 * wicket-ajax-jquery will look for this function name inside of the Wicket.Ajax.RFC namespace
+	 * </p>
+	 *
+	 * @param functionName
+	 * @param args
+	 */
+	void appendRemoteFunctionCall(CharSequence functionName, Object... args);
+
+	/**
+	 * Add extra meta data to partial page response.
+	 * This is the response meta data, not HTML meta data.
+	 *
+	 * @param name meta datum name
+	 * @param value meta datum value
+	 */
+	void addMeta(CharSequence name, CharSequence value);
+
+	/**
 	 * Adds javascript that will be evaluated on the client side before components are replaced.
 	 *
 	 * <p>If the javascript needs to do something asynchronously (i.e. needs to use window.setTimeout(), for example
@@ -92,6 +112,17 @@ public interface IPartialPageRequestHandler extends IPageRequestHandler
 	 * @param javascript
 	 */
 	void prependJavaScript(CharSequence javascript);
+
+	/**
+	 * Add function for remote call execution on client side before components are replaced.
+	 * <p>
+	 * wicket-ajax-jquery will look for this function name inside of the Wicket.Ajax.RFC namespace
+	 * </p>
+	 *
+	 * @param functionName
+	 * @param args
+	 */
+	void prependRemoteFunctionCall(CharSequence functionName, Object... args);
 
 	/**
 	 * Sets the focus in the browser to the given component. The markup id must be set. If the

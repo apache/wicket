@@ -67,7 +67,10 @@ public class CspNonceHeaderResponse extends DecoratingHeaderResponse
 
 				String policy = getContentSecurityPolicy(nonce);
 
-				super.render(MetaDataHeaderItem.forHttpEquiv(CONTENT_SECURITY_POLICY, policy));
+				super.render(
+						MetaDataHeaderItem.forHttpEquiv(CONTENT_SECURITY_POLICY, policy)
+						                  .addTagAttribute("id", "meta-csp")
+				);
 			}
 
 			((AbstractCspHeaderItem)item).setNonce(nonce);

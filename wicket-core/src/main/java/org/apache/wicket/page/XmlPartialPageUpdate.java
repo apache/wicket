@@ -16,14 +16,15 @@
  */
 package org.apache.wicket.page;
 
-import java.util.Collection;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.Strings;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * A {@link PartialPageUpdate} that serializes itself to XML.
@@ -102,6 +103,16 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	}
 
 	@Override
+	protected void writeMeta(final Response response, final Collection<CharSequence> meta) {
+		if (meta.size() > 0)
+		{
+			response.write("<meta>");
+			response.write(String.join("", meta));
+			response.write("</meta>");
+		}
+	}
+
+	@Override
 	protected void writeHeaderContribution(Response response)
 	{
 		CharSequence contents = headerBuffer.getContents();
@@ -122,13 +133,24 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	protected void writeNormalEvaluations(final Response response, final Collection<CharSequence> scripts)
 	{
 		writeEvaluations(response, "evaluate", scripts);
+	}
 
+	@Override
+	protected void writeNormalRemoteFunctionCalls(Response response, Collection<CharSequence> json)
+	{
+		writeRemoteFunctionCalls(response, "rfc", json);
 	}
 
 	@Override
 	protected void writePriorityEvaluations(Response response, Collection<CharSequence> scripts)
 	{
 		writeEvaluations(response, "priority-evaluate", scripts);
+	}
+
+	@Override
+	protected void writePriorityRemoteFunctionCalls(Response response, Collection<CharSequence> json)
+	{
+		writeRemoteFunctionCalls(response, "priority-rfc", json);
 	}
 
 	private void writeEvaluations(final Response response, String elementName, Collection<CharSequence> scripts)
@@ -140,7 +162,16 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 			{
 				combinedScript.append("(function(){").append(script).append("})();");
 			}
-			writeEvaluation(elementName, response, combinedScript);
+			writeInvocation(elementName, response, combinedScript);
+		}
+	}
+
+	private void writeRemoteFunctionCalls(final Response response, String elementName, Collection<CharSequence> jsons)
+	{
+		if (jsons.size() > 0)
+		{
+			String combinedJson = "[" + jsons.stream().collect(Collectors.joining(",")) + "]";
+			writeInvocation(elementName, response, combinedJson);
 		}
 	}
 
@@ -151,7 +182,7 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	* @param response
 	* @param js
 	*/
-	private void writeEvaluation(final String invocation, final Response response, final CharSequence js)
+	private void writeInvocation(final String invocation, final Response response, final CharSequence js)
 	{
 		response.write("<");
 		response.write(invocation);

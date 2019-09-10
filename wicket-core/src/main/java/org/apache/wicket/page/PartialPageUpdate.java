@@ -48,6 +48,7 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +70,12 @@ public abstract class PartialPageUpdate
 	private static final Logger LOG = LoggerFactory.getLogger(PartialPageUpdate.class);
 
 	/**
+	 * Meta data to be added to the partial page response.
+	 * This is the response meta data, not HTML meta data.
+	 */
+	protected final List<CharSequence> meta = Generics.newArrayList();
+
+	/**
 	 * A list of scripts (JavaScript) which should be executed on the client side before the
 	 * components' replacement
 	 */
@@ -79,6 +86,18 @@ public abstract class PartialPageUpdate
 	 * components' replacement
 	 */
 	protected final List<CharSequence> appendJavaScripts = Generics.newArrayList();
+
+	/**
+	 * A list of json strings for remote function calls which should be executed on the client side before the
+	 * components' replacement
+	 */
+	protected final List<CharSequence> prependRemoteFunctionCalls = Generics.newArrayList();
+
+	/**
+	 * A list of json strings for remote function calls which should be executed on the client side after the
+	 * components' replacement
+	 */
+	protected final List<CharSequence> appendRemoteFunctionCalls = Generics.newArrayList();
 
 	/**
 	 * A list of scripts (JavaScript) which should be executed on the client side after the
@@ -160,6 +179,8 @@ public abstract class PartialPageUpdate
 
 			onAfterRespond(response);
 
+			writeMeta(response, meta);
+
 			// queue up prepend javascripts. unlike other steps these are executed out of order so that
 			// components can contribute them from inside their onbeforerender methods.
 			writePriorityEvaluations(response, prependJavaScripts);
@@ -170,6 +191,11 @@ public abstract class PartialPageUpdate
 			evaluationScripts.addAll(domReadyJavaScripts);
 			evaluationScripts.addAll(appendJavaScripts);
 			writeNormalEvaluations(response, evaluationScripts);
+
+			// queue up prepend javascripts. unlike other steps these are executed out of order so that
+			// components can contribute them from inside their onbeforerender methods.
+			writePriorityRemoteFunctionCalls(response, prependRemoteFunctionCalls);
+			writeNormalRemoteFunctionCalls(response, appendRemoteFunctionCalls);
 
 			writeFooter(response, encoding);
 		} finally {
@@ -209,6 +235,15 @@ public abstract class PartialPageUpdate
 	 *
 	 * @param response
 	 *      the response to write to
+	 * @param meta
+	 *      the collection of prepared meta data (with tags)
+	 */
+	protected abstract void writeMeta(Response response, final Collection<CharSequence> meta);
+
+	/**
+	 *
+	 * @param response
+	 *      the response to write to
 	 * @param js
 	 *      the JavaScript to evaluate
 	 */
@@ -218,10 +253,28 @@ public abstract class PartialPageUpdate
 	 *
 	 * @param response
 	 *      the response to write to
+	 * @param json
+	 *      the JSON to pass to RFC
+	 */
+	protected abstract void writePriorityRemoteFunctionCalls(Response response, Collection<CharSequence> json);
+
+	/**
+	 *
+	 * @param response
+	 *      the response to write to
 	 * @param js
 	 *      the JavaScript to evaluate
 	 */
 	protected abstract void writeNormalEvaluations(Response response, Collection<CharSequence> js);
+
+	/**
+	 *
+	 * @param response
+	 *      the response to write to
+	 * @param json
+	 *      the JSON to pass to RFC
+	 */
+	protected abstract void writeNormalRemoteFunctionCalls(Response response, Collection<CharSequence> json);
 
 	/**
 	 * Processes components added to the target. This involves attaching components, rendering
@@ -383,6 +436,17 @@ public abstract class PartialPageUpdate
 	}
 
 	/**
+	 * Add meta datum to partial page update.
+	 * This is the response meta data, not HTML meta data.
+	 *
+	 * @param name
+	 * @param value
+	 */
+	public final void addMeta(CharSequence name, CharSequence value) {
+		meta.add(String.format("<%1$s>%2$s</%1$s>", Strings.escapeMarkup(name), Strings.escapeMarkup(value)));
+	}
+
+	/**
 	 * Adds script to the ones which are executed after the component replacement.
 	 *
 	 * @param javascript
@@ -406,6 +470,32 @@ public abstract class PartialPageUpdate
 		Args.notNull(javascript, "javascript");
 
 		prependJavaScripts.add(javascript);
+	}
+
+	/**
+	 * Add JSON for remote call to be executed before the component replacement.
+	 *
+	 * @param json
+	 *      the json to pass to RFC
+	 */
+	public final void appendRemoteFunctionCall(final CharSequence json)
+	{
+		Args.notNull(json, "json");
+
+		appendRemoteFunctionCalls.add(json);
+	}
+
+	/**
+	 * Add JSON for remote call to be executed before the component replacement.
+	 *
+	 * @param json
+	 *      the json to pass to RFC
+	 */
+	public final void prependRemoteFunctionCall(CharSequence json)
+	{
+		Args.notNull(json, "json");
+
+		prependRemoteFunctionCalls.add(json);
 	}
 
 	/**
@@ -612,7 +702,7 @@ public abstract class PartialPageUpdate
 		/**
 		 * Constructor.
 		 *
-		 * @param update
+		 * @param pageUpdate
 		 *      the partial page update
 		 */
 		public PartialHtmlHeaderContainer(PartialPageUpdate pageUpdate)
@@ -657,34 +747,11 @@ public abstract class PartialPageUpdate
 				item = ((IWrappedHeaderItem) item).getWrapped();
 			}
 
-			if (item instanceof OnLoadHeaderItem)
+			if (item instanceof OnLoadHeaderItem || item instanceof OnEventHeaderItem || item instanceof OnDomReadyHeaderItem)
 			{
 				if (!wasItemRendered(item))
 				{
-					PartialPageUpdate.this.appendJavaScript(((OnLoadHeaderItem) item).getJavaScript());
-					markItemRendered(item);
-				}
-			}
-			else if (item instanceof OnEventHeaderItem)
-			{
-				if (!wasItemRendered(item))
-				{
-					PartialPageUpdate.this.appendJavaScript(((OnEventHeaderItem) item).getCompleteJavaScript());
-					markItemRendered(item);
-				}
-			}
-			else if (item instanceof OnDomReadyHeaderItem)
-			{
-				if (!wasItemRendered(item))
-				{
-					if (priorityHeaderItem != null)
-					{
-						PartialPageUpdate.this.domReadyJavaScripts.add(0, ((OnDomReadyHeaderItem)item).getJavaScript());
-					}
-					else
-					{
-						PartialPageUpdate.this.domReadyJavaScripts.add(((OnDomReadyHeaderItem)item).getJavaScript());
-					}
+					super.render(item);
 					markItemRendered(item);
 				}
 			}

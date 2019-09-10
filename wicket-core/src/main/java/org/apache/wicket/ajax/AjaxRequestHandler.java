@@ -16,14 +16,6 @@
  */
 package org.apache.wicket.ajax;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -52,6 +44,16 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.apache.wicket.ajax.RemoteFunctionCallUtils.createFunctionJsonString;
 
 /**
  * A request target that produces ajax response envelopes used on the client side to update
@@ -266,6 +268,19 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		update.appendJavaScript(javascript);
 	}
 
+	@Override
+	public void appendRemoteFunctionCall(CharSequence functionName, Object... args)
+	{
+		String jsonString = createFunctionJsonString(functionName, args);
+		update.appendRemoteFunctionCall(jsonString);
+	}
+
+	@Override
+	public void addMeta(CharSequence name, CharSequence value)
+	{
+		update.addMeta(name, value);
+	}
+
 	/**
 	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
 	 */
@@ -309,6 +324,13 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	public final void prependJavaScript(CharSequence javascript)
 	{
 		update.prependJavaScript(javascript);
+	}
+
+	@Override
+	public void prependRemoteFunctionCall(CharSequence functionName, Object... args)
+	{
+		String jsonString = createFunctionJsonString(functionName, args);
+		update.prependRemoteFunctionCall(jsonString);
 	}
 
 	@Override
