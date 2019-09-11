@@ -2,6 +2,42 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.0.0-M3
+
+** Bug
+
+    * [WICKET-6613] - Wicket 8.1 ModalWindow autosizing problem 
+    * [WICKET-6676] - Quickstart application won't deploy to GlassFish
+    * [WICKET-6678] - Instant : Unsupported field: YearOfEra when cookieUtils.cookieToDebugString() is called
+    * [WICKET-6680] - JavaScriptStripper chokes on template literals that contain two forward slashes
+    * [WICKET-6689] - ClientProperties.getTimeZone() has some issue when DST and UTC offsets are different
+    * [WICKET-6690] - NullPointerException in KeyInSessionSunJceCryptFactory.<init>
+    * [WICKET-6692] - Page deserialization on websocket close - possible performance issue
+    * [WICKET-6697] - Wicket.DOM.toggleClass JS method is missing
+
+** New Feature
+
+    * [WICKET-6559] - Encrypted page store
+
+** Improvement
+
+    * [WICKET-6558] - Prevent package locks after commitRequest
+    * [WICKET-6672] - Restore constructors with Wicket Duration in 9.x branch for easier migration
+    * [WICKET-6673] - PriorityHeaderItem ordering is wrong for siblings
+    * [WICKET-6675] - log4j-slf4j-impl requires version 1.7.25 of slf4j-api while Wicket 8.5 requires version 1.7.26
+    * [WICKET-6682] - Improve JavaScriptContentHeaderItem and JavaScriptUtils to support nonce
+    * [WICKET-6683] - triggered events should bubble
+    * [WICKET-6684] - Make autolabel functionality more flexible by introducing a locator interface that allows to specify the component the wicket:for refers to
+    * [WICKET-6693] - Mark FormComponent#setModelValue(String[]) as not being part of the public API
+    * [WICKET-6695] - Add AjaxEditable*Label#shouldTrimInput() 
+    * [WICKET-6696] - Unify AjaxEditable*#getConverter()
+
+** Task
+
+    * [WICKET-6698] - Non-security critical dependency updates
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.0.0-M2
 
 ** Bug
