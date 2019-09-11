@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.apache.wicket</groupId>
         <artifactId>wicket-native-websocket</artifactId>
-        <version>9.0.0-M3-SNAPSHOT</version>
+        <version>9.0.0-M3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
