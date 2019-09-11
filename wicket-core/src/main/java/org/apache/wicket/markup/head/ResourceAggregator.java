@@ -33,6 +33,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CircularDependencyException;
 import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * {@code ResourceAggregator} implements resource dependencies, resource bundles and sorting of
@@ -43,55 +44,69 @@ import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
  */
 public class ResourceAggregator extends DecoratingHeaderResponse
 {
+
 	/**
-	 * The location in which a {@link HeaderItem} is added, i.e. the responsible component.
+	 * The location in which a {@link HeaderItem} is added, consisting of the component/behavior
+	 * that added the item, the index in the list for that component/behavior at which the item was
+	 * added and the index in the request.
 	 * 
 	 * @author papegaaij
 	 */
 	public static class RecordedHeaderItemLocation
 	{
 		private final Component renderBase;
-		
+
+		private int indexInRequest;
+
 		private int depth = -1;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param renderBase
-		 *            the component that added the item.
+		 *            The component that added the item.
 		 */
-		public RecordedHeaderItemLocation(Component renderBase)
+		public RecordedHeaderItemLocation(Component renderBase, int indexInRequest)
 		{
 			this.renderBase = renderBase;
+			
+			this.indexInRequest = indexInRequest;
 		}
 
 		/**
-		 * @return the component that rendered the item.
+		 * @return the component or behavior that added the item.
 		 */
-		public Component getRenderBase()
+		public Object getRenderBase()
 		{
 			return renderBase;
 		}
 
 		/**
-		 * Get the depth of this location's component in the component tree.
-		 * <p>
-		 * Used by {@link ResourceAggregator} to give precedence to {@link PriorityHeaderItem}s that are closer to the page.
-		 * 
-		 * @return depth
+		 * @return the number of items added before this one in the same request.
 		 */
+		public int getIndexInRequest()
+		{
+			return indexInRequest;
+		}
+
 		public int getDepth()
 		{
 			if (depth == -1) {
-				Component d = renderBase;
-				while (d != null)  {
+				Component component = renderBase;
+				while (component != null)  {
 					depth++;
 					
-					d = d.getParent();
+					component = component.getParent();
 				}
+
 			}
-			
 			return depth;
+		}
+		
+		@Override
+		public String toString()
+		{
+			return Classes.simpleName(renderBase.getClass());
 		}
 	}
 
@@ -105,6 +120,8 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		private final HeaderItem item;
 
 		private final List<RecordedHeaderItemLocation> locations;
+		
+		private int minDepth = Integer.MAX_VALUE;
 
 		/**
 		 * Construct.
@@ -121,11 +138,15 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		 * Records a location at which the item was added.
 		 * 
 		 * @param renderBase
-		 *            the component that rendered the item.
+		 *            The component or behavior that added the item.
+		 * @param indexInRequest
+		 *            Indicates the number of items added before this one in this request.
 		 */
-		public void addLocation(Component renderBase)
+		void addLocation(Component renderBase, int indexInRequest)
 		{
-			locations.add(new RecordedHeaderItemLocation(renderBase));
+			locations.add(new RecordedHeaderItemLocation(renderBase, indexInRequest));
+			
+			minDepth = Integer.MAX_VALUE;
 		}
 
 		/**
@@ -143,6 +164,23 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		{
 			return locations;
 		}
+		
+		/**
+		 * Get the minimum depth in the component tree.
+		 * 
+		 * @return depth
+		 */
+		public int getMinDepth()
+		{
+			if (minDepth == Integer.MAX_VALUE) {
+				for (RecordedHeaderItemLocation location : locations) {
+					minDepth = Math.min(minDepth, location.getDepth());
+				}
+			}
+			
+			return minDepth;
+		}
+
 
 		@Override
 		public String toString()
@@ -164,6 +202,8 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 * The currently rendered component
 	 */
 	private Component renderBase;
+	
+	private int indexInRequest;
 
 	/**
 	 * Construct.
@@ -219,7 +259,8 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 			recordedItem = new RecordedHeaderItem(item);
 			itemsToBeRendered.put(item, recordedItem);
 		}
-		recordedItem.addLocation(renderBase);
+		recordedItem.addLocation(renderBase, indexInRequest);
+		indexInRequest++;
 	}
 
 	private void renderDependencies(HeaderItem item, Set<HeaderItem> depsDone)

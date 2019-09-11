@@ -57,4 +57,15 @@ class HeaderResponseTest extends WicketTestCase
 			.setHeaderItemComparator(new PriorityFirstComparator(true));
 		executeTest(ConcretePage.class, "ExpectedResultPageFirst.html");
 	}
+	
+	/**
+	 * WICKET-6673 priority items are sorted by minimum depth.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+    void testPriorityDepths() throws Exception
+	{
+		executeTest(PriorityDepthsPage.class, "PriorityDepthsPage_expected.html");
+	}
 }

@@ -33,7 +33,8 @@ import org.apache.wicket.markup.head.ResourceAggregator.RecordedHeaderItemLocati
  */
 public class PriorityFirstComparator implements Comparator<RecordedHeaderItem>, Serializable
 {
-	protected static enum HeaderItemType {
+	protected static enum HeaderItemType
+	{
 		PRIORITY, PAGE, COMPONENT;
 	}
 
@@ -81,20 +82,20 @@ public class PriorityFirstComparator implements Comparator<RecordedHeaderItem>, 
 	}
 
 	/**
-	 * Compare two recorded {@link PriorityHeaderItem}s, converting the child-first order into parent-first.
+	 * Compare two recorded {@link PriorityHeaderItem}s, converting the child-first order into
+	 * parent-first.
 	 * 
-	 * @param item1 first item
-	 * @param item2 second item
+	 * @param item1
+	 *            first item
+	 * @param item2
+	 *            second item
 	 * @return -1, 0 or 1 if item1 needs to be rendered before, unchanged or after item2.
 	 * 
 	 * @see RecordedHeaderItemLocation#getDepth()
 	 */
 	protected int inversedComponentOrder(RecordedHeaderItem item1, RecordedHeaderItem item2)
 	{
-		RecordedHeaderItemLocation location1 = item1.getLocations().get(item1.getLocations().size() - 1);
-		RecordedHeaderItemLocation location2 = item2.getLocations().get(item2.getLocations().size() - 1);
-
-		return location1.getDepth() - location2.getDepth();
+		return item1.getMinDepth() - item2.getMinDepth();
 	}
 
 	/**
@@ -109,14 +110,14 @@ public class PriorityFirstComparator implements Comparator<RecordedHeaderItem>, 
 		{
 			return HeaderItemType.PRIORITY;
 		}
-		
+
 		if (renderPageFirst)
 		{
 			if (item.getItem() instanceof PageHeaderItem)
 			{
 				return HeaderItemType.PAGE;
 			}
-			
+
 			for (RecordedHeaderItemLocation curLocation : item.getLocations())
 			{
 				if (curLocation.getRenderBase() instanceof Page)
