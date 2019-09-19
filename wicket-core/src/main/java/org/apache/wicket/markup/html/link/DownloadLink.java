@@ -66,6 +66,14 @@ public class DownloadLink extends Link<File>
 	private Duration cacheDuration;
 
 	/**
+	 * Controls if the browser will save the file or display it inline.
+	 * <p>
+	 * The default is ATTACHMENT to maintain backward compatibility.
+	 * </p>
+	 */
+	private ContentDisposition contentDisposition = ContentDisposition.ATTACHMENT;
+	
+	/**
 	 * Constructor. File name used will be the result of <code>file.getName()</code>
 	 * 
 	 * @param id
@@ -180,7 +188,7 @@ public class DownloadLink extends Link<File>
 					}
 				}
 			}.setFileName(fileName)
-				.setContentDisposition(ContentDisposition.ATTACHMENT)
+				.setContentDisposition(contentDisposition)
 				.setCacheDuration(cacheDuration));
 	}
 
@@ -214,6 +222,17 @@ public class DownloadLink extends Link<File>
 		cacheDuration = duration;
 		return this;
 	}
-
+	
+	/**
+	 * Sets the contentDisposition of the request.
+	 * 
+	 * @param contentDisposition
+	 *            the contentDisposition of the file
+	 * @return this component.
+	 */
+	public DownloadLink setContentDisposition(ContentDisposition contentDisposition) {
+		this.contentDisposition = contentDisposition;
+		return this;
+	}
 
 }
