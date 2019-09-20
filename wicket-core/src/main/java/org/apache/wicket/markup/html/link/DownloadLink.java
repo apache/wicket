@@ -61,10 +61,16 @@ public class DownloadLink extends Link<File>
 	 * <p>
 	 * By default is {@code null} and
 	 * {@link org.apache.wicket.settings.ResourceSettings#getDefaultCacheDuration()} is used.
-	 * </p>
 	 */
 	private Duration cacheDuration;
 
+	/**
+	 * Controls whether the browser will save the file or display it inline.
+	 * <p>
+	 * The default is ATTACHMENT to initiate the browser file save dialog.
+	 */
+	private ContentDisposition contentDisposition = ContentDisposition.ATTACHMENT;
+	
 	/**
 	 * Constructor. File name used will be the result of <code>file.getName()</code>
 	 * 
@@ -180,7 +186,7 @@ public class DownloadLink extends Link<File>
 					}
 				}
 			}.setFileName(fileName)
-				.setContentDisposition(ContentDisposition.ATTACHMENT)
+				.setContentDisposition(contentDisposition)
 				.setCacheDuration(cacheDuration));
 	}
 
@@ -214,6 +220,17 @@ public class DownloadLink extends Link<File>
 		cacheDuration = duration;
 		return this;
 	}
-
+	
+	/**
+	 * Sets the content disposition of the request.
+	 * 
+	 * @param contentDisposition
+	 *            the content disposition of the file
+	 * @return this component
+	 */
+	public DownloadLink setContentDisposition(ContentDisposition contentDisposition) {
+		this.contentDisposition = contentDisposition;
+		return this;
+	}
 
 }
