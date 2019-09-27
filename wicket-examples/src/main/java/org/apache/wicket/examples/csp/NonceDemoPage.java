@@ -25,6 +25,7 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 /**
  * Page which disallows execution of inline scripts without nonce
@@ -47,10 +48,7 @@ public class NonceDemoPage extends WicketExamplePage
 			public void onClick(AjaxRequestTarget target)
 			{
 				clickMeCountModel.setObject(clickMeCountModel.getObject() + 1);
-
-				// target.add (works even without unsafe-eval)
 				target.add(clickMeCount);
-				// append javascript (won't work without unsafe-eval)
 				target.appendJavaScript("document.querySelector(\".click-me-text\").innerHTML = \"replaced\";");
 			}
 		}.setOutputMarkupId(true));

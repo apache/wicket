@@ -266,6 +266,12 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		update.appendJavaScript(javascript);
 	}
 
+	@Override
+	public void addMeta(CharSequence name, CharSequence value)
+	{
+		update.addMeta(name, value);
+	}
+
 	/**
 	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
 	 */

@@ -102,6 +102,16 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	}
 
 	@Override
+	protected void writeMeta(final Response response, final Collection<CharSequence> meta) {
+		if (meta.size() > 0)
+		{
+			response.write("<meta>");
+			response.write(String.join("", meta));
+			response.write("</meta>");
+		}
+	}
+
+	@Override
 	protected void writeHeaderContribution(Response response)
 	{
 		CharSequence contents = headerBuffer.getContents();

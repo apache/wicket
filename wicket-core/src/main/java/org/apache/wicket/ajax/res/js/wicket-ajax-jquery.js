@@ -187,7 +187,7 @@
 	 * Logging functionality.
 	 */
 	Wicket.Log = {
-			
+
 		enabled: false,
 
 		log: function () {
@@ -349,6 +349,44 @@
 	 *   - a redirect location
 	 */
 	Wicket.Ajax.Call = Wicket.Class.create();
+
+	Wicket.Ajax.Call._suspended = 0;
+
+	Wicket.Ajax.Call.currentNotify = undefined;
+
+	Wicket.Ajax.Call.suspend = function () {
+		if (typeof (Wicket.Ajax.Call.currentNotify) != "function") {
+			Wicket.Log.error("Can't suspend: no evaluation in process");
+			return;
+		}
+		Wicket.Ajax.Call._suspended++;
+		var notify = Wicket.Ajax.Call.currentNotify;
+		var released = false;
+
+		return function () {
+			// release only once
+			if (released === false) {
+				released = true;
+				Wicket.Ajax.Call._suspended--;
+				if (Wicket.Ajax.Call._suspended === 0) {
+					notify();
+				}
+			}
+		}
+	};
+
+	Wicket.Ajax.Call.getFunctionsExecuterStatus = function() {
+		if (Wicket.Ajax.Call._suspended) {
+			// suspended
+			return FunctionsExecuter.ASYNC;
+		} else {
+			// execution finished, cleanup the last notify
+			Wicket.Ajax.Call.currentNotify = undefined;
+			Wicket.Ajax.Call._suspended = 0;
+			// continue to next step
+			return FunctionsExecuter.DONE;
+		}
+	};
 
 	Wicket.Ajax.Call.prototype = {
 
@@ -529,20 +567,20 @@
 		},
 
 		/**
-		 * Is an element still present for Ajax requests. 
+		 * Is an element still present for Ajax requests.
 		 */
 		_isPresent: function(id) {
 			if (isUndef(id)) {
 				// no id so no check whether present
 				return true;
 			}
-			
+
 			var element = Wicket.$(id);
 			if (isUndef(element)) {
 				// not present
 				return false;
 			}
-			
+
 			// present if no attributes at all or not a placeholder
 			return (!element.hasAttribute || !element.hasAttribute('data-wicket-placeholder'));
 		},
@@ -560,7 +598,7 @@
 					'Wicket-Ajax': 'true',
 					'Wicket-Ajax-BaseURL': getAjaxBaseUrl()
 				},
-				
+
 				url = attrs.u,
 
 				// the request (extra) parameters
@@ -570,7 +608,7 @@
 
 				// the precondition to use if there are no explicit ones
 				defaultPrecondition = [ function (attributes) {
-					return self._isPresent(attributes.c) && self._isPresent(attributes.f); 
+					return self._isPresent(attributes.c) && self._isPresent(attributes.f);
 				}],
 
 				// a context that brings the common data for the success/fialure/complete handlers
@@ -631,7 +669,7 @@
 				var el = Wicket.$(attrs.c);
 				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
 			}
-			
+
 			// collect the dynamic extra parameters
 			if (jQuery.isArray(attrs.dep)) {
 				var dynamicData = this._calculateDynamicParameters(attrs);
@@ -650,7 +688,7 @@
 					for (var i = 0; i < data.length; i++) {
 						formData.append(data[i].name, data[i].value || "");
 					}
-					
+
 					data = formData;
 					wwwFormUrlEncoded = false;
 				} catch (exception) {
@@ -668,7 +706,7 @@
 				context: self,
 				processData: wwwFormUrlEncoded,
 				contentType: wwwFormUrlEncoded,
-				
+
 				beforeSend: function (jqXHR, settings) {
 					self._executeHandlers(attrs.bsh, attrs, jqXHR, settings);
 					we.publish(topic.AJAX_CALL_BEFORE_SEND, attrs, jqXHR, settings);
@@ -823,15 +861,25 @@
 					return;
 				}
 
+				var nonce;
+				var meta = root.getElementsByTagName("meta")[0];
+				if (!isUndef(meta)) {
+					// var nonceEl = meta.getElementsByTagName("wicket-nonce")[0];
+					// if (!isUndef(nonceEl)) {
+					// 	nonce = Wicket.DOM.text(nonceEl);
+					// }
+					nonce = Wicket.DOM.text(meta.getElementsByTagName("wicket-nonce")[0]);
+				}
+
 				var steps = context.steps;
 
 				// go through the ajax response and execute all priority-invocations first
 				for (var i = 0; i < root.childNodes.length; ++i) {
 					var childNode = root.childNodes[i];
 					if (childNode.tagName === "header-contribution") {
-						this.processHeaderContribution(context, childNode);
+						this.processHeaderContribution(context, childNode, nonce);
 					} else if (childNode.tagName === "priority-evaluate") {
-						this.processEvaluation(context, childNode);
+						this.processEvaluation(context, childNode, nonce);
 					}
 				}
 
@@ -848,7 +896,7 @@
 						stepIndexOfLastReplacedComponent = steps.length;
 						this.processComponent(context, node);
 					} else if (node.tagName === "evaluate") {
-						this.processEvaluation(context, node);
+						this.processEvaluation(context, node, nonce);
 					} else if (node.tagName === "redirect") {
 						this.processRedirect(context, node);
 					}
@@ -929,19 +977,10 @@
 		/**
 		 * Adds a closure that evaluates javascript code.
 		 * @param context {Object} - the object that brings the executer's steps and the attributes
-		 * @param node {XmlElement} - the <[priority-]evaluate> element with the script to evaluate
+		 * @param node {Element} - the <[priority-]evaluate> element with the script to evaluate
+		 * @param nonce {String} - optional CSP nonce
 		 */
-		processEvaluation: function (context, node) {
-
-			// used to match evaluation scripts which manually call FunctionsExecuter's notify() when ready
-			var scriptWithIdentifierR = new RegExp("\\(function\\(\\)\\{([a-zA-Z_]\\w*)\\|((.|\\n)*)?\\}\\)\\(\\);$");
-
-			/**
-			 * A regex used to split the text in (priority-)evaluate elements in the Ajax response
-			 * when there are scripts which require manual call of 'FunctionExecutor#notify()'
-			 * @type {RegExp}
-			 */
-			var scriptSplitterR = new RegExp("\\(function\\(\\)\\{[\\s\\S]*?}\\)\\(\\);", 'gi');
+		processEvaluation: function (context, node, nonce) {
 
 			// get the javascript body
 			var text = Wicket.DOM.text(node);
@@ -950,67 +989,28 @@
 			var steps = context.steps;
 			var log = Wicket.Log;
 
-			var evaluateWithManualNotify = function (parameters, body) {
-				return function(notify) {
-					var toExecute = "(function(" + parameters + ") {" + body + "})";
-
-					try {
-						// do the evaluation in global scope
-						var f = window.eval(toExecute);
-						f(notify);
-					} catch (exception) {
-						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
-					}
-					return FunctionsExecuter.ASYNC;
-				};
-			};
-
 			var evaluate = function (script) {
 				return function(notify) {
 					// just evaluate the javascript
+					Wicket.Ajax.Call.currentNotify = notify;
 					try {
 						// do the evaluation in global scope
-						window.eval(script);
+						jQuery.globalEval(script, {nonce: nonce});
 					} catch (exception) {
 						log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
 					}
 					// continue to next step
-					return FunctionsExecuter.DONE;
+					return Wicket.Ajax.Call.getFunctionsExecuterStatus();
 				};
 			};
 
-			// test if the javascript is in form of identifier|code
-			// if it is, we allow for letting the javascript decide when the rest of processing will continue
-			// by invoking identifier();. This allows usage of some asynchronous/deferred logic before the next script
-			// See WICKET-5039
-			if (scriptWithIdentifierR.test(text)) {
-				var scripts = [];
-				var scr;
-				while ( (scr = scriptSplitterR.exec(text) ) !== null ) {
-					scripts.push(scr[0]);
-				}
-
-				for (var s = 0; s < scripts.length; s++) {
-					var script = scripts[s];
-					if (script) {
-						var scriptWithIdentifier = script.match(scriptWithIdentifierR);
-						if (scriptWithIdentifier) {
-							steps.push(evaluateWithManualNotify(scriptWithIdentifier[1], scriptWithIdentifier[2]));
-						}
-						else {
-							steps.push(evaluate(script));
-						}
-					}
-				}
-			} else {
-				steps.push(evaluate(text));
-			}
+			steps.push(evaluate(text));
 		},
 
 		// Adds a closure that processes a header contribution
-		processHeaderContribution: function (context, node) {
+		processHeaderContribution: function (context, node, nonce) {
 			var c = Wicket.Head.Contributor;
-			c.processContribution(context, node);
+			c.processContribution(context, node, nonce);
 		},
 
 		// Adds a closure that processes a redirect
@@ -1231,7 +1231,7 @@
 				var result = [];
 				if (input && input.type) {
 					var $input = jQuery(input);
-					
+
 					if (input.type === 'file') {
 						for (var f = 0; f < input.files.length; f++) {
 							result.push({"name" : input.name, "value" : input.files[f]});
@@ -1608,7 +1608,7 @@
 			 * Reads the text from the node's children nodes.
 			 * Used instead of jQuery.text() because it is very slow in IE10/11.
 			 * WICKET-5132, WICKET-5510
-			 * @param node {DOMElement} the root node
+			 * @param node {Element} the root node
 			 */
 			text: function (node) {
 				if (isUndef(node)) {
@@ -1730,7 +1730,7 @@
 					}, null, attrs.sel);
 				});
 			},
-			
+
 			process: function(data) {
 				var call = new Wicket.Ajax.Call();
 				call.process(data);
@@ -1766,7 +1766,7 @@
 				parse: function (headerNode) {
 					// the header contribution is stored as CDATA section in the header-contribution element,
 					// we need to parse it since each header contribution needs to be treated separately
-					
+
 					// get the header contribution text and unescape it if necessary
 					var text = Wicket.DOM.text(headerNode);
 
@@ -1789,7 +1789,7 @@
 				},
 
 				// Processes the parsed header contribution
-				processContribution: function (context, headerNode) {
+				processContribution: function (context, headerNode, nonce) {
 					var xmldoc = this.parse(headerNode);
 					var rootNode = xmldoc.documentElement;
 
@@ -1828,9 +1828,9 @@
 							if (name === "link") {
 								this.processLink(context, node);
 							} else if (name === "script") {
-								this.processScript(context, node);
+								this.processScript(context, node, nonce);
 							} else if (name === "style") {
-								this.processStyle(context, node);
+								this.processStyle(context, node, nonce);
 							} else if (name === "meta") {
 								this.processMeta(context, node);
 							}
@@ -1891,7 +1891,7 @@
 				},
 
 				// Process an inline style element
-				processStyle: function (context, node) {
+				processStyle: function (context, node, nonce) {
 					context.steps.push(function (notify) {
 						// if element with same id is already in document, skip it
 						if (Wicket.DOM.containsElement(node)) {
@@ -1905,6 +1905,7 @@
 
 						// copy id attribute
 						style.id = node.getAttribute("id");
+						style.nonce = nonce;
 
 						var textNode = document.createTextNode(content);
 						style.appendChild(textNode);
@@ -1917,7 +1918,7 @@
 				},
 
 				// Process a script element (both inline and external)
-				processScript: function (context, node) {
+				processScript: function (context, node, nonce) {
 					context.steps.push(function (notify) {
 
 						if (!node.getAttribute("src") && Wicket.DOM.containsElement(node)) {
@@ -1982,11 +1983,11 @@
 
 							if (typeof(id) === "string" && id.length > 0) {
 								// add javascript to document head
-								Wicket.Head.addJavascript(text, id, "", type);
+								Wicket.Head.addJavascript(text, id, "", type, nonce);
 							} else {
 								try {
 									// do the evaluation in global scope
-									window.eval(text);
+									jQuery.globalEval(text, {nonce: nonce});
 								} catch (e) {
 									Wicket.Log.error("Wicket.Head.Contributor.processScript: %s", text, e);
 								}
@@ -2003,9 +2004,12 @@
 						var meta = Wicket.Head.createElement("meta"),
 							$meta = jQuery(meta),
 							attrs = jQuery(node).prop("attributes"),
-							name = node.getAttribute("name");
+							name = node.getAttribute("name"),
+							id = node.getAttribute("id");
 
-						if(name) {
+						if (id) {
+							jQuery('meta[id="' + id + '"]').remove();
+						} else if (name) {
 							jQuery('meta[name="' + name + '"]').remove();
 						}
 						jQuery.each(attrs, function() {
@@ -2109,7 +2113,7 @@
 			// attribute to filter out duplicates. However, since we set the body of the element, we can't assign
 			// also a src value. Therefore we put the url to the src_ (notice the underscore)  attribute.
 			// Wicket.Head.containsElement is aware of that and takes also the underscored attributes into account.
-			addJavascript: function (content, id, fakeSrc, type) {
+			addJavascript: function (content, id, fakeSrc, type, nonce) {
 				var script = Wicket.Head.createElement("script");
 				if (id) {
 					script.id = id;
@@ -2124,6 +2128,9 @@
 
 				script.setAttribute("src_", fakeSrc);
 				script.setAttribute("type", type);
+				if (nonce) {
+					script.setAttribute("nonce", nonce)
+				}
 
 				// set the javascript as element content
 				if (null === script.canHaveChildren || script.canHaveChildren) {
@@ -2346,7 +2353,7 @@
 					delete Wicket.TimerHandles[timerId];
 				}
 			},
-			
+
 			/**
 			 * Clear all remaining timers.
 			 */
@@ -2361,7 +2368,7 @@
 				}
 			}
 		},
-		
+
 		/**
 		 * Events related code
 		 * Based on code from Mootools (http://mootools.net)

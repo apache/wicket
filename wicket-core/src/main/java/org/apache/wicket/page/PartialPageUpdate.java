@@ -48,6 +48,7 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +68,12 @@ import org.slf4j.LoggerFactory;
 public abstract class PartialPageUpdate
 {
 	private static final Logger LOG = LoggerFactory.getLogger(PartialPageUpdate.class);
+
+	/**
+	 * Meta data to be added to the partial page response.
+	 * This is the response meta data, not HTML meta data.
+	 */
+	protected final List<CharSequence> meta = Generics.newArrayList();
 
 	/**
 	 * A list of scripts (JavaScript) which should be executed on the client side before the
@@ -91,6 +98,7 @@ public abstract class PartialPageUpdate
 	 * The component instances that will be rendered/replaced.
 	 */
 	protected final Map<String, Component> markupIdToComponent = new LinkedHashMap<String, Component>();
+
 
 	/**
 	 * A flag that indicates that components cannot be added anymore.
@@ -160,6 +168,8 @@ public abstract class PartialPageUpdate
 
 			onAfterRespond(response);
 
+			writeMeta(response, meta);
+
 			// queue up prepend javascripts. unlike other steps these are executed out of order so that
 			// components can contribute them from inside their onbeforerender methods.
 			writePriorityEvaluations(response, prependJavaScripts);
@@ -204,6 +214,15 @@ public abstract class PartialPageUpdate
 	 *      the encoding for the response
 	 */
     protected abstract void writeFooter(Response response, String encoding);
+
+	/**
+	 *
+	 * @param response
+	 *      the response to write to
+	 * @param meta
+	 *      the collection of prepared meta data (with tags)
+	 */
+	protected abstract void writeMeta(Response response, final Collection<CharSequence> meta);
 
 	/**
 	 *
@@ -380,6 +399,17 @@ public abstract class PartialPageUpdate
 		result = 31 * result + appendJavaScripts.hashCode();
 		result = 31 * result + domReadyJavaScripts.hashCode();
 		return result;
+	}
+
+	/**
+	 * Add meta datum to partial page update.
+	 * This is the response meta data, not HTML meta data.
+	 *
+	 * @param name
+	 * @param value
+	 */
+	public final void addMeta(CharSequence name, CharSequence value) {
+		meta.add(String.format("<%1$s>%2$s</%1$s>", Strings.escapeMarkup(name), Strings.escapeMarkup(value)));
 	}
 
 	/**
@@ -612,7 +642,7 @@ public abstract class PartialPageUpdate
 		/**
 		 * Constructor.
 		 *
-		 * @param update
+		 * @param pageUpdate
 		 *      the partial page update
 		 */
 		public PartialHtmlHeaderContainer(PartialPageUpdate pageUpdate)

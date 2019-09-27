@@ -16,15 +16,21 @@
  */
 package org.apache.wicket.examples.csp;
 
-import java.util.Base64;
-import java.util.concurrent.ThreadLocalRandom;
-
+import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.head.filter.CspNonceHeaderResponse;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.cycle.RequestCycle;
+
+import java.util.Base64;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CspApplication extends WicketExampleApplication
 {
@@ -45,7 +51,19 @@ public class CspApplication extends WicketExampleApplication
 	{
 		super.init();
 
-		setHeaderResponseDecorator(response -> new ResourceAggregator(new CspNonceHeaderResponse(response, getNonce())));
+		// Decorate all header items with nonce
+		setHeaderResponseDecorator(response -> new ResourceAggregator(
+				isCspApplicable() ? new CspNonceHeaderResponse(response, getNonce()) : response
+		));
+		// add nonce to ajax response
+		getAjaxRequestTargetListeners().add((new AjaxRequestTarget.IListener()
+		{
+			@Override
+			public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target)
+			{
+				target.addMeta("wicket-nonce", getNonce());
+			}
+		}));
 		
 		mountPage("noncedemo", NonceDemoPage.class);
 	}
@@ -69,4 +87,19 @@ public class CspApplication extends WicketExampleApplication
 		}
 		return nonce;
 	}
+
+	public static boolean isCspApplicable()
+	{
+		Request request = RequestCycle.get().getRequest();
+		if (request instanceof ServletWebRequest)
+		{
+			// Unfortunately Edge does things worse than just "doesn't support" it does support the CSP,
+			// but the 'nonce' and 'strict-dynamic' instructions were broken for ages.
+			// Edge issue https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/13246371/
+			// It's OK in new Edge chromium beta, also the new Edge has Edg/ in User-Agent header instead of Edge/
+			return !((ServletWebRequest)request).getContainerRequest().getHeader("User-Agent").contains("Edge/");
+		}
+		return true;
+	}
+
 }
