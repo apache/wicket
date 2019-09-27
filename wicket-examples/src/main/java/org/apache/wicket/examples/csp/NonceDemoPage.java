@@ -22,15 +22,23 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * Page which disallows execution of inline scripts without nonce
  */
 public class NonceDemoPage extends WicketExamplePage
 {
+	
+	private static final ResourceReference JS_DELAYED = new JavaScriptResourceReference(NonceDemoPage.class, "delayedVisible.js");
+	private static final ResourceReference CSS_DELAYED = new CssResourceReference(NonceDemoPage.class, "delayedVisible.css");
+	
 	private final IModel<Integer> clickMeCountModel = Model.of(0);
 
 	public NonceDemoPage()
@@ -38,9 +46,25 @@ public class NonceDemoPage extends WicketExamplePage
 		super();
 		add(new Label("testNonceScript", getString("testNonceScript")));
 		add(new Label("testNoNonceScript", getString("testNoNonceScript")));
+
 		final Label clickMeCount = new Label("clickMeCount", clickMeCountModel);
 		clickMeCount.setOutputMarkupId(true);
 		add(clickMeCount);
+		
+		final WebMarkupContainer delayedVisible = new WebMarkupContainer("delayedVisible") {
+			@Override
+			public void renderHead(IHeaderResponse response)
+			{
+				super.renderHead(response);
+				
+				response.render(JavaScriptHeaderItem.forReference(JS_DELAYED));
+				response.render(CssHeaderItem.forReference(CSS_DELAYED));
+			}
+		};
+		delayedVisible.setOutputMarkupPlaceholderTag(true);
+		delayedVisible.setVisible(false);
+		add(delayedVisible);
+		
 		add(new AjaxLink<String>("clickMe")
 		{
 			@Override
@@ -50,8 +74,12 @@ public class NonceDemoPage extends WicketExamplePage
 
 				// target.add (works even without unsafe-eval)
 				target.add(clickMeCount);
+
 				// append javascript (won't work without unsafe-eval)
 				target.appendJavaScript("document.querySelector(\".click-me-text\").innerHTML = \"replaced\";");
+				
+				delayedVisible.setVisible(true);
+				target.add(delayedVisible);
 			}
 		}.setOutputMarkupId(true));
 	}

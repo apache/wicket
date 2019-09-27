@@ -1,0 +1,7 @@
+.delayed-visible {
+	font-weight: bold;
+}
+
+.delayed-ready .delayed-visible {
+	color: green;
+}

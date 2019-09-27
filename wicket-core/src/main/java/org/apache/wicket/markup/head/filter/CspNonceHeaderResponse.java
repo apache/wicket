@@ -80,7 +80,7 @@ public class CspNonceHeaderResponse extends DecoratingHeaderResponse
 	 * Get the <em>Content-Security-Policy</em> (CSP).
 	 * <p>
 	 * There is a variety of CSP configurations, this default implementation uses the nonce for scripts and styles
-	 * and allows <code>unsafe-eval</code>s (needed for Wicket Ajax).
+	 * and allows <code>unsafe-eval</code> and <code>strict-dynamic</code>s (needed for Wicket Ajax).
 	 * 
 	 * @param nonce
 	 *            the nonce
@@ -88,6 +88,6 @@ public class CspNonceHeaderResponse extends DecoratingHeaderResponse
 	 */
 	protected String getContentSecurityPolicy(String nonce)
 	{
-		return String.format("script-src 'unsafe-eval' 'nonce-%1$s'; style-src 'nonce-%1$s';", nonce);
+		return String.format("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1$s'; style-src 'nonce-%1$s';", nonce);
 	}
 }
