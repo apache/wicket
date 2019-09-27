@@ -2003,11 +2003,15 @@
 						var meta = Wicket.Head.createElement("meta"),
 							$meta = jQuery(meta),
 							attrs = jQuery(node).prop("attributes"),
-							name = node.getAttribute("name");
+							name = node.getAttribute("name"),
+							httpEquiv = node.getAttribute("http-equiv");
 
-						if(name) {
+						if (name) {
 							jQuery('meta[name="' + name + '"]').remove();
+						} else if (httpEquiv) {
+							jQuery('meta[http-equiv="' + httpEquiv + '"]').remove();
 						}
+						
 						jQuery.each(attrs, function() {
 							$meta.attr(this.name, this.value);
 						});
