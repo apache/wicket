@@ -2005,13 +2005,17 @@
 							$meta = jQuery(meta),
 							attrs = jQuery(node).prop("attributes"),
 							name = node.getAttribute("name"),
-							id = node.getAttribute("id");
+							id = node.getAttribute("id"),
+							httpEquiv = node.getAttribute("http-equiv");
 
 						if (id) {
 							jQuery('meta[id="' + id + '"]').remove();
 						} else if (name) {
 							jQuery('meta[name="' + name + '"]').remove();
+						} else if (httpEquiv) {
+							jQuery('meta[http-equiv="' + httpEquiv + '"]').remove();
 						}
+
 						jQuery.each(attrs, function() {
 							$meta.attr(this.name, this.value);
 						});
