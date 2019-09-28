@@ -376,12 +376,12 @@
 	};
 
 	Wicket.Ajax.Call.getFunctionsExecuterStatus = function() {
+		Wicket.Ajax.Call.currentNotify = undefined;
 		if (Wicket.Ajax.Call._suspended) {
 			// suspended
 			return FunctionsExecuter.ASYNC;
 		} else {
 			// execution finished, cleanup the last notify
-			Wicket.Ajax.Call.currentNotify = undefined;
 			Wicket.Ajax.Call._suspended = 0;
 			// continue to next step
 			return FunctionsExecuter.DONE;
