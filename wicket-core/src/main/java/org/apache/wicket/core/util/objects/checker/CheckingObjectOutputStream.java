@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.core.util.objects.checker;
 
+import java.beans.PropertyChangeSupport;
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectOutput;
@@ -566,7 +567,9 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 			{
 				if (objVals[i] instanceof String || objVals[i] instanceof Number ||
 						objVals[i] instanceof Date || objVals[i] instanceof Boolean ||
-						objVals[i] instanceof Class)
+						objVals[i] instanceof Class ||
+						objVals[i] instanceof PropertyChangeSupport // WICKET-6704
+				)
 				{
 					// filter out common cases
 					continue;
