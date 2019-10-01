@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.ws.javax;
 
+import java.io.EOFException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -83,7 +84,15 @@ public class WicketEndpoint extends Endpoint
 	@Override
 	public void onError(Session session, Throwable t)
 	{
-		LOG.error("An error occurred in web socket connection with id : " + session.getId(), t);
+		if (t instanceof EOFException)
+		{
+			LOG.debug("An error occurred in web socket connection with id : {}", session.getId(), t);
+		}
+		else
+		{
+			LOG.error("An error occurred in web socket connection with id : {}", session.getId(), t);
+		}
+
 		super.onError(session, t);
 
 		if (isApplicationAlive())
