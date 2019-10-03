@@ -14,16 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*global DOMParser: true, console: true */
-
-/*
- * Wicket Ajax Support
- *
- * @author Igor Vaynberg
- * @author Matej Knopp
- */
-
 jQuery(document).ready(function() {
 	jQuery('body').addClass('delayed-ready');
 });
