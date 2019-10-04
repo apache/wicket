@@ -207,7 +207,7 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 	private static final NoopOutputStream DUMMY_OUTPUT_STREAM = new NoopOutputStream();
 
 	/** Whether we can execute the tests. If false, check will just return. */
-	private static boolean available = true;
+	private static boolean available;
 
 	// this hack - accessing the serialization API through introspection - is
 	// the only way to use Java serialization for our purposes without writing
@@ -235,6 +235,9 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 	{
 		try
 		{
+
+			available = "Oracle Corporation".equals(System.getProperty("java.vm.vendor")); //WICKET-6531
+
 			LOOKUP_METHOD = ObjectStreamClass.class.getDeclaredMethod("lookup", new Class[] {
 					Class.class, Boolean.TYPE });
 			LOOKUP_METHOD.setAccessible(true);
