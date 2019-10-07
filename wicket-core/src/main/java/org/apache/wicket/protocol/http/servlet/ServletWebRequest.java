@@ -264,7 +264,7 @@ public class ServletWebRequest extends WebRequest
 	@Override
 	public List<String> getHeaders(String name)
 	{
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		Enumeration<String> e = httpServletRequest.getHeaders(name);
 		while (e.hasMoreElements())
 		{
