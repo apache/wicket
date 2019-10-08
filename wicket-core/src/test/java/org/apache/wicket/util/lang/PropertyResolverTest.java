@@ -775,6 +775,18 @@ public class PropertyResolverTest extends WicketTestCase
 		assertEquals("string2", PropertyResolver.getValue("nested.string", document));
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6707
+	 */
+	@Test
+	void booleanVsBoolean()
+	{
+		final BooleanBean bean = new BooleanBean();
+		PropertyResolver.setValue("instantPayment", bean, "false", CONVERTER);
+		Boolean instantPayment = (Boolean) PropertyResolver.getValue("instantPayment", bean);
+		assertEquals(false, instantPayment);
+	}
+
 	class CustomGetAndSetLocator implements IPropertyLocator {
 
 		private IPropertyLocator locator = new DefaultPropertyLocator();
