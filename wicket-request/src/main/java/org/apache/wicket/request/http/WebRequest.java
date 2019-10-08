@@ -50,6 +50,8 @@ public abstract class WebRequest extends Request
 	/** {@code Referer} http header */
 	public static final String HEADER_REFERER = "Referer";
 
+	private Boolean isAjax;
+
 	/**
 	 * @return request cookies
 	 */
@@ -117,12 +119,16 @@ public abstract class WebRequest extends Request
 	 */
 	public boolean isAjax()
 	{
-		try {
-			return Strings.isTrue(getHeader(HEADER_AJAX)) ||
-				Strings.isTrue(getQueryParameters().getParameterValue(PARAM_AJAX).toString());
-		} catch (StringValueConversionException invalidValue) {
-			return false;
+		if (isAjax == null)
+		{
+			try {
+				isAjax = Strings.isTrue(getHeader(HEADER_AJAX)) ||
+						Strings.isTrue(getQueryParameters().getParameterValue(PARAM_AJAX).toString());
+			} catch (StringValueConversionException invalidValue) {
+				isAjax = false;
+			}
 		}
+		return isAjax;
 	}
 
 	/**
