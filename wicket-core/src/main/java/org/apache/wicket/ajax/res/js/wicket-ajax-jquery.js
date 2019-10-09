@@ -356,8 +356,7 @@
 
 	Wicket.Ajax.Call.suspend = function () {
 		if (typeof (Wicket.Ajax.Call.currentNotify) != "function") {
-			Wicket.Log.error("Can't suspend: no evaluation in process");
-			return;
+			throw new Error("Can't suspend: no evaluation in process");
 		}
 		Wicket.Ajax.Call._suspended++;
 		var notify = Wicket.Ajax.Call.currentNotify;
@@ -370,21 +369,9 @@
 				Wicket.Ajax.Call._suspended--;
 				if (Wicket.Ajax.Call._suspended === 0) {
 					notify();
+					Wicket.Ajax.Call.currentNotify = undefined;
 				}
 			}
-		}
-	};
-
-	Wicket.Ajax.Call.getFunctionsExecuterStatus = function() {
-		Wicket.Ajax.Call.currentNotify = undefined;
-		if (Wicket.Ajax.Call._suspended) {
-			// suspended
-			return FunctionsExecuter.ASYNC;
-		} else {
-			// execution finished, cleanup the last notify
-			Wicket.Ajax.Call._suspended = 0;
-			// continue to next step
-			return FunctionsExecuter.DONE;
 		}
 	};
 
@@ -1000,7 +987,16 @@
 						log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
 					}
 					// continue to next step
-					return Wicket.Ajax.Call.getFunctionsExecuterStatus();
+					if (Wicket.Ajax.Call._suspended) {
+						// suspended
+						return FunctionsExecuter.ASYNC;
+					} else {
+						// execution finished, cleanup the last notify
+						Wicket.Ajax.Call.currentNotify = undefined;
+						Wicket.Ajax.Call._suspended = 0;
+						// continue to next step
+						return FunctionsExecuter.DONE;
+					}
 				};
 			};
 

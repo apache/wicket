@@ -17,7 +17,9 @@
 package org.apache.wicket.examples.ajax.builtin;
 
 import java.util.Optional;
+import java.util.Set;
 
+import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxChannel.Type;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -107,6 +109,19 @@ public class EffectsPage extends BasePage
 
 		final Label c3 = new Label("c3", new PropertyModel<>(this, "counter3"));
 		c3.setOutputMarkupId(true);
+		c3.add(new ClassAttributeModifier()
+		{
+			@Override
+			protected Set<String> update(Set<String> oldClasses)
+			{
+				if (!EffectsPage.this.isRendering())
+				{
+					// Only add is-hidden when page is already rendered (in AJAX)
+					oldClasses.add("is-hidden");
+				}
+				return oldClasses;
+			}
+		});
 		add(c3);
 
 		add(new AjaxLink<Void>("c1-link")
@@ -160,7 +175,7 @@ public class EffectsPage extends BasePage
 				targetOptional.ifPresent(target -> {
 					target.prependJavaScript((String.format("EffectsPage.animatedCountHide('#%s');", c3.getMarkupId())));
 					target.add(c3);
-					target.prependJavaScript((String.format("EffectsPage.animatedCountShow('#%s');", c3.getMarkupId())));
+					target.appendJavaScript((String.format("EffectsPage.animatedCountShow('#%s');", c3.getMarkupId())));
 				});
 			}
 

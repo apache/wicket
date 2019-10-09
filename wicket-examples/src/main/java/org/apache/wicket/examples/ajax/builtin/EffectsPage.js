@@ -18,9 +18,23 @@ EffectsPage = {};
 EffectsPage.animatedCountHide = function (countComponentSelector) {
     var notify = Wicket.Ajax.Call.suspend(); // suspend the prepend JS until animation finished
     jQuery(countComponentSelector).hide("fade", function () { // hide with fade effect
+        EffectsPage.delayedFunction1(); // Example of acquiring multiple locks
         notify(); // animation is finished, release to allow the element to be replaced
     });
 };
 EffectsPage.animatedCountShow = function (countComponentSelector) {
-    jQuery(countComponentSelector).show("drop"); // show with drop effect
+    jQuery(countComponentSelector).removeClass("is-hidden").css("display", "none").show("drop"); // show with drop effect
+};
+EffectsPage.delayedFunction1 = function () {
+    var notify = Wicket.Ajax.Call.suspend();
+    setTimeout(function () {
+        EffectsPage.delayedFunction2(); // call another function acquiring another lock
+        notify();
+    }, 100);
+};
+EffectsPage.delayedFunction2 = function () {
+    var notify = Wicket.Ajax.Call.suspend();
+    setTimeout(function () {
+        notify(); // finally release
+    }, 200);
 };
