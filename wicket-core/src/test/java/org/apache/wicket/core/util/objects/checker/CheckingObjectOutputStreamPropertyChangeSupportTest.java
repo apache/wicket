@@ -23,19 +23,19 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.apache.wicket.serialize.java.JavaSerializer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for https://issues.apache.org/jira/browse/WICKET-6704
  */
-public class CheckingObjectOutputStreamPropertyChangeSupportTest {
+class CheckingObjectOutputStreamPropertyChangeSupportTest {
 
     /**
      * The test should either pass and log an ERROR
      * or cause a JVM crash
      */
     @Test
-    public void serializePropertyChangeSupport()
+    void serializePropertyChangeSupport()
     {
         JavaSerializer serializer = new JavaSerializer("test");
         serializer.serialize(new ObjectToPersist());
