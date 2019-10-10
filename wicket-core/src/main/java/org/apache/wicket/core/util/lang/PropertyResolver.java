@@ -27,7 +27,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.core.util.lang.PropertyResolverConverter;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
@@ -961,10 +960,7 @@ public final class PropertyResolver
 			Class<?> type = null;
 			if (setMethod != null)
 			{
-				// getMethod is always there and if the value will be set through a setMethod then
-				// the getMethod return type will be its type. Else we have to look at the
-				// parameters if the setter but getting the return type is quicker
-				type = getMethod.getReturnType();
+				type = setMethod.getParameterTypes()[0];
 			}
 			else if (field != null)
 			{
@@ -981,13 +977,13 @@ public final class PropertyResolver
 					{
 						throw new ConversionException("Method [" + getMethod +
 							"]. Can't convert value: " + value + " to class: " +
-							getMethod.getReturnType() + " for setting it on " + object);
+							type + " for setting it on " + object);
 					}
 					else if (setMethod != null && setMethod.getParameterTypes()[0].isPrimitive())
 					{
-						throw new ConversionException("Method [" + getMethod +
+						throw new ConversionException("Method [" + setMethod +
 							"]. Can't convert null value to a primitive class: " +
-							getMethod.getReturnType() + " for setting it on " + object);
+							type + " for setting it on " + object);
 					}
 				}
 			}
@@ -1353,9 +1349,9 @@ public final class PropertyResolver
 	/**
 	 * A locator of properties.
 	 * 
-	 * @see https://issues.apache.org/jira/browse/WICKET-5623
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-5623">WICKET-5623</a>
 	 */
-	public static interface IPropertyLocator
+	public interface IPropertyLocator
 	{
 		/**
 		 * Get {@link IGetAndSet} for a property.
