@@ -800,15 +800,18 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	protected List<StringValue> getParameterValues(String inputName)
 	{
 		String method = Form.METHOD_POST;
-		final Form form = findParent(Form.class);
 		final Request request = getRequest();
 		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
 		{
-			method = ((HttpServletRequest) getRequest().getContainerRequest()).getMethod();
+			method = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
 		}
-		else if (form != null)
+		else
 		{
-			method = form.getMethod();
+			final Form<?> form = findParent(Form.class);
+			if (form != null)
+			{
+				method = form.getMethod();
+			}
 		}
 
 		final IRequestParameters parameters;
