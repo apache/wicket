@@ -17,11 +17,12 @@
 package org.apache.wicket.util.lang;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.reflect.Field;
@@ -782,9 +783,9 @@ public class PropertyResolverTest extends WicketTestCase
 	void booleanVsBoolean()
 	{
 		final BooleanBean bean = new BooleanBean();
-		PropertyResolver.setValue("instantPayment", bean, "false", CONVERTER);
+		PropertyResolver.setValue("instantPayment", bean, null, CONVERTER);
 		Boolean instantPayment = (Boolean) PropertyResolver.getValue("instantPayment", bean);
-		assertEquals(false, instantPayment);
+		assertFalse(instantPayment);
 	}
 
 	class CustomGetAndSetLocator implements IPropertyLocator {
