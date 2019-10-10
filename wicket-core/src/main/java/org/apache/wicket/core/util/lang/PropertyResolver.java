@@ -983,7 +983,7 @@ public final class PropertyResolver
 							"]. Can't convert value: " + value + " to class: " +
 							getMethod.getReturnType() + " for setting it on " + object);
 					}
-					else if (getMethod.getReturnType().isPrimitive())
+					else if (setMethod != null && setMethod.getParameterTypes()[0].isPrimitive())
 					{
 						throw new ConversionException("Method [" + getMethod +
 							"]. Can't convert null value to a primitive class: " +
