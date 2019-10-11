@@ -861,34 +861,27 @@
 				var steps = context.steps;
 
 				// go through the ajax response and execute all priority-invocations first
-				for (var i = 0; i < root.childNodes.length; ++i) {
-					var childNode = root.childNodes[i];
-					if (childNode.tagName === "header-contribution") {
-						this.processHeaderContribution(context, childNode, nonce);
-					} else if (childNode.tagName === "priority-evaluate") {
-						this.processEvaluation(context, childNode, nonce);
-					}
-				}
+				this.processHeaderContributions(context, root.childNodes, nonce, false);
 
 				// go through the ajax response and for every action (component, js evaluation, header contribution)
 				// ad the proper closure to steps
 				var stepIndexOfLastReplacedComponent = -1;
 				for (var c = 0; c < root.childNodes.length; ++c) {
 					var node = root.childNodes[c];
-
 					if (node.tagName === "component") {
 						if (stepIndexOfLastReplacedComponent === -1) {
 							this.processFocusedComponentMark(context);
 						}
 						stepIndexOfLastReplacedComponent = steps.length;
 						this.processComponent(context, node);
-					} else if (node.tagName === "evaluate") {
-						this.processEvaluation(context, node, nonce);
 					} else if (node.tagName === "redirect") {
 						this.processRedirect(context, node);
 					}
-
 				}
+
+				// go through the ajax response and execute all NON-priority-invocations
+				this.processHeaderContributions(context, root.childNodes, nonce, true);
+
 				if (stepIndexOfLastReplacedComponent !== -1) {
 					this.processFocusedComponentReplaceCheck(steps, stepIndexOfLastReplacedComponent);
 				}
@@ -961,52 +954,14 @@
 			});
 		},
 
-		/**
-		 * Adds a closure that evaluates javascript code.
-		 * @param context {Object} - the object that brings the executer's steps and the attributes
-		 * @param node {Element} - the <[priority-]evaluate> element with the script to evaluate
-		 * @param nonce {String} - optional CSP nonce
-		 */
-		processEvaluation: function (context, node, nonce) {
-
-			// get the javascript body
-			var text = Wicket.DOM.text(node);
-
-			// aliases to improve performance
-			var steps = context.steps;
-			var log = Wicket.Log;
-
-			var evaluate = function (script) {
-				return function(notify) {
-					// just evaluate the javascript
-					Wicket.Ajax.Call.currentNotify = notify;
-					try {
-						// do the evaluation in global scope
-						jQuery.globalEval(script, {nonce: nonce});
-					} catch (exception) {
-						log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
-					}
-					// continue to next step
-					if (Wicket.Ajax.Call._suspended) {
-						// suspended
-						return FunctionsExecuter.ASYNC;
-					} else {
-						// execution finished, cleanup the last notify
-						Wicket.Ajax.Call.currentNotify = undefined;
-						Wicket.Ajax.Call._suspended = 0;
-						// continue to next step
-						return FunctionsExecuter.DONE;
-					}
-				};
-			};
-
-			steps.push(evaluate(text));
-		},
-
-		// Adds a closure that processes a header contribution
-		processHeaderContribution: function (context, node, nonce) {
+		processHeaderContributions: function (context, nodes, nonce, afterComponents) {
 			var c = Wicket.Head.Contributor;
-			c.processContribution(context, node, nonce);
+			for (var i = 0; i < nodes.length; ++i) {
+				var childNode = nodes[i];
+				if (childNode.tagName === "header-contribution") {
+					c.processContribution(context, childNode, nonce, afterComponents);
+				}
+			}
 		},
 
 		// Adds a closure that processes a redirect
@@ -1785,7 +1740,7 @@
 				},
 
 				// Processes the parsed header contribution
-				processContribution: function (context, headerNode, nonce) {
+				processContribution: function (context, headerNode, nonce, afterComponents) {
 					var xmldoc = this.parse(headerNode);
 					var rootNode = xmldoc.documentElement;
 
@@ -1797,13 +1752,15 @@
 					// go through the individual elements and process them according to their type
 					for (var i = 0; i < rootNode.childNodes.length; i++) {
 						var node = rootNode.childNodes[i];
-
 						// Chromium reports the error as a child node
 						if (this._checkParserError(node)) {
 							return;
 						}
 
 						if (!isUndef(node.tagName)) {
+							if (afterComponents !== (node.getAttribute("data-wicket-evaluation") === "after")) {
+								continue;
+							}
 							var name = node.tagName.toLowerCase();
 
 							// it is possible that a reference is surrounded by a <wicket:link
@@ -1980,17 +1937,27 @@
 							if (typeof(id) === "string" && id.length > 0) {
 								// add javascript to document head
 								Wicket.Head.addJavascript(text, id, "", type, nonce);
+								return FunctionsExecuter.DONE;
 							} else {
+								Wicket.Ajax.Call.currentNotify = notify;
 								try {
 									// do the evaluation in global scope
 									jQuery.globalEval(text, {nonce: nonce});
-								} catch (e) {
-									Wicket.Log.error("Wicket.Head.Contributor.processScript: %s", text, e);
+								} catch (exception) {
+									Wicket.Log.error("Wicket.Head.Contributor.processScript: Exception evaluating javascript: %s", text, exception);
+								}
+								// continue to next step
+								if (Wicket.Ajax.Call._suspended) {
+									// suspended
+									return FunctionsExecuter.ASYNC;
+								} else {
+									// execution finished, cleanup the last notify
+									Wicket.Ajax.Call.currentNotify = undefined;
+									Wicket.Ajax.Call._suspended = 0;
+									// continue to next step
+									return FunctionsExecuter.DONE;
 								}
 							}
-
-							// continue to next step
-							return FunctionsExecuter.DONE;
 						}
 					});
 				},

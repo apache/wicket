@@ -74,12 +74,17 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
 		attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
 		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
+		renderExtraAttributes(attributes);
 		JavaScriptUtils.writeInlineScript(response, getJavaScript(), attributes);
 
 		if (hasCondition)
 		{
 			response.write("<![endif]-->\n");
 		}
+	}
+
+	protected void renderExtraAttributes(AttributeMap attributes) {
+		// no-op by default
 	}
 
 	@Override

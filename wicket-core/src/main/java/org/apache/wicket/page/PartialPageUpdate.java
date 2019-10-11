@@ -58,22 +58,14 @@ import org.slf4j.LoggerFactory;
  * <p>
  * The elements of such response are:
  * <ul>
- * <li>priority-evaluate - an item of the prepend JavaScripts</li>
  * <li>component - the markup of the updated component</li>
- * <li>evaluate - an item of the onDomReady and append JavaScripts</li>
  * <li>header-contribution - all HeaderItems which have been contributed in
- * components' and their behaviors' #renderHead(Component, IHeaderResponse)</li>
+ * components' and their behaviors' #renderHead(Component, IHeaderResponse) and also with {@link #appendJavaScript} and {@link #prependJavaScript}</li>
  * </ul>
  */
 public abstract class PartialPageUpdate
 {
 	private static final Logger LOG = LoggerFactory.getLogger(PartialPageUpdate.class);
-
-	/**
-	 * Meta data to be added to the partial page response.
-	 * This is the response meta data, not HTML meta data.
-	 */
-	protected final List<CharSequence> meta = Generics.newArrayList();
 
 	/**
 	 * A list of scripts (JavaScript) which should be executed on the client side before the
@@ -163,12 +155,12 @@ public abstract class PartialPageUpdate
 
 			onBeforeRespond(response);
 
+			setUpHeader();
+
 			// process added components
 			writeComponents(response, encoding);
 
 			onAfterRespond(response);
-
-			writeMeta(response, meta);
 
 			// queue up prepend javascripts. unlike other steps these are executed out of order so that
 			// components can contribute them from inside their onbeforerender methods.
@@ -180,6 +172,8 @@ public abstract class PartialPageUpdate
 			evaluationScripts.addAll(domReadyJavaScripts);
 			evaluationScripts.addAll(appendJavaScripts);
 			writeNormalEvaluations(response, evaluationScripts);
+
+			closeHeader(response);
 
 			writeFooter(response, encoding);
 		} finally {
@@ -214,15 +208,6 @@ public abstract class PartialPageUpdate
 	 *      the encoding for the response
 	 */
     protected abstract void writeFooter(Response response, String encoding);
-
-	/**
-	 *
-	 * @param response
-	 *      the response to write to
-	 * @param meta
-	 *      the collection of prepared meta data (with tags)
-	 */
-	protected abstract void writeMeta(Response response, final Collection<CharSequence> meta);
 
 	/**
 	 *
@@ -278,11 +263,14 @@ public abstract class PartialPageUpdate
 		{
 			writeComponent(response, component.getAjaxRegionMarkupId(), component, encoding);
 		}
+	}
 
+	private void closeHeader(Response response)
+	{
 		if (header != null)
 		{
 			RequestCycle cycle = RequestCycle.get();
-			
+
 			// some header responses buffer all calls to render*** until close is called.
 			// when they are closed, they do something (i.e. aggregate all JS resource urls to a
 			// single url), and then "flush" (by writing to the real response) before closing.
@@ -399,17 +387,6 @@ public abstract class PartialPageUpdate
 		result = 31 * result + appendJavaScripts.hashCode();
 		result = 31 * result + domReadyJavaScripts.hashCode();
 		return result;
-	}
-
-	/**
-	 * Add meta datum to partial page update.
-	 * This is the response meta data, not HTML meta data.
-	 *
-	 * @param name
-	 * @param value
-	 */
-	public final void addMeta(CharSequence name, CharSequence value) {
-		meta.add(String.format("<%1$s>%2$s</%1$s>", Strings.escapeMarkup(name), Strings.escapeMarkup(value)));
 	}
 
 	/**
@@ -580,15 +557,6 @@ public abstract class PartialPageUpdate
 	 */
 	protected void writeHeaderContribution(final Response response, final Component component)
 	{
-		headerRendering = true;
-
-		// create the htmlheadercontainer if needed
-		if (header == null)
-		{
-			header = new PartialHtmlHeaderContainer(this);
-			page.addOrReplace(header);
-		}
-
 		RequestCycle requestCycle = component.getRequestCycle();
 
 		// save old response, set new
@@ -607,6 +575,17 @@ public abstract class PartialPageUpdate
 
 		writeHeaderContribution(response);
 		headerRendering = false;
+	}
+
+	private void setUpHeader()
+	{
+		headerRendering = true;
+		// create the htmlheadercontainer if needed
+		if (header == null)
+		{
+			header = new PartialHtmlHeaderContainer(this);
+			page.addOrReplace(header);
+		}
 	}
 
 	/**

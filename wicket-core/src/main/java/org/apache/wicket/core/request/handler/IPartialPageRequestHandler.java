@@ -79,15 +79,6 @@ public interface IPartialPageRequestHandler extends IPageRequestHandler
 	void appendJavaScript(CharSequence javascript);
 
 	/**
-	 * Add extra meta data to partial page response.
-	 * This is the response meta data, not HTML meta data.
-	 *
-	 * @param name meta datum name
-	 * @param value meta datum value
-	 */
-	void addMeta(CharSequence name, CharSequence value);
-
-	/**
 	 * Adds javascript that will be evaluated on the client side before components are replaced.
 	 *
 	 * <p>If the javascript needs to do something asynchronously (i.e. needs to use window.setTimeout(), for example

@@ -155,12 +155,6 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 	}
 
 	@Override
-	public void addMeta(CharSequence name, CharSequence value)
-	{
-		getUpdate().addMeta(name, value);
-	}
-
-	@Override
 	public void prependJavaScript(CharSequence javascript)
 	{
 		getUpdate().prependJavaScript(javascript);

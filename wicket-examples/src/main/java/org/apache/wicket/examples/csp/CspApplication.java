@@ -55,15 +55,6 @@ public class CspApplication extends WicketExampleApplication
 		setHeaderResponseDecorator(response -> new ResourceAggregator(
 				isCspApplicable() ? new CspNonceHeaderResponse(response, getNonce()) : response
 		));
-		// add nonce to ajax response
-		getAjaxRequestTargetListeners().add((new AjaxRequestTarget.IListener()
-		{
-			@Override
-			public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target)
-			{
-				target.addMeta("wicket-nonce", getNonce());
-			}
-		}));
 		
 		mountPage("noncedemo", NonceDemoPage.class);
 	}

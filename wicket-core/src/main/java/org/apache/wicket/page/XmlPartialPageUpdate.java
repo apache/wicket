@@ -16,14 +16,16 @@
  */
 package org.apache.wicket.page;
 
-import java.util.Collection;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.head.AfterDomRenderAjaxJavaScriptHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.Strings;
+
+import java.util.Collection;
 
 /**
  * A {@link PartialPageUpdate} that serializes itself to XML.
@@ -102,16 +104,6 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	}
 
 	@Override
-	protected void writeMeta(final Response response, final Collection<CharSequence> meta) {
-		if (meta.size() > 0)
-		{
-			response.write("<meta>");
-			response.write(String.join("", meta));
-			response.write("</meta>");
-		}
-	}
-
-	@Override
 	protected void writeHeaderContribution(Response response)
 	{
 		CharSequence contents = headerBuffer.getContents();
@@ -131,17 +123,16 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	@Override
 	protected void writeNormalEvaluations(final Response response, final Collection<CharSequence> scripts)
 	{
-		writeEvaluations(response, "evaluate", scripts);
-
+		writeEvaluations(scripts, false);
 	}
 
 	@Override
 	protected void writePriorityEvaluations(Response response, Collection<CharSequence> scripts)
 	{
-		writeEvaluations(response, "priority-evaluate", scripts);
+		writeEvaluations(scripts, true);
 	}
 
-	private void writeEvaluations(final Response response, String elementName, Collection<CharSequence> scripts)
+	private void writeEvaluations(Collection<CharSequence> scripts, boolean isPriority)
 	{
 		if (scripts.size() > 0)
 		{
@@ -150,32 +141,19 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 			{
 				combinedScript.append("(function(){").append(script).append("})();");
 			}
-			writeEvaluation(elementName, response, combinedScript);
+			writeEvaluation(combinedScript, isPriority);
 		}
 	}
 
-	/**
-	* @param invocation
-	*            type of invocation tag, usually {@literal evaluate} or
-	*            {@literal priority-evaluate}
-	* @param response
-	* @param js
-	*/
-	private void writeEvaluation(final String invocation, final Response response, final CharSequence js)
+	private void writeEvaluation(final CharSequence js, boolean isPriority)
 	{
-		response.write("<");
-		response.write(invocation);
-		response.write(">");
-
-		response.write("<![CDATA[");
-		response.write(encode(js));
-		response.write("]]>");
-
-		response.write("</");
-		response.write(invocation);
-		response.write(">");
-
-		bodyBuffer.reset();
+		if (header != null)
+		{
+			header.getHeaderResponse().render(
+					isPriority
+					? JavaScriptHeaderItem.forScript(js, null)
+					: AfterDomRenderAjaxJavaScriptHeaderItem.forScript(js));
+		}
 	}
 
 	protected CharSequence encode(CharSequence str)
