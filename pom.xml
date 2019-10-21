@@ -155,7 +155,7 @@
 		<junit.version>5.5.2</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.3</logback.version>
-		<hamcrest.version>2.1</hamcrest.version>
+		<hamcrest.version>2.2</hamcrest.version>
 		<hibernate-validator.version>6.0.16.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
 		<metrics.version>4.1.0</metrics.version>
