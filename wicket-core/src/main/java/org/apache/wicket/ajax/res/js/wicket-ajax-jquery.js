@@ -350,6 +350,32 @@
 	 */
 	Wicket.Ajax.Call = Wicket.Class.create();
 
+	Wicket.Ajax._currentSuspension = undefined;
+
+	/**
+	 * Suspend the currently evaluated Ajax call, fails if no Ajax call is currently
+	 * evaluated.
+	 */
+	Wicket.Ajax.suspendCall = function () {
+		var suspension = Wicket.Ajax._currentSuspension;
+		
+		if (suspension === undefined) {
+			Wicket.Log.error("Can't suspend: no Ajax call in process");
+			return;
+		}
+		
+		// suspend
+		suspension.suspend();
+
+		return function () {
+			// release only once
+			if (suspension !== null) {
+				suspension.release();
+				suspension = null;
+			}
+		}
+	};
+
 	Wicket.Ajax.Call.prototype = {
 
 		initialize: jQuery.noop,
@@ -933,16 +959,6 @@
 		 */
 		processEvaluation: function (context, node) {
 
-			// used to match evaluation scripts which manually call FunctionsExecuter's notify() when ready
-			var scriptWithIdentifierR = new RegExp("\\(function\\(\\)\\{([a-zA-Z_]\\w*)\\|((.|\\n)*)?\\}\\)\\(\\);$");
-
-			/**
-			 * A regex used to split the text in (priority-)evaluate elements in the Ajax response
-			 * when there are scripts which require manual call of 'FunctionExecutor#notify()'
-			 * @type {RegExp}
-			 */
-			var scriptSplitterR = new RegExp("\\(function\\(\\)\\{[\\s\\S]*?}\\)\\(\\);", 'gi');
-
 			// get the javascript body
 			var text = Wicket.DOM.text(node);
 
@@ -950,61 +966,47 @@
 			var steps = context.steps;
 			var log = Wicket.Log;
 
-			var evaluateWithManualNotify = function (parameters, body) {
-				return function(notify) {
-					var toExecute = "(function(" + parameters + ") {" + body + "})";
-
-					try {
-						// do the evaluation in global scope
-						var f = window.eval(toExecute);
-						f(notify);
-					} catch (exception) {
-						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
-					}
-					return FunctionsExecuter.ASYNC;
-				};
-			};
-
 			var evaluate = function (script) {
 				return function(notify) {
-					// just evaluate the javascript
+					
+					var suspension = {
+						suspended: 0,
+						
+						suspend: function() {
+							suspension.suspended++;
+						},
+						
+						release: function() {
+							suspension.suspended--;
+							if (suspension.suspended == 0) {
+								notify();
+							}
+						}
+					};
+					
 					try {
+						Wicket.Ajax._currentSuspension = suspension;
+						
 						// do the evaluation in global scope
 						window.eval(script);
 					} catch (exception) {
 						log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
+					} finally {
+						Wicket.Ajax.currentSuspension = undefined;
 					}
+					
 					// continue to next step
-					return FunctionsExecuter.DONE;
+					if (suspension.suspended === 0) {
+						// execution finished without suspension, just continue to next step
+						return FunctionsExecuter.DONE;
+					} else {
+						// suspended, signal asynchronous execution of next step
+						return FunctionsExecuter.ASYNC;
+					}
 				};
 			};
-
-			// test if the javascript is in form of identifier|code
-			// if it is, we allow for letting the javascript decide when the rest of processing will continue
-			// by invoking identifier();. This allows usage of some asynchronous/deferred logic before the next script
-			// See WICKET-5039
-			if (scriptWithIdentifierR.test(text)) {
-				var scripts = [];
-				var scr;
-				while ( (scr = scriptSplitterR.exec(text) ) !== null ) {
-					scripts.push(scr[0]);
-				}
-
-				for (var s = 0; s < scripts.length; s++) {
-					var script = scripts[s];
-					if (script) {
-						var scriptWithIdentifier = script.match(scriptWithIdentifierR);
-						if (scriptWithIdentifier) {
-							steps.push(evaluateWithManualNotify(scriptWithIdentifier[1], scriptWithIdentifier[2]));
-						}
-						else {
-							steps.push(evaluate(script));
-						}
-					}
-				}
-			} else {
-				steps.push(evaluate(text));
-			}
+			
+			steps.push(evaluate(text));
 		},
 
 		// Adds a closure that processes a header contribution
