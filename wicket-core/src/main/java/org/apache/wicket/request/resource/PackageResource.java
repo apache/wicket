@@ -526,7 +526,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	/**
 	 * locate resource stream for current resource
 	 * 
-	 * @return resource stream or <code>null</code> if not found
+	 * @return resource stream (never <code>null</code>)
 	 */
 	@Override
 	public IResourceStream getResourceStream()
