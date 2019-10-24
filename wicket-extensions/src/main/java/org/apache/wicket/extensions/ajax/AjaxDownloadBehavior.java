@@ -48,7 +48,7 @@ import com.github.openjson.JSONObject;
  * Usage:
  *
  * <pre>
- * final AjaxDownload download = new AjaxDownload(resource);
+ * final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource);
  * add(download);
  *
  * add(new AjaxButton("download")
