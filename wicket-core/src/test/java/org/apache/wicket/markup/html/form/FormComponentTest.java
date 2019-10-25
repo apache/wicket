@@ -102,9 +102,9 @@ public class FormComponentTest extends WicketTestCase
 	    tester.getRequest().setMethod("POST");
 	    formTester.submit();
         
-            assertEquals("foo", formTester.getTextComponentValue("field1"));
-            assertEquals("bar", formTester.getTextComponentValue("field2"));
-        }
+        assertEquals("foo", formTester.getTextComponentValue("field1"));
+        assertEquals("bar", formTester.getTextComponentValue("field2"));
+    }
 
 	public static class TestPage1 extends WebPage implements IMarkupResourceStreamProvider
 	{
