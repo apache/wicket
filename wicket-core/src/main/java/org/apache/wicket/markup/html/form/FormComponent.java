@@ -815,7 +815,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 		}
 
 		final IRequestParameters parameters;
-		switch (method.toLowerCase())
+		switch (method.toLowerCase(Locale.ROOT))
 		{
 			case Form.METHOD_POST:
 				parameters = request.getPostParameters();
