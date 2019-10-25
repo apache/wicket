@@ -16,16 +16,19 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.junit.Assert;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
-import org.junit.Test;
+import org.junit.Assert;
+import org.junit.Test; 
+
 
 /**
  * 
@@ -89,7 +92,7 @@ public class FormComponentTest extends WicketTestCase
 	}
 	
 	@Test
-    void upperCasePostSubmit() 
+    public void  upperCasePostSubmit() 
 	{
 	    tester.startPage(TestPage1.class);
 	    FormTester formTester = tester.newFormTester("form");
@@ -99,9 +102,9 @@ public class FormComponentTest extends WicketTestCase
 	    tester.getRequest().setMethod("POST");
 	    formTester.submit();
         
-        assertEquals("foo", formTester.getTextComponentValue("field1"));
-        assertEquals("bar", formTester.getTextComponentValue("field2"));
-    }
+            assertEquals("foo", formTester.getTextComponentValue("field1"));
+            assertEquals("bar", formTester.getTextComponentValue("field2"));
+        }
 
 	public static class TestPage1 extends WebPage implements IMarkupResourceStreamProvider
 	{
@@ -111,8 +114,8 @@ public class FormComponentTest extends WicketTestCase
 		{
 			Form form = new Form("form");
 			add(form);
-			form.add(field1 = new TextField("field1"));
-			form.add(field2 = new TextField("field2"));
+			form.add(field1 = new TextField("field1", Model.of("")));
+			form.add(field2 = new TextField("field2", Model.of("")));
 		}
 
 		@Override
