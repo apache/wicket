@@ -87,6 +87,21 @@ public class FormComponentTest extends WicketTestCase
 
 		assertTrue(validator.called);
 	}
+	
+	@Test
+    void upperCasePostSubmit() 
+	{
+	    tester.startPage(TestPage1.class);
+	    FormTester formTester = tester.newFormTester("form");
+	    
+	    formTester.setValue("field1", "foo");
+	    formTester.setValue("field2", "bar");
+	    tester.getRequest().setMethod("POST");
+	    formTester.submit();
+        
+        assertEquals("foo", formTester.getTextComponentValue("field1"));
+        assertEquals("bar", formTester.getTextComponentValue("field2"));
+    }
 
 	public static class TestPage1 extends WebPage implements IMarkupResourceStreamProvider
 	{
