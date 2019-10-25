@@ -23,8 +23,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
@@ -90,20 +92,35 @@ class FormComponentTest extends WicketTestCase
 
 		assertTrue(validator.called);
 	}
+	
+	@Test
+    void upperCasePostSubmit() 
+	{
+	    tester.startPage(TestPage1.class);
+	    FormTester formTester = tester.newFormTester("form");
+	    
+	    formTester.setValue("field1", "foo");
+	    formTester.setValue("field2", "bar");
+	    tester.getRequest().setMethod("POST");
+	    formTester.submit();
+        
+        assertEquals("foo", formTester.getTextComponentValue("field1"));
+        assertEquals("bar", formTester.getTextComponentValue("field2"));
+    }
 
     public static class TestPage1 extends WebPage implements IMarkupResourceStreamProvider
 	{
-		final TextField field1;
-		final TextField field2;
+		final TextField<String> field1;
+		final TextField<String> field2;
 
         public TestPage1()
 		{
-			Form form = new Form("form");
+			Form<Void> form = new Form<>("form");
 			add(form);
-			form.add(field1 = new TextField("field1"));
-			form.add(field2 = new TextField("field2"));
+			form.add(field1 = new TextField<String>("field1", Model.of("")));
+			form.add(field2 = new TextField<String>("field2", Model.of("")));
 		}
-
+        
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
