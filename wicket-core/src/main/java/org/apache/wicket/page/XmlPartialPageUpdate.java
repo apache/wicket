@@ -20,6 +20,7 @@ import java.util.Collection;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
@@ -102,9 +103,8 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	}
 
 	@Override
-	protected void writeHeaderContribution(Response response)
+	protected void writeHeaderContribution(Response response, CharSequence contents)
 	{
-		CharSequence contents = headerBuffer.getContents();
 		if (Strings.isEmpty(contents) == false)
 		{
 			response.write("<header-contribution>");
@@ -116,56 +116,6 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 			response.write("</head>]]>");
 			response.write("</header-contribution>");
 		}
-	}
-
-	@Override
-	protected void writeNormalEvaluations(final Response response, final Collection<CharSequence> scripts)
-	{
-		writeEvaluations(response, "evaluate", scripts);
-
-	}
-
-	@Override
-	protected void writePriorityEvaluations(Response response, Collection<CharSequence> scripts)
-	{
-		writeEvaluations(response, "priority-evaluate", scripts);
-	}
-
-	private void writeEvaluations(final Response response, String elementName, Collection<CharSequence> scripts)
-	{
-		if (scripts.size() > 0)
-		{
-			StringBuilder combinedScript = new StringBuilder(1024);
-			for (CharSequence script : scripts)
-			{
-				combinedScript.append("(function(){").append(script).append("})();");
-			}
-			writeEvaluation(elementName, response, combinedScript);
-		}
-	}
-
-	/**
-	* @param invocation
-	*            type of invocation tag, usually {@literal evaluate} or
-	*            {@literal priority-evaluate}
-	* @param response
-	* @param js
-	*/
-	private void writeEvaluation(final String invocation, final Response response, final CharSequence js)
-	{
-		response.write("<");
-		response.write(invocation);
-		response.write(">");
-
-		response.write("<![CDATA[");
-		response.write(encode(js));
-		response.write("]]>");
-
-		response.write("</");
-		response.write(invocation);
-		response.write(">");
-
-		bodyBuffer.reset();
 	}
 
 	protected CharSequence encode(CharSequence str)

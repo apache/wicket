@@ -88,6 +88,6 @@ public class CspNonceHeaderResponse extends DecoratingHeaderResponse
 	 */
 	protected String getContentSecurityPolicy(String nonce)
 	{
-		return String.format("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1$s'; style-src 'nonce-%1$s';", nonce);
+		return String.format("script-src 'strict-dynamic' 'nonce-%1$s'; style-src 'nonce-%1$s';", nonce);
 	}
 }

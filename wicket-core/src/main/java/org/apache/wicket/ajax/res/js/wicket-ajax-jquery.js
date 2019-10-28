@@ -850,35 +850,23 @@
 				}
 
 				var steps = context.steps;
-
-				// go through the ajax response and execute all priority-invocations first
-				for (var i = 0; i < root.childNodes.length; ++i) {
-					var childNode = root.childNodes[i];
-					if (childNode.tagName === "header-contribution") {
-						this.processHeaderContribution(context, childNode);
-					} else if (childNode.tagName === "priority-evaluate") {
-						this.processEvaluation(context, childNode);
-					}
-				}
-
-				// go through the ajax response and for every action (component, js evaluation, header contribution)
-				// ad the proper closure to steps
 				var stepIndexOfLastReplacedComponent = -1;
-				for (var c = 0; c < root.childNodes.length; ++c) {
-					var node = root.childNodes[c];
 
-					if (node.tagName === "component") {
+				// go through the ajax response and execute all items
+				for (var i = 0; i < root.childNodes.length; ++i) {
+					var node = root.childNodes[i];
+					
+					if (node.tagName === "header-contribution") {
+						this.processHeaderContribution(context, node);
+					} else if (node.tagName === "component") {
 						if (stepIndexOfLastReplacedComponent === -1) {
 							this.processFocusedComponentMark(context);
 						}
 						stepIndexOfLastReplacedComponent = steps.length;
 						this.processComponent(context, node);
-					} else if (node.tagName === "evaluate") {
-						this.processEvaluation(context, node);
 					} else if (node.tagName === "redirect") {
 						this.processRedirect(context, node);
 					}
-
 				}
 				if (stepIndexOfLastReplacedComponent !== -1) {
 					this.processFocusedComponentReplaceCheck(steps, stepIndexOfLastReplacedComponent);
@@ -950,63 +938,6 @@
 				// continue to next step
 				return FunctionsExecuter.DONE;
 			});
-		},
-
-		/**
-		 * Adds a closure that evaluates javascript code.
-		 * @param context {Object} - the object that brings the executer's steps and the attributes
-		 * @param node {XmlElement} - the <[priority-]evaluate> element with the script to evaluate
-		 */
-		processEvaluation: function (context, node) {
-
-			// get the javascript body
-			var text = Wicket.DOM.text(node);
-
-			// aliases to improve performance
-			var steps = context.steps;
-			var log = Wicket.Log;
-
-			var evaluate = function (script) {
-				return function(notify) {
-					
-					var suspension = {
-						suspended: 0,
-						
-						suspend: function() {
-							suspension.suspended++;
-						},
-						
-						release: function() {
-							suspension.suspended--;
-							if (suspension.suspended == 0) {
-								notify();
-							}
-						}
-					};
-					
-					try {
-						Wicket.Ajax._currentSuspension = suspension;
-						
-						// do the evaluation in global scope
-						window.eval(script);
-					} catch (exception) {
-						log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
-					} finally {
-						Wicket.Ajax.currentSuspension = undefined;
-					}
-					
-					// continue to next step
-					if (suspension.suspended === 0) {
-						// execution finished without suspension, just continue to next step
-						return FunctionsExecuter.DONE;
-					} else {
-						// suspended, signal asynchronous execution of next step
-						return FunctionsExecuter.ASYNC;
-					}
-				};
-			};
-			
-			steps.push(evaluate(text));
 		},
 
 		// Adds a closure that processes a header contribution
@@ -1937,20 +1868,17 @@
 							}
 						}
 
+						// convert the XML node to DOM node
+						var scriptDomNode = document.createElement("script");
+						var attrs = node.attributes;
+						for (var a = 0; a < attrs.length; a++) {
+							var attr = attrs[a];
+							scriptDomNode[attr.name] = attr.value;
+						}
+						
 						// determine whether it is external javascript (has src attribute set)
 						var src = node.getAttribute("src");
-
 						if (src !== null && src !== "") {
-
-							// convert the XML node to DOM node
-							var scriptDomNode = document.createElement("script");
-
-							var attrs = node.attributes;
-							for (var a = 0; a < attrs.length; a++) {
-								var attr = attrs[a];
-								scriptDomNode[attr.name] = attr.value;
-							}
-
 							var onScriptReady = function () {
 								notify();
 							};
@@ -1973,29 +1901,47 @@
 
 							return FunctionsExecuter.ASYNC;
 						} else {
-							// serialize the element content to string
-							var text = Wicket.DOM.serializeNodeChildren(node);
-							// get rid of prefix and suffix, they are not eval-d correctly
-							text = text.replace(/^\n\/\*<!\[CDATA\[\*\/\n/, "");
-							text = text.replace(/\n\/\*\]\]>\*\/\n$/, "");
-
-							var id = node.getAttribute("id");
-							var type = node.getAttribute("type");
-
-							if (typeof(id) === "string" && id.length > 0) {
-								// add javascript to document head
-								Wicket.Head.addJavascript(text, id, "", type);
-							} else {
-								try {
-									// do the evaluation in global scope
-									window.eval(text);
-								} catch (e) {
-									Wicket.Log.error("Wicket.Head.Contributor.processScript: %s", text, e);
+							var suspension = {
+								suspended: 0,
+										
+								suspend: function() {
+									suspension.suspended++;
+								},
+										
+								release: function() {
+									suspension.suspended--;
+									if (suspension.suspended == 0) {
+										notify();
+									}
 								}
+							};
+
+							try {
+								Wicket.Ajax._currentSuspension = suspension;
+
+								// serialize the element content to string
+								var text = Wicket.DOM.serializeNodeChildren(node);
+								// get rid of prefix and suffix, they are not eval-d correctly
+								text = text.replace(/^\n\/\*<!\[CDATA\[\*\/\n/, "");
+								text = text.replace(/\n\/\*\]\]>\*\/\n$/, "");
+								scriptDomNode.innerHTML = text;
+
+								var id = node.getAttribute("id");
+								Wicket.Head.addElement(scriptDomNode, typeof(id) !== "string" || id.length == 0);
+							} catch (exception) {
+								log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
+							} finally {
+								Wicket.Ajax.currentSuspension = undefined;
 							}
 
 							// continue to next step
-							return FunctionsExecuter.DONE;
+							if (suspension.suspended === 0) {
+								// execution finished without suspension, just continue to next step
+								return FunctionsExecuter.DONE;
+							} else {
+								// suspended, signal asynchronous execution of next step
+								return FunctionsExecuter.ASYNC;
+							}
 						}
 					});
 				},
@@ -2044,16 +1990,19 @@
 			},
 
 			// Adds the element to page head
-			addElement: function (element) {
+			addElement: function (element, remove) {
 				var headItems = document.querySelector('head meta[name="wicket.header.items"]');
 				if (headItems) {
 					headItems.parentNode.insertBefore(element, headItems);
 				} else {
 					var head = document.querySelector("head");
-
 					if (head) {
 						head.appendChild(element);
 					}
+				}
+
+				if (remove) {
+					element.parentNode.removeChild(element);
 				}
 			},
 

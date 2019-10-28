@@ -25,12 +25,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.Cookie;
+
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.FeedbackDelay;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.IWrappedHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
@@ -45,6 +49,7 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -52,16 +57,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A partial update of a page that collects components and header contributions to be written to the client in a specific
- * String-based format (XML, JSON, * ...).
+ * A partial update of a page that collects components and header contributions to be written to the
+ * client in a specific String-based format (XML, JSON, * ...).
  * <p>
  * The elements of such response are:
  * <ul>
- * <li>priority-evaluate - an item of the prepend JavaScripts</li>
  * <li>component - the markup of the updated component</li>
- * <li>evaluate - an item of the onDomReady and append JavaScripts</li>
- * <li>header-contribution - all HeaderItems which have been contributed in
- * components' and their behaviors' #renderHead(Component, IHeaderResponse)</li>
+ * <li>header-contribution - all HeaderItems which have been contributed in any{@link Component#renderHead(IHeaderResponse)},
+ * {@link Behavior#renderHead(Component, IHeaderResponse)} or JavaScript explicitly added via {@link #appendJavaScript(CharSequence)}
+ * or {@link #prependJavaScript(CharSequence)}</li>
  * </ul>
  */
 public abstract class PartialPageUpdate
@@ -155,21 +159,21 @@ public abstract class PartialPageUpdate
 
 			onBeforeRespond(response);
 
+			// queue up prepend javascripts. unlike other steps these are executed out of order so that
+			// components can contribute them from inside their onbeforerender methods.
+			writeEvaluations(response, prependJavaScripts);
+
 			// process added components
 			writeComponents(response, encoding);
 
 			onAfterRespond(response);
-
-			// queue up prepend javascripts. unlike other steps these are executed out of order so that
-			// components can contribute them from inside their onbeforerender methods.
-			writePriorityEvaluations(response, prependJavaScripts);
 
 			// execute the dom ready javascripts as first javascripts
 			// after component replacement
 			List<CharSequence> evaluationScripts = new ArrayList<>();
 			evaluationScripts.addAll(domReadyJavaScripts);
 			evaluationScripts.addAll(appendJavaScripts);
-			writeNormalEvaluations(response, evaluationScripts);
+			writeEvaluations(response, evaluationScripts);
 
 			writeFooter(response, encoding);
 		} finally {
@@ -212,16 +216,33 @@ public abstract class PartialPageUpdate
 	 * @param js
 	 *      the JavaScript to evaluate
 	 */
-	protected abstract void writePriorityEvaluations(Response response, Collection<CharSequence> js);
+	protected void writeEvaluations(final Response response, Collection<CharSequence> scripts)
+	{
+		if (scripts.size() > 0)
+		{
+			StringBuilder combinedScript = new StringBuilder(1024);
+			for (CharSequence script : scripts)
+			{
+				combinedScript.append("(function(){").append(script).append("})();");
+			}
 
-	/**
-	 *
-	 * @param response
-	 *      the response to write to
-	 * @param js
-	 *      the JavaScript to evaluate
-	 */
-	protected abstract void writeNormalEvaluations(Response response, Collection<CharSequence> js);
+			StringResponse stringResponse = new StringResponse();
+			IHeaderResponse headerResponse = Application.get().decorateHeaderResponse(new HeaderResponse()
+			{
+				@Override
+				protected Response getRealResponse()
+				{
+					return stringResponse;
+				}
+			});
+			
+			headerResponse.render(JavaScriptHeaderItem.forScript(combinedScript, null));
+			headerResponse.close();
+			
+			writeHeaderContribution(response, stringResponse.getBuffer());
+		}
+	}
+
 
 	/**
 	 * Processes components added to the target. This involves attaching components, rendering
@@ -281,7 +302,7 @@ public abstract class PartialPageUpdate
 			cycle.setResponse(oldResponse);
 
 			// write the XML tags and we're done
-			writeHeaderContribution(response);
+			writeHeaderContribution(response, headerBuffer.getContents());
 			headerRendering = false;
 		}
 	}
@@ -358,7 +379,7 @@ public abstract class PartialPageUpdate
 	 * @param response
 	 *      the response to write to
 	 */
-	protected abstract void writeHeaderContribution(Response response);
+	protected abstract void writeHeaderContribution(Response response, CharSequence contents);
 
 	@Override
 	public boolean equals(Object o)
@@ -575,7 +596,7 @@ public abstract class PartialPageUpdate
 			requestCycle.setResponse(oldResponse);
 		}
 
-		writeHeaderContribution(response);
+		writeHeaderContribution(response, headerBuffer.getContents());
 		headerRendering = false;
 	}
 

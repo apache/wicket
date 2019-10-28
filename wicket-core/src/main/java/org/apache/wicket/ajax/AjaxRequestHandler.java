@@ -153,15 +153,13 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 					final Map<String, Component> components = Collections
 						.unmodifiableMap(markupIdToComponent);
 
-					// create response that will be used by listeners to append
-					// javascript
+					// create response that will be used by listeners to append javascript
 					final AjaxRequestTarget.IJavaScriptResponse jsresponse = new AjaxRequestTarget.IJavaScriptResponse()
 					{
 						@Override
 						public void addJavaScript(String script)
 						{
-							writeNormalEvaluations(response,
-								Collections.<CharSequence> singleton(script));
+							writeEvaluations(response, Collections.<CharSequence> singleton(script));
 						}
 					};
 
