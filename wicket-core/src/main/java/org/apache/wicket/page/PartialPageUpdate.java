@@ -668,13 +668,8 @@ public abstract class PartialPageUpdate
 		@Override
 		public void render(HeaderItem item)
 		{
-			PriorityHeaderItem priorityHeaderItem = null;
 			while (item instanceof IWrappedHeaderItem)
 			{
-				if (item instanceof PriorityHeaderItem)
-				{
-					priorityHeaderItem = (PriorityHeaderItem) item;
-				}
 				item = ((IWrappedHeaderItem) item).getWrapped();
 			}
 
@@ -698,14 +693,7 @@ public abstract class PartialPageUpdate
 			{
 				if (!wasItemRendered(item))
 				{
-					if (priorityHeaderItem != null)
-					{
-						PartialPageUpdate.this.domReadyJavaScripts.add(0, ((OnDomReadyHeaderItem)item).getJavaScript());
-					}
-					else
-					{
-						PartialPageUpdate.this.domReadyJavaScripts.add(((OnDomReadyHeaderItem)item).getJavaScript());
-					}
+					PartialPageUpdate.this.domReadyJavaScripts.add(((OnDomReadyHeaderItem)item).getJavaScript());
 					markItemRendered(item);
 				}
 			}
