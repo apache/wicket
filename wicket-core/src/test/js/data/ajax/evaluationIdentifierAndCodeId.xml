@@ -15,5 +15,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<ajax-response><evaluate>(function(){ignored|ok(true, 'Evaluation with identifier (with newlines, WICKET-5504) must be executed!');
-    equal(typeof(ignored), 'function', 'The passed identifier must be a function'); arguments[0]();})();</evaluate><evaluate>(function(){ignored|start(); ok(true, 'Evaluation with identifier (without newlines) 2 must be executed!');equal(typeof(ignored), 'function', 'The passed identifier must be a function'); arguments[0]();})();</evaluate></ajax-response>
+<ajax-response>
+<header-contribution><![CDATA[
+<head xmlns:wicket="http://wicket.apache.org">
+<script type="text/javascript">
+/*<![CDATA[*/
+start();
+ok(true, 'Evaluation must be executed!');
+Wicket.Ajax.suspendCall()();
+/*]]]]><![CDATA[>*/
+</script>
+</head>
+]]></header-contribution>
+</ajax-response>
