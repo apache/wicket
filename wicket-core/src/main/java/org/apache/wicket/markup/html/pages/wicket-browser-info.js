@@ -57,7 +57,6 @@
 					info.screenWidth = window.screen.width;
 					info.screenHeight = window.screen.height;
 					info.screenColorDepth = window.screen.colorDepth;
-					info.utcOffset = (new Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
 				}
 				var jsTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 				info.jsTimeZone = jsTimeZone ? jsTimeZone : null;;
