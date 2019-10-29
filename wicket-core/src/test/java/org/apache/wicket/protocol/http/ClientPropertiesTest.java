@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ClientProperties that failed on Mac OS X Java platform.
- * 
+ *
  * @author Martijn Dashorst
  */
 class ClientPropertiesTest
@@ -146,6 +146,34 @@ class ClientPropertiesTest
 		ClientProperties props = new ClientProperties();
 		props.setUtcOffset("11");
 		props.setUtcDSTOffset("10");
+
+		assertEquals(TimeZone.getTimeZone("AET"), props.getTimeZone());
+	}
+
+	/**
+	 * jsTimeZone "positive" test
+	 */
+	@Test
+	void timezoneJsPositive()
+	{
+		ClientProperties props = new ClientProperties();
+		props.setUtcOffset("11");
+		props.setUtcDSTOffset("10");
+		props.setJsTimeZone("Asia/Novosibirsk");
+
+		assertEquals(TimeZone.getTimeZone("Asia/Novosibirsk"), props.getTimeZone());
+	}
+
+	/**
+	 * jsTimeZone "negative" test
+	 */
+	@Test
+	void timezoneJsNegative()
+	{
+		ClientProperties props = new ClientProperties();
+		props.setUtcOffset("11");
+		props.setUtcDSTOffset("10");
+		props.setJsTimeZone("aaa");
 
 		assertEquals(TimeZone.getTimeZone("AET"), props.getTimeZone());
 	}
