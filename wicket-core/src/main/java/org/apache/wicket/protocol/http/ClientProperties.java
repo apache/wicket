@@ -38,17 +38,17 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * <p>
  * A convenient way of letting Wicket do a sneaky redirect to {@link BrowserInfoPage} (and back
  * again) is to put this in your Application's init method:
- * 
+ *
  * <pre>
  * getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
  * </pre>
- * 
+ *
  * </p>
- * 
+ *
  * WARNING: Be sure you think about the dangers of depending on information you pull from the client
  * too much. They may be easily spoofed or inaccurate in other ways, and properties like window and
  * browser size are all too easy to be used naively.
- * 
+ *
  * @see BrowserInfoPage
  * @author Frank Bille (frankbille)
  */
@@ -72,6 +72,7 @@ public class ClientProperties implements IClusterable
 	private int screenWidth = -1;
 	private String utcDSTOffset;
 	private String utcOffset;
+	private String jsTimeZone;
 	private String hostname;
 
 	private boolean javaScriptEnabled;
@@ -185,11 +186,19 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Get the client's time zone if that could be detected.
-	 * 
+	 *
 	 * @return The client's time zone
 	 */
 	public TimeZone getTimeZone()
 	{
+		if (timeZone == null && jsTimeZone != null)
+		{
+			TimeZone temptimeZone = TimeZone.getTimeZone(jsTimeZone);
+			if (jsTimeZone.equals(temptimeZone.getID()))
+			{
+				timeZone = temptimeZone;
+			}
+		}
 		if (timeZone == null)
 		{
 			String utc = getUtcOffset();
@@ -331,7 +340,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Flag indicating support of JavaScript in the browser.
-	 * 
+	 *
 	 * @return True if JavaScript is enabled
 	 */
 	public boolean isJavaScriptEnabled() {
@@ -339,8 +348,8 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @return The client's navigator.cookieEnabled property.
 	 */
 	public boolean isNavigatorCookieEnabled()
@@ -498,7 +507,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Sets time zone.
-	 * 
+	 *
 	 * @param timeZone
 	 */
 	public void setTimeZone(TimeZone timeZone)
@@ -522,6 +531,14 @@ public class ClientProperties implements IClusterable
 	public void setUtcOffset(String utcOffset)
 	{
 		this.utcOffset = utcOffset;
+	}
+
+	/**
+	 * @param jsTimeZone
+	 */
+	public void setJsTimeZone(String jsTimeZone)
+	{
+		this.jsTimeZone = jsTimeZone;
 	}
 
 	/**
@@ -591,7 +608,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Read parameters.
-	 * 
+	 *
 	 * @param parameters
 	 *            parameters sent from browser
 	 */
@@ -610,6 +627,7 @@ public class ClientProperties implements IClusterable
 		setScreenColorDepth(parameters.getParameterValue("screenColorDepth").toInt(-1));
 		setUtcOffset(parameters.getParameterValue("utcOffset").toString(null));
 		setUtcDSTOffset(parameters.getParameterValue("utcDSTOffset").toString(null));
+		setJsTimeZone(parameters.getParameterValue("jsTimeZone").toString(null));
 		setBrowserWidth(parameters.getParameterValue("browserWidth").toInt(-1));
 		setBrowserHeight(parameters.getParameterValue("browserHeight").toInt(-1));
 		setHostname(parameters.getParameterValue("hostname").toString("N/A"));
