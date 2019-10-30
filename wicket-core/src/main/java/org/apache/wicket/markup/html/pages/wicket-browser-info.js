@@ -58,8 +58,11 @@
 					info.screenHeight = window.screen.height;
 					info.screenColorDepth = window.screen.colorDepth;
 				}
-				var jsTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-				info.jsTimeZone = jsTimeZone ? jsTimeZone : null;;
+				if (Intl && typeof(Intl.DateTimeFormat) === 'function' &&
+						typeof(Intl.DateTimeFormat().resolvedOptions) === 'function') {
+					var jsTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+					info.jsTimeZone = jsTimeZone ? jsTimeZone : null;
+				}
 				info.utcOffset = (new Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
 				info.utcDSTOffset = (new Date(new Date().getFullYear(), 6, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
 				info.browserWidth =  window.innerWidth || document.body.offsetWidth;
