@@ -157,8 +157,6 @@ class ClientPropertiesTest
 	void timezoneJsPositive()
 	{
 		ClientProperties props = new ClientProperties();
-		props.setUtcOffset("11");
-		props.setUtcDSTOffset("10");
 		props.setJsTimeZone("Asia/Novosibirsk");
 
 		assertEquals(TimeZone.getTimeZone("Asia/Novosibirsk"), props.getTimeZone());
