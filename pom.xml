@@ -145,7 +145,7 @@
 		<el-impl.version>2.2.1-b05</el-impl.version>
 		<forbiddenapis.version>2.6</forbiddenapis.version>
 		<jacoco.version>0.8.2</jacoco.version>
-		<jackson.version>2.9.9</jackson.version>
+		<jackson.version>2.9.10.1</jackson.version>
 		<javax.el.version>3.0.1-b11</javax.el.version>
 		<javax.el-api.version>3.0.1-b06</javax.el-api.version>
 		<javax.servlet.jsp-api.version>2.3.3</javax.servlet.jsp-api.version>
