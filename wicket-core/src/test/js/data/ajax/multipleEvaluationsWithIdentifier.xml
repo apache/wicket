@@ -20,14 +20,27 @@
 <head xmlns:wicket="http://wicket.apache.org">
 <script type="text/javascript">
 /*<![CDATA[*/
-ok(true, 'Evaluation must be executed!');
+ok(true, 'Evaluation 1 must be executed!');
+var suspension = Wicket.Ajax.suspendCall();
+setTimeout(function() {
+	suspension();
+	suspension();
+}, 0);
+/*]]]]><![CDATA[>*/
+</script>
+<script type="text/javascript">
+/*<![CDATA[*/
+ok(true, 'Evaluation 2 must be executed!');
 Wicket.Ajax.suspendCall()();
 /*]]]]><![CDATA[>*/
 </script>
 <script type="text/javascript">
 /*<![CDATA[*/
-ok(true, 'Evaluation must be executed!');
-Wicket.Ajax.suspendCall()();
+ok(true, 'Evaluation 3 must be executed!');
+var suspension = Wicket.Ajax.suspendCall();
+setTimeout(function() {
+	suspension();
+}, 0);
 start();
 /*]]]]><![CDATA[>*/
 </script>

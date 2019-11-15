@@ -102,11 +102,11 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('processEvaluation*s* with suspend.', function () {
 
-			expect(3);
+			expect(4);
 
 			var attrs = {
-				u: 'data/ajax/twoEvaluationsWithIdentifier.xml',
-				c: 'twoEvaluationsWithIdentifier'
+				u: 'data/ajax/multipleEvaluationsWithIdentifier.xml',
+				c: 'multipleEvaluationsWithIdentifier'
 			};
 			execute(attrs);
 		});
