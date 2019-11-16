@@ -1365,9 +1365,6 @@ public class BaseWicketTester
 		{
 			Constructor<C> c = componentClass.getConstructor(String.class);
 			comp = c.newInstance(ComponentInPage.ID);
-			componentInPage = new ComponentInPage();
-			componentInPage.component = comp;
-			componentInPage.isInstantiated = true;
 		}
 		catch (Exception e)
 		{
@@ -1377,7 +1374,11 @@ public class BaseWicketTester
 		}
 
 		// process the component
-		return startComponentInPage(comp, pageMarkup);
+		C started = startComponentInPage(comp, pageMarkup);
+		
+		componentInPage.isInstantiated = true;
+		
+		return started;
 	}
 
 	/**
@@ -1475,22 +1476,12 @@ public class BaseWicketTester
 		// Add the child component
 		page.add(component);
 
-		// Preserve 'componentInPage' because #startPage() needs to null-fy it
-		ComponentInPage oldComponentInPage = componentInPage;
-
 		// Process the page
 		startPage(page);
 
-		// Remember the "root" component processes and return it
-		if (oldComponentInPage != null)
-		{
-			componentInPage = oldComponentInPage;
-		}
-		else
-		{
-			componentInPage = new ComponentInPage();
-			componentInPage.component = component;
-		}
+		componentInPage = new ComponentInPage();
+		componentInPage.component = component;
+		
 		return component;
 	}
 

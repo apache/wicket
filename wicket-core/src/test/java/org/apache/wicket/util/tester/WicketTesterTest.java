@@ -1339,4 +1339,22 @@ public class WicketTesterTest extends WicketTestCase
 		tester.assertComponentOnAjaxResponse(testLink);
 
 	}
+	
+	/**
+	 * WICKET-6713 component can be started via class or instance on same tester
+	 */
+	@Test
+	public void componentInPage() {
+		tester.startComponentInPage(Label.class);
+		
+		tester.assertVisible("");
+
+		tester.startComponentInPage(new Label("otherLabel"));
+		
+		tester.assertVisible("otherLabel");
+
+		tester.startComponentInPage(Label.class);
+		
+		tester.assertVisible("");
+	}
 }
