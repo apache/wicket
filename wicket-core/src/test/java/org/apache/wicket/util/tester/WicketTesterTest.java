@@ -1353,6 +1353,24 @@ class WicketTesterTest extends WicketTestCase
 
 	}
 
+	/**
+	 * WICKET-6713 component can be started via class or instance on same tester
+	 */
+	@Test
+	void componentInPage() {
+		tester.startComponentInPage(Label.class);
+		
+		tester.assertVisible("");
+
+		tester.startComponentInPage(new Label("otherLabel"));
+		
+		tester.assertVisible("otherLabel");
+
+		tester.startComponentInPage(Label.class);
+		
+		tester.assertVisible("");
+	}
+
 	public static class AlwaysRedirectPage extends WebPage
 	{
 		public AlwaysRedirectPage()
@@ -1360,5 +1378,5 @@ class WicketTesterTest extends WicketTestCase
 			// redirects to another web server on the same computer
 			throw new RedirectToUrlException("http://localhost:4333/");
 		}
-	}
+	}	
 }
