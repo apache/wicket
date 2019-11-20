@@ -373,7 +373,7 @@
 				suspension.release();
 				suspension = null;
 			}
-		}
+		};
 	};
 
 	Wicket.Ajax.Call.prototype = {
@@ -1910,26 +1910,27 @@
 										
 								release: function() {
 									suspension.suspended--;
-									if (suspension.suspended == 0) {
+									if (suspension.suspended === 0) {
 										notify();
 									}
 								}
 							};
 
+							// serialize the element content to string
+							var text = Wicket.DOM.serializeNodeChildren(node);
+							// get rid of prefix and suffix, they are not eval-d correctly
+							text = text.replace(/^\n\/\*<!\[CDATA\[\*\/\n/, "");
+							text = text.replace(/\n\/\*\]\]>\*\/\n$/, "");
+							
 							try {
 								Wicket.Ajax._currentSuspension = suspension;
 
-								// serialize the element content to string
-								var text = Wicket.DOM.serializeNodeChildren(node);
-								// get rid of prefix and suffix, they are not eval-d correctly
-								text = text.replace(/^\n\/\*<!\[CDATA\[\*\/\n/, "");
-								text = text.replace(/\n\/\*\]\]>\*\/\n$/, "");
 								scriptDomNode.innerHTML = text;
 
 								var id = node.getAttribute("id");
-								Wicket.Head.addElement(scriptDomNode, typeof(id) !== "string" || id.length == 0);
+								Wicket.Head.addElement(scriptDomNode, typeof(id) !== "string" || id.length === 0);
 							} catch (exception) {
-								log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
+								Wicket.Log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
 							} finally {
 								Wicket.Ajax.currentSuspension = undefined;
 							}
