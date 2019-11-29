@@ -15,6 +15,12 @@
  * limitations under the License.
  */
 
+/*
+ * Used by TrapFocusBehavior to trap focus inside a component's markup.
+ *
+ * @author Igor Vaynberg
+ * @author svenmeier
+ */
 ;
 (function($, window, document, undefined) {
 	'use strict';
@@ -23,25 +29,25 @@
 		return;
 	}
 	
-	/** Finds all elements inside container that can receive focus */
+	/** find all elements inside container that can receive focus */
 	function findFocusable(container) {
 		var focusables = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]';
 		return container.find(focusables).filter(":visible, *:not([tabindex=-1])");
 	}
 
-	// special handler listening for 'trapfocusremove' handlers - it is
-	// invoked when any element with that event handler is removed from the DOM
+	// special handler notified by jQuery on removal of a 'trapfocusremove' handler - this
+	// happens whenever an element with a focus trap is removed from the DOM, see below
 	$.event.special.trapfocusremove = {
 		remove: function(handleObj) {
-			// forward notification of removal
+			// forward removal notification, this allows the focus trap to be cleaned up  
 			handleObj.handler();
 		}
 	};
 
-	// global handler for 'focusin'
+	// one global active 'focusin' handler for all traps  
 	var focusin = $.noop;
 
-	// setup focus trap for an element
+	// setup a focus trap for an element
 	window.Wicket.trapFocus = function(element) {
 		
 		// keep old active element
@@ -76,7 +82,7 @@
 			}
 		});
 		
-		// turn off possible previous 'focusin' handler
+		// turn off previous 'focusin' handler
 		var previousfocusin = focusin;
 		$(document).off("focusin", focusin);
 
