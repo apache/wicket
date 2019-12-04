@@ -41,7 +41,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class FileUpload implements IClusterable
+public class FileUpload
 {
 	private static final long serialVersionUID = 1L;
 
