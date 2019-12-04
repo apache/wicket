@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -28,6 +29,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -82,6 +84,28 @@ public class AutoLabelLabelProviderLocatorTest extends WicketTestCase
 		public Component getAutoLabelComponent()
 		{
 			return text;
+		}
+	}
+
+	static class WrongLabelProviderLocatorPanel extends Panel implements ILabelProviderLocator
+	{
+
+		private WebMarkupContainer dummy;
+
+		WrongLabelProviderLocatorPanel(String id)
+		{
+			super(id);
+			dummy = new WebMarkupContainer("dummy");
+			dummy.add(AttributeModifier.replace("class", "dummy1"));
+			add(dummy);
+			TextField<String> text = new TextField<>("text", Model.of(""));
+			dummy.add(text);
+		}
+
+		@Override
+		public Component getAutoLabelComponent()
+		{
+			return dummy;
 		}
 	}
 
@@ -150,5 +174,52 @@ public class AutoLabelLabelProviderLocatorTest extends WicketTestCase
 		tester.assertContains("for=\"dummy_text\"><span wicket:id=\"label\">Example1</span>");
 		tester.assertContains("for=\"dummy_dummy1_text\"><span wicket:id=\"label\">Example2</span>");
 	}
+
+	@Test
+	public void testFailingILabelProviderLocator()
+	{
+		List<IEditPanelProvider> providers = new ArrayList<>();
+
+		providers.add(new IEditPanelProvider()
+		{
+			@Override
+			public IModel<String> getLabelText()
+			{
+				return Model.of("Example1");
+			}
+
+			@Override
+			public Panel createEditPanel(String id)
+			{
+				return new ILabelProviderLocatorPanel1(id);
+			}
+		});
+
+		providers.add(new IEditPanelProvider()
+		{
+			@Override
+			public IModel<String> getLabelText()
+			{
+				return Model.of("Example2");
+			}
+
+			@Override
+			public Panel createEditPanel(String id)
+			{
+				return new WrongLabelProviderLocatorPanel(id);
+			}
+		});
+
+		try
+		{
+			EditPage editPage = new EditPage(providers);
+			tester.startPage(editPage);
+			Assert.fail("Page rendering should produce a WicketRuntimeException");
+		}
+		catch (WicketRuntimeException e)
+		{
+            Assert.assertEquals("Component 'org.apache.wicket.markup.html.WebMarkupContainer', pointed to by wicket:for attribute 'edit-component', does not implement org.apache.wicket.markup.html.form.ILabelProvider", e.getMessage());
+		}
+ 	}
 
 }
