@@ -110,8 +110,8 @@ public class AutoLabelResolver implements IComponentResolver
 
 		if (!(component instanceof ILabelProvider))
 		{
-			throw new WicketRuntimeException("Component pointed to by wicket:for attribute '" + path +
-				"' does not implement " + ILabelProvider.class.getName());
+			throw new WicketRuntimeException("Component '" + (component == null ? "null" : component.getClass().getName())
+					+ "', pointed to by wicket:for attribute '" + path + "', does not implement " + ILabelProvider.class.getName());
 		}
 
 		if (!component.getOutputMarkupId())
