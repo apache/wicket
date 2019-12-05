@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
  * Tests {@code wicket:for} attribute functionality using {@link ILabelProviderLocator}
  */
 @SuppressWarnings({ "rawtypes", "serial" })
-class AutoLabelLabelProviderLocatorTest extends WicketTestCase
+public class AutoLabelLabelProviderLocatorTest extends WicketTestCase
 {
 	static class ILabelProviderLocatorPanel1 extends Panel implements ILabelProviderLocator
 	{
@@ -135,7 +135,7 @@ class AutoLabelLabelProviderLocatorTest extends WicketTestCase
 	}
 
 	@Test
-	void testILabelProviderLocator()
+	public void testILabelProviderLocator()
 	{
 		List<IEditPanelProvider> providers = new ArrayList<>();
 
@@ -177,7 +177,7 @@ class AutoLabelLabelProviderLocatorTest extends WicketTestCase
 	}
 
 	@Test
-	void testFailingILabelProviderLocator()
+	public void testFailingILabelProviderLocator()
 	{
 		List<IEditPanelProvider> providers = new ArrayList<>();
 
