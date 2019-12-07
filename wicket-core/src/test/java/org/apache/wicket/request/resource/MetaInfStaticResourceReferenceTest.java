@@ -52,7 +52,7 @@ class MetaInfStaticResourceReferenceTest
 	void testWithServlet30() throws MalformedURLException
 	{
 		MockApplication application = new MockApplication();
-		MockServletContext servletContext = new MockServletContext(application, "/");
+		MockServletContext servletContext = new MockServletContext(application, null);
 		BaseWicketTester tester = new BaseWicketTester(application, servletContext);
 
 		MetaInfStaticResourceReference metaRes = new MetaInfStaticResourceReference(getClass(),

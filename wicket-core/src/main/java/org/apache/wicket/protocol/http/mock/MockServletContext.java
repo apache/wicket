@@ -17,8 +17,6 @@
 package org.apache.wicket.protocol.http.mock;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
@@ -407,25 +405,15 @@ public class MockServletContext implements ServletContext
 	@Override
 	public String getRealPath(String name)
 	{
-		if (webappRoot == null)
-		{
-			return null;
+		try {
+			URL url = getResource(name);
+			if (url != null) {
+				return url.getFile();
+			}
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
 		}
-
-		if (name.startsWith("/"))
-		{
-			name = name.substring(1);
-		}
-
-		File f = new File(webappRoot, name);
-		if (!f.exists())
-		{
-			return null;
-		}
-		else
-		{
-			return f.getPath();
-		}
+		return null;
 	}
 
 	/**
@@ -468,30 +456,21 @@ public class MockServletContext implements ServletContext
 	@Override
 	public URL getResource(String name) throws MalformedURLException
 	{
-		if (webappRoot == null)
-		{
-			return null;
-		}
-
-		URL result = null;
-
 		if (name.startsWith("/"))
 		{
 			name = name.substring(1);
 		}
 
-		File f = new File(webappRoot, name);
-		if (f.exists())
+		if (webappRoot != null)
 		{
-			result = f.toURI().toURL();
+			File f = new File(webappRoot, name);
+			if (f.exists())
+			{
+				return f.toURI().toURL();
+			}
 		}
 
-		if (result == null)
-		{
-			result = getClass().getClassLoader().getResource("META-INF/resources/" + name);
-		}
-
-		return result;
+		return getClass().getClassLoader().getResource("META-INF/resources/" + name);
 	}
 
 	/**
@@ -504,33 +483,15 @@ public class MockServletContext implements ServletContext
 	@Override
 	public InputStream getResourceAsStream(String name)
 	{
-		if (webappRoot == null)
-		{
-			return null;
-		}
-
-		if (name.startsWith("/"))
-		{
-			name = name.substring(1);
-		}
-
-		File f = new File(webappRoot, name);
-		if (!f.exists())
-		{
-			return null;
-		}
-		else
-		{
-			try
-			{
-				return new FileInputStream(f);
+		try {
+			URL url = getResource(name);
+			if (url != null) {
+				return url.openStream();
 			}
-			catch (FileNotFoundException e)
-			{
-				log.error(e.getMessage(), e);
-				return null;
-			}
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
 		}
+		return null;
 	}
 
 	/**
