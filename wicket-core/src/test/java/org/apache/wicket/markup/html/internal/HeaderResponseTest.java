@@ -114,7 +114,7 @@ class HeaderResponseTest
     void deferJavaScriptReference()
     {
         boolean defer = true;
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", defer));
+        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setDefer(defer));
         String expected = "<script type=\"text/javascript\" id=\"some-id\" defer=\"defer\" src=\"" +
             RESOURCE_NAME + "\"></script>\n";
         String actual = headerResponse.getResponse().toString();
@@ -130,7 +130,7 @@ class HeaderResponseTest
     void deferFalseJavaScriptReference()
     {
         boolean defer = false;
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", defer));
+        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setDefer(defer));
         String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
             "\"></script>\n";
         String actual = headerResponse.getResponse().toString();
@@ -146,8 +146,7 @@ class HeaderResponseTest
     void charsetSetJavaScriptReference()
     {
         String charset = "foo";
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", false,
-            charset));
+        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", charset));
         String expected = "<script type=\"text/javascript\" id=\"some-id\" charset=\"" + charset +
             "\" src=\"" + RESOURCE_NAME + "\"></script>\n";
         String actual = headerResponse.getResponse().toString();
@@ -162,7 +161,7 @@ class HeaderResponseTest
     @Test
     void charsetNotSetJavaScriptReference()
     {
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", false, null));
+        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", null));
         String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
             "\"></script>\n";
         String actual = headerResponse.getResponse().toString();

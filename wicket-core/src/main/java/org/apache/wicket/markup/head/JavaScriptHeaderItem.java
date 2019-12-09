@@ -66,33 +66,6 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	 * 
 	 * @param reference
 	 *            resource reference pointing to the javascript resource
-	 * @return A newly created {@link JavaScriptReferenceHeaderItem} for the given reference.
-	 */
-	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference)
-	{
-		return forReference(reference, null);
-	}
-
-	/**
-	 * Creates a {@link JavaScriptReferenceHeaderItem} for the given reference.
-	 * 
-	 * @param reference
-	 *            resource reference pointing to the javascript resource
-	 * @param id
-	 *            id that will be used to filter duplicate reference (it's still filtered by URL
-	 *            too)
-	 * @return A newly created {@link JavaScriptReferenceHeaderItem} for the given reference.
-	 */
-	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference, String id)
-	{
-		return forReference(reference, null, id);
-	}
-
-	/**
-	 * Creates a {@link JavaScriptReferenceHeaderItem} for the given reference.
-	 * 
-	 * @param reference
-	 *            resource reference pointing to the javascript resource
 	 * @param pageParameters
 	 *            the parameters for this Javascript resource reference
 	 * @param id
@@ -103,28 +76,7 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
 		PageParameters pageParameters, String id)
 	{
-		return forReference(reference, pageParameters, id, false);
-	}
-
-	/**
-	 * Creates a {@link JavaScriptReferenceHeaderItem} for the given reference.
-	 * 
-	 * @param reference
-	 *            resource reference pointing to the javascript resource
-	 * @param pageParameters
-	 *            the parameters for this Javascript resource reference
-	 * @param id
-	 *            id that will be used to filter duplicate reference (it's still filtered by URL
-	 *            too)
-	 * @param defer
-	 *            specifies that the execution of a script should be deferred (delayed) until after
-	 *            the page has been loaded.
-	 * @return A newly created {@link JavaScriptReferenceHeaderItem} for the given reference.
-	 */
-	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
-		PageParameters pageParameters, String id, boolean defer)
-	{
-		return forReference(reference, pageParameters, id, defer, null);
+		return forReference(reference, pageParameters, id, null);
 	}
 
 	/**
@@ -135,15 +87,12 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	 * @param id
 	 *            id that will be used to filter duplicate reference (it's still filtered by URL
 	 *            too)
-	 * @param defer
-	 *            specifies that the execution of a script should be deferred (delayed) until after
-	 *            the page has been loaded.
 	 * @return A newly created {@link JavaScriptReferenceHeaderItem} for the given reference.
 	 */
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
-		String id, boolean defer)
+		String id)
 	{
-		return forReference(reference, null, id, defer, null);
+		return forReference(reference, null, id, null);
 	}
 
 	/**
@@ -151,15 +100,11 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	 *
 	 * @param reference
 	 *            resource reference pointing to the JavaScript resource
-	 * @param defer
-	 *            specifies that the execution of a script should be deferred (delayed) until after
-	 *            the page has been loaded.
 	 * @return A newly created {@link JavaScriptReferenceHeaderItem} for the given reference.
 	 */
-	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
-		boolean defer)
+	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference)
 	{
-		return forReference(reference, null, null, defer, null);
+		return forReference(reference, null, null, null);
 	}
 
 	/**
@@ -172,17 +117,14 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	 * @param id
 	 *            id that will be used to filter duplicate reference (it's still filtered by URL
 	 *            too)
-	 * @param defer
-	 *            specifies that the execution of a script should be deferred (delayed) until after
-	 *            the page has been loaded.
 	 * @param charset
 	 *            a non null value specifies the charset attribute of the script tag
 	 * @return A newly created {@link JavaScriptReferenceHeaderItem} for the given reference.
 	 */
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
-		PageParameters pageParameters, String id, boolean defer, String charset)
+		PageParameters pageParameters, String id, String charset)
 	{
-		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, defer, charset);
+		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, charset);
 	}
 
 	/**
@@ -224,7 +166,7 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	 */
 	public static JavaScriptUrlReferenceHeaderItem forUrl(String url, String id)
 	{
-		return forUrl(url, id, false);
+		return new JavaScriptUrlReferenceHeaderItem(url, id, null);
 	}
 
 	/**
@@ -235,35 +177,13 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	 * @param id
 	 *            id that will be used to filter duplicate reference (it's still filtered by URL
 	 *            too)
-	 * @param defer
-	 *            specifies that the execution of a script should be deferred (delayed) until after
-	 *            the page has been loaded.
-	 * @return A newly created {@link JavaScriptUrlReferenceHeaderItem} for the given url.
-	 */
-	public static JavaScriptUrlReferenceHeaderItem forUrl(String url, String id, boolean defer)
-	{
-		return forUrl(url, id, defer, null);
-	}
-
-	/**
-	 * Creates a {@link JavaScriptUrlReferenceHeaderItem} for the given url.
-	 * 
-	 * @param url
-	 *            context-relative url of the the javascript resource
-	 * @param id
-	 *            id that will be used to filter duplicate reference (it's still filtered by URL
-	 *            too)
-	 * @param defer
-	 *            specifies that the execution of a script should be deferred (delayed) until after
-	 *            the page has been loaded.
 	 * @param charset
 	 *            a non null value specifies the charset attribute of the script tag
 	 * @return A newly created {@link JavaScriptUrlReferenceHeaderItem} for the given url.
 	 */
-	public static JavaScriptUrlReferenceHeaderItem forUrl(String url, String id, boolean defer,
-		String charset)
+	public static JavaScriptUrlReferenceHeaderItem forUrl(String url, String id, String charset)
 	{
-		return new JavaScriptUrlReferenceHeaderItem(url, id, defer, charset);
+		return new JavaScriptUrlReferenceHeaderItem(url, id, charset);
 	}
 
 	protected final void internalRenderJavaScriptReference(Response response, String url,

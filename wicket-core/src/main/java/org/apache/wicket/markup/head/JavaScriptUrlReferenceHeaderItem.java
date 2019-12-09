@@ -43,15 +43,12 @@ public class JavaScriptUrlReferenceHeaderItem extends AbstractJavaScriptReferenc
 	 * @param id
 	 *            id that will be used to filter duplicate reference (it's still filtered by URL
 	 *            too)
-	 * @param defer
-	 *            specifies that the execution of a script should be deferred (delayed) until after
-	 *            the page has been loaded.
 	 * @param charset
 	 *            a non null value specifies the charset attribute of the script tag
 	 */
-	public JavaScriptUrlReferenceHeaderItem(String url, String id, boolean defer, String charset)
+	public JavaScriptUrlReferenceHeaderItem(String url, String id, String charset)
 	{
-		super(defer, charset);
+		super(charset);
 		this.url = url;
 		setId(id);
 	}

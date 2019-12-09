@@ -37,9 +37,8 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 	 * @param charset
 	 *              the charset to use when reading the script content
 	 */
-	protected AbstractJavaScriptReferenceHeaderItem(boolean defer, String charset)
+	protected AbstractJavaScriptReferenceHeaderItem(String charset)
 	{
-		this.defer = defer;
 		this.charset = charset;
 	}
 
