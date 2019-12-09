@@ -42,12 +42,9 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 	 * @param id
 	 *            unique id for the javascript element. This can be null, however in that case the
 	 *            ajax header contribution can't detect duplicate script fragments.
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
-	public JavaScriptContentHeaderItem(CharSequence javaScript, String id, String condition)
+	public JavaScriptContentHeaderItem(CharSequence javaScript, String id)
 	{
-		super(condition);
 		this.javaScript = javaScript;
 		setId(id);
 	}
@@ -63,23 +60,11 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 	@Override
 	public void render(Response response)
 	{
-		boolean hasCondition = Strings.isEmpty(getCondition()) == false;
-		if (hasCondition)
-		{
-			response.write("<!--[if ");
-			response.write(getCondition());
-			response.write("]>");
-		}
 		AttributeMap attributes = new AttributeMap();
 		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
 		attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
 		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
 		JavaScriptUtils.writeInlineScript(response, getJavaScript(), attributes);
-
-		if (hasCondition)
-		{
-			response.write("<![endif]-->\n");
-		}
 	}
 
 	@Override

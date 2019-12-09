@@ -513,8 +513,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 					item.getPageParameters(),
 					item.getId(),
 					item.isDefer(),
-					item.getCharset(),
-					item.getCondition()
+					item.getCharset()
 			);
 		}
 		else
@@ -543,8 +542,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		{
 			resultBundle = CssHeaderItem.forReference(bundleReference,
 					item.getPageParameters(),
-					item.getMedia(),
-					item.getCondition());
+					item.getMedia());
 		}
 		else
 		{

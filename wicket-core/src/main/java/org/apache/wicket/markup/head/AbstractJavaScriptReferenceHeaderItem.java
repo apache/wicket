@@ -31,18 +31,14 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 	/**
 	 * Constructor.
 	 *
-	 * @param condition
-	 *              The condition to use for Internet Explorer conditional comments. E.g. "IE 7".
-	 *              {@code null} or empty string for no condition.
 	 * @param defer
 	 *              a flag indicating whether the execution of a script should be deferred (delayed)
 	 *              until after the page has been loaded.
 	 * @param charset
 	 *              the charset to use when reading the script content
 	 */
-	protected AbstractJavaScriptReferenceHeaderItem(String condition, boolean defer, String charset)
+	protected AbstractJavaScriptReferenceHeaderItem(boolean defer, String charset)
 	{
-		super(condition);
 		this.defer = defer;
 		this.charset = charset;
 	}

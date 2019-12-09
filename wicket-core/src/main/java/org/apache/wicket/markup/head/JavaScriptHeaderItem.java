@@ -23,7 +23,6 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.AttributeMap;
 
 /**
@@ -37,21 +36,10 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The condition to use for Internet Explorer conditional comments. E.g. "IE 7".
-	 * {@code null} or empty string for no condition.
-	 */
-	private final String condition;
-
-	/**
 	 * An optional markup id to set on the rendered &lt;script&gt; HTML element for
 	 * this header item
 	 */
 	private String markupId;
-
-	protected JavaScriptHeaderItem(String condition)
-	{
-		this.condition = condition;
-	}
 
 	/**
 	 * @return unique id for the javascript element.
@@ -71,14 +59,6 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	{
 		this.markupId = markupId;
 		return this;
-	}
-
-	/**
-	 * @return the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
-	 */
-	public String getCondition()
-	{
-		return condition;
 	}
 
 	/**
@@ -202,33 +182,7 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
 		PageParameters pageParameters, String id, boolean defer, String charset)
 	{
-		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, defer, charset, null);
-	}
-
-
-	/**
-	 * Creates a {@link JavaScriptReferenceHeaderItem} for the given reference.
-	 *
-	 * @param reference
-	 *            resource reference pointing to the javascript resource
-	 * @param pageParameters
-	 *            the parameters for this Javascript resource reference
-	 * @param id
-	 *            id that will be used to filter duplicate reference (it's still filtered by URL
-	 *            too)
-	 * @param defer
-	 *            specifies that the execution of a script should be deferred (delayed) until after
-	 *            the page has been loaded.
-	 * @param charset
-	 *            a non null value specifies the charset attribute of the script tag
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
-	 * @return A newly created {@link JavaScriptReferenceHeaderItem} for the given reference.
-	 */
-	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
-		PageParameters pageParameters, String id, boolean defer, String charset, String condition)
-	{
-		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, defer, charset, condition);
+		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, defer, charset);
 	}
 
 	/**
@@ -243,24 +197,7 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	 */
 	public static JavaScriptContentHeaderItem forScript(CharSequence javascript, String id)
 	{
-		return forScript(javascript, id, null);
-	}
-
-	/**
-	 * Creates a {@link JavaScriptContentHeaderItem} for the given content.
-	 *
-	 * @param javascript
-	 *            javascript content to be rendered.
-	 * @param id
-	 *            unique id for the javascript element. This can be null, however in that case the
-	 *            ajax header contribution can't detect duplicate script fragments.
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
-	 * @return A newly created {@link JavaScriptContentHeaderItem} for the given content.
-	 */
-	public static JavaScriptContentHeaderItem forScript(CharSequence javascript, String id, String condition)
-	{
-		return new JavaScriptContentHeaderItem(javascript, id, condition);
+		return new JavaScriptContentHeaderItem(javascript, id);
 	}
 
 	/**
@@ -326,42 +263,13 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	public static JavaScriptUrlReferenceHeaderItem forUrl(String url, String id, boolean defer,
 		String charset)
 	{
-		return forUrl(url, id, defer, charset, null);
-	}
-
-	/**
-	 * Creates a {@link JavaScriptUrlReferenceHeaderItem} for the given url.
-	 *
-	 * @param url
-	 *            context-relative url of the the javascript resource
-	 * @param id
-	 *            id that will be used to filter duplicate reference (it's still filtered by URL
-	 *            too)
-	 * @param defer
-	 *            specifies that the execution of a script should be deferred (delayed) until after
-	 *            the page has been loaded.
-	 * @param charset
-	 *            a non null value specifies the charset attribute of the script tag
-	 * @return A newly created {@link JavaScriptUrlReferenceHeaderItem} for the given url.
-	 */
-	public static JavaScriptUrlReferenceHeaderItem forUrl(String url, String id, boolean defer,
-		String charset, String condition)
-	{
-		return new JavaScriptUrlReferenceHeaderItem(url, id, defer, charset, condition);
+		return new JavaScriptUrlReferenceHeaderItem(url, id, defer, charset);
 	}
 
 	protected final void internalRenderJavaScriptReference(Response response, String url,
-		String id, boolean defer, String charset, String condition, boolean async)
+		String id, boolean defer, String charset, boolean async)
 	{
 		Args.notEmpty(url, "url");
-
-		boolean hasCondition = Strings.isEmpty(condition) == false;
-		if (hasCondition)
-		{
-			response.write("<!--[if ");
-			response.write(condition);
-			response.write("]>");
-		}
 
 		AttributeMap attributes = new AttributeMap();
 		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
@@ -373,11 +281,6 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_SRC, url);
 		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
 		JavaScriptUtils.writeScript(response, attributes);
-
-		if (hasCondition)
-		{
-			response.write("<![endif]-->\n");
-		}
 	}
 
 	@Override
@@ -386,13 +289,12 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		JavaScriptHeaderItem that = (JavaScriptHeaderItem) o;
-		return Objects.equals(condition, that.condition) &&
-				Objects.equals(markupId, that.markupId);
+		return Objects.equals(markupId, that.markupId);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(condition, markupId);
+		return Objects.hash(markupId);
 	}
 }

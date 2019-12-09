@@ -52,13 +52,10 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	 *            the parameters for this CSS resource reference
 	 * @param media
 	 *            the media type for this CSS ("print", "screen", etc.)
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
 	public CssReferenceHeaderItem(ResourceReference reference, PageParameters pageParameters,
-		String media, String condition)
+		String media)
 	{
-		super(condition);
 		this.reference = reference;
 		this.pageParameters = pageParameters;
 		this.media = media;
@@ -74,15 +71,12 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	 *            the parameters for this CSS resource reference
 	 * @param media
 	 *            the media type for this CSS ("print", "screen", etc.)
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 * @param rel
 	 *            the rel attribute content
 	 */
 	public CssReferenceHeaderItem(ResourceReference reference, PageParameters pageParameters,
-		String media, String condition, String rel)
+		String media, String rel)
 	{
-		super(condition);
 		this.reference = reference;
 		this.pageParameters = pageParameters;
 		this.media = media;
@@ -140,7 +134,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	@Override
 	public void render(Response response)
 	{
-		internalRenderCSSReference(response, getUrl(), media, getCondition(), getRel());
+		internalRenderCSSReference(response, getUrl(), media, getRel());
 	}
 
 	@Override

@@ -57,13 +57,11 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 	 *            the page has been loaded.
 	 * @param charset
 	 *            a non null value specifies the charset attribute of the script tag
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
 	public JavaScriptReferenceHeaderItem(ResourceReference reference,
-		PageParameters pageParameters, String id, boolean defer, String charset, String condition)
+		PageParameters pageParameters, String id, boolean defer, String charset)
 	{
-		super(condition, defer, charset);
+		super(defer, charset);
 		this.reference = Args.notNull(reference, "reference");
 		this.pageParameters = pageParameters;
 		setId(id);
@@ -103,8 +101,7 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 	@Override
 	public void render(Response response)
 	{
-		internalRenderJavaScriptReference(response, getUrl(), getId(), isDefer(), getCharset(),
-			getCondition(), isAsync());
+		internalRenderJavaScriptReference(response, getUrl(), getId(), isDefer(), getCharset(), isAsync());
 	}
 
 	@Override

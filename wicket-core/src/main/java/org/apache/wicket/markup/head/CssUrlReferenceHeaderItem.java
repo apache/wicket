@@ -44,14 +44,11 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 	 *            context-relative url of the CSS resource
 	 * @param media
 	 *            the media type for this CSS ("print", "screen", etc.)
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 * @param rel
 	 *            the rel attribute content
 	 */
-	public CssUrlReferenceHeaderItem(String url, String media, String condition, String rel)
+	public CssUrlReferenceHeaderItem(String url, String media, String rel)
 	{
-		super(condition);
 		this.url = url;
 		this.media = media;
 		this.rel = rel;
@@ -64,12 +61,9 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 	 *            context-relative url of the CSS resource
 	 * @param media
 	 *            the media type for this CSS ("print", "screen", etc.)
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
-	public CssUrlReferenceHeaderItem(String url, String media, String condition)
+	public CssUrlReferenceHeaderItem(String url, String media)
 	{
-		super(condition);
 		this.url = url;
 		this.media = media;
 		this.rel = null;
@@ -103,8 +97,7 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 	public void render(Response response)
 	{
 		internalRenderCSSReference(response,
-			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()), getMedia(),
-			getCondition(), getRel());
+			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()), getMedia(), getRel());
 	}
 
 	@Override
