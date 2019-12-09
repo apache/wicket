@@ -23,8 +23,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.markup.html.image.Image.Cors;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -53,7 +53,7 @@ public class ExternalImage extends WebComponent
 	/**
 	 * Cross origin settings
 	 */
-	private Cors crossOrigin = null;
+	private CrossOrigin crossOrigin = null;
 
 	private IModel<List<Serializable>> srcSetModel;
 
@@ -144,8 +144,8 @@ public class ExternalImage extends WebComponent
 
 		buildSizesAttribute(tag);
 
-		Cors crossOrigin = getCrossOrigin();
-		if (crossOrigin != null && Cors.NO_CORS != crossOrigin)
+		CrossOrigin crossOrigin = getCrossOrigin();
+		if (crossOrigin != null && CrossOrigin.NO_CORS != crossOrigin)
 		{
 			tag.put("crossOrigin", crossOrigin.getRealName());
 		}
@@ -282,11 +282,11 @@ public class ExternalImage extends WebComponent
 	/**
 	 * Gets the cross origin settings
 	 * 
-	 * @see {@link org.apache.wicket.markup.html.image.Image#setCrossOrigin(Cors)}
+	 * @see {@link org.apache.wicket.markup.html.image.Image#setCrossOrigin(CrossOrigin)}
 	 *
 	 * @return the cross origins settings
 	 */
-	public Cors getCrossOrigin()
+	public CrossOrigin getCrossOrigin()
 	{
 		return crossOrigin;
 	}
@@ -294,11 +294,11 @@ public class ExternalImage extends WebComponent
 	/**
 	 * Sets the cross origin settings
 	 * 
-	 * @see {@link org.apache.wicket.markup.html.image.Image#setCrossOrigin(Cors)}
+	 * @see {@link org.apache.wicket.markup.html.image.Image#setCrossOrigin(CrossOrigin)}
 	 * @param crossOrigin
 	 *            the cross origins settings to set
 	 */
-	public void setCrossOrigin(Cors crossOrigin)
+	public void setCrossOrigin(CrossOrigin crossOrigin)
 	{
 		this.crossOrigin = crossOrigin;
 	}

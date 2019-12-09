@@ -25,6 +25,7 @@ import org.apache.wicket.IRequestListener;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.image.resource.LocalizedImageResource;
 import org.apache.wicket.model.IModel;
@@ -52,43 +53,6 @@ public class Image extends WebComponent implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * To be used for the crossOrigin attribute
-	 *
-	 * @see {@link #setCrossOrigin(Cors)}
-	 */
-	public enum Cors {
-		/**
-		 * no authentication required
-		 */
-		ANONYMOUS("anonymous"),
-		/**
-		 * user credentials required
-		 */
-		USE_CREDENTIALS("user-credentials"),
-		/**
-		 * no cross origin
-		 */
-		NO_CORS("");
-
-		private final String realName;
-
-		private Cors(String realName)
-		{
-			this.realName = realName;
-		}
-
-		/**
-		 * Gets the real name for the cors option
-		 * 
-		 * @return the real name
-		 */
-		public String getRealName()
-		{
-			return realName;
-		}
-	}
-
 	/** The image resource this image component references (src attribute) */
 	private final LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
@@ -104,7 +68,7 @@ public class Image extends WebComponent implements IRequestListener
 	/**
 	 * Cross origin settings
 	 */
-	private Cors crossOrigin = null;
+	private CrossOrigin crossOrigin = null;
 
 	/**
 	 * This constructor can be used if you override {@link #getImageResourceReference()} or
@@ -432,8 +396,8 @@ public class Image extends WebComponent implements IRequestListener
 		}
 		buildSizesAttribute(tag);
 
-		Cors crossOrigin = getCrossOrigin();
-		if (crossOrigin != null && Cors.NO_CORS != crossOrigin)
+		CrossOrigin crossOrigin = getCrossOrigin();
+		if (crossOrigin != null && CrossOrigin.NO_CORS != crossOrigin)
 		{
 			tag.put("crossOrigin", crossOrigin.getRealName());
 		}
@@ -603,11 +567,11 @@ public class Image extends WebComponent implements IRequestListener
 	/**
 	 * Gets the cross origin settings
 	 *
-	 * @see {@link #setCrossOrigin(Cors)}
+	 * @see {@link #setCrossOrigin(CrossOrigin)}
 	 *
 	 * @return the cross origins settings
 	 */
-	public Cors getCrossOrigin()
+	public CrossOrigin getCrossOrigin()
 	{
 		return crossOrigin;
 	}
@@ -629,7 +593,7 @@ public class Image extends WebComponent implements IRequestListener
 	 * @param crossOrigin
 	 *            the cross origins settings to set
 	 */
-	public void setCrossOrigin(Cors crossOrigin)
+	public void setCrossOrigin(CrossOrigin crossOrigin)
 	{
 		this.crossOrigin = crossOrigin;
 	}

@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.image.Image.Cors;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -39,7 +39,7 @@ public class ImageResourceReferenceTestPage extends WebPage
 				return new PackageResourceReference(this.getClass(), "small.jpg");
 			}
 		};
-		image1.setCrossOrigin(Cors.ANONYMOUS);
+		image1.setCrossOrigin(CrossOrigin.ANONYMOUS);
 		this.add(image1);
 	}
 }

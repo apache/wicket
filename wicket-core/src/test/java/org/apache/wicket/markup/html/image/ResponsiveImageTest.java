@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -40,7 +41,7 @@ class ResponsiveImageTest extends WicketTestCase
 		String lastResponseAsString = tester.getLastResponse().getDocument();
 		TagTester createTagByAttribute = TagTester.createTagByName(lastResponseAsString, "img");
 		assertFalse(createTagByAttribute.hasAttribute("srcset"));
-		assertEquals(Image.Cors.ANONYMOUS.getRealName(), createTagByAttribute.getAttribute("crossorigin"));
+		assertEquals(CrossOrigin.ANONYMOUS.getRealName(), createTagByAttribute.getAttribute("crossorigin"));
 	}
 
 	@Test
