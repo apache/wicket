@@ -29,13 +29,11 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * 
  * @author papegaaij
  */
-public class CssUrlReferenceHeaderItem extends CssHeaderItem
+public class CssUrlReferenceHeaderItem extends AbstractCssReferenceHeaderItem
 {
 	private static final long serialVersionUID = 1L;
 
 	private final String url;
-	private final String media;
-	private final String rel;
 
 	/**
 	 * Creates a new {@code CSSUrlReferenceHeaderItem}.
@@ -49,9 +47,9 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 	 */
 	public CssUrlReferenceHeaderItem(String url, String media, String rel)
 	{
+		super(media, rel);
+		
 		this.url = url;
-		this.media = media;
-		this.rel = rel;
 	}
 
 	/**
@@ -64,9 +62,9 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 	 */
 	public CssUrlReferenceHeaderItem(String url, String media)
 	{
+		super(media, null);
+		
 		this.url = url;
-		this.media = media;
-		this.rel = null;
 	}
 
 	/**
@@ -77,34 +75,17 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 		return url;
 	}
 
-	/**
-	 * @return the media type for this CSS ("print", "screen", etc.)
-	 */
-	public String getMedia()
-	{
-		return media;
-	}
-
-	/**
-	 * @return the rel attribute content
-	 */
-	public String getRel()
-	{
-		return rel;
-	}
-
 	@Override
 	public void render(Response response)
 	{
-		internalRenderCSSReference(response,
-			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()), getMedia(), getRel());
+		internalRenderCSSReference(response, UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()));
 	}
 
 	@Override
 	public Iterable<?> getRenderTokens()
 	{
 		return Arrays.asList(
-			"css-" + UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()) + "-" + media);
+			"css-" + UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()) + "-" + getMedia());
 	}
 
 	@Override
@@ -116,7 +97,7 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(super.hashCode(), url, media, rel);
+		return Objects.hash(super.hashCode(), url, getMedia(), getRel());
 	}
 
 	@Override
@@ -129,7 +110,7 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 		if (!super.equals(o))
 			return false;
 		CssUrlReferenceHeaderItem that = (CssUrlReferenceHeaderItem)o;
-		return Objects.equals(url, that.url) && Objects.equals(media, that.media) &&
-			Objects.equals(rel, that.rel);
+		return Objects.equals(url, that.url) && Objects.equals(getMedia(), that.getMedia()) &&
+			Objects.equals(getRel(), that.getRel());
 	}
 }

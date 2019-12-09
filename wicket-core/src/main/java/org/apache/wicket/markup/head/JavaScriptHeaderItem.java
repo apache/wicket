@@ -186,23 +186,6 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 		return new JavaScriptUrlReferenceHeaderItem(url, id, charset);
 	}
 
-	protected final void internalRenderJavaScriptReference(Response response, String url,
-		String id, boolean defer, String charset, boolean async)
-	{
-		Args.notEmpty(url, "url");
-
-		AttributeMap attributes = new AttributeMap();
-		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
-		attributes.putAttribute(JavaScriptUtils.ATTR_ID, id);
-		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_DEFER, defer);
-		// XXX this attribute is not necessary for modern browsers
-		attributes.putAttribute("charset", charset);
-		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_ASYNC, async);
-		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_SRC, url);
-		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
-		JavaScriptUtils.writeScript(response, attributes);
-	}
-
 	@Override
 	public boolean equals(Object o)
 	{

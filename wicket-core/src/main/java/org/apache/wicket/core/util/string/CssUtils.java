@@ -44,6 +44,8 @@ public final class CssUtils
 	public static final String ATTR_LINK_MEDIA = "media";
 	public static final String ATTR_LINK_REL = "rel";
 	public static final String ATTR_CSP_NONCE = "nonce";
+	public static final String ATTR_CROSS_ORIGIN = "crossOrigin";
+	public static final String ATTR_INTEGRITY = "integrity";
 
 	/**
 	 * Hidden constructor.

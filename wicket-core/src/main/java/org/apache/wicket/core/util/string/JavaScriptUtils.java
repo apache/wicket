@@ -52,6 +52,8 @@ public class JavaScriptUtils
 	public static final String ATTR_SCRIPT_DEFER = "defer";
 	public static final String ATTR_SCRIPT_ASYNC = "async";
 	public static final String ATTR_CSP_NONCE = "nonce";
+	public static final String ATTR_CROSS_ORIGIN = "crossOrigin";
+	public static final String ATTR_INTEGRITY = "integrity";
 
 	/** The response object */
 	private final Response response;

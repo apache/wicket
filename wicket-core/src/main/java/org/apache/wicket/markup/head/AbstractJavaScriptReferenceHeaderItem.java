@@ -18,15 +18,22 @@ package org.apache.wicket.markup.head;
 
 import java.util.Objects;
 
+import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.markup.html.CrossOrigin;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.value.AttributeMap;
+
 /**
- * A {@link org.apache.wicket.markup.head.HeaderItem} that supports <em>async</em>,
- * <em>defer</em> and <em>charset</em> attributes
+ * A {@link org.apache.wicket.markup.head.HeaderItem} that renders a JavaScript reference.
  */
 public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 {
 	private boolean async;
 	private boolean defer;
 	private String charset;
+	private CrossOrigin crossOrigin;
+	private String integrity;
 
 	/**
 	 * Constructor.
@@ -82,6 +89,46 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 	{
 		this.charset = charset;
 		return this;
+	}
+
+	public CrossOrigin getCrossOrigin()
+	{
+		return crossOrigin;
+	}
+	
+	public AbstractJavaScriptReferenceHeaderItem setCrossOrigin(CrossOrigin crossOrigin)
+	{
+		this.crossOrigin = crossOrigin;
+		return this;
+	}
+	
+	public String getIntegrity()
+	{
+		return integrity;
+	}
+	
+	public AbstractJavaScriptReferenceHeaderItem setIntegrity(String integrity)
+	{
+		this.integrity = integrity;
+		return this;
+	}
+
+	protected final void internalRenderJavaScriptReference(Response response, String url)
+	{
+		Args.notEmpty(url, "url");
+
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_DEFER, defer);
+		// XXX this attribute is not necessary for modern browsers
+		attributes.putAttribute("charset", charset);
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_ASYNC, async);
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_SRC, url);
+		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
+		attributes.putAttribute(JavaScriptUtils.ATTR_CROSS_ORIGIN, getCrossOrigin() == null ? null : getCrossOrigin().getRealName());
+		attributes.putAttribute(JavaScriptUtils.ATTR_INTEGRITY, getIntegrity());
+		JavaScriptUtils.writeScript(response, attributes);
 	}
 
 	@Override

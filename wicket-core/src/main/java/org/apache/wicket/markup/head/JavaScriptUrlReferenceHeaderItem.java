@@ -65,8 +65,7 @@ public class JavaScriptUrlReferenceHeaderItem extends AbstractJavaScriptReferenc
 	public void render(Response response)
 	{
 		internalRenderJavaScriptReference(response,
-			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()), getId(), isDefer(),
-			getCharset(), isAsync());
+			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()));
 	}
 
 	@Override

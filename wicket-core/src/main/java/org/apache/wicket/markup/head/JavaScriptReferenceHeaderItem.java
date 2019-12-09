@@ -98,7 +98,7 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 	@Override
 	public void render(Response response)
 	{
-		internalRenderJavaScriptReference(response, getUrl(), getId(), isDefer(), getCharset(), isAsync());
+		internalRenderJavaScriptReference(response, getUrl());
 	}
 
 	@Override

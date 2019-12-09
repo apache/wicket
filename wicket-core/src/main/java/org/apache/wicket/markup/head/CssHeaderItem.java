@@ -19,6 +19,7 @@ package org.apache.wicket.markup.head;
 import java.util.Objects;
 
 import org.apache.wicket.core.util.string.CssUtils;
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -202,22 +203,6 @@ public abstract class CssHeaderItem extends AbstractCspHeaderItem
 	public static CssUrlReferenceHeaderItem forUrl(String url, String media, String rel)
 	{
 		return new CssUrlReferenceHeaderItem(url, media, rel);
-	}
-
-	protected final void internalRenderCSSReference(Response response, String url, String media, String rel)
-	{
-		Args.notEmpty(url, "url");
-
-		AttributeMap attributes = new AttributeMap();
-		attributes.putAttribute(CssUtils.ATTR_LINK_REL, rel == null ? "stylesheet" : rel);
-		attributes.putAttribute(CssUtils.ATTR_TYPE, "text/css");
-		attributes.putAttribute(CssUtils.ATTR_LINK_HREF, url);
-		attributes.putAttribute(CssUtils.ATTR_ID, getId());
-		attributes.putAttribute(CssUtils.ATTR_LINK_MEDIA, media);
-		attributes.putAttribute(CssUtils.ATTR_CSP_NONCE, getNonce());
-		CssUtils.writeLink(response, attributes);
-
-		response.write("\n");
 	}
 
 	@Override
