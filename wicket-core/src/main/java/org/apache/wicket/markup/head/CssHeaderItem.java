@@ -18,15 +18,8 @@ package org.apache.wicket.markup.head;
 
 import java.util.Objects;
 
-import org.apache.wicket.core.util.string.CssUtils;
-import org.apache.wicket.markup.html.CrossOrigin;
-import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.value.AttributeMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Base class for all {@link HeaderItem}s that represent stylesheets. This class mainly contains
@@ -37,8 +30,6 @@ import org.slf4j.LoggerFactory;
 public abstract class CssHeaderItem extends AbstractCspHeaderItem
 {
 	private static final long serialVersionUID = 1L;
-
-	private static final Logger logger = LoggerFactory.getLogger(CssHeaderItem.class);
 
 	private String markupId;
 

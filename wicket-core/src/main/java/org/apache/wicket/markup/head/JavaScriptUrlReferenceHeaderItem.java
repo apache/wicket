@@ -43,12 +43,9 @@ public class JavaScriptUrlReferenceHeaderItem extends AbstractJavaScriptReferenc
 	 * @param id
 	 *            id that will be used to filter duplicate reference (it's still filtered by URL
 	 *            too)
-	 * @param charset
-	 *            a non null value specifies the charset attribute of the script tag
 	 */
-	public JavaScriptUrlReferenceHeaderItem(String url, String id, String charset)
+	public JavaScriptUrlReferenceHeaderItem(String url, String id)
 	{
-		super(charset);
 		this.url = url;
 		setId(id);
 	}

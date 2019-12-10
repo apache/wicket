@@ -25,7 +25,6 @@ import java.nio.charset.Charset;
 import java.util.Optional;
 
 import org.apache.wicket.ThreadContext;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
@@ -34,7 +33,6 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
@@ -146,7 +144,7 @@ class HeaderResponseTest
     void charsetSetJavaScriptReference()
     {
         String charset = "foo";
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", charset));
+        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setCharset(charset));
         String expected = "<script type=\"text/javascript\" id=\"some-id\" charset=\"" + charset +
             "\" src=\"" + RESOURCE_NAME + "\"></script>\n";
         String actual = headerResponse.getResponse().toString();
@@ -161,7 +159,7 @@ class HeaderResponseTest
     @Test
     void charsetNotSetJavaScriptReference()
     {
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", null));
+        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id"));
         String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
             "\"></script>\n";
         String actual = headerResponse.getResponse().toString();

@@ -18,12 +18,8 @@ package org.apache.wicket.markup.head;
 
 import java.util.Objects;
 
-import org.apache.wicket.core.util.string.JavaScriptUtils;
-import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.value.AttributeMap;
 
 /**
  * Base class for all {@link HeaderItem}s that represent javascripts. This class mainly contains
@@ -76,7 +72,7 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
 		PageParameters pageParameters, String id)
 	{
-		return forReference(reference, pageParameters, id, null);
+		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id);
 	}
 
 	/**
@@ -92,7 +88,7 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
 		String id)
 	{
-		return forReference(reference, null, id, null);
+		return forReference(reference, null, id);
 	}
 
 	/**
@@ -104,27 +100,7 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	 */
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference)
 	{
-		return forReference(reference, null, null, null);
-	}
-
-	/**
-	 * Creates a {@link JavaScriptReferenceHeaderItem} for the given reference.
-	 *
-	 * @param reference
-	 *            resource reference pointing to the javascript resource
-	 * @param pageParameters
-	 *            the parameters for this Javascript resource reference
-	 * @param id
-	 *            id that will be used to filter duplicate reference (it's still filtered by URL
-	 *            too)
-	 * @param charset
-	 *            a non null value specifies the charset attribute of the script tag
-	 * @return A newly created {@link JavaScriptReferenceHeaderItem} for the given reference.
-	 */
-	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
-		PageParameters pageParameters, String id, String charset)
-	{
-		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, charset);
+		return forReference(reference, null, null);
 	}
 
 	/**
@@ -166,24 +142,7 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	 */
 	public static JavaScriptUrlReferenceHeaderItem forUrl(String url, String id)
 	{
-		return new JavaScriptUrlReferenceHeaderItem(url, id, null);
-	}
-
-	/**
-	 * Creates a {@link JavaScriptUrlReferenceHeaderItem} for the given url.
-	 * 
-	 * @param url
-	 *            context-relative url of the the javascript resource
-	 * @param id
-	 *            id that will be used to filter duplicate reference (it's still filtered by URL
-	 *            too)
-	 * @param charset
-	 *            a non null value specifies the charset attribute of the script tag
-	 * @return A newly created {@link JavaScriptUrlReferenceHeaderItem} for the given url.
-	 */
-	public static JavaScriptUrlReferenceHeaderItem forUrl(String url, String id, String charset)
-	{
-		return new JavaScriptUrlReferenceHeaderItem(url, id, charset);
+		return new JavaScriptUrlReferenceHeaderItem(url, id);
 	}
 
 	@Override

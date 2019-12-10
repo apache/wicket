@@ -511,9 +511,8 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		{
 			resultBundle = JavaScriptHeaderItem.forReference(bundleReference,
 					item.getPageParameters(),
-					item.getId(),
-					item.getCharset()
-			).setDefer(item.isDefer()).setAsync(item.isAsync()).setNonce(item.getNonce());
+					item.getId()
+			).setCharset(item.getCharset()).setDefer(item.isDefer()).setAsync(item.isAsync()).setNonce(item.getNonce());
 		}
 		else
 		{

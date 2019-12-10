@@ -36,20 +36,6 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 	private String integrity;
 
 	/**
-	 * Constructor.
-	 *
-	 * @param defer
-	 *              a flag indicating whether the execution of a script should be deferred (delayed)
-	 *              until after the page has been loaded.
-	 * @param charset
-	 *              the charset to use when reading the script content
-	 */
-	protected AbstractJavaScriptReferenceHeaderItem(String charset)
-	{
-		this.charset = charset;
-	}
-
-	/**
 	 * @return if the script should be loaded and executed asynchronously
 	 */
 	public boolean isAsync()
