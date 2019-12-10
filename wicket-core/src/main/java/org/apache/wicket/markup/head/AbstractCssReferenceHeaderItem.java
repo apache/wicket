@@ -27,7 +27,7 @@ import org.apache.wicket.util.value.AttributeMap;
 /**
  * A {@link org.apache.wicket.markup.head.HeaderItem} that renders a CSS reference.
  */
-public abstract class AbstractCssReferenceHeaderItem extends CssHeaderItem
+public abstract class AbstractCssReferenceHeaderItem extends CssHeaderItem implements ISubresourceHeaderItem
 {
 	private final String media;
 	private final String rel;
@@ -40,11 +40,13 @@ public abstract class AbstractCssReferenceHeaderItem extends CssHeaderItem
 		this.rel = rel;
 	}
 
+	@Override
 	public CrossOrigin getCrossOrigin()
 	{
 		return crossOrigin;
 	}
 
+	@Override
 	public AbstractCssReferenceHeaderItem setCrossOrigin(CrossOrigin crossOrigin)
 	{
 		this.crossOrigin = crossOrigin;
@@ -67,11 +69,13 @@ public abstract class AbstractCssReferenceHeaderItem extends CssHeaderItem
 		return rel;
 	}
 
+	@Override
 	public String getIntegrity()
 	{
 		return integrity;
 	}
 
+	@Override
 	public AbstractCssReferenceHeaderItem setIntegrity(String integrity)
 	{
 		this.integrity = integrity;

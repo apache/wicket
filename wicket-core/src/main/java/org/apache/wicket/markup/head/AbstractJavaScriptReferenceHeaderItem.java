@@ -27,7 +27,7 @@ import org.apache.wicket.util.value.AttributeMap;
 /**
  * A {@link org.apache.wicket.markup.head.HeaderItem} that renders a JavaScript reference.
  */
-public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
+public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHeaderItem implements ISubresourceHeaderItem
 {
 	private boolean async;
 	private boolean defer;
@@ -77,22 +77,26 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 		return this;
 	}
 
+	@Override
 	public CrossOrigin getCrossOrigin()
 	{
 		return crossOrigin;
 	}
 	
+	@Override
 	public AbstractJavaScriptReferenceHeaderItem setCrossOrigin(CrossOrigin crossOrigin)
 	{
 		this.crossOrigin = crossOrigin;
 		return this;
 	}
 	
+	@Override
 	public String getIntegrity()
 	{
 		return integrity;
 	}
 	
+	@Override
 	public AbstractJavaScriptReferenceHeaderItem setIntegrity(String integrity)
 	{
 		this.integrity = integrity;
