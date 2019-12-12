@@ -28,6 +28,7 @@ import org.apache.wicket.ThreadContext;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
@@ -131,6 +132,21 @@ class HeaderResponseTest
         headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setDefer(defer));
         String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
             "\"></script>\n";
+        String actual = headerResponse.getResponse().toString();
+        assertEquals(expected, actual);
+    }
+
+    /**
+     * Tests setting of subresource attributes
+     */
+    @Test
+    void subresourceJavaScriptReference()
+    {
+        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id")
+        	.setCrossOrigin(CrossOrigin.ANONYMOUS)
+        	.setIntegrity("XXXX"));
+        String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" +
+            RESOURCE_NAME + "\" crossOrigin=\"anonymous\" integrity=\"XXXX\"></script>\n";
         String actual = headerResponse.getResponse().toString();
         assertEquals(expected, actual);
     }
