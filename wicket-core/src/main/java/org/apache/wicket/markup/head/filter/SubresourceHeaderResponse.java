@@ -17,38 +17,30 @@
 package org.apache.wicket.markup.head.filter;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.markup.head.AbstractCspHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.ISubresourceHeaderItem;
 import org.apache.wicket.markup.head.IWrappedHeaderItem;
-import org.apache.wicket.markup.head.MetaDataHeaderItem;
 import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 
 /**
- * Add a <em>Content Security Policy<em> (CSP) nonce to all {@link AbstractCspHeaderItem}s.
+ * Add <em>Subresource<em> integrity and crossOrigin to all {@link ISubresourceHeaderItem}s.
+ * <p>
+ * The subclass implementation of {@link #configure(ISubresourceHeaderItem)} has to decide
+ * on how to configure the item.
  * <p>
  * Note: please don't forget to wrap with {@link ResourceAggregator} when setting it up with
  * {@link Application#setHeaderResponseDecorator}, otherwise dependencies will not be rendered.
  * 
- * @see AbstractCspHeaderItem
+ * @see ISubresourceHeaderItem
  */
-public class CspNonceHeaderResponse extends DecoratingHeaderResponse
+public abstract class SubresourceHeaderResponse extends DecoratingHeaderResponse
 {
-	private static final String CONTENT_SECURITY_POLICY = "Content-Security-Policy";
 
-	/**
-	 * Has the <em>Content-Security-Policy</em> header been rendered once.
-	 */
-	private boolean policyRendered = false;
-
-	private String nonce;
-
-	public CspNonceHeaderResponse(IHeaderResponse real, String nonce)
+	public SubresourceHeaderResponse(IHeaderResponse real)
 	{
 		super(real);
-
-		this.nonce = nonce;
 	}
 
 	@Override
@@ -59,35 +51,18 @@ public class CspNonceHeaderResponse extends DecoratingHeaderResponse
 			item = ((IWrappedHeaderItem)item).getWrapped();
 		}
 
-		if (item instanceof AbstractCspHeaderItem)
+		if (item instanceof ISubresourceHeaderItem)
 		{
-			if (policyRendered == false)
-			{
-				policyRendered = true;
-
-				String policy = getContentSecurityPolicy(nonce);
-
-				super.render(MetaDataHeaderItem.forHttpEquiv(CONTENT_SECURITY_POLICY, policy));
-			}
-
-			((AbstractCspHeaderItem)item).setNonce(nonce);
+			configure((ISubresourceHeaderItem)item);
 		}
 		
 		super.render(item);
 	}
 
 	/**
-	 * Get the <em>Content-Security-Policy</em> (CSP).
-	 * <p>
-	 * There is a variety of CSP configurations, this default implementation uses the nonce for scripts and styles
-	 * and allows <code>strict-dynamic</code>s (needed for Wicket Ajax).
+	 * Configure the item <em>Subresource</em>.
 	 * 
-	 * @param nonce
-	 *            the nonce
-	 * @return content security policy
+	 * @param item to configure
 	 */
-	protected String getContentSecurityPolicy(String nonce)
-	{
-		return String.format("script-src 'strict-dynamic' 'nonce-%1$s'; style-src 'nonce-%1$s';", nonce);
-	}
+	protected abstract void	configure(ISubresourceHeaderItem item);
 }
