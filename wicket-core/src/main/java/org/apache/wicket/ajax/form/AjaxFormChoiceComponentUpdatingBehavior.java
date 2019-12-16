@@ -30,10 +30,13 @@ import org.apache.wicket.util.lang.Args;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
- * This is a Ajax Component Update Behavior that is meant for choices/groups that are not one
- * component in the html but many.
+ * This is an Ajax behavior that is meant to update a group of choices that are represented
+ * by multiple components.
  * <p>
- * Use the normal {@link AjaxFormComponentUpdatingBehavior} for the normal single component fields
+ * Use the normal {@link AjaxFormComponentUpdatingBehavior} for the normal single component fields.
+ * <p>
+ * Notification is triggered by a {@value change} JavaScript event - if needed {@link #getEvent()} can be overridden
+ * to deviate from this default.
  * 
  * @author jcompagner
  * @author svenmeier
@@ -55,7 +58,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 	 */
 	public AjaxFormChoiceComponentUpdatingBehavior()
 	{
-		super("click");
+		super("change");
 	}
 
 	@Override

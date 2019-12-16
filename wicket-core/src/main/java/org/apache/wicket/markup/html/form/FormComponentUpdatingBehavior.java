@@ -32,10 +32,8 @@ import org.apache.wicket.util.lang.Args;
  * Contrary to {@link AjaxFormComponentUpdatingBehavior} all notification are sent via
  * standard HTTP requests and the full page is rendered as a response.
  * <p>
- * Notification is triggered by an event suitable for the host component this
- * behavior is added to - if needed {@link #getEvent()} can be overridden to change the default
- * ({@value change} for {@link DropDownChoice}, {@link ListMultipleChoice} and {@link AbstractTextComponent}, 
- * {@value click} for anything else).
+ * Notification is triggered by a {@value change} JavaScript event - if needed {@link #getEvent()} can be overridden
+ * to deviate from this default.
  * <p>
  * Note: This behavior has limited support for {@link FormComponent}s outside of a form, i.e. multiple
  * choice components ({@link ListMultipleChoice} and {@link RadioGroup}) will send their last selected
@@ -125,18 +123,11 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 	/**
 	 * Which JavaScript event triggers notification.
 	 * 
-	 * @return {@value change} or {@value click}, depending on the host component 
+	 * @return {@value change} by default 
 	 */
 	protected String getEvent()
 	{
-		if (formComponent instanceof DropDownChoice || formComponent instanceof ListMultipleChoice|| formComponent instanceof AbstractTextComponent)
-		{
-			return "change";
-		}
-		else
-		{
-			return "click";
-		}
+		return "change";
 	}
 
 	/**
