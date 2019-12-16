@@ -12,7 +12,7 @@
 	<name>Wicket Bean Validation</name>
 
 	<properties>
-		<automatic-module-name>org.apache.wicket.bean-validation</automatic-module-name>
+		<automatic-module-name>org.apache.wicket.bean.validation</automatic-module-name>
 	</properties>
 
 	<dependencies>

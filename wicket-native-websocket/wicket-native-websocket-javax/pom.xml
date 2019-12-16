@@ -29,7 +29,7 @@
 	<description>Provides the common code needed for the different integrations with web container's WebSocket implementations</description>
 
 	<properties>
-		<automatic-module-name>org.apache.wicket.native-websocket.javax</automatic-module-name>
+		<automatic-module-name>org.apache.wicket.native.websocket.javax</automatic-module-name>
 	</properties>
 
 	<dependencies>
