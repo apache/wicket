@@ -16,14 +16,22 @@
  */
 package org.apache.wicket.request.resource;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Locale;
 
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.resource.bundles.ConcatBundleResource;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
+import org.apache.wicket.util.resource.AbstractResourceStream;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.apache.wicket.util.time.Time;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,6 +62,70 @@ public class ResouceBundleTest extends WicketTestCase
 
 		tester.startResource(bundle);
 		assertEquals("//a// b.js", tester.getLastResponseAsString().trim());
+	}
+
+	/**
+	 * WICKET-6720 do not concat eagerly
+	 */
+	@Test
+	public void concatBundleLastModified()
+	{
+		final Time lastModified = Time.now();
+		
+		ConcatBundleResource bundle = new ConcatBundleResource(Arrays.asList(
+			JavaScriptHeaderItem.forReference(new ResourceReference("foo") {
+				public IResource getResource() {
+					return new IStaticCacheableResource()
+					{
+						@Override
+						public void respond(Attributes attributes)
+						{
+							fail();
+						}
+
+						@Override
+						public boolean isCachingEnabled()
+						{
+							return true;
+						}
+
+						@Override
+						public Serializable getCacheKey()
+						{
+							return "";
+						}
+
+						@Override
+						public IResourceStream getResourceStream()
+						{
+							return new AbstractResourceStream()
+							{
+								
+								@Override
+								public Time lastModifiedTime()
+								{
+									return lastModified;
+								}
+								
+								@Override
+								public InputStream getInputStream() throws ResourceStreamNotFoundException
+								{
+									fail();
+									return null;
+								}
+								
+								@Override
+								public void close() throws IOException
+								{
+									fail();
+								}
+							};
+						}
+					};
+				}
+			})));
+
+		assertEquals(lastModified, bundle.getResourceStream().lastModifiedTime());
 	}
 
 	/**
