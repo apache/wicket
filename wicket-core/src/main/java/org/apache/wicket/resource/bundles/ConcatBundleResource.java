@@ -271,45 +271,56 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	@Override
 	public IResourceStream getResourceStream()
 	{
-		List<IResourceStream> resources = collectResourceStreams();
+		List<IResourceStream> streams = collectResourceStreams();
 
-		if (resources == null)
+		if (streams == null)
 		{
 			return null;
 		}
 
-		byte[] bytes;
-		try
-		{
-			bytes = readAllResources(resources);
-		}
-		catch (IOException e)
-		{
-			return null;
-		}
-		catch (ResourceStreamNotFoundException e)
-		{
-			return null;
-		}
-
-		final String contentType = findContentType(resources);
-		final Instant lastModified = findLastModified(resources);
-		final ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-		final long length = bytes.length;
+		final String contentType = findContentType(streams);
+		final Instant lastModified = findLastModified(streams);
 		AbstractResourceStream ret = new AbstractResourceStream()
 		{
 			private static final long serialVersionUID = 1L;
 
+			private byte[] bytes;
+			
+			private ByteArrayInputStream inputStream;
+
+			private byte[] getBytes() {
+				if (bytes == null) {
+					try
+					{
+						bytes = readAllResources(streams);
+					}
+					catch (IOException e)
+					{
+						return null;
+					}
+					catch (ResourceStreamNotFoundException e)
+					{
+						return null;
+					}
+				}
+				
+				return bytes;
+			}
+			
 			@Override
 			public InputStream getInputStream() throws ResourceStreamNotFoundException
 			{
+				if (inputStream == null) {
+					inputStream = new ByteArrayInputStream(getBytes());				
+				}
+				
 				return inputStream;
 			}
 
 			@Override
 			public Bytes length()
 			{
-				return Bytes.bytes(length);
+				return Bytes.bytes(getBytes().length);
 			}
 
 			@Override
@@ -327,7 +338,9 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 			@Override
 			public void close() throws IOException
 			{
-				inputStream.close();
+				if (inputStream != null) {
+					inputStream.close();					
+				}
 			}
 		};
 		return ret;
