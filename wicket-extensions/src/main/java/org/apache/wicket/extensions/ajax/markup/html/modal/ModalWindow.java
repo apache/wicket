@@ -121,6 +121,8 @@ import com.github.openjson.JSONObject;
  * before the window get closed.
  * 
  * @author Matej Knopp
+ * 
+ * @deprecated use {@link ModalDialog} instead
  */
 public class ModalWindow extends Panel
 {

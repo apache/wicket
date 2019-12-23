@@ -41,6 +41,14 @@
 	box-shadow: 0 0 60px 10px rgba(0, 0, 0, 0.7);
 }
 
+.modal-dialog .modal-dialog-content {
+	min-width: 20vw;
+	max-width: 80vw;
+	min-height: 20vh;
+	max-height: 80vh;
+	overflow: auto;
+}
+
 /* shift nested dialogs */
 
 .dialog-theme-default .modal-dialog .modal-dialog {

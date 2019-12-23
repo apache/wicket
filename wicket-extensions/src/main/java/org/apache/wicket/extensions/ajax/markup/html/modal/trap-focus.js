@@ -48,13 +48,13 @@
 	var focusin = $.noop;
 
 	// setup a focus trap for an element
-	window.Wicket.trapFocus = function(element) {
+	window.Wicket.trapFocus = function(element, styleClass) {
+		
+		var $element = $('#' + element);
 		
 		// keep old active element
 		var oldActive = document.activeElement;
 		Wicket.Log.debug("trap-focus: focus was on element", oldActive);
-
-		var $element = $('#' + element);
 
 		// allow focus on element itself
 		$element.attr('tabindex', 0);
@@ -82,6 +82,10 @@
 			}
 		});
 		
+		// mark current trap
+		var oldTrap = $('.' + styleClass).removeClass(styleClass);
+		$element.addClass(styleClass);
+
 		// turn off previous 'focusin' handler
 		var previousfocusin = focusin;
 		$(document).off("focusin", focusin);
@@ -113,9 +117,13 @@
 				}
 			}
 			
-			// ... and re-install previous 'focusin' handler
+			// ... re-install previous 'focusin' handler
 			focusin = previousfocusin;
 			$(document).on("focusin", focusin);
+			
+			// ... and restore trap mark
+			oldTrap.addClass(styleClass);
+			$element.removeClass(styleClass);
 		});
 	};
 

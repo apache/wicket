@@ -3,17 +3,14 @@
 }
 
 .modal-dialog .modal-dialog-content {
-	/* size */
-	min-width: 20vw;
-	max-width: 80vw;
-	min-height: 20vh;
-	max-height: 80vh;
-	overflow: hidden;
-	resize: both;
-
 	/* flex children */
 	display: flex;
 	flex-direction: column;
+}
+
+.modal-dialog-overlay.current-focus-trap .modal-dialog-content {
+	/* resize the dialog with current focus only, otherwise the resize handle shows through on Firefox */
+	resize: both;
 }
 
 .modal-dialog .modal-dialog-form {
