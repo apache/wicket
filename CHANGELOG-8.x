@@ -2,6 +2,30 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.7.0
+
+** Bug
+
+    * [WICKET-6531] - Crash in Unsafe.getObject when running on the J9 VM
+    * [WICKET-6650] - Url decode the name of the file after AjaxDownload with Location == Blob
+    * [WICKET-6704] - JavaSerializer.serialize causes the JVM crash !
+    * [WICKET-6705] - URL filename not decoded when downloading via AjaxDownload blob mode
+    * [WICKET-6706] - Websocket Endpoint logs exception when user leaves page
+    * [WICKET-6707] - Property setter parameter type is assumed to be equal to getter return type
+    * [WICKET-6708] - FormComponent should read only the GET/POST parameters of the request, not both
+    * [WICKET-6713] - BaseWicketTester does not reset componentInPage field
+
+** Improvement
+
+    * [WICKET-6714] - Please add better getResource-Support for MockServletContext
+    * [WICKET-6720] - ConcatBundleResource#getResourceStream should not eagerly fetch resources
+
+** Task
+
+    * [WICKET-6698] - Non-security critical dependency updates
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.6.1
 
 ** Bug
