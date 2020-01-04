@@ -2,6 +2,18 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.16.0
+
+** Bug
+
+    * [WICKET-6531] - Crash in Unsafe.getObject when running on the J9 VM
+    * [WICKET-6704] - JavaSerializer.serialize causes the JVM crash !
+    * [WICKET-6706] - Websocket Endpoint logs exception when user leaves page
+    * [WICKET-6707] - Property setter parameter type is assumed to be equal to getter return type
+    * [WICKET-6708] - FormComponent should read only the GET/POST parameters of the request, not both
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.15.0
 
 ** Bug
