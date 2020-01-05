@@ -2,6 +2,37 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.0.0-M4
+
+** Bug
+
+    * [WICKET-6531] - Crash in Unsafe.getObject when running on the J9 VM
+    * [WICKET-6704] - JavaSerializer.serialize causes the JVM crash !
+    * [WICKET-6706] - Websocket Endpoint logs exception when user leaves page
+    * [WICKET-6707] - Property setter parameter type is assumed to be equal to getter return type
+    * [WICKET-6708] - FormComponent should read only the GET/POST parameters of the request, not both
+    * [WICKET-6713] - BaseWicketTester does not reset componentInPage field
+    * [WICKET-6717] - Automatic-Module-Name should be valid Java identifier
+
+** New Feature
+
+    * [WICKET-6666] - Rewrite ModalWindow
+
+** Improvement
+
+    * [WICKET-3404] - Improve ModalWindow form handling
+    * [WICKET-6321] - Support Integrity and Crossorigin attributes for JavaScriptUrlReferenceHeaderItem 
+    * [WICKET-6682] - Improve JavaScriptContentHeaderItem and JavaScriptUtils to support nonce
+    * [WICKET-6701] - DownloadLink make content disposition configurable
+    * [WICKET-6703] - Eliminate window.eval from wicket-ajax-jquery
+    * [WICKET-6709] - Cache the value of WebRequest#isAjax() 
+    * [WICKET-6712] - Timezone can be determined on client side
+    * [WICKET-6714] - Please add better getResource-Support for MockServletContext
+    * [WICKET-6718] - AjaxFormChoiceComponentUpdatingBehavior uses "click" instead of "change"
+    * [WICKET-6720] - ConcatBundleResource#getResourceStream should not eagerly fetch resources
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.0.0-M3
 
 ** Bug
