@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.sri;
 
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
@@ -31,6 +32,9 @@ public class IntegrityDemoPage extends WicketExamplePage
 	public static final ResourceReference JS = new JavaScriptResourceReference(
 		IntegrityDemoPage.class, "subresource.js");
 
+	public static final ResourceReference CSS = new JavaScriptResourceReference(
+		IntegrityDemoPage.class, "subresource.css");
+
 	public IntegrityDemoPage()
 	{
 	}
@@ -41,5 +45,6 @@ public class IntegrityDemoPage extends WicketExamplePage
 		super.renderHead(response);
 
 		response.render(JavaScriptHeaderItem.forReference(JS));
+		response.render(CssHeaderItem.forReference(CSS));
 	}
 }

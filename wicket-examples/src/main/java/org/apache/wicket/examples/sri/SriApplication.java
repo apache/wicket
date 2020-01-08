@@ -18,15 +18,12 @@ package org.apache.wicket.examples.sri;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.markup.head.ISubresourceHeaderItem;
-import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.head.ResourceAggregator;
-import org.apache.wicket.markup.head.filter.SubresourceHeaderResponse;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 
 public class SriApplication extends WicketExampleApplication
 {
+	private DynamicSubresourceIntegrity integrity = new DynamicSubresourceIntegrity();
+
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
@@ -38,23 +35,7 @@ public class SriApplication extends WicketExampleApplication
 	{
 		super.init();
 
-		setHeaderResponseDecorator(
-			response -> new ResourceAggregator(new SubresourceHeaderResponse(response)
-			{
-				@Override
-				protected void configure(ISubresourceHeaderItem item)
-				{
-					if (item instanceof JavaScriptReferenceHeaderItem) {
-						ResourceReference reference = ((JavaScriptReferenceHeaderItem)item).getReference();
-						
-						if (reference.equals(IntegrityDemoPage.JS)) {
-							String algorithm = "sha384";
-							String value = "yDSj1gWA4teUdCx2/5M0RsK1jovKR0RdUeeLXKU1gRpNWevoQDGhjHEd1R6Jb+FQ";
-							item.setIntegrity(algorithm + "-" + value);
-						}
-					}
-				}
-			}));
+		setHeaderResponseDecorator(response -> new ResourceAggregator(integrity.wrap(response)));
 
 		mountPage("integritydemo", IntegrityDemoPage.class);
 	}
