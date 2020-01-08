@@ -30,7 +30,7 @@ import org.apache.wicket.Component;
  * @see org.apache.wicket.model.IModel
  * @see org.apache.wicket.model.Model
  * @see org.apache.wicket.model.LoadableDetachableModel
- * @see IChainingModel
+ * @see ChainingModel
  * 
  * @author Jonathan Locke
  * 
