@@ -42,17 +42,8 @@ public class ZonedDateTimeConverterTest
 		assertEquals(date, "Jul 11, 2016, 1:02:03 AM Coordinated Universal Time");
 	}
 
-	@EnabledOnJre({JRE.JAVA_11, JRE.JAVA_12})
 	@Test
-	public void convertToObject_java12Minus() {
-		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
-		ZonedDateTime date = converter.convertToObject("Jul 11, 2016, 1:02:03 AM Coordinated Universal Time", Locale.ENGLISH);
-		assertEquals(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zoneUCT), date);
-	}
-
-	@EnabledOnJre({JRE.JAVA_13})
-	@Test
-	public void convertToObject_java13Plus() {
+	public void convertToObject() {
 		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
 		ZonedDateTime date = converter.convertToObject("Jul 11, 2016, 1:02:03 AM Coordinated Universal Time", Locale.ENGLISH);
 		assertEquals(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zoneUTC), date);
