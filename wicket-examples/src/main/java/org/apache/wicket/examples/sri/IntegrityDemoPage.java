@@ -20,6 +20,7 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
@@ -32,7 +33,7 @@ public class IntegrityDemoPage extends WicketExamplePage
 	public static final ResourceReference JS = new JavaScriptResourceReference(
 		IntegrityDemoPage.class, "subresource.js");
 
-	public static final ResourceReference CSS = new JavaScriptResourceReference(
+	public static final ResourceReference CSS = new CssResourceReference(
 		IntegrityDemoPage.class, "subresource.css");
 
 	public IntegrityDemoPage()
