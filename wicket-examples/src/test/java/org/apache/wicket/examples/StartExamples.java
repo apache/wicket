@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.examples;
 
-import java.io.File;
 import java.lang.management.ManagementFactory;
 
 import javax.management.MBeanServer;
+import javax.websocket.server.ServerContainer;
 
 import org.apache.wicket.protocol.ws.javax.WicketServerEndpointConfig;
 import org.eclipse.jetty.jmx.MBeanContainer;
@@ -29,13 +29,10 @@ import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
-import org.eclipse.jetty.server.session.DefaultSessionCache;
-import org.eclipse.jetty.server.session.FileSessionDataStore;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.eclipse.jetty.websocket.jsr356.server.ServerContainer;
-import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
+import org.eclipse.jetty.websocket.javax.server.config.JavaxWebSocketServletContainerInitializer;
 
 /**
  * Separate startup class for people that want to run the examples directly. Use parameter
@@ -75,7 +72,7 @@ public class StartExamples
 			// use this certificate anywhere important as the passwords are
 			// available in the source.
 
-			SslContextFactory sslContextFactory = new SslContextFactory.Server();
+			SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
 			sslContextFactory.setKeyStoreResource(keystore);
 			sslContextFactory.setKeyStorePassword("wicket");
 			sslContextFactory.setKeyManagerPassword("wicket");
@@ -107,7 +104,7 @@ public class StartExamples
 //		sessionCache.setSessionDataStore(sessionStore);
 //		bb.getSessionHandler().setSessionCache(sessionCache);
 		
-		ServerContainer serverContainer = WebSocketServerContainerInitializer.configureContext(bb);
+		ServerContainer serverContainer = JavaxWebSocketServletContainerInitializer.initialize(bb);
 		serverContainer.addEndpoint(new WicketServerEndpointConfig());
 
 		// uncomment next line if you want to test with JSESSIONID encoded in the urls

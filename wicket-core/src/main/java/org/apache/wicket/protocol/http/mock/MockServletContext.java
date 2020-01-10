@@ -88,6 +88,8 @@ public class MockServletContext implements ServletContext
 	private final ValueMap mimeTypes = new ValueMap();
 
 	private File webappRoot;
+	
+	private int sessionTimeoutInMinutes = 30; 
 
 	private final SessionCookieConfig sessionCookieConfig = new SessionCookieConfig()
 	{
@@ -667,6 +669,12 @@ public class MockServletContext implements ServletContext
 	{
 		return servletRegistration;
 	}
+	
+	@Override
+	public Dynamic addJspFile(String servletName, String jspFile)
+	{
+		return null;
+	}
 
 	@Override
 	public FilterRegistration.Dynamic addFilter(String filterName, String className)
@@ -867,8 +875,41 @@ public class MockServletContext implements ServletContext
 	{
 		return "";
 	}
+	
+	@Override
+	public int getSessionTimeout()
+	{
+		return sessionTimeoutInMinutes;
+	}
+	
+	@Override
+	public void setSessionTimeout(int sessionTimeout)
+	{
+		this.sessionTimeoutInMinutes = sessionTimeout;
+	}
 
+	@Override
+	public String getRequestCharacterEncoding()
+	{
+		return null;
+	}
 
+	@Override
+	public void setRequestCharacterEncoding(String encoding)
+	{
+	}
+	
+	@Override
+	public String getResponseCharacterEncoding()
+	{
+		return null;
+	}
+	
+	@Override
+	public void setResponseCharacterEncoding(String encoding)
+	{
+	}
+	
 	/**
 	 * Invocation handler for proxy interface of {@link javax.servlet.ServletRegistration.Dynamic}.
 	 * This class intercepts invocation for method {@link javax.servlet.ServletRegistration.Dynamic#getMappings}
