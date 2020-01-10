@@ -48,11 +48,6 @@
 				<version>1.0</version>
 			</dependency>
 			<dependency>
-				<groupId>javax.validation</groupId>
-				<artifactId>validation-api</artifactId>
-				<version>2.0.0.Final</version>
-			</dependency>
-			<dependency>
 				<groupId>org.codelibs</groupId>
 				<artifactId>jhighlight</artifactId>
 				<version>1.0.3</version>
@@ -61,16 +56,16 @@
 	</dependencyManagement>
 	<dependencies>
 		<dependency>
-			<groupId>javax.el</groupId>
-			<artifactId>javax.el-api</artifactId>
+			<groupId>jakarta.el</groupId>
+			<artifactId>jakarta.el-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>javax.servlet.jsp-api</artifactId>
+			<groupId>jakarta.servlet.jsp</groupId>
+			<artifactId>jakarta.servlet.jsp-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.github.axet</groupId>
@@ -81,8 +76,8 @@
 			<artifactId>cage</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -178,7 +173,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish</groupId>
-			<artifactId>javax.el</artifactId>
+			<artifactId>jakarta.el</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.httpunit</groupId>
@@ -272,9 +267,9 @@
 					<version>${jetty.version}</version>
 					<dependencies>
 						<dependency>
-							<groupId>javax.validation</groupId>
-							<artifactId>validation-api</artifactId>
-							<version>1.1.0.Final</version>
+							<groupId>jakarta.validation</groupId>
+							<artifactId>jakarta.validation-api</artifactId>
+							<version>${jakarta.validation-api.version}</version>
 						</dependency>
 					</dependencies>
 				</plugin>
