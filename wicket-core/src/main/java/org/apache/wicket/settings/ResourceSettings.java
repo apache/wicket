@@ -29,12 +29,14 @@ import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.core.util.resource.locator.caching.CachingResourceStreamLocator;
 import org.apache.wicket.css.ICssCompressor;
+import org.apache.wicket.css.WicketCoreCSSResourceReference;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.head.PriorityFirstComparator;
 import org.apache.wicket.markup.head.ResourceAggregator.RecordedHeaderItem;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
@@ -172,6 +174,8 @@ public class ResourceSettings implements IPropertiesFactoryContext
 		false);
 
 	private boolean encodeJSessionId = false;
+	
+	private CssResourceReference wicketCoreCSS = WicketCoreCSSResourceReference.get();
 
 	/**
 	 * Configures Wicket's default ResourceLoaders.<br>
@@ -768,6 +772,33 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	public ResourceSettings setEncodeJSessionId(boolean encodeJSessionId)
 	{
 		this.encodeJSessionId = encodeJSessionId;
+		return this;
+	}
+	
+	/**
+	 * Returns the resource reference of the core stylesheet for Wicket. This stylesheet contains
+	 * some lowlevel styling used by Wicket.
+	 * 
+	 * @return The resource reference of the base stylesheet for Wicket.
+	 */
+	public CssResourceReference getWicketCoreCSS()
+	{
+		return wicketCoreCSS;
+	}
+
+	/**
+	 * Replaces the core stylesheet for Wicket. Changes made to the styling can break functionality
+	 * like {@link Component#setOutputMarkupPlaceholderTag(boolean)}, causing components that should
+	 * not be visible to be displayed. Make sure the replacement stylesheet has matching definitions
+	 * for the corresponding sections in the Wicket version.
+	 * 
+	 * @param wicketCoreCSS
+	 *            The replacement styleheet.
+	 * @return {@code this} object for chaining
+	 */
+	public ResourceSettings setWicketCoreCSS(CssResourceReference wicketCoreCSS)
+	{
+		this.wicketCoreCSS = wicketCoreCSS;
 		return this;
 	}
 }

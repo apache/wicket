@@ -2367,7 +2367,7 @@ public abstract class Component
 		response.write(name);
 		response.write(" id=\"");
 		response.write(getAjaxRegionMarkupId());
-		response.write("\" style=\"display:none\" data-wicket-placeholder=\"\"></");
+		response.write("\" class=\"wicket--hidden\" data-wicket-placeholder=\"\"></");
 		response.write(name);
 		response.write(">");
 	}

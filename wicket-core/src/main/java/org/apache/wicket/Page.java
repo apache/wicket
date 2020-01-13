@@ -24,10 +24,13 @@ import java.util.Set;
 
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.css.WicketCoreCSSResourceReference;
 import org.apache.wicket.feedback.FeedbackDelay;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
@@ -1001,6 +1004,14 @@ public abstract class Page extends MarkupContainer
 		{
 			setFreezePageId(frozen);
 		}
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(
+			CssHeaderItem.forReference(getApplication().getResourceSettings().getWicketCoreCSS()));
 	}
 
 	/**
