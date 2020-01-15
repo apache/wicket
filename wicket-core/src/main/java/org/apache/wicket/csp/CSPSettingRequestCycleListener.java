@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -311,29 +312,146 @@ public class CSPSettingRequestCycleListener implements IRequestCycleListener
 
 	private enum CSPHeaderMode
 	{
-		BLOCKING,
-		REPORT_ONLY;
+		BLOCKING("Content-Security-Policy"),
+		REPORT_ONLY("Content-Security-Policy-Report-Only");
+
+		private final String header;
+
+		private CSPHeaderMode(String header)
+		{
+			this.header = header;
+		}
+
+		public String getHeader()
+		{
+			return header;
+		}
+
+		public String getLegacyHeader()
+		{
+			return "X-" + getHeader();
+		}
 	}
 
-	private static String HEADER_CSP = "Content-Security-Policy";
+	public class CSPConfiguration
+	{
+		private CSPHeaderMode mode;
 
-	private static String HEADER_CSP_REPORT = "Content-Security-Policy-Report-Only";
+		private Map<CSPDirective, List<CSPRenderable>> directives =
+			new EnumMap<>(CSPDirective.class);
 
-	private static String HEADER_CSP_IE = "X-Content-Security-Policy";
+		private boolean addLegacyHeaders = false;
 
-	private static String HEADER_CSP_REPORT_IE = "X-Content-Security-Policy-Report-Only";
+		private CSPConfiguration(CSPHeaderMode mode)
+		{
+			this.mode = mode;
+		}
 
-	// Directives for the 'Content-Security-Policy' header
-	private Map<CSPDirective, List<CSPRenderable>> blockingDirectives =
-		new EnumMap<>(CSPDirective.class);
+		public CSPHeaderMode getMode()
+		{
+			return mode;
+		}
 
-	// Directives for the 'Content-Security-Policy-Report-Only' header
-	private Map<CSPDirective, List<CSPRenderable>> reportingDirectives =
-		new EnumMap<>(CSPDirective.class);
+		/**
+		 * True when legacy headers should be added.
+		 * 
+		 * @return True when legacy headers should be added.
+		 */
+		public boolean isAddLegacyHeaders()
+		{
+			return addLegacyHeaders;
+		}
+
+		/**
+		 * Enable legacy {@code X-Content-Security-Policy} headers for older browsers, such as IE.
+		 * 
+		 * @param addLegacyHeaders
+		 *            True when the legacy headers should be added.
+		 * @return {@code this} for chaining
+		 */
+		public CSPConfiguration setAddLegacyHeaders(boolean addLegacyHeaders)
+		{
+			this.addLegacyHeaders = addLegacyHeaders;
+			return this;
+		}
+
+		public CSPConfiguration addDirective(CSPDirective directive, CSPDirectiveSrcValue... values)
+		{
+			for (CSPDirectiveSrcValue value : values)
+			{
+				doAddDirective(directive, value);
+			}
+			return this;
+		}
+
+		/**
+		 * Adds any of the default values to the sandbox directive for the 'blocking' CSP header.
+		 * Use {@link #addBlockingDirective(CSPDirective, String...)} with the sandbox
+		 * {@link CSPDirective} and a single empty string (<em>not</em> {@code null}) to add the
+		 * empty sandbox directive.
+		 */
+		public CSPConfiguration addDirective(CSPDirective sandboxDirective,
+				CSPDirectiveSandboxValue... values)
+		{
+			for (CSPDirectiveSandboxValue value : values)
+			{
+				doAddDirective(sandboxDirective, value);
+			}
+			return this;
+		}
+
+		/**
+		 * Adds any value to a directive for the 'blocking' CSP header. Use
+		 * {@link #addBlockingDirective(CSPDirective, CSPDirectiveSandboxValue...)} and
+		 * {@link #addBlockingDirective(CSPDirective, CSPDirectiveSrcValue...)} for the default
+		 * values for the sandbox and -src directives.
+		 */
+		public CSPConfiguration addDirective(CSPDirective directive, String... values)
+		{
+			for (String value : values)
+			{
+				doAddDirective(directive, new FixedCSPDirective(value));
+			}
+			return this;
+		}
+
+		public boolean isSet()
+		{
+			return !directives.isEmpty();
+		}
+
+		private CSPConfiguration doAddDirective(CSPDirective directive, CSPRenderable value)
+		{
+			// Add backwards compatible frame-src
+			// see http://caniuse.com/#feat=contentsecuritypolicy2
+			if (CSPDirective.CHILD_SRC.equals(directive))
+			{
+				doAddDirective(CSPDirective.FRAME_SRC, value);
+			}
+			List<CSPRenderable> values =
+				directives.computeIfAbsent(directive, x -> new ArrayList<>());
+			directive.checkValueForDirective(value, values);
+			values.add(value);
+			return this;
+		}
+
+		// @returns "key1 value1a value1b; key2 value2a; key3 value3a value3b value3c"
+		public String renderHeaderValue(RequestCycle cycle)
+		{
+			return directives.entrySet()
+				.stream()
+				.map(e -> e.getKey().getValue() + " "
+					+ e.getValue()
+						.stream()
+						.map(r -> r.render(CSPSettingRequestCycleListener.this, cycle))
+						.collect(Collectors.joining(" ")))
+				.collect(Collectors.joining("; "));
+		}
+	}
 
 	private Function<Integer, byte[]> randomSupplier;
 
-	private boolean addLegacyHeaders = false;
+	private Map<CSPHeaderMode, CSPConfiguration> configs = new HashMap<>();
 
 	public CSPSettingRequestCycleListener()
 	{
@@ -344,168 +462,26 @@ public class CSPSettingRequestCycleListener implements IRequestCycleListener
 		this.randomSupplier = randomSupplier;
 	}
 
-	/**
-	 * True when legacy headers should be added.
-	 * 
-	 * @return True when legacy headers should be added.
-	 */
-	public boolean isAddLegacyHeaders()
+	public CSPConfiguration blocking()
 	{
-		return addLegacyHeaders;
+		return configs.computeIfAbsent(CSPHeaderMode.BLOCKING, CSPConfiguration::new);
 	}
 
-	/**
-	 * Enable legacy {@code X-Content-Security-Policy} headers for older browsers, such as IE.
-	 * 
-	 * @param addLegacyHeaders True when the legacy headers should be added.
-	 * @return {@code this} for chaining
-	 */
-	public CSPSettingRequestCycleListener setAddLegacyHeaders(boolean addLegacyHeaders)
+	public CSPConfiguration reporting()
 	{
-		this.addLegacyHeaders = addLegacyHeaders;
-		return this;
-	}
-
-	/**
-	 * Adds any of the default values to a -src directive for the 'blocking' CSP header
-	 */
-	public CSPSettingRequestCycleListener addBlockingDirective(CSPDirective directive,
-			CSPDirectiveSrcValue... values)
-	{
-		for (CSPDirectiveSrcValue value : values)
-		{
-			addDirective(directive, value, CSPHeaderMode.BLOCKING);
-		}
-		return this;
-	}
-
-	/**
-	 * Adds any of the default values to the sandbox directive for the 'blocking' CSP header. Use
-	 * {@link #addBlockingDirective(CSPDirective, String...)} with the sandbox {@link CSPDirective}
-	 * and a single empty string (<em>not</em> {@code null}) to add the empty sandbox directive.
-	 */
-	public CSPSettingRequestCycleListener addBlockingDirective(CSPDirective sandboxDirective,
-			CSPDirectiveSandboxValue... values)
-	{
-		for (CSPDirectiveSandboxValue value : values)
-		{
-			addDirective(sandboxDirective, value, CSPHeaderMode.BLOCKING);
-		}
-		return this;
-	}
-
-	/**
-	 * Adds any value to a directive for the 'blocking' CSP header. Use
-	 * {@link #addBlockingDirective(CSPDirective, CSPDirectiveSandboxValue...)} and
-	 * {@link #addBlockingDirective(CSPDirective, CSPDirectiveSrcValue...)} for the default values
-	 * for the sandbox and -src directives.
-	 */
-	public CSPSettingRequestCycleListener addBlockingDirective(CSPDirective directive,
-			String... values)
-	{
-		for (String value : values)
-		{
-			addDirective(directive, new FixedCSPDirective(value), CSPHeaderMode.BLOCKING);
-		}
-		return this;
-	}
-
-	/**
-	 * Adds any of the default values to a -src directive for the 'reporting-only' CSP header
-	 */
-	public CSPSettingRequestCycleListener addReportingDirective(CSPDirective directive,
-			CSPDirectiveSrcValue... values)
-	{
-		for (CSPDirectiveSrcValue value : values)
-		{
-			addDirective(directive, value, CSPHeaderMode.REPORT_ONLY);
-		}
-		return this;
-	}
-
-	/**
-	 * Adds any of the default values to the sandbox directive for the 'reporting-only' CSP header.
-	 * Use {@link #addReportingDirective(CSPDirective, String...)} with the sandbox
-	 * {@link CSPDirective} and a single empty string (<em>not</em> {@code null}) to add the empty
-	 * sandbox directive.
-	 */
-	public CSPSettingRequestCycleListener addReportingDirective(CSPDirective sandboxDirective,
-			CSPDirectiveSandboxValue... values)
-	{
-		for (CSPDirectiveSandboxValue value : values)
-		{
-			addDirective(sandboxDirective, value, CSPHeaderMode.REPORT_ONLY);
-		}
-		return this;
-	}
-
-	/**
-	 * Adds any value to a directive for the 'reporting-only' CSP header. Use
-	 * {@link #addReportingDirective(CSPDirective, CSPDirectiveSandboxValue...)} and
-	 * {@link #addReportingDirective(CSPDirective, CSPDirectiveSrcValue...)} for the default values
-	 * for the sandbox and -src directives.
-	 */
-	public CSPSettingRequestCycleListener addReportingDirective(CSPDirective directive,
-			String... values)
-	{
-		for (String value : values)
-		{
-			addDirective(directive, new FixedCSPDirective(value), CSPHeaderMode.REPORT_ONLY);
-		}
-		return this;
-	}
-
-	private CSPSettingRequestCycleListener addDirective(CSPDirective directive, CSPRenderable value,
-			CSPHeaderMode mode)
-	{
-		// Add backwards compatible frame-src
-		// see http://caniuse.com/#feat=contentsecuritypolicy2
-		if (CSPDirective.CHILD_SRC.equals(directive))
-		{
-			addDirective(CSPDirective.FRAME_SRC, value, mode);
-		}
-		switch (mode)
-		{
-			case BLOCKING:
-				if (blockingDirectives.get(directive) == null)
-				{
-					blockingDirectives.put(directive, new ArrayList<>());
-				}
-				directive.checkValueForDirective(value, blockingDirectives.get(directive));
-				blockingDirectives.get(directive).add(value);
-				return this;
-			case REPORT_ONLY:
-				if (reportingDirectives.get(directive) == null)
-				{
-					reportingDirectives.put(directive, new ArrayList<>());
-				}
-				directive.checkValueForDirective(value, reportingDirectives.get(directive));
-				reportingDirectives.get(directive).add(value);
-				return this;
-			default:
-				throw new IllegalArgumentException("Incorrect CSPHeaderMode!");
-		}
-
+		return configs.computeIfAbsent(CSPHeaderMode.REPORT_ONLY, CSPConfiguration::new);
 	}
 
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
 	{
 		WebResponse webResponse = (WebResponse) cycle.getResponse();
-		if (!reportingDirectives.isEmpty())
-		{
-			String reportHeaderValue = getCSPHeaderValue(reportingDirectives, cycle);
-			webResponse.setHeader(HEADER_CSP_REPORT, reportHeaderValue);
-			if (addLegacyHeaders)
-				webResponse.setHeader(HEADER_CSP_REPORT_IE, reportHeaderValue);
-		}
-		if (!blockingDirectives.isEmpty())
-		{
-			String blockHeaderValue = getCSPHeaderValue(blockingDirectives, cycle);
-			webResponse.setHeader(HEADER_CSP, blockHeaderValue);
-			if (addLegacyHeaders)
-				webResponse.setHeader(HEADER_CSP_IE, blockHeaderValue);
-		}
+		configs.values().stream().filter(CSPConfiguration::isSet).forEach(config -> {
+			String headerValue = config.renderHeaderValue(cycle);
+			webResponse.setHeader(config.getMode().getHeader(), headerValue);
+			if (config.isAddLegacyHeaders())
+				webResponse.setHeader(config.getMode().getLegacyHeader(), headerValue);
+		});
 	}
 
 	public String getNonce(RequestCycle cycle)
@@ -517,19 +493,5 @@ public class CSPSettingRequestCycleListener implements IRequestCycleListener
 			cycle.setMetaData(NONCE_KEY, nonce);
 		}
 		return nonce;
-	}
-
-	// @returns "key1 value1a value1b; key2 value2a; key3 value3a value3b value3c"
-	private String getCSPHeaderValue(Map<CSPDirective, List<CSPRenderable>> directiveValuesMap,
-			RequestCycle cycle)
-	{
-		return directiveValuesMap.entrySet()
-			.stream()
-			.map(e -> e.getKey().getValue() + " "
-				+ e.getValue()
-					.stream()
-					.map(r -> r.render(this, cycle))
-					.collect(Collectors.joining(" ")))
-			.collect(Collectors.joining("; "));
 	}
 }
