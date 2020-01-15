@@ -35,7 +35,7 @@ public class SriApplication extends WicketExampleApplication
 	{
 		super.init();
 
-		setHeaderResponseDecorator(response -> new ResourceAggregator(integrity.wrap(response)));
+		getHeaderResponseDecorators().add(integrity::wrap);
 
 		mountPage("integritydemo", IntegrityDemoPage.class);
 	}

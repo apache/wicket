@@ -44,6 +44,7 @@ import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.ResourceAggregator;
+import org.apache.wicket.markup.html.HeaderResponseDecoratorCollection;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
@@ -184,9 +185,8 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	/**
 	 * The decorator this application uses to decorate any header responses created by Wicket
 	 */
-	private IHeaderResponseDecorator headerResponseDecorator = (headerresponse) -> {
-		return new ResourceAggregator(headerresponse);
-	};
+	private HeaderResponseDecoratorCollection headerResponseDecorators =
+		new HeaderResponseDecoratorCollection();
 
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
@@ -1585,21 +1585,36 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	 * Sets an {@link IHeaderResponseDecorator} that you want your application to use to decorate
 	 * header responses.
 	 * <p>
-	 * Calling this method replaces the default decorator, which utilizes a {@link ResourceAggregator}:
-	 * The given implementation should make sure, that it too wraps responses in a {@link ResourceAggregator},
-	 * otherwise no dependencies for {@link HeaderItem}s will be resolved.   
+	 * Calling this method replaces the default decorator, which utilizes a
+	 * {@link ResourceAggregator}: The given implementation should make sure, that it too wraps
+	 * responses in a {@link ResourceAggregator}, otherwise no dependencies for {@link HeaderItem}s
+	 * will be resolved.
 	 * 
 	 * @param headerResponseDecorator
 	 *            your custom decorator, must not be null
+	 * @deprecated use {@code add(...)} on {@link #getHeaderResponseDecorators()}. This method
+	 *             removes the {@link ResourceAggregator}, which is needed to resolve resource
+	 *             dependencies.
 	 */
-	public final Application setHeaderResponseDecorator(final IHeaderResponseDecorator headerResponseDecorator)
+	@Deprecated
+	public final Application
+			setHeaderResponseDecorator(final IHeaderResponseDecorator headerResponseDecorator)
 	{
-		Args.notNull(headerResponseDecorator, "headerResponseDecorator");
-		
-		this.headerResponseDecorator = headerResponseDecorator;
+		headerResponseDecorators.replaceAll(headerResponseDecorator);
 		return this;
 	}
 
+	/**
+	 * Returns the {@link HeaderResponseDecoratorCollection} used by this application. On this
+	 * collection you can add additional decorators, which will be nested in the order added.
+	 * 
+	 * @return The {@link HeaderResponseDecoratorCollection} used by this application.
+	 */
+	public HeaderResponseDecoratorCollection getHeaderResponseDecorators()
+	{
+		return headerResponseDecorators;
+	}
+	
 	/**
 	 * INTERNAL METHOD - You shouldn't need to call this. This is called every time Wicket creates
 	 * an IHeaderResponse. It gives you the ability to incrementally add features to an
@@ -1615,7 +1630,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	 */
 	public final IHeaderResponse decorateHeaderResponse(final IHeaderResponse response)
 	{
-		return headerResponseDecorator.decorate(response);
+		return headerResponseDecorators.decorate(response);
 	}
 
 	/**

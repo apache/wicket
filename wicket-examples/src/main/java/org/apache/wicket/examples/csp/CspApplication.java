@@ -45,7 +45,7 @@ public class CspApplication extends WicketExampleApplication
 	{
 		super.init();
 
-		setHeaderResponseDecorator(response -> new ResourceAggregator(new CspNonceHeaderResponse(response, getNonce())));
+		getHeaderResponseDecorators().add(response -> new CspNonceHeaderResponse(response, getNonce()));
 		
 		mountPage("noncedemo", NonceDemoPage.class);
 	}

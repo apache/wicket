@@ -41,17 +41,11 @@ class FilteringHeaderResponseTest extends WicketTestCase
 	@Test
 	void footerDependsOnHeadItem() throws Exception
 	{
-		tester.getApplication().setHeaderResponseDecorator(new IHeaderResponseDecorator()
-		{
-			@Override
-			public IHeaderResponse decorate(IHeaderResponse response)
-			{
-				// use this header resource decorator to load all JavaScript resources in the page
-				// footer (after </body>)
-				return new ResourceAggregator(
-					new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS"));
-			}
-		});
+		// use this header resource decorator to load all JavaScript resources in the page
+		// footer (after </body>)
+		tester.getApplication()
+			.getHeaderResponseDecorators()
+			.add(response -> new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS"));
 		executeTest(FilteredHeaderPage.class, "FilteredHeaderPageExpected.html");
 	}
 
@@ -90,19 +84,21 @@ class FilteringHeaderResponseTest extends WicketTestCase
 	@Test
 	void deferred() throws Exception
 	{
-		tester.getApplication().setHeaderResponseDecorator(
-			response -> new ResourceAggregator(new JavaScriptDeferHeaderResponse(response)));
+		tester.getApplication()
+			.getHeaderResponseDecorators()
+			.add(response -> new JavaScriptDeferHeaderResponse(response));
 		executeTest(DeferredPage.class, "DeferredPageExpected.html");
 	}
-	
+
 	/**
 	 * WICKET-6682
 	 */
 	@Test
 	void nonce() throws Exception
 	{
-		tester.getApplication().setHeaderResponseDecorator(
-			response -> new ResourceAggregator(new CspNonceHeaderResponse(response, "NONCE")));
+		tester.getApplication()
+			.getHeaderResponseDecorators()
+			.add(response -> new CspNonceHeaderResponse(response, "NONCE"));
 		executeTest(CspNoncePage.class, "CspNoncePageExpected.html");
 	}
 }
