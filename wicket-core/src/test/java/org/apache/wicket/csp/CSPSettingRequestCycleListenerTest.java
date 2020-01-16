@@ -16,16 +16,16 @@
  */
 package org.apache.wicket.csp;
 
-import static org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirective.CHILD_SRC;
-import static org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirective.DEFAULT_SRC;
-import static org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirective.FRAME_SRC;
-import static org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirective.REPORT_URI;
-import static org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirective.SANDBOX;
-import static org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirectiveSandboxValue.ALLOW_FORMS;
-import static org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirectiveSandboxValue.EMPTY;
-import static org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirectiveSrcValue.NONE;
-import static org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirectiveSrcValue.SELF;
-import static org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirectiveSrcValue.WILDCARD;
+import static org.apache.wicket.csp.CSPDirective.CHILD_SRC;
+import static org.apache.wicket.csp.CSPDirective.DEFAULT_SRC;
+import static org.apache.wicket.csp.CSPDirective.FRAME_SRC;
+import static org.apache.wicket.csp.CSPDirective.REPORT_URI;
+import static org.apache.wicket.csp.CSPDirective.SANDBOX;
+import static org.apache.wicket.csp.CSPDirectiveSandboxValue.ALLOW_FORMS;
+import static org.apache.wicket.csp.CSPDirectiveSandboxValue.EMPTY;
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.NONE;
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.SELF;
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.WILDCARD;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -37,9 +37,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirective;
-import org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirectiveSandboxValue;
-import org.apache.wicket.csp.CSPSettingRequestCycleListener.CSPDirectiveSrcValue;
 import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.Assertions;
@@ -47,7 +44,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("deprecation")
-public class CSPSettingRequestCycleListenerTest
+public class CSPSettingRequestCycleListenerTest extends WicketTester
 {
 	private static String HEADER_CSP = "Content-Security-Policy";
 
@@ -64,7 +61,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testNullSrcInputIsRejected()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(DEFAULT_SRC, (String) null);
 		});
@@ -73,7 +71,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testEmptySrcInputIsRejected()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(DEFAULT_SRC, "");
 		});
@@ -86,7 +85,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testInvalidSrcInputIsRejected()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(DEFAULT_SRC, "abc?^()-_\'xyz");
 		});
@@ -99,7 +99,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testMultipleSrcInputWithNoneIsRejected1()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(DEFAULT_SRC, SELF, NONE);
 		});
@@ -112,7 +113,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testMultipleSrcInputWithNoneIsRejected2()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(DEFAULT_SRC, NONE, SELF);
 		});
@@ -125,7 +127,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testMultipleSrcInputWithStarIsRejected1()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		cspListener.blocking().addDirective(DEFAULT_SRC, SELF);
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(DEFAULT_SRC, WILDCARD);
@@ -139,7 +142,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testMultipleSrcInputWithStarIsRejected2()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		cspListener.blocking().addDirective(DEFAULT_SRC, WILDCARD);
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(DEFAULT_SRC, SELF);
@@ -149,7 +153,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testWrongSrcInputIsRejected()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(DEFAULT_SRC, ALLOW_FORMS);
 		});
@@ -158,7 +163,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testWrongSandboxInputIsRejected()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(SANDBOX, SELF);
 		});
@@ -167,7 +173,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testNullSandboxInputIsRejected()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(SANDBOX, (String) null);
 		});
@@ -176,14 +183,16 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testEmptySandboxInputIsAccepted()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		cspListener.blocking().addDirective(SANDBOX, CSPDirectiveSandboxValue.EMPTY);
 	}
 
 	@Test
 	public void testInvalidSandboxInputIsRejected()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(SANDBOX, "abcxyz");
 		});
@@ -192,7 +201,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testMultipleSandboxInputWithEmptyStringIsRejected1()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		cspListener.blocking().addDirective(SANDBOX, ALLOW_FORMS);
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(SANDBOX, EMPTY);
@@ -202,7 +212,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testMultipleSandboxInputWithEmptyStringIsRejected2()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		cspListener.blocking().addDirective(SANDBOX, EMPTY);
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(SANDBOX, ALLOW_FORMS);
@@ -212,7 +223,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testNullReportUriInputIsRejected()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(REPORT_URI, (String) null);
 		});
@@ -221,7 +233,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testEmptyReportUriInputIsRejected()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(REPORT_URI, "");
 		});
@@ -230,7 +243,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testInvalidReportUriInputIsRejected()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			cspListener.blocking().addDirective(REPORT_URI, "abc?^()-_\'xyz");
 		});
@@ -239,12 +253,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testAllCSPSrcDefaultEnumsAreSetCorrectly() throws NoSuchAlgorithmException
 	{
-		SecureRandom random = SecureRandom.getInstanceStrong();
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener(length -> {
-			byte[] ret = new byte[length];
-			random.nextBytes(ret);
-			return ret;
-		});
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 
 		final int cspDirectiveCount = CSPDirective.values().length;
 		final int cspDirectiveSrcValueCount = CSPDirectiveSrcValue.values().length;
@@ -273,7 +283,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testCSPReportUriDirectiveSetCorrectly()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		cspListener.blocking().addDirective(REPORT_URI, "http://report.example.com");
 		cspListener.reporting().addDirective(REPORT_URI, "/example-report-uri");
 
@@ -288,14 +299,15 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testCSPSandboxDirectiveSetCorrectly()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		final int cspSandboxDirectiveValueCount = CSPDirectiveSandboxValue.values().length;
 		for (int i = 0; i < cspSandboxDirectiveValueCount; i++)
 		{
 			final CSPDirectiveSandboxValue cspDirectiveValue = CSPDirectiveSandboxValue.values()[i];
 			if (cspDirectiveValue.equals(CSPDirectiveSandboxValue.EMPTY))
 				continue;
-			
+
 			cspListener.blocking().addDirective(SANDBOX, cspDirectiveValue);
 			cspListener.reporting().addDirective(SANDBOX, cspDirectiveValue);
 		}
@@ -316,7 +328,8 @@ public class CSPSettingRequestCycleListenerTest
 	@Test
 	public void testChildSrcDirectiveAlsoSetsFrameSrcDirective()
 	{
-		CSPSettingRequestCycleListener cspListener = new CSPSettingRequestCycleListener();
+		CSPSettingRequestCycleListener cspListener =
+			new CSPSettingRequestCycleListener(getApplication());
 		cspListener.blocking().addDirective(CHILD_SRC, SELF);
 		cspListener.reporting().addDirective(CHILD_SRC, SELF);
 		StringBuffer headerErrors = checkHeaders(cspListener);
@@ -460,5 +473,4 @@ public class CSPSettingRequestCycleListenerTest
 
 		return false;
 	}
-
 }
