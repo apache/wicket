@@ -23,10 +23,10 @@ import java.io.StreamCorruptedException;
 import java.security.GeneralSecurityException;
 
 import org.apache.wicket.MockPage;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.mock.MockPageStore;
 import org.apache.wicket.serialize.java.JavaSerializer;
+import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -34,13 +34,13 @@ import org.junit.jupiter.api.Test;
  * 
  * @author svenmeier
  */
-public class CryptingPageStoreTest
+public class CryptingPageStoreTest extends WicketTester
 {
 
 	@Test
 	void test()
 	{
-		CryptingPageStore store = new CryptingPageStore(new MockPageStore());
+		CryptingPageStore store = new CryptingPageStore(new MockPageStore(), getApplication());
 		JavaSerializer serializer = new JavaSerializer("test");
 
 		IPageContext context = new MockPageContext();
@@ -60,7 +60,7 @@ public class CryptingPageStoreTest
 	@Test
 	void testFail()
 	{
-		CryptingPageStore store = new CryptingPageStore(new MockPageStore());
+		CryptingPageStore store = new CryptingPageStore(new MockPageStore(), getApplication());
 		JavaSerializer serializer = new JavaSerializer("test");
 
 		MockPageContext context = new MockPageContext();

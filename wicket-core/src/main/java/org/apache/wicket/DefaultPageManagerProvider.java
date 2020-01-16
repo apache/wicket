@@ -183,7 +183,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		
 		if (storeSettings.isEncrypted())
 		{
-			pageStore = new CryptingPageStore(pageStore);
+			pageStore = new CryptingPageStore(pageStore, application);
 		}
 
 		return pageStore;

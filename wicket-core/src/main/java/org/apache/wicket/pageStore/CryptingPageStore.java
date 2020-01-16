@@ -17,11 +17,11 @@
 package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
-import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 
 import javax.crypto.SecretKey;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
@@ -46,9 +46,9 @@ public class CryptingPageStore extends DelegatingPageStore
 		private static final long serialVersionUID = 1L;
 	};
 
-	private final SecureRandom random;
-
 	private final ICrypter crypter;
+
+	private final Application application;
 
 	/**
 	 * @param delegate
@@ -56,17 +56,10 @@ public class CryptingPageStore extends DelegatingPageStore
 	 * @param applicationName
 	 *            name of application
 	 */
-	public CryptingPageStore(IPageStore delegate)
+	public CryptingPageStore(IPageStore delegate, Application application)
 	{
 		super(delegate);
-		try
-		{
-			random = SecureRandom.getInstance("SHA1PRNG", "SUN");
-		}
-		catch (GeneralSecurityException ex)
-		{
-			throw new WicketRuntimeException(ex);
-		}
+		this.application = Args.notNull(application, "application");
 		crypter = newCrypter();
 	}
 
@@ -94,7 +87,8 @@ public class CryptingPageStore extends DelegatingPageStore
 
 	private SessionData getSessionData(IPageContext context)
 	{
-		return context.getSessionData(KEY, () -> new SessionData(crypter.generateKey(random)));
+		return context.getSessionData(KEY, () -> new SessionData(crypter
+			.generateKey(application.getSecuritySettings().getRandomSupplier().getRandom())));
 	}
 
 	/**
@@ -138,7 +132,8 @@ public class CryptingPageStore extends DelegatingPageStore
 		SerializedPage serializedPage = (SerializedPage) page;
 
 		byte[] decrypted = serializedPage.getData();
-		byte[] encrypted = getSessionData(context).encrypt(decrypted, crypter, random);
+		byte[] encrypted = getSessionData(context).encrypt(decrypted, crypter,
+			application.getSecuritySettings().getRandomSupplier().getRandom());
 
 		page = new SerializedPage(page.getPageId(), serializedPage.getPageType(), encrypted);
 
