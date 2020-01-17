@@ -130,7 +130,7 @@ public class ContentSecurityPolicyEnforcer implements IRequestCycleListener
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
 	{
-		if (!mustProtect(handler))
+		if (!mustProtect(handler) || !(cycle.getResponse() instanceof WebResponse))
 			return;
 		
 		WebResponse webResponse = (WebResponse) cycle.getResponse();
