@@ -14,7 +14,7 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.panel.Inl
 <script type="text/javascript" >
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
-Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.panel.InlinePanelPage_8?0-1.0-add","c":"add1","e":"click"});;
+Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.panel.InlinePanelPage_8?0-1.0-add","c":"add1","e":"click","pd":true});;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
@@ -25,7 +25,7 @@ Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
   <span wicket:id="number">0</span><br/>
   <div id="nextContainer2" style="display:none" data-wicket-placeholder=""></div>
 </div>
-<a wicket:id="add" id="add1" href="javascript:;">Add</a>
+<a wicket:id="add" id="add1" href="#">Add</a>
 
 
 

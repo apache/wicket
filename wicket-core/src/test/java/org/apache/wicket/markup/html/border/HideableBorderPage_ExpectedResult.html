@@ -14,14 +14,14 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.border.Hi
 <script type="text/javascript" >
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
-Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.border.HideableBorderPage?0-1.0-hideable-hideLink","c":"hideLink1","e":"click"});;
+Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.border.HideableBorderPage?0-1.0-hideable-hideLink","c":"hideLink1","e":"click","pd":true});;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
 </script>
 </head><body>
   <div wicket:id="hideable"><wicket:border>
-  <a wicket:id="hideLink" id="hideLink1" href="javascript:;">Hide contents</a>
+  <a wicket:id="hideLink" id="hideLink1" href="#">Hide contents</a>
   <div wicket:id="wrapper" id="wrapper2">
   <wicket:body>
     Contents <span wicket:id="content">label</span>

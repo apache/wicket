@@ -42,7 +42,7 @@ class AjaxLinkTest extends WicketTestCase
 		TagTester ajaxLink = tester.getTagByWicketId("ajaxLink");
 
 		// It was a link to google in the markup, but should be replaced to "#"
-		assertTrue(ajaxLink.getAttributeIs("href", "javascript:;"));
+		assertTrue(ajaxLink.getAttributeIs("href", "#"));
 	}
 
 	/**

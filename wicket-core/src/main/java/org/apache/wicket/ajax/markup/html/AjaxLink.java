@@ -88,6 +88,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 			@Override
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
+				attributes.setPreventDefault(true);
 				super.updateAjaxAttributes(attributes);
 				AjaxLink.this.updateAjaxAttributes(attributes);
 			}
@@ -117,7 +118,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 				tagName.equalsIgnoreCase("area"))
 			{
 				// disable any href attr in markup
-				tag.put("href", "javascript:;");
+				tag.put("href", "#");
 			}
 			else if (tagName.equalsIgnoreCase("button"))
 			{
