@@ -33,10 +33,10 @@ public interface CSPRenderable
 	 * Renders the value that should be put in the CSP header.
 	 * 
 	 * @param listener
-	 *            The {@link CSPSettingRequestCycleListener} that renders this value.
+	 *            The {@link ContentSecurityPolicyEnforcer} that renders this value.
 	 * @param cycle
 	 *            The current {@link RequestCycle}.
 	 * @return The rendered value.
 	 */
-	public String render(CSPSettingRequestCycleListener listener, RequestCycle cycle);
+	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle);
 }

@@ -32,7 +32,7 @@ public enum CSPDirectiveSrcValue implements CSPRenderable
 	NONCE("'nonce-%1$s'")
 	{
 		@Override
-		public String render(CSPSettingRequestCycleListener listener, RequestCycle cycle)
+		public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle)
 		{
 			return String.format(getValue(), listener.getNonce(cycle));
 		}
@@ -46,7 +46,7 @@ public enum CSPDirectiveSrcValue implements CSPRenderable
 	}
 
 	@Override
-	public String render(CSPSettingRequestCycleListener listener, RequestCycle cycle)
+	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle)
 	{
 		return value;
 	}

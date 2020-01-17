@@ -18,6 +18,7 @@ package org.apache.wicket.csp;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
@@ -28,6 +29,7 @@ import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -67,7 +69,7 @@ import org.apache.wicket.util.lang.Args;
  * @author Sven Haster
  * @author Emond Papegaaij
  */
-public class CSPSettingRequestCycleListener implements IRequestCycleListener
+public class ContentSecurityPolicyEnforcer implements IRequestCycleListener
 {
 	public static MetaDataKey<String> NONCE_KEY = new MetaDataKey<>()
 	{
@@ -77,8 +79,10 @@ public class CSPSettingRequestCycleListener implements IRequestCycleListener
 	private final Application application;
 	
 	private Map<CSPHeaderMode, CSPHeaderConfiguration> configs = new HashMap<>();
+	
+	private Predicate<IPageClassRequestHandler> protectedPageFilter = handler -> true;
 
-	public CSPSettingRequestCycleListener(Application application)
+	public ContentSecurityPolicyEnforcer(Application application)
 	{
 		this.application = Args.notNull(application, "application");
 	}
@@ -92,6 +96,20 @@ public class CSPSettingRequestCycleListener implements IRequestCycleListener
 	{
 		return configs.computeIfAbsent(CSPHeaderMode.REPORT_ONLY, x -> new CSPHeaderConfiguration());
 	}
+	
+	/**
+	 * Sets the predicate that determines which requests must be protected by the CSP. When the
+	 * predicate evaluates to false, the request for the page will not be protected.
+	 * 
+	 * @param protectedPageFilter
+	 * @return {@code this} for chaining.
+	 */
+	public ContentSecurityPolicyEnforcer
+			setProtectedPageFilter(Predicate<IPageClassRequestHandler> protectedPageFilter)
+	{
+		this.protectedPageFilter = protectedPageFilter;
+		return this;
+	}
 
 	protected boolean mustProtect(IRequestHandler handler)
 	{
@@ -103,9 +121,10 @@ public class CSPSettingRequestCycleListener implements IRequestCycleListener
 		}
 		return !(handler instanceof BufferedResponseRequestHandler);
 	}
-	
-	protected boolean mustProtectPageRequest(IPageClassRequestHandler handler) {
-		return true;
+
+	protected boolean mustProtectPageRequest(IPageClassRequestHandler handler)
+	{
+		return protectedPageFilter.test(handler);
 	}
 
 	@Override
@@ -124,15 +143,30 @@ public class CSPSettingRequestCycleListener implements IRequestCycleListener
 				webResponse.setHeader(mode.getLegacyHeader(), headerValue);
 		});
 	}
+	
+	/**
+	 * Returns true if any of the headers includes a directive with a nonce.
+	 * 
+	 * @return If a nonce is used in the CSP.
+	 */
+	public boolean isNonceEnabled()
+	{
+		return configs.values().stream().anyMatch(CSPHeaderConfiguration::isNonceEnabled);
+	}
 
 	public String getNonce(RequestCycle cycle)
 	{
 		String nonce = cycle.getMetaData(NONCE_KEY);
 		if (nonce == null)
 		{
-			nonce = application.getSecuritySettings().getRandomSupplier().getRandomBase64(12);
+			nonce = getSecuritySettings().getRandomSupplier().getRandomBase64(12);
 			cycle.setMetaData(NONCE_KEY, nonce);
 		}
 		return nonce;
+	}
+
+	private SecuritySettings getSecuritySettings()
+	{
+		return application.getSecuritySettings();
 	}
 }

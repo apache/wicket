@@ -16,6 +16,21 @@
  */
 package org.apache.wicket.csp;
 
+import static org.apache.wicket.csp.CSPDirective.CHILD_SRC;
+import static org.apache.wicket.csp.CSPDirective.CONNECT_SRC;
+import static org.apache.wicket.csp.CSPDirective.DEFAULT_SRC;
+import static org.apache.wicket.csp.CSPDirective.FONT_SRC;
+import static org.apache.wicket.csp.CSPDirective.IMG_SRC;
+import static org.apache.wicket.csp.CSPDirective.MANIFEST_SRC;
+import static org.apache.wicket.csp.CSPDirective.SCRIPT_SRC;
+import static org.apache.wicket.csp.CSPDirective.STYLE_SRC;
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.NONCE;
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.NONE;
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.SELF;
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.STRICT_DYNAMIC;
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.UNSAFE_EVAL;
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.UNSAFE_INLINE;
+
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -33,9 +48,49 @@ public class CSPHeaderConfiguration
 	private Map<CSPDirective, List<CSPRenderable>> directives = new EnumMap<>(CSPDirective.class);
 
 	private boolean addLegacyHeaders = false;
+	
+	private boolean nonceEnabled = false;
 
 	public CSPHeaderConfiguration()
 	{
+	}
+	
+	public CSPHeaderConfiguration disabled() {
+		return clear();
+	}
+
+	public CSPHeaderConfiguration unsafeInline()
+	{
+		return clear().addDirective(DEFAULT_SRC, NONE)
+			.addDirective(STYLE_SRC, SELF, UNSAFE_INLINE)
+			.addDirective(SCRIPT_SRC, SELF, UNSAFE_INLINE, UNSAFE_EVAL)
+			.addDirective(IMG_SRC, SELF)
+			.addDirective(FONT_SRC, SELF)
+			.addDirective(CHILD_SRC, SELF)
+			.addDirective(MANIFEST_SRC, SELF)
+			.addDirective(CONNECT_SRC, SELF);
+	}
+	
+	public CSPHeaderConfiguration strict()
+	{
+		return clear().addDirective(DEFAULT_SRC, NONE)
+			.addDirective(STYLE_SRC, NONCE)
+			.addDirective(SCRIPT_SRC, STRICT_DYNAMIC, NONCE)
+			.addDirective(IMG_SRC, SELF)
+			.addDirective(FONT_SRC, SELF)
+			.addDirective(CHILD_SRC, SELF)
+			.addDirective(MANIFEST_SRC, SELF)
+			.addDirective(CONNECT_SRC, SELF);
+	}
+
+	/**
+	 * True when the {@link CSPDirectiveSrcValue#NONCE} is used in one of the directives.
+	 * 
+	 * @return When any of the directives contains a nonce.
+	 */
+	public boolean isNonceEnabled()
+	{
+		return nonceEnabled;
 	}
 
 	/**
@@ -104,6 +159,18 @@ public class CSPHeaderConfiguration
 		return !directives.isEmpty();
 	}
 
+	/**
+	 * Removes all CSP directives from the configuration.
+	 * 
+	 * @return {@code this} for chaining.
+	 */
+	public CSPHeaderConfiguration clear()
+	{
+		directives.clear();
+		nonceEnabled = false;
+		return this;
+	}
+
 	@SuppressWarnings("deprecation")
 	private CSPHeaderConfiguration doAddDirective(CSPDirective directive, CSPRenderable value)
 	{
@@ -116,6 +183,7 @@ public class CSPHeaderConfiguration
 		List<CSPRenderable> values = directives.computeIfAbsent(directive, x -> new ArrayList<>());
 		directive.checkValueForDirective(value, values);
 		values.add(value);
+		nonceEnabled |= CSPDirectiveSrcValue.NONCE == value;
 		return this;
 	}
 
@@ -124,12 +192,12 @@ public class CSPHeaderConfiguration
 	 * in the form {@code "key1 value1a value1b; key2 value2a; key3 value3a value3b value3c"}.
 	 * 
 	 * @param listener
-	 *            The {@link CSPSettingRequestCycleListener} that renders the header.
+	 *            The {@link ContentSecurityPolicyEnforcer} that renders the header.
 	 * @param cycle
 	 *            The current {@link RequestCycle}.
 	 * @return the rendered header.
 	 */
-	public String renderHeaderValue(CSPSettingRequestCycleListener listener, RequestCycle cycle)
+	public String renderHeaderValue(ContentSecurityPolicyEnforcer listener, RequestCycle cycle)
 	{
 		return directives.entrySet()
 			.stream()

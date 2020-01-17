@@ -16,28 +16,22 @@
  */
 package org.apache.wicket.csp;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.AbstractCspHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.IWrappedHeaderItem;
-import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
- * Add a <em>Content Security Policy<em> (CSP) nonce to all {@link AbstractCspHeaderItem}s.
- * <p>
- * Note: please don't forget to wrap with {@link ResourceAggregator} when setting it up with
- * {@link Application#setHeaderResponseDecorator}, otherwise dependencies will not be rendered.
- *
- * @see AbstractCspHeaderItem
+ * Add a <em>Content Security Policy<em> (CSP) nonce to all {@link AbstractCspHeaderItem}s when that
+ * is required by the configuration of the CSP.
  */
 public class CspNonceHeaderResponseDecorator extends DecoratingHeaderResponse
 {
-	private CSPSettingRequestCycleListener listener;
+	private ContentSecurityPolicyEnforcer listener;
 
-	public CspNonceHeaderResponseDecorator(IHeaderResponse real, CSPSettingRequestCycleListener listener)
+	public CspNonceHeaderResponseDecorator(IHeaderResponse real, ContentSecurityPolicyEnforcer listener)
 	{
 		super(real);
 
@@ -47,14 +41,17 @@ public class CspNonceHeaderResponseDecorator extends DecoratingHeaderResponse
 	@Override
 	public void render(HeaderItem item)
 	{
-		while (item instanceof IWrappedHeaderItem)
+		if (listener.isNonceEnabled())
 		{
-			item = ((IWrappedHeaderItem) item).getWrapped();
-		}
+			while (item instanceof IWrappedHeaderItem)
+			{
+				item = ((IWrappedHeaderItem) item).getWrapped();
+			}
 
-		if (item instanceof AbstractCspHeaderItem)
-		{
-			((AbstractCspHeaderItem) item).setNonce(listener.getNonce(RequestCycle.get()));
+			if (item instanceof AbstractCspHeaderItem)
+			{
+				((AbstractCspHeaderItem) item).setNonce(listener.getNonce(RequestCycle.get()));
+			}
 		}
 
 		super.render(item);
