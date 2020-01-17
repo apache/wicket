@@ -125,7 +125,7 @@ public class SecuritySettings
 	 * 
 	 * @return The {@link ISecureRandomSupplier} to use for secure random data.
 	 */
-	public ISecureRandomSupplier getRandomSupplier()
+	public synchronized ISecureRandomSupplier getRandomSupplier()
 	{
 		if (randomSupplier == null)
 		{
@@ -193,7 +193,7 @@ public class SecuritySettings
 	 *            The new supplier, must not be null.
 	 * @return {@code this} object for chaining
 	 */
-	public SecuritySettings setRandomSupplier(ISecureRandomSupplier randomSupplier)
+	public synchronized SecuritySettings setRandomSupplier(ISecureRandomSupplier randomSupplier)
 	{
 		Args.notNull(randomSupplier, "randomSupplier");
 		this.randomSupplier = randomSupplier;

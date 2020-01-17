@@ -26,6 +26,7 @@ import org.apache.wicket.MockPage;
 import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.mock.MockPageStore;
 import org.apache.wicket.serialize.java.JavaSerializer;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.Test;
 
@@ -34,13 +35,14 @@ import org.junit.jupiter.api.Test;
  * 
  * @author svenmeier
  */
-public class CryptingPageStoreTest extends WicketTester
+public class CryptingPageStoreTest extends WicketTestCase
 {
 
 	@Test
 	void test()
 	{
-		CryptingPageStore store = new CryptingPageStore(new MockPageStore(), getApplication());
+		CryptingPageStore store =
+			new CryptingPageStore(new MockPageStore(), tester.getApplication());
 		JavaSerializer serializer = new JavaSerializer("test");
 
 		IPageContext context = new MockPageContext();
@@ -51,8 +53,8 @@ public class CryptingPageStoreTest extends WicketTester
 			SerializedPage serializedAdd = new SerializedPage(p, "foo", serializer.serialize(add));
 			store.addPage(context, serializedAdd);
 
-			SerializedPage serializedGot = (SerializedPage)store.getPage(context, p);
-			MockPage got = (MockPage)serializer.deserialize(serializedGot.getData());
+			SerializedPage serializedGot = (SerializedPage) store.getPage(context, p);
+			MockPage got = (MockPage) serializer.deserialize(serializedGot.getData());
 			assertEquals(p, got.getPageId());
 		}
 	}
@@ -60,7 +62,8 @@ public class CryptingPageStoreTest extends WicketTester
 	@Test
 	void testFail()
 	{
-		CryptingPageStore store = new CryptingPageStore(new MockPageStore(), getApplication());
+		CryptingPageStore store =
+			new CryptingPageStore(new MockPageStore(), tester.getApplication());
 		JavaSerializer serializer = new JavaSerializer("test");
 
 		MockPageContext context = new MockPageContext();

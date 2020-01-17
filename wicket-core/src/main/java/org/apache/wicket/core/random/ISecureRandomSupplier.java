@@ -48,8 +48,8 @@ public interface ISecureRandomSupplier
 	}
 	
 	/**
-	 * Returns a base64 encoded string with random content, base on {@code length} bytes. The length
-	 * of the returned string will be {@code length/3*4}.
+	 * Returns a url-base64 encoded string with random content, base on {@code length} bytes. The
+	 * length of the returned string will be {@code length/3*4}.
 	 * 
 	 * @param length
 	 *            The number of random bytes to use as input.
