@@ -31,7 +31,7 @@ public interface ISecureRandomSupplier
 	 * 
 	 * @return The {@code SecureRandom}.
 	 */
-	public SecureRandom getRandom();
+	SecureRandom getRandom();
 
 	/**
 	 * Returns a byte array with random bytes of the given length.
@@ -40,7 +40,7 @@ public interface ISecureRandomSupplier
 	 *            The number of bytes to return.
 	 * @return A byte array with random bytes of the given length.
 	 */
-	public default byte[] getRandomBytes(int length)
+	default byte[] getRandomBytes(int length)
 	{
 		byte[] ret = new byte[length];
 		getRandom().nextBytes(ret);
@@ -55,7 +55,7 @@ public interface ISecureRandomSupplier
 	 *            The number of random bytes to use as input.
 	 * @return A string with random base64 data.
 	 */
-	public default String getRandomBase64(int length)
+	default String getRandomBase64(int length)
 	{
 		return Base64.getUrlEncoder().encodeToString(getRandomBytes(length));
 	}
