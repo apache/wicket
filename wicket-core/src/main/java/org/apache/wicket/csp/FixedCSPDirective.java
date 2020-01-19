@@ -37,8 +37,9 @@ public class FixedCSPDirective implements CSPRenderable
 	public FixedCSPDirective(String value)
 	{
 		if (Strings.isEmpty(value))
-			throw new IllegalArgumentException(
-				"CSP directive cannot have empty or null values");
+		{
+			throw new IllegalArgumentException("CSP directive cannot have empty or null values");
+		}
 		this.value = value;
 	}
 

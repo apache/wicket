@@ -89,6 +89,12 @@ public class ServletWebResponse extends WebResponse
 	}
 
 	@Override
+	public boolean isHeaderSupported()
+	{
+		return true;
+	}
+	
+	@Override
 	public void setHeader(String name, String value)
 	{
 		httpServletResponse.setHeader(name, value);

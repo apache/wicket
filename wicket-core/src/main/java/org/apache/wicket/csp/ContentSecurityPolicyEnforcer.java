@@ -36,32 +36,21 @@ import org.apache.wicket.util.lang.Args;
  * An {@link IRequestCycleListener} that adds {@code Content-Security-Policy} and/or
  * {@code Content-Security-Policy-Report-Only} headers based on the supplied configuration.
  *
- * See also the {@code CSPSettingRequestCycleListenerTest}.
- *
- * Example usage:
- *
+ * Build the CSP configuration like this:
+ * 
  * <pre>
  * {@code
- *      myApplication.getRequestCycleListeners().add(
- * 			new CSPSettingRequestCycleListener()
- * 				.addBlockingDirective(CSPDirective.DEFAULT_SRC, CSPDirectiveSrcValue.NONE)
- * 				.addBlockingDirective(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF)
- * 				.addBlockingDirective(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)
- * 				.addBlockingDirective(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF));
+ *  myApplication.getCSP().blocking().clear()
+ *      .addDirective(CSPDirective.DEFAULT_SRC, CSPDirectiveSrcValue.NONE)
+ *      .addDirective(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF)
+ *      .addDirective(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)
+ *      .addDirective(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF));
  *
- * 		 myApplication.getRequestCycleListeners().add(
- * 			new CSPSettingRequestCycleListener()
- * 				.addReportingDirective(CSPDirective.DEFAULT_SRC, CSPDirectiveSrcValue.NONE)
- * 				.addReportingDirective(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)
- * 				.addReportingDirective(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF)
- * 				.addReportingDirective(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF));
+ *  myApplication.getCSP().reporting().strict();
  * 	}
  * </pre>
- *
- * {@code frame-src} has been deprecated since CSP 2.0 and replaced by {@code child-src}. Some
- * browsers do not yet support {@code child-src} and expect {@code frame-src} instead. When
- * {@code child-src} is added, a matching {@code frame-src} is added automatically for
- * compatibility.
+ * 
+ * See {@link CSPHeaderConfiguration} for more details on specifying the configuration.
  *
  * @see "http://www.w3.org/TR/CSP2/"
  * @see "https://developer.mozilla.org/en-US/docs/Web/Security/CSP/CSP_policy_directives"
@@ -114,7 +103,9 @@ public class ContentSecurityPolicyEnforcer implements IRequestCycleListener
 	protected boolean mustProtect(IRequestHandler handler)
 	{
 		if (handler instanceof IRequestHandlerDelegate)
+		{
 			return mustProtect(((IRequestHandlerDelegate) handler).getDelegateHandler());
+		}
 		if (handler instanceof IPageClassRequestHandler)
 		{
 			return mustProtectPageRequest((IPageClassRequestHandler) handler);
@@ -131,16 +122,25 @@ public class ContentSecurityPolicyEnforcer implements IRequestCycleListener
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
 	{
 		if (!mustProtect(handler) || !(cycle.getResponse() instanceof WebResponse))
+		{
 			return;
-		
+		}
+
 		WebResponse webResponse = (WebResponse) cycle.getResponse();
+		if (!webResponse.isHeaderSupported())
+		{
+			return;
+		}
+
 		configs.entrySet().stream().filter(entry -> entry.getValue().isSet()).forEach(entry -> {
 			CSPHeaderMode mode = entry.getKey();
 			CSPHeaderConfiguration config = entry.getValue();
 			String headerValue = config.renderHeaderValue(this, cycle);
 			webResponse.setHeader(mode.getHeader(), headerValue);
 			if (config.isAddLegacyHeaders())
+			{
 				webResponse.setHeader(mode.getLegacyHeader(), headerValue);
+			}
 		});
 	}
 	

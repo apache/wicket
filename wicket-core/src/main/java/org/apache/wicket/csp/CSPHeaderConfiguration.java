@@ -40,6 +40,10 @@ import java.util.stream.Collectors;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
+ * {@code CSPHeaderConfiguration} contains the configuration for a Content-Security-Policy header.
+ * This configuration is constructed using the available {@link CSPDirective}s. An number of default
+ * profiles is provided. These profiles can be used as a basis for a specific CSP. Extra directives
+ * can be added or exising directives modified.
  * 
  * @author papegaaij
  */
@@ -54,33 +58,69 @@ public class CSPHeaderConfiguration
 	public CSPHeaderConfiguration()
 	{
 	}
-	
-	public CSPHeaderConfiguration disabled() {
+
+	/**
+	 * Removes all directives from the CSP, returning an empty configuration.
+	 * 
+	 * @return {@code this} for chaining.
+	 */
+	public CSPHeaderConfiguration disabled()
+	{
 		return clear();
 	}
-
+	
+	/**
+	 * Builds a CSP configuration with the following directives: {@code default-src 'none';}
+	 * {@code script-src 'self' 'unsafe-inline' 'unsafe-eval';}
+	 * {@code style-src 'self' 'unsafe-inline';} {@code img-src 'self';} {@code connect-src 'self';}
+	 * {@code font-src 'self';} {@code manifest-src 'self';} {@code child-src 'self';}
+	 * {@code frame-src 'self'}. This will allow resources to be loaded from {@code 'self'} (the
+	 * current host). In addition, unsafe inline Javascript, {@code eval()} and inline CSS is
+	 * allowed.
+	 * 
+	 * It is recommended to not allow {@code unsafe-inline} or {@code unsafe-eval}, because those
+	 * can be used to trigger XSS attacks in your application (often in combination with another
+	 * bug). Because older application often rely on inline scripting and styling, this CSP can be
+	 * used as a stepping stone for older Wicket applications, before switching to {@link #strict}.
+	 * Using a CSP with unsafe directives is still more secure than using no CSP at all.
+	 * 
+	 * @return {@code this} for chaining.
+	 */
 	public CSPHeaderConfiguration unsafeInline()
 	{
 		return clear().addDirective(DEFAULT_SRC, NONE)
-			.addDirective(STYLE_SRC, SELF, UNSAFE_INLINE)
 			.addDirective(SCRIPT_SRC, SELF, UNSAFE_INLINE, UNSAFE_EVAL)
+			.addDirective(STYLE_SRC, SELF, UNSAFE_INLINE)
 			.addDirective(IMG_SRC, SELF)
+			.addDirective(CONNECT_SRC, SELF)
 			.addDirective(FONT_SRC, SELF)
-			.addDirective(CHILD_SRC, SELF)
 			.addDirective(MANIFEST_SRC, SELF)
-			.addDirective(CONNECT_SRC, SELF);
+			.addDirective(CHILD_SRC, SELF);
 	}
-	
+
+	/**
+	 * Builds a strict, very secure CSP configuration with the following directives:
+	 * {@code default-src 'none';} {@code script-src 'strict-dynamic' 'nonce-XYZ';}
+	 * {@code style-src 'nonce-XYZ';} {@code img-src 'self';} {@code connect-src 'self';}
+	 * {@code font-src 'self';} {@code manifest-src 'self';} {@code child-src 'self';}
+	 * {@code frame-src 'self'}. This will allow most resources to be loaded from {@code 'self'}
+	 * (the current host). Scripts and styles are only allowed when rendered with the correct nonce.
+	 * Wicket will automatically add the nonces to the {@code script} and {@code link} (CSS)
+	 * elements and to the headers.
+	 * 
+	 * @return {@code this} for chaining.
+	 */
 	public CSPHeaderConfiguration strict()
 	{
 		return clear().addDirective(DEFAULT_SRC, NONE)
+				.addDirective(SCRIPT_SRC, STRICT_DYNAMIC, NONCE)
 			.addDirective(STYLE_SRC, NONCE)
-			.addDirective(SCRIPT_SRC, STRICT_DYNAMIC, NONCE)
 			.addDirective(IMG_SRC, SELF)
+			.addDirective(CONNECT_SRC, SELF)
 			.addDirective(FONT_SRC, SELF)
-			.addDirective(CHILD_SRC, SELF)
 			.addDirective(MANIFEST_SRC, SELF)
-			.addDirective(CONNECT_SRC, SELF);
+			.addDirective(CHILD_SRC, SELF)
+			;
 	}
 
 	/**

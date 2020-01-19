@@ -40,8 +40,11 @@ public enum CSPDirective
 	MEDIA_SRC("media-src"),
 	CHILD_SRC("child-src"),
 	FRAME_ANCESTORS("frame-ancestors"),
+	/**
+	 * @deprecated Use CHILD-SRC, this will also add FRAME-SRC automatically for compatibility with
+	 *             older browsers.
+	 */
 	@Deprecated
-	/** @deprecated Gebruik CHILD-SRC, deze zet ook automatisch FRAME-SRC. */
 	FRAME_SRC("frame-src"),
 	SANDBOX("sandbox")
 	{
@@ -156,8 +159,7 @@ public enum CSPDirective
 		}
 
 		// strip off "*." so "*.example.com" becomes "example.com" and we can check if
-		// it
-		// is a valid uri
+		// it is a valid uri
 		if (strValue.startsWith("*."))
 		{
 			strValue = strValue.substring(2);
@@ -180,11 +182,15 @@ public enum CSPDirective
 	public static CSPDirective fromValue(String value)
 	{
 		if (Strings.isEmpty(value))
+		{
 			return null;
+		}
 		for (int i = 0; i < values().length; i++)
 		{
 			if (value.equals(values()[i].getValue()))
+			{
 				return values()[i];
+			}
 		}
 		return null;
 	}

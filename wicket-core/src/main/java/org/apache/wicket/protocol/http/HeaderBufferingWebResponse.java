@@ -136,6 +136,12 @@ class HeaderBufferingWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	@Override
+	public boolean isHeaderSupported()
+	{
+		return getMetaResponse().isHeaderSupported();
+	}
+
+	@Override
 	public void setHeader(String name, String value)
 	{
 		getMetaResponse().setHeader(name, value);

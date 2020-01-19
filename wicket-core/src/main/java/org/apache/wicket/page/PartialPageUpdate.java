@@ -806,6 +806,12 @@ public abstract class PartialPageUpdate
 		}
 
 		@Override
+		public boolean isHeaderSupported()
+		{
+			return originalResponse.isHeaderSupported();
+		}
+
+		@Override
 		public void setHeader(String name, String value)
 		{
 			originalResponse.setHeader(name, value);
