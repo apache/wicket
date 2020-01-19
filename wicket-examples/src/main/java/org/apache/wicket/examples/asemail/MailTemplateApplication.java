@@ -17,12 +17,12 @@
 package org.apache.wicket.examples.asemail;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
  * 
  */
-public class MailTemplateApplication extends WebApplication
+public class MailTemplateApplication extends WicketExampleApplication
 {
 	@Override
 	public Class<? extends Page> getHomePage()

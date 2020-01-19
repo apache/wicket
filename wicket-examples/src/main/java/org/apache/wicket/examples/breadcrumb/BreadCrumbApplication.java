@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.breadcrumb;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
@@ -24,7 +25,7 @@ import org.apache.wicket.protocol.http.WebApplication;
  * 
  * @author Eelco Hillenius
  */
-public class BreadCrumbApplication extends WebApplication
+public class BreadCrumbApplication extends WicketExampleApplication
 {
 	@Override
 	public Class<? extends Page> getHomePage()

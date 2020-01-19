@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.repeater;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.response.filter.ServerAndClientTimeFilter;
 
 /**
@@ -26,7 +26,7 @@ import org.apache.wicket.response.filter.ServerAndClientTimeFilter;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class RepeaterApplication extends WebApplication
+public class RepeaterApplication extends WicketExampleApplication
 {
 	private final ContactsDatabase contactsDB = new ContactsDatabase(50);
 
