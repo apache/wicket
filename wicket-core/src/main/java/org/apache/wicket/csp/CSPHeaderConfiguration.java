@@ -91,14 +91,14 @@ public class CSPHeaderConfiguration
 	 */
 	public CSPHeaderConfiguration unsafeInline()
 	{
-		return clear().addDirective(DEFAULT_SRC, NONE)
-			.addDirective(SCRIPT_SRC, SELF, UNSAFE_INLINE, UNSAFE_EVAL)
-			.addDirective(STYLE_SRC, SELF, UNSAFE_INLINE)
-			.addDirective(IMG_SRC, SELF)
-			.addDirective(CONNECT_SRC, SELF)
-			.addDirective(FONT_SRC, SELF)
-			.addDirective(MANIFEST_SRC, SELF)
-			.addDirective(CHILD_SRC, SELF);
+		return clear().add(DEFAULT_SRC, NONE)
+			.add(SCRIPT_SRC, SELF, UNSAFE_INLINE, UNSAFE_EVAL)
+			.add(STYLE_SRC, SELF, UNSAFE_INLINE)
+			.add(IMG_SRC, SELF)
+			.add(CONNECT_SRC, SELF)
+			.add(FONT_SRC, SELF)
+			.add(MANIFEST_SRC, SELF)
+			.add(CHILD_SRC, SELF);
 	}
 
 	/**
@@ -115,15 +115,14 @@ public class CSPHeaderConfiguration
 	 */
 	public CSPHeaderConfiguration strict()
 	{
-		return clear().addDirective(DEFAULT_SRC, NONE)
-				.addDirective(SCRIPT_SRC, STRICT_DYNAMIC, NONCE)
-			.addDirective(STYLE_SRC, NONCE)
-			.addDirective(IMG_SRC, SELF)
-			.addDirective(CONNECT_SRC, SELF)
-			.addDirective(FONT_SRC, SELF)
-			.addDirective(MANIFEST_SRC, SELF)
-			.addDirective(CHILD_SRC, SELF)
-			;
+		return clear().add(DEFAULT_SRC, NONE)
+			.add(SCRIPT_SRC, STRICT_DYNAMIC, NONCE)
+			.add(STYLE_SRC, NONCE)
+			.add(IMG_SRC, SELF)
+			.add(CONNECT_SRC, SELF)
+			.add(FONT_SRC, SELF)
+			.add(MANIFEST_SRC, SELF)
+			.add(CHILD_SRC, SELF);
 	}
 
 	/**
@@ -160,14 +159,28 @@ public class CSPHeaderConfiguration
 	}
 
 	/**
+	 * Removes the given directive from the configuration.
+	 * 
+	 * @param directive
+	 *            The directive to remove.
+	 * @return {@code this} for chaining
+	 */
+	public CSPHeaderConfiguration remove(CSPDirective directive)
+	{
+		directives.remove(directive);
+		return this;
+	}
+
+	/**
 	 * Adds the given values to the CSP directive on this configuraiton.
 	 * 
 	 * @param directive
 	 *            The directive to add the values to.
 	 * @param values
 	 *            The values to add.
+	 * @return {@code this} for chaining
 	 */
-	public CSPHeaderConfiguration addDirective(CSPDirective directive, CSPRenderable... values)
+	public CSPHeaderConfiguration add(CSPDirective directive, CSPRenderable... values)
 	{
 		for (CSPRenderable value : values)
 		{
@@ -184,8 +197,9 @@ public class CSPHeaderConfiguration
 	 *            The directive to add the values to.
 	 * @param values
 	 *            The values to add.
+	 * @return {@code this} for chaining
 	 */
-	public CSPHeaderConfiguration addDirective(CSPDirective directive, String... values)
+	public CSPHeaderConfiguration add(CSPDirective directive, String... values)
 	{
 		for (String value : values)
 		{
@@ -214,12 +228,12 @@ public class CSPHeaderConfiguration
 		return this;
 	}
 
-	@SuppressWarnings("deprecation")
 	private CSPHeaderConfiguration doAddDirective(CSPDirective directive, CSPRenderable value)
 	{
 		// Add backwards compatible frame-src
 		// see http://caniuse.com/#feat=contentsecuritypolicy2
-		if (CSPDirective.CHILD_SRC.equals(directive))
+		if (CSPDirective.CHILD_SRC.equals(directive)
+			&& !directives.containsKey(CSPDirective.FRAME_SRC))
 		{
 			doAddDirective(CSPDirective.FRAME_SRC, value);
 		}

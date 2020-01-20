@@ -64,8 +64,8 @@ public class JSR356Application extends WicketExampleApplication
 			webSocketSettings.setSecurePort(8443);
 		}
 
-		getCsp().blocking().addDirective(CSPDirective.SCRIPT_SRC, "https://www.google.com")
-				.addDirective(CSPDirective.STYLE_SRC, "https://www.google.com", "https://ajax.googleapis.com");
+		getCsp().blocking().add(CSPDirective.SCRIPT_SRC, "https://www.google.com")
+				.add(CSPDirective.STYLE_SRC, "https://www.google.com", "https://ajax.googleapis.com");
 	}
 
     @Override
