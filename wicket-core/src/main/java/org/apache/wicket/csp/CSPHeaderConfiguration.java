@@ -46,6 +46,9 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * can be added or exising directives modified.
  * 
  * @author papegaaij
+ * @see <a href="https://www.w3.org/TR/CSP2/">https://www.w3.org/TR/CSP2</a>
+ * @see <a href=
+ *      "https://developer.mozilla.org/en-US/docs/Web/Security/CSP">https://developer.mozilla.org/en-US/docs/Web/Security/CSP</a>
  */
 public class CSPHeaderConfiguration
 {

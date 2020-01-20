@@ -52,8 +52,9 @@ import org.apache.wicket.util.lang.Args;
  * 
  * See {@link CSPHeaderConfiguration} for more details on specifying the configuration.
  *
- * @see "http://www.w3.org/TR/CSP2/"
- * @see "https://developer.mozilla.org/en-US/docs/Web/Security/CSP/CSP_policy_directives"
+ * @see <a href="https://www.w3.org/TR/CSP2/">https://www.w3.org/TR/CSP2</a>
+ * @see <a href=
+ *      "https://developer.mozilla.org/en-US/docs/Web/Security/CSP">https://developer.mozilla.org/en-US/docs/Web/Security/CSP</a>
  *
  * @author Sven Haster
  * @author Emond Papegaaij

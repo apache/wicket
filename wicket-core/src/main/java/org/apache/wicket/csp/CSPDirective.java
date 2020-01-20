@@ -24,8 +24,12 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * An enum holding the possible CSP Directives. Via the
- * {@link #checkValueForDirective(CSPRenderable, List)}-method, new values can be verified before
- * being added to the list of values for a directive.
+ * {@link #checkValueForDirective(CSPRenderable, List)}-method, new values are verified before being
+ * added to the list of values for a directive.
+ *
+ * @see <a href="https://www.w3.org/TR/CSP2/">https://www.w3.org/TR/CSP2</a>
+ * @see <a href=
+ *      "https://developer.mozilla.org/en-US/docs/Web/Security/CSP">https://developer.mozilla.org/en-US/docs/Web/Security/CSP</a>
  */
 public enum CSPDirective
 {
@@ -41,13 +45,16 @@ public enum CSPDirective
 	CHILD_SRC("child-src"),
 	FRAME_ANCESTORS("frame-ancestors"),
 	/**
-	 * @deprecated Use CHILD-SRC, this will also add FRAME-SRC automatically for compatibility with
-	 *             older browsers.
+	 * This directive was deprecated in CSP 2, but no longer in 3. Wicket will automatically add a
+	 * {@code frame-src} directive when {@code child-src} is added.
 	 */
-	@Deprecated
 	FRAME_SRC("frame-src"),
 	SANDBOX("sandbox")
 	{
+		/**
+		 * Only allow {@link CSPDirectiveSandboxValue} for the {@code 'sandbox'} directive and block
+		 * conflicting options.
+		 */
 		@Override
 		public void checkValueForDirective(CSPRenderable value,
 				List<CSPRenderable> existingDirectiveValues)
@@ -75,6 +82,9 @@ public enum CSPDirective
 	},
 	REPORT_URI("report-uri")
 	{
+		/**
+		 * Only allow URI, and only one.
+		 */
 		@Override
 		public void checkValueForDirective(CSPRenderable value,
 				List<CSPRenderable> existingDirectiveValues)
@@ -113,7 +123,8 @@ public enum CSPDirective
 	}
 
 	/**
-	 * Check if {@code value} can be added to the list of other values.
+	 * Check if {@code value} can be added to the list of other values. By default, it checks for
+	 * conflicts with wildcards and none and it checks if values are valid uris.
 	 * 
 	 * @param value
 	 *            The value to add.
