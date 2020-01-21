@@ -25,6 +25,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -154,6 +155,7 @@ class InlineEnclosureTest extends WicketTestCase
 			protected void init()
 			{
 				getMarkupSettings().setStripWicketTags(true);
+				getResourceSettings().setCachingStrategy(NoOpResourceCachingStrategy.INSTANCE);
 			}
 		};
 	}

@@ -16,10 +16,12 @@
  */
 package org.apache.wicket.settings;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -58,7 +60,7 @@ import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.resource.IResourceStream;
-import java.time.Duration;
+import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
 
@@ -175,7 +177,8 @@ public class ResourceSettings implements IPropertiesFactoryContext
 
 	private boolean encodeJSessionId = false;
 	
-	private CssResourceReference wicketCoreCSS = WicketCoreCSSResourceReference.get();
+	private Optional<CssResourceReference> wicketCoreCSS =
+		Optional.of(WicketCoreCSSResourceReference.get());
 
 	/**
 	 * Configures Wicket's default ResourceLoaders.<br>
@@ -777,11 +780,12 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	
 	/**
 	 * Returns the resource reference of the core stylesheet for Wicket. This stylesheet contains
-	 * some lowlevel styling used by Wicket.
+	 * some lowlevel styling used by Wicket. When the Wicket core stylesheet has been disabled, this
+	 * returns an empty {@code Optional}.
 	 * 
 	 * @return The resource reference of the base stylesheet for Wicket.
 	 */
-	public CssResourceReference getWicketCoreCSS()
+	public Optional<CssResourceReference> getWicketCoreCSS()
 	{
 		return wicketCoreCSS;
 	}
@@ -798,7 +802,26 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 */
 	public ResourceSettings setWicketCoreCSS(CssResourceReference wicketCoreCSS)
 	{
-		this.wicketCoreCSS = wicketCoreCSS;
+		if (wicketCoreCSS == null)
+		{
+			throw new NullPointerException(
+				"Cannot set the Wicket core CSS to null, use disableWicketCoreCSS() instead.");
+		}
+		this.wicketCoreCSS = Optional.of(wicketCoreCSS);
+		return this;
+	}
+
+	/**
+	 * Disables the Wicket core CSS. You application should package corresponding styling
+	 * definitions in its CSS to prevent hidden components to be displayed. The Wicket core CSS can
+	 * also be disabled for {@link WicketTester} tests to prevent the core CSS to popup in testcases
+	 * when the resulting HTML is not rendered by a browser.
+	 * 
+	 * @return {@code this} object for chaining
+	 */
+	public ResourceSettings disableWicketCoreCSS()
+	{
+		this.wicketCoreCSS = Optional.empty();
 		return this;
 	}
 }

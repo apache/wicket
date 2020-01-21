@@ -71,5 +71,7 @@ public class MockApplication extends WebApplication
 
 		// for test cases we usually want stable resource names
 		getResourceSettings().setCachingStrategy(NoOpResourceCachingStrategy.INSTANCE);
+		// the core CSS causes noise in tests and isn't needed
+		getResourceSettings().disableWicketCoreCSS();
 	}
 }

@@ -39,7 +39,7 @@ class HomePageRedirectTest extends WicketTestCase
 
 		// Validate the document
 		String document = tester.getLastResponseAsString();
-		DiffUtil.validatePage(document, this.getClass(), "RedirectPage.html", true);
+		DiffUtil.validatePage(document, this.getClass(), "RedirectPage-expected1.html", true);
 	}
 
 	/**
@@ -53,6 +53,6 @@ class HomePageRedirectTest extends WicketTestCase
 		assertEquals(RedirectPage.class, tester.getLastRenderedPage().getClass());
 
 		String document = tester.getLastResponseAsString();
-		DiffUtil.validatePage(document, this.getClass(), "RedirectPage.html", true);
+		DiffUtil.validatePage(document, this.getClass(), "RedirectPage-expected2.html", true);
 	}
 }
