@@ -39,4 +39,15 @@ public interface CSPRenderable
 	 * @return The rendered value.
 	 */
 	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle);
+	
+	/**
+	 * Checks if the {@code CSPRenderable} represents a valid value for a {@code -src} directive. By
+	 * default no checks are performed.
+	 * 
+	 * @throws IllegalStateException
+	 *             when this {@code CSPRenderable} represents an invalid value.
+	 */
+	public default void checkValidityForSrc()
+	{
+	}
 }

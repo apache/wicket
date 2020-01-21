@@ -30,7 +30,6 @@ import static org.apache.wicket.csp.CSPDirectiveSrcValue.WILDCARD;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -44,13 +43,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("deprecation")
 public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 {
-	private static String HEADER_CSP = "Content-Security-Policy";
-
-	private static String HEADER_CSP_REPORT = "Content-Security-Policy-Report-Only";
-
 	private WicketTester wicketTester;
 
 	@BeforeEach
@@ -273,9 +267,9 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 			}
 		}
 
-		StringBuffer headerErrors = checkHeaders(cspListener);
+		List<String> headerErrors = checkHeaders(cspListener);
 
-		if (headerErrors.length() > 0)
+		if (!headerErrors.isEmpty())
 		{
 			Assertions.fail(headerErrors.toString());
 		}
@@ -289,9 +283,9 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 		cspListener.blocking().add(REPORT_URI, "http://report.example.com");
 		cspListener.reporting().add(REPORT_URI, "/example-report-uri");
 
-		StringBuffer headerErrors = checkHeaders(cspListener);
+		List<String> headerErrors = checkHeaders(cspListener);
 
-		if (headerErrors.length() > 0)
+		if (!headerErrors.isEmpty())
 		{
 			Assertions.fail(headerErrors.toString());
 		}
@@ -313,19 +307,18 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 			cspListener.reporting().add(SANDBOX, cspDirectiveValue);
 		}
 
-		StringBuffer headerErrors = checkHeaders(cspListener);
+		List<String> headerErrors = checkHeaders(cspListener);
 
-		if (headerErrors.length() > 0)
+		if (!headerErrors.isEmpty())
 		{
 			Assertions.fail(headerErrors.toString());
 		}
 	}
 
-	// FF 36+, IE (incl. Edge), Safari en Opera Mini hebben nog geen (volledige)
-	// support voor CSP, wat betekent dat ze CHILD-SRC niet kennen en FRAME-SRC
-	// verwachten. Daarom in de CSPSettingRCL een hack om alle CHILD-SRC's die geset
-	// worden ook als FRAME-SRC te setten.
-	// Zie http://caniuse.com/#feat=contentsecuritypolicy2
+	/**
+	 * Not all browsers support child-src and still expect frame-src. This test asserts that
+	 * frame-src is added when child-src is added.
+	 */
 	@Test
 	public void testChildSrcDirectiveAlsoSetsFrameSrcDirective()
 	{
@@ -333,56 +326,53 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 			new ContentSecurityPolicyEnforcer(tester.getApplication());
 		cspListener.blocking().add(CHILD_SRC, SELF);
 		cspListener.reporting().add(CHILD_SRC, SELF);
-		StringBuffer headerErrors = checkHeaders(cspListener);
+		List<String> headerErrors = checkHeaders(cspListener);
 
-		if (headerErrors.length() > 0)
+		if (!headerErrors.isEmpty())
 		{
 			Assertions.fail(headerErrors.toString());
 		}
 	}
 
-	private StringBuffer checkHeaders(ContentSecurityPolicyEnforcer cspListener)
+	private List<String> checkHeaders(ContentSecurityPolicyEnforcer cspListener)
 	{
-		StringBuffer headerErrors = new StringBuffer();
+		List<String> headerErrors = new ArrayList<>();
 		wicketTester.getRequestCycle().getListeners().add(cspListener);
 		wicketTester.executeUrl("/");
-		String cspHeaderValue = wicketTester.getLastResponse().getHeader(HEADER_CSP);
+		String cspHeaderValue =
+			wicketTester.getLastResponse().getHeader(CSPHeaderMode.BLOCKING.getHeader());
 		String cspReportingHeaderValue =
-			wicketTester.getLastResponse().getHeader(HEADER_CSP_REPORT);
+			wicketTester.getLastResponse().getHeader(CSPHeaderMode.REPORT_ONLY.getHeader());
 
 		if (cspHeaderValue == null)
 		{
-			headerErrors.append(
-				String.format("Header %s expected but either not present or empty", HEADER_CSP));
+			headerErrors.add(String.format("Header %s expected but either not present or empty",
+				CSPHeaderMode.BLOCKING.getHeader()));
 		}
 		if (cspReportingHeaderValue == null)
 		{
-			headerErrors.append(String.format("Header %s expected but either not present or empty",
-				HEADER_CSP_REPORT));
+			headerErrors.add(String.format("Header %s expected but either not present or empty",
+				CSPHeaderMode.REPORT_ONLY.getHeader()));
 		}
 
-		if (headerErrors.length() > 0)
+		if (!headerErrors.isEmpty())
 		{
 			return headerErrors;
 		}
 
-		StringBuffer headerValueErrors = new StringBuffer();
+		List<String> headerValueErrors = new ArrayList<>();
 		List<String> blockingHeaderValueErrors = checkCSPHeaderValues(cspHeaderValue);
 		List<String> reportingHeaderValueErrors = checkCSPHeaderValues(cspReportingHeaderValue);
 
 		if (!blockingHeaderValueErrors.isEmpty())
 		{
-			headerValueErrors.append("Blocking-mode CSP header value issues: ");
-			headerValueErrors
-				.append(blockingHeaderValueErrors.stream().collect(Collectors.joining("; ")));
-			headerValueErrors.append(". ");
+			headerValueErrors.add("Blocking-mode CSP header value issues: "
+				+ blockingHeaderValueErrors.stream().collect(Collectors.joining("; ")) + ".");
 		}
 		if (!reportingHeaderValueErrors.isEmpty())
 		{
-			headerValueErrors.append("Reporting-mode CSP header value issues: ");
-			headerValueErrors
-				.append(reportingHeaderValueErrors.stream().collect(Collectors.joining("; ")));
-			headerValueErrors.append(". ");
+			headerValueErrors.add("Reporting-mode CSP header value issues: "
+				+ reportingHeaderValueErrors.stream().collect(Collectors.joining("; ")) + ".");
 		}
 		return headerValueErrors;
 	}
