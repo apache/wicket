@@ -21,7 +21,6 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.function.Function;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -761,11 +760,9 @@ public abstract class WebApplication extends Application
 		getAjaxRequestTargetListeners().add(new AjaxEnclosureListener());
 		
 		getHeaderContributorListeners().add(head -> {
-			Optional<CssResourceReference> wicketCoreCSS = getResourceSettings().getWicketCoreCSS();
-			if (wicketCoreCSS.isPresent())
-			{
-				head.render(CssHeaderItem.forReference(wicketCoreCSS.get()));
-			}
+			getResourceSettings().getWicketCoreCSS().ifPresent(wicketCoreCSS -> {
+				head.render(CssHeaderItem.forReference(wicketCoreCSS));
+			});
 		});
 
 		// Configure the app.
