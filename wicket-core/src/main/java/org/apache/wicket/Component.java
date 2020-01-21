@@ -2367,7 +2367,7 @@ public abstract class Component
 		response.write(name);
 		response.write(" id=\"");
 		response.write(getAjaxRegionMarkupId());
-		response.write("\" style=\"display:none\" data-wicket-placeholder=\"\"></");
+		response.write("\" class=\"wicket--hidden\" data-wicket-placeholder=\"\"></");
 		response.write(name);
 		response.write(">");
 	}
@@ -3043,7 +3043,7 @@ public abstract class Component
 
 	/**
 	 * Render a placeholder tag when the component is not visible. The tag is of form:
-	 * &lt;componenttag style="display:none;" id="markupid"/&gt;. This method will also call
+	 * &lt;componenttag class="wicket--hidden" id="markupid"/&gt;. This method will also call
 	 * <code>setOutputMarkupId(true)</code>.
 	 * 
 	 * This is useful, for example, in ajax situations where the component starts out invisible and

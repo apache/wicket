@@ -680,10 +680,10 @@ final class MarkupParserTest extends WicketTestCase
 		try
 		{
 			tester.getApplication().getMarkupSettings().setStripComments(false);
-			executeTest(IEConditionalCommentsPage.class, "IEConditionalCommentsPage.html");
+			executeTest(IEConditionalCommentsPage.class, "IEConditionalCommentsPage-expected.html");
 
 			tester.getApplication().getMarkupSettings().setStripComments(true);
-			executeTest(IEConditionalCommentsPage.class, "IEConditionalCommentsPage.html");
+			executeTest(IEConditionalCommentsPage.class, "IEConditionalCommentsPage-expected.html");
 		}
 		finally
 		{

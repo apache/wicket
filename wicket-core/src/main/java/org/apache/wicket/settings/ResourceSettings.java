@@ -16,10 +16,12 @@
  */
 package org.apache.wicket.settings;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -29,12 +31,14 @@ import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.core.util.resource.locator.caching.CachingResourceStreamLocator;
 import org.apache.wicket.css.ICssCompressor;
+import org.apache.wicket.css.WicketCoreCSSResourceReference;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.head.PriorityFirstComparator;
 import org.apache.wicket.markup.head.ResourceAggregator.RecordedHeaderItem;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
@@ -56,7 +60,7 @@ import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.resource.IResourceStream;
-import java.time.Duration;
+import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
 
@@ -172,6 +176,9 @@ public class ResourceSettings implements IPropertiesFactoryContext
 		false);
 
 	private boolean encodeJSessionId = false;
+	
+	private Optional<CssResourceReference> wicketCoreCSS =
+		Optional.of(WicketCoreCSSResourceReference.get());
 
 	/**
 	 * Configures Wicket's default ResourceLoaders.<br>
@@ -768,6 +775,53 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	public ResourceSettings setEncodeJSessionId(boolean encodeJSessionId)
 	{
 		this.encodeJSessionId = encodeJSessionId;
+		return this;
+	}
+	
+	/**
+	 * Returns the resource reference of the core stylesheet for Wicket. This stylesheet contains
+	 * some lowlevel styling used by Wicket. When the Wicket core stylesheet has been disabled, this
+	 * returns an empty {@code Optional}.
+	 * 
+	 * @return The resource reference of the base stylesheet for Wicket.
+	 */
+	public Optional<CssResourceReference> getWicketCoreCSS()
+	{
+		return wicketCoreCSS;
+	}
+
+	/**
+	 * Replaces the core stylesheet for Wicket. Changes made to the styling can break functionality
+	 * like {@link Component#setOutputMarkupPlaceholderTag(boolean)}, causing components that should
+	 * not be visible to be displayed. Make sure the replacement stylesheet has matching definitions
+	 * for the corresponding sections in the Wicket version.
+	 * 
+	 * @param wicketCoreCSS
+	 *            The replacement styleheet.
+	 * @return {@code this} object for chaining
+	 */
+	public ResourceSettings setWicketCoreCSS(CssResourceReference wicketCoreCSS)
+	{
+		if (wicketCoreCSS == null)
+		{
+			throw new NullPointerException(
+				"Cannot set the Wicket core CSS to null, use disableWicketCoreCSS() instead.");
+		}
+		this.wicketCoreCSS = Optional.of(wicketCoreCSS);
+		return this;
+	}
+
+	/**
+	 * Disables the Wicket core CSS. You application should package corresponding styling
+	 * definitions in its CSS to prevent hidden components to be displayed. The Wicket core CSS can
+	 * also be disabled for {@link WicketTester} tests to prevent the core CSS to popup in testcases
+	 * when the resulting HTML is not rendered by a browser.
+	 * 
+	 * @return {@code this} object for chaining
+	 */
+	public ResourceSettings disableWicketCoreCSS()
+	{
+		this.wicketCoreCSS = Optional.empty();
 		return this;
 	}
 }
