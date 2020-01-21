@@ -61,6 +61,9 @@ import org.apache.wicket.util.lang.Args;
  */
 public class ContentSecurityPolicyEnforcer implements IRequestCycleListener
 {
+	// The number of bytes to use for a nonce, 12 will result in a 16 char nonce.
+	private static final int NONCE_LENGTH = 12;
+
 	public static MetaDataKey<String> NONCE_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
@@ -92,11 +95,13 @@ public class ContentSecurityPolicyEnforcer implements IRequestCycleListener
 	 * predicate evaluates to false, the request for the page will not be protected.
 	 * 
 	 * @param protectedPageFilter
+	 *            The new filter, must not be null.
 	 * @return {@code this} for chaining.
 	 */
 	public ContentSecurityPolicyEnforcer
 			setProtectedPageFilter(Predicate<IPageClassRequestHandler> protectedPageFilter)
 	{
+		Args.notNull(protectedPageFilter, "protectedPageFilter");
 		this.protectedPageFilter = protectedPageFilter;
 		return this;
 	}
@@ -160,7 +165,7 @@ public class ContentSecurityPolicyEnforcer implements IRequestCycleListener
 		String nonce = cycle.getMetaData(NONCE_KEY);
 		if (nonce == null)
 		{
-			nonce = getSecuritySettings().getRandomSupplier().getRandomBase64(12);
+			nonce = getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
 			cycle.setMetaData(NONCE_KEY, nonce);
 		}
 		return nonce;

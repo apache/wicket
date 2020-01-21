@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.csp;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * A simpel CSP directive that renders the string specified.
+ * A simple CSP directive that renders the string specified.
  * 
  * @author papegaaij
  */
@@ -45,6 +48,38 @@ public class FixedCSPDirective implements CSPRenderable
 
 	@Override
 	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle)
+	{
+		return value;
+	}
+	
+	@Override
+	public void checkValidityForSrc()
+	{
+		String strValue = value;
+		if ("data:".equals(strValue) || "https:".equals(strValue))
+		{
+			return;
+		}
+
+		// strip off "*." so "*.example.com" becomes "example.com" and we can check if
+		// it is a valid uri
+		if (strValue.startsWith("*."))
+		{
+			strValue = strValue.substring(2);
+		}
+
+		try
+		{
+			new URI(strValue);
+		}
+		catch (URISyntaxException urise)
+		{
+			throw new IllegalArgumentException("Illegal URI for -src directive", urise);
+		}
+	}
+	
+	@Override
+	public String toString()
 	{
 		return value;
 	}

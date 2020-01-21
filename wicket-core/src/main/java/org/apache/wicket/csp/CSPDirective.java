@@ -64,19 +64,22 @@ public enum CSPDirective
 				if (CSPDirectiveSandboxValue.EMPTY.equals(value))
 				{
 					throw new IllegalArgumentException(
-						"A sandbox directive can't contain an empty string if it already contains other values ");
+						"A sandbox directive can't contain an empty string if it already contains "
+							+ "other values: " + existingDirectiveValues);
 				}
 				if (existingDirectiveValues.contains(CSPDirectiveSandboxValue.EMPTY))
 				{
 					throw new IllegalArgumentException(
-						"A sandbox directive can't contain other values if it already contains an empty string");
+						"A sandbox directive can't contain other values if it already contains an "
+							+ "empty string, can't add " + value);
 				}
 			}
 
 			if (!(value instanceof CSPDirectiveSandboxValue))
 			{
 				throw new IllegalArgumentException(
-					"A sandbox directive can only contain values from CSPDirectiveSandboxValue or be empty");
+					"A sandbox directive can only contain values from CSPDirectiveSandboxValue or "
+						+ "be empty, can't add " + value);
 			}
 		}
 	},
@@ -92,12 +95,13 @@ public enum CSPDirective
 			if (!existingDirectiveValues.isEmpty())
 			{
 				throw new IllegalArgumentException(
-					"A report-uri directive can only contain one uri");
+					"A report-uri directive can only contain one URI, it already contains "
+						+ existingDirectiveValues);
 			}
 			if (!(value instanceof FixedCSPDirective))
 			{
 				throw new IllegalArgumentException(
-					"A report-uri directive can only contain an URI");
+					"A report-uri directive can only contain an URI, not " + value);
 			}
 			try
 			{
@@ -142,48 +146,26 @@ public enum CSPDirective
 				|| CSPDirectiveSrcValue.NONE.equals(value))
 			{
 				throw new IllegalArgumentException(
-					"A -src directive can't contain an * or a 'none' if it already contains other values ");
+					"A -src directive can't contain an * or a 'none' if it already contains other "
+						+ "values: " + existingDirectiveValues);
 			}
 			if (existingDirectiveValues.contains(CSPDirectiveSrcValue.WILDCARD)
 				|| existingDirectiveValues.contains(CSPDirectiveSrcValue.NONE))
 			{
 				throw new IllegalArgumentException(
-					"A -src directive can't contain other values if it already contains an * or a 'none'");
+					"A -src directive can't contain other values if it already contains an * or "
+						+ "a 'none', can't add " + value);
 			}
 		}
-
-		if (value instanceof CSPDirectiveSrcValue)
-		{
-			return;
-		}
-
+		
 		if (value instanceof CSPDirectiveSandboxValue)
 		{
 			throw new IllegalArgumentException(
-				"A -src directive can't contain any of the sandbox directive values");
+				"A -src directive can't contain any of the sandbox directive values, like "
+						+ value);
 		}
-
-		String strValue = value.render(null, null);
-		if ("data:".equals(strValue) || "https:".equals(strValue))
-		{
-			return;
-		}
-
-		// strip off "*." so "*.example.com" becomes "example.com" and we can check if
-		// it is a valid uri
-		if (strValue.startsWith("*."))
-		{
-			strValue = strValue.substring(2);
-		}
-
-		try
-		{
-			new URI(strValue);
-		}
-		catch (URISyntaxException urise)
-		{
-			throw new IllegalArgumentException("Illegal URI for -src directive", urise);
-		}
+		
+		value.checkValidityForSrc();
 	}
 
 	/**
