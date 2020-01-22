@@ -59,7 +59,7 @@ public class SecuritySettings
 	private ICryptFactory cryptFactory;
 	
 	/** supplier of random data and SecureRandom */
-	private ISecureRandomSupplier randomSupplier;
+	private ISecureRandomSupplier randomSupplier = new DefaultSecureRandomSupplier();
 
 	/**
 	 * Whether mounts should be enforced. If {@code true}, requests for a page will be
@@ -120,17 +120,13 @@ public class SecuritySettings
 	}
 
 	/**
-	 * Returns the {@link ISecureRandomSupplier} to use for secure random data. If no supplier is
-	 * set, a {@link DefaultSecureRandomSupplier} is instantiated.
+	 * Returns the {@link ISecureRandomSupplier} to use for secure random data. If no custom
+	 * supplier is set, a {@link DefaultSecureRandomSupplier} is used.
 	 * 
 	 * @return The {@link ISecureRandomSupplier} to use for secure random data.
 	 */
-	public synchronized ISecureRandomSupplier getRandomSupplier()
+	public ISecureRandomSupplier getRandomSupplier()
 	{
-		if (randomSupplier == null)
-		{
-			randomSupplier = new DefaultSecureRandomSupplier();
-		}
 		return randomSupplier;
 	}
 
@@ -193,7 +189,7 @@ public class SecuritySettings
 	 *            The new supplier, must not be null.
 	 * @return {@code this} object for chaining
 	 */
-	public synchronized SecuritySettings setRandomSupplier(ISecureRandomSupplier randomSupplier)
+	public SecuritySettings setRandomSupplier(ISecureRandomSupplier randomSupplier)
 	{
 		Args.notNull(randomSupplier, "randomSupplier");
 		this.randomSupplier = randomSupplier;
