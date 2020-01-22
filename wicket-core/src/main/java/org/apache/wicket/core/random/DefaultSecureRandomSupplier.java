@@ -22,7 +22,11 @@ import java.security.SecureRandom;
 import org.apache.wicket.WicketRuntimeException;
 
 /**
- * A very simple {@link ISecureRandomSupplier} that holds a strong {@code SecureRandom}.
+ * A very simple {@link ISecureRandomSupplier} that holds a {@code SecureRandom} using
+ * {@code SHA1PRNG}. This {@code SecureRandom} is strong enough for generation of nonces with a
+ * short lifespan, but might not be strong enough for generating long-lived keys. When your
+ * application has stronger requirements on the random implementation, you should replace this class
+ * by your own implementation.
  * 
  * @author papegaaij
  */
@@ -34,7 +38,7 @@ public class DefaultSecureRandomSupplier implements ISecureRandomSupplier
 	{
 		try
 		{
-			random = SecureRandom.getInstanceStrong();
+			random = SecureRandom.getInstance("SHA1PRNG");
 		}
 		catch (NoSuchAlgorithmException e)
 		{
