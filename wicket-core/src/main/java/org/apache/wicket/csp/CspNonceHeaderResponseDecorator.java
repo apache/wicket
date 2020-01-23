@@ -43,14 +43,15 @@ public class CspNonceHeaderResponseDecorator extends DecoratingHeaderResponse
 	{
 		if (listener.isNonceEnabled())
 		{
-			while (item instanceof IWrappedHeaderItem)
+			HeaderItem checkitem = item;
+			while (checkitem instanceof IWrappedHeaderItem)
 			{
-				item = ((IWrappedHeaderItem) item).getWrapped();
+				checkitem = ((IWrappedHeaderItem) checkitem).getWrapped();
 			}
 
-			if (item instanceof AbstractCspHeaderItem)
+			if (checkitem instanceof AbstractCspHeaderItem)
 			{
-				((AbstractCspHeaderItem) item).setNonce(listener.getNonce(RequestCycle.get()));
+				((AbstractCspHeaderItem) checkitem).setNonce(listener.getNonce(RequestCycle.get()));
 			}
 		}
 
