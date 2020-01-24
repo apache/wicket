@@ -2364,9 +2364,9 @@ public abstract class Component
 	{
 		String name = Strings.isEmpty(tag.getNamespace()) ? tag.getName()
 			: tag.getNamespace() + ':' + tag.getName();
-		response
-			.write(String.format("<%s id=\"%s\" class=\"%s\" data-wicket-placeholder=\"\"></%s>",
-				name, getAjaxRegionMarkupId(), CssUtils.key(Component.class, "hidden"), name));
+		response.write(
+			String.format("<%s id=\"%s\" class=\"%s\" data-wicket-placeholder=\"\"></%s>", name,
+				getAjaxRegionMarkupId(), getString(CssUtils.key(Component.class, "hidden")), name));
 	}
 
 

@@ -1242,8 +1242,8 @@ public class Form<T> extends WebMarkupContainer
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
 		// div that is not visible (but not display:none either)
-		buffer
-			.append(String.format("<div class=\"%s\">", CssUtils.key(Form.class, "hidden-fields")));
+		buffer.append(String.format("<div class=\"%s\">",
+			getString(CssUtils.key(Form.class, "hidden-fields"))));
 
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" tabindex=\"-1\" autocomplete=\"off\"/>");
@@ -1763,7 +1763,7 @@ public class Form<T> extends WebMarkupContainer
 		{
 			getResponse().write(String.format("<div id=\"%s\" class=\"%s\">",
 				getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX),
-				CssUtils.key(Form.class, "hidden-fields")));
+				getString(CssUtils.key(Form.class, "hidden-fields"))));
 
 			AppendingStringBuffer buffer = new AppendingStringBuffer();				
 
