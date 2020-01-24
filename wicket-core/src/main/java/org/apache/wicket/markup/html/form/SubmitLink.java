@@ -17,7 +17,10 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * A link which can be used exactly like a Button to submit a Form. The onclick of the link will use
@@ -165,19 +168,29 @@ public class SubmitLink extends AbstractSubmitLink
 			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
 				|| tag.getName().equalsIgnoreCase("area"))
 			{
-				tag.put("href", "javascript:;");
+				tag.put("href", "#");
 			}
 			else if (tag.getName().equalsIgnoreCase("button"))
 			{
 				// WICKET-5597 prevent default submit
 				tag.put("type", "button");
 			}
-
-			tag.put("onclick", getTriggerJavaScript());
 		}
 		else
 		{
 			disableLink(tag);
+		}
+	}
+	
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+
+		if (isEnabledInHierarchy())
+		{
+			response.render(OnDomReadyHeaderItem.forScript("Wicket.Event.add('" + getMarkupId()
+				+ "', 'click', function(event) { " + getTriggerJavaScript() + " });"));
 		}
 	}
 
