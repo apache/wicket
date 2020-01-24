@@ -59,7 +59,7 @@ class StatelessFormUrlTest extends WicketTestCase
 	void submitLinkInputNameNotEncodedIntoFormAction()
 	{
 		tester.executeUrl("?0-1.IFormSubmitListener-form&text=newValue&submitLink=x");
-		assertEquals("./?-1.-form", tester.getTagById("form1").getAttribute("action"));
+		assertEquals("./?-1.-form", tester.getTagById("form2").getAttribute("action"));
 	}
 
 	/**
