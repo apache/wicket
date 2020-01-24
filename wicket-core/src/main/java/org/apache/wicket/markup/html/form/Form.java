@@ -39,6 +39,8 @@ import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
@@ -298,6 +300,16 @@ public class Form<T> extends WebMarkupContainer
 	private static final short MULTIPART_HINT_NO = 0x04;
 
 	/**
+	 * The index of the hidden fields used to pass parameters.
+	 */
+	private static final int HIDDEN_FIELDS_PARAMS_IDX = 0;
+	
+	/**
+	 * The index of the hidden fields used for the default submit button.
+	 */
+	private static final int HIDDEN_FIELDS_SUBMIT_IDX = 1;
+	
+	/**
 	 * Constructs a form with no validation.
 	 * 
 	 * @param id
@@ -525,7 +537,8 @@ public class Form<T> extends WebMarkupContainer
 		
 		String action = url.toString();
 		if (root.encodeUrlInHiddenFields()) {
-			buffer.append(String.format("document.getElementById('%s').innerHTML = '", root.getHiddenFieldsId()));
+			buffer.append(String.format("document.getElementById('%s').innerHTML = '",
+				root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
 			
 			// parameter must be sent as hidden field, as it would be ignored in the action URL
 			int i = action.indexOf('?');
@@ -563,7 +576,8 @@ public class Form<T> extends WebMarkupContainer
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
 		if (root.encodeUrlInHiddenFields())
 		{
-			buffer.append(String.format("document.getElementById('%s').innerHTML += '", root.getHiddenFieldsId()));
+			buffer.append(String.format("document.getElementById('%s').innerHTML += '",
+				root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
 			
 			writeParamsAsHiddenFields(new String[] {param}, buffer);
 			
@@ -1220,32 +1234,55 @@ public class Form<T> extends WebMarkupContainer
 	 * will do a form submit using this component. This method is overridable as what we do is best
 	 * effort only, and may not what you want in specific situations. So if you have specific
 	 * usability concerns, or want to follow another strategy, you may override this method.
+	 * 
+	 * @see #addDefaultSubmitButtonHandler(IHeaderResponse)
 	 */
 	protected void appendDefaultButtonField()
 	{
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
-		String cssClass = getString(CssUtils.key(Form.class, "hidden-fields"));
-
 		// div that is not visible (but not display:none either)
-		buffer.append(String.format("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\" class=\"%s\">", cssClass));
+		buffer.append(String.format("<div class=\"%s\">",
+			getString(CssUtils.key(Form.class, "hidden-fields"))));
 
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" tabindex=\"-1\" autocomplete=\"off\"/>");
 
 		// add the submitting component
-		final Component submittingComponent = (Component)defaultSubmittingComponent;
-		buffer.append("<input type=\"submit\" tabindex=\"-1\" name=\"");
-		buffer.append(defaultSubmittingComponent.getInputName());
-		buffer.append("\" onclick=\" var b=document.getElementById('");
-		buffer.append(submittingComponent.getMarkupId());
-		buffer.append("'); if (b!=null&amp;&amp;b.onclick!=null&amp;&amp;typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
-		buffer.append(" />");
+		buffer
+			.append(String.format("<input id=\"%s\" type=\"submit\" tabindex=\"-1\" name=\"%s\" />",
+				getHiddenFieldsId(HIDDEN_FIELDS_SUBMIT_IDX),
+				defaultSubmittingComponent.getInputName()));
 
 		// close div
 		buffer.append("</div>");
 		
 		getResponse().write(buffer);
+	}
+
+	/**
+	 * Where {@link #appendDefaultButtonField()} renders the markup for default submit button
+	 * handling, this method attaches the event handler to its 'click' event. The 'click' event on
+	 * the hidden submit button will be dispatched to the selected default submit button. As with
+	 * {@link #appendDefaultButtonField()} this method can be overridden when the generated code
+	 * needs to be adjusted for a specific usecase.
+	 * 
+	 * @param headerResponse
+	 *            The header response.
+	 */
+	protected void addDefaultSubmitButtonHandler(IHeaderResponse headerResponse)
+	{
+		final Component submittingComponent = (Component) defaultSubmittingComponent;
+		AppendingStringBuffer buffer = new AppendingStringBuffer();
+		buffer.append("Wicket.Event.add('" + getHiddenFieldsId(HIDDEN_FIELDS_SUBMIT_IDX)
+			+ "', 'click', function(event) { var b=document.getElementById('");
+		buffer.append(submittingComponent.getMarkupId());
+		buffer.append(
+			"'); if (b!=null && b.onclick!=null && typeof(b.onclick) != 'undefined') ");
+		buffer.append(
+			"{  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;");
+		buffer.append("});");
+		headerResponse.render(OnDomReadyHeaderItem.forScript(buffer.toString()));
 	}
 
 	/**
@@ -1316,11 +1353,13 @@ public class Form<T> extends WebMarkupContainer
 	/**
 	 * Returns the id which will be used for the hidden div containing all parameter fields.
 	 * 
+	 * @param idx
+	 *            The index of the div to keep different divs apart.
 	 * @return the id of the hidden div
 	 */
-	private final String getHiddenFieldsId()
+	private final String getHiddenFieldsId(int idx)
 	{
-		return getInputNamePrefix() + getMarkupId() + "_hf_0";
+		return getInputNamePrefix() + getMarkupId() + "_hf_" + idx;
 	}
 
 	/**
@@ -1701,6 +1740,17 @@ public class Form<T> extends WebMarkupContainer
 		super.onComponentTagBody(markupStream, openTag);
 	}
 
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+
+		if (hasDefaultSubmittingComponent())
+		{
+			addDefaultSubmitButtonHandler(response);
+		}
+	}
+
 	/**
 	 * Writes the markup for the hidden input fields and default button field if applicable to the
 	 * current response.
@@ -1711,9 +1761,9 @@ public class Form<T> extends WebMarkupContainer
 		// and have to write the url parameters as hidden fields
 		if (encodeUrlInHiddenFields())
 		{
-			String cssClass = getString(CssUtils.key(Form.class, "hidden-fields"));
-
-			getResponse().write(String.format("<div id=\"%s\" style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\" class=\"%s\">", getHiddenFieldsId(), cssClass));
+			getResponse().write(String.format("<div id=\"%s\" class=\"%s\">",
+				getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX),
+				getString(CssUtils.key(Form.class, "hidden-fields"))));
 
 			AppendingStringBuffer buffer = new AppendingStringBuffer();				
 
@@ -1730,15 +1780,21 @@ public class Form<T> extends WebMarkupContainer
 		}
 
 		// if a default submitting component was set, handle the rendering of that
+		if (hasDefaultSubmittingComponent())
+		{
+			appendDefaultButtonField();
+		}
+	}
+
+	private boolean hasDefaultSubmittingComponent()
+	{
 		if (defaultSubmittingComponent instanceof Component)
 		{
-			final Component submittingComponent = (Component)defaultSubmittingComponent;
-			if (submittingComponent.isVisibleInHierarchy() &&
-				submittingComponent.isEnabledInHierarchy())
-			{
-				appendDefaultButtonField();
-			}
+			final Component submittingComponent = (Component) defaultSubmittingComponent;
+			return submittingComponent.isVisibleInHierarchy()
+				&& submittingComponent.isEnabledInHierarchy();
 		}
+		return false;
 	}
 
 	/**
