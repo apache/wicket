@@ -36,6 +36,7 @@ import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.core.util.string.ComponentStrings;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
@@ -2361,15 +2362,11 @@ public abstract class Component
 	 */
 	protected void renderPlaceholderTag(final ComponentTag tag, final Response response)
 	{
-		String name = Strings.isEmpty(tag.getNamespace()) ? tag.getName() : tag.getNamespace() + ':' + tag.getName();
-
-		response.write("<");
-		response.write(name);
-		response.write(" id=\"");
-		response.write(getAjaxRegionMarkupId());
-		response.write("\" class=\"wicket--hidden\" data-wicket-placeholder=\"\"></");
-		response.write(name);
-		response.write(">");
+		String name = Strings.isEmpty(tag.getNamespace()) ? tag.getName()
+			: tag.getNamespace() + ':' + tag.getName();
+		response.write(
+			String.format("<%s id=\"%s\" class=\"%s\" data-wicket-placeholder=\"\"></%s>", name,
+				getAjaxRegionMarkupId(), getString(CssUtils.key(Component.class, "hidden")), name));
 	}
 
 

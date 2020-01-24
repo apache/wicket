@@ -35,6 +35,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -1241,7 +1242,8 @@ public class Form<T> extends WebMarkupContainer
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
 		// div that is not visible (but not display:none either)
-		buffer.append("<div class=\"wicket--hidden-fields\">");
+		buffer.append(String.format("<div class=\"%s\">",
+			getString(CssUtils.key(Form.class, "hidden-fields"))));
 
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" tabindex=\"-1\" autocomplete=\"off\"/>");
@@ -1759,8 +1761,9 @@ public class Form<T> extends WebMarkupContainer
 		// and have to write the url parameters as hidden fields
 		if (encodeUrlInHiddenFields())
 		{
-			getResponse().write(String.format("<div id=\"%s\" class=\"wicket--hidden-fields\">",
-				getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
+			getResponse().write(String.format("<div id=\"%s\" class=\"%s\">",
+				getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX),
+				getString(CssUtils.key(Form.class, "hidden-fields"))));
 
 			AppendingStringBuffer buffer = new AppendingStringBuffer();				
 
