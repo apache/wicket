@@ -16,42 +16,57 @@
  */
 package org.apache.wicket.csp;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.util.lang.Args;
 
 /**
- * {@code CSPRenderable} describes a directive that is part of a Content-Security-Policy (CSP in
- * short). Most directives are predefined in enums.
+ * A CSP value that renders an URI relative to the context root of the Wicket application.
  * 
  * @author papegaaij
- * @see CSPDirectiveSrcValue
- * @see CSPDirectiveSandboxValue
- * @see FixedCSPValue
  */
-public interface CSPRenderable
+public class RelativeURICSPValue implements CSPRenderable
 {
+	private String relativeUri;
+
 	/**
-	 * Renders the value that should be put in the CSP header.
+	 * Creates a new {@code RelativeURICSPValue} for the given relative URI.
 	 * 
-	 * @param listener
-	 *            The {@link ContentSecurityPolicyEnforcer} that renders this value.
-	 * @param cycle
-	 *            The current {@link RequestCycle}.
-	 * @param currentHandler
-	 *            The handler that is currently being evaluated or executed.
-	 * @return The rendered value.
+	 * @param relativeUri
+	 *            The part of the URI relative to the context root of the Wicket application.
 	 */
-	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
-			IRequestHandler currentHandler);
-	
-	/**
-	 * Checks if the {@code CSPRenderable} represents a valid value for a {@code -src} directive. By
-	 * default no checks are performed.
-	 * 
-	 * @throws IllegalStateException
-	 *             when this {@code CSPRenderable} represents an invalid value.
-	 */
-	public default void checkValidityForSrc()
+	public RelativeURICSPValue(String relativeUri)
 	{
+		Args.notEmpty(relativeUri, "relativeUri");
+		this.relativeUri = relativeUri;
+	}
+
+	@Override
+	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
+			IRequestHandler currentHandler)
+	{
+		return cycle.getUrlRenderer().renderContextRelativeUrl(relativeUri);
+	}
+
+	@Override
+	public void checkValidityForSrc()
+	{
+		try
+		{
+			new URI("https://example.com/" + relativeUri);
+		}
+		catch (URISyntaxException urise)
+		{
+			throw new IllegalArgumentException("Illegal relative URI", urise);
+		}
+	}
+
+	@Override
+	public String toString()
+	{
+		return relativeUri;
 	}
 }

@@ -27,11 +27,11 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * Add a <em>Content Security Policy<em> (CSP) nonce to all {@link AbstractCspHeaderItem}s when that
  * is required by the configuration of the CSP.
  */
-public class CspNonceHeaderResponseDecorator extends DecoratingHeaderResponse
+public class CSPNonceHeaderResponseDecorator extends DecoratingHeaderResponse
 {
 	private ContentSecurityPolicyEnforcer listener;
 
-	public CspNonceHeaderResponseDecorator(IHeaderResponse real, ContentSecurityPolicyEnforcer listener)
+	public CSPNonceHeaderResponseDecorator(IHeaderResponse real, ContentSecurityPolicyEnforcer listener)
 	{
 		super(real);
 
@@ -51,7 +51,8 @@ public class CspNonceHeaderResponseDecorator extends DecoratingHeaderResponse
 
 			if (checkitem instanceof AbstractCspHeaderItem)
 			{
-				((AbstractCspHeaderItem) checkitem).setNonce(listener.getNonce(RequestCycle.get()));
+				((AbstractCspHeaderItem) checkitem).setNonce(listener.getNonce(RequestCycle.get(),
+					RequestCycle.get().getActiveRequestHandler()));
 			}
 		}
 

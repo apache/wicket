@@ -22,6 +22,7 @@ import static org.apache.wicket.csp.CSPDirective.DEFAULT_SRC;
 import static org.apache.wicket.csp.CSPDirective.FONT_SRC;
 import static org.apache.wicket.csp.CSPDirective.IMG_SRC;
 import static org.apache.wicket.csp.CSPDirective.MANIFEST_SRC;
+import static org.apache.wicket.csp.CSPDirective.REPORT_URI;
 import static org.apache.wicket.csp.CSPDirective.SCRIPT_SRC;
 import static org.apache.wicket.csp.CSPDirective.STYLE_SRC;
 import static org.apache.wicket.csp.CSPDirectiveSrcValue.NONCE;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -52,11 +54,15 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public class CSPHeaderConfiguration
 {
+	public static final String CSP_VIOLATION_REPORTING_URI = "cspviolation";
+	
 	private Map<CSPDirective, List<CSPRenderable>> directives = new EnumMap<>(CSPDirective.class);
 
 	private boolean addLegacyHeaders = false;
 	
 	private boolean nonceEnabled = false;
+	
+	private String reportUriMountPath = null;
 
 	public CSPHeaderConfiguration()
 	{
@@ -126,6 +132,54 @@ public class CSPHeaderConfiguration
 	}
 
 	/**
+	 * Configures the CSP to report violations back at the application.
+	 * 
+	 * WARNING: CSP reporting can generate a lot of traffic. A single page load can trigger multiple
+	 * violations and flood your logs or even DDoS your server. In addition, it is an open endpoint
+	 * for your application and can be used by an attacker to flood your application logs. Do not
+	 * enable this feature on a production application unless you take the needed precautions to
+	 * prevent this.
+	 * 
+	 * @return {@code this} for chaining
+	 * @see <a href=
+	 *      "https://scotthelme.co.uk/just-how-much-traffic-can-you-generate-using-csp">https://scotthelme.co.uk/just-how-much-traffic-can-you-generate-using-csp</a>
+	 */
+	public CSPHeaderConfiguration reportBack()
+	{
+		return reportBackAt(CSP_VIOLATION_REPORTING_URI);
+	}
+
+	/**
+	 * Configures the CSP to report violations at the specified relative URI.
+	 * 
+	 * WARNING: CSP reporting can generate a lot of traffic. A single page load can trigger multiple
+	 * violations and flood your logs or even DDoS your server. In addition, it is an open endpoint
+	 * for your application and can be used by an attacker to flood your application logs. Do not
+	 * enable this feature on a production application unless you take the needed precautions to
+	 * prevent this.
+	 * 
+	 * @param mountPath
+	 *            The path to report the violations at.
+	 * @return {@code this} for chaining
+	 * @see <a href=
+	 *      "https://scotthelme.co.uk/just-how-much-traffic-can-you-generate-using-csp">https://scotthelme.co.uk/just-how-much-traffic-can-you-generate-using-csp</a>
+	 */
+	public CSPHeaderConfiguration reportBackAt(String mountPath)
+	{
+		return add(REPORT_URI, new RelativeURICSPValue(mountPath));
+	}
+	
+	/**
+	 * Returns the report URI mount path.
+	 * 
+	 * @return the report URI mount path.
+	 */
+	String getReportUriMountPath()
+	{
+		return reportUriMountPath;
+	}
+
+	/**
 	 * True when the {@link CSPDirectiveSrcValue#NONCE} is used in one of the directives.
 	 * 
 	 * @return When any of the directives contains a nonce.
@@ -168,7 +222,7 @@ public class CSPHeaderConfiguration
 	public CSPHeaderConfiguration remove(CSPDirective directive)
 	{
 		directives.remove(directive);
-		return this;
+		return recalculateState();
 	}
 
 	/**
@@ -186,7 +240,7 @@ public class CSPHeaderConfiguration
 		{
 			doAddDirective(directive, value);
 		}
-		return this;
+		return recalculateState();
 	}
 
 	/**
@@ -203,9 +257,9 @@ public class CSPHeaderConfiguration
 	{
 		for (String value : values)
 		{
-			doAddDirective(directive, new FixedCSPDirective(value));
+			doAddDirective(directive, new FixedCSPValue(value));
 		}
-		return this;
+		return recalculateState();
 	}
 
 	/**
@@ -224,7 +278,26 @@ public class CSPHeaderConfiguration
 	public CSPHeaderConfiguration clear()
 	{
 		directives.clear();
-		nonceEnabled = false;
+		return recalculateState();
+	}
+	
+	private CSPHeaderConfiguration recalculateState()
+	{
+		nonceEnabled = directives.values()
+			.stream()
+			.flatMap(List::stream)
+			.anyMatch(value -> value == CSPDirectiveSrcValue.NONCE);
+
+		reportUriMountPath = null;
+		List<CSPRenderable> reportValues = directives.get(CSPDirective.REPORT_URI);
+		if (reportValues != null && !reportValues.isEmpty())
+		{
+			CSPRenderable reportUri = reportValues.get(0);
+			if (reportUri instanceof RelativeURICSPValue)
+			{
+				reportUriMountPath = reportUri.toString();
+			}
+		}
 		return this;
 	}
 
@@ -240,7 +313,6 @@ public class CSPHeaderConfiguration
 		List<CSPRenderable> values = directives.computeIfAbsent(directive, x -> new ArrayList<>());
 		directive.checkValueForDirective(value, values);
 		values.add(value);
-		nonceEnabled |= CSPDirectiveSrcValue.NONCE == value;
 		return this;
 	}
 
@@ -252,16 +324,19 @@ public class CSPHeaderConfiguration
 	 *            The {@link ContentSecurityPolicyEnforcer} that renders the header.
 	 * @param cycle
 	 *            The current {@link RequestCycle}.
+	 * @param currentHandler
+	 *            The handler that is currently being evaluated or executed.
 	 * @return the rendered header.
 	 */
-	public String renderHeaderValue(ContentSecurityPolicyEnforcer listener, RequestCycle cycle)
+	public String renderHeaderValue(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
+			IRequestHandler currentHandler)
 	{
 		return directives.entrySet()
 			.stream()
 			.map(e -> e.getKey().getValue() + " "
 				+ e.getValue()
 					.stream()
-					.map(r -> r.render(listener, cycle))
+					.map(r -> r.render(listener, cycle, currentHandler))
 					.collect(Collectors.joining(" ")))
 			.collect(Collectors.joining("; "));
 	}

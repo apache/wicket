@@ -16,14 +16,17 @@
  */
 package org.apache.wicket.csp;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.BufferedResponseRequestHandler;
 import org.apache.wicket.core.request.handler.IPageClassRequestHandler;
+import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
@@ -141,7 +144,7 @@ public class ContentSecurityPolicyEnforcer implements IRequestCycleListener
 		configs.entrySet().stream().filter(entry -> entry.getValue().isSet()).forEach(entry -> {
 			CSPHeaderMode mode = entry.getKey();
 			CSPHeaderConfiguration config = entry.getValue();
-			String headerValue = config.renderHeaderValue(this, cycle);
+			String headerValue = config.renderHeaderValue(this, cycle, handler);
 			webResponse.setHeader(mode.getHeader(), headerValue);
 			if (config.isAddLegacyHeaders())
 			{
@@ -160,19 +163,65 @@ public class ContentSecurityPolicyEnforcer implements IRequestCycleListener
 		return configs.values().stream().anyMatch(CSPHeaderConfiguration::isNonceEnabled);
 	}
 
-	public String getNonce(RequestCycle cycle)
+	public String getNonce(RequestCycle cycle, IRequestHandler handler)
 	{
 		String nonce = cycle.getMetaData(NONCE_KEY);
+		Page currentPage = getPage(handler);
 		if (nonce == null)
 		{
-			nonce = getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
+			if (currentPage != null)
+			{
+				nonce = currentPage.getMetaData(NONCE_KEY);
+			}
+			if (nonce == null)
+			{
+				nonce = getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
+			}
 			cycle.setMetaData(NONCE_KEY, nonce);
 		}
+		if (currentPage != null)
+		{
+			currentPage.setMetaData(NONCE_KEY, nonce);
+		}
 		return nonce;
+	}
+
+	/**
+	 * Resolves a page instance from the request handler iff the page instance is already created
+	 * 
+	 * @param handler
+	 * @return page or {@code null} if none
+	 */
+	public static Page getPage(IRequestHandler handler)
+	{
+		while (handler instanceof IRequestHandlerDelegate)
+		{
+			handler = ((IRequestHandlerDelegate) handler).getDelegateHandler();
+		}
+
+		if (handler instanceof IPageRequestHandler)
+		{
+			IPageRequestHandler pageHandler = (IPageRequestHandler) handler;
+			if (pageHandler.isPageInstanceCreated())
+			{
+				return (Page) pageHandler.getPage();
+			}
+		}
+		return null;
 	}
 
 	private SecuritySettings getSecuritySettings()
 	{
 		return application.getSecuritySettings();
+	}
+	
+	/**
+	 * Returns the CSP configuration per {@link CSPHeaderMode}.
+	 * 
+	 * @return the CSP configuration per {@link CSPHeaderMode}.
+	 */
+	public Map<CSPHeaderMode, CSPHeaderConfiguration> getConfiguration()
+	{
+		return Collections.unmodifiableMap(configs);
 	}
 }

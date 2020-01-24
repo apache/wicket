@@ -42,7 +42,8 @@ import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.core.util.resource.ClassPathResourceFinder;
 import org.apache.wicket.csp.CSPHeaderConfiguration;
 import org.apache.wicket.csp.ContentSecurityPolicyEnforcer;
-import org.apache.wicket.csp.CspNonceHeaderResponseDecorator;
+import org.apache.wicket.csp.ReportCSPViolationMapper;
+import org.apache.wicket.csp.CSPNonceHeaderResponseDecorator;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -749,6 +750,13 @@ public abstract class WebApplication extends Application
 
 		getResourceSettings().setFileCleaner(new FileCleaner());
 
+		cspEnforcer = newCspEnforcer();
+		getRequestCycleListeners().add(getCsp());
+		getHeaderResponseDecorators()
+			.add(response -> new CSPNonceHeaderResponseDecorator(response, getCsp()));
+		mount(new ReportCSPViolationMapper(getCsp()));
+		getCsp().blocking().unsafeInline();
+		
 		if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
 		{
 			// Add optional sourceFolder for resources.
@@ -757,6 +765,7 @@ public abstract class WebApplication extends Application
 			{
 				getResourceSettings().getResourceFinders().add(new Path(resourceFolder));
 			}
+			getCsp().blocking().reportBack();
 		}
 		setPageRendererProvider(WebPageRenderer::new);
 		setSessionStoreProvider(HttpSessionStore::new);
@@ -770,12 +779,6 @@ public abstract class WebApplication extends Application
 			});
 		});
 
-		cspEnforcer = newCspEnforcer();
-		getRequestCycleListeners().add(getCsp());
-		getHeaderResponseDecorators()
-			.add(response -> new CspNonceHeaderResponseDecorator(response, getCsp()));
-		getCsp().blocking().unsafeInline();
-		
 		// Configure the app.
 		configure();
 	}
