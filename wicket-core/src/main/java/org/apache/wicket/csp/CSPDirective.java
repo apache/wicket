@@ -98,14 +98,18 @@ public enum CSPDirective
 					"A report-uri directive can only contain one URI, it already contains "
 						+ existingDirectiveValues);
 			}
-			if (!(value instanceof FixedCSPDirective))
+			if (value instanceof RelativeURICSPValue)
+			{
+				return;
+			}
+			if (!(value instanceof FixedCSPValue))
 			{
 				throw new IllegalArgumentException(
 					"A report-uri directive can only contain an URI, not " + value);
 			}
 			try
 			{
-				new URI(value.render(null, null));
+				new URI(value.toString());
 			}
 			catch (URISyntaxException urise)
 			{

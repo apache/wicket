@@ -19,25 +19,26 @@ package org.apache.wicket.csp;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * A simple CSP directive that renders the string specified.
+ * A simple CSP value that renders the string specified.
  * 
  * @author papegaaij
  */
-public class FixedCSPDirective implements CSPRenderable
+public class FixedCSPValue implements CSPRenderable
 {
 	private String value;
 
 	/**
-	 * Creates a new {@code FixedCSPDirective} for the given value.
+	 * Creates a new {@code FixedCSPValue} for the given value.
 	 * 
 	 * @param value
 	 *            the value to render;
 	 */
-	public FixedCSPDirective(String value)
+	public FixedCSPValue(String value)
 	{
 		if (Strings.isEmpty(value))
 		{
@@ -47,7 +48,8 @@ public class FixedCSPDirective implements CSPRenderable
 	}
 
 	@Override
-	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle)
+	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
+			IRequestHandler currentHandler)
 	{
 		return value;
 	}

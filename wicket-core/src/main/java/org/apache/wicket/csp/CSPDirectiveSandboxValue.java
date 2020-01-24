@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.csp;
 
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -42,7 +43,8 @@ public enum CSPDirectiveSandboxValue implements CSPRenderable
 	}
 
 	@Override
-	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle)
+	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
+			IRequestHandler currentHandler)
 	{
 		return value;
 	}
