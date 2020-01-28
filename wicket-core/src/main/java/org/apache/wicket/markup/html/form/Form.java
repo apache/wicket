@@ -1698,14 +1698,9 @@ public class Form<T> extends WebMarkupContainer
 		else
 		{
 			// rewrite inner form tag as div
-			response.write("<div style=\"display:none\"");
-			if (getOutputMarkupId())
-			{
-				response.write(" id=\"");
-				response.write(getMarkupId());
-				response.write("\"");
-			}
-			response.write("></div>");
+			response.write(
+				String.format("<div id=\"%s\" class=\"%s\" data-wicket-placeholder=\"\"></div>",
+					getAjaxRegionMarkupId(), getString(CssUtils.key(Component.class, "hidden"))));
 		}
 	}
 
