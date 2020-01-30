@@ -22,13 +22,16 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
@@ -224,5 +227,12 @@ public final class PageView extends Panel
 		});
 
 		return data;
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(CssHeaderItem.forReference(PageViewCSSResourceReference.get()));
 	}
 }
