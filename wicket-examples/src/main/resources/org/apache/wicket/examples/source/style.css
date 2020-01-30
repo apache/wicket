@@ -1,0 +1,169 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+html, body { 
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	background-image: none;
+}
+
+#header {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	margin-left: -17px;
+	height: 2em;
+	z-index: 11;
+	background-color: gray;
+}
+
+#header .inner {
+	margin-left: 17px;
+}
+
+#header .left {
+	float: left;
+	padding-left: 10px;
+	color: white;
+}
+
+#header .right {
+	margin-left: 17em;
+	color: white;
+}
+
+#header span.close {
+	float: right;
+	padding-right: 1em;
+	color: white;
+}
+
+#header span.close a {
+	color: #ff5555;
+}
+
+#footer {
+	display: none;
+}
+		
+#body .left {
+	position: absolute;
+	top: 2em;
+	left: 0px;
+	width: 16.5em;
+	background-color: #eee;
+	_height: 90%;
+	bottom: 0px;		
+	z-index: 10;
+	
+	overflow: auto;
+}
+
+#body .right {
+	position: absolute;
+	top: 0px;
+	left: 17em;
+	right: 0px;
+	bottom: 0px;
+	_left: 0px;
+	_height: 100%;
+	_width: 100%;					
+	overflow: auto;
+	z-index: 9;
+}
+
+
+ul {
+	list-style-type : none;
+	font-size: 85%;
+	margin : 0px;
+	padding : 10px;
+}
+
+.code-container {
+	_margin-left: 17em;
+	margin-top: 2em;
+}
+
+code {
+	color: rgb(0,0,0);
+	white-space: nowrap;
+	font-size : 11px;
+	font-family : Lucida Console, Monospace, Courier New, Courier, Fixed;
+}
+.java_type {
+	color: rgb(0,44,221);
+}
+.java_comment {
+	color: rgb(147,147,147); background-color: rgb(247,247,247);
+}
+.java_operator {
+	color: rgb(0,124,31);
+}
+.java_separator {
+	color: rgb(0,33,255);
+}
+.java_plain {
+	color: rgb(0,0,0);
+}
+.java_javadoc_comment {
+	color: rgb(147,147,147); background-color: rgb(247,247,247); font-style: italic;
+}
+.java_keyword {
+	color: rgb(0,0,0); font-weight: bold;
+}
+.java_literal {
+	color: rgb(188,0,0);
+}
+.java_javadoc_tag {
+	color: rgb(147,147,147); background-color: rgb(247,247,247); font-style: italic; font-weight: bold;
+}
+
+e {
+	color: rgb(0,0,0); font-family: monospace; font-size: 12px; white-space: nowrap;
+}
+.xml_tag_symbols {
+	color: rgb(0,59,255);
+}
+.xml_rife_tag {
+	color: rgb(0,0,0); background-color: rgb(228,230,160);
+}
+.xml_plain {
+	color: rgb(0,0,0);
+}
+.xml_comment {
+	color: rgb(147,147,147); background-color: rgb(247,247,247);
+}
+.xml_attribute_name {
+	color: rgb(0,0,0); font-weight: bold;
+}
+.xml_tag_name {
+	color: rgb(0,55,255);
+}
+.xml_char_data {
+	color: rgb(0,0,0);
+}
+.xml_processing_instruction {
+	color: rgb(0,0,0); font-weight: bold; font-style: italic;
+}
+.xml_attribute_value {
+	color: rgb(193,0,0);
+}
+.xml_rife_name {
+	color: rgb(0,0,196); background-color: rgb(228,230,160);
+}

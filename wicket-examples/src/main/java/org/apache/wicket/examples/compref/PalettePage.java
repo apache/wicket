@@ -22,12 +22,16 @@ import java.util.List;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
 import org.apache.wicket.extensions.markup.html.form.palette.theme.DefaultTheme;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.debug.PageViewCSSResourceReference;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.request.resource.CssResourceReference;
 
 
 /**
@@ -85,5 +89,13 @@ public class PalettePage extends WicketExamplePage
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;final Palette palette = new Palette(\"palette\", new ListModel&lt;Person&gt;(new ArrayList&lt;Person&gt;()), new CollectionModel&lt;Person&gt;(<br/>"
 			+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;persons), renderer, 10, true);<br/>";
 		add(new ExplainPanel(html, code));
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(CssHeaderItem
+			.forReference(new CssResourceReference(PalettePage.class, "palettepage.css")));
 	}
 }

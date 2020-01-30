@@ -58,7 +58,9 @@ public abstract class WicketExampleApplication extends WebApplication
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 		
 		getResourceSettings().setCssCompressor(new CssUrlReplacer());
-		getCsp().blocking().add(CSPDirective.STYLE_SRC, "https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
+		getCsp().blocking().strict().reportBack()
+				.add(CSPDirective.STYLE_SRC,
+						"https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
 				.add(CSPDirective.FONT_SRC, "https://maxcdn.bootstrapcdn.com");
 	}
 }
