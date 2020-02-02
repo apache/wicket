@@ -22,6 +22,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupType;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class XmlDeclResponseTest extends WicketTestCase
 	@Override
 	protected WebApplication newApplication()
 	{
-		return new WebApplication()
+		return new MockApplication()
 		{
 			@Override
 			public Class<? extends Page> getHomePage()

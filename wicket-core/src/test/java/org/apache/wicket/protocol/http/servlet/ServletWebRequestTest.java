@@ -27,6 +27,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.Url;
@@ -118,7 +119,7 @@ class ServletWebRequestTest
 	@Test
 	void useCustomServletWebRequest()
 	{
-		WebApplication application = new WebApplication()
+		WebApplication application = new MockApplication()
 		{
 			@Override
 			public Class<? extends Page> getHomePage()
