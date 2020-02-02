@@ -40,7 +40,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
@@ -1274,15 +1274,13 @@ public class Form<T> extends WebMarkupContainer
 	{
 		final Component submittingComponent = (Component) defaultSubmittingComponent;
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
-		buffer.append("Wicket.Event.add('" + getHiddenFieldsId(HIDDEN_FIELDS_SUBMIT_IDX)
-			+ "', 'click', function(event) { var b=document.getElementById('");
+		buffer.append("var b=document.getElementById('");
 		buffer.append(submittingComponent.getMarkupId());
-		buffer.append(
-			"'); if (b!=null && b.onclick!=null && typeof(b.onclick) != 'undefined') ");
+		buffer.append("'); if (b!=null && b.onclick!=null && typeof(b.onclick) != 'undefined') ");
 		buffer.append(
 			"{  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;");
-		buffer.append("});");
-		headerResponse.render(OnDomReadyHeaderItem.forScript(buffer.toString()));
+		headerResponse.render(OnEventHeaderItem
+			.forMarkupId(getHiddenFieldsId(HIDDEN_FIELDS_SUBMIT_IDX), "click", buffer.toString()));
 	}
 
 	/**

@@ -18,9 +18,8 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
  * A link which can be used exactly like a Button to submit a Form. The onclick of the link will use
@@ -189,8 +188,7 @@ public class SubmitLink extends AbstractSubmitLink
 
 		if (isEnabledInHierarchy())
 		{
-			response.render(OnDomReadyHeaderItem.forScript("Wicket.Event.add('" + getMarkupId()
-				+ "', 'click', function(event) { " + getTriggerJavaScript() + " });"));
+			response.render(OnEventHeaderItem.forComponent(this, "click", getTriggerJavaScript()));
 		}
 	}
 
