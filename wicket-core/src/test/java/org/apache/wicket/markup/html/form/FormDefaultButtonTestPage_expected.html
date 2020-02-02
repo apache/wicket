@@ -4,14 +4,14 @@
 <script type="text/javascript">
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
-Wicket.Event.add('form1_hf_1', 'click', function(event) { var b=document.getElementById('default2'); if (b!=null && b.onclick!=null && typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;});;
+Wicket.Event.add('form2_hf_1', 'click', function(event) { var b=document.getElementById('default1'); if (b!=null && b.onclick!=null && typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;;});;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
 </script>
 </head><body>
-	<form wicket:id="form" id="form1" method="post" action="./org.apache.wicket.markup.html.form.FormDefaultButtonTestPage?0-1.-form"><div class="wicket--hidden-fields"><input type="text" tabindex="-1" autocomplete="off"/><input id="form1_hf_1" type="submit" tabindex="-1" name="default" /></div>
-		<button wicket:id="default" name="default" id="default2"></button>
+	<form wicket:id="form" id="form2" method="post" action="./org.apache.wicket.markup.html.form.FormDefaultButtonTestPage?0-1.-form"><div class="wicket--hidden-fields"><input type="text" tabindex="-1" autocomplete="off"/><input id="form2_hf_1" type="submit" tabindex="-1" name="default" /></div>
+		<button wicket:id="default" name="default" id="default1"></button>
 	</form>
 </body>
 </html>
