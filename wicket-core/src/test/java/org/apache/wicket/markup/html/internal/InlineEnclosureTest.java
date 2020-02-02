@@ -24,6 +24,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -143,7 +144,7 @@ class InlineEnclosureTest extends WicketTestCase
 	@Override
 	protected WebApplication newApplication()
 	{
-		return new WebApplication()
+		return new MockApplication()
 		{
 			@Override
 			public Class<? extends Page> getHomePage()

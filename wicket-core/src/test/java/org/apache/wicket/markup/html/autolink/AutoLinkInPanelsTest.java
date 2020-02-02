@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.autolink;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.autolink.sub.LogoPanel;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +43,7 @@ class AutoLinkInPanelsTest extends WicketTestCase
 	@BeforeEach
     void setUp()
 	{
-		tester = new WicketTester(new WebApplication()
+		tester = new WicketTester(new MockApplication()
 		{
 
 			@Override
@@ -66,13 +66,13 @@ class AutoLinkInPanelsTest extends WicketTestCase
 	{
 		tester.startPage(TestPage.class);
 //		tester.dumpPage();
-		tester.assertContains("<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo-ver-\\d+.png\"/>");
+		tester.assertContains("<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo.png\"/>");
 	}
 
 	@Test
     void imgTagWorksInPanelWithoutExtraContainer() throws Exception
 	{
 		tester.startPage(TestPage.class);
-		tester.assertContains("<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo2-ver-\\d+.png\"/>");
+		tester.assertContains("<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo2.png\"/>");
 	}
 }
