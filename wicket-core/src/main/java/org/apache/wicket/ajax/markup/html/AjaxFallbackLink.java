@@ -132,7 +132,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T>
 	public abstract void onClick(final Optional<AjaxRequestTarget> target);
 
 	/**
-	 * Removes any inline 'onclick' attributes set by Link#onComponentTag(ComponentTag).
+	 * Checks if the tag supports href: a, area or link.
 	 * 
 	 * @param tag
 	 *            the component tag
@@ -141,9 +141,6 @@ public abstract class AjaxFallbackLink<T> extends Link<T>
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-
-		// Ajax links work with JavaScript Event registration
-		tag.remove("onclick");
 
 		String tagName = tag.getName();
 		if (isEnabledInHierarchy() &&
@@ -156,5 +153,12 @@ public abstract class AjaxFallbackLink<T> extends Link<T>
 				AjaxFallbackLink.class.getSimpleName(), getClassRelativePath(), tagName);
 			findMarkupStream().throwMarkupException(msg);
 		}
+	}
+
+	@Override
+	protected boolean useJSEventBindingWhenNeeded()
+	{
+		// AjaxFallbackLink uses Ajax event binding.
+		return false;
 	}
 }
