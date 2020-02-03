@@ -18,6 +18,8 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.Strings;
 
@@ -165,7 +167,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	}
 
 	/**
-	 * Gets any script that should rendered as the &quot;onclick&quot; attribute of the button.
+	 * Gets any script that should rendered as a &quot;click&quot; event handler for the button.
 	 * Returns null by default, override this method to provide any script.
 	 * 
 	 * @return Any onClick JavaScript that should be used, returns null by default
@@ -177,8 +179,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 
 	/**
 	 * Processes the component tag. A <tt>value</tt> attribute is added with the value of the model
-	 * object, if available. An <tt>onclick</tt> attribute is added if the subclass specified
-	 * javascript.
+	 * object, if available.
 	 * 
 	 * <p>
 	 * <b>NOTE</b>. For a <tt>&lt;button&gt;</tt> the <tt>value</tt> attribute is not rendered,
@@ -203,12 +204,21 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 				tag.put("value", value);
 			}
 		}
+	}
+
+	/**
+	 * Adds a <tt>click</tt> event handler if the subclass specified javascript.
+	 */
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
 
 		// If the subclass specified javascript, use that
 		final String onClickJavaScript = getOnClickScript();
 		if (onClickJavaScript != null)
 		{
-			tag.put("onclick", onClickJavaScript);
+			response.render(OnEventHeaderItem.forComponent(this, "click", onClickJavaScript));
 		}
 	}
 
