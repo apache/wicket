@@ -22,6 +22,8 @@ import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -29,7 +31,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * Implementation of a hyperlink component. A link can be used with an anchor (&lt;a href...)
  * element or any element that supports the onclick javascript event handler (such as buttons, td
  * elements, etc). When used with an anchor, a href attribute will be generated. When used with any
- * other element, an onclick javascript event handler attribute will be generated.
+ * other element, a click javascript event handler will be added.
  * <p>
  * You can use a link like:
  * 
@@ -366,54 +368,77 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 			{
 				// generate the href attribute
 				tag.put("href", url);
-
-				// Add any popup script
-				if (popupSettings != null)
-				{
-					// NOTE: don't encode to HTML as that is not valid
-					// JavaScript
-					tag.put("onclick", popupSettings.getPopupJavaScript());
-				}
 			}
 			else if (tag.getName().equalsIgnoreCase("script") ||
 				tag.getName().equalsIgnoreCase("style"))
 			{
 				tag.put("src", url);
 			}
-			else
-			{
-				// generate a popup script by asking popup settings for one
-				if (popupSettings != null)
-				{
-					popupSettings.setTarget("'" + url + "'");
-					String popupScript = popupSettings.getPopupJavaScript();
-					tag.put("onclick", popupScript);
-				}
-				else
-				{
-					// or generate an onclick JS handler directly
-					// in firefox when the element is quickly clicked 3 times a second request is
-					// generated during page load. This check ensures that the click is ignored
-					tag.put(
-						"onclick",
-						"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; " +
-							"if (win == window) { window.location.href='" +
-							url +
-							"'; } ;return false");
-				}
-			}
-
-
-			// If the subclass specified javascript, use that
-			final CharSequence onClickJavaScript = getOnClickScript(url);
-			if (onClickJavaScript != null)
-			{
-				tag.put("onclick", onClickJavaScript);
-			}
 		}
 		else
 		{
 			disableLink(tag);
 		}
+	}
+	
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		// If we're disabled
+		if (isEnabledInHierarchy() && useJSEventBindingWhenNeeded())
+		{
+			ComponentTag tag = getMarkupTag();
+
+			// Set href to link to this link's linkClicked method
+			CharSequence url = getURL();
+
+			// append any anchor
+			url = appendAnchor(tag, url);
+
+			// If the subclass specified javascript, use that
+			final CharSequence onClickJavaScript = getOnClickScript(url);
+			if (onClickJavaScript != null)
+			{
+				response.render(OnEventHeaderItem.forComponent(this, "click", onClickJavaScript));
+				return;
+			}
+
+			// next check for popup settings
+			if (popupSettings != null)
+			{
+				popupSettings.setTarget("'" + url + "'");
+				response.render(OnEventHeaderItem.forComponent(this, "click",
+					popupSettings.getPopupJavaScript()));
+				return;
+			}
+
+			// finally, when the tag is not a normal link
+			if (!(tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+				|| tag.getName().equalsIgnoreCase("area")
+				|| tag.getName().equalsIgnoreCase("script")
+				|| tag.getName().equalsIgnoreCase("style")))
+			{
+				// generate an onclick JS handler directly
+				// in firefox when the element is quickly clicked 3 times a second request is
+				// generated during page load. This check ensures that the click is ignored
+				response.render(OnEventHeaderItem.forComponent(this, "click",
+					"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; "
+						+ "if (win == window) { window.location.href='" + url
+						+ "'; } ;return false"));
+				return;
+			}
+		}
+	}
+	
+	/**
+	 * This method can be overridden by a subclass to disable the JS event binding or provide custom
+	 * event binding code is used.
+	 * 
+	 * @return true when a javascripot event binding must used to handle the click event.
+	 */
+	protected boolean useJSEventBindingWhenNeeded()
+	{
+		return true;
 	}
 }

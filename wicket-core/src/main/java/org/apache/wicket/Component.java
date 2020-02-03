@@ -1384,11 +1384,13 @@ public abstract class Component
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
 	 * Get the first component tag in the associated markup
 	 * 
 	 * @return first component tag
 	 */
-	private ComponentTag getMarkupTag()
+	protected final ComponentTag getMarkupTag()
 	{
 		IMarkupFragment markup = getMarkup();
 		if (markup != null)
