@@ -55,8 +55,8 @@
 			if (displayprogress) {
 				this.setPercent(0);
 				this.setStatus(this.initialStatus);
-				Wicket.DOM.show(this.statusid, 'block');
-				Wicket.DOM.show(this.barid, 'block');
+				Wicket.DOM.toggleClass(this.statusid, 'wicket--hidden', false);
+				Wicket.DOM.toggleClass(this.barid, 'wicket--hidden', false);
 				this.scheduleUpdate();
 			}
 		},
@@ -81,7 +81,7 @@
 
 		_createIFrame : function (iframeName) {
 			var $iframe = jQuery('<iframe name="'+iframeName+'" id="'+iframeName+
-				'" src="about:blank" style="position: absolute; top: -9999px; left: -9999px;"></iframe>');
+				'" src="about:blank" class="wicket--hidden-fields"></iframe>');
 			return $iframe[0];
 		},
 
@@ -117,8 +117,8 @@
 			this.iframe = null;
 
 			if (progressPercent === '100') {
-				Wicket.DOM.hide(this.statusid);
-				Wicket.DOM.hide(this.barid);
+				Wicket.DOM.toggleClass(this.statusid, 'wicket--hidden', true);
+				Wicket.DOM.toggleClass(this.barid, 'wicket--hidden', true);
 			} else {
 				this.scheduleUpdate();
 			}
