@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -159,52 +161,74 @@ public class ExternalLink extends AbstractLink
 		}
 		else if (getDefaultModel() != null)
 		{
-			Object hrefValue = getDefaultModelObject();
-			if (hrefValue != null)
+			String url = renderUrl();
+			// if the tag is an anchor proper
+			if (url != null
+				&& (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+					|| tag.getName().equalsIgnoreCase("area")))
 			{
-				String url = hrefValue.toString();
-
-				if (contextRelative)
-				{
-					if (url.length() > 0 && url.charAt(0) == '/')
-					{
-						url = url.substring(1);
-					}
-					url = UrlUtils.rewriteToContextRelative(url, RequestCycle.get());
-				}
-
-				// if the tag is an anchor proper
-				if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
-					tag.getName().equalsIgnoreCase("area"))
-				{
-					// generate the href attribute
-					tag.put("href", url);
-
-					// Add any popup script
-					if (popupSettings != null)
-					{
-						// NOTE: don't encode to HTML as that is not valid
-						// JavaScript
-						tag.put("onclick", popupSettings.getPopupJavaScript());
-					}
-				}
-				else
-				{
-					// generate a popup script by asking popup settings for one
-					if (popupSettings != null)
-					{
-						popupSettings.setTarget("'" + url + "'");
-						String popupScript = popupSettings.getPopupJavaScript();
-						tag.put("onclick", popupScript);
-					}
-					else
-					{
-						// or generate an onclick JS handler directly
-						tag.put("onclick", "window.location.href='" + url + "';return false;");
-					}
-				}
+				// generate the href attribute
+				tag.put("href", url);
 			}
 		}
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+
+		String url = renderUrl();
+		if (isEnabledInHierarchy() && url != null)
+		{
+			if (popupSettings != null)
+			{
+				popupSettings.setTarget("'" + url + "'");
+				response.render(OnEventHeaderItem.forComponent(this, "click",
+					popupSettings.getPopupJavaScript()));
+				return;
+			}
+
+			ComponentTag tag = getMarkupTag();
+			// finally, when the tag is not a normal link
+			if (!(tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+				|| tag.getName().equalsIgnoreCase("area")
+				|| tag.getName().equalsIgnoreCase("script")
+				|| tag.getName().equalsIgnoreCase("style")))
+			{
+				// generate an onclick JS handler directly
+				// in firefox when the element is quickly clicked 3 times a second request is
+				// generated during page load. This check ensures that the click is ignored
+				response.render(OnEventHeaderItem.forComponent(this, "click",
+					"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; "
+						+ "if (win == window) { window.location.href='" + url
+						+ "'; } ;return false"));
+				return;
+			}
+		}
+	}
+
+	/**
+	 * @return the URL for this link
+	 */
+	private String renderUrl()
+	{
+		Object hrefValue = getDefaultModelObject();
+		if (hrefValue == null)
+		{
+			return null;
+		}
+
+		String url = hrefValue.toString();
+		if (contextRelative)
+		{
+			if (url.length() > 0 && url.charAt(0) == '/')
+			{
+				url = url.substring(1);
+			}
+			url = UrlUtils.rewriteToContextRelative(url, RequestCycle.get());
+		}
+		return url;
 	}
 
 	/**

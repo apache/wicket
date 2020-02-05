@@ -25,3 +25,6 @@
 	top: -100px;
 	overflow: hidden;
 }
+.wicket--color-red {
+	color: red;
+}

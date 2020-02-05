@@ -22,6 +22,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
@@ -50,7 +51,7 @@ public class GuiceWebApplicationFactoryTest
 		@Override
 		protected void configure()
 		{
-			bind(WebApplication.class).toInstance(new WebApplication()
+			bind(WebApplication.class).toInstance(new MockApplication()
 			{
 				@Override
 				public Class<? extends Page> getHomePage()

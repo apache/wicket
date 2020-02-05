@@ -22,7 +22,8 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 
@@ -95,9 +96,9 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 	{
 		return formComponent;
 	}
-
+	
 	@Override
-	public void onComponentTag(Component component, ComponentTag tag)
+	public void renderHead(Component component, IHeaderResponse response)
 	{
 		CharSequence url = component.urlForListener(this, new PageParameters());
 
@@ -109,14 +110,16 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 		Form<?> form = component.findParent(Form.class);
 		if (form != null)
 		{
-			tag.put("on" + event, condition + form.getJsForListenerUrl(url.toString()));
+			response.render(OnEventHeaderItem.forComponent(component, event,
+				condition + form.getJsForListenerUrl(url.toString())));
 		}
 		else
 		{
 			char separator = url.toString().indexOf('?') > -1 ? '&' : '?';
 
-			tag.put("on" + event, condition + String.format("window.location.href='%s%s%s=' + %s;", url,
-				separator, formComponent.getInputName(), getJSValue()));
+			response.render(OnEventHeaderItem.forComponent(component, event,
+				condition + String.format("window.location.href='%s%s%s=' + %s;", url, separator,
+					formComponent.getInputName(), getJSValue())));
 		}
 	}
 
