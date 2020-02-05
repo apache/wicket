@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.markup.html.form.validation;
 
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.form.Form;
 
 /**
  * A border that can be placed around a form component to indicate when the bordered child/children
@@ -68,6 +71,14 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 		public boolean isVisible()
 		{
 			return visible;
+		}
+		
+		@Override
+		protected void onComponentTag(ComponentTag tag)
+		{
+			super.onComponentTag(tag);
+			tag.put("class",
+				getString(CssUtils.key(FormComponentFeedbackBorder.class, "error-indicator")));
 		}
 	}
 
