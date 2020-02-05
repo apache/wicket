@@ -553,20 +553,24 @@ public class Form<T> extends WebMarkupContainer
 		}
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
 		buffer.append(String.format("f.action='%s';", action));
-		buffer.append("f.submit();");
+		buffer.append("Wicket.Event.fire(f, 'submit');");
 		return buffer;
 	}
 
 	/**
-	 * Generate a piece of JavaScript that submits the form with the given {@link IFormSubmittingComponent}.
+	 * Generate a piece of JavaScript that submits the form with the given
+	 * {@link IFormSubmittingComponent}.
 	 * 
 	 * @param submitter
 	 *            the submitter
+	 * @param triggerEvent
+	 *            When true, the form will be submited via a javascript submit event, when false via
+	 *            the {@code submit()} method.
 	 * @return the javascript code that submits the form.
 	 * 
 	 * @see #findSubmitter()
 	 */
-	public final CharSequence getJsForSubmitter(IFormSubmittingComponent submitter)
+	public final CharSequence getJsForSubmitter(IFormSubmittingComponent submitter, boolean triggerEvent)
 	{
 		Form<?> root = getRootForm();
 
@@ -588,7 +592,14 @@ public class Form<T> extends WebMarkupContainer
 			String action = root.getActionUrl().toString();
 			buffer.append("f.action += '" + (action.indexOf('?') > -1 ? '&' : '?') + param + "';");
 		}
-		buffer.append("f.submit();");
+		if (triggerEvent)
+		{
+			buffer.append("Wicket.Event.fire(f, 'submit');");
+		}
+		else
+		{
+			buffer.append("f.submit();");
+		}
 		return buffer;
 	}
 
