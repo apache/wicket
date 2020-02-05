@@ -19,10 +19,11 @@ package org.apache.wicket.extensions.markup.html.form.palette.component;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.util.convert.IConverter;
@@ -176,22 +177,19 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 		{
 			attrs.put("disabled", "disabled");
 		}
-
-		avoidAjaxSerialization();
 	}
 
-	/**
-	 * A piece of javascript to avoid serializing the options during AJAX serialization.
-	 */
-	protected void avoidAjaxSerialization()
+	@Override
+	public void renderHead(IHeaderResponse response)
 	{
-		getResponse().write(
-			JavaScriptUtils.SCRIPT_OPEN_TAG +
-				"if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")" +
-				"    Wicket.Form.excludeFromAjaxSerialization." + getMarkupId() + "='true';" +
-				JavaScriptUtils.SCRIPT_CLOSE_TAG);
-	}
+		super.renderHead(response);
 
+		// A piece of javascript to avoid serializing the options during AJAX serialization.
+		response.render(OnDomReadyHeaderItem.forScript(
+			"if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")"
+				+ "    Wicket.Form.excludeFromAjaxSerialization." + getMarkupId() + "='true';"));
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
