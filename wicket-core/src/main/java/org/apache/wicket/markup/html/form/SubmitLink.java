@@ -193,12 +193,12 @@ public class SubmitLink extends AbstractSubmitLink
 	}
 
 	/**
-	 * Controls whether or not clicking on this link will invoke form's javascript onsubmit handler.
-	 * True by default.
+	 * Controls whether or not clicking on this link will trigger a javascript submit event, firing
+	 * any submit handler added to the form. True by default.
 	 * 
-	 * @return true if form's javascript onsubmit handler should be invoked, false otherwise
+	 * @return true if form's javascript submit handlers should be invoked, false otherwise
 	 */
-	protected boolean shouldInvokeJavaScriptFormOnsubmit()
+	protected boolean shouldTriggerJavaScriptSubmitEvent()
 	{
 		return true;
 	}
@@ -217,13 +217,7 @@ public class SubmitLink extends AbstractSubmitLink
 			Form<?> root = getForm().getRootForm();
 
 			StringBuilder script = new StringBuilder();
-			if (shouldInvokeJavaScriptFormOnsubmit())
-			{
-				script.append(String.format("var ff=document.getElementById('%s');", getForm().getMarkupId()));
-				script.append("if (typeof ff.onsubmit === 'function' && ff.onsubmit() == false) return false;");
-			}
-			
-			script.append(root.getJsForSubmitter(this));
+			script.append(root.getJsForSubmitter(this, shouldTriggerJavaScriptSubmitEvent()));
 			script.append("return false;");
 			
 			return script;
