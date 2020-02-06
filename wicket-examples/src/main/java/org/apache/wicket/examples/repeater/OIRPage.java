@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.repeater;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -60,16 +59,7 @@ public class OIRPage extends BasePage
 		public HighlitableDataItem(String id, int index, IModel<T> model)
 		{
 			super(id, index, model);
-			add(new AttributeModifier("style", "background-color:#80b6ed;")
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public boolean isEnabled(Component component)
-				{
-					return HighlitableDataItem.this.highlite;
-				}
-			});
+			add(AttributeModifier.append("class", () -> highlite ? "highlight" : null));
 		}
 	}
 
@@ -104,7 +94,7 @@ public class OIRPage extends BasePage
 				item.add(new Label("homephone", contact.getHomePhone()));
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
-				item.add(AttributeModifier.replace("class",
+				item.add(AttributeModifier.append("class",
 					() -> (item.getIndex() % 2 == 1) ? "even" : "odd"));
 			}
 

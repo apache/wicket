@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.examples.repeater;
 
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.resource.CssResourceReference;
 
 /**
  * Base page for component demo pages.
@@ -95,5 +98,13 @@ public class BasePage extends ExamplePage
 	{
 		addStateChange();
 		this.selected = selected;
+	}
+	
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(
+			CssHeaderItem.forReference(new CssResourceReference(BasePage.class, "repeater.css")));
 	}
 }

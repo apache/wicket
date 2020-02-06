@@ -83,9 +83,8 @@ public class TreeApplication extends WebApplication
 	@Override
 	protected void init()
 	{
+		super.init();
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
-
-		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 	}
 
 	@Override
