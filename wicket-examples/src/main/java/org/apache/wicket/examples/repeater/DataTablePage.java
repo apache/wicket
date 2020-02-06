@@ -127,13 +127,12 @@ public class DataTablePage extends BasePage
 		
 		//This is a table that uses ColGroup to style the columns: 
 		ColGroup colgroup = tableWithColGroup.getColGroup();
-		colgroup.add(AttributeModifier.append("style", "border: solid 1px green;"));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: lightblue;")));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: lightgreen")));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: pink")));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: yellow")));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("class", "lightblue")));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("class", "lightgreen")));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("class", "pink")));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("class", "yellow")));
 		colgroup.addCol(colgroup.new Col(AttributeModifier.append("span", "2"),
-				AttributeModifier.append("style", "background-color: #CC6633")));
+			AttributeModifier.append("class", "brown")));
 	}
 	
 	/**

@@ -41,8 +41,6 @@ public class AjaxApplication extends WicketExampleApplication
 
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 
-		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
-
 		getComponentInitializationListeners().add(new IComponentInitializationListener()
 		{
 			@Override
