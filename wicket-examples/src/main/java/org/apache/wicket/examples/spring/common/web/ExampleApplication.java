@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.spring.common.web;
 
+import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.spring.common.ContactDao;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 
 /**
@@ -26,7 +26,7 @@ import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class ExampleApplication extends WebApplication
+public class ExampleApplication extends WicketExampleApplication
 {
 	/**
 	 * this field holds a contact dao proxy that is safe to use in wicket components

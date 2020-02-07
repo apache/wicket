@@ -40,6 +40,10 @@ import org.apache.wicket.core.request.mapper.PackageMapper;
 import org.apache.wicket.core.request.mapper.ResourceMapper;
 import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.core.util.resource.ClassPathResourceFinder;
+import org.apache.wicket.csp.CSPHeaderConfiguration;
+import org.apache.wicket.csp.ContentSecurityPolicyEnforcer;
+import org.apache.wicket.csp.ReportCSPViolationMapper;
+import org.apache.wicket.csp.CSPNonceHeaderResponseDecorator;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -144,6 +148,8 @@ public abstract class WebApplication extends Application
 	 * runtime.
 	 */
 	private RuntimeConfigurationType configurationType;
+	
+	private ContentSecurityPolicyEnforcer cspEnforcer;
 
 	/**
 	 * Covariant override for easy getting the current {@link WebApplication} without having to cast
@@ -744,6 +750,12 @@ public abstract class WebApplication extends Application
 
 		getResourceSettings().setFileCleaner(new FileCleaner());
 
+		cspEnforcer = newCspEnforcer();
+		getRequestCycleListeners().add(getCsp());
+		getHeaderResponseDecorators()
+			.add(response -> new CSPNonceHeaderResponseDecorator(response, getCsp()));
+		mount(new ReportCSPViolationMapper(getCsp()));
+		
 		if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
 		{
 			// Add optional sourceFolder for resources.
@@ -1075,6 +1087,31 @@ public abstract class WebApplication extends Application
 			filterFactoryManager = new FilterFactoryManager();
 		}
 		return filterFactoryManager;
+	}
+	
+	/**
+	 * Builds the {@link ContentSecurityPolicyEnforcer} to be used for this application. Override
+	 * this method to provider your own implementation.
+	 * 
+	 * @return The newly created CSP enforcer.
+	 */
+	protected ContentSecurityPolicyEnforcer newCspEnforcer()
+	{
+		return new ContentSecurityPolicyEnforcer(this);
+	}
+
+	/**
+	 * Returns the {@link ContentSecurityPolicyEnforcer} for this application. See
+	 * {@link ContentSecurityPolicyEnforcer} and {@link CSPHeaderConfiguration} for instructions on
+	 * configuring the CSP for your specific needs.
+	 * 
+	 * @return The {@link ContentSecurityPolicyEnforcer} for this application.
+	 * @see ContentSecurityPolicyEnforcer
+	 * @see CSPHeaderConfiguration
+	 */
+	public ContentSecurityPolicyEnforcer getCsp()
+	{
+		return cspEnforcer;
 	}
 
 	/**

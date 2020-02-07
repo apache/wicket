@@ -14,30 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.breadcrumb;
-
-import org.apache.wicket.Page;
-import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.protocol.http.WebApplication;
+package org.apache.wicket.csp;
 
 /**
- * Application class for the bread crumb example.
+ * Defines the possible headers for a CSP directive.
  * 
- * @author Eelco Hillenius
+ * @author papegaaij
  */
-public class BreadCrumbApplication extends WicketExampleApplication
+public enum CSPHeaderMode
 {
-	@Override
-	public Class<? extends Page> getHomePage()
+	BLOCKING("Content-Security-Policy"),
+	REPORT_ONLY("Content-Security-Policy-Report-Only");
+
+	private final String header;
+
+	private CSPHeaderMode(String header)
 	{
-		return Index.class;
+		this.header = header;
 	}
 
-	@Override
-	protected void init()
+	public String getHeader()
 	{
-		super.init();
+		return header;
+	}
 
-		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
+	public String getLegacyHeader()
+	{
+		return "X-" + getHeader();
 	}
 }

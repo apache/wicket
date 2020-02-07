@@ -53,6 +53,15 @@ public abstract class WebResponse extends Response
 	public abstract void clearCookie(final Cookie cookie);
 
 	/**
+	 * Indicates if the response supports setting headers. When this method returns
+	 * false, {@link #setHeader(String, String)} and its variations will thrown an
+	 * {@code UnsupportedOperationException}.
+	 * 
+	 * @return True when this {@code WebResponse} supports setting headers.
+	 */
+	public abstract boolean isHeaderSupported();
+	
+	/**
 	 * Set a header to the string value in the servlet response stream.
 	 * 
 	 * @param name

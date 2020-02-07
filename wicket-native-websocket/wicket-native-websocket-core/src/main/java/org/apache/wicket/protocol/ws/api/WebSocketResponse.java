@@ -150,6 +150,11 @@ public class WebSocketResponse extends WebResponse
 	}
 
 	@Override
+	public boolean isHeaderSupported() {
+		return false;
+	}
+	
+	@Override
 	public void setHeader(String name, String value)
 	{
 		throw new UnsupportedOperationException();
