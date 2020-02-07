@@ -166,6 +166,12 @@ public class MockWebResponse extends WebResponse
 	}
 
 	@Override
+	public boolean isHeaderSupported()
+	{
+		return true;
+	}
+
+	@Override
 	public void setHeader(String name, String value)
 	{
 		internalSetContentType(name, value);

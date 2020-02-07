@@ -14,30 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.breadcrumb;
+package org.apache.wicket.csp;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
- * Application class for the bread crumb example.
- * 
- * @author Eelco Hillenius
+ * An enum representing the only possible values for the sandbox directive
  */
-public class BreadCrumbApplication extends WicketExampleApplication
+public enum CSPDirectiveSandboxValue implements CSPRenderable
 {
-	@Override
-	public Class<? extends Page> getHomePage()
+	ALLOW_FORMS("allow-forms"),
+	ALLOW_SAME_ORIGIN("allow-same-origin"),
+	ALLOW_SCRIPTS("allow-scripts"),
+	ALLOW_TOP_NAVIGATION("allow-top-navigation"),
+	EMPTY("");
+
+	private String value;
+
+	private CSPDirectiveSandboxValue(String value)
 	{
-		return Index.class;
+		this.value = value;
+	}
+
+	public String getValue()
+	{
+		return value;
 	}
 
 	@Override
-	protected void init()
+	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
+			IRequestHandler currentHandler)
 	{
-		super.init();
-
-		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
+		return value;
 	}
 }

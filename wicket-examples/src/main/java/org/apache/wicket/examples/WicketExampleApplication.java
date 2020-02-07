@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples;
 
+import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.CssUrlReplacer;
 import org.apache.wicket.settings.SecuritySettings;

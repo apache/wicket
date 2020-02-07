@@ -193,6 +193,12 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	@Override
+	public boolean isHeaderSupported()
+	{
+		return originalResponse.isHeaderSupported();
+	}
+
+	@Override
 	public void setHeader(String name, String value)
 	{
 		actions.add(ActionType.HEADER.action(res -> res.setHeader(name, value)));

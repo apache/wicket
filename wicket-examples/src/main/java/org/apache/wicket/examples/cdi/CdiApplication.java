@@ -18,9 +18,9 @@ package org.apache.wicket.examples.cdi;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.examples.WicketExampleApplication;
 
-public class CdiApplication extends WebApplication
+public class CdiApplication extends WicketExampleApplication
 {
 
 	@Override

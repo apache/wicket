@@ -178,8 +178,13 @@ public class ExternalLink extends AbstractLink
 	{
 		super.renderHead(response);
 
+		if (!isEnabledInHierarchy())
+		{
+			return;
+		}
+
 		String url = renderUrl();
-		if (isEnabledInHierarchy() && url != null)
+		if (url != null)
 		{
 			if (popupSettings != null)
 			{
