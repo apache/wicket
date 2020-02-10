@@ -24,7 +24,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
@@ -176,7 +178,12 @@ public class EffectsPage extends BasePage
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
+		response.render(JavaScriptHeaderItem.forUrl("jquery-ui-1.10.3.custom.js"));
 		response.render(OnDomReadyHeaderItem.forScript("jQuery.noConflict();"));
+		// make effects work nicely with inline elements 
+		response.render(CssHeaderItem.forCSS(
+			"div.container { font-size: 14pt; } .ui-effects-wrapper { display:inline; }",
+			"effects"));
 	}
 
 }
