@@ -20,6 +20,8 @@ import org.apache.wicket.core.request.handler.ComponentRenderingRequestHandler;
 import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
@@ -99,5 +101,12 @@ public class Index extends WicketExamplePage
 	public int getCount()
 	{
 		return count;
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(JavaScriptHeaderItem.forUrl("prototype.js"));
 	}
 }
