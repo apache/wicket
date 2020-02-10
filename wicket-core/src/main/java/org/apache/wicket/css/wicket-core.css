@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 .wicket--hidden {
-	display: none!important;
+	display: none;
 }
 .wicket--hidden-fields {
 	width: 0px;
