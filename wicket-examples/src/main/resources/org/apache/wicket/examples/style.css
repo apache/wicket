@@ -1323,3 +1323,63 @@ div.tabpanel4 div.tab-row a:hover {
 .color-red {
 	color: red;
 }
+
+span.inline-edit {
+	border: 1px solid green;
+	padding: 4px;
+}
+
+span.inline-edit input {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+div.wicket-aa {
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Tahoma, Verdana;
+	font-size: 12px;
+	background-color: white;
+	border-width: 1px;
+	border-color: #cccccc;
+	border-style: solid;
+	padding: 2px;
+	margin: 1px 0 0 0;
+	text-align: left;
+}
+
+div.wicket-aa ul {
+	list-style: none;
+	padding: 2px;
+	margin: 0;
+}
+
+div.wicket-aa ul li.selected {
+	background-color: #FFFF00;
+	padding: 2px;
+	margin: 0;
+}
+
+.drop-zone {
+	border: 1px dotted #FF9925;
+	width: 200px;
+	height: 200px;
+}
+
+.drop-zone.drag-over {
+	background: #FF9925;
+	color: #ffffff;
+}
+
+.download-veil {
+	position: absolute;
+	left: 20%;
+	right: 20%;
+	color: white;
+	background-color: darkorange;
+	font-size: 40px;
+	text-align: center;
+}
+
+.download-veil span {
+	line-height: 128px;
+}
