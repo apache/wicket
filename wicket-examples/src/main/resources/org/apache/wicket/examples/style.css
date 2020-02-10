@@ -1383,3 +1383,13 @@ div.wicket-aa ul li.selected {
 .download-veil span {
 	line-height: 128px;
 }
+
+.breadcrumb-content {
+	border: thin solid black;
+	margin:	10px;
+}
+
+.breadcrumb-links {
+	margin:	10px;
+}
+
