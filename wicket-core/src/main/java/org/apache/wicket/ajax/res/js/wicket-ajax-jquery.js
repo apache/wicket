@@ -1821,28 +1821,17 @@
 							$css.attr(this.name, this.value);
 						});
 
-						// add element to head
-						Wicket.Head.addElement(css);
-
-						// cross browser way to check when the css is loaded
-						// taken from http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
-						// this makes a second GET request to the css but it gets it either from the cache or
-						// downloads just the first several bytes and realizes that the MIME is wrong and ignores the rest
-						var img = document.createElement('img');
 						var notifyCalled = false;
-						img.onerror = function () {
+						function doNotify() {
 							if (!notifyCalled) {
 								notifyCalled = true;
 								notify();
 							}
-						};
-						img.src = css.href;
-						if (img.complete) {
-						  if (!notifyCalled) {
-							notifyCalled = true;
-							notify();
-						  }
 						}
+						css.onerror = doNotify;
+						css.onload = doNotify;
+						// add element to head
+						Wicket.Head.addElement(css);
 
 						return FunctionsExecuter.ASYNC;
 					});
