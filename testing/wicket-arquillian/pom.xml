@@ -37,8 +37,8 @@
 
     <repositories>
         <repository>
-            <id>Apache Nexus</id>
-            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <id>JBoss Nexus</id>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
             <layout>default</layout>
             <releases>
                 <enabled>true</enabled>
