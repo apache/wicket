@@ -1393,3 +1393,24 @@ div.wicket-aa ul li.selected {
 	margin:	10px;
 }
 
+.width-250 {
+	width: 250px;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.margin-top-1em {
+	margin-top: 1em;
+}
+
+.library-content {
+	border: 1px solid gray;
+	overflow: hidden;
+	padding: 1em;
+}
+
+.light-grey {
+	background-color: lightgrey;
+}

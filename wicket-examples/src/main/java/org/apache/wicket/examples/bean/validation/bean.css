@@ -14,24 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.csp;
-
-import org.apache.wicket.Page;
-import org.apache.wicket.examples.WicketExampleApplication;
-
-public class CspApplication extends WicketExampleApplication
-{
-	@Override
-	public Class<? extends Page> getHomePage()
-	{
-		return NonceDemoPage.class;
-	}
-
-	@Override
-	protected void init()
-	{
-		super.init();
-
-		mountPage("noncedemo", NonceDemoPage.class);
-	}
-}
+.note { font-size:.8em; }
+.required {font-weight: bold;}
+table {border-collapse: collapse; border-spacing: 0;}
+th, td {padding: 4px;}
+ 

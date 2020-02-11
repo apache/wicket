@@ -1,19 +1,13 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
 <title>Wicket Examples - Bean Validation</title>
-<style>
-	.note { font-size:.8em; }
-	.required {font-weight: bold;}
-	table {border-collapse: collapse; border-spacing: 0;}
-	th, td {padding: 4px;}
-</style>
 </head>
 <body>
     <wicket:extend>
 	<div wicket:id="feedbackErrors"></div>
 
 	<form wicket:id="form" novalidate="novalidate">
-		<table style="border-collapse: collapse; border-spacing: 0;">
+		<table>
 			<tr>
 				<td><label wicket:for="name"><wicket:label>Name</wicket:label></label></td>
 				<td><input wicket:id="name" type="text" size="30"/></td>

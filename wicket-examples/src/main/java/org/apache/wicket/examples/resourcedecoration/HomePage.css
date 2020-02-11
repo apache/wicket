@@ -22,3 +22,7 @@
 .pending {
 	border: 1px solid yellow;
 }
+
+.large {
+	font-size: 1.5em;
+}

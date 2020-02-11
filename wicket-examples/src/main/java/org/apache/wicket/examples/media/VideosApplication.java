@@ -17,6 +17,8 @@
 package org.apache.wicket.examples.media;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.csp.CSPDirective;
+import org.apache.wicket.csp.CSPDirectiveSrcValue;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.SecurePackageResourceGuard;
@@ -38,12 +40,18 @@ public class VideosApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+		
 		IPackageResourceGuard packageResourceGuard = getResourceSettings().getPackageResourceGuard();
 		if (packageResourceGuard instanceof SecurePackageResourceGuard)
 		{
 			SecurePackageResourceGuard guard = (SecurePackageResourceGuard)packageResourceGuard;
 			guard.addPattern("+*.mp4");
 		}
+		
+		getCsp().blocking()
+			.add(CSPDirective.MEDIA_SRC, CSPDirectiveSrcValue.SELF)
+			.add(CSPDirective.MEDIA_SRC, "https://w3c-test.org/media/movie_300.mp4");
 	}
 
 }

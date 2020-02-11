@@ -16,45 +16,6 @@
    limitations under the License.
 -->
 <html xmlns:wicket="http://wicket.apache.org">
-<wicket:head>
-	<script type="text/javascript">
-		function getEventX(element, event) {
-			var result;
-			if (event.offsetX != null) {
-				result = event.offsetX;
-			} else {
-				result = event.pageX;
-				do {
-					result = result - element.offsetLeft;
-					element = element.offsetParent;
-				} while (element != null)
-			}
-			return parseInt(result, 10);
-		}
-		function getEventY(element, event) {
-			var result;
-			if (event.offsetY != null) {
-				result = event.offsetY;
-			} else {
-				result = event.pageY;
-				do {
-					result = result - element.offsetTop;
-					element = element.offsetParent;
-				} while (element != null)
-			}
-			return parseInt(result, 10);
-		}
-		function getImage() {
-			return Wicket.$("imageContainer").getElementsByTagName("img")[0];
-		}
-		function showLoadingIndicator() {
-			Wicket.$('loading').style.visibility="visible";
-		}
-		function hideLoadingIndicator() {
-			Wicket.$('loading').style.visibility="hidden";
-		}
-	</script>
-</wicket:head>
 <body>
 <wicket:panel>
 	<div wicket:id="animalSelectionLabel"></div>
@@ -66,9 +27,6 @@
 			<wicket:message key="pleaseWait"></wicket:message>
 		</div>
 	</div>
-	<script type="text/javascript">
-		Wicket.Event.add(getImage(), "load", function() { hideLoadingIndicator(); } );
-	</script>	
 </wicket:panel>
 </body>
 </html>
