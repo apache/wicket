@@ -31,6 +31,8 @@ public class BeanValidationApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+		
 		new BeanValidationConfiguration().configure(this);
 	}
 }

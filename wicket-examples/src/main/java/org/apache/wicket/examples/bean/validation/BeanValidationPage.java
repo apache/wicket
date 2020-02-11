@@ -23,11 +23,14 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.markup.html.form.datetime.LocalDateTextField;
 import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.resource.CssResourceReference;
 
 public class BeanValidationPage extends WicketExamplePage
 {
@@ -60,5 +63,13 @@ public class BeanValidationPage extends WicketExamplePage
 		form.add(new TextField<>("password", new PropertyModel<String>(this, "person.password")).add(new PropertyValidator<>()));
 		
 		add(new FeedbackPanel("feedbackSuccess", new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO)));
+	}
+	
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(CssHeaderItem
+			.forReference(new CssResourceReference(BeanValidationPage.class, "bean.css")));
 	}
 }

@@ -44,6 +44,8 @@ public abstract class WicketExampleApplication extends WebApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+		
 		// WARNING: DO NOT do this on a real world application unless
 		// you really want your app's passwords all passed around and
 		// stored in unencrypted browser cookies (BAD IDEA!)!!!

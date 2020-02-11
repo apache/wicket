@@ -93,6 +93,8 @@ public class VelocityTemplateApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+		
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 		IPackageResourceGuard packageResourceGuard = getResourceSettings().getPackageResourceGuard();
 		if (packageResourceGuard instanceof SecurePackageResourceGuard)
