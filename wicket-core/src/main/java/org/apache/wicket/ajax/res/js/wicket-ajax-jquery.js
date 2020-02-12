@@ -1852,6 +1852,8 @@
 
 						// copy id attribute
 						style.id = node.getAttribute("id");
+						// copy nonce attribute
+						style.nonce = node.getAttribute("nonce");
 
 						var textNode = document.createTextNode(content);
 						style.appendChild(textNode);
