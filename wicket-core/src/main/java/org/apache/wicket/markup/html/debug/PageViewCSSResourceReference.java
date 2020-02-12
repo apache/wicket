@@ -18,6 +18,10 @@ package org.apache.wicket.markup.html.debug;
 
 import org.apache.wicket.request.resource.CssResourceReference;
 
+/**
+ * Singleton resource reference for pageview.css.
+ * @author papegaaij
+ */
 public final class PageViewCSSResourceReference extends CssResourceReference
 {
 	private static final long serialVersionUID = 6795863553105608280L;
