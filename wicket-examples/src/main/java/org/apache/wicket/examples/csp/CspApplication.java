@@ -32,8 +32,6 @@ public class CspApplication extends WicketExampleApplication
 	{
 		super.init();
 
-		getCsp().blocking().strict();
-		
 		mountPage("noncedemo", NonceDemoPage.class);
 	}
 }

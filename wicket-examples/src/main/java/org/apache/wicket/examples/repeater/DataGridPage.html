@@ -1,19 +1,4 @@
 <html xmlns:wicket="http://wicket.apache.org">
-<wicket:head xmlns:wicket="http://wicket.apache.org">
-<style type="text/css">
-table {
-    border-collapse:collapse;
-}
-
-td {
-    padding: 2px;
-}
-
-table, th, td {
-    border: 1px solid black;
-}
-</style>
-</wicket:head>
 <body>
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
 
@@ -23,7 +8,7 @@ This is a demo of the DataGridView (builds on top of DataView). Provided feature
 <li>Easy ordering and selection of columns from code</li>
 </ul>
 <br/>
-<div style="overflow-x:auto;">
+<div class="gridpage">
 	<table cellspacing="0" cellpadding="2" border="1">
 		<tr wicket:id="rows">
 			<td wicket:id="cells">

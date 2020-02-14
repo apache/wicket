@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.images;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 
@@ -40,6 +41,7 @@ public class ImagesApplication extends WicketExampleApplication
 		super.init();
 
 		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
+		getCsp().blocking().add(CSPDirective.IMG_SRC, "data:");
 	}
 
 }

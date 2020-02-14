@@ -17,6 +17,9 @@
 package org.apache.wicket.examples.tree;
 
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.request.resource.CssResourceReference;
 
 /**
  * @author Sven Meier
@@ -26,4 +29,11 @@ public abstract class AbstractTreePage extends WicketExamplePage
 
 	private static final long serialVersionUID = 1L;
 
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(CssHeaderItem
+			.forReference(new CssResourceReference(AbstractTreePage.class, "tree.css")));
+	}
 }

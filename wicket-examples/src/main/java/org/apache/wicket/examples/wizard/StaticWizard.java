@@ -47,7 +47,7 @@ public class StaticWizard extends Wizard
 		// create a model with the stupidest steps you can think of
 		WizardModel model = new WizardModel();
 		model.add(new StaticContentStep("One", "The first step",
-			"The <span style=\"color:red\">first step</span> in the "
+			"The <span class=\"color-red\">first step</span> in the "
 				+ "<i>wonderful world</i> of <strong>wizards</strong>", true));
 		model.add(new StaticContentStep("Two", "The second step", "Aren't we having fun?", true));
 		model.add(new StaticContentStep("Three", "The third and last step",

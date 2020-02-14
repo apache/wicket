@@ -20,6 +20,8 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.template.Banner;
 import org.apache.wicket.examples.template.Banner1;
 import org.apache.wicket.examples.template.Banner2;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -84,5 +86,12 @@ public abstract class TemplatePage extends WicketExamplePage
 	public final void setPageTitle(String title)
 	{
 		pageTitle = title;
+	}
+	
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(CssHeaderItem.forUrl("template/style.css"));
 	}
 }

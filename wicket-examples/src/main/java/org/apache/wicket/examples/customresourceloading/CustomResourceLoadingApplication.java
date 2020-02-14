@@ -24,6 +24,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
+import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
