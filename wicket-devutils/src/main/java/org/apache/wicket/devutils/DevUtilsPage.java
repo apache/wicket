@@ -20,9 +20,10 @@ import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.debug.PageViewCSSResourceReference;
+import org.apache.wicket.markup.html.debug.PageView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
 
 /**
  * All pages in the wicket-devutils package should extend this page so that they automatically get
@@ -80,6 +81,7 @@ public class DevUtilsPage extends WebPage
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-		response.render(CssHeaderItem.forReference(PageViewCSSResourceReference.get()));
+		response.render(
+			CssHeaderItem.forReference(new CssResourceReference(PageView.class, "pageview.css")));
 	}
 }
