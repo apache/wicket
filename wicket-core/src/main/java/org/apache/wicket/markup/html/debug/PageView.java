@@ -30,6 +30,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.Strings;
@@ -232,6 +233,7 @@ public final class PageView extends Panel
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-		response.render(CssHeaderItem.forReference(PageViewCSSResourceReference.get()));
+		response.render(
+			CssHeaderItem.forReference(new CssResourceReference(PageView.class, "pageview.css")));
 	}
 }
