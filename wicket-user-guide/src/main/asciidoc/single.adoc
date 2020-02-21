@@ -657,19 +657,23 @@ include::security/security_4.adoc[leveloffset=+1]
 
 === CSRF protection
 
-include::security/security_4_1.adoc[leveloffset=+1]
-
-=== Package Resource Guard
-
 include::security/security_5.adoc[leveloffset=+1]
 
-=== External Security Checks
+=== Content Security Policy (CSP)
 
 include::security/security_6.adoc[leveloffset=+1]
 
-=== Summary
+=== Package Resource Guard
 
 include::security/security_7.adoc[leveloffset=+1]
+
+=== External Security Checks
+
+include::security/security_8.adoc[leveloffset=+1]
+
+=== Summary
+
+include::security/security_9.adoc[leveloffset=+1]
 
 == Test Driven Development with Wicket
 

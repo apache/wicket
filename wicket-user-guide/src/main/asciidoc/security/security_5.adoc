@@ -1,44 +1,21 @@
 
 
+_CryptoMapper_ helps preventing CSRF attacks by making the urls impossible to be guessed by an attacker but still there is some theoretical chance this to happen.
 
-Wicket internally uses an entity called package resource guard to protect package resources from external access. This entity is an implementation of interface _org.apache.wicket.markup.html.IPackageResourceGuard_. 
+To further help against this kind of vulnerability Wicket provides _CsrfPreventionRequestCycleListener_ - a _IRequestCycleListener_ that forbids requests made from a different origin. By default only actions are forbidden, i.e. a request coming from different origin cannot execute _Link.onClick()_ or submit forms (_Form.onSubmit()_). Any request to render pages are still allowed so Wicket pages could be easily embedded in other applications.
 
-By default Wicket applications use as package resource guard class _SecurePackageResourceGuard_, which allows to access only to the following file extensions (grouped by type):
-
-|===
-|File | Extensions
-|*JavaScript files* |.js
-|*CSS files* |.css
-|*HTML pages* |.html
-|*Textual files* |.txt
-|*Flash files* |.swf
-|*Picture files* |.png, .jpg, .jpeg, .gif, .ico, .cur, .bmp, .svg
-|*Web font files* |.eot, .ttf, .woff
-|===
-
-To modify the set of allowed files formats we can add one or more patterns with method _addPattern(String)_. The rules to write a pattern are the following:
-
-* patterns start with either a "+" or a "-" In the first case the pattern will add one or more file to the set while starting a pattern with a “-” we exclude all the files matching the given pattern. For example pattern “-web.xml” excludes all web.xml files in all directories.
-* wildcard character “\*” is supported as placeholder for zero or more characters. For example  pattern “+\*.mp4” adds all the mp4 files inside all directories.
-* subdirectories are supported as well. For example pattern “+documents/\*.pdf” adds all pdf files under “documents” directory. Character “\*” can be used with directories to specify a nesting level. For example “+documents/\*/\*.pdf” adds all pdf files placed one level below “documents” directory.
-* a double wildcard character “\*\*” indicates zero or more subdirectories. For example pattern “+documents/\*\*/\*.pdf” adds all pdf files placed inside “documents” directory or inside any of its subdirectories.
-
-Patterns that allow to access to every file with a given extensions (such as “+\*.pdf”) should be always avoided in favour of more restrictive expressions that contain a directory structure:
-
+MyApplication.java
 [source,java]
 ----
-//Application class code...
-@Override
-public void init()   
-{
-      IPackageResourceGuard packageResourceGuard = application.getResourceSettings() 
-                                                   .getPackageResourceGuard();
-      if (packageResourceGuard instanceof SecurePackageResourceGuard)
-      {
-         SecurePackageResourceGuard guard = (SecurePackageResourceGuard) packageResourceGuard;
-         //Allow to access only to pdf files placed in the “public” directory.
-         guard.addPattern("+public/*.pdf");
-      }
-}
+  @Override
+ protected void init() {
+  super.init();
+  getRequestCycleListeners().add(new CsrfPreventionRequestCycleListener());
+  // ...
+ }
 ----
+
+_CsrfPreventionRequestCycleListener_ is highly configurable. It allows to define a whitelist of allowed origins via _addAcceptedOrigin(String acceptedOrigin)_, to enable/disable it dynamically by overriding _isEnabled()_, to define different kind of actions when a request is rejected or allowed, to set custom error message and code for the rejected requests.
+
+_CsrfPreventionRequestCycleListener_ is not an alternative to _CryptoMapper_! Both of them could be used separately or in tandem to prevent CSRF attacks depending on the application requirements.
 

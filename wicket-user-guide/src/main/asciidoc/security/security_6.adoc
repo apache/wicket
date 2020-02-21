@@ -1,45 +1,98 @@
 
-Since Mozilla released their site to check if web pages have security issues named https://observatory.mozilla.org[Mozilla Observatory]
-a few things which can be done to get a high grade within this ranking without using further frameworks.
 
-Add a request cycle listener to your web application and adjust the headers to fit your requirements:
+In Wicket 9 support for a Content Security Policy (or CSP) has been added. CSP is an added layer of security that helps to detect and mitigate certain types of attacks, including Cross Site Scripting (XSS) and data injection attacks. These attacks are used for everything from data theft to site defacement to distribution of malware. See https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP[MDN] for more information on CSP.
+
+The default CSP set by Wicket is very strict. It requires all scripts and stylesheets to be rendered with a nonce. Wicket will automatically attach the nonce to all header contributions that support this (i.e. subclasses of the _AbstractCspHeaderItem_ class). Images, fonts and (i)frames are allowed from _self_, the current host. All other resources are blocked. This includes any inline styling or Javascript (such as an _onclick_ attribute). The exact CSP is:
+
+----
+Content-Security-Policy: default-src 'none'; script-src 'strict-dynamic' 'nonce-XYZ'; style-src 'nonce-XYZ'; img-src 'self'; connect-src 'self'; font-src 'self'; manifest-src 'self'; child-src 'self'; frame-src 'self'
+----
+
+In developer mode, the CSP is extended with a reporting directive that reports violations at a special endpoint in the application that logs the violation. This is conveniant while developing an application, but care should be taken when this is enabled on production. The _cspviolation_ endpoint must be an open endpoint and all data sent to that URL will end up in the logs. To prevent the server log from filling the disk, make sure the _org.apache.wicket.csp.ReportCSPViolationMapper_ logger has a limit on its disk usage.
+
+=== Configuring the Content Security Policy
+
+The Content Security Policy is managed by the _ContentSecurityPolicyEnforcer_ that can be accessed via _WebApplication.getCSP()_. This class maintains two instances of _CSPHeaderConfiguration_, each of which contains the directives for the CSP HTTP headers _Content-Security-Policy_ and _Content-Security-Policy-Report-Only_. The first header defines the policies that are actually enforced by the browser, whereas the second header defines a policy for which the browser will only report violations. Note that violations can also be reported on the enforced policy and that reporting requires a _report-uri_ directive.
+
+For applications that cannot adhere to a CSP, the CSP can be disabled with the following call in your _Application_ class:
+
 [source,java]
 ----
-@Override
-protected void init()
-{
-   super.init();
-
-   getRequestCycleListeners().add(new AbstractRequestCycleListener(){
-
-      @Override
-      public void onEndRequest(RequestCycle cycle)
-      {
-         WebResponse response = (WebResponse) cycle.getResponse();
-         response.setHeader("X-XSS-Protection", "1; mode=block");
-         response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
-         response.setHeader("X-Content-Type-Options", "nosniff");
-         response.setHeader("X-Frame-Options", "sameorigin");
-         response.setHeader("Content-Security-Policy", "default-src https:");
-      }
-   });
-}
+  @Override
+ protected void init() {
+  super.init();
+  getCSP().blocking().disable();
+  // ...
+ }
 ----
 
-Add this configuration to your web.xml (or let your server redirect to https):
-[source,xml]
+As mentioned before, Wicket uses a very strict CSP by default. This preset can be selected with the following code:
+
+[source,java]
+----
+  getCSP().blocking().strict();
+----
+
+A thrid preset is available that allows unsafe inline Javascript and styling and the use of unsafe _eval_. As can be inferred from the names, use of _unsafe_ is not recommended. It removes the most important protection offered by CSP. However, older applications may not be ready to apply a strict CSP. For those applications, _CSPHeaderConfiguration.unsafeInline()_ can be a starting point for the path to a strict CSP.
+
+_CSPHeaderConfiguration_ defines several methods to tune the Content Security Policy for your application. Additional sources can be whitelisted for certain via the _add(CSPDirective, ...)_ methods. For example, the code below whitelists images rendered via a _data:_ url, fonts loaded from _https://maxcdn.bootstrapcdn.com_ and a single CSS file.
+
+[source,java]
+----
+  getCSP().blocking()
+      .add(CSPDirective.IMG_SRC, "data:")
+      .add(CSPDirective.FONT_SRC, "https://maxcdn.bootstrapcdn.com")
+      .add(CSPDirective.STYLE_SRC,
+           "https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
+----
+
+=== Guidelines for strict CSP support
+
+To comply to the strict CSP set by default, you'll need to follow a few rules. Most importantly, you cannot use inline styling or Javascript. This includes:
+
+* _style_ attributes in the markup or via an _AttributeModifier_.
+* Inline event handlers, such as _onclick_ or _onsubmit_, in the markup or via an _AttributeModifier_.
+* Including stylesheets directly from the markup without whitelisting them.
+* Including Javascript directly from the markup. Whitelisting is not possible due to the _strict-dynamic_ rule.
+* Rendering _style_ attributes from Javascript in dynamically generated markup. Modifying the _style_ DOM property is still possible.
+* Load other resources from external domains without whitelisting them.
+
+For most of these restrictions Wicket provides alternative solutions that do work with a strict CSP. First of all, replace all inline styling with proper stylesheets and use CSS selectors to target the elements in the DOM. Replace the _AttributeModifier_ with a _style_ attribute for one with the _class_ attribute. For Javascripts that manipulate the _style_ attribute, you may have to update the script to use the DOM property instead.
+
+When a component includes a stylesheet directly from the markup as seen below, there are two possible solutions:
+
+[source,html]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
-<security-constraint>
-    <web-resource-collection>
-        <web-resource-name>Entire Application</web-resource-name>
-        <url-pattern>/*</url-pattern>
-    </web-resource-collection>
-    <user-data-constraint>
-        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>
-</security-constraint>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+  <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+</head>
+<body>...</body>
+</html>
 ----
 
-After this changes you have to check if your web application continues to work because it fits the requirements given with these headers. For example that resources could not be requested from other domains anymore.
+The first solution is to whitelist the stylesheet, as seen above. The second solution is to move the stylesheet to a header contribution in _renderHead_. This will allow Wicket to render the required _nonce_ attribute. For Javascript resources, this is the only possible solution:
 
+[source,java]
+----
+ @Override
+ public void renderHead(IHeaderResponse response) {
+   super.renderHead(response);
+   response.render(CssHeaderItem.forReference(
+       new CssResourceReference(MyComponent.class, "mycomponent.css")));
+ }
+----
+
+When your component relies on inline event handlers, such as _onclick_ or _onsubmit_, you can convert these to an _OnEventHeaderItem_. Again, this will allow Wicket to add the required _nonce_ attribute.
+
+[source,java]
+----
+ @Override
+ public void renderHead(IHeaderResponse response) {
+   super.renderHead(response);
+   response.render(OnEventHeaderItem.forComponent(this, "submit",
+       "return confirm('Do you really want to submit?')"));
+ }
+----
