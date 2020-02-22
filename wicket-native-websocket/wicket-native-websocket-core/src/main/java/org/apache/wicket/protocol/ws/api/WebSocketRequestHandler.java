@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.core.request.handler.AbstractPartialPageRequestHandler;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.page.PartialPageUpdate;
@@ -32,8 +32,6 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,11 +40,10 @@ import org.slf4j.LoggerFactory;
  *
  * @since 6.0
  */
-public class WebSocketRequestHandler implements IWebSocketRequestHandler
+public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler implements IWebSocketRequestHandler
 {
 	private static final Logger LOG = LoggerFactory.getLogger(WebSocketRequestHandler.class);
 
-	private final Page page;
 
 	private final IWebSocketConnection connection;
 
@@ -56,7 +53,7 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 
 	public WebSocketRequestHandler(final Component component, final IWebSocketConnection connection)
 	{
-		this.page = Args.notNull(component, "component").getPage();
+		super(Args.notNull(component, "component").getPage());
 		this.connection = Args.notNull(connection, "connection");
 	}
 
@@ -100,65 +97,15 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 		}
 	}
 
-	@Override
-	public void add(Component component, String markupId)
-	{
-		getUpdate().add(component, markupId);
-	}
 
-	private PartialPageUpdate getUpdate() {
+
+	protected PartialPageUpdate getUpdate() {
 		if (update == null) {
-			update = new XmlPartialPageUpdate(page);
+			update = new XmlPartialPageUpdate(getPage());
 		}
 		return update;
 	}
 
-	@Override
-	public void add(Component... components)
-	{
-		for (final Component component : components)
-		{
-			Args.notNull(component, "component");
-
-			if (component.getOutputMarkupId() == false)
-			{
-				throw new IllegalArgumentException(
-						"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
-								component.toString());
-			}
-
-			add(component, component.getMarkupId());
-		}
-	}
-
-	@Override
-	public final void addChildren(MarkupContainer parent, Class<?> childCriteria)
-	{
-		Args.notNull(parent, "parent");
-		Args.notNull(childCriteria, "childCriteria");
-
-		parent.visitChildren(childCriteria, new IVisitor<Component, Void>()
-		{
-			@Override
-			public void component(final Component component, final IVisit<Void> visit)
-			{
-				add(component);
-				visit.dontGoDeeper();
-			}
-		});
-	}
-
-	@Override
-	public void appendJavaScript(CharSequence javascript)
-	{
-		getUpdate().appendJavaScript(javascript);
-	}
-
-	@Override
-	public void prependJavaScript(CharSequence javascript)
-	{
-		getUpdate().prependJavaScript(javascript);
-	}
 
 	@Override
 	public Collection<? extends Component> getComponents()
@@ -171,65 +118,11 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 	}
 
 	@Override
-	public final void focusComponent(Component component)
-	{
-		if (component != null && component.getOutputMarkupId() == false)
-		{
-			throw new IllegalArgumentException(
-					"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
-							component.toString());
-		}
-		final String id = component != null ? ("'" + component.getMarkupId() + "'") : "null";
-		appendJavaScript("Wicket.Focus.setFocusOnId(" + id + ");");
-	}
-
-	@Override
-	public IHeaderResponse getHeaderResponse()
-	{
-		return getUpdate().getHeaderResponse();
-	}
-
-	@Override
-	public Page getPage()
-	{
-		return page;
-	}
-
-	@Override
-	public Integer getPageId()
-	{
-		return page.getPageId();
-	}
-
-	@Override
-	public boolean isPageInstanceCreated()
-	{
-		return true;
-	}
-
-	@Override
-	public Integer getRenderCount()
-	{
-		return page.getRenderCount();
-	}
-
-	@Override
 	public ILogData getLogData()
 	{
 		return logData;
 	}
 
-	@Override
-	public Class<? extends IRequestablePage> getPageClass()
-	{
-		return page.getPageClass();
-	}
-
-	@Override
-	public PageParameters getPageParameters()
-	{
-		return page.getPageParameters();
-	}
 
 	@Override
 	public void respond(IRequestCycle requestCycle)
@@ -245,7 +138,7 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 	{
 		if (logData == null)
 		{
-			logData = new PageLogData(page);
+			logData = new PageLogData(getPage());
 		}
 
 		if (update != null) {
