@@ -278,6 +278,20 @@
 			}
 		},
 
+		// aborts current request is there is any running
+		abort: function () {
+			if (isUndef(this.jqXHR)) {
+				Wicket.Log.debug("There is no executing request for channel " + this.name)
+			} else {
+				// if request has not finished yet, then abort it
+				if (this.jqXHR.readyState !== 4) {
+					this.jqXHR.abort();
+				} else {
+					Wicket.Log.debug("There is no executing request for channel " + this.name)
+				}
+			}
+		},
+
 		done: function () {
 			var callback = null;
 
@@ -306,8 +320,8 @@
 			this.channels = {};
 		},
 
-		// Schedules the callback to channel with given name.
-		schedule: function (channel, callback) {
+		// creates or retirves a channel
+		_createOrGetChanel: function (channel) {
 			var parsed = new Wicket.Channel(channel);
 			var c = this.channels[parsed.name];
 			if (isUndef(c)) {
@@ -316,7 +330,22 @@
 			} else {
 				c.type = parsed.type;
 			}
-			return c.schedule(callback);
+			return c;
+		},
+
+		// Schedules the callback to channel with given name.
+		schedule: function (channel, callback) {
+			return this._createOrGetChanel(channel).schedule(callback);
+		},
+
+		// registers current jqXHR with channel using it
+		registerCurrentAjaxRequest: function(channel, jqXHR) {
+			this._createOrGetChanel(channel).jqXHR = jqXHR;
+		},
+
+		// aborts the current request for channel with name channel
+		abortCurrentRequestForChannel: function(channel) {
+			this._createOrGetChanel(channel).abort();
 		},
 
 		// Tells the ChannelManager that the current callback in channel with given name
@@ -547,11 +576,27 @@
 		 */
 		ajax: function (attrs) {
 			this._initializeDefaults(attrs);
-
 			var res = Wicket.channelManager.schedule(attrs.ch, Wicket.bind(function () {
 				this.doAjax(attrs);
 			}, this));
 			return res !== null ? res: true;
+		},
+
+		/**
+		 * Aborts current AJAX request, if any is running, for default channel.
+		 * WARNING! Mind that this does not implies and server immediately will know about
+		 * request being aborted and server side processing (and page lock night continue).
+		 * This method might prove useful, for instance, in order to abort big AJAX
+		 * uploads.
+		 */
+		abortRequest: function (channel) {
+			var attr = {};
+			if (isUndef(channel) || typeof(channel) !== 'string') {
+				this._initializeDefaults(attr);
+			} else {
+				attr.ch = channel;
+			}
+			Wicket.channelManager.abortCurrentRequestForChannel(attr.ch);
 		},
 
 		/**
@@ -696,6 +741,9 @@
 				contentType: wwwFormUrlEncoded,
 				
 				beforeSend: function (jqXHR, settings) {
+					if (attrs.async) {
+						Wicket.channelManager.registerCurrentAjaxRequest(attrs.ch, jqXHR);
+					}
 					self._executeHandlers(attrs.bsh, attrs, jqXHR, settings);
 					we.publish(topic.AJAX_CALL_BEFORE_SEND, attrs, jqXHR, settings);
 
@@ -1644,6 +1692,11 @@
 				attrs.m = 'POST';
 
 				return Wicket.Ajax.ajax(attrs);
+			},
+			// aborts an AJAX request
+			abortRequest: function(channel) {
+				var call = new Wicket.Ajax.Call();
+				call.abortRequest(channel);
 			},
 
 			ajax: function(attrs) {
