@@ -278,6 +278,15 @@
 			}
 		},
 
+		// aborts current request is there is any running
+		abort: function () {
+			if (isUndef(this.jqXHR)) {
+				Wicket.Log.debug("There is no executing request fro channel " + this.name)
+			} else {
+				this.jqXHR.abort();
+			}
+		},
+
 		done: function () {
 			var callback = null;
 
@@ -317,6 +326,26 @@
 				c.type = parsed.type;
 			}
 			return c.schedule(callback);
+		},
+
+		// register AJAX request
+		registerCurrentAjaxRequest: function(name, jqXHR) {
+			var c = this.channels[name];
+			if (isUndef(c)) {
+				Wicket.Log.error("No channel with name " + name)
+			} else {
+				c.jqXHR = jqXHR;
+			}
+		},
+
+		// aborts the current request for channel with name name
+		abortCurrentQuestForChannel(name) {
+			var c = this.channels[name];
+			if (isUndef(c)) {
+				Wicket.Log.error("No channel with name " + name)
+			} else {
+				c.abort();
+			}
 		},
 
 		// Tells the ChannelManager that the current callback in channel with given name
@@ -549,7 +578,10 @@
 			this._initializeDefaults(attrs);
 
 			var res = Wicket.channelManager.schedule(attrs.ch, Wicket.bind(function () {
-				this.doAjax(attrs);
+				var jqXHR = this.doAjax(attrs);
+				if (attrs.async) {
+					Wicket.ChannelManager.registerCurrentAjaxRequest(attrs.c, jqXHR);
+				}
 			}, this));
 			return res !== null ? res: true;
 		},
