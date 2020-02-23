@@ -336,6 +336,54 @@
 	Wicket.ChannelManager.FunctionsExecuter = FunctionsExecuter;
 
 	/**
+	 * AjaxRequestMonitor allows to get hold of jqXHR during AJAX request and
+	 * manipulate it.
+	 */
+	Wicket.AjaxRequestMonitor = Wicket.Class.create();
+
+	Wicket.AjaxRequestMonitor.prototype = {
+		initialize: function () {
+			this.requests = [];
+		},
+
+		init: function() {
+			var requests = this.requests;
+			Wicket.Event.subscribe('/ajax/call/beforeSend',
+				function(jqEvent, attributes, jqXHR, errorThrown, textStatus) {
+					requests [attributes.ch] = jqXHR;
+				}
+			);
+
+			Wicket.Event.subscribe('/ajax/call/complete',
+				function(jqEvent, attributes, jqXHR, errorThrown, textStatus) {
+					delete requests[attributes.ch];
+				}
+			);
+		},
+
+		getRequest: function (channel) {
+			var channelName = channel;
+			// (ajax channel)
+			if (typeof (channelName) !== 'string') {
+				channelName = '0|s';
+			}
+			return this.requests[channelName];
+
+		},
+
+		abortRequest: function (channel) {
+			var jqXHR = this.getRequest(channel);
+			if (jqXHR) {
+				try {
+					jqXHR.abort();
+				} catch (exception) {
+					Wicket.Log.error("Couldn't abort current AJAX request:", exception);
+				}
+			}
+		}
+	};
+
+	/**
 	 * The Ajax.Request class encapsulates a XmlHttpRequest.
 	 */
 	Wicket.Ajax = {};

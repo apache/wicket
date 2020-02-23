@@ -21,9 +21,13 @@ import java.util.List;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.AjaxFileDropBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -46,6 +50,7 @@ public class FileUploadPage extends BasePage
 
 	private final FileUploadField file;
 	private final TextField<String> text;
+	private WebMarkupContainer cancelUpload;
 
 	/**
 	 * Constructor
@@ -80,6 +85,8 @@ public class FileUploadPage extends BasePage
 			}
 		};
 		form.setMaxSize(Bytes.megabytes(1));
+		// enable in case you want to be able to test cancelling AJAX upload
+		//form.setMaxSize(Bytes.megabytes(500));
 		add(form);
 
 		// create a textfield to demo non-file content
@@ -105,6 +112,7 @@ public class FileUploadPage extends BasePage
 
 				// ajax-update the feedback panel
 				target.add(feedback);
+				target.appendJavaScript(hideCancelUploadButtonScript());
 			}
 
 			@Override
@@ -112,10 +120,30 @@ public class FileUploadPage extends BasePage
 			{
 				// update feedback to display errors
 				target.add(feedback);
+				target.appendJavaScript(hideCancelUploadButtonScript());
 			}
 
+			@Override
+			public void renderHead(IHeaderResponse response)
+			{
+				String script = "$('#" + getMarkupId() +"').on('click', function() { "+ showCancelUploadButtonScript() +" });";
+				response.render(OnDomReadyHeaderItem.forScript(script));
+				response.render(OnDomReadyHeaderItem.forScript(hideCancelUploadButtonScript()));
+			}
 		});
-		
+
+		cancelUpload = new WebMarkupContainer("cancelUpload")
+		{
+			@Override
+			public void renderHead(IHeaderResponse response)
+			{
+				String script = "$('#" + cancelUpload.getMarkupId() +"').on('click', function() { window.requestMonitor.abortRequest(); });";
+				response.render(OnDomReadyHeaderItem.forScript(script));
+			}
+		};
+		cancelUpload.setOutputMarkupId(true);
+		form.add(cancelUpload);
+
 		WebMarkupContainer drop = new WebMarkupContainer("drop");
 		drop.add(new AjaxFileDropBehavior() {
 			protected void onFileUpload(AjaxRequestTarget target, List<FileUpload> files) {
@@ -133,17 +161,29 @@ public class FileUploadPage extends BasePage
 				    }
 				}
 				
-				target.add(feedback);
+				target.add(feedback, cancelUpload);
 			}
 			
 			@Override
 			protected void onError(AjaxRequestTarget target, FileUploadException fux)
 			{
 				info(fux.getMessage());
-				
-				target.add(feedback);				
+				target.add(feedback,cancelUpload);
 			}
 		});
 		add(drop);
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		response.render(OnDomReadyHeaderItem.forScript("window.requestMonitor = new Wicket.AjaxRequestMonitor(); window.requestMonitor.init();"));
+	}
+
+	private String showCancelUploadButtonScript() {
+		return "$('#" + cancelUpload.getMarkupId() + "').show();";
+	}
+
+	private String hideCancelUploadButtonScript() {
+		return "$('#" + cancelUpload.getMarkupId() + "').hide();";
 	}
 }
