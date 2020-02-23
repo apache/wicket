@@ -74,5 +74,7 @@ public class MockApplication extends WebApplication
 		// the core CSS causes noise (a head + link in every generated markup) in tests
 		// and isn't needed, because the markup isn't rendered by a browser
 		getResourceSettings().disableWicketCoreCSS();
+		// disable nonces, CSP is not needed anyway during tests
+		getCsp().blocking().disabled();
 	}
 }

@@ -755,6 +755,7 @@ public abstract class WebApplication extends Application
 		getHeaderResponseDecorators()
 			.add(response -> new CSPNonceHeaderResponseDecorator(response, getCsp()));
 		mount(new ReportCSPViolationMapper(getCsp()));
+		getCsp().blocking().strict();
 		
 		if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
 		{
@@ -764,6 +765,7 @@ public abstract class WebApplication extends Application
 			{
 				getResourceSettings().getResourceFinders().add(new Path(resourceFolder));
 			}
+			getCsp().blocking().reportBack();
 		}
 		setPageRendererProvider(WebPageRenderer::new);
 		setSessionStoreProvider(HttpSessionStore::new);
