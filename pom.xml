@@ -155,7 +155,7 @@
 		<jakarta.websocket-api.version>1.1.2</jakarta.websocket-api.version>
 		<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
-		<jetty.version>9.4.21.v20190926</jetty.version>
+		<jetty.version>9.4.26.v20200117</jetty.version>
 		<junit.version>5.5.2</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.3</logback.version>
@@ -163,7 +163,7 @@
 		<hibernate-validator.version>6.0.16.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
 		<metrics.version>4.1.0</metrics.version>
-		<mockito.version>3.1.0</mockito.version>
+		<mockito.version>3.3.0</mockito.version>
 		<objenesis.version>3.0.1</objenesis.version>
 		<openjson.version>1.0.11</openjson.version>
 		<slf4j.version>1.7.25</slf4j.version>
