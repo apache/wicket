@@ -583,11 +583,20 @@
 		},
 
 		/**
-		 * Aborts current AJAX request, if any is running, for default channel.
-		 * WARNING! Mind that this does not implies and server immediately will know about
-		 * request being aborted and server side processing (and page lock night continue).
-		 * This method might prove useful, for instance, in order to abort big AJAX
-		 * uploads.
+		 * Aborts current AJAX request, if any is running, for channel @channel.
+		 *
+		 * WARNING! Mind that this does not implies the server will immediately know about
+		 * request being aborted. And there is no reliable way to tell server to stop process
+		 * started by halted request. Thus server side processing of request and, by consequence,
+		 * Wicket's lock on page night continue. Therefore any following AJAX requests might need to wait at
+		 * server side for lock on page to be released. Nevertheless, this method might prove useful, for instance,
+		 * in order to abort/halt big AJAX uploads.
+		 *
+		 * TODO: implement some kind of client side mechanism + server side counterpart allowing to tell server
+		 * please discard/request + release page lock?
+		 *
+		 * @param {String} channel - the name of the channel. If no parameter is provided then default channel is
+		 *        assumed.
 		 */
 		abortRequest: function (channel) {
 			var attr = {};
