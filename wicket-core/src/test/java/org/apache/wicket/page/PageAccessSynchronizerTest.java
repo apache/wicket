@@ -314,11 +314,12 @@ public class PageAccessSynchronizerTest extends Assert
 	@Test
 	public void unlockIfNoSuchPage()
 	{
-		PageAccessSynchronizer synchronizer = new PageAccessSynchronizer(Duration.seconds(2));
+		final DefaultPageLockManager pageLockManager = new DefaultPageLockManager(Duration.seconds(2));
+		PageAccessSynchronizer synchronizer = new PageAccessSynchronizer(pageLockManager);
 		IPageManager pageManager = new MockPageManager();
 		IPageManager synchronizedPageManager = synchronizer.adapt(pageManager);
 		synchronizedPageManager.getPage(0);
-		ConcurrentMap<Integer, PageLock> locks = synchronizer.getLocks().get();
+		ConcurrentMap<Integer, PageLock> locks = pageLockManager.getLocks().get();
 		PageLock pageLock = locks.get(Integer.valueOf(0));
 		assertNull(pageLock);
 

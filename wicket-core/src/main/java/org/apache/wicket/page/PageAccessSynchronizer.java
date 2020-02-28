@@ -17,17 +17,9 @@
 package org.apache.wicket.page;
 
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.function.Supplier;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.settings.ExceptionSettings.ThreadDumpStrategy;
-import org.apache.wicket.util.LazyInitializer;
-import org.apache.wicket.util.lang.Threads;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,20 +34,8 @@ public class PageAccessSynchronizer implements Serializable
 
 	private static final Logger logger = LoggerFactory.getLogger(PageAccessSynchronizer.class);
 
-	/** map of which pages are owned by which threads */
-	private final Supplier<ConcurrentMap<Integer, PageLock>> locks = new LazyInitializer<ConcurrentMap<Integer, PageLock>>()
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		protected ConcurrentMap<Integer, PageLock> createInstance()
-		{
-			return new ConcurrentHashMap<>();
-		}
-	};
-
-	/** timeout value for acquiring a page lock */
-	private final Duration timeout;
+	/** lock manager responsible for locking and unlocking page instances */
+	private final IPageLockManager pageLockManager;
 
 	/**
 	 * Constructor
@@ -65,22 +45,17 @@ public class PageAccessSynchronizer implements Serializable
 	 */
 	public PageAccessSynchronizer(Duration timeout)
 	{
-		this.timeout = timeout;
-	}
-
-	private static long remaining(Time start, Duration timeout)
-	{
-		return Math.max(0, timeout.subtract(start.elapsedSince()).getMilliseconds());
+		this(new DefaultPageLockManager(timeout));
 	}
 
 	/**
-	 * @param pageId
-	 *            the id of the page to be locked
-	 * @return the duration for acquiring a page lock
+	 * Constructor
+	 *
+	 * @param pageLockManager the lock manager
 	 */
-	public Duration getTimeout(int pageId)
+	public PageAccessSynchronizer(IPageLockManager pageLockManager)
 	{
-		return timeout;
+		this.pageLockManager = Args.notNull(pageLockManager, "pageLockManager");
 	}
 
 	/**
@@ -93,80 +68,7 @@ public class PageAccessSynchronizer implements Serializable
 	 */
 	public void lockPage(int pageId) throws CouldNotLockPageException
 	{
-		final Thread thread = Thread.currentThread();
-		final PageLock lock = new PageLock(pageId, thread);
-		final Time start = Time.now();
-
-		boolean locked = false;
-
-		final boolean isDebugEnabled = logger.isDebugEnabled();
-
-		PageLock previous = null;
-
-		Duration timeout = getTimeout(pageId);
-
-		while (!locked && start.elapsedSince().lessThan(timeout))
-		{
-			if (isDebugEnabled)
-			{
-				logger.debug("'{}' attempting to acquire lock to page with id '{}'",
-					thread.getName(), pageId);
-			}
-
-			previous = locks.get().putIfAbsent(pageId, lock);
-
-			if (previous == null || previous.thread == thread)
-			{
-				// first thread to acquire lock or lock is already owned by this thread
-				locked = true;
-			}
-			else
-			{
-				// wait for a lock to become available
-				long remaining = remaining(start, timeout);
-				if (remaining > 0)
-				{
-					previous.waitForRelease(remaining, isDebugEnabled);
-				}
-			}
-		}
-		if (locked)
-		{
-			if (isDebugEnabled)
-			{
-				logger.debug("{} acquired lock to page {}", thread.getName(), pageId);
-			}
-		}
-		else
-		{
-			if (logger.isWarnEnabled())
-			{
-				logger.warn(
-					"Thread '{}' failed to acquire lock to page with id '{}', attempted for {} out of allowed {}." +
-							" The thread that holds the lock has name '{}'.",
-					thread.getName(), pageId, start.elapsedSince(), timeout,
-							previous.thread.getName());
-				if (Application.exists())
-				{
-					ThreadDumpStrategy strategy = Application.get()
-						.getExceptionSettings()
-						.getThreadDumpStrategy();
-					switch (strategy)
-					{
-						case ALL_THREADS :
-							Threads.dumpAllThreads(logger);
-							break;
-						case THREAD_HOLDING_LOCK :
-							Threads.dumpSingleThread(logger, previous.thread);
-							break;
-						case NO_THREADS :
-						default :
-							// do nothing
-					}
-				}
-			}
-			throw new CouldNotLockPageException(pageId, thread.getName(), timeout);
-		}
+		pageLockManager.lockPage(pageId);
 	}
 
 	/**
@@ -174,7 +76,7 @@ public class PageAccessSynchronizer implements Serializable
 	 */
 	public void unlockAllPages()
 	{
-		internalUnlockPages(null);
+		pageLockManager.unlockAllPages();
 	}
 
 	/**
@@ -185,46 +87,7 @@ public class PageAccessSynchronizer implements Serializable
 	 */
 	public void unlockPage(int pageId)
 	{
-		internalUnlockPages(pageId);
-	}
-
-	private void internalUnlockPages(final Integer pageId)
-	{
-		final Thread thread = Thread.currentThread();
-		final Iterator<PageLock> locks = this.locks.get().values().iterator();
-
-		final boolean isDebugEnabled = logger.isDebugEnabled();
-
-		while (locks.hasNext())
-		{
-			// remove all locks held by this thread if 'pageId' is not specified
-			// otherwise just the lock for this 'pageId'
-			final PageLock lock = locks.next();
-			if ((pageId == null || pageId == lock.pageId) && lock.thread == thread)
-			{
-				locks.remove();
-				if (isDebugEnabled)
-				{
-					logger.debug("'{}' released lock to page with id '{}'", thread.getName(),
-						lock.pageId);
-				}
-				// if any locks were removed notify threads waiting for a lock
-				lock.markReleased(isDebugEnabled);
-				if (pageId != null)
-				{
-					// unlock just the page with the specified id
-					break;
-				}
-			}
-		}
-	}
-
-	/*
-	 * used by tests
-	 */
-	Supplier<ConcurrentMap<Integer, PageLock>> getLocks()
-	{
-		return locks;
+		pageLockManager.unlockPage(pageId);
 	}
 
 	/**
