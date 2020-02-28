@@ -337,7 +337,7 @@ public class PageAccessSynchronizer implements Serializable
 			return thread;
 		}
 
-		final synchronized void waitForRelease(long remaining, boolean isDebugEnabled)
+		public final synchronized void waitForRelease(long remaining, boolean isDebugEnabled)
 		{
 			if (released)
 			{
@@ -367,7 +367,7 @@ public class PageAccessSynchronizer implements Serializable
 			}
 		}
 
-		final synchronized void markReleased(boolean isDebugEnabled)
+		public final synchronized void markReleased(boolean isDebugEnabled)
 		{
 			if (isDebugEnabled)
 			{
