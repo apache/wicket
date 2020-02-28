@@ -19,12 +19,12 @@ package org.apache.wicket.protocol.http;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import java.util.function.Consumer;
 import javax.servlet.http.Cookie;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Response;
@@ -32,7 +32,6 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.time.Time;
 
 /**
  * Subclass of {@link WebResponse} that buffers the actions and performs those on another response.
@@ -72,7 +71,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	{
 		for (Action action : actions)
 		{
-			if (action instanceof MetaDataAction)
+			if (action.getType() == ActionType.HEADER)
 				action.invoke(response);
 		}
 	}
@@ -105,395 +104,150 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	private enum ActionType {
-		HEADER, NORMAL, DATA;
+		/**
+		 * Actions not related directly to the content of the response, eg setting cookies, headers.
+		 */
+		HEADER,
+		REDIRECT,
+		NORMAL,
+		/**
+		 * Actions directly related to the data of the response, eg writing output, etc.
+		 */
+		DATA;
+
+		protected final Action action(Consumer<WebResponse> action) {
+			return new Action(this, action);
+		}
 	}
 
-	private static abstract class Action implements Comparable<Action>
+	private static final class Action implements Comparable<Action>
 	{
-		protected abstract void invoke(WebResponse response);
+		private final ActionType type;
+		private final Consumer<WebResponse> action;
 
-		protected ActionType getType()
+		private Action(ActionType type, Consumer<WebResponse> action)
 		{
-			return ActionType.NORMAL;
+			this.type = type;
+			this.action = action;
+		}
+
+		protected final void invoke(WebResponse response)
+		{
+			action.accept(response);
+		}
+
+		protected final ActionType getType()
+		{
+			return type;
 		}
 
 		@Override
-		public final int compareTo(Action o)
+		public int compareTo(Action o)
 		{
 			return getType().ordinal() - o.getType().ordinal();
 		}
 	}
 
-	/**
-	 * Actions not related directly to the content of the response, eg setting cookies, headers.
-	 * 
-	 * @author igor
-	 */
-	private static abstract class MetaDataAction extends Action
-	{
-		@Override
-		protected ActionType getType()
-		{
-			return ActionType.HEADER;
-		}
-	}
-
-	private static class WriteCharSequenceAction extends Action
-	{
-		private final StringBuilder builder = new StringBuilder(4096);
-
-		public WriteCharSequenceAction()
-		{
-
-		}
-
-		public void append(CharSequence sequence)
-		{
-			builder.append(sequence);
-		}
-
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			AppendingStringBuffer responseBuffer = new AppendingStringBuffer(builder);
-
-			List<IResponseFilter> responseFilters = Application.get()
-				.getRequestCycleSettings()
-				.getResponseFilters();
-
-			if (responseFilters != null)
-			{
-				for (IResponseFilter filter : responseFilters)
-				{
-					responseBuffer = filter.filter(responseBuffer);
-				}
-			}
-			response.write(responseBuffer);
-		}
-
-		@Override
-		protected ActionType getType()
-		{
-			return ActionType.DATA;
-		}
-	}
-
-	private static class WriteDataAction extends Action
-	{
-		private final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-		public WriteDataAction()
-		{
-
-		}
-
-		public void append(byte data[])
-		{
-			try
-			{
-				stream.write(data);
-			}
-			catch (IOException e)
-			{
-				throw new WicketRuntimeException(e);
-			}
-		}
-
-		public void append(byte data[], int offset, int length)
-		{
-			try
-			{
-				stream.write(data, offset, length);
-			}
-			catch (Exception e)
-			{
-				throw new WicketRuntimeException(e);
-			}
-		}
-
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			writeStream(response, stream);
-		}
-
-		@Override
-		protected ActionType getType()
-		{
-			return ActionType.DATA;
-		}
-	}
-
-	private static class CloseAction extends Action
-	{
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.close();
-		}
-	}
-
-	private static class AddCookieAction extends MetaDataAction
-	{
-		private final Cookie cookie;
-
-		public AddCookieAction(Cookie cookie)
-		{
-			this.cookie = cookie;
-		}
-
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.addCookie(cookie);
-		}
-	}
-
-	private static class ClearCookieAction extends MetaDataAction
-	{
-		private final Cookie cookie;
-
-		public ClearCookieAction(Cookie cookie)
-		{
-			this.cookie = cookie;
-		}
-
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.clearCookie(cookie);
-		}
-	}
-
-	private static class SetHeaderAction extends MetaDataAction
-	{
-		private final String name;
-		private final String value;
-
-		public SetHeaderAction(String name, String value)
-		{
-			this.name = name;
-			this.value = value;
-		}
-
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.setHeader(name, value);
-		}
-	}
-
-	private static class AddHeaderAction extends MetaDataAction
-	{
-		private final String name;
-		private final String value;
-
-		public AddHeaderAction(String name, String value)
-		{
-			this.name = name;
-			this.value = value;
-		}
-
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.addHeader(name, value);
-		}
-	}
-
-	private static class SetDateHeaderAction extends MetaDataAction
-	{
-		private final String name;
-		private final Time value;
-
-		public SetDateHeaderAction(String name, Time value)
-		{
-			this.name = name;
-			this.value = Args.notNull(value, "value");
-		}
-
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.setDateHeader(name, value);
-		}
-	}
-
-	private static class SetContentLengthAction extends MetaDataAction
-	{
-		private final long contentLength;
-
-		public SetContentLengthAction(long contentLength)
-		{
-			this.contentLength = contentLength;
-		}
-
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.setContentLength(contentLength);
-		}
-	}
-
-	private static class SetContentTypeAction extends MetaDataAction
-	{
-		private final String contentType;
-
-		public SetContentTypeAction(String contentType)
-		{
-			this.contentType = contentType;
-		}
-
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.setContentType(contentType);
-		}
-	}
-
-	private static class SetStatusAction extends MetaDataAction
-	{
-		private final int sc;
-
-		public SetStatusAction(int sc)
-		{
-			this.sc = sc;
-		}
-
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.setStatus(sc);
-		}
-	}
-
-	private static class DisableCachingAction extends MetaDataAction
-	{
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.disableCaching();;
-		}
-	}
-
-	private static class SendErrorAction extends Action
-	{
-		private final int sc;
-		private final String msg;
-
-		public SendErrorAction(int sc, String msg)
-		{
-			this.sc = sc;
-			this.msg = msg;
-		}
-
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.sendError(sc, msg);
-		}
-	}
-
-	private static class SendRedirectAction extends Action
-	{
-		private final String url;
-
-		public SendRedirectAction(String url)
-		{
-			this.url = url;
-		}
-
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.sendRedirect(url);
-		}
-	}
-
-	private static class FlushAction extends Action
-	{
-		@Override
-		protected void invoke(WebResponse response)
-		{
-			response.flush();
-		}
-	}
-
 	private final List<Action> actions = new ArrayList<Action>();
-	private WriteCharSequenceAction charSequenceAction;
-	private WriteDataAction dataAction;
+	private StringBuilder charSequenceBuilder;
+	private ByteArrayOutputStream dataStream;
 
 	@Override
 	public void reset()
 	{
 		super.reset();
 		actions.clear();
-		charSequenceAction = null;
-		dataAction = null;
+		charSequenceBuilder = null;
+		dataStream = null;
 	}
 
 	@Override
 	public void addCookie(Cookie cookie)
 	{
-		actions.add(new AddCookieAction(cookie));
+		actions.add(ActionType.HEADER.action(res -> res.addCookie(cookie)));
 	}
 
 	@Override
 	public void clearCookie(Cookie cookie)
 	{
-		actions.add(new ClearCookieAction(cookie));
+		actions.add(ActionType.HEADER.action(res -> res.clearCookie(cookie)));
 	}
 
 	@Override
 	public void setContentLength(long length)
 	{
-		actions.add(new SetContentLengthAction(length));
+		actions.add(ActionType.HEADER.action(res -> res.setContentLength(length)));
 	}
 
 	@Override
 	public void setContentType(String mimeType)
 	{
-		actions.add(new SetContentTypeAction(mimeType));
+		actions.add(ActionType.HEADER.action(res -> res.setContentType(mimeType)));
 	}
 
 	@Override
-	public void setDateHeader(String name, Time date)
+	public void setDateHeader(String name, Instant date)
 	{
-		actions.add(new SetDateHeaderAction(name, date));
+		Args.notNull(date, "date");
+		actions.add(ActionType.HEADER.action(res -> res.setDateHeader(name, date)));
+	}
+
+	@Override
+	public boolean isHeaderSupported()
+	{
+		return originalResponse.isHeaderSupported();
 	}
 
 	@Override
 	public void setHeader(String name, String value)
 	{
-		actions.add(new SetHeaderAction(name, value));
+		actions.add(ActionType.HEADER.action(res -> res.setHeader(name, value)));
 	}
 
 	@Override
 	public void addHeader(String name, String value)
 	{
-		actions.add(new AddHeaderAction(name, value));
+		actions.add(ActionType.HEADER.action(res -> res.addHeader(name, value)));
 	}
 
 	@Override
-	public void disableCaching() {
-		actions.add(new DisableCachingAction());
+	public void disableCaching()
+	{
+		actions.add(ActionType.HEADER.action(WebResponse::disableCaching));
 	}
 
 	@Override
 	public void write(CharSequence sequence)
 	{
-		if (dataAction != null)
+		if (dataStream != null)
 		{
 			throw new IllegalStateException(
 				"Can't call write(CharSequence) after write(byte[]) has been called.");
 		}
 
-		if (charSequenceAction == null)
+		if (charSequenceBuilder == null)
 		{
-			charSequenceAction = new WriteCharSequenceAction();
-			actions.add(charSequenceAction);
+			StringBuilder builder = new StringBuilder(4096);
+			charSequenceBuilder = builder;
+			actions.add(ActionType.DATA.action(res ->
+			{
+				AppendingStringBuffer responseBuffer = new AppendingStringBuffer(builder);
+
+				List<IResponseFilter> responseFilters = Application.get()
+						.getRequestCycleSettings()
+						.getResponseFilters();
+
+				if (responseFilters != null)
+				{
+					for (IResponseFilter filter : responseFilters)
+					{
+						responseBuffer = filter.filter(responseBuffer);
+					}
+				}
+				res.write(responseBuffer);
+			}));
 		}
-		charSequenceAction.append(sequence);
+		charSequenceBuilder.append(sequence);
 	}
 
 	/**
@@ -503,13 +257,13 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	 */
 	public CharSequence getText()
 	{
-		if (dataAction != null)
+		if (dataStream != null)
 		{
 			throw new IllegalStateException("write(byte[]) has already been called.");
 		}
-		if (charSequenceAction != null)
+		if (charSequenceBuilder != null)
 		{
-			return charSequenceAction.builder;
+			return charSequenceBuilder;
 		}
 		else
 		{
@@ -524,13 +278,13 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	 */
 	public void setText(CharSequence text)
 	{
-		if (dataAction != null)
+		if (dataStream != null)
 		{
 			throw new IllegalStateException("write(byte[]) has already been called.");
 		}
-		if (charSequenceAction != null)
+		if (charSequenceBuilder != null)
 		{
-			charSequenceAction.builder.setLength(0);
+			charSequenceBuilder.setLength(0);
 		}
 		write(text);
 	}
@@ -538,51 +292,42 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	@Override
 	public void write(byte[] array)
 	{
-		if (charSequenceAction != null)
-		{
-			throw new IllegalStateException(
-				"Can't call write(byte[]) after write(CharSequence) has been called.");
-		}
-		if (dataAction == null)
-		{
-			dataAction = new WriteDataAction();
-			actions.add(dataAction);
-		}
-		dataAction.append(array);
+		write(array, 0, array.length);
 	}
 
 	@Override
 	public void write(byte[] array, int offset, int length)
 	{
-		if (charSequenceAction != null)
+		if (charSequenceBuilder != null)
 		{
 			throw new IllegalStateException(
 				"Can't call write(byte[]) after write(CharSequence) has been called.");
 		}
-		if (dataAction == null)
+		if (dataStream == null)
 		{
-			dataAction = new WriteDataAction();
-			actions.add(dataAction);
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			dataStream = stream;
+			actions.add(ActionType.DATA.action(res -> writeStream(res, stream)));
 		}
-		dataAction.append(array, offset, length);
+		dataStream.write(array, offset, length);
 	}
 
 	@Override
 	public void sendRedirect(String url)
 	{
-		actions.add(new SendRedirectAction(url));
+		actions.add(ActionType.REDIRECT.action(res -> res.sendRedirect(url)));
 	}
 
 	@Override
 	public void setStatus(int sc)
 	{
-		actions.add(new SetStatusAction(sc));
+		actions.add(ActionType.HEADER.action(res -> res.setStatus(sc)));
 	}
 
 	@Override
 	public void sendError(int sc, String msg)
 	{
-		actions.add(new SendErrorAction(sc, msg));
+		actions.add(ActionType.NORMAL.action(res -> res.sendError(sc, msg)));
 	}
 
 	/**
@@ -608,7 +353,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	{
 		for (Action action : actions)
 		{
-			if (action instanceof SendRedirectAction)
+			if (action.getType() == ActionType.REDIRECT)
 			{
 				return true;
 			}
@@ -619,7 +364,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	@Override
 	public void flush()
 	{
-		actions.add(new FlushAction());
+		actions.add(ActionType.NORMAL.action(WebResponse::flush));
 	}
 
 	private static void writeStream(final Response response, ByteArrayOutputStream stream)
@@ -664,9 +409,9 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	public String toString()
 	{
 		final String toString;
-		if (charSequenceAction != null)
+		if (charSequenceBuilder != null)
 		{
-			toString = charSequenceAction.builder.toString();
+			toString = charSequenceBuilder.toString();
 		}
 		else
 		{

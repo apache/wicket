@@ -19,7 +19,6 @@ package org.apache.wicket.markup.head;
 import java.io.Closeable;
 
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * Interface that is used to render header elements (usually javascript and CSS references).
@@ -32,11 +31,14 @@ import org.apache.wicket.request.resource.ResourceReference;
 public interface IHeaderResponse extends Closeable
 {
 	/**
-	 * Renders the given {@link HeaderItem} to the response if none of the
-	 * {@linkplain HeaderItem#getRenderTokens() tokens} of the item has been rendered before.
+	 * Renders the given {@link HeaderItem} to the response if none of its
+	 * {@linkplain HeaderItem#getRenderTokens() tokens} has been rendered before.
+	 * <p>
+	 * Automatically marks all item's tokens as rendered.
 	 * 
 	 * @param item
 	 *            The item to render.
+	 * @see #markRendered(Object)
 	 */
 	void render(HeaderItem item);
 
@@ -52,18 +54,12 @@ public interface IHeaderResponse extends Closeable
 
 	/**
 	 * Returns whether the given object has been marked as rendered.
-	 * <ul>
-	 * <li>Methods <code>renderJavaScriptReference</code> and <code>renderCSSReference</code> mark
-	 * the specified {@link ResourceReference} as rendered.
-	 * <li>Method <code>renderJavaScript</code> marks List of two elements (first is javascript body
-	 * CharSequence and second is id) as rendered.
-	 * <li>Method <code>renderString</code> marks the whole string as rendered.
-	 * <li>Method <code>markRendered</code> can be used to mark an arbitrary object as rendered
-	 * </ul>
 	 * 
 	 * @param object
 	 *            Object that is queried to be rendered
 	 * @return Whether the object has been marked as rendered during the request
+	 * 
+	 * @see #markRendered(Object)
 	 */
 	boolean wasRendered(Object object);
 

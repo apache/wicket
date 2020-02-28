@@ -126,11 +126,9 @@ public class ResourceBundles
 			bundleReference.setCompressor(javaScriptCompressor);
 		}
 
-		if (defer) {
-			return addBundle(JavaScriptHeaderItem.forReference(bundleReference, defer));
-		} else{
-			return addBundle(JavaScriptHeaderItem.forReference(bundleReference));
-		}
+		JavaScriptReferenceHeaderItem item = JavaScriptHeaderItem.forReference(bundleReference);
+		item.setDefer(defer);
+		return addBundle(item);
 	}
 
 	/**

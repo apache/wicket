@@ -16,21 +16,25 @@
  */
 package org.apache.wicket.markup.html;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Juergen Donnerstag
  */
-public class PackageResourceGuardTest extends WicketTestCase
+class PackageResourceGuardTest extends WicketTestCase
 {
 	/**
 	 * Test acceptance of root folder.
 	 */
 	@Test
-	public void accept()
+	void accept()
 	{
 		PackageResourceGuard guard = new PackageResourceGuard();
 
@@ -48,7 +52,7 @@ public class PackageResourceGuardTest extends WicketTestCase
 	 * works on Windows and properly blocks on any other OS).
 	 */
 	@Test
-	public void acceptAbsolutePath()
+	void acceptAbsolutePath()
 	{
 		PackageResourceGuard guard = new PackageResourceGuard();
 		guard.setAllowAccessToRootResources(false);
@@ -82,7 +86,7 @@ public class PackageResourceGuardTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void markup() throws Exception
+	void markup() throws Exception
 	{
 		PackageResourceGuard guard = new PackageResourceGuard();
 

@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.util.resource.locator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,19 +30,18 @@ import org.apache.wicket.core.util.resource.locator.LocaleResourceNameIterator;
 import org.apache.wicket.core.util.resource.locator.ResourceNameIterator;
 import org.apache.wicket.core.util.resource.locator.StyleAndVariationResourceNameIterator;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class ResourceNameIteratorTest extends WicketTestCase
+class ResourceNameIteratorTest extends WicketTestCase
 {
 	/**
 	 * Asserting no duplicated locale sufix get iterated
 	 */
 	@Test
-	public void localeResourceNameIterator()
+	void localeResourceNameIterator()
 	{
 		Locale locale = new Locale("a", "b", "c");
 		LocaleResourceNameIterator iterator = new LocaleResourceNameIterator(locale, false);
@@ -81,7 +84,7 @@ public class ResourceNameIteratorTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void styleAndVariationResourceNameIterator()
+	void styleAndVariationResourceNameIterator()
 	{
 		StyleAndVariationResourceNameIterator iterator = new StyleAndVariationResourceNameIterator(
 			null, null);
@@ -120,7 +123,7 @@ public class ResourceNameIteratorTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void extensionResourceNameIterator()
+	void extensionResourceNameIterator()
 	{
 		ExtensionResourceNameIterator iterator = new ExtensionResourceNameIterator(null);
 		assertTrue(iterator.hasNext());
@@ -146,7 +149,7 @@ public class ResourceNameIteratorTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void noDuplicateVariations()
+	void noDuplicateVariations()
 	{
 		String path = "patch.extension";
 		String style = null;
@@ -167,7 +170,7 @@ public class ResourceNameIteratorTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void noTrailingDotWhenNoExtension()
+	void noTrailingDotWhenNoExtension()
 	{
 		Iterator<String> iterator = new ResourceNameIterator("foo", null, null, null, null, false);
 

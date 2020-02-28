@@ -70,8 +70,6 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -89,7 +87,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	private static class UploadedFile
 	{
-		private String fieldName;
 		private File file;
 		private String contentType;
 
@@ -102,7 +99,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 		 */
 		public UploadedFile(String fieldName, File file, String contentType)
 		{
-			this.fieldName = fieldName;
 			this.file = file;
 			this.contentType = contentType;
 		}
@@ -116,52 +112,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 		}
 
 		/**
-		 * @param contentType
-		 *            The content type.
-		 */
-		public void setContentType(String contentType)
-		{
-			this.contentType = contentType;
-		}
-
-		/**
-		 * @return The field name.
-		 */
-		public String getFieldName()
-		{
-			return fieldName;
-		}
-
-		/**
-		 * @param fieldName
-		 */
-		public void setFieldName(String fieldName)
-		{
-			this.fieldName = fieldName;
-		}
-
-		/**
 		 * @return The uploaded file.
 		 */
 		public File getFile()
 		{
 			return file;
 		}
-
-		/**
-		 * @param file
-		 */
-		public void setFile(File file)
-		{
-			this.file = file;
-		}
 	}
-
-	/** Logging object */
-	private static final Logger log = LoggerFactory.getLogger(MockHttpServletRequest.class);
-
-	/** The application */
-	private final Application application;
 
 	private final ValueMap attributes = new ValueMap();
 
@@ -217,7 +174,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public MockHttpServletRequest(final Application application, final HttpSession session,
 		final ServletContext context, Locale locale)
 	{
-		this.application = application;
 		this.session = session;
 		this.context = context;
 		initialize(locale);
@@ -689,10 +645,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 			return null;
 		}
 
-		final String language = bits[0].toLowerCase();
+		final String language = bits[0].toLowerCase(Locale.ROOT);
 		if (bits.length > 1)
 		{
-			final String country = bits[1].toUpperCase();
+			final String country = bits[1].toUpperCase(Locale.ROOT);
 			return new Locale(language, country);
 		}
 		else
@@ -1173,18 +1129,18 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Get the session.
 	 * 
-	 * @param b
+	 * @param createNew
 	 *            Ignored, there is always a session
 	 * @return The session
 	 */
 	@Override
-	public HttpSession getSession(boolean b)
+	public HttpSession getSession(boolean createNew)
 	{
 		HttpSession sess = null;
 		if (session instanceof MockHttpSession)
 		{
 			MockHttpSession mockHttpSession = (MockHttpSession)session;
-			if (b)
+			if (createNew)
 			{
 				mockHttpSession.setTemporary(false);
 			}
@@ -1524,8 +1480,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 		addHeader("Accept", "text/xml,application/xml,application/xhtml+xml,"
 			+ "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5");
 		addHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-		addHeader("Accept-Language", l.getLanguage().toLowerCase() + "-"
-			+ l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
+		addHeader("Accept-Language", l.getLanguage().toLowerCase(Locale.ROOT) + "-"
+			+ l.getCountry().toLowerCase(Locale.ROOT) + "," + l.getLanguage().toLowerCase(Locale.ROOT) + ";q=0.5");
 		addHeader("User-Agent",
 			"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:41.0) Gecko/20100101 Firefox/41.0");
 	}
@@ -1773,6 +1729,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * @return ServletContext
 	 */
+	@Override
 	public ServletContext getServletContext()
 	{
 		return context;

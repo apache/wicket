@@ -36,6 +36,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -68,7 +69,7 @@ public class DebugBar extends DevUtilsPanel
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final MetaDataKey<List<IDebugBarContributor>> CONTRIBS_META_KEY = new MetaDataKey<List<IDebugBarContributor>>()
+	private static final MetaDataKey<List<IDebugBarContributor>> CONTRIBS_META_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -177,11 +178,13 @@ public class DebugBar extends DevUtilsPanel
 	@Override
 	public void renderHead(final IHeaderResponse response)
 	{
+		CoreLibrariesContributor.contributeAjax(getApplication(), response);
+		
 		response.render(CssHeaderItem.forReference(new CssResourceReference(DebugBar.class,
 			"wicket-debugbar.css")));
 		response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
 			DebugBar.class, "wicket-debugbar.js")));
-		response.render(OnDomReadyHeaderItem.forScript("wicketDebugBarCheckState()"));
+		response.render(OnDomReadyHeaderItem.forScript("Wicket.debugBar();"));
 	}
 
 	/**

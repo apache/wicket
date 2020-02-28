@@ -26,7 +26,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -153,9 +153,7 @@ public class WellFormedXmlTestCase
 		}
 
 		@Override
-		public InputSource resolveEntity(String publicId, String systemId) throws SAXException,
-			IOException
-		{
+		public InputSource resolveEntity(String publicId, String systemId) {
 			String uri = systemIdToUri.get(systemId);
 			if (uri != null)
 			{

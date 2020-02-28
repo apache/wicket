@@ -18,10 +18,9 @@ package org.apache.wicket.util.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
 import java.util.Locale;
-
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.time.Time;
 
 /**
  * Base implementation of an IResourceStreamWriter so that you only have to override the
@@ -67,9 +66,9 @@ public abstract class AbstractResourceStreamWriter implements IResourceStreamWri
 	 * Just returns now.
 	 */
 	@Override
-	public Time lastModifiedTime()
+	public Instant lastModifiedTime()
 	{
-		return Time.now();
+		return Instant.now();
 	}
 
 	/**

@@ -21,12 +21,14 @@ import java.util.Enumeration;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 
-import com.google.inject.AbstractModule;
 import org.apache.wicket.Page;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import com.google.inject.AbstractModule;
 
 /**
  */
@@ -49,7 +51,7 @@ public class GuiceWebApplicationFactoryTest
 		@Override
 		protected void configure()
 		{
-			bind(WebApplication.class).toInstance(new WebApplication()
+			bind(WebApplication.class).toInstance(new MockApplication()
 			{
 				@Override
 				public Class<? extends Page> getHomePage()

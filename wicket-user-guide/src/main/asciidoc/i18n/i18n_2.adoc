@@ -152,3 +152,34 @@ If we want to specify multiple attributes at once, we can separate them with a c
 <input type="submit" value="Preview value" wicket:message="value:key4value, title:key4title"/>
 ----
 
+
+Finally, we can work with more complex text templates nesting components within a wicket:message element. For example:
+
+[source,xml]
+----
+<wicket:message key="myKey">
+  This text will be replaced with text from the properties file.
+  <span wicket:id="amount">[amount]</span>.
+  <a wicket:id="link">
+    <wicket:message key="linkText"/>
+  </a>
+</wicket:message>
+----
+
+----
+myKey=Your balance is ${amount}. Click ${link} to view the details.
+linkText=here
+----
+
+and
+
+----
+add(new Label("amount",new Model("$5.00")));
+add(new BookmarkablePageLink("link",DetailsPage.class)); 
+----
+
+Results in:
+
+----
+Your balance is $5.00. Click <a href="...">here</a> to view the details.
+----

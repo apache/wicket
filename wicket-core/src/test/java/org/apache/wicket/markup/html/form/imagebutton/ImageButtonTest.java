@@ -19,19 +19,19 @@ package org.apache.wicket.markup.html.form.imagebutton;
 import java.util.Locale;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Juergen Donnerstag
  */
-public class ImageButtonTest extends WicketTestCase
+class ImageButtonTest extends WicketTestCase
 {
 	/**
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void imageButton() throws Exception
+    void imageButton() throws Exception
 	{
 		Locale.setDefault(new Locale("en", "US"));
 

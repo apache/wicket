@@ -23,7 +23,7 @@ import org.apache.wicket.settings.RequestCycleSettings;
 /**
  * https://issues.apache.org/jira/browse/WICKET-5415
  */
-public class DontStoreNotRenderedPageOnePassRenderTest extends DontStoreNotRenderedPageTestCase
+class DontStoreNotRenderedPageOnePassRenderTest extends DontStoreNotRenderedPageTestCase
 {
 	@Override
 	protected WebApplication newApplication()

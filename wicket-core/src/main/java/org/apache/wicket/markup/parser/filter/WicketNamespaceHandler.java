@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.Application;
@@ -59,7 +60,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	@Override
 	protected final MarkupElement onComponentTag(ComponentTag tag) throws ParseException
 	{
-		if (tag.isOpen() && "html".equals(tag.getName().toLowerCase()))
+		if (tag.isOpen() && "html".equals(tag.getName().toLowerCase(Locale.ROOT)))
 		{
 			final String namespace = determineWicketNamespace(tag);
 			if (namespace != null)

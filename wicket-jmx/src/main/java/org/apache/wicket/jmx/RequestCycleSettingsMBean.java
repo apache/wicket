@@ -17,7 +17,6 @@
 package org.apache.wicket.jmx;
 
 import java.io.UnsupportedEncodingException;
-
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 
 /**
@@ -52,10 +51,10 @@ public interface RequestCycleSettingsMBean
 	String getResponseRequestEncoding();
 
 	/**
-	 * Gets the time that a request will by default be waiting for the previous request to be
+	 * Gets the time (in milliseconds) that a request will by default be waiting for the previous request to be
 	 * handled before giving up.
 	 * 
-	 * @return The time out
+	 * @return The time out in milliseconds
 	 */
 	String getTimeout();
 
@@ -92,10 +91,10 @@ public interface RequestCycleSettingsMBean
 		throws UnsupportedEncodingException;
 
 	/**
-	 * Sets the time that a request will by default be waiting for the previous request to be
+	 * Sets the time (in milliseconds) that a request will by default be waiting for the previous request to be
 	 * handled before giving up.
 	 * 
-	 * @param timeout
+	 * @param timeout in milliseconds
 	 */
 	void setTimeout(String timeout);
 

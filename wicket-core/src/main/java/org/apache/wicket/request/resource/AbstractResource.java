@@ -18,7 +18,12 @@ package org.apache.wicket.request.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Time;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -38,8 +43,6 @@ import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.time.Time;
 
 /**
  * Convenience resource implementation. The subclass must implement
@@ -56,13 +59,13 @@ public abstract class AbstractResource implements IResource
 	public static final Set<String> INTERNAL_HEADERS;
 
 	/** The meta data key of the content range start byte **/
-	public static final MetaDataKey<Long> CONTENT_RANGE_STARTBYTE = new MetaDataKey<Long>()
+	public static final MetaDataKey<Long> CONTENT_RANGE_STARTBYTE = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
 	/** The meta data key of the content range end byte **/
-	public static final MetaDataKey<Long> CONTENT_RANGE_ENDBYTE = new MetaDataKey<Long>()
+	public static final MetaDataKey<Long> CONTENT_RANGE_ENDBYTE = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -139,7 +142,7 @@ public abstract class AbstractResource implements IResource
 		private ContentRangeType contentRangeType = null;
 		private String textEncoding;
 		private long contentLength = -1;
-		private Time lastModified = null;
+		private Instant lastModified = null;
 		private WriteCallback writeCallback;
 		private Duration cacheDuration;
 		private WebResponse.CacheScope cacheScope;
@@ -406,7 +409,7 @@ public abstract class AbstractResource implements IResource
 		 *
 		 * @return {@code this}, for chaining.
 		 */
-		public ResourceResponse setLastModified(Time lastModified)
+		public ResourceResponse setLastModified(Instant lastModified)
 		{
 			this.lastModified = lastModified;
 			return this;
@@ -415,7 +418,7 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * @return last modification timestamp
 		 */
-		public Time getLastModified()
+		public Instant getLastModified()
 		{
 			return lastModified;
 		}
@@ -433,18 +436,18 @@ public abstract class AbstractResource implements IResource
 		public boolean dataNeedsToBeWritten(Attributes attributes)
 		{
 			WebRequest request = (WebRequest)attributes.getRequest();
-			Time ifModifiedSince = request.getIfModifiedSinceHeader();
+			Instant ifModifiedSince = request.getIfModifiedSinceHeader();
 
-			if (cacheDuration != Duration.NONE && ifModifiedSince != null && lastModified != null)
+			if (cacheDuration != Duration.ZERO && ifModifiedSince != null && lastModified != null)
 			{
 				// [Last-Modified] headers have a maximum precision of one second
 				// so we have to truncate the milliseconds part for a proper compare.
 				// that's stupid, since changes within one second will not be reliably
 				// detected by the client ... any hint or clarification to improve this
 				// situation will be appreciated...
-				Time roundedLastModified = Time.millis(lastModified.getMilliseconds() / 1000 * 1000);
+				Instant roundedLastModified = lastModified.truncatedTo(ChronoUnit.SECONDS);
 
-				return ifModifiedSince.before(roundedLastModified);
+				return ifModifiedSince.isBefore(roundedLastModified);
 			}
 			else
 			{
@@ -459,7 +462,7 @@ public abstract class AbstractResource implements IResource
 		 */
 		public ResourceResponse disableCaching()
 		{
-			return setCacheDuration(Duration.NONE);
+			return setCacheDuration(Duration.ZERO);
 		}
 
 		/**
@@ -599,7 +602,7 @@ public abstract class AbstractResource implements IResource
 		{
 			Duration duration = data.getCacheDuration();
 			WebResponse webResponse = (WebResponse)response;
-			if (duration.compareTo(Duration.NONE) > 0)
+			if (duration.compareTo(Duration.ZERO) > 0)
 			{
 				webResponse.enableCaching(duration, data.getCacheScope());
 			}
@@ -691,7 +694,7 @@ public abstract class AbstractResource implements IResource
 	 */
 	private void checkHeaderAccess(String name)
 	{
-		name = Args.notEmpty(name.trim().toLowerCase(), "name");
+		name = Args.notEmpty(name.trim().toLowerCase(Locale.ROOT), "name");
 
 		if (INTERNAL_HEADERS.contains(name))
 		{
@@ -770,7 +773,7 @@ public abstract class AbstractResource implements IResource
 			WebResponse webResponse = (WebResponse)response;
 
 			// 1. Last Modified
-			Time lastModified = resourceResponse.getLastModified();
+			Instant lastModified = resourceResponse.getLastModified();
 			if (lastModified != null)
 			{
 				webResponse.setLastModifiedTime(lastModified);

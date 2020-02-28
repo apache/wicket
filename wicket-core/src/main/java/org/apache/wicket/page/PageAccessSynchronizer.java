@@ -17,9 +17,10 @@
 package org.apache.wicket.page;
 
 import java.io.Serializable;
+import java.time.Duration;
 
+import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,13 +94,19 @@ public class PageAccessSynchronizer implements Serializable
 	/**
 	 * Wraps a page manager with this synchronizer
 	 * 
-	 * @param pagemanager
+	 * @param manager
 	 * @return wrapped page manager
 	 */
-	public IPageManager adapt(IPageManager pagemanager)
+	public IPageManager adapt(final IPageManager manager)
 	{
-		return new PageManagerDecorator(pagemanager)
+		return new IPageManager()
 		{
+			@Override
+			public boolean supportsVersioning()
+			{
+				return manager.supportsVersioning();
+			}
+
 			@Override
 			public IManageablePage getPage(int pageId)
 			{
@@ -107,7 +114,7 @@ public class PageAccessSynchronizer implements Serializable
 				try
 				{
 					lockPage(pageId);
-					page = super.getPage(pageId);
+					page = manager.getPage(pageId);
 				}
 				finally
 				{
@@ -120,13 +127,13 @@ public class PageAccessSynchronizer implements Serializable
 			}
 
 			@Override
-			public void removePage(final IManageablePage page) {
+			public void removePage(IManageablePage page)
+			{
 				if (page != null)
 				{
 					try
 					{
-						super.removePage(page);
-						untouchPage(page);
+						manager.removePage(page);
 					}
 					finally
 					{
@@ -139,20 +146,45 @@ public class PageAccessSynchronizer implements Serializable
 			public void touchPage(IManageablePage page)
 			{
 				lockPage(page.getPageId());
-				super.touchPage(page);
+
+				manager.touchPage(page);
 			}
 
 			@Override
-			public void commitRequest()
+			public void clear()
+			{
+				manager.clear();
+			}
+
+			@Override
+			public void untouchPage(IManageablePage page)
+			{
+				manager.untouchPage(page);
+			}
+
+			@Override
+			public void detach()
 			{
 				try
 				{
-					super.commitRequest();
+					manager.detach();
 				}
 				finally
 				{
 					unlockAllPages();
 				}
+			}
+
+			@Override
+			public IPageStore getPageStore()
+			{
+				return manager.getPageStore();
+			}
+
+			@Override
+			public void destroy()
+			{
+				manager.destroy();
 			}
 		};
 	}
@@ -218,7 +250,7 @@ public class PageAccessSynchronizer implements Serializable
 			if (isDebugEnabled)
 			{
 				logger.debug("{} waiting for lock to page {} for {}",
-					thread.getName(), pageId, Duration.milliseconds(remaining));
+					thread.getName(), pageId, Duration.ofMillis(remaining));
 			}
 			try
 			{

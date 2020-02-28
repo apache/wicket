@@ -16,27 +16,15 @@
  */
 package org.apache.wicket.core.util.lang;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectStreamClass;
-import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.HashMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.JavaSerializer;
-import org.apache.wicket.settings.ApplicationSettings;
 import org.apache.wicket.util.io.ByteCountingOutputStream;
-import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,141 +131,6 @@ public class WicketObjects
 
 	}
 
-	private static final class ReplaceObjectInputStream extends ObjectInputStream
-	{
-		private final ClassLoader classloader;
-		private final HashMap<String, Component> replacedComponents;
-
-		private ReplaceObjectInputStream(InputStream in,
-			HashMap<String, Component> replacedComponents, ClassLoader classloader)
-			throws IOException
-		{
-			super(in);
-			this.replacedComponents = replacedComponents;
-			this.classloader = classloader;
-			enableResolveObject(true);
-		}
-
-		// This override is required to resolve classes inside in different
-		// bundle, i.e.
-		// The classes can be resolved by OSGI classresolver implementation
-		@Override
-		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
-			ClassNotFoundException
-		{
-			String className = desc.getName();
-
-			try
-			{
-				return Class.forName(className, true, classloader);
-			}
-			catch (ClassNotFoundException ex1)
-			{
-				// ignore this exception.
-				log.debug("Class not found by using objects own classloader, trying the IClassResolver");
-			}
-
-			Application application = Application.get();
-			ApplicationSettings applicationSettings = application.getApplicationSettings();
-			IClassResolver classResolver = applicationSettings.getClassResolver();
-
-			Class<?> candidate = null;
-			try
-			{
-				candidate = classResolver.resolveClass(className);
-				if (candidate == null)
-				{
-					candidate = super.resolveClass(desc);
-				}
-			}
-			catch (WicketRuntimeException ex)
-			{
-				if (ex.getCause() instanceof ClassNotFoundException)
-				{
-					throw (ClassNotFoundException)ex.getCause();
-				}
-			}
-			return candidate;
-		}
-
-		@Override
-		protected Object resolveObject(Object obj) throws IOException
-		{
-			Object replaced = replacedComponents.get(obj);
-			if (replaced != null)
-			{
-				return replaced;
-			}
-			return super.resolveObject(obj);
-		}
-	}
-
-	private static final class ReplaceObjectOutputStream extends ObjectOutputStream
-	{
-		private final HashMap<String, Component> replacedComponents;
-
-		private ReplaceObjectOutputStream(OutputStream out,
-			HashMap<String, Component> replacedComponents) throws IOException
-		{
-			super(out);
-			this.replacedComponents = replacedComponents;
-			enableReplaceObject(true);
-		}
-
-		@Override
-		protected Object replaceObject(Object obj) throws IOException
-		{
-			if (obj instanceof Component)
-			{
-				final Component component = (Component)obj;
-				String name = component.getPath();
-				replacedComponents.put(name, component);
-				return name;
-			}
-			return super.replaceObject(obj);
-		}
-	}
-
-	/**
-	 * Makes a deep clone of an object by serializing and deserializing it. The object must be fully
-	 * serializable to be cloned. This method will not clone wicket Components, it will just reuse
-	 * those instances so that the complete component tree is not copied over only the model data.
-	 *
-	 * <strong>Warning</strong>: this method uses Java Serialization APIs to be able to avoid cloning
-	 * of {@link org.apache.wicket.Component} instances. If the application uses custom
-	 * {@link org.apache.wicket.serialize.ISerializer} then most probably this method cannot be used.
-	 *
-	 * @param object
-	 *            The object to clone
-	 * @return A deep copy of the object
-	 * @deprecated Use {@linkplain #cloneObject(Object)} instead
-	 */
-	@Deprecated
-	public static <T> T cloneModel(final T object)
-	{
-		if (object == null)
-		{
-			return null;
-		}
-		else
-		{
-			try
-			{
-				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-				final HashMap<String, Component> replacedObjects = Generics.newHashMap();
-				ObjectOutputStream oos = new ReplaceObjectOutputStream(out, replacedObjects);
-				oos.writeObject(object);
-				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(
-					out.toByteArray()), replacedObjects, object.getClass().getClassLoader());
-				return (T) ois.readObject();
-			}
-			catch (ClassNotFoundException | IOException e)
-			{
-				throw new WicketRuntimeException("Internal error cloning object", e);
-			}
-		}
-	}
-
 	/**
 	 * Strategy for calculating sizes of objects. Note: I didn't make this an application setting as
 	 * we have enough of those already, and the typical way this probably would be used is that
@@ -295,6 +148,7 @@ public class WicketObjects
 	 * @return A deep copy of the object
 	 * @see #cloneModel(Object)
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T cloneObject(final T object)
 	{
 		if (object == null)
@@ -334,6 +188,7 @@ public class WicketObjects
 	 *            The full class name
 	 * @return The new object instance
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T newInstance(final String className)
 	{
 		if (!Strings.isEmpty(className))
@@ -341,7 +196,7 @@ public class WicketObjects
 			try
 			{
 				Class<?> c = WicketObjects.resolveClass(className);
-				return (T) c.newInstance();
+				return (T) c.getDeclaredConstructor().newInstance();
 			}
 			catch (Exception e)
 			{

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/*global ok: true, start: true, test: true, equal: true, deepEqual: true,
+/*global ok: true, start: true, asyncTest: true, test: true, equal: true, deepEqual: true,
  QUnit: true, module: true, expect: true */
 
 jQuery(document).ready(function() {
@@ -41,11 +41,13 @@ jQuery(document).ready(function() {
 	});
 
 
-	test("Wicket.Head.addElement - add script element", function() {
+	asyncTest("Wicket.Head.addElement - add script element", function() {
 
+		expect(1);
+		
 		var script = jQuery('<script>', {
 			type: 'text/javascript',
-			src: 'data/test.js'
+			src: 'data/start.js'
 		}),
 
 		initialHeadElementsNumber = jQuery('head').children().length;
@@ -85,26 +87,6 @@ jQuery(document).ready(function() {
 	test('Wicket.Head.containsElement - unknown attribute', function() {
 		var scriptElement = Wicket.Head.createElement('script');
 		equal(false, Wicket.Head.containsElement(scriptElement, 'unknown').contains, 'There shouldn\'t be an element with such attribute name');
-	});
-
-	test('Wicket.Head.containsElement - check existence of wicket-ajax-debug.js with "src"', function() {
-		var scriptElement = Wicket.Head.createElement('script');
-		scriptElement.src = "../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
-		ok(Wicket.Head.containsElement(scriptElement, 'src').contains, 'There should be an element for wicket-ajax-debug.js');
-	});
-
-	test('Wicket.Head.containsElement - check existence of data/test.js with "src_"', function() {
-		var $script = jQuery('<script>', {
-			type: 'text/javascript',
-			src_: 'data/test.js'
-		}),
-		script = $script[0];
-		// add <script src_="..."/>
-		Wicket.Head.addElement(script);
-
-		script.src = script.src_;
-		// check for existence by 'src' attribute
-		ok(Wicket.Head.containsElement(script, 'src').contains, 'There should be an element for wicket-ajax-debug.js');
 	});
 
 	test('Wicket.Head.containsElement - check existence of data/test.js with jsessionid in the url', function() {
@@ -193,63 +175,6 @@ jQuery(document).ready(function() {
 					'css1 should have been removed from the DOM because a new element with the same id and' +
 					'different "href" has been added');
 		});
-	module('addJavascript');
-	
-	test('Wicket.Head.addJavascript - add script with text content', function() {
-		expect(2);
-		
-		var content = 'ok(true, "Added JavaScript must be executed!")',
-			url = 'some/fake.js';
-		Wicket.Head.addJavascript(content, 'someId', url);
-
-		var $script = jQuery('<script>', {
-			type: 'text/javascript',
-			src: url
-		}),
-		script = $script[0];
-		ok(Wicket.Head.containsElement(script, 'src').contains);
-	});
-
-	module('addJavascripts');
-
-	test('Wicket.Head.addJavascripts - no script tags', function() {
-		var $element = jQuery('<div>DIV TEXT<span>SPAN TEXT<a href="#anchor">ANCHOR</a></span></div>'),
-			initialHeadElementsNumber = jQuery('head').children().length;
-
-		Wicket.Head.addJavascripts($element[0]);
-
-		equal(initialHeadElementsNumber, jQuery('head').children().length, 'No script elements in the added element, so nothing is added');
-	});
-
-	test('Wicket.Head.addJavascripts - direct script tag', function() {
-		expect(2);
-		
-		var $element = jQuery('<script>ok(true);</script>'),
-			initialHeadElementsNumber = jQuery('head').children().length;
-
-		Wicket.Head.addJavascripts($element[0]);
-
-		equal(jQuery('head').children().length, initialHeadElementsNumber + 1, 'A script element must be added');
-	});
-
-	test('Wicket.Head.addJavascripts - child with script tags inside', function() {
-		
-		expect(2);
-		
-		var $element = jQuery('<div/>'),
-			script = document.createElement('script'),
-			initialHeadElementsNumber = jQuery('head').children().length;
-
-		script.type = 'text/javascript';
-		script.textContent = 'ok(true, "Script text executed");'; // 1
-		// cannot use jQuery.append() here - see http://stackoverflow.com/questions/610995/jquery-cant-append-script-element
-		$element[0].appendChild(script);
-		
-		Wicket.Head.addJavascripts($element[0]);
-
-		var newNumber = jQuery('head').children().length;
-		equal(newNumber, initialHeadElementsNumber + 1, 'A script element in the added element should be added and executed'); // 2
-	});
 
 	module('Contributor.parse');
 

@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.response.filter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Assert;
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -28,8 +30,8 @@ import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for <a href="https://issues.apache.org/jira/browse/WICKET-3280">WICKET-3280</a>
@@ -37,7 +39,7 @@ import org.junit.Test;
  * {@link IResponseFilter}s must be called for both Ajax and non-Ajax responses
  */
 @SuppressWarnings("serial")
-public class ResponseFilterTest extends WicketTestCase
+class ResponseFilterTest extends WicketTestCase
 {
 	private final AtomicInteger counter = new AtomicInteger(0);
 
@@ -71,8 +73,8 @@ public class ResponseFilterTest extends WicketTestCase
 	/**
 	 * after()
 	 */
-	@After
-	public void after()
+	@AfterEach
+	void after()
 	{
 		counter.set(0);
 	}
@@ -81,17 +83,17 @@ public class ResponseFilterTest extends WicketTestCase
 	 * WICKET-3620
 	 */
 	@Test
-	public void filterAddCommentFilter()
+	void filterAddCommentFilter()
 	{
 		tester.startPage(DummyHomePage.class);
-		Assert.assertTrue(tester.getLastResponseAsString().contains(AppendCommentFilter.COMMENT));
+		assertTrue(tester.getLastResponseAsString().contains(AppendCommentFilter.COMMENT));
 	}
 
 	/**
 	 * WICKET-3620
 	 */
 	@Test
-	public void addCommentFilterInAjaxResponse()
+	void addCommentFilterInAjaxResponse()
 	{
 		DummyHomePage testPage = new DummyHomePage();
 		testPage.getTestPageLink().add(new AjaxEventBehavior("event")
@@ -103,7 +105,7 @@ public class ResponseFilterTest extends WicketTestCase
 		});
 		tester.startPage(testPage);
 		tester.executeAjaxEvent(testPage.getTestPageLink(), "event");
-		Assert.assertTrue(tester.getLastResponseAsString().contains(AppendCommentFilter.COMMENT));
+		assertTrue(tester.getLastResponseAsString().contains(AppendCommentFilter.COMMENT));
 	}
 
 	private static class AppendCommentFilter implements IResponseFilter
@@ -122,7 +124,7 @@ public class ResponseFilterTest extends WicketTestCase
 	 * normalRequest()
 	 */
 	@Test
-	public void normalRequest()
+	void normalRequest()
 	{
 		tester.startPage(DummyHomePage.class);
 
@@ -133,7 +135,7 @@ public class ResponseFilterTest extends WicketTestCase
 	 * ajaxRequest()
 	 */
 	@Test
-	public void ajaxRequest()
+	void ajaxRequest()
 	{
 		AjaxPage page = new AjaxPage(counter);
 		tester.startPage(page);
@@ -149,7 +151,7 @@ public class ResponseFilterTest extends WicketTestCase
 	/**
 	 * Test page for ajax request
 	 */
-	public static class AjaxPage extends MockPageWithLink
+	static class AjaxPage extends MockPageWithLink
 	{
 		boolean ajaxCalled = false;
 
@@ -158,7 +160,7 @@ public class ResponseFilterTest extends WicketTestCase
 		 * 
 		 * @param counter
 		 */
-		public AjaxPage(final AtomicInteger counter)
+		AjaxPage(final AtomicInteger counter)
 		{
 			add(new AjaxLink<Void>(MockPageWithLink.LINK_ID)
 			{

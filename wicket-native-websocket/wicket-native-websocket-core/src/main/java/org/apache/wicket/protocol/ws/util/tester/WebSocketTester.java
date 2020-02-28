@@ -39,7 +39,7 @@ public class WebSocketTester
 
 	/**
 	 * Constructor.
-	 * Prepares a WebSockConnection that will be used to send messages from the client (the test case)
+	 * Prepares a WebSocketConnection that will be used to send messages from the client (the test case)
 	 * to the server.
 	 *
 	 * @param page

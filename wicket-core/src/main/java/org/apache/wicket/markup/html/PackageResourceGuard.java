@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.wicket.Application;
@@ -64,6 +65,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	/**
 	 * @see org.apache.wicket.markup.html.IPackageResourceGuard#accept(java.lang.String)
 	 */
+	@Override
 	public boolean accept(String path)
 	{
 		int ixExtension = path.lastIndexOf('.');
@@ -77,7 +79,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		}
 		else
 		{
-			ext = path.substring(ixExtension + 1).toLowerCase().trim();
+			ext = path.substring(ixExtension + 1).toLowerCase(Locale.ROOT).trim();
 		}
 
 		if ("html".equals(ext))

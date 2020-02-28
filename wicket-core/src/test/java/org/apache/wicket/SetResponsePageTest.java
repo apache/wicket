@@ -18,16 +18,16 @@ package org.apache.wicket;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for calling {@link Component#setResponsePage(Class)} in constructor.
  */
-public class SetResponsePageTest extends WicketTestCase
+class SetResponsePageTest extends WicketTestCase
 {
 	/** Fix setting response page in constructor. */
 	@Test
-	public void setResponsePage()
+    void setResponsePage()
 	{
 		tester.startPage(Page1.class);
 		tester.assertRenderedPage(Page3.class);
@@ -39,7 +39,7 @@ public class SetResponsePageTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 
 		/** Construct. */
-		public Page1()
+        public Page1()
 		{
 			setResponsePage(Page2.class);
 		}
@@ -63,7 +63,7 @@ public class SetResponsePageTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 
 		/** Construct. */
-		public Page3()
+        public Page3()
 		{
 		}
 	}

@@ -21,7 +21,7 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Encapsulates both page and component info. Rendered in form of
- * &lt;pageInfo&gt-&lt;componentInfo&gt;
+ * &lt;pageInfo&gt;-&lt;componentInfo&gt;
  * 
  * @author Matej Knopp
  */

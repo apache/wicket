@@ -16,11 +16,6 @@
  */
 package org.apache.wicket.protocol.ws.util.tester;
 
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
@@ -28,15 +23,21 @@ import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.WebSocketConnectionOriginFilter;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for https://issues.apache.org/jira/browse/WICKET-5860
  */
-public class WebSocketTesterProcessorTest extends Assert
+public class WebSocketTesterProcessorTest
 {
 	final static AtomicBoolean messageReceived = new AtomicBoolean(false);
 
@@ -72,14 +73,14 @@ public class WebSocketTesterProcessorTest extends Assert
 		}
 	};
 
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		tester = new WicketTester(application);
 		application.getWicketFilter().setFilterPath("");
 	}
 
-	@After
+	@AfterEach
 	public void after()
 	{
 		tester.destroy();
@@ -100,7 +101,6 @@ public class WebSocketTesterProcessorTest extends Assert
 		assertTrue(TestWebSocketResource.ON_ABORT_CALLED.get());
 	}
 
-//	@Ignore
 	@Test
 	public void onConnectMultipleOrigins()
 	{

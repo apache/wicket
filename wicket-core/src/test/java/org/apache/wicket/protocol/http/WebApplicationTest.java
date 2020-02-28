@@ -16,12 +16,16 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.mock.MockRequestParameters;
@@ -35,152 +39,17 @@ import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.ICompoundRequestMapper;
 import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test WebApplication
  */
-public class WebApplicationTest extends WicketTestCase
+class WebApplicationTest extends WicketTestCase
 {
 	private static final String MOUNT_PATH_1 = "mount/path/1";
 	private static final String MOUNT_PATH_2 = "mount/path/2";
 	private static final String MOUNT_PATH_3 = "mount/path/3";
 	private static final String MOUNT_PATH_4 = "mount/path/4";
-
-	/**
-	 * WICKET-6260
-	 */
-	@Test
-	public void testBodyNotReadBeforeApplicationSetsCharacterEncoding() throws Exception {
-		WebApplication application = tester.getApplication();
-
-		HttpServletRequest request = new MockHttpServletRequest(application, null, null) {
-			@Override
-			public Map<String, String[]> getParameterMap()
-			{
-				fail("body should not be read before character encoding is set");
-				return null;
-			}
-
-			@Override
-			public String getParameter(String name)
-			{
-				fail("body should not be read before character encoding is set");
-				return null;
-			}
-
-			@Override
-			public Enumeration<String> getParameterNames()
-			{
-				fail("body should not be read before character encoding is set");
-				return null;
-			}
-
-			@Override
-			public String[] getParameterValues(String name)
-			{
-				fail("body should not be read before character encoding is set");
-				return null;
-			}
-
-			@Override
-			public MockRequestParameters getPostParameters()
-			{
-				fail("body should not be read before character encoding is set");
-				return null;
-			}
-		};
-
-		// character encoding not set yet
-		request.setCharacterEncoding(null);
-
-		application.createWebRequest(request , "/");
-
-		assertEquals("UTF-8", request.getCharacterEncoding());
-	}
-
-	/**
-	 * Test basic unmounting from a compound mapper.
-	 */
-	@Test
-	public void testUnmountSimple()
-	{
-		CompoundRequestMapper compound = new CompoundRequestMapper();
-
-		compound.add(tester.getApplication().getRootRequestMapper());
-
-		compound.add(new MountMapper(MOUNT_PATH_1, new EmptyRequestHandler()));
-		compound.add(new MountMapper(MOUNT_PATH_2, new EmptyRequestHandler()));
-		compound.add(new MountMapper(MOUNT_PATH_3, new EmptyRequestHandler()));
-
-		tester.getApplication().setRootRequestMapper(compound);
-
-		tester.getApplication().unmount(MOUNT_PATH_1);
-
-		assertEquals("Compound size should be 3", 3, getCompoundRequestMapperSize(compound));
-
-		assertNull("Mount path 1 should not be mounted",
-			tester.getApplication().getRootRequestMapper().mapRequest(createMockRequest(MOUNT_PATH_1)));
-
-		assertTrue("Mount path 2 should match",
-			tester.getApplication().getRootRequestMapper().mapRequest(createMockRequest(MOUNT_PATH_2)) instanceof EmptyRequestHandler);
-
-		assertTrue("Mount path 3 should match",
-			tester.getApplication().getRootRequestMapper().mapRequest(createMockRequest(MOUNT_PATH_3)) instanceof EmptyRequestHandler);
-	}
-
-	/**
-	 * See https://issues.apache.org/jira/browse/WICKET-5698
-	 */
-	@Test
-	public void testUnmountComplex()
-	{
-		CompoundRequestMapper nestedCompound = new CompoundRequestMapper();
-
-		nestedCompound.add(tester.getApplication().getRootRequestMapper());
-
-		nestedCompound.add(new MountMapper(MOUNT_PATH_1, new EmptyRequestHandler()));
-		nestedCompound.add(new MountMapper(MOUNT_PATH_2, new EmptyRequestHandler()));
-
-		CompoundRequestMapper rootCompound = new CompoundRequestMapper();
-
-		rootCompound.add(new SimpleRequestMapperDelegate(nestedCompound));
-
-		rootCompound.add(new MountMapper(MOUNT_PATH_3, new EmptyRequestHandler()));
-		rootCompound.add(new MountMapper(MOUNT_PATH_4, new EmptyRequestHandler()));
-
-		tester.getApplication().setRootRequestMapper(new SimpleRequestMapperDelegate(rootCompound));
-
-		tester.getApplication().unmount(MOUNT_PATH_1);
-
-		assertEquals("Compound size should be 2", 2, getCompoundRequestMapperSize(nestedCompound));
-
-		assertNull("Mount path 1 should not be mounted",
-			tester.getApplication().getRootRequestMapper().mapRequest(createMockRequest(MOUNT_PATH_1)));
-
-		assertTrue("Mount path 2 should match",
-			tester.getApplication().getRootRequestMapper().mapRequest(createMockRequest(MOUNT_PATH_2)) instanceof EmptyRequestHandler);
-
-		assertTrue("Mount path 3 should match",
-			tester.getApplication().getRootRequestMapper().mapRequest(createMockRequest(MOUNT_PATH_3)) instanceof EmptyRequestHandler);
-
-		assertTrue("Mount path 4 should match",
-			tester.getApplication().getRootRequestMapper().mapRequest(createMockRequest(MOUNT_PATH_4)) instanceof EmptyRequestHandler);
-
-		tester.getApplication().unmount(MOUNT_PATH_3);
-
-		assertNull("Mount path 1 should not be mounted",
-			tester.getApplication().getRootRequestMapper().mapRequest(createMockRequest(MOUNT_PATH_1)));
-
-		assertTrue("Mount path 2 should match",
-			tester.getApplication().getRootRequestMapper().mapRequest(createMockRequest(MOUNT_PATH_2)) instanceof EmptyRequestHandler);
-
-		assertNull("Mount path 3 should not be mounted",
-			tester.getApplication().getRootRequestMapper().mapRequest(createMockRequest(MOUNT_PATH_3)));
-
-		assertTrue("Mount path 4 should match",
-			tester.getApplication().getRootRequestMapper().mapRequest(createMockRequest(MOUNT_PATH_4)) instanceof EmptyRequestHandler);
-	}
 
 	private static Request createMockRequest(String path)
 	{
@@ -233,12 +102,162 @@ public class WebApplicationTest extends WicketTestCase
 		return retv;
 	}
 
+	/**
+	 * WICKET-6260
+	 */
+	@Test
+	void testBodyNotReadBeforeApplicationSetsCharacterEncoding() throws Exception
+	{
+		WebApplication application = tester.getApplication();
+
+		HttpServletRequest request = new MockHttpServletRequest(application, null, null)
+		{
+			@Override
+			public Map<String, String[]> getParameterMap()
+			{
+				fail("body should not be read before character encoding is set");
+				return null;
+			}
+
+			@Override
+			public String getParameter(String name)
+			{
+				fail("body should not be read before character encoding is set");
+				return null;
+			}
+
+			@Override
+			public Enumeration<String> getParameterNames()
+			{
+				fail("body should not be read before character encoding is set");
+				return null;
+			}
+
+			@Override
+			public String[] getParameterValues(String name)
+			{
+				fail("body should not be read before character encoding is set");
+				return null;
+			}
+
+			@Override
+			public MockRequestParameters getPostParameters()
+			{
+				fail("body should not be read before character encoding is set");
+				return null;
+			}
+		};
+
+		// character encoding not set yet
+		request.setCharacterEncoding(null);
+
+		application.createWebRequest(request, "/");
+
+		assertEquals("UTF-8", request.getCharacterEncoding());
+	}
+
+	/**
+	 * Test basic unmounting from a compound mapper.
+	 */
+	@Test
+	void testUnmountSimple()
+	{
+		CompoundRequestMapper compound = new CompoundRequestMapper();
+
+		compound.add(tester.getApplication().getRootRequestMapper());
+
+		compound.add(new MountMapper(MOUNT_PATH_1, new EmptyRequestHandler()));
+		compound.add(new MountMapper(MOUNT_PATH_2, new EmptyRequestHandler()));
+		compound.add(new MountMapper(MOUNT_PATH_3, new EmptyRequestHandler()));
+
+		tester.getApplication().setRootRequestMapper(compound);
+
+		tester.getApplication().unmount(MOUNT_PATH_1);
+
+		assertEquals(3, getCompoundRequestMapperSize(compound), "Compound size should be 3");
+
+		assertNull(tester.getApplication().getRootRequestMapper().mapRequest(
+			createMockRequest(MOUNT_PATH_1)), "Mount path 1 should not be mounted");
+
+		assertTrue(
+			tester.getApplication().getRootRequestMapper().mapRequest(
+				createMockRequest(MOUNT_PATH_2)) instanceof EmptyRequestHandler,
+			"Mount path 2 should match");
+
+		assertTrue(
+			tester.getApplication().getRootRequestMapper().mapRequest(
+				createMockRequest(MOUNT_PATH_3)) instanceof EmptyRequestHandler,
+			"Mount path 3 should match");
+	}
+
+	/**
+	 * See https://issues.apache.org/jira/browse/WICKET-5698
+	 */
+	@Test
+	void testUnmountComplex()
+	{
+		CompoundRequestMapper nestedCompound = new CompoundRequestMapper();
+
+		nestedCompound.add(tester.getApplication().getRootRequestMapper());
+
+		nestedCompound.add(new MountMapper(MOUNT_PATH_1, new EmptyRequestHandler()));
+		nestedCompound.add(new MountMapper(MOUNT_PATH_2, new EmptyRequestHandler()));
+
+		CompoundRequestMapper rootCompound = new CompoundRequestMapper();
+
+		rootCompound.add(new SimpleRequestMapperDelegate(nestedCompound));
+
+		rootCompound.add(new MountMapper(MOUNT_PATH_3, new EmptyRequestHandler()));
+		rootCompound.add(new MountMapper(MOUNT_PATH_4, new EmptyRequestHandler()));
+
+		tester.getApplication().setRootRequestMapper(new SimpleRequestMapperDelegate(rootCompound));
+
+		tester.getApplication().unmount(MOUNT_PATH_1);
+
+		assertEquals(2, getCompoundRequestMapperSize(nestedCompound), "Compound size should be 2");
+		assertNull(tester.getApplication().getRootRequestMapper().mapRequest(
+			createMockRequest(MOUNT_PATH_1)), "Mount path 1 should not be mounted");
+
+		assertTrue(
+			tester.getApplication().getRootRequestMapper().mapRequest(
+				createMockRequest(MOUNT_PATH_2)) instanceof EmptyRequestHandler,
+			"Mount path 2 should match");
+
+		assertTrue(
+			tester.getApplication().getRootRequestMapper().mapRequest(
+				createMockRequest(MOUNT_PATH_3)) instanceof EmptyRequestHandler,
+			"Mount path 3 should match");
+
+		assertTrue(
+			tester.getApplication().getRootRequestMapper().mapRequest(
+				createMockRequest(MOUNT_PATH_4)) instanceof EmptyRequestHandler,
+			"Mount path 4 should match");
+
+		tester.getApplication().unmount(MOUNT_PATH_3);
+
+		assertNull(tester.getApplication().getRootRequestMapper().mapRequest(
+			createMockRequest(MOUNT_PATH_1)), "Mount path 1 should not be mounted");
+
+		assertTrue(
+			tester.getApplication().getRootRequestMapper().mapRequest(
+				createMockRequest(MOUNT_PATH_2)) instanceof EmptyRequestHandler,
+			"Mount path 2 should match");
+
+		assertNull(tester.getApplication().getRootRequestMapper().mapRequest(
+			createMockRequest(MOUNT_PATH_3)), "Mount path 3 should not be mounted");
+
+		assertTrue(
+			tester.getApplication().getRootRequestMapper().mapRequest(
+				createMockRequest(MOUNT_PATH_4)) instanceof EmptyRequestHandler,
+			"Mount path 4 should match");
+	}
+
 	private static class MountMapper implements IRequestMapper
 	{
 		private final String path;
 		private final IRequestHandler handler;
 
-		public MountMapper(String path, EmptyRequestHandler handler)
+		MountMapper(String path, EmptyRequestHandler handler)
 		{
 			this.path = path;
 			this.handler = handler;
@@ -271,7 +290,7 @@ public class WebApplicationTest extends WicketTestCase
 	{
 		private final IRequestMapper delegate;
 
-		public SimpleRequestMapperDelegate(IRequestMapper delegate)
+		SimpleRequestMapperDelegate(IRequestMapper delegate)
 		{
 			this.delegate = delegate;
 		}

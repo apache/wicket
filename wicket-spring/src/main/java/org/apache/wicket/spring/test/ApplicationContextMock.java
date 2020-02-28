@@ -29,7 +29,9 @@ import java.util.Map.Entry;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
@@ -162,6 +164,18 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	@Override
+	public <T> ObjectProvider<T> getBeanProvider(Class<T> aClass)
+	{
+		return null;
+	}
+
+	@Override
+	public <T> ObjectProvider<T> getBeanProvider(ResolvableType resolvableType)
+	{
+		return null;
+	}
+
+	@Override
 	public Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType)
 		throws BeansException
 	{
@@ -266,6 +280,12 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	@Override
+	public String[] getBeanNamesForType(ResolvableType resolvableType, boolean includeNonSingletons, boolean allowEagerInit)
+	{
+		return new String[0];
+	}
+
+	@Override
 	@SuppressWarnings({ "unchecked" })
 	public String[] getBeanNamesForType(final Class type)
 	{
@@ -318,11 +338,23 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@Override
 	public Class<?> getType(final String name) throws NoSuchBeanDefinitionException
 	{
+		return getType(name, true);
+	}
+
+	@Override
+	public Class<?> getType(String name, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException
+	{
 		Object bean = beans.get(name);
 		if (bean == null)
 		{
 			throw new NoSuchBeanDefinitionException("No bean with name '" + name + "'");
 		}
+
+		if (bean instanceof FactoryBean)
+		{
+			return ((FactoryBean) bean).getObjectType();
+		}
+		
 		return bean.getClass();
 	}
 

@@ -22,19 +22,19 @@ import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A test case for <a href="https://issues.apache.org/jira/browse/WICKET-3126">WICKET-3126</a>
  */
-public class CustomHomePageTest
+class CustomHomePageTest
 {
 
 	/**
 	 * Tests no custom home page. The home page is get from {@link Application#getHomePage()}
 	 */
 	@Test
-	public void defaultHomePage()
+    void defaultHomePage()
 	{
 		final WebApplication dummyApplication = new DummyApplication();
 		final WicketTester tester = new WicketTester(dummyApplication);
@@ -49,7 +49,7 @@ public class CustomHomePageTest
 	 * Tests mounting of a custom home page via {@link WebApplication#mountPage(String, Class)}
 	 */
 	@Test
-	public void customHomePage()
+    void customHomePage()
 	{
 		final WebApplication dummyApplication = new DummyApplication()
 		{

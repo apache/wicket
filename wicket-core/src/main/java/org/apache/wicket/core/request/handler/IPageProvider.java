@@ -52,12 +52,6 @@ public interface IPageProvider
 	PageParameters getPageParameters()  throws PageExpiredException;
 
 	/**
-	 * @return negates {@link PageProvider#hasPageInstance()}
-	 * @deprecated use {@link PageProvider#hasPageInstance()} negation instead
-	 */
-	boolean isNewPageInstance();
-
-	/**
 	 * Returns whether the provided page was expired prior to this access.
 	 *
 	 * @return <code>true></code> if the page was created after its original instance expired.

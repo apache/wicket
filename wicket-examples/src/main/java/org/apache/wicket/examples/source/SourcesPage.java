@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -42,6 +43,9 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -51,6 +55,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -216,7 +221,7 @@ public class SourcesPage extends WebPage
 							String jarZipPart = uri.getSchemeSpecificPart();
 							// lowercased for testing if jar/zip, but leave the
 							// real filespec unchanged
-							String lowerJarZipPart = jarZipPart.toLowerCase();
+							String lowerJarZipPart = jarZipPart.toLowerCase(Locale.ROOT);
 							int index = lowerJarZipPart.indexOf(".zip");
 							if (index == -1)
 								index = lowerJarZipPart.indexOf(".jar");
@@ -476,5 +481,13 @@ public class SourcesPage extends WebPage
 			}
 		}
 		return page;
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(
+			CssHeaderItem.forReference(new CssResourceReference(SourcesPage.class, "style.css")));
 	}
 }

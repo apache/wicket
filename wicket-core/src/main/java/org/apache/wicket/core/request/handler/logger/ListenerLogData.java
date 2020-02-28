@@ -113,7 +113,7 @@ public class ListenerLogData extends PageLogData
 			final IRequestableComponent component = pageAndComponentProvider.getComponent();
 			if (component instanceof Form)
 			{
-				final IFormSubmitter submitter = ((Form<?>)component).findSubmittingButton();
+				final IFormSubmitter submitter = ((Form<?>)component).findSubmitter();
 				return submitter instanceof Component ? (Component)submitter : null;
 			}
 			return null;

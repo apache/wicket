@@ -17,17 +17,15 @@
 package org.apache.wicket.request.http;
 
 import java.nio.charset.Charset;
+import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
-
 import javax.servlet.http.Cookie;
-
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Time;
 
 /**
  * Base class for request that provides additional web-related information.
@@ -51,6 +49,8 @@ public abstract class WebRequest extends Request
 	public static final String HEADER_ORIGIN = "Origin";
 	/** {@code Referer} http header */
 	public static final String HEADER_REFERER = "Referer";
+
+	private Boolean isAjax;
 
 	/**
 	 * @return request cookies
@@ -97,14 +97,14 @@ public abstract class WebRequest extends Request
 	 * @param name
 	 * @return date value of request header or <code>null</code> if not found
 	 */
-	public abstract Time getDateHeader(String name);
+	public abstract Instant getDateHeader(String name);
 
 	/**
 	 * Convenience method for retrieving If-Modified-Since header.
 	 * 
 	 * @return date representing the header or <code>null</code> if not set
 	 */
-	public final Time getIfModifiedSinceHeader()
+	public final Instant getIfModifiedSinceHeader()
 	{
 		return getDateHeader("If-Modified-Since");
 	}
@@ -119,12 +119,16 @@ public abstract class WebRequest extends Request
 	 */
 	public boolean isAjax()
 	{
-		try {
-			return Strings.isTrue(getHeader(HEADER_AJAX)) ||
-				Strings.isTrue(getQueryParameters().getParameterValue(PARAM_AJAX).toString());
-		} catch (StringValueConversionException invalidValue) {
-			return false;
+		if (isAjax == null)
+		{
+			try {
+				isAjax = Strings.isTrue(getHeader(HEADER_AJAX)) ||
+						Strings.isTrue(getQueryParameters().getParameterValue(PARAM_AJAX).toString());
+			} catch (StringValueConversionException invalidValue) {
+				isAjax = false;
+			}
 		}
+		return isAjax;
 	}
 
 	/**
@@ -181,7 +185,7 @@ public abstract class WebRequest extends Request
 			}
 
 			@Override
-			public Time getDateHeader(final String name)
+			public Instant getDateHeader(final String name)
 			{
 				return WebRequest.this.getDateHeader(name);
 			}

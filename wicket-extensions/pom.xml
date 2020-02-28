@@ -20,13 +20,18 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>9.0.0-M5-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-extensions</artifactId>
 	<packaging>bundle</packaging>
 	<name>Wicket Extensions</name>
 	<description>Wicket Extensions is a rich component library for the Wicket framework.</description>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.extensions</automatic-module-name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

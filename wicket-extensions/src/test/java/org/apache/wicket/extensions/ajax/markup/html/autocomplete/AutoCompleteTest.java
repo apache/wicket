@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link AutoCompleteBehavior}.

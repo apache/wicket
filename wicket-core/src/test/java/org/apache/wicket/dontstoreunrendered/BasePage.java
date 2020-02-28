@@ -26,7 +26,7 @@ import org.apache.wicket.model.IModel;
 class BasePage extends WebPage {
 	private static final long serialVersionUID = 1L;
 
-	public BasePage() {
+	BasePage() {
 
 		add(new Label("className", new IModel<String>() {
 

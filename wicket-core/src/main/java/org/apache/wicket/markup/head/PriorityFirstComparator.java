@@ -33,7 +33,8 @@ import org.apache.wicket.markup.head.ResourceAggregator.RecordedHeaderItemLocati
  */
 public class PriorityFirstComparator implements Comparator<RecordedHeaderItem>, Serializable
 {
-	protected static enum HeaderItemType {
+	protected static enum HeaderItemType
+	{
 		PRIORITY, PAGE, COMPONENT;
 	}
 
@@ -57,7 +58,9 @@ public class PriorityFirstComparator implements Comparator<RecordedHeaderItem>, 
 		HeaderItemType o2Type = getItemType(o2);
 
 		if (o1Type != o2Type)
+		{
 			return o1Type.ordinal() - o2Type.ordinal();
+		}
 
 		if (o1Type == HeaderItemType.PRIORITY)
 		{
@@ -69,34 +72,30 @@ public class PriorityFirstComparator implements Comparator<RecordedHeaderItem>, 
 	/**
 	 * Compares two header items that belong in the same group.
 	 * 
-	 * @param o1
-	 * @param o2
+	 * @param item1
+	 * @param item2
 	 * @return 0 by default to preserve the order
 	 */
-	protected int compareWithinGroup(RecordedHeaderItem o1, RecordedHeaderItem o2)
+	protected int compareWithinGroup(RecordedHeaderItem item1, RecordedHeaderItem item2)
 	{
 		return 0;
 	}
 
 	/**
-	 * Compares two priority header items, converting the child-first order into parent-first.
+	 * Compare two recorded {@link PriorityHeaderItem}s, converting the child-first order into
+	 * parent-first.
 	 * 
-	 * @param o1
-	 * @param o2
-	 * @return -1, 0 or 1 if o1 needs to be rendered before, unchanged or after o2.
+	 * @param item1
+	 *            first item
+	 * @param item2
+	 *            second item
+	 * @return -1, 0 or 1 if item1 needs to be rendered before, unchanged or after item2.
+	 * 
+	 * @see RecordedHeaderItemLocation#getDepth()
 	 */
-	protected int inversedComponentOrder(RecordedHeaderItem o1, RecordedHeaderItem o2)
+	protected int inversedComponentOrder(RecordedHeaderItem item1, RecordedHeaderItem item2)
 	{
-		RecordedHeaderItemLocation lastO1Location = o1.getLocations().get(
-			o1.getLocations().size() - 1);
-		RecordedHeaderItemLocation lastO2Location = o2.getLocations().get(
-			o2.getLocations().size() - 1);
-
-		// within a component, preserve order
-		if (lastO1Location.getRenderBase() == lastO2Location.getRenderBase())
-			return 0;
-
-		return lastO1Location.getIndexInRequest() < lastO2Location.getIndexInRequest() ? 1 : -1;
+		return item1.getMinDepth() - item2.getMinDepth();
 	}
 
 	/**
@@ -108,14 +107,24 @@ public class PriorityFirstComparator implements Comparator<RecordedHeaderItem>, 
 	protected HeaderItemType getItemType(RecordedHeaderItem item)
 	{
 		if (item.getItem() instanceof PriorityHeaderItem)
+		{
 			return HeaderItemType.PRIORITY;
+		}
+
 		if (renderPageFirst)
 		{
 			if (item.getItem() instanceof PageHeaderItem)
+			{
 				return HeaderItemType.PAGE;
+			}
+
 			for (RecordedHeaderItemLocation curLocation : item.getLocations())
+			{
 				if (curLocation.getRenderBase() instanceof Page)
+				{
 					return HeaderItemType.PAGE;
+				}
+			}
 		}
 
 		return HeaderItemType.COMPONENT;

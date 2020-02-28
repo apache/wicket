@@ -18,6 +18,7 @@ package org.apache.wicket.ajax.markup.html.form;
 
 import java.util.Optional;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -66,10 +67,15 @@ public abstract class AjaxFallbackButton extends Button
 		super(id, model);
 		mForm = form;
 
-		add(new AjaxFormSubmitBehavior(form, "click")
+		add(newAjaxEventBehavior(form, "click"));
+	}
+
+	protected AjaxFormSubmitBehavior newAjaxEventBehavior(Form<?> form, String event)
+	{
+		return new AjaxFormSubmitBehavior(form, event)
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
@@ -105,7 +111,12 @@ public abstract class AjaxFallbackButton extends Button
 				AjaxFallbackButton.this.updateAjaxAttributes(attributes);
 			}
 
-		});
+			@Override
+			public boolean getStatelessHint(Component component)
+			{
+				return AjaxFallbackButton.this.getStatelessHint();
+			}
+		};
 	}
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
@@ -157,11 +168,12 @@ public abstract class AjaxFallbackButton extends Button
 
 	/**
 	 * Callback for the onClick event. If ajax failed and this event was generated via a normal
-	 * submission, the target argument will be null. This method will be called <em>before</em>
-	 * {@link Form#onSubmit()}.
+	 * submission, the target argument will be {@link Optional#empty()}. This method will be called
+	 * <em>before</em> {@link Form#onSubmit()}.
 	 * 
 	 * @param target
-	 *            ajax target if this linked was invoked using ajax, null otherwise
+	 *            ajax target if this linked was invoked using ajax, {@link Optional#empty()}
+	 *            otherwise
 	 */
 	protected void onSubmit(final Optional<AjaxRequestTarget> target)
 	{

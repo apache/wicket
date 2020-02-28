@@ -16,27 +16,28 @@
  */
 package org.apache.wicket.protocol.http.mock;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.List;
 import javax.servlet.http.Cookie;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link MockHttpServletResponse}
  */
-public class MockHttpServletResponseTest extends Assert
+class MockHttpServletResponseTest
 {
 	private MockHttpServletResponse response;
 
 	/**
 	 * Prepare
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		response = new MockHttpServletResponse(null);
 	}
@@ -44,8 +45,8 @@ public class MockHttpServletResponseTest extends Assert
 	/**
 	 * Clean up
 	 */
-	@After
-	public void after()
+	@AfterEach
+	void after()
 	{
 		response = null;
 	}
@@ -54,7 +55,7 @@ public class MockHttpServletResponseTest extends Assert
 	 * Add a cookie
 	 */
 	@Test
-	public void addCookie()
+	void addCookie()
 	{
 		Cookie cookie = new Cookie("name", "value");
 		response.addCookie(cookie);
@@ -76,7 +77,7 @@ public class MockHttpServletResponseTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-4292
 	 */
 	@Test
-	public void addDuplicateCookie()
+	void addDuplicateCookie()
 	{
 		Cookie cookie1 = new Cookie("name", "value");
 		response.addCookie(cookie1);

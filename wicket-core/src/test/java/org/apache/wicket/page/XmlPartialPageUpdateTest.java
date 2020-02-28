@@ -16,23 +16,27 @@
  */
 package org.apache.wicket.page;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link XmlPartialPageUpdate}.
  */
-public class XmlPartialPageUpdateTest extends WicketTestCase 
+class XmlPartialPageUpdateTest extends WicketTestCase
 {
 
 	/**
 	 * CData start "]]>" has to be encoded in "]]]]><![CDATA[>".
 	 */
 	@Test
-	public void encodeCdataEnd() 
+	void encodeCdataEnd()
 	{
 		PageForPartialUpdate page = new PageForPartialUpdate();
 		
@@ -44,7 +48,7 @@ public class XmlPartialPageUpdateTest extends WicketTestCase
 		
 		update.writeTo(response, "UTF-8");
 		
-		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response><component id=\"container1\" ><![CDATA[<span wicket:id=\"container\" id=\"container1\"> two brackets: ]] greater than: > CDATA end: ]]]]><![CDATA[> </span>]]></component><header-contribution><![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\"><script type=\"text/javascript\" >\n" + 
+		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response><component id=\"container1\" ><![CDATA[<span wicket:id=\"container\" id=\"container1\"> two brackets: ]] greater than: > CDATA end: ]]]]><![CDATA[> </span>]]></component><header-contribution><![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\"><script type=\"text/javascript\">\n" + 
 				"/*<![CDATA[*/\n" + 
 				"// two brackets: ]] greater than: > CDATA end: ]]]]><![CDATA[>\n" + 
 				"/*]]]]><![CDATA[>*/\n" + 
@@ -52,12 +56,13 @@ public class XmlPartialPageUpdateTest extends WicketTestCase
 				"</head>]]></header-contribution></ajax-response>";
 		assertEquals(expected, response.getTextResponse().toString());
 	}
+	
 	/**
 	 * 
 	 * see https://issues.apache.org/jira/browse/WICKET-6162
 	 */
 	@Test
-	public void keepTheSameHeaderContainer() throws Exception
+	void keepTheSameHeaderContainer() throws Exception
 	{
 		PageForPartialUpdate page = new PageForPartialUpdate();
 		
@@ -74,5 +79,26 @@ public class XmlPartialPageUpdateTest extends WicketTestCase
 		update.writeTo(response, "UTF-8");
 		
 		assertEquals(originalHeader, page.get(HtmlHeaderSectionHandler.HEADER_ID));
+	}
+	
+	/**
+	 * WICKET-6503 removed components are not written, but no exception raised either. 
+	 */
+	@Test
+	void removedComponentAreNotWritten() throws Exception
+	{
+		PageForPartialUpdate page = new PageForPartialUpdate();
+		
+		tester.startPage(page);
+		
+		XmlPartialPageUpdate update = new XmlPartialPageUpdate(page);		
+		
+		update.add(new Label("notInPage"), "notInPage");
+		
+		MockWebResponse response = new MockWebResponse();
+		
+		update.writeTo(response, "UTF-8");
+		
+		assertFalse(response.getTextResponse().toString().contains("notInPage"), "notInPage not written");
 	}
 }

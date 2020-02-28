@@ -20,13 +20,18 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>9.0.0-M5-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-objectsizeof-agent</artifactId>
 	<packaging>jar</packaging>
 	<name>Wicket Objects Sizeof Agent</name>
 	<description>Agent for pluggin in object size measurements using instrumentation</description>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.objectsizeof.agent</automatic-module-name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

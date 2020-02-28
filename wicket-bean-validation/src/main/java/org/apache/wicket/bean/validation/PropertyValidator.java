@@ -1,15 +1,12 @@
 package org.apache.wicket.bean.validation;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
 import javax.validation.metadata.ConstraintDescriptor;
 
@@ -19,8 +16,8 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
-import org.apache.wicket.validation.IValidator;
 
 /**
  * Validator that delegates to the bean validation framework. The integration has to be first
@@ -55,7 +52,7 @@ import org.apache.wicket.validation.IValidator;
  * 
  * @param <T>
  */
-public class PropertyValidator<T> extends Behavior implements IValidator<T>
+public class PropertyValidator<T> extends Behavior implements INullAcceptingValidator<T>
 {
 	private static final Class<?>[] EMPTY = new Class<?>[0];
 
@@ -64,6 +61,7 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 	// the trailing underscore means that these members should not be used
 	// directly. ALWAYS use the respective getter instead.
 	private Property property_;
+
 	private final IModel<Class<?>[]> groups_;
 
 	/**
@@ -94,14 +92,17 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 
 	/**
 	 * To support debugging, trying to provide useful information where possible
+	 * 
 	 * @return
 	 */
-	private String createUnresolvablePropertyMessage(FormComponent<T> component) {
+	private String createUnresolvablePropertyMessage(FormComponent<T> component)
+	{
 		String baseMessage = "Could not resolve Bean Property from component: " + component
-				+ ". (Hints:) Possible causes are a typo in the PropertyExpression, a null reference or a model that does not work in combination with a "
-				+ IPropertyResolver.class.getSimpleName() + ".";
-        IModel<?> model = ValidationModelResolver.resolvePropertyModelFrom(component);
-		if (model != null) {
+			+ ". (Hints:) Possible causes are a typo in the PropertyExpression, a null reference or a model that does not work in combination with a "
+			+ IPropertyResolver.class.getSimpleName() + ".";
+		IModel<?> model = ValidationModelResolver.resolvePropertyModelFrom(component);
+		if (model != null)
+		{
 			baseMessage += " Model : " + model;
 		}
 		return baseMessage;
@@ -137,15 +138,14 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 		if (this.component != null)
 		{
 			throw new IllegalStateException( //
-				"This validator has already been added to component: "
-					+ this.component
+				"This validator has already been added to component: " + this.component
 					+ ". This validator does not support reusing instances, please create a new one");
 		}
 
 		if (!(component instanceof FormComponent))
 		{
-			throw new IllegalStateException(getClass().getSimpleName()
-				+ " can only be added to FormComponents");
+			throw new IllegalStateException(
+				getClass().getSimpleName() + " can only be added to FormComponents");
 		}
 
 		// TODO add a validation key that appends the type so we can have
@@ -167,6 +167,7 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 			// that model object is accessible (i.e. component is already added
 			// in a page).
 			requiredFlagSet = true;
+
 			if (isRequired())
 			{
 				this.component.setRequired(true);
@@ -184,52 +185,37 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 		}
 	}
 
-	private List<NotNull> findNotNullConstraints()
+	/**
+	 * Should this property make the owning component required.
+	 * 
+	 * @return <code>true</code> if required
+	 * 
+	 * @see BeanValidationContext#isRequiredConstraint(ConstraintDescriptor)
+	 */
+	protected boolean isRequired()
 	{
 		BeanValidationContext config = BeanValidationConfiguration.get();
-		Validator validator = config.getValidator();
-		Property property = getProperty();
 
-		List<NotNull> constraints = new ArrayList<NotNull>();
+		HashSet<Class<?>> groups = new HashSet<Class<?>>(Arrays.asList(getGroups()));
 
-		Iterator<ConstraintDescriptor<?>> it = new ConstraintIterator(validator, property);
-
+		Iterator<ConstraintDescriptor<?>> it = new ConstraintIterator(config.getValidator(), getProperty());
 		while (it.hasNext())
 		{
-			ConstraintDescriptor<?> desc = it.next();
-			if (desc.getAnnotation().annotationType().equals(NotNull.class))
+			ConstraintDescriptor<?> constraint = it.next();
+			
+			if (config.isRequiredConstraint(constraint))
 			{
-				constraints.add((NotNull)desc.getAnnotation());
-			}
-		}
-
-		return constraints;
-	}
-
-	boolean isRequired()
-	{
-		List<NotNull> constraints = findNotNullConstraints();
-
-		if (constraints.isEmpty())
-		{
-			return false;
-		}
-
-		HashSet<Class<?>> validatorGroups = new HashSet<Class<?>>();
-		validatorGroups.addAll(Arrays.asList(getGroups()));
-
-		for (NotNull constraint : constraints)
-		{
-			if (canApplyToDefaultGroup(constraint) && validatorGroups.isEmpty())
-			{
-				return true;
-			}
-
-			for (Class<?> constraintGroup : constraint.groups())
-			{
-				if (validatorGroups.contains(constraintGroup))
+				if (canApplyToDefaultGroup(constraint) && groups.size() == 0)
 				{
 					return true;
+				}
+		
+				for (Class<?> constraintGroup : constraint.getGroups())
+				{
+					if (groups.contains(constraintGroup))
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -237,9 +223,9 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 		return false;
 	}
 
-	private boolean canApplyToDefaultGroup(NotNull constraint)
+	private boolean canApplyToDefaultGroup(ConstraintDescriptor<?> constraint)
 	{
-		List<Class<?>> groups = Arrays.asList(constraint.groups());
+		Set<Class<?>> groups = constraint.getGroups();
 		//the constraint can be applied to default group either if its group array is empty
 		//or if it contains javax.validation.groups.Default
 		return groups.size() == 0 || groups.contains(Default.class);

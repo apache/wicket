@@ -23,7 +23,7 @@ import org.apache.wicket.settings.RequestCycleSettings;
 /**
  * https://issues.apache.org/jira/browse/WICKET-5415
  */
-public class DontStoreNotRenderedPageRedirectToBufferTest extends DontStoreNotRenderedPageTestCase
+class DontStoreNotRenderedPageRedirectToBufferTest extends DontStoreNotRenderedPageTestCase
 {
 	@Override
 	protected WebApplication newApplication()

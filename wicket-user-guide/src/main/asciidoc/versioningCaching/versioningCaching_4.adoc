@@ -1,8 +1,7 @@
 
 
 
-In this chapter we have seen how page instances are managed by Wicket. We have learnt that pages can be divided into two families: stateless and stateful pages. Knowing the difference between the two types of pages is important to build the right page for a given task. 
+In this chapter we have seen how page instances are managed by Wicket. We have learnt that pages can be divided into two families: stateless and stateful pages. Knowing the difference between the two types of pages is important to build the right page for a given task.
 
-However, to complete the discussion about stateless pages we still have to deal with two topics we have just outlined in this chapter: class PageParameters and bookmarkable pages. The first part of 
+However, to complete the discussion about stateless pages we still have to deal with two topics we have just outlined in this chapter: class _PageParameters_ and bookmarkable pages. The first part of 
 <<_wicket_links_and_url_generation,chapter 10>> will cover these missing topics.
-

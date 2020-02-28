@@ -16,48 +16,53 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  */
-public class FormComponentTest extends WicketTestCase
+class FormComponentTest extends WicketTestCase
 {
 	@Test
-	public void arrayType()
+	void arrayType()
 	{
 		final FormComponent<?> fc = new TextField<String>("foo");
 		fc.setType(String[].class);
-		Assert.assertSame(String[].class, fc.getType());
+		assertSame(String[].class, fc.getType());
 	}
 
 	@Test
-	public void multiDimentionalArrayType()
+	void multiDimentionalArrayType()
 	{
 		final FormComponent<?> fc = new TextField<String>("foo");
 		fc.setType(String[][][].class);
-		Assert.assertSame(String[][][].class, fc.getType());
+		assertSame(String[][][].class, fc.getType());
 	}
 
 	@Test
-	public void primitiveArrayType()
+	void primitiveArrayType()
 	{
 		final FormComponent<?> fc = new TextField<String>("foo");
 		fc.setType(boolean[].class);
-		Assert.assertSame(boolean[].class, fc.getType());
+		assertSame(boolean[].class, fc.getType());
 	}
 
 	@Test
-	public void getDefaultlabel()
+	void getDefaultlabel()
 	{
 		tester.startPage(TestPage1.class);
 		TestPage1 page = (TestPage1)tester.getLastRenderedPage();
@@ -66,7 +71,7 @@ public class FormComponentTest extends WicketTestCase
 	}
 
 	@Test
-	public void nullAcceptingValidators()
+	void nullAcceptingValidators()
 	{
 		class MyValidator implements INullAcceptingValidator
 		{
@@ -87,19 +92,35 @@ public class FormComponentTest extends WicketTestCase
 
 		assertTrue(validator.called);
 	}
-
-	public static class TestPage1 extends WebPage implements IMarkupResourceStreamProvider
+	
+	@Test
+    void upperCasePostSubmit() 
 	{
-		public final TextField field1, field2;
+	    tester.startPage(TestPage1.class);
+	    FormTester formTester = tester.newFormTester("form");
+	    
+	    formTester.setValue("field1", "foo");
+	    formTester.setValue("field2", "bar");
+	    tester.getRequest().setMethod("POST");
+	    formTester.submit();
+        
+        assertEquals("foo", formTester.getTextComponentValue("field1"));
+        assertEquals("bar", formTester.getTextComponentValue("field2"));
+    }
 
-		public TestPage1()
+    public static class TestPage1 extends WebPage implements IMarkupResourceStreamProvider
+	{
+		final TextField<String> field1;
+		final TextField<String> field2;
+
+        public TestPage1()
 		{
-			Form form = new Form("form");
+			Form<Void> form = new Form<>("form");
 			add(form);
-			form.add(field1 = new TextField("field1"));
-			form.add(field2 = new TextField("field2"));
+			form.add(field1 = new TextField<String>("field1", Model.of("")));
+			form.add(field2 = new TextField<String>("field2", Model.of("")));
 		}
-
+        
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)

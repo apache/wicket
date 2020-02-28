@@ -16,25 +16,83 @@
  */
 package org.apache.wicket.examples.websocket;
 
+import java.time.Duration;
 import java.util.concurrent.ScheduledExecutorService;
-
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.websocket.charts.ChartUpdater;
 import org.apache.wicket.examples.websocket.charts.WebSocketChart;
+import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.protocol.https.RequireHttps;
 import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
+import org.apache.wicket.request.resource.ContentDisposition;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceStreamResource;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 
 @RequireHttps
 public class WebSocketBehaviorDemoPage extends WicketExamplePage
 {
-	public WebSocketBehaviorDemoPage()
-	{
+	private static final long serialVersionUID = 1L;
+	private final WebMarkupContainer downloadingContainer = new WebMarkupContainer("downloading");
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
+		ResourceStreamResource resource = new ResourceStreamResource()
+		{
+			private static final long serialVersionUID = 1L;
+			private int i = 42;
+
+			@Override
+			protected IResourceStream getResourceStream(IResource.Attributes attributes)
+			{
+				return new StringResourceStream("downloaded via ajax " + (i++) + " times");
+			}
+		}.setContentDisposition(ContentDisposition.ATTACHMENT)
+			.setFileName("File-from-IResource.txt")
+			.setCacheDuration(Duration.ZERO);
+
+		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onBeforeDownload(IPartialPageRequestHandler handler)
+			{
+				downloadingContainer.setVisible(true);
+				handler.add(downloadingContainer);
+			}
+
+			@Override
+			protected void onDownloadSuccess(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+			}
+
+			@Override
+			protected void onDownloadFailed(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+
+				target.appendJavaScript("alert('Download failed');");
+			}
+		};
+		add(download);
 		WebSocketChart chartPanel = new WebSocketChart("chartPanel");
 		chartPanel.add(new WebSocketBehavior()
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onConnect(ConnectedMessage message)
 			{
@@ -44,14 +102,20 @@ public class WebSocketBehaviorDemoPage extends WicketExamplePage
 				ChartUpdater.start(message, service);
 			}
 		});
+		add(downloadingContainer.setOutputMarkupPlaceholderTag(true).setVisible(false));
 		add(chartPanel);
 
 		add(new WebSocketBehavior()
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onMessage(WebSocketRequestHandler handler, TextMessage message)
 			{
-				super.onMessage(handler, message);
+				if ("start".equals(message.getText()))
+				{
+					download.initiate(handler);
+				}
 			}
 		});
 	}

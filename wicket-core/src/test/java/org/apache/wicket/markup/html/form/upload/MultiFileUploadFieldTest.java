@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.form.upload;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +35,12 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for MultiFileUploadField
  */
-public class MultiFileUploadFieldTest extends WicketTestCase
+class MultiFileUploadFieldTest extends WicketTestCase
 {
 	/**
 	 * FormTester supports MultiFileUploadField
@@ -45,7 +48,7 @@ public class MultiFileUploadFieldTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5346
 	 */
 	@Test
-	public void submitMultiFileUploadFields()
+	void submitMultiFileUploadFields()
 	{
 		final AtomicBoolean submitted = new AtomicBoolean(false);
 		final ListModel<FileUpload> filesModel = new ListModel<>(new ArrayList<FileUpload>());
@@ -86,14 +89,14 @@ public class MultiFileUploadFieldTest extends WicketTestCase
 		ft.setFile("muf", new File("target/test-classes/org/apache/wicket/markup/html/form/upload/MultiFileUploadFieldTest1.txt"), "plain/text");
 		ft.submit();
 
-		assertEquals("The form is not submitted", true, submitted.get());
+		assertEquals(true, submitted.get(), "The form is not submitted");
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6198
 	 */
 	@Test
-	public void disabledMultiFileUploadFields()
+	void disabledMultiFileUploadFields()
 	{
 		final ListModel<FileUpload> filesModel = new ListModel<>(new ArrayList<FileUpload>());
 
@@ -106,9 +109,9 @@ public class MultiFileUploadFieldTest extends WicketTestCase
 
 	private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public TestPage(final ListModel<FileUpload> model)
+		TestPage(final ListModel<FileUpload> model)
 		{
-			Form f = new Form("f")
+			Form f = new Form<>("f")
 			{
 				@Override
 				protected void onSubmit()
@@ -123,7 +126,7 @@ public class MultiFileUploadFieldTest extends WicketTestCase
 			f.add(new MultiFileUploadField("muf", model));
 		}
 
-		protected void onSubmit()
+		void onSubmit()
 		{
 		}
 

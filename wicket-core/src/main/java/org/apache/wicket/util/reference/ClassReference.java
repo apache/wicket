@@ -52,6 +52,7 @@ public class ClassReference<T> implements Serializable, Supplier<Class<T>>
 	/**
 	 * @return the {@link Class} stored in this reference
 	 */
+	@Override
 	public Class<T> get()
 	{
 		Class<T> clazz = cache != null ? cache.get() : null;

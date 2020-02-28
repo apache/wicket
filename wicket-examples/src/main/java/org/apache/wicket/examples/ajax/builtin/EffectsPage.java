@@ -24,7 +24,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
@@ -36,6 +38,7 @@ public class EffectsPage extends BasePage
 {
 	private int counter1 = 0;
 	private int counter2 = 0;
+	private int counter3 = 0;
 
 	/**
 	 * @return Value of counter1
@@ -71,6 +74,24 @@ public class EffectsPage extends BasePage
 		this.counter2 = counter2;
 	}
 
+
+	/**
+	 * @return Value for counter3
+	 */
+	public int getCounter3()
+	{
+		return counter3;
+	}
+
+	/**
+	 * @param counter3
+	 *            New value for counter3
+	 */
+	public void setCounter3(int counter3)
+	{
+		this.counter3 = counter3;
+	}
+
 	/**
 	 * Constructor
 	 */
@@ -83,6 +104,10 @@ public class EffectsPage extends BasePage
 		final Label c2 = new Label("c2", new PropertyModel<>(this, "counter2"));
 		c2.setOutputMarkupId(true);
 		add(c2);
+
+		final Label c3 = new Label("c3", new PropertyModel<>(this, "counter3"));
+		c3.setOutputMarkupId(true);
+		add(c3);
 
 		add(new AjaxLink<Void>("c1-link")
 		{
@@ -125,14 +150,40 @@ public class EffectsPage extends BasePage
 				super.updateAjaxAttributes(attributes);
 			}
 		});
+
+		add(new AjaxFallbackLink<Void>("c3-link")
+		{
+			@Override
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
+			{
+				counter3++;
+				targetOptional.ifPresent(target -> {
+					target.prependJavaScript((String.format("jQuery('#%s').fadeOut(500, Wicket.Ajax.suspendCall());", c3.getMarkupId())));
+					target.add(c3);
+					target.appendJavaScript((String.format("jQuery('#%s').hide().fadeIn(500);", c3.getMarkupId())));
+				});
+			}
+
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				attributes.setChannel(new AjaxChannel("effects", Type.DROP));
+
+				super.updateAjaxAttributes(attributes);
+			}
+		});
 	}
 
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-
+		response.render(JavaScriptHeaderItem.forUrl("jquery-ui-1.10.3.custom.js"));
 		response.render(OnDomReadyHeaderItem.forScript("jQuery.noConflict();"));
+		// make effects work nicely with inline elements 
+		response.render(CssHeaderItem.forCSS(
+			"div.container { font-size: 14pt; } .ui-effects-wrapper { display:inline; }",
+			"effects"));
 	}
 
 }

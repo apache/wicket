@@ -18,7 +18,7 @@ package org.apache.wicket.examples.repeater;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for Repeater application

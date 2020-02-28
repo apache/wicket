@@ -19,6 +19,7 @@ package org.apache.wicket.request.cycle;
 import java.util.Optional;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.IMetadataContext;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
@@ -70,7 +71,7 @@ import org.slf4j.LoggerFactory;
  * @author Matej Knopp
  * @author igor.vaynberg
  */
-public class RequestCycle implements IRequestCycle, IEventSink
+public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext<Object, RequestCycle>
 {
 	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
 
@@ -256,8 +257,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		}
 		catch (Exception exception)
 		{
-			executeExceptionRequestHandler(exception, getExceptionRetryCount());
-			return true;
+			return executeExceptionRequestHandler(exception, getExceptionRetryCount());
 		}
 		finally
 		{
@@ -305,37 +305,40 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
-	 * Execute a requestHandler for the given exception.
+	 * Process the given exception.
 	 * 
 	 * @param exception
 	 * @param retryCount
 	 */
-	private void executeExceptionRequestHandler(Exception exception, int retryCount)
+	private boolean executeExceptionRequestHandler(Exception exception, int retryCount)
 	{
-		scheduleRequestHandlerAfterCurrent(null);
-
 		IRequestHandler handler = handleException(exception);
 		if (handler == null)
 		{
 			log.error("Error during request processing. URL=" + request.getUrl(), exception);
-			return;
+			return false;
 		}
+
+		scheduleRequestHandlerAfterCurrent(null);
 
 		try
 		{
 			listeners.onExceptionRequestHandlerResolved(this, handler, exception);
 
 			execute(handler);
+			
+			return true;
 		}
 		catch (Exception e)
 		{
 			if (retryCount > 0)
 			{
-				executeExceptionRequestHandler(exception, retryCount - 1);
+				return executeExceptionRequestHandler(exception, retryCount - 1);
 			}
 			else
 			{
 				log.error("Exception retry count exceeded", e);
+				return false;
 			}
 		}
 	}
@@ -409,6 +412,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
+	@Override
 	public final <T> RequestCycle setMetaData(final MetaDataKey<T> key, final T object)
 	{
 		metaData = key.set(metaData, object);
@@ -426,6 +430,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * @return The metadata or null if no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
+	@Override
 	public final <T> T getMetaData(final MetaDataKey<T> key)
 	{
 		return key.get(metaData);

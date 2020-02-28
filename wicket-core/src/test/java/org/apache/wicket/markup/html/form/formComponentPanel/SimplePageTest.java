@@ -16,16 +16,18 @@
  */
 package org.apache.wicket.markup.html.form.formComponentPanel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * 
  */
-public class SimplePageTest extends WicketTestCase
+class SimplePageTest extends WicketTestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(SimplePageTest.class);
 
@@ -33,7 +35,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage() throws Exception
+	void renderHomePage() throws Exception
 	{
 		tester.startComponentInPage(MyFormComponentPanel.class);
 		String doc = tester.getLastResponseAsString();
@@ -47,7 +49,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePageWithHeaderContribution() throws Exception
+	void renderHomePageWithHeaderContribution() throws Exception
 	{
 		tester.startComponentInPage(MyFormComponentPanel.class);
 		String doc = tester.getLastResponse().getDocument();

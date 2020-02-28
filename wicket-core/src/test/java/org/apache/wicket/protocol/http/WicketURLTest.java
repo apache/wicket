@@ -16,21 +16,22 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.encoding.UrlEncoder;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Doug Donohoe
  */
-public class WicketURLTest extends Assert
+class WicketURLTest
 {
 	/**
 	 * testPathEncoder()
 	 */
 	@Test
-	public void pathEncoder()
+	void pathEncoder()
 	{
 		assertEquals("+", UrlEncoder.PATH_INSTANCE.encode("+", "UTF-8"));
 		assertEquals("%20", UrlEncoder.PATH_INSTANCE.encode(" ", "UTF-8"));
@@ -40,7 +41,7 @@ public class WicketURLTest extends Assert
 	 * testQueryEncoder()
 	 */
 	@Test
-	public void queryEncoder()
+	void queryEncoder()
 	{
 		assertEquals("+", UrlEncoder.QUERY_INSTANCE.encode(" ", "UTF-8"));
 		assertEquals("%2B", UrlEncoder.QUERY_INSTANCE.encode("+", "UTF-8"));
@@ -50,7 +51,7 @@ public class WicketURLTest extends Assert
 	 * testPathDecoder()
 	 */
 	@Test
-	public void pathDecoder()
+	void pathDecoder()
 	{
 		assertEquals("+", UrlDecoder.PATH_INSTANCE.decode("+", "UTF-8"));
 		assertEquals(" ", UrlDecoder.PATH_INSTANCE.decode("%20", "UTF-8"));
@@ -60,7 +61,7 @@ public class WicketURLTest extends Assert
 	 * testQueryDecoder()
 	 */
 	@Test
-	public void queryDecoder()
+	void queryDecoder()
 	{
 		assertEquals(" ", UrlDecoder.QUERY_INSTANCE.decode("+", "UTF-8"));
 		assertEquals("+", UrlDecoder.QUERY_INSTANCE.decode("%2B", "UTF-8"));

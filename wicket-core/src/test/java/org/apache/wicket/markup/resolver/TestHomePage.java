@@ -17,16 +17,16 @@
 package org.apache.wicket.markup.resolver;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  */
-public class TestHomePage extends WicketTestCase
+class TestHomePage extends WicketTestCase
 {
 
 	@Test
-	public void testRenderMyPage_1()
+    void testRenderMyPage_1()
 	{
 		// start and render the test page
 		tester.startPage(HomePage_1.class);
@@ -50,7 +50,7 @@ public class TestHomePage extends WicketTestCase
 	}
 
 	@Test
-	public void testRenderMyPage_2()
+    void testRenderMyPage_2()
 	{
 		// start and render the test page
 		tester.startPage(HomePage_2.class);

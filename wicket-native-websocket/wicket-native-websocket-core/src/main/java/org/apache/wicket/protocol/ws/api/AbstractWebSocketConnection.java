@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -24,6 +26,11 @@ import org.apache.wicket.util.lang.Args;
  */
 public abstract class AbstractWebSocketConnection implements IWebSocketConnection
 {
+
+	private final String applicationName;
+	private final String sessionId;
+	private final IKey key;
+
 	private final AbstractWebSocketProcessor webSocketProcessor;
 
 	/**
@@ -34,6 +41,9 @@ public abstract class AbstractWebSocketConnection implements IWebSocketConnectio
 	 */
 	public AbstractWebSocketConnection(AbstractWebSocketProcessor webSocketProcessor)
 	{
+		this.applicationName = webSocketProcessor.getApplication().getName();
+		this.sessionId = webSocketProcessor.getSessionId();
+		this.key = webSocketProcessor.getRegistryKey();
 		this.webSocketProcessor = Args.notNull(webSocketProcessor, "webSocketProcessor");
 	}
 
@@ -41,5 +51,23 @@ public abstract class AbstractWebSocketConnection implements IWebSocketConnectio
 	public void sendMessage(IWebSocketPushMessage message)
 	{
 		webSocketProcessor.broadcastMessage(message);
+	}
+
+	@Override
+	public Application getApplication()
+	{
+		return Application.get(applicationName);
+	}
+
+	@Override
+	public String getSessionId()
+	{
+		return sessionId;
+	}
+
+	@Override
+	public IKey getKey()
+	{
+		return key;
 	}
 }

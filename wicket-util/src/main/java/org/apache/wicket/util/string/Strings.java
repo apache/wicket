@@ -21,8 +21,11 @@ import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,6 +62,19 @@ public final class Strings
 	/** A table of hex digits */
 	private static final char[] HEX_DIGIT = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 			'A', 'B', 'C', 'D', 'E', 'F' };
+	private static final Set<Character> NONCHARACTERS = Collections.unmodifiableSet(new HashSet<Character>()
+	{
+		private static final long serialVersionUID = 1L;
+
+		{
+			for (int i = 0x0000FDD0; i <= 0x0000FDEF; ++i)
+			{
+				add((char)i);
+			}
+			add((char)0x0000FFFE);
+			// all other non-characters are out of range of (char)
+		}
+	});
 
 	private static final Pattern HTML_NUMBER_REGEX = Pattern.compile("&#\\d+;");
 	
@@ -302,7 +318,7 @@ public final class Strings
 	 * @param escapeSpaces
 	 *            True to replace ' ' with nonbreaking space
 	 * @param convertToHtmlUnicodeEscapes
-	 *            True to convert non-7 bit characters to unicode HTML (&#...)
+	 *            True to convert non-7 bit characters to unicode HTML (&amp;#...)
 	 * @return The escaped string
 	 */
 	public static CharSequence escapeMarkup(final CharSequence s, final boolean escapeSpaces,
@@ -320,6 +336,10 @@ public final class Strings
 		{
 			final char c = s.charAt(i);
 
+			if (NONCHARACTERS.contains(c))
+			{
+				continue;
+			}
 			switch (c)
 			{
 				case '\t' :
@@ -807,7 +827,7 @@ public final class Strings
 	}
 
 	/**
-	 * Replace HTML numbers like &#20540 by the appropriate character.
+	 * Replace HTML numbers like &amp;#20540; by the appropriate character.
 	 * 
 	 * @param str
 	 *            The text to be evaluated
@@ -926,7 +946,7 @@ public final class Strings
 		}
 
 		// http://.../abc;jsessionid=...?param=...
-		int ixSemiColon = url.toLowerCase(Locale.ENGLISH).indexOf(SESSION_ID_PARAM);
+		int ixSemiColon = url.toLowerCase(Locale.ROOT).indexOf(SESSION_ID_PARAM);
 		if (ixSemiColon == -1)
 		{
 			return url;
@@ -1010,6 +1030,10 @@ public final class Strings
 		for (int x = 0; x < len; x++)
 		{
 			char aChar = unicodeString.charAt(x);
+			if (NONCHARACTERS.contains(aChar))
+			{
+				continue;
+			}
 			// Handle common case first, selecting largest block that
 			// avoids the specials below
 			if ((aChar > 61) && (aChar < 127))
@@ -1347,7 +1371,7 @@ public final class Strings
 		}
 		else
 		{
-			return str.toLowerCase().startsWith(prefix.toLowerCase());
+			return str.toLowerCase(Locale.ROOT).startsWith(prefix.toLowerCase(Locale.ROOT));
 		}
 	}
 

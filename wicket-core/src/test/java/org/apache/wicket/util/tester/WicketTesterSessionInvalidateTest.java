@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -23,18 +26,18 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class WicketTesterSessionInvalidateTest extends WicketTestCase
+class WicketTesterSessionInvalidateTest extends WicketTestCase
 {
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3212
 	 */
 	@Test
-	public void sessionInvalidate()
+	void sessionInvalidate()
 	{
 		tester.startPage(MyPage.class);
 
@@ -61,7 +64,7 @@ public class WicketTesterSessionInvalidateTest extends WicketTestCase
 		 * 
 		 * @param pageParameters
 		 */
-		public MyPage(PageParameters pageParameters)
+        public MyPage(PageParameters pageParameters)
 		{
 			super(pageParameters);
 

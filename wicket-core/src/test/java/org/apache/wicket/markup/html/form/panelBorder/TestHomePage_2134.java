@@ -16,20 +16,22 @@
  */
 package org.apache.wicket.markup.html.form.panelBorder;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  */
-public class TestHomePage_2134 extends WicketTestCase
+class TestHomePage_2134 extends WicketTestCase
 {
 	/**
 	 * WICKET-2134: two forms inside a border throw a ConversionException error
 	 */
 	@Test
-	public void testRenderMyPage()
+	void testRenderMyPage()
 	{
 		// start and render the test page
 		tester.startPage(CommonModelPage.class);
@@ -49,7 +51,7 @@ public class TestHomePage_2134 extends WicketTestCase
 	 * WICKET-2134: two forms inside a border throw a ConversionException error
 	 */
 	@Test
-	public void testRenderMyPage2()
+	void testRenderMyPage2()
 	{
 		// start and render the test page
 		tester.startPage(CommonModelPage.class);
@@ -71,7 +73,7 @@ public class TestHomePage_2134 extends WicketTestCase
 	 * WICKET-2134: two forms inside a border throw a ConversionException error
 	 */
 	@Test
-	public void testRenderMyPage3()
+	void testRenderMyPage3()
 	{
 		// start and render the test page
 		tester.startPage(CommonModelPage.class);

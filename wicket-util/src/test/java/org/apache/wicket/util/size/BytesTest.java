@@ -16,22 +16,23 @@
  */
 package org.apache.wicket.util.size;
 
+import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.string.StringValueConversionException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
-import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.string.StringValueConversionException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test cases for this object
  * 
  * @author Jonathan Locke
  */
-public final class BytesTest extends Assert
+public final class BytesTest
 {
 	/**
 	 * Backup of the default locale.
@@ -41,7 +42,7 @@ public final class BytesTest extends Assert
 	/**
 	 * Save the default locale.
 	 */
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		defaultLocale = Locale.getDefault(Locale.Category.FORMAT);
@@ -50,7 +51,7 @@ public final class BytesTest extends Assert
 	/**
 	 * Restore the default locale.
 	 */
-	@After
+	@AfterEach
 	public void after()
 	{
 		Locale.setDefault(Locale.Category.FORMAT, defaultLocale);
@@ -65,7 +66,7 @@ public final class BytesTest extends Assert
 	{
 		assertTrue(Bytes.bytes(1024).equals(Bytes.kilobytes(1)));
 		assertTrue(Bytes.bytes(1024 * 1024).equals(Bytes.megabytes(1)));
-		assertTrue("1G".equals(Bytes.gigabytes(1).toString()));
+		assertTrue("1GB".equals(Bytes.gigabytes(1).toString()));
 
 
 		final Bytes b = Bytes.kilobytes(7.3);
@@ -84,8 +85,8 @@ public final class BytesTest extends Assert
 	public void stringOperationsDotLocale() throws StringValueConversionException
 	{
 		Locale.setDefault(Locale.UK);
-		assertTrue("1G".equals(Bytes.gigabytes(1).toString()));
-		assertTrue(Bytes.valueOf("15.5K").bytes() == ((15 * 1024) + 512));
+		assertTrue("1GB".equals(Bytes.gigabytes(1).toString()));
+		assertTrue(Bytes.valueOf("15.5KB").bytes() == ((15 * 1024) + 512));
 
 		final Bytes b = Bytes.kilobytes(7.3);
 
@@ -100,8 +101,8 @@ public final class BytesTest extends Assert
 	public void stringOperationsCommaLocale() throws StringValueConversionException
 	{
 		Locale.setDefault(Locale.GERMANY);
-		assertTrue("1G".equals(Bytes.gigabytes(1).toString()));
-		assertTrue(Bytes.valueOf("15,5K").bytes() == ((15 * 1024) + 512));
+		assertTrue("1GB".equals(Bytes.gigabytes(1).toString()));
+		assertTrue(Bytes.valueOf("15,5KB").bytes() == ((15 * 1024) + 512));
 
 		final Bytes b = Bytes.kilobytes(7.3);
 
@@ -115,14 +116,14 @@ public final class BytesTest extends Assert
 	@Test
 	public void allOperationsExplicitLocale() throws StringValueConversionException
 	{
-		assertTrue("1G".equals(Bytes.gigabytes(1).toString()));
-		assertTrue("1,5G".equals(Bytes.gigabytes(1.5).toString(Locale.GERMAN)));
-		assertTrue("1.5G".equals(Bytes.gigabytes(1.5).toString(Locale.US)));
+		assertTrue("1GB".equals(Bytes.gigabytes(1).toString()));
+		assertTrue("1,5GB".equals(Bytes.gigabytes(1.5).toString(Locale.GERMAN)));
+		assertTrue("1.5GB".equals(Bytes.gigabytes(1.5).toString(Locale.US)));
 
 		final Bytes b = Bytes.kilobytes(7.3);
 		assertEquals(b, Bytes.valueOf(b.toString(Locale.GERMAN), Locale.GERMAN));
 
-		assertTrue(Bytes.valueOf("15,5K", Locale.GERMAN).bytes() == ((15 * 1024) + 512));
-		assertTrue(Bytes.valueOf("15.5K", Locale.US).bytes() == ((15 * 1024) + 512));
+		assertTrue(Bytes.valueOf("15,5KB", Locale.GERMAN).bytes() == ((15 * 1024) + 512));
+		assertTrue(Bytes.valueOf("15.5KB", Locale.US).bytes() == ((15 * 1024) + 512));
 	}
 }

@@ -63,7 +63,7 @@ public class TestApp2 extends WebApplication
 		setPageManagerProvider(new DefaultPageManagerProvider(this)
 		{
 			@Override
-			public IPageManager get(IPageManagerContext pageManagerContext)
+			public IPageManager apply(IPageManagerContext pageManagerContext)
 			{
 				IDataStore dataStore = new HttpSessionDataStore(pageManagerContext,
 					new PageNumberEvictionStrategy(100));

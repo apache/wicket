@@ -16,20 +16,22 @@
  */
 package org.apache.wicket.markup.html.basic;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  */
-public class HomePageRedirectTest extends WicketTestCase
+class HomePageRedirectTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderHomePagePageRedirect() throws Exception
+	void testRenderHomePagePageRedirect() throws Exception
 	{
 		tester.startPage(HomePagePageRedirect.class);
 
@@ -37,20 +39,20 @@ public class HomePageRedirectTest extends WicketTestCase
 
 		// Validate the document
 		String document = tester.getLastResponseAsString();
-		DiffUtil.validatePage(document, this.getClass(), "RedirectPage.html", true);
+		DiffUtil.validatePage(document, this.getClass(), "RedirectPage-expected1.html", true);
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderHomePageClassRedirect() throws Exception
+	void testRenderHomePageClassRedirect() throws Exception
 	{
 		tester.startPage(HomePageClassRedirect.class);
 
 		assertEquals(RedirectPage.class, tester.getLastRenderedPage().getClass());
 
 		String document = tester.getLastResponseAsString();
-		DiffUtil.validatePage(document, this.getClass(), "RedirectPage.html", true);
+		DiffUtil.validatePage(document, this.getClass(), "RedirectPage-expected2.html", true);
 	}
 }

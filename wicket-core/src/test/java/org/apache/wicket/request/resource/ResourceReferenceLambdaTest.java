@@ -16,12 +16,14 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ResourceReferenceLambdaTest extends WicketTestCase
+class ResourceReferenceLambdaTest extends WicketTestCase
 {
 
 	private final String output = "lambda resource";
@@ -42,7 +44,7 @@ public class ResourceReferenceLambdaTest extends WicketTestCase
 	}
 	
 	@Test
-	public void lambdaBasedResurceReference() throws Exception 
+	void lambdaBasedResurceReference() throws Exception
 	{
 		tester.executeUrl("./test");
 		

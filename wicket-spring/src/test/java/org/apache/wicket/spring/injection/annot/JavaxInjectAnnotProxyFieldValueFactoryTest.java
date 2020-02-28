@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
+import org.apache.wicket.spring.injection.util.JavaxInjectInjectable;
+import org.junit.jupiter.api.Test;
+
 import java.lang.reflect.Field;
 
-import org.apache.wicket.spring.injection.util.JavaxInjectInjectable;
-import org.junit.Test;
-
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests for Spring injection with {@literal @javax.inject.Inject} annotation

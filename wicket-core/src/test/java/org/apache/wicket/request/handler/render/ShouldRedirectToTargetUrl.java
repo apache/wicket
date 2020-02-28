@@ -22,15 +22,15 @@ import org.apache.wicket.request.Url;
 public class ShouldRedirectToTargetUrl extends AbstractVariations
 {
 
-	VariationIterator<Boolean> ajax = VariationIterator.of(Variation.ofBoolean());
-	VariationIterator<RenderPageRequestHandler.RedirectPolicy> redirectPolicy = VariationIterator.of(ajax,Variation.of(RenderPageRequestHandler.RedirectPolicy.class));
-	VariationIterator<Boolean> redirectToRender = VariationIterator.of(redirectPolicy,Variation.ofBoolean());
-	VariationIterator<Boolean> targetEqualsCurrentUrl = VariationIterator.of(redirectToRender,Variation.ofBoolean());
-	VariationIterator<Boolean> newPageInstance = VariationIterator.of(targetEqualsCurrentUrl,Variation.ofBoolean());
-	VariationIterator<Boolean> pageStateless = VariationIterator.of(newPageInstance,Variation.ofBoolean());
-	VariationIterator<Boolean> sessionTemporary = VariationIterator.of(pageStateless,Variation.ofBoolean());
+	private VariationIterator<Boolean> ajax = VariationIterator.of(Variation.ofBoolean());
+	private VariationIterator<RenderPageRequestHandler.RedirectPolicy> redirectPolicy = VariationIterator.of(ajax, Variation.of(RenderPageRequestHandler.RedirectPolicy.class));
+	private VariationIterator<Boolean> redirectToRender = VariationIterator.of(redirectPolicy, Variation.ofBoolean());
+	private VariationIterator<Boolean> targetEqualsCurrentUrl = VariationIterator.of(redirectToRender, Variation.ofBoolean());
+	private VariationIterator<Boolean> newPageInstance = VariationIterator.of(targetEqualsCurrentUrl, Variation.ofBoolean());
+	private VariationIterator<Boolean> pageStateless = VariationIterator.of(newPageInstance, Variation.ofBoolean());
+	private VariationIterator<Boolean> sessionTemporary = VariationIterator.of(pageStateless, Variation.ofBoolean());
 
-	VariationIterator<Boolean> last = sessionTemporary;
+	private VariationIterator<Boolean> last = sessionTemporary;
 
 	@Override
 	public String toString()

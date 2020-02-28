@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>9.0.0-M5-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-user-guide</artifactId>
@@ -31,6 +31,7 @@
 	</description>
 
 	<properties>
+		<automatic-module-name>org.apache.wicket.userguide</automatic-module-name>
 		<asciidoctor.version>1.5.5</asciidoctor.version>
 		<clirr.skip>true</clirr.skip>
 		<!-- because of windows we need this particular version -->
@@ -152,6 +153,12 @@
 					</executions>
 					<dependencies>
 						<dependency>
+							<groupId>org.jruby</groupId>
+							<artifactId>jruby-complete</artifactId>
+							<version>9.2.7.0</version>
+							<type>bundle</type>
+						</dependency>
+						<dependency>
 							<groupId>org.asciidoctor</groupId>
 							<artifactId>asciidoctorj-pdf</artifactId>
 							<version>1.5.0-alpha.15</version>
@@ -172,6 +179,14 @@
 							<version>${jruby.version}</version>
 						</dependency>
 					</dependencies>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<!-- No Java tests here -->
+						<skip>true</skip>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>

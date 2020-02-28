@@ -16,22 +16,23 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  */
-public class BookmarkablePageLinkTest extends WicketTestCase
+class BookmarkablePageLinkTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void bookmarkableRequest() throws Exception
+	void bookmarkableRequest() throws Exception
 	{
 		tester.startPage(BookmarkableHomePageLinksPage.class);
 		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableHomePageLinksPage.class);
@@ -41,7 +42,7 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void bookmarkableRequestWithIntercept() throws Exception
+	void bookmarkableRequestWithIntercept() throws Exception
 	{
 		tester.startPage(BookmarkableThrowsInterceptPage.class);
 
@@ -55,7 +56,7 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void bookmarkableRequestWithInterceptWithParams() throws Exception
+	void bookmarkableRequestWithInterceptWithParams() throws Exception
 	{
 		PageParameters pp = new PageParameters();
 		pp.set("test", "test");
@@ -72,16 +73,24 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3721">WICKET-3721</a>
 	 */
 	@Test
-	public void customParametersWithSpecialCharacters()
+	void customParametersWithSpecialCharacters()
 	{
-		BookmarkablePageLink<MockPageWithLink> link = new BookmarkablePageLink<MockPageWithLink>(
-			"link", MockPageWithLink.class);
+		BookmarkablePageLink<MockPageWithLink> link =
+			new BookmarkablePageLink<MockPageWithLink>("link", MockPageWithLink.class);
 		link.getPageParameters().set("urlEscapeNeeded", "someone's ^b%a&d pa\"rameter");
 
 		tester.startComponentInPage(link, null);
+		String expected =
+			"<html><head><script type=\"text/javascript\" src=\"./resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-3.4.1.js\"></script>\n"
+				+ "<script type=\"text/javascript\" src=\"./resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js\"></script>\n"
+				+ "<script type=\"text/javascript\">\n" + "/*<![CDATA[*/\n"
+				+ "Wicket.Event.add(window, \"domready\", function(event) { \n"
+				+ "Wicket.Event.add('link1', 'click', function(event) { var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; if (win == window) { window.location.href='./bookmarkable/org.apache.wicket.MockPageWithLink?urlEscapeNeeded=someone%27s+%5Eb%25a%26d+pa%22rameter'; } ;return false;});;\n"
+				+ "Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);\n" + ";});\n"
+				+ "/*]]>*/\n" + "</script>\n"
+				+ "</head><body><span wicket:id=\"link\" id=\"link1\"></span></body></html>";
+
 		String response = tester.getLastResponse().getDocument();
-		Assert.assertEquals(
-			"<html><body><span wicket:id=\"link\" onclick=\"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; if (win == window) { window.location.href=&#039;./bookmarkable/org.apache.wicket.MockPageWithLink?urlEscapeNeeded=someone%27s+%5Eb%25a%26d+pa%22rameter&#039;; } ;return false\"></span></body></html>",
-			response);
+		assertEquals(expected, response);
 	}
 }

@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +27,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.Url;
@@ -33,13 +36,12 @@ import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link ServletWebRequest}
  */
-public class ServletWebRequestTest extends Assert
+class ServletWebRequestTest
 {
 
 	/**
@@ -48,7 +50,7 @@ public class ServletWebRequestTest extends Assert
 	 * returns just the request uri to the error page without the query string
 	 */
 	@Test
-	public void wicket3599()
+	void wicket3599()
 	{
 		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
 		httpRequest.setURL(httpRequest.getContextPath() + "/request/Uri");
@@ -71,7 +73,7 @@ public class ServletWebRequestTest extends Assert
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-4168">WICKET-4168</a>
 	 */
 	@Test
-	public void testClientURLIsContextRelativeInErrorResponses()
+	void testClientURLIsContextRelativeInErrorResponses()
 	{
 		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
 		httpRequest.setURL(httpRequest.getContextPath() + "/request/Uri");
@@ -93,7 +95,7 @@ public class ServletWebRequestTest extends Assert
 	 * Relative Urls should be calculated against 'javax.servlet.forward.request_uri'
 	 */
 	@Test
-	public void parseForwardAttributes()
+	void parseForwardAttributes()
 	{
 		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
 		httpRequest.setURL(httpRequest.getContextPath() + "/request/Uri");
@@ -115,9 +117,9 @@ public class ServletWebRequestTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-4123
 	 */
 	@Test
-	public void useCustomServletWebRequest()
+	void useCustomServletWebRequest()
 	{
-		WebApplication application = new WebApplication()
+		WebApplication application = new MockApplication()
 		{
 			@Override
 			public Class<? extends Page> getHomePage()
@@ -150,7 +152,7 @@ public class ServletWebRequestTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-4841
 	 */
 	@Test
-	public void getClientUrlAjaxWithoutBaseUrl()
+	void getClientUrlAjaxWithoutBaseUrl()
 	{
 
 		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
@@ -173,7 +175,7 @@ public class ServletWebRequestTest extends Assert
 	 * returns just the request uri to the error page without the query string
 	 */
 	@Test
-	public void wicket5203()
+	void wicket5203()
 	{
 		String filterPath = "filterPath";
 		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
@@ -197,7 +199,7 @@ public class ServletWebRequestTest extends Assert
 	 * WICKET-5287
 	 */
 	@Test
-	public void parseUrlWhichLooksLikeFullInItsContextRelativePart()
+	void parseUrlWhichLooksLikeFullInItsContextRelativePart()
 	{
 		String filterPath = "filterPath";
 		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
@@ -215,7 +217,7 @@ public class ServletWebRequestTest extends Assert
 
 		private CustomRequestPage()
 		{
-			assertThat(getRequest(), instanceOf(CustomServletWebRequest.class));
+			assertThat(getRequest()).isInstanceOf(CustomServletWebRequest.class);
 		}
 
 		@Override
@@ -228,7 +230,7 @@ public class ServletWebRequestTest extends Assert
 
 	private static class CustomServletWebRequest extends ServletWebRequest
 	{
-		public CustomServletWebRequest(HttpServletRequest httpServletRequest, String filterPrefix)
+		CustomServletWebRequest(HttpServletRequest httpServletRequest, String filterPrefix)
 		{
 			super(httpServletRequest, filterPrefix);
 		}

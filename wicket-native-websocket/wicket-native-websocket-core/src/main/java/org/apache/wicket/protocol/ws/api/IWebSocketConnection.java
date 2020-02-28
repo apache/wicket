@@ -17,7 +17,10 @@
 package org.apache.wicket.protocol.ws.api;
 
 import java.io.IOException;
+
+import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.apache.wicket.protocol.ws.api.registry.IKey;
 
 /**
  * Common interface for native WebSocket connections
@@ -76,4 +79,19 @@ public interface IWebSocketConnection
 	 * @since 6.4
 	 */
 	void sendMessage(IWebSocketPushMessage message);
+
+	/**
+	 * @return The application for which this WebSocket connection is registered
+	 */
+	Application getApplication();
+
+	/**
+	 * @return The id of the session for which this WebSocket connection is registered
+	 */
+	String getSessionId();
+
+	/**
+	 * @return The registry key for which this WebSocket connection is registered
+	 */
+	IKey getKey();
 }

@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.core.util.objects.checker;
 
+import javax.security.auth.Subject;
+import java.beans.PropertyChangeSupport;
+import java.beans.VetoableChangeSupport;
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectOutput;
@@ -27,13 +30,23 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.InetAddress;
+import java.net.SocketAddress;
+import java.security.Permission;
+import java.security.Permissions;
+import java.util.BitSet;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -393,10 +406,12 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 				Object[] objs = (Object[])obj;
 				for (int i = 0; i < objs.length; i++)
 				{
-					CharSequence arrayPos = new StringBuilder(4).append('[').append(i).append(']');
-					simpleName = arrayPos;
-					fieldDescription += arrayPos;
-					check(objs[i]);
+					if (!isKnownToBeSerializable(objs[i])) {
+						CharSequence arrayPos = new StringBuilder(4).append('[').append(i).append(']');
+						simpleName = arrayPos;
+						fieldDescription += arrayPos;
+						check(objs[i]);
+					}
 				}
 			}
 		}
@@ -564,9 +579,7 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 			}
 			for (int i = 0; i < objVals.length; i++)
 			{
-				if (objVals[i] instanceof String || objVals[i] instanceof Number ||
-						objVals[i] instanceof Date || objVals[i] instanceof Boolean ||
-						objVals[i] instanceof Class)
+				if (isKnownToBeSerializable(objVals[i]))
 				{
 					// filter out common cases
 					continue;
@@ -594,6 +607,42 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 				check(objVals[i]);
 			}
 		}
+	}
+
+	private boolean isKnownToBeSerializable(Object obj) {
+		return isCommonClass(obj) || hasCustomSerialization(obj);
+	}
+
+	private boolean isCommonClass(Object obj) {
+		return obj instanceof String || obj instanceof Number ||
+				obj instanceof Date || obj instanceof Boolean ||
+				obj instanceof Class || obj instanceof Throwable;
+	}
+
+	/**
+	 * Some classes use {@link ObjectOutputStream.PutField} in their implementation of
+	 * <em>private void writeObject(ObjectOutputStream s) throws IOException</em> and this
+	 * (sometimes) breaks the introspection done by this class, and even crashes the JVM!
+	 *
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-6704">WICKET-6704</a>
+	 * @param obj The object to check
+	 * @return {@code true} if the object type is one of these special ones
+	 */
+	private boolean hasCustomSerialization(Object obj) {
+		return obj instanceof PropertyChangeSupport ||
+				obj instanceof VetoableChangeSupport ||
+				obj instanceof Permission ||
+				obj instanceof Permissions ||
+				obj instanceof BitSet ||
+				obj instanceof ConcurrentHashMap ||
+				obj instanceof Vector ||
+				obj instanceof InetAddress ||
+				obj instanceof SocketAddress ||
+				obj instanceof Locale ||
+				obj instanceof Random ||
+				obj instanceof ThreadLocalRandom ||
+				obj instanceof StringBuffer ||
+				obj instanceof Subject;
 	}
 
 	/**

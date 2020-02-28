@@ -20,12 +20,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.time.Time;
 
 /**
  * {@link IResourceStream} that applies XSLT on an input {@link IResourceStream}. The XSL stylesheet
@@ -146,7 +145,7 @@ public class XSLTResourceStream extends AbstractResourceStream
 	 * @see org.apache.wicket.util.watch.IModifiable#lastModifiedTime()
 	 */
 	@Override
-	public Time lastModifiedTime()
+	public Instant lastModifiedTime()
 	{
 		return null;
 	}

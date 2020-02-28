@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
-<style>
-	span.inline-edit { border: 1px solid green; padding: 4px; }
-	span.inline-edit input { border:0; margin:0; padding:0; }
-</style>
-
 <form wicket:id="form">
-<br/>
+
+<p>
 Click on the area with a green outline to begin an inplace edit. Press enter or outside the area to save, pless esc to cancel.
-<br/><br/>
+</p>
+
+<p>
 The quick brown <span wicket:id="text1" class="inline-edit">[[editable label 1]]</span> jumped over the lazy <span wicket:id="text2" class="inline-edit">[[editable label 2]]</span>.
-<br/><br/>
-click to edit multiple lines: <div wicket:id="text3">[[multiple lines]]</div>
-<br/><br/>
-click to select another site: <span wicket:id="site">[[site selection]]</span>
+</p>
+
+<p>
+click to edit multiple lines: <div wicket:id="text3" class="inline-edit">[[multiple lines]]</div>
+</p>
+
+<p>
+click to select another site: <span wicket:id="site" class="inline-edit">[[site selection]]</span>
+</p>
+
+<p>
+click to enter another number: <span wicket:id="number" class="inline-edit">[[number selection]]</span>
+</p>
 
 <br/><br/>
 This page has been refreshed: <span wicket:id="refresh-counter">[[refresh count]]</span> times.

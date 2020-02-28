@@ -32,90 +32,86 @@ import org.apache.wicket.util.collections.ClassMetaCache;
 /**
  * Manages lifecycle of non-contextual (non-CDI-managed) objects
  * 
- * @author igor
- * 
  * @param <T>
+ * @author igor
  */
 public class NonContextual<T>
 {
 	private static final Object lock = new Object();
-	private static volatile Map<BeanManager, ClassMetaCache<NonContextual<?>>> cache = Collections.emptyMap();
+	private static volatile Map<BeanManager, ClassMetaCache<NonContextual<?>>> cache = Collections
+			.emptyMap();
 
 	final InjectionTarget<T> it;
-	final BeanManager manager;
 
 	/**
-	 * Undeploys specified bean manager from cache
-	 * 
-	 * @param beanManager
+	 * Undeploys the looked up bean manager from cache
 	 */
-	public static void undeploy(BeanManager beanManager)
+	public static void undeploy()
 	{
-		if (cache.containsKey(beanManager))
+		if (cache.containsKey(BeanManagerLookup.lookup()))
 		{
 			synchronized (lock)
 			{
 				// copy-on-write the cache
-				Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<>(
-					cache);
-				newCache.remove(beanManager);
+				Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
+						cache);
+				newCache.remove(BeanManagerLookup.lookup());
 				cache = Collections.unmodifiableMap(newCache);
 			}
 		}
 	}
 
 	/**
-	 * Convenience factory method for an instance, see {@link #of(Class, BeanManager).
-	 * 
-	 * @param <T>
-	 * @param beanManager
-	 * @return The NonContextual for the instance's class managed by the given manager
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> NonContextual<T> of(T t, BeanManager beanManager)
-	{
-		// cast is necessary for Eclipse compiler :/
-		return (NonContextual<T>)of(t.getClass(), beanManager);
-	}
-
-	/**
-	 * Factory method for creating noncontextual instances
+	 * Convenience factory method for an instance, see {@link #of(Class).
 	 * 
 	 * @param <T>
 	 * @param clazz
-	 * @param manager
-	 * @return The NonContextual for the given class managed by the given manager
+	 * @return The NonContextual for the instance's class
 	 */
-	public static <T> NonContextual<T> of(Class<? extends T> clazz, BeanManager manager)
+	@SuppressWarnings("unchecked")
+	public static <T> NonContextual<T> of(T t) {
+		// cast is necessary for Eclipse compiler :/
+		return (NonContextual<T>)of(t.getClass());
+	}
+
+	/**
+	 * Factory method for creating non-contextual instances
+	 * 
+	 * @param <T>
+	 * @param clazz
+	 * @return The NonContextual for the given class
+	 */
+	public static <T> NonContextual<T> of(Class<? extends T> clazz)
 	{
-		ClassMetaCache<NonContextual<?>> meta = getCache(manager);
+		ClassMetaCache<NonContextual<?>> meta = getCache();
 
 		@SuppressWarnings("unchecked")
 		NonContextual<T> nc = (NonContextual<T>)meta.get(clazz);
 
 		if (nc == null)
 		{
-			nc = new NonContextual<>(manager, clazz);
+			nc = new NonContextual<T>(clazz);
 			meta.put(clazz, nc);
 		}
 		return nc;
 	}
 
-	private static ClassMetaCache<NonContextual<?>> getCache(BeanManager manager)
+	private static ClassMetaCache<NonContextual<?>> getCache()
 	{
-		ClassMetaCache<NonContextual<?>> meta = cache.get(manager);
+		ClassMetaCache<NonContextual<?>> meta = cache.get(BeanManagerLookup.lookup());
 		if (meta == null)
 		{
 			synchronized (lock)
 			{
+				BeanManager manager = BeanManagerLookup.lookup();
 				meta = cache.get(manager);
 				if (meta == null)
 				{
-					meta = new ClassMetaCache<>();
+					meta = new ClassMetaCache<NonContextual<?>>();
 
 					// copy-on-write the cache
-					Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<>(
-						cache);
+					Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
+							cache);
 					newCache.put(manager, meta);
 					cache = Collections.unmodifiableMap(newCache);
 				}
@@ -125,9 +121,9 @@ public class NonContextual<T>
 	}
 
 	@SuppressWarnings("unchecked")
-	private NonContextual(BeanManager manager, Class<? extends T> clazz)
+	private NonContextual(Class<? extends T> clazz)
 	{
-		this.manager = manager;
+		BeanManager manager = BeanManagerLookup.lookup();
 		AnnotatedType<? extends T> type = manager.createAnnotatedType(clazz);
 		this.it = (InjectionTarget<T>)manager.createInjectionTarget(type);
 	}
@@ -139,11 +135,11 @@ public class NonContextual<T>
 	 */
 	public void postConstruct(T instance)
 	{
-		CreationalContext<T> cc = manager.createCreationalContext(null);
+		CreationalContext<T> cc = BeanManagerLookup.lookup().createCreationalContext(null);
 		it.inject(instance, cc);
 		it.postConstruct(instance);
 	}
-	
+
 	/**
 	 * Injects the instance
 	 * 
@@ -151,13 +147,13 @@ public class NonContextual<T>
 	 */
 	public void inject(T instance)
 	{
-		CreationalContext<T> cc = manager.createCreationalContext(null);
+		CreationalContext<T> cc = BeanManagerLookup.lookup().createCreationalContext(null);
 		it.inject(instance, cc);
 	}
 
 	/**
-	 * Calls any {@link PreDestroy} methods and destroys any injected dependencies that need to be
-	 * destroyed.
+	 * Calls any {@link PreDestroy} methods and destroys any injected
+	 * dependencies that need to be destroyed.
 	 * 
 	 * @param instance
 	 */

@@ -28,7 +28,7 @@ public abstract class AbstractTest14WebPage extends WebPage
 	/**
 	 * 
 	 */
-	public AbstractTest14WebPage()
+    AbstractTest14WebPage()
 	{
 		// Create border and add it to the page
 		add(new HeaderSectionBorder_2("border"));

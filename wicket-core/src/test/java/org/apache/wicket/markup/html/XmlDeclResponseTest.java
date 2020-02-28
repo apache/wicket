@@ -16,31 +16,34 @@
  */
 package org.apache.wicket.markup.html;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupType;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test xml decl in WebResponse
  */
-public class XmlDeclResponseTest extends WicketTestCase
+class XmlDeclResponseTest extends WicketTestCase
 {
 	private static final String markupWith = "<?xml version='1.0' encoding='UTF-8' ?><html><body></body></html>";
 	private static final String markupWithout = "<html><body></body></html>";
 
 	private static final String acceptString = "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
-	public static final String ACCEPT = "Accept";
+	private static final String ACCEPT = "Accept";
 
 	private int insertXmlDecl = 0;
 
 	@Override
 	protected WebApplication newApplication()
 	{
-		return new WebApplication()
+		return new MockApplication()
 		{
 			@Override
 			public Class<? extends Page> getHomePage()
@@ -64,7 +67,7 @@ public class XmlDeclResponseTest extends WicketTestCase
 
 	/** */
 	@Test
-	public void insertAlways()
+	void insertAlways()
 	{
 		insertXmlDecl = 1;
 
@@ -99,7 +102,7 @@ public class XmlDeclResponseTest extends WicketTestCase
 
 	/** */
 	@Test
-	public void insertNever()
+	void insertNever()
 	{
 		insertXmlDecl = -1;
 
@@ -134,7 +137,7 @@ public class XmlDeclResponseTest extends WicketTestCase
 
 	/** */
 	@Test
-	public void insertWithRules()
+	void insertWithRules()
 	{
 		insertXmlDecl = 0;
 
@@ -179,7 +182,7 @@ public class XmlDeclResponseTest extends WicketTestCase
 		/**
 		 * @param mime
 		 */
-		public SimplePage(String mime)
+		SimplePage(String mime)
 		{
 			this.mime = mime;
 		}

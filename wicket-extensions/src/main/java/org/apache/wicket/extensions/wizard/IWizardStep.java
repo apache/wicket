@@ -37,8 +37,20 @@ import org.apache.wicket.util.io.IClusterable;
 public interface IWizardStep extends IClusterable
 {
 	/**
+	 * Initializes this step with the model it will belong to.
+	 * <p>
+	 * This method is called at least once before this step becomes the actual step.
+	 * 
+	 * @param wizardModel
+	 *            the owning wizard model
+	 */
+	void init(IWizardModel wizardModel);
+	
+	/**
 	 * Gets the header component for this step. This component is displayed in a special section of
 	 * the wizard.
+	 * <p>
+	 * This method is called every time this step becomes the active step of the wizard.
 	 * 
 	 * @param id
 	 *            The id that the component should be created with
@@ -52,8 +64,9 @@ public interface IWizardStep extends IClusterable
 
 	/**
 	 * Returns the current view this step is displaying. This component will be displayed in the
-	 * main section of the wizard with this step is active. This may changed at any time by as long
-	 * as an appropriate property change event is fired.
+	 * main section of the wizard.
+	 * <p>
+	 * This method is called every time this step becomes the active step of the wizard.
 	 * 
 	 * @param id
 	 *            The id that the component should be created with
@@ -66,17 +79,12 @@ public interface IWizardStep extends IClusterable
 	Component getView(String id, Component parent, IWizard wizard);
 
 	/**
-	 * Initializes this step with the model it will belong to.
+	 * This method is called whenever the wizard proceeds from this step to another step. It is not
+	 * called when returning to a previous step.
 	 * 
-	 * @param wizardModel
-	 *            the owning wizard model
-	 */
-	void init(IWizardModel wizardModel);
-
-	/**
-	 * This method is called whenever the user presses next while this step is active.
-	 * <p>
-	 * This method will only be called if {@link IWizardModel#isNextAvailable} returns {@code true}.
+	 * @see IWizardModel#next() 
+	 * @see IWizardModel#last() 
+	 * @see IWizardModel#finish() 
 	 */
 	void applyState();
 
@@ -85,6 +93,10 @@ public interface IWizardStep extends IClusterable
 	 * proceed to the next step.
 	 * 
 	 * @return {@code true} if the wizard can proceed from this step, {@code false} otherwise.
+	 * 
+	 * @see IWizardModel#next() 
+	 * @see IWizardModel#last() 
+	 * @see IWizardModel#finish() 
 	 */
 	boolean isComplete();
 }

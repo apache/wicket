@@ -169,7 +169,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 */
 	public static void registerWellKnownTagName(final String name)
 	{
-		String lowerCaseName = name.toLowerCase(Locale.ENGLISH);
+		String lowerCaseName = name.toLowerCase(Locale.ROOT);
 		WELL_KNOWN_TAG_NAMES.add(lowerCaseName);
 	}
 
@@ -180,7 +180,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 */
 	private boolean isWellKnown(final ComponentTag tag)
 	{
-		String lowerCaseTagName = tag.getName().toLowerCase(Locale.ENGLISH);
+		String lowerCaseTagName = tag.getName().toLowerCase(Locale.ROOT);
 		return WELL_KNOWN_TAG_NAMES.contains(lowerCaseTagName);
 	}
 
@@ -191,7 +191,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 */
 	private boolean isRaw(final ComponentTag tag)
 	{
-		String lowerCaseTagName = tag.getName().toLowerCase(Locale.ENGLISH);
+		String lowerCaseTagName = tag.getName().toLowerCase(Locale.ROOT);
 		return RAW_TAG_NAMES.contains(lowerCaseTagName);
 	}
 }

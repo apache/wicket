@@ -31,13 +31,7 @@
 
 		 </Directory>
 
-	... or tweak wicket-examples' StartExamples.java like so:
-
-		bb.setContextPath("/ajax-tests");
-		bb.setWar("../wicket-core/src");
-
-	then run it by opening "http://localhost/ajax-tests/test/js/all.html" in the browser
-
+	Or start StartJavaScriptTests.java in project wicket-js-tests. 
  */
 
 /*global ok: true, start: true, asyncTest: true, test: true, equal: true, deepEqual: true,
@@ -89,23 +83,12 @@ jQuery(document).ready(function() {
 			execute(attrs);
 		});
 
-		asyncTest('processEvaluation with mock data (priority-evaluate).', function () {
+		/**
+		 * Suspends execution.
+		 */
+		asyncTest('processEvaluation with suspend.', function () {
 
 			expect(2);
-
-			var attrs = {
-				u: 'data/ajax/priorityEvaluationId.xml',
-				c: 'priorityEvaluationId'
-			};
-			execute(attrs);
-		});
-
-		/**
-		 * Executes the second part of 'something|functionBody' by passing 'notify' function as parameter
-		 */
-		asyncTest('processEvaluation with identifier|code.', function () {
-
-			expect(5);
 
 			var attrs = {
 				u: 'data/ajax/evaluationIdentifierAndCodeId.xml',
@@ -115,17 +98,15 @@ jQuery(document).ready(function() {
 		});
 
 		/**
-		 * Executes the second part of 'something|functionBody' by passing 'notify' function as parameter.
-		 * There are two functions with passed 'notify' function which leads to splitting the text in
-		 * <(priority-)evaluate> elements to eval one function at a time to be able to call notify manually.
+		 * Suspends executions.
 		 */
-		asyncTest('processEvaluation*s* with identifier|code.', function () {
+		asyncTest('processEvaluation*s* with suspend.', function () {
 
-			expect(6);
+			expect(4);
 
 			var attrs = {
-				u: 'data/ajax/twoEvaluationsWithIdentifier.xml',
-				c: 'twoEvaluationsWithIdentifier'
+				u: 'data/ajax/multipleEvaluationsWithIdentifier.xml',
+				c: 'multipleEvaluationsWithIdentifier'
 			};
 			execute(attrs);
 		});
@@ -156,8 +137,8 @@ jQuery(document).ready(function() {
 
 			var oldWicketLogError = Wicket.Log.error;
 
-			Wicket.Log.error = function(msg) {
-				equal(msg, 'Wicket.Ajax.Call.processComponent: Component with id [[componentToReplaceDoesNotExist]] was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.');
+			Wicket.Log.error = function() {
+				equal(arguments[1], "componentToReplaceDoesNotExist");
 
 				// restore the original method
 				Wicket.Log.error = oldWicketLogError;
@@ -1012,7 +993,6 @@ jQuery(document).ready(function() {
 
 		/**
 		 * Submits a nested multipart form (represented with <div>).
-		 * The submit uses <iframe>.
 		 *
 		 * https://issues.apache.org/jira/browse/WICKET-4673
 		 */
@@ -1042,7 +1022,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('Submit nested form - success scenario.', function () {
 
-			expect(13);
+			expect(9);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -1056,18 +1036,6 @@ jQuery(document).ready(function() {
 				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
 				bsh: [ function(attrs) {
 					ok(true, "BeforeSend handler executed");
-
-					var form = Wicket.$(attrs.f);
-					if (form.tagName.toLowerCase() !== "form") {
-						do {
-							form = form.parentNode;
-						} while(form.tagName.toLowerCase() !== "form" && form !== document.body);
-					}
-					var formUrl = form.action;
-					ok(formUrl.indexOf('dynamicEPName') > -1, "Dynamic extra parameter name is in the request query string");
-					ok(formUrl.indexOf('dynamicEPValue') > -1, "Dynamic extra parameter value is in the request query string");
-					ok(formUrl.indexOf('extraParamName') > -1, "Static extra parameter name is in the request query string");
-					ok(formUrl.indexOf('extraParamValue') > -1, "Static extra parameter value is in the request query string");
 				} ],
 				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
 				sh: [ function(attrs) { ok(true, "Success handler executed"); } ],
@@ -1101,7 +1069,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('Submit nested form - failure scenario.', function () {
 
-			expect(12);
+			expect(8);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -1115,18 +1083,6 @@ jQuery(document).ready(function() {
 				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
 				bsh: [ function(attrs) {
 					ok(true, "BeforeSend handler executed");
-
-					var form = Wicket.$(attrs.f);
-					if (form.tagName.toLowerCase() !== "form") {
-						do {
-							form = form.parentNode;
-						} while(form.tagName.toLowerCase() !== "form" && form !== document.body);
-					}
-					var formUrl = form.action;
-					ok(formUrl.indexOf('dynamicEPName') > -1, "Dynamic extra parameter name is in the request query string");
-					ok(formUrl.indexOf('dynamicEPValue') > -1, "Dynamic extra parameter value is in the request query string");
-					ok(formUrl.indexOf('extraParamName') > -1, "Static extra parameter name is in the request query string");
-					ok(formUrl.indexOf('extraParamValue') > -1, "Static extra parameter value is in the request query string");
 				} ],
 				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
 				sh: [ function(attrs) { ok(false, "Success handler should not be executed"); } ],
@@ -1278,42 +1234,6 @@ jQuery(document).ready(function() {
 		});
 
 		/**
-		 * https://issues.apache.org/jira/browse/WICKET-5047
-		 */
-		asyncTest('try/catch only the content of \'script type="text/javascript"\'.', function () {
-
-			// manually call HTMLScriptElement.onload() to let
-			// FunctionsExecutor finish its work
-			var oldAddElement = Wicket.Head.addElement;
-			Wicket.Head.addElement = function(element) {
-				oldAddElement(element);
-				if (element.onload) {
-					element.onload();
-				}
-			};
-
-			expect(2);
-
-			var attrs = {
-				u: 'data/ajax/javaScriptTemplate.xml',
-				coh: [
-					function() {
-						start();
-
-						var jsTemplateText = jQuery('#jsTemplate').text();
-						equal(jsTemplateText, 'var data = 123;', 'JavaScript template is *not* try/catched');
-
-						var jsNonTemplateText = jQuery('#jsNonTemplate').text();
-						equal(jsNonTemplateText, 'try{var data = 456;}catch(e){Wicket.Log.error(e);}', 'JavaScript non template *is* try/catched');
-
-					}
-				]
-			};
-
-			Wicket.Ajax.ajax(attrs);
-		});
-
-		/**
 		 * 'null' values passed to _asParamArray() should be spliced
 		 * See http://markmail.org/message/khuc2v37aakzyfth
 		 * WICKET-5759
@@ -1323,6 +1243,7 @@ jQuery(document).ready(function() {
 			expect(1);
 
 			var attrs = {
+				u: 'data/ajax/componentId.xml',
 				e: 'event1',
 				ep: [null, {name: "name", value: "value"}, null, null],
 				bsh: [function(attributes) {
@@ -1428,6 +1349,37 @@ jQuery(document).ready(function() {
 			execute(attrs);
 		});
 
+		asyncTest('Ajax 301 with Ajax-Location response header.', function () {
+
+			expect(2);
+
+			var redirectUrl = 'http://www.example.com/ajax/location';
+			var componentUrl = 'data/ajax/componentId.xml';
+
+			$.mockjax({
+				url: componentUrl,
+				status: 301,
+				headers: {
+					'Ajax-Location': redirectUrl
+				}
+			});
+
+			var originalRedirect = Wicket.Ajax.redirect;
+
+			Wicket.Ajax.redirect = function(location) {
+				Wicket.Ajax.redirect = originalRedirect;
+				start();
+				equal(location, redirectUrl, 'Ajax redirect in 301 response is properly handled');
+			};
+
+			var attrs = {
+				u: componentUrl,
+				c: 'componentId'
+			};
+
+			execute(attrs);
+		});
+
 		asyncTest('processAjaxResponse, chrome-extensions case.', function () {
 
 			expect(2);
@@ -1495,6 +1447,96 @@ jQuery(document).ready(function() {
 				c: 'componentId'
 			};
 
+			execute(attrs);
+		});
+		
+		var metaByName = function(name) {
+			return jQuery('head meta[name=' + name + ']');
+		};
+
+		asyncTest('processMeta() create meta tag', function() {
+
+			expect(3);
+
+			jQuery('meta').remove();
+			equal(metaByName("m1").length, 0, "There must be no meta tag before the contribution.");
+			
+			var attrs = {
+				u: 'data/ajax/metaId.xml',
+				sh: [
+					function() {
+						start();
+						equal(metaByName("m1").length, 1, "There must be one meta tag after the contribution.");
+						equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+					}
+				]
+			};
+			execute(attrs);
+		});
+		
+		asyncTest('processMeta() change meta tag', function() {
+
+			expect(3);
+
+			jQuery('meta').remove();
+			jQuery('head').append('<meta name="m1" content="c1_old" />');
+			equal(metaByName("m1").length, 1, "There must be one old meta tag before the contribution.");
+			
+			var attrs = {
+				u: 'data/ajax/metaId.xml',
+				sh: [
+					function() {
+						start();
+						equal(metaByName("m1").length, 1, "There must be one meta tag after the contribution.");
+						equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+					}
+				]
+			};
+			execute(attrs);
+		});
+
+		asyncTest('processMeta() add meta tag', function() {
+
+			expect(5);
+
+			jQuery('meta').remove();
+			jQuery('head').append('<meta name="m2" content="c2" />');
+			equal(metaByName("m2").length, 1, "There must be one old meta tag before the contribution.");
+			
+			var attrs = {
+				u: 'data/ajax/metaId.xml',
+				sh: [
+					function() {
+						start();
+						equal(metaByName("m2").length, 1, "There must be one old meta tag after the contribution.");
+						equal(metaByName("m2").attr("content"), "c2", "The old meta tag must still have the old content.");
+						equal(metaByName("m1").length, 1, "There must be one new meta tag after the contribution.");
+						equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+					}
+				]
+			};
+			execute(attrs);
+		});
+		
+		asyncTest('no ajax send on component placeholder', function() {
+
+			expect(1);
+
+			var attrs = {
+				u: 'data/ajax/componentPlaceholderId.xml',
+				c: 'componentPlaceholderId',
+				bsh: [
+					function() {
+						ok(false, 'should not be sent');
+					}
+				],
+				dh: [
+					function() {
+						start();
+						ok('Done handler should be called');
+					}
+				]
+			};
 			execute(attrs);
 		});
 	}

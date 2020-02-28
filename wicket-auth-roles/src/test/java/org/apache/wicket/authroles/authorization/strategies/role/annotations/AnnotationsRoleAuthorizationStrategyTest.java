@@ -16,174 +16,172 @@
  */
 package org.apache.wicket.authroles.authorization.strategies.role.annotations;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.request.resource.IResource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for {@link AnnotationsRoleAuthorizationStrategy}
  */
-public class AnnotationsRoleAuthorizationStrategyTest
+class AnnotationsRoleAuthorizationStrategyTest
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3974
 	 */
 	@Test
-	public void allowsRenderWithRequiredRoleAndNoDeniedRole()
+    void allowsRenderWithRequiredRoleAndNoDeniedRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role1"));
+			roles("role1"));
 		// use mock to not need Application in the thread
-		TestComponent_Render component = Mockito
-				.mock(TestComponent_Render.class);
+		TestComponent_Render component = Mockito.mock(TestComponent_Render.class);
 		assertTrue(strategy.isActionAuthorized(component, Component.RENDER));
 	}
 
 	@Test
-	public void deniesRenderWithoutRequiredRole()
+    void deniesRenderWithoutRequiredRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role2"));
-		TestComponent_Render component = Mockito
-				.mock(TestComponent_Render.class);
+			roles("role2"));
+		TestComponent_Render component = Mockito.mock(TestComponent_Render.class);
 		assertFalse(strategy.isActionAuthorized(component, Component.RENDER));
 	}
 
 	@Test
-	public void deniesRenderWithRequiredRoleAndDeniedRole()
+    void deniesRenderWithRequiredRoleAndDeniedRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role1", "role3"));
-		TestComponent_Render component = Mockito
-				.mock(TestComponent_Render.class);
+			roles("role1", "role3"));
+		TestComponent_Render component = Mockito.mock(TestComponent_Render.class);
 		assertFalse(strategy.isActionAuthorized(component, Component.RENDER));
 	}
 
 	@Test
-	public void deniesRenderWithDeniedRole()
+    void deniesRenderWithDeniedRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role3"));
-		TestComponent_Render component = Mockito
-				.mock(TestComponent_Render.class);
+			roles("role3"));
+		TestComponent_Render component = Mockito.mock(TestComponent_Render.class);
 		assertFalse(strategy.isActionAuthorized(component, Component.RENDER));
 	}
 
 	@Test
-	public void allowsEnableWithRequiredRole()
+    void allowsEnableWithRequiredRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role1"));
-		TestComponent_Enable component = Mockito
-				.mock(TestComponent_Enable.class);
+			roles("role1"));
+		TestComponent_Enable component = Mockito.mock(TestComponent_Enable.class);
 		assertTrue(strategy.isActionAuthorized(component, Component.ENABLE));
 	}
 
 	@Test
-	public void deniesEnableWithoutRequiredRoleAndNoDeniedRole()
+    void deniesEnableWithoutRequiredRoleAndNoDeniedRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role2"));
-		TestComponent_Enable component = Mockito
-				.mock(TestComponent_Enable.class);
+			roles("role2"));
+		TestComponent_Enable component = Mockito.mock(TestComponent_Enable.class);
 		assertFalse(strategy.isActionAuthorized(component, Component.ENABLE));
 	}
 
 	@Test
-	public void deniesEnableWithDeniedRole()
+    void deniesEnableWithDeniedRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role3"));
-		TestComponent_Enable component = Mockito
-				.mock(TestComponent_Enable.class);
+			roles("role3"));
+		TestComponent_Enable component = Mockito.mock(TestComponent_Enable.class);
 		assertFalse(strategy.isActionAuthorized(component, Component.ENABLE));
 	}
 
 	@Test
-	public void deniesEnableWithRequiredRoleAndDeniedRole()
+    void deniesEnableWithRequiredRoleAndDeniedRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role1", "role3"));
-		TestComponent_Enable component = Mockito
-				.mock(TestComponent_Enable.class);
+			roles("role1", "role3"));
+		TestComponent_Enable component = Mockito.mock(TestComponent_Enable.class);
 		assertFalse(strategy.isActionAuthorized(component, Component.ENABLE));
 	}
 
 	@Test
-	public void allowsInstantiationWithRequiredRole() throws Exception
-	{
+    void allowsInstantiationWithRequiredRole() {
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role1"));
-		assertTrue(strategy
-				.isInstantiationAuthorized(TestComponent_Instantiate.class));
+			roles("role1"));
+		assertTrue(strategy.isInstantiationAuthorized(TestComponent_Instantiate.class));
 	}
 
 	@Test
-	public void deniesInstantiationWithoutRequiredRole() throws Exception
-	{
+    void deniesInstantiationWithoutRequiredRole() {
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role2"));
-		assertFalse(strategy
-				.isInstantiationAuthorized(TestComponent_Instantiate.class));
+			roles("role2"));
+		assertFalse(strategy.isInstantiationAuthorized(TestComponent_Instantiate.class));
 	}
 
 	@Test
-	public void allowsInstantiationWithAllRequiredRoles() throws Exception
-	{
+    void allowsInstantiationWithAllRequiredRoles() {
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role1", "role2"));
 		assertTrue(strategy.isInstantiationAuthorized(TestComponent_Roleset_Instantiate.class));
 	}
 
 	@Test
-	public void deniesInstantiationWithoutAllRequiredRoles() throws Exception
-	{
+    void deniesInstantiationWithoutAllRequiredRoles() {
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role2"));
 		assertFalse(strategy.isInstantiationAuthorized(TestComponent_Roleset_Instantiate.class));
 	}
 
 	@Test
-	public void allowsResourceWithRequiredRole() throws Exception
-	{
+    void allowsResourceWithRequiredRole() {
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role1"));
+			roles("role1"));
 		IResource resource = Mockito.mock(RestrictedResource.class);
 		assertTrue(strategy.isResourceAuthorized(resource, null));
 	}
 
 	@Test
-	public void deniesResourceWithoutRequiredRole() throws Exception
-	{
+    void deniesResourceWithoutRequiredRole() {
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role2"));
+			roles("role2"));
 		IResource resource = Mockito.mock(RestrictedResource.class);
 		assertFalse(strategy.isResourceAuthorized(resource, null));
 	}
 
 	@Test
-	public void allowsUnprotectedResourceWithRole() throws Exception {
+    void allowsUnprotectedResourceWithRole() {
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
-				roles("role2"));
-		IResource resource = Mockito.mock(UnrestrictedResource.class);
-		assertTrue(strategy.isResourceAuthorized(resource, null));
-	}
-	
-	@Test
-	public void allowsUnprotectedResourceWithoutRole() throws Exception {
-		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(roles());
+			roles("role2"));
 		IResource resource = Mockito.mock(UnrestrictedResource.class);
 		assertTrue(strategy.isResourceAuthorized(resource, null));
 	}
 
-	@AuthorizeInstantiation({"role1"})
+	@Test
+    void allowsUnprotectedResourceWithoutRole() {
+		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
+			roles());
+		IResource resource = Mockito.mock(UnrestrictedResource.class);
+		assertTrue(strategy.isResourceAuthorized(resource, null));
+	}
+
+	/**
+	 * Create a test role checking strategy that is simply given a list of roles and returns true if
+	 * that list contains any of the asked-for roles.
+	 *
+	 * @param availableRoles
+	 *            rules that this role checker should have
+	 * @return test role checking strategy
+	 */
+	private IRoleCheckingStrategy roles(final String... availableRoles)
+	{
+		return requiredRoles -> requiredRoles.hasAnyRole(new Roles(availableRoles));
+	}
+
+	@AuthorizeInstantiation({ "role1" })
 	private static class TestComponent_Instantiate extends WebComponent
 	{
 
@@ -195,7 +193,7 @@ public class AnnotationsRoleAuthorizationStrategyTest
 		}
 
 	}
-	
+
 	@AuthorizeInstantiations(ruleset = { @AuthorizeInstantiation({ "role1" }),
 			@AuthorizeInstantiation({ "role2" }) })
 	private static class TestComponent_Roleset_Instantiate extends WebComponent
@@ -210,7 +208,7 @@ public class AnnotationsRoleAuthorizationStrategyTest
 
 	}
 
-	@AuthorizeAction(action = "RENDER", roles = {"role1"}, deny = {"role3"})
+	@AuthorizeAction(action = "RENDER", roles = { "role1" }, deny = { "role3" })
 	private static class TestComponent_Render extends WebComponent
 	{
 
@@ -223,7 +221,7 @@ public class AnnotationsRoleAuthorizationStrategyTest
 
 	}
 
-	@AuthorizeAction(action = "ENABLE", roles = {"role1"}, deny = {"role3"})
+	@AuthorizeAction(action = "ENABLE", roles = { "role1" }, deny = { "role3" })
 	private static class TestComponent_Enable extends WebComponent
 	{
 		private static final long serialVersionUID = 1L;
@@ -250,29 +248,12 @@ public class AnnotationsRoleAuthorizationStrategyTest
 		}
 	}
 
-	private static class UnrestrictedResource implements IResource {
+	private static class UnrestrictedResource implements IResource
+	{
 		@Override
-		public void respond(Attributes attributes) {
+		public void respond(Attributes attributes)
+		{
 			; // NOOP
 		}
-	}
-
-	/**
-	 * Create a test role checking strategy that is simply given a list of roles
-	 * and returns true if that list contains any of the asked-for roles.
-	 *
-	 * @param availableRoles rules that this role checker should have
-	 * @return test role checking strategy
-	 */
-	private IRoleCheckingStrategy roles(final String... availableRoles)
-	{
-		return new IRoleCheckingStrategy()
-		{
-			@Override
-			public boolean hasAnyRole(Roles requiredRoles)
-			{
-				return requiredRoles.hasAnyRole(new Roles(availableRoles));
-			}
-		};
 	}
 }

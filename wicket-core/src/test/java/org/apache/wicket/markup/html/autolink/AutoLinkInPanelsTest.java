@@ -19,18 +19,18 @@ package org.apache.wicket.markup.html.autolink;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.autolink.sub.LogoPanel;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for WICKET-4681
  * 
  * @author Carl-Eric Menzel
  */
-public class AutoLinkInPanelsTest extends WicketTestCase
+class AutoLinkInPanelsTest extends WicketTestCase
 {
 	public static class TestPage extends WebPage
 	{
@@ -40,10 +40,10 @@ public class AutoLinkInPanelsTest extends WicketTestCase
 		}
 	}
 
-	@Before
-	public void setUp()
+	@BeforeEach
+    void setUp()
 	{
-		tester = new WicketTester(new WebApplication()
+		tester = new WicketTester(new MockApplication()
 		{
 
 			@Override
@@ -62,17 +62,17 @@ public class AutoLinkInPanelsTest extends WicketTestCase
 	}
 
 	@Test
-	public void imgTagWorksInPanelWithExtraContainer() throws Exception
+    void imgTagWorksInPanelWithExtraContainer() throws Exception
 	{
 		tester.startPage(TestPage.class);
 //		tester.dumpPage();
-		tester.assertContains("<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo-ver-\\d+.png\"/>");
+		tester.assertContains("<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo.png\"/>");
 	}
 
 	@Test
-	public void imgTagWorksInPanelWithoutExtraContainer() throws Exception
+    void imgTagWorksInPanelWithoutExtraContainer() throws Exception
 	{
 		tester.startPage(TestPage.class);
-		tester.assertContains("<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo2-ver-\\d+.png\"/>");
+		tester.assertContains("<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo2.png\"/>");
 	}
 }

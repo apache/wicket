@@ -30,9 +30,8 @@ import org.danekja.java.util.function.serializable.SerializableConsumer;
  * changed.
  * <p>
  * This behavior uses best available method to track changes on different types of form components.
- * To accomplish this for text input form components it uses a custom event, named 'inputchange',
- * that is handled in the best way for the specific browser. For other form component types the
- * 'change' event is used.
+ * For text input form components it uses event 'input', for other form component types the 'change'
+ * event is used.
  * </p>
  * 
  * @author Janne Hietam&auml;ki (janne)
@@ -46,11 +45,9 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 'inputchange' event delegates to 'input', 'keyup', 'cut' and 'paste' events
-	 * for text input form component depending on the browser.
-	 * 'change' is used as a fallback for all other form component types.
+	 * 'input' and 'change' used as a fallback for all other form component types.
 	 */
-	public static final String EVENT_NAME = "inputchange change";
+	public static final String EVENT_NAME = "input change";
 
 	/**
 	 * the change event
@@ -72,7 +69,7 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 
 		Component component = getComponent();
 
-		// textfiels and textareas will trigger this behavior with either 'inputchange' or 'change' events
+		// textfiels and textareas will trigger this behavior with either 'input' or 'change' events
 		// all the other components will use just 'change'
 		if (!(component instanceof TextField || component instanceof TextArea))
 		{

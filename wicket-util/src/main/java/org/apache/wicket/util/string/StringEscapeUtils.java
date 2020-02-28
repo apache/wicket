@@ -81,7 +81,7 @@ class StringEscapeUtils
 	 */
 	private static String hex(char ch)
 	{
-		return Integer.toHexString(ch).toUpperCase(Locale.ENGLISH);
+		return Integer.toHexString(ch).toUpperCase(Locale.ROOT);
 	}
 
 	// HTML and XML

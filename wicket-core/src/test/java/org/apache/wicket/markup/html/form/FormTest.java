@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -26,9 +30,8 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.visit.IVisitor;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pekka Enberg
@@ -41,8 +44,8 @@ public class FormTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		visitor = new Form.ValidationVisitor()
 		{
@@ -53,21 +56,39 @@ public class FormTest extends WicketTestCase
 		};
 	}
 
-
 	/**
-	 * @throws Exception
+	 * WICKET-6540
 	 */
 	@Test
-	public void formMethodGet() throws Exception
+	void defaultButton() throws Exception
+	{
+		executeTest(FormDefaultButtonTestPage.class, "FormDefaultButtonTestPage_expected.html");
+	}
+
+	/**
+	 * WICKET-6525 / WICKET-6348
+	 */
+	@Test
+	void formMethods() throws Exception
 	{
 		executeTest(FormMethodTestPage.class, "FormMethodTestPage_expected.html");
+		
+		FormMethodTestPage page = (FormMethodTestPage)tester.getLastRenderedPage();
+	
+		// form action contains path and query 
+		assertEquals("var f = document.getElementById('formpost1');f.action='path?param1&param2=val%20ue';Wicket.Event.fire(f, 'submit');",
+			page.postForm.getJsForListenerUrl("path?param1&param2=val%20ue").toString());
+		
+		// form action must not contain query (since ignored by browser), put into hidden form parameters instead 
+		assertEquals("document.getElementById('formget2_hf_0').innerHTML = '<input type=\"hidden\" name=\"param1\" value=\"\" /><input type=\"hidden\" name=\"param2\" value=\"val ue\" />';var f = document.getElementById('formget2');f.action='path';Wicket.Event.fire(f, 'submit');",
+			page.getForm.getJsForListenerUrl("path?param1&param2=val%20ue").toString());
 	}
 
 	/**
 	 * WICKET-3488
 	 */
 	@Test
-	public void formReplacement()
+	void formReplacement()
 	{
 		tester.startPage(TestPage.class);
 		tester.newFormTester("form").submit();
@@ -78,7 +99,7 @@ public class FormTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void actionUrlNotDoubleEscaped()
+	void actionUrlNotDoubleEscaped()
 	{
 		tester.startPage(TestPage.class);
 		String response = tester.getLastResponseAsString();
@@ -86,14 +107,14 @@ public class FormTest extends WicketTestCase
 	}
 
 	@Test
-	public void onValidateModelObjects()
+	void onValidateModelObjects()
 	{
 
 		class TestPage extends WebPage implements IMarkupResourceStreamProvider
 		{
 			boolean shouldFail, submit, error;
 
-			public TestPage()
+			TestPage()
 			{
 				add(new Form<Void>("form")
 				{
@@ -145,7 +166,7 @@ public class FormTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 		/** */
-		public static final String TEST_QUERY_STRING = "&query_p_1=value_1";
+		static final String TEST_QUERY_STRING = "&query_p_1=value_1";
 
 		@Override
 		protected Form<Void> newForm(String id)
@@ -170,7 +191,7 @@ public class FormTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void pageWithParameters() throws Exception
+	void pageWithParameters() throws Exception
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.add("first", "foo");

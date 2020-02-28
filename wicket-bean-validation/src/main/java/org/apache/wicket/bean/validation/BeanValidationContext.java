@@ -3,6 +3,7 @@ package org.apache.wicket.bean.validation;
 import java.lang.annotation.Annotation;
 
 import javax.validation.Validator;
+import javax.validation.metadata.ConstraintDescriptor;
 
 import org.apache.wicket.markup.html.form.FormComponent;
 
@@ -36,6 +37,19 @@ public interface BeanValidationContext extends IPropertyResolver
 	 */
 	IViolationTranslator getViolationTranslator();
 
+	/**
+	 * Resolve the property for a component.
+	 * 
+	 * @param component component
+	 */
 	@Override
 	Property resolveProperty(FormComponent<?> component);
+	
+	/**
+	 * Does the given constraint make a component required.
+	 * 
+	 * @param constraint constraint
+	 * @return <code>true</code> if required
+	 */
+	boolean isRequiredConstraint(ConstraintDescriptor<?> constraint);
 }

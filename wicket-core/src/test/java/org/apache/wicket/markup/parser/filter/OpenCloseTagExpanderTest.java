@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.ParseException;
 
@@ -28,19 +30,18 @@ import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.hamcrest.CoreMatchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  */
-public class OpenCloseTagExpanderTest extends WicketTestCase
+class OpenCloseTagExpanderTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage() throws Exception
+	void renderHomePage() throws Exception
 	{
 		executeTest(OpenCloseTagExpanderPage_1.class,
 			"OpenCloseTagExpanderPageExpectedResult_1.html");
@@ -52,7 +53,7 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 	 * @throws ParseException
 	 */
 	@Test
-	public void doNotExpandVoidElements() throws ParseException
+	void doNotExpandVoidElements() throws ParseException
 	{
 		String[] htmlVoidElements = new String[] { "area", "base", "br", "col", "command", "embed",
 				"hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr" };
@@ -88,7 +89,7 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 			MarkupElement markupElement = expander.nextElement();
 
 			// assert the next element is returned by the parent
-			assertThat(markupElement, instanceOf(TestMarkupElement.class));
+			assertThat(markupElement).isInstanceOf(TestMarkupElement.class);
 		}
 	}
 
@@ -98,7 +99,7 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 	 * @throws ParseException
 	 */
 	@Test
-	public void expandNonVoidElements() throws ParseException
+	void expandNonVoidElements() throws ParseException
 	{
 		for (String htmlNonVoidElement : OpenCloseTagExpander.REPLACE_FOR_TAGS)
 		{
@@ -143,7 +144,7 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 	 * @throws ParseException
 	 */
 	@Test
-	public void expandWicketTagWithSameNamespace() throws ParseException
+	void expandWicketTagWithSameNamespace() throws ParseException
 	{
 		final String namespace = "customNS";
 
@@ -162,14 +163,14 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 
 		MarkupElement markupElement = expander.nextElement();
 
-		assertThat(markupElement, CoreMatchers.instanceOf(WicketTag.class));
+		assertThat(markupElement).isInstanceOf(WicketTag.class);
 		assertTrue(markupElement.closes(tag));
 		assertEquals(namespace, ((ComponentTag) markupElement).getNamespace());
 	}
 
 	private static class TestMarkupElement extends WicketTag
 	{
-		public TestMarkupElement()
+		TestMarkupElement()
 		{
 			super(new XmlTag());
 		}

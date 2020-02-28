@@ -14,57 +14,69 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function wicketDebugBarCollapse() {
-	wicketDebugBarToggleVisibility('wicketDebugBarContents');
-}
+;(function (jQuery, undefined) {
 
-function wicketDebugBarRemove() {
-	wicketDebugBarToggleVisibility('wicketDebugBar');
-}
+	'use strict';
 
-function wicketDebugBarToggleVisibility(elemID) {
-	var elem = document.getElementById(elemID);
-	var vis  = elem.style.display != 'none';
-	elem.style.display = (vis ? 'none' : '');
-    // alter the state cookie so we can initialize it properly on domReady
-	wicketDebugBarSetExpandedCookie(vis ? 'collapsed' : 'expanded')
-}
+	if (typeof(Wicket) === 'undefined') {
+		window.Wicket = {};
+	}
 
-function wicketDebugBarSetExpandedCookie(value) {
-	document.cookie =  "wicketDebugBarState=" + window.escape(value);
-}
+	if (typeof(Wicket.debugBar) === 'object') {
+		return;
+	}
 
-function wicketDebugBarGetExpandedCookie() {
-	var name = 'wicketDebugBarState';
-	if (document.cookie.length > 0) {
-		var start = document.cookie.indexOf (name + "=");
-		if (start !== -1) {
-			start = start + name.length + 1;
-			var end = document.cookie.indexOf(";", start);
-			if (end === -1) {
-				end = document.cookie.length;
+	Wicket.debugBar = function() {
+		
+		function setExpandedCookie(value) {
+			document.cookie =  "wicketDebugBarState=" + window.escape(value);
+		}
+		
+		function getExpandedCookie() {
+			var name = 'wicketDebugBarState';
+			if (document.cookie.length > 0) {
+				var start = document.cookie.indexOf (name + "=");
+				if (start !== -1) {
+					start = start + name.length + 1;
+					var end = document.cookie.indexOf(";", start);
+					if (end === -1) {
+						end = document.cookie.length;
+					}
+					return window.unescape(document.cookie.substring(start,end));
+				} else {
+					return null;
+				}
+			} else {
+				return null;
 			}
-			return window.unescape(document.cookie.substring(start,end));
-		} else {
-			return null;
 		}
-	} else {
-		return null;
-	}
-}
 
-function wicketDebugBarCheckState() {
-	var state = wicketDebugBarGetExpandedCookie();
-    // state cookie has not been set. determine state and set it
-	if (state === null) {
-		var isVisible = jQuery('#wicketDebugBarContents').is(':visible');
-		wicketDebugBarSetExpandedCookie(isVisible ? 'expanded' : 'collapsed');
-    // set state of debug bar according to cookie
-	} else {
-		if (state === 'expanded') {
-			jQuery('#wicketDebugBarContents').css('display', '');
-		} else {
-			jQuery('#wicketDebugBarContents').css('display', 'none');
+		jQuery('#wicketDebugBarCollapse').on("click", function() {
+			var content = jQuery('#wicketDebugBarContents');
+			setExpandedCookie(!content.is(':visible'));
+			content.toggle(400);
+		});
+
+		jQuery('#wicketDebugBarRemove').on("click", function() {
+			var bar = jQuery('#wicketDebugBar');
+			setExpandedCookie(!bar.is(':visible'));
+			bar.hide();
+		});
+
+	    // determine state and set it
+		if (getExpandedCookie() === 'false') {
+			jQuery('#wicketDebugBarContents').hide();
 		}
-	}
-}
+		
+		var original = Wicket.Log.error;
+		Wicket.Log.error = function() {
+			original.apply(Wicket.Log, arguments);
+			
+			jQuery('#wicketDebugBar')
+				.addClass('wicketDebugBarError')
+				.one('animationend', function() {
+					jQuery(this).removeClass('wicketDebugBarError');
+				});
+		};
+	};
+})(jQuery);

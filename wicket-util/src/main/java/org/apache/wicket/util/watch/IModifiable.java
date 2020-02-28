@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.watch;
 
-import org.apache.wicket.util.time.Time;
+import java.time.Instant;
 
 /**
  * Interface to get the last time something was modified.
@@ -32,5 +32,5 @@ public interface IModifiable
 	 * @return the last modification <code>Time</code> or 
 	 * <code>null</code> if that information is not available
 	 */
-	Time lastModifiedTime();
+	Instant lastModifiedTime();
 }

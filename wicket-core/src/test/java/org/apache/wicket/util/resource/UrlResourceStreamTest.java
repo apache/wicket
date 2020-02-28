@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -25,20 +27,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.util.lang.Bytes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Kent Tong
  */
-public class UrlResourceStreamTest extends Assert {
+class UrlResourceStreamTest {
 	/**
 	 * lastModified() shouldn't change the content length if the file isn't really changed.
 	 *
 	 * @throws IOException
 	 */
 	@Test
-	public void lastModifiedForResourceInJar() throws IOException {
+	void lastModifiedForResourceInJar() throws IOException {
 		String anyClassInJarFile = "/java/lang/String.class";
 		URL url = getClass().getResource(anyClassInJarFile);
 		UrlResourceStream stream = new UrlResourceStream(url);
@@ -59,7 +60,7 @@ public class UrlResourceStreamTest extends Assert {
 	 * @throws ResourceStreamNotFoundException
 	 */
 	@Test
-	public void loadJustOnce() throws IOException, ResourceStreamNotFoundException {
+	void loadJustOnce() throws IOException, ResourceStreamNotFoundException {
 		String anyClassInJarFile = "/java/lang/String.class";
 		URL realURL = getClass().getResource(anyClassInJarFile);
 
@@ -116,8 +117,8 @@ public class UrlResourceStreamTest extends Assert {
 
 		private final URL realURL;
 
-		public CountingURLStreamHandler(URL realURL, AtomicInteger connectCounter,
-										AtomicInteger streamCounter) {
+		CountingURLStreamHandler(URL realURL, AtomicInteger connectCounter,
+								 AtomicInteger streamCounter) {
 			this.connectCounter = connectCounter;
 			this.streamCounter = streamCounter;
 			this.realURL = realURL;

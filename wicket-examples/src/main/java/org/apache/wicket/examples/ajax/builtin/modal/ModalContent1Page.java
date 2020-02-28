@@ -65,8 +65,6 @@ public class ModalContent1Page extends WebPage
 			}
 		});
 
-		add(new LocalDateTimeField("dateTimeField"));
-
 		final ModalWindow modal;
 		add(modal = new ModalWindow("modal"));
 

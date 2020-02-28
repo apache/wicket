@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,18 +29,18 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for the retainDisabledSelected flag on ListMultipleChoice.
  */
-public class DisabledItemRetainingCheckBoxTest extends WicketTestCase
+class DisabledItemRetainingCheckBoxTest extends WicketTestCase
 {
 	/**
 	 * testRenderMyPage()
 	 */
 	@Test
-	public void renderMyPage()
+	void renderMyPage()
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		tester.assertRenderedPage(TestPage.class);
@@ -50,7 +54,7 @@ public class DisabledItemRetainingCheckBoxTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void retainDisabledSelected_On() throws Exception
+	void retainDisabledSelected_On() throws Exception
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		FormTester form = tester.newFormTester("form");
@@ -65,7 +69,7 @@ public class DisabledItemRetainingCheckBoxTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void retainDisabledSelected_Off() throws Exception
+	void retainDisabledSelected_Off() throws Exception
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		FormTester form = tester.newFormTester("form");
@@ -80,7 +84,7 @@ public class DisabledItemRetainingCheckBoxTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void retainDisabledSelected_NoSelection() throws Exception
+	void retainDisabledSelected_NoSelection() throws Exception
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		FormTester form = tester.newFormTester("form");
@@ -94,7 +98,7 @@ public class DisabledItemRetainingCheckBoxTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void retainDisabledSelected_Off_NoSelection() throws Exception
+	void retainDisabledSelected_Off_NoSelection() throws Exception
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		FormTester form = tester.newFormTester("form");

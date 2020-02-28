@@ -148,6 +148,7 @@ public class CompoundValidator<T> extends Behavior implements IValidator<T>
 		}
 	}
 
+	@Override
 	public boolean getStatelessHint(Component component)
 	{
 		for (IValidator<T> validator : validators) {

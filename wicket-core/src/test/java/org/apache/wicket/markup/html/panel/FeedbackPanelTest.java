@@ -16,40 +16,74 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link FeedbackPanel}
  * 
  * @author cgatay
  */
-public class FeedbackPanelTest extends WicketTestCase
+class FeedbackPanelTest extends WicketTestCase
 {
     @Test
-    public void testCssClassesOnFeedbackPanel() throws Exception {
+    void testCssClassesOnFeedbackPanel() throws Exception
+    {
         TestPage testPage = new TestPage();
         testPage.label.error("Error message");
         testPage.label.info("Info message");
         testPage.label.warn("Warn message");
         executeTest(testPage, "FeedbackPanelTest_cssClasses_expected.html");
     }
+    
+    @Test
+    void collectSessionMessages() throws Exception
+	{
+    	TestPage testPage = new TestPage();
+    	
+    	tester.startPage(testPage);
+    	tester.assertInvisible("feedback");
+		
+    	String message = "session info";
+
+    	tester.getSession().info(message);
+    	tester.startPage(testPage);
+    	tester.assertVisible("feedback");
+	}
 
     private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
     {
         FeedbackPanel feedbackPanel;
         Component label;
 
-        public TestPage()
+        TestPage()
         {
-            feedbackPanel = new FeedbackPanel("feedback");
+            feedbackPanel = new FeedbackPanel("feedback") 
+            {
+            	/**
+            	 * Hide panel if there is no message to show
+            	 */
+            	@Override
+            	protected void onConfigure()
+            	{
+            		super.onConfigure();
+            		List<FeedbackMessage> messages = getFeedbackMessagesModel().getObject();
+            		
+            		setVisible(messages.size() > 0);
+            	}
+            };
+            
+            
             label = new Label("label");
             add(feedbackPanel, label);
         }

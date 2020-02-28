@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.util.tester;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
-
-import junit.framework.AssertionFailedError;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.wicket.Component;
@@ -47,7 +45,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ValidationErrorFeedback;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -57,11 +54,10 @@ import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * A helper class to ease unit testing of Wicket applications without the need for a servlet
  * container. To start a test, either use <code>startPage</code> or <code>startPanel</code>:
- * 
+ *
  * <pre>
  * // production page
  * public class MyPage extends WebPage
@@ -79,16 +75,16 @@ import org.slf4j.LoggerFactory;
  * 	}
  * }
  * </pre>
- * 
+ *
  * <pre>
  * // test code
  * private WicketTester tester;
- * 
+ *
  * public void setUp()
  * {
  * 	tester = new WicketTester();
  * }
- * 
+ *
  * public void testRenderMyPage()
  * {
  * 	// start and render the test page
@@ -99,10 +95,10 @@ import org.slf4j.LoggerFactory;
  * 	tester.assertLabel(&quot;myMessage&quot;, &quot;Hello!&quot;);
  * }
  * </pre>
- * 
+ *
  * The above example is straight forward: start <code>MyPage.class</code> and assert
  * <code>Label</code> it rendered. Next, we try to navigate through a <code>Link</code>:
- * 
+ *
  * <pre>
  * // production page
  * public class YourPage extends WebPage
@@ -113,7 +109,7 @@ import org.slf4j.LoggerFactory;
  * 		info(&quot;Wicket Rocks ;-)&quot;);
  * 	}
  * }
- * 
+ *
  * // test code
  * public void testLinkToYourPage()
  * {
@@ -124,11 +120,11 @@ import org.slf4j.LoggerFactory;
  * 	tester.assertLabel(&quot;yourMessage&quot;, &quot;Hi!&quot;);
  * }
  * </pre>
- * 
+ *
  * <code>tester.clickLink(path);</code> will simulate user click on the component (in this case,
  * it's a <code>Link</code>) and render the response page <code>YourPage</code>. Ok, unit test of
  * <code>MyPage</code> is completed. Now we test <code>YourPage</code> standalone:
- * 
+ *
  * <pre>
  * // test code
  * public void testRenderYourPage()
@@ -141,30 +137,28 @@ import org.slf4j.LoggerFactory;
  * 	tester.assertInfoMessages(new String[] { &quot;Wicket Rocks ;-)&quot; });
  * }
  * </pre>
- * 
+ *
  * Many methods require a 'path' parameter. E.g. the page relative path can be obtained via
  * {@link Component#getPageRelativePath()}. Since each Component has an ID/name, any Component can
  * also be referenced by its ID {@link MarkupContainer#get(String)}. And since MarkupContainer's and
  * its subclasses are containers which allow to add Components (in sync with the markup hierarchy),
  * you may not only access direct childs but also subchilds like get("myPanel:myForm:myNameField")
  * separating each ID with a ':'.
- * 
+ *
  * Cookie handling:
- * 
- * There are some expectations about wicket tester cookie handling which should match as best as
- * it can be with a real client server request response cycle: 
- * - all valid cookies set before a request is made (tester.getRequest().addCookie()) should
- *   appear in the page request
- * - all cookies set in the response should appear in the last response (tester.getLastResponse()) 
- *   after the request is made (expired cookies and others)
- * - all cookies set in the response should appear even after a redirect response is made
- *   until the final response (tester.getLastResponse()) is written to the client (wicket tester) 
- * - all valid cookies (maxAge!=0) from the last response should be added to
- *   the next request cookies (tester.getRequest().getCookies())
- * 
- * 
+ *
+ * There are some expectations about wicket tester cookie handling which should match as best as it
+ * can be with a real client server request response cycle: - all valid cookies set before a request
+ * is made (tester.getRequest().addCookie()) should appear in the page request - all cookies set in
+ * the response should appear in the last response (tester.getLastResponse()) after the request is
+ * made (expired cookies and others) - all cookies set in the response should appear even after a
+ * redirect response is made until the final response (tester.getLastResponse()) is written to the
+ * client (wicket tester) - all valid cookies (maxAge!=0) from the last response should be added to
+ * the next request cookies (tester.getRequest().getCookies())
+ *
+ *
  * TODO General: Example usage of FormTester
- * 
+ *
  * @author Ingram Chen
  * @author Juergen Donnerstag
  * @author Frank Bille
@@ -185,7 +179,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Creates a <code>WicketTester</code> and automatically creates a <code>WebApplication</code>.
-	 * 
+	 *
 	 * @param homePage
 	 *            a home page <code>Class</code>
 	 */
@@ -196,7 +190,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Creates a <code>WicketTester</code>.
-	 * 
+	 *
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 */
@@ -207,13 +201,13 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Creates a <code>WicketTester</code> to help unit testing.
-	 * 
+	 *
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 * @param path
 	 *            the absolute path on disk to the web application's contents (e.g. war root) - may
 	 *            be <code>null</code>
-	 * 
+	 *
 	 * @see org.apache.wicket.mock.MockApplication#MockApplication()
 	 */
 	public WicketTester(final WebApplication application, final String path)
@@ -223,7 +217,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Creates a <code>WicketTester</code> to help unit testing.
-	 * 
+	 *
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 * @param servletCtx
@@ -233,10 +227,10 @@ public class WicketTester extends BaseWicketTester
 	{
 		super(application, servletCtx);
 	}
-	
+
 	/**
 	 * Creates a <code>WicketTester</code> to help unit testing.
-	 * 
+	 *
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 * @param init
@@ -246,10 +240,10 @@ public class WicketTester extends BaseWicketTester
 	{
 		super(application, init);
 	}
-	
+
 	/**
 	 * Creates a <code>WicketTester</code> to help unit testing.
-	 * 
+	 *
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 * @param servletCtx
@@ -260,6 +254,26 @@ public class WicketTester extends BaseWicketTester
 	public WicketTester(WebApplication application, ServletContext servletCtx, boolean init)
 	{
 		super(application, servletCtx, init);
+	}
+
+	/**
+	 * Returns the current Maven build directory taken from the <tt>basedir</tt> system property, or
+	 * null if not set
+	 *
+	 * @return path with a trailing slash
+	 */
+	public static String getBasedir()
+	{
+		String basedir = System.getProperty("basedir");
+		if (basedir != null)
+		{
+			basedir = basedir + "/";
+		}
+		else
+		{
+			basedir = "";
+		}
+		return basedir;
 	}
 
 	/**
@@ -275,19 +289,19 @@ public class WicketTester extends BaseWicketTester
 		String ajaxLocation = getLastResponse().getHeader("Ajax-Location");
 		if (null == ajaxLocation)
 		{
-			throw new AssertionFailedError("Ajax-Location header should be present when using Ajax");
+			fail("Ajax-Location header should be present when using Ajax");
 		}
 
 		int statusCode = getLastResponse().getStatus();
 		if (statusCode != 200)
 		{
-			throw new AssertionFailedError("Expected HTTP status code to be 200 (OK)");
+			fail("Expected HTTP status code to be 200 (OK)");
 		}
 	}
 
 	/**
 	 * Asserts a <code>Component</code> class.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>Component</code>
 	 * @param expectedComponentClass
@@ -299,8 +313,7 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * Asserts that the <code>Component</code> a the given path has a behavior
-	 * of the given type.
+	 * Asserts that the <code>Component</code> a the given path has a behavior of the given type.
 	 *
 	 * @param path
 	 *            path to <code>Component</code>
@@ -314,19 +327,19 @@ public class WicketTester extends BaseWicketTester
 		Component component = assertExists(path);
 		List<? extends Behavior> behaviors = component.getBehaviors(expectedBehaviorClass);
 		final String message = String.format("Component '%s' has no behaviors of type '%s'",
-				component.getPageRelativePath(), expectedBehaviorClass);
+			component.getPageRelativePath(), expectedBehaviorClass);
 		assertResult(new Result(CollectionUtils.isEmpty(behaviors), message));
 	}
 
 	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
-	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(Component...)}. This method actually tests that a
-	 * <code>Component</code> is on the Ajax response sent back to the client.
+	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(Component...)}. This method actually
+	 * tests that a <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
 	 * tree, using JavaScript. But it shouldn't be needed because you just have to trust that Wicket
 	 * Ajax JavaScript works.
-	 * 
+	 *
 	 * @param component
 	 *            a <code>Component</code> to be tested
 	 */
@@ -338,13 +351,13 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
-	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(Component...)}. This method actually tests that a
-	 * <code>Component</code> is on the Ajax response sent back to the client.
+	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(Component...)}. This method actually
+	 * tests that a <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
 	 * tree, using JavaScript. But it shouldn't be needed because you just have to trust that Wicket
 	 * Ajax JavaScript works.
-	 * 
+	 *
 	 * @param componentPath
 	 *            a <code>Component</code> path to test
 	 */
@@ -356,7 +369,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Asserts the content of last rendered page contains (matches) a given regex pattern.
-	 * 
+	 *
 	 * @param pattern
 	 *            a regex pattern to match
 	 */
@@ -367,7 +380,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * The opposite of {@link #assertContains(String)}.
-	 * 
+	 *
 	 * @param pattern
 	 *            pattern
 	 */
@@ -380,9 +393,9 @@ public class WicketTester extends BaseWicketTester
 	 * Asserts that a component's markup has loaded with the given variation
 	 *
 	 * @param component
-	 *              The component which markup to check
+	 *            The component which markup to check
 	 * @param expectedVariation
-	 *              The expected variation of the component's markup
+	 *            The expected variation of the component's markup
 	 */
 	public void assertMarkupVariation(Component component, String expectedVariation)
 	{
@@ -392,7 +405,8 @@ public class WicketTester extends BaseWicketTester
 		String actualVariation = markup.getMarkupResourceStream().getVariation();
 		if (Objects.equal(expectedVariation, actualVariation) == false)
 		{
-			result = Result.fail(String.format("Wrong variation for component '%s'. Actual: '%s', expected: '%s'",
+			result = Result.fail(
+				String.format("Wrong variation for component '%s'. Actual: '%s', expected: '%s'",
 					component.getPageRelativePath(), actualVariation, expectedVariation));
 		}
 
@@ -403,10 +417,10 @@ public class WicketTester extends BaseWicketTester
 	 * Asserts that a component's markup has loaded with the given style.
 	 *
 	 * @param component
-	 *              The component which markup to check
+	 *            The component which markup to check
 	 * @param expectedStyle
-	 *              The expected style of the component's markup.
-	 *              For example: <em>green</em> in <code>MyPanel_green.html</code>
+	 *            The expected style of the component's markup. For example: <em>green</em> in
+	 *            <code>MyPanel_green.html</code>
 	 */
 	public void assertMarkupStyle(Component component, String expectedStyle)
 	{
@@ -416,7 +430,8 @@ public class WicketTester extends BaseWicketTester
 		String actualStyle = markup.getMarkupResourceStream().getStyle();
 		if (Objects.equal(expectedStyle, actualStyle) == false)
 		{
-			result = Result.fail(String.format("Wrong style for component '%s'. Actual: '%s', expected: '%s'",
+			result = Result
+				.fail(String.format("Wrong style for component '%s'. Actual: '%s', expected: '%s'",
 					component.getPageRelativePath(), actualStyle, expectedStyle));
 		}
 
@@ -427,9 +442,9 @@ public class WicketTester extends BaseWicketTester
 	 * Asserts that a component's markup has loaded with the given locale
 	 *
 	 * @param component
-	 *              The component which markup to check
+	 *            The component which markup to check
 	 * @param expectedLocale
-	 *              The expected locale of the component's markup
+	 *            The expected locale of the component's markup
 	 */
 	public void assertMarkupLocale(Component component, Locale expectedLocale)
 	{
@@ -439,7 +454,8 @@ public class WicketTester extends BaseWicketTester
 		Locale actualLocale = markup.getMarkupResourceStream().getLocale();
 		if (Objects.equal(expectedLocale, actualLocale) == false)
 		{
-			result = Result.fail(String.format("Wrong locale for component '%s'. Actual: '%s', expected: '%s'",
+			result = Result
+				.fail(String.format("Wrong locale for component '%s'. Actual: '%s', expected: '%s'",
 					component.getPageRelativePath(), actualLocale, expectedLocale));
 		}
 
@@ -451,7 +467,7 @@ public class WicketTester extends BaseWicketTester
 		IMarkupFragment markup = null;
 		if (component instanceof MarkupContainer)
 		{
-			markup = ((MarkupContainer) component).getAssociatedMarkup();
+			markup = ((MarkupContainer)component).getAssociatedMarkup();
 		}
 
 		if (markup == null)
@@ -461,7 +477,8 @@ public class WicketTester extends BaseWicketTester
 
 		if (markup == null)
 		{
-			throw new AssertionFailedError(String.format("Cannot find the markup of component: %s", component.getPageRelativePath()));
+			fail(String.format("Cannot find the markup of component: %s",
+				component.getPageRelativePath()));
 		}
 
 		return markup;
@@ -469,24 +486,26 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Asserts error-level feedback messages.
-	 * 
+	 *
 	 * @param expectedErrorMessages
 	 *            expected error messages
 	 */
 	public void assertErrorMessages(Serializable... expectedErrorMessages)
 	{
-		assertFeedbackMessages(new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR), expectedErrorMessages);
+		assertFeedbackMessages(new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR),
+			expectedErrorMessages);
 	}
 
 	/**
 	 * Assert info-level feedback messages.
-	 * 
+	 *
 	 * @param expectedInfoMessages
 	 *            expected info messages
 	 */
 	public void assertInfoMessages(Serializable... expectedInfoMessages)
 	{
-		assertFeedbackMessages(new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO), expectedInfoMessages);
+		assertFeedbackMessages(new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO),
+			expectedInfoMessages);
 	}
 
 	/**
@@ -497,7 +516,8 @@ public class WicketTester extends BaseWicketTester
 	 * @param expectedMessages
 	 *            expected feedback messages
 	 */
-	public void assertFeedbackMessages(IFeedbackMessageFilter filter, Serializable... expectedMessages)
+	public void assertFeedbackMessages(IFeedbackMessageFilter filter,
+		Serializable... expectedMessages)
 	{
 		List<FeedbackMessage> feedbackMessages = getFeedbackMessages(filter);
 		List<Serializable> actualMessages = getActualFeedbackMessages(feedbackMessages);
@@ -508,31 +528,33 @@ public class WicketTester extends BaseWicketTester
 	 * Asserts that there is a feedback message provided by a given component
 	 *
 	 * @param component
-	 *          the component that provided the expected feedback message. Optional.
+	 *            the component that provided the expected feedback message. Optional.
 	 * @param key
-	 *          the resource key for the feedback message. Mandatory.
+	 *            the resource key for the feedback message. Mandatory.
 	 * @param model
-	 *          the model used for interpolating the feedback message. Optional.
+	 *            the model used for interpolating the feedback message. Optional.
 	 * @param filter
-	 *          the filter that decides in which messages to look in. E.g. with a specific
-	 *          level, rendered or not, etc.
+	 *            the filter that decides in which messages to look in. E.g. with a specific level,
+	 *            rendered or not, etc.
 	 */
-	public void assertComponentFeedbackMessage(Component component, String key, IModel<?> model, IFeedbackMessageFilter filter)
+	public void assertComponentFeedbackMessage(Component component, String key, IModel<?> model,
+		IFeedbackMessageFilter filter)
 	{
 		Args.notNull(key, "key");
 
-		String expectedMessage = getApplication().getResourceSettings().getLocalizer().getString(key, component, model);
+		String expectedMessage = getApplication().getResourceSettings().getLocalizer().getString(
+			key, component, model);
 
 		List<FeedbackMessage> feedbackMessages = getFeedbackMessages(filter);
 		List<Serializable> actualMessages = getActualFeedbackMessages(feedbackMessages);
 
-		assertTrue(String.format("Feedback message with key '%s' cannot be found in %s", key, actualMessages),
-				actualMessages.contains(expectedMessage));
+		assertTrue(actualMessages.contains(expectedMessage), String
+			.format("Feedback message with key '%s' cannot be found in %s", key, actualMessages));
 	}
 
 	/**
-	 * Extracts the actual messages from the passed feedback messages.
-	 * Specially handles ValidationErrorFeedback messages by extracting their String message
+	 * Extracts the actual messages from the passed feedback messages. Specially handles
+	 * ValidationErrorFeedback messages by extracting their String message
 	 *
 	 * @param feedbackMessages
 	 *            the feedback messages
@@ -558,11 +580,11 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Assert that a particular feedback panel is rendering certain messages.
-	 * 
+	 *
 	 * NOTE: this casts the component at the specified path to a {@link FeedbackPanel}, so it will
 	 * not work with custom {@link IFeedback} implementations unless you are subclassing
 	 * {@link FeedbackPanel}
-	 * 
+	 *
 	 * @param path
 	 *            path to the feedback panel
 	 * @param messages
@@ -577,11 +599,14 @@ public class WicketTester extends BaseWicketTester
 		{
 			fail(String.format("feedback panel at path [%s] returned null messages", path));
 		}
+
 		if (messages.length != renderedMessages.size())
 		{
-			fail(String.format("you expected '%d' messages for the feedback panel [%s], but there were actually '%d'",
-					messages.length, path, renderedMessages.size()));
+			fail(String.format(
+				"you expected '%d' messages for the feedback panel [%s], but there were actually '%d'",
+				messages.length, path, renderedMessages.size()));
 		}
+
 		for (int i = 0; i < messages.length && i < renderedMessages.size(); i++)
 		{
 			final Serializable expected = messages[i];
@@ -603,7 +628,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Asserts that a <code>Component</code> is invisible.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>Component</code>
 	 */
@@ -614,7 +639,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Asserts the text of a <code>Label</code> <code>Component</code>.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>Label</code> <code>Component</code>
 	 * @param expectedLabelText
@@ -628,7 +653,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Asserts the model value of a component.
-	 * 
+	 *
 	 * @param path
 	 *            path to the component on the page
 	 * @param expectedValue
@@ -638,24 +663,6 @@ public class WicketTester extends BaseWicketTester
 	{
 		Component component = getComponentFromLastRenderedPage(path);
 		assertEquals(expectedValue, component.getDefaultModelObject());
-	}
-
-	/**
-	 * Asserts the model of a {@link ListView}.
-	 * 
-	 * @param path
-	 *            path to a {@link ListView} <code>Component</code>
-	 * @param expectedList
-	 *            expected <code>List</code> in the model of the given {@link ListView}
-	 * @Deprecated use {@link #assertComponent(String, Class) combined with
-	 *             {@link #assertModelValue(String, Object)} instead
-	 */
-	@Deprecated
-	@Override
-	public void assertListView(String path, List<?> expectedList)
-	{
-		ListView<?> listView = (ListView<?>)getComponentFromLastRenderedPage(path);
-		WicketTesterHelper.assertEquals(expectedList, listView.getList());
 	}
 
 	/**
@@ -676,19 +683,19 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Asserts there are no feedback messages with a certain level.
-	 * 
+	 *
 	 * @param level
 	 *            the level to check for
 	 */
 	public void assertNoFeedbackMessage(int level)
 	{
 		Result result = hasNoFeedbackMessage(level);
-		assertFalse(result.getMessage(), result.wasFailed());
+		assertFalse(result.wasFailed(), result.getMessage());
 	}
 
 	/**
 	 * Asserts a last-rendered <code>Page</code> class.
-	 * 
+	 *
 	 * @param expectedRenderedPageClass
 	 *            expected class of last rendered <code>Page</code>
 	 */
@@ -702,7 +709,7 @@ public class WicketTester extends BaseWicketTester
 	 * <p>
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
 	 * output file.
-	 * 
+	 *
 	 * @param clazz
 	 *            <code>Class</code> used to load the file (relative to <code>clazz</code> package)
 	 * @param filename
@@ -719,12 +726,11 @@ public class WicketTester extends BaseWicketTester
 	/**
 	 * Asserts last-rendered <code>Page</code> against an expected HTML document as a
 	 * <code>String</code>
-	 * 
+	 *
 	 * @param expectedDocument
 	 *            expected output <code>String</code>
-	 * @throws Exception
 	 */
-	public void assertResultPage(final String expectedDocument) throws Exception
+	public void assertResultPage(final String expectedDocument)
 	{
 		// Validate the document
 		String document = getLastResponseAsString();
@@ -733,7 +739,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Asserts that a <code>Component</code> is visible.
-	 * 
+	 *
 	 * @param path
 	 *            path to a <code>Component</code>
 	 */
@@ -744,10 +750,10 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert component is enabled.
-	 * 
+	 *
 	 * @param path
 	 *            path to component
-	 * 
+	 *
 	 */
 	public void assertEnabled(String path)
 	{
@@ -756,7 +762,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert component is enabled.
-	 * 
+	 *
 	 * @param path
 	 *            path to component
 	 */
@@ -767,7 +773,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * assert form component is required.
-	 * 
+	 *
 	 * @param path
 	 *            path to form component
 	 */
@@ -788,20 +794,20 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @param result
 	 */
 	private void assertResult(Result result)
 	{
 		if (result.wasFailed())
 		{
-			throw new AssertionFailedError(result.getMessage());
+			fail(result.getMessage());
 		}
 	}
 
 	/**
 	 * Checks whether a component is visible and/or enabled before usage
-	 * 
+	 *
 	 * @param component
 	 */
 	public void assertUsability(final Component component)
@@ -810,7 +816,7 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @param link
 	 */
 	public void clickLink(Component link)
@@ -821,7 +827,7 @@ public class WicketTester extends BaseWicketTester
 	/**
 	 * Asserts that that the BookmarkablePageLink<?> identified by "id" points to the page as
 	 * expected - including parameters.
-	 * 
+	 *
 	 * @param id
 	 * @param pageClass
 	 * @param parameters
@@ -836,21 +842,22 @@ public class WicketTester extends BaseWicketTester
 		}
 		catch (ClassCastException e)
 		{
-			throw new IllegalArgumentException("Component with id:" + id +
-				" is not a BookmarkablePageLink");
+			throw new IllegalArgumentException(
+				"Component with id:" + id + " is not a BookmarkablePageLink");
 		}
 
-		assertEquals("BookmarkablePageLink: " + id + " is pointing to the wrong page", pageClass,
-			pageLink.getPageClass());
+		assertEquals(pageClass, pageLink.getPageClass(),
+			"BookmarkablePageLink: " + id + " is pointing to the wrong page");
 
-		assertEquals("One or more of the parameters associated with the BookmarkablePageLink: " +
-			id + " do not match", parameters, pageLink.getPageParameters());
+		assertEquals(parameters, pageLink.getPageParameters(),
+			"One or more of the parameters associated with the BookmarkablePageLink: " + id +
+				" do not match");
 	}
 
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
 	 * output file.
-	 * 
+	 *
 	 * @param <T>
 	 * @param testClass
 	 * @param pageClass
@@ -870,7 +877,7 @@ public class WicketTester extends BaseWicketTester
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
 	 * output file.
-	 * 
+	 *
 	 * @param testClass
 	 * @param page
 	 * @param filename
@@ -889,7 +896,7 @@ public class WicketTester extends BaseWicketTester
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
 	 * output file.
-	 * 
+	 *
 	 * @param testClass
 	 * @param component
 	 * @param filename
@@ -907,7 +914,7 @@ public class WicketTester extends BaseWicketTester
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
 	 * output file.
-	 * 
+	 *
 	 * @param <T>
 	 * @param testClass
 	 * @param pageClass
@@ -926,7 +933,7 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @param testClass
 	 * @param component
 	 * @param filename
@@ -944,7 +951,7 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @param testClass
 	 * @param behavior
 	 * @param filename
@@ -963,7 +970,7 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Assert that the last request redirected to the given Url.
-	 * 
+	 *
 	 * @param expectedRedirectUrl
 	 *            expected
 	 */
@@ -971,25 +978,5 @@ public class WicketTester extends BaseWicketTester
 	{
 		String actualRedirectUrl = getLastResponse().getRedirectLocation();
 		assertEquals(expectedRedirectUrl, actualRedirectUrl);
-	}
-
-	/**
-	 * Returns the current Maven build directory taken from the <tt>basedir</tt> system property, or
-	 * null if not set
-	 * 
-	 * @return path with a trailing slash
-	 */
-	public static String getBasedir()
-	{
-		String basedir = System.getProperty("basedir");
-		if (basedir != null)
-		{
-			basedir = basedir + "/";
-		}
-		else
-		{
-			basedir = "";
-		}
-		return basedir;
 	}
 }

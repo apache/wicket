@@ -20,22 +20,26 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.Objects;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.IWicketInternalException;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
+import org.apache.wicket.resource.IScopeAwareTextResourceProcessor;
+import org.apache.wicket.resource.ITextResourceCompressor;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Classes;
@@ -45,7 +49,6 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.ResourceStreamWrapper;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,6 +122,11 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private final String scopeName;
 
 	/**
+	 * The name of the resource
+	 */
+	private final String name;
+
+	/**
 	 * The resource's style
 	 */
 	private final String style;
@@ -183,6 +191,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			path = name;
 		}
 
+		this.name = name;
 		this.scopeName = scope.getName();
 		this.locale = locale;
 		this.style = style;
@@ -283,6 +292,11 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		return WicketObjects.resolveClass(scopeName);
 	}
 
+	public final String getName()
+	{
+		return name;
+	}
+
 	/**
 	 * Gets the style.
 	 * 
@@ -315,7 +329,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		}
 
 		// add Last-Modified header (to support HEAD requests and If-Modified-Since)
-		final Time lastModified = resourceStream.lastModifiedTime();
+		final Instant lastModified = resourceStream.lastModifiedTime();
 
 		resourceResponse.setLastModified(lastModified);
 
@@ -408,7 +422,81 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 */
 	protected byte[] processResponse(final Attributes attributes, final byte[] original)
 	{
-		return original;
+		return compressResponse(attributes, original);
+	}
+
+	/**
+	 * Compresses the response if its is eligible and there is a configured compressor
+	 *
+	 * @param attributes
+	 * 	 *            current request attributes from client
+	 * 	 * @param original
+	 * 	 *            the original response
+	 * 	 * @return the compressed response
+	 */
+	protected byte[] compressResponse(final Attributes attributes, final byte[] original)
+	{
+		ITextResourceCompressor compressor = getCompressor();
+
+		if (compressor != null && getCompress())
+		{
+			try
+			{
+				Charset charset = getProcessingEncoding();
+				String nonCompressed = new String(original, charset);
+				String output;
+				if (compressor instanceof IScopeAwareTextResourceProcessor)
+				{
+					IScopeAwareTextResourceProcessor scopeAwareProcessor = (IScopeAwareTextResourceProcessor)compressor;
+					output = scopeAwareProcessor.process(nonCompressed, getScope(), name);
+				}
+				else
+				{
+					output = compressor.compress(nonCompressed);
+				}
+				final String textEncoding = getTextEncoding();
+				final Charset outputCharset;
+				if (Strings.isEmpty(textEncoding))
+				{
+					outputCharset = charset;
+				}
+				else
+				{
+					outputCharset = Charset.forName(textEncoding);
+				}
+				return output.getBytes(outputCharset);
+			}
+			catch (Exception e)
+			{
+				log.error("Error while compressing the content", e);
+				return original;
+			}
+		}
+		else
+		{
+			// don't strip the comments
+			return original;
+		}
+	}
+
+	/**
+	 * @return The charset to use to read the resource
+	 */
+	protected Charset getProcessingEncoding()
+	{
+		return StandardCharsets.UTF_8;
+	}
+
+	/**
+	 * Gets the {@link IJavaScriptCompressor} to be used. By default returns the configured
+	 * compressor on application level, but can be overriden by the user application to provide
+	 * compressor specific to the resource.
+	 *
+	 * @return the configured application level JavaScript compressor. May be {@code null}.
+	 */
+	protected ITextResourceCompressor getCompressor()
+	{
+		return null;
 	}
 
 	/**

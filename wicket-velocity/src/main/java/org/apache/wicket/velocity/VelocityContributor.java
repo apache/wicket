@@ -42,7 +42,7 @@ public class VelocityContributor extends Behavior
 
 	private String encoding = "ISO-8859-1";
 
-	private final IModel<? extends Map<?, ?>> model;
+	private final IModel<? extends Map<String, Object>> model;
 
 	private final String templateName;
 
@@ -56,7 +56,7 @@ public class VelocityContributor extends Behavior
 	 * @param templateName
 	 * @param model
 	 */
-	public VelocityContributor(final String templateName, final IModel<? extends Map<?, ?>> model)
+	public VelocityContributor(final String templateName, final IModel<? extends Map<String, Object>> model)
 	{
 		Args.notNull(model, "model");
 

@@ -18,9 +18,9 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.export;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
@@ -102,8 +102,9 @@ public class ExportToolbar extends AbstractToolbar
 	public ExportToolbar(DataTable<?, ?> table, IModel<String> messageModel, IModel<String> fileNameModel)
 	{
 		super(table);
-		this.messageModel = messageModel;
-		this.fileNameModel = fileNameModel;
+		
+		setMessageModel(messageModel);
+		setFileNameModel(fileNameModel);
 	}
 
 	/**
@@ -115,7 +116,7 @@ public class ExportToolbar extends AbstractToolbar
 	 */
 	public ExportToolbar setMessageModel(IModel<String> messageModel)
 	{
-		this.messageModel = Args.notNull(messageModel, "messageModel");
+		this.messageModel = wrap(Args.notNull(messageModel, "messageModel"));
 		return this;
 	}
 
@@ -128,7 +129,7 @@ public class ExportToolbar extends AbstractToolbar
 	 */
 	public ExportToolbar setFileNameModel(IModel<String> fileNameModel)
 	{
-		this.fileNameModel = Args.notNull(fileNameModel, "fileNameModel");
+		this.fileNameModel = wrap(Args.notNull(fileNameModel, "fileNameModel"));
 		return this;
 	}
 
@@ -201,15 +202,34 @@ public class ExportToolbar extends AbstractToolbar
 	{
 		IResource resource = new ResourceStreamResource()
 		{
+			/**
+			 * Set fileName and cacheDuration lazily
+			 */
+			public void respond(Attributes attributes) {
+				setFileName(fileNameModel.getObject() + "." + dataExporter.getFileNameExtension());
+				setCacheDuration(ExportToolbar.this.getCacheDuration());
+				
+				super.respond(attributes);
+			}
+			
 			@Override
 			protected IResourceStream getResourceStream(Attributes attributes)
 			{
 				return new DataExportResourceStreamWriter(dataExporter, getTable());
 			}
-		}.setFileName(fileNameModel.getObject() + "." + dataExporter.getFileNameExtension());
+		};
 
 		return new ResourceLink<Void>(componentId, resource)
 			.setBody(dataExporter.getDataFormatNameModel());
+	}
+
+	/**
+	 * How long should the export be cached.
+	 * 
+	 * @return default is {@link Duration#NONE}
+	 */
+	protected Duration getCacheDuration() {
+		return Duration.ZERO;
 	}
 
 	@Override

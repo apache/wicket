@@ -25,12 +25,12 @@ import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
 	/**
 	 * Construct.
 	 */
-	public ApacheLicenceHeaderTest()
+    ApacheLicenceHeaderTest()
 	{
 // addHeaders = true;
 
@@ -103,6 +103,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		javaScriptIgnore.add("src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js");
 		javaScriptIgnore.add("src/main/java/org/apache/wicket/resource/jquery");
 		javaScriptIgnore.add("src/test/js/qunit/qunit.js");
+		javaScriptIgnore.add("src/test/js/qunit/jquery.mockjax.js");
 		javaScriptIgnore.add("src/test/js/qunit/blanket.min.js");
 		javaScriptIgnore.add("src/test/js/amd/require.js");
 		javaScriptIgnore.add("src/test/js/data/ajax/nonWicketResponse.json"); // no way to add licence in JSON

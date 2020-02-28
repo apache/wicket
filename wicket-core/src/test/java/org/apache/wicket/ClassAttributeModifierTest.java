@@ -16,24 +16,26 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ClassAttributeModifier
  */
-public class ClassAttributeModifierTest extends Assert
+class ClassAttributeModifierTest
 {
 	/**
 	 * Adds two values
 	 */
 	@Test
-	public void addCssClasses()
+	void addCssClasses()
 	{
 		ClassAttributeModifier cam = new ClassAttributeModifier()
 		{
@@ -59,7 +61,7 @@ public class ClassAttributeModifierTest extends Assert
 	 * Adds 'three' and removes 'two'
 	 */
 	@Test
-	public void addRemoveCssClasses()
+	void addRemoveCssClasses()
 	{
 		ClassAttributeModifier cam = new ClassAttributeModifier()
 		{
@@ -87,7 +89,7 @@ public class ClassAttributeModifierTest extends Assert
 	 * Removes all CSS class values
 	 */
 	@Test
-	public void removeAllCssClasses()
+	void removeAllCssClasses()
 	{
 		ClassAttributeModifier cam = new ClassAttributeModifier()
 		{

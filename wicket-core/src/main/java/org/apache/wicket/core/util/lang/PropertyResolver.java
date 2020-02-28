@@ -27,7 +27,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.core.util.lang.PropertyResolverConverter;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
@@ -294,7 +293,7 @@ public final class PropertyResolver
 				break;
 			}
 
-			IGetAndSet getAndSet = null;
+			IGetAndSet getAndSet;
 			try
 			{
 				getAndSet = getGetAndSet(exp, clz);
@@ -486,12 +485,12 @@ public final class PropertyResolver
 		 *
 		 * @return The value of this property
 		 */
-		public Object getValue(final Object object);
+		Object getValue(final Object object);
 
 		/**
 		 * @return The target class of the object that as to be set.
 		 */
-		public Class<?> getTargetClass();
+		Class<?> getTargetClass();
 
 		/**
 		 * @param object
@@ -499,30 +498,30 @@ public final class PropertyResolver
 		 *
 		 * @return The new value for the property that is set back on that object.
 		 */
-		public Object newValue(Object object);
+		Object newValue(Object object);
 
 		/**
 		 * @param object
 		 * @param value
 		 * @param converter
 		 */
-		public void setValue(final Object object, final Object value,
+		void setValue(final Object object, final Object value,
 			PropertyResolverConverter converter);
 
 		/**
 		 * @return Field or null if there is no field
 		 */
-		public Field getField();
+		Field getField();
 
 		/**
 		 * @return Getter method or null if there is no getter
 		 */
-		public Method getGetter();
+		Method getGetter();
 
 		/**
 		 * @return Setter of null if there is no setter
 		 */
-		public Method getSetter();
+		Method getSetter();
 	}
 
 	public static abstract class AbstractGetAndSet implements IGetAndSet
@@ -710,7 +709,7 @@ public final class PropertyResolver
 			Object value = null;
 			try
 			{
-				value = clzComponentType.newInstance();
+				value = clzComponentType.getDeclaredConstructor().newInstance();
 				Array.set(object, index, value);
 			}
 			catch (Exception e)
@@ -900,7 +899,7 @@ public final class PropertyResolver
 			Object value = null;
 			try
 			{
-				value = clz.newInstance();
+				value = clz.getDeclaredConstructor().newInstance();
 				setMethod.invoke(object, index, value);
 			}
 			catch (Exception e)
@@ -961,10 +960,7 @@ public final class PropertyResolver
 			Class<?> type = null;
 			if (setMethod != null)
 			{
-				// getMethod is always there and if the value will be set through a setMethod then
-				// the getMethod return type will be its type. Else we have to look at the
-				// parameters if the setter but getting the return type is quicker
-				type = getMethod.getReturnType();
+				type = setMethod.getParameterTypes()[0];
 			}
 			else if (field != null)
 			{
@@ -981,13 +977,13 @@ public final class PropertyResolver
 					{
 						throw new ConversionException("Method [" + getMethod +
 							"]. Can't convert value: " + value + " to class: " +
-							getMethod.getReturnType() + " for setting it on " + object);
+							type + " for setting it on " + object);
 					}
-					else if (getMethod.getReturnType().isPrimitive())
+					else if (setMethod != null && type.isPrimitive())
 					{
-						throw new ConversionException("Method [" + getMethod +
+						throw new ConversionException("Method [" + setMethod +
 							"]. Can't convert null value to a primitive class: " +
-							getMethod.getReturnType() + " for setting it on " + object);
+							type + " for setting it on " + object);
 					}
 				}
 			}
@@ -1042,7 +1038,7 @@ public final class PropertyResolver
 			}
 			try
 			{
-				Method method = clz.getMethod(name, new Class[] { getMethod.getReturnType() });
+				Method method = clz.getMethod(name, getMethod.getReturnType());
 				if (method != null)
 				{
 					method.setAccessible(true);
@@ -1066,11 +1062,11 @@ public final class PropertyResolver
 						}
 					}
 				}
-				log.debug("Cannot find setter corresponding to " + getMethod);
+				log.debug("Cannot find setter corresponding to " + getMethod, e);
 			}
 			catch (Exception e)
 			{
-				log.debug("Cannot find setter corresponding to " + getMethod);
+				log.debug("Cannot find setter corresponding to " + getMethod, e);
 			}
 			return null;
 		}
@@ -1091,7 +1087,7 @@ public final class PropertyResolver
 			Object value = null;
 			try
 			{
-				value = clz.newInstance();
+				value = clz.getDeclaredConstructor().newInstance();
 				setMethod.invoke(object, value);
 			}
 			catch (Exception e)
@@ -1184,7 +1180,7 @@ public final class PropertyResolver
 			Object value = null;
 			try
 			{
-				value = clz.newInstance();
+				value = clz.getDeclaredConstructor().newInstance();
 				field.set(object, value);
 			}
 			catch (Exception e)
@@ -1292,9 +1288,9 @@ public final class PropertyResolver
 	/**
 	 * A locator of properties.
 	 * 
-	 * @see https://issues.apache.org/jira/browse/WICKET-5623
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-5623">WICKET-5623</a>
 	 */
-	public static interface IPropertyLocator
+	public interface IPropertyLocator
 	{
 		/**
 		 * Get {@link IGetAndSet} for a property.
@@ -1468,7 +1464,7 @@ public final class PropertyResolver
 									// and setPropertyIndex(int, object)
 									String name = Character.toUpperCase(propertyName.charAt(0)) +
 										propertyName.substring(1);
-									method = clz.getMethod(GET + name, new Class[] { int.class });
+									method = clz.getMethod(GET + name, int.class);
 									getAndSet = new IndexedPropertyGetAndSet(method, parsedIndex);
 								}
 								catch (Exception e)

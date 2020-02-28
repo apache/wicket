@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MockPageWithLink;
@@ -23,20 +25,19 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link AbstractLink}
  */
-public class AbstractLinkTest extends WicketTestCase
+class AbstractLinkTest extends WicketTestCase
 {
 	/**
 	 * 
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3338">WICKET-3338</a>
 	 */
 	@Test
-	public void testSetBodyModel()
+	void testSetBodyModel()
 	{
 		final String linkBody = "Link body";
 
@@ -51,7 +52,7 @@ public class AbstractLinkTest extends WicketTestCase
 
 		tester.startPage(mockPageWithLink);
 		TagTester tagTester = tester.getTagById("link");
-		Assert.assertEquals(linkBody, tagTester.getValue());
+		assertEquals(linkBody, tagTester.getValue());
 	}
 
 	/**
@@ -59,7 +60,7 @@ public class AbstractLinkTest extends WicketTestCase
 	 * method can be overridden to provide a dynamic model.
 	 */
 	@Test
-	public void testRenderUsingGetBody()
+	void testRenderUsingGetBody()
 	{
 		final AtomicInteger counter = new AtomicInteger(0);
 
@@ -79,10 +80,10 @@ public class AbstractLinkTest extends WicketTestCase
 
 		tester.startPage(mockPageWithLink);
 		TagTester tagTester = tester.getTagById("link");
-		Assert.assertEquals("0", tagTester.getValue());
+		assertEquals("0", tagTester.getValue());
 
 		tester.startPage(mockPageWithLink);
 		tagTester = tester.getTagById("link");
-		Assert.assertEquals("1", tagTester.getValue());
+		assertEquals("1", tagTester.getValue());
 	}
 }

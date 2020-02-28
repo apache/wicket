@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>9.0.0-M2-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -35,30 +35,70 @@
         WAR version (everything in a single .war file).
     </description>
 
+    <repositories>
+        <repository>
+            <id>JBoss Nexus</id>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
 	<properties>
+		<automatic-module-name>org.apache.wicket.arquillian.tests</automatic-module-name>
+
 		<!-- port configuration -->
 		<wicket.arquillian.server.port>18787</wicket.arquillian.server.port>
 		<java.debug.wire.protocol.port>48787</java.debug.wire.protocol.port>
 		<wicket.arquillian.management.port>11091</wicket.arquillian.management.port>
 		<!-- end port configuration -->
 
-		<arquillian.version>1.1.13.Final</arquillian.version>
+		<arquillian.version>1.4.0.Final</arquillian.version>
 		<maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<wildfly.version>8.2.1.Final</wildfly.version>
+		<wildfly.version>11.0.0.Final</wildfly.version>
 		<version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
 		<jee.spec.version>1.1.0.Final</jee.spec.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.jboss.arquillian</groupId>
-				<artifactId>arquillian-bom</artifactId>
-				<version>${arquillian.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
+            <dependency>
+                <groupId>org.jboss.spec</groupId>
+                <artifactId>jboss-javaee-7.0</artifactId>
+                <version>${jee.spec.version}</version>
+                <type>pom</type>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly</groupId>
+                <artifactId>wildfly-weld</artifactId>
+                <version>${wildfly.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>sun.jdk</groupId>
+                        <artifactId>jconsole</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.arquillian</groupId>
+                <artifactId>wildfly-arquillian-container-embedded</artifactId>
+                <version>2.1.0.Final</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${arquillian.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -66,29 +106,38 @@
 		<dependency>
 			<groupId>org.jboss.spec</groupId>
 			<artifactId>jboss-javaee-7.0</artifactId>
-			<version>${jee.spec.version}</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.wildfly</groupId>
-			<artifactId>wildfly-arquillian-container-embedded</artifactId>
-			<version>${wildfly.version}</version>
+			<artifactId>wildfly-weld</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>sun.jdk</groupId>
+					<artifactId>jconsole</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.wildfly</groupId>
-			<artifactId>wildfly-embedded</artifactId>
-			<version>${wildfly.version}</version>
+			<groupId>org.wildfly.arquillian</groupId>
+			<artifactId>wildfly-arquillian-container-embedded</artifactId>
 		</dependency>
+		
+
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
 			<artifactId>arquillian-junit-container</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
 		</dependency>
 		<!-- Wicket CDI integration. -->
 		<dependency>
@@ -101,21 +150,23 @@
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.opentest4j</groupId>
+			<artifactId>opentest4j</artifactId>
+			<version>1.1.0</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.jboss.shrinkwrap.resolver</groupId>
 			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.jboss.shrinkwrap.resolver</groupId>
-			<artifactId>shrinkwrap-resolver-spi</artifactId>
-		</dependency>
-
 	</dependencies>
 
 	<build>
 		<resources>
-			 <resource>
+			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
@@ -174,7 +225,13 @@
 						<filename>target/${project.build.finalName}.war</filename>
 					</configuration>
 				</plugin>
-
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -192,6 +249,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
 

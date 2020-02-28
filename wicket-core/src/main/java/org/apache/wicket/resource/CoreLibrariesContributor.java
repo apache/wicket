@@ -26,14 +26,14 @@ import org.apache.wicket.settings.JavaScriptLibrarySettings;
 /**
  * A helper class that contributes all required JavaScript resources needed for Wicket Ajax
  * functionality
- * 
+ *
  * @since 6.0
  */
 public class CoreLibrariesContributor
 {
 	/**
 	 * Contributes the backing library plus the implementation of Wicket.Event.
-	 * 
+	 *
 	 * @param application
 	 *            the application instance
 	 * @param response
@@ -42,14 +42,14 @@ public class CoreLibrariesContributor
 	public static void contribute(final Application application, final IHeaderResponse response)
 	{
 		JavaScriptLibrarySettings jsLibrarySettings = application.getJavaScriptLibrarySettings();
-		ResourceReference wicketEventReference = jsLibrarySettings.getWicketEventReference();
-		response.render(JavaScriptHeaderItem.forReference(wicketEventReference));
+		ResourceReference wicketAjaxReference = jsLibrarySettings.getWicketAjaxReference();
+		response.render(JavaScriptHeaderItem.forReference(wicketAjaxReference));
 	}
 
 	/**
 	 * Contributes the Ajax backing library plus wicket-event.js and wicket-ajax.js implementations.
 	 * Additionally if Ajax debug is enabled then wicket-ajax-debug.js implementation is also added.
-	 * 
+	 *
 	 * @param application
 	 *            the application instance
 	 * @param response
@@ -59,17 +59,13 @@ public class CoreLibrariesContributor
 	{
 		JavaScriptLibrarySettings jsLibrarySettings = application.getJavaScriptLibrarySettings();
 
+		ResourceReference wicketAjaxReference = jsLibrarySettings.getWicketAjaxReference();
+		response.render(JavaScriptHeaderItem.forReference(wicketAjaxReference));
+		
 		final DebugSettings debugSettings = application.getDebugSettings();
 		if (debugSettings.isAjaxDebugModeEnabled())
 		{
-			response.render(JavaScriptHeaderItem.forReference(jsLibrarySettings.getWicketAjaxDebugReference()));
-			response.render(JavaScriptHeaderItem.forScript("Wicket.Ajax.DebugWindow.enabled=true;",
-				"wicket-ajax-debug-enable"));
-		}
-		else
-		{
-			ResourceReference wicketAjaxReference = jsLibrarySettings.getWicketAjaxReference();
-			response.render(JavaScriptHeaderItem.forReference(wicketAjaxReference));
+			response.render(JavaScriptHeaderItem.forScript("Wicket.Log.enabled=true;", "wicket-ajax-debug-enable"));
 		}
 	}
 }

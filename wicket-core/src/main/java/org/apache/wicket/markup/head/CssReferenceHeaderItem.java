@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -34,14 +35,12 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author papegaaij
  */
-public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceHeaderItem
+public class CssReferenceHeaderItem extends AbstractCssReferenceHeaderItem implements IReferenceHeaderItem
 {
 	private static final long serialVersionUID = 1L;
 
 	private final ResourceReference reference;
-	private final String media;
 	private final PageParameters pageParameters;
-	private final String rel;
 
 	/**
 	 * Creates a new {@code CSSReferenceHeaderItem}.
@@ -52,17 +51,14 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	 *            the parameters for this CSS resource reference
 	 * @param media
 	 *            the media type for this CSS ("print", "screen", etc.)
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
 	public CssReferenceHeaderItem(ResourceReference reference, PageParameters pageParameters,
-		String media, String condition)
+		String media)
 	{
-		super(condition);
+		super(media, null);
+		
 		this.reference = reference;
 		this.pageParameters = pageParameters;
-		this.media = media;
-		this.rel = null;
 	}
 
 	/**
@@ -74,19 +70,16 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	 *            the parameters for this CSS resource reference
 	 * @param media
 	 *            the media type for this CSS ("print", "screen", etc.)
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 * @param rel
 	 *            the rel attribute content
 	 */
 	public CssReferenceHeaderItem(ResourceReference reference, PageParameters pageParameters,
-		String media, String condition, String rel)
+		String media, String rel)
 	{
-		super(condition);
+		super(media, rel); 
+		
 		this.reference = reference;
 		this.pageParameters = pageParameters;
-		this.media = media;
-		this.rel = rel;
 	}
 
 	/**
@@ -100,22 +93,6 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	}
 
 	/**
-	 * @return the media type for this CSS ("print", "screen", etc.)
-	 */
-	public String getMedia()
-	{
-		return media;
-	}
-
-	/**
-	 * @return the rel attribute content
-	 */
-	public String getRel()
-	{
-		return rel;
-	}
-
-	/**
 	 * @return the parameters for this CSS resource reference
 	 */
 	public PageParameters getPageParameters()
@@ -123,6 +100,18 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 		return pageParameters;
 	}
 
+	@Override
+	public CrossOrigin getCrossOrigin()
+	{
+		return null;
+	}
+	
+	@Override
+	public String getIntegrity()
+	{
+		return null;
+	}
+	
 	@Override
 	public List<HeaderItem> getDependencies()
 	{
@@ -140,13 +129,13 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	@Override
 	public void render(Response response)
 	{
-		internalRenderCSSReference(response, getUrl(), media, getCondition(), getRel());
+		internalRenderCSSReference(response, getUrl());
 	}
 
 	@Override
 	public Iterable<?> getRenderTokens()
 	{
-		return Arrays.asList("css-" + Strings.stripJSessionId(getUrl()) + "-" + media);
+		return Arrays.asList("css-" + Strings.stripJSessionId(getUrl()) + "-" + getMedia());
 	}
 
 	@Override
@@ -165,7 +154,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(super.hashCode(), reference, media, pageParameters, rel);
+		return Objects.hash(super.hashCode(), reference, getMedia(), pageParameters, getRel());
 	}
 
 	@Override
@@ -178,7 +167,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 		if (!super.equals(o))
 			return false;
 		CssReferenceHeaderItem that = (CssReferenceHeaderItem)o;
-		return Objects.equals(reference, that.reference) && Objects.equals(media, that.media) &&
-			Objects.equals(rel, that.rel) && Objects.equals(pageParameters, that.pageParameters);
+		return Objects.equals(reference, that.reference) && Objects.equals(getMedia(), that.getMedia()) &&
+			Objects.equals(getRel(), that.getRel()) && Objects.equals(pageParameters, that.pageParameters);
 	}
 }

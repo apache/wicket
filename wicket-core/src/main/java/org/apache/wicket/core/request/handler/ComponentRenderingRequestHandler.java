@@ -64,13 +64,8 @@ public class ComponentRenderingRequestHandler implements IComponentRequestHandle
 			response.disableCaching();
 		}
 
-		Page page = component.getPage();
-
-		page.startComponentRender(component);
-
-		component.render();
-
-		page.endComponentRender(component);
+		component.beforeRender();
+		component.renderPart();
 	}
 
 	@Override

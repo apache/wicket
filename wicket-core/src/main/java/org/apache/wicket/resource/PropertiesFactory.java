@@ -128,10 +128,6 @@ public class PropertiesFactory implements IPropertiesFactory
 		context.getLocalizer().clearCache();
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.resource.IPropertiesFactory#load(java.lang.Class, java.lang.String)
-	 */
 	@Override
 	public Properties load(final Class<?> clazz, final String path)
 	{

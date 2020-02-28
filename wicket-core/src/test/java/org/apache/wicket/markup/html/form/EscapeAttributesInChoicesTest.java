@@ -16,19 +16,22 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.apache.wicket.util.tester.TagTester.createTagByAttribute;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
-import static org.apache.wicket.util.tester.TagTester.createTagByAttribute;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test XSS vulnerability in RadioChoice and CheckBoxMultipleChoice
  */
-public class EscapeAttributesInChoicesTest extends WicketTestCase
+class EscapeAttributesInChoicesTest extends WicketTestCase
 {
 	@Test
-	public void escapeAttributes()
+	void escapeAttributes()
 	{
 		tester.startPage(EscapeAttributesInChoicesPage.class);
 		String lastResponseAsString = tester.getLastResponseAsString();

@@ -44,7 +44,7 @@
 	<properties>
 		<wicket.version>@project.version@</wicket.version>
 		<jetty9.version>@jetty.version@</jetty9.version>
-		<log4j.version>@log4j.version@</log4j.version>
+		<slf4j.version>@slf4j.version@</slf4j.version>
 		<junit.version>@junit.version@</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
@@ -65,22 +65,17 @@
 		</dependency>
 		-->
 
-		<!-- LOGGING DEPENDENCIES - LOG4J -->
+		<!-- LOGGING DEPENDENCIES - SLF4J-SIMPLE -->
 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>${log4j.version}</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
 
 		<!--  JUNIT DEPENDENCY FOR TESTING -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
@@ -99,14 +94,14 @@
 			<scope>test</scope>
 		</dependency>
 
-        <!-- uncomment if WebSocket support is needed
+		<!-- uncomment if WebSocket support is needed
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>javax-websocket-server-impl</artifactId>
-			<version>${jetty.version}</version>
+			<version>${jetty9.version}</version>
 			<scope>test</scope>
 		</dependency>
-        -->
+		-->
 	</dependencies>
 	<build>
 		<resources>
@@ -146,10 +141,10 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.8.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>11</source>
+					<target>11</target>
 					<encoding>UTF-8</encoding>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>

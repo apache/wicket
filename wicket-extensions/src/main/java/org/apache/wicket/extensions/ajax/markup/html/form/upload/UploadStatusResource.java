@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
+import java.time.Duration;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.Model;
@@ -26,7 +26,6 @@ import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl;
 import org.apache.wicket.protocol.http.servlet.UploadInfo;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
-import org.apache.wicket.util.time.Duration;
 
 /**
  * A resource that prints out basic statistics about the current upload. This resource is used to
@@ -63,7 +62,7 @@ class UploadStatusResource extends AbstractResource
 
 		ResourceResponse response = new ResourceResponse();
 		response.setContentType("text/html; charset=" + encoding);
-		response.setCacheDuration(Duration.NONE);
+		response.setCacheDuration(Duration.ZERO);
 
 		final String status = getStatus(attributes);
 		response.setWriteCallback(new WriteCallback()

@@ -18,34 +18,22 @@ package org.apache.wicket.markup.head;
 
 import java.util.Objects;
 
+import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.markup.html.CrossOrigin;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.value.AttributeMap;
+
 /**
- * A {@link org.apache.wicket.markup.head.HeaderItem} that supports <em>async</em>,
- * <em>defer</em> and <em>charset</em> attributes
+ * A {@link org.apache.wicket.markup.head.HeaderItem} that renders a JavaScript reference.
  */
-public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
+public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHeaderItem implements ISubresourceHeaderItem
 {
 	private boolean async;
 	private boolean defer;
 	private String charset;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param condition
-	 *              The condition to use for Internet Explorer conditional comments. E.g. "IE 7".
-	 *              {@code null} or empty string for no condition.
-	 * @param defer
-	 *              a flag indicating whether the execution of a script should be deferred (delayed)
-	 *              until after the page has been loaded.
-	 * @param charset
-	 *              the charset to use when reading the script content
-	 */
-	protected AbstractJavaScriptReferenceHeaderItem(String condition, boolean defer, String charset)
-	{
-		super(condition);
-		this.defer = defer;
-		this.charset = charset;
-	}
+	private CrossOrigin crossOrigin;
+	private String integrity;
 
 	/**
 	 * @return if the script should be loaded and executed asynchronously
@@ -87,6 +75,50 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 	{
 		this.charset = charset;
 		return this;
+	}
+
+	@Override
+	public CrossOrigin getCrossOrigin()
+	{
+		return crossOrigin;
+	}
+	
+	@Override
+	public AbstractJavaScriptReferenceHeaderItem setCrossOrigin(CrossOrigin crossOrigin)
+	{
+		this.crossOrigin = crossOrigin;
+		return this;
+	}
+	
+	@Override
+	public String getIntegrity()
+	{
+		return integrity;
+	}
+	
+	@Override
+	public AbstractJavaScriptReferenceHeaderItem setIntegrity(String integrity)
+	{
+		this.integrity = integrity;
+		return this;
+	}
+
+	protected final void internalRenderJavaScriptReference(Response response, String url)
+	{
+		Args.notEmpty(url, "url");
+
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_DEFER, defer);
+		// XXX this attribute is not necessary for modern browsers
+		attributes.putAttribute("charset", charset);
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_ASYNC, async);
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_SRC, url);
+		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
+		attributes.putAttribute(JavaScriptUtils.ATTR_CROSS_ORIGIN, getCrossOrigin() == null ? null : getCrossOrigin().getRealName());
+		attributes.putAttribute(JavaScriptUtils.ATTR_INTEGRITY, getIntegrity());
+		JavaScriptUtils.writeScript(response, attributes);
 	}
 
 	@Override

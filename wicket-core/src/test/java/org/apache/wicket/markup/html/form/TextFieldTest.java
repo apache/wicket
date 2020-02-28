@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.HTML5Attributes;
@@ -29,16 +32,16 @@ import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.validation.validator.StringValidator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class TextFieldTest extends WicketTestCase
+class TextFieldTest extends WicketTestCase
 {
 	/** */
 	@Test
-	public void emptyInputConvertedToNull()
+	void emptyInputConvertedToNull()
 	{
 		TestPage testPage = new TestPage();
 		testPage.textField.setType(String.class);
@@ -54,7 +57,7 @@ public class TextFieldTest extends WicketTestCase
 	 * Asserting that the value attribute on tag input is escaped once by default
 	 */
 	@Test
-	public void valueAttribute()
+	void valueAttribute()
 	{
 		TestPage testPage = new TestPage();
 		String text = "some text & another text";
@@ -67,7 +70,7 @@ public class TextFieldTest extends WicketTestCase
 	 * Assert that null input is not validated.
 	 */
 	@Test
-	public void nullIsNotValidated()
+	void nullIsNotValidated()
 	{
 		TestPage testPage = new TestPage();
 		testPage.textField.setType(String.class);
@@ -85,7 +88,7 @@ public class TextFieldTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5289
 	 */
 	@Test
-	public void requiredAttribute()
+	void requiredAttribute()
 	{
 		TestPage testPage = new TestPage();
 		testPage.textField.setOutputMarkupId(true);
@@ -108,7 +111,7 @@ public class TextFieldTest extends WicketTestCase
 		IModel<String> textModel = Model.of((String)null);
 
 		/** */
-		public TestPage()
+		TestPage()
 		{
 			add(form = new Form<>("form"));
 			form.add(textField = new TextField<>("text", textModel));

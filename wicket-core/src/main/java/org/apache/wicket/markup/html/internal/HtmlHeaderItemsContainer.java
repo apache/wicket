@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import org.apache.wicket.request.Response;
+
 /**
  * A specialization of HtmlHeaderContainer that doesn't render
  * &lt;head&gt; and &l;/head&gt; around the header contributions.
@@ -36,6 +38,13 @@ public class HtmlHeaderItemsContainer extends HtmlHeaderContainer
 	public HtmlHeaderItemsContainer(String id)
 	{
 		super(id);
+	}
+
+	@Override
+	protected void onAfterRender() {
+		super.onAfterRender();
+		final Response webResponse = getResponse();
+		webResponse.write("<meta name=\"wicket.header.items\"/>");
 	}
 
 	@Override

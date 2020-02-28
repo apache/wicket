@@ -243,22 +243,4 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 	 * @return The property expression for the component
 	 */
 	protected abstract String propertyExpression();
-
-	/**
-	 * @return The innermost model or the object if the target is not a model
-	 */
-	public final Object getInnermostModelOrObject()
-	{
-		Object object = getTarget();
-		while (object instanceof IModel)
-		{
-			Object tmp = ((IModel<?>)object).getObject();
-			if (tmp == object)
-			{
-				break;
-			}
-			object = tmp;
-		}
-		return object;
-	}
 }

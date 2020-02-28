@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.parse.metapattern.parsers;
 
+import java.util.Locale;
+
 import org.apache.wicket.util.parse.metapattern.Group;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.util.parse.metapattern.OptionalMetaPattern;
@@ -61,7 +63,7 @@ public final class TagNameParser extends MetaPatternParser
 		final String namespace = namespaceGroup.get(matcher());
 		if (namespace != null)
 		{
-			return namespace.toLowerCase();
+			return namespace.toLowerCase(Locale.ROOT);
 		}
 		return namespace;
 	}

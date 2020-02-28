@@ -17,10 +17,13 @@
 package org.apache.wicket.markup.html.form.validation;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.feedback.IFeedback;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
@@ -59,6 +62,24 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 		filter = new ComponentFeedbackMessageFilter(component);
 	}
 
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		add(new WebMarkupContainer("indicator")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				tag.put("class", getString(
+					CssUtils.key(FormComponentFeedbackIndicator.class, "error-indicator")));
+			}
+		});
+	}
+	
 	/**
 	 * Set the component's visibility according to the existence (or not) of feedback messages
 	 */

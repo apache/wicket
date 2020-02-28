@@ -27,7 +27,7 @@ class Path implements Iterable<Path.Segment>
 
 	private List<Segment> segments;
 
-	public Path()
+	private Path()
 	{
 		segments = new ArrayList<>();
 	}
@@ -38,7 +38,7 @@ class Path implements Iterable<Path.Segment>
 		add(components);
 	}
 
-	public Path add(Class<?> type, String id)
+	private Path add(Class<?> type, String id)
 	{
 		segments.add(new Segment(type, id));
 		return this;
@@ -81,7 +81,7 @@ class Path implements Iterable<Path.Segment>
 		Class<?> type;
 		String id;
 
-		public Segment(Class<?> type, String id)
+		Segment(Class<?> type, String id)
 		{
 			this.type = type;
 			this.id = id;

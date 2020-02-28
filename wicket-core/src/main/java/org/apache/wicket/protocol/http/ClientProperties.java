@@ -38,17 +38,17 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * <p>
  * A convenient way of letting Wicket do a sneaky redirect to {@link BrowserInfoPage} (and back
  * again) is to put this in your Application's init method:
- * 
+ *
  * <pre>
  * getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
  * </pre>
- * 
+ *
  * </p>
- * 
+ *
  * WARNING: Be sure you think about the dangers of depending on information you pull from the client
  * too much. They may be easily spoofed or inaccurate in other ways, and properties like window and
  * browser size are all too easy to be used naively.
- * 
+ *
  * @see BrowserInfoPage
  * @author Frank Bille (frankbille)
  */
@@ -57,16 +57,6 @@ public class ClientProperties implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	private int browserHeight = -1;
-	private boolean browserInternetExplorer;
-	private boolean browserKonqueror;
-	private boolean browserMozilla;
-	private boolean browserMozillaFirefox;
-	private boolean browserOpera;
-	private boolean browserSafari;
-	private boolean browserChrome;
-	private boolean browserEdge;
-	private int browserVersionMajor = -1;
-	private int browserVersionMinor = -1;
 	private int browserWidth = -1;
 	private boolean navigatorCookieEnabled;
 	private boolean navigatorJavaEnabled;
@@ -82,6 +72,7 @@ public class ClientProperties implements IClusterable
 	private int screenWidth = -1;
 	private String utcDSTOffset;
 	private String utcOffset;
+	private String jsTimeZone;
 	private String hostname;
 
 	private boolean javaScriptEnabled;
@@ -95,22 +86,6 @@ public class ClientProperties implements IClusterable
 	public int getBrowserHeight()
 	{
 		return browserHeight;
-	}
-
-	/**
-	 * @return The major version number of the browser.
-	 */
-	public int getBrowserVersionMajor()
-	{
-		return browserVersionMajor;
-	}
-
-	/**
-	 * @return The minor version number of the browser.
-	 */
-	public int getBrowserVersionMinor()
-	{
-		return browserVersionMinor;
 	}
 
 	/**
@@ -211,11 +186,19 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Get the client's time zone if that could be detected.
-	 * 
+	 *
 	 * @return The client's time zone
 	 */
 	public TimeZone getTimeZone()
 	{
+		if (timeZone == null && jsTimeZone != null)
+		{
+			TimeZone temptimeZone = TimeZone.getTimeZone(jsTimeZone);
+			if (jsTimeZone.equals(temptimeZone.getID()))
+			{
+				timeZone = temptimeZone;
+			}
+		}
 		if (timeZone == null)
 		{
 			String utc = getUtcOffset();
@@ -311,8 +294,8 @@ public class ClientProperties implements IClusterable
 					if (dstTimeZone != null &&
 						dstTimeZone.getRawOffset() != timeZone.getRawOffset())
 					{
-						int dstSaving = dstTimeZone.getRawOffset() - timeZone.getRawOffset();
-						String[] availableIDs = TimeZone.getAvailableIDs(timeZone.getRawOffset());
+						int dstSaving = Math.abs(dstTimeZone.getRawOffset() - timeZone.getRawOffset());
+						String[] availableIDs = TimeZone.getAvailableIDs(dstTimeZone.getRawOffset() < timeZone.getRawOffset() ? dstTimeZone.getRawOffset() : timeZone.getRawOffset());
 						for (String availableID : availableIDs)
 						{
 							TimeZone zone = TimeZone.getTimeZone(availableID);
@@ -357,7 +340,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Flag indicating support of JavaScript in the browser.
-	 * 
+	 *
 	 * @return True if JavaScript is enabled
 	 */
 	public boolean isJavaScriptEnabled() {
@@ -365,89 +348,8 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
-	 * Flag indicating that the browser is a derivative of the Microsoft Internet Explorer browser
-	 * platform.
-	 * 
-	 * @return True if a derivative of the Microsoft Internet Explorer browser platform.
-	 */
-	public boolean isBrowserInternetExplorer()
-	{
-		return browserInternetExplorer;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the KDE Konqueror browser platform.
-	 * 
-	 * @return True if a derivative of the KDE Konqueror browser platform.
-	 */
-	public boolean isBrowserKonqueror()
-	{
-		return browserKonqueror;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Mozilla 1.0-1.8+ browser platform.
-	 * 
-	 * @return True if a derivative of the Mozilla 1.0-1.8+ browser platform.
-	 */
-	public boolean isBrowserMozilla()
-	{
-		return browserMozilla;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Mozilla Firefox 1.0+ browser
-	 * platform.
-	 * 
-	 * @return True if a derivative of the Mozilla Firefox 1.0+ browser platform.
-	 */
-	public boolean isBrowserMozillaFirefox()
-	{
-		return browserMozillaFirefox;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Opera browser platform.
-	 * 
-	 * @return True if a derivative of the Opera browser platform.
-	 */
-	public boolean isBrowserOpera()
-	{
-		return browserOpera;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Apple Safari browser platform.
-	 * 
-	 * @return True if a derivative of the Apple Safari browser platform.
-	 */
-	public boolean isBrowserSafari()
-	{
-		return browserSafari;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Chrome browser platform.
-	 * 
-	 * @return True if a derivative of the Chrome browser platform.
-	 */
-	public boolean isBrowserChrome()
-	{
-		return browserChrome;
-	}
-	/**
-	 * Flag indicating that the browser is a derivative of the Microsoft Edge browser platform.
 	 *
-	 * @return True if a derivative of the Microsoft Edge browser platform.
-	 */
-	public boolean isBrowserEdge()
-	{
-		return browserEdge;
-	}
-
-	/**
-	 * 
-	 * 
+	 *
 	 * @return The client's navigator.cookieEnabled property.
 	 */
 	public boolean isNavigatorCookieEnabled()
@@ -475,113 +377,6 @@ public class ClientProperties implements IClusterable
 	public void setBrowserHeight(int browserHeight)
 	{
 		this.browserHeight = browserHeight;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Microsoft Internet Explorer browser
-	 * platform.
-	 * 
-	 * @param browserInternetExplorer
-	 *            True if a derivative of the Microsoft Internet Explorer browser platform.
-	 */
-	public void setBrowserInternetExplorer(boolean browserInternetExplorer)
-	{
-		this.browserInternetExplorer = browserInternetExplorer;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the KDE Konqueror browser platform.
-	 * 
-	 * @param browserKonqueror
-	 *            True if a derivative of the KDE Konqueror browser platform.
-	 */
-	public void setBrowserKonqueror(boolean browserKonqueror)
-	{
-		this.browserKonqueror = browserKonqueror;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Mozilla 1.0-1.8+ browser platform.
-	 * 
-	 * @param browserMozilla
-	 *            True if a derivative of the Mozilla 1.0-1.8+ browser platform.
-	 */
-	public void setBrowserMozilla(boolean browserMozilla)
-	{
-		this.browserMozilla = browserMozilla;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Mozilla Firefox 1.0+ browser
-	 * platform.
-	 * 
-	 * @param browserMozillaFirefox
-	 *            True if a derivative of the Mozilla Firefox 1.0+ browser platform.
-	 */
-	public void setBrowserMozillaFirefox(boolean browserMozillaFirefox)
-	{
-		this.browserMozillaFirefox = browserMozillaFirefox;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Opera browser platform.
-	 * 
-	 * @param browserOpera
-	 *            True if a derivative of the Opera browser platform.
-	 */
-	public void setBrowserOpera(boolean browserOpera)
-	{
-		this.browserOpera = browserOpera;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Apple Safari browser platform.
-	 * 
-	 * @param browserSafari
-	 *            True if a derivative of the Apple Safari browser platform.
-	 */
-	public void setBrowserSafari(boolean browserSafari)
-	{
-		this.browserSafari = browserSafari;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Chrome browser platform.
-	 * 
-	 * @param browserChrome
-	 *            True if a derivative of the Chrome browser platform.
-	 */
-	public void setBrowserChrome(boolean browserChrome)
-	{
-		this.browserChrome = browserChrome;
-	}
-	/**
-	 * Flag indicating that the browser is a derivative of the Microsoft Edge browser platform.
-	 *
-	 * @param browserEdge
-	 *            True if a derivative of the Microsoft Edge browser platform.
-	 */
-	public void setBrowserEdge(boolean browserEdge)
-	{
-		this.browserEdge = browserEdge;
-	}
-
-	/**
-	 * @param browserVersionMajor
-	 *            The major version number of the browser.
-	 */
-	public void setBrowserVersionMajor(int browserVersionMajor)
-	{
-		this.browserVersionMajor = browserVersionMajor;
-	}
-
-	/**
-	 * @param browserVersionMinor
-	 *            The minor version number of the browser.
-	 */
-	public void setBrowserVersionMinor(int browserVersionMinor)
-	{
-		this.browserVersionMinor = browserVersionMinor;
 	}
 
 	/**
@@ -712,7 +507,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Sets time zone.
-	 * 
+	 *
 	 * @param timeZone
 	 */
 	public void setTimeZone(TimeZone timeZone)
@@ -736,6 +531,14 @@ public class ClientProperties implements IClusterable
 	public void setUtcOffset(String utcOffset)
 	{
 		this.utcOffset = utcOffset;
+	}
+
+	/**
+	 * @param jsTimeZone
+	 */
+	public void setJsTimeZone(String jsTimeZone)
+	{
+		this.jsTimeZone = jsTimeZone;
 	}
 
 	/**
@@ -805,7 +608,7 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * Read parameters.
-	 * 
+	 *
 	 * @param parameters
 	 *            parameters sent from browser
 	 */
@@ -824,6 +627,7 @@ public class ClientProperties implements IClusterable
 		setScreenColorDepth(parameters.getParameterValue("screenColorDepth").toInt(-1));
 		setUtcOffset(parameters.getParameterValue("utcOffset").toString(null));
 		setUtcDSTOffset(parameters.getParameterValue("utcDSTOffset").toString(null));
+		setJsTimeZone(parameters.getParameterValue("jsTimeZone").toString(null));
 		setBrowserWidth(parameters.getParameterValue("browserWidth").toInt(-1));
 		setBrowserHeight(parameters.getParameterValue("browserHeight").toInt(-1));
 		setHostname(parameters.getParameterValue("hostname").toString("N/A"));

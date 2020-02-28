@@ -16,25 +16,28 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link InlineEnclosure} and {@link InlineEnclosureHandler}.
  * 
  * @author Joonas Hamalainen
  */
-public class InlineEnclosureTest extends WicketTestCase
+class InlineEnclosureTest extends WicketTestCase
 {
 	/**
 	 * WICKET-5085: Since {@link InlineEnclosure}s are not removed as other auto-Components, they must be
@@ -43,7 +46,7 @@ public class InlineEnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void inlineEnclosuresAreResolvedOnceOnly() throws Exception
+	void inlineEnclosuresAreResolvedOnceOnly() throws Exception
 	{
 		InlineEnclosurePanelPage page = new InlineEnclosurePanelPage();
 
@@ -79,7 +82,7 @@ public class InlineEnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void inlineEnclosurePage_1() throws Exception
+	void inlineEnclosurePage_1() throws Exception
 	{
 		executeTest(InlineEnclosurePage_1.class, "InlineEnclosurePageExpectedResult_1.html");
 	}
@@ -88,7 +91,7 @@ public class InlineEnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void inlineEnclosurePage_2() throws Exception
+	void inlineEnclosurePage_2() throws Exception
 	{
 		executeTest(InlineEnclosurePage_2.class, "InlineEnclosurePageExpectedResult_2.html");
 	}
@@ -97,13 +100,13 @@ public class InlineEnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void inlineEnclosurePanelPage() throws Exception
+	void inlineEnclosurePanelPage() throws Exception
 	{
 		executeTest(InlineEnclosurePanelPage.class, "InlineEnclosurePanelPageExpectedResult.html");
 	}
 
 	@Test
-	public void inlineEnclosurePageDifferentNamespace() throws Exception
+	void inlineEnclosurePageDifferentNamespace() throws Exception
 	{
 		executeTest(InlineEnclosureDifferentNamespacePage.class,
 			"InlineEnclosureDifferentNamespaceExpectedResult.html");
@@ -117,7 +120,7 @@ public class InlineEnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void inlineEnclosureWithWicketMessageVisible() throws Exception
+	void inlineEnclosureWithWicketMessageVisible() throws Exception
 	{
 		executeTest(new InlineEnclosureWithWicketMessagePage(true),
 			"InlineEnclosureWithWicketMessagePage_visible_expected.html");
@@ -132,7 +135,7 @@ public class InlineEnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void inlineEnclosureWithWicketMessageInvisible() throws Exception
+	void inlineEnclosureWithWicketMessageInvisible() throws Exception
 	{
 		executeTest(new InlineEnclosureWithWicketMessagePage(false),
 			"InlineEnclosureWithWicketMessagePage_invisible_expected.html");
@@ -141,7 +144,7 @@ public class InlineEnclosureTest extends WicketTestCase
 	@Override
 	protected WebApplication newApplication()
 	{
-		return new WebApplication()
+		return new MockApplication()
 		{
 			@Override
 			public Class<? extends Page> getHomePage()
@@ -153,6 +156,7 @@ public class InlineEnclosureTest extends WicketTestCase
 			protected void init()
 			{
 				getMarkupSettings().setStripWicketTags(true);
+				getResourceSettings().setCachingStrategy(NoOpResourceCachingStrategy.INSTANCE);
 			}
 		};
 	}

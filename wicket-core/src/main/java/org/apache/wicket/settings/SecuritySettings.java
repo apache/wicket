@@ -24,6 +24,8 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.IUnauthorizedResourceRequestListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
+import org.apache.wicket.core.random.DefaultSecureRandomSupplier;
+import org.apache.wicket.core.random.ISecureRandomSupplier;
 import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.lang.Args;
@@ -55,6 +57,9 @@ public class SecuritySettings
 
 	/** factory for creating crypt objects */
 	private ICryptFactory cryptFactory;
+	
+	/** supplier of random data and SecureRandom */
+	private ISecureRandomSupplier randomSupplier = new DefaultSecureRandomSupplier();
 
 	/**
 	 * Whether mounts should be enforced. If {@code true}, requests for a page will be
@@ -115,6 +120,17 @@ public class SecuritySettings
 	}
 
 	/**
+	 * Returns the {@link ISecureRandomSupplier} to use for secure random data. If no custom
+	 * supplier is set, a {@link DefaultSecureRandomSupplier} is used.
+	 * 
+	 * @return The {@link ISecureRandomSupplier} to use for secure random data.
+	 */
+	public ISecureRandomSupplier getRandomSupplier()
+	{
+		return randomSupplier;
+	}
+
+	/**
 	 * Gets whether page mounts should be enforced. If {@code true}, requests for a page will be
 	 * allowed only if the page has been explicitly mounted in {@link Application#init() MyApplication#init()}.
 	 *
@@ -161,6 +177,22 @@ public class SecuritySettings
 	{
 		Args.notNull(cryptFactory, "cryptFactory");
 		this.cryptFactory = cryptFactory;
+		return this;
+	}
+	
+	/**
+	 * Sets the supplier of secure random data for Wicket. The implementation must use a strong
+	 * source of random data and be able to generate a lot of random data without running out of
+	 * entropy.
+	 * 
+	 * @param randomSupplier
+	 *            The new supplier, must not be null.
+	 * @return {@code this} object for chaining
+	 */
+	public SecuritySettings setRandomSupplier(ISecureRandomSupplier randomSupplier)
+	{
+		Args.notNull(randomSupplier, "randomSupplier");
+		this.randomSupplier = randomSupplier;
 		return this;
 	}
 

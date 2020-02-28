@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>9.0.0-M5-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-js-tests</artifactId>
@@ -29,8 +29,28 @@
 	<description>JavaScript tests for all Wicket modules</description>
 
 	<properties>
+		<automatic-module-name>org.apache.wicket.js.tests</automatic-module-name>
 		<clirr.skip>true</clirr.skip>
 	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-jmx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -39,18 +59,26 @@
 				<artifactId>maven-deploy-plugin</artifactId>
 			</plugin>
 		</plugins>
-        <pluginManagement>
-    		<plugins>
-    			<plugin>
-    				<groupId>org.apache.maven.plugins</groupId>
-    				<artifactId>maven-deploy-plugin</artifactId>
-    				<configuration>
-    					<!-- Just tests. No need to deploy -->
-    					<skip>true</skip>
-    				</configuration>
-    			</plugin>
-    		</plugins>
-        </pluginManagement>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<configuration>
+						<!-- Just tests. No need to deploy -->
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<!-- No Java tests here -->
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<profiles>
 		<profile>
@@ -63,7 +91,7 @@
 					<plugin>
 						<groupId>com.github.eirslett</groupId>
 						<artifactId>frontend-maven-plugin</artifactId>
-						<version>1.4</version>
+						<version>1.9.0</version>
 						<executions>
 							<execution>
 								<id>install node and npm</id>
@@ -72,8 +100,8 @@
 								</goals>
 								<phase>generate-resources</phase>
 								<configuration>
-									<npmVersion>5.0.0</npmVersion>
-									<nodeVersion>v8.0.0</nodeVersion>
+									<npmVersion>6.10.3</npmVersion>
+									<nodeVersion>v10.16.2</nodeVersion>
 								</configuration>
 							</execution>
 							<execution>
@@ -91,8 +119,8 @@
 									<goal>grunt</goal>
 								</goals>
 								<configuration>
-							        <!--<arguments> - -verbose </arguments>-->
-							    </configuration>
+									<!--<arguments> - -verbose </arguments>-->
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
@@ -101,23 +129,4 @@
 		</profile>
 	</profiles>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-jmx</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-	</dependencies>
 </project>

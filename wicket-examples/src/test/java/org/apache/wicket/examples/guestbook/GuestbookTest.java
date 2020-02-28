@@ -19,10 +19,11 @@ package org.apache.wicket.examples.guestbook;
 import java.util.ArrayList;
 
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -33,7 +34,7 @@ public class GuestbookTest extends WicketTestCase
 	/**
 	 * Sets up the test.
 	 */
-	@Before
+	@BeforeEach
 	public void setUp()
 	{
 		GuestBook.clear();
@@ -41,17 +42,16 @@ public class GuestbookTest extends WicketTestCase
 
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
+	 *
 	 */
 	@Test
-	public void test_1() throws Exception
-	{
+	public void test_1() {
 		tester.startPage(GuestBook.class);
 		tester.assertContains("Wicket Examples - guestbook");
 
 		// check if the list of comments is empty
-		tester.assertListView("comments", new ArrayList<>());
+		tester.assertComponent("comments", ListView.class);
+		tester.assertModelValue("comments", new ArrayList<>());
 		tester.assertComponent("commentForm", Form.class);
 		FormTester formTester = tester.newFormTester("commentForm");
 		formTester.setValue("text", "test-1");

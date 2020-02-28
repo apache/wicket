@@ -16,89 +16,76 @@
  */
 package org.apache.wicket.page;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.pageStore.IPageStore;
 
 /**
- * Page manager.
+ * A manager of pages - facade between {@link Page}s and {@link IPageStore}s they are stored in.
  * 
- * @author Matej Knopp
+ * @see PageManager
  */
 public interface IPageManager
 {
 	/**
+	 * Is versionining of pages supported, see {@link IPageStore#supportsVersioning()}.
 	 * 
-	 * @return the page manager context
+	 * @return {@code true} if versioning is supported
 	 */
-	IPageManagerContext getContext();
+	boolean supportsVersioning();
 
 	/**
-	 * Retrieve page instance with given id.
+	 * Get a page
 	 * 
-	 * @param id
-	 *      the id of the page to load
-	 * @return page instance or <code>null</code>
-	 * @throws CouldNotLockPageException if the page is already locked by another thread
-	 * and the lock cannot be acquired for some timeout
+	 * @param pageId
+	 *            id of page
+	 * @return page, may be <code>null</code>
 	 */
-	IManageablePage getPage(int id) throws CouldNotLockPageException;
+	IManageablePage getPage(int pageId);
 
 	/**
-	 * Removes a page from the {@link org.apache.wicket.pageStore.IPageStore} and
-	 * {@link org.apache.wicket.pageStore.IDataStore}. Any attempt to access it later
-	 * will lead to {@link org.apache.wicket.protocol.http.PageExpiredException}
-	 *
-	 * @param page The page instance to remove from the stores
+	 * Remove a page
+	 * 
+	 * @param page
+	 *            page to remove
 	 */
 	void removePage(IManageablePage page);
 
 	/**
-	 * Marks page as changed.
-	 * <p><strong>Note:</strong>Only stateful pages are stored.</p>
+	 * Add a page.
 	 * 
 	 * @param page
-	 *      the page that should be stored in the page stores at the end of the request.
-	 * @throws CouldNotLockPageException if the page is already locked by another thread
-	 * and the lock cannot be acquired for some timeout
+	 *            page to add
 	 */
 	void touchPage(IManageablePage page);
-
+	
 	/**
 	 * Marks page as non-changed.
 	 * Could be used in Ajax requests to avoid storing the page if no changes have happened.
 	 *
 	 * @param page
 	 *      the page that should <strong>not</strong> be stored in the page stores at the end of the request.
-	 * @throws CouldNotLockPageException if the page is already locked by another thread
-	 * and the lock cannot be acquired for some timeout
 	 */
 	void untouchPage(IManageablePage page);
 
 	/**
-	 * Returns whether this manager supports versioning. Managers that support versioning must store
-	 * page snapshots.
-	 * 
-	 * @return whether this page manager supports versioning
-	 */
-	boolean supportsVersioning();
-
-	/**
-	 * Commits the changes to external storage if the manager uses it.
-	 * 
-	 * Should also detach all pages that were touched during this request.
-	 */
-	void commitRequest();
-
-	/**
-	 * Invoked when new session has been created.
-	 */
-	void newSessionCreated();
-
-	/**
-	 * Clears all data for the current session.
+	 * Clear all pages.
 	 */
 	void clear();
 
 	/**
-	 * Destroy the page manager.
+	 * Detach at end of request.
+	 */
+	void detach();
+
+	/**
+	 * Destroy when application is destroyed.
 	 */
 	void destroy();
+
+	/**
+	 * Get the storage of pages, optional.
+	 *  
+	 * @return store or <code>null</code>
+	 */
+	IPageStore getPageStore();
 }

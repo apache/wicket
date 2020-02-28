@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples;
 
+import java.io.File;
 import java.lang.management.ManagementFactory;
 
 import javax.management.MBeanServer;
@@ -28,6 +29,8 @@ import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.server.session.DefaultSessionCache;
+import org.eclipse.jetty.server.session.FileSessionDataStore;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -72,7 +75,7 @@ public class StartExamples
 			// use this certificate anywhere important as the passwords are
 			// available in the source.
 
-			SslContextFactory sslContextFactory = new SslContextFactory();
+			SslContextFactory sslContextFactory = new SslContextFactory.Server();
 			sslContextFactory.setKeyStoreResource(keystore);
 			sslContextFactory.setKeyStorePassword("wicket");
 			sslContextFactory.setKeyManagerPassword("wicket");
@@ -97,12 +100,18 @@ public class StartExamples
 		bb.setContextPath("/");
 		bb.setWar("src/main/webapp");
 
+		// uncomment next lines if you want to test with session persistence
+//		DefaultSessionCache sessionCache = new DefaultSessionCache(bb.getSessionHandler());
+//		FileSessionDataStore sessionStore = new FileSessionDataStore();
+//		sessionStore.setStoreDir(new File("./jetty-session-data"));
+//		sessionCache.setSessionDataStore(sessionStore);
+//		bb.getSessionHandler().setSessionCache(sessionCache);
+		
 		ServerContainer serverContainer = WebSocketServerContainerInitializer.configureContext(bb);
 		serverContainer.addEndpoint(new WicketServerEndpointConfig());
 
 		// uncomment next line if you want to test with JSESSIONID encoded in the urls
-		// ((AbstractSessionManager)
-		// bb.getSessionHandler().getSessionManager()).setUsingCookies(false);
+//		((AbstractSessionManager) bb.getSessionHandler().getSessionManager()).setUsingCookies(false);
 
 		server.setHandler(bb);
 

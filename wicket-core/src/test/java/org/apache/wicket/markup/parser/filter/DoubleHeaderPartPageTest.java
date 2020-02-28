@@ -17,20 +17,20 @@
 package org.apache.wicket.markup.parser.filter;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  * 
  */
-public class DoubleHeaderPartPageTest extends WicketTestCase
+class DoubleHeaderPartPageTest extends WicketTestCase
 {
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderHeaderPartPage() throws Exception
+    void testRenderHeaderPartPage() throws Exception
 	{
 		executeTest(DoubleHeaderPartPage.class, "DoubleHeaderPartPageExpectedResult.html");
 	}

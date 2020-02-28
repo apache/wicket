@@ -322,32 +322,4 @@ jQuery(document).ready(function() {
 		Wicket.Event.publish('topicName1', "arg1", "arg2");
 		Wicket.Event.publish('topicName2', "arg1", "arg2");
 	});
-
-	module("Custom events");
-
-	test('inputchange', function() {
-
-		stop();
-
-		if (Wicket.Browser.isIELessThan11()) {
-			expect(3);
-		} else {
-			expect(1);
-		}
-
-		var $input = jQuery("#inputChangeInput");
-		$input.on("inputchange", function() {
-			ok(true, "inputchange event is triggered!");
-		});
-
-		if (Wicket.Browser.isIELessThan11()) {
-			$input.trigger("paste");
-			$input.trigger("keyup");
-			$input.trigger("cut");
-		} else {
-			$input.trigger("input");
-		}
-		start();
-
-	});
 });

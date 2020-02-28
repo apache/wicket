@@ -235,7 +235,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	/**
 	 * @return the container with the toolbars at the top
 	 */
-	public final ToolbarsContainer getTopToolbars()
+	public final WebMarkupContainer getTopToolbars()
 	{
 		return topToolbars;
 	}
@@ -243,7 +243,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	/**
 	 * @return the container with the toolbars at the bottom
 	 */
-	public final ToolbarsContainer getBottomToolbars()
+	public final WebMarkupContainer getBottomToolbars()
 	{
 		return bottomToolbars;
 	}
@@ -349,6 +349,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	 *            number of items to display per page
 	 * 
 	 */
+	@Override
 	public void setItemsPerPage(final long items)
 	{
 		datagrid.setItemsPerPage(items);

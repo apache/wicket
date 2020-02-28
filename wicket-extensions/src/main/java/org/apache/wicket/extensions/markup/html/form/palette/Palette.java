@@ -30,6 +30,7 @@ import org.apache.wicket.extensions.markup.html.form.palette.theme.DefaultTheme;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -312,10 +313,11 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onComponentTag(final ComponentTag tag)
+			public void renderHead(IHeaderResponse response)
 			{
-				super.onComponentTag(tag);
-				tag.getAttributes().put("onclick", Palette.this.getDownOnClickJS());
+				super.renderHead(response);
+				response.render(
+					OnEventHeaderItem.forComponent(this, "click", Palette.this.getDownOnClickJS()));
 			}
 		};
 	}
@@ -332,10 +334,11 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onComponentTag(final ComponentTag tag)
+			public void renderHead(IHeaderResponse response)
 			{
-				super.onComponentTag(tag);
-				tag.getAttributes().put("onclick", Palette.this.getUpOnClickJS());
+				super.renderHead(response);
+				response.render(
+					OnEventHeaderItem.forComponent(this, "click", Palette.this.getUpOnClickJS()));
 			}
 		};
 	}
@@ -352,10 +355,11 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onComponentTag(final ComponentTag tag)
+			public void renderHead(IHeaderResponse response)
 			{
-				super.onComponentTag(tag);
-				tag.getAttributes().put("onclick", Palette.this.getRemoveOnClickJS());
+				super.renderHead(response);
+				response.render(OnEventHeaderItem.forComponent(this, "click",
+					Palette.this.getRemoveOnClickJS()));
 			}
 		};
 	}
@@ -372,10 +376,11 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onComponentTag(final ComponentTag tag)
+			public void renderHead(IHeaderResponse response)
 			{
-				super.onComponentTag(tag);
-				tag.getAttributes().put("onclick", Palette.this.getAddOnClickJS());
+				super.renderHead(response);
+				response.render(
+					OnEventHeaderItem.forComponent(this, "click", Palette.this.getAddOnClickJS()));
 			}
 		};
 	}
@@ -416,10 +421,12 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void onComponentTag(ComponentTag tag)
+			@Override
+			public void renderHead(IHeaderResponse response)
 			{
-				super.onComponentTag(tag);
-				tag.getAttributes().put("onclick", Palette.this.getAddAllOnClickJS());
+				super.renderHead(response);
+				response.render(OnEventHeaderItem.forComponent(this, "click",
+					Palette.this.getAddAllOnClickJS()));
 			}
 		};
 	}
@@ -436,10 +443,12 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected void onComponentTag(ComponentTag tag)
+			@Override
+			public void renderHead(IHeaderResponse response)
 			{
-				super.onComponentTag(tag);
-				tag.getAttributes().put("onclick", Palette.this.getRemoveAllOnClickJS());
+				super.renderHead(response);
+				response.render(OnEventHeaderItem.forComponent(this, "click",
+					Palette.this.getRemoveAllOnClickJS()));
 			}
 		};
 	}

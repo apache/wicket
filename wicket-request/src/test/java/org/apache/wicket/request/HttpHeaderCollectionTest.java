@@ -16,19 +16,19 @@
  */
 package org.apache.wicket.request;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import java.time.Instant;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.apache.wicket.util.time.Time;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("javadoc")
 public class HttpHeaderCollectionTest
@@ -89,8 +89,8 @@ public class HttpHeaderCollectionTest
 	{
 		final HttpHeaderCollection headers = new HttpHeaderCollection();
 
-		final Time time1 = Time.millis(1000000);
-		final Time time2 = Time.millis(2000000);
+		final Instant time1 = Instant.ofEpochMilli(1000000);
+		final Instant time2 = Instant.ofEpochMilli(2000000);
 
 		headers.setDateHeader("date", time1);
 		headers.addDateHeader("date", time2);
@@ -122,12 +122,13 @@ public class HttpHeaderCollectionTest
 		}
 
 		assertArrayEquals(new String[] { "Thu, 01 Jan 1970 00:16:40 GMT",
-				"Thu, 01 Jan 1970 00:33:20 GMT", "not-a-date" }, headers.getHeaderValues("date"));
+				"Thu, 01 Jan 1970 00:33:20 GMT", "not-a-date" },
+			headers.getHeaderValues("date"));
 
 		headers.setHeader("date", "foobar");
 		try
 		{
-			Time date = headers.getDateHeader("date");
+			Instant date = headers.getDateHeader("date");
 			fail();
 		}
 		catch (IllegalStateException e)

@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.markup.html.basic;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -23,8 +28,7 @@ import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.value.ValueMap;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple application that demonstrates the mock http application code (and checks that it is
@@ -32,13 +36,13 @@ import org.junit.Test;
  * 
  * @author Chris Turner
  */
-public class SimplePageTest extends WicketTestCase
+class SimplePageTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage() throws Exception
+	void renderHomePage() throws Exception
 	{
 		executeTest(SimplePage.class, "SimplePageExpectedResult.html");
 	}
@@ -47,7 +51,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_2() throws Exception
+	void renderHomePage_2() throws Exception
 	{
 		executeTest(SimplePage.class, "SimplePageExpectedResult.html");
 		String document = tester.getLastResponseAsString();
@@ -58,7 +62,8 @@ public class SimplePageTest extends WicketTestCase
 
 		Panel panel = (Panel)tester.getLastRenderedPage().get("myPanel");
 		assertNotNull(panel);
-		assertTrue(document.contains("<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>"));
+		assertTrue(document.contains(
+			"<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>"));
 
 		label = (Label)tester.getLastRenderedPage().get("myPanel:label");
 		assertNotNull(label);
@@ -68,18 +73,21 @@ public class SimplePageTest extends WicketTestCase
 		Border border = (Border)tester.getLastRenderedPage().get("myBorder");
 		assertNotNull(border);
 		assertFalse("".equals(document));
-		assertTrue(document.contains("<wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border>"));
+		assertTrue(document.contains(
+			"<wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border>"));
 
 		border = (Border)tester.getLastRenderedPage().get("myBorder2");
 		assertNotNull(border);
 		assertFalse("".equals(document));
-		assertTrue(document.contains("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>"));
+		assertTrue(document.contains(
+			"<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>"));
 
 		// do the same test twice. Igor reported a problem with that, so we have to test it.
 		border = (Border)tester.getLastRenderedPage().get("myBorder2");
 		assertNotNull(border);
 		assertFalse("".equals(document));
-		assertTrue(document.contains("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>"));
+		assertTrue(document.contains(
+			"<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>"));
 
 		WebMarkupContainer container = (WebMarkupContainer)tester.getLastRenderedPage().get("test");
 		assertNotNull(container);
@@ -96,7 +104,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_2a() throws Exception
+	void renderHomePage_2a() throws Exception
 	{
 		// Render the component without having rendered the page previously
 		SimplePage page = new SimplePage();
@@ -108,7 +116,8 @@ public class SimplePageTest extends WicketTestCase
 
 		Panel panel = (Panel)page.get("myPanel");
 		assertNotNull(panel);
-		assertTrue(document.contains("<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>"));
+		assertTrue(document.contains(
+			"<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>"));
 
 		label = (Label)page.get("myPanel:label");
 		assertNotNull(label);
@@ -116,16 +125,19 @@ public class SimplePageTest extends WicketTestCase
 
 		Border border = (Border)page.get("myBorder");
 		assertNotNull(border);
-		assertTrue(document.contains("<wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border>"));
+		assertTrue(document.contains(
+			"<wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border>"));
 
 		border = (Border)page.get("myBorder2");
 		assertNotNull(border);
-		assertTrue(document.contains("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>"));
+		assertTrue(document.contains(
+			"<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>"));
 
 		// do the same test twice. Igor reported a problem with that, so we have to test it.
 		border = (Border)page.get("myBorder2");
 		assertNotNull(border);
-		assertTrue(document.contains("<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>"));
+		assertTrue(document.contains(
+			"<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>"));
 
 		WebMarkupContainer container = (WebMarkupContainer)page.get("test");
 		assertNotNull(container);
@@ -140,7 +152,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_2b() throws Exception
+	void renderHomePage_2b() throws Exception
 	{
 		// Render the component without having rendered the page previously
 		SimplePage page = new SimplePage();
@@ -199,7 +211,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_3() throws Exception
+	void renderHomePage_3() throws Exception
 	{
 		executeTest(SimplePage_3.class, "SimplePageExpectedResult_3.html");
 	}
@@ -208,7 +220,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_4() throws Exception
+	void renderHomePage_4() throws Exception
 	{
 		boolean hit = false;
 		try
@@ -223,14 +235,14 @@ public class SimplePageTest extends WicketTestCase
 			assertTrue(mex.getMessage().contains("<span>"));
 			assertTrue(mex.toString().contains("SimplePage_4.html"));
 		}
-		assertTrue("Did expect a MarkupException", hit);
+		assertTrue(hit, "Did expect a MarkupException");
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_5() throws Exception
+	void renderHomePage_5() throws Exception
 	{
 		boolean hit = false;
 		try
@@ -241,14 +253,14 @@ public class SimplePageTest extends WicketTestCase
 		{
 			hit = true;
 		}
-		assertTrue("Did expect a MarkupNotFoundException", hit);
+		assertTrue(hit, "Did expect a MarkupNotFoundException");
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_6() throws Exception
+	void renderHomePage_6() throws Exception
 	{
 		boolean hit = false;
 		try
@@ -259,14 +271,14 @@ public class SimplePageTest extends WicketTestCase
 		{
 			hit = true;
 		}
-		assertTrue("Did expect a MarkupException", hit);
+		assertTrue(hit, "Did expect a MarkupException");
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_7() throws Exception
+	void renderHomePage_7() throws Exception
 	{
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
 		// This is for issue https://issues.apache.org/jira/browse/WICKET-590
@@ -277,7 +289,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_8() throws Exception
+	void renderHomePage_8() throws Exception
 	{
 		boolean hit = false;
 		try
@@ -288,14 +300,14 @@ public class SimplePageTest extends WicketTestCase
 		{
 			hit = true;
 		}
-		assertTrue("Did expect a MarkupException", hit);
+		assertTrue(hit, "Did expect a MarkupException");
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_9() throws Exception
+	void renderHomePage_9() throws Exception
 	{
 		executeTest(SimplePage_9.class, "SimplePageExpectedResult_9.html");
 	}
@@ -304,19 +316,20 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_10() throws Exception
+	void renderHomePage_10() throws Exception
 	{
 		executeTest(new SimplePage_10(false), "SimplePageExpectedResult_10.html");
 		tester.startPage(new SimplePage_10(true));
 		String document = tester.getLastResponseAsString();
-		assertTrue(document.contains("<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>"));
+		assertTrue(document.contains(
+			"<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>"));
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_11() throws Exception
+	void renderHomePage_11() throws Exception
 	{
 		executeTest(SimplePage_11.class, "SimplePageExpectedResult_11.html");
 	}
@@ -325,7 +338,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_12() throws Exception
+	void renderHomePage_12() throws Exception
 	{
 		executeTest(SimplePage_12.class, "SimplePageExpectedResult_12.html");
 	}
@@ -334,7 +347,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_13() throws Exception
+	void renderHomePage_13() throws Exception
 	{
 		executeTest(SimplePage_13.class, "SimplePageExpectedResult_13.html");
 	}
@@ -343,7 +356,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_14() throws Exception
+	void renderHomePage_14() throws Exception
 	{
 		executeTest(SimplePage_14.class, "SimplePageExpectedResult_14.html");
 	}
@@ -352,7 +365,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_15() throws Exception
+	void renderHomePage_15() throws Exception
 	{
 		executeTest(SimplePage_15.class, "SimplePageExpectedResult_15.html");
 	}
@@ -361,7 +374,7 @@ public class SimplePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_16() throws Exception
+	void renderHomePage_16() throws Exception
 	{
 		executeTest(SimplePage_16.class, "SimplePageExpectedResult_16.html");
 	}

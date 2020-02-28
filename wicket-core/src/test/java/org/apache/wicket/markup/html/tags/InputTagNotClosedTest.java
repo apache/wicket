@@ -17,18 +17,18 @@
 package org.apache.wicket.markup.html.tags;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  */
-public class InputTagNotClosedTest extends WicketTestCase
+class InputTagNotClosedTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void inputVisible() throws Exception
+    void inputVisible() throws Exception
 	{
 		executeTest(InputTagVisibleWebPage.class, "InputTagVisibleWebPageResult.html");
 	}
@@ -37,7 +37,7 @@ public class InputTagNotClosedTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void inputNotVisible() throws Exception
+    void inputNotVisible() throws Exception
 	{
 		executeTest(InputTagNotVisibleWebPage.class, "InputTagNotVisibleWebPageResult.html");
 	}

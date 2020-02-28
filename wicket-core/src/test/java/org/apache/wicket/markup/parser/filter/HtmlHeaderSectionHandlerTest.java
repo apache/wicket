@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.MarkupException;
@@ -23,9 +25,9 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class HtmlHeaderSectionHandlerTest extends WicketTestCase
+class HtmlHeaderSectionHandlerTest extends WicketTestCase
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4511
@@ -35,11 +37,16 @@ public class HtmlHeaderSectionHandlerTest extends WicketTestCase
 	 *
 	 * @throws Exception
 	 */
-	@Test(expected = MarkupException.class)
-	public void loadMarkupWithBodyInsideHead() throws Exception
+	@Test
+	void loadMarkupWithBodyInsideHead() throws Exception
 	{
 		CustomMarkupPage customMarkupPage = new CustomMarkupPage();
-		tester.startPage(customMarkupPage);
+
+		assertThrows(MarkupException.class, () -> {
+			tester.startPage(customMarkupPage);
+		});
+
+
 	}
 
 	private static class CustomMarkupPage extends WebPage implements IMarkupResourceStreamProvider

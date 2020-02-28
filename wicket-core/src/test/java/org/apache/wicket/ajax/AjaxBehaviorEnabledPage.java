@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.ajax;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.junit.Assert;
 
 /**
  * @author marrink
@@ -42,7 +44,7 @@ public class AjaxBehaviorEnabledPage extends WebPage
 			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
-				Assert.assertNotNull(target);
+				assertNotNull(target);
 			}
 		});
 		add(enabled);
@@ -55,7 +57,7 @@ public class AjaxBehaviorEnabledPage extends WebPage
 			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
-				Assert.fail("should never get here with disabled ajax");
+				fail("should never get here with disabled ajax");
 			}
 		});
 		add(disabled);

@@ -16,29 +16,30 @@
  */
 package org.apache.wicket.util.file;
 
-import java.net.URL;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.net.URL;
 import javax.servlet.ServletContext;
 
 import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.junit.Assert;
-import org.junit.Test;
-import org.mockito.Matchers;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 /**
  * @since 1.5.5
  */
-public class WebApplicationPathTest extends Assert
+class WebApplicationPathTest
 {
 	@Test
-	public void doNotServeResourcesFromWebInf() throws Exception
+	void doNotServeResourcesFromWebInf() throws Exception
 	{
 		URL webUrl = new URL("file://dummyFile");
 
 		ServletContext context = Mockito.mock(ServletContext.class);
-		Mockito.when(context.getResource(Matchers.any(String.class))).thenReturn(webUrl);
+		Mockito.when(context.getResource(ArgumentMatchers.any(String.class))).thenReturn(webUrl);
 
 		WebApplicationPath path = new WebApplicationPath(context, "");
 		IResourceStream resourceStream = path.find(String.class, "WEB-INF/web.xml");

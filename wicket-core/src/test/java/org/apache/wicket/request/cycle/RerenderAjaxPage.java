@@ -78,6 +78,6 @@ public class RerenderAjaxPage extends WebPage
 
 		// and add our own special sauce to the page to emphasize the issue. If this CSS is not
 		// rendered, the page will show a big red box telling you about the failure.
-		response.render(new CssContentHeaderItem(HEAD_TEXT, "mystyle", null));
+		response.render(new CssContentHeaderItem(HEAD_TEXT, "mystyle"));
 	}
 }

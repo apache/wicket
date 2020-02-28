@@ -5,7 +5,7 @@ NOTE: All the example projects presented in this document have been generated us
 
 === Wicket application structure
 
-A Wicket application is a standard Java EE web application, hence it is deployed through a web.xml file placed inside folder WEB-INF:
+A Wicket application is a standard Java EE web application, hence it is deployed through a _web.xml_ file placed inside folder WEB-INF:
 
 image::../img/webinf.png[]
 
@@ -39,11 +39,11 @@ If we are using Servlet 3 or a later version, we can of course use a class in pl
 
 [source,java]
 ----
-@WebFilter(value = "/*", initParams = { 
-             @WebInitParam(name = "applicationClassName", value = "com.mycompany.WicketApplication"), 
+@WebFilter(value = "/*", initParams = {
+             @WebInitParam(name = "applicationClassName", value = "com.mycompany.WicketApplication"),
 			@WebInitParam(name="filterMappingUrlPattern", value="/*") })
 public class ProjectFilter extends WicketFilter {
-	
+
 }
 ----
 
@@ -53,7 +53,7 @@ NOTE: Wicket can be started in two modes named respectively DEVELOPMENT and DEPL
 
 === The application class
 
-If we look back at web.xml we can see that we have provided the Wicket filter with a parameter called  _applicationClassName_. This value must be the fully qualified class name of a subclass of _org.apache.wicket.Application_. This subclass represents our web application built upon Wicket and it's responsible for configuring it when the server is starting up. Most of the times our custom application class won't inherit directly from class _Application_, but rather from class _org.apache.wicket.protocol.http.WebApplication_ which provides a closer integration with servlet infrastructure. 
+If we look back at _web.xml_ we can see that we have provided the Wicket filter with a parameter called  _applicationClassName_. This value must be the fully qualified class name of a subclass of _org.apache.wicket.Application_. This subclass represents our web application built upon Wicket and it's responsible for configuring it when the server is starting up. Most of the times our custom application class won't inherit directly from class _Application_, but rather from class _org.apache.wicket.protocol.http.WebApplication_ which provides a closer integration with servlet infrastructure.
 Class _Application_ comes with a set of configuration methods that we can override to customize our application's settings. One of these methods is _getHomePage()_ that must be overridden as it is declared abstract:
 
 [source,java]
@@ -76,7 +76,7 @@ The current application's instance can be retrieved at any time by calling stati
 [source,java]
 ----
 public class WicketApplication extends WebApplication
-{    	
+{
 	@Override
 	public Class<? extends WebPage> getHomePage()
 	{
@@ -96,4 +96,3 @@ Since this is a very basic example of a Wicket application, we don't need to spe
 
 NOTE: Declaring a _WicketFilter_ inside web.xml descriptor is not the only way we have to kick-start our application.
 If we prefer to use a servlet instead of a filter, we can use class _org.apache.wicket.protocol.http.WicketServlet_. See the JavaDoc for further details.
-

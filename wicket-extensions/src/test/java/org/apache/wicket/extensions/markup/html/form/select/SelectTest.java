@@ -16,8 +16,12 @@
  */
 package org.apache.wicket.extensions.markup.html.form.select;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link Select}.
@@ -27,19 +31,17 @@ public class SelectTest extends WicketTestCase
 
 	/**
 	 * WICKET-4276
-	 * 
-	 * @throws Exception
-	 */
+     */
 	@Test
-	public void rawInputKeepsSelectionOnError() throws Exception
-	{
+	public void rawInputKeepsSelectionOnError() {
 		SelectTestPage page = new SelectTestPage();
 
 		tester.startPage(page);
 
-		tester.getRequest().setParameter("select", page.option1.getValue());
+		final FormTester formTester = tester.newFormTester("form");
+		formTester.setValue("select", "option1");
 
-		tester.submitForm(page.form);
+		formTester.submit();
 
 		// form has error ...
 		assertTrue(page.form.hasError());
@@ -52,9 +54,10 @@ public class SelectTest extends WicketTestCase
 		// ... even after re-render
 		assertTrue(page.select.isSelected(page.option1));
 
-		tester.getRequest().setParameter("select", page.option1.getValue());
-		tester.getRequest().setParameter("text", "text is required");
-		tester.submitForm(page.form);
+		final FormTester formTester2 = tester.newFormTester("form");
+		formTester2.setValue("select", "option1");
+		formTester2.setValue("text", "text is required");
+		formTester2.submit();
 
 		// ... until successful submit without rawInput
 		assertFalse(page.select.hasRawInput());
@@ -67,9 +70,24 @@ public class SelectTest extends WicketTestCase
 	@Test
 	public void selectionWithouEquals()
 	{
-
 		SelectTestPage2 page = new SelectTestPage2();
 
 		assertTrue(page.select.isSelected(page.option0));
+	}
+	
+	/**
+	 * WICKET-6553 option text
+	 */
+	@Test
+	public void optionText()
+	{
+		SelectTestPage3 page = new SelectTestPage3();
+
+		tester.startPage(page);
+
+		final String lastResponseAsString = tester.getLastResponseAsString();
+		assertTrue(lastResponseAsString.contains("&lt;1&gt;"));
+		assertTrue(lastResponseAsString.contains("&lt;2&gt;"));
+		assertTrue(lastResponseAsString.contains("&lt;3&gt;"));
 	}
 }

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
@@ -25,13 +27,12 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  */
-public class TogglePageTest extends WicketTestCase
+class TogglePageTest extends WicketTestCase
 {
 
 	@Override
@@ -50,7 +51,7 @@ public class TogglePageTest extends WicketTestCase
 	}
 
 	@Test
-	public void testNoAjaxPage()
+	void testNoAjaxPage()
 	{
 		{
 			// On
@@ -78,7 +79,7 @@ public class TogglePageTest extends WicketTestCase
 	}
 
 	@Test
-	public void testTraditionalAjaxEnclosurePage()
+	void testTraditionalAjaxEnclosurePage()
 	{
 		{
 			// On
@@ -109,7 +110,7 @@ public class TogglePageTest extends WicketTestCase
 	}
 
 	@Test
-	public void testInlineEnclosureWithAdditionalAjaxTarget()
+	void testInlineEnclosureWithAdditionalAjaxTarget()
 	{
 		{
 			// On
@@ -156,12 +157,12 @@ public class TogglePageTest extends WicketTestCase
 	}
 
 	@Test
-	public void testInlineEnclosureAjaxPage()
+	void testInlineEnclosureAjaxPage()
 	{
 		String inlineEnclosureIdPrefix = "wicket__InlineEnclosure_";
 
 		String inlineEnclosureHiddenPattern = "<tr id=\"" + inlineEnclosureIdPrefix +
-			"\\w+\" style=\"display:none\"></tr>";
+			"\\w+\" class=\"wicket--hidden\" data-wicket-placeholder=\"\"></tr>";
 
 		String inlineEnclosureVisiblePattern = "<tr bgcolor=\"red\" id=\"" +
 			inlineEnclosureIdPrefix + "\\w+\">";
@@ -200,7 +201,7 @@ public class TogglePageTest extends WicketTestCase
 	/**
 	 * @param toggleable
 	 */
-	protected void assertInvisible(Component toggleable)
+	private void assertInvisible(Component toggleable)
 	{
 		tester.assertInvisible(toggleable.getPageRelativePath());
 		assertDoesNotContain(toggledText);
@@ -210,7 +211,7 @@ public class TogglePageTest extends WicketTestCase
 	/**
 	 * @param toggleable
 	 */
-	protected void assertVisible(Component toggleable)
+	private void assertVisible(Component toggleable)
 	{
 		tester.assertVisible(toggleable.getPageRelativePath());
 		tester.assertContains(Pattern.quote(toggledText));
@@ -221,7 +222,7 @@ public class TogglePageTest extends WicketTestCase
 	/**
 	 * @param label
 	 */
-	protected void assertVisible(Label label)
+	private void assertVisible(Label label)
 	{
 		tester.assertVisible(label.getPageRelativePath());
 		tester.assertContains(Pattern.quote(label.getInnermostModel().getObject().toString()));
@@ -230,7 +231,7 @@ public class TogglePageTest extends WicketTestCase
 	/**
 	 * @param label
 	 */
-	protected void assertInVisible(Label label)
+	private void assertInVisible(Label label)
 	{
 		tester.assertInvisible(label.getPageRelativePath());
 	}
@@ -240,8 +241,7 @@ public class TogglePageTest extends WicketTestCase
 	 */
 	private void assertDoesNotContain(String string)
 	{
-		assertFalse("Should not contain: " + string,
-			tester.getLastResponseAsString().contains(string));
+		assertFalse(tester.getLastResponseAsString().contains(string), "Should not contain: " + string);
 	}
 
 

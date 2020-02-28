@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -30,12 +33,12 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * <a href="https://issues.apache.org/jira/browse/WICKET-3711">WICKET-3711</a>
  */
-public class FormTesterSubmitLinkTest extends WicketTestCase
+class FormTesterSubmitLinkTest extends WicketTestCase
 {
 	/**
 	 * Submit via SubmitLink.
@@ -43,7 +46,7 @@ public class FormTesterSubmitLinkTest extends WicketTestCase
 	 * This should work the same as regular submit
 	 */
 	@Test
-	public void submitLink()
+	void submitLink()
 	{
 		tester.startPage(TestPage.class);
 
@@ -58,7 +61,7 @@ public class FormTesterSubmitLinkTest extends WicketTestCase
 	 * Submit the form
 	 */
 	@Test
-	public void regularSubmit()
+	void regularSubmit()
 	{
 		tester.startPage(TestPage.class);
 
@@ -70,7 +73,7 @@ public class FormTesterSubmitLinkTest extends WicketTestCase
 	}
 
 	@Test
-	public void radioComponentValueEncoding()
+	void radioComponentValueEncoding()
 	{
 
 		class TestPage extends WebPage implements IMarkupResourceStreamProvider
@@ -80,7 +83,7 @@ public class FormTesterSubmitLinkTest extends WicketTestCase
 			private String value;
 			private boolean submitted;
 
-			public TestPage()
+			TestPage()
 			{
 				Form<Void> form = new Form<Void>("form");
 				add(form);

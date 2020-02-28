@@ -44,7 +44,7 @@ public class UrlDecoder
 	 * Encoder used to decode name or value components of a query string.<br/>
 	 * <br/>
 	 * 
-	 * For example: http://org.acme/notthis/northis/oreventhis?buthis=isokay&asis=thispart
+	 * For example: http://org.acme/notthis/northis/oreventhis?buthis=isokay&amp;asis=thispart
 	 */
 	public static final UrlDecoder QUERY_INSTANCE = new UrlDecoder(true);
 

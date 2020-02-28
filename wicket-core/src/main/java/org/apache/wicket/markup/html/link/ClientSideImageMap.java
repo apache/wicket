@@ -39,7 +39,7 @@ public class ClientSideImageMap extends Panel
 {
 	private static final long serialVersionUID = 1L;
 	private static final String CIRCLE = "circle";
-	private static final String POLYGON = "polygon";
+	private static final String POLYGON = "poly";
 	private static final String RECTANGLE = "rect";
 
 	private RepeatingView areas;

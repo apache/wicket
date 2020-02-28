@@ -16,15 +16,17 @@
  */
 package org.apache.wicket.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Locale;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Abstract base class providing common test functionality to ensure that all loader implementations
@@ -32,15 +34,15 @@ import org.junit.Test;
  * 
  * @author Chris Turner
  */
-public abstract class StringResourceLoaderTestBase extends Assert
+public abstract class StringResourceLoaderTestBase
 {
-	protected WicketTester tester;
+	WicketTester tester;
 
 	// The loader to test
 	protected IStringResourceLoader loader;
 
 	// The dummy component
-	protected Component component;
+	Component component;
 
 
 	/**
@@ -53,8 +55,8 @@ public abstract class StringResourceLoaderTestBase extends Assert
 	/**
 	 * @throws Exception
 	 */
-	@Before
-	public void before() throws Exception
+	@BeforeEach
+	void before() throws Exception
 	{
 		tester = new WicketTester(new DummyApplication());
 		component = new DummyComponent("test", tester.getApplication());
@@ -66,8 +68,8 @@ public abstract class StringResourceLoaderTestBase extends Assert
 	/**
 	 * @throws Exception
 	 */
-	@After
-	public void after() throws Exception
+	@AfterEach
+	void after() throws Exception
 	{
 		tester.destroy();
 	}
@@ -76,57 +78,58 @@ public abstract class StringResourceLoaderTestBase extends Assert
 	 * 
 	 */
 	@Test
-	public void loaderValidKeyNoStyleDefaultLocale()
+	void loaderValidKeyNoStyleDefaultLocale()
 	{
 		String s = loader.loadStringResource(component.getClass(), "test.string",
 			Locale.getDefault(), null, null);
-		Assert.assertEquals("Resource should be loaded", "This is a test", s);
+		assertEquals("This is a test", s, "Resource should be loaded");
 
 		// And do it again to ensure caching path is exercised
 		s = loader.loadStringResource(component.getClass(), "test.string", Locale.getDefault(),
 			null, null);
-		Assert.assertEquals("Resource should be loaded", "This is a test", s);
+		assertEquals("This is a test", s, "Resource should be loaded");
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void loaderInvalidKeyNoStyleDefaultLocale()
+	void loaderInvalidKeyNoStyleDefaultLocale()
 	{
-		Assert.assertNull("Missing key should return null", loader.loadStringResource(
-			component.getClass(), "unknown.string", Locale.getDefault(), null, null));
+		assertNull(loader.loadStringResource(component.getClass(), "unknown.string",
+			Locale.getDefault(), null, null), "Missing key should return null");
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void loaderValidKeyNoStyleAlternativeLocale()
+	void loaderValidKeyNoStyleAlternativeLocale()
 	{
 		String s = loader.loadStringResource(component.getClass(), "test.string", new Locale("zz"),
 			null, null);
-		Assert.assertEquals("Resource should be loaded", "Flib flob", s);
+		assertEquals("Flib flob", s, "Resource should be loaded");
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void loaderInvalidKeyNoStyleAlternativeLocale()
+	void loaderInvalidKeyNoStyleAlternativeLocale()
 	{
-		Assert.assertNull("Missing key should return null", loader.loadStringResource(
-			component.getClass(), "unknown.string", new Locale("zz"), null, null));
+		assertNull(loader.loadStringResource(component.getClass(), "unknown.string",
+			new Locale("zz"), null, null), "Missing key should return null");
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void loaderValidKeyStyleNoLocale()
+	void loaderValidKeyStyleNoLocale()
 	{
-		String s = loader.loadStringResource(component.getClass(), "test.string", null, "alt", null);
-		Assert.assertEquals("Resource should be loaded", "Alt test string", s);
+		String s = loader.loadStringResource(component.getClass(), "test.string", null, "alt",
+			null);
+		assertEquals("Alt test string", s, "Resource should be loaded");
 	}
 
 	/**

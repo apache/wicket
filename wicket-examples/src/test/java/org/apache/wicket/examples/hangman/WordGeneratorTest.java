@@ -16,11 +16,15 @@
  */
 package org.apache.wicket.examples.hangman;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,12 +40,10 @@ public class WordGeneratorTest extends WicketTestCase
 
 	/**
 	 * Tests word generator
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void testWordGenerator() throws Exception
-	{
+	public void testWordGenerator() {
 		WordGenerator wg = new WordGenerator();
 		int wordCount = wg.size();
 		Set<Word> words = new HashSet<>();
@@ -50,7 +52,7 @@ public class WordGeneratorTest extends WicketTestCase
 		{
 			Word word = wg.next();
 			log.info("Word found: " + word);
-			assertFalse("Word should not be returned twice", words.contains(word));
+			Assertions.assertFalse(words.contains(word), "Word should not be returned twice");
 			words.add(word);
 		}
 		log.info("Second iteration...");
@@ -58,20 +60,18 @@ public class WordGeneratorTest extends WicketTestCase
 		{
 			Word word = wg.next();
 			log.info("Word found: " + word);
-			assertTrue("Word " + word + " should have been returned only once", words.remove(word));
+			assertTrue(words.remove(word), "Word " + word + " should have been returned only once");
 		}
-		assertTrue("All words should have been returned twice", words.isEmpty());
+		assertTrue(words.isEmpty(), "All words should have been returned twice");
 	}
 
 	/**
 	 * Tests word generator
-	 * 
-	 * @throws Exception
+	 *
 	 */
 	@Test
-	public void testSuppliedWordConstructor() throws Exception
-	{
+	public void testSuppliedWordConstructor() {
 		WordGenerator wg = new WordGenerator(new String[] { "testing" });
-		assertEquals("Word should be as expected", "testing", wg.next().asString());
+		assertEquals("testing", wg.next().asString(), "Word should be as expected");
 	}
 }

@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>9.0.0-M5-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-common-tests</artifactId>
@@ -29,14 +29,11 @@
 	<description>Tests for all Wicket modules</description>
 
 	<properties>
+		<automatic-module-name>org.apache.wicket.common.tests</automatic-module-name>
 		<clirr.skip>true</clirr.skip>
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-auth-roles</artifactId>
@@ -106,6 +103,36 @@
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-velocity</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket9</groupId>
+			<artifactId>wicket-http2-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket9</groupId>
+			<artifactId>wicket-http2-jetty</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket9</groupId>
+			<artifactId>wicket-http2-servlet4</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket9</groupId>
+			<artifactId>wicket-http2-tomcat</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket9</groupId>
+			<artifactId>wicket-http2-undertow</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<groupId>org.junit.jupiter</groupId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

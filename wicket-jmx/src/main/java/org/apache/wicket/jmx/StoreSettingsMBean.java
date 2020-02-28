@@ -16,8 +16,7 @@
  */
 package org.apache.wicket.jmx;
 
-import org.apache.wicket.pageStore.DiskDataStore;
-import org.apache.wicket.pageStore.IDataStore;
+import org.apache.wicket.pageStore.DiskPageStore;
 
 /**
  * JMX MBean for Application's StoreSettings
@@ -26,19 +25,13 @@ public interface StoreSettingsMBean
 {
 
 	/**
-	 * @return the number of page instances which will be stored in the http session for faster
-	 *         retrieval
-	 */
-	int getInmemoryCacheSize();
-
-	/**
-	 * @return maximum page size. After this size is exceeded, the {@link DiskDataStore} will start
+	 * @return maximum page size. After this size is exceeded, the {@link DiskPageStore} will start
 	 *         saving the pages at the beginning of file.
 	 */
 	long getMaxSizePerSession();
 
 	/**
-	 * @return the location of the folder where {@link DiskDataStore} will store the files with page
+	 * @return the location of the folder where {@link DiskPageStore} will store the files with page
 	 *         instances per session
 	 */
 	String getFileStoreFolder();
@@ -50,7 +43,7 @@ public interface StoreSettingsMBean
 
 	/**
 	 * @return {@code true} when the HTTP worker thread doesn't wait for the storing of the page's
-	 *         bytes in {@link IDataStore}
+	 *         bytes in {@link IPageStore}
 	 */
 	boolean isAsynchronous();
 }

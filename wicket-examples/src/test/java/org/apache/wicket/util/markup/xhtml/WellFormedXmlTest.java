@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.markup.xhtml;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Checks that the html markup files are well formed xml-s.

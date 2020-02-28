@@ -26,7 +26,7 @@ import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Duration;
+import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

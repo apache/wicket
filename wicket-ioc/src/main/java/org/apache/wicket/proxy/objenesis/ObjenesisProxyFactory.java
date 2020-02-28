@@ -16,15 +16,17 @@
  */
 package org.apache.wicket.proxy.objenesis;
 
-import net.sf.cglib.proxy.Callback;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.core.NamingPolicy;
+import java.io.Serializable;
+
 import org.apache.wicket.proxy.ILazyInitProxy;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.proxy.LazyInitProxyFactory.IWriteReplace;
 import org.objenesis.ObjenesisStd;
 
-import java.io.Serializable;
+import net.sf.cglib.core.NamingPolicy;
+import net.sf.cglib.proxy.Callback;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.Factory;
 
 public class ObjenesisProxyFactory
 {
@@ -39,10 +41,13 @@ public class ObjenesisProxyFactory
 		e.setSuperclass(type);
 		e.setCallbackType(handler.getClass());
 		e.setNamingPolicy(namingPolicy);
-		e.setUseCache(false);
-
 		Class<?> proxyClass = e.createClass();
-		Enhancer.registerCallbacks(proxyClass, new Callback[]{handler});
-		return OBJENESIS.newInstance(proxyClass);
+		
+		Object instance = OBJENESIS.newInstance(proxyClass);
+
+		// set callbacks directly (WICKET-6607) 
+		((Factory) instance).setCallbacks(new Callback[]{handler});
+		
+		return instance;
 	}
 }

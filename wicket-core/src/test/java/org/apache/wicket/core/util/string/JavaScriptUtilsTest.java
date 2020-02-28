@@ -16,14 +16,16 @@
  */
 package org.apache.wicket.core.util.string;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.response.StringResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.apache.wicket.util.value.AttributeMap;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.5.7
  */
-public class JavaScriptUtilsTest extends Assert
+class JavaScriptUtilsTest
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4546
@@ -31,17 +33,19 @@ public class JavaScriptUtilsTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void writeJavaScriptUrl() throws Exception
+	public void writeJavaScript() throws Exception
 	{
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		attributes.putAttribute(JavaScriptUtils.ATTR_ID, "some\"funny<id&%");
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_DEFER, true);
+		attributes.putAttribute("charset", "some\"funny<charset&%");
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_SRC, "some/url;jsessionid=1234?p1=v1&p2=v2");
 		StringResponse response = new StringResponse();
-		String url = "some/url;jsessionid=1234?p1=v1&p2=v2";
-		String id = "some&bad%id";
-		boolean defer = true;
-		String charset = "some&bad%%charset";
-		JavaScriptUtils.writeJavaScriptUrl(response, url, id, defer, charset);
+		JavaScriptUtils.writeScript(response, attributes);
 
 		assertEquals(
-			"<script type=\"text/javascript\" id=\"some&amp;bad%id\" defer=\"defer\" charset=\"some&amp;bad%%charset\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2\"></script>\n",
+				"<script type=\"text/javascript\" id=\"some&quot;funny&lt;id&amp;%\" defer=\"defer\" charset=\"some&quot;funny&lt;charset&amp;%\" src=\"some/url;jsessionid=1234?p1=v1&amp;p2=v2\"></script>\n",
 			response.toString());
 	}
 
@@ -49,31 +53,35 @@ public class JavaScriptUtilsTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5715
 	 */
 	@Test
-	public void writeJavaScriptUrlAsync()
+	public void writeJavaScriptAsync()
 	{
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		attributes.putAttribute(JavaScriptUtils.ATTR_ID, "some\"funny<id&%");
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_DEFER, true);
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_ASYNC, true);
+		attributes.putAttribute("charset", "some\"funny<charset&%");
+		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_SRC, "some/url;jsessionid=1234?p1=v1&p2=v2&p3=v3");
 		StringResponse response = new StringResponse();
-		String url = "some/url;jsessionid=1234?p1=v1&p2=v2";
-		String id = "some&bad%id";
-		boolean defer = true;
-		boolean async = true;
-		String charset = "some&bad%%charset";
-		JavaScriptUtils.writeJavaScriptUrl(response, url, id, defer, charset, async);
+		JavaScriptUtils.writeScript(response, attributes);
 
 		assertEquals(
-				"<script type=\"text/javascript\" id=\"some&amp;bad%id\" defer=\"defer\" async=\"async\" charset=\"some&amp;bad%%charset\" src=\"some/url;jsessionid=1234?p1=v1&p2=v2\"></script>\n",
+				"<script type=\"text/javascript\" id=\"some&quot;funny&lt;id&amp;%\" defer=\"defer\" async=\"async\" charset=\"some&quot;funny&lt;charset&amp;%\" src=\"some/url;jsessionid=1234?p1=v1&amp;p2=v2&amp;p3=v3\"></script>\n",
 				response.toString());
 	}
 
 	/**
 	 */
 	@Test
-	public void writeJavaScript()
+	public void writeInlineScript()
 	{
 		StringResponse response = new StringResponse();
-		JavaScriptUtils.writeJavaScript(response,
-			"var message = 'Scripts are written to the <script></script> tag'");
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		JavaScriptUtils.writeInlineScript(response,
+			"var message = 'Scripts are written to the <script></script> tag'", attributes);
 
-		assertEquals("<script type=\"text/javascript\" >\n" //
+		assertEquals("<script type=\"text/javascript\">\n" //
 			+ "/*<![CDATA[*/\n" //
 			+ "var message = 'Scripts are written to the <script><\\/script> tag'\n" //
 			+ "/*]]>*/\n"//

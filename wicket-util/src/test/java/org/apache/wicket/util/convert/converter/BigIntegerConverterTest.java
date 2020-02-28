@@ -16,15 +16,17 @@
  */
 package org.apache.wicket.util.convert.converter;
 
+import org.apache.wicket.util.convert.ConversionException;
+import org.junit.jupiter.api.Test;
+
 import java.math.BigInteger;
 import java.util.Locale;
 
-import org.apache.wicket.util.convert.ConversionException;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SuppressWarnings("javadoc")
-public class BigIntegerConverterTest extends Assert
+public class BigIntegerConverterTest
 {
 	@Test
 	public void positiveInteger()
@@ -76,10 +78,13 @@ public class BigIntegerConverterTest extends Assert
 		assertEquals("-1234567890987654321234567890987654321234567890987654321", bigInteger.toString());
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void nan()
 	{
-		BigIntegerConverter converter = new BigIntegerConverter();
-		converter.convertToObject("a12345a", Locale.GERMAN);
+		assertThrows(ConversionException.class, () -> {
+			BigIntegerConverter converter = new BigIntegerConverter();
+			converter.convertToObject("a12345a", Locale.GERMAN);
+		});
+
 	}
 }

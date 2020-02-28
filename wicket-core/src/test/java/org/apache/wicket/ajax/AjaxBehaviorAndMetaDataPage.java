@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.ajax;
 
+import java.time.Duration;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.util.time.Duration;
 
 
 /**	 */
@@ -36,7 +36,7 @@ public class AjaxBehaviorAndMetaDataPage extends WebPage implements IAjaxIndicat
 		ajaxContainer.setMarkupId("menu");
 		ajaxContainer.setOutputMarkupId(true);
 
-		ajaxIndicatorAppender = new AjaxSelfUpdatingTimerBehavior(Duration.ONE_MINUTE);
+		ajaxIndicatorAppender = new AjaxSelfUpdatingTimerBehavior(Duration.ofMinutes(1));
 		ajaxContainer.add(ajaxIndicatorAppender);
 
 		add(ajaxContainer);

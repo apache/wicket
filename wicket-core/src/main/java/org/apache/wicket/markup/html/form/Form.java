@@ -35,11 +35,12 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
@@ -146,8 +147,6 @@ public class Form<T> extends WebMarkupContainer
 		IRequestListener,
 		IGenericComponent<T, Form<T>>
 {
-	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
-
 	public static final String ENCTYPE_MULTIPART_FORM_DATA = "multipart/form-data";
 
 	/**
@@ -301,6 +300,16 @@ public class Form<T> extends WebMarkupContainer
 	private static final short MULTIPART_HINT_NO = 0x04;
 
 	/**
+	 * The index of the hidden fields used to pass parameters.
+	 */
+	private static final int HIDDEN_FIELDS_PARAMS_IDX = 0;
+	
+	/**
+	 * The index of the hidden fields used for the default submit button.
+	 */
+	private static final int HIDDEN_FIELDS_SUBMIT_IDX = 1;
+	
+	/**
 	 * Constructs a form with no validation.
 	 * 
 	 * @param id
@@ -426,12 +435,14 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * <p>
 	 * Gets the IFormSubmittingComponent which submitted this form.
 	 * 
 	 * @return The component which submitted this form, or null if the processing was not triggered
 	 *         by a registered IFormSubmittingComponent
 	 */
-	public final IFormSubmitter findSubmittingButton()
+	public final IFormSubmittingComponent findSubmitter()
 	{
 		IFormSubmittingComponent submittingComponent = getPage().visitChildren(
 			IFormSubmittingComponent.class, new IVisitor<Component, IFormSubmittingComponent>()
@@ -509,14 +520,7 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * @deprecated use {@link #getJsForListenerUrl(CharSequence)} instead.
-	 */
-	public final CharSequence getJsForInterfaceUrl(CharSequence url) {
-		return getJsForListenerUrl(url);
-	}
-
-	/**
-	 * Generate a piece of JavaScript that submits the form to the given URL.
+	 * Generate a piece of JavaScript that submits the form to the given URL of an {@link IRequestListener}.
 	 * 
 	 * Warning: This code should only be called in the rendering phase for form components inside
 	 * the form because it uses the css/javascript id of the form which can be stored in the markup.
@@ -528,7 +532,75 @@ public class Form<T> extends WebMarkupContainer
 	public final CharSequence getJsForListenerUrl(CharSequence url)
 	{
 		Form<?> root = getRootForm();
-		return String.format("var f = document.getElementById('%s'); f.action='%s';f.submit();", root.getMarkupId(), url);
+
+		AppendingStringBuffer buffer = new AppendingStringBuffer();
+		
+		String action = url.toString();
+		if (root.encodeUrlInHiddenFields()) {
+			buffer.append(String.format("document.getElementById('%s').innerHTML = '",
+				root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
+			
+			// parameter must be sent as hidden field, as it would be ignored in the action URL
+			int i = action.indexOf('?');
+			if (i != -1)
+			{
+				writeParamsAsHiddenFields(Strings.split(action.substring(i + 1), '&'), buffer);
+				
+				action = action.substring(0, i);
+			}
+			
+			buffer.append("';");
+		}
+		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
+		buffer.append(String.format("f.action='%s';", action));
+		buffer.append("Wicket.Event.fire(f, 'submit');");
+		return buffer;
+	}
+
+	/**
+	 * Generate a piece of JavaScript that submits the form with the given
+	 * {@link IFormSubmittingComponent}.
+	 * 
+	 * @param submitter
+	 *            the submitter
+	 * @param triggerEvent
+	 *            When true, the form will be submited via a javascript submit event, when false via
+	 *            the {@code submit()} method.
+	 * @return the javascript code that submits the form.
+	 * 
+	 * @see #findSubmitter()
+	 */
+	public final CharSequence getJsForSubmitter(IFormSubmittingComponent submitter, boolean triggerEvent)
+	{
+		Form<?> root = getRootForm();
+
+		String param = submitter.getInputName() + "=x";
+
+		AppendingStringBuffer buffer = new AppendingStringBuffer();
+		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
+		if (root.encodeUrlInHiddenFields())
+		{
+			buffer.append(String.format("document.getElementById('%s').innerHTML += '",
+				root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
+			
+			writeParamsAsHiddenFields(new String[] {param}, buffer);
+			
+			buffer.append("';");
+		}
+		else
+		{
+			String action = root.getActionUrl().toString();
+			buffer.append("f.action += '" + (action.indexOf('?') > -1 ? '&' : '?') + param + "';");
+		}
+		if (triggerEvent)
+		{
+			buffer.append("Wicket.Event.fire(f, 'submit');");
+		}
+		else
+		{
+			buffer.append("f.submit();");
+		}
+		return buffer;
 	}
 
 	/**
@@ -669,26 +741,6 @@ public class Form<T> extends WebMarkupContainer
 	@Override
 	public final void onRequest()
 	{
-		// check methods match
-		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
-		{
-			String desiredMethod = getMethod();
-			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
-			if (!actualMethod.equalsIgnoreCase(desiredMethod))
-			{
-				MethodMismatchResponse response = onMethodMismatch();
-				switch (response)
-				{
-					case ABORT :
-						return;
-					case CONTINUE :
-						break;
-					default :
-						throw new IllegalStateException("Invalid " +
-							MethodMismatchResponse.class.getName() + " value: " + response);
-				}
-			}
-		}
 		onFormSubmitted(null);
 	}
 
@@ -718,6 +770,27 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public final void onFormSubmitted(IFormSubmitter submitter)
 	{
+		// check methods match
+		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
+		{
+			String desiredMethod = getMethod();
+			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
+			if (!actualMethod.equalsIgnoreCase(desiredMethod))
+			{
+				MethodMismatchResponse response = onMethodMismatch();
+				switch (response)
+				{
+					case ABORT :
+						return;
+					case CONTINUE :
+						break;
+					default :
+						throw new IllegalStateException("Invalid " +
+								MethodMismatchResponse.class.getName() + " value: " + response);
+				}
+			}
+		}
+
 		markFormsSubmitted(submitter);
 
 		if (handleMultiPart())
@@ -725,10 +798,10 @@ public class Form<T> extends WebMarkupContainer
 			// Tells FormComponents that a new user input has come
 			inputChanged();
 
-			// First, see if the processing was triggered by a Wicket IFormSubmittingComponent
+			// First, see if the processing was triggered by a IFormSubmittingComponent
 			if (submitter == null)
 			{
-				submitter = findSubmittingButton();
+				submitter = findSubmitter();
 
 				if (submitter instanceof IFormSubmittingComponent)
 				{
@@ -1172,30 +1245,53 @@ public class Form<T> extends WebMarkupContainer
 	 * will do a form submit using this component. This method is overridable as what we do is best
 	 * effort only, and may not what you want in specific situations. So if you have specific
 	 * usability concerns, or want to follow another strategy, you may override this method.
+	 * 
+	 * @see #addDefaultSubmitButtonHandler(IHeaderResponse)
 	 */
 	protected void appendDefaultButtonField()
 	{
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
 		// div that is not visible (but not display:none either)
-		buffer.append(HIDDEN_DIV_START);
+		buffer.append(String.format("<div class=\"%s\">",
+			getString(CssUtils.key(Form.class, "hidden-fields"))));
 
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" tabindex=\"-1\" autocomplete=\"off\"/>");
 
 		// add the submitting component
-		final Component submittingComponent = (Component)defaultSubmittingComponent;
-		buffer.append("<input type=\"submit\" tabindex=\"-1\" name=\"");
-		buffer.append(defaultSubmittingComponent.getInputName());
-		buffer.append("\" onclick=\" var b=document.getElementById('");
-		buffer.append(submittingComponent.getMarkupId());
-		buffer.append("'); if (b!=null&amp;&amp;b.onclick!=null&amp;&amp;typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
-		buffer.append(" />");
+		buffer
+			.append(String.format("<input id=\"%s\" type=\"submit\" tabindex=\"-1\" name=\"%s\" />",
+				getHiddenFieldsId(HIDDEN_FIELDS_SUBMIT_IDX),
+				defaultSubmittingComponent.getInputName()));
 
 		// close div
 		buffer.append("</div>");
-
+		
 		getResponse().write(buffer);
+	}
+
+	/**
+	 * Where {@link #appendDefaultButtonField()} renders the markup for default submit button
+	 * handling, this method attaches the event handler to its 'click' event. The 'click' event on
+	 * the hidden submit button will be dispatched to the selected default submit button. As with
+	 * {@link #appendDefaultButtonField()} this method can be overridden when the generated code
+	 * needs to be adjusted for a specific usecase.
+	 * 
+	 * @param headerResponse
+	 *            The header response.
+	 */
+	protected void addDefaultSubmitButtonHandler(IHeaderResponse headerResponse)
+	{
+		final Component submittingComponent = (Component) defaultSubmittingComponent;
+		AppendingStringBuffer buffer = new AppendingStringBuffer();
+		buffer.append("var b=document.getElementById('");
+		buffer.append(submittingComponent.getMarkupId());
+		buffer.append("'); if (b!=null && b.onclick!=null && typeof(b.onclick) != 'undefined') ");
+		buffer.append(
+			"{  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;");
+		headerResponse.render(OnEventHeaderItem
+			.forMarkupId(getHiddenFieldsId(HIDDEN_FIELDS_SUBMIT_IDX), "click", buffer.toString()));
 	}
 
 	/**
@@ -1264,14 +1360,15 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Returns the HiddenFieldId which will be used as the name and id property of the hiddenfield
-	 * that is generated for event dispatches.
+	 * Returns the id which will be used for the hidden div containing all parameter fields.
 	 * 
-	 * @return The name and id of the hidden field.
+	 * @param idx
+	 *            The index of the div to keep different divs apart.
+	 * @return the id of the hidden div
 	 */
-	public final String getHiddenFieldId()
+	private final String getHiddenFieldsId(int idx)
 	{
-		return getInputNamePrefix() + getMarkupId() + "_hf_0";
+		return getInputNamePrefix() + getMarkupId() + "_hf_" + idx;
 	}
 
 	/**
@@ -1338,7 +1435,7 @@ public class Form<T> extends WebMarkupContainer
 						}
 
 					});
-			
+
 			if (Boolean.TRUE.equals(anyEmbeddedMultipart)) {
 				multiPart |= MULTIPART_HINT_YES;
 			} else {
@@ -1519,11 +1616,11 @@ public class Form<T> extends WebMarkupContainer
 	{
 		super.onComponentTag(tag);
 
-		checkComponentTag(tag, "form");
-
 		if (isRootForm())
 		{
-			String method = getMethod().toLowerCase(Locale.ENGLISH);
+			checkComponentTag(tag, "form");
+
+			String method = getMethod().toLowerCase(Locale.ROOT);
 			tag.put("method", method);
 			String url = getActionUrl().toString();
 			if (encodeUrlInHiddenFields())
@@ -1547,7 +1644,7 @@ public class Form<T> extends WebMarkupContainer
 				{
 					log.warn("Form with id '{}' is multipart. It should use method 'POST'!",
 						getId());
-					tag.put("method", METHOD_POST.toLowerCase(Locale.ENGLISH));
+					tag.put("method", METHOD_POST.toLowerCase(Locale.ROOT));
 				}
 
 				tag.put("enctype", ENCTYPE_MULTIPART_FORM_DATA);
@@ -1575,7 +1672,11 @@ public class Form<T> extends WebMarkupContainer
 		}
 		else
 		{
-			tag.setName("div");
+			// WICKET-6658 form is not allowed, anything else can stay as is
+			if ("form".equalsIgnoreCase(tag.getName()))
+			{
+				tag.setName("div");
+			}
 			tag.remove("method");
 			tag.remove("action");
 			tag.remove("enctype");
@@ -1606,19 +1707,15 @@ public class Form<T> extends WebMarkupContainer
 		else
 		{
 			// rewrite inner form tag as div
-			response.write("<div style=\"display:none\"");
-			if (getOutputMarkupId())
-			{
-				response.write(" id=\"");
-				response.write(getMarkupId());
-				response.write("\"");
-			}
-			response.write("></div>");
+			response.write(
+				String.format("<div id=\"%s\" class=\"%s\" data-wicket-placeholder=\"\"></div>",
+					getAjaxRegionMarkupId(), getString(CssUtils.key(Component.class, "hidden"))));
 		}
 	}
 
 	/**
-	 * 
+	 * Should URL query parameters be encoded in hidden fields.
+	 *
 	 * @return true if form's method is 'get'
 	 */
 	protected boolean encodeUrlInHiddenFields()
@@ -1647,8 +1744,19 @@ public class Form<T> extends WebMarkupContainer
 		super.onComponentTagBody(markupStream, openTag);
 	}
 
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+
+		if (hasDefaultSubmittingComponent())
+		{
+			addDefaultSubmitButtonHandler(response);
+		}
+	}
+
 	/**
-	 * Writes the markup for the hidden input field and default button field if applicable to the
+	 * Writes the markup for the hidden input fields and default button field if applicable to the
 	 * current response.
 	 */
 	public final void writeHiddenFields()
@@ -1657,7 +1765,11 @@ public class Form<T> extends WebMarkupContainer
 		// and have to write the url parameters as hidden fields
 		if (encodeUrlInHiddenFields())
 		{
-			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START);
+			getResponse().write(String.format("<div id=\"%s\" class=\"%s\">",
+				getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX),
+				getString(CssUtils.key(Form.class, "hidden-fields"))));
+
+			AppendingStringBuffer buffer = new AppendingStringBuffer();				
 
 			String url = getActionUrl().toString();
 			int i = url.indexOf('?');
@@ -1665,21 +1777,28 @@ public class Form<T> extends WebMarkupContainer
 			String[] params = Strings.split(queryString, '&');
 
 			writeParamsAsHiddenFields(params, buffer);
-			
-			buffer.append("</div>");
+
 			getResponse().write(buffer);
+			
+			getResponse().write("</div>");
 		}
 
 		// if a default submitting component was set, handle the rendering of that
+		if (hasDefaultSubmittingComponent())
+		{
+			appendDefaultButtonField();
+		}
+	}
+
+	private boolean hasDefaultSubmittingComponent()
+	{
 		if (defaultSubmittingComponent instanceof Component)
 		{
-			final Component submittingComponent = (Component)defaultSubmittingComponent;
-			if (submittingComponent.isVisibleInHierarchy() &&
-				submittingComponent.isEnabledInHierarchy())
-			{
-				appendDefaultButtonField();
-			}
+			final Component submittingComponent = (Component) defaultSubmittingComponent;
+			return submittingComponent.isVisibleInHierarchy()
+				&& submittingComponent.isEnabledInHierarchy();
 		}
+		return false;
 	}
 
 	/**
@@ -1740,7 +1859,7 @@ public class Form<T> extends WebMarkupContainer
 			this.multiPart &= MULTIPART_HARD;
 		}
 	}
-	
+
 	@Override
 	protected void onBeforeRender()
 	{
@@ -2019,32 +2138,6 @@ public class Form<T> extends WebMarkupContainer
 	public static Form<?> findForm(Component component)
 	{
 		return component.findParent(Form.class);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void renderHead(IHeaderResponse response)
-	{
-		if (!isRootForm() && isMultiPart())
-		{
-			// register some metadata so we can later properly handle multipart ajax posts for
-			// embedded forms
-			registerJavaScriptNamespaces(response);
-			response.render(JavaScriptHeaderItem.forScript("Wicket.Forms[\"" + getMarkupId() +
-				"\"]={multipart:true};", Form.class.getName() + '.' + getMarkupId() + ".metadata"));
-		}
-	}
-
-	/**
-	 * Produces javascript that registers Wicket.Forms namespaces
-	 * 
-	 * @param response
-	 */
-	protected void registerJavaScriptNamespaces(IHeaderResponse response)
-	{
-		response.render(JavaScriptHeaderItem.forScript(
-			"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
-			Form.class.getName()));
 	}
 
 	/**

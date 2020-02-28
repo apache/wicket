@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.util.parse.metapattern.parsers;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @since 1.5.8
  */
-public class VariableAssignmentParserTest extends Assert
+public class VariableAssignmentParserTest
 {
 	/**
 	 * Tests parsing of attribute names with and without namespaces

@@ -41,8 +41,8 @@ public class HeaderPanel extends Panel
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		response.render(StringHeaderItem.forString("<title>HeaderContributionInHeaderPanel</title>\n"));
+		response.render(StringHeaderItem.forString("<title>HeaderPanel-HeaderItem</title>\n"));
 		response.render(new PriorityHeaderItem(
-			StringHeaderItem.forString("<title>PriorityHeaderContributionInHeaderPanel</title>\n")));
+			StringHeaderItem.forString("<title>HeaderPanel-PriorityHeaderItem</title>\n")));
 	}
 }

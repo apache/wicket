@@ -20,8 +20,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
-
 class XmlPrologHeaderHandler extends XmlLicenseHeaderHandler
 {
 	/**
@@ -32,12 +30,6 @@ class XmlPrologHeaderHandler extends XmlLicenseHeaderHandler
 	public XmlPrologHeaderHandler(final List<String> ignoreFiles)
 	{
 		super(ignoreFiles);
-	}
-
-	@Override
-	public List<String> getSuffixes()
-	{
-		return Arrays.asList("html");
 	}
 
 	/**
@@ -53,8 +45,13 @@ class XmlPrologHeaderHandler extends XmlLicenseHeaderHandler
 		}
 		catch (Exception e)
 		{
-			Assert.fail(e.getMessage());
+			throw new AssertionError(e.getMessage());
 		}
-		return true;
+	}
+
+	@Override
+	public List<String> getSuffixes()
+	{
+		return Arrays.asList("html");
 	}
 }

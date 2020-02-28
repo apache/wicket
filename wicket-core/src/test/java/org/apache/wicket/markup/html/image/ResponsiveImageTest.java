@@ -16,13 +16,17 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ResponsiveImageTest extends WicketTestCase
+class ResponsiveImageTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -31,37 +35,37 @@ public class ResponsiveImageTest extends WicketTestCase
 	}
 
 	@Test
-	public void testSrcSetIsNotAvailableOnDefaultUsage()
+	void testSrcSetIsNotAvailableOnDefaultUsage()
 	{
 		tester.startPage(ImageResourceReferenceTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
-		TagTester createTagByAttribute = TagTester.createTagByAttribute(lastResponseAsString, "img");
-		Assert.assertFalse(createTagByAttribute.hasAttribute("srcset"));
-		Assert.assertEquals(Image.Cors.ANONYMOUS.getRealName(), createTagByAttribute.getAttribute("crossorigin"));
+		TagTester createTagByAttribute = TagTester.createTagByName(lastResponseAsString, "img");
+		assertFalse(createTagByAttribute.hasAttribute("srcset"));
+		assertEquals(CrossOrigin.ANONYMOUS.getRealName(), createTagByAttribute.getAttribute("crossorigin"));
 	}
 
 	@Test
-	public void testPictureTagIsRenderedRight()
+	void testPictureTagIsRenderedRight()
 	{
 		tester.startPage(ImagePictureTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
-		TagTester pictureTagTester = TagTester.createTagByAttribute(lastResponseAsString, "picture");
-		Assert.assertTrue(pictureTagTester.hasChildTag("img"));
-		Assert.assertTrue(pictureTagTester.hasChildTag("source"));
-		TagTester sourceTagTester = TagTester.createTagByAttribute(lastResponseAsString, "source");
-		Assert.assertTrue(sourceTagTester.hasAttribute("media"));
-		Assert.assertEquals("(min-width: 650px)", sourceTagTester.getAttribute("media"));
-		Assert.assertEquals("(min-width: 50em) 33vw", sourceTagTester.getAttribute("sizes"));
+		TagTester pictureTagTester = TagTester.createTagByName(lastResponseAsString, "picture");
+		assertTrue(pictureTagTester.hasChildTag("img"));
+		assertTrue(pictureTagTester.hasChildTag("source"));
+		TagTester sourceTagTester = TagTester.createTagByName(lastResponseAsString, "source");
+		assertTrue(sourceTagTester.hasAttribute("media"));
+		assertEquals("(min-width: 650px)", sourceTagTester.getAttribute("media"));
+		assertEquals("(min-width: 50em) 33vw", sourceTagTester.getAttribute("sizes"));
 	}
 
 	@Test
-	public void testImageTagIsRenderedWithXValuesAndSrcSet()
+	void testImageTagIsRenderedWithXValuesAndSrcSet()
 	{
 		tester.startPage(ImageSrcSetTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
-		TagTester imgTagTester = TagTester.createTagByAttribute(lastResponseAsString, "img");
-		Assert.assertTrue(imgTagTester.hasAttribute("src"));
-		Assert.assertTrue(imgTagTester.hasAttribute("srcset"));
+		TagTester imgTagTester = TagTester.createTagByName(lastResponseAsString, "img");
+		assertTrue(imgTagTester.hasAttribute("src"));
+		assertTrue(imgTagTester.hasAttribute("srcset"));
 		String attribute = imgTagTester.getAttribute("srcset");
 		String[] srcSetElements = attribute.split(",");
 		int i = 0;
@@ -69,19 +73,19 @@ public class ResponsiveImageTest extends WicketTestCase
 		{
 			if (i == 0)
 			{
-				Assert.assertTrue(srcSetElement.endsWith("320w"));
+				assertTrue(srcSetElement.endsWith("320w"));
 			}
 			if (i == 1)
 			{
-				Assert.assertTrue(srcSetElement.endsWith("2x"));
+				assertTrue(srcSetElement.endsWith("2x"));
 			}
 			if (i == 2)
 			{
-				Assert.assertTrue(srcSetElement.endsWith("900w"));
+				assertTrue(srcSetElement.endsWith("900w"));
 			}
 			i++;
 		}
-		Assert.assertEquals("(min-width: 50em) 33vw,(min-width: 28em) 50vw,100vw",
+		assertEquals("(min-width: 50em) 33vw,(min-width: 28em) 50vw,100vw",
 			imgTagTester.getAttribute("sizes"));
 	}
 

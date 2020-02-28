@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.apache.wicket</groupId>
         <artifactId>wicket-native-websocket</artifactId>
-        <version>8.0.0-SNAPSHOT</version>
+        <version>9.0.0-M5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -30,6 +30,10 @@
     <name>Wicket Native WebSocket Core</name>
     <description>Provides the common code needed for the different integrations with web container's WebSocket implementations</description>
 
+    <properties>
+        <automatic-module-name>org.apache.wicket.websocket.core</automatic-module-name>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.wicket</groupId>
@@ -37,8 +41,8 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
 
     </dependencies>

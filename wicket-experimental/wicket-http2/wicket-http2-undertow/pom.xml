@@ -18,9 +18,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.apache.wicket.experimental.wicket8</groupId>
+		<groupId>org.apache.wicket.experimental.wicket9</groupId>
 		<artifactId>wicket-http2</artifactId>
-		<version>0.4-SNAPSHOT</version>
+		<version>0.10-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-http2-undertow</artifactId>
@@ -32,16 +32,30 @@
 		is the Undertow 2+ implementation to resolve the PushBuilder API and
 		provide the IInitializer.
 	</description>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.http2.undertow</automatic-module-name>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.undertow</groupId>
+				<artifactId>undertow-servlet</artifactId>
+				<version>2.0.16.Final</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket8</groupId>
-			<artifactId>wicket-http2-core</artifactId>
+			<groupId>io.undertow</groupId>
+			<artifactId>undertow-servlet</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>io.undertow</groupId>
-		    <artifactId>undertow-servlet</artifactId>
-		    <version>2.0.0.Alpha1</version>
-		    <scope>provided</scope>
+			<groupId>org.apache.wicket.experimental.wicket9</groupId>
+			<artifactId>wicket-http2-core</artifactId>
 		</dependency>
 	</dependencies>
 </project>

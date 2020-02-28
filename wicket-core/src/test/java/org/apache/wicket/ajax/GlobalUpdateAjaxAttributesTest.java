@@ -25,12 +25,12 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  */
-public class GlobalUpdateAjaxAttributesTest extends WicketTestCase
+class GlobalUpdateAjaxAttributesTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -53,7 +53,7 @@ public class GlobalUpdateAjaxAttributesTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4958
 	 */
 	@Test
-	public void globalUpdateAjaxAttributes()
+    void globalUpdateAjaxAttributes()
 	{
 		tester.startPage(new GlobalUpdateAjaxAttributesPage());
 //		System.err.println(tester.getLastResponseAsString());

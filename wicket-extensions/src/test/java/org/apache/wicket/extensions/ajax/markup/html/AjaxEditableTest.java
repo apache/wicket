@@ -16,22 +16,25 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.IWritableRequestParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link AjaxEditableLabel}
@@ -44,7 +47,7 @@ public class AjaxEditableTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	@Before
+	@BeforeEach
 	public void setUp()
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
@@ -137,8 +140,10 @@ public class AjaxEditableTest extends WicketTestCase
 
 		FormComponent<?> editor = (FormComponent<?>)ajaxLabel.get("editor");
 		// set some new value and submit it
-		tester.getRequest().setParameter(editor.getInputName(), "something");
-		tester.getRequest().setParameter("save", "true");
+		final MockHttpServletRequest request = tester.getRequest();
+		request.setParameter(editor.getInputName(), "something");
+		request.setParameter("save", "true");
+		request.setMethod(Form.METHOD_GET);
 		tester.executeBehavior((AbstractAjaxBehavior)editor.getBehaviorById(0));
 
 		tester.assertInvisible("ajaxLabel:editor");
@@ -168,9 +173,9 @@ public class AjaxEditableTest extends WicketTestCase
 		IWritableRequestParameters postParameters = (IWritableRequestParameters)tester
 			.getRequestCycle().getRequest().getPostParameters();
 		postParameters.setParameterValues(editableLabel.getEditor().getInputName(),
-			Arrays.asList(new StringValue[] { StringValue.valueOf("5") }));
+			Arrays.asList(StringValue.valueOf("5")));
 		editableLabel.getEditor().processInput();
 
-		assertThat(integerModel.getObject(), instanceOf(Integer.class));
+		assertTrue(integerModel.getObject() instanceof Integer);
 	}
 }

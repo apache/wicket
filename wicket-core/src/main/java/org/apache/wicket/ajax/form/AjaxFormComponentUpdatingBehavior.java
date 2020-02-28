@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.form;
 
+import java.util.Locale;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -136,7 +138,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	{
 		final FormComponent<?> formComponent = getFormComponent();
 
-		if ("blur".equals(getEvent().toLowerCase()) && disableFocusOnBlur())
+		if ("blur".equals(getEvent().toLowerCase(Locale.ROOT)) && disableFocusOnBlur())
 		{
 			target.focusComponent(null);
 		}

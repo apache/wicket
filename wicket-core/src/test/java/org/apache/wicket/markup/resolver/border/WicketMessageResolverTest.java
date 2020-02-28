@@ -17,18 +17,18 @@
 package org.apache.wicket.markup.resolver.border;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  */
-public class WicketMessageResolverTest extends WicketTestCase
+class WicketMessageResolverTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void test_1() throws Exception
+    void test_1() throws Exception
 	{
 		executeTest(HomePage.class, "HomePageExpectedResult.html");
 	}

@@ -31,7 +31,7 @@ public class BookmarkableThrowsInterceptPage extends WebPage
 	/**
 	 * 
 	 */
-	public static final MetaDataKey<Boolean> SECURITY = new MetaDataKey<Boolean>()
+	public static final MetaDataKey<Boolean> SECURITY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 

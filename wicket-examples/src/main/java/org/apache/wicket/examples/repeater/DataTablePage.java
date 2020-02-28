@@ -16,10 +16,14 @@
  */
 package org.apache.wicket.examples.repeater;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.ColGroup;
@@ -33,7 +37,9 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.export.CSVDa
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.ExportToolbar;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.convert.converter.DateConverter;
 
 
 /**
@@ -52,7 +58,7 @@ public class DataTablePage extends BasePage
 	{
 		List<IColumn<Contact, String>> columns = new ArrayList<>();
 
-		columns.add(new AbstractColumn<Contact, String>(new Model<>("Actions"))
+		columns.add(new AbstractColumn<Contact, String>(new ResourceModel("actions"))
 		{
 			@Override
 			public void populateItem(Item<ICellPopulator<Contact>> cellItem, String componentId,
@@ -62,7 +68,7 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<>("ID"), "id")
+		columns.add(new PropertyColumn<Contact, String>(new ResourceModel("id"), "id")
 		{
 			@Override
 			public String getCssClass()
@@ -71,9 +77,9 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new LambdaColumn<>(Model.of("First Name"), "firstName", Contact::getFirstName));
+		columns.add(new LambdaColumn<>(new ResourceModel("firstName"), "firstName", Contact::getFirstName));
 
-		columns.add(new LambdaColumn<Contact, String>(new Model<>("Last Name"), "lastName", Contact::getLastName)
+		columns.add(new LambdaColumn<Contact, String>(new ResourceModel("lastName"), "lastName", Contact::getLastName)
 		{
 			@Override
 			public String getCssClass()
@@ -82,14 +88,35 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn<>(new Model<>("Home Phone"), "homePhone"));
-		columns.add(new PropertyColumn<>(new Model<>("Cell Phone"), "cellPhone"));
+		columns.add(new PropertyColumn<>(new ResourceModel("homePhone"), "homePhone"));
+		columns.add(new PropertyColumn<>(new ResourceModel("cellPhone"), "cellPhone"));
+		columns.add(new PropertyColumn<>(new ResourceModel("bornDate"), "bornDate"));
 
 		SortableContactDataProvider dataProvider = new SortableContactDataProvider();
 		DataTable<Contact, String> dataTable = new DefaultDataTable<>("table", columns,
 				dataProvider, 8);
 		
-		dataTable.addBottomToolbar(new ExportToolbar(dataTable).addDataExporter(new CSVDataExporter()));
+		dataTable.addBottomToolbar(new ExportToolbar(dataTable).addDataExporter(new CSVDataExporter() {
+			/**
+			 * Use converters of this page.
+			 * 
+			 * @see DataTablePage#createConverter(Class)
+			 */
+			@Override
+			protected IConverterLocator getConverterLocator()
+			{
+				return DataTablePage.this;
+			}
+			
+			/**
+			 * Wrap models on the page so resource properties get picked up. 
+			 */
+			@Override
+			protected <T> IModel<T> wrapModel(IModel<T> model)
+			{
+				return DataTablePage.this.wrap(model);
+			}
+		}));
 
 		add(dataTable);
 
@@ -100,13 +127,29 @@ public class DataTablePage extends BasePage
 		
 		//This is a table that uses ColGroup to style the columns: 
 		ColGroup colgroup = tableWithColGroup.getColGroup();
-		colgroup.add(AttributeModifier.append("style", "border: solid 1px green;"));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: lightblue;")));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: lightgreen")));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: pink")));
-		colgroup.addCol(colgroup.new Col(AttributeModifier.append("style", "background-color: yellow")));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("class", "lightblue")));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("class", "lightgreen")));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("class", "pink")));
+		colgroup.addCol(colgroup.new Col(AttributeModifier.append("class", "yellow")));
 		colgroup.addCol(colgroup.new Col(AttributeModifier.append("span", "2"),
-				AttributeModifier.append("style", "background-color: #CC6633")));
-		
+			AttributeModifier.append("class", "brown")));
+	}
+	
+	/**
+	 * Custom format for date in export.
+	 */
+	@Override
+	protected IConverter<?> createConverter(Class<?> type)
+	{
+		if (type == Date.class) {
+			return new DateConverter() {
+				@Override
+				public DateFormat getDateFormat(Locale locale)
+				{
+					return (DateFormat) DateFormat.getDateInstance(DateFormat.LONG, locale).clone();
+				}
+			};
+		}
+		return null;
 	}
 }

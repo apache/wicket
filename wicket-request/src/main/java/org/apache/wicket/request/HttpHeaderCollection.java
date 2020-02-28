@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request;
 
+import java.sql.Time;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,9 +27,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Time;
+import org.apache.wicket.util.time.Instants;
 
 /**
  * A multivalue map of headers names and header values suitable for processing http request and
@@ -115,7 +116,7 @@ public class HttpHeaderCollection
 	 * @param time
 	 *            timestamp
 	 */
-	public void addDateHeader(String name, Time time)
+	public void addDateHeader(String name, Instant time)
 	{
 		internalAdd(name, time);
 	}
@@ -128,7 +129,7 @@ public class HttpHeaderCollection
 	 * @param time
 	 *            timestamp
 	 */
-	public void setDateHeader(String name, Time time)
+	public void setDateHeader(String name, Instant time)
 	{
 		// remove previous values
 		removeHeader(name);
@@ -161,9 +162,9 @@ public class HttpHeaderCollection
 
 	private String valueToString(Object value)
 	{
-		if (value instanceof Time)
+		if (value instanceof Instant)
 		{
-			return ((Time)value).toRfc1123TimestampString();
+			return Instants.toRFC7231Format((Instant)value);
 		}
 		else
 		{
@@ -261,7 +262,7 @@ public class HttpHeaderCollection
 	 * @param name
 	 * @return {@code null} when the header was not found
 	 */
-	public Time getDateHeader(String name)
+	public Instant getDateHeader(String name)
 	{
 		final List<Object> objects = headers.get(new HeaderKey(name));
 
@@ -271,11 +272,11 @@ public class HttpHeaderCollection
 		}
 		Object object = objects.get(0);
 
-		if ((object instanceof Time) == false)
+		if ((object instanceof Instant) == false)
 		{
 			throw new IllegalStateException("header value is not of type date");
 		}
-		return (Time)object;
+		return (Instant)object;
 	}
 
 	/**

@@ -29,7 +29,7 @@ public class BasePage extends WebPage
 	 * Creates a new instance of BasePanel
 	 * 
 	 */
-	public BasePage()
+    BasePage()
 	{
 	}
 }

@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.util.lang;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.Serializable;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
@@ -23,23 +28,22 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the WicketObjects class.
  * 
  * @author Martijn Dashorst
  */
-public class WicketObjectsTest extends WicketTestCase
+class WicketObjectsTest extends WicketTestCase
 {
 	/**
 	 * Test method for WicketObjects.cloneModel(null)
 	 */
 	@Test
-	public void cloneModelNull()
+	void cloneModelNull()
 	{
-		Object clone = WicketObjects.cloneModel(null);
+		Object clone = WicketObjects.cloneObject(null);
 		assertEquals(null, clone);
 	}
 
@@ -47,7 +51,7 @@ public class WicketObjectsTest extends WicketTestCase
 	 * Test method for WicketObjects.cloneObject(null)
 	 */
 	@Test
-	public void cloneObjectNull()
+	void cloneObjectNull()
 	{
 		Object clone = WicketObjects.cloneObject(null);
 		assertEquals(null, clone);
@@ -57,11 +61,11 @@ public class WicketObjectsTest extends WicketTestCase
 	 * Test method for WicketObjects.cloneModel(String)
 	 */
 	@Test
-	public void cloneModelString()
+	void cloneModelString()
 	{
 		String cloneMe = "Mini-me";
 
-		Object clone = WicketObjects.cloneModel(cloneMe);
+		Object clone = WicketObjects.cloneObject(cloneMe);
 		assertEquals(cloneMe, clone);
 		assertNotSame(cloneMe, clone);
 	}
@@ -70,7 +74,7 @@ public class WicketObjectsTest extends WicketTestCase
 	 * Test method for WicketObjects.cloneObject(String)
 	 */
 	@Test
-	public void cloneObjectString()
+	void cloneObjectString()
 	{
 		String cloneMe = "Mini-me";
 
@@ -83,13 +87,13 @@ public class WicketObjectsTest extends WicketTestCase
 	 * Test method for WicketObjects.cloneModel(nonSerializableObject)
 	 */
 	@Test
-	public void cloneModelNonSerializableObject()
+	void cloneModelNonSerializableObject()
 	{
 		Object cloneMe = new Object();
 
 		try
 		{
-			WicketObjects.cloneModel(cloneMe);
+			WicketObjects.cloneObject(cloneMe);
 			fail("Exception expected");
 		}
 		catch (RuntimeException e)
@@ -102,7 +106,7 @@ public class WicketObjectsTest extends WicketTestCase
 	 * Test method for WicketObjects.cloneObject(nonSerializableObject)
 	 */
 	@Test
-	public void cloneObjectNonSerializableObject()
+	void cloneObjectNonSerializableObject()
 	{
 		Object cloneMe = new Object();
 
@@ -120,26 +124,24 @@ public class WicketObjectsTest extends WicketTestCase
 	/**
 	 * Test method for component cloning
 	 */
-	@SuppressWarnings({ "unchecked" })
 	@Test
-	public void componentClone()
+	void componentClone()
 	{
-		PropertyModel<String> pm = new PropertyModel<>(new TextField<>("test",
-			Model.of("test")), "modelObject");
-		PropertyModel<String> pm2 = WicketObjects.cloneModel(pm);
-		assertSame(pm.getObject(), pm2.getObject());
+		PropertyModel<String> pm = new PropertyModel<>(new TextField<>("test", Model.of("test")), "modelObject");
+		PropertyModel<String> pm2 = WicketObjects.cloneObject(pm);
+		assertEquals(pm.getObject(), pm2.getObject());
 	}
 
 	/**
 	 * Test method for 'org.apache.wicket.util.lang.Objects.clone(Object)'
 	 */
 	@Test
-	public void cloneCloneObject()
+	void cloneCloneObject()
 	{
 		CloneObject cloneMe = new CloneObject();
 		cloneMe.nr = 1;
 
-		Object clone = WicketObjects.cloneModel(cloneMe);
+		Object clone = WicketObjects.cloneObject(cloneMe);
 		assertEquals(cloneMe, clone);
 		assertNotSame(cloneMe, clone);
 	}

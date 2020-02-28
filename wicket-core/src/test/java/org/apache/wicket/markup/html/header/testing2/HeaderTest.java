@@ -17,20 +17,20 @@
 package org.apache.wicket.markup.html.header.testing2;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class HeaderTest extends WicketTestCase
+class HeaderTest extends WicketTestCase
 {
 	/**
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void test_1() throws Exception
+    void test_1() throws Exception
 	{
 		executeTest(TestExtendedPage.class, "TestExtendedPage_ExpectedResult.html");
 	}
@@ -40,7 +40,7 @@ public class HeaderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void test_2() throws Exception
+    void test_2() throws Exception
 	{
 		executeTest(TestExtendedPage2.class, "TestExtendedPage2_ExpectedResult.html");
 	}

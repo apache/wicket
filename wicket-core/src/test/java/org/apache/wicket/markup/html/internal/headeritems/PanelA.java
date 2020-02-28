@@ -24,7 +24,7 @@ import org.apache.wicket.resource.CoreLibrariesContributor;
  * A panel that contributes all Ajax header items
  * and uses <wicket:head> to contribute a <meta> element
  */
-public class PanelA extends Panel
+class PanelA extends Panel
 {
 	public PanelA(String id)
 	{

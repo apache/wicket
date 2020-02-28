@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.math.BigDecimal;
 import java.util.Locale;
 
@@ -27,21 +30,21 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link NumberTextField}.
  * 
  * @author svenmeier
  */
-public class NumberTextFieldTest extends WicketTestCase
+class NumberTextFieldTest extends WicketTestCase
 {
 
 	/**
 	 * WICKET-4884, WICKET-3591
 	 */
 	@Test
-	public void convertBigDecimal()
+	void convertBigDecimal()
 	{
 		TestPage<BigDecimal> testPage = new TestPage<>();
 		testPage.textField.setType(BigDecimal.class);
@@ -63,13 +66,13 @@ public class NumberTextFieldTest extends WicketTestCase
 	 * WICKET-4884, WICKET-3591
 	 */
 	@Test
-	public void convertDouble()
+	void convertDouble()
 	{
 		TestPage<Double> testPage = new TestPage<Double>();
 		testPage.textField.setType(Double.class);
-		testPage.textField.setMinimum(new Double("0.0"));
-		testPage.textField.setMaximum(new Double("2000.0"));
-		testPage.textField.setModelObject(new Double("1000.0"));
+		testPage.textField.setMinimum(Double.valueOf("0.0"));
+		testPage.textField.setMaximum(Double.valueOf("2000.0"));
+		testPage.textField.setModelObject(Double.valueOf("1000.0"));
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();
@@ -78,20 +81,20 @@ public class NumberTextFieldTest extends WicketTestCase
 		FormTester formTester = tester.newFormTester(testPage.form.getId());
 		formTester.setValue(testPage.textField.getId(), "2,000.00");
 		formTester.submit();
-		assertEquals(new Double("2000.00"), testPage.textField.getDefaultModelObject());
+		assertEquals(Double.valueOf("2000.00"), testPage.textField.getDefaultModelObject());
 	}
 
 	/**
 	 * WICKET-4884, WICKET-3591
 	 */
 	@Test
-	public void convertLong()
+	void convertLong()
 	{
 		TestPage<Long> testPage = new TestPage<Long>();
 		testPage.textField.setType(Long.class);
-		testPage.textField.setMinimum(new Long("0"));
-		testPage.textField.setMaximum(new Long("100"));
-		testPage.textField.setModelObject(new Long("0"));
+		testPage.textField.setMinimum(Long.valueOf("0"));
+		testPage.textField.setMaximum(Long.valueOf("100"));
+		testPage.textField.setModelObject(Long.valueOf("0"));
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();
@@ -100,19 +103,19 @@ public class NumberTextFieldTest extends WicketTestCase
 		FormTester formTester = tester.newFormTester(testPage.form.getId());
 		formTester.setValue(testPage.textField.getId(), "50");
 		formTester.submit();
-		assertEquals(new Long("50"), testPage.textField.getDefaultModelObject());
+		assertEquals(Long.valueOf("50"), testPage.textField.getDefaultModelObject());
 	}
 
 	/**
 	 * WICKET-5467
 	 */
 	@Test
-	public void respectStepAny()
+	void respectStepAny()
 	{
 		TestPage<Double> testPage = new TestPage<Double>();
 		testPage.textField.setType(Double.class);
 		testPage.textField.setStep(Model.of(NumberTextField.ANY));
-		testPage.textField.setModelObject(new Double("1000.0"));
+		testPage.textField.setModelObject(Double.valueOf("1000.0"));
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();
@@ -123,12 +126,12 @@ public class NumberTextFieldTest extends WicketTestCase
 	 * WICKET-5467
 	 */
 	@Test
-	public void respectStepWithNumberValue()
+	void respectStepWithNumberValue()
 	{
 		TestPage<Double> testPage = new TestPage<Double>();
 		testPage.textField.setType(Double.class);
 		testPage.textField.setStep(Double.valueOf(0.3d));
-		testPage.textField.setModelObject(new Double("1000.0"));
+		testPage.textField.setModelObject(Double.valueOf("1000.0"));
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();
@@ -149,7 +152,7 @@ public class NumberTextFieldTest extends WicketTestCase
 		NumberTextField<N> textField;
 
 		/** */
-		public TestPage()
+		TestPage()
 		{
 			add(form = new Form<Void>("form")
 			{

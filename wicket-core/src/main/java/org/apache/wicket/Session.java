@@ -17,6 +17,7 @@
 package org.apache.wicket;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,7 +27,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
-
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.core.request.ClientInfo;
@@ -35,6 +35,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
+import org.apache.wicket.feedback.IFeedbackContributor;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageAccessSynchronizer;
 import org.apache.wicket.request.Request;
@@ -44,7 +45,6 @@ import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,12 +106,24 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Session implements IClusterable, IEventSink
+public abstract class Session implements IClusterable, IEventSink, IMetadataContext<Serializable, Session>, IFeedbackContributor
 {
 	private static final long serialVersionUID = 1L;
 
 	/** Logging object */
 	private static final Logger log = LoggerFactory.getLogger(Session.class);
+
+	/** records if pages have been unlocked for the current request */
+	private static final MetaDataKey<Boolean> PAGES_UNLOCKED = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+	
+	/** records if session has been invalidated by the current request */
+	private static final MetaDataKey<Boolean> SESSION_INVALIDATED = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
@@ -183,16 +195,13 @@ public abstract class Session implements IClusterable, IEventSink
 	private final FeedbackMessages feedbackMessages = new FeedbackMessages();
 
 	/** cached id because you can't access the id after session unbound */
-	private String id = null;
+	private volatile String id = null;
 
 	/** The locale to use when loading resources for this session. */
 	private final AtomicReference<Locale> locale;
 
-	/** Application level meta data. */
+	/** Session level meta data. */
 	private MetaDataEntry<?>[] metaData;
-
-	/** True, if session has been invalidated */
-	private transient volatile boolean sessionInvalidated = false;
 
 	/**
 	 * Temporary instance of the session store. Should be set on each request as it is not supposed
@@ -297,6 +306,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void error(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.ERROR);
@@ -308,6 +318,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void fatal(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.FATAL);
@@ -319,6 +330,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void debug(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.DEBUG);
@@ -419,6 +431,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
+	@Override
 	public synchronized final <M extends Serializable> M getMetaData(final MetaDataKey<M> key)
 	{
 		return key.get(metaData);
@@ -456,6 +469,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void info(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.INFO);
@@ -467,6 +481,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void success(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.SUCCESS);
@@ -480,7 +495,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public void invalidate()
 	{
-		sessionInvalidated = true;
+		RequestCycle.get().setMetaData(SESSION_INVALIDATED, true);
 	}
 
 	/**
@@ -493,15 +508,10 @@ public abstract class Session implements IClusterable, IEventSink
 			sessionStore.invalidate(RequestCycle.get().getRequest());
 			sessionStore = null;
 			id = null;
-			sessionInvalidated = false;
+			RequestCycle.get().setMetaData(SESSION_INVALIDATED, false);
 			clientInfo = null;
 			dirty = false;
 			metaData = null;
-			feedbackMessages.clear();
-			setStyle(null);
-			pageId.set(0);
-			sequence.set(0);
-			temporarySessionAttributes = null;
 		}
 	}
 
@@ -511,19 +521,24 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public void invalidateNow()
 	{
-		if (isSessionInvalidated() == false) {
+		if (isSessionInvalidated() == false) 
+		{
 			invalidate();
 		}
+		
 		destroy();
+		feedbackMessages.clear();
+		setStyle(null);
+		pageId.set(0);
+		sequence.set(0);
+		temporarySessionAttributes = null;
 	}
 
 	/**
 	 * Replaces the underlying (Web)Session, invalidating the current one and creating a new one. By
 	 * calling {@link ISessionStore#invalidate(Request)} and {@link #bind()}
-	 * <p>
-	 * Call upon login to protect against session fixation.
 	 * 
-	 * @see "http://www.owasp.org/index.php/Session_Fixation"
+	 * If you are looking for a mean against session fixation attack, consider to use {@link #changeSessionId()}.
 	 */
 	public void replaceSession()
 	{
@@ -542,7 +557,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final boolean isSessionInvalidated()
 	{
-		return sessionInvalidated;
+		return Boolean.TRUE.equals(RequestCycle.get().getMetaData(SESSION_INVALIDATED));
 	}
 
 	/**
@@ -603,6 +618,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
+	@Override
 	public final synchronized <M extends Serializable> Session setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		metaData = key.set(metaData, object);
@@ -633,6 +649,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void warn(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.WARNING);
@@ -659,11 +676,14 @@ public abstract class Session implements IClusterable, IEventSink
 	{
 		detachFeedback();
 
-		if (sessionInvalidated)
+		pageAccessSynchronizer.get().unlockAllPages();
+		RequestCycle.get().setMetaData(PAGES_UNLOCKED, true);
+
+		if (isSessionInvalidated())
 		{
 			invalidateNow();
 		}
-		else
+		else if (!isTemporary())
 		{
 			// WICKET-5103 container might have changed id
 			updateId();
@@ -904,8 +924,12 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final IPageManager getPageManager()
 	{
-		IPageManager pageManager = Application.get().internalGetPageManager();
-		return pageAccessSynchronizer.get().adapt(pageManager);
+		if (Boolean.TRUE.equals(RequestCycle.get().getMetaData(PAGES_UNLOCKED))) {
+			throw new WicketRuntimeException("The request has been processed. Access to pages is no longer allowed");
+		}
+		
+		IPageManager manager = Application.get().internalGetPageManager();
+		return pageAccessSynchronizer.get().adapt(manager);
 	}
 
 	/** {@inheritDoc} */
@@ -927,6 +951,30 @@ public abstract class Session implements IClusterable, IEventSink
 	public void onInvalidate()
 	{
 	}
+	
+	/**
+	 * Change the id of the underlying (Web)Session if this last one is permanent.
+	 * <p>
+	 * Call upon login to protect against session fixation.
+	 * 
+	 * @see "http://www.owasp.org/index.php/Session_Fixation"
+	 */
+	public void changeSessionId()
+	{
+		if (isTemporary())
+		{
+			return;
+		}
+		
+		id = generateNewSessionId();
+	}
+
+	/**
+	 * Change the id of the underlying (Web)Session.
+	 * 
+	 * @return the new session id value.
+	 */
+	protected abstract String generateNewSessionId();
 
 	/**
 	 * Factory method for PageAccessSynchronizer instances
@@ -954,7 +1002,7 @@ public abstract class Session implements IClusterable, IEventSink
 			}
 			else
 			{
-				timeout = Duration.minutes(1);
+				timeout = Duration.ofMinutes(1);
 				log.warn(
 					"PageAccessSynchronizer created outside of application thread, using default timeout: {}",
 					timeout);

@@ -17,12 +17,12 @@
 package org.apache.wicket.markup.resolver.issue5569;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class Issue5569Test extends WicketTestCase
+class Issue5569Test extends WicketTestCase
 {
 	@Test
-	public void testIssue5569()
+    void testIssue5569()
 	{
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);

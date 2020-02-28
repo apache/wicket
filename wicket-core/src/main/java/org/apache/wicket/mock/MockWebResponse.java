@@ -18,18 +18,16 @@ package org.apache.wicket.mock;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
 import javax.servlet.http.Cookie;
-
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.HttpHeaderCollection;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Time;
 
 /**
  * Mocked {@link WebResponse}.
@@ -145,7 +143,7 @@ public class MockWebResponse extends WebResponse
 	}
 
 	@Override
-	public void setDateHeader(String name, Time date)
+	public void setDateHeader(String name, Instant date)
 	{
 		Args.notNull(date, "date");
 		headers.setDateHeader(name, date);
@@ -156,15 +154,21 @@ public class MockWebResponse extends WebResponse
 	 * 
 	 * @return date header with specified name
 	 */
-	public Time getDateHeader(String name)
+	public Instant getDateHeader(String name)
 	{
-		final Time time = headers.getDateHeader(name);
+		final Instant time = headers.getDateHeader(name);
 
 		if (time == null)
 		{
 			throw new WicketRuntimeException("Date header '" + name + "' is not set.");
 		}
 		return time;
+	}
+
+	@Override
+	public boolean isHeaderSupported()
+	{
+		return true;
 	}
 
 	@Override

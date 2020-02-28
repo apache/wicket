@@ -1,11 +1,9 @@
 <html xmlns:wicket>
-<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-2.2.4.js"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-event-jquery.js"></script>
+<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-3.4.1.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-debug.js"></script>
 <script type="text/javascript" id="wicket-ajax-debug-enable">
 /*<![CDATA[*/
-Wicket.Ajax.DebugWindow.enabled=true;
+Wicket.Log.enabled=true;
 /*]]>*/
 </script>
 <script type="text/javascript" id="wicket-ajax-base-url">
@@ -13,10 +11,10 @@ Wicket.Ajax.DebugWindow.enabled=true;
 Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.panel.InlinePanelPage_8?0";
 /*]]>*/
 </script>
-<script type="text/javascript" >
+<script type="text/javascript">
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
-Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.panel.InlinePanelPage_8?0-1.0-add","c":"add1","e":"click"});;
+Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.panel.InlinePanelPage_8?0-1.0-add","c":"add1","e":"click","pd":true});;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
@@ -25,9 +23,9 @@ Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 
 <div wicket:id="first">
   <span wicket:id="number">0</span><br/>
-  <div id="nextContainer2" style="display:none"></div>
+  <div id="nextContainer2" class="wicket--hidden" data-wicket-placeholder=""></div>
 </div>
-<a wicket:id="add" id="add1" href="javascript:;">Add</a>
+<a wicket:id="add" id="add1" href="#">Add</a>
 
 
 

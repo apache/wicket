@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -29,7 +28,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.IResourceBundle;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -54,18 +52,9 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 	 * @param id
 	 *            id that will be used to filter duplicate reference (it's still filtered by URL
 	 *            too)
-	 * @param defer
-	 *            specifies that the execution of a script should be deferred (delayed) until after
-	 *            the page has been loaded.
-	 * @param charset
-	 *            a non null value specifies the charset attribute of the script tag
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
-	public JavaScriptReferenceHeaderItem(ResourceReference reference,
-		PageParameters pageParameters, String id, boolean defer, String charset, String condition)
+	public JavaScriptReferenceHeaderItem(ResourceReference reference, PageParameters pageParameters, String id)
 	{
-		super(condition, defer, charset);
 		this.reference = Args.notNull(reference, "reference");
 		this.pageParameters = pageParameters;
 		setId(id);
@@ -105,8 +94,7 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 	@Override
 	public void render(Response response)
 	{
-		internalRenderJavaScriptReference(response, getUrl(), getId(), isDefer(), getCharset(),
-			getCondition(), isAsync());
+		internalRenderJavaScriptReference(response, getUrl());
 	}
 
 	@Override

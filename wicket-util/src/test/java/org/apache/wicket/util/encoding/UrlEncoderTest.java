@@ -17,12 +17,13 @@
 package org.apache.wicket.util.encoding;
 
 import org.apache.wicket.util.crypt.CharEncoding;
-import org.apache.wicket.util.encoding.UrlEncoder;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @SuppressWarnings("javadoc")
-public class UrlEncoderTest extends Assert
+public class UrlEncoderTest
 {
 
 	// starts with &auml;
@@ -40,7 +41,7 @@ public class UrlEncoderTest extends Assert
 			}
 		}
 	}
-	
+
 	@Test
 	public void queryStringUnencoded()  {
 		String unencoded = "azAZ09.-_~!$*,:@/";

@@ -31,6 +31,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IConverterLocator;
@@ -46,11 +48,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.parameter.EmptyRequestParameters;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
@@ -755,8 +759,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 */
 	public String[] getInputAsArray()
 	{
-		List<StringValue> list = getRequest().getRequestParameters().getParameterValues(
-			getInputName());
+		List<StringValue> list = getParameterValues(getInputName());
 
 		String[] values = null;
 		if (list != null)
@@ -782,6 +785,48 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			}
 		}
 		return values;
+	}
+
+	/**
+	 * Reads the value(s) of the request parameter with name <em>inputName</em>
+	 * from either the query parameters for <em>GET</em> method or the request body
+	 * for <em>POST</em> method.
+	 *
+	 * @param inputName
+	 *      The name of the request parameter
+	 * @return The parameter's value(s)
+	 */
+	protected List<StringValue> getParameterValues(String inputName)
+	{
+		String method = Form.METHOD_POST;
+		final Request request = getRequest();
+		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
+		{
+			method = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
+		}
+		else
+		{
+			final Form<?> form = findParent(Form.class);
+			if (form != null)
+			{
+				method = form.getMethod();
+			}
+		}
+
+		final IRequestParameters parameters;
+		switch (method.toLowerCase(Locale.ROOT))
+		{
+			case Form.METHOD_POST:
+				parameters = request.getPostParameters();
+				break;
+			case Form.METHOD_GET:
+				parameters = request.getQueryParameters();
+				break;
+			default:
+				parameters = EmptyRequestParameters.INSTANCE;
+		}
+
+		return parameters.getParameterValues(inputName);
 	}
 
 	/**
@@ -1031,6 +1076,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 *
 	 * Sets the value for a form component.
 	 * 
 	 * @param value
@@ -1387,11 +1434,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			onDisabled(tag);
 		}
 
-		if (isRequired())
-		{
-			onRequired(tag);
-		}
-
 		super.onComponentTag(tag);
 	}
 
@@ -1418,17 +1460,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	protected void onDisabled(final ComponentTag tag)
 	{
 		tag.put("disabled", "disabled");
-	}
-
-	/**
-	 * Called by {@link #onComponentTag(ComponentTag)} when the component is required.
-	 * 
-	 * @param tag
-	 *            the tag that is being rendered
-	 */
-	@Deprecated
-	protected void onRequired(final ComponentTag tag)
-	{
 	}
 
 	/**
@@ -1580,7 +1611,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * 
 	 * If the model object does not yet exists, a new suitable collection is filled with the converted
 	 * input and used as the new model object. Otherwise the existing collection is modified
-	 * in-place, then {@link Model#setObject(Object)} is called with the same instance: it allows
+	 * in-place, then {@link IModel#setObject(Object)} is called with the same instance: it allows
 	 * the Model to be notified of changes even when {@link Model#getObject()} returns a different
 	 * {@link Collection} at every invocation.
 	 * 

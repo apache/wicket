@@ -16,20 +16,22 @@
  */
 package org.apache.wicket.request.mapper.info;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Matej Knopp
  */
-public class ComponentInfoTest extends Assert
+class ComponentInfoTest
 {
 	/**
 	 * 
 	 */
 	@Test
-	public void test1()
+	void test1()
 	{
 		String s = "-component-path";
 		ComponentInfo info = ComponentInfo.parse(s);
@@ -43,7 +45,7 @@ public class ComponentInfoTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test2()
+	void test2()
 	{
 		String s = "component-path";
 		ComponentInfo info = ComponentInfo.parse(s);
@@ -54,7 +56,7 @@ public class ComponentInfoTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test3()
+	void test3()
 	{
 		String s = ".-";
 		ComponentInfo info = ComponentInfo.parse(s);
@@ -66,7 +68,7 @@ public class ComponentInfoTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test4()
+	void test4()
 	{
 		String s = "-";
 		ComponentInfo info = ComponentInfo.parse(s);
@@ -77,7 +79,7 @@ public class ComponentInfoTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test5()
+	void test5()
 	{
 		String s = "abcd";
 		assertEquals(null, ComponentInfo.parse(s));
@@ -87,7 +89,7 @@ public class ComponentInfoTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test6()
+	void test6()
 	{
 		String s = "-compo~~nent-path";
 		ComponentInfo info = ComponentInfo.parse(s);
@@ -101,7 +103,7 @@ public class ComponentInfoTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test7()
+	void test7()
 	{
 		String s = "-co~mpo~~nent-path";
 		ComponentInfo info = ComponentInfo.parse(s);
@@ -115,7 +117,7 @@ public class ComponentInfoTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test8()
+	void test8()
 	{
 		String s = ".12-component-path";
 		ComponentInfo info = ComponentInfo.parse(s);
@@ -129,7 +131,7 @@ public class ComponentInfoTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test9()
+	void test9()
 	{
 		String s = "4.-a-b";
 		ComponentInfo info = ComponentInfo.parse(s);
@@ -142,7 +144,7 @@ public class ComponentInfoTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test10()
+	void test10()
 	{
 		String s = "4.5-a-b";
 		ComponentInfo info = ComponentInfo.parse(s);
@@ -156,7 +158,7 @@ public class ComponentInfoTest extends Assert
 	 * 
 	 */
 	@Test
-	public void encodeDecode()
+	void encodeDecode()
 	{
 		final Integer renderCount = 1;
 		final String componentPath = "-nav-container-:-nav:1:link";

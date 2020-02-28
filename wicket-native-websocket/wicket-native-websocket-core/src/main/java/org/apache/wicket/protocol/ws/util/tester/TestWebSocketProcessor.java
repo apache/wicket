@@ -126,7 +126,7 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	@Override
 	public void onOpen(Object connection)
 	{
-		onConnect(new TestWebSocketConnection() {
+		onConnect(new TestWebSocketConnection(getApplication(), getSessionId(), getRegistryKey()) {
 
 			@Override
 			protected void onOutMessage(String message)

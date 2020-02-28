@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.util.resource;
 
+import java.time.Instant;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.time.Time;
 
 /**
  * A string resource that can be appended to.
@@ -59,7 +59,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	public StringBufferResourceStream append(final CharSequence s)
 	{
 		buffer.append(s);
-		setLastModified(Time.now());
+		setLastModified(Instant.now());
 		return this;
 	}
 
@@ -73,7 +73,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	public StringBufferResourceStream prepend(final CharSequence s)
 	{
 		buffer.insert(0, s);
-		setLastModified(Time.now());
+		setLastModified(Instant.now());
 		return this;
 	}
 

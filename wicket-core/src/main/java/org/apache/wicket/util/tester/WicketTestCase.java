@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 import java.util.Locale;
 
@@ -27,9 +29,8 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Base class for tests which require comparing wicket response with a file.
@@ -37,15 +38,14 @@ import org.junit.Before;
  * To create/replace the expected result file with the new content, define the system property like
  * -Dwicket.replace.expected.results=true
  */
-public abstract class WicketTestCase extends Assert
+public abstract class WicketTestCase
 {
 	/** */
 	public WicketTester tester;
 
 	/**
-	 * @see junit.framework.TestCase#setUp()
 	 */
-	@Before
+	@BeforeEach
 	public void commonBefore()
 	{
 		// make sure no leaked threadlocals are present
@@ -83,7 +83,7 @@ public abstract class WicketTestCase extends Assert
 	/**
 	 *
 	 */
-	@After
+	@AfterEach
 	public void commonAfter()
 	{
 		tester.destroy();
@@ -178,7 +178,7 @@ public abstract class WicketTestCase extends Assert
 	 * @param scopeClass
 	 * @throws IOException
 	 */
-	public final void compareMarkupWithFile(IMarkupFragment markup, String filename, Class<?> scopeClass)
+	protected final void compareMarkupWithFile(IMarkupFragment markup, String filename, Class<?> scopeClass)
 		throws IOException
 	{
 		String doc = markup.toString(true);
@@ -190,11 +190,8 @@ public abstract class WicketTestCase extends Assert
 	 *
 	 * @param markup
 	 * @param testMarkup
-	 * @throws IOException
 	 */
-	public final void compareMarkupWithString(IMarkupFragment markup, String testMarkup)
-		throws IOException
-	{
+	protected final void compareMarkupWithString(IMarkupFragment markup, String testMarkup) {
 		testMarkup = testMarkup.replaceAll("\r", "");
 		testMarkup = testMarkup.replaceAll("\n", "");
 		testMarkup = testMarkup.replaceAll("\t", "");

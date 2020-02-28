@@ -590,6 +590,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		if (model != null)
 		{
 			return new PropertyVariableInterpolator(resourceKey, model.getObject()) {
+				@Override
 				protected String getValue(String variableName) {
 					String result = super.getValue(variableName);
 					

@@ -21,14 +21,14 @@ package org.apache.wicket.guice;
 public interface ITestService
 {
 	/** */
-	public static final String RESULT = "foo";
+	String RESULT = "foo";
 	/** */
-	public static final String RESULT_RED = "red";
+	String RESULT_RED = "red";
 	/** */
-	public static final String RESULT_BLUE = "blue";
+	String RESULT_BLUE = "blue";
 
 	/**
 	 * @return string
 	 */
-	public String getString();
+	String getString();
 }

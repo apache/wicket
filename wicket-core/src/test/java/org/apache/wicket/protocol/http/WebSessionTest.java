@@ -16,23 +16,32 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Locale;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.mock.MockWebRequest;
+import org.apache.wicket.protocol.http.mock.MockHttpSession;
 import org.apache.wicket.request.Url;
-import org.junit.Assert;
-import org.junit.Test;
+import org.apache.wicket.util.tester.WicketTester;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Timo Rantalaiho
  */
-public class WebSessionTest extends Assert
+class WebSessionTest
 {
 	/**
 	 * testReadsLocaleFromRequestOnConstruction()
 	 */
 	@Test
-	public void readsLocaleFromRequestOnConstruction()
+	void readsLocaleFromRequestOnConstruction()
 	{
 		final Locale locale = Locale.TRADITIONAL_CHINESE;
 		MockWebRequest request = new MockWebRequest(Url.parse("/"))
@@ -46,5 +55,49 @@ public class WebSessionTest extends Assert
 
 		WebSession session = new WebSession(request);
 		assertEquals(locale, session.getLocale());
+	}
+
+	@Test
+	public void changeSessionId() throws Exception
+	{
+		WicketTester tester = new WicketTester(new MockApplication());
+		MockHttpSession httpSession = (MockHttpSession)tester.getRequest().getSession();
+		Session session = tester.getSession();
+
+		httpSession.setTemporary(false);
+		session.bind();
+
+		String oldId = session.getId();
+		assertNotNull(oldId);
+
+		session.changeSessionId();
+		String newId = session.getId();
+
+		assertNotEquals(oldId, newId);
+	}
+
+	/**
+	 * WICKET-6558
+	 */
+	@Test
+	public void lockAfterDetach() throws Exception
+	{
+		WicketTester tester = new WicketTester(new MockApplication());
+
+		Session session = tester.getSession();
+
+		session.getPageManager();
+		
+		session.detach();
+
+		try
+		{
+			session.getPageManager();
+			fail();
+		}
+		catch (WicketRuntimeException ex)
+		{
+			assertEquals("The request has been processed. Access to pages is no longer allowed", ex.getMessage());
+		}
 	}
 }

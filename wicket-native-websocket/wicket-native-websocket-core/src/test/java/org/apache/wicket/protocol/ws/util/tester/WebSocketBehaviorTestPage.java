@@ -16,22 +16,22 @@
  */
 package org.apache.wicket.protocol.ws.util.tester;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
+import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A page used for {@link WebSocketTesterBehaviorTest}
@@ -53,7 +53,7 @@ class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStream
 			protected void onMessage(WebSocketRequestHandler handler, TextMessage message)
 			{
 				// assert the inbould message
-				Assert.assertThat(message.getText(), is(equalTo(expectedMessage)));
+				assertEquals(expectedMessage, message.getText());
 
 				// now send an outbound message
 				handler.push(Strings.capitalize(expectedMessage));
@@ -68,9 +68,9 @@ class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStream
 			@Override
 			protected void onMessage(WebSocketRequestHandler handler, BinaryMessage binaryMessage)
 			{
-				Assert.assertArrayEquals(message, binaryMessage.getData());
-				Assert.assertEquals(offset, binaryMessage.getOffset());
-				Assert.assertEquals(length, binaryMessage.getLength());
+				assertArrayEquals(binaryMessage.getData(), message);
+				assertEquals(offset, binaryMessage.getOffset());
+				assertEquals(length, binaryMessage.getLength());
 				
 				String msg = new String(message);
 				byte[] pushedMessage = Strings.capitalize(msg).getBytes();
@@ -87,9 +87,9 @@ class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStream
 			@Override
 			protected void onPush(WebSocketRequestHandler handler, IWebSocketPushMessage message)
 			{
-				Assert.assertThat(message, CoreMatchers.instanceOf(WebSocketTesterBehaviorTest.BroadcastMessage.class));
+				assertTrue(message instanceof WebSocketTesterBehaviorTest.BroadcastMessage);
 				WebSocketTesterBehaviorTest.BroadcastMessage broadcastMessage = (WebSocketTesterBehaviorTest.BroadcastMessage) message;
-				Assert.assertSame(expectedMessage, broadcastMessage);
+				assertSame(expectedMessage, broadcastMessage);
 
 				String pushedMessage = broadcastMessage.getText().toUpperCase();
 
@@ -101,6 +101,6 @@ class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStream
 	@Override
 	public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 	{
-		return new StringResourceStream("<html/>");
+		return new StringResourceStream("<html><head></head><body></body></html>");
 	}
 }

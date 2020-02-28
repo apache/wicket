@@ -47,7 +47,7 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 	public ClassStringResourceLoader(final Class<?> clazz)
 	{
 		Args.notNull(clazz, "clazz");
-		clazzRef = new WeakReference<Class<?>>(clazz);
+		clazzRef = new WeakReference<>(clazz);
 	}
 
 	@Override

@@ -27,14 +27,28 @@ import org.apache.wicket.protocol.ws.api.registry.IKey;
  */
 public class ClosedMessage extends AbstractClientMessage
 {
-	public ClosedMessage(Application application, String sessionId, IKey key)
+	private final int closeCode;
+
+	private final String message;
+	
+	public ClosedMessage(Application application, String sessionId, IKey key, int closeCode, String message)
 	{
 		super(application, sessionId, key);
+		this.closeCode = closeCode;
+		this.message = message;
+	}
+
+	public int getCloseCode() {
+		return closeCode;
+	}
+
+	public String getMessage() {
+		return message;
 	}
 
 	@Override
 	public final String toString()
 	{
-		return "The client closed its connection";
+		return "The client closed its connection with code '" + closeCode + "' and message: '" + message + "'";
 	}
 }

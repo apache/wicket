@@ -97,8 +97,6 @@ public abstract class VelocityPanel extends Panel
 	 * 
 	 * @param id
 	 *            Component id
-	 * @param templateResource
-	 *            The velocity template as a string resource
 	 * @param model
 	 *            Model with variables that can be substituted by Velocity.
 	 */
@@ -170,10 +168,6 @@ public abstract class VelocityPanel extends Panel
 	 * 
 	 * @param exception
 	 *            the cause
-	 * @param markupStream
-	 *            the markup stream
-	 * @param openTag
-	 *            the open tag
 	 */
 	private void onException(final Exception exception)
 	{

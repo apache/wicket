@@ -21,12 +21,12 @@ import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link RestartResponseAtInterceptPageException}
  */
-public class RestartResponseAtInterceptPageExceptionTest extends WicketTestCase
+class RestartResponseAtInterceptPageExceptionTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -61,7 +61,7 @@ public class RestartResponseAtInterceptPageExceptionTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-3836
 	 */
 	@Test
-	public void redirectToBufferForNonVersionedPage()
+    void redirectToBufferForNonVersionedPage()
 	{
 		tester.startPage(tester.getApplication().getHomePage());
 

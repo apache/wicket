@@ -17,13 +17,12 @@
 package org.apache.wicket.response.filter;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.core.util.string.JavaScriptUtils;
-import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +49,16 @@ import org.slf4j.LoggerFactory;
  * </pre>
  * 
  * @author jcompagner
+ * @deprecated This class has been deprecated for several reasons. The way it tries to measure
+ *             server and client times is very inaccurate. Modern browsers provide much better tools
+ *             to measure Javascript execution times. The measurements were written in a property
+ *             that has been deprecated for years and removed in modern browsers. Finally, rendering
+ *             the Javascript directly into the response makes it hard to support a strict CSP with
+ *             nonces. There is no real replacement for this class. Use the tools provided by the
+ *             browser. See {@code WicketExampleApplication} for a simple example of passing
+ *             rendering times to the browser via the {@code Server-Timing} header.
  */
+@Deprecated
 public class AjaxServerAndClientTimeFilter implements IResponseFilter
 {
 	private static Logger log = LoggerFactory.getLogger(AjaxServerAndClientTimeFilter.class);
@@ -68,30 +76,36 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 		long timeTaken = System.currentTimeMillis() - RequestCycle.get().getStartTime();
 		if (headIndex != -1 && bodyIndex != -1)
 		{
-			AppendingStringBuffer endScript = new AppendingStringBuffer(150);
-			endScript.append("\n").append(JavaScriptUtils.SCRIPT_OPEN_TAG);
-			endScript.append("\nwindow.defaultStatus='");
-			endScript.append(getStatusString(timeTaken, "ServerAndClientTimeFilter.statustext"));
-			endScript.append("';\n").append(JavaScriptUtils.SCRIPT_CLOSE_TAG).append("\n");
-			responseBuffer.insert(bodyIndex - 1, endScript);
-			responseBuffer.insert(headIndex + 6, "\n" + JavaScriptUtils.SCRIPT_OPEN_TAG +
-				"\nvar clientTimeVariable = new Date().getTime();\n" +
-				JavaScriptUtils.SCRIPT_CLOSE_TAG + "\n");
+			responseBuffer.insert(bodyIndex, scriptTag("window.defaultStatus=" + getStatusString(timeTaken, "ServerAndClientTimeFilter.statustext") + ";"));
+			responseBuffer.insert(headIndex + 6, scriptTag("clientTimeVariable = new Date().getTime();"));
 		}
 		else if (ajaxStart != -1 && ajaxEnd != -1)
 		{
-			AppendingStringBuffer startScript = new AppendingStringBuffer(250);
-			startScript.append("<evaluate><![CDATA[window.defaultStatus='");
-			startScript.append(getStatusString(timeTaken,
-				"ajax.ServerAndClientTimeFilter.statustext"));
-			startScript.append("';]]></evaluate>");
-			responseBuffer.insert(ajaxEnd, startScript.toString());
-			responseBuffer.insert(ajaxStart + 15,
-				"<priority-evaluate><![CDATA[clientTimeVariable = new Date().getTime();]]></priority-evaluate>");
+			responseBuffer.insert(ajaxEnd, headerContribution("window.defaultStatus=" + getStatusString(timeTaken, "ajax.ServerAndClientTimeFilter.statustext") + ";"));
+			responseBuffer.insert(ajaxStart + 15, headerContribution("clientTimeVariable = new Date().getTime();"));
 		}
 		log.info(timeTaken + "ms server time taken for request " +
 			RequestCycle.get().getRequest().getUrl() + " response size: " + responseBuffer.length());
 		return responseBuffer;
+	}
+
+	private String scriptTag(String script)
+	{
+		AppendingStringBuffer buffer = new AppendingStringBuffer(250);
+		buffer.append("\n");
+		buffer.append(JavaScriptUtils.SCRIPT_OPEN_TAG);
+		buffer.append(script);
+		buffer.append(JavaScriptUtils.SCRIPT_CLOSE_TAG).append("\n");
+		return buffer.toString();
+	}
+	
+	private String headerContribution(String script)
+	{
+		AppendingStringBuffer buffer = new AppendingStringBuffer(250);
+		buffer.append("<header-contribution><![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\">");
+		buffer.append(script);
+		buffer.append("</head>]]></header-contribution>");
+		return buffer.toString();
 	}
 
 	/**
@@ -105,14 +119,14 @@ public class AjaxServerAndClientTimeFilter implements IResponseFilter
 	 */
 	private String getStatusString(long timeTaken, String resourceKey)
 	{
-		final String txt = Application.get()
+		final HashMap<String, String> map = new HashMap<String, String>(4);
+		map.put("servertime", ((double)timeTaken) / 1000 + "s");
+		map.put("clienttime", "' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
+
+		return Application.get()
 			.getResourceSettings()
 			.getLocalizer()
-			.getString(resourceKey, null,
-				"Server parsetime: ${servertime}, Client parsetime: ${clienttime}");
-		final Map<String, String> map = new HashMap<String, String>(4);
-		map.put("clienttime", "' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
-		map.put("servertime", ((double)timeTaken) / 1000 + "s");
-		return MapVariableInterpolator.interpolate(txt, map);
+			.getString(resourceKey, null, Model.of(map),
+				"'Server parsetime: ${servertime}, Client parsetime: ${clienttime}'");
 	}
 }

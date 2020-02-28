@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.guice;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.servlet.ServletContext;
 
 import com.google.inject.Guice;
@@ -143,20 +145,11 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 				{
 					// see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6500212
 					Class<?> moduleClazz = Class.forName(moduleName, false, classLoader);
-					Object moduleObject = moduleClazz.newInstance();
+					Object moduleObject = moduleClazz.getDeclaredConstructor().newInstance();
 					modules[i] = (Module)moduleObject;
 				}
-				catch (InstantiationException e)
-				{
-					throw new RuntimeException(
-						"Could not create new instance of Guice Module class " + moduleName, e);
-				}
-				catch (ClassNotFoundException e)
-				{
-					throw new RuntimeException(
-						"Could not create new instance of Guice Module class " + moduleName, e);
-				}
-				catch (IllegalAccessException e)
+				catch (InstantiationException | ClassNotFoundException | IllegalAccessException
+						| NoSuchMethodException | InvocationTargetException e)
 				{
 					throw new RuntimeException(
 						"Could not create new instance of Guice Module class " + moduleName, e);

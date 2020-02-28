@@ -5,7 +5,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.w3.org/1999/xhtml http://www.w3.org/MarkUp/SCHEMA/xhtml-basic10.xsd"
 	elementFormDefault="qualified"
-	version="7.0.0">
+	version="8.0.0">
 	
 	<redefine schemaLocation="http://www.w3.org/MarkUp/SCHEMA/xhtml-basic10.xsd">
 		<attributeGroup name="xhtml.label.attlist">

@@ -16,22 +16,23 @@
  */
 package org.apache.wicket.util.string.interpolator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.core.util.string.interpolator.PropertyVariableInterpolator;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link PropertyVariableInterpolator}
  * 
  * @author Gerolf Seitz
  */
-public class PropertyVariableInterpolatorTest extends Assert
+class PropertyVariableInterpolatorTest
 {
 	/**
 	 * 
 	 */
 	@Test
-	public void withValue()
+	void withValue()
 	{
 		TestClass object = new TestClass("value");
 		String result = new PropertyVariableInterpolator("${key}", object).toString();
@@ -43,7 +44,7 @@ public class PropertyVariableInterpolatorTest extends Assert
 	 * '$' and '${key}' is interpolated to the respective value
 	 */
 	@Test
-	public void withValueAndEscape()
+	void withValueAndEscape()
 	{
 		TestClass object = new TestClass("3.24");
 		String result = new PropertyVariableInterpolator("$$${key}", object).toString();
@@ -54,7 +55,7 @@ public class PropertyVariableInterpolatorTest extends Assert
 	 * 
 	 */
 	@Test
-	public void withoutValue()
+	void withoutValue()
 	{
 		String result = new PropertyVariableInterpolator("${key}", null).toString();
 		assertEquals("${key}", result.toString());
@@ -64,7 +65,7 @@ public class PropertyVariableInterpolatorTest extends Assert
 	{
 		private final String key;
 
-		public TestClass(String key)
+		TestClass(String key)
 		{
 			this.key = key;
 		}

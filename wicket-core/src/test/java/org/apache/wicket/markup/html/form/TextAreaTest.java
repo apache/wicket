@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.HTML5Attributes;
@@ -26,18 +28,18 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  */
-public class TextAreaTest extends WicketTestCase
+class TextAreaTest extends WicketTestCase
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5289
 	 */
 	@Test
-	public void requiredAttribute()
+	void requiredAttribute()
 	{
 		TestPage testPage = new TestPage();
 		testPage.textArea.setOutputMarkupId(true);
@@ -60,7 +62,7 @@ public class TextAreaTest extends WicketTestCase
 		IModel<String> textModel = Model.of((String)null);
 
 		/** */
-		public TestPage()
+		TestPage()
 		{
 			add(form = new Form<>("form"));
 			form.add(textArea = new TextArea<>("textarea", textModel));

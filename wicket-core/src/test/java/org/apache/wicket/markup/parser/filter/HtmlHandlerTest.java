@@ -22,12 +22,12 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.5.6
  */
-public class HtmlHandlerTest extends WicketTestCase
+class HtmlHandlerTest extends WicketTestCase
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4494
@@ -38,7 +38,7 @@ public class HtmlHandlerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void loadMarkupWithNonClosedTagsDynamically() throws Exception
+    void loadMarkupWithNonClosedTagsDynamically() throws Exception
 	{
 		CustomMarkupPage page = new CustomMarkupPage();
 		tester.executeTest(HtmlHandlerTest.class, page, "DynamicMarkupPageWithNonClosedTags_expected.html");

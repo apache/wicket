@@ -6,13 +6,15 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen" />
     <script>
-        document.write("<scr"+"ipt src='../../main/java/org/apache/wicket/resource/jquery/jquery-"+location.search.substring(1)+".js'></scr"+"ipt>");
+    	// version lies between question mark and first ampersand (or end)  
+    	var version = location.search.match(/\?(.*?)(&|$)/)[1];
+    	
+        document.write("<scr"+"ipt src='../../main/java/org/apache/wicket/resource/jquery/jquery-"+version+".js'></scr"+"ipt>");
     </script>
     <!--<script src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script>-->
-    <script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js"></script>
 	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js"></script>
-	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js"></script>
 	<script type="text/javascript" src="qunit/qunit.js"></script>
+	<script type="text/javascript" src="qunit/jquery.mockjax.js"></script>
 	<script type="text/javascript" src="qunit/blanket.min.js"></script>
 
 	<!-- the module under test -->
@@ -43,7 +45,7 @@
 		<div id="evaluationId"></div>
 		<div id="priorityEvaluationId"></div>
 		<div id="evaluationIdentifierAndCodeId"></div>
-		<div id="twoEvaluationsWithIdentifier"></div>
+		<div id="multipleEvaluationsWithIdentifier"></div>
 
 		<div id="componentToReplace">old body</div>
 
@@ -86,6 +88,9 @@
 		<textarea id="componentToReplaceTitle">
 			<ajax-response><component id="titleId"><![CDATA[<title id="titleId">new title</title>]]></component></ajax-response>
 		</textarea>
+
+		<div id="componentPlaceholderId" data-wicket-placeholder="">
+		</div>
 
 		<!--
 			DOM
@@ -174,8 +179,6 @@
 		</form>
 
 		<div id="usedAsContextWicket5025"></div>
-
-		<input type="text" id="inputChangeInput">
 
 		<div id="ajaxIndicator"></div>
 	</div>

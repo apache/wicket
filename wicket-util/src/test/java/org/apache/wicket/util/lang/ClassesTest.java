@@ -16,16 +16,17 @@
  */
 package org.apache.wicket.util.lang;
 
+import org.junit.jupiter.api.Test;
+
 import java.text.SimpleDateFormat;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @since 1.5.8
  */
 @SuppressWarnings({"javadoc", "serial"})
-public class ClassesTest extends Assert
+public class ClassesTest
 {
 	@Test
 	public void simpleName() throws Exception

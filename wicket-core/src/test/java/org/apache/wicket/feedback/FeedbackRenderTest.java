@@ -16,27 +16,47 @@
  */
 package org.apache.wicket.feedback;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test calling of {@link Component#beforeRender()} for {@link IFeedback} components.
  */
-public class FeedbackRenderTest extends WicketTestCase
+class FeedbackRenderTest extends WicketTestCase
 {
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void test() throws Exception
+	void test() throws Exception
 	{
 		final FeedbacksPage page = new FeedbacksPage();
 
 		tester.startPage(page);
 
-		// non-IFeedback first, then IFeedback from nested to top
-		assertEquals("|id4|id3|id2|id1", page.onBeforeRenderOrder.toString());
+		// non-IFeedback first, then IFeedback top-down
+		assertEquals("|id4|id1|id2|id3", page.onBeforeRenderOrder.toString());
+	}
+	
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	void testAjax() throws Exception
+	{
+		final FeedbacksPage page = new FeedbacksPage();
+
+		tester.startPage(page);
+		
+		page.onBeforeRenderOrder.setLength(0);
+
+		tester.executeAjaxEvent(page.getAjaxLink(), "click");
+		
+		// non-IFeedback first, then IFeedback top-down
+		assertEquals("|id4|id1|id2|id3", page.onBeforeRenderOrder.toString());
 	}
 }

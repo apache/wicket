@@ -16,15 +16,18 @@
  */
 package org.apache.wicket.ajax;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Gerolf Seitz
  */
-public class AjaxComponentVisibilityTest extends WicketTestCase
+class AjaxComponentVisibilityTest extends WicketTestCase
 {
 
 	private Component test1;
@@ -34,8 +37,8 @@ public class AjaxComponentVisibilityTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+    void before()
 	{
 		tester.startPage(new AjaxHeaderContributionPage());
 		test1 = tester.getLastRenderedPage().get("test1");
@@ -47,7 +50,7 @@ public class AjaxComponentVisibilityTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void componentsAddedToAjax()
+    void componentsAddedToAjax()
 	{
 		test2.setVisible(false);
 		test3.setVisible(false).setOutputMarkupPlaceholderTag(true);
@@ -60,5 +63,6 @@ public class AjaxComponentVisibilityTest extends WicketTestCase
 		assertTrue(tester.isComponentOnAjaxResponse(test2).wasFailed());
 		// test3 is in the ajax response because it renders a placeholder tag
 		assertFalse(tester.isComponentOnAjaxResponse(test3).wasFailed());
+		assertTrue(tester.getTagById(test3.getMarkupId()).hasAttribute("data-wicket-placeholder"));
 	}
 }

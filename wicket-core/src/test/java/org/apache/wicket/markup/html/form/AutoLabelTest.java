@@ -16,30 +16,34 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@code wicket:for} attribute functionality
  * 
  * @author igor
  */
-public class AutoLabelTest extends WicketTestCase
+class AutoLabelTest extends WicketTestCase
 {
 	/** */
 	@Test
-	public void labelIntoMarkupInsertion()
+	void labelIntoMarkupInsertion()
 	{
 		class MyTestPage extends TestPage
 		{
 			private static final long serialVersionUID = 1L;
 
-			public MyTestPage(String labelMarkup)
+			MyTestPage(String labelMarkup)
 			{
 				super("<label wicket:for='t'>" + labelMarkup + "</label>");
 				field.setLabel(Model.of("t"));
@@ -72,13 +76,13 @@ public class AutoLabelTest extends WicketTestCase
 
 	/** */
 	@Test
-	public void markupIntoLabelInsertion()
+	void markupIntoLabelInsertion()
 	{
 		class MyTestPage extends TestPage
 		{
 			private static final long serialVersionUID = 1L;
 
-			public MyTestPage(String labelMarkup)
+			MyTestPage(String labelMarkup)
 			{
 				super("<label wicket:for='t'>" + labelMarkup + "</label>");
 			}
@@ -88,19 +92,19 @@ public class AutoLabelTest extends WicketTestCase
 
 		MyTestPage page = new MyTestPage("<wicket:label>text</wicket:label>");
 		tester.startPage(page);
-		assertEquals("text", ((MyTestPage)tester.getLastRenderedPage()).field.getLabel()
-			.getObject());
+		assertEquals("text",
+			((MyTestPage)tester.getLastRenderedPage()).field.getLabel().getObject());
 	}
 
 	/** */
 	@Test
-	public void labelTagClasses()
+	void labelTagClasses()
 	{
 		class MyTestPage extends TestPage
 		{
 			private static final long serialVersionUID = 1L;
 
-			public MyTestPage()
+			MyTestPage()
 			{
 				super("<label wicket:for='t'><span class='label-text'>field</span></label>");
 			}
@@ -143,7 +147,7 @@ public class AutoLabelTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public MyTestPage2()
+			MyTestPage2()
 			{
 				super(
 					"<label class='long' wicket:for='t'><wicket:label>field</wicket:label></label>");
@@ -164,8 +168,8 @@ public class AutoLabelTest extends WicketTestCase
 		tester.startPage(page);
 		String markup = tester.getLastResponse().getDocument();
 		markup = markup.replace("'", "\"");
-		assertTrue("fragment: [" + markupFragment + "] not found in generated markup: [" + markup +
-			"]", markup.contains(markupFragment.replace("'", "\"")));
+		assertTrue(markup.contains(markupFragment.replace("'", "\"")),
+			"fragment: [" + markupFragment + "] not found in generated markup: [" + markup + "]");
 	}
 
 	private void assertNotRendered(Page page, String markupFragment)
@@ -173,19 +177,17 @@ public class AutoLabelTest extends WicketTestCase
 		tester.startPage(page);
 		String markup = tester.getLastResponse().getDocument();
 		markup = markup.replace("'", "\"");
-		assertFalse("fragment: [" + markupFragment + "] not found in generated markup: [" + markup +
-			"]", markup.contains(markupFragment.replace("'", "\"")));
+		assertFalse(markup.contains(markupFragment.replace("'", "\"")),
+			"fragment: [" + markupFragment + "] not found in generated markup: [" + markup + "]");
 	}
 
 	private static class TestPage extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
-
+		private final String labelMarkup;
 		TextField<String> field;
 
-		private final String labelMarkup;
-
-		public TestPage(String labelMarkup)
+		TestPage(String labelMarkup)
 		{
 			this.labelMarkup = labelMarkup;
 			Form<?> form = new Form<Void>("f");

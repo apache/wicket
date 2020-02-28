@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.resource.bundles;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.javascript.DefaultJavaScriptCompressor;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -28,18 +30,18 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A test case for https://issues.apache.org/jira/browse/WICKET-4902
  */
-public class CompressBundlesTest extends WicketTestCase
+class CompressBundlesTest extends WicketTestCase
 {
 	/**
 	 * Asserts that the bundle response is compressed
 	 */
 	@Test
-	public void compressBundle()
+	void compressBundle()
 	{
 		tester.startPage(new CompressBundleTestPage());
 		tester.assertRenderedPage(CompressBundleTestPage.class);
@@ -75,7 +77,7 @@ public class CompressBundlesTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		public CompressBundleTestPage() {}
+		CompressBundleTestPage() {}
 
 		@Override
 		public void renderHead(IHeaderResponse response)

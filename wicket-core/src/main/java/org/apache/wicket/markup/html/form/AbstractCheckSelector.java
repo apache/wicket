@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.form;
 import java.util.List;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.ajax.WicketEventJQueryResourceReference;
+import org.apache.wicket.ajax.WicketAjaxJQueryResourceReference;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -33,11 +33,11 @@ import org.apache.wicket.request.resource.ResourceReference;
  * Base class for all Javascript-based "select-all" checkboxes. Provides a simple "select all"
  * checkbox which can be automatically updated based on the selection state of the checkboxes it
  * controls (see {@link #wantAutomaticUpdate()}).
- * 
+ *
  * @see CheckboxMultipleChoiceSelector
  * @see CheckGroupSelector
  * @see CheckBoxSelector
- * 
+ *
  * @author Carl-Eric Menzel <cmenzel@wicketbuch.de>
  */
 public abstract class AbstractCheckSelector extends LabeledWebMarkupContainer
@@ -58,9 +58,9 @@ public abstract class AbstractCheckSelector extends LabeledWebMarkupContainer
 		public List<HeaderItem> getDependencies()
 		{
 			List<HeaderItem> dependencies = super.getDependencies();
-			ResourceReference wicketEventReference = WicketEventJQueryResourceReference.get();
+			ResourceReference wicketEventReference = WicketAjaxJQueryResourceReference.get();
 			if (Application.exists()) {
-				wicketEventReference = Application.get().getJavaScriptLibrarySettings().getWicketEventReference();
+				wicketEventReference = Application.get().getJavaScriptLibrarySettings().getWicketAjaxReference();
 			}
 			dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
 			return dependencies;
@@ -69,7 +69,7 @@ public abstract class AbstractCheckSelector extends LabeledWebMarkupContainer
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            the component id
 	 */
@@ -126,7 +126,7 @@ public abstract class AbstractCheckSelector extends LabeledWebMarkupContainer
 	/**
 	 * Concrete subclasses must override this to provide a Javascript function that returns the IDs
 	 * of all checkboxes that should be controlled by this selector.
-	 * 
+	 *
 	 * @return a String containing a Javascript expression that evaluates to a function(!). This
 	 *         function must return an array containing the IDs of all checkbox input elements that
 	 *         this selector should control.

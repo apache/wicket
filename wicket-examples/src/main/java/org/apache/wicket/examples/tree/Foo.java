@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Sven Meier
@@ -46,8 +47,8 @@ public class Foo implements Serializable
 	public Foo(String id)
 	{
 		this.id = id;
-		bar = id.toLowerCase() + "Bar";
-		baz = id.toLowerCase() + "Baz";
+		bar = id.toLowerCase(Locale.ROOT) + "Bar";
+		baz = id.toLowerCase(Locale.ROOT) + "Baz";
 	}
 
 	public Foo(Foo parent, String name)

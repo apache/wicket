@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.modal;
 
-import com.github.openjson.JSONObject;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -44,6 +43,8 @@ import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+
+import com.github.openjson.JSONObject;
 
 /**
  * Modal window component.
@@ -120,6 +121,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * before the window get closed.
  * 
  * @author Matej Knopp
+ * 
+ * @deprecated use {@link ModalDialog} instead
  */
 public class ModalWindow extends Panel
 {
@@ -1022,7 +1025,8 @@ public class ModalWindow extends Panel
 		}
 		else
 		{
-			settings.put("height", (Object)null);
+			// WICKET-6613 null would remove the key, so use false instead 
+			settings.put("height", false);
 		}
 
 		settings.put("resizable", isResizable());

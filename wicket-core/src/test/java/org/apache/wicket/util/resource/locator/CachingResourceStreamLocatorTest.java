@@ -16,10 +16,8 @@
  */
 package org.apache.wicket.util.resource.locator;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -38,22 +36,21 @@ import org.apache.wicket.core.util.resource.locator.caching.CachingResourceStrea
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for CachingResourceStreamLocator
  *
  * <a href="https://issues.apache.org/jira/browse/WICKET-3511">WICKET-3511</a>
  */
-public class CachingResourceStreamLocatorTest
+class CachingResourceStreamLocatorTest
 {
 
 	/**
 	 * Tests NullResourceStreamReference
 	 */
 	@Test
-	public void notExistingResource()
+	void notExistingResource()
 	{
 
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
@@ -73,7 +70,7 @@ public class CachingResourceStreamLocatorTest
 	 * Tests strict before non-strict matching without a specific locale.
 	 */
 	@Test
-	public void strictBeforeNonStrictMatchingWithoutLocaleDoesntResultInInvalidNonStrictMatch()
+	void strictBeforeNonStrictMatchingWithoutLocaleDoesntResultInInvalidNonStrictMatch()
 	{
 		IResourceStreamLocator resourceStreamLocator = new ResourceStreamLocator(
 			new ClassPathResourceFinder(""));
@@ -85,26 +82,26 @@ public class CachingResourceStreamLocatorTest
 		Locale locale = null;
 		String extension = null;
 
-		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
+		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js";
 
 		// a strict lookup for the resource with no specific locale results in a match
 		IResourceStream strictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
 			filename, style, variation, locale, extension, true);
 
-		assertThat(strictLocate, is(not(nullValue())));
+		assertNotNull(strictLocate);
 
 		// followed by a non-strict search for the same resource also finds it
 		IResourceStream nonStrictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
 			filename, style, variation, locale, extension, false);
 
-		assertThat(nonStrictLocate, is(not(nullValue())));
+		assertNotNull(nonStrictLocate);
 	}
 
 	/**
 	 * Tests strict before non-strict matching with a specific locale.
 	 */
 	@Test
-	public void strictMatchingDoesntInvalidateNonStrictMatching()
+	void strictMatchingDoesntInvalidateNonStrictMatching()
 	{
 		IResourceStreamLocator resourceStreamLocator = new ResourceStreamLocator(
 			new ClassPathResourceFinder(""));
@@ -116,25 +113,25 @@ public class CachingResourceStreamLocatorTest
 		Locale locale = new Locale("nl", "NL");
 		String extension = null;
 
-		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
+		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js";
 
 		// a strict lookup of a localized resource should not find the non-localized resource
 		IResourceStream strictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
 			filename, style, variation, locale, extension, true);
-		assertThat(strictLocate, is(nullValue()));
+		assertNull(strictLocate);
 
 		// but a non-strict lookup with a locale should fall back to the non-localized resource
 		IResourceStream nonStrictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
 			filename, style, variation, locale, extension, false);
 
-		assertThat(nonStrictLocate, is(not(nullValue())));
+		assertNotNull(nonStrictLocate);
 	}
 
 	/**
 	 * Tests non-strict before strict matching with a specific locale.
 	 */
 	@Test
-	public void nonStrictMatchingDoesntResultInInvalidStrictMatch()
+	void nonStrictMatchingDoesntResultInInvalidStrictMatch()
 	{
 		IResourceStreamLocator resourceStreamLocator = new ResourceStreamLocator(
 			new ClassPathResourceFinder(""));
@@ -146,27 +143,27 @@ public class CachingResourceStreamLocatorTest
 		Locale locale = new Locale("nl", "NL");
 		String extension = null;
 
-		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
+		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js";
 
 		// a non-strict lookup with a specific locale should find the non-localized resource
 		IResourceStream nonStrictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
 			filename, style, variation, locale, extension, false);
 
-		assertThat(nonStrictLocate, is(not(nullValue())));
+		assertNotNull(nonStrictLocate);
 
 		// but a strict lookup with a specific locale should not fall back to the non-localized
 		// resource
 		IResourceStream strictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
 			filename, style, variation, locale, extension, true);
 
-		assertThat(strictLocate, is(nullValue()));
+		assertNull(strictLocate);
 	}
 
 	/**
 	 * Tests FileResourceStreamReference
 	 */
 	@Test
-	public void fileResource()
+	void fileResource()
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 
@@ -190,7 +187,7 @@ public class CachingResourceStreamLocatorTest
 	 * Tests two FileResourceStreamReferences with different extensions
 	 */
 	@Test
-	public void fileResourceDifferentExtensions()
+	void fileResourceDifferentExtensions()
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 
@@ -219,7 +216,7 @@ public class CachingResourceStreamLocatorTest
 	 * @throws Exception
 	 */
 	@Test
-	public void urlResource() throws Exception
+	void urlResource() throws Exception
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 
@@ -242,7 +239,7 @@ public class CachingResourceStreamLocatorTest
 	 * UrlResourceStream). These should <strong>not</strong> be cached.
 	 */
 	@Test
-	public void lightweightResource()
+	void lightweightResource()
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 

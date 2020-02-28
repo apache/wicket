@@ -60,8 +60,10 @@ public class WicketJavaEEApplication extends WebApplication {
         initResourceFinder();
         
         // Configure CDI, disabling Conversations as we aren't using them
-        new CdiConfiguration(bm).setPropagation(ConversationPropagation.NONE).configure(this);
-        
+        CdiConfiguration cdiConfiguration = new CdiConfiguration();
+		cdiConfiguration.setPropagation(ConversationPropagation.NONE).configure(this);
+        cdiConfiguration.setFallbackBeanManager(bm);
+		
         // Mount the InsertContact page at /insert
         mountPage("/insert", InsertContact.class);
     }

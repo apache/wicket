@@ -30,7 +30,6 @@ import java.util.Set;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
@@ -44,6 +43,8 @@ import org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree;
 import org.apache.wicket.extensions.markup.html.repeater.tree.DefaultTableTree;
 import org.apache.wicket.extensions.markup.html.repeater.tree.table.TreeColumn;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableTreeProvider;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.debug.PageView;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -56,6 +57,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.Strings;
@@ -86,42 +88,13 @@ public final class EnhancedPageView extends GenericPanel<Page>
 	 * 
 	 * @param id
 	 *            See Component
-	 * @param page
+	 * @param model
 	 *            The page to be analyzed
 	 */
-	public EnhancedPageView(String id, Page page)
+	public EnhancedPageView(String id, IModel<Page> model)
 	{
-		this(id, getModelFor(page == null ? null : page.getPageReference()));
-	}
-
-	private static IModel<Page> getModelFor(final PageReference pageRef)
-	{
-		return new LoadableDetachableModel<Page>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected Page load()
-			{
-				if (pageRef == null)
-					return null;
-				Page page = pageRef.getPage();
-				return page;
-			}
-		};
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param id
-	 *            See Component
-	 * @param pageModel
-	 *            The page to be analyzed
-	 */
-	public EnhancedPageView(String id, IModel<Page> pageModel)
-	{
-		super(id, pageModel);
+		super(id, model);
+		
 		expandState = new ExpandState();
 		expandState.expandAll();
 		showStatefulAndParentsOnly = false;
@@ -305,6 +278,7 @@ public final class EnhancedPageView extends GenericPanel<Page>
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
 				expandState.expandAll();
@@ -819,5 +793,13 @@ public final class EnhancedPageView extends GenericPanel<Page>
 		{
 			throw new UnsupportedOperationException();
 		}
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(CssHeaderItem.forReference(
+			new CssResourceReference(EnhancedPageView.class, "enhancedpageview.css")));
 	}
 }

@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.protocol.ws.api.message;
 
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.ws.api.registry.IKey;
+
 /**
  * A {@link IWebSocketMessage message} with binary data
  *
  * @since 6.0
  */
-public class BinaryMessage implements IWebSocketMessage
+public class BinaryMessage extends AbstractClientMessage
 {
 	private final byte[] data;
 	private final int offset;
@@ -30,15 +33,21 @@ public class BinaryMessage implements IWebSocketMessage
 	/**
 	 * Constructor.
 	 *
+	 * @param application
+	 *      the Wicket application
+	 * @param sessionId
+	 *      the id of the http session
+	 * @param key
+	 *      the page id or resource name
 	 * @param data
 	 *      the binary message from the client
 	 * @param offset
-	 *      the offset to read from
+ *      the offset to read from
 	 * @param length
-	 *      how much data to read
 	 */
-	public BinaryMessage(byte[] data, int offset, int length)
+	public BinaryMessage(WebApplication application, String sessionId, IKey key, byte[] data, int offset, int length)
 	{
+		super(application, sessionId, key);
 		this.data = data;
 		this.offset = offset;
 		this.length = length;

@@ -16,32 +16,29 @@
  */
 package org.apache.wicket.pageStore;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.common.base.Stopwatch;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.MockPage;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.mock.MockPageContext;
+import org.apache.wicket.mock.MockPageStore;
 import org.apache.wicket.page.IManageablePage;
-import org.apache.wicket.serialize.ISerializer;
-import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
-import org.apache.wicket.util.SlowTests;
-import org.apache.wicket.util.file.File;
-import org.apache.wicket.util.lang.Bytes;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.wicket.util.WicketTestTag;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -49,14 +46,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author manuelbarzi
  */
-@Category(SlowTests.class)
+@Tag(WicketTestTag.SLOW)
 public class AsynchronousPageStoreTest
 {
-	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(AsynchronousPageStoreTest.class);
-
 	@SuppressWarnings("serial")
-	private static class DummyPage implements IManageablePage
+	private static class DummyPage implements IManageablePage, Cloneable
 	{
 
 		private int pageId;
@@ -95,49 +89,19 @@ public class AsynchronousPageStoreTest
 			return false;
 		}
 
-		/**
-		 * @param s
-		 * @throws IOException
-		 */
-		private void writeObject(java.io.ObjectOutputStream s) throws IOException
+		@Override
+		protected DummyPage clone()
 		{
-			log.debug("serializing page {} for {}ms (session {})", getPageId(), writeMillis,
-					sessionId);
 			try
 			{
-				Thread.sleep(writeMillis);
+				return (DummyPage) super.clone();
 			}
-			catch (InterruptedException e)
+			catch (CloneNotSupportedException e)
 			{
-				throw new RuntimeException(e);
+				throw new Error(e);
 			}
-
-			s.writeInt(pageId);
-			s.writeLong(writeMillis);
-			s.writeLong(readMillis);
-			s.writeObject(sessionId);
 		}
-
-		private void readObject(java.io.ObjectInputStream s)
-				throws IOException, ClassNotFoundException
-		{
-			log.debug("deserializing page {} for {}ms (session {})", getPageId(), writeMillis,
-					sessionId);
-			try
-			{
-				Thread.sleep(readMillis);
-			}
-			catch (InterruptedException e)
-			{
-				throw new RuntimeException(e);
-			}
-
-			pageId = s.readInt();
-			writeMillis = s.readLong();
-			readMillis = s.readLong();
-			sessionId = (String)s.readObject();
-		}
-
+		
 		public String toString()
 		{
 			return "DummyPage[pageId = " + pageId + ", writeMillis = " + writeMillis +
@@ -153,33 +117,53 @@ public class AsynchronousPageStoreTest
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void storeReturnsSameInstanceOnClosePageRequest() throws InterruptedException
+	void storeReturnsSameInstanceOnClosePageRequest() throws InterruptedException
 	{
+		final Semaphore semaphore = new Semaphore(0);
+		
+		IPageStore store = new NoopPageStore() {
+			
+			@Override
+			public synchronized void addPage(IPageContext context, IManageablePage page)
+			{
+				try
+				{
+					// wait until the page was get below
+					semaphore.acquire();
+				}
+				catch (InterruptedException e)
+				{
+				}
+				
+				super.addPage(context, page);
+			}
+			
+			@Override
+			public IManageablePage getPage(IPageContext context, int id)
+			{
+				fail();
+				return null;
+			}
+		};
 
-		ISerializer serializer = new DeflatedJavaSerializer("applicationKey");
-		// ISerializer serializer = new DummySerializer();
-
-		IDataStore dataStore = new DiskDataStore("applicationName", new File("./target"),
-				Bytes.bytes(10000l));
-
-		// IPageStore pageStore = new DummyPageStore(new File("target/store"));
-		IPageStore pageStore = spy(new DefaultPageStore(serializer, dataStore, 0));
-
-		IPageStore asyncPageStore = new AsynchronousPageStore(pageStore, 100);
+		IPageStore asyncPageStore = new AsynchronousPageStore(store, 100);
 
 		int pageId = 0;
+		
 		String sessionId = "sessionId";
+		
+		IPageContext context = new MockPageContext(sessionId);
 
-		DummyPage page = new DummyPage(pageId, 1000, 1000, sessionId);
-		asyncPageStore.storePage(sessionId, page);
+		SerializedPage page = new SerializedPage(pageId, "", new byte[0]);
+		asyncPageStore.addPage(context, page);
 
-		Thread.sleep(500);
+		IManageablePage pageBack = asyncPageStore.getPage(context, pageId);
 
-		IManageablePage pageBack = asyncPageStore.getPage(sessionId, pageId);
-
-		verify(pageStore, never()).getPage(sessionId, pageId);
+		semaphore.release();
 
 		assertEquals(page, pageBack);
+		
+		store.destroy();
 	}
 
 	/**
@@ -189,33 +173,55 @@ public class AsynchronousPageStoreTest
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void storeReturnsRestoredInstanceOnDistantPageRequest() throws InterruptedException
+	void storeReturnsRestoredInstanceOnDistantPageRequest() throws InterruptedException
 	{
+		final Semaphore semaphore = new Semaphore(0);
+		
+		final AtomicBoolean got = new AtomicBoolean(false);
+		
+		IPageStore store = new MockPageStore() {
+			
+			@Override
+			public synchronized void addPage(IPageContext context, IManageablePage page)
+			{
+				super.addPage(context, page);
+				
+				semaphore.release();
+			}
+			
+			@Override
+			public IManageablePage getPage(IPageContext context, int id)
+			{
+				return super.getPage(context, id);
+			}
+		};
 
-		ISerializer serializer = new DeflatedJavaSerializer("applicationKey");
-		// ISerializer serializer = new DummySerializer();
-
-		IDataStore dataStore = new DiskDataStore("applicationName", new File("./target"),
-				Bytes.bytes(10000l));
-
-		// IPageStore pageStore = new DummyPageStore(new File("target/store"));
-		IPageStore pageStore = spy(new DefaultPageStore(serializer, dataStore, 0));
-
-		IPageStore asyncPageStore = new AsynchronousPageStore(pageStore, 100);
+		IPageStore asyncPageStore = new AsynchronousPageStore(store, 100);
 
 		int pageId = 0;
+		
 		String sessionId = "sessionId";
+		
+		IPageContext context = new MockPageContext(sessionId);
 
-		DummyPage page = new DummyPage(pageId, 1000, 1000, sessionId);
-		asyncPageStore.storePage(sessionId, page);
+		SerializedPage page = new SerializedPage(pageId, "", new byte[0]);
+		asyncPageStore.addPage(context, page);
 
-		Thread.sleep(1500);
+		try
+		{
+			semaphore.acquire();
+		}
+		catch (InterruptedException e)
+		{
+		}
 
-		IManageablePage pageBack = asyncPageStore.getPage(sessionId, pageId);
+		IManageablePage pageBack = asyncPageStore.getPage(context, pageId);
 
-		verify(pageStore, times(1)).getPage(sessionId, pageId);
+		semaphore.release();
 
-		assertNotEquals(page, pageBack);
+		assertEquals(page, pageBack);
+		
+		store.destroy();
 	}
 
 	/**
@@ -225,7 +231,7 @@ public class AsynchronousPageStoreTest
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void storeBehavesAsyncWhenNotExceedingStoreCapacity() throws InterruptedException
+	void storeBehavesAsyncWhenNotExceedingStoreCapacity() throws InterruptedException
 	{
 		int sessions = 2;
 		int pages = 5;
@@ -254,7 +260,7 @@ public class AsynchronousPageStoreTest
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void storeBehavesSyncFromWhenExceedingStoreCapacity() throws InterruptedException
+	void storeBehavesSyncFromWhenExceedingStoreCapacity() throws InterruptedException
 	{
 		int sessions = 2;
 		int pages = 5;
@@ -288,6 +294,96 @@ public class AsynchronousPageStoreTest
 		assertTrue(sync > 0);
 	}
 
+	private MetaDataKey<Serializable> KEY1 = new MetaDataKey<Serializable>()
+	{
+	};
+	
+	private MetaDataKey<Serializable> KEY2 = new MetaDataKey<Serializable>()
+	{
+	};
+	
+	/**
+	 * Store does not allow modifications when pages are added asynchronously.
+	 */
+	@Test
+	public void storeAsynchronousContextClosed() throws Throwable
+	{
+		final AtomicReference<Throwable> asyncFail = new AtomicReference<>();
+		
+		IPageStore store = new MockPageStore() {
+			
+			@Override
+			public boolean canBeAsynchronous(IPageContext context)
+			{
+				// can get session id
+				context.getSessionId(true);
+				
+				// can access request data
+				assertEquals("value1", context.getRequestData(KEY1, () -> "value1"));
+
+				// can access session data
+				assertEquals("value1", context.getSessionData(KEY1, () -> "value1"));
+
+				// can access session
+				context.getSessionAttribute("key1", () -> "value1");
+
+				return true;
+			}
+			
+			@Override
+			public synchronized void addPage(IPageContext context, IManageablePage page)
+			{
+				// can get session id
+				context.getSessionId(true);
+				
+				// cannot access request
+				try {
+					context.getRequestData(KEY1, () -> null);
+					asyncFail.set(new Exception().fillInStackTrace());
+				} catch (WicketRuntimeException expected) {
+				}
+				try {
+					context.getRequestData(KEY2, () -> null);
+					asyncFail.set(new Exception().fillInStackTrace());
+				} catch (WicketRuntimeException expected) {
+				}
+
+				// can read session data 
+				assertEquals("value1", context.getSessionData(KEY1, () -> "value2"));
+				assertEquals(null, context.getSessionData(KEY2, () -> null));
+				// .. but cannot set
+				try {
+					context.getSessionData(KEY2, () -> "value2");
+					asyncFail.set(new Exception().fillInStackTrace());
+				} catch (WicketRuntimeException expected) {
+				}
+				
+				// can read session attribute already read
+				assertEquals("value1", context.getSessionAttribute("key1", () -> null));
+				// .. but nothing new
+				try {
+					context.getSessionAttribute("key2", () -> null);
+					asyncFail.set(new Exception().fillInStackTrace());
+				} catch (WicketRuntimeException expected) {
+				}
+			}
+		};
+
+		IPageStore asyncPageStore = new AsynchronousPageStore(store, 100);
+
+		MockPage page = new MockPage();
+		
+		IPageContext context = new MockPageContext();
+		
+		asyncPageStore.addPage(context , page);
+		
+		store.destroy();
+		
+		if (asyncFail.get() != null) {
+			throw asyncFail.get();
+		}
+	}
+	
 	// test run
 
 	private class Metrics
@@ -312,50 +408,64 @@ public class AsynchronousPageStoreTest
 
 		final CountDownLatch lock = new CountDownLatch(pages * sessions);
 
-		// ISerializer serializer = new DummySerializer();
-		ISerializer serializer = new DeflatedJavaSerializer("applicationKey");
-
-		IDataStore dataStore = new DiskDataStore("applicationName", new File("./target"),
-				Bytes.bytes(10000l));
-
-		// IPageStore pageStore = new DummyPageStore(new File("target/store")) {
-		IPageStore pageStore = new DefaultPageStore(serializer, dataStore, 0)
-		{
-
+		IPageStore pageStore = new InMemoryPageStore("test", Integer.MAX_VALUE) {
 			@Override
-			public void storePage(String sessionId, IManageablePage page)
+			public void addPage(IPageContext context, IManageablePage page)
 			{
+				DummyPage dummyPage = (DummyPage) page;
 
-				super.storePage(sessionId, page);
-
+				super.addPage(context, dummyPage.clone());
+				
+				try
+				{
+					Thread.sleep(dummyPage.writeMillis);
+				}
+				catch (InterruptedException e)
+				{
+					throw new RuntimeException(e);
+				}
+				
 				lock.countDown();
+			}
+			
+			@Override
+			public IManageablePage getPage(IPageContext context, int id) {
+				DummyPage dummyPage = (DummyPage) super.getPage(context, id);
+				
+				try
+				{
+					Thread.sleep(dummyPage.readMillis);
+				}
+				catch (InterruptedException e)
+				{
+					throw new RuntimeException(e);
+				}
+				
+				return dummyPage;
 			}
 		};
 
 		IPageStore asyncPageStore = new AsynchronousPageStore(pageStore, asyncPageStoreCapacity);
-
-		Stopwatch stopwatch = Stopwatch.createUnstarted();
 
 		for (int pageId = 1; pageId <= pages; pageId++)
 		{
 			for (int i = 1; i <= sessions; i++)
 			{
 				String sessionId = String.valueOf(i);
+				IPageContext context = new MockPageContext(sessionId);
 				Metrics metrics = new Metrics();
 
-				stopwatch.reset();
 				DummyPage page = new DummyPage(pageId, around(writeMillis), around(readMillis),
 						sessionId);
-				stopwatch.start();
-				asyncPageStore.storePage(sessionId, page);
+				final long startStoring = System.currentTimeMillis();
+				asyncPageStore.addPage(context, page);
 				metrics.storedPage = page;
-				metrics.storingMillis = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+				metrics.storingMillis = System.currentTimeMillis() - startStoring;
 
-				stopwatch.reset();
-				stopwatch.start();
+				final long startRestoring = System.currentTimeMillis();
 				metrics.restoredPage = DummyPage.class
-						.cast(asyncPageStore.getPage(sessionId, pageId));
-				metrics.restoringMillis = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+						.cast(asyncPageStore.getPage(context, pageId));
+				metrics.restoringMillis = System.currentTimeMillis() - startRestoring;
 
 				results.add(metrics);
 			}
@@ -363,6 +473,8 @@ public class AsynchronousPageStoreTest
 
 		lock.await(pages * sessions * (writeMillis + readMillis), TimeUnit.MILLISECONDS);
 
+		pageStore.destroy();
+		
 		return results;
 	}
 

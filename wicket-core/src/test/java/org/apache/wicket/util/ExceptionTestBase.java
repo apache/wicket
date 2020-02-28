@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 import java.lang.reflect.Constructor;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Base class for testing exceptions in order to make sure that they achieve 100% test coverage.
@@ -28,7 +31,7 @@ import org.junit.Test;
  * 
  * @author Chris Turner
  */
-public abstract class ExceptionTestBase extends Assert
+public abstract class ExceptionTestBase
 {
 
 	/**
@@ -45,14 +48,14 @@ public abstract class ExceptionTestBase extends Assert
 	 *             If test fails
 	 */
 	@Test
-	public final void emptyConstructor() throws Exception
+	final void emptyConstructor() throws Exception
 	{
 		Class<?> c = Class.forName(getExceptionClassName());
 		Constructor<?> constructor = c.getConstructor((Class[])null);
 		Exception e = (Exception)constructor.newInstance((Object[])null);
-		Assert.assertNotNull("Exception should be created", e);
-		Assert.assertNull(e.getMessage());
-		Assert.assertNull(e.getCause());
+		assertNotNull(e, "Exception should be created");
+		assertNull(e.getMessage());
+		assertNull(e.getCause());
 	}
 
 	/**
@@ -62,14 +65,14 @@ public abstract class ExceptionTestBase extends Assert
 	 *             If test fails
 	 */
 	@Test
-	public final void messageConstructor() throws Exception
+	final void messageConstructor() throws Exception
 	{
 		Class<?> c = Class.forName(getExceptionClassName());
 		Constructor<?> constructor = c.getConstructor(new Class[] { String.class });
 		Exception e = (Exception)constructor.newInstance("test message");
-		Assert.assertNotNull("Exception should be created", e);
-		Assert.assertEquals("test message", e.getMessage());
-		Assert.assertNull(e.getCause());
+		assertNotNull(e, "Exception should be created");
+		assertEquals("test message", e.getMessage());
+		assertNull(e.getCause());
 	}
 
 	/**
@@ -79,14 +82,14 @@ public abstract class ExceptionTestBase extends Assert
 	 *             If test fails
 	 */
 	@Test
-	public final void causeConstructor() throws Exception
+	final void causeConstructor() throws Exception
 	{
 		NullPointerException npe = new NullPointerException();
 		Class<?> c = Class.forName(getExceptionClassName());
 		Constructor<?> constructor = c.getConstructor(new Class[] { Throwable.class });
 		Exception e = (Exception)constructor.newInstance(npe);
-		Assert.assertNotNull("Exception should be created", e);
-		Assert.assertSame(npe, e.getCause());
+		assertNotNull(e, "Exception should be created");
+		assertSame(npe, e.getCause());
 	}
 
 	/**
@@ -96,15 +99,15 @@ public abstract class ExceptionTestBase extends Assert
 	 *             If test fails
 	 */
 	@Test
-	public final void messageAndCauseConstructor() throws Exception
+	final void messageAndCauseConstructor() throws Exception
 	{
 		NullPointerException npe = new NullPointerException();
 		Class<?> c = Class.forName(getExceptionClassName());
 		Constructor<?> constructor = c.getConstructor(new Class[] { String.class, Throwable.class });
 		Exception e = (Exception)constructor.newInstance("test message", npe);
-		Assert.assertNotNull("Exception should be created", e);
-		Assert.assertEquals("test message", e.getMessage());
-		Assert.assertSame(npe, e.getCause());
+		assertNotNull(e, "Exception should be created");
+		assertEquals("test message", e.getMessage());
+		assertSame(npe, e.getCause());
 	}
 
 }

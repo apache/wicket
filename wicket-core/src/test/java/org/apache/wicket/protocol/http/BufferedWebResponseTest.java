@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 
 import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
@@ -39,7 +40,7 @@ public class BufferedWebResponseTest extends WicketTestCase
 	 * WICKET-3618
 	 */
 	@Test
-	public void testBufferedResponsePostponeWriteResponseAction()
+	void testBufferedResponsePostponeWriteResponseAction()
 	{
 		final ArrayList<TestAction> actionsSequence = new ArrayList<TestAction>();
 		WebResponse originalResponse = new MockWebResponse()

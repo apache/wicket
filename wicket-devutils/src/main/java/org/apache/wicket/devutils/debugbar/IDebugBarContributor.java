@@ -16,14 +16,13 @@
  */
 package org.apache.wicket.devutils.debugbar;
 
-import java.io.Serializable;
-
 import org.apache.wicket.Component;
+import org.apache.wicket.util.io.IClusterable;
 
 /**
  * 
  */
-public interface IDebugBarContributor extends Serializable
+public interface IDebugBarContributor extends IClusterable
 {
 	/**
 	 * 

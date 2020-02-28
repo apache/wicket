@@ -101,6 +101,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
+				attributes.setPreventDefault(true);
 				super.updateAjaxAttributes(attributes);
 				AjaxSubmitLink.this.updateAjaxAttributes(attributes);
 			}
@@ -162,7 +163,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 				|| tagName.equalsIgnoreCase("area"))
 			{
 				// disable any href attr in markup
-				tag.put("href", "javascript:;");
+				tag.put("href", "#");
 			}
 			else if (tagName.equalsIgnoreCase("button"))
 			{

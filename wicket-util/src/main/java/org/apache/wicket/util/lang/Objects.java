@@ -214,7 +214,7 @@ public final class Objects
 	 *            second value to compare
 	 * 
 	 * @return integer describing the comparison between the two objects. A negative number
-	 *         indicates that v1 < v2. Positive indicates that v1 > v2. Zero indicates v1 == v2.
+	 *         indicates that v1 &lt; v2. Positive indicates that v1 &gt; v2. Zero indicates v1 == v2.
 	 * 
 	 * @throws IllegalArgumentException
 	 *             if the objects are both non-numeric yet of incompatible types or do not implement
@@ -341,7 +341,7 @@ public final class Objects
 				}
 				if ((toType == Float.class) || (toType == Float.TYPE))
 				{
-					result = new Float(doubleValue(value));
+					result = (float) doubleValue(value);
 				}
 				if (toType == BigInteger.class)
 				{

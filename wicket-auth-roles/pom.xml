@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>9.0.0-M5-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-auth-roles</artifactId>
@@ -30,6 +30,11 @@
 		Wicket Authorization Integration Based on roles, metadata and
 		annotations.
 	</description>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.auth.roles</automatic-module-name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

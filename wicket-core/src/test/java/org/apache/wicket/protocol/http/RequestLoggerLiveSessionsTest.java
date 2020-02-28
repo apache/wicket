@@ -16,28 +16,29 @@
  */
 package org.apache.wicket.protocol.http;
 
-import org.apache.wicket.util.SlowTests;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.wicket.util.WicketTestTag;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 /**
  * Test for https://issues.apache.org/jira/browse/WICKET-6169
  */
-@Category(SlowTests.class)
-public class RequestLoggerLiveSessionsTest 
+@Tag(WicketTestTag.SLOW)
+class RequestLoggerLiveSessionsTest
 {
 	private final RequestLogger requestLogger = new RequestLogger();
 	
 	private final ArrayList<String> sessionIds = new ArrayList<>();
 
 	@Test
-	public void concurrentModification() {
+	void concurrentModification() {
 		SessionCreateThread sct = new SessionCreateThread();
 		SessionDestroyThread sdt = new SessionDestroyThread();
 		sct.start();
@@ -63,7 +64,7 @@ public class RequestLoggerLiveSessionsTest
 		sdt.interrupt();
 
 		if (nullPointerExceptionThrown.get()) {
-			Assert.fail("The test should not fail with NullPointerException");
+			fail("The test should not fail with NullPointerException");
 		}
 	}
 	

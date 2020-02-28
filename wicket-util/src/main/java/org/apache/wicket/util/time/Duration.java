@@ -20,7 +20,6 @@ import java.util.Locale;
 import java.util.Locale.Category;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.thread.ICode;
@@ -87,7 +86,10 @@ import org.slf4j.Logger;
  * 
  * @author Jonathan Locke
  * @since 1.2.6
+ * 
+ * @deprecated Since Wicket 9 this class is obsolete and no more used. It will be removed in Wicket 10. Use {@link java.time.Duration} instead
  */
+@Deprecated
 public class Duration extends AbstractTimeValue
 {
 	private static final long serialVersionUID = 1L;
@@ -533,6 +535,16 @@ public class Duration extends AbstractTimeValue
 		{
 			return "N/A";
 		}
+	}
+
+	/**
+	 * Builds a {@link java.time.Duration} out of a wicket {@link Duration}.
+	 *
+	 * @return returns a {@link java.time.Duration}
+	 */
+	public java.time.Duration toJavaDuration()
+	{
+		return java.time.Duration.ofMillis(getMilliseconds());
 	}
 
 	/**

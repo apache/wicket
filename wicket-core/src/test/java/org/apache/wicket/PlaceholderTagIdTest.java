@@ -24,12 +24,12 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for <a href="https://issues.apache.org/jira/browse/WICKET-3563">WICKET-3563</a>
  */
-public class PlaceholderTagIdTest extends WicketTestCase
+class PlaceholderTagIdTest extends WicketTestCase
 {
 
 	/**
@@ -38,11 +38,11 @@ public class PlaceholderTagIdTest extends WicketTestCase
 	 * {@link IAjaxRegionMarkupIdProvider}
 	 */
 	@Test
-	public void wicket3563()
+    void wicket3563()
 	{
 		tester.startPage(TestPage.class);
 
-		tester.assertContains("<form id=\"form1_region\" style=\"display:none\">");
+		tester.assertContains("<form id=\"form1_region\" class=\"wicket--hidden\" data-wicket-placeholder=\"\">");
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class PlaceholderTagIdTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-		public TestPage()
+        public TestPage()
 		{
 			Form<?> form = new Form<Void>("form");
 			form.setVisible(false);

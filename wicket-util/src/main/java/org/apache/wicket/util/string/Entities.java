@@ -513,14 +513,14 @@ class Entities
 		@Override
 		public void add(String name, int value)
 		{
-			mapNameToValue.put(name, new Integer(value));
-			mapValueToName.put(Integer.valueOf(value), name);
+			mapNameToValue.put(name, value);
+			mapValueToName.put(value, name);
 		}
 
 		@Override
 		public String name(int value)
 		{
-			return mapValueToName.get(Integer.valueOf(value));
+			return mapValueToName.get(value);
 		}
 
 		/**

@@ -106,7 +106,7 @@ public class StringValidator extends AbstractRangeValidator<Integer, String>
 	{
 		super.onComponentTag(component, tag);
 
-		String tagName = tag.getName().toLowerCase(Locale.ENGLISH);
+		String tagName = tag.getName().toLowerCase(Locale.ROOT);
 		boolean hasLengthAttribute = hasLengthAttribute(tagName);
 
 		Integer maximum = getMaximum();

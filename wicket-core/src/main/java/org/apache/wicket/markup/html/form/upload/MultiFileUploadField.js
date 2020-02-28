@@ -71,11 +71,6 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 
 			if (this.useMultipleAttr) {
 				element.multiple = this.useMultipleAttr;
-				if (Wicket.Browser.isOpera()) {
-					// in Opera 12.02, changing 'multiple' this way does not update the field
-					element.type = 'button';
-					element.type = 'file';
-				}
 			}
 
 			// Element name -- what number am I?

@@ -14,8 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@import url(./fonts/source-code-pro/stylesheet.css);
-@import url(./fonts/source-sans-pro/stylesheet.css);
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
   padding: 0;
@@ -309,35 +307,41 @@ input[type=button],
 button {
   background: #FF9925;
   color: #fff; }
-  .button:hover,
-  input[type=submit]:hover,
-  input[type=reset]:hover,
-  button:hover {
-    background: #ffb158;
-    color: #fff; }
-  .button:active, .button:focus,
-  input[type=submit]:active,
-  input[type=submit]:focus,
-  button:active,
-  button:focus {
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); }
+.button:hover,
+input[type=submit]:hover,
+input[type=reset]:hover,
+button:hover {
+  background: #ffb158;
+  color: #fff; }
+.button:active, .button:focus,
+input[type=submit]:active,
+input[type=submit]:focus,
+button:active,
+button:focus {
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); }   
+.button[disabled],
+input[type=submit][disabled],
+input[type=reset][disabled],
+input[type=button][disabled],
+button[disabled] {
+  background: #DDDDDD; }
 
 .button--neutral,
 input[type=submit].button--neutral,
 button.button--neutral {
   background: #ccd6d2;
   color: #3f4542; }
-  .button--neutral:hover,
-  input[type=submit].button--neutral:hover,
-  button.button--neutral:hover {
-    background: #8d9994;
-    color: #3f4542; }
-  .button--neutral:active, .button--neutral:focus,
-  input[type=submit].button--neutral:active,
-  input[type=submit].button--neutral:focus,
-  button.button--neutral:active,
-  button.button--neutral:focus {
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); }
+.button--neutral:hover,
+input[type=submit].button--neutral:hover,
+button.button--neutral:hover {
+  background: #8d9994;
+  color: #3f4542; }
+.button--neutral:active, .button--neutral:focus,
+input[type=submit].button--neutral:active,
+input[type=submit].button--neutral:focus,
+button.button--neutral:active,
+button.button--neutral:focus {
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); }
 
 .button--success,
 input[type=submit].button--success,
@@ -1300,4 +1304,113 @@ div.tabpanel4 div.tab-row li.selected a:link, div.tabpanel4 div.tab-row a:visite
 
 div.tabpanel4 div.tab-row a:hover {
     background: #fff;
+}
+
+.display-inline {
+	display: inline;
+}
+
+.dotted-box {
+	border: 2px dotted #fc0;
+	width: 500px;
+	padding: 5px;	
+}
+
+.color-green {
+	color: green;
+}
+
+.color-red {
+	color: red;
+}
+
+span.inline-edit {
+	border: 1px solid green;
+	padding: 4px;
+}
+
+span.inline-edit input {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+div.wicket-aa {
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Tahoma, Verdana;
+	font-size: 12px;
+	background-color: white;
+	border-width: 1px;
+	border-color: #cccccc;
+	border-style: solid;
+	padding: 2px;
+	margin: 1px 0 0 0;
+	text-align: left;
+}
+
+div.wicket-aa ul {
+	list-style: none;
+	padding: 2px;
+	margin: 0;
+}
+
+div.wicket-aa ul li.selected {
+	background-color: #FFFF00;
+	padding: 2px;
+	margin: 0;
+}
+
+.drop-zone {
+	border: 1px dotted #FF9925;
+	width: 200px;
+	height: 200px;
+}
+
+.drop-zone.drag-over {
+	background: #FF9925;
+	color: #ffffff;
+}
+
+.download-veil {
+	position: absolute;
+	left: 20%;
+	right: 20%;
+	color: white;
+	background-color: darkorange;
+	font-size: 40px;
+	text-align: center;
+}
+
+.download-veil span {
+	line-height: 128px;
+}
+
+.breadcrumb-content {
+	border: thin solid black;
+	margin:	10px;
+}
+
+.breadcrumb-links {
+	margin:	10px;
+}
+
+.width-250 {
+	width: 250px;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.margin-top-1em {
+	margin-top: 1em;
+}
+
+.library-content {
+	border: 1px solid gray;
+	overflow: hidden;
+	padding: 1em;
+}
+
+.light-grey {
+	background-color: lightgrey;
 }

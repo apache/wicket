@@ -14,14 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.wicket.util.convert.converters;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static java.lang.String.format;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.text.ChoiceFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,17 +42,18 @@ import org.apache.wicket.util.convert.converter.FloatConverter;
 import org.apache.wicket.util.convert.converter.IntegerConverter;
 import org.apache.wicket.util.convert.converter.LongConverter;
 import org.apache.wicket.util.convert.converter.ShortConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 
 @SuppressWarnings("javadoc")
-public final class ConvertersTest
+final class ConvertersTest
 {
 	/** Dutch locale for localized testing. */
 	private static final Locale DUTCH_LOCALE = new Locale("nl", "NL");
 
 	@Test
-	public void thousandSeperator() throws Exception
-	{
+	void thousandSeparator() {
 		BigDecimalConverter bdc = new BigDecimalConverter();
 		assertEquals(new BigDecimal(3000), bdc.convertToObject("3 000", Locale.FRENCH));
 
@@ -61,7 +65,7 @@ public final class ConvertersTest
 	 * WICKET-4988 nbsp between digits only
 	 */
 	@Test
-	public void thousandSeperatorWithCurrency() throws Exception
+	public void thousandSeparatorWithCurrency()
 	{
 		FloatConverter fc = new FloatConverter()
 		{
@@ -73,67 +77,80 @@ public final class ConvertersTest
 				return NumberFormat.getCurrencyInstance(locale);
 			}
 		};
+		final Locale locale = Locale.FRENCH;
+		final DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance(locale);
+		char groupingSeparator = decimalFormatSymbols.getGroupingSeparator();
+		String currencySymbol = decimalFormatSymbols.getCurrencySymbol();
 
-		// \u00A0 = nbsp
-		// \u00A4 = currency symbol (unspecified currency)
-		String string = "1\u00A0234,00 \u00A4";
+		String expected = format("1%s234,00\u00A0%s", groupingSeparator, currencySymbol);
 
-		assertEquals(string, fc.convertToString(Float.valueOf(1234f), Locale.FRENCH));
-		assertEquals(Float.valueOf(1234f), fc.convertToObject(string, Locale.FRENCH));
+		assertEquals(expected, fc.convertToString(1234f, locale));
+		assertEquals(Float.valueOf(1234f), fc.convertToObject(expected, locale));
 	}
 
 	@Test
-	public void validBooleanConversions()
+	void validBooleanConversions()
 	{
 		BooleanConverter converter = new BooleanConverter();
 		assertEquals(Boolean.FALSE, converter.convertToObject("", Locale.US));
-		assertEquals("true", converter.convertToString(Boolean.TRUE, Locale.getDefault(Locale.Category.FORMAT)));
-		assertEquals("false", converter.convertToString(Boolean.FALSE, Locale.getDefault(Locale.Category.FORMAT)));
-		assertEquals(Boolean.TRUE, converter.convertToObject("true", Locale.getDefault(Locale.Category.FORMAT)));
-		assertEquals(Boolean.FALSE, converter.convertToObject("false", Locale.getDefault(Locale.Category.FORMAT)));
+		assertEquals("true",
+			converter.convertToString(Boolean.TRUE, Locale.getDefault(Locale.Category.FORMAT)));
+		assertEquals("false",
+			converter.convertToString(Boolean.FALSE, Locale.getDefault(Locale.Category.FORMAT)));
+		assertEquals(Boolean.TRUE,
+			converter.convertToObject("true", Locale.getDefault(Locale.Category.FORMAT)));
+		assertEquals(Boolean.FALSE,
+			converter.convertToObject("false", Locale.getDefault(Locale.Category.FORMAT)));
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidBooleanConversion()
 	{
 		BooleanConverter converter = new BooleanConverter();
 
-		// should throw an exception
-		converter.convertToObject("whatever", Locale.getDefault(Locale.Category.FORMAT));
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("whatever", Locale.getDefault(Locale.Category.FORMAT));
+		});
 	}
 
 	@Test
-	public void validByteConversions()
+	void validByteConversions()
 	{
 		ByteConverter converter = new ByteConverter();
 		assertNull(converter.convertToObject("", Locale.US));
-		assertEquals(new Byte((byte)10), converter.convertToObject("10", Locale.US));
+		assertEquals(Byte.valueOf((byte)10), converter.convertToObject("10", Locale.US));
 		assertEquals("10", converter.convertToString((byte)10, Locale.US));
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidByteConversion1()
 	{
 		ByteConverter converter = new ByteConverter();
-		converter.convertToObject("whatever", Locale.US);
-	}
-
-	@Test(expected = ConversionException.class)
-	public void invalidByteConversion2()
-	{
-		ByteConverter converter = new ByteConverter();
-		converter.convertToObject("10whatever", Locale.US);
-	}
-
-	@Test(expected = ConversionException.class)
-	public void invalidByteConversion3()
-	{
-		ByteConverter converter = new ByteConverter();
-		converter.convertToObject("256", Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("whatever", Locale.US);
+		});
 	}
 
 	@Test
-	public void validDoubleConversions()
+	public void invalidByteConversion2()
+	{
+		ByteConverter converter = new ByteConverter();
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("10whatever", Locale.US);
+		});
+	}
+
+	@Test
+	public void invalidByteConversion3()
+	{
+		ByteConverter converter = new ByteConverter();
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("256", Locale.US);
+		});
+	}
+
+	@Test
+	void validDoubleConversions()
 	{
 		DoubleConverter converter = new DoubleConverter();
 		assertEquals("7.1", converter.convertToString(7.1, Locale.US));
@@ -143,127 +160,152 @@ public final class ConvertersTest
 		assertEquals("1.1", converter.convertToString(1.1, Locale.US));
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidDoubleConversion1()
 	{
 		DoubleConverter converter = new DoubleConverter();
-		converter.convertToObject("whatever", Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("whatever", Locale.US);
+		});
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidDoubleConversion2()
 	{
 		DoubleConverter converter = new DoubleConverter();
-		converter.convertToObject("1.1whatever", Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("1.1whatever", Locale.US);
+		});
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidDoubleConversion3()
 	{
 		DoubleConverter converter = new DoubleConverter();
-		converter.convertToObject("1" + Double.MAX_VALUE, Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("1" + Double.MAX_VALUE, Locale.US);
+		});
 	}
 
 	@Test
-	public void validFloatConversions()
+	void validFloatConversions()
 	{
 		FloatConverter converter = new FloatConverter();
 		assertNull(converter.convertToObject("", Locale.US));
-		assertEquals(new Float(1.1), converter.convertToObject("1.1", Locale.US));
-		assertEquals("1.1", converter.convertToString(new Float(1.1), Locale.US));
-	}
-
-	@Test(expected = ConversionException.class)
-	public void invalidFloatConversion1()
-	{
-		FloatConverter converter = new FloatConverter();
-		converter.convertToObject("whatever", Locale.US);
-	}
-
-	@Test(expected = ConversionException.class)
-	public void invalidFloatConversion2()
-	{
-		FloatConverter converter = new FloatConverter();
-		converter.convertToObject("1.1whatever", Locale.US);
-	}
-
-	@Test(expected = ConversionException.class)
-	public void invalidFloatConversion3()
-	{
-		FloatConverter converter = new FloatConverter();
-		converter.convertToObject("1" + Float.MAX_VALUE, Locale.US);
+		assertEquals(Float.valueOf(1.1F), converter.convertToObject("1.1", Locale.US));
+		assertEquals("1.1", converter.convertToString(1.1F, Locale.US));
 	}
 
 	@Test
-	public void validIntegerConversions()
+	public void invalidFloatConversion1()
+	{
+		FloatConverter converter = new FloatConverter();
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("whatever", Locale.US);
+		});
+	}
+
+	@Test
+	public void invalidFloatConversion2()
+	{
+		FloatConverter converter = new FloatConverter();
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("1.1whatever", Locale.US);
+		});
+	}
+
+	@Test
+	public void invalidFloatConversion3()
+	{
+		FloatConverter converter = new FloatConverter();
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("1" + Float.MAX_VALUE, Locale.US);
+		});
+	}
+
+	@Test
+	void validIntegerConversions()
 	{
 		IntegerConverter converter = new IntegerConverter();
 		assertEquals("7", converter.convertToString(7, Locale.US));
 		assertNull(converter.convertToObject("", Locale.US));
-		assertEquals(new Integer(10), converter.convertToObject("10", Locale.US));
+		assertEquals(Integer.valueOf(10), converter.convertToObject("10", Locale.US));
 		assertEquals("10", converter.convertToString(10, Locale.US));
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidIntegerConversion1()
 	{
 		IntegerConverter converter = new IntegerConverter();
-		converter.convertToObject("whatever", Locale.US);
-	}
-
-	@Test(expected = ConversionException.class)
-	public void invalidIntegerConversion2()
-	{
-		IntegerConverter converter = new IntegerConverter();
-		converter.convertToObject("10whatever", Locale.US);
-	}
-
-	@Test(expected = ConversionException.class)
-	public void invalidIntegerConversion3()
-	{
-		IntegerConverter converter = new IntegerConverter();
-		converter.convertToObject("1.0", Locale.US);
-		fail("Conversion should have thrown an exception");
-	}
-
-	@Test(expected = ConversionException.class)
-	public void invalidIntegerConversion4()
-	{
-		IntegerConverter converter = new IntegerConverter();
-		converter.convertToObject("1" + Integer.MAX_VALUE, Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("whatever", Locale.US);
+		});
 	}
 
 	@Test
-	public void validLongConversions()
+	public void invalidIntegerConversion2()
+	{
+		IntegerConverter converter = new IntegerConverter();
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("10whatever", Locale.US);
+		});
+	}
+
+	@Test
+	public void invalidIntegerConversion3()
+	{
+		IntegerConverter converter = new IntegerConverter();
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("1.0", Locale.US);
+		});
+	}
+
+	@Test
+	public void invalidIntegerConversion4()
+	{
+		IntegerConverter converter = new IntegerConverter();
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("1" + Integer.MAX_VALUE, Locale.US);
+		});
+	}
+
+	@Test
+	void validLongConversions()
 	{
 		LongConverter converter = new LongConverter();
 		assertNull(converter.convertToObject("", Locale.US));
-		assertEquals(new Long(10), converter.convertToObject("10", Locale.US));
-		assertEquals("10", converter.convertToString((long)10, Locale.US));
+		assertEquals(Long.valueOf(10), converter.convertToObject("10", Locale.US));
+		assertEquals("10", converter.convertToString(10L, Locale.US));
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidLongConversion1()
 	{
 		LongConverter converter = new LongConverter();
-		converter.convertToObject("whatever", Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("whatever", Locale.US);
+		});
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidLongConversion2()
 	{
 		LongConverter converter = new LongConverter();
-		converter.convertToObject("10whatever", Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("10whatever", Locale.US);
+		});
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidLongConversion3()
 	{
 		LongConverter converter = new LongConverter();
-		converter.convertToObject("1" + Long.MAX_VALUE, Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("1" + Long.MAX_VALUE, Locale.US);
+		});
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidLongConversion4()
 	{
 		LongConverter converter = new LongConverter();
@@ -272,10 +314,12 @@ public final class ConvertersTest
 		final String biggerThanLong = "9223372036854776833";
 		assertEquals(1,
 			new BigDecimal(biggerThanLong).compareTo(BigDecimal.valueOf(Long.MAX_VALUE)));
-		converter.convertToObject(biggerThanLong, Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject(biggerThanLong, Locale.US);
+		});
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidLongConversion5()
 	{
 		LongConverter converter = new LongConverter();
@@ -284,41 +328,49 @@ public final class ConvertersTest
 		final String biggerThanLong = "9223372036854776832";
 		assertEquals(1,
 			new BigDecimal(biggerThanLong).compareTo(BigDecimal.valueOf(Long.MAX_VALUE)));
-		converter.convertToObject(biggerThanLong, Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject(biggerThanLong, Locale.US);
+		});
 	}
 
 	@Test
-	public void shortConversions()
+	void shortConversions()
 	{
 		ShortConverter converter = new ShortConverter();
 		assertNull(converter.convertToObject("", Locale.US));
-		assertEquals(new Short((short)10), converter.convertToObject("10", Locale.US));
+		assertEquals(Short.valueOf((short)10), converter.convertToObject("10", Locale.US));
 		assertEquals("10", converter.convertToString((short)10, Locale.US));
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidShortConversion1()
 	{
 		ShortConverter converter = new ShortConverter();
-		converter.convertToObject("whatever", Locale.US);
-	}
-
-	@Test(expected = ConversionException.class)
-	public void invalidShortConversion2()
-	{
-		ShortConverter converter = new ShortConverter();
-		converter.convertToObject("10whatever", Locale.US);
-	}
-
-	@Test(expected = ConversionException.class)
-	public void invalidShortConversion3()
-	{
-		ShortConverter converter = new ShortConverter();
-		converter.convertToObject("" + (Short.MAX_VALUE + 1), Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("whatever", Locale.US);
+		});
 	}
 
 	@Test
-	public void validCharacterConverter()
+	public void invalidShortConversion2()
+	{
+		ShortConverter converter = new ShortConverter();
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("10whatever", Locale.US);
+		});
+	}
+
+	@Test
+	public void invalidShortConversion3()
+	{
+		ShortConverter converter = new ShortConverter();
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("" + (Short.MAX_VALUE + 1), Locale.US);
+		});
+	}
+
+	@Test
+	void validCharacterConverter()
 	{
 		CharacterConverter converter = new CharacterConverter();
 
@@ -327,16 +379,18 @@ public final class ConvertersTest
 		assertEquals((Object)'A', converter.convertToObject("A", DUTCH_LOCALE));
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidCharacterConversion1()
 	{
 		CharacterConverter converter = new CharacterConverter();
-		converter.convertToObject("AA", Locale.US);
-		fail("Conversion should have thrown an exception");
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("AA", Locale.US);
+		});
 	}
 
+	@EnabledOnJre({JRE.JAVA_11, JRE.JAVA_12})
 	@Test
-	public void validDateConverters()
+	void validDateConverters_upToJava12()
 	{
 		DateConverter converter = new DateConverter();
 
@@ -354,22 +408,47 @@ public final class ConvertersTest
 		assertEquals(date, converter.convertToObject("10/24/02", Locale.US));
 	}
 
-	@Test(expected = ConversionException.class)
-	public void invalidDateConversion1()
+	@EnabledOnJre({JRE.JAVA_13})
+	@Test
+	void validDateConverters_Java13()
 	{
 		DateConverter converter = new DateConverter();
-		converter.convertToObject("whatever", Locale.US);
-	}
 
-	@Test(expected = ConversionException.class)
-	public void invalidDateConversion2()
-	{
-		DateConverter converter = new DateConverter();
-		converter.convertToObject("10/24/02whatever", Locale.US);
+		assertNull(new DateConverter().convertToObject("", Locale.US));
+
+		Calendar cal = Calendar.getInstance(DUTCH_LOCALE);
+		cal.clear();
+		cal.set(2002, Calendar.OCTOBER, 24);
+		Date date = cal.getTime();
+
+		assertEquals("24-10-2002", converter.convertToString(date, DUTCH_LOCALE));
+		assertEquals(date, converter.convertToObject("24-10-02", DUTCH_LOCALE));
+
+		assertEquals("10/24/02", converter.convertToString(date, Locale.US));
+		assertEquals(date, converter.convertToObject("10/24/02", Locale.US));
 	}
 
 	@Test
-	public void calendarConverter()
+	public void invalidDateConversion1()
+	{
+		DateConverter converter = new DateConverter();
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("whatever", Locale.US);
+		});
+	}
+
+	@Test
+	public void invalidDateConversion2()
+	{
+		DateConverter converter = new DateConverter();
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("10/24/02whatever", Locale.US);
+		});
+	}
+
+	@EnabledOnJre({JRE.JAVA_11, JRE.JAVA_12})
+	@Test
+	void calendarConverter_upToJava12()
 	{
 		CalendarConverter converter = new CalendarConverter();
 
@@ -377,7 +456,7 @@ public final class ConvertersTest
 		cal.clear();
 		cal.set(2011, Calendar.MAY, 1);
 
-		assertEquals("1-5-11", converter.convertToString(cal, DUTCH_LOCALE));
+		assertEquals("01-05-11", converter.convertToString(cal, DUTCH_LOCALE));
 		assertEquals(cal, converter.convertToObject("1-5-11", DUTCH_LOCALE));
 
 		cal = Calendar.getInstance(Locale.US);
@@ -387,18 +466,42 @@ public final class ConvertersTest
 		assertEquals(cal, converter.convertToObject("5/1/11", Locale.US));
 	}
 
-	@Test(expected = ConversionException.class)
+	@EnabledOnJre({JRE.JAVA_13})
+	@Test
+	void calendarConverter_Java13()
+	{
+		CalendarConverter converter = new CalendarConverter();
+
+		Calendar cal = Calendar.getInstance(DUTCH_LOCALE);
+		cal.clear();
+		cal.set(2011, Calendar.MAY, 1);
+
+		assertEquals("01-05-2011", converter.convertToString(cal, DUTCH_LOCALE));
+		assertEquals(cal, converter.convertToObject("1-5-11", DUTCH_LOCALE));
+
+		cal = Calendar.getInstance(Locale.US);
+		cal.clear();
+		cal.set(2011, Calendar.MAY, 1);
+		assertEquals("5/1/11", converter.convertToString(cal, Locale.US));
+		assertEquals(cal, converter.convertToObject("5/1/11", Locale.US));
+	}
+
+	@Test
 	public void invalidCalendarConversion1()
 	{
 		CalendarConverter converter = new CalendarConverter();
-		converter.convertToObject("whatever", Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("whatever", Locale.US);
+		});
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidCalendarConversion2()
 	{
 		CalendarConverter converter = new CalendarConverter();
-		converter.convertToObject("5/1/11whatever", Locale.US);
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("5/1/11whatever", Locale.US);
+		});
 	}
 
 	/**
@@ -406,7 +509,7 @@ public final class ConvertersTest
 	 * http://java.sun.com/j2se/1.4.2/docs/api/java/math/BigDecimal.html#BigDecimal%28double%29
 	 */
 	@Test
-	public void bigDecimalConverter()
+	void bigDecimalConverter()
 	{
 		BigDecimal bd = new BigDecimalConverter().convertToObject("0.1", Locale.US);
 		assertEquals(new BigDecimal("0.1"), bd);
@@ -420,7 +523,7 @@ public final class ConvertersTest
 	}
 
 	@Test
-	public void customFormat()
+	void customFormat()
 	{
 		@SuppressWarnings("serial")
 		IntegerConverter converter = new IntegerConverter()
@@ -433,10 +536,10 @@ public final class ConvertersTest
 		};
 
 		Integer integer = converter.convertToObject("two", Locale.US);
-		assertEquals(new Integer(2), integer);
+		assertEquals(Integer.valueOf(2), integer);
 	}
 
-	@Test(expected = ConversionException.class)
+	@Test
 	public void invalidCustomConversion1()
 	{
 		@SuppressWarnings("serial")
@@ -449,7 +552,8 @@ public final class ConvertersTest
 			}
 		};
 
-		converter.convertToObject("four", Locale.US);
-		fail("Conversion should have thrown an exception");
+		assertThrows(ConversionException.class, () -> {
+			converter.convertToObject("four", Locale.US);
+		});
 	}
 }

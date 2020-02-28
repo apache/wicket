@@ -16,19 +16,18 @@
  */
 package org.apache.wicket.dontstoreunrendered;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.page.IManageablePage;
-import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-5415
@@ -55,21 +54,16 @@ public abstract class DontStoreNotRenderedPageTestCase extends WicketTestCase
 			@Override
 			protected IPageManagerProvider newTestPageManagerProvider()
 			{
-				return new IPageManagerProvider()
-				{
-					@Override
-					public IPageManager apply(IPageManagerContext context)
+				return () -> {
+					return new MockPageManager()
 					{
-						return new MockPageManager()
+						@Override
+						public void touchPage(IManageablePage page)
 						{
-							@Override
-							public void touchPage(IManageablePage page)
-							{
-								Assert.assertFalse("PageB should not be touched!", page instanceof PageB);
-								super.touchPage(page);
-							}
-						};
-					}
+							assertFalse(page instanceof PageB, "PageB should not be touched!");
+							super.touchPage(page);
+						}
+					};
 				};
 			}
 		};
@@ -85,7 +79,7 @@ public abstract class DontStoreNotRenderedPageTestCase extends WicketTestCase
 	 * Verifies that PageB is not initialized, rendered and stored by PageManager
 	 */
 	@Test
-	public void dontStoreNotRenderedPage()
+	void dontStoreNotRenderedPage()
 	{
 		tester.startPage(PageA.class);
 		tester.clickLink("goToB");

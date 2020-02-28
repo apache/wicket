@@ -42,13 +42,13 @@ public class WicketMetrics
 	private static final String APPLICATION_ERROR = "The application couldn't be resolved, please ensure to apply \"<aspect name=\"org.apache.wicket.metrics.aspects.WicketFilterInitAspect\" />\" to your aspects";
 
 	/** The key for metrics registry **/
-	public static final MetaDataKey<MetricRegistry> METRIC_REGISTRY = new MetaDataKey<MetricRegistry>()
+	public static final MetaDataKey<MetricRegistry> METRIC_REGISTRY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
 	/** The key for metrics registry **/
-	public static final MetaDataKey<WicketMetricsSettings> METRIC_SETTINGS = new MetaDataKey<WicketMetricsSettings>()
+	public static final MetaDataKey<WicketMetricsSettings> METRIC_SETTINGS = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

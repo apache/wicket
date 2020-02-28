@@ -16,10 +16,11 @@
  */
 package org.apache.wicket;
 
+import java.util.ArrayDeque;
+
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
-import org.apache.wicket.util.collections.ArrayListStack;
 
 /**
  * Context for component dequeueing. Keeps track of markup position and container stack.
@@ -32,34 +33,34 @@ public final class DequeueContext
 	private final IMarkupFragment markup;
 	private int index;
 	private ComponentTag next;
-	private ArrayListStack<ComponentTag> tags = new ArrayListStack<>();
+	private ArrayDeque<ComponentTag> tags = new ArrayDeque<>();
 	private final boolean skipFirst;
 	private ComponentTag first;
 
-	private ArrayListStack<MarkupContainer> containers = new ArrayListStack<>();
+	private ArrayDeque<MarkupContainer> containers = new ArrayDeque<>();
 
 	/** A bookmark for the DequeueContext stack */
 	public static final class Bookmark
 	{
 		private final int index;
 		private final ComponentTag next;
-		private final ArrayListStack<ComponentTag> tags;
-		private final ArrayListStack<MarkupContainer> containers;
+		private final ArrayDeque<ComponentTag> tags;
+		private final ArrayDeque<MarkupContainer> containers;
 
 		private Bookmark(DequeueContext parser)
 		{
 			this.index = parser.index;
 			this.next = parser.next;
-			this.tags = new ArrayListStack<>(parser.tags);
-			this.containers = new ArrayListStack<>(parser.containers);
+			this.tags = new ArrayDeque<>(parser.tags);
+			this.containers = new ArrayDeque<>(parser.containers);
 		}
 
 		private void restore(DequeueContext parser)
 		{
 			parser.index = index;
 			parser.next = next;
-			parser.tags = new ArrayListStack<>(tags);
-			parser.containers = new ArrayListStack<>(containers);
+			parser.tags = new ArrayDeque<>(tags);
+			parser.containers = new ArrayDeque<>(containers);
 		}
 	}
 
@@ -226,9 +227,9 @@ public final class DequeueContext
 		}
 
 		DequeueTagAction action;
-		for (int i = containers.size() - 1; i >= 0; i--)
+		for (MarkupContainer container : containers)
 		{
-			action = containers.get(i).canDequeueTag((open));
+			action = container.canDequeueTag(open);
 			if (action != null)
 			{
 				return action;
@@ -286,9 +287,8 @@ public final class DequeueContext
 	 */
 	public Component findComponentToDequeue(ComponentTag tag)
 	{
-		for (int j = containers.size() - 1; j >= 0; j--)
+		for (MarkupContainer container : containers)
 		{
-			MarkupContainer container = containers.get(j);
 			Component child = container.findComponentToDequeue(tag);
 			if (child != null)
 			{

@@ -19,18 +19,20 @@ package org.apache.wicket.util.value;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Time;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
+import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.IStringIterator;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.StringValueConversionException;
-import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.time.Time;
 
 
 /**
@@ -419,12 +421,12 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	}
 
 	/**
-	 * @see IValueMap#getTime(String)
+	 * @see IValueMap#getInstant(String)
 	 */
 	@Override
-	public final Time getTime(final String key) throws StringValueConversionException
+	public final Instant getInstant(final String key) throws StringValueConversionException
 	{
-		return getStringValue(key).toTime();
+		return getStringValue(key).toInstant();
 	}
 
 	/**
@@ -543,7 +545,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	@Override
 	public String toString()
 	{
-		final StringBuilder buffer = new StringBuilder();
+		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		boolean first = true;
 		for (Map.Entry<String, Object> entry : entrySet())
 		{
@@ -754,10 +756,10 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	}
 
 	/**
-	 * @see IValueMap#getAsTime(String)
+	 * @see IValueMap#getAsInstant(String)
 	 */
 	@Override
-	public Time getAsTime(final String key)
+	public Instant getAsInstant(final String key)
 	{
 		return getAsTime(key, null);
 	}
@@ -766,7 +768,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 	 * @see IValueMap#getAsTime(String, Time)
 	 */
 	@Override
-	public Time getAsTime(final String key, final Time defaultValue)
+	public Instant getAsTime(final String key, final Instant defaultValue)
 	{
 		if (!containsKey(key))
 		{
@@ -775,7 +777,7 @@ public class ValueMap extends LinkedHashMap<String, Object> implements IValueMap
 
 		try
 		{
-			return getTime(key);
+			return getInstant(key);
 		}
 		catch (StringValueConversionException ignored)
 		{

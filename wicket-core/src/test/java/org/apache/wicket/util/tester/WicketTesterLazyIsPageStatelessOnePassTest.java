@@ -23,7 +23,7 @@ import org.apache.wicket.settings.RequestCycleSettings;
 /**
  * https://issues.apache.org/jira/browse/WICKET-5426
  */
-public class WicketTesterLazyIsPageStatelessOnePassTest extends WicketTesterLazyIsPageStatelessBase
+class WicketTesterLazyIsPageStatelessOnePassTest extends WicketTesterLazyIsPageStatelessBase
 {
 	@Override
 	protected WebApplication newApplication()

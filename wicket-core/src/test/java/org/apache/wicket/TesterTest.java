@@ -16,23 +16,23 @@
  */
 package org.apache.wicket;
 
-import junit.framework.AssertionFailedError;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  */
-public class TesterTest extends WicketTestCase
+class TesterTest extends WicketTestCase
 {
 	/**
 	 * 
 	 */
 	@Test
-	public void assertTest()
+	void assertTest()
 	{
 		tester.startPage(new MyPage());
 		tester.debugComponentTrees();
@@ -41,7 +41,7 @@ public class TesterTest extends WicketTestCase
 			tester.assertVisible("label");
 			fail("Should fail, because label is invisible");
 		}
-		catch (AssertionFailedError e)
+		catch (AssertionError e)
 		{
 		}
 		catch (NullPointerException e)
@@ -57,7 +57,7 @@ public class TesterTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-		public MyPage()
+		MyPage()
 		{
 			add(new Label("label")
 			{

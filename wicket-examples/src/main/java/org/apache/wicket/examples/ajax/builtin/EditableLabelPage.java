@@ -18,6 +18,7 @@ package org.apache.wicket.examples.ajax.builtin;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableChoiceLabel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
@@ -26,7 +27,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
 
 
 /**
@@ -43,6 +45,8 @@ public class EditableLabelPage extends BasePage
 	private String text1 = "fox";
 	private String text2 = "dog";
 	private String text3 = "multiple\nlines of\ntextual content";
+	private int number = 42;
+	
 	private int refreshCounter = 0;
 
 	/**
@@ -57,6 +61,28 @@ public class EditableLabelPage extends BasePage
 		form.add(new AjaxEditableLabel("text2"));
 		form.add(new AjaxEditableMultiLineLabel("text3"));
 		form.add(new AjaxEditableChoiceLabel<>("site", SITES));
+		
+		form.add(new AjaxEditableLabel<Integer>("number") {
+			@Override
+			protected IConverter<?> createConverter(Class<?> type)
+			{
+				return new IConverter<Integer>() {
+					@Override
+					public Integer convertToObject(String value, Locale locale)
+						throws ConversionException
+					{
+						return Integer.parseInt(value);
+					}
+					
+					@Override
+					public String convertToString(Integer value, Locale locale)
+					{
+						return String.format("%010d", value);
+					}
+				};
+			}
+		});
+		
 
 		form.add(new Label("refresh-counter", () -> "" + refreshCounter));
 

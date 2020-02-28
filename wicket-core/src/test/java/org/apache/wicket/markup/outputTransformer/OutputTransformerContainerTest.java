@@ -17,19 +17,19 @@
 package org.apache.wicket.markup.outputTransformer;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class OutputTransformerContainerTest extends WicketTestCase
+class OutputTransformerContainerTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage() throws Exception
+    void renderHomePage() throws Exception
 	{
 		executeTest(Page_1.class, "PageExpectedResult_1.html");
 	}
@@ -38,7 +38,7 @@ public class OutputTransformerContainerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_2() throws Exception
+    void renderHomePage_2() throws Exception
 	{
 		executeTest(Page_2.class, "PageExpectedResult_2.html");
 	}
@@ -47,7 +47,7 @@ public class OutputTransformerContainerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_3() throws Exception
+    void renderHomePage_3() throws Exception
 	{
 		executeTest(Page_3.class, "PageExpectedResult_3.html");
 	}

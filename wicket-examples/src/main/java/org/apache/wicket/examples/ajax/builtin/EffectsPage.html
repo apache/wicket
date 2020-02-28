@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <html xmlns:wicket="http://wicket.apache.org">
-<head>
-	<wicket:head>
-		<script language="JavaScript" type="text/javascript" src="jquery-ui-1.10.3.custom.js"></script>
-	</wicket:head>
-</head>
 <wicket:extend>
-<style>
-	div.container { font-size: 14pt; }
-	
-	/* make effects work nicely with inline elements */
-    .ui-effects-wrapper {
-        display:inline;
-    }
-</style>
 <div class="container">
-counter 1:<span wicket:id="c1"></span> 
-<br/>
-<br/>
-counter 2: <span wicket:id="c2"></span>
-<br/>
-<br/>
-<a href="#" wicket:id="c1-link">counter1++ and shake</a>&#160;&#160;<a href="#" wicket:id="c2-link">counter2++ and highlight</a>
+	<div>
+		<p>
+			counter 1:<span wicket:id="c1"></span>
+		</p>
+		<p>
+			counter 2: <span wicket:id="c2"></span>
+		</p>
+		<p>
+			counter 3: <span wicket:id="c3"></span>
+		</p>
+	</div>
+	<div>
+		<p>
+			<a href="#" wicket:id="c1-link">counter1++ and shake</a>
+		</p>
+		<p>
+			<a href="#" wicket:id="c2-link">counter2++ and highlight</a>
+		</p>
+		<p>
+			<a href="#" wicket:id="c3-link">counter3++, fade-out and fade-in</a>
+		</p>
+	</div>
 </div>
 </wicket:extend>
 </html>

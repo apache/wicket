@@ -33,7 +33,7 @@ public class PanelWithHeader extends Panel
 
 	private static class StringHeaderItemWithDependency extends StringHeaderItem
 	{
-		public StringHeaderItemWithDependency(CharSequence string)
+		StringHeaderItemWithDependency(CharSequence string)
 		{
 			super(string);
 		}
@@ -42,7 +42,7 @@ public class PanelWithHeader extends Panel
 		public List<HeaderItem> getDependencies()
 		{
 			List<HeaderItem> dependencies = super.getDependencies();
-			dependencies.add(StringHeaderItem.forString("<title>DependencyOfPriorityHeaderContributionInPanelWithHeader</title>\n"));
+			dependencies.add(StringHeaderItem.forString("<title>PanelWithHeader-HeaderItem-Dependency</title>\n"));
 			return dependencies;
 		}
 	}
@@ -60,8 +60,8 @@ public class PanelWithHeader extends Panel
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		response.render(StringHeaderItem.forString("<title>HeaderContributionInPanelWithHeader</title>\n"));
+		response.render(StringHeaderItem.forString("<title>PanelWithHeader-HeaderItem</title>\n"));
 		response.render(new PriorityHeaderItem(new StringHeaderItemWithDependency(
-			"<title>PriorityHeaderContributionInPanelWithHeader</title>\n")));
+			"<title>PanelWithHeader-PriorityHeaderItem</title>\n")));
 	}
 }

@@ -16,26 +16,26 @@
  */
 package org.apache.wicket.validation.validator;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.Validatable;
 import org.apache.wicket.validation.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests range validator
  * 
  * @author igor.vaynberg
  */
-public class RangeValidatorTest
+class RangeValidatorTest
 {
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void doubleRange() throws Exception
+    void doubleRange() throws Exception
 	{
 		IValidator<Double> validator = new RangeValidator<Double>(1.1, 1.8);
 
@@ -65,7 +65,7 @@ public class RangeValidatorTest
 	 * @throws Exception
 	 */
 	@Test
-	public void integerRange() throws Exception
+    void integerRange() throws Exception
 	{
 		IValidator<Integer> validator = new RangeValidator<Integer>(1, 8);
 
@@ -92,7 +92,7 @@ public class RangeValidatorTest
 	}
 
 	@Test
-	public void resourceKeys()
+    void resourceKeys()
 	{
 		Validatable<Integer> validatable = new Validatable<Integer>(10);
 
@@ -118,7 +118,7 @@ public class RangeValidatorTest
 	}
 
 	@Test
-	public void onlyMinValue()
+    void onlyMinValue()
 	{
 		IValidator<Integer> validator = new RangeValidator<Integer>(1, null);
 
@@ -128,7 +128,7 @@ public class RangeValidatorTest
 	}
 
 	@Test
-	public void onlyMaxValue()
+    void onlyMaxValue()
 	{
 		IValidator<Integer> validator = new RangeValidator<Integer>(null, 1);
 
@@ -141,7 +141,7 @@ public class RangeValidatorTest
 	 * WICKET-4717
 	 */
 	@Test
-	public void exact()
+    void exact()
 	{
 		IValidator<Integer> validator = new RangeValidator<Integer>(1, 1);
 

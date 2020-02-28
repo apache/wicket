@@ -29,6 +29,8 @@ import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxLink;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.settings.ExceptionSettings;
@@ -224,5 +226,13 @@ public class LinksPage extends BasePage
 				throw new RuntimeException("test whether the exception handling works");
 			}
 		});
+	}
+	
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(CssHeaderItem.forCSS(
+			"span.wicket-ajax-indicator { margin:0; padding:0; padding-left: 2px; }", "indicator"));
 	}
 }

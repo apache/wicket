@@ -16,13 +16,15 @@
  */
 package org.apache.wicket.util.io;
 
+import org.junit.jupiter.api.Test;
+
 import java.io.BufferedReader;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SuppressWarnings("javadoc")
-public class XmlReaderTest extends Assert
+public class XmlReaderTest
 {
 	@Test
 	public void readHtmlFileWithoutAnyTags() throws Exception

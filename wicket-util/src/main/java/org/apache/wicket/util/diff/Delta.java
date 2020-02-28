@@ -115,7 +115,7 @@ public abstract class Delta extends ToString
 		Delta result;
 		try
 		{
-			result = (Delta)c.newInstance();
+			result = (Delta)c.getDeclaredConstructor().newInstance();
 		}
 		catch (Exception e)
 		{

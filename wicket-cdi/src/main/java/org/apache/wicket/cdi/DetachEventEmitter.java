@@ -23,7 +23,6 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +36,9 @@ public class DetachEventEmitter implements IRequestCycleListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(DetachEventEmitter.class);
 
-	private static final MetaDataKey<Boolean> DETACH_SCHEDULED_KEY = new MetaDataKey<Boolean>()
+	private static final MetaDataKey<Boolean> DETACH_SCHEDULED_KEY = new MetaDataKey<>()
 	{
+		private static final long serialVersionUID = 1L;
 	};
 
 	@Inject
@@ -46,13 +46,10 @@ public class DetachEventEmitter implements IRequestCycleListener
 
 	/**
 	 * Constructor
-	 * 
-	 * @param container
 	 */
-	public DetachEventEmitter(CdiContainer container)
+	public DetachEventEmitter()
 	{
-		Args.notNull(container, "container");
-		container.getNonContextualManager().postConstruct(this);
+		NonContextual.of(DetachEventEmitter.class).postConstruct(this);
 	}
 
 	@Override
@@ -71,7 +68,7 @@ public class DetachEventEmitter implements IRequestCycleListener
 			logger.debug("Firing Detach event {}", cycle.getRequest().getUrl());
 
 			detachEvent.fire(new DetachEvent());
-			
+
 			cycle.setMetaData(DETACH_SCHEDULED_KEY, null);
 		}
 	}

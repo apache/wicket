@@ -17,11 +17,10 @@
 package org.apache.wicket.protocol.http.mock;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
@@ -53,6 +52,7 @@ import javax.servlet.descriptor.JspConfigDescriptor;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
@@ -69,7 +69,7 @@ import org.slf4j.LoggerFactory;
  * value allows all of the resource location functionality to work as in a fully functioning web
  * application. This value is not set then not resource location functionality will work and instead
  * null will always be returned.
- * 
+ *
  * @author Chris Turner
  */
 public class MockServletContext implements ServletContext
@@ -81,7 +81,7 @@ public class MockServletContext implements ServletContext
 	private final ValueMap attributes = new ValueMap();
 
 	private final ValueMap initParameters = new ValueMap();
-	
+
 	private final Map<String, ServletRegistration.Dynamic> servletRegistration = new HashMap<>();
 
 	/** Map of mime types */
@@ -89,12 +89,106 @@ public class MockServletContext implements ServletContext
 
 	private File webappRoot;
 
+	private final SessionCookieConfig sessionCookieConfig = new SessionCookieConfig()
+	{
+		private boolean secure;
+		private String path;
+		private String name = CookieUtils.DEFAULT_SESSIONID_COOKIE_NAME;
+		private int maxAge;
+		private boolean httpOnly;
+		private String domain;
+		private String comment;
+
+		@Override
+		public void setSecure(boolean secure)
+		{
+			this.secure = secure;
+		}
+
+		@Override
+		public void setPath(String path)
+		{
+			this.path = path;
+		}
+
+		@Override
+		public void setName(String name)
+		{
+			this.name = name;
+		}
+
+		@Override
+		public void setMaxAge(int maxAge)
+		{
+			this.maxAge = maxAge;
+		}
+
+		@Override
+		public void setHttpOnly(boolean httpOnly)
+		{
+			this.httpOnly = httpOnly;
+		}
+
+		@Override
+		public void setDomain(String domain)
+		{
+			this.domain = domain;
+		}
+
+		@Override
+		public void setComment(String comment)
+		{
+			this.comment = comment;
+		}
+
+		@Override
+		public boolean isSecure()
+		{
+			return secure;
+		}
+
+		@Override
+		public boolean isHttpOnly()
+		{
+			return httpOnly;
+		}
+
+		@Override
+		public String getPath()
+		{
+			return path;
+		}
+
+		@Override
+		public String getName()
+		{
+			return name;
+		}
+
+		@Override
+		public int getMaxAge()
+		{
+			return maxAge;
+		}
+
+		@Override
+		public String getDomain()
+		{
+			return domain;
+		}
+
+		@Override
+		public String getComment()
+		{
+			return comment;
+		}
+	};
 	/**
 	 * Create the mock object. As part of the creation, the context sets the root directory where
 	 * web application content is stored. This must be an ABSOLUTE directory relative to where the
 	 * tests are being executed. For example: <code>System.getProperty("user.dir") +
 	 * "/src/webapp"</code>
-	 * 
+	 *
 	 * @param application
 	 *            The application that this context is for
 	 * @param path
@@ -132,7 +226,7 @@ public class MockServletContext implements ServletContext
 			String tmpDir = System.getProperty("java.io.tmpdir");
 			file = new File(tmpDir);
 		}
-			
+
 		attributes.put("javax.servlet.context.tempdir", file);
 
 		mimeTypes.put("html", "text/html");
@@ -147,7 +241,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Add an init parameter.
-	 * 
+	 *
 	 * @param name
 	 *            The parameter name
 	 * @param value
@@ -162,7 +256,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Add a new recognized mime type.
-	 * 
+	 *
 	 * @param fileExtension
 	 *            The file extension (e.g. "jpg")
 	 * @param mimeType
@@ -175,7 +269,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get an attribute with the given name.
-	 * 
+	 *
 	 * @param name
 	 *            The attribute name
 	 * @return The value, or null
@@ -188,7 +282,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get all of the attribute names.
-	 * 
+	 *
 	 * @return The attribute names
 	 */
 	@Override
@@ -201,7 +295,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the context for the given URL path
-	 * 
+	 *
 	 * @param name
 	 *            The url path
 	 * @return Always returns this
@@ -214,7 +308,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the init parameter with the given name.
-	 * 
+	 *
 	 * @param name
 	 *            The name
 	 * @return The parameter, or null if no such parameter
@@ -227,7 +321,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the name of all of the init parameters.
-	 * 
+	 *
 	 * @return The init parameter names
 	 */
 	@Override
@@ -245,7 +339,7 @@ public class MockServletContext implements ServletContext
 	/**
 	 * Get the mime type for the given file. Uses a hardcoded map of mime types set at
 	 * Initialization time.
-	 * 
+	 *
 	 * @param name
 	 *            The name to get the mime type for
 	 * @return The mime type
@@ -290,7 +384,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Wicket does not use the RequestDispatcher, so this implementation just returns a dummy value.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the servlet or JSP
 	 * @return The dispatcher
@@ -303,7 +397,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the real file path of the given resource name.
-	 * 
+	 *
 	 * @param name
 	 *            The name
 	 * @return The real path or null
@@ -311,30 +405,20 @@ public class MockServletContext implements ServletContext
 	@Override
 	public String getRealPath(String name)
 	{
-		if (webappRoot == null)
-		{
-			return null;
+		try {
+			URL url = getResource(name);
+			if (url != null) {
+				return url.getFile();
+			}
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
 		}
-
-		if (name.startsWith("/"))
-		{
-			name = name.substring(1);
-		}
-
-		File f = new File(webappRoot, name);
-		if (!f.exists())
-		{
-			return null;
-		}
-		else
-		{
-			return f.getPath();
-		}
+		return null;
 	}
 
 	/**
 	 * Wicket does not use the RequestDispatcher, so this implementation just returns a dummy value.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the resource to get the dispatcher for
 	 * @return The dispatcher
@@ -362,7 +446,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the URL for a particular resource that is relative to the web app root directory.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the resource to get
 	 * @return The resource, or null if resource not found
@@ -372,35 +456,26 @@ public class MockServletContext implements ServletContext
 	@Override
 	public URL getResource(String name) throws MalformedURLException
 	{
-		if (webappRoot == null)
-		{
-			return null;
-		}
-
-		URL result = null;
-
 		if (name.startsWith("/"))
 		{
 			name = name.substring(1);
 		}
 
-		File f = new File(webappRoot, name);
-		if (f.exists())
+		if (webappRoot != null)
 		{
-			result = f.toURI().toURL();
+			File f = new File(webappRoot, name);
+			if (f.exists())
+			{
+				return f.toURI().toURL();
+			}
 		}
 
-		if (result == null)
-		{
-			result = getClass().getClassLoader().getResource("META-INF/resources/" + name);
-		}
-
-		return result;
+		return getClass().getClassLoader().getResource("META-INF/resources/" + name);
 	}
 
 	/**
 	 * Get an input stream for a particular resource that is relative to the web app root directory.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the resource to get
 	 * @return The input stream for the resource, or null of resource is not found
@@ -408,39 +483,21 @@ public class MockServletContext implements ServletContext
 	@Override
 	public InputStream getResourceAsStream(String name)
 	{
-		if (webappRoot == null)
-		{
-			return null;
-		}
-
-		if (name.startsWith("/"))
-		{
-			name = name.substring(1);
-		}
-
-		File f = new File(webappRoot, name);
-		if (!f.exists())
-		{
-			return null;
-		}
-		else
-		{
-			try
-			{
-				return new FileInputStream(f);
+		try {
+			URL url = getResource(name);
+			if (url != null) {
+				return url.openStream();
 			}
-			catch (FileNotFoundException e)
-			{
-				log.error(e.getMessage(), e);
-				return null;
-			}
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
 		}
+		return null;
 	}
 
 	/**
 	 * Get the resource paths starting from the web app root directory and then relative to the the
 	 * given name.
-	 * 
+	 *
 	 * @param name
 	 *            The starting name
 	 * @return The set of resource paths at this location
@@ -514,7 +571,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Get the server info.
-	 * 
+	 *
 	 * @return The server info
 	 */
 	@Override
@@ -525,7 +582,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * NOT USED - Servlet Spec requires that this always returns null.
-	 * 
+	 *
 	 * @param name
 	 *            Not used
 	 * @return null
@@ -540,7 +597,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Return the name of the servlet context.
-	 * 
+	 *
 	 * @return The name
 	 */
 	@Override
@@ -567,9 +624,9 @@ public class MockServletContext implements ServletContext
 	{
 		Dynamic mockRegistration = (Dynamic)Proxy.newProxyInstance(Dynamic.class.getClassLoader(),
 			new Class<?>[]{Dynamic.class}, new MockedServletRegistationHandler(servletName));
-		
+
 		servletRegistration.put(servletName, mockRegistration);
-		
+
 		return mockRegistration;
 	}
 
@@ -578,9 +635,9 @@ public class MockServletContext implements ServletContext
 	{
 		try
 		{
-			return addServlet(servletName, servletClass.newInstance());
+			return addServlet(servletName, servletClass.getDeclaredConstructor().newInstance());
 		}
-		catch (InstantiationException | IllegalAccessException e)
+		catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
 		{
 			throw new WicketRuntimeException(e);
 		}
@@ -591,9 +648,9 @@ public class MockServletContext implements ServletContext
 	{
 		try
 		{
-			return clazz.newInstance();
+			return clazz.getDeclaredConstructor().newInstance();
 		}
-		catch (InstantiationException | IllegalAccessException e)
+		catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
 		{
 			throw new WicketRuntimeException(e);
 		}
@@ -650,7 +707,7 @@ public class MockServletContext implements ServletContext
 	@Override
 	public SessionCookieConfig getSessionCookieConfig()
 	{
-		return null;
+		return sessionCookieConfig;
 	}
 
 	@Override
@@ -716,7 +773,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * NOT USED - Servlet spec requires that this always returns null.
-	 * 
+	 *
 	 * @return null
 	 */
 	@Override
@@ -727,7 +784,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * NOT USED - Servlet spec requires that this always returns null.
-	 * 
+	 *
 	 * @return null
 	 */
 	@Override
@@ -738,7 +795,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * As part of testing we always log to the console.
-	 * 
+	 *
 	 * @param e
 	 *            The exception to log
 	 * @param msg
@@ -752,7 +809,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * As part of testing we always log to the console.
-	 * 
+	 *
 	 * @param msg
 	 *            The message to log
 	 */
@@ -764,7 +821,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * As part of testing we always log to the console.
-	 * 
+	 *
 	 * @param msg
 	 *            The message to log
 	 * @param cause
@@ -778,7 +835,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Remove an attribute with the given name.
-	 * 
+	 *
 	 * @param name
 	 *            The name
 	 */
@@ -790,7 +847,7 @@ public class MockServletContext implements ServletContext
 
 	/**
 	 * Set an attribute.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the attribute
 	 * @param o
@@ -810,26 +867,26 @@ public class MockServletContext implements ServletContext
 	{
 		return "";
 	}
-	
-	
+
+
 	/**
 	 * Invocation handler for proxy interface of {@link javax.servlet.ServletRegistration.Dynamic}.
-	 * This class intercepts invocation for method {@link javax.servlet.ServletRegistration.Dynamic#getMappings} 
+	 * This class intercepts invocation for method {@link javax.servlet.ServletRegistration.Dynamic#getMappings}
 	 * and returns the servlet name.
-	 * 
+	 *
 	 * @author andrea del bene
 	 *
 	 */
 	class MockedServletRegistationHandler implements InvocationHandler
 	{
-		
+
 		private final Collection<String> servletName;
-		
+
 		public MockedServletRegistationHandler(String servletName)
 		{
 			this.servletName = Arrays.asList(servletName);
 		}
-		
+
 		@Override
 		public Object invoke(Object object, Method method, Object[] args) throws Throwable
 		{
@@ -837,7 +894,7 @@ public class MockServletContext implements ServletContext
 			{
 				return servletName;
 			}
-			
+
 			return null;
 		}
 	}

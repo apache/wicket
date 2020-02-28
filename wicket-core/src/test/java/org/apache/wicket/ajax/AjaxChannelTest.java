@@ -16,20 +16,22 @@
  */
 package org.apache.wicket.ajax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Martin Dilger
  */
-public class AjaxChannelTest extends WicketTestCase
+class AjaxChannelTest extends WicketTestCase
 {
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4024
 	 */
 	@Test
-	public void getChannelNameRetursCorrectStringForStackableChannels()
+	void getChannelNameRetursCorrectStringForStackableChannels()
 	{
 		String channelName = "channelName";
 		String expectedForStackables = channelName + "|s";

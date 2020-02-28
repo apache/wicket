@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.util.lang;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests the <code>Primitives</code> class. The code for testing the hashcode is taken from the
@@ -28,7 +30,7 @@ import org.junit.Test;
  * @author Martijn Dashorst
  * @author <a href="mailto:pholser@yahoo.com">Paul Holser</a>
  */
-public class PrimitivesTest extends Assert
+public class PrimitivesTest
 {
 	/**
 	 * Test stub for testing the hashcode function.
@@ -66,7 +68,7 @@ public class PrimitivesTest extends Assert
 	/**
 	 * Creates the objects for the tests.
 	 */
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		eq1 = new HashCodeObject(26);
@@ -83,10 +85,10 @@ public class PrimitivesTest extends Assert
 	@Test
 	public final void hashCodeContract()
 	{
-		assertEquals("1st vs. 2nd", eq1.hashCode(), eq2.hashCode());
-		assertEquals("1st vs. 3rd", eq1.hashCode(), eq3.hashCode());
-		assertEquals("2nd vs. 3rd", eq2.hashCode(), eq3.hashCode());
-		assertTrue("1st vs. neq", eq1.hashCode() != neq.hashCode());
+		assertEquals(eq1.hashCode(), eq2.hashCode(), "1st vs. 2nd");
+		assertEquals(eq1.hashCode(), eq3.hashCode(), "1st vs. 3rd");
+		assertEquals(eq2.hashCode(), eq3.hashCode(), "2nd vs. 3rd");
+		assertTrue(eq1.hashCode() != neq.hashCode(), "1st vs. neq");
 	}
 
 	/**
@@ -104,10 +106,10 @@ public class PrimitivesTest extends Assert
 
 		for (int i = 0; i < 2; ++i)
 		{
-			assertEquals("1st equal instance", eq1Hash, eq1.hashCode());
-			assertEquals("2nd equal instance", eq2Hash, eq2.hashCode());
-			assertEquals("3rd equal instance", eq3Hash, eq3.hashCode());
-			assertEquals("not-equal instance", neqHash, neq.hashCode());
+			assertEquals(eq1Hash, eq1.hashCode(), "1st equal instance");
+			assertEquals(eq2Hash, eq2.hashCode(), "2nd equal instance");
+			assertEquals(eq3Hash, eq3.hashCode(), "3rd equal instance");
+			assertEquals(neqHash, neq.hashCode(), "not-equal instance");
 		}
 	}
 }

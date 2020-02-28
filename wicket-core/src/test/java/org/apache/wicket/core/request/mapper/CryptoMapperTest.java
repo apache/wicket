@@ -16,7 +16,13 @@
  */
 package org.apache.wicket.core.request.mapper;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.function.Supplier;
 
@@ -51,16 +57,17 @@ import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link CryptoMapper}
  */
-public class CryptoMapperTest extends AbstractMapperTest
+class CryptoMapperTest extends AbstractMapperTest
 {
-	private static final String PLAIN_BOOKMARKABLE_URL = "wicket/bookmarkable/" + Page2.class.getName();
+	private static final String PLAIN_BOOKMARKABLE_URL = "wicket/bookmarkable/" +
+		Page2.class.getName();
 	private static final String ENCRYPTED_BOOKMARKABLE_URL = "L7ExSNbPC4sb6TPJDblCAopL53TWmZP5y7BQEaJSJAC05HXod5M5U7gT2yNT0lK5L6L09ZAOoZkGyUhseyPrC4S5tqUUrV6zipc4_Ni877EmwR8AyCyA-A/L7E59/5y7f2";
 	private static final String PLAIN_PAGE_INSTANCE_URL = "wicket/page?5";
 	private static final String ENCRYPTED_PAGE_INSTANCE_URL = "fyBfZ9p6trOhokHCzsQS6Q/fyBce";
@@ -70,13 +77,23 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 	private WicketTester tester;
 
+	private static IRequestHandler unwrapRequestHandlerDelegate(IRequestHandler handler)
+	{
+		while (handler instanceof IRequestHandlerDelegate)
+		{
+			handler = ((IRequestHandlerDelegate)handler).getDelegateHandler();
+		}
+
+		return handler;
+	}
+
 	/**
 	 * Creates the {@link CryptoMapper}
 	 *
 	 * @throws Exception
 	 */
-	@Before
-	public void before() throws Exception
+	@BeforeEach
+	void before() throws Exception
 	{
 		tester = new WicketTester(HomePage.class);
 
@@ -105,8 +122,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 	/**
 	 * @throws Exception
 	 */
-	@After
-	public void after() throws Exception
+	@AfterEach
+	void after() throws Exception
 	{
 		tester.destroy();
 	}
@@ -115,13 +132,13 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Tests that the home page is requestable.
 	 */
 	@Test
-	public void homePage()
+	void homePage()
 	{
 		IRequestHandler requestHandler = mapper.mapRequest(getRequest(Url.parse("")));
-		assertNotNull("Unable to map request for home page", requestHandler);
+		assertNotNull(requestHandler, "Unable to map request for home page");
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
-		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
-		RenderPageRequestHandler handler = (RenderPageRequestHandler) requestHandler;
+		assertThat(requestHandler).isInstanceOf(RenderPageRequestHandler.class);
+		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertSame(tester.getApplication().getHomePage(), handler.getPageClass());
 	}
 
@@ -129,10 +146,11 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Verifies that the home page can be reached with non-encrypted query parameters.
 	 * https://issues.apache.org/jira/browse/WICKET-4345
 	 *
-	 * Also, test that the URL for the home page with non-encrypted parameters is not encrypted, to avoid unnecessary redirects.
+	 * Also, test that the URL for the home page with non-encrypted parameters is not encrypted, to
+	 * avoid unnecessary redirects.
 	 */
 	@Test
-	public void homePageWithNonEncryptedQueryParameters()
+	void homePageWithNonEncryptedQueryParameters()
 	{
 		String expectedEncrypted = "?namedKey1=namedValue1";
 		PageParameters expectedParameters = new PageParameters();
@@ -149,23 +167,26 @@ public class CryptoMapperTest extends AbstractMapperTest
 		assertNotNull(requestHandler);
 
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
-		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
-		RenderPageRequestHandler handler = (RenderPageRequestHandler) requestHandler;
+		assertThat(requestHandler).isInstanceOf(RenderPageRequestHandler.class);
+		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(tester.getApplication().getHomePage(), handler.getPageClass());
 		StringValue queryParam = handler.getPageParameters().get("namedKey1");
 		assertEquals("namedValue1", queryParam.toOptionalString());
 	}
 
 	/**
-	 * Tests that we do not allow unencrypted URLs to IRequestListeners on the home page, like: ?0-0.ILinkListener-link
+	 * Tests that we do not allow unencrypted URLs to IRequestListeners on the home page, like:
+	 * ?0-0.ILinkListener-link
 	 */
 	@Test
-	public void homePageForceEncryptionOfRequestListener()
+	void homePageForceEncryptionOfRequestListener()
 	{
-		PageAndComponentProvider provider = new PageAndComponentProvider(tester.getApplication().getHomePage(), "link");
+		PageAndComponentProvider provider = new PageAndComponentProvider(
+			tester.getApplication().getHomePage(), "link");
 		IRequestHandler requestHandler = new BookmarkableListenerRequestHandler(provider);
 		Url plainUrl = mapper.getDelegateMapper().mapHandler(requestHandler);
-		assertTrue("Plain URL for home page has segments: " + plainUrl.toString(), plainUrl.getSegments().isEmpty());
+		assertTrue(plainUrl.getSegments().isEmpty(),
+			"Plain URL for home page has segments: " + plainUrl.toString());
 		assertNull(mapper.mapRequest(getRequest(plainUrl)));
 	}
 
@@ -173,10 +194,10 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Tests that URLs for bookmarkable pages are encrypted.
 	 */
 	@Test
-	public void bookmarkablePageEncrypt()
+	void bookmarkablePageEncrypt()
 	{
-		IRequestHandler renderPage2BookmarkableHandler = new RenderPageRequestHandler(new PageProvider(
-			Page2.class, new PageParameters()));
+		IRequestHandler renderPage2BookmarkableHandler = new RenderPageRequestHandler(
+			new PageProvider(Page2.class, new PageParameters()));
 
 		Url plainTextUrl = mapper.getDelegateMapper().mapHandler(renderPage2BookmarkableHandler);
 
@@ -187,10 +208,11 @@ public class CryptoMapperTest extends AbstractMapperTest
 	}
 
 	/**
-	 * Tests that encrypted URLs for bookmarkable pages are decrypted and passed to the wrapped mapper.
+	 * Tests that encrypted URLs for bookmarkable pages are decrypted and passed to the wrapped
+	 * mapper.
 	 */
 	@Test
-	public void bookmarkablePageDecrypt()
+	void bookmarkablePageDecrypt()
 	{
 		Request request = getRequest(Url.parse(ENCRYPTED_BOOKMARKABLE_URL));
 		IRequestHandler requestHandler = mapper.mapRequest(request);
@@ -198,23 +220,24 @@ public class CryptoMapperTest extends AbstractMapperTest
 		assertNotNull(requestHandler);
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
 
-		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(requestHandler).isInstanceOf(RenderPageRequestHandler.class);
 
-		RenderPageRequestHandler handler = (RenderPageRequestHandler) requestHandler;
+		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(Page2.class, handler.getPageClass());
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6131
 	 *
-	 * Tests that encrypted URLs for bookmarkable pages are decrypted and passed to the wrapped mapper.
-	 * Extra segments should be ignored.
+	 * Tests that encrypted URLs for bookmarkable pages are decrypted and passed to the wrapped
+	 * mapper. Extra segments should be ignored.
 	 */
 	@Test
-	public void bookmarkablePageDecrypt2()
+	void bookmarkablePageDecrypt2()
 	{
 		String encryptedExtraSegments = "/i87b7/i87b7";
-		Request request = getRequest(Url.parse(ENCRYPTED_BOOKMARKABLE_URL + encryptedExtraSegments));
+		Request request = getRequest(
+			Url.parse(ENCRYPTED_BOOKMARKABLE_URL + encryptedExtraSegments));
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
 		assertNotNull(requestHandler);
@@ -222,16 +245,16 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		assertTrue(requestHandler instanceof RenderPageRequestHandler);
 
-		RenderPageRequestHandler handler = (RenderPageRequestHandler) requestHandler;
+		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(Page2.class, handler.getPageClass());
 	}
 
 	/**
-	 * Tests that encrypted URLs for bookmarkable pages are decrypted and passed to the wrapped mapper when there is more than
-	 * one cryptomapper installed.
+	 * Tests that encrypted URLs for bookmarkable pages are decrypted and passed to the wrapped
+	 * mapper when there is more than one cryptomapper installed.
 	 */
 	@Test
-	public void bookmarkablePageDecryptMultipleCryptoMapper()
+	void bookmarkablePageDecryptMultipleCryptoMapper()
 	{
 		Request request = getRequest(Url.parse(ENCRYPTED_BOOKMARKABLE_URL));
 
@@ -241,9 +264,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 		assertNotNull(requestHandler);
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
 
-		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(requestHandler).isInstanceOf(RenderPageRequestHandler.class);
 
-		RenderPageRequestHandler handler = (RenderPageRequestHandler) requestHandler;
+		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(Page2.class, handler.getPageClass());
 	}
 
@@ -251,9 +274,10 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Tests that plain text URLs to bookmarkable pages are not mapped.
 	 */
 	@Test
-	public void bookmarkablePageForceEncryption()
+	void bookmarkablePageForceEncryption()
 	{
-		IRequestHandler requestHandler = mapper.mapRequest(getRequest(Url.parse(PLAIN_BOOKMARKABLE_URL)));
+		IRequestHandler requestHandler = mapper
+			.mapRequest(getRequest(Url.parse(PLAIN_BOOKMARKABLE_URL)));
 		assertNull(requestHandler);
 	}
 
@@ -262,14 +286,14 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * wicket/bookmarkable/my.package.page?0-0.ILinkListener-link
 	 */
 	@Test
-	public void bookmarkablePageForceEncryptionOfRequestListener()
+	void bookmarkablePageForceEncryptionOfRequestListener()
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(Page2.class, "link");
 		IRequestHandler requestHandler = new BookmarkableListenerRequestHandler(provider);
 		Url plainUrl = mapper.getDelegateMapper().mapHandler(requestHandler);
-		assertTrue("Plain text request listener URL for bookmarkable page does not start with: "
-			+ PLAIN_BOOKMARKABLE_URL + ": " + plainUrl.toString(),
-			plainUrl.toString().startsWith(PLAIN_BOOKMARKABLE_URL));
+		assertTrue(plainUrl.toString().startsWith(PLAIN_BOOKMARKABLE_URL),
+			"Plain text request listener URL for bookmarkable page does not start with: " +
+				PLAIN_BOOKMARKABLE_URL + ": " + plainUrl.toString());
 		assertNull(mapper.mapRequest(getRequest(plainUrl)));
 	}
 
@@ -277,12 +301,13 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Tests that URLs for page instances are encrypted (/wicket/page?5)
 	 */
 	@Test
-	public void pageInstanceEncrypt()
+	void pageInstanceEncrypt()
 	{
 		MockPage page = new MockPage(5);
 		IRequestHandler requestHandler = new RenderPageRequestHandler(new PageProvider(page));
 
-		assertEquals(PLAIN_PAGE_INSTANCE_URL, mapper.getDelegateMapper().mapHandler(requestHandler).toString());
+		assertEquals(PLAIN_PAGE_INSTANCE_URL,
+			mapper.getDelegateMapper().mapHandler(requestHandler).toString());
 		assertEquals(ENCRYPTED_PAGE_INSTANCE_URL, mapper.mapHandler(requestHandler).toString());
 	}
 
@@ -290,15 +315,16 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Make sure that encrypted page instance URLs are decrypted and the correct handler resolved.
 	 */
 	@Test
-	public void pageInstanceDecrypt()
+	void pageInstanceDecrypt()
 	{
-		IRequestHandler requestHandler = mapper.mapRequest(getRequest(Url.parse(ENCRYPTED_PAGE_INSTANCE_URL)));
+		IRequestHandler requestHandler = mapper
+			.mapRequest(getRequest(Url.parse(ENCRYPTED_PAGE_INSTANCE_URL)));
 
 		assertNotNull(requestHandler);
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
 
-		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
-		RenderPageRequestHandler handler = (RenderPageRequestHandler) requestHandler;
+		assertThat(requestHandler).isInstanceOf(RenderPageRequestHandler.class);
+		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(5, handler.getPageId().intValue());
 	}
 
@@ -306,7 +332,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Make sure that encrypted page instance URLs are decrypted and the correct handler resolved.
 	 */
 	@Test
-	public void pageInstanceDecryptMultipleCryptoMapper()
+	void pageInstanceDecryptMultipleCryptoMapper()
 	{
 		IRequestHandler requestHandler = new CryptoMapper(mapper, tester.getApplication())
 			.mapRequest(getRequest(Url.parse(ENCRYPTED_PAGE_INSTANCE_URL)));
@@ -314,8 +340,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 		assertNotNull(requestHandler);
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
 
-		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
-		RenderPageRequestHandler handler = (RenderPageRequestHandler) requestHandler;
+		assertThat(requestHandler).isInstanceOf(RenderPageRequestHandler.class);
+		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(5, handler.getPageId().intValue());
 	}
 
@@ -323,7 +349,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Tests that plain text requests to a page instance URL are not mapped.
 	 */
 	@Test
-	public void pageInstanceForceEncryption()
+	void pageInstanceForceEncryption()
 	{
 		assertNull(mapper.mapRequest(getRequest(Url.parse(PLAIN_PAGE_INSTANCE_URL))));
 	}
@@ -332,9 +358,10 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Tests that mounted pages are still accessible through their mounted URL.
 	 */
 	@Test
-	public void mountedPage()
+	void mountedPage()
 	{
-		IRequestHandler requestHandler = new RenderPageRequestHandler(new PageProvider(Page1.class));
+		IRequestHandler requestHandler = new RenderPageRequestHandler(
+			new PageProvider(Page1.class));
 
 		assertEquals(MOUNTED_URL, mapper.mapHandler(requestHandler).toString());
 
@@ -344,20 +371,21 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
 
-		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(requestHandler).isInstanceOf(RenderPageRequestHandler.class);
 
-		assertEquals(Page1.class, ((RenderPageRequestHandler) requestHandler).getPageClass());
+		assertEquals(Page1.class, ((RenderPageRequestHandler)requestHandler).getPageClass());
 	}
 
 	/**
 	 * Tests that PageComponentInfo parameters are encrypted on Mounted pages
 	 */
 	@Test
-	public void mountedPageRequestListenerParameter()
+	void mountedPageRequestListenerParameter()
 	{
 		final String componentPath = "link";
 
-		PageAndComponentProvider provider = new PageAndComponentProvider(Page1.class, componentPath);
+		PageAndComponentProvider provider = new PageAndComponentProvider(Page1.class,
+			componentPath);
 		IRequestHandler requestHandler = new ListenerRequestHandler(provider);
 
 		Url plainUrl = mapper.getDelegateMapper().mapHandler(requestHandler);
@@ -381,7 +409,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 			if (Strings.isEmpty(qp.getValue()))
 			{
 				PageComponentInfo pci = PageComponentInfo.parse(qp.getName());
-				assertNull("PageComponentInfo query parameter not encrypted", pci);
+				assertNull(pci, "PageComponentInfo query parameter not encrypted");
 			}
 		}
 
@@ -391,14 +419,15 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
 
-		assertThat(requestHandler, instanceOf(ListenerRequestHandler.class));
+		assertThat(requestHandler).isInstanceOf(ListenerRequestHandler.class);
 
-		ListenerRequestHandler handler = (ListenerRequestHandler) requestHandler;
+		ListenerRequestHandler handler = (ListenerRequestHandler)requestHandler;
 		assertEquals(componentPath, handler.getComponentPath());
 		assertEquals(Page1.class, handler.getPageClass());
 
 		/*
-		 * We anticipate that sometimes multiple cryptomappers will be used. It should still work in these situations.
+		 * We anticipate that sometimes multiple cryptomappers will be used. It should still work in
+		 * these situations.
 		 */
 		requestHandler = new CryptoMapper(mapper, tester.getApplication())
 			.mapRequest(getRequest(encryptedUrl));
@@ -407,9 +436,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
 
-		assertThat(requestHandler, instanceOf(ListenerRequestHandler.class));
+		assertThat(requestHandler).isInstanceOf(ListenerRequestHandler.class);
 
-		handler = (ListenerRequestHandler) requestHandler;
+		handler = (ListenerRequestHandler)requestHandler;
 		assertEquals(componentPath, handler.getComponentPath());
 		assertEquals(Page1.class, handler.getPageClass());
 	}
@@ -418,24 +447,23 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Tests that the compatability score is correctly calculated from wrapped mapper.
 	 */
 	@Test
-	public void compatabilityScore()
+	void compatabilityScore()
 	{
-		int delegateHomePageScore = mapper.getDelegateMapper().getCompatibilityScore(
-			getRequest(Url.parse("")));
-		int cryptoHomePageScore = mapper.getCompatibilityScore(
-			getRequest(Url.parse("")));
+		int delegateHomePageScore = mapper.getDelegateMapper()
+			.getCompatibilityScore(getRequest(Url.parse("")));
+		int cryptoHomePageScore = mapper.getCompatibilityScore(getRequest(Url.parse("")));
 		assertEquals(delegateHomePageScore, cryptoHomePageScore);
 
-		int delegateBookmarkableScore = mapper.getDelegateMapper().getCompatibilityScore(
-			getRequest(Url.parse(PLAIN_BOOKMARKABLE_URL)));
-		int cryptoBookmarkableScore = mapper.getCompatibilityScore(
-			getRequest(Url.parse(ENCRYPTED_BOOKMARKABLE_URL)));
+		int delegateBookmarkableScore = mapper.getDelegateMapper()
+			.getCompatibilityScore(getRequest(Url.parse(PLAIN_BOOKMARKABLE_URL)));
+		int cryptoBookmarkableScore = mapper
+			.getCompatibilityScore(getRequest(Url.parse(ENCRYPTED_BOOKMARKABLE_URL)));
 		assertEquals(delegateBookmarkableScore, cryptoBookmarkableScore);
 
-		int delegatePageInstanceScore = mapper.getDelegateMapper().getCompatibilityScore(
-			getRequest(Url.parse(PLAIN_PAGE_INSTANCE_URL)));
-		int cryptoPageInstanceScore = mapper.getCompatibilityScore(
-			getRequest(Url.parse(ENCRYPTED_PAGE_INSTANCE_URL)));
+		int delegatePageInstanceScore = mapper.getDelegateMapper()
+			.getCompatibilityScore(getRequest(Url.parse(PLAIN_PAGE_INSTANCE_URL)));
+		int cryptoPageInstanceScore = mapper
+			.getCompatibilityScore(getRequest(Url.parse(ENCRYPTED_PAGE_INSTANCE_URL)));
 		assertEquals(delegatePageInstanceScore, cryptoPageInstanceScore);
 	}
 
@@ -443,7 +471,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Test a failed decrypt, WICKET-4139
 	 */
 	@Test
-	public void decryptFailed()
+	void decryptFailed()
 	{
 		String encrypted = "style.css";
 
@@ -456,7 +484,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Tests that named and indexed parameters are properly (en|de)crypted
 	 */
 	@Test
-	public void pageParameters()
+	void pageParameters()
 	{
 		String expectedEncrypted = "L7ExSNbPC4sb6TPJDblCAopL53TWmZP5y7BQEaJSJAC05HXod5M5U7gT2yNT0lK5L6L09ZAOoZkGyUhseyPrC4S5tqUUrV6zipc4_Ni877FDOOoE5C_Cd7YCyK1xSScpVhno6LeBz2wiu5oWyf7hB1RKcv6zkhEBmbx8vU7K7-e4xe1_LO8Y3fhEjMSQyU9BVh7Uz4HKzkR2OxFo5LaDzQ/L7E59/yPr6a/5L6ae/OxF2c";
 
@@ -474,9 +502,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 		assertNotNull(requestHandler);
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
-		assertThat(requestHandler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(requestHandler).isInstanceOf(RenderPageRequestHandler.class);
 
-		RenderPageRequestHandler handler = (RenderPageRequestHandler) requestHandler;
+		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(Page2.class, handler.getPageClass());
 		PageParameters actualParameters = handler.getPageParameters();
 		assertEquals(expectedParameters, actualParameters);
@@ -486,7 +514,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * UrlResourceReferences, WICKET-5319
 	 */
 	@Test
-	public void urlResourceReference()
+	void urlResourceReference()
 	{
 		UrlResourceReference resource = new UrlResourceReference(
 			Url.parse("http://wicket.apache.org/"));
@@ -499,7 +527,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Relative ResourceReferences, WICKET-3514
 	 */
 	@Test
-	public void resourceReference()
+	void resourceReference()
 	{
 		PackageResourceReference resource = new PackageResourceReference(getClass(),
 			"crypt/crypt.txt");
@@ -511,8 +539,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		assertNotNull(requestHandler);
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
-		assertThat(requestHandler, instanceOf(ResourceReferenceRequestHandler.class));
-		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler) requestHandler;
+		assertThat(requestHandler).isInstanceOf(ResourceReferenceRequestHandler.class);
+		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
 		assertEquals("crypt/crypt.txt", handler.getResourceReference().getName());
@@ -522,7 +550,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Relative ResourceReferences, WICKET-3514
 	 */
 	@Test
-	public void resourceReferenceWithModifiedSegments()
+	void resourceReferenceWithModifiedSegments()
 	{
 		PackageResourceReference resource = new PackageResourceReference(getClass(),
 			"crypt/crypt.txt");
@@ -536,8 +564,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		assertNotNull(requestHandler);
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
-		assertThat(requestHandler, instanceOf(ResourceReferenceRequestHandler.class));
-		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler) requestHandler;
+		assertThat(requestHandler).isInstanceOf(ResourceReferenceRequestHandler.class);
+		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
 		assertEquals("crypt/modified-crypt.txt", handler.getResourceReference().getName());
@@ -547,7 +575,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Relative ResourceReferences, WICKET-3514
 	 */
 	@Test
-	public void resourceReferenceWithMoreSegments()
+	void resourceReferenceWithMoreSegments()
 	{
 		PackageResourceReference resource = new PackageResourceReference(getClass(),
 			"crypt/crypt.txt");
@@ -562,7 +590,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		assertNotNull(requestHandler);
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
-		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler) requestHandler;
+		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
 		assertEquals("crypt/more/more-crypt.txt", handler.getResourceReference().getName());
@@ -572,7 +600,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Relative ResourceReferences, WICKET-3514
 	 */
 	@Test
-	public void resourceReferenceWithLessSegments()
+	void resourceReferenceWithLessSegments()
 	{
 		PackageResourceReference resource = new PackageResourceReference(getClass(),
 			"crypt/crypt.txt");
@@ -587,8 +615,8 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		assertNotNull(requestHandler);
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
-		assertThat(requestHandler, instanceOf(ResourceReferenceRequestHandler.class));
-		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler) requestHandler;
+		assertThat(requestHandler).isInstanceOf(ResourceReferenceRequestHandler.class);
+		ResourceReferenceRequestHandler handler = (ResourceReferenceRequestHandler)requestHandler;
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
 		assertEquals("less-crypt.txt", handler.getResourceReference().getName());
@@ -598,7 +626,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 * Additional parameters, WICKET-4923
 	 */
 	@Test
-	public void additionalParameters()
+	void additionalParameters()
 	{
 		MockPage page = new MockPage();
 		IRequestableComponent c = page.get("foo:bar");
@@ -612,16 +640,17 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
-		assertThat(requestHandler, instanceOf(RequestSettingRequestHandler.class));
+		assertThat(requestHandler).isInstanceOf(RequestSettingRequestHandler.class);
 
-		assertEquals("foo", ((RequestSettingRequestHandler) requestHandler).getRequest()
-			.getUrl()
-			.getQueryParameterValue("q")
-			.toString());
+		assertEquals("foo",
+			((RequestSettingRequestHandler)requestHandler).getRequest()
+				.getUrl()
+				.getQueryParameterValue("q")
+				.toString());
 	}
 
 	@Test
-	public void markedEncryptedUrlDecrypt()
+	void markedEncryptedUrlDecrypt()
 	{
 		mapper.setMarkEncryptedUrls(true);
 		Request request = getRequest(Url.parse("crypt." + ENCRYPTED_BOOKMARKABLE_URL));
@@ -632,29 +661,23 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		assertTrue(requestHandler instanceof RenderPageRequestHandler);
 
-		RenderPageRequestHandler handler = (RenderPageRequestHandler) requestHandler;
+		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(Page2.class, handler.getPageClass());
 	}
 
-	@Test(expected = PageExpiredException.class)
-	public void expiredMarkedEncryptedUrlThrowsPageExpiredException()
+	@Test
+	void expiredMarkedEncryptedUrlThrowsPageExpiredException()
 	{
 		mapper.setMarkEncryptedUrls(true);
-		Url encryptedUrl = mapper.mapHandler(new RenderPageRequestHandler(new PageProvider(Page2.class)));
+		Url encryptedUrl = mapper
+			.mapHandler(new RenderPageRequestHandler(new PageProvider(Page2.class)));
 		assertTrue(encryptedUrl.getSegments().get(0).startsWith("crypt."));
 		encryptedUrl.getSegments().remove(0);
 		encryptedUrl.getSegments().add(0, "crypt.no decryptable");
-		mapper.mapRequest(getRequest(encryptedUrl));
-	}
 
-	private static IRequestHandler unwrapRequestHandlerDelegate(IRequestHandler handler)
-	{
-		while (handler instanceof IRequestHandlerDelegate)
-		{
-			handler = ((IRequestHandlerDelegate) handler).getDelegateHandler();
-		}
-
-		return handler;
+		assertThrows(PageExpiredException.class, () -> {
+			mapper.mapRequest(getRequest(encryptedUrl));
+		});
 	}
 
 	/**
@@ -664,14 +687,15 @@ public class CryptoMapperTest extends AbstractMapperTest
 	{
 		public HomePage()
 		{
-			add(new Link<Void>("link") {
+			add(new Link<Void>("link")
+			{
 				@Override
 				public void onClick()
 				{
 				}
 			});
 		}
-		
+
 		@Override
 		public IMarkupFragment getMarkup()
 		{
@@ -686,14 +710,15 @@ public class CryptoMapperTest extends AbstractMapperTest
 	{
 		public Page1()
 		{
-			add(new Link<Void>("link") {
+			add(new Link<Void>("link")
+			{
 				@Override
 				public void onClick()
 				{
 				}
 			});
 		}
-		
+
 		@Override
 		public IMarkupFragment getMarkup()
 		{
@@ -708,14 +733,15 @@ public class CryptoMapperTest extends AbstractMapperTest
 	{
 		public Page2()
 		{
-			add(new Link<Void>("link") {
+			add(new Link<Void>("link")
+			{
 				@Override
 				public void onClick()
 				{
 				}
 			});
 		}
-		
+
 		@Override
 		public IMarkupFragment getMarkup()
 		{

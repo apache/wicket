@@ -18,7 +18,6 @@ package org.apache.wicket.contrib.velocity;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.util.collections.MiniMap;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
@@ -43,14 +42,14 @@ public class VelocityJavaScriptPage extends WebPage
 		String javascript = "msg1: Stoopid test 1\nmsg2: Stooopid test 2";
 		JavaScriptUtils.writeJavaScript(getResponse(), javascript, id);
 
-		IModel<MiniMap<String, String>> model = new Model<MiniMap<String, String>>()
+		IModel<MiniMap<String, Object>> model = new IModel<>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public MiniMap<String, String> getObject()
+			public MiniMap<String, Object> getObject()
 			{
-				MiniMap<String, String> map = new MiniMap<>(2);
+				MiniMap<String, Object> map = new MiniMap<>(2);
 				map.put("msg1", MSG1);
 				map.put("msg2", "Stooopid test 2");
 				return map;

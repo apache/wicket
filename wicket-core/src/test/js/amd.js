@@ -22,21 +22,18 @@ define(
 	[
 		"jquery",
 		"Wicket",
-		"WicketDebugWindow",
 		"qunit"
 	],
-	function ($, w, wdw, qunit) {
+	function ($, w, qunit) {
 		"use strict";
 
 		return {
 			runTests: function () {
 				qunit.test("Wicket object is successfully loaded via RequireJs", function () {
-
-					qunit.expect(15);
+					qunit.expect(13);
 
 					// test for one member for each Wicket.** module
-					qunit.ok($.isFunction(w.Browser.isChrome), "Wicket Browser (from wicket-event-jquery.js) is imported");
-					qunit.ok($.isFunction(w.Event.fix), "Wicket Event (from wicket-event-jquery.js) is imported");
+					qunit.ok($.isFunction(w.Event.fix), "Wicket Event (from wicket-ajax-jquery.js) is imported");
 					qunit.ok($.isFunction(w.Ajax.ajax), "Wicket Ajax (from wicket-ajax-jquery.js) is imported");
 					qunit.ok($.isFunction(w.DOM.get), "Wicket DOM (from wicket-ajax-jquery.js) is imported");
 					qunit.ok($.isFunction(w.Form.serialize), "Wicket Form (from wicket-ajax-jquery.js) is imported");
@@ -50,8 +47,6 @@ define(
 					qunit.ok($.isFunction(new w.ThrottlerEntry().getFunc), "Wicket ThrottlerEntry (from wicket-ajax-jquery.js) is imported");
 
 					qunit.equal('div', w.DOM.get('amdElement').tagName.toLowerCase(), "Wicket.DOM.get() works");
-
-					qunit.ok($.isFunction(w.Ajax.DebugWindow.logError), "Wicket Ajax.DebugWindow (from wicket-ajax-jquery-debug.js) is imported");
 				});
 			}
 		};

@@ -64,30 +64,36 @@ public interface IPartialPageRequestHandler extends IPageRequestHandler
 	void addChildren(MarkupContainer parent, Class<?> childCriteria);
 
 	/**
-	 * Adds javascript that will be evaluated on the client side after components are replaced
-	 *
-	 * <p>If the javascript needs to do something asynchronously (i.e. needs to use window.setTimeout(), for example
-	 * to do animations) then the following special syntax may be used: <code>someFunctionName|myJsLogic(someFunctionName);</code>.
-	 * Wicket will transform it to: <code>function(someFunctionName){myJsLogic(someFunctionName);}</code> and your code
-	 * is responsible to execute <em>someFunctionName()</em> when the asynchronous task is finished. Once <em>someFunctionName</em>
-	 * is executed the next appended script will be executed. <strong>Important</strong>: it is highly recommended to
-	 * execute your code in try/finally to make sure <em>someFunctionName</em> is executed even an error happens in
-	 * your code, otherwise all following scripts wont be executed.</p>
+	 * Add JavasSript that will be evaluated on the client side after components are replaced
+	 * <p>
+	 * If the JavaScript needs to do something asynchronously (i.e. uses window.setTimeout(), for example
+	 * to do animations), it may call <code>Wicket.Ajax.suspendCall()</code> to suspend the evaluation of the current
+	 * Ajax call. The returned function has to be called when the asynchronous task is finished, after which the evaluation
+	 * of the Ajax call is continued, e.g.
+	 * <pre>
+	 * target.appendJavaScript("var continueCall = Wicket.Ajax.suspendCall(); try { ... } finally { continueCall(); }");
+	 * </pre>
+	 * <strong>Important</strong>: it is recommended to execute your code in try/finally to make sure
+	 * the function is executed even if an error happens in your code, otherwise all following scripts and
+	 * component replacements wont be made.
 	 *
 	 * @param javascript
 	 */
 	void appendJavaScript(CharSequence javascript);
 
 	/**
-	 * Adds javascript that will be evaluated on the client side before components are replaced.
-	 *
-	 * <p>If the javascript needs to do something asynchronously (i.e. needs to use window.setTimeout(), for example
-	 * to do animations) then the following special syntax may be used: <code>someFunctionName|myJsLogic(someFunctionName);</code>.
-	 * Wicket will transform it to: <code>function(someFunctionName){myJsLogic(someFunctionName);}</code> and your code
-	 * is responsible to execute <em>someFunctionName()</em> when the asynchronous task is finished. Once <em>someFunctionName</em>
-	 * is executed the next prepended script will be executed. <strong>Important</strong>: it is highly recommended to
-	 * execute your code in try/finally to make sure <em>someFunctionName</em> is executed even an error happens in
-	 * your code, otherwise all following scripts and component replacements wont be made.</p>
+	 * Add JavaScript that will be evaluated on the client side before components are replaced.
+	 * <p>
+	 * If the JavaScript needs to do something asynchronously (i.e. uses window.setTimeout(), for example
+	 * to do animations), it may call <code>Wicket.Ajax.suspendCall()</code> to suspend the evaluation of the current
+	 * Ajax call. The returned function has to be called when the asynchronous task is finished, after which the evaluation
+	 * of the Ajax call is continued, e.g.
+	 * <pre>
+	 * target.prependJavaScript("var continueCall = Wicket.Ajax.suspendCall(); try { ... } finally { continueCall(); }");
+	 * </pre>
+	 * <strong>Important</strong>: it is recommended to execute your code in try/finally to make sure
+	 * the function is executed even if an error happens in your code, otherwise all following scripts and
+	 * component replacements wont be made.
 	 *
 	 * @param javascript
 	 */

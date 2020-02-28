@@ -25,6 +25,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Spliterators;
 import java.util.stream.Stream;
@@ -128,7 +129,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * This is stored in meta data because it only is necessary when a child is removed, and this
 	 * saves the memory necessary for a field on a widely used class.
 	 */
-	private static final MetaDataKey<LinkedList<RemovedChild>> REMOVALS_KEY = new MetaDataKey<LinkedList<RemovedChild>>()
+	private static final MetaDataKey<LinkedList<RemovedChild>> REMOVALS_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -589,7 +590,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 			private void refreshInternalIteratorIfNeeded()
 			{
-				if (modCounter != 0 && expectedModCounter >= modCounter)
+				if (expectedModCounter >= modCounter)
 					return;
 
 				if (children == null)
@@ -1559,8 +1560,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				@Override
 				public void component(Component component, IVisit<Void> visit)
 				{
-					if (Strings.getLevenshteinDistance(id.toLowerCase(), component.getId()
-						.toLowerCase()) < 3)
+					if (Strings.getLevenshteinDistance(id.toLowerCase(Locale.ROOT), component.getId()
+						.toLowerCase(Locale.ROOT)) < 3)
 					{
 						names.add(component.getPageRelativePath());
 					}
@@ -1694,6 +1695,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.Component#internalMarkRendering(boolean)
+	 */
 	@Override
 	void internalMarkRendering(boolean setRenderingFlag)
 	{
@@ -1793,22 +1798,11 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	@Override
-	protected void onAfterRenderChildren()
-	{
-		for (Component child : this)
-		{
-			// set RENDERING_FLAG to false for auto-component's children (like Enclosure)
-			child.markRendering(false);
-		}
-		super.onAfterRenderChildren();
-	}
-
-	@Override
 	protected void onDetach()
 	{
 		super.onDetach();
 
-		modCounter = 0;
+		modCounter++;
 		removals_clear();
 
 		if (queue != null && !queue.isEmpty() && hasBeenRendered())

@@ -27,7 +27,6 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.Response;
@@ -93,7 +92,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	 * we store this FilteringHeaderResponse in the RequestCycle so that the containers can access
 	 * it to render their bucket of stuff
 	 */
-	private static final MetaDataKey<FilteringHeaderResponse> RESPONSE_KEY = new MetaDataKey<FilteringHeaderResponse>()
+	private static final MetaDataKey<FilteringHeaderResponse> RESPONSE_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -234,6 +233,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	 *            the name of the filter to get the bucket for
 	 * @return the content that was accepted by the filter with this name
 	 */
+	@SuppressWarnings("resource")
 	public final CharSequence getContent(String filterName)
 	{
 		if (filterName == null || !responseFilterMap.containsKey(filterName))
@@ -263,16 +263,28 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 			}
 		};
 
-		ResourceAggregator resourceAggregator = new ResourceAggregator(headerRenderer);
+		headerRenderer = decorate(headerRenderer);
 
 		for (HeaderItem curItem : resp)
 		{
-			resourceAggregator.render(curItem);
+			headerRenderer.render(curItem);
 		}
 
-		resourceAggregator.close();
+		headerRenderer.close();
 
 		return strResponse.getBuffer();
+	}
+
+	/**
+	 * Decorate the given response used to get contents.
+	 * 
+	 * @param response
+	 *            response to decorate
+	 * @return default implementation just returns the response
+	 */
+	protected IHeaderResponse decorate(IHeaderResponse response)
+	{
+		return response;
 	}
 
 	private void render(HeaderItem item, String filterName)

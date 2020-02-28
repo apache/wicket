@@ -1,5 +1,6 @@
 
 
 
-In this chapter we have seen which stages compose the lifecycle of Wicket components and which hook methods they provide. Overriding these methods we can dynamically modify the component hierarchy and we can enrich the behavior of our custom components.
+When a request has finished, the page and all its contained components move a the detached stage:
 
+The hook method _onDetach()_ notifies each component that it should release all held resources no longer needed until the next request.

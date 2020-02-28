@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
 import org.apache.wicket.util.string.Strings;
 
 class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
@@ -64,13 +63,13 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 			}
 			else
 			{
-				Assert.fail();
+				throw new AssertionError();
 			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			Assert.fail(e.getMessage());
+			throw new AssertionError(e.getMessage());
 		}
 
 		return added;

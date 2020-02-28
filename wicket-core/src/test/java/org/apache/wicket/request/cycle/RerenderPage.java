@@ -17,13 +17,12 @@
 package org.apache.wicket.request.cycle;
 
 import java.io.Serializable;
-
+import java.time.Duration;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.time.Duration;
 
 @SuppressWarnings("javadoc")
 public class RerenderPage extends WebPage
@@ -47,7 +46,7 @@ public class RerenderPage extends WebPage
 		this.newValue = pars.get("value").toInteger();
 		
 		// make page statefull
-		add(new AjaxSelfUpdatingTimerBehavior(Duration.ONE_DAY));
+		add(new AjaxSelfUpdatingTimerBehavior(Duration.ofDays(1)));
 	}
 
 	@Override

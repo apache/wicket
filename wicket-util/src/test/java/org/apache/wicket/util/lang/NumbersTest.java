@@ -16,17 +16,18 @@
  */
 package org.apache.wicket.util.lang;
 
+import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @since 1.5.8
  */
 @SuppressWarnings("javadoc")
-public class NumbersTest extends Assert
+public class NumbersTest
 {
 	/**
 	 * See WICKET-4696 for Float and Double minimum value

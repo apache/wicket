@@ -17,22 +17,20 @@
 package org.apache.wicket.protocol.http;
 
 import static java.lang.System.arraycopy;
-
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +54,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	/**
 	 * Key for storing request data in the request cycle's meta data.
 	 */
-	private static MetaDataKey<RequestData> REQUEST_DATA = new MetaDataKey<RequestData>()
+	private static MetaDataKey<RequestData> REQUEST_DATA = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -64,7 +62,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	/**
 	 * Key for storing session data in the request cycle's meta data.
 	 */
-	private static MetaDataKey<SessionData> SESSION_DATA = new MetaDataKey<SessionData>()
+	private static MetaDataKey<SessionData> SESSION_DATA = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -295,6 +293,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 			requestCycle.setMetaData(SESSION_DATA, sessionData);
 	}
 
+	@Override
 	public RequestData getCurrentRequest()
 	{
 		RequestCycle requestCycle = RequestCycle.get();
@@ -495,7 +494,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	{
 		Args.notNull(date, "date");
 
-		final Calendar cal = Calendar.getInstance(Time.GMT);
+		final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		final StringBuilder buf = new StringBuilder(32);
 
 		cal.setTimeInMillis(date.getTime());

@@ -16,9 +16,12 @@
  */
 package org.apache.wicket.markup.html.pages;
 
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
 
 /**
  * A parent page for all pages that are used to show an error to the user. Setups the common
@@ -53,5 +56,13 @@ public abstract class AbstractErrorPage extends WebPage
 	public boolean isVersioned()
 	{
 		return false;
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(CssHeaderItem
+			.forReference(new CssResourceReference(AbstractErrorPage.class, "error.css")));
 	}
 }

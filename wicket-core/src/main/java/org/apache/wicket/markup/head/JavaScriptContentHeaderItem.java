@@ -20,9 +20,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
-import org.apache.wicket.request.Response;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
 
 /**
  * {@link HeaderItem} for internal (embedded in the header) javascript content.
@@ -41,12 +42,9 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 	 * @param id
 	 *            unique id for the javascript element. This can be null, however in that case the
 	 *            ajax header contribution can't detect duplicate script fragments.
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
-	public JavaScriptContentHeaderItem(CharSequence javaScript, String id, String condition)
+	public JavaScriptContentHeaderItem(CharSequence javaScript, String id)
 	{
-		super(condition);
 		this.javaScript = javaScript;
 		setId(id);
 	}
@@ -62,19 +60,11 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 	@Override
 	public void render(Response response)
 	{
-		boolean hasCondition = Strings.isEmpty(getCondition()) == false;
-		if (hasCondition)
-		{
-			response.write("<!--[if ");
-			response.write(getCondition());
-			response.write("]>");
-		}
-		JavaScriptUtils.writeJavaScript(response, getJavaScript(), getId());
-
-		if (hasCondition)
-		{
-			response.write("<![endif]-->\n");
-		}
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
+		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
+		JavaScriptUtils.writeInlineScript(response, getJavaScript(), attributes);
 	}
 
 	@Override

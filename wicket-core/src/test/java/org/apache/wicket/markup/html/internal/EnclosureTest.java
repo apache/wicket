@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 
 import org.apache.wicket.Component;
@@ -36,29 +40,32 @@ import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class EnclosureTest extends WicketTestCase
+class EnclosureTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderHomePage() throws Exception
+	void testRenderHomePage() throws Exception
 	{
 		executeTest(EnclosurePage_1.class, "EnclosurePageExpectedResult_1.html");
+		
+		EnclosurePage_1 page = (EnclosurePage_1)tester.getLastRenderedPage();
+		
+		assertEquals(0, page.pendingAfterRenderCount);
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderHomePage2() throws Exception
+	void testRenderHomePage2() throws Exception
 	{
 		executeTest(EnclosurePage_2.class, "EnclosurePageExpectedResult_2.html");
 	}
@@ -67,7 +74,7 @@ public class EnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderHomePage3() throws Exception
+	void testRenderHomePage3() throws Exception
 	{
 		executeTest(EnclosurePage_3.class, "EnclosurePageExpectedResult_3.html");
 	}
@@ -76,7 +83,7 @@ public class EnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderHomePage4() throws Exception
+	void testRenderHomePage4() throws Exception
 	{
 		executeTest(EnclosurePage_4.class, new PageParameters().set("visible", false),
 			"EnclosurePageExpectedResult_4.html");
@@ -86,7 +93,7 @@ public class EnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderHomePage4_1() throws Exception
+	void testRenderHomePage4_1() throws Exception
 	{
 		executeTest(EnclosurePage_4.class, new PageParameters().set("visible", true),
 			"EnclosurePageExpectedResult_4-1.html");
@@ -96,7 +103,7 @@ public class EnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderHomePage5() throws Exception
+	void testRenderHomePage5() throws Exception
 	{
 		executeTest(EnclosurePage_5.class, new PageParameters().set("visible", false),
 			"EnclosurePageExpectedResult_5.html");
@@ -106,7 +113,7 @@ public class EnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderHomePage5_1() throws Exception
+	void testRenderHomePage5_1() throws Exception
 	{
 		executeTest(EnclosurePage_5.class, new PageParameters().set("visible", true),
 			"EnclosurePageExpectedResult_5-1.html");
@@ -118,7 +125,7 @@ public class EnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testVisibilityOfChildren() throws Exception
+	void testVisibilityOfChildren() throws Exception
 	{
 		// render with enclosure initially visible
 		tester.startPage(EnclosurePage_6.class);
@@ -143,7 +150,7 @@ public class EnclosureTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void testRender()
+	void testRender()
 	{
 		tester.startPage(EnclosurePage_7.class);
 	}
@@ -153,7 +160,7 @@ public class EnclosureTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void testRender8() throws Exception
+	void testRender8() throws Exception
 	{
 		executeTest(EnclosurePage_8.class, "EnclosurePageExpectedResult_8.html");
 	}
@@ -182,7 +189,7 @@ public class EnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRender9() throws Exception
+	void testRender9() throws Exception
 	{
 		executePage(new EnclosurePage_9(), "EnclosurePageExpectedResult_9.html");
 		EnclosurePage_9 page = (EnclosurePage_9)tester.getLastRenderedPage();
@@ -239,7 +246,7 @@ public class EnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRender9a() throws Exception
+	void testRender9a() throws Exception
 	{
 		Class<? extends Page> clazz = EnclosurePage_9.class;
 
@@ -282,7 +289,7 @@ public class EnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRender10() throws Exception
+	void testRender10() throws Exception
 	{
 		Class<? extends Page> clazz = EnclosurePage_10.class;
 		executeTest(clazz, "EnclosurePageExpectedResult_10.html");
@@ -323,7 +330,7 @@ public class EnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderPage11() throws Exception
+	void testRenderPage11() throws Exception
 	{
 		executeTest(EnclosurePage_11.class, "EnclosurePageExpectedResult_11.html");
 	}
@@ -332,7 +339,7 @@ public class EnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderPage12() throws Exception
+	void testRenderPage12() throws Exception
 	{
 		executeTest(EnclosurePage_12.class, "EnclosurePageExpectedResult_12.html");
 	}
@@ -341,7 +348,7 @@ public class EnclosureTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderPage13() throws Exception
+	void testRenderPage13() throws Exception
 	{
 		tester = new WicketTester(new MockApplication()
 		{
@@ -369,7 +376,7 @@ public class EnclosureTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-3842
 	 */
 	@Test
-	public void testAtrribute()
+	void testAtrribute()
 	{
 		/**
 		 * Page for the test
@@ -378,7 +385,7 @@ public class EnclosureTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			public TestPage()
+			TestPage()
 			{
 				final Label l = new Label("msg", "$label$");
 				add(l);
@@ -419,7 +426,7 @@ public class EnclosureTest extends WicketTestCase
 	 * Test case for https://issues.apache.org/jira/browse/WICKET-4172
 	 */
 	@Test
-	public void childWithDeeperPathInTransparentContainer()
+	void childWithDeeperPathInTransparentContainer()
 	{
 		boolean enclosureChildVisible = true;
 		tester.startPage(new ChildWithDeeperPathInTransparentContainerPage(enclosureChildVisible));
@@ -433,7 +440,7 @@ public class EnclosureTest extends WicketTestCase
 	}
 	
 	@Test
-	public void nestedEnclousers()
+	void nestedEnclousers()
 	{
 		TestPageMarkup p = new TestPageMarkup();
 		p.setPageMarkup("<wicket:enclosure child='labelOuter'>tOuter Enclosure <span wicket:id='labelOuter'/>"
@@ -448,7 +455,7 @@ public class EnclosureTest extends WicketTestCase
 	 * Test case for https://issues.apache.org/jira/browse/WICKET-6043
 	 */
 	@Test
-	public void enclosureInsideContainererAndInheritance() throws Exception
+	void enclosureInsideContainererAndInheritance() throws Exception
 	{
 		tester.startPage(ListViewInContainerPage.class);
 		tester.assertRenderedPage(ListViewInContainerPage.class);
@@ -458,7 +465,7 @@ public class EnclosureTest extends WicketTestCase
 	{
 		private String markup;
 
-		public TestPageMarkup()
+		TestPageMarkup()
 		{
 		}
 
@@ -467,12 +474,12 @@ public class EnclosureTest extends WicketTestCase
 			this.markup = markup;
 		}
 
-		protected String getPageMarkup()
+		String getPageMarkup()
 		{
 			return markup;
 		}
 
-		public void setPageMarkup(String markup)
+		void setPageMarkup(String markup)
 		{
 			this.markup = markup;
 		}

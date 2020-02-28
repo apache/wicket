@@ -30,12 +30,14 @@ import org.apache.wicket.request.Request;
  */
 public final class LibrarySession extends AuthenticatedWebSession
 {
+	private static final String USERNAME_PASSWORD = "wicket";
+
 	// Logged in user
 	private User user;
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param request
 	 *            The current request object
 	 */
@@ -47,7 +49,7 @@ public final class LibrarySession extends AuthenticatedWebSession
 	/**
 	 * Checks the given username and password, returning a User object if if the username and
 	 * password identify a valid user.
-	 * 
+	 *
 	 * @param username
 	 *            The username
 	 * @param password
@@ -57,9 +59,7 @@ public final class LibrarySession extends AuthenticatedWebSession
 	@Override
 	public final boolean authenticate(final String username, final String password)
 	{
-		final String WICKET = "wicket";
-
-		if (WICKET.equalsIgnoreCase(username) && WICKET.equalsIgnoreCase(password))
+		if (USERNAME_PASSWORD.equalsIgnoreCase(username) && USERNAME_PASSWORD.equalsIgnoreCase(password))
 		{
 			// Create User object
 			final User user = new User();

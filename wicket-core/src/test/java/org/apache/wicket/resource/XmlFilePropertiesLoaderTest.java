@@ -16,19 +16,18 @@
  */
 package org.apache.wicket.resource;
 
-
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * WICKET-2035 Change naming convention for xml properties files to *.properties.xml instead of
  * *.xml
  */
-public class XmlFilePropertiesLoaderTest extends WicketTestCase
+class XmlFilePropertiesLoaderTest extends WicketTestCase
 {
 	static Map<Locale, String> EXPECTED_LOCALIZATIONS = new HashMap<Locale, String>();
 	static
@@ -42,7 +41,7 @@ public class XmlFilePropertiesLoaderTest extends WicketTestCase
 	 * (PageWithXmlProperties_locale).properties.xml
 	 */
 	@Test
-	public void wicket2035()
+	void wicket2035()
 	{
 		for (Locale locale : EXPECTED_LOCALIZATIONS.keySet())
 		{

@@ -38,7 +38,7 @@ import org.apache.wicket.util.lang.Generics;
 public class RequestCycleCachedResourceVersion implements IResourceVersion
 {
 	private static final MetaDataKey<Map<Serializable, String>> CACHE_KEY =
-		new MetaDataKey<Map<Serializable, String>>()
+		new MetaDataKey<>()
 		{
 			private static final long serialVersionUID = 1L;
 		};

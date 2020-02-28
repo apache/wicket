@@ -17,18 +17,18 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class TestFormHasError extends WicketTestCase
+class TestFormHasError extends WicketTestCase
 {
 
 	/**
 	 * testFormHasError()
 	 */
 	@Test
-	public void testFormHasError()
+    void testFormHasError()
 	{
 		tester.startPage(FormHasErrorPage.class);
 		tester.assertRenderedPage(FormHasErrorPage.class);
@@ -40,7 +40,7 @@ public class TestFormHasError extends WicketTestCase
 	 * testFormComponentHasError()
 	 */
 	@Test
-	public void testFormComponentHasError()
+    void testFormComponentHasError()
 	{
 		tester.startPage(FormHasErrorPage.class);
 		tester.assertRenderedPage(FormHasErrorPage.class);
@@ -52,7 +52,7 @@ public class TestFormHasError extends WicketTestCase
 	 * testComponentHasError()
 	 */
 	@Test
-	public void testComponentHasError()
+    void testComponentHasError()
 	{
 		tester.startPage(FormHasErrorPage.class);
 		tester.assertRenderedPage(FormHasErrorPage.class);

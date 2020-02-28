@@ -20,20 +20,17 @@ import java.util.Collection;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A {@link PartialPageUpdate} that serializes itself to XML.
  */
 public class XmlPartialPageUpdate extends PartialPageUpdate
 {
-	private static final Logger LOG = LoggerFactory.getLogger(XmlPartialPageUpdate.class);
-
 	/**
 	 * The name of the root element in the produced XML document.
 	 */
@@ -59,72 +56,30 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 		response.write("\"?>");
 		response.write(START_ROOT_ELEMENT);
 	}
-
+	
 	@Override
 	protected void writeComponent(Response response, String markupId, Component component, String encoding)
 	{
-		if (component.getRenderBodyOnly() == true)
-		{
-			throw new IllegalStateException(
-					"A partial update is not possible for a component that has renderBodyOnly enabled. Component: " +
-							component.toString());
-		}
-
-		component.setOutputMarkupId(true);
-
-		// Initialize temporary variables
-		final Page page = component.findParent(Page.class);
-		if (page == null)
-		{
-			// dont throw an exception but just ignore this component, somehow
-			// it got removed from the page.
-			LOG.warn("Component '{}' with markupid: '{}' not rendered because it was already removed from page",
-					component, markupId);
-			return;
-		}
-
 		// substitute our encoding response for the old one so we can capture
 		// component's markup in a manner safe for transport inside CDATA block
 		Response oldResponse = RequestCycle.get().setResponse(bodyBuffer);
 
 		try
 		{
+			// render any associated headers of the component
+			writeHeaderContribution(response, component);
+			
 			bodyBuffer.reset();
 			
-			page.startComponentRender(component);
-
 			try
 			{
-				component.prepareForRender();
-
-				// render any associated headers of the component
-				writeHeaderContribution(response, component);
-			}
-			catch (RuntimeException e)
-			{
-				try
-				{
-					component.afterRender();
-				}
-				catch (RuntimeException e2)
-				{
-					// ignore this one could be a result off.
-				}
-				bodyBuffer.reset();
-				throw e;
-			}
-
-			try
-			{
-				component.render();
+				component.renderPart();
 			}
 			catch (RuntimeException e)
 			{
 				bodyBuffer.reset();
 				throw e;
 			}
-
-			page.endComponentRender(component);
 		}
 		finally
 		{
@@ -148,9 +103,8 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	}
 
 	@Override
-	protected void writeHeaderContribution(Response response)
+	protected void writeHeaderContribution(Response response, CharSequence contents)
 	{
-		CharSequence contents = headerBuffer.getContents();
 		if (Strings.isEmpty(contents) == false)
 		{
 			response.write("<header-contribution>");
@@ -162,56 +116,6 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 			response.write("</head>]]>");
 			response.write("</header-contribution>");
 		}
-	}
-
-	@Override
-	protected void writeNormalEvaluations(final Response response, final Collection<CharSequence> scripts)
-	{
-		writeEvaluations(response, "evaluate", scripts);
-
-	}
-
-	@Override
-	protected void writePriorityEvaluations(Response response, Collection<CharSequence> scripts)
-	{
-		writeEvaluations(response, "priority-evaluate", scripts);
-	}
-
-	private void writeEvaluations(final Response response, String elementName, Collection<CharSequence> scripts)
-	{
-		if (scripts.size() > 0)
-		{
-			StringBuilder combinedScript = new StringBuilder(1024);
-			for (CharSequence script : scripts)
-			{
-				combinedScript.append("(function(){").append(script).append("})();");
-			}
-			writeEvaluation(elementName, response, combinedScript);
-		}
-	}
-
-	/**
-	* @param invocation
-	*            type of invocation tag, usually {@literal evaluate} or
-	*            {@literal priority-evaluate}
-	* @param response
-	* @param js
-	*/
-	private void writeEvaluation(final String invocation, final Response response, final CharSequence js)
-	{
-		response.write("<");
-		response.write(invocation);
-		response.write(">");
-
-		response.write("<![CDATA[");
-		response.write(encode(js));
-		response.write("]]>");
-
-		response.write("</");
-		response.write(invocation);
-		response.write(">");
-
-		bodyBuffer.reset();
 	}
 
 	protected CharSequence encode(CharSequence str)

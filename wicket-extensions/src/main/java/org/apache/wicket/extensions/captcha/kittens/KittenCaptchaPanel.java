@@ -24,20 +24,23 @@ import java.awt.image.RescaleOp;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
 import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageInputStream;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.IAjaxCallListener;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.image.NonCachingImage;
@@ -49,7 +52,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.DynamicImageResource;
-import org.apache.wicket.util.time.Time;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -294,6 +297,17 @@ public class KittenCaptchaPanel extends Panel
 		// Could not place animal
 		return null;
 	}
+	
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(JavaScriptHeaderItem.forReference(
+			new JavaScriptResourceReference(KittenCaptchaPanel.class, "kittencaptcha.js")));
+		response.render(OnEventHeaderItem.forComponent(image, "load", "hideLoadingIndicator()"));
+		response.render(OnDomReadyHeaderItem.forScript("if (document.getElementById('"
+			+ image.getMarkupId() + "').complete) hideLoadingIndicator();"));
+	}
 
 	/**
 	 * @param max
@@ -428,7 +442,7 @@ public class KittenCaptchaPanel extends Panel
 		protected byte[] getImageData(final Attributes attributes)
 		{
 			// Handle caching
-			setLastModifiedTime(Time.now());
+			setLastModifiedTime(Instant.now());
 			final WebResponse response = (WebResponse)RequestCycle.get().getResponse();
 			response.setHeader("Cache-Control", "no-cache, must-revalidate, max-age=0, no-store");
 
@@ -466,7 +480,7 @@ public class KittenCaptchaPanel extends Panel
 		private void clearData()
 		{
 			invalidate();
-			setLastModifiedTime(Time.now());
+			setLastModifiedTime(Instant.now());
 		}
 
 		/**

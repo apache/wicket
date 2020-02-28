@@ -38,15 +38,15 @@ public class FeedbackCollector
 
 	/**
 	 * Constructs a collector that will only collect messages from {@link Session}. To collect
-	 * messages from session and components use {@link #FeedbackCollector(Component)}.
+	 * messages from session and components use {@link #FeedbackCollector(Component, boolean)}.
 	 */
 	public FeedbackCollector()
 	{
-		this(null);
+		this(null, true);
 	}
 
 	/**
-	 * Constructs a collector that will collect messages from {@link Session} and specified
+	 * Constructs a collector that will collect messages from the specified
 	 * {@code container}
 	 * 
 	 * @param component
@@ -54,7 +54,22 @@ public class FeedbackCollector
 	 */
 	public FeedbackCollector(Component component)
 	{
+		this(component, false);
+	}
+
+	/**
+	 * Constructs a collector that will collect messages from {@link Session} and specified
+	 * {@code container}
+	 *
+	 * @param component
+	 *            root component from which feedback will be collected
+	 * @param includeSession
+	 *            controls whether or not feedback from the {@link Session} will be collected
+	 */
+	public FeedbackCollector(Component component, boolean includeSession)
+	{
 		this.component = component;
+		this.includeSession = includeSession;
 	}
 
 	/**

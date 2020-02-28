@@ -289,7 +289,7 @@ public class WebPageRenderer extends PageRenderer
 
 	protected boolean isNewPageInstance()
 	{
-		return getPageProvider().isNewPageInstance();
+		return !getPageProvider().hasPageInstance();
 	}
 
 	protected boolean shouldPreserveClientUrl(RequestCycle requestCycle)

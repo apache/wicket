@@ -17,7 +17,9 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -26,7 +28,6 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
-import org.apache.wicket.util.collections.ArrayListStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	private static final Logger log = LoggerFactory.getLogger(HtmlHandler.class);
 
 	/** Tag stack to find balancing tags */
-	final private ArrayListStack<ComponentTag> stack = new ArrayListStack<ComponentTag>();
+	final private ArrayDeque<ComponentTag> stack = new ArrayDeque<ComponentTag>();
 
 	/** Map of simple tags. */
 	private static final Map<String, Boolean> doesNotRequireCloseTag = new HashMap<String, Boolean>();
@@ -200,7 +201,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	 */
 	public static boolean requiresCloseTag(final String name)
 	{
-		return doesNotRequireCloseTag.get(name.toLowerCase()) == null;
+		return doesNotRequireCloseTag.get(name.toLowerCase(Locale.ROOT)) == null;
 	}
 
 	/**

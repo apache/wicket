@@ -77,9 +77,10 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  */
 public class FencedFeedbackPanel extends FeedbackPanel
 {
+	
 	private static final long serialVersionUID = 1L;
 
-	private static final MetaDataKey<Integer> FENCE_KEY = new MetaDataKey<Integer>()
+	private static final MetaDataKey<Integer> FENCE_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -179,37 +180,15 @@ public class FencedFeedbackPanel extends FeedbackPanel
 				if (fence == null)
 				{
 					// this is the catch-all panel
-
-					return new FeedbackCollector(panel.getPage())
-					{
-						@Override
-						protected boolean shouldRecurseInto(Component component)
-						{
-							return !componentIsMarkedAsFence(component);
-						}
-					}.collect(filter);
+					return new FencedFeedbackCollector(panel.getPage(), true).collect(filter);
 				}
 				else
 				{
 					// this is a fenced panel
-
-					return new FeedbackCollector(fence)
-					{
-						@Override
-						protected boolean shouldRecurseInto(Component component)
-						{
-							// only recurse into components that are not fences
-							return !componentIsMarkedAsFence(component);
-						}
-					}.setIncludeSession(false).collect(filter);
+					return new FencedFeedbackCollector(fence, false).collect(filter);
 				}
 			}
 		};
-	}
-
-	private boolean componentIsMarkedAsFence(Component component)
-	{
-		return component.getMetaData(FENCE_KEY) != null;
 	}
 
 	@Override
@@ -223,5 +202,24 @@ public class FencedFeedbackPanel extends FeedbackPanel
 			incrementFenceCount();
 		}
 		super.onReAdd();
+	}
+	
+	private final class FencedFeedbackCollector extends FeedbackCollector
+	{
+		private FencedFeedbackCollector(Component component, boolean includeSession)
+		{
+			super(component, includeSession);
+		}
+
+		@Override
+		protected boolean shouldRecurseInto(Component component)
+		{
+			return !componentIsMarkedAsFence(component);
+		}
+		
+		private boolean componentIsMarkedAsFence(Component component)
+		{
+			return component.getMetaData(FENCE_KEY) != null;
+		}
 	}
 }

@@ -26,20 +26,23 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
 
 /**
  * {@link HeaderItem} for scripts that need to be executed after the entire page is loaded.
- * 
+ *
  * @author papegaaij
  */
-public class OnLoadHeaderItem extends HeaderItem
+public class OnLoadHeaderItem extends AbstractCspHeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Creates a {@link OnLoadHeaderItem} for the script.
-	 * 
+	 *
 	 * @param javaScript
 	 *            The script to execute on the load event.
-	 * 
+	 *
 	 * @return A newly created {@link OnLoadHeaderItem}.
 	 */
 	public static OnLoadHeaderItem forScript(CharSequence javaScript)
@@ -61,7 +64,7 @@ public class OnLoadHeaderItem extends HeaderItem
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param javaScript
 	 */
 	public OnLoadHeaderItem(CharSequence javaScript)
@@ -84,8 +87,11 @@ public class OnLoadHeaderItem extends HeaderItem
 		CharSequence js = getJavaScript();
 		if (Strings.isEmpty(js) == false)
 		{
-			JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"load\", " +
-				"function(event) { " + js + ";});");
+			AttributeMap attributes = new AttributeMap();
+			attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+			attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
+			JavaScriptUtils.writeInlineScript(response, "Wicket.Event.add(window, \"load\", " +
+					"function(event) { " + js + ";});", attributes);
 		}
 	}
 
@@ -120,9 +126,9 @@ public class OnLoadHeaderItem extends HeaderItem
 	public List<HeaderItem> getDependencies()
 	{
 		JavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
-		ResourceReference wicketEventReference = ajaxSettings.getWicketEventReference();
+		ResourceReference wicketAjaxReference = ajaxSettings.getWicketAjaxReference();
 		List<HeaderItem> dependencies = super.getDependencies();
-		dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+		dependencies.add(JavaScriptHeaderItem.forReference(wicketAjaxReference));
 		return dependencies;
 	}
 }

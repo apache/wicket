@@ -21,12 +21,12 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.RequestCycleSettings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-5679
  */
-public class StartComponentInPageRedirectToRenderTest extends WicketTestCase
+class StartComponentInPageRedirectToRenderTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -43,7 +43,7 @@ public class StartComponentInPageRedirectToRenderTest extends WicketTestCase
 	}
 
 	@Test
-	public void startComponentInPageRedirectToRender()
+    void startComponentInPageRedirectToRender()
 	{
 		tester.startComponentInPage(new Label("foo"));
 	}

@@ -17,6 +17,8 @@
 package org.apache.wicket.ajax;
 
 
+import org.apache.wicket.util.io.IClusterable;
+
 /**
  * This interface makes it trivial to use busy indicators for ajax requests. This interface can be
  * implemented by a component that has an ajax behavior attached to it, or any parent of the
@@ -32,7 +34,8 @@ package org.apache.wicket.ajax;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface IAjaxIndicatorAware
+@FunctionalInterface
+public interface IAjaxIndicatorAware extends IClusterable
 {
 	/**
 	 * @return the value of the markup id attribute of the indicating element

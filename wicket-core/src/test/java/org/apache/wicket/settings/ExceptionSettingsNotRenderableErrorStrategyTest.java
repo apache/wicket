@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.settings;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -24,22 +29,19 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link ExceptionSettings#notRenderableErrorStrategy}
  */
-public class ExceptionSettingsNotRenderableErrorStrategyTest extends WicketTestCase {
+class ExceptionSettingsNotRenderableErrorStrategyTest extends WicketTestCase {
 
     private WicketTagTestPage wicketTagTestPage;
     private RenderBodyOnlyTestPage renderBodyOnlyTestPage;
 
-    @Before
-    public void before()
+    @BeforeEach
+    void before()
     {
         ExceptionSettings exceptionSettings = tester.getApplication().getExceptionSettings();
         exceptionSettings.setNotRenderableErrorStrategy(ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION);
@@ -49,7 +51,7 @@ public class ExceptionSettingsNotRenderableErrorStrategyTest extends WicketTestC
     }
 
     @Test
-    public void notRenderableErrorStrategy_whenWicketTagAndOutputId_throwException() {
+    void notRenderableErrorStrategy_whenWicketTagAndOutputId_throwException() {
         try
         {
             wicketTagTestPage.component.setOutputMarkupId(true);
@@ -61,7 +63,7 @@ public class ExceptionSettingsNotRenderableErrorStrategyTest extends WicketTestC
     }
 
     @Test
-    public void notRenderableErrorStrategy_whenWicketTagAndOutputPlaceholder_throwException() {
+    void notRenderableErrorStrategy_whenWicketTagAndOutputPlaceholder_throwException() {
         try
         {
             wicketTagTestPage.component.setOutputMarkupPlaceholderTag(true);
@@ -73,7 +75,7 @@ public class ExceptionSettingsNotRenderableErrorStrategyTest extends WicketTestC
     }
 
     @Test
-    public void notRenderableErrorStrategy_whenRenderBodyOnlyAndOutputId_throwException() {
+    void notRenderableErrorStrategy_whenRenderBodyOnlyAndOutputId_throwException() {
         try
         {
             renderBodyOnlyTestPage.component.setOutputMarkupId(true);
@@ -85,7 +87,7 @@ public class ExceptionSettingsNotRenderableErrorStrategyTest extends WicketTestC
     }
 
     @Test
-    public void notRenderableErrorStrategy_whenRenderBodyOnlyAndOutputPlaceholder_throwException() {
+    void notRenderableErrorStrategy_whenRenderBodyOnlyAndOutputPlaceholder_throwException() {
         try
         {
             renderBodyOnlyTestPage.component.setOutputMarkupPlaceholderTag(true);

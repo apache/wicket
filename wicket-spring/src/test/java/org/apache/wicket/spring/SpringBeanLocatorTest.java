@@ -19,9 +19,14 @@ package org.apache.wicket.spring;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.spring.test.SpringContextLocatorMock;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests {@link SpringBeanLocator}
@@ -29,7 +34,7 @@ import org.junit.Test;
  * @author ivaynberg
  * 
  */
-public class SpringBeanLocatorTest extends Assert
+public class SpringBeanLocatorTest
 {
 	private ApplicationContextMock ctx;
 
@@ -38,7 +43,7 @@ public class SpringBeanLocatorTest extends Assert
 	/**
 	 * 
 	 */
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		ctx = new ApplicationContextMock();
@@ -56,7 +61,7 @@ public class SpringBeanLocatorTest extends Assert
 		ctx.putBean("bean", bean);
 
 		SpringBeanLocator locator = new SpringBeanLocator(Bean.class, ctxLocator);
-		assertTrue(locator.locateProxyTarget() == bean);
+		assertSame(locator.locateProxyTarget(), bean);
 	}
 
 	/**
@@ -126,7 +131,7 @@ public class SpringBeanLocatorTest extends Assert
 		ctx.putBean("bean", bean);
 
 		SpringBeanLocator locator = new SpringBeanLocator("bean", Bean.class, ctxLocator);
-		assertTrue(locator.locateProxyTarget() == bean);
+		assertSame(locator.locateProxyTarget(), bean);
 
 	}
 
@@ -230,19 +235,19 @@ public class SpringBeanLocatorTest extends Assert
 		assertEquals(aprime, a);
 		assertEquals(a.hashCode(), aprime.hashCode());
 
-		assertFalse(a.equals(b));
-		assertFalse(a.equals(c));
-		assertFalse(b.equals(c));
+		assertNotEquals(a, b);
+		assertNotEquals(a, c);
+		assertNotEquals(b, c);
 
 		assertEquals(d, dprime);
 		assertEquals(dprime, d);
 		ctx.putBean("locator", a); // we need to register a Bean of type d.getClass()
 		assertEquals(d.hashCode(), dprime.hashCode());
 
-		assertFalse(a.equals(d));
-		assertFalse(d.equals(e));
+		assertNotEquals(a, d);
+		assertNotEquals(d, e);
 
-		assertFalse(a.equals(ctxLocator));
+		assertNotEquals(a, ctxLocator);
 	}
 
 }

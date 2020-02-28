@@ -18,18 +18,18 @@ package org.apache.wicket.resource;
 
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test {@link UtfPropertiesFilePropertiesLoader}.
  */
-public class UtfPropertiesFilePropertiesLoaderTest extends WicketTestCase
+class UtfPropertiesFilePropertiesLoaderTest extends WicketTestCase
 {
 	/**
 	 * Test encoding.
 	 */
 	@Test
-	public void encoding()
+    void encoding()
 	{
 		tester.startPage(PageWithUTF8Properties.class);
 	}

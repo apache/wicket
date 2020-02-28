@@ -13,7 +13,7 @@ Wicket will create an according BufferedHttpServletResponse instance that will b
 
 image::../img/lost-in-redirection-mockup2.png[]
 
-After the buffered response is cached the HTTP status code of 302 get’s provided back to the browser resulting in an additional GET request to the redirect URL (which Wicket sets to the URL of the Form itself). There is a special handling code for this case in the WicketFilter instance that then looks up a Map of buffered responses within the WebApplication accordingly. If an appropriate already cached response for the current request is found, it get’s streamed back to the browser immediately. No additional form processing happens now. The following is a code snippet taken from WicketFilter:
+After the buffered response is cached the HTTP status code of 302 gets provided back to the browser resulting in an additional GET request to the redirect URL (which Wicket sets to the URL of the Form itself). There is a special handling code for this case in the WicketFilter instance that then looks up a Map of buffered responses within the WebApplication accordingly. If an appropriate already cached response for the current request is found, it gets streamed back to the browser immediately. No additional form processing happens now. The following is a code snippet taken from WicketFilter:
 
 [source,java]
 ----
@@ -75,5 +75,3 @@ You could of course turn on the session stickiness between your load balancer (a
 image::../img/lost-in-redirection-mockup4.png[]
 
 Session replication would still provide you with failover in case one of the tomcat server dies for whatever reason and sticky sessions would ensure that the Lost In Redirection problem does not occur any more.
-
-

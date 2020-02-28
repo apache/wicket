@@ -410,7 +410,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	public Enumeration<String> getParameterNames()
 	{
 		final Iterator<String> iterator = parametersMap.keySet().iterator();
-		return new Enumeration<String>()
+		return new Enumeration<>()
 		{
 			@Override
 			public boolean hasMoreElements()

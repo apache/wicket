@@ -23,11 +23,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-
+import java.time.Instant;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.time.Time;
 
 /**
  * A FileSystemResourceStream is an IResourceStream implementation for Java NIO paths.
@@ -140,14 +139,14 @@ public class FileSystemResourceStream extends AbstractResourceStream
 	}
 
 	@Override
-	public Time lastModifiedTime()
+	public Instant lastModifiedTime()
 	{
 		try
 		{
 			BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
 			FileTime lastModifiedTime = attributes.lastModifiedTime();
 			long millis = lastModifiedTime.toMillis();
-			return Time.millis(millis);
+			return Instant.ofEpochMilli(millis);
 		}
 		catch (IOException e)
 		{

@@ -16,12 +16,14 @@
  */
 package org.apache.wicket.extensions.markup.html;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanelTester;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
@@ -38,7 +40,7 @@ public class AjaxLazyLoadPanelTesterTest extends WicketTestCase
 	@Test
 	public void test()
 	{
-		AjaxLazyLoadPanel panel = new AjaxLazyLoadPanel("panel")
+		AjaxLazyLoadPanel<Component> panel = new AjaxLazyLoadPanel<Component>("panel")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -52,7 +54,7 @@ public class AjaxLazyLoadPanelTesterTest extends WicketTestCase
 		tester.assertLabel(
 			"panel:content",
 			"<img alt=\"Loading...\" src=\"./resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif\"/>");
-		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(tester, panel.getParent());
+		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(tester);
 		tester.debugComponentTrees();
 		tester.assertLabel("panel:content", "lazy panel test");
 		String doc = tester.getLastResponseAsString();

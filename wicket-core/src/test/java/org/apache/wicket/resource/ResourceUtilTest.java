@@ -16,20 +16,21 @@
  */
 package org.apache.wicket.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Locale;
 
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReference.UrlAttributes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-
-public class ResourceUtilTest extends Assert
+class ResourceUtilTest
 {
 	@Test
-	public void decodeResourceReferenceAttributesWithString() throws Exception
+	void decodeResourceReferenceAttributesWithString() throws Exception
 	{
 		String urlParameter = "en_GB-style-variation";		
 		UrlAttributes attributes = ResourceUtil.decodeResourceReferenceAttributes(urlParameter);
@@ -61,7 +62,7 @@ public class ResourceUtilTest extends Assert
 	}
 
 	@Test
-	public void decodeResourceReferenceAttributesWithUrl() throws Exception
+	void decodeResourceReferenceAttributesWithUrl() throws Exception
 	{
 		Url url = Url.parse("www.funny.url/?param1=value1");
 		UrlAttributes attributes = ResourceUtil.decodeResourceReferenceAttributes(url);
@@ -82,7 +83,7 @@ public class ResourceUtilTest extends Assert
 	}
 
 	@Test
-	public void encodeResourceReferenceAttributes() throws Exception
+	void encodeResourceReferenceAttributes() throws Exception
 	{
 		UrlAttributes attributes = new UrlAttributes(null, null, null);
 		assertNull(ResourceUtil.encodeResourceReferenceAttributes(attributes));
@@ -97,7 +98,7 @@ public class ResourceUtilTest extends Assert
 	}
 
 	@Test
-	public void encodeResourceReferenceAttributesWithResource() throws Exception
+	void encodeResourceReferenceAttributesWithResource() throws Exception
 	{
 		ResourceReference resourceReference = Mockito.mock(ResourceReference.class);
 

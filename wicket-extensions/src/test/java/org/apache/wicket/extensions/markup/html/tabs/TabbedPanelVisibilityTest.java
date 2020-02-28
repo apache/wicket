@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.extensions.markup.html.tabs;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for visibility of {@link ITab}s in a {@link TabbedPanel}.

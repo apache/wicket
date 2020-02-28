@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -30,7 +32,6 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.junit.Assert;
 
 /**
  * A <code>WicketTester</code>-specific helper class.
@@ -42,7 +43,7 @@ public class WicketTesterHelper
 {
 	/**
 	 * <code>ComponentData</code> class.
-	 * 
+	 *
 	 * @author Ingram Chen
 	 * @since 1.2.6
 	 */
@@ -69,7 +70,7 @@ public class WicketTesterHelper
 	/**
 	 * Gets recursively all <code>Component</code>s of a given <code>Page</code>, extracts the
 	 * information relevant to us, and adds them to a <code>List</code>.
-	 * 
+	 *
 	 * @param page
 	 *            the <code>Page</code> to analyze
 	 * @return a <code>List</code> of <code>Component</code> data objects
@@ -119,7 +120,7 @@ public class WicketTesterHelper
 
 	/**
 	 * Asserts that both <code>Collection</code>s contain the same elements.
-	 * 
+	 *
 	 * @param expects
 	 *            a <code>Collection</code> object
 	 * @param actuals
@@ -136,7 +137,7 @@ public class WicketTesterHelper
 
 	/**
 	 * Fails with a verbose error message.
-	 * 
+	 *
 	 * @param expects
 	 *            a <code>Collection</code> object
 	 * @param actuals
@@ -145,13 +146,13 @@ public class WicketTesterHelper
 	public static void failWithVerboseMessage(final Collection<?> expects,
 		final Collection<?> actuals)
 	{
-		Assert.fail("\nexpect (" + expects.size() + "):\n" + asLined(expects) + "\nbut was (" +
+		fail("\nexpect (" + expects.size() + "):\n" + asLined(expects) + "\nbut was (" +
 			actuals.size() + "):\n" + asLined(actuals));
 	}
 
 	/**
 	 * A <code>toString</code> method for the given <code>Collection</code>.
-	 * 
+	 *
 	 * @param objects
 	 *            a <code>Collection</code> object
 	 * @return a <code>String</code> representation of the <code>Collection</code>
@@ -206,16 +207,6 @@ public class WicketTesterHelper
 		String[] eventNames = Strings.split(event, ' ');
 		for (String eventName : eventNames)
 		{
-			if (eventName.startsWith("on"))
-			{
-				String shortName = event.substring(2);
-				throw new IllegalArgumentException(
-						String.format("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
-										"'on' in the event name '%s'. Please use just '%s'. Wicket 8.x won't manipulate the provided event " +
-										"names so the leading 'on' may break your application."
-								, event, shortName));
-			}
-
 			for (Behavior behavior : component.getBehaviors())
 			{
 				if (behavior instanceof AjaxEventBehavior)
@@ -224,10 +215,6 @@ public class WicketTesterHelper
 					String[] behaviorEventNames = Strings.split(behaviorEvent, ' ');
 					for (String behaviorEventName : behaviorEventNames)
 					{
-						if (behaviorEventName.startsWith("on"))
-						{
-							behaviorEventName = behaviorEventName.substring(2);
-						}
 						if (eventName.equalsIgnoreCase(behaviorEventName))
 						{
 							behaviors.add((AjaxEventBehavior)behavior);

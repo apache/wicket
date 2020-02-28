@@ -4,8 +4,10 @@
 		<wicket:extend>
 
 		<form wicket:id="form">
-			Field: <input type="text" wicket:id="field" size="50"/><br/>
-			Values:<span wicket:id="selectedValue"></span><br/>
+			<p><wicket:message key="onChange.help" /></p>
+			<wicket:message key="onChange.country"/>: <input type="text" wicket:id="field" size="50"/><br/>
+			<wicket:message key="onChange.input"/>: <span wicket:id="userInput"></span><br/>
+			<wicket:message key="onChange.countriesFound"/>: <span wicket:id="selectedValue"></span><br/>
 		</form>
 
 		</wicket:extend>

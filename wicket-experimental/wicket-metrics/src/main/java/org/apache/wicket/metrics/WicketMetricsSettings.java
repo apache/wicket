@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.metrics;
 
-import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.jmx.JmxReporter;
 
 /**
  * Settings to configure wicket metrics

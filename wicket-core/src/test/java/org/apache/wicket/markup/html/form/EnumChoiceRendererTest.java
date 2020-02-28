@@ -16,21 +16,23 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link EnumChoiceRenderer}
  * 
  * @author igor.vaynberg
  */
-public class EnumChoiceRendererTest extends org.junit.Assert
+public class EnumChoiceRendererTest
 {
 
 	/**
 	 * 
 	 */
 	@Test
-	public void testResourceKeyGenerationForAnonymousEnums()
+	void testResourceKeyGenerationForAnonymousEnums()
 	{
 		final EnumChoiceRenderer<TestEnum> renderer = new EnumChoiceRenderer<TestEnum>();
 		assertEquals("TestEnum.ANONYMOUS", renderer.resourceKey(TestEnum.ANONYMOUS));

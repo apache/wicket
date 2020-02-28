@@ -17,13 +17,15 @@
 package org.apache.wicket.markup.parser;
 
 import java.text.ParseException;
+import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.WicketParseException;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
-import org.apache.wicket.util.collections.ArrayListStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +52,7 @@ public class TagStack
 	}
 
 	/** Tag stack to find balancing tags */
-	final private ArrayListStack<ComponentTag> stack = new ArrayListStack<ComponentTag>();
+	final private ArrayDeque<ComponentTag> stack = new ArrayDeque<ComponentTag>();
 	private boolean debug;
 
 	/**
@@ -166,12 +168,13 @@ public class TagStack
 		// If there's still a non-simple tag left, it's an error
 		if (stack.size() > 0)
 		{
-			for (int i = 0; i < stack.size(); i++)
+			Iterator<ComponentTag> it = stack.descendingIterator();
+			while (it.hasNext())
 			{
-				ComponentTag tag = stack.get(i);
+				ComponentTag tag = it.next();
 				if (!requiresCloseTag(tag.getName()))
 				{
-					stack.pop();
+					it.remove();
 				}
 				else
 				{
@@ -199,7 +202,7 @@ public class TagStack
 	 */
 	public static boolean requiresCloseTag(final String name)
 	{
-		return doesNotRequireCloseTag.get(name.toLowerCase()) == null;
+		return doesNotRequireCloseTag.get(name.toLowerCase(Locale.ROOT)) == null;
 	}
 
 	/**

@@ -50,7 +50,16 @@ import org.slf4j.LoggerFactory;
  * </pre>
  * 
  * @author jcompagner
+ * @deprecated This class has been deprecated for several reasons. The way it tries to measure
+ *             server and client times is very inaccurate. Modern browsers provide much better tools
+ *             to measure Javascript execution times. The measurements were written in a property
+ *             that has been deprecated for years and removed in modern browsers. Finally, rendering
+ *             the Javascript directly into the response makes it hard to support a strict CSP with
+ *             nonces. There is no real replacement for this class. Use the tools provided by the
+ *             browser. See {@code WicketExampleApplication} for a simple example of passing
+ *             rendering times to the browser via the {@code Server-Timing} header.
  */
+@Deprecated
 public class ServerAndClientTimeFilter implements IResponseFilter
 {
 	private static final Logger log = LoggerFactory.getLogger(ServerAndClientTimeFilter.class);

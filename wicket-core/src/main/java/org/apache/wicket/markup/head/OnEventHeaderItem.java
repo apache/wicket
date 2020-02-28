@@ -22,39 +22,84 @@ import java.util.Locale;
 import java.util.Objects;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
 
 /**
  * {@link HeaderItem} for event triggered scripts.
- * 
+ *
  * @author papegaaij
  */
-public class OnEventHeaderItem extends HeaderItem
+public class OnEventHeaderItem extends AbstractCspHeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Creates a {@link OnEventHeaderItem} for the given parameters.
-	 * 
-	 * @param target
-	 *            The target of the event handler, for example 'window' or 'document'.
+	 *
+	 * @param literalTarget
+	 *            The target of the event handler, for example 'window' or 'document'. Note that
+	 *            this parameter is a literal and will be rendered unquoted.
 	 * @param event
 	 *            The event itself, for example 'click'.
 	 * @param javaScript
 	 *            The script to execute on the event.
-	 * 
+	 *
+	 * @return A newly created {@link OnEventHeaderItem}.
+	 * @see #forComponent(Component, String, CharSequence)
+	 * @see #forMarkupId(String, String, CharSequence)
+	 */
+	public static OnEventHeaderItem forScript(String literalTarget, String event,
+			CharSequence javaScript)
+	{
+		return new OnEventHeaderItem(literalTarget, event, javaScript);
+	}
+
+	/**
+	 * Creates a {@link OnEventHeaderItem} for the given parameters.
+	 *
+	 * @param target
+	 *            The target component of the event handler.
+	 * @param event
+	 *            The event itself, for example 'click'.
+	 * @param javaScript
+	 *            The script to execute on the event.
+	 *
 	 * @return A newly created {@link OnEventHeaderItem}.
 	 */
-	public static OnEventHeaderItem forScript(String target, String event, CharSequence javaScript)
+	public static OnEventHeaderItem forComponent(Component target, String event,
+			CharSequence javaScript)
 	{
-		return new OnEventHeaderItem(target, event, javaScript);
+		return forMarkupId(target.getMarkupId(), event, javaScript);
+	}
+
+	/**
+	 * Creates a {@link OnEventHeaderItem} for the given parameters.
+	 *
+	 * @param id
+	 *            The id of the component to bind the handler to.
+	 * @param event
+	 *            The event itself, for example 'click'.
+	 * @param javaScript
+	 *            The script to execute on the event.
+	 *
+	 * @return A newly created {@link OnEventHeaderItem}.
+	 */
+	public static OnEventHeaderItem forMarkupId(String id, String event, CharSequence javaScript)
+	{
+		return forScript("'" + id + "'", event, javaScript);
 	}
 
 	private final String target;
+
 	private final String event;
+
 	private final CharSequence javaScript;
 
 	/**
@@ -72,7 +117,7 @@ public class OnEventHeaderItem extends HeaderItem
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param target
 	 * @param event
 	 * @param javaScript
@@ -82,18 +127,8 @@ public class OnEventHeaderItem extends HeaderItem
 		this.target = Args.notEmpty(target, "target");
 
 		Args.notEmpty(event, "event");
-		event = event.toLowerCase(Locale.ENGLISH);
-		if (event.startsWith("on"))
-		{
-			String shortName = event.substring(2);
-			throw new IllegalArgumentException(
-					String.format("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
-									"'on' in the event name '%s'. Please use just '%s'. Wicket 8.x won't manipulate the provided event " +
-									"names so the leading 'on' may break your application."
-							, event, shortName));
-		}
+		event = event.toLowerCase(Locale.ROOT);
 		this.event = event;
-
 		this.javaScript = javaScript;
 	}
 
@@ -126,7 +161,10 @@ public class OnEventHeaderItem extends HeaderItem
 	{
 		if (Strings.isEmpty(getJavaScript()) == false)
 		{
-			JavaScriptUtils.writeJavaScript(response, getCompleteJavaScript());
+			AttributeMap attributes = new AttributeMap();
+			attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+			attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
+			JavaScriptUtils.writeInlineScript(response, getCompleteJavaScript(), attributes);
 		}
 	}
 
@@ -138,9 +176,9 @@ public class OnEventHeaderItem extends HeaderItem
 		StringBuilder result = new StringBuilder();
 		result.append("Wicket.Event.add(")
 				.append(getTarget())
-				.append(", \"")
+				.append(", \'")
 				.append(getEvent())
-				.append("\", function(event) { ")
+				.append("\', function(event) { ")
 				.append(getJavaScript())
 				.append(";});");
 		return result;
@@ -180,9 +218,9 @@ public class OnEventHeaderItem extends HeaderItem
 	public List<HeaderItem> getDependencies()
 	{
 		JavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
-		ResourceReference wicketEventReference = ajaxSettings.getWicketEventReference();
+		ResourceReference wicketAjaxReference = ajaxSettings.getWicketAjaxReference();
 		List<HeaderItem> dependencies = super.getDependencies();
-		dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+		dependencies.add(JavaScriptHeaderItem.forReference(wicketAjaxReference));
 		return dependencies;
 	}
 }

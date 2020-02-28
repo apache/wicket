@@ -16,16 +16,18 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-public class StatelessAjaxFallbackLinkDoNotRecreateTest extends WicketTestCase
+class StatelessAjaxFallbackLinkDoNotRecreateTest extends WicketTestCase
 {
-	@After
-	public void after()
+	@AfterEach
+	void after()
 	{
 		// things must stay stateless
 		assertTrue(Session.get().isTemporary());
@@ -35,7 +37,7 @@ public class StatelessAjaxFallbackLinkDoNotRecreateTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6349
 	 */
 	@Test
-	public void statelessPagesAreAlwaysRecreated()
+	void statelessPagesAreAlwaysRecreated()
 	{
 		tester.getApplication().getPageSettings().setRecreateBookmarkablePagesAfterExpiry(false);
 		tester.startPage(StatelessAjaxFallbackLinkDoNotRecreatePage.class);

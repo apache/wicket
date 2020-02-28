@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.queueing;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -34,15 +36,15 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.util.SlowTests;
+import org.apache.wicket.util.WicketTestTag;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(SlowTests.class)
+@Tag(WicketTestTag.SLOW)
 public class ComponentQueueingPerformanceTest extends WicketTestCase
 {
 	private void run(Class<? extends Page> pageClass)
@@ -59,7 +61,7 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 	}
 
 	@Test
-	public void performance()
+	void performance()
 	{
 		final int warmup = 30;
 		final int performance = 60;
@@ -97,7 +99,7 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 
 
 	@Test
-	public void consistency()
+	void consistency()
 	{
 		tester.startPage(new QueueContactsPage());
 		String queue = tester.getLastResponseAsString();
@@ -134,7 +136,7 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 
 	}
 
-	static Store store = new Store();
+	private static Store store = new Store();
 
 	private static class Store
 	{
@@ -159,7 +161,7 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 			throw new RuntimeException();
 		}
 
-		public Store()
+		Store()
 		{
 			for (int i = 0; i < 250; i++)
 			{
@@ -174,7 +176,7 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 	{
 		private String id;
 
-		public ContactModel(Contact contact)
+		ContactModel(Contact contact)
 		{
 			super(contact);
 			this.id = contact.id;
@@ -190,7 +192,7 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 
 	private static abstract class AbstractPhonePanel extends TestPanel
 	{
-		public AbstractPhonePanel(String id, IModel<PhoneNumber> phone)
+		AbstractPhonePanel(String id, IModel<PhoneNumber> phone)
 		{
 			super(id);
 			setPanelMarkup("<wicket:panel><span wicket:id='areacode'></span> <span wicket:id='prefix'></span>-<span wicket:id='suffix'></span></wicket:panel>");
@@ -199,7 +201,7 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 
 	private static class AddPhonePanel extends AbstractPhonePanel
 	{
-		public AddPhonePanel(String id, IModel<PhoneNumber> phone)
+		AddPhonePanel(String id, IModel<PhoneNumber> phone)
 		{
 			super(id, phone);
 			add(new Label("areacode", new PropertyModel(phone, "areacode")));
@@ -220,7 +222,7 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 
 	private static abstract class AbstractAddressPanel extends TestPanel
 	{
-		public AbstractAddressPanel(String id, IModel<Address> addr)
+		AbstractAddressPanel(String id, IModel<Address> addr)
 		{
 			super(id);
 			setPanelMarkup("<wicket:panel><span wicket:id='street'></span><br/><span wicket:id='city'></span>, <span wicket:id='state'></span> <span wicket:id='zipcode'></span></wicket:panel>");
@@ -229,7 +231,7 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 
 	private static class AddAddressPanel extends AbstractAddressPanel
 	{
-		public AddAddressPanel(String id, IModel<Address> addr)
+		AddAddressPanel(String id, IModel<Address> addr)
 		{
 			super(id, addr);
 			add(new Label("street", new PropertyModel(addr, "street")));
@@ -340,7 +342,7 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 	{
 		private String markup;
 
-		public TestPage()
+		TestPage()
 		{
 		}
 
@@ -349,12 +351,12 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 			this.markup = markup;
 		}
 
-		protected String getPageMarkup()
+		String getPageMarkup()
 		{
 			return markup;
 		}
 
-		public void setPageMarkup(String markup)
+		void setPageMarkup(String markup)
 		{
 			this.markup = markup;
 		}
@@ -373,17 +375,17 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 
 		private String markup;
 
-		public TestPanel(String id)
+		TestPanel(String id)
 		{
 			super(id);
 		}
 
-		protected void setPanelMarkup(String markup)
+		void setPanelMarkup(String markup)
 		{
 			this.markup = markup;
 		}
 
-		protected String getPanelMarkup()
+		String getPanelMarkup()
 		{
 			return markup;
 		}

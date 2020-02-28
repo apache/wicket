@@ -18,9 +18,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.apache.wicket.experimental.wicket8</groupId>
+		<groupId>org.apache.wicket.experimental.wicket9</groupId>
 		<artifactId>wicket-http2</artifactId>
-		<version>0.4-SNAPSHOT</version>
+		<version>0.10-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-http2-core</artifactId>
@@ -32,6 +32,11 @@
 		is the core implementation which provides the header item
 		that uses the API.
 	</description>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.http2.core</automatic-module-name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

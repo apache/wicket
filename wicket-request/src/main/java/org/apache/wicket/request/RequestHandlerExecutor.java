@@ -19,8 +19,6 @@ package org.apache.wicket.request;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.lang.Exceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,23 +71,6 @@ public abstract class RequestHandlerExecutor
 		IRequestHandler scheduled = scheduledAfterCurrent;
 		scheduledAfterCurrent = null;
 		return scheduled;
-	}
-
-	/**
-	 * Certain exceptions can carry a request handler they wish to be executed, this method tries to
-	 * resolve such a handler given an exception.
-	 * 
-	 * @param exception
-	 * @return request handler or null} if one cannot be resolved
-	 * @deprecated
-	 */
-	public final IRequestHandler resolveHandler(RuntimeException exception)
-	{
-		Args.notNull(exception, "exception");
-
-		ReplaceHandlerException replacer = Exceptions.findCause(exception,
-			ReplaceHandlerException.class);
-		return replacer != null ? replacer.replacementRequestHandler : null;
 	}
 
 	/**
@@ -199,14 +180,6 @@ public abstract class RequestHandlerExecutor
 		{
 			this.replacementRequestHandler = replacementRequestHandler;
 			this.removeScheduled = removeScheduled;
-		}
-		
-		/**
-		 * @deprecated use {@link #getRemoveScheduled()} instead
-		 */
-		public boolean isRemoveAll()
-		{
-			return removeScheduled;
 		}
 
 		/**

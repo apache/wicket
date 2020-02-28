@@ -16,29 +16,34 @@
  */
 package org.apache.wicket.util.cookies;
 
-import javax.servlet.http.Cookie;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
+import javax.servlet.http.Cookie;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
  * Helper class to simplify Cookie handling.
- * 
+ *
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
 public class CookieUtils
 {
 	private final static Logger log = LoggerFactory.getLogger(CookieUtils.class);
+
+	public static final String DEFAULT_SESSIONID_COOKIE_NAME = "JSESSIONID";
 
 	private final CookieDefaults settings;
 
@@ -52,7 +57,7 @@ public class CookieUtils
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param settings
 	 *          the default settings for the saved cookies
 	 */
@@ -71,7 +76,7 @@ public class CookieUtils
 
 	/**
 	 * Remove the cookie identified by the key
-	 * 
+	 *
 	 * @param key
 	 *          The cookie name
 	 */
@@ -86,7 +91,7 @@ public class CookieUtils
 
 	/**
 	 * Remove the cookie identified by the form component
-	 * 
+	 *
 	 * @param formComponent
 	 */
 	public final void remove(final FormComponent<?> formComponent)
@@ -97,13 +102,13 @@ public class CookieUtils
 	/**
 	 * This method gets used when a cookie key needs to be derived from a form component. By default
 	 * the component's page relative path is used.
-	 * 
+	 *
 	 * @param component
 	 * @return cookie key
 	 */
 	protected String getKey(final FormComponent<?> component)
 	{
-		return component.getPageRelativePath();
+		return getSaveKey(component.getPageRelativePath());
 	}
 
 	/**
@@ -126,7 +131,7 @@ public class CookieUtils
 	/**
 	 * Retrieve the cookie value associated with the formComponent and load the model object with
 	 * the cookie value.
-	 * 
+	 *
 	 * @param formComponent
 	 * @return The Cookie value which has also been used to set the component's model value
 	 */
@@ -143,19 +148,18 @@ public class CookieUtils
 
 	/**
 	 * Create a Cookie with key and value and save it in the browser with the next response
-	 * 
-	 * @param key
+	 *
+	 * @param name
 	 *          The cookie name
 	 * @param value
 	 *          The cookie value
 	 */
-	public final void save(String key, final String value)
+	public final void save(String name, final String value)
 	{
-		key = getSaveKey(key);
-		Cookie cookie = getCookie(key);
+		Cookie cookie = getCookie(name);
 		if (cookie == null)
 		{
-			cookie = new Cookie(key, value);
+			cookie = new Cookie(name, value);
 		}
 		else
 		{
@@ -166,7 +170,7 @@ public class CookieUtils
 
 	/**
 	 * Save the form components model value in a cookie
-	 * 
+	 *
 	 * @param formComponent
 	 */
 	public final void save(final FormComponent<?> formComponent)
@@ -176,7 +180,7 @@ public class CookieUtils
 
 	/**
 	 * Make sure the 'key' does not contain any illegal chars. E.g. for cookies ':' is not allowed.
-	 * 
+	 *
 	 * @param key
 	 *            The key to be validated
 	 * @return The save key
@@ -198,7 +202,7 @@ public class CookieUtils
 	/**
 	 * Convenience method for deleting a cookie by name. Delete the cookie by setting its maximum
 	 * age to zero.
-	 * 
+	 *
 	 * @param cookie
 	 *            The cookie to delete
 	 */
@@ -221,30 +225,28 @@ public class CookieUtils
 
 	/**
 	 * Gets the cookie with 'name' attached to the latest WebRequest.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the cookie to be looked up
-	 * 
+	 *
 	 * @return Any cookies for this request
 	 */
 	public Cookie getCookie(final String name)
 	{
-		String key = getSaveKey(name);
-
 		try
 		{
 			WebRequest webRequest = getWebRequest();
-			Cookie cookie = webRequest.getCookie(key);
+			Cookie cookie = webRequest.getCookie(name);
 			if (log.isDebugEnabled())
 			{
 				if (cookie != null)
 				{
-					log.debug("Found Cookie with name=" + key + " and request URI=" +
+					log.debug("Found Cookie with name=" + name + " and request URI=" +
 							webRequest.getUrl().toString());
 				}
 				else
 				{
-					log.debug("Unable to find Cookie with name=" + key + " and request URI=" +
+					log.debug("Unable to find Cookie with name=" + name + " and request URI=" +
 							webRequest.getUrl().toString());
 				}
 			}
@@ -259,9 +261,25 @@ public class CookieUtils
 		return null;
 	}
 
+
+	/**
+	 * Gets the name of the cookie where the session id is stored.
+	 *
+	 * @param application
+	 *            The current we application holding the {@link javax.servlet.ServletContext}.
+	 *
+	 * @return The name set in {@link javax.servlet.SessionCookieConfig} or the default value 'JSESSIONID' if not set
+	 */
+	public String getSessionIdCookieName(WebApplication application)
+	{
+		String jsessionCookieName = application.getServletContext().getSessionCookieConfig().getName();
+
+		return jsessionCookieName == null ? DEFAULT_SESSIONID_COOKIE_NAME : jsessionCookieName;
+	}
+
 	/**
 	 * Persist/save the data using Cookies.
-	 * 
+	 *
 	 * @param cookie
 	 *            The Cookie to be persisted.
 	 * @return The cookie provided
@@ -289,7 +307,7 @@ public class CookieUtils
 	/**
 	 * Is called before the Cookie is saved. May be subclassed for different (dynamic) Cookie
 	 * parameters. Static parameters can also be changed via {@link CookieDefaults}.
-	 * 
+	 *
 	 * @param cookie
 	 */
 	protected void initializeCookie(final Cookie cookie)
@@ -319,7 +337,7 @@ public class CookieUtils
 
 	/**
 	 * Convenience method to get the http request.
-	 * 
+	 *
 	 * @return WebRequest related to the RequestCycle
 	 */
 	private WebRequest getWebRequest()
@@ -329,7 +347,7 @@ public class CookieUtils
 
 	/**
 	 * Convenience method to get the http response.
-	 * 
+	 *
 	 * @return WebResponse related to the RequestCycle
 	 */
 	private WebResponse getWebResponse()
@@ -345,15 +363,16 @@ public class CookieUtils
 
 	/**
 	 * Gets debug info as a string for the given cookie.
-	 * 
+	 *
 	 * @param cookie
 	 *            the cookie to debug.
 	 * @return a string that represents the internals of the cookie.
 	 */
 	private String cookieToDebugString(final Cookie cookie)
 	{
+		final LocalDateTime localDateTime = Instant.ofEpochMilli(cookie.getMaxAge()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue() +
 			", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() + ", maxAge = " +
-			Time.millis(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")" + "]";
+			localDateTime + "(" + cookie.getMaxAge() + ")" + "]";
 	}
 }

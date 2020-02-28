@@ -18,8 +18,6 @@ package org.apache.wicket.threadtest.apps.app2;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
 
 /**
  */
@@ -32,17 +30,6 @@ public class Home extends WebPage
 	 */
 	public Home()
 	{
-
-		IModel<String> model = new AbstractReadOnlyModel<String>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String getObject()
-			{
-				return Pool.getConnection().getData();
-			}
-		};
-		add(new Label("label", model));
+		add(new Label("label", () -> Pool.getConnection().getData()));
 	}
 }

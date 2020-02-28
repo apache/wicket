@@ -36,7 +36,7 @@ import org.apache.wicket.util.lang.Generics;
 public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRegistry
 {
 	private static final MetaDataKey<ConcurrentMap<String, ConcurrentMap<IKey, IWebSocketConnection>>> KEY =
-			new MetaDataKey<ConcurrentMap<String, ConcurrentMap<IKey, IWebSocketConnection>>>()
+			new MetaDataKey<>()
 	{
 	};
 
@@ -86,6 +86,7 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 	 *          The application
 	 * @return a collection of currently active websockets
 	 */
+	@Override
 	public Collection<IWebSocketConnection> getConnections(Application application)
 	{
 		Args.notNull(application, "application");

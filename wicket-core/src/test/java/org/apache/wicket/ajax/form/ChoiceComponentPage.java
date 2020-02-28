@@ -37,7 +37,7 @@ public class ChoiceComponentPage extends WebPage
 
 	public final RadioGroup<Boolean> group;
 
-	public final Radio<Boolean> radioTrue;
+	private final Radio<Boolean> radioTrue;
 
 	public final Radio<Boolean> radioFalse;
 

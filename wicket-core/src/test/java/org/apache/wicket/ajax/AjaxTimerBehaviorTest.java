@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageWithLinkAndComponent;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -25,11 +27,10 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.util.time.Duration;
-import org.junit.Test;
+import java.time.Duration;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Tests that an AbstractAjaxTimerBehavior injects itself into the markup once and only once. Also
@@ -37,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Jim McLaughlin
  */
-public class AjaxTimerBehaviorTest extends WicketTestCase
+class AjaxTimerBehaviorTest extends WicketTestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(AjaxTimerBehaviorTest.class);
 
@@ -45,9 +46,9 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	 * Tests timer behavior in a component added to an AjaxRequestTarget
 	 */
 	@Test
-	public void addedInAjaxSetsTimout()
+    void addedInAjaxSetsTimout()
 	{
-		Duration dur = Duration.seconds(20);
+		Duration dur = Duration.ofSeconds(20);
 		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 
@@ -87,9 +88,9 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	 * tests timer behavior in a WebPage.
 	 */
 	@Test
-	public void pageRenderSetsTimeout()
+    void pageRenderSetsTimeout()
 	{
-		Duration dur = Duration.seconds(20);
+		Duration dur = Duration.ofSeconds(20);
 		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 		Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
@@ -124,9 +125,9 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	 * tests timer behavior in a WebPage.
 	 */
 	@Test
-	public void ajaxUpdateDoesNotSetTimeout()
+    void ajaxUpdateDoesNotSetTimeout()
 	{
-		Duration dur = Duration.seconds(20);
+		Duration dur = Duration.ofSeconds(20);
 		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 		final Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
@@ -161,9 +162,9 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	/**
 	 */
 	@Test
-	public void setVisibleSetsTimeout()
+    void setVisibleSetsTimeout()
 	{
-		Duration dur = Duration.seconds(20);
+		Duration dur = Duration.ofSeconds(20);
 		final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
 		final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
 		final Label label = new Label(MockPageWithLinkAndComponent.COMPONENT_ID, "Hello");
@@ -200,9 +201,9 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	/**
 	 */
 	@Test
-	public void setDisabledClearsTimeout()
+    void setDisabledClearsTimeout()
 	{
-		final AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(20))
+		final AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.ofSeconds(20))
 		{
 			private boolean enabled = true;
 			
@@ -239,7 +240,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		tester.executeBehavior(timer);
 
-		assertMatches("Wicket.Timer.clear", 1);
+		assertMatches("Wicket.Timer.clear", 0);
 		assertMatches("Wicket.Timer.set", 0);
 	}
 
@@ -250,7 +251,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	 * WICKET-1525, WICKET-2152
 	 */
 	@Test
-	public void restartResultsInAddTimeout()
+    void restartResultsInAddTimeout()
 	{
 		final Integer labelInitialValue = Integer.valueOf(0);
 
@@ -259,7 +260,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		// the duration doesn't matter because we manually trigger the behavior
 		final AbstractAjaxTimerBehavior timerBehavior = new AbstractAjaxTimerBehavior(
-			Duration.seconds(2))
+			Duration.ofSeconds(2))
 		{
 			private static final long serialVersionUID = 1L;
 

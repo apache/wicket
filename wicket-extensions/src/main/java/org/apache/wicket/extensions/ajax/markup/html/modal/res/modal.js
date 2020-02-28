@@ -56,142 +56,6 @@
 	}
 
 	/**
-	 * Supporting code for getting mouse move and mouse up events from iframes.
-	 * The problem when dragging a div with an iframe is that when the mouse cursor
-	 * gets over an iframe, all mouse events are received by the iframe's document. (IE and FF)
-	 *
-	 * This code can recursively traverse all iframes in document and temporarily forward
-	 * events from their documents to parent document.
-	 */
-	Wicket.Iframe = {
-
-		/**
-		 * Returns the horizontal position of given element (in pixels).
-		 */
-		findPosX: function(e) {
-			if (e.offsetParent) {
-				var c = 0;
-				while (e) {
-					c += e.offsetLeft;
-					e = e.offsetParent;
-				}
-				return c;
-			} else if (e.x) {
-				return e.x;
-			} else {
-				return 0;
-			}
-		},
-
-		/**
-		 * Returns the vertical position of given element (in pixels).
-		 */
-		findPosY: function(e) {
-			if (e.offsetParent) {
-				var c = 0;
-				while (e) {
-					c += e.offsetTop;
-					e = e.offsetParent;
-				}
-				return c;
-			} else if (e.y) {
-				return e.y;
-			} else {
-				return 0;
-			}
-		},
-
-		/**
-		 * Forwards the events from iframe to the parent document (works recursively).
-		 * @param {Document} doc - document to which the events will be forwarded
-		 * @param {HTMLElement} iframe - source iframe
-		 * @param {Array} revertList - list to which altered iframes will be added
-		 */
-		forwardEvents: function(doc, iframe, revertList) {
-			try {
-				var idoc = iframe.contentWindow.document;
-				idoc.old_onmousemove = idoc.onmousemove;
-				idoc.onmousemove = function(evt) {
-					if (!evt) {
-						evt = iframe.contentWindow.event;
-					}
-					var e = {};
-
-					var dx = 0;
-					var dy = 0;
-					if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
-						dx = Wicket.Window.getScrollX();
-						dy = Wicket.Window.getScrollY();
-					}
-
-					e.clientX = evt.clientX + Wicket.Iframe.findPosX(iframe) - dx;
-					e.clientY = evt.clientY + Wicket.Iframe.findPosY(iframe) - dy;
-					doc.onmousemove(e);
-				};
-				idoc.old_onmouseup = idoc.old_onmousemove;
-				idoc.onmouseup = function(evt) {
-					if (!evt) {
-						evt = iframe.contentWindow.event;
-					}
-					var e = {};
-
-					var dx = 0;
-					var dy = 0;
-					if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
-						dx = Wicket.Window.getScrollX();
-						dy = Wicket.Window.getScrollY();
-					}
-
-					e.clientX = evt.clientX + Wicket.Iframe.findPosX(iframe) - dx;
-					e.clientY = evt.clientY + Wicket.Iframe.findPosY(iframe) - dy;
-					doc.onmouseup(e);
-				};
-				revertList.push(iframe);
-				Wicket.Iframe.documentFix(idoc, revertList);
-			} catch (ignore) {
-			}
-		},
-
-		/**
-		 * Reverts the changes made to the given iframe.
-		 * @param {HTMLElement} iframe
-		 */
-		revertForward: function(iframe) {
-			var idoc = iframe.contentWindow.document;
-			idoc.onmousemove = idoc.old_onmousemove;
-			idoc.onmouseup = idoc.old_onmouseup;
-			idoc.old_onmousemove = null;
-			idoc.old_onmouseup = null;
-		},
-
-		/**
-		 * Forward events from all iframes of the given document (recursive)
-		 * @param {Document} doc - document to be fixed
-		 * @param {Array} revertList - all affected iframes will be stored here
-		 */
-		documentFix: function(doc, revertList) {
-			var iframes = doc.getElementsByTagName("iframe");
-			for (var i = 0; i < iframes.length; ++i) {
-				var iframe = iframes[i];
-				if (iframe.tagName) {
-					Wicket.Iframe.forwardEvents(doc, iframe, revertList);
-				}
-			}
-		},
-
-		/**
-		 * Reverts the changes made to each iframe in the given array.
-		 * @param {Array} revertList
-		 */
-		documentRevert: function(revertList) {
-			for (var i = 0; i < revertList.length; ++i) {
-				var iframe = revertList[i];
-				Wicket.Iframe.revertForward(iframe);
-			}
-		}
-	};
-
-	/**
 	 * Draggable (and optionally resizable) window that can either hold a div
 	 * or an iframe.
 	 */
@@ -207,7 +71,7 @@
 		var Win;
 
 		// if it is an iframe window...
-		if (typeof(settings.src) !== "undefined" && Wicket.Browser.isKHTML() === false) {
+		if (typeof(settings.src) !== "undefined") {
 			// attempt to get class from parent
 			try {
 				Win = window.parent.Wicket.Window;
@@ -284,6 +148,11 @@
 				width: 600,  /* initial width */
 				height: 300, /* may be null for non-iframe, non-resizable window (automatic height) */
 
+				modalSpacing: 10, /* spacing between the modal and viewport border when modal is wider than viewport */
+				headerHeight: 40,
+
+				overflow: "auto",
+
 				resizable: true,
 
 				widthUnit: "px", /* valid only if not resizable */
@@ -308,6 +177,8 @@
 					this.close();
 					return false;
 				}, this), /* called when close button is clicked */
+
+				afterInit: function() { },
 
 				onClose: function() { }, /* called when window is closed */
 
@@ -368,23 +239,6 @@
 			this.bottomRight = _(idBottomRight);
 			this.bottom = _(idBottom);
 			this.captionText = _(idCaptionText);
-
-			if (Wicket.Browser.isIELessThan11()) {
-				// IE stupid 3px bug - not fixed even in IE7 quirks!
-				if (Wicket.Browser.isIEQuirks()) {
-					this.topLeft.style.marginRight = "-3px";
-					this.topRight.style.marginLeft = "-3px";
-					this.bottomLeft.style.marginRight = "-3px";
-					this.bottomRight.style.marginLeft = "-3px";
-				}
-			}
-
-			// HACK - IE doesn't support position:fixed. Gecko does, however for a reason
-			// we need to have background position: absolute, which makes the movement of
-			// the window really jerky if the window stays position: fixed
-			if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
-				this.window.style.position = "absolute";
-			}
 
 			// fix the cursors
 			if (this.settings.resizable === false) {
@@ -479,23 +333,18 @@
 			var scTop = 0;
 			var scLeft = 0;
 
-			if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
-				scLeft = Wicket.Window.getScrollX();
-				scTop = Wicket.Window.getScrollY();
-			}
-
 			var width = Wicket.Window.getViewportWidth();
 			var height = Wicket.Window.getViewportHeight();
 
 			var modalWidth = this.window.offsetWidth;
 			var modalHeight = this.window.offsetHeight;
 
-			if (modalWidth > width - 10) {
-				this.window.style.width = (width - 10) + "px";
+			if (modalWidth > width - this.settings.modalSpacing) {
+				this.window.style.width = (width - this.settings.modalSpacing) + "px";
 				modalWidth = this.window.offsetWidth;
 			}
-			if (modalHeight > height - 40) {
-				this.content.style.height = (height - 40) + "px";
+			if (modalHeight > height - this.settings.headerHeight) {
+				this.content.style.height = (height - this.settings.headerHeight) + "px";
 				modalHeight = this.window.offsetHeight;
 			}
 
@@ -617,14 +466,7 @@
 				this.update = window.setInterval(Wicket.bind(this.updateTitle, this), 100);
 			}
 
-			// opera seems to have problem accessing contentWindow here
-			if (Wicket.Browser.isOpera()) {
-				this.content.onload = Wicket.bind(function() {
-					this.content.contentWindow.name = this.settings.iframeName;
-				}, this);
-			} else {
-				this.content.contentWindow.name = this.settings.iframeName;
-			}
+			this.content.contentWindow.name = this.settings.iframeName;
 
 			try
 			{
@@ -665,7 +507,7 @@
 				this.content.appendChild(this.settings.element);
 
 				// set the overflow style so that scrollbars are shown when the element is bigger than window
-				this.content.style.overflow="auto";
+				this.content.style.overflow = this.settings.overflow;
 			}
 
 			// bind the events
@@ -704,15 +546,7 @@
 
 			this.adjustOpenWindowsStatusOnShow();
 
-			// show the window
-			if (false && Wicket.Browser.isGecko() && this.isIframe()) {
-				// HACK
-				// gecko flickers when showing the window
-				// unless the showing is postponed a little
-				window.setTimeout(function() { doShow(); }, 0);
-			} else {
-				doShow();
-			}
+			doShow();
 
 			// if the content supports focus and blur it, which means
 			// that the already focused element will lose it's focus
@@ -737,6 +571,8 @@
 
 			// create the mask that covers the background
 			this.createMask();
+
+			this.settings.afterInit(this);
 		},
 
 		onbeforeunload: function() {
@@ -837,20 +673,6 @@
 			}
 
 			this.adjustOpenWindowsStatusAndZIndexesOnClose();
-
-			if (Wicket.Browser.isIELessThan11()) {
-				// There's a strange focus problem in IE that disables focus on entire page,
-				// unless something focuses an input
-				var e = document.createElement("input");
-				var x = Wicket.Window.getScrollX();
-				var y = Wicket.Window.getScrollY();
-				e.style.position = "absolute";
-				e.style.left = x + "px";
-				e.style.top = y + "px";
-				document.body.appendChild(e);
-				e.focus();
-				document.body.removeChild(e);
-			}
 		},
 
 		adjustOpenWindowsStatusAndZIndexesOnClose: function() {
@@ -884,13 +706,6 @@
 						this.captionText.innerHTML = this.content.contentWindow.document.title;
 						// http://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby
 						this.window.setAttribute('aria-labelledBy', this.content.contentWindow.document.title);
-
-						// konqueror doesn't refresh caption text properly
-						if (Wicket.Browser.isKHTML()) {
-							this.captionText.style.display = 'none';
-							window.setTimeout(Wicket.bind(function() { this.captionText.style.display="block";}, this), 0);
-						}
-
 					}
 				}
 			} catch (ignore) {
@@ -901,25 +716,26 @@
 		/**
 		 * Called when dragging has started.
 		 */
-		onBegin: function(object) {
-			if (this.isIframe() && (Wicket.Browser.isGecko() || Wicket.Browser.isIELessThan11() || Wicket.Browser.isSafari())) {
-				this.revertList = [];
-				Wicket.Iframe.documentFix(document, this.revertList);
+		onBegin: function(element, event) {
+			// all resize elements must be clicked directly
+			if (jQuery(element).is('.w_caption') === false && element !== event.target) {
+				return false;
 			}
+
+			jQuery(this.window).find('iframe').css('pointer-events', 'none');
+			
+			return true;
 		},
 
 		/**
 		 * Called when dragging has ended.
 		 */
 		onEnd: function(object) {
-			if (this.revertList) {
-				Wicket.Iframe.documentRevert(this.revertList);
-				this.revertList = null;
-				if (Wicket.Browser.isKHTML() || this.content.style.visibility==='hidden') {
-					this.content.style.visibility='hidden';
-					window.setTimeout(Wicket.bind(function() { this.content.style.visibility='visible'; }, this),  0 );
-				}
-				this.revertList = null;
+			jQuery(this.window).find('iframe').css('pointer-events', 'auto');
+
+			if (this.content.style.visibility==='hidden') {
+				this.content.style.visibility='hidden';
+				window.setTimeout(Wicket.bind(function() { this.content.style.visibility='visible'; }, this),  0 );
 			}
 
 			this.savePosition();
@@ -1150,7 +966,7 @@
 
 			targetWindow.style.width = newWidth;
 
-			targetContent.style.overflow = 'auto';
+			targetContent.style.overflow = this.settings.overflow;
 		}
 	};
 
@@ -1183,7 +999,7 @@
 					"<div class=\"w_left\" id='"+idLeft+"'>"+
 						"<div class=\"w_right_1\">"+
 							"<div class=\"w_right\" id='"+idRight+"'>"+
-								"<div class=\"w_content_1\" onmousedown=\"Wicket.Event.stop(event);\">"+
+								"<div class=\"w_content_1\">"+
 									"<div class=\"w_caption\"  id=\""+idCaption+"\">"+
 										"<a class=\"w_close\" style=\"z-index:1\" href=\"#\"></a>"+
 										"<h3 id=\""+idCaptionText+"\" class=\"w_captionText\"></h3>"+
@@ -1269,23 +1085,9 @@
 
 				e.style.zIndex = Wicket.Window.Mask.zIndex;
 
-				// HACK - KHTML doesn't support colors with alpha transparency
-				// if the mask is not transparent we have to either
-				// make the background image visible (setting color to transparent) - for KHTML
-				// or make the background-image invisible (setting it to null) - for other browsers
+				// if the mask is not transparent we have to make the background-image invisible (setting it to null)
 				if (this.transparent === false) {
-					if (Wicket.Browser.isKHTML() === false) {
-						e.style.backgroundImage = "none";
-					} else {
-						e.style.backgroundColor = "transparent";
-					}
-				}
-
-				// HACK - it really sucks that we have to set this to absolute even for gecko.
-				// however background with position:fixed makes the text cursor in textfieds
-				// in modal window disappear
-				if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
-					e.style.position = "absolute";
+					e.style.backgroundImage = "none";
 				}
 
 				// set the element
@@ -1443,25 +1245,6 @@
 			if (!this.shown) {
 				return;
 			}
-
-			if (Wicket.Browser.isIELessThan11()) {
-				this.boxes = [];
-				var selects = doc.getElementsByTagName("select");
-				for (var i = 0; i < selects.length; i++) {
-					var element = selects[i];
-
-					// if this is not an iframe window and the select is child of window content,
-					// don't hide it
-					if (win.isIframe() === false && this.isParent(element, win.content)) {
-						continue;
-					}
-
-					if (element.style.visibility !== "hidden") {
-						element.style.visibility = "hidden";
-						this.boxes.push(element);
-					}
-				}
-			}
 		},
 
 		/**
@@ -1500,15 +1283,13 @@
 			if (!this.shown) {
 				return;
 			}
-			// explorer doesn't need this, because for IE disableTabs() is called.
-			// plus in IE this causes problems because it scrolls document		);
-			if (Wicket.Browser.isIELessThan11() === false) {
-				this.focusRevertList = [];
-				var body = doc.getElementsByTagName("body")[0];
-				for (var i = 0; i < body.childNodes.length; ++i) {
-					this.disableFocusElement(body.childNodes[i], this.focusRevertList, win);
-				}
+			
+			this.focusRevertList = [];
+			var body = doc.getElementsByTagName("body")[0];
+			for (var i = 0; i < body.childNodes.length; ++i) {
+				this.disableFocusElement(body.childNodes[i], this.focusRevertList, win);
 			}
+			
 			this.focusDisabled=true;
 		},
 
@@ -1539,22 +1320,6 @@
 
 			if (typeof (this.tabbableTags) === "undefined") {
 				this.tabbableTags = ["A", "BUTTON", "TEXTAREA", "INPUT", "IFRAME", "SELECT"];
-			}
-			if (Wicket.Browser.isIELessThan11()) {
-				this.disabledTabsRevertList = [];
-				for (var j = 0; j < this.tabbableTags.length; j++) {
-					var tagElements = doc.getElementsByTagName(this.tabbableTags[j]);
-					for (var k = 0 ; k < tagElements.length; k++) {
-						// if this is not an iframe window and the element is child of modal window,
-						// don't disable tab on it
-						if (win.isIframe() === true || this.isParent(tagElements[k], win.window) === false) {
-							var element = tagElements[k];
-							element.hiddenTabIndex = element.tabIndex;
-							element.tabIndex="-1";
-							this.disabledTabsRevertList.push(element);
-						}
-					}
-				}
 			}
 		},
 
@@ -1667,8 +1432,167 @@
 		set: function(name, value, expiredays) {
 			var exdate = new Date();
 			exdate.setDate(exdate.getDate() + expiredays);
-			document.cookie = name + "=" + window.escape(value) + ((expiredays === null) ? "" : ";expires="+exdate);
+			var secure = /^https/.test(location.protocol) ? ';secure' : '';
+			document.cookie = name + "=" + window.escape(value) +
+				((expiredays === null) ? "" : ";expires="+exdate) +
+				secure;
 		}
 	};
 
+	/**
+	 * Flexible dragging support.
+	 */
+	Wicket.Drag = {
+
+		/**
+		 * Initializes dragging on the specified element.
+		 * 
+		 * @param element {Element}
+		 *            element clicking on which
+		 *            the drag should begin
+		 * @param onDragBegin {Function}
+		 *            called at the begin of dragging - passed element and event as parameters,
+		 *            may return false to prevent the start
+		 * @param onDragEnd {Function}
+		 *            handler called at the end of dragging - passed element as parameter
+		 * @param onDrag {Function}
+		 *            handler called during dragging - passed element and mouse deltas as parameters
+		 */
+		init: function(element, onDragBegin, onDragEnd, onDrag) {
+
+			if (typeof(onDragBegin) === "undefined") {
+				onDragBegin = jQuery.noop;
+			}
+
+			if (typeof(onDragEnd) === "undefined") {
+				onDragEnd = jQuery.noop;
+			}
+
+			if (typeof(onDrag) === "undefined") {
+				onDrag = jQuery.noop;
+			}
+
+			element.wicketOnDragBegin = onDragBegin;
+			element.wicketOnDrag = onDrag;
+			element.wicketOnDragEnd = onDragEnd;
+
+
+			// set the mousedown handler
+			Wicket.Event.add(element, "mousedown", Wicket.Drag.mouseDownHandler);
+		},
+
+		mouseDownHandler: function (e) {
+			e = Wicket.Event.fix(e);
+
+			var element = this;
+
+			if (element.wicketOnDragBegin(element, e) === false) {
+				return;
+			}
+
+			if (e.preventDefault) {
+				e.preventDefault();
+			}
+
+			element.lastMouseX = e.clientX;
+			element.lastMouseY = e.clientY;
+
+			element.old_onmousemove = document.onmousemove;
+			element.old_onmouseup = document.onmouseup;
+			element.old_onselectstart = document.onselectstart;
+			element.old_onmouseout = document.onmouseout;
+
+			document.onselectstart = function () {
+				return false;
+			};
+			document.onmousemove = Wicket.Drag.mouseMove;
+			document.onmouseup = Wicket.Drag.mouseUp;
+			document.onmouseout = Wicket.Drag.mouseOut;
+
+			Wicket.Drag.current = element;
+		},
+
+		/**
+		 * Deinitializes the dragging support on given element.
+		 */
+		clean: function (element) {
+			element.onmousedown = null;
+		},
+
+		/**
+		 * Called when mouse is moved. This method fires the onDrag event
+		 * with element instance, deltaX and deltaY (the distance
+		 * between this call and the previous one).
+
+		 * The onDrag handler can optionally return an array of two integers
+		 * - the delta correction. This is used, for example, if there is
+		 * element being resized and the size limit has been reached (but the
+		 * mouse can still move).
+		 *
+		 * @param {Event} e
+		 */
+		mouseMove: function (e) {
+			e = Wicket.Event.fix(e);
+			var o = Wicket.Drag.current;
+
+			// this happens sometimes in Safari
+			if (e.clientX < 0 || e.clientY < 0) {
+				return;
+			}
+
+			if (o !== null) {
+				var deltaX = e.clientX - o.lastMouseX;
+				var deltaY = e.clientY - o.lastMouseY;
+
+				var res = o.wicketOnDrag(o, deltaX, deltaY, e);
+
+				if (res !== "undefined") {
+					res = [0, 0];
+				}
+
+				o.lastMouseX = e.clientX + res[0];
+				o.lastMouseY = e.clientY + res[1];
+			}
+
+			return false;
+		},
+
+		/**
+		 * Called when the mouse button is released.
+		 * Cleans all temporary variables and callback methods.
+		 */
+		mouseUp: function () {
+			var o = Wicket.Drag.current;
+
+			if (o) {
+				o.wicketOnDragEnd(o);
+
+				o.lastMouseX = null;
+				o.lastMouseY = null;
+
+				document.onmousemove = o.old_onmousemove;
+				document.onmouseup = o.old_onmouseup;
+				document.onselectstart = o.old_onselectstart;
+
+				document.onmouseout = o.old_onmouseout;
+
+				o.old_mousemove = null;
+				o.old_mouseup = null;
+				o.old_onselectstart = null;
+				o.old_onmouseout = null;
+
+				Wicket.Drag.current = null;
+			}
+		},
+
+		/**
+		 * Called when mouse leaves an element. We need this for firefox, as otherwise
+		 * the dragging would continue after mouse leaves the document.
+		 * Unfortunately this break dragging in firefox immediately after the mouse leaves
+		 * page.
+		 */
+		mouseOut: function (e) {
+		}
+	};
+	
 })();

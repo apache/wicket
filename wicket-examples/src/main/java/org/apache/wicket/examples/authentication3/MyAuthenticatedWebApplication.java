@@ -19,6 +19,7 @@ package org.apache.wicket.examples.authentication3;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
+import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.markup.html.WebPage;
 
 
@@ -52,5 +53,12 @@ public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 	{
 		super.init();
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
+
+		getCsp().blocking()
+			.strict()
+			.reportBack()
+			.add(CSPDirective.STYLE_SRC,
+				"https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
+			.add(CSPDirective.FONT_SRC, "https://maxcdn.bootstrapcdn.com");
 	}
 }

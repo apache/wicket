@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.request.cycle;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.core.request.handler.RequestSettingRequestHandler;
@@ -30,17 +33,17 @@ import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.5.8
  */
-public class PageRequestHandlerTrackerTest extends WicketTestCase
+class PageRequestHandlerTrackerTest extends WicketTestCase
 {
 	
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		tester.getApplication().getRequestCycleListeners().add(new PageRequestHandlerTracker());
 	}
@@ -50,7 +53,7 @@ public class PageRequestHandlerTrackerTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4624
 	 */
 	@Test
-	public void trackPages()
+	void trackPages()
 	{
 		tester.getApplication().getRequestCycleListeners().add(new IRequestCycleListener()
 		{
@@ -78,7 +81,7 @@ public class PageRequestHandlerTrackerTest extends WicketTestCase
 	 * Uses PageRequestHandlerTracker to check last IRequestHandler encapsulated in IRequestHandlerDelegate 
 	 */
 	@Test
-	public void trackPagesWithMapperDelegate()
+	void trackPagesWithMapperDelegate()
 	{
 		IRequestMapper mapper = tester.getApplication().getRootRequestMapper();
 		tester.getApplication().setRootRequestMapper(new MapperDelegate(mapper));
@@ -92,7 +95,7 @@ public class PageRequestHandlerTrackerTest extends WicketTestCase
 	 */
 	private static class PageA extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public PageA()
+		PageA()
 		{
 			// make stateful so it is rendered in first requestCycle (without redirect) 
 			setStatelessHint(false);
@@ -105,7 +108,7 @@ public class PageRequestHandlerTrackerTest extends WicketTestCase
 
 
 			IPageRequestHandler lastHandler = PageRequestHandlerTracker.getLastHandler(getRequestCycle());
-			assertNotNull("Last handler is null: probably issue in IRequestHandlerDelegate support", lastHandler);
+			assertNotNull(lastHandler, "Last handler is null: probably issue in IRequestHandlerDelegate support");
 			
 			setResponsePage(new PageB());
 		}
@@ -136,7 +139,7 @@ public class PageRequestHandlerTrackerTest extends WicketTestCase
 	{
 		IRequestMapper mapper;
 		
-		public MapperDelegate(IRequestMapper mapper)
+		MapperDelegate(IRequestMapper mapper)
 		{
 			this.mapper = mapper;
 		}

@@ -16,24 +16,23 @@
  */
 package org.apache.wicket.component.replacewith;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for Component#replaceWith() method
  */
-public class ReplaceWithTest extends WicketTestCase
+class ReplaceWithTest extends WicketTestCase
 {
-	@Rule
-	public ExpectedException expectedException = ExpectedException.none();
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5417
 	 */
 	@Test
-	public void replaceWithInOnInitialize()
+	void replaceWithInOnInitialize()
 	{
 		HomePage page = new HomePage();
 		page.add(new ReplaceInOnInitializePanel("panel"));
@@ -46,7 +45,7 @@ public class ReplaceWithTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5417
 	 */
 	@Test
-	public void replaceWithInOnBeforeRender()
+	void replaceWithInOnBeforeRender()
 	{
 		HomePage page = new HomePage();
 		page.add(new ReplaceInOnBeforeRenderPanel("panel"));
@@ -59,7 +58,7 @@ public class ReplaceWithTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5417
 	 */
 	@Test
-	public void replaceWithInOnConfigure()
+	void replaceWithInOnConfigure()
 	{
 		HomePage page = new HomePage();
 		page.add(new ReplaceInOnConfigurePanel("panel"));
@@ -72,14 +71,16 @@ public class ReplaceWithTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5417
 	 */
 	@Test
-	public void replaceWithInConstructor()
+	void replaceWithInConstructor()
 	{
 		HomePage page = new HomePage();
 
-		expectedException.expect(IllegalStateException.class);
-		expectedException.
-		    expectMessage("This method can only be called on a component that has already been added to its parent.");
+		Exception e = assertThrows(IllegalStateException.class, () -> {
+			page.add(new ReplaceInConstructorPanel("panel"));
+		});
 
-		page.add(new ReplaceInConstructorPanel("panel"));
+		assertEquals(
+			"This method can only be called on a component that has already been added to its parent.",
+			e.getMessage());
 	}
 }

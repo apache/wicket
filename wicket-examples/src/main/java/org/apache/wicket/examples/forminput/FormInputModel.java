@@ -77,7 +77,7 @@ public final class FormInputModel implements IClusterable
 		@Override
 		public String toString()
 		{
-			return text;
+			return text == null ? "null" : "'" + text + "'";
 		}
 	}
 
@@ -368,9 +368,9 @@ public final class FormInputModel implements IClusterable
 	public String toString()
 	{
 	 StringBuilder b = new StringBuilder();
-		b.append("[TestInputObject stringProperty = '")
-			.append(stringProperty)
-			.append("', integerProperty = ")
+		b.append("[TestInputObject stringProperty = ")
+			.append(stringProperty == null ? "null" : "'" + stringProperty + "'")
+			.append(", integerProperty = ")
 			.append(integerProperty)
 			.append(", doubleProperty = ")
 			.append(doubleProperty)

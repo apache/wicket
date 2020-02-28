@@ -1,1 +1,1 @@
-org.apache.wicket.http2.Initializer
+org.apache.wicket.http2.markup.head.servlet4.Initializer

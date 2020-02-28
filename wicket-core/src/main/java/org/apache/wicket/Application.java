@@ -17,14 +17,13 @@
 package org.apache.wicket;
 
 import java.net.URLConnection;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Supplier;
-
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.application.ComponentInstantiationListenerCollection;
 import org.apache.wicket.application.ComponentOnAfterRenderListenerCollection;
@@ -33,6 +32,7 @@ import org.apache.wicket.application.ComponentOnConfigureListenerCollection;
 import org.apache.wicket.application.HeaderContributorListenerCollection;
 import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.application.IComponentInstantiationListener;
+import org.apache.wicket.application.OnComponentTagListenerCollection;
 import org.apache.wicket.core.request.mapper.IMapperContext;
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.core.util.lang.WicketObjects;
@@ -41,8 +41,10 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.javascript.DefaultJavaScriptCompressor;
 import org.apache.wicket.markup.MarkupFactory;
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.ResourceAggregator;
+import org.apache.wicket.markup.html.HeaderResponseDecoratorCollection;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
@@ -54,10 +56,7 @@ import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
-import org.apache.wicket.page.DefaultPageManagerContext;
 import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
@@ -91,10 +90,8 @@ import org.apache.wicket.settings.RequestLoggerSettings;
 import org.apache.wicket.settings.ResourceSettings;
 import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.settings.StoreSettings;
-import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -137,7 +134,7 @@ import org.slf4j.LoggerFactory;
  * @see org.apache.wicket.protocol.http.WebApplication
  * @author Jonathan Locke
  */
-public abstract class Application implements UnboundListener, IEventSink
+public abstract class Application implements UnboundListener, IEventSink, IMetadataContext<Object, Application>
 {
 	/** Configuration constant for the 2 types */
 	public static final String CONFIGURATION = "configuration";
@@ -151,13 +148,6 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
-
-	private static final String PROPERTIES_FILE_EXTENSION = ".properties";
-
-	/**
-	 * The path to look for Wicket specific properties file(s)
-	 */
-	private static final String META_INF_WICKET_PATH = File.separatorChar+ "META-INF" + File.separatorChar + "wicket" + File.separatorChar;
 
 	/** root mapper */
 	private IRequestMapper rootRequestMapper;
@@ -195,7 +185,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * The decorator this application uses to decorate any header responses created by Wicket
 	 */
-	private IHeaderResponseDecorator headerResponseDecorator;
+	private HeaderResponseDecoratorCollection headerResponseDecorators =
+		new HeaderResponseDecoratorCollection();
 
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
@@ -289,7 +280,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		switch (getConfigurationType())
 		{
 			case DEVELOPMENT : {
-				getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
+				getResourceSettings().setResourcePollFrequency(Duration.ofSeconds(1));
 				getResourceSettings().setJavaScriptCompressor(null);
 				getResourceSettings().setUseMinifiedResources(false);
 				getMarkupSettings().setStripWicketTags(false);
@@ -402,6 +393,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
+	@Override
 	public final synchronized <T> T getMetaData(final MetaDataKey<T> key)
 	{
 		return key.get(metaData);
@@ -515,7 +507,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final synchronized <T> Application setMetaData(final MetaDataKey<T> key, final Object object)
+	@Override
+	public synchronized final <T> Application setMetaData(final MetaDataKey<T> key, final T object)
 	{
 		metaData = key.set(metaData, object);
 		return this;
@@ -566,16 +559,6 @@ public abstract class Application implements UnboundListener, IEventSink
 			serviceLoaderInitializer.init(this);
 			initializers.add(serviceLoaderInitializer);
 		}
-	}
-
-	/**
-	 * @param properties
-	 *            Properties map with names of any library initializers in it
-	 */
-	private void load(final Properties properties)
-	{
-		addInitializer(properties.getProperty("initializer"));
-		addInitializer(properties.getProperty(getName() + "-initializer"));
 	}
 
 	/**
@@ -884,6 +867,8 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	private final BehaviorInstantiationListenerCollection behaviorInstantiationListeners = new BehaviorInstantiationListenerCollection();
 
+	private final OnComponentTagListenerCollection onComponentTagListeners = new OnComponentTagListenerCollection();
+
 	/**
 	 * @return Gets the application's {@link HeaderContributorListenerCollection}
 	 */
@@ -924,6 +909,12 @@ public abstract class Application implements UnboundListener, IEventSink
 		return behaviorInstantiationListeners;
 	}
 
+	/**
+	 * @return collection of application's on-component-tag listeners
+	 */
+	public final OnComponentTagListenerCollection getOnComponentTagListeners() {
+		return onComponentTagListeners;
+	}
 
 	/**
 	 * @return Gets the application's ComponentInstantiationListenerCollection
@@ -1024,7 +1015,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/** The Security Settings */
 	private SecuritySettings securitySettings;
 
-	/** The settings for {@link IPageStore}, {@link IDataStore} and {@link IPageManager} */
+	/** The settings for {@link IPageStore} and {@link IPageManager} */
 	private StoreSettings storeSettings;
 
 	/** can the settings object be set/used. */
@@ -1342,19 +1333,17 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
+	 * Set the provider of an {@link IPageManager}.
 	 * 
 	 * @param provider
+	 * 
+	 * @see DefaultPageManagerProvider
 	 */
 	public final Application setPageManagerProvider(final IPageManagerProvider provider)
 	{
 		pageManagerProvider = provider;
 		return this;
 	}
-
-	/**
-	 * Context for PageManager to interact with rest of Wicket
-	 */
-	private final IPageManagerContext pageManagerContext = new DefaultPageManagerContext();
 
 	/**
 	 * Returns an unsynchronized version of page manager
@@ -1369,20 +1358,11 @@ public abstract class Application implements UnboundListener, IEventSink
 			{
 				if (pageManager == null)
 				{
-					pageManager = pageManagerProvider.apply(getPageManagerContext());
+					pageManager = pageManagerProvider.get();
 				}
 			}
 		}
 		return pageManager;
-	}
-
-	/**
-	 * 
-	 * @return the page manager context
-	 */
-	protected IPageManagerContext getPageManagerContext()
-	{
-		return pageManagerContext;
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1542,7 +1522,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		{
 			session = newSession(requestCycle.getRequest(), requestCycle.getResponse());
 			ThreadContext.setSession(session);
-			internalGetPageManager().newSessionCreated();
+			internalGetPageManager().clear();
 			sessionListeners.onCreated(session);
 		}
 		else
@@ -1589,18 +1569,12 @@ public abstract class Application implements UnboundListener, IEventSink
 			@Override
 			public void onDetach(final RequestCycle requestCycle)
 			{
-				if (Session.exists())
-				{
-					Session.get().getPageManager().commitRequest();
-				}
+				internalGetPageManager().detach();
 
-				if (Application.exists())
+				IRequestLogger requestLogger = getRequestLogger();
+				if (requestLogger != null)
 				{
-					IRequestLogger requestLogger = Application.get().getRequestLogger();
-					if (requestLogger != null)
-					{
-						requestLogger.requestTime((System.currentTimeMillis() - requestCycle.getStartTime()));
-					}
+					requestLogger.requestTime((System.currentTimeMillis() - requestCycle.getStartTime()));
 				}
 			}
 		});
@@ -1610,17 +1584,37 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * Sets an {@link IHeaderResponseDecorator} that you want your application to use to decorate
 	 * header responses.
+	 * <p>
+	 * Calling this method replaces the default decorator, which utilizes a
+	 * {@link ResourceAggregator}: The given implementation should make sure, that it too wraps
+	 * responses in a {@link ResourceAggregator}, otherwise no dependencies for {@link HeaderItem}s
+	 * will be resolved.
 	 * 
 	 * @param headerResponseDecorator
-	 *            your custom decorator
+	 *            your custom decorator, must not be null
+	 * @deprecated use {@code add(...)} on {@link #getHeaderResponseDecorators()}. This method
+	 *             removes the {@link ResourceAggregator}, which is needed to resolve resource
+	 *             dependencies.
 	 */
-	public final Application setHeaderResponseDecorator(
-		final IHeaderResponseDecorator headerResponseDecorator)
+	@Deprecated
+	public final Application
+			setHeaderResponseDecorator(final IHeaderResponseDecorator headerResponseDecorator)
 	{
-		this.headerResponseDecorator = headerResponseDecorator;
+		headerResponseDecorators.replaceAll(headerResponseDecorator);
 		return this;
 	}
 
+	/**
+	 * Returns the {@link HeaderResponseDecoratorCollection} used by this application. On this
+	 * collection you can add additional decorators, which will be nested in the order added.
+	 * 
+	 * @return The {@link HeaderResponseDecoratorCollection} used by this application.
+	 */
+	public HeaderResponseDecoratorCollection getHeaderResponseDecorators()
+	{
+		return headerResponseDecorators;
+	}
+	
 	/**
 	 * INTERNAL METHOD - You shouldn't need to call this. This is called every time Wicket creates
 	 * an IHeaderResponse. It gives you the ability to incrementally add features to an
@@ -1636,14 +1630,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	public final IHeaderResponse decorateHeaderResponse(final IHeaderResponse response)
 	{
-		final IHeaderResponse aggregatingResponse = new ResourceAggregator(response);
-
-		if (headerResponseDecorator == null)
-		{
-			return aggregatingResponse;
-		}
-
-		return headerResponseDecorator.decorate(aggregatingResponse);
+		return headerResponseDecorators.decorate(response);
 	}
 
 	/**

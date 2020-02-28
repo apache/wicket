@@ -15,4 +15,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<ajax-response><evaluate>(function(){start(); ok(true, 'Evaluation must be executed!');})();</evaluate></ajax-response>
+<ajax-response>
+<header-contribution><![CDATA[
+<head xmlns:wicket="http://wicket.apache.org">
+<script type="text/javascript">
+/*<![CDATA[*/
+start(); ok(true, 'Evaluation must be executed!');
+/*]]]]><![CDATA[>*/
+</script>
+</head>
+]]></header-contribution>
+</ajax-response>

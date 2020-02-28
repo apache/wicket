@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Locale;
 
 import org.apache.wicket.Page;
@@ -24,24 +26,24 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "rawtypes", "serial", "unchecked" })
-public class AutoFormLabelPickupTest extends WicketTestCase
+class AutoFormLabelPickupTest extends WicketTestCase
 {
-	public static class PrintLabelPage extends WebPage
+	static class PrintLabelPage extends WebPage
 	{
-		public PrintLabelPage(IModel labelModel)
+		PrintLabelPage(IModel labelModel)
 		{
 			Form form = new Form("form");
 			add(form);
 			form.add(new TextField("input", Model.of("")).setLabel(labelModel));
 		}
 	}
-	public static class PickUpLabelPage extends WebPage
+	static class PickUpLabelPage extends WebPage
 	{
-		public PickUpLabelPage(IModel labelModel)
+		PickUpLabelPage(IModel labelModel)
 		{
 			Form form = new Form("form");
 			add(form);
@@ -55,28 +57,28 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		Session.get().setLocale(Locale.US);
 	}
 
 	@Test
-	public void labelIsPrintedFromModel() throws Exception
+	void labelIsPrintedFromModel() throws Exception
 	{
 		tester.startPage(new PrintLabelPage(Model.of("label from model")));
 		tester.assertContains("<label wicket:for=\"input\" id=\"input2-w-lbl\" for=\"input2\">\\|label from model\\|</label>");
 	}
 
 	@Test
-	public void labelIsPrintedFromProperties() throws Exception
+	void labelIsPrintedFromProperties() throws Exception
 	{
 		tester.startPage(new PrintLabelPage(Model.of((String)null)));
 		tester.assertContains("<label wicket:for=\"input\" id=\"input2-w-lbl\" for=\"input2\">\\|label from properties\\|</label>");
 	}
 
 	@Test
-	public void labelIsPickedUpFromMarkup() throws Exception
+	void labelIsPickedUpFromMarkup() throws Exception
 	{
 		tester.startPage(new PickUpLabelPage(null));
 		assertEquals(
@@ -86,7 +88,7 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 	}
 
 	@Test
-	public void labelIsPickedUpFromProperties() throws Exception
+	void labelIsPickedUpFromProperties() throws Exception
 	{
 		tester.startPage(new PickUpLabelPage(null));
 		assertEquals(
@@ -96,7 +98,7 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 	}
 
 	@Test
-	public void withoutAutolabel() throws Exception
+	void withoutAutolabel() throws Exception
 	{
 		tester.startPage(new PickUpLabelPage(null));
 		tester.assertContains("<label>label from markup without autolabel</label>");
@@ -107,7 +109,7 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 	}
 
 	@Test
-	public void localeChangesAreDetectedWithExplicitMessageKeys() throws Exception
+	void localeChangesAreDetectedWithExplicitMessageKeys() throws Exception
 	{
 		Session.get().setLocale(Locale.GERMAN);
 		tester.startPage(new PickUpLabelPage(null));
@@ -129,7 +131,7 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 	}
 
 	@Test
-	public void localeChangesAreDetectedWithDefaultLabels() throws Exception
+	void localeChangesAreDetectedWithDefaultLabels() throws Exception
 	{
 		Session.get().setLocale(Locale.GERMAN);
 		tester.startPage(new PickUpLabelPage(null));
@@ -151,7 +153,7 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 	}
 
 	@Test
-	public void defaultLabelIsPickedUpFromProperties() throws Exception
+	void defaultLabelIsPickedUpFromProperties() throws Exception
 	{
 		tester.startPage(new PickUpLabelPage(null));
 		assertEquals(

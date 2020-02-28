@@ -16,28 +16,27 @@
  */
 package org.apache.wicket.validation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.wicket.markup.html.form.ValidationErrorFeedback;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * {@link ValidationError} related tests
  * 
  * @author igor
  */
-public class ValidationErrorTest
+class ValidationErrorTest
 {
 	/**
 	 * tests standard key values
 	 */
 	@Test
-	public void standardKeys()
+	void standardKeys()
 	{
 		ValidationError e = new ValidationError();
 		e.addKey(new TestValidator());
@@ -77,12 +76,12 @@ public class ValidationErrorTest
 	}
 
 	@Test
-	public void calculateMessageWithoutKeys()
+	void calculateMessageWithoutKeys()
 	{
 		String message = "foo message";
 		ValidationError error = new ValidationError(message);
 		Serializable errorMessage = error.getErrorMessage(new TestMessageSource());
-		assertThat(errorMessage, Matchers.instanceOf(ValidationErrorFeedback.class));
+		assertThat(errorMessage).isInstanceOf(ValidationErrorFeedback.class);
 		ValidationErrorFeedback vef = (ValidationErrorFeedback) errorMessage;
 		assertEquals(message, vef.getMessage());
 	}

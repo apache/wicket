@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource.caching;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.time.Duration;
 import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -26,16 +28,14 @@ import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
 import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.tester.WicketTester;
-import org.apache.wicket.util.time.Duration;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for FilenameWithVersionResourceCachingStrategy
  */
-public class FilenameWithVersionResourceCachingStrategyTest extends Assert
+class FilenameWithVersionResourceCachingStrategyTest
 {
-	public static final String TEST_RESOURCE_VERSION = "9A0364B9E99BB480DD25E1F0284C8555";
+	private static final String TEST_RESOURCE_VERSION = "9A0364B9E99BB480DD25E1F0284C8555";
 
 	private final String versionPrefix = "--vers--";
 	private final IResourceVersion resourceVersion = new MessageDigestResourceVersion();
@@ -43,7 +43,7 @@ public class FilenameWithVersionResourceCachingStrategyTest extends Assert
 			new FilenameWithVersionResourceCachingStrategy(versionPrefix, resourceVersion);
 
 	@Test
-	public void testDecorateUrl() throws Exception
+	void testDecorateUrl() throws Exception
 	{
 		ResourceUrl resourceUrl = new ResourceUrl("some-resource.txt", new PageParameters());
 		strategy.decorateUrl(resourceUrl, new TestResource());
@@ -58,7 +58,7 @@ public class FilenameWithVersionResourceCachingStrategyTest extends Assert
 	}
 
 	@Test
-	public void testUndecorateUrl() throws Exception
+	void testUndecorateUrl() throws Exception
 	{
 		ResourceUrl resourceUrl = new ResourceUrl("some-resource--vers--"+TEST_RESOURCE_VERSION+".txt", new PageParameters());
 		strategy.undecorateUrl(resourceUrl);
@@ -79,9 +79,9 @@ public class FilenameWithVersionResourceCachingStrategyTest extends Assert
 	}
 
 	@Test
-	public void testDecorateResponse() throws Exception
+	void testDecorateResponse() throws Exception
 	{
-		Duration defaultDuration = Duration.minutes(60);
+		Duration defaultDuration = Duration.ofMinutes(60);
 
 		// setup RequestCycle
 		BaseWicketTester tester = new BaseWicketTester();
@@ -115,7 +115,7 @@ public class FilenameWithVersionResourceCachingStrategyTest extends Assert
 	}
 
 	@Test
-	public void testUrlVersionStoredInRequestCycle()
+	void testUrlVersionStoredInRequestCycle()
 	{
 		WicketTester tester = new WicketTester();
 		tester.getApplication().getResourceSettings().setCachingStrategy(strategy);

@@ -16,16 +16,20 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table.export;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.wicket.Application;
+import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
@@ -179,72 +183,120 @@ public class CSVDataExporter extends AbstractDataExporter
 	public <T> void exportData(IDataProvider<T> dataProvider, List<IExportableColumn<T, ?>> columns, OutputStream outputStream)
 		throws IOException
 	{
-		PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, Charset.forName(characterSet)));
-		try
+		
+		try (Grid grid = new Grid(new OutputStreamWriter(outputStream, Charset.forName(characterSet))))
 		{
-			if (isExportHeadersEnabled())
-			{
-				boolean first = true;
-				for (IExportableColumn<T, ?> col : columns)
-				{
-					if (first)
-					{
-						first = false;
-					}
-					else
-					{
-						out.print(delimiter);
-					}
-					out.print(quoteValue(col.getDisplayModel().getObject()));
-				}
-				out.print("\r\n");
-			}
-			long numberOfRows = dataProvider.size();
-			Iterator<? extends T> rowIterator = dataProvider.iterator(0, numberOfRows);
-			while (rowIterator.hasNext())
-			{
-				T row = rowIterator.next();
-
-				boolean first = true;
-				for (IExportableColumn<T, ?> col : columns)
-				{
-					if (first)
-					{
-						first = false;
-					}
-					else
-					{
-						out.print(delimiter);
-					}
-
-					Object o = col.getDataModel(dataProvider.model(row)).getObject();
-
-					if (o != null)
-					{
-						Class<?> c = o.getClass();
-
-						String s;
-
-						IConverter converter = Application.get().getConverterLocator().getConverter(c);
-
-						if (converter == null)
-						{
-							s = o.toString();
-						}
-						else
-						{
-							s = converter.convertToString(o, Session.get().getLocale());
-						}
-
-						out.print(quoteValue(s));
-					}
-				}
-				out.print("\r\n");
-			}
+			writeHeaders(columns, grid);
+			writeData(dataProvider, columns, grid);
 		}
-		finally
+	}
+	
+	private <T> void writeHeaders(List<IExportableColumn<T, ?>> columns, Grid grid) throws IOException
+	{
+		if (isExportHeadersEnabled())
 		{
-			out.close();
+			for (IExportableColumn<T, ?> col : columns)
+			{
+				IModel<String> displayModel = col.getDisplayModel();
+				String display = wrapModel(displayModel).getObject();
+				grid.cell(quoteValue(display));
+			}
+			grid.row();
+		}
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private <T> void writeData(IDataProvider<T> dataProvider, List<IExportableColumn<T, ?>> columns, Grid grid) throws IOException
+	{
+		long numberOfRows = dataProvider.size();
+		Iterator<? extends T> rowIterator = dataProvider.iterator(0, numberOfRows);
+		while (rowIterator.hasNext())
+		{
+			T row = rowIterator.next();
+
+			for (IExportableColumn<T, ?> col : columns)
+			{
+				IModel<?> dataModel = col.getDataModel(dataProvider.model(row));
+				
+				Object value = wrapModel(dataModel).getObject();
+				if (value != null)
+				{
+					Class<?> c = value.getClass();
+
+					String s;
+
+					IConverter converter = getConverterLocator().getConverter(c);
+
+					if (converter == null)
+					{
+						s = value.toString();
+					}
+					else
+					{
+						s = converter.convertToString(value, Session.get().getLocale());
+					}
+
+					grid.cell(quoteValue(s));
+				}
+			}
+			grid.row();
+		}
+	}
+
+	/**
+	 * Get the locator of converters.
+	 *
+	 * @return locator
+	 */
+	protected IConverterLocator getConverterLocator() {
+		return Application.get().getConverterLocator();
+	}
+
+	/**
+	 * Wrap the given model-
+	 * 
+	 * @param displayModel
+	 * @return
+	 */
+	protected <T> IModel<T> wrapModel(IModel<T> model)
+	{
+		return model;
+	}
+	
+	private class Grid implements Closeable{
+
+		private Writer writer;
+
+		boolean first = true;
+		
+		public Grid(Writer writer)
+		{
+			this.writer = writer;
+		}
+
+		public void cell(String value) throws IOException {
+			if (first)
+			{
+				first = false;
+			}
+			else
+			{
+				writer.write(delimiter);
+			}
+			
+			writer.write(value);
+		}
+		
+		public void row() throws IOException
+		{
+			writer.write("\r\n");
+			first = true;
+		}
+
+		@Override
+		public void close() throws IOException
+		{
+			writer.close();
 		}
 	}
 }

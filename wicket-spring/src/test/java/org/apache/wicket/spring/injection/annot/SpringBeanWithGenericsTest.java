@@ -16,10 +16,14 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import org.apache.wicket.spring.BeanWithGeneric;
+import org.apache.wicket.util.tester.DummyHomePage;
+import org.apache.wicket.util.tester.WicketTester;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,30 +31,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.wicket.spring.BeanWithGeneric;
-import org.apache.wicket.util.tester.DummyHomePage;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Andrea Del Bene
  *
  */
-public class SpringBeanWithGenericsTest extends Assert
+class SpringBeanWithGenericsTest
 {
 	private WicketTester tester;
 	private AnnotationConfigApplicationContext ctx;
 
-	/**
-	 * @throws Exception
-	 */
-	@Before
-	public void before() throws Exception
+	@BeforeEach
+	void before()
 	{
 		tester = new WicketTester();
 
@@ -65,7 +60,7 @@ public class SpringBeanWithGenericsTest extends Assert
 	}
 
 	@Test
-	public void genericAsQualifier() throws Exception
+	void genericAsQualifier()
 	{
 		AnnotatedBeanGenericQualifier page = 
 			tester.startPage(new AnnotatedBeanGenericQualifier());
@@ -74,7 +69,7 @@ public class SpringBeanWithGenericsTest extends Assert
 	}
 
 	@Test
-	public void listOfGenerics() throws Exception
+	void listOfGenerics()
 	{
 		AnnotatedListOfBeanGenericQualifier page = 
 			tester.startPage(new AnnotatedListOfBeanGenericQualifier());
@@ -89,22 +84,22 @@ public class SpringBeanWithGenericsTest extends Assert
 	}
 
 	@Test
-	public void listOfStringGenerics() throws Exception
+	void listOfStringGenerics()
 	{
 		AnnotatedListOfBeanStringGenericQualifier page =
 				tester.startPage(new AnnotatedListOfBeanStringGenericQualifier());
 
 		List<BeanWithGeneric<String>> beans = page.getBeans();
 
-		assertThat(beans, is(notNullValue()));
-		assertThat(beans.size(), is(1));
+		assertNotNull(beans);
+		assertEquals(1, beans.size());
 
 		BeanWithGeneric<String> stringBean = (BeanWithGeneric<String>) ctx.getBean("stringBean");
-		assertThat(beans, hasItem(stringBean));
+		assertTrue(beans.contains(stringBean));
 	}
 	
 	@Test
-	public void mapOfGenerics() throws Exception
+	void mapOfGenerics()
 	{
 		AnnotatedMapOfBeanGenericQualifier page = 
 			tester.startPage(new AnnotatedMapOfBeanGenericQualifier());
@@ -119,7 +114,7 @@ public class SpringBeanWithGenericsTest extends Assert
 	}
 	
 	@Test
-	public void setOfGenerics() throws Exception
+	void setOfGenerics()
 	{
 		AnnotatedSetOfBeanGenericQualifier page = 
 			tester.startPage(new AnnotatedSetOfBeanGenericQualifier());
@@ -134,7 +129,7 @@ public class SpringBeanWithGenericsTest extends Assert
 	}
 	
 	@Test
-	public void listField() throws Exception
+	void listField()
 	{
 		AnnotatedListField page =
 			tester.startPage(new AnnotatedListField());
@@ -142,32 +137,32 @@ public class SpringBeanWithGenericsTest extends Assert
 		List<String> stringsList = page.getStringsList();
 		assertNotNull(stringsList);
 		assertEquals(3, stringsList.size());
-		assertThat(stringsList.get(0), is(equalTo("foo")));
-		assertThat(stringsList.get(1), is(equalTo("bar")));
-		assertThat(stringsList.get(2), is(equalTo("baz")));
+		assertEquals("foo", stringsList.get(0));
+		assertEquals("bar", stringsList.get(1));
+		assertEquals("baz", stringsList.get(2));
 		
 		ArrayList<String> arrayListStrings = page.getArrayListStrings();
-		assertThat(arrayListStrings, is(notNullValue()));
-		assertThat(arrayListStrings.size(), is(3));
-		assertThat(arrayListStrings.get(0), is(equalTo("one")));
-		assertThat(arrayListStrings.get(1), is(equalTo("two")));
-		assertThat(arrayListStrings.get(2), is(equalTo("three")));
+		assertNotNull(arrayListStrings);
+		assertEquals(3, arrayListStrings.size());
+		assertEquals("one", arrayListStrings.get(0));
+		assertEquals("two", arrayListStrings.get(1));
+		assertEquals("three", arrayListStrings.get(2));
 
 		ArrayList<Integer> arrayListIntegers = page.getArrayListIntegers();
-		assertThat(arrayListIntegers, is(notNullValue()));
-		assertThat(arrayListIntegers.size(), is(3));
-		assertThat(arrayListIntegers.get(0), is(1));
-		assertThat(arrayListIntegers.get(1), is(2));
-		assertThat(arrayListIntegers.get(2), is(3));
+		assertNotNull(arrayListIntegers);
+		assertEquals(3, arrayListIntegers.size());
+		assertEquals(Integer.valueOf(1), arrayListIntegers.get(0));
+		assertEquals(Integer.valueOf(2), arrayListIntegers.get(1));
+		assertEquals(Integer.valueOf(3), arrayListIntegers.get(2));
 
 		MyList<String> myList = page.getMyList();
-		assertThat(myList, is(notNullValue()));
-		assertThat(myList.size(), is(1));
-		assertThat(myList.get(0), is("one"));
+		assertNotNull(myList);
+		assertEquals(1, myList.size());
+		assertEquals("one", myList.get(0));
 	}
 
 	@Test
-	public void listOfTypedGenerics() throws Exception
+	void listOfTypedGenerics()
 	{
 		AnnotatedListOfBeanTypeQualifier page = 
 			tester.startPage(new AnnotatedListOfBeanTypeQualifier());
@@ -301,7 +296,7 @@ public class SpringBeanWithGenericsTest extends Assert
 		@Bean
 		public ArrayList<String> arrayListStrings()
 		{
-			ArrayList<String> arrayList = new ArrayList();
+			ArrayList<String> arrayList = new ArrayList<>();
 			arrayList.add("one");
 			arrayList.add("two");
 			arrayList.add("three");
@@ -311,7 +306,7 @@ public class SpringBeanWithGenericsTest extends Assert
 		@Bean
 		public ArrayList<Integer> arrayListIntegers()
 		{
-			ArrayList<Integer> arrayList = new ArrayList();
+			ArrayList<Integer> arrayList = new ArrayList<>();
 			arrayList.add(1);
 			arrayList.add(2);
 			arrayList.add(3);

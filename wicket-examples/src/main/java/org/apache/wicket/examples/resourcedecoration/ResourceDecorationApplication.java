@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.resourcedecoration;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.markup.head.filter.JavaScriptFilteredIntoFooterHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -27,12 +28,12 @@ import org.apache.wicket.request.resource.CssResourceReference;
  * 
  * <p>
  * The key is to register a custom {@link IHeaderResponseDecorator} via
- * {@link Application#setHeaderResponseDecorator(IHeaderResponseDecorator)} that will intercept all
+ * {@link Application#getHeaderResponseDecorators()} that will intercept all
  * resource contributions.
  * 
  * @author jthomerson
  */
-public class ResourceDecorationApplication extends WebApplication
+public class ResourceDecorationApplication extends WicketExampleApplication
 {
 	@Override
 	protected void init()
@@ -43,11 +44,10 @@ public class ResourceDecorationApplication extends WebApplication
 			new CssResourceReference(HomePage.class, "footer.css"),
 			new CssResourceReference(HomePage.class, "header.css"));
 
-		setHeaderResponseDecorator(response -> {
-			// use this header resource decorator to load all JavaScript resources in the page
-			// footer (after </body>)
-			return new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS");
-		});
+		// use this header resource decorator to load all JavaScript resources in the page
+		// footer (after </body>)
+		getHeaderResponseDecorators()
+				.add(response -> new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS"));
 	}
 
 	@Override

@@ -20,15 +20,16 @@ import static org.apache.wicket.ajax.attributes.CallbackParameter.context;
 import static org.apache.wicket.ajax.attributes.CallbackParameter.converted;
 import static org.apache.wicket.ajax.attributes.CallbackParameter.explicit;
 import static org.apache.wicket.ajax.attributes.CallbackParameter.resolved;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
-public class AjaxCallbackFunctionTest extends WicketTestCase
+class AjaxCallbackFunctionTest extends WicketTestCase
 {
 	@Test
-	public void testDefaultCallbackFunction()
+	void testDefaultCallbackFunction()
 	{
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(//
@@ -52,7 +53,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 	}
 
 	@Test
-	public void testCallbackFunctionWithContext()
+	void testCallbackFunctionWithContext()
 	{
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(//
@@ -76,7 +77,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 	}
 
 	@Test
-	public void testCallbackFunctionWithExplicit()
+	void testCallbackFunctionWithExplicit()
 	{
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(//
@@ -99,7 +100,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 	}
 
 	@Test
-	public void testCallbackFunctionWithResolved()
+	void testCallbackFunctionWithResolved()
 	{
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(//
@@ -127,7 +128,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 	}
 
 	@Test
-	public void testCallbackFunctionWithConverted()
+	void testCallbackFunctionWithConverted()
 	{
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(
@@ -157,7 +158,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 	}
 
 	@Test
-	public void testCallbackFunctionWithAll()
+	void testCallbackFunctionWithAll()
 	{
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(
@@ -195,7 +196,7 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 	}
 
 	@Test
-	public void testJQueryUIEvent()
+	void testJQueryUIEvent()
 	{
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(

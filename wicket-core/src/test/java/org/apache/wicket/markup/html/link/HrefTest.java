@@ -17,14 +17,14 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple tester that demonstrates the mock http application code (and checks that it is working)
  * 
  * @author Chris Turner
  */
-public class HrefTest extends WicketTestCase
+class HrefTest extends WicketTestCase
 {
 
 	/**
@@ -33,7 +33,7 @@ public class HrefTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_1() throws Exception
+    void renderHomePage_1() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
 		executeTest(Href_1.class, "HrefExpectedResult_1.html");
@@ -45,7 +45,7 @@ public class HrefTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_2() throws Exception
+    void renderHomePage_2() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
 		executeTest(Href_1.class, "HrefExpectedResult_1-1.html");
@@ -57,7 +57,7 @@ public class HrefTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_2a() throws Exception
+    void renderHomePage_2a() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
 		executeTest(Href_2.class, "HrefExpectedResult_2.html");
@@ -69,7 +69,7 @@ public class HrefTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_3() throws Exception
+    void renderHomePage_3() throws Exception
 	{
 		executeTest(Href_3.class, "HrefExpectedResult_3.html");
 	}

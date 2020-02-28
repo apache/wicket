@@ -18,7 +18,6 @@ module.exports = function(grunt) {
 
 	var
 		coreJs = [
-			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js',
 			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
 			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
 			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckSelector.js",
@@ -106,12 +105,12 @@ module.exports = function(grunt) {
 			 */
 			all: {
 				options: {
-			        urls: [
-			        	'http://localhost:38887/test/js/all.html?1.12.4',
-			        	'http://localhost:38887/test/js/all.html?2.2.4',
-						'http://localhost:38887/test/js/all.html?3.2.1'
-			        ]
-			    }
+					urls: [
+						'http://localhost:38887/test/js/all.html?1.12.4',
+						'http://localhost:38887/test/js/all.html?2.2.4',
+						'http://localhost:38887/test/js/all.html?3.4.1'
+					]
+				}
 			},
 
 			/**
@@ -122,7 +121,7 @@ module.exports = function(grunt) {
 					urls: [
 						'http://localhost:38887/test/js/amd.html?1.12.4',
 						'http://localhost:38887/test/js/amd.html?2.2.4',
-						'http://localhost:38887/test/js/amd.html?3.2.1'
+						'http://localhost:38887/test/js/amd.html?3.4.1'
 					]
 				}
 			}

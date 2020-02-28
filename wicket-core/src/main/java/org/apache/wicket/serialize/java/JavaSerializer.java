@@ -25,6 +25,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -308,8 +309,10 @@ public class JavaSerializer implements ISerializer
 				}
 				try
 				{
-					return Proxy.getProxyClass(
-						hasNonPublicInterface ? nonPublicLoader : latestLoader, classObjs);
+					final InvocationHandler invocationHandler = (proxy, method, args) -> null;
+					final Object proxyInstance = Proxy.newProxyInstance(
+							hasNonPublicInterface ? nonPublicLoader : latestLoader, classObjs, invocationHandler);
+					return proxyInstance.getClass();
 				}
 				catch (IllegalArgumentException e)
 				{

@@ -34,6 +34,7 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioChoice;
@@ -46,7 +47,6 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -318,23 +318,8 @@ public class Home extends WebPage
 		{
 			super(id, LOCALES, new LocaleChoiceRenderer());
 			setDefaultModel(new PropertyModel<Locale>(Home.this, "locale"));
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
-		 */
-		@Override
-		public void onSelectionChanged(Locale newSelection)
-		{
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
-		 */
-		@Override
-		protected boolean wantOnSelectionChangedNotifications()
-		{
-			return true;
+			
+			add(new FormComponentUpdatingBehavior());
 		}
 	}
 
@@ -388,16 +373,7 @@ public class Home extends WebPage
 				item.add(new Label("homephone", contact.getHomePhone()));
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
-				item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>()
-				{
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public String getObject()
-					{
-						return (item.getIndex() % 2 == 1) ? "even" : "odd";
-					}
-				}));
+				item.add(AttributeModifier.replace("class", () -> (item.getIndex() % 2 == 1) ? "even" : "odd"));
 			}
 		});
 

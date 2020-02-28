@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.image;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
@@ -160,7 +161,7 @@ public class Source extends Image
 	 * Unsupported for source tag
 	 */
 	@Override
-	public void setCrossOrigin(Cors crossorigin)
+	public void setCrossOrigin(CrossOrigin crossorigin)
 	{
 		throw new UnsupportedOperationException(
 			"It is not allowed to set the crossorigin attribute for source tag");
@@ -170,7 +171,7 @@ public class Source extends Image
 	 * Unsupported for source tag
 	 */
 	@Override
-	public final Cors getCrossOrigin()
+	public final CrossOrigin getCrossOrigin()
 	{
 		return null;
 	}

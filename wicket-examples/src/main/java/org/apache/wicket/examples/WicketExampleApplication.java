@@ -16,7 +16,12 @@
  */
 package org.apache.wicket.examples;
 
+import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.resource.CssUrlReplacer;
 import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.util.crypt.ClassCryptFactory;
@@ -43,6 +48,8 @@ public abstract class WicketExampleApplication extends WebApplication
 	@Override
 	protected void init()
 	{
+		super.init();
+		
 		// WARNING: DO NOT do this on a real world application unless
 		// you really want your app's passwords all passed around and
 		// stored in unencrypted browser cookies (BAD IDEA!)!!!
@@ -57,5 +64,20 @@ public abstract class WicketExampleApplication extends WebApplication
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 		
 		getResourceSettings().setCssCompressor(new CssUrlReplacer());
+		getCsp().blocking().strict().reportBack()
+				.add(CSPDirective.STYLE_SRC,
+						"https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
+				.add(CSPDirective.FONT_SRC, "https://maxcdn.bootstrapcdn.com");
+		
+		getRequestCycleListeners().add(new IRequestCycleListener()
+		{
+			@Override
+			public void onEndRequest(RequestCycle cycle)
+			{
+				((WebResponse) cycle.getResponse()).addHeader("Server-Timing",
+					"server;desc=\"Wicket rendering time\";dur="
+						+ (System.currentTimeMillis() - cycle.getStartTime()));
+			}
+		});
 	}
 }

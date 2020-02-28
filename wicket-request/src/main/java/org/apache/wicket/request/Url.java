@@ -88,6 +88,14 @@ public class Url implements Serializable
 	private String fragment;
 
 	/**
+	 * Flags the URL as relative to the application context. It is a special type of URL, used
+	 * internally to hold the client data: protocol + host + port + relative segments
+	 * 
+	 * Unlike absolute URLs, a context relative one has no context or filter mapping segments
+	 */
+	private boolean contextRelative;
+
+	/**
 	 * Modes with which urls can be stringized
 	 * 
 	 * @author igor
@@ -489,7 +497,7 @@ public class Url implements Serializable
 	 */
 	public boolean isContextAbsolute()
 	{
-		return !isFull() && !getSegments().isEmpty() && Strings.isEmpty(getSegments().get(0));
+		return !contextRelative && !isFull() && !getSegments().isEmpty() && Strings.isEmpty(getSegments().get(0));
 	}
 
 	/**
@@ -512,7 +520,7 @@ public class Url implements Serializable
 	 */
 	public boolean isFull()
 	{
-		return getHost() != null;
+		return !contextRelative && getHost() != null;
 	}
 
 	/**
@@ -1102,6 +1110,28 @@ public class Url implements Serializable
 	public void setProtocol(final String protocol)
 	{
 		this.protocol = protocol;
+	}
+
+	/**
+	 * 
+	 * Flags the URL as relative to the application context.
+	 * 
+	 * @param contextRelative
+	 */
+	public void setContextRelative(boolean contextRelative)
+	{
+		this.contextRelative = contextRelative;
+	}
+
+	/**
+	 * Tests if the URL is relative to the application context. If so, it holds all the information
+	 * an absolute URL would have, minus the context and filter mapping segments
+	 * 
+	 * @return contextRelative
+	 */
+	public boolean isContextRelative()
+	{
+		return contextRelative;
 	}
 
 	/**

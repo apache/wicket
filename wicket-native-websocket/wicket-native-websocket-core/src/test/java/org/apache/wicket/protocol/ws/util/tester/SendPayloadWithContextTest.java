@@ -16,11 +16,6 @@
  */
 package org.apache.wicket.protocol.ws.util.tester;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -31,10 +26,15 @@ import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test for https://issues.apache.org/jira/browse/WICKET-5627.
@@ -42,13 +42,13 @@ import org.junit.Test;
  *
  * @since 6.17.0
  */
-public class SendPayloadWithContextTest extends Assert
+public class SendPayloadWithContextTest
 {
 	final AtomicBoolean context = new AtomicBoolean(false);
 
 	WicketTester tester;
 
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		tester = new WicketTester();
@@ -64,7 +64,7 @@ public class SendPayloadWithContextTest extends Assert
 		});
 	}
 
-	@After
+	@AfterEach
 	public void after()
 	{
 		tester.destroy();
@@ -80,12 +80,12 @@ public class SendPayloadWithContextTest extends Assert
 			@Override
 			protected void onOutMessage(String message)
 			{
-				assertThat(Boolean.parseBoolean(message), is(equalTo(Boolean.TRUE)));
+				assertTrue(Boolean.parseBoolean(message));
 			}
 		};
-		assertThat(context.get(), is(false));
+		assertFalse(context.get());
 		webSocketTester.sendMessage("trigger web socket communication");
-		assertThat(context.get(), is(false));
+		assertFalse(context.get());
 		webSocketTester.destroy();
 	}
 
@@ -96,8 +96,13 @@ public class SendPayloadWithContextTest extends Assert
 			add(new WebSocketBehavior()
 			{
 				@Override
-				protected void onMessage(WebSocketRequestHandler handler, TextMessage ignored)
+				protected void onMessage(WebSocketRequestHandler handler, TextMessage message)
 				{
+					assertNotNull(message.getApplication(), "The application must be available");
+					assertNotNull(message.getSessionId(), "The session id must be available");
+					assertNotNull(message.getKey(), "The key must be available");
+					assertNotNull(message.getText(), "The text must be set");
+
 					// send an outbound message with the current context encoded as String
 					handler.push(String.valueOf(context.get()));
 				}
@@ -107,7 +112,7 @@ public class SendPayloadWithContextTest extends Assert
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
-			return new StringResourceStream("<html/>");
+			return new StringResourceStream("<html><head></head><body></body></html>");
 		}
 	}
 

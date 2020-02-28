@@ -17,13 +17,12 @@
 package org.apache.wicket.contrib.velocity;
 
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test header contributions.
  */
-public class VelocityJavaScriptContributorTest extends Assert
+public class VelocityJavaScriptContributorTest
 {
 	/**
 	 * Test that the header contribution is added correctly.

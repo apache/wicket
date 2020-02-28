@@ -17,6 +17,8 @@
 package org.apache.wicket.examples.compref;
 
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -39,11 +41,26 @@ public class SubmitLinkPage extends WicketExamplePage
 		add(feedbackPanel);
 
 		// Add a form with 2 SubmitLinks that can be called
-		Form<?> form = new Form("form");
+		Form< ? > form = new Form("form")
+		{
+			@Override
+			public void renderHead(IHeaderResponse response)
+			{
+				super.renderHead(response);
+				response.render(OnEventHeaderItem.forComponent(this, "submit",
+					"return confirm('Do you really want to submit?')"));
+			}
+		};
 		add(form);
 
 		SubmitLink internal = new SubmitLink("internal")
 		{
+			@Override
+			protected boolean shouldTriggerJavaScriptSubmitEvent()
+			{
+				return false;
+			}
+			
 			@Override
 			public void onSubmit()
 			{

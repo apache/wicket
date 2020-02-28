@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.model;
 
+import java.util.Locale;
+
 import org.danekja.java.util.function.serializable.SerializableSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +65,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 		@Override
 		public String toString()
 		{
-			return name().toLowerCase();
+			return name().toLowerCase(Locale.ROOT);
 		}
 	}
 

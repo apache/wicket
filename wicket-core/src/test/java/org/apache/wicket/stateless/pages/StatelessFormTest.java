@@ -21,13 +21,13 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * User: Anatoly Kupriyanov (kan.izh@gmail.com) Date: 12-Feb-2009 Time: 22:27:08 Bugfix for
  * http://issues.apache.org/jira/browse/WICKET-1897
  */
-public class StatelessFormTest extends WicketTestCase
+class StatelessFormTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -55,7 +55,7 @@ public class StatelessFormTest extends WicketTestCase
 	 * testBug()
 	 */
 	@Test
-	public void bug()
+    void bug()
 	{
 		{
 			tester.getRequest().setUrl(Url.parse("page2"));

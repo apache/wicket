@@ -16,21 +16,19 @@
  */
 package org.apache.wicket.util.io;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.net.URL;
+import java.time.Instant;
+import org.apache.wicket.util.WicketTestTag;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-import org.apache.wicket.util.SlowTests;
-import org.apache.wicket.util.time.Time;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-
-@SuppressWarnings("javadoc")
-@Category(SlowTests.class)
-public class ConnectionsTest 
+/**
+ * Tests for {@link Connections}
+ */
+@Tag(WicketTestTag.SLOW)
+public class ConnectionsTest
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5838
@@ -39,8 +37,8 @@ public class ConnectionsTest
 	public void getLastModified() throws Exception
 	{
 		URL url = new URL("http://wicket.apache.org/learn/books/wia.png");
-		Time lastModified = Connections.getLastModified(url);
-		assertThat(lastModified, is(notNullValue()));
-		assertThat(lastModified.getMilliseconds(), is(not(0L)));
+		Instant lastModified = Connections.getLastModified(url);
+		assertNotNull(lastModified);
+		assertNotEquals(lastModified.toEpochMilli(), 0L);
 	}
 }

@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.basic.Label;
  *
  * @since 1.5.6
  */
-public class InlineEnclosureWithWicketMessagePage extends WebPage
+class InlineEnclosureWithWicketMessagePage extends WebPage
 {
 	public InlineEnclosureWithWicketMessagePage(boolean childVisible)
 	{

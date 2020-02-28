@@ -237,10 +237,9 @@ update any other dependencies on Wicket projects to the same version):
 </dependency>
 
 Or download and build the distribution yourself, or use our
-convenience binary package
+convenience binary package you can find here:
 
- * Source: http://www.apache.org/dyn/closer.cgi/wicket/$version
- * Binary: http://www.apache.org/dyn/closer.cgi/wicket/$version/binaries
+ * Download: http://wicket.apache.org/start/wicket-$major_version.x.html#manually
 
 Upgrading from earlier versions
 -------------------------------
@@ -379,8 +378,8 @@ then
 fi
 
 if [ ! -z "$milestone_version" ] ; then
-    next_version="$major_version.0.0-SNAPSHOT"
-    previous_version="$major_version.0.0-SNAPSHOT"
+    next_version="$major_version.0.0-M$(expr $milestone_version + 1)-SNAPSHOT"
+    previous_version="$major_version.0.0-M$milestone_version-SNAPSHOT"
 else
     next_version="$major_version.$(expr $minor_version + 1).0-SNAPSHOT"
     previous_minor_version=$(expr $minor_version - 1)
@@ -530,8 +529,11 @@ git archive --format=tar.gz --prefix=apache-wicket-$version/ -o target/dist/apac
 git archive --format=zip --prefix=apache-wicket-$version/ -o target/dist/apache-wicket-$version.zip $tag
 gpg --armor --detach-sign --use-agent --sign target/dist/apache-wicket-$version.tar.gz
 gpg --armor --detach-sign --use-agent --sign target/dist/apache-wicket-$version.zip
-sha256sum target/dist/apache-wicket-$version.tar.gz > target/dist/apache-wicket-$version.tar.gz.sha256
-sha256sum target/dist/apache-wicket-$version.zip > target/dist/apache-wicket-$version.zip.sha256
+
+pushd target/dist
+sha256sum apache-wicket-$version.tar.gz > apache-wicket-$version.tar.gz.sha256
+sha256sum apache-wicket-$version.zip > apache-wicket-$version.zip.sha256
+popd
 
 echo "Create and sign the binaries"
 mkdir target/apache-wicket-$version-bin
@@ -550,8 +552,11 @@ tar cfz dist/binaries/apache-wicket-$version-bin.tar.gz apache-wicket-$version-b
 zip -r dist/binaries/apache-wicket-$version-bin.zip apache-wicket-$version-bin
 gpg --armor --detach-sign --use-agent --sign dist/binaries/apache-wicket-$version-bin.tar.gz
 gpg --armor --detach-sign --use-agent --sign dist/binaries/apache-wicket-$version-bin.zip
-sha256sum dist/binaries/apache-wicket-$version-bin.tar.gz > dist/binaries/apache-wicket-$version-bin.tar.gz.sha256
-sha256sum dist/binaries/apache-wicket-$version-bin.zip > dist/binaries/apache-wicket-$version-bin.zip.sha256
+
+pushd dist/binaries
+sha256sum apache-wicket-$version-bin.tar.gz > apache-wicket-$version-bin.tar.gz.sha256
+sha256sum apache-wicket-$version-bin.zip > apache-wicket-$version-bin.zip.sha256
+popd
 popd
 
 echo "Uploading release to dist.apache.org"

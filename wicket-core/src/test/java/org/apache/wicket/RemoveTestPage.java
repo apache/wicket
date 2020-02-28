@@ -30,8 +30,8 @@ public class RemoveTestPage extends WebPage
 	static final String COMPONENT = "component";
 	static final String LINK = "link";
 
-	MarkupContainer _1;
-	MarkupContainer _2;
+	private MarkupContainer _1;
+	private MarkupContainer _2;
 
 	private int componentOnRemovalFromHierarchyCalls = 0;
 	private int linkOnRemovalFromHierarchyCalls = 0;

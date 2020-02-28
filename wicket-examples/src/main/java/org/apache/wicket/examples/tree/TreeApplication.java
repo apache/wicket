@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.response.filter.ServerAndClientTimeFilter;
 
@@ -28,7 +29,7 @@ import org.apache.wicket.response.filter.ServerAndClientTimeFilter;
  * 
  * @author svenmeier
  */
-public class TreeApplication extends WebApplication
+public class TreeApplication extends WicketExampleApplication
 {
 	/**
 	 * All root {@link Foo}s.
@@ -83,9 +84,8 @@ public class TreeApplication extends WebApplication
 	@Override
 	protected void init()
 	{
+		super.init();
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
-
-		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 	}
 
 	@Override

@@ -16,14 +16,16 @@
  */
 package org.apache.wicket.core.util.string;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.response.StringResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.apache.wicket.util.value.AttributeMap;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.5.7
  */
-public class CssUtilsTest extends Assert
+class CssUtilsTest
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4546
@@ -31,13 +33,19 @@ public class CssUtilsTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void writeLinkUrl() throws Exception
+	void writeLink() throws Exception
 	{
 		StringResponse response = new StringResponse();
 		String url = "some/url;jsessionid=1234?with=parameters&p1=v1";
-		String media = "some&bad&media";
-		CssUtils.writeLinkUrl(response, url, media, "markupId");
-
-		assertEquals("<link rel=\"stylesheet\" type=\"text/css\" href=\"some/url;jsessionid=1234?with=parameters&amp;p1=v1\" media=\"some&amp;bad&amp;media\" id=\"markupId\" />", response.toString());
+		// Media may contain funny things, and it's OK
+		String media = "some&bad&media (min-height: 680px), screen and (orientation: portrait)";
+		AttributeMap attributes = new AttributeMap();
+		attributes.putAttribute(CssUtils.ATTR_LINK_REL, "stylesheet");
+		attributes.putAttribute(CssUtils.ATTR_TYPE, "text/css");
+		attributes.putAttribute(CssUtils.ATTR_LINK_HREF, url);
+		attributes.putAttribute(CssUtils.ATTR_LINK_MEDIA, media);
+		attributes.putAttribute(CssUtils.ATTR_ID, "markupId");
+		CssUtils.writeLink(response, attributes);
+		assertEquals("<link rel=\"stylesheet\" type=\"text/css\" href=\"some/url;jsessionid=1234?with=parameters&amp;p1=v1\" media=\"some&amp;bad&amp;media (min-height: 680px), screen and (orientation: portrait)\" id=\"markupId\" />", response.toString());
 	}
 }

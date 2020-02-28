@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.stateless;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.mock.MockApplication;
@@ -24,7 +27,7 @@ import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A test to detect temporary sessions. However since the http stack has been mocked for this test,
@@ -33,7 +36,7 @@ import org.junit.Test;
  * 
  * @author marrink
  */
-public class TemporarySessionTest extends WicketTestCase
+class TemporarySessionTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -53,7 +56,7 @@ public class TemporarySessionTest extends WicketTestCase
 	 * Test if we can keep a session temporary.
 	 */
 	@Test
-	public void sessionIsTemporary()
+	void sessionIsTemporary()
 	{
 		tester.startPage(LoginPage.class);
 		assertTrue(tester.getSession().isTemporary());

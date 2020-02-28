@@ -17,10 +17,7 @@
 package org.apache.wicket.extensions.ajax;
 
 import java.util.Locale;
-
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
@@ -28,6 +25,7 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONFunction;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.Response;
@@ -48,17 +46,17 @@ import com.github.openjson.JSONObject;
  * Download resources via Ajax.
  * <p>
  * Usage:
- * 
+ *
  * <pre>
- * final AjaxDownload download = new AjaxDownload(resource);
+ * final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource);
  * add(download);
- * 
+ *
  * add(new AjaxButton("download")
  * {
  * 	&#64;Override
- * 	protected void onSubmit(AjaxRequestTarget target, Form&lt;?> form)
+ * 	protected void onSubmit(IPartialPageRequestHandler handler, Form&lt;?> form)
  * 	{
- * 		download.initiate(target);
+ * 		download.initiate(handler);
  * 	}
  * });
  * </pre>
@@ -66,7 +64,7 @@ import com.github.openjson.JSONObject;
  * <p>To set the name of the downloaded resource make use of
  * {@link org.apache.wicket.request.resource.ResourceStreamResource#setFileName(String)} or
  * {@link org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setFileName(String)}</p>
- * 
+ *
  * @author svenmeier
  * @author Martin Grigorov
  * @author Maxim Solodovnik
@@ -98,7 +96,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		 * the resource has to be a {@link ContentDisposition#ATTACHMENT}.
 		 * <p>
 		 * Note: This will trigger JavaScript <em>unload</em> event on the page!
-		 * Does not support {@link AjaxDownloadBehavior#onDownloadFailed(AjaxRequestTarget)} callback,
+		 * Does not support {@link AjaxDownloadBehavior#onDownloadFailed(IPartialPageRequestHandler)} callback,
 		 * i.e. it is not possible to detect when the download has failed!
 		 */
 		SameWindow,
@@ -129,8 +127,8 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	private Location location = Location.Blob;
 
 	/**
-	 * Download of a {@link Resource}.
-	 * 
+	 * Download of a {@link IResource}.
+	 *
 	 * @param resource
 	 *            resource to download
 	 */
@@ -146,8 +144,8 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 * <p>
 	 * The {@link IResource} returned by {@link ResourceReference#getResource()} must call
 	 * {@link #markCompleted(Attributes)} when responding, otherwise the callback
-	 * {@link #onDownloadSuccess(AjaxRequestTarget)} will not work.
-	 * 
+	 * {@link #onDownloadSuccess(IPartialPageRequestHandler)} will not work.
+	 *
 	 * @param reference
 	 *            reference to resource to download
 	 */
@@ -161,8 +159,8 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 * <p>
 	 * The {@link IResource} returned by {@link ResourceReference#getResource()} must call
 	 * {@link #markCompleted(Attributes)} when responding, otherwise the callback
-	 * {@link #onDownloadSuccess(AjaxRequestTarget)} will not work.
-	 * 
+	 * {@link #onDownloadSuccess(IPartialPageRequestHandler)} will not work.
+	 *
 	 * @param reference
 	 *            reference to resource to download
 	 * @param resourceParameters
@@ -200,18 +198,16 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 
 	/**
 	 * Call this method to initiate the download.
-	 * 
-	 * @param target
-	 *            the initiating Ajax target
+	 *
+	 * @param handler
+	 *            the initiating RequestHandler
 	 */
-	public void initiate(AjaxRequestTarget target)
+	public void initiate(IPartialPageRequestHandler handler)
 	{
 		if (getComponent() == null)
 		{
 			throw new WicketRuntimeException("not bound to a component");
 		}
-
-		((WebResponse)RequestCycle.get().getResponse()).clearCookie(cookie(getName()));
 
 		CharSequence url;
 		if (resourceBehavior == null)
@@ -241,14 +237,14 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		settings.put("attributes", new JSONFunction(renderAjaxAttributes(getComponent())));
 		settings.put("name", getName());
 		settings.put("downloadUrl", url);
-		settings.put("method", getLocation().name().toLowerCase(Locale.ENGLISH));
+		settings.put("method", getLocation().name().toLowerCase(Locale.ROOT));
 
-		target.appendJavaScript(String.format("Wicket.AjaxDownload.initiate(%s);", settings));
+		handler.appendJavaScript(String.format("Wicket.AjaxDownload.initiate(%s);", settings));
 
-		onBeforeDownload(target);
+		onBeforeDownload(handler);
 	}
 
-	protected void onBeforeDownload(AjaxRequestTarget target)
+	protected void onBeforeDownload(IPartialPageRequestHandler handler)
 	{
 	}
 
@@ -327,6 +323,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 */
 	private class ResourceBehavior extends Behavior implements IRequestListener
 	{
+		private static final long serialVersionUID = 1L;
 		private final IResource resource;
 
 		private ResourceBehavior(IResource resource)
@@ -339,7 +336,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		{
 			return false;
 		}
-		
+
 		@Override
 		public void onRequest()
 		{
@@ -363,7 +360,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 * <p>
 	 * Has to be called from {@link IResource#respond(Attributes)} when downloaded via
 	 * {@link #AjaxDownloadBehavior(IResource)}.
-	 * 
+	 *
 	 * @param attributes
 	 *            resource attributes
 	 */
@@ -377,12 +374,12 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	private static Cookie cookie(String name)
 	{
 		Cookie cookie = new Cookie(name, "complete");
-		
+
 		// has to be on root, otherwise JavaScript will not be able to access the
 		// cookie when it is set from a different path - which is the case when a
 		// ResourceReference is used
 		cookie.setPath("/");
-		
+
 		return cookie;
 	}
 }

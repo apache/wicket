@@ -33,20 +33,20 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class AuthenticatedWebSessionTest extends WicketTestCase {
+class AuthenticatedWebSessionTest extends WicketTestCase {
 	private Request request;
 	private Response response;
 	private ISessionStore sessionStore;
 	private AuthenticatedWebSession session;
 
-	@Before
-	public void initialize() {
+	@BeforeEach
+    void initialize() {
 		request = mock(Request.class);
 		response = mock(Response.class);
 		sessionStore = mock(ISessionStore.class);
@@ -55,7 +55,7 @@ public class AuthenticatedWebSessionTest extends WicketTestCase {
 	}
 
 	@Test
-	public void shouldLookupForSessionOnce() throws InterruptedException {
+    void shouldLookupForSessionOnce() throws InterruptedException {
 		ExecutorService executorService = Executors.newFixedThreadPool(10);
 		for (int i = 0; i < 10; i++)
 			executorService.submit(new SiginTask(tester.getApplication()));
@@ -69,7 +69,7 @@ public class AuthenticatedWebSessionTest extends WicketTestCase {
 	class SiginTask implements Runnable {
 		Application application;
 
-		public SiginTask(Application application) {
+		SiginTask(Application application) {
 			this.application = application;
 		}
 
@@ -84,7 +84,7 @@ public class AuthenticatedWebSessionTest extends WicketTestCase {
 	class TestAuthenticatedWebSession extends AuthenticatedWebSession {
 		private static final long serialVersionUID = 1L;
 
-		public TestAuthenticatedWebSession(Request request) {
+		TestAuthenticatedWebSession(Request request) {
 			super(request);
 		}
 

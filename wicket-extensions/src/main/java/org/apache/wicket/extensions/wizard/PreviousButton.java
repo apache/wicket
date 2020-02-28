@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.wizard;
 
+import org.apache.wicket.model.ResourceModel;
+
 /**
  * Models a previous button in the wizard. When pressed, it moves the wizard state to the previous
  * step of the model by calling {@link IWizardModel#previous() previous} on the wizard's model.
@@ -36,17 +38,16 @@ public class PreviousButton extends WizardButton
 	 */
 	public PreviousButton(final String id, final IWizard wizard)
 	{
-		super(id, wizard, "org.apache.wicket.extensions.wizard.previous");
+		super(id, wizard, new ResourceModel("org.apache.wicket.extensions.wizard.previous"));
 		setDefaultFormProcessing(false);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#isEnabled()
-	 */
 	@Override
-	public boolean isEnabled()
+	protected void onConfigure()
 	{
-		return getWizardModel().isPreviousAvailable() && super.isEnabled();
+		super.onConfigure();
+		
+		setEnabled(getWizardModel().isPreviousAvailable());
 	}
 
 	/**

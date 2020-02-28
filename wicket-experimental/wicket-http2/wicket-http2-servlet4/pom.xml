@@ -18,9 +18,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.apache.wicket.experimental.wicket8</groupId>
+		<groupId>org.apache.wicket.experimental.wicket9</groupId>
 		<artifactId>wicket-http2</artifactId>
-		<version>0.3-SNAPSHOT</version>
+		<version>0.10-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-http2-servlet4</artifactId>
@@ -32,16 +32,30 @@
 		is the Servlet 4 implementation to resolve the PushBuilder API and
 		provide the IInitializer.
 	</description>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.http2.servlet4</automatic-module-name>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>4.0.0</version><!--$NO-MVN-MAN-VER$-->
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
-		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket8</groupId>
-			<artifactId>wicket-http2-core</artifactId>
-		</dependency>
 		<dependency>
 		    <groupId>javax.servlet</groupId>
 		    <artifactId>javax.servlet-api</artifactId>
-		    <version>4.0.0</version><!--$NO-MVN-MAN-VER$-->
-		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket9</groupId>
+			<artifactId>wicket-http2-core</artifactId>
 		</dependency>
 	</dependencies>
 </project>

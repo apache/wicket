@@ -16,11 +16,8 @@
  */
 package org.apache.wicket.settings;
 
-import org.apache.wicket.ajax.WicketAjaxDebugJQueryResourceReference;
 import org.apache.wicket.ajax.WicketAjaxJQueryResourceReference;
-import org.apache.wicket.ajax.WicketEventJQueryResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.DynamicJQueryResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.lang.Args;
 
@@ -38,13 +35,9 @@ import org.apache.wicket.util.lang.Args;
  */
 public class JavaScriptLibrarySettings
 {
-	private ResourceReference jQueryReference = DynamicJQueryResourceReference.getV2();
-
-	private ResourceReference wicketEventReference = WicketEventJQueryResourceReference.get();
+	private ResourceReference jQueryReference = JQueryResourceReference.getV3();
 
 	private ResourceReference wicketAjaxReference = WicketAjaxJQueryResourceReference.get();
-
-	private ResourceReference wicketAjaxDebugReference = WicketAjaxDebugJQueryResourceReference.get();
 
 	/**
 	 * @return the reference to the JQuery JavaScript library used as backing library for
@@ -68,25 +61,6 @@ public class JavaScriptLibrarySettings
 	}
 
 	/**
-	 * @return the reference to the implementation of wicket-event.js
-	 */
-	public ResourceReference getWicketEventReference()
-	{
-		return wicketEventReference;
-	}
-
-	/**
-	 * @param wicketEventReference
-	 *            a reference to the implementation of wicket-event.js
-	 * @return {@code this} object for chaining
-	 */
-	public JavaScriptLibrarySettings setWicketEventReference(ResourceReference wicketEventReference)
-	{
-		this.wicketEventReference = Args.notNull(wicketEventReference, "wicketEventReference");
-		return this;
-	}
-
-	/**
 	 * @return the reference to the implementation of wicket-ajax.js
 	 */
 	public ResourceReference getWicketAjaxReference()
@@ -104,27 +78,4 @@ public class JavaScriptLibrarySettings
 		this.wicketAjaxReference = Args.notNull(wicketAjaxReference, "wicketAjaxReference");
 		return this;
 	}
-
-	/**
-	 * The Wicket Ajax Debug Window.
-	 *
-	 * @return the reference to the implementation of wicket-ajax-debug.js
-	 */
-	public ResourceReference getWicketAjaxDebugReference()
-	{
-		return wicketAjaxDebugReference;
-	}
-
-	/**
-	 * @param wicketAjaxDebugReference
-	 *            a reference to the implementation of wicket-ajax-debug.js
-	 * @return {@code this} object for chaining
-	 */
-	public JavaScriptLibrarySettings setWicketAjaxDebugReference(ResourceReference wicketAjaxDebugReference)
-	{
-		this.wicketAjaxDebugReference = Args.notNull(wicketAjaxDebugReference,
-			"wicketAjaxDebugReference");
-		return this;
-	}
-
 }

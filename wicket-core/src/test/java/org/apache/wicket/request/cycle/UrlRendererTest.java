@@ -16,24 +16,29 @@
  */
 package org.apache.wicket.request.cycle;
 
+import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Arrays;
 
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Matej Knopp
  */
-public class UrlRendererTest extends Assert
+class UrlRendererTest
 {
+
 	/**
 	 * 
 	 */
 	@Test
-	public void test1()
+	void test1()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("foo/bar/baz?a=b")));
 		assertEquals("./xyz?x=y", r1.renderUrl(Url.parse("foo/bar/xyz?x=y")));
@@ -46,7 +51,7 @@ public class UrlRendererTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test2()
+	void test2()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("foo/bar/baz?a=b")));
 		assertEquals("../../foo?x=y", r1.renderUrl(Url.parse("foo?x=y")));
@@ -57,7 +62,7 @@ public class UrlRendererTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test3()
+	void test3()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("?a=b")));
 		assertEquals("./a/b/c?x=y", r1.renderUrl(Url.parse("a/b/c?x=y")));
@@ -67,7 +72,7 @@ public class UrlRendererTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test5()
+	void test5()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("url")));
 		assertEquals("./url?1", r1.renderUrl(Url.parse("url?1")));
@@ -77,7 +82,7 @@ public class UrlRendererTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test6()
+	void test6()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("url/")));
 		assertEquals("./x?1", r1.renderUrl(Url.parse("url/x?1")));
@@ -87,7 +92,7 @@ public class UrlRendererTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test7()
+	void test7()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(
 			Url.parse("MyTestPage/indexed1/indexed2/indexed3?10-27.ILinkListener-l2&p1=v1")));
@@ -98,7 +103,7 @@ public class UrlRendererTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test8()
+	void test8()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(
 			Url.parse("en/first-test-page?16-1.ILinkListener-l1")));
@@ -110,7 +115,7 @@ public class UrlRendererTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test9()
+	void test9()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("a/b/q/d/e")));
 		assertEquals("../../../q/c/d/e", r1.renderUrl(Url.parse("a/q/c/d/e")));
@@ -120,7 +125,7 @@ public class UrlRendererTest extends Assert
 	 * 
 	 */
 	@Test
-	public void test10()
+	void test10()
 	{
 		MockWebRequest request = new MockWebRequest(Url.parse("a/b/q/d/e"), "/contextPath",
 			"/filterPath", "../");
@@ -146,7 +151,7 @@ public class UrlRendererTest extends Assert
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3337">WICKET-3337</a>
 	 */
 	@Test
-	public void test11()
+	void test11()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("a")));
 		assertEquals(".", r1.renderUrl(Url.parse("")));
@@ -156,7 +161,7 @@ public class UrlRendererTest extends Assert
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3567">WICKET-3567</a>
 	 */
 	@Test
-	public void test12()
+	void test12()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("?0")));
 		assertEquals("./", r1.renderUrl(Url.parse("")));
@@ -169,7 +174,7 @@ public class UrlRendererTest extends Assert
 	 * '../' works better.
 	 */
 	@Test
-	public void test13()
+	void test13()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("foo/bar")));
 		assertEquals("../", r1.renderUrl(Url.parse("")));
@@ -179,7 +184,7 @@ public class UrlRendererTest extends Assert
 	 * WICKET-4920 prevent double slash
 	 */
 	@Test
-	public void test14()
+	void test14()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(new Url()));
 
@@ -188,11 +193,25 @@ public class UrlRendererTest extends Assert
 			r1.renderRelativeUrl(Url.parse("http://localhost:8080/;jsessionid=1p87c5424zjuvd57kljcu2bwa?0-1.IBehaviorListener.1-component")));
 	}
 
+	@Test
+	void rendersRelativeUrl()
+	{
+		Url contextRelativeUrl = new Url();
+		contextRelativeUrl.setProtocol("http");
+		contextRelativeUrl.setHost("localshot");
+		contextRelativeUrl.setPort(8080);
+		contextRelativeUrl.setContextRelative(true);
+		contextRelativeUrl.getSegments().addAll(asList("", ""));
+
+		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(contextRelativeUrl));
+		assertEquals("../foo", r1.renderRelativeUrl(Url.parse("foo")));
+	}
+
 	/**
 	 * WICKET-4935 prevent another double slash
 	 */
 	@Test
-	public void test15()
+	void test15()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("private/AdminPage")));
 
@@ -204,7 +223,7 @@ public class UrlRendererTest extends Assert
 	 * prevent another double slash when common prefix is present
 	 */
 	@Test
-	public void test16()
+	void test16()
 	{
 		UrlRenderer r1 = new UrlRenderer(
 			new MockWebRequest(Url.parse("private/AdminPage")).setContextPath("context"));
@@ -217,7 +236,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5468
 	 */
 	@Test
-	public void renderUrlWithTrailingDotsInQueryString()
+	void renderUrlWithTrailingDotsInQueryString()
 	{
 		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("some/path")));
 
@@ -231,7 +250,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-4466
 	 */
 	@Test
-	public void renderAbsoluteUrl()
+	void renderAbsoluteUrl()
 	{
 		String absoluteUrl = "http://www.example.com/some/path.ext";
 		Url url = Url.parse(absoluteUrl);
@@ -241,7 +260,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlWithRelativeArgument()
+	void renderFullUrlWithRelativeArgument()
 	{
 		Url baseUrl = Url.parse("one/two/three");
 		baseUrl.setProtocol("http");
@@ -257,7 +276,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-4514
 	 */
 	@Test
-	public void renderFullUrlWithAbsoluteArgument()
+	void renderFullUrlWithAbsoluteArgument()
 	{
 		Url baseUrl = Url.parse("one/two/three");
 		baseUrl.setProtocol("http");
@@ -275,7 +294,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-4562
 	 */
 	@Test
-	public void renderUrlWithRelativeArgument()
+	void renderUrlWithRelativeArgument()
 	{
 		Url baseUrl = Url.parse("one/two/three");
 		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
@@ -316,7 +335,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToAnAbsoluteBaseUrl()
+	void renderFullUrlAsRelativeToAnAbsoluteBaseUrl()
 	{
 		Url baseUrl = Url.parse("http://host:8080/contextPath/filterPath/a/b/c/d");
 		Url encodedFullUrl = Url.parse("http://host:8080/contextPath/filterPath/a/b;jsessionid=123456");
@@ -328,7 +347,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToBaseUrlWithoutSchemeHostnameAndPort()
+	void renderFullUrlAsRelativeToBaseUrlWithoutSchemeHostnameAndPort()
 	{
 		Url baseUrl = Url.parse("/contextPath/filterPath/a/b/c/d");
 		Url encodedFullUrl = Url.parse("http://host:8080/contextPath/filterPath/a/b;jsessionid=123456");
@@ -340,7 +359,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToBaseUrlWithoutContextAndFilterPaths()
+	void renderFullUrlAsRelativeToBaseUrlWithoutContextAndFilterPaths()
 	{
 		Url baseUrl = Url.parse("a/b/c/d"); // base url without context path and filter path
 		Url encodedFullUrl = Url.parse("http://host:8080/contextPath/filterPath/a/b;jsessionid=123456");
@@ -355,7 +374,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToBaseUrlWithoutComposedContextAndFilterPaths()
+	void renderFullUrlAsRelativeToBaseUrlWithoutComposedContextAndFilterPaths()
 	{
 		Url baseUrl = Url.parse("a/b/c/d"); // base url without context path and filter path
 		Url encodedFullUrl = Url.parse("http://host:8080/context/path/filter/path/a/b;jsessionid=123456");
@@ -370,7 +389,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToBaseUrlWithoutContextPath()
+	void renderFullUrlAsRelativeToBaseUrlWithoutContextPath()
 	{
 		Url baseUrl = Url.parse("a/b/c/d"); // base url without context path and filter path
 		Url encodedFullUrl = Url.parse("http://host:8080/filterPath/a/b;jsessionid=123456");
@@ -384,7 +403,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToBaseUrlWithoutComposedContextPath()
+	void renderFullUrlAsRelativeToBaseUrlWithoutComposedContextPath()
 	{
 		Url baseUrl = Url.parse("a/b/c/d"); // base url without context path and filter path
 		Url encodedFullUrl = Url.parse("http://host:8080/filter/path/a/b;jsessionid=123456");
@@ -398,7 +417,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToBaseUrlWithoutFilterPath()
+	void renderFullUrlAsRelativeToBaseUrlWithoutFilterPath()
 	{
 		Url baseUrl = Url.parse("a/b/c/d"); // base url without context path and filter path
 		Url encodedFullUrl = Url.parse("http://host:8080/contextPath/a/b;jsessionid=123456");
@@ -412,7 +431,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToBaseUrlWithoutComposedFilterPath()
+	void renderFullUrlAsRelativeToBaseUrlWithoutComposedFilterPath()
 	{
 		Url baseUrl = Url.parse("a/b/c/d"); // base url without context path and filter path
 		Url encodedFullUrl = Url.parse("http://host:8080/context/path/a/b;jsessionid=123456");
@@ -426,7 +445,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToBaseUrlWithFirstSegmentsEqualToTheContextPath()
+	void renderFullUrlAsRelativeToBaseUrlWithFirstSegmentsEqualToTheContextPath()
 	{
 		// base url without context path and filter path
 		// 'contextPath' here is a normal segment with the same value
@@ -444,7 +463,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToBaseUrlWithFirstSegmentsEqualToTheContextAndFilterPaths()
+	void renderFullUrlAsRelativeToBaseUrlWithFirstSegmentsEqualToTheContextAndFilterPaths()
 	{
 		// base url without context path and filter path
 		// 'filterPath' here is a normal segment with the same value
@@ -463,7 +482,7 @@ public class UrlRendererTest extends Assert
 	}
 
 	@Test
-	public void renderFullUrlAsRelativeToBaseUrlWithFirstSegmentsEqualToTheFilterPath()
+	void renderFullUrlAsRelativeToBaseUrlWithFirstSegmentsEqualToTheFilterPath()
 	{
 		// base url without context path and filter path
 		// 'filterPath' here is a normal segment with the same value
@@ -484,7 +503,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5123
 	 */
 	@Test
-	public void renderHomeUrl()
+	void renderHomeUrl()
 	{
 		Url baseUrl = Url.parse("login");
 
@@ -501,7 +520,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5065
 	 */
 	@Test
-	public void renderAbsoluteWithoutHost()
+	void renderAbsoluteWithoutHost()
 	{
 		Url baseUrl = Url.parse("a/b");
 
@@ -518,7 +537,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5065
 	 */
 	@Test
-	public void renderAbsoluteWithoutScheme()
+	void renderAbsoluteWithoutScheme()
 	{
 		Url baseUrl = Url.parse("a/b");
 
@@ -535,7 +554,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5065
 	 */
 	@Test
-	public void renderAbsoluteWithoutSchemeWithPort()
+	void renderAbsoluteWithoutSchemeWithPort()
 	{
 		Url baseUrl = Url.parse("a/b");
 
@@ -552,7 +571,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5073
 	 */
 	@Test
-	public void removeCommonPrefixesWicket5073()
+	void removeCommonPrefixesWicket5073()
 	{
 		Url baseUrl = new Url(Arrays.asList(""), Arrays.<Url.QueryParameter> asList());
 
@@ -570,7 +589,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5202
 	 */
 	@Test
-	public void removeCommonPrefixesWithJSessionId()
+	void removeCommonPrefixesWithJSessionId()
 	{
 		Url baseUrl = new Url(Arrays.asList("", "SomePage;jsessionid=1234"),
 			Arrays.<Url.QueryParameter> asList());
@@ -589,7 +608,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5774
 	 */
 	@Test
-	public void renderFullUrlWithNoOpLeadingSegments()
+	void renderFullUrlWithNoOpLeadingSegments()
 	{
 		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("any/thing")));
 
@@ -607,7 +626,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5774
 	 */
 	@Test
-	public void renderContextAbsoluteUrlWithNoOpLeadingSegments()
+	void renderContextAbsoluteUrlWithNoOpLeadingSegments()
 	{
 		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("any/thing")));
 
@@ -625,7 +644,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5970
 	 */
 	@Test
-	public void renderFullUrlWithFragment()
+	void renderFullUrlWithFragment()
 	{
 		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("authorize")));
 
@@ -640,7 +659,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5970
 	 */
 	@Test
-	public void renderRelativeUrlWithFragment()
+	void renderRelativeUrlWithFragment()
 	{
 		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("authorize")));
 
@@ -655,7 +674,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5970
 	 */
 	@Test
-	public void renderUrlWithFragment()
+	void renderUrlWithFragment()
 	{
 		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("authorize")));
 
@@ -670,7 +689,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-6230
 	 */
 	@Test
-	public void renderUrlWithManyDotsAtTheBeginning1()
+	void renderUrlWithManyDotsAtTheBeginning1()
 	{
 		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("a")));
 
@@ -683,7 +702,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-6230
 	 */
 	@Test
-	public void renderUrlWithManyDotsAtTheBeginning2()
+	void renderUrlWithManyDotsAtTheBeginning2()
 	{
 		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("a/b")));
 
@@ -695,7 +714,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-6230
 	 */
 	@Test
-	public void renderUrlWithManyDotsAtTheEnd1()
+	void renderUrlWithManyDotsAtTheEnd1()
 	{
 		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("a")));
 
@@ -707,7 +726,7 @@ public class UrlRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-6230
 	 */
 	@Test
-	public void renderUrlWithManyDotsAtTheEnd2()
+	void renderUrlWithManyDotsAtTheEnd2()
 	{
 		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("a/b")));
 

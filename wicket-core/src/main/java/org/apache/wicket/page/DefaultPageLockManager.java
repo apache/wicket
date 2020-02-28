@@ -1,6 +1,8 @@
 package org.apache.wicket.page;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -10,8 +12,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Threads;
-import org.apache.wicket.util.time.Duration;
-import org.apache.wicket.util.time.Time;
+import org.apache.wicket.util.time.Durations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,9 +53,10 @@ public class DefaultPageLockManager implements IPageLockManager, Serializable {
 		this.timeout = timeout;
 	}
 
-	private static long remaining(Time start, Duration timeout)
+	private static long remaining(Instant start, Duration timeout)
 	{
-		return Math.max(0, timeout.subtract(start.elapsedSince()).getMilliseconds());
+		Duration elapsedTime = Durations.elapsedSince(start);
+		return Math.max(0, timeout.minus(elapsedTime).toMillis());
 	}
 
 	/**
@@ -72,7 +74,7 @@ public class DefaultPageLockManager implements IPageLockManager, Serializable {
 	{
 		final Thread thread = Thread.currentThread();
 		final PageAccessSynchronizer.PageLock lock = new PageAccessSynchronizer.PageLock(pageId, thread);
-		final Time start = Time.now();
+		final Instant start = Instant.now();
 
 		boolean locked = false;
 
@@ -82,7 +84,7 @@ public class DefaultPageLockManager implements IPageLockManager, Serializable {
 
 		Duration timeout = getTimeout(pageId);
 
-		while (!locked && start.elapsedSince().lessThan(timeout))
+		while (!locked && Durations.elapsedSince(start).compareTo(timeout) < 0)
 		{
 			if (isDebugEnabled)
 			{
@@ -121,7 +123,7 @@ public class DefaultPageLockManager implements IPageLockManager, Serializable {
 				logger.warn(
 						"Thread '{}' failed to acquire lock to page with id '{}', attempted for {} out of allowed {}." +
 								" The thread that holds the lock has name '{}'.",
-						thread.getName(), pageId, start.elapsedSince(), timeout,
+						thread.getName(), pageId, Duration.between(start, Instant.now()), timeout,
 						previous.getThread().getName());
 				if (Application.exists())
 				{

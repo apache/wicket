@@ -67,9 +67,14 @@ public class MockApplication extends WebApplication
 
 		// set page and session store providers
 		setSessionStoreProvider(MockSessionStore::new);
-		setPageManagerProvider((pageManagerContext) -> new MockPageManager());
+		setPageManagerProvider(() -> new MockPageManager());
 
 		// for test cases we usually want stable resource names
 		getResourceSettings().setCachingStrategy(NoOpResourceCachingStrategy.INSTANCE);
+		// the core CSS causes noise (a head + link in every generated markup) in tests
+		// and isn't needed, because the markup isn't rendered by a browser
+		getResourceSettings().disableWicketCoreCSS();
+		// disable nonces, CSP is not needed anyway during tests
+		getCsp().blocking().disabled();
 	}
 }

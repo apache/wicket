@@ -60,7 +60,7 @@ public class UrlEncoder
 	 * Encoder used to encode name or value components of a query string.<br/>
 	 * <br/>
 	 * 
-	 * For example: http://org.acme/notthis/northis/oreventhis?buthis=isokay&asis=thispart
+	 * For example: http://org.acme/notthis/northis/oreventhis?buthis=isokay&amp;asis=thispart
 	 */
 	public static final UrlEncoder QUERY_INSTANCE = new UrlEncoder(Type.QUERY);
 

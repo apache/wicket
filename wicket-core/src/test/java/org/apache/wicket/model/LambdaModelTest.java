@@ -16,23 +16,22 @@
  */
 package org.apache.wicket.model;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.lambda.Person;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link LambdaModel}
  */
 @SuppressWarnings("javadoc")
-public class LambdaModelTest
+class LambdaModelTest
 {
 	@Test
-	public void methodReference()
+	void methodReference()
 	{
 		Person person = new Person();
 		IModel<String> personNameModel = LambdaModel.of(person::getName, person::setName);
@@ -40,7 +39,7 @@ public class LambdaModelTest
 	}
 
 	@Test
-	public void explicitLambdas()
+	void explicitLambdas()
 	{
 		Person person = new Person();
 		IModel<String> personNameModel = LambdaModel.<String>of(
@@ -50,7 +49,7 @@ public class LambdaModelTest
 	}
 
 	@Test
-	public void targetModel()
+	void targetModel()
 	{
 		IModel<Person> target = Model.of(new Person());
 
@@ -59,32 +58,23 @@ public class LambdaModelTest
 	}
 
 	@Test
-	public void targetModelNull()
+	void targetModelNull()
 	{
 		IModel<Person> target = Model.of((Person)null);
 
 		IModel<String> personNameModel = LambdaModel.of(target, Person::getName, Person::setName);
 
 		personNameModel.setObject("new name");
-		assertThat(personNameModel.getObject(), is(nullValue()));
-	}
-
-	@Test(expected=UnsupportedOperationException.class)
-	public void targetReadOnly()
-	{
-		IModel<Person> target = Model.of(new Person());
-
-		IModel<String> personNameModel = LambdaModel.of(target, Person::getName);
-		check(personNameModel);
+		assertNull(personNameModel.getObject());
 	}
 
 	private void check(IModel<String> personNameModel)
 	{
-		assertThat(personNameModel.getObject(), is(nullValue()));
+		assertNull(personNameModel.getObject());
 
 		final String personName = "new name";
 		personNameModel.setObject(personName);
-		assertThat(personNameModel.getObject(), is(personName));
+		assertEquals(personName, personNameModel.getObject());
 
 		serialize(personNameModel, personName);
 	}
@@ -92,7 +82,7 @@ public class LambdaModelTest
 	private void serialize(IModel<String> personNameModel, String personName)
 	{
 		final IModel<String> clone = WicketObjects.cloneObject(personNameModel);
-		assertThat(clone, is(instanceOf(LambdaModel.class)));
-		assertThat(clone.getObject(), is(personName));
+		assertThat(clone).isInstanceOf(LambdaModel.class);
+		assertEquals(personName, clone.getObject());
 	}
 }

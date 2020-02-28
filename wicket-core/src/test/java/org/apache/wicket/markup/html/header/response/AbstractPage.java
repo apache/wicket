@@ -31,8 +31,8 @@ public class AbstractPage extends WebPage
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		response.render(StringHeaderItem.forString("<title>HeaderContributionInAbstractPage</title>\n"));
+		response.render(StringHeaderItem.forString("<title>AbstractPage-HeaderItem</title>\n"));
 		response.render(new PriorityHeaderItem(
-			StringHeaderItem.forString("<title>PriorityHeaderContributionInAbstractPage</title>\n")));
+			StringHeaderItem.forString("<title>AbstractPage-PriorityHeaderItem</title>\n")));
 	}
 }

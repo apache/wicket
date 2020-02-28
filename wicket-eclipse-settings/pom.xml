@@ -27,7 +27,7 @@
   </parent>
   <groupId>org.apache.wicket</groupId>
   <artifactId>wicket-eclipse-settings</artifactId>
-  <version>4-SNAPSHOT</version>
+  <version>4</version>
   <packaging>jar</packaging>
   <name>Wicket Eclipse Settings</name>
   <description>

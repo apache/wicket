@@ -16,16 +16,13 @@
  */
 package org.apache.wicket.markup.parser;
 
-import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.wicket.markup.parser.IXmlPullParser.HttpTagType;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
-import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.AttributeMap;
 import org.apache.wicket.util.value.IValueMap;
-import org.apache.wicket.util.value.ValueMap;
 
 
 /**
@@ -41,26 +38,19 @@ public class XmlTag
 	 */
 	public static enum TagType {
 		/** A close tag, like &lt;/TAG&gt;. */
-		CLOSE("CLOSE"),
+		CLOSE,
 
 		/** An open tag, like &lt;TAG componentId = "xyz"&gt;. */
-		OPEN("OPEN"),
+		OPEN,
 
 		/** An open/close tag, like &lt;TAG componentId = "xyz"/&gt;. */
-		OPEN_CLOSE("OPEN_CLOSE");
-
-		private String name;
-
-		TagType(final String name)
-		{
-			this.name = name;
-		}
+		OPEN_CLOSE;
 	}
 
 	TextSegment text;
 
 	/** Attribute map. */
-	private IValueMap attributes;
+	private AttributeMap attributes;
 
 	/** Name of tag, such as "img" or "input". */
 	String name;
@@ -79,8 +69,6 @@ public class XmlTag
 
 	/** True if this tag is mutable, false otherwise. */
 	private boolean isMutable = true;
-
-	private HttpTagType httpTagType;
 
 	/**
 	 * Construct.
@@ -139,15 +127,20 @@ public class XmlTag
 	 */
 	public IValueMap getAttributes()
 	{
+		return attributes();
+	}
+
+	private AttributeMap attributes()
+	{
 		if (attributes == null)
 		{
 			if ((copyOf == this) || (copyOf == null) || (copyOf.attributes == null))
 			{
-				attributes = new ValueMap();
+				attributes = new AttributeMap();
 			}
 			else
 			{
-				attributes = new ValueMap(copyOf.attributes);
+				attributes = new AttributeMap(copyOf.attributes);
 			}
 		}
 		return attributes;
@@ -349,7 +342,7 @@ public class XmlTag
 		dest.copyOf = copyOf;
 		if (attributes != null)
 		{
-			dest.attributes = new ValueMap(attributes);
+			dest.attributes = new AttributeMap(attributes);
 		}
 	}
 
@@ -542,7 +535,7 @@ public class XmlTag
 			return text.text;
 		}
 
-		return toXmlString(null);
+		return toXmlString();
 	}
 
 	/**
@@ -560,10 +553,9 @@ public class XmlTag
 	 * Assuming some attributes have been changed, toXmlString() rebuilds the String on based on the
 	 * tags informations.
 	 * 
-	 * @param attributeToBeIgnored
 	 * @return A xml string matching the tag
 	 */
-	public CharSequence toXmlString(final String attributeToBeIgnored)
+	public CharSequence toXmlString()
 	{
 		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 
@@ -582,31 +574,7 @@ public class XmlTag
 
 		buffer.append(name);
 
-		final IValueMap attributes = getAttributes();
-		if (attributes.size() > 0)
-		{
-			final Iterator<String> iterator = attributes.keySet().iterator();
-			for (; iterator.hasNext();)
-			{
-				final String key = iterator.next();
-				if ((key != null) &&
-					((attributeToBeIgnored == null) || !key.equalsIgnoreCase(attributeToBeIgnored)))
-				{
-					buffer.append(' ');
-					buffer.append(key);
-					CharSequence value = getAttribute(key);
-
-					// Attributes without values are possible, e.g. 'disabled'
-					if (value != null)
-					{
-						buffer.append("=\"");
-						value = Strings.escapeMarkup(value);
-						buffer.append(value);
-						buffer.append('"');
-					}
-				}
-			}
-		}
+		buffer.append(attributes().toCharSequence());
 
 		if (type == TagType.OPEN_CLOSE)
 		{

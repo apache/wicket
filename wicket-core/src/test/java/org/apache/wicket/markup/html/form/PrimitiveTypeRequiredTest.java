@@ -16,22 +16,24 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  */
-public class PrimitiveTypeRequiredTest extends WicketTestCase
+class PrimitiveTypeRequiredTest extends WicketTestCase
 {
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void primitiveClass() throws Exception
+	void primitiveClass() throws Exception
 	{
 		TextField<Integer> tf = new TextField<Integer>("test", int.class);
 		assertTrue(tf.isRequired());

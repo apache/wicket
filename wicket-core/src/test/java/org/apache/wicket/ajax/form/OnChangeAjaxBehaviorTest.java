@@ -19,18 +19,18 @@ package org.apache.wicket.ajax.form;
 import java.util.Locale;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Janne Hietam&auml;ki (janne)
  */
-public class OnChangeAjaxBehaviorTest extends WicketTestCase
+class OnChangeAjaxBehaviorTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void rendering() throws Exception
+    void rendering() throws Exception
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 		
@@ -44,7 +44,7 @@ public class OnChangeAjaxBehaviorTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void ajaxSubmitWhileAnotherButtonIsNotVisible()
+    void ajaxSubmitWhileAnotherButtonIsNotVisible()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);
@@ -54,7 +54,7 @@ public class OnChangeAjaxBehaviorTest extends WicketTestCase
 		tester.assertLabel("message",
 			"If you see this message wicket is properly configured and running");
 
-		tester.executeAjaxEvent("form:select", "inputchange change");
+		tester.executeAjaxEvent("form:select", "input change");
 
 		// assert rendered page class
 		tester.assertRenderedPage(ThirdPage.class);

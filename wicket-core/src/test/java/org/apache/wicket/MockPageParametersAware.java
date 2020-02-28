@@ -99,7 +99,7 @@ public class MockPageParametersAware extends WebPage
 	/**
 	 * @return textField
 	 */
-	public TextField<String> getTextField()
+    TextField<String> getTextField()
 	{
 		return textField;
 	}

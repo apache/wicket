@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.markup.html.internal;
 
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,28 +25,26 @@ import java.nio.charset.Charset;
 import java.util.Optional;
 
 import org.apache.wicket.ThreadContext;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link IHeaderResponse}'s methods
  */
-public class HeaderResponseTest
+class HeaderResponseTest
 {
     private static final String RESOURCE_NAME = "resource.name";
 
@@ -56,8 +55,8 @@ public class HeaderResponseTest
     /**
      * Prepare
      */
-    @Before
-    public void before()
+    @BeforeEach
+    void before()
     {
         final Response realResponse = new StringResponse();
 
@@ -99,51 +98,11 @@ public class HeaderResponseTest
     /**
      * Tear down
      */
-    @After
-    public void after()
+    @AfterEach
+    void after()
     {
         ThreadContext.setRequestCycle(null);
     }
-
-    /**
-     * Tests the creation of a proper IE conditional comment
-     */
-    @Test
-    public void conditionalRenderCSSReference()
-    {
-        headerResponse.render(CssHeaderItem.forReference(reference, null, "screen", "lt IE 8"));
-        String expected = "<!--[if lt IE 8]><link rel=\"stylesheet\" type=\"text/css\" href=\"" +
-            RESOURCE_NAME + "\" media=\"screen\" /><![endif]-->\n";
-        String actual = headerResponse.getResponse().toString();
-        Assert.assertEquals(expected, actual);
-    }
-
-    /**
-     * Tests the creation of a proper IE conditional comment
-     */
-    @Test
-    public void conditionalRenderCSSReferenceWithUrl()
-    {
-        headerResponse.render(CssHeaderItem.forUrl("resource.css", "screen", "lt IE 8"));
-        String expected = "<!--[if lt IE 8]><link rel=\"stylesheet\" type=\"text/css\" href=\""+RESOURCE_NAME+"\" media=\"screen\" /><![endif]-->\n";
-        String actual = headerResponse.getResponse().toString();
-        Assert.assertEquals(expected, actual);
-    }
-
-
-	/**
-	 * Tests the creation of a proper IE conditional comment
-	 */
-	@Test
-	public void conditionalRenderCSSContent()
-	{
-		headerResponse.render(CssHeaderItem.forCSS(".className { font-size: 10px}", "id", "lt IE 8"));
-		String expected = "<!--[if lt IE 8]><style type=\"text/css\" id=\"id\"><!--\n" +
-				".className { font-size: 10px}--></style>\n" +
-				"<![endif]-->\n";
-		String actual = headerResponse.getResponse().toString();
-		Assert.assertEquals(expected, actual);
-	}
 
     /**
      * Tests setting of 'defer' attribute
@@ -151,14 +110,14 @@ public class HeaderResponseTest
      * WICKET-3661
      */
     @Test
-    public void deferJavaScriptReference()
+    void deferJavaScriptReference()
     {
         boolean defer = true;
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", defer));
+        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setDefer(defer));
         String expected = "<script type=\"text/javascript\" id=\"some-id\" defer=\"defer\" src=\"" +
             RESOURCE_NAME + "\"></script>\n";
         String actual = headerResponse.getResponse().toString();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     /**
@@ -167,14 +126,29 @@ public class HeaderResponseTest
      * WICKET-3661
      */
     @Test
-    public void deferFalseJavaScriptReference()
+    void deferFalseJavaScriptReference()
     {
         boolean defer = false;
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", defer));
+        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setDefer(defer));
         String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
             "\"></script>\n";
         String actual = headerResponse.getResponse().toString();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
+    }
+
+    /**
+     * Tests setting of subresource attributes
+     */
+    @Test
+    void subresourceJavaScriptReference()
+    {
+        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id")
+        	.setCrossOrigin(CrossOrigin.ANONYMOUS)
+        	.setIntegrity("XXXX"));
+        String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" +
+            RESOURCE_NAME + "\" crossOrigin=\"anonymous\" integrity=\"XXXX\"></script>\n";
+        String actual = headerResponse.getResponse().toString();
+        assertEquals(expected, actual);
     }
 
     /**
@@ -183,15 +157,14 @@ public class HeaderResponseTest
      * WICKET-3909
      */
     @Test
-    public void charsetSetJavaScriptReference()
+    void charsetSetJavaScriptReference()
     {
         String charset = "foo";
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", false,
-            charset));
+        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setCharset(charset));
         String expected = "<script type=\"text/javascript\" id=\"some-id\" charset=\"" + charset +
             "\" src=\"" + RESOURCE_NAME + "\"></script>\n";
         String actual = headerResponse.getResponse().toString();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     /**
@@ -200,65 +173,12 @@ public class HeaderResponseTest
      * WICKET-3909
      */
     @Test
-    public void charsetNotSetJavaScriptReference()
+    void charsetNotSetJavaScriptReference()
     {
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id", false, null));
+        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id"));
         String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
             "\"></script>\n";
         String actual = headerResponse.getResponse().toString();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
-
-	/**
-	 * Tests the creation of a proper IE conditional comment
-	 */
-	@Test
-	public void conditionalRenderJSReference()
-	{
-		headerResponse.render(
-				JavaScriptHeaderItem.forReference(reference, new PageParameters(), "id", false, null, "lt IE 8"));
-
-		String expected = "<!--[if lt IE 8]><script type=\"text/javascript\" id=\"id\" src=\""+RESOURCE_NAME+"\"></script>\n<![endif]-->\n";
-
-		String actual = headerResponse.getResponse().toString();
-
-		Assert.assertEquals(expected, actual);
-	}
-
-	/**
-	 * Tests the creation of a proper IE conditional comment
-	 */
-	@Test
-	public void conditionalRenderJSReferenceWithUrl()
-	{
-		headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "id", true, "cp1251", "lt IE 8"));
-
-		String expected = "<!--[if lt IE 8]><script type=\"text/javascript\" id=\"id\" defer=\"defer\" charset=\"cp1251\" src=\""+RESOURCE_NAME+"\"></script>\n" +
-				"<![endif]-->\n";
-
-		String actual = headerResponse.getResponse().toString();
-
-		Assert.assertEquals(expected, actual);
-	}
-
-
-	/**
-	 * Tests the creation of a proper IE conditional comment
-	 */
-	@Test
-	public void conditionalRenderJSContent()
-	{
-		headerResponse.render(JavaScriptHeaderItem.forScript("someJSMethod();", "id", "lt IE 8"));
-
-		String expected = "<!--[if lt IE 8]><script type=\"text/javascript\" id=\"id\">\n" +
-				"/*<![CDATA[*/\n" +
-				"someJSMethod();\n" +
-				"/*]]>*/\n" +
-				"</script>\n" +
-				"<![endif]-->\n";
-
-		String actual = headerResponse.getResponse().toString();
-
-		Assert.assertEquals(expected, actual);
-	}
 }

@@ -43,18 +43,9 @@ public class JavaScriptUrlReferenceHeaderItem extends AbstractJavaScriptReferenc
 	 * @param id
 	 *            id that will be used to filter duplicate reference (it's still filtered by URL
 	 *            too)
-	 * @param defer
-	 *            specifies that the execution of a script should be deferred (delayed) until after
-	 *            the page has been loaded.
-	 * @param charset
-	 *            a non null value specifies the charset attribute of the script tag
-	 * @param condition
-	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
 	 */
-	public JavaScriptUrlReferenceHeaderItem(String url, String id, boolean defer, String charset,
-		String condition)
+	public JavaScriptUrlReferenceHeaderItem(String url, String id)
 	{
-		super(condition, defer, charset);
 		this.url = url;
 		setId(id);
 	}
@@ -71,8 +62,7 @@ public class JavaScriptUrlReferenceHeaderItem extends AbstractJavaScriptReferenc
 	public void render(Response response)
 	{
 		internalRenderJavaScriptReference(response,
-			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()), getId(), isDefer(),
-			getCharset(), getCondition(), isAsync());
+			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()));
 	}
 
 	@Override

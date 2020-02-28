@@ -18,18 +18,17 @@ package org.apache.wicket.http2.markup.head;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -48,7 +47,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.collections.ConcurrentHashSet;
-import org.apache.wicket.util.time.Time;
 
 /**
  * A push header item to be used in the http/2 context and to reduce the latency of the web
@@ -172,7 +170,7 @@ public class PushHeaderItem extends HeaderItem
 	 * 
 	 * @return the time the page of this header item has been modified
 	 */
-	protected Time getPageModificationTime()
+	protected Instant getPageModificationTime()
 	{
 		URL resource = page.getClass().getResource(page.getClass().getSimpleName() + ".html");
 		if (resource == null)
@@ -182,7 +180,7 @@ public class PushHeaderItem extends HeaderItem
 		}
 		try
 		{
-			return Time.valueOf(new Date(resource.openConnection().getLastModified()));
+			return Instant.ofEpochMilli(resource.openConnection().getLastModified());
 		}
 		catch (IOException e)
 		{
@@ -199,9 +197,9 @@ public class PushHeaderItem extends HeaderItem
 	protected void applyPageCacheHeader()
 	{
 		// check modification of page html
-		Time pageModificationTime = getPageModificationTime();
+		Instant pageModificationTime = getPageModificationTime();
 		// The date of the page is now
-		pageWebResponse.setDateHeader("Date", Time.now());
+		pageWebResponse.setDateHeader("Date", Instant.now());
 		// Set the modification time so that the browser sends a "If-Modified-Since" header which
 		// can be compared
 		pageWebResponse.setLastModifiedTime(pageModificationTime);
@@ -228,7 +226,7 @@ public class PushHeaderItem extends HeaderItem
 		if (isHttp2(request))
 		{
 
-			Time pageModificationTime = getPageModificationTime();
+			Instant pageModificationTime = getPageModificationTime();
 			String ifModifiedSinceHeader = pageWebRequest.getHeader("If-Modified-Since");
 
 			// Check if the if-modified-since header is set - if not push all resources
@@ -236,7 +234,7 @@ public class PushHeaderItem extends HeaderItem
 			{
 
 				// Try to parse RFC1123
-				Time ifModifiedSinceFromRequestTime = parseIfModifiedSinceHeader(
+				Instant ifModifiedSinceFromRequestTime = parseIfModifiedSinceHeader(
 					ifModifiedSinceHeader, headerDateFormat_RFC1123);
 
 				// Try to parse ASCTIME
@@ -256,7 +254,7 @@ public class PushHeaderItem extends HeaderItem
 				// if the modified since header is before the page modification time or if it can't
 				// be parsed push it.
 				if (ifModifiedSinceFromRequestTime == null ||
-					ifModifiedSinceFromRequestTime.before(pageModificationTime))
+					ifModifiedSinceFromRequestTime.isBefore(pageModificationTime))
 				{
 					// Some browsers like IE 9-11 or Chrome 39 that does not send right headers
 					// receive the resource via push all the time
@@ -280,13 +278,14 @@ public class PushHeaderItem extends HeaderItem
 	 *            the formatter to parse the header string with
 	 * @return the time or null
 	 */
-	private Time parseIfModifiedSinceHeader(String ifModifiedSinceHeader,
+	private Instant parseIfModifiedSinceHeader(String ifModifiedSinceHeader,
 		DateTimeFormatter dateTimeFormatter)
 	{
 		try
 		{
-			return Time.valueOf(Date.from(LocalDateTime
-				.parse(ifModifiedSinceHeader, dateTimeFormatter).toInstant(ZoneOffset.UTC)));
+			return LocalDateTime
+				.parse(ifModifiedSinceHeader, dateTimeFormatter)
+				.toInstant(ZoneOffset.UTC);
 		}
 		catch (DateTimeParseException e)
 		{
@@ -419,7 +418,7 @@ public class PushHeaderItem extends HeaderItem
 	public boolean isHttp2(HttpServletRequest request)
 	{
 		// detects http/2 and http/2.0
-		return request.getProtocol().toLowerCase().contains(HTTP2_PROTOCOL);
+		return request.getProtocol().toLowerCase(Locale.ROOT).contains(HTTP2_PROTOCOL);
 	}
 
 	/**

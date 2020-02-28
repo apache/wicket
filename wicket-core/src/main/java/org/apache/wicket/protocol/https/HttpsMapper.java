@@ -101,6 +101,11 @@ public class HttpsMapper implements IRequestMapperDelegate
 		IRequestHandler handler = delegate.mapRequest(request);
 
 		Scheme desired = getDesiredSchemeFor(handler);
+		if (Scheme.ANY.equals(desired))
+		{
+			return handler;
+		}
+		
 		Scheme current = getSchemeOf(request);
 		if (!desired.isCompatibleWith(current))
 		{
@@ -173,6 +178,11 @@ public class HttpsMapper implements IRequestMapperDelegate
 		Url url = delegate.mapHandler(handler);
 
 		Scheme desired = getDesiredSchemeFor(handler);
+		if (Scheme.ANY.equals(desired))
+		{
+			return url;
+		}
+		
 		Scheme current = getSchemeOf(request);
 		if (!desired.isCompatibleWith(current))
 		{

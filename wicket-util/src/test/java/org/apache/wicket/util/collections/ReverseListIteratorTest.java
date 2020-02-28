@@ -16,16 +16,17 @@
  */
 package org.apache.wicket.util.collections;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for {@link ReverseListIterator}
  */
-public class ReverseListIteratorTest extends Assert
+public class ReverseListIteratorTest
 {
 
 	/**

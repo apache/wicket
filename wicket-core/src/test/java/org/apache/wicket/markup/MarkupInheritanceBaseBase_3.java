@@ -29,7 +29,7 @@ public class MarkupInheritanceBaseBase_3 extends WebPage
 	 * Construct.
 	 * 
 	 */
-	public MarkupInheritanceBaseBase_3()
+    MarkupInheritanceBaseBase_3()
 	{
 		// add(new Label("label1", "baseBase label 1"));
 		// add(new Label("label2", "baseBase label 2"));

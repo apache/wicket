@@ -26,8 +26,8 @@ import java.util.Set;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.core.request.handler.AbstractPartialPageRequestHandler;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
@@ -42,15 +42,13 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.response.filter.IResponseFilter;
+import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * A request target that produces ajax response envelopes used on the client side to update
@@ -79,9 +77,8 @@ import org.apache.wicket.util.visit.IVisitor;
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
  */
-public class AjaxRequestHandler implements AjaxRequestTarget
+public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implements AjaxRequestTarget
 {
-
 	/**
 	 * Collector of page updates.
 	 */
@@ -97,20 +94,17 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	protected transient boolean respondersFrozen;
 	protected transient boolean listenersFrozen;
 
-	/** The associated Page */
-	private final Page page;
-
 	private PageLogData logData;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param page
-	 *      the currently active page
+	 *            the currently active page
 	 */
 	public AjaxRequestHandler(final Page page)
 	{
-		this.page = Args.notNull(page, "page");
+		super(page);
 
 		update = new XmlPartialPageUpdate(page)
 		{
@@ -140,7 +134,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 			 * events will have been fired by now.
 			 * 
 			 * @param response
-			 *      the response to write to
+			 *            the response to write to
 			 */
 			@Override
 			protected void onAfterRespond(final Response response)
@@ -150,16 +144,16 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 				// invoke onafterresponse event on listeners
 				if (listeners != null)
 				{
-					final Map<String, Component> components = Collections.unmodifiableMap(markupIdToComponent);
+					final Map<String, Component> components = Collections
+						.unmodifiableMap(markupIdToComponent);
 
-					// create response that will be used by listeners to append
-					// javascript
+					// create response that will be used by listeners to append javascript
 					final AjaxRequestTarget.IJavaScriptResponse jsresponse = new AjaxRequestTarget.IJavaScriptResponse()
 					{
 						@Override
 						public void addJavaScript(String script)
 						{
-							writeNormalEvaluations(response, Collections.<CharSequence>singleton(script));
+							writeEvaluations(response, Collections.<CharSequence> singleton(script));
 						}
 					};
 
@@ -170,15 +164,6 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 				}
 			}
 		};
-	}
-
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPage()
-	 */
-	@Override
-	public Page getPage()
-	{
-		return page;
 	}
 
 	@Override
@@ -199,75 +184,15 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	}
 
 	@Override
-	public final void addChildren(MarkupContainer parent, Class<?> childCriteria)
+	public PartialPageUpdate getUpdate()
 	{
-		Args.notNull(parent, "parent");
-		Args.notNull(childCriteria, "childCriteria");
-
-		parent.visitChildren(childCriteria, new IVisitor<Component, Void>()
-		{
-			@Override
-			public void component(final Component component, final IVisit<Void> visit)
-			{
-				add(component);
-				visit.dontGoDeeper();
-			}
-		});
-	}
-
-	@Override
-	public void add(Component... components)
-	{
-		for (final Component component : components)
-		{
-			Args.notNull(component, "component");
-
-			if (component.getOutputMarkupId() == false && !(component instanceof Page))
-			{
-				throw new IllegalArgumentException(
-					"Cannot update component that does not have setOutputMarkupId property set to true. Component: " +
-						component.toString());
-			}
-			else if (component.getPage() != getPage())
-			{
-				throw new IllegalArgumentException(
-					"Cannot update component because its page is not the same as " +
-					"the one this handler has been created for. Component: " +
-						component.toString());
-			}
-			add(component, component.getMarkupId());
-		}
-	}
-
-	@Override
-	public void add(Component component, String markupId)
-	{
-		update.add(component, markupId);
+		return update;
 	}
 
 	@Override
 	public final Collection<? extends Component> getComponents()
 	{
 		return update.getComponents();
-	}
-
-	@Override
-	public final void focusComponent(Component component)
-	{
-		if (component != null && component.getOutputMarkupId() == false)
-		{
-			throw new IllegalArgumentException(
-				"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
-					component.toString());
-		}
-		final String id = component != null ? ("'" + component.getMarkupId() + "'") : "null";
-		appendJavaScript("Wicket.Focus.setFocusOnId(" + id + ");");
-	}
-
-	@Override
-	public final void appendJavaScript(CharSequence javascript)
-	{
-		update.appendJavaScript(javascript);
 	}
 
 	/**
@@ -278,7 +203,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	{
 		if (logData == null)
 		{
-			logData = new PageLogData(page);
+			logData = new PageLogData(getPage());
 		}
 
 		update.detach(requestCycle);
@@ -310,12 +235,6 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	}
 
 	@Override
-	public final void prependJavaScript(CharSequence javascript)
-	{
-		update.prependJavaScript(javascript);
-	}
-
-	@Override
 	public void registerRespondListener(ITargetRespondListener listener)
 	{
 		assertRespondersNotFrozen();
@@ -330,6 +249,8 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	{
 		final RequestCycle rc = (RequestCycle)requestCycle;
 		final WebResponse response = (WebResponse)requestCycle.getResponse();
+
+		Page page = getPage();
 
 		if (shouldRedirectToPage(requestCycle))
 		{
@@ -420,51 +341,18 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		return "[AjaxRequestHandler@" + hashCode() + " responseObject [" + update + "]";
 	}
 
-	@Override
-	public IHeaderResponse getHeaderResponse()
-	{
-		return update.getHeaderResponse();
-	}
-
 	/**
 	 * @return the markup id of the focused element in the browser
 	 */
 	@Override
 	public String getLastFocusedElementId()
 	{
-		WebRequest request = (WebRequest)page.getRequest();
+		WebRequest request = (WebRequest)getPage().getRequest();
+
 		String id = request.getHeader("Wicket-FocusedElementId");
-		return Strings.isEmpty(id) ? null : id;
-	}
-
-	@Override
-	public Class<? extends IRequestablePage> getPageClass()
-	{
-		return page.getPageClass();
-	}
-
-	@Override
-	public Integer getPageId()
-	{
-		return page.getPageId();
-	}
-
-	@Override
-	public PageParameters getPageParameters()
-	{
-		return page.getPageParameters();
-	}
-
-	@Override
-	public final boolean isPageInstanceCreated()
-	{
-		return true;
-	}
-
-	@Override
-	public final Integer getRenderCount()
-	{
-		return page.getRenderCount();
+		
+		// WICKET-6568 might contain non-ASCII
+		return Strings.isEmpty(id) ? null : UrlDecoder.QUERY_INSTANCE.decode(id, request.getCharset());
 	}
 
 	@Override
