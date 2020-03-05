@@ -545,8 +545,6 @@
 			// if the title is specified set it
 			if (this.settings.title != null) {
 				this.captionText.innerHTML = this.settings.title;
-				// http://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby
-				this.window.setAttribute('aria-labelledBy', this.settings.title);
 			}
 
 			// initial width and height
@@ -755,15 +753,12 @@
 				if (this.content.contentWindow.document.title) {
 					if (this.captionText.innerHTML !== this.content.contentWindow.document.title) {
 						this.captionText.innerHTML = this.content.contentWindow.document.title;
-						// http://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby
-						this.window.setAttribute('aria-labelledBy', this.content.contentWindow.document.title);
 
 						// konqueror doesn't refresh caption text properly
 						if (Wicket.Browser.isKHTML()) {
 							this.captionText.style.display = 'none';
 							window.setTimeout(Wicket.bind(function() { this.captionText.style.display="block";}, this), 0);
 						}
-
 					}
 				}
 			} catch (ignore) {
@@ -1038,7 +1033,7 @@
 	 */
 	Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idContent, idTop, idTopLeft, idTopRight, idLeft, idRight, idBottomLeft, idBottomRight, idBottom, idCaptionText, isFrame) {
 		var s =
-				"<div class=\"wicket-modal\" id=\""+idWindow+"\" role=\"dialog\" aria-labelledBy=\""+idCaptionText+"\" style=\"top: 10px; left: 10px; width: 100px;\"><form style='background-color:transparent;padding:0px;margin:0px;border-width:0px;position:static'>"+
+				"<div class=\"wicket-modal\" id=\""+idWindow+"\" role=\"dialog\" aria-labelledby=\""+idCaptionText+"\" style=\"top: 10px; left: 10px; width: 100px;\"><form style='background-color:transparent;padding:0px;margin:0px;border-width:0px;position:static'>"+
 				"<div id=\""+idClassElement+"\">"+
 
 					"<div class=\"w_top_1\">"+
