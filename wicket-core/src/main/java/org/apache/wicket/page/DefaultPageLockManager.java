@@ -18,8 +18,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Default {@link IPageLockManager} that that holds a map of locks in the current session.
- * 
- * @author Igor Vaynberg (ivaynberg)
  */
 public class DefaultPageLockManager implements IPageLockManager, Serializable {
 
@@ -109,6 +107,7 @@ public class DefaultPageLockManager implements IPageLockManager, Serializable {
 				}
 			}
 		}
+
 		if (locked)
 		{
 			if (isDebugEnabled)
