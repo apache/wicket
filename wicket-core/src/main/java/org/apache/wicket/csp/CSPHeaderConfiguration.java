@@ -45,7 +45,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * {@code CSPHeaderConfiguration} contains the configuration for a Content-Security-Policy header.
  * This configuration is constructed using the available {@link CSPDirective}s. An number of default
  * profiles is provided. These profiles can be used as a basis for a specific CSP. Extra directives
- * can be added or exising directives modified.
+ * can be added or existing directives modified.
  * 
  * @author papegaaij
  * @see <a href="https://www.w3.org/TR/CSP2/">https://www.w3.org/TR/CSP2</a>
