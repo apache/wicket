@@ -2200,7 +2200,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			@Override
 			public boolean hasNext()
 			{
-				if (!currentIterator.hasNext() && !iteratorStack.isEmpty())
+				while (!currentIterator.hasNext() && !iteratorStack.isEmpty())
 				{
 					currentIterator = iteratorStack.pop();
 				}
