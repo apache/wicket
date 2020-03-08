@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.wicket.core.util.lang.WicketObjects;
@@ -1280,7 +1281,7 @@ public class MarkupContainerTest extends WicketTestCase
 	 * 
 	 * @param iterator
 	 *            the iterator to remove the children with
-	 * @param numberOfChildrenToAdd
+	 * @param numberOfChildrenToRemove
 	 *            the number of children
 	 */
 	private void removeNChildren(Iterator<Component> iterator, int numberOfChildrenToRemove)
@@ -1352,5 +1353,19 @@ public class MarkupContainerTest extends WicketTestCase
 
 		assertThat(loginPage.streamChildren().filter(TextField.class::isInstance)
 			.filter(c -> c.getId().equals("field")).findFirst().isPresent(), is(true));
+	}
+
+	// https://issues.apache.org/jira/browse/WICKET-6754
+	@Test
+	public void streamChildrenNestedContainer() {
+		WebMarkupContainer wmc = new WebMarkupContainer("parent");
+		WebMarkupContainer wmc1 = new WebMarkupContainer("wmc1");
+		wmc.add(wmc1);
+		WebMarkupContainer wmc1_2= new WebMarkupContainer("wmc1_2");
+		wmc1.add(wmc1_2);
+		Label lbl2 = new Label("lbl2");
+		wmc.add(lbl2);
+		List l = wmc.streamChildren().map(Component::getId).collect(Collectors.toList());
+		assertEquals("[wmc1, wmc1_2, lbl2]", l.toString());
 	}
 }
