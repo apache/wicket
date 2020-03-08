@@ -18,6 +18,7 @@ package org.apache.wicket;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -47,7 +48,6 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({ "javadoc", "serial" })
 class MarkupContainerTest extends WicketTestCase
 {
 	private static final int NUMBER_OF_CHILDREN_FOR_A_MAP = MarkupContainer.MAPIFY_THRESHOLD + 1;
@@ -99,20 +99,19 @@ class MarkupContainerTest extends WicketTestCase
 
 		// basic gets
 
-		assertTrue(a.get(null) == a);
-		assertTrue(a.get("") == a);
-		assertTrue(a.get("b") == b);
-		assertTrue(a.get("c") == c);
-		assertTrue(a.get("c:d") == d);
-		assertTrue(a.get("c:e:f") == f);
+		assertSame(a.get(null), a);
+		assertSame(a.get(""), a);
+		assertSame(a.get("b"), b);
+		assertSame(a.get("c"), c);
+		assertSame(a.get("c:d"), d);
+		assertSame(a.get("c:e:f"), f);
 
 		// parent path gets
-
-		assertTrue(b.get("..") == a);
-		assertTrue(e.get("..:..") == a);
-		assertTrue(d.get("..:..:c:e:f") == f);
-		assertTrue(e.get("..:d:..:e:f") == f);
-		assertTrue(e.get("..:d:..:..") == a);
+		assertSame(b.get(".."), a);
+		assertSame(e.get("..:.."), a);
+		assertSame(d.get("..:..:c:e:f"), f);
+		assertSame(e.get("..:d:..:e:f"), f);
+		assertSame(e.get("..:d:..:.."), a);
 
 		// invalid gets
 
@@ -129,9 +128,7 @@ class MarkupContainerTest extends WicketTestCase
 	void addMyself()
 	{
 		WebMarkupContainer me = new WebMarkupContainer("a");
-		assertThrows(IllegalArgumentException.class, () -> {
-			me.add(me);
-		});
+		assertThrows(IllegalArgumentException.class, () -> me.add(me));
 	}
 
 	/**
@@ -190,7 +187,7 @@ class MarkupContainerTest extends WicketTestCase
 	@Test
 	void callToStringFromConstructor()
 	{
-		ToStringComponent page = new ToStringComponent();
+		new ToStringComponent();
 	}
 
 	@Test
@@ -199,7 +196,7 @@ class MarkupContainerTest extends WicketTestCase
 		WebMarkupContainer wmc = new WebMarkupContainer("id");
 
 		Iterator<Component> iterator = wmc.iterator();
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -214,9 +211,9 @@ class MarkupContainerTest extends WicketTestCase
 
 		assertEquals(1, wmc.size());
 
-		assertEquals(true, iterator.hasNext());
+		assertTrue(iterator.hasNext());
 		assertEquals(label1, iterator.next());
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -233,12 +230,12 @@ class MarkupContainerTest extends WicketTestCase
 		Label label1 = new Label("label1", "Label1");
 		wmc.add(label1);
 
-		assertEquals(true, iterator.hasNext());
+		assertTrue(iterator.hasNext());
 
 		takeNChildren(iterator, NUMBER_OF_CHILDREN_FOR_A_MAP);
 
 		assertEquals(label1, iterator.next());
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -257,9 +254,9 @@ class MarkupContainerTest extends WicketTestCase
 		Label label1 = new Label("label1", "Label1");
 		wmc.add(label1);
 
-		assertEquals(true, iterator.hasNext());
+		assertTrue(iterator.hasNext());
 		assertEquals(label1, iterator.next());
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 
@@ -283,7 +280,7 @@ class MarkupContainerTest extends WicketTestCase
 
 		assertEquals(0, wmc.size());
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -300,7 +297,7 @@ class MarkupContainerTest extends WicketTestCase
 		takeNChildren(iterator, 1);
 
 		// there are no more children to iterate
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 
 		// add the new child
 		Label newChild = new Label("label1", "Label1");
@@ -310,7 +307,7 @@ class MarkupContainerTest extends WicketTestCase
 
 		// ensure that the newChild is up next (as it was added)
 		assertEquals(newChild, iterator.next());
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -339,7 +336,7 @@ class MarkupContainerTest extends WicketTestCase
 
 		// and the new child is not iterated (was replaced before the current position of the
 		// iterator).
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -375,7 +372,7 @@ class MarkupContainerTest extends WicketTestCase
 		assertSame(label5, iterator.next());
 
 		// and that there are no more children to iterate
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -392,7 +389,7 @@ class MarkupContainerTest extends WicketTestCase
 	}
 
 	@Test
-	void childrenListBecomesMapWhenThresholdPassed() throws Exception
+	void childrenListBecomesMapWhenThresholdPassed()
 	{
 		WebMarkupContainer wmc = new WebMarkupContainer("id");
 
@@ -404,7 +401,7 @@ class MarkupContainerTest extends WicketTestCase
 	}
 
 	@Test
-	void childrenBecomesLinkedMapWhenThresholdPassed() throws Exception
+	void childrenBecomesLinkedMapWhenThresholdPassed()
 	{
 		WebMarkupContainer wmc = new WebMarkupContainer("id");
 
@@ -446,7 +443,7 @@ class MarkupContainerTest extends WicketTestCase
 	}
 
 	@Test
-	void geenIdee3() throws Exception
+	void geenIdee3()
 	{
 		WebMarkupContainer wmc = new WebMarkupContainer("id");
 
@@ -456,12 +453,12 @@ class MarkupContainerTest extends WicketTestCase
 
 		removeNChildren(iterator, NUMBER_OF_CHILDREN_FOR_A_MAP);
 
-		assertEquals(true, iterator.hasNext());
+		assertTrue(iterator.hasNext());
 		assertEquals(1, wmc.size());
 
 		iterator.next();
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -476,7 +473,7 @@ class MarkupContainerTest extends WicketTestCase
 		assertEquals(label1, iterator.next());
 
 		wmc.remove(label1);
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -490,11 +487,11 @@ class MarkupContainerTest extends WicketTestCase
 		wmc.add(label1);
 		assertEquals(label1, iterator.next());
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 
 		wmc.remove(label1);
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 
 		wmc.add(label1);
 		assertEquals(label1, iterator.next());
@@ -512,11 +509,11 @@ class MarkupContainerTest extends WicketTestCase
 		wmc.add(label1);
 		assertEquals(label1, iterator.next());
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 
 		wmc.remove(label1);
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 
 		wmc.add(label2);
 		assertEquals(label2, iterator.next());
@@ -534,9 +531,9 @@ class MarkupContainerTest extends WicketTestCase
 		wmc.add(label1);
 		wmc.replace(label2);
 
-		assertEquals(true, iterator.hasNext());
+		assertTrue(iterator.hasNext());
 		assertEquals(label2, iterator.next());
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -548,9 +545,9 @@ class MarkupContainerTest extends WicketTestCase
 
 		Iterator<Component> iterator = wmc.iterator();
 
-		assertEquals(true, iterator.hasNext());
+		assertTrue(iterator.hasNext());
 		assertEquals(label1, iterator.next());
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -566,9 +563,9 @@ class MarkupContainerTest extends WicketTestCase
 
 		wmc.replace(label2);
 
-		assertEquals(true, iterator.hasNext());
+		assertTrue(iterator.hasNext());
 		assertSame(label2, iterator.next());
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -581,12 +578,12 @@ class MarkupContainerTest extends WicketTestCase
 
 		Iterator<Component> iterator = wmc.iterator();
 
-		assertEquals(true, iterator.hasNext());
+		assertTrue(iterator.hasNext());
 		assertEquals(label1, iterator.next());
 
 		wmc.replace(label2);
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -606,7 +603,7 @@ class MarkupContainerTest extends WicketTestCase
 		assertEquals(label2, iterator.next());
 		assertEquals(label3, iterator.next());
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -627,7 +624,7 @@ class MarkupContainerTest extends WicketTestCase
 		wmc.add(label3 = new Label("label3", "Label3"));
 		assertEquals(label3, iterator.next());
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -648,7 +645,7 @@ class MarkupContainerTest extends WicketTestCase
 		assertEquals(label2, iterator.next());
 		assertEquals(label3, iterator.next());
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -669,7 +666,7 @@ class MarkupContainerTest extends WicketTestCase
 		assertEquals(label2, iterator.next());
 		assertEquals(label3, iterator.next());
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -690,7 +687,7 @@ class MarkupContainerTest extends WicketTestCase
 		wmc.remove(label1);
 		assertEquals(label3, iterator.next());
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -711,17 +708,16 @@ class MarkupContainerTest extends WicketTestCase
 		assertEquals(label3, iterator.next());
 		wmc.remove(label1);
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
 	void iteratorShouldAllowReplacingComponentAfterIterationStarted0()
 	{
 		WebMarkupContainer wmc = new WebMarkupContainer("id");
-		Label label1;
 		Label label2;
 		Label label3;
-		wmc.add(label1 = new Label("label1", "Label1"));
+		wmc.add(new Label("label1", "Label1"));
 		wmc.add(label2 = new Label("label2", "Label2"));
 
 		Iterator<Component> iterator = wmc.iterator();
@@ -731,17 +727,16 @@ class MarkupContainerTest extends WicketTestCase
 		assertEquals(label3, iterator.next());
 		assertEquals(label2, iterator.next());
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
 	void iteratorShouldAllowReplacingComponentAfterIterationStarted1()
 	{
 		WebMarkupContainer wmc = new WebMarkupContainer("id");
-		Label label1;
 		Label label2;
 		Label label3;
-		wmc.add(label1 = new Label("label1", "Label1"));
+		wmc.add(new Label("label1", "Label1"));
 		wmc.add(label2 = new Label("label2", "Label2"));
 
 		Iterator<Component> iterator = wmc.iterator();
@@ -751,7 +746,7 @@ class MarkupContainerTest extends WicketTestCase
 		assertEquals(label3, iterator.next());
 		assertEquals(label2, iterator.next());
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -760,7 +755,6 @@ class MarkupContainerTest extends WicketTestCase
 		WebMarkupContainer wmc = new WebMarkupContainer("id");
 		Label label1;
 		Label label2;
-		Label label3;
 		wmc.add(label1 = new Label("label1", "Label1"));
 		wmc.add(label2 = new Label("label2", "Label2"));
 
@@ -769,9 +763,9 @@ class MarkupContainerTest extends WicketTestCase
 		assertEquals(label1, iterator.next());
 		assertEquals(label2, iterator.next());
 
-		wmc.replace(label3 = new Label("label1", "Label3"));
+		wmc.replace(new Label("label1", "Label3"));
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -779,10 +773,9 @@ class MarkupContainerTest extends WicketTestCase
 	{
 		WebMarkupContainer wmc = new WebMarkupContainer("id");
 		Label label1;
-		Label label2;
 		Label label3;
 		wmc.add(label1 = new Label("label1", "Label1"));
-		wmc.add(label2 = new Label("label2", "Label2"));
+		wmc.add(new Label("label2", "Label2"));
 
 		addNChildren(wmc, NUMBER_OF_CHILDREN_FOR_A_MAP);
 
@@ -796,7 +789,7 @@ class MarkupContainerTest extends WicketTestCase
 
 		takeNChildren(iterator, NUMBER_OF_CHILDREN_FOR_A_MAP);
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -825,7 +818,7 @@ class MarkupContainerTest extends WicketTestCase
 		wmc.removeAll();
 
 		assertEquals(0, wmc.size());
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -841,7 +834,7 @@ class MarkupContainerTest extends WicketTestCase
 		wmc.removeAll();
 
 		assertEquals(0, wmc.size());
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -886,7 +879,7 @@ class MarkupContainerTest extends WicketTestCase
 
 		takeNChildren(iterator, numberOfRemainingChildren);
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	@Test
@@ -901,7 +894,7 @@ class MarkupContainerTest extends WicketTestCase
 		wmc.detach();
 		takeNChildren(iterator, 1);
 
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 		assertEquals(1, wmc.size());
 	}
 
@@ -936,8 +929,8 @@ class MarkupContainerTest extends WicketTestCase
 		}
 
 		// after 2*N removals there should not be any child left
-		assertEquals(false, iterator1.hasNext());
-		assertEquals(false, iterator2.hasNext());
+		assertFalse(iterator1.hasNext());
+		assertFalse(iterator2.hasNext());
 	}
 
 	/**
@@ -957,7 +950,7 @@ class MarkupContainerTest extends WicketTestCase
 
 		wmc.detach();
 
-		assertEquals(false, iterator1.hasNext());
+		assertFalse(iterator1.hasNext());
 	}
 
 	/**
@@ -977,11 +970,11 @@ class MarkupContainerTest extends WicketTestCase
 
 		addNChildren(wmc, 1);
 
-		assertEquals(true, iterator1.hasNext());
+		assertTrue(iterator1.hasNext());
 
 		wmc.detach();
 
-		assertEquals(true, iterator1.hasNext());
+		assertTrue(iterator1.hasNext());
 		assertNotNull(iterator1.next());
 	}
 
@@ -999,11 +992,11 @@ class MarkupContainerTest extends WicketTestCase
 		iterator1.next();
 		iterator1.remove();
 
-		assertEquals(true, iterator1.hasNext());
+		assertTrue(iterator1.hasNext());
 
 		wmc.detach();
 
-		assertEquals(true, iterator1.hasNext());
+		assertTrue(iterator1.hasNext());
 		assertNotNull(iterator1.next());
 	}
 
@@ -1027,7 +1020,7 @@ class MarkupContainerTest extends WicketTestCase
 		wmc.detach();
 
 		takeNChildren(iterator, NUMBER_OF_CHILDREN_FOR_A_MAP - 4);
-		assertEquals(false, iterator.hasNext());
+		assertFalse(iterator.hasNext());
 	}
 
 	/**
@@ -1043,8 +1036,6 @@ class MarkupContainerTest extends WicketTestCase
 
 		Iterator<Component> iterator1 = wmc.iterator();
 
-		Random r = new Random();
-
 		for (int i = 0; i < NUMBER_OF_CHILDREN_FOR_A_MAP; i++)
 		{
 			iterator1.next();
@@ -1056,7 +1047,7 @@ class MarkupContainerTest extends WicketTestCase
 			iterator1.next();
 			iterator1.remove();
 		}
-		assertEquals(false, iterator1.hasNext());
+		assertFalse(iterator1.hasNext());
 	}
 
 	@Test
@@ -1127,8 +1118,8 @@ class MarkupContainerTest extends WicketTestCase
 				iterator.remove();
 			}
 		}
-		assertEquals(false, iterator1.hasNext());
-		assertEquals(false, iterator2.hasNext());
+		assertFalse(iterator1.hasNext());
+		assertFalse(iterator2.hasNext());
 	}
 
 	/**
@@ -1212,13 +1203,13 @@ class MarkupContainerTest extends WicketTestCase
 		Optional<Component> first = loginPage.stream()
 			.filter(c -> c.getId().equals("form"))
 			.findFirst();
-		assertEquals(false, first.isPresent());
+		assertFalse(first.isPresent());
 
 		loginPage.add(new Form<>("form"));
 		Optional<Component> second = loginPage.stream()
 			.filter(c -> c.getId().equals("form"))
 			.findFirst();
-		assertEquals(true, second.isPresent());
+		assertTrue(second.isPresent());
 
 		loginPage.add(new WebMarkupContainer("wmc"));
 
@@ -1226,13 +1217,13 @@ class MarkupContainerTest extends WicketTestCase
 			.filter(Form.class::isInstance)
 			.map(Form.class::cast)
 			.findFirst();
-		assertEquals(true, form.isPresent());
+		assertTrue(form.isPresent());
 
 		Optional<WebMarkupContainer> wmc = loginPage.stream()
 			.filter(WebMarkupContainer.class::isInstance)
 			.map(WebMarkupContainer.class::cast)
 			.findFirst();
-		assertEquals(true, wmc.isPresent());
+		assertTrue(wmc.isPresent());
 	}
 
 	@Test
@@ -1242,7 +1233,7 @@ class MarkupContainerTest extends WicketTestCase
 		Optional<Component> first = loginPage.stream()
 			.filter(c -> c.getId().equals("form"))
 			.findFirst();
-		assertEquals(false, first.isPresent());
+		assertFalse(first.isPresent());
 
 		Form<Object> form = new Form<>("form");
 		loginPage.add(form);
@@ -1250,20 +1241,14 @@ class MarkupContainerTest extends WicketTestCase
 		form.add(new TextField<>("field"));
 
 		assertTrue(loginPage.streamChildren()
-			.filter(c -> c.getId().equals("form"))
-			.findFirst()
-			.isPresent());
+		                    .anyMatch(c -> c.getId().equals("form")));
 
 		assertTrue(loginPage.streamChildren()
-			.filter(c -> c.getId().equals("field"))
-			.findFirst()
-			.isPresent());
+		                    .anyMatch(c -> c.getId().equals("field")));
 
 		assertTrue(loginPage.streamChildren()
-			.filter(TextField.class::isInstance)
-			.filter(c -> c.getId().equals("field"))
-			.findFirst()
-			.isPresent());
+		                    .filter(TextField.class::isInstance)
+		                    .anyMatch(c -> c.getId().equals("field")));
 	}
 
 	// https://issues.apache.org/jira/browse/WICKET-6754
