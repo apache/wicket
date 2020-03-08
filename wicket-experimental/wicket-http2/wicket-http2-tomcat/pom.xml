@@ -42,7 +42,7 @@
 			<dependency>
 				<groupId>org.apache.tomcat</groupId>
 				<artifactId>tomcat-catalina</artifactId>
-				<version>8.5.33</version>
+				<version>8.5.51</version>
 				<scope>provided</scope>
 			</dependency>
 		</dependencies>
