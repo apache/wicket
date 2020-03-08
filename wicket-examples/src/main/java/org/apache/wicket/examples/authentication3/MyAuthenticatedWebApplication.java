@@ -54,11 +54,11 @@ public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 		super.init();
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 
-		getCsp().blocking()
-			.strict()
-			.reportBack()
-			.add(CSPDirective.STYLE_SRC,
+		getCspSettings().blocking()
+		                .strict()
+		                .reportBack()
+		                .add(CSPDirective.STYLE_SRC,
 				"https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
-			.add(CSPDirective.FONT_SRC, "https://maxcdn.bootstrapcdn.com");
+		                .add(CSPDirective.FONT_SRC, "https://maxcdn.bootstrapcdn.com");
 	}
 }

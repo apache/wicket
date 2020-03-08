@@ -28,7 +28,7 @@ public enum CSPHeaderMode
 
 	private final String header;
 
-	private CSPHeaderMode(String header)
+	CSPHeaderMode(String header)
 	{
 		this.header = header;
 	}

@@ -44,9 +44,9 @@ public class ReportCSPViolationMapper extends AbstractMapper
 
 	private static final Logger log = LoggerFactory.getLogger(ReportCSPViolationMapper.class);
 
-	private ContentSecurityPolicyEnforcer csp;
+	private final ContentSecurityPolicySettings csp;
 
-	public ReportCSPViolationMapper(ContentSecurityPolicyEnforcer csp)
+	public ReportCSPViolationMapper(ContentSecurityPolicySettings csp)
 	{
 		this.csp = csp;
 	}
@@ -65,7 +65,10 @@ public class ReportCSPViolationMapper extends AbstractMapper
 					{
 						HttpServletRequest httpRequest =
 							((ServletWebRequest) requestCycle.getRequest()).getContainerRequest();
-						log.error(reportToString(httpRequest));
+						if (log.isErrorEnabled())
+						{
+							log.error(reportToString(httpRequest));
+						}
 					}
 					catch (IOException e)
 					{
@@ -78,7 +81,7 @@ public class ReportCSPViolationMapper extends AbstractMapper
 					try (StringWriter sw = new StringWriter())
 					{
 						char[] buffer = new char[MAX_LOG_SIZE];
-						int n = 0;
+						int n;
 						if (-1 != (n = httpRequest.getReader().read(buffer)))
 						{
 							sw.write(buffer, 0, n);

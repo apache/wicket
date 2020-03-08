@@ -33,23 +33,23 @@ public enum CSPDirectiveSrcValue implements CSPRenderable
 	NONCE("'nonce-%1$s'")
 	{
 		@Override
-		public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
-				IRequestHandler currentHandler)
+		public String render(ContentSecurityPolicySettings listener, RequestCycle cycle,
+		                     IRequestHandler currentHandler)
 		{
 			return String.format(getValue(), listener.getNonce(cycle, currentHandler));
 		}
 	};
 
-	private String value;
+	private final String value;
 
-	private CSPDirectiveSrcValue(String value)
+	CSPDirectiveSrcValue(String value)
 	{
 		this.value = value;
 	}
 
 	@Override
-	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
-			IRequestHandler currentHandler)
+	public String render(ContentSecurityPolicySettings listener, RequestCycle cycle,
+	                     IRequestHandler currentHandler)
 	{
 		return value;
 	}

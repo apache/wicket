@@ -29,9 +29,9 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public class CSPNonceHeaderResponseDecorator extends DecoratingHeaderResponse
 {
-	private ContentSecurityPolicyEnforcer listener;
+	private final ContentSecurityPolicySettings listener;
 
-	public CSPNonceHeaderResponseDecorator(IHeaderResponse real, ContentSecurityPolicyEnforcer listener)
+	public CSPNonceHeaderResponseDecorator(IHeaderResponse real, ContentSecurityPolicySettings listener)
 	{
 		super(real);
 

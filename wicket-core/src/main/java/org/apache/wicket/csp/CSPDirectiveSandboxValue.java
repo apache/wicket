@@ -30,9 +30,9 @@ public enum CSPDirectiveSandboxValue implements CSPRenderable
 	ALLOW_TOP_NAVIGATION("allow-top-navigation"),
 	EMPTY("");
 
-	private String value;
+	private final String value;
 
-	private CSPDirectiveSandboxValue(String value)
+	CSPDirectiveSandboxValue(String value)
 	{
 		this.value = value;
 	}
@@ -43,8 +43,8 @@ public enum CSPDirectiveSandboxValue implements CSPRenderable
 	}
 
 	@Override
-	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
-			IRequestHandler currentHandler)
+	public String render(ContentSecurityPolicySettings listener, RequestCycle cycle,
+	                     IRequestHandler currentHandler)
 	{
 		return value;
 	}

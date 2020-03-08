@@ -120,7 +120,7 @@ public enum CSPDirective
 
 	private String value;
 
-	private CSPDirective(String value)
+	CSPDirective(String value)
 	{
 		this.value = value;
 	}

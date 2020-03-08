@@ -20,7 +20,6 @@ import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.resource.CssUrlReplacer;
 import org.apache.wicket.settings.SecuritySettings;
@@ -64,10 +63,10 @@ public abstract class WicketExampleApplication extends WebApplication
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 		
 		getResourceSettings().setCssCompressor(new CssUrlReplacer());
-		getCsp().blocking().strict().reportBack()
-				.add(CSPDirective.STYLE_SRC,
+		getCspSettings().blocking().strict().reportBack()
+		                .add(CSPDirective.STYLE_SRC,
 						"https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
-				.add(CSPDirective.FONT_SRC, "https://maxcdn.bootstrapcdn.com");
+		                .add(CSPDirective.FONT_SRC, "https://maxcdn.bootstrapcdn.com");
 		
 		getRequestCycleListeners().add(new IRequestCycleListener()
 		{

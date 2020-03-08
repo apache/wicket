@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.websocket;
 
-import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.websocket.charts.ChartWebSocketResource;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -66,7 +65,7 @@ public class JSR356Application extends WicketExampleApplication
 
 		// The websocket example loads JS from ajax.googleapis.com, which is not allowed by the CSP.
 		// This now serves as an example on how to disable CSP
-		getCsp().blocking().disabled();
+		getCspSettings().blocking().disabled();
 	}
 
     @Override

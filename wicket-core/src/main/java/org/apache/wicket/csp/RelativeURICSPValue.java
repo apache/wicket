@@ -30,7 +30,7 @@ import org.apache.wicket.util.lang.Args;
  */
 public class RelativeURICSPValue implements CSPRenderable
 {
-	private String relativeUri;
+	private final String relativeUri;
 
 	/**
 	 * Creates a new {@code RelativeURICSPValue} for the given relative URI.
@@ -45,8 +45,8 @@ public class RelativeURICSPValue implements CSPRenderable
 	}
 
 	@Override
-	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
-			IRequestHandler currentHandler)
+	public String render(ContentSecurityPolicySettings listener, RequestCycle cycle,
+	                     IRequestHandler currentHandler)
 	{
 		return cycle.getUrlRenderer().renderContextRelativeUrl(relativeUri);
 	}

@@ -41,7 +41,7 @@ import org.apache.wicket.core.request.mapper.ResourceMapper;
 import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.core.util.resource.ClassPathResourceFinder;
 import org.apache.wicket.csp.CSPHeaderConfiguration;
-import org.apache.wicket.csp.ContentSecurityPolicyEnforcer;
+import org.apache.wicket.csp.ContentSecurityPolicySettings;
 import org.apache.wicket.csp.ReportCSPViolationMapper;
 import org.apache.wicket.csp.CSPNonceHeaderResponseDecorator;
 import org.apache.wicket.markup.MarkupType;
@@ -149,7 +149,7 @@ public abstract class WebApplication extends Application
 	 */
 	private RuntimeConfigurationType configurationType;
 	
-	private ContentSecurityPolicyEnforcer cspEnforcer;
+	private ContentSecurityPolicySettings cspSettings;
 
 	/**
 	 * Covariant override for easy getting the current {@link WebApplication} without having to cast
@@ -750,12 +750,12 @@ public abstract class WebApplication extends Application
 
 		getResourceSettings().setFileCleaner(new FileCleaner());
 
-		cspEnforcer = newCspEnforcer();
-		getRequestCycleListeners().add(getCsp());
+		cspSettings = newCspEnforcer();
+		getRequestCycleListeners().add(getCspSettings());
 		getHeaderResponseDecorators()
-			.add(response -> new CSPNonceHeaderResponseDecorator(response, getCsp()));
-		mount(new ReportCSPViolationMapper(getCsp()));
-		getCsp().blocking().strict();
+			.add(response -> new CSPNonceHeaderResponseDecorator(response, getCspSettings()));
+		mount(new ReportCSPViolationMapper(getCspSettings()));
+		getCspSettings().blocking().strict();
 		
 		if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
 		{
@@ -765,7 +765,7 @@ public abstract class WebApplication extends Application
 			{
 				getResourceSettings().getResourceFinders().add(new Path(resourceFolder));
 			}
-			getCsp().blocking().reportBack();
+			getCspSettings().blocking().reportBack();
 		}
 		setPageRendererProvider(WebPageRenderer::new);
 		setSessionStoreProvider(HttpSessionStore::new);
@@ -1092,28 +1092,28 @@ public abstract class WebApplication extends Application
 	}
 	
 	/**
-	 * Builds the {@link ContentSecurityPolicyEnforcer} to be used for this application. Override
+	 * Builds the {@link ContentSecurityPolicySettings} to be used for this application. Override
 	 * this method to provider your own implementation.
 	 * 
 	 * @return The newly created CSP enforcer.
 	 */
-	protected ContentSecurityPolicyEnforcer newCspEnforcer()
+	protected ContentSecurityPolicySettings newCspEnforcer()
 	{
-		return new ContentSecurityPolicyEnforcer(this);
+		return new ContentSecurityPolicySettings(this);
 	}
 
 	/**
-	 * Returns the {@link ContentSecurityPolicyEnforcer} for this application. See
-	 * {@link ContentSecurityPolicyEnforcer} and {@link CSPHeaderConfiguration} for instructions on
+	 * Returns the {@link ContentSecurityPolicySettings} for this application. See
+	 * {@link ContentSecurityPolicySettings} and {@link CSPHeaderConfiguration} for instructions on
 	 * configuring the CSP for your specific needs.
 	 * 
-	 * @return The {@link ContentSecurityPolicyEnforcer} for this application.
-	 * @see ContentSecurityPolicyEnforcer
+	 * @return The {@link ContentSecurityPolicySettings} for this application.
+	 * @see ContentSecurityPolicySettings
 	 * @see CSPHeaderConfiguration
 	 */
-	public ContentSecurityPolicyEnforcer getCsp()
+	public ContentSecurityPolicySettings getCspSettings()
 	{
-		return cspEnforcer;
+		return cspSettings;
 	}
 
 	/**

@@ -34,15 +34,15 @@ public interface CSPRenderable
 	 * Renders the value that should be put in the CSP header.
 	 * 
 	 * @param listener
-	 *            The {@link ContentSecurityPolicyEnforcer} that renders this value.
+	 *            The {@link ContentSecurityPolicySettings} that renders this value.
 	 * @param cycle
 	 *            The current {@link RequestCycle}.
 	 * @param currentHandler
 	 *            The handler that is currently being evaluated or executed.
 	 * @return The rendered value.
 	 */
-	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
-			IRequestHandler currentHandler);
+	String render(ContentSecurityPolicySettings listener, RequestCycle cycle,
+	                     IRequestHandler currentHandler);
 	
 	/**
 	 * Checks if the {@code CSPRenderable} represents a valid value for a {@code -src} directive. By
@@ -51,7 +51,7 @@ public interface CSPRenderable
 	 * @throws IllegalStateException
 	 *             when this {@code CSPRenderable} represents an invalid value.
 	 */
-	public default void checkValidityForSrc()
+	default void checkValidityForSrc()
 	{
 	}
 }

@@ -30,7 +30,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public class FixedCSPValue implements CSPRenderable
 {
-	private String value;
+	private final String value;
 
 	/**
 	 * Creates a new {@code FixedCSPValue} for the given value.
@@ -48,8 +48,8 @@ public class FixedCSPValue implements CSPRenderable
 	}
 
 	@Override
-	public String render(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
-			IRequestHandler currentHandler)
+	public String render(ContentSecurityPolicySettings listener, RequestCycle cycle,
+	                     IRequestHandler currentHandler)
 	{
 		return value;
 	}

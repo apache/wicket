@@ -49,9 +49,9 @@ public class VideosApplication extends WicketExampleApplication
 			guard.addPattern("+*.mp4");
 		}
 		
-		getCsp().blocking()
-			.add(CSPDirective.MEDIA_SRC, CSPDirectiveSrcValue.SELF)
-			.add(CSPDirective.MEDIA_SRC, "https://w3c-test.org/media/movie_300.mp4");
+		getCspSettings().blocking()
+		                .add(CSPDirective.MEDIA_SRC, CSPDirectiveSrcValue.SELF)
+		                .add(CSPDirective.MEDIA_SRC, "https://w3c-test.org/media/movie_300.mp4");
 	}
 
 }

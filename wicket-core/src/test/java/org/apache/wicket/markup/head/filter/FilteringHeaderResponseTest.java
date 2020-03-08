@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
 
-import org.apache.wicket.csp.ContentSecurityPolicyEnforcer;
+import org.apache.wicket.csp.ContentSecurityPolicySettings;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.mock.MockApplication;
@@ -45,9 +45,9 @@ class FilteringHeaderResponseTest extends WicketTestCase
 		return new MockApplication()
 		{
 			@Override
-			protected ContentSecurityPolicyEnforcer newCspEnforcer()
+			protected ContentSecurityPolicySettings newCspEnforcer()
 			{
-				return new ContentSecurityPolicyEnforcer(this)
+				return new ContentSecurityPolicySettings(this)
 				{
 					@Override
 					public String getNonce(RequestCycle cycle, IRequestHandler currentHandler)
@@ -117,7 +117,7 @@ class FilteringHeaderResponseTest extends WicketTestCase
 	@Test
 	void nonce() throws Exception
 	{
-		tester.getApplication().getCsp().blocking().strict();
+		tester.getApplication().getCspSettings().blocking().strict();
 		executeTest(CspNoncePage.class, "CspNoncePageExpected.html");
 	}
 }

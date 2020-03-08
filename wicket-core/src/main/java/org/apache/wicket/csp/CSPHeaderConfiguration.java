@@ -56,17 +56,13 @@ public class CSPHeaderConfiguration
 {
 	public static final String CSP_VIOLATION_REPORTING_URI = "cspviolation";
 	
-	private Map<CSPDirective, List<CSPRenderable>> directives = new EnumMap<>(CSPDirective.class);
+	private final Map<CSPDirective, List<CSPRenderable>> directives = new EnumMap<>(CSPDirective.class);
 
 	private boolean addLegacyHeaders = false;
 	
 	private boolean nonceEnabled = false;
 	
 	private String reportUriMountPath = null;
-
-	public CSPHeaderConfiguration()
-	{
-	}
 
 	/**
 	 * Removes all directives from the CSP, returning an empty configuration.
@@ -301,7 +297,7 @@ public class CSPHeaderConfiguration
 		return this;
 	}
 
-	private CSPHeaderConfiguration doAddDirective(CSPDirective directive, CSPRenderable value)
+	private void doAddDirective(CSPDirective directive, CSPRenderable value)
 	{
 		// Add backwards compatible frame-src
 		// see http://caniuse.com/#feat=contentsecuritypolicy2
@@ -313,7 +309,6 @@ public class CSPHeaderConfiguration
 		List<CSPRenderable> values = directives.computeIfAbsent(directive, x -> new ArrayList<>());
 		directive.checkValueForDirective(value, values);
 		values.add(value);
-		return this;
 	}
 
 	/**
@@ -321,15 +316,15 @@ public class CSPHeaderConfiguration
 	 * in the form {@code "key1 value1a value1b; key2 value2a; key3 value3a value3b value3c"}.
 	 * 
 	 * @param listener
-	 *            The {@link ContentSecurityPolicyEnforcer} that renders the header.
+	 *            The {@link ContentSecurityPolicySettings} that renders the header.
 	 * @param cycle
 	 *            The current {@link RequestCycle}.
 	 * @param currentHandler
 	 *            The handler that is currently being evaluated or executed.
 	 * @return the rendered header.
 	 */
-	public String renderHeaderValue(ContentSecurityPolicyEnforcer listener, RequestCycle cycle,
-			IRequestHandler currentHandler)
+	public String renderHeaderValue(ContentSecurityPolicySettings listener, RequestCycle cycle,
+	                                IRequestHandler currentHandler)
 	{
 		return directives.entrySet()
 			.stream()

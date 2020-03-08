@@ -12,7 +12,7 @@ In developer mode, the CSP is extended with a reporting directive that reports v
 
 === Configuring the Content Security Policy
 
-The Content Security Policy is managed by the _ContentSecurityPolicyEnforcer_ that can be accessed via _WebApplication.getCSP()_. This class maintains two instances of _CSPHeaderConfiguration_, each of which contains the directives for the CSP HTTP headers _Content-Security-Policy_ and _Content-Security-Policy-Report-Only_. The first header defines the policies that are actually enforced by the browser, whereas the second header defines a policy for which the browser will only report violations. Note that violations can also be reported on the enforced policy and that reporting requires a _report-uri_ directive.
+The Content Security Policy is managed by the _ContentSecurityPolicyEnforcer_ that can be accessed via _WebApplication.getCspSettings()_. This class maintains two instances of _CSPHeaderConfiguration_, each of which contains the directives for the CSP HTTP headers _Content-Security-Policy_ and _Content-Security-Policy-Report-Only_. The first header defines the policies that are actually enforced by the browser, whereas the second header defines a policy for which the browser will only report violations. Note that violations can also be reported on the enforced policy and that reporting requires a _report-uri_ directive.
 
 For applications that cannot adhere to a CSP, the CSP can be disabled with the following call in your _Application_ class:
 
@@ -21,7 +21,7 @@ For applications that cannot adhere to a CSP, the CSP can be disabled with the f
   @Override
  protected void init() {
   super.init();
-  getCSP().blocking().disable();
+  getCspSettings().blocking().disable();
   // ...
  }
 ----
@@ -30,7 +30,7 @@ As mentioned before, Wicket uses a very strict CSP by default. This preset can b
 
 [source,java]
 ----
-  getCSP().blocking().strict();
+  getCspSettings().blocking().strict();
 ----
 
 A thrid preset is available that allows unsafe inline Javascript and styling and the use of unsafe _eval_. As can be inferred from the names, use of _unsafe_ is not recommended. It removes the most important protection offered by CSP. However, older applications may not be ready to apply a strict CSP. For those applications, _CSPHeaderConfiguration.unsafeInline()_ can be a starting point for the path to a strict CSP.
@@ -39,7 +39,7 @@ _CSPHeaderConfiguration_ defines several methods to tune the Content Security Po
 
 [source,java]
 ----
-  getCSP().blocking()
+  getCspSettings().blocking()
       .add(CSPDirective.IMG_SRC, "data:")
       .add(CSPDirective.FONT_SRC, "https://maxcdn.bootstrapcdn.com")
       .add(CSPDirective.STYLE_SRC,
