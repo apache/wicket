@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.wicket.core.util.lang.WicketObjects;
@@ -1263,6 +1264,20 @@ class MarkupContainerTest extends WicketTestCase
 			.filter(c -> c.getId().equals("field"))
 			.findFirst()
 			.isPresent());
+	}
+
+	// https://issues.apache.org/jira/browse/WICKET-6754
+	@Test
+	void streamChildrenNestedContainer() {
+		WebMarkupContainer wmc = new WebMarkupContainer("parent");
+		WebMarkupContainer wmc1 = new WebMarkupContainer("wmc1");
+		wmc.add(wmc1);
+		WebMarkupContainer wmc1_2= new WebMarkupContainer("wmc1_2");
+		wmc1.add(wmc1_2);
+		Label lbl2 = new Label("lbl2");
+		wmc.add(lbl2);
+		List l = wmc.streamChildren().map(Component::getId).collect(Collectors.toList());
+		assertEquals("[wmc1, wmc1_2, lbl2]", l.toString());
 	}
 
 	private static class HierarchyChangePage extends WebPage
