@@ -20,7 +20,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,6 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
-import org.apache.wicket.markup.head.PriorityHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
@@ -94,7 +92,7 @@ public abstract class PartialPageUpdate
 	/**
 	 * The component instances that will be rendered/replaced.
 	 */
-	protected final Map<String, Component> markupIdToComponent = new LinkedHashMap<String, Component>();
+	protected final Map<String, Component> markupIdToComponent = new LinkedHashMap<>();
 
 	/**
 	 * A flag that indicates that components cannot be added anymore.
@@ -116,7 +114,7 @@ public abstract class PartialPageUpdate
 
 	protected HtmlHeaderContainer header = null;
 	
-	private Component originalHeaderContainer  = null;
+	private Component originalHeaderContainer;
 
 	// whether a header contribution is being rendered
 	private boolean headerRendering = false;
@@ -213,12 +211,12 @@ public abstract class PartialPageUpdate
 	 *
 	 * @param response
 	 *      the response to write to
-	 * @param js
-	 *      the JavaScript to evaluate
+	 * @param scripts
+	 *      the JavaScripts to evaluate
 	 */
 	protected void writeEvaluations(final Response response, Collection<CharSequence> scripts)
 	{
-		if (scripts.size() > 0)
+		if (!scripts.isEmpty())
 		{
 			StringBuilder combinedScript = new StringBuilder(1024);
 			for (CharSequence script : scripts)
@@ -227,7 +225,7 @@ public abstract class PartialPageUpdate
 			}
 
 			StringResponse stringResponse = new StringResponse();
-			IHeaderResponse headerResponse = Application.get().decorateHeaderResponse(new HeaderResponse()
+			IHeaderResponse decoratedHeaderResponse = Application.get().decorateHeaderResponse(new HeaderResponse()
 			{
 				@Override
 				protected Response getRealResponse()
@@ -236,8 +234,8 @@ public abstract class PartialPageUpdate
 				}
 			});
 			
-			headerResponse.render(JavaScriptHeaderItem.forScript(combinedScript, null));
-			headerResponse.close();
+			decoratedHeaderResponse.render(JavaScriptHeaderItem.forScript(combinedScript, null));
+			decoratedHeaderResponse.close();
 			
 			writeHeaderContribution(response, stringResponse.getBuffer());
 		}
@@ -263,11 +261,8 @@ public abstract class PartialPageUpdate
 		try (FeedbackDelay delay = new FeedbackDelay(RequestCycle.get())) {
 			for (Component component : markupIdToComponent.values())
 			{
-				if (!containsAncestorFor(component))
-				{
-					if (prepareComponent(component)) {
-						toBeWritten.add(component);
-					}
+				if (!containsAncestorFor(component) && prepareComponent(component)) {
+					toBeWritten.add(component);
 				}
 			}
 
@@ -312,11 +307,11 @@ public abstract class PartialPageUpdate
 	 *
 	 * @param component
 	 *      the component to prepare
-	 * @return wether the component was prepared
+	 * @return whether the component was prepared
 	 */
 	protected boolean prepareComponent(Component component)
 	{
-		if (component.getRenderBodyOnly() == true)
+		if (component.getRenderBodyOnly())
 		{
 			throw new IllegalStateException(
 					"A partial update is not possible for a component that has renderBodyOnly enabled. Component: " +
@@ -326,8 +321,8 @@ public abstract class PartialPageUpdate
 		component.setOutputMarkupId(true);
 
 		// Initialize temporary variables
-		final Page page = component.findParent(Page.class);
-		if (page == null)
+		final Page parentPage = component.findParent(Page.class);
+		if (parentPage == null)
 		{
 			// dont throw an exception but just ignore this component, somehow
 			// it got removed from the page.
@@ -442,7 +437,6 @@ public abstract class PartialPageUpdate
 	 *      thrown when components no more can be added for replacement.
 	 */
 	public final void add(final Component component, final String markupId)
-			throws IllegalArgumentException, IllegalStateException
 	{
 		Args.notEmpty(markupId, "markupId");
 		Args.notNull(component, "component");
@@ -505,13 +499,9 @@ public abstract class PartialPageUpdate
 	 */
 	public void detach(IRequestCycle requestCycle)
 	{
-		Iterator<Component> iterator = markupIdToComponent.values().iterator();
-		while (iterator.hasNext())
-		{
-			final Component component = iterator.next();
+		for (final Component component : markupIdToComponent.values()) {
 			final Page parentPage = component.findParent(Page.class);
-			if (parentPage != null)
-			{
+			if (parentPage != null) {
 				parentPage.detach();
 				break;
 			}
@@ -544,7 +534,7 @@ public abstract class PartialPageUpdate
 	 */
 	public boolean containsPage()
 	{
-		return markupIdToComponent.values().contains(page);
+		return markupIdToComponent.containsValue(page);
 	}
 
 	/**
@@ -633,7 +623,7 @@ public abstract class PartialPageUpdate
 		/**
 		 * Constructor.
 		 *
-		 * @param update
+		 * @param pageUpdate
 		 *      the partial page update
 		 */
 		public PartialHtmlHeaderContainer(PartialPageUpdate pageUpdate)
