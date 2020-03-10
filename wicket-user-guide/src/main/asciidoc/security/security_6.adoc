@@ -12,7 +12,7 @@ In developer mode, the CSP is extended with a reporting directive that reports v
 
 === Configuring the Content Security Policy
 
-The Content Security Policy is managed by the _ContentSecurityPolicyEnforcer_ that can be accessed via _WebApplication.getCspSettings()_. This class maintains two instances of _CSPHeaderConfiguration_, each of which contains the directives for the CSP HTTP headers _Content-Security-Policy_ and _Content-Security-Policy-Report-Only_. The first header defines the policies that are actually enforced by the browser, whereas the second header defines a policy for which the browser will only report violations. Note that violations can also be reported on the enforced policy and that reporting requires a _report-uri_ directive.
+The Content Security Policy is managed by the _ContentSecurityPolicySettings_ that can be accessed via _WebApplication.getCspSettings()_. This class maintains two instances of _CSPHeaderConfiguration_, each of which contains the directives for the CSP HTTP headers _Content-Security-Policy_ and _Content-Security-Policy-Report-Only_. The first header defines the policies that are actually enforced by the browser, whereas the second header defines a policy for which the browser will only report violations. Note that violations can also be reported on the enforced policy and that reporting requires a _report-uri_ directive.
 
 For applications that cannot adhere to a CSP, the CSP can be disabled with the following call in your _Application_ class:
 
