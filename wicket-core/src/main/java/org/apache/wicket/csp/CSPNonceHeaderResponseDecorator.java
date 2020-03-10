@@ -29,19 +29,19 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public class CSPNonceHeaderResponseDecorator extends DecoratingHeaderResponse
 {
-	private final ContentSecurityPolicySettings listener;
+	private final ContentSecurityPolicySettings settings;
 
-	public CSPNonceHeaderResponseDecorator(IHeaderResponse real, ContentSecurityPolicySettings listener)
+	public CSPNonceHeaderResponseDecorator(IHeaderResponse real, ContentSecurityPolicySettings settings)
 	{
 		super(real);
 
-		this.listener = listener;
+		this.settings = settings;
 	}
 
 	@Override
 	public void render(HeaderItem item)
 	{
-		if (listener.isNonceEnabled())
+		if (settings.isNonceEnabled())
 		{
 			HeaderItem checkitem = item;
 			while (checkitem instanceof IWrappedHeaderItem)
@@ -51,7 +51,7 @@ public class CSPNonceHeaderResponseDecorator extends DecoratingHeaderResponse
 
 			if (checkitem instanceof AbstractCspHeaderItem)
 			{
-				((AbstractCspHeaderItem) checkitem).setNonce(listener.getNonce(RequestCycle.get(),
+				((AbstractCspHeaderItem) checkitem).setNonce(settings.getNonce(RequestCycle.get(),
 					RequestCycle.get().getActiveRequestHandler()));
 			}
 		}

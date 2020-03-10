@@ -44,11 +44,11 @@ public class ReportCSPViolationMapper extends AbstractMapper
 
 	private static final Logger log = LoggerFactory.getLogger(ReportCSPViolationMapper.class);
 
-	private final ContentSecurityPolicySettings csp;
+	private final ContentSecurityPolicySettings settings;
 
-	public ReportCSPViolationMapper(ContentSecurityPolicySettings csp)
+	public ReportCSPViolationMapper(ContentSecurityPolicySettings settings)
 	{
-		this.csp = csp;
+		this.settings = settings;
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class ReportCSPViolationMapper extends AbstractMapper
 			{
 				return false;
 			}
-			for (CSPHeaderConfiguration curConfig : csp.getConfiguration().values())
+			for (CSPHeaderConfiguration curConfig : settings.getConfiguration().values())
 			{
 				String mountPath = curConfig.getReportUriMountPath();
 				if (mountPath != null

@@ -139,7 +139,7 @@ public class ConversationPropagator implements IRequestCycleListener
 			return;
 		}
 
-		if (propagation.propagatesVia(handler, getPage(handler)))
+		if (propagation.propagatesVia(handler, IPageRequestHandler.getPage(handler)))
 		{
 			logger.debug(
 					"Propagating non-transient conversation {} via page parameters of handler {}",
@@ -173,7 +173,7 @@ public class ConversationPropagator implements IRequestCycleListener
 			return;
 		}
 
-		if (propagation.propagatesVia(handler, getPage(handler)))
+		if (propagation.propagatesVia(handler, IPageRequestHandler.getPage(handler)))
 		{
 			logger.debug("Propagating non-transient conversation {} via url", conversation.getId());
 			url.setQueryParameter(CID, conversation.getId());
@@ -231,7 +231,7 @@ public class ConversationPropagator implements IRequestCycleListener
 
 	public static void markPageWithConversationId(IRequestHandler handler, String cid)
 	{
-		Page page = getPage(handler);
+		Page page = IPageRequestHandler.getPage(handler);
 		if (page != null)
 		{
 			page.setMetaData(CONVERSATION_ID_KEY, cid);
@@ -246,31 +246,6 @@ public class ConversationPropagator implements IRequestCycleListener
 	public static void removeConversationIdFromPage(Page page)
 	{
 		page.setMetaData(CONVERSATION_ID_KEY, null);
-	}
-
-	/**
-	 * Resolves a page instance from the request handler iff the page instance
-	 * is already created
-	 * 
-	 * @param handler
-	 * @return page or {@code null} if none
-	 */
-	public static Page getPage(IRequestHandler handler)
-	{
-		while (handler instanceof IRequestHandlerDelegate)
-		{
-			handler = ((IRequestHandlerDelegate)handler).getDelegateHandler();
-		}
-
-		if (handler instanceof IPageRequestHandler)
-		{
-			IPageRequestHandler pageHandler = (IPageRequestHandler)handler;
-			if (pageHandler.isPageInstanceCreated())
-			{
-				return (Page)pageHandler.getPage();
-			}
-		}
-		return null;
 	}
 
 	/**

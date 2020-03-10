@@ -75,6 +75,6 @@ public class MockApplication extends WebApplication
 		// and isn't needed, because the markup isn't rendered by a browser
 		getResourceSettings().disableWicketCoreCSS();
 		// disable nonces, CSP is not needed anyway during tests
-		getCspSettings().blocking().disabled();
+		getContentSecurityPolicySettings().blocking().disabled();
 	}
 }

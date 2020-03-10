@@ -315,7 +315,7 @@ public class CSPHeaderConfiguration
 	 * Renders this {@code CSPHeaderConfiguration} into an HTTP header. The returned String will be
 	 * in the form {@code "key1 value1a value1b; key2 value2a; key3 value3a value3b value3c"}.
 	 * 
-	 * @param listener
+	 * @param settings
 	 *            The {@link ContentSecurityPolicySettings} that renders the header.
 	 * @param cycle
 	 *            The current {@link RequestCycle}.
@@ -323,7 +323,7 @@ public class CSPHeaderConfiguration
 	 *            The handler that is currently being evaluated or executed.
 	 * @return the rendered header.
 	 */
-	public String renderHeaderValue(ContentSecurityPolicySettings listener, RequestCycle cycle,
+	public String renderHeaderValue(ContentSecurityPolicySettings settings, RequestCycle cycle,
 	                                IRequestHandler currentHandler)
 	{
 		return directives.entrySet()
@@ -331,7 +331,7 @@ public class CSPHeaderConfiguration
 			.map(e -> e.getKey().getValue() + " "
 				+ e.getValue()
 					.stream()
-					.map(r -> r.render(listener, cycle, currentHandler))
+					.map(r -> r.render(settings, cycle, currentHandler))
 					.collect(Collectors.joining(" ")))
 			.collect(Collectors.joining("; "));
 	}

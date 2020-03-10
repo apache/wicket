@@ -1303,7 +1303,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	/**
 	 *
 	 */
-	private void checkSettingsAvailable()
+	protected void checkSettingsAvailable()
 	{
 		if (!settingsAccessible)
 		{

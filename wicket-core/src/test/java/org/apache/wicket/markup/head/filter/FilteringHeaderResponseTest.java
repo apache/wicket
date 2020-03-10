@@ -45,7 +45,7 @@ class FilteringHeaderResponseTest extends WicketTestCase
 		return new MockApplication()
 		{
 			@Override
-			protected ContentSecurityPolicySettings newCspEnforcer()
+			protected ContentSecurityPolicySettings newContentSecurityPolicySettings()
 			{
 				return new ContentSecurityPolicySettings(this)
 				{
@@ -117,7 +117,7 @@ class FilteringHeaderResponseTest extends WicketTestCase
 	@Test
 	void nonce() throws Exception
 	{
-		tester.getApplication().getCspSettings().blocking().strict();
+		tester.getApplication().getContentSecurityPolicySettings().blocking().strict();
 		executeTest(CspNoncePage.class, "CspNoncePageExpected.html");
 	}
 }

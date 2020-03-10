@@ -43,7 +43,7 @@ public enum CSPDirectiveSandboxValue implements CSPRenderable
 	}
 
 	@Override
-	public String render(ContentSecurityPolicySettings listener, RequestCycle cycle,
+	public String render(ContentSecurityPolicySettings settings, RequestCycle cycle,
 	                     IRequestHandler currentHandler)
 	{
 		return value;

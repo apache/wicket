@@ -24,32 +24,25 @@ import java.util.function.Predicate;
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
-import org.apache.wicket.core.request.handler.BufferedResponseRequestHandler;
 import org.apache.wicket.core.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestHandlerDelegate;
-import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * An {@link IRequestCycleListener} that adds {@code Content-Security-Policy} and/or
- * {@code Content-Security-Policy-Report-Only} headers based on the supplied configuration.
- *
  * Build the CSP configuration like this:
  * 
  * <pre>
  * {@code
- *  myApplication.getCspSettings().blocking().clear()
+ *  myApplication.getContentSecuritySettings().blocking().clear()
  *      .add(CSPDirective.DEFAULT_SRC, CSPDirectiveSrcValue.NONE)
  *      .add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF)
  *      .add(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)
  *      .add(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF));
  *
- *  myApplication.getCspSettings().reporting().strict();
+ *  myApplication.getContentSecuritySettings().reporting().strict();
  * 	}
  * </pre>
  * 
@@ -62,7 +55,7 @@ import org.apache.wicket.util.lang.Args;
  * @author Sven Haster
  * @author Emond Papegaaij
  */
-public class ContentSecurityPolicySettings implements IRequestCycleListener
+public class ContentSecurityPolicySettings
 {
 	// The number of bytes to use for a nonce, 12 will result in a 16 char nonce.
 	private static final int NONCE_LENGTH = 12;
@@ -73,9 +66,10 @@ public class ContentSecurityPolicySettings implements IRequestCycleListener
 	};
 
 	private final Application application;
-	
-	private final Map<CSPHeaderMode, CSPHeaderConfiguration> configs = new EnumMap<>(CSPHeaderMode.class);
-	
+
+	private final Map<CSPHeaderMode, CSPHeaderConfiguration> configs = new EnumMap<>(
+		CSPHeaderMode.class);
+
 	private Predicate<IPageClassRequestHandler> protectedPageFilter = handler -> true;
 
 	public ContentSecurityPolicySettings(Application application)
@@ -90,9 +84,10 @@ public class ContentSecurityPolicySettings implements IRequestCycleListener
 
 	public CSPHeaderConfiguration reporting()
 	{
-		return configs.computeIfAbsent(CSPHeaderMode.REPORT_ONLY, x -> new CSPHeaderConfiguration());
+		return configs.computeIfAbsent(CSPHeaderMode.REPORT_ONLY,
+			x -> new CSPHeaderConfiguration());
 	}
-	
+
 	/**
 	 * Sets the predicate that determines which requests must be protected by the CSP. When the
 	 * predicate evaluates to false, the request for the page will not be protected.
@@ -101,60 +96,27 @@ public class ContentSecurityPolicySettings implements IRequestCycleListener
 	 *            The new filter, must not be null.
 	 * @return {@code this} for chaining.
 	 */
-	public ContentSecurityPolicySettings
-			setProtectedPageFilter(Predicate<IPageClassRequestHandler> protectedPageFilter)
+	public ContentSecurityPolicySettings setProtectedPageFilter(
+		Predicate<IPageClassRequestHandler> protectedPageFilter)
 	{
 		Args.notNull(protectedPageFilter, "protectedPageFilter");
 		this.protectedPageFilter = protectedPageFilter;
 		return this;
 	}
 
-	protected boolean mustProtect(IRequestHandler handler)
-	{
-		if (handler instanceof IRequestHandlerDelegate)
-		{
-			return mustProtect(((IRequestHandlerDelegate) handler).getDelegateHandler());
-		}
-		if (handler instanceof IPageClassRequestHandler)
-		{
-			return mustProtectPageRequest((IPageClassRequestHandler) handler);
-		}
-		return !(handler instanceof BufferedResponseRequestHandler);
-	}
-
+	/**
+	 * Should any request to the given page be protected by CSP.
+	 *
+	 * @param handler
+	 * @return <code>true</code> by default
+	 * 
+	 * @see #setProtectedPageFilter(Predicate)
+	 */
 	protected boolean mustProtectPageRequest(IPageClassRequestHandler handler)
 	{
 		return protectedPageFilter.test(handler);
 	}
 
-	@Override
-	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
-	{
-		if (!mustProtect(handler) || !(cycle.getResponse() instanceof WebResponse))
-		{
-			return;
-		}
-
-		WebResponse webResponse = (WebResponse) cycle.getResponse();
-		if (!webResponse.isHeaderSupported())
-		{
-			return;
-		}
-
-		configs.entrySet().stream().
-				filter(entry -> entry.getValue().isSet())
-		       .forEach(entry -> {
-					CSPHeaderMode mode = entry.getKey();
-					CSPHeaderConfiguration config = entry.getValue();
-					String headerValue = config.renderHeaderValue(this, cycle, handler);
-					webResponse.setHeader(mode.getHeader(), headerValue);
-					if (config.isAddLegacyHeaders())
-					{
-						webResponse.setHeader(mode.getLegacyHeader(), headerValue);
-					}
-				});
-	}
-	
 	/**
 	 * Returns true if any of the headers includes a directive with a nonce.
 	 * 
@@ -167,9 +129,9 @@ public class ContentSecurityPolicySettings implements IRequestCycleListener
 
 	public String getNonce(RequestCycle cycle, IRequestHandler handler)
 	{
-		String nonce = cycle.getMetaData(NONCE_KEY);
-		Page currentPage = getPage(handler);
+		Page currentPage = IPageRequestHandler.getPage(handler);
 
+		String nonce = cycle.getMetaData(NONCE_KEY);
 		if (nonce == null)
 		{
 			if (currentPage != null)
@@ -178,7 +140,7 @@ public class ContentSecurityPolicySettings implements IRequestCycleListener
 			}
 			if (nonce == null)
 			{
-				nonce = getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
+				nonce = createNonce();
 			}
 			cycle.setMetaData(NONCE_KEY, nonce);
 		}
@@ -187,38 +149,15 @@ public class ContentSecurityPolicySettings implements IRequestCycleListener
 		{
 			currentPage.setMetaData(NONCE_KEY, nonce);
 		}
+
 		return nonce;
 	}
 
-	/**
-	 * Resolves a page instance from the request handler iff the page instance is already created
-	 * 
-	 * @param handler The request handler
-	 * @return page or {@code null} if none
-	 */
-	public static Page getPage(IRequestHandler handler)
+	protected String createNonce()
 	{
-		while (handler instanceof IRequestHandlerDelegate)
-		{
-			handler = ((IRequestHandlerDelegate) handler).getDelegateHandler();
-		}
-
-		if (handler instanceof IPageRequestHandler)
-		{
-			IPageRequestHandler pageHandler = (IPageRequestHandler) handler;
-			if (pageHandler.isPageInstanceCreated())
-			{
-				return (Page) pageHandler.getPage();
-			}
-		}
-		return null;
+		return application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
 	}
 
-	private SecuritySettings getSecuritySettings()
-	{
-		return application.getSecuritySettings();
-	}
-	
 	/**
 	 * Returns the CSP configuration per {@link CSPHeaderMode}.
 	 * 
@@ -227,5 +166,19 @@ public class ContentSecurityPolicySettings implements IRequestCycleListener
 	public Map<CSPHeaderMode, CSPHeaderConfiguration> getConfiguration()
 	{
 		return Collections.unmodifiableMap(configs);
+	}
+
+	/**
+	 * Enforce CSP settings on an application.
+	 * 
+	 * @param application
+	 *            application
+	 */
+	public void enforce(WebApplication application)
+	{
+		application.getRequestCycleListeners().add(new CSPRequestCycleListener(this));
+		application.getHeaderResponseDecorators()
+			.add(response -> new CSPNonceHeaderResponseDecorator(response, this));
+		application.mount(new ReportCSPViolationMapper(this));
 	}
 }

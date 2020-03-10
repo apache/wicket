@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.component.IRequestablePage;
 
 /**
@@ -54,4 +57,28 @@ public interface IPageRequestHandler extends IPageClassRequestHandler
 	 * @see IRequestablePage#getRenderCount()
 	 */
 	Integer getRenderCount();
+	
+	/**
+	 * Resolves a page instance from the request handler iff the page instance is already created
+	 * 
+	 * @param handler The request handler
+	 * @return page or {@code null} if none
+	 */
+	public static Page getPage(IRequestHandler handler)
+	{
+		while (handler instanceof IRequestHandlerDelegate)
+		{
+			handler = ((IRequestHandlerDelegate) handler).getDelegateHandler();
+		}
+
+		if (handler instanceof IPageRequestHandler)
+		{
+			IPageRequestHandler pageHandler = (IPageRequestHandler) handler;
+			if (pageHandler.isPageInstanceCreated())
+			{
+				return (Page) pageHandler.getPage();
+			}
+		}
+		return null;
+	}
 }

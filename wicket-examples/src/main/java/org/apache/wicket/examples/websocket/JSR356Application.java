@@ -65,7 +65,7 @@ public class JSR356Application extends WicketExampleApplication
 
 		// The websocket example loads JS from ajax.googleapis.com, which is not allowed by the CSP.
 		// This now serves as an example on how to disable CSP
-		getCspSettings().blocking().disabled();
+		getContentSecurityPolicySettings().blocking().disabled();
 	}
 
     @Override

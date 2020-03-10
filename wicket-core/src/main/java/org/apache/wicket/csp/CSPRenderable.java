@@ -33,7 +33,7 @@ public interface CSPRenderable
 	/**
 	 * Renders the value that should be put in the CSP header.
 	 * 
-	 * @param listener
+	 * @param settings
 	 *            The {@link ContentSecurityPolicySettings} that renders this value.
 	 * @param cycle
 	 *            The current {@link RequestCycle}.
@@ -41,7 +41,7 @@ public interface CSPRenderable
 	 *            The handler that is currently being evaluated or executed.
 	 * @return The rendered value.
 	 */
-	String render(ContentSecurityPolicySettings listener, RequestCycle cycle,
+	String render(ContentSecurityPolicySettings settings, RequestCycle cycle,
 	                     IRequestHandler currentHandler);
 	
 	/**

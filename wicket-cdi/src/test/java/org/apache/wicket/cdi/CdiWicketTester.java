@@ -26,6 +26,7 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.IRequestHandler;
@@ -79,7 +80,7 @@ public class CdiWicketTester extends WicketTester
 	{
 		Url ret = super.urlFor(handler);
 		final CdiConfiguration configuration = CdiConfiguration.get(getApplication());
-		Page page = ConversationPropagator.getPage(handler);
+		Page page = IPageRequestHandler.getPage(handler);
 		if (configuration.getPropagation().propagatesVia(handler, page))
 		{
 			if (page != null)

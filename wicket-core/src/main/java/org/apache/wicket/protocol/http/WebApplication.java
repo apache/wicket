@@ -74,6 +74,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
 import org.apache.wicket.session.HttpSessionStore;
+import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.apache.wicket.util.crypt.CharEncoding;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IFileCleaner;
@@ -750,23 +751,6 @@ public abstract class WebApplication extends Application
 
 		getResourceSettings().setFileCleaner(new FileCleaner());
 
-		cspSettings = newCspEnforcer();
-		getRequestCycleListeners().add(getCspSettings());
-		getHeaderResponseDecorators()
-			.add(response -> new CSPNonceHeaderResponseDecorator(response, getCspSettings()));
-		mount(new ReportCSPViolationMapper(getCspSettings()));
-		getCspSettings().blocking().strict();
-		
-		if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
-		{
-			// Add optional sourceFolder for resources.
-			String resourceFolder = getInitParameter("sourceFolder");
-			if (resourceFolder != null)
-			{
-				getResourceSettings().getResourceFinders().add(new Path(resourceFolder));
-			}
-			getCspSettings().blocking().reportBack();
-		}
 		setPageRendererProvider(WebPageRenderer::new);
 		setSessionStoreProvider(HttpSessionStore::new);
 		setAjaxRequestTargetProvider(AjaxRequestHandler::new);
@@ -779,8 +763,21 @@ public abstract class WebApplication extends Application
 			});
 		});
 
+		getContentSecurityPolicySettings().enforce(this);
+		
 		// Configure the app.
 		configure();
+		if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
+		{
+			// Add optional sourceFolder for resources.
+			String resourceFolder = getInitParameter("sourceFolder");
+			if (resourceFolder != null)
+			{
+				getResourceSettings().getResourceFinders().add(new Path(resourceFolder));
+			}
+			getContentSecurityPolicySettings().blocking().reportBack();
+		}
+		getContentSecurityPolicySettings().blocking().strict();
 	}
 
 	/**
@@ -1097,7 +1094,7 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @return The newly created CSP enforcer.
 	 */
-	protected ContentSecurityPolicySettings newCspEnforcer()
+	protected ContentSecurityPolicySettings newContentSecurityPolicySettings()
 	{
 		return new ContentSecurityPolicySettings(this);
 	}
@@ -1111,8 +1108,14 @@ public abstract class WebApplication extends Application
 	 * @see ContentSecurityPolicySettings
 	 * @see CSPHeaderConfiguration
 	 */
-	public ContentSecurityPolicySettings getCspSettings()
+	public ContentSecurityPolicySettings getContentSecurityPolicySettings()
 	{
+		checkSettingsAvailable();
+
+		if (cspSettings == null)
+		{
+			cspSettings = newContentSecurityPolicySettings();
+		}
 		return cspSettings;
 	}
 }

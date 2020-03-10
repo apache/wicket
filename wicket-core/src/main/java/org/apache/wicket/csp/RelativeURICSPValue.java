@@ -45,7 +45,7 @@ public class RelativeURICSPValue implements CSPRenderable
 	}
 
 	@Override
-	public String render(ContentSecurityPolicySettings listener, RequestCycle cycle,
+	public String render(ContentSecurityPolicySettings settings, RequestCycle cycle,
 	                     IRequestHandler currentHandler)
 	{
 		return cycle.getUrlRenderer().renderContextRelativeUrl(relativeUri);
