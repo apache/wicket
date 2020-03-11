@@ -1115,19 +1115,4 @@ public abstract class WebApplication extends Application
 	{
 		return cspSettings;
 	}
-
-	/**
-	 * If true, auto label css classes such as {@code error} and {@code required} will be updated
-	 * after form component processing during an ajax request. This allows auto labels to correctly
-	 * reflect the state of the form component even if they are not part of the ajax markup update.
-	 * 
-	 * TODO in wicket-7 this should move into a settings object. cannot move in 6.x because it
-	 * requires a change to a setting interface.
-	 * 
-	 * @return {@code true} iff enabled
-	 */
-	public boolean getUpdateAutoLabelsOnAjaxRequests()
-	{
-		return true;
-	}
 }
