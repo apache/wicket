@@ -57,8 +57,8 @@ import org.apache.wicket.util.lang.Args;
  */
 public class ContentSecurityPolicySettings
 {
-	// The number of bytes to use for a nonce, 12 will result in a 16 char nonce.
-	private static final int NONCE_LENGTH = 12;
+	// The number of bytes to use for a nonce, 18 will result in a 24 char nonce.
+	private static final int NONCE_LENGTH = 18;
 
 	public static final MetaDataKey<String> NONCE_KEY = new MetaDataKey<>()
 	{
