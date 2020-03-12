@@ -41,7 +41,7 @@ public class ImagesApplication extends WicketExampleApplication
 		super.init();
 
 		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
-		getContentSecurityPolicySettings().blocking().add(CSPDirective.IMG_SRC, "data:");
+		getCspSettings().blocking().add(CSPDirective.IMG_SRC, "data:");
 	}
 
 }

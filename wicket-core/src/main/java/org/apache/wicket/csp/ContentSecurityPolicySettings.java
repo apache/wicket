@@ -36,13 +36,13 @@ import org.apache.wicket.util.lang.Args;
  * 
  * <pre>
  * {@code
- *  myApplication.getContentSecuritySettings().blocking().clear()
+ *  myApplication.getCspSettings().blocking().clear()
  *      .add(CSPDirective.DEFAULT_SRC, CSPDirectiveSrcValue.NONE)
  *      .add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF)
  *      .add(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)
  *      .add(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF));
  *
- *  myApplication.getContentSecuritySettings().reporting().strict();
+ *  myApplication.getCspSettings().reporting().strict();
  * 	}
  * </pre>
  * 

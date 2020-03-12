@@ -54,7 +54,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testNullSrcInputIsRejected()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(DEFAULT_SRC, (String) null);
 		});
@@ -63,7 +63,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testEmptySrcInputIsRejected()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(DEFAULT_SRC, "");
 		});
@@ -76,7 +76,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testInvalidSrcInputIsRejected()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(DEFAULT_SRC, "abc?^()-_\'xyz");
 		});
@@ -89,7 +89,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testMultipleSrcInputWithNoneIsRejected1()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(DEFAULT_SRC, SELF, NONE);
 		});
@@ -102,7 +102,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testMultipleSrcInputWithNoneIsRejected2()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(DEFAULT_SRC, NONE, SELF);
 		});
@@ -115,7 +115,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testMultipleSrcInputWithStarIsRejected1()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(DEFAULT_SRC, SELF);
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(DEFAULT_SRC, WILDCARD);
@@ -129,7 +129,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testMultipleSrcInputWithStarIsRejected2()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(DEFAULT_SRC, WILDCARD);
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(DEFAULT_SRC, SELF);
@@ -139,7 +139,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testWrongSrcInputIsRejected()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(DEFAULT_SRC, ALLOW_FORMS);
 		});
@@ -148,7 +148,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testWrongSandboxInputIsRejected()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(SANDBOX, SELF);
 		});
@@ -157,7 +157,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testNullSandboxInputIsRejected()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(SANDBOX, (String) null);
 		});
@@ -166,14 +166,14 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testEmptySandboxInputIsAccepted()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(SANDBOX, CSPDirectiveSandboxValue.EMPTY);
 	}
 
 	@Test
 	public void testInvalidSandboxInputIsRejected()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(SANDBOX, "abcxyz");
 		});
@@ -182,7 +182,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testMultipleSandboxInputWithEmptyStringIsRejected1()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(SANDBOX, ALLOW_FORMS);
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(SANDBOX, EMPTY);
@@ -192,7 +192,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testMultipleSandboxInputWithEmptyStringIsRejected2()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(SANDBOX, EMPTY);
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(SANDBOX, ALLOW_FORMS);
@@ -202,7 +202,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testNullReportUriInputIsRejected()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(REPORT_URI, (String) null);
 		});
@@ -211,7 +211,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testEmptyReportUriInputIsRejected()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(REPORT_URI, "");
 		});
@@ -220,7 +220,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testInvalidReportUriInputIsRejected()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			settings.blocking().add(REPORT_URI, "abc?^()-_\'xyz");
 		});
@@ -229,7 +229,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testAllCSPSrcDefaultEnumsAreSetCorrectly() throws NoSuchAlgorithmException
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 
 		final int cspDirectiveCount = CSPDirective.values().length;
 		final int cspDirectiveSrcValueCount = CSPDirectiveSrcValue.values().length;
@@ -258,7 +258,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testCSPReportUriDirectiveSetCorrectly()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(REPORT_URI, "http://report.example.com");
 		settings.reporting().add(REPORT_URI, "/example-report-uri");
 
@@ -273,7 +273,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testCSPSandboxDirectiveSetCorrectly()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		final int cspSandboxDirectiveValueCount = CSPDirectiveSandboxValue.values().length;
 		for (int i = 0; i < cspSandboxDirectiveValueCount; i++)
 		{
@@ -300,7 +300,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void testChildSrcDirectiveAlsoSetsFrameSrcDirective()
 	{
-		ContentSecurityPolicySettings settings = tester.getApplication().getContentSecurityPolicySettings();
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(CHILD_SRC, SELF);
 		settings.reporting().add(CHILD_SRC, SELF);
 		List<String> headerErrors = checkHeaders();

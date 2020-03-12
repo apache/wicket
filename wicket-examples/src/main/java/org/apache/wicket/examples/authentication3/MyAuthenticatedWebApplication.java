@@ -54,7 +54,7 @@ public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 		super.init();
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 
-		getContentSecurityPolicySettings().blocking()
+		getCspSettings().blocking()
 		                .strict()
 		                .reportBack()
 		                .add(CSPDirective.STYLE_SRC,

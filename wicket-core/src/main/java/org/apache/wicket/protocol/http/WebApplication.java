@@ -18,14 +18,17 @@ package org.apache.wicket.protocol.http;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.function.Function;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
@@ -42,8 +45,6 @@ import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.core.util.resource.ClassPathResourceFinder;
 import org.apache.wicket.csp.CSPHeaderConfiguration;
 import org.apache.wicket.csp.ContentSecurityPolicySettings;
-import org.apache.wicket.csp.ReportCSPViolationMapper;
-import org.apache.wicket.csp.CSPNonceHeaderResponseDecorator;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -74,7 +75,6 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
 import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.apache.wicket.util.crypt.CharEncoding;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IFileCleaner;
@@ -82,7 +82,6 @@ import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.Strings;
-import java.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -763,7 +762,7 @@ public abstract class WebApplication extends Application
 			});
 		});
 
-		getContentSecurityPolicySettings().enforce(this);
+		getCspSettings().enforce(this);
 		
 		// Configure the app.
 		configure();
@@ -775,9 +774,9 @@ public abstract class WebApplication extends Application
 			{
 				getResourceSettings().getResourceFinders().add(new Path(resourceFolder));
 			}
-			getContentSecurityPolicySettings().blocking().reportBack();
+			getCspSettings().blocking().reportBack();
 		}
-		getContentSecurityPolicySettings().blocking().strict();
+		getCspSettings().blocking().strict();
 	}
 
 	/**
@@ -1092,9 +1091,9 @@ public abstract class WebApplication extends Application
 	 * Builds the {@link ContentSecurityPolicySettings} to be used for this application. Override
 	 * this method to provider your own implementation.
 	 * 
-	 * @return The newly created CSP enforcer.
+	 * @return The newly created CSP settings.
 	 */
-	protected ContentSecurityPolicySettings newContentSecurityPolicySettings()
+	protected ContentSecurityPolicySettings newCspSettings()
 	{
 		return new ContentSecurityPolicySettings(this);
 	}
@@ -1108,13 +1107,13 @@ public abstract class WebApplication extends Application
 	 * @see ContentSecurityPolicySettings
 	 * @see CSPHeaderConfiguration
 	 */
-	public ContentSecurityPolicySettings getContentSecurityPolicySettings()
+	public ContentSecurityPolicySettings getCspSettings()
 	{
 		checkSettingsAvailable();
 
 		if (cspSettings == null)
 		{
-			cspSettings = newContentSecurityPolicySettings();
+			cspSettings = newCspSettings();
 		}
 		return cspSettings;
 	}
