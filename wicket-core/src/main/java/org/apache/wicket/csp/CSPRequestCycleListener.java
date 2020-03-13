@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.csp;
 
-import org.apache.wicket.core.request.handler.BufferedResponseRequestHandler;
 import org.apache.wicket.core.request.handler.IPageClassRequestHandler;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
@@ -81,11 +81,11 @@ public class CSPRequestCycleListener implements IRequestCycleListener
 		{
 			return mustProtect(((IRequestHandlerDelegate)handler).getDelegateHandler());
 		}
-		if (handler instanceof IPageClassRequestHandler)
+		if (handler instanceof RenderPageRequestHandler)
 		{
-			return settings.mustProtectPageRequest((IPageClassRequestHandler)handler);
+			return settings.mustProtectPageRequest((RenderPageRequestHandler)handler);
 		}
-		return !(handler instanceof BufferedResponseRequestHandler);
+		return false;
 	}
 
 }
