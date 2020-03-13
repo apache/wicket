@@ -42,6 +42,9 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final String ERROR_CSS_CLASS_KEY = CssUtils
+		.key(FormComponentFeedbackBorder.class, "error");
+
 	/** Visible property cache. */
 	private boolean visible;
 
@@ -72,13 +75,12 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 		{
 			return visible;
 		}
-		
+
 		@Override
 		protected void onComponentTag(ComponentTag tag)
 		{
 			super.onComponentTag(tag);
-			tag.put("class",
-				getString(CssUtils.key(FormComponentFeedbackBorder.class, "error-indicator")));
+			tag.put("class", getString(ERROR_CSS_CLASS_KEY));
 		}
 	}
 

@@ -37,6 +37,9 @@ import org.apache.wicket.markup.html.panel.Panel;
  */
 public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 {
+	public static final String ERROR_CSS_CLASS_KEY = CssUtils
+		.key(FormComponentFeedbackIndicator.class, "error");
+
 	private static final long serialVersionUID = 1L;
 
 	/** The message filter for this indicator component */
@@ -74,12 +77,11 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
-				tag.put("class", getString(
-					CssUtils.key(FormComponentFeedbackIndicator.class, "error-indicator")));
+				tag.put("class", getString(ERROR_CSS_CLASS_KEY));
 			}
 		});
 	}
-	
+
 	/**
 	 * Set the component's visibility according to the existence (or not) of feedback messages
 	 */
@@ -88,8 +90,7 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	{
 		super.onConfigure();
 		// Get the messages for the current page
-		setVisible(new FeedbackCollector(getPage()).collect(getFeedbackMessageFilter())
-			.size() > 0);
+		setVisible(new FeedbackCollector(getPage()).collect(getFeedbackMessageFilter()).size() > 0);
 	}
 
 	/**
