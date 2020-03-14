@@ -18,6 +18,7 @@ package org.apache.wicket.core.util.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -119,9 +120,16 @@ public class UrlResourceStream extends AbstractResourceStream
 				streamData.connection = url.openConnection();
 				streamData.contentLength = streamData.connection.getContentLength();
 
+				// Default implementation "sun.net.www.MimeTable" works on strings with "/" only and
+				// doesn't properly parse paths nor URLs. So providing an absolute URI is compatible
+				// with the default implementation, while the string can't be misinterpreted as path
+				// like has been the case with "URL.getFile" before. That doesn't decode to paths,
+				// results only look similar sometimes.
+				String uriStr = url.toURI().toString();
+
 				if (Application.exists())
 				{
-					streamData.contentType = Application.get().getMimeType(url.getFile());
+					streamData.contentType = Application.get().getMimeType(uriStr);
 				}
 				else
 				{
@@ -131,10 +139,10 @@ public class UrlResourceStream extends AbstractResourceStream
 				if (streamData.contentType == null || streamData.contentType.contains("unknown"))
 				{
 					streamData.contentType = URLConnection.getFileNameMap().getContentTypeFor(
-						url.getFile());
+						uriStr);
 				}
 			}
-			catch (IOException ex)
+			catch (IOException | URISyntaxException ex)
 			{
 				throw new IllegalArgumentException("Invalid URL parameter " + url, ex);
 			}
