@@ -163,7 +163,7 @@
 		<hibernate-validator.version>6.1.1.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
 		<metrics.version>4.1.4</metrics.version>
-		<mockito.version>3.3.0</mockito.version>
+		<mockito.version>3.3.3</mockito.version>
 		<objenesis.version>3.1</objenesis.version>
 		<openjson.version>1.0.11</openjson.version>
 		<slf4j.version>1.7.25</slf4j.version>
@@ -188,7 +188,7 @@
 		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
 		<maven-remote-resources-plugin.version>1.7.0</maven-remote-resources-plugin.version>
 		<maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
-		<maven-site-plugin.version>3.8.2</maven-site-plugin.version>
+		<maven-site-plugin.version>3.9.0</maven-site-plugin.version>
 		<maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
 		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 		<maven-toolchains-plugin.version>3.0.0</maven-toolchains-plugin.version>
