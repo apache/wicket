@@ -1,0 +1,1 @@
+This file's name contains spaces to ensure proper decoding of MockServletContext#getRealPath()
