@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
@@ -408,9 +409,11 @@ public class MockServletContext implements ServletContext
 		try {
 			URL url = getResource(name);
 			if (url != null) {
-				return url.getFile();
+				url.getFile();
+				// WICKET-6755 do not use url.getFile() as it does not properly decode the path
+				return new File(url.toURI()).getAbsolutePath();
 			}
-		} catch (IOException e) {
+		} catch (IOException | URISyntaxException e) {
 			log.error(e.getMessage(), e);
 		}
 		return null;
