@@ -24,8 +24,8 @@ import java.util.function.Predicate;
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
-import org.apache.wicket.core.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -70,7 +70,7 @@ public class ContentSecurityPolicySettings
 	private final Map<CSPHeaderMode, CSPHeaderConfiguration> configs = new EnumMap<>(
 		CSPHeaderMode.class);
 
-	private Predicate<IPageClassRequestHandler> protectedPageFilter = handler -> true;
+	private Predicate<IRequestHandler> protectedFilter = RenderPageRequestHandler.class::isInstance;
 
 	public ContentSecurityPolicySettings(Application application)
 	{
@@ -90,31 +90,31 @@ public class ContentSecurityPolicySettings
 
 	/**
 	 * Sets the predicate that determines which requests must be protected by the CSP. When the
-	 * predicate evaluates to false, the request for the page will not be protected.
+	 * predicate evaluates to false, the request will not be protected.
 	 * 
-	 * @param protectedPageFilter
+	 * @param protectedFilter
 	 *            The new filter, must not be null.
 	 * @return {@code this} for chaining.
 	 */
-	public ContentSecurityPolicySettings setProtectedPageFilter(
-		Predicate<IPageClassRequestHandler> protectedPageFilter)
+	public ContentSecurityPolicySettings setProtectedFilter(
+		Predicate<IRequestHandler> protectedFilter)
 	{
-		Args.notNull(protectedPageFilter, "protectedPageFilter");
-		this.protectedPageFilter = protectedPageFilter;
+		Args.notNull(protectedFilter, "protectedFilter");
+		this.protectedFilter = protectedFilter;
 		return this;
 	}
 
 	/**
-	 * Should any request to the given page be protected by CSP.
+	 * Should any request be protected by CSP.
 	 *
 	 * @param handler
 	 * @return <code>true</code> by default
 	 * 
-	 * @see #setProtectedPageFilter(Predicate)
+	 * @see #setProtectedFilter(Predicate)
 	 */
-	protected boolean mustProtectPageRequest(IPageClassRequestHandler handler)
+	protected boolean mustProtectRequest(IRequestHandler handler)
 	{
-		return protectedPageFilter.test(handler);
+		return protectedFilter.test(handler);
 	}
 
 	/**

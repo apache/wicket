@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.csp;
 
-import org.apache.wicket.core.request.handler.IPageClassRequestHandler;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
@@ -28,7 +26,7 @@ import org.apache.wicket.request.http.WebResponse;
  * An {@link IRequestCycleListener} that adds {@code Content-Security-Policy} and/or
  * {@code Content-Security-Policy-Report-Only} headers based on the supplied configuration.
  *
- * @author Sven Haster
+ * @author Sven Hasters
  * @author Emond Papegaaij
  */
 public class CSPRequestCycleListener implements IRequestCycleListener
@@ -73,7 +71,7 @@ public class CSPRequestCycleListener implements IRequestCycleListener
 	 * @param handler
 	 *            handler
 	 * @return <code>true</code> if must protected
-	 * @see ContentSecurityPolicySettings#mustProtectPageRequest(IPageClassRequestHandler)
+	 * @see ContentSecurityPolicySettings#mustProtectRequest(IRequestHandler)
 	 */
 	protected boolean mustProtect(IRequestHandler handler)
 	{
@@ -81,11 +79,8 @@ public class CSPRequestCycleListener implements IRequestCycleListener
 		{
 			return mustProtect(((IRequestHandlerDelegate)handler).getDelegateHandler());
 		}
-		if (handler instanceof RenderPageRequestHandler)
-		{
-			return settings.mustProtectPageRequest((RenderPageRequestHandler)handler);
-		}
-		return false;
+		
+		return settings.mustProtectRequest(handler);
 	}
 
 }
