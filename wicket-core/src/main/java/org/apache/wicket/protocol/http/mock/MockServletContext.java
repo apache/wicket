@@ -409,7 +409,6 @@ public class MockServletContext implements ServletContext
 		try {
 			URL url = getResource(name);
 			if (url != null) {
-				url.getFile();
 				// WICKET-6755 do not use url.getFile() as it does not properly decode the path
 				return new File(url.toURI()).getAbsolutePath();
 			}
