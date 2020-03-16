@@ -26,7 +26,7 @@ import org.apache.wicket.request.http.WebResponse;
  * An {@link IRequestCycleListener} that adds {@code Content-Security-Policy} and/or
  * {@code Content-Security-Policy-Report-Only} headers based on the supplied configuration.
  *
- * @author Sven Hasters
+ * @author Sven Haster
  * @author Emond Papegaaij
  */
 public class CSPRequestCycleListener implements IRequestCycleListener
