@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.csp;
 
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -37,12 +36,9 @@ public interface CSPRenderable
 	 *            The {@link ContentSecurityPolicySettings} that renders this value.
 	 * @param cycle
 	 *            The current {@link RequestCycle}.
-	 * @param currentHandler
-	 *            The handler that is currently being evaluated or executed.
 	 * @return The rendered value.
 	 */
-	String render(ContentSecurityPolicySettings settings, RequestCycle cycle,
-	                     IRequestHandler currentHandler);
+	String render(ContentSecurityPolicySettings settings, RequestCycle cycle);
 	
 	/**
 	 * Checks if the {@code CSPRenderable} represents a valid value for a {@code -src} directive. By

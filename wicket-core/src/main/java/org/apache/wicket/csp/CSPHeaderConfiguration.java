@@ -331,7 +331,7 @@ public class CSPHeaderConfiguration
 			.map(e -> e.getKey().getValue() + " "
 				+ e.getValue()
 					.stream()
-					.map(r -> r.render(settings, cycle, currentHandler))
+					.map(r -> r.render(settings, cycle))
 					.collect(Collectors.joining(" ")))
 			.collect(Collectors.joining("; "));
 	}

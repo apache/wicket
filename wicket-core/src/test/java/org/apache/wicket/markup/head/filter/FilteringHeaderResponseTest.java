@@ -25,7 +25,6 @@ import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.response.StringResponse;
@@ -50,7 +49,7 @@ class FilteringHeaderResponseTest extends WicketTestCase
 				return new ContentSecurityPolicySettings(this)
 				{
 					@Override
-					public String getNonce(RequestCycle cycle, IRequestHandler currentHandler)
+					public String getNonce(RequestCycle cycle)
 					{
 						return "NONCE";
 					}

@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.csp;
 
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -33,10 +32,9 @@ public enum CSPDirectiveSrcValue implements CSPRenderable
 	NONCE("'nonce-%1$s'")
 	{
 		@Override
-		public String render(ContentSecurityPolicySettings settings, RequestCycle cycle,
-		                     IRequestHandler currentHandler)
+		public String render(ContentSecurityPolicySettings settings, RequestCycle cycle)
 		{
-			return String.format(getValue(), settings.getNonce(cycle, currentHandler));
+			return String.format(getValue(), settings.getNonce(cycle));
 		}
 	};
 
@@ -48,8 +46,7 @@ public enum CSPDirectiveSrcValue implements CSPRenderable
 	}
 
 	@Override
-	public String render(ContentSecurityPolicySettings settings, RequestCycle cycle,
-	                     IRequestHandler currentHandler)
+	public String render(ContentSecurityPolicySettings settings, RequestCycle cycle)
 	{
 		return value;
 	}

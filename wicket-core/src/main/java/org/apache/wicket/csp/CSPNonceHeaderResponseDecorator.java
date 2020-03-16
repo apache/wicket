@@ -51,8 +51,7 @@ public class CSPNonceHeaderResponseDecorator extends DecoratingHeaderResponse
 
 			if (checkitem instanceof AbstractCspHeaderItem)
 			{
-				((AbstractCspHeaderItem) checkitem).setNonce(settings.getNonce(RequestCycle.get(),
-					RequestCycle.get().getActiveRequestHandler()));
+				((AbstractCspHeaderItem) checkitem).setNonce(settings.getNonce(RequestCycle.get()));
 			}
 		}
 

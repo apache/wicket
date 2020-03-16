@@ -19,7 +19,6 @@ package org.apache.wicket.csp;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
 
@@ -48,8 +47,7 @@ public class FixedCSPValue implements CSPRenderable
 	}
 
 	@Override
-	public String render(ContentSecurityPolicySettings settings, RequestCycle cycle,
-	                     IRequestHandler currentHandler)
+	public String render(ContentSecurityPolicySettings settings, RequestCycle cycle)
 	{
 		return value;
 	}

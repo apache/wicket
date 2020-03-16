@@ -127,8 +127,10 @@ public class ContentSecurityPolicySettings
 		return configs.values().stream().anyMatch(CSPHeaderConfiguration::isNonceEnabled);
 	}
 
-	public String getNonce(RequestCycle cycle, IRequestHandler handler)
+	public String getNonce(RequestCycle cycle)
 	{
+		IRequestHandler handler = cycle.getActiveRequestHandler();
+		
 		Page currentPage = IPageRequestHandler.getPage(handler);
 
 		String nonce = cycle.getMetaData(NONCE_KEY);
