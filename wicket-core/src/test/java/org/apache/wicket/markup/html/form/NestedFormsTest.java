@@ -35,7 +35,26 @@ import org.junit.Test;
 public class NestedFormsTest extends WicketTestCase
 {
 	/**
-	 *
+	 * 
+	 */
+	@Test
+	public void tagName() throws Exception
+	{
+		tester.executeTest(NestedFormsTest.class, new TestPage(), "NestedFormsTest_expected.html");
+
+	}
+
+	/**
+	 * WICKET-2166, WICKET-6760
+	 */
+	@Test
+	public void tagNamePlaceholder() throws Exception
+	{
+		tester.executeTest(NestedFormsTest.class, new TestPage().hideInner(), "NestedFormsTest_placeholder_expected.html");
+	}
+
+	/**
+	 * 
 	 */
 	@Test
 	public void postOrderSequenceSubmittingRootForm()
@@ -129,6 +148,14 @@ public class NestedFormsTest extends WicketTestCase
 				}
 			};
 			innerForm.add(innerSubmit);
+		}
+
+		public TestPage hideInner()
+		{
+			innerForm.setOutputMarkupPlaceholderTag(true);
+			innerForm.setVisible(false);
+			
+			return this;
 		}
 
 		@Override
