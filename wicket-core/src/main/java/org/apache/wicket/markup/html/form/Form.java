@@ -1672,14 +1672,18 @@ public class Form<T> extends WebMarkupContainer
 		}
 		else
 		{
-			// WICKET-6658 form is not allowed, anything else can stay as is
-			if ("form".equalsIgnoreCase(tag.getName()))
-			{
-				tag.setName("div");
-			}
+			adjustNestedTagName(tag);
 			tag.remove("method");
 			tag.remove("action");
 			tag.remove("enctype");
+		}
+	}
+	
+	// WICKET-6658 form is not allowed, anything else can stay as is
+	private void adjustNestedTagName(ComponentTag tag) {
+		if ("form".equalsIgnoreCase(tag.getName()))
+		{
+			tag.setName("div");
 		}
 	}
 
@@ -1700,17 +1704,13 @@ public class Form<T> extends WebMarkupContainer
 	@Override
 	protected void renderPlaceholderTag(ComponentTag tag, Response response)
 	{
-		if (isRootForm())
+		if (!isRootForm())
 		{
-			super.renderPlaceholderTag(tag, response);
+			// WICKET-2166
+			adjustNestedTagName(tag);
 		}
-		else
-		{
-			// rewrite inner form tag as div
-			response.write(
-				String.format("<div id=\"%s\" class=\"%s\" data-wicket-placeholder=\"\"></div>",
-					getAjaxRegionMarkupId(), getString(CssUtils.key(Component.class, "hidden"))));
-		}
+
+		super.renderPlaceholderTag(tag, response);
 	}
 
 	/**

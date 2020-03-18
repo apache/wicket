@@ -37,7 +37,26 @@ import org.junit.jupiter.api.Test;
 class NestedFormsTest extends WicketTestCase
 {
 	/**
-	 *
+	 * 
+	 */
+	@Test
+	void tagName() throws Exception
+	{
+		tester.executeTest(NestedFormsTest.class, new TestPage(), "NestedFormsTest_expected.html");
+
+	}
+
+	/**
+	 * WICKET-2166, WICKET-6760
+	 */
+	@Test
+	void tagNamePlaceholder() throws Exception
+	{
+		tester.executeTest(NestedFormsTest.class, new TestPage().hideInner(), "NestedFormsTest_placeholder_expected.html");
+	}
+
+	/**
+	 * 
 	 */
 	@Test
 	void postOrderSequenceSubmittingRootForm()
@@ -131,6 +150,14 @@ class NestedFormsTest extends WicketTestCase
 				}
 			};
 			innerForm.add(innerSubmit);
+		}
+
+		public TestPage hideInner()
+		{
+			innerForm.setOutputMarkupPlaceholderTag(true);
+			innerForm.setVisible(false);
+			
+			return this;
 		}
 
 		@Override

@@ -2319,7 +2319,7 @@ public abstract class Component
 		{
 			if (getFlag(FLAG_PLACEHOLDER))
 			{
-				renderPlaceholderTag((ComponentTag)elem, getResponse());
+				renderPlaceholderTag(((ComponentTag)elem).mutable(), getResponse());
 			}
 		}
 	}
