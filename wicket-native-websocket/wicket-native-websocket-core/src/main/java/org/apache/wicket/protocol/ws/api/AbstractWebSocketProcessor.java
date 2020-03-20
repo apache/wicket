@@ -194,8 +194,10 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	@Override
 	public void onError(Throwable t)
 	{
-		IKey key = getRegistryKey();
-		broadcastMessage(new ErrorMessage(getApplication(), getSessionId(), key, t));
+		if (webSocketSettings.shouldNotifyOnErrorEvent(t)) {
+			IKey key = getRegistryKey();
+			broadcastMessage(new ErrorMessage(getApplication(), getSessionId(), key, t));
+		}
 	}
 
 	/**
