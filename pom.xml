@@ -141,7 +141,7 @@
 		<commons-fileupload.version>1.4</commons-fileupload.version>
 		<commons-io.version>2.6</commons-io.version>
 		<commons-lang3.version>3.9</commons-lang3.version>
-		<guice.version>4.2.2</guice.version>
+		<guice.version>4.2.3</guice.version>
 		<el-impl.version>2.2.1-b05</el-impl.version>
 		<forbiddenapis.version>2.7</forbiddenapis.version>
 		<jacoco.version>0.8.5</jacoco.version>
@@ -183,7 +183,7 @@
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
 		<maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
-		<maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+		<maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
 		<maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
 		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
 		<maven-remote-resources-plugin.version>1.7.0</maven-remote-resources-plugin.version>
