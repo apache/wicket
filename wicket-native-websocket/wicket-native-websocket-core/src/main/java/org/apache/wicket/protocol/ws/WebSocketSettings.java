@@ -149,6 +149,22 @@ public class WebSocketSettings
 	}
 
 	/**
+	 * A function that decides whether to notify the page/resource on
+	 * web socket error event.
+	 * The page notification leads to deserialization of the page instance from
+	 * the page store and sometimes this is not wanted.
+	 */
+	private Function<Throwable, Boolean> notifyOnErrorEvent = (throwable) -> true;
+
+	public boolean shouldNotifyOnErrorEvent(Throwable throwable) {
+		return notifyOnErrorEvent == null || notifyOnErrorEvent.apply(throwable);
+	}
+
+	public void setNotifyOnErrorEvent(Function<Throwable, Boolean> notifyOnErrorEvent) {
+		this.notifyOnErrorEvent = notifyOnErrorEvent;
+	}
+
+	/**
 	 * Set the executor for processing websocket push messages broadcasted to all sessions.
 	 * Default executor does all the processing in the caller thread. Using a proper thread pool is adviced
 	 * for applications that send push events from ajax calls to avoid page level deadlocks.
