@@ -244,6 +244,13 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 					session = oldSession;
 				}
 
+				if (session == null)
+				{
+					connectionRegistry.removeConnection(application, sessionId, key);
+					LOG.debug("No Session could be found for session id '{}' and key '{}'!", sessionId, key);
+					return;
+				}
+
 				IPageManager pageManager = session.getPageManager();
 				Page page = getPage(pageManager);
 
