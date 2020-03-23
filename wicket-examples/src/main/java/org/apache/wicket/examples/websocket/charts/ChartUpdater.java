@@ -100,12 +100,12 @@ public class ChartUpdater
 			Application application = Application.get(applicationName);
 			WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
 			IWebSocketConnectionRegistry webSocketConnectionRegistry = webSocketSettings.getConnectionRegistry();
-			IWebSocketConnection connection = webSocketConnectionRegistry.getConnection(application, sessionId, key);
 
 			int dataIndex = 0;
 
 			while (dataIndex < data.length)
 			{
+				IWebSocketConnection connection = webSocketConnectionRegistry.getConnection(application, sessionId, key);
 				try
 				{
 					Record record = data[dataIndex++];
