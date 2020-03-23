@@ -26,12 +26,12 @@ import org.apache.wicket.util.lang.Args;
 public class ResourceNameTokenKey implements IKey
 {
 	private final String resourceName;
-	private final String resourceToken;
+	private final String connectionToken;
 
-	public ResourceNameTokenKey(String resourceName, String resourceToken)
+	public ResourceNameTokenKey(String resourceName, String connectionToken)
 	{
 		this.resourceName = Args.notNull(resourceName, "resourceName");
-		this.resourceToken = Args.notNull(resourceToken, "resourceToken");
+		this.connectionToken = Args.notNull(connectionToken, "connectionToken");
 	}
 
 	@Override
@@ -42,12 +42,12 @@ public class ResourceNameTokenKey implements IKey
 		if (o == null || getClass() != o.getClass())
 			return false;
 		final ResourceNameTokenKey that = (ResourceNameTokenKey)o;
-		return resourceName.equals(that.resourceName) && resourceToken.equals(that.resourceToken);
+		return resourceName.equals(that.resourceName) && connectionToken.equals(that.connectionToken);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(resourceName, resourceToken);
+		return Objects.hash(resourceName, connectionToken);
 	}
 }

@@ -85,7 +85,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	private final WebRequest webRequest;
 	private final int pageId;
 	private final String resourceName;
-	private final String resourceToken;
+	private final String connectionToken;
 	private final Url baseUrl;
 	private final WebApplication application;
 	private final String sessionId;
@@ -113,7 +113,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		this.sessionId = httpSession.getId();
 		String pageId = request.getParameter("pageId");
 		this.resourceName = request.getParameter("resourceName");
-		this.resourceToken = request.getParameter("resourceToken");
+		this.connectionToken = request.getParameter("connectionToken");
 		if (Strings.isEmpty(pageId) && Strings.isEmpty(resourceName))
 		{
 			throw new IllegalArgumentException("The request should have either 'pageId' or 'resourceName' parameter!");
@@ -389,11 +389,11 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		}
 		else
 		{
-			if (Strings.isEmpty(resourceToken))
+			if (Strings.isEmpty(connectionToken))
 			{
 				key = new ResourceNameKey(resourceName);
 			} else {
-				key = new ResourceNameTokenKey(resourceName, resourceToken);
+				key = new ResourceNameTokenKey(resourceName, connectionToken);
 			}
 		}
 		return key;

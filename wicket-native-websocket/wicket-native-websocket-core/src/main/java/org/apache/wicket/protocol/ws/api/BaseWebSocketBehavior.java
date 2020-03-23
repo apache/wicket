@@ -40,7 +40,7 @@ import org.apache.wicket.util.template.PackageTextTemplate;
 public class BaseWebSocketBehavior extends Behavior
 {
 	private final String resourceName;
-	private final String resourceToken;
+	private final String connectionToken;
 
 	/**
 	 * Constructor.
@@ -51,7 +51,7 @@ public class BaseWebSocketBehavior extends Behavior
 	protected BaseWebSocketBehavior()
 	{
 		this.resourceName = null;
-		this.resourceToken = null;
+		this.connectionToken = null;
 	}
 
 	/**
@@ -90,13 +90,13 @@ public class BaseWebSocketBehavior extends Behavior
 	 *
 	 *  @param resourceName
 	 *          the name of the shared {@link org.apache.wicket.protocol.ws.api.WebSocketResource}
-	 *  @param resourceToken
+	 *  @param connectionToken
 	 *  		an optional token to support connections to the same resource from multiple browser tabs
 	 */
-	public BaseWebSocketBehavior(String resourceName, String resourceToken)
+	public BaseWebSocketBehavior(String resourceName, String connectionToken)
 	{
 		this.resourceName = Args.notEmpty(resourceName, "resourceName");
-		this.resourceToken = resourceToken;
+		this.connectionToken = connectionToken;
 	}
 
 	@Override
@@ -119,12 +119,12 @@ public class BaseWebSocketBehavior extends Behavior
 			int pageId = component.getPage().getPageId();
 			variables.put("pageId", pageId);
 			variables.put("resourceName", "");
-			variables.put("resourceToken", "");
+			variables.put("connectionToken", "");
 		}
 		else
 		{
 			variables.put("resourceName", resourceName);
-			variables.put("resourceToken", resourceToken);
+			variables.put("connectionToken", connectionToken);
 			variables.put("pageId", false);
 		}
 
