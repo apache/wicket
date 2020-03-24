@@ -95,7 +95,7 @@ public class AjaxIndicatorAppender extends Behavior
 		super.afterRender(component);
 		final Response r = component.getResponse();
 
-		r.write("<span class=\"wicket--hidden ");
+		r.write("<span hidden=\"\" class=\"");
 		r.write(getSpanClass());
 		r.write("\" ");
 		r.write("id=\"");

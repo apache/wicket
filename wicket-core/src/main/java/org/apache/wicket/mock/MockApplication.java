@@ -71,9 +71,6 @@ public class MockApplication extends WebApplication
 
 		// for test cases we usually want stable resource names
 		getResourceSettings().setCachingStrategy(NoOpResourceCachingStrategy.INSTANCE);
-		// the core CSS causes noise (a head + link in every generated markup) in tests
-		// and isn't needed, because the markup isn't rendered by a browser
-		getResourceSettings().disableWicketCoreCSS();
 		// disable nonces, CSP is not needed anyway during tests
 		getCspSettings().blocking().disabled();
 	}

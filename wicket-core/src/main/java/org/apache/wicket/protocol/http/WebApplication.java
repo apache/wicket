@@ -756,12 +756,6 @@ public abstract class WebApplication extends Application
 
 		getAjaxRequestTargetListeners().add(new AjaxEnclosureListener());
 		
-		getHeaderContributorListeners().add(head -> {
-			getResourceSettings().getWicketCoreCSS().ifPresent(wicketCoreCSS -> {
-				head.render(CssHeaderItem.forReference(wicketCoreCSS));
-			});
-		});
-
 		getCspSettings().enforce(this);
 		
 		// Configure the app.

@@ -36,7 +36,6 @@ import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.core.util.string.ComponentStrings;
-import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
@@ -2367,8 +2366,8 @@ public abstract class Component
 		String name = Strings.isEmpty(tag.getNamespace()) ? tag.getName()
 			: tag.getNamespace() + ':' + tag.getName();
 		response.write(
-			String.format("<%s id=\"%s\" class=\"%s\" data-wicket-placeholder=\"\"></%s>", name,
-				getAjaxRegionMarkupId(), getString(CssUtils.key(Component.class, "hidden")), name));
+			String.format("<%s id=\"%s\" hidden=\"\" data-wicket-placeholder=\"\"></%s>", name,
+				getAjaxRegionMarkupId(), name));
 	}
 
 
@@ -3042,7 +3041,7 @@ public abstract class Component
 
 	/**
 	 * Render a placeholder tag when the component is not visible. The tag is of form:
-	 * &lt;componenttag class="wicket--hidden" id="markupid"/&gt;. This method will also call
+	 * &lt;componenttag hidden=""" id="markupid"/&gt;. This method will also call
 	 * <code>setOutputMarkupId(true)</code>.
 	 * 
 	 * This is useful, for example, in ajax situations where the component starts out invisible and

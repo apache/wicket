@@ -42,7 +42,7 @@ class AjaxEnclosureTest extends WicketTestCase
 {
 	private final String inlineEnclosureIdPrefix = "wicket__InlineEnclosure_";
 	private final String inlineEnclosureHiddenPattern = "<div id=\"" + inlineEnclosureIdPrefix +
-		"\\w+\" class=\"wicket--hidden\" data-wicket-placeholder=\"\"></div>";
+		"\\w+\" hidden=\"\" data-wicket-placeholder=\"\"></div>";
 	private final String inlineEnclosureVisiblePattern = "<div id=\"" + inlineEnclosureIdPrefix +
 		"\\w+\">";
 

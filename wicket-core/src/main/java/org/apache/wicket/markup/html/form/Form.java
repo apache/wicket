@@ -149,6 +149,9 @@ public class Form<T> extends WebMarkupContainer
 {
 	public static final String ENCTYPE_MULTIPART_FORM_DATA = "multipart/form-data";
 
+	public static final String HIDDEN_FIELDS_CSS_CLASS_KEY = CssUtils
+		.key(Form.class, "hidden-fields");
+
 	/**
 	 * Visitor used for validation
 	 * 
@@ -1252,9 +1255,9 @@ public class Form<T> extends WebMarkupContainer
 	{
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
-		// div that is not visible (but not display:none either)
-		buffer.append(String.format("<div class=\"%s\">",
-			getString(CssUtils.key(Form.class, "hidden-fields"))));
+		// hidden div
+		buffer.append(String.format("<div hidden=\"\" class=\"%s\">",
+			getString(HIDDEN_FIELDS_CSS_CLASS_KEY)));
 
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" tabindex=\"-1\" autocomplete=\"off\"/>");
@@ -1765,9 +1768,9 @@ public class Form<T> extends WebMarkupContainer
 		// and have to write the url parameters as hidden fields
 		if (encodeUrlInHiddenFields())
 		{
-			getResponse().write(String.format("<div id=\"%s\" class=\"%s\">",
+			getResponse().write(String.format("<div id=\"%s\" hidden=\"\" class=\"%s\">",
 				getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX),
-				getString(CssUtils.key(Form.class, "hidden-fields"))));
+				getString(HIDDEN_FIELDS_CSS_CLASS_KEY)));
 
 			AppendingStringBuffer buffer = new AppendingStringBuffer();				
 
