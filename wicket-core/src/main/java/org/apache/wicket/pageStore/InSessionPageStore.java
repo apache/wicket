@@ -48,12 +48,12 @@ import org.apache.wicket.util.lang.Classes;
 public class InSessionPageStore extends DelegatingPageStore
 {
 
-	private static final MetaDataKey<SessionData> KEY_CACHE = new MetaDataKey<SessionData>()
+	private static final MetaDataKey<SessionData> KEY_CACHE = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	private static final MetaDataKey<SessionData> KEY_PERSISTENT = new MetaDataKey<SessionData>()
+	private static final MetaDataKey<SessionData> KEY_PERSISTENT = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -213,7 +213,7 @@ public class InSessionPageStore extends DelegatingPageStore
 	 * Data kept in the {@link Session}, might get serialized along with its containing
 	 * {@link HttpSession}.
 	 */
-	static abstract class SessionData implements Serializable
+	abstract static class SessionData implements Serializable
 	{
 
 		transient ISerializer serializer;
@@ -328,14 +328,14 @@ public class InSessionPageStore extends DelegatingPageStore
 	 */
 	static class CountLimitedData extends SessionData
 	{
-
-		private int maxPages;
+		private final int maxPages;
 
 		public CountLimitedData(int maxPages)
 		{
 			this.maxPages = Args.withinRange(1, Integer.MAX_VALUE, maxPages, "maxPages");
 		}
 
+		@Override
 		public synchronized void add(IManageablePage page)
 		{
 			super.add(page);
@@ -352,8 +352,7 @@ public class InSessionPageStore extends DelegatingPageStore
 	 */
 	static class SizeLimitedData extends SessionData
 	{
-
-		private Bytes maxBytes;
+		private final Bytes maxBytes;
 
 		private long size;
 
@@ -389,7 +388,7 @@ public class InSessionPageStore extends DelegatingPageStore
 			SerializedPage page = (SerializedPage)super.remove(pageId);
 			if (page != null)
 			{
-				size -= ((SerializedPage)page).getData().length;
+				size -= page.getData().length;
 			}
 
 			return page;

@@ -205,7 +205,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	/**
 	 * Data kept in memory.
 	 */
-	static abstract class MemoryData implements Iterable<IManageablePage>
+	abstract static class MemoryData implements Iterable<IManageablePage>
 	{
 		/**
 		 * Kept in list instead of map, since non-serialized pages might change their id during a request.
@@ -243,11 +243,8 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 
 		public synchronized IManageablePage get(int pageId)
 		{
-			Iterator<IManageablePage> iterator = pages.iterator();
-			while (iterator.hasNext())
+			for (final IManageablePage page : pages)
 			{
-				IManageablePage page = iterator.next();
-				
 				if (page.getPageId() == pageId)
 				{
 					return page;
@@ -269,8 +266,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	 */
 	static class CountLimitedData extends MemoryData
 	{
-
-		private int maxPages;
+		private final int maxPages;
 
 		public CountLimitedData(int maxPages)
 		{
@@ -294,8 +290,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	 */
 	static class SizeLimitedData extends MemoryData
 	{
-		
-		private Bytes maxBytes;
+		private final Bytes maxBytes;
 		
 		private long size;
 
@@ -330,7 +325,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 			SerializedPage page = (SerializedPage) super.remove(pageId);
 			if (page != null)
 			{
-				size -= ((SerializedPage) page).getData().length;
+				size -= page.getData().length;
 			}
 			return page;
 		}

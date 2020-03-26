@@ -86,7 +86,7 @@ public class PageWindowManager implements Serializable
 		}
 	}
 
-	private final List<FileWindow> windows = new ArrayList<FileWindow>();
+	private final List<FileWindow> windows = new ArrayList<>();
 
 	/**
 	 * map from page id to list of pagewindow indices (referring to the windows list) - to improve
@@ -149,9 +149,9 @@ public class PageWindowManager implements Serializable
 	private void rebuildIndices()
 	{
 		idToWindowIndex = null;
-		idToWindowIndex = new IntHashMap<Integer>();
+		idToWindowIndex = new IntHashMap<>();
 		windowIndexToPageId = null;
-		windowIndexToPageId = new IntHashMap<Integer>();
+		windowIndexToPageId = new IntHashMap<>();
 		for (int i = 0; i < windows.size(); ++i)
 		{
 			FileWindow window = windows.get(i);
@@ -355,7 +355,7 @@ public class PageWindowManager implements Serializable
 	 * Creates and returns a new page window for given page.
 	 * 
 	 * @param pageId
-	 * @param type 
+	 * @param pageType
 	 * @param size
 	 * @return page window
 	 */
@@ -437,7 +437,7 @@ public class PageWindowManager implements Serializable
 	 */
 	public synchronized List<FileWindow> getFileWindows()
 	{
-		List<FileWindow> result = new ArrayList<FileWindow>();
+		List<FileWindow> result = new ArrayList<>();
 
 		// start from current index to 0
 		int currentIndex = indexPointer;

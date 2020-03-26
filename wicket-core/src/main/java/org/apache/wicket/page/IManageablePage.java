@@ -40,7 +40,8 @@ public interface IManageablePage extends IClusterable
 	 * Detaches model after use. This is generally used to null out transient references that can be
 	 * re-attached later.
 	 */
-	void detach();
+	default void detach()
+	{}
 
 	/**
 	 * Sets whether or not the page is allowed to change its page id. Implementations of this

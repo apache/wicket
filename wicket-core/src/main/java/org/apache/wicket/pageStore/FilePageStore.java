@@ -35,7 +35,6 @@ import java.util.Set;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.pageStore.disk.NestedFolders;
-import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
@@ -77,23 +76,6 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 	 * @see SerializingPageStore
 	 */
 	public FilePageStore(String applicationName, File fileStoreFolder, Bytes maxSizePerSession)
-	{
-		this(applicationName, fileStoreFolder, maxSizePerSession, null);
-	}
-
-	/**
-	 * Create a store to files.
-	 * 
-	 * @param applicationName
-	 *            name of application
-	 * @param fileStoreFolder
-	 *            folder to store to
-	 * @param maxSizePerSession
-	 *            maximum size per session
-	 * @param serializer
-	 *            for serialization of pages
-	 */
-	public FilePageStore(String applicationName, File fileStoreFolder, Bytes maxSizePerSession, ISerializer serializer)
 	{
 		super(applicationName);
 		
@@ -229,32 +211,27 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		Arrays.sort(files, new LastModifiedComparator());
 
 		long total = 0;
-		for (int f = 0; f < files.length; f++)
+		for (File candidate : files)
 		{
-			File candidate = files[f];
-
 			total += candidate.length();
 
 			if (total > maxSizePerSession.bytes())
 			{
 				if (!Files.remove(candidate))
 				{
-					log.warn("cannot remove page data for session {} page {}", sessionIdentifier,
-						candidate.getName());
+					log.warn("cannot remove page data for session {} page {}", sessionIdentifier, candidate.getName());
 				}
 			}
 		}
 	}
 
-	public class LastModifiedComparator implements Comparator<File>
+	public static class LastModifiedComparator implements Comparator<File>
 	{
-
 		@Override
 		public int compare(File f1, File f2)
 		{
 			return Long.compare(f2.lastModified(), f1.lastModified());
 		}
-
 	}
 
 	@Override
@@ -288,8 +265,7 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 					int pageId;
 					try
 					{
-						pageId = Integer
-							.valueOf(name.substring(0, name.length() - FILE_SUFFIX.length()));
+						pageId = Integer.parseInt(name.substring(0, name.length() - FILE_SUFFIX.length()), 10);
 					}
 					catch (Exception ex)
 					{

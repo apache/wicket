@@ -17,6 +17,7 @@
 package org.apache.wicket.pageStore.disk;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -98,15 +99,14 @@ public class NestedFolders
 			Files.removeFolder(folder);
 			
 			File high = folder.getParentFile();
-			if (high.list().length == 0)
+			final String[] highChildren = high.list();
+			if (highChildren != null && highChildren.length == 0 && Files.removeFolder(high))
 			{
-				if (Files.removeFolder(high))
+				File low = high.getParentFile();
+				final String[] lowChildren = low.list();
+				if (lowChildren != null && lowChildren.length == 0)
 				{
-					File low = high.getParentFile();
-					if (low.list().length == 0)
-					{
-						Files.removeFolder(low);
-					}
+					Files.removeFolder(low);
 				}
 			}
 		}
@@ -127,10 +127,7 @@ public class NestedFolders
 			{
 				for (File high: Files.list(low))
 				{
-					for (File file : Files.list(high))
-					{
-						files.add(file);
-					}
+					Collections.addAll(files, Files.list(high));
 				}
 			}
 		}

@@ -33,7 +33,7 @@ public class DefaultPageContext implements IPageContext
 {
 	
 	/**
-	 * @see org.apache.wicket.pageStore.IPageContext#getSessionId()
+	 * @see org.apache.wicket.pageStore.IPageContext#getSessionId(boolean)
 	 */
 	@Override
 	public String getSessionId(boolean bind)

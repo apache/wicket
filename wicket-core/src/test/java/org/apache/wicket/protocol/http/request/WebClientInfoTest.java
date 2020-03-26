@@ -64,7 +64,7 @@ class WebClientInfoTest
 		WebClientInfo clientInfo = new WebClientInfo(requestCycleMock, "No user agent");
 		String actual = clientInfo.getRemoteAddr(requestCycleMock);
 		assertEquals(expected, actual);
-		Mockito.verifyZeroInteractions(servletRequest);
+		Mockito.verifyNoInteractions(servletRequest);
 	}
 
 	/**

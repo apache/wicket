@@ -27,7 +27,7 @@ import org.apache.wicket.util.lang.Classes;
 public class SerializingPageStore extends DelegatingPageStore
 {
 
-	private ISerializer serializer;
+	private final ISerializer serializer;
 
 	/**
 	 * @param delegate

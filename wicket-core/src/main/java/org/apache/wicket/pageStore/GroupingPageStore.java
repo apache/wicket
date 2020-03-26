@@ -40,12 +40,12 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 
 	private static final String DEFAULT_GROUP = "default";
 
-	private static final MetaDataKey<SessionData> KEY = new MetaDataKey<SessionData>()
+	private static final MetaDataKey<SessionData> KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	private int maxGroups;
+	private final int maxGroups;
 	
 	/**
 	 * Is a group of a page stable.
@@ -157,9 +157,9 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 	 */
 	static class SessionData implements Serializable
 	{
-		private LinkedList<String> groups = new LinkedList<>();
+		private final LinkedList<String> groups = new LinkedList<>();
 
-		private Map<String, MetaDataEntry<?>[]> metaData = new HashMap<>();
+		private final Map<String, MetaDataEntry<?>[]> metaData = new HashMap<>();
 
 		public synchronized <T> void setMetaData(String group, MetaDataKey<T> key, T value)
 		{

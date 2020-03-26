@@ -165,7 +165,7 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	/**
 	 * Create an identifier for the given context.
 	 * <p>
-	 * Default implementation uses {@link IPageContext#getSessionId()}.
+	 * Default implementation uses {@link IPageContext#getSessionId(boolean)}}.
 	 * 
 	 * @param context context
 	 * @return identifier for the session
@@ -224,11 +224,11 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 
 	protected static class PersistedPage implements IPersistedPage
 	{
-		private int pageId;
+		private final int pageId;
 
-		private String pageType;
+		private final String pageType;
 
-		private long pageSize;
+		private final long pageSize;
 
 		public PersistedPage(int pageId, String pageType, long pageSize)
 		{

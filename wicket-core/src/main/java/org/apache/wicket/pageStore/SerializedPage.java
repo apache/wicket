@@ -85,11 +85,6 @@ public final class SerializedPage implements IManageablePage
 	{
 		return data;
 	}
-	
-	@Override
-	public void detach()
-	{
-	}
 
 	@Override
 	public boolean setFreezePageId(boolean freeze)

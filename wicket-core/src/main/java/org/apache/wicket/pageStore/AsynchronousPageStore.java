@@ -18,7 +18,6 @@ package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -102,8 +101,8 @@ public class AsynchronousPageStore extends DelegatingPageStore
 
 	/**
 	 * 
-	 * @param pageId
 	 * @param sessionId
+	 * @param pageId
 	 * @return generated key
 	 */
 	private static String getKey(final String sessionId, final int pageId)
@@ -145,8 +144,6 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		}
 
 		/**
-		 * 
-		 * @param entry
 		 * @return generated key
 		 */
 		private String getKey()
@@ -189,12 +186,9 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			if (asynchronous)
 			{
 				value = (T)attributeCache.get(key);
-				if (value == null )
+				if (value == null && defaultValue.get() != null)
 				{
-					if (defaultValue.get() != null)
-					{
 						throw new WicketRuntimeException("session attribute can not be changed asynchronuously");
-					}
 				}
 			} else {
 				value = context.getSessionAttribute(key, defaultValue);
@@ -218,12 +212,9 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			if (asynchronous)
 			{
 				value = context.getSessionData(key, () -> null);
-				if (value == null )
+				if (value == null && defaultValue.get() != null)
 				{
-					if (defaultValue.get() != null)
-					{
 						throw new WicketRuntimeException("session data can not be changed asynchronuously");
-					}
 				}
 			}
 			else
@@ -340,13 +331,10 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		}
 
 		String key = getKey(sessionId, page.getPageId());
-		if (key != null)
+		PendingAdd entry = queueMap.remove(key);
+		if (entry != null)
 		{
-			PendingAdd entry = queueMap.remove(key);
-			if (entry != null)
-			{
-				queue.remove(entry);
-			}
+			queue.remove(entry);
 		}
 
 		getDelegate().removePage(context, page);
@@ -394,17 +382,8 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		if (sessionId == null) {
 			return;
 		}
-		
-		Iterator<PendingAdd> iterator = queue.iterator();
-		while (iterator.hasNext())
-		{
-			PendingAdd add = iterator.next(); 
-		
-			if (add.sessionId.equals(sessionId))
-			{
-				iterator.remove();
-			}
-		}
+
+		queue.removeIf(add -> add.sessionId.equals(sessionId));
 		
 		getDelegate().removeAllPages(context);
 	}

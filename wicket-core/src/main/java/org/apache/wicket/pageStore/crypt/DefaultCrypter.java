@@ -33,10 +33,6 @@ import org.apache.wicket.WicketRuntimeException;
  */
 public class DefaultCrypter implements ICrypter
 {
-	public DefaultCrypter()
-	{
-	}
-
 	protected Cipher getCipher() throws GeneralSecurityException
 	{
 		return Cipher.getInstance("AES/CBC/PKCS5Padding");

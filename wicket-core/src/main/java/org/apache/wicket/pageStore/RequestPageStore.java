@@ -115,7 +115,7 @@ public class RequestPageStore extends DelegatingPageStore
 
 	private RequestData getRequestData(IPageContext context)
 	{
-		return context.getRequestData(KEY, () -> new RequestData());
+		return context.getRequestData(KEY, RequestData::new);
 	}
 	
 	/**
@@ -123,7 +123,7 @@ public class RequestPageStore extends DelegatingPageStore
 	 */
 	static class RequestData
 	{
-		private LinkedList<IManageablePage> pages = new LinkedList<>();
+		private final LinkedList<IManageablePage> pages = new LinkedList<>();
 		
 		public void add(IManageablePage page)
 		{

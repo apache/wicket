@@ -43,7 +43,7 @@ public class FilePageStoreTest extends AbstractConcurrentPageStoreTest
 	{
 		File folder = Files.createTempDirectory(null).toFile();
 
-		IPageStore pageStore = new FilePageStore("app1", folder, MAX_SIZE_PER_SESSION, new JavaSerializer("app1"));
+		IPageStore pageStore = new FilePageStore("app1", folder, MAX_SIZE_PER_SESSION);
 
 		doTestStore(pageStore);
 

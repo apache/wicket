@@ -41,7 +41,7 @@ import org.apache.wicket.util.lang.Args;
  */
 public class CryptingPageStore extends DelegatingPageStore
 {
-	private static final MetaDataKey<SessionData> KEY = new MetaDataKey<SessionData>()
+	private static final MetaDataKey<SessionData> KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -53,8 +53,8 @@ public class CryptingPageStore extends DelegatingPageStore
 	/**
 	 * @param delegate
 	 *            store to delegate to
-	 * @param applicationName
-	 *            name of application
+	 * @param application
+	 *            the application
 	 */
 	public CryptingPageStore(IPageStore delegate, Application application)
 	{

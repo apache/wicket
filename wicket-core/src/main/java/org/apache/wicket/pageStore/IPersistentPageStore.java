@@ -51,7 +51,7 @@ public interface IPersistentPageStore extends IPageStore
 	/**
 	 * Get information about all persisted pages with the given session identifier.
 	 * 
-	 * @param the
+	 * @param sessionIdentifier
 	 *            identifier of the session.
 	 * @return all persisted pages
 	 */

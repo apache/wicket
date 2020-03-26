@@ -50,8 +50,8 @@ public interface IPageStore
 	 * 
 	 * @param context
 	 *            the context of the page
-	 * @param id
-	 *            the id of the page.
+	 * @param page
+	 *            the page.
 	 */
 	void addPage(IPageContext context, IManageablePage page);
 
@@ -60,8 +60,8 @@ public interface IPageStore
 	 * 
 	 * @param context
 	 *            the context of the page
-	 * @param id
-	 *            the id of the page.
+	 * @param page
+	 *            the page.
 	 */
 	void removePage(IPageContext context, IManageablePage page);
 

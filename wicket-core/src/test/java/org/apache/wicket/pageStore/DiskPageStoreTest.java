@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.util.WicketTestTag;
 import org.apache.wicket.util.lang.Bytes;
 import org.junit.jupiter.api.Tag;
@@ -43,7 +42,7 @@ public class DiskPageStoreTest extends AbstractConcurrentPageStoreTest
 	{
 		File fileStoreFolder = Files.createTempDirectory(null).toFile();
 
-		IPageStore pageStore = new DiskPageStore("app1", fileStoreFolder, MAX_SIZE_PER_SESSION, new JavaSerializer("app1"));
+		IPageStore pageStore = new DiskPageStore("app1", fileStoreFolder, MAX_SIZE_PER_SESSION);
 
 		doTestStore(pageStore);
 

@@ -18,7 +18,6 @@ package org.apache.wicket.pageStore;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +41,6 @@ import org.apache.wicket.pageStore.disk.NestedFolders;
 import org.apache.wicket.pageStore.disk.PageWindowManager;
 import org.apache.wicket.pageStore.disk.PageWindowManager.FileWindow;
 import org.apache.wicket.protocol.http.PageExpiredException;
-import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
@@ -59,7 +57,7 @@ import org.slf4j.LoggerFactory;
  * Since Ajax requests do not change the id of a page, {@link DiskPageStore} offers an optimization to overwrite the most recently written
  * page, if it has the same id as a new page to write.<p>
  * However this does not help in case of alternating requests between multiple browser windows: In this case requests are processed for
- * different page ids and the oldests pages are constantly overwritten (this can easily happen with Ajax timers on one or more pages).
+ * different page ids and the oldest pages are constantly overwritten (this can easily happen with Ajax timers on one or more pages).
  * This leads to pages with identical id superfluously kept in the file, while older pages are prematurely expelled.
  * Any following request to these older pages will then fail with {@link PageExpiredException}.   
  */
@@ -91,24 +89,6 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 	 * @see SerializingPageStore
 	 */
 	public DiskPageStore(String applicationName, File fileStoreFolder, Bytes maxSizePerSession)
-	{
-		this(applicationName, fileStoreFolder, maxSizePerSession, null);
-	}
-
-	/**
-	 * Create a store to disk.
-	 * 
-	 * @param applicationName
-	 *            name of application
-	 * @param fileStoreFolder
-	 *            folder to store to
-	 * @param maxSizePerSession
-	 *            maximum size per session
-	 * @param serializer
-	 *            for serialization of pages
-	 */
-	public DiskPageStore(String applicationName, File fileStoreFolder, Bytes maxSizePerSession,
-		ISerializer serializer)
 	{
 		super(applicationName);
 		
@@ -285,7 +265,7 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 			{
 				ObjectOutputStream oos = new ObjectOutputStream(stream);
 				
-				List<DiskData> list = new ArrayList<>(diskDatas.size());
+				ArrayList<DiskData> list = new ArrayList<>(diskDatas.size());
 				for (DiskData diskData : diskDatas.values())
 				{
 					if (diskData.sessionIdentifier != null)
@@ -310,7 +290,7 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 
 	/**
 	 * 
-	 * @param session
+	 * @param sessionIdentifier
 	 *            key
 	 * @return a list of the last N page windows
 	 */
@@ -499,15 +479,14 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 			if (create || file.exists())
 			{
 				String mode = create ? "rw" : "r";
-				try
+				try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, mode))
 				{
-					RandomAccessFile randomAccessFile = new RandomAccessFile(file, mode);
 					channel = randomAccessFile.getChannel();
 				}
-				catch (FileNotFoundException fnfx)
+				catch (IOException iox)
 				{
 					// can happen if the file is locked. WICKET-4176
-					log.error(fnfx.getMessage(), fnfx);
+					log.error(iox.getMessage(), iox);
 				}
 			}
 			return channel;
