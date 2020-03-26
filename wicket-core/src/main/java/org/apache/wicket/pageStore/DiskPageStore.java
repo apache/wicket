@@ -18,6 +18,7 @@ package org.apache.wicket.pageStore;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -479,14 +480,15 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 			if (create || file.exists())
 			{
 				String mode = create ? "rw" : "r";
-				try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, mode))
+				try
 				{
+					RandomAccessFile randomAccessFile = new RandomAccessFile(file, mode);
 					channel = randomAccessFile.getChannel();
 				}
-				catch (IOException iox)
+				catch (FileNotFoundException fnfx)
 				{
 					// can happen if the file is locked. WICKET-4176
-					log.error(iox.getMessage(), iox);
+					log.error(fnfx.getMessage(), fnfx);
 				}
 			}
 			return channel;
