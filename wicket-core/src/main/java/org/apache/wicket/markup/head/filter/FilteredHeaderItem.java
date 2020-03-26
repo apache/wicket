@@ -37,9 +37,9 @@ public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
 {
 	private static final long serialVersionUID = 1L;
 
-	private HeaderItem wrapped;
+	private final HeaderItem wrapped;
 
-	private String filterName;
+	private final String filterName;
 
 	/**
 	 * Construct.

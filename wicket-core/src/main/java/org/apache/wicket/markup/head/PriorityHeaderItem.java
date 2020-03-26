@@ -31,7 +31,7 @@ import org.apache.wicket.request.Response;
  */
 public class PriorityHeaderItem extends HeaderItem implements IWrappedHeaderItem
 {
-	private HeaderItem wrapped;
+	private final HeaderItem wrapped;
 
 	/**
 	 * Construct.
