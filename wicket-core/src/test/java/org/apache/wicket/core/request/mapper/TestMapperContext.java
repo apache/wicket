@@ -23,7 +23,9 @@ import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageManager;
+import org.apache.wicket.pageStore.CachingPageStore;
 import org.apache.wicket.pageStore.IPageContext;
+import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.InMemoryPageStore;
 import org.apache.wicket.pageStore.InSessionPageStore;
 import org.apache.wicket.pageStore.RequestPageStore;
@@ -44,7 +46,7 @@ public class TestMapperContext implements IMapperContext
 	private static final String APP_NAME = "test_app";
 	private static int count;
 
-	InSessionPageStore pageStore;
+	IPageStore pageStore;
 	MockPageContext pageContext;
 	IPageManager pageManager;
 	private String appName;
@@ -60,7 +62,8 @@ public class TestMapperContext implements IMapperContext
 		pageContext = new MockPageContext();
 		
 		InMemoryPageStore inMemoryPageStore = new InMemoryPageStore(appName, Integer.MAX_VALUE);
-		pageStore = new InSessionPageStore(inMemoryPageStore, 4, new JavaSerializer(appName));
+		InSessionPageStore inSessionPageStore = new InSessionPageStore(4, new JavaSerializer(appName));
+		pageStore = new CachingPageStore(inMemoryPageStore, inSessionPageStore);
 		pageManager = new PageManager(new RequestPageStore(pageStore)) {
 			@Override
 			protected IPageContext createPageContext()

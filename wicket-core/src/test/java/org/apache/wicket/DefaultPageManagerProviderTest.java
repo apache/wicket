@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.pageStore.AsynchronousPageStore;
+import org.apache.wicket.pageStore.CachingPageStore;
 import org.apache.wicket.pageStore.DiskPageStore;
 import org.apache.wicket.pageStore.InSessionPageStore;
 import org.apache.wicket.pageStore.RequestPageStore;
@@ -42,8 +43,9 @@ class DefaultPageManagerProviderTest extends WicketTestCase
 		IPageManager manager = new DefaultPageManagerProvider(tester.getApplication()).get();
 
 		RequestPageStore request = (RequestPageStore)manager.getPageStore();
-		InSessionPageStore session = (InSessionPageStore)request.getDelegate();
-		AsynchronousPageStore asynchronous = (AsynchronousPageStore)session.getDelegate();
+		CachingPageStore caching = (CachingPageStore)request.getDelegate();
+		InSessionPageStore session = (InSessionPageStore)caching.getCache();
+		AsynchronousPageStore asynchronous = (AsynchronousPageStore)caching.getDelegate();
 		SerializingPageStore serializing = (SerializingPageStore)asynchronous.getDelegate();
 		DiskPageStore disk = (DiskPageStore)serializing.getDelegate();
 		

@@ -26,7 +26,6 @@ import java.util.function.Supplier;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.wicket.DefaultPageManagerProvider;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
@@ -39,26 +38,15 @@ import org.apache.wicket.util.lang.Classes;
 /**
  * A store keeping a configurable maximum of pages in the session.
  * <p>
- * This store can be used in two different ways:
- * <ul>
- * <li>as a fast cache in front of a persistent store (as used by {@link DefaultPageManagerProvider})</li>
- * <li>as an application's persistent store of serialized pages in the session</li>
- * </ul>  
+ * Note: see {@link #getKey()} for using more than once instance in an application
  */
-public class InSessionPageStore extends DelegatingPageStore
+public class InSessionPageStore implements IPageStore
 {
 
-	private static final MetaDataKey<SessionData> KEY_CACHE = new MetaDataKey<>()
+	private static final MetaDataKey<SessionData> KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
-
-	private static final MetaDataKey<SessionData> KEY_PERSISTENT = new MetaDataKey<>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
-
-	private final MetaDataKey<SessionData> key;
 
 	private final ISerializer serializer;
 
@@ -75,7 +63,7 @@ public class InSessionPageStore extends DelegatingPageStore
 	 */
 	public InSessionPageStore(int maxPages)
 	{
-		this(new NoopPageStore(), null, KEY_PERSISTENT, () -> new CountLimitedData(maxPages));
+		this(null, () -> new CountLimitedData(maxPages));
 	}
 
 	/**
@@ -89,23 +77,7 @@ public class InSessionPageStore extends DelegatingPageStore
 	 */
 	public InSessionPageStore(Bytes maxBytes)
 	{
-		this(new NoopPageStore(), null, KEY_PERSISTENT, () -> new SizeLimitedData(maxBytes));
-	}
-
-	/**
-	 * Keep a cache of {@code maxPages} in each session.
-	 * <p>
-	 * If the container serializes sessions to disk, any non-{@code SerializedPage} added to this
-	 * store will be dropped.
-	 * 
-	 * @param delegate
-	 *            store to delegate to
-	 * @param maxPages
-	 *            maximum pages to keep in session
-	 */
-	public InSessionPageStore(IPageStore delegate, int maxPages)
-	{
-		this(delegate, maxPages, null);
+		this(null, () -> new SizeLimitedData(maxBytes));
 	}
 
 	/**
@@ -114,25 +86,19 @@ public class InSessionPageStore extends DelegatingPageStore
 	 * If the container serializes sessions to disk, any non-{@code SerializedPage} added to this
 	 * store will be automatically serialized.
 	 * 
-	 * @param delegate
-	 *            store to delegate to
 	 * @param maxPages
 	 *            maximum pages to keep in session
 	 * @param serializer
-	 *            optional serializer used only in case session serialization 
+	 *            optional serializer used only in case session serialization
 	 */
-	public InSessionPageStore(IPageStore delegate, int maxPages, ISerializer serializer)
+	public InSessionPageStore(int maxPages, ISerializer serializer)
 	{
-		this(delegate, serializer, KEY_CACHE, () -> new CountLimitedData(maxPages));
+		this(serializer, () -> new CountLimitedData(maxPages));
 	}
 
-	private InSessionPageStore(IPageStore delegate, ISerializer serializer, MetaDataKey<SessionData> key, Supplier<SessionData> dataCreator)
+	private InSessionPageStore(ISerializer serializer, Supplier<SessionData> dataCreator)
 	{
-		super(delegate);
-
 		this.serializer = serializer;
-
-		this.key = key;
 
 		this.dataCreator = dataCreator;
 	}
@@ -150,7 +116,7 @@ public class InSessionPageStore extends DelegatingPageStore
 			}
 		}
 
-		return getDelegate().getPage(context, id);
+		return null;
 	}
 
 	@Override
@@ -159,8 +125,6 @@ public class InSessionPageStore extends DelegatingPageStore
 		SessionData data = getSessionData(context, true);
 
 		data.add(page);
-
-		getDelegate().addPage(context, page);
 	}
 
 	@Override
@@ -171,8 +135,6 @@ public class InSessionPageStore extends DelegatingPageStore
 		{
 			data.remove(page.getPageId());
 		}
-
-		getDelegate().removePage(context, page);
 	}
 
 	@Override
@@ -183,13 +145,11 @@ public class InSessionPageStore extends DelegatingPageStore
 		{
 			data.removeAll();
 		}
-
-		getDelegate().removeAllPages(context);
 	}
 
 	private SessionData getSessionData(IPageContext context, boolean create)
 	{
-		SessionData data = context.getSessionData(key, () -> {
+		SessionData data = context.getSessionData(getKey(), () -> {
 			if (create)
 			{
 				return dataCreator.get();
@@ -210,10 +170,22 @@ public class InSessionPageStore extends DelegatingPageStore
 	}
 
 	/**
+	 * Session data is stored under a {@link MetaDataKey}.
+	 * <p>
+	 * In cases where more than one instance is used in an application (e.g. as a fast cache
+	 * <em>and</em> a persistent store of serialized pages in the session), this method has to be
+	 * overridden to provide a separate key for each instance.
+	 */
+	protected MetaDataKey<SessionData> getKey()
+	{
+		return KEY;
+	}
+
+	/**
 	 * Data kept in the {@link Session}, might get serialized along with its containing
 	 * {@link HttpSession}.
 	 */
-	abstract static class SessionData implements Serializable
+	protected abstract static class SessionData implements Serializable
 	{
 
 		transient ISerializer serializer;
@@ -401,5 +373,11 @@ public class InSessionPageStore extends DelegatingPageStore
 
 			size = 0;
 		}
+	}
+
+	@Override
+	public boolean supportsVersioning()
+	{
+		return false;
 	}
 }

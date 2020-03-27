@@ -21,6 +21,7 @@ import java.io.File;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageManager;
 import org.apache.wicket.pageStore.AsynchronousPageStore;
+import org.apache.wicket.pageStore.CachingPageStore;
 import org.apache.wicket.pageStore.CryptingPageStore;
 import org.apache.wicket.pageStore.DiskPageStore;
 import org.apache.wicket.pageStore.FilePageStore;
@@ -103,7 +104,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		
 		store = newAsynchronousStore(store);
 
-		store = newSessionStore(store);
+		store = newCachingStore(store);
 
 		store = newRequestStore(store);
 
@@ -125,7 +126,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	}
 
 	/**
-	 * Cache pages in the request until it is finished.
+	 * Keep pages in the request until it is finished.
 	 * 
 	 * @see RequestPageStore
 	 */
@@ -139,9 +140,9 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	 * 
 	 * @see InSessionPageStore
 	 */
-	protected IPageStore newSessionStore(IPageStore pageStore)
+	protected IPageStore newCachingStore(IPageStore pageStore)
 	{
-		return new InSessionPageStore(pageStore, 1, getSerializer());
+		return new CachingPageStore(pageStore, new InSessionPageStore(1, getSerializer()));
 	}
 
 	/**

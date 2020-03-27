@@ -105,7 +105,7 @@ class PersistentPageManagerTest
 	 */
 	private IPageManager createPageManager(String appName, AtomicReference<Object> sessionData)
 	{
-		IPageStore store = new InSessionPageStore(new NoopPageStore(), Integer.MAX_VALUE, new JavaSerializer(APP_NAME));
+		IPageStore store = new InSessionPageStore(Integer.MAX_VALUE, new JavaSerializer(APP_NAME));
 		
 		return new PageManager(store) {
 			@Override

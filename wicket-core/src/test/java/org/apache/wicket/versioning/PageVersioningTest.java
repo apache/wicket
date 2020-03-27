@@ -23,6 +23,7 @@ import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.Page;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageManager;
+import org.apache.wicket.pageStore.CachingPageStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.InMemoryPageStore;
 import org.apache.wicket.pageStore.InSessionPageStore;
@@ -62,7 +63,8 @@ class PageVersioningTest
 				{
 					InMemoryPageStore inMemory = new InMemoryPageStore("test", Integer.MAX_VALUE);
 					SerializingPageStore serializing = new SerializingPageStore(inMemory, new JavaSerializer("test"));
-					final IPageStore store = new InSessionPageStore(serializing, Integer.MAX_VALUE);
+					InSessionPageStore session = new InSessionPageStore(Integer.MAX_VALUE);
+					final IPageStore store = new CachingPageStore(serializing, session);
 					return new PageManager(store);
 				};
 			}
