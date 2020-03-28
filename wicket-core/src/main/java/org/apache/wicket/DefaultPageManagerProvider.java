@@ -42,8 +42,8 @@ import org.apache.wicket.util.lang.Bytes;
 /**
  * A provider of a {@link PageManager} managing @link IManageablePage}s with a default chain of {@link IPageStore}s:
  * <ol>
- * <li>{@link RequestPageStore} caching pages until end of the request</li>
- * <li>{@link InSessionPageStore} keeping the last accessed page in the session</li>
+ * <li>{@link RequestPageStore} keeping pages until end of the request</li>
+ * <li>{@link InSessionPageStore} caching the last accessed page in the session</li>
  * <li>{@link AsynchronousPageStore} moving storage of pages to an asynchronous worker thread (enabled by default with {@link StoreSettings#isAsynchronous()})</li>
  * <li>{@link SerializingPageStore} serializing all pages (so they are available for back-button)</li>
  * <li>{@link CryptingPageStore} encrypting all pages (disabled by default in {@link StoreSettings#isEncrypted()})</li>
@@ -62,7 +62,6 @@ import org.apache.wicket.util.lang.Bytes;
  * <ul>
  * <li>{@link RequestPageStore} caching pages until end of the request</li>
  * <li>{@link InSessionPageStore} keeping a limited count of pages in the session, e.g. 10</li>
- * <li>{@link NoopPageStore} discarding all exceeding pages</li>
  * </ul>
  * The chain's initial store should always be a {@link RequestPageStore}, buffering all adding of pages until the end of the request.
  * Several stores accept {@link SerializedPage} only, these have to be preceded by a {@link SerializingPageStore}.
@@ -73,6 +72,8 @@ import org.apache.wicket.util.lang.Bytes;
  * <p>
  * Other stores be may inserted ad libitum, e.g.
  * <ul>
+ * <li>{@link NoopPageStore} discards all pages</li>
+ * <li>{@link CachingPageStore} uses a page store as a cache in front of another store</li>
  * <li>{@link GroupingPageStore} groups pages, e.g. to limit storage size on a per-group basis</li>
  * <li>{@link FilePageStore} as an alternative to the trusted {@link DiskPageStore}</li>
  * <li>other implementations from <a href="https://github.com/wicketstuff/core/tree/master/datastores-parent">wicketstuff-datastores</a></li>

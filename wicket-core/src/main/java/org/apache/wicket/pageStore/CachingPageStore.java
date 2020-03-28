@@ -24,7 +24,10 @@ import org.apache.wicket.page.IManageablePage;
 public class CachingPageStore extends DelegatingPageStore
 {
 
-	private IPageStore cache;
+	/**
+	 * The cache.
+	 */
+	private final IPageStore cache;
 
 	/**
 	 * Constructor.
@@ -48,6 +51,9 @@ public class CachingPageStore extends DelegatingPageStore
 		return cache;
 	}
 
+	/**
+	 * Get the page from cache first.
+	 */
 	@Override
 	public IManageablePage getPage(IPageContext context, int id)
 	{
