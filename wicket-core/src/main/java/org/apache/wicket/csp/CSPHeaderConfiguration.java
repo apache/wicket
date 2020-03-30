@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -319,12 +318,9 @@ public class CSPHeaderConfiguration
 	 *            The {@link ContentSecurityPolicySettings} that renders the header.
 	 * @param cycle
 	 *            The current {@link RequestCycle}.
-	 * @param currentHandler
-	 *            The handler that is currently being evaluated or executed.
 	 * @return the rendered header.
 	 */
-	public String renderHeaderValue(ContentSecurityPolicySettings settings, RequestCycle cycle,
-	                                IRequestHandler currentHandler)
+	public String renderHeaderValue(ContentSecurityPolicySettings settings, RequestCycle cycle)
 	{
 		return directives.entrySet()
 			.stream()

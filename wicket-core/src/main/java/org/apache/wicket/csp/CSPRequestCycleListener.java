@@ -56,7 +56,7 @@ public class CSPRequestCycleListener implements IRequestCycleListener
 			.forEach(entry -> {
 				CSPHeaderMode mode = entry.getKey();
 				CSPHeaderConfiguration config = entry.getValue();
-				String headerValue = config.renderHeaderValue(settings, cycle, handler);
+				String headerValue = config.renderHeaderValue(settings, cycle);
 				webResponse.setHeader(mode.getHeader(), headerValue);
 				if (config.isAddLegacyHeaders())
 				{
