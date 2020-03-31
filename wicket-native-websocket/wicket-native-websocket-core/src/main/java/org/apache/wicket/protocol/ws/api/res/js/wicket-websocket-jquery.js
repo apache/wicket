@@ -76,6 +76,9 @@
 					url += '?pageId=' + encodeURIComponent(WWS.pageId);
 				} else if (WWS.resourceName) {
 					url += '?resourceName=' + encodeURIComponent(WWS.resourceName);
+					if (WWS.connectionToken) {
+						url += '&connectionToken=' + encodeURIComponent(WWS.connectionToken);
+					}
 				}
 
 				url += '&wicket-ajax-baseurl=' + encodeURIComponent(WWS.baseUrl);

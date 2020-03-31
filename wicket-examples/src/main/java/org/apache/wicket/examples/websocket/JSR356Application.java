@@ -44,12 +44,13 @@ public class JSR356Application extends WebApplication
 	{
 		super.init();
 
-        scheduledExecutorService = Executors.newScheduledThreadPool(1);
+        scheduledExecutorService = Executors.newScheduledThreadPool(5);
 
 		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig(8080, 8443)));
 
 		mountPage("/behavior", WebSocketBehaviorDemoPage.class);
 		mountPage("/resource", WebSocketResourceDemoPage.class);
+		mountPage("/resource-multi-tab", WebSocketMultiTabResourceDemoPage.class);
 
 		getSharedResources().add(ChartWebSocketResource.NAME, new ChartWebSocketResource());
 

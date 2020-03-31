@@ -40,6 +40,7 @@ import org.apache.wicket.util.template.PackageTextTemplate;
 public class BaseWebSocketBehavior extends Behavior
 {
 	private final String resourceName;
+	private final String connectionToken;
 
 	/**
 	 * Constructor.
@@ -50,6 +51,7 @@ public class BaseWebSocketBehavior extends Behavior
 	protected BaseWebSocketBehavior()
 	{
 		this.resourceName = null;
+		this.connectionToken = null;
 	}
 
 	/**
@@ -70,7 +72,31 @@ public class BaseWebSocketBehavior extends Behavior
 	 */
 	public BaseWebSocketBehavior(String resourceName)
 	{
+		this(resourceName, null);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * Contributes WebSocket initialization code that will
+	 * work with {@link org.apache.wicket.protocol.ws.api.WebSocketResource}
+	 *
+	 * To use WebSocketResource the application have to setup the
+	 * resource as a shared one in its {@link org.apache.wicket.Application#init()}
+	 * method:
+	 * <code><pre>
+	 *     getSharedResources().add(resourceName, new MyWebSocketResource())
+	 * </pre></code>
+	 *
+	 *  @param resourceName
+	 *          the name of the shared {@link org.apache.wicket.protocol.ws.api.WebSocketResource}
+	 *  @param connectionToken
+	 *  		an optional token to support connections to the same resource from multiple browser tabs
+	 */
+	public BaseWebSocketBehavior(String resourceName, String connectionToken)
+	{
 		this.resourceName = Args.notEmpty(resourceName, "resourceName");
+		this.connectionToken = connectionToken;
 	}
 
 	@Override
@@ -103,10 +129,12 @@ public class BaseWebSocketBehavior extends Behavior
 			int pageId = component.getPage().getPageId();
 			variables.put("pageId", pageId);
 			variables.put("resourceName", "");
+			variables.put("connectionToken", "");
 		}
 		else
 		{
 			variables.put("resourceName", resourceName);
+			variables.put("connectionToken", connectionToken);
 			variables.put("pageId", false);
 		}
 
