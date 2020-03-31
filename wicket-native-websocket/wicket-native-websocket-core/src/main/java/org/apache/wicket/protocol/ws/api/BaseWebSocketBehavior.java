@@ -80,12 +80,22 @@ public class BaseWebSocketBehavior extends Behavior
 
 		response.render(JavaScriptHeaderItem.forReference(WicketWebSocketJQueryResourceReference.get()));
 
+		Map<String, Object> parameters = getParameters(component);
+		String webSocketSetupScript = getWebSocketSetupScript(parameters);
+
+		response.render(OnDomReadyHeaderItem.forScript(webSocketSetupScript));
+	}
+
+	protected String getWebSocketSetupScript(Map<String, Object> parameters) {
 		PackageTextTemplate webSocketSetupTemplate =
 				new PackageTextTemplate(WicketWebSocketJQueryResourceReference.class,
 						"res/js/wicket-websocket-setup.js.tmpl");
 
-		Map<String, Object> variables = Generics.newHashMap();
+		return webSocketSetupTemplate.asString(parameters);
+	}
 
+	private Map<String, Object> getParameters(Component component) {
+		Map<String, Object> variables = Generics.newHashMap();
 
 		// set falsy JS values for the non-used parameter
 		if (Strings.isEmpty(resourceName))
@@ -124,10 +134,7 @@ public class BaseWebSocketBehavior extends Behavior
 
 		final CharSequence sessionId = getSessionId(component);
 		variables.put("sessionId", sessionId);
-
-		String webSocketSetupScript = webSocketSetupTemplate.asString(variables);
-
-		response.render(OnDomReadyHeaderItem.forScript(webSocketSetupScript));
+		return variables;
 	}
 
 	protected Integer getPort(WebSocketSettings webSocketSettings)
