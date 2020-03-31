@@ -107,7 +107,7 @@ public class StartExamples
 //		sessionCache.setSessionDataStore(sessionStore);
 //		bb.getSessionHandler().setSessionCache(sessionCache);
 		
-		ServerContainer serverContainer = WebSocketServerContainerInitializer.configureContext(bb);
+		ServerContainer serverContainer = WebSocketServerContainerInitializer.initialize(bb);
 		serverContainer.addEndpoint(new WicketServerEndpointConfig());
 
 		// uncomment next line if you want to test with JSESSIONID encoded in the urls
