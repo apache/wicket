@@ -76,14 +76,19 @@ public final class SerializedPage implements IManageablePage
 		return pageId;
 	}
 
+
 	public String getPageType()
 	{
 		return pageType;
 	}
-	
+
 	public byte[] getData()
 	{
 		return data;
+	}
+
+	@Override
+	public void detach() {
 	}
 
 	@Override

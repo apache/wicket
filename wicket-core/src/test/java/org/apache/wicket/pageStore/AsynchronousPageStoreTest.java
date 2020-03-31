@@ -79,6 +79,10 @@ public class AsynchronousPageStoreTest
 		}
 
 		@Override
+		public void detach() {
+		}
+
+		@Override
 		public boolean setFreezePageId(boolean freeze)
 		{
 			return false;

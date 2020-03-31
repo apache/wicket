@@ -133,6 +133,10 @@ public class MockComponent implements IRequestableComponent, IRequestListener
 	}
 
 	@Override
+	public void detach() {
+	}
+
+	@Override
 	public boolean canCallListenerAfterExpiry()
 	{
 		return false;
@@ -168,7 +172,7 @@ public class MockComponent implements IRequestableComponent, IRequestListener
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void onRequest()
 	{

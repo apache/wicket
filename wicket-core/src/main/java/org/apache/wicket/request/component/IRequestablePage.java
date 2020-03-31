@@ -71,10 +71,4 @@ public interface IRequestablePage extends IRequestableComponent, IManageablePage
 	 * @return page parameters or <code>null</code>
 	 */
 	PageParameters getPageParameters();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	default void detach()
-	{}
 }

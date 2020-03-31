@@ -158,5 +158,9 @@ class PersistentPageManagerTest
 		{
 			return false;
 		}
+
+		@Override
+		public void detach() {
+		}
 	}
 }

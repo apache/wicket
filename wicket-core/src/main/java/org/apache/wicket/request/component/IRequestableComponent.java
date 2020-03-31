@@ -107,8 +107,7 @@ public interface IRequestableComponent
 	 * 
 	 * </p>
 	 */
-	default void detach()
-	{}
+	void detach();
 
 	/**
 	 * @return {@code true} if it is save to call an {@link org.apache.wicket.IRequestListener} on this component
