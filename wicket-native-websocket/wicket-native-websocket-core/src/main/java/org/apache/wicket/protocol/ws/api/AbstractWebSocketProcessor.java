@@ -50,6 +50,7 @@ import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
 import org.apache.wicket.protocol.ws.api.registry.ResourceNameKey;
+import org.apache.wicket.protocol.ws.api.registry.ResourceNameTokenKey;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
@@ -84,6 +85,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	private final WebRequest webRequest;
 	private final int pageId;
 	private final String resourceName;
+	private final String connectionToken;
 	private final Url baseUrl;
 	private final WebApplication application;
 	private final String sessionId;
@@ -111,6 +113,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		this.sessionId = httpSession.getId();
 		String pageId = request.getParameter("pageId");
 		this.resourceName = request.getParameter("resourceName");
+		this.connectionToken = request.getParameter("connectionToken");
 		if (Strings.isEmpty(pageId) && Strings.isEmpty(resourceName))
 		{
 			throw new IllegalArgumentException("The request should have either 'pageId' or 'resourceName' parameter!");
@@ -395,7 +398,12 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		}
 		else
 		{
-			key = new ResourceNameKey(resourceName);
+			if (Strings.isEmpty(connectionToken))
+			{
+				key = new ResourceNameKey(resourceName);
+			} else {
+				key = new ResourceNameTokenKey(resourceName, connectionToken);
+			}
 		}
 		return key;
 	}
