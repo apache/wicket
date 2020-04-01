@@ -73,9 +73,12 @@ public abstract class WicketExampleApplication extends WebApplication
 			@Override
 			public void onEndRequest(RequestCycle cycle)
 			{
-				((WebResponse) cycle.getResponse()).addHeader("Server-Timing",
-					"server;desc=\"Wicket rendering time\";dur="
-						+ (System.currentTimeMillis() - cycle.getStartTime()));
+				final WebResponse webResponse = (WebResponse) cycle.getResponse();
+				if (webResponse.isHeaderSupported())
+				{
+					final long serverTime = System.currentTimeMillis() - cycle.getStartTime();
+					webResponse.addHeader("Server-Timing", "server;desc=\"Wicket rendering time\";dur=" + serverTime);
+				}
 			}
 		});
 	}
