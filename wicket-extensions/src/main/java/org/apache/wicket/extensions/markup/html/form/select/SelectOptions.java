@@ -26,13 +26,18 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
- * Component that makes it easy to produce a list of SelectOption components
- * 
- * Example markup:
- * 
+ * Component that makes it easy to produce a list of SelectOption components.
+ * <p>
+ * Has to be attached to a &lt;option&gt; markup tag.
+ * <p>
+ * Note: The following pre Wicket 9 markup is deprecated and results in a log warning. Its support
+ * will be removed in Wicket 10:
+ *
  * <pre>
  * <code>
  * &lt;wicket:container wicket:id=&quot;selectOptions&quot;&gt;&lt;option wicket:id=&quot;option&quot;&gt;&lt;/option&gt;&lt;/wicket:container&gt;
@@ -46,6 +51,8 @@ import org.apache.wicket.util.string.Strings;
 public class SelectOptions<T> extends RepeatingView
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger log = LoggerFactory.getLogger(SelectOptions.class);
 
 	private boolean recreateChoices = false;
 
@@ -83,9 +90,9 @@ public class SelectOptions<T> extends RepeatingView
 	 * Controls whether {@link SelectOption}s are recreated on each render.
 	 * <p>
 	 * Note: When recreating on each render, {@link #newOption(String, IModel)} should return
-	 * {@link SelectOption}s with stable values, i.e. {@link SelectOption#getValue()} should
-	 * return a value based on its model object instead of the default auto index.
-	 * Otherwise the current selection will be lost on form errors.
+	 * {@link SelectOption}s with stable values, i.e. {@link SelectOption#getValue()} should return
+	 * a value based on its model object instead of the default auto index. Otherwise the current
+	 * selection will be lost on form errors.
 	 * 
 	 * @param refresh
 	 * @return this for chaining
@@ -111,36 +118,61 @@ public class SelectOptions<T> extends RepeatingView
 			removeAll();
 
 			Collection<? extends T> modelObject = (Collection<? extends T>)getDefaultModelObject();
-
 			if (modelObject != null)
 			{
+				// TODO remove in Wicket 10
+				boolean option = "option".equalsIgnoreCase(getMarkupTag().getName());
+				if (option == false)
+				{
+					log.warn("Since version 9.0.0 you should use an option tag");
+				}
+
 				for (T value : modelObject)
 				{
-					// we need a container to represent a row in repeater
-					WebMarkupContainer row = new WebMarkupContainer(newChildId());
-					row.setRenderBodyOnly(true);
-					add(row);
-
 					// we add our actual SelectOption component to the row
 					String text = renderer.getDisplayValue(value);
 					IModel<T> model = renderer.getModel(value);
-					row.add(newOption(text, model));
+
+					if (option)
+					{
+						add(newOption(newChildId(), text, model));
+					}
+					else
+					{
+						// pre Wicket 9 a container is used to represent a row in repeater
+						WebMarkupContainer row = new WebMarkupContainer(newChildId());
+						row.setRenderBodyOnly(true);
+						add(row);
+
+						// we add our actual SelectOption component to the row
+						row.add(newOption(text, model));
+					}
 				}
 			}
 		}
 	}
 
 	/**
+	 * @deprecated override {@link #newOption(String, String, IModel)} instead.
+	 */
+	protected SelectOption<T> newOption(final String text, final IModel<T> model)
+	{
+		return newOption("option",  text, model);
+	}
+
+	/**
 	 * Factory method for creating a new <code>SelectOption</code>. Override to add your own
 	 * extensions, such as Ajax behaviors.
 	 * 
+	 * @param id
+	 *            component id
 	 * @param text
 	 * @param model
 	 * @return a {@link SelectOption}
 	 */
-	protected SelectOption<T> newOption(final String text, final IModel<T> model)
+	protected SelectOption<T> newOption(final String id, final String text, final IModel<T> model)
 	{
-		SimpleSelectOption<T> option = new SimpleSelectOption<>("option", model, text);
+		SimpleSelectOption<T> option = new SimpleSelectOption<>(id, model, text);
 		option.setEscapeModelStrings(this.getEscapeModelStrings());
 		return option;
 	}
@@ -173,10 +205,11 @@ public class SelectOptions<T> extends RepeatingView
 		public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 		{
 			CharSequence escaped = text;
-			if (getEscapeModelStrings()) {
+			if (getEscapeModelStrings())
+			{
 				escaped = Strings.escapeMarkup(text);
 			}
-			
+
 			replaceComponentTagBody(markupStream, openTag, escaped);
 		}
 
@@ -193,12 +226,12 @@ public class SelectOptions<T> extends RepeatingView
 			tag.setType(TagType.OPEN);
 		}
 	}
-	
+
 	@Override
 	protected void onDetach()
 	{
 		renderer.detach();
-		
+
 		super.onDetach();
 	}
 }

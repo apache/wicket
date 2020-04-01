@@ -18,7 +18,6 @@ package org.apache.wicket.examples.compref;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,7 +31,6 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.util.io.IClusterable;
 
 
@@ -44,10 +42,6 @@ import org.apache.wicket.util.io.IClusterable;
  */
 public class SelectPage extends WicketExamplePage
 {
-	/** available sites for selection. */
-	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby",
-		"Java.Net");
-
 	/** available choices for large selection box. */
 	private static final List<String> MANY_CHOICES = Arrays.asList("Choice1", "Choice2",
 		"Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9");
@@ -103,9 +97,7 @@ public class SelectPage extends WicketExamplePage
 			}
 
 		};
-		IModel<Collection<String>> model = new CollectionModel<>(
-			MANY_CHOICES);
-		choices.add(new SelectOptions<>("manychoices", model, renderer));
+		choices.add(new SelectOptions<>("manychoices", () -> MANY_CHOICES, renderer));
 
 	}
 

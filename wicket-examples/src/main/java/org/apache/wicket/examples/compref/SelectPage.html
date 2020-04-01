@@ -35,8 +35,10 @@
 		  <td valign="top">Select some of these excellent choices</td>
 		  <td>
 		    <select wicket:id="choices" multiple="multiple" size="5">
-				<!-- the only trick here is that the wicket id of the option tag is fixed to "option" -->
-		        <span wicket:id="manychoices"><option wicket:id="option"></option></span>
+		        <option wicket:id="manychoices"></option>
+				<!-- the pre Wicket 9 solution required a nested option tag with a fixed "option" id
+			        <span wicket:id="manychoices"><option wicket:id="option"></option></span>
+				-->
 		    </select>
 		  </td>
 		 </tr>
