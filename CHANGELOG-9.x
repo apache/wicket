@@ -2,6 +2,56 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.0.0-M5
+
+** Bug
+
+    * [WICKET-6715] - FileUpload class should not  implement IClusterable
+    * [WICKET-6745] - CSP: inline JS in server and client time response filters
+    * [WICKET-6746] - HttpsMapper cannot deal with resources over websockets
+    * [WICKET-6752] - Some dependencies contain CVEs
+    * [WICKET-6753] - res/modal.js using aria-labelledby where it should be using aria-label
+    * [WICKET-6754] - Iteration stops with nested containers
+    * [WICKET-6755] - MockServletContext does not decode real path
+    * [WICKET-6756] - Avoid URL.getFile() when actually expecting paths.
+    * [WICKET-6757] - Avoid URL.getFile during mime type detection.
+    * [WICKET-6758] - NPE in AbstractWebSocketProcessor after session times out
+
+** New Feature
+
+    * [WICKET-6727] - Configurable CSP
+    * [WICKET-6729] - allow adding IHeaderResponseDecorator without replacing all others
+    * [WICKET-6730] - Global access to secure random data
+
+** Improvement
+
+    * [WICKET-6724] - CSP: Inline Javascript in AjaxLink
+    * [WICKET-6725] - CSP: display:none in Component.renderPlaceholderTag
+    * [WICKET-6726] - CSP: inline styling and js in Form submitbutton handling
+    * [WICKET-6731] - CSP: inline JS in SubmitLink
+    * [WICKET-6732] - CSP: inline JS in Link and ExternalLink
+    * [WICKET-6733] - CSP: enable by default
+    * [WICKET-6735] - CSP: inline styling in FormComponentFeedbackBorder/Indicator
+    * [WICKET-6736] - CSP: Inline styling in BrowserInfoForm
+    * [WICKET-6737] - CSP: violations in examples
+    * [WICKET-6738] - CSP: inline styling in UploadProgressBar
+    * [WICKET-6739] - CSP: inline JS in Palette
+    * [WICKET-6740] - CSP: inline JS in Button
+    * [WICKET-6741] - CSP: inline JS in FormComponentUpdatingBehavior
+    * [WICKET-6749] - CSP: Inline styling in ExceptionErrorPage.html
+    * [WICKET-6759] - Support disabling error notification for websockets
+    * [WICKET-6760] - Nested Form placeholder should preserve tag name
+    * [WICKET-6761] - Support multiple connections to the same websocket resource from a single session
+    * [WICKET-6762] - Support manual initialization of websocket connections
+
+** Task
+
+    * [WICKET-6687] - Cleanup the code from attribute inline styles and attribute inline scripts
+    * [WICKET-6747] - Document CSP in user guide and migration guide
+    * [WICKET-6751] - Support creating custom page access synchronization strategies
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.0.0-M4
 
 ** Bug
