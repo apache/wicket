@@ -20,7 +20,7 @@
   <parent>
     <artifactId>wicket-parent</artifactId>
     <groupId>org.apache.wicket</groupId>
-    <version>9.0.0-M5-SNAPSHOT</version>
+    <version>9.0.0-M6-SNAPSHOT</version>
   </parent>
   <artifactId>wicket-request</artifactId>
   <packaging>bundle</packaging>
