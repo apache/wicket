@@ -21,7 +21,7 @@ For applications that cannot adhere to a CSP, the CSP can be disabled with the f
   @Override
  protected void init() {
   super.init();
-  getCspSettings().blocking().disable();
+  getCspSettings().blocking().disabled();
   // ...
  }
 ----
