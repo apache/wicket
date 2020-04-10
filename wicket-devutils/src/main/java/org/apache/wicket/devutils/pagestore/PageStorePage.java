@@ -54,18 +54,27 @@ public class PageStorePage extends DevUtilsPage
 		return false;
 	}
 	
+	/**
+	 * Helper to find the {@link IPersistentPageStore} of the application.
+	 * 
+	 * @return store or <code>null</code> if not available
+	 */
 	public static IPersistentPageStore getPersistentPageStore() {
-		IPageStore store = Session.get().getPageManager().getPageStore();
-		while (true) {
-			if (store instanceof IPersistentPageStore) {
-				return (IPersistentPageStore)store;
+		try {
+			IPageStore store = Session.get().getPageManager().getPageStore();
+			while (true) {
+				if (store instanceof IPersistentPageStore) {
+					return (IPersistentPageStore)store;
+				}
+				
+				if (store instanceof DelegatingPageStore) {
+					store = ((DelegatingPageStore)store).getDelegate();
+				} else {
+					break;
+				}
 			}
-			
-			if (store instanceof DelegatingPageStore) {
-				store = ((DelegatingPageStore)store).getDelegate();
-			} else {
-				break;
-			}
+		} catch (UnsupportedOperationException ex) {
+			// no page store
 		}
 		
 		return null;

@@ -35,7 +35,7 @@ public class MockPageManager implements IPageManager
 	@Override
 	public boolean supportsVersioning()
 	{
-		return false;
+		return true;
 	}
 	
 	@Override
