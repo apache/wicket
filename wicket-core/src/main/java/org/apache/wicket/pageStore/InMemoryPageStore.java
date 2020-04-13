@@ -41,13 +41,13 @@ import org.apache.wicket.util.lang.Classes;
 public class InMemoryPageStore extends AbstractPersistentPageStore implements IPersistentPageStore
 {
 
-	private final Map<String, MemoryData> datas = new ConcurrentHashMap<>();
+	private final Map<String, IMemoryData> datas;
 
-	private final Supplier<MemoryData> dataCreator;
+	private final Supplier<IMemoryData> dataCreator;
 
 	/**
 	 * Keep {@code maxPages} for each session.
-	 *    
+	 * 
 	 * @param applicationName
 	 *            {@link Application#getName()}
 	 * @param maxPages
@@ -55,14 +55,14 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	 */
 	public InMemoryPageStore(String applicationName, int maxPages)
 	{
-		this(applicationName, () -> new CountLimitedData(maxPages));
+		this(applicationName, () -> new CountLimitedData(maxPages), new ConcurrentHashMap<>());
 	}
 
 	/**
 	 * Keep page up to {@code maxBytes} for each session.
 	 * <p>
-	 * All pages added to this store <em>must</em> be {@code SerializedPage}s. You can achieve this by letting
-	 * a {@link SerializingPageStore} delegate to this store.
+	 * All pages added to this store <em>must</em> be {@code SerializedPage}s. You can achieve this
+	 * by letting a {@link SerializingPageStore} delegate to this store.
 	 * 
 	 * @param applicationName
 	 *            {@link Application#getName()}
@@ -71,29 +71,40 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	 */
 	public InMemoryPageStore(String applicationName, Bytes maxBytes)
 	{
-		this(applicationName, () -> new SizeLimitedData(maxBytes));
-	}
-
-	InMemoryPageStore(String applicationName, Supplier<MemoryData> dataCreator)
-	{
-		super(applicationName);
-		
-		this.dataCreator = dataCreator;
+		this(applicationName, () -> new SizeLimitedData(maxBytes), new ConcurrentHashMap<>());
 	}
 
 	/**
-	 * Versioning is not supported.	
+	 * @param applicationName
+	 *            {@link Application#getName()}
+	 * @param dataCreator
+	 *            creator of new data
+	 * @param datas
+	 *            storage for datas
+	 */
+	protected InMemoryPageStore(String applicationName, Supplier<IMemoryData> dataCreator,
+		Map<String, IMemoryData> datas)
+	{
+		super(applicationName);
+
+		this.dataCreator = dataCreator;
+
+		this.datas = datas;
+	}
+
+	/**
+	 * Versioning is not supported.
 	 */
 	@Override
 	public boolean supportsVersioning()
 	{
 		return false;
 	}
-	
+
 	@Override
 	protected IManageablePage getPersistedPage(String sessionIdentifier, int id)
 	{
-		MemoryData data = getMemoryData(sessionIdentifier, false);
+		IMemoryData data = getMemoryData(sessionIdentifier, false);
 		if (data != null)
 		{
 			return data.get(id);
@@ -105,7 +116,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	@Override
 	protected void removePersistedPage(String sessionIdentifier, IManageablePage page)
 	{
-		MemoryData data = getMemoryData(sessionIdentifier, false);
+		IMemoryData data = getMemoryData(sessionIdentifier, false);
 		if (data != null)
 		{
 			synchronized (data)
@@ -124,7 +135,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	@Override
 	protected void addPersistedPage(String sessionIdentifier, IManageablePage page)
 	{
-		MemoryData data = getMemoryData(sessionIdentifier, true);
+		IMemoryData data = getMemoryData(sessionIdentifier, true);
 
 		data.add(page);
 	}
@@ -138,7 +149,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	@Override
 	public List<IPersistedPage> getPersistedPages(String sessionIdentifier)
 	{
-		MemoryData data = datas.get(sessionIdentifier);
+		IMemoryData data = datas.get(sessionIdentifier);
 		if (data == null)
 		{
 			return new ArrayList<>();
@@ -146,13 +157,13 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 
 		synchronized (data)
 		{
-			return StreamSupport.stream(data.spliterator(), false)
-				.map(page -> {
-					String pageType = page instanceof SerializedPage ? ((SerializedPage)page).getPageType() : Classes.name(page.getClass());
-					
-					return new PersistedPage(page.getPageId(), pageType, getSize(page));
-				})
-				.collect(Collectors.toList());
+			return StreamSupport.stream(data.spliterator(), false).map(page -> {
+				String pageType = page instanceof SerializedPage
+					? ((SerializedPage)page).getPageType()
+					: Classes.name(page.getClass());
+
+				return new PersistedPage(page.getPageId(), pageType, getSize(page));
+			}).collect(Collectors.toList());
 		}
 	}
 
@@ -161,7 +172,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	{
 		int size = 0;
 
-		for (MemoryData data : datas.values())
+		for (IMemoryData data : datas.values())
 		{
 			synchronized (data)
 			{
@@ -190,48 +201,80 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 		}
 	}
 
-	private MemoryData getMemoryData(String sessionIdentifier, boolean create)
+	private IMemoryData getMemoryData(String sessionIdentifier, boolean create)
 	{
 		if (!create)
 		{
 			return datas.get(sessionIdentifier);
 		}
 
-		MemoryData data = dataCreator.get();
-		MemoryData existing = datas.putIfAbsent(sessionIdentifier, data);
+		IMemoryData data = dataCreator.get();
+		IMemoryData existing = datas.putIfAbsent(sessionIdentifier, data);
 		return existing != null ? existing : data;
 	}
 
 	/**
-	 * Data kept in memory.
+	 * Pages kept in memory for a session.
 	 */
-	abstract static class MemoryData implements Iterable<IManageablePage>
+	interface IMemoryData extends Iterable<IManageablePage>
 	{
 		/**
-		 * Kept in list instead of map, since non-serialized pages might change their id during a request.
+		 * Remove a page.
+		 * 
+		 * @param pageId
+		 * @return
+		 */
+		IManageablePage remove(int pageId);
+
+		/**
+		 * Add a page.
+		 * 
+		 * @param page
+		 */
+		void add(IManageablePage page);
+
+		/**
+		 * Get a page.
+		 * 
+		 * @param id
+		 * @return
+		 */
+		IManageablePage get(int id);
+	}
+
+	/**
+	 * List based implementation.
+	 */
+	protected static class MemoryData implements IMemoryData
+	{
+		/**
+		 * Kept in list instead of map, since non-serialized pages might change their id during a
+		 * request.
 		 */
 		List<IManageablePage> pages = new LinkedList<>();
-
+		
 		@Override
 		public Iterator<IManageablePage> iterator()
 		{
 			return pages.iterator();
 		}
 
+		@Override
 		public synchronized void add(IManageablePage page)
 		{
 			remove(page.getPageId());
-			
+
 			pages.add(page);
 		}
 
+		@Override
 		public synchronized IManageablePage remove(int pageId)
 		{
 			Iterator<IManageablePage> iterator = pages.iterator();
 			while (iterator.hasNext())
 			{
 				IManageablePage page = iterator.next();
-				
+
 				if (page.getPageId() == pageId)
 				{
 					iterator.remove();
@@ -241,6 +284,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 			return null;
 		}
 
+		@Override
 		public synchronized IManageablePage get(int pageId)
 		{
 			for (final IManageablePage page : pages)
@@ -250,21 +294,22 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 					return page;
 				}
 			}
-			
+
 			return null;
 		}
-		
-		protected void removeOldest() {
+
+		protected void removeOldest()
+		{
 			IManageablePage page = pages.iterator().next();
-			
+
 			remove(page.getPageId());
 		}
 	}
-	
+
 	/**
 	 * Limit pages by count.
 	 */
-	static class CountLimitedData extends MemoryData
+	protected static class CountLimitedData extends MemoryData
 	{
 		private final int maxPages;
 
@@ -272,57 +317,58 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 		{
 			this.maxPages = Args.withinRange(1, Integer.MAX_VALUE, maxPages, "maxPages");
 		}
-	
+
 		@Override
 		public synchronized void add(IManageablePage page)
 		{
 			super.add(page);
-			
+
 			while (pages.size() > maxPages)
 			{
 				removeOldest();
 			}
 		}
 	}
-	
+
 	/**
 	 * Limit pages by size.
 	 */
-	static class SizeLimitedData extends MemoryData
+	protected static class SizeLimitedData extends MemoryData
 	{
 		private final Bytes maxBytes;
-		
+
 		private long size;
 
 		public SizeLimitedData(Bytes maxBytes)
 		{
 			Args.notNull(maxBytes, "maxBytes");
-			
+
 			this.maxBytes = Args.withinRange(Bytes.bytes(1), Bytes.MAX, maxBytes, "maxBytes");
 		}
-		
+
 		@Override
 		public synchronized void add(IManageablePage page)
 		{
 			if (page instanceof SerializedPage == false)
 			{
-				throw new WicketRuntimeException("InMemoryPageStore limited by size works with serialized pages only");
+				throw new WicketRuntimeException(
+					"InMemoryPageStore limited by size works with serialized pages only");
 			}
-			
+
 			super.add(page);
-			
-			size += ((SerializedPage) page).getData().length;
+
+			size += ((SerializedPage)page).getData().length;
 
 			while (size > maxBytes.bytes())
 			{
 				removeOldest();
 			}
 		}
-		
+
 		@Override
 		public synchronized IManageablePage remove(int pageId)
 		{
-			SerializedPage page = (SerializedPage) super.remove(pageId);
+			SerializedPage page = (SerializedPage)super.remove(pageId);
 			if (page != null)
 			{
 				size -= page.getData().length;
