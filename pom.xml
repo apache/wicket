@@ -131,7 +131,7 @@
 		<maven.compiler.target>11</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<asm.version>7.3.1</asm.version>
+		<asm.version>8.0.1</asm.version>
 		<aspectj.version>1.9.5</aspectj.version>
 		<assertj-core.version>3.15.0</assertj-core.version>
 		<cdi-unit.version>4.1.0</cdi-unit.version>
@@ -145,7 +145,7 @@
 		<el-impl.version>2.2.1-b05</el-impl.version>
 		<forbiddenapis.version>2.7</forbiddenapis.version>
 		<jacoco.version>0.8.5</jacoco.version>
-		<jackson.version>2.9.10.3</jackson.version>
+		<jackson.version>2.10.3</jackson.version>
 		<jakarta.annotation-api.version>1.3.5</jakarta.annotation-api.version>
 		<jakarta.el.version>3.0.3</jakarta.el.version>
 		<jakarta.el-api.version>3.0.3</jakarta.el-api.version>
@@ -155,27 +155,27 @@
 		<jakarta.websocket-api.version>1.1.2</jakarta.websocket-api.version>
 		<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
-		<jetty.version>9.4.27.v20200227</jetty.version>
-		<junit.version>5.6.1</junit.version>
+		<jetty.version>9.4.28.v20200408</jetty.version>
+		<junit.version>5.6.2</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.3</logback.version>
 		<hamcrest.version>2.2</hamcrest.version>
-		<hibernate-validator.version>6.1.1.Final</hibernate-validator.version>
+		<hibernate-validator.version>6.1.3.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
-		<metrics.version>4.1.4</metrics.version>
+		<metrics.version>4.1.6</metrics.version>
 		<mockito.version>3.3.3</mockito.version>
 		<objenesis.version>3.1</objenesis.version>
-		<openjson.version>1.0.11</openjson.version>
+		<openjson.version>1.0.12</openjson.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<spring.version>5.2.5.RELEASE</spring.version>
 		<wagon-ssh-external.version>3.3.4</wagon-ssh-external.version>
-		<weld.version>3.1.3.Final</weld.version>
+		<weld.version>3.1.4.Final</weld.version>
 		<velocity-engine-core.version>2.2</velocity-engine-core.version>
 
 		<!-- Maven plugins -->
 		<clirr-maven-plugin.version>2.8</clirr-maven-plugin.version>
 		<maven-archetype-plugin.version>3.1.2</maven-archetype-plugin.version>
-		<maven-bundle-plugin.version>4.2.0</maven-bundle-plugin.version>
+		<maven-bundle-plugin.version>4.2.1</maven-bundle-plugin.version>
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
 		<maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
