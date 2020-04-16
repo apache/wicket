@@ -216,7 +216,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	/**
 	 * Pages kept in memory for a session.
 	 */
-	interface IMemoryData extends Iterable<IManageablePage>
+	public interface IMemoryData extends Iterable<IManageablePage>
 	{
 		/**
 		 * Remove a page.
