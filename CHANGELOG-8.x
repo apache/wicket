@@ -2,6 +2,28 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.8.0
+
+** Bug
+
+    * [WICKET-6746] - HttpsMapper cannot deal with resources over websockets
+    * [WICKET-6752] - Some dependencies contain CVEs
+    * [WICKET-6753] - res/modal.js using aria-labelledby where it should be using aria-label
+    * [WICKET-6754] - Iteration stops with nested containers
+    * [WICKET-6755] - MockServletContext does not decode real path
+    * [WICKET-6756] - Avoid URL.getFile() when actually expecting paths.
+    * [WICKET-6757] - Avoid URL.getFile during mime type detection.
+    * [WICKET-6758] - NPE in AbstractWebSocketProcessor after session times out
+
+** Improvement
+
+    * [WICKET-6759] - Support disabling error notification for websockets
+    * [WICKET-6760] - Nested Form placeholder should preserve tag name
+    * [WICKET-6761] - Support multiple connections to the same websocket resource from a single session
+    * [WICKET-6762] - Support manual initialization of websocket connections
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.7.0
 
 ** Bug
