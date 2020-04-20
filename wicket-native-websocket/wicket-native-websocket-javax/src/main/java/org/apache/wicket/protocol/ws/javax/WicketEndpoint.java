@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.ws.javax;
 
 import java.io.EOFException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -84,7 +85,7 @@ public class WicketEndpoint extends Endpoint
 	@Override
 	public void onError(Session session, Throwable t)
 	{
-		if (t instanceof EOFException)
+		if (isIgnorableError(t))
 		{
 			LOG.debug("An error occurred in web socket connection with id : {}", session.getId(), t);
 		}
@@ -99,6 +100,13 @@ public class WicketEndpoint extends Endpoint
 		{
 			javaxWebSocketProcessor.onError(t);
 		}
+	}
+
+	private boolean isIgnorableError(Throwable t)
+	{
+		return
+			t instanceof EOFException ||
+		    (t instanceof IOException && "Broken pipe".equals(t.getMessage()));
 	}
 
 	private boolean isApplicationAlive() {
