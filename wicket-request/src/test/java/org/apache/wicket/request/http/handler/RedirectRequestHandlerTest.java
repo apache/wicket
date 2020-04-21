@@ -17,6 +17,7 @@
 package org.apache.wicket.request.http.handler;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +27,6 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 /**
  * RedirectRequestHandlerTest
@@ -45,19 +45,16 @@ class RedirectRequestHandlerTest
 		when(requestCycle.getRequest()).thenReturn(webRequest);
 	}
 
-	/**
-	 * permenanentlyMovedShouldSetLocationHeader()
-	 */
 	@Test
-	void permenanentlyMovedShouldSetLocationHeader()
+	void permanentlyMovedShouldSetLocationHeader()
 	{
 		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
 			HttpServletResponse.SC_MOVED_PERMANENTLY);
 
 		handler.respond(requestCycle);
 
-		Mockito.verify(webResponse).setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-		Mockito.verify(webResponse).setHeader("Location", REDIRECT_URL);
+		verify(webResponse).setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+		verify(webResponse).setHeader("Location", REDIRECT_URL);
 	}
 
 	/**
@@ -76,7 +73,7 @@ class RedirectRequestHandlerTest
 
 		handler.respond(requestCycle);
 
-		Mockito.verify(webResponse).sendRedirect(REDIRECT_URL);
+		verify(webResponse).sendRedirect(REDIRECT_URL);
 	}
 
 	/**
@@ -90,8 +87,8 @@ class RedirectRequestHandlerTest
 
 		handler.respond(requestCycle);
 
-		Mockito.verify(webResponse).setStatus(HttpServletResponse.SC_SEE_OTHER);
-		Mockito.verify(webResponse).setHeader("Location", REDIRECT_URL);
+		verify(webResponse).setStatus(HttpServletResponse.SC_SEE_OTHER);
+		verify(webResponse).setHeader("Location", REDIRECT_URL);
 	}
 
 	/**
@@ -107,7 +104,38 @@ class RedirectRequestHandlerTest
 
 		handler.respond(requestCycle);
 
-		Mockito.verify(webResponse).setStatus(HttpServletResponse.SC_SEE_OTHER);
-		Mockito.verify(webResponse).setHeader("Ajax-Location", REDIRECT_URL);
+		verify(webResponse).setStatus(HttpServletResponse.SC_SEE_OTHER);
+		verify(webResponse).setHeader("Ajax-Location", REDIRECT_URL);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6764
+	 */
+	@Test
+	void movedPermanentlyAndModeRedirect_shouldSendRedirect()
+	{
+		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
+		                                                            HttpServletResponse.SC_MOVED_PERMANENTLY);
+		handler.mode(RedirectRequestHandler.Mode.REDIRECT);
+
+		handler.respond(requestCycle);
+
+		verify(webResponse).sendRedirect(REDIRECT_URL);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6764
+	 */
+	@Test
+	void movedTemporarilyAndModeStatus_shouldSetLocation()
+	{
+		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
+		                                                            HttpServletResponse.SC_MOVED_TEMPORARILY);
+		handler.mode(RedirectRequestHandler.Mode.STATUS);
+
+		handler.respond(requestCycle);
+
+		verify(webResponse).setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
+		verify(webResponse).setHeader("Location", REDIRECT_URL);
 	}
 }
