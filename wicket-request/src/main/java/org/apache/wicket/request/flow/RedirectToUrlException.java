@@ -57,4 +57,20 @@ public class RedirectToUrlException extends ReplaceHandlerException
 	{
 		super(new RedirectRequestHandler(redirectUrl, statusCode), true);
 	}
+
+
+	/**
+	 * Construct.
+	 *
+	 * @param redirectUrl
+	 *            URL to redirect to.
+	 * @param statusCode
+	 *            301 (Moved permanently) or 302 (Moved temporarily)
+	 * @param mode
+	 *            The way to made the redirect - via sendRedirect() or directly via setStatus()+setHeader("Location", ...)
+	 */
+	public RedirectToUrlException(final String redirectUrl, final int statusCode, RedirectRequestHandler.Mode mode)
+	{
+		super(new RedirectRequestHandler(redirectUrl, statusCode).mode(mode), true);
+	}
 }
