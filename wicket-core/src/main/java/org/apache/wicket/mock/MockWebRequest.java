@@ -17,6 +17,7 @@
 package org.apache.wicket.mock;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -275,7 +276,7 @@ public class MockWebRequest extends WebRequest
 	@Override
 	public Charset getCharset()
 	{
-		return Charset.forName("UTF-8");
+		return StandardCharsets.UTF_8;
 	}
 
 	@Override

@@ -18,7 +18,7 @@ package org.apache.wicket.request.resource;
 
 import static org.hamcrest.Matchers.is;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class CharSequenceResourceTest extends Assert
 	public void getLength_UTF8_whenUnicodeSymbols_thenReturnTheBytesLength() throws Exception
 	{
 		CharSequenceResource resource = new CharSequenceResource("plain/text");
-		resource.setCharset(Charset.forName("UTF-8"));
+		resource.setCharset(StandardCharsets.UTF_8);
 		assertThat(resource.getLength("a\u1234d"), is(5L));
 	}
 
@@ -47,7 +47,7 @@ public class CharSequenceResourceTest extends Assert
 	public void getLength_UTF16_whenUnicodeSymbols_thenReturnTheBytesLength() throws Exception
 	{
 		CharSequenceResource resource = new CharSequenceResource("plain/text");
-		resource.setCharset(Charset.forName("UTF-16"));
+		resource.setCharset(StandardCharsets.UTF_16);
 		assertThat(resource.getLength("a\u1234d"), is(8L));
 	}
 }

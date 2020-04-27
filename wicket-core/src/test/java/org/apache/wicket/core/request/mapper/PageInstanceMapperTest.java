@@ -19,6 +19,7 @@ package org.apache.wicket.core.request.mapper;
 import static org.hamcrest.CoreMatchers.instanceOf;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.IPageProvider;
@@ -204,7 +205,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 			@Override
 			public Charset getCharset()
 			{
-				return Charset.forName("UTF-8");
+				return StandardCharsets.UTF_8;
 			}
 
 			@Override
@@ -249,7 +250,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 			@Override
 			public Charset getCharset()
 			{
-				return Charset.forName("UTF-8");
+				return StandardCharsets.UTF_8;
 			}
 
 			@Override

@@ -226,41 +226,40 @@ public class UrlEncoder
 	/**
 	 * @param s
 	 *            string to encode
-	 * @param charset
+	 * @param charsetName
 	 *            charset to use for encoding
 	 * @return encoded string
 	 * @see java.net.URLEncoder#encode(String, String)
 	 */
-	public String encode(final String s, final Charset charset)
+	public String encode(final String s, final String charsetName)
 	{
-		return encode(s, charset.name());
-	}
-
-	/**
-	 * @param unsafeInput
-	 *            string to encode
-	 * @param charsetName
-	 *            encoding to use
-	 * @return encoded string
-	 * @see java.net.URLEncoder#encode(String, String)
-	 */
-	public String encode(final String unsafeInput, final String charsetName)
-	{
-		final String s = unsafeInput.replace("\0", "NULL");
-		StringBuilder out = new StringBuilder(s.length());
-		Charset charset;
-		CharArrayWriter charArrayWriter = new CharArrayWriter();
-
 		Args.notNull(charsetName, "charsetName");
 
 		try
 		{
-			charset = Charset.forName(charsetName);
+			return encode(s, Charset.forName(charsetName));
 		}
 		catch (IllegalCharsetNameException | UnsupportedCharsetException e)
 		{
 			throw new RuntimeException(new UnsupportedEncodingException(charsetName));
 		}
+	}
+
+	/**
+	 * @param unsafeInput
+	 *            string to encode
+	 * @param charset
+	 *            encoding to use
+	 * @return encoded string
+	 * @see java.net.URLEncoder#encode(String, String)
+	 */
+	public String encode(final String unsafeInput, final Charset charset)
+	{
+		final String s = unsafeInput.replace("\0", "NULL");
+		StringBuilder out = new StringBuilder(s.length());
+		CharArrayWriter charArrayWriter = new CharArrayWriter();
+
+		Args.notNull(charset, "charset");
 
 		for (int i = 0; i < s.length();)
 		{

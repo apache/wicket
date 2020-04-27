@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -30,7 +31,7 @@ import org.junit.Test;
 public class RequestUtilsTest extends Assert
 {
 
-	public static final Charset UTF_8_CHARSET = Charset.forName("UTF-8");
+	public static final Charset UTF_8_CHARSET = StandardCharsets.UTF_8;
 
 	/**
 	 * 
@@ -180,9 +181,9 @@ public class RequestUtilsTest extends Assert
 		MockHttpServletRequest request = new MockHttpServletRequest(null, null, null);
 
 		request.setCharacterEncoding("UTF-8");
-		assertEquals(Charset.forName("UTF-8"), RequestUtils.getCharset(request));
+		assertEquals(StandardCharsets.UTF_8, RequestUtils.getCharset(request));
 
 		request.setCharacterEncoding("FOO");
-		assertEquals(Charset.forName("UTF-8"), RequestUtils.getCharset(request));
+		assertEquals(StandardCharsets.UTF_8, RequestUtils.getCharset(request));
 	}
 }

@@ -21,6 +21,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.is;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import org.apache.wicket.MockPage;
@@ -312,7 +313,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 			@Override
 			public Charset getCharset()
 			{
-				return Charset.forName("UTF-8");
+				return StandardCharsets.UTF_8;
 			}
 
 			@Override
@@ -371,7 +372,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 			@Override
 			public Charset getCharset()
 			{
-				return Charset.forName("UTF-8");
+				return StandardCharsets.UTF_8;
 			}
 
 			@Override
@@ -429,7 +430,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 			@Override
 			public Charset getCharset()
 			{
-				return Charset.forName("UTF-8");
+				return StandardCharsets.UTF_8;
 			}
 
 			@Override

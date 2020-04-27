@@ -18,7 +18,10 @@ package org.apache.wicket.util.encoding;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.UnsupportedCharsetException;
 
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,20 +78,29 @@ public class UrlDecoder
 	 * @return decoded string
 	 * @see java.net.URLDecoder#decode(String, String)
 	 */
-	public String decode(final String s, final Charset enc)
+	public String decode(final String s, final String enc)
 	{
-		return decode(s, enc.name());
+		Args.notNull(enc, "enc");
+
+		try
+		{
+			return decode(s, Charset.forName(enc));
+		}
+		catch (IllegalCharsetNameException | UnsupportedCharsetException e)
+		{
+			throw new RuntimeException(new UnsupportedEncodingException(enc));
+		}
 	}
 
 	/**
 	 * @param s
 	 *            string to decode
-	 * @param enc
+	 * @param charset
 	 *            encoding to decode with
 	 * @return decoded string
 	 * @see java.net.URLDecoder#decode(String, String)
 	 */
-	public String decode(final String s, final String enc)
+	public String decode(final String s, final Charset charset)
 	{
 		if (Strings.isEmpty(s))
 		{
@@ -99,11 +111,7 @@ public class UrlDecoder
 		StringBuilder sb = new StringBuilder(numChars > 500 ? numChars / 2 : numChars);
 		int i = 0;
 
-		if (enc.length() == 0)
-		{
-			throw new RuntimeException(new UnsupportedEncodingException(
-				"URLDecoder: empty string enc parameter"));
-		}
+		Args.notNull(charset, "charset");
 
 		char c;
 		byte[] bytes = null;
@@ -154,14 +162,7 @@ public class UrlDecoder
 							break;
 						}
 
-						try
-						{
-							sb.append(new String(bytes, 0, pos, enc));
-						}
-						catch (UnsupportedEncodingException e)
-						{
-							throw new RuntimeException(e);
-						}
+						sb.append(new String(bytes, 0, pos, charset));
 					}
 					catch (NumberFormatException e)
 					{

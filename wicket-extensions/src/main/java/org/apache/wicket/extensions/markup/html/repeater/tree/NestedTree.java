@@ -129,11 +129,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 
 	/**
 	 * Overridden to update the corresponding {@link Node} only.
-<<<<<<< HEAD
 	 *
-=======
-	 * 
->>>>>>> master
 	 * @param node
 	 *            node to update
 	 * @param target

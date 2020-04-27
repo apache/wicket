@@ -18,6 +18,8 @@ package org.apache.wicket.util.encoding;
 
 import static org.junit.Assert.assertEquals;
 
+import java.nio.charset.StandardCharsets;
+
 import org.junit.Test;
 
 @SuppressWarnings("javadoc")
@@ -27,7 +29,7 @@ public class UrlDecoderTest
 	public void mustNotEmitNullByteForPath() throws Exception
 	{
 		String evil = "http://www.devil.com/highway/to%00hell";
-		String decoded = UrlDecoder.PATH_INSTANCE.decode(evil, "UTF-8");
+		String decoded = UrlDecoder.PATH_INSTANCE.decode(evil, StandardCharsets.UTF_8);
 		assertEquals(-1, decoded.indexOf('\0'));
 		assertEquals("http://www.devil.com/highway/toNULLhell", decoded);
 	}
@@ -36,7 +38,7 @@ public class UrlDecoderTest
 	public void mustNotEmitNullByteForQuery() throws Exception
 	{
 		String evil = "http://www.devil.com/highway?destination=%00hell";
-		String decoded = UrlDecoder.QUERY_INSTANCE.decode(evil, "UTF-8");
+		String decoded = UrlDecoder.QUERY_INSTANCE.decode(evil, StandardCharsets.UTF_8);
 		assertEquals(-1, decoded.indexOf('\0'));
 		assertEquals("http://www.devil.com/highway?destination=NULLhell", decoded);
 	}
@@ -48,15 +50,15 @@ public class UrlDecoderTest
 	public void badUrlEntities() throws Exception
 	{
 		String url = "http://localhost/test?a=%%%";
-		String decoded = UrlDecoder.QUERY_INSTANCE.decode(url, "UTF-8");
+		String decoded = UrlDecoder.QUERY_INSTANCE.decode(url, StandardCharsets.UTF_8);
 		assertEquals("http://localhost/test?a=", decoded);
 
 		url = "http://localhost/test?%%%";
-		decoded = UrlDecoder.QUERY_INSTANCE.decode(url, "UTF-8");
+		decoded = UrlDecoder.QUERY_INSTANCE.decode(url, StandardCharsets.UTF_8);
 		assertEquals("http://localhost/test?", decoded);
 
 		url = "http://localhost/test?%a=%b%";
-		decoded = UrlDecoder.QUERY_INSTANCE.decode(url, "UTF-8");
+		decoded = UrlDecoder.QUERY_INSTANCE.decode(url, StandardCharsets.UTF_8);
 		assertEquals("http://localhost/test?a=b", decoded);
 	}
 }

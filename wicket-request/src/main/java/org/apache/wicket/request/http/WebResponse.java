@@ -17,6 +17,7 @@
 package org.apache.wicket.request.http;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.Cookie;
 
@@ -175,7 +176,7 @@ public abstract class WebResponse extends Response
 	{
 		return (Strings.isEmpty(filename) ? "" : String.format(
 			"; filename=\"%1$s\"; filename*=UTF-8''%1$s",
-			UrlEncoder.HEADER_INSTANCE.encode(filename, "UTF-8")));
+			UrlEncoder.HEADER_INSTANCE.encode(filename, StandardCharsets.UTF_8)));
 	}
 
 	/**

@@ -21,6 +21,8 @@ import org.apache.wicket.util.encoding.UrlEncoder;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author Doug Donohoe
  */
@@ -32,8 +34,8 @@ public class WicketURLTest extends Assert
 	@Test
 	public void pathEncoder()
 	{
-		assertEquals("+", UrlEncoder.PATH_INSTANCE.encode("+", "UTF-8"));
-		assertEquals("%20", UrlEncoder.PATH_INSTANCE.encode(" ", "UTF-8"));
+		assertEquals("+", UrlEncoder.PATH_INSTANCE.encode("+", StandardCharsets.UTF_8));
+		assertEquals("%20", UrlEncoder.PATH_INSTANCE.encode(" ", StandardCharsets.UTF_8));
 	}
 
 	/**
@@ -42,8 +44,8 @@ public class WicketURLTest extends Assert
 	@Test
 	public void queryEncoder()
 	{
-		assertEquals("+", UrlEncoder.QUERY_INSTANCE.encode(" ", "UTF-8"));
-		assertEquals("%2B", UrlEncoder.QUERY_INSTANCE.encode("+", "UTF-8"));
+		assertEquals("+", UrlEncoder.QUERY_INSTANCE.encode(" ", StandardCharsets.UTF_8));
+		assertEquals("%2B", UrlEncoder.QUERY_INSTANCE.encode("+", StandardCharsets.UTF_8));
 	}
 
 	/**
@@ -52,8 +54,8 @@ public class WicketURLTest extends Assert
 	@Test
 	public void pathDecoder()
 	{
-		assertEquals("+", UrlDecoder.PATH_INSTANCE.decode("+", "UTF-8"));
-		assertEquals(" ", UrlDecoder.PATH_INSTANCE.decode("%20", "UTF-8"));
+		assertEquals("+", UrlDecoder.PATH_INSTANCE.decode("+", StandardCharsets.UTF_8));
+		assertEquals(" ", UrlDecoder.PATH_INSTANCE.decode("%20", StandardCharsets.UTF_8));
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class WicketURLTest extends Assert
 	@Test
 	public void queryDecoder()
 	{
-		assertEquals(" ", UrlDecoder.QUERY_INSTANCE.decode("+", "UTF-8"));
-		assertEquals("+", UrlDecoder.QUERY_INSTANCE.decode("%2B", "UTF-8"));
+		assertEquals(" ", UrlDecoder.QUERY_INSTANCE.decode("+", StandardCharsets.UTF_8));
+		assertEquals("+", UrlDecoder.QUERY_INSTANCE.decode("%2B", StandardCharsets.UTF_8));
 	}
 }
