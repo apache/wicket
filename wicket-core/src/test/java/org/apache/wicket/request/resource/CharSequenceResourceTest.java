@@ -19,6 +19,7 @@ package org.apache.wicket.request.resource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +39,7 @@ class CharSequenceResourceTest
 	void getLength_UTF8_whenUnicodeSymbols_thenReturnTheBytesLength() throws Exception
 	{
 		CharSequenceResource resource = new CharSequenceResource("plain/text");
-		resource.setCharset(Charset.forName("UTF-8"));
+		resource.setCharset(StandardCharsets.UTF_8);
 		assertEquals(Long.valueOf(5L), resource.getLength("a\u1234d"));
 	}
 
@@ -46,7 +47,7 @@ class CharSequenceResourceTest
 	void getLength_UTF16_whenUnicodeSymbols_thenReturnTheBytesLength() throws Exception
 	{
 		CharSequenceResource resource = new CharSequenceResource("plain/text");
-		resource.setCharset(Charset.forName("UTF-16"));
+		resource.setCharset(StandardCharsets.UTF_16);
 		assertEquals(Long.valueOf(8L), resource.getLength("a\u1234d"));
 	}
 }

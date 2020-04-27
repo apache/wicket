@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -200,7 +201,7 @@ class AjaxRequestHandlerTest extends WicketTestCase
 		tester.startPage(page);
 
 		// wicket-ajax-jquery encodes non ASCII id
-		String encoded = UrlEncoder.QUERY_INSTANCE.encode("€uro", Charset.forName("UTF-8"));
+		String encoded = UrlEncoder.QUERY_INSTANCE.encode("€uro", StandardCharsets.UTF_8);
 		tester.getRequest().setHeader("Wicket-FocusedElementId", encoded);
 
 		tester.executeAjaxEvent("link", "click");

@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -187,15 +188,16 @@ public final class RequestUtils
 	private static Charset getDefaultCharset()
 	{
 		String charsetName = null;
-
 		if (Application.exists())
 		{
 			charsetName = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 		}
+		
 		if (Strings.isEmpty(charsetName))
 		{
-			charsetName = "UTF-8";
+			return StandardCharsets.UTF_8;
 		}
+		
 		return Charset.forName(charsetName);
 	}
 

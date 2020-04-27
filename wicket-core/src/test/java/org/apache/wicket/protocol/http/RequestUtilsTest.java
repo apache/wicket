@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -31,7 +32,7 @@ import org.junit.jupiter.api.Test;
 class RequestUtilsTest
 {
 
-	private static final Charset UTF_8_CHARSET = Charset.forName("UTF-8");
+	private static final Charset UTF_8_CHARSET = StandardCharsets.UTF_8;
 
 	/**
 	 * 
@@ -181,9 +182,9 @@ class RequestUtilsTest
 		MockHttpServletRequest request = new MockHttpServletRequest(null, null, null);
 
 		request.setCharacterEncoding("UTF-8");
-		assertEquals(Charset.forName("UTF-8"), RequestUtils.getCharset(request));
+		assertEquals(StandardCharsets.UTF_8, RequestUtils.getCharset(request));
 
 		request.setCharacterEncoding("FOO");
-		assertEquals(Charset.forName("UTF-8"), RequestUtils.getCharset(request));
+		assertEquals(StandardCharsets.UTF_8, RequestUtils.getCharset(request));
 	}
 }

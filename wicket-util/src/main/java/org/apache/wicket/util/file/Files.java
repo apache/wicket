@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.io.IOUtils;
@@ -363,7 +364,7 @@ public class Files
 	public static File getLocalFileFromUrl(URL url)
 	{
 		final URL location = Args.notNull(url, "url");
-		return getLocalFileFromUrl(UrlDecoder.PATH_INSTANCE.decode(location.toExternalForm(), "UTF-8"));
+		return getLocalFileFromUrl(UrlDecoder.PATH_INSTANCE.decode(location.toExternalForm(), StandardCharsets.UTF_8));
 	}
 
 	/**
