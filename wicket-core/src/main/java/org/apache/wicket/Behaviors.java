@@ -91,6 +91,9 @@ final class Behaviors implements IDetachable
 				}
 			}
 		}
+		if (subset.isEmpty()) {
+			return Collections.emptyList();
+		}
 		return Collections.unmodifiableList(subset);
 	}
 
