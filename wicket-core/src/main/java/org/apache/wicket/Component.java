@@ -441,6 +441,8 @@ public abstract class Component
 	private static final short RFLAG_DETACHING = 0x1000;	
 	/** True when a component is being removed from the hierarchy */
 	private static final short RFLAG_REMOVING_FROM_HIERARCHY = 0x2000;
+	protected static final short RFLAG_HAS_REMOVAL = 0x3000;
+	private static final short RFLAG_HAS_FEEDBACK = 0x4000;
 
 	/**
 	 * Flags that only keep their value during the request. Useful for cache markers, etc. At the
@@ -489,6 +491,8 @@ public abstract class Component
 	 * <p>
 	 */
 	Object data = null;
+
+	boolean useFlagsForDetach;
 
 	final int data_start()
 	{
@@ -1160,6 +1164,9 @@ public abstract class Component
 
 	private void detachFeedback()
 	{
+		if (useFlagsForDetach && !getRequestFlag(RFLAG_HAS_FEEDBACK)) {
+			return;
+		}
 		FeedbackMessages feedback = getMetaData(FEEDBACK_KEY);
 		if (feedback != null)
 		{
@@ -1911,6 +1918,7 @@ public abstract class Component
 		{
 			messages = new FeedbackMessages();
 			setMetaData(FEEDBACK_KEY, messages);
+			setRequestFlag(RFLAG_HAS_FEEDBACK, true);
 		}
 		return messages;
 	}
@@ -4504,4 +4512,10 @@ public abstract class Component
 	{
 		setRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED, true);
 	}
+
+	public void setUseFlagsForDetach(boolean useFlagsForDetach) {
+		this.useFlagsForDetach = useFlagsForDetach;
+	}
+
+
 }

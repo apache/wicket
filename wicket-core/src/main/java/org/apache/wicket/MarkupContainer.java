@@ -1351,6 +1351,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	private void removals_add(Component removedChild, Component prevSibling)
 	{
 		modCounter++;
+		setRequestFlag(RFLAG_HAS_REMOVAL, true);
 
 		LinkedList<RemovedChild> removals = removals_get();
 		if (removals == null)
@@ -1380,8 +1381,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private int removals_size()
 	{
-		LinkedList<RemovedChild> removals = removals_get();
-		return removals == null ? 0 : removals.size();
+		if (useFlagsForDetach && !getRequestFlag(RFLAG_HAS_REMOVAL)) {
+			return 0;
+		} else {
+			LinkedList<RemovedChild> removals = removals_get();
+			return removals == null ? 0 : removals.size();
+		}
 	}
 
 	/**
