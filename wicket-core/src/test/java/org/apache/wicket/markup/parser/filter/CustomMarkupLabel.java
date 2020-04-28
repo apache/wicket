@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -57,7 +58,7 @@ class CustomMarkupLabel
 	{
 		// the markup is loaded from database in our real application
 		StringResourceStream res = new StringResourceStream(SAMPLE_MARKUP);
-		res.setCharset(Charset.forName("UTF-8"));
+		res.setCharset(StandardCharsets.UTF_8);
 		return res;
 	}
 

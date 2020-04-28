@@ -18,6 +18,7 @@ package org.apache.wicket.request;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -72,8 +73,6 @@ import org.apache.wicket.util.string.Strings;
 public class Url implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-
-	private static final String DEFAULT_CHARSET_NAME = "UTF-8";
 
 	private final List<String> segments;
 
@@ -423,13 +422,14 @@ public class Url implements Serializable
 	 */
 	public Charset getCharset()
 	{
-		if (Strings.isEmpty(charsetName))
-		{
-			charsetName = DEFAULT_CHARSET_NAME;
-		}
 		if (_charset == null)
 		{
-			_charset = Charset.forName(charsetName);
+			if (Strings.isEmpty(charsetName))
+			{
+				_charset = StandardCharsets.UTF_8;
+			} else {
+				_charset = Charset.forName(charsetName);
+			}
 		}
 		return _charset;
 	}
@@ -442,7 +442,7 @@ public class Url implements Serializable
 	{
 		if (charset == null)
 		{
-			charsetName = "UTF-8";
+			charsetName = null;
 			_charset = null;
 		}
 		else
@@ -994,7 +994,7 @@ public class Url implements Serializable
 		@Override
 		public String toString()
 		{
-			return toString(Charset.forName(DEFAULT_CHARSET_NAME));
+			return toString(StandardCharsets.UTF_8);
 		}
 
 		/**

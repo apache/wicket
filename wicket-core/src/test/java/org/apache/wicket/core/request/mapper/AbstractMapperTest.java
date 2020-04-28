@@ -19,6 +19,7 @@ package org.apache.wicket.core.request.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import org.apache.wicket.request.Request;
@@ -58,7 +59,7 @@ abstract class AbstractMapperTest
 			@Override
 			public Charset getCharset()
 			{
-				return Charset.forName("UTF-8");
+				return StandardCharsets.UTF_8;
 			}
 
 			@Override

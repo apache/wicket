@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,7 +41,7 @@ import org.junit.jupiter.api.Test;
 
 class ResourceMapperTest extends WicketTestCase
 {
-	private static final Charset CHARSET = Charset.forName("UTF-8");
+	private static final Charset CHARSET = StandardCharsets.UTF_8;
 	private static final String SHARED_NAME = "test-resource";
 
 	private IRequestMapper mapper;

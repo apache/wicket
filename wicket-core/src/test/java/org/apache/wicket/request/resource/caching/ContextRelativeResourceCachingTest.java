@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import org.apache.wicket.request.IRequestHandler;
@@ -40,7 +41,7 @@ import org.junit.jupiter.api.Test;
  */
 class ContextRelativeResourceCachingTest extends WicketTestCase
 {
-	private static final Charset CHARSET = Charset.forName("UTF-8");
+	private static final Charset CHARSET = StandardCharsets.UTF_8;
 	private static final String SHARED_NAME = "contextresource";
 
 	private Request createRequest(final String url)
