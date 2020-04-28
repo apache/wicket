@@ -562,7 +562,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		 */
 		class MarkupChildIterator implements Iterator<Component>
 		{
-			private int indexInRemovalsSinceLastUpdate = removals_size();
+			private int indexInRemovalsSinceLastUpdate;
 			private int expectedModCounter = -1;
 			private Component currentComponent = null;
 			private Iterator<Component> internalIterator = null;
@@ -590,8 +590,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 			private void refreshInternalIteratorIfNeeded()
 			{
-				if (expectedModCounter >= modCounter)
+				if (expectedModCounter >= modCounter) {
+					// no new modifications
 					return;
+				}
 
 				if (children == null)
 				{
@@ -615,7 +617,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				// since we now have a new iterator, we need to set it to the last known position
 				currentComponent = findLastExistingChildAlreadyReturned(currentComponent);
 				expectedModCounter = modCounter;
-				indexInRemovalsSinceLastUpdate = removals_size();
 
 				if (currentComponent != null)
 				{
@@ -627,33 +628,38 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				}
 			}
 
-			private Component findLastExistingChildAlreadyReturned(Component target)
+			private Component findLastExistingChildAlreadyReturned(Component current)
 			{
-				while (true)
-				{
-					if (target == null)
-						return null;
-
-					RemovedChild removedChild = null;
-					for (int i = indexInRemovalsSinceLastUpdate; i < removals_size(); i++)
-					{
-						RemovedChild curRemovedChild = removals_get(i);
-						if (curRemovedChild.removedChild == target ||
-							curRemovedChild.removedChild == null)
+				if (current == null) {
+					indexInRemovalsSinceLastUpdate = 0;
+				} else {
+					LinkedList<RemovedChild> removals = removals_get();
+					if (removals != null) {
+						check_removed:
+						while (current != null)
 						{
-							removedChild = curRemovedChild;
+							for (int i = indexInRemovalsSinceLastUpdate; i < removals.size(); i++)
+							{
+								RemovedChild removal = removals.get(i);
+								if (removal.removedChild == current ||
+									removal.removedChild == null)
+								{
+									current = removal.previousSibling;
+									
+									// current was removed, use its sibling instead
+									continue check_removed;
+								}
+							}
+							
+							// current wasn't removed, keep it
 							break;
 						}
-					}
-					if (removedChild == null)
-					{
-						return target;
-					}
-					else
-					{
-						target = removedChild.previousSibling;
+						
+						indexInRemovalsSinceLastUpdate = removals.size();
 					}
 				}
+				
+				return current;
 			}
 		};
 		return new MarkupChildIterator();
@@ -1359,29 +1365,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			removals_set(removals);
 		}
 		removals.add(new RemovedChild(removedChild, prevSibling));
-	}
-
-	/**
-	 * Gets the {@link RemovedChild} from the list of removals at given position.
-	 * 
-	 * @param i
-	 *            the position
-	 * @return the removed child
-	 */
-	private RemovedChild removals_get(int i)
-	{
-		return getMetaData(REMOVALS_KEY).get(i);
-	}
-
-	/**
-	 * Gets the number of removals that happened during the request.
-	 * 
-	 * @return the number of removals
-	 */
-	private int removals_size()
-	{
-		LinkedList<RemovedChild> removals = removals_get();
-		return removals == null ? 0 : removals.size();
 	}
 
 	/**
