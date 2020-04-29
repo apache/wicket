@@ -475,17 +475,17 @@ public abstract class Component
 	 * are ordered as specified above.
 	 * <p>
 	 */
-	Object data = null;
+	private Object data = null;
 
 	/**
 	 * The component model
 	 */
-	IModel<?> model = null;
+	private IModel<?> model = null;
 
 	/**
 	 * The component metadata
 	 */
-	MetaDataEntry<?>[] metaData = null;
+	private MetaDataEntry<?>[] metaData = null;
 
 	final int data_length()
 	{
