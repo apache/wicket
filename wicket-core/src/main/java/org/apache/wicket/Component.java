@@ -463,27 +463,28 @@ public abstract class Component
 	private transient IMarkupSourcingStrategy markupSourcingStrategy;
 
 	/**
-	 * The object that holds the component state.
+	 * The object that holds the component data.
 	 * <p>
 	 * What's stored here depends on what attributes are set on component. Data can contains
 	 * combination of following attributes:
 	 * <ul>
-	 * <li>Model (indicated by {@link #FLAG_MODEL_SET})
-	 * <li>MetaDataEntry (optionally {@link MetaDataEntry}[] if more metadata entries are present) *
-	 * <li>{@link Behavior}(s) added to component. The behaviors are not stored in separate array,
-	 * they are part of the {@link #data} array (this is in order to save the space of the pointer
-	 * to an empty array as most components have no behaviours). - FIXME - explain why - is this
-	 * correct?
+	 * <li>{@link Behavior}(s) added to component.
 	 * </ul>
-	 * If there is only one attribute set (i.e. model or MetaDataEntry([]) or one behavior), the
-	 * #data object points directly to value of that attribute. Otherwise the data is of type
-	 * Object[] where the attributes are ordered as specified above.
+	 * If there is only one attribute set (i.e. one behavior), the #data object points directly
+	 * to value of that attribute. Otherwise the data is of type Object[] where the attributes
+	 * are ordered as specified above.
 	 * <p>
 	 */
 	Object data = null;
 
+	/**
+	 * The component model
+	 */
 	IModel<?> model = null;
 
+	/**
+	 * The component metadata
+	 */
 	MetaDataEntry<?>[] metaData = null;
 
 	final int data_length()
