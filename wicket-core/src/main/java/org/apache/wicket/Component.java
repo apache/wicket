@@ -492,6 +492,8 @@ public abstract class Component
 	 */
 	Object data = null;
 
+	MetaDataEntry<?>[] metaData = null;
+
 	boolean useFlagsForDetach;
 
 	final int data_start()
@@ -505,7 +507,7 @@ public abstract class Component
 		{
 			return 0;
 		}
-		else if (data instanceof Object[] && !(data instanceof MetaDataEntry<?>[]))
+		else if (data instanceof Object[])
 		{
 			return ((Object[])data).length;
 		}
@@ -521,7 +523,7 @@ public abstract class Component
 		{
 			return null;
 		}
-		else if (data instanceof Object[] && !(data instanceof MetaDataEntry<?>[]))
+		else if (data instanceof Object[])
 		{
 			Object[] array = (Object[])data;
 			return index < array.length ? array[index] : null;
@@ -543,7 +545,7 @@ public abstract class Component
 			throw new IndexOutOfBoundsException("can not set data at " + index +
 				" when data_length() is " + data_length());
 		}
-		else if (index == 0 && !(data instanceof Object[] && !(data instanceof MetaDataEntry<?>[])))
+		else if (index == 0 && !(data instanceof Object[]))
 		{
 			data = object;
 		}
@@ -1521,7 +1523,11 @@ public abstract class Component
 	@Override
 	public final <M extends Serializable> M getMetaData(final MetaDataKey<M> key)
 	{
-		return key.get(getMetaData());
+		final MetaDataEntry<?>[] metaData = getMetaData();
+		if (metaData == null) {
+			return null;
+		}
+		return key.get(metaData);
 	}
 
 	/**
@@ -1531,26 +1537,6 @@ public abstract class Component
 	 */
 	private MetaDataEntry<?>[] getMetaData()
 	{
-		MetaDataEntry<?>[] metaData = null;
-
-		// index where we should expect the entry
-		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;
-
-		int length = data_length();
-
-		if (index < length)
-		{
-			Object object = data_get(index);
-			if (object instanceof MetaDataEntry<?>[])
-			{
-				metaData = (MetaDataEntry<?>[])object;
-			}
-			else if (object instanceof MetaDataEntry)
-			{
-				metaData = new MetaDataEntry[] { (MetaDataEntry<?>)object };
-			}
-		}
-
 		return metaData;
 	}
 
@@ -2880,29 +2866,12 @@ public abstract class Component
 	@Override
 	public final <M extends Serializable> Component setMetaData(final MetaDataKey<M> key, final M object)
 	{
-		MetaDataEntry<?>[] old = getMetaData();
-
-		Object metaData = null;
-		MetaDataEntry<?>[] metaDataArray = key.set(getMetaData(), object);
-		if (metaDataArray != null && metaDataArray.length > 0)
+		final MetaDataEntry<?>[] current = getMetaData();
+		if (current == null && object == null)
 		{
-			metaData = (metaDataArray.length > 1) ? metaDataArray : metaDataArray[0];
+			return this;
 		}
-
-		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;
-
-		if (old == null && metaData != null)
-		{
-			data_insert(index, metaData);
-		}
-		else if (old != null && metaData != null)
-		{
-			data_set(index, metaData);
-		}
-		else if (old != null && metaData == null)
-		{
-			data_remove(index);
-		}
+		this.metaData = key.set(current, object);
 		return this;
 	}
 

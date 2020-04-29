@@ -59,8 +59,8 @@ public class ComponentBenchmarks {
 
 		private WebMarkupContainer createChild(int index, boolean useFlagsForDetach) {
 			final WebMarkupContainer c = new WebMarkupContainer("anyChildId" + index);
+			c.setMarkupId("anyChildId" + index);
 			c.setUseFlagsForDetach(useFlagsForDetach);
-			c.setMarkupId("anyChild" + index);
 			return c;
 		}
 	}
