@@ -379,14 +379,6 @@ public abstract class Component
 	protected static final int FLAG_RESERVED8 = 0x80000;
 
 	/**
-	 * Flag that determines whether the model is set. This is necessary because of the way we
-	 * represent component state ({@link #data}). We can't distinguish between model and behavior
-	 * using instanceof, because one object can implement both interfaces. Thus we need this flag -
-	 * when the flag is set, first object in {@link #data} is always model.
-	 */
-	private static final int FLAG_MODEL_SET = 0x100000;
-
-	/**
 	 * Flag that restricts visibility of a component when set to true. This is usually used when a
 	 * component wants to restrict visibility of another component. Calling
 	 * {@link #setVisible(boolean)} on a component does not always have the desired effect because
@@ -490,12 +482,9 @@ public abstract class Component
 	 */
 	Object data = null;
 
-	MetaDataEntry<?>[] metaData = null;
+	IModel<?> model = null;
 
-	final int data_start()
-	{
-		return getFlag(FLAG_MODEL_SET) ? 1 : 0;
-	}
+	MetaDataEntry<?>[] metaData = null;
 
 	final int data_length()
 	{
@@ -2913,11 +2902,7 @@ public abstract class Component
 	 */
 	IModel<?> getModelImpl()
 	{
-		if (getFlag(FLAG_MODEL_SET))
-		{
-			return (IModel<?>)data_get(0);
-		}
-		return null;
+		return model;
 	}
 
 	/**
@@ -2926,26 +2911,7 @@ public abstract class Component
 	 */
 	void setModelImpl(IModel<?> model)
 	{
-		if (getFlag(FLAG_MODEL_SET))
-		{
-			if (model != null)
-			{
-				data_set(0, model);
-			}
-			else
-			{
-				data_remove(0);
-				setFlag(FLAG_MODEL_SET, false);
-			}
-		}
-		else
-		{
-			if (model != null)
-			{
-				data_insert(0, model);
-				setFlag(FLAG_MODEL_SET, true);
-			}
-		}
+		this.model = model;
 	}
 
 	/**

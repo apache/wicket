@@ -73,17 +73,11 @@ final class Behaviors implements IDetachable
 	public <M extends Behavior> List<M> getBehaviors(Class<M> type)
 	{
 		final int len = component.data_length();
-		final int start = component.data_start();
-		if (len < start)
-		{
-			return Collections.emptyList();
-		}
-
 		List<M> subset = new ArrayList<>(len);
-		for (int i = component.data_start(); i < len; i++)
+		for (int i = 0; i < len; i++)
 		{
 			Object obj = component.data_get(i);
-			if (obj != null && obj instanceof Behavior)
+			if (obj instanceof Behavior)
 			{
 				if (type == null || type.isAssignableFrom(obj.getClass()))
 				{
@@ -130,10 +124,10 @@ final class Behaviors implements IDetachable
 	public final void detach()
 	{
 		int len = component.data_length();
-		for (int i = component.data_start(); i < len; i++)
+		for (int i = 0; i < len; i++)
 		{
 			Object obj = component.data_get(i);
-			if (obj != null && obj instanceof Behavior)
+			if (obj instanceof Behavior)
 			{
 				final Behavior behavior = (Behavior)obj;
 
@@ -152,7 +146,7 @@ final class Behaviors implements IDetachable
 	private boolean internalRemove(final Behavior behavior)
 	{
 		final int len = component.data_length();
-		for (int i = component.data_start(); i < len; i++)
+		for (int i = 0; i < len; i++)
 		{
 			Object o = component.data_get(i);
 			if (o != null && o.equals(behavior))
@@ -189,10 +183,11 @@ final class Behaviors implements IDetachable
 
 	private void removeBehaviorsIdList()
 	{
-		for (int i = component.data_start(); i < component.data_length(); i++)
+		final int len = component.data_length();
+		for (int i = 0; i < len; i++)
 		{
 			Object obj = component.data_get(i);
-			if (obj != null && obj instanceof BehaviorIdList)
+			if (obj instanceof BehaviorIdList)
 			{
 				component.data_remove(i);
 				return;
@@ -202,11 +197,11 @@ final class Behaviors implements IDetachable
 
 	private BehaviorIdList getBehaviorsIdList(boolean createIfNotFound)
 	{
-		int len = component.data_length();
-		for (int i = component.data_start(); i < len; i++)
+		final int len = component.data_length();
+		for (int i = 0; i < len; i++)
 		{
 			Object obj = component.data_get(i);
-			if (obj != null && obj instanceof BehaviorIdList)
+			if (obj instanceof BehaviorIdList)
 			{
 				return (BehaviorIdList)obj;
 			}
@@ -230,10 +225,10 @@ final class Behaviors implements IDetachable
 	public void onRemove(Component component)
 	{
 		final int len = component.data_length();
-		for (int i = component.data_start(); i < len; i++)
+		for (int i = 0; i < len; i++)
 		{
 			Object obj = component.data_get(i);
-			if (obj != null && obj instanceof Behavior)
+			if (obj instanceof Behavior)
 			{
 				final Behavior behavior = (Behavior)obj;
 
@@ -257,7 +252,8 @@ final class Behaviors implements IDetachable
 		Args.notNull(behavior, "behavior");
 
 		boolean found = false;
-		for (int i = component.data_start(); i < component.data_length(); i++)
+		final int len = component.data_length();
+		for (int i = 0; i < len; i++)
 		{
 			if (behavior == component.data_get(i))
 			{
