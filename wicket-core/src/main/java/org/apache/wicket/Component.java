@@ -381,8 +381,7 @@ public abstract class Component
 	/**
 	 * Flag that determines whether the model is set. This is necessary because of the way we
 	 * represent component state ({@link #data}). We can't distinguish between model and behavior
-	 * using instanceof, because one object can implement both interfaces. Thus we need this flag -
-	 * when the flag is set, first object in {@link #data} is always model.
+	 * using instanceof, because one object can implement both interfaces.
 	 */
 	private static final int FLAG_MODEL_SET = 0x100000;
 
@@ -456,8 +455,7 @@ public abstract class Component
 
 	/**
 	 * Instead of remembering the whole markupId, we just remember the number for this component so
-	 * we can "reconstruct" the markupId on demand. While this could be part of {@link #data},
-	 * profiling showed that having it as separate property consumes less memory.
+	 * we can "reconstruct" the markupId on demand.
 	 */
 	int generatedMarkupId = -1;
 
@@ -480,170 +478,11 @@ public abstract class Component
 	 * <li>MetaDataEntry (optionally {@link MetaDataEntry}[] if more metadata entries are present) *
 	 * <li>{@link Behavior}(s) added to component. The behaviors are not stored in separate array,
 	 * they are part of the {@link #data} array (this is in order to save the space of the pointer
-	 * to an empty array as most components have no behaviours). - FIXME - explain why - is this
-	 * correct?
+	 * to an empty array as most components have no behaviours).
+	 * <li>A {@link ComponentState} if a combination of the attributes is set.
 	 * </ul>
-	 * If there is only one attribute set (i.e. model or MetaDataEntry([]) or one behavior), the
-	 * #data object points directly to value of that attribute. Otherwise the data is of type
-	 * Object[] where the attributes are ordered as specified above.
-	 * <p>
 	 */
-	Object data = null;
-
-	final int data_start()
-	{
-		return getFlag(FLAG_MODEL_SET) ? 1 : 0;
-	}
-
-	final int data_length()
-	{
-		if (data == null)
-		{
-			return 0;
-		}
-		else if (data instanceof Object[] && !(data instanceof MetaDataEntry<?>[]))
-		{
-			return ((Object[])data).length;
-		}
-		else
-		{
-			return 1;
-		}
-	}
-
-	final Object data_get(int index)
-	{
-		if (data == null)
-		{
-			return null;
-		}
-		else if (data instanceof Object[] && !(data instanceof MetaDataEntry<?>[]))
-		{
-			Object[] array = (Object[])data;
-			return index < array.length ? array[index] : null;
-		}
-		else if (index == 0)
-		{
-			return data;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	final void data_set(int index, Object object)
-	{
-		if (index > data_length() - 1)
-		{
-			throw new IndexOutOfBoundsException("can not set data at " + index +
-				" when data_length() is " + data_length());
-		}
-		else if (index == 0 && !(data instanceof Object[] && !(data instanceof MetaDataEntry<?>[])))
-		{
-			data = object;
-		}
-		else
-		{
-			Object[] array = (Object[])data;
-			array[index] = object;
-		}
-	}
-
-	final void data_add(Object object)
-	{
-		data_insert(-1, object);
-	}
-
-	final void data_insert(int position, Object object)
-	{
-		int currentLength = data_length();
-		if (position == -1)
-		{
-			position = currentLength;
-		}
-		if (position > currentLength)
-		{
-			throw new IndexOutOfBoundsException("can not insert data at " + position +
-				" when data_length() is " + currentLength);
-		}
-		if (currentLength == 0)
-		{
-			data = object;
-		}
-		else if (currentLength == 1)
-		{
-			Object[] array = new Object[2];
-			if (position == 0)
-			{
-				array[0] = object;
-				array[1] = data;
-			}
-			else
-			{
-				array[0] = data;
-				array[1] = object;
-			}
-			data = array;
-		}
-		else
-		{
-			Object[] array = new Object[currentLength + 1];
-			Object[] current = (Object[])data;
-			int after = currentLength - position;
-			if (position > 0)
-			{
-				System.arraycopy(current, 0, array, 0, position);
-			}
-			array[position] = object;
-			if (after > 0)
-			{
-				System.arraycopy(current, position, array, position + 1, after);
-			}
-			data = array;
-		}
-	}
-
-	final void data_remove(int position)
-	{
-		int currentLength = data_length();
-
-		if (position > currentLength - 1)
-		{
-			throw new IndexOutOfBoundsException();
-		}
-		else if (currentLength == 1)
-		{
-			data = null;
-		}
-		else if (currentLength == 2)
-		{
-			Object[] current = (Object[])data;
-			if (position == 0)
-			{
-				data = current[1];
-			}
-			else
-			{
-				data = current[0];
-			}
-		}
-		else
-		{
-			Object[] current = (Object[])data;
-			data = new Object[currentLength - 1];
-
-			if (position > 0)
-			{
-				System.arraycopy(current, 0, data, 0, position);
-			}
-			if (position != currentLength - 1)
-			{
-				final int left = currentLength - position - 1;
-				System.arraycopy(current, position + 1, data, position, left);
-			}
-		}
-	}
+	private Object data = null;
 
 	/**
 	 * Constructor. All components have names. A component's id cannot be null. This is the minimal
@@ -1090,7 +929,7 @@ public abstract class Component
 				getClass().getName() +
 				" has not called super.onRemove() in the override of onRemove() method");
 		}
-		new Behaviors(this).onRemove(this);
+		ComponentState.onRemoveBehaviors(this, data, getFlag(FLAG_MODEL_SET));
 		removeChildren();
 	}
 
@@ -1119,7 +958,7 @@ public abstract class Component
 			detachModels();
 
 			// detach any behaviors
-			new Behaviors(this).detach();
+			data = ComponentState.detachBehaviors(this, data, getFlag(FLAG_MODEL_SET));
 		}
 		catch (Exception x)
 		{
@@ -1512,39 +1351,20 @@ public abstract class Component
 	 * @see MetaDataKey
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public final <M extends Serializable> M getMetaData(final MetaDataKey<M> key)
 	{
-		return key.get(getMetaData());
-	}
-
-	/**
-	 * Gets the meta data entries for this component as an array of {@link MetaDataEntry} objects.
-         *
-	 * @return the meta data entries for this component
-	 */
-	private MetaDataEntry<?>[] getMetaData()
-	{
-		MetaDataEntry<?>[] metaData = null;
-
-		// index where we should expect the entry
-		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;
-
-		int length = data_length();
-
-		if (index < length)
+		Object metaData = ComponentState.getMetaData(data, getFlag(FLAG_MODEL_SET));
+		if (metaData == null)
 		{
-			Object object = data_get(index);
-			if (object instanceof MetaDataEntry<?>[])
-			{
-				metaData = (MetaDataEntry<?>[])object;
-			}
-			else if (object instanceof MetaDataEntry)
-			{
-				metaData = new MetaDataEntry[] { (MetaDataEntry<?>)object };
-			}
+			return null;
 		}
-
-		return metaData;
+		else if (metaData instanceof MetaDataEntry)
+		{
+			MetaDataEntry< ? > entry = (MetaDataEntry< ? >) metaData;
+			return entry.key.equals(key) ? (M) entry.object : null;
+		}
+		return key.get((MetaDataEntry< ? >[]) metaData);
 	}
 
 	/**
@@ -2872,29 +2692,7 @@ public abstract class Component
 	@Override
 	public final <M extends Serializable> Component setMetaData(final MetaDataKey<M> key, final M object)
 	{
-		MetaDataEntry<?>[] old = getMetaData();
-
-		Object metaData = null;
-		MetaDataEntry<?>[] metaDataArray = key.set(getMetaData(), object);
-		if (metaDataArray != null && metaDataArray.length > 0)
-		{
-			metaData = (metaDataArray.length > 1) ? metaDataArray : metaDataArray[0];
-		}
-
-		int index = getFlag(FLAG_MODEL_SET) ? 1 : 0;
-
-		if (old == null && metaData != null)
-		{
-			data_insert(index, metaData);
-		}
-		else if (old != null && metaData != null)
-		{
-			data_set(index, metaData);
-		}
-		else if (old != null && metaData == null)
-		{
-			data_remove(index);
-		}
+		data = ComponentState.setMetaData(data, getFlag(FLAG_MODEL_SET), key, object);
 		return this;
 	}
 
@@ -2944,11 +2742,7 @@ public abstract class Component
 	 */
 	IModel<?> getModelImpl()
 	{
-		if (getFlag(FLAG_MODEL_SET))
-		{
-			return (IModel<?>)data_get(0);
-		}
-		return null;
+		return ComponentState.getModel(data, getFlag(FLAG_MODEL_SET));
 	}
 
 	/**
@@ -2957,26 +2751,8 @@ public abstract class Component
 	 */
 	void setModelImpl(IModel<?> model)
 	{
-		if (getFlag(FLAG_MODEL_SET))
-		{
-			if (model != null)
-			{
-				data_set(0, model);
-			}
-			else
-			{
-				data_remove(0);
-				setFlag(FLAG_MODEL_SET, false);
-			}
-		}
-		else
-		{
-			if (model != null)
-			{
-				data_insert(0, model);
-				setFlag(FLAG_MODEL_SET, true);
-			}
-		}
+		data = ComponentState.setModel(model, data, getFlag(FLAG_MODEL_SET));
+		setFlag(FLAG_MODEL_SET, model != null);
 	}
 
 	/**
@@ -3620,7 +3396,7 @@ public abstract class Component
 	 */
 	public <M extends Behavior> List<M> getBehaviors(Class<M> type)
 	{
-		return new Behaviors(this).getBehaviors(type);
+		return ComponentState.getBehaviors(type, data, getFlag(FLAG_MODEL_SET));
 	}
 
 	/**
@@ -4429,11 +4205,7 @@ public abstract class Component
 	 */
 	public Component remove(final Behavior... behaviors)
 	{
-		Behaviors helper = new Behaviors(this);
-		for (Behavior behavior : behaviors)
-		{
-			helper.remove(behavior);
-		}
+		data = ComponentState.removeBehaviors(this, data, getFlag(FLAG_MODEL_SET), behaviors);
 		return this;
 	}
 
@@ -4441,14 +4213,14 @@ public abstract class Component
 	@Override
 	public final Behavior getBehaviorById(int id)
 	{
-		return new Behaviors(this).getBehaviorById(id);
+		return ComponentState.getBehaviorById(this, id, data, getFlag(FLAG_MODEL_SET));
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public final int getBehaviorId(Behavior behavior)
 	{
-		return new Behaviors(this).getBehaviorId(behavior);
+		return ComponentState.getBehaviorId(this, behavior, data, getFlag(FLAG_MODEL_SET));
 	}
 
 	/**
@@ -4460,7 +4232,11 @@ public abstract class Component
 	 */
 	public Component add(final Behavior... behaviors)
 	{
-		new Behaviors(this).add(behaviors);
+		data = ComponentState.addBehaviors(this, data, getFlag(FLAG_MODEL_SET), behaviors);
+		for (Behavior curBehavior : behaviors)
+		{
+			ComponentState.bindBehavior(this, curBehavior);
+		}
 		return this;
 	}
 
