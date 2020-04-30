@@ -53,6 +53,13 @@ public class SunJceCrypt extends AbstractCrypt
 	public final static byte[] SALT = { (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
 			(byte)0x66, (byte)0x51, (byte)0x2a, (byte)0xbc };
 
+	/**
+	 * for security concern, Iteration count should large or equal to 1000.
+	 * salt should be randomly generated as:
+	 * SecureRandom random = new SecureRandom();
+         * byte[] salt = new byte[32];
+         * random.nextBytes(salt);
+	 */
 	private static final PBEParameterSpec PARAMETER_SPEC = new PBEParameterSpec(SALT, COUNT);
 
 	/** The name of encryption method (cipher) */
