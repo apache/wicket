@@ -206,13 +206,14 @@ abstract class ComponentState implements Serializable
 
 	static Object setModel(IModel< ? > model, Object state, boolean modelSet)
 	{
-		return createState(model, getBehaviors(state, modelSet), getMetaData(state, modelSet));
+		return createState(state, model, getBehaviors(state, modelSet),
+			getMetaData(state, modelSet));
 	}
 
 	static Object addBehaviors(Component component, Object state, boolean modelSet,
 			Behavior... behaviorsToAdd)
 	{
-		return createState(getModel(state, modelSet),
+		return createState(state, getModel(state, modelSet),
 			addBehaviors(component, getBehaviors(state, modelSet), behaviorsToAdd),
 			getMetaData(state, modelSet));
 	}
@@ -220,18 +221,19 @@ abstract class ComponentState implements Serializable
 	static Object removeBehaviors(Component component, Object state, boolean modelSet,
 			Behavior... behaviorsToRemove)
 	{
-		return createState(getModel(state, modelSet),
+		return createState(state, getModel(state, modelSet),
 			removeBehaviors(component, getBehaviors(state, modelSet), behaviorsToRemove),
 			getMetaData(state, modelSet));
 	}
 
 	static <T> Object setMetaData(Object state, boolean modelSet, MetaDataKey<T> key, T data)
 	{
-		return createState(getModel(state, modelSet), getBehaviors(state, modelSet),
+		return createState(state, getModel(state, modelSet), getBehaviors(state, modelSet),
 			setMetaData(getMetaData(state, modelSet), key, data));
 	}
 
-	private static Object createState(IModel< ? > model, Object behaviors, Object metaData)
+	private static Object createState(Object oldState, IModel< ? > model, Object behaviors,
+			Object metaData)
 	{
 		if (model == null)
 		{
@@ -254,6 +256,14 @@ abstract class ComponentState implements Serializable
 				}
 				else
 				{
+					if (oldState instanceof BehaviorsMetaDataComponentState)
+					{
+						BehaviorsMetaDataComponentState old =
+							(BehaviorsMetaDataComponentState) oldState;
+						old.behaviors = behaviors;
+						old.metaData = metaData;
+						return old;
+					}
 					return new BehaviorsMetaDataComponentState(behaviors, metaData);
 				}
 			}
@@ -268,6 +278,13 @@ abstract class ComponentState implements Serializable
 				}
 				else
 				{
+					if (oldState instanceof ModelMetaDataComponentState)
+					{
+						ModelMetaDataComponentState old = (ModelMetaDataComponentState) oldState;
+						old.model = model;
+						old.metaData = metaData;
+						return old;
+					}
 					return new ModelMetaDataComponentState(model, metaData);
 				}
 			}
@@ -275,10 +292,26 @@ abstract class ComponentState implements Serializable
 			{
 				if (metaData == null)
 				{
+					if (oldState instanceof ModelBehaviorComponentState)
+					{
+						ModelBehaviorComponentState old = (ModelBehaviorComponentState) oldState;
+						old.model = model;
+						old.behaviors = behaviors;
+						return old;
+					}
 					return new ModelBehaviorComponentState(model, behaviors);
 				}
 				else
 				{
+					if (oldState instanceof ModelBehaviorsMetaDataComponentState)
+					{
+						ModelBehaviorsMetaDataComponentState old =
+							(ModelBehaviorsMetaDataComponentState) oldState;
+						old.model = model;
+						old.behaviors = behaviors;
+						old.metaData = metaData;
+						return old;
+					}
 					return new ModelBehaviorsMetaDataComponentState(model, behaviors, metaData);
 				}
 			}
@@ -682,7 +715,7 @@ abstract class ComponentState implements Serializable
 			if (behavior.isTemporary(component))
 			{
 				behavior.unbind(component);
-				return createState(getModel(state, modelSet), null, getMetaData(state, modelSet));
+				return createState(state, getModel(state, modelSet), null, getMetaData(state, modelSet));
 			}
 		}
 		else if (behaviors instanceof Behavior[])
@@ -705,7 +738,7 @@ abstract class ComponentState implements Serializable
 			}
 			if (changed)
 			{
-				return createState(getModel(state, modelSet),
+				return createState(state, getModel(state, modelSet),
 					compactBehaviors(component, behaviorsArr), getMetaData(state, modelSet));
 			}
 		}
