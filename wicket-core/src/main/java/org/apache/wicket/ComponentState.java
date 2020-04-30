@@ -1,18 +1,12 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License. You may obtain a
+ * copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable
+ * law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
+ * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ * for the specific language governing permissions and limitations under the License.
  */
 package org.apache.wicket;
 
@@ -206,30 +200,137 @@ abstract class ComponentState implements Serializable
 
 	static Object setModel(IModel< ? > model, Object state, boolean modelSet)
 	{
-		return createState(state, model, getBehaviors(state, modelSet),
-			getMetaData(state, modelSet));
+		Object stateBehavior;
+		Object stateMetaData;
+		if (state instanceof ComponentState)
+		{
+			ComponentState compState = (ComponentState) state;
+			stateBehavior = compState.getBehaviors();
+			stateMetaData = compState.getMetaData();
+		}
+		else if (modelSet)
+		{
+			stateBehavior = null;
+			stateMetaData = null;
+		}
+		else if (state instanceof MetaDataEntry || state instanceof MetaDataEntry[])
+		{
+			stateBehavior = null;
+			stateMetaData = state;
+		}
+		else
+		{
+			stateBehavior = state;
+			stateMetaData = null;
+		}
+
+		return createState(state, model, stateBehavior, stateMetaData);
 	}
 
 	static Object addBehaviors(Component component, Object state, boolean modelSet,
 			Behavior... behaviorsToAdd)
 	{
-		return createState(state, getModel(state, modelSet),
-			addBehaviors(component, getBehaviors(state, modelSet), behaviorsToAdd),
-			getMetaData(state, modelSet));
+		IModel< ? > stateModel;
+		Object stateBehavior;
+		Object stateMetaData;
+		if (state instanceof ComponentState)
+		{
+			ComponentState compState = (ComponentState) state;
+			stateModel = compState.getModel();
+			stateBehavior = compState.getBehaviors();
+			stateMetaData = compState.getMetaData();
+		}
+		else if (modelSet)
+		{
+			stateModel = (IModel< ? >) state;
+			stateBehavior = null;
+			stateMetaData = null;
+		}
+		else if (state instanceof MetaDataEntry || state instanceof MetaDataEntry[])
+		{
+			stateModel = null;
+			stateBehavior = null;
+			stateMetaData = state;
+		}
+		else
+		{
+			stateModel = null;
+			stateBehavior = state;
+			stateMetaData = null;
+		}
+
+		return createState(state, stateModel,
+			addBehaviors(component, stateBehavior, behaviorsToAdd), stateMetaData);
 	}
 
 	static Object removeBehaviors(Component component, Object state, boolean modelSet,
 			Behavior... behaviorsToRemove)
 	{
-		return createState(state, getModel(state, modelSet),
-			removeBehaviors(component, getBehaviors(state, modelSet), behaviorsToRemove),
-			getMetaData(state, modelSet));
+		IModel< ? > stateModel;
+		Object stateBehavior;
+		Object stateMetaData;
+		if (state instanceof ComponentState)
+		{
+			ComponentState compState = (ComponentState) state;
+			stateModel = compState.getModel();
+			stateBehavior = compState.getBehaviors();
+			stateMetaData = compState.getMetaData();
+		}
+		else if (modelSet)
+		{
+			stateModel = (IModel< ? >) state;
+			stateBehavior = null;
+			stateMetaData = null;
+		}
+		else if (state instanceof MetaDataEntry || state instanceof MetaDataEntry[])
+		{
+			stateModel = null;
+			stateBehavior = null;
+			stateMetaData = state;
+		}
+		else
+		{
+			stateModel = null;
+			stateBehavior = state;
+			stateMetaData = null;
+		}
+
+		return createState(state, stateModel,
+			removeBehaviors(component, stateBehavior, behaviorsToRemove), stateMetaData);
 	}
 
 	static <T> Object setMetaData(Object state, boolean modelSet, MetaDataKey<T> key, T data)
 	{
-		return createState(state, getModel(state, modelSet), getBehaviors(state, modelSet),
-			setMetaData(getMetaData(state, modelSet), key, data));
+		IModel< ? > stateModel;
+		Object stateBehavior;
+		Object stateMetaData;
+		if (state instanceof ComponentState)
+		{
+			ComponentState compState = (ComponentState) state;
+			stateModel = compState.getModel();
+			stateBehavior = compState.getBehaviors();
+			stateMetaData = compState.getMetaData();
+		}
+		else if (modelSet)
+		{
+			stateModel = (IModel< ? >) state;
+			stateBehavior = null;
+			stateMetaData = null;
+		}
+		else if (state instanceof MetaDataEntry || state instanceof MetaDataEntry[])
+		{
+			stateModel = null;
+			stateBehavior = null;
+			stateMetaData = state;
+		}
+		else
+		{
+			stateModel = null;
+			stateBehavior = state;
+			stateMetaData = null;
+		}
+
+		return createState(state, stateModel, stateBehavior, setMetaData(stateMetaData, key, data));
 	}
 
 	private static Object createState(Object oldState, IModel< ? > model, Object behaviors,
@@ -715,7 +816,8 @@ abstract class ComponentState implements Serializable
 			if (behavior.isTemporary(component))
 			{
 				behavior.unbind(component);
-				return createState(state, getModel(state, modelSet), null, getMetaData(state, modelSet));
+				return createState(state, getModel(state, modelSet), null,
+					getMetaData(state, modelSet));
 			}
 		}
 		else if (behaviors instanceof Behavior[])
