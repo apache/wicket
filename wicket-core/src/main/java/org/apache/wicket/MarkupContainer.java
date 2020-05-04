@@ -133,6 +133,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		private static final long serialVersionUID = 1L;
 	};
+	
+	/**
+	 * This flag tracks if the {@link #REMOVALS_KEY} has been set on this component. Clearing this
+	 * key is an expensive operation. With this flag this expensive call can be avoided.
+	 */
+	private static final short RFLAG_HAS_REMOVALS = 0x4000;
 
 	/**
 	 * Administrative class for detecting removed children during child iteration. Not intended to
@@ -1322,7 +1328,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private LinkedList<RemovedChild> removals_get()
 	{
-		return getMetaData(REMOVALS_KEY);
+		return getRequestFlag(RFLAG_HAS_REMOVALS) ? getMetaData(REMOVALS_KEY) : null;
 	}
 
 	/**
@@ -1334,6 +1340,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private void removals_set(LinkedList<RemovedChild> removals)
 	{
+		setRequestFlag(RFLAG_HAS_REMOVALS, removals != null);
 		setMetaData(REMOVALS_KEY, removals);
 	}
 
@@ -1342,7 +1349,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private void removals_clear()
 	{
-		setMetaData(REMOVALS_KEY, null);
+		if (getRequestFlag(RFLAG_HAS_REMOVALS))
+		{
+			removals_set(null);
+		}
 	}
 
 	/**
