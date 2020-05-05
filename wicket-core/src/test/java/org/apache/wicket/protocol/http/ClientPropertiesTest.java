@@ -23,7 +23,7 @@ import org.junit.Test;
 
 /**
  * Tests for ClientProperties that failed on Mac OS X Java platform.
- * 
+ *
  * @author Martijn Dashorst
  */
 public class ClientPropertiesTest extends Assert
@@ -143,6 +143,36 @@ public class ClientPropertiesTest extends Assert
 		ClientProperties props = new ClientProperties();
 		props.setUtcOffset("11");
 		props.setUtcDSTOffset("10");
+
+		assertEquals(TimeZone.getTimeZone("AET"), props.getTimeZone());
+	}
+
+	/**
+	 * WICKET-6781
+	 *
+	 * jsTimeZone "positive" test
+	 */
+	@Test
+	public void timezoneJsPositive()
+	{
+		ClientProperties props = new ClientProperties();
+		props.setJsTimeZone("Asia/Novosibirsk");
+
+		assertEquals(TimeZone.getTimeZone("Asia/Novosibirsk"), props.getTimeZone());
+	}
+
+	/**
+	 * WICKET-6781
+	 *
+	 * jsTimeZone "negative" test
+	 */
+	@Test
+	public void timezoneJsNegative()
+	{
+		ClientProperties props = new ClientProperties();
+		props.setUtcOffset("11");
+		props.setUtcDSTOffset("10");
+		props.setJsTimeZone("aaa");
 
 		assertEquals(TimeZone.getTimeZone("AET"), props.getTimeZone());
 	}
