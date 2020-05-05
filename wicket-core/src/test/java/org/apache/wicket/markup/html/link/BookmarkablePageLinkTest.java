@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Assert;
 import org.junit.Test;
