@@ -29,13 +29,16 @@ import java.util.Set;
  * An implementation of the java.util.Map interface which can only hold a single object. This is
  * particularly useful to control memory usage in Wicket because many containers hold only a single
  * component.
- * 
+ *
  * @author Jonathan Locke
  * @param <K>
  *            Key type
  * @param <V>
  *            Value type
+ *
+ * @deprecated Please use {@link Map#of(Object, Object)} instead
  */
+@Deprecated(forRemoval = true, since = "9.0.0")
 public final class MicroMap<K, V> implements Map<K, V>, Serializable
 {
 	private static final long serialVersionUID = 1L;
@@ -58,7 +61,7 @@ public final class MicroMap<K, V> implements Map<K, V>, Serializable
 
 	/**
 	 * Constructs map with a single key and value pair.
-	 * 
+	 *
 	 * @param key
 	 *            The key
 	 * @param value
