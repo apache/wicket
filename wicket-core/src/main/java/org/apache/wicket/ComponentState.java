@@ -56,6 +56,11 @@ abstract class ComponentState implements Serializable
 	 */
 	abstract IModel< ? > getModel();
 
+	/**
+	 * @param model
+	 *            the new model or null
+	 * @return the new state for the component using the rules defined above
+	 */
 	abstract Object setModel(IModel< ? > model);
 
 	/**
@@ -63,6 +68,11 @@ abstract class ComponentState implements Serializable
 	 */
 	abstract Object getBehaviors();
 
+	/**
+	 * @param behaviors
+	 *            the new behaviors (null, one behavior or an array of behaviors)
+	 * @return the new state for the component using the rules defined above
+	 */
 	abstract Object setBehaviors(Object behaviors);
 
 	/**
@@ -71,6 +81,11 @@ abstract class ComponentState implements Serializable
 	 */
 	abstract Object getMetaData();
 
+	/**
+	 * @param metaData
+	 *            the new meta data entries (null, one entry or an array of entries)
+	 * @return the new state for the component using the rules defined above
+	 */
 	abstract Object setMetaData(Object metaData);
 
 	/**
@@ -350,19 +365,29 @@ abstract class ComponentState implements Serializable
 		}
 	}
 
+	/**
+	 * @param state
+	 *            the component state
+	 * @param modelSet
+	 *            a boolean indicating if the model is set
+	 * @return the model from the given state or null
+	 */
 	static IModel< ? > getModel(Object state, boolean modelSet)
 	{
-		if (!modelSet || state == null)
+		if (state instanceof ComponentState)
 		{
-			return null;
+			return ((ComponentState) state).getModel();
 		}
-		if (state instanceof IModel)
-		{
-			return (IModel< ? >) state;
-		}
-		return ((ComponentState) state).getModel();
+		return modelSet ? (IModel< ? >) state : null;
 	}
 
+	/**
+	 * @param state
+	 *            the component state
+	 * @param modelSet
+	 *            a boolean indicating if the model is set
+	 * @return the behaviors from the given state: null, one behavior or an array of behaviors
+	 */
 	static Object getBehaviors(Object state, boolean modelSet)
 	{
 		if (state instanceof ComponentState)
@@ -373,6 +398,13 @@ abstract class ComponentState implements Serializable
 			: state;
 	}
 
+	/**
+	 * @param state
+	 *            the component state
+	 * @param modelSet
+	 *            a boolean indicating if the model is set
+	 * @return the meta data entries from the given state: null, one entry or an array of entries
+	 */
 	static Object getMetaData(Object state, boolean modelSet)
 	{
 		if (state instanceof ComponentState)
@@ -383,6 +415,17 @@ abstract class ComponentState implements Serializable
 			? null : state;
 	}
 
+	/**
+	 * Construct a new component state with the given model value
+	 * 
+	 * @param model
+	 *            the new model to set or null to clear
+	 * @param state
+	 *            the current component state
+	 * @param modelSet
+	 *            a boolean indicating if the model is set
+	 * @return the new component state
+	 */
 	static Object setModel(IModel< ? > model, Object state, boolean modelSet)
 	{
 		if (state instanceof ComponentState)
@@ -394,6 +437,7 @@ abstract class ComponentState implements Serializable
 		{
 			return model;
 		}
+		// state does not have a model, clear is a no-op
 		else if (model == null)
 		{
 			return state;
@@ -408,18 +452,31 @@ abstract class ComponentState implements Serializable
 		}
 	}
 
+	/**
+	 * Construct a new component state with the given behaviors added
+	 * 
+	 * @param component
+	 *            the component to add the behaviors to
+	 * @param state
+	 *            the current component state
+	 * @param modelSet
+	 *            a boolean indicating if the model is set
+	 * @param behaviorsToAdd
+	 *            the behaviors to add
+	 * @return the new component state
+	 */
 	static Object addBehaviors(Component component, Object state, boolean modelSet,
 			Behavior... behaviorsToAdd)
 	{
-		if (state instanceof ComponentState)
+		if (behaviorsToAdd.length == 0)
+		{
+			return state;
+		}
+		else if (state instanceof ComponentState)
 		{
 			ComponentState compState = (ComponentState) state;
 			return compState
 				.setBehaviors(addBehaviors(component, compState.getBehaviors(), behaviorsToAdd));
-		}
-		else if (behaviorsToAdd.length == 0)
-		{
-			return state;
 		}
 		else if (modelSet)
 		{
@@ -437,18 +494,31 @@ abstract class ComponentState implements Serializable
 		}
 	}
 
+	/**
+	 * Construct a new component state with the given behaviors removed
+	 * 
+	 * @param component
+	 *            the component to remove the behaviors from
+	 * @param state
+	 *            the current component state
+	 * @param modelSet
+	 *            a boolean indicating if the model is set
+	 * @param behaviorsToRemove
+	 *            the behaviors to removed
+	 * @return the new component state
+	 */
 	static Object removeBehaviors(Component component, Object state, boolean modelSet,
 			Behavior... behaviorsToRemove)
 	{
-		if (state instanceof ComponentState)
+		if (behaviorsToRemove.length == 0)
+		{
+			return state;
+		}
+		else if (state instanceof ComponentState)
 		{
 			ComponentState compState = (ComponentState) state;
 			return compState.setBehaviors(
 				removeBehaviors(component, compState.getBehaviors(), behaviorsToRemove));
-		}
-		else if (behaviorsToRemove.length == 0)
-		{
-			return state;
 		}
 		else if (modelSet)
 		{
@@ -464,6 +534,17 @@ abstract class ComponentState implements Serializable
 		}
 	}
 
+	/**
+	 * Construct a new component state with the behaviors replaced
+	 * 
+	 * @param state
+	 *            the current component state
+	 * @param modelSet
+	 *            a boolean indicating if the model is set
+	 * @param behaviors
+	 *            the new value for the behaviors: null, one behavior or an array of behaviors
+	 * @return the new component state
+	 */
 	static Object setBehaviors(Object state, boolean modelSet, Object behaviors)
 	{
 		if (state instanceof ComponentState)
@@ -489,6 +570,19 @@ abstract class ComponentState implements Serializable
 		}
 	}
 
+	/**
+	 * Construct a new component state with the given meta data entry set or reset
+	 * 
+	 * @param state
+	 *            the current component state
+	 * @param modelSet
+	 *            a boolean indicating if the model is set
+	 * @param key
+	 *            the key to replace the value for
+	 * @param data
+	 *            the new value for the meta data entry, null to clear
+	 * @return the new component state
+	 */
 	static <T> Object setMetaData(Object state, boolean modelSet, MetaDataKey<T> key, T data)
 	{
 		if (state instanceof ComponentState)
@@ -496,7 +590,8 @@ abstract class ComponentState implements Serializable
 			ComponentState compState = (ComponentState) state;
 			return compState.setMetaData(setMetaData(compState.getMetaData(), key, data));
 		}
-		else if (state instanceof MetaDataEntry || state instanceof MetaDataEntry[] || state == null)
+		else if (state instanceof MetaDataEntry || state instanceof MetaDataEntry[]
+			|| state == null)
 		{
 			return setMetaData(state, key, data);
 		}
@@ -513,6 +608,21 @@ abstract class ComponentState implements Serializable
 		{
 			return new BehaviorsMetaDataComponentState(state, new MetaDataEntry<>(key, data));
 		}
+	}
+
+	/**
+	 * Bind a behavior to a component, adding a state change if needed.
+	 * 
+	 * @param component
+	 * @param behavior
+	 */
+	static void bindBehavior(Component component, Behavior behavior)
+	{
+		if (!behavior.isTemporary(component))
+		{
+			component.addStateChange();
+		}
+		behavior.bind(component);
 	}
 
 	private static Object addBehaviors(Component component, Object behaviors,
@@ -557,15 +667,6 @@ abstract class ComponentState implements Serializable
 			ret[checkSlot] = behaviorToAdd;
 		}
 		return ret;
-	}
-
-	static void bindBehavior(Component component, Behavior behavior)
-	{
-		if (!behavior.isTemporary(component))
-		{
-			component.addStateChange();
-		}
-		behavior.bind(component);
 	}
 
 	private static Object removeBehaviors(Component component, Object behaviors,
