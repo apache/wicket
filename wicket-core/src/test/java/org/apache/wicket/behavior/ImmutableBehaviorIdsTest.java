@@ -17,6 +17,7 @@
 package org.apache.wicket.behavior;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -128,30 +129,47 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 		page.getContainer().remove(border);
 		behaviors = page.getContainer().getBehaviors();
 		assertEquals(5, behaviors.size());
-//		assertEquals(autoId, page.container.getBehaviorId(auto));
+		assertEquals(autoId, page.container.getBehaviorId(auto));
 		assertEquals(link2Id, page.container.getBehaviorId(link2));
 
 		// auto,link,border2,link2,auto2
 		page.getContainer().remove(link);
 		behaviors = page.getContainer().getBehaviors();
 		assertEquals(4, behaviors.size());
-//		assertEquals(autoId, page.container.getBehaviorId(auto));
+		assertEquals(autoId, page.container.getBehaviorId(auto));
 		assertEquals(link2Id, page.container.getBehaviorId(link2));
 
 		// auto,border2,link2,auto2
 		page.getContainer().remove(auto2);
 		behaviors = page.getContainer().getBehaviors();
 		assertEquals(3, behaviors.size());
-//		assertEquals(autoId, page.container.getBehaviorId(auto));
+		assertEquals(autoId, page.container.getBehaviorId(auto));
 		assertEquals(link2Id, page.container.getBehaviorId(link2));
 
 		// auto,border2,link2
 		page.getContainer().remove(link2); // last IBehaviorListener
 		behaviors = page.getContainer().getBehaviors();
 		assertEquals(2, behaviors.size());
-//		assertEquals(autoId, page.container.getBehaviorId(auto));
-//		assertEquals(border2Id, page.container.getBehaviorId(border2));
+		assertEquals(autoId, page.container.getBehaviorId(auto));
+		assertEquals(border2Id, page.container.getBehaviorId(border2));
 
+		// add and remove some again
+		page.getContainer().add(border, link, link2, auto2);
+		borderId = page.container.getBehaviorId(border);
+		border2Id = page.container.getBehaviorId(border2);
+		autoId = page.container.getBehaviorId(auto);
+		auto2Id = page.container.getBehaviorId(auto2);
+		linkId = page.container.getBehaviorId(link);
+		link2Id = page.container.getBehaviorId(link2);
+		page.getContainer().remove(border, link2, auto2);
+
+		page.detach();
+		behaviors = page.getContainer().getBehaviors();
+		assertEquals(3, behaviors.size());
+		assertEquals(linkId, page.container.getBehaviorId(link));
+		// This unequality is not a requirement, but after compacting the behaviors during detach,
+		// the id does change. It does show the difference between stateless and stateful behaviors.
+		assertNotEquals(autoId, page.container.getBehaviorId(auto));
 	}
 
 	private static class LinkBehavior extends Behavior implements IRequestListener

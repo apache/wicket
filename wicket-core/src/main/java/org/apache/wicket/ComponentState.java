@@ -716,7 +716,7 @@ abstract class ComponentState implements Serializable
 				throw cannotRemove(behaviorToRemove);
 			}
 		}
-		return compactBehaviors(component, behaviorArr);
+		return behaviorArr;
 	}
 
 	private static IllegalStateException cannotRemove(Behavior behavior)
@@ -734,64 +734,6 @@ abstract class ComponentState implements Serializable
 			component.addStateChange();
 		}
 		behavior.detach(component);
-	}
-
-	private static Object compactBehaviors(Component component, Behavior[] behaviors)
-	{
-		// first find the number of behaviors and the highest statefull one
-		Behavior singleBehavior = null;
-		int highestId = -1;
-		int filledSlots = 0;
-		for (int i = 0; i < behaviors.length; i++)
-		{
-			Behavior curBehavior = behaviors[i];
-			if (curBehavior != null)
-			{
-				singleBehavior = curBehavior;
-				filledSlots++;
-				if (!curBehavior.getStatelessHint(component))
-				{
-					highestId = i;
-				}
-			}
-		}
-
-		int newSize = Math.max(highestId + 1, filledSlots);
-		if (newSize == 0)
-		{
-			return null;
-		}
-		if (newSize == 1)
-		{
-			return singleBehavior;
-		}
-
-		// multiple behaviors (or one with an id > 0)
-		Behavior[] ret = new Behavior[newSize];
-		int checkSlot = 0;
-		for (int i = 0; i < behaviors.length; i++)
-		{
-			Behavior curBehavior = behaviors[i];
-			if (curBehavior == null)
-			{
-				continue;
-			}
-			// statefull behaviors stay at their index
-			if (!curBehavior.getStatelessHint(component))
-			{
-				ret[i] = curBehavior;
-			}
-			else
-			{
-				// for all others, find the first free slot
-				while (ret[checkSlot] != null)
-				{
-					checkSlot++;
-				}
-				ret[checkSlot] = curBehavior;
-			}
-		}
-		return ret;
 	}
 
 	private static int getBehaviorsLength(Object behaviors)
@@ -1018,8 +960,14 @@ abstract class ComponentState implements Serializable
 		}
 		else if (behaviors instanceof Behavior[])
 		{
-			boolean changed = false;
+			// remove temporary behaviors and compact the array
+			Behavior singleBehavior = null;
+			int highestId = -1;
+			int filledSlots = 0;
 			Behavior[] behaviorsArr = (Behavior[]) behaviors;
+
+			// iterate over all behaviors, detaching them and removing temporary behaviors
+			// remaining behaviors are counted and for stateful behaviors slots assigned
 			for (int i = 0; i < behaviorsArr.length; i++)
 			{
 				Behavior curBehavior = behaviorsArr[i];
@@ -1030,14 +978,63 @@ abstract class ComponentState implements Serializable
 					{
 						curBehavior.unbind(component);
 						behaviorsArr[i] = null;
-						changed = true;
+					}
+					else
+					{
+						singleBehavior = curBehavior;
+						filledSlots++;
+						if (!curBehavior.getStatelessHint(component))
+						{
+							highestId = i;
+						}
 					}
 				}
 			}
-			if (changed)
+
+			// if at most 1 behavior remains, no array is needed
+			int newSize = Math.max(highestId + 1, filledSlots);
+			if (newSize == 0)
 			{
-				return setBehaviors(state, modelSet, behaviorsArr);
+				return setBehaviors(state, modelSet, null);
 			}
+			if (newSize == 1)
+			{
+				return setBehaviors(state, modelSet, singleBehavior);
+			}
+
+			// the calculated size is equal to the current size, cannot compact
+			if (newSize == behaviorsArr.length)
+			{
+				return state;
+			}
+
+			// multiple behaviors (or one with an id > 0)
+			// construct a new array and compact the behaviors
+			Behavior[] ret = new Behavior[newSize];
+			int checkSlot = 0;
+			for (int i = 0; i < behaviorsArr.length; i++)
+			{
+				Behavior curBehavior = behaviorsArr[i];
+				if (curBehavior == null)
+				{
+					continue;
+				}
+				// statefull behaviors stay at their index
+				if (!curBehavior.getStatelessHint(component))
+				{
+					ret[i] = curBehavior;
+				}
+				else
+				{
+					// for all others, find the first free slot
+					while (ret[checkSlot] != null)
+					{
+						checkSlot++;
+					}
+					ret[checkSlot] = curBehavior;
+				}
+			}
+			return setBehaviors(state, modelSet, ret);
 		}
 		return state;
 	}

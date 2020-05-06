@@ -83,12 +83,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		final Component component = getComponent();
 		
 		component.setOutputMarkupId(true);
-		
-		if (getStatelessHint(component))
-		{
-			//generate behavior id
-			component.getBehaviorId(this);
-		}
 	}
 
 	/**
