@@ -28,6 +28,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
@@ -46,7 +48,6 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.collections.ConcurrentHashSet;
 
 /**
  * A push header item to be used in the http/2 context and to reduce the latency of the web
@@ -57,7 +58,7 @@ import org.apache.wicket.util.collections.ConcurrentHashSet;
  * PushHeaderItem<br>
  * - Ensure a valid https connection (not self signed), because otherwise no caching information are
  * accepted from Chrome or other browsers
- * 
+ *
  * @author Tobias Soloschenko
  *
  */
@@ -96,7 +97,7 @@ public class PushHeaderItem extends HeaderItem
 	/**
 	 * The URLs of resources to be pushed to the client
 	 */
-	private Set<PushItem> pushItems = new ConcurrentHashSet<PushItem>(new TreeSet<PushItem>());
+	private Set<PushItem> pushItems = ConcurrentHashMap.newKeySet();
 	/**
 	 * The web response of the page to apply the caching information to
 	 */
@@ -115,8 +116,8 @@ public class PushHeaderItem extends HeaderItem
 	/**
 	 * Creates a push header item based on the given page and the corresponding page request / page
 	 * response. To get the request and response
-	 * 
-	 * 
+	 *
+	 *
 	 * @param page
 	 *            the page this header item is applied to
 	 * @param pageRequest
@@ -167,7 +168,7 @@ public class PushHeaderItem extends HeaderItem
 	 * }
 	 * </pre>
 	 * </code>
-	 * 
+	 *
 	 * @return the time the page of this header item has been modified
 	 */
 	protected Instant getPageModificationTime()
@@ -271,7 +272,7 @@ public class PushHeaderItem extends HeaderItem
 
 	/**
 	 * Parses the given if modified since header with the date time formatter
-	 * 
+	 *
 	 * @param ifModifiedSinceHeader
 	 *            the if modified since header string
 	 * @param dateTimeFormatter
@@ -296,7 +297,7 @@ public class PushHeaderItem extends HeaderItem
 
 	/**
 	 * Pushed all URLs of this header item to the client
-	 * 
+	 *
 	 * @param request
 	 *            the request to push the URLs to
 	 */
@@ -311,7 +312,7 @@ public class PushHeaderItem extends HeaderItem
 	/**
 	 * Creates a URL and pushes the resource to the client - this is only supported if http2 is
 	 * enabled
-	 * 
+	 *
 	 * @param pushItems
 	 *            a list of items to be pushed to the client
 	 * @return the current push header item
@@ -397,7 +398,7 @@ public class PushHeaderItem extends HeaderItem
 
 	/**
 	 * Gets the container request
-	 * 
+	 *
 	 * @param request
 	 *            the wicket request to get the container request from
 	 * @return the container request
@@ -410,7 +411,7 @@ public class PushHeaderItem extends HeaderItem
 
 	/**
 	 * Checks if the given request is a http/2 request
-	 * 
+	 *
 	 * @param request
 	 *            the request to check if it is a http/2 request
 	 * @return if the request is a http/2 request
@@ -425,7 +426,7 @@ public class PushHeaderItem extends HeaderItem
 	 * Checks if the container request from the given request is instance of
 	 * {@link HttpServletRequest} if not the API of the PushHeaderItem can't be used and a
 	 * {@link WicketRuntimeException} is thrown.
-	 * 
+	 *
 	 * @param request
 	 *            the request to get the container request from. The container request is checked if
 	 *            it is instance of {@link HttpServletRequest}
