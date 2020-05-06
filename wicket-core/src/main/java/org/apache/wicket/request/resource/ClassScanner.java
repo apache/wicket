@@ -19,8 +19,8 @@ package org.apache.wicket.request.resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.util.collections.ConcurrentHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +28,7 @@ abstract class ClassScanner
 {
 	private static final Logger log = LoggerFactory.getLogger(ClassScanner.class);
 
-	private final Set<String> scannedClasses = new ConcurrentHashSet<String>();
+	private final Set<String> scannedClasses = ConcurrentHashMap.newKeySet();
 
 	abstract boolean foundResourceReference(ResourceReference reference);
 
