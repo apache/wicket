@@ -218,7 +218,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		IKey key = getRegistryKey();
 		IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, key);
 
-		if (connection != null && (connection.isOpen() || message instanceof ClosedMessage))
+		if (connection != null && (connection.isOpen() || isSpecialMessage(message)))
 		{
 			Application oldApplication = ThreadContext.getApplication();
 			Session oldSession = ThreadContext.getSession();
@@ -261,7 +261,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 
 					WebSocketPayload payload = createEventPayload(message, requestHandler);
 
-					if (!(message instanceof ConnectedMessage || message instanceof ClosedMessage || message instanceof AbortedMessage)) {
+					if (!(message instanceof ConnectedMessage || isSpecialMessage(message))) {
 						requestCycle.scheduleRequestHandlerAfterCurrent(requestHandler);
 					}
 
@@ -296,6 +296,11 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		{
 			LOG.debug("Either there is no connection({}) or it is closed.", connection);
 		}
+	}
+
+	private static boolean isSpecialMessage(IWebSocketMessage message)
+	{
+		return message instanceof ClosedMessage || message instanceof ErrorMessage || message instanceof AbortedMessage;
 	}
 
 	private RequestCycle createRequestCycle(WebSocketRequestMapper requestMapper, WebResponse webResponse)
