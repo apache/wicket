@@ -26,10 +26,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class implements the <tt>Set</tt> interface, backed by a ConcurrentHashMap instance.
- * 
+ *
  * @author Matt Tucker
  * @param <E>
+ * @deprecated please use {@link ConcurrentHashMap#newKeySet()} instead
  */
+@Deprecated
 public class ConcurrentHashSet<E> extends AbstractSet<E>
 	implements
 		Set<E>,
@@ -57,7 +59,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	 * Constructs a new set containing the elements in the specified collection. The
 	 * <tt>ConcurrentHashMap</tt> is created with default load factor (0.75) and an initial capacity
 	 * sufficient to contain the elements in the specified collection.
-	 * 
+	 *
 	 * @param c
 	 *            the collection whose elements are to be placed into this set.
 	 * @throws NullPointerException
@@ -72,7 +74,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	/**
 	 * Constructs a new, empty set; the backing <tt>ConcurrentHashMap</tt> instance has the
 	 * specified initial capacity and the specified load factor.
-	 * 
+	 *
 	 * @param initialCapacity
 	 *            the initial capacity of the hash map.
 	 * @param loadFactor
@@ -88,7 +90,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	/**
 	 * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has the specified initial
 	 * capacity and default load factor, which is <tt>0.75</tt>.
-	 * 
+	 *
 	 * @param initialCapacity
 	 *            the initial capacity of the hash table.
 	 * @throws IllegalArgumentException
@@ -182,7 +184,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 	}
 
 	/**
-	 * 
+	 *
 	 * @param s
 	 * @throws java.io.IOException
 	 */
@@ -199,7 +201,7 @@ public class ConcurrentHashSet<E> extends AbstractSet<E>
 
 	/**
 	 * Re-constitute the <tt>HashSet</tt> instance from a stream.
-	 * 
+	 *
 	 * @param inputStream
 	 * @throws ClassNotFoundException
 	 * @throws IOException
