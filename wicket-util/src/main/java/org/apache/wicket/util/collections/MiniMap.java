@@ -28,7 +28,7 @@ import java.util.Set;
 /**
  * A fixed size map implementation. Holds an array of keys and array of values which correspond by
  * index. Null key entries are available for use. This means that null is not a valid key.
- * 
+ *
  * @author Jonathan Locke
  * @param <K>
  *            Key type
@@ -53,7 +53,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param maxEntries
 	 *            The maximum number of entries this map can hold
 	 */
@@ -66,7 +66,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param map
 	 *            The map
 	 * @param maxEntries
@@ -79,7 +79,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	}
 
 	/**
-	 * @return True if this MicroMap is full
+	 * @return True if this MiniMap is full
 	 */
 	public boolean isFull()
 	{
@@ -396,7 +396,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 
 	/**
 	 * Computes the next index in the key or value array (both are the same length)
-	 * 
+	 *
 	 * @param index
 	 *            The index
 	 * @return The next index, taking into account wraparound
@@ -408,7 +408,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 
 	/**
 	 * Finds the index of the next non-null key. If the map is empty, -1 will be returned.
-	 * 
+	 *
 	 * @param start
 	 *            Index to start at
 	 * @return Index of next non-null key
@@ -434,7 +434,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	/**
 	 * Finds the index of the next null key. If no null key can be found, the map is full and -1
 	 * will be returned.
-	 * 
+	 *
 	 * @param start
 	 *            Index to start at
 	 * @return Index of next null key
@@ -461,7 +461,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 	 * Finds a key by starting at lastSearchIndex and searching from there. If the key is found,
 	 * lastSearchIndex is advanced so the next key search can find the next key in the array, which
 	 * is the most likely to be retrieved.
-	 * 
+	 *
 	 * @param key
 	 *            Key to find in map
 	 * @return Index of matching key or -1 if not found
@@ -489,7 +489,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 
 	/**
 	 * Searches for a key from a given starting index.
-	 * 
+	 *
 	 * @param key
 	 *            The key to find in this map
 	 * @param start
@@ -516,7 +516,7 @@ public class MiniMap<K, V> implements Map<K, V>, Serializable
 
 	/**
 	 * Searches for a value from a given starting index.
-	 * 
+	 *
 	 * @param start
 	 *            Index to start at
 	 * @param value

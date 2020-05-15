@@ -43,18 +43,27 @@ public class AjaxChannel implements IClusterable
 
 		/**
 		 * Ajax requests are kept in a Queue at the client side and processed one at a time
+		 *
+		 * 's' comes from 'stack', but it really acts as a queue.
 		 */
-		QUEUE,
+		QUEUE("s"),
 
 		/**
 		 * dropping - only the last Ajax request is processed, the others are discarded
 		 */
-		DROP,
+		DROP("d"),
 
 		/**
 		 * the ajax call will discarded if there is an active/running request on the same channel
 		 */
-		ACTIVE
+		ACTIVE("a");
+
+		private final String shortType;
+
+		Type(String shortType)
+		{
+			this.shortType = shortType;
+		}
 	}
 
 	/**
@@ -132,26 +141,7 @@ public class AjaxChannel implements IClusterable
 	@Override
 	public String toString()
 	{
-		return String.format("%s|%s", name, getShortType(type));
-	}
-
-	private String getShortType(Type t)
-	{
-		String shortType;
-		switch (t)
-		{
-			case DROP:
-				shortType = "d";
-				break;
-			case ACTIVE:
-				shortType = "a";
-				break;
-			case QUEUE:
-			default:
-				// 's' comes from 'stack', but it really acts as a queue.
-				shortType = "s";
-		}
-		return shortType;
+		return name + "|" + type.shortType;
 	}
 
 	@Override

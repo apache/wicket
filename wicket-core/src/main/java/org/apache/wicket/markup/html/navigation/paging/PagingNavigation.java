@@ -33,27 +33,27 @@ import org.apache.wicket.util.collections.MicroMap;
  * <p>
  * For each row (one page of the list of pages) a {@link PagingNavigationLink}will be added that
  * contains a {@link Label} with the page number of that link (1..n).
- * 
+ *
  * <pre>
- * 
+ *
  * 	&lt;td wicket:id=&quot;navigation&quot;&gt;
  * 		&lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
  * 			&lt;span wicket:id=&quot;pageNumber&quot;&gt;1&lt;/span&gt;
  * 		&lt;/a&gt;
  * 	&lt;/td&gt;
- * 
+ *
  * </pre>
- * 
+ *
  * thus renders like:
- * 
+ *
  * <pre>
  * 	1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
  * </pre>
- * 
+ *
  * </p>
  * <p>
  * Override method populateItem to customize the rendering of the navigation. For instance:
- * 
+ *
  * <pre>
  * protected void populateItem(LoopItem loopItem)
  * {
@@ -72,9 +72,9 @@ import org.apache.wicket.util.collections.MicroMap;
  * 	loopItem.add(link);
  * }
  * </pre>
- * 
+ *
  * With:
- * 
+ *
  * <pre>
  * &lt;span wicket:id=&quot;navigation&quot;&gt;
  * 	&lt;span wicket:id=&quot;separator&quot;&gt;&lt;/span&gt;
@@ -83,13 +83,13 @@ import org.apache.wicket.util.collections.MicroMap;
  * 	&lt;/a&gt;
  * &lt;/span&gt;
  * </pre>
- * 
+ *
  * renders like:
- * 
+ *
  * <pre>
  * page1 | page2 | page3 | page4 | page5 | page6 | page7 | page8 | page9
  * </pre>
- * 
+ *
  * </p>
  * Assuming a PageableListView with 1000 entries and not more than 10 lines shall be printed per
  * page, the navigation bar would have 100 entries. Because this is not feasible PagingNavigation's
@@ -103,10 +103,10 @@ import org.apache.wicket.util.collections.MicroMap;
  * Use setMargin() and setViewSize() to adjust the navigation's bar view size and margin.
  * <p>
  * Please
- * 
+ *
  * @see PagingNavigator for a ready made component which already includes links to the first,
  *      previous, next and last page.
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
@@ -141,7 +141,7 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param pageable
@@ -154,7 +154,7 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 * @param pageable
@@ -173,7 +173,7 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Gets the margin, default value is half the view size, unless explicitly set.
-	 * 
+	 *
 	 * @return the margin
 	 */
 	public long getMargin()
@@ -187,7 +187,7 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Gets the seperator.
-	 * 
+	 *
 	 * @return the seperator
 	 */
 	public String getSeparator()
@@ -197,7 +197,7 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Gets the view size (is fixed by user).
-	 * 
+	 *
 	 * @return view size
 	 */
 	public int getViewSize()
@@ -207,7 +207,7 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * view size of the navigation bar.
-	 * 
+	 *
 	 * @param size
 	 */
 	public void setViewSize(final int size)
@@ -217,7 +217,7 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Sets the margin.
-	 * 
+	 *
 	 * @param margin
 	 *            the margin
 	 */
@@ -228,7 +228,7 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Sets the seperator. Null meaning, no separator at all.
-	 * 
+	 *
 	 * @param separator
 	 *            the seperator
 	 */
@@ -253,7 +253,7 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Allow subclasses replacing populateItem to calculate the current page number
-	 * 
+	 *
 	 * @return start index
 	 */
 	protected final long getStartIndex()
@@ -265,7 +265,7 @@ public class PagingNavigation extends Loop
 	 * Populate the current cell with a page link (PagingNavigationLink) enclosing the page number
 	 * the link is pointing to. Subclasses may provide there own implementation adding more
 	 * sophisticated page links.
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.html.list.Loop#populateItem(org.apache.wicket.markup.html.list.LoopItem)
 	 */
 	@Override
@@ -294,7 +294,7 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Factory method for creating page number links.
-	 * 
+	 *
 	 * @param id
 	 *            the component id.
 	 * @param pageable
@@ -310,8 +310,8 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Renders the page link. Add the separator if not the last page link
-	 * 
-	 * @see Loop#renderItem(org.apache.wicket.markup.html.list.LoopItem) 
+	 *
+	 * @see Loop#renderItem(org.apache.wicket.markup.html.list.LoopItem)
 	 */
 	@Override
 	protected void renderItem(final LoopItem loopItem)
@@ -385,7 +385,7 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Set the number of iterations.
-	 * 
+	 *
 	 * @param i
 	 *            the number of iterations
 	 */
@@ -396,7 +396,7 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Appends title attribute to navigation links
-	 * 
+	 *
 	 * @author igor.vaynberg
 	 */
 	private final class TitleAppender extends Behavior
@@ -409,7 +409,7 @@ public class PagingNavigation extends Loop
 
 		/**
 		 * Constructor
-		 * 
+		 *
 		 * @param page
 		 *            page number to use as the ${page} var
 		 */
@@ -423,7 +423,7 @@ public class PagingNavigation extends Loop
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
 			String pageIndex = String.valueOf(page + 1).intern();
-			Map<String, String> vars = new MicroMap<String, String>("page", pageIndex);
+			Map<String, String> vars = Map.of("page", pageIndex);
 			tag.put("title", PagingNavigation.this.getString(RES, Model.ofMap(vars)));
 		}
 	}

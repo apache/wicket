@@ -4220,6 +4220,11 @@ public abstract class Component
 	@Override
 	public final int getBehaviorId(Behavior behavior)
 	{
+		if (behavior.isTemporary(this))
+		{
+			throw new IllegalArgumentException(
+				"Cannot get a stable id for temporary behavior " + behavior);
+		}
 		return ComponentState.getBehaviorId(this, behavior, data, getFlag(FLAG_MODEL_SET));
 	}
 

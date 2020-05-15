@@ -89,7 +89,7 @@ class BehaviorTest extends WicketTestCase
 		assertFalse(container.getBehaviors().contains(temp2));
 	}
 
-	private static class TestTemporaryBehavior extends Behavior {
+	public static class TestTemporaryBehavior extends Behavior {
 		private static final long serialVersionUID = 1L;
 
 		@Override

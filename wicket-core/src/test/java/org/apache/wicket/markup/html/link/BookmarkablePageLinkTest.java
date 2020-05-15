@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -81,7 +82,8 @@ class BookmarkablePageLinkTest extends WicketTestCase
 
 		tester.startComponentInPage(link, null);
 		String expected =
-			"<html><head><script type=\"text/javascript\" src=\"./resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-3.4.1.js\"></script>\n"
+				"<html><head><script type=\"text/javascript\" src=\"./resource/org.apache.wicket.resource.JQueryResourceReference/" + JQueryResourceReference.VERSION_3
+				+ "\"></script>\n"
 				+ "<script type=\"text/javascript\" src=\"./resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js\"></script>\n"
 				+ "<script type=\"text/javascript\">\n" + "/*<![CDATA[*/\n"
 				+ "Wicket.Event.add(window, \"domready\", function(event) { \n"
