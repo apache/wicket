@@ -17,6 +17,7 @@
 package org.apache.wicket.behavior;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -25,6 +26,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.behavior.BehaviorTest.TestTemporaryBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -68,7 +70,7 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 		tester.startPage(page);
 
 		String output = tester.getLastResponseAsString();
-//		System.out.println(output);
+		// System.out.println(output);
 		assertTrue(output.contains("class=\"border\""));
 		assertTrue(output.contains("autocomplete=\"off\""));
 		assertTrue(output.contains("class2=\"border\""));
@@ -77,7 +79,6 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 		assertTrue(output.contains(".1"));
 		assertEquals(link, page.getContainer().getBehaviorById(0));
 		assertEquals(link2, page.getContainer().getBehaviorById(1));
-
 
 		// if we remove a behavior that is before the ibehaviorlistener its url index should not
 		// change
@@ -88,7 +89,7 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 		page.getContainer().remove(auto2);
 		tester.startPage(page);
 		output = tester.getLastResponseAsString();
-//		System.out.println(output);
+		// System.out.println(output);
 		assertTrue(output.contains(".0"));
 		assertTrue(output.contains(".1"));
 		assertEquals(link, page.getContainer().getBehaviorById(0));
@@ -118,7 +119,7 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 		int linkId = page.container.getBehaviorId(link);
 		int link2Id = page.container.getBehaviorId(link2);
 
-		List<? extends Behavior> behaviors = page.getContainer().getBehaviors();
+		List< ? extends Behavior> behaviors = page.getContainer().getBehaviors();
 		assertEquals(6, behaviors.size());
 
 		// test removal of various behaviors and make sure they preserve indexes as long as there is
@@ -151,7 +152,18 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 		assertEquals(2, behaviors.size());
 		assertEquals(autoId, page.container.getBehaviorId(auto));
 		assertEquals(border2Id, page.container.getBehaviorId(border2));
+	}
 
+	@Test
+	void noStableIdForTemporaryBehavior()
+	{
+		MyPage page = new MyPage();
+		TestTemporaryBehavior tempBehavior = new TestTemporaryBehavior();
+		page.getContainer().add(tempBehavior);
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			page.getContainer().getBehaviorId(tempBehavior);
+		});
 	}
 
 	private static class LinkBehavior extends Behavior implements IRequestListener
@@ -181,6 +193,7 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 	private static class MyPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
+
 		private final WebMarkupContainer container;
 
 		MyPage()
@@ -191,7 +204,7 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class<?> containerClass)
+				Class< ? > containerClass)
 		{
 			return new StringResourceStream(
 				"<html><body><a wicket:id='container'></a></body></html>");
@@ -203,6 +216,5 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 		}
 
 	}
-
 
 }
