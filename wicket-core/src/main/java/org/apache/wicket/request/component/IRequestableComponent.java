@@ -63,11 +63,15 @@ public interface IRequestableComponent
 	IRequestableComponent get(String path);
 
 	/**
-	 * Gets a stable id for the specified behavior. The id remains stable from the point this method
-	 * is first called for the behavior until the behavior has been removed from the component
+	 * Gets a stable id for the specified non-temporary behavior. The id remains stable from the
+	 * point this method is first called for the behavior until the behavior has been removed from
+	 * the component. This includes from one request to the next, when the component itself is
+	 * retained for the next request (i.e. is stateful). Note that the bookkeeping required for
+	 * these stable ids increases the memory footprint of the component.
 	 * 
 	 * @param behavior
 	 * @return a stable id for the specified behavior
+	 * @throws IllegalArgumentException when the behavior is temporary
 	 */
 	int getBehaviorId(Behavior behavior);
 
@@ -95,7 +99,7 @@ public interface IRequestableComponent
 	 * 	// Detach nested object if it's a detachable
 	 * 	if (target instanceof IDetachable)
 	 * 	{
-	 * 		((IDetachable)target).detach();
+	 * 		((IDetachable) target).detach();
 	 * 	}
 	 * }
 	 * </pre>
@@ -110,8 +114,8 @@ public interface IRequestableComponent
 	void detach();
 
 	/**
-	 * @return {@code true} if it is save to call an {@link org.apache.wicket.IRequestListener} on this component
-	 *      when the owner page is freshly created after expiration
+	 * @return {@code true} if it is save to call an {@link org.apache.wicket.IRequestListener} on
+	 *         this component when the owner page is freshly created after expiration
 	 */
 	boolean canCallListenerAfterExpiry();
 }
