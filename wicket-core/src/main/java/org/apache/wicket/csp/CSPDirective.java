@@ -44,6 +44,7 @@ public enum CSPDirective
 	MEDIA_SRC("media-src"),
 	CHILD_SRC("child-src"),
 	FRAME_ANCESTORS("frame-ancestors"),
+	BASE_URI("base-uri"),
 	/**
 	 * This directive was deprecated in CSP 2, but no longer in 3. Wicket will automatically add a
 	 * {@code frame-src} directive when {@code child-src} is added.
@@ -133,7 +134,7 @@ public enum CSPDirective
 	/**
 	 * Check if {@code value} can be added to the list of other values. By default, it checks for
 	 * conflicts with wildcards and none and it checks if values are valid uris.
-	 * 
+	 *
 	 * @param value
 	 *            The value to add.
 	 * @param existingDirectiveValues
@@ -161,14 +162,14 @@ public enum CSPDirective
 						+ "a 'none', can't add " + value);
 			}
 		}
-		
+
 		if (value instanceof CSPDirectiveSandboxValue)
 		{
 			throw new IllegalArgumentException(
 				"A -src directive can't contain any of the sandbox directive values, like "
 						+ value);
 		}
-		
+
 		value.checkValidityForSrc();
 	}
 

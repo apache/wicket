@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.csp;
 
+import static org.apache.wicket.csp.CSPDirective.BASE_URI;
 import static org.apache.wicket.csp.CSPDirective.CHILD_SRC;
 import static org.apache.wicket.csp.CSPDirective.CONNECT_SRC;
 import static org.apache.wicket.csp.CSPDirective.DEFAULT_SRC;
@@ -45,7 +46,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * This configuration is constructed using the available {@link CSPDirective}s. An number of default
  * profiles is provided. These profiles can be used as a basis for a specific CSP. Extra directives
  * can be added or existing directives modified.
- * 
+ *
  * @author papegaaij
  * @see <a href="https://www.w3.org/TR/CSP2/">https://www.w3.org/TR/CSP2</a>
  * @see <a href=
@@ -54,25 +55,25 @@ import org.apache.wicket.request.cycle.RequestCycle;
 public class CSPHeaderConfiguration
 {
 	public static final String CSP_VIOLATION_REPORTING_URI = "cspviolation";
-	
+
 	private final Map<CSPDirective, List<CSPRenderable>> directives = new EnumMap<>(CSPDirective.class);
 
 	private boolean addLegacyHeaders = false;
-	
+
 	private boolean nonceEnabled = false;
-	
+
 	private String reportUriMountPath = null;
 
 	/**
 	 * Removes all directives from the CSP, returning an empty configuration.
-	 * 
+	 *
 	 * @return {@code this} for chaining.
 	 */
 	public CSPHeaderConfiguration disabled()
 	{
 		return clear();
 	}
-	
+
 	/**
 	 * Builds a CSP configuration with the following directives: {@code default-src 'none';}
 	 * {@code script-src 'self' 'unsafe-inline' 'unsafe-eval';}
@@ -81,13 +82,13 @@ public class CSPHeaderConfiguration
 	 * {@code frame-src 'self'}. This will allow resources to be loaded from {@code 'self'} (the
 	 * current host). In addition, unsafe inline Javascript, {@code eval()} and inline CSS is
 	 * allowed.
-	 * 
+	 *
 	 * It is recommended to not allow {@code unsafe-inline} or {@code unsafe-eval}, because those
 	 * can be used to trigger XSS attacks in your application (often in combination with another
 	 * bug). Because older application often rely on inline scripting and styling, this CSP can be
 	 * used as a stepping stone for older Wicket applications, before switching to {@link #strict}.
 	 * Using a CSP with unsafe directives is still more secure than using no CSP at all.
-	 * 
+	 *
 	 * @return {@code this} for chaining.
 	 */
 	public CSPHeaderConfiguration unsafeInline()
@@ -99,7 +100,8 @@ public class CSPHeaderConfiguration
 			.add(CONNECT_SRC, SELF)
 			.add(FONT_SRC, SELF)
 			.add(MANIFEST_SRC, SELF)
-			.add(CHILD_SRC, SELF);
+			.add(CHILD_SRC, SELF)
+			.add(BASE_URI, SELF);
 	}
 
 	/**
@@ -111,7 +113,7 @@ public class CSPHeaderConfiguration
 	 * (the current host). Scripts and styles are only allowed when rendered with the correct nonce.
 	 * Wicket will automatically add the nonces to the {@code script} and {@code link} (CSS)
 	 * elements and to the headers.
-	 * 
+	 *
 	 * @return {@code this} for chaining.
 	 */
 	public CSPHeaderConfiguration strict()
@@ -123,18 +125,19 @@ public class CSPHeaderConfiguration
 			.add(CONNECT_SRC, SELF)
 			.add(FONT_SRC, SELF)
 			.add(MANIFEST_SRC, SELF)
-			.add(CHILD_SRC, SELF);
+			.add(CHILD_SRC, SELF)
+			.add(BASE_URI, SELF);
 	}
 
 	/**
 	 * Configures the CSP to report violations back at the application.
-	 * 
+	 *
 	 * WARNING: CSP reporting can generate a lot of traffic. A single page load can trigger multiple
 	 * violations and flood your logs or even DDoS your server. In addition, it is an open endpoint
 	 * for your application and can be used by an attacker to flood your application logs. Do not
 	 * enable this feature on a production application unless you take the needed precautions to
 	 * prevent this.
-	 * 
+	 *
 	 * @return {@code this} for chaining
 	 * @see <a href=
 	 *      "https://scotthelme.co.uk/just-how-much-traffic-can-you-generate-using-csp">https://scotthelme.co.uk/just-how-much-traffic-can-you-generate-using-csp</a>
@@ -146,13 +149,13 @@ public class CSPHeaderConfiguration
 
 	/**
 	 * Configures the CSP to report violations at the specified relative URI.
-	 * 
+	 *
 	 * WARNING: CSP reporting can generate a lot of traffic. A single page load can trigger multiple
 	 * violations and flood your logs or even DDoS your server. In addition, it is an open endpoint
 	 * for your application and can be used by an attacker to flood your application logs. Do not
 	 * enable this feature on a production application unless you take the needed precautions to
 	 * prevent this.
-	 * 
+	 *
 	 * @param mountPath
 	 *            The path to report the violations at.
 	 * @return {@code this} for chaining
@@ -163,10 +166,10 @@ public class CSPHeaderConfiguration
 	{
 		return add(REPORT_URI, new RelativeURICSPValue(mountPath));
 	}
-	
+
 	/**
 	 * Returns the report URI mount path.
-	 * 
+	 *
 	 * @return the report URI mount path.
 	 */
 	String getReportUriMountPath()
@@ -176,7 +179,7 @@ public class CSPHeaderConfiguration
 
 	/**
 	 * True when the {@link CSPDirectiveSrcValue#NONCE} is used in one of the directives.
-	 * 
+	 *
 	 * @return When any of the directives contains a nonce.
 	 */
 	public boolean isNonceEnabled()
@@ -186,7 +189,7 @@ public class CSPHeaderConfiguration
 
 	/**
 	 * True when legacy headers should be added.
-	 * 
+	 *
 	 * @return True when legacy headers should be added.
 	 */
 	public boolean isAddLegacyHeaders()
@@ -196,7 +199,7 @@ public class CSPHeaderConfiguration
 
 	/**
 	 * Enable legacy {@code X-Content-Security-Policy} headers for older browsers, such as IE.
-	 * 
+	 *
 	 * @param addLegacyHeaders
 	 *            True when the legacy headers should be added.
 	 * @return {@code this} for chaining
@@ -209,7 +212,7 @@ public class CSPHeaderConfiguration
 
 	/**
 	 * Removes the given directive from the configuration.
-	 * 
+	 *
 	 * @param directive
 	 *            The directive to remove.
 	 * @return {@code this} for chaining
@@ -222,7 +225,7 @@ public class CSPHeaderConfiguration
 
 	/**
 	 * Adds the given values to the CSP directive on this configuraiton.
-	 * 
+	 *
 	 * @param directive
 	 *            The directive to add the values to.
 	 * @param values
@@ -241,7 +244,7 @@ public class CSPHeaderConfiguration
 	/**
 	 * Adds a free-form value to a directive for the CSP header. This is primarily meant to used for
 	 * URIs.
-	 * 
+	 *
 	 * @param directive
 	 *            The directive to add the values to.
 	 * @param values
@@ -267,7 +270,7 @@ public class CSPHeaderConfiguration
 
 	/**
 	 * Removes all CSP directives from the configuration.
-	 * 
+	 *
 	 * @return {@code this} for chaining.
 	 */
 	public CSPHeaderConfiguration clear()
@@ -275,7 +278,7 @@ public class CSPHeaderConfiguration
 		directives.clear();
 		return recalculateState();
 	}
-	
+
 	private CSPHeaderConfiguration recalculateState()
 	{
 		nonceEnabled = directives.values()
@@ -313,7 +316,7 @@ public class CSPHeaderConfiguration
 	/**
 	 * Renders this {@code CSPHeaderConfiguration} into an HTTP header. The returned String will be
 	 * in the form {@code "key1 value1a value1b; key2 value2a; key3 value3a value3b value3c"}.
-	 * 
+	 *
 	 * @param settings
 	 *            The {@link ContentSecurityPolicySettings} that renders the header.
 	 * @param cycle
