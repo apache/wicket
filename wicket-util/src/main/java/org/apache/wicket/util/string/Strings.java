@@ -62,19 +62,6 @@ public final class Strings
 	/** A table of hex digits */
 	private static final char[] HEX_DIGIT = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 			'A', 'B', 'C', 'D', 'E', 'F' };
-	private static final Set<Character> NONCHARACTERS = Collections.unmodifiableSet(new HashSet<Character>()
-	{
-		private static final long serialVersionUID = 1L;
-
-		{
-			for (int i = 0x0000FDD0; i <= 0x0000FDEF; ++i)
-			{
-				add((char)i);
-			}
-			add((char)0x0000FFFE);
-			// all other non-characters are out of range of (char)
-		}
-	});
 
 	private static final Pattern HTML_NUMBER_REGEX = Pattern.compile("&#\\d+;");
 	
@@ -336,7 +323,7 @@ public final class Strings
 		{
 			final char c = s.charAt(i);
 
-			if (NONCHARACTERS.contains(c))
+			if (Character.getType(c) == Character.UNASSIGNED)
 			{
 				continue;
 			}
@@ -1020,7 +1007,7 @@ public final class Strings
 	 */
 	public static String toEscapedUnicode(final String unicodeString)
 	{
-		if ((unicodeString == null) || (unicodeString.length() == 0))
+		if (unicodeString == null || unicodeString.isEmpty())
 		{
 			return unicodeString;
 		}
@@ -1030,7 +1017,7 @@ public final class Strings
 		for (int x = 0; x < len; x++)
 		{
 			char aChar = unicodeString.charAt(x);
-			if (NONCHARACTERS.contains(aChar))
+			if (Character.getType(aChar) == Character.UNASSIGNED)
 			{
 				continue;
 			}
