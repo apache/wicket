@@ -459,7 +459,7 @@ public class StringsTest
 	@Test
 	public void testNonchar()
 	{
-		assertEquals("", Strings.escapeMarkup("\ufffe\uFDDF\uFDE0").toString());
-		assertEquals("", Strings.toEscapedUnicode("\ufffe\uFDDF\uFDE0"));
+		assertEquals("", Strings.escapeMarkup("\ufffe\uFDDF\uFDE0\uFDD0\uFDEF").toString());
+		assertEquals("", Strings.toEscapedUnicode("\ufffe\uFDDF\uFDE0\uFDD0\uFDEF"));
 	}
 }
