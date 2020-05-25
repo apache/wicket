@@ -386,6 +386,13 @@ public abstract class Component
 	private static final int FLAG_MODEL_SET = 0x100000;
 
 	/**
+	 * Flag that is set when {@link #getBehaviorId(Behavior)} is called on this component. Once this
+	 * flag is set, the indexes of all behaviors must remain fixed to keep the contract of
+	 * {@link #getBehaviorId(Behavior)}.
+	 */
+	private static final int FLAG_BEHAVIOR_IDS_FIXED = 0x200000;
+	
+	/**
 	 * Flag that restricts visibility of a component when set to true. This is usually used when a
 	 * component wants to restrict visibility of another component. Calling
 	 * {@link #setVisible(boolean)} on a component does not always have the desired effect because
@@ -958,7 +965,8 @@ public abstract class Component
 			detachModels();
 
 			// detach any behaviors
-			data = ComponentState.detachBehaviors(this, data, getFlag(FLAG_MODEL_SET));
+			data = ComponentState.detachBehaviors(this, data, getFlag(FLAG_MODEL_SET),
+				getFlag(FLAG_BEHAVIOR_IDS_FIXED));
 		}
 		catch (Exception x)
 		{
@@ -4213,6 +4221,9 @@ public abstract class Component
 	@Override
 	public final Behavior getBehaviorById(int id)
 	{
+		data = ComponentState.compactBehaviors(this, data, getFlag(FLAG_MODEL_SET),
+			getFlag(FLAG_BEHAVIOR_IDS_FIXED));
+		setFlag(FLAG_BEHAVIOR_IDS_FIXED, true);
 		return ComponentState.getBehaviorById(this, id, data, getFlag(FLAG_MODEL_SET));
 	}
 
@@ -4225,6 +4236,9 @@ public abstract class Component
 			throw new IllegalArgumentException(
 				"Cannot get a stable id for temporary behavior " + behavior);
 		}
+		data = ComponentState.compactBehaviors(this, data, getFlag(FLAG_MODEL_SET),
+			getFlag(FLAG_BEHAVIOR_IDS_FIXED));
+		setFlag(FLAG_BEHAVIOR_IDS_FIXED, true);
 		return ComponentState.getBehaviorId(this, behavior, data, getFlag(FLAG_MODEL_SET));
 	}
 

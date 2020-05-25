@@ -945,7 +945,56 @@ abstract class ComponentState implements Serializable
 		}
 	}
 
-	static Object detachBehaviors(Component component, Object state, boolean modelSet)
+	static Object compactBehaviors(Component component, Object state, boolean modelSet,
+			boolean fixedIds)
+	{
+		if (fixedIds)
+		{
+			return state;
+		}
+		Object behaviors = getBehaviors(state, modelSet);
+		if (!(behaviors instanceof Behavior[]))
+		{
+			return state;
+		}
+
+		Behavior[] behaviorsArr = (Behavior[]) behaviors;
+		int setIndex = 0;
+		int endIndex = behaviorsArr.length - 1;
+		int checkIndex = 0;
+		while (checkIndex <= endIndex)
+		{
+			Behavior curBehavior = behaviorsArr[checkIndex];
+			if (curBehavior == null)
+			{
+				checkIndex++;
+				continue;
+			}
+
+			// move tmp behaviors to the end of the array, swap with what's there
+			if (curBehavior.isTemporary(component))
+			{
+				Behavior tmp = behaviorsArr[endIndex];
+				behaviorsArr[endIndex] = curBehavior;
+				behaviorsArr[checkIndex] = tmp;
+				endIndex--;
+				continue;
+			}
+			behaviorsArr[setIndex] = curBehavior;
+			checkIndex++;
+			setIndex++;
+		}
+
+		// wipe the remainder of the array
+		for (; setIndex <= endIndex; setIndex++)
+		{
+			behaviorsArr[setIndex] = null;
+		}
+		return state;
+	}
+
+	static Object detachBehaviors(Component component, Object state, boolean modelSet,
+			boolean fixedIds)
 	{
 		Object behaviors = getBehaviors(state, modelSet);
 		if (behaviors instanceof Behavior)
@@ -961,7 +1010,6 @@ abstract class ComponentState implements Serializable
 		else if (behaviors instanceof Behavior[])
 		{
 			// remove temporary behaviors and compact the array
-			Behavior singleBehavior = null;
 			int highestId = -1;
 			int filledSlots = 0;
 			Behavior[] behaviorsArr = (Behavior[]) behaviors;
@@ -981,25 +1029,21 @@ abstract class ComponentState implements Serializable
 					}
 					else
 					{
-						singleBehavior = curBehavior;
 						filledSlots++;
-						if (!curBehavior.getStatelessHint(component))
-						{
-							highestId = i;
-						}
+						highestId = i;
 					}
 				}
 			}
 
 			// if at most 1 behavior remains, no array is needed
-			int newSize = Math.max(highestId + 1, filledSlots);
+			int newSize = fixedIds ? Math.max(highestId + 1, filledSlots) : filledSlots;
 			if (newSize == 0)
 			{
 				return setBehaviors(state, modelSet, null);
 			}
 			if (newSize == 1)
 			{
-				return setBehaviors(state, modelSet, singleBehavior);
+				return setBehaviors(state, modelSet, behaviorsArr[highestId]);
 			}
 
 			// the calculated size is equal to the current size, cannot compact
@@ -1011,27 +1055,23 @@ abstract class ComponentState implements Serializable
 			// multiple behaviors (or one with an id > 0)
 			// construct a new array and compact the behaviors
 			Behavior[] ret = new Behavior[newSize];
-			int checkSlot = 0;
-			for (int i = 0; i < behaviorsArr.length; i++)
+
+			if (fixedIds)
 			{
-				Behavior curBehavior = behaviorsArr[i];
-				if (curBehavior == null)
+				System.arraycopy(behaviorsArr, 0, ret, 0, ret.length);
+			}
+			else
+			{
+				int targetIndex = 0;
+				for (int i = 0; i < behaviorsArr.length; i++)
 				{
-					continue;
-				}
-				// statefull behaviors stay at their index
-				if (!curBehavior.getStatelessHint(component))
-				{
-					ret[i] = curBehavior;
-				}
-				else
-				{
-					// for all others, find the first free slot
-					while (ret[checkSlot] != null)
+					Behavior curBehavior = behaviorsArr[i];
+					if (curBehavior == null)
 					{
-						checkSlot++;
+						continue;
 					}
-					ret[checkSlot] = curBehavior;
+					ret[targetIndex] = curBehavior;
+					targetIndex++;
 				}
 			}
 			return setBehaviors(state, modelSet, ret);
