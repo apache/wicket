@@ -79,9 +79,9 @@ public class CSPHeaderConfiguration
 	 * {@code script-src 'self' 'unsafe-inline' 'unsafe-eval';}
 	 * {@code style-src 'self' 'unsafe-inline';} {@code img-src 'self';} {@code connect-src 'self';}
 	 * {@code font-src 'self';} {@code manifest-src 'self';} {@code child-src 'self';}
-	 * {@code frame-src 'self'}. This will allow resources to be loaded from {@code 'self'} (the
-	 * current host). In addition, unsafe inline Javascript, {@code eval()} and inline CSS is
-	 * allowed.
+	 * {@code frame-src 'self'} {@code base-uri 'self'}. This will allow resources to be loaded
+	 * from {@code 'self'} (the current host). In addition, unsafe inline Javascript,
+	 * {@code eval()} and inline CSS is allowed.
 	 *
 	 * It is recommended to not allow {@code unsafe-inline} or {@code unsafe-eval}, because those
 	 * can be used to trigger XSS attacks in your application (often in combination with another
@@ -109,8 +109,9 @@ public class CSPHeaderConfiguration
 	 * {@code default-src 'none';} {@code script-src 'strict-dynamic' 'nonce-XYZ';}
 	 * {@code style-src 'nonce-XYZ';} {@code img-src 'self';} {@code connect-src 'self';}
 	 * {@code font-src 'self';} {@code manifest-src 'self';} {@code child-src 'self';}
-	 * {@code frame-src 'self'}. This will allow most resources to be loaded from {@code 'self'}
-	 * (the current host). Scripts and styles are only allowed when rendered with the correct nonce.
+	 * {@code frame-src 'self'} {@code base-uri 'self'}. This will allow most resources to be loaded
+	 * from {@code 'self'} (the current host). Scripts and styles are only allowed when rendered with
+	 * the correct nonce.
 	 * Wicket will automatically add the nonces to the {@code script} and {@code link} (CSS)
 	 * elements and to the headers.
 	 *

@@ -5,7 +5,7 @@ In Wicket 9 support for a Content Security Policy (or CSP) has been added. CSP i
 The default CSP set by Wicket is very strict. It requires all scripts and stylesheets to be rendered with a nonce. Wicket will automatically attach the nonce to all header contributions that support this (i.e. subclasses of the _AbstractCspHeaderItem_ class). Images, fonts and (i)frames are allowed from _self_, the current host. All other resources are blocked. This includes any inline styling or Javascript (such as an _onclick_ attribute). The exact CSP is:
 
 ----
-Content-Security-Policy: default-src 'none'; script-src 'strict-dynamic' 'nonce-XYZ'; style-src 'nonce-XYZ'; img-src 'self'; connect-src 'self'; font-src 'self'; manifest-src 'self'; child-src 'self'; frame-src 'self'
+Content-Security-Policy: default-src 'none'; script-src 'strict-dynamic' 'nonce-XYZ'; style-src 'nonce-XYZ'; img-src 'self'; connect-src 'self'; font-src 'self'; manifest-src 'self'; child-src 'self'; frame-src 'self'; base-uri 'self';
 ----
 
 In developer mode, the CSP is extended with a reporting directive that reports violations at a special endpoint in the application that logs the violation. This is conveniant while developing an application, but care should be taken when this is enabled on production. The _cspviolation_ endpoint must be an open endpoint and all data sent to that URL will end up in the logs. To prevent the server log from filling the disk, make sure the _org.apache.wicket.csp.ReportCSPViolationMapper_ logger has a limit on its disk usage.
