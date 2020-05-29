@@ -16,25 +16,25 @@
  */
 package org.apache.wicket.util.encoding;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Adapted from java.net.URLDecoder, but defines instances for query string decoding versus URL path
+ * Adapted from Spring's UriUtils, but defines instances for query string decoding versus URL path
  * component decoding.
  * <p/>
  * The difference is important because a space is encoded as a + in a query string, but this is a
  * valid value in a path component (and is therefore not decode back to a space).
- * 
- * @author Doug Donohoe
- * @see java.net.URLDecoder
+ *
+ * @author Thomas Heigl
+ * @see org.springframework.web.util.UriUtils
  * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC-2396</a>
  */
 public class UrlDecoder
@@ -46,7 +46,7 @@ public class UrlDecoder
 	/**
 	 * Encoder used to decode name or value components of a query string.<br/>
 	 * <br/>
-	 * 
+	 *
 	 * For example: http://org.acme/notthis/northis/oreventhis?buthis=isokay&amp;asis=thispart
 	 */
 	public static final UrlDecoder QUERY_INSTANCE = new UrlDecoder(true);
@@ -54,14 +54,14 @@ public class UrlDecoder
 	/**
 	 * Encoder used to decode components of a path.<br/>
 	 * <br/>
-	 * 
+	 *
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
 	public static final UrlDecoder PATH_INSTANCE = new UrlDecoder(false);
 
 	/**
 	 * Create decoder
-	 * 
+	 *
 	 * @param decodePlus
 	 *            - whether to decode + to space
 	 */
@@ -76,7 +76,6 @@ public class UrlDecoder
 	 * @param enc
 	 *            encoding to decode with
 	 * @return decoded string
-	 * @see java.net.URLDecoder#decode(String, String)
 	 */
 	public String decode(final String s, final String enc)
 	{
@@ -93,95 +92,69 @@ public class UrlDecoder
 	}
 
 	/**
-	 * @param s
+	 * @param source
 	 *            string to decode
 	 * @param charset
 	 *            encoding to decode with
 	 * @return decoded string
-	 * @see java.net.URLDecoder#decode(String, String)
 	 */
-	public String decode(final String s, final Charset charset)
+	public String decode(final String source, final Charset charset)
 	{
-		if (Strings.isEmpty(s))
+		if (source == null || source.isEmpty())
 		{
-			return s;
+			return source;
 		}
-
-		int numChars = s.length();
-		StringBuilder sb = new StringBuilder(numChars > 500 ? numChars / 2 : numChars);
-		int i = 0;
 
 		Args.notNull(charset, "charset");
 
-		char c;
-		byte[] bytes = null;
-		while (i < numChars)
+		final int length = source.length();
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream(length);
+		boolean changed = false;
+		for (int i = 0; i < length; i++)
 		{
-			c = s.charAt(i);
-			switch (c)
+			final int ch = source.charAt(i);
+			if (ch == '%')
 			{
-				case '+' :
-					sb.append(decodePlus ? ' ' : '+');
-					i++;
-					break;
-
-				case '%' :
-					/*
-					 * Starting with this instance of %, process all consecutive substrings of the
-					 * form %xy. Each substring %xy will yield a byte. Convert all consecutive bytes
-					 * obtained this way to whatever character(s) they represent in the provided
-					 * encoding.
-					 */
-					try
+				if (i + 2 < length)
+				{
+					final char hex1 = source.charAt(i + 1);
+					final char hex2 = source.charAt(i + 2);
+					final int u = Character.digit(hex1, 16);
+					final int l = Character.digit(hex2, 16);
+					if (u != -1 && l != -1)
 					{
-						// (numChars-i)/3 is an upper bound for the number
-						// of remaining bytes
-						if (bytes == null)
-						{
-							bytes = new byte[(numChars - i) / 3];
-						}
-						int pos = 0;
-
-						while (((i + 2) < numChars) && (c == '%'))
-						{
-							bytes[pos++] = (byte)Integer.parseInt(s.substring(i + 1, i + 3), 16);
-							i += 3;
-							if (i < numChars)
-							{
-								c = s.charAt(i);
-							}
-						}
-
-						// A trailing, incomplete byte encoding such as
-						// "%x" will cause an exception to be thrown
-						if ((i < numChars) && (c == '%'))
-						{
-							LOG.info("Incomplete trailing escape (%) pattern in '%s'. The escape character (%) will be ignored.",
-									s);
-							i++;
-							break;
-						}
-
-						sb.append(new String(bytes, 0, pos, charset));
+						bos.write((char)((u << 4) + l));
+						i += 2;
 					}
-					catch (NumberFormatException e)
-					{
-						LOG.info("Illegal hex characters in escape (%) pattern in '{}'. " +
-								"The escape character (%) will be ignored. NumberFormatException: {} ",
-							s, e.getMessage());
-						i++;
-					}
-					break;
-
-				default :
-					sb.append(c);
-					i++;
-					break;
+					changed = true;
+				}
+				else
+				{
+					LOG.info(
+						"Incomplete trailing escape (%) pattern in '{}'. The escape character (%) will be ignored.",
+						source);
+				}
+			}
+			else if (ch == '+')
+			{
+				if (decodePlus)
+				{
+					bos.write(' ');
+					changed = true;
+				}
+				else
+				{
+					bos.write(ch);
+				}
+			}
+			else
+			{
+				bos.write(ch);
 			}
 		}
-
+		final String result = changed ? new String(bos.toByteArray(), charset) : source;
 		// no trying to filter out bad escapes beforehand, just kill all null bytes here at the end,
 		// that way none will come through
-		return sb.toString().replace("\0", "NULL");
+		return result.replace("\0", "NULL");
 	}
 }
