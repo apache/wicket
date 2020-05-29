@@ -119,11 +119,16 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 */
 	public String getEvent()
 	{
+		if (event.indexOf(' ') == -1)
+		{
+			return event;
+		}
+
 		String[] splitEvents = event.split("\\s+");
 		List<String> cleanedEvents = new ArrayList<>(splitEvents.length);
 		for (String evt : splitEvents)
 		{
-			if (Strings.isEmpty(evt) == false)
+			if (!Strings.isEmpty(evt))
 			{
 				cleanedEvents.add(evt);
 			}
