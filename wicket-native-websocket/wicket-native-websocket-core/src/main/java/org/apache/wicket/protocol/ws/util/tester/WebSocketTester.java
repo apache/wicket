@@ -56,6 +56,9 @@ public class WebSocketTester
 			webApplication.getWicketFilter().setFilterPath("");
 		}
 
+		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(webApplication);
+		webSocketSettings.setWebSocketPushMessageExecutor(new WebSocketSettings.SameThreadExecutor());
+
 		socketProcessor = new TestWebSocketProcessor(wicketTester, page)
 		{
 			@Override
@@ -92,6 +95,9 @@ public class WebSocketTester
 		{
 			webApplication.getWicketFilter().setFilterPath("");
 		}
+
+		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(webApplication);
+		webSocketSettings.setWebSocketPushMessageExecutor(new WebSocketSettings.SameThreadExecutor());
 
 		socketProcessor = new TestWebSocketProcessor(wicketTester, resourceName)
 		{

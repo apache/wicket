@@ -40,6 +40,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.Callable;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -64,6 +67,7 @@ public class WebSocketSettings
 	 * are never passed to the Servlet Filters.
 	 */
 	private static boolean USING_JAVAX_WEB_SOCKET = false;
+
 	static
 	{
 		try
@@ -96,6 +100,7 @@ public class WebSocketSettings
 			{
 				synchronized (application)
 				{
+					settings = application.getMetaData(KEY);
 					if (settings == null)
 					{
 						settings = new WebSocketSettings();
@@ -115,7 +120,7 @@ public class WebSocketSettings
 	/**
 	 * The executor that handles the processing of Web Socket push message broadcasts.
 	 */
-	private Executor webSocketPushMessageExecutor = new SameThreadExecutor();
+	private Executor webSocketPushMessageExecutor = new WebSocketPushMessageExecutor();
 
 	/**
 	 * The executor that handles broadcast of the {@link org.apache.wicket.protocol.ws.api.event.WebSocketPayload}
@@ -206,11 +211,12 @@ public class WebSocketSettings
 	 */
 	public Executor getSendPayloadExecutor()
 	{
-	return sendPayloadExecutor;
+		return sendPayloadExecutor;
 	}
 
 	/**
 	 * Sets the filter for checking the incoming connections
+	 *
 	 * @param connectionFilter
 	 *              the filter for checking the incoming connections
 	 * @see WebSocketConnectionFilterCollection
@@ -224,7 +230,8 @@ public class WebSocketSettings
 	 * @return the filter for checking the incoming connections
 	 * @see WebSocketConnectionFilterCollection
 	 */
-	public IWebSocketConnectionFilter getConnectionFilter() {
+	public IWebSocketConnectionFilter getConnectionFilter()
+	{
 		return this.connectionFilter;
 	}
 
@@ -252,7 +259,8 @@ public class WebSocketSettings
 	 *          The active web socket connection
 	 * @return a new instance of WebSocketRequestHandler for processing a web socket request
 	 */
-	public WebSocketRequestHandler newWebSocketRequestHandler(Page page, IWebSocketConnection connection) {
+	public WebSocketRequestHandler newWebSocketRequestHandler(Page page, IWebSocketConnection connection)
+	{
 		return new WebSocketRequestHandler(page, connection);
 	}
 
@@ -271,11 +279,13 @@ public class WebSocketSettings
 		return new WebSocketRequest(new ServletRequestCopy(request), filterPath);
 	}
 
-	public void setFilterPrefix(final CharSequence filterPrefix) {
+	public void setFilterPrefix(final CharSequence filterPrefix)
+	{
 		this.filterPrefix.set(filterPrefix);
 	}
 
-	public CharSequence getFilterPrefix() {
+	public CharSequence getFilterPrefix()
+	{
 		if (filterPrefix.get() == null)
 		{
 			if (USING_JAVAX_WEB_SOCKET)
@@ -290,11 +300,13 @@ public class WebSocketSettings
 		return filterPrefix.get();
 	}
 
-	public void setContextPath(final CharSequence contextPath) {
+	public void setContextPath(final CharSequence contextPath)
+	{
 		this.contextPath.set(contextPath);
 	}
 
-	public CharSequence getContextPath() {
+	public CharSequence getContextPath()
+	{
 		contextPath.compareAndSet(null, RequestCycle.get().getRequest().getContextPath());
 		return contextPath.get();
 	}
@@ -304,7 +316,8 @@ public class WebSocketSettings
 		this.baseUrl.set(baseUrl);
 	}
 
-	public CharSequence getBaseUrl() {
+	public CharSequence getBaseUrl()
+	{
 		if (baseUrl.get() == null)
 		{
 			Url _baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl();
@@ -366,6 +379,79 @@ public class WebSocketSettings
 		public <T> T call(Callable<T> callable) throws Exception
 		{
 			return callable.call();
+		}
+	}
+
+	public static class WebSocketPushMessageExecutor implements Executor
+	{
+		/**
+		 * An executor that should be used when the WebSocket message is pushed
+		 * from non-http worker thread.
+		 */
+		private final java.util.concurrent.Executor nonHttpRequestExecutor;
+
+		/**
+		 * An executor that is used when the WebSocket push is initiated in
+		 * http worker thread. In this case the WebSocket processing should be
+		 * off-loaded to a different thread that should wait for the page instance
+		 * lock.
+		 */
+		private final java.util.concurrent.Executor httpRequestExecutor;
+
+		/**
+		 * For non-http worker threads pushes the WebSocket runnable in the same request.
+		 * For http worker threads uses an elastic thread pool of 1-8 threads.
+		 *
+		 * Use {@link WebSocketPushMessageExecutor#WebSocketPushMessageExecutor(java.util.concurrent.Executor, java.util.concurrent.Executor)}
+		 * for custom behavior and/or settings
+		 */
+		public WebSocketPushMessageExecutor()
+		{
+			this(
+				new java.util.concurrent.Executor() {
+					@Override
+					public void execute(Runnable command) {
+						command.run();
+					}
+				}, new ThreadPoolExecutor(1, 8,
+							60L, TimeUnit.SECONDS,
+							new SynchronousQueue<Runnable>(), new ThreadFactory())
+			);
+		}
+
+		public WebSocketPushMessageExecutor(java.util.concurrent.Executor nonHttpRequestExecutor, java.util.concurrent.Executor httpRequestExecutor)
+		{
+			this.nonHttpRequestExecutor = nonHttpRequestExecutor;
+			this.httpRequestExecutor = httpRequestExecutor;
+		}
+
+		@Override
+		public void run(final Runnable command)
+		{
+			if (RequestCycle.get() != null)
+			{
+				httpRequestExecutor.execute(command);
+			}
+			else
+			{
+				nonHttpRequestExecutor.execute(command);
+			}
+		}
+
+		@Override
+		public <T> T call(Callable<T> callable) throws Exception {
+			return callable.call();
+		}
+	}
+
+	public static class ThreadFactory implements java.util.concurrent.ThreadFactory
+	{
+		private final AtomicInteger counter = new AtomicInteger();
+
+		@Override
+		public Thread newThread(final Runnable r)
+		{
+			return new Thread(r, "Wicket-WebSocket-HttpRequest-Thread-" + counter.getAndIncrement());
 		}
 	}
 }
