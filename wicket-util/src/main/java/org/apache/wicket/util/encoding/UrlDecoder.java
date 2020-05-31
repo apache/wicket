@@ -133,6 +133,7 @@ public class UrlDecoder
 					LOG.info(
 						"Incomplete trailing escape (%) pattern in '{}'. The escape character (%) will be ignored.",
 						source);
+					changed = true;
 				}
 			}
 			else if (ch == '+')
