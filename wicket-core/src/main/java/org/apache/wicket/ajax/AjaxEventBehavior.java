@@ -68,6 +68,8 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 	private static final long serialVersionUID = 1L;
 
+	private static final char EVENT_NAME_SEPARATOR = ' ';
+
 	private final String event;
 
 	/**
@@ -119,15 +121,16 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 */
 	public String getEvent()
 	{
-		if (event.indexOf(' ') == -1)
+		if (event.indexOf(EVENT_NAME_SEPARATOR) == -1)
 		{
 			return event;
 		}
 
-		String[] splitEvents = event.split("\\s+");
+		String[] splitEvents = Strings.split(event, EVENT_NAME_SEPARATOR);
 		List<String> cleanedEvents = new ArrayList<>(splitEvents.length);
 		for (String evt : splitEvents)
 		{
+			evt = evt.trim();
 			if (!Strings.isEmpty(evt))
 			{
 				cleanedEvents.add(evt);
