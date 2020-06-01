@@ -242,18 +242,18 @@ public class AsynchronousPageStore extends DelegatingPageStore
 	{
 		private static final Logger log = LoggerFactory.getLogger(PageAddingRunnable.class);
 
-		private final BlockingQueue<PendingAdd> entries;
+		private final BlockingQueue<PendingAdd> queue;
 
-		private final ConcurrentMap<String, PendingAdd> addQueue;
+		private final ConcurrentMap<String, PendingAdd> map;
 
 		private final IPageStore delegate;
 
-		private PageAddingRunnable(IPageStore delegate, BlockingQueue<PendingAdd> entries,
-		                           ConcurrentMap<String, PendingAdd> entryMap)
+		private PageAddingRunnable(IPageStore delegate, BlockingQueue<PendingAdd> queue,
+		                           ConcurrentMap<String, PendingAdd> map)
 		{
 			this.delegate = delegate;
-			this.entries = entries;
-			this.addQueue = entryMap;
+			this.queue = queue;
+			this.map = map;
 		}
 
 		@Override
@@ -264,7 +264,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 				PendingAdd add = null;
 				try
 				{
-					add = entries.poll(POLL_WAIT, TimeUnit.MILLISECONDS);
+					add = queue.poll(POLL_WAIT, TimeUnit.MILLISECONDS);
 				}
 				catch (InterruptedException e)
 				{
@@ -276,7 +276,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 					log.debug("Saving asynchronously: {}...", add);
 					add.asynchronous = true;					
 					delegate.addPage(add, add.page);
-					addQueue.remove(add.getKey());
+					map.remove(add.getKey());
 				}
 			}
 		}
@@ -383,7 +383,14 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			return;
 		}
 
-		queue.removeIf(add -> add.sessionId.equals(sessionId));
+		queue.removeIf(add -> {
+			if (add.sessionId.equals(sessionId)) {
+				queueMap.remove(add.getKey());
+				return true;
+			}
+			
+			return false;
+		});
 		
 		getDelegate().removeAllPages(context);
 	}

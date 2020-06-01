@@ -176,8 +176,6 @@ public class AsynchronousPageStoreTest
 	{
 		final Semaphore semaphore = new Semaphore(0);
 		
-		final AtomicBoolean got = new AtomicBoolean(false);
-		
 		IPageStore store = new MockPageStore() {
 			
 			@Override
@@ -222,6 +220,63 @@ public class AsynchronousPageStoreTest
 		
 		store.destroy();
 	}
+
+	/**
+	 * WICKET-6793
+	 *
+	 * @throws InterruptedException
+	 */
+	@Test
+	void dontKeepPendingPagesInMapIfSessionExpires() throws InterruptedException
+	{
+
+		final Semaphore semaphore = new Semaphore(0);
+		
+		IPageStore store = new NoopPageStore() {
+			
+			@Override
+			public synchronized void addPage(IPageContext context, IManageablePage page)
+			{
+				try
+				{
+					semaphore.acquire();
+				}
+				catch (InterruptedException e)
+				{
+				}
+			}
+			
+			@Override
+			public IManageablePage getPage(IPageContext context, int id)
+			{
+				return null;
+			}
+		};
+
+		IPageStore asyncPageStore = new AsynchronousPageStore(store, 100);
+
+		int pageId = 0;
+		
+		String sessionId = "sessionId";
+		
+		IPageContext context = new MockPageContext(sessionId);
+
+		SerializedPage page = new SerializedPage(pageId, "", new byte[0]);
+		// add twice so the first one clogs the queue and the second
+		// is still present in the queue
+		asyncPageStore.addPage(context, page);
+		asyncPageStore.addPage(context, page);
+
+		// clear the queue
+		asyncPageStore.removeAllPages(context);
+		
+		assertEquals(null, asyncPageStore.getPage(context, pageId));
+		
+		store.destroy();
+
+		semaphore.release();
+	}
+
 
 	/**
 	 * Store works fully asynchronous when number of pages handled never exceeds the
