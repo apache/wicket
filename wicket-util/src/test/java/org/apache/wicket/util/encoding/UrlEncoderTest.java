@@ -125,5 +125,4 @@ public class UrlEncoderTest
 		assertEquals("foo+bar", UrlEncoder.QUERY_INSTANCE.encode("foo bar", CHARSET));
 		assertEquals("foo%26bar", UrlEncoder.QUERY_INSTANCE.encode("foo&bar", CHARSET));
 	}
-
 }

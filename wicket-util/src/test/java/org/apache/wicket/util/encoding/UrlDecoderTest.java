@@ -82,5 +82,4 @@ public class UrlDecoderTest
 		assertEquals("T\u014dky\u014d",
 			UrlDecoder.QUERY_INSTANCE.decode("T\u014dky\u014d", CHARSET));
 	}
-
 }

@@ -27,14 +27,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Adapted from Spring's UriUtils, but defines instances for query string decoding versus URL path
+ * Adapted from Spring Framework's UriUtils class, but defines instances for query string decoding versus URL path
  * component decoding.
  * <p/>
  * The difference is important because a space is encoded as a + in a query string, but this is a
  * valid value in a path component (and is therefore not decode back to a space).
  *
  * @author Thomas Heigl
- * @see org.springframework.web.util.UriUtils
  * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC-2396</a>
  */
 public class UrlDecoder

@@ -25,14 +25,13 @@ import java.nio.charset.UnsupportedCharsetException;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Adapted from Spring's UriUtils, but defines instances for query string encoding versus URL path
+ * Adapted from Spring Framework's UriUtils class, but defines instances for query string encoding versus URL path
  * component encoding.
  * <p/>
  * The difference is important because a space is encoded as a + in a query string, but this is a
  * valid value in a path component (and is therefore not decode back to a space).
  *
  * @author Thomas Heigl
- * @see org.springframework.web.util.UriUtils
  * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC-2396</a>
  */
 public class UrlEncoder
