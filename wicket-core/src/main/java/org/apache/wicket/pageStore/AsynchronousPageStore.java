@@ -124,16 +124,6 @@ public class AsynchronousPageStore implements IPageStore
 	}
 
 	/**
-	 *
-	 * @param entry
-	 * @return generated key
-	 */
-	private static String getKey(final Entry entry)
-	{
-		return getKey(entry.sessionId, entry.page.getPageId());
-	}
-
-	/**
 	 * The structure used for an entry in the queue
 	 */
 	private static class Entry
@@ -173,6 +163,15 @@ public class AsynchronousPageStore implements IPageStore
 				return false;
 			return true;
 		}
+		
+		/**
+		 *
+		 * @return generated key
+		 */
+		private String getKey()
+		{
+			return AsynchronousPageStore.getKey(sessionId, page.getPageId());
+		}
 
 		@Override
 		public String toString()
@@ -206,7 +205,7 @@ public class AsynchronousPageStore implements IPageStore
 				{
 					log.debug("PageSavingRunnable:: Saving asynchronously: {}...", entry);
 					delegate.storePage(entry.sessionId, entry.page);
-					entryMap.remove(getKey(entry));
+					entryMap.remove(entry.getKey());
 				}
 			}
 		}
@@ -274,7 +273,7 @@ public class AsynchronousPageStore implements IPageStore
 			return;
 		}
 		Entry entry = new Entry(sessionId, page);
-		String key = getKey(entry);
+		String key = entry.getKey();
 		entryMap.put(key, entry);
 
 		try
