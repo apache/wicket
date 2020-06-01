@@ -3014,7 +3014,14 @@ public abstract class Component
 		if (!getModelComparator().compare(this, object))
 		{
 			modelChanging();
-			model.setObject(object);
+			try
+			{
+				model.setObject(object);
+			}
+			catch (UnsupportedOperationException uox)
+			{
+				throw new WicketRuntimeException("You need to use writeable IModel for component " + getPageRelativePath(), uox);
+			}
 			modelChanged();
 		}
 
