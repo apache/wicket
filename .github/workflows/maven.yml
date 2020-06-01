@@ -19,5 +19,12 @@ jobs:
         java-version: 11
         jdkFile: ./OpenJDK11U-jdk_x64_linux_hotspot_11.0.6_10.tar.gz
 
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
     - name: Build with Maven
       run: mvn package --file pom.xml -Pjs-test
