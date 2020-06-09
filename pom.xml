@@ -167,7 +167,7 @@
 		<objenesis.version>3.1</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<spring.version>5.2.5.RELEASE</spring.version>
+		<spring.version>5.2.7.RELEASE</spring.version>
 		<wagon-ssh-external.version>3.3.4</wagon-ssh-external.version>
 		<weld.version>3.1.4.Final</weld.version>
 		<velocity-engine-core.version>2.2</velocity-engine-core.version>
@@ -192,7 +192,7 @@
 		<maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
 		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 		<maven-toolchains-plugin.version>3.0.0</maven-toolchains-plugin.version>
-		<maven-war-plugin.version>3.2.3</maven-war-plugin.version>
+		<maven-war-plugin.version>3.3.0</maven-war-plugin.version>
 		<yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
 
 		<automatic-module-name>MUST-BE-OVERRIDDEN-BY-MODULES</automatic-module-name>
