@@ -178,6 +178,8 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	 */
 	private Collection<String> acceptedOrigins = new ArrayList<>();
 
+	private ResourceIsolationPolicy fetchMetadataPolicy = new DefaultResourceIsolationPolicy();
+
 	/**
 	 * Sets the action when no Origin header is present in the request. Default {@code ALLOW}.
 	 *
@@ -313,6 +315,15 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	}
 
 	/**
+	 * Checks if Sec-Fetch-* headers are present
+	 */
+	protected boolean hasFetchMetadataHeaders(HttpServletRequest containerRequest)
+	{
+		String secFetchSiteValue = containerRequest.getHeader(ResourceIsolationPolicy.SEC_FETCH_SITE_HEADER);
+		return !Strings.isEmpty(secFetchSiteValue);
+	}
+
+	/**
 	 * Unwraps the handler if it is a {@code IRequestHandlerDelegate} down to the deepest nested
 	 * handler.
 	 *
@@ -345,13 +356,21 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 			IRequestablePage targetedPage = prh.getPage();
 			HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
 				.getContainerRequest();
-			String sourceUri = getSourceUri(containerRequest);
+            String sourceUri = getSourceUri(containerRequest);
 
 			// Check if the page should be CSRF protected
 			if (isChecked(targetedPage))
 			{
-				// if so check the Origin HTTP header
-				checkRequest(containerRequest, sourceUri, targetedPage);
+				//check sec-fetch-site header and call the fetch metadata check if present
+				if (hasFetchMetadataHeaders(containerRequest))
+				{
+				    checkRequestFetchMetadata(containerRequest, sourceUri, targetedPage);
+				}
+				else
+				{
+					// if not check the Origin HTTP header
+					checkRequestOriginReferer(containerRequest, sourceUri, targetedPage);
+				}
 			}
 			else
 			{
@@ -400,7 +419,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	 * @param page
 	 *            the page that is the target of the request
 	 */
-	protected void checkRequest(HttpServletRequest request, String sourceUri, IRequestablePage page)
+	protected void checkRequestOriginReferer(HttpServletRequest request, String sourceUri, IRequestablePage page)
 	{
 		if (sourceUri == null || sourceUri.isEmpty())
 		{
@@ -450,6 +469,54 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 			matchingOrigin(request, sourceUri, page);
 		}
 	}
+
+	/**
+     * Performs the check of the {@code Sec-Fetch-*} headers that are targeted at the
+     * {@code page}.
+     * @param request
+     *          the current container request
+     * @param sourceUri
+     *          the source URI
+     * @param page
+     *          the page that is the target of the request
+	 */
+	protected void checkRequestFetchMetadata(HttpServletRequest request, String sourceUri, IRequestablePage page)
+    {
+		//check if sourceUri exists before checking for whitelisted hosts,
+		// if not set sourceUri to no origin for logging purposes
+    	if (sourceUri == null || sourceUri.isEmpty())
+		{
+			sourceUri = "no origin";
+		}
+		else
+		{
+			// if the origin is a know and trusted origin, don't check any further but allow the request
+			if (isWhitelistedHost(sourceUri)) {
+				whitelistedHandler(request, sourceUri, page);
+				return;
+			}
+		}
+        if (!fetchMetadataPolicy.isRequestAllowed(request))
+        {
+            log.debug("Request is not allowed by the resource isolation policy, {}", conflictingOriginAction);
+            switch (conflictingOriginAction)
+            {
+                case ALLOW :
+                    allowHandler(request, sourceUri, page);
+                    break;
+                case SUPPRESS :
+                    suppressHandler(request, sourceUri, page);
+                    break;
+                case ABORT :
+                    abortHandler(request, sourceUri, page);
+                    break;
+            }
+        }
+        else
+        {
+            matchingOrigin(request, sourceUri, page);
+        }
+    }
 
 	/**
 	 * Checks whether the domain part of the {@code sourceUri} ({@code Origin} or {@code Referer}
