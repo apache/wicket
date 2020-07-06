@@ -19,7 +19,7 @@ package org.apache.wicket.ajax;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -87,8 +87,8 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	 */
 	private final PartialPageUpdate update;
 
-	/** a list of listeners */
-	private List<AjaxRequestTarget.IListener> listeners = null;
+	/** a set of listeners */
+	private Set<AjaxRequestTarget.IListener> listeners = null;
 
 	/** */
 	private final Set<ITargetRespondListener> respondListeners = new HashSet<>();
@@ -191,7 +191,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 
 		if (listeners == null)
 		{
-			listeners = new LinkedList<>();
+			listeners = new LinkedHashSet<>();
 		}
 
 		if (!listeners.contains(listener))
