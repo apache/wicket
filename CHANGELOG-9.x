@@ -2,6 +2,46 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.0.0
+
+** Bug
+
+    * [WICKET-6742] - Stacktrace in Fragment example
+    * [WICKET-6764] - RedirectToUrlException change the second question mark in URL from "?" to "%3F"
+    * [WICKET-6768] - TagTester#createTagsByAttribute() cannot find hidden elements
+    * [WICKET-6771] - Performance issues accessing component metadata while iterating
+    * [WICKET-6782] - WebSocket onError/onAbort is not being called
+    * [WICKET-6784] - StockQuote example does not work because the web service is no more available
+    * [WICKET-6791] - Offload WebSocket push when initiated in Wicket request cycle
+    * [WICKET-6793] - OOM in AsynchronousPageStore
+
+** Improvement
+
+    * [WICKET-5406] - Better Content Security Policy Support
+    * [WICKET-6763] - SelectOptions unnecessary complicated markup
+    * [WICKET-6766] - Keep page ids in tests like they where in Wicket 8
+    * [WICKET-6767] - Do not log error for broken pipes in websocket connections
+    * [WICKET-6769] - InMemoryPageStore customizable map implementation
+    * [WICKET-6772] - Use StandardCharset for URL encoding and decoding
+    * [WICKET-6773] - Improve performance of getting behaviors for components
+    * [WICKET-6777] - Minor performance improvement for AjaxChannel
+    * [WICKET-6778] - Clearing MarkupContainer.REMOVALS_KEY is expensive
+    * [WICKET-6788] - Improve performance of markup escaping
+    * [WICKET-6789] - 'base-uri' need to be added to CSPDirective enum
+    * [WICKET-6792] - Packages#absolutePath keeps unnecessary current dir dot "."
+    * [WICKET-6794] - Improve performance of UrlEncoder and UrlDecoder
+    * [WICKET-6795] - Avoid needlessly splitting and joining strings in AjaxEventBehavior
+    * [WICKET-6796] - Report the component path when failing to set a new object to a read only model
+    * [WICKET-6797] - Use space character as a separator for event names in AjaxEventBehavior
+    * [WICKET-6800] - Use LinkedHashSet instead of LinkedList for AjaxRequestHandler#listeners
+
+** Task
+
+    * [WICKET-6779] - Upgrade JQuery 3 to 3.5.1
+    * [WICKET-6783] - Utility classes available in JDK should be deprecated/removed
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.0.0-M5
 
 ** Bug
