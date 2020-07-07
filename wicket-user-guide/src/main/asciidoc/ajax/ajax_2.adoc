@@ -73,25 +73,23 @@ AutoCompleteTextField field = new AutoCompleteTextField<T>("field", model) {
 
 Wicket module wicket-examples contains page class _AutoCompletePagePage.java_ which shows an example of autocomplete text field. The running example is available on {wicket_examples_url}/ajax/autocomplete[examples site] .
 
-=== Modal window
+=== Modal dialog
 
-Class _org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow_ is an implementation of a  http://en.wikipedia.org/wiki/Modal_window[modal window] based on AJAX:
+Class _org.apache.wicket.extensions.ajax.markup.html.modal.ModalDialog_ is an implementation of a  http://en.wikipedia.org/wiki/Modal_dialog[modal dialog] based on AJAX:
 
-image::../img/modal-window-example-screenshot.png[]
+image::../img/modal-dialog-example-screenshot.png[]
 
-The content of a modal window can be either another component or a page. In the first case the id of the  component used as content must be retrieved with method getContentId(). 
+The content of a modal dialog is another component. The id of this component used as content must be _ModalDialog#CONTENT_ID_.
 
-If instead we want to use a page as window content, we must implement the inner interface _ModalWindow.PageCreator_ and pass it to method _setPageCreator_. The page used as content will be embedded in a <iframe> tag.
-
-To display a modal window we must call its method _show(AjaxRequestTarget target)_. This is  usually done inside the AJAX callback method of another component (like an _AjaxLink_). The following markup and code are taken from project _BasicModalWindowExample_ and illustrate a basic usage of a modal window:
+To display a modal dialog we must call its method _open(AjaxRequestTarget target)_. This is  usually done inside the AJAX callback method of another component (like an _AjaxLink_). The following markup and code are taken from project _BasicModalDialogExample_ and illustrate a basic usage of a modal dialog:
 
 *HTML:*
 [source,html]
 ----
 <body>
-	<h2>Modal Windod example</h2>
-	<a wicket:id="openWindow">Open the window!</a>
-	<div wicket:id="modalWindow"></div>
+	<h2>Modal Dialog example</h2>
+	<a wicket:id="open">Open the Dialog!</a>
+	<div wicket:id="modal"></div>
 </body>
 ----
 
@@ -100,52 +98,28 @@ To display a modal window we must call its method _show(AjaxRequestTarget target
 ----
 public HomePage(final PageParameters parameters) {
    	super(parameters);
-   	final ModalWindow modalWindow = new ModalWindow("modalWindow");
-   	Label label = new Label(modalWindow.getContentId(), "I'm a modal window!");
+    	final ModalDialog modal = new ModalDialog("modal");
+    	modal.add(new DefaultTheme());
+    	modal.closeOnClick();
+    	Label label = new Label(ModalDialog.CONTENT_ID, "I'm a modal dialog!");
     	
-   	modalWindow.setContent(label);
-   	modalWindow.setTitle("Modal window");
+    	modal.setContent(label);
     	
-   	add(modalWindow);
-   	add(new AjaxLink<Void>("openWindow") {
-	  @Override
-	  public void onClick(AjaxRequestTarget target) {
-		modalWindow.show(target);				
-	  }    		
+    	add(modal);
+    	add(new AjaxLink<Void>("open") {
+		@Override
+		public void onClick(AjaxRequestTarget target) {
+			modal.open(target);				
+		}    		
 	});
 }
 ----
 
-Just like any other component also _ModalWindow_ must be added to a markup tag, like we did in our example using a <div> tag. Wicket will automatically hide this tag in the final markup appending the style value display:none. 
-The component provides different setter methods to customize the appearance of the window:
+Just like any other component also _ModalDialog_ must be added to a markup tag, like we did in our example using a <div> tag. Wicket will automatically hide the content of this tag in the final markup, as long as the dialog is not opened. 
+This component does not provide any styling by itself, so you have can add a
+_DefaultTheme_ to this component if aren't styling these CSS classes by yourself.
 
-* *setTitle(String)*: specifies the title of the window
-* *setResizable(boolean)*: by default the window is resizeable. If we need to make its size fixed we can use this method to turn off this feature.
-* *setInitialWidth(int) and setInitialHeight(int)*: set the initial dimensions of the window.
-* *setMinimalWidth(int) and setMinimalHeight(int)*: specify the minimal dimensions of the window.
-* *setCookieName(String)*: this method can be used to specify the name of the cookie used on  client side to store size and position of the window when it is closed. The component will use this cookie to restore these two parameters the next time the window will be opened. If no cookie name is provided, the component will not remember its last position and size.
-* *setCssClassName(String)*: specifies the CSS class used for the window. 
-* *setAutoSize(boolean)*: when this flag is set to true the window will automatically adjust its size to fit content width and height. By default it is false.
-
-The modal window can be closed from code using its method _close(AjaxRequestTarget target)_. The currently opened window can be closed also with the following JavaScript instruction:
-
-[source,java]
-----
-Wicket.Window.get().close();
-----
-
-_ModalWindow_ gives the opportunity to perform custom actions when window is closing. Inner interface _ModalWindow.WindowClosedCallback_ can be implemented and passed to window's method _setWindowClosedCallback_ to specify the callback that must be executed after window has been closed:
-
-[source,java]
-----
-modalWindow.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
-
-	@Override
-	public void onClose(AjaxRequestTarget target) {
-	  //custom code...
-	}			
-});
-----
+The modal dialog can be closed from code using its method _close(AjaxRequestTarget target)_.
 
 === Tree repeaters
 
