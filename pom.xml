@@ -92,7 +92,7 @@
 		<connection>scm:git:http://git-wip-us.apache.org/repos/asf/wicket.git</connection>
 		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/wicket.git</developerConnection>
 		<url>http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git</url>
-		<tag>HEAD</tag>
+		<tag>rel/wicket-9.0.0</tag>
 	</scm>
 	<modules>
 		<!-- wicket-eclipse-settings is separate released -->
@@ -440,37 +440,37 @@
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-http2-core</artifactId>
-				<version>0.11-SNAPSHOT</version>
+				<version>0.11</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-http2-jetty</artifactId>
-				<version>0.11-SNAPSHOT</version>
+				<version>0.11</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-http2-servlet4</artifactId>
-				<version>0.11-SNAPSHOT</version>
+				<version>0.11</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-http2-tomcat</artifactId>
-				<version>0.11-SNAPSHOT</version>
+				<version>0.11</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-http2-undertow</artifactId>
-				<version>0.11-SNAPSHOT</version>
+				<version>0.11</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-metrics</artifactId>
-				<version>0.12-SNAPSHOT</version>
+				<version>0.12</version>
 				<type>jar</type>
 			</dependency>
 
