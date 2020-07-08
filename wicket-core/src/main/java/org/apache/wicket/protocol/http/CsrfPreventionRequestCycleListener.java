@@ -192,11 +192,11 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 
 	private final ResourceIsolationPolicy resourceIsolationPolicy;
 
-	CsrfPreventionRequestCycleListener() {
+	protected CsrfPreventionRequestCycleListener() {
 		this(new DefaultResourceIsolationPolicy());
 	}
 
-	CsrfPreventionRequestCycleListener(ResourceIsolationPolicy resourceIsolationPolicy) {
+	protected CsrfPreventionRequestCycleListener(ResourceIsolationPolicy resourceIsolationPolicy) {
 		this.resourceIsolationPolicy = resourceIsolationPolicy;
 	}
 	/**
