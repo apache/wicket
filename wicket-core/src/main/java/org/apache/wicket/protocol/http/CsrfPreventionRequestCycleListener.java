@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_DEST_HEADER;
+import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_MODE_HEADER;
+import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_SITE_HEADER;
+import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.VARY_HEADER;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -33,7 +38,6 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.*;
 
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
@@ -118,6 +122,11 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 {
 	private static final Logger log = LoggerFactory
 		.getLogger(CsrfPreventionRequestCycleListener.class);
+	static final String VARY_HEADER_VALUE = String.format("%s, %s, %s,",
+			SEC_FETCH_DEST_HEADER,
+			SEC_FETCH_SITE_HEADER,
+			SEC_FETCH_MODE_HEADER
+	);
 
 	/**
 	 * The action to perform when a missing or conflicting source URI is detected.
@@ -181,8 +190,15 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	 */
 	private Collection<String> acceptedOrigins = new ArrayList<>();
 
-	private final ResourceIsolationPolicy fetchMetadataPolicy = new DefaultResourceIsolationPolicy();
+	private final ResourceIsolationPolicy resourceIsolationPolicy;
 
+	CsrfPreventionRequestCycleListener() {
+		this(new DefaultResourceIsolationPolicy());
+	}
+
+	CsrfPreventionRequestCycleListener(ResourceIsolationPolicy resourceIsolationPolicy) {
+		this.resourceIsolationPolicy = resourceIsolationPolicy;
+	}
 	/**
 	 * Sets the action when no Origin header is present in the request. Default {@code ALLOW}.
 	 *
@@ -405,8 +421,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 			WebResponse webResponse = (WebResponse)cycle.getResponse();
 			if (webResponse.isHeaderSupported())
 			{
-				webResponse.addHeader(VARY_HEADER, SEC_FETCH_DEST_HEADER + ", "
-					+ SEC_FETCH_SITE_HEADER + ", " + SEC_FETCH_MODE_HEADER);
+				webResponse.addHeader(VARY_HEADER, VARY_HEADER_VALUE);
 			}
 		}
 	}
@@ -523,7 +538,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 			}
 		}
 
-		if (fetchMetadataPolicy.isRequestAllowed(request))
+		if (resourceIsolationPolicy.isRequestAllowed(request))
 		{
 			matchingOrigin(request, sourceUri, page);
 			return;

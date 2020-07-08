@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.apache.wicket.protocol.http.CsrfPreventionRequestCycleListener.VARY_HEADER_VALUE;
 import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.CROSS_SITE;
 import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.DEST_EMBED;
 import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.DEST_OBJECT;
@@ -560,8 +561,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 			throw new AssertionError("Vary header should not be null");
 		}
 
-		if (!vary.contains(SEC_FETCH_DEST_HEADER) || !vary.contains(SEC_FETCH_MODE_HEADER)
-			|| !vary.contains(SEC_FETCH_SITE_HEADER))
+		if (!VARY_HEADER_VALUE.equals(vary))
 		{
 			throw new AssertionError("Unexpected vary header: " + vary);
 		}
@@ -587,8 +587,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 			throw new AssertionError("Vary header should not be null");
 		}
 
-		if (!vary.contains(SEC_FETCH_DEST_HEADER) || !vary.contains(SEC_FETCH_MODE_HEADER)
-			|| !vary.contains(SEC_FETCH_SITE_HEADER))
+		if (!VARY_HEADER_VALUE.equals(vary))
 		{
 			throw new AssertionError("Unexpected vary header: " + vary);
 		}
