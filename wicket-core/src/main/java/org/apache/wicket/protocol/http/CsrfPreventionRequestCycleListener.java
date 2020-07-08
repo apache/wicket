@@ -33,6 +33,9 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
+import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.*;
+
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
@@ -178,7 +181,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	 */
 	private Collection<String> acceptedOrigins = new ArrayList<>();
 
-	private ResourceIsolationPolicy fetchMetadataPolicy = new DefaultResourceIsolationPolicy();
+	private final ResourceIsolationPolicy fetchMetadataPolicy = new DefaultResourceIsolationPolicy();
 
 	/**
 	 * Sets the action when no Origin header is present in the request. Default {@code ALLOW}.
@@ -319,7 +322,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	 */
 	protected boolean hasFetchMetadataHeaders(HttpServletRequest containerRequest)
 	{
-		String secFetchSiteValue = containerRequest.getHeader(ResourceIsolationPolicy.SEC_FETCH_SITE_HEADER);
+		String secFetchSiteValue = containerRequest.getHeader(SEC_FETCH_SITE_HEADER);
 		return !Strings.isEmpty(secFetchSiteValue);
 	}
 
@@ -356,15 +359,15 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 			IRequestablePage targetedPage = prh.getPage();
 			HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
 				.getContainerRequest();
-            String sourceUri = getSourceUri(containerRequest);
+			String sourceUri = getSourceUri(containerRequest);
 
 			// Check if the page should be CSRF protected
 			if (isChecked(targetedPage))
 			{
-				//check sec-fetch-site header and call the fetch metadata check if present
+				// check sec-fetch-site header and call the fetch metadata check if present
 				if (hasFetchMetadataHeaders(containerRequest))
 				{
-				    checkRequestFetchMetadata(containerRequest, sourceUri, targetedPage);
+					checkRequestFetchMetadata(containerRequest, sourceUri, targetedPage, cycle);
 				}
 				else
 				{
@@ -388,6 +391,23 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 				log.trace(
 					"Resolved handler {} doesn't target an action on a page, no CSRF check performed",
 					handler.getClass().getName());
+		}
+	}
+
+	@Override
+	public void onEndRequest(RequestCycle cycle)
+	{
+		// set vary headers to avoid caching responses processed by Fetch Metadata
+		// caching these responses may return 403 responses to legitimate requests
+		// or defeat the protection
+		if (cycle.getResponse() instanceof WebResponse)
+		{
+			WebResponse webResponse = (WebResponse)cycle.getResponse();
+			if (webResponse.isHeaderSupported())
+			{
+				webResponse.addHeader(VARY_HEADER, SEC_FETCH_DEST_HEADER + ", "
+					+ SEC_FETCH_SITE_HEADER + ", " + SEC_FETCH_MODE_HEADER);
+			}
 		}
 	}
 
@@ -419,7 +439,8 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	 * @param page
 	 *            the page that is the target of the request
 	 */
-	protected void checkRequestOriginReferer(HttpServletRequest request, String sourceUri, IRequestablePage page)
+	protected void checkRequestOriginReferer(HttpServletRequest request, String sourceUri,
+		IRequestablePage page)
 	{
 		if (sourceUri == null || sourceUri.isEmpty())
 		{
@@ -471,52 +492,58 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	}
 
 	/**
-     * Performs the check of the {@code Sec-Fetch-*} headers that are targeted at the
-     * {@code page}.
-     * @param request
-     *          the current container request
-     * @param sourceUri
-     *          the source URI
-     * @param page
-     *          the page that is the target of the request
+	 * Performs the check of the {@code Sec-Fetch-*} headers that are targeted at the {@code page}.
+	 * 
+	 * @param request
+	 *            the current container request
+	 * @param sourceUri
+	 *            the source URI
+	 * @param page
+	 *            the page that is the target of the request
+	 * @param cycle
+	 *            the current request cycle to set vary headers after white list check
 	 */
-	protected void checkRequestFetchMetadata(HttpServletRequest request, String sourceUri, IRequestablePage page)
-    {
-		//check if sourceUri exists before checking for whitelisted hosts,
+	protected void checkRequestFetchMetadata(HttpServletRequest request, String sourceUri,
+		IRequestablePage page, RequestCycle cycle)
+	{
+		// check if sourceUri exists before checking for whitelisted hosts,
 		// if not set sourceUri to no origin for logging purposes
-    	if (sourceUri == null || sourceUri.isEmpty())
+		if (Strings.isEmpty(sourceUri))
 		{
 			sourceUri = "no origin";
 		}
 		else
 		{
-			// if the origin is a know and trusted origin, don't check any further but allow the request
-			if (isWhitelistedHost(sourceUri)) {
+			// if the origin is a know and trusted origin, don't check any further but allow the
+			// request
+			if (isWhitelistedHost(sourceUri))
+			{
 				whitelistedHandler(request, sourceUri, page);
 				return;
 			}
 		}
-        if (!fetchMetadataPolicy.isRequestAllowed(request))
-        {
-            log.debug("Request is not allowed by the resource isolation policy, {}", conflictingOriginAction);
-            switch (conflictingOriginAction)
-            {
-                case ALLOW :
-                    allowHandler(request, sourceUri, page);
-                    break;
-                case SUPPRESS :
-                    suppressHandler(request, sourceUri, page);
-                    break;
-                case ABORT :
-                    abortHandler(request, sourceUri, page);
-                    break;
-            }
-        }
-        else
-        {
-            matchingOrigin(request, sourceUri, page);
-        }
-    }
+
+		if (fetchMetadataPolicy.isRequestAllowed(request))
+		{
+			matchingOrigin(request, sourceUri, page);
+			return;
+		}
+
+		log.debug("Request is not allowed by the resource isolation policy, {}",
+			conflictingOriginAction);
+		switch (conflictingOriginAction)
+		{
+			case ALLOW :
+				allowHandler(request, sourceUri, page);
+				break;
+			case SUPPRESS :
+				suppressHandler(request, sourceUri, page);
+				break;
+			case ABORT :
+				abortHandler(request, sourceUri, page);
+				break;
+		}
+	}
 
 	/**
 	 * Checks whether the domain part of the {@code sourceUri} ({@code Origin} or {@code Referer}
