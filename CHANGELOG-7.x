@@ -2,6 +2,29 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.17.0
+
+** Bug
+
+    * [WICKET-6758] - NPE in AbstractWebSocketProcessor after session times out
+    * [WICKET-6764] - RedirectToUrlException change the second question mark in URL from "?" to "%3F"
+    * [WICKET-6782] - WebSocket onError/onAbort is not being called
+    * [WICKET-6784] - StockQuote example does not work because the web service is no more available
+    * [WICKET-6791] - Offload WebSocket push when initiated in Wicket request cycle
+
+** Improvement
+
+    * [WICKET-6767] - Do not log error for broken pipes in websocket connections
+    * [WICKET-6781] - Timezone can be determined on client side (7.x and 8.x)
+    * [WICKET-6792] - Packages#absolutePath keeps unnecessary current dir dot "."
+    * [WICKET-6800] - Use LinkedHashSet instead of LinkedList for AjaxRequestHandler#listeners
+
+** Task
+
+    * [WICKET-6779] - Upgrade JQuery 3 to 3.5.1
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.16.0
 
 ** Bug
