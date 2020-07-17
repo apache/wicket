@@ -296,19 +296,25 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		String pageType = null;
 		try
 		{
-			UserDefinedFileAttributeView view = java.nio.file.Files
-				.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
+			UserDefinedFileAttributeView view = getAttributeView(file);
+			
 			ByteBuffer buffer = ByteBuffer.allocate(view.size(ATTRIBUTE_PAGE_TYPE));
 			view.read(ATTRIBUTE_PAGE_TYPE, buffer);
 			buffer.flip();
 			pageType = Charset.defaultCharset().decode(buffer).toString();
 		}
-		catch (IOException ex)
+		catch (Exception ex)
 		{
 			log.debug("cannot get pageType for {}", file);
 		}
 
 		return pageType;
+	}
+
+	private UserDefinedFileAttributeView getAttributeView(File file)
+	{
+		return java.nio.file.Files
+			.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
 	}
 
 	/**
@@ -323,11 +329,11 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 	{
 		try
 		{
-			UserDefinedFileAttributeView view = java.nio.file.Files
-				.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
+			UserDefinedFileAttributeView view = getAttributeView(file);
+			
 			view.write(ATTRIBUTE_PAGE_TYPE, Charset.defaultCharset().encode(pageType));
 		}
-		catch (IOException ex)
+		catch (Exception ex)
 		{
 			log.debug("cannot set pageType for {}", file, ex);
 		}
