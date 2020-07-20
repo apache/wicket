@@ -1,6 +1,6 @@
 <p align="center">
   <a href="http://wicket.apache.org">
-    <img height="200" width="200" src="https://wicket.apache.org/img/logo.svg">
+    <img height="200" width="200" src="https://wicket.apache.org/img/wicket-9-sun.png">
   </a>
 </p>
 
@@ -199,12 +199,12 @@ do:
     creates wicket-x.y.z.jar in target/ subdirectory and installs the file
     into your local Maven repository for use in other projects.
 
-Migrating from 7.x
+Migrating from 8.x
 ------------------
 
 This file is a copy of the migration guide from available on our Wiki:
 
-    https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0
+    https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+9.0
     
 Getting help
 ------------
@@ -231,7 +231,7 @@ of the project.
 Java/Application server requirements
 ------------------------------------
 
-Wicket requires at least Java 1.8. The application server for running your web
+Wicket 9 requires at least Java 11. The application server for running your web
 application should adhere to the servlet specification version 3.1 or newer.
 
 Cryptographic Software Notice
