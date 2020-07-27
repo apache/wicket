@@ -36,7 +36,7 @@ from, and get started quickly:
  - Wicket Examples:
 
     shows all components in short usage examples, also available live on:
-    http://examples8x.wicket.apache.org
+    http://examples9x.wicket.apache.org
 
  - Wicket Quickstart - http://wicket.apache.org/start/quickstart.html:
 
@@ -140,7 +140,7 @@ the src/ folder.
 
  - wicket and wicket-extensions:
 
-    You only need to include the Servlet API (2.5, just for compiling), SLF4J
+    You only need to include the Servlet API (3.1, just for compiling), SLF4J
     API and the SLF4J logging implementation you want. You cannot use Wicket
     without adding a SLF4J logging implementation to your classpath. Most
     people use log4j. If you do, just include slf4j-log4j12.jar on your
