@@ -380,16 +380,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 			// Check if the page should be CSRF protected
 			if (isChecked(targetedPage))
 			{
-				// check sec-fetch-site header and call the fetch metadata check if present
-				if (hasFetchMetadataHeaders(containerRequest))
-				{
-					checkRequestFetchMetadata(containerRequest, sourceUri, targetedPage, cycle);
-				}
-				else
-				{
-					// if not check the Origin HTTP header
-					checkRequestOriginReferer(containerRequest, sourceUri, targetedPage);
-				}
+				checkRequest(containerRequest, sourceUri, targetedPage);
 			}
 			else
 			{
@@ -441,6 +432,31 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 			sourceUri = containerRequest.getHeader(WebRequest.HEADER_REFERER);
 		}
 		return normalizeUri(sourceUri);
+	}
+
+	/**
+	 * Created to preserve the API after adding Fetch Metadata checks (WICKET-6786)
+	 *
+	 * @param request
+	 *            the current container request
+	 * @param sourceUri
+	 *            the source URI
+	 * @param page
+	 *            the page that is the target of the request
+	 */
+	protected void checkRequest(HttpServletRequest request, String sourceUri, IRequestablePage page)
+	{
+		RequestCycle cycle = RequestCycle.get();
+		// check sec-fetch-site header and call the fetch metadata check if present
+		if (hasFetchMetadataHeaders(request))
+		{
+			checkRequestFetchMetadata(request, sourceUri, page, cycle);
+		}
+		else
+		{
+			// if not check the Origin HTTP header
+			checkRequestOriginReferer(request, sourceUri, page);
+		}
 	}
 
 	/**
