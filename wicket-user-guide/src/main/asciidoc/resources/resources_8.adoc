@@ -21,7 +21,7 @@ Some web developers prefer to put their <script> tags at the end of page body an
 ----
 
 
-In Wicket we can achieve this result providing a custom _IHeaderResponseDecorator_ to a our application and using Wicket tag <wicket:container/> to indicate where we want to render our scripts inside the page. Interface _IHeaderResponseDecorator_ defines method _IHeaderResponse decorate(IHeaderResponse response)_ which allows to decorate or add functionalities to Wicket _IHeaderResponse_. Our custom _IHeaderResponseDecorator_ can be registered in the application with method _setHeaderResponseDecorator_. Anytime Wicket creates an instance of _IHeaderResponse_, it will call the registered _IHeaderResponseDecorator_ to decorate the header response.
+In Wicket we can achieve this result providing a custom _IHeaderResponseDecorator_ to a our application and using Wicket tag <wicket:container/> to indicate where we want to render our scripts inside the page. Interface _IHeaderResponseDecorator_ defines method _IHeaderResponse decorate(IHeaderResponse response)_ which allows to decorate or add functionalities to Wicket _IHeaderResponse_. Our custom _IHeaderResponseDecorator_ can be registered in the application via the method _getHeaderResponseDecorators_. Anytime Wicket creates an instance of _IHeaderResponse_, it will call the registered _IHeaderResponseDecorators_ to decorate the header response.
 
 In the example project _ScriptInsideBody_ we can find a custom _IHeaderResponseDecorator_ that renders CSS into the usual <head> tag and put JavaScricpt header items into a specific container (tag <wicket:container/>)
 Wicket already comes with class _JavaScriptFilteredIntoFooterHeaderResponse_ which wraps a _IHeaderResponse_ and renders in a given container all the instances of _JavaScriptHeaderItem_.
@@ -34,7 +34,7 @@ The following code is taken from the Application class of the project:
     @Override
     public void init()
     {
-       setHeaderResponseDecorator(response -> new ResourceAggregator(new JavaScriptFilteredIntoFooterHeaderResponse(response, "footer-container")));
+       getHeaderResponseDecorators().add(response -> new JavaScriptFilteredIntoFooterHeaderResponse(response, "footer-container"));
     }
 
 ----
