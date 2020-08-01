@@ -17,9 +17,11 @@
 package org.apache.wicket.protocol.http;
 
 import javax.servlet.http.HttpServletRequest;
+import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.util.string.Strings;
 
 /**
- * Default resource isolation policy used in {@link CsrfPreventionRequestCycleListener} that
+ * Default resource isolation policy used in {@link FetchMetadataRequestCycleListener} that
  * implements the {@link ResourceIsolationPolicy} interface. This default policy is based on
  * <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>.
  *
@@ -32,8 +34,14 @@ public class DefaultResourceIsolationPolicy implements ResourceIsolationPolicy
 {
 
 	@Override
-	public boolean isRequestAllowed(HttpServletRequest request)
+	public boolean isRequestAllowed(HttpServletRequest request,
+			IRequestablePage targetPage)
 	{
+		// request made by a legacy browser with no support for Fetch Metadata
+		if (!hasFetchMetadataHeaders(request)) {
+			return true;
+		}
+
 		String site = request.getHeader(SEC_FETCH_SITE_HEADER);
 
 		// Allow same-site and browser-initiated requests
@@ -56,5 +64,14 @@ public class DefaultResourceIsolationPolicy implements ResourceIsolationPolicy
 		boolean isNotObjectOrEmbedRequest = !DEST_EMBED.equals(dest) && !DEST_OBJECT.equals(dest);
 
 		return isSimpleTopLevelNavigation && isNotObjectOrEmbedRequest;
+	}
+
+	/**
+	 * Checks if Sec-Fetch-* headers are present
+	 */
+	private static boolean hasFetchMetadataHeaders(HttpServletRequest containerRequest)
+	{
+		String secFetchSiteValue = containerRequest.getHeader(SEC_FETCH_SITE_HEADER);
+		return !Strings.isEmpty(secFetchSiteValue);
 	}
 }

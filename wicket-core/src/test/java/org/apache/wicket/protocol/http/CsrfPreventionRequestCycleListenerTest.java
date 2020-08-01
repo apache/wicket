@@ -16,16 +16,9 @@
  */
 package org.apache.wicket.protocol.http;
 
-import static org.apache.wicket.protocol.http.CsrfPreventionRequestCycleListener.VARY_HEADER_VALUE;
 import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.CROSS_SITE;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.DEST_EMBED;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.DEST_OBJECT;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.MODE_NAVIGATE;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SAME_ORIGIN;
 import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_DEST_HEADER;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_MODE_HEADER;
 import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_SITE_HEADER;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.VARY_HEADER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -416,83 +409,6 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		tester.assertRenderedPage(ThirdPage.class);
 	}
 
-	/** Tests whether a request with Sec-Fetch-Site = cross-site is aborted*/
-	@Test
-	void crossSiteFMAborted()
-	{
-		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
-		csrfListener.setNoOriginAction(CsrfAction.ALLOW);
-		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
-
-		tester.clickLink("link");
-
-		assertConflictingOriginsRequestAborted();
-	}
-
-	/** Tests whether a request with Sec-Fetch-Site = cross-site is suppressed*/
-	@Test
-	void crossSiteFMSuppressed()
-	{
-		csrfListener.setConflictingOriginAction(CsrfAction.SUPPRESS);
-		csrfListener.setNoOriginAction(CsrfAction.ALLOW);
-		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
-
-		tester.clickLink("link");
-
-		assertConflictingOriginsRequestSuppressed();
-	}
-
-	/** Tests whether a request with Sec-Fetch-Site = cross-site is allowed*/
-	@Test
-	void crossSiteFMAllowed()
-	{
-		csrfListener.setConflictingOriginAction(CsrfAction.ALLOW);
-		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
-
-		tester.clickLink("link");
-
-		assertConflictingOriginsRequestAllowed();
-	}
-
-	/** Tests whether a top level navigation request is allowed by FM checks */
-	@Test
-	void topLevelNavigationAllowedFM()
-	{
-		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
-		tester.addRequestHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
-
-		tester.clickLink("link");
-		tester.assertRenderedPage(SecondPage.class);
-	}
-
-	/** Tests whether embed requests are aborted by fetch metadata checks*/
-	@Test
-	void destEmbedFMAborted()
-	{
-		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
-		csrfListener.setNoOriginAction(CsrfAction.ALLOW);
-		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
-		tester.addRequestHeader(SEC_FETCH_DEST_HEADER, DEST_EMBED);
-
-		tester.clickLink("link");
-
-		assertConflictingOriginsRequestAborted();
-	}
-
-	/** Tests whether object requests (sec-fetch-dest :"object" ) are aborted by FM checks*/
-	@Test
-	void destObjectAborted()
-	{
-		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
-		csrfListener.setNoOriginAction(CsrfAction.ALLOW);
-		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
-		tester.addRequestHeader(SEC_FETCH_DEST_HEADER, DEST_OBJECT);
-
-		tester.clickLink("link");
-
-		assertConflictingOriginsRequestAborted();
-	}
-
 	/** Tests whether a cross origin request by a white listed origin is allowed*/
 	@Test
 	void crossSiteButWhiteListedAllowed()
@@ -515,6 +431,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://foo.example.com/");
 		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+		tester.addRequestHeader(SEC_FETCH_DEST_HEADER, CROSS_SITE);
 
 		tester.clickLink("link");
 
@@ -530,7 +447,8 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	@Test
 	void crossSitePageNotCheckedAllowed()
 	{
-		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER,
+				CROSS_SITE);
 		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
 
 		// disable the check for this page
@@ -540,57 +458,6 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		assertConflictingOriginsRequestAllowed();
 		tester.assertRenderedPage(SecondPage.class);
-	}
-
-	/** Tests that requests rejected by fetch metadata have the Vary header set */
-	@Test
-	void varyHeaderSetWhenFetchMetadataRejectsRequest()
-	{
-		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
-		csrfListener.setNoOriginAction(CsrfAction.ALLOW);
-		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
-
-		tester.clickLink("link");
-
-		assertConflictingOriginsRequestAborted();
-
-		String vary = tester.getLastResponse().getHeader("Vary");
-
-		if (vary == null)
-		{
-			throw new AssertionError("Vary header should not be null");
-		}
-
-		if (!VARY_HEADER_VALUE.equals(vary))
-		{
-			throw new AssertionError("Unexpected vary header: " + vary);
-		}
-	}
-
-	/** Tests that requests rejected by fetch metadata have the Vary header set */
-	@Test
-	void varyHeaderSetWhenFetchMetadataAcceptsRequest()
-	{
-		csrfListener.addAcceptedOrigin("example.com");
-		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
-		tester.addRequestHeader(SEC_FETCH_DEST_HEADER, CROSS_SITE);
-		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
-
-		tester.clickLink("link");
-
-		assertOriginsWhitelisted();
-		tester.assertRenderedPage(SecondPage.class);
-
-		String vary = tester.getLastResponse().getHeader(VARY_HEADER);
-		if (vary == null)
-		{
-			throw new AssertionError("Vary header should not be null");
-		}
-
-		if (!VARY_HEADER_VALUE.equals(vary))
-		{
-			throw new AssertionError("Unexpected vary header: " + vary);
-		}
 	}
 
 	/*
@@ -698,7 +565,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		assertEquals(errorCode, tester.getLastResponse().getStatus(), "Response error code");
 		assertThat("Response error message", tester.getLastResponse().getErrorMessage(),
-			is(errorMessage));
+				is(errorMessage));
 	}
 
 	/**
@@ -754,7 +621,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	}
 
 	private final class MockCsrfPreventionRequestCycleListener extends
-		CsrfPreventionRequestCycleListener
+			CsrfPreventionRequestCycleListener
 	{
 		@Override
 		protected boolean isEnabled()
@@ -779,7 +646,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		@Override
 		protected void onAborted(HttpServletRequest containerRequest, String origin,
-			IRequestablePage page)
+				IRequestablePage page)
 		{
 			aborted = true;
 			if (abortHandler != null)
@@ -788,7 +655,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		@Override
 		protected void onAllowed(HttpServletRequest containerRequest, String origin,
-			IRequestablePage page)
+				IRequestablePage page)
 		{
 			allowed = true;
 			if (allowHandler != null)
@@ -797,7 +664,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		@Override
 		protected void onSuppressed(HttpServletRequest containerRequest, String origin,
-			IRequestablePage page)
+				IRequestablePage page)
 		{
 			suppressed = true;
 			if (suppressHandler != null)
@@ -806,7 +673,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		@Override
 		protected void onMatchingOrigin(HttpServletRequest containerRequest, String origin,
-			IRequestablePage page)
+				IRequestablePage page)
 		{
 			matched = true;
 			if (matchedHandler != null)
@@ -815,7 +682,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		@Override
 		protected void onWhitelisted(HttpServletRequest containerRequest, String origin,
-			IRequestablePage page)
+				IRequestablePage page)
 		{
 			whitelisted = true;
 			if (whitelistHandler != null)

@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import javax.servlet.http.HttpServletRequest;
+import org.apache.wicket.request.component.IRequestablePage;
 
 /**
  * Interface for the resource isolation policies to be used for fetch metadata checks.
@@ -50,5 +51,5 @@ public interface ResourceIsolationPolicy
 	String DEST_SCRIPT = "script";
 	String DEST_IMAGE = "image";
 
-	boolean isRequestAllowed(HttpServletRequest request);
+	boolean isRequestAllowed(HttpServletRequest request, IRequestablePage targetPage);
 }
