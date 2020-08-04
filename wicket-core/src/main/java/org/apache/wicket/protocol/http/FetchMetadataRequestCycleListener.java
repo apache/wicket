@@ -38,6 +38,7 @@ import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,16 +65,18 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener 
       .getLogger(FetchMetadataRequestCycleListener.class);
   public static final int ERROR_CODE = 403;
   public static final String ERROR_MESSAGE = "Forbidden";
+  public static final String VARY_HEADER_VALUE = SEC_FETCH_DEST_HEADER + ", "
+      + SEC_FETCH_SITE_HEADER + ", " + SEC_FETCH_MODE_HEADER;
 
   private final Set<String> exemptedPaths = new HashSet<>();
   private final List<ResourceIsolationPolicy> resourceIsolationPolicies = new ArrayList<>();
 
-  FetchMetadataRequestCycleListener(ResourceIsolationPolicy... additionalPolicies) {
+  public FetchMetadataRequestCycleListener(ResourceIsolationPolicy... additionalPolicies) {
     this.resourceIsolationPolicies.add(new DefaultResourceIsolationPolicy());
     this.resourceIsolationPolicies.addAll(asList(additionalPolicies));
   }
 
-  void addExemptedPaths(String... exemptions) {
+  public void addExemptedPaths(String... exemptions) {
     Arrays.stream(exemptions)
         .filter(e -> !Strings.isEmpty(e))
         .forEach(exemptedPaths::add);
@@ -85,35 +88,39 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener 
     HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
         .getContainerRequest();
 
-    logAtDebug("Processing request to: {}", containerRequest.getPathInfo());
+    if (log.isDebugEnabled()) {
+      log.debug("Processing request to: {}", new Object[]{containerRequest.getPathInfo()});
+    }
   }
 
   @Override
   public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
   {
     handler = unwrap(handler);
-    Optional<IPageRequestHandler> pageRequestHandler = getPageRequestHandler(handler);
-    if (pageRequestHandler.isEmpty()) {
+    IPageRequestHandler pageRequestHandler = getPageRequestHandler(handler);
+    if (pageRequestHandler == null) {
       return;
     }
 
-    IRequestablePage targetedPage = pageRequestHandler.get().getPage();
+    IRequestablePage targetedPage = pageRequestHandler.getPage();
     HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
         .getContainerRequest();
 
     String pathInfo = containerRequest.getPathInfo();
     if (exemptedPaths.contains(pathInfo)) {
-      logAtDebug("Allowing request to {} because it matches an exempted path", pathInfo);
+      if (log.isDebugEnabled()) {
+        log.debug("Allowing request to {} because it matches an exempted path",
+            new Object[]{pathInfo});
+      }
       return;
     }
 
     for (ResourceIsolationPolicy resourceIsolationPolicy : resourceIsolationPolicies) {
       if (!resourceIsolationPolicy.isRequestAllowed(containerRequest, targetedPage)) {
-        logAtDebug(
-            "Isolation policy {} has rejected a request to {}",
-            resourceIsolationPolicy.getClass().getSimpleName(),
-            pathInfo
-        );
+        if (log.isDebugEnabled()) {
+          log.debug("Isolation policy {} has rejected a request to {}",
+              new Object[]{Classes.simpleName(resourceIsolationPolicy.getClass()), pathInfo});
+        }
         throw new AbortWithHttpErrorCodeException(ERROR_CODE, ERROR_MESSAGE);
       }
     }
@@ -130,28 +137,22 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener 
       WebResponse webResponse = (WebResponse)cycle.getResponse();
       if (webResponse.isHeaderSupported())
       {
-        webResponse.addHeader(VARY_HEADER, SEC_FETCH_DEST_HEADER + ", "
-            + SEC_FETCH_SITE_HEADER + ", " + SEC_FETCH_MODE_HEADER);
+        webResponse.addHeader(VARY_HEADER, VARY_HEADER_VALUE);
       }
     }
   }
 
   private static IRequestHandler unwrap(IRequestHandler handler) {
-    while (handler instanceof IRequestHandlerDelegate)
+    while (handler instanceof IRequestHandlerDelegate) {
       handler = ((IRequestHandlerDelegate)handler).getDelegateHandler();
+    }
     return handler;
   }
 
-  private Optional<IPageRequestHandler> getPageRequestHandler(IRequestHandler handler)
+  private IPageRequestHandler getPageRequestHandler(IRequestHandler handler)
   {
     boolean isPageRequestHandler = handler instanceof IPageRequestHandler &&
         !(handler instanceof RenderPageRequestHandler);
-    return isPageRequestHandler ? Optional.of((IPageRequestHandler) handler) : Optional.empty();
-  }
-
-  private static void logAtDebug(String message, Object... params) {
-    if (log.isDebugEnabled()) {
-      log.debug(message, params);
-    }
+    return isPageRequestHandler ? (IPageRequestHandler) handler : null;
   }
 }
