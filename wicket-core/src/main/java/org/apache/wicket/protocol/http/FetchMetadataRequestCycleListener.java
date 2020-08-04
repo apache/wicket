@@ -72,7 +72,13 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener 
   private final List<ResourceIsolationPolicy> resourceIsolationPolicies = new ArrayList<>();
 
   public FetchMetadataRequestCycleListener(ResourceIsolationPolicy... additionalPolicies) {
-    this.resourceIsolationPolicies.add(new DefaultResourceIsolationPolicy());
+    this.resourceIsolationPolicies.addAll(
+        asList(
+            new DefaultResourceIsolationPolicy(),
+            new OriginBasedResourceIsolationPolicy()
+        )
+    );
+
     this.resourceIsolationPolicies.addAll(asList(additionalPolicies));
   }
 
