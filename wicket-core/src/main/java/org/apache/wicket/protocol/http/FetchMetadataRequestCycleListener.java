@@ -94,9 +94,7 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener 
     HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
         .getContainerRequest();
 
-    if (log.isDebugEnabled()) {
-      log.debug("Processing request to: {}", new Object[]{containerRequest.getPathInfo()});
-    }
+    log.debug("Processing request to: {}", containerRequest.getPathInfo());
   }
 
   @Override
@@ -123,10 +121,8 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener 
 
     for (ResourceIsolationPolicy resourceIsolationPolicy : resourceIsolationPolicies) {
       if (!resourceIsolationPolicy.isRequestAllowed(containerRequest, targetedPage)) {
-        if (log.isDebugEnabled()) {
           log.debug("Isolation policy {} has rejected a request to {}",
-              new Object[]{Classes.simpleName(resourceIsolationPolicy.getClass()), pathInfo});
-        }
+              Classes.simpleName(resourceIsolationPolicy.getClass()), pathInfo);
         throw new AbortWithHttpErrorCodeException(ERROR_CODE, ERROR_MESSAGE);
       }
     }
