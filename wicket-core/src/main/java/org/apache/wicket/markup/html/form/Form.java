@@ -56,6 +56,7 @@ import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.PrependingStringBuffer;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.util.value.LongValue;
@@ -447,11 +448,28 @@ public class Form<T> extends WebMarkupContainer
 					if ((form != null) && (form.getRootForm() == Form.this))
 					{
 						String name = submittingComponent.getInputName();
-						IRequestParameters parameters = getRequest().getRequestParameters();
-						if ((!parameters.getParameterValue(name).isNull()) ||
-							!parameters.getParameterValue(name + ".x").isNull())
+						final String method = form.getMethod();
+						IRequestParameters parameters;
+						if (Form.METHOD_POST.equals(method))
+						{
+							parameters = getRequest().getPostParameters();
+						}
+						else
+						{
+							parameters = getRequest().getQueryParameters();
+						}
+						// there is a parameter with the special name then use it
+						if (!parameters.getParameterValue(name + ".x").isNull())
 						{
 							visit.stop(submittingComponent);
+						}
+						else
+						{
+							// otherwise check for a single parameter with that name
+							final List<StringValue> parameterValues = parameters.getParameterValues(name);
+							if (parameterValues != null && parameterValues.size() == 1 && !parameterValues.get(0).isNull()) {
+								visit.stop(submittingComponent);
+							}
 						}
 					}
 				}

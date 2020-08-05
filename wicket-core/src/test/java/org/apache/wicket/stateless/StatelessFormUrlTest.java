@@ -56,7 +56,7 @@ public class StatelessFormUrlTest extends WicketTestCase
 	public void submitLinkInputNameNotEncodedIntoFormAction()
 	{
 		tester.executeUrl("?0-1.IFormSubmitListener-form&text=newValue&submitLink=x");
-		assertEquals("./?-1.-form", tester.getTagById("form1").getAttribute("action"));
+		assertEquals("./?-1.-form&submitLink=x", tester.getTagById("form1").getAttribute("action"));
 	}
 
 	/**
@@ -94,7 +94,8 @@ public class StatelessFormUrlTest extends WicketTestCase
 			Class<?> containerClass)
 		{
 			return new StringResourceStream(
-				"<html><body><form wicket:id=\"form\"><input wicket:id=\"text\"><a wicket:id=\"submitLink\"></a></form></body></html>");
+				"<html><body><form wicket:id=\"form\"><input wicket:id=\"text\"><a "
+				+ "wicket:id=\"submitLink\"></a></form></body></html>");
 		}
 
 	}
