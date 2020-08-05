@@ -135,6 +135,12 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		 */
 		private final Map<String, Serializable> attributeCache = new HashMap<>();
 
+		/**
+		 * Cache of session data which may filled in {@link IPageStore#canBeAsynchronous(IPageContext)},
+		 * so these are available asynchronously later on.
+		 */
+		private final Map<MetaDataKey<?>, Serializable> dataCache = new HashMap<>();
+
 		public PendingAdd(final IPageContext context, final IManageablePage page)
 		{
 			this.context = Args.notNull(context, "context");
@@ -211,15 +217,19 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			
 			if (asynchronous)
 			{
-				value = context.getSessionData(key, () -> null);
+				value = (T)dataCache.get(key);
 				if (value == null && defaultValue.get() != null)
 				{
-						throw new WicketRuntimeException("session data can not be changed asynchronuously");
+					throw new WicketRuntimeException("session data can not be changed asynchronuously");
 				}
 			}
 			else
 			{
 				value = context.getSessionData(key, defaultValue);
+				if (value != null)
+				{
+					dataCache.put(key, value);
+				}
 			}
 			
 			return value;
