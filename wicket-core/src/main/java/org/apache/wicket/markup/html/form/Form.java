@@ -50,8 +50,10 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.parameter.EmptyRequestParameters;
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
@@ -447,6 +449,8 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public final IFormSubmittingComponent findSubmitter()
 	{
+		final IRequestParameters parameters = getRequestParameters(this);
+
 		IFormSubmittingComponent submittingComponent = getPage().visitChildren(
 			IFormSubmittingComponent.class, new IVisitor<Component, IFormSubmittingComponent>()
 			{
@@ -462,7 +466,6 @@ public class Form<T> extends WebMarkupContainer
 					if ((form != null) && (form.getRootForm() == Form.this))
 					{
 						String name = submittingComponent.getInputName();
-						IRequestParameters parameters = getRequest().getRequestParameters();
 						if ((!parameters.getParameterValue(name).isNull()) ||
 							!parameters.getParameterValue(name + ".x").isNull())
 						{
@@ -581,20 +584,11 @@ public class Form<T> extends WebMarkupContainer
 
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
-		if (root.encodeUrlInHiddenFields())
-		{
-			buffer.append(String.format("document.getElementById('%s').innerHTML += '",
-				root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
-			
-			writeParamsAsHiddenFields(new String[] {param}, buffer);
-			
-			buffer.append("';");
-		}
-		else
-		{
-			String action = root.getActionUrl().toString();
-			buffer.append("f.action += '" + (action.indexOf('?') > -1 ? '&' : '?') + param + "';");
-		}
+		buffer.append(String.format("document.getElementById('%s').innerHTML += '",
+			root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
+		writeParamsAsHiddenFields(new String[] {param}, buffer);
+		buffer.append("';");
+
 		if (triggerEvent)
 		{
 			buffer.append("Wicket.Event.fire(f, 'submit');");
@@ -1717,9 +1711,15 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Should URL query parameters be encoded in hidden fields.
+	 * Should URL query parameters be encoded in hidden fields, by default <code>true</code>
+	 * for {@link #METHOD_GET} only.
+	 * <p>
+	 * In that case, the parameters must <em>not</em> be written as query parameters, as the browser
+	 * would strip them from the action url before appending the form values.
 	 *
 	 * @return true if form's method is 'get'
+	 * 
+	 * @see #getMethod()
 	 */
 	protected boolean encodeUrlInHiddenFields()
 	{
@@ -1764,14 +1764,12 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public final void writeHiddenFields()
 	{
-		// if it's a get, did put the parameters in the action attribute,
-		// and have to write the url parameters as hidden fields
+		getResponse().write(String.format("<div id=\"%s\" hidden=\"\" class=\"%s\">",
+			getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX),
+			getString(HIDDEN_FIELDS_CSS_CLASS_KEY)));
+		// if the parameters are not in the action attribute, they have to be written as hidden fields
 		if (encodeUrlInHiddenFields())
 		{
-			getResponse().write(String.format("<div id=\"%s\" hidden=\"\" class=\"%s\">",
-				getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX),
-				getString(HIDDEN_FIELDS_CSS_CLASS_KEY)));
-
 			AppendingStringBuffer buffer = new AppendingStringBuffer();				
 
 			String url = getActionUrl().toString();
@@ -1782,10 +1780,9 @@ public class Form<T> extends WebMarkupContainer
 			writeParamsAsHiddenFields(params, buffer);
 
 			getResponse().write(buffer);
-			
-			getResponse().write("</div>");
 		}
-
+		getResponse().write("</div>");
+		
 		// if a default submitting component was set, handle the rendering of that
 		if (hasDefaultSubmittingComponent())
 		{
@@ -2183,6 +2180,51 @@ public class Form<T> extends WebMarkupContainer
 			inputName.prepend("p");
 		}
 		return inputName.toString();
+	}
+
+	/**
+	 * Get the request parameters for a form submit,
+	 * according to the request's method or the form's method as fallback.
+	 *  
+	 * @param component any component inside the form or the form itself
+	 * @return parameters
+	 */
+	static IRequestParameters getRequestParameters(Component component) {
+		String method = Form.METHOD_POST;
+		final Request request = component.getRequest();
+		if (request.getContainerRequest() instanceof HttpServletRequest)
+		{
+			method = ((HttpServletRequest)request.getContainerRequest()).getMethod();
+		}
+		else
+		{
+			final Form<?> form;
+			if (component instanceof Form) {
+				form = (Form<?>)component;
+			} else {
+				form = component.findParent(Form.class);
+			}
+			
+			if (form != null)
+			{
+				method = form.getMethod();
+			}
+		}
+
+		final IRequestParameters parameters;
+		switch (method.toLowerCase(Locale.ROOT))
+		{
+			case Form.METHOD_POST:
+				parameters = request.getPostParameters();
+				break;
+			case Form.METHOD_GET:
+				parameters = request.getQueryParameters();
+				break;
+			default:
+				parameters = EmptyRequestParameters.INSTANCE;
+		}
+
+		return parameters;
 	}
 
 	/**

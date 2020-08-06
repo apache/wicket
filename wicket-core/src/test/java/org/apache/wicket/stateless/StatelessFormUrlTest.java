@@ -17,7 +17,7 @@
 package org.apache.wicket.stateless;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
@@ -58,7 +58,10 @@ class StatelessFormUrlTest extends WicketTestCase
 	@Test
 	void submitLinkInputNameNotEncodedIntoFormAction()
 	{
-		tester.executeUrl("?0-1.IFormSubmitListener-form&text=newValue&submitLink=x");
+		tester.getRequest().getPostParameters().setParameterValue("text", "newValue");
+		tester.getRequest().getPostParameters().setParameterValue("submitLink", "x");
+		tester.executeUrl("?0-1.-form");
+		assertEquals("newValue", tester.getTagById("text3").getAttribute("value"));
 		assertEquals("./?-1.-form", tester.getTagById("form1").getAttribute("action"));
 	}
 
@@ -68,8 +71,10 @@ class StatelessFormUrlTest extends WicketTestCase
 	@Test
 	void formComponentNameNotEncodedIntoFormAction()
 	{
-		tester.executeUrl("?0-1.IFormSubmitListener-form&text=newValue");
-		assertFalse(tester.getLastResponseAsString().contains("text=newValue"));
+		tester.getRequest().getPostParameters().setParameterValue("text", "newValue");
+		tester.executeUrl("?0-1.-form");
+		assertEquals("newValue", tester.getTagById("text3").getAttribute("value"));
+		assertEquals("./?-1.-form", tester.getTagById("form1").getAttribute("action"));
 	}
 
 	/** */
@@ -87,6 +92,7 @@ class StatelessFormUrlTest extends WicketTestCase
 			StatelessForm<Void> form = new StatelessForm<>("form");
 			add(form);
 			TextField<String> textField = new TextField<>("text", Model.of("textValue"));
+			textField.setOutputMarkupId(true);
 			form.add(textField);
 			SubmitLink submitLink = new SubmitLink("submitLink");
 			form.add(submitLink);
