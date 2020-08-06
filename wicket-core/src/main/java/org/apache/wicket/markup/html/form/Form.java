@@ -450,7 +450,7 @@ public class Form<T> extends WebMarkupContainer
 						String name = submittingComponent.getInputName();
 						final String method = form.getMethod();
 						IRequestParameters parameters;
-						if (Form.METHOD_POST.equals(method))
+						if (Form.METHOD_POST.equalsIgnoreCase(method))
 						{
 							parameters = getRequest().getPostParameters();
 						}
@@ -586,7 +586,7 @@ public class Form<T> extends WebMarkupContainer
 
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
-		if (root.encodeUrlInHiddenFields())
+		if (METHOD_POST.equalsIgnoreCase(root.getMethod()))
 		{
 			buffer.append(String.format("document.getElementById('%s').innerHTML += '", root.getHiddenFieldsId()));
 			
@@ -1360,14 +1360,10 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected String getMethod()
 	{
-		String method = getMarkupAttributes().getString("method");
-		return (method != null) ? method : METHOD_POST;
+		String method = getMarkupAttributes().getString("method", METHOD_POST);
+		return method;
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#getStatelessHint()
-	 */
 	@Override
 	protected boolean getStatelessHint()
 	{
@@ -1729,7 +1725,7 @@ public class Form<T> extends WebMarkupContainer
 	{
 		// if it's a get, did put the parameters in the action attribute,
 		// and have to write the url parameters as hidden fields
-		if (encodeUrlInHiddenFields())
+		if (METHOD_POST.equalsIgnoreCase(getMethod()))
 		{
 			String cssClass = getString(CssUtils.key(Form.class, "hidden-fields"));
 

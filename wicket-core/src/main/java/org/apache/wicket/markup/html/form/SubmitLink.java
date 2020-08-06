@@ -145,7 +145,7 @@ public class SubmitLink extends AbstractSubmitLink implements IRequestListener
 	 * This method is here as a means to fall back on normal link behavior when this link is not
 	 * nested in a form. Not intended to be called by clients directly.
 	 * 
-	 * @see org.apache.wicket.markup.html.link.ILinkListener#onLinkClicked()
+	 * @see IRequestListener#onRequest()
 	 */
 	public final void onLinkClicked()
 	{

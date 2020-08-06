@@ -55,6 +55,13 @@ public class SubmitLinkPage extends WicketExamplePage
 			{
 				info("internal onsubmit");
 			}
+
+			@Override
+			public void onError() {
+				super.onError();
+
+				error("Duh");
+			}
 		};
 		form.add(internal);
 
@@ -64,6 +71,13 @@ public class SubmitLinkPage extends WicketExamplePage
 			public void onSubmit()
 			{
 				info("external onsubmit");
+			}
+
+			@Override
+			public void onError() {
+				super.onError();
+
+				error("Duh");
 			}
 		};
 		add(external);
