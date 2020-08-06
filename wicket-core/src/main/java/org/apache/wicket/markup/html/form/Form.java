@@ -440,6 +440,11 @@ public class Form<T> extends WebMarkupContainer
 				public void component(final Component component,
 					final IVisit<IFormSubmittingComponent> visit)
 				{
+					if (!component.isVisibleInHierarchy())
+					{
+						return;
+					}
+
 					// Get submitting component
 					final IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)component;
 					final Form<?> form = submittingComponent.getForm();
@@ -467,7 +472,8 @@ public class Form<T> extends WebMarkupContainer
 						{
 							// otherwise check for a single parameter with that name
 							final List<StringValue> parameterValues = parameters.getParameterValues(name);
-							if (parameterValues != null && parameterValues.size() == 1 && !parameterValues.get(0).isNull()) {
+							if (parameterValues != null && parameterValues.size() == 1 && !parameterValues.get(0).isNull())
+							{
 								visit.stop(submittingComponent);
 							}
 						}
@@ -1723,27 +1729,19 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public final void writeHiddenFields()
 	{
-		// if it's a get, did put the parameters in the action attribute,
-		// and have to write the url parameters as hidden fields
-		if (METHOD_POST.equalsIgnoreCase(getMethod()))
-		{
-			String cssClass = getString(CssUtils.key(Form.class, "hidden-fields"));
 
-			getResponse().write(String.format("<div id=\"%s\" style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\" class=\"%s\">", getHiddenFieldsId(), cssClass));
+		String cssClass = getString(CssUtils.key(Form.class, "hidden-fields"));
 
-			AppendingStringBuffer buffer = new AppendingStringBuffer();				
+		getResponse().write(String.format("<div id=\"%s\" style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\" class=\"%s\">", getHiddenFieldsId(), cssClass));
 
-			String url = getActionUrl().toString();
-			int i = url.indexOf('?');
-			String queryString = (i > -1) ? url.substring(i + 1) : url;
-			String[] params = Strings.split(queryString, '&');
-
-			writeParamsAsHiddenFields(params, buffer);
-
-			getResponse().write(buffer);
-			
-			getResponse().write("</div>");
-		}
+		AppendingStringBuffer buffer = new AppendingStringBuffer();
+		String url = getActionUrl().toString();
+		int i = url.indexOf('?');
+		String queryString = (i > -1) ? url.substring(i + 1) : url;
+		String[] params = Strings.split(queryString, '&');
+		writeParamsAsHiddenFields(params, buffer);
+		getResponse().write(buffer);
+		getResponse().write("</div>");
 
 		// if a default submitting component was set, handle the rendering of that
 		if (defaultSubmittingComponent instanceof Component)
