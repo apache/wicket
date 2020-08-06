@@ -31,8 +31,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IConverterLocator;
@@ -49,8 +47,6 @@ import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestParameters;
-import org.apache.wicket.request.Request;
-import org.apache.wicket.request.parameter.EmptyRequestParameters;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
@@ -798,33 +794,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 */
 	protected List<StringValue> getParameterValues(String inputName)
 	{
-		String method = Form.METHOD_POST;
-		final Request request = getRequest();
-		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
-		{
-			method = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
-		}
-		else
-		{
-			final Form<?> form = findParent(Form.class);
-			if (form != null)
-			{
-				method = form.getMethod();
-			}
-		}
-
-		final IRequestParameters parameters;
-		switch (method.toLowerCase(Locale.ROOT))
-		{
-			case Form.METHOD_POST:
-				parameters = request.getPostParameters();
-				break;
-			case Form.METHOD_GET:
-				parameters = request.getQueryParameters();
-				break;
-			default:
-				parameters = EmptyRequestParameters.INSTANCE;
-		}
+		final IRequestParameters parameters = Form.getRequestParameters(this);
 
 		return parameters.getParameterValues(inputName);
 	}
