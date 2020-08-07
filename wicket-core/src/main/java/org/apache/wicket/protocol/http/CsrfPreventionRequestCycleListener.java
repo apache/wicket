@@ -16,14 +16,8 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Locale;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -34,7 +28,6 @@ import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
-import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,11 +103,15 @@ import org.slf4j.LoggerFactory;
  * <li>{@link #onSuppressed(HttpServletRequest, String, IRequestablePage)} when an origin was in
  * conflict and the request should be suppressed</li>
  * </ul>
+ *
+ * @see FetchMetadataRequestCycleListener
+ * @deprecated
  */
-public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
+@Deprecated(since = "9.1.0")
+public class CsrfPreventionRequestCycleListener extends OriginBasedResourceIsolationPolicy implements IRequestCycleListener
 {
 	private static final Logger log = LoggerFactory
-		.getLogger(CsrfPreventionRequestCycleListener.class);
+			.getLogger(CsrfPreventionRequestCycleListener.class);
 
 	/**
 	 * The action to perform when a missing or conflicting source URI is detected.
@@ -173,12 +170,6 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	private String errorMessage = "Origin does not correspond to request";
 
 	/**
-	 * A white list of accepted origins (host names/domain names) presented as
-	 * &lt;domainname&gt;.&lt;TLD&gt;. The domain part can contain subdomains.
-	 */
-	private Collection<String> acceptedOrigins = new ArrayList<>();
-
-	/**
 	 * Sets the action when no Origin header is present in the request. Default {@code ALLOW}.
 	 *
 	 * @param action
@@ -234,41 +225,13 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 		return this;
 	}
 
-	/**
-	 * Adds an origin (host name/domain name) to the white list. An origin is in the form of
-	 * &lt;domainname&gt;.&lt;TLD&gt;, and can contain a subdomain. Every Origin header that matches
-	 * a domain from the whitelist is accepted and not checked any further for CSRF issues.
-	 *
-	 * E.g. when {@code example.com} is in the white list, this allows requests from (i.e. with an
-	 * {@code Origin:} header containing) {@code example.com} and {@code blabla.example.com} but
-	 * rejects requests from {@code blablaexample.com} and {@code example2.com}.
-	 *
-	 * @param acceptedOrigin
-	 *            the acceptable origin
-	 * @return this
-	 */
-	public CsrfPreventionRequestCycleListener addAcceptedOrigin(String acceptedOrigin)
-	{
-		Checks.notNull("acceptedOrigin", acceptedOrigin);
-
-		// strip any leading dot characters
-		final int len = acceptedOrigin.length();
-		int i = 0;
-		while (i < len && acceptedOrigin.charAt(i) == '.')
-		{
-			i++;
-		}
-		acceptedOrigins.add(acceptedOrigin.substring(i));
-		return this;
-	}
-
 	@Override
 	public void onBeginRequest(RequestCycle cycle)
 	{
 		if (log.isDebugEnabled())
 		{
 			HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
-				.getContainerRequest();
+					.getContainerRequest();
 			log.debug("Request Source URI: {}", getSourceUri(containerRequest));
 		}
 	}
@@ -309,7 +272,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	protected boolean isChecked(IRequestHandler handler)
 	{
 		return handler instanceof IPageRequestHandler &&
-			!(handler instanceof RenderPageRequestHandler);
+				!(handler instanceof RenderPageRequestHandler);
 	}
 
 	/**
@@ -344,7 +307,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 			IPageRequestHandler prh = (IPageRequestHandler)handler;
 			IRequestablePage targetedPage = prh.getPage();
 			HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
-				.getContainerRequest();
+					.getContainerRequest();
 			String sourceUri = getSourceUri(containerRequest);
 
 			// Check if the page should be CSRF protected
@@ -367,8 +330,8 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 		{
 			if (log.isTraceEnabled())
 				log.trace(
-					"Resolved handler {} doesn't target an action on a page, no CSRF check performed",
-					handler.getClass().getName());
+						"Resolved handler {} doesn't target an action on a page, no CSRF check performed",
+						handler.getClass().getName());
 		}
 	}
 
@@ -452,167 +415,6 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	}
 
 	/**
-	 * Checks whether the domain part of the {@code sourceUri} ({@code Origin} or {@code Referer}
-	 * header) is whitelisted.
-	 *
-	 * @param sourceUri
-	 *            the contents of the {@code Origin} or {@code Referer} HTTP header
-	 * @return {@code true} when the source domain was whitelisted
-	 */
-	protected boolean isWhitelistedHost(final String sourceUri)
-	{
-		try
-		{
-			final String sourceHost = new URI(sourceUri).getHost();
-			if (Strings.isEmpty(sourceHost))
-				return false;
-			for (String whitelistedOrigin : acceptedOrigins)
-			{
-				if (sourceHost.equalsIgnoreCase(whitelistedOrigin) ||
-					sourceHost.endsWith("." + whitelistedOrigin))
-				{
-					log.trace("Origin {} matched whitelisted origin {}, request accepted",
-						sourceUri, whitelistedOrigin);
-					return true;
-				}
-			}
-		}
-		catch (URISyntaxException e)
-		{
-			log.debug("Origin: {} not parseable as an URI. Whitelisted-origin check skipped.",
-				sourceUri);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Checks whether the {@code Origin} HTTP header of the request matches where the request came
-	 * from.
-	 *
-	 * @param containerRequest
-	 *            the current container request
-	 * @param originHeader
-	 *            the contents of the {@code Origin} HTTP header
-	 * @return {@code true} when the origin of the request matches the {@code Origin} HTTP header
-	 */
-	protected boolean isLocalOrigin(HttpServletRequest containerRequest, String originHeader)
-	{
-		// Make comparable strings from Origin and Location
-		String origin = normalizeUri(originHeader);
-		if (origin == null)
-			return false;
-
-		String request = getTargetUriFromRequest(containerRequest);
-		if (request == null)
-			return false;
-
-		return origin.equalsIgnoreCase(request);
-	}
-
-	/**
-	 * Creates a RFC-6454 comparable URI from the {@code uri} string.
-	 *
-	 * @param uri
-	 *            the contents of the Origin or Referer HTTP header
-	 * @return only the scheme://host[:port] part, or {@code null} when the URI string is not
-	 *         compliant
-	 */
-	protected final String normalizeUri(String uri)
-	{
-		// the request comes from a privacy sensitive context, flag as non-local origin. If
-		// alternative action is required, an implementor can override any of the onAborted,
-		// onSuppressed or onAllowed and implement such needed action.
-
-		if (Strings.isEmpty(uri) || "null".equals(uri))
-			return null;
-
-		StringBuilder target = new StringBuilder();
-
-		try
-		{
-			URI originUri = new URI(uri);
-			String scheme = originUri.getScheme();
-			if (scheme == null)
-			{
-				return null;
-			}
-			else
-			{
-				scheme = scheme.toLowerCase(Locale.ROOT);
-			}
-
-			target.append(scheme);
-			target.append("://");
-
-			String host = originUri.getHost();
-			if (host == null)
-			{
-				return null;
-			}
-			target.append(host);
-
-			int port = originUri.getPort();
-			boolean portIsSpecified = port != -1;
-			boolean isAlternateHttpPort = "http".equals(scheme) && port != 80;
-			boolean isAlternateHttpsPort = "https".equals(scheme) && port != 443;
-
-			if (portIsSpecified && (isAlternateHttpPort || isAlternateHttpsPort))
-			{
-				target.append(':');
-				target.append(port);
-			}
-			return target.toString();
-		}
-		catch (URISyntaxException e)
-		{
-			log.debug("Invalid URI provided: {}, marked conflicting", uri);
-			return null;
-		}
-	}
-
-	/**
-	 * Creates a RFC-6454 comparable URI from the {@code request} requested resource.
-	 *
-	 * @param request
-	 *            the incoming request
-	 * @return only the scheme://host[:port] part, or {@code null} when the origin string is not
-	 *         compliant
-	 */
-	protected final String getTargetUriFromRequest(HttpServletRequest request)
-	{
-		// Build scheme://host:port from request
-		StringBuilder target = new StringBuilder();
-		String scheme = request.getScheme();
-		if (scheme == null)
-		{
-			return null;
-		}
-		else
-		{
-			scheme = scheme.toLowerCase(Locale.ROOT);
-		}
-		target.append(scheme);
-		target.append("://");
-
-		String host = request.getServerName();
-		if (host == null)
-		{
-			return null;
-		}
-		target.append(host);
-
-		int port = request.getServerPort();
-		if ("http".equals(scheme) && port != 80 || "https".equals(scheme) && port != 443)
-		{
-			target.append(':');
-			target.append(port);
-		}
-
-		return target.toString();
-	}
-
-	/**
 	 * Handles the case where an origin is in the whitelist. Default action is to allow the
 	 * whitelisted origin.
 	 *
@@ -624,13 +426,13 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	 *            the page that is targeted with this request
 	 */
 	protected void whitelistedHandler(HttpServletRequest request, String origin,
-		IRequestablePage page)
+			IRequestablePage page)
 	{
 		onWhitelisted(request, origin, page);
 		if (log.isDebugEnabled())
 		{
 			log.debug("CSRF Origin {} was whitelisted, allowed for page {}", origin,
-				page.getClass().getName());
+					page.getClass().getName());
 		}
 	}
 
@@ -661,13 +463,13 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	 *            the page that is targeted with this request
 	 */
 	protected void matchingOrigin(HttpServletRequest request, String origin,
-		IRequestablePage page)
+			IRequestablePage page)
 	{
 		onMatchingOrigin(request, origin, page);
 		if (log.isDebugEnabled())
 		{
 			log.debug("CSRF Origin {} matched requested resource, allowed for page {}", origin,
-				page.getClass().getName());
+					page.getClass().getName());
 		}
 	}
 
@@ -683,7 +485,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	 *            the page that is targeted with this request
 	 */
 	protected void onMatchingOrigin(HttpServletRequest request, String origin,
-		IRequestablePage page)
+			IRequestablePage page)
 	{
 	}
 
@@ -700,11 +502,11 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	 *            the page that is targeted with this request
 	 */
 	protected void allowHandler(HttpServletRequest request, String origin,
-		IRequestablePage page)
+			IRequestablePage page)
 	{
 		onAllowed(request, origin, page);
 		log.info("Possible CSRF attack, request URL: {}, Origin: {}, action: allowed",
-			request.getRequestURL(), origin);
+				request.getRequestURL(), origin);
 	}
 
 	/**
@@ -736,11 +538,11 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	 *            the page that is targeted with this request
 	 */
 	protected void suppressHandler(HttpServletRequest request, String origin,
-		IRequestablePage page)
+			IRequestablePage page)
 	{
 		onSuppressed(request, origin, page);
 		log.info("Possible CSRF attack, request URL: {}, Origin: {}, action: suppressed",
-			request.getRequestURL(), origin);
+				request.getRequestURL(), origin);
 		throw new RestartResponseException(page);
 	}
 
@@ -773,7 +575,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 	 *            the page that is targeted with this request
 	 */
 	protected void abortHandler(HttpServletRequest request, String origin,
-		IRequestablePage page)
+			IRequestablePage page)
 	{
 		onAborted(request, origin, page);
 		log.info(

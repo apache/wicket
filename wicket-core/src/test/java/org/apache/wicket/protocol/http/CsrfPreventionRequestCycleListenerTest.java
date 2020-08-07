@@ -16,12 +16,14 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.CROSS_SITE;
+import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_DEST_HEADER;
+import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_SITE_HEADER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.protocol.http.CsrfPreventionRequestCycleListener.CsrfAction;
 import org.apache.wicket.request.IRequestHandler;
@@ -407,6 +409,57 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		tester.assertRenderedPage(ThirdPage.class);
 	}
 
+	/** Tests whether a cross origin request by a white listed origin is allowed*/
+	@Test
+	void crossSiteButWhiteListedAllowed()
+	{
+		csrfListener.addAcceptedOrigin("example.com");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+
+		tester.clickLink("link");
+
+		assertOriginsWhitelisted();
+		tester.assertRenderedPage(SecondPage.class);
+	}
+
+	/** Tests whitelisting with conflicting subdomain origin when sec-fetch-site is cross-site. */
+	@Test
+	void crossSiteButWhitelistedSubdomainOriginAllowed()
+	{
+		csrfListener.addAcceptedOrigin("example.com");
+
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://foo.example.com/");
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+		tester.addRequestHeader(SEC_FETCH_DEST_HEADER, CROSS_SITE);
+
+		tester.clickLink("link");
+
+		tester.assertRenderedPage(SecondPage.class);
+		assertOriginsWhitelisted();
+	}
+
+	/**
+	 * Tests when the listener is disabled for a specific page (by overriding
+	 * {@link CsrfPreventionRequestCycleListener#isChecked(IRequestablePage)}) and when fetch
+	 * metadata headers indicate cross-site request
+	 */
+	@Test
+	void crossSitePageNotCheckedAllowed()
+	{
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER,
+				CROSS_SITE);
+		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
+
+		// disable the check for this page
+		checkPage = false;
+
+		tester.clickLink("link");
+
+		assertConflictingOriginsRequestAllowed();
+		tester.assertRenderedPage(SecondPage.class);
+	}
+
 	/*
 	 * Infrastructure code for these test cases starts here.
 	 */
@@ -512,7 +565,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		assertEquals(errorCode, tester.getLastResponse().getStatus(), "Response error code");
 		assertThat("Response error message", tester.getLastResponse().getErrorMessage(),
-			is(errorMessage));
+				is(errorMessage));
 	}
 
 	/**
@@ -568,7 +621,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	}
 
 	private final class MockCsrfPreventionRequestCycleListener extends
-		CsrfPreventionRequestCycleListener
+			CsrfPreventionRequestCycleListener
 	{
 		@Override
 		protected boolean isEnabled()
@@ -593,7 +646,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		@Override
 		protected void onAborted(HttpServletRequest containerRequest, String origin,
-			IRequestablePage page)
+				IRequestablePage page)
 		{
 			aborted = true;
 			if (abortHandler != null)
@@ -602,7 +655,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		@Override
 		protected void onAllowed(HttpServletRequest containerRequest, String origin,
-			IRequestablePage page)
+				IRequestablePage page)
 		{
 			allowed = true;
 			if (allowHandler != null)
@@ -611,7 +664,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		@Override
 		protected void onSuppressed(HttpServletRequest containerRequest, String origin,
-			IRequestablePage page)
+				IRequestablePage page)
 		{
 			suppressed = true;
 			if (suppressHandler != null)
@@ -620,7 +673,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		@Override
 		protected void onMatchingOrigin(HttpServletRequest containerRequest, String origin,
-			IRequestablePage page)
+				IRequestablePage page)
 		{
 			matched = true;
 			if (matchedHandler != null)
@@ -629,7 +682,7 @@ class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 		@Override
 		protected void onWhitelisted(HttpServletRequest containerRequest, String origin,
-			IRequestablePage page)
+				IRequestablePage page)
 		{
 			whitelisted = true;
 			if (whitelistHandler != null)
