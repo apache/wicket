@@ -44,117 +44,121 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Fetch Metadata Request Cycle Listener is Wicket's implementation of Fetch Metadata.
- * This adds a layer of protection for modern browsers that prevents Cross-Site Request Forgery
- * attacks.
+ * The Fetch Metadata Request Cycle Listener is Wicket's implementation of Fetch Metadata. This adds
+ * a layer of protection for modern browsers that prevents Cross-Site Request Forgery attacks.
  *
  * This request listener uses the {@link DefaultResourceIsolationPolicy} by default and can be
  * customized with additional Resource Isolation Policies.
  *
- * This listener can be configured to add exempted URL paths that are intended to be used cross-site.
+ * This listener can be configured to add exempted URL paths that are intended to be used
+ * cross-site.
  *
- * Learn more about Fetch Metadata and resource isolation
- * at <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>
+ * Learn more about Fetch Metadata and resource isolation at
+ * <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>
  *
  * @author Santiago Diaz - saldiaz@google.com
  * @author Ecenaz Jen Ozmen - ecenazo@google.com
  */
-public class FetchMetadataRequestCycleListener implements IRequestCycleListener {
+public class FetchMetadataRequestCycleListener implements IRequestCycleListener
+{
 
-  private static final Logger log = LoggerFactory
-      .getLogger(FetchMetadataRequestCycleListener.class);
-  public static final int ERROR_CODE = 403;
-  public static final String ERROR_MESSAGE = "Forbidden";
-  public static final String VARY_HEADER_VALUE = SEC_FETCH_DEST_HEADER + ", "
-      + SEC_FETCH_SITE_HEADER + ", " + SEC_FETCH_MODE_HEADER;
+	private static final Logger log = LoggerFactory
+		.getLogger(FetchMetadataRequestCycleListener.class);
+	public static final int ERROR_CODE = 403;
+	public static final String ERROR_MESSAGE = "Forbidden";
+	public static final String VARY_HEADER_VALUE = SEC_FETCH_DEST_HEADER + ", "
+		+ SEC_FETCH_SITE_HEADER + ", " + SEC_FETCH_MODE_HEADER;
 
-  private final Set<String> exemptedPaths = new HashSet<>();
-  private final List<ResourceIsolationPolicy> resourceIsolationPolicies = new ArrayList<>();
+	private final Set<String> exemptedPaths = new HashSet<>();
+	private final List<ResourceIsolationPolicy> resourceIsolationPolicies = new ArrayList<>();
 
-  public FetchMetadataRequestCycleListener(ResourceIsolationPolicy... additionalPolicies) {
-    this.resourceIsolationPolicies.addAll(
-        asList(
-            new DefaultResourceIsolationPolicy(),
-            new OriginBasedResourceIsolationPolicy()
-        )
-    );
+	public FetchMetadataRequestCycleListener(ResourceIsolationPolicy... additionalPolicies)
+	{
+		this.resourceIsolationPolicies.addAll(
+			asList(new DefaultResourceIsolationPolicy(), new OriginBasedResourceIsolationPolicy()));
 
-    this.resourceIsolationPolicies.addAll(asList(additionalPolicies));
-  }
+		this.resourceIsolationPolicies.addAll(asList(additionalPolicies));
+	}
 
-  public void addExemptedPaths(String... exemptions) {
-    Arrays.stream(exemptions)
-        .filter(e -> !Strings.isEmpty(e))
-        .forEach(exemptedPaths::add);
-  }
+	public void addExemptedPaths(String... exemptions)
+	{
+		Arrays.stream(exemptions).filter(e -> !Strings.isEmpty(e)).forEach(exemptedPaths::add);
+	}
 
-  @Override
-  public void onBeginRequest(RequestCycle cycle)
-  {
-    HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
-        .getContainerRequest();
+	@Override
+	public void onBeginRequest(RequestCycle cycle)
+	{
+		HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
+			.getContainerRequest();
 
-    log.debug("Processing request to: {}", containerRequest.getPathInfo());
-  }
+		log.debug("Processing request to: {}", containerRequest.getPathInfo());
+	}
 
-  @Override
-  public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
-  {
-    handler = unwrap(handler);
-    IPageRequestHandler pageRequestHandler = getPageRequestHandler(handler);
-    if (pageRequestHandler == null) {
-      return;
-    }
+	@Override
+	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
+	{
+		handler = unwrap(handler);
+		IPageRequestHandler pageRequestHandler = getPageRequestHandler(handler);
+		if (pageRequestHandler == null)
+		{
+			return;
+		}
 
-    IRequestablePage targetedPage = pageRequestHandler.getPage();
-    HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
-        .getContainerRequest();
+		IRequestablePage targetedPage = pageRequestHandler.getPage();
+		HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
+			.getContainerRequest();
 
-    String pathInfo = containerRequest.getPathInfo();
-    if (exemptedPaths.contains(pathInfo)) {
-      if (log.isDebugEnabled()) {
-        log.debug("Allowing request to {} because it matches an exempted path",
-            new Object[]{pathInfo});
-      }
-      return;
-    }
+		String pathInfo = containerRequest.getPathInfo();
+		if (exemptedPaths.contains(pathInfo))
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("Allowing request to {} because it matches an exempted path",
+					new Object[] { pathInfo });
+			}
+			return;
+		}
 
-    for (ResourceIsolationPolicy resourceIsolationPolicy : resourceIsolationPolicies) {
-      if (!resourceIsolationPolicy.isRequestAllowed(containerRequest, targetedPage)) {
-          log.debug("Isolation policy {} has rejected a request to {}",
-              Classes.simpleName(resourceIsolationPolicy.getClass()), pathInfo);
-        throw new AbortWithHttpErrorCodeException(ERROR_CODE, ERROR_MESSAGE);
-      }
-    }
-  }
+		for (ResourceIsolationPolicy resourceIsolationPolicy : resourceIsolationPolicies)
+		{
+			if (!resourceIsolationPolicy.isRequestAllowed(containerRequest, targetedPage))
+			{
+				log.debug("Isolation policy {} has rejected a request to {}",
+					Classes.simpleName(resourceIsolationPolicy.getClass()), pathInfo);
+				throw new AbortWithHttpErrorCodeException(ERROR_CODE, ERROR_MESSAGE);
+			}
+		}
+	}
 
-  @Override
-  public void onEndRequest(RequestCycle cycle)
-  {
-    // set vary headers to avoid caching responses processed by Fetch Metadata
-    // caching these responses may return 403 responses to legitimate requests
-    // or defeat the protection
-    if (cycle.getResponse() instanceof WebResponse)
-    {
-      WebResponse webResponse = (WebResponse)cycle.getResponse();
-      if (webResponse.isHeaderSupported())
-      {
-        webResponse.addHeader(VARY_HEADER, VARY_HEADER_VALUE);
-      }
-    }
-  }
+	@Override
+	public void onEndRequest(RequestCycle cycle)
+	{
+		// set vary headers to avoid caching responses processed by Fetch Metadata
+		// caching these responses may return 403 responses to legitimate requests
+		// or defeat the protection
+		if (cycle.getResponse() instanceof WebResponse)
+		{
+			WebResponse webResponse = (WebResponse)cycle.getResponse();
+			if (webResponse.isHeaderSupported())
+			{
+				webResponse.addHeader(VARY_HEADER, VARY_HEADER_VALUE);
+			}
+		}
+	}
 
-  private static IRequestHandler unwrap(IRequestHandler handler) {
-    while (handler instanceof IRequestHandlerDelegate) {
-      handler = ((IRequestHandlerDelegate)handler).getDelegateHandler();
-    }
-    return handler;
-  }
+	private static IRequestHandler unwrap(IRequestHandler handler)
+	{
+		while (handler instanceof IRequestHandlerDelegate)
+		{
+			handler = ((IRequestHandlerDelegate)handler).getDelegateHandler();
+		}
+		return handler;
+	}
 
-  private IPageRequestHandler getPageRequestHandler(IRequestHandler handler)
-  {
-    boolean isPageRequestHandler = handler instanceof IPageRequestHandler &&
-        !(handler instanceof RenderPageRequestHandler);
-    return isPageRequestHandler ? (IPageRequestHandler) handler : null;
-  }
+	private IPageRequestHandler getPageRequestHandler(IRequestHandler handler)
+	{
+		boolean isPageRequestHandler = handler instanceof IPageRequestHandler
+			&& !(handler instanceof RenderPageRequestHandler);
+		return isPageRequestHandler ? (IPageRequestHandler)handler : null;
+	}
 }

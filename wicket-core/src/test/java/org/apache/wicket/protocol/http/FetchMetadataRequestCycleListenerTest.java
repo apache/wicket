@@ -32,152 +32,163 @@ import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class FetchMetadataRequestCycleListenerTest extends WicketTestCase {
+public class FetchMetadataRequestCycleListenerTest extends WicketTestCase
+{
 
-  private FetchMetadataRequestCycleListener fetchMetadataListener;
+	private FetchMetadataRequestCycleListener fetchMetadataListener;
 
-  @BeforeEach
-  void before() {
-    withCustomListener(new FetchMetadataRequestCycleListener());
-  }
+	@BeforeEach
+	void before()
+	{
+		withCustomListener(new FetchMetadataRequestCycleListener());
+	}
 
-  void withCustomListener(FetchMetadataRequestCycleListener fetchMetadataListener) {
-    WebApplication application = tester.getApplication();
+	void withCustomListener(FetchMetadataRequestCycleListener fetchMetadataListener)
+	{
+		WebApplication application = tester.getApplication();
 
-    this.fetchMetadataListener = fetchMetadataListener;
-    application.getRequestCycleListeners().add(fetchMetadataListener);
+		this.fetchMetadataListener = fetchMetadataListener;
+		application.getRequestCycleListeners().add(fetchMetadataListener);
 
-    tester.startPage(FirstPage.class);
-    tester.assertRenderedPage(FirstPage.class);
-  }
+		tester.startPage(FirstPage.class);
+		tester.assertRenderedPage(FirstPage.class);
+	}
 
-  /**
-   * Tests whether a request with Sec-Fetch-Site = cross-site is aborted
-   */
-  @Test
-  void crossSiteFMAborted() {
-    tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+	/**
+	 * Tests whether a request with Sec-Fetch-Site = cross-site is aborted
+	 */
+	@Test
+	void crossSiteFMAborted()
+	{
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
 
-    assertRequestAborted();
-  }
+		assertRequestAborted();
+	}
 
-  /**
-   * Tests whether embed requests are aborted by fetch metadata checks
-   */
-  @Test
-  void destEmbedFMAborted() {
-    tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
-    tester.addRequestHeader(SEC_FETCH_DEST_HEADER, DEST_EMBED);
+	/**
+	 * Tests whether embed requests are aborted by fetch metadata checks
+	 */
+	@Test
+	void destEmbedFMAborted()
+	{
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+		tester.addRequestHeader(SEC_FETCH_DEST_HEADER, DEST_EMBED);
 
-    assertRequestAborted();
-  }
+		assertRequestAborted();
+	}
 
-  /**
-   * Tests whether object requests (sec-fetch-dest :"object" ) are aborted by FM checks
-   */
-  @Test
-  void destObjectAborted() {
-    tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
-    tester.addRequestHeader(SEC_FETCH_DEST_HEADER, DEST_OBJECT);
+	/**
+	 * Tests whether object requests (sec-fetch-dest :"object" ) are aborted by FM checks
+	 */
+	@Test
+	void destObjectAborted()
+	{
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+		tester.addRequestHeader(SEC_FETCH_DEST_HEADER, DEST_OBJECT);
 
-    assertRequestAborted();
-  }
+		assertRequestAborted();
+	}
 
-  /**
-   * Tests whether a top level navigation request is allowed by FM checks
-   */
-  @Test
-  void topLevelNavigationAllowedFM() {
-    tester.addRequestHeader(SEC_FETCH_SITE_HEADER, SAME_ORIGIN);
-    tester.addRequestHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
+	/**
+	 * Tests whether a top level navigation request is allowed by FM checks
+	 */
+	@Test
+	void topLevelNavigationAllowedFM()
+	{
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, SAME_ORIGIN);
+		tester.addRequestHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
 
-    assertRequestAccepted();
-  }
+		assertRequestAccepted();
+	}
 
-  /**
-   * Tests that requests rejected by fetch metadata have the Vary header set
-   */
-  @Test
-  void varyHeaderSetWhenFetchMetadataRejectsRequest() {
-    tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
-    assertRequestAborted();
+	/**
+	 * Tests that requests rejected by fetch metadata have the Vary header set
+	 */
+	@Test
+	void varyHeaderSetWhenFetchMetadataRejectsRequest()
+	{
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+		assertRequestAborted();
 
-    String vary = tester.getLastResponse().getHeader("Vary");
+		String vary = tester.getLastResponse().getHeader("Vary");
 
-    if (vary == null) {
-      throw new AssertionError("Vary header should not be null");
-    }
+		if (vary == null)
+		{
+			throw new AssertionError("Vary header should not be null");
+		}
 
-    if (!vary.contains(SEC_FETCH_DEST_HEADER) || !vary.contains(SEC_FETCH_MODE_HEADER)
-        || !vary.contains(SEC_FETCH_SITE_HEADER)) {
-      throw new AssertionError("Unexpected vary header: " + vary);
-    }
-  }
+		if (!vary.contains(SEC_FETCH_DEST_HEADER) || !vary.contains(SEC_FETCH_MODE_HEADER)
+			|| !vary.contains(SEC_FETCH_SITE_HEADER))
+		{
+			throw new AssertionError("Unexpected vary header: " + vary);
+		}
+	}
 
-  /**
-   * Tests that requests accepted by fetch metadata have the Vary header set
-   */
-  @Test
-  void varyHeaderSetWhenFetchMetadataAcceptsRequest() {
-    tester.addRequestHeader(SEC_FETCH_SITE_HEADER, SAME_SITE);
-    assertRequestAccepted();
+	/**
+	 * Tests that requests accepted by fetch metadata have the Vary header set
+	 */
+	@Test
+	void varyHeaderSetWhenFetchMetadataAcceptsRequest()
+	{
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, SAME_SITE);
+		assertRequestAccepted();
 
-    String vary = tester.getLastResponse().getHeader(VARY_HEADER);
-    if (vary == null) {
-      throw new AssertionError("Vary header should not be null");
-    }
+		String vary = tester.getLastResponse().getHeader(VARY_HEADER);
+		if (vary == null)
+		{
+			throw new AssertionError("Vary header should not be null");
+		}
 
-    if (!vary.contains(SEC_FETCH_DEST_HEADER) || !vary.contains(SEC_FETCH_MODE_HEADER)
-        || !vary.contains(SEC_FETCH_SITE_HEADER)) {
-      throw new AssertionError("Unexpected vary header: " + vary);
-    }
-  }
+		if (!vary.contains(SEC_FETCH_DEST_HEADER) || !vary.contains(SEC_FETCH_MODE_HEADER)
+			|| !vary.contains(SEC_FETCH_SITE_HEADER))
+		{
+			throw new AssertionError("Unexpected vary header: " + vary);
+		}
+	}
 
-  @Test
-  void whenAtLeastOnePolicyRejectsRequest_thenRequestRejected() {
-    fetchMetadataListener = new FetchMetadataRequestCycleListener(
-        (request, page) -> true,
-        (request, page) -> true,
-        (request, page) -> false,
-        (request, page) -> true
-    );
+	@Test
+	void whenAtLeastOnePolicyRejectsRequest_thenRequestRejected()
+	{
+		fetchMetadataListener = new FetchMetadataRequestCycleListener((request, page) -> true,
+			(request, page) -> true, (request, page) -> false, (request, page) -> true);
 
-    withCustomListener(fetchMetadataListener);
-    assertRequestAborted();
-  }
+		withCustomListener(fetchMetadataListener);
+		assertRequestAborted();
+	}
 
-  @Test
-  void whenAllPoliciesAcceptRequest_thenRequestAccepted() {
-    fetchMetadataListener = new FetchMetadataRequestCycleListener(
-        (request, page) -> true,
-        (request, page) -> true,
-        (request, page) -> true,
-        (request, page) -> true
-    );
+	@Test
+	void whenAllPoliciesAcceptRequest_thenRequestAccepted()
+	{
+		fetchMetadataListener = new FetchMetadataRequestCycleListener((request, page) -> true,
+			(request, page) -> true, (request, page) -> true, (request, page) -> true);
 
-    withCustomListener(fetchMetadataListener);
-    assertRequestAccepted();
-  }
+		withCustomListener(fetchMetadataListener);
+		assertRequestAccepted();
+	}
 
-  @Test
-  void whenCrossOriginRequestToExempted_thenRequestAccepted() {
-    fetchMetadataListener.addExemptedPaths("/wicket/bookmarkable/org.apache.wicket.protocol.http.FirstPage");
-    withCustomListener(fetchMetadataListener);
+	@Test
+	void whenCrossOriginRequestToExempted_thenRequestAccepted()
+	{
+		fetchMetadataListener
+			.addExemptedPaths("/wicket/bookmarkable/org.apache.wicket.protocol.http.FirstPage");
+		withCustomListener(fetchMetadataListener);
 
-    tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
-    assertRequestAccepted();
-  }
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+		assertRequestAccepted();
+	}
 
-  private void assertRequestAborted() {
-    tester.clickLink("link");
-    assertEquals(tester.getLastResponse().getStatus(),
-        FetchMetadataRequestCycleListener.ERROR_CODE);
-    assertEquals(tester.getLastResponse().getErrorMessage(),
-        FetchMetadataRequestCycleListener.ERROR_MESSAGE);
-  }
+	private void assertRequestAborted()
+	{
+		tester.clickLink("link");
+		assertEquals(tester.getLastResponse().getStatus(),
+			FetchMetadataRequestCycleListener.ERROR_CODE);
+		assertEquals(tester.getLastResponse().getErrorMessage(),
+			FetchMetadataRequestCycleListener.ERROR_MESSAGE);
+	}
 
-  private void assertRequestAccepted() {
-    tester.clickLink("link");
-    tester.assertRenderedPage(SecondPage.class);
-  }
+	private void assertRequestAccepted()
+	{
+		tester.clickLink("link");
+		tester.assertRenderedPage(SecondPage.class);
+	}
 }

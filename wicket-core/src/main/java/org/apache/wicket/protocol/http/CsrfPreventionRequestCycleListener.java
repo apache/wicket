@@ -579,8 +579,8 @@ public class CsrfPreventionRequestCycleListener extends OriginBasedResourceIsola
 	{
 		onAborted(request, origin, page);
 		log.info(
-				"Possible CSRF attack, request URL: {}, Origin: {}, action: aborted with error {} {}",
-				request.getRequestURL(), origin, errorCode, errorMessage);
+			"Possible CSRF attack, request URL: {}, Origin: {}, action: aborted with error {} {}",
+			request.getRequestURL(), origin, errorCode, errorMessage);
 		throw new AbortWithHttpErrorCodeException(errorCode, errorMessage);
 	}
 

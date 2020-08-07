@@ -34,11 +34,11 @@ public class DefaultResourceIsolationPolicy implements ResourceIsolationPolicy
 {
 
 	@Override
-	public boolean isRequestAllowed(HttpServletRequest request,
-			IRequestablePage targetPage)
+	public boolean isRequestAllowed(HttpServletRequest request, IRequestablePage targetPage)
 	{
 		// request made by a legacy browser with no support for Fetch Metadata
-		if (!hasFetchMetadataHeaders(request)) {
+		if (!hasFetchMetadataHeaders(request))
+		{
 			return true;
 		}
 
