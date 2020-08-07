@@ -76,31 +76,31 @@ public class OriginBasedResourceIsolationPolicy implements ResourceIsolationPoli
 	 * @return whether the request is allowed based on its origin
 	 */
 	@Override
-	public boolean isRequestAllowed(HttpServletRequest request, IRequestablePage targetPage)
+	public ResourceIsolationOutcome isRequestAllowed(HttpServletRequest request, IRequestablePage targetPage)
 	{
 		String sourceUri = getSourceUri(request);
 
 		if (sourceUri == null || sourceUri.isEmpty())
 		{
 			log.debug("Source URI not present in request to {}", request.getPathInfo());
-			return true;
+			return ResourceIsolationOutcome.UNKNOWN;
 		}
 		sourceUri = sourceUri.toLowerCase(Locale.ROOT);
 
 		// if the origin is a know and trusted origin, don't check any further but allow the request
 		if (isWhitelistedHost(sourceUri))
 		{
-			return true;
+			return ResourceIsolationOutcome.ALLOWED;
 		}
 
 		// check if the origin HTTP header matches the request URI
 		if (!isLocalOrigin(request, sourceUri))
 		{
 			log.debug("Source URI conflicts with request origin");
-			return false;
+			return ResourceIsolationOutcome.DISALLOWED;
 		}
 
-		return true;
+		return ResourceIsolationOutcome.ALLOWED;
 	}
 
 	/**

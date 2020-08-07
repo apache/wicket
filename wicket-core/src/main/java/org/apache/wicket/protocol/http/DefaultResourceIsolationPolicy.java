@@ -34,12 +34,13 @@ public class DefaultResourceIsolationPolicy implements ResourceIsolationPolicy
 {
 
 	@Override
-	public boolean isRequestAllowed(HttpServletRequest request, IRequestablePage targetPage)
+	public ResourceIsolationOutcome isRequestAllowed(HttpServletRequest request,
+		IRequestablePage targetPage)
 	{
 		// request made by a legacy browser with no support for Fetch Metadata
 		if (!hasFetchMetadataHeaders(request))
 		{
-			return true;
+			return ResourceIsolationOutcome.UNKNOWN;
 		}
 
 		String site = request.getHeader(SEC_FETCH_SITE_HEADER);
@@ -47,11 +48,13 @@ public class DefaultResourceIsolationPolicy implements ResourceIsolationPolicy
 		// Allow same-site and browser-initiated requests
 		if (SAME_ORIGIN.equals(site) || SAME_SITE.equals(site) || NONE.equals(site))
 		{
-			return true;
+			return ResourceIsolationOutcome.ALLOWED;
 		}
 
 		// Allow simple top-level navigations except <object> and <embed>
-		return isAllowedTopLevelNavigation(request);
+		return isAllowedTopLevelNavigation(request)
+			? ResourceIsolationOutcome.ALLOWED
+			: ResourceIsolationOutcome.DISALLOWED;
 	}
 
 	private boolean isAllowedTopLevelNavigation(HttpServletRequest request)

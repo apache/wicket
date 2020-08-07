@@ -51,5 +51,6 @@ public interface ResourceIsolationPolicy
 	String DEST_SCRIPT = "script";
 	String DEST_IMAGE = "image";
 
-	boolean isRequestAllowed(HttpServletRequest request, IRequestablePage targetPage);
+	ResourceIsolationOutcome isRequestAllowed(HttpServletRequest request,
+		IRequestablePage targetPage);
 }

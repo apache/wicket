@@ -47,6 +47,10 @@ public class FetchMetadataRequestCycleListenerTest extends WicketTestCase
 	{
 		WebApplication application = tester.getApplication();
 
+		if (this.fetchMetadataListener != null)
+		{
+			application.getRequestCycleListeners().remove(this.fetchMetadataListener);
+		}
 		this.fetchMetadataListener = fetchMetadataListener;
 		application.getRequestCycleListeners().add(fetchMetadataListener);
 
@@ -147,22 +151,24 @@ public class FetchMetadataRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	void whenAtLeastOnePolicyRejectsRequest_thenRequestRejected()
+	void whenAtFirstNotUnkownRejectsRequest_thenRequestRejected()
 	{
-		fetchMetadataListener = new FetchMetadataRequestCycleListener((request, page) -> true,
-			(request, page) -> true, (request, page) -> false, (request, page) -> true);
-
-		withCustomListener(fetchMetadataListener);
+		withCustomListener(new FetchMetadataRequestCycleListener(
+			(request, page) -> ResourceIsolationOutcome.UNKNOWN,
+			(request, page) -> ResourceIsolationOutcome.UNKNOWN,
+			(request, page) -> ResourceIsolationOutcome.DISALLOWED,
+			(request, page) -> ResourceIsolationOutcome.ALLOWED));
 		assertRequestAborted();
 	}
 
 	@Test
-	void whenAllPoliciesAcceptRequest_thenRequestAccepted()
+	void whenFirstNotUnknownPolicieAcceptRequest_thenRequestAccepted()
 	{
-		fetchMetadataListener = new FetchMetadataRequestCycleListener((request, page) -> true,
-			(request, page) -> true, (request, page) -> true, (request, page) -> true);
-
-		withCustomListener(fetchMetadataListener);
+		withCustomListener(new FetchMetadataRequestCycleListener(
+			(request, page) -> ResourceIsolationOutcome.UNKNOWN,
+			(request, page) -> ResourceIsolationOutcome.ALLOWED,
+			(request, page) -> ResourceIsolationOutcome.ALLOWED,
+			(request, page) -> ResourceIsolationOutcome.ALLOWED));
 		assertRequestAccepted();
 	}
 
@@ -181,7 +187,7 @@ public class FetchMetadataRequestCycleListenerTest extends WicketTestCase
 	{
 		tester.clickLink("link");
 		assertEquals(tester.getLastResponse().getStatus(),
-			FetchMetadataRequestCycleListener.ERROR_CODE);
+			javax.servlet.http.HttpServletResponse.SC_FORBIDDEN);
 		assertEquals(tester.getLastResponse().getErrorMessage(),
 			FetchMetadataRequestCycleListener.ERROR_MESSAGE);
 	}

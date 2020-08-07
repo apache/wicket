@@ -26,9 +26,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
@@ -61,23 +63,151 @@ import org.slf4j.LoggerFactory;
  */
 public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 {
-
 	private static final Logger log = LoggerFactory
 		.getLogger(FetchMetadataRequestCycleListener.class);
-	public static final int ERROR_CODE = 403;
-	public static final String ERROR_MESSAGE = "Forbidden";
+
+	public static final String ERROR_MESSAGE = "The request was blocked by a resource isolation policy";
 	public static final String VARY_HEADER_VALUE = SEC_FETCH_DEST_HEADER + ", "
 		+ SEC_FETCH_SITE_HEADER + ", " + SEC_FETCH_MODE_HEADER;
+
+	/**
+	 * The action to perform when the outcome of the resource isolation policy is DISALLOWED or
+	 * UNKNOWN.
+	 */
+	public enum CsrfAction
+	{
+		/** Aborts the request and throws an exception when a CSRF request is detected. */
+		ABORT {
+			@Override
+			public String toString()
+			{
+				return "aborted";
+			}
+		},
+
+		/**
+		 * Ignores the action of a CSRF request, and just renders the page it was targeted against.
+		 */
+		SUPPRESS {
+			@Override
+			public String toString()
+			{
+				return "suppressed";
+			}
+		},
+
+		/** Detects a CSRF request, logs it and allows the request to continue. */
+		ALLOW {
+			@Override
+			public String toString()
+			{
+				return "allowed";
+			}
+		},
+	}
+
+	/**
+	 * Action to perform when none resource isolation policies can determine the validity of the
+	 * request.
+	 */
+	private CsrfAction unknownOutcomeAction = CsrfAction.ABORT;
+
+	/**
+	 * Action to perform when DISALLOWED is reported by a resource isolation policy.
+	 */
+	private CsrfAction disallowedOutcomeAction = CsrfAction.ABORT;
+
+	/**
+	 * The error code to report when the action to take for a CSRF request is
+	 * {@link CsrfAction#ABORT}. Default {@code 403 FORBIDDEN}.
+	 */
+	private int errorCode = javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+
+	/**
+	 * The error message to report when the action to take for a CSRF request is {@code ERROR}.
+	 * Default {@code "The request was blocked by a resource isolation policy"}.
+	 */
+	private String errorMessage = ERROR_MESSAGE;
+
 
 	private final Set<String> exemptedPaths = new HashSet<>();
 	private final List<ResourceIsolationPolicy> resourceIsolationPolicies = new ArrayList<>();
 
-	public FetchMetadataRequestCycleListener(ResourceIsolationPolicy... additionalPolicies)
+	/**
+	 * Create a new FetchMetadataRequestCycleListener with the given policies. If no policies are
+	 * given, {@link DefaultResourceIsolationPolicy} and {@link OriginBasedResourceIsolationPolicy}
+	 * will be used. The policies are checked in order. The first outcome that's not
+	 * {@link ResourceIsolationOutcome#UNKNOWN} will be used.
+	 * 
+	 * @param policies
+	 *            the policies to check requests against.
+	 */
+	public FetchMetadataRequestCycleListener(ResourceIsolationPolicy... policies)
 	{
-		this.resourceIsolationPolicies.addAll(
-			asList(new DefaultResourceIsolationPolicy(), new OriginBasedResourceIsolationPolicy()));
+		this.resourceIsolationPolicies.addAll(asList(policies));
+		if (policies.length == 0)
+		{
+			this.resourceIsolationPolicies.addAll(asList(new DefaultResourceIsolationPolicy(),
+				new OriginBasedResourceIsolationPolicy()));
+		}
+	}
 
-		this.resourceIsolationPolicies.addAll(asList(additionalPolicies));
+	/**
+	 * Sets the action when none of the resource isolation policies can come to an outcome. Default
+	 * {@code ABORT}.
+	 *
+	 * @param action
+	 *            the alternate action
+	 *
+	 * @return this (for chaining)
+	 */
+	public FetchMetadataRequestCycleListener setUnknownOutcomeAction(CsrfAction action)
+	{
+		this.unknownOutcomeAction = action;
+		return this;
+	}
+
+	/**
+	 * Sets the action when a request is disallowed by a resource isolation policy. Default is
+	 * {@code ABORT}.
+	 *
+	 * @param action
+	 *            the alternate action
+	 *
+	 * @return this
+	 */
+	public FetchMetadataRequestCycleListener setDisallowedOutcomeAction(CsrfAction action)
+	{
+		this.disallowedOutcomeAction = action;
+		return this;
+	}
+
+	/**
+	 * Modifies the HTTP error code in the exception when a disallowed request is detected.
+	 *
+	 * @param errorCode
+	 *            the alternate HTTP error code, default {@code 403 FORBIDDEN}
+	 *
+	 * @return this
+	 */
+	public FetchMetadataRequestCycleListener setErrorCode(int errorCode)
+	{
+		this.errorCode = errorCode;
+		return this;
+	}
+
+	/**
+	 * Modifies the HTTP message in the exception when a disallowed request is detected.
+	 *
+	 * @param errorMessage
+	 *            the alternate message
+	 *
+	 * @return this
+	 */
+	public FetchMetadataRequestCycleListener setErrorMessage(String errorMessage)
+	{
+		this.errorMessage = errorMessage;
+		return this;
 	}
 
 	public void addExemptedPaths(String... exemptions)
@@ -94,39 +224,121 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 		log.debug("Processing request to: {}", containerRequest.getPathInfo());
 	}
 
+	/**
+	 * Dynamic override for enabling/disabling the CSRF detection. Might be handy for specific
+	 * tenants in a multi-tenant application. When false, the CSRF detection is not performed for
+	 * the running request. Default {@code true}
+	 *
+	 * @return {@code true} when the CSRF checks need to be performed.
+	 */
+	protected boolean isEnabled()
+	{
+		return true;
+	}
+
+	/**
+	 * Override to limit whether the request to the specific page should be checked for a possible
+	 * CSRF attack.
+	 *
+	 * @param targetedPage
+	 *            the page that is the target for the action
+	 * @return {@code true} when the request to the page should be checked for CSRF issues.
+	 */
+	protected boolean isChecked(IRequestablePage targetedPage)
+	{
+		return true;
+	}
+
+	/**
+	 * Override to change the request handler types that are checked. Currently only action handlers
+	 * (form submits, link clicks, AJAX events) are checked for a matching Origin HTTP header.
+	 *
+	 * @param handler
+	 *            the handler that is currently processing
+	 * @return true when the Origin HTTP header should be checked for this {@code handler}
+	 */
+	protected boolean isChecked(IRequestHandler handler)
+	{
+		return handler instanceof IPageRequestHandler
+			&& !(handler instanceof RenderPageRequestHandler);
+	}
+
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
 	{
+		if (!isEnabled())
+		{
+			log.trace("CSRF listener is disabled, no checks performed");
+			return;
+		}
+
 		handler = unwrap(handler);
-		IPageRequestHandler pageRequestHandler = getPageRequestHandler(handler);
-		if (pageRequestHandler == null)
+		if (isChecked(handler))
 		{
-			return;
-		}
+			IPageRequestHandler pageRequestHandler = (IPageRequestHandler)handler;
+			IRequestablePage targetedPage = pageRequestHandler.getPage();
+			HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
+				.getContainerRequest();
 
-		IRequestablePage targetedPage = pageRequestHandler.getPage();
-		HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest()
-			.getContainerRequest();
-
-		String pathInfo = containerRequest.getPathInfo();
-		if (exemptedPaths.contains(pathInfo))
-		{
-			if (log.isDebugEnabled())
+			if (!isChecked(targetedPage))
 			{
-				log.debug("Allowing request to {} because it matches an exempted path",
-					new Object[] { pathInfo });
+				if (log.isDebugEnabled())
+				{
+					log.debug("Targeted page {} was opted out of the CSRF origin checks, allowed",
+						targetedPage.getClass().getName());
+				}
+				return;
 			}
-			return;
-		}
 
-		for (ResourceIsolationPolicy resourceIsolationPolicy : resourceIsolationPolicies)
-		{
-			if (!resourceIsolationPolicy.isRequestAllowed(containerRequest, targetedPage))
+			String pathInfo = containerRequest.getPathInfo();
+			if (exemptedPaths.contains(pathInfo))
 			{
-				log.debug("Isolation policy {} has rejected a request to {}",
-					Classes.simpleName(resourceIsolationPolicy.getClass()), pathInfo);
-				throw new AbortWithHttpErrorCodeException(ERROR_CODE, ERROR_MESSAGE);
+				if (log.isDebugEnabled())
+				{
+					log.debug("Allowing request to {} because it matches an exempted path",
+						new Object[] { pathInfo });
+				}
+				return;
 			}
+
+			for (ResourceIsolationPolicy resourceIsolationPolicy : resourceIsolationPolicies)
+			{
+				ResourceIsolationOutcome outcome = resourceIsolationPolicy
+					.isRequestAllowed(containerRequest, targetedPage);
+				if (ResourceIsolationOutcome.DISALLOWED.equals(outcome))
+				{
+					log.debug("Isolation policy {} has rejected a request to {}",
+						Classes.simpleName(resourceIsolationPolicy.getClass()), pathInfo);
+					triggerAction(disallowedOutcomeAction, containerRequest, targetedPage);
+				}
+				else if (ResourceIsolationOutcome.ALLOWED.equals(outcome))
+				{
+					return;
+				}
+			}
+			triggerAction(unknownOutcomeAction, containerRequest, targetedPage);
+		}
+		else
+		{
+			if (log.isTraceEnabled())
+				log.trace("Resolved handler {} is not checked, no CSRF check performed",
+					handler.getClass().getName());
+		}
+	}
+
+	private void triggerAction(CsrfAction action, HttpServletRequest request, IRequestablePage page)
+	{
+		switch (action)
+		{
+			case ALLOW :
+				allowHandler(request, page);
+				break;
+			case SUPPRESS :
+				suppressHandler(request, page);
+				break;
+			case ABORT :
+				abortHandler(request, page);
+				break;
 		}
 	}
 
@@ -146,6 +358,52 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 		}
 	}
 
+	/**
+	 * Handles the case where the resource isolation policies resulted in
+	 * {@link ResourceIsolationOutcome#UNKNOWN} or {@link ResourceIsolationOutcome#DISALLOWED} and
+	 * the action was set to {#link {@link CsrfAction#ALLOW}.
+	 *
+	 * @param request
+	 *            the request
+	 * @param page
+	 *            the page that is targeted with this request
+	 */
+	protected void allowHandler(HttpServletRequest request, IRequestablePage page)
+	{
+		log.info("Possible CSRF attack, request URL: {}, action: allowed", request.getRequestURL());
+	}
+
+	/**
+	 * Supresses the execution of the listener in the request because the outcome results in
+	 * {@link CsrfAction#SUPPRESS}.
+	 *
+	 * @param request
+	 *            the request
+	 * @param page
+	 *            the page that is targeted with this request
+	 */
+	protected void suppressHandler(HttpServletRequest request, IRequestablePage page)
+	{
+		log.info("Possible CSRF attack, request URL: {}, action: suppressed",
+			request.getRequestURL());
+		throw new RestartResponseException(page);
+	}
+
+	/**
+	 * Aborts the request because the outcome results in {@link CsrfAction#ABORT}.
+	 *
+	 * @param request
+	 *            the request
+	 * @param page
+	 *            the page that is targeted with this request
+	 */
+	protected void abortHandler(HttpServletRequest request, IRequestablePage page)
+	{
+		log.info("Possible CSRF attack, request URL: {}, action: aborted with error {} {}",
+			request.getRequestURL(), errorCode, errorMessage);
+		throw new AbortWithHttpErrorCodeException(errorCode, errorMessage);
+	}
+
 	private static IRequestHandler unwrap(IRequestHandler handler)
 	{
 		while (handler instanceof IRequestHandlerDelegate)
@@ -153,12 +411,5 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 			handler = ((IRequestHandlerDelegate)handler).getDelegateHandler();
 		}
 		return handler;
-	}
-
-	private IPageRequestHandler getPageRequestHandler(IRequestHandler handler)
-	{
-		boolean isPageRequestHandler = handler instanceof IPageRequestHandler
-			&& !(handler instanceof RenderPageRequestHandler);
-		return isPageRequestHandler ? (IPageRequestHandler)handler : null;
 	}
 }
