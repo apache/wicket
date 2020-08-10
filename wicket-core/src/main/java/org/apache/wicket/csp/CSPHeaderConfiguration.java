@@ -34,6 +34,7 @@ import static org.apache.wicket.csp.CSPDirectiveSrcValue.UNSAFE_EVAL;
 import static org.apache.wicket.csp.CSPDirectiveSrcValue.UNSAFE_INLINE;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -262,6 +263,16 @@ public class CSPHeaderConfiguration
 	}
 
 	/**
+	 * Returns an unmodifiable map of the directives set for this header.
+	 * 
+	 * @return The directives set for this header.
+	 */
+	public Map<CSPDirective, List<CSPRenderable>> getDirectives()
+	{
+		return Collections.unmodifiableMap(directives);
+	}
+
+	/**
 	 * @return true if this {@code CSPHeaderConfiguration} has any directives configured.
 	 */
 	public boolean isSet()
@@ -307,7 +318,8 @@ public class CSPHeaderConfiguration
 		if (CSPDirective.CHILD_SRC.equals(directive)
 			&& !directives.containsKey(CSPDirective.FRAME_SRC))
 		{
-			doAddDirective(CSPDirective.FRAME_SRC, value);
+			doAddDirective(CSPDirective.FRAME_SRC,
+				new ClonedCSPValue(this, CSPDirective.CHILD_SRC));
 		}
 		List<CSPRenderable> values = directives.computeIfAbsent(directive, x -> new ArrayList<>());
 		directive.checkValueForDirective(value, values);

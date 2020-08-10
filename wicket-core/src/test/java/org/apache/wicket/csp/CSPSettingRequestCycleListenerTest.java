@@ -26,6 +26,7 @@ import static org.apache.wicket.csp.CSPDirectiveSandboxValue.EMPTY;
 import static org.apache.wicket.csp.CSPDirectiveSrcValue.NONE;
 import static org.apache.wicket.csp.CSPDirectiveSrcValue.SELF;
 import static org.apache.wicket.csp.CSPDirectiveSrcValue.WILDCARD;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,6 +39,8 @@ import java.util.stream.Stream;
 
 import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.Assertions;
@@ -309,6 +312,35 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 		{
 			Assertions.fail(headerErrors.toString());
 		}
+	}
+
+	@Test
+	public void testChildIsClonedIntoFrame()
+	{
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
+		settings.blocking().add(CHILD_SRC, SELF);
+
+		tester.startPage(DummyHomePage.class);
+		String childSrc = renderDirective(settings.blocking().getDirectives().get(CHILD_SRC),
+			settings, tester.getRequestCycle());
+		String frameSrc = renderDirective(settings.blocking().getDirectives().get(FRAME_SRC),
+			settings, tester.getRequestCycle());
+		assertEquals("'self'", childSrc);
+		assertEquals(childSrc, frameSrc);
+
+		settings.blocking().add(CHILD_SRC, "https://wicket.apache.org");
+		childSrc = renderDirective(settings.blocking().getDirectives().get(CHILD_SRC), settings,
+			tester.getRequestCycle());
+		frameSrc = renderDirective(settings.blocking().getDirectives().get(FRAME_SRC), settings,
+			tester.getRequestCycle());
+		assertEquals("'self' https://wicket.apache.org", childSrc);
+		assertEquals(childSrc, frameSrc);
+	}
+
+	private String renderDirective(List<CSPRenderable> values,
+		ContentSecurityPolicySettings settings, RequestCycle cycle)
+	{
+		return values.stream().map(r -> r.render(settings, cycle)).collect(Collectors.joining(" "));
 	}
 
 	private List<String> checkHeaders()
