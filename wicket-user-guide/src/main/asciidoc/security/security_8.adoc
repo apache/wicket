@@ -10,7 +10,7 @@ protected void init()
 {
    super.init();
 
-   getRequestCycleListeners().add(new AbstractRequestCycleListener(){
+   getRequestCycleListeners().add(new IRequestCycleListener(){
 
       @Override
       public void onEndRequest(RequestCycle cycle)

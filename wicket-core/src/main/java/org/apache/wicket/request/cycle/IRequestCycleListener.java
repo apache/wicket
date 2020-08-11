@@ -54,18 +54,13 @@ import org.apache.wicket.request.Url;
  * {@link #onExceptionRequestHandlerResolved(RequestCycle, org.apache.wicket.request.IRequestHandler, Exception)} </li>
  * </ul>
  * 
- * <h3>Implementing your own</h3>
- * <p>
- * Use {@link AbstractRequestCycleListener} for a default, empty implementation as a base class.
- * </p>
- * 
  * <h3>Example</h3>
  * <p>
  * A short example of a request counter.
  * </p>
  * 
  * <pre>
- * public class RequestCounter extends AbstractRequestCycleListener
+ * public class RequestCounter implements IRequestCycleListener
  * {
  * 	private AtomicLong counter = new AtomicLong(0);
  * 
@@ -93,7 +88,6 @@ import org.apache.wicket.request.Url;
  * @author Jeremy Thomerson
  * @author Martijn Dashorst
  * 
- * @see AbstractRequestCycleListener
  * @see org.apache.wicket.Application#getRequestCycleListeners()
  */
 public interface IRequestCycleListener
