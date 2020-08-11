@@ -80,7 +80,7 @@ public class CoepRequestCycleListener implements IRequestCycleListener
 
 		if (coepConfig.isExempted(path))
 		{
-			log.debug("Request path {} is exempted from COOP, no COOP header added", path);
+			log.debug("Request path {} is exempted from COEP, no COEP header added", path);
 			return;
 		}
 
