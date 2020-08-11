@@ -1,0 +1,96 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.wicket.coep;
+
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * Sets <a href="https://wicg.github.io/cross-origin-embedder-policy/">Cross-Origin Embedder
+ * Policy</a> headers on the responses based on the mode specified by {@link CoepConfiguration}.
+ * COEP can be enabled in <code>REPORTING</code> mode which will set the headers as
+ * <code>Cross-Origin-Embedder-Policy-Report-Only</code> or <code>ENFORCING</code> mode which will
+ * set the header as <code>Cross-Origin-Embedder-Policy</code>. The header is not set for the paths
+ * that are exempted from COEP. The only valid value of COEP is <code>require-corp</code>, so if the
+ * listener is enabled the policy value will be specified as so.
+ *
+ * COEP prevents a document from loading any non-same-origin resources which don't explicitly grant
+ * the document permission to be loaded. Using COEP and COOP together allows developers to safely
+ * use powerful features such as <code>SharedArrayBuffer</code>,
+ * <code>performance.measureMemory()</code>, and the JS Self-Profiling API.See
+ * {@link org.apache.wicket.coop.CoopRequestCycleListener} for instructions on how to enable COOP.
+ * Read more about cross-origin isolation on
+ * <a href="https://web.dev/why-coop-coep/">https://web.dev/why-coop-coep/</a>
+ *
+ * You can enable COEP headers by adding it to the request cycle listeners in your
+ * {@link org.apache.wicket.protocol.http.WebApplication#init() application's init method}:
+ *
+ * <pre>
+ * &#064;Override
+ * protected void init()
+ * {
+ * 	// ...
+ * 	enableCoep(new CoepConfiguration.Builder().withMode(CoepMode.ENFORCING)
+ * 		.withExemptions("EXEMPTED PATHS").build());
+ * 	// ...
+ * }
+ * </pre>
+ *
+ * @author Santiago Diaz - saldiaz@google.com
+ * @author Ecenaz Jen Ozmen - ecenazo@google.com
+ *
+ * @see CoepConfiguration
+ */
+public class CoepRequestCycleListener implements IRequestCycleListener
+{
+	private static final Logger log = LoggerFactory.getLogger(CoepRequestCycleListener.class);
+
+	private final CoepConfiguration coepConfig;
+
+	public CoepRequestCycleListener(CoepConfiguration coepConfig)
+	{
+		this.coepConfig = coepConfig;
+	}
+
+	@Override
+	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
+	{
+		HttpServletRequest request = (HttpServletRequest)cycle.getRequest().getContainerRequest();
+		String path = request.getContextPath();
+
+		if (coepConfig.isExempted(path))
+		{
+			log.debug("Request path {} is exempted from COOP, no COOP header added", path);
+			return;
+		}
+
+		if (cycle.getResponse() instanceof WebResponse)
+		{
+			WebResponse webResponse = (WebResponse)cycle.getResponse();
+			if (webResponse.isHeaderSupported())
+			{
+				coepConfig.addCoepHeader(webResponse);
+			}
+		}
+	}
+}
