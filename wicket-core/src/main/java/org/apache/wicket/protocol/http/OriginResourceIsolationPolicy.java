@@ -21,7 +21,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.lang.Checks;
@@ -29,10 +31,18 @@ import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OriginBasedResourceIsolationPolicy implements ResourceIsolationPolicy
+/**
+ * {@link IResourceIsolationPolicy} based on {@link WebRequest#HEADER_ORIGIN} and
+ * {@link WebRequest#HEADER_REFERER} headers.
+ * <p>
+ * This origin-based listener can be used in combination with the
+ * {@link ResourceIsolationRequestCycleListener} to add support for legacy browsers that don't send
+ * Sec-Fetch-* headers yet.
+ * 
+ */
+public class OriginResourceIsolationPolicy implements IResourceIsolationPolicy
 {
-	private static final Logger log = LoggerFactory
-		.getLogger(OriginBasedResourceIsolationPolicy.class);
+	private static final Logger log = LoggerFactory.getLogger(OriginResourceIsolationPolicy.class);
 
 	/**
 	 * A white list of accepted origins (host names/domain names) presented as
@@ -53,7 +63,7 @@ public class OriginBasedResourceIsolationPolicy implements ResourceIsolationPoli
 	 *            the acceptable origin
 	 * @return this
 	 */
-	public OriginBasedResourceIsolationPolicy addAcceptedOrigin(String acceptedOrigin)
+	public OriginResourceIsolationPolicy addAcceptedOrigin(String acceptedOrigin)
 	{
 		Checks.notNull("acceptedOrigin", acceptedOrigin);
 
@@ -69,14 +79,11 @@ public class OriginBasedResourceIsolationPolicy implements ResourceIsolationPoli
 	}
 
 	/**
-	 * This origin-based listener can be used in combination with the
-	 * {@link FetchMetadataRequestCycleListener} to add support for legacy browsers that don't send
-	 * Sec-Fetch-* headers yet.
-	 * 
 	 * @return whether the request is allowed based on its origin
 	 */
 	@Override
-	public ResourceIsolationOutcome isRequestAllowed(HttpServletRequest request, IRequestablePage targetPage)
+	public ResourceIsolationOutcome isRequestAllowed(HttpServletRequest request,
+		IRequestablePage targetPage)
 	{
 		String sourceUri = getSourceUri(request);
 

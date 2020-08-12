@@ -17,16 +17,17 @@
 package org.apache.wicket.protocol.http;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.request.component.IRequestablePage;
 
 /**
- * Interface for the resource isolation policies to be used for fetch metadata checks.
- *
- * Resource isolation policies are designed to protect against cross origin attacks and use the
- * {@code sec-fetch-*} request headers to decide whether to accept or reject a request. Read more
- * about <a href="https://web.dev/fetch-metadata/">Fetch Metadata.</a>
- *
- * See {@link DefaultResourceIsolationPolicy} for the default implementation used.
+ * Interface for the resource isolation policies.
+ * <p>
+ * Resource isolation policies are designed to protect against cross origin attacks.
+ * <p>
+ * See {@link FetchMetadataResourceIsolationPolicy} for the default implementation used
+ * by {@link ResourceIsolationRequestCycleListener}.
  *
  * @see <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>
  *
@@ -34,23 +35,39 @@ import org.apache.wicket.request.component.IRequestablePage;
  * @author Ecenaz Jen Ozmen - ecenazo@google.com
  */
 @FunctionalInterface
-public interface ResourceIsolationPolicy
+public interface IResourceIsolationPolicy
 {
-	String SEC_FETCH_SITE_HEADER = "sec-fetch-site";
-	String SEC_FETCH_MODE_HEADER = "sec-fetch-mode";
-	String SEC_FETCH_DEST_HEADER = "sec-fetch-dest";
-	String VARY_HEADER = "Vary";
-	String SAME_ORIGIN = "same-origin";
-	String SAME_SITE = "same-site";
-	String NONE = "none";
-	String MODE_NAVIGATE = "navigate";
-	String DEST_OBJECT = "object";
-	String DEST_EMBED = "embed";
-	String CROSS_SITE = "cross-site";
-	String CORS = "cors";
-	String DEST_SCRIPT = "script";
-	String DEST_IMAGE = "image";
+	/**
+	 * Indicates the outcome for a resource isolation policy for a request. When the outcome is
+	 * {@link #UNKNOWN}, the next policy will be consulted.
+	 * 
+	 * @author papegaaij
+	 * 
+	 * @see IResourceIsolationPolicy#isRequestAllowed(javax.servlet.http.HttpServletRequest, org.apache.wicket.request.component.IRequestablePage)
+	 */
+	public enum ResourceIsolationOutcome
+	{
+		ALLOWED, DISALLOWED, UNKNOWN
+	}
 
+	/**
+	 * Is the given request allowed.
+	 * 
+	 * @param request
+	 *            request
+	 * @param targetPage
+	 *            targeted page
+	 * @return outcome, must not be <code>null</code>
+	 */
 	ResourceIsolationOutcome isRequestAllowed(HttpServletRequest request,
 		IRequestablePage targetPage);
+
+	/**
+	 * Set possible response headers.
+	 * 
+	 * @param response
+	 */
+	default void setHeaders(HttpServletResponse response)
+	{
+	}
 }

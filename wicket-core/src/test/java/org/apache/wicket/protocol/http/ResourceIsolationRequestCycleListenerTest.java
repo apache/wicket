@@ -16,42 +16,46 @@
  */
 package org.apache.wicket.protocol.http;
 
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.CROSS_SITE;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.DEST_EMBED;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.DEST_OBJECT;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.MODE_NAVIGATE;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SAME_ORIGIN;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SAME_SITE;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_DEST_HEADER;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_MODE_HEADER;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_SITE_HEADER;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.VARY_HEADER;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.CROSS_SITE;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.DEST_EMBED;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.DEST_OBJECT;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.MODE_NAVIGATE;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SAME_ORIGIN;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SAME_SITE;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SEC_FETCH_DEST_HEADER;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SEC_FETCH_MODE_HEADER;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SEC_FETCH_SITE_HEADER;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.VARY_HEADER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.apache.wicket.protocol.http.IResourceIsolationPolicy.ResourceIsolationOutcome;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class FetchMetadataRequestCycleListenerTest extends WicketTestCase
+/**
+ * Test for {@link ResourceIsolationRequestCycleListener}. 
+ */
+public class ResourceIsolationRequestCycleListenerTest extends WicketTestCase
 {
 
-	private FetchMetadataRequestCycleListener fetchMetadataListener;
+	private ResourceIsolationRequestCycleListener listener;
 
 	@BeforeEach
 	void before()
 	{
-		withCustomListener(new FetchMetadataRequestCycleListener());
+		withCustomListener(new ResourceIsolationRequestCycleListener());
 	}
 
-	void withCustomListener(FetchMetadataRequestCycleListener fetchMetadataListener)
+	void withCustomListener(ResourceIsolationRequestCycleListener fetchMetadataListener)
 	{
 		WebApplication application = tester.getApplication();
 
-		if (this.fetchMetadataListener != null)
+		if (this.listener != null)
 		{
-			application.getRequestCycleListeners().remove(this.fetchMetadataListener);
+			application.getRequestCycleListeners().remove(this.listener);
 		}
-		this.fetchMetadataListener = fetchMetadataListener;
+		this.listener = fetchMetadataListener;
 		application.getRequestCycleListeners().add(fetchMetadataListener);
 
 		tester.startPage(FirstPage.class);
@@ -112,6 +116,7 @@ public class FetchMetadataRequestCycleListenerTest extends WicketTestCase
 	void varyHeaderSetWhenFetchMetadataRejectsRequest()
 	{
 		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+		tester.setFollowRedirects(false);
 		assertRequestAborted();
 
 		String vary = tester.getLastResponse().getHeader("Vary");
@@ -135,6 +140,7 @@ public class FetchMetadataRequestCycleListenerTest extends WicketTestCase
 	void varyHeaderSetWhenFetchMetadataAcceptsRequest()
 	{
 		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, SAME_SITE);
+		tester.setFollowRedirects(false);
 		assertRequestAccepted();
 
 		String vary = tester.getLastResponse().getHeader(VARY_HEADER);
@@ -153,7 +159,7 @@ public class FetchMetadataRequestCycleListenerTest extends WicketTestCase
 	@Test
 	void whenAtFirstNotUnkownRejectsRequest_thenRequestRejected()
 	{
-		withCustomListener(new FetchMetadataRequestCycleListener(
+		withCustomListener(new ResourceIsolationRequestCycleListener(
 			(request, page) -> ResourceIsolationOutcome.UNKNOWN,
 			(request, page) -> ResourceIsolationOutcome.UNKNOWN,
 			(request, page) -> ResourceIsolationOutcome.DISALLOWED,
@@ -164,7 +170,7 @@ public class FetchMetadataRequestCycleListenerTest extends WicketTestCase
 	@Test
 	void whenFirstNotUnknownPolicieAcceptRequest_thenRequestAccepted()
 	{
-		withCustomListener(new FetchMetadataRequestCycleListener(
+		withCustomListener(new ResourceIsolationRequestCycleListener(
 			(request, page) -> ResourceIsolationOutcome.UNKNOWN,
 			(request, page) -> ResourceIsolationOutcome.ALLOWED,
 			(request, page) -> ResourceIsolationOutcome.ALLOWED,
@@ -175,9 +181,9 @@ public class FetchMetadataRequestCycleListenerTest extends WicketTestCase
 	@Test
 	void whenCrossOriginRequestToExempted_thenRequestAccepted()
 	{
-		fetchMetadataListener
+		listener
 			.addExemptedPaths("/wicket/bookmarkable/org.apache.wicket.protocol.http.FirstPage");
-		withCustomListener(fetchMetadataListener);
+		withCustomListener(listener);
 
 		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
 		assertRequestAccepted();
@@ -189,7 +195,7 @@ public class FetchMetadataRequestCycleListenerTest extends WicketTestCase
 		assertEquals(tester.getLastResponse().getStatus(),
 			javax.servlet.http.HttpServletResponse.SC_FORBIDDEN);
 		assertEquals(tester.getLastResponse().getErrorMessage(),
-			FetchMetadataRequestCycleListener.ERROR_MESSAGE);
+			ResourceIsolationRequestCycleListener.ERROR_MESSAGE);
 	}
 
 	private void assertRequestAccepted()

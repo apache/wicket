@@ -17,10 +17,6 @@
 package org.apache.wicket.protocol.http;
 
 import static java.util.Arrays.asList;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_DEST_HEADER;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_MODE_HEADER;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.SEC_FETCH_SITE_HEADER;
-import static org.apache.wicket.protocol.http.ResourceIsolationPolicy.VARY_HEADER;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,10 +25,12 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.protocol.http.IResourceIsolationPolicy.ResourceIsolationOutcome;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -46,33 +44,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Fetch Metadata Request Cycle Listener is Wicket's implementation of Fetch Metadata. This adds
- * a layer of protection for modern browsers that prevents Cross-Site Request Forgery attacks.
- *
- * This request listener uses the {@link DefaultResourceIsolationPolicy} by default and can be
- * customized with additional Resource Isolation Policies.
- *
- * This listener can be configured to add exempted URL paths that are intended to be used
- * cross-site.
- *
+ * This {@link RequestCycle} listener ensures resource isolation, adding a layer of protection for
+ * modern browsers that prevent <em>Cross-Site Request Forgery</em> attacks.
+ * <p>
+ * It uses the {@link FetchMetadataResourceIsolationPolicy} and
+ * {@link OriginResourceIsolationPolicy} by default and can be customized with additional
+ * {@link IResourceIsolationPolicy}s.
+ * <p>
+ * URL paths that are intended to be used cross-site can be excempted from these policies.
+ * <p>
  * Learn more about Fetch Metadata and resource isolation at
- * <a href="https://web.dev/fetch-metadata/">https://web.dev/fetch-metadata/</a>
+ * <a href="https://web.dev/fetch-metadata">https://web.dev/fetch-metadata/</a>
  *
  * @author Santiago Diaz - saldiaz@google.com
  * @author Ecenaz Jen Ozmen - ecenazo@google.com
  */
-public class FetchMetadataRequestCycleListener implements IRequestCycleListener
+public class ResourceIsolationRequestCycleListener implements IRequestCycleListener
 {
 	private static final Logger log = LoggerFactory
-		.getLogger(FetchMetadataRequestCycleListener.class);
+		.getLogger(ResourceIsolationRequestCycleListener.class);
 
 	public static final String ERROR_MESSAGE = "The request was blocked by a resource isolation policy";
-	public static final String VARY_HEADER_VALUE = SEC_FETCH_DEST_HEADER + ", "
-		+ SEC_FETCH_SITE_HEADER + ", " + SEC_FETCH_MODE_HEADER;
 
 	/**
 	 * The action to perform when the outcome of the resource isolation policy is DISALLOWED or
-	 * UNKNOWN.
+	 * UNKNOWN. 
 	 */
 	public enum CsrfAction
 	{
@@ -82,6 +78,13 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 			public String toString()
 			{
 				return "aborted";
+			}
+			
+			@Override
+			void apply(ResourceIsolationRequestCycleListener listener, HttpServletRequest request,
+				IRequestablePage page)
+			{
+				listener.abortHandler(request, page);
 			}
 		},
 
@@ -94,6 +97,13 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 			{
 				return "suppressed";
 			}
+			
+			@Override
+			void apply(ResourceIsolationRequestCycleListener listener, HttpServletRequest request,
+				IRequestablePage page)
+			{
+				listener.suppressHandler(request, page);
+			}
 		},
 
 		/** Detects a CSRF request, logs it and allows the request to continue. */
@@ -103,17 +113,28 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 			{
 				return "allowed";
 			}
-		},
+			
+			@Override
+			void apply(ResourceIsolationRequestCycleListener listener, HttpServletRequest request,
+				IRequestablePage page)
+			{
+				listener.allowHandler(request, page);
+			}
+		};
+
+		abstract void apply(ResourceIsolationRequestCycleListener listener,
+			HttpServletRequest request, IRequestablePage page);
 	}
 
 	/**
-	 * Action to perform when none resource isolation policies can determine the validity of the
+	 * Action to perform when no resource isolation policy can determine the validity of the
 	 * request.
 	 */
 	private CsrfAction unknownOutcomeAction = CsrfAction.ABORT;
 
 	/**
-	 * Action to perform when DISALLOWED is reported by a resource isolation policy.
+	 * Action to perform when {@link ResourceIsolationOutcome#DISALLOWED} is reported by a
+	 * resource isolation policy.
 	 */
 	private CsrfAction disallowedOutcomeAction = CsrfAction.ABORT;
 
@@ -129,26 +150,26 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 	 */
 	private String errorMessage = ERROR_MESSAGE;
 
-
 	private final Set<String> exemptedPaths = new HashSet<>();
-	private final List<ResourceIsolationPolicy> resourceIsolationPolicies = new ArrayList<>();
+	
+	private final List<IResourceIsolationPolicy> resourceIsolationPolicies = new ArrayList<>();
 
 	/**
-	 * Create a new FetchMetadataRequestCycleListener with the given policies. If no policies are
-	 * given, {@link DefaultResourceIsolationPolicy} and {@link OriginBasedResourceIsolationPolicy}
-	 * will be used. The policies are checked in order. The first outcome that's not
+	 * Create a new listener with the given policies. If no policies are given,
+	 * {@link FetchMetadataResourceIsolationPolicy} and {@link OriginResourceIsolationPolicy} will
+	 * be used. The policies are checked in order. The first outcome that's not
 	 * {@link ResourceIsolationOutcome#UNKNOWN} will be used.
 	 * 
 	 * @param policies
 	 *            the policies to check requests against.
 	 */
-	public FetchMetadataRequestCycleListener(ResourceIsolationPolicy... policies)
+	public ResourceIsolationRequestCycleListener(IResourceIsolationPolicy... policies)
 	{
 		this.resourceIsolationPolicies.addAll(asList(policies));
 		if (policies.length == 0)
 		{
-			this.resourceIsolationPolicies.addAll(asList(new DefaultResourceIsolationPolicy(),
-				new OriginBasedResourceIsolationPolicy()));
+			this.resourceIsolationPolicies.addAll(asList(new FetchMetadataResourceIsolationPolicy(),
+				new OriginResourceIsolationPolicy()));
 		}
 	}
 
@@ -161,7 +182,7 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 	 *
 	 * @return this (for chaining)
 	 */
-	public FetchMetadataRequestCycleListener setUnknownOutcomeAction(CsrfAction action)
+	public ResourceIsolationRequestCycleListener setUnknownOutcomeAction(CsrfAction action)
 	{
 		this.unknownOutcomeAction = action;
 		return this;
@@ -176,7 +197,7 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 	 *
 	 * @return this
 	 */
-	public FetchMetadataRequestCycleListener setDisallowedOutcomeAction(CsrfAction action)
+	public ResourceIsolationRequestCycleListener setDisallowedOutcomeAction(CsrfAction action)
 	{
 		this.disallowedOutcomeAction = action;
 		return this;
@@ -190,7 +211,7 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 	 *
 	 * @return this
 	 */
-	public FetchMetadataRequestCycleListener setErrorCode(int errorCode)
+	public ResourceIsolationRequestCycleListener setErrorCode(int errorCode)
 	{
 		this.errorCode = errorCode;
 		return this;
@@ -204,7 +225,7 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 	 *
 	 * @return this
 	 */
-	public FetchMetadataRequestCycleListener setErrorMessage(String errorMessage)
+	public ResourceIsolationRequestCycleListener setErrorMessage(String errorMessage)
 	{
 		this.errorMessage = errorMessage;
 		return this;
@@ -251,11 +272,11 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 
 	/**
 	 * Override to change the request handler types that are checked. Currently only action handlers
-	 * (form submits, link clicks, AJAX events) are checked for a matching Origin HTTP header.
+	 * (form submits, link clicks, AJAX events) are checked.
 	 *
 	 * @param handler
 	 *            the handler that is currently processing
-	 * @return true when the Origin HTTP header should be checked for this {@code handler}
+	 * @return true when resource isolation should be checked for this {@code handler}
 	 */
 	protected boolean isChecked(IRequestHandler handler)
 	{
@@ -284,7 +305,7 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 			{
 				if (log.isDebugEnabled())
 				{
-					log.debug("Targeted page {} was opted out of the CSRF origin checks, allowed",
+					log.debug("Targeted page {} was opted out of resource isolation, allowed",
 						targetedPage.getClass().getName());
 				}
 				return;
@@ -301,22 +322,23 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 				return;
 			}
 
-			for (ResourceIsolationPolicy resourceIsolationPolicy : resourceIsolationPolicies)
+			for (IResourceIsolationPolicy policy : resourceIsolationPolicies)
 			{
-				ResourceIsolationOutcome outcome = resourceIsolationPolicy
+				ResourceIsolationOutcome outcome = policy
 					.isRequestAllowed(containerRequest, targetedPage);
 				if (ResourceIsolationOutcome.DISALLOWED.equals(outcome))
 				{
 					log.debug("Isolation policy {} has rejected a request to {}",
-						Classes.simpleName(resourceIsolationPolicy.getClass()), pathInfo);
-					triggerAction(disallowedOutcomeAction, containerRequest, targetedPage);
+						Classes.simpleName(policy.getClass()), pathInfo);
+					disallowedOutcomeAction.apply(this, containerRequest, targetedPage);
+					return;
 				}
 				else if (ResourceIsolationOutcome.ALLOWED.equals(outcome))
 				{
 					return;
 				}
 			}
-			triggerAction(unknownOutcomeAction, containerRequest, targetedPage);
+			unknownOutcomeAction.apply(this, containerRequest, targetedPage);
 		}
 		else
 		{
@@ -326,42 +348,31 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 		}
 	}
 
-	private void triggerAction(CsrfAction action, HttpServletRequest request, IRequestablePage page)
-	{
-		switch (action)
-		{
-			case ALLOW :
-				allowHandler(request, page);
-				break;
-			case SUPPRESS :
-				suppressHandler(request, page);
-				break;
-			case ABORT :
-				abortHandler(request, page);
-				break;
-		}
-	}
-
+	/**
+	 * Allow isolation policy to add headers.
+	 * 
+	 * @see IResourceIsolationPolicy#setHeaders(HttpServletResponse)
+	 */
 	@Override
 	public void onEndRequest(RequestCycle cycle)
 	{
-		// set vary headers to avoid caching responses processed by Fetch Metadata
-		// caching these responses may return 403 responses to legitimate requests
-		// or defeat the protection
 		if (cycle.getResponse() instanceof WebResponse)
 		{
 			WebResponse webResponse = (WebResponse)cycle.getResponse();
 			if (webResponse.isHeaderSupported())
 			{
-				webResponse.addHeader(VARY_HEADER, VARY_HEADER_VALUE);
+				for (IResourceIsolationPolicy resourceIsolationPolicy : resourceIsolationPolicies)
+				{
+					resourceIsolationPolicy
+						.setHeaders((HttpServletResponse)webResponse.getContainerResponse());
+				}
 			}
 		}
 	}
 
 	/**
-	 * Handles the case where the resource isolation policies resulted in
-	 * {@link ResourceIsolationOutcome#UNKNOWN} or {@link ResourceIsolationOutcome#DISALLOWED} and
-	 * the action was set to {#link {@link CsrfAction#ALLOW}.
+	 * Allow the execution of the listener in the request because the outcome results in
+	 * {@link CsrfAction#ALLOW}.
 	 *
 	 * @param request
 	 *            the request
@@ -374,7 +385,7 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 	}
 
 	/**
-	 * Supresses the execution of the listener in the request because the outcome results in
+	 * Suppress the execution of the listener in the request because the outcome results in
 	 * {@link CsrfAction#SUPPRESS}.
 	 *
 	 * @param request
@@ -390,7 +401,7 @@ public class FetchMetadataRequestCycleListener implements IRequestCycleListener
 	}
 
 	/**
-	 * Aborts the request because the outcome results in {@link CsrfAction#ABORT}.
+	 * Abort the request because the outcome results in {@link CsrfAction#ABORT}.
 	 *
 	 * @param request
 	 *            the request

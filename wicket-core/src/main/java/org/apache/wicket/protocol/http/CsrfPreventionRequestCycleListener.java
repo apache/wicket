@@ -104,11 +104,10 @@ import org.slf4j.LoggerFactory;
  * conflict and the request should be suppressed</li>
  * </ul>
  *
- * @see FetchMetadataRequestCycleListener
- * @deprecated
+ * @deprecated Use {@link FetchMetadataResourceIsolationPolicy} instead
  */
 @Deprecated(since = "9.1.0")
-public class CsrfPreventionRequestCycleListener extends OriginBasedResourceIsolationPolicy implements IRequestCycleListener
+public class CsrfPreventionRequestCycleListener extends OriginResourceIsolationPolicy implements IRequestCycleListener
 {
 	private static final Logger log = LoggerFactory
 			.getLogger(CsrfPreventionRequestCycleListener.class);
