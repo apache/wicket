@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Sets <a href="https://github.com/whatwg/html/pull/5334/files">Cross-Origin Opener Policy</a>
- * headers on the responses based on the policy specified by {@link CoopConfiguration}. The header
+ * headers on the responses based on the policy specified by {@link CrossOriginOpenerPolicyConfiguration}. The header
  * is not set for the paths that are exempted from COOP.
  *
  * COOP is a mitigation against cross-origin information leaks and is used to make websites
@@ -40,36 +40,25 @@ import javax.servlet.http.HttpServletRequest;
  * Read more about cross-origin isolation on
  * <a href="https://web.dev/why-coop-coep/">https://web.dev/why-coop-coep/</a>
  *
- * You can enable COOP headers by adding it to the request cycle listeners in your
- * {@link org.apache.wicket.protocol.http.WebApplication#init() application's init method}:
- *
- * <pre>
- * &#064;Override
- * protected void init()
- * {
- * 	// ...
- * 	enableCoop(new CoopConfiguration.Builder().withMode(CoopMode.SAME_ORIGIN)
- * 		.withExemptions("EXEMPTED PATHS").build());
- * 	// ...
- * }
- * </pre>
  *
  * @author Santiago Diaz - saldiaz@google.com
  * @author Ecenaz Jen Ozmen - ecenazo@google.com
  *
- * @see CoopConfiguration
+ * @see CrossOriginOpenerPolicyConfiguration
+ * @see org.apache.wicket.settings.SecuritySettings
  */
 public class CoopRequestCycleListener implements IRequestCycleListener
 {
 	private static final Logger log = LoggerFactory.getLogger(CoopRequestCycleListener.class);
 
-	private final CoopConfiguration coopConfig;
+	static final String COOP_HEADER = "Cross-Origin-Opener-Policy";
 
-	public CoopRequestCycleListener(CoopConfiguration cooopConfig)
+	private CrossOriginOpenerPolicyConfiguration coopConfig;
+
+	public CoopRequestCycleListener(CrossOriginOpenerPolicyConfiguration cooopConfig)
 	{
 		this.coopConfig = cooopConfig;
 	}
-
 
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
@@ -77,7 +66,7 @@ public class CoopRequestCycleListener implements IRequestCycleListener
 		HttpServletRequest request = (HttpServletRequest)cycle.getRequest().getContainerRequest();
 		String path = request.getContextPath();
 
-		if (coopConfig.isExempted(path))
+		if (coopConfig.getExemptions().contains(path))
 		{
 			log.debug("Request path {} is exempted from COOP, no COOP header added", path);
 			return;
@@ -88,7 +77,7 @@ public class CoopRequestCycleListener implements IRequestCycleListener
 			WebResponse webResponse = (WebResponse)cycle.getResponse();
 			if (webResponse.isHeaderSupported())
 			{
-				coopConfig.addCoopHeader(webResponse);
+				webResponse.setHeader(COOP_HEADER, coopConfig.getHeaderValue());
 			}
 		}
 	}

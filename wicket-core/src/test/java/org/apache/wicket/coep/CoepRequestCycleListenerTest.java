@@ -16,41 +16,59 @@
  */
 package org.apache.wicket.coep;
 
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
-import org.apache.wicket.coep.CoepConfiguration.CoepMode;
+import org.apache.wicket.coep.CrossOriginEmbedderPolicyConfiguration.CoepMode;
 
-import static org.apache.wicket.coep.CoepConfiguration.REQUIRE_CORP;
+import static org.apache.wicket.coep.CoepRequestCycleListener.REQUIRE_CORP;
 
 public class CoepRequestCycleListenerTest extends WicketTestCase
 {
+	private CoepMode mode;
+	private String exemptions;
+
 	@Test
 	public void testEnforcingCoepHeadersSetCorrectly()
 	{
-		tester.getApplication().enableCoep(new CoepConfiguration.Builder()
-			.withMode(CoepConfiguration.CoepMode.ENFORCING).withExemptions("exempt").build());
-		checkHeaders(CoepConfiguration.CoepMode.ENFORCING);
+		mode = CoepMode.ENFORCING;
+		buildApp();
+		checkHeaders(CoepMode.ENFORCING);
 	}
 
 	@Test
 	public void testReportingCoepHeadersSetCorrectly()
 	{
-		tester.getApplication().enableCoep(new CoepConfiguration.Builder()
-			.withMode(CoepConfiguration.CoepMode.REPORTING).withExemptions("exempt").build());
-		checkHeaders(CoepConfiguration.CoepMode.REPORTING);
+		mode = CoepMode.REPORTING;
+		buildApp();
+		checkHeaders(CoepMode.REPORTING);
+	}
+
+	@Test
+	public void testCoepDisabled()
+	{
+		mode = CoepMode.DISABLED;
+		buildApp();
+		tester.executeUrl("exempt");
+		String coepHeaderValue = tester.getLastResponse().getHeader(CoepMode.REPORTING.header);
+		if (coepHeaderValue != null)
+		{
+			throw new AssertionError("COOP header should be null on DISABLED");
+		}
 	}
 
 	@Test
 	public void testCoepHeadersNotSetExemptedPath()
 	{
-		tester.getApplication().enableCoep(new CoepConfiguration.Builder()
-			.withMode(CoepConfiguration.CoepMode.ENFORCING).withExemptions("exempt").build());
+		exemptions = "exempt";
+		buildApp();
 		tester.executeUrl("exempt");
-		String coopHeaderValue = tester.getLastResponse()
-			.getHeader(CoepConfiguration.CoepMode.ENFORCING.header);
+		String coepHeaderValue = tester.getLastResponse().getHeader(CoepMode.REPORTING.header);
 
-		if (coopHeaderValue != null)
+		if (coepHeaderValue != null)
 		{
 			throw new AssertionError("COOP header should be null on exempted path");
 		}
@@ -63,12 +81,41 @@ public class CoepRequestCycleListenerTest extends WicketTestCase
 
 		if (coepHeaderValue == null)
 		{
-			throw new AssertionError("COEP" + mode + "header should not be null");
+			throw new AssertionError("COEP " + mode + " header should not be null");
 		}
 
 		if (!REQUIRE_CORP.equals(coepHeaderValue))
 		{
 			throw new AssertionError("Unexpected COEP header: " + coepHeaderValue);
 		}
+	}
+
+	@Override
+	protected WebApplication newApplication()
+	{
+		return new MockApplication()
+		{
+			@Override
+			protected void init()
+			{
+				super.init();
+				getSecuritySettings().setCrossOriginEmbedderPolicyConfiguration(mode, exemptions);
+			}
+		};
+	}
+
+	// overriding the commonBefore because we want to modify init behavior
+	// contents of commonBefore moved to buildApp, called after the coepMode / exemption set in every test
+	@Override
+	public void commonBefore()
+	{
+	}
+
+	private void buildApp()
+	{
+		ThreadContext.detach();
+
+		WebApplication application = newApplication();
+		tester = newWicketTester(application);
 	}
 }

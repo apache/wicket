@@ -16,44 +16,64 @@
  */
 package org.apache.wicket.coop;
 
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.coop.CoopConfiguration.CoopMode;
+import org.apache.wicket.coop.CrossOriginOpenerPolicyConfiguration.CoopMode;
 import org.junit.jupiter.api.Test;
 
-import static org.apache.wicket.coop.CoopConfiguration.COOP_HEADER;
+
+import static org.apache.wicket.coop.CoopRequestCycleListener.COOP_HEADER;
 
 public class CoopRequestCycleListenerTest extends WicketTestCase
 {
+	private CoopMode mode;
+	private String exemptions;
 
 	@Test
 	public void testCoopHeaderSameOrigin()
 	{
-		tester.getApplication().enableCoop(new CoopConfiguration.Builder()
-			.withMode(CoopMode.SAME_ORIGIN).withExemptions("exempt").build());
+		mode = CoopMode.SAME_ORIGIN;
+		buildApp();
 		checkHeaders(CoopMode.SAME_ORIGIN);
 	}
 
 	@Test
 	public void testCoopHeaderSameOriginAllowPopups()
 	{
-		tester.getApplication().enableCoop(new CoopConfiguration.Builder()
-				.withMode(CoopMode.SAME_ORIGIN_ALLOW_POPUPS).withExemptions("exempt").build());
+		mode = CoopMode.SAME_ORIGIN_ALLOW_POPUPS;
+		buildApp();
 		checkHeaders(CoopMode.SAME_ORIGIN_ALLOW_POPUPS);
 	}
 
 	@Test
 	public void testCoopHeaderUnsafeNone()
 	{
-		tester.getApplication().enableCoop(new CoopConfiguration.Builder()
-				.withMode(CoopMode.UNSAFE_NONE).withExemptions("exempt").build());
+		mode = CoopMode.UNSAFE_NONE;
+		buildApp();
 		checkHeaders(CoopMode.UNSAFE_NONE);
+	}
+
+	@Test
+	public void testCoopDisabled()
+	{
+		mode = CoopMode.DISABLED;
+		buildApp();
+		tester.executeUrl("/");
+		String coopHeaderValue = tester.getLastResponse().getHeader(COOP_HEADER);
+
+		if (coopHeaderValue != null)
+		{
+			throw new AssertionError("COOP header should be null on DISABLED");
+		}
 	}
 
 	@Test
 	public void testCoopHeadersNotSetExemptedPath()
 	{
-		tester.getApplication().enableCoop(new CoopConfiguration.Builder()
-			.withMode(CoopMode.SAME_ORIGIN).withExemptions("exempt").build());
+		exemptions = "exempt";
+		buildApp();
 		tester.executeUrl("exempt");
 		String coopHeaderValue = tester.getLastResponse().getHeader(COOP_HEADER);
 
@@ -63,7 +83,7 @@ public class CoopRequestCycleListenerTest extends WicketTestCase
 		}
 	}
 
-	private void checkHeaders( CoopMode mode)
+	private void checkHeaders(CoopMode mode)
 	{
 		tester.executeUrl("/");
 		String coopHeaderValue = tester.getLastResponse().getHeader(COOP_HEADER);
@@ -77,5 +97,34 @@ public class CoopRequestCycleListenerTest extends WicketTestCase
 		{
 			throw new AssertionError("Unexpected COOP header: " + coopHeaderValue);
 		}
+	}
+  
+	@Override
+	protected WebApplication newApplication()
+	{
+		return new MockApplication()
+		{
+			@Override
+			protected void init()
+			{
+				super.init();
+				getSecuritySettings().setCrossOriginOpenerPolicyConfiguration(mode, exemptions);
+			}
+		};
+	}
+
+	// overriding the commonBefore because we want to modify init behavior
+	// contents of commonBefore moved to buildApp, called after the coopMode/exemption set in every test
+	@Override
+	public void commonBefore()
+	{
+	}
+
+	private void buildApp()
+	{
+		ThreadContext.detach();
+
+		WebApplication application = newApplication();
+		tester = newWicketTester(application);
 	}
 }
