@@ -82,7 +82,7 @@ public class WicketEndpoint extends Endpoint
 		LOG.debug("Web Socket connection with id '{}' has been closed with code '{}' and reason: {}",
 				session.getId(), closeCode, reasonPhrase);
 
-		if (isApplicationAlive())
+		if (isApplicationAlive() && javaxWebSocketProcessor != null)
 		{
 			javaxWebSocketProcessor.onClose(closeCode, reasonPhrase);
 		}
@@ -102,7 +102,7 @@ public class WicketEndpoint extends Endpoint
 
 		super.onError(session, t);
 
-		if (isApplicationAlive())
+		if (isApplicationAlive() && javaxWebSocketProcessor != null)
 		{
 			javaxWebSocketProcessor.onError(t);
 		}
