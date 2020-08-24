@@ -14,91 +14,82 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.coop;
+package org.apache.wicket.coep;
 
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.coop.CrossOriginOpenerPolicyConfiguration.CoopMode;
 import org.junit.jupiter.api.Test;
 
+import org.apache.wicket.coep.CrossOriginEmbedderPolicyConfiguration.CoepMode;
 
-import static org.apache.wicket.coop.CoopRequestCycleListener.COOP_HEADER;
+import static org.apache.wicket.coep.CrossOriginEmbedderPolicyRequestCycleListener.REQUIRE_CORP;
 
-public class CoopRequestCycleListenerTest extends WicketTestCase
+public class CrossOriginEmbedderPolicyRequestCycleListenerTest extends WicketTestCase
 {
-	private CoopMode mode;
+	private CoepMode mode;
 	private String exemptions;
 
 	@Test
-	public void testCoopHeaderSameOrigin()
+	public void testEnforcingCoepHeadersSetCorrectly()
 	{
-		mode = CoopMode.SAME_ORIGIN;
+		mode = CoepMode.ENFORCING;
 		buildApp();
-		checkHeaders(CoopMode.SAME_ORIGIN);
+		checkHeaders(CoepMode.ENFORCING);
 	}
 
 	@Test
-	public void testCoopHeaderSameOriginAllowPopups()
+	public void testReportingCoepHeadersSetCorrectly()
 	{
-		mode = CoopMode.SAME_ORIGIN_ALLOW_POPUPS;
+		mode = CoepMode.REPORTING;
 		buildApp();
-		checkHeaders(CoopMode.SAME_ORIGIN_ALLOW_POPUPS);
+		checkHeaders(CoepMode.REPORTING);
 	}
 
 	@Test
-	public void testCoopHeaderUnsafeNone()
+	public void testCoepDisabled()
 	{
-		mode = CoopMode.UNSAFE_NONE;
+		mode = CoepMode.DISABLED;
 		buildApp();
-		checkHeaders(CoopMode.UNSAFE_NONE);
-	}
-
-	@Test
-	public void testCoopDisabled()
-	{
-		mode = CoopMode.DISABLED;
-		buildApp();
-		tester.executeUrl("/");
-		String coopHeaderValue = tester.getLastResponse().getHeader(COOP_HEADER);
-
-		if (coopHeaderValue != null)
+		tester.executeUrl("exempt");
+		String coepHeaderValue = tester.getLastResponse().getHeader(CoepMode.REPORTING.header);
+		if (coepHeaderValue != null)
 		{
 			throw new AssertionError("COOP header should be null on DISABLED");
 		}
 	}
 
 	@Test
-	public void testCoopHeadersNotSetExemptedPath()
+	public void testCoepHeadersNotSetExemptedPath()
 	{
 		exemptions = "exempt";
 		buildApp();
 		tester.executeUrl("exempt");
-		String coopHeaderValue = tester.getLastResponse().getHeader(COOP_HEADER);
+		String coepHeaderValue = tester.getLastResponse().getHeader(CoepMode.REPORTING.header);
 
-		if (coopHeaderValue != null)
+		if (coepHeaderValue != null)
 		{
 			throw new AssertionError("COOP header should be null on exempted path");
 		}
 	}
 
-	private void checkHeaders(CoopMode mode)
+	private void checkHeaders(CoepMode mode)
 	{
 		tester.executeUrl("/");
-		String coopHeaderValue = tester.getLastResponse().getHeader(COOP_HEADER);
+		String coepHeaderValue = tester.getLastResponse().getHeader(mode.header);
 
-		if (coopHeaderValue == null)
+		if (coepHeaderValue == null)
 		{
-			throw new AssertionError("COOP header should not be null");
+			throw new AssertionError("COEP " + mode + " header should not be null");
 		}
 
-		if (!mode.keyword.equals(coopHeaderValue))
+		if (!REQUIRE_CORP.equals(coepHeaderValue))
 		{
-			throw new AssertionError("Unexpected COOP header: " + coopHeaderValue);
+			throw new AssertionError("Unexpected COEP header: " + coepHeaderValue);
 		}
 	}
-  
+
 	@Override
 	protected WebApplication newApplication()
 	{
@@ -108,13 +99,13 @@ public class CoopRequestCycleListenerTest extends WicketTestCase
 			protected void init()
 			{
 				super.init();
-				getSecuritySettings().setCrossOriginOpenerPolicyConfiguration(mode, exemptions);
+				getSecuritySettings().setCrossOriginEmbedderPolicyConfiguration(mode, exemptions);
 			}
 		};
 	}
 
 	// overriding the commonBefore because we want to modify init behavior
-	// contents of commonBefore moved to buildApp, called after the coopMode/exemption set in every test
+	// contents of commonBefore moved to buildApp, called after the coepMode / exemption set in every test
 	@Override
 	public void commonBefore()
 	{

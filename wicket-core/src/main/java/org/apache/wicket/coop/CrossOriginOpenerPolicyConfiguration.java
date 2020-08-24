@@ -25,7 +25,7 @@ import java.util.Set;
 
 /**
  * Specifies the configuration for Cross-Origin Opener Policy to be used by
- * {@link CoopRequestCycleListener} when adding COOP headers. Users can specify the paths that
+ * {@link CrossOriginOpenerPolicyRequestCycleListener} when adding COOP headers. Users can specify the paths that
  * should be exempt from COOP and one of 4 modes
  * (<code>UNSAFE_NONE, SAME_ORIGIN, SAME_ORIGIN_ALLOW_POPUPS, DISABLED</code>) for the policy. The
  * config object lives in {@link org.apache.wicket.settings.SecuritySettings}, users can specify
@@ -49,7 +49,7 @@ import java.util.Set;
  * @author Santiago Diaz - saldiaz@google.com
  * @author Ecenaz Jen Ozmen - ecenazo@google.com
  *
- * @see CoopRequestCycleListener
+ * @see CrossOriginOpenerPolicyRequestCycleListener
  * @see org.apache.wicket.settings.SecuritySettings
  */
 public class CrossOriginOpenerPolicyConfiguration

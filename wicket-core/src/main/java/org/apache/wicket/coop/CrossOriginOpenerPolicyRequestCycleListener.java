@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.coop;
 
+import org.apache.wicket.coep.CrossOriginEmbedderPolicyRequestCycleListener;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -36,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
  * cannot directly interact with the top-level window. Using COEP and COOP together allows
  * developers to safely use * powerful features such as <code>SharedArrayBuffer</code>,
  * <code>performance.measureMemory()</code>, * and the JS Self-Profiling API.See
- * {@link org.apache.wicket.coep.CoepRequestCycleListener} for instructions * on how to enable COOP.
+ * {@link CrossOriginEmbedderPolicyRequestCycleListener} for instructions * on how to enable COOP.
  * Read more about cross-origin isolation on
  * <a href="https://web.dev/why-coop-coep/">https://web.dev/why-coop-coep/</a>
  *
@@ -47,15 +48,15 @@ import javax.servlet.http.HttpServletRequest;
  * @see CrossOriginOpenerPolicyConfiguration
  * @see org.apache.wicket.settings.SecuritySettings
  */
-public class CoopRequestCycleListener implements IRequestCycleListener
+public class CrossOriginOpenerPolicyRequestCycleListener implements IRequestCycleListener
 {
-	private static final Logger log = LoggerFactory.getLogger(CoopRequestCycleListener.class);
+	private static final Logger log = LoggerFactory.getLogger(CrossOriginOpenerPolicyRequestCycleListener.class);
 
 	static final String COOP_HEADER = "Cross-Origin-Opener-Policy";
 
 	private CrossOriginOpenerPolicyConfiguration coopConfig;
 
-	public CoopRequestCycleListener(CrossOriginOpenerPolicyConfiguration cooopConfig)
+	public CrossOriginOpenerPolicyRequestCycleListener(CrossOriginOpenerPolicyConfiguration cooopConfig)
 	{
 		this.coopConfig = cooopConfig;
 	}

@@ -33,9 +33,9 @@ import org.apache.wicket.application.HeaderContributorListenerCollection;
 import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.application.OnComponentTagListenerCollection;
-import org.apache.wicket.coep.CoepRequestCycleListener;
+import org.apache.wicket.coep.CrossOriginEmbedderPolicyRequestCycleListener;
 import org.apache.wicket.coep.CrossOriginEmbedderPolicyConfiguration;
-import org.apache.wicket.coop.CoopRequestCycleListener;
+import org.apache.wicket.coop.CrossOriginOpenerPolicyRequestCycleListener;
 import org.apache.wicket.coop.CrossOriginOpenerPolicyConfiguration;
 import org.apache.wicket.core.request.mapper.IMapperContext;
 import org.apache.wicket.core.util.lang.PropertyResolver;
@@ -804,14 +804,14 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 			.getCrossOriginOpenerPolicyConfiguration();
 		if (coopConfig.isEnabled())
 		{
-			getRequestCycleListeners().add(new CoopRequestCycleListener(coopConfig));
+			getRequestCycleListeners().add(new CrossOriginOpenerPolicyRequestCycleListener(coopConfig));
 		}
 
 		CrossOriginEmbedderPolicyConfiguration coepConfig = getSecuritySettings()
 			.getCrossOriginEmbedderPolicyConfiguration();
 		if (coepConfig.isEnabled())
 		{
-			getRequestCycleListeners().add(new CoepRequestCycleListener(coepConfig));
+			getRequestCycleListeners().add(new CrossOriginEmbedderPolicyRequestCycleListener(coepConfig));
 		}
 	}
 

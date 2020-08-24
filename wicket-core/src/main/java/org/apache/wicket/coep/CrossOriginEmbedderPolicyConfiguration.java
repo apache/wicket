@@ -18,7 +18,6 @@ package org.apache.wicket.coep;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.http.WebResponse;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,7 +25,7 @@ import java.util.Set;
 
 /**
  * Specifies the configuration for Cross-Origin Embedder Policy to be used for
- * {@link CoepRequestCycleListener}. Users can specify the paths that should be exempt from COEP and
+ * {@link CrossOriginEmbedderPolicyRequestCycleListener}. Users can specify the paths that should be exempt from COEP and
  * one of 3 modes (<code>REPORTING, ENFORCING, DISABLED</code>) for the policy. The config object
  * lives in {@link org.apache.wicket.settings.SecuritySettings}, users can specify their COOP
  * preferences with the following lines in their application's {@link WebApplication#init()} method:
@@ -48,7 +47,7 @@ import java.util.Set;
  * @author Santiago Diaz - saldiaz@google.com
  * @author Ecenaz Jen Ozmen - ecenazo@google.com
  *
- * @see CoepRequestCycleListener
+ * @see CrossOriginEmbedderPolicyRequestCycleListener
  * @see org.apache.wicket.settings.SecuritySettings
  */
 public class CrossOriginEmbedderPolicyConfiguration
