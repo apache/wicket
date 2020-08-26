@@ -767,7 +767,6 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 		applicationListeners.onAfterInitialized(this);
 
 		validateInit();
-		coopCoepInit();
 	}
 
 	/**
@@ -789,29 +788,6 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 		{
 			throw new IllegalStateException(
 				"An instance of IPageManagerProvider has not yet been set on this Application. @see Application#setPageManagerProvider");
-		}
-	}
-
-	/**
-	 * Adds the COOP and COEP listeners if configs ({@link CrossOriginOpenerPolicyConfiguration},
-	 * {@link CrossOriginEmbedderPolicyConfiguration}) in {@link SecuritySettings} indicate they are
-	 * enabled
-	 */
-	protected void coopCoepInit()
-	{
-		// enable coop and coep listeners if specified in security settings
-		CrossOriginOpenerPolicyConfiguration coopConfig = getSecuritySettings()
-			.getCrossOriginOpenerPolicyConfiguration();
-		if (coopConfig.isEnabled())
-		{
-			getRequestCycleListeners().add(new CrossOriginOpenerPolicyRequestCycleListener(coopConfig));
-		}
-
-		CrossOriginEmbedderPolicyConfiguration coepConfig = getSecuritySettings()
-			.getCrossOriginEmbedderPolicyConfiguration();
-		if (coepConfig.isEnabled())
-		{
-			getRequestCycleListeners().add(new CrossOriginEmbedderPolicyRequestCycleListener(coepConfig));
 		}
 	}
 
