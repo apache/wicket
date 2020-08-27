@@ -21,6 +21,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,29 +57,33 @@ public class CrossOriginOpenerPolicyRequestCycleListener implements IRequestCycl
 
 	private CrossOriginOpenerPolicyConfiguration coopConfig;
 
-	public CrossOriginOpenerPolicyRequestCycleListener(CrossOriginOpenerPolicyConfiguration cooopConfig)
+	public CrossOriginOpenerPolicyRequestCycleListener(CrossOriginOpenerPolicyConfiguration coopConfig)
 	{
-		this.coopConfig = cooopConfig;
+		this.coopConfig = Args.notNull(coopConfig, "coopConfig");
 	}
 
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
 	{
-		HttpServletRequest request = (HttpServletRequest)cycle.getRequest().getContainerRequest();
-		String path = request.getContextPath();
-
-		if (coopConfig.getExemptions().contains(path))
+		final Object containerRequest = cycle.getRequest().getContainerRequest();
+		if (containerRequest instanceof HttpServletRequest)
 		{
-			log.debug("Request path {} is exempted from COOP, no COOP header added", path);
-			return;
-		}
+			HttpServletRequest request = (HttpServletRequest) containerRequest;
+			String path = request.getContextPath();
 
-		if (cycle.getResponse() instanceof WebResponse)
-		{
-			WebResponse webResponse = (WebResponse)cycle.getResponse();
-			if (webResponse.isHeaderSupported())
+			if (coopConfig.getExemptions().contains(path))
 			{
-				webResponse.setHeader(COOP_HEADER, coopConfig.getHeaderValue());
+				log.debug("Request path {} is exempted from COOP, no {} header added", path, COOP_HEADER);
+				return;
+			}
+
+			if (cycle.getResponse() instanceof WebResponse)
+			{
+				WebResponse webResponse = (WebResponse) cycle.getResponse();
+				if (webResponse.isHeaderSupported())
+				{
+					webResponse.setHeader(COOP_HEADER, coopConfig.getHeaderValue());
+				}
 			}
 		}
 	}

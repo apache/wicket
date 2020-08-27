@@ -27,8 +27,6 @@ import java.util.function.Consumer;
 import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.coep.CrossOriginEmbedderPolicyConfiguration.CoepMode;
-import org.apache.wicket.coop.CrossOriginOpenerPolicyConfiguration.CoopMode;
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.request.IExceptionMapper;
@@ -64,19 +62,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 	@BeforeEach
 	void setUp()
 	{
-		DummyApplication application = new DummyApplication()
-		{
-			@Override
-			protected void init()
-			{
-				super.init();
-				// disabling COOP and COEP for these tests because MockWebRequest
-				// used in these tests can't be cast into HttpServletRequest by the
-				// COOP and COEP listeners, which get added in Application#initApplication()
-				getSecuritySettings().setCrossOriginOpenerPolicyConfiguration(CoopMode.DISABLED);
-				getSecuritySettings().setCrossOriginEmbedderPolicyConfiguration(CoepMode.DISABLED);
-			}
-		};
+		DummyApplication application = new DummyApplication();
 		application.setName("dummyTestApplication");
 		ThreadContext.setApplication(application);
 		application.setServletContext(new MockServletContext(application, "/"));

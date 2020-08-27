@@ -25,14 +25,17 @@ import org.junit.jupiter.api.Test;
 import org.apache.wicket.coep.CrossOriginEmbedderPolicyConfiguration.CoepMode;
 
 import static org.apache.wicket.coep.CrossOriginEmbedderPolicyRequestCycleListener.REQUIRE_CORP;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class CrossOriginEmbedderPolicyRequestCycleListenerTest extends WicketTestCase
+class CrossOriginEmbedderPolicyRequestCycleListenerTest extends WicketTestCase
 {
 	private CoepMode mode;
 	private String exemptions;
 
 	@Test
-	public void testEnforcingCoepHeadersSetCorrectly()
+	void testEnforcingCoepHeadersSetCorrectly()
 	{
 		mode = CoepMode.ENFORCING;
 		buildApp();
@@ -40,7 +43,7 @@ public class CrossOriginEmbedderPolicyRequestCycleListenerTest extends WicketTes
 	}
 
 	@Test
-	public void testReportingCoepHeadersSetCorrectly()
+	void testReportingCoepHeadersSetCorrectly()
 	{
 		mode = CoepMode.REPORTING;
 		buildApp();
@@ -48,30 +51,25 @@ public class CrossOriginEmbedderPolicyRequestCycleListenerTest extends WicketTes
 	}
 
 	@Test
-	public void testCoepDisabled()
+	void testCoepDisabled()
 	{
 		mode = CoepMode.DISABLED;
 		buildApp();
 		tester.executeUrl("exempt");
 		String coepHeaderValue = tester.getLastResponse().getHeader(CoepMode.REPORTING.header);
-		if (coepHeaderValue != null)
-		{
-			throw new AssertionError("COOP header should be null on DISABLED");
-		}
+		assertNull(coepHeaderValue, "COOP header should be null on DISABLED");
 	}
 
 	@Test
-	public void testCoepHeadersNotSetExemptedPath()
+	void testCoepHeadersNotSetExemptedPath()
 	{
+		mode = CoepMode.DISABLED;
 		exemptions = "exempt";
 		buildApp();
 		tester.executeUrl("exempt");
 		String coepHeaderValue = tester.getLastResponse().getHeader(CoepMode.REPORTING.header);
 
-		if (coepHeaderValue != null)
-		{
-			throw new AssertionError("COOP header should be null on exempted path");
-		}
+		assertNull(coepHeaderValue, "COOP header should be null on exempted path");
 	}
 
 	private void checkHeaders(CoepMode mode)
@@ -79,15 +77,9 @@ public class CrossOriginEmbedderPolicyRequestCycleListenerTest extends WicketTes
 		tester.executeUrl("/");
 		String coepHeaderValue = tester.getLastResponse().getHeader(mode.header);
 
-		if (coepHeaderValue == null)
-		{
-			throw new AssertionError("COEP " + mode + " header should not be null");
-		}
+		assertNotNull(coepHeaderValue, "COEP " + mode + " header should not be null");
 
-		if (!REQUIRE_CORP.equals(coepHeaderValue))
-		{
-			throw new AssertionError("Unexpected COEP header: " + coepHeaderValue);
-		}
+		assertEquals(REQUIRE_CORP, coepHeaderValue, "Unexpected COEP header: " + coepHeaderValue);
 	}
 
 	@Override

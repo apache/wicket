@@ -18,6 +18,7 @@ package org.apache.wicket.coop;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.lang.Args;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -43,7 +44,7 @@ import java.util.Set;
  * }
  * </pre>
  * 
- * The config value will be read once at stratup in {@link Application#initApplication()}, changing
+ * The config value will be read once at startup in {@link Application#initApplication()}, changing
  * the configuration at runtime will have no effect of the COOP headers set.
  *
  * @author Santiago Diaz - saldiaz@google.com
@@ -56,8 +57,10 @@ public class CrossOriginOpenerPolicyConfiguration
 {
 	public enum CoopMode
 	{
-		UNSAFE_NONE("unsafe-none"), SAME_ORIGIN("same-origin"), SAME_ORIGIN_ALLOW_POPUPS(
-			"same-origin-allow-popups"), DISABLED("");
+		UNSAFE_NONE("unsafe-none"),
+		SAME_ORIGIN("same-origin"),
+		SAME_ORIGIN_ALLOW_POPUPS("same-origin-allow-popups"),
+		DISABLED("");
 
 		final String keyword;
 
@@ -74,12 +77,12 @@ public class CrossOriginOpenerPolicyConfiguration
 	public CrossOriginOpenerPolicyConfiguration(CoopMode mode, String... exemptions)
 	{
 		this.exemptions.addAll(Arrays.asList(exemptions));
-		this.mode = mode;
+		this.mode = Args.notNull(mode, "mode");
 	}
 
 	public CrossOriginOpenerPolicyConfiguration(CoopMode mode)
 	{
-		this.mode = mode;
+		this.mode = Args.notNull(mode, "mode");
 	}
 
 	public CrossOriginOpenerPolicyConfiguration addExemptedPath(String path)

@@ -18,6 +18,7 @@ package org.apache.wicket.coep;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.lang.Args;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -41,7 +42,7 @@ import java.util.Set;
  * }
  * </pre>
  *
- * The config value will be read once at stratup in {@link Application#initApplication()}, changing
+ * The config value will be read once at startup in {@link Application#initApplication()}, changing
  * the configuration at runtime will have no effect of the COOP headers set.
  * 
  * @author Santiago Diaz - saldiaz@google.com
@@ -54,8 +55,9 @@ public class CrossOriginEmbedderPolicyConfiguration
 {
 	public enum CoepMode
 	{
-		ENFORCING("Cross-Origin-Embedder-Policy"), REPORTING(
-			"Cross-Origin-Embedder-Policy-Report-Only"), DISABLED("");
+		ENFORCING("Cross-Origin-Embedder-Policy"),
+		REPORTING("Cross-Origin-Embedder-Policy-Report-Only"),
+		DISABLED("");
 
 		final String header;
 
@@ -71,12 +73,12 @@ public class CrossOriginEmbedderPolicyConfiguration
 	public CrossOriginEmbedderPolicyConfiguration(CoepMode mode, String... exemptions)
 	{
 		this.exemptions.addAll(Arrays.asList(exemptions));
-		this.mode = mode;
+		this.mode = Args.notNull(mode, "mode");
 	}
 
 	public CrossOriginEmbedderPolicyConfiguration(CoepMode mode)
 	{
-		this.mode = mode;
+		this.mode = Args.notNull(mode, "mode");
 	}
 
 	public Set<String> getExemptions()

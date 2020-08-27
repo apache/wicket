@@ -21,6 +21,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Sets <a href="https://wicg.github.io/cross-origin-embedder-policy/">Cross-Origin Embedder
- * Policy</a> headers on the responses based on the mode specified by
+ * Policy</a> (COEP) headers on the responses based on the mode specified by
  * {@link CrossOriginEmbedderPolicyConfiguration}. COEP can be enabled in <code>REPORTING</code>
  * mode which will set the headers as <code>Cross-Origin-Embedder-Policy-Report-Only</code> or
  * <code>ENFORCING</code> mode which will set the header as
@@ -61,27 +62,32 @@ public class CrossOriginEmbedderPolicyRequestCycleListener implements IRequestCy
 
 	public CrossOriginEmbedderPolicyRequestCycleListener(CrossOriginEmbedderPolicyConfiguration coepConfig)
 	{
-		this.coepConfig = coepConfig;
+		this.coepConfig = Args.notNull(coepConfig, "coepConfig");
 	}
 
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
 	{
-		HttpServletRequest request = (HttpServletRequest)cycle.getRequest().getContainerRequest();
-		String path = request.getContextPath();
-
-		if (coepConfig.getExemptions().contains(path))
+		final Object containerRequest = cycle.getRequest().getContainerRequest();
+		if (containerRequest instanceof HttpServletRequest)
 		{
-			log.debug("Request path {} is exempted from COEP, no COEP header added", path);
-			return;
-		}
+			HttpServletRequest request = (HttpServletRequest) containerRequest;
+			String path = request.getContextPath();
+			final String coepHeaderName = coepConfig.getCoepHeader();
 
-		if (cycle.getResponse() instanceof WebResponse)
-		{
-			WebResponse webResponse = (WebResponse)cycle.getResponse();
-			if (webResponse.isHeaderSupported())
+			if (coepConfig.getExemptions().contains(path))
 			{
-				webResponse.setHeader(coepConfig.getCoepHeader(), REQUIRE_CORP);
+				log.debug("Request path {} is exempted from COEP, no '{}' header added", path, coepHeaderName);
+				return;
+			}
+
+			if (cycle.getResponse() instanceof WebResponse)
+			{
+				WebResponse webResponse = (WebResponse) cycle.getResponse();
+				if (webResponse.isHeaderSupported())
+				{
+					webResponse.setHeader(coepHeaderName, REQUIRE_CORP);
+				}
 			}
 		}
 	}

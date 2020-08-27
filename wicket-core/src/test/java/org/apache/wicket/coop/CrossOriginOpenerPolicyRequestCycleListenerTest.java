@@ -25,14 +25,17 @@ import org.junit.jupiter.api.Test;
 
 
 import static org.apache.wicket.coop.CrossOriginOpenerPolicyRequestCycleListener.COOP_HEADER;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class CrossOriginOpenerPolicyRequestCycleListenerTest extends WicketTestCase
+class CrossOriginOpenerPolicyRequestCycleListenerTest extends WicketTestCase
 {
 	private CoopMode mode;
 	private String exemptions;
 
 	@Test
-	public void testCoopHeaderSameOrigin()
+	void testCoopHeaderSameOrigin()
 	{
 		mode = CoopMode.SAME_ORIGIN;
 		buildApp();
@@ -40,7 +43,7 @@ public class CrossOriginOpenerPolicyRequestCycleListenerTest extends WicketTestC
 	}
 
 	@Test
-	public void testCoopHeaderSameOriginAllowPopups()
+	void testCoopHeaderSameOriginAllowPopups()
 	{
 		mode = CoopMode.SAME_ORIGIN_ALLOW_POPUPS;
 		buildApp();
@@ -48,7 +51,7 @@ public class CrossOriginOpenerPolicyRequestCycleListenerTest extends WicketTestC
 	}
 
 	@Test
-	public void testCoopHeaderUnsafeNone()
+	void testCoopHeaderUnsafeNone()
 	{
 		mode = CoopMode.UNSAFE_NONE;
 		buildApp();
@@ -56,31 +59,26 @@ public class CrossOriginOpenerPolicyRequestCycleListenerTest extends WicketTestC
 	}
 
 	@Test
-	public void testCoopDisabled()
+	void testCoopDisabled()
 	{
 		mode = CoopMode.DISABLED;
 		buildApp();
 		tester.executeUrl("/");
 		String coopHeaderValue = tester.getLastResponse().getHeader(COOP_HEADER);
 
-		if (coopHeaderValue != null)
-		{
-			throw new AssertionError("COOP header should be null on DISABLED");
-		}
+		assertNull(coopHeaderValue, "COOP header should be null on DISABLED");
 	}
 
 	@Test
-	public void testCoopHeadersNotSetExemptedPath()
+	void testCoopHeadersNotSetExemptedPath()
 	{
+		mode = CoopMode.DISABLED;
 		exemptions = "exempt";
 		buildApp();
 		tester.executeUrl("exempt");
 		String coopHeaderValue = tester.getLastResponse().getHeader(COOP_HEADER);
 
-		if (coopHeaderValue != null)
-		{
-			throw new AssertionError("COOP header should be null on exempted path");
-		}
+		assertNull(coopHeaderValue, "COOP header should be null on exempted path");
 	}
 
 	private void checkHeaders(CoopMode mode)
@@ -88,15 +86,9 @@ public class CrossOriginOpenerPolicyRequestCycleListenerTest extends WicketTestC
 		tester.executeUrl("/");
 		String coopHeaderValue = tester.getLastResponse().getHeader(COOP_HEADER);
 
-		if (coopHeaderValue == null)
-		{
-			throw new AssertionError("COOP header should not be null");
-		}
+		assertNotNull(coopHeaderValue, "COOP header should not be null");
 
-		if (!mode.keyword.equals(coopHeaderValue))
-		{
-			throw new AssertionError("Unexpected COOP header: " + coopHeaderValue);
-		}
+		assertEquals(mode.keyword, coopHeaderValue, "Unexpected COOP header: " + coopHeaderValue);
 	}
   
 	@Override
