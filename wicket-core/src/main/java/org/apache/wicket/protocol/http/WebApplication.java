@@ -37,6 +37,10 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxRequestTargetListenerCollection;
+import org.apache.wicket.coep.CrossOriginEmbedderPolicyConfiguration;
+import org.apache.wicket.coep.CrossOriginEmbedderPolicyRequestCycleListener;
+import org.apache.wicket.coop.CrossOriginOpenerPolicyConfiguration;
+import org.apache.wicket.coop.CrossOriginOpenerPolicyRequestCycleListener;
 import org.apache.wicket.core.request.mapper.IMapperContext;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.request.mapper.PackageMapper;
@@ -771,6 +775,29 @@ public abstract class WebApplication extends Application
 			getCspSettings().blocking().reportBack();
 		}
 		getCspSettings().blocking().strict();
+	}
+
+	@Override
+	protected void validateInit()
+	{
+		super.validateInit();
+
+		// enable coop and coep listeners if specified in security settings
+		CrossOriginOpenerPolicyConfiguration coopConfig = getSecuritySettings()
+			.getCrossOriginOpenerPolicyConfiguration();
+		if (coopConfig.isEnabled())
+		{
+			getRequestCycleListeners()
+				.add(new CrossOriginOpenerPolicyRequestCycleListener(coopConfig));
+		}
+
+		CrossOriginEmbedderPolicyConfiguration coepConfig = getSecuritySettings()
+			.getCrossOriginEmbedderPolicyConfiguration();
+		if (coepConfig.isEnabled())
+		{
+			getRequestCycleListeners()
+				.add(new CrossOriginEmbedderPolicyRequestCycleListener(coepConfig));
+		}
 	}
 
 	/**
