@@ -100,7 +100,7 @@ public class ModalDialog extends Panel
 	/**
 	 * Factory method for the dialog markup around the content.
 	 * 
-	 * @param overlayId
+	 * @param dialogId
 	 *            id
 	 * @return overlay
 	 */
@@ -118,7 +118,7 @@ public class ModalDialog extends Panel
 	 */
 	public void setContent(Component content)
 	{
-		if (!content.getId().equals(CONTENT_ID))
+		if (!CONTENT_ID.equals(content.getId()))
 		{
 			throw new IllegalArgumentException(
 				"Content must have wicket id set to ModalDialog.CONTENT_ID");
@@ -171,7 +171,7 @@ public class ModalDialog extends Panel
 	{
 		if (overlay.size() == 0)
 		{
-			throw new WicketRuntimeException("no content set");
+			throw new WicketRuntimeException(String.format("ModalDialog with id '%s' has no content set!", getId()));
 		}
 
 		overlay.setVisible(true);
@@ -250,8 +250,7 @@ public class ModalDialog extends Panel
 		{
 			protected CharSequence getPrecondition()
 			{
-				return String.format("return attrs.event.target.id == '%s';",
-					overlay.getMarkupId());
+				return String.format("return attrs.event.target.id === '%s';", overlay.getMarkupId());
 			}
 		});
 		return this;

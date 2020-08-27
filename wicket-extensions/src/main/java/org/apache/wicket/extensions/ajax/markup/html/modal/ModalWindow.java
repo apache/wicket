@@ -49,7 +49,8 @@ import com.github.openjson.JSONObject;
 /**
  * Modal window component.
  * <p>
- * Modal window is a draggable window (with either div or iframe content) that prevent user from
+ * Modal window is a draggable window (with either &lt;div&gt; when used with a Panel or &lt;iframe&gt;
+ * when used with a Page content) that prevent user from
  * interacting the rest of page (using a mask) until the window is closed.
  * <p>
  * If you want this to work under IE, don't attach this component to a &lt;span&gt; tag, make sure
