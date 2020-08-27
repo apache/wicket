@@ -53,6 +53,12 @@ class FilteringHeaderResponseTest extends WicketTestCase
 					{
 						return "NONCE";
 					}
+					
+					@Override
+					public boolean isEnabled()
+					{
+						return true;
+					}
 				};
 			}
 		};

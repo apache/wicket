@@ -183,4 +183,12 @@ public class ContentSecurityPolicySettings
 			.add(response -> new CSPNonceHeaderResponseDecorator(response, this));
 		application.mount(new ReportCSPViolationMapper(this));
 	}
+
+	/**
+	 * Is CSP enabled.
+	 */
+	public boolean isEnabled()
+	{
+		return configs.values().stream().anyMatch(CSPHeaderConfiguration::isSet);
+	}
 }

@@ -760,8 +760,6 @@ public abstract class WebApplication extends Application
 
 		getAjaxRequestTargetListeners().add(new AjaxEnclosureListener());
 		
-		getCspSettings().enforce(this);
-		
 		// Configure the app.
 		configure();
 		if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
@@ -781,6 +779,10 @@ public abstract class WebApplication extends Application
 	protected void validateInit()
 	{
 		super.validateInit();
+
+		if (getCspSettings().isEnabled()) {
+			getCspSettings().enforce(this);
+		}
 
 		// enable coop and coep listeners if specified in security settings
 		CrossOriginOpenerPolicyConfiguration coopConfig = getSecuritySettings()
