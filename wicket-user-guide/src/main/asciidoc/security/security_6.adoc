@@ -33,7 +33,7 @@ As mentioned before, Wicket uses a very strict CSP by default. This preset can b
   getCspSettings().blocking().strict();
 ----
 
-A thrid preset is available that allows unsafe inline Javascript and styling and the use of unsafe _eval_. As can be inferred from the names, use of _unsafe_ is not recommended. It removes the most important protection offered by CSP. However, older applications may not be ready to apply a strict CSP. For those applications, _CSPHeaderConfiguration.unsafeInline()_ can be a starting point for the path to a strict CSP.
+A third preset is available that allows unsafe inline Javascript and styling and the use of unsafe _eval_. As can be inferred from the names, use of _unsafe_ is not recommended. It removes the most important protection offered by CSP. However, older applications may not be ready to apply a strict CSP. For those applications, _CSPHeaderConfiguration.unsafeInline()_ can be a starting point for the path to a strict CSP.
 
 _CSPHeaderConfiguration_ defines several methods to tune the Content Security Policy for your application. Additional sources can be whitelisted for certain via the _add(CSPDirective, ...)_ methods. For example, the code below whitelists images rendered via a _data:_ url, fonts loaded from _https://maxcdn.bootstrapcdn.com_ and a single CSS file.
 
