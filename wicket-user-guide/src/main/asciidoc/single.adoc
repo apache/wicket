@@ -663,6 +663,10 @@ include::security/security_5.adoc[leveloffset=+1]
 
 include::security/security_6.adoc[leveloffset=+1]
 
+=== Cross Origin Isolation with COOP and COEP
+
+include::security/security_10.adoc[leveloffset=+1]
+
 === Package Resource Guard
 
 include::security/security_7.adoc[leveloffset=+1]
