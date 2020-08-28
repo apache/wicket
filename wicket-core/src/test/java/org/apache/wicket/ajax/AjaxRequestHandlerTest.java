@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.MockPageWithLinkAndComponent;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
@@ -284,6 +285,32 @@ public class AjaxRequestHandlerTest extends WicketTestCase
 			.getHeader("Expires"));
 		assertEquals("no-cache", tester.getLastResponse().getHeader("Pragma"));
 		assertEquals("no-cache, no-store", tester.getLastResponse().getHeader("Cache-Control"));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6808
+	 */
+	@Test
+	public void addPage()
+	{
+		final MockPageWithLink page1 = new MockPageWithLink();
+		page1.add(new AjaxLink<Void>(MockPageWithLink.LINK_ID) {
+
+			@Override
+			public void onClick(final AjaxRequestTarget target) {
+				target.add(page1);
+			}
+		});
+
+		assertEquals(0, page1.getRenderCount());
+
+		tester.startPage(page1);
+
+		assertEquals(1, page1.getRenderCount());
+
+		tester.clickLink(MockPageWithLink.LINK_ID);
+
+		assertEquals(2, page1.getRenderCount());
 	}
 
 	/**

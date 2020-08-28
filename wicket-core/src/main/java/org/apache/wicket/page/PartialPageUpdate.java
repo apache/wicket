@@ -47,6 +47,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.time.Time;
@@ -454,10 +455,9 @@ public abstract class PartialPageUpdate
 			if (component instanceof AbstractRepeater)
 			{
 				throw new IllegalArgumentException(
-						"Component " +
-								component.getClass().getName() +
-								" is a repeater and cannot be added to a partial page update directly. " +
-								"Instead add its parent or another markup container higher in the hierarchy.");
+					"Component " + Classes.name(component.getClass()) +
+					" is a repeater and cannot be added to a partial page update directly. " +
+					"Instead add its parent or another markup container higher in the hierarchy.");
 			}
 		}
 
