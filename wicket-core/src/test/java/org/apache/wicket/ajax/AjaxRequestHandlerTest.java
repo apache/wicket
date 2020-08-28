@@ -302,7 +302,7 @@ class AjaxRequestHandlerTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6808
 	 */
 	@Test
-	void addPage()
+	void addCurrentPage()
 	{
 		final MockPageWithLink page1 = new MockPageWithLink();
 		page1.add(new AjaxLink<Void>(MockPageWithLink.LINK_ID) {
@@ -322,6 +322,28 @@ class AjaxRequestHandlerTest extends WicketTestCase
 		tester.clickLink(MockPageWithLink.LINK_ID);
 
 		assertEquals(2, page1.getRenderCount());
+	}
+
+	@Test
+	void addAnotherPage()
+	{
+		final MockPageWithLink currentPage = new MockPageWithLink();
+		final MockPageWithLink anotherPage = new MockPageWithLink();
+		currentPage.add(new AjaxLink<Void>(MockPageWithLink.LINK_ID) {
+
+			@Override
+			public void onClick(final AjaxRequestTarget target) {
+				target.add(anotherPage);
+			}
+		});
+
+		tester.startPage(currentPage);
+
+		final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+			tester.clickLink(MockPageWithLink.LINK_ID);
+		});
+
+		assertEquals(exception.getMessage(), "Cannot add another page");
 	}
 
 	/**
