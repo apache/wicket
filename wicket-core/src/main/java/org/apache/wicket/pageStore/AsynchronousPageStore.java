@@ -30,6 +30,7 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -160,7 +161,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		@Override
 		public String toString()
 		{
-			return "PendingAdd [sessionId=" + sessionId + ", pageId=" + page.getPageId() + "]";
+			return "PendingAdd [sessionId=" + sessionId + ", pageId=" + page.getPageId() + ", pageClass=" + Classes.name(page.getClass()) + "]";
 		}
 
 		/**
@@ -278,15 +279,26 @@ public class AsynchronousPageStore extends DelegatingPageStore
 				}
 				catch (InterruptedException e)
 				{
+					log.debug("PageAddingRunnable:: Interrupted...");
 					Thread.currentThread().interrupt();
 				}
 
 				if (add != null)
 				{
-					log.debug("Saving asynchronously: {}...", add);
-					add.asynchronous = true;					
-					delegate.addPage(add, add.page);
-					map.remove(add.getKey());
+					try
+					{
+						log.debug("Saving asynchronously: {}...", add);
+						add.asynchronous = true;
+						delegate.addPage(add, add.page);
+					}
+					catch (Exception x)
+					{
+						log.error("An error occurred while saving asynchronously '{}'", add, x);
+					}
+					finally
+					{
+						map.remove(add.getKey());
+					}
 				}
 			}
 		}
