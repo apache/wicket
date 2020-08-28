@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -176,7 +177,7 @@ public class AsynchronousPageStore implements IPageStore
 		@Override
 		public String toString()
 		{
-			return "Entry [sessionId=" + sessionId + ", pageId=" + page.getPageId() + "]";
+			return "Entry [sessionId=" + sessionId + ", pageId=" + page.getPageId() + ", pageClass=" + Classes.name(page.getClass())+ "]";
 		}
 
 	}
@@ -199,13 +200,24 @@ public class AsynchronousPageStore implements IPageStore
 				catch (InterruptedException e)
 				{
 					log.debug("PageSavingRunnable:: Interrupted...");
+					Thread.currentThread().interrupt();
 				}
 
 				if (entry != null && pageSavingThread != null)
 				{
-					log.debug("PageSavingRunnable:: Saving asynchronously: {}...", entry);
-					delegate.storePage(entry.sessionId, entry.page);
-					entryMap.remove(entry.getKey());
+					try
+					{
+						log.debug("PageSavingRunnable:: Saving asynchronously: {}...", entry);
+						delegate.storePage(entry.sessionId, entry.page);
+					}
+					catch (Exception x)
+					{
+						log.error("An error occurred while saving asynchronously '{}'", entry, x);
+					}
+					finally
+					{
+						entryMap.remove(entry.getKey());
+					}
 				}
 			}
 		}
