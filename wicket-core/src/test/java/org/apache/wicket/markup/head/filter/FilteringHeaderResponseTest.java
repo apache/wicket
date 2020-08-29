@@ -44,22 +44,24 @@ class FilteringHeaderResponseTest extends WicketTestCase
 		return new MockApplication()
 		{
 			@Override
-			protected ContentSecurityPolicySettings newCspSettings()
+			protected void init()
 			{
-				return new ContentSecurityPolicySettings(this)
+				super.init();
+
+				setCspSettings(new ContentSecurityPolicySettings(this)
 				{
 					@Override
 					public String getNonce(RequestCycle cycle)
 					{
 						return "NONCE";
 					}
-					
+
 					@Override
 					public boolean isEnabled()
 					{
 						return true;
 					}
-				};
+				});
 			}
 		};
 	}
@@ -69,8 +71,7 @@ class FilteringHeaderResponseTest extends WicketTestCase
 	{
 		// use this header resource decorator to load all JavaScript resources in the page
 		// footer (after </body>)
-		tester.getApplication()
-			.getHeaderResponseDecorators()
+		tester.getApplication().getHeaderResponseDecorators()
 			.add(response -> new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS"));
 		executeTest(FilteredHeaderPage.class, "FilteredHeaderPageExpected.html");
 	}
@@ -110,8 +111,7 @@ class FilteringHeaderResponseTest extends WicketTestCase
 	@Test
 	void deferred() throws Exception
 	{
-		tester.getApplication()
-			.getHeaderResponseDecorators()
+		tester.getApplication().getHeaderResponseDecorators()
 			.add(response -> new JavaScriptDeferHeaderResponse(response));
 		executeTest(DeferredPage.class, "DeferredPageExpected.html");
 	}

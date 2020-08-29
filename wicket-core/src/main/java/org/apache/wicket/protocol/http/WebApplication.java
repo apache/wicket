@@ -1111,10 +1111,9 @@ public abstract class WebApplication extends Application
 	}
 	
 	/**
-	 * Builds the {@link ContentSecurityPolicySettings} to be used for this application. Override
-	 * this method to provider your own implementation.
+	 * TODO remove in Wicket 10
 	 * 
-	 * @return The newly created CSP settings.
+	 * @deprecated use {@link #setCspSettings(ContentSecurityPolicySettings)} instead
 	 */
 	protected ContentSecurityPolicySettings newCspSettings()
 	{
@@ -1129,6 +1128,8 @@ public abstract class WebApplication extends Application
 	 * @return The {@link ContentSecurityPolicySettings} for this application.
 	 * @see ContentSecurityPolicySettings
 	 * @see CSPHeaderConfiguration
+	 * 
+	 * TODO make final in Wicket 10
 	 */
 	public ContentSecurityPolicySettings getCspSettings()
 	{
@@ -1139,5 +1140,14 @@ public abstract class WebApplication extends Application
 			cspSettings = newCspSettings();
 		}
 		return cspSettings;
+	}
+
+	/**
+	 * Set CSP settings.
+	 * 
+	 */
+	public void setCspSettings(ContentSecurityPolicySettings cspSettings)
+	{
+		this.cspSettings = cspSettings;
 	}
 }
