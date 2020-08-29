@@ -53,16 +53,16 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 		return new MockApplication()
 		{
 			@Override
-			protected ContentSecurityPolicySettings newCspSettings()
+			protected void init()
 			{
-				return new ContentSecurityPolicySettings(this)
+				setCspSettings(new ContentSecurityPolicySettings(this)
 				{
 					@Override
 					public boolean isEnabled()
 					{
 						return true;
 					}
-				};
+				});
 			}
 		};
 	}
