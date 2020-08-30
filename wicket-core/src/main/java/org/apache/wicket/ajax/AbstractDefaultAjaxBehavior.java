@@ -62,16 +62,16 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	public static final ResourceReference INDICATOR = new PackageResourceReference(
 		AbstractDefaultAjaxBehavior.class, "indicator.gif");
 
-	private static final String DYNAMIC_PARAMETER_FUNCTION_TEMPLATE = "function(attrs){%s}";
-	private static final String PRECONDITION_FUNCTION_TEMPLATE = "function(attrs){%s}";
-	private static final String COMPLETE_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, textStatus){%s}";
-	private static final String FAILURE_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, errorMessage, textStatus){%s}";
-	private static final String SUCCESS_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, data, textStatus){%s}";
-	private static final String AFTER_HANDLER_FUNCTION_TEMPLATE = "function(attrs){%s}";
-	private static final String BEFORE_SEND_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, settings){%s}";
-	private static final String BEFORE_HANDLER_FUNCTION_TEMPLATE = "function(attrs){%s}";
-	private static final String INIT_HANDLER_FUNCTION_TEMPLATE = "function(attrs){%s}";
-	private static final String DONE_HANDLER_FUNCTION_TEMPLATE = "function(attrs){%s}";
+	private static final String DYNAMIC_PARAMETER_FUNCTION_SIGNATURE = "function(attrs)";
+	private static final String PRECONDITION_FUNCTION_SIGNATURE = "function(attrs)";
+	private static final String COMPLETE_HANDLER_FUNCTION_SIGNATURE = "function(attrs, jqXHR, textStatus)";
+	private static final String FAILURE_HANDLER_FUNCTION_SIGNATURE = "function(attrs, jqXHR, errorMessage, textStatus)";
+	private static final String SUCCESS_HANDLER_FUNCTION_SIGNATURE = "function(attrs, jqXHR, data, textStatus)";
+	private static final String AFTER_HANDLER_FUNCTION_SIGNATURE = "function(attrs)";
+	private static final String BEFORE_SEND_HANDLER_FUNCTION_SIGNATURE = "function(attrs, jqXHR, settings)";
+	private static final String BEFORE_HANDLER_FUNCTION_SIGNATURE = "function(attrs)";
+	private static final String INIT_HANDLER_FUNCTION_SIGNATURE = "function(attrs)";
+	private static final String DONE_HANDLER_FUNCTION_SIGNATURE = "function(attrs)";
 
 	/**
 	 * Subclasses should call super.onBind()
@@ -262,46 +262,46 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 					CharSequence initHandler = ajaxCallListener.getInitHandler(component);
 					appendListenerHandler(initHandler, attributesJson,
 						AjaxAttributeName.INIT_HANDLER.jsonName(),
-						INIT_HANDLER_FUNCTION_TEMPLATE);
+						INIT_HANDLER_FUNCTION_SIGNATURE);
 
 						CharSequence beforeHandler = ajaxCallListener.getBeforeHandler(component);
 					appendListenerHandler(beforeHandler, attributesJson,
 						AjaxAttributeName.BEFORE_HANDLER.jsonName(),
-						BEFORE_HANDLER_FUNCTION_TEMPLATE);
+						BEFORE_HANDLER_FUNCTION_SIGNATURE);
 
 					CharSequence beforeSendHandler = ajaxCallListener
 						.getBeforeSendHandler(component);
 					appendListenerHandler(beforeSendHandler, attributesJson,
 						AjaxAttributeName.BEFORE_SEND_HANDLER.jsonName(),
-						BEFORE_SEND_HANDLER_FUNCTION_TEMPLATE);
+						BEFORE_SEND_HANDLER_FUNCTION_SIGNATURE);
 
 					CharSequence afterHandler = ajaxCallListener.getAfterHandler(component);
 					appendListenerHandler(afterHandler, attributesJson,
-						AjaxAttributeName.AFTER_HANDLER.jsonName(), AFTER_HANDLER_FUNCTION_TEMPLATE);
+						AjaxAttributeName.AFTER_HANDLER.jsonName(), AFTER_HANDLER_FUNCTION_SIGNATURE);
 
 					CharSequence successHandler = ajaxCallListener.getSuccessHandler(component);
 					appendListenerHandler(successHandler, attributesJson,
 						AjaxAttributeName.SUCCESS_HANDLER.jsonName(),
-						SUCCESS_HANDLER_FUNCTION_TEMPLATE);
+						SUCCESS_HANDLER_FUNCTION_SIGNATURE);
 
 					CharSequence failureHandler = ajaxCallListener.getFailureHandler(component);
 					appendListenerHandler(failureHandler, attributesJson,
 						AjaxAttributeName.FAILURE_HANDLER.jsonName(),
-						FAILURE_HANDLER_FUNCTION_TEMPLATE);
+						FAILURE_HANDLER_FUNCTION_SIGNATURE);
 
 					CharSequence completeHandler = ajaxCallListener.getCompleteHandler(component);
 					appendListenerHandler(completeHandler, attributesJson,
 						AjaxAttributeName.COMPLETE_HANDLER.jsonName(),
-						COMPLETE_HANDLER_FUNCTION_TEMPLATE);
+						COMPLETE_HANDLER_FUNCTION_SIGNATURE);
 
 					CharSequence precondition = ajaxCallListener.getPrecondition(component);
 					appendListenerHandler(precondition, attributesJson,
-						AjaxAttributeName.PRECONDITION.jsonName(), PRECONDITION_FUNCTION_TEMPLATE);
+						AjaxAttributeName.PRECONDITION.jsonName(), PRECONDITION_FUNCTION_SIGNATURE);
 
 					CharSequence doneHandler = ajaxCallListener.getDoneHandler(component);
 					appendListenerHandler(doneHandler, attributesJson,
 						AjaxAttributeName.DONE_HANDLER.jsonName(),
-						DONE_HANDLER_FUNCTION_TEMPLATE);
+						DONE_HANDLER_FUNCTION_SIGNATURE);
 
 				}
 			}
@@ -318,9 +318,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			{
 				for (CharSequence dynamicExtraParameter : dynamicExtraParameters)
 				{
-					String func = String.format(DYNAMIC_PARAMETER_FUNCTION_TEMPLATE,
-						dynamicExtraParameter);
-					JSONFunction function = new JSONFunction(func);
+					JSONFunction function = getJsonFunction(DYNAMIC_PARAMETER_FUNCTION_SIGNATURE, dynamicExtraParameter);
 					attributesJson.append(AjaxAttributeName.DYNAMIC_PARAMETER_FUNCTION.jsonName(),
 						function);
 				}
@@ -418,7 +416,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	private void appendListenerHandler(final CharSequence handler, final JSONObject attributesJson,
-		final String propertyName, final String functionTemplate) throws JSONException
+		final String propertyName, final String signature) throws JSONException
 	{
 		if (Strings.isEmpty(handler) == false)
 		{
@@ -429,11 +427,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			}
 			else
 			{
-				String func = String.format(functionTemplate, handler);
-				function = new JSONFunction(func);
+				function = getJsonFunction(signature, handler);
 			}
 			attributesJson.append(propertyName, function);
 		}
+	}
+
+	private JSONFunction getJsonFunction(String signature, CharSequence body) {
+		String func = signature + "{" + body + "}";
+		return new JSONFunction(func);
 	}
 
 	/**

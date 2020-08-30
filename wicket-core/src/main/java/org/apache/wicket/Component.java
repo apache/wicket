@@ -2357,15 +2357,13 @@ public abstract class Component
 	 */
 	protected void renderPlaceholderTag(final ComponentTag tag, final Response response)
 	{
-		String name = Strings.isEmpty(tag.getNamespace()) ? tag.getName() : tag.getNamespace() + ':' + tag.getName();
-
-		response.write("<");
-		response.write(name);
-		response.write(" id=\"");
-		response.write(getAjaxRegionMarkupId());
-		response.write("\" style=\"display:none\" data-wicket-placeholder=\"\"></");
-		response.write(name);
-		response.write(">");
+		String name = Strings.isEmpty(tag.getNamespace()) ? tag.getName()
+			: tag.getNamespace() + ':' + tag.getName();
+		
+		// prefer concatenation over String#format() for performance 
+		response.write(
+			"<" + name + " id=\"" + getAjaxRegionMarkupId() +
+				"\" style=\"display:none\" data-wicket-placeholder=\"\"></" + name + ">");
 	}
 
 
