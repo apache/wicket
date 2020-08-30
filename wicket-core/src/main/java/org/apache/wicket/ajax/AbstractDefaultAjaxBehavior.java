@@ -61,16 +61,16 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	public static final ResourceReference INDICATOR = new PackageResourceReference(
 		AbstractDefaultAjaxBehavior.class, "indicator.gif");
 
-	private static final String DYNAMIC_PARAMETER_FUNCTION_TEMPLATE = "function(attrs){%s}";
-	private static final String PRECONDITION_FUNCTION_TEMPLATE = "function(attrs){%s}";
-	private static final String COMPLETE_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, textStatus){%s}";
-	private static final String FAILURE_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, errorMessage, textStatus){%s}";
-	private static final String SUCCESS_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, data, textStatus){%s}";
-	private static final String AFTER_HANDLER_FUNCTION_TEMPLATE = "function(attrs){%s}";
-	private static final String BEFORE_SEND_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, settings){%s}";
-	private static final String BEFORE_HANDLER_FUNCTION_TEMPLATE = "function(attrs){%s}";
-	private static final String INIT_HANDLER_FUNCTION_TEMPLATE = "function(attrs){%s}";
-	private static final String DONE_HANDLER_FUNCTION_TEMPLATE = "function(attrs){%s}";
+	private static final String DYNAMIC_PARAMETER_FUNCTION_TEMPLATE = "function(attrs)";
+	private static final String PRECONDITION_FUNCTION_TEMPLATE = "function(attrs)";
+	private static final String COMPLETE_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, textStatus)";
+	private static final String FAILURE_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, errorMessage, textStatus)";
+	private static final String SUCCESS_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, data, textStatus)";
+	private static final String AFTER_HANDLER_FUNCTION_TEMPLATE = "function(attrs)";
+	private static final String BEFORE_SEND_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, settings)";
+	private static final String BEFORE_HANDLER_FUNCTION_TEMPLATE = "function(attrs)";
+	private static final String INIT_HANDLER_FUNCTION_TEMPLATE = "function(attrs)";
+	private static final String DONE_HANDLER_FUNCTION_TEMPLATE = "function(attrs)";
 
 	/**
 	 * Subclasses should call super.onBind()
@@ -317,9 +317,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			{
 				for (CharSequence dynamicExtraParameter : dynamicExtraParameters)
 				{
-					String func = String.format(DYNAMIC_PARAMETER_FUNCTION_TEMPLATE,
-						dynamicExtraParameter);
-					JSONFunction function = new JSONFunction(func);
+					JSONFunction function = getJsonFunction(DYNAMIC_PARAMETER_FUNCTION_TEMPLATE, dynamicExtraParameter);
 					attributesJson.append(AjaxAttributeName.DYNAMIC_PARAMETER_FUNCTION.jsonName(),
 						function);
 				}
@@ -428,11 +426,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			}
 			else
 			{
-				String func = String.format(functionTemplate, handler);
-				function = new JSONFunction(func);
+				function = getJsonFunction(functionTemplate, handler);
 			}
 			attributesJson.append(propertyName, function);
 		}
+	}
+
+	private JSONFunction getJsonFunction(String functionTemplate, CharSequence handler) {
+		String func = functionTemplate + "{" + handler + "}";
+		return new JSONFunction(func);
 	}
 
 	/**
