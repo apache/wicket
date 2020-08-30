@@ -2365,9 +2365,11 @@ public abstract class Component
 	{
 		String name = Strings.isEmpty(tag.getNamespace()) ? tag.getName()
 			: tag.getNamespace() + ':' + tag.getName();
+		
+		// prefer concatenation over String#format() for performance 
 		response.write(
-			String.format("<%s id=\"%s\" hidden=\"\" data-wicket-placeholder=\"\"></%s>", name,
-				getAjaxRegionMarkupId(), name));
+			"<" + name + " id=\"" + getAjaxRegionMarkupId() +
+				"\" hidden=\"\" data-wicket-placeholder=\"\"></" + name + ">");
 	}
 
 
