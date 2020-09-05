@@ -643,7 +643,7 @@ public final class Strings
 		{
 			return "";
 		}
-		return join(separator, fragments.toArray(new String[fragments.size()]));
+		return join(separator, fragments.toArray(new String[0]));
 	}
 
 	/**
@@ -668,19 +668,21 @@ public final class Strings
 		else
 		{
 			// two or more elements
-			StringBuilder buff = new StringBuilder(128);
+			AppendingStringBuffer buff = new AppendingStringBuffer(128);
 			if (fragments[0] != null)
 			{
 				buff.append(fragments[0]);
 			}
+			boolean separatorNotEmpty = !Strings.isEmpty(separator);
 			for (int i = 1; i < fragments.length; i++)
 			{
 				String fragment = fragments[i];
-				if ((fragments[i - 1] != null) || (fragment != null))
+				String previousFragment = fragments[i - 1];
+				if (previousFragment != null || fragment != null)
 				{
-					boolean lhsClosed = fragments[i - 1].endsWith(separator);
+					boolean lhsClosed = previousFragment.endsWith(separator);
 					boolean rhsClosed = fragment.startsWith(separator);
-					if (!Strings.isEmpty(separator) && lhsClosed && rhsClosed)
+					if (separatorNotEmpty && lhsClosed && rhsClosed)
 					{
 						buff.append(fragment.substring(1));
 					}
