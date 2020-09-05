@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Url;
@@ -37,6 +38,9 @@ import org.apache.wicket.util.string.Strings;
  */
 public class ResourceUtil
 {
+
+	private static final Pattern ESCAPED_ATTRIBUTE_PATTERN = Pattern.compile("(\\w)~(\\w)");
+
 	/**
 	 * Reads resource reference attributes (style, locale, variation) encoded in the given string.
 	 * 
@@ -273,7 +277,7 @@ public class ResourceUtil
 	 */
 	public static String unescapeAttributesSeparator(String attribute)
 	{
-		String tmp = attribute.replaceAll("(\\w)~(\\w)", "$1-$2");
+		String tmp = ESCAPED_ATTRIBUTE_PATTERN.matcher(attribute).replaceAll("$1-$2");
 		return Strings.replaceAll(tmp, "~~", "~").toString();
 	}
 
