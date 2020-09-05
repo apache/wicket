@@ -35,7 +35,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>cglib</groupId>
-			<artifactId>cglib-nodep</artifactId>
+			<artifactId>cglib</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -43,7 +43,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
-			<artifactId>asm-util</artifactId>
+			<artifactId>asm</artifactId>
 		</dependency>
 	</dependencies>
 </project>

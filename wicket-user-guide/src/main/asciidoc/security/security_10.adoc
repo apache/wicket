@@ -1,0 +1,25 @@
+A major consequence of transient execution attacks for the web is the risk of exposing private authenticated data to untrusted sites via microarchitectural side channels. Some web APIs increase the risk of side-channel attacks like https://meltdownattack.com/[Spectre]. To mitigate that risk, browsers offer two opt-in mechanisms to effectively isolate resources from third-party origins through Cross-Origin Opener Policy and Cross-Origin Embedder Policy.
+
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Opener-Policy[Cross-Origin Opener Policy (COOP)] is a security mitigation that lets developers isolate their resources against side-channel attacks and information leaks. The COOP response header allows a document to request a new browsing context group to better isolate itself from other untrustworthy origins.
+
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Embedder-Policy[Cross-Origin Embedder Policy (COEP)] prevents a document from loading any cross-origin resources which don't explicitly grant the document permission to be loaded.
+
+COOP and COEP are independent mechanisms that can be enabled, tested and deployed separately. While enabling one doesn’t require developers to enable the other, when set together COOP and COEP allows developers to use powerful features (such as __SharedArrayBuffer__, __performance.measureMemory()__ and the JS Self-Profiling API) securely, while still mitigating information leaks and side channel attacks like Spectre. Read more about COOP/COEP on https://docs.google.com/document/d/1zDlfvfTJ_9e8Jdc8ehuV4zMEu9ySMCiTGMS9y0GU92k/edit#bookmark=id.uo6kivyh0ge2[COOP/COEP] and https://web.dev/why-coop-coep/[why you need cross-origin isolation].
+
+Wicket provides highly configurable support for COOP and COEP. Users can specify the mode for each policy. For COOP, the __CoopMode__ represents the three valid header values __same-origin__ (__SAME_ORIGIN__ mode), __same-origin-allow-popups__ (__SAME_ORIGIN_ALLOW_POPUPS__ mode), __unsafe-none__ (__UNSAFE_NONE__ mode) and disabling COOP enitrely (__DISABLED__). For COEP the __CoepMode__ represents whether the policy will be __Report-Only__ (__REPORTING__ mode), enforcing (__ENFORCING__ mode) or disabled entirely (__DISABLED__). For both COOP and COEP, exempted paths can be specified, the response headers will not be set for these paths. For exempted paths, the __IRequestCycleListener__s perform exact string matching against the path associated with URL requests. When setting exempted paths the parameter should only receive relative paths with a trailing slash. Exemptions can include paths that use features that need to hold JavaScript references to windows opened through the __window.open__ function.
+
+To set preferred policies use the __CrossOriginOpenerPolicyConfiguration__ and __CrossOriginEmbedderPolicyConfiguration__ in __SecuritySettings__. The configuration should be set in the __init()__ method, the values are read once at startup (in __WebApplication#validateInit())__, and if the configurations indicate the policies aren't __DISABLED__ the respective listeners (__CrossOriginOpenerPolicyRequestCycleListener__, __CrossOriginEmbedderPolicyRequestCycleListener__) will be added automatically and these __IRequestCycleListener__s will add the appropriate headers to every response.
+
+MyApplication.java
+[source,java]
+----
+  @Override
+ protected void init() {
+  super.init();
+  // configure COOP
+  getSecuritySettings().setCrossOriginOpenerPolicyConfiguration(CoopMode.SAME_ORIGIN, "exemptions");
+  // configure COEP
+  getSecuritySettings().setCrossOriginEmbedderPolicyConfiguration(CoepMode.ENFORCING, "exemptions");
+  // ...
+ }
+----

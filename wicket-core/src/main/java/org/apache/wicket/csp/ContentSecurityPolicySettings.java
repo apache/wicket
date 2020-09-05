@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
@@ -65,16 +66,20 @@ public class ContentSecurityPolicySettings
 		private static final long serialVersionUID = 1L;
 	};
 
-	private final Application application;
-
 	private final Map<CSPHeaderMode, CSPHeaderConfiguration> configs = new EnumMap<>(
 		CSPHeaderMode.class);
 
 	private Predicate<IRequestHandler> protectedFilter = RenderPageRequestHandler.class::isInstance;
 
+	private Supplier<String> nonceCreator;
+	
 	public ContentSecurityPolicySettings(Application application)
 	{
-		this.application = Args.notNull(application, "application");
+		Args.notNull(application, "application");
+		
+		nonceCreator = () -> {
+				return application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
+			};
 	}
 
 	public CSPHeaderConfiguration blocking()
@@ -88,6 +93,20 @@ public class ContentSecurityPolicySettings
 			x -> new CSPHeaderConfiguration());
 	}
 
+	/**
+	 * Sets the creator of nonces.
+	 * 
+	 * @param nonceCreator
+	 *            The new creator, must not be null.
+	 * @return {@code this} for chaining.
+	 */
+	public ContentSecurityPolicySettings setNonceCreator(Supplier<String> nonceCreator)
+	{
+		Args.notNull(nonceCreator, "nonceCreator");
+		this.nonceCreator = nonceCreator;
+		return this;
+	}
+	
 	/**
 	 * Sets the predicate that determines which requests must be protected by the CSP. When the
 	 * predicate evaluates to false, the request will not be protected.
@@ -108,7 +127,7 @@ public class ContentSecurityPolicySettings
 	 * Should any request be protected by CSP.
 	 *
 	 * @param handler
-	 * @return <code>true</code> by default
+	 * @return <code>true</code> by default for all {@link RenderPageRequestHandler}s
 	 * 
 	 * @see #setProtectedFilter(Predicate)
 	 */
@@ -155,9 +174,16 @@ public class ContentSecurityPolicySettings
 		return nonce;
 	}
 
+	/**
+	 * Create a new nonce.
+	 *
+	 * @return nonce
+	 * 
+	 * @see #setNonceCreator(Supplier)
+	 */
 	protected String createNonce()
 	{
-		return application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
+		return nonceCreator.get();
 	}
 
 	/**
@@ -182,5 +208,13 @@ public class ContentSecurityPolicySettings
 		application.getHeaderResponseDecorators()
 			.add(response -> new CSPNonceHeaderResponseDecorator(response, this));
 		application.mount(new ReportCSPViolationMapper(this));
+	}
+
+	/**
+	 * Is CSP enabled.
+	 */
+	public boolean isEnabled()
+	{
+		return configs.values().stream().anyMatch(CSPHeaderConfiguration::isSet);
 	}
 }

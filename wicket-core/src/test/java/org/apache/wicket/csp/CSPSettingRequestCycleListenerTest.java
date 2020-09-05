@@ -37,21 +37,34 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.wicket.mock.MockHomePage;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 {
-	 @Override
-	protected WicketTester newWicketTester(WebApplication app)
+	@Override
+	protected WebApplication newApplication()
 	{
-		return new WicketTester(MockHomePage.class);
+		return new MockApplication()
+		{
+			@Override
+			protected void init()
+			{
+				setCspSettings(new ContentSecurityPolicySettings(this)
+				{
+					@Override
+					public boolean isEnabled()
+					{
+						return true;
+					}
+				});
+			}
+		};
 	}
 
 	@Test
