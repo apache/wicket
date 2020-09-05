@@ -21,11 +21,8 @@ import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -791,38 +788,7 @@ public final class Strings
 		}
 		else
 		{
-			// Allocate a AppendingStringBuffer that will hold one replacement
-			// with a
-			// little extra room.
-			int size = s.length();
-			final int replaceWithLength = replaceWith.length();
-			final int searchForLength = searchFor.length();
-			if (replaceWithLength > searchForLength)
-			{
-				size += (replaceWithLength - searchForLength);
-			}
-			final AppendingStringBuffer buffer = new AppendingStringBuffer(size + 16);
-
-			int pos = 0;
-			do
-			{
-				// Append text up to the match
-				append(buffer, s, pos, matchIndex);
-
-				// Add replaceWith text
-				buffer.append(replaceWith);
-
-				// Find next occurrence, if any
-				pos = matchIndex + searchForLength;
-				matchIndex = search(s, searchString, pos);
-			}
-			while (matchIndex != -1);
-
-			// Add tail of s
-			buffer.append(s.subSequence(pos, s.length()));
-
-			// Return processed buffer
-			return buffer;
+			return s.toString().replace(searchString, replaceWith);
 		}
 	}
 
@@ -864,7 +830,7 @@ public final class Strings
 	 */
 	public static String[] split(final String s, final char c)
 	{
-		if (s == null || s.length() == 0)
+		if (s == null || s.isEmpty())
 		{
 			return NO_STRINGS;
 		}
