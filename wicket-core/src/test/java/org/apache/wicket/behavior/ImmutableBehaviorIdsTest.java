@@ -75,10 +75,10 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 		assertTrue(output.contains("autocomplete=\"off\""));
 		assertTrue(output.contains("class2=\"border\""));
 		assertTrue(output.contains("autocomplete2=\"off\""));
-		assertTrue(output.contains(".0"));
-		assertTrue(output.contains(".1"));
-		assertEquals(link, page.getContainer().getBehaviorById(0));
-		assertEquals(link2, page.getContainer().getBehaviorById(1));
+		assertTrue(output.contains(".2"));
+		assertTrue(output.contains(".4"));
+		assertEquals(link, page.getContainer().getBehaviorById(2));
+		assertEquals(link2, page.getContainer().getBehaviorById(4));
 
 		// if we remove a behavior that is before the ibehaviorlistener its url index should not
 		// change
@@ -89,11 +89,11 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 		page.getContainer().remove(auto2);
 		tester.startPage(page);
 		output = tester.getLastResponseAsString();
-		// System.out.println(output);
-		assertTrue(output.contains(".0"));
-		assertTrue(output.contains(".1"));
-		assertEquals(link, page.getContainer().getBehaviorById(0));
-		assertEquals(link2, page.getContainer().getBehaviorById(1));
+//		System.out.println(output);
+		assertTrue(output.contains(".2"));
+		assertTrue(output.contains(".4"));
+		assertEquals(link, page.getContainer().getBehaviorById(2));
+		assertEquals(link2, page.getContainer().getBehaviorById(4));
 	}
 
 	/**

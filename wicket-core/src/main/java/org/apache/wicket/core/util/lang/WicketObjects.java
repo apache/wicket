@@ -17,6 +17,7 @@
 package org.apache.wicket.core.util.lang;
 
 import java.io.Serializable;
+import java.nio.file.Files;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
