@@ -72,29 +72,41 @@ final class Behaviors implements IDetachable
 	@SuppressWarnings("unchecked")
 	public <M extends Behavior> List<M> getBehaviors(Class<M> type)
 	{
-		final int len = component.data_length();
-		final int start = component.data_start();
+		int len = component.data_length();
+		if (len == 0)
+		{
+			return Collections.emptyList();
+		}
+		int start = component.data_start();
 		if (len < start)
 		{
 			return Collections.emptyList();
 		}
 
-		List<M> subset = new ArrayList<>(len);
-		for (int i = component.data_start(); i < len; i++)
+		List<M> subset = null;
+		for (int i = start; i < len; i++)
 		{
 			Object obj = component.data_get(i);
-			if (obj != null && obj instanceof Behavior)
+			if (obj instanceof Behavior)
 			{
 				if (type == null || type.isAssignableFrom(obj.getClass()))
 				{
+					if (subset == null)
+					{
+						subset = new ArrayList<>(len);
+					}
 					subset.add((M)obj);
 				}
 			}
 		}
-		if (subset.isEmpty()) {
+		if (subset == null || subset.isEmpty())
+		{
 			return Collections.emptyList();
 		}
-		return Collections.unmodifiableList(subset);
+		else
+		{
+			return Collections.unmodifiableList(subset);
+		}
 	}
 
 
@@ -120,7 +132,7 @@ final class Behaviors implements IDetachable
 
 	/**
 	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
-	 * 
+	 *
 	 * Traverses all behaviors and calls detachModel() on them. This is needed to cleanup behavior
 	 * after render. This method is necessary for {@link org.apache.wicket.ajax.AjaxRequestTarget} to be able to cleanup
 	 * component's behaviors after header contribution has been done (which is separated from
@@ -130,10 +142,19 @@ final class Behaviors implements IDetachable
 	public final void detach()
 	{
 		int len = component.data_length();
-		for (int i = component.data_start(); i < len; i++)
+		if (len == 0)
+		{
+			return;
+		}
+		int start = component.data_start();
+		if (len < start)
+		{
+			return;
+		}
+		for (int i = start; i < len; i++)
 		{
 			Object obj = component.data_get(i);
-			if (obj != null && obj instanceof Behavior)
+			if (obj instanceof Behavior)
 			{
 				final Behavior behavior = (Behavior)obj;
 
@@ -192,7 +213,7 @@ final class Behaviors implements IDetachable
 		for (int i = component.data_start(); i < component.data_length(); i++)
 		{
 			Object obj = component.data_get(i);
-			if (obj != null && obj instanceof BehaviorIdList)
+			if (obj instanceof BehaviorIdList)
 			{
 				component.data_remove(i);
 				return;
@@ -206,7 +227,7 @@ final class Behaviors implements IDetachable
 		for (int i = component.data_start(); i < len; i++)
 		{
 			Object obj = component.data_get(i);
-			if (obj != null && obj instanceof BehaviorIdList)
+			if (obj instanceof BehaviorIdList)
 			{
 				return (BehaviorIdList)obj;
 			}
@@ -229,11 +250,20 @@ final class Behaviors implements IDetachable
 	 */
 	public void onRemove(Component component)
 	{
-		final int len = component.data_length();
-		for (int i = component.data_start(); i < len; i++)
+		int len = component.data_length();
+		if (len == 0)
+		{
+			return;
+		}
+		int start = component.data_start();
+		if (len < start)
+		{
+			return;
+		}
+		for (int i = start; i < len; i++)
 		{
 			Object obj = component.data_get(i);
-			if (obj != null && obj instanceof Behavior)
+			if (obj instanceof Behavior)
 			{
 				final Behavior behavior = (Behavior)obj;
 
