@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.basic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -67,36 +68,36 @@ class SimplePageTest extends WicketTestCase
 
 		label = (Label)tester.getLastRenderedPage().get("myPanel:label");
 		assertNotNull(label);
-		assertFalse("".equals(document));
+		assertNotEquals("", document);
 		assertTrue(document.contains("<span wicket:id=\"label\">mein Label</span>"));
 
 		Border border = (Border)tester.getLastRenderedPage().get("myBorder");
 		assertNotNull(border);
-		assertFalse("".equals(document));
+		assertNotEquals("", document);
 		assertTrue(document.contains(
 			"<wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border>"));
 
 		border = (Border)tester.getLastRenderedPage().get("myBorder2");
 		assertNotNull(border);
-		assertFalse("".equals(document));
+		assertNotEquals("", document);
 		assertTrue(document.contains(
 			"<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>"));
 
 		// do the same test twice. Igor reported a problem with that, so we have to test it.
 		border = (Border)tester.getLastRenderedPage().get("myBorder2");
 		assertNotNull(border);
-		assertFalse("".equals(document));
+		assertNotEquals("", document);
 		assertTrue(document.contains(
 			"<span wicket:id=\"myBorder2\" testAttr=\"myValue\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>"));
 
 		WebMarkupContainer container = (WebMarkupContainer)tester.getLastRenderedPage().get("test");
 		assertNotNull(container);
-		assertFalse("".equals(document));
+		assertNotEquals("", document);
 		assertTrue(document.contains("body<span wicket:id=\"myLabel2\">Test Label2</span>"));
 
 		label = (Label)tester.getLastRenderedPage().get("test:myLabel2");
 		assertNotNull(label);
-		assertFalse("".equals(document));
+		assertNotEquals("", document);
 		assertTrue(document.contains("<span wicket:id=\"myLabel2\">Test Label2</span>"));
 	}
 

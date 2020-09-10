@@ -309,7 +309,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			buffer.append("\n<option");
 
 			// If null is selected, indicate that
-			if ("".equals(selectedValue))
+			if (selectedValue != null && selectedValue.isEmpty())
 			{
 				buffer.append(" selected=\"selected\"");
 			}
@@ -321,7 +321,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 		else
 		{
 			// Null is not valid. Is it selected anyway?
-			if ("".equals(selectedValue))
+			if (selectedValue != null && selectedValue.isEmpty())
 			{
 				// Force the user to pick a non-null value
 				String option = getNullKeyDisplayValue();

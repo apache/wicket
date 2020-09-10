@@ -487,7 +487,7 @@ public class Image extends WebComponent implements IRequestListener
 		{
 			sizes = sizes.substring(0, lastIndexOf);
 		}
-		if (!"".equals(sizes))
+		if (!sizes.isEmpty())
 		{
 			tag.put("sizes", sizes);
 		}

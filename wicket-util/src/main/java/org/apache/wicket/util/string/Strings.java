@@ -755,7 +755,7 @@ public final class Strings
 
 		// If searchFor is null or the empty string, then there is nothing to
 		// replace, so returning s is the only option here.
-		if ((searchFor == null) || "".equals(searchFor))
+		if ((searchFor == null) || searchFor.length() == 0)
 		{
 			return s;
 		}
@@ -862,7 +862,7 @@ public final class Strings
 
 		// Stripping a null or empty string from the end returns the
 		// original string.
-		if ((ending == null) || "".equals(ending))
+		if (ending == null || ending.isEmpty())
 		{
 			return s;
 		}

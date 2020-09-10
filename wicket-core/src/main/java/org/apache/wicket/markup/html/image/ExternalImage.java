@@ -217,7 +217,7 @@ public class ExternalImage extends WebComponent
 		{
 			sizes = sizes.substring(0, lastIndexOf);
 		}
-		if (!"".equals(sizes))
+		if (!sizes.isEmpty())
 		{
 			tag.put("sizes", sizes);
 		}

@@ -87,24 +87,18 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 		{
 			private static final long serialVersionUID = 1L;
 
-			/**
-			 * {@inheritDoc}
-			 */
 			@Override
 			public <C> IConverter<C> getConverter(final Class<C> type)
 			{
 				return AjaxEditableMultiLineLabel.this.getConverter(type);
 			}
-			
-			/**
-			 * {@inheritDoc}
-			 */
+
 			@Override
 			public void onComponentTagBody(final MarkupStream markupStream,
 				final ComponentTag openTag)
 			{
 				Object modelObject = getDefaultModelObject();
-				if ((modelObject == null) || "".equals(modelObject))
+				if ((modelObject == null) || (modelObject instanceof String && ((String) modelObject).isEmpty()))
 				{
 					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
 				}
