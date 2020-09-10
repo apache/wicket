@@ -1055,19 +1055,21 @@ public class Url implements Serializable
 
 		// remove leading './' (current folder) and empty segments, process any ../ segments from
 		// the relative url
-		while (!relative.getSegments().isEmpty())
+		final List<String> relativeSegments = relative.getSegments();
+		while (!relativeSegments.isEmpty())
 		{
-			if (".".equals(relative.getSegments().get(0)))
+			final String firstSegment = relativeSegments.get(0);
+			if (".".equals(firstSegment))
 			{
-				relative.getSegments().remove(0);
+				relativeSegments.remove(0);
 			}
-			else if ("".equals(relative.getSegments().get(0)))
+			else if (firstSegment.isEmpty())
 			{
-				relative.getSegments().remove(0);
+				relativeSegments.remove(0);
 			}
-			else if ("..".equals(relative.getSegments().get(0)))
+			else if ("..".equals(firstSegment))
 			{
-				relative.getSegments().remove(0);
+				relativeSegments.remove(0);
 				if (getSegments().isEmpty() == false)
 				{
 					getSegments().remove(getSegments().size() - 1);
@@ -1079,13 +1081,13 @@ public class Url implements Serializable
 			}
 		}
 
-		if (!getSegments().isEmpty() && relative.getSegments().isEmpty())
+		if (!getSegments().isEmpty() && relativeSegments.isEmpty())
 		{
 			getSegments().add("");
 		}
 
 		// append the remaining relative segments
-		getSegments().addAll(relative.getSegments());
+		getSegments().addAll(relativeSegments);
 
 		// replace query params with the ones from relative
 		parameters.clear();

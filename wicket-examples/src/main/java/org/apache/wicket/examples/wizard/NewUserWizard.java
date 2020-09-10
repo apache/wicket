@@ -150,9 +150,10 @@ public class NewUserWizard extends Wizard
 				public void validate(Form<?> form)
 				{
 					String rolesInput = rolesChoiceField.getInput();
-					if (rolesInput != null && (!"".equals(rolesInput)))
+					if (rolesInput != null && !rolesInput.isEmpty())
 					{
-						if ("".equals(rolesSetNameField.getInput()))
+						final String rolesSetNameFieldInput = rolesSetNameField.getInput();
+						if (rolesSetNameFieldInput == null || rolesSetNameFieldInput.isEmpty())
 						{
 							rolesSetNameField.error(new ValidationError().addKey("error.noSetNameForRoles"));
 						}

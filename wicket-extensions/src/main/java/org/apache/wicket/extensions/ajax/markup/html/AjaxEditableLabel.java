@@ -401,15 +401,12 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 				return c != null ? c : super.getConverter(type);
 			}
 
-			/**
-			 * {@inheritDoc}
-			 */
 			@Override
 			public void onComponentTagBody(final MarkupStream markupStream,
 				final ComponentTag openTag)
 			{
 				Object modelObject = getDefaultModelObject();
-				if ((modelObject == null) || "".equals(modelObject))
+				if ((modelObject == null) || (modelObject instanceof String && ((String) modelObject).isEmpty()))
 				{
 					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
 				}

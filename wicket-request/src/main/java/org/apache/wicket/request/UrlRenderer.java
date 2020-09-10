@@ -322,7 +322,7 @@ public class UrlRenderer
 	{
 		// try to remove context/filter path only if the Url starts with '/',
 		// i.e. has an empty segment in the beginning
-		if (segments.isEmpty() || "".equals(segments.get(0)) == false)
+		if ((segments.isEmpty() || segments.get(0).isEmpty()) == false)
 		{
 			return;
 		}
