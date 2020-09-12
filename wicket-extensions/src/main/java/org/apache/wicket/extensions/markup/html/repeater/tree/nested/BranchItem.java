@@ -54,7 +54,10 @@ public final class BranchItem<T> extends Item<T>
 		}
 	}
 
-	private boolean isLast()
+	/**
+	 * Is this the last branch in the containing subtree.
+	 */
+	protected boolean isLast()
 	{
 		return getIndex() == getParent().size() - 1;
 	}
