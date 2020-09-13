@@ -22,25 +22,22 @@ import java.util.List;
 
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.InvalidBehaviorIdException;
-import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Manages behaviors in a {@link Component} instance
+ * Manages behaviors for {@link Component} instances
  * 
  * @author igor
  */
-final class Behaviors implements IDetachable
+final class Behaviors
 {
-	private static final long serialVersionUID = 1L;
-	private final Component component;
 
-	public Behaviors(Component component)
+	private Behaviors()
 	{
-		this.component = component;
+		// utility class
 	}
 
-	public void add(Behavior... behaviors)
+	public static void add(Component component, Behavior... behaviors)
 	{
 		Args.notNull(behaviors, "behaviors");
 
@@ -48,7 +45,7 @@ final class Behaviors implements IDetachable
 		{
 			Args.notNull(behavior, "behavior");
 
-			internalAdd(behavior);
+			internalAdd(component, behavior);
 
 			if (!behavior.isTemporary(component))
 			{
@@ -60,17 +57,17 @@ final class Behaviors implements IDetachable
 		}
 	}
 
-	private void internalAdd(final Behavior behavior)
+	private static void internalAdd(Component component, Behavior behavior)
 	{
 		component.data_add(behavior);
 		if (behavior.getStatelessHint(component) == false)
 		{
-			getBehaviorId(behavior);
+			getBehaviorId(component, behavior);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public <M extends Behavior> List<M> getBehaviors(Class<M> type)
+	public static <M extends Behavior> List<M> getBehaviors(Component component, Class<M> type)
 	{
 		int len = component.data_length();
 		if (len == 0)
@@ -110,11 +107,11 @@ final class Behaviors implements IDetachable
 	}
 
 
-	public void remove(Behavior behavior)
+	public static void remove(Component component, Behavior behavior)
 	{
 		Args.notNull(behavior, "behavior");
 
-		if (internalRemove(behavior))
+		if (internalRemove(component, behavior))
 		{
 			if (!behavior.isTemporary(component))
 			{
@@ -138,8 +135,7 @@ final class Behaviors implements IDetachable
 	 * component's behaviors after header contribution has been done (which is separated from
 	 * component render).
 	 */
-	@Override
-	public final void detach()
+	public static void detach(Component component)
 	{
 		int len = component.data_length();
 		if (len == 0)
@@ -162,7 +158,7 @@ final class Behaviors implements IDetachable
 
 				if (behavior.isTemporary(component))
 				{
-					internalRemove(behavior);
+					internalRemove(component, behavior);
 					i--;
 					len--;
 				}
@@ -170,7 +166,7 @@ final class Behaviors implements IDetachable
 		}
 	}
 
-	private boolean internalRemove(final Behavior behavior)
+	private static boolean internalRemove(Component component, Behavior behavior)
 	{
 		final int len = component.data_length();
 		for (int i = component.data_start(); i < len; i++)
@@ -182,7 +178,7 @@ final class Behaviors implements IDetachable
 				behavior.unbind(component);
 
 				// remove behavior from behavior-ids
-				ArrayList<Behavior> ids = getBehaviorsIdList(false);
+				ArrayList<Behavior> ids = getBehaviorsIdList(component, false);
 				if (ids != null)
 				{
 					int idx = ids.indexOf(behavior);
@@ -198,7 +194,7 @@ final class Behaviors implements IDetachable
 
 					if (ids.isEmpty())
 					{
-						removeBehaviorsIdList();
+						removeBehaviorsIdList(component);
 					}
 
 				}
@@ -208,7 +204,7 @@ final class Behaviors implements IDetachable
 		return false;
 	}
 
-	private void removeBehaviorsIdList()
+	private static void removeBehaviorsIdList(Component component)
 	{
 		for (int i = component.data_start(); i < component.data_length(); i++)
 		{
@@ -221,7 +217,7 @@ final class Behaviors implements IDetachable
 		}
 	}
 
-	private BehaviorIdList getBehaviorsIdList(boolean createIfNotFound)
+	private static BehaviorIdList getBehaviorsIdList(Component component, boolean createIfNotFound)
 	{
 		int len = component.data_length();
 		for (int i = component.data_start(); i < len; i++)
@@ -248,7 +244,7 @@ final class Behaviors implements IDetachable
 	 * @param component
 	 *      the component that will be removed from its parent
 	 */
-	public void onRemove(Component component)
+	public static void onRemove(Component component)
 	{
 		int len = component.data_length();
 		if (len == 0)
@@ -282,7 +278,7 @@ final class Behaviors implements IDetachable
 		}
 	}
 
-	public final int getBehaviorId(Behavior behavior)
+	public static int getBehaviorId(Component component, Behavior behavior)
 	{
 		Args.notNull(behavior, "behavior");
 
@@ -299,10 +295,10 @@ final class Behaviors implements IDetachable
 		{
 			throw new IllegalStateException(
 				"Behavior must be added to component before its id can be generated. Behavior: " +
-					behavior + ", Component: " + this);
+					behavior + ", Component: " + component);
 		}
 
-		ArrayList<Behavior> ids = getBehaviorsIdList(true);
+		ArrayList<Behavior> ids = getBehaviorsIdList(component, true);
 
 		int id = ids.indexOf(behavior);
 
@@ -331,11 +327,11 @@ final class Behaviors implements IDetachable
 		return id;
 	}
 
-	public final Behavior getBehaviorById(int id)
+	public static Behavior getBehaviorById(Component component, int id)
 	{
 		Behavior behavior = null;
 
-		ArrayList<Behavior> ids = getBehaviorsIdList(false);
+		ArrayList<Behavior> ids = getBehaviorsIdList(component, false);
 		if (ids != null)
 		{
 			if (id >= 0 && id < ids.size())
