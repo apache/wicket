@@ -133,7 +133,7 @@ import org.slf4j.LoggerFactory;
  * unlikely for a web application and even the need to implement a listener interface directly is
  * highly discouraged. Instead, calls to listeners are routed through logic specific to the event,
  * resulting in calls to user code through other overridable methods. See {@link Form} for an
- * example of a component which listens for events via {@link IFormSubmitListener}.</li>
+ * example of a component which listens for events via {@link IRequestListener}.</li>
  * <li><b>Rendering </b>- Before a page or part of a page (in case of Ajax updates) is rendered, all
  * containing components are able to prepare for rendering via two hook methods:
  * {@link #onConfigure()} (regardless whether they are visible or not) and {@link #onBeforeRender()}
@@ -1085,11 +1085,11 @@ public abstract class Component
 		if (getRequestFlag(RFLAG_REMOVING_FROM_HIERARCHY))
 		{
 			throw new IllegalStateException(Component.class.getName() +
-				" has not been properly removed from hierachy. Something in the hierarchy of " +
+				" has not been properly removed from hierarchy. Something in the hierarchy of " +
 				getClass().getName() +
 				" has not called super.onRemove() in the override of onRemove() method");
 		}
-		new Behaviors(this).onRemove(this);
+		Behaviors.onRemove(this);
 		removeChildren();
 	}
 
@@ -1118,7 +1118,7 @@ public abstract class Component
 			detachModels();
 
 			// detach any behaviors
-			new Behaviors(this).detach();
+			Behaviors.detach(this);
 		}
 		catch (Exception x)
 		{
@@ -2115,8 +2115,6 @@ public abstract class Component
 	 * @param setRenderingFlag
 	 *            if this is false only the PREPARED_FOR_RENDER flag is removed from component, the
 	 *            RENDERING flag is not set.
-	 * 
-	 * @see #internalPrepareForRender(boolean)
 	 */
 	public final void markRendering(boolean setRenderingFlag)
 	{
@@ -3622,7 +3620,7 @@ public abstract class Component
 	 */
 	public <M extends Behavior> List<M> getBehaviors(Class<M> type)
 	{
-		return new Behaviors(this).getBehaviors(type);
+		return Behaviors.getBehaviors(this, type);
 	}
 
 	/**
@@ -4431,26 +4429,28 @@ public abstract class Component
 	 */
 	public Component remove(final Behavior... behaviors)
 	{
-		Behaviors helper = new Behaviors(this);
 		for (Behavior behavior : behaviors)
 		{
-			helper.remove(behavior);
+			Behaviors.remove(this, behavior);
 		}
 		return this;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public final Behavior getBehaviorById(int id)
 	{
-		return new Behaviors(this).getBehaviorById(id);
+		return Behaviors.getBehaviorById(this, id);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public final int getBehaviorId(Behavior behavior)
 	{
-		return new Behaviors(this).getBehaviorId(behavior);
+		if (behavior.isTemporary(this))
+		{
+			throw new IllegalArgumentException(
+				"Cannot get a stable id for temporary behavior " + behavior);
+		}
+		return Behaviors.getBehaviorId(this, behavior);
 	}
 
 	/**
@@ -4462,7 +4462,7 @@ public abstract class Component
 	 */
 	public Component add(final Behavior... behaviors)
 	{
-		new Behaviors(this).add(behaviors);
+		Behaviors.add(this, behaviors);
 		return this;
 	}
 
