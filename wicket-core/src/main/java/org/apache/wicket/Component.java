@@ -1086,11 +1086,11 @@ public abstract class Component
 		if (getRequestFlag(RFLAG_REMOVING_FROM_HIERARCHY))
 		{
 			throw new IllegalStateException(Component.class.getName() +
-				" has not been properly removed from hierachy. Something in the hierarchy of " +
+				" has not been properly removed from hierarchy. Something in the hierarchy of " +
 				getClass().getName() +
 				" has not called super.onRemove() in the override of onRemove() method");
 		}
-		new Behaviors(this).onRemove(this);
+		Behaviors.onRemove(this);
 		removeChildren();
 	}
 
@@ -1119,7 +1119,7 @@ public abstract class Component
 			detachModels();
 
 			// detach any behaviors
-			new Behaviors(this).detach();
+			Behaviors.detach(this);
 		}
 		catch (Exception x)
 		{
@@ -3629,7 +3629,7 @@ public abstract class Component
 	 */
 	public <M extends Behavior> List<M> getBehaviors(Class<M> type)
 	{
-		return new Behaviors(this).getBehaviors(type);
+		return Behaviors.getBehaviors(this, type);
 	}
 
 	/**
@@ -4438,10 +4438,9 @@ public abstract class Component
 	 */
 	public Component remove(final Behavior... behaviors)
 	{
-		Behaviors helper = new Behaviors(this);
 		for (Behavior behavior : behaviors)
 		{
-			helper.remove(behavior);
+			Behaviors.remove(this, behavior);
 		}
 		return this;
 	}
@@ -4450,7 +4449,7 @@ public abstract class Component
 	@Override
 	public final Behavior getBehaviorById(int id)
 	{
-		return new Behaviors(this).getBehaviorById(id);
+		return Behaviors.getBehaviorById(this, id);
 	}
 
 	/** {@inheritDoc} */
@@ -4462,7 +4461,7 @@ public abstract class Component
 			throw new IllegalArgumentException(
 				"Cannot get a stable id for temporary behavior " + behavior);
 		}
-		return new Behaviors(this).getBehaviorId(behavior);
+		return Behaviors.getBehaviorId(this, behavior);
 	}
 
 	/**
@@ -4474,7 +4473,7 @@ public abstract class Component
 	 */
 	public Component add(final Behavior... behaviors)
 	{
-		new Behaviors(this).add(behaviors);
+		Behaviors.add(this, behaviors);
 		return this;
 	}
 
