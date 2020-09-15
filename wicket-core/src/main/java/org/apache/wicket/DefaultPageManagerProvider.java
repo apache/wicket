@@ -101,9 +101,9 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		
 		store = newCryptingStore(store);
 
-		store = newSerializingStore(store);
-		
 		store = newAsynchronousStore(store);
+		
+		store = newSerializingStore(store);
 
 		store = newCachingStore(store);
 

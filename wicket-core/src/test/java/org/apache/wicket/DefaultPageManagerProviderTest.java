@@ -45,9 +45,9 @@ class DefaultPageManagerProviderTest extends WicketTestCase
 		RequestPageStore request = (RequestPageStore)manager.getPageStore();
 		CachingPageStore caching = (CachingPageStore)request.getDelegate();
 		InSessionPageStore session = (InSessionPageStore)caching.getCache();
-		AsynchronousPageStore asynchronous = (AsynchronousPageStore)caching.getDelegate();
-		SerializingPageStore serializing = (SerializingPageStore)asynchronous.getDelegate();
-		DiskPageStore disk = (DiskPageStore)serializing.getDelegate();
+		SerializingPageStore serializing = (SerializingPageStore)caching.getDelegate();
+		AsynchronousPageStore asynchronous = (AsynchronousPageStore)serializing.getDelegate();
+		DiskPageStore disk = (DiskPageStore)asynchronous.getDelegate();
 		
 		assertNotNull(disk);
 	}
