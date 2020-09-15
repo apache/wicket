@@ -2119,8 +2119,6 @@ public abstract class Component
 	 * @param setRenderingFlag
 	 *            if this is false only the PREPARED_FOR_RENDER flag is removed from component, the
 	 *            RENDERING flag is not set.
-	 * 
-	 * @see #internalPrepareForRender(boolean)
 	 */
 	public final void markRendering(boolean setRenderingFlag)
 	{
