@@ -271,12 +271,21 @@ public class WicketFilter implements Filter
 	{
 		// Assume we are able to handle the request
 		boolean res = true;
-
-		if (requestCycle.processRequestAndDetach())
+		boolean reqProcessed = false;
+		try
 		{
-			webResponse.flush();
+			reqProcessed = requestCycle.processRequest();
+			if (reqProcessed)
+			{
+				webResponse.flush();
+			}
 		}
-		else
+		finally
+		{
+			requestCycle.detach();
+		}
+
+		if (!reqProcessed)
 		{
 			if (chain != null)
 			{
