@@ -44,6 +44,8 @@ import org.slf4j.LoggerFactory;
  * Based on AsynchronousDataStore (@author Matej Knopp).
  *
  * @author manuelbarzi
+ * 
+ * @deprecated asynchronous page serialization might lead to concurrent modifications
  */
 public class AsynchronousPageStore implements IPageStore
 {
