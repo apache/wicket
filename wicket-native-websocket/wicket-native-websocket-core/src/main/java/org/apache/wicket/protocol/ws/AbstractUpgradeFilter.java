@@ -58,7 +58,6 @@ public class AbstractUpgradeFilter extends WicketFilter
 			final FilterChain chain)
 		throws IOException, ServletException
 	{
-
 		// Assume we are able to handle the request
 		boolean res = true;
 
@@ -68,17 +67,31 @@ public class AbstractUpgradeFilter extends WicketFilter
 		{
 			res = true;
 		}
-		else if (requestCycle.processRequestAndDetach() || httpServletResponse.isCommitted())
-		{
-			webResponse.flush();
-		}
 		else
 		{
-			if (chain != null)
+			boolean reqProcessed = false;
+			try
 			{
-				chain.doFilter(httpServletRequest, httpServletResponse);
+				reqProcessed = requestCycle.processRequest() || httpServletResponse.isCommitted();
+				if (reqProcessed)
+				{
+					webResponse.flush();
+				}
 			}
-			res = false;
+			finally
+			{
+				requestCycle.detach();
+			}
+
+			if (!reqProcessed)
+			{
+				if (chain != null)
+				{
+					// invoke next filter from within Wicket context
+					chain.doFilter(httpServletRequest, httpServletResponse);
+				}
+				res = false;
+			}
 		}
 
 		return res;
