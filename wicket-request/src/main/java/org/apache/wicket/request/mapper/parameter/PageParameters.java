@@ -17,7 +17,6 @@
 package org.apache.wicket.request.mapper.parameter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -294,35 +293,48 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		Args.notEmpty(name, "name");
 		Args.notNull(value, "value");
 
+		if (value instanceof String[])
+		{
+			addNamed(name, (String[]) value, index, type);
+		}
+		else
+		{
+			addNamed(name, value.toString(), index, type);
+		}
+
+		return this;
+	}
+
+	private void addNamed(String name, String[] values, int index, Type type) 
+	{
+		if (namedParameters == null && values.length > 0)
+		{
+			namedParameters = new ArrayList<>(values.length);
+		}
+
+		for (String val : values)
+		{
+			addNamed(name, val, index, type);
+		}
+	}
+
+	private void addNamed(String name, String value, int index, Type type) 
+	{
 		if (namedParameters == null)
 		{
 			namedParameters = new ArrayList<>(1);
 		}
 
-		List<String> values = new ArrayList<>();
-		if (value instanceof String[])
+		NamedPair entry = new NamedPair(name, value, type);
+
+		if (index < 0 || index > namedParameters.size())
 		{
-			values.addAll(Arrays.asList((String[])value));
+			namedParameters.add(entry);
 		}
 		else
 		{
-			values.add(value.toString());
+			namedParameters.add(index, entry);
 		}
-
-		for (String val : values)
-		{
-			NamedPair entry = new NamedPair(name, val, type);
-
-			if (index < 0 || index > namedParameters.size())
-			{
-				namedParameters.add(entry);
-			}
-			else
-			{
-				namedParameters.add(index, entry);
-			}
-		}
-		return this;
 	}
 
 	/**
@@ -413,23 +425,47 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	{
 		if (other != null && this != other)
 		{
-			for (int index = 0; index < other.getIndexedCount(); index++)
-			{
-				if (!other.get(index).isNull())
-				{
-					set(index, other.get(index));
-				}
-			}
-			for (String name : other.getNamedKeys())
-			{
-				remove(name);
-			}
-			for (NamedPair curNamed : other.getAllNamed())
-			{
-				add(curNamed.getKey(), curNamed.getValue(), curNamed.getType());
-			}
+			mergeIndexed(other);
+			mergeNamed(other);
 		}
 		return this;
+	}
+
+	private void mergeIndexed(PageParameters other)
+	{
+		final int otherIndexedCount = other.getIndexedCount();
+		for (int index = 0; index < otherIndexedCount; index++)
+		{
+			final StringValue value = other.get(index);
+			if (!value.isNull())
+			{
+				set(index, value);
+			}
+		}
+	}
+
+	private void mergeNamed(PageParameters other) 
+	{
+		final List<NamedPair> otherNamed = other.namedParameters;
+		if (otherNamed == null || otherNamed.isEmpty())
+		{
+			return;
+		}
+
+		for (NamedPair curNamed : otherNamed)
+		{
+			remove(curNamed.getKey());
+		}
+
+		if (this.namedParameters == null)
+		{
+			this.namedParameters = new ArrayList<>(otherNamed.size());
+		}
+
+		for (NamedPair curNamed : otherNamed)
+		{
+			add(curNamed.getKey(), curNamed.getValue(),  curNamed.getType());
+		}
 	}
 
 	@Override
