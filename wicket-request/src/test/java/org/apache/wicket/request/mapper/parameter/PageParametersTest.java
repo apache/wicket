@@ -61,9 +61,31 @@ public class PageParametersTest extends Assert
 
 			if (found == false)
 			{
-				throw new IllegalStateException("Expected to find a StringValue with value: " + in);
+				fail("Expected to find a StringValue with value: " + in);
 			}
 		}
+	}
+
+	@Test
+	public void addEmptyStringArrayValue()
+	{
+		PageParameters parameters = new PageParameters();
+
+		String[] input = new String[] {  };
+		parameters.add("key", input, INamedParameters.Type.MANUAL);
+
+		assertTrue(parameters.isEmpty());
+	}
+
+	@Test
+	public void addEmptyStringValue()
+	{
+		PageParameters parameters = new PageParameters();
+
+		parameters.add("key", "", INamedParameters.Type.MANUAL);
+
+		assertFalse(parameters.isEmpty());
+		assertTrue(parameters.get("key").isEmpty());
 	}
 
 	/**
@@ -181,6 +203,16 @@ public class PageParametersTest extends Assert
 		assertEquals(2, left.getValues("both").size());
 		assertEquals("both1-r", left.getValues("both").get(0).toString());
 		assertEquals("both2-r", left.getValues("both").get(1).toString());
+	}
+
+	@Test
+	public void mergeEmptyParameters()
+	{
+		final PageParameters left = new PageParameters();
+		final PageParameters right = new PageParameters();
+		left.mergeWith(right);
+		
+		assertTrue(left.isEmpty());
 	}
 
 	/**
