@@ -68,7 +68,11 @@ public abstract class AbstractMapper implements IRequestMapper
 	 */
 	protected String getPlaceholder(final String s, char startChar)
 	{
-		if ((s == null) || (s.length() < 4) || !s.startsWith(startChar + "{") || !s.endsWith("}"))
+		if (s == null || s.length() < 4)
+		{
+			return null;
+		}
+		else if (s.charAt(0) != startChar || s.charAt(1) != '{' || s.charAt(s.length() - 1) != '}')
 		{
 			return null;
 		}
