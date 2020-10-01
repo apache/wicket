@@ -58,30 +58,13 @@ public class AbstractUpgradeFilter extends WicketFilter
 			final FilterChain chain)
 		throws IOException, ServletException
 	{
-
-		// Assume we are able to handle the request
-		boolean res = true;
-
 		ThreadContext.setRequestCycle(requestCycle);
-
 		if (acceptWebSocket(httpServletRequest, httpServletResponse) || httpServletResponse.isCommitted())
 		{
-			res = true;
+			return true;
 		}
-		else if (requestCycle.processRequestAndDetach() || httpServletResponse.isCommitted())
-		{
-			webResponse.flush();
-		}
-		else
-		{
-			if (chain != null)
-			{
-				chain.doFilter(httpServletRequest, httpServletResponse);
-			}
-			res = false;
-		}
-
-		return res;
+		
+		return super.processRequestCycle(requestCycle, webResponse, httpServletRequest, httpServletResponse, chain);
 	}
 
 	protected boolean acceptWebSocket(HttpServletRequest req, HttpServletResponse resp)
