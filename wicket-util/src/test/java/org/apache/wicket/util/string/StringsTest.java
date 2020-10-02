@@ -16,19 +16,24 @@
  */
 package org.apache.wicket.util.string;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("javadoc")
 public class StringsTest
 {
 	@Test
-	public void stripJSessionId()
+	void stripJSessionId()
 	{
 		String url = "http://localhost/abc";
 		assertEquals(url, Strings.stripJSessionId(url));
@@ -48,7 +53,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void test()
+	void test()
 	{
 		assertEquals("foo", Strings.lastPathComponent("bar:garply:foo", ':'));
 		assertEquals("foo", Strings.lastPathComponent("foo", ':'));
@@ -70,7 +75,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void beforeFirst()
+	void beforeFirst()
 	{
 		assertNull(Strings.beforeFirst(null, '.'));
 		assertEquals("", Strings.beforeFirst("", '.'));
@@ -83,7 +88,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void afterFirst()
+	void afterFirst()
 	{
 		assertNull(Strings.afterFirst(null, '.'));
 		assertEquals("", Strings.afterFirst("", '.'));
@@ -96,7 +101,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void afterLast()
+	void afterLast()
 	{
 		assertNull(Strings.afterLast(null, '.'));
 		assertEquals("", Strings.afterLast("", '.'));
@@ -109,7 +114,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void beforeLastPathComponent()
+	void beforeLastPathComponent()
 	{
 		assertNull(Strings.beforeLastPathComponent(null, '.'));
 		assertEquals("", Strings.beforeLastPathComponent("", '.'));
@@ -123,7 +128,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void capitalize()
+	void capitalize()
 	{
 		assertEquals("Lorem ipsum dolor sit amet",
 			Strings.capitalize("lorem ipsum dolor sit amet"));
@@ -135,7 +140,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void escapeMarkup()
+	void escapeMarkup()
 	{
 		assertNull(Strings.escapeMarkup(null));
 		assertEquals("", Strings.escapeMarkup("").toString());
@@ -167,7 +172,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void escapeMarkupWhiteSpace()
+	void escapeMarkupWhiteSpace()
 	{
 		assertNull(Strings.escapeMarkup(null, true));
 		assertEquals("", Strings.escapeMarkup("", true).toString());
@@ -180,7 +185,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void escapeMarkupUnicode()
+	void escapeMarkupUnicode()
 	{
 		assertNull(Strings.escapeMarkup(null, true, true));
 		assertEquals("", Strings.escapeMarkup("", true, true).toString());
@@ -195,7 +200,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void replaceHtmlEscapeNumber()
+	void replaceHtmlEscapeNumber()
 	{
 		assertNull(Strings.replaceHtmlEscapeNumber(null));
 		assertEquals("", Strings.replaceHtmlEscapeNumber(""));
@@ -212,7 +217,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void firstPathComponent()
+	void firstPathComponent()
 	{
 		assertNull(Strings.firstPathComponent(null, '.'));
 		assertEquals("", Strings.firstPathComponent("", '.'));
@@ -222,7 +227,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void isEmpty()
+	void isEmpty()
 	{
 		assertTrue(Strings.isEmpty(null));
 		assertTrue(Strings.isEmpty(""));
@@ -234,7 +239,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void isTrue() throws StringValueConversionException
+	void isTrue() throws StringValueConversionException
 	{
 		assertFalse(Strings.isTrue(null));
 		assertFalse(Strings.isTrue(""));
@@ -259,7 +264,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void invalidIsTrue()
+	void invalidIsTrue()
 	{
 		assertThrows(StringValueConversionException.class, () -> {
 			Strings.isTrue("foo");
@@ -268,7 +273,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void replaceAll()
+	void replaceAll()
 	{
 		assertNull(Strings.replaceAll(null, null, null));
 		assertNull(Strings.replaceAll(null, "", null));
@@ -302,20 +307,22 @@ public class StringsTest
 	}
 
 	@Test
-	public void split()
+	void split()
 	{
 		assertArrayEquals(new String[0], Strings.split(null, '.'));
 		assertArrayEquals(new String[0], Strings.split("", '.'));
 		assertArrayEquals(new String[] { "", "" }, Strings.split(".", '.'));
 		assertArrayEquals(new String[] { "a", "" }, Strings.split("a.", '.'));
 		assertArrayEquals(new String[] { "a", "b" }, Strings.split("a.b", '.'));
+		assertArrayEquals(new String[] { "a", "b", "" }, Strings.split("a.b.", '.'));
+		assertArrayEquals(new String[] { "", "b", "" }, Strings.split(".b.", '.'));
 		assertArrayEquals(new String[] { "a", "b", "c" }, Strings.split("a.b.c", '.'));
 		assertArrayEquals(new String[] { "a", "b", "c" }, Strings.split("a b c", ' '));
 		assertArrayEquals(new String[] { "abc" }, Strings.split("abc", ' '));
 	}
 
 	@Test
-	public void stripEnding()
+	void stripEnding()
 	{
 		assertNull(Strings.stripEnding(null, null));
 		assertEquals("", Strings.stripEnding("", null));
@@ -327,7 +334,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void toBoolean() throws StringValueConversionException
+	void toBoolean() throws StringValueConversionException
 	{
 		assertEquals(Boolean.FALSE, Strings.toBoolean(null));
 		assertEquals(Boolean.FALSE, Strings.toBoolean("off"));
@@ -344,7 +351,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void invalidToBoolean()
+	void invalidToBoolean()
 	{
 		assertThrows(StringValueConversionException.class, () -> {
 			Strings.toBoolean("waar");
@@ -352,14 +359,14 @@ public class StringsTest
 	}
 
 	@Test
-	public void toChar()
+	void toChar()
 	{
 		assertEquals(' ', Strings.toChar(" "));
 		assertEquals('a', Strings.toChar("a"));
 	}
 
 	@Test
-	public void invalidToChar1()
+	void invalidToChar1()
 	{
 		assertThrows(StringValueConversionException.class, () -> {
 			Strings.toChar("");
@@ -368,7 +375,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void invalidToChar2()
+	void invalidToChar2()
 	{
 
 		assertThrows(StringValueConversionException.class, () -> {
@@ -377,7 +384,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void invalidToChar3()
+	void invalidToChar3()
 	{
 		assertThrows(StringValueConversionException.class, () -> {
 			Strings.toChar("aa");
@@ -385,7 +392,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void toMultilineMarkup()
+	void toMultilineMarkup()
 	{
 		assertNull(Strings.toMultilineMarkup(null));
 		assertEquals("<p></p>", Strings.toMultilineMarkup("").toString());
@@ -417,7 +424,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void testToString()
+	void testToString()
 	{
 		assertNull(Strings.toString((Object)null));
 		assertEquals("", Strings.toString(""));
@@ -436,7 +443,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void toStringThrowable()
+	void toStringThrowable()
 	{
 		NullPointerException np = new NullPointerException("null test");
 		RuntimeException wre = new RuntimeException("null test", np);
@@ -446,7 +453,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void testJoin() throws Exception
+	void testJoin() throws Exception
 	{
 		List<String> fragments = Arrays.asList("foo", "bar", "baz");
 
@@ -457,7 +464,7 @@ public class StringsTest
 	}
 
 	@Test
-	public void testNonchar()
+	void testNonchar()
 	{
 		assertEquals("", Strings.escapeMarkup("\ufffe\uFDDF\uFDE0\uFDD0\uFDEF").toString());
 		assertEquals("", Strings.toEscapedUnicode("\ufffe\uFDDF\uFDE0\uFDD0\uFDEF"));
