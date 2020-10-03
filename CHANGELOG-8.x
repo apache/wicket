@@ -2,6 +2,28 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.10.0
+
+** Bug
+
+    * [WICKET-6702] - AsynchronousPageStore with NotDetachedModelChecker - "Not detached model found" exception on several fast sequential Ajax calls
+    * [WICKET-6818] - NPE in WicketEndpoint onClose
+    * [WICKET-6822] - AsynchronousPageStore Potential Memory Leak
+
+** Improvement
+
+    * [WICKET-6824] - Use concatenation instead of String.format for frequently called methods
+    * [WICKET-6826] - Improve performance and reduce allocations for Behaviors
+    * [WICKET-6827] - Improve performance of Strings.join and Strings.replaceAll
+    * [WICKET-6828] - Wrong tree branch icon with hidden children
+    * [WICKET-6829] - Use String.isEmpty() instead of "".equals(...)
+    * [WICKET-6830] - Convert Behaviors into a static utility class to reduce allocations
+    * [WICKET-6831] - Try to flush the response before detach
+    * [WICKET-6833] - Reduce allocations when merging page parameters
+    * [WICKET-6835] - Improve performance of AbstractMapper.getPlaceholder
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.9.0
 
 ** Bug
