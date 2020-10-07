@@ -2,6 +2,44 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.1.0
+
+** Bug
+
+    * [WICKET-6702] - AsynchronousPageStore with NotDetachedModelChecker - "Not detached model found" exception on several fast sequential Ajax calls
+    * [WICKET-6802] - FilePageStore writing to UserDefinedFileAttributeView might be null
+    * [WICKET-6803] -  wicket-objectsizeof-agent has no valid automatic module name
+    * [WICKET-6806] - CSP header response decorator breaks JavaScriptFilteredIntoFooterHeaderResponse 
+    * [WICKET-6808] - Cannot add page to AjaxRequestTarget
+    * [WICKET-6810] - Asynchronous+encrypted pagestore leads to WicketRuntimeException
+    * [WICKET-6813] - Setting child-src does not update frame-src after initial assignment
+    * [WICKET-6818] - NPE in WicketEndpoint onClose
+    * [WICKET-6822] - AsynchronousPageStore Potential Memory Leak
+    * [WICKET-6825] - wicket-ioc 9.0.0 throws IAE with JDK14, still includes outdated ASM 7.1.0 in cglib-nodep
+    * [WICKET-6837] - Jupiter engine transitively included in war file
+
+** New Feature
+
+    * [WICKET-6805] - Add Cross-Origin Opener Policy and Cross-Origin Embedder Policy support
+
+** Improvement
+
+    * [WICKET-6786] - CsrfPreventionRequestCycleListener should support Fetch Metadata Request Headers
+    * [WICKET-6807] - Fake Submitting Button
+    * [WICKET-6821] - Completely disable CSP support
+    * [WICKET-6824] - Use concatenation instead of String.format for frequently called methods
+    * [WICKET-6826] - Improve performance and reduce allocations for Behaviors
+    * [WICKET-6827] - Improve performance of Strings.join and Strings.replaceAll
+    * [WICKET-6828] - Wrong tree branch icon with hidden children
+    * [WICKET-6829] - Use String.isEmpty() instead of "".equals(...)
+    * [WICKET-6830] - Convert Behaviors into a static utility class to reduce allocations
+    * [WICKET-6831] - Try to flush the response before detach
+    * [WICKET-6833] - Reduce allocations when merging page parameters
+    * [WICKET-6835] - Improve performance of AbstractMapper.getPlaceholder
+    * [WICKET-6838] - Improve performance of Strings.split
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.0.0
 
 ** Bug
