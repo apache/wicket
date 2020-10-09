@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.transformer;
 
+import java.util.function.Function;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -37,7 +39,10 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 	@Test
 	public void responseTransformation()
 	{
-		TestPage testPage = new TestPage();
+		TestPage	testPage	= new TestPage();
+		String		replacement	= "replacement";
+
+		testPage.add(new Label(TestPage.LABEL_ID, TestPage.LABEL_VAL));
 		testPage.add(new AbstractTransformerBehavior()
 		{
 			/** */
@@ -47,11 +52,12 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 			public CharSequence transform(Component component, CharSequence output)
 				throws Exception
 			{
-				return output.toString().replace("to be replaced", "replacement");
+				return output.toString().replace(TestPage.LABEL_VAL, replacement);
 			}
 		});
+
 		tester.startPage(testPage);
-		assertTrue(tester.getLastResponseAsString().contains("replacement"));
+		assertTrue(tester.getLastResponseAsString().contains(replacement));
 	}
 
 	/**
@@ -69,7 +75,77 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 		tester.clickLink("updateLabel", true);
 		tester.assertContains("ajax request");
 		tester.assertContainsNot("normal request");
+	}
 
+	/**
+	 * Test how multiple different transformers applied to the same component behave.
+	 * <p>
+	 * The current implementation of {@link AbstractTransformerBehavior} doesn't support multiple
+	 * instances on the same component, a container needs to be used explicitly instead. So make
+	 * sure the implementation is as expected, as otherwise the container might not be necessary at
+	 * all anymore, and that the container really works around the problem.
+	 * </p>
+	 * @see <a href="https://issues.apache.org/jira/projects/WICKET/issues/WICKET-6823">JIRA issue</a>
+	 */
+	@Test
+	public void multiTransesSameComp()
+	{
+		TestPage	testPage	= new TestPage();
+		Label		label		= new Label(TestPage.LABEL_ID, TestPage.LABEL_VAL);
+
+		Function<String, AbstractTransformerBehavior> transProd = (val) ->
+		{
+			return new AbstractTransformerBehavior()
+			{
+				/** */
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public CharSequence transform(Component component, CharSequence output)
+					throws Exception
+				{
+					String outStr = output.toString();
+					if (outStr.contains(TestPage.LABEL_VAL))
+					{
+						return outStr.replace(TestPage.LABEL_VAL, val);
+					}
+
+					// Make somewhat sure to recognize that BOTH transformers have been applied.
+					return outStr.replaceAll
+					(
+						">(.+)</span>",
+						String.format(">$1%s</span>", val)
+					);
+				}
+			};
+		};
+
+		label.add(transProd.apply("foo"));
+		label.add(transProd.apply("bar"));
+
+		// Make sure the expected limited implementation is still available, which makes a container
+		// necessary only at all. If that has changed, the container might be removed as well.
+		testPage.add(label);
+		tester.startPage(testPage);
+		tester.isVisible(TestPage.LABEL_ID);
+		tester.assertContains(">foo</span>");
+		tester.assertContainsNot("</html>");
+
+		testPage	= new TestPage();
+		label		= new Label(TestPage.LABEL_ID, TestPage.LABEL_VAL);
+
+		label.add(AbstractTransformerBehavior.Multi.newFor
+		(
+			transProd.apply("foo"),
+			transProd.apply("bar")
+		));
+
+		// Maike sure that the container provided as workaround really fixes the problem.
+		testPage.add(label);
+		tester.startPage(testPage);
+		tester.isVisible(TestPage.LABEL_ID);
+		tester.assertContains(">foobar</span>");
+		tester.assertContains("</html>");
 	}
 
 	private static class AjaxTestPage extends WebPage implements IMarkupResourceStreamProvider
@@ -126,12 +202,14 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
+		private static final String LABEL_ID	= "label";
+		private static final String LABEL_VAL	= "{to be replaced}";
+
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
-			return new StringResourceStream("<html><body>{to be replaced}</body></html>");
+			return new StringResourceStream("<html><body><span wicket:id='label'></span></body></html>");
 		}
-
 	}
 }
