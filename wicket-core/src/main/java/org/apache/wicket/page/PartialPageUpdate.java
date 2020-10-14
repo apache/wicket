@@ -158,12 +158,15 @@ public abstract class PartialPageUpdate
 
 			onBeforeRespond(response);
 
-			// queue up prepend javascripts. unlike other steps these are executed out of order so that
-			// components can contribute them from inside their onbeforerender methods.
+			// prepare first so that components can contribute prepend JS
+			// from their onbeforerender methods. 
+			List<Component> toBeWritten = prepareComponents();
+			
+			// prepend javascripts
 			writeEvaluations(response, prependJavaScripts);
 
 			// process added components
-			writeComponents(response, encoding);
+			writeComponents(toBeWritten, response, encoding);
 
 			onAfterRespond(response);
 
@@ -242,20 +245,10 @@ public abstract class PartialPageUpdate
 		}
 	}
 
-
-	/**
-	 * Processes components added to the target. This involves attaching components, rendering
-	 * markup into a client side xml envelope, and detaching them
-	 *
-	 * @param response
-	 *      the response to write to
-	 * @param encoding
-	 *      the encoding for the response
-	 */
-	private void writeComponents(Response response, String encoding)
+	private List<Component> prepareComponents()
 	{
 		componentsFrozen = true;
-
+		
 		List<Component> toBeWritten = new ArrayList<>(markupIdToComponent.size());
 		
 		// delay preparation of feedbacks after all other components
@@ -270,6 +263,23 @@ public abstract class PartialPageUpdate
 			// .. now prepare all postponed feedbacks
 			delay.beforeRender();
 		}
+		
+		return toBeWritten;
+	}
+
+	/**
+	 * Processes components added to the target. This involves attaching components, rendering
+	 * markup into a client side xml envelope, and detaching them
+	 *
+	 * @param response
+	 *      the response to write to
+	 * @param encoding
+	 *      the encoding for the response
+	 */
+	private void writeComponents(List<Component> toBeWritten, Response response, String encoding)
+	{
+		componentsFrozen = true;
+
 
 		// write components
 		for (Component component : toBeWritten)

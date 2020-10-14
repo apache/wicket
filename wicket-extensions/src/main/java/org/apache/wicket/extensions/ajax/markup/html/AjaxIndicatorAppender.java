@@ -22,6 +22,7 @@ import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.page.PartialPageUpdate;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -75,11 +76,18 @@ public class AjaxIndicatorAppender extends Behavior
 		this.indicator = indicator;
 	}
 
+	/**
+	 * Remove a possibly remaining indicator on partial updates of the page,
+	 * since a new indicator will be rendered anyways.
+	 * <p> 
+	 * Note: JavaScripts can not be prepended from {@link #beforeRender(Component)}, since
+	 * at that time the prepend JavaScripts are already rendered.  
+	 * 
+	 * @see PartialPageUpdate
+	 */
 	@Override
-	public void renderHead(final Component component, final IHeaderResponse response)
+	public void onConfigure(Component component)
 	{
-		super.renderHead(component, response);
-
 		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> {
 			final String javascript = "var e = Wicket.$('" + getMarkupId() +
 				"'); if (e != null && typeof(e.parentNode) != 'undefined') e.parentNode.removeChild(e);";
@@ -87,7 +95,6 @@ public class AjaxIndicatorAppender extends Behavior
 			target.prependJavaScript(javascript);
 		});
 	}
-
 
 	@Override
 	public void afterRender(final Component component)
