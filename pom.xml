@@ -1133,8 +1133,6 @@
 						<comparisonVersion>9.0.0</comparisonVersion>
 						<failOnError>true</failOnError>
 						<logResults>true</logResults>
-						<!-- Disable until Wicket 9.0.0 -->
-						<skip>true</skip>
 					</configuration>
 					<executions>
 						<execution>

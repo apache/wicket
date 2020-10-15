@@ -169,6 +169,17 @@ public class CsrfPreventionRequestCycleListener extends OriginResourceIsolationP
 	private String errorMessage = "Origin does not correspond to request";
 
 	/**
+	 * TODO remove in Wicket 10
+	 */
+	@Override
+	public CsrfPreventionRequestCycleListener addAcceptedOrigin(String acceptedOrigin)
+	{
+		super.addAcceptedOrigin(acceptedOrigin);
+		
+		return this;
+	}
+
+	/**
 	 * Sets the action when no Origin header is present in the request. Default {@code ALLOW}.
 	 *
 	 * @param action
