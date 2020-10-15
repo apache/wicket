@@ -71,9 +71,6 @@ public abstract class Behavior
 
 	/**
 	 * Called when a component is about to render.
-	 * <p>
-	 * Note: This method is <em>not</em> called before rendering of the component tree
-	 * as the similar named method {@link Component#onBeforeRender()}.
 	 * 
 	 * @param component
 	 *            the component that has this behavior coupled

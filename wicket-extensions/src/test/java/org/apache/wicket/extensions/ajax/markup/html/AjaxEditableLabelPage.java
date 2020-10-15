@@ -35,9 +35,7 @@ public class AjaxEditableLabelPage extends WebPage
 	{
 		final AjaxEditableLabel<String> ajaxLabel = new AjaxEditableLabel<String>("ajaxLabel",
 			new Model<>("ajaxTest"));
-		ajaxLabel.add(new AjaxIndicatorAppender());
 		add(ajaxLabel);
-		
 		add(new AjaxLink<Void>("toggle")
 		{
 			private static final long serialVersionUID = 1L;

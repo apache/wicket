@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -81,10 +80,6 @@ public class AjaxEditableTest extends WicketTestCase
 		tester.executeBehavior(editorBehavior);
 		tester.assertInvisible("ajaxLabel:editor");
 		tester.assertVisible("ajaxLabel:label");
-		
-		// WICKET-6840 prepended JavaScript comes before component replacement
-		String response = tester.getLastResponseAsString();
-		assertTrue(response.indexOf("<header-contribution") < response.indexOf("<component"), "prepend before component");
 	}
 
 	/**
