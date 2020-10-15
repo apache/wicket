@@ -850,20 +850,32 @@
 				}
 
 				var steps = context.steps;
-				var stepIndexOfLastReplacedComponent = -1;
 
-				// go through the ajax response and execute all items
+				// go through the ajax response and process priority evaluations and
+				// header contributions first
 				for (var i = 0; i < root.childNodes.length; ++i) {
-					var node = root.childNodes[i];
-					
-					if (node.tagName === "header-contribution") {
-						this.processHeaderContribution(context, node);
-					} else if (node.tagName === "component") {
+					var childNode = root.childNodes[i];
+					if (childNode.tagName === "header-contribution") {
+						this.processHeaderContribution(context, childNode);
+					} else if (childNode.tagName === "priority-evaluate") {
+						this.processHeaderContribution(context, childNode);
+					}
+				}
+
+				// ... then add components, process remaining evaluations and a
+				// possible redirect
+				var stepIndexOfLastReplacedComponent = -1;
+				for (var c = 0; c < root.childNodes.length; ++c) {
+					var node = root.childNodes[c];
+
+					if (node.tagName === "component") {
 						if (stepIndexOfLastReplacedComponent === -1) {
 							this.processFocusedComponentMark(context);
 						}
 						stepIndexOfLastReplacedComponent = steps.length;
 						this.processComponent(context, node);
+					} else if (node.tagName === "evaluate") {
+						this.processHeaderContribution(context, node);
 					} else if (node.tagName === "redirect") {
 						this.processRedirect(context, node);
 					}

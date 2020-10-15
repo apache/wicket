@@ -158,12 +158,12 @@ public abstract class PartialPageUpdate
 
 			onBeforeRespond(response);
 
-			// queue up prepend javascripts. unlike other steps these are executed out of order so that
-			// components can contribute them from inside their onbeforerender methods.
-			writeEvaluations(response, prependJavaScripts);
-
 			// process added components
 			writeComponents(response, encoding);
+
+			// queue up prepend javascripts. unlike other steps these are executed out of order so that
+			// components can contribute them from during rendering.
+			writePriorityEvaluations(response, prependJavaScripts);
 
 			onAfterRespond(response);
 
@@ -215,33 +215,55 @@ public abstract class PartialPageUpdate
 	 * @param scripts
 	 *      the JavaScripts to evaluate
 	 */
+	protected void writePriorityEvaluations(final Response response, Collection<CharSequence> scripts)
+	{
+		if (!scripts.isEmpty())
+		{
+			CharSequence contents = renderScripts(scripts);
+			
+			writePriorityEvaluation(response, contents);
+		}
+	}
+	
+	/**
+	 *
+	 * @param response
+	 *      the response to write to
+	 * @param scripts
+	 *      the JavaScripts to evaluate
+	 */
 	protected void writeEvaluations(final Response response, Collection<CharSequence> scripts)
 	{
 		if (!scripts.isEmpty())
 		{
-			StringBuilder combinedScript = new StringBuilder(1024);
-			for (CharSequence script : scripts)
-			{
-				combinedScript.append("(function(){").append(script).append("})();");
-			}
-
-			StringResponse stringResponse = new StringResponse();
-			IHeaderResponse decoratedHeaderResponse = Application.get().decorateHeaderResponse(new HeaderResponse()
-			{
-				@Override
-				protected Response getRealResponse()
-				{
-					return stringResponse;
-				}
-			});
+			CharSequence contents = renderScripts(scripts);
 			
-			decoratedHeaderResponse.render(JavaScriptHeaderItem.forScript(combinedScript, null));
-			decoratedHeaderResponse.close();
-			
-			writeHeaderContribution(response, stringResponse.getBuffer());
+			writeEvaluation(response, contents);
 		}
 	}
 
+	private CharSequence renderScripts(Collection<CharSequence> scripts) {
+		StringBuilder combinedScript = new StringBuilder(1024);
+		for (CharSequence script : scripts)
+		{
+			combinedScript.append("(function(){").append(script).append("})();");
+		}
+
+		StringResponse stringResponse = new StringResponse();
+		IHeaderResponse decoratedHeaderResponse = Application.get().decorateHeaderResponse(new HeaderResponse()
+		{
+			@Override
+			protected Response getRealResponse()
+			{
+				return stringResponse;
+			}
+		});
+		
+		decoratedHeaderResponse.render(JavaScriptHeaderItem.forScript(combinedScript, null));
+		decoratedHeaderResponse.close();
+		
+		return stringResponse.getBuffer();
+	}
 
 	/**
 	 * Processes components added to the target. This involves attaching components, rendering
@@ -356,7 +378,39 @@ public abstract class PartialPageUpdate
 	 * @param encoding
 	 *      the encoding for the response
 	 */
-	protected abstract void writeComponent(Response response, String markupId, Component component, String encoding);
+	protected void writeComponent(Response response, String markupId, Component component, String encoding)
+	{
+		// substitute our encoding response for the old one so we can capture
+		// component's markup in a manner safe for transport inside CDATA block
+		Response oldResponse = RequestCycle.get().setResponse(bodyBuffer);
+
+		try
+		{
+			// render any associated headers of the component
+			writeHeaderContribution(response, component);
+			
+			bodyBuffer.reset();
+			
+			try
+			{
+				component.renderPart();
+			}
+			catch (RuntimeException e)
+			{
+				bodyBuffer.reset();
+				throw e;
+			}
+		}
+		finally
+		{
+			// Restore original response
+			RequestCycle.get().setResponse(oldResponse);
+		}
+
+		writeComponent(response, markupId, bodyBuffer.getContents());
+
+		bodyBuffer.reset();
+	}
 
 	/**
 	 * Writes the head part of the response.
@@ -370,12 +424,42 @@ public abstract class PartialPageUpdate
 	protected abstract void writeHeader(Response response, String encoding);
 
 	/**
-	 * Writes header contribution (&lt;link/&gt; or &lt;script/&gt;) to the response.
+	 * Writes a component to the response.
+	 * <p>
+	 * TODO make abstract in Wicket 10
 	 *
 	 * @param response
 	 *      the response to write to
+	 * @param contents      
+	 * 		the contents
+	 */
+	protected void writeComponent(Response response, String markupId, CharSequence contents) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * TODO make abstract in Wicket 10
+	 */
+	protected void writePriorityEvaluation(Response response, CharSequence contents) {
+		throw new UnsupportedOperationException();		
+	}
+
+	/**
+	 * Writes a header contribution to the response.
+	 *
+	 * @param response
+	 *      the response to write to
+	 * @param contents      
+	 * 		the contents
 	 */
 	protected abstract void writeHeaderContribution(Response response, CharSequence contents);
+
+	/**
+	 * TODO make abstract in Wicket 10
+	 */
+	protected void writeEvaluation(Response response, CharSequence contents) {
+		throw new UnsupportedOperationException();		
+	}
 
 	@Override
 	public boolean equals(Object o)
@@ -587,6 +671,8 @@ public abstract class PartialPageUpdate
 			requestCycle.setResponse(oldResponse);
 		}
 
+		// note: in almost all cases the header will be empty here,
+		// since all header items will be rendered later on close only
 		writeHeaderContribution(response, headerBuffer.getContents());
 		headerRendering = false;
 	}
