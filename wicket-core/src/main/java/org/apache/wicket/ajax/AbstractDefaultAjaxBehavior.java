@@ -36,6 +36,7 @@ import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -44,6 +45,10 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * The base class for Wicket's default AJAX implementation.
@@ -55,8 +60,9 @@ import org.apache.wicket.util.time.Duration;
  */
 public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 {
-
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractDefaultAjaxBehavior.class);
 
 	/** reference to the default indicator gif file. */
 	public static final ResourceReference INDICATOR = new PackageResourceReference(
@@ -153,6 +159,17 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		}
 		updateAjaxAttributes(attributes);
 		return attributes;
+	}
+
+	/**
+	 * This method decides whether to continue processing or to abort the Ajax request when the method
+	 * is different than the {@link AjaxRequestAttributes#getMethod()}'s method.
+	 *
+	 * @return response that can either abort or continue the processing of the Ajax request
+	 */
+	protected Form.MethodMismatchResponse onMethodMismatch()
+	{
+		return Form.MethodMismatchResponse.CONTINUE;
 	}
 
 	/**
@@ -591,6 +608,20 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	@Override
 	public final void onRequest()
 	{
+		Form.MethodMismatchResponse methodMismatch = onMethodMismatch();
+		if (methodMismatch == Form.MethodMismatchResponse.ABORT)
+		{
+			AjaxRequestAttributes attrs = getAttributes();
+			String desiredMethod = attrs.getMethod().toString();
+			String actualMethod = ((HttpServletRequest) RequestCycle.get().getRequest().getContainerRequest()).getMethod();
+			if (!desiredMethod.equalsIgnoreCase(actualMethod))
+			{
+				LOG.debug("Ignoring the Ajax request because its method '{}' is different than the expected one '{}",
+				          actualMethod, desiredMethod);
+				return;
+			}
+		}
+
 		WebApplication app = (WebApplication)getComponent().getApplication();
 		AjaxRequestTarget target = app.newAjaxRequestTarget(getComponent().getPage());
 

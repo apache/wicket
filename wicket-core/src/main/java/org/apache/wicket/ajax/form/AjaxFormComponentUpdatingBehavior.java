@@ -55,9 +55,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	private static final Logger log = LoggerFactory
 		.getLogger(AjaxFormComponentUpdatingBehavior.class);
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -71,10 +68,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		super(event);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onBind()
-	 */
 	@Override
 	protected void onBind()
 	{
@@ -129,10 +122,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		attributes.setMethod(Method.POST);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
-	 */
 	@Override
 	protected final void onEvent(final AjaxRequestTarget target)
 	{
