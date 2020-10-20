@@ -52,21 +52,21 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 	/**
 	 * Container to apply multiple {@link AbstractTransformerBehavior} to some component.
 	 * <p>
-	 * This container is by design NOT about multiple arbitrary transformations, but really only for the
-	 * one use case supporting multiple instances of {@link AbstractTransformerBehavior} on one and the
-	 * same component. The current implementation of that works with temporary responses, but doesn't
-	 * support nesting itself properly in case multiple behaviors assigned to the same component, which
-	 * results in missing rendered output and most likely entirely broken HTML documents in the end.
+	 * This container is by design NOT about multiple arbitrary transformations, but really only for
+	 * the one use case supporting multiple instances of {@link AbstractTransformerBehavior} on one
+	 * and the same component. The current implementation of that makes use of temporary responses,
+	 * but doesn't support nesting itself properly in case multiple behaviors assigned to the same
+	 * component. That results in missing rendered output and most likely entirely broken HTML.
 	 * </p>
 	 * <p>
-	 * The easiest workaround for that problem is simply introducing this container which users need to
-	 * use in those cases: An instance needs to be created with all transformers of interest in the
-	 * order they should be applied and the container takes care of doing so. Because the container is
-	 * an {@link AbstractTransformerBehavior} itself, things simply work like with individual behaviors,
-	 * while response handling is only managed by the container. So when used with this container, the
-	 * callbacks of the maintained instances like {@link AbstractTransformerBehavior#afterRender(Component)}
-	 * etc., are NOT used anymore! OTOH, the individual behaviors stay useful without the container as
-	 * well.
+	 * The easiest workaround for that problem is simply introducing this container which users need
+	 * to use in those cases: An instance needs to be created with all transformers of interest in
+	 * the order they should be applied and the container takes care of doing so. As the container
+	 * is an {@link AbstractTransformerBehavior} itself, things simply work like with individual
+	 * behaviors, while response handling is only managed by the container. So when used with this
+	 * container, the callbacks of the internally maintained instances like
+	 * {@link AbstractTransformerBehavior#afterRender(Component)} etc., are NOT used anymore! OTOH,
+	 * the individual behaviors stay useful without the container  as well.
 	 * </p>
 	 * @see <a href="https://issues.apache.org/jira/projects/WICKET/issues/WICKET-6823">JIRA issue</a>
 	 */
@@ -110,11 +110,12 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 		/**
 		 * Create a new container with the given transformers and with keeping their order.
 		 * <p>
-		 * This factory expects multiple individual transformers already, because creating a container
-		 * with less doesn't make too much sense and users should reconsider then if this container is
-		 * of use at all. In most cases users do have individual transformers to apply only anyway and
-		 * don't need to provide a collection themself this way. OTOH, a collection could be empty or
-		 * contain only one element would then defeat the purpose of this container again.
+		 * This factory expects multiple individual transformers already, as creating a container
+		 * with less of those doesn't make too much sense and users should reconsider then if this
+		 * container is of use at all. In most cases users do have individual transformers to apply
+		 * only anyway and don't need to provide a collection themself this way. OTOH, a collection
+		 * could be empty, contain only one element etc. and would then defeat the purpose of this
+		 * container again.
 		 * </p>
 		 * @param first First transformer to apply.
 		 * @param second Second transformer to apply.
