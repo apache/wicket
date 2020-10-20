@@ -55,18 +55,17 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 	 * This container is by design NOT about multiple arbitrary transformations, but really only for
 	 * the one use case supporting multiple instances of {@link AbstractTransformerBehavior} on one
 	 * and the same component. The current implementation of that makes use of temporary responses,
-	 * but doesn't support nesting itself properly in case multiple behaviors assigned to the same
+	 * but doesn't support nesting itself properly if multiple behaviors get assigned to the same
 	 * component. That results in missing rendered output and most likely entirely broken HTML.
 	 * </p>
 	 * <p>
-	 * The easiest workaround for that problem is simply introducing this container which users need
-	 * to use in those cases: An instance needs to be created with all transformers of interest in
-	 * the order they should be applied and the container takes care of doing so. As the container
-	 * is an {@link AbstractTransformerBehavior} itself, things simply work like with individual
-	 * behaviors, while response handling is only managed by the container. So when used with this
-	 * container, the callbacks of the internally maintained instances (like
-	 * {@link AbstractTransformerBehavior#afterRender(Component)} etc.) are NOT used anymore! OTOH,
-	 * the individual behaviors stay useful without the container as well.
+	 * The easiest workaround for that problem is using this container in those cases: An instance
+	 * needs to be created with all transformers of interest in the order they should be applied and
+	 * the container takes care of doing so. Being an {@link AbstractTransformerBehavior} itself,
+	 * things simply work like with individual behaviors, while response handling is managed by the
+	 * container only. This means that callbacks of the internally maintained instances, like
+	 * {@link AbstractTransformerBehavior#afterRender(Component)} etc., are NOT used anymore! OTOH,
+	 * this way the behaviors stay individually useful without the container as well.
 	 * </p>
 	 * @see <a href="https://issues.apache.org/jira/projects/WICKET/issues/WICKET-6823">JIRA issue</a>
 	 */
