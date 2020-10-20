@@ -278,15 +278,16 @@ public class InSessionPageStore implements IPageStore
 
 				if ((page instanceof SerializedPage) == false)
 				{
+					pages.remove(p);
 					if (serializer == null)
 					{
-						pages.remove(p);
 						p--;
 					}
 					else
 					{
-						pages.set(p, new SerializedPage(page.getPageId(),
-							Classes.name(page.getClass()), serializer.serialize(page)));
+						byte[] bytes = serializer.serialize(page);
+						SerializedPage serializedPage = new SerializedPage(page.getPageId(), Classes.name(page.getClass()), bytes);
+						pages.add(p, serializedPage);
 					}
 				}
 			}
