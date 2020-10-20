@@ -64,9 +64,9 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 	 * the order they should be applied and the container takes care of doing so. As the container
 	 * is an {@link AbstractTransformerBehavior} itself, things simply work like with individual
 	 * behaviors, while response handling is only managed by the container. So when used with this
-	 * container, the callbacks of the internally maintained instances like
-	 * {@link AbstractTransformerBehavior#afterRender(Component)} etc., are NOT used anymore! OTOH,
-	 * the individual behaviors stay useful without the container  as well.
+	 * container, the callbacks of the internally maintained instances (like
+	 * {@link AbstractTransformerBehavior#afterRender(Component)} etc.) are NOT used anymore! OTOH,
+	 * the individual behaviors stay useful without the container as well.
 	 * </p>
 	 * @see <a href="https://issues.apache.org/jira/projects/WICKET/issues/WICKET-6823">JIRA issue</a>
 	 */
@@ -122,9 +122,9 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 		 * @param moreIf All other transformers to apply, if at all, in given order.
 		 * @return A container with multiple transformers being applied.
 		 */
-		public static Multi newFor(	AbstractTransformerBehavior		first,
-									AbstractTransformerBehavior		second,
-									AbstractTransformerBehavior...	moreIf)
+		public static Multi of(	AbstractTransformerBehavior		first,
+								AbstractTransformerBehavior		second,
+								AbstractTransformerBehavior...	moreIf)
 		{
 			List<AbstractTransformerBehavior> transformers = new ArrayList<>();
 

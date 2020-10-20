@@ -134,7 +134,7 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 		testPage	= new TestPage();
 		label		= new Label(TestPage.LABEL_ID, TestPage.LABEL_VAL);
 
-		label.add(AbstractTransformerBehavior.Multi.newFor
+		label.add(AbstractTransformerBehavior.Multi.of
 		(
 			transformerProducer.apply("foo"),
 			transformerProducer.apply("bar")
