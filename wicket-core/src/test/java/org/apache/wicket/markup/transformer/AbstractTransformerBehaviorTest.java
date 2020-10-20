@@ -93,7 +93,7 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 		TestPage	testPage	= new TestPage();
 		Label		label		= new Label(TestPage.LABEL_ID, TestPage.LABEL_VAL);
 
-		Function<String, AbstractTransformerBehavior> transProd = (val) ->
+		Function<String, AbstractTransformerBehavior> transformerProducer = (val) ->
 		{
 			return new AbstractTransformerBehavior()
 			{
@@ -120,8 +120,8 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 			};
 		};
 
-		label.add(transProd.apply("foo"));
-		label.add(transProd.apply("bar"));
+		label.add(transformerProducer.apply("foo"));
+		label.add(transformerProducer.apply("bar"));
 
 		// Make sure the expected limited implementation is still available, which makes a container
 		// necessary only at all. If that has changed, the container might be removed as well.
@@ -136,8 +136,8 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 
 		label.add(AbstractTransformerBehavior.Multi.newFor
 		(
-			transProd.apply("foo"),
-			transProd.apply("bar")
+			transformerProducer.apply("foo"),
+			transformerProducer.apply("bar")
 		));
 
 		// Maike sure that the container provided as workaround really fixes the problem.

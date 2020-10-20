@@ -78,28 +78,28 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 		 * All transformers which need to be applied in the order given by the user, which is the
 		 * same order as processed by the container in the end.
 		 */
-		private final List<AbstractTransformerBehavior> transes;
+		private final List<AbstractTransformerBehavior> transformers;
 
 		/**
 		 * Constructor simply storing the given transformers.
 		 *
-		 * @param transes, which must not be {@code null} or empty, as neither make sense here.
+		 * @param transformers, which must not be {@code null} or empty. Wouldn't makes sense here.
 		 */
-		private Multi(List<AbstractTransformerBehavior> transes)
+		private Multi(List<AbstractTransformerBehavior> transformers)
 		{
-			if ((transes == null) || transes.isEmpty())
+			if ((transformers == null) || transformers.isEmpty())
 			{
 				throw new IllegalArgumentException("No transformers given.");
 			}
 
-			this.transes = transes;
+			this.transformers = transformers;
 		}
 
 		@Override
 		public CharSequence transform(Component component, CharSequence output) throws Exception
 		{
 			CharSequence retVal = output;
-			for (AbstractTransformerBehavior trans : this.transes)
+			for (AbstractTransformerBehavior trans : this.transformers)
 			{
 				retVal = trans.transform(component, retVal);
 			}
@@ -126,17 +126,17 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 									AbstractTransformerBehavior		second,
 									AbstractTransformerBehavior...	moreIf)
 		{
-			List<AbstractTransformerBehavior> transes = new ArrayList<>();
+			List<AbstractTransformerBehavior> transformers = new ArrayList<>();
 
-			transes.add(Objects.requireNonNull(first,	"No first transformer given."));
-			transes.add(Objects.requireNonNull(second,	"No second transformer given."));
+			transformers.add(Objects.requireNonNull(first,	"No first transformer given."));
+			transformers.add(Objects.requireNonNull(second,	"No second transformer given."));
 
 			if ((moreIf != null) && (moreIf.length > 0))
 			{
-				transes.addAll(Arrays.asList(moreIf));
+				transformers.addAll(Arrays.asList(moreIf));
 			}
 
-			return new Multi(transes);
+			return new Multi(transformers);
 		}
 	}
 
