@@ -55,8 +55,8 @@ public class InSessionPageStore implements IPageStore
 	/**
 	 * Keep {@code maxPages} persistent in each session.
 	 * <p>
-	 * All pages added to this store <em>must</em> be {@code SerializedPage}s. You can achieve this
-	 * by letting a {@link SerializingPageStore} delegate to this store.
+	 * Any page added to this store <em>not</em> being a {@code SerializedPage} will be dropped
+	 * on serialization of the session.
 	 * 
 	 * @param maxPages
 	 *            maximum pages to keep in session
@@ -278,15 +278,22 @@ public class InSessionPageStore implements IPageStore
 
 				if ((page instanceof SerializedPage) == false)
 				{
+					// remove if not already serialized
 					pages.remove(p);
+					
 					if (serializer == null)
 					{
+						// cannot be serialized, thus skip
 						p--;
 					}
 					else
 					{
+						// serialize first
 						byte[] bytes = serializer.serialize(page);
 						SerializedPage serializedPage = new SerializedPage(page.getPageId(), Classes.name(page.getClass()), bytes);
+
+						// and then re-add (to prevent a serialization loop,
+						// in case the page holds a reference to the session)  
 						pages.add(p, serializedPage);
 					}
 				}

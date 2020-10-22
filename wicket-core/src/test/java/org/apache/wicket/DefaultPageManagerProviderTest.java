@@ -17,7 +17,9 @@
 package org.apache.wicket;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.pageStore.AsynchronousPageStore;
 import org.apache.wicket.pageStore.CachingPageStore;
@@ -45,6 +47,7 @@ class DefaultPageManagerProviderTest extends WicketTestCase
 		RequestPageStore request = (RequestPageStore)manager.getPageStore();
 		CachingPageStore caching = (CachingPageStore)request.getDelegate();
 		InSessionPageStore session = (InSessionPageStore)caching.getCache();
+		assertNull(PropertyResolver.getValue("serializer", session));
 		SerializingPageStore serializing = (SerializingPageStore)caching.getDelegate();
 		AsynchronousPageStore asynchronous = (AsynchronousPageStore)serializing.getDelegate();
 		DiskPageStore disk = (DiskPageStore)asynchronous.getDelegate();
