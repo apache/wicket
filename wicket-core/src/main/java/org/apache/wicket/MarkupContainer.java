@@ -1322,7 +1322,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private LinkedList<RemovedChild> removals_get()
 	{
-		return getMetaData(REMOVALS_KEY);
+		return getRequestFlag(RFLAG_CONTAINER_HAS_REMOVALS) ? getMetaData(REMOVALS_KEY) : null;
 	}
 
 	/**
@@ -1334,6 +1334,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private void removals_set(LinkedList<RemovedChild> removals)
 	{
+		setRequestFlag(RFLAG_CONTAINER_HAS_REMOVALS, removals != null);
 		setMetaData(REMOVALS_KEY, removals);
 	}
 
@@ -1342,7 +1343,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private void removals_clear()
 	{
-		setMetaData(REMOVALS_KEY, null);
+		if (getRequestFlag(RFLAG_CONTAINER_HAS_REMOVALS))
+		{
+			removals_set(null);
+		}
 	}
 
 	/**

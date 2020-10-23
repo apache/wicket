@@ -243,6 +243,38 @@ public class ComponentTest extends WicketTestCase
 		assertTrue(component.getFlagReserved5());
 	}
 
+	@Test
+	public void isEnabledInHierarchyCachesResult()
+	{
+		final SpyComponent c = new SpyComponent("test");
+
+		c.isEnabledInHierarchy();
+		c.isEnabledInHierarchy();
+		assertEquals(1, c.isEnabledCallCount);
+
+		c.setEnabled(false);
+
+		c.isEnabledInHierarchy();
+		c.isEnabledInHierarchy();
+		assertEquals(2, c.isEnabledCallCount);
+	}
+
+	@Test
+	public void isVisibleInHierarchyCachesResult()
+	{
+		final SpyComponent c = new SpyComponent("test");
+		
+		c.isVisibleInHierarchy();
+		c.isVisibleInHierarchy();
+		assertEquals(1, c.isVisibleCallCount);
+		
+		c.setVisible(false);
+		
+		c.isVisibleInHierarchy();
+		c.isVisibleInHierarchy();
+		assertEquals(2, c.isVisibleCallCount);
+	}
+
 	/**
 	 * Component#FLAG_RESERVED5 (Page's STATELESS_HINT) must be initially set to true
 	 */
@@ -256,6 +288,36 @@ public class ComponentTest extends WicketTestCase
 		private boolean getFlagReserved5()
 		{
 			return getFlag(FLAG_RESERVED5);
+		}
+
+		@Override
+		protected void onRender() {
+		}
+	}
+
+	private static class SpyComponent extends Component
+	{
+
+		int isEnabledCallCount;
+		int isVisibleCallCount;
+
+		public SpyComponent(final String id)
+		{
+			super(id);
+		}
+
+		@Override
+		public boolean isEnabled()
+		{
+			isEnabledCallCount++;
+			return super.isEnabled();
+		}
+
+		@Override
+		public boolean isVisible()
+		{
+			isVisibleCallCount++;
+			return super.isVisible();
 		}
 
 		@Override
