@@ -27,7 +27,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author svenmeier
  */
-public final class BranchItem<T> extends Item<T>
+public class BranchItem<T> extends Item<T>
 {
 
 	private static final long serialVersionUID = 1L;
