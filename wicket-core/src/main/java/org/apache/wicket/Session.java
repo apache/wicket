@@ -551,7 +551,24 @@ public abstract class Session implements IClusterable, IEventSink, IFeedbackCont
 	 */
 	public final boolean isSessionInvalidated()
 	{
-		return Boolean.TRUE.equals(RequestCycle.get().getMetaData(SESSION_INVALIDATED));
+		RequestCycle requestCycle = RequestCycle.get();
+		return isSessionInvalidated(requestCycle);
+	}
+
+	/**
+	 * Whether the session is invalid now, or will be invalidated by the end of the request. Clients
+	 * should rarely need to use this method if ever.
+	 * 
+	 * @param requestCycle
+	 *            The current request cycle
+	 * @return Whether the session is invalid when the current request is done
+	 * 
+	 * @see #invalidate()
+	 * @see #invalidateNow()
+	 */
+	public static boolean isSessionInvalidated(RequestCycle requestCycle)
+	{
+		return Boolean.TRUE.equals(requestCycle.getMetaData(SESSION_INVALIDATED));
 	}
 
 	/**

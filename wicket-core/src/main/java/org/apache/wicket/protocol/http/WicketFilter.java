@@ -31,6 +31,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.servlet.ResponseIOException;
@@ -270,11 +271,13 @@ public class WicketFilter implements Filter
 		final FilterChain chain) throws IOException, ServletException
 	{
 		boolean reqProcessed;
+		boolean respFlushed = false;
 		try
 		{
 			reqProcessed = requestCycle.processRequest();
-			if (reqProcessed)
+			if (reqProcessed && !Session.isSessionInvalidated(requestCycle))
 			{
+				respFlushed = true;
 				webResponse.flush();
 			}
 		}
@@ -290,6 +293,10 @@ public class WicketFilter implements Filter
 				// invoke next filter from within Wicket context
 				chain.doFilter(httpServletRequest, httpServletResponse);
 			}
+		}
+		else if (!respFlushed)
+		{
+			webResponse.flush();
 		}
 		return reqProcessed;
 	}
