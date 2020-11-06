@@ -261,6 +261,16 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 		}
 		finally
 		{
+			try
+			{
+				onEndRequest();
+				listeners.onEndRequest(this);
+			}
+			catch (RuntimeException e)
+			{
+				log.error("Exception occurred during onEndRequest", e);
+			}
+
 			set(null);
 		}
 
@@ -646,16 +656,6 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 */
 	public void onDetach()
 	{
-		try
-		{
-			onEndRequest();
-			listeners.onEndRequest(this);
-		}
-		catch (RuntimeException e)
-		{
-			log.error("Exception occurred during onEndRequest", e);
-		}
-
 		try
 		{
 			requestHandlerExecutor.detach();

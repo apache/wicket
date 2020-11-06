@@ -1133,6 +1133,18 @@
 						<comparisonVersion>9.0.0</comparisonVersion>
 						<failOnError>true</failOnError>
 						<logResults>true</logResults>
+						<ignored>
+							<difference>
+								<differenceType>7012</differenceType>
+								<className>org/apache/wicket/page/IPageManager</className>
+								<method>void end()</method>
+							</difference>
+							<difference>
+								<differenceType>7012</differenceType>
+								<className>org/apache/wicket/pageStore/IPageStore</className>
+								<method>void end(org.apache.wicket.pageStore.IPageContext)</method>
+							</difference>
+						</ignored>
 					</configuration>
 					<executions>
 						<execution>
