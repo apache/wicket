@@ -59,11 +59,6 @@ public class RequestPageStore extends DelegatingPageStore
 	@Override
 	public void addPage(IPageContext context, IManageablePage page)
 	{
-		// make sure an HTTP session is bound before committing the response
-		if (isPageStateless(page) == false)
-		{
-			context.getSessionId(true);
-		}
 		getRequestData(context).add(page);
 	}
 
@@ -89,6 +84,20 @@ public class RequestPageStore extends DelegatingPageStore
 		getRequestData(context).remove(page);
 		
 		getDelegate().revertPage(context, page);
+	}
+	
+	@Override
+	public void end(IPageContext context)
+	{
+		RequestData requestData = getRequestData(context);
+		for (IManageablePage page : requestData.pages())
+		{
+			if (isPageStateless(page) == false)
+			{
+				// last opportunity to create a session
+				context.getSessionId(true);
+			}
+		}
 	}
 	
 	@Override

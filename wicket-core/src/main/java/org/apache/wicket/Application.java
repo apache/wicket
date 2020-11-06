@@ -1567,6 +1567,12 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 		requestCycle.getListeners().add(new IRequestCycleListener()
 		{
 			@Override
+			public void onEndRequest(RequestCycle cycle)
+			{
+				internalGetPageManager().end();
+			}
+			
+			@Override
 			public void onDetach(final RequestCycle requestCycle)
 			{
 				internalGetPageManager().detach();

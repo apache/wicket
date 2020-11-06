@@ -80,6 +80,12 @@ public class PageManager implements IPageManager
 	}
 	
 	@Override
+	public void end()
+	{
+		store.end(createPageContext());
+	}
+	
+	@Override
 	public void detach()
 	{
 		store.detach(createPageContext());
