@@ -785,6 +785,10 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 */
 	protected void onEndRequest()
 	{
+		if (Session.exists())
+		{
+			Session.get().endRequest();
+		}
 	}
 
 	/**
