@@ -557,24 +557,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 */
 	public final boolean isSessionInvalidated()
 	{
-		RequestCycle requestCycle = RequestCycle.get();
-		return isSessionInvalidated(requestCycle);
-	}
-
-	/**
-	 * Whether the session is invalid now, or will be invalidated by the end of the request. Clients
-	 * should rarely need to use this method if ever.
-	 * 
-	 * @param requestCycle
-	 *            The current request cycle
-	 * @return Whether the session is invalid when the current request is done
-	 * 
-	 * @see #invalidate()
-	 * @see #invalidateNow()
-	 */
-	public static boolean isSessionInvalidated(RequestCycle requestCycle)
-	{
-		return Boolean.TRUE.equals(requestCycle.getMetaData(SESSION_INVALIDATED));
+		return Boolean.TRUE.equals(RequestCycle.get().getMetaData(SESSION_INVALIDATED));
 	}
 
 	/**
@@ -686,16 +669,9 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	}
 
 	/**
-	 * Any detach logic for session subclasses. This is called on the end of handling a request,
-	 * when the RequestCycle is about to be detached from the current thread.
+	 * End the current request.
 	 */
-	public void detach()
-	{
-		detachFeedback();
-
-		pageAccessSynchronizer.get().unlockAllPages();
-		RequestCycle.get().setMetaData(PAGES_UNLOCKED, true);
-
+	public void endRequest() {
 		if (isSessionInvalidated())
 		{
 			invalidateNow();
@@ -705,6 +681,18 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 			// WICKET-5103 container might have changed id
 			updateId();
 		}
+	}
+	
+	/**
+	 * Any detach logic for session subclasses. This is called on the end of handling a request,
+	 * when the RequestCycle is about to be detached from the current thread.
+	 */
+	public void detach()
+	{
+		detachFeedback();
+
+		pageAccessSynchronizer.get().unlockAllPages();
+		RequestCycle.get().setMetaData(PAGES_UNLOCKED, true);
 	}
 
 	private void detachFeedback()
