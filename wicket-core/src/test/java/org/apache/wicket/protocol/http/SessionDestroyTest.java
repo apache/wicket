@@ -56,21 +56,21 @@ public class SessionDestroyTest extends WicketTestCase
 		// schedule invalidation
 		session.invalidate();
 
-		// the invalidation will happen on #detach(), so #destroy() is still not called
-		verify(session, never()).invalidateNow();
+		// the invalidation will happen on #end(), so #destroy() is still not called
+		verify(session, never()).endRequest();
 		assertThat(session.isSessionInvalidated(), is(true));
 
-		session.detach();
+		session.endRequest();
 
 		// the session has been detached so #destroy() has been called and 'sessionInvalidated' is reset
-		verify(session, times(1)).invalidateNow();
+		verify(session, times(1)).endRequest();
 		assertThat(session.isSessionInvalidated(), is(false));
 
 		// no matter how many times #detach() is called #destroy() should not be called
-		session.detach();
+		session.endRequest();
 		verify(session, times(1)).invalidateNow();
-		session.detach();
-		session.detach();
+		session.endRequest();
+		session.endRequest();
 		verify(session, times(1)).invalidateNow();
 		assertThat(session.isSessionInvalidated(), is(false));
 

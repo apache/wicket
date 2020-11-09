@@ -1599,6 +1599,12 @@ public abstract class Application implements UnboundListener, IEventSink
 		requestCycle.getListeners().add(new IRequestCycleListener()
 		{
 			@Override
+			public void onEndRequest(RequestCycle cycle)
+			{
+				internalGetPageManager().endRequest();
+			}
+			
+			@Override
 			public void onDetach(final RequestCycle requestCycle)
 			{
 				if (Session.exists())

@@ -271,13 +271,11 @@ public class WicketFilter implements Filter
 		final FilterChain chain) throws IOException, ServletException
 	{
 		boolean reqProcessed;
-		boolean respFlushed = false;
 		try
 		{
 			reqProcessed = requestCycle.processRequest();
-			if (reqProcessed && !Session.isSessionInvalidated(requestCycle))
+			if (reqProcessed)
 			{
-				respFlushed = true;
 				webResponse.flush();
 			}
 		}
@@ -293,10 +291,6 @@ public class WicketFilter implements Filter
 				// invoke next filter from within Wicket context
 				chain.doFilter(httpServletRequest, httpServletResponse);
 			}
-		}
-		else if (!respFlushed)
-		{
-			webResponse.flush();
 		}
 		return reqProcessed;
 	}

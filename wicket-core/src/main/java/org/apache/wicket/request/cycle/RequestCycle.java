@@ -260,6 +260,16 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		}
 		finally
 		{
+			try
+			{
+				listeners.onEndRequest(this);
+				onEndRequest();
+			}
+			catch (RuntimeException e)
+			{
+				log.error("Exception occurred during onEndRequest", e);
+			}
+
 			set(null);
 		}
 
@@ -645,16 +655,6 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	{
 		try
 		{
-			onEndRequest();
-			listeners.onEndRequest(this);
-		}
-		catch (RuntimeException e)
-		{
-			log.error("Exception occurred during onEndRequest", e);
-		}
-
-		try
-		{
 			requestHandlerExecutor.detach();
 		}
 		catch (RuntimeException exception)
@@ -782,6 +782,10 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	protected void onEndRequest()
 	{
+		if (Session.exists())
+		{
+			Session.get().endRequest();
+		}
 	}
 
 	/**

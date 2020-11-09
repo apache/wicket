@@ -81,6 +81,12 @@ public interface IPageManager
 	boolean supportsVersioning();
 
 	/**
+	 * End the current request.
+	 */
+	default void endRequest() {
+	}
+	
+	/**
 	 * Commits the changes to external storage if the manager uses it.
 	 * 
 	 * Should also detach all pages that were touched during this request.

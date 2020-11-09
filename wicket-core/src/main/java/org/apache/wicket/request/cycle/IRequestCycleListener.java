@@ -107,7 +107,7 @@ public interface IRequestCycleListener
 	{}
 
 	/**
-	 * Called when the request cycle object has finished its response
+	 * Called when the request cycle object has finished before flushing the response
 	 * 
 	 * @param cycle
 	 */

@@ -74,6 +74,11 @@ public class PageManagerDecorator implements IPageManager
 	}
 
 	@Override
+	public void endRequest() {
+		delegate.endRequest();
+	}
+	
+	@Override
 	public void commitRequest()
 	{
 		delegate.commitRequest();

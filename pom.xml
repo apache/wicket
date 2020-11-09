@@ -1054,6 +1054,13 @@
 						<comparisonVersion>8.0.0</comparisonVersion>
 						<failOnError>true</failOnError>
 						<logResults>true</logResults>
+						<ignored>
+							<difference>
+								<differenceType>7012</differenceType>
+								<className>org/apache/wicket/page/IPageManager</className>
+								<method>void endRequest()</method>
+							</difference>
+						</ignored>
 					</configuration>
 					<executions>
 						<execution>

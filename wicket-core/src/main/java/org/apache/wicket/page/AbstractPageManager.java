@@ -71,6 +71,11 @@ public abstract class AbstractPageManager implements IPageManager
 	}
 
 	@Override
+	public void endRequest() {
+		getRequestAdapter().endRequest();
+	}
+	
+	@Override
 	public void commitRequest()
 	{
 		getRequestAdapter().commitRequest();

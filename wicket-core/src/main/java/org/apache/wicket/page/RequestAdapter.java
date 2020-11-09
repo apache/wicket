@@ -172,6 +172,28 @@ public abstract class RequestAdapter
 	/**
 	 * 
 	 */
+	protected void endRequest()
+	{
+		// check for pages that are not stateless
+		if (touchedPages.isEmpty() == false)
+		{
+			List<IManageablePage> statefulPages = new ArrayList<IManageablePage>(
+				touchedPages.size());
+			for (IManageablePage page : touchedPages)
+			{
+				if (isPageStateless(page) == false)
+				{
+					// last opportunity to create a session
+					bind();
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 */
 	protected void commitRequest()
 	{
 		// store pages that are not stateless
@@ -181,17 +203,7 @@ public abstract class RequestAdapter
 				touchedPages.size());
 			for (IManageablePage page : touchedPages)
 			{
-				boolean isPageStateless;
-				try
-				{
-					isPageStateless = page.isPageStateless();
-				}
-				catch (Exception x)
-				{
-					log.warn("An error occurred while checking whether a page is stateless. Assuming it is stateful.", x);
-					isPageStateless = false;
-				}
-				if (isPageStateless == false)
+				if (isPageStateless(page) == false)
 				{
 					statefulPages.add(page);
 				}
@@ -202,6 +214,20 @@ public abstract class RequestAdapter
 				storeTouchedPages(statefulPages);
 			}
 		}
+	}
+
+	private boolean isPageStateless(final IManageablePage page) {
+		boolean isPageStateless;
+		try
+		{
+			isPageStateless = page.isPageStateless();
+		}
+		catch (Exception x)
+		{
+			log.warn("An error occurred while checking whether a page is stateless. Assuming it is stateful.", x);
+			isPageStateless = false;
+		}
+		return isPageStateless;
 	}
 
 	public void clear() {
