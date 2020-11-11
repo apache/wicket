@@ -263,8 +263,8 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 		{
 			try
 			{
-				onEndRequest();
 				listeners.onEndRequest(this);
+				onEndRequest();
 			}
 			catch (RuntimeException e)
 			{
