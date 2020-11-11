@@ -89,6 +89,8 @@ public class RequestPageStore extends DelegatingPageStore
 	@Override
 	public void end(IPageContext context)
 	{
+		getDelegate().end(context);
+		
 		RequestData requestData = getRequestData(context);
 		for (IManageablePage page : requestData.pages())
 		{
@@ -96,6 +98,7 @@ public class RequestPageStore extends DelegatingPageStore
 			{
 				// last opportunity to create a session
 				context.getSessionId(true);
+				break;
 			}
 		}
 	}
