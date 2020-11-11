@@ -526,6 +526,9 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 			invalidate();
 		}
 		
+		// clear all pages possibly pending in the request
+		getPageManager().clear();
+		
 		destroy();
 		feedbackMessages.clear();
 		setStyle(null);
