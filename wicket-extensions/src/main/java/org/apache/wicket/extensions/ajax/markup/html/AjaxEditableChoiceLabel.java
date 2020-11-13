@@ -25,10 +25,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
@@ -158,6 +155,19 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 		final List<? extends T> choices, final IChoiceRenderer<? super T> renderer)
 	{
 		this(id, model, Model.ofList(choices), renderer);
+	}
+
+	/**
+	 * Set the choice renderer to be used.
+	 *
+	 * @param renderer
+	 *              The IChoiceRenderer used for rendering the data objects
+	 * @return this for chaining
+	 */
+	public AjaxEditableChoiceLabel<T> setChoiceRenderer(IChoiceRenderer<? super T> renderer)
+	{
+		this.renderer = renderer;
+		return this;
 	}
 
 	/**
