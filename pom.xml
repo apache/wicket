@@ -1134,6 +1134,7 @@
 						<failOnError>true</failOnError>
 						<logResults>true</logResults>
 						<ignored>
+							<!-- TODO remove in 10.x - clirr does not support default methods -->
 							<difference>
 								<differenceType>7012</differenceType>
 								<className>org/apache/wicket/page/IPageManager</className>
