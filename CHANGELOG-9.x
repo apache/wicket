@@ -2,6 +2,25 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.2.0
+
+** Bug
+
+    * [WICKET-6839] - Component visible-in-hierarchy cache not used but cleared
+    * [WICKET-6840] - Busy indicator persists after request
+    * [WICKET-6841] - Evaluation order of dependent JS in Ajax request
+    * [WICKET-6845] - stackoverflow while serializing a page containing a reference to session
+    * [WICKET-6847] - async page storing fails with flush before detach without session
+    * [WICKET-6848] - Session invalidation fails because response is already committed
+    * [WICKET-6849] - quickstart styling is broken due to CSP
+
+** Improvement
+
+    * [WICKET-6828] - Wrong tree branch icon with hidden children
+    * [WICKET-6844] - Add support for MethodMismatchResponse for Ajax behaviors
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.1.0
 
 ** Bug
