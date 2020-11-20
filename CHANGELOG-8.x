@@ -2,6 +2,25 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.11.0
+
+** Bug
+
+    * [WICKET-6839] - Component visible-in-hierarchy cache not used but cleared
+    * [WICKET-6847] - async page storing fails with flush before detach without session
+    * [WICKET-6848] - Session invalidation fails because response is already committed
+
+** Improvement
+
+    * [WICKET-6828] - Wrong tree branch icon with hidden children
+    * [WICKET-6844] - Add support for MethodMismatchResponse for Ajax behaviors
+
+** Task
+
+    * [WICKET-6846] - wicket-ajax-jquery.js   ActiveX control discovery - Unpatched Application
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.10.0
 
 ** Bug
