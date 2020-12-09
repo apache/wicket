@@ -19,6 +19,8 @@ package org.apache.wicket.util.string;
 import static org.junit.Assert.*;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,7 +30,7 @@ import org.junit.Test;
 public class StringsTest
 {
 	@Test
-	public void stripJSessionId()
+	public void stripJSessionId() throws Exception
 	{
 		String url = "http://localhost/abc";
 		assertEquals(url, Strings.stripJSessionId(url));
@@ -45,6 +47,24 @@ public class StringsTest
 		assertEquals(url + ";a=b;c=d", Strings.stripJSessionId(url + ";a=b;c=d;jsessionid=12345"));
 		assertEquals(url + ";a=b;c=d?param=a;b",
 			Strings.stripJSessionId(url + ";a=b;c=d;jsessionid=12345?param=a;b"));
+
+		// WICKET-6858
+		final Field sessionIdParamField = Strings.class.getDeclaredField("SESSION_ID_PARAM");
+		sessionIdParamField.setAccessible(true);
+		Field modifiersField = Field.class.getDeclaredField( "modifiers");
+		modifiersField.setAccessible(true);
+		try {
+			final String customSessionIdParam = ";Custom seSsion - ид=";
+			modifiersField.setInt(sessionIdParamField, sessionIdParamField.getModifiers() & ~Modifier.FINAL );
+			sessionIdParamField.set(null, customSessionIdParam);
+			assertEquals(url + ";a=b;c=d?param=a;b",
+			             Strings.stripJSessionId(url + ";a=b;c=d" + customSessionIdParam + "12345?param=a;b"));
+		} finally {
+			sessionIdParamField.set(null, "jsessionid");
+			modifiersField.setInt(sessionIdParamField, sessionIdParamField.getModifiers() & Modifier.FINAL );
+			modifiersField.setAccessible(false);
+			sessionIdParamField.setAccessible(false);
+		}
 	}
 
 	@Test
