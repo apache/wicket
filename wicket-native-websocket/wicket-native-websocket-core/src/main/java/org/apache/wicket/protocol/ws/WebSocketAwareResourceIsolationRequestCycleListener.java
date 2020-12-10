@@ -16,23 +16,21 @@
  */
 package org.apache.wicket.protocol.ws;
 
-import org.apache.wicket.protocol.http.CsrfPreventionRequestCycleListener;
+import org.apache.wicket.protocol.http.ResourceIsolationRequestCycleListener;
 import org.apache.wicket.protocol.ws.api.WebSocketMessageBroadcastHandler;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 
 /**
- * A specialization of {@link CsrfPreventionRequestCycleListener} that should be used when
- * the application uses Web Sockets.
+ * A specialization of {@link ResourceIsolationRequestCycleListener} that should be
+ * used when the application uses Web Sockets.
  *
- * <p>The HTTP upgrade request brings <em>Origin</em> in its headers, but any Web socket frame doesn't
- * bring it so {@link WebSocketRequestHandler} and {@link WebSocketMessageBroadcastHandler}
+ * <p>The HTTP upgrade request brings <em>Origin</em> and/or <em>Fetch Metadata</em>
+ * in its headers, but any Web socket frame doesn't bring it so
+ * {@link WebSocketRequestHandler} and {@link WebSocketMessageBroadcastHandler}
  * should be ignored.</p>
- *
- * @deprecated Use {@link WebSocketAwareResourceIsolationRequestCycleListener} instead
  */
-@Deprecated(since = "9.3.0")
-public class WebSocketAwareCsrfPreventionRequestCycleListener extends CsrfPreventionRequestCycleListener
+public class WebSocketAwareResourceIsolationRequestCycleListener extends ResourceIsolationRequestCycleListener
 {
 	@Override
 	protected boolean isChecked(IRequestHandler handler)
