@@ -23,16 +23,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("javadoc")
-public class StringsTest
+class StringsTest
 {
 	@Test
 	void stripJSessionId() throws Exception
@@ -56,7 +55,7 @@ public class StringsTest
 		// WICKET-6858
 		final Field sessionIdParamField = Strings.class.getDeclaredField("SESSION_ID_PARAM");
 		sessionIdParamField.setAccessible(true);
-		Field modifiersField = Field.class.getDeclaredField( "modifiers");
+		Field modifiersField = getModifiersField();
 		modifiersField.setAccessible(true);
 		try {
 			final String customSessionIdParam = ";Custom seSsion - ид=";
@@ -69,6 +68,34 @@ public class StringsTest
 			modifiersField.setInt(sessionIdParamField, sessionIdParamField.getModifiers() & Modifier.FINAL );
 			modifiersField.setAccessible(false);
 			sessionIdParamField.setAccessible(false);
+		}
+	}
+
+	private Field getModifiersField() throws NoSuchFieldException
+	{
+		try
+		{
+			return Field.class.getDeclaredField("modifiers");
+		}
+		catch (NoSuchFieldException e) {
+			try
+			{
+				Method getDeclaredFields0 = Class.class.getDeclaredMethod("getDeclaredFields0", boolean.class);
+				getDeclaredFields0.setAccessible(true);
+				Field[] fields = (Field[]) getDeclaredFields0.invoke(Field.class, false);
+				for (Field field : fields)
+				{
+					if ("modifiers".equals(field.getName()))
+					{
+						return field;
+					}
+				}
+			}
+			catch (ReflectiveOperationException ex)
+			{
+				e.addSuppressed(ex);
+			}
+			throw e;
 		}
 	}
 
@@ -229,11 +256,6 @@ public class StringsTest
 		assertEquals("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
 			Strings.replaceHtmlEscapeNumber(
 				"&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
-	}
-
-	private String convertNonASCIIString(final String str) throws UnsupportedEncodingException
-	{
-		return new String(str.getBytes(), "iso-8859-1");
 	}
 
 	@Test
