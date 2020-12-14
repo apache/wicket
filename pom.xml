@@ -1091,7 +1091,8 @@
 							<include>**/*Test.java</include>
 						</includes>
 						<argLine>--add-opens java.base/jdk.internal.loader=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED
-							--add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-modules=ALL-SYSTEM</argLine>
+							--add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED
+							--add-modules=ALL-SYSTEM</argLine>
 					</configuration>
 				</plugin>
 				<plugin>
