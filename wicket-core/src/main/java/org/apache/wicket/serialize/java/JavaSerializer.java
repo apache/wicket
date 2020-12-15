@@ -111,8 +111,8 @@ public class JavaSerializer implements ISerializer
 		}
 		catch (Exception e)
 		{
-			log.error("Error serializing object " + object.getClass() + " [object=" + object + "]",
-				e);
+			log.error("Error serializing object {} [object={}]",
+			          object.getClass(), object, e);
 		}
 		return null;
 	}
@@ -155,7 +155,7 @@ public class JavaSerializer implements ISerializer
 		}
 		catch (ClassNotFoundException | IOException cnfx)
 		{
-			throw new RuntimeException("Could not deserialize object from byte[]", cnfx);
+			throw new WicketRuntimeException("Could not deserialize object from byte[]", cnfx);
 		}
 		finally
 		{
@@ -292,7 +292,7 @@ public class JavaSerializer implements ISerializer
 			{
 				// ignore this exception.
 				log.debug(
-					"Proxy Class not found by the object outputstream itself, trying the IClassResolver");
+					"Proxy Class not found by the ObjectOutputStream itself, trying the IClassResolver");
 
 				ClassLoader latestLoader = latestUserDefinedLoader();
 				ClassLoader nonPublicLoader = null;
@@ -392,18 +392,15 @@ public class JavaSerializer implements ISerializer
 						CheckingObjectOutputStream checkingObjectOutputStream =
 							new CheckingObjectOutputStream(outputStream, new ObjectSerializationChecker(nsx));
 						checkingObjectOutputStream.writeObject(obj);
-					} 
+					}
+					catch (CheckingObjectOutputStream.ObjectCheckException x)
+					{
+						throw x;
+					}
 					catch (Exception x)
 					{
-						if (x instanceof CheckingObjectOutputStream.ObjectCheckException)
-						{
-							throw (CheckingObjectOutputStream.ObjectCheckException) x;
-						}
-						else
-						{
-							x.initCause(nsx);
-							throw new WicketRuntimeException("A problem occurred while trying to collect debug information about not serializable object", x);
-						}
+						x.initCause(nsx);
+						throw new WicketRuntimeException("A problem occurred while trying to collect debug information about not serializable object", x);
 					}
 
 					// if we get here, we didn't fail, while we should
@@ -413,7 +410,7 @@ public class JavaSerializer implements ISerializer
 			}
 			catch (Exception e)
 			{
-				log.error("error writing object " + obj + ": " + e.getMessage(), e);
+				log.error("error writing object {} : {}", obj, e.getMessage(), e);
 				throw new WicketRuntimeException(e);
 			}
 		}
