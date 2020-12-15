@@ -340,12 +340,12 @@ public class JavaSerializer implements ISerializer
 			try
 			{
 				return STACKWALKER.walk(s ->
-                    s.map(StackWalker.StackFrame::getDeclaringClass)
-                     .map(Class::getClassLoader)
-                     .filter(Objects::nonNull)
-                     .filter(cl -> !PLATFORM_CLASS_LOADER.equals(cl))
-                     .findFirst()
-                     .orElse(PLATFORM_CLASS_LOADER));
+						s.map(StackWalker.StackFrame::getDeclaringClass)
+						.map(Class::getClassLoader)
+						.filter(Objects::nonNull)
+						.filter(cl -> !PLATFORM_CLASS_LOADER.equals(cl))
+						.findFirst()
+						.orElse(PLATFORM_CLASS_LOADER));
 			}
 			catch (IllegalArgumentException | SecurityException e)
 			{
