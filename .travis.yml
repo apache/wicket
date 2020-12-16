@@ -19,7 +19,7 @@ os: linux
 dist: focal
 group: edge
 arch: arm64-graviton2
-virm: vm
+virt: vm
 
 services: xvfb
 env:
