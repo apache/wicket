@@ -36,6 +36,7 @@ import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -117,18 +118,26 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		{
 			SpringBean annot = field.getAnnotation(SpringBean.class);
 
-			String name;
-			boolean required;
+			String name = null;
+			Boolean required = true;
+
 			if (annot != null)
 			{
 				name = annot.name();
 				required = annot.required();
 			}
-			else
+
+			Autowired autowiredAnnotation = field.getAnnotation(Autowired.class);
+
+			if (autowiredAnnotation != null)
+			{
+				required = autowiredAnnotation.required();
+			}
+
+			if (name == null)
 			{
 				Named named = field.getAnnotation(Named.class);
 				name = named != null ? named.value() : "";
-				required = true;
 			}
 
 			Class<?> generic = ResolvableType.forField(field).resolveGeneric(0);
@@ -324,6 +333,6 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	@Override
 	public boolean supportsField(final Field field)
 	{
-		return field.isAnnotationPresent(SpringBean.class) || field.isAnnotationPresent(Inject.class);
+		return field.isAnnotationPresent(SpringBean.class) || field.isAnnotationPresent(Inject.class) || field.isAnnotationPresent(Autowired.class);
 	}
 }
