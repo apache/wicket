@@ -273,6 +273,12 @@ public class ComponentTest extends WicketTestCase
 		c.isVisibleInHierarchy();
 		c.isVisibleInHierarchy();
 		assertEquals(2, c.isVisibleCallCount);
+		
+		c.setVisibilityAllowed(false);
+		
+		c.isVisibleInHierarchy();
+		c.isVisibleInHierarchy();
+		assertEquals(3, c.isVisibleCallCount);
 	}
 
 	/**

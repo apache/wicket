@@ -4319,7 +4319,11 @@ public abstract class Component
 	 */
 	public final Component setVisibilityAllowed(boolean allowed)
 	{
-		setFlag(FLAG_VISIBILITY_ALLOWED, allowed);
+		if (allowed != getFlag(FLAG_VISIBILITY_ALLOWED))
+		{
+			setFlag(FLAG_VISIBILITY_ALLOWED, allowed);
+			onVisibleStateChanged();
+		}
 		return this;
 	}
 
