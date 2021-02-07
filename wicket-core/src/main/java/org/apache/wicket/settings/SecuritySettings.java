@@ -49,8 +49,11 @@ import org.apache.wicket.util.lang.Args;
 public class SecuritySettings
 {
 	/**
-	 * encryption key used by default crypt factory
+	 * encryption key is no longer used
+	 * 
+	 * @deprecated
 	 */
+	@Deprecated
 	public static final String DEFAULT_ENCRYPTION_KEY = "WiCkEt-FRAMEwork";
 
 	/** The authorization strategy. */
@@ -121,8 +124,8 @@ public class SecuritySettings
 	}
 
 	/**
-	 * Note: Prints a warning to stderr if no factory was set and {@link #DEFAULT_ENCRYPTION_KEY} is
-	 * used instead.
+	 * Returns the {@link ICryptFactory}. If no factory is set, a {@link KeyInSessionSunJceCryptFactory}
+	 * is used.
 	 * 
 	 * @return crypt factory used to generate crypt objects
 	 */
@@ -270,6 +273,7 @@ public class SecuritySettings
 	 *
 	 * @return Returns the authentication strategy.
 	 */
+	@SuppressWarnings("deprecation")
 	public IAuthenticationStrategy getAuthenticationStrategy()
 	{
 		if (authenticationStrategy == null)

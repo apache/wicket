@@ -21,6 +21,8 @@ package org.apache.wicket.util.crypt;
  * all further invocations of {@link #newCrypt()}.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @deprecated use a lambda expression instead TODO remove in Wicket 10
  */
 public class CachingSunJceCryptFactory extends CryptFactoryCachingDecorator
 {

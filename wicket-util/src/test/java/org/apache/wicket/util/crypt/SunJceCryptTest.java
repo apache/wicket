@@ -34,6 +34,7 @@ public class SunJceCryptTest
 	@Test
 	public void defaultEncryption() throws GeneralSecurityException
 	{
+		@SuppressWarnings("deprecation")
 		SunJceCrypt crypt = new SunJceCrypt();
 		String input = "input";
 		byte[] encrypted = crypt.crypt(input.getBytes(), Cipher.ENCRYPT_MODE);
@@ -51,6 +52,7 @@ public class SunJceCryptTest
 		boolean unlimitedStrengthJurisdictionPolicyInstalled = isUnlimitedStrengthJurisdictionPolicyInstalled();
 		Assumptions.assumeTrue(unlimitedStrengthJurisdictionPolicyInstalled);
 
+		@SuppressWarnings("deprecation")
 		SunJceCrypt crypt = new SunJceCrypt("PBEWithMD5AndTripleDES");
 		String input = "input";
 		byte[] encrypted = crypt.crypt(input.getBytes(), Cipher.ENCRYPT_MODE);

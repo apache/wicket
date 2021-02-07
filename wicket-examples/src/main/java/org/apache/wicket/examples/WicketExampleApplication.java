@@ -22,8 +22,6 @@ import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.resource.CssUrlReplacer;
-import org.apache.wicket.settings.SecuritySettings;
-import org.apache.wicket.util.crypt.ClassCryptFactory;
 import org.apache.wicket.util.crypt.NoCrypt;
 
 
@@ -57,8 +55,7 @@ public abstract class WicketExampleApplication extends WebApplication
 		// has the java security classes required by Crypt installed
 		// and we want them to be able to run the examples out of the
 		// box.
-		getSecuritySettings().setCryptFactory(
-			new ClassCryptFactory(NoCrypt.class, SecuritySettings.DEFAULT_ENCRYPTION_KEY));
+		getSecuritySettings().setCryptFactory(() -> new NoCrypt());
 
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 		

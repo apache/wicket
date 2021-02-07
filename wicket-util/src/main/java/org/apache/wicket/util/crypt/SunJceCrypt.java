@@ -21,6 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -44,26 +45,58 @@ public class SunJceCrypt extends AbstractCrypt
 	/**
 	 * Iteration count used in combination with the salt to create the encryption key.
 	 */
-	private final static int COUNT = 17;
+	private final static int DEFAULT_ITERATION_COUNT = 17;
 
 	/** Name of the default encryption method */
 	public static final String DEFAULT_CRYPT_METHOD = "PBEWithMD5AndDES";
 
-	/** Salt */
+	/**
+	 * Default salt.
+	 * 
+	 * @deprecated TODO remove in Wicket 10
+	 */
+	@Deprecated
 	public final static byte[] SALT = { (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
 			(byte)0x66, (byte)0x51, (byte)0x2a, (byte)0xbc };
 
-	private static final PBEParameterSpec PARAMETER_SPEC = new PBEParameterSpec(SALT, COUNT);
-
 	/** The name of encryption method (cipher) */
 	private final String cryptMethod;
-
+	
+	private final int iterationCount;
+	
+	private final byte[] salt;
+ 
 	/**
 	 * Constructor
+	 * 
+	 * @deprecated
 	 */
 	public SunJceCrypt()
 	{
 		this(DEFAULT_CRYPT_METHOD);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param salt
+	 *              salt for encryption
+	 * @param iterationCount
+	 * 				iteration count
+	 */
+	public SunJceCrypt(byte[] salt, int iterationCount)
+	{
+		this(DEFAULT_CRYPT_METHOD, salt, iterationCount);
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @deprecated
+	 */
+	public SunJceCrypt(String cryptMethod)
+	{
+		this(cryptMethod, SALT, DEFAULT_ITERATION_COUNT);
 	}
 
 	/**
@@ -73,10 +106,16 @@ public class SunJceCrypt extends AbstractCrypt
 	 *
 	 * @param cryptMethod
 	 *              the name of encryption method (the cipher)
+	 * @param salt
+	 *              salt for encryption
+	 * @param iterationCount
+	 * 				iteration count
 	 */
-	public SunJceCrypt(String cryptMethod)
+	public SunJceCrypt(String cryptMethod, byte[] salt, int iterationCount)
 	{
 		this.cryptMethod = Args.notNull(cryptMethod, "Crypt method");
+		this.salt = Args.notNull(salt, "salt");
+		this.iterationCount = iterationCount;
 	}
 
 	/**
@@ -138,12 +177,13 @@ public class SunJceCrypt extends AbstractCrypt
 		return keyFactory.generateSecret(spec);
 	}
 
+	
 	/**
 	 * @return the parameter spec to be used for the configured crypt method
 	 */
 	protected AlgorithmParameterSpec createParameterSpec()
 	{
-		return PARAMETER_SPEC;
+		return new PBEParameterSpec(salt, iterationCount);
 	}
 
 	/**
@@ -152,5 +192,18 @@ public class SunJceCrypt extends AbstractCrypt
 	protected KeySpec createKeySpec()
 	{
 		return new PBEKeySpec(getKey().toCharArray());
+	}
+
+	/**
+	 * Create a random salt.
+	 * 
+	 * @return salt
+	 */
+	public static byte[] randomSalt()
+	{
+		// only 8 bytes long supported
+		byte[] salt = new byte[8];
+		new Random().nextBytes(salt);
+		return salt;
 	}
 }

@@ -24,8 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.function.Supplier;
-
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
 import org.apache.wicket.core.request.handler.ListenerRequestHandler;
@@ -50,10 +48,8 @@ import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.UrlResourceReference;
-import org.apache.wicket.settings.SecuritySettings;
-import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICrypt;
-import org.apache.wicket.util.crypt.ICryptFactory;
+import org.apache.wicket.util.crypt.SunJceCrypt;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
@@ -100,23 +96,11 @@ class CryptoMapperTest extends AbstractMapperTest
 		WebApplication application = tester.getApplication();
 		application.mountPage(MOUNTED_URL, Page1.class);
 
-		/**
-		 * Use explicit crypt provider to prevent crypt warning output, see
-		 * SecuritySettings#getCryptFactory()
-		 */
-		Supplier<ICrypt> cryptProvider = new Supplier<ICrypt>()
-		{
-			private ICryptFactory cryptFactory = new CachingSunJceCryptFactory(
-				SecuritySettings.DEFAULT_ENCRYPTION_KEY);
+		ICrypt crypt = new SunJceCrypt(new byte[]{ (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
+			(byte)0x66, (byte)0x51, (byte)0x2a, (byte)0xbc }, 17);
+		crypt.setKey("WiCkEt-FRAMEwork");
 
-			@Override
-			public ICrypt get()
-			{
-				return cryptFactory.newCrypt();
-			}
-		};
-
-		mapper = new CryptoMapper(application.getRootRequestMapper(), cryptProvider);
+		mapper = new CryptoMapper(application.getRootRequestMapper(), () -> crypt);
 	}
 
 	/**

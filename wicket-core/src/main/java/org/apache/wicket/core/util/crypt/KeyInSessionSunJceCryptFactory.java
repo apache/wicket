@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.core.util.crypt;
 
+import java.io.Serializable;
 import java.security.Provider;
 import java.security.Security;
+import java.util.Random;
 import java.util.UUID;
 
 import org.apache.wicket.MetaDataKey;
@@ -38,8 +40,8 @@ import org.apache.wicket.util.lang.Args;
  */
 public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 {
-	/** metadata-key used to store crypto-key in session metadata */
-	private static final MetaDataKey<String> KEY = new MetaDataKey<>()
+	/** metadata-key used to store crypt data in session metadata */
+	private static final MetaDataKey<CryptData> KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -89,25 +91,44 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 		session.bind();
 
 		// retrieve or generate encryption key from session
-		String key = session.getMetaData(KEY);
-		if (key == null)
+		CryptData data = session.getMetaData(KEY);
+		if (data == null)
 		{
+			// generate new salt
+			byte[] salt = SunJceCrypt.randomSalt();
+			
 			// generate new key
-			key = session.getId() + "." + UUID.randomUUID().toString();
-			session.setMetaData(KEY, key);
+			String key = session.getId() + "." + UUID.randomUUID().toString();
+			
+			data = new CryptData(key, salt);
+			session.setMetaData(KEY, data);
 		}
 
-		// build the crypt based on session key
-		ICrypt crypt = createCrypt();
-		crypt.setKey(key);
+		// build the crypt based on session key and salt
+		SunJceCrypt crypt = new SunJceCrypt(cryptMethod, data.salt, 1000);
+		crypt.setKey(data.key);
+		
 		return crypt;
 	}
 
 	/**
 	 * @return the {@link org.apache.wicket.util.crypt.ICrypt} to use
+	 * 
+	 * @deprecated this method is no longer called
 	 */
 	protected ICrypt createCrypt()
 	{
-		return new SunJceCrypt(cryptMethod);
+		return null;
+	}
+	
+	private static final class CryptData implements Serializable {
+		final String key;
+		
+		final byte[] salt;
+		
+		CryptData(String key, byte[] salt) {
+			this.key = key;
+			this.salt = salt;
+		}
 	}
 }
