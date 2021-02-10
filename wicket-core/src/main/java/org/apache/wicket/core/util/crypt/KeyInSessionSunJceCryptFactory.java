@@ -19,7 +19,6 @@ package org.apache.wicket.core.util.crypt;
 import java.io.Serializable;
 import java.security.Provider;
 import java.security.Security;
-import java.util.Random;
 import java.util.UUID;
 
 import org.apache.wicket.MetaDataKey;
@@ -114,8 +113,9 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 	/**
 	 * @return the {@link org.apache.wicket.util.crypt.ICrypt} to use
 	 * 
-	 * @deprecated this method is no longer called
+	 * @deprecated this method is no longer called TODO remove in Wicket 10
 	 */
+	@Deprecated(forRemoval = true)
 	protected ICrypt createCrypt()
 	{
 		return null;

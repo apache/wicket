@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.authentication.strategy;
 
-import java.util.Random;
 import java.util.UUID;
 
 import org.apache.wicket.authentication.IAuthenticationStrategy;
@@ -34,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * password, encrypt it and put it into one Cookie.
  * <p>
  * Note: To support automatic authentication across application restarts you have to use
- * the constructor {@link DefaultAuthenticationStrategy#DefaultAuthenticationStrategy(String, String, byte[])}.
+ * the constructor {@link DefaultAuthenticationStrategy#DefaultAuthenticationStrategy(String, ICrypt)}.
  * 
  * @author Juergen Donnerstag
  */
@@ -48,7 +47,7 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	/**
 	 * @deprecated no longer used TODO remove in Wicket 10
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	protected final String encryptionKey = null;
 
 	/** The separator used to concatenate the username and password */
@@ -68,7 +67,7 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	 *            
 	 * @deprecated supply a crypt instead TODO remove in Wicket 10
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public DefaultAuthenticationStrategy(final String cookieKey)
 	{
 		this(cookieKey, defaultEncryptionKey());
@@ -82,7 +81,7 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	/**
 	 * @deprecated supply a crypt instead TODO remove in Wicket 10
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public DefaultAuthenticationStrategy(final String cookieKey, final String encryptionKey)
 	{
 		this(cookieKey, defaultCrypt(encryptionKey));
@@ -98,7 +97,8 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	}
 
 	/**
-	 * Constructor
+	 * This is the recommended constructor to be used, which allows automatic authentication across
+	 * application restarts.  
 	 * 
 	 * @param cookieKey
 	 *            The name of the cookie

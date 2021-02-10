@@ -69,8 +69,9 @@ public class SunJceCrypt extends AbstractCrypt
 	/**
 	 * Constructor
 	 * 
-	 * @deprecated
+	 * @deprecated TODO remove in Wicket 10
 	 */
+	@Deprecated(forRemoval = true)
 	public SunJceCrypt()
 	{
 		this(DEFAULT_CRYPT_METHOD);
@@ -92,8 +93,9 @@ public class SunJceCrypt extends AbstractCrypt
 	/**
 	 * Constructor
 	 *
-	 * @deprecated
+	 * @deprecated TODO remove in Wicket 10
 	 */
+	@Deprecated(forRemoval = true)
 	public SunJceCrypt(String cryptMethod)
 	{
 		this(cryptMethod, SALT, DEFAULT_ITERATION_COUNT);
@@ -115,7 +117,7 @@ public class SunJceCrypt extends AbstractCrypt
 	{
 		this.cryptMethod = Args.notNull(cryptMethod, "Crypt method");
 		this.salt = Args.notNull(salt, "salt");
-		this.iterationCount = iterationCount;
+		this.iterationCount = Args.withinRange(1, Integer.MAX_VALUE,  iterationCount, "iterationCount");
 	}
 
 	/**
@@ -195,13 +197,14 @@ public class SunJceCrypt extends AbstractCrypt
 	}
 
 	/**
-	 * Create a random salt.
+	 * Create a random salt to be used for this crypt. 
 	 * 
-	 * @return salt
+	 * @return salt, always 8 bytes long
 	 */
 	public static byte[] randomSalt()
 	{
-		// only 8 bytes long supported
+		// must be 8 bytes - for anything else PBES1Core throws
+		// InvalidAlgorithmParameterException: Salt must be 8 bytes long  
 		byte[] salt = new byte[8];
 		new Random().nextBytes(salt);
 		return salt;
