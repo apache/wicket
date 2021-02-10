@@ -178,7 +178,6 @@ public class SunJceCrypt extends AbstractCrypt
 		KeySpec spec = createKeySpec();
 		return keyFactory.generateSecret(spec);
 	}
-
 	
 	/**
 	 * @return the parameter spec to be used for the configured crypt method
