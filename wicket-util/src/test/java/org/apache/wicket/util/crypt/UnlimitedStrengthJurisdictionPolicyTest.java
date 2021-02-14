@@ -16,20 +16,17 @@
  */
 package org.apache.wicket.util.crypt;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
-
-import javax.crypto.Cipher;
+import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+import java.security.spec.KeySpec;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.AlgorithmParameters;
-import java.security.GeneralSecurityException;
-import java.security.spec.KeySpec;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * A demo how to create {@link org.apache.wicket.util.crypt.ICrypt} implementation that
@@ -44,62 +41,47 @@ public class UnlimitedStrengthJurisdictionPolicyTest
 		boolean unlimitedStrengthJurisdictionPolicyInstalled = SunJceCryptTest.isUnlimitedStrengthJurisdictionPolicyInstalled();
 		Assumptions.assumeTrue(unlimitedStrengthJurisdictionPolicyInstalled);
 
-		AbstractCrypt crypt = new UnlimitedStrenghtJurisdictionPolicyCrypt();
-
+		byte[] iv = new byte[16];
+		new SecureRandom().nextBytes(iv);
+		IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+		
+		GenericJceCrypt crypt = new UnlimitedStrenghtJurisdictionPolicyCrypt(buildKey("myWeakPassword"), ivParameterSpec);
+		
 		String input1 = "input1";
-		byte[] encrypted = crypt.crypt(input1.getBytes(), Cipher.ENCRYPT_MODE);
+		String encrypted = crypt.encryptUrlSafe(input1);
 
 		String input2 = "input2";
-		byte[] encrypted2 = crypt.crypt(input2.getBytes(), Cipher.ENCRYPT_MODE);
+		String encrypted2 = crypt.encryptUrlSafe(input2);
 
-		byte[] decrypted = crypt.crypt(encrypted, Cipher.DECRYPT_MODE);
-		assertEquals(new String(decrypted), input1);
+		String decrypted = crypt.decryptUrlSafe(encrypted);
+		assertEquals(decrypted, input1);
 
-		byte[] decrypted2 = crypt.crypt(encrypted2, Cipher.DECRYPT_MODE);
-		assertEquals(new String(decrypted2),input2);
+		String decrypted2 = crypt.decryptUrlSafe(encrypted2);
+		assertEquals(decrypted2, input2);
 	}
 
 	/**
 	 * Based on http://stackoverflow.com/a/992413
 	 */
-	private static class UnlimitedStrenghtJurisdictionPolicyCrypt extends AbstractCrypt
+	private static class UnlimitedStrenghtJurisdictionPolicyCrypt extends GenericJceCrypt
 	{
-		private final Cipher crypter;
-		private final Cipher decrypter;
-
-		private UnlimitedStrenghtJurisdictionPolicyCrypt() throws GeneralSecurityException
+		
+		private UnlimitedStrenghtJurisdictionPolicyCrypt(SecretKey secretKey, IvParameterSpec iv)
 		{
-			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-			KeySpec spec = new PBEKeySpec(getKey().toCharArray(), SunJceCrypt.SALT, 65536, 256);
-			SecretKey tmp = factory.generateSecret(spec);
-			SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
-
-			String transformation = "AES/CBC/PKCS5Padding";
-			crypter = Cipher.getInstance(transformation);
-			crypter.init(Cipher.ENCRYPT_MODE, secret);
-			AlgorithmParameters params = crypter.getParameters();
-			byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
-
-			decrypter = Cipher.getInstance(transformation);
-			decrypter.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
+		    super(secretKey, "AES/CBC/PKCS5Padding", iv);
 		}
-
-		@Override
-		protected byte[] crypt(byte[] input, int mode) throws GeneralSecurityException
-		{
-			byte[] result;
-			switch (mode)
-			{
-				case Cipher.ENCRYPT_MODE:
-					result = crypter.doFinal(input);
-					break;
-				case Cipher.DECRYPT_MODE:
-					result = decrypter.doFinal(input);
-					break;
-				default:
-					throw new RuntimeException("Wrong crypt mode: " + mode);
-			}
-			return result;
-		}
+	}
+	
+	private static SecretKey buildKey(String password) 
+	{
+	    
+	    try {
+	        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+	        KeySpec spec = new PBEKeySpec(password.toCharArray(), SunJceCrypt.SALT, 65536, 256);
+	        SecretKey tmp = factory.generateSecret(spec);
+	        return new SecretKeySpec(tmp.getEncoded(), "AES");
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    }
 	}
 }

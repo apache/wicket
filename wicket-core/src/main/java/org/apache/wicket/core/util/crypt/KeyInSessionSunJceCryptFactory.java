@@ -16,17 +16,16 @@
  */
 package org.apache.wicket.core.util.crypt;
 
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Session;
+import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory.CryptData;
+import org.apache.wicket.util.crypt.ICrypt;
+import org.apache.wicket.util.crypt.SunJceCrypt;
+import org.apache.wicket.util.lang.Args;
 import java.io.Serializable;
 import java.security.Provider;
 import java.security.Security;
 import java.util.UUID;
-
-import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.Session;
-import org.apache.wicket.util.crypt.ICrypt;
-import org.apache.wicket.util.crypt.ICryptFactory;
-import org.apache.wicket.util.crypt.SunJceCrypt;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * Crypt factory that produces {@link SunJceCrypt} instances based on session-specific
@@ -37,7 +36,7 @@ import org.apache.wicket.util.lang.Args;
  *
  * @author igor.vaynberg
  */
-public class KeyInSessionSunJceCryptFactory implements ICryptFactory
+public class KeyInSessionSunJceCryptFactory extends AbstractKeyInSessionCryptFactory<CryptData>
 {
 	/** metadata-key used to store crypt data in session metadata */
 	private static final MetaDataKey<CryptData> KEY = new MetaDataKey<>()
@@ -83,33 +82,6 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 		}
 	}
 
-	@Override
-	public ICrypt newCrypt()
-	{
-		Session session = Session.get();
-		session.bind();
-
-		// retrieve or generate encryption key from session
-		CryptData data = session.getMetaData(KEY);
-		if (data == null)
-		{
-			// generate new salt
-			byte[] salt = SunJceCrypt.randomSalt();
-			
-			// generate new key
-			String key = session.getId() + "." + UUID.randomUUID().toString();
-			
-			data = new CryptData(key, salt);
-			session.setMetaData(KEY, data);
-		}
-
-		// build the crypt based on session key and salt
-		SunJceCrypt crypt = new SunJceCrypt(cryptMethod, data.salt, 1000);
-		crypt.setKey(data.key);
-		
-		return crypt;
-	}
-
 	/**
 	 * @return the {@link org.apache.wicket.util.crypt.ICrypt} to use
 	 * 
@@ -121,12 +93,40 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 		return null;
 	}
 	
-	private static final class CryptData implements Serializable {
-		final String key;
+	@Override
+	protected CryptData generateKey(Session session)
+	{
+	    // generate new salt
+        byte[] salt = SunJceCrypt.randomSalt();
+        
+	    // generate new key
+        String key = session.getId() + "." + UUID.randomUUID().toString();
+        
+        return new CryptData(key, salt);
+	}
+	
+	@Override
+	protected ICrypt createCrypt(CryptData keyParams)
+	{
+	    SunJceCrypt crypt = new SunJceCrypt(cryptMethod, keyParams.salt, 1000);
+        crypt.setKey(keyParams.key);
+        
+        return crypt;
+	}
+
+    static final class CryptData implements Serializable
+	{
+		/**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        final String key;
 		
 		final byte[] salt;
 		
-		CryptData(String key, byte[] salt) {
+		CryptData(String key, byte[] salt)
+		{
 			this.key = key;
 			this.salt = salt;
 		}
