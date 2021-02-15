@@ -116,35 +116,40 @@
 			Wicket.Event.add(obj, 'keydown', function (jqEvent) {
 				switch(Wicket.Event.keyCode(jqEvent)){
 					case KEY_UP:
-						if (selected>-1) {
-							setSelected(selected-1);
+						if (elementCount > 0) {
+							if (selected>-1) {
+								setSelected(selected-1);
+							}
+	
+							var searchTerm = Wicket.$(ajaxAttributes.c).value;
+							if(selected === -1 && searchTerm) {
+								// select the last element
+								setSelected(elementCount-1);
+								showAutoComplete();
+							}
+							render(true, false);
 						}
-
-						var searchTerm = Wicket.$(ajaxAttributes.c).value;
-						if(selected === -1 && searchTerm) {
-							// select the last element
-							setSelected(elementCount-1);
-							showAutoComplete();
-						}
-						render(true, false);
 
 						if (Wicket.Browser.isSafari()) {
 							return jqEvent.stopPropagation();
 						}
 						break;
 					case KEY_DOWN:
-						if (selected < elementCount-1) {
-							setSelected(selected+1);
-						} else if (selected === elementCount-1) {
-							// select the first element
-							setSelected(0);
+						if (elementCount > 0) {
+							if (selected < elementCount-1) {
+								setSelected(selected+1);
+							} else if (selected === elementCount-1) {
+								// select the first element
+								setSelected(0);
+							}
+							if (visible === 0) {
+								updateChoices();
+							} else {
+								render(true, false);
+								showAutoComplete();
+							}
 						}
-						if (visible === 0) {
-							updateChoices();
-						} else {
-							render(true, false);
-							showAutoComplete();
-						}
+
 						if (Wicket.Browser.isSafari()) {
 							return jqEvent.stopPropagation();
 						}
