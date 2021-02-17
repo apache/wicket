@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.core.util.crypt;
 
-import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory.CryptData;
 import org.apache.wicket.util.crypt.ICrypt;
@@ -38,11 +37,6 @@ import java.util.UUID;
  */
 public class KeyInSessionSunJceCryptFactory extends AbstractKeyInSessionCryptFactory<CryptData>
 {
-	/** metadata-key used to store crypt data in session metadata */
-	private static final MetaDataKey<CryptData> KEY = new MetaDataKey<>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
 
 	private final String cryptMethod;
 

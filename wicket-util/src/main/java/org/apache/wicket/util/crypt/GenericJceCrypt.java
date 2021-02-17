@@ -18,7 +18,8 @@ package org.apache.wicket.util.crypt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -37,7 +38,7 @@ import javax.crypto.SecretKey;
 public class GenericJceCrypt implements ICrypt
 {
 	/** Encoding used to convert java String from and to byte[] */
-	private static final String CHARACTER_ENCODING = "UTF-8";
+	private static final Charset CHARACTER_ENCODING = StandardCharsets.UTF_8;
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(GenericJceCrypt.class);
@@ -107,11 +108,6 @@ public class GenericJceCrypt implements ICrypt
 			log.error("Unable to encrypt text '" + plainText + "'", e);
 			return null;
 		}
-		catch (UnsupportedEncodingException e)
-		{
-			log.error("Unable to encrypt text '" + plainText + "'", e);
-			return null;
-		}
 	}
 
 	/**
@@ -145,14 +141,7 @@ public class GenericJceCrypt implements ICrypt
 	private byte[] encryptStringToByteArray(final String plainText)
 		throws GeneralSecurityException
 	{
-		try
-		{
-			return crypter.doFinal(plainText.getBytes(CHARACTER_ENCODING));
-		}
-		catch (UnsupportedEncodingException ex)
-		{
-			throw new RuntimeException(ex.getMessage());
-		}
+		return crypter.doFinal(plainText.getBytes(CHARACTER_ENCODING));
 	}
 
     @Override
