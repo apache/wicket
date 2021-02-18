@@ -100,7 +100,7 @@
 								</goals>
 								<phase>generate-resources</phase>
 								<configuration>
-									<npmVersion>7.5.4</npmVersion>
+									<npmVersion>6.14.11</npmVersion>
 									<nodeVersion>v14.15.5</nodeVersion>
 								</configuration>
 							</execution>
