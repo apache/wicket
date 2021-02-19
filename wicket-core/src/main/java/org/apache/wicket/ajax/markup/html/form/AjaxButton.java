@@ -135,6 +135,12 @@ public abstract class AjaxButton extends Button
 
 				AjaxButton.this.updateAjaxAttributes(attributes);
 			}
+			
+			@Override
+			protected boolean shouldTriggerJavaScriptSubmitEvent()
+			{
+				return AjaxButton.this.shouldTriggerJavaScriptSubmitEvent();
+			}
 
 			@Override
 			public boolean getDefaultProcessing()
@@ -148,6 +154,17 @@ public abstract class AjaxButton extends Button
 				return AjaxButton.this.getStatelessHint();
 			}
 		};
+	}
+
+	/**
+	 * Controls whether or not a JS <code>submit</code> should be triggered on the submitting form.
+	 * False by default.
+	 * 
+	 * @return true if <code>submit</code> should be triggered, false otherwise
+	 */
+	protected boolean shouldTriggerJavaScriptSubmitEvent()
+	{
+		return false;
 	}
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
