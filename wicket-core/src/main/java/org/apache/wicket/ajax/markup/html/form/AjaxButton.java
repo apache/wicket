@@ -135,6 +135,12 @@ public abstract class AjaxButton extends Button
 
 				AjaxButton.this.updateAjaxAttributes(attributes);
 			}
+			
+			@Override
+			protected boolean shouldCallJavaScriptOnsubmit()
+			{
+				return AjaxButton.this.shouldCallJavaScriptOnsubmit();
+			}
 
 			@Override
 			public boolean getDefaultProcessing()
@@ -148,6 +154,16 @@ public abstract class AjaxButton extends Button
 				return AjaxButton.this.getStatelessHint();
 			}
 		};
+	}
+
+	/**
+	 * Controls whether or not JS <code>onsubmit()</code> should be called on the submitting form.
+	 * False by default.
+	 * 
+	 * @return true if form's <code>onsubmit()</code> should be called, false otherwise
+	 */
+	protected boolean shouldCallJavaScriptOnsubmit() {
+		return false;
 	}
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)

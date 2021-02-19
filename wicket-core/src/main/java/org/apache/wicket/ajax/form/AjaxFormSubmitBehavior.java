@@ -19,6 +19,7 @@ package org.apache.wicket.ajax.form;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.markup.html.form.Button;
@@ -139,6 +140,17 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		}
 	}
 
+	/**
+	 * Controls whether or not JS <code>onsubmit()</code> should be called on the submitting form.
+	 * False by default.
+	 * 
+	 * @return true if form's <code>onsubmit()</code> should be called, false otherwise
+	 */
+	protected boolean shouldCallJavaScriptOnsubmit()
+	{
+		return false;
+	}
+
 	@Override
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
@@ -164,6 +176,16 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		{
 			String submittingComponentName = submittingComponent.getInputName();
 			attributes.setSubmittingComponentName(submittingComponentName);
+		}
+		
+		if (shouldCallJavaScriptOnsubmit()) {
+			attributes.getAjaxCallListeners().add(new AjaxCallListener() {
+				@Override
+				public CharSequence getPrecondition(Component component)
+				{
+					return String.format("return (Wicket.$('%s').onsubmit || jQuery.noop)();", form.getMarkupId());
+				}
+			});
 		}
 	}
 
