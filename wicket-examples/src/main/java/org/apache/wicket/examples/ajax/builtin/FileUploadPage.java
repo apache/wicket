@@ -99,10 +99,10 @@ public class FileUploadPage extends BasePage
 			private static final long serialVersionUID = 1L;
 
 			/**
-			 * Need to call onsubmit to initiate progressbar. 
+			 * Need to trigger submit to initiate progressbar. 
 			 */
 			@Override
-			protected boolean shouldCallJavaScriptOnsubmit()
+			protected boolean shouldTriggerJavaScriptSubmitEvent()
 			{
 				return true;
 			}

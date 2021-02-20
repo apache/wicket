@@ -118,20 +118,21 @@ public abstract class AjaxFallbackButton extends Button
 			}
 			
 			@Override
-			protected boolean shouldCallJavaScriptOnsubmit()
+			protected boolean shouldTriggerJavaScriptSubmitEvent()
 			{
-				return AjaxFallbackButton.this.shouldCallJavaScriptOnsubmit();
+				return AjaxFallbackButton.this.shouldTriggerJavaScriptSubmitEvent();
 			}
 		};
 	}
 
 	/**
-	 * Controls whether or not JS <code>onsubmit()</code> should be called on the submitting form.
+	 * Controls whether or not a JS <code>submit</code> should be triggered on the submitting form.
 	 * False by default.
 	 * 
-	 * @return true if form's <code>onsubmit()</code> should be called, false otherwise
+	 * @return true if <code>submit</code> should be triggered, false otherwise
 	 */
-	protected boolean shouldCallJavaScriptOnsubmit() {
+	protected boolean shouldTriggerJavaScriptSubmitEvent()
+	{
 		return false;
 	}
 

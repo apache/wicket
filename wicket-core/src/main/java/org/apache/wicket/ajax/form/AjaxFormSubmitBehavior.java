@@ -141,12 +141,12 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	}
 
 	/**
-	 * Controls whether or not JS <code>onsubmit()</code> should be called on the submitting form.
+	 * Controls whether or not a JS <code>submit</code> should be triggered on the submitting form.
 	 * False by default.
 	 * 
-	 * @return true if form's <code>onsubmit()</code> should be called, false otherwise
+	 * @return true if <code>submit</code> should be triggered, false otherwise
 	 */
-	protected boolean shouldCallJavaScriptOnsubmit()
+	protected boolean shouldTriggerJavaScriptSubmitEvent()
 	{
 		return false;
 	}
@@ -178,12 +178,16 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			attributes.setSubmittingComponentName(submittingComponentName);
 		}
 		
-		if (shouldCallJavaScriptOnsubmit()) {
+		if (shouldTriggerJavaScriptSubmitEvent()) {
 			attributes.getAjaxCallListeners().add(new AjaxCallListener() {
 				@Override
 				public CharSequence getPrecondition(Component component)
 				{
-					return String.format("return (Wicket.$('%s').onsubmit || jQuery.noop)();", form.getMarkupId());
+					return String.format("var p, f = jQuery('#%s'), fn = function(e) { p = !e.isDefaultPrevented(); e.preventDefault(); };" //
+						+ "f.on('submit',fn);" //
+						+ "f.trigger('submit');" //
+						+ "f.off('submit',fn);" //
+						+ "return p;", form.getMarkupId());
 				}
 			});
 		}
