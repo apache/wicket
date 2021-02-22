@@ -35,26 +35,18 @@ import javax.crypto.SecretKey;
  * Base class for JCE based ICrypt implementations.
  * 
  */
-public class GenericJceCrypt implements ICrypt
+public abstract class AbstractJceCrypt implements ICrypt
 {
 	/** Encoding used to convert java String from and to byte[] */
-	private static final Charset CHARACTER_ENCODING = StandardCharsets.UTF_8;
+	public static final Charset CHARACTER_ENCODING = StandardCharsets.UTF_8;
 
 	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(GenericJceCrypt.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractJceCrypt.class);
 
-	private final Cipher crypter;
-    private final Cipher decrypter;
-
-    public GenericJceCrypt(SecretKey secretKey, String transformation, AlgorithmParameterSpec params) 
+    protected Cipher buildCipher(int opMode, SecretKey secretKey, String transformation, AlgorithmParameterSpec params)
     {
-        this.crypter = buildCipher(Cipher.ENCRYPT_MODE, secretKey, transformation, params);
-        this.decrypter = buildCipher(Cipher.DECRYPT_MODE, secretKey, transformation, params);
-    }
-
-    private Cipher buildCipher(int opMode, SecretKey secretKey, String transformation, AlgorithmParameterSpec params)
-    {
-        try {
+        try 
+        {
             Cipher crypter = Cipher.getInstance(transformation);
             crypter.init(opMode, secretKey, params);
             return crypter;
@@ -96,39 +88,21 @@ public class GenericJceCrypt implements ICrypt
 	@Override
 	public final String encryptUrlSafe(final String plainText)
 	{
-		try
-		{
-			byte[] encrypted = encryptStringToByteArray(plainText);
-			Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
-			byte[] encoded = encoder.encode(encrypted);
-			return new String(encoded, CHARACTER_ENCODING);
-		}
-		catch (GeneralSecurityException e)
-		{
-			log.error("Unable to encrypt text '" + plainText + "'", e);
-			return null;
-		}
+		byte[] encrypted = encryptStringToByteArray(plainText);
+        Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
+        byte[] encoded = encoder.encode(encrypted);
+        return new String(encoded, CHARACTER_ENCODING);
 	}
 
 	/**
-	 * Decrypts an encrypted, but Base64 decoded byte array into a byte array.
+	 * Decrypts an encrypted byte array.
 	 * 
 	 * @param encrypted
 	 *            byte array to decrypt
 	 * @return the decrypted text
 	 */
-	private byte[] decryptByteArray(final byte[] encrypted)
-	{
-		try
-		{
-			return decrypter.doFinal(encrypted);
-		}
-		catch (GeneralSecurityException e)
-		{
-			throw new RuntimeException(
-				"Unable to decrypt the text '" + new String(encrypted) + "'", e);
-		}
-	}
+	abstract protected byte[] decryptByteArray(final byte[] encrypted);
+	
 
 	/**
 	 * Encrypts the given text into a byte array.
@@ -138,11 +112,8 @@ public class GenericJceCrypt implements ICrypt
 	 * @return the string encrypted
 	 * @throws GeneralSecurityException
 	 */
-	private byte[] encryptStringToByteArray(final String plainText)
-		throws GeneralSecurityException
-	{
-		return crypter.doFinal(plainText.getBytes(CHARACTER_ENCODING));
-	}
+	abstract protected byte[] encryptStringToByteArray(final String plainText);
+	
 
     @Override
     public void setKey(String key) {
