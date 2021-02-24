@@ -34,8 +34,8 @@ public class AESCryptTest
 			.isUnlimitedStrengthJurisdictionPolicyInstalled();
 		Assumptions.assumeTrue(unlimitedStrengthJurisdictionPolicyInstalled);
 
-		SecretKey secretKey = CipherUtils.getKeyFromPassword(
-			"myeWeakPassword", "PBKDF2WithHmacSHA1", "AES", 
+		SecretKey secretKey = CipherUtils.generatePBEKey(
+			"myWeakPassword", "PBKDF2WithHmacSHA1", "AES", 
 			CipherUtils.randomByteArray(16), 65536, 256);
 		
 		AbstractJceCrypt crypt = new AESCrypt(secretKey);

@@ -44,7 +44,7 @@ public class CipherUtils
 		}
 	}
 
-	public static SecretKey getKeyFromPassword(String password, String pbeAlgorithm,
+	public static SecretKey generatePBEKey(String password, String pbeAlgorithm,
 		String keyAlgorithm, byte[] salt, int iterationCount, int keyLength)
 	{
 		try

@@ -20,70 +20,72 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.ICryptFactory;
+
 import java.io.Serializable;
 
 
 /**
- * Base class to implement crypt factories that store crypt into user session.
- * Note that the use of this crypt factory will result in an immediate creation of a http session.
+ * Base class to implement crypt factories that store crypt into user session. Note that the use of
+ * this crypt factory will result in an immediate creation of a http session.
  * 
  * @author andrea del bene
  *
  * @param <T>
- *              the type for the secret key.
+ *            the type for the secret key.
  */
-public abstract class AbstractKeyInSessionCryptFactory<T extends Serializable> implements ICryptFactory
+public abstract class AbstractKeyInSessionCryptFactory<T extends Serializable>
+	implements
+		ICryptFactory
 {
-    /** metadata-key used to store crypto-key in session metadata */
-    private static final MetaDataKey<Serializable> KEY = new MetaDataKey<Serializable>()
-    {
-        private static final long serialVersionUID = 1L;
-    };
-    
-    public AbstractKeyInSessionCryptFactory()
-    {
-        super();
-    }
-    
-    /**
-     * Creates a new crypt for the current user session. If no user session is 
-     * available, a new one is created.
-     * 
-     * @return
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public ICrypt newCrypt()
-    {
-        Session session = Session.get();
-        session.bind();
-    
-        // retrieve or generate encryption key from session
-        Serializable key = session.getMetaData(KEY);
-        if (key == null)
-        {
-            // generate new key
-            key = generateKey(session);
-            session.setMetaData(KEY, key);
-        }
-    
-        // build the crypt based on session key
-        ICrypt crypt = createCrypt((T)key);
-        return crypt;
-    }
-    
-    /**
-     * Generates the secret key for a new crypt.
-     * 
-     * @param session
-     *              the current user session where crypt will be stored
-     * @return
-     *              the secret key for a new crypt
-     */
-    protected abstract T generateKey(Session session);  
+	/** metadata-key used to store crypto-key in session metadata */
+	private static final MetaDataKey<Serializable> KEY = new MetaDataKey<Serializable>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
-    /**
-     * @return the {@link org.apache.wicket.util.crypt.ICrypt} to use
-     */
-    protected abstract ICrypt createCrypt(T key);
+	public AbstractKeyInSessionCryptFactory()
+	{
+		super();
+	}
+
+	/**
+	 * Creates a new crypt for the current user session. If no user session is available, a new one
+	 * is created.
+	 * 
+	 * @return
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public ICrypt newCrypt()
+	{
+		Session session = Session.get();
+		session.bind();
+
+		// retrieve or generate encryption key from session
+		Serializable key = session.getMetaData(KEY);
+		if (key == null)
+		{
+			// generate new key
+			key = generateKey(session);
+			session.setMetaData(KEY, key);
+		}
+
+		// build the crypt based on session key
+		ICrypt crypt = createCrypt((T)key);
+		return crypt;
+	}
+
+	/**
+	 * Generates the secret key for a new crypt.
+	 * 
+	 * @param session
+	 *            the current user session where crypt will be stored
+	 * @return the secret key for a new crypt
+	 */
+	protected abstract T generateKey(Session session);
+
+	/**
+	 * @return the {@link org.apache.wicket.util.crypt.ICrypt} to use
+	 */
+	protected abstract ICrypt createCrypt(T key);
 }
