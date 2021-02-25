@@ -244,7 +244,8 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 				T content = getLazyLoadComponent(CONTENT_ID);
 
 				// replace the loading component with the new component
-				AjaxLazyLoadPanel.this.replace(content);
+				// note: use addOrReplace(), since onConfigure() might not have been called yet 
+				AjaxLazyLoadPanel.this.addOrReplace(content);
 
 				Optional<AjaxRequestTarget> target = getRequestCycle().find(AjaxRequestTarget.class);
 
