@@ -43,6 +43,7 @@ public enum CSPDirective
 	MANIFEST_SRC("manifest-src"),
 	MEDIA_SRC("media-src"),
 	CHILD_SRC("child-src"),
+	WORKER_SRC("worker-src"),
 	FRAME_ANCESTORS("frame-ancestors"),
 	BASE_URI("base-uri"),
 	/**
