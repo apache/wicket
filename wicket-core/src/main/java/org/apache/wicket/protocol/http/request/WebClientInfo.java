@@ -23,8 +23,6 @@ import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,8 +33,6 @@ import org.slf4j.LoggerFactory;
 public class WebClientInfo extends ClientInfo
 {
 	private static final long serialVersionUID = 1L;
-
-	private static final Logger log = LoggerFactory.getLogger(WebClientInfo.class);
 
 	/**
 	 * The user agent string from the User-Agent header, app. Theoretically, this might differ from
