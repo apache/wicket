@@ -23,7 +23,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
 /**
+ * AES based {@link ICrypt} encrypt and decrypt strings such as passwords or URL segments.
  * Based on http://stackoverflow.com/a/992413
+ * 
+ * @see ICrypt
  */
 class AESCrypt extends AbstractJceCrypt
 {
@@ -33,11 +36,27 @@ class AESCrypt extends AbstractJceCrypt
 	private final int ivSize;
 
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param secretKey
+	 *              The {@link SecretKey} to use to initialize the {@link Cipher}.
+	 */
 	public AESCrypt(SecretKey secretKey)
 	{
 		this(secretKey, "AES/CBC/PKCS5Padding", 16);
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param secretKey
+	 *              The {@link SecretKey} to use to initialize the {@link Cipher}.
+	 * @param algorithm
+	 *              The cipher algorithm to use, for example "AES/CBC/PKCS5Padding".
+	 * @param ivSize
+	 *              The size of the Initialization Vector to use with the cipher.
+	 */
 	private AESCrypt(SecretKey secretKey, String algorithm, int ivSize)
 	{
 		this.secretKey = secretKey;
