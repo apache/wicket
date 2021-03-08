@@ -170,7 +170,7 @@
 		<spring.version>5.3.4</spring.version>
 		<wagon-ssh-external.version>3.3.4</wagon-ssh-external.version>
 		<weld.version>3.1.5.SP1</weld.version>
-		<velocity-engine-core.version>2.2</velocity-engine-core.version>
+		<velocity-engine-core.version>2.3</velocity-engine-core.version>
 
 		<!-- Maven plugins -->
 		<clirr-maven-plugin.version>2.8</clirr-maven-plugin.version>
