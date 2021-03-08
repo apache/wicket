@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -184,18 +185,18 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 		final ITextResourceCompressor textResourceCompressor = getCompressor();
 		if (textResourceCompressor != null)
 		{
-			String nonCompressed = new String(bytes, "UTF-8");
+			String nonCompressed = new String(bytes, StandardCharsets.UTF_8);
 
 			if (textResourceCompressor instanceof IScopeAwareTextResourceProcessor)
 			{
 				final ResourceReference reference = providedResources.get(0).getReference();
 				final Class<?> scope = reference.getScope();
 				final String name = reference.getName();
-				bytes = ((IScopeAwareTextResourceProcessor) textResourceCompressor).process(nonCompressed, scope, name).getBytes("UTF-8");
+				bytes = ((IScopeAwareTextResourceProcessor) textResourceCompressor).process(nonCompressed, scope, name).getBytes(StandardCharsets.UTF_8);
 			}
 			else
 			{
-				bytes = textResourceCompressor.compress(nonCompressed).getBytes("UTF-8");
+				bytes = textResourceCompressor.compress(nonCompressed).getBytes(StandardCharsets.UTF_8);
 			}
 		}
 

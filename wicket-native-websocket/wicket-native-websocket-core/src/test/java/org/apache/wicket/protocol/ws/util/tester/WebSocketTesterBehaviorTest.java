@@ -24,7 +24,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -84,9 +84,9 @@ public class WebSocketTesterBehaviorTest
 	 * pushes back the same message but capitalized, offset plus 1 and length minus 1.
 	 */
 	@Test
-	public void sendBinaryMessageBehavior() throws UnsupportedEncodingException
+	public void sendBinaryMessageBehavior()
 	{
-		final byte[] expectedMessage = "some message".getBytes("UTF-8");
+		final byte[] expectedMessage = "some message".getBytes(StandardCharsets.UTF_8);
 		final int offset = 1;
 		final int length = 2;
 
@@ -98,19 +98,12 @@ public class WebSocketTesterBehaviorTest
 			@Override
 			protected void onOutMessage(byte[] message, int off, int len)
 			{
-				try
-				{
-					String msg = new String(expectedMessage);
-					byte[] pushedMessage = Strings.capitalize(msg).getBytes("UTF-8");
+				String msg = new String(expectedMessage);
+				byte[] pushedMessage = Strings.capitalize(msg).getBytes(StandardCharsets.UTF_8);
 
-					assertArrayEquals(pushedMessage, message);
-					assertEquals(offset + 1, off);
-					assertEquals(length - 1, len);
-
-				} catch (UnsupportedEncodingException uex)
-				{
-					throw new RuntimeException(uex);
-				}
+				assertArrayEquals(pushedMessage, message);
+				assertEquals(offset + 1, off);
+				assertEquals(length - 1, len);
 			}
 		};
 

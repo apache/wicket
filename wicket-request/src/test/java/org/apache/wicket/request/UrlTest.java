@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -618,7 +619,7 @@ class UrlTest
 	void charset1()
 	{
 		Url url = new Url();
-		assertEquals(Charset.forName("UTF-8"), url.getCharset());
+		assertEquals(StandardCharsets.UTF_8, url.getCharset());
 	}
 
 	/**
