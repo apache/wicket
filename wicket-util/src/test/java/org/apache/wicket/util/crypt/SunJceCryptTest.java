@@ -16,14 +16,15 @@
  */
 package org.apache.wicket.util.crypt;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
-import javax.crypto.Cipher;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import javax.crypto.Cipher;
 
 @SuppressWarnings("javadoc")
 public class SunJceCryptTest
@@ -68,7 +69,7 @@ public class SunJceCryptTest
 	 * @return {@code true} if Unlimited Strength Jurisdiction Policy is installed
 	 * @throws NoSuchAlgorithmException
 	 */
-	static boolean isUnlimitedStrengthJurisdictionPolicyInstalled() throws NoSuchAlgorithmException
+	public static boolean isUnlimitedStrengthJurisdictionPolicyInstalled() throws NoSuchAlgorithmException
 	{
 		return Cipher.getMaxAllowedKeyLength("AES") == Integer.MAX_VALUE;
 	}

@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.crypt;
+package org.apache.wicket.core.util.crypt;
 
+import org.apache.wicket.core.random.ISecureRandomSupplier;
+import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.lang.Args;
 
 import javax.crypto.BadPaddingException;
@@ -36,6 +38,7 @@ public class AESCrypt extends AbstractJceCrypt
 	private final SecretKey secretKey;
 	private final String algorithm;
 	private final int ivSize;
+	private ISecureRandomSupplier randomSupplier;
 
 	
 	/**
@@ -44,9 +47,9 @@ public class AESCrypt extends AbstractJceCrypt
 	 * @param secretKey
 	 *              The {@link SecretKey} to use to initialize the {@link Cipher}.
 	 */
-	public AESCrypt(SecretKey secretKey)
+	public AESCrypt(SecretKey secretKey, ISecureRandomSupplier randomSupplier)
 	{
-		this(secretKey, "AES/CBC/PKCS5Padding", 16);
+		this(secretKey, "AES/CBC/PKCS5Padding", randomSupplier, 16);
 	}
 
 	/**
@@ -59,13 +62,16 @@ public class AESCrypt extends AbstractJceCrypt
 	 * @param ivSize
 	 *              The size of the Initialization Vector to use with the cipher.
 	 */
-	public AESCrypt(SecretKey secretKey, String algorithm, int ivSize)
+	public AESCrypt(SecretKey secretKey, String algorithm, 
+		ISecureRandomSupplier randomSupplier,  int ivSize)
 	{
 		Args.notNull(secretKey, "secretKey");
 		Args.notNull(algorithm, "algorithm");
+		Args.notNull(randomSupplier, "randomSupplier");
 		
 		this.secretKey = secretKey;
 		this.algorithm = algorithm;
+		this.randomSupplier = randomSupplier;
 		this.ivSize = ivSize;
 	}
 
@@ -93,7 +99,7 @@ public class AESCrypt extends AbstractJceCrypt
 	@Override
 	protected byte[] encryptStringToByteArray(String plainText)
 	{
-		byte[] iv = CipherUtils.randomByteArray(ivSize);
+		byte[] iv = randomSupplier.getRandomBytes(ivSize);
 		Cipher cipher = buildCipher(Cipher.ENCRYPT_MODE, secretKey, algorithm,
 			new IvParameterSpec(iv));
 		byte[] ciphertext;

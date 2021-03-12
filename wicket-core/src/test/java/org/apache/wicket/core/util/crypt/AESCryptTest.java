@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.crypt;
+package org.apache.wicket.core.util.crypt;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Assumptions;
+import org.apache.wicket.core.random.DefaultSecureRandomSupplier;
+import org.apache.wicket.util.crypt.CipherUtils;
 import org.junit.jupiter.api.Test;
 
 import java.security.GeneralSecurityException;
@@ -30,15 +31,13 @@ public class AESCryptTest
 	@Test
 	public void encrypDecrypt() throws GeneralSecurityException
 	{
-		boolean unlimitedStrengthJurisdictionPolicyInstalled = SunJceCryptTest
-			.isUnlimitedStrengthJurisdictionPolicyInstalled();
-		Assumptions.assumeTrue(unlimitedStrengthJurisdictionPolicyInstalled);
-
+		DefaultSecureRandomSupplier randomSupplier = new DefaultSecureRandomSupplier();
+		
 		SecretKey secretKey = CipherUtils.generatePBEKey(
 			"myWeakPassword", "PBKDF2WithHmacSHA1", "AES", 
-			CipherUtils.randomByteArray(16), 65536, 256);
+			randomSupplier.getRandomBytes(16), 65536, 256);
 		
-		AbstractJceCrypt crypt = new AESCrypt(secretKey);
+		AbstractJceCrypt crypt = new AESCrypt(secretKey, randomSupplier);
 
 		String input1 = "input1";
 		String encrypted = crypt.encryptUrlSafe(input1);
