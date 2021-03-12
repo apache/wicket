@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.crypt;
 
+import org.apache.wicket.util.lang.Args;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -28,7 +30,7 @@ import javax.crypto.spec.IvParameterSpec;
  * 
  * @see ICrypt
  */
-class AESCrypt extends AbstractJceCrypt
+public class AESCrypt extends AbstractJceCrypt
 {
 
 	private final SecretKey secretKey;
@@ -57,8 +59,11 @@ class AESCrypt extends AbstractJceCrypt
 	 * @param ivSize
 	 *              The size of the Initialization Vector to use with the cipher.
 	 */
-	private AESCrypt(SecretKey secretKey, String algorithm, int ivSize)
+	public AESCrypt(SecretKey secretKey, String algorithm, int ivSize)
 	{
+		Args.notNull(secretKey, "secretKey");
+		Args.notNull(algorithm, "algorithm");
+		
 		this.secretKey = secretKey;
 		this.algorithm = algorithm;
 		this.ivSize = ivSize;

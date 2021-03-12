@@ -42,12 +42,12 @@ public class CipherUtils
 	 *              the key length
 	 * @return a new {@link SecretKey}
 	 */
-	public static SecretKey generateKey(String algorithm, int keyLength)
+	public static SecretKey generateKey(String algorithm, int keyLength, SecureRandom secureRandom)
 	{
 		try
 		{
 			KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
-			keyGenerator.init(keyLength);
+			keyGenerator.init(keyLength, secureRandom);
 			SecretKey key = keyGenerator.generateKey();
 			return key;
 		}

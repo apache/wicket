@@ -18,6 +18,7 @@ package org.apache.wicket.util.crypt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
@@ -26,6 +27,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Base64;
+
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
@@ -43,20 +45,23 @@ public abstract class AbstractJceCrypt implements ICrypt
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(AbstractJceCrypt.class);
 
-    protected Cipher buildCipher(int opMode, SecretKey secretKey, String transformation, AlgorithmParameterSpec params)
-    {
-        try 
-        {
-            Cipher crypter = Cipher.getInstance(transformation);
-            crypter.init(opMode, secretKey, params);
-            return crypter;
-        } catch (InvalidKeyException | InvalidAlgorithmParameterException 
-                | NoSuchAlgorithmException | NoSuchPaddingException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	protected Cipher buildCipher(int opMode, SecretKey secretKey, String transformation,
+		AlgorithmParameterSpec params)
+	{
+		try
+		{
+			Cipher cipher = Cipher.getInstance(transformation);
+			cipher.init(opMode, secretKey, params);
+			return cipher;
+		}
+		catch (InvalidKeyException | InvalidAlgorithmParameterException | NoSuchAlgorithmException
+			| NoSuchPaddingException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 
-    /**
+	/**
 	 * Decrypts a string into a string.
 	 * 
 	 * @param text
@@ -73,7 +78,7 @@ public abstract class AbstractJceCrypt implements ICrypt
 		}
 		catch (Exception ex)
 		{
-			log.debug("Error decoding text: " + text, ex);
+			log.debug("Error decoding text: {}", text, ex);
 			return null;
 		}
 	}
@@ -89,9 +94,9 @@ public abstract class AbstractJceCrypt implements ICrypt
 	public final String encryptUrlSafe(final String plainText)
 	{
 		byte[] encrypted = encryptStringToByteArray(plainText);
-        Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
-        byte[] encoded = encoder.encode(encrypted);
-        return new String(encoded, CHARACTER_ENCODING);
+		Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
+		byte[] encoded = encoder.encode(encrypted);
+		return new String(encoded, CHARACTER_ENCODING);
 	}
 
 	/**
@@ -102,7 +107,7 @@ public abstract class AbstractJceCrypt implements ICrypt
 	 * @return the decrypted text
 	 */
 	abstract protected byte[] decryptByteArray(final byte[] encrypted);
-	
+
 
 	/**
 	 * Encrypts the given text into a byte array.
@@ -113,10 +118,11 @@ public abstract class AbstractJceCrypt implements ICrypt
 	 * @throws GeneralSecurityException
 	 */
 	abstract protected byte[] encryptStringToByteArray(final String plainText);
-	
 
-    @Override
-    public void setKey(String key) {
-        throw new UnsupportedOperationException();
-    }
+
+	@Override
+	final public void setKey(String key)
+	{
+		throw new UnsupportedOperationException();
+	}
 }

@@ -20,8 +20,9 @@ import org.apache.wicket.Session;
 import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory.CryptData;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.SunJceCrypt;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
-import java.io.Serializable;
+
 import java.security.Provider;
 import java.security.Security;
 import java.util.UUID;
@@ -108,11 +109,8 @@ public class KeyInSessionSunJceCryptFactory extends AbstractKeyInSessionCryptFac
         return crypt;
 	}
 
-    static final class CryptData implements Serializable
+    static final class CryptData implements IClusterable
 	{
-		/**
-         * 
-         */
         private static final long serialVersionUID = 1L;
 
         final String key;
