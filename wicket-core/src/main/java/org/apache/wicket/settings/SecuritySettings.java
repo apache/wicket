@@ -53,7 +53,7 @@ public class SecuritySettings
 	 * 
 	 * @deprecated
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public static final String DEFAULT_ENCRYPTION_KEY = "WiCkEt-FRAMEwork";
 
 	/** The authorization strategy. */
