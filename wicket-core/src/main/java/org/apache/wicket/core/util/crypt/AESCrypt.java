@@ -46,6 +46,8 @@ public class AESCrypt extends AbstractJceCrypt
 	 * 
 	 * @param secretKey
 	 *              The {@link SecretKey} to use to initialize the {@link Cipher}.
+	 * @param randomSupplier
+	 *              The {@link ISecureRandomSupplier} to use to generate random values.
 	 */
 	public AESCrypt(SecretKey secretKey, ISecureRandomSupplier randomSupplier)
 	{
@@ -59,6 +61,8 @@ public class AESCrypt extends AbstractJceCrypt
 	 *              The {@link SecretKey} to use to initialize the {@link Cipher}.
 	 * @param algorithm
 	 *              The cipher algorithm to use, for example "AES/CBC/PKCS5Padding".
+	 * @param randomSupplier
+	 *              The {@link ISecureRandomSupplier} to use to generate random values.
 	 * @param ivSize
 	 *              The size of the Initialization Vector to use with the cipher.
 	 */
@@ -76,7 +80,7 @@ public class AESCrypt extends AbstractJceCrypt
 	}
 
 	@Override
-	protected byte[] decryptByteArray(byte[] encrypted)
+	protected byte[] decrypt(byte[] encrypted)
 	{
 		byte[] iv = new byte[ivSize];
 		byte[] ciphertext = new byte[encrypted.length - ivSize];
@@ -97,7 +101,7 @@ public class AESCrypt extends AbstractJceCrypt
 	}
 
 	@Override
-	protected byte[] encryptStringToByteArray(String plainText)
+	protected byte[] encrypt(byte[] plainBytes)
 	{
 		byte[] iv = randomSupplier.getRandomBytes(ivSize);
 		Cipher cipher = buildCipher(Cipher.ENCRYPT_MODE, secretKey, algorithm,
@@ -106,7 +110,7 @@ public class AESCrypt extends AbstractJceCrypt
 
 		try
 		{
-			ciphertext = cipher.doFinal(plainText.getBytes(CHARACTER_ENCODING));
+			ciphertext = cipher.doFinal(plainBytes);
 		}
 		catch (IllegalBlockSizeException | BadPaddingException e)
 		{

@@ -75,7 +75,7 @@ public abstract class AbstractJceCrypt implements ICrypt
 		try
 		{
 			byte[] decoded = java.util.Base64.getUrlDecoder().decode(text);
-			return new String(decryptByteArray(decoded), CHARACTER_ENCODING);
+			return new String(decrypt(decoded), CHARACTER_ENCODING);
 		}
 		catch (Exception ex)
 		{
@@ -94,7 +94,7 @@ public abstract class AbstractJceCrypt implements ICrypt
 	@Override
 	public final String encryptUrlSafe(final String plainText)
 	{
-		byte[] encrypted = encryptStringToByteArray(plainText);
+		byte[] encrypted = encrypt(plainText.getBytes(CHARACTER_ENCODING));
 		Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
 		byte[] encoded = encoder.encode(encrypted);
 		return new String(encoded, CHARACTER_ENCODING);
@@ -107,7 +107,7 @@ public abstract class AbstractJceCrypt implements ICrypt
 	 *            byte array to decrypt
 	 * @return the decrypted text
 	 */
-	abstract protected byte[] decryptByteArray(final byte[] encrypted);
+	abstract protected byte[] decrypt(final byte[] encrypted);
 
 
 	/**
@@ -118,7 +118,7 @@ public abstract class AbstractJceCrypt implements ICrypt
 	 * @return the string encrypted
 	 * @throws GeneralSecurityException
 	 */
-	abstract protected byte[] encryptStringToByteArray(final String plainText);
+	abstract protected byte[] encrypt(final byte[] plainBytes);
 
 
 	@Override
