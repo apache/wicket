@@ -23,15 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.AlgorithmParameterSpec;
 import java.util.Base64;
-
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 
 
 /**
@@ -45,22 +37,6 @@ public abstract class AbstractJceCrypt implements ICrypt
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(AbstractJceCrypt.class);
-
-	protected Cipher buildCipher(int opMode, SecretKey secretKey, String transformation,
-		AlgorithmParameterSpec params)
-	{
-		try
-		{
-			Cipher cipher = Cipher.getInstance(transformation);
-			cipher.init(opMode, secretKey, params);
-			return cipher;
-		}
-		catch (InvalidKeyException | InvalidAlgorithmParameterException | NoSuchAlgorithmException
-			| NoSuchPaddingException e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
 
 	/**
 	 * Decrypts a string into a string.
@@ -124,6 +100,6 @@ public abstract class AbstractJceCrypt implements ICrypt
 	@Override
 	final public void setKey(String key)
 	{
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("This method has been deprecated in ICrypt and will be removed.");
 	}
 }

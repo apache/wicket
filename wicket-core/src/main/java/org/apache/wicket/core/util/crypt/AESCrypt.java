@@ -20,9 +20,14 @@ import org.apache.wicket.core.random.ISecureRandomSupplier;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.lang.Args;
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
@@ -37,7 +42,6 @@ public class AESCrypt extends AbstractJceCrypt
 
 	private final SecretKey secretKey;
 	private final String algorithm;
-	private final int ivSize;
 	private ISecureRandomSupplier randomSupplier;
 
 	
@@ -51,7 +55,7 @@ public class AESCrypt extends AbstractJceCrypt
 	 */
 	public AESCrypt(SecretKey secretKey, ISecureRandomSupplier randomSupplier)
 	{
-		this(secretKey, "AES/CBC/PKCS5Padding", randomSupplier, 16);
+		this(secretKey, "AES/CBC/PKCS5Padding", randomSupplier);
 	}
 
 	/**
@@ -63,11 +67,9 @@ public class AESCrypt extends AbstractJceCrypt
 	 *              The cipher algorithm to use, for example "AES/CBC/PKCS5Padding".
 	 * @param randomSupplier
 	 *              The {@link ISecureRandomSupplier} to use to generate random values.
-	 * @param ivSize
-	 *              The size of the Initialization Vector to use with the cipher.
 	 */
 	public AESCrypt(SecretKey secretKey, String algorithm, 
-		ISecureRandomSupplier randomSupplier,  int ivSize)
+		ISecureRandomSupplier randomSupplier)
 	{
 		Args.notNull(secretKey, "secretKey");
 		Args.notNull(algorithm, "algorithm");
@@ -76,25 +78,27 @@ public class AESCrypt extends AbstractJceCrypt
 		this.secretKey = secretKey;
 		this.algorithm = algorithm;
 		this.randomSupplier = randomSupplier;
-		this.ivSize = ivSize;
 	}
 
 	@Override
 	protected byte[] decrypt(byte[] encrypted)
 	{
-		byte[] iv = new byte[ivSize];
-		byte[] ciphertext = new byte[encrypted.length - ivSize];
-		System.arraycopy(encrypted, 0, iv, 0, ivSize);
-		System.arraycopy(encrypted, ivSize, ciphertext, 0, ciphertext.length);
-
-		Cipher cipher = buildCipher(Cipher.DECRYPT_MODE, secretKey, algorithm,
-			new IvParameterSpec(iv));
-
 		try
 		{
+			Cipher cipher = Cipher.getInstance(algorithm);
+			
+			int ivSize = cipher.getBlockSize();
+			byte[] iv = new byte[ivSize];
+			byte[] ciphertext = new byte[encrypted.length - ivSize];
+			
+			System.arraycopy(encrypted, 0, iv, 0, ivSize);
+			System.arraycopy(encrypted, ivSize, ciphertext, 0, ciphertext.length);
+
+			cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
 			return cipher.doFinal(ciphertext);
 		}
-		catch (IllegalBlockSizeException | BadPaddingException e)
+		catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException 
+			| InvalidKeyException | InvalidAlgorithmParameterException e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -103,25 +107,26 @@ public class AESCrypt extends AbstractJceCrypt
 	@Override
 	protected byte[] encrypt(byte[] plainBytes)
 	{
-		byte[] iv = randomSupplier.getRandomBytes(ivSize);
-		Cipher cipher = buildCipher(Cipher.ENCRYPT_MODE, secretKey, algorithm,
-			new IvParameterSpec(iv));
-		byte[] ciphertext;
-
 		try
 		{
-			ciphertext = cipher.doFinal(plainBytes);
+			Cipher cipher = Cipher.getInstance(algorithm);
+			int ivSize = cipher.getBlockSize();
+			byte[] iv = randomSupplier.getRandomBytes(ivSize);
+			cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
+
+			byte[] ciphertext = cipher.doFinal(plainBytes);
+			byte[] finalRes = new byte[ciphertext.length + ivSize];
+			
+			System.arraycopy(iv, 0, finalRes, 0, ivSize);
+			System.arraycopy(ciphertext, 0, finalRes, ivSize, ciphertext.length);
+			
+			return finalRes;
 		}
-		catch (IllegalBlockSizeException | BadPaddingException e)
+		catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException 
+			| InvalidKeyException | InvalidAlgorithmParameterException e)
 		{
 			throw new RuntimeException(e);
 		}
 
-		byte[] finalRes = new byte[ciphertext.length + ivSize];
-
-		System.arraycopy(iv, 0, finalRes, 0, ivSize);
-		System.arraycopy(ciphertext, 0, finalRes, ivSize, ciphertext.length);
-
-		return finalRes;
 	}
 }
