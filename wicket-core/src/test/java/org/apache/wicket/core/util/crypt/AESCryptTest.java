@@ -39,16 +39,16 @@ public class AESCryptTest
 		
 		AbstractJceCrypt crypt = new AESCrypt(secretKey, randomSupplier);
 
-		String input1 = "input1";
-		String encrypted = crypt.encryptUrlSafe(input1);
+		String inputTest = "inputTest";
+		String encrypted = crypt.encryptUrlSafe(inputTest);
 
-		String input2 = "input2";
-		String encrypted2 = crypt.encryptUrlSafe(input2);
+		String japFlowerBirdsWindMoon = "花鳥風月";
+		String encrypted2 = crypt.encryptUrlSafe(japFlowerBirdsWindMoon);
 
 		String decrypted = crypt.decryptUrlSafe(encrypted);
-		assertEquals(decrypted, input1);
+		assertEquals(decrypted, inputTest);
 
 		String decrypted2 = crypt.decryptUrlSafe(encrypted2);
-		assertEquals(decrypted2, input2);
+		assertEquals(decrypted2, japFlowerBirdsWindMoon);
 	}
 }

@@ -42,7 +42,7 @@ public class AESCrypt extends AbstractJceCrypt
 
 	private final SecretKey secretKey;
 	private final String algorithm;
-	private ISecureRandomSupplier randomSupplier;
+	private final ISecureRandomSupplier randomSupplier;
 
 	
 	/**

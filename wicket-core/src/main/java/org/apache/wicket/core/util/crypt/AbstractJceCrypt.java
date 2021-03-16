@@ -20,7 +20,6 @@ import org.apache.wicket.util.crypt.ICrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.Base64;
@@ -32,9 +31,6 @@ import java.util.Base64;
  */
 public abstract class AbstractJceCrypt implements ICrypt
 {
-	/** Encoding used to convert java String from and to byte[] */
-	public static final Charset CHARACTER_ENCODING = StandardCharsets.UTF_8;
-
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(AbstractJceCrypt.class);
 
@@ -51,7 +47,7 @@ public abstract class AbstractJceCrypt implements ICrypt
 		try
 		{
 			byte[] decoded = java.util.Base64.getUrlDecoder().decode(text);
-			return new String(decrypt(decoded), CHARACTER_ENCODING);
+			return new String(decrypt(decoded), StandardCharsets.UTF_8);
 		}
 		catch (Exception ex)
 		{
@@ -70,10 +66,10 @@ public abstract class AbstractJceCrypt implements ICrypt
 	@Override
 	public final String encryptUrlSafe(final String plainText)
 	{
-		byte[] encrypted = encrypt(plainText.getBytes(CHARACTER_ENCODING));
+		byte[] encrypted = encrypt(plainText.getBytes(StandardCharsets.UTF_8));
 		Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
 		byte[] encoded = encoder.encode(encrypted);
-		return new String(encoded, CHARACTER_ENCODING);
+		return new String(encoded, StandardCharsets.UTF_8);
 	}
 
 	/**

@@ -42,11 +42,6 @@ public abstract class AbstractKeyInSessionCryptFactory<T extends IClusterable>
 		private static final long serialVersionUID = 1L;
 	};
 
-	public AbstractKeyInSessionCryptFactory()
-	{
-		super();
-	}
-
 	/**
 	 * Creates a new crypt for the current user session. If no user session is available, a new one
 	 * is created.
