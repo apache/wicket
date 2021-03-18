@@ -61,6 +61,10 @@ public interface ICrypt
 	 * 
 	 * @param key
 	 *            private key
+	 * 
+	 *
+     * @deprecated TODO remove in Wicket 10
 	 */
+	@Deprecated(forRemoval = true)
 	void setKey(final String key);
 }
