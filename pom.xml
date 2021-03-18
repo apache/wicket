@@ -1571,9 +1571,9 @@
 						<reports>
 							<report>index</report>
 							<report>dependencies</report>
-							<report>mailing-list</report>
-							<report>issue-tracking</report>
-							<report>license</report>
+							<report>mailing-lists</report>
+							<report>issue-management</report>
+							<report>licenses</report>
 							<report>scm</report>
 						</reports>
 					</reportSet>
