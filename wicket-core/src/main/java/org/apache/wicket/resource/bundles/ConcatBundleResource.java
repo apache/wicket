@@ -20,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,6 @@ import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
-import org.apache.wicket.resource.IScopeAwareTextResourceProcessor;
 import org.apache.wicket.resource.ITextResourceCompressor;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
@@ -174,33 +172,13 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	protected byte[] readAllResources(List<IResourceStream> resources) throws IOException,
 		ResourceStreamNotFoundException
 	{
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		for (IResourceStream curStream : resources)
-		{
-			IOUtils.copy(curStream.getInputStream(), output);
-		}
-
-		byte[] bytes = output.toByteArray();
-
-		final ITextResourceCompressor textResourceCompressor = getCompressor();
-		if (textResourceCompressor != null)
-		{
-			String nonCompressed = new String(bytes, StandardCharsets.UTF_8);
-
-			if (textResourceCompressor instanceof IScopeAwareTextResourceProcessor)
-			{
-				final ResourceReference reference = providedResources.get(0).getReference();
-				final Class<?> scope = reference.getScope();
-				final String name = reference.getName();
-				bytes = ((IScopeAwareTextResourceProcessor) textResourceCompressor).process(nonCompressed, scope, name).getBytes(StandardCharsets.UTF_8);
+		try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+			for (IResourceStream curStream : resources) {
+				IOUtils.copy(curStream.getInputStream(), output);
 			}
-			else
-			{
-				bytes = textResourceCompressor.compress(nonCompressed).getBytes(StandardCharsets.UTF_8);
-			}
-		}
 
-		return bytes;
+			return output.toByteArray();
+		}
 	}
 
 	private ResourceResponse sendResourceError(ResourceResponse resourceResponse, int errorCode,
