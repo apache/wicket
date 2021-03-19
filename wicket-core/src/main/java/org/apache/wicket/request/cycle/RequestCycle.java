@@ -19,6 +19,7 @@ package org.apache.wicket.request.cycle;
 import java.util.Optional;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.IWicketInternalException;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
@@ -681,7 +682,10 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	private void handleDetachException(RuntimeException exception) 
 	{
-		log.error("Error detaching RequestCycle", exception);
+		if (!(exception instanceof IWicketInternalException))
+		{
+			log.error("Error detaching RequestCycle", exception);
+		}
 	}
 
 	/**
