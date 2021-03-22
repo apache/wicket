@@ -62,8 +62,11 @@ public class MetaPattern implements IClusterable
 	private static final String _STRING = "(?:[\\w\\-\\.]+|" + _DOUBLE_QUOTED_STRING + "|" +
 		_SINGLE_QUOTED_STRING + ")";
 	private static final String _OPTIONAL_STRING = _STRING + "?";
-	private static final String _VARIABLE_NAME = "[A-Za-z_][A-Za-z0-9_]*";
-	private static final String _XML_NAME = "[A-Za-z_][A-Za-z0-9_.-]*";
+	private static final String _VARIABLE_NAME = "[A-Za-z_][A-Za-z0-9_-]*";
+
+	// '@' char is not allowed by https://www.w3.org/TR/REC-xml/#NT-NameStartChar
+	// but we allow it to be friendlier with VueJS
+	private static final String _XML_NAME = "[A-Za-z_:@][A-Za-z0-9_.-]*";
 
 	// Delimiters and punctuation
 	/** Constant for whitespace. */
