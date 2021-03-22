@@ -164,6 +164,7 @@ public final class MetaPatternTest
 
 		tag = ":names";
 		parser = new TagNameParser(tag);
-		assertEquals(false, parser.matcher().matches());
+		// leading : is allowed according to https://www.w3.org/TR/REC-xml/#NT-NameStartChar
+		assertTrue(parser.matcher().matches());
 	}
 }
