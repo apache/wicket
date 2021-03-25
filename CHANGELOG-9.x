@@ -2,6 +2,32 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.3.0
+
+** Bug
+
+    * [WICKET-6815] - Incorrect parsing of html attributes
+    * [WICKET-6858] - Do not lower case the session cookie name
+    * [WICKET-6860] - ConcatBundleResource double scope processing when CssUrlReplacer is used
+    * [WICKET-6863] - Method Component.setVisibilityAllowed should call onVisibleStateChanged()
+    * [WICKET-6865] - JS Error on keyup in AutoCompleteTextField
+    * [WICKET-6867] - AutoComplete list don't choose any item, if click took more then 500 ms
+    * [WICKET-6868] - UploadProcessBar doesn't work anymore with AjaxFormSubmitBehaviour("change") out of the box
+    * [WICKET-6869] - StalePageException does not refresh page
+    * [WICKET-6871] - Exception with nested AjaxLazyLoadPanel
+    * [WICKET-6872] - CSPDirective is missing worker-src
+
+** Improvement
+
+    * [WICKET-6859] - Deprecate WebSocketAwareCsrfPreventionRequestCycleListener
+    * [WICKET-6864] - Avoid hardcoded salt and insuffcient interation length in creating PBE
+
+** Task
+
+    * [WICKET-6873] - Upgrade jQuery to 3.6.0
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.2.0
 
 ** Bug
