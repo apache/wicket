@@ -2,6 +2,27 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.12.0
+
+** Bug
+
+    * [WICKET-6815] - Incorrect parsing of html attributes
+    * [WICKET-6858] - Do not lower case the session cookie name
+    * [WICKET-6860] - ConcatBundleResource double scope processing when CssUrlReplacer is used
+    * [WICKET-6863] - Method Component.setVisibilityAllowed should call onVisibleStateChanged()
+    * [WICKET-6865] - JS Error on keyup in AutoCompleteTextField
+    * [WICKET-6867] - AutoComplete list don't choose any item, if click took more then 500 ms
+    * [WICKET-6868] - UploadProcessBar doesn't work anymore with AjaxFormSubmitBehaviour("change") out of the box
+    * [WICKET-6869] - StalePageException does not refresh page
+    * [WICKET-6870] - Wicket complains about component failing to render
+    * [WICKET-6871] - Exception with nested AjaxLazyLoadPanel
+
+** Task
+
+    * [WICKET-6873] - Upgrade jQuery to 3.6.0
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.11.0
 
 ** Bug
