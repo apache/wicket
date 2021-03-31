@@ -131,16 +131,16 @@
 		<maven.compiler.target>11</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<asm.version>9.0</asm.version>
+		<asm.version>9.1</asm.version>
 		<aspectj.version>1.9.6</aspectj.version>
-		<assertj-core.version>3.18.0</assertj-core.version>
+		<assertj-core.version>3.19.0</assertj-core.version>
 		<cdi-unit.version>4.1.0</cdi-unit.version>
 		<cglib.version>3.3.0</cglib.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<commons-fileupload.version>1.4</commons-fileupload.version>
 		<commons-io.version>2.8.0</commons-io.version>
-		<commons-lang3.version>3.11</commons-lang3.version>
+		<commons-lang3.version>3.12.0</commons-lang3.version>
 		<guice.version>4.2.3</guice.version>
 		<el-impl.version>2.2.1-b05</el-impl.version>
 		<forbiddenapis.version>3.1</forbiddenapis.version>
@@ -155,27 +155,27 @@
 		<jakarta.websocket-api.version>1.1.2</jakarta.websocket-api.version>
 		<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
-		<jetty.version>9.4.38.v20210224</jetty.version>
+		<jetty.version>9.4.39.v20210325</jetty.version>
 		<junit.version>5.7.1</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.3</logback.version>
 		<hamcrest.version>2.2</hamcrest.version>
 		<hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
-		<metrics.version>4.1.14</metrics.version>
+		<metrics.version>4.1.18</metrics.version>
 		<mockito.version>3.8.0</mockito.version>
-		<objenesis.version>3.1</objenesis.version>
+		<objenesis.version>3.2</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<spring.version>5.3.5</spring.version>
-		<wagon-ssh-external.version>3.3.4</wagon-ssh-external.version>
-		<weld.version>3.1.5.SP1</weld.version>
+		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
+		<weld.version>3.1.7.Final</weld.version>
 		<velocity-engine-core.version>2.3</velocity-engine-core.version>
 
 		<!-- Maven plugins -->
 		<clirr-maven-plugin.version>2.8</clirr-maven-plugin.version>
 		<maven-archetype-plugin.version>3.2.0</maven-archetype-plugin.version>
-		<maven-bundle-plugin.version>5.1.1</maven-bundle-plugin.version>
+		<maven-bundle-plugin.version>5.1.2</maven-bundle-plugin.version>
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
 		<maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
