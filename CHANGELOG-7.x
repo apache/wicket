@@ -2,6 +2,10 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.18.0
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.17.0
 
 ** Bug
