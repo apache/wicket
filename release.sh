@@ -252,8 +252,7 @@ more. You can find more about Apache Wicket at https://wicket.apache.org
 
 This release marks another minor release of Wicket $major_version. We
 use semantic versioning for the development of Wicket, and as such no
-API breaks are present breaks are present in this release compared to
-$major_version.0.0.
+API breaks are present in this release compared to $major_version.0.0.
 
 <OPTIONAL> New and noteworthy
 <OPTIONAL> ------------------
