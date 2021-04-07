@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.fileupload.FileUploadException;
@@ -31,6 +32,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.validation.validator.StringValidator;
@@ -46,13 +48,14 @@ public class FileUploadPage extends BasePage
 
 	private final FileUploadField file;
 	private final TextField<String> text;
+	private Label selectedFileInfo;
+	private String fileInfo;
 
 	/**
 	 * Constructor
 	 */
 	public FileUploadPage()
 	{
-
 		// create a feedback panel
 		final Component feedback = new FeedbackPanel("feedback").setOutputMarkupId(true);
 		add(feedback);
@@ -88,6 +91,34 @@ public class FileUploadPage extends BasePage
 
 		// create the file upload field
 		form.add(file = new FileUploadField("file"));
+		file.add(new FileUploadField.OnFileSelectedBehavior()
+		{
+			@Override
+			protected void onFileSelected(AjaxRequestTarget target, String fileName, Long fileSize, Date lastModified, String mimeType)
+			{
+				Bytes bytes = Bytes.bytes(fileSize);
+				fileInfo = "File " + fileName + " (with size " + bytes + ") was selected at client side. "
+						+ "File was last modified at: " + lastModified
+						+ " and is of type " + mimeType +
+						". It has not been uploaded yet. ";
+				if (bytes.greaterThan(form.getMaxSize())) {
+					fileInfo += " File exceeds max allowed size.";
+				} else {
+					fileInfo += " You can click on buttons bellow in order to upload it.";
+				}
+				target.add(selectedFileInfo);
+			}
+		});
+
+		add(selectedFileInfo = new Label("selectedFileInfo", (IModel<String>) () -> fileInfo) {
+			@Override
+			protected void onAfterRender() {
+				super.onAfterRender();
+				fileInfo = null;
+			}
+		});
+		selectedFileInfo.setOutputMarkupId(true);
+		form.add(selectedFileInfo);
 
 		form.add(new Label("max", form::getMaxSize));
 

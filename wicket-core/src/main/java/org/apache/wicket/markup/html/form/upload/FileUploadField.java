@@ -18,14 +18,23 @@ package org.apache.wicket.markup.html.form.upload;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.wicket.Component;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
+import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.list.Loop;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.Request;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
 
@@ -46,6 +55,73 @@ import org.apache.wicket.util.string.Strings;
 public class FileUploadField extends FormComponent<List<FileUpload>>
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 *  {@link org.apache.wicket.ajax.form.OnChangeAjaxBehavior} that streams back to server properties
+	 *  of the selected file (at client side), even when file has not yet being uploaded.
+s	 *
+	 * @author Ernesto Reinaldo Barreiro (reiern70@gmail.com).
+	 */
+	public static abstract class OnFileSelectedBehavior extends OnChangeAjaxBehavior
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected void onBind() {
+			super.onBind();
+			Component component = getComponent();
+			if (!(component instanceof FileUploadField))
+			{
+				throw new WicketRuntimeException("Behavior " + getClass().getName()
+						+ " can only be added to an instance of a FileUploadField");
+			}
+		}
+
+		@Override
+		protected void onUpdate(AjaxRequestTarget target)
+		{
+			Request request = RequestCycle.get().getRequest();
+			String fileName = request.getRequestParameters().getParameterValue("fileName").toString();
+			Long fileSize = request.getRequestParameters().getParameterValue("fileSize").toLong(0);
+			Date lastModified = new Date(request.getRequestParameters().getParameterValue("lastModified").toLong(0));
+			String mimeType = request.getRequestParameters().getParameterValue("type").toString();
+			onFileSelected(target, fileName, fileSize, lastModified, mimeType);
+		}
+
+		/**
+		 * Called when a file, at client side is selected.
+		 *
+		 * @param target The {@link org.apache.wicket.ajax.AjaxRequestTarget}
+		 * @param fileName The client file name
+		 * @param fileSize The client file size
+		 * @param lastModified The {@link java.util.Date} when file was last modified.
+		 * @param mimeType The  MIME type of file.
+		 */
+		protected abstract void onFileSelected(AjaxRequestTarget target, String fileName, Long fileSize,
+											   Date lastModified, String mimeType);
+
+		@Override
+		protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+			super.updateAjaxAttributes(attributes);
+			attributes.getAjaxCallListeners().add(new IAjaxCallListener()
+			{
+				@Override
+				public CharSequence getPrecondition(Component component)
+				{
+					return "if (this.files) {  window."+component.getMarkupId()+"_file = this.files[0]; return true; } " +
+							"else return false;";
+				}
+			});
+
+			String var = "window."+getComponent().getMarkupId()+"_file";
+			attributes.getDynamicExtraParameters().add("return {" +
+					"'fileName': "+var + ".name, " +
+					"'fileSize':  "+var + ".size, " +
+					"'lastModified':  "+var + ".lastModified, " +
+					"'type':  "+var + ".type, " +
+					"};");
+		}
+	}
 
 	private transient List<FileUpload> fileUploads;
 
