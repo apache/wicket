@@ -160,14 +160,14 @@
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.3</logback.version>
 		<hamcrest.version>2.2</hamcrest.version>
-		<hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
+		<hibernate-validator.version>6.2.0.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
-		<metrics.version>4.1.18</metrics.version>
-		<mockito.version>3.8.0</mockito.version>
+		<metrics.version>4.1.19</metrics.version>
+		<mockito.version>3.9.0</mockito.version>
 		<objenesis.version>3.2</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<spring.version>5.3.5</spring.version>
+		<spring.version>5.3.6</spring.version>
 		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
 		<weld.version>3.1.7.Final</weld.version>
 		<velocity-engine-core.version>2.3</velocity-engine-core.version>
