@@ -44,13 +44,24 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
  * And the related Java code:
  * 
  * <pre>
+ *  // Application specific POJO to view/edit
+ *  public class MyEntity {
+ *    private String firstName;
+ *    private String lastName;
+ *
+ *    // getters and setters
+ *  }
+ *
+ *  public class MyEntityProvider implements IDataProvider&lt;MyEntity&gt; {
+ *      ...
+ *  }
+ *
+ * List&lt;ICellPopulator&lt;MyEntity&gt;&gt; columns = new ArrayList&lt;&gt;();
  * 
- * List&lt;ICellPopulator&gt; columns = new ArrayList&lt;ICellPopulator&gt;();
+ * columns.add(new PropertyPopulator&lt;MyEntity&gt;(&quot;firstName&quot;));
+ * columns.add(new PropertyPopulator&lt;MyEntity&gt;(&quot;lastName&quot;));
  * 
- * columns.add(new PropertyPopulator(&quot;firstName&quot;));
- * columns.add(new PropertyPopulator(&quot;lastName&quot;));
- * 
- * add(new DataGridView(&quot;rows&quot;, columns, new UserProvider()));
+ * add(new DataGridView&lt;MyEntity&gt;(&quot;rows&quot;, columns, new MyEntityProvider()));
  * 
  * </pre>
  * 
