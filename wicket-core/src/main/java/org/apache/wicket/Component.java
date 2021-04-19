@@ -2893,7 +2893,7 @@ public abstract class Component
 		MetaDataEntry<?>[] old = getMetaData();
 
 		Object metaData = null;
-		MetaDataEntry<?>[] metaDataArray = key.set(getMetaData(), object);
+		MetaDataEntry<?>[] metaDataArray = key.set(old, object);
 		if (metaDataArray != null && metaDataArray.length > 0)
 		{
 			metaData = (metaDataArray.length > 1) ? metaDataArray : metaDataArray[0];
