@@ -63,9 +63,9 @@ public class BehavioursDetachTestPage extends WebPage {
             super.onConfigure(component);
 
             // If no other Behavior of this kind deemed the component to be hidden yet,
-            // calculate its visibilty now
-            Boolean calculatdVisibilitySoFar = component.getMetaData(META_DATA_KEY);
-            if (!Boolean.FALSE.equals(calculatdVisibilitySoFar)) {
+            // calculate its visibility now
+            Boolean calculatedVisibilitySoFar = component.getMetaData(META_DATA_KEY);
+            if (!Boolean.FALSE.equals(calculatedVisibilitySoFar)) {
                 boolean calculatedVisibility = calculateVisibility();
                 component.setVisibilityAllowed(calculatedVisibility);
                 component.setMetaData(META_DATA_KEY, calculatedVisibility);
