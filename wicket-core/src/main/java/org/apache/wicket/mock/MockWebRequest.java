@@ -29,7 +29,6 @@ import javax.servlet.http.Cookie;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.time.Time;
@@ -282,7 +281,8 @@ public class MockWebRequest extends WebRequest
 	@Override
 	public Url getClientUrl()
 	{
-		Url baseUrl = new Url(url.getSegments(), Collections.<QueryParameter> emptyList());
+		Url baseUrl = new Url(url);
+		baseUrl.getQueryParameters().clear();
 		baseUrl.setContextRelative(url.isContextRelative());
 		return baseUrl;
 	}

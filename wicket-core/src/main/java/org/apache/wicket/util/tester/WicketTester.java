@@ -57,7 +57,6 @@ import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * A helper class to ease unit testing of Wicket applications without the need for a servlet
  * container. To start a test, either use <code>startPage</code> or <code>startPanel</code>:
@@ -146,7 +145,7 @@ import org.slf4j.LoggerFactory;
  * {@link Component#getPageRelativePath()}. Since each Component has an ID/name, any Component can
  * also be referenced by its ID {@link MarkupContainer#get(String)}. And since MarkupContainer's and
  * its subclasses are containers which allow to add Components (in sync with the markup hierarchy),
- * you may not only access direct childs but also subchilds like get("myPanel:myForm:myNameField")
+ * you may not only access direct children but also grandchildren like get("myPanel:myForm:myNameField")
  * separating each ID with a ':'.
  * 
  * Cookie handling:
@@ -161,9 +160,7 @@ import org.slf4j.LoggerFactory;
  *   until the final response (tester.getLastResponse()) is written to the client (wicket tester) 
  * - all valid cookies (maxAge!=0) from the last response should be added to
  *   the next request cookies (tester.getRequest().getCookies())
- * 
- * 
- * TODO General: Example usage of FormTester
+ *
  * 
  * @author Ingram Chen
  * @author Juergen Donnerstag
@@ -172,7 +169,6 @@ import org.slf4j.LoggerFactory;
  */
 public class WicketTester extends BaseWicketTester
 {
-	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(WicketTester.class);
 
 	/**

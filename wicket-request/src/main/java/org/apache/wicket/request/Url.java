@@ -95,11 +95,25 @@ public class Url implements Serializable
 	private boolean contextRelative;
 
 	/**
+	 * A flag indicating that the Url is created from a full url, i.e.
+	 * with scheme, host and optional port.
+	 * Wicket usually works with relative urls. If a client wants to parse
+	 * a full url then most probably it also expects this url to be rendered
+	 * as full by {@link UrlRenderer#renderUrl(Url)}
+	 */
+	private boolean shouldRenderAsFull;
+
+	public boolean shouldRenderAsFull()
+	{
+		return shouldRenderAsFull;
+	}
+
+	/**
 	 * Modes with which urls can be stringized
 	 * 
 	 * @author igor
 	 */
-	public static enum StringMode {
+	public enum StringMode {
 		/** local urls are rendered without the host name */
 		LOCAL,
 		/**
@@ -147,6 +161,7 @@ public class Url implements Serializable
 		parameters = new ArrayList<>(url.parameters);
 		charsetName = url.charsetName;
 		_charset = url._charset;
+		shouldRenderAsFull = url.shouldRenderAsFull;
 	}
 
 	/**
@@ -168,7 +183,7 @@ public class Url implements Serializable
 	 */
 	public Url(final List<String> segments, final Charset charset)
 	{
-		this(segments, Collections.<QueryParameter> emptyList(), charset);
+		this(segments, Collections.emptyList(), charset);
 	}
 
 	/**
@@ -272,6 +287,8 @@ public class Url implements Serializable
 
 		if (isFull && isFullHint)
 		{
+			result.shouldRenderAsFull = true;
+
 			if (protocolLess == false)
 			{
 				result.protocol = absoluteUrl.substring(0, protocolAt).toLowerCase(Locale.US);

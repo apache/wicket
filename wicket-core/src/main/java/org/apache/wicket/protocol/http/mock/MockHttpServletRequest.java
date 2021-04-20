@@ -70,8 +70,6 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -156,9 +154,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 			this.file = file;
 		}
 	}
-
-	/** Logging object */
-	private static final Logger log = LoggerFactory.getLogger(MockHttpServletRequest.class);
 
 	/** The application */
 	private final Application application;

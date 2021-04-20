@@ -361,6 +361,10 @@ public class UrlRenderer
 	 */
 	protected boolean shouldRenderAsFull(final Url url)
 	{
+		if (url.shouldRenderAsFull()) {
+			return true;
+		}
+
 		Url clientUrl = request.getClientUrl();
 
 		if (!Strings.isEmpty(url.getProtocol()) &&
