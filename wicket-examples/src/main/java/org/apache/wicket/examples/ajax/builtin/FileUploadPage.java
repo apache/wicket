@@ -295,7 +295,7 @@ public class FileUploadPage extends BasePage
 			columns.add(new PropertyColumn<>(Model.of("Size"), "fileSize"));
 			columns.add(new PropertyColumn<>(Model.of("Last Modified"), "lastModified"));
 			columns.add(new PropertyColumn<>(Model.of("MIME Type"), "mimeType"));
-			selectedFileInfo = new AjaxFallbackDefaultDataTable<>("selectedFileInfo", columns, dataProvider = new DataProvider(), 100) {
+			selectedFileInfo = new AjaxFallbackDefaultDataTable<FileDescription, String>("selectedFileInfo", columns, dataProvider = new DataProvider(), 100) {
 				@Override
 				protected void onConfigure() {
 					super.onConfigure();
