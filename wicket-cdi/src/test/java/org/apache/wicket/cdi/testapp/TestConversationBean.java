@@ -19,7 +19,7 @@ package org.apache.wicket.cdi.testapp;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.enterprise.context.ConversationScoped;
+import jakarta.enterprise.context.ConversationScoped;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

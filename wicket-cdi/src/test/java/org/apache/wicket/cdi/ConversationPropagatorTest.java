@@ -18,8 +18,8 @@ package org.apache.wicket.cdi;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.enterprise.context.Conversation;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Conversation;
+import jakarta.inject.Inject;
 
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestConversationalPage;

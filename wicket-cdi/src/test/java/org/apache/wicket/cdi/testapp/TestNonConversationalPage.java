@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.cdi.testapp;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;

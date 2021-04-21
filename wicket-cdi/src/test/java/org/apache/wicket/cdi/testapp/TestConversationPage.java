@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.cdi.testapp;
 
-import javax.enterprise.context.Conversation;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Conversation;
+import jakarta.inject.Inject;
 
 import java.util.Locale;
 import org.apache.wicket.markup.html.WebPage;

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.context.ConversationScoped;
+import jakarta.enterprise.context.ConversationScoped;
 
 import org.apache.wicket.util.io.IClusterable;
 
