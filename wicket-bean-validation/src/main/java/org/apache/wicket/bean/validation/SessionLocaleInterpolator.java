@@ -2,7 +2,7 @@ package org.apache.wicket.bean.validation;
 
 import java.util.Locale;
 
-import javax.validation.MessageInterpolator;
+import jakarta.validation.MessageInterpolator;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.util.lang.Args;

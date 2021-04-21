@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.request.Request;

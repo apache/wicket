@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.metrics.aspects.request;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.metrics.WicketMetrics;
 import org.aspectj.lang.ProceedingJoinPoint;

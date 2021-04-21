@@ -18,7 +18,7 @@ package org.apache.wicket.util.tester.cookies;
 
 import java.util.List;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.tester.DummyHomePage;

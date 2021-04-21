@@ -19,7 +19,7 @@ package org.apache.wicket.request.handler.resource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.request.mapper.parameter.PageParameters;

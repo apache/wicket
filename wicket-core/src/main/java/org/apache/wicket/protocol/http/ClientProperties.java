@@ -21,7 +21,7 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.TimeZone;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.request.IRequestParameters;

@@ -1,6 +1,6 @@
 package org.apache.wicket.bean.validation;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;

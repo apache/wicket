@@ -26,7 +26,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.mock.MockRequestParameters;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;

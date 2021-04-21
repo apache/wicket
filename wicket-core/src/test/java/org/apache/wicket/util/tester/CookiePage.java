@@ -18,7 +18,7 @@ package org.apache.wicket.util.tester;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;

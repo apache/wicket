@@ -25,9 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
+import jakarta.servlet.http.Part;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -135,6 +135,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		files = new HashMap<>();
 
 		// Check that request is multipart
+		// FIXME Wicket 10 This needs a new release of Commons FileUpload (https://issues.apache.org/jira/browse/FILEUPLOAD-309)
 		final boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 		if (!isMultipart)
 		{
@@ -148,7 +149,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	@Override
 	public void parseFileParts() throws FileUploadException
 	{
-		HttpServletRequest request = getContainerRequest();
+		HttpServletRequest request = new javax.servlet.http.HttpServletRequest.Impl(getContainerRequest());
 
 		// The encoding that will be used to decode the string parameters
 		// It should NOT be null at this point, but it may be
@@ -393,7 +394,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	{
 		UploadInfo info = new UploadInfo(totalBytes);
 
-		setUploadInfo(getContainerRequest(), upload, info);
+		setUploadInfo(new javax.servlet.http.HttpServletRequest.Impl(getContainerRequest()), upload, info);
 	}
 
 	/**
@@ -404,7 +405,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 */
 	protected void onUploadUpdate(int bytesUploaded, int total)
 	{
-		HttpServletRequest request = getContainerRequest();
+		HttpServletRequest request = new javax.servlet.http.HttpServletRequest.Impl(getContainerRequest());
 		UploadInfo info = getUploadInfo(request, upload);
 		if (info == null)
 		{
@@ -421,7 +422,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 */
 	protected void onUploadCompleted()
 	{
-		clearUploadInfo(getContainerRequest(), upload);
+		clearUploadInfo(new javax.servlet.http.HttpServletRequest.Impl(getContainerRequest()), upload);
 	}
 
 	/**

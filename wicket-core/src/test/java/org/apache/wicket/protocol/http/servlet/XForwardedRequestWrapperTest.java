@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.http.servlet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.markup.html.basic.SimplePage;
 import org.apache.wicket.mock.MockApplication;

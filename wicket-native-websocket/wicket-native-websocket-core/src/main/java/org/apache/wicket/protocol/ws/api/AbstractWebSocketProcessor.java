@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;

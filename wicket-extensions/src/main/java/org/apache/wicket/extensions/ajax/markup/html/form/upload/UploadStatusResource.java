@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
 import java.time.Duration;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.Model;
@@ -91,7 +91,7 @@ class UploadStatusResource extends AbstractResource
 		final HttpServletRequest req = (HttpServletRequest)attributes.getRequest()
 			.getContainerRequest();
 
-		UploadInfo info = MultipartServletWebRequestImpl.getUploadInfo(req, upload);
+		UploadInfo info = MultipartServletWebRequestImpl.getUploadInfo(new javax.servlet.http.HttpServletRequest.Impl(req), upload);
 
 		String status;
 		if ((info == null) || (info.getTotalBytes() < 1))

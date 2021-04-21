@@ -19,8 +19,8 @@ package org.apache.wicket.protocol.ws.javax;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import javax.websocket.CloseReason;
-import javax.websocket.Session;
+import jakarta.websocket.CloseReason;
+import jakarta.websocket.Session;
 
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;

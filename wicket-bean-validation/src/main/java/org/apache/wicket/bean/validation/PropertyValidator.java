@@ -5,10 +5,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import javax.validation.groups.Default;
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import jakarta.validation.groups.Default;
+import jakarta.validation.metadata.ConstraintDescriptor;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
@@ -227,7 +227,7 @@ public class PropertyValidator<T> extends Behavior implements INullAcceptingVali
 	{
 		Set<Class<?>> groups = constraint.getGroups();
 		//the constraint can be applied to default group either if its group array is empty
-		//or if it contains javax.validation.groups.Default
+		//or if it contains jakarta.validation.groups.Default
 		return groups.size() == 0 || groups.contains(Default.class);
 	}
 

@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.ws.api;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.Instant;
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebResponse;
 import org.slf4j.Logger;

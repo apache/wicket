@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.protocol.http.RequestUtils;
@@ -428,7 +428,7 @@ public class ServletWebRequest extends WebRequest
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload)
 		throws FileUploadException
 	{
-		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize, upload);
+		return new MultipartServletWebRequestImpl(new javax.servlet.http.HttpServletRequest.Impl(getContainerRequest()), filterPrefix, maxSize, upload);
 	}
 
 	/**
@@ -445,7 +445,7 @@ public class ServletWebRequest extends WebRequest
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload,
 		FileItemFactory factory) throws FileUploadException
 	{
-		return new MultipartServletWebRequestImpl(getContainerRequest(), filterPrefix, maxSize, upload, factory);
+		return new MultipartServletWebRequestImpl(new javax.servlet.http.HttpServletRequest.Impl(getContainerRequest()), filterPrefix, maxSize, upload, factory);
 	}
 
 	@Override

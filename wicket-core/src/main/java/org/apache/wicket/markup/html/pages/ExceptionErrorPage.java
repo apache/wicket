@@ -18,7 +18,7 @@ package org.apache.wicket.markup.html.pages;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;

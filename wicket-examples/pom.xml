@@ -69,8 +69,8 @@
 			<artifactId>jakarta.servlet.jsp-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.github.axet</groupId>
@@ -174,7 +174,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>javax-websocket-server-impl</artifactId>
+			<artifactId>websocket-jakarta-server</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish</groupId>

@@ -9,11 +9,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 
-import javax.validation.Validator;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.Validator;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.metadata.ConstraintDescriptor;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
@@ -42,9 +42,9 @@ public class BeanValidationConfiguration implements BeanValidationContext
 		tmp.add(NotNull.class);
 		try
 		{
-			tmp.add(Class.forName("javax.validation.constraints.NotBlank")
+			tmp.add(Class.forName("jakarta.validation.constraints.NotBlank")
 				.asSubclass(Annotation.class));
-			tmp.add(Class.forName("javax.validation.constraints.NotEmpty")
+			tmp.add(Class.forName("jakarta.validation.constraints.NotEmpty")
 				.asSubclass(Annotation.class));
 		}
 		catch (ClassNotFoundException e)
@@ -157,7 +157,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	 * Registers a violation translator
 	 *
 	 * @param violationTranslator
-	 *            A violation translator that will convert {@link javax.validation.ConstraintViolation}s into Wicket's
+	 *            A violation translator that will convert {@link jakarta.validation.ConstraintViolation}s into Wicket's
 	 *            {@link org.apache.wicket.validation.ValidationError}s
 	 */
 	public void setViolationTranslator(IViolationTranslator violationTranslator)

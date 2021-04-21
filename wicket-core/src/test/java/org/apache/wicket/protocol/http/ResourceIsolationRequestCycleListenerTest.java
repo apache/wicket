@@ -193,7 +193,7 @@ public class ResourceIsolationRequestCycleListenerTest extends WicketTestCase
 	{
 		tester.clickLink("link");
 		assertEquals(tester.getLastResponse().getStatus(),
-			javax.servlet.http.HttpServletResponse.SC_FORBIDDEN);
+			jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN);
 		assertEquals(tester.getLastResponse().getErrorMessage(),
 			ResourceIsolationRequestCycleListener.ERROR_MESSAGE);
 	}

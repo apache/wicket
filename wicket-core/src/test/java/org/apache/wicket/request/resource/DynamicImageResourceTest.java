@@ -19,7 +19,7 @@ package org.apache.wicket.request.resource;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;

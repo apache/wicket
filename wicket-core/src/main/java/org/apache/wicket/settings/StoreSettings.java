@@ -97,7 +97,7 @@ public class StoreSettings
 			if (WebApplication.exists())
 			{
 				fileStoreFolder = (File) WebApplication.get().getServletContext()
-					.getAttribute("javax.servlet.context.tempdir");
+					.getAttribute("jakarta.servlet.context.tempdir");
 			}
 
 			if (fileStoreFolder != null)

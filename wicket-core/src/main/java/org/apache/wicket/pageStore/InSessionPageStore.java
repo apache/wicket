@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;

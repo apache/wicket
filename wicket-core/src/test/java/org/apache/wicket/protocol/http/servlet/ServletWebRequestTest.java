@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
@@ -61,7 +61,7 @@ class ServletWebRequestTest
 		assertEquals("request/Uri?some=parameter", clientUrl.toString());
 
 		// simulates a request that has errors metadata
-		httpRequest.setAttribute("javax.servlet.error.request_uri", httpRequest.getContextPath()
+		httpRequest.setAttribute("jakarta.servlet.error.request_uri", httpRequest.getContextPath()
 			+ "/any/source/of/error");
 		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "");
 		Url errorClientUrl = errorWebRequest.getClientUrl();
@@ -80,7 +80,7 @@ class ServletWebRequestTest
 
 		String problematiURI = httpRequest.getContextPath() + "/any/source/of/error";
 
-		httpRequest.setAttribute("javax.servlet.error.request_uri", problematiURI);
+		httpRequest.setAttribute("jakarta.servlet.error.request_uri", problematiURI);
 
 		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, "");
 
@@ -102,7 +102,7 @@ class ServletWebRequestTest
 
 		String forwardedURI = httpRequest.getContextPath() + "/some/forwarded/url";
 
-		httpRequest.setAttribute("javax.servlet.forward.request_uri", forwardedURI);
+		httpRequest.setAttribute("jakarta.servlet.forward.request_uri", forwardedURI);
 
 		ServletWebRequest forwardWebRequest = new ServletWebRequest(httpRequest, "");
 
@@ -187,7 +187,7 @@ class ServletWebRequestTest
 		assertEquals("request/Path?some=parameter", clientUrl.toString());
 
 		// simulates a request that has errors metadata
-		httpRequest.setAttribute("javax.servlet.error.request_uri", httpRequest.getContextPath()
+		httpRequest.setAttribute("jakarta.servlet.error.request_uri", httpRequest.getContextPath()
 			+ '/' + filterPath + "/any/source/of/error");
 		ServletWebRequest errorWebRequest = new ServletWebRequest(httpRequest, filterPath);
 		Url errorClientUrl = errorWebRequest.getClientUrl();

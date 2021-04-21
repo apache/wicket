@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.protocol.http;
 
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.annotation.WebInitParam;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.annotation.WebInitParam;
 
 /**
  * Test filter using Servlet 3.0 initialization.

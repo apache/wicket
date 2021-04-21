@@ -24,8 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -142,7 +142,7 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 	 * The error code to report when the action to take for a CSRF request is
 	 * {@link CsrfAction#ABORT}. Default {@code 403 FORBIDDEN}.
 	 */
-	private int errorCode = javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+	private int errorCode = jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 
 	/**
 	 * The error message to report when the action to take for a CSRF request is {@code ERROR}.

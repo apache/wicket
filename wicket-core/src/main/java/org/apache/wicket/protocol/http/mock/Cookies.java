@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.http.mock;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import org.apache.wicket.util.lang.Args;
 

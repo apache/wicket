@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 
 /**
  * See <a href="http://code.google.com/p/xebia-france/wiki/XForwardedFilter">XForwardedFilter</a>
@@ -80,7 +80,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletRequestWrapper#getDateHeader(java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletRequestWrapper#getDateHeader(java.lang.String)
 	 */
 	@Override
 	public long getDateHeader(final String name)
@@ -116,7 +116,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletRequestWrapper#getHeader(java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletRequestWrapper#getHeader(java.lang.String)
 	 */
 	@Override
 	public String getHeader(final String name)
@@ -150,7 +150,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletRequestWrapper#getHeaderNames()
+	 * @see jakarta.servlet.http.HttpServletRequestWrapper#getHeaderNames()
 	 */
 	@Override
 	public Enumeration<String> getHeaderNames()
@@ -159,7 +159,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletRequestWrapper#getHeaders(java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletRequestWrapper#getHeaders(java.lang.String)
 	 */
 	@Override
 	public Enumeration<String> getHeaders(final String name)
@@ -176,7 +176,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletRequestWrapper#getIntHeader(java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletRequestWrapper#getIntHeader(java.lang.String)
 	 */
 	@Override
 	public int getIntHeader(final String name)
@@ -193,7 +193,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 	}
 
 	/**
-	 * @see javax.servlet.ServletRequestWrapper#getRemoteAddr()
+	 * @see jakarta.servlet.ServletRequestWrapper#getRemoteAddr()
 	 */
 	@Override
 	public String getRemoteAddr()
@@ -202,7 +202,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 	}
 
 	/**
-	 * @see javax.servlet.ServletRequestWrapper#getRemoteHost()
+	 * @see jakarta.servlet.ServletRequestWrapper#getRemoteHost()
 	 */
 	@Override
 	public String getRemoteHost()
@@ -211,7 +211,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 	}
 
 	/**
-	 * @see javax.servlet.ServletRequestWrapper#getScheme()
+	 * @see jakarta.servlet.ServletRequestWrapper#getScheme()
 	 */
 	@Override
 	public String getScheme()
@@ -220,7 +220,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 	}
 
 	/**
-	 * @see javax.servlet.ServletRequestWrapper#getServerPort()
+	 * @see jakarta.servlet.ServletRequestWrapper#getServerPort()
 	 */
 	@Override
 	public int getServerPort()
@@ -229,7 +229,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 	}
 
 	/**
-	 * @see javax.servlet.ServletRequestWrapper#isSecure()
+	 * @see jakarta.servlet.ServletRequestWrapper#isSecure()
 	 */
 	@Override
 	public boolean isSecure()

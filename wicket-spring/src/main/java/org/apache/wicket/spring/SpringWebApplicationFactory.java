@@ -18,7 +18,7 @@ package org.apache.wicket.spring;
 
 import java.util.Map;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.apache.wicket.protocol.http.IWebApplicationFactory;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -131,7 +131,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	{
 		ServletContext servletContext = filter.getFilterConfig().getServletContext();
 
-		WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+		WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(new javax.servlet.ServletContext.Impl(servletContext));
 
 		if (getContextConfigLocation(filter) != null)
 		{
@@ -195,7 +195,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	{
 		webApplicationContext = newApplicationContext();
 		webApplicationContext.setParent(parent);
-		webApplicationContext.setServletContext(filter.getFilterConfig().getServletContext());
+		webApplicationContext.setServletContext(new javax.servlet.ServletContext.Impl(filter.getFilterConfig().getServletContext()));
 		webApplicationContext.setConfigLocation(getContextConfigLocation(filter));
 
 		postProcessWebApplicationContext(webApplicationContext, filter);

@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.collections.MultiMap;
@@ -81,7 +81,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#addCookie(javax.servlet.http.Cookie)
+	 * @see jakarta.servlet.http.HttpServletResponse#addCookie(javax.servlet.http.Cookie)
 	 */
 	@Override
 	public void addCookie(Cookie cookie)
@@ -95,7 +95,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#containsHeader(java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletResponse#containsHeader(java.lang.String)
 	 */
 	@Override
 	public boolean containsHeader(String name)
@@ -109,7 +109,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#encodeURL(java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletResponse#encodeURL(java.lang.String)
 	 */
 	@Override
 	public String encodeURL(String url)
@@ -119,7 +119,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#encodeRedirectURL(java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletResponse#encodeRedirectURL(java.lang.String)
 	 */
 	@Override
 	public String encodeRedirectURL(String url)
@@ -129,7 +129,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#encodeUrl(java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletResponse#encodeUrl(java.lang.String)
 	 * @deprecated
 	 */
 	@Override
@@ -141,7 +141,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#encodeRedirectUrl(java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletResponse#encodeRedirectUrl(java.lang.String)
 	 * @deprecated
 	 */
 	@Override
@@ -153,7 +153,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#sendError(int, java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletResponse#sendError(int, java.lang.String)
 	 */
 	@Override
 	public void sendError(int sc, String msg) throws IOException
@@ -163,7 +163,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#sendError(int)
+	 * @see jakarta.servlet.http.HttpServletResponse#sendError(int)
 	 */
 	@Override
 	public void sendError(int sc) throws IOException
@@ -173,7 +173,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#sendRedirect(java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletResponse#sendRedirect(java.lang.String)
 	 */
 	@Override
 	public void sendRedirect(String location) throws IOException
@@ -210,7 +210,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#setDateHeader(java.lang.String, long)
+	 * @see jakarta.servlet.http.HttpServletResponse#setDateHeader(java.lang.String, long)
 	 */
 	@Override
 	public void setDateHeader(String name, long date)
@@ -220,7 +220,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#addDateHeader(java.lang.String, long)
+	 * @see jakarta.servlet.http.HttpServletResponse#addDateHeader(java.lang.String, long)
 	 */
 	@Override
 	public void addDateHeader(String name, long date)
@@ -230,7 +230,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#setHeader(java.lang.String, java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletResponse#setHeader(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void setHeader(String name, String value)
@@ -240,7 +240,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#addHeader(java.lang.String, java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletResponse#addHeader(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void addHeader(String name, String value)
@@ -250,7 +250,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#setIntHeader(java.lang.String, int)
+	 * @see jakarta.servlet.http.HttpServletResponse#setIntHeader(java.lang.String, int)
 	 */
 	@Override
 	public void setIntHeader(String name, int value)
@@ -260,7 +260,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#addIntHeader(java.lang.String, int)
+	 * @see jakarta.servlet.http.HttpServletResponse#addIntHeader(java.lang.String, int)
 	 */
 	@Override
 	public void addIntHeader(String name, int value)
@@ -270,7 +270,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#setStatus(int)
+	 * @see jakarta.servlet.http.HttpServletResponse#setStatus(int)
 	 */
 	@Override
 	public void setStatus(int statusCode)
@@ -279,7 +279,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#setStatus(int, java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletResponse#setStatus(int, java.lang.String)
 	 * @deprecated use setStatus(int) instead
 	 */
 	@Override
@@ -290,7 +290,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#getCharacterEncoding()
+	 * @see jakarta.servlet.ServletResponse#getCharacterEncoding()
 	 */
 	@Override
 	public String getCharacterEncoding()
@@ -311,7 +311,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#getOutputStream()
+	 * @see jakarta.servlet.ServletResponse#getOutputStream()
 	 */
 	@Override
 	public ServletOutputStream getOutputStream() throws IOException
@@ -320,7 +320,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#getWriter()
+	 * @see jakarta.servlet.ServletResponse#getWriter()
 	 */
 	@Override
 	public PrintWriter getWriter() throws IOException
@@ -330,7 +330,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#setContentLength(int)
+	 * @see jakarta.servlet.ServletResponse#setContentLength(int)
 	 */
 	@Override
 	public void setContentLength(int len)
@@ -347,7 +347,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#setContentType(java.lang.String)
+	 * @see jakarta.servlet.ServletResponse#setContentType(java.lang.String)
 	 */
 	@Override
 	public void setContentType(String type)
@@ -366,7 +366,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#setBufferSize(int)
+	 * @see jakarta.servlet.ServletResponse#setBufferSize(int)
 	 */
 	@Override
 	public void setBufferSize(int size)
@@ -376,7 +376,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#getBufferSize()
+	 * @see jakarta.servlet.ServletResponse#getBufferSize()
 	 */
 	@Override
 	public int getBufferSize()
@@ -386,7 +386,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#flushBuffer()
+	 * @see jakarta.servlet.ServletResponse#flushBuffer()
 	 */
 	@Override
 	public void flushBuffer() throws IOException
@@ -395,7 +395,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#resetBuffer()
+	 * @see jakarta.servlet.ServletResponse#resetBuffer()
 	 */
 	@Override
 	public void resetBuffer()
@@ -405,7 +405,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#isCommitted()
+	 * @see jakarta.servlet.ServletResponse#isCommitted()
 	 */
 	@Override
 	public boolean isCommitted()
@@ -414,7 +414,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#reset()
+	 * @see jakarta.servlet.ServletResponse#reset()
 	 */
 	@Override
 	public void reset()
@@ -425,7 +425,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#setLocale(java.util.Locale)
+	 * @see jakarta.servlet.ServletResponse#setLocale(java.util.Locale)
 	 */
 	@Override
 	public void setLocale(Locale loc)
@@ -435,7 +435,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.ServletResponse#getLocale()
+	 * @see jakarta.servlet.ServletResponse#getLocale()
 	 */
 	@Override
 	public Locale getLocale()
@@ -600,7 +600,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletResponse#setStatus(int)
+	 * @see jakarta.servlet.http.HttpServletResponse#setStatus(int)
 	 * @return status
 	 */
 	@Override
@@ -610,7 +610,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletRequest#getHeader(java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletRequest#getHeader(java.lang.String)
 	 * @param name
 	 * @return the first header with name
 	 */
@@ -626,7 +626,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletRequest#getHeaders(java.lang.String)
+	 * @see jakarta.servlet.http.HttpServletRequest#getHeaders(java.lang.String)
 	 * @param name
 	 * @return all headers with name
 	 */
@@ -647,7 +647,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see javax.servlet.http.HttpServletRequest#getHeaderNames()
+	 * @see jakarta.servlet.http.HttpServletRequest#getHeaderNames()
 	 * @return all header names
 	 */
 	@Override

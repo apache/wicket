@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.protocol.http;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;

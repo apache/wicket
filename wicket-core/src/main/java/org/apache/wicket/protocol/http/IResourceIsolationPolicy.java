@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.protocol.http;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.request.component.IRequestablePage;
 
@@ -43,7 +43,7 @@ public interface IResourceIsolationPolicy
 	 * 
 	 * @author papegaaij
 	 * 
-	 * @see IResourceIsolationPolicy#isRequestAllowed(javax.servlet.http.HttpServletRequest, org.apache.wicket.request.component.IRequestablePage)
+	 * @see IResourceIsolationPolicy#isRequestAllowed(jakarta.servlet.http.HttpServletRequest, org.apache.wicket.request.component.IRequestablePage)
 	 */
 	public enum ResourceIsolationOutcome
 	{

@@ -18,8 +18,8 @@ package org.apache.wicket.protocol.http;
 
 import java.net.URL;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.application.ReloadingClassLoader;
@@ -141,7 +141,7 @@ public class ReloadingWicketFilter extends WicketFilter
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.WicketFilter#init(boolean, javax.servlet.FilterConfig)
+	 * @see org.apache.wicket.protocol.http.WicketFilter#init(boolean, jakarta.servlet.FilterConfig)
 	 */
 	@Override
 	public void init(final boolean isServlet, final FilterConfig filterConfig)

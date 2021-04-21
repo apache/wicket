@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Common interface for rejecting connections which are not meeting some of the security concerns.

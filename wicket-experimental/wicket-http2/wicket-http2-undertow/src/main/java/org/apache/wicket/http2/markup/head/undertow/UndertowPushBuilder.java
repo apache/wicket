@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.http2.markup.head.undertow;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.http2.markup.head.PushBuilder;
 import org.apache.wicket.http2.markup.head.PushItem;
@@ -41,7 +41,8 @@ public class UndertowPushBuilder implements PushBuilder
 	{
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
-		io.undertow.servlet.spec.HttpServletRequestImpl undertowRequest = (io.undertow.servlet.spec.HttpServletRequestImpl) httpRequest;
+		// FIXME Wicket 10
+		io.undertow.servlet.spec.HttpServletRequestImpl undertowRequest = null;// (io.undertow.servlet.spec.HttpServletRequestImpl) httpRequest;
 		// Added explicit cast here to ensure this is the implementation of undertow
 		io.undertow.servlet.spec.PushBuilderImpl pushBuilder = (io.undertow.servlet.spec.PushBuilderImpl)undertowRequest.newPushBuilder();
 		if (pushBuilder != null)

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.IReferenceHeaderItem;

@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.wicket.Component;
