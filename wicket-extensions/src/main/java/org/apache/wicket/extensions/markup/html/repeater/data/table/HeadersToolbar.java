@@ -117,6 +117,8 @@ public class HeadersToolbar<S> extends AbstractToolbar
 					header.add(AttributeModifier.replace("rowspan", column.getHeaderRowspan()));
 				}
 
+				header.add(AttributeModifier.replace("scope", "col"));
+
 				item.add(header);
 				item.setRenderBodyOnly(true);
 				header.add(column.getHeader("label"));
