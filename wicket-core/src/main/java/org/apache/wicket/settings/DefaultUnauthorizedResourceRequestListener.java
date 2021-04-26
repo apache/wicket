@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.settings;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.authorization.IUnauthorizedResourceRequestListener;
 import org.apache.wicket.request.IRequestHandler;

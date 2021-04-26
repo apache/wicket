@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.http2.markup.head.servlet4;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.http2.markup.head.PushBuilder;
 import org.apache.wicket.http2.markup.head.PushItem;
@@ -41,7 +41,7 @@ public class Servlet4PushBuilder implements PushBuilder
 	{
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
-		javax.servlet.http.PushBuilder pushBuilder = httpRequest.newPushBuilder();
+		jakarta.servlet.http.PushBuilder pushBuilder = httpRequest.newPushBuilder();
 		if (pushBuilder != null)
 		{
 			for (PushItem pushItem : pushItems)

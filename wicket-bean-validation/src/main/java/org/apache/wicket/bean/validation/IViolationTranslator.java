@@ -1,6 +1,6 @@
 package org.apache.wicket.bean.validation;
 
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 
 import org.apache.wicket.validation.ValidationError;
 

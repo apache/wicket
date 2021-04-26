@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.ajax;
 
 import java.util.Locale;
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;

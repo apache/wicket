@@ -2,8 +2,8 @@ package org.apache.wicket.bean.validation;
 
 import java.lang.annotation.Annotation;
 
-import javax.validation.Validator;
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.Validator;
+import jakarta.validation.metadata.ConstraintDescriptor;
 
 import org.apache.wicket.markup.html.form.FormComponent;
 

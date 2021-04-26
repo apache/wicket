@@ -17,11 +17,11 @@
 package org.apache.wicket.cdi;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.jboss.weld.bean.builtin.BeanManagerProxy;
 import org.jboss.weld.module.web.servlet.HttpContextLifecycle;
@@ -74,13 +74,14 @@ public class ContextManager
 		if (currentRequest != null)
 			return;
 
-		currentRequest = new LifecycleAwareRequest(new CdiUnitInitialListenerImpl(), request);
-		lifecycle.requestInitialized(currentRequest, null);
+		// FIXME Wicket 10
+		currentRequest = null;// new LifecycleAwareRequest(new CdiUnitInitialListenerImpl(), new javax.servlet.http.HttpServletRequest(request));
+		lifecycle.requestInitialized(new javax.servlet.http.HttpServletRequest.Impl(currentRequest), null);
 	}
 
 	public void deactivateContexts()
 	{
-		lifecycle.requestDestroyed(currentRequest);
+		lifecycle.requestDestroyed(new javax.servlet.http.HttpServletRequest.Impl(currentRequest));
 		currentSession = currentRequest.getSession(false);
 		currentRequest = null;
 	}
@@ -94,7 +95,7 @@ public class ContextManager
 
 		if (currentSession != null)
 		{
-			lifecycle.sessionDestroyed(currentSession);
+			lifecycle.sessionDestroyed(new javax.servlet.http.HttpSession.Impl(currentSession));
 			currentSession = null;
 		}
 	}

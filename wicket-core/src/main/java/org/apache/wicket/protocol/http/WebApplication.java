@@ -24,10 +24,10 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.function.Function;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
@@ -103,7 +103,7 @@ import org.slf4j.LoggerFactory;
  * the constructor itself because the defaults will then override your settings.
  * <p>
  * If you want to use a filter specific configuration, e.g. using init parameters from the
- * {@link javax.servlet.FilterConfig} object, you should override the init() method. For example:
+ * {@link jakarta.servlet.FilterConfig} object, you should override the init() method. For example:
  * 
  * <pre>
  *  public void init() {
@@ -121,9 +121,9 @@ import org.slf4j.LoggerFactory;
  * @see org.apache.wicket.settings.RequestCycleSettings
  * @see org.apache.wicket.settings.ResourceSettings
  * @see org.apache.wicket.settings.SecuritySettings
- * @see javax.servlet.Filter
- * @see javax.servlet.FilterConfig
- * @see javax.servlet.ServletContext
+ * @see jakarta.servlet.Filter
+ * @see jakarta.servlet.FilterConfig
+ * @see jakarta.servlet.ServletContext
  * 
  * @author Jonathan Locke
  * @author Chris Turner

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.http2.markup.head.jetty;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.http2.markup.head.PushBuilder;
 import org.apache.wicket.http2.markup.head.PushItem;
@@ -41,7 +41,8 @@ public class Jetty9PushBuilder implements PushBuilder
 	{
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
-		final org.eclipse.jetty.server.PushBuilder pushBuilder = org.eclipse.jetty.server.Request.getBaseRequest(httpRequest).getPushBuilder();
+		// FIXME Wicket 10
+		final jakarta.servlet.http.PushBuilder pushBuilder = null;//org.eclipse.jetty.server.Request.getBaseRequest(httpRequest).getPushBuilder();
 		if (pushBuilder != null)
 		{
 			for (PushItem pushItem : pushItems)

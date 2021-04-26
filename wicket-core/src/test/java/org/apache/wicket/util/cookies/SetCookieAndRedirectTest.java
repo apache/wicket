@@ -19,7 +19,7 @@ package org.apache.wicket.util.cookies;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.util.tester.FormTester;

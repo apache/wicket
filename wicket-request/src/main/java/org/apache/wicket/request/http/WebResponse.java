@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.lang.Args;

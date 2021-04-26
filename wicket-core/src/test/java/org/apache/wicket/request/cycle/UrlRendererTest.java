@@ -733,4 +733,64 @@ class UrlRendererTest
 		String renderedUrl = renderer.renderUrl(Url.parse("abc..."));
 		assertEquals("../abc...", renderedUrl);
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6878
+	 *
+	 * When passing a full url to {@link UrlRenderer#renderUrl(Url)}
+	 * always render it as full, i.e. with scheme, host and port (if available)
+	 */
+	@Test
+	public void whenRenderingFullUrl_thenRenderItFull()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("http://localhost/a/b")));
+
+		String renderedUrl = renderer.renderUrl(Url.parse("http://localhost/c/d"));
+		assertEquals("http://localhost/c/d", renderedUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6878
+	 *
+	 * When passing a full url to {@link UrlRenderer#renderUrl(Url)}
+	 * always render it as full, i.e. with scheme, host and port (if available)
+	 */
+	@Test
+	public void whenRenderingFullUrlWithDifferentScheme_thenRenderItFull()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("http://localhost/a/b")));
+
+		String renderedUrl = renderer.renderUrl(Url.parse("https://localhost/c/d"));
+		assertEquals("https://localhost/c/d", renderedUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6878
+	 *
+	 * When passing a full url to {@link UrlRenderer#renderUrl(Url)}
+	 * always render it as full, i.e. with scheme, host and port (if available)
+	 */
+	@Test
+	public void whenRenderingFullUrlWithDifferentHost_thenRenderItFull()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("http://localhost/a/b")));
+
+		String renderedUrl = renderer.renderUrl(Url.parse("http://another.host/c/d"));
+		assertEquals("http://another.host/c/d", renderedUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6878
+	 *
+	 * When passing a full url to {@link UrlRenderer#renderUrl(Url)}
+	 * always render it as full, i.e. with scheme, host and port (if available)
+	 */
+	@Test
+	public void whenRenderingFullUrlWithDifferentPort_thenRenderItFull()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("http://localhost/a/b")));
+
+		String renderedUrl = renderer.renderUrl(Url.parse("http://localhost:8080/c/d"));
+		assertEquals("http://localhost:8080/c/d", renderedUrl);
+	}
 }

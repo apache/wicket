@@ -3,21 +3,13 @@
 <body>
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
 
-Demonstrates Wicket's ability to transparently handle multipart forms via AJAX.<br/><br/>The only difference between this example and other non-AJAX upload examples is the option to trigger the form submit via an AjaxButton, everything else is handled transparently by Wicket.<br/><br/>
+    Demonstrates Wicket's ability to transparently handle multipart forms via AJAX.<br/><br/>The only difference
+    between this example and other non-AJAX upload examples is the option to trigger the form submit via an AjaxButton,
+    everything else is handled transparently by Wicket.<br/><br/>
 
-
-<div wicket:id="feedback"></div>
-
-<form wicket:id="form">
-	Text field: <input wicket:id="text" type="text"/><br/>
-	File field: <input wicket:id="file" type="file"/> (<span wicket:id="max"></span> max)<br/><br/>
-	<div wicket:id="progress"></div>
-	<input type="submit" value="Regular Submit"/> <input wicket:id="ajaxSubmit" type="button" value="Ajax Submit"/>
-</form>
-
-<div wicket:id="drop" class="drop-zone">
-	Drop file here.
-</div>
+    <div wicket:id="singleFileUpload"></div>
+    <br/>
+    <div wicket:id="multipleFileUpload"></div>
 
 </wicket:extend>
 </body>

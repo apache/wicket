@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
@@ -29,29 +29,29 @@ import org.apache.wicket.util.string.Strings;
  * 
  * See documentation for the following request attributes for the values stored in this object:
  * <ul>
- * <li>{@link javax.servlet.RequestDispatcher#FORWARD_CONTEXT_PATH}</li>
- * <li>{@link javax.servlet.RequestDispatcher#FORWARD_PATH_INFO}</li>
- * <li>{@link javax.servlet.RequestDispatcher#FORWARD_QUERY_STRING}</li>
- * <li>{@link javax.servlet.RequestDispatcher#FORWARD_REQUEST_URI}</li>
- * <li>{@link javax.servlet.RequestDispatcher#FORWARD_SERVLET_PATH}</li>
+ * <li>{@link jakarta.servlet.RequestDispatcher#FORWARD_CONTEXT_PATH}</li>
+ * <li>{@link jakarta.servlet.RequestDispatcher#FORWARD_PATH_INFO}</li>
+ * <li>{@link jakarta.servlet.RequestDispatcher#FORWARD_QUERY_STRING}</li>
+ * <li>{@link jakarta.servlet.RequestDispatcher#FORWARD_REQUEST_URI}</li>
+ * <li>{@link jakarta.servlet.RequestDispatcher#FORWARD_SERVLET_PATH}</li>
  * </ul>
  * 
  */
 public class ForwardAttributes
 {
-	// javax.servlet.forward.request_uri
+	// jakarta.servlet.forward.request_uri
 	private final String requestUri;
 
-	// javax.servlet.forward.servlet_path
+	// jakarta.servlet.forward.servlet_path
 	private final String servletPath;
 
-	// javax.servlet.forward.context_path
+	// jakarta.servlet.forward.context_path
 	private final String contextPath;
 
-	// javax.servlet.forward.query_string
+	// jakarta.servlet.forward.query_string
 	private final String queryString;
 
-	// javax.servlet.forward.path_info
+	// jakarta.servlet.forward.path_info
 	private final String pathInfo;
 
 	/**

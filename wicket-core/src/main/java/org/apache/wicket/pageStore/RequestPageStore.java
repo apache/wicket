@@ -87,23 +87,29 @@ public class RequestPageStore extends DelegatingPageStore
 	}
 	
 	@Override
+	public void end(IPageContext context)
+	{
+		getDelegate().end(context);
+		
+		RequestData requestData = getRequestData(context);
+		for (IManageablePage page : requestData.pages())
+		{
+			if (isPageStateless(page) == false)
+			{
+				// last opportunity to create a session
+				context.getSessionId(true);
+				break;
+			}
+		}
+	}
+	
+	@Override
 	public void detach(IPageContext context)
 	{
 		RequestData requestData = getRequestData(context);
 		for (IManageablePage page : requestData.pages())
 		{
-			boolean isPageStateless;
-			try
-			{
-				isPageStateless = page.isPageStateless();
-			}
-			catch (Exception x)
-			{
-				log.warn("An error occurred while checking whether a page is stateless. Assuming it is stateful.", x);
-				isPageStateless = false;
-			}
-
-			if (isPageStateless == false)
+			if (isPageStateless(page) == false)
 			{
 				getDelegate().addPage(context, page);
 			}
@@ -111,6 +117,20 @@ public class RequestPageStore extends DelegatingPageStore
 		requestData.removeAll();
 
 		getDelegate().detach(context);
+	}
+
+	private boolean isPageStateless(final IManageablePage page) {
+		boolean isPageStateless;
+		try
+		{
+			isPageStateless = page.isPageStateless();
+		}
+		catch (Exception x)
+		{
+			log.warn("An error occurred while checking whether a page is stateless. Assuming it is stateful.", x);
+			isPageStateless = false;
+		}
+		return isPageStateless;
 	}
 
 	private RequestData getRequestData(IPageContext context)

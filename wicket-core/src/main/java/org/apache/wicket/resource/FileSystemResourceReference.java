@@ -72,7 +72,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 					String name = attributes.getParameters().get("name").toString("");
  * 					URI uri = URI.create(
  * 						"jar:file:////folder/example.zip!/zipfolder/" + name);
- * 					return createResourceResponse(
+ * 					return createResourceResponse(attributes, 
  * 						FileSystemResourceReference.getPath(uri));
  * 				}
  * 				catch (IOException | URISyntaxException e)

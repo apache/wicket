@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.tester.cookies;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.request.http.WebResponse;

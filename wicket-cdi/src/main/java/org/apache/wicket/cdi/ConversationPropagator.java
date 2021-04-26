@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.context.ContextNotActiveException;
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.ConversationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.enterprise.context.Conversation;
+import jakarta.enterprise.context.ConversationScoped;
+import jakarta.inject.Inject;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
@@ -28,7 +28,6 @@ import org.apache.wicket.core.request.handler.BufferedResponseRequestHandler;
 import org.apache.wicket.core.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;

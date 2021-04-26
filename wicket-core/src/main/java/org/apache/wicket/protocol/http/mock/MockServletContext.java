@@ -26,6 +26,8 @@ import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,19 +39,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterRegistration;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-import javax.servlet.ServletRegistration.Dynamic;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.SessionCookieConfig;
-import javax.servlet.SessionTrackingMode;
-import javax.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.ServletRegistration.Dynamic;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.SessionTrackingMode;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
@@ -184,6 +186,11 @@ public class MockServletContext implements ServletContext
 			return comment;
 		}
 	};
+
+	private int sessionTimeout = 30; // in minutes
+	private Charset requestCharacterEncoding = StandardCharsets.UTF_8;
+	private Charset responseCharacterEncoding = StandardCharsets.UTF_8;
+
 	/**
 	 * Create the mock object. As part of the creation, the context sets the root directory where
 	 * web application content is stored. This must be an ABSOLUTE directory relative to where the
@@ -228,7 +235,7 @@ public class MockServletContext implements ServletContext
 			file = new File(tmpDir);
 		}
 
-		attributes.put("javax.servlet.context.tempdir", file);
+		attributes.put("jakarta.servlet.context.tempdir", file);
 
 		mimeTypes.put("html", "text/html");
 		mimeTypes.put("htm", "text/html");
@@ -646,6 +653,12 @@ public class MockServletContext implements ServletContext
 	}
 
 	@Override
+	public Dynamic addJspFile(String s, String s1)
+	{
+		return null;
+	}
+
+	@Override
 	public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException
 	{
 		try
@@ -773,6 +786,42 @@ public class MockServletContext implements ServletContext
 		return "WicketTester 8.x";
 	}
 
+	@Override
+	public int getSessionTimeout()
+	{
+		return sessionTimeout;
+	}
+
+	@Override
+	public void setSessionTimeout(int sessionTimeout)
+	{
+		this.sessionTimeout = sessionTimeout;
+	}
+
+	@Override
+	public String getRequestCharacterEncoding()
+	{
+		return requestCharacterEncoding.name();
+	}
+
+	@Override
+	public void setRequestCharacterEncoding(String requestCharacterEncoding)
+	{
+		this.requestCharacterEncoding = Charset.forName(requestCharacterEncoding);
+	}
+
+	@Override
+	public String getResponseCharacterEncoding()
+	{
+		return responseCharacterEncoding.name();
+	}
+
+	@Override
+	public void setResponseCharacterEncoding(String responseCharacterEncoding)
+	{
+		this.responseCharacterEncoding = Charset.forName(responseCharacterEncoding);
+	}
+
 	/**
 	 * NOT USED - Servlet spec requires that this always returns null.
 	 *
@@ -872,8 +921,8 @@ public class MockServletContext implements ServletContext
 
 
 	/**
-	 * Invocation handler for proxy interface of {@link javax.servlet.ServletRegistration.Dynamic}.
-	 * This class intercepts invocation for method {@link javax.servlet.ServletRegistration.Dynamic#getMappings}
+	 * Invocation handler for proxy interface of {@link jakarta.servlet.ServletRegistration.Dynamic}.
+	 * This class intercepts invocation for method {@link jakarta.servlet.ServletRegistration.Dynamic#getMappings}
 	 * and returns the servlet name.
 	 *
 	 * @author andrea del bene

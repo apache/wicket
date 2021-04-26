@@ -19,6 +19,7 @@ package org.apache.wicket.ajax.form;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.markup.html.form.Button;
@@ -139,6 +140,17 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		}
 	}
 
+	/**
+	 * Controls whether or not a JS <code>submit</code> should be triggered on the submitting form.
+	 * False by default.
+	 * 
+	 * @return true if <code>submit</code> should be triggered, false otherwise
+	 */
+	protected boolean shouldTriggerJavaScriptSubmitEvent()
+	{
+		return false;
+	}
+
 	@Override
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
@@ -164,6 +176,20 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		{
 			String submittingComponentName = submittingComponent.getInputName();
 			attributes.setSubmittingComponentName(submittingComponentName);
+		}
+		
+		if (shouldTriggerJavaScriptSubmitEvent()) {
+			attributes.getAjaxCallListeners().add(new AjaxCallListener() {
+				@Override
+				public CharSequence getPrecondition(Component component)
+				{
+					return String.format("var p, f = jQuery('#%s'), fn = function(e) { p = e.isDefaultPrevented(); e.preventDefault(); };" //
+						+ "f.on('submit',fn);" //
+						+ "f.trigger('submit');" //
+						+ "f.off('submit',fn);" //
+						+ "return !p;", form.getMarkupId());
+				}
+			});
 		}
 	}
 

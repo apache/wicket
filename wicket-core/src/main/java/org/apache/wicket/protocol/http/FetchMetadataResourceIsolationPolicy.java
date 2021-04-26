@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.protocol.http;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.util.string.Strings;

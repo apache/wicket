@@ -1,6 +1,6 @@
 package org.apache.wicket.metrics.aspects;
 
-import javax.servlet.FilterConfig;
+import jakarta.servlet.FilterConfig;
 
 import org.apache.wicket.metrics.WicketMetrics;
 import org.aspectj.lang.ProceedingJoinPoint;

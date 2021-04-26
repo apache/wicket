@@ -19,7 +19,7 @@ package org.apache.wicket.response;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;

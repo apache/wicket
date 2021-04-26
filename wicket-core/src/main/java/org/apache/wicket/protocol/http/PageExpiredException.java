@@ -18,7 +18,7 @@ package org.apache.wicket.protocol.http;
 
 import java.io.NotSerializableException;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;

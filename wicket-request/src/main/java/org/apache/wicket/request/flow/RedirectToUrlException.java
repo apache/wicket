@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.flow;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.request.RequestHandlerExecutor.ReplaceHandlerException;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;

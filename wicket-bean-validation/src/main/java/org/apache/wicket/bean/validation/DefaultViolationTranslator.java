@@ -3,8 +3,8 @@ package org.apache.wicket.bean.validation;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.metadata.ConstraintDescriptor;
 
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.validation.ValidationError;

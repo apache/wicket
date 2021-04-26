@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
@@ -55,8 +55,8 @@ public class InSessionPageStore implements IPageStore
 	/**
 	 * Keep {@code maxPages} persistent in each session.
 	 * <p>
-	 * All pages added to this store <em>must</em> be {@code SerializedPage}s. You can achieve this
-	 * by letting a {@link SerializingPageStore} delegate to this store.
+	 * Any page added to this store <em>not</em> being a {@code SerializedPage} will be dropped
+	 * on serialization of the session.
 	 * 
 	 * @param maxPages
 	 *            maximum pages to keep in session
@@ -278,15 +278,23 @@ public class InSessionPageStore implements IPageStore
 
 				if ((page instanceof SerializedPage) == false)
 				{
+					// remove if not already serialized
+					pages.remove(p);
+					
 					if (serializer == null)
 					{
-						pages.remove(p);
+						// cannot be serialized, thus skip
 						p--;
 					}
 					else
 					{
-						pages.set(p, new SerializedPage(page.getPageId(),
-							Classes.name(page.getClass()), serializer.serialize(page)));
+						// serialize first
+						byte[] bytes = serializer.serialize(page);
+						SerializedPage serializedPage = new SerializedPage(page.getPageId(), Classes.name(page.getClass()), bytes);
+
+						// and then re-add (to prevent a serialization loop,
+						// in case the page holds a reference to the session)  
+						pages.add(p, serializedPage);
 					}
 				}
 			}

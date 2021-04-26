@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.protocol.https;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.core.request.handler.IPageClassRequestHandler;

@@ -20,13 +20,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.websocket.Endpoint;
-import javax.websocket.server.ServerApplicationConfig;
-import javax.websocket.server.ServerEndpointConfig;
+import jakarta.websocket.Endpoint;
+import jakarta.websocket.server.ServerApplicationConfig;
+import jakarta.websocket.server.ServerEndpointConfig;
 
 /**
  * Configures WicketServerEndpointConfig that will setup {@link org.apache.wicket.protocol.ws.javax.WicketEndpoint}
- * and a custom {@link javax.websocket.server.ServerEndpointConfig.Configurator} to collect the
+ * and a custom {@link jakarta.websocket.server.ServerEndpointConfig.Configurator} to collect the
  * useful information from the upgrade http request
  */
 @SuppressWarnings("unused") // loaded with class-scan

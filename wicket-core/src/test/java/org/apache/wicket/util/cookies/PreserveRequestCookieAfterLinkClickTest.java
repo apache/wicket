@@ -18,7 +18,7 @@ package org.apache.wicket.util.cookies;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;

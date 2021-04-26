@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<head>
+    <wicket:head>
+        <script type="text/css">
+            table.files {
+                width: 1000px;
+                display: table;
+            }
+            table.files tbody {
+                width: 100%;
+            }
+            table.files td {
+                width: 25%;
+            }
+        </script>
+    </wicket:head>
+</head>
+<body>
+<wicket:panel>
+    <h2>Uploading a multiple files</h2>
+
+    <div wicket:id="feedback"></div>
+
+    <form wicket:id="form">
+        Text field: <input wicket:id="text" type="text"/><br/>
+        File field (can select multiple files): <input wicket:id="file" type="file" multiple="multiple"/> (<span wicket:id="max"></span> max)<br/><br/>
+        <br/>
+        <table wicket:id="selectedFileInfo" class="files">
+        </table>
+        <br/>
+        <div wicket:id="progress"></div>
+        <input wicket:id="submit" type="submit" value="Regular Submit"/> <input wicket:id="ajaxSubmit" type="button" value="Ajax Submit"/>
+    </form>
+</wicket:panel>
+</body>
+</html>

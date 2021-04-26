@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.markup.html;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -29,6 +31,8 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.internal.HeaderResponse;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -53,6 +57,50 @@ class HeaderContributorTest extends WicketTestCase
 		assertTrue(page.component.get(), "component");
 		assertTrue(page.behavior.get(), "behavior");
 		assertTrue(page.callDecorator.get(), "callDecorator");
+	}
+
+	/**
+	 * WICKET-6821 ensure correct ordering of header decorators
+	 */
+	@Test
+	void testHeaderContributorOrder()
+	{
+		final AtomicInteger counter = new AtomicInteger();
+		
+		class AssertOrder implements IHeaderResponseDecorator {
+			
+			private int order;
+			
+			AssertOrder(int order)
+			{
+				this.order = order;
+			}
+			
+			@Override
+			public IHeaderResponse decorate(IHeaderResponse response)
+			{
+				assertEquals(order, counter.getAndIncrement());
+				
+				return response;
+			}
+		}
+		
+		HeaderResponseDecoratorCollection decorators = tester.getApplication().getHeaderResponseDecorators();
+		decorators.add(new AssertOrder(2));
+		decorators.add(new AssertOrder(1));
+		decorators.addPreResourceAggregationDecorator(new AssertOrder(3));
+		decorators.add(new AssertOrder(0));
+		decorators.addPostProcessingDecorator(new AssertOrder(4));
+		
+		tester.getApplication().decorateHeaderResponse(new HeaderResponse()
+		{
+			
+			@Override
+			protected Response getRealResponse()
+			{
+				return null;
+			}
+		});
 	}
 
 	/**

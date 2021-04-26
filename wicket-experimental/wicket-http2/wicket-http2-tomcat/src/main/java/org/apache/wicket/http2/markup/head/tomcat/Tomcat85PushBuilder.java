@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.http2.markup.head.tomcat;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.catalina.core.ApplicationPushBuilder;
 import org.apache.wicket.http2.markup.head.PushBuilder;

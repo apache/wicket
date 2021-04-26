@@ -26,10 +26,11 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Objects;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
@@ -53,6 +54,19 @@ import org.slf4j.LoggerFactory;
 public class JavaSerializer implements ISerializer
 {
 	private static final Logger log = LoggerFactory.getLogger(JavaSerializer.class);
+
+	private static final StackWalker STACKWALKER;
+	private static final ClassLoader PLATFORM_CLASS_LOADER;
+
+	static {
+		PrivilegedAction<StackWalker> pa1 =
+				() -> StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+		PrivilegedAction<ClassLoader> pa2 = ClassLoader::getPlatformClassLoader;
+		STACKWALKER = AccessController.doPrivileged(pa1);
+		PLATFORM_CLASS_LOADER = AccessController.doPrivileged(pa2);
+	}
+
+
 	/**
 	 * The key of the application which can be used later to find the proper {@link IClassResolver}
 	 */
@@ -97,8 +111,8 @@ public class JavaSerializer implements ISerializer
 		}
 		catch (Exception e)
 		{
-			log.error("Error serializing object " + object.getClass() + " [object=" + object + "]",
-				e);
+			log.error("Error serializing object {} [object={}]",
+			          object.getClass(), object, e);
 		}
 		return null;
 	}
@@ -141,7 +155,7 @@ public class JavaSerializer implements ISerializer
 		}
 		catch (ClassNotFoundException | IOException cnfx)
 		{
-			throw new RuntimeException("Could not deserialize object from byte[]", cnfx);
+			throw new WicketRuntimeException("Could not deserialize object from byte[]", cnfx);
 		}
 		finally
 		{
@@ -278,7 +292,7 @@ public class JavaSerializer implements ISerializer
 			{
 				// ignore this exception.
 				log.debug(
-					"Proxy Class not found by the object outputstream itself, trying the IClassResolver");
+					"Proxy Class not found by the ObjectOutputStream itself, trying the IClassResolver");
 
 				ClassLoader latestLoader = latestUserDefinedLoader();
 				ClassLoader nonPublicLoader = null;
@@ -321,22 +335,20 @@ public class JavaSerializer implements ISerializer
 			}
 		}
 
-		/*
-		 * Method in the superclass is private, call it via reflection.
-		 */
 		private static ClassLoader latestUserDefinedLoader()
 		{
 			try
 			{
-				Method originalMethod =
-					ObjectInputStream.class.getDeclaredMethod("latestUserDefinedLoader");
-				originalMethod.setAccessible(true);
-				return (ClassLoader) originalMethod.invoke(null);
+				return STACKWALKER.walk(s ->
+						s.map(StackWalker.StackFrame::getDeclaringClass)
+						.map(Class::getClassLoader)
+						.filter(Objects::nonNull)
+						.filter(cl -> !PLATFORM_CLASS_LOADER.equals(cl))
+						.findFirst()
+						.orElse(PLATFORM_CLASS_LOADER));
 			}
-			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-					| NoSuchMethodException | SecurityException e)
+			catch (IllegalArgumentException | SecurityException e)
 			{
-				// should not happen
 				throw new WicketRuntimeException(e);
 			}
 		}
@@ -380,18 +392,15 @@ public class JavaSerializer implements ISerializer
 						CheckingObjectOutputStream checkingObjectOutputStream =
 							new CheckingObjectOutputStream(outputStream, new ObjectSerializationChecker(nsx));
 						checkingObjectOutputStream.writeObject(obj);
-					} 
+					}
+					catch (CheckingObjectOutputStream.ObjectCheckException x)
+					{
+						throw x;
+					}
 					catch (Exception x)
 					{
-						if (x instanceof CheckingObjectOutputStream.ObjectCheckException)
-						{
-							throw (CheckingObjectOutputStream.ObjectCheckException) x;
-						}
-						else
-						{
-							x.initCause(nsx);
-							throw new WicketRuntimeException("A problem occurred while trying to collect debug information about not serializable object", x);
-						}
+						x.initCause(nsx);
+						throw new WicketRuntimeException("A problem occurred while trying to collect debug information about not serializable object", x);
 					}
 
 					// if we get here, we didn't fail, while we should
@@ -401,7 +410,7 @@ public class JavaSerializer implements ISerializer
 			}
 			catch (Exception e)
 			{
-				log.error("error writing object " + obj + ": " + e.getMessage(), e);
+				log.error("error writing object {} : {}", obj, e.getMessage(), e);
 				throw new WicketRuntimeException(e);
 			}
 		}

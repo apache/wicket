@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.http;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.SocketException;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.protocol.http.servlet.ResponseIOException;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;

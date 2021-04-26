@@ -60,17 +60,17 @@ class SessionDestroyTest extends WicketTestCase
 		verify(session, never()).invalidateNow();
 		assertEquals(true, session.isSessionInvalidated());
 
-		session.detach();
+		session.endRequest();
 
-		// the session has been detached so #destroy() has been called and 'sessionInvalidated' is reset
+		// the session has ended the request so #destroy() has been called and 'sessionInvalidated' is reset
 		verify(session, times(1)).invalidateNow();
 		assertEquals(false, session.isSessionInvalidated());
 
-		// no matter how many times #detach() is called #destroy() should not be called
-		session.detach();
+		// no matter how many times #endRequest() is called #destroy() should not be called
+		session.endRequest();
 		verify(session, times(1)).invalidateNow();
-		session.detach();
-		session.detach();
+		session.endRequest();
+		session.endRequest();
 		verify(session, times(1)).invalidateNow();
 		assertEquals(false, session.isSessionInvalidated());
 

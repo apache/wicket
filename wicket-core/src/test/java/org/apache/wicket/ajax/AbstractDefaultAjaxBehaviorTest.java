@@ -17,13 +17,22 @@
 package org.apache.wicket.ajax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MockPageWithLink;
+import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.ajax.attributes.AjaxAttributeName;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -32,7 +41,7 @@ import org.mockito.Mockito;
  * 
  * @since 6.0
  */
-class AbstractDefaultAjaxBehaviorTest
+class AbstractDefaultAjaxBehaviorTest extends WicketTestCase
 {
 	/**
 	 * Checks the generated JSON for Ajax's attributes
@@ -89,5 +98,113 @@ class AbstractDefaultAjaxBehaviorTest
 			"}";
 
 		assertEquals(expected, json);
+	}
+
+	@Test
+	void onMethodMismatch_whenAbortAndMethodsDiffer_thenDoNotProcess()
+	{
+		AtomicBoolean respondMethodCalled = new AtomicBoolean(false);
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		Label component = new Label(MockPageWithOneComponent.COMPONENT_ID, "");
+		page.add(component);
+
+		AbstractDefaultAjaxBehavior behavior = new AbstractDefaultAjaxBehavior()
+		{
+			@Override
+			protected void respond(AjaxRequestTarget target)
+			{
+				respondMethodCalled.set(true);
+			}
+
+			@Override
+			protected void updateAjaxAttributes(final AjaxRequestAttributes attributes) {
+				super.updateAjaxAttributes(attributes);
+				attributes.setMethod(AjaxRequestAttributes.Method.GET);
+			}
+
+			@Override
+			protected Form.MethodMismatchResponse onMethodMismatch() {
+				return Form.MethodMismatchResponse.ABORT;
+			}
+		};
+		component.add(behavior);
+
+		tester.startPage(page);
+		tester.getRequest().setMethod(Form.METHOD_POST);
+		tester.executeBehavior(behavior);
+
+		assertFalse(respondMethodCalled.get());
+	}
+
+	@Test
+	void onMethodMismatch_whenAbortAndMethodsSame_thenProcess()
+	{
+		AtomicBoolean respondMethodCalled = new AtomicBoolean(false);
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		Label component = new Label(MockPageWithOneComponent.COMPONENT_ID, "");
+		page.add(component);
+
+		AbstractDefaultAjaxBehavior behavior = new AbstractDefaultAjaxBehavior()
+		{
+			@Override
+			protected void respond(AjaxRequestTarget target)
+			{
+				respondMethodCalled.set(true);
+			}
+
+			@Override
+			protected void updateAjaxAttributes(final AjaxRequestAttributes attributes) {
+				super.updateAjaxAttributes(attributes);
+				attributes.setMethod(AjaxRequestAttributes.Method.GET);
+			}
+
+			@Override
+			protected Form.MethodMismatchResponse onMethodMismatch() {
+				return Form.MethodMismatchResponse.ABORT;
+			}
+		};
+		component.add(behavior);
+
+		tester.startPage(page);
+		tester.getRequest().setMethod(Form.METHOD_GET);
+		tester.executeBehavior(behavior);
+
+		assertTrue(respondMethodCalled.get());
+	}
+
+	@Test
+	void onMethodMismatch_whenContinueAndMethodsDiffer_thenProcess()
+	{
+		AtomicBoolean respondMethodCalled = new AtomicBoolean(false);
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		Label component = new Label(MockPageWithOneComponent.COMPONENT_ID, "");
+		page.add(component);
+
+		AbstractDefaultAjaxBehavior behavior = new AbstractDefaultAjaxBehavior()
+		{
+			@Override
+			protected void respond(AjaxRequestTarget target)
+			{
+				respondMethodCalled.set(true);
+			}
+
+			@Override
+			protected void updateAjaxAttributes(final AjaxRequestAttributes attributes) {
+				super.updateAjaxAttributes(attributes);
+				attributes.setMethod(AjaxRequestAttributes.Method.GET);
+			}
+
+			@Override
+			protected Form.MethodMismatchResponse onMethodMismatch() {
+				return Form.MethodMismatchResponse.CONTINUE;
+			}
+		};
+		component.add(behavior);
+
+		tester.startPage(page);
+		tester.getRequest().setMethod(Form.METHOD_POST);
+		tester.executeBehavior(behavior);
+
+		assertTrue(respondMethodCalled.get());
 	}
 }

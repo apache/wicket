@@ -823,11 +823,26 @@ public final class Strings
 		{
 			return NO_STRINGS;
 		}
+
+		int pos = s.indexOf(c);
+		if (pos == -1)
+		{
+			return new String[] { s };
+		}
+
+		int next = s.indexOf(c, pos + 1);
+		if (next == -1)
+		{
+			return new String[] { s.substring(0, pos), s.substring(pos + 1) };
+		}
+
 		final List<String> strings = new ArrayList<>();
-		int pos = 0;
+		strings.add(s.substring(0, pos));
+		strings.add(s.substring(pos + 1, next));
 		while (true)
 		{
-			int next = s.indexOf(c, pos);
+			pos = next + 1;
+			next = s.indexOf(c, pos);
 			if (next == -1)
 			{
 				strings.add(s.substring(pos));
@@ -837,7 +852,6 @@ public final class Strings
 			{
 				strings.add(s.substring(pos, next));
 			}
-			pos = next + 1;
 		}
 		final String[] result = new String[strings.size()];
 		strings.toArray(result);
@@ -901,7 +915,7 @@ public final class Strings
 		}
 
 		// http://.../abc;jsessionid=...?param=...
-		int ixSemiColon = url.toLowerCase(Locale.ROOT).indexOf(SESSION_ID_PARAM);
+		int ixSemiColon = url.indexOf(SESSION_ID_PARAM);
 		if (ixSemiColon == -1)
 		{
 			return url;

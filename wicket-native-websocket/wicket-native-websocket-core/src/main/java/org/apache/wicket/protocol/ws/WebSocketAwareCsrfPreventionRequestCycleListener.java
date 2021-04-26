@@ -28,7 +28,10 @@ import org.apache.wicket.request.IRequestHandler;
  * <p>The HTTP upgrade request brings <em>Origin</em> in its headers, but any Web socket frame doesn't
  * bring it so {@link WebSocketRequestHandler} and {@link WebSocketMessageBroadcastHandler}
  * should be ignored.</p>
+ *
+ * @deprecated Use {@link WebSocketAwareResourceIsolationRequestCycleListener} instead
  */
+@Deprecated(since = "9.3.0")
 public class WebSocketAwareCsrfPreventionRequestCycleListener extends CsrfPreventionRequestCycleListener
 {
 	@Override

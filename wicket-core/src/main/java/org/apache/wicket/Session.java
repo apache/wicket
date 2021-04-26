@@ -526,6 +526,9 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 			invalidate();
 		}
 		
+		// clear all pages possibly pending in the request
+		getPageManager().clear();
+		
 		destroy();
 		feedbackMessages.clear();
 		setStyle(null);
@@ -669,16 +672,9 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	}
 
 	/**
-	 * Any detach logic for session subclasses. This is called on the end of handling a request,
-	 * when the RequestCycle is about to be detached from the current thread.
+	 * End the current request.
 	 */
-	public void detach()
-	{
-		detachFeedback();
-
-		pageAccessSynchronizer.get().unlockAllPages();
-		RequestCycle.get().setMetaData(PAGES_UNLOCKED, true);
-
+	public void endRequest() {
 		if (isSessionInvalidated())
 		{
 			invalidateNow();
@@ -688,6 +684,18 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 			// WICKET-5103 container might have changed id
 			updateId();
 		}
+	}
+	
+	/**
+	 * Any detach logic for session subclasses. This is called on the end of handling a request,
+	 * when the RequestCycle is about to be detached from the current thread.
+	 */
+	public void detach()
+	{
+		detachFeedback();
+
+		pageAccessSynchronizer.get().unlockAllPages();
+		RequestCycle.get().setMetaData(PAGES_UNLOCKED, true);
 	}
 
 	private void detachFeedback()

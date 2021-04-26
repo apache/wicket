@@ -21,17 +21,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.servlet.ResponseIOException;
@@ -270,28 +271,34 @@ public class WicketFilter implements Filter
 		HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 		final FilterChain chain) throws IOException, ServletException
 	{
-		// Assume we are able to handle the request
-		boolean res = true;
-
-		if (requestCycle.processRequestAndDetach())
+		boolean reqProcessed;
+		try
 		{
-			webResponse.flush();
+			reqProcessed = requestCycle.processRequest();
+			if (reqProcessed)
+			{
+				webResponse.flush();
+			}
 		}
-		else
+		finally
+		{
+			requestCycle.detach();
+		}
+
+		if (!reqProcessed)
 		{
 			if (chain != null)
 			{
 				// invoke next filter from within Wicket context
 				chain.doFilter(httpServletRequest, httpServletResponse);
 			}
-			res = false;
 		}
-		return res;
+		return reqProcessed;
 	}
 
 	/**
-	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
-	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	 * @see jakarta.servlet.Filter#doFilter(jakarta.servlet.ServletRequest,
+	 *      jakarta.servlet.ServletResponse, jakarta.servlet.FilterChain)
 	 */
 	@Override
 	public void doFilter(final ServletRequest request, final ServletResponse response,
@@ -350,7 +357,7 @@ public class WicketFilter implements Filter
 	/**
 	 * If you do have a need to subclass, you may subclass {@link #init(boolean, FilterConfig)}
 	 * 
-	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+	 * @see jakarta.servlet.Filter#init(jakarta.servlet.FilterConfig)
 	 */
 	@Override
 	public final void init(final FilterConfig filterConfig) throws ServletException
@@ -604,7 +611,7 @@ public class WicketFilter implements Filter
 	}
 
 	/**
-	 * @see javax.servlet.Filter#destroy()
+	 * @see jakarta.servlet.Filter#destroy()
 	 */
 	@Override
 	public void destroy()

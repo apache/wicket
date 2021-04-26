@@ -25,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Locale;
 import java.util.Objects;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.wicket.Application;
 import org.apache.wicket.IWicketInternalException;
 import org.apache.wicket.Session;

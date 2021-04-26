@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;

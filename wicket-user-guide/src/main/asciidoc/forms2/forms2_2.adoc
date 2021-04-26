@@ -1,7 +1,7 @@
 
 
 
-A basic example of a validation rule is to make a field required. In <<modelsforms.adoc#_models_and_javabeans,paragraph 11.3>> we have already seen how this can be done calling setRequired(true) on a field. However, to set a validation rule on a FormComponent we must add the corresponding validator to it.
+A basic example of a validation rule is to make a field required. In <<modelsforms.adoc#_login_form,paragraph 11.4.2>> we have already seen how this can be done calling setRequired(true) on a field. However, to set a validation rule on a FormComponent we must add the corresponding validator to it.
 
 A validator is an implementation of the _org.apache.wicket.validation.IValidator_ interface and the _FormComponent_ has a version of method add which takes as input a reference of this interface. 
 

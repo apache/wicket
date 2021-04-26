@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;

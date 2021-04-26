@@ -16,13 +16,9 @@
  */
 package org.apache.wicket.page;
 
-import java.util.Collection;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.Strings;
 
@@ -56,44 +52,25 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 		response.write("\"?>");
 		response.write(START_ROOT_ELEMENT);
 	}
+
+	/**
+	 * TODO remove in Wicket 10
+	 */
+	@Override
+	protected void writeComponent(Response response, String markupId, Component component,
+		String encoding)
+	{
+		super.writeComponent(response, markupId, component, encoding);
+	}
 	
 	@Override
-	protected void writeComponent(Response response, String markupId, Component component, String encoding)
+	protected void writeComponent(Response response, String markupId, CharSequence contents)
 	{
-		// substitute our encoding response for the old one so we can capture
-		// component's markup in a manner safe for transport inside CDATA block
-		Response oldResponse = RequestCycle.get().setResponse(bodyBuffer);
-
-		try
-		{
-			// render any associated headers of the component
-			writeHeaderContribution(response, component);
-			
-			bodyBuffer.reset();
-			
-			try
-			{
-				component.renderPart();
-			}
-			catch (RuntimeException e)
-			{
-				bodyBuffer.reset();
-				throw e;
-			}
-		}
-		finally
-		{
-			// Restore original response
-			RequestCycle.get().setResponse(oldResponse);
-		}
-
 		response.write("<component id=\"");
 		response.write(markupId);
 		response.write("\" ><![CDATA[");
-		response.write(encode(bodyBuffer.getContents()));
+		response.write(encode(contents));
 		response.write("]]></component>");
-
-		bodyBuffer.reset();
 	}
 
 	@Override
@@ -103,18 +80,34 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	}
 
 	@Override
+	protected void writePriorityEvaluation(Response response, CharSequence contents)
+	{
+		writeHeaderContribution(response, "priority-evaluate", contents);
+	}
+	
+	@Override
 	protected void writeHeaderContribution(Response response, CharSequence contents)
+	{
+		writeHeaderContribution(response, "header-contribution", contents);
+	}
+
+	@Override
+	protected void writeEvaluation(Response response, CharSequence contents)
+	{
+		writeHeaderContribution(response, "evaluate", contents);
+	}
+
+	private void writeHeaderContribution(Response response, String elementName, CharSequence contents)
 	{
 		if (Strings.isEmpty(contents) == false)
 		{
-			response.write("<header-contribution>");
+			response.write("<" + elementName + ">");
 
 			// we need to write response as CDATA and parse it on client,
-			// because konqueror crashes when there is a <script> element
 			response.write("<![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\">");
 			response.write(encode(contents));
 			response.write("</head>]]>");
-			response.write("</header-contribution>");
+			response.write("</" + elementName + ">");
 		}
 	}
 

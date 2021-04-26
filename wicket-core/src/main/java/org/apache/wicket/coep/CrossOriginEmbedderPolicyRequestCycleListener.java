@@ -25,7 +25,7 @@ import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Sets <a href="https://wicg.github.io/cross-origin-embedder-policy/">Cross-Origin Embedder

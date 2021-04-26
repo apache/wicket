@@ -16,16 +16,16 @@
  */
 package org.apache.wicket.core.util.crypt;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory.CryptData;
+import org.apache.wicket.util.crypt.ICrypt;
+import org.apache.wicket.util.crypt.SunJceCrypt;
+import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.util.lang.Args;
+
 import java.security.Provider;
 import java.security.Security;
 import java.util.UUID;
-
-import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.Session;
-import org.apache.wicket.util.crypt.ICrypt;
-import org.apache.wicket.util.crypt.ICryptFactory;
-import org.apache.wicket.util.crypt.SunJceCrypt;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * Crypt factory that produces {@link SunJceCrypt} instances based on session-specific
@@ -36,13 +36,8 @@ import org.apache.wicket.util.lang.Args;
  *
  * @author igor.vaynberg
  */
-public class KeyInSessionSunJceCryptFactory implements ICryptFactory
+public class KeyInSessionSunJceCryptFactory extends AbstractKeyInSessionCryptFactory<CryptData>
 {
-	/** metadata-key used to store crypto-key in session metadata */
-	private static final MetaDataKey<String> KEY = new MetaDataKey<>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
 
 	private final String cryptMethod;
 
@@ -82,32 +77,50 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 		}
 	}
 
-	@Override
-	public ICrypt newCrypt()
-	{
-		Session session = Session.get();
-		session.bind();
-
-		// retrieve or generate encryption key from session
-		String key = session.getMetaData(KEY);
-		if (key == null)
-		{
-			// generate new key
-			key = session.getId() + "." + UUID.randomUUID().toString();
-			session.setMetaData(KEY, key);
-		}
-
-		// build the crypt based on session key
-		ICrypt crypt = createCrypt();
-		crypt.setKey(key);
-		return crypt;
-	}
-
 	/**
 	 * @return the {@link org.apache.wicket.util.crypt.ICrypt} to use
+	 * 
+	 * @deprecated this method is no longer called TODO remove in Wicket 10
 	 */
+	@Deprecated(forRemoval = true)
 	protected ICrypt createCrypt()
 	{
-		return new SunJceCrypt(cryptMethod);
+		return null;
+	}
+	
+	@Override
+	protected CryptData generateKey(Session session)
+	{
+	    // generate new salt
+        byte[] salt = SunJceCrypt.randomSalt();
+        
+	    // generate new key
+        String key = session.getId() + "." + UUID.randomUUID().toString();
+        
+        return new CryptData(key, salt);
+	}
+	
+	@Override
+	protected ICrypt createCrypt(CryptData keyParams)
+	{
+	    SunJceCrypt crypt = new SunJceCrypt(cryptMethod, keyParams.salt, 1000);
+        crypt.setKey(keyParams.key);
+        
+        return crypt;
+	}
+
+    static final class CryptData implements IClusterable
+	{
+        private static final long serialVersionUID = 1L;
+
+        final String key;
+		
+		final byte[] salt;
+		
+		CryptData(String key, byte[] salt)
+		{
+			this.key = key;
+			this.salt = salt;
+		}
 	}
 }

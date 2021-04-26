@@ -285,3 +285,35 @@ public void tearDown(){
 }
 ----
 
+=== Setting request headers
+
+In some cases you might need to set one or more specific request headers to make your test pass. This holds true when your application is protected against CSRF attacks as explained in <<security.adoc#_csrf_protection,paragraph 22.5>>. In this particular case in order to make your tests green you must set header request _"sec-fetch-site"_ to _same-site_ before clicking on a page link or before invoking a callback URL:
+
+[source,java]
+----
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SAME_SITE;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SEC_FETCH_SITE_HEADER;
+
+public class TestHomePage
+{
+	private WicketTester tester;
+
+	@BeforeEach
+	public void setUp()
+	{
+		tester = new WicketTester(new WicketApplication());
+	}
+
+	@Test
+	public void homepageRendersSuccessfully()
+	{
+		//start and render the test page
+		tester.startPage(HomePage.class);
+
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, SAME_SITE);
+		tester.clickLink("click");
+	}
+}	
+----
+
+NOTE: keep in mind that request headers are immediately discarded after the use and thus are not re-used for following requests. 

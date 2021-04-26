@@ -2,11 +2,11 @@ package org.apache.wicket.bean.validation;
 
 import java.util.function.Supplier;
 
-import javax.validation.Configuration;
-import javax.validation.MessageInterpolator;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import jakarta.validation.Configuration;
+import jakarta.validation.MessageInterpolator;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 
 /**

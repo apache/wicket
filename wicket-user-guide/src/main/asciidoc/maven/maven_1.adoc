@@ -48,11 +48,25 @@ The third way to set the running mode is using system property _wicket.configura
 java -Dwicket.configuration=deployment ...
 ----
 
-The last option is to set it in your Java code (e.g. in the init-method of your WebApplication):
+The last option is to override getConfigurationType() method in your class that extends WebApplication):
 
 [source,java]
 ----
-setConfigurationType(RuntimeConfigurationType.DEPLOYMENT);
+public class WicketApplication extends WebApplication
+{
+    @Override
+    public void init()
+    {
+        super.init();
+        // add your configuration here
+    }
+
+    @Override
+    public RuntimeConfigurationType getConfigurationType()
+    {
+        return RuntimeConfigurationType.DEPLOYMENT;
+    }
+}
 ----
 
 Remember that system properties overwrite other settings, so they are ideal to ensure that on production machine the running mode will be always set to DEPLOYMENT. 

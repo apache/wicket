@@ -20,12 +20,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.string.Strings;
@@ -86,7 +86,7 @@ import org.slf4j.LoggerFactory;
  * RequestCycle's render() method is then called to produce a response to the HTTP request.
  * <p>
  * If you want to use servlet specific configuration, e.g. using init parameters from the
- * {@link javax.servlet.ServletConfig}object, you should override the init() method of
+ * {@link jakarta.servlet.ServletConfig}object, you should override the init() method of
  * {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
@@ -271,7 +271,7 @@ public class WicketServlet extends HttpServlet
 		wicketFilter.init(true, new FilterConfig()
 		{
 			/**
-			 * @see javax.servlet.FilterConfig#getServletContext()
+			 * @see jakarta.servlet.FilterConfig#getServletContext()
 			 */
 			@Override
 			public ServletContext getServletContext()
@@ -280,7 +280,7 @@ public class WicketServlet extends HttpServlet
 			}
 
 			/**
-			 * @see javax.servlet.FilterConfig#getInitParameterNames()
+			 * @see jakarta.servlet.FilterConfig#getInitParameterNames()
 			 */
 			@Override
 			@SuppressWarnings("unchecked")
@@ -290,7 +290,7 @@ public class WicketServlet extends HttpServlet
 			}
 
 			/**
-			 * @see javax.servlet.FilterConfig#getInitParameter(java.lang.String)
+			 * @see jakarta.servlet.FilterConfig#getInitParameter(java.lang.String)
 			 */
 			@Override
 			public String getInitParameter(final String name)
@@ -299,7 +299,7 @@ public class WicketServlet extends HttpServlet
 			}
 
 			/**
-			 * @see javax.servlet.FilterConfig#getFilterName()
+			 * @see jakarta.servlet.FilterConfig#getFilterName()
 			 */
 			@Override
 			public String getFilterName()

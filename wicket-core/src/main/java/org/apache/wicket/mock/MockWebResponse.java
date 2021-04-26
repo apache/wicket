@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.HttpHeaderCollection;
 import org.apache.wicket.request.http.WebResponse;

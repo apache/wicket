@@ -33,10 +33,10 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.protocol.http.IMetaDataBufferingWebResponse;
 import org.apache.wicket.request.http.WebResponse;

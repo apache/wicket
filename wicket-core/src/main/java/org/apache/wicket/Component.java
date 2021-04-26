@@ -421,26 +421,34 @@ public abstract class Component
 	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED |
 		FLAG_IS_RENDER_ALLOWED | FLAG_VISIBILITY_ALLOWED | FLAG_RESERVED5 /* page's stateless hint */;
 
-	private static final short RFLAG_ENABLED_IN_HIERARCHY_VALUE = 0x1;
-	private static final short RFLAG_ENABLED_IN_HIERARCHY_SET = 0x2;
-	private static final short RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED = 0x4;
-	private static final short RFLAG_VISIBLE_IN_HIERARCHY_SET = 0x8;
+	// @formatter:off	
+	private static final short RFLAG_ENABLED_IN_HIERARCHY_VALUE        = 0x1;
+	private static final short RFLAG_ENABLED_IN_HIERARCHY_SET          = 0x2;
+	private static final short RFLAG_VISIBLE_IN_HIERARCHY_VALUE        = 0x4;
+	private static final short RFLAG_VISIBLE_IN_HIERARCHY_SET          = 0x8;
 	/** onconfigure has been called */
-	private static final short RFLAG_CONFIGURED = 0x10;
+	private static final short RFLAG_CONFIGURED                        = 0x10;
 	private static final short RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED = 0x20;
-	private static final short RFLAG_INITIALIZE_SUPER_CALL_VERIFIED = 0x40;
-	protected static final short RFLAG_CONTAINER_DEQUEING = 0x80;
-	private static final short RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED = 0x100;
+	private static final short RFLAG_INITIALIZE_SUPER_CALL_VERIFIED    = 0x40;
+	protected static final short RFLAG_CONTAINER_DEQUEING              = 0x80;
+	private static final short RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED     = 0x100;
 	/**
 	 * Flag that makes we are in before-render callback phase Set after component.onBeforeRender is
 	 * invoked (right before invoking beforeRender on children)
 	 */
-	private static final short RFLAG_RENDERING = 0x200;
-	private static final short RFLAG_PREPARED_FOR_RENDER = 0x400;
-	private static final short RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED = 0x800;
-	private static final short RFLAG_DETACHING = 0x1000;	
+	private static final short RFLAG_RENDERING                         = 0x200;
+	private static final short RFLAG_PREPARED_FOR_RENDER               = 0x400;
+	private static final short RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED  = 0x800;
+	private static final short RFLAG_DETACHING                         = 0x1000;
 	/** True when a component is being removed from the hierarchy */
-	private static final short RFLAG_REMOVING_FROM_HIERARCHY = 0x2000;
+	private static final short RFLAG_REMOVING_FROM_HIERARCHY           = 0x2000;
+	/**
+	 * This flag tracks if removals have been set on this component. Clearing this key is an
+	 * expensive operation. With this flag this expensive call can be avoided.
+	 */
+	protected static final short RFLAG_CONTAINER_HAS_REMOVALS          = 0x4000;
+	private static final short RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED  = (short) 0x8000;
+	// @formatter:on
 
 	/**
 	 * Flags that only keep their value during the request. Useful for cache markers, etc. At the
@@ -2099,15 +2107,25 @@ public abstract class Component
 	 */
 	public final boolean isVisibleInHierarchy()
 	{
+		if (getRequestFlag(RFLAG_VISIBLE_IN_HIERARCHY_SET))
+		{
+			return getRequestFlag(RFLAG_VISIBLE_IN_HIERARCHY_VALUE);
+		}
+
+		final boolean state;
 		Component parent = getParent();
 		if (parent != null && !parent.isVisibleInHierarchy())
 		{
-			return false;
+			state = false;
 		}
 		else
 		{
-			return determineVisibility();
+			state = determineVisibility();
 		}
+
+		setRequestFlag(RFLAG_VISIBLE_IN_HIERARCHY_SET, true);
+		setRequestFlag(RFLAG_VISIBLE_IN_HIERARCHY_VALUE, state);
+		return state;
 	}
 
 	/**
@@ -2875,7 +2893,7 @@ public abstract class Component
 		MetaDataEntry<?>[] old = getMetaData();
 
 		Object metaData = null;
-		MetaDataEntry<?>[] metaDataArray = key.set(getMetaData(), object);
+		MetaDataEntry<?>[] metaDataArray = key.set(old, object);
 		if (metaDataArray != null && metaDataArray.length > 0)
 		{
 			metaData = (metaDataArray.length > 1) ? metaDataArray : metaDataArray[0];
@@ -4310,7 +4328,11 @@ public abstract class Component
 	 */
 	public final Component setVisibilityAllowed(boolean allowed)
 	{
-		setFlag(FLAG_VISIBILITY_ALLOWED, allowed);
+		if (allowed != getFlag(FLAG_VISIBILITY_ALLOWED))
+		{
+			setFlag(FLAG_VISIBILITY_ALLOWED, allowed);
+			onVisibleStateChanged();
+		}
 		return this;
 	}
 

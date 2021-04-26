@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -69,7 +69,7 @@ public class SpringComponentInjector extends Injector
 	/**
 	 * Constructor used when spring application context is declared in the spring standard way and
 	 * can be located through
-	 * {@link WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}.
+	 * {@link WebApplicationContextUtils#getRequiredWebApplicationContext(javax.servlet.ServletContext)}.
 	 * 
 	 * @param webapp
 	 *            wicket web application
@@ -172,7 +172,7 @@ public class SpringComponentInjector extends Injector
 		ApplicationContext context = webapp.getMetaData(CONTEXT_KEY);
 		if (context == null)
 		{
-			context = WebApplicationContextUtils.getRequiredWebApplicationContext(webapp.getServletContext());
+			context = WebApplicationContextUtils.getRequiredWebApplicationContext(new javax.servlet.ServletContext.Impl(webapp.getServletContext()));
 		}
 		return context;
 	}

@@ -19,7 +19,7 @@ package org.apache.wicket.extensions.util.encoding;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;

@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
  * must implement {@link ICrypt}.
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @deprecated use a lambda expression instead TODO remove in Wicket 10
  */
 public class ClassCryptFactory implements ICryptFactory
 {

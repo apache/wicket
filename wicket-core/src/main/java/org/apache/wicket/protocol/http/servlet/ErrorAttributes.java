@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;

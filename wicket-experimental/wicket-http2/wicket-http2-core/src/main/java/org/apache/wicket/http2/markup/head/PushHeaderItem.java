@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;

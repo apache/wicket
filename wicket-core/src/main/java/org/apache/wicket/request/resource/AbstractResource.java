@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;

@@ -18,7 +18,7 @@ package org.apache.wicket.core.request.mapper;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.request.IRequestHandler;

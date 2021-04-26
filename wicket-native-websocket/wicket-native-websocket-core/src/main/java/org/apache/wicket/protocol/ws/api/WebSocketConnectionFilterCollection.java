@@ -18,7 +18,7 @@ package org.apache.wicket.protocol.ws.api;
 
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class WebSocketConnectionFilterCollection extends ArrayList<IWebSocketConnectionFilter>
 		implements IWebSocketConnectionFilter

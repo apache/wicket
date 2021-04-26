@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IMetadataContext;
+import org.apache.wicket.IWicketInternalException;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
@@ -261,6 +262,16 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 		}
 		finally
 		{
+			try
+			{
+				listeners.onEndRequest(this);
+				onEndRequest();
+			}
+			catch (RuntimeException e)
+			{
+				log.error("Exception occurred during onEndRequest", e);
+			}
+
 			set(null);
 		}
 
@@ -648,16 +659,6 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	{
 		try
 		{
-			onEndRequest();
-			listeners.onEndRequest(this);
-		}
-		catch (RuntimeException e)
-		{
-			log.error("Exception occurred during onEndRequest", e);
-		}
-
-		try
-		{
 			requestHandlerExecutor.detach();
 		}
 		catch (RuntimeException exception)
@@ -684,19 +685,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 */
 	private void handleDetachException(RuntimeException exception) 
 	{
-		boolean isBufferedResponse = true;
-		if (Application.exists())
-		{
-			isBufferedResponse = Application.get().getRequestCycleSettings().getBufferResponse();
-		}
-
-		//if application is using a buffered response strategy,
-		//then we display exception to user.
-		if (isBufferedResponse) 
-		{
-			throw exception;
-		}
-		else 
+		if (!(exception instanceof IWicketInternalException))
 		{
 			log.error("Error detaching RequestCycle", exception);
 		}
@@ -800,6 +789,10 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 */
 	protected void onEndRequest()
 	{
+		if (Session.exists())
+		{
+			Session.get().endRequest();
+		}
 	}
 
 	/**

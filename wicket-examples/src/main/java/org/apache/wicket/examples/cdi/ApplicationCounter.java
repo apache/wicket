@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.cdi;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
 
 import org.apache.wicket.cdi.DetachEvent;
 import org.slf4j.Logger;

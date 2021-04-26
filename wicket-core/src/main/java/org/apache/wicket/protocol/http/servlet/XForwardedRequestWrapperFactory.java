@@ -19,9 +19,9 @@ package org.apache.wicket.protocol.http.servlet;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

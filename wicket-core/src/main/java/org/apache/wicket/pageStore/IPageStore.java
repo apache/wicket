@@ -94,6 +94,15 @@ public interface IPageStore
 	IManageablePage getPage(IPageContext context, int id);
 
 	/**
+	 * End the current context.
+	 * 
+	 * @param context
+	 */
+	default void end(IPageContext context)
+	{
+	}
+
+	/**
 	 * Detach from the current context.
 	 * 
 	 * @param context

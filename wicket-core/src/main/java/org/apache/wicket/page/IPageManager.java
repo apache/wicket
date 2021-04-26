@@ -73,6 +73,12 @@ public interface IPageManager
 	void clear();
 
 	/**
+	 * End the request.
+	 */
+	default void end() {
+	}
+	
+	/**
 	 * Detach at end of request.
 	 */
 	void detach();

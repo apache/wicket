@@ -156,6 +156,22 @@ final class Behaviors
 
 				behavior.detach(component);
 
+				final int currentLength = component.data_length();
+				if (len != currentLength)
+				{
+					// if the length has changed then reset 'i' and 'len'
+					for (int j = start; j < currentLength; j++)
+					{
+						// find the new index of the current behavior by identity
+						if (behavior == component.data_get(j))
+						{
+							i = j;
+							len = currentLength;
+							break;
+						}
+					}
+				}
+
 				if (behavior.isTemporary(component))
 				{
 					internalRemove(component, behavior);

@@ -17,7 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import java.util.Locale;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -160,13 +160,24 @@ public class CsrfPreventionRequestCycleListener extends OriginResourceIsolationP
 	 * The error code to report when the action to take for a CSRF request is
 	 * {@link CsrfAction#ABORT}. Default {@code 400 BAD REQUEST}.
 	 */
-	private int errorCode = javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+	private int errorCode = jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 	/**
 	 * The error message to report when the action to take for a CSRF request is {@code ERROR}.
 	 * Default {@code "Origin does not correspond to request"}.
 	 */
 	private String errorMessage = "Origin does not correspond to request";
+
+	/**
+	 * TODO remove in Wicket 10
+	 */
+	@Override
+	public CsrfPreventionRequestCycleListener addAcceptedOrigin(String acceptedOrigin)
+	{
+		super.addAcceptedOrigin(acceptedOrigin);
+		
+		return this;
+	}
 
 	/**
 	 * Sets the action when no Origin header is present in the request. Default {@code ALLOW}.

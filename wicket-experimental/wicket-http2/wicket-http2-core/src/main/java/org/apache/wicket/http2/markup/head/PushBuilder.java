@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.http2.markup.head;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Used to delegate the push call to the vendor specific push builder API

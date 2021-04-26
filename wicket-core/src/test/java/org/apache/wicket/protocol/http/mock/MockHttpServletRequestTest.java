@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.util.Enumeration;
 import java.util.Locale;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.request.Url;

@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.http.servlet;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.FilterConfig;
+import jakarta.servlet.FilterConfig;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Generics;

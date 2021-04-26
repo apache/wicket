@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeanManager;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;

@@ -16,12 +16,13 @@
  */
 package org.apache.wicket.authentication.strategy;
 
-import org.apache.wicket.Application;
+import java.util.UUID;
+
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.util.cookies.CookieDefaults;
 import org.apache.wicket.util.cookies.CookieUtils;
-import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICrypt;
+import org.apache.wicket.util.crypt.SunJceCrypt;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -30,6 +31,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Wicket's default implementation of an authentication strategy. It'll concatenate username and
  * password, encrypt it and put it into one Cookie.
+ * <p>
+ * Note: To support automatic authentication across application restarts you have to use
+ * the constructor {@link DefaultAuthenticationStrategy#DefaultAuthenticationStrategy(String, ICrypt)}.
  * 
  * @author Juergen Donnerstag
  */
@@ -40,8 +44,11 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	/** The cookie name to store the username and password */
 	protected final String cookieKey;
 
-	/** The key to use for encrypting/decrypting the cookie value  */
-	protected final String encryptionKey;
+	/**
+	 * @deprecated no longer used TODO remove in Wicket 10
+	 */
+	@Deprecated(forRemoval = true)
+	protected final String encryptionKey = null;
 
 	/** The separator used to concatenate the username and password */
 	protected final String VALUE_SEPARATOR = "-sep-";
@@ -57,25 +64,51 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	 * 
 	 * @param cookieKey
 	 *            The name of the cookie
+	 *            
+	 * @deprecated supply a crypt instead TODO remove in Wicket 10
 	 */
+	@Deprecated(forRemoval = true)
 	public DefaultAuthenticationStrategy(final String cookieKey)
 	{
-		this(cookieKey, defaultEncryptionKey(cookieKey));
+		this(cookieKey, defaultEncryptionKey());
 	}
 
-	private static String defaultEncryptionKey(String cookieKey)
+	private static String defaultEncryptionKey()
 	{
-		if (Application.exists())
-		{
-			return Application.get().getName();
-		}
-		return cookieKey;
+		return UUID.randomUUID().toString();
 	}
 
+	/**
+	 * @deprecated supply a crypt instead TODO remove in Wicket 10
+	 */
+	@Deprecated(forRemoval = true)
 	public DefaultAuthenticationStrategy(final String cookieKey, final String encryptionKey)
 	{
+		this(cookieKey, defaultCrypt(encryptionKey));
+	}
+
+	private static ICrypt defaultCrypt(String encryptionKey)
+	{
+		byte[] salt = SunJceCrypt.randomSalt();
+
+		SunJceCrypt crypt = new SunJceCrypt(salt, 1000);
+		crypt.setKey(encryptionKey);
+		return crypt;
+	}
+
+	/**
+	 * This is the recommended constructor to be used, which allows automatic authentication across
+	 * application restarts.  
+	 * 
+	 * @param cookieKey
+	 *            The name of the cookie
+	 * @param crypt
+	 *            the crypt
+	 */
+	public DefaultAuthenticationStrategy(final String cookieKey, ICrypt crypt)
+	{
 		this.cookieKey = Args.notEmpty(cookieKey, "cookieKey");
-		this.encryptionKey = Args.notEmpty(encryptionKey, "encryptionKey");
+		this.crypt = Args.notNull(crypt, "crypt");
 	}
 
 	/**
@@ -99,11 +132,6 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	 */
 	protected ICrypt getCrypt()
 	{
-		if (crypt == null)
-		{
-			CachingSunJceCryptFactory cryptFactory = new CachingSunJceCryptFactory(encryptionKey);
-			crypt = cryptFactory.newCrypt();
-		}
 		return crypt;
 	}
 

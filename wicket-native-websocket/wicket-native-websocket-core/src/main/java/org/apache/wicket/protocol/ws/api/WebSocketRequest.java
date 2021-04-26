@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.ws.api;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.http.WebRequest;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * A {@link WebRequest} implementation used for the lifecycle of a web socket
