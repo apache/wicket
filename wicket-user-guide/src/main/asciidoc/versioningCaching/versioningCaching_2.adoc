@@ -89,15 +89,17 @@ A serializer based on Kryo library and another one based on Fast are provided by
 
 === Page caching
 
-By default Wicket persists versions of pages into a session-relative file on disk, but it uses a two-level cache to speed up this process. The first level of the cache uses a http session attribute called “wicket:persistentPageManagerData-<APPLICATION_NAME>” to store pages. The second level cache stores pages into application-scoped variables which are identified by a session id and a page id.
+By default Wicket persists versions of pages into a session-relative file on disk, but it uses a two-level cache to speed up the access. The first level of the cache contains all the pages involved in the current requests as we may visit more than one page during a single request, for example if we have been redirected with _setResponsePage_.
+The second level cache stores the last rendered page into a session-scoped variables.
+
+NOTE: Scoped variables will be introduced in <<requestProcessing.adoc#_storing_arbitrary_objects_with_metadata,chapter 9.4.6>> which is about Wicket metadata.
 
 The following picture is an overview of these two caching levels:
 
 image::../img/wicket-cache.png[]
 
-The session-scoped cache is faster then the other memory levels but it contains only the pages used to serve the last request. Wicket allows us to set the maximum amount of memory allowed for the application-scoped cache and for the page store file. Both parameters can be configured via setting class _org.apache.wicket.settings.StoreSettings_.
-
-This interface provides the _setMaxSizePerSession(Bytes bytes)_ method to set the size for page store file. The Bytes parameter is the maximum size allowed for this file:
+Wicket allows us to set the maximum size of the file used to store pages with setting class _org.apache.wicket.settings.StoreSettings_.
+This class provides the _setMaxSizePerSession(Bytes bytes)_ method to set the size of the file. The Bytes parameter is the maximum size allowed for this file:
 
 [source,java]
 ----
@@ -110,17 +112,8 @@ public void init()
 ----
 
 Class _org.apache.wicket.util.lang.Bytes_ is an utility class provided by Wicket to express size in bytes (for further details refer to the JavaDoc).
-For the second level cache we can use the _setInmemoryCacheSize(int inmemoryCacheSize)_ method. The integer parameter is the maximum number of page instances that will be saved into application-scoped cache:
 
-[source,java]
-----
-@Override
-public void init()
-{
-	super.init();
-	getStoreSettings().setInmemoryCacheSize(50);
-}
-----
+NOTE: more insights on internal page handling will be covered in <<internals.adoc,chapter 26>> 
 
 === Page expiration
 
