@@ -113,7 +113,7 @@ public void init()
 
 Class _org.apache.wicket.util.lang.Bytes_ is an utility class provided by Wicket to express size in bytes (for further details refer to the JavaDoc).
 
-NOTE: more insights on internal page handling will be covered in <<internals.adoc,chapter 26>> 
+NOTE: More insights on internal page storing will be covered in <<internals.adoc#_wicket_internals,chapter 26>> 
 
 === Page expiration
 
