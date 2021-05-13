@@ -163,11 +163,11 @@
 		<hibernate-validator.version>6.2.0.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
 		<metrics.version>4.1.19</metrics.version>
-		<mockito.version>3.9.0</mockito.version>
+		<mockito.version>3.10.0</mockito.version>
 		<objenesis.version>3.2</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<spring.version>5.3.6</spring.version>
+		<spring.version>5.3.7</spring.version>
 		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
 		<weld.version>3.1.7.Final</weld.version>
 		<velocity-engine-core.version>2.3</velocity-engine-core.version>
