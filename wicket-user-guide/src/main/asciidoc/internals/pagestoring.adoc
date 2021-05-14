@@ -43,40 +43,9 @@ i.e. this is the serialized page instance (data) plus additional information nee
 * *DiskPageStore:* stores _SerializedPage_ on a session-scoped file on disk. The location of the folder where the files are stored is configurable via _org.apache.wicket.settings.StoreSettings.setFileStoreFolder(File)_, by default the web container's work folder is used (ServletContext attribute 'javax.servlet.context.tempdir'). In this folder a sub-folder is created named _'applicationName-filestore'_. 
 This folder contains a sub-folder for each active http session. This session folder contains a single file named 'data' which contains the bytes for the pages. The size of this 'data' file is configurable via _org.apache.wicket.settings.StoreSettings.setMaxSizePerSession(Bytes)_. When this size is exceeded the newly stored files overwrite the oldest ones.
 
- 
-=== DebugDiskDataStore
+=== InMemoryPageStore
 
-Wicket provides an extension of _DiskDataStore_ that can be used to browse the content of the 'data' files created by _DiskDataStore_. This extension can be found in wicket-devutils.jar and needs to be enabled in the _init_-method of your application via 
-[source,java]
-----
- DebugDiskDataStore.register(this);
-----
-The debug information can be seen at http://host:port/context/wicket/internal/debug/diskDataStore
-
-=== HttpSessionDataStore
-
-In some environments like Google AppEngine it is not allowed to write to the file system and thus _DiskDataStore_ cannot be used. In this case _org.apache.wicket.pageStore.memory.HttpSessionDataStore_ can be used as replacement. This implementation of _IDataStore_ is not persistent and puts all the data in the http session.
-Wicket comes with 2 default eviction strategies to keep the size of the http session reasonable:
-
-* *org.apache.wicket.pageStore.memory.PageNumberEvictionStrategy* - specifies how many pages can be hold
-* *org.apache.wicket.pageStore.memory.MemorySizeEvictionStrategy* - specifies the maximum amount of memory for pages per http session.
-
-To configure it:
-[source,java]
-----
-MyApp#init()
-{
-   super.init();
- 
-   setPageManagerProvider(new DefaultPageManagerProvider(this)
-   {
-       protected IDataStore newDataStore()
-       {
-           return  new HttpSessionDataStore(getPageManagerContext(), new PageNumberEvictionStrategy(20));
-       }
-   }
-}
-----
+An alternative _IPageStore_ we can use in a custom chain is _org.apache.wicket.pageStore.InMemoryPageStore_. This implementation stores pages in a session-relative variable which can be limited by size or by page instance number.
 
 === DebugBar
 
