@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.http2.markup.head;
+package org.apache.wicket.markup.head.http2;
 
 /**
  * A push header to be applied when the resource is pushed

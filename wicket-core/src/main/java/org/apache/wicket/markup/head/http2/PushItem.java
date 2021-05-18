@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.http2.markup.head;
+package org.apache.wicket.markup.head.http2;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -157,7 +157,7 @@ public class PushItem implements Serializable
 	/**
 	 * Gets the URL composed within the push header item
 	 *
-	 * @see {@link org.apache.wicket.http2.markup.head.PushHeaderItem#push(List)}
+	 * @see {@link PushHeaderItem#push(List)}
 	 * @return the URL to be pushed
 	 */
 	public String getUrl()
@@ -168,7 +168,7 @@ public class PushItem implements Serializable
 	/**
 	 * Sets the URL composed within the push header item
 	 *
-	 * @see {@link org.apache.wicket.http2.markup.head.PushHeaderItem#push(List)}
+	 * @see {@link PushHeaderItem#push(List)}
 	 * @param url
 	 *            the URL used to push the resource
 	 * @return the push item

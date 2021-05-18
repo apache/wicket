@@ -14,31 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.http2.markup.head.servlet4;
+package org.apache.wicket.markup.head.http2;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.IInitializer;
-import org.apache.wicket.http2.Http2Settings;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * Initializes the servlet 4 specific push builder API and makes it available through the HTTP2
- * settings
+ * Used to delegate the push call to the vendor specific push builder API
  */
-public class Initializer implements IInitializer
+public interface IPushBuilder
 {
 	/**
-	 * Initializes the push builder API of Servlet 4
+	 * Pushes the given paths with the push builder received from the http servlet request
+	 * 
+	 * @param httpServletRequest
+	 *            the http servlet request to get the push builder from
+	 * @param pushItems
+	 *            the pushItems of the resources to be pushed
 	 */
-	@Override
-	public void init(Application application)
-	{
-		Http2Settings http2Settings = Http2Settings.Holder.get(application);
-		http2Settings.setPushBuilder(new Servlet4PushBuilder());
-	}
-
-	@Override
-	public void destroy(Application application)
-	{
-		// NOOP
-	}
+	void push(HttpServletRequest httpServletRequest, PushItem... pushItems);
 }

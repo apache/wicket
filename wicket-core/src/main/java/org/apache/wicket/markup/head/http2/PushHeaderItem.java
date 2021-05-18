@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.http2.markup.head;
+package org.apache.wicket.markup.head.http2;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,10 +31,8 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.http2.Http2Settings;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -48,6 +46,7 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A push header item to be used in the http/2 context and to reduce the latency of the web
@@ -113,6 +112,8 @@ public class PushHeaderItem extends HeaderItem
 	 */
 	private Page page;
 
+	private final IPushBuilder pushBuilder;
+
 	/**
 	 * Creates a push header item based on the given page and the corresponding page request / page
 	 * response. To get the request and response
@@ -127,17 +128,22 @@ public class PushHeaderItem extends HeaderItem
 	 */
 	public PushHeaderItem(Page page, Request pageRequest, Response pageResponse)
 	{
-		if (page == null || !(page instanceof WebPage) || pageResponse == null ||
-			!(pageResponse instanceof WebResponse))
+		this(page, pageRequest, pageResponse, new PushBuilder());
+	}
+
+	public PushHeaderItem(Page page, Request pageRequest, Response pageResponse, IPushBuilder pushBuilder)
+	{
+		if (!(page instanceof WebPage) || !(pageRequest instanceof WebRequest) || !(pageResponse instanceof WebResponse))
 		{
 			throw new WicketRuntimeException(
-				"Please hand over the web page, the web request and the web response to the push header item like \"new PushHeaderItem(this, yourWebPageRequest, yourWebPageResponse)\" - " +
-					"The webPageResponse / webPageRequest can be obtained via \"getRequestCycle().getRequest()\" / \"getRequestCycle().getResponse()\" and placed into the page as fields " +
+				"Please hand over the web page, the web request and the web response to the push header item like \"new PushHeaderItem(page, webRequest, webResponse)\" - " +
+					"The webResponse / webRequest can be obtained via \"getRequestCycle().getRequest()\" / \"getRequestCycle().getResponse()\" and placed into the page as fields " +
 					"\"private transient Response webPageResponse;\" / \"private transient Request webPageRequest;\"");
 		}
 		this.pageWebRequest = (WebRequest)pageRequest;
 		this.pageWebResponse = (WebResponse)pageResponse;
 		this.page = page;
+		this.pushBuilder = Args.notNull(pushBuilder, "pushBuilder");
 	}
 
 	/**
@@ -146,7 +152,7 @@ public class PushHeaderItem extends HeaderItem
 	@Override
 	public Iterable<?> getRenderTokens()
 	{
-		Set<String> tokens = new TreeSet<String>();
+		Set<String> tokens = new TreeSet<>();
 		for (PushItem pushItem : pushItems)
 		{
 			tokens.add(pushItem.getUrl() + TOKEN_SUFFIX);
@@ -303,10 +309,7 @@ public class PushHeaderItem extends HeaderItem
 	 */
 	protected void push(HttpServletRequest request)
 	{
-		// Receives the vendor specific push builder
-		Http2Settings http2Settings = Http2Settings.Holder.get(Application.get());
-		PushBuilder pushBuilder = http2Settings.getPushBuilder();
-		pushBuilder.push(request, pushItems.toArray(new PushItem[pushItems.size()]));
+		pushBuilder.push(request, pushItems.toArray(new PushItem[0]));
 	}
 
 	/**
@@ -333,7 +336,7 @@ public class PushHeaderItem extends HeaderItem
 						"Please provide an object to the items to be pushed, so that the url can be created for the given resource.");
 				}
 
-				CharSequence url = null;
+				CharSequence url;
 				if (object instanceof ResourceReference)
 				{
 					url = requestCycle.urlFor((ResourceReference)object, parameters);
@@ -385,7 +388,7 @@ public class PushHeaderItem extends HeaderItem
 					filterPath = filterPath.substring(0, filterPath.length() - 1);
 				}
 				partialUrl.append(filterPath);
-				partialUrl.append(url.toString());
+				partialUrl.append(url);
 
 				// Set the url the resource is going to be pushed with
 				pushItem.setUrl(partialUrl.toString());

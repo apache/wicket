@@ -14,14 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.http2.markup.head.servlet4;
+package org.apache.wicket.markup.head.http2;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.http2.markup.head.PushBuilder;
-import org.apache.wicket.http2.markup.head.PushItem;
-import org.apache.wicket.http2.markup.head.PushItemHeaderValue;
-import org.apache.wicket.http2.markup.head.PushItemHeaderValue.HeaderOperation;
+import org.apache.wicket.markup.head.http2.PushItemHeaderValue.HeaderOperation;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
@@ -32,9 +29,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Tobias Soloschenko
  */
-public class Servlet4PushBuilder implements PushBuilder
+public class PushBuilder implements IPushBuilder
 {
-	private static final Logger LOG = LoggerFactory.getLogger(Servlet4PushBuilder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PushBuilder.class);
 
 	@Override
 	public void push(HttpServletRequest httpServletRequest, PushItem... pushItems)
