@@ -50,6 +50,7 @@ public class JSR356Application extends WicketExampleApplication
 		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig(8080, 8443)));
 
 		mountPage("/behavior", WebSocketBehaviorDemoPage.class);
+		mountPage("/push", WebSocketPushUpdateProgressDemoPage.class);
 		mountPage("/resource", WebSocketResourceDemoPage.class);
 		mountPage("/resource-multi-tab", WebSocketMultiTabResourceDemoPage.class);
 
