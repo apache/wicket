@@ -81,6 +81,10 @@
 					}
 				}
 
+				if (WWS.context) {
+					url += '&context=' + encodeURIComponent(WWS.context);
+				}
+
 				url += '&wicket-ajax-baseurl=' + encodeURIComponent(WWS.baseUrl);
 				url += '&wicket-app-name=' + encodeURIComponent(WWS.appName);
 

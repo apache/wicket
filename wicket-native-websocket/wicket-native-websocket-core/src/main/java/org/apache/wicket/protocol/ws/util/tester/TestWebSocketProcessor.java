@@ -67,9 +67,20 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	 * @param resourceName
 	 *      the name of the shared resource that will handle the web socket messages
 	 */
+	public TestWebSocketProcessor(final WicketTester wicketTester, final String resourceName, Page page)
+	{
+		super(createRequest(wicketTester, resourceName, page),  wicketTester.getApplication());
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param resourceName
+	 *      the name of the shared resource that will handle the web socket messages
+	 */
 	public TestWebSocketProcessor(final WicketTester wicketTester, final String resourceName)
 	{
-		super(createRequest(wicketTester, resourceName),  wicketTester.getApplication());
+		super(createRequest(wicketTester, resourceName, null),  wicketTester.getApplication());
 	}
 
 	/**
@@ -84,6 +95,7 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 		Args.notNull(page, "page");
 		MockHttpServletRequest request = createRequest(wicketTester);
 		request.addParameter("pageId", page.getId());
+		request.addParameter("context", page.getClass().getName());
 		return request;
 	}
 
@@ -94,11 +106,12 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	 *      the page that may have registered {@link org.apache.wicket.protocol.ws.api.WebSocketBehavior}
 	 * @return a mock http request
 	 */
-	private static HttpServletRequest createRequest(final WicketTester wicketTester, final String resourceName)
+	private static HttpServletRequest createRequest(final WicketTester wicketTester, final String resourceName, final Page page)
 	{
 		Args.notNull(resourceName, "resourceName");
 		MockHttpServletRequest request = createRequest(wicketTester);
 		request.addParameter("resourceName", resourceName);
+		request.addParameter("context", page != null ? page.getClass().getName() : "");
 		return request;
 	}
 

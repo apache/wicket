@@ -121,8 +121,20 @@ public class BaseWebSocketBehavior extends Behavior
 		return webSocketSetupTemplate.asString(parameters);
 	}
 
+	/**
+	 * Override to return a context. By default, this is the page class name.
+	 *
+	 * @param component the {@link org.apache.wicket.Component}
+	 * @return the context for this websocket behavior.
+	 */
+	protected String getContext(Component component) {
+		return component.getPage().getClass().getName();
+	}
+
 	private Map<String, Object> getParameters(Component component) {
 		Map<String, Object> variables = Generics.newHashMap();
+
+		variables.put("context", getContext(component));
 
 		// set falsy JS values for the non-used parameter
 		if (Strings.isEmpty(resourceName))

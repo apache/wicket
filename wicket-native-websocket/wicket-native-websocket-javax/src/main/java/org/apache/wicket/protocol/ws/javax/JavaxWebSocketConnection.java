@@ -49,7 +49,7 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 	public JavaxWebSocketConnection(Session session, AbstractWebSocketProcessor webSocketProcessor)
 	{
 		super(webSocketProcessor);
-		this.session = Args.notNull(session, "connection");
+		this.session = Args.notNull(session, "session");
 	}
 
 	@Override

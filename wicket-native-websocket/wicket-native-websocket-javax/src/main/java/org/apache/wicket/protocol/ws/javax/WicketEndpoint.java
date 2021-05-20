@@ -123,7 +123,6 @@ public class WicketEndpoint extends Endpoint
 	{
 		String appName = null;
 
-		@SuppressWarnings("unchecked")
 		Map<String, List<String>> parameters = session.getRequestParameterMap();
 		if (parameters != null)
 		{

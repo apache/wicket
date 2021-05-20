@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.ws.api.registry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.Application;
@@ -74,6 +75,31 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 			if (connectionsByPage != null)
 			{
 				connections = connectionsByPage.values();
+			}
+		}
+		return connections;
+	}
+
+	@Override
+	public Collection<IWebSocketConnection> getConnections(Application application, IConnectionsFilter connectionsFilter)
+	{
+		Args.notNull(application, "application");
+		Args.notNull(connectionsFilter, "connectionsFilter");
+
+		Collection<IWebSocketConnection> connections = new ArrayList<>();
+		ConcurrentMap<String, ConcurrentMap<IKey, IWebSocketConnection>> connectionsBySession = application.getMetaData(KEY);
+		if (connectionsBySession != null)
+		{
+			for (Map.Entry<String, ConcurrentMap<IKey, IWebSocketConnection>> connectionsByPage : connectionsBySession.entrySet())
+			{
+				for (Map.Entry<IKey, IWebSocketConnection> connectionEntry: connectionsByPage.getValue().entrySet())
+				{
+					if (connectionsFilter.accept(connectionsByPage.getKey(), connectionEntry.getKey()))
+					{
+						connections.add(connectionEntry.getValue());
+					}
+				}
+
 			}
 		}
 		return connections;

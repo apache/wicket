@@ -97,7 +97,17 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 		}
 	}
 
-
+	/**
+	 * @return if <code>true</code> then EMPTY partial updates will se send. If <code>false</code> then EMPTY
+	 *    partial updates will be skipped. A possible use case is: a page receives and a push event but no one is
+	 *    listening to it, and nothing is added to {@link org.apache.wicket.protocol.ws.api.WebSocketRequestHandler}
+	 *    thus no real push to client is needed. For compatibilities this is set to true. Thus EMPTY updates are sent
+	 *    by default.
+	 */
+	protected boolean shouldPushWhenEmpty()
+	{
+		return true;
+	}
 
 	protected PartialPageUpdate getUpdate() {
 		if (update == null) {
@@ -129,7 +139,10 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 	{
 		if (update != null)
 		{
-			update.writeTo(requestCycle.getResponse(), "UTF-8");
+			if (shouldPushWhenEmpty() || !update.isEmpty())
+			{
+				update.writeTo(requestCycle.getResponse(), "UTF-8");
+			}
 		}
 	}
 

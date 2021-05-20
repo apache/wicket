@@ -23,4 +23,10 @@ import org.apache.wicket.util.io.IClusterable;
  * connection in {@link IWebSocketConnectionRegistry}
  */
 public interface IKey extends IClusterable
-{}
+{
+    /**
+     * @return return a context for the key. This could be, for instance, a page class name or a resource class name.
+     *    I.e. something that allow to discriminate keys along different pages.
+     */
+    String getContext();
+}

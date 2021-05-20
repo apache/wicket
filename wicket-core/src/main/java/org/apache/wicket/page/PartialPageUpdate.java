@@ -150,6 +150,14 @@ public abstract class PartialPageUpdate
 	}
 
 	/**
+	 * @return returns true if and only if nothing has being added to partial update.
+	 */
+	public boolean isEmpty()
+	{
+		return prependJavaScripts.isEmpty() && appendJavaScripts.isEmpty() && domReadyJavaScripts.isEmpty() && markupIdToComponent.isEmpty();
+	}
+
+	/**
 	 * Serializes this object to the response.
 	 *
 	 * @param response

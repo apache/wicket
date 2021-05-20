@@ -14,19 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.websocket;
+package org.apache.wicket.protocol.ws.api.registry;
 
-import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.examples.websocket.charts.ChartWebSocketResource;
-import org.apache.wicket.examples.websocket.charts.WebSocketChart;
-import org.apache.wicket.protocol.ws.api.BaseWebSocketBehavior;
-
-public class WebSocketResourceDemoPage extends WicketExamplePage
+public class AbstractKey implements IKey
 {
-	public WebSocketResourceDemoPage()
-	{
-		WebSocketChart chartPanel = new WebSocketChart("chartPanel");
-		chartPanel.add(new BaseWebSocketBehavior(ChartWebSocketResource.NAME));
-		add(chartPanel);
-	}
+
+    private final String context;
+
+    public AbstractKey(String context)
+    {
+        this.context = context;
+    }
+
+    @Override
+    public String getContext() {
+        return context;
+    }
 }
