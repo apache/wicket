@@ -109,6 +109,74 @@ public class WebSocketPushBroadcaster
 		process(application, wsConnections, message);
 	}
 
+	/**
+	 * Processes the given message in all pages in a given session that have active Web Socket connections.
+	 * The message is sent as an event to the Page and components of the session allowing the components
+	 * to be updated.
+	 *
+	 * This method can be invoked from any thread, even a non-wicket thread. By default all processing
+	 * is done in the caller thread. Use
+	 * {@link WebSocketSettings#setWebSocketPushMessageExecutor(org.apache.wicket.protocol.ws.concurrent.Executor)}
+	 * to move processing to background threads.
+	 *
+	 * If some connections are not in valid state they are silently ignored.
+	 *
+	 * @param application
+	 *			The wicket application
+	 *
+	 * @param sessionId
+	 *         The session ID
+	 * @param message
+	 *			The push message event
+	 */
+	public void broadcastAllInSession(Application application, String sessionId, IWebSocketPushMessage message)
+	{
+		Args.notNull(application, "application");
+		Args.notNull(message, "message");
+		Args.notNull(sessionId, "sessionId");
+
+		Collection<IWebSocketConnection> wsConnections = registry.getConnections(application, sessionId);
+		if (wsConnections == null || wsConnections.isEmpty())
+		{
+			return;
+		}
+		process(application, wsConnections, message);
+	}
+
+	/**
+	 * Processes the given message in all pages in a given session that have active Web Socket connections and match
+	 * the given filter. The message is sent as an event to the Page and components of the session allowing the components
+	 * to be updated.
+	 *
+	 * This method can be invoked from any thread, even a non-wicket thread. By default all processing
+	 * is done in the caller thread. Use
+	 * {@link WebSocketSettings#setWebSocketPushMessageExecutor(org.apache.wicket.protocol.ws.concurrent.Executor)}
+	 * to move processing to background threads.
+	 *
+	 * If some connections are not in valid state they are silently ignored.
+	 *
+	 * @param application
+	 *			The wicket application
+	 *
+	 * @param connectionsFilter
+	 *         the {@link org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry.IConnectionsFilter}
+	 * @param message
+	 *			The push message event
+	 */
+	public void broadcastAllMatchingFilter(Application application, IWebSocketConnectionRegistry.IConnectionsFilter connectionsFilter, IWebSocketPushMessage message)
+	{
+		Args.notNull(application, "application");
+		Args.notNull(message, "message");
+		Args.notNull(connectionsFilter, "connectionsFilter");
+
+		Collection<IWebSocketConnection> wsConnections = registry.getConnections(application, connectionsFilter);
+		if (wsConnections == null  || wsConnections.isEmpty())
+		{
+			return;
+		}
+		process(application, wsConnections, message);
+	}
+
 	private void process(final Application application, final Collection<IWebSocketConnection> wsConnections,
 	                     final IWebSocketPushMessage message)
 	{

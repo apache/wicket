@@ -131,7 +131,7 @@ public class WebSocketTesterBehaviorTest
 			}
 		};
 		webSocketTester.broadcast(tester.getApplication(), tester.getHttpSession().getId(),
-				new PageIdKey(page.getPageId()), broadcastMessage);
+				new PageIdKey(page.getPageId(), page.getClass().getName()), broadcastMessage);
 
 		assertTrue(messageReceived.get());
 		webSocketTester.destroy();

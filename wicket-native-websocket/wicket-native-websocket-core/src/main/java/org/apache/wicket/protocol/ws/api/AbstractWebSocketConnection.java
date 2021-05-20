@@ -50,7 +50,7 @@ public abstract class AbstractWebSocketConnection implements IWebSocketConnectio
 	@Override
 	public void sendMessage(IWebSocketPushMessage message)
 	{
-		webSocketProcessor.broadcastMessage(message);
+		webSocketProcessor.broadcastMessage(message, this);
 	}
 
 	@Override

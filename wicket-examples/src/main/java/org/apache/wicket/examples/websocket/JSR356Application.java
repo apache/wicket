@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.examples.websocket;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.websocket.charts.ChartWebSocketResource;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -50,6 +53,7 @@ public class JSR356Application extends WicketExampleApplication
 		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig(8080, 8443)));
 
 		mountPage("/behavior", WebSocketBehaviorDemoPage.class);
+		mountPage("/push", WebSocketPushUpdateProgressDemoPage.class);
 		mountPage("/resource", WebSocketResourceDemoPage.class);
 		mountPage("/resource-multi-tab", WebSocketMultiTabResourceDemoPage.class);
 
@@ -69,7 +73,13 @@ public class JSR356Application extends WicketExampleApplication
 		getCspSettings().blocking().disabled();
 	}
 
-    @Override
+	@Override
+	public Session newSession(Request request, Response response)
+	{
+		return new JSR356Session(request);
+	}
+
+	@Override
     protected void onDestroy() {
         scheduledExecutorService.shutdownNow();
 

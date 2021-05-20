@@ -17,16 +17,13 @@
 package org.apache.wicket.examples.websocket;
 
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.examples.websocket.charts.ChartWebSocketResource;
-import org.apache.wicket.examples.websocket.charts.WebSocketChart;
-import org.apache.wicket.protocol.ws.api.BaseWebSocketBehavior;
+import org.apache.wicket.examples.websocket.progress.ProgressBarTogglePanel;
+import org.apache.wicket.examples.websocket.progress.ProgressUpdater;
 
-public class WebSocketResourceDemoPage extends WicketExamplePage
+public class WebSocketPushUpdateProgressDemoPage extends WicketExamplePage implements ProgressUpdater.ITaskProgressListener
 {
-	public WebSocketResourceDemoPage()
+	public WebSocketPushUpdateProgressDemoPage()
 	{
-		WebSocketChart chartPanel = new WebSocketChart("chartPanel");
-		chartPanel.add(new BaseWebSocketBehavior(ChartWebSocketResource.NAME));
-		add(chartPanel);
+		add(new ProgressBarTogglePanel("progressPanel"));
 	}
 }
