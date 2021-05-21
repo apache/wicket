@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class EscapeAttributesInChoicesPage extends WebPage {
 	private static final long serialVersionUID = 1L;
@@ -32,7 +32,7 @@ public class EscapeAttributesInChoicesPage extends WebPage {
 		final Map<String, String> fruits = new HashMap<>();
 		fruits.put("apple\" onmouseover=\"alert('hi');\" \"", "Apple");
 
-		IChoiceRenderer<String> iChoiceRenderer = new ChoiceRenderer<String>() {
+		IChoiceRenderer<String> iChoiceRenderer = new IChoiceRenderer<String>() {
 			@Override
 			public Object getDisplayValue(final String s) {
 				return fruits.get(s);
