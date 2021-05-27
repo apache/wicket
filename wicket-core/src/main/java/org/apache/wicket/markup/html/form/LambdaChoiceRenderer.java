@@ -44,7 +44,6 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
  * </p>
  *
  * @param <T> The model object type
- * @author
  */
 public class LambdaChoiceRenderer<T> implements IChoiceRenderer<T> {
     private static final long serialVersionUID = 1L;
