@@ -155,7 +155,7 @@
 		<jakarta.websocket-api.version>2.0.0</jakarta.websocket-api.version>
 		<jakarta.servlet-api.version>5.0.0</jakarta.servlet-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
-		<jetty.version>11.0.2</jetty.version>
+		<jetty.version>11.0.3</jetty.version>
 		<junit.version>5.7.2</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.3</logback.version>
@@ -183,7 +183,7 @@
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
 		<maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
-		<maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
+		<maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
 		<maven-project-info-reports-plugin.version>3.1.1</maven-project-info-reports-plugin.version>
 		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
 		<maven-remote-resources-plugin.version>1.7.0</maven-remote-resources-plugin.version>
