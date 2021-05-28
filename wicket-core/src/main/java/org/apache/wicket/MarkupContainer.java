@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.wicket.behavior.OutputMarkupContainerClassNameBehavior;
 import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.ComponentTag.IAutoComponentFactory;
@@ -786,29 +787,17 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		try
 		{
 			setIgnoreAttributeModifier(true);
+			final boolean outputClassName = getApplication().getDebugSettings()
+					.isOutputMarkupContainerClassName();
+			if (outputClassName)
+			{
+				associatedMarkupOpenTag.addBehavior(OutputMarkupContainerClassNameBehavior.INSTANCE);
+			}
+
 			renderComponentTag(associatedMarkupOpenTag);
 			associatedMarkupStream.next();
 
-			String className = null;
-
-			final boolean outputClassName = getApplication().getDebugSettings()
-				.isOutputMarkupContainerClassName();
-			if (outputClassName)
-			{
-				className = Classes.name(getClass());
-				getResponse().write("<!-- MARKUP FOR ");
-				getResponse().write(className);
-				getResponse().write(" BEGIN -->");
-			}
-
 			renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
-
-			if (outputClassName)
-			{
-				getResponse().write("<!-- MARKUP FOR ");
-				getResponse().write(className);
-				getResponse().write(" END -->");
-			}
 
 			renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag, false);
 		}

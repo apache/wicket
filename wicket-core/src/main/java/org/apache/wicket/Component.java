@@ -3933,6 +3933,7 @@ public abstract class Component
 			// apply behaviors that are attached to the component tag.
 			if (tag.hasBehaviors())
 			{
+				tag = tag.mutable();
 				Iterator<? extends Behavior> tagBehaviors = tag.getBehaviors();
 				while (tagBehaviors.hasNext())
 				{
