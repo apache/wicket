@@ -396,7 +396,7 @@
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationFactoryClassName</param-name>
-			<param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
+			<param-value>org.apache.wicket.spring.AnnotationConfigSpringWebApplicationFactory</param-value>
 		</init-param>
 	</filter>
 

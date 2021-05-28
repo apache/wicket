@@ -18,6 +18,7 @@ package org.apache.wicket.spring;
 
 import java.util.Map;
 
+import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletContext;
 
 import org.apache.wicket.protocol.http.IWebApplicationFactory;
@@ -109,12 +110,23 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	 */
 	protected final String getContextConfigLocation(final WicketFilter filter)
 	{
-		return filter.getFilterConfig().getInitParameter("contextConfigLocation");
+		String contextConfigLocation;
+
+		final FilterConfig filterConfig = filter.getFilterConfig();
+		contextConfigLocation = filterConfig.getInitParameter("contextConfigLocation");
+
+		if (contextConfigLocation == null)
+		{
+			final ServletContext servletContext = filterConfig.getServletContext();
+			contextConfigLocation = servletContext.getInitParameter("contextConfigLocation");
+		}
+
+		return contextConfigLocation;
 	}
 
 	/**
 	 * Factory method used to create a new instance of the web application context, by default an
-	 * instance o {@link XmlWebApplicationContext} will be created.
+	 * instance of {@link XmlWebApplicationContext} will be created.
 	 * 
 	 * @return application context instance
 	 */
@@ -123,9 +135,6 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 		return new XmlWebApplicationContext();
 	}
 
-	/**
-	 * @see IWebApplicationFactory#createApplication(WicketFilter)
-	 */
 	@Override
 	public WebApplication createApplication(final WicketFilter filter)
 	{
@@ -219,7 +228,6 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 		// noop
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void destroy(final WicketFilter filter)
 	{
