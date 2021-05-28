@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.toggle;
 
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -38,6 +39,13 @@ import java.util.Set;
  */
 public class ToggleColumn<T, S> extends AbstractColumn<T, S> {
 
+    private static final String CSS_TOGGLEABLE_DEFAULT = "toggleable";
+    private static final String CSS_TOGGLEABLE_KEY = CssUtils.key(ToggleColumn.class, CSS_TOGGLEABLE_DEFAULT);
+    private static final String CSS_COLLAPSIBLE_DEFAULT = "collapsible";
+    private static final String CSS_COLLAPSIBLE_KEY = CssUtils.key(ToggleColumn.class, CSS_COLLAPSIBLE_DEFAULT);
+    private static final String CSS_EXPANDABLE_DEFAULT = "expandable";
+    private static final String CSS_EXPANDABLE_KEY = CssUtils.key(ToggleColumn.class, CSS_EXPANDABLE_DEFAULT);
+
     private IToggleable<T> dataTable;
 
     public ToggleColumn(final IModel<String> displayModel) {
@@ -52,11 +60,11 @@ public class ToggleColumn<T, S> extends AbstractColumn<T, S> {
             protected Set<String> update(Set<String> oldClasses) {
                 final T object = rowModel.getObject();
                 if (dataTable.isToggleable(object)) {
-                    oldClasses.add("toggleable");
+                    oldClasses.add(toggleComponent.getString(CSS_TOGGLEABLE_KEY, null, CSS_TOGGLEABLE_DEFAULT));
                     if (dataTable.isCollapsible(object)) {
-                        oldClasses.add("collapsible");
+                        oldClasses.add(toggleComponent.getString(CSS_COLLAPSIBLE_KEY, null, CSS_COLLAPSIBLE_DEFAULT));
                     } else if (dataTable.isExpandable(object)) {
-                        oldClasses.add("expandable");
+                        oldClasses.add(toggleComponent.getString(CSS_EXPANDABLE_KEY, null, CSS_EXPANDABLE_DEFAULT));
                     }
                 }
                 return oldClasses;

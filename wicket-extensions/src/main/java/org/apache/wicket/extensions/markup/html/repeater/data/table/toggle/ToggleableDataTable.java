@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.toggle;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -88,6 +89,8 @@ import java.util.Set;
 public class ToggleableDataTable<T, S> extends DataTable<T, S> implements IToggleable<T> {
 
     private static final long serialVersionUID = 1L;
+    private static final String CSS_EXPANSION_ROW_DEFAULT = "expansion-row";
+    private static final String CSS_EXPANSION_ROW_KEY = CssUtils.key(ToggleableDataTable.class, CSS_EXPANSION_ROW_DEFAULT);
 
     private final Set<T> expandedRows = new HashSet<>(0);
     private final IToggleableDataProvider<T> toggleableDataProvider;
@@ -218,7 +221,7 @@ public class ToggleableDataTable<T, S> extends DataTable<T, S> implements IToggl
                     .add(new ClassAttributeModifier() {
                         @Override
                         protected Set<String> update(Set<String> oldClasses) {
-                            oldClasses.add("expansion-row");
+                            oldClasses.add(getString(CSS_EXPANSION_ROW_KEY, null, CSS_EXPANSION_ROW_DEFAULT));
                             return oldClasses;
                         }
 
