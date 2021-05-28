@@ -72,3 +72,16 @@ col.yellow {
 col.brown {
 	background-color: #CC6633;
 }
+
+.toggleable {
+    cursor: pointer;
+    text-align: center;
+}
+
+.collapsible:after {
+    content: '-';
+}
+
+.expandable:after {
+    content: '+';
+}
