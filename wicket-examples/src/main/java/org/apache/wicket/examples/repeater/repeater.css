@@ -73,15 +73,15 @@ col.brown {
 	background-color: #CC6633;
 }
 
-.toggleable {
+table.dataview tbody tr td div.toggleable {
     cursor: pointer;
     text-align: center;
 }
 
-.collapsible:after {
+table.dataview tbody tr td div.toggleable.collapsible:after {
     content: '-';
 }
 
-.expandable:after {
+table.dataview tbody tr td div.toggleable.expandable:after {
     content: '+';
 }
