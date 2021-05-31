@@ -28,7 +28,7 @@ public interface IToggleable<T> extends IClusterable {
     void toggle(T object);
 
     default boolean isToggleable(T object) {
-        return isCollapsible(object) || isExpandable(object);
+        return Boolean.logicalXor(isCollapsible(object), isExpandable(object));
     }
 
     boolean isCollapsible(T object);
