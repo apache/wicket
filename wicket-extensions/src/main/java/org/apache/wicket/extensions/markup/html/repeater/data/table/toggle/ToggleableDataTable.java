@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.toggle;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ClassAttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.DataGridView;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -26,6 +27,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IStyledColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.toggle.IToggleable;
+import org.apache.wicket.extensions.markup.html.repeater.util.DataProviderSubset;
 import org.apache.wicket.markup.html.GenericWebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.IItemFactory;
@@ -34,7 +36,6 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -86,13 +87,12 @@ import java.util.Set;
  * @author Roland Kurucz
  * @see DataTable
  */
-public class ToggleableDataTable<T, S> extends DataTable<T, S> implements IToggleable<T> {
+public class ToggleableDataTable<T, S> extends DataTable<T, S> implements IToggleable<T>, IGenericComponent<Set<T>, ToggleableDataTable<T, S>> {
 
     private static final long serialVersionUID = 1L;
     private static final String CSS_EXPANSION_ROW_DEFAULT = "expansion-row";
     private static final String CSS_EXPANSION_ROW_KEY = CssUtils.key(ToggleableDataTable.class, CSS_EXPANSION_ROW_DEFAULT);
 
-    private final Set<T> expandedRows = new HashSet<>(0);
     private final IToggleableDataProvider<T> toggleableDataProvider;
 
     /**
@@ -128,32 +128,70 @@ public class ToggleableDataTable<T, S> extends DataTable<T, S> implements IToggl
     }
 
     @Override
+    protected IModel<?> initModel() {
+        IModel<?> model = super.initModel();
+        if (model == null) {
+            model = newModel();
+        }
+
+        return model;
+    }
+
+    /**
+     * Factory method for a model, by default creates a model containing a {@link DataProviderSubset}.
+     * Depending on your {@link IDataProvider}'s model you might consider to provide a custom
+     * {@link Set} implementation.
+     * <p>
+     * Note: The contained {@link Set} has at least to implement {@link Set#add(Object)},
+     * {@link Set#remove(Object)} and {@link Set#contains(Object)}.
+     *
+     * @return model for this data table
+     */
+    protected IModel<Set<T>> newModel() {
+        return new DataProviderSubset<>(getDataProvider()).createModel();
+    }
+
+    /**
+     * Overridden to detach the {@link IDataProvider}.
+     */
+    @Override
+    protected void onDetach() {
+        getDataProvider().detach();
+
+        super.onDetach();
+    }
+
+    @Override
     public void toggle(final T object) {
-        if (isCollapsible(object)) {
-            collapse(object);
-        } else if (isExpandable(object)) {
-            expand(object);
+        if (isToggleable(object)) {
+            modelChanging();
+            if (isCollapsible(object)) {
+                collapse(object);
+            } else if (isExpandable(object)) {
+                expand(object);
+            }
+            modelChanged();
         } else {
             throw new UnsupportedOperationException();
         }
     }
 
     private void collapse(final T object) {
-        expandedRows.remove(object);
+        getModelObject().remove(object);
     }
 
     private void expand(final T object) {
-        expandedRows.add(object);
+        getModelObject().add(object);
     }
 
     @Override
     public boolean isCollapsible(final T object) {
-        return toggleableDataProvider.isToggleable(object) && expandedRows.contains(object);
+        return toggleableDataProvider.isToggleable(object) && getModelObject().contains(object);
     }
 
     @Override
     public boolean isExpandable(final T object) {
-        return toggleableDataProvider.isToggleable(object) && !expandedRows.contains(object);
+        return toggleableDataProvider.isToggleable(object) && !getModelObject().contains(object);
     }
 
     protected Item<T> newExpansionRowItem(final String id, final int index, final IModel<T> model) {
