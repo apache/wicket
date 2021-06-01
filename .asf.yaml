@@ -1,0 +1,13 @@
+github:
+  description: "Apache Wicket - Component-based Java web framework"
+  homepage: https://wicket.apache.org/
+  labels:
+    - apache
+    - java
+    - web
+    - html
+
+notifications:
+    commits:      commits@wicket.apache.org
+    pullrequests: commits@wicket.apache.org
+    jira_options: link label comment
