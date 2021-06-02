@@ -21,9 +21,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.DequeueContext;
-import org.apache.wicket.DequeueContext.Bookmark;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
@@ -158,31 +155,4 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	 */
 	protected abstract void onPopulate();
 
-	@Override
-	public void dequeue(DequeueContext dequeue)
-	{
-		if (size() > 0)
-		{
-			// essentially what we do is for every child replace the repeater with the child in
-			// dequeue container stack and run the dequeue on the child. we also take care to reset
-			// the state of the dequeue context after we process every child.
-
-			Bookmark bookmark = dequeue.save();
-
-			for (Component child : this)
-			{
-				if (child instanceof MarkupContainer)
-				{
-					dequeue.popContainer(); // pop the repeater
-					MarkupContainer container = (MarkupContainer) child;
-					dequeue.pushContainer(container);
-					container.dequeue(dequeue);
-					dequeue.restore(bookmark);
-				}
-			}
-		}
-
-		dequeue.skipToCloseTag();
-
-	}
 }

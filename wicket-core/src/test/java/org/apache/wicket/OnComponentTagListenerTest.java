@@ -102,13 +102,14 @@ class OnComponentTagListenerTest extends WicketTestCase {
 	static class TestPage extends WebPage implements IMarkupResourceStreamProvider {
 		private static final long serialVersionUID = 1L;
 
-		private Component c1, c2, c3;
+		private WebMarkupContainer c1, c2, c3;
 
 		TestPage() {
 			c1 = new WebMarkupContainer("c1");
 			c2 = new WebMarkupContainer("c2");
 			c3 = new WebMarkupContainer("c3");
-			queue(c1, c2, c3);
+			add(c1, c3);
+			c1.add(c2);
 		}
 
 		@Override

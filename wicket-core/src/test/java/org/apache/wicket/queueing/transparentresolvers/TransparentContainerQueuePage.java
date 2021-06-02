@@ -26,7 +26,7 @@ public class TransparentContainerQueuePage extends WebPage
 	public TransparentContainerQueuePage(PageParameters parameters)
 	{
 		super(parameters);
-		queue(new Label("queuedComponent", "Queued label."));
+		add(new Label("queuedComponent", "Queued label."));
 	}
 	
 }

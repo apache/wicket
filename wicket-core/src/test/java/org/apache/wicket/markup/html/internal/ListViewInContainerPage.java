@@ -50,10 +50,10 @@ public class ListViewInContainerPage extends BasePage
 			protected void populateItem(final ListItem<Integer> item)
 			{
 				final Label testenc = new Label("testenc", Model.of("enclosure " + item.getModelObject()));
-				item.queue(testenc);
+				item.add(testenc);
 
 				final Label testlib = new Label("testlib", Model.of("no enclosure " + item.getModelObject()));
-				item.queue(testlib);
+				item.add(testlib);
 			}
 		});
     }

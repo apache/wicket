@@ -39,7 +39,7 @@ public class BehavioursDetachTestPage extends WebPage {
             @Override
             public void onClick() {/*NoOp*/}
         };
-        queue(link);
+        add(link);
 
         // A behavior that causes the problem
         link.add(new VisibilityBehavior());

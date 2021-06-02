@@ -57,22 +57,24 @@ public class ModalDialogPage extends BasePage
 	public ModalDialogPage()
 	{
 
-		queue(new RadioGroup("stacked", new PropertyModel<>(this, "stacked"))
-			.setRenderBodyOnly(false).add(new AjaxFormChoiceComponentUpdatingBehavior()
-			{
+		RadioGroup radioGroup = new RadioGroup("stacked", new PropertyModel<>(this, "stacked"));
+		radioGroup
+			.setRenderBodyOnly(false)
+			.add(new AjaxFormChoiceComponentUpdatingBehavior() {
 				@Override
 				protected void onUpdate(AjaxRequestTarget target)
 				{
 				}
-			}));
+			});
+		add(radioGroup);
 
-		queue(new Radio<Boolean>("yes", Model.of(true)));
-		queue(new Radio<Boolean>("no", Model.of(false)));
+		radioGroup.add(new Radio<Boolean>("yes", Model.of(true)));
+		radioGroup.add(new Radio<Boolean>("no", Model.of(false)));
 
-		queue(new ModalFragment("start"));
+		add(new ModalFragment("start"));
 
 		stackedDialogs = new AjaxListPanel("stackedDialogs");
-		queue(stackedDialogs);
+		add(stackedDialogs);
 	}
 
 	@Override
@@ -94,15 +96,15 @@ public class ModalDialogPage extends BasePage
 			super(id, "fragment", ModalDialogPage.this);
 
 			Form<Void> form = new Form<Void>("form");
-			queue(form);
+			add(form);
 			
 			nestedDialog = new ModalDialog("nestedDialog");
 			nestedDialog.add(new DefaultTheme());
 			nestedDialog.trapFocus();
 			nestedDialog.closeOnEscape();
-			queue(nestedDialog);
+			form.add(nestedDialog);
 
-			queue(new AjaxLink<Void>("ajaxOpenDialog")
+			form.add(new AjaxLink<Void>("ajaxOpenDialog")
 			{
 				@Override
 				public void onClick(AjaxRequestTarget target)
@@ -111,7 +113,7 @@ public class ModalDialogPage extends BasePage
 				}
 			});
 
-			queue(new Link<Void>("openDialog")
+			form.add(new Link<Void>("openDialog")
 			{
 				@Override
 				public void onClick()
@@ -120,7 +122,7 @@ public class ModalDialogPage extends BasePage
 				}
 			});
 
-			queue(new TextField("text").add(new AjaxEventBehavior("keydown")
+			form.add(new TextField("text").add(new AjaxEventBehavior("keydown")
 			{
 				@Override
 				protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
@@ -144,7 +146,7 @@ public class ModalDialogPage extends BasePage
 				}
 			}));
 
-			queue(new WebMarkupContainer("closing")
+			WebMarkupContainer closing = new WebMarkupContainer("closing")
 			{
 				@Override
 				protected void onConfigure()
@@ -153,9 +155,10 @@ public class ModalDialogPage extends BasePage
 
 					setVisible(findParent(ModalDialog.class) != null);
 				}
-			});
+			};
+			form.add(closing);
 
-			queue(new Link<Void>("close")
+			closing.add(new Link<Void>("close")
 			{
 				@Override
 				public void onClick()
@@ -166,9 +169,9 @@ public class ModalDialogPage extends BasePage
 			
 			final MultiLineLabel lorem = new MultiLineLabel("lorem", "");
 			lorem.setOutputMarkupId(true);
-			queue(lorem);
+			form.add(lorem);
 			
-			queue(new AjaxLink<Void>("ipsum") {
+			form.add(new AjaxLink<Void>("ipsum") {
 				@Override
 				public void onClick(AjaxRequestTarget target)
 				{

@@ -89,30 +89,6 @@ class ComponentBorderTest extends WicketTestCase
 	}
 
 	@Test
-	void borderWithForm() throws Exception
-	{
-		/*
-		 * Suppose we have a border like this:
-		 * 
-		 * <div wicket:id="border"> <form> <body/> </form> </div>
-		 * 
-		 * Any form components inside its body must be correctly submitted with the outer form.
-		 */
-		Model<String> model = Model.of("");
-		BorderWithFormPage page = new BorderWithFormPage(model);
-
-		tester.startPage(page);
-
-		FormTester formTester = tester
-			.newFormTester("borderContainer:formBorder:borderContainer:form");
-
-		formTester.setValue("formBorder_body:text", TEST_TEXT);
-		formTester.submit();
-
-		assertEquals(TEST_TEXT, model.getObject());
-	}
-
-	@Test
 	void borderWithEnclosurePage() throws Exception
 	{
 		tester.startPage(BorderWithEnclosurePage.class);

@@ -84,8 +84,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Page extends MarkupContainer
 	implements
-		IRequestablePage,
-		IQueueRegion
+		IRequestablePage
 {
 	/** True if the page hierarchy has been modified in the current request. */
 	private static final int FLAG_IS_DIRTY = FLAG_RESERVED3;

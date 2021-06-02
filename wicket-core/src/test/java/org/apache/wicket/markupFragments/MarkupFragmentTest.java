@@ -180,7 +180,6 @@ class MarkupFragmentTest extends WicketTestCase
 
 		assertNull(border.getBodyContainer().getAssociatedMarkup());
 
-		border.dequeue();
 		markup = border.getBodyContainer().getMarkup();
 		compareMarkupWithString(markup, "<wicket:body/>");
 
@@ -220,8 +219,6 @@ class MarkupFragmentTest extends WicketTestCase
 
 		assertNull(border.getBodyContainer().getAssociatedMarkup());
 
-		// See explanation in BaseBorder.BorderBodyContainer.getMarkup()
-		border.dequeue();
 		markup = border.getBodyContainer().getParent().getMarkup(border.getBodyContainer());
 		compareMarkupWithString(markup, "<wicket:body>333</wicket:body>");
 

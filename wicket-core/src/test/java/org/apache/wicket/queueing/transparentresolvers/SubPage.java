@@ -28,6 +28,6 @@ public class SubPage extends BasePage
 	{
 		super(parameters);
 
-		queue(new Label("version", getApplication().getFrameworkSettings().getVersion()));
+		add(new Label("version", getApplication().getFrameworkSettings().getVersion()));
 	}
 }

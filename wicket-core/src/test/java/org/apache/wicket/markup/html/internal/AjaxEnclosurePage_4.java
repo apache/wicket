@@ -17,10 +17,8 @@
 package org.apache.wicket.markup.html.internal;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.PropertyModel;
@@ -49,14 +47,14 @@ public class AjaxEnclosurePage_4 extends WebPage
 	{
 
 		Form<?> form=new Form<Void>("form");
-		queue(form);
+		add(form);
 		
 		//nameLabel=new Label("nameLabel", "Name");
 		//queue(nameLabel);
 		
 		nameField=new TextField<String>("nameField", new PropertyModel<String>(this, "name"));
 		nameField.setOutputMarkupId(true);
-		queue(nameField);
+		form.add(nameField);
 
 		submit=new AjaxSubmitLink("submit") {
 			@Override
@@ -66,7 +64,7 @@ public class AjaxEnclosurePage_4 extends WebPage
 				target.add(nameField);
 			}
 		};
-		queue(submit);
+		form.add(submit);
 		
 	}
 
