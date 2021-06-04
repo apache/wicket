@@ -19,45 +19,44 @@ package org.apache.wicket.spring.test;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.ResolvableType;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 
 /**
  * Mock application context object. This mock context allows easy creation of unit tests by allowing
  * the user to put bean instances into the context.
  * 
- * Only {@link #getBean(String)}, {@link #getBean(String, Class)}, and
- * {@link #getBeansOfType(Class)
- * } are implemented so far. Any other method throws
- * {@link UnsupportedOperationException}.
- * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class ApplicationContextMock implements ApplicationContext, Serializable
+public class ApplicationContextMock extends AbstractApplicationContext implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private final Map<String, Object> beans = new HashMap<>();
+	private final DefaultListableBeanFactory beanFactory;
+	private final long startupTime;
+
+	public ApplicationContextMock() {
+		this.beanFactory = new DefaultListableBeanFactory();
+		beanFactory.setSerializationId(ApplicationContextMock.class.getName());
+		startupTime = System.currentTimeMillis();
+	}
 
 	/**
 	 * puts bean with the given name into the context
@@ -65,14 +64,9 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 * @param name
 	 * @param bean
 	 */
-	public void putBean(final String name, final Object bean)
+	public <T extends Object> void putBean(final String name, final T bean)
 	{
-		if (beans.containsKey(name))
-		{
-			throw new IllegalArgumentException("a bean with name [" + name +
-				"] has already been added to the context");
-		}
-		beans.put(name, bean);
+		beanFactory.registerBeanDefinition(name, new RootBeanDefinition((Class<T>)bean.getClass(), () -> bean));
 	}
 
 	/**
@@ -88,159 +82,82 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@Override
 	public Object getBean(final String name) throws BeansException
 	{
-		Object bean = beans.get(name);
-		if (bean == null)
-		{
-			throw new NoSuchBeanDefinitionException(name);
-		}
-		return bean;
+		return beanFactory.getBean(name);
 	}
 
 	@Override
 	public Object getBean(final String name, final Object... args) throws BeansException
 	{
-		return getBean(name);
+		return beanFactory.getBean(name, args);
 	}
 
-	/**
-	 * @see org.springframework.beans.factory.BeanFactory#getBean(java.lang.String, java.lang.Class)
-	 */
 	@Override
 	@SuppressWarnings({ "unchecked" })
 	public <T> T getBean(String name, Class<T> requiredType) throws BeansException
 	{
-		Object bean = getBean(name);
-		if (!(requiredType.isAssignableFrom(bean.getClass())))
-		{
-			throw new BeanNotOfRequiredTypeException(name, requiredType, bean.getClass());
-		}
-		return (T)bean;
+		return beanFactory.getBean(name, requiredType);
 	}
 
-	/**
-	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType(java.lang.Class)
-	 */
 	@Override
 	@SuppressWarnings({ "unchecked" })
 	public <T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException
 	{
-		final Map<String, T> found = new HashMap<>();
-
-		for (Entry<String, Object> entry : beans.entrySet())
-		{
-			if (type.isAssignableFrom(entry.getValue().getClass()))
-			{
-				found.put(entry.getKey(), (T)entry.getValue());
-			}
-		}
-
-		return found;
+		return beanFactory.getBeansOfType(type);
 	}
 
 	@Override
 	public <T> T getBean(Class<T> requiredType) throws BeansException
 	{
-		Iterator<T> beans = getBeansOfType(requiredType).values().iterator();
-
-		if (beans.hasNext() == false)
-		{
-			throw new NoSuchBeanDefinitionException("bean of required type " + requiredType +
-				" not found");
-		}
-		final T bean = beans.next();
-
-		if (beans.hasNext() != false)
-		{
-			throw new NoSuchBeanDefinitionException("more than one bean of required type " +
-				requiredType + " found");
-		}
-		return bean;
+		return beanFactory.getBean(requiredType);
 	}
 
 	@Override
 	public <T> T getBean(Class<T> requiredType, Object... objects) throws BeansException
 	{
-		return getBean(requiredType);
+		return beanFactory.getBean(requiredType, objects);
 	}
 
 	@Override
 	public <T> ObjectProvider<T> getBeanProvider(Class<T> aClass)
 	{
-		return null;
+		return beanFactory.getBeanProvider(aClass);
 	}
 
 	@Override
 	public <T> ObjectProvider<T> getBeanProvider(ResolvableType resolvableType)
 	{
-		return null;
+		return beanFactory.getBeanProvider(resolvableType);
 	}
 
 	@Override
 	public Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType)
 		throws BeansException
 	{
-		final Map<String, Object> found = new HashMap<>();
-
-		for (Entry<String, Object> entry : beans.entrySet())
-		{
-			if (entry.getValue().getClass().isAnnotationPresent(annotationType))
-			{
-				found.put(entry.getKey(), entry.getValue());
-			}
-		}
-		return found;
+		return beanFactory.getBeansWithAnnotation(annotationType);
 	}
 
 	@Override
 	public <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType)
 	{
-		return findAnnotationOnClass(getBean(beanName).getClass(), annotationType);
-	}
-
-	private <A extends Annotation> A findAnnotationOnClass(Class<?> cls, Class<A> annotationType)
-	{
-		// lookup annotation type on class
-		A annotation = cls.getAnnotation(annotationType);
-
-		// lookup annotation type on superclass
-		if (annotation == null && cls.getSuperclass() != null)
-		{
-			annotation = findAnnotationOnClass(cls.getSuperclass(), annotationType);
-		}
-
-		// lookup annotation type on interfaces
-		if (annotation == null)
-		{
-			for (Class<?> intfClass : cls.getInterfaces())
-			{
-				annotation = findAnnotationOnClass(intfClass, annotationType);
-
-				if (annotation != null)
-				{
-					break;
-				}
-			}
-		}
-
-		return annotation;
+		return beanFactory.findAnnotationOnBean(beanName, annotationType);
 	}
 
 	@Override
 	public ApplicationContext getParent()
 	{
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	@Override
 	public String getDisplayName()
 	{
-		throw new UnsupportedOperationException();
+		return ApplicationContextMock.class.getSimpleName();
 	}
 
 	@Override
 	public long getStartupDate()
 	{
-		throw new UnsupportedOperationException();
+		return startupTime;
 	}
 
 	@Override
@@ -258,129 +175,103 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@Override
 	public boolean containsBeanDefinition(final String beanName)
 	{
-		return containsBean(beanName);
+		return beanFactory.containsBean(beanName);
 	}
 
 	@Override
 	public int getBeanDefinitionCount()
 	{
-		return beans.size();
+		return beanFactory.getBeanDefinitionCount();
 	}
 
 	@Override
 	public String[] getBeanDefinitionNames()
 	{
-		return beans.keySet().toArray(new String[0]);
+		return beanFactory.getBeanDefinitionNames();
 	}
 
 	@Override
 	public <T> ObjectProvider<T> getBeanProvider(final Class<T> aClass, final boolean b) {
-		return null;
+		return beanFactory.getBeanProvider(aClass, b);
 	}
 
 	@Override
 	public <T> ObjectProvider<T> getBeanProvider(final ResolvableType resolvableType, final boolean b) {
-		return null;
+		return beanFactory.getBeanProvider(resolvableType, b);
 	}
 
 	@Override
 	public String[] getBeanNamesForType(ResolvableType resolvableType)
 	{
-		return new String[0];
+		return beanFactory.getBeanNamesForType(resolvableType);
 	}
 
 	@Override
 	public String[] getBeanNamesForType(ResolvableType resolvableType, boolean includeNonSingletons, boolean allowEagerInit)
 	{
-		return new String[0];
+		return beanFactory.getBeanNamesForType(resolvableType, includeNonSingletons, allowEagerInit);
 	}
 
 	@Override
-	@SuppressWarnings({ "unchecked" })
 	public String[] getBeanNamesForType(final Class type)
 	{
-		ArrayList<String> names = new ArrayList<>();
-		for (Entry<String, Object> entry : beans.entrySet())
-		{
-			Object bean = entry.getValue();
-
-			if (type.isAssignableFrom(bean.getClass()))
-			{
-				names.add(entry.getKey());
-			}
-		}
-		return names.toArray(new String[names.size()]);
+		return beanFactory.getBeanNamesForType(type);
 	}
 
 	@Override
-	@SuppressWarnings({ "unchecked" })
 	public String[] getBeanNamesForType(Class type, boolean includeNonSingletons,
 		boolean allowEagerInit)
 	{
-		throw new UnsupportedOperationException();
+		return beanFactory.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
 	}
 
 	@Override
 	public <T> Map<String, T> getBeansOfType(Class<T> type, boolean includeNonSingletons,
 		boolean allowEagerInit) throws BeansException
 	{
-		throw new UnsupportedOperationException();
+		return beanFactory.getBeansOfType(type, includeNonSingletons, allowEagerInit);
 	}
 
 	@Override
 	public String[] getBeanNamesForAnnotation(Class<? extends Annotation> aClass)
 	{
-		throw new UnsupportedOperationException();
+		return beanFactory.getBeanNamesForAnnotation(aClass);
 	}
 
 	@Override
 	public boolean containsBean(final String name)
 	{
-		return beans.containsKey(name);
+		return beanFactory.containsBean(name);
 	}
 
 	@Override
 	public boolean isSingleton(final String name) throws NoSuchBeanDefinitionException
 	{
-		return true;
+		return beanFactory.isSingleton(name);
 	}
 
 	@Override
 	public Class<?> getType(final String name) throws NoSuchBeanDefinitionException
 	{
-		return getType(name, true);
+		return beanFactory.getType(name);
 	}
 
 	@Override
 	public Class<?> getType(String name, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException
 	{
-		Object bean = beans.get(name);
-		if (bean == null)
-		{
-			throw new NoSuchBeanDefinitionException("No bean with name '" + name + "'");
-		}
-
-		if (bean instanceof FactoryBean)
-		{
-			return ((FactoryBean) bean).getObjectType();
-		}
-		
-		return bean.getClass();
+		return beanFactory.getType(name, allowFactoryBeanInit);
 	}
 
 	@Override
 	public String[] getAliases(final String name) throws NoSuchBeanDefinitionException
 	{
-		throw new UnsupportedOperationException();
+		return beanFactory.getAliases(name);
 	}
 
-	/**
-	 * @see org.springframework.beans.factory.HierarchicalBeanFactory# getParentBeanFactory()
-	 */
 	@Override
 	public BeanFactory getParentBeanFactory()
 	{
-		return null;
+		return beanFactory.getParentBeanFactory();
 	}
 
 	@Override
@@ -411,6 +302,19 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	@Override
+	protected void refreshBeanFactory() throws BeansException, IllegalStateException {
+	}
+
+	@Override
+	protected void closeBeanFactory() {
+	}
+
+	@Override
+	public ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException {
+		return beanFactory;
+	}
+
+	@Override
 	public Resource getResource(final String location)
 	{
 		throw new UnsupportedOperationException();
@@ -419,56 +323,31 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@Override
 	public AutowireCapableBeanFactory getAutowireCapableBeanFactory() throws IllegalStateException
 	{
-		throw new UnsupportedOperationException();
+		return beanFactory;
 	}
 
 	@Override
-	public boolean containsLocalBean(final String arg0)
+	public boolean containsLocalBean(final String name)
 	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public ClassLoader getClassLoader()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public String getId()
-	{
-		return null;
-	}
-
-	@Override
-	public String getApplicationName()
-	{
-		return "";
+		return beanFactory.containsLocalBean(name);
 	}
 
 	@Override
 	public boolean isPrototype(final String name) throws NoSuchBeanDefinitionException
 	{
-		return !isSingleton(name);
+		return beanFactory.isPrototype(name);
 	}
 
 	@Override
 	public boolean isTypeMatch(String s, ResolvableType resolvableType) throws NoSuchBeanDefinitionException
 	{
-		return false;
+		return beanFactory.isTypeMatch(s, resolvableType);
 	}
 
 	@Override
-	@SuppressWarnings({ "unchecked" })
 	public boolean isTypeMatch(final String name, final Class targetType)
 		throws NoSuchBeanDefinitionException
 	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Environment getEnvironment()
-	{
-		return null;
+		return beanFactory.isTypeMatch(name, targetType);
 	}
 }
