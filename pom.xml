@@ -150,6 +150,7 @@
 		<jakarta.el.version>4.0.1</jakarta.el.version>
 		<jakarta.el-api.version>4.0.0</jakarta.el-api.version>
 		<jakarta.enterprise.cdi-api.version>3.0.0</jakarta.enterprise.cdi-api.version>
+		<jakarta.inject-api.version>2.0.0</jakarta.inject-api.version>
 		<jakarta.servlet.jsp-api.version>3.0.0</jakarta.servlet.jsp-api.version>
 		<jakarta.validation-api.version>3.0.0</jakarta.validation-api.version>
 		<jakarta.websocket-api.version>2.0.0</jakarta.websocket-api.version>
@@ -308,9 +309,9 @@
 				<version>${metrics.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>javax.inject</groupId>
-				<artifactId>javax.inject</artifactId>
-				<version>1</version>
+				<groupId>jakarta.inject</groupId>
+				<artifactId>jakarta.inject-api</artifactId>
+				<version>${jakarta.inject-api.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>

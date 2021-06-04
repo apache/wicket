@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
-import org.apache.wicket.spring.injection.util.JavaxInjectInjectable;
+import org.apache.wicket.spring.injection.util.JakartaInjectInjectable;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -27,14 +27,14 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * Tests for Spring injection with {@literal @javax.inject.Inject} annotation
  */
-public class JavaxInjectAnnotProxyFieldValueFactoryTest extends AnnotProxyFieldValueFactoryTest
+public class JakartaInjectAnnotProxyFieldValueFactoryTest extends AnnotProxyFieldValueFactoryTest
 {
 	/**
 	 * Construct.
 	 */
-	public JavaxInjectAnnotProxyFieldValueFactoryTest()
+	public JakartaInjectAnnotProxyFieldValueFactoryTest()
 	{
-		super(new JavaxInjectInjectable());
+		super(new JakartaInjectInjectable());
 	}
 
 	/**

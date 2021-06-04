@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.spring.injection.util;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Mock for an object with some SpringBean annotations
@@ -25,7 +25,7 @@ import javax.inject.Named;
  * @author Igor Vaynberg (ivaynberg)
  *
  */
-public class JavaxInjectInjectable implements InjectableInterface
+public class JakartaInjectInjectable implements InjectableInterface
 {
 	private Bean nobean;
 
