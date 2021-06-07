@@ -4,7 +4,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
 
 /**
- * Resolves the property to be validated for the given form component. Implementations, incuding the
+ * Resolves the property to be validated for the given form component. Implementations, including the
  * default one, usually check the form component's model for some subclass that can provide the
  * necessary meta information to resolve the property.
  * 
