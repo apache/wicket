@@ -22,12 +22,7 @@ final class ValidationModelResolver
     public static IPropertyReflectionAwareModel<?> resolvePropertyModelFrom(FormComponent<?> component)
     {
         IModel<?> model = component.getModel();
-        while (true)
-        {
-            if (model == null)
-            {
-                return null;
-            }
+        while (model != null) {
             if (model instanceof IPropertyReflectionAwareModel)
             {
                 return (IPropertyReflectionAwareModel<?>) model;
