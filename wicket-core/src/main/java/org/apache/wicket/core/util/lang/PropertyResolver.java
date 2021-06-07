@@ -77,14 +77,13 @@ import org.slf4j.LoggerFactory;
  */
 public final class PropertyResolver
 {
-	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
 
-	private final static int RETURN_NULL = 0;
-	private final static int CREATE_NEW_VALUE = 1;
-	private final static int RESOLVE_CLASS = 2;
+	private static final int RETURN_NULL = 0;
+	private static final int CREATE_NEW_VALUE = 1;
+	private static final int RESOLVE_CLASS = 2;
 
-	private final static ConcurrentHashMap<Object, IPropertyLocator> applicationToLocators = Generics.newConcurrentHashMap(2);
+	private static final ConcurrentHashMap<Object, IPropertyLocator> applicationToLocators = Generics.newConcurrentHashMap(2);
 
 	private static final String GET = "get";
 	private static final String IS = "is";
@@ -407,7 +406,7 @@ public final class PropertyResolver
 	 * @author jcompagner
 	 *
 	 */
-	private final static class ObjectWithGetAndSet
+	private static final class ObjectWithGetAndSet
 	{
 		private final IGetAndSet getAndSet;
 		private final Object value;
@@ -524,38 +523,26 @@ public final class PropertyResolver
 		Method getSetter();
 	}
 
-	public static abstract class AbstractGetAndSet implements IGetAndSet
+	public abstract static class AbstractGetAndSet implements IGetAndSet
 	{
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Field getField()
 		{
 			return null;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Method getGetter()
 		{
 			return null;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Method getSetter()
 		{
 			return null;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Class<?> getTargetClass()
 		{
@@ -572,18 +559,12 @@ public final class PropertyResolver
 			this.key = key;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object getValue(final Object object)
 		{
 			return ((Map<?, ?>)object).get(key);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		@SuppressWarnings("unchecked")
 		public void setValue(final Object object, final Object value,
@@ -592,9 +573,6 @@ public final class PropertyResolver
 			((Map<String, Object>)object).put(key, value);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object newValue(final Object object)
 		{
@@ -606,16 +584,13 @@ public final class PropertyResolver
 
 	private static final class ListGetAndSet extends AbstractGetAndSet
 	{
-		final private int index;
+		private final int index;
 
 		ListGetAndSet(int index)
 		{
 			this.index = index;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object getValue(final Object object)
 		{
@@ -626,9 +601,6 @@ public final class PropertyResolver
 			return ((List<?>)object).get(index);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		@SuppressWarnings("unchecked")
 		public void setValue(final Object object, final Object value,
@@ -654,9 +626,6 @@ public final class PropertyResolver
 			}
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object newValue(Object object)
 		{
@@ -677,9 +646,6 @@ public final class PropertyResolver
 			this.index = index;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object getValue(Object object)
 		{
@@ -690,9 +656,6 @@ public final class PropertyResolver
 			return null;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
@@ -700,9 +663,6 @@ public final class PropertyResolver
 			Array.set(object, index, value);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object newValue(Object object)
 		{
@@ -714,15 +674,12 @@ public final class PropertyResolver
 			}
 			catch (Exception e)
 			{
-				log.warn("Cannot set new value " + value + " at index " + index +
-					" for array holding elements of class " + clzComponentType, e);
+				log.warn("Cannot set new value {} at index {} for array holding elements of class {}",
+						value, index, clzComponentType, e);
 			}
 			return value;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Class<?> getTargetClass()
 		{
@@ -736,18 +693,12 @@ public final class PropertyResolver
 		{
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object getValue(final Object object)
 		{
 			return Array.getLength(object);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void setValue(final Object object, final Object value,
 			final PropertyResolverConverter converter)
@@ -755,9 +706,6 @@ public final class PropertyResolver
 			throw new WicketRuntimeException("You can't set the length on an array:" + object);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object newValue(final Object object)
 		{
@@ -765,9 +713,6 @@ public final class PropertyResolver
 				object);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Class<?> getTargetClass()
 		{
@@ -777,8 +722,8 @@ public final class PropertyResolver
 
 	private static final class IndexedPropertyGetAndSet extends AbstractGetAndSet
 	{
-		final private Integer index;
-		final private Method getMethod;
+		private final Integer index;
+		private final Method getMethod;
 		private Method setMethod;
 
 		IndexedPropertyGetAndSet(final Method method, final int index)
@@ -798,14 +743,11 @@ public final class PropertyResolver
 			}
 			catch (Exception e)
 			{
-				log.debug("Can't find setter method corresponding to " + getMethod);
+				log.debug("Can't find setter method corresponding to {}", getMethod);
 			}
 			return null;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object getValue(Object object)
 		{
@@ -827,9 +769,6 @@ public final class PropertyResolver
 			return ret;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void setValue(final Object object, final Object value,
 			final PropertyResolverConverter converter)
@@ -869,18 +808,12 @@ public final class PropertyResolver
 			}
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Class<?> getTargetClass()
 		{
 			return getMethod.getReturnType();
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object newValue(Object object)
 		{
@@ -924,9 +857,6 @@ public final class PropertyResolver
 			this.setMethod = setMethod;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public final Object getValue(final Object object)
 		{
@@ -948,11 +878,6 @@ public final class PropertyResolver
 			return ret;
 		}
 
-		/**
-		 * @param object
-		 * @param value
-		 * @param converter
-		 */
 		@Override
 		public final void setValue(final Object object, final Object value,
 			PropertyResolverConverter converter)
@@ -1071,9 +996,6 @@ public final class PropertyResolver
 			return null;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object newValue(Object object)
 		{
@@ -1097,36 +1019,24 @@ public final class PropertyResolver
 			return value;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Class<?> getTargetClass()
 		{
 			return getMethod.getReturnType();
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Method getGetter()
 		{
 			return getMethod;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Method getSetter()
 		{
 			return setMethod;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Field getField()
 		{
@@ -1134,9 +1044,6 @@ public final class PropertyResolver
 		}
 	}
 
-	/**
-	 * @author jcompagner
-	 */
 	private static class FieldGetAndSet extends AbstractGetAndSet
 	{
 		private final Field field;
@@ -1153,9 +1060,6 @@ public final class PropertyResolver
 			this.field.setAccessible(true);
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object getValue(final Object object)
 		{
@@ -1170,9 +1074,6 @@ public final class PropertyResolver
 			}
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Object newValue(final Object object)
 		{
@@ -1190,9 +1091,6 @@ public final class PropertyResolver
 			return value;
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void setValue(final Object object, Object value,
 			final PropertyResolverConverter converter)
@@ -1209,18 +1107,12 @@ public final class PropertyResolver
 			}
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Class<?> getTargetClass()
 		{
 			return field.getType();
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public Field getField()
 		{
@@ -1329,7 +1221,7 @@ public final class PropertyResolver
 			}
 		};
 
-		private IPropertyLocator locator;
+		private final IPropertyLocator locator;
 
 		public CachingPropertyLocator(IPropertyLocator locator) {
 			this.locator = locator;
@@ -1525,7 +1417,7 @@ public final class PropertyResolver
 					}
 					tmp = tmp.getSuperclass();
 				}
-				log.debug("Cannot find field " + clz + "." + expression);
+				log.debug("Cannot find field {}.{}", clz, expression);
 			}
 			return field;
 		}
@@ -1554,7 +1446,7 @@ public final class PropertyResolver
 				}
 				catch (Exception e)
 				{
-					log.debug("Cannot find getter " + clz + "." + expression);
+					log.debug("Cannot find getter {}.{}", clz, expression);
 				}
 			}
 			return method;
@@ -1573,7 +1465,7 @@ public final class PropertyResolver
 			}
 			catch (Exception e)
 			{
-				log.debug("Cannot find method " + clz + "." + expression);
+				log.debug("Cannot find method {}.{}", clz, expression);
 			}
 			return method;
 		}
