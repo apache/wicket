@@ -155,7 +155,7 @@
 		<jakarta.websocket-api.version>1.1.2</jakarta.websocket-api.version>
 		<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
-		<jetty.version>9.4.41.v20210516</jetty.version>
+		<jetty.version>9.4.42.v20210604</jetty.version>
 		<junit.version>5.7.2</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.3</logback.version>
@@ -167,7 +167,7 @@
 		<objenesis.version>3.2</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<spring.version>5.3.7</spring.version>
+		<spring.version>5.3.8</spring.version>
 		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
 		<weld.version>3.1.7.Final</weld.version>
 		<velocity-engine-core.version>2.3</velocity-engine-core.version>
