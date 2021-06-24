@@ -1005,7 +1005,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * Returns the javascript used to open the window. Subclass
-	 * {@link #postProcessSettings(AppendingStringBuffer)} to modify the JavaScript if needed.
+	 * {@link #postProcessSettings(JSONObject)} to modify the JavaScript if needed.
 	 * 
 	 * See WICKET-12
 	 * 
@@ -1126,7 +1126,6 @@ public class ModalWindow extends Panel
 	 * Method that allows tweaking the settings
 	 * 
 	 * @param settings
-	 * @return settings json
 	 */
 	protected void postProcessSettings(JSONObject settings)
 	{

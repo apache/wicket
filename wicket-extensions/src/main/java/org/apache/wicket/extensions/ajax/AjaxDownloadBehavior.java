@@ -54,7 +54,7 @@ import com.github.openjson.JSONObject;
  * add(new AjaxButton("download")
  * {
  * 	&#64;Override
- * 	protected void onSubmit(IPartialPageRequestHandler handler, Form&lt;?> form)
+ * 	protected void onSubmit(IPartialPageRequestHandler handler, Form&lt;?&gt; form)
  * 	{
  * 		download.initiate(handler);
  * 	}
@@ -96,7 +96,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		 * the resource has to be a {@link ContentDisposition#ATTACHMENT}.
 		 * <p>
 		 * Note: This will trigger JavaScript <em>unload</em> event on the page!
-		 * Does not support {@link AjaxDownloadBehavior#onDownloadFailed(IPartialPageRequestHandler)} callback,
+		 * Does not support {@link AjaxDownloadBehavior#onDownloadFailed(AjaxRequestTarget)} callback,
 		 * i.e. it is not possible to detect when the download has failed!
 		 */
 		SameWindow,
@@ -144,7 +144,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 * <p>
 	 * The {@link IResource} returned by {@link ResourceReference#getResource()} must call
 	 * {@link #markCompleted(Attributes)} when responding, otherwise the callback
-	 * {@link #onDownloadSuccess(IPartialPageRequestHandler)} will not work.
+	 * {@link #onDownloadSuccess(AjaxRequestTarget)} will not work.
 	 *
 	 * @param reference
 	 *            reference to resource to download
@@ -159,7 +159,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 * <p>
 	 * The {@link IResource} returned by {@link ResourceReference#getResource()} must call
 	 * {@link #markCompleted(Attributes)} when responding, otherwise the callback
-	 * {@link #onDownloadSuccess(IPartialPageRequestHandler)} will not work.
+	 * {@link #onDownloadSuccess(AjaxRequestTarget)} will not work.
 	 *
 	 * @param reference
 	 *            reference to resource to download

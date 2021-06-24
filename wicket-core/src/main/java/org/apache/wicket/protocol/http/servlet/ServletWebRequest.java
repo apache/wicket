@@ -117,7 +117,7 @@ public class ServletWebRequest extends WebRequest
 	 * Example: if current url is
 	 * 
 	 * <pre>
-	 * http://localhost:8080/context/filter/mapping/wicket/bookmarkable/com.foo.Page?1&id=2
+	 * http://localhost:8080/context/filter/mapping/wicket/bookmarkable/com.foo.Page?1&amp;id=2
 	 * </pre>
 	 * 
 	 * the base url is <em>wicket/bookmarkable/com.foo.Page</em>

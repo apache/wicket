@@ -27,9 +27,6 @@ import java.lang.annotation.Target;
  * 
  * NOTES: Adding {@link Inherited} annotation to this annotation will not work because we also want
  * it to work for interfaces
- * 
- * @see SwitchProtocolRequestHandler
- * 
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

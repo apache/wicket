@@ -24,7 +24,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.visit.IVisit;
 
 /**
- * This a header render strategy implements a child->parent->root sequence, which is inverse to how
+ * This a header render strategy implements a child-&gt;parent-&gt;root sequence, which is inverse to how
  * it was until Wicket 1.5. It now allows parent containers to replace child contributions, since
  * their contribution is added to the markup after the child ones (see <a
  * href="https://issues.apache.org/jira/browse/WICKET-2693">WICKET-2693</a>).

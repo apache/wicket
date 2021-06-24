@@ -62,10 +62,10 @@ public class NonContextual<T>
 	}
 
 	/**
-	 * Convenience factory method for an instance, see {@link #of(Class).
+	 * Convenience factory method for an instance, see {@link #of(Class)}.
 	 * 
 	 * @param <T>
-	 * @param clazz
+	 * @param t
 	 * @return The NonContextual for the instance's class
 	 */
 	@SuppressWarnings("unchecked")

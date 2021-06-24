@@ -146,7 +146,6 @@ public class WicketObjects
 	 * @param object
 	 *            The object to clone
 	 * @return A deep copy of the object
-	 * @see #cloneModel(Object)
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T cloneObject(final T object)

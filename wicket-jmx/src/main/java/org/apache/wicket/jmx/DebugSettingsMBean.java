@@ -56,16 +56,16 @@ public interface DebugSettingsMBean
 	 * If the parameter value is non-empty then Wicket will use it as the name of an attribute of the
 	 * component tag to print the {@link org.apache.wicket.Component}'s path.
 	 * 
-	 * @param enabled
+	 * @param name
 	 */
-	public void setComponentPathAttributeName(String name);
+	void setComponentPathAttributeName(String name);
 
 	/**
 	 * @see #setComponentPathAttributeName(String)
 	 * @return The name of the attribute for the {@link org.apache.wicket.markup.ComponentTag}.
 	 *         If {@code null} or empty then the attribute won't be rendered
 	 */
-	public String getComponentPathAttributeName();
+	String getComponentPathAttributeName();
 
 	/**
 	 * Enables wrapping output of markup container in html comments that contain markup container's
@@ -73,7 +73,7 @@ public interface DebugSettingsMBean
 	 * 
 	 * @param enable
 	 */
-	public void setOutputMarkupContainerClassName(boolean enable);
+	void setOutputMarkupContainerClassName(boolean enable);
 
 	/**
 	 * Returns whether the output of markup container's should be wrapped by comments containing the
@@ -81,7 +81,7 @@ public interface DebugSettingsMBean
 	 * 
 	 * @return true if the markup container's class name should be written to response
 	 */
-	public boolean isOutputMarkupContainerClassName();
+	boolean isOutputMarkupContainerClassName();
 
 	/**
 	 * Returns status of line precise error reporting for added components that are not present in
@@ -91,7 +91,7 @@ public interface DebugSettingsMBean
 	 * 
 	 * @return true if the line precise error reporting is enabled
 	 */
-	public boolean isLinePreciseReportingOnAddComponentEnabled();
+	boolean isLinePreciseReportingOnAddComponentEnabled();
 
 	/**
 	 * Enables line precise error reporting for added components that are not present in the markup:
@@ -101,7 +101,7 @@ public interface DebugSettingsMBean
 	 * 
 	 * @param enable
 	 */
-	public void setLinePreciseReportingOnAddComponentEnabled(boolean enable);
+	void setLinePreciseReportingOnAddComponentEnabled(boolean enable);
 
 	/**
 	 * Returns status of line precise error reporting for new components that are not present in the
@@ -110,7 +110,7 @@ public interface DebugSettingsMBean
 	 * 
 	 * @return true if the line precise error reporting is enabled
 	 */
-	public boolean isLinePreciseReportingOnNewComponentEnabled();
+	boolean isLinePreciseReportingOnNewComponentEnabled();
 
 	/**
 	 * Enables line precise error reporting for new components that are not present in the markup:
@@ -119,19 +119,19 @@ public interface DebugSettingsMBean
 	 * 
 	 * @param enable
 	 */
-	public void setLinePreciseReportingOnNewComponentEnabled(boolean enable);
+	void setLinePreciseReportingOnNewComponentEnabled(boolean enable);
 
 	/**
 	 * Enables all of the panels and pages, etc, from wicket-devutils package.
 	 * 
 	 * @param enable
 	 */
-	public void setDevelopmentUtilitiesEnabled(boolean enable);
+	void setDevelopmentUtilitiesEnabled(boolean enable);
 
 	/**
 	 * Are all of the panels and pages, etc, from wicket-devutils package enabled?
 	 * 
 	 * @return true if all of the panels and pages, etc, from wicket-devutils package are enabled
 	 */
-	public boolean isDevelopmentUtilitiesEnabled();
+	boolean isDevelopmentUtilitiesEnabled();
 }

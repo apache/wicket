@@ -105,7 +105,7 @@ public abstract class CssHeaderItem extends AbstractCspHeaderItem
 	 * public void renderHead(IHeaderResponse response) {
 	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
 	 *   ClientProperties properties = clientInfo.getProperties();
-	 *   if (properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() >= 8) {
+	 *   if (properties.isBrowserInternetExplorer() &amp;&amp; properties.getBrowserVersionMajor() &gt;= 8) {
 	 *     response.renderCSSReference(new PackageResourceReference(MyPage.class, "my-conditional.css" ));
 	 *   }
 	 * }
@@ -177,7 +177,7 @@ public abstract class CssHeaderItem extends AbstractCspHeaderItem
 	 * public void renderHead(IHeaderResponse response) {
 	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
 	 *   ClientProperties properties = clientInfo.getProperties();
-	 *   if (properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() >= 8) {
+	 *   if (properties.isBrowserInternetExplorer() &amp;&amp; properties.getBrowserVersionMajor() &gt;= 8) {
 	 *     response.renderCSSReference(new PackageResourceReference(MyPage.class, "my-conditional.css" ));
 	 *   }
 	 * }

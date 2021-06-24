@@ -326,9 +326,7 @@ public final class AutoCompleteSettings implements IClusterable
 	/**
 	 * Sets whether the popup positioning will take into account browser window visible area or not.
 	 * (so always show popup bottom-right or not)<br>
-	 * THIS WILL PRODUCE UNWANTED BEHAVIOR WITH IE versions < 8 (probably because of unreliable
-	 * clientWidth/clientHeight browser element properties).
-	 * 
+	 *
 	 * @param useSmartPositioning
 	 *            the flag
 	 * @return this {@link AutoCompleteSettings}.

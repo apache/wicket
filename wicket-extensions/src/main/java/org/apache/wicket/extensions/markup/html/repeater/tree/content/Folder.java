@@ -30,7 +30,7 @@ import org.apache.wicket.model.IModel;
  * 
  * The link is used to expand/collapse the tree depending on the {@link State} of the current node.
  * Nodes without children are not clickable. Subclasses may change this behavior by overriding
- * {@link #isClickable()} and {@link #onClick(Optional<AjaxRequestTarget>)}.
+ * {@link #isClickable()} and {@link #onClick(Optional)}
  * 
  * @author svenmeier
  */

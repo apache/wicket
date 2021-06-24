@@ -294,8 +294,8 @@ public class TimeField extends FormComponentPanel<LocalTime>
 	 * Checks whether the current {@link Locale} uses the 12h or 24h time format. This method can be
 	 * overridden to e.g. always use 24h format.
 	 * 
-	 * @return {@value true}, if the current {@link Locale} uses the 12h format.<br/>
-	 *         {@value false}, otherwise
+	 * @return {@code true}, if the current {@link Locale} uses the 12h format.<br/>
+	 *         {@code false}, otherwise
 	 */
 	protected boolean use12HourFormat()
 	{

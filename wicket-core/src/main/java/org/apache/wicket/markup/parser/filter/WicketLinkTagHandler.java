@@ -39,13 +39,13 @@ import org.apache.wicket.util.value.IValueMap;
 /**
  * This is a markup inline filter. It identifies xml tags which include a href attribute and which
  * are not Wicket specific components and flags these tags (ComponentTag) as autolink enabled. A
- * component resolver will later resolve the href and assign a BookmarkablePageLink<?> to it
+ * component resolver will later resolve the href and assign a BookmarkablePageLink to it
  * (automatically).
  * <p>
  * An application setting is used as default value, which might be modified for specific regions.
  * These regions are identified by &lt;wicket:link&gt; tags with an optional 'autolink' attribute.
  * The default value for the attribute is true, thus enabling autolinking. An open-close
- * &lt;wicket:link/&gt tag will change the autolink status until the end of the markup document or
+ * &lt;wicket:link/&gt; tag will change the autolink status until the end of the markup document or
  * the next &lt;wicket:link&gt; tag respectively. &lt;wicket:link&gt; regions may be nested.
  * 
  * @author Juergen Donnerstag

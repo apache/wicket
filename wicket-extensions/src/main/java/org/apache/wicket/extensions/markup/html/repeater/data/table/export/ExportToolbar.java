@@ -226,7 +226,7 @@ public class ExportToolbar extends AbstractToolbar
 	/**
 	 * How long should the export be cached.
 	 * 
-	 * @return default is {@link Duration#NONE}
+	 * @return default is {@link Duration#ZERO}
 	 */
 	protected Duration getCacheDuration() {
 		return Duration.ZERO;

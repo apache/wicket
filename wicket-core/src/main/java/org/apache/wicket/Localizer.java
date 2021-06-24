@@ -550,7 +550,7 @@ public class Localizer
 	 * Helper method to handle property variable substitution in strings.
 	 * 
 	 * @param component
-	 *            The component requesting a model value or {@code null]
+	 *            The component requesting a model value or {@code null}
 	 * @param string
 	 *            The string to substitute into
 	 * @param model

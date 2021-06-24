@@ -147,7 +147,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	/** */
 	public static final String BORDER = "border";
 
-	/** The body component associated with <wicket:body> */
+	/** The body component associated with &lt;wicket:body&gt; */
 	private final BorderBodyContainer body;
 
 	/**

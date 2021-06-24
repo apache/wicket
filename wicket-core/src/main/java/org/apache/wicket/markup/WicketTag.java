@@ -31,10 +31,10 @@ import org.apache.wicket.markup.resolver.WicketMessageResolver;
  * WicketTag extends ComponentTag and will be created by a MarkupParser whenever it parses a tag in
  * the wicket namespace. By default, this namespace is "wicket", so wicket tags are then of the form
  * &lt;wicket:*&gt;
- * <p>
+ * &lt;p&gt;
  * Note 1: you need to add an XHTML doctype to your markup and use &lt;html xmlns:wicket&gt; to
  * create a XHTML conform namespace for such tags.
- * <p>
+ * &lt;p&gt;
  * Note 2: The namespace name is configurable. E.g. &lt;html xmlns:wcn="http://wicket"&gt;
  * 
  * @author Juergen Donnerstag
@@ -169,7 +169,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return True if <wicket:panel>, <wicket:border>, <wicket:ex
+	 * @return True if &lt;wicket:panel&gt;, &lt;wicket:border&gt;, &lt;wicket:extend&gt;
 	 */
 	public final boolean isMajorWicketComponentTag()
 	{

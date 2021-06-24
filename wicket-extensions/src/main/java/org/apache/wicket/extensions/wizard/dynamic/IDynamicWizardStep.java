@@ -36,7 +36,7 @@ public interface IDynamicWizardStep extends IWizardStep
 	/**
 	 * Gets whether this is the last step in the wizard.
 	 * 
-	 * @return True if its the final step in the wizard, false< otherwise.
+	 * @return True if its the final step in the wizard, false otherwise.
 	 * 
 	 * @see IWizardModel#isLastStep(IWizardStep)
 	 */

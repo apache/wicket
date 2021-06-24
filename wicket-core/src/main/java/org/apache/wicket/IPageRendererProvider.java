@@ -22,7 +22,7 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.render.PageRenderer;
 
 /**
- * Interface for {@link Function}&ltRenderPageRequestHandler, PageRenderer&gt
+ * Interface for <em>Function&lt;RenderPageRequestHandler, PageRenderer&gt;</em>
  */
 public interface IPageRendererProvider extends Function<RenderPageRequestHandler, PageRenderer>
 {

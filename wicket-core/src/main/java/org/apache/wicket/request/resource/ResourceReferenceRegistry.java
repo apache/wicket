@@ -407,7 +407,7 @@ public class ResourceReferenceRegistry
 	 * Set the cache size in number of entries
 	 * 
 	 * @param autoAddedCapacity
-	 *            A value < 0 will disable aging of auto-create resource references. They will be
+	 *            A value &lt; 0 will disable aging of auto-create resource references. They will be
 	 *            created, added to the registry and live their until manually removed or the
 	 *            application shuts down.
 	 */

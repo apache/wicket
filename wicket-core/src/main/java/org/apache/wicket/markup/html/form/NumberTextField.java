@@ -34,8 +34,8 @@ import org.apache.wicket.validation.validator.RangeValidator;
  * the <a href="https://www.w3.org/TR/html-markup/input.number.html">HTML specification</a>. Use a simple
  * {@code TextField} to use a locale specific conversion of numbers.
  * <p>
- * Automatically validates the input against the configured {@link #setMinimum(N) min} and
- * {@link #setMaximum(N) max} attributes. If any of them is <code>null</code> then respective
+ * Automatically validates the input against the configured {@link #setMinimum(Number) min} and
+ * {@link #setMaximum(Number) max} attributes. If any of them is <code>null</code> then respective
  * MIN_VALUE or MAX_VALUE for the number type is used. If the number type has no minimum and/or
  * maximum value then {@link Double#MIN_VALUE} and {@link Double#MAX_VALUE} are used respectfully.
  * 

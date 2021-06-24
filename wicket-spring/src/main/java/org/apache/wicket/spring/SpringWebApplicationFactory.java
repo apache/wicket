@@ -42,7 +42,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * <pre>
  * &lt;filter&gt;
  *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
- *   &lt;filter-class>org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
+ *   &lt;filter-class&gt;org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
  *   &lt;init-param&gt;
  *     &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
  *     &lt;param-value&gt;org.apache.wicket.spring.SpringWebApplicationFactory&lt;/param-value&gt;
@@ -58,7 +58,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * <pre>
  * &lt;filter&gt;
  *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
- *   &lt;filter-class>org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
+ *   &lt;filter-class&gt;org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
  *   &lt;init-param&gt;
  *     &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
  *     &lt;param-value&gt;org.apache.wicket.spring.SpringWebApplicationFactory&lt;/param-value&gt;
@@ -79,7 +79,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  * <pre>
  * &lt;filter&gt;
  *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
- *   &lt;filter-class>org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
+ *   &lt;filter-class&gt;org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
  *   &lt;init-param&gt;
  *     &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
  *     &lt;param-value&gt;org.apache.wicket.spring.SpringWebApplicationFactory&lt;/param-value&gt;
@@ -190,7 +190,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 
 	/**
 	 * Creates and initializes a new {@link WebApplicationContext}, with the given context as the
-	 * parent. Based on the logic in {@link FrameworkServlet#createWebApplicationContext}
+	 * parent. Based on the logic in Spring's FrameworkServlet#createWebApplicationContext()
 	 * 
 	 * @param parent
 	 *            parent application context
@@ -215,7 +215,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 
 	/**
 	 * This is a hook for potential subclasses to perform additional processing on the context.
-	 * Based on the logic in {@link FrameworkServlet#postProcessWebApplicationContext}
+	 * Based on the logic in Spring's FrameworkServlet#postProcessWebApplicationContext()
 	 * 
 	 * @param wac
 	 *            additional application context

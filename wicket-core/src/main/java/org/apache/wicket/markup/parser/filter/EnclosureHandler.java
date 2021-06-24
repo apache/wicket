@@ -69,7 +69,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 	/** The child attribute */
 	public static final String CHILD_ATTRIBUTE = "child";
 
-	/** Stack of <wicket:enclosure> tags */
+	/** Stack of &lt;wicket:enclosure&gt; tags */
 	private Deque<ComponentTag> stack;
 
 	/** The id of the first wicket tag inside the enclosure */

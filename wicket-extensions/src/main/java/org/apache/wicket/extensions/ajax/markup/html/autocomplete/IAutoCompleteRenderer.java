@@ -34,20 +34,20 @@ import org.apache.wicket.request.Response;
  * <pre>
  * new IAutoCompleteRenderer() {
  *     void renderHead(Response r) { r.write(&quot;
- * <ul>
+ * &lt;ul&gt;
  * &quot;); }
  *     
  *     void render(Object o, Response r) {
  *        // notice the textvalue attribute we define for li element
  *        r.write(&quot;
- * <li textvalue=\""+o.toString()+"\">
+ * &lt;li textvalue=\""+o.toString()+"\"&gt;
  * &lt;i&gt;&quot;+o.toString()+&quot;&lt;/i&gt;
- * </li>
+ * &lt;/li&gt;
  * &quot;;
  *     }
  *     
  *     void renderFooter(Response r) { r.write(&quot;
- * </ul>
+ * &lt;/ul&gt;
  * &quot;); }
  * }
  * </pre>

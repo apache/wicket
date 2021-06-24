@@ -41,8 +41,8 @@ import org.slf4j.LoggerFactory;
  * be inserted. From the derived markup all tags in between &lt;wicket:extend&gt; and
  * &lt;/wicket:extend&gt; will be inserted.
  * <p>
- * In addition, all &lt;wicket:head> regions are copied as well. This allows to develop completely
- * self-contained plug & play components including javascript etc.
+ * In addition, all &lt;wicket:head&gt; regions are copied as well. This allows to develop completely
+ * self-contained plug &amp; play components including javascript etc.
  * 
  * @author Juergen Donnerstag
  */
@@ -58,7 +58,7 @@ public class MergedMarkup extends Markup
 	 * @param baseMarkup
 	 *            The base markup
 	 * @param extendIndex
-	 *            Index where <wicket:extend> has been found
+	 *            Index where &lt;wicket:extend&gt; has been found
 	 */
 	public MergedMarkup(final Markup markup, final Markup baseMarkup, int extendIndex)
 	{

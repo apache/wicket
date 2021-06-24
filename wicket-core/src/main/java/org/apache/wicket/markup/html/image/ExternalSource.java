@@ -48,10 +48,6 @@ public class ExternalSource extends ExternalImage
 	 * 
 	 * @param id
 	 *            the component id
-	 * @param src
-	 *            the source URL
-	 * @param srcSet
-	 *            a list of URLs placed in the srcset attribute
 	 */
 	public ExternalSource(String id)
 	{
@@ -63,8 +59,6 @@ public class ExternalSource extends ExternalImage
 	 * 
 	 * @param id
 	 *            the component id
-	 * @param src
-	 *            the source URL
 	 * @param srcSet
 	 *            a list of URLs placed in the srcset attribute
 	 */
@@ -78,8 +72,6 @@ public class ExternalSource extends ExternalImage
 	 * 
 	 * @param id
 	 *            the component id
-	 * @param src
-	 *            the model source URL
 	 * @param srcSetModel
 	 *            a model list of URLs placed in the srcset attribute
 	 */

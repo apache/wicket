@@ -78,9 +78,6 @@ public class WizardButtonBar extends Panel
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.wizard.IDefaultButtonProvider#getDefaultButton(org.apache.wicket.extensions.wizard.IWizardModel)
-	 */
 	public WizardButton getDefaultButton(final IWizardModel model)
 	{
 		if (model.isNextAvailable())
