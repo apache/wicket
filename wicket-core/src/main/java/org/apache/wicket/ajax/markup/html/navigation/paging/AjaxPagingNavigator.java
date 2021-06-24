@@ -135,7 +135,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 * @param target
 	 *            the request target to add the components that need to be updated in the ajax
 	 *            event.
-	 * @see Component#getOutputMarkupId(boolean)
+	 * @see Component#getOutputMarkupId()
 	 */
 	protected void onAjaxEvent(AjaxRequestTarget target)
 	{

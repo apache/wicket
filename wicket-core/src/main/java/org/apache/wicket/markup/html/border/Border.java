@@ -117,7 +117,7 @@ import org.apache.wicket.util.lang.Args;
  *   &lt;html&gt;
  *   &lt;body&gt;
  *     &lt;span wicket:id = &quot;myBorder&quot;&gt;
- *       &lt;input wicket:id=&quot;name&quot/;&gt;
+ *       &lt;input wicket:id=&quot;name&quot;/&gt;
  *     &lt;/span&gt;
  *   &lt;/body&gt;
  *   &lt;/html&gt;
@@ -128,7 +128,7 @@ import org.apache.wicket.util.lang.Args;
  * or its Body as well.
  * <p/>
  * 
- * Other methods like {@link #remove()}, {@link #get(int)}, {@link #iterator()}, etc. are not
+ * Other methods like {@link #remove()}, {@link #get(String)}, {@link #iterator()}, etc. are not
  * aliased to work on the border's body and attention must be paid when they need to be used.
  * 
  * @see BorderPanel An alternative implementation based on Panel

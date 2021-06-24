@@ -52,7 +52,7 @@ public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 	/**
 	 * Returns the window's name.
 	 * 
-	 * @return name of {@value null} if not yet bound to a window
+	 * @return name of {@code null} if not yet bound to a window
 	 */
 	public String getWindowName()
 	{

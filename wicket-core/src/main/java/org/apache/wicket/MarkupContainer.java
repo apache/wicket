@@ -2139,7 +2139,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * Adds a dequeued component to this container. This method should rarely be overridden because
 	 * the common case of simply forwarding the component to
-	 * {@link MarkupContainer#add(Component...))} method should cover most cases. Components that
+	 * {@link MarkupContainer#add(Component...)} method should cover most cases. Components that
 	 * implement a custom hierarchy, such as borders, may wish to override it to support edge-case
 	 * non-standard behavior.
 	 * 

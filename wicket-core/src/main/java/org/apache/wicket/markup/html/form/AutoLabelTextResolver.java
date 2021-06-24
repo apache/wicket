@@ -94,7 +94,7 @@ import org.apache.wicket.util.string.Strings;
  * </ul>
  * 
  * 
- * @author Carl-Eric Menzel <cmenzel@wicketbuch.de>
+ * @author Carl-Eric Menzel
  * @author igor
  */
 public class AutoLabelTextResolver implements IComponentResolver

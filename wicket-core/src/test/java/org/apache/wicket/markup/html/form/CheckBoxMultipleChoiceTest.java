@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
  * Test the dynamic prefix/suffix feature introduced with
  * https://issues.apache.org/jira/browse/WICKET-3478
  * 
- * @author Carl-Eric Menzel <cmenzel@wicketbuch.de> <carl-eric.menzel@c1-setcon.de>
+ * @author Carl-Eric Menzel
  */
 class CheckBoxMultipleChoiceTest extends WicketTestCase
 {

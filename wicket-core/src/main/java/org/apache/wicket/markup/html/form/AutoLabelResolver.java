@@ -63,7 +63,7 @@ import org.slf4j.LoggerFactory;
  * </p>
  * 
  * @author igor
- * @author Carl-Eric Menzel <cmenzel@wicketbuch.de>
+ * @author Carl-Eric Menzel
  */
 public class AutoLabelResolver implements IComponentResolver
 {

@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * "autolink" by the MarkupParser for all tags with href attribute, such as anchor and link tags
  * with no explicit wicket id. E.g. &lt;a href="Home.html"&gt;
  * <p>
- * If href points to a *.html file, a BookmarkablePageLink<?> will automatically be created, except
+ * If href points to a *.html file, a BookmarkablePageLink will automatically be created, except
  * for absolute paths, where an ExternalLink is created.
  * <p>
  * If href points to a *.html file, it resolves the given URL by searching for a page class, either
@@ -144,7 +144,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		private final String anchor;
 
 		/**
-		 * When using <wicket:link> to let Wicket lookup for pages and create the related links,
+		 * When using &lt;wicket:link&gt; to let Wicket lookup for pages and create the related links,
 		 * it's not possible to change the "setAutoEnable" property, which defaults to true. This
 		 * affects the prototype because, sometimes designers _want_ links to be enabled.
 		 */
