@@ -38,8 +38,8 @@ import org.apache.wicket.util.resource.IResourceStream;
 
 /**
  * This is a behavior implementation that can be used if you have markup that should be around a
- * component. It works just like {@link Border} so you have to have a <wicket:border>HTML
- * before<wicket:body/>HTML after</wicket:border> in the html of your subclass. But different than
+ * component. It works just like {@link Border} so you have to have a &lt;wicket:border&gt;HTML
+ * before &lt;wicket:body/&gt; HTML after &lt;/wicket:border&gt; in the html of your subclass. But different than
  * Border you can not add components to the Border markup, only to the BorderBody.
  * 
  * @author jcompagner

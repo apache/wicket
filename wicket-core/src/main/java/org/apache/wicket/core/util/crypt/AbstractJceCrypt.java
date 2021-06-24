@@ -85,7 +85,7 @@ public abstract class AbstractJceCrypt implements ICrypt
 	/**
 	 * Encrypts the given text into a byte array.
 	 * 
-	 * @param plainText
+	 * @param plainBytes
 	 *            text to encrypt
 	 * @return the string encrypted
 	 * @throws GeneralSecurityException
@@ -94,7 +94,7 @@ public abstract class AbstractJceCrypt implements ICrypt
 
 
 	@Override
-	final public void setKey(String key)
+	public final void setKey(String key)
 	{
 		throw new UnsupportedOperationException("This method has been deprecated in ICrypt and will be removed.");
 	}

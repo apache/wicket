@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * The information in the log files can take any format, depending on the request logger
  * implementation: currently Wicket supports two formats: a {@link RequestLogger legacy, log4j
- * compatible format}, and a {@link JsonRequestLogger JSON format}.
+ * compatible format}, and a <em>JsonRequestLogger</em> JSON format.
  */
 public abstract class AbstractRequestLogger implements IRequestLogger
 {

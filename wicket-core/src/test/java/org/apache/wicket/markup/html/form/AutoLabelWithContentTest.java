@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
  * components to support things like
  * {@literal <label wicket:for="foo"><input wicket:id="foo"/></label>}.
  * 
- * @author Carl-Eric Menzel <cmenzel@wicketbuch.de>
+ * @author Carl-Eric Menzel
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 class AutoLabelWithContentTest extends WicketTestCase

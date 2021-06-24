@@ -22,7 +22,7 @@ package org.apache.wicket.markup.html.form;
  * "select all" checkbox. Override {@link AbstractCheckSelector#wantAutomaticUpdate()} to change
  * this.
  * 
- * @author Carl-Eric Menzel <cmenzel@wicketbuch.de>
+ * @author Carl-Eric Menzel
  */
 public class CheckboxMultipleChoiceSelector extends AbstractCheckSelector
 {

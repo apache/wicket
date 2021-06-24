@@ -35,7 +35,7 @@ import org.danekja.java.util.function.serializable.SerializableConsumer;
  * <p>
  * Use the normal {@link AjaxFormComponentUpdatingBehavior} for the normal single component fields.
  * <p>
- * Notification is triggered by a {@value change} JavaScript event - if needed {@link #getEvent()} can be overridden
+ * Notification is triggered by a {@code change} JavaScript event - if needed {@link #getEvent()} can be overridden
  * to deviate from this default.
  * 
  * @author jcompagner

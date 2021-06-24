@@ -426,7 +426,7 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Check to determine if the resource data needs to be written. This method checks the
 		 * <code>If-Modified-Since</code> request header and compares it to lastModified property.
-		 * In order for this method to work {@link #setLastModified(Time)} has to be called first.
+		 * In order for this method to work {@link #setLastModified(Instant)} has to be called first.
 		 * 
 		 * @param attributes
 		 *            request attributes
@@ -497,7 +497,7 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @return duration for caching
 		 * 
-		 * @see org.apache.wicket.settings.ResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)
+		 * @see org.apache.wicket.settings.ResourceSettings#setDefaultCacheDuration(Duration)
 		 * @see org.apache.wicket.settings.ResourceSettings#getDefaultCacheDuration()
 		 */
 		public Duration getCacheDuration()
@@ -519,7 +519,7 @@ public abstract class AbstractResource implements IResource
 		 * @return cache scope
 		 * 
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#getCacheDuration()
-		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setCacheDuration(org.apache.wicket.util.time.Duration)
+		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setCacheDuration(Duration)
 		 * @see org.apache.wicket.request.http.WebResponse.CacheScope
 		 */
 		public WebResponse.CacheScope getCacheScope()
@@ -536,7 +536,7 @@ public abstract class AbstractResource implements IResource
 		 *            scope for caching
 		 * 
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#getCacheDuration()
-		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setCacheDuration(org.apache.wicket.util.time.Duration)
+		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setCacheDuration(Duration)
 		 * @see org.apache.wicket.request.http.WebResponse.CacheScope
 		 *
 		 * @return {@code this}, for chaining.
