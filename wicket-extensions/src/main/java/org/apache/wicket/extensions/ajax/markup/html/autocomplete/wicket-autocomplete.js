@@ -77,6 +77,12 @@
 		// timeout handler that cancels the hiding of the menu if the focus is still on menu items
 		var hideAutoCompleteTimer;
 
+		// A flag indicating whether the 'change' event has been triggered manually after selection
+		// from the menu.
+		// In this case we don't want to render the menu.
+		// It is usually rendered on successful Ajax response
+		var isTriggeredChange = false;
+
 		function initialize(){
 			var isShowing = false;
 			// Remove the autocompletion menu if still present from
@@ -456,9 +462,10 @@
 			}
 			
 			if (triggerChangeOnHide) {
-				var input = Wicket.$(ajaxAttributes.c);
-				jQuery(input).triggerHandler('change');
 				triggerChangeOnHide = false;
+				var input = Wicket.$(ajaxAttributes.c);
+				isTriggeredChange = true;
+				jQuery(input).trigger('change');
 			}
 		}
 
@@ -683,7 +690,12 @@
 					}
 					setSelected(selectedIndex);
 				}
-				showAutoComplete();
+
+				if (isTriggeredChange) {
+					isTriggeredChange = false;
+				} else {
+					showAutoComplete();
+				}
 			} else {
 				hideAutoComplete();
 			}
