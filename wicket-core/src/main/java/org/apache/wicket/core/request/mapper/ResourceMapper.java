@@ -50,7 +50,7 @@ import org.apache.wicket.util.string.Strings;
  * <strong>sample structure of url</strong>
  *
  * <pre>
- *    /myresources/${category}/images/[indexed-param-0]/[indexed-param-1]?[named-param-1=value]&[named-param-2=value2]
+ *    /myresources/${category}/images/[indexed-param-0]/[indexed-param-1]?[named-param-1=value]&amp;[named-param-2=value2]
  * </pre>
  *
  * <h4>sample usage</h4>

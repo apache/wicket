@@ -42,7 +42,7 @@ public final class RequestUtils
 	 * value map.
 	 * 
 	 * @param queryString
-	 *            string to decode, uses '&' to separate parameters and '=' to separate key from
+	 *            string to decode, uses '&amp;' to separate parameters and '=' to separate key from
 	 *            value
 	 * @param params
 	 *            parameters map to write the found key/ value pairs to

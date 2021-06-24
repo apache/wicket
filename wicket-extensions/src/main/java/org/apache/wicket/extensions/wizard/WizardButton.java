@@ -45,8 +45,8 @@ public abstract class WizardButton extends Button
 	 *            The component id
 	 * @param wizard
 	 *            The wizard
-	 * @param labelResourceKey
-	 *            The resource key of the button's label
+	 * @param label
+	 *            The button's label
 	 */
 	public WizardButton(final String id, final IWizard wizard, final IModel<String> label)
 	{

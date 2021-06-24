@@ -724,9 +724,9 @@ public abstract class WebApplication extends Application
 	 * 
 	 * Internal initialization. First determine the deployment mode. First check the system property
 	 * -Dwicket.configuration. If it does not exist check the servlet init parameter (
-	 * <code>&lt;init-param&gt&lt;param-name&gt;configuration&lt;/param-name&gt;</code>). If not
+	 * <code>&lt;init-param&gt;&lt;param-name&gt;configuration&lt;/param-name&gt;</code>). If not
 	 * found check the servlet context init parameter
-	 * <code>&lt;context-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>). If the
+	 * <code>&lt;context-param&gt;&lt;param-name6gt;configuration&lt;/param-name&gt;</code>). If the
 	 * parameter is "development" (which is default), settings appropriate for development are set.
 	 * If it's "deployment" , deployment settings are used. If development is specified and a
 	 * "sourceFolder" init parameter is also set, then resources in that folder will be polled for

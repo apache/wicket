@@ -184,7 +184,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * Since all LazyLoadingPanels on a page share the same Ajax timer, its update interval
 	 * is derived from the minimum of all panel's update intervals.
 	 * 
-	 * @return update interval, must not be {@value null}
+	 * @return update interval, must not be {@code null}
 	 */
 	protected Duration getUpdateInterval() {
 		return Duration.ofSeconds(1);

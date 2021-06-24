@@ -52,7 +52,7 @@ public class NonCachingImage extends Image
 	/**
 	 * Construct.
 	 * 
-	 * @see Image#Image(String, org.apache.wicket.request.resource.IResource)
+	 * @see Image#Image(String, IResource, IResource...)
 	 * 
 	 * @param id
 	 * @param imageResource
@@ -65,8 +65,7 @@ public class NonCachingImage extends Image
 	/**
 	 * Construct.
 	 * 
-	 * @see Image#Image(String, org.apache.wicket.request.resource.ResourceReference,
-	 *      org.apache.wicket.request.mapper.parameter.PageParameters)
+	 * @see Image#Image(String, ResourceReference, PageParameters, ResourceReference...)
 	 * 
 	 * @param id
 	 * @param resourceReference
@@ -81,7 +80,7 @@ public class NonCachingImage extends Image
 	/**
 	 * Construct.
 	 * 
-	 * @see Image#Image(String, ResourceReference)
+	 * @see Image#Image(String, ResourceReference, ResourceReference...)
 	 * 
 	 * @param id
 	 * @param resourceReference

@@ -79,7 +79,7 @@ public class AjaxLazyLoadPanelTester
 	 *            the tester
 	 * @param panel
 	 *            the panel
-	 * @return	update duration or {@value null} of already loadedO
+	 * @return	update duration or {@code null} of already loadedO
 	 */
 	public static Duration loadAjaxLazyLoadPanel(final BaseWicketTester wt, final AjaxLazyLoadPanel<?> panel)
 	{

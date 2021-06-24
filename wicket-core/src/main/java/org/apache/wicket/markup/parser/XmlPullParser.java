@@ -323,7 +323,7 @@ public final class XmlPullParser implements IXmlPullParser
 	}
 
 	/**
-	 * Handle special tags like <!-- --> or <![CDATA[..]]> or <?xml>
+	 * Handle special tags like &lt;!-- --&gt; or &lt;![CDATA[..]]&gt; or &lt;?xml&gt;
 	 * 
 	 * @param tagText
 	 * @param openBracketIndex

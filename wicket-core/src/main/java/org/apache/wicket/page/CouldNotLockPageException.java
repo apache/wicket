@@ -23,7 +23,7 @@ import java.time.Duration;
  * the lock on a page instance that is currently locked by another thread and it cannot
  * do that for some specified {@link org.apache.wicket.settings.RequestCycleSettings#getTimeout() duration}
  *
- * @see org.apache.wicket.settings.RequestCycleSettings#setTimeout(org.apache.wicket.util.time.Duration)
+ * @see org.apache.wicket.settings.RequestCycleSettings#setTimeout(Duration)
  * @see org.apache.wicket.settings.ExceptionSettings#setThreadDumpStrategy(org.apache.wicket.settings.ExceptionSettings.ThreadDumpStrategy)
  */
 public class CouldNotLockPageException extends RuntimeException

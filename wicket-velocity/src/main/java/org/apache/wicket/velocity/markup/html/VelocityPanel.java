@@ -39,9 +39,9 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Panel that displays the result of rendering a <a
- * href="http://jakarta.apache.org/velocity">Velocity</a> template. The template itself can be any
+ * href="http://velocity.apache.org">Velocity</a> template. The template itself can be any
  * {@link StringResourceStream} implementation, of which there are a number of convenient
- * implementations in the {@link org.apache.wicket.util} package. The model can be any normal
+ * implementations in the <em>org.apache.wicket.util</em> package. The model can be any normal
  * {@link Map}, which will be used to create the {@link VelocityContext}.
  * <p>
  * <b>Note:</b> Be sure to properly initialize the Velocity engine before using

@@ -56,109 +56,72 @@ public class DebugSettings implements DebugSettingsMBean
 		return application.getDebugSettings().isAjaxDebugModeEnabled();
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setAjaxDebugModeEnabled(boolean)
-	 */
 	@Override
 	public void setAjaxDebugModeEnabled(final boolean enable)
 	{
 		application.getDebugSettings().setAjaxDebugModeEnabled(enable);
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setComponentUseCheck(boolean)
-	 */
 	@Override
 	public void setComponentUseCheck(final boolean check)
 	{
 		application.getDebugSettings().setComponentUseCheck(check);
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setComponentPathAttributeName(boolean)
-	 */
 	@Override
 	public void setComponentPathAttributeName(final String name)
 	{
 		application.getDebugSettings().setComponentPathAttributeName(name);
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isOutputComponentPath()
-	 */
 	@Override
 	public String getComponentPathAttributeName()
 	{
 		return application.getDebugSettings().getComponentPathAttributeName();
 	}
 
-
-	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setOutputMarkupContainerClassName(boolean)
-	 */
 	@Override
 	public void setOutputMarkupContainerClassName(final boolean enable)
 	{
 		application.getDebugSettings().setOutputMarkupContainerClassName(enable);
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isOutputMarkupContainerClassName()
-	 */
 	@Override
 	public boolean isOutputMarkupContainerClassName()
 	{
 		return application.getDebugSettings().isOutputMarkupContainerClassName();
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isLinePreciseReportingOnAddComponentEnabled()
-	 */
 	@Override
 	public boolean isLinePreciseReportingOnAddComponentEnabled()
 	{
 		return application.getDebugSettings().isLinePreciseReportingOnAddComponentEnabled();
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setLinePreciseReportingOnAddComponentEnabled(boolean)
-	 */
 	@Override
 	public void setLinePreciseReportingOnAddComponentEnabled(final boolean enable)
 	{
 		application.getDebugSettings().setLinePreciseReportingOnAddComponentEnabled(enable);
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isLinePreciseReportingOnNewComponentEnabled()
-	 */
 	@Override
 	public boolean isLinePreciseReportingOnNewComponentEnabled()
 	{
 		return application.getDebugSettings().isLinePreciseReportingOnNewComponentEnabled();
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setLinePreciseReportingOnNewComponentEnabled(boolean)
-	 */
 	@Override
 	public void setLinePreciseReportingOnNewComponentEnabled(final boolean enable)
 	{
 		application.getDebugSettings().setLinePreciseReportingOnNewComponentEnabled(enable);
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setDevelopmentUtilitiesEnabled(boolean)
-	 */
 	@Override
 	public void setDevelopmentUtilitiesEnabled(final boolean enable)
 	{
 		application.getDebugSettings().setDevelopmentUtilitiesEnabled(enable);
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isDevelopmentUtilitiesEnabled()
-	 */
 	@Override
 	public boolean isDevelopmentUtilitiesEnabled()
 	{

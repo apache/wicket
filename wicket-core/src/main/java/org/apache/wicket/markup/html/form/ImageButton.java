@@ -132,9 +132,6 @@ public class ImageButton extends Button implements IRequestListener
 		return false;
 	}
 
-	/**
-	 * @see org.apache.wicket.IResourceListener#onResourceRequested()
-	 */
 	@Override
 	public void onRequest()
 	{

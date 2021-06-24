@@ -38,7 +38,7 @@ public class SimplePanel extends Panel
 	public SimplePanel(String id)
 	{
 		super(id);
-		add(new Label("label", new Model<String>("hello world")));
+		add(new Label("label", new Model<>("hello world")));
 	}
 
 }

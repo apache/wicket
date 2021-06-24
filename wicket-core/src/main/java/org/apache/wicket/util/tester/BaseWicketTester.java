@@ -955,7 +955,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * @return last response or <code>null</code>> if no response has been produced yet.
+	 * @return last response or <code>null</code> if no response has been produced yet.
 	 */
 	public MockHttpServletResponse getLastResponse()
 	{

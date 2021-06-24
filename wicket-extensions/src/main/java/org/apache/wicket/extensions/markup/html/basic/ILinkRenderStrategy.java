@@ -18,7 +18,7 @@ package org.apache.wicket.extensions.markup.html.basic;
 
 /**
  * An implementation of <code>ILinkRenderStrategy</code> transforms a link target (e.g. email
- * address) into a proper html link (e.g. &lta href="mailto:..."&gt;...&lt;/a&gt;)
+ * address) into a proper html link (e.g. &lt;a href="mailto:..."&gt;...&lt;/a&gt;)
  * 
  * @author Gerolf Seitz
  */

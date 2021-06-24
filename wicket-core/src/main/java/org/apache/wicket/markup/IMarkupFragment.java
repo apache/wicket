@@ -57,7 +57,7 @@ public interface IMarkupFragment extends Iterable<MarkupElement>
 	/**
 	 * Finds a markup fragment that spans a tag
 	 * 
-	 * @param id
+	 * @param wicketId
 	 *            the wicket:id attribute in the tag
 	 * @return the markup fragment that spans the complete found tag
 	 */

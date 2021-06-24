@@ -193,7 +193,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	 * 
 	 * See {@link FeedbackCollector#setIncludeSession} and {@link Session#getFeedbackMessages} 
 	 * 
-	 * @param value
+	 * @param includeSession
 	 * @return 
 	 * @return {@code this} for chaining
 	 */

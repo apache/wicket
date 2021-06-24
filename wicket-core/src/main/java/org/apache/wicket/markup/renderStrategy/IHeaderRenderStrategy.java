@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.internal.HtmlHeaderContainer.HeaderStreamSt
 /**
  * Allows for different header render strategies. The difference per strategy will be order in which
  * components are asked to add to the markup header section. Before 1.5 it was
- * page->container->child. Since 1.5 it has been changed to child->container->parent (see <a
+ * page-&gt;container-&gt;child. Since 1.5 it has been changed to child-&gt;container-&gt;parent (see <a
  * href="http://issues.apache.org/jira/browse/WICKET-2693 ">WICKET-2693</a>)
  * 
  * @author Juergen Donnerstag

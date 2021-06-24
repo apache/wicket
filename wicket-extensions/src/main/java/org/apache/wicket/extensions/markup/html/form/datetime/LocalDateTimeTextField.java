@@ -53,7 +53,7 @@ public class LocalDateTimeTextField extends TextField<LocalDateTime> implements 
 	 *            the component id
 	 * @param model
 	 *            the model
-	 * @param pattern
+	 * @param dateTimePattern
 	 *            the pattern to use
 	 */
 	public LocalDateTimeTextField(String id, IModel<LocalDateTime> model, String dateTimePattern)
@@ -82,7 +82,7 @@ public class LocalDateTimeTextField extends TextField<LocalDateTime> implements 
 	 * 
 	 * @param id
 	 *            the component id
-	 * @param pattern
+	 * @param dateTimePattern
 	 *            the pattern to use
 	 */
 	public LocalDateTimeTextField(String id, String dateTimePattern)

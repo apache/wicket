@@ -68,10 +68,10 @@ public abstract class StyledLinkLabel<T> extends Panel
 	 * Hook method to create a new link component.
 	 * 
 	 * This default implementation returns an {@link AjaxFallbackLink} which invokes
-	 * {@link #onClick(Optional<AjaxRequestTarget>)} only if {@link #isClickable()} returns <code>true</code>.
+	 * {@link #onClick(Optional)} only if {@link #isClickable()} returns <code>true</code>.
 	 * 
 	 * @see #isClickable()
-	 * @see #onClick(Optional<AjaxRequestTarget>)
+	 * @see #onClick(Optional)
 	 */
 	protected MarkupContainer newLinkComponent(String id, IModel<T> model)
 	{

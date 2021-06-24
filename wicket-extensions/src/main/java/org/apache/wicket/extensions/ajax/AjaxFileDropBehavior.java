@@ -201,7 +201,7 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 	 *
 	 * @param target
 	 *            the current request handler
-	 * @param e
+	 * @param fux
 	 *            the error that occurred
 	 */
 	protected void onError(AjaxRequestTarget target, FileUploadException fux)

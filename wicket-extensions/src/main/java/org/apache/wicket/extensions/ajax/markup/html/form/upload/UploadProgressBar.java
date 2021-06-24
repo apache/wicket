@@ -55,7 +55,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * 	protected void init() {
  * 		super.init();
  * 
- * 		<b>getApplicationSettings().setUploadProgressUpdatesEnabled(true);</b> // <--
+ * 		&lt;b&gt;getApplicationSettings().setUploadProgressUpdatesEnabled(true);&lt;/b&gt; // &lt;--
  * 	}
  * }
  * </code>

@@ -179,9 +179,6 @@ public class Image extends WebComponent implements IRequestListener
 		return false;
 	}
 	
-	/**
-	 * @see org.apache.wicket.IResourceListener#onResourceRequested()
-	 */
 	@Override
 	public void onRequest()
 	{

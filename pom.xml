@@ -1571,7 +1571,7 @@
 								<links>
 									<link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
 								</links>
-								<failOnError>false</failOnError>
+								<failOnError>true</failOnError>
 								<doclint>none</doclint>
 								<additionalJOption>--no-module-directories</additionalJOption>
 							</configuration>
@@ -1607,7 +1607,7 @@
 								<links>
 									<link>https://docs.oracle.com/en/java/javase/16/docs/api/</link>
 								</links>
-								<failOnError>false</failOnError>
+								<failOnError>true</failOnError>
 								<doclint>none</doclint>
 							</configuration>
 							<executions>
