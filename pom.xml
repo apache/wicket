@@ -1011,9 +1011,13 @@
 						<links>
 							<link>${javadoc.jdk.apidocs.link}</link>
 						</links>
-						<failOnError>false</failOnError>
+						<linksource/>
+						<failOnError>true</failOnError>
 						<doclint>none</doclint>
 						<additionalJOption>${javadoc.additionalJOption}</additionalJOption>
+						<sourcepath>${project.build.sourceDirectory}</sourcepath>
+						<!-- While we publish modules, our source is pre-JMPS so tell javadoc that. -->
+						<source>8</source>
 					</configuration>
 					<executions>
 						<execution>
