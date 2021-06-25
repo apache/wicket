@@ -124,6 +124,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+		<javadoc.additionalJOption/>
+		<javadoc.jdk.apidocs.link>https://docs.oracle.com/en/java/javase/${java.specification.version}/docs/api/</javadoc.jdk.apidocs.link>
+
 		<maven.compiler.optimize>true</maven.compiler.optimize>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
@@ -999,6 +1002,30 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven-javadoc-plugin.version}</version>
+					<configuration>
+						<minmemory>128m</minmemory>
+						<maxmemory>256m</maxmemory>
+						<quiet>true</quiet>
+						<links>
+							<link>${javadoc.jdk.apidocs.link}</link>
+						</links>
+						<failOnError>true</failOnError>
+						<doclint>none</doclint>
+						<additionalJOption>${javadoc.additionalJOption}</additionalJOption>
+					</configuration>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>${maven-release-plugin.version}</version>
 					<inherited>true</inherited>
@@ -1232,6 +1259,11 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
+						<inherited>true</inherited>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
 						<inherited>true</inherited>
 					</plugin>
 					<plugin>
@@ -1549,75 +1581,13 @@
 			</build>
 		</profile>
 		<profile>
-			<id>on-java-12-</id>
+			<id>on-java-11-or-12</id>
 			<activation>
 				<jdk>[11,12]</jdk>
 			</activation>
-			<build>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-javadoc-plugin</artifactId>
-							<version>${maven-javadoc-plugin.version}</version>
-							<configuration>
-								<minmemory>128m</minmemory>
-								<maxmemory>256m</maxmemory>
-								<quiet>true</quiet>
-								<links>
-									<link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
-								</links>
-								<failOnError>true</failOnError>
-								<doclint>none</doclint>
-								<additionalJOption>--no-module-directories</additionalJOption>
-							</configuration>
-							<executions>
-								<execution>
-									<id>attach-javadocs</id>
-									<goals>
-										<goal>jar</goal>
-									</goals>
-								</execution>
-							</executions>
-						</plugin>
-					</plugins>
-				</pluginManagement>
-			</build>
-		</profile>
-		<profile>
-			<id>on-java-13+</id>
-			<activation>
-				<jdk>[13,)</jdk>
-			</activation>
-			<build>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-javadoc-plugin</artifactId>
-							<version>${maven-javadoc-plugin.version}</version>
-							<configuration>
-								<minmemory>128m</minmemory>
-								<maxmemory>256m</maxmemory>
-								<quiet>true</quiet>
-								<links>
-									<link>https://docs.oracle.com/en/java/javase/16/docs/api/</link>
-								</links>
-								<failOnError>true</failOnError>
-								<doclint>none</doclint>
-							</configuration>
-							<executions>
-								<execution>
-									<id>attach-javadocs</id>
-									<goals>
-										<goal>jar</goal>
-									</goals>
-								</execution>
-							</executions>
-						</plugin>
-					</plugins>
-				</pluginManagement>
-			</build>
+			<properties>
+				<javadoc.additionalJOption>--no-module-directories</javadoc.additionalJOption>
+			</properties>
 		</profile>
 	</profiles>
 	<reporting>
