@@ -1585,12 +1585,21 @@
 			</build>
 		</profile>
 		<profile>
-			<id>on-java-11-or-12</id>
+			<id>on-jdk-11-or-12</id>
 			<activation>
 				<jdk>[11,12]</jdk>
 			</activation>
 			<properties>
 				<javadoc.additionalJOption>--no-module-directories</javadoc.additionalJOption>
+			</properties>
+		</profile>
+		<profile>
+			<id>on-jdk-early-access</id>
+			<activation>
+				<jdk>[17,)</jdk>
+			</activation>
+			<properties>
+				<javadoc.jdk.apidocs.link>https://download.java.net/java/early_access/jdk${java.specification.version}/docs/api/</javadoc.jdk.apidocs.link>
 			</properties>
 		</profile>
 	</profiles>
