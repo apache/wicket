@@ -1011,7 +1011,7 @@
 						<links>
 							<link>${javadoc.jdk.apidocs.link}</link>
 						</links>
-						<linksource/>
+						<linksource>true</linksource>
 						<failOnError>true</failOnError>
 						<doclint>none</doclint>
 						<additionalJOption>${javadoc.additionalJOption}</additionalJOption>
