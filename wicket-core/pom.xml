@@ -36,10 +36,6 @@
 		persisted using your favorite technology.
 	</description>
 
-	<properties>
-		<automatic-module-name>org.apache.wicket.core</automatic-module-name>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.hamcrest</groupId>

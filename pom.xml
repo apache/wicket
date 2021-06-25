@@ -159,8 +159,8 @@
 		<jakarta.websocket-api.version>2.0.0</jakarta.websocket-api.version>
 		<jakarta.servlet-api.version>5.0.0</jakarta.servlet-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
-		<jetty.version>11.0.4</jetty.version>
-		<junit.version>5.7.2</junit.version>
+		<jetty.version>11.0.6</jetty.version>
+		<junit.version>5.8.0-M1</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.3</logback.version>
 		<hamcrest.version>2.2</hamcrest.version>
@@ -170,7 +170,7 @@
 		<mockito.version>3.11.2</mockito.version>
 		<objenesis.version>3.2</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
-		<slf4j.version>1.7.25</slf4j.version>
+		<slf4j.version>2.0.0-alpha2</slf4j.version>
 		<spring.version>5.3.8</spring.version>
 		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
 		<weld.version>4.0.1.SP1</weld.version>
@@ -199,7 +199,6 @@
 		<maven-war-plugin.version>3.3.1</maven-war-plugin.version>
 		<yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
 
-		<automatic-module-name>MUST-BE-OVERRIDDEN-BY-MODULES</automatic-module-name>
 	</properties>
 
 	<dependencyManagement>
@@ -991,9 +990,6 @@
 								<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 							</manifest>
-							<manifestEntries>
-								<Automatic-Module-Name>${automatic-module-name}</Automatic-Module-Name>
-							</manifestEntries>
 						</archive>
 					</configuration>
 				</plugin>
@@ -1012,9 +1008,7 @@
 						<failOnError>false</failOnError>
 						<doclint>none</doclint>
 						<additionalJOption>${javadoc.additionalJOption}</additionalJOption>
-						<sourcepath>${project.build.sourceDirectory}</sourcepath>
-						<!-- While we publish modules, our source is pre-JMPS so tell javadoc that. -->
-						<source>8</source>
+						<source>${java.specification.version}</source>
 					</configuration>
 					<executions>
 						<execution>
@@ -1092,6 +1086,7 @@
 						<argLine>--add-opens java.base/jdk.internal.loader=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED
 							--add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED
 							--add-modules=ALL-SYSTEM</argLine>
+						<useModulePath>false</useModulePath>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -1297,12 +1292,6 @@
 			<!-- distribution management is inherited from the parent pom -->
 		</profile>
 		<profile>
-			<id>all</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-		<profile>
 			<id>fast</id>
 			<build>
 				<plugins>
@@ -1356,45 +1345,6 @@
 							</execution>
 						</executions>
 
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>Java 11</id>
-			<activation>
-				<jdk>11</jdk>
-			</activation>
-			<properties>
-				<!-- Disable javadoc linter when building with Java 8
-				 http://mail-archives.apache.org/mod_mbox/maven-users/201403.mbox/%3CCANWgJS5xHWiGE+Lecey+mZVbj9Via4JUWsaBeZtQr2aQNebupA@mail.gmail.com%3E
-				 http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
-				 -->
-				<additionalparam>-Xdoclint:none</additionalparam>
-			</properties>
-		</profile>
-		<profile>
-			<id>buildbot</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-toolchains-plugin</artifactId>
-						<version>${maven-toolchains-plugin.version}</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>toolchain</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<toolchains>
-								<jdk>
-									<version>${maven.compiler.source}</version>
-								</jdk>
-							</toolchains>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>

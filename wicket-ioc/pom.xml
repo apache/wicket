@@ -31,10 +31,6 @@
 		Spring, Guice, etc.
 	</description>
 
-	<properties>
-		<automatic-module-name>org.apache.wicket.ioc</automatic-module-name>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>cglib</groupId>

@@ -33,10 +33,6 @@
 		and resources.
 	</description>
 
-	<properties>
-		<automatic-module-name>org.apache.wicket.cdi</automatic-module-name>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>jakarta.annotation</groupId>

@@ -31,10 +31,6 @@
 		annotations.
 	</description>
 
-	<properties>
-		<automatic-module-name>org.apache.wicket.auth.roles</automatic-module-name>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

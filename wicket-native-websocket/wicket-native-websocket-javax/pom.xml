@@ -28,10 +28,6 @@
 	<name>Wicket Native WebSocket Javax</name>
 	<description>Provides the common code needed for the different integrations with web container's WebSocket implementations</description>
 
-	<properties>
-		<automatic-module-name>org.apache.wicket.websocket.javax</automatic-module-name>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>jakarta.websocket</groupId>
