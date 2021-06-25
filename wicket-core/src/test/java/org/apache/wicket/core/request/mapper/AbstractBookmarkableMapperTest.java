@@ -29,7 +29,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.info.PageInfo;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.util.tester.WicketTesterLazyIsPageStatelessRedirectToBufferTest.EmptyPage;
+import org.apache.wicket.core.util.tester.WicketTesterLazyIsPageStatelessRedirectToBufferTest.EmptyPage;
 import org.junit.jupiter.api.Test;
 
 /**

@@ -32,10 +32,6 @@
 		about web applications build on the web framework.
 	</description>
 
-	<properties>
-		<automatic-module-name>org.apache.wicket.metrics</automatic-module-name>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>

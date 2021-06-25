@@ -28,10 +28,6 @@
 	<name>Wicket Objects Sizeof Agent</name>
 	<description>Agent for pluggin in object size measurements using instrumentation</description>
 
-	<properties>
-		<automatic-module-name>org.apache.wicket.objectsizeof.agent</automatic-module-name>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

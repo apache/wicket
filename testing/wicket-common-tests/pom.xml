@@ -29,7 +29,6 @@
 	<description>Tests for all Wicket modules</description>
 
 	<properties>
-		<automatic-module-name>org.apache.wicket.common.tests</automatic-module-name>
 		<clirr.skip>true</clirr.skip>
 	</properties>
 
