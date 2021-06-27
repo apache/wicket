@@ -72,3 +72,16 @@ col.yellow {
 col.brown {
 	background-color: #CC6633;
 }
+
+table.dataview tbody tr td div.toggleable {
+    cursor: pointer;
+    text-align: center;
+}
+
+table.dataview tbody tr td div.toggleable.collapsible:after {
+    content: '-';
+}
+
+table.dataview tbody tr td div.toggleable.expandable:after {
+    content: '+';
+}
