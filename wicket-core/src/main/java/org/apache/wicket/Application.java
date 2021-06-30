@@ -651,8 +651,8 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 
 		pageFactory = newPageFactory();
 
-		requestCycleProvider = (context) -> new RequestCycle(context);
-		exceptionMapperProvider = () -> new DefaultExceptionMapper();
+		requestCycleProvider = RequestCycle::new;
+		exceptionMapperProvider = DefaultExceptionMapper::new;
 
 		// add a request cycle listener that logs each request for the requestlogger.
 		getRequestCycleListeners().add(new RequestLoggerRequestCycleListener());
@@ -669,6 +669,10 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	public Supplier<IExceptionMapper> getExceptionMapperProvider()
 	{
 		return exceptionMapperProvider;
+	}
+
+	public void setExceptionMapperProvider(Supplier<IExceptionMapper> exceptionMapperProvider) {
+		this.exceptionMapperProvider = Args.notNull(exceptionMapperProvider, "exceptionMapperProvider");
 	}
 
 	/**
