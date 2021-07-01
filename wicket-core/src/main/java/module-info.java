@@ -16,7 +16,6 @@
  */
 
 module org.apache.wicket.core {
-    requires java.base;
     requires java.instrument;
     requires java.desktop;
     requires java.sql;

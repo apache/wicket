@@ -17,7 +17,7 @@
 package org.apache.wicket.resource;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.core.util.util.ExceptionTestBase;
+import org.apache.wicket.core.util.ExceptionTestBase;
 
 
 /**
