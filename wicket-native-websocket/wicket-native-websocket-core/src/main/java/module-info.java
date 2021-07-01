@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.native_websocket.core {
+module org.apache.wicket.websocket.core {
     requires org.apache.wicket.util;
     requires org.apache.wicket.request;
     requires org.apache.wicket.core;

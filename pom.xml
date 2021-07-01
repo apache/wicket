@@ -199,7 +199,6 @@
 		<maven-war-plugin.version>3.3.1</maven-war-plugin.version>
 		<yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
 
-		<automatic-module-name>MUST-BE-OVERRIDDEN-BY-MODULES</automatic-module-name>
 	</properties>
 
 	<dependencyManagement>
@@ -1002,9 +1001,6 @@
 								<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 							</manifest>
-							<manifestEntries>
-								<Automatic-Module-Name>${automatic-module-name}</Automatic-Module-Name>
-							</manifestEntries>
 						</archive>
 					</configuration>
 				</plugin>

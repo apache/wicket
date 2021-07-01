@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.native_websocket.javax {
+module org.apache.wicket.websocket.javax {
     requires org.apache.wicket.util;
     requires org.apache.wicket.request;
     requires org.apache.wicket.core;
-    requires org.apache.wicket.native_websocket.core;
+    requires org.apache.wicket.websocket.core;
     requires javax.servlet.api;
     requires jakarta.websocket.api;
     requires org.slf4j;

@@ -32,10 +32,6 @@
 		turned on for additional production debugging.
 	</description>
 
-	<properties>
-		<automatic-module-name>org.apache.wicket.devutils</automatic-module-name>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
