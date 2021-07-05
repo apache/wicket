@@ -341,9 +341,6 @@
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
 				<version>10.0.0-M1-SNAPSHOT</version>
-				<!-- It seems there is a bug in Maven (2.2.1 & 3.0.1) and
-				type 'pom' is not properly inherited. I.e. the
-				dependency management doesn't work -->
 				<type>pom</type>
 			</dependency>
 			<dependency>
@@ -1012,7 +1009,7 @@
 							<link>${javadoc.jdk.apidocs.link}</link>
 						</links>
 						<linksource>true</linksource>
-						<failOnError>true</failOnError>
+						<failOnError>false</failOnError>
 						<doclint>none</doclint>
 						<additionalJOption>${javadoc.additionalJOption}</additionalJOption>
 						<sourcepath>${project.build.sourceDirectory}</sourcepath>
