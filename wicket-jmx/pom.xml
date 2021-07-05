@@ -28,10 +28,6 @@
 	<name>Wicket JMX</name>
 	<description>Wicket Java Management Extensions</description>
 
-	<properties>
-		<automatic-module-name>org.apache.wicket.jmx</automatic-module-name>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>cglib</groupId>

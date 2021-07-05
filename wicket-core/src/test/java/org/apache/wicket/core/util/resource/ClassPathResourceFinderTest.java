@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.core.util.resource;
 
-import static org.apache.wicket.util.resource.ResourceStreamLocatorTest.getFilename;
+import static org.apache.wicket.core.util.resource.ResourceStreamLocatorTest.getFilename;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

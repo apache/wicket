@@ -18,7 +18,6 @@ package org.apache.wicket.request.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Time;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -950,7 +949,7 @@ public abstract class AbstractResource implements IResource
 		 * @param stream
 		 *            input stream
 		 */
-		protected final void writeStream(Attributes attributes, InputStream stream) throws IOException
+		protected void writeStream(Attributes attributes, InputStream stream) throws IOException
 		{
 			final Response response = attributes.getResponse();
 			Streams.copy(stream, response.getOutputStream());
