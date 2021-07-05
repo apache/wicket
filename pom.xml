@@ -1297,12 +1297,6 @@
 			<!-- distribution management is inherited from the parent pom -->
 		</profile>
 		<profile>
-			<id>all</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-		<profile>
 			<id>fast</id>
 			<build>
 				<plugins>
@@ -1356,45 +1350,6 @@
 							</execution>
 						</executions>
 
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>Java 11</id>
-			<activation>
-				<jdk>11</jdk>
-			</activation>
-			<properties>
-				<!-- Disable javadoc linter when building with Java 8
-				 http://mail-archives.apache.org/mod_mbox/maven-users/201403.mbox/%3CCANWgJS5xHWiGE+Lecey+mZVbj9Via4JUWsaBeZtQr2aQNebupA@mail.gmail.com%3E
-				 http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
-				 -->
-				<additionalparam>-Xdoclint:none</additionalparam>
-			</properties>
-		</profile>
-		<profile>
-			<id>buildbot</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-toolchains-plugin</artifactId>
-						<version>${maven-toolchains-plugin.version}</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>toolchain</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<toolchains>
-								<jdk>
-									<version>${maven.compiler.source}</version>
-								</jdk>
-							</toolchains>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>
