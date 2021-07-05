@@ -142,7 +142,6 @@
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<commons-fileupload.version>1.4</commons-fileupload.version>
-<!--		<commons-fileupload.version>0.68.0.1</commons-fileupload.version>-->
 		<commons-io.version>2.8.0</commons-io.version>
 		<commons-lang3.version>3.12.0</commons-lang3.version>
 		<guice.version>4.2.3</guice.version>
@@ -290,7 +289,6 @@
 				<version>${commons-fileupload.version}</version>
 				<exclusions>
 					<exclusion>
-<!--						<groupId>com.jwebmp.jpms.commons</groupId>-->
 						<groupId>commons-io</groupId>
 						<artifactId>commons-io</artifactId>
 					</exclusion>
@@ -341,9 +339,6 @@
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
 				<version>9.4.0-SNAPSHOT</version>
-				<!-- It seems there is a bug in Maven (2.2.1 & 3.0.1) and
-				type 'pom' is not properly inherited. I.e. the
-				dependency management doesn't work -->
 				<type>pom</type>
 			</dependency>
 			<dependency>
@@ -1015,7 +1010,7 @@
 							<link>${javadoc.jdk.apidocs.link}</link>
 						</links>
 						<linksource>true</linksource>
-						<failOnError>true</failOnError>
+						<failOnError>false</failOnError>
 						<doclint>none</doclint>
 						<additionalJOption>${javadoc.additionalJOption}</additionalJOption>
 						<sourcepath>${project.build.sourceDirectory}</sourcepath>
