@@ -65,27 +65,19 @@ public class FilterToolbar extends AbstractToolbar
 
 		Args.notNull(table, "table");
 		
-		IModel<List<IColumn<T, S>>> model = new IModel<List<IColumn<T,S>>>() {
+		IModel<List<IColumn<T, S>>> model = new IModel<>() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public List<IColumn<T, S>> getObject() {
-				List<IColumn<T, S>> columnsModels = new LinkedList<>();
-
-				for (IColumn<T, S> column : table.getColumns())
-				{
-					columnsModels.add(column);
-				}
-				return columnsModels;
+				return new LinkedList<>(table.getColumns());
 			}
 		};
-		
 
 		// populate the toolbar with components provided by filtered columns
-		ListView<IColumn<T, S>> filters = new ListView<IColumn<T, S>>("filters", model)
+		ListView<IColumn<T, S>> filters = new ListView<>("filters", model)
 		{
 			private static final long serialVersionUID = 1L;
-
 
 			@Override
 			protected void populateItem(ListItem<IColumn<T, S>> item)
@@ -114,7 +106,7 @@ public class FilterToolbar extends AbstractToolbar
 								filter.getId() +
 								"] required component id [" +
 								getId() +
-								"] generating column [" + col.toString() + "] ");
+								"] generating column [" + col + "] ");
 					}
 				}
 
