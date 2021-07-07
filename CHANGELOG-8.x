@@ -2,6 +2,28 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.13.0
+
+** Bug
+
+    * [WICKET-6875] - Example for FileSystemResource.java does not work
+    * [WICKET-6877] - Removing component's MetaData during detach phase from within a Behavior causes issue
+    * [WICKET-6878] - Rendering of relative Urls does not take into account filterpath for absolute Urls
+    * [WICKET-6881] - Link on website to JavaDoc of version 1.3.x is broken
+    * [WICKET-6896] - AutoCompleteTextField re-opens dropdown item list after item has been selected
+
+** New Feature
+
+    * [WICKET-6886] - LambdaChoiceRenderer
+
+** Improvement
+
+    * [WICKET-6876] - add an AJAX behavior that allows to collect file information when a file, to be uploaded,  is selected. 
+    * [WICKET-6880] - Documentation of DataTable/DataGridView has reference to unknown class UserProvider
+    * [WICKET-6885] - Add scope col and colgroup to HeadersToolbar
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.12.0
 
 ** Bug
