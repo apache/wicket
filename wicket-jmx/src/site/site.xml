@@ -16,9 +16,4 @@
    limitations under the License.
 -->
 <project name="Wicket JMX">
-	<skin>
-		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-site-skin</artifactId>
-		<version>1.0-SNAPSHOT</version>
-	</skin>
 </project>
