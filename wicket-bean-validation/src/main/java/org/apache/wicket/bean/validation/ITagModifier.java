@@ -29,4 +29,7 @@ public interface ITagModifier<T extends Annotation>
 	 *            constraint annotation
 	 */
 	void modify(FormComponent<?> component, ComponentTag tag, T annotation);
+	
+	public static final ITagModifier<?> NoOp = (component, tag, annotation) -> {
+	};
 }

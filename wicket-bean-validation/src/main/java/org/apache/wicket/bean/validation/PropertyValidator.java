@@ -32,14 +32,15 @@ import org.apache.wicket.validation.IValidatable;
  * 
  * <p>
  * The validator will set the required flag on the form component it is attached to based on the
- * presence of the @NotNull annotation. Notice, the required flag will only be set to {@code true},
+ * presence of the @NotNull annotation, see {@link BeanValidationContext#isRequiredConstraint(ConstraintDescriptor)}
+ * for details. Notice, the required flag will only be set to {@code true},
  * components with the required flag already set to {@code true} will not have the flag set to
  * {@code false} by this validator.
  * </p>
  * 
  * <p>
- * The validator will allow {@link ITagModifier}s configured in {@link BeanValidationConfiguration}
- * to mutate the markup tag of the component it is attached to.
+ * The validator will allow {@link ITagModifier}s registered on {@link BeanValidationContext}
+ * to mutate the markup tag of the component it is attached to, e.g. add a <code>maxlength</code> attribute.
  * </p>
  * 
  * <p>
