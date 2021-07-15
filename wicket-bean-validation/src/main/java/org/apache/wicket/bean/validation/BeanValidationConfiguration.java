@@ -69,7 +69,13 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	}
 
 	/**
-	 * Registeres a tag modifier for a specific constraint annotation
+	 * Registers a tag modifier for a specific constraint annotation.
+	 * <p>
+	 * By default {@link Size} constraints are automatically mapped to <code>maxlength</code> of text inputs,
+	 * this can be disabled by registering a {@link ITagModifier#NoOp} instead:
+	 * <code>
+	 * configuration.register(Size.class, ITagModifier.NoOp});
+	 * </code>
 	 * 
 	 * @param annotationType
 	 *            constraint annotation such as {@link Size}
@@ -88,6 +94,11 @@ public class BeanValidationConfiguration implements BeanValidationContext
 		return this;
 	}
 
+	/**
+	 * Get the registered modifier for the given annotation.
+	 * 
+	 * @see #register(Class, ITagModifier)
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends Annotation> ITagModifier<T> getTagModifier(Class<T> annotationType)
