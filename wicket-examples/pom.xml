@@ -33,6 +33,7 @@
 
 	<properties>
 		<dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
+		<japicmp.skip>true</japicmp.skip>
 	</properties>
 
 	<dependencyManagement>

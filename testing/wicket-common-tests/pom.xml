@@ -29,7 +29,7 @@
 	<description>Tests for all Wicket modules</description>
 
 	<properties>
-		<clirr.skip>true</clirr.skip>
+		<japicmp.skip>true</japicmp.skip>
 	</properties>
 
 	<dependencies>
