@@ -104,6 +104,12 @@ public abstract class PartialPageUpdate
 	protected transient boolean componentsFrozen;
 
 	/**
+	 * A flag that indicates that javascripts cannot be added anymore.
+	 * See https://issues.apache.org/jira/browse/WICKET-6902
+	 */
+	protected transient boolean javascriptsFrozen;
+
+	/**
 	 * Buffer of response body. 
 	 */
 	protected final ResponseBuffer bodyBuffer;
@@ -161,11 +167,13 @@ public abstract class PartialPageUpdate
 			// process added components
 			writeComponents(response, encoding);
 
+			onAfterRespond(response);
+			
+			javascriptsFrozen = true;
+
 			// queue up prepend javascripts. unlike other steps these are executed out of order so that
 			// components can contribute them from during rendering.
 			writePriorityEvaluations(response, prependJavaScripts);
-
-			onAfterRespond(response);
 
 			// execute the dom ready javascripts as first javascripts
 			// after component replacement
@@ -493,6 +501,11 @@ public abstract class PartialPageUpdate
 	{
 		Args.notNull(javascript, "javascript");
 
+		if (javascriptsFrozen)
+		{
+			throw new IllegalStateException("A partial update of the page is being rendered, JavaScript can no longer be added");
+		}
+
 		appendJavaScripts.add(javascript);
 	}
 
@@ -505,6 +518,11 @@ public abstract class PartialPageUpdate
 	public final void prependJavaScript(CharSequence javascript)
 	{
 		Args.notNull(javascript, "javascript");
+		
+		if (javascriptsFrozen)
+		{
+			throw new IllegalStateException("A partial update of the page is being rendered, JavaScript can no longer be added");
+		}
 
 		prependJavaScripts.add(javascript);
 	}
