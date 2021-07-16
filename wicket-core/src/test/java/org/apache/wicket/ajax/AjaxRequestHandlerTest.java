@@ -21,14 +21,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MockPageWithLink;
@@ -38,6 +39,9 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -265,15 +269,18 @@ class AjaxRequestHandlerTest extends WicketTestCase
 	@Test
 	void globalAjaxRequestTargetListeners()
 	{
-		final ValidatingAjaxRequestTargetListener listener = new ValidatingAjaxRequestTargetListener();
-
+		ValidatingListener listener = new ValidatingListener();
+		
 		tester.getApplication().getAjaxRequestTargetListeners().add(listener);
+		tester.getApplication().getRequestCycleListeners().add(listener);
 
 		tester.startPage(TestEventPage.class);
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID, true);
 
-		assertTrue(listener.onBeforeRespondExecuted);
-		assertTrue(listener.onAfterRespondExecuted);
+		tester.assertContains("BEFORE_RESPOND_PREPEND");
+		tester.assertContains("BEFORE_RESPOND_APPEND");
+		tester.assertContains("AFTER_RESPOND_PREPEND");
+		tester.assertContains("AFTER_RESPOND_APPEND");
 	}
 
 	/**
@@ -396,23 +403,32 @@ class AjaxRequestHandlerTest extends WicketTestCase
 		}
 	}
 
-	private static class ValidatingAjaxRequestTargetListener implements AjaxRequestTarget.IListener
+	private static class ValidatingListener implements AjaxRequestTarget.IListener, IRequestCycleListener
 	{
-		boolean onBeforeRespondExecuted = false;
-		boolean onAfterRespondExecuted = false;
-
 		@Override
 		public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target)
 		{
-			onBeforeRespondExecuted = true;
-
+			target.prependJavaScript("BEFORE_RESPOND_PREPEND");
+			target.appendJavaScript("BEFORE_RESPOND_APPEND");
 		}
 
 		@Override
-		public void onAfterRespond(Map<String, Component> map,
-			AjaxRequestTarget.IJavaScriptResponse response)
+		public void onAfterRespond(Map<String, Component> map, AjaxRequestTarget target)
 		{
-			onAfterRespondExecuted = true;
+			target.prependJavaScript("AFTER_RESPOND_PREPEND");
+			target.appendJavaScript("AFTER_RESPOND_APPEND");
+		}
+		
+		@Override
+		public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler) {
+			if (handler instanceof AjaxRequestHandler) {
+				try {
+					((AjaxRequestHandler) handler).appendJavaScript("FAIL");
+					
+					fail();
+				} catch (IllegalStateException javascriptFrozen) {
+				}
+			}
 		}
 	}
 

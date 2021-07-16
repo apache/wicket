@@ -145,19 +145,9 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 					final Map<String, Component> components = Collections
 						.unmodifiableMap(markupIdToComponent);
 
-					// create response that will be used by listeners to append javascript
-					final AjaxRequestTarget.IJavaScriptResponse jsresponse = new AjaxRequestTarget.IJavaScriptResponse()
-					{
-						@Override
-						public void addJavaScript(String script)
-						{
-							writeEvaluations(response, Collections.<CharSequence> singleton(script));
-						}
-					};
-
 					for (AjaxRequestTarget.IListener listener : listeners)
 					{
-						listener.onAfterRespond(components, jsresponse);
+						listener.onAfterRespond(components, AjaxRequestHandler.this);
 					}
 				}
 			}

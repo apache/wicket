@@ -1153,6 +1153,11 @@
 								<className>org/apache/wicket/pageStore/IPageStore</className>
 								<method>void end(org.apache.wicket.pageStore.IPageContext)</method>
 							</difference>
+							<difference>
+								<differenceType>7012</differenceType>
+								<className>org/apache/wicket/ajax/AjaxRequestTarget$IListener</className>
+								<method>void onAfterRespond(java.util.Map, org.apache.wicket.ajax.AjaxRequestTarget)</method>
+							</difference>
 						</ignored>
 					</configuration>
 					<executions>
