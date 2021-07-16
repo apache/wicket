@@ -26,6 +26,11 @@
 	<artifactId>wicket-archetype-quickstart</artifactId>
 	<packaging>maven-archetype</packaging>
 	<name>Wicket Quickstart Archetype</name>
+
+	<properties>
+		<japicmp.skip>true</japicmp.skip>
+	</properties>
+
 	<build>
 		<resources>
 			<resource>

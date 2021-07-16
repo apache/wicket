@@ -57,7 +57,6 @@ public class RedirectToUrlException extends ReplaceHandlerException
 		super(new RedirectRequestHandler(redirectUrl, statusCode), true);
 	}
 
-
 	/**
 	 * Construct.
 	 *

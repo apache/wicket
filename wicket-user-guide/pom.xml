@@ -33,7 +33,7 @@
 	<properties>
 		<automatic-module-name>org.apache.wicket.userguide</automatic-module-name>
 		<asciidoctor.version>1.5.5</asciidoctor.version>
-		<clirr.skip>true</clirr.skip>
+		<japicmp.skip>true</japicmp.skip>
 		<!-- because of windows we need this particular version -->
 		<jruby.version>1.7.21</jruby.version>
 	</properties>

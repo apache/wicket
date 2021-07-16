@@ -158,6 +158,7 @@
 		<jakarta.validation-api.version>3.0.0</jakarta.validation-api.version>
 		<jakarta.websocket-api.version>2.0.0</jakarta.websocket-api.version>
 		<jakarta.servlet-api.version>5.0.0</jakarta.servlet-api.version>
+		<japicmp.skip>true</japicmp.skip> <!-- TODO Wicket 10 Remove this once 10.0.0 is released -->
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
 		<jetty.version>11.0.6</jetty.version>
 		<junit.version>5.8.0-M1</junit.version>
@@ -177,7 +178,7 @@
 		<velocity-engine-core.version>2.3</velocity-engine-core.version>
 
 		<!-- Maven plugins -->
-		<clirr-maven-plugin.version>2.8</clirr-maven-plugin.version>
+		<japicmp-maven-plugin.version>0.15.3</japicmp-maven-plugin.version>
 		<maven-archetype-plugin.version>3.2.0</maven-archetype-plugin.version>
 		<maven-bundle-plugin.version>5.1.2</maven-bundle-plugin.version>
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
@@ -758,8 +759,8 @@
 				<inherited>true</inherited>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>clirr-maven-plugin</artifactId>
+				<groupId>com.github.siom79.japicmp</groupId>
+				<artifactId>japicmp-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -803,6 +804,60 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>com.github.siom79.japicmp</groupId>
+					<artifactId>japicmp-maven-plugin</artifactId>
+					<version>${japicmp-maven-plugin.version}</version>
+					<configuration>
+						<oldVersion>
+							<dependency>
+								<groupId>${project.groupId}</groupId>
+								<artifactId>${project.artifactId}</artifactId>
+								<version>10.0.0</version>
+								<type>jar</type>
+							</dependency>
+						</oldVersion>
+						<newVersion>
+							<file>
+								<path>${project.build.directory}/${project.artifactId}-${project.version}.jar</path>
+							</file>
+						</newVersion>
+						<parameter>
+							<skipXmlReport>true</skipXmlReport>
+							<skipHtmlReport>true</skipHtmlReport>
+							<breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
+							<breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
+							<onlyBinaryIncompatible>true</onlyBinaryIncompatible>
+							<ignoreMissingClasses>true</ignoreMissingClasses>
+							<excludes>
+								<exclude>
+									<!-- [ERROR] Failed to execute goal com.github.siom79.japicmp:japicmp-maven-plugin:0.15.3:cmp (default) on project wicket-core: There is at least one incompatibility: org.apache.wicket.markup.html.form.EnumChoiceRenderer:METHOD_REMOVED_IN_SUPERCLASS -->
+									org.apache.wicket.markup.html.form.EnumChoiceRenderer
+								</exclude>
+							</excludes>
+							<overrideCompatibilityChangeParameters>
+								<overrideCompatibilityChangeParameter>
+									<compatibilityChange>METHOD_ABSTRACT_NOW_DEFAULT</compatibilityChange>
+									<binaryCompatible>true</binaryCompatible>
+									<sourceCompatible>true</sourceCompatible>
+								</overrideCompatibilityChangeParameter>
+								<overrideCompatibilityChangeParameter>
+									<compatibilityChange>METHOD_NEW_DEFAULT</compatibilityChange>
+									<binaryCompatible>true</binaryCompatible>
+									<sourceCompatible>true</sourceCompatible>
+								</overrideCompatibilityChangeParameter>
+							</overrideCompatibilityChangeParameters>
+						</parameter>
+					</configuration>
+					<executions>
+						<execution>
+							<phase>verify</phase>
+							<goals>
+								<goal>cmp</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<groupId>de.thetaphi</groupId>
 					<artifactId>forbiddenapis</artifactId>
@@ -1122,39 +1177,6 @@
 					</configuration>
 				</plugin>
 				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>clirr-maven-plugin</artifactId>
-					<version>${clirr-maven-plugin.version}</version>
-					<configuration>
-						<comparisonVersion>10.0.0</comparisonVersion>
-						<failOnError>false</failOnError>
-						<logResults>true</logResults>
-						<skip>true</skip> <!-- FIXME Wicket 10 -->
-						<ignored>
-							<!-- TODO remove in 10.x - clirr does not support default methods -->
-							<difference>
-								<differenceType>7012</differenceType>
-								<className>org/apache/wicket/page/IPageManager</className>
-								<method>void end()</method>
-							</difference>
-							<difference>
-								<differenceType>7012</differenceType>
-								<className>org/apache/wicket/pageStore/IPageStore</className>
-								<method>void end(org.apache.wicket.pageStore.IPageContext)</method>
-							</difference>
-						</ignored>
-					</configuration>
-					<executions>
-						<execution>
-							<id>clirr-check</id>
-							<phase>compile</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
 					<groupId>org.eclipse.jetty</groupId>
 					<artifactId>jetty-maven-plugin</artifactId>
 					<version>${jetty.version}</version>
@@ -1186,9 +1208,9 @@
 								</pluginExecution>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>org.codehaus.mojo</groupId>
-										<artifactId>clirr-maven-plugin</artifactId>
-										<versionRange>[2.6.1,)</versionRange>
+										<groupId>com.github.siom79.japicmp</groupId>
+										<artifactId>japicmp-maven-plugin</artifactId>
+										<versionRange>[0.15.3,)</versionRange>
 										<goals>
 											<goal>check</goal>
 										</goals>
