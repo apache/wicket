@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.license;
+package org.apache.wicket.http2.markup.head.undertow.util.license;
+
+import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
 
 /**
  * Test that the license headers are in place in this project. The tests are run from

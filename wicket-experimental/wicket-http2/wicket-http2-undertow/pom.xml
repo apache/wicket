@@ -54,6 +54,10 @@
 			<artifactId>undertow-servlet</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.wicket.experimental.wicket9</groupId>
 			<artifactId>wicket-http2-core</artifactId>
 		</dependency>

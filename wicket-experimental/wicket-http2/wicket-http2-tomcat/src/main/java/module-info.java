@@ -14,21 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.license;
 
-/**
- * Test that the license headers are in place in this project. The tests are run from
- * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
- * 
- * @author Frank Bille Jensen (frankbille)
- */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
-{
-	/**
-	 * Construct.
-	 */
-	public ApacheLicenceHeaderTest()
-	{
-		// addHeaders = true;
-	}
+module org.apache.wicket.http2.tomcat {
+    requires org.apache.wicket.request;
+    requires org.apache.wicket.core;
+    requires org.apache.wicket.http2.core;
+    requires org.slf4j;
+    requires javax.servlet.api;
+    requires tomcat.catalina;
+
+    exports org.apache.wicket.http2.markup.head.tomcat;
 }
