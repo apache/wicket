@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Base class for testing exceptions in order to make sure that they achieve 100% test coverage.
- * Assumes that exceptions implement all of the four standard consturctors.
+ * Assumes that exceptions implement all of the four standard constructors.
  * 
  * @author Chris Turner
  */

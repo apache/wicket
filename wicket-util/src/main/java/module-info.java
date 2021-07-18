@@ -53,4 +53,8 @@ module org.apache.wicket.util {
     exports org.apache.wicket.util.visit;
     exports org.apache.wicket.util.watch;
     exports org.apache.wicket.util.xml;
+
+    // temporary hack until CDI-Unit, commons-fileupload and Spring provide Jakarta EE based releases
+    exports javax.servlet;
+    exports javax.servlet.http;
 }
