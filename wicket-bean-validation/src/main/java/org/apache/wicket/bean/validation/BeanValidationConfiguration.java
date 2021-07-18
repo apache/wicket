@@ -88,9 +88,9 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	 * Registers a tag modifier for a specific constraint annotation.
 	 * <p>
 	 * By default {@link Size} constraints are automatically mapped to <code>maxlength</code> of text inputs,
-	 * this can be disabled by registering a {@link ITagModifier#NoOp} instead:
+	 * this can be disabled by registering a {@link ITagModifier#NO_OP} instead:
 	 * <code>
-	 * configuration.register(Size.class, ITagModifier.NoOp});
+	 * configuration.register(Size.class, ITagModifier.NO_OP});
 	 * </code>
 	 * 
 	 * @param annotationType

@@ -46,6 +46,6 @@ public interface ITagModifier<T extends Annotation>
 	 */
 	void modify(FormComponent<?> component, ComponentTag tag, T annotation);
 	
-	public static final ITagModifier<?> NoOp = (component, tag, annotation) -> {
+	ITagModifier<?> NO_OP = (component, tag, annotation) -> {
 	};
 }
