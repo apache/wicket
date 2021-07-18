@@ -16,10 +16,10 @@
  */
 
 module org.apache.wicket.cdi {
-    requires java.annotation;
+    requires jakarta.annotation;
     requires java.naming;
-    requires jakarta.enterprise.cdi.api;
-    requires jakarta.inject.api;
+    requires jakarta.cdi;
+    requires jakarta.inject;
     requires org.apache.wicket.util;
     requires org.apache.wicket.request;
     requires org.apache.wicket.core;

@@ -21,7 +21,7 @@ module org.apache.wicket.websocket.javax {
     requires org.apache.wicket.core;
     requires org.apache.wicket.websocket.core;
     requires jakarta.servlet;
-    requires jakarta.websocket.api;
+    requires jakarta.websocket;
     requires org.slf4j;
 
     exports org.apache.wicket.protocol.ws.javax;

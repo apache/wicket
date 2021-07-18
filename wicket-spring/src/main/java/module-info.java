@@ -19,7 +19,7 @@ module org.apache.wicket.spring {
     requires org.apache.wicket.util;
     requires org.apache.wicket.core;
     requires org.apache.wicket.ioc;
-    requires javax.inject;
+    requires jakarta.inject;
     requires jakarta.servlet;
     requires spring.beans;
     requires spring.context;

@@ -18,7 +18,7 @@
 module org.apache.wicket.bean.validation {
     requires org.apache.wicket.util;
     requires org.apache.wicket.core;
-    requires java.validation;
+    requires jakarta.validation;
 
     exports org.apache.wicket.bean.validation;
 }

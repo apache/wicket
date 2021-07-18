@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
@@ -26,8 +26,6 @@ import jakarta.servlet.http.HttpSession;
 import org.jboss.weld.bean.builtin.BeanManagerProxy;
 import org.jboss.weld.module.web.servlet.HttpContextLifecycle;
 import org.jboss.weld.servlet.spi.helpers.AcceptingHttpContextActivationFilter;
-import org.jglue.cdiunit.internal.CdiUnitInitialListenerImpl;
-import org.jglue.cdiunit.internal.servlet.LifecycleAwareRequest;
 
 /**
  * @author jsarman
