@@ -31,9 +31,6 @@ import org.apache.wicket.markup.html.panel.Panel;
  * Presents a modal dialog to the user. See {@link #open(Component, AjaxRequestTarget)} and
  * {@link #close(AjaxRequestTarget)} methods.
  * <p>
- * Unlike the deprecated {@link ModalWindow} this component offers no UI controls, you should use
- * any components as you need in the content of this dialog.
- * <p>
  * Note: This component does not provide any styling by itself, so you have can add a
  * {@link DefaultTheme} to this component if aren't styling these CSS classes by yourself:
  * <dl>

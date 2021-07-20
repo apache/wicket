@@ -56,25 +56,6 @@ public final class CssUtils
 
 	/**
 	 * Write the simple text to the response object surrounded by a style tag.
-	 *
-	 * @param response
-	 *            The HTTP: response
-	 * @param text
-	 *            The text to added in between the style tags
-	 * @param id
-	 *            Unique identifier of element
-	 * @deprecated please use {@link #writeInlineStyle(Response, CharSequence, AttributeMap)} instead
-	 */
-	@Deprecated
-	public static void writeCss(final Response response, final CharSequence text, String id)
-	{
-		writeOpenTag(response, id);
-		response.write(text);
-		writeCloseTag(response);
-	}
-
-	/**
-	 * Write the simple text to the response object surrounded by a style tag.
 	 * In most cases the text simply an inline CSS.
 	 *
 	 * @param response
@@ -127,54 +108,6 @@ public final class CssUtils
 	public static void writeCloseTag(final Response response)
 	{
 		response.write(INLINE_CLOSE_TAG);
-	}
-
-	/**
-	 * Writes a reference to a css file in the response object
-	 *
-	 * @param response
-	 *            the response to write to
-	 * @param url
-	 *            the url of the css reference
-	 * @param media
-	 *            the CSS media
-	 * @param markupId
-	 *            the markupId
-	 * @deprecated please use {@link #writeLink(Response, AttributeMap)} instead
-	 */
-	@Deprecated
-	public static void writeLinkUrl(final Response response, final CharSequence url,
-		final CharSequence media, final String markupId)
-	{
-		CssUtils.writeLinkUrl(response, url, media, markupId, null);
-	}
-
-	/**
-	 * Writes a reference to a css file in the response object
-	 *
-	 * @param response
-	 *            the response to write to
-	 * @param url
-	 *            the url of the css reference
-	 * @param media
-	 *            the CSS media
-	 * @param markupId
-	 *            the markupId
-	 * @param rel
-	 *            the rel attribute
-	 * @deprecated please use {@link #writeLink(Response, AttributeMap)} instead
-	 */
-	@Deprecated
-	public static void writeLinkUrl(final Response response, final CharSequence url,
-		final CharSequence media, final String markupId, final String rel)
-	{
-		AttributeMap attributes = new AttributeMap();
-		attributes.putAttribute(ATTR_LINK_REL, Strings.isEmpty(rel) ? "stylesheet" : rel);
-		attributes.putAttribute(ATTR_TYPE, "text/css");
-		attributes.putAttribute(ATTR_LINK_HREF, url);
-		attributes.putAttribute(ATTR_LINK_MEDIA, media.toString());
-		attributes.putAttribute(ATTR_ID, markupId);
-		writeLink(response, attributes);
 	}
 
 	/**

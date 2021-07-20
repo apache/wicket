@@ -27,10 +27,6 @@ package org.apache.wicket.util.crypt;
  * implementation of the encryption algorithm may change between releases. As such, this interface
  * and its implementations are not intended and should not be used as an encryption facility for
  * persistent values.
- * <p>
- * As of Wicket 1.2 the methods encrypt and decrypt are deprecated. Consider changing your
- * persistent encryption strategy to be based on a one-way encryption such as a SHA1 hash, not
- * depending on Wicket classes.
  * 
  * @author Juergen Donnerstag
  */
