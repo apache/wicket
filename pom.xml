@@ -144,7 +144,7 @@
 		<commons-fileupload.version>1.4</commons-fileupload.version>
 		<commons-io.version>2.8.0</commons-io.version>
 		<commons-lang3.version>3.12.0</commons-lang3.version>
-		<guice.version>4.2.3</guice.version>
+		<guice.version>5.0.1</guice.version>
 		<el-impl.version>2.2.1-b05</el-impl.version>
 		<forbiddenapis.version>3.1</forbiddenapis.version>
 		<jacoco.version>0.8.7</jacoco.version>
