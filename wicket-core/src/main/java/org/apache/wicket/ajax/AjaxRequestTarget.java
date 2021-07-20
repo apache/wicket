@@ -82,7 +82,7 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 		 */
 		default void onAfterRespond(Map<String, Component> map, AjaxRequestTarget target)
 		{
-			onAfterRespond(map, script -> target.appendJavaScript(script));
+			onAfterRespond(map, target::appendJavaScript);
 		}
 
 		/**
@@ -104,7 +104,7 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 	 *
 	 * @author ivaynberg
 	 * 
-	 * @deprecated use {@link AjaxRequestTargetprependJavaScript(CharSequence)} and
+	 * @deprecated use {@link AjaxRequestTarget#prependJavaScript(CharSequence)} and
 	 *             {@link AjaxRequestTarget#appendJavaScript(CharSequence)} instead
 	 */
 	@Deprecated
@@ -131,7 +131,7 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 	interface ITargetRespondListener
 	{
 		/**
-		 * Invoked when AjaxRequestTarget is about the respond.
+		 * Invoked when AjaxRequestTarget is about to respond.
 		 *
 		 * @param target
 		 */
