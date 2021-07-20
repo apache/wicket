@@ -90,7 +90,7 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 	interface ITargetRespondListener
 	{
 		/**
-		 * Invoked when AjaxRequestTarget is about the respond.
+		 * Invoked when AjaxRequestTarget is about to respond.
 		 *
 		 * @param target
 		 */
