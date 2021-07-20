@@ -91,11 +91,4 @@ public abstract class AbstractJceCrypt implements ICrypt
 	 * @throws GeneralSecurityException
 	 */
 	abstract protected byte[] encrypt(final byte[] plainBytes);
-
-
-	@Override
-	public final void setKey(String key)
-	{
-		throw new UnsupportedOperationException("This method has been deprecated in ICrypt and will be removed.");
-	}
 }

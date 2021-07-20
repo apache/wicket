@@ -55,24 +55,6 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 		 * additional JavaScript can be added to the response.
 		 *
 		 * NOTE: During this stage of processing any calls that manipulate components will result in
-		 * an exception.
-		 *
-		 * @param map
-		 *            read-only map:markupId-&gt;component of components already added to the target
-		 * @param response
-		 *            response object that can be used to output JavaScript
-		 *            
-		 * @deprecated implement {@link #onAfterRespond(Map, AjaxRequestTarget)} instead
-		 */
-		@Deprecated
-		default void onAfterRespond(Map<String, Component> map, AjaxRequestTarget.IJavaScriptResponse response)
-		{}
-
-		/**
-		 * Triggered after the target has written components. At this point only
-		 * additional JavaScript can be added to the response.
-		 *
-		 * NOTE: During this stage of processing any calls that manipulate components will result in
 		 * an exception. After notification of all listeners no JavaScript can be added any longer.
 		 *
 		 * @param map
@@ -82,7 +64,6 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 		 */
 		default void onAfterRespond(Map<String, Component> map, AjaxRequestTarget target)
 		{
-			onAfterRespond(map, script -> target.appendJavaScript(script));
 		}
 
 		/**
@@ -96,28 +77,6 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 		 */
 		default void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior, AjaxRequestAttributes attributes)
 		{}
-	}
-
-	/**
-	 * An ajax JavaScript response that allows users to add JavaScript to be executed on the client
-	 * side
-	 *
-	 * @author ivaynberg
-	 * 
-	 * @deprecated use {@link AjaxRequestTargetprependJavaScript(CharSequence)} and
-	 *             {@link AjaxRequestTarget#appendJavaScript(CharSequence)} instead
-	 */
-	@Deprecated
-	@FunctionalInterface
-	interface IJavaScriptResponse
-	{
-		/**
-		 * Adds more JavaScript to the ajax response that will be executed on the client side
-		 *
-		 * @param script
-		 *            JavaScript
-		 */
-		void addJavaScript(String script);
 	}
 
 	/**

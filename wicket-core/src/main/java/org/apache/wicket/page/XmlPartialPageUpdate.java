@@ -53,16 +53,6 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 		response.write(START_ROOT_ELEMENT);
 	}
 
-	/**
-	 * TODO remove in Wicket 10
-	 */
-	@Override
-	protected void writeComponent(Response response, String markupId, Component component,
-		String encoding)
-	{
-		super.writeComponent(response, markupId, component, encoding);
-	}
-	
 	@Override
 	protected void writeComponent(Response response, String markupId, CharSequence contents)
 	{

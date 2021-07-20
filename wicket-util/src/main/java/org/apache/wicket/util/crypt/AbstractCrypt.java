@@ -118,7 +118,6 @@ public abstract class AbstractCrypt implements ICrypt
 	 * @param key
 	 *            private key to make de-/encryption unique
 	 */
-	@Override
 	public void setKey(final String key)
 	{
 		encryptionKey = key;

@@ -1592,29 +1592,6 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	}
 
 	/**
-	 * Sets an {@link IHeaderResponseDecorator} that you want your application to use to decorate
-	 * header responses.
-	 * <p>
-	 * Calling this method replaces the default decorator, which utilizes a
-	 * {@link ResourceAggregator}: The given implementation should make sure, that it too wraps
-	 * responses in a {@link ResourceAggregator}, otherwise no dependencies for {@link HeaderItem}s
-	 * will be resolved.
-	 * 
-	 * @param headerResponseDecorator
-	 *            your custom decorator, must not be null
-	 * @deprecated use {@code add(...)} on {@link #getHeaderResponseDecorators()}. This method
-	 *             removes the {@link ResourceAggregator}, which is needed to resolve resource
-	 *             dependencies.
-	 */
-	@Deprecated
-	public final Application
-			setHeaderResponseDecorator(final IHeaderResponseDecorator headerResponseDecorator)
-	{
-		headerResponseDecorators.replaceAll(headerResponseDecorator);
-		return this;
-	}
-
-	/**
 	 * Returns the {@link HeaderResponseDecoratorCollection} used by this application. On this
 	 * collection you can add additional decorators, which will be nested in the order added.
 	 * 

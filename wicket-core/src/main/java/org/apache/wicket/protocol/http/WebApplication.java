@@ -24,11 +24,6 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.function.Function;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
@@ -89,6 +84,11 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 
 /**
@@ -1111,16 +1111,6 @@ public abstract class WebApplication extends Application
 	}
 	
 	/**
-	 * TODO remove in Wicket 10
-	 * 
-	 * @deprecated use {@link #setCspSettings(ContentSecurityPolicySettings)} instead
-	 */
-	protected ContentSecurityPolicySettings newCspSettings()
-	{
-		return new ContentSecurityPolicySettings(this);
-	}
-
-	/**
 	 * Returns the {@link ContentSecurityPolicySettings} for this application. See
 	 * {@link ContentSecurityPolicySettings} and {@link CSPHeaderConfiguration} for instructions on
 	 * configuring the CSP for your specific needs.
@@ -1128,16 +1118,14 @@ public abstract class WebApplication extends Application
 	 * @return The {@link ContentSecurityPolicySettings} for this application.
 	 * @see ContentSecurityPolicySettings
 	 * @see CSPHeaderConfiguration
-	 * 
-	 * TODO make final in Wicket 10
 	 */
-	public ContentSecurityPolicySettings getCspSettings()
+	public final ContentSecurityPolicySettings getCspSettings()
 	{
 		checkSettingsAvailable();
 
 		if (cspSettings == null)
 		{
-			cspSettings = newCspSettings();
+			cspSettings = new ContentSecurityPolicySettings(this);
 		}
 		return cspSettings;
 	}

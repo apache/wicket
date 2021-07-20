@@ -18,7 +18,6 @@ package org.apache.wicket.examples.repeater;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.response.filter.ServerAndClientTimeFilter;
 
 /**
  * application class for repeater examples application

@@ -96,7 +96,7 @@ class CryptoMapperTest extends AbstractMapperTest
 		WebApplication application = tester.getApplication();
 		application.mountPage(MOUNTED_URL, Page1.class);
 
-		ICrypt crypt = new SunJceCrypt(new byte[]{ (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
+		SunJceCrypt crypt = new SunJceCrypt(new byte[]{ (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
 			(byte)0x66, (byte)0x51, (byte)0x2a, (byte)0xbc }, 17);
 		crypt.setKey("WiCkEt-FRAMEwork");
 

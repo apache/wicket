@@ -82,14 +82,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	{
 		Args.notEmpty(event, "event");
 
-		if ("inputchange".equals(event))
-		{
-			// TODO Wicket 10 remove (see WICKET-6667)
-			event = "input";
-			LOGGER.warn("Since version 9.0.0 Wicket no longer supports 'inputchange' events, please use 'input' instead");
-		}
-
-		this.event = event;
+		this.event = event;	
 	}
 
 	@Override

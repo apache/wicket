@@ -77,17 +77,6 @@ public class KeyInSessionSunJceCryptFactory extends AbstractKeyInSessionCryptFac
 		}
 	}
 
-	/**
-	 * @return the {@link org.apache.wicket.util.crypt.ICrypt} to use
-	 * 
-	 * @deprecated this method is no longer called TODO remove in Wicket 10
-	 */
-	@Deprecated(forRemoval = true)
-	protected ICrypt createCrypt()
-	{
-		return null;
-	}
-	
 	@Override
 	protected CryptData generateKey(Session session)
 	{

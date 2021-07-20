@@ -16,13 +16,10 @@
  */
 package org.apache.wicket.authentication.strategy;
 
-import java.util.UUID;
-
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.util.cookies.CookieDefaults;
 import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.crypt.ICrypt;
-import org.apache.wicket.util.crypt.SunJceCrypt;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -44,12 +41,6 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	/** The cookie name to store the username and password */
 	protected final String cookieKey;
 
-	/**
-	 * @deprecated no longer used TODO remove in Wicket 10
-	 */
-	@Deprecated(forRemoval = true)
-	protected final String encryptionKey = null;
-
 	/** The separator used to concatenate the username and password */
 	protected final String VALUE_SEPARATOR = "-sep-";
 
@@ -58,43 +49,6 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 
 	/** Use to encrypt cookie values for username and password. */
 	private ICrypt crypt;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param cookieKey
-	 *            The name of the cookie
-	 *            
-	 * @deprecated supply a crypt instead TODO remove in Wicket 10
-	 */
-	@Deprecated(forRemoval = true)
-	public DefaultAuthenticationStrategy(final String cookieKey)
-	{
-		this(cookieKey, defaultEncryptionKey());
-	}
-
-	private static String defaultEncryptionKey()
-	{
-		return UUID.randomUUID().toString();
-	}
-
-	/**
-	 * @deprecated supply a crypt instead TODO remove in Wicket 10
-	 */
-	@Deprecated(forRemoval = true)
-	public DefaultAuthenticationStrategy(final String cookieKey, final String encryptionKey)
-	{
-		this(cookieKey, defaultCrypt(encryptionKey));
-	}
-
-	private static ICrypt defaultCrypt(String encryptionKey)
-	{
-		byte[] salt = SunJceCrypt.randomSalt();
-
-		SunJceCrypt crypt = new SunJceCrypt(salt, 1000);
-		crypt.setKey(encryptionKey);
-		return crypt;
-	}
 
 	/**
 	 * This is the recommended constructor to be used, which allows automatic authentication across

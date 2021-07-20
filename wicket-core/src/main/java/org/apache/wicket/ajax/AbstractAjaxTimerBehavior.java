@@ -54,20 +54,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 * Construct.
 	 *
 	 * @param updateInterval
-	 *            {@link org.apache.wicket.util.time.Duration} between AJAX callbacks
-	 *
-	 * @deprecated Since Wicket 9 this constructor is deprecated. It will be removed in Wicket 10. Use {@link AbstractAjaxTimerBehavior#AbstractAjaxTimerBehavior(Duration)} instead
-	 */
-	@Deprecated
-	public AbstractAjaxTimerBehavior(final org.apache.wicket.util.time.Duration updateInterval)
-	{
-		setUpdateInterval(updateInterval.toJavaDuration());
-	}
-
-	/**
-	 * Construct.
-	 *
-	 * @param updateInterval
 	 *            {@link Duration} between AJAX callbacks
 	 */
 	public AbstractAjaxTimerBehavior(final Duration updateInterval)

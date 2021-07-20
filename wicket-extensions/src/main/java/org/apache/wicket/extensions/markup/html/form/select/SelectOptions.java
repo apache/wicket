@@ -20,7 +20,6 @@ import java.util.Collection;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
@@ -34,15 +33,6 @@ import org.slf4j.LoggerFactory;
  * Component that makes it easy to produce a list of SelectOption components.
  * <p>
  * Has to be attached to a &lt;option&gt; markup tag.
- * <p>
- * Note: The following pre Wicket 9 markup is deprecated and results in a log warning. Its support
- * will be removed in Wicket 10:
- *
- * <pre>
- * <code>
- * &lt;wicket:container wicket:id=&quot;selectOptions&quot;&gt;&lt;option wicket:id=&quot;option&quot;&gt;&lt;/option&gt;&lt;/wicket:container&gt;
- * </code>
- * </pre>
  * 
  * @param <T>
  *            type of elements contained in the model's collection
@@ -120,44 +110,16 @@ public class SelectOptions<T> extends RepeatingView
 			Collection<? extends T> modelObject = (Collection<? extends T>)getDefaultModelObject();
 			if (modelObject != null)
 			{
-				// TODO remove in Wicket 10
-				boolean option = "option".equalsIgnoreCase(getMarkupTag().getName());
-				if (option == false)
-				{
-					log.warn("Since version 9.0.0 you should use an option tag");
-				}
-
 				for (T value : modelObject)
 				{
 					// we add our actual SelectOption component to the row
 					String text = renderer.getDisplayValue(value);
 					IModel<T> model = renderer.getModel(value);
 
-					if (option)
-					{
-						add(newOption(newChildId(), text, model));
-					}
-					else
-					{
-						// pre Wicket 9 a container is used to represent a row in repeater
-						WebMarkupContainer row = new WebMarkupContainer(newChildId());
-						row.setRenderBodyOnly(true);
-						add(row);
-
-						// we add our actual SelectOption component to the row
-						row.add(newOption(text, model));
-					}
+					add(newOption(newChildId(), text, model));
 				}
 			}
 		}
-	}
-
-	/**
-	 * @deprecated override {@link #newOption(String, String, IModel)} instead.
-	 */
-	protected SelectOption<T> newOption(final String text, final IModel<T> model)
-	{
-		return newOption("option",  text, model);
 	}
 
 	/**

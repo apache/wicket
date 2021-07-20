@@ -59,15 +59,4 @@ public class NoCrypt implements ICrypt
 	{
 		return plainText;
 	}
-
-	/**
-	 * Set encryption private key
-	 * 
-	 * @param key
-	 *            private key to make de-/encryption unique
-	 */
-	@Override
-	public void setKey(final String key)
-	{
-	}
 }

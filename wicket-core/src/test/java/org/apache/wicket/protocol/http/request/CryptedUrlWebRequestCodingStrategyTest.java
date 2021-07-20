@@ -122,11 +122,6 @@ class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 					return new String(Base64.getUrlEncoder().encode(plainText.getBytes()));
 				}
 
-				@Override
-				public void setKey(String key)
-				{
-				}
-
 			};
 		}
 	}

@@ -433,24 +433,18 @@ public abstract class PartialPageUpdate
 
 	/**
 	 * Writes a component to the response.
-	 * <p>
-	 * TODO make abstract in Wicket 10
 	 *
 	 * @param response
 	 *      the response to write to
 	 * @param contents      
 	 * 		the contents
 	 */
-	protected void writeComponent(Response response, String markupId, CharSequence contents) {
-		throw new UnsupportedOperationException();
-	}
+	protected abstract void writeComponent(Response response, String markupId, CharSequence contents);
 
 	/**
-	 * TODO make abstract in Wicket 10
+	 * Write priority-evaluation.
 	 */
-	protected void writePriorityEvaluation(Response response, CharSequence contents) {
-		throw new UnsupportedOperationException();		
-	}
+	protected abstract void writePriorityEvaluation(Response response, CharSequence contents);
 
 	/**
 	 * Writes a header contribution to the response.
@@ -463,11 +457,9 @@ public abstract class PartialPageUpdate
 	protected abstract void writeHeaderContribution(Response response, CharSequence contents);
 
 	/**
-	 * TODO make abstract in Wicket 10
+	 * Write evaluation.
 	 */
-	protected void writeEvaluation(Response response, CharSequence contents) {
-		throw new UnsupportedOperationException();		
-	}
+	protected abstract void writeEvaluation(Response response, CharSequence contents);
 
 	@Override
 	public boolean equals(Object o)

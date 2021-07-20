@@ -32,6 +32,7 @@ import org.apache.wicket.core.random.DefaultSecureRandomSupplier;
 import org.apache.wicket.core.random.ISecureRandomSupplier;
 import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICryptFactory;
+import org.apache.wicket.util.crypt.SunJceCrypt;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -48,14 +49,6 @@ import org.apache.wicket.util.lang.Args;
  */
 public class SecuritySettings
 {
-	/**
-	 * encryption key is no longer used
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated(forRemoval = true)
-	public static final String DEFAULT_ENCRYPTION_KEY = "WiCkEt-FRAMEwork";
-
 	/** The authorization strategy. */
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
@@ -278,7 +271,7 @@ public class SecuritySettings
 	{
 		if (authenticationStrategy == null)
 		{
-			authenticationStrategy = new DefaultAuthenticationStrategy("LoggedIn");
+			authenticationStrategy = new DefaultAuthenticationStrategy("LoggedIn", new SunJceCrypt(SunJceCrypt.randomSalt(), 17));
 		}
 		return authenticationStrategy;
 	}

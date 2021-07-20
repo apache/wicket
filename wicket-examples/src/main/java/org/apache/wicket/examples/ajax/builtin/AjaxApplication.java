@@ -22,9 +22,7 @@ import org.apache.wicket.ajax.AjaxNewWindowNotifyingBehavior;
 import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.ajax.builtin.modal.ModalDialogPage;
-import org.apache.wicket.examples.ajax.builtin.modal.ModalWindowPage;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
 
 
 /**
@@ -61,7 +59,6 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("guest-book", GuestBook.class);
 		mountPage("lazy-loading", LazyLoadingPage.class);
 		mountPage("links", LinksPage.class);
-		mountPage("modal-window", ModalWindowPage.class);
 		mountPage("modal-dialog", ModalDialogPage.class);
 		mountPage("on-change-ajax-behavior", OnChangeAjaxBehaviorPage.class);
 		mountPage("pageables", PageablesPage.class);

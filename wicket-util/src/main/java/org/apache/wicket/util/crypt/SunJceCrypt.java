@@ -42,22 +42,8 @@ import org.apache.wicket.util.lang.Args;
  */
 public class SunJceCrypt extends AbstractCrypt
 {
-	/**
-	 * Iteration count used in combination with the salt to create the encryption key.
-	 */
-	private final static int DEFAULT_ITERATION_COUNT = 17;
-
 	/** Name of the default encryption method */
 	public static final String DEFAULT_CRYPT_METHOD = "PBEWithMD5AndDES";
-
-	/**
-	 * Default salt.
-	 * 
-	 * @deprecated TODO remove in Wicket 10
-	 */
-	@Deprecated
-	public final static byte[] SALT = { (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
-			(byte)0x66, (byte)0x51, (byte)0x2a, (byte)0xbc };
 
 	/** The name of encryption method (cipher) */
 	private final String cryptMethod;
@@ -66,17 +52,6 @@ public class SunJceCrypt extends AbstractCrypt
 	
 	private final byte[] salt;
  
-	/**
-	 * Constructor
-	 * 
-	 * @deprecated TODO remove in Wicket 10
-	 */
-	@Deprecated(forRemoval = true)
-	public SunJceCrypt()
-	{
-		this(DEFAULT_CRYPT_METHOD);
-	}
-
 	/**
 	 * Constructor.
 	 * 
@@ -88,17 +63,6 @@ public class SunJceCrypt extends AbstractCrypt
 	public SunJceCrypt(byte[] salt, int iterationCount)
 	{
 		this(DEFAULT_CRYPT_METHOD, salt, iterationCount);
-	}
-
-	/**
-	 * Constructor
-	 *
-	 * @deprecated TODO remove in Wicket 10
-	 */
-	@Deprecated(forRemoval = true)
-	public SunJceCrypt(String cryptMethod)
-	{
-		this(cryptMethod, SALT, DEFAULT_ITERATION_COUNT);
 	}
 
 	/**

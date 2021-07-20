@@ -21,7 +21,6 @@ import java.util.Formatter;
 import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -38,8 +37,6 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * A panel to show the progress of an HTTP upload.
@@ -249,29 +246,11 @@ public class UploadProgressBar extends Panel
 
 	/**
 	 * Form on where will be installed the JavaScript callback to present the progress bar.
-	 * {@link ModalWindow} is designed to hold nested forms and the progress bar callback JavaScript
-	 * needs to be add at the form inside the {@link ModalWindow} if one is used.
 	 * 
 	 * @return form
 	 */
 	private Form<?> getCallbackForm()
 	{
-		Boolean insideModal = form.visitParents(ModalWindow.class,
-			new IVisitor<ModalWindow, Boolean>()
-			{
-				@Override
-				public void component(final ModalWindow object, final IVisit<Boolean> visit)
-				{
-					visit.stop(true);
-				}
-			});
-		if ((insideModal != null) && insideModal)
-		{
-			return form;
-		}
-		else
-		{
-			return form.getRootForm();
-		}
+		return form.getRootForm();
 	}
 }
