@@ -315,7 +315,7 @@
 						<version>${dockerfile-maven-plugin.version}</version>
 						<configuration>
 							<repository>apache.jfrog.io/wicket-docker/wicket-examples</repository>
-							<tag>LATEST-9</tag>
+							<tag>LATEST-10</tag>
 						</configuration>
 						<executions>
 							<execution>
