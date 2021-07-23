@@ -324,7 +324,7 @@
 						<artifactId>dockerfile-maven-plugin</artifactId>
 						<version>${dockerfile-maven-plugin.version}</version>
 						<configuration>
-							<repository>apache-docker-wicket-docker.bintray.io/wicket-examples</repository>
+							<repository>apache.jfrog.io/wicket-docker/wicket-examples</repository>
 							<tag>LATEST-8</tag>
 						</configuration>
 						<executions>
