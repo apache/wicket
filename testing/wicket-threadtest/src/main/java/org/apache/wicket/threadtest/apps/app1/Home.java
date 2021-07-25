@@ -342,7 +342,6 @@ public class Home extends WebPage
 	 */
 	public Home()
 	{
-
 		add(new Link<Void>("link")
 		{
 			private static final long serialVersionUID = 1L;
@@ -356,7 +355,7 @@ public class Home extends WebPage
 			}
 		});
 
-		add(new Label("selectedLabel", new PropertyModel<Contact>(this, "selectedContactLabel")));
+		add(new Label("selectedLabel", this::getSelectedContactLabel));
 
 		add(new DataView<Contact>("simple", new ContactDataProvider())
 		{

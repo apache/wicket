@@ -129,11 +129,6 @@
 			<artifactId>wicket-http2-undertow</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<groupId>org.junit.jupiter</groupId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

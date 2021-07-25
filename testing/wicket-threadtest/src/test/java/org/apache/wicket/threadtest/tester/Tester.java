@@ -18,6 +18,7 @@ package org.apache.wicket.threadtest.tester;
 
 import static org.junit.Assert.fail;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,7 +28,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.apache.wicket.threadtest.tester.CommandRunner.CommandRunnerObserver;
-import org.apache.wicket.util.time.Duration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
@@ -271,7 +271,7 @@ public final class Tester implements CommandRunnerObserver
 
 			long end = System.currentTimeMillis();
 			long time = end - start;
-			log.info("\n******** finished in " + Duration.milliseconds(time) + " (" + time +
+			log.info("\n******** finished in " + Duration.ofMillis(time) + " (" + time +
 				" milis)");
 
 		}

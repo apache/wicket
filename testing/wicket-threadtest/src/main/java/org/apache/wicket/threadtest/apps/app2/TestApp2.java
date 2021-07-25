@@ -21,13 +21,11 @@ import org.apache.wicket.DefaultPageManagerProvider;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.page.PageStoreManager;
-import org.apache.wicket.pageStore.DefaultPageStore;
-import org.apache.wicket.pageStore.IDataStore;
+import org.apache.wicket.page.PageManager;
 import org.apache.wicket.pageStore.IPageStore;
-import org.apache.wicket.pageStore.memory.HttpSessionDataStore;
-import org.apache.wicket.pageStore.memory.PageNumberEvictionStrategy;
+import org.apache.wicket.pageStore.InSessionPageStore;
+import org.apache.wicket.pageStore.RequestPageStore;
+import org.apache.wicket.pageStore.SerializingPageStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.serialize.java.JavaSerializer;
 
@@ -60,19 +58,14 @@ public class TestApp2 extends WebApplication
 	{
 		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
 
-		setPageManagerProvider(new DefaultPageManagerProvider(this)
-		{
-			@Override
-			public IPageManager apply(IPageManagerContext pageManagerContext)
-			{
-				IDataStore dataStore = new HttpSessionDataStore(pageManagerContext,
-					new PageNumberEvictionStrategy(100));
-				IPageStore pageStore = new DefaultPageStore(
-					new JavaSerializer(getApplicationKey()), dataStore,
-					getStoreSettings().getInmemoryCacheSize());
-				return new PageStoreManager(getName(), pageStore, pageManagerContext);
+		setPageManagerProvider(() -> {
+			IPageStore store = new InSessionPageStore(100);
+			
+			store = new SerializingPageStore(store, getFrameworkSettings().getSerializer());
+			
+			store = new RequestPageStore(store);
 
-			}
+			return new PageManager(store);
 		});
 	}
 
