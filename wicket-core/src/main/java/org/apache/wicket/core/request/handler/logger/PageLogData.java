@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.handler.logger;
 
+import java.util.function.Supplier;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPageClassRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
@@ -46,21 +48,20 @@ public class PageLogData implements ILogData
 	 */
 	public PageLogData(IPageProvider pageProvider)
 	{
-		pageClass = tryToGetPageClass(pageProvider);
-		pageId = pageProvider.getPageId();
-		pageParameters = pageProvider.getPageParameters();
-		renderCount = pageProvider.getRenderCount();
+		pageId = optional(pageProvider::getPageId);
+		renderCount = optional(pageProvider::getRenderCount);
+		pageClass = optional(pageProvider::getPageClass);
+		pageParameters = optional(pageProvider::getPageParameters);
 	}
 
-	private static Class<? extends IRequestablePage> tryToGetPageClass(IPageProvider pageProvider)
-	{
-		try
-		{
-			return pageProvider.getPageClass();
-		}
-		catch (Exception e)
-		{
-			// getPageClass might fail if the page does not exist (ie session timeout)
+	/**
+	 * Wrapper for optional values that might fail if the page does not exist
+	 * (i.e. session timeout).
+	 */
+	protected <T> T optional(Supplier<T> function) {
+		try {
+			return function.get();
+		} catch (Exception ex) {
 			return null;
 		}
 	}
