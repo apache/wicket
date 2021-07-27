@@ -1063,7 +1063,7 @@
 						<failOnError>false</failOnError>
 						<doclint>none</doclint>
 						<additionalJOption>${javadoc.additionalJOption}</additionalJOption>
-						<source>${java.specification.version}</source>
+						<source>8</source>
 					</configuration>
 					<executions>
 						<execution>
