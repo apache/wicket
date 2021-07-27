@@ -23,7 +23,7 @@ import org.apache.wicket.model.IModel;
  * for the model and its object.
  *
  * <p>
- *     Usage:<br/>
+ *     Usage:<br>
  *     <code>
  *         public class MyComponent&lt;T&gt; extends AnotherComponent implements IGenericComponent&lt;T, MyComponent&lt;T&gt;&gt; { ... }
  *     </code>

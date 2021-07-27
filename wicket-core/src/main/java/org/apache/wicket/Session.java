@@ -56,30 +56,31 @@ import org.slf4j.LoggerFactory;
  * <li><b>Access</b> - the Session can be retrieved either by {@link Component#getSession()}
  * or by directly calling the static method Session.get(). All classes which extend directly or indirectly
  * {@link org.apache.wicket.markup.html.WebMarkupContainer} can also use its convenience method
- * {@link org.apache.wicket.markup.html.WebMarkupContainer#getWebSession()}
+ * {@link org.apache.wicket.markup.html.WebMarkupContainer#getWebSession()}</li>
  * 
  * <li><b>Locale</b> - A session has a Locale property to support localization. The Locale for a
  * session can be set by calling {@link Session#setLocale(Locale)}. The Locale for a Session
- * determines how localized resources are found and loaded.
+ * determines how localized resources are found and loaded.</li>
  * 
  * <li><b>Style</b> - Besides having an appearance based on locale, resources can also have
  * different looks in the same locale (a.k.a. "skins"). The style for a session determines the look
  * which is used within the appropriate locale. The session style ("skin") can be set with the
- * setStyle() method.
+ * setStyle() method.</li>
  * 
  * <li><b>Resource Loading</b> - Based on the Session locale and style, searching for resources
  * occurs in the following order (where sourcePath is set via the ApplicationSettings object for the
  * current Application, and style and locale are Session properties):
- * <ul>
- * 1. [sourcePath]/name[style][locale].[extension] <br>
- * 2. [sourcePath]/name[locale].[extension] <br>
- * 3. [sourcePath]/name[style].[extension] <br>
- * 4. [sourcePath]/name.[extension] <br>
- * 5. [classPath]/name[style][locale].[extension] <br>
- * 6. [classPath]/name[locale].[extension] <br>
- * 7. [classPath]/name[style].[extension] <br>
- * 8. [classPath]/name.[extension] <br>
- * </ul>
+ * <ol>
+ * <li> [sourcePath]/name[style][locale].[extension]</li>
+ * <li> [sourcePath]/name[locale].[extension]</li>
+ * <li> [sourcePath]/name[style].[extension]</li>
+ * <li> [sourcePath]/name.[extension]</li>
+ * <li> [classPath]/name[style][locale].[extension]</li>
+ * <li> [classPath]/name[locale].[extension]</li>
+ * <li> [classPath]/name[style].[extension]</li>
+ * <li> [classPath]/name.[extension]</li>
+ * </ol>
+ * </li>
  * 
  * <li><b>Session Properties</b> - Arbitrary objects can be attached to a Session by installing a
  * session factory on your Application class which creates custom Session subclasses that have
@@ -87,20 +88,21 @@ import org.slf4j.LoggerFactory;
  * discourage non-typesafe access to Session properties, no setProperty() or getProperty() method is
  * provided. In a clustered environment, you should take care to call the dirty() method when you
  * change a property on your own. This way the session will be reset again in the http session so
- * that the http session knows the session is changed.
+ * that the http session knows the session is changed.</li>
  * 
  * <li><b>Class Resolver</b> - Sessions have a class resolver ( {@link IClassResolver})
- * implementation that is used to locate classes for components such as pages.
+ * implementation that is used to locate classes for components such as pages.</li>
  * 
  * <li><b>Page Factory</b> - A pluggable implementation of {@link IPageFactory} is used to
- * instantiate pages for the session.
+ * instantiate pages for the session.</li>
  * 
  * <li><b>Removal</b> - Pages can be removed from the Session forcibly by calling clear(),
- * although such an action should rarely be necessary.
+ * although such an action should rarely be necessary.</li>
  * 
  * <li><b>Flash Messages</b> - Flash messages are messages that are stored in session and are removed
  * after they are displayed to the user. Session acts as a store for these messages because they can
- * last across requests.
+ * last across requests.</li>
+ * </ul>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius

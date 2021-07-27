@@ -104,8 +104,6 @@ import org.slf4j.LoggerFactory;
  * }
  * </pre>
  * 
- * </p>
- * 
  * @author Eelco Hillenius
  */
 public class WicketSessionFilter implements Filter

@@ -196,8 +196,6 @@ public class MyersDiff implements DiffAlgorithm
 	 * @param rev
 	 *            The revised sequence.
 	 * @return A {@link Revision} script corresponding to the path.
-	 * @throws DifferentiationFailedException
-	 *             if a {@link Revision} could not be built from the given path.
 	 */
 	public static Revision buildRevision(PathNode path, final Object[] orig, final Object[] rev)
 	{

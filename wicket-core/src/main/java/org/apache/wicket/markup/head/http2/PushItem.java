@@ -122,7 +122,7 @@ public class PushItem implements Serializable
 	 * 
 	 * @param object
 	 *            the object to extract the push URL information from
-	 * @see {@link org.apache.wicket.request.cycle.RequestCycle} (urlFor methods)
+	 * @see org.apache.wicket.request.cycle.RequestCycle (urlFor methods)
 	 * @return the push item
 	 */
 	public PushItem setObject(Serializable object)
@@ -157,7 +157,7 @@ public class PushItem implements Serializable
 	/**
 	 * Gets the URL composed within the push header item
 	 *
-	 * @see {@link PushHeaderItem#push(List)}
+	 * @see PushHeaderItem#push(List)
 	 * @return the URL to be pushed
 	 */
 	public String getUrl()
@@ -168,7 +168,7 @@ public class PushItem implements Serializable
 	/**
 	 * Sets the URL composed within the push header item
 	 *
-	 * @see {@link PushHeaderItem#push(List)}
+	 * @see PushHeaderItem#push(List)
 	 * @param url
 	 *            the URL used to push the resource
 	 * @return the push item

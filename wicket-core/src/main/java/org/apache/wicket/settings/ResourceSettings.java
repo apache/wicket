@@ -512,9 +512,9 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 * Get the the default cache duration for resources.
 	 * <p/>
 	 *
-	 * @return cache duration (Duration.NONE will be returned if caching is disabled)
+	 * @return cache duration ({@link Duration#ZERO} will be returned if caching is disabled)
 	 *
-	 * @see org.apache.wicket.util.time.Duration#NONE
+	 * @see Duration#ZERO
 	 */
 	public final Duration getDefaultCacheDuration()
 	{
@@ -522,15 +522,15 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	}
 
 	/**
-	 * Set the the default cache duration for resources.
+	 * Set the default cache duration for resources.
 	 * <p/>
-	 * Based on RFC-2616 this should not exceed one year. If you set Duration.NONE caching will be
+	 * Based on RFC-2616 this should not exceed one year. If you set {@link Duration#ZERO} caching will be
 	 * disabled.
 	 *
 	 * @param duration
 	 *            default cache duration in seconds
 	 *
-	 * @see org.apache.wicket.util.time.Duration#NONE
+	 * @see Duration#ZERO
 	 * @see org.apache.wicket.request.http.WebResponse#MAX_CACHE_DURATION
 	 * @return {@code this} object for chaining
 	 */

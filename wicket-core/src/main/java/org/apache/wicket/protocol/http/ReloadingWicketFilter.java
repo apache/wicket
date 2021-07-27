@@ -58,8 +58,8 @@ import org.apache.wicket.util.listener.IChangeListener;
  * </pre>
  * 
  * <p>
- * <b>NOTE. </b> If you wish to reload <tt>com.company.search.Form</tt>, you have to make sure to
- * include all classes that <b>reference</b> <tt>com.company.search.Form</tt>. In particular, if it
+ * <b>NOTE</b> If you wish to reload <em>com.company.search.Form</em>, you have to make sure to
+ * include all classes that <b>reference</b> <em>com.company.search.Form</em>. In particular, if it
  * is referenced in com.company.Application, you will also have to include the latter. And this is
  * viral, as for every class you include, you must check that all classes that reference it are also
  * included.
@@ -67,7 +67,7 @@ import org.apache.wicket.util.listener.IChangeListener;
  * 
  * <p>
  * It is also possible to add an extra URL to watch for changes using
- * <tt>ReloadingClassLoader.addLocation()</tt> . By default, all the URLs returned by the parent
+ * <em>ReloadingClassLoader.addLocation()</em> . By default, all the URLs returned by the parent
  * class loader (ie all {@link URL} returned by {@link ClassLoader#getResources(String)} with empty
  * {@link String}) are registered.
  * </p>
@@ -82,7 +82,7 @@ import org.apache.wicket.util.listener.IChangeListener;
  * <li>Don't forget that inner classes are named after YourClass$1, so take that into account when
  * setting up the patterns, eg include <tt>YourClass*</tt>, not just <tt>YourClass</tt></li>
  * <li>To enable back-button support for the reloading mechanism, be sure to put
- * <tt>Objects.setObjectStreamFactory(new WicketObjectStreamFactory());</tt> in your application's
+ * <em>Objects.setObjectStreamFactory(new WicketObjectStreamFactory());</em> in your application's
  * {@link WebApplication#init()} method. <b>Native JDK object serialization will break the reloading
  * mechanism when navigating in the browser's history.</b></li>
  * <li>It is advisable to <b>exclude</b> subclasses of {@link Session} from the the reloading
@@ -103,14 +103,14 @@ import org.apache.wicket.util.listener.IChangeListener;
  * 
  * <p>
  * <b>WARNING. </b> Be careful that when using Spring or other component managers, you will get
- * <tt>ClassCastException</tt> if a given class is loaded two times, one time by the normal
+ * <em>ClassCastException</em> if a given class is loaded two times, one time by the normal
  * classloader, and another time by the reloading classloader. You need to ensure that your Spring
  * beans are properly excluded from the reloading class loader and that only the Wicket components
  * are included. When getting a cryptic error with regard to class loading, class instantiation or
  * class comparison, first <b>disable the reloading class loader</b> to rule out the possibility of
  * a classloader conflict. Please keep in mind that two classes are equal if and only if they have
  * the same name <b>and are loaded in the same classloader</b>. Same goes for errors like
- * <tt>LinkageError: Class FooBar violates loader constraints</tt>, better be safe and disable the
+ * <em>LinkageError: Class FooBar violates loader constraints</em>, better be safe and disable the
  * reloading feature.
  * </p>
  * 

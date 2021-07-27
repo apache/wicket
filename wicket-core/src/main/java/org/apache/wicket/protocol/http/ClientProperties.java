@@ -43,7 +43,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
  * </pre>
  *
- * </p>
+ * <p>
  *
  * WARNING: Be sure you think about the dangers of depending on information you pull from the client
  * too much. They may be easily spoofed or inaccurate in other ways, and properties like window and

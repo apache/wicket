@@ -64,6 +64,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * <strong>Configuration parameters:</strong>
  * <table border="1">
+ * <caption>Configuration parameters</caption>
  * <tr>
  * <th>XForwardedFilter property</th>
  * <th>Description</th>
@@ -184,6 +185,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Request values:
  * <table border="1">
+ * <caption>Request values</caption>
  * <tr>
  * <th>property</th>
  * <th>Value Before XForwardedFilter</th>
@@ -262,6 +264,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Request values:
  * <table border="1">
+ * <caption>Request values</caption>
  * <tr>
  * <th>property</th>
  * <th>Value Before XForwardedFilter</th>
@@ -320,6 +323,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Request values:
  * <table border="1">
+ * <caption>Request values</caption>
  * <tr>
  * <th>property</th>
  * <th>Value Before XForwardedFilter</th>
@@ -380,6 +384,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Request values:
  * <table border="1">
+ * <caption>Request values</caption>
  * <tr>
  * <th>property</th>
  * <th>Value Before XForwardedFilter</th>

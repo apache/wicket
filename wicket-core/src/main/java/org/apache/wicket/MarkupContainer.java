@@ -71,13 +71,14 @@ import org.slf4j.LoggerFactory;
  * nested container "b" which held a nested component "c", then a.get("b:c") would return the
  * Component with id "c". The number of children in a MarkupContainer can be determined by calling
  * size(), and the whole hierarchy of children held by a MarkupContainer can be traversed by calling
- * visitChildren(), passing in an implementation of IVisitor.
+ * visitChildren(), passing in an implementation of IVisitor.</li>
  * 
  * <li><b>Markup Rendering </b>- A MarkupContainer also holds/references associated markup which is
  * used to render the container. As the markup stream for a container is rendered, component
  * references in the markup are resolved by using the container to look up Components in the
  * container's component map by id. Each component referenced by the markup stream is given an
- * opportunity to render itself using the markup stream.
+ * opportunity to render itself using the markup stream.</li>
+ * </ul>
  * <p>
  * Components may alter their referring tag, replace the tag's body or insert markup after the tag.
  * But components cannot remove tags from the markup stream. This is an important guarantee because

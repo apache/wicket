@@ -190,7 +190,6 @@ public class MessageDigestResourceVersion implements IResourceVersion
 	 * 
 	 * @return binary message digest
 	 * 
-	 * @throws ResourceStreamNotFoundException
 	 * @throws IOException
 	 */
 	protected byte[] computeDigest(InputStream inputStream) throws IOException

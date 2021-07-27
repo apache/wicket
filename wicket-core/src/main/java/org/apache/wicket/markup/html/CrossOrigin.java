@@ -16,10 +16,12 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.markup.head.ISubresourceHeaderItem;
+
 /**
  * To be used for the crossOrigin attribute
  *
- * @see {@link #setCrossOrigin(CrossOrigin)}
+ * @see ISubresourceHeaderItem#setCrossOrigin(org.apache.wicket.markup.html.CrossOrigin)
  */
 public enum CrossOrigin {
 	/**
@@ -37,7 +39,7 @@ public enum CrossOrigin {
 
 	private final String realName;
 
-	private CrossOrigin(String realName)
+	CrossOrigin(String realName)
 	{
 		this.realName = realName;
 	}

@@ -88,7 +88,6 @@ public abstract class AbstractJceCrypt implements ICrypt
 	 * @param plainBytes
 	 *            text to encrypt
 	 * @return the string encrypted
-	 * @throws GeneralSecurityException
 	 */
 	abstract protected byte[] encrypt(final byte[] plainBytes);
 }

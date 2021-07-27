@@ -28,7 +28,7 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
  * <pre>
  * &lt;filter&gt;
  *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
- *   &lt;filter-class>org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
+ *   &lt;filter-class&gt;org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;
  *   &lt;init-param&gt;
  *     &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
  *     &lt;param-value&gt;org.apache.wicket.spring.AnnotationConfigSpringWebApplicationFactory&lt;/param-value&gt;

@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * Examples:
  * <table border="0">
+ * <caption>Examples</caption>
  * <tr>
  * <td>+*.gif</td>
  * <td>All gif files in all directories</td>

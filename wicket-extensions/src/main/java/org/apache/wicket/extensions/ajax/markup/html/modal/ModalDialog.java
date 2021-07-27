@@ -256,7 +256,7 @@ public class ModalDialog extends Panel
 	/**
 	 * Convenience method to trap focus inside the overlay.
 	 * 
-	 * @see {@link TrapFocusBehavior}
+	 * @see TrapFocusBehavior
 	 * 
 	 * @return this
 	 */

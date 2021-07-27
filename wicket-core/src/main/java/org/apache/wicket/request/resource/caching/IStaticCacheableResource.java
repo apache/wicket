@@ -33,7 +33,7 @@ public interface IStaticCacheableResource extends IResource
 	/**
 	 * controls whether caching of the resource is enabled or disabled
 	 * 
-	 * @return @{code true} if caching is enabled
+	 * @return {@code true} if caching is enabled
 	 */
 	boolean isCachingEnabled();
 	

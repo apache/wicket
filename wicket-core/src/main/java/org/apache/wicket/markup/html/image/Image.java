@@ -564,7 +564,7 @@ public class Image extends WebComponent implements IRequestListener
 	/**
 	 * Gets the cross origin settings
 	 *
-	 * @see {@link #setCrossOrigin(CrossOrigin)}
+	 * @see #setCrossOrigin(CrossOrigin)
 	 *
 	 * @return the cross origins settings
 	 */

@@ -57,7 +57,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  *  &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
- * </p>
+ * <p>
  * The following snippet shows how to pass a parameter from the Page creating the Page to the Page
  * responded by the Link.
  * 

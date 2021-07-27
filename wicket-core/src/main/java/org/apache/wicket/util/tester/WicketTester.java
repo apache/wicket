@@ -146,7 +146,7 @@ import org.slf4j.LoggerFactory;
  * separating each ID with a ':'.
  *
  * <h2>Cookie handling</h2>
- * <p>
+ *
  * There are some expectations about wicket tester cookie handling which should match as best as
  * it can be with a real client server request response cycle:
  * <ul>
@@ -159,7 +159,6 @@ import org.slf4j.LoggerFactory;
  *  <li> all valid cookies (maxAge!=0) from the last response should be added to
  *   the next request cookies (tester.getRequest().getCookies())</li>
  * </ul>
- * </p>
  *
  * @author Ingram Chen
  * @author Juergen Donnerstag

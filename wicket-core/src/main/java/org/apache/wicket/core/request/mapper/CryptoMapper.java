@@ -112,8 +112,7 @@ public class CryptoMapper implements IRequestMapperDelegate
 	/**
 	 * Encrypt with {@link org.apache.wicket.settings.SecuritySettings#getCryptFactory()}.
 	 * <p>
-	 * <strong>Important</strong>: Encryption is done with {@link org.apache.wicket.settings.SecuritySettings#DEFAULT_ENCRYPTION_KEY} if you haven't
-	 * configured an alternative {@link ICryptFactory}. For better security it is recommended to use
+	 * <strong>Important</strong>: For better security it is recommended to use
 	 * {@link CryptoMapper#CryptoMapper(IRequestMapper, Supplier)} with a specific {@link ICrypt} implementation
 	 * that generates a separate key for each user.
 	 * {@link org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory} provides such an implementation that stores the
