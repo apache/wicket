@@ -21,16 +21,21 @@ import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-class ListenerLogDataTest {
+public class ListenerLogDataTest {
 
 	/**
 	 * Test for WICKET-6908.
 	 */
 	@Test
-	void neverFails() {
+	public void neverFails() {
 		IPageAndComponentProvider provider = new IPageAndComponentProvider() {
+			
+			@Override
+			public boolean isNewPageInstance() {
+				throw new IllegalStateException();
+			}
 			
 			@Override
 			public boolean wasExpired() {
