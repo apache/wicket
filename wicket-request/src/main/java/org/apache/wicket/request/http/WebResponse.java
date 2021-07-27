@@ -199,7 +199,6 @@ public abstract class WebResponse extends Response
 	 * 
 	 * @param sc
 	 * @param msg
-	 * @throws IOException
 	 */
 	public abstract void sendError(int sc, String msg);
 

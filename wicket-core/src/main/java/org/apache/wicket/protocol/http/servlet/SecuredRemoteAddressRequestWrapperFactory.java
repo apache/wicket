@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * <strong>Configuration parameters:</strong>
  * <table border="1">
+ * <caption>Configuration parameters</caption>
  * <tr>
  * <th>XForwardedFilter property</th>
  * <th>Description</th>

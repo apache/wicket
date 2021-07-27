@@ -375,7 +375,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @see org.springframework.beans.factory.HierarchicalBeanFactory# getParentBeanFactory()
+	 * @see org.springframework.beans.factory.HierarchicalBeanFactory#getParentBeanFactory()
 	 */
 	@Override
 	public BeanFactory getParentBeanFactory()

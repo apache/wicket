@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
  * Note that the applicationClassName parameter you specify must be the fully qualified name of a
  * class that extends WebApplication. If your class cannot be found, does not extend WebApplication
  * or cannot be instantiated, a runtime exception of type WicketRuntimeException will be thrown.
- * </p>
+ * <p>
  * As an alternative, you can configure an application factory instead. This looks like:
  * 
  * <pre>
@@ -97,7 +97,7 @@ import org.slf4j.LoggerFactory;
  *     ...
  * </pre>
  * 
- * </p>
+ * <p>
  * In order to support frameworks like Spring, the class is non-final and the variable
  * webApplication is protected instead of private. Thus subclasses may provide their own means of
  * providing the application object.

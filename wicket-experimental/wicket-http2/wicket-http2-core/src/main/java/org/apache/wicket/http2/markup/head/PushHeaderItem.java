@@ -431,8 +431,7 @@ public class PushHeaderItem extends HeaderItem
 	 *            the request to get the container request from. The container request is checked if
 	 *            it is instance of {@link HttpServletRequest}
 	 * @return the container request get from the given request casted to {@link HttpServletRequest}
-	 * @throw {@link WicketRuntimeException} if the container request is not a
-	 *        {@link HttpServletRequest}
+	 * @throws WicketRuntimeException - if the container request is not a {@link HttpServletRequest}
 	 */
 	public HttpServletRequest checkHttpServletRequest(Request request)
 	{

@@ -36,7 +36,7 @@ import org.apache.wicket.util.lang.Args;
  * achieve this with
  * <ul>
  * <li>a {@link SerializingPageStore} delegating to this store and</li>
- * <li>delegating to a store that does not deserialize its pages, e.g. a {@link DiskPageStore}.</li>.
+ * <li>delegating to a store that does not deserialize its pages, e.g. a {@link DiskPageStore}.</li>
  * </ul>
  */
 public class CryptingPageStore extends DelegatingPageStore

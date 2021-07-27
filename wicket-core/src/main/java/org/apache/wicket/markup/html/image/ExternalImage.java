@@ -282,7 +282,7 @@ public class ExternalImage extends WebComponent
 	/**
 	 * Gets the cross origin settings
 	 * 
-	 * @see {@link org.apache.wicket.markup.html.image.Image#setCrossOrigin(CrossOrigin)}
+	 * @see org.apache.wicket.markup.html.image.Image#setCrossOrigin(CrossOrigin)
 	 *
 	 * @return the cross origins settings
 	 */
@@ -294,7 +294,7 @@ public class ExternalImage extends WebComponent
 	/**
 	 * Sets the cross origin settings
 	 * 
-	 * @see {@link org.apache.wicket.markup.html.image.Image#setCrossOrigin(CrossOrigin)}
+	 * @see org.apache.wicket.markup.html.image.Image#setCrossOrigin(CrossOrigin)
 	 * @param crossOrigin
 	 *            the cross origins settings to set
 	 */

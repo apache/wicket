@@ -190,7 +190,7 @@ public enum AjaxAttributeName {
 	/**
 	 * the indicator id, if any found (i)
 	 * 
-	 * @see AbstractDefaultAjaxBehavior#findIndicatorId()
+	 * See AbstractDefaultAjaxBehavior#findIndicatorId()
 	 */
 	INDICATOR_ID("i"),
 
@@ -218,7 +218,7 @@ public enum AjaxAttributeName {
 	/**
 	 * markup id of behavior attached component (c)
 	 * 
-	 * @see AbstractDefaultAjaxBehavior#renderAjaxAttributes(org.apache.wicket.Component)
+	 * See AbstractDefaultAjaxBehavior#renderAjaxAttributes(Component)
 	 */
 	MARKUP_ID("c"),
 
@@ -230,17 +230,17 @@ public enum AjaxAttributeName {
 	METHOD("m"),
 
 	/**
-	 * @see AbstractDefaultAjaxBehavior#getCallbackUrl();
+	 * @see AbstractDefaultAjaxBehavior#getCallbackUrl()
 	 */
 	URL("u"),
 
 	/**
-	 * @see AjaxRequestAttributes#childSelector
+	 * @see AjaxRequestAttributes#setChildSelector(CharSequence)
 	 */
 	CHILD_SELECTOR("sel"),
 
 	/**
-	 * @see AjaxRequestAttributes#serializeRecursively
+	 * @see AjaxRequestAttributes#setSerializeRecursively(boolean)
 	 */
 	SERIALIZE_RECURSIVELY("sr");
 

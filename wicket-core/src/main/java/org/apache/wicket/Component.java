@@ -206,6 +206,7 @@ import org.slf4j.LoggerFactory;
  * <li><b>Security </b>- All components are subject to an {@link IAuthorizationStrategy} which
  * controls instantiation, visibility and enabling. See {@link SimplePageAuthorizationStrategy} for
  * a simple implementation.</li>
+ * </ul>
  * 
  * @author Jonathan Locke
  * @author Chris Turner

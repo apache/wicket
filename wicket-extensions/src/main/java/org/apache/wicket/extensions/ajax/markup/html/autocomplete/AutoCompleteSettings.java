@@ -24,6 +24,7 @@ import org.apache.wicket.util.io.IClusterable;
  * <p>
  * Default settings:
  * <table>
+ * <caption>Default settings</caption>
  * <tr>
  * <th>setting</th>
  * <th>default value</th>

@@ -576,7 +576,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 *            The input stream to read and parse
 	 * @throws IOException
 	 * 
-	 * @see {@link #parse(InputStream, String)}
+	 * @see #parse(InputStream, String)
 	 */
 	@Override
 	public void parse(final InputStream in) throws IOException

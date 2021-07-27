@@ -1064,8 +1064,8 @@
 							<link>${javadoc.jdk.apidocs.link}</link>
 						</links>
 						<linksource>true</linksource>
-						<failOnError>false</failOnError>
-						<doclint>none</doclint>
+						<failOnError>true</failOnError>
+						<doclint>all,-html</doclint>
 						<additionalJOption>${javadoc.additionalJOption}</additionalJOption>
 						<source>8</source>
 					</configuration>

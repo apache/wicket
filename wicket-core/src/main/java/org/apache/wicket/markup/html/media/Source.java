@@ -239,7 +239,7 @@ public class Source extends WebMarkupContainer
 	/**
 	 * Gets the type
 	 *
-	 * @see {@link #setType(String)}
+	 * @see #setType(String)
 	 *
 	 * @return the type of this media element
 	 */
@@ -299,7 +299,7 @@ public class Source extends WebMarkupContainer
 	/**
 	 * The media for which the content of this source should be shown
 	 *
-	 * @See {@link #setMedia(String)}
+	 * @see #setMedia(String)
 	 * @return The media for which the content of this source should be shown
 	 */
 	public String getMedia()

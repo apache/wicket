@@ -225,8 +225,8 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * @return read only iterator over added behaviors
-	 * @TODO change to return unmodifiable list which will never be null. See Component.getBehavior
 	 */
+	// TODO change to return unmodifiable list which will never be null. See Component.getBehavior
 	public final Iterator<? extends Behavior> getBehaviors()
 	{
 		if (behaviors == null)

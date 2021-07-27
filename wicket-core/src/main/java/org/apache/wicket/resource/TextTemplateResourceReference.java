@@ -35,7 +35,7 @@ import org.apache.wicket.util.template.TextTemplate;
 /**
  * A class which adapts a {@link PackageTextTemplate} to a {@link ResourceReference}.
  * 
- * @see {@link "https://cwiki.apache.org/WICKET/dynamically-generate-a-css-stylesheet.html"}
+ * See <a href="https://cwiki.apache.org/confluence/display/WICKET/Dynamically+Generate+a+CSS+Stylesheet">Dynamically generate a CSS stylesheet</a>
  * 
  * @author James Carman
  */
