@@ -22,9 +22,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * Abstract base class for TextArea and TextField.
@@ -36,11 +33,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractTextComponent<T> extends FormComponent<T>
 {
-	// Flag for the type resolving. FLAG_RESERVED1-3 is taken by form component
+	// Flag for the type resolving. FLAG_RESERVED1-3 are taken by form component
 	private static final int TYPE_RESOLVED = Component.FLAG_RESERVED4;
-
-	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(AbstractTextComponent.class);
 
 	/**
 	 * 

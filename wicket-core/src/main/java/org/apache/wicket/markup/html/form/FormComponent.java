@@ -117,9 +117,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	{
 		private final Set<String> triedKeys = new LinkedHashSet<>();
 
-		/**
-		 * @see org.apache.wicket.validation.IErrorMessageSource#getMessage(String, java.util.Map)
-		 */
 		@Override
 		public String getMessage(String key, Map<String, Object> vars)
 		{
@@ -771,12 +768,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 		{
 			if (values != null && values.length == 1 && values[0] == null)
 			{
-				// we the key got passed in (otherwise values would be null),
+				// the key got passed in (otherwise values would be null),
 				// but the value was set to null.
 				// As the servlet spec isn't clear on what to do with 'empty'
 				// request values - most return an empty string, but some null -
 				// we have to workaround here and deliberately set to an empty
-				// string if the the component is not nullable (text components)
+				// string if the component is not nullable (text components)
 				return EMPTY_STRING_ARRAY;
 			}
 		}
