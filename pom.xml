@@ -1065,7 +1065,7 @@
 						</links>
 						<linksource>true</linksource>
 						<failOnError>true</failOnError>
-						<doclint>all,-html</doclint>
+						<doclint>all,-html,-missing</doclint>
 						<additionalJOption>${javadoc.additionalJOption}</additionalJOption>
 						<source>8</source>
 					</configuration>

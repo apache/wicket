@@ -32,7 +32,7 @@ import org.apache.wicket.request.Url;
  * <b>NOTE</b>: a listener implementation is a singleton and hence needs to ensure proper handling
  * of multi-threading issues.
  * <p>
- * <h3>Call order</h3>
+ * Call order
  * <p>
  * The interface methods are ordered in the execution order as Wicket goes through the request
  * cycle:
@@ -53,8 +53,7 @@ import org.apache.wicket.request.Url;
  * <li>{@link #onException(RequestCycle, Exception)}, followed by
  * {@link #onExceptionRequestHandlerResolved(RequestCycle, org.apache.wicket.request.IRequestHandler, Exception)} </li>
  * </ul>
- * 
- * <h3>Example</h3>
+ *
  * <p>
  * A short example of a request counter.
  * </p>

@@ -1444,8 +1444,8 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Handles multi-part processing of the submitted data. <h3>
-	 * WARNING</h3> If this method is overridden it can break {@link FileUploadField}s on this form
+	 * Handles multi-part processing of the submitted data.
+	 * <strong>WARNING</strong> If this method is overridden it can break {@link FileUploadField}s on this form
 	 * 
 	 * @return false if form is multipart and upload failed
 	 */

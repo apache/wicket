@@ -562,7 +562,6 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 * @param compressor
 	 *            The implementation to be used
 	 * @return The old value
-	 * @return {@code this} object for chaining
 	 */
 	public IJavaScriptCompressor setJavaScriptCompressor(IJavaScriptCompressor compressor)
 	{
@@ -592,7 +591,6 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 * @param compressor
 	 *            The implementation to be used
 	 * @return The old value
-	 * @return {@code this} object for chaining
 	 */
 	public ICssCompressor setCssCompressor(ICssCompressor compressor)
 	{

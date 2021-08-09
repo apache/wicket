@@ -347,7 +347,7 @@ class AttributeModifierTest
 		AttributeModifier appender = AttributeModifier.append("class", AttributeModifier.VALUELESS_ATTRIBUTE_ADD);
 		final AttributeModifier copy = WicketObjects.cloneObject(appender);
 		final IModel<?> replaceModel = copy.getReplaceModel();
-		assertThat(replaceModel.getObject()).isEqualToComparingFieldByField(AttributeModifier.VALUELESS_ATTRIBUTE_ADD);
+		assertThat(replaceModel.getObject()).usingRecursiveComparison().isEqualTo(AttributeModifier.VALUELESS_ATTRIBUTE_ADD);
 	}
 
 
@@ -360,6 +360,6 @@ class AttributeModifierTest
 		AttributeModifier appender = AttributeModifier.append("class", AttributeModifier.VALUELESS_ATTRIBUTE_REMOVE);
 		final AttributeModifier copy = WicketObjects.cloneObject(appender);
 		final IModel<?> replaceModel = copy.getReplaceModel();
-		assertThat(replaceModel.getObject()).isEqualToComparingFieldByField(AttributeModifier.VALUELESS_ATTRIBUTE_REMOVE);
+		assertThat(replaceModel.getObject()).usingRecursiveComparison().isEqualTo(AttributeModifier.VALUELESS_ATTRIBUTE_REMOVE);
 	}
 }
