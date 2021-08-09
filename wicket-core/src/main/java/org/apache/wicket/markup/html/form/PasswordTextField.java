@@ -65,7 +65,7 @@ public class PasswordTextField extends TextField<String>
 	/**
 	 * Should password be reset, see {@link #setResetPassword(boolean)}.
 	 * 
-	 * @return should password be resetted
+	 * @return should password be reset
 	 */
 	public final boolean getResetPassword()
 	{
@@ -74,7 +74,7 @@ public class PasswordTextField extends TextField<String>
 
 	/**
 	 * Flag indicating whether the password should be reset after each request.
-	 * Additionally any present value is not rendered into the markup.
+	 * Additionally, any present value is not rendered into the markup.
 	 * <br>
 	 * If <code>true</code>, the model object is set to null after each request to prevent it
 	 * being serialized along with the containing page. This is default and highly recommended
@@ -116,7 +116,7 @@ public class PasswordTextField extends TextField<String>
 	}
 
 	/**
-	 * Overriden to nullify the password.
+	 * Overridden to nullify the password.
 	 */
 	@Override
 	protected void onDetach()
