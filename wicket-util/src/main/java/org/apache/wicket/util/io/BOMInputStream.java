@@ -36,9 +36,8 @@ import java.util.List;
  * <li>UTF-32BE - {@link ByteOrderMark#UTF_32LE}</li>
  * <li>UTF-32LE - {@link ByteOrderMark#UTF_32BE}</li>
  * </ul>
- * 
- * 
- * <h3>Example 1 - Detect and exclude a UTF-8 BOM</h3>
+ *
+ * <p> Example 1 - Detect and exclude a UTF-8 BOM
  * 
  * <pre>
  * BOMInputStream bomIn = new BOMInputStream(in);
@@ -47,7 +46,7 @@ import java.util.List;
  * }
  * </pre>
  * 
- * <h3>Example 2 - Detect a UTF-8 BOM (but don't exclude it)</h3>
+ * <p> Example 2 - Detect a UTF-8 BOM (but don't exclude it)
  * 
  * <pre>
  * boolean include = true;
@@ -57,7 +56,7 @@ import java.util.List;
  * }
  * </pre>
  * 
- * <h3>Example 3 - Detect Multiple BOMs</h3>
+ * <p> Example 3 - Detect Multiple BOMs
  * 
  * <pre>
  * BOMInputStream bomIn = new BOMInputStream(in, 
