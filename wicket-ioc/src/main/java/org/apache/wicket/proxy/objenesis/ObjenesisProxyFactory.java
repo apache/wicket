@@ -18,36 +18,39 @@ package org.apache.wicket.proxy.objenesis;
 
 import java.io.Serializable;
 
+import javax.security.auth.callback.Callback;
+
 import org.apache.wicket.proxy.ILazyInitProxy;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.proxy.LazyInitProxyFactory.IWriteReplace;
 import org.objenesis.ObjenesisStd;
 
-import net.sf.cglib.core.NamingPolicy;
-import net.sf.cglib.proxy.Callback;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.Factory;
+//import net.sf.cglib.core.NamingPolicy;
+//import net.sf.cglib.proxy.Callback;
+//import net.sf.cglib.proxy.Enhancer;
+//import net.sf.cglib.proxy.Factory;
 
 public class ObjenesisProxyFactory
 {
 	private static final ObjenesisStd OBJENESIS = new ObjenesisStd(false);
 
-	public static Object createProxy(final Class<?> type, final IProxyTargetLocator locator, NamingPolicy namingPolicy)
+	public static Object createProxy(final Class<?> type, final IProxyTargetLocator locator/*, NamingPolicy namingPolicy*/)
 	{
 		ObjenesisCGLibInterceptor handler = new ObjenesisCGLibInterceptor(type, locator);
 
-		Enhancer e = new Enhancer();
-		e.setInterfaces(new Class[]{Serializable.class, ILazyInitProxy.class, IWriteReplace.class});
-		e.setSuperclass(type);
-		e.setCallbackType(handler.getClass());
-		e.setNamingPolicy(namingPolicy);
-		Class<?> proxyClass = e.createClass();
-		
-		Object instance = OBJENESIS.newInstance(proxyClass);
-
-		// set callbacks directly (WICKET-6607) 
-		((Factory) instance).setCallbacks(new Callback[]{handler});
-		
-		return instance;
+//		Enhancer e = new Enhancer();
+//		e.setInterfaces(new Class[]{Serializable.class, ILazyInitProxy.class, IWriteReplace.class});
+//		e.setSuperclass(type);
+//		e.setCallbackType(handler.getClass());
+//		e.setNamingPolicy(namingPolicy);
+//		Class<?> proxyClass = e.createClass();
+//
+//		Object instance = OBJENESIS.newInstance(proxyClass);
+//
+//		// set callbacks directly (WICKET-6607)
+//		((Factory) instance).setCallbacks(new Callback[]{handler});
+//
+//		return instance;
+		return null;
 	}
 }
