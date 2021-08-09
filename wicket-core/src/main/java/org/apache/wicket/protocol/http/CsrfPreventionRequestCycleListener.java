@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * HTTP headers for cross domain requests. By default only checks requests that try to perform an
  * action on a component, such as a form submit, or link click.
  * <p>
- * <h3>Installation</h3>
+ * Installation
  * <p>
  * You can enable this CSRF prevention filter by adding it to the request cycle listeners in your
  * {@link WebApplication#init() application's init method}:
@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
  * }
  * </pre>
  * <p>
- * <h3>Configuration</h3>
+ * Configuration
  * <p>
  * When the {@code Origin} or {@code Referer} HTTP header is present but doesn't match the requested
  * URL this listener will by default throw a HTTP error ( {@code 400 BAD REQUEST}) and abort the
