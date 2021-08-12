@@ -41,6 +41,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.proxy.objenesis.ObjenesisProxyFactory;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -173,29 +174,38 @@ public class LazyInitProxyFactory
 		}
 		else if (IS_OBJENESIS_AVAILABLE && !hasNoArgConstructor(type))
 		{
-			return null; //ObjenesisProxyFactory.createProxy(type, locator, WicketNamingPolicy.INSTANCE);
+			return ObjenesisProxyFactory.createProxy(type, locator);
 		}
 		else
 		{
-			ClassLoader classLoader = resolveClassLoader();
+			ByteBuddyInterceptor interceptor = new ByteBuddyInterceptor(type, locator);
+			Class<?> proxyClass = createProxyClass(type, interceptor);
 
-			Class<?> dynamicType = DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
-					new TypeCache.SimpleKey(type),
-					() -> BYTE_BUDDY
-							.subclass(type)
-							.implement(Serializable.class, ILazyInitProxy.class, IWriteReplace.class)
-							.method(ElementMatchers.any())
-							.intercept(MethodDelegation.to(new ByteBuddyInterceptor(type, locator)))
-							.make()
-							.load(classLoader, ClassLoadingStrategy.Default.INJECTION)
-							.getLoaded());
-
-			try {
-				return dynamicType.getDeclaredConstructor().newInstance();
-			} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			try
+			{
+				return proxyClass.getDeclaredConstructor().newInstance();
+			}
+			catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+			{
 				throw new WicketRuntimeException(e);
 			}
 		}
+	}
+
+	public static Class<?> createProxyClass(Class<?> type, Object interceptor)
+	{
+		ClassLoader classLoader = resolveClassLoader();
+		Class<?> dynamicType = DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
+				new TypeCache.SimpleKey(type),
+				() -> BYTE_BUDDY
+						.subclass(type)
+						.implement(Serializable.class, ILazyInitProxy.class, IWriteReplace.class)
+						.method(ElementMatchers.any())
+						.intercept(MethodDelegation.to(interceptor))
+						.make()
+						.load(classLoader, ClassLoadingStrategy.Default.INJECTION)
+						.getLoaded());
+		return dynamicType;
 	}
 
 	private static ClassLoader resolveClassLoader()

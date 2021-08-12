@@ -22,12 +22,12 @@ import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
 
 /**
- * Method interceptor for proxies representing concrete object not backed by an interface. These
- * proxies are representing by cglib proxies.
+ * Method interceptor for proxies representing concrete object not backed by an interface.
+ * These proxies are representing by ByteBuddy proxies.
  */
-public class ObjenesisCGLibInterceptor extends LazyInitProxyFactory.AbstractByteBuddyInterceptor
+public class ObjenesisByteBuddyInterceptor extends LazyInitProxyFactory.AbstractByteBuddyInterceptor
 {
-	public ObjenesisCGLibInterceptor(Class<?> type, IProxyTargetLocator locator) {
+	public ObjenesisByteBuddyInterceptor(Class<?> type, IProxyTargetLocator locator) {
 		super(type, locator);
 	}
 

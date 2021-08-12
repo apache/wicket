@@ -16,13 +16,9 @@
  */
 package org.apache.wicket.proxy.objenesis;
 
-import java.io.Serializable;
-
-import javax.security.auth.callback.Callback;
-
-import org.apache.wicket.proxy.ILazyInitProxy;
+import net.bytebuddy.NamingStrategy;
 import org.apache.wicket.proxy.IProxyTargetLocator;
-import org.apache.wicket.proxy.LazyInitProxyFactory.IWriteReplace;
+import org.apache.wicket.proxy.LazyInitProxyFactory;
 import org.objenesis.ObjenesisStd;
 
 //import net.sf.cglib.core.NamingPolicy;
@@ -34,23 +30,12 @@ public class ObjenesisProxyFactory
 {
 	private static final ObjenesisStd OBJENESIS = new ObjenesisStd(false);
 
-	public static Object createProxy(final Class<?> type, final IProxyTargetLocator locator/*, NamingPolicy namingPolicy*/)
+	public static Object createProxy(final Class<?> type, final IProxyTargetLocator locator)
 	{
-		ObjenesisCGLibInterceptor handler = new ObjenesisCGLibInterceptor(type, locator);
+		ObjenesisByteBuddyInterceptor interceptor = new ObjenesisByteBuddyInterceptor(type, locator);
+		final Class<?> proxyClass = LazyInitProxyFactory.createProxyClass(type, interceptor);
 
-//		Enhancer e = new Enhancer();
-//		e.setInterfaces(new Class[]{Serializable.class, ILazyInitProxy.class, IWriteReplace.class});
-//		e.setSuperclass(type);
-//		e.setCallbackType(handler.getClass());
-//		e.setNamingPolicy(namingPolicy);
-//		Class<?> proxyClass = e.createClass();
-//
-//		Object instance = OBJENESIS.newInstance(proxyClass);
-//
-//		// set callbacks directly (WICKET-6607)
-//		((Factory) instance).setCallbacks(new Callback[]{handler});
-//
-//		return instance;
-		return null;
+		Object instance = OBJENESIS.newInstance(proxyClass);
+		return instance;
 	}
 }
