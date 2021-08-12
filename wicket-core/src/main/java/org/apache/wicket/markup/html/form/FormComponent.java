@@ -946,7 +946,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * Gets whether this component's input can be null. By default, components that do not get input
 	 * will have null values passed in for input. However, component TextField is an example
 	 * (possibly the only one) that never gets a null passed in, even if the field is left empty
-	 * UNLESS it had attribute <code>disabled="disabled"</code> set.
+	 * UNLESS it has attribute <code>disabled="disabled"</code> set.
 	 * 
 	 * @return True if this component's input can be null. Returns true by default.
 	 */
