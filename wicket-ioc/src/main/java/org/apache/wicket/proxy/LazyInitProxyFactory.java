@@ -53,7 +53,7 @@ import org.apache.wicket.util.io.IClusterable;
  * forwarded.
  * <p>
  * This factory creates two kinds of proxies: A standard dynamic proxy when the specified type is an
- * interface, and a CGLib proxy when the specified type is a concrete class.
+ * interface, and a ByteBuddy proxy when the specified type is a concrete class.
  * <p>
  * The general use case for such a proxy is to represent a dependency that should not be serialized
  * with a wicket page or {@link IModel}. The solution is to serialize the proxy and the
@@ -307,7 +307,7 @@ public class LazyInitProxyFactory
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	public abstract static class AbstractByteBuddyInterceptor
+	public static class ByteBuddyInterceptor
 		implements
 			ILazyInitProxy,
 			Serializable,
@@ -330,7 +330,7 @@ public class LazyInitProxyFactory
 		 * @param locator
 		 *            object locator used to locate the object this proxy represents
 		 */
-		public AbstractByteBuddyInterceptor(final Class<?> type, final IProxyTargetLocator locator)
+		public ByteBuddyInterceptor(final Class<?> type, final IProxyTargetLocator locator)
 		{
 			super();
 			typeName = type.getName();
@@ -380,20 +380,6 @@ public class LazyInitProxyFactory
 		public IProxyTargetLocator getObjectLocator()
 		{
 			return locator;
-		}
-	}
-
-	/**
-	 * Method interceptor for proxies representing concrete object not backed by an interface.
-	 * These proxies are representing by ByteBuddy proxies.
-	 *
-	 * @author Igor Vaynberg (ivaynberg)
-	 */
-	protected static class ByteBuddyInterceptor extends AbstractByteBuddyInterceptor
-	{
-		public ByteBuddyInterceptor(Class<?> type, IProxyTargetLocator locator)
-		{
-			super(type, locator);
 		}
 
 		@Override
@@ -581,11 +567,11 @@ public class LazyInitProxyFactory
 
 		@Override
 		protected String name(TypeDescription superClass) {
-			final String prefix = superClass.getName();
+			String prefix = superClass.getName();
 			int lastIdxOfDot = prefix.lastIndexOf('.');
 			String packageName = prefix.substring(0, lastIdxOfDot);
 			String className = prefix.substring(lastIdxOfDot + 1);
-			String name = packageName + ".Wicket_Proxy_" + className;
+			String name = "bytebuddy_generated_wicket_proxy." + packageName + "." + className;
 			return name;
 		}
 

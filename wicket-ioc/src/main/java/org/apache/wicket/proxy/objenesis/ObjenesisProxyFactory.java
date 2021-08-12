@@ -16,15 +16,9 @@
  */
 package org.apache.wicket.proxy.objenesis;
 
-import net.bytebuddy.NamingStrategy;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
 import org.objenesis.ObjenesisStd;
-
-//import net.sf.cglib.core.NamingPolicy;
-//import net.sf.cglib.proxy.Callback;
-//import net.sf.cglib.proxy.Enhancer;
-//import net.sf.cglib.proxy.Factory;
 
 public class ObjenesisProxyFactory
 {

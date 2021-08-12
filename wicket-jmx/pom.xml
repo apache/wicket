@@ -32,7 +32,6 @@
 		<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy</artifactId>
-			<version>1.11.12</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

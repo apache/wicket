@@ -25,7 +25,7 @@ import org.apache.wicket.proxy.LazyInitProxyFactory;
  * Method interceptor for proxies representing concrete object not backed by an interface.
  * These proxies are representing by ByteBuddy proxies.
  */
-public class ObjenesisByteBuddyInterceptor extends LazyInitProxyFactory.AbstractByteBuddyInterceptor
+public class ObjenesisByteBuddyInterceptor extends LazyInitProxyFactory.ByteBuddyInterceptor
 {
 	public ObjenesisByteBuddyInterceptor(Class<?> type, IProxyTargetLocator locator) {
 		super(type, locator);
