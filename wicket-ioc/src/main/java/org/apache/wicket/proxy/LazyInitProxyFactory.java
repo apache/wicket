@@ -312,9 +312,9 @@ public class LazyInitProxyFactory
 	 * We need to set the interceptor as a field in the proxy class so that
 	 * we could use different interceptors for proxied classes with generics.
 	 * For example: a {@link org.apache.wicket.Component} may need to inject
-	 * two beans with the same raw type but difference generic type(s) (<em>
+	 * two beans with the same raw type but different generic type(s) (<em>
 	 * ArrayList&lt;String&gt;</em> and <em>ArrayList&lt;Integer&gt;</em>).
-	 * Since the generic types are erased at runtime and we use caching for the
+	 * Since the generic types are erased at runtime, and we use caching for the
 	 * dynamic proxy classes we need to be able to set different interceptors
 	 * after instantiating the proxy class.
 	 */
