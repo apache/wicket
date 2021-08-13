@@ -29,8 +29,10 @@ import java.util.List;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.NamingStrategy;
 import net.bytebuddy.TypeCache;
+import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
+import net.bytebuddy.implementation.FieldAccessor;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bind.annotation.AllArguments;
 import net.bytebuddy.implementation.bind.annotation.Origin;
@@ -124,7 +126,7 @@ public class LazyInitProxyFactory
 	 */
 	private static final TypeCache<TypeCache.SimpleKey> DYNAMIC_CLASS_CACHE = new TypeCache.WithInlineExpunction<>(TypeCache.Sort.SOFT);
 
-	private static final ByteBuddy BYTE_BUDDY = new ByteBuddy().with(WicketNamingPolicy.INSTANCE);
+	private static final ByteBuddy BYTE_BUDDY = new ByteBuddy().with(WicketNamingStrategy.INSTANCE);
 
 	private static final boolean IS_OBJENESIS_AVAILABLE = isObjenesisAvailable();
 
@@ -178,12 +180,14 @@ public class LazyInitProxyFactory
 		}
 		else
 		{
-			ByteBuddyInterceptor interceptor = new ByteBuddyInterceptor(type, locator);
-			Class<?> proxyClass = createProxyClass(type, interceptor);
+			Class<?> proxyClass = createOrGetProxyClass(type);
 
 			try
 			{
-				return proxyClass.getDeclaredConstructor().newInstance();
+				Object instance = proxyClass.getDeclaredConstructor().newInstance();
+				ByteBuddyInterceptor interceptor = new ByteBuddyInterceptor(type, locator);
+				((InterceptorMutator) instance).setInterceptor(interceptor);
+				return instance;
 			}
 			catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
 			{
@@ -192,20 +196,21 @@ public class LazyInitProxyFactory
 		}
 	}
 
-	public static Class<?> createProxyClass(Class<?> type, Object interceptor)
+	public static Class<?> createOrGetProxyClass(Class<?> type)
 	{
 		ClassLoader classLoader = resolveClassLoader();
-		Class<?> dynamicType = DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
+		return DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
 				new TypeCache.SimpleKey(type),
 				() -> BYTE_BUDDY
 						.subclass(type)
 						.implement(Serializable.class, ILazyInitProxy.class, IWriteReplace.class)
 						.method(ElementMatchers.any())
-						.intercept(MethodDelegation.to(interceptor))
+						.intercept(MethodDelegation.toField("interceptor"))
+						.defineField("interceptor", ByteBuddyInterceptor.class, Visibility.PRIVATE)
+						.implement(InterceptorMutator.class).intercept(FieldAccessor.ofBeanProperty())
 						.make()
 						.load(classLoader, ClassLoadingStrategy.Default.INJECTION)
 						.getLoaded());
-		return dynamicType;
 	}
 
 	private static ClassLoader resolveClassLoader()
@@ -302,6 +307,23 @@ public class LazyInitProxyFactory
 	}
 
 	/**
+	 * An interface used to set the Byte Buddy interceptor after creating an
+	 * instance of the dynamically created proxy class.
+	 * We need to set the interceptor as a field in the proxy class so that
+	 * we could use different interceptors for proxied classes with generics.
+	 * For example: a {@link org.apache.wicket.Component} may need to inject
+	 * two beans with the same raw type but difference generic type(s) (<em>
+	 * ArrayList&lt;String&gt;</em> and <em>ArrayList&lt;Integer&gt;</em>).
+	 * Since the generic types are erased at runtime and we use caching for the
+	 * dynamic proxy classes we need to be able to set different interceptors
+	 * after instantiating the proxy class.
+	 */
+	public interface InterceptorMutator
+	{
+		void setInterceptor(ByteBuddyInterceptor interceptor);
+	}
+
+	/**
 	 * Method interceptor for proxies representing concrete object not backed by an interface.
 	 * These proxies are represented by ByteBuddy proxies.
 	 * 
@@ -340,7 +362,7 @@ public class LazyInitProxyFactory
 		@RuntimeType
 		public Object intercept(final @Origin Method method,
 								final @AllArguments Object[] args)
-				throws Throwable
+				throws Exception
 		{
 			if (isFinalizeMethod(method))
 			{
@@ -427,10 +449,6 @@ public class LazyInitProxyFactory
 			typeName = type.getName();
 		}
 
-		/**
-		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
-		 *      java.lang.reflect.Method, java.lang.Object[])
-		 */
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args)
 			throws Throwable
@@ -556,11 +574,19 @@ public class LazyInitProxyFactory
 			(method.getParameterTypes().length == 0) && method.getName().equals("writeReplace");
 	}
 
-	public static final class WicketNamingPolicy extends NamingStrategy.AbstractBase
+	/**
+	 * A strategy that decides what should be the fully qualified name of the generated
+	 * classes. Since it is not possible to create new classes in the <em>java.**</em>
+	 * package we modify the package name by prefixing it with <em>bytebuddy_generated_wicket_proxy.</em>.
+	 * For classes in any other packages we modify just the class name by prefixing
+	 * it with <em>WicketProxy_</em>. This way the generated proxy class could still
+	 * access package-private members of sibling classes.
+	 */
+	public static final class WicketNamingStrategy extends NamingStrategy.AbstractBase
 	{
-		public static final WicketNamingPolicy INSTANCE = new WicketNamingPolicy();
+		public static final WicketNamingStrategy INSTANCE = new WicketNamingStrategy();
 
-		private WicketNamingPolicy()
+		private WicketNamingStrategy()
 		{
 			super();
 		}
@@ -571,7 +597,15 @@ public class LazyInitProxyFactory
 			int lastIdxOfDot = prefix.lastIndexOf('.');
 			String packageName = prefix.substring(0, lastIdxOfDot);
 			String className = prefix.substring(lastIdxOfDot + 1);
-			String name = "bytebuddy_generated_wicket_proxy." + packageName + "." + className;
+			String name = packageName + ".";
+			if (prefix.startsWith("java."))
+			{
+				name = "bytebuddy_generated_wicket_proxy." + name + className;
+			}
+			else
+			{
+				name += "WicketProxy_" + className;
+			}
 			return name;
 		}
 

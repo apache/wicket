@@ -26,10 +26,10 @@ public class ObjenesisProxyFactory
 
 	public static Object createProxy(final Class<?> type, final IProxyTargetLocator locator)
 	{
-		ObjenesisByteBuddyInterceptor interceptor = new ObjenesisByteBuddyInterceptor(type, locator);
-		final Class<?> proxyClass = LazyInitProxyFactory.createProxyClass(type, interceptor);
-
+		Class<?> proxyClass = LazyInitProxyFactory.createOrGetProxyClass(type);
 		Object instance = OBJENESIS.newInstance(proxyClass);
+		ObjenesisByteBuddyInterceptor interceptor = new ObjenesisByteBuddyInterceptor(type, locator);
+		((LazyInitProxyFactory.InterceptorMutator) instance).setInterceptor(interceptor);
 		return instance;
 	}
 }
