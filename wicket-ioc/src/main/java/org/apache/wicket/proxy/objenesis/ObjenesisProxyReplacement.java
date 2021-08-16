@@ -50,6 +50,6 @@ class ObjenesisProxyReplacement implements IClusterable
 							"] with the currently configured org.apache.wicket.application.IClassResolver");
 			throw new WicketRuntimeException(cause);
 		}
-		return ObjenesisProxyFactory.createProxy(clazz, locator, LazyInitProxyFactory.WicketNamingPolicy.INSTANCE);
+		return ObjenesisProxyFactory.createProxy(clazz, locator);
 	}
 }

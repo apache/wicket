@@ -20,7 +20,7 @@ module org.apache.wicket.jmx {
     requires org.apache.wicket.util;
     requires org.apache.wicket.core;
     requires org.slf4j;
-    requires cglib;
+    requires net.bytebuddy;
 
     provides org.apache.wicket.IInitializer with org.apache.wicket.jmx.Initializer;
     exports org.apache.wicket.jmx;

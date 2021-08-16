@@ -17,6 +17,7 @@
 package org.apache.wicket.jmx;
 
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +31,16 @@ import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 
-import net.sf.cglib.core.DefaultNamingPolicy;
-import net.sf.cglib.core.Predicate;
-import net.sf.cglib.proxy.Enhancer;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.NamingStrategy;
+import net.bytebuddy.TypeCache;
+import net.bytebuddy.description.type.TypeDescription;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.implementation.bind.annotation.AllArguments;
+import net.bytebuddy.implementation.bind.annotation.Origin;
+import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+import net.bytebuddy.matcher.ElementMatchers;
 
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.ThreadContext;
@@ -68,7 +76,24 @@ import org.slf4j.LoggerFactory;
  */
 public class Initializer implements IInitializer
 {
-	private static Logger log = LoggerFactory.getLogger(Initializer.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Initializer.class);
+
+	/**
+	 * A cache used to store the dynamically generated classes by ByteBuddy.
+	 * Without this cache a new class will be generated for each proxy creation
+	 * and this will fill up the metaspace
+	 */
+	private static final TypeCache<TypeCache.SimpleKey> DYNAMIC_CLASS_CACHE = new TypeCache.WithInlineExpunction<>(TypeCache.Sort.SOFT);
+
+	private static final ByteBuddy BYTE_BUDDY = new ByteBuddy()
+			.with(new NamingStrategy.AbstractBase()
+			{
+				@Override
+				protected String name(TypeDescription superClass)
+				{
+					return superClass.getName().replace(".wrapper", "");
+				}
+			});
 
 	// It's best to store a reference to the MBeanServer rather than getting it
 	// over and over
@@ -90,7 +115,7 @@ public class Initializer implements IInitializer
 			}
 			catch (InstanceNotFoundException | MBeanRegistrationException e)
 			{
-				log.error(e.getMessage(), e);
+				LOG.error(e.getMessage(), e);
 			}
 		}
 	}
@@ -110,7 +135,7 @@ public class Initializer implements IInitializer
 			catch (SecurityException e)
 			{
 				// Ignore - we're not allowed to read this property.
-				log.warn("not allowed to read property wicket.mbean.server.agentid due to security settings; ignoring");
+				LOG.warn("not allowed to read property wicket.mbean.server.agentid due to security settings; ignoring");
 			}
 			if (agentId != null)
 			{
@@ -121,7 +146,7 @@ public class Initializer implements IInitializer
 				}
 				else
 				{
-					log.error("unable to find mbean server with agent id " + agentId);
+					LOG.error("unable to find mbean server with agent id {}", agentId);
 				}
 			}
 			if (mbeanServer == null)
@@ -134,7 +159,7 @@ public class Initializer implements IInitializer
 				catch (SecurityException e)
 				{
 					// Ignore - we're not allowed to read this property.
-					log.warn("not allowed to read property wicket.mbean.server.class due to security settings; ignoring");
+					LOG.warn("not allowed to read property wicket.mbean.server.class due to security settings; ignoring");
 				}
 				if (impl != null)
 				{
@@ -152,7 +177,7 @@ public class Initializer implements IInitializer
 					}
 					if (mbeanServer == null)
 					{
-						log.error("unable to find mbean server of type '{}'", impl);
+						LOG.error("unable to find mbean server of type '{}'", impl);
 					}
 				}
 			}
@@ -162,7 +187,7 @@ public class Initializer implements IInitializer
 				// never null
 			}
 
-			log.info("registering Wicket mbeans with server '{}'", mbeanServer);
+			LOG.info("registering Wicket mbeans with server '{}'", mbeanServer);
 
 			// register top level application object, but first check whether
 			// multiple instances of the same application (name) are running and
@@ -238,48 +263,67 @@ public class Initializer implements IInitializer
 		registered.add(objectName);
 	}
 
-	private Object createProxy(final org.apache.wicket.Application application, final Object o)
+	private static class Interceptor
 	{
-		Enhancer e = new Enhancer();
-		e.setInterfaces(o.getClass().getInterfaces());
-		e.setSuperclass(Object.class);
-		e.setCallback(new net.sf.cglib.proxy.InvocationHandler()
-		{
-			@Override
-			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
-			{
-				boolean existed = ThreadContext.exists();
+		private final org.apache.wicket.Application application;
+		private final Object object;
 
+		private Interceptor(org.apache.wicket.Application application, Object object) {
+			this.application = application;
+			this.object = object;
+		}
+
+		@RuntimeType
+		public Object intercept(final @Origin Method method,
+								final @AllArguments Object[] args)
+				throws Throwable
+		{
+			boolean existed = ThreadContext.exists();
+
+			if (existed == false)
+			{
+				ThreadContext.setApplication(application);
+			}
+
+			try
+			{
+				return method.invoke(object, args);
+			}
+			finally
+			{
 				if (existed == false)
 				{
-					ThreadContext.setApplication(application);
-				}
-
-				try
-				{
-					return method.invoke(o, args);
-				}
-				finally
-				{
-					if (existed == false)
-					{
-						ThreadContext.detach();
-					}
+					ThreadContext.detach();
 				}
 			}
-		});
-		e.setNamingPolicy(new DefaultNamingPolicy()
+		}
+	}
+
+	private Object createProxy(final org.apache.wicket.Application application, final Object o)
+	{
+		Class<?> type = o.getClass();
+		ClassLoader classLoader = resolveClassLoader();
+
+		Class<?> proxyClass = DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
+				new TypeCache.SimpleKey(type),
+				() -> BYTE_BUDDY
+						.subclass(type)
+						.implement(type.getInterfaces())
+						.method(ElementMatchers.any())
+						.intercept(MethodDelegation.to(new Interceptor(application, o)))
+						.make()
+						.load(classLoader, ClassLoadingStrategy.Default.INJECTION)
+						.getLoaded());
+
+
+		try
 		{
-			@Override
-			public String getClassName(final String prefix, final String source, final Object key,
-				final Predicate names)
-			{
-				return o.getClass().getName().replace(".wrapper", "");
-			}
-		});
-		e.setClassLoader(resolveClassLoader());
-
-		return e.create();
+			return proxyClass.getDeclaredConstructor(org.apache.wicket.Application.class).newInstance(application);
+		}
+		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 
 	private static ClassLoader resolveClassLoader()

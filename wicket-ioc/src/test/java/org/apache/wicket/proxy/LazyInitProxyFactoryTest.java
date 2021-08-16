@@ -25,6 +25,7 @@ import org.apache.wicket.proxy.util.InterfaceObject;
 import org.apache.wicket.proxy.util.ObjectMethodTester;
 import org.junit.jupiter.api.Test;
 
+import java.io.ObjectStreamException;
 import java.lang.reflect.Proxy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,11 +40,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class LazyInitProxyFactoryTest
+class LazyInitProxyFactoryTest
 {
 	private static InterfaceObject interfaceObject = new InterfaceObject("interface");
 
-	private static ConcreteObject concreteObject = new ConcreteObject("concrete");
+	private static final ConcreteObject concreteObject = new ConcreteObject("concrete");
 
 	private static final PackagePrivateConcreteObject PACKAGE_PRIVATE_CONCRETE_OBJECT = new PackagePrivateConcreteObject("package-private-concrete");
 
@@ -58,7 +59,7 @@ public class LazyInitProxyFactoryTest
 		}
 	};
 
-	private static IProxyTargetLocator concreteObjectLocator = new IProxyTargetLocator()
+	private static final IProxyTargetLocator concreteObjectLocator = new IProxyTargetLocator()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -66,6 +67,11 @@ public class LazyInitProxyFactoryTest
 		public Object locateProxyTarget()
 		{
 			return LazyInitProxyFactoryTest.concreteObject;
+		}
+
+		// This method is needed to prevent (de)serialization of this locator instance in #testByteBuddyInterceptorReplacement()
+		private Object readResolve() throws ObjectStreamException {
+			return concreteObjectLocator;
 		}
 	};
 
@@ -95,7 +101,7 @@ public class LazyInitProxyFactoryTest
 	 * Tests lazy init proxy to represent interfaces
 	 */
 	@Test
-	public void testInterfaceProxy()
+	void testInterfaceProxy()
 	{
 		// test proxy creation for an interface class
 		IInterface proxy = (IInterface)LazyInitProxyFactory.createProxy(IInterface.class,
@@ -106,15 +112,15 @@ public class LazyInitProxyFactoryTest
 
 		// test proxy implements ILazyInitProxy
 		assertTrue(proxy instanceof ILazyInitProxy);
-		assertTrue(((ILazyInitProxy)proxy).getObjectLocator() == interfaceObjectLocator);
+		assertSame(((ILazyInitProxy) proxy).getObjectLocator(), interfaceObjectLocator);
 
 		// test method invocation
-		assertEquals(proxy.getMessage(), "interface");
+		assertEquals("interface", proxy.getMessage());
 
 		// test serialization
 		IInterface proxy2 = WicketObjects.cloneObject(proxy);
-		assertTrue(proxy != proxy2);
-		assertEquals(proxy2.getMessage(), "interface");
+		assertNotSame(proxy, proxy2);
+		assertEquals("interface", proxy2.getMessage());
 
 		// test equals/hashcode method interception
 		final IObjectMethodTester tester = new ObjectMethodTester();
@@ -143,32 +149,33 @@ public class LazyInitProxyFactoryTest
 	 * Tests lazy init proxy to represent concrete objects
 	 */
 	@Test
-	public void testConcreteProxy()
+	void testConcreteProxy()
 	{
 		ConcreteObject proxy = (ConcreteObject)LazyInitProxyFactory.createProxy(
 			ConcreteObject.class, concreteObjectLocator);
 
 		// test proxy implements ILazyInitProxy
 		assertTrue(proxy instanceof ILazyInitProxy);
-		assertSame(((ILazyInitProxy) proxy).getObjectLocator(), concreteObjectLocator);
+		final IProxyTargetLocator objectLocator = ((ILazyInitProxy) proxy).getObjectLocator();
+		assertSame(objectLocator, concreteObjectLocator);
 
 		// test we do not have a jdk dynamic proxy
 		assertFalse(Proxy.isProxyClass(proxy.getClass()));
 
 		// test method invocation
-		assertEquals(proxy.getMessage(), "concrete");
+		assertEquals("concrete", proxy.getMessage());
 
 		// test serialization
 		ConcreteObject proxy2 = WicketObjects.cloneObject(proxy);
 		assertNotSame(proxy, proxy2);
-		assertEquals(proxy2.getMessage(), "concrete");
+		assertEquals("concrete", proxy2.getMessage());
 
 		// test equals/hashcode method interception
 		final IObjectMethodTester tester = new ObjectMethodTester();
 		assertTrue(tester.isValid());
 
 		// test only a single class is generated,
-		// otherwise permgen space will fill up with each proxy
+		// otherwise meta space will fill up with each proxy
 		assertSame(proxy.getClass(), LazyInitProxyFactory.createProxy(
 			ConcreteObject.class, concreteObjectLocator).getClass());
 
@@ -197,25 +204,25 @@ public class LazyInitProxyFactoryTest
 	 * https://issues.apache.org/jira/browse/WICKET-4324
 	 */
 	@Test
-	public void testPackagePrivateConcreteProxy()
+	void testPackagePrivateConcreteProxy()
 	{
 		PackagePrivateConcreteObject proxy = (PackagePrivateConcreteObject)LazyInitProxyFactory.createProxy(
 				PackagePrivateConcreteObject.class, PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR);
 
 		// test proxy implements ILazyInitProxy
 		assertTrue(proxy instanceof ILazyInitProxy);
-		assertTrue(((ILazyInitProxy)proxy).getObjectLocator() == PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR);
+		assertSame(((ILazyInitProxy)proxy).getObjectLocator(), PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR);
 
 		// test we do not have a jdk dynamic proxy
 		assertFalse(Proxy.isProxyClass(proxy.getClass()));
 
 		// test method invocation
-		assertEquals(proxy.getMessage(), "package-private-concrete");
+		assertEquals("package-private-concrete", proxy.getMessage());
 
 		// test serialization
 		PackagePrivateConcreteObject proxy2 = WicketObjects.cloneObject(proxy);
-		assertTrue(proxy != proxy2);
-		assertEquals(proxy2.getMessage(), "package-private-concrete");
+		assertNotSame(proxy, proxy2);
+		assertEquals("package-private-concrete", proxy2.getMessage());
 
 		// test equals/hashcode method interception
 		final IObjectMethodTester tester = new ObjectMethodTester();
@@ -246,23 +253,23 @@ public class LazyInitProxyFactoryTest
 	}
 
 	/**
-	 * Tests lazy init concrete replacement replacement
+	 * Tests lazy init concrete replacement
 	 */
 	@Test
-	public void testCGLibInterceptorReplacement()
+	void testByteBuddyInterceptorReplacement()
 	{
 		ProxyReplacement ser = new ProxyReplacement(ConcreteObject.class.getName(),
 			concreteObjectLocator);
 
 		Object proxy2 = WicketObjects.cloneObject(ser);
-		assertEquals(((ConcreteObject)proxy2).getMessage(), "concrete");
+		assertEquals("concrete", ((ConcreteObject)proxy2).getMessage());
 	}
 
 	/**
 	 * Tests String beans.
 	 */
 	@Test
-	public void testStringProxy()
+	void testStringProxy()
 	{
 		// We special-case String objects to avoid proxying them, as they're
 		// final.

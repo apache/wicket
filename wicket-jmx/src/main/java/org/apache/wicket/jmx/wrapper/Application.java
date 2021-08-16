@@ -39,63 +39,42 @@ public class Application implements ApplicationMBean
 		this.application = application;
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.ApplicationMBean#clearMarkupCache()
-	 */
 	@Override
 	public void clearMarkupCache() throws IOException
 	{
 		application.getMarkupSettings().getMarkupFactory().getMarkupCache().clear();
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.ApplicationMBean#getApplicationClass()
-	 */
 	@Override
 	public String getApplicationClass() throws IOException
 	{
 		return application.getClass().getName();
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.ApplicationMBean#getConfigurationType()
-	 */
 	@Override
 	public String getConfigurationType()
 	{
 		return application.getConfigurationType().name();
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.ApplicationMBean#getHomePageClass()
-	 */
 	@Override
 	public String getHomePageClass() throws IOException
 	{
 		return application.getHomePage().getName();
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.ApplicationMBean#getMarkupCacheSize()
-	 */
 	@Override
 	public int getMarkupCacheSize() throws IOException
 	{
 		return application.getMarkupSettings().getMarkupFactory().getMarkupCache().size();
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.ApplicationMBean#getWicketVersion()
-	 */
 	@Override
 	public String getWicketVersion() throws IOException
 	{
 		return application.getFrameworkSettings().getVersion();
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.ApplicationMBean#clearLocalizerCache()
-	 */
 	@Override
 	public void clearLocalizerCache() throws IOException
 	{

@@ -30,8 +30,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
