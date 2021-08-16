@@ -758,8 +758,10 @@ public abstract class WebApplication extends Application
 		setSessionStoreProvider(HttpSessionStore::new);
 		setAjaxRequestTargetProvider(AjaxRequestHandler::new);
 
-		getAjaxRequestTargetListeners().add(new AjaxEnclosureListener());
-		
+		AjaxRequestTargetListenerCollection ajaxRequestTargetListeners = getAjaxRequestTargetListeners();
+		ajaxRequestTargetListeners.add(new AjaxEnclosureListener());
+		ajaxRequestTargetListeners.add(new MultipartFormComponentListener());
+
 		// Configure the app.
 		configure();
 		if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
