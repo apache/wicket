@@ -77,12 +77,12 @@ class FormMultiPartTest extends WicketTestCase
 
 		page.multiPart = true;
 		tester.executeAjaxEvent(page.button1, "click");
-		assertEquals(2, page.asked);
+		assertEquals(3, page.asked);
 		assertTrue(page.form.isMultiPart());
 
 		page.multiPart = false;
 		tester.executeAjaxEvent(page.button1, "click");
-		assertEquals(3, page.asked);
+		assertEquals(5, page.asked);
 		assertFalse(page.form.isMultiPart());
 	}
 }
