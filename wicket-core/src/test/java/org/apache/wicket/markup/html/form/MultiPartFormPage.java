@@ -49,7 +49,7 @@ public class MultiPartFormPage extends WebPage
 		form = new Form<Void>("form");
 		add(form.setOutputMarkupId(true));
 		
-		input = new TextField<String>("input", Model.of(""))
+		input = new TextField<>("input", Model.of(""))
 		{
 			@Override
 			public boolean isMultiPart() {
