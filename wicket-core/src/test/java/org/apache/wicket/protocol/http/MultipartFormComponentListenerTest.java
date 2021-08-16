@@ -16,21 +16,18 @@
  */
 package org.apache.wicket.protocol.http;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-6914
  */
-class MultipartFormComponentListenerTest extends WicketTestCase
+public class MultipartFormComponentListenerTest extends WicketTestCase
 {
     @Test
-    void updateFormEnctype()
+    public void updateFormEnctype()
     {
         tester.startPage(MultipartFormComponentListenerPage.class);
         tester.assertRenderedPage(MultipartFormComponentListenerPage.class);
