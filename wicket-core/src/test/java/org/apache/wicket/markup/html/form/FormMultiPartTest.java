@@ -34,7 +34,7 @@ public class FormMultiPartTest extends WicketTestCase
 
 		assertEquals(0, page.asked);
 
-		assertEquals(true, page.form.isMultiPart());
+		assertTrue(page.form.isMultiPart());
 	}
 
 	@Test
@@ -45,17 +45,17 @@ public class FormMultiPartTest extends WicketTestCase
 		page.multiPart = false;
 		tester.startPage(page);
 		assertEquals(1, page.asked);
-		assertEquals(false, page.form.isMultiPart());
-		
+		assertFalse(page.form.isMultiPart());
+
 		page.multiPart = true;
 		tester.newFormTester("form").submit(page.button1);
 		assertEquals(2, page.asked);
-		assertEquals(true, page.form.isMultiPart());
-		
+		assertTrue(page.form.isMultiPart());
+
 		page.multiPart = false;
 		tester.newFormTester("form").submit(page.button1);
 		assertEquals(3, page.asked);
-		assertEquals(false, page.form.isMultiPart());		
+		assertFalse(page.form.isMultiPart());
 	}
 	
 	@Test
@@ -66,16 +66,16 @@ public class FormMultiPartTest extends WicketTestCase
 		page.multiPart = false;
 		tester.startPage(page);
 		assertEquals(1, page.asked);
-		assertEquals(false, page.form.isMultiPart());
-		
+		assertFalse(page.form.isMultiPart());
+
 		page.multiPart = true;
 		tester.executeAjaxEvent(page.button1, "click");
 		assertEquals(2, page.asked);
-		assertEquals(true, page.form.isMultiPart());
-		
+		assertTrue(page.form.isMultiPart());
+
 		page.multiPart = false;
 		tester.executeAjaxEvent(page.button1, "click");
 		assertEquals(3, page.asked);
-		assertEquals(false, page.form.isMultiPart());		
+		assertFalse(page.form.isMultiPart());
 	}
 }
