@@ -17,11 +17,11 @@
 package org.apache.wicket.jmx;
 
 import java.lang.management.ManagementFactory;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.Attribute;
+import javax.management.AttributeList;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanRegistrationException;
@@ -30,17 +30,7 @@ import javax.management.MBeanServerFactory;
 import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
-
-import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.NamingStrategy;
-import net.bytebuddy.TypeCache;
-import net.bytebuddy.description.type.TypeDescription;
-import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
-import net.bytebuddy.implementation.MethodDelegation;
-import net.bytebuddy.implementation.bind.annotation.AllArguments;
-import net.bytebuddy.implementation.bind.annotation.Origin;
-import net.bytebuddy.implementation.bind.annotation.RuntimeType;
-import net.bytebuddy.matcher.ElementMatchers;
+import javax.management.StandardMBean;
 
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.ThreadContext;
@@ -78,15 +68,6 @@ public class Initializer implements IInitializer
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Initializer.class);
 
-	/**
-	 * A cache used to store the dynamically generated classes by ByteBuddy.
-	 * Without this cache a new class will be generated for each proxy creation
-	 * and this will fill up the metaspace
-	 */
-	private static final TypeCache<TypeCache.SimpleKey> DYNAMIC_CLASS_CACHE = new TypeCache.WithInlineExpunction<>(TypeCache.Sort.SOFT);
-
-	private static final ByteBuddy BYTE_BUDDY = new ByteBuddy();
-	
 	// It's best to store a reference to the MBeanServer rather than getting it
 	// over and over
 	private MBeanServer mbeanServer = null;
@@ -246,102 +227,69 @@ public class Initializer implements IInitializer
 	 * @throws MBeanRegistrationException
 	 * @throws InstanceAlreadyExistsException
 	 */
-	private void register(final org.apache.wicket.Application application, final Object o,
+	private <T> void register(final org.apache.wicket.Application application, final T o,
 		final ObjectName objectName) throws InstanceAlreadyExistsException,
 		MBeanRegistrationException, NotCompliantMBeanException
 	{
-		Object proxy = createProxy(application, o);
-		mbeanServer.registerMBean(proxy, objectName);
+		StandardMBean bean = new StandardMBean(o, (Class<T>)o.getClass().getInterfaces()[0]) {
+			@Override
+			public Object getAttribute(String attribute)
+			{
+				return withApplication(() -> super.getAttribute(attribute));
+			}
+			
+			@Override
+			public void setAttribute(Attribute attribute)
+			{
+				withApplication(() -> {
+					super.setAttribute(attribute);
+					return null;
+				});
+			}
+			
+			@Override
+			public AttributeList setAttributes(AttributeList attributes)
+			{
+				return withApplication(() -> super.setAttributes(attributes));
+			}
+			
+			@Override
+			public Object invoke(String actionName, Object[] params, String[] signature)
+			{
+				return withApplication(() -> super.invoke(actionName, params, signature));
+			}
+			
+			private <R> R withApplication(Invocation<R> invocation)
+			{
+				boolean existed = ThreadContext.exists();
+
+				if (existed == false)
+				{
+					ThreadContext.setApplication(application);
+				}
+
+				try
+				{
+					return invocation.invoke();
+				}
+				catch (Exception ex)
+				{
+					throw new WicketRuntimeException(ex);
+				}
+				finally
+				{
+					if (existed == false)
+					{
+						ThreadContext.detach();
+					}
+				}
+			}
+		};
+		mbeanServer.registerMBean(bean, objectName);
 		registered.add(objectName);
 	}
 
-	// must be public to prevent JMX Server throwing:
-	// failed to access class org.apache.wicket.jmx.Initializer$Interceptor from class org.apache.wicket.jmx.Application
-	public static class Interceptor
-	{
-		private final org.apache.wicket.Application application;
-		private final Object object;
-
-		private Interceptor(org.apache.wicket.Application application, Object object) {
-			this.application = application;
-			this.object = object;
-		}
-
-		@RuntimeType
-		public Object intercept(final @Origin Method method,
-								final @AllArguments Object[] args)
-				throws Throwable
-		{
-			boolean existed = ThreadContext.exists();
-
-			if (existed == false)
-			{
-				ThreadContext.setApplication(application);
-			}
-
-			try
-			{
-				return method.invoke(object, args);
-			}
-			finally
-			{
-				if (existed == false)
-				{
-					ThreadContext.detach();
-				}
-			}
-		}
+	private static interface Invocation<R> {
+		R invoke() throws Exception;
 	}
-
-	private Object createProxy(final org.apache.wicket.Application application, final Object o)
-	{
-		final Class<?> type = o.getClass();
-		final ClassLoader classLoader = resolveClassLoader();
-
-		Class<?> proxyClass = DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
-				new TypeCache.SimpleKey(type),
-				() -> BYTE_BUDDY
-						.with(new NamingStrategy.AbstractBase()
-						{
-							@Override
-							protected String name(TypeDescription superClass)
-							{
-								return type.getName().replace(".wrapper", "");
-							}
-						})
-						.subclass(Object.class)
-						.implement(type.getInterfaces())
-						.method(ElementMatchers.any())
-						.intercept(MethodDelegation.to(new Interceptor(application, o)))
-						.make()
-						.load(classLoader, ClassLoadingStrategy.Default.INJECTION)
-						.getLoaded());
-
-
-		try
-		{
-			return proxyClass.getDeclaredConstructor().newInstance();
-		}
-		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-	}
-
-	private static ClassLoader resolveClassLoader()
-	{
-		ClassLoader classLoader = null;
-		if (org.apache.wicket.Application.exists())
-		{
-			classLoader = org.apache.wicket.Application.get().getApplicationSettings()
-					.getClassResolver().getClassLoader();
-		}
-
-		if (classLoader == null) {
-			classLoader = Thread.currentThread().getContextClassLoader();
-		}
-
-		return classLoader;
-	}
-
 }
