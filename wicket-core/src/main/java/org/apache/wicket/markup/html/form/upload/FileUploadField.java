@@ -20,7 +20,7 @@ package org.apache.wicket.markup.html.form.upload;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload2.FileItem;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
