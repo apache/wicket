@@ -85,16 +85,8 @@ public class Initializer implements IInitializer
 	 */
 	private static final TypeCache<TypeCache.SimpleKey> DYNAMIC_CLASS_CACHE = new TypeCache.WithInlineExpunction<>(TypeCache.Sort.SOFT);
 
-	private static final ByteBuddy BYTE_BUDDY = new ByteBuddy()
-			.with(new NamingStrategy.AbstractBase()
-			{
-				@Override
-				protected String name(TypeDescription superClass)
-				{
-					return superClass.getName().replace(".wrapper", "");
-				}
-			});
-
+	private static final ByteBuddy BYTE_BUDDY = new ByteBuddy();
+	
 	// It's best to store a reference to the MBeanServer rather than getting it
 	// over and over
 	private MBeanServer mbeanServer = null;
@@ -263,7 +255,9 @@ public class Initializer implements IInitializer
 		registered.add(objectName);
 	}
 
-	private static class Interceptor
+	// must be public to prevent JMX Server throwing:
+	// failed to access class org.apache.wicket.jmx.Initializer$Interceptor from class org.apache.wicket.jmx.Application
+	public static class Interceptor
 	{
 		private final org.apache.wicket.Application application;
 		private final Object object;
@@ -301,13 +295,21 @@ public class Initializer implements IInitializer
 
 	private Object createProxy(final org.apache.wicket.Application application, final Object o)
 	{
-		Class<?> type = o.getClass();
-		ClassLoader classLoader = resolveClassLoader();
+		final Class<?> type = o.getClass();
+		final ClassLoader classLoader = resolveClassLoader();
 
 		Class<?> proxyClass = DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
 				new TypeCache.SimpleKey(type),
 				() -> BYTE_BUDDY
-						.subclass(type)
+						.with(new NamingStrategy.AbstractBase()
+						{
+							@Override
+							protected String name(TypeDescription superClass)
+							{
+								return type.getName().replace(".wrapper", "");
+							}
+						})
+						.subclass(Object.class)
 						.implement(type.getInterfaces())
 						.method(ElementMatchers.any())
 						.intercept(MethodDelegation.to(new Interceptor(application, o)))
@@ -318,7 +320,7 @@ public class Initializer implements IInitializer
 
 		try
 		{
-			return proxyClass.getDeclaredConstructor(org.apache.wicket.Application.class).newInstance(application);
+			return proxyClass.getDeclaredConstructor().newInstance();
 		}
 		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
 		{
