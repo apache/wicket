@@ -17,10 +17,12 @@
 package org.apache.wicket.jmx;
 
 import java.lang.management.ManagementFactory;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
+import javax.management.Attribute;
+import javax.management.AttributeList;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanRegistrationException;
@@ -29,10 +31,7 @@ import javax.management.MBeanServerFactory;
 import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
-
-import net.sf.cglib.core.DefaultNamingPolicy;
-import net.sf.cglib.core.Predicate;
-import net.sf.cglib.proxy.Enhancer;
+import javax.management.StandardMBean;
 
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.ThreadContext;
@@ -229,24 +228,39 @@ public class Initializer implements IInitializer
 	 * @throws MBeanRegistrationException
 	 * @throws InstanceAlreadyExistsException
 	 */
-	private void register(final org.apache.wicket.Application application, final Object o,
+	private <T> void register(final org.apache.wicket.Application application, final T o,
 		final ObjectName objectName) throws InstanceAlreadyExistsException,
 		MBeanRegistrationException, NotCompliantMBeanException
 	{
-		Object proxy = createProxy(application, o);
-		mbeanServer.registerMBean(proxy, objectName);
-		registered.add(objectName);
-	}
-
-	private Object createProxy(final org.apache.wicket.Application application, final Object o)
-	{
-		Enhancer e = new Enhancer();
-		e.setInterfaces(o.getClass().getInterfaces());
-		e.setSuperclass(Object.class);
-		e.setCallback(new net.sf.cglib.proxy.InvocationHandler()
-		{
+		StandardMBean bean = new StandardMBean(o, (Class<T>)o.getClass().getInterfaces()[0]) {
 			@Override
-			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+			public Object getAttribute(String attribute)
+			{
+				return withApplication(() -> super.getAttribute(attribute));
+			}
+			
+			@Override
+			public void setAttribute(Attribute attribute)
+			{
+				withApplication(() -> {
+					super.setAttribute(attribute);
+					return null;
+				});
+			}
+			
+			@Override
+			public AttributeList setAttributes(AttributeList attributes)
+			{
+				return withApplication(() -> super.setAttributes(attributes));
+			}
+			
+			@Override
+			public Object invoke(String actionName, Object[] params, String[] signature)
+			{
+				return withApplication(() -> super.invoke(actionName, params, signature));
+			}
+			
+			private <R> R withApplication(Callable<R> callable)
 			{
 				boolean existed = ThreadContext.exists();
 
@@ -257,7 +271,11 @@ public class Initializer implements IInitializer
 
 				try
 				{
-					return method.invoke(o, args);
+					return callable.call();
+				}
+				catch (Exception ex)
+				{
+					throw new WicketRuntimeException(ex);
 				}
 				finally
 				{
@@ -267,35 +285,8 @@ public class Initializer implements IInitializer
 					}
 				}
 			}
-		});
-		e.setNamingPolicy(new DefaultNamingPolicy()
-		{
-			@Override
-			public String getClassName(final String prefix, final String source, final Object key,
-				final Predicate names)
-			{
-				return o.getClass().getName().replace(".wrapper", "");
-			}
-		});
-		e.setClassLoader(resolveClassLoader());
-
-		return e.create();
+		};
+		mbeanServer.registerMBean(bean, objectName);
+		registered.add(objectName);
 	}
-
-	private static ClassLoader resolveClassLoader()
-	{
-		ClassLoader classLoader = null;
-		if (org.apache.wicket.Application.exists())
-		{
-			classLoader = org.apache.wicket.Application.get().getApplicationSettings()
-					.getClassResolver().getClassLoader();
-		}
-
-		if (classLoader == null) {
-			classLoader = Thread.currentThread().getContextClassLoader();
-		}
-
-		return classLoader;
-	}
-
 }
