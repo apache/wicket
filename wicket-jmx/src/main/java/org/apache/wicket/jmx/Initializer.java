@@ -67,7 +67,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Initializer implements IInitializer
 {
-	private static Logger log = LoggerFactory.getLogger(Initializer.class);
+	private static final Logger log = LoggerFactory.getLogger(Initializer.class);
 
 	// It's best to store a reference to the MBeanServer rather than getting it
 	// over and over
@@ -120,7 +120,7 @@ public class Initializer implements IInitializer
 				}
 				else
 				{
-					log.error("unable to find mbean server with agent id " + agentId);
+					log.error("unable to find mbean server with agent id {}", agentId);
 				}
 			}
 			if (mbeanServer == null)
@@ -133,7 +133,8 @@ public class Initializer implements IInitializer
 				catch (SecurityException e)
 				{
 					// Ignore - we're not allowed to read this property.
-					log.warn("not allowed to read property wicket.mbean.server.class due to security settings; ignoring");
+					log.warn("Not allowed to read property wicket.mbean.server.class due to security settings: {}. Ignoring",
+							e.getMessage());
 				}
 				if (impl != null)
 				{
