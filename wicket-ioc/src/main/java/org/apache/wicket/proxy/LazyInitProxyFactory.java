@@ -18,31 +18,24 @@ package org.apache.wicket.proxy;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
-import net.sf.cglib.core.DefaultNamingPolicy;
-import net.sf.cglib.core.Predicate;
-import net.sf.cglib.proxy.Callback;
-import net.sf.cglib.proxy.CallbackFilter;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
-import net.sf.cglib.proxy.NoOp;
-
-import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.proxy.objenesis.ObjenesisProxyFactory;
+import org.apache.wicket.proxy.bytebuddy.ByteBuddyProxyFactory;
+import org.apache.wicket.proxy.cglib.CglibProxyFactory;
+import org.apache.wicket.proxy.jdk.JdkProxyFactory;
 import org.apache.wicket.util.io.IClusterable;
-import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.sf.cglib.core.DefaultNamingPolicy;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+import net.sf.cglib.proxy.NoOp;
 
 /**
  * A factory class that creates lazy init proxies given a type and a {@link IProxyTargetLocator}
@@ -53,7 +46,7 @@ import org.apache.wicket.util.string.Strings;
  * forwarded.
  * <p>
  * This factory creates two kinds of proxies: A standard dynamic proxy when the specified type is an
- * interface, and a CGLib proxy when the specified type is a concrete class.
+ * interface, and a cglib proxy when the specified type is a concrete class.
  * <p>
  * The general use case for such a proxy is to represent a dependency that should not be serialized
  * with a wicket page or {@link IModel}. The solution is to serialize the proxy and the
@@ -109,19 +102,30 @@ import org.apache.wicket.util.string.Strings;
  */
 public class LazyInitProxyFactory
 {
+	private static final Logger log = LoggerFactory.getLogger(LazyInitProxyFactory.class);
+
 	/**
 	 * Primitive java types and their object wrappers
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static final List PRIMITIVES = Arrays.asList(String.class, byte.class, Byte.class,
+	private static final List<Class<?>> PRIMITIVES = Arrays.asList(String.class, byte.class, Byte.class,
 		short.class, Short.class, int.class, Integer.class, long.class, Long.class, float.class,
 		Float.class, double.class, Double.class, char.class, Character.class, boolean.class,
 		Boolean.class);
-
-	private static final int CGLIB_CALLBACK_NO_OVERRIDE = 0;
-	private static final int CGLIB_CALLBACK_HANDLER = 1;
-
-	private static final boolean IS_OBJENESIS_AVAILABLE = isObjenesisAvailable();
+	
+	private static final IProxyFactory proxyFactory = initProxyFactory();
+	
+    private static IProxyFactory initProxyFactory() {
+		IProxyFactory proxyFactory = null; 
+		
+		if ("true".equals(System.getProperty("wicket.ioc.useByteBuddy"))) {
+			log.info("using Byte Buddy proxy factory");
+			proxyFactory = new ByteBuddyProxyFactory();
+		} else {
+			proxyFactory = new CglibProxyFactory();
+		}
+		
+		return proxyFactory;
+	}
 
 	/**
 	 * Create a lazy init proxy for the specified type. The target object will be located using the
@@ -145,70 +149,14 @@ public class LazyInitProxyFactory
 		}
 		else if (type.isInterface())
 		{
-			JdkHandler handler = new JdkHandler(type, locator);
-
-			try
-			{
-				return Proxy.newProxyInstance(resolveClassLoader(),
-					new Class[] { type, Serializable.class, ILazyInitProxy.class,
-							IWriteReplace.class }, handler);
-			}
-			catch (IllegalArgumentException e)
-			{
-				/*
-				 * STW: In some clustering environments it appears the context classloader fails to
-				 * load the proxied interface (currently seen in BEA WLS 9.x clusters). If this
-				 * happens, we can try and fall back to the classloader (current) that actually
-				 * loaded this class.
-				 */
-				return Proxy.newProxyInstance(LazyInitProxyFactory.class.getClassLoader(),
-					new Class[] { type, Serializable.class, ILazyInitProxy.class,
-							IWriteReplace.class }, handler);
-			}
-
+			return new JdkProxyFactory().createProxy(type, locator);
 		}
-		else if (IS_OBJENESIS_AVAILABLE && !hasNoArgConstructor(type))
-		{
-			return ObjenesisProxyFactory.createProxy(type, locator, WicketNamingPolicy.INSTANCE);
-		}
-		else
-		{
-			CGLibInterceptor handler = new CGLibInterceptor(type, locator);
-
-			Callback[] callbacks = new Callback[2];
-			callbacks[CGLIB_CALLBACK_NO_OVERRIDE] = SerializableNoOpCallback.INSTANCE;
-			callbacks[CGLIB_CALLBACK_HANDLER] = handler;
-
-			Enhancer e = new Enhancer();
-			e.setClassLoader(resolveClassLoader());
-			e.setInterfaces(new Class[] { Serializable.class, ILazyInitProxy.class,
-					IWriteReplace.class });
-			e.setSuperclass(type);
-			e.setCallbackFilter(NoOpForProtectedMethodsCGLibCallbackFilter.INSTANCE);
-			e.setCallbacks(callbacks);
-			e.setNamingPolicy(WicketNamingPolicy.INSTANCE);
-
-			return e.create();
+		else {
+			return proxyFactory.createProxy(type, locator);
 		}
 	}
-
-	private static ClassLoader resolveClassLoader()
-	{
-		ClassLoader classLoader = null;
-		if (Application.exists())
-		{
-			classLoader = Application.get().getApplicationSettings()
-					.getClassResolver().getClassLoader();
-		}
-
-		if (classLoader == null) {
-			classLoader = Thread.currentThread().getContextClassLoader();
-		}
-
-		return classLoader;
-	}
-
-    /**
+	
+	/**
 	 * This interface is used to make the proxy forward writeReplace() call to the handler instead
 	 * of invoking it on itself. This allows us to serialize the replacement object instead of the
 	 * proxy itself in case the proxy subclass is deserialized on a VM that does not have it
@@ -237,7 +185,7 @@ public class LazyInitProxyFactory
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	static class ProxyReplacement implements IClusterable
+	public static final class ProxyReplacement implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -292,6 +240,7 @@ public class LazyInitProxyFactory
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
+	@Deprecated(forRemoval = true)
 	public abstract static class AbstractCGLibInterceptor
 		implements
 			MethodInterceptor,
@@ -372,24 +321,7 @@ public class LazyInitProxyFactory
 		{
 			return locator;
 		}
-	}
 
-	/**
-	 * Method interceptor for proxies representing concrete object not backed by an interface. These
-	 * proxies are representing by cglib proxies.
-	 *
-	 * @author Igor Vaynberg (ivaynberg)
-	 */
-	protected static class CGLibInterceptor extends AbstractCGLibInterceptor
-	{
-		public CGLibInterceptor(Class<?> type, IProxyTargetLocator locator)
-		{
-			super(type, locator);
-		}
-
-		/**
-		 * @see org.apache.wicket.proxy.LazyInitProxyFactory.IWriteReplace#writeReplace()
-		 */
 		@Override
 		public Object writeReplace() throws ObjectStreamException
 		{
@@ -398,153 +330,40 @@ public class LazyInitProxyFactory
 	}
 
 	/**
-	 * Serializable implementation of the NoOp callback.
-	 */
-	public static class SerializableNoOpCallback implements NoOp, Serializable
-	{
-		private static final long serialVersionUID = 1L;
-
-		private static final NoOp INSTANCE = new SerializableNoOpCallback();
-	}
-
-	/**
-	 * CGLib callback filter which does not intercept protected methods.
-	 * 
-	 * Protected methods need to be called with invokeSuper() instead of invoke().
-	 * When invoke() is called on a protected method, it throws an "IllegalArgumentException:
-	 * Protected method" exception.
-	 * That being said, we do not need to intercept the protected methods so this callback filter
-	 * is designed to use a NoOp callback for protected methods.
-	 * 
-	 * @see <a href="http://comments.gmane.org/gmane.comp.java.cglib.devel/720">Discussion about
-	 * this very issue in Spring AOP</a>
-	 * @see <a href="https://github.com/wicketstuff/core/wiki/SpringReference">The WicketStuff
-	 * SpringReference project which worked around this issue</a>
-	 */
-	private static class NoOpForProtectedMethodsCGLibCallbackFilter implements CallbackFilter
-	{
-		private static final CallbackFilter INSTANCE = new NoOpForProtectedMethodsCGLibCallbackFilter();
-
-		@Override
-		public int accept(Method method) {
-			if (Modifier.isProtected(method.getModifiers()))
-			{
-				return CGLIB_CALLBACK_NO_OVERRIDE;
-			}
-			else
-			{
-				return CGLIB_CALLBACK_HANDLER;
-			}
-		}
-	}
-
-	/**
-	 * Invocation handler for proxies representing interface based object. For interface backed
-	 * objects dynamic jdk proxies are used.
+	 * Method interceptor for proxies representing concrete object not backed by an interface. These
+	 * proxies are represented by cglib proxies.
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class JdkHandler
-		implements
-			InvocationHandler,
-			ILazyInitProxy,
-			Serializable,
-			IWriteReplace
+	public static class CGLibInterceptor extends AbstractCGLibInterceptor
 	{
 		private static final long serialVersionUID = 1L;
-
-		private final IProxyTargetLocator locator;
-
-		private final String typeName;
-
-		private transient Object target;
 
 		/**
 		 * Constructor
 		 * 
 		 * @param type
-		 *            class of object this handler will represent
+		 *            class of the object this proxy was created for
 		 * 
 		 * @param locator
 		 *            object locator used to locate the object this proxy represents
 		 */
-		public JdkHandler(final Class<?> type, final IProxyTargetLocator locator)
+		public CGLibInterceptor(final Class<?> type, final IProxyTargetLocator locator)
 		{
-			super();
-			this.locator = locator;
-			typeName = type.getName();
-		}
-
-		/**
-		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object,
-		 *      java.lang.reflect.Method, java.lang.Object[])
-		 */
-		@Override
-		public Object invoke(final Object proxy, final Method method, final Object[] args)
-			throws Throwable
-		{
-			if (isFinalizeMethod(method))
-			{
-				// swallow finalize call
-				return null;
-			}
-			else if (isEqualsMethod(method))
-			{
-				return (equals(args[0])) ? Boolean.TRUE : Boolean.FALSE;
-			}
-			else if (isHashCodeMethod(method))
-			{
-				return hashCode();
-			}
-			else if (isToStringMethod(method))
-			{
-				return toString();
-			}
-			else if (method.getDeclaringClass().equals(ILazyInitProxy.class))
-			{
-				return getObjectLocator();
-			}
-			else if (isWriteReplaceMethod(method))
-			{
-				return writeReplace();
-			}
-
-			if (target == null)
-			{
-
-				target = locator.locateProxyTarget();
-			}
-			try
-			{
-				method.setAccessible(true);
-				return method.invoke(target, args);
-			}
-			catch (InvocationTargetException e)
-			{
-				throw e.getTargetException();
-			}
-		}
-
-		/**
-		 * @see org.apache.wicket.proxy.ILazyInitProxy#getObjectLocator()
-		 */
-		@Override
-		public IProxyTargetLocator getObjectLocator()
-		{
-			return locator;
-		}
-
-		/**
-		 * @see org.apache.wicket.proxy.LazyInitProxyFactory.IWriteReplace#writeReplace()
-		 */
-		@Override
-		public Object writeReplace() throws ObjectStreamException
-		{
-			return new ProxyReplacement(typeName, locator);
+			super(type, locator);
 		}
 	}
-
+	
+	/**
+	 * @deprecated no longer used
+	 */
+	@Deprecated(forRemoval = true)
+	public static class SerializableNoOpCallback implements NoOp, Serializable
+	{
+		public static final NoOp INSTANCE = new SerializableNoOpCallback();
+	}
+	
 	/**
 	 * Checks if the method is derived from Object.equals()
 	 * 
@@ -610,47 +429,17 @@ public class LazyInitProxyFactory
 		return (method.getReturnType() == Object.class) &&
 			(method.getParameterTypes().length == 0) && method.getName().equals("writeReplace");
 	}
-
-	public static final class WicketNamingPolicy extends DefaultNamingPolicy
+	
+	/**
+	 * @deprecated no longer used
+	 */
+	@Deprecated(forRemoval = true)
+	public static class WicketNamingPolicy extends DefaultNamingPolicy
 	{
 		public static final WicketNamingPolicy INSTANCE = new WicketNamingPolicy();
 
 		private WicketNamingPolicy()
 		{
-			super();
-		}
-
-		@Override
-		public String getClassName(final String prefix, final String source, final Object key,
-				final Predicate names)
-		{
-			int lastIdxOfDot = prefix.lastIndexOf('.');
-			String packageName = prefix.substring(0, lastIdxOfDot);
-			String className = prefix.substring(lastIdxOfDot + 1);
-			String newPrefix = packageName + ".Wicket_Proxy_" + className;
-			return super.getClassName(newPrefix, source, key, names);
-		}
-	}
-
-
-	private static boolean hasNoArgConstructor(Class<?> type)
-	{
-		for (Constructor<?> constructor : type.getDeclaredConstructors())
-		{
-			if (constructor.getParameterTypes().length == 0)
-				return true;
-		}
-
-		return false;
-	}
-
-	private static boolean isObjenesisAvailable()
-	{
-		try {
-			Class.forName("org.objenesis.ObjenesisStd");
-			return true;
-		} catch (Exception ignored) {
-			return false;
 		}
 	}
 }

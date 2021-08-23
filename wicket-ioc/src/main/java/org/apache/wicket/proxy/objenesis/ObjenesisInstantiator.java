@@ -14,45 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.injection.util;
+package org.apache.wicket.proxy.objenesis;
 
-import org.apache.wicket.proxy.LazyInitProxyFactory;
+import org.objenesis.ObjenesisStd;
 
 /**
- * Mock dependency that does not implement an interface
- * 
- * @author Igor Vaynberg (ivaynberg)
- * 
+ * Wrapper around Objenesis to allow optional creation of objects without
+ * default constructor.
+ * <br>
+ * Note: This class fails to load if Objenesis is not on the classpath.
  */
-public class MockDependency
+class ObjenesisInstantiator implements IInstantiator
 {
-	private String message;
+	private final ObjenesisStd OBJENESIS = new ObjenesisStd(false);
 
-	/**
-	 * Empty default constructor. It is required by {@link LazyInitProxyFactory}
-	 * to create a proxy.
-	 */
-	public MockDependency()
-	{
-
+	public Object newInstance(Class<?> type) {
+		return OBJENESIS.newInstance(type);
 	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param message
-	 */
-	public MockDependency(final String message)
-	{
-		this.message = message;
-	}
-
-	/**
-	 * @return message
-	 */
-	public String getMessage()
-	{
-		return message;
-	}
-
 }

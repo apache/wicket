@@ -16,24 +16,16 @@
  */
 package org.apache.wicket.proxy.objenesis;
 
-import java.io.ObjectStreamException;
-
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
 
 /**
- * Method interceptor for proxies representing concrete object not backed by an interface. These
- * proxies are representing by cglib proxies.
+ * @deprecated no longer used
  */
+@Deprecated(forRemoval = true)
 public class ObjenesisCGLibInterceptor extends LazyInitProxyFactory.AbstractCGLibInterceptor
 {
 	public ObjenesisCGLibInterceptor(Class<?> type, IProxyTargetLocator locator) {
 		super(type, locator);
-	}
-
-	@Override
-	public Object writeReplace() throws ObjectStreamException
-	{
-		return new ObjenesisProxyReplacement(typeName, locator);
 	}
 }

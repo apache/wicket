@@ -14,45 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.injection.util;
-
-import org.apache.wicket.proxy.LazyInitProxyFactory;
+package org.apache.wicket.proxy.util;
 
 /**
- * Mock dependency that does not implement an interface
- * 
- * @author Igor Vaynberg (ivaynberg)
- * 
+ * Mock dependency that does not implement have a default constructor.
  */
-public class MockDependency
+public class NoDefaultConstructor
 {
-	private String message;
 
-	/**
-	 * Empty default constructor. It is required by {@link LazyInitProxyFactory}
-	 * to create a proxy.
-	 */
-	public MockDependency()
+	public NoDefaultConstructor(String args)
 	{
-
 	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param message
-	 */
-	public MockDependency(final String message)
-	{
-		this.message = message;
-	}
-
-	/**
-	 * @return message
-	 */
-	public String getMessage()
-	{
-		return message;
-	}
-
 }
