@@ -139,6 +139,7 @@
 		<assertj-core.version>3.19.0</assertj-core.version>
 		<cdi-unit.version>4.1.0</cdi-unit.version>
 		<cglib.version>3.3.0</cglib.version>
+		<byte-buddy.version>1.11.12</byte-buddy.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<commons-fileupload.version>1.4</commons-fileupload.version>
@@ -319,6 +320,11 @@
 				<artifactId>log4j</artifactId>
 				<version>1.2.17</version>
 				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>net.bytebuddy</groupId>
+				<artifactId>byte-buddy</artifactId>
+				<version>${byte-buddy.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>

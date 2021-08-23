@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.proxy;
 
+import org.apache.wicket.proxy.cglib.CglibProxyFactory;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -43,7 +44,7 @@ import org.apache.wicket.util.io.IClusterable;
  * }
  * </pre>
  * 
- * @see LazyInitProxyFactory#createProxy(Class, IProxyTargetLocator)
+ * @see CglibProxyFactory#createProxy(Class, IProxyTargetLocator)
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 

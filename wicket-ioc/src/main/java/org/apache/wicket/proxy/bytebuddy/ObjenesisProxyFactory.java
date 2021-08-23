@@ -14,45 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.injection.util;
+package org.apache.wicket.proxy.bytebuddy;
 
-import org.apache.wicket.proxy.LazyInitProxyFactory;
+import org.apache.wicket.proxy.IProxyTargetLocator;
+import org.objenesis.ObjenesisStd;
 
-/**
- * Mock dependency that does not implement an interface
- * 
- * @author Igor Vaynberg (ivaynberg)
- * 
- */
-public class MockDependency
+public class ObjenesisProxyFactory
 {
-	private String message;
+	private static final ObjenesisStd OBJENESIS = new ObjenesisStd(false);
 
-	/**
-	 * Empty default constructor. It is required by {@link LazyInitProxyFactory}
-	 * to create a proxy.
-	 */
-	public MockDependency()
+	public static Object createProxy(final Class<?> type, final IProxyTargetLocator locator)
 	{
-
+		Class<?> proxyClass = ByteBuddyProxyFactory.createOrGetProxyClass(type);
+		Object instance = OBJENESIS.newInstance(proxyClass);
+		ObjenesisByteBuddyInterceptor interceptor = new ObjenesisByteBuddyInterceptor(type, locator);
+		((ByteBuddyProxyFactory.InterceptorMutator) instance).setInterceptor(interceptor);
+		return instance;
 	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param message
-	 */
-	public MockDependency(final String message)
-	{
-		this.message = message;
-	}
-
-	/**
-	 * @return message
-	 */
-	public String getMessage()
-	{
-		return message;
-	}
-
 }

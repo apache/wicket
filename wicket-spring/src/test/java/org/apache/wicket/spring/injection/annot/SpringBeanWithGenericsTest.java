@@ -290,7 +290,7 @@ class SpringBeanWithGenericsTest
 		@Bean
 		public List<String> stringsList()
 		{
-			return Arrays.asList("foo", "bar", "baz");
+			return List.of("foo", "bar", "baz");
 		}
 
 		@Bean

@@ -14,45 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.injection.util;
+package org.apache.wicket.proxy.bytebuddy;
 
-import org.apache.wicket.proxy.LazyInitProxyFactory;
+import java.io.ObjectStreamException;
+
+import org.apache.wicket.proxy.IProxyTargetLocator;
 
 /**
- * Mock dependency that does not implement an interface
- * 
- * @author Igor Vaynberg (ivaynberg)
- * 
+ * Method interceptor for proxies representing concrete object not backed by an interface.
+ * These proxies are representing by ByteBuddy proxies.
  */
-public class MockDependency
+public class ObjenesisByteBuddyInterceptor extends ByteBuddyProxyFactory.ByteBuddyInterceptor
 {
-	private String message;
-
-	/**
-	 * Empty default constructor. It is required by {@link LazyInitProxyFactory}
-	 * to create a proxy.
-	 */
-	public MockDependency()
-	{
-
+	public ObjenesisByteBuddyInterceptor(Class<?> type, IProxyTargetLocator locator) {
+		super(type, locator);
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param message
-	 */
-	public MockDependency(final String message)
+	@Override
+	public Object writeReplace() throws ObjectStreamException
 	{
-		this.message = message;
+		return new ObjenesisProxyReplacement(typeName, locator);
 	}
-
-	/**
-	 * @return message
-	 */
-	public String getMessage()
-	{
-		return message;
-	}
-
 }

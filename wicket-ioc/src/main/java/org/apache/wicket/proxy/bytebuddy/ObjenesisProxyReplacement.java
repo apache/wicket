@@ -14,14 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.proxy.objenesis;
+package org.apache.wicket.proxy.bytebuddy;
 
 import java.io.ObjectStreamException;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.proxy.IProxyTargetLocator;
-import org.apache.wicket.proxy.LazyInitProxyFactory.WicketNamingPolicy;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -50,6 +49,6 @@ class ObjenesisProxyReplacement implements IClusterable
 							"] with the currently configured org.apache.wicket.application.IClassResolver");
 			throw new WicketRuntimeException(cause);
 		}
-		return ObjenesisProxyFactory.createProxy(clazz, locator, WicketNamingPolicy.INSTANCE);
+		return ObjenesisProxyFactory.createProxy(clazz, locator);
 	}
 }
