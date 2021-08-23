@@ -16,6 +16,15 @@
  */
 package org.apache.wicket.proxy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.ObjectStreamException;
+import java.lang.reflect.Proxy;
+
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.proxy.LazyInitProxyFactory.ProxyReplacement;
 import org.apache.wicket.proxy.util.ConcreteObject;
@@ -24,14 +33,6 @@ import org.apache.wicket.proxy.util.IObjectMethodTester;
 import org.apache.wicket.proxy.util.InterfaceObject;
 import org.apache.wicket.proxy.util.ObjectMethodTester;
 import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Proxy;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests lazy init proxy factory
@@ -44,8 +45,6 @@ public class LazyInitProxyFactoryTest
 	private static InterfaceObject interfaceObject = new InterfaceObject("interface");
 
 	private static ConcreteObject concreteObject = new ConcreteObject("concrete");
-
-	private static final PackagePrivateConcreteObject PACKAGE_PRIVATE_CONCRETE_OBJECT = new PackagePrivateConcreteObject("package-private-concrete");
 
 	private static IProxyTargetLocator interfaceObjectLocator = new IProxyTargetLocator()
 	{
@@ -66,17 +65,6 @@ public class LazyInitProxyFactoryTest
 		public Object locateProxyTarget()
 		{
 			return LazyInitProxyFactoryTest.concreteObject;
-		}
-	};
-
-	private final static IProxyTargetLocator PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR = new IProxyTargetLocator()
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public Object locateProxyTarget()
-		{
-			return LazyInitProxyFactoryTest.PACKAGE_PRIVATE_CONCRETE_OBJECT;
 		}
 	};
 
@@ -192,61 +180,6 @@ public class LazyInitProxyFactoryTest
 	}
 
 	/**
-	 * Tests lazy init proxy to represent package private concrete objects
-	 *
-	 * https://issues.apache.org/jira/browse/WICKET-4324
-	 */
-	@Test
-	public void testPackagePrivateConcreteProxy()
-	{
-		PackagePrivateConcreteObject proxy = (PackagePrivateConcreteObject)LazyInitProxyFactory.createProxy(
-				PackagePrivateConcreteObject.class, PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR);
-
-		// test proxy implements ILazyInitProxy
-		assertTrue(proxy instanceof ILazyInitProxy);
-		assertTrue(((ILazyInitProxy)proxy).getObjectLocator() == PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR);
-
-		// test we do not have a jdk dynamic proxy
-		assertFalse(Proxy.isProxyClass(proxy.getClass()));
-
-		// test method invocation
-		assertEquals(proxy.getMessage(), "package-private-concrete");
-
-		// test serialization
-		PackagePrivateConcreteObject proxy2 = WicketObjects.cloneObject(proxy);
-		assertTrue(proxy != proxy2);
-		assertEquals(proxy2.getMessage(), "package-private-concrete");
-
-		// test equals/hashcode method interception
-		final IObjectMethodTester tester = new ObjectMethodTester();
-		assertTrue(tester.isValid());
-
-		// test only a single class is generated,
-		// otherwise permgen space will fill up with each proxy
-		assertSame(proxy.getClass(), LazyInitProxyFactory.createProxy(
-				PackagePrivateConcreteObject.class, PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR).getClass());
-
-		IProxyTargetLocator testerLocator = new IProxyTargetLocator()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Object locateProxyTarget()
-			{
-				return tester;
-			}
-		};
-
-		ObjectMethodTester testerProxy = (ObjectMethodTester)LazyInitProxyFactory.createProxy(
-				ObjectMethodTester.class, testerLocator);
-		testerProxy.equals(this);
-		testerProxy.hashCode();
-		testerProxy.toString();
-		assertTrue(tester.isValid());
-	}
-
-	/**
-	 * Tests lazy init concrete replacement replacement
 	 */
 	@Test
 	public void testCGLibInterceptorReplacement()
