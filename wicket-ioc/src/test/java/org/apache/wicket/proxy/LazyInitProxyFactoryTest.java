@@ -16,6 +16,15 @@
  */
 package org.apache.wicket.proxy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.ObjectStreamException;
+import java.lang.reflect.Proxy;
+
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.proxy.LazyInitProxyFactory.ProxyReplacement;
 import org.apache.wicket.proxy.util.ConcreteObject;
@@ -24,15 +33,6 @@ import org.apache.wicket.proxy.util.IObjectMethodTester;
 import org.apache.wicket.proxy.util.InterfaceObject;
 import org.apache.wicket.proxy.util.ObjectMethodTester;
 import org.junit.jupiter.api.Test;
-
-import java.io.ObjectStreamException;
-import java.lang.reflect.Proxy;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests lazy init proxy factory
@@ -45,8 +45,6 @@ class LazyInitProxyFactoryTest
 	private static InterfaceObject interfaceObject = new InterfaceObject("interface");
 
 	private static final ConcreteObject concreteObject = new ConcreteObject("concrete");
-
-	private static final PackagePrivateConcreteObject PACKAGE_PRIVATE_CONCRETE_OBJECT = new PackagePrivateConcreteObject("package-private-concrete");
 
 	private static IProxyTargetLocator interfaceObjectLocator = new IProxyTargetLocator()
 	{
@@ -72,17 +70,6 @@ class LazyInitProxyFactoryTest
 		// This method is needed to prevent (de)serialization of this locator instance in #testByteBuddyInterceptorReplacement()
 		private Object readResolve() throws ObjectStreamException {
 			return concreteObjectLocator;
-		}
-	};
-
-	private final static IProxyTargetLocator PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR = new IProxyTargetLocator()
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public Object locateProxyTarget()
-		{
-			return LazyInitProxyFactoryTest.PACKAGE_PRIVATE_CONCRETE_OBJECT;
 		}
 	};
 
@@ -192,60 +179,6 @@ class LazyInitProxyFactoryTest
 
 		ObjectMethodTester testerProxy = (ObjectMethodTester)LazyInitProxyFactory.createProxy(
 			ObjectMethodTester.class, testerLocator);
-		testerProxy.equals(this);
-		testerProxy.hashCode();
-		testerProxy.toString();
-		assertTrue(tester.isValid());
-	}
-
-	/**
-	 * Tests lazy init proxy to represent package private concrete objects
-	 *
-	 * https://issues.apache.org/jira/browse/WICKET-4324
-	 */
-	@Test
-	void testPackagePrivateConcreteProxy()
-	{
-		PackagePrivateConcreteObject proxy = (PackagePrivateConcreteObject)LazyInitProxyFactory.createProxy(
-				PackagePrivateConcreteObject.class, PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR);
-
-		// test proxy implements ILazyInitProxy
-		assertTrue(proxy instanceof ILazyInitProxy);
-		assertSame(((ILazyInitProxy)proxy).getObjectLocator(), PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR);
-
-		// test we do not have a jdk dynamic proxy
-		assertFalse(Proxy.isProxyClass(proxy.getClass()));
-
-		// test method invocation
-		assertEquals("package-private-concrete", proxy.getMessage());
-
-		// test serialization
-		PackagePrivateConcreteObject proxy2 = WicketObjects.cloneObject(proxy);
-		assertNotSame(proxy, proxy2);
-		assertEquals("package-private-concrete", proxy2.getMessage());
-
-		// test equals/hashcode method interception
-		final IObjectMethodTester tester = new ObjectMethodTester();
-		assertTrue(tester.isValid());
-
-		// test only a single class is generated,
-		// otherwise permgen space will fill up with each proxy
-		assertSame(proxy.getClass(), LazyInitProxyFactory.createProxy(
-				PackagePrivateConcreteObject.class, PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR).getClass());
-
-		IProxyTargetLocator testerLocator = new IProxyTargetLocator()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Object locateProxyTarget()
-			{
-				return tester;
-			}
-		};
-
-		ObjectMethodTester testerProxy = (ObjectMethodTester)LazyInitProxyFactory.createProxy(
-				ObjectMethodTester.class, testerLocator);
 		testerProxy.equals(this);
 		testerProxy.hashCode();
 		testerProxy.toString();

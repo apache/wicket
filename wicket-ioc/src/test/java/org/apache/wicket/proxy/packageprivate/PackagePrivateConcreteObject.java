@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.proxy;
+package org.apache.wicket.proxy.packageprivate;
 
 /**
  * Mock dependency that does not implement an interface.
- * Its visibility is package private (to {@link LazyInitProxyFactoryTest}) to test a bug
+ * Its visibility is package private (to {@link PackagePrivateTest}) to test a bug
  * described at https://issues.apache.org/jira/browse/WICKET-4324
  */
 class PackagePrivateConcreteObject
