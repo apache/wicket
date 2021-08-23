@@ -25,6 +25,14 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+
+import org.apache.wicket.Application;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.proxy.objenesis.ObjenesisProxyFactory;
+import org.apache.wicket.util.io.IClusterable;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.NamingStrategy;
@@ -36,15 +44,9 @@ import net.bytebuddy.implementation.FieldAccessor;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bind.annotation.AllArguments;
 import net.bytebuddy.implementation.bind.annotation.Origin;
+import net.bytebuddy.implementation.bind.annotation.Pipe;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 import net.bytebuddy.matcher.ElementMatchers;
-
-import org.apache.wicket.Application;
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.core.util.lang.WicketObjects;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.proxy.objenesis.ObjenesisProxyFactory;
-import org.apache.wicket.util.io.IClusterable;
 
 /**
  * A factory class that creates lazy init proxies given a type and a {@link IProxyTargetLocator}
@@ -203,11 +205,15 @@ public class LazyInitProxyFactory
 				new TypeCache.SimpleKey(type),
 				() -> BYTE_BUDDY
 						.subclass(type)
-						.implement(Serializable.class, ILazyInitProxy.class, IWriteReplace.class)
-						.method(ElementMatchers.any())
-						.intercept(MethodDelegation.toField("interceptor"))
+						.method(ElementMatchers.isPublic())
+							.intercept(
+								MethodDelegation
+									.withDefaultConfiguration()
+									.withBinders(Pipe.Binder.install(Function.class))
+									.toField("interceptor"))
 						.defineField("interceptor", ByteBuddyInterceptor.class, Visibility.PRIVATE)
 						.implement(InterceptorMutator.class).intercept(FieldAccessor.ofBeanProperty())
+						.implement(Serializable.class, IWriteReplace.class, ILazyInitProxy.class).intercept(MethodDelegation.toField("interceptor"))
 						.make()
 						.load(classLoader, ClassLoadingStrategy.Default.INJECTION)
 						.getLoaded());
@@ -355,14 +361,13 @@ public class LazyInitProxyFactory
 		public ByteBuddyInterceptor(final Class<?> type, final IProxyTargetLocator locator)
 		{
 			super();
-			typeName = type.getName();
+			
+			this.typeName = type.getName();
 			this.locator = locator;
 		}
 
 		@RuntimeType
-		public Object intercept(final @Origin Method method,
-								final @AllArguments Object[] args)
-				throws Exception
+		public Object intercept(@Origin Method method, @AllArguments Object[] args, @Pipe Function pipe) throws Exception
 		{
 			if (isFinalizeMethod(method))
 			{
@@ -381,21 +386,13 @@ public class LazyInitProxyFactory
 			{
 				return toString();
 			}
-			else if (isWriteReplaceMethod(method))
-			{
-				return writeReplace();
-			}
-			else if (method.getDeclaringClass().equals(ILazyInitProxy.class))
-			{
-				return getObjectLocator();
-			}
-
+			
 			if (target == null)
 			{
 				target = locator.locateProxyTarget();
 			}
-
-			return method.invoke(target, args);
+			
+			return pipe.apply(target);
 		}
 
 		@Override
