@@ -14,26 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.proxy.objenesis;
-
-import java.io.ObjectStreamException;
-
-import org.apache.wicket.proxy.IProxyTargetLocator;
-import org.apache.wicket.proxy.LazyInitProxyFactory;
+package org.apache.wicket.proxy.util;
 
 /**
- * Method interceptor for proxies representing concrete object not backed by an interface.
- * These proxies are representing by ByteBuddy proxies.
+ * Mock dependency that does not implement have a default constructor.
  */
-public class ObjenesisByteBuddyInterceptor extends LazyInitProxyFactory.ByteBuddyInterceptor
+public class NoDefaultConstructor
 {
-	public ObjenesisByteBuddyInterceptor(Class<?> type, IProxyTargetLocator locator) {
-		super(type, locator);
-	}
 
-	@Override
-	public Object writeReplace() throws ObjectStreamException
+	public NoDefaultConstructor(String args)
 	{
-		return new ObjenesisProxyReplacement(typeName, locator);
 	}
 }

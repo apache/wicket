@@ -31,6 +31,7 @@ import org.apache.wicket.proxy.util.ConcreteObject;
 import org.apache.wicket.proxy.util.IInterface;
 import org.apache.wicket.proxy.util.IObjectMethodTester;
 import org.apache.wicket.proxy.util.InterfaceObject;
+import org.apache.wicket.proxy.util.NoDefaultConstructor;
 import org.apache.wicket.proxy.util.ObjectMethodTester;
 import org.junit.jupiter.api.Test;
 
@@ -42,9 +43,11 @@ import org.junit.jupiter.api.Test;
  */
 class LazyInitProxyFactoryTest
 {
-	private static InterfaceObject interfaceObject = new InterfaceObject("interface");
+	private static final InterfaceObject interfaceObject = new InterfaceObject("interface");
 
 	private static final ConcreteObject concreteObject = new ConcreteObject("concrete");
+
+	private static final NoDefaultConstructor noDefaultConstructor = new NoDefaultConstructor("argument");
 
 	private static IProxyTargetLocator interfaceObjectLocator = new IProxyTargetLocator()
 	{
@@ -54,6 +57,17 @@ class LazyInitProxyFactoryTest
 		public Object locateProxyTarget()
 		{
 			return LazyInitProxyFactoryTest.interfaceObject;
+		}
+	};
+
+	private static IProxyTargetLocator noDefaultConstructorLocator = new IProxyTargetLocator()
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public Object locateProxyTarget()
+		{
+			return LazyInitProxyFactoryTest.noDefaultConstructor;
 		}
 	};
 
@@ -189,7 +203,7 @@ class LazyInitProxyFactoryTest
 	 * Tests lazy init concrete replacement
 	 */
 	@Test
-	void testByteBuddyInterceptorReplacement()
+	void testInterceptorReplacement()
 	{
 		ProxyReplacement ser = new ProxyReplacement(ConcreteObject.class.getName(),
 			concreteObjectLocator);
@@ -209,5 +223,15 @@ class LazyInitProxyFactoryTest
 		// See WICKET-603.
 		String proxy = (String)LazyInitProxyFactory.createProxy(String.class, stringObjectLocator);
 		assertEquals("StringLiteral", proxy);
+	}
+	
+	/**
+	 * Test construction via objenesis.
+	 */
+	@Test
+	void testNoDefaultConstructor()
+	{
+		NoDefaultConstructor proxy = (NoDefaultConstructor)LazyInitProxyFactory.createProxy(
+			NoDefaultConstructor.class, concreteObjectLocator);
 	}
 }

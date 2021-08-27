@@ -14,13 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.wicket.proxy.objenesis;
 
-module org.apache.wicket.ioc {
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.core;
-    requires net.bytebuddy;
-    requires org.objenesis;
+import org.objenesis.ObjenesisStd;
 
-    exports org.apache.wicket.injection;
-    exports org.apache.wicket.proxy;
+/**
+ * Wrapper around Objenesis to allow optional creation of objects without
+ * default constructor.
+ * <br>
+ * Note: This class fails to load if Objenesis is not on the classpath.
+ */
+class ObjenesisInstantiator implements IInstantiator
+{
+	private final ObjenesisStd OBJENESIS = new ObjenesisStd(false);
+
+	public Object newInstance(Class<?> type) {
+		return OBJENESIS.newInstance(type);
+	}
 }

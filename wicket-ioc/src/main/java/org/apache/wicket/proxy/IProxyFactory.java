@@ -14,13 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.wicket.proxy;
 
-module org.apache.wicket.ioc {
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.core;
-    requires net.bytebuddy;
-    requires org.objenesis;
-
-    exports org.apache.wicket.injection;
-    exports org.apache.wicket.proxy;
+/**
+ * A factory of proxies.
+ */
+public interface IProxyFactory
+{
+	/**
+	 * Create a proxy.
+	 * 
+	 * @param type
+	 *            the target type
+	 * @param locator
+	 *            the locator of the target
+	 * @return a proxy
+	 */
+	public Object createProxy(final Class<?> type, final IProxyTargetLocator locator);
 }

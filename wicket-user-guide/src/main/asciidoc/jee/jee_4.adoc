@@ -1,4 +1,11 @@
 
+During their lifecycle Wicket components are serialized into the session or some secondary storage.
+But in most cases injected dependencies are not serializable, as these are typically singletons like services and repositories.
+Because of this Wicket uses https://bytebuddy.net/#/[Byte Buddy] to generate proxies that are injected instead.
+These will serialize a replacement and re-lookup the dependency after deserialization.
+
+NOTE: By default injected types need a default constructor without arguments, otherwise proxies can not be instantiated.
+You can remedy this limitation by adding http://objenesis.org[Objenesis] to your project depencencies.
 
 
 In this chapter we have seen how to integrate Wicket applications with Spring and with an EJB container. Module wicket-examples contains also an example of integration with Guice (see application class _org.apache.wicket.examples.guice.GuiceApplication_). 

@@ -16,20 +16,37 @@
  */
 package org.apache.wicket.proxy.objenesis;
 
-import org.apache.wicket.proxy.IProxyTargetLocator;
-import org.apache.wicket.proxy.LazyInitProxyFactory;
-import org.objenesis.ObjenesisStd;
+import org.apache.wicket.WicketRuntimeException;
 
-public class ObjenesisProxyFactory
+/**
+ * Instantiator for Objects without default constructor.
+ */
+@FunctionalInterface
+public interface IInstantiator
 {
-	private static final ObjenesisStd OBJENESIS = new ObjenesisStd(false);
+	/**
+	 * Create a new instance.
+	 * 
+	 * @param type
+	 *            type of instance
+	 * @return instance
+	 */
+	public Object newInstance(Class<?> type);
 
-	public static Object createProxy(final Class<?> type, final IProxyTargetLocator locator)
+	public static IInstantiator getInstantiator()
 	{
-		Class<?> proxyClass = LazyInitProxyFactory.createOrGetProxyClass(type);
-		Object instance = OBJENESIS.newInstance(proxyClass);
-		ObjenesisByteBuddyInterceptor interceptor = new ObjenesisByteBuddyInterceptor(type, locator);
-		((LazyInitProxyFactory.InterceptorMutator) instance).setInterceptor(interceptor);
-		return instance;
+		try
+		{
+			return new ObjenesisInstantiator();
+		}
+		catch (NoClassDefFoundError e)
+		{
+			return (type) -> {
+				throw new WicketRuntimeException(String.format(
+					"Can't create proxy for %s without default constructor"
+						+ " - you can remedy this by adding Objenesis to your project dependencies.",
+					type.getName()));
+			};
+		}
 	}
 }
