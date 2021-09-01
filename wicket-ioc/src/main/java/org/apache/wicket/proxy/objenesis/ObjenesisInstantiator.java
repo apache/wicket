@@ -26,9 +26,10 @@ import org.objenesis.ObjenesisStd;
  */
 class ObjenesisInstantiator implements IInstantiator
 {
-	private final ObjenesisStd OBJENESIS = new ObjenesisStd(false);
+	private static final ObjenesisStd OBJENESIS = new ObjenesisStd(false);
 
-	public Object newInstance(Class<?> type) {
+	public <T> T newInstance(Class<T> type)
+	{
 		return OBJENESIS.newInstance(type);
 	}
 }

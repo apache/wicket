@@ -45,7 +45,7 @@ public class CglibProxyFactory implements IProxyFactory
 	private static final int CGLIB_CALLBACK_NO_OVERRIDE = 0;
 	private static final int CGLIB_CALLBACK_HANDLER = 1;
 	
-	private static IInstantiator instantiator = IInstantiator.getInstantiator();
+	private static final IInstantiator INSTANTIATOR = IInstantiator.getInstantiator();
 
 	/**
 	 * Create a lazy init proxy for the specified type. The target object will be located using the
@@ -60,7 +60,8 @@ public class CglibProxyFactory implements IProxyFactory
 	 * @return lazily initializable proxy
 	 */
 	@Override
-	public Object createProxy(final Class<?> type, final IProxyTargetLocator locator)
+	@SuppressWarnings("unchecked")
+	public <T> T createProxy(final Class<T> type, final IProxyTargetLocator locator)
 	{
 		CGLibInterceptor handler = new CGLibInterceptor(type, locator);
 
@@ -80,18 +81,18 @@ public class CglibProxyFactory implements IProxyFactory
 		{
 			e.setCallbackTypes(new Class[] {callbacks[0].getClass(), callbacks[1].getClass()});
 
-			Object instance = instantiator.newInstance(e.createClass());
+			Object instance = INSTANTIATOR.newInstance(e.createClass());
 
 			// set callbacks directly (WICKET-6607) 
 			((Factory) instance).setCallbacks(callbacks);
 			
-			return instance;
+			return (T) instance;
 		}
 		else
 		{
 			e.setCallbacks(callbacks);
 			
-			return e.create();
+			return (T) e.create();
 		}
 	}
 

@@ -25,6 +25,7 @@ import java.lang.reflect.Proxy;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.proxy.ILazyInitProxy;
+import org.apache.wicket.proxy.IProxyFactory;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
 import org.apache.wicket.proxy.LazyInitProxyFactory.IWriteReplace;
@@ -33,7 +34,7 @@ import org.apache.wicket.proxy.LazyInitProxyFactory.ProxyReplacement;
 /**
  * A factory class that creates jdk dynamic proxies.
  */
-public class JdkProxyFactory
+public class JdkProxyFactory implements IProxyFactory
 {
 	/**
 	 * Create a lazy init proxy for the specified type. The target object will be located using the
@@ -47,13 +48,14 @@ public class JdkProxyFactory
 	 * 
 	 * @return lazily initializable proxy
 	 */
-	public Object createProxy(final Class<?> type, final IProxyTargetLocator locator)
+	@SuppressWarnings("unchecked")
+	public <T> T createProxy(final Class<T> type, final IProxyTargetLocator locator)
 	{
 		JdkHandler handler = new JdkHandler(type, locator);
 
 		try
 		{
-			return Proxy.newProxyInstance(resolveClassLoader(),
+			return (T) Proxy.newProxyInstance(resolveClassLoader(),
 				new Class[] { type, Serializable.class, ILazyInitProxy.class,
 						IWriteReplace.class }, handler);
 		}
@@ -65,7 +67,7 @@ public class JdkProxyFactory
 			 * happens, we can try and fall back to the classloader (current) that actually
 			 * loaded this class.
 			 */
-			return Proxy.newProxyInstance(LazyInitProxyFactory.class.getClassLoader(),
+			return (T) Proxy.newProxyInstance(LazyInitProxyFactory.class.getClassLoader(),
 				new Class[] { type, Serializable.class, ILazyInitProxy.class,
 						IWriteReplace.class }, handler);
 		}

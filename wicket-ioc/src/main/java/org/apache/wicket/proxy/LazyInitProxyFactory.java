@@ -112,18 +112,22 @@ public class LazyInitProxyFactory
 		Float.class, double.class, Double.class, char.class, Character.class, boolean.class,
 		Boolean.class);
 	
-	private static final IProxyFactory proxyFactory = initProxyFactory();
-	
+	private static final IProxyFactory JDK_PROXY_FACTORY = new JdkProxyFactory();
+	private static final IProxyFactory CLASS_PROXY_FACTORY = initProxyFactory();
+
     private static IProxyFactory initProxyFactory() {
-		IProxyFactory proxyFactory = null; 
-		
-		if ("true".equals(System.getProperty("wicket.ioc.useByteBuddy"))) {
-			log.info("using Byte Buddy proxy factory");
+		IProxyFactory proxyFactory;
+
+		if (Boolean.getBoolean("wicket.ioc.useByteBuddy"))
+		{
+			log.info("Using Byte Buddy proxy factory");
 			proxyFactory = new ByteBuddyProxyFactory();
-		} else {
+		}
+		else
+		{
 			proxyFactory = new CglibProxyFactory();
 		}
-		
+
 		return proxyFactory;
 	}
 
@@ -139,20 +143,21 @@ public class LazyInitProxyFactory
 	 * 
 	 * @return lazily initializable proxy
 	 */
-	public static Object createProxy(final Class<?> type, final IProxyTargetLocator locator)
+	public static <T> T createProxy(final Class<T> type, final IProxyTargetLocator locator)
 	{
 		if (PRIMITIVES.contains(type) || Enum.class.isAssignableFrom(type))
 		{
 			// We special-case primitives as sometimes people use these as
 			// SpringBeans (WICKET-603, WICKET-906). Go figure.
-			return locator.locateProxyTarget();
+			return (T) locator.locateProxyTarget();
 		}
 		else if (type.isInterface())
 		{
-			return new JdkProxyFactory().createProxy(type, locator);
+			return JDK_PROXY_FACTORY.createProxy(type, locator);
 		}
-		else {
-			return proxyFactory.createProxy(type, locator);
+		else
+		{
+			return CLASS_PROXY_FACTORY.createProxy(type, locator);
 		}
 	}
 	
@@ -185,7 +190,7 @@ public class LazyInitProxyFactory
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	public static final class ProxyReplacement implements IClusterable
+	public static class ProxyReplacement implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 

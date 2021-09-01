@@ -30,5 +30,5 @@ public interface IProxyFactory
 	 *            the locator of the target
 	 * @return a proxy
 	 */
-	public Object createProxy(final Class<?> type, final IProxyTargetLocator locator);
+	<T> T createProxy(final Class<T> type, final IProxyTargetLocator locator);
 }
