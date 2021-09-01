@@ -53,8 +53,9 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	private static final TypeCache<TypeCache.SimpleKey> DYNAMIC_CLASS_CACHE = new TypeCache.WithInlineExpunction<>(TypeCache.Sort.SOFT);
 
 	private static final ByteBuddy BYTE_BUDDY = new ByteBuddy().with(WicketNamingStrategy.INSTANCE);
+	private static final String INTERCEPTOR_FIELD_NAME = "interceptor";
 
-	private static IInstantiator instantiatior = IInstantiator.getInstantiator();
+	private static final IInstantiator INSTANTIATOR = IInstantiator.getInstantiator();
 
 	/**
 	 * Create a lazy init proxy for the specified type. The target object will be located using the
@@ -69,15 +70,15 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	 * @return lazily initializable proxy
 	 */
 	@Override
-	public Object createProxy(final Class<?> type, final IProxyTargetLocator locator)
+	public <T> T createProxy(final Class<T> type, final IProxyTargetLocator locator)
 	{
-		Class<?> proxyClass = createOrGetProxyClass(type);
+		Class<T> proxyClass = createOrGetProxyClass(type);
 
-		Object instance;
+		T instance;
 		
 		if (!hasNoArgConstructor(type))
 		{
-			instance = instantiatior.newInstance(proxyClass);
+			instance = INSTANTIATOR.newInstance(proxyClass);
 		}
 		else
 		{
@@ -97,10 +98,11 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 		return instance;
 	}
 
-	public static Class<?> createOrGetProxyClass(Class<?> type)
+	@SuppressWarnings("unchecked")
+	public static <T> Class<T> createOrGetProxyClass(Class<T> type)
 	{
 		ClassLoader classLoader = resolveClassLoader();
-		return DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
+		return (Class<T>) DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
 				new TypeCache.SimpleKey(type),
 				() -> BYTE_BUDDY
 						.subclass(type)
@@ -109,10 +111,10 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 								MethodDelegation
 									.withDefaultConfiguration()
 									.withBinders(Pipe.Binder.install(Function.class))
-									.toField("interceptor"))
-						.defineField("interceptor", ByteBuddyInterceptor.class, Visibility.PRIVATE)
+									.toField(INTERCEPTOR_FIELD_NAME))
+						.defineField(INTERCEPTOR_FIELD_NAME, ByteBuddyInterceptor.class, Visibility.PRIVATE)
 						.implement(InterceptorMutator.class).intercept(FieldAccessor.ofBeanProperty())
-						.implement(Serializable.class, IWriteReplace.class, ILazyInitProxy.class).intercept(MethodDelegation.toField("interceptor"))
+						.implement(Serializable.class, IWriteReplace.class, ILazyInitProxy.class).intercept(MethodDelegation.toField(INTERCEPTOR_FIELD_NAME))
 						.make()
 						.load(classLoader, ClassLoadingStrategy.Default.INJECTION)
 						.getLoaded());

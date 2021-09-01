@@ -17,6 +17,7 @@
 package org.apache.wicket.proxy.objenesis;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * Instantiator for Objects without default constructor.
@@ -31,9 +32,9 @@ public interface IInstantiator
 	 *            type of instance
 	 * @return instance
 	 */
-	public Object newInstance(Class<?> type);
+	<T> T newInstance(Class<T> type);
 
-	public static IInstantiator getInstantiator()
+	static IInstantiator getInstantiator()
 	{
 		try
 		{
@@ -41,11 +42,16 @@ public interface IInstantiator
 		}
 		catch (NoClassDefFoundError e)
 		{
-			return (type) -> {
-				throw new WicketRuntimeException(String.format(
-					"Can't create proxy for %s without default constructor"
-						+ " - you can remedy this by adding Objenesis to your project dependencies.",
-					type.getName()));
+			return new IInstantiator()
+			{
+				@Override
+				public <T> T newInstance(Class<T> type)
+				{
+					throw new WicketRuntimeException(String.format(
+							"Can't create proxy for %s without default constructor"
+									+ " - you can remedy this by adding Objenesis to your project dependencies.",
+							Classes.name(type)));
+				}
 			};
 		}
 	}

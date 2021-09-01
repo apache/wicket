@@ -101,8 +101,9 @@ public class LazyInitProxyFactory
 		Float.class, double.class, Double.class, char.class, Character.class, boolean.class,
 		Boolean.class);
 	
-	private static final IProxyFactory proxyFactory = new ByteBuddyProxyFactory();
-	
+	private static final IProxyFactory JDK_PROXY_FACTORY = new JdkProxyFactory();
+	private static final IProxyFactory CLASS_PROXY_FACTORY = new ByteBuddyProxyFactory();
+
 	/**
 	 * Create a lazy init proxy for the specified type. The target object will be located using the
 	 * provided locator upon first method invocation.
@@ -115,20 +116,21 @@ public class LazyInitProxyFactory
 	 * 
 	 * @return lazily initializable proxy
 	 */
-	public static Object createProxy(final Class<?> type, final IProxyTargetLocator locator)
+	public static <T> T createProxy(final Class<T> type, final IProxyTargetLocator locator)
 	{
 		if (PRIMITIVES.contains(type) || Enum.class.isAssignableFrom(type))
 		{
 			// We special-case primitives as sometimes people use these as
 			// SpringBeans (WICKET-603, WICKET-906). Go figure.
-			return locator.locateProxyTarget();
+			return (T) locator.locateProxyTarget();
 		}
 		else if (type.isInterface())
 		{
-			return new JdkProxyFactory().createProxy(type, locator);
+			return JDK_PROXY_FACTORY.createProxy(type, locator);
 		}
-		else {
-			return proxyFactory.createProxy(type, locator);
+		else
+		{
+			return CLASS_PROXY_FACTORY.createProxy(type, locator);
 		}
 	}
 	
