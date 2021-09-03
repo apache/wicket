@@ -2,10 +2,6 @@ name: Java CI
 
 on: [push, pull_request]
 
-env:
-  LOGNAME: ${{ secrets.NIGHTLIES_USER }}
-  RSYNC_PASSWORD: ${{ secrets.NIGHTLIES_TOKEN }}
-
 jobs:
   build:
 
@@ -28,12 +24,4 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Build with Maven
-      run: |
-        export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64 && \
-        export PATH=$JAVA_HOME/bin:$PATH && \
-        java -version && \
-        mvn -version && \
-        mvn clean verify -Pjs-test
-      
-    - name: Deploy User Guide
-      run: rsync -av wicket-user-guide/target/generated-docs/ nightlies.apache.org::buildbot/wicket/guide-gha/10.x/
+      run: export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64 && export PATH=$JAVA_HOME/bin:$PATH && java -version && mvn -version && mvn clean verify -Pjs-test
