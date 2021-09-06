@@ -2,6 +2,30 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.5.0
+
+** Bug
+
+    * [WICKET-6884] - Wicket API 9.x refers to 10.0.0-M1-SNAPSHOT API
+    * [WICKET-6902] - Change of PartialPageUpdate order of onAfterResponse and writePriorityEvaluations makes IListener.onAfterResponde ignore prepended javascripts
+    * [WICKET-6908] - Possible bug / edge case where page is not detached
+    * [WICKET-6909] - Link to Javadoc for 9.x is broken on the website
+    * [WICKET-6913] - Java 17 compatibility with cglib
+    * [WICKET-6914] - Visibility change of "File Upload" via ajax causes "missing" form-data
+
+** Improvement
+
+    * [WICKET-6901] - PropertyValidator improve configuration doc
+    * [WICKET-6911] - wicket-spring throws an error when a spring bean uses ctor injection
+
+** Task
+
+    * [WICKET-6903] - Replace maven-clirr-plugin with something newer
+    * [WICKET-6904] - Make Apache Wicket fully supporting Java9+ module system
+    * [WICKET-6916] - Simplify JMX with StandardMBean
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.4.0
 
 ** Bug
