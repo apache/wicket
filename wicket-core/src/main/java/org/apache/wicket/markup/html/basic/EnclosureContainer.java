@@ -25,8 +25,8 @@ import org.apache.wicket.util.lang.Args;
  * <code>&lt;wicket:enclosure&gt;</code> is nice and prevents that users have to add boilerplate to
  * their application. But it is not without problems. The child components are children in the
  * markup, but the auto-component generated for the enclosure tag will not magically re-parent the
- * child components. Thus the markup hierarchy and the component hierarchy will be out of sync. The
- * automatically created enclosure container will be created along side its "children" with both
+ * child components. Thus, the markup hierarchy and the component hierarchy will be out of sync. The
+ * automatically created enclosure container will be created alongside its "children" with both
  * attached to the very same parent container. That leads to a tricky situation since e.g.
  * <code>onBeforeRender()</code> will be called for enclosure children even if the enclosure is made
  * invisible by it controlling child.
@@ -40,6 +40,12 @@ import org.apache.wicket.util.lang.Args;
  * Where any of these problems apply, you may replace the tag and manually add this simple container
  * which basically does the same. But instead of adding the children to the Page, Panel whatever,
  * you must add the children to this container in order to keep the component hierarchy in sync.
+ * </p>
+ *
+ * <p>
+ * <strong>Note</strong>: Make sure the markup element associated with this {@link EnclosureContainer}
+ * is anything but <em>&lt;wicket:enclosure&gt;</em>, e.g. a &lt;div&gt;, a &lt;span&gt; or even a
+ * &lt;wicket:container&gt;
  * </p>
  * 
  * @author Juergen Donnerstag
@@ -72,7 +78,7 @@ public class EnclosureContainer extends WebMarkupContainer
 	}
 
 	/**
-	 * Overriden to set the visibility depending on childs {@link #determineVisibility()}.
+	 * Overridden to set the visibility depending on children {@link #determineVisibility()}.
 	 */
 	@Override
 	protected void onConfigure()
