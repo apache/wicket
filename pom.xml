@@ -161,7 +161,7 @@
 		<japicmp.skip>true</japicmp.skip> <!-- TODO Wicket 10 Remove this once 10.0.0 is released -->
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
 		<jetty.version>11.0.6</jetty.version>
-		<junit.version>5.8.0-RC1</junit.version>
+		<junit.version>5.8.0</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.3</logback.version>
 		<hamcrest.version>2.2</hamcrest.version>
