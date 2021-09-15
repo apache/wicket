@@ -88,7 +88,7 @@ public class WicketFilterTest
 {
 	private static WebApplication application;
 	private final DateFormat headerDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z",
-		Locale.UK);
+		Locale.ROOT);
 
 	/**
 	 * @throws Exception
