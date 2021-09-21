@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -76,5 +78,12 @@ public class MultipartFormComponentListenerPage extends WebPage {
 			}
 		});
 
+		add(new AjaxLink<>("toggleVisibility") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				form.setVisible(!form.isVisible());
+				target.add(form);
+			}
+		});
 	}
 }
