@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.markup.html.form.Form;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-6914
+ * https://issues.apache.org/jira/browse/WICKET-6921
  */
 class MultipartFormComponentListenerTest extends WicketTestCase
 {
@@ -36,16 +38,22 @@ class MultipartFormComponentListenerTest extends WicketTestCase
         tester.assertRenderedPage(MultipartFormComponentListenerPage.class);
 
         TagTester formTagTester = tester.getTagByWicketId("form");
+        String formMarkupId = formTagTester.getAttribute("id");
+
         assertEquals(Form.ENCTYPE_MULTIPART_FORM_DATA, formTagTester.getAttribute("enctype"));
 
         tester.getRequest().setAttribute("form:dropDown", 1);
         tester.executeAjaxEvent("form:dropDown", "change");
         String ajaxResponse = tester.getLastResponseAsString();
-        assertTrue(ajaxResponse.contains(".form.enctype='" + MultipartFormComponentListener.ENCTYPE_URL_ENCODED + "'})();"));
+        assertTrue(ajaxResponse.contains("Wicket.$('"+formMarkupId+"').enctype='" + MultipartFormComponentListener.ENCTYPE_URL_ENCODED + "'})();"));
 
         tester.getRequest().setAttribute("form:dropDown", 2);
         tester.executeAjaxEvent("form:dropDown", "change");
         ajaxResponse = tester.getLastResponseAsString();
-        assertTrue(ajaxResponse.contains(".form.enctype='" + Form.ENCTYPE_MULTIPART_FORM_DATA + "'})();"));
+        assertTrue(ajaxResponse.contains("Wicket.$('"+formMarkupId+"').enctype='" + Form.ENCTYPE_MULTIPART_FORM_DATA + "'})();"));
+
+        tester.clickLink("toggleVisibility");
+        ajaxResponse = tester.getLastResponseAsString();
+        assertFalse(ajaxResponse.contains("Wicket.$('"+formMarkupId+"').enctype="), "enctype should not be pushed on hidden elements");
     }
 }
