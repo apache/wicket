@@ -646,19 +646,12 @@ public abstract class WebApplication extends Application
 		return shouldBufferResponse ? new HeaderBufferingWebResponse(webResponse) : webResponse;
 	}
 
-	/**
-	 * @see org.apache.wicket.Application#newSession(org.apache.wicket.request.Request,
-	 *      org.apache.wicket.request.Response)
-	 */
 	@Override
 	public Session newSession(Request request, Response response)
 	{
 		return new WebSession(request);
 	}
 
-	/**
-	 * @see org.apache.wicket.Application#sessionUnbound(java.lang.String)
-	 */
 	@Override
 	public void sessionUnbound(final String sessionId)
 	{
