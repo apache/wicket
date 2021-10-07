@@ -293,11 +293,8 @@ public class SignInPanel extends Panel
 			rememberMeContainer.setVisible(includeRememberMe);
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-		 */
 		@Override
-		public final void onSubmit()
+		public void onSubmit()
 		{
 			IAuthenticationStrategy strategy = getApplication().getSecuritySettings()
 				.getAuthenticationStrategy();

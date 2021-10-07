@@ -52,7 +52,7 @@ public interface IAuthenticationStrategy
 	void save(final String credential, final String... extraCredentials);
 
 	/**
-	 * When the user logs out (session invalidation), than remove username and password from the
+	 * When the user logs out (session invalidation), then remove username and password from the
 	 * persistence store
 	 */
 	void remove();

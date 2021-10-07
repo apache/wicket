@@ -54,7 +54,7 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 	}
 
 	/**
-	 * Try to logon the user. It'll call {@link #authenticate(String, String)} to do the real work
+	 * Try to sign in the user. It'll call {@link #authenticate(String, String)} to do the real work
 	 * and that is what you need to subclass to provide your own authentication mechanism.
 	 * 
 	 * @param username
