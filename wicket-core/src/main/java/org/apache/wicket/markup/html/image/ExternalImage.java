@@ -65,7 +65,7 @@ public class ExternalImage extends WebComponent
 	 */
 	public ExternalImage(String id)
 	{
-		this(id, null, Model.ofList(Collections.<Serializable> emptyList()));
+		this(id, null, Model.ofList(Collections.emptyList()));
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class ExternalImage extends WebComponent
 	 */
 	public ExternalImage(String id, IModel<Serializable> srcModel)
 	{
-		this(id, srcModel, Model.ofList(Collections.<Serializable> emptyList()));
+		this(id, srcModel, Model.ofList(Collections.emptyList()));
 	}
 
 	/**
@@ -131,16 +131,12 @@ public class ExternalImage extends WebComponent
 	{
 		super.onComponentTag(tag);
 
-		if ("source".equals(tag.getName()))
-		{
-			buildSrcSetAttribute(tag, getSrcSetModel());
-		}
-		else
+		if (!"source".equals(tag.getName()))
 		{
 			checkComponentTag(tag, "img");
 			buildSrcAttribute(tag, getDefaultModel());
-			buildSrcSetAttribute(tag, getSrcSetModel());
 		}
+		buildSrcSetAttribute(tag, getSrcSetModel());
 
 		buildSizesAttribute(tag);
 

@@ -31,9 +31,6 @@ import org.apache.wicket.request.resource.ResourceReference;
  */
 public class NonCachingImage extends Image
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -117,7 +114,7 @@ public class NonCachingImage extends Image
 	}
 
 	/**
-	 * Overriden to precent caching.
+	 * Overridden to prevent caching.
 	 * 
 	 * @return always {@code true}
 	 */

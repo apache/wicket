@@ -17,7 +17,6 @@
 package org.apache.wicket.core.request.handler;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.http.WebResponse;

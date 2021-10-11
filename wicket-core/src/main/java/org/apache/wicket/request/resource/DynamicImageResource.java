@@ -124,10 +124,8 @@ public abstract class DynamicImageResource extends AbstractResource
 	 */
 	protected abstract byte[] getImageData(Attributes attributes);
 
-
 	protected void configureResponse(final ResourceResponse response, final Attributes attributes)
 	{
-
 	}
 
 	@Override
