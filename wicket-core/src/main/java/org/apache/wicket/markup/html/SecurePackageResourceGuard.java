@@ -122,6 +122,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		addPattern("+*.swf");
 		addPattern("+*.bmp");
 		addPattern("+*.svg");
+		addPattern("+*.avif");
 
 		// allow web fonts
 		addPattern("+*.eot");
