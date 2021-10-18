@@ -27,30 +27,11 @@ package org.apache.wicket.model;
  * 
  * @param <T>
  *            The Model object type
+ * @deprecated Use {@link IWrapModel}
  */
+@Deprecated
 public abstract class AbstractWrapModel<T> implements IWrapModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	@Override
-	public T getObject()
-	{
-		return null;
-	}
-
-	@Override
-	public void setObject(T object)
-	{
-	}
-
-	/**
-	 * Calls getWrappedModel().detach();
-	 * 
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
-	@Override
-	public void detach()
-	{
-		getWrappedModel().detach();
-	}
 }
