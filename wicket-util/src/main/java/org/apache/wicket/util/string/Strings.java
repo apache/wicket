@@ -18,8 +18,6 @@ package org.apache.wicket.util.string;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -51,11 +49,6 @@ import org.apache.wicket.util.lang.Args;
  */
 public final class Strings
 {
-	/**
-	 * The line separator for the current platform.
-	 */
-	public static final String LINE_SEPARATOR;
-
 	/** A table of hex digits */
 	private static final char[] HEX_DIGIT = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 			'A', 'B', 'C', 'D', 'E', 'F' };
@@ -77,18 +70,6 @@ public final class Strings
 	 * actually uses.
 	 */
 	private static final String SESSION_ID_PARAM = ';' + SESSION_ID_PARAM_NAME + '=';
-
-	static
-	{
-		LINE_SEPARATOR = AccessController.doPrivileged(new PrivilegedAction<String>()
-		{
-			@Override
-			public String run()
-			{
-				return System.getProperty("line.separator");
-			}
-		});
-	}
 
 	/**
 	 * Private constructor prevents construction.
