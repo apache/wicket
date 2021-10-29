@@ -2,6 +2,26 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.6.0
+
+** Bug
+
+    * [WICKET-6921] - MultipartFormComponentListener breaks on hidden components
+
+** Improvement
+
+    * [WICKET-6920] - Improve the examples to use the browser's light/dark mode
+    * [WICKET-6924] - Allow image/avif in SecurePackageResourceGuard
+    * [WICKET-6927] - Get rid of java.security.AccessController
+
+** Task
+
+    * [WICKET-6918] - Add links to latest wicket.xsd to the web site
+    * [WICKET-6919] - Improve EnclosureContainer's javadoc to explain that it should not be used with <wicket:enclosure>
+    * [WICKET-6925] - Deprecate AbstractWrapModel
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.5.0
 
 ** Bug
