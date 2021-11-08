@@ -77,7 +77,7 @@ Order order = new Order(new Date(), ORDER_STATUS.IN_PROGRESS);
 add(new Label("orderStatus", new StringResourceModel("orderStatus.${status.code}", Model.of(order))));
 ----
 
-As we can see in the code above also the key contains a property expression (${status.code}) which makes its value dynamic. In this way the state of an object (an Order in our example) can determinate which resource will be loaded by StringResourceModel. If we don't use properties expressions we can provide a null value as model and in this case StringResourceModel will behave exactly as a ResourceModel. StringResourceModel supports also the same parameter substitution used by standard class _java.text.MessageFormat_. 
+As we can see in the code above also the key contains a property expression (${status.code}) which makes its value dynamic. In this way the state of an object (an Order in our example) can determine which resource will be loaded by StringResourceModel. If we don't use properties expressions we can provide a null value as model and in this case StringResourceModel will behave exactly as a ResourceModel. StringResourceModel supports also the same parameter substitution used by standard class _java.text.MessageFormat_. 
 
 Parameters can be generic objects but if we use a model as parameter, StringResourceModel will use the data object inside it as actual value (it will call getObject on the model). Parameters are passed as a vararg argument with method _setParameters(Object... parameters)_. Here is an example of usage of parameter substitution:
 
