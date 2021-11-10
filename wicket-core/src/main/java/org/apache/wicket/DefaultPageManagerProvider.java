@@ -147,7 +147,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	 */
 	protected IPageStore newCachingStore(IPageStore pageStore)
 	{
-		return new CachingPageStore(pageStore, new InSessionPageStore(1));
+		return new CachingPageStore(pageStore, new InSessionCache());
 	}
 
 	/**
@@ -209,5 +209,28 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		File fileStoreFolder = storeSettings.getFileStoreFolder();
 
 		return new DiskPageStore(application.getName(), fileStoreFolder, maxSizePerSession);
+	}
+	
+	private static class InSessionCache extends InSessionPageStore {
+
+		private static final MetaDataKey<SessionData> KEY = new MetaDataKey<>()
+		{
+			private static final long serialVersionUID = 1L;
+		};
+		
+		InSessionCache()
+		{
+			super(1);
+		}
+
+		/**
+		 * Use a separate key, so this store does not interfere with any additional {@link InSessionPageStore}
+		 * the application might set up.
+		 */
+		@Override
+		protected MetaDataKey<SessionData> getKey()
+		{
+			return KEY;
+		}
 	}
 }
