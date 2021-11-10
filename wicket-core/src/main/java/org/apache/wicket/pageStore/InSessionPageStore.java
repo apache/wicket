@@ -172,9 +172,8 @@ public class InSessionPageStore implements IPageStore
 	/**
 	 * Session data is stored under a {@link MetaDataKey}.
 	 * <p>
-	 * In cases where more than one instance is used in an application (e.g. as a fast cache
-	 * <em>and</em> a persistent store of serialized pages in the session), this method has to be
-	 * overridden to provide a separate key for each instance.
+	 * In the unlikely case that an application utilizes more than one instance of this store,
+	 * this method has to be overridden to provide a separate key for each instance.
 	 */
 	protected MetaDataKey<SessionData> getKey()
 	{
