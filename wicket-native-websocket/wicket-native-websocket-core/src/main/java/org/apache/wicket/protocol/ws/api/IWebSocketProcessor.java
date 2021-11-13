@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.ws.WebSocketSettings;
+
 /**
  * Processes web socket messages.
  *
@@ -23,6 +26,21 @@ package org.apache.wicket.protocol.ws.api;
  */
 public interface IWebSocketProcessor
 {
+	/**
+	 * Called when then {@link org.apache.wicket.protocol.ws.api.IWebSocketSession} is being opened: to allow to configure
+	 * the underlying web socket session.
+	 *
+	 * @param webSocketSession
+	 * 			the {@link org.apache.wicket.protocol.ws.api.IWebSocketSession}
+	 * @param application
+	 *          the {@link org.apache.wicket.protocol.http.WebApplication}
+	 */
+	default void onOpen(IWebSocketSession webSocketSession, final WebApplication application) {
+		// find the current org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer and use it
+		// in order to configure the session
+		WebSocketSettings.Holder.get(application).getSocketSessionConfigurer().configureSession(webSocketSession);
+	}
+
 	/**
 	 * Called when a text message arrives from the client
 	 *
@@ -56,7 +74,9 @@ public interface IWebSocketProcessor
 	 * The connection could be closed by either the client or the server
 	 *
 	 * @param closeCode
+	 *   		The close code
 	 * @param message
+	 *          the message
 	 */
 	void onClose(int closeCode, String message);
 
