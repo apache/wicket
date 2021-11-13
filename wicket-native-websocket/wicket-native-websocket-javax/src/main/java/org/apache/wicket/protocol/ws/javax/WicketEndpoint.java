@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WicketEndpoint extends Endpoint
 {
+
 	private static final Logger LOG = LoggerFactory.getLogger(WicketEndpoint.class);
 
 	/**
@@ -70,6 +71,7 @@ public class WicketEndpoint extends Endpoint
 		{
 			ThreadContext.setApplication(app);
 			javaxWebSocketProcessor = new JavaxWebSocketProcessor(session, app, endpointConfig);
+			javaxWebSocketProcessor.onOpen(new JavaxWebSocketSession(session), app);
 		}
 		finally
 		{

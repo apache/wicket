@@ -23,7 +23,9 @@ import jakarta.websocket.MessageHandler;
 import jakarta.websocket.Session;
 
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
+import org.apache.wicket.protocol.ws.api.IWebSocketSession;
 
 /**
  * An {@link org.apache.wicket.protocol.ws.api.IWebSocketProcessor processor} that integrates with
@@ -39,7 +41,9 @@ public class JavaxWebSocketProcessor extends AbstractWebSocketProcessor
 	 * @param session
 	 *            the WebSocket session
 	 * @param application
+	 *            the {@link org.apache.wicket.protocol.http.WebApplication}
 	 * @param endpointConfig
+	 *            the {@link jakarta.websocket.EndpointConfig}
 	 */
 	public JavaxWebSocketProcessor(final Session session, final WebApplication application, EndpointConfig endpointConfig)
 	{
@@ -50,7 +54,6 @@ public class JavaxWebSocketProcessor extends AbstractWebSocketProcessor
 		session.addMessageHandler(new StringMessageHandler());
 		session.addMessageHandler(new BinaryMessageHandler());
 	}
-
 
 	@Override
 	public void onOpen(Object containerConnection)
