@@ -50,7 +50,7 @@ public class NavigatorLabel extends Label
 			new Model<>(new LabelModelObject(pageable))));
 	}
 
-	private static class LabelModelObject implements IClusterable
+	public static class LabelModelObject implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 		private final IPageableItems pageable;
