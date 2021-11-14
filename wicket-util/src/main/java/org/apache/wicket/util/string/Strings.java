@@ -69,7 +69,9 @@ public final class Strings
 	 * Constructs something like <em>;jsessionid=</em>. This is what {@linkplain Strings#stripJSessionId(String)}
 	 * actually uses.
 	 */
-	private static final String SESSION_ID_PARAM = ';' + SESSION_ID_PARAM_NAME + '=';
+	// the field is not 'final' because we need to modify it in a unit test
+	// see https://github.com/openjdk/jdk/pull/5027#issuecomment-968177213
+	private static String SESSION_ID_PARAM = ';' + SESSION_ID_PARAM_NAME + '=';
 
 	/**
 	 * Private constructor prevents construction.
