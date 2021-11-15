@@ -55,47 +55,14 @@ class StringsTest
 		// WICKET-6858
 		final Field sessionIdParamField = Strings.class.getDeclaredField("SESSION_ID_PARAM");
 		sessionIdParamField.setAccessible(true);
-		Field modifiersField = getModifiersField();
-		modifiersField.setAccessible(true);
 		try {
 			final String customSessionIdParam = ";Custom seSsion - ид=";
-			modifiersField.setInt(sessionIdParamField, sessionIdParamField.getModifiers() & ~Modifier.FINAL );
 			sessionIdParamField.set(null, customSessionIdParam);
 			assertEquals(url + ";a=b;c=d?param=a;b",
 			             Strings.stripJSessionId(url + ";a=b;c=d" + customSessionIdParam + "12345?param=a;b"));
 		} finally {
 			sessionIdParamField.set(null, "jsessionid");
-			modifiersField.setInt(sessionIdParamField, sessionIdParamField.getModifiers() & Modifier.FINAL );
-			modifiersField.setAccessible(false);
 			sessionIdParamField.setAccessible(false);
-		}
-	}
-
-	private Field getModifiersField() throws NoSuchFieldException
-	{
-		try
-		{
-			return Field.class.getDeclaredField("modifiers");
-		}
-		catch (NoSuchFieldException e) {
-			try
-			{
-				Method getDeclaredFields0 = Class.class.getDeclaredMethod("getDeclaredFields0", boolean.class);
-				getDeclaredFields0.setAccessible(true);
-				Field[] fields = (Field[]) getDeclaredFields0.invoke(Field.class, false);
-				for (Field field : fields)
-				{
-					if ("modifiers".equals(field.getName()))
-					{
-						return field;
-					}
-				}
-			}
-			catch (ReflectiveOperationException ex)
-			{
-				e.addSuppressed(ex);
-			}
-			throw e;
 		}
 	}
 
