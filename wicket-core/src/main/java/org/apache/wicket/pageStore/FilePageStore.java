@@ -23,6 +23,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.ArrayList;
@@ -185,8 +186,7 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		File file = getPageFile(sessionIdentifier, pageId, true);
 		try
 		{
-			FileChannel channel = FileChannel.open(file.toPath(), StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+			FileChannel channel = createWriteFileChannel(file.toPath());
 			try
 			{
 				ByteBuffer buffer = ByteBuffer.wrap(data);
@@ -203,6 +203,21 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		}
 
 		setPageType(file, pageType);
+	}
+
+	/**
+	 * Factory method for write channels. Mind StandardOpenOption.TRUNCATE_EXISTING may produce problems in
+	 * Windows operating system. If removed default java serialization will still work but files will not shrink.
+	 * Please be careful if you use another serialization method.
+	 *
+	 * @param path The Path of the file.
+	 * @return FileChannel
+	 * @throws IOException
+	 */
+	protected FileChannel createWriteFileChannel(Path path) throws IOException
+	{
+		return  FileChannel.open(path, StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
 	}
 
 	private void checkMaxSize(String sessionIdentifier)
