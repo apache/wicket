@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.ajax.markup.html;
 
 import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -238,8 +239,8 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected WebComponent newLabel(final MarkupContainer parent, final String componentId,
-		final IModel<T> model)
+	protected Component newLabel(final MarkupContainer parent, final String componentId,
+								 final IModel<T> model)
 	{
 		Label label = new Label(componentId, model)
 		{
