@@ -134,10 +134,10 @@
 		<maven.compiler.target>11</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<asm.version>9.1</asm.version>
+		<asm.version>9.2</asm.version>
 		<aspectj.version>1.9.6</aspectj.version>
-		<assertj-core.version>3.19.0</assertj-core.version>
-		<byte-buddy.version>1.11.12</byte-buddy.version>
+		<assertj-core.version>3.21.0</assertj-core.version>
+		<byte-buddy.version>1.12.2</byte-buddy.version>
 		<cdi-unit.version>4.1.0</cdi-unit.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
@@ -163,16 +163,16 @@
 		<jetty.version>11.0.7</jetty.version>
 		<junit.version>5.8.1</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
-		<logback.version>1.2.3</logback.version>
+		<logback.version>1.2.7</logback.version>
 		<hamcrest.version>2.2</hamcrest.version>
 		<hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
-		<metrics.version>4.1.19</metrics.version>
-		<mockito.version>4.0.0</mockito.version>
+		<metrics.version>4.2.4</metrics.version>
+		<mockito.version>4.1.0</mockito.version>
 		<objenesis.version>3.2</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
 		<slf4j.version>2.0.0-alpha5</slf4j.version>
-		<spring.version>5.3.11</spring.version>
+		<spring.version>5.3.13</spring.version>
 		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
 		<weld.version>4.0.1.SP1</weld.version>
 		<velocity-engine-core.version>2.3</velocity-engine-core.version>
