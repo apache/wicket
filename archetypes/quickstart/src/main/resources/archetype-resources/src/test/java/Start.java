@@ -49,7 +49,7 @@ public class Start
 			// if a keystore for a SSL certificate is available, start a SSL
 			// connector on port 8443.
 			// By default, the quickstart comes with a Apache Wicket Quickstart
-			// Certificate that expires about half way september 2021. Do not
+			// Certificate that expires about half way september 2031. Do not
 			// use this certificate anywhere important as the passwords are
 			// available in the source.
 
