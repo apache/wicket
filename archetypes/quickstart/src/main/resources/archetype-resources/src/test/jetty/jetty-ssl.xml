@@ -6,7 +6,7 @@
 <!-- and either jetty-https.xml or jetty-spdy.xml (but not both)   -->
 <!-- ============================================================= -->
 <Configure id="sslContextFactory" class="org.eclipse.jetty.util.ssl.SslContextFactory">
-  <Set name="KeyStorePath"><Property name="maven.project.build.directory.test-classes" default="." />/<Property name="jetty.keystore" default="keystore.p12"/></Set>
+  <Set name="KeyStorePath"><Property name="maven.project.build.directory.test-classes" default="." />/<Property name="jetty.keystore" default="keystore"/></Set>
   <Set name="KeyStorePassword"><Property name="jetty.keystore.password" default="wicket"/></Set>
   <Set name="KeyManagerPassword"><Property name="jetty.keymanager.password" default="wicket"/></Set>
   <Set name="EndpointIdentificationAlgorithm"></Set>
