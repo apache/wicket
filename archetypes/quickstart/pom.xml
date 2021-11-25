@@ -65,6 +65,9 @@
 						<delimiters>
 							<delimiter>@</delimiter>
 						</delimiters>
+						<nonFilteredFileExtensions>
+							<nonFilteredFileExtension>p12</nonFilteredFileExtension>
+						</nonFilteredFileExtensions>
 					</configuration>
 				</plugin>
 			</plugins>
