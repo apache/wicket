@@ -31,7 +31,6 @@
 	</description>
 
 	<properties>
-		<automatic-module-name>org.apache.wicket.userguide</automatic-module-name>
 		<asciidoctor.version>2.5.2</asciidoctor.version>
 		<asciidoctor-maven-plugin.version>2.2.1</asciidoctor-maven-plugin.version>
 		<japicmp.skip>true</japicmp.skip>

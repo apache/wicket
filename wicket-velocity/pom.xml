@@ -32,10 +32,6 @@
 		simple CMS like applications.
 	</description>
 
-	<properties>
-		<automatic-module-name>org.apache.wicket.velocity</automatic-module-name>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
