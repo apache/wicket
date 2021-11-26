@@ -60,14 +60,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
+					<version>${maven-resources-plugin.version}</version>
 					<configuration>
 						<useDefaultDelimiters>false</useDefaultDelimiters>
 						<delimiters>
 							<delimiter>@</delimiter>
 						</delimiters>
-						<nonFilteredFileExtensions>
-							<nonFilteredFileExtension>p12</nonFilteredFileExtension>
-						</nonFilteredFileExtensions>
 					</configuration>
 				</plugin>
 			</plugins>

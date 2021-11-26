@@ -27,6 +27,17 @@
 	<packaging>bundle</packaging>
 	<name>Wicket Bean Validation</name>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jboss.logging</groupId>
+				<artifactId>jboss-logging</artifactId>
+				<version>3.4.2.Final</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>jakarta.el</groupId>

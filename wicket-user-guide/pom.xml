@@ -62,7 +62,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>1.4</version>
+					<version>${maven-enforcer-plugin.version}</version>
 					<inherited>false</inherited>
 					<configuration>
 						<skip>true</skip>
