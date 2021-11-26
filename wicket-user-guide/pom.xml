@@ -54,6 +54,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${maven-deploy-plugin.version}</version>
 					<configuration>
 						<!-- Just documentation. No need to deploy -->
 						<skip>true</skip>
@@ -78,6 +79,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven-javadoc-plugin.version}</version>
 					<configuration>
 						<!-- Just documentation, no sources -->
 						<skip>true</skip>
@@ -86,6 +88,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
+					<version>${maven-source-plugin.version}</version>
 					<configuration>
 						<!-- Just documentation, no sources -->
 						<skipSource>true</skipSource>
@@ -179,6 +182,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven-surefire-plugin.version}</version>
 					<configuration>
 						<!-- No Java tests here -->
 						<skip>true</skip>
@@ -198,6 +202,7 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-clean-plugin</artifactId>
+						<version>${maven-clean-plugin.version}</version>
 						<configuration>
 							<filesets>
 								<fileset>

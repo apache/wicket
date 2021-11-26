@@ -174,14 +174,15 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-    			<plugin>
-    				<groupId>org.apache.maven.plugins</groupId>
-    				<artifactId>maven-deploy-plugin</artifactId>
-    				<configuration>
-    					<!-- Just tests. No need to deploy them -->
-    					<skip>true</skip>
-    				</configuration>
-    			</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${maven-deploy-plugin.version}</version>
+					<configuration>
+						<!-- Just tests. No need to deploy them -->
+						<skip>true</skip>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
