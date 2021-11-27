@@ -2,6 +2,25 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.7.0
+
+** Bug
+
+    * [WICKET-6931] - User guide: 'determinate' is not a verb; should be changed into 'to determine'
+    * [WICKET-6936] - FilePageStore fails on windows 
+
+** Improvement
+
+    * [WICKET-6930] - add some web-socket improvements. 
+    * [WICKET-6933] - Ease use of InSessionPageStore as persistent store
+    * [WICKET-6935] - make some datatable related components more reusable
+
+** Task
+
+    * [WICKET-6937] - Update the keystore used by the quickstart application
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.6.0
 
 ** Bug
