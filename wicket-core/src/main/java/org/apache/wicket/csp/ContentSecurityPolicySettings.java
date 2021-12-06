@@ -77,9 +77,8 @@ public class ContentSecurityPolicySettings
 	{
 		Args.notNull(application, "application");
 		
-		nonceCreator = () -> {
-				return application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
-			};
+		nonceCreator = () ->
+				application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
 	}
 
 	public CSPHeaderConfiguration blocking()

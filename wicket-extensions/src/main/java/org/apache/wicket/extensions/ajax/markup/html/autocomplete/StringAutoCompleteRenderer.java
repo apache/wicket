@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 /**
- * An renderer that calls object.toString() to get the text value. Great for quickly generating a
+ * A renderer that calls object.toString() to get the text value. Great for quickly generating a
  * list of assists.
  * 
  * @since 1.2

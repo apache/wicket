@@ -225,7 +225,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	protected AutoCompleteBehavior<T> newAutoCompleteBehavior(
 		final IAutoCompleteRenderer<T> renderer, final AutoCompleteSettings settings)
 	{
-		return new AutoCompleteBehavior<T>(renderer, settings)
+		return new AutoCompleteBehavior<>(renderer, settings)
 		{
 			private static final long serialVersionUID = 1L;
 

@@ -64,7 +64,7 @@ public interface IPageRequestHandler extends IPageClassRequestHandler
 	 * @param handler The request handler
 	 * @return page or {@code null} if none
 	 */
-	public static Page getPage(IRequestHandler handler)
+	static Page getPage(IRequestHandler handler)
 	{
 		while (handler instanceof IRequestHandlerDelegate)
 		{
