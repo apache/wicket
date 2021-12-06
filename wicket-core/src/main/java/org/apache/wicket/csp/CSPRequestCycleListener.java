@@ -70,7 +70,7 @@ public class CSPRequestCycleListener implements IRequestCycleListener
 	 * 
 	 * @param handler
 	 *            handler
-	 * @return <code>true</code> if must protected
+	 * @return <code>true</code> if must be protected
 	 * @see ContentSecurityPolicySettings#mustProtectRequest(IRequestHandler)
 	 */
 	protected boolean mustProtect(IRequestHandler handler)

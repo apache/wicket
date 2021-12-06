@@ -20,8 +20,8 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * A renderer that abstracts autoassist specific details and allows subclasses to only render the
- * visual part of the assist instead of having to also render the necessary autoassist javascript
+ * A renderer that abstracts auto-assist specific details and allows subclasses to only render the
+ * visual part of the assist instead of having to also render the necessary auto-assist javascript
  * hooks.
  * 
  * @param <T>
