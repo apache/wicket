@@ -81,7 +81,6 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * A pageId indicating that the endpoint is WebSocketResource
 	 */
 	static final int NO_PAGE_ID = -1;
-	static final String NO_PAGE_CLASS = "_NO_PAGE";
 
 	private final WebRequest webRequest;
 	private final int pageId;
@@ -202,7 +201,9 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	{
 		if (webSocketSettings.shouldNotifyOnErrorEvent(t)) {
 			IKey key = getRegistryKey();
-			broadcastMessage(new ErrorMessage(getApplication(), getSessionId(), key, t));
+			IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, key);
+			ErrorMessage message = new ErrorMessage(application, sessionId, key, t);
+			broadcastMessage(message, connection);
 		}
 	}
 
