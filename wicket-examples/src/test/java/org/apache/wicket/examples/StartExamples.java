@@ -16,12 +16,10 @@
  */
 package org.apache.wicket.examples;
 
-import java.io.File;
 import java.lang.management.ManagementFactory;
 
 import javax.management.MBeanServer;
 
-import jakarta.websocket.server.ServerContainer;
 import org.apache.wicket.protocol.ws.javax.WicketServerEndpointConfig;
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -32,10 +30,11 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.session.DefaultSessionCache;
 import org.eclipse.jetty.server.session.FileSessionDataStore;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.eclipse.jetty.websocket.jakarta.server.internal.JakartaWebSocketServerContainer;
+import org.eclipse.jetty.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
 
 /**
  * Separate startup class for people that want to run the examples directly. Use parameter
@@ -107,9 +106,9 @@ public class StartExamples
 //		sessionCache.setSessionDataStore(sessionStore);
 //		bb.getSessionHandler().setSessionCache(sessionCache);
 
-		// FIXME Wicket 10
-//		ServerContainer serverContainer = JakartaWebSocketServerContainer.ensureContainer(bb);
-//		serverContainer.addEndpoint(new WicketServerEndpointConfig());
+//		ServletContextHandler contextHandler = ServletContextHandler.getServletContextHandler(bb.getServletContext());
+//		JakartaWebSocketServletContainerInitializer.configure(contextHandler,
+//				(servletContext, container) -> container.addEndpoint(new WicketServerEndpointConfig()));
 
 		// uncomment next line if you want to test with JSESSIONID encoded in the urls
 //		((AbstractSessionManager) bb.getSessionHandler().getSessionManager()).setUsingCookies(false);
