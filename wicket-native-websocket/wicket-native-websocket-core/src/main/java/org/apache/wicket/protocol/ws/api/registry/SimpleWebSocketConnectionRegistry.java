@@ -52,10 +52,10 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 		ConcurrentMap<String, ConcurrentMap<IKey, IWebSocketConnection>> connectionsBySession = application.getMetaData(KEY);
 		if (connectionsBySession != null)
 		{
-			ConcurrentMap<IKey, IWebSocketConnection> connectionsByPage = connectionsBySession.get(sessionId);
-			if (connectionsByPage != null)
+			ConcurrentMap<IKey, IWebSocketConnection> connectionsByKey = connectionsBySession.get(sessionId);
+			if (connectionsByKey != null)
 			{
-				connection = connectionsByPage.get(key);
+				connection = connectionsByKey.get(key);
 			}
 		}
 		return connection;

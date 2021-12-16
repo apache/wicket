@@ -136,7 +136,7 @@ public class BaseWebSocketBehavior extends Behavior
 
 		variables.put("context", getContext(component));
 
-		// set falsy JS values for the non-used parameter
+		// set falsy JS values for the non-used parameters
 		if (Strings.isEmpty(resourceName))
 		{
 			int pageId = component.getPage().getPageId();

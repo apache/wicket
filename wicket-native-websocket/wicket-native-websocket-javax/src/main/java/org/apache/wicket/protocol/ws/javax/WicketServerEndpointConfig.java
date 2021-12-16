@@ -40,7 +40,7 @@ public class WicketServerEndpointConfig implements ServerEndpointConfig
 	/**
 	 * A fake mount path used for WebSocket endpoint.
 	 * WicketFilter should not process this path.
-	 * @see org.apache.wicket.protocol.http.WicketFilter#ignorePaths
+	 * See JavaxWebSocketFilter.JavaxWebSocketFilterConfig#getInitParameter(String)
 	 */
 	static final String WICKET_WEB_SOCKET_PATH = "/wicket/websocket";
 
