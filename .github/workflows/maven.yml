@@ -24,4 +24,4 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Build with Maven
-      run: export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && export PATH=$JAVA_HOME/bin:$PATH && java -version && mvn -version && mvn clean verify -Pjs-test
+      run: export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && export PATH=$JAVA_HOME/bin:$PATH && java -version && mvn -version && mvn clean verify -Pjs-test,java17

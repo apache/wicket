@@ -38,4 +38,4 @@ before_install:
   - mvn -version
 
 script: 
-  - mvn clean verify -Pjs-test
+  - mvn clean verify -Pjs-test,java17
