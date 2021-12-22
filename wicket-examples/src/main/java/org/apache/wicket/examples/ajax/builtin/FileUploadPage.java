@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.collections4.iterators.EmptyIterator;
-import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload2.FileUploadException;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;

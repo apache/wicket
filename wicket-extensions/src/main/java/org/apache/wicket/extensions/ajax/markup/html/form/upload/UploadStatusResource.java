@@ -91,7 +91,7 @@ class UploadStatusResource extends AbstractResource
 		final HttpServletRequest req = (HttpServletRequest)attributes.getRequest()
 			.getContainerRequest();
 
-		UploadInfo info = MultipartServletWebRequestImpl.getUploadInfo(new javax.servlet.http.HttpServletRequest.Impl(req), upload);
+		UploadInfo info = MultipartServletWebRequestImpl.getUploadInfo(req, upload);
 
 		String status;
 		if ((info == null) || (info.getTotalBytes() < 1))
