@@ -322,6 +322,43 @@ class PageParametersTest
 		assertEquals(p2, p1);
 	}
 
+	@Test
+	void notEqualWithDifferentNumberOfNamedParameters()
+	{
+		PageParameters p1 = new PageParameters()
+				.add("a", "b")
+				.add("a", "b");
+
+		PageParameters p2 = new PageParameters()
+				.add("a", "b");
+
+		assertNotEquals(p1, p2);
+	}
+
+	@Test
+	void notEqualWithDifferentCardinality()
+	{
+		PageParameters p1 = new PageParameters()
+				.add("a", "b")
+				.add("a", "b");
+
+		PageParameters p2 = new PageParameters()
+				.add("a", "b")
+				.add("c", "d");
+
+		assertNotEquals(p1, p2);
+	}
+
+	@Test
+	void notEqualWithDifferentNamedParameterValues()
+	{
+		PageParameters p1 = new PageParameters().add("a", "b");
+
+		PageParameters p2 = new PageParameters().add("a", "c");
+
+		assertNotEquals(p1, p2);
+	}
+
 	/**
 	 * NamedPairs equality should not depend on the order
 	 *

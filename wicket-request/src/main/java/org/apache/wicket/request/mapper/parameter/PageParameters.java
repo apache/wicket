@@ -18,13 +18,14 @@ package org.apache.wicket.request.mapper.parameter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
@@ -502,9 +503,31 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		}
 		else if (other.namedParameters == null)
 			return false;
-		else if (!CollectionUtils.isEqualCollection(namedParameters, other.namedParameters))
+		else if (!sameElements(namedParameters, other.namedParameters))
 			return false;
 		return true;
+	}
+
+	private static <A> boolean sameElements(final List<A> list1, final List<A> list2) {
+		if (list1.size() != list2.size())
+			return false;
+		Map<A, Integer> cardinality1 = getCardinality(list1);
+		Map<A, Integer> cardinality2 = getCardinality(list2);
+		if (cardinality1.size() != cardinality2.size())
+			return false;
+		for (Map.Entry<A, Integer> entry : cardinality1.entrySet()) {
+			if (!java.util.Objects.equals(entry.getValue(), cardinality2.get(entry.getKey())))
+				return false;
+		}
+		return true;
+	}
+
+	private static <A> Map<A, Integer> getCardinality(final List<A> list) {
+		Map<A, Integer> cardinality = new HashMap<>();
+		for (A namedPair : list) {
+			cardinality.merge(namedPair, 1, Integer::sum);
+		}
+		return cardinality;
 	}
 
 	/**
