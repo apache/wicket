@@ -140,7 +140,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	{
 		ServletContext servletContext = filter.getFilterConfig().getServletContext();
 
-		WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(new javax.servlet.ServletContext.Impl(servletContext));
+		WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
 
 		if (getContextConfigLocation(filter) != null)
 		{
@@ -204,7 +204,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	{
 		webApplicationContext = newApplicationContext();
 		webApplicationContext.setParent(parent);
-		webApplicationContext.setServletContext(new javax.servlet.ServletContext.Impl(filter.getFilterConfig().getServletContext()));
+		webApplicationContext.setServletContext(filter.getFilterConfig().getServletContext());
 		webApplicationContext.setConfigLocation(getContextConfigLocation(filter));
 
 		postProcessWebApplicationContext(webApplicationContext, filter);

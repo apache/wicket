@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- * Tests for Spring injection with {@literal @javax.inject.Inject} annotation
+ * Tests for Spring injection with {@literal @jakarta.inject.Inject} annotation
  */
 public class JakartaInjectAnnotProxyFieldValueFactoryTest extends AnnotProxyFieldValueFactoryTest
 {

@@ -94,6 +94,16 @@
 		<url>http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git</url>
 		<tag>HEAD</tag>
 	</scm>
+
+	<repositories>
+		<!-- TODO Wicket 10: Use stable release instead of a milestone one -->
+		<repository>
+			<id>repository.spring.milestone</id>
+			<name>Spring Milestone Repository</name>
+			<url>https://repo.spring.io/milestone</url>
+		</repository>
+	</repositories>
+
 	<modules>
 		<!-- wicket-eclipse-settings is separate released -->
 		<module>wicket</module>
@@ -130,8 +140,8 @@
 		<maven.compiler.optimize>true</maven.compiler.optimize>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 
 		<!-- Project Versions -->
 		<asm.version>9.2</asm.version>
@@ -172,7 +182,7 @@
 		<objenesis.version>3.2</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
 		<slf4j.version>2.0.0-alpha5</slf4j.version>
-		<spring.version>5.3.13</spring.version>
+		<spring.version>6.0.0-M1</spring.version>
 		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
 		<weld.version>4.0.2.Final</weld.version>
 		<velocity-engine-core.version>2.3</velocity-engine-core.version>

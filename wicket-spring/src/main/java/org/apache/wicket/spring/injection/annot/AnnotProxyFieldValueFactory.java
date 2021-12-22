@@ -287,7 +287,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			msg.append("More than one bean of type [");
 			msg.append(clazz.getName());
 			msg.append("] found, you have to specify the name of the bean ");
-			msg.append("(@SpringBean(name=\"foo\")) or (@Named(\"foo\") if using @javax.inject classes) in order to resolve this conflict. ");
+			msg.append("(@SpringBean(name=\"foo\")) or (@Named(\"foo\") if using @jakarta.inject classes) in order to resolve this conflict. ");
 			msg.append("Matched beans: ");
 			msg.append(Strings.join(",", names));
 			throw new IllegalStateException(msg.toString());

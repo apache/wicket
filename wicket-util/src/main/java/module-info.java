@@ -54,7 +54,7 @@ module org.apache.wicket.util {
     exports org.apache.wicket.util.watch;
     exports org.apache.wicket.util.xml;
 
-    // temporary hack until CDI-Unit and Spring provide Jakarta EE based releases
+    // temporary hack until Weld and CDI-Unit provide Jakarta EE based releases
     exports javax.servlet;
     exports javax.servlet.http;
 }
