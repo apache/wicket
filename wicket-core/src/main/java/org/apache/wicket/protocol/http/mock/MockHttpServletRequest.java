@@ -57,7 +57,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpUpgradeHandler;
 import jakarta.servlet.http.Part;
 
-import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload2.FileUploadBase;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.mock.MockRequestParameters;

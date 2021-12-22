@@ -21,8 +21,8 @@ import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload2.FileItem;
+import org.apache.commons.fileupload2.FileUploadException;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;

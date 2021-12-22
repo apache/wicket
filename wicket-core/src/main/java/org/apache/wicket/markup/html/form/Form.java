@@ -25,9 +25,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
-
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload2.FileUploadException;
+import org.apache.commons.fileupload2.pub.FileSizeLimitExceededException;
+import org.apache.commons.fileupload2.pub.SizeLimitExceededException;
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.IRequestListener;
@@ -1496,12 +1496,12 @@ public class Form<T> extends WebMarkupContainer
 	protected void onFileUploadException(final FileUploadException e,
 		final Map<String, Object> model)
 	{
-		if (e instanceof FileUploadBase.SizeLimitExceededException)
+		if (e instanceof SizeLimitExceededException)
 		{
 			String msg = getString(UPLOAD_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
 			error(msg);
 		}
-		else if (e instanceof FileUploadBase.FileSizeLimitExceededException)
+		else if (e instanceof FileSizeLimitExceededException)
 		{
 			String msg = getString(UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
 			error(msg);
@@ -1515,9 +1515,6 @@ public class Form<T> extends WebMarkupContainer
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#internalOnModelChanged()
-	 */
 	@Override
 	protected void internalOnModelChanged()
 	{
