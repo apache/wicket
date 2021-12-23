@@ -57,7 +57,7 @@ public class LocaleUtils {
 	 * Sindhi (sd) and Uyghur (ug). The presence of other subtags of the
 	 * language code, e.g. regions like EG (Egypt), is ignored.
 	 *
-	 * @param languageString - locale string
+	 * @param locale - locale to check
 	 * @return <code>true</code> in case passed locale is right-to-left
 	 */
 	public static boolean isRtlLanguage(final Locale locale) {
