@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.core.request.ClientInfo;
+import org.apache.wicket.core.util.lang.LocaleUtils;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
@@ -123,6 +124,11 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	
 	/** records if session has been invalidated by the current request */
 	private static final MetaDataKey<Boolean> SESSION_INVALIDATED = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+	/** records if pages have been unlocked for the current request */
+	public static final MetaDataKey<Boolean> IS_RTL = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -606,6 +612,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 		if (!Objects.equal(getLocale(), locale))
 		{
 			this.locale.set(locale);
+			setMetaData(IS_RTL, LocaleUtils.isRtlLanguage(locale));
 			dirty();
 		}
 		return this;
