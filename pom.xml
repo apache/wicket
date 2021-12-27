@@ -181,6 +181,7 @@
 		<mockito.version>4.2.0</mockito.version>
 		<objenesis.version>3.2</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
+		<log4j.version>2.17.0</log4j.version>
 		<slf4j.version>2.0.0-alpha5</slf4j.version>
 		<spring.version>6.0.0-M1</spring.version>
 		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
@@ -312,12 +313,6 @@
 				<version>${jakarta.inject-api.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>1.2.17</version>
-				<optional>true</optional>
-			</dependency>
-			<dependency>
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy</artifactId>
 				<version>${byte-buddy.version}</version>
@@ -342,6 +337,16 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
 				<version>${commons-lang3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.velocity</groupId>
@@ -478,6 +483,12 @@
 				<artifactId>wicket-http2-undertow</artifactId>
 				<version>0.25-SNAPSHOT</version>
 				<type>jar</type>
+				<exclusions>
+					<exclusion>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
@@ -625,6 +636,12 @@
 				<artifactId>hibernate-validator</artifactId>
 				<version>${hibernate-validator.version}</version>
 				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.httpunit</groupId>
