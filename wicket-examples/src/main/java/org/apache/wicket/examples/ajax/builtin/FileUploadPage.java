@@ -17,10 +17,10 @@
 package org.apache.wicket.examples.ajax.builtin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.collections4.iterators.EmptyIterator;
 import org.apache.commons.fileupload2.FileUploadException;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -226,7 +226,7 @@ public class FileUploadPage extends BasePage
 			@Override
 			public Iterator<? extends FileDescription> iterator(long first, long count) {
 				if (this.fileDescriptions == null) {
-					return EmptyIterator.emptyIterator();
+					return Collections.emptyIterator();
 				}
 				return fileDescriptions.listIterator();
 			}

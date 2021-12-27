@@ -22,9 +22,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.collections4.map.HashedMap;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.IReferenceHeaderItem;
 import org.apache.wicket.markup.head.ISubresourceHeaderItem;
@@ -49,7 +49,7 @@ public class DynamicSubresourceIntegrity
 {
 	private static final Logger log = LoggerFactory.getLogger(DynamicSubresourceIntegrity.class);
 
-	private Map<Serializable, String> cache = new HashedMap<>();
+	private Map<Serializable, String> cache = new HashMap<>();
 
 	/**
 	 * Wrap the given response
