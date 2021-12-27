@@ -28,12 +28,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.reflect.Field;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
@@ -397,7 +397,7 @@ class MarkupContainerTest extends WicketTestCase
 		assertChildrenType(wmc, List.class);
 
 		addNChildren(wmc, 1);
-		assertChildrenType(wmc, LinkedMap.class);
+		assertChildrenType(wmc, LinkedHashMap.class);
 	}
 
 	@Test
@@ -407,7 +407,7 @@ class MarkupContainerTest extends WicketTestCase
 
 		addNChildren(wmc, NUMBER_OF_CHILDREN_FOR_A_MAP + 1);
 
-		assertChildrenType(wmc, LinkedMap.class);
+		assertChildrenType(wmc, LinkedHashMap.class);
 	}
 
 	@Test
@@ -418,7 +418,7 @@ class MarkupContainerTest extends WicketTestCase
 		addNChildren(wmc, NUMBER_OF_CHILDREN_FOR_A_MAP);
 		wmc.add(new EmptyPanel("panel"));
 
-		assertChildrenType(wmc, LinkedMap.class);
+		assertChildrenType(wmc, LinkedHashMap.class);
 
 		Iterator<Component> iterator = wmc.iterator();
 		removeNChildren(iterator, NUMBER_OF_CHILDREN_FOR_A_MAP);

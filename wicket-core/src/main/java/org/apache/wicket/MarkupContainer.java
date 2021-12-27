@@ -23,15 +23,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.wicket.behavior.OutputMarkupContainerClassNameBehavior;
 import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.markup.ComponentTag;
@@ -1163,12 +1164,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				prevChild = child;
 			}
 		}
-		else if (children instanceof LinkedMap)
+		else if (children instanceof LinkedHashMap)
 		{
-			LinkedMap<String, Component> childrenMap = children();
+			LinkedHashMap<String, Component> childrenMap = children();
 			if (childrenMap.containsKey(childId))
 			{
-				String prevSiblingId = childrenMap.previousKey(childId);
+				String prevSiblingId = previousKey(childrenMap, childId);
 				Component oldChild = childrenMap.remove(childId);
 				removals_add(oldChild, childrenMap.get(prevSiblingId));
 				if (childrenMap.size() == 1)
@@ -1177,6 +1178,20 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				}
 			}
 		}
+	}
+
+	private static <A> A previousKey(final LinkedHashMap<A, ?> map, final A targetKey)
+	{
+		A previousKey = null;
+		for (A key : map.keySet())
+		{
+			if (Objects.equals(key, targetKey))
+			{
+				return previousKey;
+			}
+			previousKey = key;
+		}
+		return null;
 	}
 
 	/**
@@ -1282,7 +1297,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			}
 			else
 			{
-				Map<String, Component> newChildren = new LinkedMap<>(MAPIFY_THRESHOLD * 2);
+				Map<String, Component> newChildren = new LinkedHashMap<>(MAPIFY_THRESHOLD * 2);
 				for (Component curChild : childrenList)
 				{
 					newChildren.put(curChild.getId(), curChild);
