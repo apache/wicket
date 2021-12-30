@@ -71,4 +71,8 @@ public interface ICellPopulator<T> extends IClusterable, IDetachable
 	 */
 	void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId,
 		final IModel<T> rowModel);
+		
+	boolean isVisible();
+	
+	void setVisible(boolean visible);
 }

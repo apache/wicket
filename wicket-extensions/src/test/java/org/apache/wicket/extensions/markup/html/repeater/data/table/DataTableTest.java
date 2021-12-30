@@ -185,4 +185,16 @@ public class DataTableTest extends WicketTestCase
 		}
 
 	}
+	/**
+	  * Tests that a {@link DataTable} with non-visible column will not be rendered.
+	  */
+	@Test
+	public void testWicket6941()
+	{
+		DataTablePage page = new DataTablePage();
+		tester.startPage(page);
+		tester.assertRenderedPage(DataTablePage.class);
+		assertTrue(tester.getLastResponseAsString().contains("<span wicket:id=\"label\">ID</span>"));
+		assertFalse(tester.getLastResponseAsString().contains("<span wicket:id=\"label\">Age</span>"));
+	}
 }

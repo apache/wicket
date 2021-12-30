@@ -39,6 +39,7 @@ public class PropertyPopulator<T> implements ICellPopulator<T>
 {
 	private static final long serialVersionUID = 1L;
 	private final String property;
+	private boolean visible = true;
 
 	/**
 	 * Constructor
@@ -73,5 +74,17 @@ public class PropertyPopulator<T> implements ICellPopulator<T>
 		final IModel<T> rowModel)
 	{
 		cellItem.add(new Label(componentId, new PropertyModel<>(rowModel, property)));
+	}
+
+	@Override
+	public boolean isVisible()
+	{
+		return visible;
+	}
+
+	@Override
+	public void setVisible(boolean visible)
+	{
+		this.visible = visible;
 	}
 }
