@@ -43,8 +43,8 @@
 	</licenses>
 	<properties>
 		<wicket.version>@project.version@</wicket.version>
-		<jetty9.version>@jetty.version@</jetty9.version>
 		<slf4j.version>@slf4j.version@</slf4j.version>
+		<jetty.version>@jetty.version@</jetty.version>
 		<junit.version>@junit.version@</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
@@ -85,12 +85,12 @@
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
 			<scope>test</scope>
-			<version>${jetty9.version}</version>
+			<version>${jetty.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-jmx</artifactId>
-			<version>${jetty9.version}</version>
+			<version>${jetty.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -98,7 +98,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>websocket-jakarta-server</artifactId>
-			<version>${jetty9.version}</version>
+			<version>${jetty.version}</version>
 			<scope>test</scope>
 		</dependency>
 		-->
@@ -141,10 +141,10 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>@maven-compiler-plugin.version@</version>
 				<configuration>
-					<source>11</source>
-					<target>11</target>
+					<source>@maven.compiler.source@</source>
+					<target>@maven.compiler.target@</target>
 					<encoding>UTF-8</encoding>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
@@ -153,7 +153,7 @@
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jetty9.version}</version>
+				<version>${jetty.version}</version>
 				<configuration>
 					<systemProperties>
 						<systemProperty>
@@ -167,7 +167,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.10</version>
+				<version>@maven-eclipse-plugin.version@</version>
 				<configuration>
 					<downloadSources>true</downloadSources>
 					<wtpversion>${wtp.version}</wtpversion>
