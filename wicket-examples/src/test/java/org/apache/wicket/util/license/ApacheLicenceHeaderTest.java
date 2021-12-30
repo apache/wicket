@@ -78,7 +78,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 * Configuration files with no "intelligent" content
 		 */
 		propertiesIgnore.add("src/main/java/commons-logging.properties");
-		propertiesIgnore.add("src/main/java/log4j.properties");
+		propertiesIgnore.add("src/main/java/simplelogger.properties");
 
 		xmlPrologIgnore = Arrays.asList("src");
 	}

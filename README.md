@@ -148,13 +148,10 @@ the src/ folder.
 
     You only need to include the Servlet API (2.5, just for compiling), SLF4J
     API and the SLF4J logging implementation you want. You cannot use Wicket
-    without adding a SLF4J logging implementation to your classpath. Most
-    people use log4j. If you do, just include slf4j-log4j12.jar on your
-    classpath to get Wicket to use log4j too. If you want to use
-    commons-logging or JDK14 logging or something else, please see the SLF4J
-    site (http://www.slf4j.org/) for more information.
+    without adding a SLF4J logging implementation to your classpath. 
+    Please see the SLF4J site (http://www.slf4j.org/) for more information.
 
-	As the following projects all depend on wicket, they inherit these
+    As the following projects all depend on wicket, they inherit these
     dependencies.
 
  - wicket-velocity:
@@ -177,10 +174,10 @@ the src/ folder.
     Google Guice (http://code.google.com/p/google-guice/)
 
  - wicket-cdi / wicket-cdi-1.1:
-	Component Dependency Injection 
-	(http://www.oracle.com/technetwork/articles/java/cdi-javaee-bien-225152.html 
-	and 
-	http://download.oracle.com/otndocs/jcp/cdi-1_1-pr-spec/index.html)
+    Component Dependency Injection 
+    (http://www.oracle.com/technetwork/articles/java/cdi-javaee-bien-225152.html 
+    and 
+    http://download.oracle.com/otndocs/jcp/cdi-1_1-pr-spec/index.html)
 
  - wicket-examples:
 

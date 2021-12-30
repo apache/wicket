@@ -4487,10 +4487,10 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the currently coupled {@link Behavior}s as a unmodifiable list. Returns an empty list
+	 * Gets the currently coupled {@link Behavior}s as an unmodifiable list. Returns an empty list
 	 * rather than null if there are no behaviors coupled to this component.
 	 * 
-	 * @return The currently coupled behaviors as a unmodifiable list
+	 * @return The currently coupled behaviors as an unmodifiable list
 	 */
 	public final List<? extends Behavior> getBehaviors()
 	{
