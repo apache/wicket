@@ -19,7 +19,6 @@
         <webClassPathEntry>M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/jaxen/jaxen/1.1-beta-8/jaxen-1.1-beta-8.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/jdom/jdom/1.0/jdom-1.0.jar</webClassPathEntry>
-        <webClassPathEntry>M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/ccil/cowan/tagsoup/tagsoup/0.9.7/tagsoup-0.9.7.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/rhino/js/1.6R1/js-1.6R1.jar</webClassPathEntry>
