@@ -37,8 +37,6 @@ public abstract class AbstractColumn<T, S> implements IStyledColumn<T, S>
 
 	private final S sortProperty;
 
-	private boolean visible = true;	
-
 	/**
 	 * @param displayModel
 	 *            model used to generate header text
@@ -93,17 +91,5 @@ public abstract class AbstractColumn<T, S> implements IStyledColumn<T, S>
 	public String getCssClass()
 	{
 		return null;
-	}
-
-	@Override
-	public boolean isVisible()
-	{
-		return visible;
-	}
-
-	@Override
-	public void setVisible(boolean visible)
-	{
-		this.visible = visible;
 	}
 }

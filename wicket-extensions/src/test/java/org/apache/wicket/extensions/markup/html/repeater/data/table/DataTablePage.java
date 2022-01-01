@@ -85,7 +85,15 @@ public class DataTablePage extends WebPage
 
 		columns.add(new PropertyColumn<Contact, String>(new Model<>("Home Phone"), "homePhone"));
 		columns.add(new PropertyColumn<Contact, String>(new Model<>("Cell Phone"), "cellPhone"));
-		IColumn<Contact, String> ageColumn = new PropertyColumn<Contact, String>(new Model<>("Age"), "age");
+		IColumn<Contact, String> ageColumn = new PropertyColumn<Contact, String>(new Model<>("Age"), "age")
+		{
+			private static final long serialVersionUID = 1L;
+
+			public boolean isVisible()
+			{
+				return false;
+			}
+		};
 		columns.add(ageColumn);
 		
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -98,7 +106,6 @@ public class DataTablePage extends WebPage
 			protected void onConfigure()
 			{
 				super.onConfigure();
-				ageColumn.setVisible(false);
 			}
 			
 			@Override
