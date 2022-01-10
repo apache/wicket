@@ -133,7 +133,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
 	/**
-	 * taken from BidiUtils
+	 * taken from Google Closure Templates BidiUtils
 	 *
 	 * A regular expression for matching right-to-left language codes. See
 	 * {@link #isRtlLanguage} for the design.
@@ -220,7 +220,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 * @param locale - locale to check
 	 * @return <code>true</code> in case passed locale is right-to-left
 	 */
-	public static boolean isRtlLanguage(final Locale locale) {
+	private static boolean isRtlLanguage(final Locale locale) {
 		Args.notNull(locale, "locale");
 		return RTL_LOCALE_RE.matcher(locale.toLanguageTag()).find();
 	}
