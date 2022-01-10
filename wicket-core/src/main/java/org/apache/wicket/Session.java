@@ -32,7 +32,6 @@ import java.util.regex.Pattern;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.core.request.ClientInfo;
-import org.apache.wicket.core.util.lang.LocaleUtils;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
