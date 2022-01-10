@@ -284,6 +284,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 				"Request#getLocale() cannot return null, request has to have a locale set on it");
 		}
 		this.locale = new AtomicReference<>(locale);
+		rtlLocale = isRtlLanguage(locale);
 
 		pageAccessSynchronizer = new PageAccessSynchronizerProvider();
 	}

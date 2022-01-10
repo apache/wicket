@@ -17,11 +17,14 @@
 package org.apache.wicket.protocol.http;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Locale;
+import java.util.stream.Stream;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
@@ -31,6 +34,8 @@ import org.apache.wicket.protocol.http.mock.MockHttpSession;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * @author Timo Rantalaiho
@@ -99,5 +104,49 @@ class WebSessionTest
 		{
 			assertEquals("The request has been processed. Access to pages is no longer allowed", ex.getMessage());
 		}
+	}
+
+	private static Stream<String> provideLTRtags() {
+		return Stream.of("en", "en-US", "ko", "bg", "ar-Latn", "fa-Cyrl");
+	}
+
+	private static Stream<String> provideRTLtags() {
+		return Stream.of("ar", "dv", "he", "iw", "fa", "nqo", "ps", "sd", "ug", "ur", "yi", "en-Arab-US", "ru-Hebr", "nl-Thaa", "fi-Nkoo", "fr-Tfng");
+	}
+
+	@ParameterizedTest
+	@MethodSource("provideLTRtags")
+	void testConstructorLtr(String langTag) {
+		MockWebRequest rq = new MockWebRequest(Url.parse("/"));
+		rq.setLocale(Locale.forLanguageTag(langTag));
+		Session session = new WebSession(rq);
+		assertFalse(session.isRtlLocale(), langTag + " should be LTR");
+	}
+
+	@ParameterizedTest
+	@MethodSource("provideRTLtags")
+	void testConstructorRtl(String langTag) {
+		MockWebRequest rq = new MockWebRequest(Url.parse("/"));
+		rq.setLocale(Locale.forLanguageTag(langTag));
+		Session session = new WebSession(rq);
+		assertTrue(session.isRtlLocale(), langTag + " should be RTL");
+	}
+
+	@ParameterizedTest
+	@MethodSource("provideLTRtags")
+	void testSetterLtr(String langTag) {
+		MockWebRequest rq = new MockWebRequest(Url.parse("/"));
+		Session session = new WebSession(rq);
+		session.setLocale(Locale.forLanguageTag(langTag));
+		assertFalse(session.isRtlLocale(), langTag + " should be LTR");
+	}
+
+	@ParameterizedTest
+	@MethodSource("provideRTLtags")
+	void testSetterRtl(String langTag) {
+		MockWebRequest rq = new MockWebRequest(Url.parse("/"));
+		Session session = new WebSession(rq);
+		session.setLocale(Locale.forLanguageTag(langTag));
+		assertTrue(session.isRtlLocale(), langTag + " should be RTL");
 	}
 }
