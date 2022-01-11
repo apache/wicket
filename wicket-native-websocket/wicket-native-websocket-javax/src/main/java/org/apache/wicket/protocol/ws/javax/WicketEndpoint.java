@@ -20,6 +20,8 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.websocket.CloseReason;
@@ -49,6 +51,7 @@ public class WicketEndpoint extends Endpoint
 	private static final String WICKET_APP_PARAM_NAME = "wicket-app-name";
 
 	private final AtomicBoolean applicationDestroyed = new AtomicBoolean(false);
+	private final Set<String> registeredListeners = ConcurrentHashMap.newKeySet();
 
 	private JavaxWebSocketProcessor javaxWebSocketProcessor;
 
@@ -58,7 +61,10 @@ public class WicketEndpoint extends Endpoint
 		String appName = getApplicationName(session);
 
 		WebApplication app = (WebApplication) WebApplication.get(appName);
-		app.getApplicationListeners().add(new ApplicationListener(applicationDestroyed));
+		if (registeredListeners.add(appName))
+		{
+			app.getApplicationListeners().add(new ApplicationListener(applicationDestroyed));
+		}
 
 		try
 		{
