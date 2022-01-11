@@ -92,7 +92,7 @@ class WebSessionTest
 		Session session = tester.getSession();
 
 		session.getPageManager();
-		
+
 		session.detach();
 
 		try
@@ -114,29 +114,32 @@ class WebSessionTest
 		return Stream.of("ar", "dv", "he", "iw", "fa", "nqo", "ps", "sd", "ug", "ur", "yi", "en-Arab-US", "ru-Hebr", "nl-Thaa", "fi-Nkoo", "fr-Tfng");
 	}
 
+	private Session createSessionViaConstructor(String langTag) {
+		MockWebRequest rq = new MockWebRequest(Url.parse("/"));
+		rq.setLocale(Locale.forLanguageTag(langTag));
+		return new WebSession(rq);
+	}
+
 	@ParameterizedTest
 	@MethodSource("provideLTRtags")
 	void testConstructorLtr(String langTag) {
-		MockWebRequest rq = new MockWebRequest(Url.parse("/"));
-		rq.setLocale(Locale.forLanguageTag(langTag));
-		Session session = new WebSession(rq);
+		Session session = createSessionViaConstructor(langTag);
 		assertFalse(session.isRtlLocale(), langTag + " should be LTR");
 	}
 
 	@ParameterizedTest
 	@MethodSource("provideRTLtags")
 	void testConstructorRtl(String langTag) {
-		MockWebRequest rq = new MockWebRequest(Url.parse("/"));
-		rq.setLocale(Locale.forLanguageTag(langTag));
-		Session session = new WebSession(rq);
+		Session session = createSessionViaConstructor(langTag);
 		assertTrue(session.isRtlLocale(), langTag + " should be RTL");
 	}
 
 	@ParameterizedTest
 	@MethodSource("provideLTRtags")
 	void testSetterLtr(String langTag) {
-		MockWebRequest rq = new MockWebRequest(Url.parse("/"));
-		Session session = new WebSession(rq);
+		WicketTester tester = new WicketTester(new MockApplication());
+		Session session = tester.getSession();
+
 		session.setLocale(Locale.forLanguageTag(langTag));
 		assertFalse(session.isRtlLocale(), langTag + " should be LTR");
 	}
@@ -144,8 +147,9 @@ class WebSessionTest
 	@ParameterizedTest
 	@MethodSource("provideRTLtags")
 	void testSetterRtl(String langTag) {
-		MockWebRequest rq = new MockWebRequest(Url.parse("/"));
-		Session session = new WebSession(rq);
+		WicketTester tester = new WicketTester(new MockApplication());
+		Session session = tester.getSession();
+
 		session.setLocale(Locale.forLanguageTag(langTag));
 		assertTrue(session.isRtlLocale(), langTag + " should be RTL");
 	}
