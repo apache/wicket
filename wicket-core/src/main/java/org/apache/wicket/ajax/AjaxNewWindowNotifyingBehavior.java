@@ -132,8 +132,8 @@ public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 	}
 
 	/**
-	 * A callback method when a new window/tab is opened for a page instance which is already opened
-	 * in another window/tab.
+	 * A callback method that is called when a new window/tab is opened for a page instance
+	 * which is already opened in another window/tab.
 	 * <p>
 	 * Default implementation redirects to a new page instance with identical page parameters.
 	 *
