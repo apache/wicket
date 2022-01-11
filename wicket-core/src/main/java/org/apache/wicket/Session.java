@@ -196,13 +196,13 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	}
 
 	/**
-	 * Check if a BCP 47 / III language code indicates an RTL language, i.e.
+	 * Check if a BCP 47 / III language code indicates an RTL (right-to-left) language, i.e.
 	 * either: - a language code explicitly specifying one of the right-to-left
 	 * scripts, e.g. "az-Arab", or
 	 * <p>
 	 * - a language code specifying one of the languages normally written in a
 	 * right-to-left script, e.g. "fa" (Farsi), except ones explicitly
-	 * specifying Latin or Cyrillic script (which are the usual LTR
+	 * specifying Latin or Cyrillic script (which are the usual LTR (left-to-right)
 	 * alternatives).
 	 * <p>
 	 * <a href="http://www.unicode.org/iso15924/iso15924-num.html">
@@ -243,7 +243,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	/** The locale to use when loading resources for this session. */
 	private final AtomicReference<Locale> locale;
 
-	/** True if locale is RTL */
+	/** True if locale's language is RTL (right-to-left) */
 	private boolean rtlLocale = false;
 
 	/** Session level meta data. */
@@ -658,9 +658,9 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	}
 
 	/**
-	 * Method to determine if current locale is RTL or not
+	 * Method to determine if language of current locale is RTL (right-to-left) or not
 	 *
-	 * @return <code>true</code> if session locale is RTL, <code>false</code> otherwise
+	 * @return <code>true</code> if language of session locale is RTL (right-to-left), <code>false</code> otherwise
 	 */
 	public boolean isRtlLocale() {
 		return rtlLocale;

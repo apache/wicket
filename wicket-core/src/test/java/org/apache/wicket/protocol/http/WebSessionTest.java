@@ -124,14 +124,14 @@ class WebSessionTest
 	@MethodSource("provideLTRtags")
 	void testConstructorLtr(String langTag) {
 		Session session = createSessionViaConstructor(langTag);
-		assertFalse(session.isRtlLocale(), langTag + " should be LTR");
+		assertFalse(session.isRtlLocale(), langTag + " should be LTR (left-to-right)");
 	}
 
 	@ParameterizedTest
 	@MethodSource("provideRTLtags")
 	void testConstructorRtl(String langTag) {
 		Session session = createSessionViaConstructor(langTag);
-		assertTrue(session.isRtlLocale(), langTag + " should be RTL");
+		assertTrue(session.isRtlLocale(), langTag + " should be RTL (right-to-left)");
 	}
 
 	@ParameterizedTest
@@ -141,7 +141,7 @@ class WebSessionTest
 		Session session = tester.getSession();
 
 		session.setLocale(Locale.forLanguageTag(langTag));
-		assertFalse(session.isRtlLocale(), langTag + " should be LTR");
+		assertFalse(session.isRtlLocale(), langTag + " should be LTR (left-to-right)");
 	}
 
 	@ParameterizedTest
@@ -151,6 +151,6 @@ class WebSessionTest
 		Session session = tester.getSession();
 
 		session.setLocale(Locale.forLanguageTag(langTag));
-		assertTrue(session.isRtlLocale(), langTag + " should be RTL");
+		assertTrue(session.isRtlLocale(), langTag + " should be RTL (right-to-left)");
 	}
 }
