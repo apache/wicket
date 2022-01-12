@@ -220,7 +220,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 * @param locale - locale to check
 	 * @return <code>true</code> in case passed locale is right-to-left
 	 */
-	private static boolean isRtlLanguage(final Locale locale) {
+	public static boolean isRtlLanguage(final Locale locale) {
 		Args.notNull(locale, "locale");
 		return RTL_LOCALE_RE.matcher(locale.toLanguageTag()).find();
 	}
