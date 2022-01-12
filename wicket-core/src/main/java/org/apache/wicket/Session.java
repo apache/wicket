@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
+
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.core.request.ClientInfo;
@@ -130,6 +132,15 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
+	/**
+	 * taken from Google Closure Templates BidiUtils
+	 *
+	 * A regular expression for matching right-to-left language codes. See
+	 * {@link #isRtlLanguage} for the design.
+	 */
+	private static final Pattern RTL_LOCALE_RE = Pattern.compile("^(ar|dv|he|iw|fa|nqo|ps|sd|ug|ur|yi|.*[-_](Arab|Hebr|Thaa|Nkoo|Tfng))"
+					+ "(?!.*[-_](Latn|Cyrl)($|-|_))($|-|_)");
+
 	/** a sequence used for whenever something session-specific needs a unique value */
 	private final AtomicInteger sequence = new AtomicInteger(1);
 
@@ -185,6 +196,36 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	}
 
 	/**
+	 * Check if a BCP 47 / III language code indicates an RTL (right-to-left) language, i.e.
+	 * either: - a language code explicitly specifying one of the right-to-left
+	 * scripts, e.g. "az-Arab", or
+	 * <p>
+	 * - a language code specifying one of the languages normally written in a
+	 * right-to-left script, e.g. "fa" (Farsi), except ones explicitly
+	 * specifying Latin or Cyrillic script (which are the usual LTR (left-to-right)
+	 * alternatives).
+	 * <p>
+	 * <a href="http://www.unicode.org/iso15924/iso15924-num.html">
+	 * The list of right-to-left scripts appears in the 100-199 range in</a>, of which Arabic and
+	 * Hebrew are by far the most widely used. We also recognize Thaana, N'Ko,
+	 * and Tifinagh, which also have significant modern usage. The rest (Syriac,
+	 * Samaritan, Mandaic, etc.) seem to have extremely limited or no modern
+	 * usage and are not recognized. The languages usually written in a
+	 * right-to-left script are taken as those with 
+	 * <a href="http://www.iana.org/assignments/language-subtag-registry">Suppress-Script</a>:
+	 * Hebr|Arab|Thaa|Nkoo|Tfng, as well as
+	 * Sindhi (sd) and Uyghur (ug). The presence of other subtags of the
+	 * language code, e.g. regions like EG (Egypt), is ignored.
+	 *
+	 * @param locale - locale to check
+	 * @return <code>true</code> in case passed locale is right-to-left
+	 */
+	private static boolean isRtlLanguage(final Locale locale) {
+		Args.notNull(locale, "locale");
+		return RTL_LOCALE_RE.matcher(locale.toLanguageTag()).find();
+	}
+
+	/**
 	 * Cached instance of agent info which is typically designated by calling
 	 * {@link Session#getClientInfo()}.
 	 */
@@ -201,6 +242,9 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 
 	/** The locale to use when loading resources for this session. */
 	private final AtomicReference<Locale> locale;
+
+	/** True if locale's language is RTL (right-to-left) */
+	private boolean rtlLocale = false;
 
 	/** Session level meta data. */
 	private MetaDataEntry<?>[] metaData;
@@ -240,6 +284,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 				"Request#getLocale() cannot return null, request has to have a locale set on it");
 		}
 		this.locale = new AtomicReference<>(locale);
+		rtlLocale = isRtlLanguage(locale);
 
 		pageAccessSynchronizer = new PageAccessSynchronizerProvider();
 	}
@@ -606,9 +651,19 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 		if (!Objects.equal(getLocale(), locale))
 		{
 			this.locale.set(locale);
+			rtlLocale = isRtlLanguage(locale);
 			dirty();
 		}
 		return this;
+	}
+
+	/**
+	 * Method to determine if language of current locale is RTL (right-to-left) or not
+	 *
+	 * @return <code>true</code> if language of session locale is RTL (right-to-left), <code>false</code> otherwise
+	 */
+	public boolean isRtlLocale() {
+		return rtlLocale;
 	}
 
 	/**
