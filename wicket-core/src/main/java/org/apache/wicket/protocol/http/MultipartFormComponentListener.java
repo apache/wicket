@@ -22,6 +22,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.visit.IVisitor;
 
 /**
@@ -35,18 +36,22 @@ public class MultipartFormComponentListener implements AjaxRequestTarget.IListen
 	static final String ENCTYPE_URL_ENCODED = "application/x-www-form-urlencoded";
 
 	@Override
-	public void onBeforeRespond(final Map<String, Component> map, final AjaxRequestTarget target)
+	public void onAfterRespond(final Map<String, Component> map, final AjaxRequestTarget.IJavaScriptResponse response)
 	{
-		target.getPage().visitChildren(FormComponent.class, (IVisitor<FormComponent<?>, Void>) (formComponent, visit) -> {
-			if (formComponent.isMultiPart())
-			{
-				Form<?> form = formComponent.getForm();
-				boolean multiPart = form.isMultiPart();
-				String enctype = multiPart ? Form.ENCTYPE_MULTIPART_FORM_DATA : ENCTYPE_URL_ENCODED;
-				target.appendJavaScript(String.format("Wicket.$('%s').form.enctype='%s'",
-						formComponent.getMarkupId(), enctype));
-				visit.stop();
-			}
+		RequestCycle.get().find(AjaxRequestTarget.class).ifPresent(target -> {
+			target.getPage().visitChildren(Form.class, (IVisitor<Form<?>, Void>) (form, formVisitor) -> {
+				if (form.isVisibleInHierarchy()) {
+					form.visitFormComponents((formComponent, visit) -> {
+						if (formComponent.isMultiPart()) {
+							String enctype = form.isMultiPart() ? Form.ENCTYPE_MULTIPART_FORM_DATA : ENCTYPE_URL_ENCODED;
+							target.appendJavaScript(String.format("Wicket.$('%s').enctype='%s'", form.getMarkupId(), enctype));
+							visit.stop();
+						}
+					});
+				} else {
+					formVisitor.dontGoDeeper();
+				}
+			});
 		});
 	}
 }

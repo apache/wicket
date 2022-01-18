@@ -33,16 +33,23 @@ public class MultipartFormComponentListenerTest extends WicketTestCase
         tester.assertRenderedPage(MultipartFormComponentListenerPage.class);
 
         TagTester formTagTester = tester.getTagByWicketId("form");
+        String formMarkupId = formTagTester.getAttribute("id");
+
         assertEquals(Form.ENCTYPE_MULTIPART_FORM_DATA, formTagTester.getAttribute("enctype"));
 
         tester.getRequest().setAttribute("form:dropDown", 1);
         tester.executeAjaxEvent("form:dropDown", "change");
         String ajaxResponse = tester.getLastResponseAsString();
-        assertTrue(ajaxResponse.contains(".form.enctype='" + MultipartFormComponentListener.ENCTYPE_URL_ENCODED + "'})();"));
+        System.err.println("ajaxResponse: " + ajaxResponse);
+        assertTrue(ajaxResponse.contains("Wicket.$('"+formMarkupId+"').enctype='" + MultipartFormComponentListener.ENCTYPE_URL_ENCODED + "'})();"));
 
         tester.getRequest().setAttribute("form:dropDown", 2);
         tester.executeAjaxEvent("form:dropDown", "change");
         ajaxResponse = tester.getLastResponseAsString();
-        assertTrue(ajaxResponse.contains(".form.enctype='" + Form.ENCTYPE_MULTIPART_FORM_DATA + "'})();"));
+        assertTrue(ajaxResponse.contains("Wicket.$('"+formMarkupId+"').enctype='" + Form.ENCTYPE_MULTIPART_FORM_DATA + "'})();"));
+
+        tester.clickLink("toggleVisibility");
+        ajaxResponse = tester.getLastResponseAsString();
+        assertFalse("enctype should not be pushed on hidden elements", ajaxResponse.contains("Wicket.$('"+formMarkupId+"').enctype="));
     }
 }
