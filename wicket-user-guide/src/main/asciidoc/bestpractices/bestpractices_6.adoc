@@ -7,7 +7,7 @@ Always use models - period! Do not pass raw objects directly to components. Inst
 
 [source,java]
 ----
-public class RegistrationInputPanel extends Panel{
+public class RegistrationInputPanel extends Panel {
     // Correct: The class Registration gets wrapped by IModel
     public RegistrationInputPanel(String id, IModel<Registration> regModel) {
         // add components

@@ -64,7 +64,7 @@ The code above shows the usage of the poor component in the _RegistrationPage_. 
 public class RegistrationInputPanel extends Panel{
     public RegistrationInputPanel(String id, IModel<Registration> regModel) {
         super(id, regModel);
-        IModel<Registration> compound = new CompoundPropertyModel<Registration(regmodel)
+        IModel<Registration> compound = new CompoundPropertyModel<Registration>(regmodel);
         Form<Registration> form = new Form<Registration>("form", compound);
         // Correct: Add components to Form over the instance variable
         form.add(new TextField("username"));
