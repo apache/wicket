@@ -144,7 +144,6 @@ jQuery(document).ready(function() {
 		Wicket.DOM.showIncrementally(elId);
 		equal( Wicket.$(elId).style.display, 'none', ".style.display should still be 'none'." );
 		Wicket.DOM.showIncrementally(elId);
-		window.console.log('====== JQUERY version', jQuery.fn.jquery);
 		equal(Wicket.$(elId).style.display, 'block', "Wicket.DOM.show should set .style.display to 'block'.");
 	});
 
