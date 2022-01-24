@@ -60,9 +60,6 @@ public abstract class IndicatingAjaxLink<T> extends AjaxLink<T> implements IAjax
 		add(indicatorAppender);
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.IAjaxIndicatorAware#getAjaxIndicatorMarkupId()
-	 */
 	@Override
 	public String getAjaxIndicatorMarkupId()
 	{
