@@ -68,6 +68,8 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("world-clock", WorldClockPage.class);
 		mountPage("upload", FileUploadPage.class);
 		mountPage("download", AjaxDownloadPage.class);
+
+		mountResource("dynamic-text-file", AjaxDownloadPage.DynamicTextFileResource.instance);
 	}
 
 	/**
