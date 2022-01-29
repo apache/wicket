@@ -2,6 +2,25 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.14.0
+
+** Bug
+
+    * [WICKET-6908] - Possible bug / edge case where page is not detached
+    * [WICKET-6910] - StalePageException not thrown
+    * [WICKET-6914] - Visibility change of "File Upload" via ajax causes "missing" form-data
+    * [WICKET-6931] - User guide: 'determinate' is not a verb; should be changed into 'to determine'
+    * [WICKET-6944] - Memory leak in WicketEndpoint
+    * [WICKET-6945] - MultipartFormComponentListener modifies enctype on invisible forms, leading to javascript errors
+
+** Task
+
+    * [WICKET-6919] - Improve EnclosureContainer's javadoc to explain that it should not be used with <wicket:enclosure>
+    * [WICKET-6937] - Update the keystore used by the quickstart application
+    * [WICKET-6942] - Replace usage of log4j 1.x in tests and wicket-examples with slf4j-simple
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.13.0
 
 ** Bug
