@@ -16,17 +16,17 @@
  */
 package org.apache.wicket.util.io;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
-
-import java.net.URL;
+import static org.junit.Assert.assertThat;
 
 import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.time.Time;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
+import java.net.URL;
 
 @SuppressWarnings("javadoc")
 @Category(SlowTests.class)
@@ -38,7 +38,7 @@ public class ConnectionsTest
 	@Test
 	public void getLastModified() throws Exception
 	{
-		URL url = new URL("http://wicket.apache.org/learn/books/wia.png");
+		URL url = new URL("https://wicket.apache.org/learn/books/wia.png");
 		Time lastModified = Connections.getLastModified(url);
 		assertThat(lastModified, is(notNullValue()));
 		assertThat(lastModified.getMilliseconds(), is(not(0L)));
