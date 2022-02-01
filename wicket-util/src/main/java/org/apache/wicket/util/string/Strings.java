@@ -531,8 +531,26 @@ public final class Strings
 	 */
 	public static boolean isEmpty(final CharSequence string)
 	{
-		return (string == null) || (string.length() == 0) ||
-			(string.toString().trim().length() == 0);
+		return string == null || string.length() == 0 ||
+			(string.charAt(0) <= ' ' && string.toString().trim().isEmpty());
+	}
+
+	/**
+	 * Checks whether the <code>string</code> is considered empty. Empty means that the string may
+	 * contain whitespace, but no visible characters.
+	 *
+	 * "\n\t " is considered empty, while " a" is not.
+	 * 
+	 * Note: This method overloads {@link #isEmpty(CharSequence)} for performance reasons.
+	 *
+	 * @param string
+	 *            The string
+	 * @return True if the string is null or ""
+	 */
+	public static boolean isEmpty(final String string)
+	{
+		return string == null || string.isEmpty() ||
+			(string.charAt(0) <= ' ' && string.trim().isEmpty());
 	}
 
 	/**
