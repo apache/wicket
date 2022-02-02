@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket.experimental.wicket8</groupId>
 		<artifactId>wicket-http2</artifactId>
-		<version>0.20-SNAPSHOT</version>
+		<version>0.21-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-http2-core</artifactId>
