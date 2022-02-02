@@ -24,8 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
@@ -243,8 +241,24 @@ class StringsTest
 		assertTrue(Strings.isEmpty(" "));
 		assertTrue(Strings.isEmpty("           "));
 		assertTrue(Strings.isEmpty(" \n\t"));
+
 		assertFalse(Strings.isEmpty("a"));
 		assertFalse(Strings.isEmpty(" a"));
+		assertFalse(Strings.isEmpty("a "));
+	}
+
+	@Test
+	void isEmptyCharSequence()
+	{
+		assertTrue(Strings.isEmpty((AppendingStringBuffer)null));
+		assertTrue(Strings.isEmpty(new AppendingStringBuffer("")));
+		assertTrue(Strings.isEmpty(new AppendingStringBuffer(" ")));
+		assertTrue(Strings.isEmpty(new AppendingStringBuffer("           ")));
+		assertTrue(Strings.isEmpty(new AppendingStringBuffer(" \n\t")));
+
+		assertFalse(Strings.isEmpty(new AppendingStringBuffer("a")));
+		assertFalse(Strings.isEmpty(new AppendingStringBuffer(" a")));
+		assertFalse(Strings.isEmpty(new AppendingStringBuffer("a ")));
 	}
 
 	@Test
