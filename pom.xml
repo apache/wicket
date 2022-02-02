@@ -154,7 +154,7 @@
 		<commons-fileupload.version>2.0-SNAPSHOT</commons-fileupload.version>
 		<commons-io.version>2.11.0</commons-io.version>
 		<commons-lang3.version>3.12.0</commons-lang3.version>
-		<guice.version>5.0.1</guice.version>
+		<guice.version>5.1.0</guice.version>
 		<el-impl.version>2.2.1-b05</el-impl.version>
 		<forbiddenapis.version>3.2</forbiddenapis.version>
 		<jacoco.version>0.8.7</jacoco.version>
@@ -178,7 +178,7 @@
 		<hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
 		<metrics.version>4.2.4</metrics.version>
-		<mockito.version>4.2.0</mockito.version>
+		<mockito.version>4.3.1</mockito.version>
 		<objenesis.version>3.2</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
 		<slf4j.version>2.0.0-alpha5</slf4j.version>
