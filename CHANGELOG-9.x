@@ -2,6 +2,30 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.8.0
+
+** Bug
+
+    * [WICKET-6944] - Memory leak in WicketEndpoint
+    * [WICKET-6945] - MultipartFormComponentListener modifies enctype on invisible forms, leading to javascript errors
+    * [WICKET-6947] - IndicatingAjaxButton does not work with Bootstrap 4
+    * [WICKET-6953] - JavaScriptDeferHeaderResponse not working correctly for AJAX requests
+
+** Improvement
+
+    * [WICKET-6943] - There should be ability to check if current session's locale is RTL
+    * [WICKET-6946] - isVisibleInHierarchy/isEnabledInHierarchy broken by isVisible/isEnabled override
+    * [WICKET-6948] - Upgrade Spring to latest 5.3.x
+    * [WICKET-6949] - make AjaxDownloadBehavior more dynamic
+    * [WICKET-6950] - wicket web-sockets implementation does not allow to configure/access web socket session on onOpen
+    * [WICKET-6952] - Performance improvements for Strings.isEmpty
+
+** Task
+
+    * [WICKET-6942] - Replace usage of log4j 1.x in tests and wicket-examples with slf4j-simple
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.7.0
 
 ** Bug
