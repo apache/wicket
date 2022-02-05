@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import java.nio.ByteBuffer;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -45,6 +47,7 @@ import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.ErrorMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.apache.wicket.protocol.ws.api.message.PongMessageMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
@@ -145,6 +148,24 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 
 		this.connectionFilter = webSocketSettings.getConnectionFilter();
+	}
+
+	@Override
+	public void onPong(ByteBuffer byteBuffer)
+	{
+		IKey key = getRegistryKey();
+		WebApplication application = getApplication();
+		String sessionId = getSessionId();
+		IWebSocketConnection webSocketConnection = connectionRegistry.getConnection(application, sessionId, key);
+		if (webSocketConnection != null)
+		{
+			webSocketConnection.onPong(byteBuffer);
+			if (webSocketSettings.isSendMessagesOnPong())
+			{
+				// if we want to deliver messages on pong deliver them
+				broadcastMessage(new PongMessageMessage(application, sessionId, key, byteBuffer));
+			}
+		}
 	}
 
 	@Override

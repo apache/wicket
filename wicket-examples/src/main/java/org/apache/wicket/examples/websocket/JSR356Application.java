@@ -23,8 +23,6 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
-import org.apache.wicket.protocol.ws.api.IWebSocketSession;
-import org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.slf4j.Logger;

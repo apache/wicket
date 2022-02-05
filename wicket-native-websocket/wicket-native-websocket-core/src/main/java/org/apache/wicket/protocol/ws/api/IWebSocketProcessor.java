@@ -16,8 +16,11 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import java.nio.ByteBuffer;
+
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
+import org.apache.wicket.protocol.ws.api.registry.IKey;
 
 /**
  * Processes web socket messages.
@@ -40,6 +43,13 @@ public interface IWebSocketProcessor
 		// in order to configure the session
 		WebSocketSettings.Holder.get(application).getSocketSessionConfigurer().configureSession(webSocketSession);
 	}
+
+	/**
+	 * Called when remote peer answers to ping with pong message.
+	 *
+	 * @param byteBuffer Contains application specific content
+	 */
+	void onPong(ByteBuffer byteBuffer);
 
 	/**
 	 * Called when a text message arrives from the client

@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.ws.api;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
@@ -29,6 +30,53 @@ import org.apache.wicket.protocol.ws.api.registry.IKey;
  */
 public interface IWebSocketConnection
 {
+	/**
+	 *
+	 * @return the last time connection was checked to be alive (checked via ping/pong mechanism)
+	 */
+	long getLastTimeAlive();
+
+	/**
+	 *
+	 * @return {@code true} if connection is alive (checked via ping/pong mechanism). {@code false} otherwise
+	 */
+	boolean isAlive();
+
+	/**
+	 * Allows setting whether connection is alive or not.
+	 *
+	 * @param alive Alive
+	 */
+	void setAlive(boolean alive);
+
+	/**
+	 * Terminates the connection.
+	 *
+	 * @param reason The reason to terminate connection.
+	 */
+	void terminate(String reason);
+
+	/**
+	 * Sends a ping message to the server.
+	 *
+	 * @throws IOException if something went wrong with ping
+	 */
+	void ping() throws IOException;
+
+
+	/**
+	 * Allows the developer to send an unsolicited Pong message containing the given application data in order to serve
+     * as a unidirectional heartbeat for the session.
+	 */
+	void pong() throws IOException;
+
+	/**
+	 * Called when remote peer answers to ping with pong message.
+	 *
+	 * @param byteBuffer Contains application specific content
+	 */
+	void onPong(ByteBuffer byteBuffer);
+
 	/**
 	 * @return {@code true} when the underlying native web socket
 	 *      connection is still open.

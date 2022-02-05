@@ -41,6 +41,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -87,6 +93,7 @@ public class WebSocketSettings
 	private final AtomicReference<CharSequence> baseUrl = new AtomicReference<>();
 	private final AtomicInteger port = new AtomicInteger();
 	private final AtomicInteger securePort = new AtomicInteger();
+
 
 	/**
 	 * Holds this WebSocketSettings in the Application's metadata.
@@ -138,6 +145,46 @@ public class WebSocketSettings
 	 * A filter that may reject an incoming connection
 	 */
 	private IWebSocketConnectionFilter connectionFilter;
+
+	/**
+	 * Boolean used to determine if ping-pong heart beat will be used.
+	 */
+	private boolean useHeartBeat = false;
+
+	/**
+	 * Flag used to determine if client will try to reconnect in case of ping-pong failure
+	 */
+	private boolean reconnectOnFailure = false;
+
+	/**
+	 * In case ping or remote client immediately fails, this determines how many times ping
+	 * will be retried before connection it terminated.
+	 */
+	private int maxPingRetries = 3;
+
+	/**
+	 * Periodicity by which the heartbeat timer will kick.
+	 */
+	private long heartBeatPace = Duration.ofSeconds(15).toMillis();
+
+	/**
+	 * The max threshold assumed for network latency.
+	 */
+	private long networkLatencyThreshold = Duration.ofSeconds(2).toMillis();
+
+	/**
+	 * The executor that handles delivering pings to remote peers and checking if peers have
+	 * correctly ponged back (and terminates connections in case not).
+	 */
+	private Executor heartBeatsExecutor = new HeartBeatsExecutor();
+
+	/**
+	 * Whether messages are broadcast when receiving pong messages
+	 */
+	private boolean sendMessagesOnPong = false;
+
+	// internal heartbeat's timer.
+	private Timer heartBeatsTimer;
 
 	/**
 	 * A {@link org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer} that allows to configure
@@ -424,6 +471,177 @@ public class WebSocketSettings
 		return securePort.get();
 	}
 
+	public void setUseHeartBeat(boolean useHeartBeat)
+	{
+		this.useHeartBeat = useHeartBeat;
+	}
+
+	public boolean isUseHeartBeat()
+	{
+		return useHeartBeat;
+	}
+
+	public void setReconnectOnFailure(boolean reconnectOnFailure)
+	{
+		this.reconnectOnFailure = reconnectOnFailure;
+	}
+
+	public boolean isReconnectOnFailure()
+	{
+		return reconnectOnFailure;
+	}
+
+	public long getHeartBeatPace()
+	{
+		return heartBeatPace;
+	}
+
+	public void setHeartBeatPace(long heartBeatPace)
+	{
+		this.heartBeatPace = heartBeatPace;
+	}
+
+	public void setHeartBeatPace(Duration heartBeatPace)
+	{
+		this.heartBeatPace = heartBeatPace.toMillis();
+	}
+
+	public long getNetworkLatencyThreshold()
+	{
+		return networkLatencyThreshold;
+	}
+
+	public void setNetworkLatencyThreshold(long networkLatencyThreshold)
+	{
+		this.networkLatencyThreshold = networkLatencyThreshold;
+	}
+
+	public void setNetworkLatencyThreshold(Duration networkLatencyThreshold)
+	{
+		this.networkLatencyThreshold = networkLatencyThreshold.toMillis();
+	}
+
+	public void setHeartBeatsExecutor(Executor heartBeatsExecutor)
+	{
+		this.heartBeatsExecutor = heartBeatsExecutor;
+	}
+
+	public void setMaxPingRetries(int maxPingRetries)
+	{
+		this.maxPingRetries = maxPingRetries;
+	}
+
+
+	public void startHeartBeatTimer(String application)
+	{
+		if (useHeartBeat ==  false)
+		{
+			LOG.debug("useClientSideHeartBeat is set to false. Thus we won't start heartbeat's sending thread");
+		}
+
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Starting thread pushing hart beats");
+		}
+
+		TimerTask timerTask = new TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					sendHeartBeats(application);
+				}
+				catch (Exception e)
+				{
+					LOG.error("Error while checking sessions", e);
+				}
+			}
+		};
+
+		this.heartBeatsTimer = new Timer(true);
+		this.heartBeatsTimer.schedule(timerTask, new Date(), Duration.ofSeconds(heartBeatPace).toMillis());
+	}
+
+	public void stopHeartBeatTimer()
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Stopping thread pushing hart beats");
+		}
+		if (this.heartBeatsTimer != null)
+		{
+			this.heartBeatsTimer.cancel();
+		}
+	}
+
+	private void sendHeartBeats(Application application)
+	{
+		for (IWebSocketConnection connection: connectionRegistry.getConnections(application))
+		{
+			// connection didn't received the PONG from peer terminate it
+			if (connection.isAlive() == false)
+			{
+				if (connection.getLastTimeAlive() - System.currentTimeMillis() > (heartBeatPace + networkLatencyThreshold))
+				{
+					heartBeatsExecutor.run(() -> terminateConnection(connection));
+				}
+			}
+			else
+			{
+				heartBeatsExecutor.run(() -> ping(connection, maxPingRetries));
+			}
+		}
+	}
+
+	public void setSendMessagesOnPong(boolean sendMessagesOnPong)
+	{
+		this.sendMessagesOnPong = sendMessagesOnPong;
+	}
+
+	public boolean isSendMessagesOnPong()
+	{
+		return sendMessagesOnPong;
+	}
+
+	private void sendHeartBeats(String application)
+	{
+		sendHeartBeats(Application.get(application));
+	}
+
+	private void ping(IWebSocketConnection connection, final int pingRetryCounter)
+	{
+		try
+		{
+			connection.ping();
+		}
+		catch (IOException e)
+		{
+			if (pingRetryCounter == 0)
+			{
+				// ping failed enough times kill connection
+				terminateConnection(connection);
+			}
+			else
+			{
+				ping(connection, pingRetryCounter - 1);
+			}
+		}
+	}
+
+	private void terminateConnection(IWebSocketConnection connection)
+	{
+		connection.setAlive(false);
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Terminating connection with ID {} because ping of remote peer failed {} times",
+					connection.getKey(), maxPingRetries);
+		}
+		connection.terminate("Failed to ping remote peer");
+		connectionRegistry.removeConnection(connection.getApplication(), connection.getSessionId(), connection.getKey());
+	}
+
 	/**
 	 * Simple executor that runs the tasks in the caller thread.
 	 */
@@ -484,6 +702,33 @@ public class WebSocketSettings
 			{
 				nonHttpRequestExecutor.execute(command);
 			}
+		}
+	}
+
+	public static class HeartBeatsExecutor implements Executor
+	{
+
+		private final java.util.concurrent.Executor executor;
+
+
+		public HeartBeatsExecutor()
+		{
+			this(new ThreadPoolExecutor(1, 8,
+					60L, TimeUnit.SECONDS,
+					new SynchronousQueue<>(),
+					new ThreadFactory()));
+		}
+
+		public HeartBeatsExecutor(java.util.concurrent.Executor executor)
+		{
+			this.executor = executor;
+
+		}
+
+		@Override
+		public void run(final Runnable command)
+		{
+			executor.execute(command);
 		}
 	}
 

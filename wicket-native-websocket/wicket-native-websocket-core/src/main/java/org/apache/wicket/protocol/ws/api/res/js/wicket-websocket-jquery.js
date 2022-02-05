@@ -92,7 +92,14 @@
 
 				self.ws.onopen = function (evt) {
 					Wicket.Event.publish(topics.Opened, evt);
+					if (Wicket.WebSocket.useHeartBeat) {
+						self.heartbeat();
+					}
 				};
+
+				if (WWS.useHeartBeat) {
+					self.ws.on("ping", self.heartbeat)
+				}
 
 				self.ws.onmessage = function (event) {
 
@@ -137,6 +144,20 @@
 				Wicket.Log.error(errMessage);
 				Wicket.Event.publish(topics.NotSupported, errMessage);
 			}
+		},
+
+		heartbeat: function () {
+			clearTimeout(this.pingTimeout);
+			// Set a timeout in order to check ping received
+			this.pingTimeout = setTimeout(() => {
+					this.ws.terminate();
+					// try to reconnect to server
+					if (Wicket.WebSocket.reconnectOnFailure)
+					{
+						Wicket.WebSocket.INSTANCE = null;
+						Wicket.WebSocket.createDefaultConnection();
+					}
+				}, Wicket.WebSocket.heartBeatPace + Wicket.WebSocket.networkLatencyThreshold);
 		},
 
 		send: function (text) {

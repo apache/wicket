@@ -18,6 +18,8 @@ package org.apache.wicket.protocol.ws.javax;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.Session;
@@ -40,6 +42,9 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 
 	private final Session session;
 
+	private final AtomicBoolean alive = new AtomicBoolean(false);
+	private final AtomicLong lastTimeAlive = new AtomicLong(System.currentTimeMillis());
+
 	/**
 	 * Constructor.
 	 *
@@ -50,6 +55,57 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 	{
 		super(webSocketProcessor);
 		this.session = Args.notNull(session, "session");
+		setAlive(true);
+	}
+
+	@Override
+	public long getLastTimeAlive()
+	{
+		return lastTimeAlive.get();
+	}
+
+	@Override
+	public boolean isAlive()
+	{
+		return alive.get();
+	}
+
+	@Override
+	public void setAlive(boolean alive)
+	{
+		if (alive)
+		{
+			// is connection if alive we set the timestamp.
+			this.lastTimeAlive.set(System.currentTimeMillis());
+		}
+		this.alive.set(alive);
+	}
+
+	@Override
+	public synchronized void terminate(String reason)
+	{
+		close(CloseReason.CloseCodes.GOING_AWAY.getCode(), reason);
+	}
+
+	@Override
+	public void ping() throws IOException
+	{
+		ByteBuffer buf = ByteBuffer.wrap(new byte[]{0xA});
+		session.getBasicRemote().sendPing(buf);
+	}
+
+	@Override
+	public void pong() throws IOException
+	{
+		ByteBuffer buf = ByteBuffer.wrap(new byte[]{0xA});
+		session.getBasicRemote().sendPong(buf);
+	}
+
+	@Override
+	public void onPong(ByteBuffer byteBuffer)
+	{
+		// we received pong answer from remote peer. Thus, connection is alive
+		setAlive(true);
 	}
 
 	@Override
