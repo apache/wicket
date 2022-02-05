@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import java.nio.ByteBuffer;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -45,6 +47,7 @@ import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.ErrorMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.apache.wicket.protocol.ws.api.message.PongMessageMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
@@ -81,7 +84,6 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * A pageId indicating that the endpoint is WebSocketResource
 	 */
 	static final int NO_PAGE_ID = -1;
-	static final String NO_PAGE_CLASS = "_NO_PAGE";
 
 	private final WebRequest webRequest;
 	private final int pageId;
@@ -149,6 +151,24 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	}
 
 	@Override
+	public void onPong(ByteBuffer byteBuffer)
+	{
+		IKey key = getRegistryKey();
+		WebApplication application = getApplication();
+		String sessionId = getSessionId();
+		IWebSocketConnection webSocketConnection = connectionRegistry.getConnection(application, sessionId, key);
+		if (webSocketConnection != null)
+		{
+			webSocketConnection.onPong(byteBuffer);
+			if (webSocketSettings.isSendMessagesOnPong())
+			{
+				// if we want to deliver messages on pong deliver them
+				broadcastMessage(new PongMessageMessage(application, sessionId, key, byteBuffer));
+			}
+		}
+	}
+
+	@Override
 	public void onMessage(final String message)
 	{
 		broadcastMessage(new TextMessage(getApplication(), getSessionId(), getRegistryKey(), message));
@@ -168,7 +188,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 *            the web socket connection to use to communicate with the client
 	 * @see #onOpen(Object)
 	 */
-	protected final void onConnect(final IWebSocketConnection connection) {
+	protected final void onConnect(final IWebSocketConnection connection, boolean reconnected) {
 		IKey key = getRegistryKey();
 		connectionRegistry.setConnection(getApplication(), getSessionId(), key, connection);
 
@@ -184,7 +204,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			}
 		}
 
-		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key), connection);
+		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key, reconnected), connection);
 	}
 
 	@Override
@@ -202,7 +222,9 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	{
 		if (webSocketSettings.shouldNotifyOnErrorEvent(t)) {
 			IKey key = getRegistryKey();
-			broadcastMessage(new ErrorMessage(getApplication(), getSessionId(), key, t));
+			IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, key);
+			ErrorMessage message = new ErrorMessage(application, sessionId, key, t);
+			broadcastMessage(message, connection);
 		}
 	}
 

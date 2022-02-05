@@ -16,42 +16,40 @@
  */
 package org.apache.wicket.protocol.ws.api.message;
 
+import java.nio.ByteBuffer;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
+import org.apache.wicket.util.lang.Args;
 
 /**
- * A {@link IWebSocketMessage message} when a client creates web socket
- * connection.
+ * A {@link IWebSocketMessage message} with Pong message data
  *
  * @since 6.0
  */
-public class ConnectedMessage extends AbstractClientMessage
+public class PongMessageMessage extends AbstractClientMessage
 {
-	private final boolean reconnected;
-
-	public ConnectedMessage(Application application, String sessionId, IKey key, boolean reconnected)
-	{
-		super(application, sessionId, key);
-		this.reconnected = reconnected;
-	}
-
-	public ConnectedMessage(Application application, String sessionId, IKey key)
-	{
-		super(application, sessionId, key);
-		reconnected = false;
-	}
+	private final ByteBuffer byteBuffer;
 
 	/**
-	 * @return {@code true} if connection happened because client initiated a reconnection
+	 *
+	 * @param application
+	 *      the Wicket application
+	 * @param sessionId
+	 *      the id of the http session
+	 * @param key
+	 *      the page id or resource name
+	 * @param byteBuffer
+	 *      the message sent from the client
 	 */
-	public boolean isReconnected()
+	public PongMessageMessage(Application application, String sessionId, IKey key, ByteBuffer byteBuffer)
 	{
-		return reconnected;
+		super(application, sessionId, key);
+		this.byteBuffer = Args.notNull(byteBuffer, "byteBuffer");
 	}
 
-	@Override
-	public final String toString()
+	public ByteBuffer getByteBuffer()
 	{
-		return "Client is connected";
+		return byteBuffer;
 	}
 }

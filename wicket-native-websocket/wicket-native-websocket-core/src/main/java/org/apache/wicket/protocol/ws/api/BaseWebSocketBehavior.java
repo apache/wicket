@@ -161,6 +161,14 @@ public class BaseWebSocketBehavior extends Behavior
 		Integer securePort = getSecurePort(webSocketSettings);
 		variables.put("securePort", securePort);
 
+		variables.put("useHeartBeat", isUseHeartBeat(webSocketSettings));
+
+		variables.put("reconnectOnFailure", isReconnectOnFailure(webSocketSettings));
+
+		variables.put("heartBeatPace", getHeartBeatPace(webSocketSettings));
+
+		variables.put("networkLatencyThreshold", getNetworkLatencyThreshold(webSocketSettings));
+
 		CharSequence contextPath = getContextPath(webSocketSettings);
 		Args.notNull(contextPath, "contextPath");
 		variables.put("contextPath", contextPath);
@@ -175,6 +183,26 @@ public class BaseWebSocketBehavior extends Behavior
 		final CharSequence sessionId = getSessionId(component);
 		variables.put("sessionId", sessionId);
 		return variables;
+	}
+
+	protected boolean isUseHeartBeat(WebSocketSettings webSocketSettings)
+	{
+		return webSocketSettings.isUseHeartBeat();
+	}
+
+	protected boolean isReconnectOnFailure(WebSocketSettings webSocketSettings)
+	{
+		return webSocketSettings.isReconnectOnFailure();
+	}
+
+	protected long getHeartBeatPace(WebSocketSettings webSocketSettings)
+	{
+		return webSocketSettings.getHeartBeatPace();
+	}
+
+	protected long getNetworkLatencyThreshold(WebSocketSettings webSocketSettings)
+	{
+		return webSocketSettings.getNetworkLatencyThreshold();
 	}
 
 	protected Integer getPort(WebSocketSettings webSocketSettings)

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.util.tester;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -24,6 +26,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
+import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.lang.Args;
@@ -154,11 +157,16 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 			}
 
 			@Override
+			protected void onOutMessage(byte[] message) {
+				TestWebSocketProcessor.this.onOutMessage(message);
+			}
+
+			@Override
 			public void sendMessage(IWebSocketPushMessage message)
 			{
 				TestWebSocketProcessor.this.broadcastMessage(message);
 			}
-		});
+		}, false);
 	}
 
 	/**
@@ -180,4 +188,12 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	 *      the length of bytes to read from the binary message
 	 */
 	protected abstract void onOutMessage(byte[] message, int offset, int length);
+
+	/**
+	 * A callback method that is being called when a binary message is written to the TestWebSocketConnection
+	 *
+	 * @param message
+	 *      the binary message to deliver to the client
+	 */
+	protected abstract void onOutMessage(byte[] message);
 }

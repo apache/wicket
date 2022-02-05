@@ -92,12 +92,14 @@ public class WebSocketBehaviorDemoPage extends WicketExamplePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onConnect(ConnectedMessage message)
-			{
+			protected void onConnect(ConnectedMessage message) {
 				super.onConnect(message);
 
-				ScheduledExecutorService service = JSR356Application.get().getScheduledExecutorService();
-				ChartUpdater.start(message, service);
+				if (!message.isReconnected())
+				{
+					ScheduledExecutorService service = JSR356Application.get().getScheduledExecutorService();
+					ChartUpdater.start(message, service);
+				}
 			}
 		});
 		add(downloadingContainer.setOutputMarkupPlaceholderTag(true).setVisible(false));

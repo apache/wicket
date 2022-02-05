@@ -4,7 +4,10 @@
 	if (typeof(Wicket.WebSocket.appName) === "undefined") {
 		jQuery.extend(Wicket.WebSocket, { pageId: ${pageId},  context: '${context}', resourceName: '${resourceName}', connectionToken: '${connectionToken}',
 			baseUrl: '${baseUrl}', contextPath: '${contextPath}', appName: '${applicationName}',
-			port: ${port}, securePort: ${securePort}, filterPrefix: '${filterPrefix}', sessionId: '${sessionId}' });
+			port: ${port}, securePort: ${securePort}, filterPrefix: '${filterPrefix}', sessionId: '${sessionId}',
+			useHeartBeat: ${useHeartBeat}, reconnectOnFailure: ${reconnectOnFailure},
+			heartBeatPace: ${heartBeatPace}, networkLatencyThreshold: ${networkLatencyThreshold}});
+
 		Wicket.WebSocket.createDefaultConnection();
 	}
 })();
