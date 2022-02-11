@@ -23,11 +23,13 @@ import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * A {@link IWebSocketMessage message} with Pong message data
+ * A {@link IWebSocketMessage message} with Pong message data.
+ * Pongs are answers from client to server originated ping messages. It is up to client implementation to provide
+ * some client side huck for "onping" and allowing sending application data back via a pong message.
  *
- * @since 6.0
+ * @since 9.9.0
  */
-public class PongMessageMessage extends AbstractClientMessage
+public class PongMessage extends AbstractClientMessage
 {
 	private final ByteBuffer byteBuffer;
 
@@ -42,7 +44,7 @@ public class PongMessageMessage extends AbstractClientMessage
 	 * @param byteBuffer
 	 *      the message sent from the client
 	 */
-	public PongMessageMessage(Application application, String sessionId, IKey key, ByteBuffer byteBuffer)
+	public PongMessage(Application application, String sessionId, IKey key, ByteBuffer byteBuffer)
 	{
 		super(application, sessionId, key);
 		this.byteBuffer = Args.notNull(byteBuffer, "byteBuffer");

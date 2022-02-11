@@ -47,7 +47,7 @@ import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.ErrorMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
-import org.apache.wicket.protocol.ws.api.message.PongMessageMessage;
+import org.apache.wicket.protocol.ws.api.message.PongMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
@@ -163,7 +163,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			if (webSocketSettings.isSendMessagesOnPong())
 			{
 				// if we want to deliver messages on pong deliver them
-				broadcastMessage(new PongMessageMessage(application, sessionId, key, byteBuffer));
+				broadcastMessage(new PongMessage(application, sessionId, key, byteBuffer));
 			}
 		}
 	}
