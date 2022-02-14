@@ -25,6 +25,12 @@ import org.apache.wicket.protocol.ws.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A timer class that periodically schedules sending ping-pong heartbeats to all connected clients.
+ * If pong message fails to be received for some time then connection is closed. No reconnection mechanism
+ * is provided as ping-pong does not define client side listening for ping messages (pong will be generated probably
+ * by the browser)
+ */
 public class PingPongHeartBeatTimer extends AbstractHeartBeatTimer {
 
     private static final Logger LOG = LoggerFactory.getLogger(PingPongHeartBeatTimer.class);
@@ -38,10 +44,7 @@ public class PingPongHeartBeatTimer extends AbstractHeartBeatTimer {
     protected boolean isTimerEnabled() {
         if (webSocketSettings.isUsePingPongHeartBeat() ==  false)
         {
-            if (LOG.isInfoEnabled())
-            {
-                LOG.info("usePingPongHeartBeat is set to false. Thus we won't start heartbeat's sending thread");
-            }
+            LOG.info("usePingPongHeartBeat is set to false. Thus we won't start ping pong heartbeat's sending thread");
             return false;
         }
         return true;
@@ -56,7 +59,7 @@ public class PingPongHeartBeatTimer extends AbstractHeartBeatTimer {
         final int maxPingRetries = webSocketSettings.getMaxPingRetries();
         for (IWebSocketConnection connection: webSocketSettings.getConnectionRegistry().getConnections(application))
         {
-            // connection didn't received the PONG from peer terminate it
+            // connection didn't receive the PONG from peer terminate it
             if (connection.isAlive() == false)
             {
                 if (connection.getLastTimeAlive() - System.currentTimeMillis() > (heartBeatPace + networkLatencyThreshold))

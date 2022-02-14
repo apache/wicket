@@ -25,30 +25,30 @@ import org.apache.wicket.protocol.ws.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HeartBeatWithReconnectTimer extends AbstractHeartBeatTimer {
-
+/**
+ * A timer class that periodically schedules sending custom heartbeats "ping" messages to all connected clients.
+ * At client side some JavaScript machinery is listening for those messages. In case messages do not arrive for certain
+ * time, client will assume connection to sever is dead and try to reconnect.
+ */
+public class HeartBeatWithReconnectTimer extends AbstractHeartBeatTimer
+{
     private static final Logger LOG = LoggerFactory.getLogger(HeartBeatWithReconnectTimer.class);
-
 
     public HeartBeatWithReconnectTimer(WebSocketSettings webSocketSettings)
     {
       super(webSocketSettings);
     }
 
-
     @Override
     protected boolean isTimerEnabled() {
         if (webSocketSettings.isUseHeartBeat() ==  false)
         {
-            if (LOG.isInfoEnabled())
-            {
-                LOG.info("useHeartBeat is set to false. Thus we won't start heartbeat's sending thread");
-            }
+            LOG.info("useHeartBeat is set to false. Thus we won't start heartbeat's sending thread");
+
             return false;
         }
         return true;
     }
-
 
     protected void sendHeartBeats(Application application)
     {

@@ -16,18 +16,18 @@
  */
 package org.apache.wicket.protocol.ws.timer;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
-import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
-import org.apache.wicket.protocol.ws.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A base "timer" class that will schedule sending king alive "ping" messages to clients.
+ */
 public abstract class AbstractHeartBeatTimer {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractHeartBeatTimer.class);
@@ -49,10 +49,7 @@ public abstract class AbstractHeartBeatTimer {
             return;
         }
 
-        if (LOG.isInfoEnabled())
-        {
-            LOG.info("Starting thread pushing heart beats");
-        }
+        LOG.info("Starting scheduler thread pushing heart beats");
 
         TimerTask timerTask = new TimerTask()
         {
@@ -65,7 +62,7 @@ public abstract class AbstractHeartBeatTimer {
                 }
                 catch (Exception e)
                 {
-                    LOG.error("Error while checking connections", e);
+                    LOG.error("Error sending heartbeats", e);
                 }
             }
         };
@@ -74,19 +71,26 @@ public abstract class AbstractHeartBeatTimer {
         this.heartBeatsTimer.schedule(timerTask, new Date(), webSocketSettings.getHeartBeatPace());
     }
 
+    /**
+     *
+     * @return {@code true} if timer is enable via settings.
+     */
     protected abstract boolean isTimerEnabled();
 
     public final void stop()
     {
-        if (LOG.isInfoEnabled())
-        {
-            LOG.info("Stopping thread pushing heart beats");
-        }
+        LOG.info("Stopping thread pushing heart beats");
+
         if (this.heartBeatsTimer != null)
         {
             this.heartBeatsTimer.cancel();
         }
     }
 
+    /**
+     * Override to schedule sending the heartbeats
+     *
+     * @param application the {@link org.apache.wicket.Application}
+     */
     protected abstract void sendHeartBeats(Application application);
 }
