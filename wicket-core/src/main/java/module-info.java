@@ -33,6 +33,8 @@ module org.apache.wicket.core {
     provides org.apache.wicket.IInitializer with org.apache.wicket.Initializer;
     provides org.apache.wicket.resource.FileSystemPathService with org.apache.wicket.resource.FileSystemJarPathService;
 
+    uses org.apache.wicket.IInitializer;
+
     exports org.apache.wicket;
     exports org.apache.wicket.ajax;
     exports org.apache.wicket.ajax.attributes;
