@@ -24,7 +24,7 @@
 	</parent>
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
-	<version>9.8.0</version>
+	<version>9.8.1</version>
 	<packaging>pom</packaging>
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
@@ -92,7 +92,7 @@
 		<connection>scm:git:http://git-wip-us.apache.org/repos/asf/wicket.git</connection>
 		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/wicket.git</developerConnection>
 		<url>http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git</url>
-		<tag>rel/wicket-9.8.0</tag>
+		<tag>rel/wicket-9.8.1</tag>
 	</scm>
 	<modules>
 		<!-- wicket-eclipse-settings is separate released -->
@@ -339,37 +339,37 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-auth-roles</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-bean-validation</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-cdi</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-core</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-devutils</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
@@ -380,61 +380,61 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-extensions</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-guice</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-ioc</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-jmx</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-core</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-javax</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-request</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-spring</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-util</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-velocity</artifactId>
-				<version>9.8.0</version>
+				<version>9.8.1</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>

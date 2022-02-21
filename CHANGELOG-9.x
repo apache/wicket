@@ -2,7 +2,7 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
-Release Notes - Wicket - Version 9.8.0
+Release Notes - Wicket - Version 9.8.1
 
 ** Bug
 
