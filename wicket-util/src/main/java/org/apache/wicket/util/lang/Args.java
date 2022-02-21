@@ -66,6 +66,28 @@ public class Args
 		return argument;
 	}
 
+	/**
+	 * Checks argument is not empty (not null and has a non-whitespace character)
+	 *
+	 * Note: This method overloads {@link #notEmpty(CharSequence, String)} for performance reasons.
+	 * 
+	 * @param argument
+	 *            the argument to check for emptiness
+	 * @param name
+	 *            the name to use in the error message
+	 * @return The {@code argument} parameter if not empty
+	 * @throws IllegalArgumentException
+	 *             when the passed {@code argument} is empty
+	 */
+	public static String notEmpty(final String argument, final String name)
+	{
+		if (Strings.isEmpty(argument))
+		{
+			throw new IllegalArgumentException("Argument '" + name + "' may not be null or empty.");
+		}
+		return argument;
+	}
+
 
 	/**
 	 * 
