@@ -24,7 +24,7 @@
 	</parent>
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
-	<version>9.8.0-SNAPSHOT</version>
+	<version>9.8.0.KMC</version>
 	<packaging>pom</packaging>
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
@@ -94,6 +94,16 @@
 		<url>http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git</url>
 		<tag>HEAD</tag>
 	</scm>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>local</id>
+			<url>file://C:/javastuff/localrepo/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>local</id>
+			<url>file://C:/javastuff/localrepo/releases</url>
+		</repository>
+	</distributionManagement>
 	<modules>
 		<!-- wicket-eclipse-settings is separate released -->
 		<module>wicket</module>
@@ -345,37 +355,37 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-auth-roles</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-bean-validation</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-cdi</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-core</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-devutils</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
@@ -386,61 +396,61 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-extensions</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-guice</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-ioc</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-jmx</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-core</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-javax</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-request</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-spring</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-util</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-velocity</artifactId>
-				<version>9.8.0-SNAPSHOT</version>
+				<version>9.8.0.KMC</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
