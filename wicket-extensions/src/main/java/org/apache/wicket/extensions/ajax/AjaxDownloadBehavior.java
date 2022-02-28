@@ -197,6 +197,21 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	}
 
 	/**
+	 * Call this method to initiate the download. You can use the {@link #resourceParameters} to dynamically pass
+	 * information to the {@link org.apache.wicket.request.resource.IResource} in order to generate contents.
+	 *
+	 * @param handler
+	 *          the initiating RequestHandler
+	 * @param resourceParameters
+	 *          Some PageParameters that might be used by the resource in order to generate content
+	 */
+	public void initiate(IPartialPageRequestHandler handler, PageParameters resourceParameters)
+	{
+		this.resourceParameters = resourceParameters;
+		initiate(handler);
+	}
+
+	/**
 	 * Call this method to initiate the download.
 	 *
 	 * @param handler

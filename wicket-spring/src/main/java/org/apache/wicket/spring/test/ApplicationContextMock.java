@@ -197,6 +197,11 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 		return findAnnotationOnClass(getBean(beanName).getClass(), annotationType);
 	}
 
+	@Override
+	public <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException {
+		return findAnnotationOnClass(getBean(beanName).getClass(), annotationType);
+	}
+
 	private <A extends Annotation> A findAnnotationOnClass(Class<?> cls, Class<A> annotationType)
 	{
 		// lookup annotation type on class

@@ -16,12 +16,11 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.util.ArrayList;
-
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -32,12 +31,20 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 
+import java.util.ArrayList;
+
 public class MultipartFormComponentListenerPage extends WebPage {
 	private static final long serialVersionUID = 1L;
 
 	public MultipartFormComponentListenerPage() {
 		CompoundPropertyModel<MultipartFormComponentListenerBean> model = new CompoundPropertyModel<>(new MultipartFormComponentListenerBean());
 		Form<MultipartFormComponentListenerBean> form = new Form<>("form", model);
+		form.add(new Behavior() {
+			@Override
+			public void onConfigure(Component component) {
+				component.setVisible(model.getObject().isFormVisible());
+			}
+		});
 		add(form);
 
 		RequiredTextField<String> textField = new RequiredTextField<>("textField");
@@ -81,7 +88,7 @@ public class MultipartFormComponentListenerPage extends WebPage {
 		add(new AjaxLink<>("toggleVisibility") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				form.setVisible(!form.isVisible());
+				model.getObject().setFormVisible(!model.getObject().isFormVisible());
 				target.add(form);
 			}
 		});

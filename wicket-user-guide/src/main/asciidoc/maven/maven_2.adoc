@@ -30,7 +30,6 @@ Once we have run the resulting command in the OS shell, we will have a new folde
             |   |               WicketApplication.java
             |   |
             |   +---resources
-            |   |       log4j.properties
             |   |
             |   \---webapp
             |       \---WEB-INF

@@ -121,11 +121,7 @@ jQuery(document).ready(function() {
 		Wicket.DOM.showIncrementally(el);
 		equal( el.style.display, 'none', ".style.display should still be 'none'." );
 		Wicket.DOM.showIncrementally(el);
-		if (jQuery.fn.jquery.indexOf("3") === 0) {
-			equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
-		} else {
-			equal( el.style.display, 'inline', "Wicket.DOM.show should set .style.display to 'inline'." );
-		}
+		equal( el.style.display, 'inline', "Wicket.DOM.show should set .style.display to 'inline'." );
 	});
 
 	test("(show|hide)Incrementally() an element by id ", function() {
@@ -136,11 +132,7 @@ jQuery(document).ready(function() {
 		Wicket.DOM.showIncrementally(existingId);
 		equal( Wicket.$(existingId).style.display, 'none', ".style.display should still be 'none'." );
 		Wicket.DOM.showIncrementally(existingId);
-		if (jQuery.fn.jquery.indexOf("3") === 0) {
-			equal(Wicket.$(existingId).style.display, '', "Wicket.DOM.show should set .style.display to ''.");
-		} else {
-			equal(Wicket.$(existingId).style.display, 'inline', "Wicket.DOM.show should set .style.display to 'inline'.");
-		}
+		equal(Wicket.$(existingId).style.display, 'inline', "Wicket.DOM.show should set .style.display to 'inline'.");
 	});
 
 	test("(show|hide)Incrementally() a block element by id ", function() {
@@ -152,11 +144,7 @@ jQuery(document).ready(function() {
 		Wicket.DOM.showIncrementally(elId);
 		equal( Wicket.$(elId).style.display, 'none', ".style.display should still be 'none'." );
 		Wicket.DOM.showIncrementally(elId);
-		if (jQuery.fn.jquery.indexOf("3") === 0) {
-			equal(Wicket.$(elId).style.display, '', "Wicket.DOM.show should set .style.display to ''.");
-		} else {
-			equal(Wicket.$(elId).style.display, 'block', "Wicket.DOM.show should set .style.display to 'block'.");
-		}
+		equal(Wicket.$(elId).style.display, 'block', "Wicket.DOM.show should set .style.display to 'block'.");
 	});
 
 	test("hide() an element", function() {

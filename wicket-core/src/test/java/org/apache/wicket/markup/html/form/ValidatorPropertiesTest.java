@@ -30,9 +30,9 @@ import org.junit.jupiter.api.Test;
 
 /**
  * 
- * Use the following log4j config for detailed logging on the property resolution process
- * log4j.logger.org.apache.wicket.resource.loader=DEBUG
- * log4j.logger.org.apache.wicket.Localizer=DEBUG
+ * Use the following slf4j-simple config for detailed logging on the property resolution process
+ * org.slf4j.simpleLogger.log.org.apache.wicket.resource.loader=DEBUG
+ * org.slf4j.simpleLogger.log.org.apache.wicket.Localizer=DEBUG
  * 
  * @author Juergen Donnerstag
  */

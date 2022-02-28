@@ -21,6 +21,8 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnectionFilter;
+import org.apache.wicket.protocol.ws.api.IWebSocketSession;
+import org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer;
 import org.apache.wicket.protocol.ws.api.ServletRequestCopy;
 import org.apache.wicket.protocol.ws.api.WebSocketConnectionFilterCollection;
 import org.apache.wicket.protocol.ws.api.WebSocketRequest;
@@ -138,6 +140,17 @@ public class WebSocketSettings
 	private IWebSocketConnectionFilter connectionFilter;
 
 	/**
+	 * A {@link org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer} that allows to configure
+	 * {@link org.apache.wicket.protocol.ws.api.IWebSocketSession}s.
+	 */
+	private IWebSocketSessionConfigurer socketSessionConfigurer = new IWebSocketSessionConfigurer() {
+		@Override
+		public void configureSession(IWebSocketSession webSocketSession) {
+			// does nothing by default
+		}
+	};
+
+	/**
 	 * A function that decides whether to notify the page/resource on
 	 * web socket connection closed event.
 	 * The page notification leads to deserialization of the page instance from
@@ -243,6 +256,22 @@ public class WebSocketSettings
 	public Executor getSendPayloadExecutor()
 	{
 		return sendPayloadExecutor;
+	}
+
+	/**
+	 * Sets the IWebSocketSessionConfigurer
+	 * @param socketSessionConfigurer A non-null {@link org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer}
+	 */
+	public void setSocketSessionConfigurer(IWebSocketSessionConfigurer socketSessionConfigurer) {
+		Args.notNull(socketSessionConfigurer, "socketSessionConfigurer");
+		this.socketSessionConfigurer = socketSessionConfigurer;
+	}
+
+	/**
+	 * @return returns the {@link org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer}
+	 */
+	public IWebSocketSessionConfigurer getSocketSessionConfigurer() {
+		return socketSessionConfigurer;
 	}
 
 	/**

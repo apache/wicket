@@ -44,15 +44,12 @@ import org.apache.wicket.request.resource.ResourceReference;
  */
 public class AjaxIndicatorAppender extends Behavior
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Component instance this behavior is bound to
 	 */
 	private Component component;
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	private final ResourceReference indicator;
 
@@ -65,7 +62,7 @@ public class AjaxIndicatorAppender extends Behavior
 	}
 	
 	/**
-	 * Build a new instance specifing a custom busy indicator as {@link ResourceReference}.
+	 * Build a new instance specifying a custom busy indicator as {@link ResourceReference}.
 	 * 
 	 * @param indicator
 	 *             The {@link ResourceReference} to use as busy indicator.     
@@ -135,9 +132,6 @@ public class AjaxIndicatorAppender extends Behavior
 		return component.getMarkupId() + "--ajax-indicator";
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.Behavior#bind(org.apache.wicket.Component)
-	 */
 	@Override
 	public final void bind(final Component component)
 	{

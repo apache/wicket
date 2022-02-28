@@ -1333,6 +1333,7 @@
 					} else {
 						e.style.display = display;
 					}
+					e.removeAttribute("hidden");
 				}
 			},
 
@@ -1341,6 +1342,7 @@
 				e = Wicket.$(e);
 				if (e !== null) {
 					jQuery(e).hide();
+					e.setAttribute("hidden", "");
 				}
 			},
 

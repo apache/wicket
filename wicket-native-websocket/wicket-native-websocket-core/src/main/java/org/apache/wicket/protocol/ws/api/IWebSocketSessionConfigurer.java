@@ -14,40 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.head.filter;
-
-import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
+package org.apache.wicket.protocol.ws.api;
 
 /**
- * @author svenmeier
+ * Allows to configure the {@link org.apache.wicket.protocol.ws.api.IWebSocketSession}
  */
-public class DeferredPage extends WebPage
-{
-	private static final long serialVersionUID = 1L;
+public interface IWebSocketSessionConfigurer {
 
-	public AjaxEventBehavior behavior;
-	
-	/**
-	 * Construct.
-	 * 
-	 * @param parameters
-	 */
-	public DeferredPage()
-	{
-		WebMarkupContainer c = new WebMarkupContainer("c");
-		add(c);
+    /**
+     * Allows to configure {@link org.apache.wicket.protocol.ws.api.IWebSocketSession}
+     *
+     * @param webSocketSession
+     *        The {@link org.apache.wicket.protocol.ws.api.IWebSocketSession}
+     */
+    void configureSession(IWebSocketSession webSocketSession);
 
-		c.add(behavior = new AjaxEventBehavior("click") {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onEvent(AjaxRequestTarget target)
-			{
-				target.add(c);
-			}
-		});
-	}
 }

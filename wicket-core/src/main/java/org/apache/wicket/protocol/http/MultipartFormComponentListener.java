@@ -35,7 +35,7 @@ public class MultipartFormComponentListener implements AjaxRequestTarget.IListen
 	static final String ENCTYPE_URL_ENCODED = "application/x-www-form-urlencoded";
 
 	@Override
-	public void onBeforeRespond(final Map<String, Component> map, final AjaxRequestTarget target)
+	public void onAfterRespond(final Map<String, Component> map, final AjaxRequestTarget target)
 	{
 		target.getPage().visitChildren(Form.class, (IVisitor<Form<?>, Void>) (form, formVisitor) -> {
 			if (form.isVisibleInHierarchy()) {

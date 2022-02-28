@@ -13,7 +13,13 @@ loginBox.setVisible(MySession.get().isNotLoggedIn());
 add(loginBox);
 ----
 
-Listing 6 shows a poor implementation, because a decision about the visibility is made while instanciating the component. Again, in Wicket instances of components exist for several requests. To reuse the same instance you have to call _loginBox.setVisible(false)_. This is very unhandy, because we always have to call _setVisible()_ and manage the visibility. Furthermore you are going to duplicate the states, because visible is equal to "not logged in" So we have two saved states, one for the business aspect "not logged in" and one for the technical aspect "visible" Both is always equal. This approach is error-prone and fragile, because we always have to pay attention to setting the correct information every time. But this is often forgotten because the logic is widely spread over the code. The solution is the Hollywood principle: "Don't call us, we'll call you". Take a look at the following diagram illustrating an application flow with some calls. We avoid three calls through the  http://en.wikipedia.org/wiki/Hollywood_Principle[Hollywood-Principle] and we just have to instanciate the _LoginBoxPanel_.
+Listing 6 shows a poor implementation, because a decision about the visibility is made while instanciating the component. Again, in Wicket instances of components exist for several requests.
+
+To reuse the same instance you have to call _loginBox.setVisible(false)_. This is very unhandy, because we always have to call _setVisible()_ and manage the visibility manually from the outside.
+
+This approach is error-prone and fragile, because we always have to pay attention to setting the correct information every time. But this is often forgotten because the logic might be widely spread over the code.
+
+The solution is the Hollywood principle: "Don't call us, we'll call you". Take a look at the following diagram illustrating an application flow with some calls. We avoid three calls through the http://en.wikipedia.org/wiki/Hollywood_Principle[Hollywood-Principle] and we just have to instantiate the _LoginBoxPanel_.
 
 image::../img/login_calls_hollywood.png[]
 
@@ -24,15 +30,21 @@ image::../img/login_calls_hollywood.png[]
 public class LoginBoxPanel {
     // constructor etc.
     @Override
-    public boolean isVisible() {
-        return MySession.get().isNotLoggedIn();
+    public void onConfigure() {
+        setVisible(MySession.get().isNotLoggedIn());
     }
 };
 ----
 
-Now the control over visibility has been inverted, the _LoginBoxPanel_ decides on its visibility autonomously. For each call of _isVisible()_ there is a refreshed interpretion of the login state. Hence, there is no additional state that might be outdated. The logic is centralized in one line code and not spread throughout the application. Furthermore, you can easily identify that the technical aspect _isVisible()_ correlates to the business aspect "logged in" The same rules can be applied to the method _isEnabled()_. If _isEnabled()_ returns false the components get displayed in gray. Forms which are within an inactive or invisible component do not get executed.
+Now the control over visibility has been inverted, the _LoginBoxPanel_ decides on its visibility autonomously.
 
-Note that there are cases in which you cannot avoid to call the methods _setVisible()_ and _setEnabled()_. An example: The user presses a button to display an inlined registration form. In general, you can apply the following rules: data driven components override these methods and delegates to the data model. User triggered events call the method _setVisible(boolean)_. You can also override these methods with inline implementations:
+For each call of _onConfigure()_ there is a refreshed interpretion of the login state. Hence, there is no additional state that might be outdated. The logic is centralized in one line code and not spread throughout the application. Furthermore, you can easily identify that the technical aspect of visibility correlates to the business aspect "logged in".
+
+TIP: The same approach can be used to control when a component is enabled.
+
+NOTE: Forms which are within an inactive or invisible component do not get executed.
+
+Note that there are cases in which calls to _setVisible()_ and _setEnabled()_ seem unavoidable. For example, the user presses a button to display an inlined registration form. In general, you can apply the following rules: data driven components are configured by their model, and the button modifies the model. Listing 8 presents a model-bound visibility.
 
 *Listing 8:*
 
@@ -40,13 +52,14 @@ Note that there are cases in which you cannot avoid to call the methods _setVis
 ----
 new Label("headline", headlineModel) {
     @Override
-    public boolean isVisible() {
-        // Hidden headline if text starts with "Berlusconi"
+    public void onConfigure() {
+        // Headline visible only if text starts with "Berlusconi"
         String headline = getModelObject();
-        return headline.startWith("Berlusconi");
+        setVisible(headline.startWith("Berlusconi"));
     }
 }
 ----
 
-*Note:* Some people insist on overriding _isVisible()_ being http://www.mail-archive.com/dev\@wicket.apache.org/msg07123.html[a bad thing]
+WARNING: While possible, overriding _isVisible()_ may lead to unpredictable results under some conditions. See https://issues.apache.org/jira/browse/WICKET-3171[WICKET-3171], https://issues.apache.org/jira/browse/WICKET-6946[WICKET-6946] and http://www.mail-archive.com/dev@wicket.apache.org/msg07123.html[dev@wicket.apache.org mailing list: overriding isVisible bad?].
+
 

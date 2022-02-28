@@ -20,12 +20,20 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior;
 import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior.Location;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.ContentDisposition;
+import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceStreamResource;
@@ -40,7 +48,9 @@ import org.apache.wicket.util.resource.StringResourceStream;
 public class AjaxDownloadPage extends BasePage
 {
 	private static final long serialVersionUID = 1L;
-	private WebMarkupContainer downloadingContainer;
+	private final WebMarkupContainer downloadingContainer;
+
+	private IModel<String> text;
 
 	/**
 	 * Constructor
@@ -59,6 +69,8 @@ public class AjaxDownloadPage extends BasePage
 		initDownloadInNewWindow();
 
 		initDownloadInSameWindow();
+
+		initDynamicDownload();
 
 		initDownloadReference();
 	}
@@ -326,6 +338,62 @@ public class AjaxDownloadPage extends BasePage
 		});
 	}
 
+	private void initDynamicDownload()
+	{
+		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(DynamicTextFileResource.instance)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onBeforeDownload(IPartialPageRequestHandler handler)
+			{
+				downloadingContainer.setVisible(true);
+				handler.add(downloadingContainer);
+			}
+
+			@Override
+			protected void onDownloadSuccess(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+			}
+
+			@Override
+			protected void onDownloadFailed(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+
+				target.appendJavaScript("alert('Download failed');");
+			}
+
+			@Override
+			protected void onDownloadCompleted(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+			}
+		};
+		add(download);
+		download.setLocation(Location.Blob);
+		text = Model.of("");
+		Form<Void> form = new Form<>("form");
+		add(form);
+		final TextArea<String> stringTextArea =new TextArea<>("text", text);
+		stringTextArea.setOutputMarkupId(true);
+		form.add(stringTextArea);
+		form.add(new AjaxSubmitLink("downloadDynamicContents")
+		{
+			@Override
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				download.initiate(target, DynamicTextFileResource.encodeText(text.getObject()));
+				text.setObject("");
+				target.add(stringTextArea);
+			}
+		});
+	}
+
 	public static class StaticResource extends ResourceStreamResource
 	{
 		private static final long serialVersionUID = 1L;
@@ -360,13 +428,19 @@ public class AjaxDownloadPage extends BasePage
 		}
 	}
 
-	private class ExampleResource extends ResourceStreamResource
+	private static class ExampleResource extends ResourceStreamResource
 	{
 		private static final long serialVersionUID = 1L;
 
 		private String content;
 
 		private int count = 0;
+
+		public ExampleResource()
+		{
+			setFileName("Dynamic-File-from-IResource.txt");
+			setCacheDuration(Duration.ZERO);
+		}
 
 		public ExampleResource(String content)
 		{
@@ -393,8 +467,55 @@ public class AjaxDownloadPage extends BasePage
 				throw new AbortWithHttpErrorCodeException(400);
 			}
 
-			return new StringResourceStream(content);
-		};
+			return new StringResourceStream(getContent(attributes));
+		}
 
+		protected String getContent(Attributes attributes) {
+			return content;
+		}
+
+	}
+
+	public static class DynamicTextFileResource extends ResourceReference {
+
+		static final String FILE_CONTENTS = "fileContents";
+
+		public static DynamicTextFileResource instance = new DynamicTextFileResource();
+
+		public DynamicTextFileResource() {
+			super(AjaxDownloadPage.class, "DynamicTextFileResource");
+		}
+
+		public static PageParameters encodeText(String  text) {
+			PageParameters parameters = new PageParameters();
+			parameters.add(FILE_CONTENTS, text);
+			return parameters;
+		}
+
+		@Override
+		public IResource getResource() {
+			return new ExampleResource() {
+				@Override
+				protected String getContent(Attributes attributes) {
+					String licence = "/*\n" +
+							" * Licensed to the Apache Software Foundation (ASF) under one or more\n" +
+							" * contributor license agreements.  See the NOTICE file distributed with\n" +
+							" * this work for additional information regarding copyright ownership.\n" +
+							" * The ASF licenses this file to You under the Apache License, Version 2.0\n" +
+							" * (the \"License\"); you may not use this file except in compliance with\n" +
+							" * the License.  You may obtain a copy of the License at\n" +
+							" *\n" +
+							" *      http://www.apache.org/licenses/LICENSE-2.0\n" +
+							" *\n" +
+							" * Unless required by applicable law or agreed to in writing, software\n" +
+							" * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+							" * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+							" * See the License for the specific language governing permissions and\n" +
+							" * limitations under the License.\n" +
+							" */ \n\n\n";
+					return licence + attributes.getParameters().get(FILE_CONTENTS).toString("");
+				}
+			};
+		}
 	}
 }

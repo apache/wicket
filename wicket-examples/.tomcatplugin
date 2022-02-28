@@ -28,14 +28,12 @@
         <webClassPathEntry>M2_REPO/easymock/easymock/1.2_Java1.3/easymock-1.2_Java1.3.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/javax/portlet/portlet-api/1.0/portlet-api-1.0.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev.jar</webClassPathEntry>
-        <webClassPathEntry>M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/logkit/logkit/1.0.1/logkit-1.0.1.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/mx4j/mx4j-tools/3.0.1/mx4j-tools-3.0.1.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/mx4j/mx4j/3.0.1/mx4j-3.0.1.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/nekohtml/nekohtml/0.9.1/nekohtml-0.9.1.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/apache/portals/bridges/portals-bridges-common/1.0.3/portals-bridges-common-1.0.3.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/slf4j/slf4j-api/1.4.2/slf4j-api-1.4.2.jar</webClassPathEntry>
-        <webClassPathEntry>M2_REPO/org/slf4j/slf4j-log4j12/1.4.2/slf4j-log4j12-1.4.2.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/org/springframework/spring/2.0/spring-2.0.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/rhino/js/1.5R4.1/js-1.5R4.1.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/velocity/velocity-dep/1.4/velocity-dep-1.4.jar</webClassPathEntry>
