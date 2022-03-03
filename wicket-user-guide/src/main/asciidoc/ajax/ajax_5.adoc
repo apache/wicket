@@ -15,7 +15,8 @@ AjaxRequestAttributes exposes the attributes used to generate the JavaScript cal
 |mp | If the AJAX call involves the submission of a form, this flag indicates whether the data must be encoded using the encoding mode “multipart/form-data”. | false
 |sc | The input name of the submitting component of the form |
 |async | A boolean parameter that indicates if the AJAX call is asynchronous (true) or not. | true
-|wr | Specifies the type of data returned by the AJAX call (XML, HTML, JSON, etc...). | XML
+|dt | Specifies the type of data returned by the AJAX call (XML, HTML, JSON, etc...). | XML
+|wr | Boolean flag which indicates whether the response is <ajax-response> which is handled by wicket-ajax.js or custom response type which can be handled by application's code (e.g. in IAjaxCallListener's success handler). | true
 |ih, bh, pre, bsh, ah, sh, fh, coh, dh | This is a list of the listeners that are executed on client side (they are JavaScript scripts) during the lifecycle of an AJAX request. Each short name is the abbreviation of one of the methods defined in the interface IAjaxCallListener (see below). | An empty list
 |===
 
