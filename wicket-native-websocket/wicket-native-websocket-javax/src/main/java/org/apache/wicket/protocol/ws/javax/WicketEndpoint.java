@@ -46,13 +46,14 @@ public class WicketEndpoint extends Endpoint
 
 	private static final Logger LOG = LoggerFactory.getLogger(WicketEndpoint.class);
 
+	private static final Set<String> REGISTERED_LISTENERS = ConcurrentHashMap.newKeySet();
+
 	/**
 	 * The name of the request parameter that holds the application name
 	 */
 	private static final String WICKET_APP_PARAM_NAME = "wicket-app-name";
 
 	private final AtomicBoolean applicationDestroyed = new AtomicBoolean(false);
-	private final Set<String> registeredListeners = ConcurrentHashMap.newKeySet();
 
 	private JavaxWebSocketProcessor javaxWebSocketProcessor;
 
@@ -62,7 +63,7 @@ public class WicketEndpoint extends Endpoint
 		String appName = getApplicationName(session);
 
 		WebApplication app = (WebApplication) WebApplication.get(appName);
-		if (registeredListeners.add(appName))
+		if (REGISTERED_LISTENERS.add(appName))
 		{
 			app.getApplicationListeners().add(new ApplicationListener(applicationDestroyed));
 		}
@@ -172,6 +173,8 @@ public class WicketEndpoint extends Endpoint
 		public void onBeforeDestroyed(Application application)
 		{
 			applicationDestroyed.set(true);
+			REGISTERED_LISTENERS.remove(application.getName());
+			application.getApplicationListeners().remove(this);
 		}
 	}
 }
