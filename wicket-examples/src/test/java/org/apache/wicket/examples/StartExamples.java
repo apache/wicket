@@ -106,9 +106,9 @@ public class StartExamples
 //		sessionCache.setSessionDataStore(sessionStore);
 //		bb.getSessionHandler().setSessionCache(sessionCache);
 
-//		ServletContextHandler contextHandler = ServletContextHandler.getServletContextHandler(bb.getServletContext());
-//		JakartaWebSocketServletContainerInitializer.configure(contextHandler,
-//				(servletContext, container) -> container.addEndpoint(new WicketServerEndpointConfig()));
+		ServletContextHandler contextHandler = ServletContextHandler.getServletContextHandler(bb.getServletContext());
+		JakartaWebSocketServletContainerInitializer.configure(contextHandler,
+				(servletContext, container) -> container.addEndpoint(new WicketServerEndpointConfig()));
 
 		// uncomment next line if you want to test with JSESSIONID encoded in the urls
 //		((AbstractSessionManager) bb.getSessionHandler().getSessionManager()).setUsingCookies(false);
