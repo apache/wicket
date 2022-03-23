@@ -15,13 +15,13 @@
 # specific language governing permissions and limitations
 # under the License.
 
+language: generic
 os: linux
 dist: focal
 group: edge
 arch: arm64-graviton2
 virt: vm
 
-services: xvfb
 env:
   - CHROMIUM=true
 
