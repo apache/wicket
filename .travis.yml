@@ -22,9 +22,6 @@ group: edge
 arch: arm64-graviton2
 virt: vm
 
-env:
-  - CHROMIUM=true
-
 cache:
   directories:
     - $HOME/.m2/repository
