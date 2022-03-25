@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.ws.util.tester;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -40,6 +41,41 @@ abstract class TestWebSocketConnection implements IWebSocketConnection
 		this.application = application;
 		this.sessionId = sessionId;
 		this.registryKey = registryKey;
+	}
+
+	@Override
+	public long getLastTimeAlive() {
+		return 0;
+	}
+
+	@Override
+	public boolean isAlive() {
+		return false;
+	}
+
+	@Override
+	public void setAlive(boolean alive) {
+
+	}
+
+	@Override
+	public void ping() throws IOException {
+
+	}
+
+	@Override
+	public void pong() throws IOException {
+
+	}
+
+	@Override
+	public void onPong(ByteBuffer byteBuffer) {
+
+	}
+
+	@Override
+	public void terminate(String reason) {
+		close(-1, "abnormally closed");
 	}
 
 	@Override
@@ -70,6 +106,13 @@ abstract class TestWebSocketConnection implements IWebSocketConnection
 		return this;
 	}
 
+	@Override
+	public IWebSocketConnection sendMessage(byte[] message) throws IOException {
+		checkOpenness();
+		onOutMessage(message);
+		return this;
+	}
+
 	/**
 	 * A callback method that is called when a text message should be send to the client
 	 *
@@ -79,7 +122,7 @@ abstract class TestWebSocketConnection implements IWebSocketConnection
 	protected abstract void onOutMessage(String message);
 
 	/**
-	 * A callback method that is called when a text message should be send to the client
+	 * A callback method that is called when a text message should be sent to the client
 	 *
 	 * @param message
 	 *      the binary message to deliver to the client
@@ -89,6 +132,14 @@ abstract class TestWebSocketConnection implements IWebSocketConnection
 	 *      the length of bytes to read from the binary message
 	 */
 	protected abstract void onOutMessage(byte[] message, int offset, int length);
+
+	/**
+	 * A callback method that is called when a text message should be sent to the client
+	 *
+	 * @param message
+	 *      the binary message to deliver to the client
+	 */
+	protected abstract void onOutMessage(byte[] message);
 
 	private void checkOpenness()
 	{

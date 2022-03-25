@@ -59,6 +59,11 @@ public class WebSocketTesterProcessorTest
 		{
 			messageReceived.set(true);
 		}
+
+		@Override
+		protected void onOutMessage(byte[] message) {
+			messageReceived.set(true);
+		}
 	}
 
 	WicketTester tester;

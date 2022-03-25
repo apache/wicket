@@ -72,6 +72,12 @@ public class WebSocketTester
 			{
 				WebSocketTester.this.onOutMessage(message, offset, length);
 			}
+
+			@Override
+			protected void onOutMessage(byte[] message)
+			{
+				WebSocketTester.this.onOutMessage(message);
+			}
 		};
 		socketProcessor.onOpen(null);
 	}
@@ -111,6 +117,12 @@ public class WebSocketTester
 			protected void onOutMessage(byte[] message, int offset, int length)
 			{
 				WebSocketTester.this.onOutMessage(message, offset, length);
+			}
+
+			@Override
+			protected void onOutMessage(byte[] message)
+			{
+				WebSocketTester.this.onOutMessage(message);
 			}
 		};
 		socketProcessor.onOpen(null);
@@ -203,6 +215,16 @@ public class WebSocketTester
 	 *      the length of bytes to read from the binary message
 	 */
 	protected void onOutMessage(byte[] message, int offset, int length)
+	{
+	}
+
+	/**
+	 * A callback method which may be overritten to receive messages pushed by the server
+	 *
+	 * @param message
+	 *      the pushed binary message from the server
+	 */
+	protected void onOutMessage(byte[] message)
 	{
 	}
 }

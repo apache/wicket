@@ -17,15 +17,19 @@
 package org.apache.wicket.protocol.ws.javax;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
+import javax.websocket.PongMessage;
 import javax.websocket.Session;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
 import org.apache.wicket.protocol.ws.api.IWebSocketSession;
+import org.apache.wicket.protocol.ws.api.message.TextMessage;
+import org.apache.wicket.protocol.ws.api.registry.IKey;
 
 /**
  * An {@link org.apache.wicket.protocol.ws.api.IWebSocketProcessor processor} that integrates with
@@ -49,16 +53,29 @@ public class JavaxWebSocketProcessor extends AbstractWebSocketProcessor
 	{
 		super(new JavaxUpgradeHttpRequest(session, endpointConfig), application);
 
-		onConnect(new JavaxWebSocketConnection(session, this));
+		List<String> reconnect = session.getRequestParameterMap().get("reconnect");
+		onConnect(new JavaxWebSocketConnection(session, this), reconnect != null && !reconnect.isEmpty());
 
 		session.addMessageHandler(new StringMessageHandler());
 		session.addMessageHandler(new BinaryMessageHandler());
+		session.addMessageHandler(new PongMessageMessageHandler());
 	}
 
 	@Override
 	public void onOpen(Object containerConnection)
 	{
 	}
+
+
+	private class PongMessageMessageHandler implements MessageHandler.Whole<PongMessage>
+	{
+		@Override
+		public void onMessage(PongMessage message)
+		{
+			JavaxWebSocketProcessor.this.onPong(message.getApplicationData());
+		}
+	}
+
 
 	private class StringMessageHandler implements MessageHandler.Whole<String>
 	{

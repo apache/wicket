@@ -23,8 +23,8 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
-import org.apache.wicket.protocol.ws.api.IWebSocketSession;
-import org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer;
+import org.apache.wicket.protocol.ws.timer.HeartBeatWithReconnectTimer;
+import org.apache.wicket.protocol.ws.timer.PingPongHeartBeatTimer;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.slf4j.Logger;
@@ -43,6 +43,7 @@ public class JSR356Application extends WicketExampleApplication
 	private static final Logger LOGGER = LoggerFactory.getLogger(JSR356Application.class);
 
     private ScheduledExecutorService scheduledExecutorService;
+	private HeartBeatWithReconnectTimer heartBeatWithReconnectTimer;
 
 	@Override
 	public Class<HomePage> getHomePage()
@@ -83,6 +84,10 @@ public class JSR356Application extends WicketExampleApplication
 			webSocketSettings.setSecurePort(8443);
 		}
 
+		webSocketSettings.setUseHeartBeat(true);
+		webSocketSettings.setReconnectOnFailure(true);
+		heartBeatWithReconnectTimer = new HeartBeatWithReconnectTimer(webSocketSettings);
+		heartBeatWithReconnectTimer.start(this);
 		// The websocket example loads JS from ajax.googleapis.com, which is not allowed by the CSP.
 		// This now serves as an example on how to disable CSP
 		getCspSettings().blocking().disabled();
@@ -97,7 +102,7 @@ public class JSR356Application extends WicketExampleApplication
 	@Override
     protected void onDestroy() {
         scheduledExecutorService.shutdownNow();
-
+		heartBeatWithReconnectTimer.stop();
         super.onDestroy();
     }
 

@@ -85,16 +85,31 @@
 					url += '&context=' + encodeURIComponent(WWS.context);
 				}
 
+				// this flag is used at server side to send reconnect event
+				if (WWS.reconnect) {
+					url += '&reconnect=' + true
+				}
+
 				url += '&wicket-ajax-baseurl=' + encodeURIComponent(WWS.baseUrl);
 				url += '&wicket-app-name=' + encodeURIComponent(WWS.appName);
+
+				console.log(url);
 
 				self.ws = new WebSocket(url);
 
 				self.ws.onopen = function (evt) {
 					Wicket.Event.publish(topics.Opened, evt);
+					if (Wicket.WebSocket.useHeartBeat) {
+						self.heartbeat();
+					}
 				};
 
 				self.ws.onmessage = function (event) {
+
+					if (WWS.useHeartBeat) {
+						// reset heartbeat in any message
+						self.heartbeat();
+					}
 
 					var message = event.data;
 					if (typeof(message) === 'string' && message.indexOf('<ajax-response>') > -1) {
@@ -120,6 +135,7 @@
 				self.ws.onclose = function (evt) {
 					if (self.ws) {
 						self.ws.close();
+						clearTimeout(self.pingTimeout);
 						self.ws = null;
 						Wicket.Event.publish(topics.Closed, evt);
 					}
@@ -137,6 +153,22 @@
 				Wicket.Log.error(errMessage);
 				Wicket.Event.publish(topics.NotSupported, errMessage);
 			}
+		},
+
+		heartbeat: function () {
+			clearTimeout(this.pingTimeout);
+			// Set a timeout in order to check ping received
+			this.pingTimeout = setTimeout(() => {
+				this.ws.close();
+				// try to reconnect to server
+				if (Wicket.WebSocket.reconnectOnFailure)
+				{
+					Wicket.Log.debug("Trying to reconnect to server");
+					Wicket.WebSocket.INSTANCE = null;
+					Wicket.WebSocket.reconnect = true;
+					Wicket.WebSocket.createDefaultConnection();
+				}
+			}, Wicket.WebSocket.heartBeatPace + Wicket.WebSocket.networkLatencyThreshold);
 		},
 
 		send: function (text) {

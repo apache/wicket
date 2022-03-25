@@ -18,6 +18,8 @@ package org.apache.wicket.protocol.ws.javax;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.websocket.CloseReason;
 import javax.websocket.Session;
@@ -40,6 +42,9 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 
 	private final Session session;
 
+	private final AtomicBoolean alive = new AtomicBoolean(false);
+	private final AtomicLong lastTimeAlive = new AtomicLong(System.currentTimeMillis());
+
 	/**
 	 * Constructor.
 	 *
@@ -50,6 +55,69 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 	{
 		super(webSocketProcessor);
 		this.session = Args.notNull(session, "session");
+		setAlive(true);
+	}
+
+	@Override
+	public long getLastTimeAlive()
+	{
+		return lastTimeAlive.get();
+	}
+
+	@Override
+	public boolean isAlive()
+	{
+		return alive.get();
+	}
+
+	@Override
+	public void setAlive(boolean alive)
+	{
+		if (alive)
+		{
+			// is connection if alive we set the timestamp.
+			this.lastTimeAlive.set(System.currentTimeMillis());
+		}
+		this.alive.set(alive);
+	}
+
+	@Override
+	public synchronized void terminate(String reason)
+	{
+		close(CloseReason.CloseCodes.CLOSED_ABNORMALLY.getCode(), reason);
+	}
+
+	@Override
+	public void ping() throws IOException
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Pinging connection {}", getKey());
+		}
+		ByteBuffer buf = ByteBuffer.wrap(new byte[]{0xA});
+		session.getBasicRemote().sendPing(buf);
+	}
+
+	@Override
+	public void pong() throws IOException
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Sending unidirectional pon for connection {}", getKey());
+		}
+		ByteBuffer buf = ByteBuffer.wrap(new byte[]{0xA});
+		session.getBasicRemote().sendPong(buf);
+	}
+
+	@Override
+	public void onPong(ByteBuffer byteBuffer)
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("Pong receive for {} with contents {}", getKey(), byteBuffer.array());
+		}
+		// we received pong answer from remote peer. Thus, connection is alive
+		setAlive(true);
 	}
 
 	@Override
@@ -66,7 +134,8 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 			try
 			{
 				session.close(new CloseReason(new CloseCode(code), reason));
-			} catch (IOException iox)
+			}
+			catch (IOException iox)
 			{
 				LOG.error("An error occurred while closing WebSocket session", iox);
 			}
@@ -89,6 +158,15 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 		checkClosed();
 
 		ByteBuffer buf = ByteBuffer.wrap(message, offset, length);
+		session.getBasicRemote().sendBinary(buf);
+		return this;
+	}
+
+	@Override
+	public IWebSocketConnection sendMessage(byte[] message) throws IOException {
+		checkClosed();
+
+		ByteBuffer buf = ByteBuffer.wrap(message);
 		session.getBasicRemote().sendBinary(buf);
 		return this;
 	}
