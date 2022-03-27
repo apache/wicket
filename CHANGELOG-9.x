@@ -2,6 +2,21 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.9.0
+
+** Bug
+
+    * [WICKET-6957] - Declare JSPM 'uses' for IInitializer
+    * [WICKET-6965] - Memory leak in WicketEndpoint
+
+** Improvement
+
+    * [WICKET-6960] - Reduce allocations when encoding ComponentInfo
+    * [WICKET-6963] - Use singletons for PanelMarkupSourcingStrategy
+    * [WICKET-6964] - Do not allocate when escaping empty string
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.8.0
 
 ** Bug
