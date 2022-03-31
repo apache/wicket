@@ -33,27 +33,8 @@ import org.apache.wicket.markup.MarkupStream;
  */
 public class PanelMarkupSourcingStrategy extends AssociatedMarkupSourcingStrategy
 {
-	private static final PanelMarkupSourcingStrategy PANEL_INSTANCE = new PanelMarkupSourcingStrategy(
-		false);
-	private static final PanelMarkupSourcingStrategy BORDER_INSTANCE = new PanelMarkupSourcingStrategy(
-		true);
-
 	// False for Panel and true for Border components.
 	private final boolean allowWicketComponentsInBodyMarkup;
-
-	/**
-	 * @param allowWicketComponentsInBodyMarkup
-	 *            {@code false} for Panel and {@code true} for Border components. If Panel then the
-	 *            body markup should only contain raw markup, which is ignored (removed), but no
-	 *            Wicket Component. With Border components, the body markup will be associated with
-	 *            the Body Component.
-	 * 
-	 * @return A singleton of the strategy
-	 */
-	public static PanelMarkupSourcingStrategy get(final boolean allowWicketComponentsInBodyMarkup)
-	{
-		return allowWicketComponentsInBodyMarkup ? BORDER_INSTANCE : PANEL_INSTANCE;
-	}
 
 	/**
 	 * Constructor.
