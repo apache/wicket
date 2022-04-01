@@ -28,11 +28,12 @@ package org.apache.wicket.settings;
  */
 public class RequestLoggerSettings
 {
-	private boolean recordSessionSize = true;
+	private boolean requestLoggerEnabled = false;
+
+	private boolean recordSessionSize = false;
 
 	private int requestsWindowSize = 0;
 
-	private boolean requestLoggerEnabled;
 
 	/**
 	 * @return true if the session size is recorded. (default true)
