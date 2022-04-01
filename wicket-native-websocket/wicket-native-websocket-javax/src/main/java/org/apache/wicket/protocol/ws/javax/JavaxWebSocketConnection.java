@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.Future;
 
 import jakarta.websocket.CloseReason;
+import jakarta.websocket.RemoteEndpoint;
 import jakarta.websocket.Session;
 
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketConnection;
