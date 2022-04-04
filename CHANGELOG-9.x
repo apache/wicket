@@ -2,6 +2,19 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.9.1
+
+** Bug
+
+    * [WICKET-6966] - IndexOutOfBounds in InSessionPageStore
+    * [WICKET-6965] - Memory leak in WicketEndpoint
+
+** Improvement
+
+    * [WICKET-6963] - (REVERTED) Use singletons for PanelMarkupSourcingStrategy
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.9.0
 
 ** Bug
