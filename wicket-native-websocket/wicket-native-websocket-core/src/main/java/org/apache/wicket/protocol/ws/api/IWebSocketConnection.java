@@ -17,7 +17,6 @@
 package org.apache.wicket.protocol.ws.api;
 
 import java.io.IOException;
-import java.util.concurrent.Future;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
@@ -56,27 +55,6 @@ public interface IWebSocketConnection
 	 */
 	IWebSocketConnection sendMessage(String message) throws IOException;
 
-    /**
-     * Sends a text message to the client in an asynchronous way.
-     *
-     * @param message
-     *      the text message
-     * @return a {@link java.util.concurrent.Future} representing the send operation
-     *
-     */
-    Future<Void> sendMessageAsync(String message);
-
-    /**
-     * Sends a text message to the client in an asynchronous way.
-     *
-     * @param message
-     *      the text message
-     * @param timeOut
-     *      the timeout for operation
-     * @return a {@link java.util.concurrent.Future} representing the send operation
-     */
-    Future<Void> sendMessageAsync(String message, long timeOut);
-
 	/**
 	 * Sends a binary message to the client.
 	 *
@@ -90,34 +68,6 @@ public interface IWebSocketConnection
 	 * @throws IOException when an IO error occurs during the write to the client
 	 */
 	IWebSocketConnection sendMessage(byte[] message, int offset, int length) throws IOException;
-
-    /**
-     * Sends a binary message to the client in an asynchronous way.
-     *
-     * @param message
-     *      the binary message
-     * @param offset
-     *      the offset to read from
-     * @param length
-     *      how much data to read
-     * @return a {@link java.util.concurrent.Future} representing the send operation
-     */
-    Future<Void> sendMessageAsync(byte[] message, int offset, int length);
-
-    /**
-     * Sends a binary message to the client in an asynchronous way.
-     *
-     * @param message
-     *      the binary message
-     * @param offset
-     *      the offset to read from
-     * @param length
-     *      how much data to read
-     * @param timeOut
-     *      *      the timeout for operation
-     * @return a {@link java.util.concurrent.Future} representing the send operation
-     */
-    Future<Void> sendMessageAsync(byte[] message, int offset, int length, long timeOut);
 
 	/**
 	 * Broadcasts a push message to the wicket page (and it's components) associated with this

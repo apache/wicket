@@ -17,7 +17,6 @@
 package org.apache.wicket.protocol.ws.util.tester;
 
 import java.io.IOException;
-import java.util.concurrent.Future;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -63,21 +62,7 @@ abstract class TestWebSocketConnection implements IWebSocketConnection
 		return this;
 	}
 
-    @Override
-    public Future<Void> sendMessageAsync(String message)
-    {
-        return sendMessageAsync(message, -1);
-    }
-
-    @Override
-    public Future<Void> sendMessageAsync(String message, long timeOut)
-    {
-        checkOpenness();
-        onOutMessage(message);
-        return null;
-    }
-
-    @Override
+	@Override
 	public IWebSocketConnection sendMessage(byte[] message, int offset, int length) throws IOException
 	{
 		checkOpenness();
@@ -85,21 +70,7 @@ abstract class TestWebSocketConnection implements IWebSocketConnection
 		return this;
 	}
 
-    @Override
-    public Future<Void> sendMessageAsync(byte[] message, int offset, int length)
-    {
-        return sendMessageAsync(message, offset, length, -1);
-    }
-
-    @Override
-    public Future<Void> sendMessageAsync(byte[] message, int offset, int length, long timeOut)
-    {
-        checkOpenness();
-        onOutMessage(message, offset, length);
-        return null;
-    }
-
-    /**
+	/**
 	 * A callback method that is called when a text message should be send to the client
 	 *
 	 * @param message
