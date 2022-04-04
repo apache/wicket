@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
@@ -140,22 +140,18 @@ class HeaderSectionTest extends WicketTestCase
 		executeTest(HeaderSectionPage_11.class, "HeaderSectionPageExpectedResult_11.html");
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	void renderHomePage_13() throws Exception
+	void renderHomePage_13()
 	{
-		boolean hit = false;
-		try
-		{
-			executeTest(HeaderSectionPage_13.class, "HeaderSectionPageExpectedResult_13.html");
-		}
-		catch (WicketRuntimeException ex)
-		{
-			hit = true;
-		}
-		assertTrue(hit, "Expected a MarkupException to be thrown");
+		final MarkupException markupException = assertThrows(MarkupException.class,
+			() -> executeTest(HeaderSectionPage_13.class,
+				"HeaderSectionPageExpectedResult_13.html"));
+
+		// assertEquals(markupException.getMessage(), "<wicket:head> tags are only allowed before
+		// <body>, </head>, <wicket:panel> etc. tag");
+		assertTrue(markupException.getMessage()
+			.startsWith(
+				"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel>, <wicket:border>, and <wicket:extend>."));
 	}
 
 	/**
@@ -227,8 +223,11 @@ class HeaderSectionTest extends WicketTestCase
 	@Test
 	void doubleHeadTagPage()
 	{
-		assertThrows(MarkupException.class, () -> {
+		final MarkupException markupException = assertThrows(MarkupException.class, () -> {
 			tester.startPage(DoubleHeadTagPage.class);
 		});
+
+		assertEquals(markupException.getMessage(),
+			"Tag <head> is not allowed at this position (do you have multiple <head> tags in your markup?).");
 	}
 }
