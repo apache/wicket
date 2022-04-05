@@ -22,6 +22,7 @@ import java.util.concurrent.Future;
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
 
 /**
@@ -92,14 +93,14 @@ abstract class TestWebSocketConnection implements IWebSocketConnection
     }
 
     @Override
-    public Future<Void> sendMessageAsync(byte[] message, int offset, int length, long timeOut)
+    public Future<Void> sendMessageAsync(byte[] message, int offset, int length, long timeout)
     {
         checkOpenness();
         onOutMessage(message, offset, length);
         return null;
     }
 
-    /**
+	/**
 	 * A callback method that is called when a text message should be send to the client
 	 *
 	 * @param message

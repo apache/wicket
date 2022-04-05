@@ -22,15 +22,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.application.IClassResolver;
-import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
-import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.WebSocketPushBroadcaster;
-import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
-import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

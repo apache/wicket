@@ -71,11 +71,11 @@ public interface IWebSocketConnection
      *
      * @param message
      *      the text message
-     * @param timeOut
+     * @param timeout
      *      the timeout for operation
      * @return a {@link java.util.concurrent.Future} representing the send operation
      */
-    Future<Void> sendMessageAsync(String message, long timeOut);
+    Future<Void> sendMessageAsync(String message, long timeout);
 
 	/**
 	 * Sends a binary message to the client.
@@ -113,11 +113,11 @@ public interface IWebSocketConnection
      *      the offset to read from
      * @param length
      *      how much data to read
-     * @param timeOut
-     *      *      the timeout for operation
+     * @param timeout
+     *      the timeout for operation
      * @return a {@link java.util.concurrent.Future} representing the send operation
      */
-    Future<Void> sendMessageAsync(byte[] message, int offset, int length, long timeOut);
+    Future<Void> sendMessageAsync(byte[] message, int offset, int length, long timeout);
 
 	/**
 	 * Broadcasts a push message to the wicket page (and it's components) associated with this
@@ -129,6 +129,31 @@ public interface IWebSocketConnection
 	 * @since 6.4
 	 */
 	void sendMessage(IWebSocketPushMessage message);
+
+	/**
+	 * Broadcasts a push message to the wicket page (and it's components) associated with this
+	 * connection. The components can then send messages or component updates to client by adding
+	 * them to the target. Pushing to client is done asynchronously.
+	 *
+	 * @param message
+	 *     the push message to send
+	 *
+	 */
+	void sendMessageAsync(IWebSocketPushMessage message);
+
+
+	/**
+	 * Broadcasts a push message to the wicket page (and it's components) associated with this
+	 * connection. The components can then send messages or component updates to client by adding
+	 * them to the target. Pushing to client is done asynchronously.
+	 *
+	 * @param message
+	 *     the push message to send
+	 * @param timeout
+	 *     the timeout in milliseconds
+	 *
+	 */
+	void sendMessageAsync(IWebSocketPushMessage message, long timeout);
 
 	/**
 	 * @return The application for which this WebSocket connection is registered

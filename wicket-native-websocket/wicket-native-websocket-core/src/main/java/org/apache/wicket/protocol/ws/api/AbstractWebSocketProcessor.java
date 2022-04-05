@@ -184,7 +184,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			}
 		}
 
-		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key), connection);
+		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key), connection, webSocketSettings.isAsynchronousPush(), webSocketSettings.getAsynchronousPushTimeout());
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	{
 		IKey key = getRegistryKey();
 		IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, key);
-		broadcastMessage(message, connection);
+		broadcastMessage(message, connection, webSocketSettings.isAsynchronousPush(), webSocketSettings.getAsynchronousPushTimeout());
 	}
 
 	/**
@@ -225,7 +225,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * @param message
 	 *      the message to broadcast
 	 */
-	public final void broadcastMessage(final IWebSocketMessage message, IWebSocketConnection connection)
+	public final void broadcastMessage(final IWebSocketMessage message, IWebSocketConnection connection, boolean asynchronousPush, long timeout)
 	{
 		if (connection != null && (connection.isOpen() || isSpecialMessage(message)))
 		{
@@ -233,7 +233,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			Session oldSession = ThreadContext.getSession();
 			RequestCycle oldRequestCycle = ThreadContext.getRequestCycle();
 
-			WebResponse webResponse = webSocketSettings.newWebSocketResponse(connection);
+			WebResponse webResponse = webSocketSettings.newWebSocketResponse(connection, asynchronousPush, timeout);
 			try
 			{
 				WebSocketRequestMapper requestMapper = new WebSocketRequestMapper(application.getRootRequestMapper());
