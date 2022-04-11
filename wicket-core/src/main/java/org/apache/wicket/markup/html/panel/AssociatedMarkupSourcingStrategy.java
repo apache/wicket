@@ -74,8 +74,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	 */
 	protected final void renderAssociatedMarkup(final Component component)
 	{
-		((MarkupContainer)component).renderAssociatedMarkup(tagName, "Markup for a " + tagName +
-			" component must begin a tag like '<wicket:" + tagName + ">'");
+		((MarkupContainer)component).renderAssociatedMarkup(tagName);
 	}
 
 	/**
