@@ -18,6 +18,7 @@ package org.apache.wicket.util.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -130,7 +131,12 @@ public class Connections
 			// otherwise it leaks open file handles. See WICKET-4359.
 			// Most other connection types should not call getInputStream() here,
 			// especially remote connections.
-			connection.getInputStream().close();
+			InputStream inputStream = connection.getInputStream();
+
+			if (inputStream != null)
+			{
+				inputStream.close();
+			}
 		}
 
 		if (connection instanceof HttpURLConnection)
