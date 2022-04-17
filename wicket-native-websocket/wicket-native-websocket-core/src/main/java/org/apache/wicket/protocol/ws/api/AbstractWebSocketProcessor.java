@@ -225,6 +225,13 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 *
 	 * @param message
 	 *      the message to broadcast
+     * @param connection
+     * 	    the {@link org.apache.wicket.protocol.ws.api.IWebSocketConnection}
+     * @param asynchronousPush
+     * 	    whether asynchronous pus is used or not
+     * @param timeout
+     * 	    The time ut to use for operation (in milliseconds). A negative value means use default timeout
+     * 	    (specified by container).
 	 */
 	public final void broadcastMessage(final IWebSocketMessage message, IWebSocketConnection connection, boolean asynchronousPush, long timeout)
 	{
