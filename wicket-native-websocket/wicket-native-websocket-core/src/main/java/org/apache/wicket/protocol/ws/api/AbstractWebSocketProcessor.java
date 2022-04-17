@@ -201,9 +201,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	{
 		if (webSocketSettings.shouldNotifyOnErrorEvent(t)) {
 			IKey key = getRegistryKey();
-			IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, key);
-			ErrorMessage message = new ErrorMessage(application, sessionId, key, t);
-			broadcastMessage(message, connection, false, -1);
+			broadcastMessage(new ErrorMessage(getApplication(), getSessionId(), key, t));
 		}
 	}
 
