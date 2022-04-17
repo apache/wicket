@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.ws.api;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 import org.apache.wicket.Component;
@@ -90,7 +91,7 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 		{
 			LOG.warn("The websocket connection is already closed. Cannot push the text message '{}'", message);
 		}
-		return null;
+		return CompletableFuture.completedFuture(null);
 	}
 
 	@Override
@@ -137,7 +138,7 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 		{
 			LOG.warn("The websocket connection is already closed. Cannot push the binary message '{}'", message);
 		}
-		return java.util.concurrent.CompletableFuture.completedFuture(null);
+		return CompletableFuture.completedFuture(null);
 	}
 
 	/**
