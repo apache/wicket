@@ -2669,7 +2669,7 @@ public abstract class Component
 					if (response.wasRendered(behavior) == false)
 					{
 						behavior.renderHead(this, response);
-						List<IClusterable> pair = Arrays.asList(this, behavior);
+						List<IClusterable> pair = List.of(this, behavior);
 						response.markRendered(pair);
 					}
 				}
