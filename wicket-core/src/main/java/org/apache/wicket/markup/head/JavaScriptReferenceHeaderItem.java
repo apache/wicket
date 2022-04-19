@@ -123,7 +123,14 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 	@Override
 	public int hashCode()
 	{
-		return java.util.Objects.hash(super.hashCode(), reference, pageParameters);
+		//return java.util.Objects.hash(super.hashCode(), reference, pageParameters);
+		// this code is faster and consumes much less memory than the original code.
+		// We now do not need to autobox the int into an Integer (saving 12 bytes),
+		// and also do not need to allocate 32bytes for the Object[].
+		return 31*31*31 +
+				31*31 * super.hashCode() +
+				31 * (reference != null ? reference.hashCode() : 0) +
+				(pageParameters != null ? pageParameters.hashCode() : 0);
 	}
 
 	@Override

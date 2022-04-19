@@ -135,6 +135,16 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(async, defer, charset);
+		// original code was: return Objects.hash(async, defer, charset);
+		// This returns the same hash code value, but doesn't allocate an Object[3],
+		// which consumes 32 bytes, and doesn't need to autobox the two booleans.
+		// This method is called very often, especially when a containing Map or Set is resized,
+		// and this version will run faster and save a lot of memory.
+		// It is possible that Escape Analysis would elide the creation of the Object[],
+		// but we do not see that in our running applications with the latest JDK.
+		return 31*31*31 +
+				31*31*Boolean.hashCode(async) +
+				31*Boolean.hashCode(defer) +
+				((charset != null) ? charset.hashCode() : 0);
 	}
 }
