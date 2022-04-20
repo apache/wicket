@@ -94,6 +94,8 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(super.hashCode(), javaScript);
+		int result = super.hashCode();
+		result = 31*result + ((javaScript != null) ? javaScript.hashCode() : 0);
+		return result;
 	}
 }
