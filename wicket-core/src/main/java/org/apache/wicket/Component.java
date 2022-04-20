@@ -2666,10 +2666,10 @@ public abstract class Component
 			{
 				if (isBehaviorAccepted(behavior))
 				{
-					if (response.wasRendered(behavior) == false)
+					List<IClusterable> pair = List.of(this, behavior);
+					if (!response.wasRendered(pair))
 					{
 						behavior.renderHead(this, response);
-						List<IClusterable> pair = Arrays.asList(this, behavior);
 						response.markRendered(pair);
 					}
 				}
