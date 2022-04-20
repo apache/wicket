@@ -147,8 +147,6 @@ class HeaderSectionTest extends WicketTestCase
 			() -> executeTest(HeaderSectionPage_13.class,
 				"HeaderSectionPageExpectedResult_13.html"));
 
-		// assertEquals(markupException.getMessage(), "<wicket:head> tags are only allowed before
-		// <body>, </head>, <wicket:panel> etc. tag");
 		assertTrue(markupException.getMessage()
 			.startsWith(
 				"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel>, <wicket:border>, and <wicket:extend>."));
