@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -125,6 +126,8 @@ public class ComponentTag extends MarkupElement
 	private Map<String, Object> userData;
 
 	private IAutoComponentFactory autoComponentFactory;
+
+	private static final Map<String,AppendingStringBuffer> tagMap = new ConcurrentHashMap<>();
 
 	/**
 	 * Automatically create a XmlTag, assign the name and the type, and construct a ComponentTag
@@ -673,15 +676,15 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final CharSequence syntheticCloseTagString()
 	{
-		AppendingStringBuffer buf = new AppendingStringBuffer();
-		buf.append("</");
-		if (getNamespace() != null)
-		{
-			buf.append(getNamespace()).append(':');
+		String ns = getNamespace();
+		if (ns == null) {
+			return tagMap.computeIfAbsent(getName(),
+					s -> new AppendingStringBuffer(s.length() + 3).append("</").append(s).append(">"));
+		} else {
+			AppendingStringBuffer buf = new AppendingStringBuffer();
+			buf.append("</").append(ns).append(':').append(getName()).append('>');
+			return buf;
 		}
-		buf.append(getName()).append('>');
-
-		return buf;
 	}
 
 	/**
