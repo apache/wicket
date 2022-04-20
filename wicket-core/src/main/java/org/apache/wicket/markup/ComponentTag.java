@@ -670,7 +670,9 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * @return A synthetic close tag for this tag
+	 * @deprecated use {{@link #writeSyntheticCloseTag(Response)}} instead
 	 */
+	@Deprecated(forRemoval = true)
 	public final CharSequence syntheticCloseTagString()
 	{
 		AppendingStringBuffer buf = new AppendingStringBuffer();
@@ -682,6 +684,24 @@ public class ComponentTag extends MarkupElement
 		buf.append(getName()).append('>');
 
 		return buf;
+	}
+
+	/**
+	 * Writes the synthetic close tag for this tag to the response
+	 * 
+	 * @param response
+	 *            The response to write to
+	 */
+	public final void writeSyntheticCloseTag(Response response)
+	{
+		response.write("</");
+		if (getNamespace() != null)
+		{
+			response.write(getNamespace());
+			response.write(":");
+		}
+		response.write(getName());
+		response.write(">");
 	}
 
 	/**
