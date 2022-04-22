@@ -19,6 +19,8 @@ package org.apache.wicket.protocol.ws.api;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -78,6 +80,27 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 	}
 
 	@Override
+	public Future<Void> pushAsync(CharSequence message, long timeout)
+	{
+		if (connection.isOpen())
+		{
+			Args.notNull(message, "message");
+			return connection.sendMessageAsync(message.toString(), timeout);
+		}
+		else
+		{
+			LOG.warn("The websocket connection is already closed. Cannot push the text message '{}'", message);
+		}
+		return CompletableFuture.completedFuture(null);
+	}
+
+	@Override
+	public Future<Void> pushAsync(CharSequence message)
+	{
+		return pushAsync(message, -1);
+	}
+
+	@Override
 	public void push(byte[] message, int offset, int length)
 	{
 		if (connection.isOpen())
@@ -95,6 +118,27 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 		{
 			LOG.warn("The websocket connection is already closed. Cannot push the binary message '{}'", message);
 		}
+	}
+
+	@Override
+	public Future<Void> pushAsync(byte[] message, int offset, int length)
+	{
+		return pushAsync(message, offset, length, -1);
+	}
+
+	@Override
+	public Future<Void> pushAsync(byte[] message, int offset, int length, long timeout)
+	{
+		if (connection.isOpen())
+		{
+			Args.notNull(message, "message");
+			return connection.sendMessageAsync(message, offset, length, timeout);
+		}
+		else
+		{
+			LOG.warn("The websocket connection is already closed. Cannot push the binary message '{}'", message);
+		}
+		return CompletableFuture.completedFuture(null);
 	}
 
 	/**

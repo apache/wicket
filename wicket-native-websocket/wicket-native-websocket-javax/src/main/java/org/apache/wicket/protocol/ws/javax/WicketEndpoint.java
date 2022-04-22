@@ -54,15 +54,16 @@ public class WicketEndpoint extends Endpoint
 	 */
 	private static final String WICKET_APP_PARAM_NAME = "wicket-app-name";
 
+	private String applicationName;
 	private JavaxWebSocketProcessor javaxWebSocketProcessor;
 
 	@Override
 	public void onOpen(Session session, EndpointConfig endpointConfig)
 	{
-		String appName = getApplicationName(session);
+		applicationName = getApplicationName(session);
 
-		WebApplication app = (WebApplication) WebApplication.get(appName);
-		if (RUNNING_APPLICATIONS.add(appName))
+		WebApplication app = (WebApplication)WebApplication.get(applicationName);
+		if (RUNNING_APPLICATIONS.add(applicationName))
 		{
 			app.getApplicationListeners().add(new ApplicationListener());
 		}
@@ -90,8 +91,7 @@ public class WicketEndpoint extends Endpoint
 		LOG.debug("Web Socket connection with id '{}' has been closed with code '{}' and reason: {}",
 				session.getId(), closeCode, reasonPhrase);
 
-		String applicationName = getApplicationName(session);
-		if (isApplicationAlive(applicationName) && javaxWebSocketProcessor != null)
+		if (javaxWebSocketProcessor != null && isApplicationAlive(applicationName))
 		{
 			javaxWebSocketProcessor.onClose(closeCode, reasonPhrase);
 		}
@@ -111,8 +111,7 @@ public class WicketEndpoint extends Endpoint
 
 		super.onError(session, t);
 
-		String applicationName = getApplicationName(session);
-		if (isApplicationAlive(applicationName) && javaxWebSocketProcessor != null)
+		if (javaxWebSocketProcessor != null && isApplicationAlive(applicationName))
 		{
 			javaxWebSocketProcessor.onError(t);
 		}
