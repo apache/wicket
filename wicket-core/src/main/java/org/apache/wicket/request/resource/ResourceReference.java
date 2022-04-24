@@ -350,9 +350,6 @@ public abstract class ResourceReference implements IClusterable
 			return variation;
 		}
 
-		/**
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -370,13 +367,12 @@ public abstract class ResourceReference implements IClusterable
 				Objects.equal(getVariation(), that.getVariation());
 		}
 
-		/**
-		 * @see java.lang.Object#hashCode()
-		 */
 		@Override
-		public int hashCode()
-		{
-			return Objects.hashCode(getLocale(), getStyle(), getVariation());
+		public int hashCode() {
+			int result = locale != null ? locale.hashCode() : 0;
+			result = 31 * result + (style != null ? style.hashCode() : 0);
+			result = 31 * result + (variation != null ? variation.hashCode() : 0);
+			return result;
 		}
 
 		/**
