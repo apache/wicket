@@ -133,9 +133,11 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 	}
 
 	@Override
-	public int hashCode()
-	{
-		return (charset != null ? charset.hashCode() << 2 : 0)
-				+ (async ? 2 : 0) + (defer ? 1 : 0);
+	public int hashCode() {
+		int result = super.hashCode();
+		result = 31 * result + (async ? 1 : 0);
+		result = 31 * result + (defer ? 1 : 0);
+		result = 31 * result + (charset != null ? charset.hashCode() : 0);
+		return result;
 	}
 }
