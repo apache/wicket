@@ -99,9 +99,9 @@ public class CssUrlReferenceHeaderItem extends AbstractCssReferenceHeaderItem
 	{
 		String s;
 		int result = super.hashCode();
-		result = 31*result + ((url != null) ? url.hashCode() : 0);
-		result = 31*result + (((s = getMedia()) != null) ? s.hashCode() : 0);
-		result = 31*result + (((s = getRel()) != null) ? s.hashCode() : 0);
+		result = 31 * result + ((url != null) ? url.hashCode() : 0);
+		result = 31 * result + (((s = getMedia()) != null) ? s.hashCode() : 0);
+		result = 31 * result + (((s = getRel()) != null) ? s.hashCode() : 0);
 		return result;
 	}
 
