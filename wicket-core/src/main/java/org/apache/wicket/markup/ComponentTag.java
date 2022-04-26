@@ -672,7 +672,7 @@ public class ComponentTag extends MarkupElement
 	 * @return A synthetic close tag for this tag
 	 * @deprecated use {{@link #writeSyntheticCloseTag(Response)}} instead
 	 */
-	@Deprecated(forRemoval = true)
+	@Deprecated(since = "9.10.0", forRemoval = true)
 	public final CharSequence syntheticCloseTagString()
 	{
 		AppendingStringBuffer buf = new AppendingStringBuffer();
