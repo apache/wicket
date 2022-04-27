@@ -8,7 +8,7 @@
     "url": "http://git-wip-us.apache.org/repos/asf/wicket.git"
   },
   "devDependencies": {
-    "grunt": "1.4.1",
+    "grunt": "1.5.2",
     "grunt-cli": "1.4.3",
     "grunt-contrib-connect": "3.0.0",
     "grunt-contrib-jshint": "3.2.0",
