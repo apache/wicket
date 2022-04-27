@@ -13,7 +13,7 @@
     "grunt-contrib-connect": "3.0.0",
     "grunt-contrib-jshint": "3.2.0",
     "grunt-contrib-nodeunit": "4.0.0",
-    "grunt-contrib-qunit": "5.1.1"
+    "grunt-contrib-qunit": "6.0.0"
   },
   "scripts": {
     "test": "grunt --verbose"
