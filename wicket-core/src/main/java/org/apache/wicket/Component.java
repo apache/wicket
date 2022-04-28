@@ -2520,7 +2520,7 @@ public abstract class Component
 					{
 						// Close the manually opened tag. And since the user might have changed the
 						// tag name ...
-						getResponse().write(tag.syntheticCloseTagString());
+						tag.writeSyntheticCloseTag(getResponse());
 					}
 				}
 			}
@@ -4240,7 +4240,7 @@ public abstract class Component
 				// Render the close tag
 				if ((renderBodyOnly == false) && needToRenderTag(openTag))
 				{
-					getResponse().write(openTag.syntheticCloseTagString());
+					openTag.writeSyntheticCloseTag(getResponse());
 				}
 			}
 			else if (openTag.requiresCloseTag())

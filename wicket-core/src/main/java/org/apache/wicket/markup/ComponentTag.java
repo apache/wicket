@@ -33,7 +33,6 @@ import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
@@ -669,19 +668,21 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * @return A synthetic close tag for this tag
+	 * Writes the synthetic close tag for this tag to the response
+	 * 
+	 * @param response
+	 *            The response to write to
 	 */
-	public final CharSequence syntheticCloseTagString()
+	public final void writeSyntheticCloseTag(Response response)
 	{
-		AppendingStringBuffer buf = new AppendingStringBuffer();
-		buf.append("</");
+		response.write("</");
 		if (getNamespace() != null)
 		{
-			buf.append(getNamespace()).append(':');
+			response.write(getNamespace());
+			response.write(":");
 		}
-		buf.append(getName()).append('>');
-
-		return buf;
+		response.write(getName());
+		response.write(">");
 	}
 
 	/**
