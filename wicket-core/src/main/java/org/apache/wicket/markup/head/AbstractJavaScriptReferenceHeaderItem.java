@@ -134,6 +134,7 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 
 	@Override
 	public int hashCode() {
+		// Not using `Objects.hash` for performance reasons
 		int result = super.hashCode();
 		result = 31 * result + (async ? 1 : 0);
 		result = 31 * result + (defer ? 1 : 0);

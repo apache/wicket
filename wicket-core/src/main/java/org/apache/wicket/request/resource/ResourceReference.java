@@ -369,6 +369,7 @@ public abstract class ResourceReference implements IClusterable
 
 		@Override
 		public int hashCode() {
+			// Not using `Objects.hash` for performance reasons
 			int result = locale != null ? locale.hashCode() : 0;
 			result = 31 * result + (style != null ? style.hashCode() : 0);
 			result = 31 * result + (variation != null ? variation.hashCode() : 0);

@@ -154,6 +154,7 @@ public class CssReferenceHeaderItem extends AbstractCssReferenceHeaderItem imple
 	@Override
 	public int hashCode()
 	{
+		// Not using `Objects.hash` for performance reasons
 		int result = super.hashCode();
 		result = 31 * result + ((reference != null) ? reference.hashCode() : 0);
 		result = 31 * result + ((getMedia() != null) ? getMedia().hashCode() : 0);

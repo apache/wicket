@@ -97,11 +97,11 @@ public class CssUrlReferenceHeaderItem extends AbstractCssReferenceHeaderItem
 	@Override
 	public int hashCode()
 	{
-		String s;
+		// Not using `Objects.hash` for performance reasons
 		int result = super.hashCode();
 		result = 31 * result + ((url != null) ? url.hashCode() : 0);
-		result = 31 * result + (((s = getMedia()) != null) ? s.hashCode() : 0);
-		result = 31 * result + (((s = getRel()) != null) ? s.hashCode() : 0);
+		result = 31 * result + ((getMedia() != null) ? getMedia().hashCode() : 0);
+		result = 31 * result + ((getRel() != null) ? getRel().hashCode() : 0);
 		return result;
 	}
 

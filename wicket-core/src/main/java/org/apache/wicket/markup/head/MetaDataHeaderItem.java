@@ -277,6 +277,7 @@ public class MetaDataHeaderItem extends HeaderItem
 
 	@Override
 	public int hashCode() {
+		// Not using `Objects.hash` for performance reasons
 		int result = tagAttributes != null ? tagAttributes.hashCode() : 0;
 		result = 31 * result + (tagMinimizedAttributes != null ? tagMinimizedAttributes.hashCode() : 0);
 		result = 31 * result + (tagName != null ? tagName.hashCode() : 0);
