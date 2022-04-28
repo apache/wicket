@@ -22,7 +22,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
-import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
@@ -42,9 +41,6 @@ import org.apache.wicket.util.lang.Classes;
  */
 public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSourcingStrategy
 {
-	/** <wicket:head> is only allowed before <body>, </head>, <wicket:panel> etc. */
-	private boolean noMoreWicketHeadTagsAllowed = false;
-
 	private final String tagName;
 
 	/**
@@ -95,7 +91,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 		if (associatedMarkup == null)
 		{
 			throw new MarkupNotFoundException("Failed to find markup file associated. " +
-				Classes.simpleName(parent.getClass()) + ": " + parent.toString());
+				Classes.simpleName(parent.getClass()) + ": " + parent);
 		}
 
 		// Find <wicket:panel>
@@ -103,7 +99,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 		if (markup == null)
 		{
 			throw new MarkupNotFoundException("Expected to find <wicket:" + tagName +
-				"> in associated markup file. Markup: " + associatedMarkup.toString());
+				"> in associated markup file. Markup: " + associatedMarkup);
 		}
 		
 		// If child == null, than return the markup fragment starting with <wicket:panel>
@@ -167,13 +163,13 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 			{
 				if (tag.getMarkupClass() == null)
 				{
-					// find() can still fail an return null => continue the search
+					// find() can still fail and return null => continue the search
 					childMarkup = stream.getMarkupFragment().find(child.getId());
 				}
 			}
 			else if (TagUtils.isHeadTag(tag))
 			{
-				// find() can still fail an return null => continue the search
+				// find() can still fail and return null => continue the search
 				childMarkup = stream.getMarkupFragment().find(child.getId());
 			}
 
@@ -219,9 +215,6 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	public final void renderHeadFromAssociatedMarkupFile(final WebMarkupContainer container,
 		final HtmlHeaderContainer htmlContainer)
 	{
-		// reset for each render in case the strategy is re-used
-		noMoreWicketHeadTagsAllowed = false;
-
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
 		final MarkupStream markupStream = container.getAssociatedMarkupStream(false);
@@ -231,7 +224,6 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 		}
 
 		// Position pointer at current (first) header
-		noMoreWicketHeadTagsAllowed = false;
 		while (nextHeaderMarkup(markupStream) != -1)
 		{
 			// found <wicket:head>
@@ -301,15 +293,14 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 		if (element instanceof WicketTag)
 		{
 			final WicketTag wTag = (WicketTag)element;
-			if ((wTag.isHeadTag() == true) && (wTag.getNamespace() != null))
+			if ((wTag.isHeadTag()) && (wTag.getNamespace() != null))
 			{
 				// Create the header container and associate the markup with it
 				return new HeaderPartContainer(id, container, markup);
 			}
 		}
 
-		throw new WicketRuntimeException("Programming error: expected a WicketTag: " +
-			markup.toString());
+		throw new WicketRuntimeException("Programming error: expected a WicketTag: " + markup);
 	}
 
 	/**
@@ -335,35 +326,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 				WicketTag tag = (WicketTag)elem;
 				if (tag.isOpen() && tag.isHeadTag())
 				{
-					if (noMoreWicketHeadTagsAllowed == true)
-					{
-						throw new MarkupException(
-							"<wicket:head> tags are only allowed before <body>, </head>, <wicket:panel> etc. tag");
-					}
 					return associatedMarkupStream.getCurrentIndex();
-				}
-				// wicket:head must be before border, panel or extend
-				// @TODO why is that? Why can't it be anywhere? (except inside wicket:fragment)
-				else if (tag.isOpen() &&
-					(tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag()))
-				{
-					noMoreWicketHeadTagsAllowed = true;
-				}
-			}
-			else if (elem instanceof ComponentTag)
-			{
-				ComponentTag tag = (ComponentTag)elem;
-				// wicket:head must be before </head>
-				// @TODO why??
-				if (tag.isClose() && TagUtils.isHeadTag(tag))
-				{
-					noMoreWicketHeadTagsAllowed = true;
-				}
-				// wicket:head must be before <body>
-				// @TODO why??
-				else if (tag.isOpen() && TagUtils.isBodyTag(tag))
-				{
-					noMoreWicketHeadTagsAllowed = true;
 				}
 			}
 			elem = associatedMarkupStream.next();
