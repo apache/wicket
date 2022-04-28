@@ -198,7 +198,7 @@ public class OnEventHeaderItem extends AbstractCspHeaderItem
 	}
 
 	@Override
-	public int hashCode() 
+	public int hashCode()
 	{
 		// Not using `Objects.hash` for performance reasons
 		int result = target != null ? target.hashCode() : 0;
