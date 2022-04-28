@@ -124,9 +124,13 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 	@Override
 	public boolean equals(Object o)
 	{
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		AbstractJavaScriptReferenceHeaderItem that = (AbstractJavaScriptReferenceHeaderItem) o;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		if (!super.equals(o))
+			return false;
+		AbstractJavaScriptReferenceHeaderItem that = (AbstractJavaScriptReferenceHeaderItem)o;
 		return async == that.async &&
 				defer == that.defer &&
 				Objects.equals(charset, that.charset);
