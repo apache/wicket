@@ -115,7 +115,8 @@ public abstract class AbstractCssReferenceHeaderItem extends CssHeaderItem imple
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode() 
+	{
 		// Not using `Objects.hash` for performance reasons
 		int result = (integrity != null) ? integrity.hashCode() : 0;
 		result = 31 * result + ((crossOrigin != null) ? crossOrigin.hashCode() : 0);
