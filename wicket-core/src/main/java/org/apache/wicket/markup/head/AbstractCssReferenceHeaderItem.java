@@ -101,13 +101,14 @@ public abstract class AbstractCssReferenceHeaderItem extends CssHeaderItem imple
 		response.write("\n");
 	}
 
-
 	@Override
 	public boolean equals(Object o)
 	{
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())
+			return false;
+		if (!super.equals(o))
 			return false;
 		AbstractCssReferenceHeaderItem that = (AbstractCssReferenceHeaderItem)o;
 		return Objects.equals(integrity, that.integrity)
@@ -117,6 +118,10 @@ public abstract class AbstractCssReferenceHeaderItem extends CssHeaderItem imple
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(integrity, crossOrigin);
+		// Not using `Objects.hash` for performance reasons
+		int result = super.hashCode();
+		result = 31 * result + (crossOrigin != null ? crossOrigin.hashCode() : 0);
+		result = 31 * result + (integrity != null ? integrity.hashCode() : 0);
+		return result;
 	}
 }

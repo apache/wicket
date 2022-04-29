@@ -123,7 +123,11 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 	@Override
 	public int hashCode()
 	{
-		return java.util.Objects.hash(super.hashCode(), reference, pageParameters);
+		// Not using `Objects.hash` for performance reasons
+		int result = super.hashCode();
+		result = 31 * result + (reference != null ? reference.hashCode() : 0);
+		result = 31 * result + (pageParameters != null ? pageParameters.hashCode() : 0);
+		return result;
 	}
 
 	@Override
