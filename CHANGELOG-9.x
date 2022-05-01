@@ -2,6 +2,26 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.10.0
+
+** Bug
+
+    * [WICKET-6970] - Unnecessary string building in AssociatedMarkupSourcingStrategy
+    * [WICKET-6971] - NullPointerException in ModificationWatcher
+    * [WICKET-6974] - JavaxUpgradeHttpRequest returns an empty contextPath
+    * [WICKET-6975] - Behavior.renderHead may be called multiple times
+
+** Improvement
+
+    * [WICKET-6963] - Use singletons for PanelMarkupSourcingStrategy
+    * [WICKET-6967] - allow to send non-blocking web socket messages
+    * [WICKET-6969] - allow to process web socket push messages in an asynchronous way.
+    * [WICKET-6972] - Add Resource key to be logged on Warning in Localizer.java
+    * [WICKET-6976] - Reduce allocations when writing synthetic closing tags
+    * [WICKET-6977] - hashCode computations generate excessive garbage objects
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.9.1
 
 ** Bug
