@@ -27,7 +27,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public class PageComponentInfo
 {
-	private static final char SEPARATOR = '-';
+	private static final String SEPARATOR = "-";
 
 	private final PageInfo pageInfo;
 
@@ -69,18 +69,16 @@ public class PageComponentInfo
 	@Override
 	public String toString()
 	{
-		StringBuilder result = new StringBuilder();
 		if (pageInfo != null)
 		{
-			result.append(pageInfo.toString());
+			return pageInfo.toString();
 		}
 		if (componentInfo != null)
 		{
-			result.append(SEPARATOR);
-			result.append(componentInfo);
+			return SEPARATOR + componentInfo;
 		}
-
-		return result.toString();
+		
+		return "";
 	}
 
 	/**
@@ -101,7 +99,6 @@ public class PageComponentInfo
 
 		int i = s.indexOf(SEPARATOR);
 		if (i == -1)
-
 		{
 			pageInfo = PageInfo.parse(s);
 			componentInfo = null;
