@@ -747,8 +747,28 @@ public class Url implements Serializable
 	 */
 	public String toString(StringMode mode, Charset charset)
 	{
-		StringBuilder result = new StringBuilder();
-		final String path = getPath(charset);
+		// this method is rarely called with StringMode == FULL.
+
+		final CharSequence path = getPathInternal(charset);
+		final String queryString = getQueryString(charset);
+		String _fragment = getFragment();
+
+		// short circuit all the processing in the most common cases
+		if (StringMode.FULL != mode && Strings.isEmpty(_fragment))
+		{
+			if (queryString == null)
+			{
+				return path.toString();
+			}
+			else
+			{
+				return path + "?" + queryString;
+			}
+		}
+
+		// fall through into the traditional code path
+
+		StringBuilder result = new StringBuilder(64);
 
 		if (StringMode.FULL == mode)
 		{
@@ -781,22 +801,19 @@ public class Url implements Serializable
 					StringMode.FULL.name() + " mode because it has a `..` segment: " + toString());
 			}
 
-			if (!path.startsWith("/"))
+			if (!path.isEmpty() && !(path.charAt(0) == '/'))
 			{
 				result.append('/');
 			}
-
 		}
 
 		result.append(path);
 
-		final String queryString = getQueryString(charset);
 		if (queryString != null)
 		{
 			result.append('?').append(queryString);
 		}
 
-		String _fragment = getFragment();
 		if (Strings.isEmpty(_fragment) == false)
 		{
 			result.append('#').append(_fragment);
@@ -1021,14 +1038,15 @@ public class Url implements Serializable
 		 */
 		public String toString(final Charset charset)
 		{
-			StringBuilder result = new StringBuilder();
-			result.append(encodeParameter(getName(), charset));
-			if (!Strings.isEmpty(getValue()))
+			String value = getValue();
+			if (Strings.isEmpty(value))
 			{
-				result.append('=');
-				result.append(encodeParameter(getValue(), charset));
+				return encodeParameter(getName(), charset);
 			}
-			return result.toString();
+			else
+			{
+				return encodeParameter(getName(), charset) + "=" + encodeParameter(value, charset);
+			}
 		}
 	}
 
@@ -1203,9 +1221,34 @@ public class Url implements Serializable
 	 */
 	public String getPath(Charset charset)
 	{
+		return getPathInternal(charset).toString();
+	}
+
+	/**
+	 * return path for current url in given encoding, with optimizations for common use to avoid excessive object creation
+	 * and resizing of StringBuilders.   Used internally by Url
+	 *
+	 * @param charset
+	 *            character set for encoding
+	 *
+	 * @return path string
+	 */
+	private CharSequence getPathInternal(Charset charset)
+	{
 		Args.notNull(charset, "charset");
 
-		StringBuilder path = new StringBuilder();
+		List<String> segments = getSegments();
+		// these two common cases can be handled with no additional overhead, so do that.
+		if (segments.isEmpty())
+			return "";
+		if (segments.size() == 1)
+			return encodeSegment(segments.get(0), charset);
+
+		int length = 0;
+		for (String segment : getSegments())
+			length += segment.length() + 4;
+
+		StringBuilder path = new StringBuilder(length);
 		boolean slash = false;
 
 		for (String segment : getSegments())
@@ -1217,7 +1260,7 @@ public class Url implements Serializable
 			path.append(encodeSegment(segment, charset));
 			slash = true;
 		}
-		return path.toString();
+		return path;
 	}
 
 	/**
@@ -1243,24 +1286,23 @@ public class Url implements Serializable
 	{
 		Args.notNull(charset, "charset");
 
-		String queryString = null;
 		List<QueryParameter> queryParameters = getQueryParameters();
+		if (queryParameters.isEmpty())
+			return null;
+		if (queryParameters.size() == 1)
+			return queryParameters.get(0).toString(charset);
 
-		if (queryParameters.size() != 0)
+		// make a reasonable guess at a size for this builder
+		StringBuilder query = new StringBuilder(16 * parameters.size());
+		for (QueryParameter parameter : queryParameters)
 		{
-			StringBuilder query = new StringBuilder();
-
-			for (QueryParameter parameter : queryParameters)
-			{
-				if (query.length() != 0)
-				{
-					query.append('&');
-				}
-				query.append(parameter.toString(charset));
+			if (query.length() != 0) {
+				query.append('&');
 			}
-			queryString = query.toString();
+			query.append(parameter.toString(charset));
 		}
-		return queryString;
+
+		return query.toString();
 	}
 
 	/**
