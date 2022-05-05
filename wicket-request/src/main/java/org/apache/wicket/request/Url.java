@@ -766,7 +766,7 @@ public class Url implements Serializable
 
 		// fall through into the traditional code path
 
-		StringBuilder result = new StringBuilder(64;
+		StringBuilder result = new StringBuilder(64);
 
 		if (StringMode.FULL == mode)
 		{
