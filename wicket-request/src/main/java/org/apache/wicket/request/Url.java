@@ -756,10 +756,12 @@ public class Url implements Serializable
 		// short circuit all the processing in the most common cases
 		if (StringMode.FULL != mode && Strings.isEmpty(_fragment))
 		{
-			if (queryString == null) {
+			if (queryString == null)
+			{
 				return path.toString();
 			}
-			else {
+			else
+			{
 				return path + "?" + queryString;
 			}
 		}
