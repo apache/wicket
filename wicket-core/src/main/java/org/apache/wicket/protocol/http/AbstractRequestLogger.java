@@ -490,12 +490,11 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	 *            the date to format
 	 * @return the formatted date
 	 */
-	protected String formatDate(final Date date)
+	protected void formatDate(final Date date, StringBuilder buf)
 	{
 		Args.notNull(date, "date");
 
 		final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-		final StringBuilder buf = new StringBuilder(32);
 
 		cal.setTimeInMillis(date.getTime());
 
@@ -520,8 +519,6 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 		buf.append(String.format("%02d", seconds));
 		buf.append(',');
 		buf.append(String.format("%03d", millis));
-
-		return buf.toString();
 	}
 
 	private int getRequestsWindowSize()
