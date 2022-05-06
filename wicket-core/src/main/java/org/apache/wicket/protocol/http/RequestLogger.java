@@ -19,7 +19,6 @@ package org.apache.wicket.protocol.http;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

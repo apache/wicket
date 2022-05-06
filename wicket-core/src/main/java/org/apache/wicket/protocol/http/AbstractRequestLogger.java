@@ -504,8 +504,8 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	 *
 	 * @param date
 	 *            the date to format
-	 * @param date
-	 *            the buffer in to which o format the date
+	 * @param buf
+	 *            the buffer into which the date will be formatter
 	 * @return the formatted date
 	 */
 	protected void formatDate(final Date date, StringBuilder buf)
