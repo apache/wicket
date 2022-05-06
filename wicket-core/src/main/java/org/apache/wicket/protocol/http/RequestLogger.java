@@ -59,7 +59,7 @@ public class RequestLogger extends AbstractRequestLogger
 
 	private String createRequestData(RequestData rd, SessionData sd)
 	{
-		AppendingStringBuffer sb = new AppendingStringBuffer(150);
+		StringBuilder sb = new StringBuilder(768);
 
 		sb.append("startTime=\"");
 		sb.append(formatDate(rd.getStartDate()));
@@ -69,9 +69,9 @@ public class RequestLogger extends AbstractRequestLogger
 		sb.append(rd.getRequestedUrl());
 		sb.append('"');
 		sb.append(",event={");
-		sb.append(getRequestHandlerString(rd.getEventTarget()));
+		getRequestHandlerString(rd.getEventTarget(), sb);
 		sb.append("},response={");
-		sb.append(getRequestHandlerString(rd.getResponseTarget()));
+		getRequestHandlerString(rd.getResponseTarget(), sb);
 		sb.append("},sessionid=\"");
 		sb.append(rd.getSessionId());
 		sb.append('"');
@@ -110,9 +110,8 @@ public class RequestLogger extends AbstractRequestLogger
 		return sb.toString();
 	}
 
-	private String getRequestHandlerString(IRequestHandler handler)
+	private void getRequestHandlerString(IRequestHandler handler, StringBuilder sb)
 	{
-		AppendingStringBuffer sb = new AppendingStringBuffer(128);
 		if (handler != null)
 		{
 			Class<? extends IRequestHandler> handlerClass = handler.getClass();
@@ -129,6 +128,5 @@ public class RequestLogger extends AbstractRequestLogger
 		{
 			sb.append("none");
 		}
-		return sb.toString();
 	}
 }
