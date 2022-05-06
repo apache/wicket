@@ -801,7 +801,7 @@ public class Url implements Serializable
 					StringMode.FULL.name() + " mode because it has a `..` segment: " + toString());
 			}
 
-			if (!path.toString().startsWith("/"))
+			if (!path.isEmpty() && !(path.charAt(0) == '/'))
 			{
 				result.append('/');
 			}
@@ -1038,10 +1038,11 @@ public class Url implements Serializable
 		 */
 		public String toString(final Charset charset)
 		{
-			if (Strings.isEmpty(getValue())) {
+			String value = getValue();
+			if (Strings.isEmpty(value)) {
 				return encodeParameter(getName(), charset);
 			} else {
-				return encodeParameter(getName(), charset) + "=" + encodeParameter(getValue(), charset);
+				return encodeParameter(getName(), charset) + "=" + encodeParameter(value, charset);
 			}
 		}
 	}
