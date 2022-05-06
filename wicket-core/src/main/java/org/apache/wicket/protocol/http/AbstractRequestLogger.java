@@ -51,6 +51,8 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractRequestLogger.class);
 
+	private static final TimeZone TZ = TimeZone.getTimeZone("GMT");
+
 	/**
 	 * Key for storing request data in the request cycle's meta data.
 	 */
@@ -490,11 +492,27 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	 *            the date to format
 	 * @return the formatted date
 	 */
+	protected String formatDate(final Date date)
+	{
+		StringBuilder sb = new StringBuilder(32);
+		formatDate(date, sb);
+		return sb.toString();
+	}
+
+	/**
+	 * Thread-safely formats the passed date in format 'yyyy-MM-dd hh:mm:ss,SSS' with GMT timezone
+	 *
+	 * @param date
+	 *            the date to format
+	 * @param date
+	 *            the buffer in to which o format the date
+	 * @return the formatted date
+	 */
 	protected void formatDate(final Date date, StringBuilder buf)
 	{
 		Args.notNull(date, "date");
 
-		final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		final Calendar cal = Calendar.getInstance(TZ);
 
 		cal.setTimeInMillis(date.getTime());
 
