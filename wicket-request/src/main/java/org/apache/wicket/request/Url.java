@@ -1039,9 +1039,12 @@ public class Url implements Serializable
 		public String toString(final Charset charset)
 		{
 			String value = getValue();
-			if (Strings.isEmpty(value)) {
+			if (Strings.isEmpty(value))
+			{
 				return encodeParameter(getName(), charset);
-			} else {
+			}
+			else
+			{
 				return encodeParameter(getName(), charset) + "=" + encodeParameter(value, charset);
 			}
 		}
