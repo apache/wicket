@@ -346,7 +346,9 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 */
 	private void renderCombinedEventScripts()
 	{
-		StringBuilder combinedScript = new StringBuilder();
+		// make a rough estimate of the size to which this StringBuilder will grow
+		int length = domReadyItemsToBeRendered.size() * 256;
+		StringBuilder combinedScript = new StringBuilder(length);
 		for (HeaderItem curItem : domReadyItemsToBeRendered)
 		{
 			if (markItemRendered(curItem))
@@ -364,9 +366,8 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 		if (combinedScript.length() > 0)
 		{
-			combinedScript.append("\nWicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);");
-			getRealResponse().render(
-				OnDomReadyHeaderItem.forScript(combinedScript.append('\n').toString()));
+			combinedScript.append("\nWicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);\n");
+			getRealResponse().render(OnDomReadyHeaderItem.forScript(combinedScript));
 		}
 
 		combinedScript.setLength(0);
@@ -382,7 +383,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		if (combinedScript.length() > 0)
 		{
 			getRealResponse().render(
-				OnLoadHeaderItem.forScript(combinedScript.append('\n').toString()));
+				OnLoadHeaderItem.forScript(combinedScript.append('\n')));
 		}
 	}
 
