@@ -17,12 +17,14 @@
 package org.apache.wicket.protocol.http;
 
 import static java.lang.System.arraycopy;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.wicket.Application;
@@ -51,7 +53,8 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractRequestLogger.class);
 
-	private static final TimeZone TZ = TimeZone.getTimeZone("GMT");
+	private static final ZoneId ZID = ZoneId.of("GMT");
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss,SSS");
 
 	/**
 	 * Key for storing request data in the request cycle's meta data.
@@ -494,48 +497,10 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	 */
 	protected String formatDate(final Date date)
 	{
-		StringBuilder sb = new StringBuilder(32);
-		formatDate(date, sb);
-		return sb.toString();
-	}
-
-	/**
-	 * Thread-safely formats the passed date in format 'yyyy-MM-dd hh:mm:ss,SSS' with GMT timezone
-	 *
-	 * @param date
-	 *            the date to format
-	 * @param buf
-	 *            the buffer into which the date will be formatter
-	 */
-	protected void formatDate(final Date date, StringBuilder buf)
-	{
 		Args.notNull(date, "date");
 
-		final Calendar cal = Calendar.getInstance(TZ);
-
-		cal.setTimeInMillis(date.getTime());
-
-		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH) + 1;
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		int hours = cal.get(Calendar.HOUR_OF_DAY);
-		int minutes = cal.get(Calendar.MINUTE);
-		int seconds = cal.get(Calendar.SECOND);
-		int millis = cal.get(Calendar.MILLISECOND);
-
-		buf.append(year);
-		buf.append('-');
-		buf.append(String.format("%02d", month));
-		buf.append('-');
-		buf.append(String.format("%02d", day));
-		buf.append(' ');
-		buf.append(String.format("%02d", hours));
-		buf.append(':');
-		buf.append(String.format("%02d", minutes));
-		buf.append(':');
-		buf.append(String.format("%02d", seconds));
-		buf.append(',');
-		buf.append(String.format("%03d", millis));
+		LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZID);
+		return ldt.format(FORMATTER);
 	}
 
 	private int getRequestsWindowSize()

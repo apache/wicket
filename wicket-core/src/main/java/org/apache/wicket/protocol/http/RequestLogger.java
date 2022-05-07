@@ -61,7 +61,7 @@ public class RequestLogger extends AbstractRequestLogger
 		StringBuilder sb = new StringBuilder(768);
 
 		sb.append("startTime=\"");
-		formatDate(rd.getStartDate(), sb);
+		sb.append(formatDate(rd.getStartDate()));
 		sb.append("\",duration=");
 		sb.append(rd.getTimeTaken());
 		sb.append(",url=\"");
@@ -85,7 +85,7 @@ public class RequestLogger extends AbstractRequestLogger
 		if (sd != null)
 		{
 			sb.append(",sessionstart=\"");
-			formatDate(sd.getStartDate(), sb);
+			sb.append(formatDate(sd.getStartDate()));
 			sb.append("\",requests=");
 			sb.append(sd.getNumberOfRequests());
 			sb.append(",totaltime=");
