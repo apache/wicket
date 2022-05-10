@@ -68,9 +68,9 @@ public class RequestLogger extends AbstractRequestLogger
 		sb.append(rd.getRequestedUrl());
 		sb.append('"');
 		sb.append(",event={");
-		getRequestHandlerString(rd.getEventTarget(), sb);
+		appendRequestHandlerString(sb, rd.getEventTarget());
 		sb.append("},response={");
-		getRequestHandlerString(rd.getResponseTarget(), sb);
+		appendRequestHandlerString(sb, rd.getResponseTarget());
 		sb.append("},sessionid=\"");
 		sb.append(rd.getSessionId());
 		sb.append('"');
@@ -109,7 +109,7 @@ public class RequestLogger extends AbstractRequestLogger
 		return sb.toString();
 	}
 
-	private void getRequestHandlerString(IRequestHandler handler, StringBuilder sb)
+	private void appendRequestHandlerString(StringBuilder sb, IRequestHandler handler)
 	{
 		if (handler != null)
 		{
