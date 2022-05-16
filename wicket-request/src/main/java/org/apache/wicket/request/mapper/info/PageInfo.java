@@ -29,15 +29,17 @@ import org.apache.wicket.util.string.Strings;
 public class PageInfo
 {
 	private final Integer pageId;
+	private final String stringId;
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param pageId
 	 */
 	public PageInfo(final Integer pageId)
 	{
 		this.pageId = pageId;
+		stringId = (pageId == null) ? "" : pageId.toString();
 	}
 
 	/**
@@ -62,14 +64,7 @@ public class PageInfo
 	@Override
 	public String toString()
 	{
-		if (getPageId() == null)
-		{
-			return "";
-		}
-		else
-		{
-			return getPageId().toString();
-		}
+		return stringId;
 	}
 
 
