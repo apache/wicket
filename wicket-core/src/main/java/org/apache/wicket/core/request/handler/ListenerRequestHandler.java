@@ -167,12 +167,6 @@ public class ListenerRequestHandler
 					+ "' has been removed from page.");
 		}
 
-		if (page instanceof Page)
-		{
-			// initialize the page to be able to check whether it is stateless
-			((Page)page).internalInitialize();
-		}
-
 		RedirectPolicy policy = page.isPageStateless()
 			? RedirectPolicy.NEVER_REDIRECT
 			: RedirectPolicy.AUTO_REDIRECT;
