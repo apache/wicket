@@ -146,14 +146,9 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	{
 		String key = KEY_PREFIX + Classes.simpleName(getClass());
 		
-		SessionAttribute attribute = context.getSessionAttribute(key, () -> {
-			if (create)
-			{
-				return new SessionAttribute(storeKey, createSessionIdentifier(context));
-			}
-			
-			return null;
-		});
+		SessionAttribute attribute = context.getSessionAttribute(key, create ? () -> {
+			return new SessionAttribute(storeKey, createSessionIdentifier(context));
+		} : null);
 		
 		if (attribute == null)
 		{
