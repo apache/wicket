@@ -123,7 +123,7 @@ public abstract class AbstractPageStoreTest
 		IPageContext context = new MockPageContext(sessionId) {
 			@Override
 			public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> value) {
-				if (value.get() != null) {
+				if (value != null) {
 					fail();
 				}
 				
@@ -132,7 +132,7 @@ public abstract class AbstractPageStoreTest
 			
 			@Override
 			public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> value) {
-				if (value.get() != null) {
+				if (value != null) {
 					return fail();
 				}
 				
@@ -149,7 +149,7 @@ public abstract class AbstractPageStoreTest
 		IPageContext context = new MockPageContext(sessionId) {
 			@Override
 			public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> value) {
-				if (value.get() != null) {
+				if (value != null) {
 					fail();
 				}
 				
@@ -158,7 +158,7 @@ public abstract class AbstractPageStoreTest
 			
 			@Override
 			public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> value) {
-				if (value.get() != null) {
+				if (value != null) {
 					return fail();
 				}
 				
