@@ -149,16 +149,9 @@ public class InSessionPageStore implements IPageStore
 
 	private SessionData getSessionData(IPageContext context, boolean create)
 	{
-		SessionData data = context.getSessionData(getKey(), () -> {
-			if (create)
-			{
-				return dataCreator.get();
-			}
-			else
-			{
-				return null;
-			}
-		});
+		SessionData data = context.getSessionData(getKey(), create ? () -> {
+			return dataCreator.get();
+		} : null);
 
 		if (data != null && serializer != null)
 		{
