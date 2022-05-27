@@ -449,7 +449,7 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 				{
 					throw (ObjectCheckException)e;
 				}
-				log.warn("Error delegating to Externalizable : {}, path: {}", e.getMessage(), currentPath());
+				log.warn("Error delegating to Externalizable. Path: {}", currentPath(), e);
 			}
 		}
 		else
