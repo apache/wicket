@@ -20,7 +20,7 @@ module org.apache.wicket.http2.core {
     requires org.apache.wicket.request;
     requires org.apache.wicket.core;
     requires org.slf4j;
-    requires javax.servlet.api;
+    requires static javax.servlet.api;
 
     exports org.apache.wicket.http2;
     exports org.apache.wicket.http2.markup.head;
