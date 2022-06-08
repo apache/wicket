@@ -201,8 +201,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		timerId = getTimerId();
 
 		headerResponse.render(
-			OnLoadHeaderItem.forScript(String.format("Wicket.Timer.set('%s', function(){%s}, %d);",
-				timerId, js, updateInterval.getMilliseconds())));
+			OnLoadHeaderItem.forScript("Wicket.Timer.set('" + timerId + "', function(){" + js + "}, " + updateInterval.getMilliseconds() + ");"));
 	}
 
 	private void clearTimeout(IHeaderResponse headerResponse)

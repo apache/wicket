@@ -27,6 +27,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.time.Duration;
 import org.junit.Test;
+import java.util.Locale;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +83,6 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		assertMatches("Wicket.Timer.set", 1);
 	}
-
 
 	/**
 	 * tests timer behavior in a WebPage.
@@ -204,6 +205,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	{
 		final AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(20))
 		{
+			private static final long serialVersionUID = 1L;
 			private boolean enabled = true;
 			
 			@Override
@@ -329,6 +331,49 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		// assert label is now 2
 		tester.assertLabel(labelPath, String.valueOf(labelInitialValue + 2));
+	}
+
+	/**
+	 * Tests timer behavior in a component added to an AjaxRequestTarget
+	 */
+	@Test
+	public void arabicAddedInAjaxSetsTimout()
+	{
+		Locale def = Locale.getDefault();
+		try {
+			Locale.setDefault(Locale.forLanguageTag("ar-EG"));
+			Duration dur = Duration.seconds(20);
+			final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
+			final MockPageWithLinkAndComponent page = new MockPageWithLinkAndComponent();
+
+			page.add(new WebComponent(MockPageWithLinkAndComponent.COMPONENT_ID)
+				.setOutputMarkupId(true));
+
+
+			page.add(new AjaxLink<Void>(MockPageWithLinkAndComponent.LINK_ID)
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void onClick(AjaxRequestTarget target)
+				{
+					WebMarkupContainer wmc = new WebMarkupContainer(
+						MockPageWithLinkAndComponent.COMPONENT_ID);
+					wmc.setOutputMarkupId(true);
+					wmc.add(timer);
+					page.replace(wmc);
+					target.add(wmc);
+				}
+			});
+
+			tester.startPage(page);
+			tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
+
+			// first render sets timeout in correct Locale
+			assertMatches(", 20000", 1);
+		} finally {
+			Locale.setDefault(def);
+		}
 	}
 
 	/**
