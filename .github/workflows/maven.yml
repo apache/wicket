@@ -18,7 +18,7 @@ jobs:
 
     - name: Install Maven
       run: |
-        MAVEN_VERSION=3.8.5
+        MAVEN_VERSION=3.8.6
         wget https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
         tar -xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz
         export PATH=$PWD/apache-maven-${MAVEN_VERSION}/bin:$PATH
