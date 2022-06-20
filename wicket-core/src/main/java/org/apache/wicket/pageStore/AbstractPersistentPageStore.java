@@ -48,6 +48,14 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	 */
 	private static final ConcurrentMap<String, AbstractPersistentPageStore> STORES = new ConcurrentHashMap<>();
 
+	private static final ThreadLocal<Boolean> gettingSessionAttribute = new ThreadLocal<>()
+	{
+		protected Boolean initialValue()
+		{
+			return Boolean.FALSE;
+		}
+	};
+
 	private final String storeKey;
 
 	protected AbstractPersistentPageStore(String applicationName)
@@ -144,17 +152,22 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	 */
 	private String getSessionIdentifier(IPageContext context, boolean create)
 	{
-		String key = KEY_PREFIX + Classes.simpleName(getClass());
-		
-		SessionAttribute attribute = context.getSessionAttribute(key, create ? () -> {
-			return new SessionAttribute(storeKey, createSessionIdentifier(context));
-		} : null);
-		
-		if (attribute == null)
-		{
-			return null;
+		gettingSessionAttribute.set(Boolean.TRUE);
+		try {
+			String key = KEY_PREFIX + Classes.simpleName(getClass());
+			
+			SessionAttribute attribute = context.getSessionAttribute(key, create ? () -> {
+				return new SessionAttribute(storeKey, createSessionIdentifier(context));
+			} : null);
+			
+			if (attribute == null)
+			{
+				return null;
+			}
+			return attribute.sessionIdentifier;
+		} finally {
+			gettingSessionAttribute.set(Boolean.FALSE);
 		}
-		return attribute.sessionIdentifier;
 	}
 
 	/**
@@ -207,7 +220,10 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 			}
 			else
 			{
-				store.removeAllPersistedPages(sessionIdentifier);
+				if (Boolean.FALSE.equals(gettingSessionAttribute.get()))
+				{
+					store.removeAllPersistedPages(sessionIdentifier);
+				}		
 			}
 		}
 	}
