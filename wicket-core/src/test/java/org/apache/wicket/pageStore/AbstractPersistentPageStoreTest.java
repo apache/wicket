@@ -40,7 +40,7 @@ class AbstractPersistentPageStoreTest
 	@Test
 	void rebindingAttributeDoesNotRemoveAllPages()
 	{
-		var store = new AbstractPersistentPageStore("test")
+		var store = new AbstractPersistentPageStore("fooBar")
 		{
 			
 			@Override
