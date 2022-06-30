@@ -32,30 +32,30 @@ class ResourceUtilTest
 	@Test
 	void decodeResourceReferenceAttributesWithString() throws Exception
 	{
-		String urlParameter = "en_GB-style-variation";		
+		String urlParameter = "5~en_GB5~style9~variation";		
 		UrlAttributes attributes = ResourceUtil.decodeResourceReferenceAttributes(urlParameter);
 		
 		assertEquals(Locale.UK, attributes.getLocale());
 		assertEquals("style", attributes.getStyle());
 		assertEquals("variation", attributes.getVariation());
 		
-		attributes = ResourceUtil.decodeResourceReferenceAttributes("it_IT");
+		attributes = ResourceUtil.decodeResourceReferenceAttributes("5~it_ITnullnull");
 		
 		assertEquals(Locale.ITALY, attributes.getLocale());
 		assertNull(attributes.getStyle());
 		assertNull(attributes.getVariation());
 		
-		attributes = ResourceUtil.decodeResourceReferenceAttributes("-style-variation");
+		attributes = ResourceUtil.decodeResourceReferenceAttributes("null5~style9~variation");
 		assertNull(attributes.getLocale());
 		assertEquals("style", attributes.getStyle());
 		assertEquals("variation", attributes.getVariation());
 
-		attributes = ResourceUtil.decodeResourceReferenceAttributes("--variation");
+		attributes = ResourceUtil.decodeResourceReferenceAttributes("nullnull9~variation");
 		assertNull(attributes.getLocale());
 		assertNull(attributes.getStyle());
 		assertEquals("variation", attributes.getVariation());
 
-		attributes = ResourceUtil.decodeResourceReferenceAttributes("-style");
+		attributes = ResourceUtil.decodeResourceReferenceAttributes("null5~stylenull");
 		assertNull(attributes.getLocale());
 		assertEquals("style", attributes.getStyle());
 		assertNull(attributes.getVariation());
@@ -69,13 +69,13 @@ class ResourceUtilTest
 
 		assertEquals(new UrlAttributes(null, null, null), attributes);
 
-		url = Url.parse("www.funny.url/?de_DE");
+		url = Url.parse("www.funny.url/?5~de_DEnullnull");
 		attributes = ResourceUtil.decodeResourceReferenceAttributes(url);
 		assertEquals(Locale.GERMANY, attributes.getLocale());
 		assertNull(attributes.getStyle());
 		assertNull(attributes.getVariation());
 
-		url = Url.parse("www.funny.url/?-style");
+		url = Url.parse("www.funny.url/?null5~stylenull");
 		attributes = ResourceUtil.decodeResourceReferenceAttributes(url);
 		assertNull(attributes.getLocale());
 		assertEquals("style", attributes.getStyle());
@@ -90,11 +90,11 @@ class ResourceUtilTest
 
 		attributes = new UrlAttributes(Locale.CANADA_FRENCH, "style", "variation");
 		
-		assertEquals("fr_CA-style-variation", ResourceUtil.encodeResourceReferenceAttributes(attributes));
+		assertEquals("5~fr_CA5~style9~variation", ResourceUtil.encodeResourceReferenceAttributes(attributes));
 		
 		attributes = new UrlAttributes(null, null, "variation");
 		
-		assertEquals("--variation", ResourceUtil.encodeResourceReferenceAttributes(attributes));
+		assertEquals("nullnull9~variation", ResourceUtil.encodeResourceReferenceAttributes(attributes));
 	}
 
 	@Test
@@ -136,7 +136,7 @@ class ResourceUtilTest
 		Mockito.when(resourceReference.getUrlAttributes()).thenReturn(attributes);
 		ResourceUtil.encodeResourceReferenceAttributes(url, resourceReference);
 		
-		assertEquals(urlString + "?fr_CA-style-variation", url.toString());
+		assertEquals(urlString + "?5~fr_CA5~style9~variation", url.toString());
 		
 		Mockito.reset(resourceReference);
 		
@@ -147,6 +147,6 @@ class ResourceUtilTest
 		Mockito.when(resourceReference.getUrlAttributes()).thenReturn(attributes);
 		ResourceUtil.encodeResourceReferenceAttributes(url, resourceReference);
 		
-		assertEquals(urlString + "?--variation", url.toString());
+		assertEquals(urlString + "?nullnull9~variation", url.toString());
 	}
 }
