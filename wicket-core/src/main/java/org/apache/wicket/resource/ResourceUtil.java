@@ -57,24 +57,12 @@ public class ResourceUtil
 	 */
 	public static ResourceReference.UrlAttributes decodeResourceReferenceAttributes(String encodedAttributes)
 	{
-		Locale locale = null;
-		String style = null;
-		String variation = null;
+		String[] decodeAttributes = decodeStringParts(encodedAttributes);
 
-		if (Strings.isEmpty(encodedAttributes) == false)
-		{
-			String split[] = Strings.split(encodedAttributes, '-');
-			locale = parseLocale(split[0]);
-			if (split.length == 2)
-			{
-				style = Strings.defaultIfEmpty(unescapeAttributesSeparator(split[1]), null);
-			}
-			else if (split.length == 3)
-			{
-				style = Strings.defaultIfEmpty(unescapeAttributesSeparator(split[1]), null);
-				variation = Strings.defaultIfEmpty(unescapeAttributesSeparator(split[2]), null);
-			}
-		}
+		Locale locale = decodeAttributes.length > 0 ? parseLocale(decodeAttributes[0]) : null;
+		String style = decodeAttributes.length > 1 ? decodeAttributes[1] : null;
+		String variation = decodeAttributes.length > 2 ? decodeAttributes[2] : null;
+
 		return new ResourceReference.UrlAttributes(locale, style, variation);
 	}
 	
@@ -114,37 +102,18 @@ public class ResourceUtil
 	public static String encodeResourceReferenceAttributes(ResourceReference.UrlAttributes attributes)
 	{
 		if (attributes == null ||
-			(attributes.getLocale() == null && attributes.getStyle() == null && attributes.getVariation() == null))
-		{
-			return null;
-		}
-		else
-		{
-			StringBuilder res = new StringBuilder(32);
-			if (attributes.getLocale() != null)
+				(attributes.getLocale() == null && attributes.getStyle() == null && attributes.getVariation() == null))
 			{
-				res.append(attributes.getLocale());
+				return null;
 			}
-			boolean styleEmpty = Strings.isEmpty(attributes.getStyle());
-			if (!styleEmpty)
+			else
 			{
-				res.append('-');
-				res.append(escapeAttributesSeparator(attributes.getStyle()));
+				StringBuilder res = new StringBuilder(32);
+				res.append(encodeStringPart(attributes.getLocale() == null ? null : attributes.getLocale().toString()));
+				res.append(encodeStringPart(attributes.getStyle()));
+				res.append(encodeStringPart(attributes.getVariation()));
+				return res.toString();
 			}
-			if (!Strings.isEmpty(attributes.getVariation()))
-			{
-				if (styleEmpty)
-				{
-					res.append("--");
-				}
-				else
-				{
-					res.append('-');
-				}
-				res.append(escapeAttributesSeparator(attributes.getVariation()));
-			}
-			return res.toString();
-		}
 	}
 
 	/**
@@ -332,6 +301,10 @@ public class ResourceUtil
 			if (c >= '0' && c <= '9') {
 				lengthString.append(c);
 			} else {
+				if (isAtStartOfPart || c != '~') { // Not a (valid) resource attribute string
+					return new String[0];
+				}
+
 				int length = Integer.parseInt(lengthString.toString());
 				lengthString.setLength(0); // reset the length buffer
 				result.add(String.valueOf(chars, i + 1, length));
