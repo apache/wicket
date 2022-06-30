@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Url;
@@ -44,7 +43,6 @@ public class ResourceUtil
 	 * Used to denote {@code null} in encoded strings.
 	 */
 	private static final String NULL_VALUE = "null";
-	private static final Pattern ESCAPED_ATTRIBUTE_PATTERN = Pattern.compile("(\\w)~(\\w)");
 
 	/**
 	 * Reads resource reference attributes (style, locale, variation) encoded in the given string.
@@ -139,20 +137,6 @@ public class ResourceUtil
 	}
 
 	/**
-	 * Escapes any occurrences of <em>-</em> character in the style and variation
-	 * attributes with <em>~</em>. Any occurrence of <em>~</em> is encoded as <em>~~</em>.
-	 *
-	 * @param attribute
-	 *      the attribute to escape
-	 * @return the attribute with escaped separator character
-	 */
-	public static CharSequence escapeAttributesSeparator(String attribute)
-	{
-		CharSequence tmp = Strings.replaceAll(attribute, "~", "~~");
-		return Strings.replaceAll(tmp, "-", "~");
-	}
-
-	/**
 	 * Parses the string representation of a {@link java.util.Locale} (for example 'en_GB').
 	 * 
 	 * @param locale
@@ -239,20 +223,6 @@ public class ResourceUtil
 		{
 			throw new WicketRuntimeException("failed to locate stream from " + resourceStream, e);
 		}
-	}
-
-	/**
-	 * Reverts the escaping applied by {@linkplain #escapeAttributesSeparator(String)} - unescapes
-	 * occurrences of <em>~</em> character in the style and variation attributes with <em>-</em>.
-	 *
-	 * @param attribute
-	 *      the attribute to unescape
-	 * @return the attribute with escaped separator character
-	 */
-	public static String unescapeAttributesSeparator(String attribute)
-	{
-		String tmp = ESCAPED_ATTRIBUTE_PATTERN.matcher(attribute).replaceAll("$1-$2");
-		return Strings.replaceAll(tmp, "~~", "~").toString();
 	}
 
 	/**
