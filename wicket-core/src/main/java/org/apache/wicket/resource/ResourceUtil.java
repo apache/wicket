@@ -19,6 +19,7 @@ package org.apache.wicket.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -39,6 +40,10 @@ import org.apache.wicket.util.string.Strings;
 public class ResourceUtil
 {
 
+	/**
+	 * Used to denote {@code null} in encoded strings.
+	 */
+	private static final String NULL_VALUE = "null";
 	private static final Pattern ESCAPED_ATTRIBUTE_PATTERN = Pattern.compile("(\\w)~(\\w)");
 
 	/**
@@ -279,6 +284,62 @@ public class ResourceUtil
 	{
 		String tmp = ESCAPED_ATTRIBUTE_PATTERN.matcher(attribute).replaceAll("$1-$2");
 		return Strings.replaceAll(tmp, "~~", "~").toString();
+	}
+
+	/**
+	 * Encode the {@code part} in the format <string length encoded in base ten ASCII>~<string data>.
+	 *
+	 * If the {@code part} is {@code null} the special value {@link #NULL_VALUE} is returned;
+	 *
+	 * @param part
+	 *     The string to encode
+	 * @return The encoded string
+	 */
+	static String encodeStringPart(String part)
+	{
+		if (part == null) {
+			return NULL_VALUE;
+		}
+
+		int length = part.length();
+		return length + "~" + part;
+	}
+
+	/**
+	 * Decodes the {@code encoded} parts of a string decoded by {@link #encodeStringPart(String)}.
+	 *
+	 * @param encoded
+	 * @return An array containing the parts of {@code encoded}.
+	 *     The array can contain {@code null} but is itself never {@code null}
+	 */
+	static String[] decodeStringParts(String encoded)
+	{
+		ArrayList<String> result = new ArrayList<>();
+
+		StringBuilder lengthString = new StringBuilder();
+		char[] chars = encoded.toCharArray();
+		for (int i = 0; i < chars.length; i++)
+		{
+			boolean isAtStartOfPart = lengthString.length() == 0;
+			if (isAtStartOfPart && chars.length >= i + NULL_VALUE.length() &&
+					String.valueOf(chars, i, NULL_VALUE.length()).equals(NULL_VALUE)) {
+				result.add(null);
+				i += NULL_VALUE.length() - 1;
+				continue;
+			}
+
+			char c = chars[i];
+			if (c >= '0' && c <= '9') {
+				lengthString.append(c);
+			} else {
+				int length = Integer.parseInt(lengthString.toString());
+				lengthString.setLength(0); // reset the length buffer
+				result.add(String.valueOf(chars, i + 1, length));
+				i += length;
+			}
+		}
+
+		return result.toArray(String[]::new);
 	}
 
 	private ResourceUtil()
