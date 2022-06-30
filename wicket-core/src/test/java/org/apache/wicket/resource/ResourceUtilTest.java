@@ -98,6 +98,21 @@ class ResourceUtilTest
 	}
 
 	@Test
+	void encodeAndDecodeVariationShouldBeEqual() throws Exception
+	{
+		String[] variations = new String[] {"double--separator", "single-e-inside", "-", "--", "~", "~~"};
+
+		for (String variation : variations) {
+			UrlAttributes attributes = new UrlAttributes(null, null, variation);
+			String encoded = ResourceUtil.encodeResourceReferenceAttributes(attributes);
+
+			attributes = ResourceUtil.decodeResourceReferenceAttributes(encoded);
+
+			assertEquals(variation, attributes.getVariation());
+		}
+	}
+
+	@Test
 	void encodeResourceReferenceAttributesWithResource() throws Exception
 	{
 		ResourceReference resourceReference = Mockito.mock(ResourceReference.class);
