@@ -801,7 +801,7 @@ public class Url implements Serializable
 					StringMode.FULL.name() + " mode because it has a `..` segment: " + toString());
 			}
 
-			if (!path.isEmpty() && !(path.charAt(0) == '/'))
+			if (!(path.length() == 0) && !(path.charAt(0) == '/'))
 			{
 				result.append('/');
 			}
