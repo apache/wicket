@@ -106,11 +106,11 @@ public class ResourceUtil
 			}
 			else
 			{
-				StringBuilder res = new StringBuilder(32);
-				res.append(encodeStringPart(attributes.getLocale() == null ? null : attributes.getLocale().toString()));
-				res.append(encodeStringPart(attributes.getStyle()));
-				res.append(encodeStringPart(attributes.getVariation()));
-				return res.toString();
+				StringBuilder buffer = new StringBuilder(32);
+				encodeStringPart(attributes.getLocale() == null ? null : attributes.getLocale().toString(), buffer);
+				encodeStringPart(attributes.getStyle(), buffer);
+				encodeStringPart(attributes.getVariation(), buffer);
+				return buffer.toString();
 			}
 	}
 
@@ -228,20 +228,22 @@ public class ResourceUtil
 	/**
 	 * Encode the {@code part} in the format <string length encoded in base ten ASCII>~<string data>.
 	 *
-	 * If the {@code part} is {@code null} the special value {@link #NULL_VALUE} is returned;
+	 * If the {@code part} is {@code null} the special value {@link #NULL_VALUE} is used;
 	 *
 	 * @param part
-	 *     The string to encode
-	 * @return The encoded string
+	 *     The string to encode.
+	 * @param buffer
+	 *     The buffer into which the {@code part} is encoded.
+	 * @return The {@code buffer} for chaining.
 	 */
-	static String encodeStringPart(String part)
+	static StringBuilder encodeStringPart(String part, StringBuilder buffer)
 	{
 		if (part == null) {
-			return NULL_VALUE;
+			return buffer.append(NULL_VALUE);
 		}
 
 		int length = part.length();
-		return length + "~" + part;
+		return buffer.append(length).append('~').append(part);
 	}
 
 	/**
