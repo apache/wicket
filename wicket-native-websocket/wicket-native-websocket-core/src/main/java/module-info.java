@@ -19,7 +19,7 @@ module org.apache.wicket.websocket.core {
     requires org.apache.wicket.util;
     requires org.apache.wicket.request;
     requires org.apache.wicket.core;
-    requires jakarta.servlet;
+    requires static jakarta.servlet;
     requires org.slf4j;
 
     exports org.apache.wicket.protocol.ws;

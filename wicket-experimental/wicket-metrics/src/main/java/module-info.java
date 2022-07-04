@@ -20,7 +20,7 @@ module org.apache.wicket.metrics {
     requires org.aspectj.runtime;
     requires com.codahale.metrics;
     requires com.codahale.metrics.jmx;
-    requires jakarta.servlet;
+    requires static jakarta.servlet;
 
     exports org.apache.wicket.metrics;
     exports org.apache.wicket.metrics.aspects;

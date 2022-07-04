@@ -17,7 +17,7 @@
 
 module org.apache.wicket.extensions {
     requires java.desktop;
-    requires jakarta.servlet;
+    requires static jakarta.servlet;
     requires org.slf4j;
     requires com.fasterxml.jackson.databind;
     requires com.github.openjson;

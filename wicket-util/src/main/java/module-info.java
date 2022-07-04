@@ -25,7 +25,7 @@ module org.apache.wicket.util {
     requires org.apache.commons.collections4;
     requires commons.fileupload2;
     requires org.slf4j;
-    requires jakarta.servlet;
+    requires static jakarta.servlet;
     requires org.junit.jupiter.api;
 
     exports org.apache.wicket.util;

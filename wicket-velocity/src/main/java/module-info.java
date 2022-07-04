@@ -16,7 +16,7 @@
  */
 
 module org.apache.wicket.velocity {
-    requires jakarta.servlet;
+    requires static jakarta.servlet;
     requires org.apache.wicket.util;
     requires org.apache.wicket.core;
     requires org.slf4j;

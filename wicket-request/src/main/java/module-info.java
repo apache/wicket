@@ -19,7 +19,7 @@ module org.apache.wicket.request {
     requires java.sql;
     requires org.apache.wicket.util;
     requires org.slf4j;
-    requires jakarta.servlet;
+    requires static jakarta.servlet;
 
     exports org.apache.wicket.request;
     exports org.apache.wicket.request.flow;
