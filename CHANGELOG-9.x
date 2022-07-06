@@ -2,6 +2,25 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.11.0
+
+** Bug
+
+    * [WICKET-6981] - InSessionPageStore does not trigger flushSession
+    * [WICKET-6988] - String.format used in JS generation leads to errors
+    * [WICKET-6990] - DiskPageStore loses pages when container re-binds attributes
+
+** Improvement
+
+    * [WICKET-6979] - Cut back slightly on some String instance creation in PageInfo and friends.
+    * [WICKET-6982] - Unnecessary initialization of stateful pages in ListenerRequestHandler
+    * [WICKET-6985] - Insufficient information logged by CheckingObjectOutputStream when delegation to Externalizable
+    * [WICKET-6991] - ResourceAggregator is resizing the StringBuilder several times.
+    * [WICKET-6992] - Reduce object creation and wasted memory in Url toString() methods
+    * [WICKET-6994] - Make the servlet API a runtime provided dependency when using JPMS.
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.10.0
 
 ** Bug
