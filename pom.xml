@@ -170,7 +170,7 @@
 		<jakarta.servlet-api.version>5.0.0</jakarta.servlet-api.version>
 		<japicmp.skip>true</japicmp.skip> <!-- TODO Wicket 10 Remove this once 10.0.0 is released -->
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
-		<jetty.version>11.0.7</jetty.version>
+		<jetty.version>11.0.10</jetty.version>
 		<junit.version>5.8.2</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.7</logback.version>
