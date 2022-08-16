@@ -25,6 +25,8 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReference.UrlAttributes;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
 class ResourceUtilTest
@@ -133,5 +135,18 @@ class ResourceUtilTest
 		ResourceUtil.encodeResourceReferenceAttributes(url, resourceReference);
 		
 		assertEquals(urlString + "?--variation", url.toString());
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"double--separator", "single-e-inside", "single~e~inside", "-", "--", "~", "~~"})
+	void encodeAndDecodeVariationShouldBeEqual(String variation) throws Exception
+	{
+		UrlAttributes attributes = new UrlAttributes(null, null, variation);
+		String encoded = ResourceUtil.encodeResourceReferenceAttributes(attributes);
+		System.err.println("Encoded: " + encoded);
+
+		attributes = ResourceUtil.decodeResourceReferenceAttributes(encoded);
+
+		assertEquals(variation, attributes.getVariation());
 	}
 }

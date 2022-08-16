@@ -38,9 +38,6 @@ import org.apache.wicket.util.string.Strings;
  */
 public class ResourceUtil
 {
-
-	private static final Pattern ESCAPED_ATTRIBUTE_PATTERN = Pattern.compile("(\\w)~(\\w)");
-
 	/**
 	 * Reads resource reference attributes (style, locale, variation) encoded in the given string.
 	 * 
@@ -174,8 +171,33 @@ public class ResourceUtil
 	 */
 	public static CharSequence escapeAttributesSeparator(String attribute)
 	{
-		CharSequence tmp = Strings.replaceAll(attribute, "~", "~~");
-		return Strings.replaceAll(tmp, "-", "~");
+		int len = attribute.length();
+		StringBuilder result = new StringBuilder(len + 4);
+		for (int i = 0; i < len; i++)
+		{
+			char c = attribute.charAt(i);
+			if (c == '-')
+			{
+				if (i + 1 < len && attribute.charAt(i + 1) == '-')
+				{
+					result.append("~~~~");
+					i++;
+				}
+				else
+				{
+					result.append('~');
+				}
+			}
+			else if (c == '~')
+			{
+				result.append("~~");
+			}
+			else
+			{
+				result.append(c);
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -277,8 +299,29 @@ public class ResourceUtil
 	 */
 	public static String unescapeAttributesSeparator(String attribute)
 	{
-		String tmp = ESCAPED_ATTRIBUTE_PATTERN.matcher(attribute).replaceAll("$1-$2");
-		return Strings.replaceAll(tmp, "~~", "~").toString();
+		int len = attribute.length();
+		StringBuilder result = new StringBuilder(len);
+		for (int i = 0; i < len; i++)
+		{
+			char c = attribute.charAt(i);
+			if (c == '~')
+			{
+				if (i + 1 < len && attribute.charAt(i + 1) == '~')
+				{
+					result.append('~');
+					i++;
+				}
+				else
+				{
+					result.append('-');
+				}
+			}
+			else
+			{
+				result.append(c);
+			}
+		}
+		return result.toString();
 	}
 
 	private ResourceUtil()
