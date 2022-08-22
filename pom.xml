@@ -170,7 +170,7 @@
 		<mockito.version>4.3.1</mockito.version>
 		<objenesis.version>3.2</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
-		<slf4j.version>2.0.0-alpha5</slf4j.version>
+		<slf4j.version>2.0.0</slf4j.version>
 		<spring.version>5.3.18</spring.version>
 		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
 		<weld.version>3.1.7.Final</weld.version>
