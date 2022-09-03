@@ -17,12 +17,14 @@
 package org.apache.wicket.protocol.http;
 
 import static java.lang.System.arraycopy;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.wicket.Application;
@@ -50,6 +52,9 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractRequestLogger implements IRequestLogger
 {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractRequestLogger.class);
+
+	private static final ZoneId ZID = ZoneId.of("GMT");
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss,SSS");
 
 	/**
 	 * Key for storing request data in the request cycle's meta data.
@@ -494,34 +499,8 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	{
 		Args.notNull(date, "date");
 
-		final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-		final StringBuilder buf = new StringBuilder(32);
-
-		cal.setTimeInMillis(date.getTime());
-
-		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH) + 1;
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		int hours = cal.get(Calendar.HOUR_OF_DAY);
-		int minutes = cal.get(Calendar.MINUTE);
-		int seconds = cal.get(Calendar.SECOND);
-		int millis = cal.get(Calendar.MILLISECOND);
-
-		buf.append(year);
-		buf.append('-');
-		buf.append(String.format("%02d", month));
-		buf.append('-');
-		buf.append(String.format("%02d", day));
-		buf.append(' ');
-		buf.append(String.format("%02d", hours));
-		buf.append(':');
-		buf.append(String.format("%02d", minutes));
-		buf.append(':');
-		buf.append(String.format("%02d", seconds));
-		buf.append(',');
-		buf.append(String.format("%03d", millis));
-
-		return buf.toString();
+		LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZID);
+		return ldt.format(FORMATTER);
 	}
 
 	private int getRequestsWindowSize()
