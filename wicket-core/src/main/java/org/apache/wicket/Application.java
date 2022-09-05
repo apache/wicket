@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
@@ -171,7 +172,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	private final List<IInitializer> initializers = Generics.newArrayList();
 
 	/** Application level meta data. */
-	private MetaDataEntry<?>[] metaData;
+	private ConcurrentHashMap<MetaDataKey<?>, Object> metaData = new ConcurrentHashMap<>();
 
 	/** Name of application subclass. */
 	private String name;
@@ -406,9 +407,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
-	public final synchronized <T> T getMetaData(final MetaDataKey<T> key)
+	@SuppressWarnings("unchecked")
+	public final <T> T getMetaData(final MetaDataKey<T> key)
 	{
-		return key.get(metaData);
+		return (T)metaData.get(key);
 	}
 
 	/**
@@ -519,9 +521,9 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final synchronized <T> Application setMetaData(final MetaDataKey<T> key, final Object object)
+	public final <T> Application setMetaData(final MetaDataKey<T> key, final Object object)
 	{
-		metaData = key.set(metaData, object);
+		metaData.put(key, object);
 		return this;
 	}
 
