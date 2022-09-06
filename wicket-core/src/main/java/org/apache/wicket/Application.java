@@ -160,7 +160,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	private final List<IInitializer> initializers = Generics.newArrayList();
 
 	/** Application level meta data. */
-	private ConcurrentHashMap<MetaDataKey<?>, Object> metaData = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<MetaDataKey<?>, Object> metaData = new ConcurrentHashMap<>();
 
 	/** Name of application subclass. */
 	private String name;
