@@ -31,7 +31,10 @@
 		users to work with Velocity and Wicket. Particularly useful for
 		simple CMS like applications.
 	</description>
-
+	<properties>
+		<osgi.export.package>org.apache.wicket.velocity*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.velocity</groupId>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Wicket feature for Apache Karaf 
+
+     karaf> repo-add mvn:org.apache.wicket/wicket/${project.verion}/xml/features
+     karaf> feature:install wicket-core
+
+     ref: wicket-user-guide single.html#_working_with_karaf
+-->
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="${project.groupId}.${project.artifactId}-${project.version}">
+	<feature name="wicket-core" version="${project.version}" start-level="50">
+		<bundle>mvn:com.github.openjson/openjson/${openjson.version}</bundle>
+		<bundle>mvn:commons-io/commons-io/${commons-io.version}</bundle>
+		<bundle>mvn:commons-fileupload/commons-fileupload/${commons-fileupload.version}</bundle>
+		<bundle>mvn:org.apache.commons/commons-collections4/${commons-collections4.version}</bundle>
+		<bundle>mvn:org.danekja/jdk-serializable-functional/${jdk-serializable-functional.version}</bundle>
+		<bundle>mvn:org.apache.wicket/wicket-util/${project.version}</bundle>
+		<bundle>mvn:org.apache.wicket/wicket-request/${project.version}</bundle>
+		<bundle>mvn:org.apache.wicket/wicket-core/${project.version}</bundle>
+		<bundle>mvn:org.apache.wicket/wicket-auth-roles/${project.version}</bundle>
+		<bundle>mvn:org.apache.wicket/wicket-devutils/${project.version}</bundle>
+		<bundle>mvn:org.apache.wicket/wicket-extensions/${project.version}</bundle>
+		<bundle>mvn:org.apache.wicket/wicket-jmx/${project.version}</bundle>
+		<capability>wicket;provider:=apache-wicket</capability>
+	</feature>
+</features>

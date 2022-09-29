@@ -27,7 +27,10 @@
 	<packaging>bundle</packaging>
 	<name>Wicket Spring Integration</name>
 	<description>Integration project to use Spring injection in your Wicket applications. See the wicket-spring-examples for integration patterns.</description>
-
+	<properties>
+		<osgi.export.package>org.apache.wicket.spring*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>

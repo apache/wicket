@@ -27,7 +27,10 @@
 	<packaging>bundle</packaging>
 	<name>Wicket Extensions</name>
 	<description>Wicket Extensions is a rich component library for the Wicket framework.</description>
-
+	<properties>
+		<osgi.export.package>org.apache.wicket.extensions*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

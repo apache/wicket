@@ -32,7 +32,10 @@
 		Also enables propagation of conversations between wicket artifacts such as pages
 		and resources.
 	</description>
-
+	<properties>
+		<osgi.export.package>org.apache.wicket.cdi*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>jakarta.annotation</groupId>

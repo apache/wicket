@@ -27,7 +27,10 @@
 	<packaging>bundle</packaging>
 	<name>Wicket JMX</name>
 	<description>Wicket Java Management Extensions</description>
-
+	<properties>
+		<osgi.export.package>org.apache.wicket.jmx*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
