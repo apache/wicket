@@ -31,7 +31,10 @@
 		are typically used during development only, but may be 
 		turned on for additional production debugging.
 	</description>
-
+	<properties>
+		<osgi.export.package>org.apache.wicket.devutils*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
