@@ -30,7 +30,10 @@
 		Wicket Authorization Integration Based on roles, metadata and
 		annotations.
 	</description>
-
+	<properties>
+		<osgi.export.package>org.apache.wicket.authroles*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

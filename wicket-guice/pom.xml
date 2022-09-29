@@ -30,7 +30,10 @@
 		Google Guice integration in your Wicket web applications. See the
 		examples project for usecases.
 	</description>
-
+	<properties>
+		<osgi.export.package>org.apache.wicket.guice*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.google.inject</groupId>

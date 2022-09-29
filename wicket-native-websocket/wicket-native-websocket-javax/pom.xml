@@ -27,6 +27,10 @@
 	<packaging>bundle</packaging>
 	<name>Wicket Native WebSocket Javax</name>
 	<description>Provides the common code needed for the different integrations with web container's WebSocket implementations</description>
+	<properties>
+		<osgi.export.package>org.apache.wicket.protocol.ws.javax*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+	</properties>
 
 	<dependencies>
 		<dependency>

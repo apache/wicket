@@ -883,6 +883,15 @@ include::wicketstuff/wicketstuff_7.adoc[leveloffset=+1]
 include::redirects.adoc[]
 
 [appendix]
+== Working with Karaf
+
+include::karaf.adoc[]
+
+=== Wicket feature
+
+include::karaf/karaf_1.adoc[leveloffset=+1]
+
+[appendix]
 == Contributing to this guide
 
 include::contributing.adoc[]

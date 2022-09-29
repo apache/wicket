@@ -28,6 +28,8 @@
 	<name>Wicket Util</name>
 
 	<properties>
+		<osgi.export.package>org.apache.wicket.util*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
 		<automatic-module-name>org.apache.wicket.util</automatic-module-name>
 	</properties>
 

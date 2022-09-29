@@ -177,9 +177,10 @@
 		<velocity-engine-core.version>2.3</velocity-engine-core.version>
 
 		<!-- Maven plugins -->
+		<build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
 		<japicmp-maven-plugin.version>0.15.5</japicmp-maven-plugin.version>
 		<maven-archetype-plugin.version>3.2.0</maven-archetype-plugin.version>
-		<maven-bundle-plugin.version>5.1.3</maven-bundle-plugin.version>
+		<maven-bundle-plugin.version>5.1.8</maven-bundle-plugin.version>
 		<maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
@@ -200,6 +201,9 @@
 		<maven-war-plugin.version>3.3.1</maven-war-plugin.version>
 		<yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
 
+		<osgi.dynamicimport.package></osgi.dynamicimport.package>
+		<osgi.export.package>*</osgi.export.package>
+		<osgi.import.package>!java,!kotlin,*</osgi.import.package>
 	</properties>
 
 	<dependencyManagement>
@@ -891,18 +895,18 @@
 					<extensions>true</extensions>
 					<executions>
 						<execution>
-							<id>bundle-manifest</id>
-							<phase>process-classes</phase>
+							<id>default-bundle</id>
+							<phase>package</phase>
 							<goals>
-								<goal>manifest</goal>
+								<goal>bundle</goal>
 							</goals>
 							<configuration>
 								<instructions>
-									<Export-Package>*</Export-Package>
-									<Import-Package>org.apache.wicket*,
-										org.junit.jupiter*</Import-Package>
-									<DynamicImport-Package>*</DynamicImport-Package>
+									<Export-Package>${osgi.export.package}</Export-Package>
+									<Import-Package>${osgi.import.package}</Import-Package>
+									<DynamicImport-Package>${osgi.dynamicimport.package}</DynamicImport-Package>
 									<_nouses>true</_nouses>
+									<_noee>true</_noee>
 								</instructions>
 							</configuration>
 						</execution>
@@ -1170,6 +1174,11 @@
 					<configuration>
 						<warName>${project.artifactId}</warName>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>${build-helper-maven-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.jetty</groupId>
