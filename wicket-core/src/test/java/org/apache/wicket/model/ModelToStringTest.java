@@ -19,10 +19,10 @@ package org.apache.wicket.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Properties;
-
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
+
+import java.util.Properties;
 
 /**
  * Tests the toString() method on the models in the org.apache.wicket.model package.
@@ -122,15 +122,15 @@ class ModelToStringTest extends WicketTestCase
 	{
 		LoadableDetachableModel<String> model = new MyLoadableDetachableModel();
 		assertTrue(model.toString().contains(":attached=false"));
-		assertTrue(model.toString().contains(":tempModelObject=[null]"));
+		assertTrue(model.toString().contains(":transientModelObject=[null]"));
 
 		model.getObject();
 		assertTrue(model.toString().contains(":attached=true"));
-		assertTrue(model.toString().contains(":tempModelObject=[foo]"));
+		assertTrue(model.toString().contains(":transientModelObject=[foo]"));
 
 		model.detach();
 		assertTrue(model.toString().contains(":attached=false"));
-		assertTrue(model.toString().contains(":tempModelObject=[null]"));
+		assertTrue(model.toString().contains(":transientModelObject=[null]"));
 	}
 
 
