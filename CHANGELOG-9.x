@@ -2,6 +2,28 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.12.0
+
+** Bug
+
+    * [WICKET-6955] - Wicket uses unstable slf4j version
+    * [WICKET-6996] - NotSerializableException near KeyInSessionSunJceCryptFactory
+    * [WICKET-6999] - Missing Export-Package of packages with "internal" in name
+    * [WICKET-7007] - Code snippets for CSRF documentation fixing
+
+** Improvement
+
+    * [WICKET-6958] - Allow to use Slf4j 1.7.x in OSGi runtime
+    * [WICKET-6982] - Unnecessary initialization of stateful pages in ListenerRequestHandler
+    * [WICKET-6998] - Bump slf4j-api to 2.0.0
+    * [WICKET-7000] - ParseException ("Malformed tag") if <script> attribute 'type' is 'module' 
+    * [WICKET-7002] - Application metadata access should not require synchronization
+    * [WICKET-7003] -  The http RequestLogger is very expensive. #524 
+    * [WICKET-7004] - Jetty config example contains security hazard
+    * [WICKET-7008] -  LoadableDetachableModel.toString() should reflect the actual variable name
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.11.0
 
 ** Bug
