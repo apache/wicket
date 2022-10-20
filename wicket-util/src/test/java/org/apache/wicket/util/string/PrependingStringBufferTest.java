@@ -19,7 +19,6 @@ package org.apache.wicket.util.string;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author jcompagner
@@ -74,7 +73,7 @@ public class PrependingStringBufferTest
 	public void equalsReflexive() throws Exception
 	{
 		PrependingStringBuffer psb = new PrependingStringBuffer("foo");
-		assertTrue(psb.equals(psb));
+		assertEquals(psb, psb);
 	}
 
 	/**
@@ -88,7 +87,7 @@ public class PrependingStringBufferTest
 	{
 		PrependingStringBuffer foo = new PrependingStringBuffer("foo");
 		PrependingStringBuffer bar = new PrependingStringBuffer("foo");
-		assertTrue(foo.equals(bar));
+		assertEquals(foo, bar);
 		assertEquals(foo.hashCode(), bar.hashCode());
 	}
 

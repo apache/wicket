@@ -17,6 +17,7 @@
 package org.apache.wicket.guice;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -142,7 +143,7 @@ public abstract class AbstractInjectorTest
 	private void doChecksForComponent(final TestComponentInterface component)
 	{
 		assertEquals(ITestService.RESULT, component.getInjectedField().getString());
-		assertEquals(null, component.getInjectedOptionalField());
+		assertNull(component.getInjectedOptionalField());
 		assertEquals(ITestService.RESULT_RED, component.getInjectedFieldRed().getString());
 		assertEquals(ITestService.RESULT_BLUE, component.getInjectedFieldBlue().getString());
 
