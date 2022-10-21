@@ -23,7 +23,7 @@ import org.springframework.core.ResolvableType;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class FieldBeansCollectorTest
@@ -40,7 +40,7 @@ public class FieldBeansCollectorTest
 
 		FieldBeansCollector fieldBeansCollector = new FieldBeansCollector(resolvableType);
 
-		assertTrue(fieldBeansCollector.getFieldType() == FieldType.LIST);
+		assertEquals(fieldBeansCollector.getFieldType(), FieldType.LIST);
 	}
 
 	@Test
@@ -51,6 +51,6 @@ public class FieldBeansCollectorTest
 		ResolvableType resolvableType = ResolvableType.forField(field);
 		FieldBeansCollector fieldBeansCollector = new FieldBeansCollector(resolvableType);
 
-		assertTrue(fieldBeansCollector.getFieldType() == FieldType.LIST);
+		assertEquals(fieldBeansCollector.getFieldType(), FieldType.LIST);
 	}
 }

@@ -159,10 +159,10 @@ public class ValueMapTest
 		assertEquals(test, TestEnum.two);
 
 		test = vm.getAsEnum("missing", TestEnum.class, null);
-		assertEquals(test, null);
+		assertNull(test);
 
 		test = vm.getAsEnum("missing", TestEnum.class);
-		assertEquals(test, null);
+		assertNull(test);
 
 		// test get if value doesn't match enum
 		vm.put(name, "bogus");
