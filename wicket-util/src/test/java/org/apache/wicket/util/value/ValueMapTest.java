@@ -130,18 +130,18 @@ public class ValueMapTest
 		String name = "name";
 
 		TestEnum fetch = TestEnum.valueOf("one");
-		assertEquals(fetch, TestEnum.one);
+		assertEquals(TestEnum.one, fetch);
 
 		ValueMap vm = new ValueMap();
 		vm.put(name, "one");
 
 		// test get
 		TestEnum test = vm.getAsEnum(name, TestEnum.class, TestEnum.three);
-		assertEquals(test, TestEnum.one);
+		assertEquals(TestEnum.one, test);
 
 		// test get alternate
 		test = vm.getAsEnum(name, TestEnum.three);
-		assertEquals(test, TestEnum.one);
+		assertEquals(TestEnum.one, test);
 
 		// test get alternate null
 		try
@@ -156,7 +156,7 @@ public class ValueMapTest
 
 		// test get if nothing there
 		test = vm.getAsEnum("missing", TestEnum.class, TestEnum.two);
-		assertEquals(test, TestEnum.two);
+		assertEquals(TestEnum.two, test);
 
 		test = vm.getAsEnum("missing", TestEnum.class, null);
 		assertNull(test);
@@ -167,7 +167,7 @@ public class ValueMapTest
 		// test get if value doesn't match enum
 		vm.put(name, "bogus");
 		test = vm.getAsEnum(name, TestEnum.class, TestEnum.one);
-		assertEquals(test, TestEnum.one);
+		assertEquals(TestEnum.one, test);
 	}
 
 	/**

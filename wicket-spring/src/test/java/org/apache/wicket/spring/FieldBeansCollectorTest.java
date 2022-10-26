@@ -40,7 +40,7 @@ public class FieldBeansCollectorTest
 
 		FieldBeansCollector fieldBeansCollector = new FieldBeansCollector(resolvableType);
 
-		assertEquals(fieldBeansCollector.getFieldType(), FieldType.LIST);
+		assertEquals(FieldType.LIST, fieldBeansCollector.getFieldType());
 	}
 
 	@Test
@@ -51,6 +51,6 @@ public class FieldBeansCollectorTest
 		ResolvableType resolvableType = ResolvableType.forField(field);
 		FieldBeansCollector fieldBeansCollector = new FieldBeansCollector(resolvableType);
 
-		assertEquals(fieldBeansCollector.getFieldType(), FieldType.LIST);
+		assertEquals(FieldType.LIST, fieldBeansCollector.getFieldType());
 	}
 }
