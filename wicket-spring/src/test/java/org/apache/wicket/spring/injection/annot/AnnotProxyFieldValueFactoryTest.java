@@ -82,7 +82,7 @@ public abstract class AnnotProxyFieldValueFactoryTest
 		field = obj.getClass().getDeclaredField("beanByClass");
 		proxy = factory.getFieldValue(field, obj);
 		locator = (SpringBeanLocator)((ILazyInitProxy)proxy).getObjectLocator();
-		assertEquals(locator.getBeanType(), Bean.class);
+		assertEquals(Bean.class, locator.getBeanType());
 		assertSame(locator.getSpringContextLocator(), mockCtxLocator);
 		assertTrue(factory.getFieldValue(field, obj) instanceof ILazyInitProxy);
 
@@ -90,7 +90,7 @@ public abstract class AnnotProxyFieldValueFactoryTest
 		proxy = factory.getFieldValue(field, obj);
 		locator = (SpringBeanLocator)((ILazyInitProxy)proxy).getObjectLocator();
 		assertEquals("somebean", locator.getBeanName());
-		assertEquals(locator.getBeanType(), Bean2.class);
+		assertEquals(Bean2.class, locator.getBeanType());
 		assertSame(locator.getSpringContextLocator(), mockCtxLocator);
 		assertTrue(factory.getFieldValue(field, obj) instanceof ILazyInitProxy);
 	}
