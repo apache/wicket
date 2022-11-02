@@ -216,7 +216,7 @@ public class InSessionPageStore implements IPageStore
 
 		public synchronized IManageablePage remove(int pageId)
 		{
-			if (pages == null || pages.size() == 0) {
+			if (pages == null || pages.isEmpty()) {
 				// Logging?
 				return null;
 			}
