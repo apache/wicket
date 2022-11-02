@@ -24,8 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
@@ -34,6 +32,8 @@ import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Classes;
+
+import jakarta.servlet.http.HttpSession;
 
 /**
  * A store keeping a configurable maximum of pages in the session.
@@ -216,6 +216,11 @@ public class InSessionPageStore implements IPageStore
 
 		public synchronized IManageablePage remove(int pageId)
 		{
+			if (pages == null || pages.size() == 0) {
+				// Logging?
+				return null;
+			}
+
 			Iterator<IManageablePage> iterator = pages.iterator();
 			while (iterator.hasNext())
 			{
