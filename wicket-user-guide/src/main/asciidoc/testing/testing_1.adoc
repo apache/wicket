@@ -287,7 +287,7 @@ public void tearDown(){
 
 === Setting request headers
 
-In some cases you might need to set one or more specific request headers to make your test pass. This holds true when your application is protected against CSRF attacks as explained in <<security.adoc#_csrf_protection,paragraph 22.5>>. In this particular case in order to make your tests green you must set header request _"sec-fetch-site"_ to _same-site_ before clicking on a page link or before invoking a callback URL:
+In some cases you might need to set one or more specific request headers to make your test pass. This holds true when your application is protected against CSRF attacks as explained in <<security.adoc#_csrf_protection,paragraph 22.5>>. In this particular case in order to make your tests green you must set header request _sec-fetch-site_ to _same-site_ before clicking on a page link or before invoking a callback URL:
 
 [source,java]
 ----

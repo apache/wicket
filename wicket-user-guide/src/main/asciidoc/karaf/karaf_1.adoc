@@ -5,7 +5,7 @@ Wicket jar files are packaged as OSGi bundles and are ready to be installed in O
 
 Wicket provides a Karaf feature file to assist in installation and building Karaf distributions that include Wicket.
 
-==== Add Wicket feature
+=== Add Wicket feature
 
 [source,subs="quotes"]
 ----
@@ -13,7 +13,7 @@ karaf@root()> repo-add mvn:org.apache.wicket/wicket/_version_/xml/features
 Adding feature url mvn:org.apache.wicket/wicket/_version_/xml/features
 ----
 
-==== Verify Wicket feature
+=== Verify Wicket feature
 
 [source,subs="quotes"]
 ----
@@ -21,14 +21,14 @@ karaf@root()> feature:list | grep -i wicket
 wicket-core    │ _version_ │    │ Uninstalled │ org.apache.wicket.wicket-_version_ │
 ----
 
-==== Install Wicket feature
+=== Install Wicket feature
 
 [source,subs="quotes"]
 ----
 karaf@root()> feature:install wicket-core
 ----
 
-==== Troubleshooting
+=== Troubleshooting
 
 Inspect the wicket-core feature
 
@@ -66,7 +66,7 @@ The Wicket feature may be referenced from Maven to include in Karaf assemblies.
 </dependency>
 ----
 
-==== Reference links
+=== Reference links
 
 https://karaf.apache.org[Apache Karaf website]
 
