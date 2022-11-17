@@ -95,15 +95,6 @@
 		<tag>HEAD</tag>
 	</scm>
 
-	<repositories>
-		<!-- TODO Wicket 10: Use stable release instead of a milestone one -->
-		<repository>
-			<id>repository.spring.milestone</id>
-			<name>Spring Milestone Repository</name>
-			<url>https://repo.spring.io/milestone</url>
-		</repository>
-	</repositories>
-
 	<modules>
 		<!-- wicket-eclipse-settings is separate released -->
 		<module>wicket</module>
@@ -182,7 +173,7 @@
 		<objenesis.version>3.2</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
 		<slf4j.version>2.0.3</slf4j.version>
-		<spring.version>6.0.0-M2</spring.version>
+		<spring.version>6.0.0</spring.version>
 		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
 		<weld.version>4.0.2.Final</weld.version>
 		<velocity-engine-core.version>2.3</velocity-engine-core.version>
