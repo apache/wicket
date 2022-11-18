@@ -210,16 +210,16 @@ public class ListenerRequestHandler
 		}
 		else
 		{
+			final Behavior behavior;
 			try
 			{
-				Behavior behavior = getComponent().getBehaviorById(behaviorId);
-				invoke(requestCycle, policy, ajax, getComponent(), behavior);
+				behavior = getComponent().getBehaviorById(behaviorId);
 			}
 			catch (IndexOutOfBoundsException e)
 			{
 				throw new WicketRuntimeException("Couldn't find component behavior.", e);
 			}
-
+			invoke(requestCycle, policy, ajax, getComponent(), behavior);
 		}
 	}
 	
