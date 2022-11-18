@@ -137,6 +137,7 @@
 		<asm.version>9.1</asm.version>
 		<aspectj.version>1.9.6</aspectj.version>
 		<assertj-core.version>3.19.0</assertj-core.version>
+		<bouncycastle.version>1.72</bouncycastle.version>
 		<cdi-unit.version>4.1.0</cdi-unit.version>
 		<cglib.version>3.3.0</cglib.version>
 		<byte-buddy.version>1.11.12</byte-buddy.version>
@@ -482,6 +483,11 @@
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjrt</artifactId>
 				<version>${aspectj.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk18on</artifactId>
+				<version>${bouncycastle.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.danekja</groupId>
