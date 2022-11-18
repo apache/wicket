@@ -170,6 +170,11 @@ org.apache.wicket.validation.validator;-noimport:=true
 			<artifactId>wicket-util</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk18on</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>org.danekja</groupId>
 			<artifactId>jdk-serializable-functional</artifactId>
 		</dependency>

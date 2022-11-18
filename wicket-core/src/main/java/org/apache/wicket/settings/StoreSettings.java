@@ -18,9 +18,12 @@ package org.apache.wicket.settings;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.pageStore.crypt.DefaultCrypter;
+import org.apache.wicket.pageStore.crypt.ICrypter;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
@@ -50,6 +53,8 @@ public class StoreSettings
 	private boolean asynchronous = true;
 	
 	private boolean encrypted = false;
+	
+	private Supplier<ICrypter> crypter = DefaultCrypter::new;
 
 	/**
 	 * Construct.
@@ -202,5 +207,29 @@ public class StoreSettings
 	public boolean isEncrypted()
 	{
 		return encrypted;
+	}
+	
+	/**
+	 * Sets the supplier for the {@link ICrypter} used by a
+	 * {@link org.apache.wicket.pageStore.CryptingPageStore}.
+	 * 
+	 * @param crypter
+	 *            The new supplier for an {@link ICrypter}.
+	 * @return {@code this} object for chaining
+	 */
+	public StoreSettings setCrypter(Supplier<ICrypter> crypter)
+	{
+		this.crypter = crypter;
+		return this;
+	}
+
+	/**
+	 * @return the supplier used to create a {@link ICrypter} for a
+	 *         {@link org.apache.wicket.pageStore.CryptingPageStore}. The default is
+	 *         {@link DefaultCrypter}.
+	 */
+	public Supplier<ICrypter> getCrypter()
+	{
+		return crypter;
 	}
 }
