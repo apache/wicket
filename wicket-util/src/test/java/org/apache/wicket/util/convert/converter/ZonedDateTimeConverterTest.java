@@ -39,7 +39,7 @@ public class ZonedDateTimeConverterTest
 	public void convertToString() {
 		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
 		String date = converter.convertToString(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zoneUCT), Locale.ENGLISH);
-		assertEquals(date, "Jul 11, 2016, 1:02:03 AM Coordinated Universal Time");
+		assertEquals("Jul 11, 2016, 1:02:03 AM Coordinated Universal Time", date);
 	}
 
 	@Test

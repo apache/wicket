@@ -28,7 +28,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Represents a collection of listeners. Facilitates invocation of events on each listener.
  * <p>
- * NOTE: Ordering of listeners is not guaranteed and should not be relied upon
+ * Listeners will be invoked in the order added to the collection when using
+ * {@link #notify(INotifier)} or in reversed order when using {@link #reversedNotify(INotifier)}.
  * </p>
  * 
  * @author ivaynberg (Igor Vaynberg)

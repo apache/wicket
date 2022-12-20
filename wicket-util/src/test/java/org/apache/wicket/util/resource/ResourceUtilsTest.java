@@ -35,27 +35,27 @@ public class ResourceUtilsTest
 		ResourceUtils.PathLocale pathLocale;
 
 		pathLocale = ResourceUtils.getLocaleFromFilename("some.ext");
-		assertEquals(pathLocale.path, "some.ext");
+		assertEquals("some.ext", pathLocale.path);
 		assertNull(pathLocale.locale);
 
 		pathLocale = ResourceUtils.getLocaleFromFilename("some.min.ext");
-		assertEquals(pathLocale.path, "some.min.ext");
+		assertEquals("some.min.ext", pathLocale.path);
 		assertNull(pathLocale.locale);
 
 		pathLocale = ResourceUtils.getLocaleFromFilename("some.min_en.ext");
-		assertEquals(pathLocale.path, "some.min.ext");
-		assertEquals(pathLocale.locale, Locale.ENGLISH);
+		assertEquals("some.min.ext", pathLocale.path);
+		assertEquals(Locale.ENGLISH, pathLocale.locale);
 
 		pathLocale = ResourceUtils.getLocaleFromFilename("some_fr_CA.min.ext");
-		assertEquals(pathLocale.path, "some.min.ext");
-		assertEquals(pathLocale.locale, Locale.CANADA_FRENCH);
+		assertEquals("some.min.ext", pathLocale.path);
+		assertEquals(Locale.CANADA_FRENCH, pathLocale.locale);
 
 		String localeVariant = "blah";
 		pathLocale = ResourceUtils
 			.getLocaleFromFilename("some_fr_CA_" + localeVariant + ".min.ext");
-		assertEquals(pathLocale.path, "some.min.ext");
-		assertEquals(pathLocale.locale.getLanguage(), "fr");
-		assertEquals(pathLocale.locale.getCountry(), "CA");
+		assertEquals("some.min.ext", pathLocale.path);
+		assertEquals("fr", pathLocale.locale.getLanguage());
+		assertEquals("CA", pathLocale.locale.getCountry());
 		assertEquals(pathLocale.locale.getVariant(), localeVariant);
 	}
 }

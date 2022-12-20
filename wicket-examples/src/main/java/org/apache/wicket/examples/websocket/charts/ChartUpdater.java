@@ -116,7 +116,8 @@ public class ChartUpdater
 						// stop if the web socket connection is closed
 						return;
 					}
-					connection.sendMessage(json);
+					//send mon-blocking message
+					connection.sendMessageAsync(json);
 
 					// sleep for a while to simulate work
 					TimeUnit.SECONDS.sleep(1);

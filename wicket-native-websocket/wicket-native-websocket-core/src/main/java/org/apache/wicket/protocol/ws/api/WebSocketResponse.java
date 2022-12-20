@@ -47,9 +47,20 @@ public class WebSocketResponse extends WebResponse
 
 	private boolean isRedirect = false;
 
+	private final boolean asynchronous;
+
+	private final long timeout;
+
 	public WebSocketResponse(final IWebSocketConnection conn)
 	{
+		this(conn, false, -1);
+	}
+
+	public WebSocketResponse(final IWebSocketConnection conn, boolean asynchronous, long timeout)
+	{
 		this.connection = conn;
+		this.asynchronous = asynchronous;
+		this.timeout = timeout;
 	}
 
 	@Override
@@ -87,13 +98,27 @@ public class WebSocketResponse extends WebResponse
 			{
 				if (text != null)
 				{
-					connection.sendMessage(text.toString());
+					if (asynchronous)
+					{
+						connection.sendMessageAsync(text.toString(), timeout);
+					}
+					else
+					{
+						connection.sendMessage(text.toString());
+					}
 					text = null;
 				}
 				else if (binary != null)
 				{
 					byte[] bytes = binary.toByteArray();
-					connection.sendMessage(bytes, 0, bytes.length);
+					if (asynchronous)
+					{
+                       connection.sendMessageAsync(bytes, 0, bytes.length, timeout);
+					}
+					else
+					{
+						connection.sendMessage(bytes, 0, bytes.length);
+					}
 					binary.close();
 					binary = null;
 				}

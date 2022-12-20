@@ -48,8 +48,8 @@ if [ ! -z "$1" ] ; then
 	major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
 	minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-.*')
 	bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-.*')
-	milestone_version=$(expr $current_version : '.*\..*-\(.*\)')
-	version="$major_version.$minor_version.0-$milestone_version"
+	
+	version="$1"
 	previous_version="$major_version.$(expr $minor_version - 1).0"
 else
 	current_version=$(getProjectVersionFromPom)

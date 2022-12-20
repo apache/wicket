@@ -18,6 +18,7 @@ package org.apache.wicket.util.string;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,12 +39,9 @@ public class StringValueTest
 	@Test
 	public void equals()
 	{
-		assertFalse(StringValue.valueOf("bla", Locale.FRANCE)
-			.equals(StringValue.valueOf("bla", Locale.CANADA)));
-		assertTrue(StringValue.valueOf("bla", Locale.FRANCE)
-			.equals(StringValue.valueOf("bla", Locale.FRANCE)));
-		assertFalse(StringValue.valueOf("bla", Locale.FRANCE)
-			.equals(StringValue.valueOf("blo", Locale.FRANCE)));
+		assertNotEquals(StringValue.valueOf("bla", Locale.FRANCE), StringValue.valueOf("bla", Locale.CANADA));
+		assertEquals(StringValue.valueOf("bla", Locale.FRANCE), StringValue.valueOf("bla", Locale.FRANCE));
+		assertNotEquals(StringValue.valueOf("bla", Locale.FRANCE), StringValue.valueOf("blo", Locale.FRANCE));
 	}
 
 	/**

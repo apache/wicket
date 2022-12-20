@@ -56,12 +56,13 @@ public class DefaultPageContext implements IPageContext
 		synchronized (session)
 		{
 			T value = (T)session.getAttribute(key);
-			if (value == null) {
-				value = defaultValue.get();
-				if (value != null) {
+			if (defaultValue != null) {
+				if (value == null) {
+					value = defaultValue.get();
 					session.bind();
-					session.setAttribute(key, value);
-				}
+				}				
+				
+				session.setAttribute(key, value);
 			}
 			
 			return value;
@@ -76,15 +77,15 @@ public class DefaultPageContext implements IPageContext
 		synchronized (session)
 		{
 			T value = session.getMetaData(key);
-			if (value != null) {
-				return value;
-			}
-			
-			value = defaultValue.get();
-			if (value != null) {
-				session.bind();
+			if (defaultValue != null) {
+				if (value == null) {
+					value = defaultValue.get();
+					session.bind();
+				}
+				
 				session.setMetaData(key, value);
 			}
+
 			return value;
 		}
 	}

@@ -52,7 +52,7 @@ public class AttributeMapTest
 		assertEquals("baz", map.get("foo"));
 
 		assertEquals("baz", map.putAttribute("foo", null));
-		assertEquals(null, map.get("foo"));
+		assertNull(map.get("foo"));
 	}
 
 	@Test
@@ -64,6 +64,6 @@ public class AttributeMapTest
 		assertEquals("foo", map.get("foo"));
 
 		assertTrue(map.putAttribute("foo", false));
-		assertEquals(null, map.get("foo"));
+		assertNull(map.get("foo"));
 	}
 }

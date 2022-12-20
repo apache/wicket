@@ -158,6 +158,18 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 			{
 				TestWebSocketProcessor.this.broadcastMessage(message);
 			}
+
+			@Override
+			public void sendMessageAsync(IWebSocketPushMessage message, long timeout)
+			{
+				TestWebSocketProcessor.this.broadcastMessage(message);
+			}
+
+			@Override
+			public void sendMessageAsync(IWebSocketPushMessage message)
+			{
+				TestWebSocketProcessor.this.broadcastMessage(message);
+			}
 		});
 	}
 

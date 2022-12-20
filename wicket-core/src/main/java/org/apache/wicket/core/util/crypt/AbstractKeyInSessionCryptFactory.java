@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.util.crypt;
 
+import java.io.Serializable;
+
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.util.crypt.ICrypt;
@@ -37,7 +39,7 @@ public abstract class AbstractKeyInSessionCryptFactory<T extends IClusterable>
 		ICryptFactory
 {
 	/** metadata-key used to store crypto-key in session metadata */
-	private final MetaDataKey<T> KEY = new MetaDataKey<T>()
+	private static final MetaDataKey<Serializable> KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -55,7 +57,7 @@ public abstract class AbstractKeyInSessionCryptFactory<T extends IClusterable>
 		session.bind();
 
 		// retrieve or generate encryption key from session
-		T key = session.getMetaData(KEY);
+		T key = (T) session.getMetaData(KEY);
 		if (key == null)
 		{
 			// generate new key

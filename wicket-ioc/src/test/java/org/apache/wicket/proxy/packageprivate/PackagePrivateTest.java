@@ -66,7 +66,7 @@ class PackagePrivateTest
 
 		// test proxy implements ILazyInitProxy
 		assertTrue(proxy instanceof ILazyInitProxy);
-		assertSame(((ILazyInitProxy)proxy).getObjectLocator(), PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR);
+		assertSame(PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR, ((ILazyInitProxy)proxy).getObjectLocator());
 
 		// test we do not have a jdk dynamic proxy
 		assertFalse(Proxy.isProxyClass(proxy.getClass()));

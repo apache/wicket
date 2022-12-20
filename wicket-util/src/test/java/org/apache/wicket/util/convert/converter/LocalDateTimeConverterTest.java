@@ -33,7 +33,7 @@ public class LocalDateTimeConverterTest
 	public void convertToString() {
 		LocalDateTimeConverter converter = new LocalDateTimeConverter();
 		String date = converter.convertToString(LocalDateTime.of(2016, 7, 11, 1, 2, 3), Locale.ENGLISH);
-		assertEquals(date, "Jul 11, 2016, 1:02:03 AM");
+		assertEquals("Jul 11, 2016, 1:02:03 AM", date);
 	}
 
 	@Test

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.devutils.inspector;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.mock.MockApplication;
@@ -47,7 +47,7 @@ public class SessionSizeModelTest
 			}
 		});
 		SessionSizeModel model = new SessionSizeModel();
-		assertEquals(null, model.getObject());
+		assertNull(model.getObject());
 	}
 
 	/**

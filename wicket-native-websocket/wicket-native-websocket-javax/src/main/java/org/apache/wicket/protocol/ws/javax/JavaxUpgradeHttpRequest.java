@@ -60,6 +60,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	private final String requestUri;
 	private final Map<String, String[]> parametersMap;
 	private final Map<String, List<String>> headers;
+    private final String contextPath;
 
 	public JavaxUpgradeHttpRequest(final Session session, EndpointConfig endpointConfig)
 	{
@@ -77,6 +78,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 		this.userPrincipal = session.getUserPrincipal();
 		Object requestURI = session.getRequestURI();
 		this.requestUri = requestURI != null ? requestURI.toString() : "";
+		this.contextPath = httpSession.getServletContext().getContextPath();
 
 		this.parametersMap = new HashMap<>();
 
@@ -212,7 +214,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	@Override
 	public String getContextPath()
 	{
-		return "";
+		return contextPath;
 	}
 
 	@Override

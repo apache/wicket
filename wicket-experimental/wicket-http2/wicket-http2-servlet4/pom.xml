@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket.experimental.wicket9</groupId>
 		<artifactId>wicket-http2</artifactId>
-		<version>0.20-SNAPSHOT</version>
+		<version>0.24-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-http2-servlet4</artifactId>
@@ -35,6 +35,9 @@
 
 	<properties>
 		<automatic-module-name>org.apache.wicket.http2.servlet4</automatic-module-name>
+		<osgi.export.package>org.apache.wicket.http2.markup.head.servlet4;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+
 	</properties>
 
 	<dependencyManagement>

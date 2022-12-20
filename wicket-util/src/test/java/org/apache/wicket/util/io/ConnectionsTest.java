@@ -39,6 +39,6 @@ class ConnectionsTest
 		URL url = new URL("https://wicket.apache.org/learn/books/wia.png");
 		Instant lastModified = Connections.getLastModified(url);
 		assertNotNull(lastModified);
-		assertNotEquals(lastModified.toEpochMilli(), 0L);
+		assertNotEquals(0L, lastModified.toEpochMilli());
 	}
 }

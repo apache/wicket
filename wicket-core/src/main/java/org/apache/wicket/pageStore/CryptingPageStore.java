@@ -96,7 +96,7 @@ public class CryptingPageStore extends DelegatingPageStore
 	 */
 	protected ICrypter newCrypter()
 	{
-		return new DefaultCrypter();
+		return application.getStoreSettings().getCrypter().get();
 	}
 
 	@Override

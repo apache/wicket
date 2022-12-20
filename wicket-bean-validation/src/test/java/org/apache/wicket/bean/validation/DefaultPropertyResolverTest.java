@@ -35,7 +35,6 @@ import static org.apache.wicket.bean.validation.customconstraint.PasswordConstra
 import static org.apache.wicket.bean.validation.customconstraint.PasswordConstraintAnnotation.DEFAULT_BUNDLE_KEY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DefaultPropertyResolverTest
 {
@@ -181,7 +180,7 @@ public class DefaultPropertyResolverTest
 		{
 			String expectedKey = expectedKeys[i];
 
-			assertTrue(keys.get(i).equals(expectedKey));
+			assertEquals(keys.get(i), expectedKey);
 		}
 	}
 

@@ -189,7 +189,14 @@ public class WebSocketPushBroadcaster
 				@Override
 				public void run()
 				{
-					wsConnection.sendMessage(message);
+					if (webSocketSettings.isAsynchronousPush())
+					{
+						wsConnection.sendMessageAsync(message, webSocketSettings.getAsynchronousPushTimeout());
+					}
+					else
+					{
+						wsConnection.sendMessage(message);
+					}
 				}
 			});
 		}

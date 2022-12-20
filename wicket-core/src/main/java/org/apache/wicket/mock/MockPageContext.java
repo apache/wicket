@@ -68,11 +68,9 @@ public class MockPageContext implements IPageContext
 	{
 		@SuppressWarnings("unchecked")
 		T value = (T)sessionAttributes.get(key);
-		if (value == null) {
+		if (value == null && defaultValue != null) {
 			value = defaultValue.get();
-			if (value != null) {
-				sessionAttributes.put(key, value);
-			}
+			sessionAttributes.put(key, value);
 		}
 		
 		return value;
@@ -82,11 +80,9 @@ public class MockPageContext implements IPageContext
 	public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue)
 	{
 		T value = key.get(sessionData);
-		if (value == null) {
+		if (value == null && defaultValue != null) {
 			value = defaultValue.get();
-			if (value != null) {
-				sessionData = key.set(sessionData, value);
-			}
+			sessionData = key.set(sessionData, value);
 		}
 		
 		return value;

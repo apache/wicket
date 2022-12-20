@@ -158,7 +158,7 @@ class LazyInitProxyFactoryTest
 		// test proxy implements ILazyInitProxy
 		assertTrue(proxy instanceof ILazyInitProxy);
 		final IProxyTargetLocator objectLocator = ((ILazyInitProxy) proxy).getObjectLocator();
-		assertSame(objectLocator, concreteObjectLocator);
+		assertSame(concreteObjectLocator, objectLocator);
 
 		// test we do not have a jdk dynamic proxy
 		assertFalse(Proxy.isProxyClass(proxy.getClass()));

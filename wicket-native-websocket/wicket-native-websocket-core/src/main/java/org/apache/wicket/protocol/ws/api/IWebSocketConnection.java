@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.ws.api;
 
 import java.io.IOException;
+import java.util.concurrent.Future;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
@@ -55,6 +56,27 @@ public interface IWebSocketConnection
 	 */
 	IWebSocketConnection sendMessage(String message) throws IOException;
 
+    /**
+     * Sends a text message to the client in an asynchronous way.
+     *
+     * @param message
+     *      the text message
+     * @return a {@link java.util.concurrent.Future} representing the send operation
+     *
+     */
+    Future<Void> sendMessageAsync(String message);
+
+    /**
+     * Sends a text message to the client in an asynchronous way.
+     *
+     * @param message
+     *      the text message
+     * @param timeout
+     *      the timeout for operation
+     * @return a {@link java.util.concurrent.Future} representing the send operation
+     */
+    Future<Void> sendMessageAsync(String message, long timeout);
+
 	/**
 	 * Sends a binary message to the client.
 	 *
@@ -69,6 +91,34 @@ public interface IWebSocketConnection
 	 */
 	IWebSocketConnection sendMessage(byte[] message, int offset, int length) throws IOException;
 
+    /**
+     * Sends a binary message to the client in an asynchronous way.
+     *
+     * @param message
+     *      the binary message
+     * @param offset
+     *      the offset to read from
+     * @param length
+     *      how much data to read
+     * @return a {@link java.util.concurrent.Future} representing the send operation
+     */
+    Future<Void> sendMessageAsync(byte[] message, int offset, int length);
+
+    /**
+     * Sends a binary message to the client in an asynchronous way.
+     *
+     * @param message
+     *      the binary message
+     * @param offset
+     *      the offset to read from
+     * @param length
+     *      how much data to read
+     * @param timeout
+     *      the timeout for operation
+     * @return a {@link java.util.concurrent.Future} representing the send operation
+     */
+    Future<Void> sendMessageAsync(byte[] message, int offset, int length, long timeout);
+
 	/**
 	 * Broadcasts a push message to the wicket page (and it's components) associated with this
 	 * connection. The components can then send messages or component updates to client by adding
@@ -79,6 +129,31 @@ public interface IWebSocketConnection
 	 * @since 6.4
 	 */
 	void sendMessage(IWebSocketPushMessage message);
+
+	/**
+	 * Broadcasts a push message to the wicket page (and it's components) associated with this
+	 * connection. The components can then send messages or component updates to client by adding
+	 * them to the target. Pushing to client is done asynchronously.
+	 *
+	 * @param message
+	 *     the push message to send
+	 *
+	 */
+	void sendMessageAsync(IWebSocketPushMessage message);
+
+
+	/**
+	 * Broadcasts a push message to the wicket page (and it's components) associated with this
+	 * connection. The components can then send messages or component updates to client by adding
+	 * them to the target. Pushing to client is done asynchronously.
+	 *
+	 * @param message
+	 *     the push message to send
+	 * @param timeout
+	 *     the timeout in milliseconds
+	 *
+	 */
+	void sendMessageAsync(IWebSocketPushMessage message, long timeout);
 
 	/**
 	 * @return The application for which this WebSocket connection is registered

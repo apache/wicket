@@ -346,43 +346,46 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 */
 	private void renderCombinedEventScripts()
 	{
-		StringBuilder combinedScript = new StringBuilder();
+		// make a rough estimate of the size to which this StringBuilder will grow
+		int domReadyLength = domReadyItemsToBeRendered.size() * 256;
+		StringBuilder domReadScript = new StringBuilder(domReadyLength);
 		for (HeaderItem curItem : domReadyItemsToBeRendered)
 		{
 			if (markItemRendered(curItem))
 			{
-				combinedScript.append('\n');
+				domReadScript.append('\n');
 				if (curItem instanceof OnDomReadyHeaderItem)
 				{
-					combinedScript.append(((OnDomReadyHeaderItem)curItem).getJavaScript());
+					domReadScript.append(((OnDomReadyHeaderItem)curItem).getJavaScript());
 				} else if (curItem instanceof OnEventHeaderItem)
 				{
-					combinedScript.append(((OnEventHeaderItem)curItem).getCompleteJavaScript());
+					domReadScript.append(((OnEventHeaderItem)curItem).getCompleteJavaScript());
 				}
-				combinedScript.append(';');
+				domReadScript.append(';');
 			}
 		}
-		if (combinedScript.length() > 0)
+		if (domReadScript.length() > 0)
 		{
-			combinedScript.append("\nWicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);");
-			getRealResponse().render(
-				OnDomReadyHeaderItem.forScript(combinedScript.append('\n').toString()));
+			domReadScript.append("\nWicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);\n");
+			getRealResponse().render(OnDomReadyHeaderItem.forScript(domReadScript));
 		}
 
-		combinedScript.setLength(0);
+		int onLoadLength = loadItemsToBeRendered.size() * 256;
+        StringBuilder onLoadScript = new StringBuilder(onLoadLength);
+		
 		for (OnLoadHeaderItem curItem : loadItemsToBeRendered)
 		{
 			if (markItemRendered(curItem))
 			{
-				combinedScript.append('\n');
-				combinedScript.append(curItem.getJavaScript());
-				combinedScript.append(';');
+			    onLoadScript.append('\n');
+			    onLoadScript.append(curItem.getJavaScript());
+			    onLoadScript.append(';');
 			}
 		}
-		if (combinedScript.length() > 0)
+		if (onLoadScript.length() > 0)
 		{
 			getRealResponse().render(
-				OnLoadHeaderItem.forScript(combinedScript.append('\n').toString()));
+				OnLoadHeaderItem.forScript(onLoadScript.append('\n')));
 		}
 	}
 

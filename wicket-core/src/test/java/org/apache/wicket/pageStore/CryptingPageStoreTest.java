@@ -21,14 +21,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StreamCorruptedException;
 import java.security.GeneralSecurityException;
+import java.security.Security;
+import java.util.List;
 
 import org.apache.wicket.MockPage;
 import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.mock.MockPageStore;
+import org.apache.wicket.pageStore.crypt.DefaultCrypter;
+import org.apache.wicket.pageStore.crypt.GCMSIVCrypter;
+import org.apache.wicket.pageStore.crypt.ICrypter;
 import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.jupiter.api.Test;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Test for {@link CryptingPageStore}.
@@ -37,12 +44,22 @@ import org.junit.jupiter.api.Test;
  */
 public class CryptingPageStoreTest extends WicketTestCase
 {
-
-	@Test
-	void test()
+	@BeforeAll
+	public static void init()
 	{
-		CryptingPageStore store =
-			new CryptingPageStore(new MockPageStore(), tester.getApplication());
+		Security.addProvider(new BouncyCastleProvider());
+	}
+	
+	static List<ICrypter> crypters()
+	{
+		return List.of(new DefaultCrypter(), new GCMSIVCrypter());
+	}
+
+	@ParameterizedTest
+	@MethodSource("crypters")
+	void test(ICrypter crypter)
+	{
+		CryptingPageStore store = buildPageStore(crypter);
 		JavaSerializer serializer = new JavaSerializer("test");
 
 		IPageContext context = new MockPageContext();
@@ -59,11 +76,11 @@ public class CryptingPageStoreTest extends WicketTestCase
 		}
 	}
 
-	@Test
-	void testFail()
+	@ParameterizedTest
+	@MethodSource("crypters")
+	void testFail(ICrypter crypter)
 	{
-		CryptingPageStore store =
-			new CryptingPageStore(new MockPageStore(), tester.getApplication());
+		CryptingPageStore store = buildPageStore(crypter);
 		JavaSerializer serializer = new JavaSerializer("test");
 
 		MockPageContext context = new MockPageContext();
@@ -91,5 +108,17 @@ public class CryptingPageStoreTest extends WicketTestCase
 					|| ex.getCause() instanceof StreamCorruptedException,
 				"unable to decrypt with new key");
 		}
+	}
+	
+	private CryptingPageStore buildPageStore(ICrypter crypter)
+	{
+		return new CryptingPageStore(new MockPageStore(), tester.getApplication())
+		{
+			@Override
+			protected ICrypter newCrypter()
+			{
+				return crypter;
+			}
+		};
 	}
 }

@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.markup.html.repeater.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Iterator;
@@ -128,13 +129,13 @@ public class TreeModelProviderTest
 		};
 
 		assertFalse(provider.completeUpdate);
-		assertEquals(null, provider.nodeUpdates);
-		assertEquals(null, provider.branchUpdates);
+		assertNull(provider.nodeUpdates);
+		assertNull(provider.branchUpdates);
 
 		treeModel.removeNodeFromParent((MutableTreeNode)root.getChildAt(0).getChildAt(0));
 
 		assertFalse(provider.completeUpdate);
-		assertEquals(null, provider.nodeUpdates);
+		assertNull(provider.nodeUpdates);
 		assertEquals(1, provider.branchUpdates.size());
 
 		treeModel.nodeChanged(root.getChildAt(1));

@@ -19,6 +19,8 @@ package org.apache.wicket.protocol.ws.api;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.request.ILoggableRequestHandler;
 
+import java.util.concurrent.Future;
+
 /**
  * An interface for outbound communication with web socket clients
  *
@@ -35,6 +37,28 @@ public interface IWebSocketRequestHandler extends IPartialPageRequestHandler, IL
 	void push(CharSequence message);
 
 	/**
+	 * Pushes a text message to the client in an asynchronous way.
+	 *
+	 * @param message
+	 *      the text message to push to the client if the web socket connection is open
+	 * @return
+	 *      a {@link java.util.concurrent.Future} representing the send operation. Or null if connection is closed.
+	 */
+	Future<Void> pushAsync(CharSequence message);
+
+	/**
+	 * Pushes a text message to the client in an asynchronous way.
+	 *
+	 * @param message
+	 *      the text message to push to the client if the web socket connection is open
+	 * @param timeout
+	 *      the timeout for operation
+	 * @return
+	 * 		a {@link java.util.concurrent.Future} representing the send operation. Or null if connection is closed.
+	 */
+	Future<Void> pushAsync(CharSequence message, long timeout);
+
+	/**
 	 * Pushes a binary message to the client.
 	 *
 	 * @param message
@@ -45,4 +69,34 @@ public interface IWebSocketRequestHandler extends IPartialPageRequestHandler, IL
 	 *      how many bytes to read from the message
 	 */
 	void push(byte[] message, int offset, int length);
+
+	/**
+	 * Pushes a binary message to the client.
+	 *
+	 * @param message
+	 *      the binary message to push to the client if the web socket connection is open
+	 * @param offset
+	 *      the offset to start to read from the message
+	 * @param length
+	 *      how many bytes to read from the message
+	 * @return
+	 * 		a {@link java.util.concurrent.Future} representing the send operation. Or null if connection is closed.
+	 */
+	Future<Void> pushAsync(byte[] message, int offset, int length);
+
+	/**
+	 * Pushes a binary message to the client.
+	 *
+	 * @param message
+	 *      the binary message to push to the client if the web socket connection is open
+	 * @param offset
+	 *      the offset to start to read from the message
+	 * @param length
+	 *      how many bytes to read from the message
+	 * @param timeout
+	 *      the timeout for operation
+	 * @return
+	 * 		a {@link java.util.concurrent.Future} representing the send operation. Or null if connection is closed.
+	 */
+	Future<Void> pushAsync(byte[] message, int offset, int length, long timeout);
 }

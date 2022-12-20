@@ -81,7 +81,7 @@ public abstract class Panel extends WebMarkupContainer implements IQueueRegion
 	@Override
 	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
 	{
-		return new PanelMarkupSourcingStrategy(false);
+		return PanelMarkupSourcingStrategy.get(false);
 	}
 	
 	/**

@@ -302,7 +302,12 @@ public final class Strings
 			return null;
 		}
 
-		int len = s.length();
+		final int len = s.length();
+		if (len == 0)
+		{
+			return s;
+		}
+
 		final AppendingStringBuffer buffer = new AppendingStringBuffer((int)(len * 1.1));
 
 		for (int i = 0; i < len; i++)
