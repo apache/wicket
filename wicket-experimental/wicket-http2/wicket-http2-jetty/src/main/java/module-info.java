@@ -20,7 +20,7 @@ module org.apache.wicket.http2.jetty {
     requires org.apache.wicket.core;
     requires org.apache.wicket.http2.core;
     requires org.slf4j;
-    requires javax.servlet.api;
+    requires static javax.servlet.api;
     requires org.eclipse.jetty.server;
 
     exports org.apache.wicket.http2.markup.head.jetty;

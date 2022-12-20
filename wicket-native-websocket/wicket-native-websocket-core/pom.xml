@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.apache.wicket</groupId>
         <artifactId>wicket-native-websocket</artifactId>
-        <version>9.9.0-SNAPSHOT</version>
+        <version>9.13.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -29,7 +29,10 @@
     <packaging>bundle</packaging>
     <name>Wicket Native WebSocket Core</name>
     <description>Provides the common code needed for the different integrations with web container's WebSocket implementations</description>
-
+	<properties>
+		<osgi.export.package>org.apache.wicket.protocol.ws*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+	</properties>
     <dependencies>
         <dependency>
             <groupId>org.apache.wicket</groupId>

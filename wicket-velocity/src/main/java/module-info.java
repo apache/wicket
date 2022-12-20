@@ -16,7 +16,7 @@
  */
 
 module org.apache.wicket.velocity {
-    requires javax.servlet.api;
+    requires static javax.servlet.api;
     requires org.apache.wicket.util;
     requires org.apache.wicket.core;
     requires org.slf4j;

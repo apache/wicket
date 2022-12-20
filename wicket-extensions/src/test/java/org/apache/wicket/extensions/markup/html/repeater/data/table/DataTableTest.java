@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -65,15 +66,15 @@ public class DataTableTest extends WicketTestCase
 		int index = document.indexOf("<thead");
 		assertTrue(index != -1, "Expected at least on <thead>");
 		index = document.indexOf("<thead", index + 1);
-		assertTrue(index == -1, "There must be only one <thead>");
+		assertEquals(-1, index, "There must be only one <thead>");
 
 		index = document.indexOf("<tbody");
 		assertTrue(index != -1, "Expected at least on <tbody>");
 		index = document.indexOf("<tbody", index + 1);
-		assertTrue(index == -1, "There must be only one <tbody>");
+		assertEquals(-1, index, "There must be only one <tbody>");
 
 		index = document.indexOf("<caption", index + 1);
-		assertTrue(index == -1, "There must be not be <caption>");
+		assertEquals(-1, index, "There must be not be <caption>");
 	}
 
 	/**

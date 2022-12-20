@@ -33,7 +33,7 @@ public class LocalTimeConverterTest
 	public void convertToString() {
 		LocalTimeConverter converter = new LocalTimeConverter();
 		String time = converter.convertToString(LocalTime.of(1, 2, 3), Locale.ENGLISH);
-		assertEquals(time, "01:02:03");
+		assertEquals("01:02:03", time);
 	}
 
 	@Test

@@ -21,6 +21,8 @@ import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.util.lang.Args;
 
+import java.util.concurrent.Future;
+
 /**
  * Abstract class handling the Web Socket broadcast messages.
  */
@@ -50,7 +52,19 @@ public abstract class AbstractWebSocketConnection implements IWebSocketConnectio
 	@Override
 	public void sendMessage(IWebSocketPushMessage message)
 	{
-		webSocketProcessor.broadcastMessage(message, this);
+		webSocketProcessor.broadcastMessage(message, this, false, -1);
+	}
+
+	@Override
+	public void sendMessageAsync(IWebSocketPushMessage message)
+	{
+		webSocketProcessor.broadcastMessage(message, this, true, -1);
+	}
+
+	@Override
+	public void sendMessageAsync(IWebSocketPushMessage message, long timeout)
+	{
+		webSocketProcessor.broadcastMessage(message, this, true, timeout);
 	}
 
 	@Override

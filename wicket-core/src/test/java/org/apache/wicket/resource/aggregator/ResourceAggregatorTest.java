@@ -19,6 +19,7 @@ package org.apache.wicket.resource.aggregator;
 import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +27,8 @@ import java.util.List;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.head.PriorityHeaderItem;
 import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -274,4 +277,35 @@ class ResourceAggregatorTest extends WicketTestCase
 		aggregator.render(new PriorityHeaderItem(forReference(new ResourceReferenceA())));
 		assertItems(new PriorityHeaderItem(bundleAB), forReference(new ResourceReferenceX()));
 	}
+	
+	/**
+	 *  Test rendering for onDomReady and onLoad scripts
+	 */
+	
+	@Test
+	void testCombinedScripts()
+    {
+        String onLoadScript = ";alert('Hello!');";
+        String onReadyScript = ";alert('Ready!');";
+        
+        aggregator.render(OnDomReadyHeaderItem.forScript(onReadyScript));
+        aggregator.render(OnLoadHeaderItem.forScript(onLoadScript));
+        aggregator.close();
+        
+        List<HeaderItem> items = responseStub.getItems();
+        
+        OnDomReadyHeaderItem onDomReadyItem = (OnDomReadyHeaderItem) items.stream()
+            .filter(item -> (item instanceof OnDomReadyHeaderItem))
+            .findFirst().get();
+           
+        String onReadyItemScript = onDomReadyItem.getJavaScript().toString();
+        assertTrue(onReadyItemScript.contains(onReadyScript));
+        
+        OnLoadHeaderItem onLoadItem = (OnLoadHeaderItem) items.stream()
+            .filter(item -> (item instanceof OnLoadHeaderItem))
+            .findFirst().get();
+        
+        String onLoadItemScript = onLoadItem.getJavaScript().toString();
+        assertTrue(onLoadItemScript.contains(onLoadScript));
+    }
 }

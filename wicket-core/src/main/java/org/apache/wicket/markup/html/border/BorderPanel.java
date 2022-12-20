@@ -92,7 +92,7 @@ public abstract class BorderPanel extends Panel
 	@Override
 	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
 	{
-		return new PanelMarkupSourcingStrategy(true);
+		return PanelMarkupSourcingStrategy.get(true);
 	}
 
 	/**

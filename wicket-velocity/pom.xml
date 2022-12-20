@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>9.9.0-SNAPSHOT</version>
+		<version>9.13.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-velocity</artifactId>
@@ -33,6 +33,8 @@
 	</description>
 
 	<properties>
+		<osgi.export.package>org.apache.wicket.velocity*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
 		<automatic-module-name>org.apache.wicket.velocity</automatic-module-name>
 	</properties>
 

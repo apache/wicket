@@ -81,7 +81,6 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * A pageId indicating that the endpoint is WebSocketResource
 	 */
 	static final int NO_PAGE_ID = -1;
-	static final String NO_PAGE_CLASS = "_NO_PAGE";
 
 	private final WebRequest webRequest;
 	private final int pageId;
@@ -184,7 +183,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			}
 		}
 
-		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key), connection);
+		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key), connection, webSocketSettings.isAsynchronousPush(), webSocketSettings.getAsynchronousPushTimeout());
 	}
 
 	@Override
@@ -210,7 +209,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	{
 		IKey key = getRegistryKey();
 		IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, key);
-		broadcastMessage(message, connection);
+		broadcastMessage(message, connection, webSocketSettings.isAsynchronousPush(), webSocketSettings.getAsynchronousPushTimeout());
 	}
 
 	/**
@@ -224,8 +223,15 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 *
 	 * @param message
 	 *      the message to broadcast
+     * @param connection
+     * 	    the {@link org.apache.wicket.protocol.ws.api.IWebSocketConnection}
+     * @param asynchronousPush
+     * 	    whether asynchronous pus is used or not
+     * @param timeout
+     * 	    The time ut to use for operation (in milliseconds). A negative value means use default timeout
+     * 	    (specified by container).
 	 */
-	public final void broadcastMessage(final IWebSocketMessage message, IWebSocketConnection connection)
+	public final void broadcastMessage(final IWebSocketMessage message, IWebSocketConnection connection, boolean asynchronousPush, long timeout)
 	{
 		if (connection != null && (connection.isOpen() || isSpecialMessage(message)))
 		{
@@ -233,7 +239,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			Session oldSession = ThreadContext.getSession();
 			RequestCycle oldRequestCycle = ThreadContext.getRequestCycle();
 
-			WebResponse webResponse = webSocketSettings.newWebSocketResponse(connection);
+			WebResponse webResponse = webSocketSettings.newWebSocketResponse(connection, asynchronousPush, timeout);
 			try
 			{
 				WebSocketRequestMapper requestMapper = new WebSocketRequestMapper(application.getRootRequestMapper());

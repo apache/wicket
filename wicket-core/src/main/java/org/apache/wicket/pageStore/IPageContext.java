@@ -47,7 +47,8 @@ public interface IPageContext
 
 	/**
 	 * Get an attribute from the session. <br>
-	 * Binds the session if not already set and supplied default value is not <code>null</code>.
+	 * Binds the session if not already set <em>and</em> supplier is not <code>null</code>.
+	 * Sets the session attribute if supplier is not <code>null</code>.
 	 * 
 	 * @param key
 	 *            key
@@ -61,12 +62,13 @@ public interface IPageContext
 
 	/**
 	 * Get metadata from the session. <br>
-	 * Binds the session if not already set and supplied default value is not <code>null</code>.
+	 * Binds the session if not already set <em>and</em> supplier is not <code>null</code>.
+	 * Sets the session attribute if supplier is not <code>null</code>.
 	 *
 	 * @param key
 	 *            key
 	 * @param defaultValue
-	 *            default value to use if not present
+	 *            optional supplier of a default value to use if not present
 	 * @return value
 	 * 
 	 * @see Session#getMetaData(MetaDataKey)

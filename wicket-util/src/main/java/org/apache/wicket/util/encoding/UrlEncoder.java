@@ -249,7 +249,7 @@ public class UrlEncoder
 				}
 			}
 		}
-		return new String(bos.toByteArray(), charset);
+		return bos.toString(charset);
 	}
 
 }

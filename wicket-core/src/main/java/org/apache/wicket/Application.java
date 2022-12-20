@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.application.ComponentInstantiationListenerCollection;
@@ -159,7 +160,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	private final List<IInitializer> initializers = Generics.newArrayList();
 
 	/** Application level meta data. */
-	private MetaDataEntry<?>[] metaData;
+	private final ConcurrentHashMap<MetaDataKey<?>, Object> metaData = new ConcurrentHashMap<>();
 
 	/** Name of application subclass. */
 	private String name;
@@ -394,9 +395,10 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	 * @see MetaDataKey
 	 */
 	@Override
-	public final synchronized <T> T getMetaData(final MetaDataKey<T> key)
+	@SuppressWarnings("unchecked")
+	public final <T> T getMetaData(final MetaDataKey<T> key)
 	{
-		return key.get(metaData);
+		return (T)metaData.get(key);
 	}
 
 	/**
@@ -508,9 +510,9 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	 * @see MetaDataKey
 	 */
 	@Override
-	public synchronized final <T> Application setMetaData(final MetaDataKey<T> key, final T object)
+	public final <T> Application setMetaData(final MetaDataKey<T> key, final T object)
 	{
-		metaData = key.set(metaData, object);
+		metaData.put(key, object);
 		return this;
 	}
 

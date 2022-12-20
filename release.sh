@@ -140,22 +140,6 @@ function generate_signatures_from_release {
 
     echo "========================================================================
 
-    The signatures for the source release artefacts:
-
-    " > /tmp/release-$version-sigs.txt
-
-    pushd target/dist > /dev/null
-    for i in apache-wicket*{zip,tar.gz}
-    do
-        echo "Signature for $i:
-
-    $(cat $i.asc)
-    " >> /tmp/release-$version-sigs.txt
-    done
-    popd > /dev/null
-
-        echo "========================================================================
-
     CHANGELOG for $version:
     " >> /tmp/release-$version-sigs.txt
 

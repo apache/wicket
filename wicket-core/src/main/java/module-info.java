@@ -25,13 +25,16 @@ module org.apache.wicket.core {
     requires org.apache.commons.collections4;
     requires commons.fileupload;
     requires org.slf4j;
-    requires javax.servlet.api;
+    requires static javax.servlet.api;
     requires org.danekja.jdk.serializable.functional;
     requires com.github.openjson;
     requires org.junit.jupiter.api;
+    requires static org.bouncycastle.provider;
 
     provides org.apache.wicket.IInitializer with org.apache.wicket.Initializer;
     provides org.apache.wicket.resource.FileSystemPathService with org.apache.wicket.resource.FileSystemJarPathService;
+
+    uses org.apache.wicket.IInitializer;
 
     exports org.apache.wicket;
     exports org.apache.wicket.ajax;

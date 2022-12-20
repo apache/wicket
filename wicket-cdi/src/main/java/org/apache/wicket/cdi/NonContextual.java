@@ -125,7 +125,8 @@ public class NonContextual<T>
 	{
 		BeanManager manager = BeanManagerLookup.lookup();
 		AnnotatedType<? extends T> type = manager.createAnnotatedType(clazz);
-		this.it = (InjectionTarget<T>)manager.createInjectionTarget(type);
+		this.it = (InjectionTarget<T>) manager.getInjectionTargetFactory(type)
+			.createInjectionTarget(null);
 	}
 
 	/**

@@ -762,9 +762,25 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param openTagName
 	 *            the tag to render the associated markup for
 	 * @param exceptionMessage
-	 *            message that will be used for exceptions
+	 *            ignored
+	 * @deprecated
+	 *            Use {@link #renderAssociatedMarkup(String)}. The {@code exceptionMessage}
+	 *            parameter is ignored.
 	 */
+	@Deprecated(since = "9.10.0", forRemoval = true)
 	public final void renderAssociatedMarkup(final String openTagName, final String exceptionMessage)
+	{
+		renderAssociatedMarkup(openTagName);
+	}
+	
+	/**
+	 * Renders the entire associated markup for a container such as a Border or Panel. Any leading
+	 * or trailing raw markup in the associated markup is skipped.
+	 * 
+	 * @param openTagName
+	 *            the tag to render the associated markup for
+	 */
+	public final void renderAssociatedMarkup(final String openTagName)
 	{
 		// Get associated markup file for the Border or Panel component
 		final MarkupStream associatedMarkupStream = new MarkupStream(getMarkup(null));
@@ -773,15 +789,16 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		MarkupElement elem = associatedMarkupStream.get();
 		if ((elem instanceof ComponentTag) == false)
 		{
-			associatedMarkupStream.throwMarkupException("Expected the open tag. " +
-				exceptionMessage);
+			associatedMarkupStream.throwMarkupException("Expected the open tag. Markup for a "
+				+ openTagName + " component must begin a tag like '<wicket:" + openTagName + ">'");
 		}
 
 		// Check for required open tag name
 		ComponentTag associatedMarkupOpenTag = (ComponentTag)elem;
 		if (!(associatedMarkupOpenTag.isOpen() && (associatedMarkupOpenTag instanceof WicketTag)))
 		{
-			associatedMarkupStream.throwMarkupException(exceptionMessage);
+			associatedMarkupStream.throwMarkupException("Markup for a " + openTagName
+				+ " component must begin a tag like '<wicket:" + openTagName + ">'");
 		}
 
 		try

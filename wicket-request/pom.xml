@@ -20,7 +20,7 @@
   <parent>
     <artifactId>wicket-parent</artifactId>
     <groupId>org.apache.wicket</groupId>
-    <version>9.9.0-SNAPSHOT</version>
+    <version>9.13.0-SNAPSHOT</version>
   </parent>
   <artifactId>wicket-request</artifactId>
   <packaging>bundle</packaging>
@@ -28,6 +28,8 @@
   <url>http://maven.apache.org</url>
 
     <properties>
+         <osgi.export.package>org.apache.wicket.request*;-noimport:=true</osgi.export.package>
+         <osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
         <automatic-module-name>org.apache.wicket.request</automatic-module-name>
     </properties>
 

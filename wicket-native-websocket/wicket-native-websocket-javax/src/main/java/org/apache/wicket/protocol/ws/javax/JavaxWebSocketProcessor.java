@@ -23,9 +23,7 @@ import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
-import org.apache.wicket.protocol.ws.api.IWebSocketSession;
 
 /**
  * An {@link org.apache.wicket.protocol.ws.api.IWebSocketProcessor processor} that integrates with

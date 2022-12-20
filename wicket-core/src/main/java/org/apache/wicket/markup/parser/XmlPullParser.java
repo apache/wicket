@@ -36,7 +36,7 @@ import org.apache.wicket.util.string.Strings;
 /**
  * A fairly shallow markup pull parser which parses a markup string of a given type of markup (for
  * example, html, xml, vxml or wml) into ComponentTag and RawMarkup tokens.
- * 
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
@@ -108,7 +108,7 @@ public final class XmlPullParser implements IXmlPullParser
 	/**
 	 * Whatever will be in between the current index and the closing tag, will be ignored (and thus
 	 * treated as raw markup (text). This is useful for tags like 'script'.
-	 * 
+	 *
 	 * @throws ParseException
 	 */
 	private void skipUntil() throws ParseException
@@ -151,7 +151,7 @@ public final class XmlPullParser implements IXmlPullParser
 	}
 
 	/**
-	 * 
+	 *
 	 * @return line and column number
 	 */
 	private String getLineAndColumnText()
@@ -266,7 +266,7 @@ public final class XmlPullParser implements IXmlPullParser
 					{
 						// +1 to remove the ' or "
 						String typePrefix = lowerCase.substring(idxOfType + typeAttr.length() + 1);
-						if (typePrefix.startsWith("text/javascript"))
+						if (typePrefix.startsWith("text/javascript") || typePrefix.startsWith("module"))
 						{
 							// prepare to skip everything between the open and close tag
 							skipUntilText = SCRIPT;
@@ -324,7 +324,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Handle special tags like &lt;!-- --&gt; or &lt;![CDATA[..]]&gt; or &lt;?xml&gt;
-	 * 
+	 *
 	 * @param tagText
 	 * @param openBracketIndex
 	 * @param closeBracketIndex
@@ -514,7 +514,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Find the char but ignore any text within ".." and '..'
-	 * 
+	 *
 	 * @param ch
 	 *            The character to search
 	 * @param startIndex
@@ -553,7 +553,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 * <p>
 	 * Note: xml character encoding is NOT applied. It is assumed the input provided does have the
 	 * correct encoding already.
-	 * 
+	 *
 	 * @param string
 	 *            The input string
 	 * @throws IOException
@@ -571,11 +571,11 @@ public final class XmlPullParser implements IXmlPullParser
 	/**
 	 * Reads and parses markup from an input stream, using UTF-8 encoding by default when not
 	 * specified in XML declaration.
-	 * 
+	 *
 	 * @param in
 	 *            The input stream to read and parse
 	 * @throws IOException
-	 * 
+	 *
 	 * @see #parse(InputStream, String)
 	 */
 	@Override
@@ -589,7 +589,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 * Reads and parses markup from an input stream.
 	 * <p>
 	 * Note: The input is closed after parsing.
-	 * 
+	 *
 	 * @param inputStream
 	 *            The input stream to read and parse
 	 * @param encoding
@@ -634,7 +634,7 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/**
 	 * Parses the text between tags. For example, "a href=foo.html".
-	 * 
+	 *
 	 * @param tag
 	 * @param tagText
 	 *            The text between tags

@@ -20,14 +20,17 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>9.9.0-SNAPSHOT</version>
+		<version>9.13.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-objectsizeof-agent</artifactId>
 	<packaging>jar</packaging>
 	<name>Wicket Objects Sizeof Agent</name>
 	<description>Agent for pluggin in object size measurements using instrumentation</description>
-
+	<properties>
+		<osgi.export.package>org.apache.wicket.util.instrument*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

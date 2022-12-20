@@ -28,6 +28,8 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * @since 1.5.8
  */
@@ -49,6 +51,8 @@ class SharedBehaviorTest extends WicketTestCase
 	{
 		TestPage page = new TestPage();
 		executeTest(page, "SharedBehaviorTest_renderHead_expected.html");
+
+		assertEquals(page.sharedBehavior.renderHeadCount, 2);
 	}
 
 	/**
@@ -56,13 +60,18 @@ class SharedBehaviorTest extends WicketTestCase
 	 */
 	private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+
+		final SharedBehavior sharedBehavior;
+
 		private TestPage()
 		{
-			SharedBehavior behavior = new SharedBehavior();
+			sharedBehavior = new SharedBehavior();
 			WebComponent component1 = new WebComponent("comp1");
-			component1.add(behavior);
+			component1.add(sharedBehavior);
+			component1.add(sharedBehavior);
 			WebComponent component2 = new WebComponent("comp2");
-			component2.add(behavior);
+			component2.add(sharedBehavior);
+			component2.add(sharedBehavior);
 			add(component1, component2);
 		}
 
@@ -78,10 +87,13 @@ class SharedBehaviorTest extends WicketTestCase
 	 */
 	private static class SharedBehavior extends Behavior
 	{
+		int renderHeadCount;
+
 		@Override
 		public void renderHead(Component component, IHeaderResponse response)
 		{
 			super.renderHead(component, response);
+			renderHeadCount += 1;
 			response.render(StringHeaderItem.forString("\nRendering header contribution for component with id: " + component.getId()));
 		}
 	}

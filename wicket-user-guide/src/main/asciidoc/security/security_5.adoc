@@ -10,7 +10,7 @@ Just like any RequestCycle listener _ResourceIsolationRequestCycleListener_ must
   @Override
  protected void init() {
   super.init();
-  getRequestCycleListeners().add(new ResourseIsolationRequestCycleListener());
+  getRequestCycleListeners().add(new ResourceIsolationRequestCycleListener());
   // ...
  }
 ----
@@ -38,7 +38,7 @@ _ResourceIsolationRequestCycleListener_ is highly configurable. It allows to add
 
 An __IResourceIsolationPolicy__ returns a __ResourceIsolationOutcome__ after processing a request, which can be one of 3 values (__ALLOWED__, __DISALLOWED__, __UNKNOWN__). The __ResourceIsolationRequestCycleListener__ checks the __IResourceIsolationPolicy__ objects in order and uses the first outcome that is not __UNKNOWN__ to trigger the appropriate action. If all return __UNKNOWN__ __unknownOutcomeAction__ is applied. The actions can be configured through the listener.
 
-The default constructor uses the __FetchMetadataResourceIsolationPolicy__, which checks Fetch Metadata headers, and the __OriginBasedResourceIsolationPolicy__ which uses the Origin and Referer headers to forbid requests made from a different origin, in order. The __OriginBasedResourceIsolationPolicy__ contains the refactored logic of the now deprecated __CsrfPreventionRequestCycleListener__.
+The default constructor uses the __FetchMetadataResourceIsolationPolicy__, which checks Fetch Metadata headers, and the __OriginResourceIsolationPolicy__ which uses the Origin and Referer headers to forbid requests made from a different origin, in order. The __OriginResourceIsolationPolicy__ contains the refactored logic of the now deprecated __CsrfPreventionRequestCycleListener__.
 The listener can be configured to include custom __IResourceIsolationPolicy__ objects.
 
 For example:
@@ -50,7 +50,7 @@ For example:
   getRequestCycleListeners().add(
 	new ResourseIsolationRequestCycleListener(
 		new FetchMetadataResourceIsolationPolicy(),
-		new OriginBasedResourceIsolationPolicy(),
+		new OriginResourceIsolationPolicy(),
 		new MyCustomResourceIsolationPolicy()
 	));
   // ...

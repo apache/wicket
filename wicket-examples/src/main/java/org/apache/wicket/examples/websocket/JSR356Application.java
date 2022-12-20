@@ -23,8 +23,6 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
-import org.apache.wicket.protocol.ws.api.IWebSocketSession;
-import org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.slf4j.Logger;
@@ -67,6 +65,10 @@ public class JSR356Application extends WicketExampleApplication
 		getSharedResources().add(ChartWebSocketResource.NAME, new ChartWebSocketResource());
 
 		final WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(this);
+
+		// use asynchronous/non-blocking push mode
+		webSocketSettings.setAsynchronousPush(true);
+		webSocketSettings.setAsynchronousPushTimeout(6000L);
 
 		webSocketSettings.setSocketSessionConfigurer(webSocketSession -> {
 			LOGGER.info("getMaxIdleTimeout = {}", webSocketSession.getMaxIdleTimeout());

@@ -167,12 +167,6 @@ public class ListenerRequestHandler
 					+ "' has been removed from page.");
 		}
 
-		if (page instanceof Page)
-		{
-			// initialize the page to be able to check whether it is stateless
-			((Page)page).internalInitialize();
-		}
-
 		RedirectPolicy policy = page.isPageStateless()
 			? RedirectPolicy.NEVER_REDIRECT
 			: RedirectPolicy.AUTO_REDIRECT;
@@ -216,16 +210,16 @@ public class ListenerRequestHandler
 		}
 		else
 		{
+			final Behavior behavior;
 			try
 			{
-				Behavior behavior = getComponent().getBehaviorById(behaviorId);
-				invoke(requestCycle, policy, ajax, getComponent(), behavior);
+				behavior = getComponent().getBehaviorById(behaviorId);
 			}
 			catch (IndexOutOfBoundsException e)
 			{
 				throw new WicketRuntimeException("Couldn't find component behavior.", e);
 			}
-
+			invoke(requestCycle, policy, ajax, getComponent(), behavior);
 		}
 	}
 	

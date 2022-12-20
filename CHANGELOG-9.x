@@ -2,6 +2,95 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.12.0
+
+** Bug
+
+    * [WICKET-6955] - Wicket uses unstable slf4j version
+    * [WICKET-6996] - NotSerializableException near KeyInSessionSunJceCryptFactory
+    * [WICKET-6999] - Missing Export-Package of packages with "internal" in name
+    * [WICKET-7007] - Code snippets for CSRF documentation fixing
+
+** Improvement
+
+    * [WICKET-6958] - Allow to use Slf4j 1.7.x in OSGi runtime
+    * [WICKET-6982] - Unnecessary initialization of stateful pages in ListenerRequestHandler
+    * [WICKET-6998] - Bump slf4j-api to 2.0.0
+    * [WICKET-7000] - ParseException ("Malformed tag") if <script> attribute 'type' is 'module' 
+    * [WICKET-7002] - Application metadata access should not require synchronization
+    * [WICKET-7003] -  The http RequestLogger is very expensive. #524 
+    * [WICKET-7004] - Jetty config example contains security hazard
+    * [WICKET-7008] -  LoadableDetachableModel.toString() should reflect the actual variable name
+
+=======================================================================
+
+Release Notes - Wicket - Version 9.11.0
+
+** Bug
+
+    * [WICKET-6981] - InSessionPageStore does not trigger flushSession
+    * [WICKET-6988] - String.format used in JS generation leads to errors
+    * [WICKET-6990] - DiskPageStore loses pages when container re-binds attributes
+
+** Improvement
+
+    * [WICKET-6979] - Cut back slightly on some String instance creation in PageInfo and friends.
+    * [WICKET-6982] - Unnecessary initialization of stateful pages in ListenerRequestHandler
+    * [WICKET-6985] - Insufficient information logged by CheckingObjectOutputStream when delegation to Externalizable
+    * [WICKET-6991] - ResourceAggregator is resizing the StringBuilder several times.
+    * [WICKET-6992] - Reduce object creation and wasted memory in Url toString() methods
+    * [WICKET-6994] - Make the servlet API a runtime provided dependency when using JPMS.
+
+=======================================================================
+
+Release Notes - Wicket - Version 9.10.0
+
+** Bug
+
+    * [WICKET-6970] - Unnecessary string building in AssociatedMarkupSourcingStrategy
+    * [WICKET-6971] - NullPointerException in ModificationWatcher
+    * [WICKET-6974] - JavaxUpgradeHttpRequest returns an empty contextPath
+    * [WICKET-6975] - Behavior.renderHead may be called multiple times
+
+** Improvement
+
+    * [WICKET-6963] - Use singletons for PanelMarkupSourcingStrategy
+    * [WICKET-6967] - allow to send non-blocking web socket messages
+    * [WICKET-6969] - allow to process web socket push messages in an asynchronous way.
+    * [WICKET-6972] - Add Resource key to be logged on Warning in Localizer.java
+    * [WICKET-6976] - Reduce allocations when writing synthetic closing tags
+    * [WICKET-6977] - hashCode computations generate excessive garbage objects
+
+=======================================================================
+
+Release Notes - Wicket - Version 9.9.1
+
+** Bug
+
+    * [WICKET-6966] - IndexOutOfBounds in InSessionPageStore
+    * [WICKET-6965] - Memory leak in WicketEndpoint
+
+** Improvement
+
+    * [WICKET-6963] - (REVERTED) Use singletons for PanelMarkupSourcingStrategy
+
+=======================================================================
+
+Release Notes - Wicket - Version 9.9.0
+
+** Bug
+
+    * [WICKET-6957] - Declare JSPM 'uses' for IInitializer
+    * [WICKET-6965] - Memory leak in WicketEndpoint
+
+** Improvement
+
+    * [WICKET-6960] - Reduce allocations when encoding ComponentInfo
+    * [WICKET-6963] - Use singletons for PanelMarkupSourcingStrategy
+    * [WICKET-6964] - Do not allocate when escaping empty string
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.8.0
 
 ** Bug

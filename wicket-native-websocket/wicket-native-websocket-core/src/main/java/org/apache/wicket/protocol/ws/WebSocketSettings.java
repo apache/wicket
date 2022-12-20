@@ -158,11 +158,24 @@ public class WebSocketSettings
 	 */
 	private Function<Integer, Boolean> notifyOnCloseEvent = (code) -> true;
 
-	public boolean shouldNotifyOnCloseEvent(int closeCode) {
+	/**
+	 * Flag that allows to use asynchronous push. By default, it is set to <code>false</code>.
+	 */
+	private boolean asynchronousPush = false;
+
+	/**
+	 * The timeout to use for asynchronous push. By default, it is -1 which means use timeout configured by
+	 * server implementation.
+	 */
+	private long asynchronousPushTimeout = -1;
+
+	public boolean shouldNotifyOnCloseEvent(int closeCode)
+	{
 		return notifyOnCloseEvent == null || notifyOnCloseEvent.apply(closeCode);
 	}
 
-	public void setNotifyOnCloseEvent(Function<Integer, Boolean> notifyOnCloseEvent) {
+	public void setNotifyOnCloseEvent(Function<Integer, Boolean> notifyOnCloseEvent)
+	{
 		this.notifyOnCloseEvent = notifyOnCloseEvent;
 	}
 
@@ -174,11 +187,13 @@ public class WebSocketSettings
 	 */
 	private Function<Throwable, Boolean> notifyOnErrorEvent = (throwable) -> true;
 
-	public boolean shouldNotifyOnErrorEvent(Throwable throwable) {
+	public boolean shouldNotifyOnErrorEvent(Throwable throwable)
+	{
 		return notifyOnErrorEvent == null || notifyOnErrorEvent.apply(throwable);
 	}
 
-	public void setNotifyOnErrorEvent(Function<Throwable, Boolean> notifyOnErrorEvent) {
+	public void setNotifyOnErrorEvent(Function<Throwable, Boolean> notifyOnErrorEvent)
+	{
 		this.notifyOnErrorEvent = notifyOnErrorEvent;
 	}
 
@@ -305,7 +320,24 @@ public class WebSocketSettings
 	 */
 	public WebResponse newWebSocketResponse(IWebSocketConnection connection)
 	{
-		return new WebSocketResponse(connection);
+		return newWebSocketResponse(connection, isAsynchronousPush(), getAsynchronousPushTimeout());
+	}
+
+	/**
+	 * A factory method for the {@link org.apache.wicket.request.http.WebResponse}
+	 * that should be used to write the response back to the client/browser
+	 *
+	 * @param connection
+	 *              The active web socket connection
+	 * @param asynchronousPush
+	 *              Whether asynchronous push is wanted or not.
+     * @param timeout
+     *              The timeout to be used for push operations
+	 * @return the response object that should be used to write the response back to the client
+	 */
+	public WebResponse newWebSocketResponse(IWebSocketConnection connection, boolean asynchronousPush, long timeout)
+	{
+		return new WebSocketResponse(connection, asynchronousPush, timeout);
 	}
 
 	/**
@@ -496,5 +528,25 @@ public class WebSocketSettings
 		{
 			return new Thread(r, "Wicket-WebSocket-HttpRequest-Thread-" + counter.getAndIncrement());
 		}
+	}
+
+	public void setAsynchronousPush(boolean asynchronousPush)
+	{
+		this.asynchronousPush = asynchronousPush;
+	}
+
+	public boolean isAsynchronousPush()
+	{
+		return asynchronousPush;
+	}
+
+	public void setAsynchronousPushTimeout(long asynchronousPushTimeout)
+	{
+		this.asynchronousPushTimeout = asynchronousPushTimeout;
+	}
+
+	public long getAsynchronousPushTimeout()
+	{
+		return asynchronousPushTimeout;
 	}
 }
