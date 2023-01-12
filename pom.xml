@@ -198,7 +198,7 @@
 		<maven-remote-resources-plugin.version>1.7.0</maven-remote-resources-plugin.version>
 		<maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
 		<maven-site-plugin.version>3.9.1</maven-site-plugin.version>
-		<maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+		<maven-surefire-plugin.version>3.0.0-M8</maven-surefire-plugin.version>
 		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 		<maven-toolchains-plugin.version>3.0.0</maven-toolchains-plugin.version>
 		<maven-war-plugin.version>3.3.2</maven-war-plugin.version>
@@ -625,7 +625,7 @@
 					<!--
 						A dependency on xerces:xmlParserAPIs pulls classes (e.g. org.xml.sax.SAXException) into this
 						module, that are already defined in module JRA "java.xml". This violation of "unique visibility"
-						causes compile errors in Eclipse (see bug 536928) and (in the future, see JDK-8215739) javac. 
+						causes compile errors in Eclipse (see bug 536928) and (in the future, see JDK-8215739) javac.
 					-->
 					<exclusion>
 						<groupId>xerces</groupId>
@@ -862,7 +862,7 @@
 						<failOnUnsupportedJava>false</failOnUnsupportedJava>
 						<signatures><![CDATA[
 							@defaultMessage Specify Locale.ROOT to ensure locale insensitive conversion
-							java.lang.String#toLowerCase() 
+							java.lang.String#toLowerCase()
 							java.lang.String#toUpperCase()
 						]]></signatures>
 					</configuration>
@@ -1342,7 +1342,7 @@
 				</plugins>
 			</build>
 		</profile>
-		
+
 		<profile>
 			<id>coverage</id>
 			<build>
@@ -1351,7 +1351,7 @@
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
 						<version>${jacoco.version}</version>
-						
+
 						<executions>
 							<execution>
 								<id>jacoco-initialize</id>

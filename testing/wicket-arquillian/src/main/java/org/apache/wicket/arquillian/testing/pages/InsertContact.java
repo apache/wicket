@@ -32,7 +32,7 @@
  */
 package org.apache.wicket.arquillian.testing.pages;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.wicket.arquillian.testing.dao.ContactDao;
 import org.apache.wicket.arquillian.testing.model.Contact;
@@ -50,11 +50,11 @@ import org.apache.wicket.model.PropertyModel;
 public class InsertContact extends WebPage
 {
     private Form<Contact> insertForm;
-    
+
     private String name;
-    
+
     private String email;
-    
+
     @Inject
     private ContactDao contactDao;
 
@@ -78,7 +78,7 @@ public class InsertContact extends WebPage
         add(insertForm);
     }
 
-    
+
     public String getEmail()
     {
         return email;

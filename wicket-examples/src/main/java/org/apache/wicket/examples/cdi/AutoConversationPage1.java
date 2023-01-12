@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.cdi;
 
 import jakarta.enterprise.context.Conversation;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.wicket.cdi.ConversationalComponent;
 import org.apache.wicket.markup.html.basic.Label;

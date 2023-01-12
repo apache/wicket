@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.wicket.arquillian.testing.dao.ContactDao;
 import org.apache.wicket.arquillian.testing.deployment.AbstractDeploymentTest;
@@ -42,14 +42,14 @@ import org.slf4j.LoggerFactory;
  * possible harmful effect of connecting to the wrong server. Please stop server before running or
  * change to another type of container. To disable this check and allow Arquillian to connect to a
  * running server, set allowConnectingToRunningServer to true in the container configuration.</b>
- * 
+ *
  * <b>SOLUTION: Search and kill wildfly or jboss proccess instance that are using port 8080.</b>
  *
  * <b> If you can't run inside eclipse, add as source the folder src/test/resources and try again.
  * </b>
- * 
+ *
  * Just a class test to show that everything is working.
- * 
+ *
  * @author felipecalmeida
  * @since 06/21/2015
  *
