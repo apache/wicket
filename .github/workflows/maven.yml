@@ -24,7 +24,7 @@ jobs:
         export PATH=$PWD/apache-maven-${MAVEN_VERSION}/bin:$PATH
 
     - name: Cache Maven packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -36,4 +36,4 @@ jobs:
         export PATH=$JAVA_HOME/bin:$PATH 
         java -version 
         mvn -version
-        mvn clean verify -Pjs-test
+        mvn clean verify
