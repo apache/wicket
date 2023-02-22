@@ -28,10 +28,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
@@ -61,6 +63,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	private final Map<String, String[]> parametersMap;
 	private final Map<String, List<String>> headers;
     private final String contextPath;
+	private final String requestId;
 
 	public JavaxUpgradeHttpRequest(final Session session, EndpointConfig endpointConfig)
 	{
@@ -92,6 +95,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 				parametersMap.put(name, value.toArray(new String[0]));
 			}
 		}
+		requestId = UUID.randomUUID().toString();
 	}
 
 	@Override
@@ -297,12 +301,6 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 
 	@Override
 	public boolean isRequestedSessionIdFromURL()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isRequestedSessionIdFromUrl()
 	{
 		return false;
 	}
@@ -517,12 +515,6 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	}
 
 	@Override
-	public String getRealPath(String path)
-	{
-		return null;
-	}
-
-	@Override
 	public int getRemotePort()
 	{
 		return 0;
@@ -585,6 +577,21 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	@Override
 	public DispatcherType getDispatcherType()
 	{
+		return null;
+	}
+
+	@Override
+	public String getRequestId() {
+		return requestId;
+	}
+
+	@Override
+	public String getProtocolRequestId() {
+		return null;
+	}
+
+	@Override
+	public ServletConnection getServletConnection() {
 		return null;
 	}
 }

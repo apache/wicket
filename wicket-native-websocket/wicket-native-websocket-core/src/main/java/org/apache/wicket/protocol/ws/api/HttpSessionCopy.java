@@ -22,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpSessionContext;
 
 /**
  * A copy of the HttpSession used at the WebSocket connection creation time
@@ -91,19 +90,7 @@ public class HttpSessionCopy implements HttpSession
 	}
 
 	@Override
-	public HttpSessionContext getSessionContext()
-	{
-		return null;
-	}
-
-	@Override
 	public Object getAttribute(String name)
-	{
-		return attributes.get(name);
-	}
-
-	@Override
-	public Object getValue(String name)
 	{
 		return attributes.get(name);
 	}
@@ -115,31 +102,13 @@ public class HttpSessionCopy implements HttpSession
 	}
 
 	@Override
-	public String[] getValueNames()
-	{
-		return Collections.list(attributes.keys()).toArray(new String[0]);
-	}
-
-	@Override
 	public void setAttribute(String name, Object value)
 	{
 		attributes.put(name, value);
 	}
 
 	@Override
-	public void putValue(String name, Object value)
-	{
-		attributes.put(name, value);
-	}
-
-	@Override
 	public void removeAttribute(String name)
-	{
-		attributes.remove(name);
-	}
-
-	@Override
-	public void removeValue(String name)
 	{
 		attributes.remove(name);
 	}

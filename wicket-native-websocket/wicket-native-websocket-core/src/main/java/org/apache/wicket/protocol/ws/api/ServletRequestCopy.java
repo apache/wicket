@@ -26,10 +26,12 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
@@ -82,6 +84,7 @@ public class ServletRequestCopy implements HttpServletRequest
 	private final Principal principal;
 
 	private String characterEncoding;
+	private final String requestId;
 
 	public ServletRequestCopy(HttpServletRequest request) {
 		this.servletPath = request.getServletPath();
@@ -132,6 +135,7 @@ public class ServletRequestCopy implements HttpServletRequest
 			s = e.nextElement();
 			parameters.put(s, request.getParameterValues(s));
 		}
+		requestId = UUID.randomUUID().toString();
 	}
 
 	@Override
@@ -349,12 +353,6 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public String getRealPath(String path)
-	{
-		return null;
-	}
-
-	@Override
 	public int getRemotePort()
 	{
 		return remotePort;
@@ -417,6 +415,21 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public DispatcherType getDispatcherType()
 	{
+		return null;
+	}
+
+	@Override
+	public String getRequestId() {
+		return requestId;
+	}
+
+	@Override
+	public String getProtocolRequestId() {
+		return null;
+	}
+
+	@Override
+	public ServletConnection getServletConnection() {
 		return null;
 	}
 
@@ -501,12 +514,6 @@ public class ServletRequestCopy implements HttpServletRequest
 
 	@Override
 	public boolean isRequestedSessionIdFromURL()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isRequestedSessionIdFromUrl()
 	{
 		return false;
 	}
