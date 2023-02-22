@@ -19,7 +19,6 @@ package javax.servlet.http;
 import java.util.Enumeration;
 
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpSessionContext;
 
 /**
  * A temporary class used until all dependencies provide releases based on jakarta.** APIs
@@ -74,18 +73,8 @@ public interface HttpSession extends jakarta.servlet.http.HttpSession {
     }
 
     @Override
-    default HttpSessionContext getSessionContext() {
-        return getDelegate().getSessionContext();
-    }
-
-    @Override
     default Object getAttribute(String name) {
         return getDelegate().getAttribute(name);
-    }
-
-    @Override
-    default Object getValue(String name) {
-        return getDelegate().getValue(name);
     }
 
     @Override
@@ -94,28 +83,13 @@ public interface HttpSession extends jakarta.servlet.http.HttpSession {
     }
 
     @Override
-    default String[] getValueNames() {
-        return getDelegate().getValueNames();
-    }
-
-    @Override
     default void setAttribute(String name, Object value) {
         getDelegate().setAttribute(name, value);
     }
 
     @Override
-    default void putValue(String name, Object value) {
-        getDelegate().putValue(name, value);
-    }
-
-    @Override
     default void removeAttribute(String name) {
         getDelegate().removeAttribute(name);
-    }
-
-    @Override
-    default void removeValue(String name) {
-        getDelegate().removeValue(name);
     }
 
     @Override

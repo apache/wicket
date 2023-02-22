@@ -17,6 +17,7 @@
 
 module org.apache.wicket.request {
     requires java.sql;
+    requires org.apache.commons.collections4;
     requires org.apache.wicket.util;
     requires org.slf4j;
     requires static jakarta.servlet;

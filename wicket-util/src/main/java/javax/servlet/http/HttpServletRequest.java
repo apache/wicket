@@ -28,6 +28,7 @@ import java.util.Map;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
@@ -56,6 +57,21 @@ public interface HttpServletRequest extends jakarta.servlet.http.HttpServletRequ
         @Override
         public jakarta.servlet.http.HttpServletRequest getDelegate() {
             return delegate;
+        }
+
+        @Override
+        public String getRequestId() {
+            return delegate.getRequestId();
+        }
+
+        @Override
+        public String getProtocolRequestId() {
+            return delegate.getProtocolRequestId();
+        }
+
+        @Override
+        public ServletConnection getServletConnection() {
+            return delegate.getServletConnection();
         }
     }
 
@@ -183,11 +199,6 @@ public interface HttpServletRequest extends jakarta.servlet.http.HttpServletRequ
 
     @Override
     default boolean isRequestedSessionIdFromURL() {
-        return getDelegate().isRequestedSessionIdFromURL();
-    }
-
-    @Override
-    default boolean isRequestedSessionIdFromUrl() {
         return getDelegate().isRequestedSessionIdFromURL();
     }
 
@@ -344,11 +355,6 @@ public interface HttpServletRequest extends jakarta.servlet.http.HttpServletRequ
     @Override
     default RequestDispatcher getRequestDispatcher(String path) {
         return getDelegate().getRequestDispatcher(path);
-    }
-
-    @Override
-    default String getRealPath(String path) {
-        return getDelegate().getRealPath(path);
     }
 
     @Override

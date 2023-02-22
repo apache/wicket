@@ -102,6 +102,8 @@ public class MockServletContext implements ServletContext
 		private String domain;
 		private String comment;
 
+		private final Map<String, String> attributes = new HashMap<>();
+
 		@Override
 		public void setSecure(boolean secure)
 		{
@@ -172,6 +174,21 @@ public class MockServletContext implements ServletContext
 		public int getMaxAge()
 		{
 			return maxAge;
+		}
+
+		@Override
+		public void setAttribute(String s, String s1) {
+			attributes.put(s, s1);
+		}
+
+		@Override
+		public String getAttribute(String s) {
+			return attributes.get(s);
+		}
+
+		@Override
+		public Map<String, String> getAttributes() {
+			return Map.copyOf(attributes);
 		}
 
 		@Override
@@ -590,21 +607,6 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * NOT USED - Servlet Spec requires that this always returns null.
-	 *
-	 * @param name
-	 *            Not used
-	 * @return null
-	 * @throws ServletException
-	 *             Not used
-	 */
-	@Override
-	public Servlet getServlet(String name) throws ServletException
-	{
-		return null;
-	}
-
-	/**
 	 * Return the name of the servlet context.
 	 *
 	 * @return The name
@@ -820,42 +822,6 @@ public class MockServletContext implements ServletContext
 	public void setResponseCharacterEncoding(String responseCharacterEncoding)
 	{
 		this.responseCharacterEncoding = Charset.forName(responseCharacterEncoding);
-	}
-
-	/**
-	 * NOT USED - Servlet spec requires that this always returns null.
-	 *
-	 * @return null
-	 */
-	@Override
-	public Enumeration<String> getServletNames()
-	{
-		return null;
-	}
-
-	/**
-	 * NOT USED - Servlet spec requires that this always returns null.
-	 *
-	 * @return null
-	 */
-	@Override
-	public Enumeration<Servlet> getServlets()
-	{
-		return null;
-	}
-
-	/**
-	 * As part of testing we always log to the console.
-	 *
-	 * @param e
-	 *            The exception to log
-	 * @param msg
-	 *            The message to log
-	 */
-	@Override
-	public void log(Exception e, String msg)
-	{
-		log.error(msg, e);
 	}
 
 	/**

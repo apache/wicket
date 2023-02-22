@@ -117,28 +117,8 @@ public interface ServletContext extends jakarta.servlet.ServletContext {
     }
 
     @Override
-    default Servlet getServlet(String name) throws ServletException {
-        return getDelegate().getServlet(name);
-    }
-
-    @Override
-    default Enumeration<Servlet> getServlets() {
-        return getDelegate().getServlets();
-    }
-
-    @Override
-    default Enumeration<String> getServletNames() {
-        return getDelegate().getServletNames();
-    }
-
-    @Override
     default void log(String msg) {
         getDelegate().log(msg);
-    }
-
-    @Override
-    default void log(Exception exception, String msg) {
-        getDelegate().log(exception, msg);
     }
 
     @Override

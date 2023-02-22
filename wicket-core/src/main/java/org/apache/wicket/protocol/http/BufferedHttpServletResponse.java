@@ -129,30 +129,6 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see jakarta.servlet.http.HttpServletResponse#encodeUrl(java.lang.String)
-	 * @deprecated
-	 */
-	@Override
-	@Deprecated
-	public String encodeUrl(String url)
-	{
-		isOpen();
-		return realResponse.encodeURL(url);
-	}
-
-	/**
-	 * @see jakarta.servlet.http.HttpServletResponse#encodeRedirectUrl(java.lang.String)
-	 * @deprecated
-	 */
-	@Override
-	@Deprecated
-	public String encodeRedirectUrl(String url)
-	{
-		isOpen();
-		return realResponse.encodeRedirectURL(url);
-	}
-
-	/**
 	 * @see jakarta.servlet.http.HttpServletResponse#sendError(int, java.lang.String)
 	 */
 	@Override
@@ -276,17 +252,6 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	public void setStatus(int statusCode)
 	{
 		status = statusCode;
-	}
-
-	/**
-	 * @see jakarta.servlet.http.HttpServletResponse#setStatus(int, java.lang.String)
-	 * @deprecated use setStatus(int) instead
-	 */
-	@Override
-	@Deprecated
-	public void setStatus(int sc, String sm)
-	{
-		setStatus(sc);
 	}
 
 	/**

@@ -45,6 +45,7 @@ import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
@@ -888,21 +889,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Deprecated method - should not be used.
-	 * 
-	 * @param name
-	 *            The name
-	 * @return The path
-	 * @deprecated Use ServletContext.getRealPath(String) instead.
-	 */
-	@Override
-	@Deprecated
-	public String getRealPath(String name)
-	{
-		return context.getRealPath(name);
-	}
-
-	/**
 	 * @return the remote address of the client
 	 */
 	@Override
@@ -1215,17 +1201,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public boolean isRequestedSessionIdFromCookie()
 	{
 		return true;
-	}
-
-	/**
-	 * Check whether session id is from a url rewrite. Always returns false.
-	 * 
-	 * @return Always false
-	 */
-	@Override
-	public boolean isRequestedSessionIdFromUrl()
-	{
-		return false;
 	}
 
 	@Override
@@ -1769,6 +1744,21 @@ public class MockHttpServletRequest implements HttpServletRequest
 	@Override
 	public DispatcherType getDispatcherType()
 	{
+		return null;
+	}
+
+	@Override
+	public String getRequestId() {
+		return null;
+	}
+
+	@Override
+	public String getProtocolRequestId() {
+		return null;
+	}
+
+	@Override
+	public ServletConnection getServletConnection() {
 		return null;
 	}
 
