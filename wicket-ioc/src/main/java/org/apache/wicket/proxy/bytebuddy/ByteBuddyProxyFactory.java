@@ -116,7 +116,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 						.implement(InterceptorMutator.class).intercept(FieldAccessor.ofBeanProperty())
 						.implement(Serializable.class, IWriteReplace.class, ILazyInitProxy.class).intercept(MethodDelegation.toField(INTERCEPTOR_FIELD_NAME))
 						.make()
-						.load(classLoader, ClassLoadingStrategy.Default.INJECTION)
+						.load(classLoader, ClassLoadingStrategy.Default.INJECTION.allowExistingTypes())
 						.getLoaded());
 	}
 
