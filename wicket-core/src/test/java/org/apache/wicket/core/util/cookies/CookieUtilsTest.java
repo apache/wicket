@@ -17,6 +17,7 @@
 package org.apache.wicket.core.util.cookies;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -142,7 +143,7 @@ class CookieUtilsTest extends WicketTestCase
 	void defaults()
 	{
 		CookieDefaults defaults = new CookieDefaults();
-		defaults.setComment("A comment");
+		defaults.setComment("A comment"); // comments are deprecated in Servlet 6.x
 		defaults.setDomain("A domain");
 		defaults.setMaxAge(123);
 		defaults.setSecure(true);
@@ -153,7 +154,7 @@ class CookieUtilsTest extends WicketTestCase
 		utils.save(key, value1);
 		before(); // execute a request cycle, so the response cookie is send with the next request
 		Cookie result = utils.getCookie(key);
-		assertEquals(defaults.getComment(), result.getComment());
+		assertNull(result.getComment());
 	}
 
 	private void copyCookieFromResponseToRequest()
