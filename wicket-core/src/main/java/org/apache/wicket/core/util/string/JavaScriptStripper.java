@@ -126,6 +126,7 @@ public class JavaScriptStripper
 					// char, which
 					// will be either '=' or '('. If it's not, it's just a divide operator.
 					int idx = result.length() - 1;
+					String trimmedResult = result.toString().trim();
 					while (idx > 0)
 					{
 						char tmp = result.charAt(idx);
@@ -135,7 +136,7 @@ public class JavaScriptStripper
 							continue;
 						}
 						if (tmp == '=' || tmp == '(' || tmp == '{' || tmp == ':' || tmp == ',' ||
-							tmp == '[' || tmp == ';' || tmp == '!')
+							tmp == '[' || tmp == ';' || tmp == '!' || trimmedResult.endsWith("return"))
 						{
 							state = REG_EXP;
 							break;
