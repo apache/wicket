@@ -26,7 +26,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class JavaScriptStripper
 {
-	/*
+    /*
 	 * Determines the state of script processing.
 	 */
 	/** Inside regular text */
@@ -52,6 +52,9 @@ public class JavaScriptStripper
 
 	/** Inside a template literal */
 	private final static int TEMPLATE_LITERAL = 8;
+
+	/** Function "return" keyword, useful to identify if we are inside a regexp */
+	private final static String RETURN_KEYWORD = "return";
 
 	private int getPrevCount(String s, int fromIndex, char c)
 	{
@@ -136,7 +139,7 @@ public class JavaScriptStripper
 							continue;
 						}
 						if (tmp == '=' || tmp == '(' || tmp == '{' || tmp == ':' || tmp == ',' ||
-							tmp == '[' || tmp == ';' || tmp == '!' || trimmedResult.endsWith("return"))
+							tmp == '[' || tmp == ';' || tmp == '!' || trimmedResult.endsWith(RETURN_KEYWORD))
 						{
 							state = REG_EXP;
 							break;
