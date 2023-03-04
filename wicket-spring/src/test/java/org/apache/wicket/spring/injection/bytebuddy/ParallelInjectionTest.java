@@ -110,7 +110,7 @@ public class ParallelInjectionTest implements ApplicationContextAware {
     }
 
     void runInjection(int nThreads) throws InterruptedException {
-                // Arrange
+        // Arrange
         var tester = new WicketTester(createPortalApplication());
         ExecutorService executor = Executors.newFixedThreadPool(nThreads);
 
@@ -136,16 +136,13 @@ public class ParallelInjectionTest implements ApplicationContextAware {
                 throw new RuntimeException("A problem occurred", e);
             }
         });
+
+        // No Assert, we expect no Exception
     }
 
     private WebApplication createPortalApplication() {
-        LOG.debug("Erstelle MockServletContext mit applicationContext");
-
-        MockServletContext mockServletContext = new MockServletContext();
-
+        var mockServletContext = new MockServletContext();
         mockServletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, context);
-
-        LOG.debug("Erstelle PortalApplication ...");
 
         return new WebApplication() {
             @Override
