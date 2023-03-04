@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -1574,6 +1575,48 @@ public class BaseWicketTester
 	public Component getComponentFromLastRenderedPage(String path)
 	{
 		return getComponentFromLastRenderedPage(path, true);
+	}
+
+	/**
+	 * TODO
+	 *
+	 * @param wicketId
+	 * @return
+	 */
+	public Optional<Component> getFirstComponentFromLastRenderedPageByWicketId(String wicketId) {
+		if (getLastRenderedPage() != null && componentInPage != null) {
+			Component component = getLastRenderedPage().visitChildren((c, visit) -> {
+				if (c.getId().equals(wicketId)) {
+					visit.stop(c);
+				}
+			});
+
+			return Optional.ofNullable(component);
+		}
+
+		return Optional.empty();
+	}
+
+	/**
+	 * TODO
+	 *
+	 * @param wicketId
+	 * @return
+	 */
+	public List<Component> getAllComponentsFromLastRenderedPageByWicketId(String wicketId) {
+		var result = new ArrayList<Component>();
+
+		if (getLastRenderedPage() != null && componentInPage != null) {
+			getLastRenderedPage().visitChildren((c, visit) -> {
+				if (c.getId().equals(wicketId)) {
+					result.add(c);
+				}
+			});
+		}
+
+		log.debug("Found {} Components with ID '{}'", result.size(), wicketId);
+
+		return result;
 	}
 
 	/**
