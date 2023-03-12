@@ -119,7 +119,8 @@
 		<module>wicket-native-websocket</module>
 		<module>wicket-bean-validation</module>
 		<module>wicket-user-guide</module>
-	</modules>
+        <module>wicket-migration</module>
+    </modules>
 	<properties>
 		<!-- Encoding -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
