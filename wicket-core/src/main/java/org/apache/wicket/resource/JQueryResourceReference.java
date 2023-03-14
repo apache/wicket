@@ -32,34 +32,12 @@ public class JQueryResourceReference extends JavaScriptResourceReference
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * jQuery ver. 1.x - works on modern browsers and IE 6/7/8
-	 */
-	public static final String VERSION_1 = "jquery/jquery-1.12.4.js";
-
-	/**
-	 * jQuery ver. 2.x - works only on modern browsers
-	 */
-	public static final String VERSION_2 = "jquery/jquery-2.2.4.js";
-
-	/**
 	 * JQuery ver. 3.x - improves on ver. 2
 	 * <strong>Note</strong>: Might not work with old jQuery plugins!
 	 */
 	public static final String VERSION_3 = "jquery/jquery-3.6.4.js";
 
-	public static final JQueryResourceReference INSTANCE_1 = new JQueryResourceReference(VERSION_1);
-	public static final JQueryResourceReference INSTANCE_2 = new JQueryResourceReference(VERSION_2);
 	public static final JQueryResourceReference INSTANCE_3 = new JQueryResourceReference(VERSION_3);
-
-	public static JQueryResourceReference getV1()
-	{
-		return INSTANCE_1;
-	}
-
-	public static JQueryResourceReference getV2()
-	{
-		return INSTANCE_2;
-	}
 
 	public static JQueryResourceReference getV3()
 	{
