@@ -18,7 +18,6 @@ package org.apache.wicket.util.tester;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,7 @@ class BaseWicketTesterTest {
 		var cut = new DemoPanel("id");
 
 		// Act
-		var label = tester.getFirstComponentFromLastRenderedPageByWicketId("label");
+		var label = tester.getFirstComponentByWicketId("label");
 
 		// Assert
 		SoftAssertions.assertSoftly(sa -> {
@@ -53,7 +52,7 @@ class BaseWicketTesterTest {
 		tester.startComponentInPage(cut);
 
 		// Act
-		var label = tester.getFirstComponentFromLastRenderedPageByWicketId("label");
+		var label = tester.getFirstComponentByWicketId("label");
 
 		// Assert
 		SoftAssertions.assertSoftly(sa -> {
@@ -69,7 +68,37 @@ class BaseWicketTesterTest {
 		tester.startComponentInPage(cut);
 
 		// Act
-		var label = tester.getFirstComponentFromLastRenderedPageByWicketId("asdf");
+		var label = tester.getFirstComponentByWicketId("asdf");
+
+		// Assert
+		SoftAssertions.assertSoftly(sa -> {
+			sa.assertThat(label).isEmpty();
+		});
+	}
+
+	@Test
+	void getFirstComponentFromLastRenderedPageByWicketId_whenWicketIdNull_returnEmptyOptional() {
+		// Arrange
+		var cut = new DemoPanel("id");
+		tester.startComponentInPage(cut);
+
+		// Act
+		var label = tester.getFirstComponentByWicketId(null);
+
+		// Assert
+		SoftAssertions.assertSoftly(sa -> {
+			sa.assertThat(label).isEmpty();
+		});
+	}
+
+	@Test
+	void getFirstComponentFromLastRenderedPageByWicketId_whenWicketIdBlank_returnEmptyOptional() {
+		// Arrange
+		var cut = new DemoPanel("id");
+		tester.startComponentInPage(cut);
+
+		// Act
+		var label = tester.getFirstComponentByWicketId(" ");
 
 		// Assert
 		SoftAssertions.assertSoftly(sa -> {
@@ -83,7 +112,7 @@ class BaseWicketTesterTest {
 		var cut = new DemoPanel("id");
 
 		// Act
-		var components = tester.getAllComponentsFromLastRenderedPageByWicketId("label");
+		var components = tester.getAllComponentsByWicketId("label");
 
 		// Assert
 		SoftAssertions.assertSoftly(sa -> {
@@ -98,7 +127,7 @@ class BaseWicketTesterTest {
 		tester.startComponentInPage(cut);
 
 		// Act
-		var components = tester.getAllComponentsFromLastRenderedPageByWicketId("label");
+		var components = tester.getAllComponentsByWicketId("label");
 
 		// Assert
 		SoftAssertions.assertSoftly(sa -> {
@@ -115,7 +144,7 @@ class BaseWicketTesterTest {
 		tester.startComponentInPage(cut);
 
 		// Act
-		var components = tester.getAllComponentsFromLastRenderedPageByWicketId("content");
+		var components = tester.getAllComponentsByWicketId("content");
 
 		// Assert
 		SoftAssertions.assertSoftly(sa -> {
@@ -135,7 +164,37 @@ class BaseWicketTesterTest {
 		tester.startComponentInPage(cut);
 
 		// Act
-		var components = tester.getAllComponentsFromLastRenderedPageByWicketId("asdf");
+		var components = tester.getAllComponentsByWicketId("asdf");
+
+		// Assert
+		SoftAssertions.assertSoftly(sa -> {
+			sa.assertThat(components).isEmpty();
+		});
+	}
+
+	@Test
+	void getAllComponentsFromLastRenderedPageByWicketId_whenWicketIdNull_returnEmptyList() {
+		// Arrange
+		var cut = new DemoPanel("id");
+		tester.startComponentInPage(cut);
+
+		// Act
+		var components = tester.getAllComponentsByWicketId(null);
+
+		// Assert
+		SoftAssertions.assertSoftly(sa -> {
+			sa.assertThat(components).isEmpty();
+		});
+	}
+
+	@Test
+	void getAllComponentsFromLastRenderedPageByWicketId_whenWicketIdBlank_returnEmptyList() {
+		// Arrange
+		var cut = new DemoPanel("id");
+		tester.startComponentInPage(cut);
+
+		// Act
+		var components = tester.getAllComponentsByWicketId("");
 
 		// Assert
 		SoftAssertions.assertSoftly(sa -> {
