@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -1574,6 +1575,62 @@ public class BaseWicketTester
 	public Component getComponentFromLastRenderedPage(String path)
 	{
 		return getComponentFromLastRenderedPage(path, true);
+	}
+
+	/**
+	 * Returns the first {@link Component} (breadth-first search) matching the given Wicket-ID. If no such
+	 * {@link Component} exists it returns {@link Optional#empty()}
+	 *
+	 * @param wicketId
+	 *            the Wicket-ID of the {@link Component} to be found
+	 * @return Optional of the component, {@link Optional#empty()} if no matching component can be found or wicketId is
+	 *         null or blank.
+	 */
+	public Optional<Component> getFirstComponentByWicketId(String wicketId) {
+		if (wicketId == null || wicketId.isBlank()) {
+			return Optional.empty();
+		}
+
+		if (getLastRenderedPage() != null && componentInPage != null) {
+			Component component = getLastRenderedPage().visitChildren((c, visit) -> {
+				if (c.getId().equals(wicketId)) {
+					visit.stop(c);
+				}
+			});
+
+			return Optional.ofNullable(component);
+		}
+
+		return Optional.empty();
+	}
+
+	/**
+	 * Returns a {@link List} of all {@link Component}s matching the given Wicket-ID. Returns an empty list if no such
+	 * component can be found or the Wicket-ID is null.
+	 *
+	 * @param wicketId
+	 *            the Wicket-ID of the components to be found
+	 * @return A list of all {@link Component}s that have the given Wicket-ID, an empty List if no such component can be
+	 *         found. Returns an empty List of wicketId is null or blank.
+	 */
+	public List<Component> getAllComponentsByWicketId(String wicketId) {
+		var result = new ArrayList<Component>();
+
+		if (wicketId == null || wicketId.isBlank()) {
+			return result;
+		}
+
+		if (getLastRenderedPage() != null && componentInPage != null) {
+			getLastRenderedPage().visitChildren((c, visit) -> {
+				if (c.getId().equals(wicketId)) {
+					result.add(c);
+				}
+			});
+		}
+
+		log.debug("Found {} Components with ID '{}'", result.size(), wicketId);
+
+		return result;
 	}
 
 	/**
