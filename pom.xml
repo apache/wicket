@@ -135,72 +135,71 @@
 		<maven.compiler.target>17</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<asm.version>9.2</asm.version>
-		<aspectj.version>1.9.7</aspectj.version>
-		<assertj-core.version>3.21.0</assertj-core.version>
+		<asm.version>9.4</asm.version>
+		<aspectj.version>1.9.19</aspectj.version>
+		<assertj-core.version>3.24.2</assertj-core.version>
 		<bouncycastle.version>1.72</bouncycastle.version>
-		<byte-buddy.version>1.12.2</byte-buddy.version>
+		<byte-buddy.version>1.14.2</byte-buddy.version>
 		<cdi-unit.version>4.1.0</cdi-unit.version>
-		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<commons-fileupload.version>2.0-SNAPSHOT</commons-fileupload.version>
 		<commons-io.version>2.11.0</commons-io.version>
 		<commons-lang3.version>3.12.0</commons-lang3.version>
 		<guice.version>5.1.0</guice.version>
 		<el-impl.version>2.2.1-b05</el-impl.version>
-		<forbiddenapis.version>3.2</forbiddenapis.version>
+		<forbiddenapis.version>3.4</forbiddenapis.version>
 		<jacoco.version>0.8.7</jacoco.version>
-		<jackson.version>2.13.4.1</jackson.version>
-		<jakarta.annotation-api.version>2.1.0-B1</jakarta.annotation-api.version>
+		<jackson.version>2.14.2</jackson.version>
+		<jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
 		<jakarta.el.version>4.0.2</jakarta.el.version>
 		<jakarta.el-api.version>4.0.0</jakarta.el-api.version>
 		<jakarta.enterprise.cdi-api.version>3.0.0</jakarta.enterprise.cdi-api.version>
 		<jakarta.inject-api.version>2.0.1</jakarta.inject-api.version>
-		<jakarta.servlet.jsp-api.version>3.0.0</jakarta.servlet.jsp-api.version>
-		<jakarta.validation-api.version>3.0.0</jakarta.validation-api.version>
+		<jakarta.servlet.jsp-api.version>3.1.1</jakarta.servlet.jsp-api.version>
+		<jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
 		<jakarta.websocket-api.version>2.0.0</jakarta.websocket-api.version>
 		<jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
 		<japicmp.skip>true</japicmp.skip> <!-- TODO Wicket 10 Remove this once 10.0.0 is released -->
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
-		<jetty.version>11.0.10</jetty.version>
-		<junit.version>5.8.2</junit.version>
+		<jetty.version>11.0.14</jetty.version>
+		<junit.version>5.9.2</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.7</logback.version>
 		<hamcrest.version>2.2</hamcrest.version>
-		<hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
+		<hibernate-validator.version>7.0.5.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
-		<metrics.version>4.2.4</metrics.version>
-		<mockito.version>4.3.1</mockito.version>
-		<objenesis.version>3.2</objenesis.version>
+		<metrics.version>4.2.17</metrics.version>
+		<mockito.version>5.2.0</mockito.version>
+		<objenesis.version>3.3</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
-		<slf4j.version>2.0.3</slf4j.version>
-		<spring.version>6.0.5</spring.version>
+		<slf4j.version>2.0.6</slf4j.version>
+		<spring.version>6.0.6</spring.version>
 		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
-		<weld.version>4.0.2.Final</weld.version>
+		<weld.version>4.0.3.Final</weld.version>
 		<velocity-engine-core.version>2.3</velocity-engine-core.version>
 
 		<!-- Maven plugins -->
 		<build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
-		<japicmp-maven-plugin.version>0.15.5</japicmp-maven-plugin.version>
-		<maven-archetype-plugin.version>3.2.0</maven-archetype-plugin.version>
+		<japicmp-maven-plugin.version>0.17.2</japicmp-maven-plugin.version>
+		<maven-archetype-plugin.version>3.2.1</maven-archetype-plugin.version>
 		<maven-bundle-plugin.version>5.1.8</maven-bundle-plugin.version>
 		<maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
-		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+		<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+		<maven-deploy-plugin.version>3.1.0</maven-deploy-plugin.version>
 		<maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
-		<maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
+		<maven-enforcer-plugin.version>3.1.0</maven-enforcer-plugin.version>
 		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
-		<maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
-		<maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
-		<maven-project-info-reports-plugin.version>3.1.2</maven-project-info-reports-plugin.version>
-		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-		<maven-remote-resources-plugin.version>1.7.0</maven-remote-resources-plugin.version>
-		<maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
-		<maven-site-plugin.version>3.9.1</maven-site-plugin.version>
-		<maven-surefire-plugin.version>3.0.0-M8</maven-surefire-plugin.version>
+		<maven-install-plugin.version>3.1.0</maven-install-plugin.version>
+		<maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+		<maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
+		<maven-project-info-reports-plugin.version>3.4.1</maven-project-info-reports-plugin.version>
+		<maven-release-plugin.version>3.0.0-M7</maven-release-plugin.version>
+		<maven-remote-resources-plugin.version>3.0.0</maven-remote-resources-plugin.version>
+		<maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
+		<maven-site-plugin.version>4.0.0-M3</maven-site-plugin.version>
+		<maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
 		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-		<maven-toolchains-plugin.version>3.0.0</maven-toolchains-plugin.version>
+		<maven-toolchains-plugin.version>3.1.0</maven-toolchains-plugin.version>
 		<maven-war-plugin.version>3.3.2</maven-war-plugin.version>
 		<yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
 
@@ -281,11 +280,6 @@
 				<groupId>com.google.inject</groupId>
 				<artifactId>guice</artifactId>
 				<version>${guice.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-collections</groupId>
-				<artifactId>commons-collections</artifactId>
-				<version>${commons-collections.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-io</groupId>
