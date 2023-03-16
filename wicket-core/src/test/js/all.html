@@ -5,30 +5,6 @@
 	<title id="titleId">All tests</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen" />
-    <script>
-    	// version lies between question mark and first ampersand (or end)  
-    	var version = location.search.match(/\?(.*?)(&|$)/)[1];
-    	
-        document.write("<scr"+"ipt src='../../main/java/org/apache/wicket/resource/jquery/jquery-"+version+".js'></scr"+"ipt>");
-    </script>
-    <!--<script src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script>-->
-	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js"></script>
-	<script type="text/javascript" src="qunit/qunit.js"></script>
-	<script type="text/javascript" src="qunit/jquery.mockjax.js"></script>
-	<script type="text/javascript" src="qunit/blanket.min.js"></script>
-
-	<!-- the module under test -->
-    <script>
-        // uncomment for error reporting from the tests
-//        Wicket.Ajax.DebugWindow.enabled = true;
-    </script>
-	<script type="text/javascript" src="channels.js"></script>
-	<script type="text/javascript" src="dom.js"></script>
-	<script type="text/javascript" src="event.js"></script>
-	<script type="text/javascript" src="form.js"></script>
-	<script type="text/javascript" src="head.js"></script>
-	<script type="text/javascript" src="ajax.js"></script>
-	<script type="text/javascript" src="timer.js"></script>
 </head>
 
 <body>
@@ -60,7 +36,7 @@
 			<table id="componentToReplace">
 				<thead>
 				<tr>
-					<th><div><script>start(); ok(true, 'script in thead > td has to be executed')</script></div>
+					<th><div><script>Wicket.testDone(); Wicket.assert.ok(true, 'script in thead > td has to be executed')</script></div>
 					</th>
 					<th>header 2</th>
 				</tr>
@@ -68,7 +44,7 @@
 				<tbody>
 				<tr>
 					<td>data 1
-						<script>start(); ok(true, 'script in tbody > td has to be executed')</script>
+						<script>Wicket.testDone(); Wicket.assert.ok(true, 'script in tbody > td has to be executed')</script>
 					</td>
 					<td>data 2</td>
 				</tr>
@@ -77,7 +53,7 @@
 				<tr>
 					<td>footer 1</td>
 					<td>footer 2
-						<script>start(); ok(true, 'script in tfoot > td has to be executed')</script>
+						<script>Wicket.testDone(); Wicket.assert.ok(true, 'script in tfoot > td has to be executed')</script>
 					</td>
 				</tr>
 				</tfoot>
@@ -182,5 +158,30 @@
 
 		<div id="ajaxIndicator"></div>
 	</div>
+
+	<script>
+		// version lies between question mark and first ampersand (or end)
+		var version = location.search.match(/\?(.*?)(&|$)/)[1];
+
+		document.write("<scr"+"ipt src='../../main/java/org/apache/wicket/resource/jquery/jquery-"+version+".js'></scr"+"ipt>");
+	</script>
+	<!--<script src="https://code.jquery.com/jquery-migrate-3.0.0.js"></script>-->
+	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js"></script>
+	<script type="text/javascript" src="qunit/qunit.js"></script>
+	<script type="text/javascript" src="qunit/jquery.mockjax.js"></script>
+	<script type="text/javascript" src="qunit/blanket.min.js"></script>
+
+	<!-- the module under test -->
+	<script>
+		// uncomment for error reporting from the tests
+		// Wicket.Ajax.DebugWindow.enabled = true;
+	</script>
+	<script type="text/javascript" src="channels.js"></script>
+	<script type="text/javascript" src="dom.js"></script>
+	<script type="text/javascript" src="event.js"></script>
+	<script type="text/javascript" src="form.js"></script>
+	<script type="text/javascript" src="head.js"></script>
+	<script type="text/javascript" src="ajax.js"></script>
+	<script type="text/javascript" src="timer.js"></script>
 </body>
 </html>
