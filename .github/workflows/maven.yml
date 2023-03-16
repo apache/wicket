@@ -33,4 +33,4 @@ jobs:
         export PATH=$JAVA_HOME/bin:$PATH
         java -version
         mvn -version
-        mvn clean verify
+        mvn clean verify -Pjs-test
