@@ -16,8 +16,8 @@
 
 package org.apache.wicket.migration;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.ExpectedToFail;
 import org.openrewrite.config.Environment;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.test.RecipeSpec;
@@ -52,36 +52,61 @@ class MigrateToWicket10Test implements RewriteTest {
                 java("""
                         package org.apache.wicket.http2.markup.head;
 
-                        public class PushHeaderItem { }"""),
-                java(
-                        """
+                        public class PushHeaderItem {
+                        }
+                        """),
+                java("""
                                 package sample.wicket;
                                                                 
                                 import org.apache.wicket.http2.markup.head.PushHeaderItem;
                                                                 
                                 class ATest {
                                    PushHeaderItem item;
-                                }""",
+                                }
+                                """,
                         """
                                 package sample.wicket;
-                                
+                                                                
                                 import org.apache.wicket.markup.head.http2.PushHeaderItem;
-                                
+                                                                
                                 class ATest {
                                    PushHeaderItem item;
-                                }"""
-                ));
+                                }
+                                """
+                )
+        );
     }
 
     @Test
-    @Disabled("Required a first release of 10.x")
+    @ExpectedToFail("Requires first release of 10.x before we can update the version")
     void migrateDependencies() {
         //language=xml
         rewriteRun(
                 mavenProject("any-project",
-                        pomXml(
-
-                                """
+                        pomXml("""
+                                        <project>
+                                            <modelVersion>4.0.0</modelVersion>
+                                            <groupId>com.example</groupId>
+                                            <artifactId>wicket</artifactId>
+                                            <version>1.0.0</version>
+                                            <dependencies>
+                                                <dependency>
+                                                    <groupId>org.apache.wicket</groupId>
+                                                    <artifactId>wicket-core</artifactId>
+                                                    <version>9.12.0</version>
+                                                </dependency>
+                                                <dependency>
+                                                    <groupId>org.apache.wicket.experimental.wicket9</groupId>
+                                                    <artifactId>wicket-http2-core</artifactId>
+                                                    <version>0.23</version>
+                                                </dependency>
+                                            </dependencies>
+                                        </project>
+                                        """,
+                                spec -> spec.after(pom -> {
+                                    Matcher version = Pattern.compile("10\\..+").matcher(pom);
+                                    assertThat(version.find()).describedAs("Expected 10.x in %s", pom).isTrue();
+                                    return String.format("""
                                             <project>
                                                 <modelVersion>4.0.0</modelVersion>
                                                 <groupId>com.example</groupId>
@@ -91,35 +116,15 @@ class MigrateToWicket10Test implements RewriteTest {
                                                     <dependency>
                                                         <groupId>org.apache.wicket</groupId>
                                                         <artifactId>wicket-core</artifactId>
-                                                        <version>9.12.0</version>
-                                                    </dependency>
-                                                    <dependency>
-                                                        <groupId>org.apache.wicket.experimental.wicket9</groupId>
-                                                        <artifactId>wicket-http2-core</artifactId>
-                                                        <version>0.23</version>
+                                                        <version>%s</version>
                                                     </dependency>
                                                 </dependencies>
                                             </project>
-                                        """,
-                                spec -> spec.after(pom -> {
-                                    Matcher version = Pattern.compile("10\\..+").matcher(pom);
-                                    assertThat(version.find()).describedAs("Expected 10.x in %s", pom).isTrue();
-                                    return String.format("""
-                                                <project>
-                                                    <modelVersion>4.0.0</modelVersion>
-                                                    <groupId>com.example</groupId>
-                                                    <artifactId>wicket</artifactId>
-                                                    <version>1.0.0</version>
-                                                    <dependencies>
-                                                        <dependency>
-                                                            <groupId>org.apache.wicket</groupId>
-                                                            <artifactId>wicket-core</artifactId>
-                                                            <version>%s</version>
-                                                        </dependency>
-                                                    </dependencies>
-                                                </project>
                                             """, version.group(0));
-                                }))));
+                                })
+                        )
+                )
+        );
     }
 
 }
