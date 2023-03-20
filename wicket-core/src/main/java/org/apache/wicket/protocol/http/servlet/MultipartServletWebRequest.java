@@ -49,6 +49,11 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 	private Bytes fileMaxSize;
 
 	/**
+	 * Maximum amount of files in request.
+	 */
+	private Long fileCountMax;
+
+	/**
 	 * Construct.
 	 * 
 	 * @param httpServletRequest
@@ -130,5 +135,15 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 	public void setFileMaxSize(Bytes fileMaxSize)
 	{
 		this.fileMaxSize = fileMaxSize;
+	}
+
+	public Long getFileCountMax()
+	{
+		return fileCountMax;
+	}
+
+	public void setFileCountMax(Long fileCountMax)
+	{
+		this.fileCountMax = fileCountMax;
 	}
 }

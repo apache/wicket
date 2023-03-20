@@ -298,6 +298,12 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			fileUpload.setFileSizeMax(fileMaxSize.bytes());
 		}
 
+		Long fileCountMax = getFileCountMax();
+		if (fileCountMax != null)
+		{
+			fileUpload.setFileCountMax(fileCountMax);
+		}
+
 		return fileUpload;
 	}
 

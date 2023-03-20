@@ -283,6 +283,11 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	private Bytes fileMaxSize;
 
+	/**
+	 * Maximum amount of files in request.
+	 */
+	private Long fileCountMax;
+
 	/** True if the form has enctype of multipart/form-data */
 	private short multiPart = 0;
 
@@ -646,6 +651,15 @@ public class Form<T> extends WebMarkupContainer
 	public Bytes getFileMaxSize()
 	{
 		return fileMaxSize;
+	}
+
+	/**
+	 * Gets maximum count of files in the form
+	 * 
+	 * @return
+	 */
+	public Long getFileCountMax() {
+		return fileCountMax;
 	}
 
 	/**
@@ -1129,6 +1143,15 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
+	 * Sets maximum amount of files in upload request.
+	 * 
+	 * @param fileCountMax
+	 */
+	public void setFileCountMax(Long fileCountMax) {
+		this.fileCountMax = fileCountMax;
+	}
+
+	/**
 	 * Set to true to use enctype='multipart/form-data', and to process file uploads by default
 	 * multiPart = false
 	 * 
@@ -1461,6 +1484,7 @@ public class Form<T> extends WebMarkupContainer
 				final MultipartServletWebRequest multipartWebRequest = request.newMultipartWebRequest(
 					getMaxSize(), getPage().getId());
 				multipartWebRequest.setFileMaxSize(getFileMaxSize());
+				multipartWebRequest.setFileCountMax(getFileCountMax());
 				multipartWebRequest.parseFileParts();
 
 				// TODO: Can't this be detected from header?
