@@ -40,7 +40,7 @@ import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Upload example.
- * 
+ *
  * @author Eelco Hillenius
  */
 @SuppressWarnings("serial")
@@ -53,7 +53,7 @@ public class UploadPage extends WicketExamplePage
 	{
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param name
 		 *            Component name
 		 * @param files
@@ -93,7 +93,7 @@ public class UploadPage extends WicketExamplePage
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param name
 		 *            Component name
 		 */
@@ -112,6 +112,9 @@ public class UploadPage extends WicketExamplePage
 
 			// Set maximum size per file to 90K for demo purposes
 			setFileMaxSize(Bytes.kilobytes(90));
+
+			// Set maximum file count to 2 for demo purposes
+			setFileCountMax(2L);
 		}
 
 		@Override
@@ -149,7 +152,7 @@ public class UploadPage extends WicketExamplePage
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param parameters
 	 *            Page parameters
 	 */
@@ -195,7 +198,7 @@ public class UploadPage extends WicketExamplePage
 
 	/**
 	 * Check whether the file allready exists, and if so, try to delete it.
-	 * 
+	 *
 	 * @param newFile
 	 *            the file to check
 	 */
