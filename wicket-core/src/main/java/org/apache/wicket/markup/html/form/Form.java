@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileCountLimitExceededException;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.Component;
@@ -258,6 +259,7 @@ public class Form<T> extends WebMarkupContainer
 
 	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
 	private static final String UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY = "uploadSingleFileTooLarge";
+	private static final String UPLOAD_TOO_MANY_FILES_RESOURCE_KEY = "uploadTooManyFiles";
 
 	/**
 	 * Any default IFormSubmittingComponent. If set, a hidden submit component will be rendered
@@ -1532,6 +1534,11 @@ public class Form<T> extends WebMarkupContainer
 		else if (e instanceof FileUploadBase.FileSizeLimitExceededException)
 		{
 			String msg = getString(UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
+			error(msg);
+		}
+		else if (e instanceof FileCountLimitExceededException)
+		{
+			String msg = getString(UPLOAD_TOO_MANY_FILES_RESOURCE_KEY, Model.ofMap(model));
 			error(msg);
 		}
 		else

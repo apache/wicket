@@ -126,8 +126,8 @@ public class MultiUploadPage extends WicketExamplePage
 			// Set maximum size per file to 90K for demo purposes
 			setFileMaxSize(Bytes.kilobytes(90));
 
-			// Set maximum file count to 2 for demo purposes
-			setFileCountMax(2L);
+			// Set maximum file count to 5 for demo purposes
+			setFileCountMax(5L);
 		}
 
 		/**
