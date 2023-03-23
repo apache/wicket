@@ -1907,24 +1907,6 @@ public class Form<T> extends WebMarkupContainer
 		if (!fileCountMax.isPresent())
 		{
 			AtomicLong accumulator = new AtomicLong(0);
-			visitChildren(FileUploadField.class, new IVisitor<FileUploadField, Void>()
-			{
-				@Override
-				public void component(FileUploadField mpfc, IVisit<Void> visit)
-				{
-					if (accumulator.get() > -1)
-					{
-						if (mpfc.getMarkupAttributes().containsKey("multiple"))
-						{
-							accumulator.set(-1L);
-						}
-						else
-						{
-							accumulator.addAndGet(1L);
-						}
-					}
-				}
-			});
 			visitChildren(MultiFileUploadField.class, new IVisitor<MultiFileUploadField, Void>()
 			{
 				@Override
