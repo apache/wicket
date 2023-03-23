@@ -292,7 +292,7 @@ public class Form<T> extends WebMarkupContainer
 	 * Maximum amount of files in request.
 	 * A value of -1 indicates no maximum.
 	 */
-	private Optional<Long> fileCountMax;
+	private Optional<Long> fileCountMax = Optional.empty();
 
 	/** True if the form has enctype of multipart/form-data */
 	private short multiPart = 0;
