@@ -1925,10 +1925,7 @@ public class Form<T> extends WebMarkupContainer
 					}
 				}
 			});
-			if (accumulator.get() != 0)
-			{
-				setFileCountMax(accumulator.get());
-			}
+			setFileCountMax(accumulator.get());
 		}
 		super.onBeforeRender();
 	}
