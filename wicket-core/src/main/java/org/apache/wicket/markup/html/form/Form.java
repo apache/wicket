@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,6 +46,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.form.upload.MultiFileUploadField;
 import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.IModel;
@@ -289,7 +292,7 @@ public class Form<T> extends WebMarkupContainer
 	 * Maximum amount of files in request.
 	 * A value of -1 indicates no maximum.
 	 */
-	private long fileCountMax = -1L;
+	private Optional<Long> fileCountMax;
 
 	/** True if the form has enctype of multipart/form-data */
 	private short multiPart = 0;
@@ -663,7 +666,7 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public long getFileCountMax()
 	{
-		return fileCountMax;
+		return fileCountMax.orElse(-1L);
 	}
 
 	/**
@@ -1153,7 +1156,7 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public void setFileCountMax(long fileCountMax)
 	{
-		this.fileCountMax = fileCountMax;
+		this.fileCountMax = Optional.of(fileCountMax);
 	}
 
 	/**
@@ -1901,6 +1904,29 @@ public class Form<T> extends WebMarkupContainer
 		// clear multipart hint, it will be reevaluated by #isMultiPart()
 		this.multiPart &= MULTIPART_HARD;
 
+		if (!fileCountMax.isPresent())
+		{
+			AtomicLong accumulator = new AtomicLong(0);
+			visitChildren(MultiFileUploadField.class, new IVisitor<MultiFileUploadField, Void>()
+			{
+				@Override
+				public void component(MultiFileUploadField mpfc, IVisit<Void> visit)
+				{
+					if (accumulator.get() > -1)
+					{
+						if (mpfc.getMax() == -1)
+						{
+							accumulator.set(-1L);
+						}
+						else
+						{
+							accumulator.addAndGet(mpfc.getMax());
+						}
+					}
+				}
+			});
+			setFileCountMax(accumulator.get());
+		}
 		super.onBeforeRender();
 	}
 

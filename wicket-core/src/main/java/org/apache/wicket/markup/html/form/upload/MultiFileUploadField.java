@@ -47,17 +47,17 @@ import org.apache.wicket.util.string.Strings;
 /**
  * Form component that allows the user to select multiple files to upload via a single &lt;input
  * type=&quot;file&quot;/&gt; field.
- * 
+ *
  * Notice that this component clears its model at the end of the request, so the uploaded files MUST
  * be processed within the request they were uploaded.
- * 
+ *
  * Uses javascript implementation from
  * http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
- * 
+ *
  * For customizing caption text see {@link #RESOURCE_LIMITED} and {@link #RESOURCE_UNLIMITED}
- * 
+ *
  * For an example of styling using CSS see the upload example in wicket-examples
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
  */
 public class MultiFileUploadField extends FormComponentPanel<Collection<FileUpload>>
@@ -72,7 +72,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	/**
 	 * Resource key used to retrieve caption message for when a limit on the number of uploads is
 	 * specified. The limit is represented via ${max} variable.
-	 * 
+	 *
 	 * Example: org.apache.wicket.mfu.caption.limited=Files (maximum ${max}):
 	 */
 	public static final String RESOURCE_LIMITED = "org.apache.wicket.mfu.caption.limited";
@@ -80,7 +80,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	/**
 	 * Resource key used to retrieve caption message for when no limit on the number of uploads is
 	 * specified.
-	 * 
+	 *
 	 * Example: org.apache.wicket.mfu.caption.unlimited=Files:
 	 */
 	public static final String RESOURCE_UNLIMITED = "org.apache.wicket.mfu.caption.unlimited";
@@ -105,7 +105,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param id
 	 */
 	public MultiFileUploadField(String id)
@@ -115,7 +115,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param id
 	 * @param max
 	 *            max number of files a user can upload
@@ -127,7 +127,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param id
 	 * @param model
 	 */
@@ -138,7 +138,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param id
 	 * @param model
 	 * @param max
@@ -160,7 +160,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	 *            true in order to use the new HTML5 "multiple" &lt;input&gt; attribute. It will allow
 	 *            the users to select multiple files at once for multiple times if the browser
 	 *            supports it, otherwise it will work just as before - one file multiple times.
-	 * 
+	 *
 	 */
 	@SuppressWarnings("unchecked")
 	public MultiFileUploadField(String id, IModel<? extends Collection<FileUpload>> model, int max,
@@ -372,7 +372,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 
 	/**
 	 * Model that will construct the caption string
-	 * 
+	 *
 	 * @author ivaynberg
 	 */
 	private class CaptionModel implements IModel<String>
@@ -393,6 +393,13 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 				return getString(RESOURCE_LIMITED, new Model<>(vars));
 			}
 		}
+	}
 
+	/**
+	 * Getter for max field
+	 * @return
+	 */
+	public int getMax() {
+		return max;
 	}
 }
