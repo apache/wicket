@@ -1,0 +1,42 @@
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.wicket.BestPractices
+displayName: Wicket best practices
+description: Applies Wicket best practices such as minimizing anonymous inner classes and upgrading to the latest version.
+recipeList:
+  - org.openrewrite.java.cleanup.LambdaBlockToExpression
+  - org.openrewrite.java.cleanup.UseLambdaForFunctionalInterface
+  - org.apache.wicket.MigrateToWicket10
+---
+# https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+10.0
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.wicket.MigrateToWicket10
+displayName: Migrate to Wicket 10.x
+description: Migrates Wicket 9.x to Wicket 10.x, as well as Java 17 and Jakarta.
+recipeList:
+  - org.openrewrite.java.migrate.UpgradeToJava17
+  - org.openrewrite.java.migrate.jakarta.JavaxMigrationToJakarta
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.http2.markup.head.PushHeaderItem
+      newFullyQualifiedTypeName: org.apache.wicket.markup.head.http2.PushHeaderItem
+      ignoreDefinition: "True"
+  - org.openrewrite.maven.RemoveDependency:
+      groupId: org.apache.wicket.experimental.wicket8
+      artifactId: wicket-http2-*
+  - org.openrewrite.maven.RemoveDependency:
+      groupId: org.apache.wicket.experimental.wicket9
+      artifactId: wicket-http2-*
+  - org.openrewrite.maven.UpgradeDependencyVersion:
+      groupId: org.apache.wicket
+      artifactId: "*"
+      newVersion: 10.x
+      versionPattern: -SNAPSHOT
+  - org.openrewrite.maven.UpgradeDependencyVersion:
+      groupId: org.apache.wicket.experimental.wicket9
+      artifactId: "*"
+      newVersion: 10.x
+  - org.openrewrite.maven.UpgradeDependencyVersion:
+      groupId: org.apache.wicket.experimental.wicket9
+      artifactId: "*"
+      newVersion: 10.x
+---
