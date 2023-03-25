@@ -1,0 +1,462 @@
+<?xml version="1.0"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>Using FileUpload</title>
+    <author email="martinc@apache.org">Martin Cooper</author>
+  </properties>
+
+  <body>
+    <section name="Using FileUpload">
+      <p>
+        FileUpload can be used in a number of different ways, depending upon the
+        requirements of your application. In the simplest case, you will call a
+        single method to parse the servlet request, and then process the list of
+        items as they apply to your application. At the other end of the scale,
+        you might decide to customize FileUpload to take full control of the way
+        in which individual items are stored; for example, you might decide to
+        stream the content into a database.
+      </p>
+      <p>
+        Here, we will describe the basic principles of FileUpload, and illustrate
+        some of the simpler - and most common - usage patterns. Customization of
+        FileUpload is described <a href="customizing.html">elsewhere</a>.
+      </p>
+      <p>
+         FileUpload depends on Commons IO, so make sure you have the version 
+         mentioned on the <a href="dependencies.html">dependencies page</a> in 
+         your classpath before continuing.
+      </p>
+    </section>
+
+    <section name="How it works">
+      <p>
+        A file upload request comprises an ordered list of <em>items</em> that
+        are encoded according to
+        <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>,
+        "Form-based File Upload in HTML". FileUpload can parse such a request
+        and provide your application with a list of the individual uploaded
+        items. Each such item implements the <code>FileItem</code> interface,
+        regardless of its underlying implementation.
+      </p>
+      <p>
+        This page describes the traditional API of the commons fileupload
+        library. The traditional API is a convenient approach. However, for
+        ultimate performance, you might prefer the faster
+        <a href="streaming.html">Streaming API</a>.
+      </p>
+      <p>
+        Each file item has a number of properties that might be of interest for
+        your application. For example, every item has a name and a content type,
+        and can provide an <code>InputStream</code> to access its data. On the
+        other hand, you may need to process items differently, depending upon
+        whether the item is a regular form field - that is, the data came from
+        an ordinary text box or similar HTML field - or an uploaded file. The
+        <code>FileItem</code> interface provides the methods to make such a
+        determination, and to access the data in the most appropriate manner.
+      </p>
+      <p>
+        FileUpload creates new file items using a <code>FileItemFactory</code>.
+        This is what gives FileUpload most of its flexibility. The factory has
+        ultimate control over how each item is created. The factory implementation
+        that currently ships with FileUpload stores the item's data in memory or
+        on disk, depending on the size of the item (i.e. bytes of data). However,
+        this behavior can be customized to suit your application.
+      </p>
+    </section>
+
+    <section name="Servlets, Jakarta Servlets, and Portlets">
+      <p>
+        Starting with version 1.1, FileUpload supports file upload requests in
+        both servlet and portlet environments. The usage is almost identical in
+        the two environments, so the remainder of this document refers only to
+        the servlet environment.
+      </p>
+      <p>
+        If you are building a portlet application, the following are the two
+        distinctions you should make as you read this document:</p>
+        <ul>
+          <li>
+            Where you see references to the <code>ServletFileUpload</code> class,
+            substitute the <code>PortletFileUpload</code> class.
+          </li>
+          <li>
+            Where you see references to the <code>HttpServletRequest</code> class,
+            substitute the <code>ActionRequest</code> class.
+          </li>
+        </ul>
+      <p>Version 2 of FileUpload introduces support for the Jakarta Servlet API 5.
+         (This API is the successor to the classic servlet environment, which
+         basically renames the <code>javax.servlet</code> package to
+         <code>jakarta.servlet</code>). If you are building a Jakarta Servlet application,
+         keep the following in mind, as you read this document:</p>
+         <ul>
+          <li>
+            Where you see references to the <code>ServletFileUpload</code> class,
+            substitute the <code>JakSrvltFileUpload</code> class.
+          </li>
+          <li>
+            Likewise, references to the <code>FileCleanerCleanup</code> class should
+            be substituted with the <code>JakSrvltFileCleaner</code> class.
+          </li>
+          <li>
+            Where you see references to the <code>HttpServletRequest</code> class
+            (as in javax.servlet.http.HttpServletRequest), then substitute the
+            <code>jakarta.servlet.http.HttpServletRequest</code> class. For well
+            written code, this should be as simple as changing a single import
+            statement.
+          </li>
+         </ul>
+    </section>
+
+    <section name="Parsing the request">
+      <p>
+        Before you can work with the uploaded items, of course, you need to parse
+        the request itself. Ensuring that the request is actually a file upload
+        request is straightforward, but FileUpload makes it simplicity itself, by
+        providing a static method to do just that.
+      </p>
+  <source><![CDATA[// Check that we have a file upload request
+boolean isMultipart = ServletFileUpload.isMultipartContent(request);]]></source>
+        <p>
+          Now we are ready to parse the request into its constituent items.
+        </p>
+      <subsection name="The simplest case">
+        <p>The simplest usage scenario is the following:</p>
+        <ul>
+          <li>
+            Uploaded items should be retained in memory as long as they are
+            reasonably small.
+          </li>
+          <li>
+            Larger items should be written to a temporary file on disk.
+          </li>
+          <li>
+            Very large upload requests should not be permitted.
+          </li>
+          <li>
+            The built-in defaults for the maximum size of an item to
+            be retained in memory, the maximum permitted size of an upload
+            request, and the location of temporary files are acceptable.
+          </li>
+        </ul>
+        <p>
+          Handling a request in this scenario couldn't be much simpler:
+        </p>
+  <source><![CDATA[// Create a factory for disk-based file items
+DiskFileItemFactory factory = new DiskFileItemFactory();
+
+// Configure a repository (to ensure a secure temp location is used)
+ServletContext servletContext = this.getServletConfig().getServletContext();
+File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+factory.setRepository(repository);
+
+// Create a new file upload handler
+ServletFileUpload upload = new ServletFileUpload(factory);
+
+// Parse the request
+List<FileItem> items = upload.parseRequest(request);]]></source>
+        <p>
+          That's all that's needed. Really!
+        </p>
+        <p>
+          The result of the parse is a <code>List</code> of file items, each of
+          which implements the <code>FileItem</code> interface. Processing these
+          items is discussed below.
+        </p>
+      </subsection>
+
+      <subsection name="Exercising more control"> 
+        <p>
+          If your usage scenario is close to the simplest case, described above,
+          but you need a little more control, you can easily customize the
+          behavior of the upload handler or the file item factory or both. The
+          following example shows several configuration options:
+        </p>
+<source><![CDATA[// Create a factory for disk-based file items
+DiskFileItemFactory factory = new DiskFileItemFactory();
+
+// Set factory constraints
+factory.setSizeThreshold(yourMaxMemorySize);
+factory.setRepository(yourTempDirectory);
+
+// Create a new file upload handler
+ServletFileUpload upload = new ServletFileUpload(factory);
+
+// Set overall request size constraint
+upload.setSizeMax(yourMaxRequestSize);
+
+// Parse the request
+List<FileItem> items = upload.parseRequest(request);]]></source>
+        <p>
+          Of course, each of the configuration methods is independent of the
+          others, but if you want to configure the factory all at once, you can
+          do that with an alternative constructor, like this:
+        </p>
+  <source><![CDATA[// Create a factory for disk-based file items
+DiskFileItemFactory factory = new DiskFileItemFactory(yourMaxMemorySize, yourTempDirectory);]]></source>
+        <p>
+          Should you need further control over the parsing of the request, such
+          as storing the items elsewhere - for example, in a database - you will
+          need to look into <a href="customizing.html">customizing</a> FileUpload.
+        </p>
+      </subsection>
+    </section>
+
+    <section name="Processing the uploaded items">
+      <p>
+        Once the parse has completed, you will have a <code>List</code> of file
+        items that you need to process. In most cases, you will want to handle
+        file uploads differently from regular form fields, so you might process
+        the list like this:
+      </p>
+  <source><![CDATA[// Process the uploaded items
+Iterator<FileItem> iter = items.iterator();
+while (iter.hasNext()) {
+    FileItem item = iter.next();
+
+    if (item.isFormField()) {
+        processFormField(item);
+    } else {
+        processUploadedFile(item);
+    }
+}]]></source>
+      <p>
+        For a regular form field, you will most likely be interested only in the
+        name of the item, and its <code>String</code> value. As you might expect,
+        accessing these is very simple.
+      </p>
+  <source><![CDATA[// Process a regular form field
+if (item.isFormField()) {
+    String name = item.getFieldName();
+    String value = item.getString();
+    ...
+}]]></source>
+      <p>
+        For a file upload, there are several different things you might want to
+        know before you process the content. Here is an example of some of the
+        methods you might be interested in.
+      </p>
+  <source><![CDATA[// Process a file upload
+if (!item.isFormField()) {
+    String fieldName = item.getFieldName();
+    String fileName = item.getName();
+    String contentType = item.getContentType();
+    boolean isInMemory = item.isInMemory();
+    long sizeInBytes = item.getSize();
+    ...
+}]]></source>
+      <p>
+        With uploaded files, you generally will not want to access them via
+        memory, unless they are small, or unless you have no other alternative.
+        Rather, you will want to process the content as a stream, or write the
+        entire file to its ultimate location. FileUpload provides simple means of
+        accomplishing both of these.
+      </p>
+  <source><![CDATA[// Process a file upload
+if (writeToFile) {
+    File uploadedFile = new File(...);
+    item.write(uploadedFile);
+} else {
+    InputStream uploadedStream = item.getInputStream();
+    ...
+    uploadedStream.close();
+}]]></source>
+      <p>
+        Note that, in the default implementation of FileUpload, <code>write()</code>
+        will attempt to rename the file to the specified destination, if the data
+        is already in a temporary file. Actually copying the data is only done if
+        the the rename fails, for some reason, or if the data was in memory.
+      </p>
+      <p>
+        If you do need to access the uploaded data in memory, you need simply
+        call the <code>get()</code> method to obtain the data as an array of
+        bytes.
+      </p>
+  <source><![CDATA[// Process a file upload in memory
+byte[] data = item.get();
+...]]></source>
+    </section>
+
+    <section name="Resource cleanup">
+      <p>
+        This section applies only, if you are using the
+        <a href="./apidocs/org/apache/commons/fileupload/disk/DiskFileItem.html">DiskFileItem</a>.
+        In other words, it applies, if your uploaded files are written to
+        temporary files before processing them.
+      </p>
+      <p>
+        Such temporary files are deleted automatically, if they are no longer
+        used (more precisely, if the corresponding instance of <code>DiskFileItem</code>
+        is garbage collected. This is done silently by the <code>org.apache.commons.io.FileCleanerTracker</code>
+        class, which starts a reaper thread.
+      </p>
+      <p>
+        This reaper thread should be stopped, if it is no longer needed. In
+        a servlet environment, this is done by using a special servlet
+        context listener, called
+        <a href="./apidocs/org/apache/commons/fileupload/servlet/FileCleanerCleanup.html">FileCleanerCleanup</a>.
+        To do so, add a section like the following to your <code>web.xml</code>:
+      </p>
+  <source><![CDATA[<web-app>
+  ...
+  <listener>
+    <listener-class>
+      org.apache.commons.fileupload.servlet.FileCleanerCleanup
+    </listener-class>
+  </listener>
+  ...
+</web-app>]]></source>
+
+      <subsection name="Creating a DiskFileItemFactory">
+        <p>
+          The FileCleanerCleanup provides an instance of
+          <code>org.apache.commons.io.FileCleaningTracker</code>. This
+          instance must be used when creating a
+          <code>org.apache.commons.fileupload.disk.DiskFileItemFactory</code>.
+          This should be done by calling a method like the following:
+        </p>
+  <source><![CDATA[public static DiskFileItemFactory newDiskFileItemFactory(ServletContext context,
+                                                         File repository) {
+    FileCleaningTracker fileCleaningTracker
+        = FileCleanerCleanup.getFileCleaningTracker(context);
+    DiskFileItemFactory factory
+        = new DiskFileItemFactory(DiskFileItemFactory.DEFAULT_SIZE_THRESHOLD,
+                                  repository);
+    factory.setFileCleaningTracker(fileCleaningTracker);
+    return factory;
+}]]></source>
+      </subsection>
+
+      <subsection name="Disabling cleanup of temporary files">
+        <p>
+          To disable tracking of temporary files, you may set the
+          <code>FileCleaningTracker</code> to null. Consequently,
+          created files will no longer be tracked. In particular,
+          they will no longer be deleted automatically.</p>
+      </subsection>
+    </section>
+
+    <section name="Interaction with virus scanners">
+      <p>
+        Virus scanners running on the same system as the web container can cause
+        some unexpected behaviors for applications using FileUpload. This section
+        describes some of the behaviors that you might encounter, and provides
+        some ideas for how to handle them.
+      </p>
+      <p>
+        The default implementation of FileUpload will cause uploaded items above
+        a certain size threshold to be written to disk. As soon as such a file is
+        closed, any virus scanner on the system will wake up and inspect it, and
+        potentially quarantine the file - that is, move it to a special location
+        where it will not cause problems. This, of course, will be a surprise to
+        the application developer, since the uploaded file item will no longer be
+        available for processing. On the other hand, uploaded items below that
+        same threshold will be held in memory, and therefore will not be seen by
+        virus scanners. This allows for the possibility of a virus being retained
+        in some form (although if it is ever written to disk, the virus scanner
+        would locate and inspect it).
+      </p>
+      <p>
+        One commonly used solution is to set aside one directory on the system
+        into which all uploaded files will be placed, and to configure the virus
+        scanner to ignore that directory. This ensures that files will not be
+        ripped out from under the application, but then leaves responsibility for
+        virus scanning up to the application developer. Scanning the uploaded
+        files for viruses can then be performed by an external process, which
+        might move clean or cleaned files to an "approved" location, or by
+        integrating a virus scanner within the application itself. The details of
+        configuring an external process or integrating virus scanning into an
+        application are outside the scope of this document.
+      </p>
+    </section>
+
+    <section name="Watching progress">
+      <p>
+        If you expect really large file uploads, then it would be nice to report
+        to your users, how much is already received. Even HTML pages allow to
+        implement a progress bar by returning a multipart/replace response,
+        or something like that.
+      </p>
+      <p>
+        Watching the upload progress may be done by supplying a progress listener:
+      </p>
+  <source><![CDATA[//Create a progress listener
+ProgressListener progressListener = new ProgressListener(){
+   public void update(long pBytesRead, long pContentLength, int pItems) {
+       System.out.println("We are currently reading item " + pItems);
+       if (pContentLength == -1) {
+           System.out.println("So far, " + pBytesRead + " bytes have been read.");
+       } else {
+           System.out.println("So far, " + pBytesRead + " of " + pContentLength
+                              + " bytes have been read.");
+       }
+   }
+};
+upload.setProgressListener(progressListener);]]></source>
+      <p>
+        Do yourself a favour and implement your first progress listener just
+        like the above, because it shows you a pitfall: The progress listener
+        is called quite frequently. Depending on the servlet engine and other
+        environment factory, it may be called for any network packet! In
+        other words, your progress listener may become a performance problem!
+        A typical solution might be, to reduce the progress listeners activity.
+        For example, you might emit a message only, if the number of megabytes
+        has changed:
+      </p>
+  <source><![CDATA[//Create a progress listener
+ProgressListener progressListener = new ProgressListener(){
+   private long megaBytes = -1;
+   public void update(long pBytesRead, long pContentLength, int pItems) {
+       long mBytes = pBytesRead / 1000000;
+       if (megaBytes == mBytes) {
+           return;
+       }
+       megaBytes = mBytes;
+       System.out.println("We are currently reading item " + pItems);
+       if (pContentLength == -1) {
+           System.out.println("So far, " + pBytesRead + " bytes have been read.");
+       } else {
+           System.out.println("So far, " + pBytesRead + " of " + pContentLength
+                              + " bytes have been read.");
+       }
+   }
+};]]></source>
+    </section>
+
+    <section name="What's next">
+      <p>
+        Hopefully this page has provided you with a good idea of how to use
+        FileUpload in your own applications. For more detail on the methods
+        introduced here, as well as other available methods, you should refer
+        to the <a href="./apidocs/index.html">Javadocs</a>.
+      </p>
+      <p>
+        The usage described here should satisfy a large majority of file upload
+        needs. However, should you have more complex requirements, FileUpload
+        should still be able to help you, with it's flexible
+        <a href="./customizing.html">customization</a> capabilities.
+      </p>
+    </section>
+  </body>
+
+</document>
