@@ -126,7 +126,7 @@
 		<cglib.version>3.2.12</cglib.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
-		<commons-fileupload.version>1.4</commons-fileupload.version>
+		<commons-fileupload.version>1.5</commons-fileupload.version>
 		<commons-lang3.version>3.9</commons-lang3.version>
 		<jacoco.version>0.8.2</jacoco.version>
 		<jackson.version>2.9.9</jackson.version>

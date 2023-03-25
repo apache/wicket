@@ -63,6 +63,12 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 	 */
 	private Bytes fileMaxSize;
 
+	/**
+	 * Maximum amount of files in request.
+	 * A value of -1 indicates no maximum.
+	 */
+	private long fileCountMax = -1L;
+
 	private String parameterName = "f";
 
 	/**
@@ -97,11 +103,11 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 			public CharSequence getPrecondition(Component component)
 			{
 				String css = getComponent().getString(DRAG_OVER_CLASS_KEY);
-				
+
 				return String.format("jQuery('#' + attrs.c).toggleClass('%s', attrs.event.type === 'dragover'); return (attrs.event.type === 'drop');", css);
 			}
 		});
-		
+
 		attributes.getDynamicExtraParameters()
 			.add(String.format(
 				"return Wicket.DataTransfer.getFilesAsParamArray(attrs.event.originalEvent, '%s');",
@@ -117,6 +123,7 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 			final MultipartServletWebRequest multipartWebRequest = request
 				.newMultipartWebRequest(getMaxSize(), getComponent().getPage().getId());
 			multipartWebRequest.setFileMaxSize(getFileMaxSize());
+			multipartWebRequest.setFileCountMax(getFileCountMax());
 			multipartWebRequest.parseFileParts();
 
 			// TODO: Can't this be detected from header?
@@ -155,7 +162,7 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 
 	/**
 	 * Set the maximum upload size.
-	 * 
+	 *
 	 * @param maxSize maximum size, must not be null
 	 */
 	public void setMaxSize(Bytes maxSize)
@@ -171,7 +178,7 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 
 	/**
 	 * Set an optional maximum size per file.
-	 * 
+	 *
 	 * @param fileMaxSize maximum size for each uploaded file
 	 */
 	public void setFileMaxSize(Bytes fileMaxSize)
@@ -180,11 +187,31 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 	}
 
 	/**
+	 * Gets maximum count of files
+	 *
+	 * @return
+	 */
+	public long getFileCountMax()
+	{
+		return fileCountMax;
+	}
+
+	/**
+	 * Sets maximum amount of files in upload request.
+	 *
+	 * @param fileCountMax
+	 */
+	public void setFileCountMax(long fileCountMax)
+	{
+		this.fileCountMax = fileCountMax;
+	}
+
+	/**
 	 * Hook method called after a file was uploaded.
 	 * <p>
 	 * Note: {@link #onError(AjaxRequestTarget, FileUploadException)} is called instead when
 	 * uploading failed
-	 * 
+	 *
 	 * @param target
 	 *            the current request handler
 	 * @param files
@@ -197,7 +224,7 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 	/**
 	 * Hook method called to handle any error during uploading of the file.
 	 * <p>
-	 * Default implementation re-throws the exception. 
+	 * Default implementation re-throws the exception.
 	 *
 	 * @param target
 	 *            the current request handler
