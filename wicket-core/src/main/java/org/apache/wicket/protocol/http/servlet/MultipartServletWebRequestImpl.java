@@ -47,7 +47,7 @@ import org.apache.wicket.util.value.ValueMap;
 
 /**
  * Servlet specific WebRequest subclass for multipart content uploads.
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Cameron Braid
@@ -297,12 +297,14 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			fileUpload.setFileSizeMax(fileMaxSize.bytes());
 		}
 
+		fileUpload.setFileCountMax(getFileCountMax());
+
 		return fileUpload;
 	}
 
     /**
 	 * Adds a parameter to the parameters value map
-	 * 
+	 *
 	 * @param name
 	 *            parameter name
 	 * @param value
@@ -340,7 +342,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Gets the file that was uploaded using the given field name.
-	 * 
+	 *
 	 * @param fieldName
 	 *            the field name that was used for the upload
 	 * @return the upload with the given field name
@@ -375,7 +377,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	/**
 	 * Subclasses that want to receive upload notifications should return true. By default, it takes
 	 * the value from {@link org.apache.wicket.settings.ApplicationSettings#isUploadProgressUpdatesEnabled()}.
-	 * 
+	 *
 	 * @return true if upload status update event should be invoked
 	 */
 	protected boolean wantUploadProgressUpdates()
@@ -385,7 +387,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Upload start callback
-	 * 
+	 *
 	 * @param totalBytes
 	 */
 	protected void onUploadStarted(int totalBytes)
@@ -397,7 +399,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Upload status update callback
-	 * 
+	 *
 	 * @param bytesUploaded
 	 * @param total
 	 */
@@ -425,7 +427,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * An {@link InputStream} that updates total number of bytes read
-	 * 
+	 *
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
 	private class CountingInputStream extends InputStream
@@ -435,7 +437,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 		/**
 		 * Constructs a new CountingInputStream.
-		 * 
+		 *
 		 * @param in
 		 *            InputStream to delegate to
 		 */
@@ -517,7 +519,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Retrieves {@link UploadInfo} from session, null if not found.
-	 * 
+	 *
 	 * @param req
 	 *            http servlet request, not null
 	 * @param upload
@@ -532,7 +534,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Sets the {@link UploadInfo} object into session.
-	 * 
+	 *
 	 * @param req
 	 *            http servlet request, not null
 	 * @param upload
@@ -551,7 +553,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Clears the {@link UploadInfo} object from session if one exists.
-	 * 
+	 *
 	 * @param req
 	 *            http servlet request, not null
 	 * @param upload

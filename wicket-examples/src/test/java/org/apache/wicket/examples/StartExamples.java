@@ -44,7 +44,7 @@ public class StartExamples
 {
 	/**
 	 * Main function, starts the jetty server.
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception

@@ -28,6 +28,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.FileUploadException;
 import org.apache.commons.fileupload2.pub.FileUploadByteCountLimitException;
 import org.apache.commons.fileupload2.pub.FileUploadSizeException;
+import org.apache.commons.fileupload2.pub.FileUploadFileCountLimitException;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.IRequestListener;
@@ -110,7 +112,7 @@ import org.slf4j.LoggerFactory;
  * </ul>
  * </li>
  * </ul>
- * 
+ *
  * A Form can be configured for handling uploads with multipart requests (e.g. files) by calling
  * {@link #setMultiPart(boolean)} (although Wicket will try to automatically detect this for you).
  * Use this with {@link FileUploadField} components. You can attach multiple {@link FileUploadField}
@@ -119,11 +121,11 @@ import org.slf4j.LoggerFactory;
  * In case of an upload error two resource keys are available to specify error messages:
  * {@code uploadTooLarge} and {@code uploadFailed}, i.e. for a form with id {@code myform} in
  * {@code MyPage.properties}:
- * 
+ *
  * <pre>
  * myform.uploadTooLarge=You have uploaded a file that is over the allowed limit of 2Mb
  * </pre>
- * 
+ *
  * Forms can be nested. You can put a form in another form. Since HTML doesn't allow nested
  * &lt;form&gt; tags, the inner forms will be rendered using the &lt;div&gt; tag. You have to submit
  * the inner forms using explicit components (like {@link Button} or {@link SubmitLink}), you can't
@@ -132,7 +134,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * When a nested form is submitted, the user entered values in outer (parent) forms are preserved
  * and only the fields in the submitted form are validated. </b>
- * 
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
@@ -140,7 +142,7 @@ import org.slf4j.LoggerFactory;
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
  * @author David Leangen
- * 
+ *
  * @param <T>
  *            The model object type
  */
@@ -156,7 +158,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Visitor used for validation
-	 * 
+	 *
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
 	public abstract static class ValidationVisitor implements IVisitor<FormComponent<?>, Void>
@@ -185,7 +187,7 @@ public class Form<T> extends WebMarkupContainer
 
 		/**
 		 * Callback that should be used to validate form component
-		 * 
+		 *
 		 * @param formComponent
 		 */
 		public abstract void validate(FormComponent<?> formComponent);
@@ -194,7 +196,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Visitor used to update component models
-	 * 
+	 *
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
 	private static class FormModelUpdateVisitor implements IVisitor<Component, Void>
@@ -203,7 +205,7 @@ public class Form<T> extends WebMarkupContainer
 
 		/**
 		 * Constructor
-		 * 
+		 *
 		 * @param formFilter
 		 */
 		public FormModelUpdateVisitor(Form<?> formFilter)
@@ -258,6 +260,7 @@ public class Form<T> extends WebMarkupContainer
 
 	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
 	private static final String UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY = "uploadSingleFileTooLarge";
+	private static final String UPLOAD_TOO_MANY_FILES_RESOURCE_KEY = "uploadTooManyFiles";
 
 	/**
 	 * Any default IFormSubmittingComponent. If set, a hidden submit component will be rendered
@@ -282,6 +285,12 @@ public class Form<T> extends WebMarkupContainer
 	 * Maximum size of file of upload in bytes (if there are more than one) in request.
 	 */
 	private Bytes fileMaxSize;
+
+	/**
+	 * Maximum amount of files in request.
+	 * A value of -1 indicates no maximum.
+	 */
+	private long fileCountMax = -1L;
 
 	/** True if the form has enctype of multipart/form-data */
 	private short multiPart = 0;
@@ -308,15 +317,15 @@ public class Form<T> extends WebMarkupContainer
 	 * The index of the hidden fields used to pass parameters.
 	 */
 	private static final int HIDDEN_FIELDS_PARAMS_IDX = 0;
-	
+
 	/**
 	 * The index of the hidden fields used for the default submit button.
 	 */
 	private static final int HIDDEN_FIELDS_SUBMIT_IDX = 1;
-	
+
 	/**
 	 * Constructs a form with no validation.
-	 * 
+	 *
 	 * @param id
 	 *            See Component
 	 */
@@ -340,7 +349,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Adds a form validator to the form.
-	 * 
+	 *
 	 * @param validator
 	 *            validator
 	 * @throws IllegalArgumentException
@@ -363,7 +372,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Removes a form validator from the form.
-	 * 
+	 *
 	 * @param validator
 	 *            validator
 	 * @throws IllegalArgumentException
@@ -428,7 +437,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Registers an error feedback message for this component
-	 * 
+	 *
 	 * @param error
 	 *            error message
 	 * @param args
@@ -443,7 +452,7 @@ public class Form<T> extends WebMarkupContainer
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * <p>
 	 * Gets the IFormSubmittingComponent which submitted this form.
-	 * 
+	 *
 	 * @return The component which submitted this form, or null if the processing was not triggered
 	 *         by a registered IFormSubmittingComponent
 	 */
@@ -489,7 +498,7 @@ public class Form<T> extends WebMarkupContainer
 	 * </p>
 	 * There can be only one default submit component per form hierarchy. So if you want to get the
 	 * default component on a nested form, it will actually delegate the call to root form. </b>
-	 * 
+	 *
 	 * @return The submit component to set as the default IFormSubmittingComponent, or null when you
 	 *         want to 'unset' any previously set default IFormSubmittingComponent
 	 */
@@ -507,7 +516,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Gets all {@link IFormValidator}s added to this form
-	 * 
+	 *
 	 * @return unmodifiable collection of {@link IFormValidator}s
 	 */
 	public final Collection<IFormValidator> getFormValidators()
@@ -527,10 +536,10 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Generate a piece of JavaScript that submits the form to the given URL of an {@link IRequestListener}.
-	 * 
+	 *
 	 * Warning: This code should only be called in the rendering phase for form components inside
 	 * the form because it uses the css/javascript id of the form which can be stored in the markup.
-	 * 
+	 *
 	 * @param url
 	 *            The listener url to be submitted to
 	 * @return the javascript code that submits the form.
@@ -540,21 +549,21 @@ public class Form<T> extends WebMarkupContainer
 		Form<?> root = getRootForm();
 
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
-		
+
 		String action = url.toString();
 		if (root.encodeUrlInHiddenFields()) {
 			buffer.append(String.format("document.getElementById('%s').innerHTML = '",
 				root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
-			
+
 			// parameter must be sent as hidden field, as it would be ignored in the action URL
 			int i = action.indexOf('?');
 			if (i != -1)
 			{
 				writeParamsAsHiddenFields(Strings.split(action.substring(i + 1), '&'), buffer);
-				
+
 				action = action.substring(0, i);
 			}
-			
+
 			buffer.append("';");
 		}
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
@@ -566,14 +575,14 @@ public class Form<T> extends WebMarkupContainer
 	/**
 	 * Generate a piece of JavaScript that submits the form with the given
 	 * {@link IFormSubmittingComponent}.
-	 * 
+	 *
 	 * @param submitter
 	 *            the submitter
 	 * @param triggerEvent
 	 *            When true, the form will be submited via a javascript submit event, when false via
 	 *            the {@code submit()} method.
 	 * @return the javascript code that submits the form.
-	 * 
+	 *
 	 * @see #findSubmitter()
 	 */
 	public final CharSequence getJsForSubmitter(IFormSubmittingComponent submitter, boolean triggerEvent)
@@ -603,8 +612,8 @@ public class Form<T> extends WebMarkupContainer
 	/**
 	 * Gets the maximum size for uploads. If null, the setting
 	 * {@link org.apache.wicket.settings.ApplicationSettings#getDefaultMaximumUploadSize()} is used.
-	 * 
-	 * 
+	 *
+	 *
 	 * @return the maximum size
 	 */
 	public final Bytes getMaxSize()
@@ -614,7 +623,7 @@ public class Form<T> extends WebMarkupContainer
 		 * max size smaller then the one specified in applications settings because the inner form
 		 * will return the default unless it is specifically set in the traversal. With this method
 		 * remaining final we can tell when the value is explicitly set by the user.
-		 * 
+		 *
 		 * If the value needs to be dynamic it can be set in oncofigure() instead of overriding this
 		 * method.
 		 */
@@ -640,7 +649,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Gets maximum size for each file of an upload.
-	 * 
+	 *
 	 * @return
 	 */
 	public Bytes getFileMaxSize()
@@ -649,8 +658,18 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
+	 * Gets maximum count of files in the form
+	 *
+	 * @return
+	 */
+	public long getFileCountMax()
+	{
+		return fileCountMax;
+	}
+
+	/**
 	 * Returns the root form or this, if this is the root form.
-	 * 
+	 *
 	 * @return root form or this form
 	 */
 	public Form<?> getRootForm()
@@ -681,7 +700,7 @@ public class Form<T> extends WebMarkupContainer
 	 * <p>
 	 * Returned prefix will be used for all form components. The prefix can also be overridden on
 	 * form component level by overriding {@link FormComponent#getValidatorKeyPrefix()}
-	 * 
+	 *
 	 * @return prefix prepended to validator keys
 	 */
 	public String getValidatorKeyPrefix()
@@ -691,7 +710,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Gets whether the current form has any error registered.
-	 * 
+	 *
 	 * @return True if this form has at least one error.
 	 */
 	public final boolean hasError()
@@ -710,7 +729,7 @@ public class Form<T> extends WebMarkupContainer
 	/**
 	 * Returns whether the form is a root form, which means that there's no other form in it's
 	 * parent hierarchy.
-	 * 
+	 *
 	 * @return true if form is a root form, false otherwise
 	 */
 	public boolean isRootForm()
@@ -720,7 +739,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Checks if this form has been submitted during the current request
-	 * 
+	 *
 	 * @return true if the form has been submitted during this request, false otherwise
 	 */
 	public final boolean isSubmitted()
@@ -730,9 +749,9 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
-	 * 
+	 *
 	 * Handles form submissions.
-	 * 
+	 *
 	 * @see #onFormSubmitted(IFormSubmitter)
 	 */
 	@Override
@@ -746,7 +765,7 @@ public class Form<T> extends WebMarkupContainer
 	 * {@link #getMethod()}. For example, someone can copy and paste the action url and invoke the
 	 * form using a {@code GET} instead of the desired {@code POST}. This method allows the user to
 	 * react to this situation.
-	 * 
+	 *
 	 * @return response that can either abort or continue the processing of the form
 	 */
 	protected MethodMismatchResponse onMethodMismatch()
@@ -756,13 +775,13 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
-	 * 
+	 *
 	 * Handles form submissions.
-	 * 
+	 *
 	 * @param submitter
 	 *            listener that will receive form processing events, if {@code null} the form will
 	 *            attempt to locate one
-	 * 
+	 *
 	 * @see Form#validate()
 	 */
 	public final void onFormSubmitted(IFormSubmitter submitter)
@@ -881,7 +900,7 @@ public class Form<T> extends WebMarkupContainer
 	 * </ul>
 	 * </li>
 	 * </ul>
-	 * 
+	 *
 	 * @param submitter
 	 *            The submitting component, if any. May be null.
 	 * @return The form that needs to be processed.
@@ -934,7 +953,7 @@ public class Form<T> extends WebMarkupContainer
 	 * Whether this form wants to be submitted too if a nested form is submitted. By default, this
 	 * is false, so when a nested form is submitted, this form will <em>not</em> be submitted. If
 	 * this method is overridden to return true, this form <em>will</em> be submitted.
-	 * 
+	 *
 	 * @return Whether this form wants to be submitted too if a nested form is submitted.
 	 */
 	// TODO wicket-7 migration guide: changed from public to protected
@@ -947,7 +966,7 @@ public class Form<T> extends WebMarkupContainer
 	 * Whether this *nested* form wants to be submitted when parent form is submitted. By default,
 	 * this is true, so when a parent form is submitted, the nested form is also submitted. If this
 	 * method is overridden to return false, it will not be validated, processed nor submitted.
-	 * 
+	 *
 	 * @return {@code true} by default
 	 */
 	protected boolean wantSubmitOnParentFormSubmit()
@@ -958,15 +977,15 @@ public class Form<T> extends WebMarkupContainer
 	/**
 	 * Process the form. Though you can override this method to provide your own algorithm, it is
 	 * not recommended to do so.
-	 * 
+	 *
 	 * <p>
 	 * See the class documentation for further details on the form processing
 	 * </p>
-	 * 
+	 *
 	 * @param submittingComponent
 	 *            component responsible for submitting the form, or <code>null</code> if none (eg
 	 *            the form has been submitted via the enter key or javascript calling form.submit())
-	 * 
+	 *
 	 * @see #delegateSubmit(IFormSubmitter) for an easy way to process submitting component in the
 	 *      default manner
 	 */
@@ -1020,7 +1039,7 @@ public class Form<T> extends WebMarkupContainer
 	/**
 	 * Calls onError on this {@link Form} and any enabled and visible nested form, if the respective
 	 * {@link Form} actually has errors.
-	 * 
+	 *
 	 * @param submitter
 	 */
 	protected void callOnError(IFormSubmitter submitter)
@@ -1054,20 +1073,20 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Sets FLAG_SUBMITTED to true on this form and every enabled nested form.
-	 * @param submitter 
+	 * @param submitter
 	 */
 	private void markFormsSubmitted(IFormSubmitter submitter)
 	{
 		setFlag(FLAG_SUBMITTED, true);
 		Form<?> formToProcess = findFormToProcess(submitter);
-		
+
 		visitChildren(Form.class, new IVisitor<Component, Void>()
 		{
 			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
 				Form<?> form = (Form<?>)component;
-				if ((form.wantSubmitOnParentFormSubmit() || form == formToProcess) 
+				if ((form.wantSubmitOnParentFormSubmit() || form == formToProcess)
 					&& form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.setFlag(FLAG_SUBMITTED, true);
@@ -1089,7 +1108,7 @@ public class Form<T> extends WebMarkupContainer
 	 * </p>
 	 * There can be only one default button per form hierarchy. So if you set default button on a
 	 * nested form, it will actually delegate the call to root form. </b>
-	 * 
+	 *
 	 * @param submittingComponent
 	 *            The component to set as the default submitting component, or null when you want to
 	 *            'unset' any previously set default component
@@ -1109,7 +1128,7 @@ public class Form<T> extends WebMarkupContainer
 	/**
 	 * Sets the maximum size for uploads. If null, the setting
 	 * {@link org.apache.wicket.settings.ApplicationSettings#getDefaultMaximumUploadSize()} is used.
-	 * 
+	 *
 	 * @param maxSize
 	 *            The maximum size
 	 */
@@ -1120,7 +1139,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Sets maximum size of each file in upload request.
-	 * 
+	 *
 	 * @param fileMaxSize
 	 */
 	public void setFileMaxSize(Bytes fileMaxSize)
@@ -1129,9 +1148,19 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
+	 * Sets maximum amount of files in upload request.
+	 *
+	 * @param fileCountMax
+	 */
+	public void setFileCountMax(long fileCountMax)
+	{
+		this.fileCountMax = fileCountMax;
+	}
+
+	/**
 	 * Set to true to use enctype='multipart/form-data', and to process file uploads by default
 	 * multiPart = false
-	 * 
+	 *
 	 * @param multiPart
 	 *            whether this form should behave as a multipart form
 	 */
@@ -1169,7 +1198,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Convenient and typesafe way to visit all the form components on a form.
-	 * 
+	 *
 	 * @param <R>
 	 *            return object type
 	 * @param visitor
@@ -1184,7 +1213,7 @@ public class Form<T> extends WebMarkupContainer
 	/**
 	 * Convenient and typesafe way to visit all the form components on a form postorder (deepest
 	 * first)
-	 * 
+	 *
 	 * @param <R>
 	 *            Return object type
 	 * @param visitor
@@ -1199,7 +1228,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Find out whether there is any registered error for a form component.
-	 * 
+	 *
 	 * @return whether there is any registered error for a form component
 	 */
 	private boolean anyFormComponentError()
@@ -1242,7 +1271,7 @@ public class Form<T> extends WebMarkupContainer
 	 * will do a form submit using this component. This method is overridable as what we do is best
 	 * effort only, and may not what you want in specific situations. So if you have specific
 	 * usability concerns, or want to follow another strategy, you may override this method.
-	 * 
+	 *
 	 * @see #addDefaultSubmitButtonHandler(IHeaderResponse)
 	 */
 	protected void appendDefaultButtonField()
@@ -1264,7 +1293,7 @@ public class Form<T> extends WebMarkupContainer
 
 		// close div
 		buffer.append("</div>");
-		
+
 		getResponse().write(buffer);
 	}
 
@@ -1274,7 +1303,7 @@ public class Form<T> extends WebMarkupContainer
 	 * the hidden submit button will be dispatched to the selected default submit button. As with
 	 * {@link #appendDefaultButtonField()} this method can be overridden when the generated code
 	 * needs to be adjusted for a specific usecase.
-	 * 
+	 *
 	 * @param headerResponse
 	 *            The header response.
 	 */
@@ -1313,7 +1342,7 @@ public class Form<T> extends WebMarkupContainer
 	 * Regardless of whether a submitting component was found, the form's onSubmit method is called
 	 * next.
 	 * </p>
-	 * 
+	 *
 	 * @param submittingComponent
 	 *            the component that triggered this form processing, or null if the processing was
 	 *            triggered by something else (like a non-Wicket submit button or a javascript
@@ -1358,7 +1387,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Returns the id which will be used for the hidden div containing all parameter fields.
-	 * 
+	 *
 	 * @param idx
 	 *            The index of the div to keep different divs apart.
 	 * @return the id of the hidden div
@@ -1375,7 +1404,7 @@ public class Form<T> extends WebMarkupContainer
 	 * handlers may submit the form with a "get" even when the form method is declared as "post."
 	 * Therefore this method should not be considered a guarantee of the HTTP method used, but a
 	 * value for the markup only. Override if you have a requirement to alter this behavior.
-	 * 
+	 *
 	 * @return the submit method specified in markup.
 	 */
 	protected String getMethod()
@@ -1385,7 +1414,7 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.Component#getStatelessHint()
 	 */
 	@Override
@@ -1446,7 +1475,7 @@ public class Form<T> extends WebMarkupContainer
 	/**
 	 * Handles multi-part processing of the submitted data.
 	 * <strong>WARNING</strong> If this method is overridden it can break {@link FileUploadField}s on this form
-	 * 
+	 *
 	 * @return false if form is multipart and upload failed
 	 */
 	protected boolean handleMultiPart()
@@ -1461,6 +1490,7 @@ public class Form<T> extends WebMarkupContainer
 				final MultipartServletWebRequest multipartWebRequest = request.newMultipartWebRequest(
 					getMaxSize(), getPage().getId());
 				multipartWebRequest.setFileMaxSize(getFileMaxSize());
+				multipartWebRequest.setFileCountMax(getFileCountMax());
 				multipartWebRequest.parseFileParts();
 
 				// TODO: Can't this be detected from header?
@@ -1473,6 +1503,7 @@ public class Form<T> extends WebMarkupContainer
 				model.put("exception", fux);
 				model.put("maxSize", getMaxSize());
 				model.put("fileMaxSize", getFileMaxSize());
+				model.put("fileCountMax", getFileCountMax());
 
 				onFileUploadException(fux, model);
 
@@ -1489,7 +1520,7 @@ public class Form<T> extends WebMarkupContainer
 	 * maxSize in the model or add you own property and use that in your error message.
 	 * <p>
 	 * Don't forget to call super.onFileUploadException(e, model) at the end of your method.
-	 * 
+	 *
 	 * @param e
 	 * @param model
 	 */
@@ -1504,6 +1535,11 @@ public class Form<T> extends WebMarkupContainer
 		else if (e instanceof FileUploadSizeException)
 		{
 			String msg = getString(UPLOAD_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
+			error(msg);
+		}
+		else if (e instanceof FileUploadFileCountLimitException)
+		{
+			String msg = getString(UPLOAD_TOO_MANY_FILES_RESOURCE_KEY, Model.ofMap(model));
 			error(msg);
 		}
 		else
@@ -1672,7 +1708,7 @@ public class Form<T> extends WebMarkupContainer
 			tag.remove("enctype");
 		}
 	}
-	
+
 	// WICKET-6658 form is not allowed, anything else can stay as is
 	private void adjustNestedTagName(ComponentTag tag) {
 		if ("form".equalsIgnoreCase(tag.getName()))
@@ -1683,7 +1719,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Generates the action url for the form
-	 * 
+	 *
 	 * @return action url
 	 */
 	protected CharSequence getActionUrl()
@@ -1715,7 +1751,7 @@ public class Form<T> extends WebMarkupContainer
 	 * would strip them from the action url before appending the form values.
 	 *
 	 * @return true if form's method is 'get'
-	 * 
+	 *
 	 * @see #getMethod()
 	 */
 	protected boolean encodeUrlInHiddenFields()
@@ -1725,7 +1761,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Append an additional hidden input tag to support anchor tags that can submit a form.
-	 * 
+	 *
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
@@ -1767,7 +1803,7 @@ public class Form<T> extends WebMarkupContainer
 		// if the parameters are not in the action attribute, they have to be written as hidden fields
 		if (encodeUrlInHiddenFields())
 		{
-			AppendingStringBuffer buffer = new AppendingStringBuffer();				
+			AppendingStringBuffer buffer = new AppendingStringBuffer();
 
 			String url = getActionUrl().toString();
 			int i = url.indexOf('?');
@@ -1779,7 +1815,7 @@ public class Form<T> extends WebMarkupContainer
 			getResponse().write(buffer);
 		}
 		getResponse().write("</div>");
-		
+
 		// if a default submitting component was set, handle the rendering of that
 		if (hasDefaultSubmittingComponent())
 		{
@@ -1799,7 +1835,7 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * 
+	 *
 	 * @param params
 	 * @param buffer
 	 */
@@ -1819,7 +1855,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Take URL-encoded query string value, decode it and return HTML-escaped version
-	 * 
+	 *
 	 * @param s
 	 *            value to decode
 	 * @return URL decoded and HTML escaped value
@@ -1877,10 +1913,10 @@ public class Form<T> extends WebMarkupContainer
 	 * Update the model of all components on this form and nested forms using the fields that were
 	 * sent with the current request. This method only updates models when the Form.validate() is
 	 * called first that takes care of the conversion for the FormComponents.
-	 * 
+	 *
 	 * Normally this method will not be called when a validation error occurs in one of the form
 	 * components.
-	 * 
+	 *
 	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
 	 */
 	protected final void updateFormComponentModels()
@@ -1891,7 +1927,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Update the model of all components on nested forms.
-	 * 
+	 *
 	 * @see #updateFormComponentModels()
 	 */
 	private void updateNestedFormComponentModels()
@@ -1915,7 +1951,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Update the model of all components on this form.
-	 * 
+	 *
 	 * @see #updateFormComponentModels()
 	 */
 	private void internalUpdateFormComponentModels()
@@ -1979,7 +2015,7 @@ public class Form<T> extends WebMarkupContainer
 	/**
 	 * Called after form components have updated their models. This is a late-stage validation that
 	 * allows outside frameworks to validate any beans that the form is updating.
-	 * 
+	 *
 	 * This validation method is not preferred because at this point any errors will not unroll any
 	 * changes to the model object, so the model object is in a modified state potentially
 	 * containing illegal values. However, with external frameworks there may not be an alternate
@@ -2012,10 +2048,10 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Checks if the specified form component visible and is attached to a page
-	 * 
+	 *
 	 * @param fc
 	 *            form component
-	 * 
+	 *
 	 * @return true if the form component and all its parents are visible and there component is in
 	 *         page's hierarchy
 	 */
@@ -2031,7 +2067,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Validates form with the given form validator
-	 * 
+	 *
 	 * @param validator
 	 */
 	protected final void validateFormValidator(final IFormValidator validator)
@@ -2091,7 +2127,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Validates {@link FormComponent}s as well as {@link IFormValidator}s in nested {@link Form}s.
-	 * 
+	 *
 	 * @see #validate()
 	 */
 	private void validateNestedForms()
@@ -2120,7 +2156,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Allows to customize input names of form components inside this form.
-	 * 
+	 *
 	 * @return String that well be used as prefix to form component input names
 	 */
 	protected String getInputNamePrefix()
@@ -2140,7 +2176,7 @@ public class Form<T> extends WebMarkupContainer
 	/**
 	 * Utility method to assemble an id to distinct form components from different nesting levels.
 	 * Useful to generate input names attributes.
-	 * 
+	 *
 	 * @param component
 	 * @return form relative identification string
 	 */
@@ -2166,7 +2202,7 @@ public class Form<T> extends WebMarkupContainer
 		 * Certain input names causes problems with JavaScript. If the input name would cause a
 		 * problem, we create a replacement unique name by prefixing the name with a path that would
 		 * otherwise never be used (blank id in path).
-		 * 
+		 *
 		 * Input names must start with [A-Za-z] according to HTML 4.01 spec. HTML 5 allows almost
 		 * anything.
 		 */
@@ -2182,7 +2218,7 @@ public class Form<T> extends WebMarkupContainer
 	/**
 	 * Get the request parameters for a form submit,
 	 * according to the request's method or the form's method as fallback.
-	 *  
+	 *
 	 * @param component any component inside the form or the form itself
 	 * @return parameters
 	 */
@@ -2201,7 +2237,7 @@ public class Form<T> extends WebMarkupContainer
 			} else {
 				form = component.findParent(Form.class);
 			}
-			
+
 			if (form != null)
 			{
 				method = form.getMethod();
@@ -2226,9 +2262,9 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Response when a submission method mismatch is detected
-	 * 
+	 *
 	 * @see Form#getMethod()
-	 * 
+	 *
 	 * @author igor
 	 */
 	public static enum MethodMismatchResponse {
