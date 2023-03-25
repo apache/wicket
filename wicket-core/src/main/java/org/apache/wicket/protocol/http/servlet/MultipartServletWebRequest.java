@@ -31,7 +31,7 @@ import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Servlet specific WebRequest subclass for multipart content uploads.
- * 
+ *
  * @author Matej Knopp
  */
 public abstract class MultipartServletWebRequest extends ServletWebRequest
@@ -49,8 +49,14 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 	private Bytes fileMaxSize;
 
 	/**
+	 * Maximum amount of files in request.
+	 * A value of -1 indicates no maximum.
+	 */
+	private long fileCountMax = -1L;
+
+	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param httpServletRequest
 	 * @param filterPrefix
 	 */
@@ -61,7 +67,7 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param httpServletRequest
 	 * @param filterPrefix
 	 * @param url
@@ -130,5 +136,15 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 	public void setFileMaxSize(Bytes fileMaxSize)
 	{
 		this.fileMaxSize = fileMaxSize;
+	}
+
+	public long getFileCountMax()
+	{
+		return fileCountMax;
+	}
+
+	public void setFileCountMax(long fileCountMax)
+	{
+		this.fileCountMax = fileCountMax;
 	}
 }
