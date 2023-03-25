@@ -25,9 +25,9 @@ import java.util.Collection;
 
 import jakarta.servlet.http.Part;
 
-import org.apache.commons.fileupload2.FileItem;
-import org.apache.commons.fileupload2.FileItemHeaders;
-import org.apache.commons.fileupload2.util.FileItemHeadersImpl;
+import org.apache.wicket.commons.fileupload2.FileItem;
+import org.apache.wicket.commons.fileupload2.FileItemHeaders;
+import org.apache.wicket.commons.fileupload2.util.FileItemHeadersImpl;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.util.io.IOUtils;

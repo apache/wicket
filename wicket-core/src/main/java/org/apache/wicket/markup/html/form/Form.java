@@ -25,11 +25,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.fileupload2.FileUploadException;
-import org.apache.commons.fileupload2.pub.FileUploadByteCountLimitException;
-import org.apache.commons.fileupload2.pub.FileUploadSizeException;
-import org.apache.commons.fileupload2.pub.FileUploadFileCountLimitException;
-
+import org.apache.wicket.commons.fileupload2.FileUploadException;
+import org.apache.wicket.commons.fileupload2.pub.FileUploadByteCountLimitException;
+import org.apache.wicket.commons.fileupload2.pub.FileUploadSizeException;
+import org.apache.wicket.commons.fileupload2.pub.FileUploadFileCountLimitException;
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.IRequestListener;

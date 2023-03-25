@@ -27,8 +27,8 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.apache.commons.fileupload2.FileItem;
-import org.apache.commons.fileupload2.disk.DiskFileItemFactory;
+import org.apache.wicket.commons.fileupload2.FileItem;
+import org.apache.wicket.commons.fileupload2.disk.DiskFileItemFactory;
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.file.FileCleaner;
@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test of FileUpload
- * 
+ *
  * @author Frank Bille (billen)
  */
 class FileUploadTest extends WicketTestCase
@@ -48,9 +48,9 @@ class FileUploadTest extends WicketTestCase
 
 	/**
 	 * Test that when getting an input stream a new input stream is returned every time.
-	 * 
+	 *
 	 * Also test that the inputstream is saved internally for later closing.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

@@ -23,7 +23,8 @@ module org.apache.wicket.core {
     requires org.apache.wicket.request;
     requires org.apache.commons.io;
     requires org.apache.commons.collections4;
-    requires commons.fileupload2;
+    //commented out due to local-copy WICKET-6915 requires commons.fileupload2;
+    requires org.apache.wicket.commons.fileupload;
     requires org.slf4j;
     requires static jakarta.servlet;
     requires org.danekja.jdk.serializable.functional;

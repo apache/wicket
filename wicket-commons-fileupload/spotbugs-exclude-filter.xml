@@ -28,33 +28,33 @@
 
     <!-- Reason: Initial commit. Need to refine -->
     <Match>
-        <Class name="org.apache.commons.fileupload2.MultipartStream" />
+        <Class name="org.apache.wicket.commons.fileupload2.MultipartStream" />
         <Method name="readHeaders" />
         <Bug pattern="DM_DEFAULT_ENCODING" />
     </Match>
     <Match>
-        <Class name="org.apache.commons.fileupload2.MultipartStream" />
+        <Class name="org.apache.wicket.commons.fileupload2.MultipartStream" />
         <Bug pattern="MS_PKGPROTECT" />
     </Match>
     <Match>
-        <Class name="org.apache.commons.fileupload2.disk.DiskFileItem" />
+        <Class name="org.apache.wicket.commons.fileupload2.disk.DiskFileItem" />
         <Bug pattern="DM_DEFAULT_ENCODING" />
     </Match>
     <Match>
-        <Class name="org.apache.commons.fileupload2.disk.DiskFileItem" />
+        <Class name="org.apache.wicket.commons.fileupload2.disk.DiskFileItem" />
         <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE" />
     </Match>
     <Match>
-        <Class name="org.apache.commons.fileupload2.disk.DiskFileItem" />
+        <Class name="org.apache.wicket.commons.fileupload2.disk.DiskFileItem" />
         <Method name="getString" />
         <Bug pattern="DLS_DEAD_LOCAL_STORE" />
     </Match>
     <Match>
-        <Class name="org.apache.commons.fileupload2.jaksrvlt.JakSrvltFileUpload" />
+        <Class name="org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltFileUpload" />
         <Bug pattern="NM_WRONG_PACKAGE" />
     </Match>
     <Match>
-        <Class name="org.apache.commons.fileupload2.util.Streams" />
+        <Class name="org.apache.wicket.commons.fileupload2.util.Streams" />
         <Method name="asString" />
         <Bug pattern="DM_DEFAULT_ENCODING" />
     </Match>

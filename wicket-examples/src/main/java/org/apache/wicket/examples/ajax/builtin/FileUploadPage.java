@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.collections4.iterators.EmptyIterator;
-import org.apache.commons.fileupload2.FileUploadException;
+import org.apache.wicket.commons.fileupload2.FileUploadException;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -49,7 +49,7 @@ import org.apache.wicket.validation.validator.StringValidator;
 
 /**
  * Demos ajax handling of a multipart form
- * 
+ *
  * @author igor.vaynberg
  */
 public class FileUploadPage extends BasePage
