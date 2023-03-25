@@ -29,7 +29,7 @@ import java.io.UnsupportedEncodingException;
  *
  * <p> After retrieving an instance of this class from a {@link
  * org.apache.wicket.commons.fileupload2.FileUpload FileUpload} instance (see
- * {@link org.apache.wicket.commons.fileupload2.servlet.ServletFileUpload
+ * {@link org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltFileUpload
  * #parseRequest(javax.servlet.http.HttpServletRequest)}), you may
  * either request all contents of the file at once using {@link #get()} or
  * request an {@link java.io.InputStream InputStream} with

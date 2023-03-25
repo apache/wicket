@@ -237,6 +237,7 @@
     <moditect-maven-plugin.version>1.0.0.RC2</moditect-maven-plugin.version>
     <moditect.skip>true</moditect.skip>
     <enforcer.skip>true</enforcer.skip>
+    <checkstyle.skip>true</checkstyle.skip>
 
     <!-- Commons Release Plugin -->
     <commons.bc.version>1.3.3</commons.bc.version>
@@ -245,8 +246,6 @@
     <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
     <commons.releaseManagerName>Rob Tompkins</commons.releaseManagerName>
     <commons.releaseManagerKey>B6E73D84EA4FCC47166087253FAAD2CD5ECBB314</commons.releaseManagerKey>
-
-    <automatic-module-name>org.apache.wicket.commons.fileupload</automatic-module-name>
   </properties>
 
   <dependencies>
@@ -282,22 +281,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>${maven-jar-plugin.version}</version>
-        <configuration>
-          <archive>
-            <manifest>
-              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-            </manifest>
-            <manifestEntries>
-              <Automatic-Module-Name>${automatic-module-name}</Automatic-Module-Name>
-            </manifestEntries>
-          </archive>
-        </configuration>
-      </plugin>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>

@@ -27,7 +27,6 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.commons.fileupload2.Constants;
 import org.apache.wicket.commons.fileupload2.FileItem;
-import org.apache.wicket.commons.fileupload2.FileUploadTest;
 import org.apache.wicket.commons.fileupload2.disk.DiskFileItemFactory;
 import org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltFileUpload;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for {@link org.apache.wicket.commons.fileupload2.servlet.ServletFileUpload}.
  *
- * @see FileUploadTest
  * @since 1.4
  */
 public class JakSrvltFileUploadTest {

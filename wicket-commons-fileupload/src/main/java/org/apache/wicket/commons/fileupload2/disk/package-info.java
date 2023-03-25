@@ -29,9 +29,7 @@
  *      would be created, configured, and then passed to a
  *      {@link org.apache.wicket.commons.fileupload2.FileUpload FileUpload}
  *      implementation such as
- *      {@link org.apache.wicket.commons.fileupload2.servlet.ServletFileUpload ServletFileUpload}
- *      or
- *      {@link org.apache.wicket.commons.fileupload2.portlet.PortletFileUpload PortletFileUpload}.
+ *      {@link org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltFileUpload ServletFileUpload}
  *    </p>
  *    <p>
  *      The following code fragment demonstrates this usage.

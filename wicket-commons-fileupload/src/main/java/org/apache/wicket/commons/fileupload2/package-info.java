@@ -27,10 +27,8 @@
  * these classes are not typically used directly. Instead, normal usage
  * involves one of the provided extensions of
  * {@link org.apache.wicket.commons.fileupload2.FileUpload FileUpload} such as
- * {@link org.apache.wicket.commons.fileupload2.servlet.ServletFileUpload ServletFileUpload}
- * or
- * {@link org.apache.wicket.commons.fileupload2.portlet.PortletFileUpload PortletFileUpload},
- * together with a factory for
+ * {@link org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltFileUpload ServletFileUpload}
+  * together with a factory for
  * {@link org.apache.wicket.commons.fileupload2.FileItem FileItem} instances,
  * such as
  * {@link org.apache.wicket.commons.fileupload2.disk.DiskFileItemFactory DiskFileItemFactory}.
