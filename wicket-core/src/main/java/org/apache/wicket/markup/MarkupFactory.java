@@ -18,6 +18,7 @@ package org.apache.wicket.markup;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -64,7 +65,7 @@ public class MarkupFactory
 		return Application.get().getMarkupSettings().getMarkupFactory();
 	}
 
-	private final LinkedHashMap<IMarkupFilter, Class<? extends IMarkupFilter>> additionalMarkupFilters = new LinkedHashMap<>();
+	private final Map<IMarkupFilter, Class<? extends IMarkupFilter>> additionalMarkupFilters = new LinkedHashMap<>();
 
 	/**
 	 * Construct.
