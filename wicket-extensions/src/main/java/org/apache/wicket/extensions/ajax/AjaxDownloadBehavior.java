@@ -38,6 +38,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
+import org.apache.wicket.util.cookies.CookieDefaults;
 import org.apache.wicket.util.lang.Args;
 
 import com.github.openjson.JSONObject;
@@ -125,6 +126,8 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	private PageParameters resourceParameters;
 
 	private Location location = Location.Blob;
+
+	private CookieDefaults.SameSite sameSite = null;
 
 	/**
 	 * Download of a {@link IResource}.
@@ -252,11 +255,31 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		settings.put("attributes", new JSONFunction(renderAjaxAttributes(getComponent())));
 		settings.put("name", getName());
 		settings.put("downloadUrl", url);
+		settings.put("sameSite", generateSameSiteAttribute());
 		settings.put("method", getLocation().name().toLowerCase(Locale.ROOT));
 
 		handler.appendJavaScript(String.format("Wicket.AjaxDownload.initiate(%s);", settings));
 
 		onBeforeDownload(handler);
+	}
+
+	private String generateSameSiteAttribute() {
+		if (sameSite == null)
+		{
+			return "";
+		}
+
+		StringBuilder stringBuffer = new StringBuilder(30);
+		if (sameSite.equals(CookieDefaults.SameSite.None))
+		{
+			stringBuffer.append("; Secure");
+		}
+
+		stringBuffer.append("; SameSite=");
+		stringBuffer.append(sameSite.name());
+
+		return stringBuffer.toString();
+
 	}
 
 	protected void onBeforeDownload(IPartialPageRequestHandler handler)
@@ -386,6 +409,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		((WebResponse)attributes.getResponse()).addCookie(cookie(cookieName));
 	}
 
+
 	private static Cookie cookie(String name)
 	{
 		Cookie cookie = new Cookie(name, "complete");
@@ -396,5 +420,24 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		cookie.setPath("/");
 
 		return cookie;
+	}
+
+	/**
+	 * @return The {@link org.apache.wicket.util.cookies.CookieDefaults.SameSite} attribute to be used for the complete download.
+	 */
+	public CookieDefaults.SameSite getSameSite()
+	{
+		return sameSite;
+	}
+
+	/**
+	 * Setter for the same {@link org.apache.wicket.util.cookies.CookieDefaults.SameSite}
+	 *
+	 * @param sameSite The non-null sameSite attribute
+	 */
+	public void setSameSite(CookieDefaults.SameSite sameSite)
+	{
+		Args.notNull(sameSite, "sameSite");
+		this.sameSite = sameSite;
 	}
 }
