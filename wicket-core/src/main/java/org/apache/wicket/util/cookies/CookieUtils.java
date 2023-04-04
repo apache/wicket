@@ -328,11 +328,17 @@ public class CookieUtils
 		String path = request.getContainerRequest().getContextPath() + "/" +
 			request.getFilterPrefix();
 
+		if (settings.getSameSite() == CookieDefaults.SameSite.None)
+		{
+			settings.setSecure(true);
+		}
+
 		cookie.setPath(path);
 		cookie.setVersion(settings.getVersion());
 		cookie.setSecure(settings.getSecure());
 		cookie.setMaxAge(settings.getMaxAge());
 		cookie.setHttpOnly(settings.isHttpOnly());
+		cookie.setAttribute("SameSite", settings.getSameSite().name());
 	}
 
 	/**
