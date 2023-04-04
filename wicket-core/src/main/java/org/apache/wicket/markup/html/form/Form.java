@@ -26,8 +26,8 @@ import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.FileUploadException;
-import org.apache.commons.fileupload2.pub.FileSizeLimitExceededException;
-import org.apache.commons.fileupload2.pub.SizeLimitExceededException;
+import org.apache.commons.fileupload2.pub.FileUploadByteCountLimitException;
+import org.apache.commons.fileupload2.pub.FileUploadSizeException;
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.IRequestListener;
@@ -1496,14 +1496,14 @@ public class Form<T> extends WebMarkupContainer
 	protected void onFileUploadException(final FileUploadException e,
 		final Map<String, Object> model)
 	{
-		if (e instanceof SizeLimitExceededException)
-		{
-			String msg = getString(UPLOAD_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
-			error(msg);
-		}
-		else if (e instanceof FileSizeLimitExceededException)
+		if (e instanceof FileUploadByteCountLimitException)
 		{
 			String msg = getString(UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
+			error(msg);
+		}
+		else if (e instanceof FileUploadSizeException)
+		{
+			String msg = getString(UPLOAD_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
 			error(msg);
 		}
 		else

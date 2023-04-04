@@ -34,7 +34,7 @@ import org.apache.commons.fileupload2.FileUploadException;
 import org.apache.commons.fileupload2.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload2.jaksrvlt.JakSrvltFileUpload;
 import org.apache.commons.fileupload2.jaksrvlt.JakSrvltRequestContext;
-import org.apache.commons.fileupload2.pub.FileSizeLimitExceededException;
+import org.apache.commons.fileupload2.pub.FileUploadByteCountLimitException;
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
@@ -491,9 +491,9 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 				if (fileMaxSize != null && fileItem.getSize() > fileMaxSize.bytes())
 				{
 					String fieldName = entry.getKey();
-					FileUploadException fslex = new FileSizeLimitExceededException("The field '" +
+					FileUploadException fslex = new FileUploadByteCountLimitException("The field '" +
 							fieldName + "' exceeds its maximum permitted size of '" +
-							maxSize + "' characters.", fileItem.getSize(), fileMaxSize.bytes());
+							maxSize + "' characters.", fileItem.getSize(), fileMaxSize.bytes(), fileItem.getName(), fieldName);
 					throw fslex;
 				}
 			}
