@@ -36,7 +36,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * <code>Cross-Origin-Embedder-Policy</code>. The header is not set for the paths that are exempted
  * from COEP. The only valid value of COEP is <code>require-corp</code>, so if the listener is
  * enabled the policy value will be specified as so.
- *
+ * <p>
  * COEP prevents a document from loading any non-same-origin resources which don't explicitly grant
  * the document permission to be loaded. Using COEP and COOP together allows developers to safely
  * use powerful features such as <code>SharedArrayBuffer</code>,
@@ -44,7 +44,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * {@link CrossOriginOpenerPolicyRequestCycleListener} for instructions on how to enable COOP.
  * Read more about cross-origin isolation on
  * <a href="https://web.dev/why-coop-coep/">https://web.dev/why-coop-coep/</a>
- *
+ * <p>
  * 
  * @author Santiago Diaz - saldiaz@google.com
  * @author Ecenaz Jen Ozmen - ecenazo@google.com
@@ -58,7 +58,7 @@ public class CrossOriginEmbedderPolicyRequestCycleListener implements IRequestCy
 
 	static final String REQUIRE_CORP = "require-corp";
 
-	private CrossOriginEmbedderPolicyConfiguration coepConfig;
+	private final CrossOriginEmbedderPolicyConfiguration coepConfig;
 
 	public CrossOriginEmbedderPolicyRequestCycleListener(CrossOriginEmbedderPolicyConfiguration coepConfig)
 	{
@@ -67,6 +67,18 @@ public class CrossOriginEmbedderPolicyRequestCycleListener implements IRequestCy
 
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
+	{
+		// WICKET-7028- this is needed for redirect to buffer use case.
+		protect(cycle, handler);
+	}
+
+	@Override
+	public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
+	{
+		protect(cycle, handler);
+	}
+
+	protected void protect(RequestCycle cycle, IRequestHandler handler)
 	{
 		final Object containerRequest = cycle.getRequest().getContainerRequest();
 		if (containerRequest instanceof HttpServletRequest)
@@ -91,4 +103,5 @@ public class CrossOriginEmbedderPolicyRequestCycleListener implements IRequestCy
 			}
 		}
 	}
+
 }

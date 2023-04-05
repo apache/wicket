@@ -31,7 +31,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * Sets <a href="https://github.com/whatwg/html/pull/5334/files">Cross-Origin Opener Policy</a>
  * headers on the responses based on the policy specified by {@link CrossOriginOpenerPolicyConfiguration}. The header
  * is not set for the paths that are exempted from COOP.
- *
+ * <p>
  * COOP is a mitigation against cross-origin information leaks and is used to make websites
  * cross-origin isolated. Setting the COOP header allows you to ensure that a top-level window is
  * isolated from other documents by putting them in a different browsing context group, so they
@@ -41,7 +41,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * {@link CrossOriginEmbedderPolicyRequestCycleListener} for instructions * on how to enable COOP.
  * Read more about cross-origin isolation on
  * <a href="https://web.dev/why-coop-coep/">https://web.dev/why-coop-coep/</a>
- *
+ * <p>
  *
  * @author Santiago Diaz - saldiaz@google.com
  * @author Ecenaz Jen Ozmen - ecenazo@google.com
@@ -55,7 +55,7 @@ public class CrossOriginOpenerPolicyRequestCycleListener implements IRequestCycl
 
 	static final String COOP_HEADER = "Cross-Origin-Opener-Policy";
 
-	private CrossOriginOpenerPolicyConfiguration coopConfig;
+	private final CrossOriginOpenerPolicyConfiguration coopConfig;
 
 	public CrossOriginOpenerPolicyRequestCycleListener(CrossOriginOpenerPolicyConfiguration coopConfig)
 	{
@@ -64,6 +64,19 @@ public class CrossOriginOpenerPolicyRequestCycleListener implements IRequestCycl
 
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
+	{
+		// WICKET-7028- this is needed for redirect to buffer use case.
+		protect(cycle, handler);
+	}
+
+	@Override
+	public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
+	{
+		protect(cycle, handler);
+	}
+
+
+	protected void protect(RequestCycle cycle, IRequestHandler handler)
 	{
 		final Object containerRequest = cycle.getRequest().getContainerRequest();
 		if (containerRequest instanceof HttpServletRequest)
