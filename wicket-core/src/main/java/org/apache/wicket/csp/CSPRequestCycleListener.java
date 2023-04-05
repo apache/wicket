@@ -31,7 +31,7 @@ import org.apache.wicket.request.http.WebResponse;
  */
 public class CSPRequestCycleListener implements IRequestCycleListener
 {
-	private ContentSecurityPolicySettings settings;
+	private final ContentSecurityPolicySettings settings;
 
 	public CSPRequestCycleListener(ContentSecurityPolicySettings settings)
 	{
@@ -39,7 +39,7 @@ public class CSPRequestCycleListener implements IRequestCycleListener
 	}
 
 	@Override
-	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
+	public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
 	{
 		if (!mustProtect(handler) || !(cycle.getResponse() instanceof WebResponse))
 		{
