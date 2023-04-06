@@ -140,14 +140,14 @@
 		<bouncycastle.version>1.72</bouncycastle.version>
 		<cdi-unit.version>4.1.0</cdi-unit.version>
 		<cglib.version>3.3.0</cglib.version>
-		<byte-buddy.version>1.14.0</byte-buddy.version>
+		<byte-buddy.version>1.14.4</byte-buddy.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<commons-fileupload.version>1.5</commons-fileupload.version>
 		<commons-io.version>2.11.0</commons-io.version>
 		<commons-lang3.version>3.12.0</commons-lang3.version>
 		<guice.version>5.1.0</guice.version>
 		<el-impl.version>2.2.1-b05</el-impl.version>
-		<forbiddenapis.version>3.4</forbiddenapis.version>
+		<forbiddenapis.version>3.5.1</forbiddenapis.version>
 		<jacoco.version>0.8.7</jacoco.version>
 		<jackson.version>2.14.2</jackson.version>
 		<jakarta.annotation-api.version>1.3.5</jakarta.annotation-api.version>
@@ -159,18 +159,18 @@
 		<jakarta.websocket-api.version>1.1.2</jakarta.websocket-api.version>
 		<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
-		<jetty.version>9.4.50.v20221201</jetty.version>
+		<jetty.version>9.4.51.v20230217</jetty.version>
 		<junit.version>5.9.2</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.7</logback.version>
 		<hamcrest.version>2.2</hamcrest.version>
 		<hibernate-validator.version>6.2.0.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
-		<metrics.version>4.2.17</metrics.version>
-		<mockito.version>5.1.1</mockito.version>
+		<metrics.version>4.2.18</metrics.version>
+		<mockito.version>5.2.0</mockito.version>
 		<objenesis.version>3.3</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
-		<slf4j.version>2.0.6</slf4j.version>
+		<slf4j.version>2.0.7</slf4j.version>
 		<spring.version>5.3.25</spring.version>
 		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
 		<weld.version>3.1.9.Final</weld.version>
@@ -178,24 +178,24 @@
 
 		<!-- Maven plugins -->
 		<build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
-		<japicmp-maven-plugin.version>0.17.1</japicmp-maven-plugin.version>
+		<japicmp-maven-plugin.version>0.17.2</japicmp-maven-plugin.version>
 		<maven-archetype-plugin.version>3.2.1</maven-archetype-plugin.version>
 		<maven-bundle-plugin.version>5.1.8</maven-bundle-plugin.version>
 		<maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
-		<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-		<maven-deploy-plugin.version>3.0.0</maven-deploy-plugin.version>
+		<maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+		<maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
 		<maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
-		<maven-enforcer-plugin.version>3.1.0</maven-enforcer-plugin.version>
+		<maven-enforcer-plugin.version>3.3.0</maven-enforcer-plugin.version>
 		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-		<maven-install-plugin.version>3.1.0</maven-install-plugin.version>
+		<maven-install-plugin.version>3.1.1</maven-install-plugin.version>
 		<maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
-		<maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
-		<maven-project-info-reports-plugin.version>3.4.1</maven-project-info-reports-plugin.version>
-		<maven-release-plugin.version>3.0.0-M7</maven-release-plugin.version>
+		<maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+		<maven-project-info-reports-plugin.version>3.4.2</maven-project-info-reports-plugin.version>
+		<maven-release-plugin.version>3.0.0</maven-release-plugin.version>
 		<maven-remote-resources-plugin.version>3.0.0</maven-remote-resources-plugin.version>
-		<maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
-		<maven-site-plugin.version>4.0.0-M3</maven-site-plugin.version>
-		<maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
+		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+		<maven-site-plugin.version>4.0.0-M5</maven-site-plugin.version>
+		<maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
 		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 		<maven-toolchains-plugin.version>3.1.0</maven-toolchains-plugin.version>
 		<maven-war-plugin.version>3.3.2</maven-war-plugin.version>
