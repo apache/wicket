@@ -25,16 +25,19 @@
 	Wicket.WUPB = Wicket.Class.create();
 	Wicket.WUPB.prototype = {
 
-		initialize : function(formid, statusid, barid, url, fileid, initialStatus) {
+		initialize : function(formid, statusid, barid, url, fileid, initialStatus, onProgressUpdated) {
 			this.statusid = statusid;
 			this.barid = barid;
 			this.url = url;
 			this.fileid = fileid;
 			this.initialStatus = initialStatus;
+			this.onProgressUpdated = onProgressUpdated;
 
-			var formElement = Wicket.$(formid);
-			this.originalCallback = formElement.onsubmit;
-			formElement.onsubmit = Wicket.bind(this.submitCallback, this);
+			if (formid) {
+				var formElement = Wicket.$(formid);
+				this.originalCallback = formElement.onsubmit;
+				formElement.onsubmit = Wicket.bind(this.submitCallback, this);
+			}
 		},
 
 		submitCallback : function() {
@@ -55,8 +58,14 @@
 			if (displayprogress) {
 				this.setPercent(0);
 				this.setStatus(this.initialStatus);
-				Wicket.$(this.statusid).removeAttribute('hidden');
-				Wicket.$(this.barid).removeAttribute('hidden');
+				var $statusId = Wicket.$(this.statusid);
+				if ($statusId != null) {
+					Wicket.DOM.show($statusId);
+				}
+				var $barid = Wicket.$(this.barid);
+				if ($barid != null) {
+					Wicket.DOM.show($barid);
+				}
 				this.scheduleUpdate();
 			}
 		},
@@ -64,15 +73,24 @@
 		setStatus : function(status) {
 			var label = document.createElement("label");
 			label.innerHTML = status;
-			var oldLabel = Wicket.$(this.statusid).firstChild;
-			if( oldLabel != null){
-				Wicket.$(this.statusid).removeChild(oldLabel);
+			var $statusId = Wicket.$(this.statusid);
+			if ($statusId != null) {
+				var oldLabel = $statusId.firstChild;
+				if (oldLabel != null){
+					$statusId.removeChild(oldLabel);
+				}
+				$statusId.appendChild(label);
 			}
-			Wicket.$(this.statusid).appendChild(label);
 		},
 
 		setPercent : function(progressPercent) {
-			Wicket.$(this.barid).firstChild.firstChild.style.width = progressPercent + '%';
+			var barId = Wicket.$(this.barid);
+			if (barId != null && barId.firstChild != null && barId.firstChild.firstChild != null) {
+				barId.firstChild.firstChild.style.width = progressPercent + '%';
+			}
+			if (this.onProgressUpdated) {
+				this.onProgressUpdated(progressPercent);
+			}
 		},
 
 		scheduleUpdate : function(){
@@ -117,8 +135,14 @@
 			this.iframe = null;
 
 			if (progressPercent === '100') {
-				Wicket.$(this.statusid).setAttribute('hidden', '');
-				Wicket.$(this.barid).setAttribute('hidden', '');
+				var $statusId = Wicket.$(this.statusid);
+				if ($statusId != null) {
+					Wicket.DOM.hide($statusId);
+				}
+				var $barid = Wicket.$(this.barid);
+				if ($barid != null) {
+					Wicket.DOM.hide($barid);
+				}
 			} else {
 				this.scheduleUpdate();
 			}

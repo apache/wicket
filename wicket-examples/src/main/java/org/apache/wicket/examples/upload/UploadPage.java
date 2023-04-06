@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import org.apache.wicket.markup.html.basic.Label;
@@ -173,7 +172,7 @@ public class UploadPage extends WicketExamplePage
 
 		// Add folder view
 		add(new Label("dir", uploadFolder.getAbsolutePath()));
-		fileListView = new FileListView("fileList", new LoadableDetachableModel<List<File>>()
+		fileListView = new FileListView("fileList", new LoadableDetachableModel<>()
 		{
 			@Override
 			protected List<File> load()
@@ -216,6 +215,6 @@ public class UploadPage extends WicketExamplePage
 
 	private Folder getUploadFolder()
 	{
-		return ((UploadApplication)Application.get()).getUploadFolder();
+		return UploadApplication.getInstance().getUploadFolder();
 	}
 }
