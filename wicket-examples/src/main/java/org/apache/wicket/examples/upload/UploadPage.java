@@ -216,6 +216,6 @@ public class UploadPage extends WicketExamplePage
 
 	private Folder getUploadFolder()
 	{
-		return ((UploadApplication)Application.get()).getUploadFolder();
+		return UploadApplication.getInstance().getUploadFolder();
 	}
 }

@@ -256,11 +256,11 @@ public class Form<T> extends WebMarkupContainer
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String UPLOAD_FAILED_RESOURCE_KEY = "uploadFailed";
+	public static final String UPLOAD_FAILED_RESOURCE_KEY = "uploadFailed";
 
-	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
-	private static final String UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY = "uploadSingleFileTooLarge";
-	private static final String UPLOAD_TOO_MANY_FILES_RESOURCE_KEY = "uploadTooManyFiles";
+	public static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
+	public static final String UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY = "uploadSingleFileTooLarge";
+	public static final String UPLOAD_TOO_MANY_FILES_RESOURCE_KEY = "uploadTooManyFiles";
 
 	/**
 	 * Any default IFormSubmittingComponent. If set, a hidden submit component will be rendered
