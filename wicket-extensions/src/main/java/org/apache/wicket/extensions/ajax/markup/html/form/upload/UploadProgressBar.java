@@ -21,6 +21,7 @@ import java.util.Formatter;
 import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -30,7 +31,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
@@ -112,13 +112,37 @@ public class UploadProgressBar extends Panel
 
 	private static final long serialVersionUID = 1L;
 
-	private final Form<?> form;
+	private Form<?> form;
 
 	private MarkupContainer statusDiv;
 
 	private MarkupContainer barDiv;
 
 	private final FileUploadField uploadField;
+
+	/**
+	 * Constructor that will display the upload progress bar for every submit of the given form.
+	 *
+	 * @param id
+	 *            component id (not null)
+	 * @param uploadField
+	 *            the file upload field to check for a file upload, or null to display the upload
+	 *            field for every submit of the given form
+	 */
+	public UploadProgressBar(final String id,  final FileUploadField uploadField)
+	{
+		super(id);
+
+		this.uploadField = uploadField;
+		if (uploadField != null)
+		{
+			uploadField.setOutputMarkupId(true);
+		}
+
+		setRenderBodyOnly(true);
+	}
+
+
 
 	/**
 	 * Constructor that will display the upload progress bar for every submit of the given form.
@@ -166,7 +190,10 @@ public class UploadProgressBar extends Panel
 	protected void onInitialize()
 	{
 		super.onInitialize();
-		getCallbackForm().setOutputMarkupId(true);
+		Form<?> form = getCallbackForm();
+		if (form != null) {
+			form.setOutputMarkupId(true);
+		}
 
 		barDiv = newBarComponent("bar");
 		add(barDiv);
@@ -231,20 +258,42 @@ public class UploadProgressBar extends Panel
 
 		ResourceReference ref = new SharedResourceReference(RESOURCE_NAME);
 
-		final String uploadFieldId = (uploadField == null) ? "" : uploadField.getMarkupId();
+		final String uploadFieldId = (uploadField == null) ? "null" : ("'" + uploadField.getMarkupId() + "'");
 
-		final String status = new StringResourceModel(RESOURCE_STARTING, this, (IModel<?>)null).getString();
+		final String status = new StringResourceModel(RESOURCE_STARTING, this, null).getString();
 
-		CharSequence url = urlFor(ref, UploadStatusResource.newParameter(getPage().getId()));
+		CharSequence url = form != null ? urlFor(ref, UploadStatusResource.newParameter(getPage().getId())) :
+				urlFor(ref, UploadStatusResource.newParameter(uploadField.getMarkupId()));
 
 		StringBuilder builder = new StringBuilder(128);
 		Formatter formatter = new Formatter(builder);
 
-		formatter.format(
-			"new Wicket.WUPB('%s', '%s', '%s', '%s', '%s', '%s');",
-				getCallbackForm().getMarkupId(), statusDiv.getMarkupId(), barDiv.getMarkupId(), url, uploadFieldId,
-			status);
+		Form<?> form = getCallbackForm();
+
+		formatter.format(getVarName() + " = new Wicket.WUPB(%s, '%s', '%s', '%s', %s, '%s', %s);",
+				form != null ? "'" + form.getMarkupId() + "'" : "null", statusDiv.getMarkupId(), barDiv.getMarkupId(), url, uploadFieldId,
+			status, getOnProgressUpdatedCallBack());
 		response.render(OnDomReadyHeaderItem.forScript(builder.toString()));
+	}
+
+	/**
+	 * Allows to pass a JavaScript function that is called when progress in updated.
+	 *
+	 * @return A JavaScript function.
+	 */
+	protected String getOnProgressUpdatedCallBack()
+	{
+		return "function(percent) {}";
+	}
+
+	private String getVarName() {
+		return "window.upb_" + barDiv.getMarkupId();
+	}
+
+
+	public void start(IPartialPageRequestHandler handler)
+	{
+		handler.appendJavaScript(getVarName() + ".start();");
 	}
 
 	/**
@@ -256,6 +305,10 @@ public class UploadProgressBar extends Panel
 	 */
 	private Form<?> getCallbackForm()
 	{
+		if (form == null)
+		{
+			return null;
+		}
 		Boolean insideModal = form.visitParents(ModalWindow.class,
 			new IVisitor<ModalWindow, Boolean>()
 			{
