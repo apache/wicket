@@ -77,7 +77,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.response.LazyStringResponse;
+import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.IHierarchical;
@@ -2639,7 +2639,7 @@ public abstract class Component
 			boolean wasRendered = response.wasRendered(this);
 			if (wasRendered == false)
 			{
-				LazyStringResponse markupHeaderResponse = new LazyStringResponse();
+				StringResponse markupHeaderResponse = new StringResponse();
 				Response oldResponse = getResponse();
 				RequestCycle.get().setResponse(markupHeaderResponse);
 				try
