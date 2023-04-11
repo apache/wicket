@@ -72,6 +72,12 @@ public abstract class PartialPageUpdate
 	private static final Logger LOG = LoggerFactory.getLogger(PartialPageUpdate.class);
 
 	/**
+	 * Length of the script block that combined scripts are wrapped in. This includes the script tag,
+	 * CDATA and if CSP is enabled also the nonce.
+	 */
+	private static final int SCRIPT_BLOCK_LENGTH = 100;
+
+	/**
 	 * A list of scripts (JavaScript) which should be executed on the client side before the
 	 * components' replacement
 	 */
@@ -265,7 +271,7 @@ public abstract class PartialPageUpdate
 			combinedScript.append("(function(){").append(script).append("})();");
 		}
 
-		StringResponse stringResponse = new StringResponse();
+		StringResponse stringResponse = new StringResponse(combinedScript.length() + SCRIPT_BLOCK_LENGTH);
 		IHeaderResponse decoratedHeaderResponse = Application.get().decorateHeaderResponse(new HeaderResponse()
 		{
 			@Override
