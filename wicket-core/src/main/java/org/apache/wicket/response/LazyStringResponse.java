@@ -25,7 +25,9 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * {@link StringResponse}, but defers creating the buffer until it is needed.
  * 
  * @author Thomas Heigl
+ * @deprecated In Wicket 10 {@link StringResponse} will be made lazy and this class will be removed
  */
+@Deprecated(since = "9.13.0", forRemoval = true)
 public class LazyStringResponse extends Response
 {
 
