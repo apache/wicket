@@ -88,6 +88,14 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	}
 
 	/**
+	 * @return count of named parameters
+	 */
+	public int getNamedCount()
+	{
+		return namedParameters != null ? namedParameters.size() : 0;
+	}
+
+	/**
 	 * @see org.apache.wicket.request.mapper.parameter.IIndexedParameters#set(int, java.lang.Object)
 	 */
 	@Override
@@ -522,11 +530,11 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			return true;
 		}
-		if ((p1 == null) && (p2.getIndexedCount() == 0) && p2.getNamedKeys().isEmpty())
+		if ((p1 == null) && (p2.getIndexedCount() == 0) && p2.getNamedCount() == 0)
 		{
 			return true;
 		}
-		if ((p2 == null) && (p1.getIndexedCount() == 0) && p1.getNamedKeys().isEmpty())
+		if ((p2 == null) && (p1.getIndexedCount() == 0) && p1.getNamedCount() == 0)
 		{
 			return true;
 		}
@@ -538,7 +546,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	 */
 	public boolean isEmpty()
 	{
-		return (getIndexedCount() == 0) && getNamedKeys().isEmpty();
+		return getIndexedCount() == 0 && getNamedCount() == 0;
 	}
 
 	public PageParameters setLocale(Locale locale)
