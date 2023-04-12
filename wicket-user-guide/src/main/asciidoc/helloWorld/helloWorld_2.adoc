@@ -7,7 +7,7 @@ NOTE: All the example projects presented in this document have been generated us
 
 A Wicket application is a standard Java EE web application, hence it is deployed through a _web.xml_ file placed inside folder WEB-INF:
 
-image::../img/webinf.png[]
+image::./img/webinf.png[]
 
 _Illustration: The standard directory structure of a Wicket application_
 

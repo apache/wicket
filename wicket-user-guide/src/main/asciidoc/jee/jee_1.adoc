@@ -3,22 +3,22 @@
 
 WicketStuff provides a module called wicketstuff-javaee-inject that contains component instantiation listener _JavaEEComponentInjector_. If we register this listener in our application we can use standard EJB annotations to inject dependencies into our Wicket components.
 
-To register a component instantiation listener in Wicket we must use _Application_'s method _getComponentInstantiationListeners_ which returns a typed collection of _IComponentInstantiationListeners_. 
+To register a component instantiation listener in Wicket we must use _Application_'s method _getComponentInstantiationListeners_ which returns a typed collection of _IComponentInstantiationListeners_.
 
-The following initialization code is taken from project _EjbInjectionExample_: 
+The following initialization code is taken from project _EjbInjectionExample_:
 
 [source,java]
 ----
 public class WicketApplication extends WebApplication
-{    	
+{
        //Constructor...
 
 	@Override
 	public void init()
 	{
 		super.init();
-		getComponentInstantiationListeners().add(new JavaEEComponentInjector(this));		
-	}	
+		getComponentInstantiationListeners().add(new JavaEEComponentInjector(this));
+	}
 }
 ----
 
@@ -37,14 +37,14 @@ Please note that we have used annotation ManagedBean to decorate our object. Now
 [source,java]
 ----
 public class HomePage extends WebPage {
-	
+
 	@EJB
 	private EnterpriseMessage enterpriseMessage;
 	//getter and setter for enterpriseMessage...
-	
+
 	public HomePage(final PageParameters parameters) {
 		super(parameters);
-	
+
 		add(new Label("message", enterpriseMessage.message));
 	}
 }
@@ -52,5 +52,5 @@ public class HomePage extends WebPage {
 
 That is all. We can point the browser to the home page of the project and see the greeting message injected into the page:
 
-image::../img/EjbInjectionExample.png[]
+image::./img/EjbInjectionExample.png[]
 
