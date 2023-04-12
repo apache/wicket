@@ -10,7 +10,7 @@ To integrate the  https://developers.google.com/chart/[Google Chart] tool into o
 ...
   <h2>Hello World</h2>
   <img wicket:id="helloWorld"/>
-... 
+...
 ----
 
 *Java code:*
@@ -30,6 +30,6 @@ add(new Chart("helloWorld", provider));
 
 *Displayed chart:*
 
-image::../img/googlechart.png[]
+image::./img/googlechart.png[]
 
-As we can see in the snippet above, component Chart must be used with <img> tag while the input data returned by IChartData must be a two-dimensional array of double values. 
+As we can see in the snippet above, component Chart must be used with <img> tag while the input data returned by IChartData must be a two-dimensional array of double values.

@@ -5,7 +5,7 @@ Let's go back to our layout example. In <<layout.adoc#_header_footer_left_menu_c
 
 First, let's build a custom panel for each layout area (except for 'content' area). For example given the  header area
 
-image::../img/header-area.png[]
+image::./img/header-area.png[]
 
 we can build a panel called _HeaderPanel_ with a related markup file called HeaderPanel.html containing the HTML for this area:
 
@@ -26,10 +26,10 @@ we can build a panel called _HeaderPanel_ with a related markup file called Head
               </td>
               <td>
                 <h1>Gestione Anagrafica</h1>
-              </td>   
+              </td>
              </tr>
           </tbody>
-      </table>   
+      </table>
    </wicket:panel>
 </body>
 <html>
@@ -46,14 +46,14 @@ import org.apache.wicket.markup.html.panel.Panel;
 public class HeaderPanel extends Panel {
 
 	public HeaderPanel(String id) {
-		super(id);		
+		super(id);
 	}
 }
 ----
 
 For each layout area we will build a panel like the one above that holds the appropriate HTML markup. In the end we will have the following set of panels:
 
-* HeaderPanel 
+* HeaderPanel
 * FooterPanel
 * MenuPanel
 
@@ -67,7 +67,7 @@ Now we can build a generic template page using our brand new panels. Its markup 
 ----
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 ...
 <!--Include CSS-->
 ...
@@ -100,16 +100,16 @@ public class JugTemplate extends WebPage {
 	private Component headerPanel;
 	private Component menuPanel;
 	private Component footerPanel;
- 
+
     public JugTemplate(){
 		add(headerPanel = new HeaderPanel("headerPanel"));
 		add(menuPanel = new MenuPanel("menuPanel"));
 		add(footerPanel = new FooterPanel("footerPanel"));
 		add(new Label(CONTENT_ID, "Put your content here"));
 	}
-              
+
     //getters for layout areas
-    //... 
+    //...
 }
 ----
 
@@ -129,23 +129,23 @@ As final example we will build the login page for our site. We will call it _Sim
     <div style="margin: auto; width: 40%;">
        <form  id="loginForm" method="get">
          <fieldset id="login" class="center">
-            <legend >Login</legend>               
-            <span >Username: </span><input type="text" id="username"/><br/>                                                                  
+            <legend >Login</legend>
+            <span >Username: </span><input type="text" id="username"/><br/>
             <span >Password: </span><input type="password" id="password" />
             <p>
                <input type="submit" name="login" value="login"/>
             </p>
          </fieldset>
       </form>
-    </div>   
+    </div>
    </wicket:panel>
 </body>
 </html>
 ----
 
-The class for this panel just extends _Panel_ class so we won't see the relative code. The form of this panel is for illustrative purpose only. We will see how to work with Wicket forms in chapters 
-<<_wicket_models_and_forms,11>> and 
-<<_wicket_forms_in_detail,12>>. Since this is a login page we don't want it to display the left menu area. That's not a big deal as _Component_ class exposes a method called _setVisible_ which sets whether the component and its children should be displayed. 
+The class for this panel just extends _Panel_ class so we won't see the relative code. The form of this panel is for illustrative purpose only. We will see how to work with Wicket forms in chapters
+<<_wicket_models_and_forms,11>> and
+<<_wicket_forms_in_detail,12>>. Since this is a login page we don't want it to display the left menu area. That's not a big deal as _Component_ class exposes a method called _setVisible_ which sets whether the component and its children should be displayed.
 
 The resulting Java code for the login page is the following:
 
@@ -158,7 +158,7 @@ import org.apache.wicket.event.IEventSink;
 
 public class SimpleLoginPage extends JugTemplate {
 	public SimpleLoginPage(){
-		super();		
+		super();
 		replace(new LoginPanel(CONTENT_ID));
 		getMenuPanel().setVisible(false);
 	}
@@ -167,6 +167,6 @@ public class SimpleLoginPage extends JugTemplate {
 
 Obviously this page doesn't come with a related markup file. You can see the final page in the following picture:
 
-image::../img/final-login-page.png[]
+image::./img/final-login-page.png[]
 
 
