@@ -156,6 +156,29 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return Collections.unmodifiableSet(set);
 	}
 
+	/**
+	 * Checks if the parameter with the given name exists
+	 * 
+	 * @param name the parameter name
+	 * @return {@code true} if the parameter exists, {@code false} otherwise
+	 */
+	public boolean contains(final String name)
+	{
+		Args.notNull(name, "name");
+
+		if (namedParameters != null)
+		{
+			for (NamedPair entry : namedParameters)
+			{
+				if (entry.getKey().equals(name))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public StringValue get(final String name)
 	{
@@ -213,12 +236,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		}
 
 		List<NamedPair> parametersByType = new ArrayList<>();
-		Iterator<NamedPair> iterator = allNamed.iterator();
-		while (iterator.hasNext())
-		{
-			NamedPair pair = iterator.next();
-			if (type == pair.getType())
-			{
+		for (NamedPair pair : allNamed) {
+			if (type == pair.getType()) {
 				parametersByType.add(pair);
 			}
 		}
