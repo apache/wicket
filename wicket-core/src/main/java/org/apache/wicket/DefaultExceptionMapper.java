@@ -63,17 +63,30 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		}
 		catch (RuntimeException e2)
 		{
-			if (logger.isDebugEnabled())
-			{
-				logger.error(
-					"An error occurred while handling a previous error: " + e2.getMessage(), e2);
-			}
-
-			// hmmm, we were already handling an exception! give up
-			logger.error("unexpected exception when handling another exception: " + e.getMessage(),
-				e);
-			return new ErrorCodeRequestHandler(500);
+			return handleNestedException(e, e2);
 		}
+	}
+
+
+	/**
+	 * Handles the case when an exception is generated while mapping the original exception happened
+	 *
+	 * @param originalException The original exception.
+	 * @param nestedException The nested (second) exception produced
+	 * @return IRequestHandler (by default ErrorCodeRequestHandler
+	 */
+	protected IRequestHandler handleNestedException(Exception originalException, RuntimeException nestedException)
+	{
+		if (logger.isDebugEnabled())
+		{
+			logger.error(
+					"An error occurred while handling a previous error: " + nestedException.getMessage(), nestedException);
+		}
+
+		// hmmm, we were already handling an exception! give up
+		logger.error("unexpected exception when handling another exception: " + originalException.getMessage(),
+				originalException);
+		return new ErrorCodeRequestHandler(500);
 	}
 	
 	/**
@@ -187,7 +200,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 	/**
 	 * Creates a {@link RenderPageRequestHandler} for the target page provided by {@code pageProvider}.
-	 * 
+	 * <p>
 	 * Uses {@link RenderPageRequestHandler.RedirectPolicy#NEVER_REDIRECT} policy to preserve the original page's URL
 	 * for non-Ajax requests and {@link RenderPageRequestHandler.RedirectPolicy#AUTO_REDIRECT} for AJAX requests.
 	 * 
