@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.commons.fileupload2.jaksrvlt;
 
-
 import org.apache.commons.io.FileCleaningTracker;
 
 import jakarta.servlet.ServletContext;
@@ -38,28 +37,40 @@ public class JakSrvltFileCleaner implements ServletContextListener {
         = JakSrvltFileCleaner.class.getName() + ".FileCleaningTracker";
 
     /**
-     * Returns the instance of {@link FileCleaningTracker}, which is
+     * Gets the instance of {@link FileCleaningTracker}, which is
      * associated with the given {@link ServletContext}.
      *
-     * @param pServletContext The servlet context to query
+     * @param servletContext The servlet context to query
      * @return The contexts tracker
      */
     public static FileCleaningTracker
-            getFileCleaningTracker(final ServletContext pServletContext) {
+            getFileCleaningTracker(final ServletContext servletContext) {
         return (FileCleaningTracker)
-            pServletContext.getAttribute(FILE_CLEANING_TRACKER_ATTRIBUTE);
+            servletContext.getAttribute(FILE_CLEANING_TRACKER_ATTRIBUTE);
     }
 
     /**
      * Sets the instance of {@link FileCleaningTracker}, which is
      * associated with the given {@link ServletContext}.
      *
-     * @param pServletContext The servlet context to modify
-     * @param pTracker The tracker to set
+     * @param servletContext The servlet context to modify
+     * @param tracker The tracker to set
      */
-    public static void setFileCleaningTracker(final ServletContext pServletContext,
-            final FileCleaningTracker pTracker) {
-        pServletContext.setAttribute(FILE_CLEANING_TRACKER_ATTRIBUTE, pTracker);
+    public static void setFileCleaningTracker(final ServletContext servletContext,
+            final FileCleaningTracker tracker) {
+        servletContext.setAttribute(FILE_CLEANING_TRACKER_ATTRIBUTE, tracker);
+    }
+
+    /**
+     * Called when the web application is being destroyed.
+     * Calls {@link FileCleaningTracker#exitWhenFinished()}.
+     *
+     * @param sce The servlet context, used for calling
+     *     {@link #getFileCleaningTracker(ServletContext)}.
+     */
+    @Override
+    public void contextDestroyed(final ServletContextEvent sce) {
+        getFileCleaningTracker(sce.getServletContext()).exitWhenFinished();
     }
 
     /**
@@ -73,17 +84,5 @@ public class JakSrvltFileCleaner implements ServletContextListener {
     public void contextInitialized(final ServletContextEvent sce) {
         setFileCleaningTracker(sce.getServletContext(),
                 new FileCleaningTracker());
-    }
-
-    /**
-     * Called when the web application is being destroyed.
-     * Calls {@link FileCleaningTracker#exitWhenFinished()}.
-     *
-     * @param sce The servlet context, used for calling
-     *     {@link #getFileCleaningTracker(ServletContext)}.
-     */
-    @Override
-    public void contextDestroyed(final ServletContextEvent sce) {
-        getFileCleaningTracker(sce.getServletContext()).exitWhenFinished();
     }
 }

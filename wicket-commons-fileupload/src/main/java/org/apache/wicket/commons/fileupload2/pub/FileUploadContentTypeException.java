@@ -16,46 +16,47 @@
  */
 package org.apache.wicket.commons.fileupload2.pub;
 
-import java.io.IOException;
-
 import org.apache.wicket.commons.fileupload2.FileUploadException;
 
 /**
- * Thrown to indicate an IOException.
+ * Signals that a request is not a multipart request.
  */
-public class IOFileUploadException extends FileUploadException {
+public class FileUploadContentTypeException extends FileUploadException {
 
     /**
      * The exceptions UID, for serializing an instance.
      */
-    private static final long serialVersionUID = 1749796615868477269L;
+    private static final long serialVersionUID = 2;
 
     /**
-     * The exceptions cause; we overwrite the parent
-     * classes field, which is available since Java
-     * 1.4 only.
+     * The guilty content type.
      */
-    private final IOException cause;
+    private String contentType;
 
     /**
-     * Creates a new instance with the given cause.
+     * Constructs an instance with the specified detail message.
      *
-     * @param pMsg The detail message.
-     * @param pException The exceptions cause.
+     * @param message The detail message (which is saved for later retrieval by the {@link #getMessage()} method)
+     * @param contentType The guilty content type.
      */
-    public IOFileUploadException(final String pMsg, final IOException pException) {
-        super(pMsg);
-        cause = pException;
+    public FileUploadContentTypeException(final String message, final String contentType) {
+        super(message);
+        this.contentType = contentType;
     }
 
     /**
-     * Returns the exceptions cause.
+     * Constructs an instance with the specified detail message and cause.
      *
-     * @return The exceptions cause, if any, or null.
+     * @param message
+     *        The detail message (which is saved for later retrieval
+     *        by the {@link #getMessage()} method)
+     * @param cause the original cause
      */
-    @Override
-    public Throwable getCause() {
-        return cause;
+    public FileUploadContentTypeException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 
+    public String getContentType() {
+        return contentType;
+    }
 }

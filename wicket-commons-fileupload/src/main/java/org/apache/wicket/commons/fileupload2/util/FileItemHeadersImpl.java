@@ -37,21 +37,30 @@ public class FileItemHeadersImpl implements FileItemHeaders, Serializable {
     /**
      * Serial version UID, being used, if serialized.
      */
-    private static final long serialVersionUID = -4455695752627032559L;
+    private static final long serialVersionUID = 2;
 
     /**
-     * Map of {@code String} keys to a {@code List} of
-     * {@code String} instances.
+     * Map of {@code String} keys to a {@code List} of {@code String} instances.
      */
     private final Map<String, List<String>> headerNameToValueListMap = new LinkedHashMap<>();
+
+    /**
+     * Method to add header values to this instance.
+     *
+     * @param name  name of this header
+     * @param value value of this header
+     */
+    public synchronized void addHeader(final String name, final String value) {
+        final List<String> headerValueList = headerNameToValueListMap.computeIfAbsent(toLowerCase(name), k -> new ArrayList<>());
+        headerValueList.add(value);
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public String getHeader(final String name) {
-        final String nameLower = name.toLowerCase(Locale.ENGLISH);
-        final List<String> headerValueList = headerNameToValueListMap.get(nameLower);
+        final List<String> headerValueList = getList(name);
         if (null == headerValueList) {
             return null;
         }
@@ -71,25 +80,19 @@ public class FileItemHeadersImpl implements FileItemHeaders, Serializable {
      */
     @Override
     public Iterator<String> getHeaders(final String name) {
-        final String nameLower = name.toLowerCase(Locale.ENGLISH);
-        List<String> headerValueList = headerNameToValueListMap.get(nameLower);
+        List<String> headerValueList = getList(name);
         if (null == headerValueList) {
             headerValueList = Collections.emptyList();
         }
         return headerValueList.iterator();
     }
 
-    /**
-     * Method to add header values to this instance.
-     *
-     * @param name name of this header
-     * @param value value of this header
-     */
-    public synchronized void addHeader(final String name, final String value) {
-        final String nameLower = name.toLowerCase(Locale.ENGLISH);
-        final List<String> headerValueList = headerNameToValueListMap.
-                computeIfAbsent(nameLower, k -> new ArrayList<>());
-        headerValueList.add(value);
+    private List<String> getList(final String name) {
+        return headerNameToValueListMap.get(toLowerCase(name));
+    }
+
+    private String toLowerCase(final String value) {
+        return value.toLowerCase(Locale.ENGLISH);
     }
 
 }

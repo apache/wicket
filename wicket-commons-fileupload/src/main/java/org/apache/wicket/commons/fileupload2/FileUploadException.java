@@ -17,90 +17,41 @@
 package org.apache.wicket.commons.fileupload2;
 
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
 
 /**
- * Exception for errors encountered while processing the request.
+ * Signals errors encountered while processing the request.
  */
 public class FileUploadException extends IOException {
 
     /**
-     * Serial version UID, being used, if the exception
-     * is serialized.
+     * Serial version UID, being used, if the exception is serialized.
      */
-    private static final long serialVersionUID = 8881893724388807504L;
+    private static final long serialVersionUID = 2;
 
     /**
-     * The exceptions cause. We overwrite the cause of
-     * the super class, which isn't available in Java 1.3.
-     */
-    private final Throwable cause;
-
-    /**
-     * Constructs a new {@code FileUploadException} without message.
+     * Constructs a new instance.
      */
     public FileUploadException() {
-        this(null, null);
     }
 
     /**
-     * Constructs a new {@code FileUploadException} with specified detail
-     * message.
+     * Constructs an instance with a given detail message.
      *
-     * @param msg the error message.
+     * @param message The detail message (which is saved for later retrieval by the {@link #getMessage()} method)
      */
-    public FileUploadException(final String msg) {
-        this(msg, null);
+    public FileUploadException(final String message) {
+        super(message);
     }
 
     /**
-     * Creates a new {@code FileUploadException} with the given
-     * detail message and cause.
+     * Constructs an instance with the given detail message and cause.
      *
-     * @param msg The exceptions detail message.
-     * @param cause The exceptions cause.
+     * @param message The detail message (which is saved for later retrieval by the {@link #getMessage()} method)
+     * @param cause   The cause (which is saved for later retrieval by the {@link #getCause()} method). (A null value is permitted, and indicates that the cause
+     *                is nonexistent or unknown.)
      */
-    public FileUploadException(final String msg, final Throwable cause) {
-        super(msg);
-        this.cause = cause;
-    }
-
-    /**
-     * Prints this throwable and its backtrace to the specified print stream.
-     *
-     * @param stream {@code PrintStream} to use for output
-     */
-    @Override
-    public void printStackTrace(final PrintStream stream) {
-        super.printStackTrace(stream);
-        if (cause != null) {
-            stream.println("Caused by:");
-            cause.printStackTrace(stream);
-        }
-    }
-
-    /**
-     * Prints this throwable and its backtrace to the specified
-     * print writer.
-     *
-     * @param writer {@code PrintWriter} to use for output
-     */
-    @Override
-    public void printStackTrace(final PrintWriter writer) {
-        super.printStackTrace(writer);
-        if (cause != null) {
-            writer.println("Caused by:");
-            cause.printStackTrace(writer);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Throwable getCause() {
-        return cause;
+    public FileUploadException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 
 }

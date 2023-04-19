@@ -17,6 +17,7 @@
 
  module org.apache.wicket.commons.fileupload {
 	requires org.apache.commons.io;
+	requires java.naming;
 	requires jakarta.servlet;
 
 	exports org.apache.wicket.commons.fileupload2;

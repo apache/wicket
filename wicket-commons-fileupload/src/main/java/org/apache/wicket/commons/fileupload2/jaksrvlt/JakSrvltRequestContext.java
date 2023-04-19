@@ -16,32 +16,25 @@
  */
 package org.apache.wicket.commons.fileupload2.jaksrvlt;
 
-import static java.lang.String.format;
-
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.wicket.commons.fileupload2.FileUploadBase;
-import org.apache.wicket.commons.fileupload2.UploadContext;
+import org.apache.wicket.commons.fileupload2.AbstractRequestContext;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * <p>Provides access to the request information needed for a request made to
- * an HTTP servlet.</p>
+ * Provides access to the request information needed for a request made to
+ * an HTTP servlet.
  *
  * @since 1.1
  */
-public class JakSrvltRequestContext implements UploadContext {
-
-    // ----------------------------------------------------- Instance Variables
+public class JakSrvltRequestContext extends AbstractRequestContext {
 
     /**
      * The request for which the context is being provided.
      */
     private final HttpServletRequest request;
-
-    // ----------------------------------------------------------- Constructors
 
     /**
      * Construct a context for this request.
@@ -49,13 +42,12 @@ public class JakSrvltRequestContext implements UploadContext {
      * @param request The request to which this context applies.
      */
     public JakSrvltRequestContext(final HttpServletRequest request) {
+        super(request::getHeader, request::getContentLength);
         this.request = request;
     }
 
-    // --------------------------------------------------------- Public Methods
-
     /**
-     * Retrieve the character encoding for the request.
+     * Gets the character encoding for the request.
      *
      * @return The character encoding for the request.
      */
@@ -65,7 +57,7 @@ public class JakSrvltRequestContext implements UploadContext {
     }
 
     /**
-     * Retrieve the content type of the request.
+     * Gets the content type of the request.
      *
      * @return The content type of the request.
      */
@@ -75,36 +67,7 @@ public class JakSrvltRequestContext implements UploadContext {
     }
 
     /**
-     * Retrieve the content length of the request.
-     *
-     * @return The content length of the request.
-     * @deprecated 1.3 Use {@link #contentLength()} instead
-     */
-    @Override
-    @Deprecated
-    public int getContentLength() {
-        return request.getContentLength();
-    }
-
-    /**
-     * Retrieve the content length of the request.
-     *
-     * @return The content length of the request.
-     * @since 1.3
-     */
-    @Override
-    public long contentLength() {
-        long size;
-        try {
-            size = Long.parseLong(request.getHeader(FileUploadBase.CONTENT_LENGTH));
-        } catch (final NumberFormatException e) {
-            size = request.getContentLength();
-        }
-        return size;
-    }
-
-    /**
-     * Retrieve the input stream for the request.
+     * Gets the input stream for the request.
      *
      * @return The input stream for the request.
      *
@@ -113,18 +76,6 @@ public class JakSrvltRequestContext implements UploadContext {
     @Override
     public InputStream getInputStream() throws IOException {
         return request.getInputStream();
-    }
-
-    /**
-     * Returns a string representation of this object.
-     *
-     * @return a string representation of this object.
-     */
-    @Override
-    public String toString() {
-        return format("ContentLength=%s, ContentType=%s",
-                this.contentLength(),
-                this.getContentType());
     }
 
 }

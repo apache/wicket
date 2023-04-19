@@ -72,32 +72,26 @@
 
         <subsection name="Notes on Apache Commons FileUpload 1.3.3">
           <p>
-            Regarding potential security problems with the class called DiskFileItem,
-            it is true, that this class exists, and can be serialized/deserialized in FileUpload versions, up to, and
-            including 1.3.2. It is also true, that a malicious attacker can abuse this possibility to create abitraryly
-            located files (assuming the required permissions) with arbitrary contents, if he gets the opportunity to
-            provide specially crafted data, which is being deserialized by a Java application, which has either of the
-            above versions of Commons FileUpload in the classpath, and which puts no limitations on the classes being
-            deserialized.
+            Up to, and including version 1.3.2, the class org.apache.commons.fileupload2.disk.DiskFileItem can be serialized and 
+            deserialized. A malicious attacker can abuse this feature to arbitrarily create files with any content, assuming the 
+            required permissions for a given file location. If an attacker gets the opportunity to provide maliciously crafted data 
+            and an application puts no limitations on classes being deserialized, that data can then be deserialized by a Java 
+            application.
           </p>
           <p>
-            That being said, we (the Apache Commons team) hold the view, that the actual problem is not the DiskFileItem
-            class, but the "if" in the previous sentence. A Java application should carefully consider, which classes
-            can be deserialized. A typical approach would be, for example, to provide a blacklist, or whitelist of
-            packages, and/or classes, which may, or may not be deserialized.
+            We hold the view that the actual problem is not the DiskFileItem class, but that a Java application should carefully 
+            consider which classes can be deserialized. A typical approach would be, for example, to provide a deny list, or an 
+            accept list of packages, and/or classes, which may, or may not be deserialized.
           </p>
           <p>
-            On the other hand, we acknowledge, that the likelyhood of application container vendors taking such a
-            simple security measure is extremely low. So, in order to support the Commons Fileupload users, we have
-            decided to choose a different approach:
+            We acknowledge that the likelihood of application container vendors taking such a simple security measure is extremely 
+            low. In order to better support Commons Fileupload users, we chose a different approach.
           </p>
           <p>
-            Beginning with 1.3.3, the class DiskFileItem is still implementing the interface java.io.Serializable.
-            In other words, it still declares itself as serializable, and deserializable to the JVM. In practice,
-            however, an attempt to deserialize an instance of DiskFileItem will trigger an Exception. In the unlikely
-            case, that your application depends on the deserialization of DiskFileItems, you can revert to the
-            previous behavior by setting the system property "org.apache.commons.fileupload.disk.DiskFileItem.serializable"
-            to "true".
+            Starting with version 1.3.3, the class DiskFileItem still implements the interface java.io.Serializable but attempts 
+            to deserialize an instance of DiskFileItem will trigger an Exception. In the unlikely case, that your application 
+            depends on the deserialization of DiskFileItems, you can revert to the previous behavior by setting the system property 
+            "org.apache.commons.fileupload.disk.DiskFileItem.serializable" to "true".
           </p>
         </subsection>
 

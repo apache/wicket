@@ -18,15 +18,13 @@ package org.apache.wicket.commons.fileupload2.util.mime;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.wicket.commons.fileupload2.util.mime.QuotedPrintableDecoder;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -34,16 +32,27 @@ import org.junit.jupiter.api.Test;
  */
 public final class QuotedPrintableDecoderTestCase {
 
-    @Test
-    public void emptyDecode() throws Exception {
-        assertEncoded("", "");
+    private static void assertEncoded(final String clearText, final String encoded) throws Exception {
+        final byte[] expected = clearText.getBytes(StandardCharsets.US_ASCII);
+
+        final ByteArrayOutputStream out = new ByteArrayOutputStream(encoded.length());
+        final byte[] encodedData = encoded.getBytes(StandardCharsets.US_ASCII);
+        QuotedPrintableDecoder.decode(encodedData, out);
+        final byte[] actual = out.toByteArray();
+
+        assertArrayEquals(expected, actual);
     }
 
-    @Test
-    public void plainDecode() throws Exception {
-        // spaces are allowed in encoded data
-        // There are special rules for trailing spaces; these are not currently implemented.
-        assertEncoded("The quick brown fox jumps over the lazy dog.", "The quick brown fox jumps over the lazy dog.");
+    private static void assertIOException(final String messageText, final String encoded) {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream(encoded.length());
+        final byte[] encodedData = encoded.getBytes(StandardCharsets.US_ASCII);
+        try {
+            QuotedPrintableDecoder.decode(encodedData, out);
+            fail("Expected IOException");
+        } catch (final IOException e) {
+            final String em = e.getMessage();
+            assertTrue(em.contains(messageText), "Expected to find " + messageText + " in '" + em + "'");
+        }
     }
 
     @Test
@@ -52,23 +61,35 @@ public final class QuotedPrintableDecoderTestCase {
     }
 
     @Test
-    public void invalidQuotedPrintableEncoding() throws Exception {
-        assertIOException("truncated escape sequence", "YWJjMTIzXy0uKn4hQCMkJV4mKCkre31cIlxcOzpgLC9bXQ==");
-    }
-
-    @Test
-    public void unsafeDecode() throws Exception {
-        assertEncoded("=\r\n", "=3D=0D=0A");
-    }
-
-    @Test
-    public void unsafeDecodeLowerCase() throws Exception {
-        assertEncoded("=\r\n", "=3d=0d=0a");
+    public void emptyDecode() throws Exception {
+        assertEncoded("", "");
     }
 
     @Test
     public void invalidCharDecode() {
         assertThrows(IOException.class, () -> assertEncoded("=\r\n", "=3D=XD=XA"));
+    }
+
+    @Test
+    public void invalidQuotedPrintableEncoding() throws Exception {
+        assertIOException("truncated escape sequence", "YWJjMTIzXy0uKn4hQCMkJV4mKCkre31cIlxcOzpgLC9bXQ==");
+    }
+
+    @Test
+    public void invalidSoftBreak1() throws Exception {
+        assertIOException("CR must be followed by LF", "=\r\r");
+    }
+
+    @Test
+    public void invalidSoftBreak2() throws Exception {
+        assertIOException("CR must be followed by LF", "=\rn");
+    }
+
+    @Test
+    public void plainDecode() throws Exception {
+        // spaces are allowed in encoded data
+        // There are special rules for trailing spaces; these are not currently implemented.
+        assertEncoded("The quick brown fox jumps over the lazy dog.", "The quick brown fox jumps over the lazy dog.");
     }
 
     /**
@@ -85,42 +106,18 @@ public final class QuotedPrintableDecoderTestCase {
     }
 
     @Test
-    public void invalidSoftBreak1() throws Exception {
-        assertIOException("CR must be followed by LF", "=\r\r");
-    }
-
-    @Test
-    public void invalidSoftBreak2() throws Exception {
-        assertIOException("CR must be followed by LF", "=\rn");
-    }
-
-    @Test
     public void truncatedEscape() throws Exception {
         assertIOException("truncated", "=1");
     }
 
-    private static void assertEncoded(final String clearText, final String encoded) throws Exception {
-        final byte[] expected = clearText.getBytes(StandardCharsets.US_ASCII);
-
-        final ByteArrayOutputStream out = new ByteArrayOutputStream(encoded.length());
-        final byte[] encodedData = encoded.getBytes(StandardCharsets.US_ASCII);
-        QuotedPrintableDecoder.decode(encodedData, out);
-        final byte[] actual = out.toByteArray();
-
-        assertArrayEquals(expected, actual);
+    @Test
+    public void unsafeDecode() throws Exception {
+        assertEncoded("=\r\n", "=3D=0D=0A");
     }
 
-    private static void assertIOException(final String messageText, final String encoded)
-            throws UnsupportedEncodingException {
-        final ByteArrayOutputStream out = new ByteArrayOutputStream(encoded.length());
-        final byte[] encodedData = encoded.getBytes(StandardCharsets.US_ASCII);
-        try {
-            QuotedPrintableDecoder.decode(encodedData, out);
-            fail("Expected IOException");
-        } catch (final IOException e) {
-            final String em = e.getMessage();
-            assertTrue(em.contains(messageText), "Expected to find " + messageText + " in '" + em + "'");
-        }
+    @Test
+    public void unsafeDecodeLowerCase() throws Exception {
+        assertEncoded("=\r\n", "=3d=0d=0a");
     }
 
 }

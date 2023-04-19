@@ -19,15 +19,14 @@ package org.apache.wicket.commons.fileupload2.pub;
 import org.apache.wicket.commons.fileupload2.FileUploadException;
 
 /**
- * This exception is thrown, if a requests permitted size
- * is exceeded.
+ * Signals that a requests permitted size is exceeded.
  */
-abstract class SizeException extends FileUploadException {
+public class FileUploadSizeException extends FileUploadException {
 
     /**
      * Serial version UID, being used, if serialized.
      */
-    private static final long serialVersionUID = -8776225574705254126L;
+    private static final long serialVersionUID = 2;
 
     /**
      * The actual size of the request.
@@ -40,35 +39,33 @@ abstract class SizeException extends FileUploadException {
     private final long permitted;
 
     /**
-     * Creates a new instance.
+     * Constructs an instance.
      *
-     * @param message The detail message.
-     * @param actual The actual number of bytes in the request.
-     * @param permitted The requests size limit, in bytes.
+     * @param message   The detail message (which is saved for later retrieval by the {@link #getMessage()} method)
+     * @param permitted The requests size limit.
+     * @param actual    The actual values for the request.
      */
-    protected SizeException(final String message, final long actual, final long permitted) {
+    public FileUploadSizeException(final String message, final long permitted, final long actual) {
         super(message);
-        this.actual = actual;
         this.permitted = permitted;
+        this.actual = actual;
     }
 
     /**
-     * Retrieves the actual size of the request.
+     * Gets the actual size of the request.
      *
      * @return The actual size of the request.
-     * @since 1.3
      */
     public long getActualSize() {
         return actual;
     }
 
     /**
-     * Retrieves the permitted size of the request.
+     * Gets the limit size of the request.
      *
-     * @return The permitted size of the request.
-     * @since 1.3
+     * @return The limit size of the request.
      */
-    public long getPermittedSize() {
+    public long getPermitted() {
         return permitted;
     }
 

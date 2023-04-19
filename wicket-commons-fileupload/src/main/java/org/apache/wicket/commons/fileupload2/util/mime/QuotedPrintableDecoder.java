@@ -31,14 +31,7 @@ final class QuotedPrintableDecoder {
     private static final int UPPER_NIBBLE_SHIFT = Byte.SIZE / 2;
 
     /**
-     * Hidden constructor, this class must not be instantiated.
-     */
-    private QuotedPrintableDecoder() {
-        // do nothing
-    }
-
-    /**
-     * Decode the encoded byte data writing it to the given output stream.
+     * Decodes the encoded byte data writing it to the given output stream.
      *
      * @param data   The array of byte data to decode.
      * @param out    The output stream used to return the decoded data.
@@ -94,7 +87,7 @@ final class QuotedPrintableDecoder {
     }
 
     /**
-     * Convert a hex digit to the binary value it represents.
+     * Converts a hex digit to the binary value it represents.
      *
      * @param b the ascii hex byte to convert (0-0, A-F, a-f)
      * @return the int value of the hex byte, 0-15
@@ -107,6 +100,13 @@ final class QuotedPrintableDecoder {
             throw new IOException("Invalid quoted printable encoding: not a valid hex digit: " + b);
         }
         return i;
+    }
+
+    /**
+     * Hidden constructor, this class must not be instantiated.
+     */
+    private QuotedPrintableDecoder() {
+        // do nothing
     }
 
 }

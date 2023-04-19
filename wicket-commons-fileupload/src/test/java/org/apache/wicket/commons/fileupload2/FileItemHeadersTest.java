@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Iterator;
 
-import org.apache.wicket.commons.fileupload2.FileItemHeaders;
 import org.apache.wicket.commons.fileupload2.util.FileItemHeadersImpl;
 import org.junit.jupiter.api.Test;
 

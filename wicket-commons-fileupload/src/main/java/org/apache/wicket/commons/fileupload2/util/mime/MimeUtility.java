@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -75,14 +76,7 @@ public final class MimeUtility {
     }
 
     /**
-     * Hidden constructor, this class must not be instantiated.
-     */
-    private MimeUtility() {
-        // do nothing
-    }
-
-    /**
-     * Decode a string of text obtained from a mail header into
+     * Decodes a string of text obtained from a mail header into
      * its proper form.  The text generally will consist of a
      * string of tokens, some of which may be encoded using
      * base64 encoding.
@@ -181,7 +175,7 @@ public final class MimeUtility {
     }
 
     /**
-     * Parse a string using the RFC 2047 rules for an "encoded-word"
+     * Decodes a string using the RFC 2047 rules for an "encoded-word"
      * type.  This encoding has the syntax:
      *
      * encoded-word = "=?" charset "?" encoding "?" encoded-text "?="
@@ -237,7 +231,7 @@ public final class MimeUtility {
 
             // Base64 encoded?
             if (encoding.equals(BASE64_ENCODING_MARKER)) {
-                Base64Decoder.decode(encodedData, out);
+                out.write(Base64.getMimeDecoder().decode(encodedData));
             } else if (encoding.equals(QUOTEDPRINTABLE_ENCODING_MARKER)) { // maybe quoted printable.
                 QuotedPrintableDecoder.decode(encodedData, out);
             } else {
@@ -272,6 +266,13 @@ public final class MimeUtility {
             return charset;
         }
         return mappedCharset;
+    }
+
+    /**
+     * Hidden constructor, this class must not be instantiated.
+     */
+    private MimeUtility() {
+        // do nothing
     }
 
 }

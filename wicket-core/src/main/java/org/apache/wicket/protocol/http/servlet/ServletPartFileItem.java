@@ -135,7 +135,7 @@ class ServletPartFileItem implements FileItem
 	}
 
 	@Override
-	public void write(File file) throws Exception
+	public void write(File file) throws IOException
 	{
 		part.write(file.getName());
 	}

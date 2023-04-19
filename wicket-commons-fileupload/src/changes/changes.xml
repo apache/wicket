@@ -51,11 +51,27 @@ The <action> type attribute can be add,update,fix,remove.
       <action                        dev="ggregory" type="fix" due-to="Emmanuel Lécharny">Slight optim: resuse the index position instead of recomputing it #49.</action>
       <action issue="FILEUPLOAD-340" dev="mgrigorov" type="fix">Make commons-fileupload2 a JPMS module by adding module-info.class.</action>
       <action issue="FILEUPLOAD-341" dev="jochen" type="fix" due-to="Martin Grigorov">Move Exception classes out of the impl package.</action>
+      <action                        dev="ggregory" type="fix" due-to="Gary Gregory">Rework exceptions to use propagated exception causes (introduced in Java 1.4).</action>
+      <action                        dev="ggregory" type="fix" due-to="Gary Gregory">All custom exception extend FileUploadException.</action>
+      <action                        dev="ggregory" type="fix" due-to="Gary Gregory">All custom exceptions serialVersionUID value is now 2.</action>
       <!-- ADD -->
       <action                        dev="ggregory" type="add" due-to="Gary Gregory">Add github/codeql-action from #144.</action>
       <action                        dev="jochen" type="add">Add the package org.apache.fileupload2.jaksrvlt, for compliance with Jakarta Servlet API 5.0.</action>
       <action                        dev="jochen" type="add">Making FileUploadException a subclass of IOException. (Mibor API simplification.)</action>
       <action                        dev="markt" type="add">Add a configurable limit (disabled by default) for the number of files to upload per request.</action>
+      <!-- REMOVE -->
+      <action                        dev="ggregory" type="remove" due-to="Gary Gregory">Remove deprecated constructors in MultipartStream.</action>
+      <action                        dev="ggregory" type="remove" due-to="Gary Gregory">Remove deprecated RequestContext.getContentLength().</action>
+      <action                        dev="ggregory" type="remove" due-to="Gary Gregory">Remove deprecated JakSrvltRequestContext.getContentLength().</action>
+      <action                        dev="ggregory" type="remove" due-to="Gary Gregory">Remove deprecated PortletRequestContext.getContentLength().</action>
+      <action                        dev="ggregory" type="remove" due-to="Gary Gregory">Remove deprecated ServletRequestContext.getContentLength().</action>
+      <action                        dev="ggregory" type="remove" due-to="Gary Gregory">Remove deprecated FileUploadBase.MAX_HEADER_SIZE.</action>
+      <action                        dev="ggregory" type="remove" due-to="Gary Gregory">Remove deprecated FileUploadBase.createItem(Map, boolean).</action>
+      <action                        dev="ggregory" type="remove" due-to="Gary Gregory">Remove deprecated FileUploadBase.getFieldName(Map).</action>
+      <action                        dev="ggregory" type="remove" due-to="Gary Gregory">Remove deprecated FileUploadBase.getFileName(Map).</action>
+      <action                        dev="ggregory" type="remove" due-to="Gary Gregory">Remove deprecated FileUploadBase.getHeader(Map, String).</action>
+      <action                        dev="ggregory" type="remove" due-to="Gary Gregory">Remove deprecated FileUploadBase.parseHeaders(String).</action>
+      <action                        dev="ggregory" type="remove" due-to="Gary Gregory">Replace org.apache.commons.fileupload2.util.mime.Base64Decoder with java.util.Base64.</action>
       <!-- UPDATE -->
       <action                        dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">Bump actions/cache from 2.1.6 to 3.0.8 #128, #140.</action>
       <action                        dev="ggregory" type="update" due-to="Dependabot, Gary Gregory">Bump actions/checkout from 2.3.4 to 3.0.2 #125.</action>

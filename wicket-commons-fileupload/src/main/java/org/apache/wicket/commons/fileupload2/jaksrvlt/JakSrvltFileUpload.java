@@ -20,28 +20,30 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.commons.fileupload2.AbstractFileUpload;
 import org.apache.wicket.commons.fileupload2.FileItem;
 import org.apache.wicket.commons.fileupload2.FileItemFactory;
 import org.apache.wicket.commons.fileupload2.FileItemIterator;
 import org.apache.wicket.commons.fileupload2.FileUpload;
-import org.apache.wicket.commons.fileupload2.FileUploadBase;
 import org.apache.wicket.commons.fileupload2.FileUploadException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * <p>High level API for processing file uploads.</p>
- *
- * <p>This class handles multiple files per single HTML widget, sent using
+ * High level API for processing file uploads.
+ * <p>
+ * This class handles multiple files per single HTML widget, sent using
  * {@code multipart/mixed} encoding type, as specified by
  * <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>.  Use {@link
  * #parseRequest(HttpServletRequest)} to acquire a list of {@link
  * org.apache.wicket.commons.fileupload2.FileItem}s associated with a given HTML
- * widget.</p>
- *
- * <p>How the data for individual parts is stored is determined by the factory
+ * widget.
+ * </p>
+ * <p>
+ * How the data for individual parts is stored is determined by the factory
  * used to create them; a given part may be in memory, on disk, or somewhere
- * else.</p>
+ * else.
+ * </p>
  */
 public class JakSrvltFileUpload extends FileUpload {
 
@@ -49,8 +51,6 @@ public class JakSrvltFileUpload extends FileUpload {
      * Constant for HTTP POST method.
      */
     private static final String POST_METHOD = "POST";
-
-    // ---------------------------------------------------------- Class methods
 
     /**
      * Utility method that determines whether the request contains multipart
@@ -61,15 +61,9 @@ public class JakSrvltFileUpload extends FileUpload {
      * @return {@code true} if the request is multipart;
      *         {@code false} otherwise.
      */
-    public static final boolean isMultipartContent(
-            final HttpServletRequest request) {
-        if (!POST_METHOD.equalsIgnoreCase(request.getMethod())) {
-            return false;
-        }
-        return FileUploadBase.isMultipartContent(new JakSrvltRequestContext(request));
+    public static final boolean isMultipartContent(final HttpServletRequest request) {
+        return POST_METHOD.equalsIgnoreCase(request.getMethod()) && AbstractFileUpload.isMultipartContent(new JakSrvltRequestContext(request));
     }
-
-    // ----------------------------------------------------------- Constructors
 
     /**
      * Constructs an uninitialized instance of this class. A factory must be
@@ -92,32 +86,31 @@ public class JakSrvltFileUpload extends FileUpload {
         super(fileItemFactory);
     }
 
-    // --------------------------------------------------------- Public methods
-
     /**
-     * Processes an <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>
-     * compliant {@code multipart/form-data} stream.
+     * Gets an <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>
+     * compliant {@code multipart/form-data} file item iterator.
      *
      * @param request The servlet request to be parsed.
-     *
-     * @return A list of {@code FileItem} instances parsed from the
-     *         request, in the order that they were transmitted.
-     *
+     * @return An iterator to instances of {@code FileItemStream}
+     *         parsed from the request, in the order that they were
+     *         transmitted.
      * @throws FileUploadException if there are problems reading/parsing
      *                             the request or storing files.
+     * @throws IOException An I/O error occurred. This may be a network
+     *   error while communicating with the client or a problem while
+     *   storing the uploaded content.
      */
-    public List<FileItem> parseRequest(final HttpServletRequest request) throws FileUploadException {
-        return parseRequest(new JakSrvltRequestContext(request));
+    public FileItemIterator getItemIterator(final HttpServletRequest request)
+    throws FileUploadException, IOException {
+        return super.getItemIterator(new JakSrvltRequestContext(request));
     }
 
     /**
-     * Processes an <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>
+     * Parses an <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>
      * compliant {@code multipart/form-data} stream.
      *
      * @param request The servlet request to be parsed.
-     *
      * @return A map of {@code FileItem} instances parsed from the request.
-     *
      * @throws FileUploadException if there are problems reading/parsing
      *                             the request or storing files.
      *
@@ -129,24 +122,17 @@ public class JakSrvltFileUpload extends FileUpload {
     }
 
     /**
-     * Processes an <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>
+     * Parses an <a href="http://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>
      * compliant {@code multipart/form-data} stream.
      *
      * @param request The servlet request to be parsed.
-     *
-     * @return An iterator to instances of {@code FileItemStream}
-     *         parsed from the request, in the order that they were
-     *         transmitted.
-     *
+     * @return A list of {@code FileItem} instances parsed from the
+     *         request, in the order that they were transmitted.
      * @throws FileUploadException if there are problems reading/parsing
      *                             the request or storing files.
-     * @throws IOException An I/O error occurred. This may be a network
-     *   error while communicating with the client or a problem while
-     *   storing the uploaded content.
      */
-    public FileItemIterator getItemIterator(final HttpServletRequest request)
-    throws FileUploadException, IOException {
-        return super.getItemIterator(new JakSrvltRequestContext(request));
+    public List<FileItem> parseRequest(final HttpServletRequest request) throws FileUploadException {
+        return parseRequest(new JakSrvltRequestContext(request));
     }
 
 }

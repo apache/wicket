@@ -16,38 +16,22 @@
  */
 package org.apache.wicket.commons.fileupload2.pub;
 
-import org.apache.wicket.commons.fileupload2.FileUploadException;
-
 /**
- * This exception is thrown if a request contains more files than the specified
- * limit.
+ * Signals that a request contains more files than the specified limit.
  */
-public class FileCountLimitExceededException extends FileUploadException {
+public class FileUploadFileCountLimitException extends FileUploadSizeException {
 
-    private static final long serialVersionUID = 2408766352570556046L;
-
-    /**
-     * The limit that was exceeded.
-     */
-    private final long limit;
+    private static final long serialVersionUID = 2;
 
     /**
-     * Creates a new instance.
+     * Constructs an instance.
      *
-     * @param message The detail message
-     * @param limit The limit that was exceeded
+     * @param message The detail message (which is saved for later retrieval by the {@link #getMessage()} method)
+     * @param limit   The limit that was exceeded.
+     * @param actual  The actual value.
      */
-    public FileCountLimitExceededException(final String message, final long limit) {
-        super(message);
-        this.limit = limit;
+    public FileUploadFileCountLimitException(final String message, final long limit, final long actual) {
+        super(message, limit, actual);
     }
 
-    /**
-     * Retrieves the limit that was exceeded.
-     *
-     * @return The limit that was exceeded by the request
-     */
-    public long getLimit() {
-        return limit;
-    }
 }

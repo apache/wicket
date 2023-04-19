@@ -30,17 +30,12 @@ package org.apache.wicket.commons.fileupload2;
  * used to create them; a given part may be in memory, on disk, or somewhere
  * else.</p>
  */
-public class FileUpload
-    extends FileUploadBase {
-
-    // ----------------------------------------------------------- Data members
+public class FileUpload extends AbstractFileUpload {
 
     /**
      * The factory to use to create new form items.
      */
     private FileItemFactory fileItemFactory;
-
-    // ----------------------------------------------------------- Constructors
 
     /**
      * Constructs an uninitialized instance of this class.
@@ -65,10 +60,8 @@ public class FileUpload
         this.fileItemFactory = fileItemFactory;
     }
 
-    // ----------------------------------------------------- Property accessors
-
     /**
-     * Returns the factory class used when creating file items.
+     * Gets the factory class used when creating file items.
      *
      * @return The factory class for new file items.
      */

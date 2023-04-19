@@ -17,7 +17,7 @@
 package org.apache.wicket.commons.fileupload2;
 
 /**
- * This exception is thrown in case of an invalid file name.
+ * Signals an invalid file name.
  * A file name is invalid, if it contains a NUL character.
  * Attackers might use this to circumvent security checks:
  * For example, a malicious user might upload a file with the name
@@ -32,7 +32,7 @@ public class InvalidFileNameException extends RuntimeException {
      * Serial version UID, being used, if the exception
      * is serialized.
      */
-    private static final long serialVersionUID = 7922042602454350470L;
+    private static final long serialVersionUID = 2;
 
     /**
      * The file name causing the exception.
@@ -40,18 +40,18 @@ public class InvalidFileNameException extends RuntimeException {
     private final String name;
 
     /**
-     * Creates a new instance.
+     * Constructs a new instance.
      *
-     * @param pName The file name causing the exception.
-     * @param pMessage A human readable error message.
+     * @param name The file name causing the exception.
+     * @param message A human readable error message.
      */
-    public InvalidFileNameException(final String pName, final String pMessage) {
-        super(pMessage);
-        name = pName;
+    public InvalidFileNameException(final String name, final String message) {
+        super(message);
+        this.name = name;
     }
 
     /**
-     * Returns the invalid file name.
+     * Gets the invalid file name.
      *
      * @return the invalid file name.
      */

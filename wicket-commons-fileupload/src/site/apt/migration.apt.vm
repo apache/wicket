@@ -29,12 +29,12 @@ Migration
    you need to adapt your projects as follows:
 
    1. Upgrade your Java version to 8, or later.
-
+   
    2. In your dependency declaration, change the groupId to org.apache.commons, the artifactId to
       commons-fileupload2, and the version number to ${project.version}.
 
-   3. Change namespace org.apache.commons.fileupload to org.apache.wicket.commons.fileupload2.
-
+   3. Change namespace org.apache.commons.fileupload to org.apache.commons.fileupload2.
+   
       Example: Change
 
 +-------------------------------------------
@@ -44,7 +44,7 @@ Migration
       to
 
 +-------------------------------------------
-   import org.apache.wicket.commons.fileupload2.servlet.ServletFileUpload;
+   import org.apache.commons.fileupload2.servlet.ServletFileUpload;
 +-------------------------------------------
 
   4. Existing code like the following might give compiler errors, although it
@@ -58,7 +58,7 @@ Migration
     } catch (FileUploadException e) {
         // Handle the FileUploadException
     }
-+-------------------------------------------
++------------------------------------------- 
 
     With FileUpload 2, this is invalid, because the FileUploadException is now a
     subclass of the IOException. The solution is simple: Just switch the order,
@@ -78,18 +78,18 @@ Migration
 
   2. Replace the classes from <<org.apache.commons.fileupload.servlet>>, or
      <<org.apache.commons.filupload2.servlet>> with the corresponding
-     classes from <<org.apache.wicket.commons.fileupload2.jaksrvlt>>. Namely, replace
+     classes from <<org.apache.commons.fileupload2.jaksrvlt>>. Namely, replace
 
 *------------------------------------------------------------- *----------------------------------------------------------------*
 | <<Old class name>>                                           | <<New class name>>                                             |
 *------------------------------------------------------------- *----------------------------------------------------------------*
-| org.apache.commons.fileupload.servlet.ServletFileUpload      | org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltFileUpload     |
-| org.apache.wicket.commons.fileupload2.servlet.ServletFileUpload     |                                                                |
+| org.apache.commons.fileupload.servlet.ServletFileUpload      | org.apache.commons.fileupload2.jaksrvlt.JakSrvltFileUpload     |
+| org.apache.commons.fileupload2.servlet.ServletFileUpload     |                                                                |
 *------------------------------------------------------------- *----------------------------------------------------------------*
-| org.apache.commons.fileupload.servlet.ServletRequestContext  | org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltRequestContext |
-| org.apache.wicket.commons.fileupload2.servlet.ServletRequestContext |                                                                |
+| org.apache.commons.fileupload.servlet.ServletRequestContext  | org.apache.commons.fileupload2.jaksrvlt.JakSrvltRequestContext |
+| org.apache.commons.fileupload2.servlet.ServletRequestContext |                                                                |
 *--------------------------------------------------------------*----------------------------------------------------------------*
-| org.apache.wicket.commons.fileupload2.servlet.FileCleanerCleanup    | org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltFileCleaner    |
+| org.apache.commons.fileupload2.servlet.FileCleanerCleanup    | org.apache.commons.fileupload2.jaksrvlt.JakSrvltFileCleaner    |
 *--------------------------------------------------------------*----------------------------------------------------------------*
 
 ## Example
@@ -100,13 +100,13 @@ The following example demonstrates, how to use Commons Fileupload with the Java 
     import java.io.IOException;
     import java.util.List;
 
-    import org.apache.wicket.commons.fileupload2.FileItem;
-    import org.apache.wicket.commons.fileupload2.FileItemFactory;
-    import org.apache.wicket.commons.fileupload2.FileUpload;
-    import org.apache.wicket.commons.fileupload2.FileUploadException;
-    import org.apache.wicket.commons.fileupload2.disk.DiskFileItemFactory;
-    import org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltFileUpload;
-    import org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltRequestContext;
+    import org.apache.commons.fileupload2.FileItem;
+    import org.apache.commons.fileupload2.FileItemFactory;
+    import org.apache.commons.fileupload2.FileUpload;
+    import org.apache.commons.fileupload2.FileUploadException;
+    import org.apache.commons.fileupload2.disk.DiskFileItemFactory;
+    import org.apache.commons.fileupload2.jaksrvlt.JakSrvltFileUpload;
+    import org.apache.commons.fileupload2.jaksrvlt.JakSrvltRequestContext;
 
     import jakarta.servlet.ServletException;
     import jakarta.servlet.http.HttpServlet;
@@ -136,5 +136,5 @@ The following example demonstrates, how to use Commons Fileupload with the Java 
 # Commons FileUpload 2 can be used a Java Package Module
 
 The library provides <<META-INF/versions/module-info.class>> that defines the required modules and exported packages.
-All packages but <<org.apache.wicket.commons.fileupload2.impl>> are exported. All exception classes have been moved from
-<<org.apache.wicket.commons.fileupload2.impl>> to <<org.apache.wicket.commons.fileupload2.pub>> package
+All packages but <<org.apache.commons.fileupload2.impl>> are exported. All exception classes have been moved from
+<<org.apache.commons.fileupload2.impl>> to <<org.apache.commons.fileupload2.pub>> package

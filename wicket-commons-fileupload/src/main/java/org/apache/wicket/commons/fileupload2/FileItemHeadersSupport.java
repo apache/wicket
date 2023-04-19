@@ -17,18 +17,16 @@
 package org.apache.wicket.commons.fileupload2;
 
 /**
- * Interface that will indicate that {@link FileItem} or {@link FileItemStream}
- * implementations will accept the headers read for the item.
- *
- * @since 1.2.1
+ * Accepts headers for an item type.
  *
  * @see FileItem
  * @see FileItemStream
+ * @since 1.2.1
  */
 public interface FileItemHeadersSupport {
 
     /**
-     * Returns the collection of headers defined locally within this item.
+     * Gets the collection of headers defined locally within this item.
      *
      * @return the {@link FileItemHeaders} present for this item.
      */

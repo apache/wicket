@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.UnsupportedEncodingException;
 
-import org.apache.wicket.commons.fileupload2.util.mime.MimeUtility;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -32,19 +31,13 @@ import org.junit.jupiter.api.Test;
  */
 public final class MimeUtilityTestCase {
 
-    @Test
-    public void noNeedToDecode() throws Exception {
-        assertEncoded("abc", "abc");
+    private static void assertEncoded(final String expected, final String encoded) throws Exception {
+        assertEquals(expected, MimeUtility.decodeText(encoded));
     }
 
     @Test
-    public void decodeUtf8QuotedPrintableEncoded() throws Exception {
-        assertEncoded(" h\u00e9! \u00e0\u00e8\u00f4u !!!", "=?UTF-8?Q?_h=C3=A9!_=C3=A0=C3=A8=C3=B4u_!!!?=");
-    }
-
-    @Test
-    public void decodeUtf8Base64Encoded() throws Exception {
-        assertEncoded(" h\u00e9! \u00e0\u00e8\u00f4u !!!", "=?UTF-8?B?IGjDqSEgw6DDqMO0dSAhISE=?=");
+    public void decodeInvalidEncoding() {
+        assertThrows(UnsupportedEncodingException.class, () -> MimeUtility.decodeText("=?invalid?B?xyz-?="));
     }
 
     @Test
@@ -61,12 +54,18 @@ public final class MimeUtilityTestCase {
                       + "2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?=\"\r\n");
     }
 
-    private static void assertEncoded(final String expected, final String encoded) throws Exception {
-        assertEquals(expected, MimeUtility.decodeText(encoded));
+    @Test
+    public void decodeUtf8Base64Encoded() throws Exception {
+        assertEncoded(" h\u00e9! \u00e0\u00e8\u00f4u !!!", "=?UTF-8?B?IGjDqSEgw6DDqMO0dSAhISE=?=");
     }
 
     @Test
-    public void decodeInvalidEncoding() {
-        assertThrows(UnsupportedEncodingException.class, () -> MimeUtility.decodeText("=?invalid?B?xyz-?="));
+    public void decodeUtf8QuotedPrintableEncoded() throws Exception {
+        assertEncoded(" h\u00e9! \u00e0\u00e8\u00f4u !!!", "=?UTF-8?Q?_h=C3=A9!_=C3=A0=C3=A8=C3=B4u_!!!?=");
+    }
+
+    @Test
+    public void noNeedToDecode() throws Exception {
+        assertEncoded("abc", "abc");
     }
 }

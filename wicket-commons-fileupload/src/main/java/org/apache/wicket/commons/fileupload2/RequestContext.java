@@ -16,43 +16,42 @@
  */
 package org.apache.wicket.commons.fileupload2;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * <p>Abstracts access to the request information needed for file uploads. This
- * interface should be implemented for each type of request that may be
- * handled by FileUpload, such as servlets and portlets.</p>
- *
+ * Abstracts access to the request information needed for file uploads.
+ * <p>
+ * This interface should be implemented for each type of request that may be handled by FileUpload, such as servlets and portlets.
+ * </p>
  * @since 1.1
  */
 public interface RequestContext {
 
     /**
-     * Retrieve the character encoding for the request.
+     * Gets the character encoding for the request.
      *
      * @return The character encoding for the request.
      */
     String getCharacterEncoding();
 
     /**
-     * Retrieve the content type of the request.
+     * Gets the content length of the request.
+     *
+     * @return The content length of the request.
+     * @since 1.3
+     */
+    long getContentLength();
+
+    /**
+     * Gets the content type of the request.
      *
      * @return The content type of the request.
      */
     String getContentType();
 
     /**
-     * Retrieve the content length of the request.
-     *
-     * @return The content length of the request.
-     * @deprecated 1.3 Use {@link UploadContext#contentLength()} instead
-     */
-    @Deprecated
-    int getContentLength();
-
-    /**
-     * Retrieve the input stream for the request.
+     * Gets the input stream for the request.
      *
      * @return The input stream for the request.
      *
