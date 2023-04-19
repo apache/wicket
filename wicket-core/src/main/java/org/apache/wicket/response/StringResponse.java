@@ -21,7 +21,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
 /**
- * Response object that writes to a StringWriter. If the StringResponse is later converted to a
+ * Response object that writes to an AppendingStringBuffer. If the StringResponse is later converted to a
  * String via toString(), the output which was written to the StringResponse will be returned as a
  * String.
  * 
@@ -32,61 +32,63 @@ public class StringResponse extends Response
 
 	private static final int DEFAULT_INITIAL_CAPACITY = 128;
 
-	/** StringWriter to write to */
-	protected final AppendingStringBuffer out;
+	/** Initial capacity of the buffer */
+	private final int initialCapacity;
 
-	/**
-	 * Constructor
-	 */
+	/** Buffer to write to */
+	private AppendingStringBuffer out;
+
 	public StringResponse()
 	{
 		this(DEFAULT_INITIAL_CAPACITY);
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param initialCapacity
-	 *            the initial capacity of the internal buffer
-	 */
 	public StringResponse(int initialCapacity)
 	{
-		out = new AppendingStringBuffer(initialCapacity);
+		this.initialCapacity = initialCapacity;
 	}
 
 	/**
-	 * @see org.apache.wicket.request.Response#write(CharSequence)
+	 * @see Response#write(CharSequence)
 	 */
 	@Override
 	public void write(final CharSequence string)
 	{
+		if (out == null)
+		{
+			out = new AppendingStringBuffer(initialCapacity);
+		}
 		out.append(string);
 	}
 
 	/**
-	 * @see org.apache.wicket.request.Response#reset()
+	 * @see Response#reset()
 	 */
 	@Override
 	public void reset()
 	{
-		out.clear();
+		if (out != null)
+		{
+			out.clear();
+		}
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * @see Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return out.toString();
+		return getBuffer().toString();
 	}
 
 	/**
-	 * @return The internal buffer directly as a {@link CharSequence}
+	 * @return The internal buffer as a {@link CharSequence} or an empty string if no content has
+	 *         been written to the response
 	 */
 	public CharSequence getBuffer()
 	{
-		return out;
+		return out != null ? out : "";
 	}
 
 	@Override
