@@ -1088,12 +1088,15 @@ public final class Strings
 		{
 			return null;
 		}
-
-		final AppendingStringBuffer buffer = new AppendingStringBuffer();
+		
+		final int len = s.length();
+		
+		// allocate a buffer that is 10% larger than the original string to account for markup
+		final AppendingStringBuffer buffer = new AppendingStringBuffer((int) (len * 1.1) + 16);
 		int newlineCount = 0;
 
 		buffer.append("<p>");
-		for (int i = 0; i < s.length(); i++)
+		for (int i = 0; i < len; i++)
 		{
 			final char c = s.charAt(i);
 
