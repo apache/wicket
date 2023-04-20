@@ -20,7 +20,7 @@ package org.apache.wicket.markup.html.form.upload;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.fileupload2.FileItem;
+import org.apache.wicket.commons.fileupload2.FileItem;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
@@ -40,7 +40,7 @@ import org.apache.wicket.util.string.Strings;
  * streams they point to will be closed. Because of this, the {@link FileUpload} instance should be
  * processed within the same request as the form containing it was submitted.
  * </p>
- * 
+ *
  * @author Eelco Hillenius
  */
 public class FileUploadField extends FormComponent<List<FileUpload>>
@@ -119,7 +119,7 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 				}
 			}
 		}
-		
+
 		return fileUploads;
 	}
 
@@ -181,7 +181,7 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	/**
 	 * Clean up at the end of the request. This means closing all inputstreams which might have been
 	 * opened from the fileUpload.
-	 * 
+	 *
 	 * @see org.apache.wicket.Component#onDetach()
 	 */
 	@Override
@@ -210,7 +210,7 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	 * The FileUploadField will close any input streams you have opened in its FileUpload by
 	 * default. If you wish to manage the stream yourself (e.g. you want to use it in another
 	 * thread) then you can override this method to prevent this behavior.
-	 * 
+	 *
 	 * @return <code>true</code> if stream should be closed at the end of request
 	 */
 	protected boolean forceCloseStreamsOnDetach()

@@ -1,0 +1,140 @@
+~~
+~~ Licensed to the Apache Software Foundation (ASF) under one or more
+~~ contributor license agreements.  See the NOTICE file distributed with
+~~ this work for additional information regarding copyright ownership.
+~~ The ASF licenses this file to You under the Apache License, Version 2.0
+~~ (the "License"); you may not use this file except in compliance with
+~~ the License.  You may obtain a copy of the License at
+~~
+~~      http://www.apache.org/licenses/LICENSE-2.0
+~~
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~
+		---------
+		Migration
+		---------
+
+Migration
+
+   This document provides advice for migration between versions of Commons FileUpload, and between versions
+   of the underlying Servlet API.
+
+# Migrating to Commons FileUpload 2
+
+   Commons Fileupload 2 is the first version, that drops compatibility to previous versions. This means, that
+   you need to adapt your projects as follows:
+
+   1. Upgrade your Java version to 8, or later.
+   
+   2. In your dependency declaration, change the groupId to org.apache.commons, the artifactId to
+      commons-fileupload2, and the version number to ${project.version}.
+
+   3. Change namespace org.apache.commons.fileupload to org.apache.commons.fileupload2.
+   
+      Example: Change
+
++-------------------------------------------
+   import org.apache.commons.fileupload.servlet.ServletFileUpload;
++-------------------------------------------
+
+      to
+
++-------------------------------------------
+   import org.apache.commons.fileupload2.servlet.ServletFileUpload;
++-------------------------------------------
+
+  4. Existing code like the following might give compiler errors, although it
+     looks perfectly valid:
+
++-------------------------------------------
+    try {
+        //  Parse a Fileupload request here.
+    } catch (IOException e) {
+        // Handle the IOException
+    } catch (FileUploadException e) {
+        // Handle the FileUploadException
+    }
++------------------------------------------- 
+
+    With FileUpload 2, this is invalid, because the FileUploadException is now a
+    subclass of the IOException. The solution is simple: Just switch the order,
+    and handle the FileUploadException in the first catch clause, and the IOException
+    in the second clause.
+
+# Migrating to Jakarta Servlet API, Version 5, or later.
+
+  Most existing projects, that are using Commons Fileupload, are based on the Java Servlet API, version
+  two, or later. In Jakarta EE 9, this is going to be replaced with the Jakarta Servlet API, version 5.
+  Basically, this means, that user code is supposed to use the <<jakarta.servlet>> package, rather than
+  the <<javax.servlet>> package.
+
+  For applications, that are using Commons Fileupload, this means, that you need to
+
+  1. Upgrade Commons Fileupload to version 2, or later.
+
+  2. Replace the classes from <<org.apache.commons.fileupload.servlet>>, or
+     <<org.apache.commons.filupload2.servlet>> with the corresponding
+     classes from <<org.apache.commons.fileupload2.jaksrvlt>>. Namely, replace
+
+*------------------------------------------------------------- *----------------------------------------------------------------*
+| <<Old class name>>                                           | <<New class name>>                                             |
+*------------------------------------------------------------- *----------------------------------------------------------------*
+| org.apache.commons.fileupload.servlet.ServletFileUpload      | org.apache.commons.fileupload2.jaksrvlt.JakSrvltFileUpload     |
+| org.apache.commons.fileupload2.servlet.ServletFileUpload     |                                                                |
+*------------------------------------------------------------- *----------------------------------------------------------------*
+| org.apache.commons.fileupload.servlet.ServletRequestContext  | org.apache.commons.fileupload2.jaksrvlt.JakSrvltRequestContext |
+| org.apache.commons.fileupload2.servlet.ServletRequestContext |                                                                |
+*--------------------------------------------------------------*----------------------------------------------------------------*
+| org.apache.commons.fileupload2.servlet.FileCleanerCleanup    | org.apache.commons.fileupload2.jaksrvlt.JakSrvltFileCleaner    |
+*--------------------------------------------------------------*----------------------------------------------------------------*
+
+## Example
+
+The following example demonstrates, how to use Commons Fileupload with the Java Servlet API, version 5:
+
++-------------------------------------------
+    import java.io.IOException;
+    import java.util.List;
+
+    import org.apache.commons.fileupload2.FileItem;
+    import org.apache.commons.fileupload2.FileItemFactory;
+    import org.apache.commons.fileupload2.FileUpload;
+    import org.apache.commons.fileupload2.FileUploadException;
+    import org.apache.commons.fileupload2.disk.DiskFileItemFactory;
+    import org.apache.commons.fileupload2.jaksrvlt.JakSrvltFileUpload;
+    import org.apache.commons.fileupload2.jaksrvlt.JakSrvltRequestContext;
+
+    import jakarta.servlet.ServletException;
+    import jakarta.servlet.http.HttpServlet;
+    import jakarta.servlet.http.HttpServletRequest;
+    import jakarta.servlet.http.HttpServletResponse;
+    public class SampleServlet extends HttpServlet {
+	    private static final long serialVersionUID = -8899322882932916888L;
+
+	    @Override
+	    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		    if (JakSrvltFileUpload.isMultipartContent(req)) {
+			    final FileItemFactory fileItemfactory = new DiskFileItemFactory();
+			    final FileUpload fileUpload = new JakSrvltFileUpload(fileItemfactory);
+			    final List<FileItem> items;
+			    try {
+				    items = fileUpload.parseRequest(new JakSrvltRequestContext(req));
+			    } catch (FileUploadException e) {
+			        throw new ServletException(e);
+     			}
+     			// Process the uploaded file items here...
+		    }
+	    }
+	 }
+
++-------------------------------------------
+
+# Commons FileUpload 2 can be used a Java Package Module
+
+The library provides <<META-INF/versions/module-info.class>> that defines the required modules and exported packages.
+All packages but <<org.apache.commons.fileupload2.impl>> are exported. All exception classes have been moved from
+<<org.apache.commons.fileupload2.impl>> to <<org.apache.commons.fileupload2.pub>> package

@@ -24,7 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.fileupload2.FileItem;
+import org.apache.wicket.commons.fileupload2.FileItem;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -37,7 +37,7 @@ import org.apache.wicket.util.string.Strings;
 /**
  * Model for file uploads. Objects of this class should not be kept between requests, and should
  * therefore be marked as <code>transient</code> if they become a property of an IModel.
- * 
+ *
  * @author Jonathan Locke
  */
 public class FileUpload
@@ -50,7 +50,7 @@ public class FileUpload
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param item
 	 *            The uploaded file item
 	 */
@@ -100,10 +100,10 @@ public class FileUpload
 
 	/**
 	 * Get the MD5 checksum.
-	 * 
+	 *
 	 * @param algorithm
 	 *            the digest algorithm, e.g. MD5, SHA-1, SHA-256, SHA-512
-	 * 
+	 *
 	 * @return The cryptographic digest of the file
 	 */
 	public byte[] getDigest(String algorithm)
@@ -155,7 +155,7 @@ public class FileUpload
 
 	/**
 	 * Get the MD5 checksum.
-	 * 
+	 *
 	 * @return The MD5 checksum of the file
 	 */
 	public byte[] getMD5()
@@ -196,7 +196,7 @@ public class FileUpload
 	 * <b>PLEASE NOTE!</b><br>
 	 * The InputStream return will be closed be Wicket at the end of the request. If you need it
 	 * across a request you need to hold on to this FileUpload instead.
-	 * 
+	 *
 	 * @return Input stream with file contents.
 	 * @throws IOException
 	 */
@@ -223,7 +223,7 @@ public class FileUpload
 
 	/**
 	 * Saves this file upload to a given file on the server side.
-	 * 
+	 *
 	 * @param file
 	 *            The file
 	 * @throws Exception
@@ -240,9 +240,9 @@ public class FileUpload
 	 * <p>
 	 * Only use this if you actually need a {@link File} to work with, in all other cases use
 	 * {@link #getInputStream()} or {@link #getBytes()}
-	 * 
+	 *
 	 * @since 1.2
-	 * 
+	 *
 	 * @return temporary file containing the contents of the uploaded file
 	 * @throws Exception
 	 */

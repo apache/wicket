@@ -1,0 +1,115 @@
+              Apache Commons FileUpload 1.4 RELEASE NOTES
+
+The Apache Commons FileUpload team is pleased to announce the release of Apache Commons FileUpload 1.4.
+
+The Apache Commons FileUpload component provides a simple yet flexible means of
+adding support for multipart file upload functionality to servlets and web
+applications. Version 1.3 onwards requires Java 6 or later.
+
+No client code changes are required to migrate from version 1.3.0 to 1.3.1.
+
+
+1.4 Release
+
+Changes in version 1.4 include:
+
+New features:
+o                  Site: added security report
+
+Fixed Bugs:
+o FILEUPLOAD-252:  DiskFileItem#write() could lose original IO exception
+o FILEUPLOAD-258:  DiskFileItem#getStoreLocation() wrongly returned a File object for items stored in memory
+o FILEUPLOAD-242:  FileUploadBase - should not silently catch and ignore all Throwables
+o FILEUPLOAD-257:  Fix Javadoc 1.8.0 errors
+o FILEUPLOAD-234:  Fix section "Resource cleanup" of the user guide
+o FILEUPLOAD-237:  Fix streaming example: use FileItem.getInputStream() instead of openStream()
+o FILEUPLOAD-248:  DiskFileItem might suppress critical IOExceptions on rename - use FileUtil.move instead
+o FILEUPLOAD-251:  DiskFileItem#getTempFile() is broken
+o FILEUPLOAD-250:  FileUploadBase - potential resource leak - InputStream not closed on exception
+o FILEUPLOAD-244:  DiskFileItem.readObject fails to close FileInputStream
+o FILEUPLOAD-245:  DiskFileItem.get() may not fully read the data
+
+Changes:
+o FILEUPLOAD-292:  Don't create un-needed resources in FileUploadBase.java
+o FILEUPLOAD-282:  Upversion complier.source, compiler.target to 1.6
+o FILEUPLOAD-246:  FileUpload should use IOUtils.closeQuietly where relevant
+o FILEUPLOAD-243:  Make some MultipartStream private fields final Thanks to Ville Skyttä.
+
+
+For complete information on Apache Commons FileUpload, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Commons FileUpload website:
+
+https://commons.apache.org/proper/commons-fileupload/
+
+------------------------------------------------------------------------------
+
+              Apache Commons FileUpload 1.3.3 RELEASE NOTES
+
+The Apache Commons FileUpload team is pleased to announce the release of Apache Commons FileUpload 1.3.3.
+
+The Apache Commons FileUpload component provides a simple yet flexible means of
+adding support for multipart file upload functionality to servlets and web
+applications. Version 1.3 onwards requires Java 5 or later.
+
+No client code changes are required to migrate from version 1.3.0, 1.3.1, or 1.3.2, to 1.3.3
+
+Changes in version 1.3.3 include:
+
+o FILEUPLOAD-279:  DiskFileItem can no longer be deserialized, unless a particular system property is set.
+
+
+For complete information on Apache Commons FileUpload, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Commons FileUpload website:
+
+https://commons.apache.org/proper/commons-fileupload/
+
+------------------------------------------------------------------------------
+
+No client code changes are required to migrate from version 1.3.1 to 1.3.2.
+
+Changes in version 1.3.2 include:
+
+o FILEUPLOAD-272:  Performance Improvement in MultipartStream. Prevents a DoS (CVE-2016-3092)
+
+
+For complete information on Apache Commons FileUpload, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Commons FileUpload website:
+
+https://commons.apache.org/proper/commons-fileupload/
+
+------------------------------------------------------------------------------
+
+              Apache Commons FileUpload 1.3.1 RELEASE NOTES
+
+The Apache Commons FileUpload team is pleased to announce the release of Apache Commons FileUpload 1.3.1.
+
+The Apache Commons FileUpload component provides a simple yet flexible means of
+adding support for multipart file upload functionality to servlets and web
+applications. Version 1.3 onwards requires Java 5 or later.
+
+No client code changes are required to migrate from version 1.3.0 to 1.3.1.
+
+
+This is a security and maintenance release that includes an important security
+fix as well as a small number of bugfixes.
+
+Changes in version 1.3.1 include:
+
+
+Fixed Bugs:
+o                  SECURITY - CVE-2014-0050. Specially crafted input can trigger a DoS if the
+                   buffer used by the MultipartStream is not big enough. When constructing
+                   MultipartStream enforce the requirements for buffer size by throwing an
+                   IllegalArgumentException if the requested buffer size is too small. This
+                   prevents the DoS.
+o                  When deserializing DiskFileItems ensure that the repository location, if
+                   any, is a valid one. Thanks to Arun Babu Neelicattu.
+o                  Correct example in usage documentation so it compiles.
+
+
+
+For complete information on Apache Commons FileUpload, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Commons FileUpload website:
+
+https://commons.apache.org/proper/commons-fileupload/
+

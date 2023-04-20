@@ -19,12 +19,12 @@ package org.apache.wicket.protocol.http;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.fileupload2.FileItem;
+import org.apache.wicket.commons.fileupload2.FileItem;
 
 
 /**
  * An interface providing access to multipart content uploads of a WebRequest
- * 
+ *
  * @author Ate Douma
  */
 public interface IMultipartWebRequest
@@ -36,7 +36,7 @@ public interface IMultipartWebRequest
 
 	/**
 	 * Gets the files that were uploaded using the given field name.
-	 * 
+	 *
 	 * @param fieldName
 	 *            the field name that was used for the upload
 	 * @return the uploads with the given field name

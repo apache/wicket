@@ -27,14 +27,14 @@ import java.util.Map;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
-import org.apache.commons.fileupload2.FileItem;
-import org.apache.commons.fileupload2.FileItemFactory;
-import org.apache.commons.fileupload2.FileUploadBase;
-import org.apache.commons.fileupload2.FileUploadException;
-import org.apache.commons.fileupload2.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload2.jaksrvlt.JakSrvltFileUpload;
-import org.apache.commons.fileupload2.jaksrvlt.JakSrvltRequestContext;
-import org.apache.commons.fileupload2.pub.FileUploadByteCountLimitException;
+import org.apache.wicket.commons.fileupload2.AbstractFileUpload;
+import org.apache.wicket.commons.fileupload2.FileItem;
+import org.apache.wicket.commons.fileupload2.FileItemFactory;
+import org.apache.wicket.commons.fileupload2.FileUploadException;
+import org.apache.wicket.commons.fileupload2.disk.DiskFileItemFactory;
+import org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltFileUpload;
+import org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltRequestContext;
+import org.apache.wicket.commons.fileupload2.pub.FileUploadByteCountLimitException;
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
@@ -162,7 +162,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 		}
 
-		FileUploadBase fileUpload = newFileUpload(encoding);
+		AbstractFileUpload fileUpload = newFileUpload(encoding);
 
 		List<FileItem> items;
 
@@ -274,13 +274,13 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	}
 
 	/**
-	 * Factory method for creating new instances of FileUploadBase
+	 * Factory method for creating new instances of AbstractFileUpload
 	 *
 	 * @param encoding
 	 *            The encoding to use while reading the data
-	 * @return A new instance of FileUploadBase
+	 * @return A new instance of AbstractFileUpload
 	 */
-	protected FileUploadBase newFileUpload(String encoding) {
+	protected AbstractFileUpload newFileUpload(String encoding) {
 		// Configure the factory here, if desired.
 		JakSrvltFileUpload fileUpload = new JakSrvltFileUpload(fileItemFactory);
 
