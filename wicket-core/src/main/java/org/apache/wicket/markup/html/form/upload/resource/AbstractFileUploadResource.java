@@ -143,6 +143,9 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 		catch (FileUploadException fux)
 		{
 			resourceResponse.setContentType("application/json");
+			// even when this exceptional situation we want the request to be successful
+			// as we are just sending back to client some JSON with error messages
+			// which will in turn be sent to wicket component (who will handle the errors)
 			resourceResponse.setStatusCode(HttpServletResponse.SC_OK);
 			JSONObject json = new JSONObject();
 			json.put("error", true);
