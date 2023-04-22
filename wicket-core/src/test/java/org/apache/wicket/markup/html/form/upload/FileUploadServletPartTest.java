@@ -45,8 +45,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Test of FileUpload with simulated Servlet 3.0 multipart config
  */
-// FIXME Wicket 10
-@Disabled
 class FileUploadServletPartTest extends WicketTestCase
 {
 	/**

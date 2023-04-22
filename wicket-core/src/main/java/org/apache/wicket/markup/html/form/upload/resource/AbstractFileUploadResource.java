@@ -25,6 +25,7 @@ import org.apache.wicket.commons.fileupload2.FileUploadException;
 import org.apache.wicket.commons.fileupload2.pub.FileUploadByteCountLimitException;
 import org.apache.wicket.commons.fileupload2.pub.FileUploadFileCountLimitException;
 import org.apache.wicket.Application;
+import org.apache.wicket.commons.fileupload2.pub.FileUploadSizeException;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
@@ -188,12 +189,16 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	{
 		if (e instanceof FileUploadByteCountLimitException)
 		{
-			return Form.UPLOAD_TOO_LARGE_RESOURCE_KEY;
+			return Form.UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY;
 		}
 		else if (e instanceof FileUploadFileCountLimitException)
 		{
 			return Form.UPLOAD_TOO_MANY_FILES_RESOURCE_KEY;
 		}
+        else if (e instanceof FileUploadSizeException)
+        {
+            return Form.UPLOAD_TOO_LARGE_RESOURCE_KEY;
+        }
 		else
 		{
 			return Form.UPLOAD_FAILED_RESOURCE_KEY;

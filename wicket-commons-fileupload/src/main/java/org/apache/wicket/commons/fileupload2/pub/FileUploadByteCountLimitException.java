@@ -47,7 +47,7 @@ public class FileUploadByteCountLimitException extends FileUploadSizeException {
      */
     public FileUploadByteCountLimitException(final String message, final long actual, final long permitted, final String fileName, final String fieldName) {
         super(message, permitted, actual);
-        this.fileName = fieldName;
+        this.fileName = fileName;
         this.fieldName = fieldName;
     }
 

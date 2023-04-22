@@ -41,8 +41,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for MultiFileUploadField
  */
-// FIXME Wicket 10
-@Disabled
 class MultiFileUploadFieldTest extends WicketTestCase
 {
 	/**

@@ -44,8 +44,6 @@ import org.junit.jupiter.api.Test;
  * 
  * @author Frank Bille (billen)
  */
-// FIXME Wicket 10
-@Disabled
 class FileUploadFieldTest extends WicketTestCase
 {
 	private static final String TEST_FILE_NAME = FileUploadFieldTest.class.getName();

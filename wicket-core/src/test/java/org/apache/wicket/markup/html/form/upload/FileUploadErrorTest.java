@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 /**
  * see WICKET-2015
  */
-// FIXME Wicket 10
 @Disabled
 class FileUploadErrorTest extends WicketTestCase
 {
@@ -128,7 +127,7 @@ class FileUploadErrorTest extends WicketTestCase
 		try
 		{
 			formTester.submit();
-			fail("Value not succesfully submitted.");
+			fail("Value not successfully submitted.");
 		}
 		catch (RuntimeException ex)
 		{
