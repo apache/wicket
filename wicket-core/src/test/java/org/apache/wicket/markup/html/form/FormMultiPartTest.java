@@ -21,13 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
  */
-// FIXME Wicket 10
-@Disabled
 class FormMultiPartTest extends WicketTestCase
 {
 

@@ -42,7 +42,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.junit.jupiter.api.Disabled;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
@@ -52,8 +51,6 @@ import org.junit.jupiter.api.Test;
  * 
  * @author frankbille
  */
-// FIXME Wicket 10
-@Disabled
 class FormTesterTest extends WicketTestCase
 {
 
