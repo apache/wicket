@@ -2,6 +2,17 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.15.0
+
+** Improvement
+
+    * [WICKET-7002] - Application metadata access should not require synchronization
+    * [WICKET-7017] - ListenerRequestHandler should not hide IndexOutOfBoundsException
+    * [WICKET-7035] - fileCountMax should be added to control the amount of files being uploaded
+    * [WICKET-7041] - Reduce allocations when rendering component headers
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.14.0
 
 ** Bug
