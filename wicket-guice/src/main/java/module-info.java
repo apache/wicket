@@ -20,7 +20,7 @@ module org.apache.wicket.guice {
     requires org.apache.wicket.util;
     requires org.apache.wicket.core;
     requires org.apache.wicket.ioc;
-    requires javax.inject;
+    requires jakarta.inject;
     requires com.google.guice;
 
     exports org.apache.wicket.guice;

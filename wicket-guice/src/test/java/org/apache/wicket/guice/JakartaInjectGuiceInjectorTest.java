@@ -19,7 +19,7 @@ package org.apache.wicket.guice;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.junit.jupiter.api.Test;
@@ -29,18 +29,18 @@ import com.google.inject.spi.Message;
 
 /**
  */
-public class JavaxInjectGuiceInjectorTest extends AbstractInjectorTest
+public class JakartaInjectGuiceInjectorTest extends AbstractInjectorTest
 {
 	@Override
-	protected JavaxInjectTestComponent newTestComponent(String id)
+	protected JakartaInjectTestComponent newTestComponent(String id)
 	{
-		return new JavaxInjectTestComponent(id);
+		return new JakartaInjectTestComponent(id);
 	}
 
 	@Override
 	protected TestNoComponentInterface newTestNoComponent()
 	{
-		return new JavaxInjectTestNoComponent();
+		return new JakartaInjectTestNoComponent();
 	}
 
 	/**
@@ -55,9 +55,9 @@ public class JavaxInjectGuiceInjectorTest extends AbstractInjectorTest
 	{
 		try
 		{
-			JavaxInjectTestComponent component = new MyJavaxInjectWithNonExistingTestComponent();
+			JakartaInjectTestComponent component = new MyJakartaInjectWithNonExistingTestComponent();
 			// Throws exception because component.getNonExisting() cannot be injected
-			fail("Fields annotated with @javax.inject.Inject are required!");
+			fail("Fields annotated with @jakarta.inject.Inject are required!");
 		}
 		catch (ConfigurationException cx)
 		{
@@ -68,12 +68,12 @@ public class JavaxInjectGuiceInjectorTest extends AbstractInjectorTest
 		}
 	}
 
-	private static class MyJavaxInjectWithNonExistingTestComponent extends JavaxInjectTestComponent
+	private static class MyJakartaInjectWithNonExistingTestComponent extends JakartaInjectTestComponent
 	{
 		@Inject
 		private IAjaxCallListener nonExisting;
 
-		public MyJavaxInjectWithNonExistingTestComponent()
+		public MyJakartaInjectWithNonExistingTestComponent()
 		{
 			super("id");
 		}

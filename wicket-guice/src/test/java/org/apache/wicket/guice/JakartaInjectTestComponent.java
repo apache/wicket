@@ -18,8 +18,8 @@ package org.apache.wicket.guice;
 
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.apache.wicket.Component;
 
@@ -27,7 +27,7 @@ import com.google.inject.Provider;
 
 /**
  */
-public class JavaxInjectTestComponent extends Component implements TestComponentInterface
+public class JakartaInjectTestComponent extends Component implements TestComponentInterface
 {
 	private static final long serialVersionUID = 1L;
 
@@ -56,7 +56,7 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 	@Named("named2")
 	private String named2;
 
-	private final JavaxInjectTestNoComponent noComponent;
+	private final JakartaInjectTestNoComponent noComponent;
 
 	@Inject
 	private EvilTestService evilTestService;
@@ -66,11 +66,11 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 	 * 
 	 * @param id
 	 */
-	public JavaxInjectTestComponent(final String id)
+	public JakartaInjectTestComponent(final String id)
 	{
 		super(id);
-		noComponent = new JavaxInjectTestNoComponent();
-		add(new JavaxInjectTestBehavior());
+		noComponent = new JakartaInjectTestNoComponent();
+		add(new JakartaInjectTestBehavior());
 	}
 
 	/**

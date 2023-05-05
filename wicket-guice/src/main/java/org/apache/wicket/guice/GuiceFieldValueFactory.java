@@ -21,7 +21,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 import org.apache.wicket.injection.IFieldValueFactory;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
@@ -61,8 +61,8 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 		if (supportsField(field))
 		{
 			Inject injectAnnotation = field.getAnnotation(Inject.class);
-			javax.inject.Inject javaxInjectAnnotation = field.getAnnotation(javax.inject.Inject.class);
-			if (!Modifier.isStatic(field.getModifiers()) && (injectAnnotation != null || javaxInjectAnnotation != null))
+			jakarta.inject.Inject jakartaInjectAnnotation = field.getAnnotation(jakarta.inject.Inject.class);
+			if (!Modifier.isStatic(field.getModifiers()) && (injectAnnotation != null || jakartaInjectAnnotation != null))
 			{
 				try
 				{
@@ -121,7 +121,7 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 	@Override
 	public boolean supportsField(final Field field)
 	{
-		return field.isAnnotationPresent(Inject.class) || field.isAnnotationPresent(javax.inject.Inject.class);
+		return field.isAnnotationPresent(Inject.class) || field.isAnnotationPresent(jakarta.inject.Inject.class);
 	}
 
 	/**

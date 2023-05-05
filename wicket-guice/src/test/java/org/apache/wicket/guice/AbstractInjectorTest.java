@@ -23,7 +23,7 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
@@ -158,7 +158,7 @@ public abstract class AbstractInjectorTest
 	}
 
 	/**
-	 * Helper class to make binding of an instance of javax.inject.Named less verbose
+	 * Helper class to make binding of an instance of jakarta.inject.Named less verbose
 	 */
 	private static class Jsr330Named implements Named
 	{
