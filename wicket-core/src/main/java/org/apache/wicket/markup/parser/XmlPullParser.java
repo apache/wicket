@@ -266,7 +266,8 @@ public final class XmlPullParser implements IXmlPullParser
 					{
 						// +1 to remove the ' or "
 						String typePrefix = lowerCase.substring(idxOfType + typeAttr.length() + 1);
-						if (typePrefix.startsWith("text/javascript") || typePrefix.startsWith("module"))
+						if (typePrefix.startsWith("text/javascript") || typePrefix.startsWith("module")
+						        || typePrefix.startsWith("importmap"))
 						{
 							// prepare to skip everything between the open and close tag
 							skipUntilText = SCRIPT;
