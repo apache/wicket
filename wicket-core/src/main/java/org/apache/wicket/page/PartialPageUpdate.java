@@ -198,7 +198,7 @@ public abstract class PartialPageUpdate
 
 			writeFooter(response, encoding);
 		} finally {
-			if (header != null && originalHeaderContainer!= null) {
+			if (header != null && originalHeaderContainer != null) {
 				// restore a normal header
 				page.replace(originalHeaderContainer);
 				header = null;
