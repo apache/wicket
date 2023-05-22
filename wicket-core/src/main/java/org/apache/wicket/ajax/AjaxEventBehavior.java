@@ -23,6 +23,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
@@ -94,7 +95,14 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		{
 			CharSequence js = getCallbackScript(component);
 
-			response.render(OnDomReadyHeaderItem.forScript(js.toString()));
+			if ("load".equals(getEvent()))
+			{
+				response.render(OnLoadHeaderItem.forScript(js.toString()));
+			}
+			else
+			{
+				response.render(OnDomReadyHeaderItem.forScript(js.toString()));
+			}
 		}
 	}
 
