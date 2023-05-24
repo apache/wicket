@@ -2,6 +2,29 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.14.0
+
+** Bug
+
+    * [WICKET-7013] - IndexOutOfBoundsException in InSessionPageStore
+    * [WICKET-7052] - Interrupting a task should not be logged as an error
+    * [WICKET-7054] - Tag <script> mus be wrapped in CDATA for 'type' values 'module' and 'importmap' 
+    * [WICKET-7055] - AjaxEventBehavior onload event unstable
+
+** New Feature
+
+    * [WICKET-7033] - add support to uploading to a resource
+
+** Improvement
+
+    * [WICKET-6979] - Cut back slightly on some String instance creation in PageInfo and friends.
+    * [WICKET-7045] - Avoid allocations in PageParameters.getNamedKeys
+    * [WICKET-7046] - Avoid allocating StringResponse when no response filters are active
+    * [WICKET-7047] - Improve initial buffer capacity for Strings.toMultilineMarkup
+    * [WICKET-7049] - Avoid allocation for empty buckets in FilteringHeaderResponse
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.13.0
 
 ** Bug
