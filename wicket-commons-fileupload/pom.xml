@@ -317,13 +317,9 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>biz.aQute.bnd</groupId>
-            <artifactId>biz.aQute.bndlib</artifactId>
-            <version>6.4.0</version>
-          </dependency>
-        </dependencies>
+        <configuration>
+          <excludeDependencies>true</excludeDependencies>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.moditect</groupId>
