@@ -321,34 +321,6 @@
           <excludeDependencies>true</excludeDependencies>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.moditect</groupId>
-        <artifactId>moditect-maven-plugin</artifactId>
-        <version>${moditect-maven-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>add-module-infos</id>
-            <phase>package</phase>
-            <goals>
-              <goal>add-module-info</goal>
-            </goals>
-            <configuration>
-              <jvmVersion>9</jvmVersion>
-              <outputDirectory>${project.build.directory}</outputDirectory>
-              <overwriteExistingFiles>true</overwriteExistingFiles>
-              <module>
-                <moduleInfo>
-                  <name>org.apache.wicket.commons.fileupload2</name>
-                  <exports>
-                    !org.apache.wicket.commons.fileupload2.impl;
-                    *;
-                  </exports>
-                </moduleInfo>
-              </module>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>

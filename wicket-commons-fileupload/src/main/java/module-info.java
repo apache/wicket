@@ -20,9 +20,6 @@
 	requires java.naming;
 	requires jakarta.servlet;
 
-	exports org.apache.wicket.commons.fileupload2;
-	exports org.apache.wicket.commons.fileupload2.pub;
-	exports org.apache.wicket.commons.fileupload2.util;
-	exports org.apache.wicket.commons.fileupload2.disk;
-	exports org.apache.wicket.commons.fileupload2.jaksrvlt;
+	exports !org.apache.wicket.commons.fileupload2.impl;
+        exports *;
 }
