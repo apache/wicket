@@ -39,7 +39,7 @@ public class HomePageHeader extends Panel {
 			 */
 			Package p = Application.class.getPackage();
 
-			String version = p.getSpecificationVersion();
+			String version = p.getImplementationVersion();
 
 			if (version == null || version.length() == 0)
 			{
