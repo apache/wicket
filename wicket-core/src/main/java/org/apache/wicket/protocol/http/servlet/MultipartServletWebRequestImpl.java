@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.http.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,14 +28,14 @@ import java.util.Map;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
-import org.apache.wicket.commons.fileupload2.AbstractFileUpload;
-import org.apache.wicket.commons.fileupload2.FileItem;
-import org.apache.wicket.commons.fileupload2.FileItemFactory;
-import org.apache.wicket.commons.fileupload2.FileUploadException;
-import org.apache.wicket.commons.fileupload2.disk.DiskFileItemFactory;
-import org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltFileUpload;
-import org.apache.wicket.commons.fileupload2.jaksrvlt.JakSrvltRequestContext;
-import org.apache.wicket.commons.fileupload2.pub.FileUploadByteCountLimitException;
+import org.apache.commons.fileupload2.AbstractFileUpload;
+import org.apache.commons.fileupload2.FileItem;
+import org.apache.commons.fileupload2.FileItemFactory;
+import org.apache.commons.fileupload2.FileUploadException;
+import org.apache.commons.fileupload2.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
+import org.apache.commons.fileupload2.jakarta.JakartaServletRequestContext;
+import org.apache.commons.fileupload2.FileUploadByteCountLimitException;
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
@@ -92,17 +93,12 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
 										  Bytes maxSize, String upload) throws FileUploadException
 	{
-		this(request, filterPrefix, maxSize, upload, new DiskFileItemFactory()
-		{
-			@Override
-			public FileCleaningTracker getFileCleaningTracker()
-			{
-				IFileCleaner fileCleaner = Application.get()
-						.getResourceSettings()
-						.getFileCleaner();
-				return new FileCleanerTrackerAdapter(fileCleaner);
-			}
-		});
+		this(request, filterPrefix, maxSize, upload,
+			DiskFileItemFactory.builder()
+					.setFileCleaningTracker(new FileCleanerTrackerAdapter(Application.get()
+							.getResourceSettings()
+							.getFileCleaner()))
+					.get());
 	}
 
 	/**
@@ -134,7 +130,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		files = new HashMap<>();
 
 		// Check that request is multipart
-		final boolean isMultipart = JakSrvltFileUpload.isMultipartContent(request);
+		final boolean isMultipart = JakartaServletFileUpload.isMultipartContent(request);
 		if (!isMultipart)
 		{
 			throw new IllegalStateException(
@@ -168,7 +164,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 		if (wantUploadProgressUpdates())
 		{
-			JakSrvltRequestContext ctx = new JakSrvltRequestContext(request)
+			JakartaServletRequestContext ctx = new JakartaServletRequestContext(request)
 			{
 				@Override
 				public InputStream getInputStream() throws IOException
@@ -192,7 +188,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		{
 			// try to parse the file uploads by using Apache Commons FileUpload APIs
 			// because they are feature richer (e.g. progress updates, cleaner)
-			items = fileUpload.parseRequest(new JakSrvltRequestContext(request));
+			items = fileUpload.parseRequest(new JakartaServletRequestContext(request));
 			if (items.isEmpty())
 			{
 				// fallback to Servlet 3.0 APIs
@@ -282,12 +278,13 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 */
 	protected AbstractFileUpload newFileUpload(String encoding) {
 		// Configure the factory here, if desired.
-		JakSrvltFileUpload fileUpload = new JakSrvltFileUpload(fileItemFactory);
+		JakartaServletFileUpload fileUpload = new JakartaServletFileUpload(fileItemFactory);
 
 		// set encoding specifically when we found it
 		if (encoding != null)
 		{
-			fileUpload.setHeaderEncoding(encoding);
+			Charset charset = Charset.forName(encoding);
+			fileUpload.setHeaderCharset(charset);
 		}
 
 		fileUpload.setSizeMax(getMaxSize().bytes());

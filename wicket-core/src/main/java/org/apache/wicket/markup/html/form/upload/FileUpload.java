@@ -24,7 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.commons.fileupload2.FileItem;
+import org.apache.commons.fileupload2.FileItem;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -231,7 +231,7 @@ public class FileUpload
 	public void writeTo(final File file) throws Exception
 	{
 		Files.remove(file);
-		item.write(file);
+		item.write(file.toPath());
 	}
 
 	/**

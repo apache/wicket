@@ -21,13 +21,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Path;
 import java.util.Collection;
 
 import jakarta.servlet.http.Part;
 
-import org.apache.wicket.commons.fileupload2.FileItem;
-import org.apache.wicket.commons.fileupload2.FileItemHeaders;
-import org.apache.wicket.commons.fileupload2.util.FileItemHeadersImpl;
+import org.apache.commons.fileupload2.FileItem;
+import org.apache.commons.fileupload2.FileItemHeaders;
+import org.apache.commons.fileupload2.FileItemHeadersImpl;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.util.io.IOUtils;
@@ -135,9 +136,9 @@ class ServletPartFileItem implements FileItem
 	}
 
 	@Override
-	public void write(File file) throws IOException
+	public void write(Path path) throws IOException
 	{
-		part.write(file.getName());
+		part.write(path.toFile().getName());
 	}
 
 	@Override
