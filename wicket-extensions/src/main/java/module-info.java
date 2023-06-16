@@ -21,7 +21,6 @@ module org.apache.wicket.extensions {
     requires org.slf4j;
     requires com.fasterxml.jackson.databind;
     requires com.github.openjson;
-    requires org.apache.wicket.commons.fileupload;
     requires org.apache.wicket.util;
     requires org.apache.wicket.request;
     requires org.apache.wicket.core;

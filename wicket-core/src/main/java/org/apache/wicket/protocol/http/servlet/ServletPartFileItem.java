@@ -20,15 +20,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collection;
 
 import jakarta.servlet.http.Part;
 
-import org.apache.commons.fileupload2.FileItem;
-import org.apache.commons.fileupload2.FileItemHeaders;
-import org.apache.commons.fileupload2.FileItemHeadersImpl;
+import org.apache.commons.fileupload2.core.FileItem;
+import org.apache.commons.fileupload2.core.FileItemFactory.FileItemBuilder;
+import org.apache.commons.fileupload2.core.FileItemHeaders;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.util.io.IOUtils;
@@ -116,10 +117,10 @@ class ServletPartFileItem implements FileItem
 	}
 
 	@Override
-	public String getString(String encoding) throws UnsupportedEncodingException
+	public String getString(Charset toCharset) throws IOException
 	{
 		byte[] bytes = get();
-		return new String(bytes, encoding);
+		return new String(bytes, toCharset);
 	}
 
 	@Override
@@ -127,9 +128,9 @@ class ServletPartFileItem implements FileItem
 	{
 		try
 		{
-			return getString("UTF-8");
+			return getString(StandardCharsets.UTF_8);
 		}
-		catch (UnsupportedEncodingException uex)
+		catch (IOException uex)
 		{
 			throw new WicketRuntimeException("UTF-8 must be supported", uex);
 		}
@@ -187,7 +188,7 @@ class ServletPartFileItem implements FileItem
 	@Override
 	public FileItemHeaders getHeaders()
 	{
-		FileItemHeadersImpl fileItemHeaders = new FileItemHeadersImpl();
+		FileItemHeaders fileItemHeaders = FileItemBuilder.newFileItemHeaders();
 		for (String headerName : part.getHeaderNames())
 		{
 			Collection<String> headerValues = part.getHeaders(headerName);

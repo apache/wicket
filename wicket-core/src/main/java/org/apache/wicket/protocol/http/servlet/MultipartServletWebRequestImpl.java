@@ -28,14 +28,14 @@ import java.util.Map;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
-import org.apache.commons.fileupload2.AbstractFileUpload;
-import org.apache.commons.fileupload2.FileItem;
-import org.apache.commons.fileupload2.FileItemFactory;
-import org.apache.commons.fileupload2.FileUploadException;
-import org.apache.commons.fileupload2.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload2.core.AbstractFileUpload;
+import org.apache.commons.fileupload2.core.FileItem;
+import org.apache.commons.fileupload2.core.FileItemFactory;
+import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
+import org.apache.commons.fileupload2.core.FileUploadException;
+import org.apache.commons.fileupload2.core.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
 import org.apache.commons.fileupload2.jakarta.JakartaServletRequestContext;
-import org.apache.commons.fileupload2.FileUploadByteCountLimitException;
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
@@ -209,7 +209,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 				{
 					try
 					{
-						value = item.getString(encoding);
+						value = item.getString(Charset.forName(encoding));
 					}
 					catch (IOException e)
 					{
