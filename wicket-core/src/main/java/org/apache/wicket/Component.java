@@ -1110,6 +1110,15 @@ public abstract class Component
 	@Override
 	public final void detach()
 	{
+		// notify any detach listener
+		IDetachListener detachListener = getApplication().getFrameworkSettings()
+				.getDetachListener();
+
+		if (detachListener != null)
+		{
+			detachListener.onBeforeDetach(this);
+		}
+
 		try
 		{
 			setRequestFlag(RFLAG_DETACHING, true);
@@ -1158,9 +1167,7 @@ public abstract class Component
 
 		internalDetach();
 
-		// notify any detach listener
-		IDetachListener detachListener = getApplication().getFrameworkSettings()
-			.getDetachListener();
+
 		if (detachListener != null)
 		{
 			detachListener.onDetach(this);

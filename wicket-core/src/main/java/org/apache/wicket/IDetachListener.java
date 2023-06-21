@@ -29,6 +29,15 @@ package org.apache.wicket;
 public interface IDetachListener
 {
 	/**
+	 * Called at the beginning of {@link Component#detach()} method before any actual detach logic is called.
+	 * The idea is that this method could be used to, for instance, estimate object size before detach
+	 *
+	 * @param component component being detached
+	 */
+	default void onBeforeDetach(Component component)
+	{}
+
+	/**
 	 * Called when component is being detached via a call to {@link Component#detach()}.
 	 * 
 	 * NOTICE: The component is in a fully detached state when this method is invoked; It is the
