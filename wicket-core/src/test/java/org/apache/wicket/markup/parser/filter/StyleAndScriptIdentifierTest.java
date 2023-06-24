@@ -58,7 +58,6 @@ class StyleAndScriptIdentifierTest extends WicketTestCase
 		elementBody = "  <!-- someJS() ";
 		assertFalse(filter.shouldWrapInCdata(elementBody));
 
-
 		elementBody = "<![CDATA[ someJS() ";
 		assertFalse(filter.shouldWrapInCdata(elementBody));
 
