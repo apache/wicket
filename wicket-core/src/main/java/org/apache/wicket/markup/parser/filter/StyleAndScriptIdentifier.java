@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
-import java.text.ParseException;
-import java.util.regex.Pattern;
-
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.Markup;
@@ -27,6 +24,9 @@ import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.util.lang.Args;
+
+import java.text.ParseException;
+import java.util.regex.Pattern;
 
 
 /**
@@ -151,7 +151,7 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 				// script elements should be processed only if they have no type (HTML5 recommendation)
 				// or the type is "text/javascript" or "module"
 				(typeAttribute == null || "text/javascript".equalsIgnoreCase(typeAttribute) ||
-				        "module".equalsIgnoreCase(typeAttribute) ||"importmap".equalsIgnoreCase(typeAttribute));
+				        "module".equalsIgnoreCase(typeAttribute));
 
 		return shouldProcess && openTag.getUserData("STYLE_OR_SCRIPT") != null;
 	}
