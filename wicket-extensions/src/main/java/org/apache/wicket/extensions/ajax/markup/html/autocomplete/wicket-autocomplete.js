@@ -50,7 +50,7 @@
 		var selected=-1;	// index of the currently selected item
 		var elementCount=0; // number of items on the auto complete list
 		var visible=0;		// is the list visible
-		
+
 		var ignoreKeyEnter = false;		// ignore key ENTER because is already hid the autocomplete list
 		var ignoreOneFocusGain = false; // on FF, clicking an option in the pop-up would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
 		var triggerChangeOnHide = false;		// should a change be triggered on hiding of the popup
@@ -128,7 +128,7 @@
 							if (selected>-1) {
 								setSelected(selected-1);
 							}
-	
+
 							var searchTerm = Wicket.$(ajaxAttributes.c).value;
 							if(selected === -1 && searchTerm) {
 								// select the last element
@@ -154,7 +154,7 @@
 								showAutoComplete();
 							}
 						}
-						
+
 						break;
 					case KEY_ESC:
 						if (visible === 1) {
@@ -165,22 +165,22 @@
 					case KEY_TAB:
 					case KEY_ENTER:
 						ignoreKeyEnter = false;
-						
+
 						if (selected > -1) {
 							var value = getSelectedValue();
 							value = handleSelection(value);
-							
+
 							if (value) {
 								obj.value = value;
 								triggerChangeOnHide = true;
 							}
-							
+
 							hideAutoComplete();
-							
+
 							ignoreKeyEnter = true;
 						} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {
 							hideAutoComplete();
-							
+
 							ignoreKeyEnter = true;
 						}
 
@@ -194,7 +194,7 @@
 				if (visible === 1) {
 					// don't let any other change handler get this
 					jqEvent.stopImmediatePropagation();
-					
+
 					triggerChangeOnHide = true;
 				}
 			});
@@ -324,7 +324,8 @@
 				choiceDiv=document.createElement("div");
 				container.appendChild(choiceDiv);
 				choiceDiv.id=getMenuId();
-				choiceDiv.className="wicket-aa";
+				choiceDiv.className = "wicket-aa";
+				choiceDiv.ariaLive = "polite";
 			}
 
 
@@ -353,7 +354,7 @@
 		function actualUpdateChoices() {
 			prepareAndExecuteAjaxUpdate(doUpdateChoices, Wicket.$(ajaxAttributes.c).value);
 		}
-		
+
 		function prepareAndExecuteAjaxUpdate(successHandler, currentInput){
 			showIndicator();
 
@@ -368,25 +369,25 @@
 					// WICKET-6366 input might no longer be on page
 					return false;
 				}
-				
+
 				var activeIsInitial = (document.activeElement === initialElement);
 				var hasMinimumLength = input.value.length >= minInputLength;
-			
+
 				var result = hasMinimumLength && activeIsInitial;
-					
+
 				if (!result) {
 					hideAutoComplete();
 				}
-				
+
 				return result;
-			});	
+			});
 
 			attrs.sh = attrs.sh || [];
 			attrs.sh.push(successHandler);
-				
+
 			attrs.ep = attrs.ep || [];
 			attrs.ep.push({'name' : cfg.parameterName, 'value' : currentInput});
-				
+
 			Wicket.Ajax.ajax(attrs);
 		}
 
@@ -418,7 +419,7 @@
 			calculateAndSetPopupBounds(input, container);
 
 			visible = 1;
-			triggerChangeOnHide = false;			
+			triggerChangeOnHide = false;
 		}
 
 		function initializeUsefulDimensions(input, container) {
@@ -442,10 +443,10 @@
 			hideAutoCompleteTimer = undefined;
 			visible = 0;
 			setSelected(-1);
-			
+
 			//WICKET-5382
 			hideIndicator();
-			
+
 			var container = getAutocompleteContainer();
 			if (container)
 			{
@@ -454,7 +455,7 @@
 					container.style.width = "auto"; // let browser auto-set width again next time it is shown
 				}
 			}
-			
+
 			if (triggerChangeOnHide) {
 				triggerChangeOnHide = false;
 				var input = Wicket.$(ajaxAttributes.c);
@@ -576,7 +577,7 @@
 
 		function getPosition(obj) {
 			var rectangle = jQuery(obj).offset();
-			
+
 			var leftPosition = rectangle.left || 0;
 			var topPosition = rectangle.top || 0;
 			if (!cfg.ignoreBordersWhenPositioning) {
@@ -591,7 +592,6 @@
 			doUpdateChoices(attributes, jqXHR, resp, textStatus, -1);
 		}
 		function doUpdateChoices(attributes, jqXHR, resp, textStatus, defaultSelection) {
-
 			getAutocompleteMenu().showingAutocomplete = false;
 
 			// check if the input hasn't been cleared in the meanwhile or has been replaced by ajax
@@ -622,7 +622,7 @@
 
 					var value = getSelectedValue();
 					value = handleSelection(value);
-					
+
 					var input = Wicket.$(ajaxAttributes.c);
 					if (value) {
 						input.value = value;
@@ -630,7 +630,7 @@
 					}
 
 					hideAutoComplete();
-					
+
 					if (document.activeElement !== input) {
 						ignoreOneFocusGain = true;
 						input.focus();
@@ -704,7 +704,7 @@
 		function scheduleEmptyCheck() {
 			window.setTimeout(function() {
 				var input=Wicket.$(ajaxAttributes.c);
-				
+
 				// WICKET-6366 input might no longer be on page
 				if (input) {
 					if (!cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
