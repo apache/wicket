@@ -28,7 +28,7 @@ import java.util.Collection;
 import jakarta.servlet.http.Part;
 
 import org.apache.commons.fileupload2.core.FileItem;
-import org.apache.commons.fileupload2.core.FileItemFactory.FileItemBuilder;
+import org.apache.commons.fileupload2.core.FileItemFactory.AbstractFileItemBuilder;
 import org.apache.commons.fileupload2.core.FileItemHeaders;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.AbstractResource;
@@ -137,13 +137,14 @@ class ServletPartFileItem implements FileItem
 	}
 
 	@Override
-	public void write(Path path) throws IOException
+	public ServletPartFileItem write(Path path) throws IOException
 	{
 		part.write(path.toFile().getName());
+		return this;
 	}
 
 	@Override
-	public void delete()
+	public ServletPartFileItem delete()
 	{
 		try
 		{
@@ -153,6 +154,7 @@ class ServletPartFileItem implements FileItem
 		{
 			throw new WicketRuntimeException("A problem occurred while deleting an upload part", iox);
 		}
+		return this;
 	}
 
 	@Override
@@ -162,7 +164,7 @@ class ServletPartFileItem implements FileItem
 	}
 
 	@Override
-	public void setFieldName(String name)
+	public ServletPartFileItem setFieldName(String name)
 	{
 		throw new UnsupportedOperationException("setFieldName");
 	}
@@ -174,7 +176,7 @@ class ServletPartFileItem implements FileItem
 	}
 
 	@Override
-	public void setFormField(boolean state)
+	public ServletPartFileItem setFormField(boolean state)
 	{
 		throw new UnsupportedOperationException("setFormField");
 	}
@@ -188,7 +190,7 @@ class ServletPartFileItem implements FileItem
 	@Override
 	public FileItemHeaders getHeaders()
 	{
-		FileItemHeaders fileItemHeaders = FileItemBuilder.newFileItemHeaders();
+		FileItemHeaders fileItemHeaders = AbstractFileItemBuilder.newFileItemHeaders();
 		for (String headerName : part.getHeaderNames())
 		{
 			Collection<String> headerValues = part.getHeaders(headerName);
@@ -201,7 +203,7 @@ class ServletPartFileItem implements FileItem
 	}
 
 	@Override
-	public void setHeaders(FileItemHeaders headers)
+	public ServletPartFileItem setHeaders(FileItemHeaders headers)
 	{
 		throw new UnsupportedOperationException("setHeaders");
 	}

@@ -28,7 +28,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import org.apache.commons.fileupload2.core.FileItem;
-import org.apache.commons.fileupload2.core.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.FileCleanerTrackerAdapter;

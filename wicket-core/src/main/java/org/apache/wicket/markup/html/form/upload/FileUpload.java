@@ -85,7 +85,7 @@ public class FileUpload
 	/**
 	 * Deletes temp file from disk
 	 */
-	public void delete()
+	public void delete() throws IOException
 	{
 		item.delete();
 	}
