@@ -98,7 +98,6 @@
 	<modules>
 		<!-- wicket-eclipse-settings is separate released -->
 		<module>wicket</module>
-		<module>wicket-commons-fileupload</module>
 		<module>wicket-core</module>
 		<module>wicket-util</module>
 		<module>wicket-request</module>
@@ -144,8 +143,8 @@
 		<byte-buddy.version>1.14.2</byte-buddy.version>
 		<cdi-unit.version>4.1.0</cdi-unit.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
-		<commons-fileupload.version>2.0-SNAPSHOT</commons-fileupload.version>
-		<commons-io.version>2.11.0</commons-io.version>
+		<commons-fileupload.version>2.0.0-M1</commons-fileupload.version>
+		<commons-io.version>2.13.0</commons-io.version>
 		<commons-lang3.version>3.12.0</commons-lang3.version>
 		<guice.version>7.0.0</guice.version>
 		<el-impl.version>2.2.1-b05</el-impl.version>
@@ -313,10 +312,9 @@
 				<artifactId>commons-collections4</artifactId>
 				<version>${commons-collections4.version}</version>
 			</dependency>
-			<!-- Commented out due to all classes are copied into wicket-commons-fileupload
 			<dependency>
 				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-fileupload2</artifactId>
+				<artifactId>commons-fileupload2-jakarta</artifactId>
 				<version>${commons-fileupload.version}</version>
 				<exclusions>
 					<exclusion>
@@ -324,7 +322,7 @@
 						<artifactId>commons-io</artifactId>
 					</exclusion>
 				</exclusions>
-			</dependency-->
+			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>

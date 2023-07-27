@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Wicket feature for Apache Karaf 
+<!-- Wicket feature for Apache Karaf
 
      karaf> repo-add mvn:org.apache.wicket/wicket/${project.verion}/xml/features
      karaf> feature:install wicket-core
@@ -10,7 +10,7 @@
 	<feature name="wicket-core" version="${project.version}" start-level="50">
 		<bundle>mvn:com.github.openjson/openjson/${openjson.version}</bundle>
 		<bundle>mvn:commons-io/commons-io/${commons-io.version}</bundle>
-		<bundle>mvn:commons-fileupload/commons-fileupload/${commons-fileupload.version}</bundle>
+		<bundle>mvn:org.apache.commons/commons-fileupload2-jakarta/${commons-fileupload.version}</bundle>
 		<bundle>mvn:org.apache.commons/commons-collections4/${commons-collections4.version}</bundle>
 		<bundle>mvn:org.danekja/jdk-serializable-functional/${jdk-serializable-functional.version}</bundle>
 		<bundle>mvn:org.apache.wicket/wicket-util/${project.version}</bundle>

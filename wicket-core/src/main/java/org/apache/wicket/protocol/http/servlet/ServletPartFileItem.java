@@ -20,14 +20,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Collection;
 
 import jakarta.servlet.http.Part;
 
-import org.apache.wicket.commons.fileupload2.FileItem;
-import org.apache.wicket.commons.fileupload2.FileItemHeaders;
-import org.apache.wicket.commons.fileupload2.util.FileItemHeadersImpl;
+import org.apache.commons.fileupload2.core.FileItem;
+import org.apache.commons.fileupload2.core.FileItemFactory.AbstractFileItemBuilder;
+import org.apache.commons.fileupload2.core.FileItemHeaders;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.util.io.IOUtils;
@@ -115,10 +117,10 @@ class ServletPartFileItem implements FileItem
 	}
 
 	@Override
-	public String getString(String encoding) throws UnsupportedEncodingException
+	public String getString(Charset toCharset) throws IOException
 	{
 		byte[] bytes = get();
-		return new String(bytes, encoding);
+		return new String(bytes, toCharset);
 	}
 
 	@Override
@@ -126,22 +128,23 @@ class ServletPartFileItem implements FileItem
 	{
 		try
 		{
-			return getString("UTF-8");
+			return getString(StandardCharsets.UTF_8);
 		}
-		catch (UnsupportedEncodingException uex)
+		catch (IOException uex)
 		{
 			throw new WicketRuntimeException("UTF-8 must be supported", uex);
 		}
 	}
 
 	@Override
-	public void write(File file) throws IOException
+	public ServletPartFileItem write(Path path) throws IOException
 	{
-		part.write(file.getName());
+		part.write(path.toFile().getName());
+		return this;
 	}
 
 	@Override
-	public void delete()
+	public ServletPartFileItem delete()
 	{
 		try
 		{
@@ -151,6 +154,7 @@ class ServletPartFileItem implements FileItem
 		{
 			throw new WicketRuntimeException("A problem occurred while deleting an upload part", iox);
 		}
+		return this;
 	}
 
 	@Override
@@ -160,7 +164,7 @@ class ServletPartFileItem implements FileItem
 	}
 
 	@Override
-	public void setFieldName(String name)
+	public ServletPartFileItem setFieldName(String name)
 	{
 		throw new UnsupportedOperationException("setFieldName");
 	}
@@ -172,7 +176,7 @@ class ServletPartFileItem implements FileItem
 	}
 
 	@Override
-	public void setFormField(boolean state)
+	public ServletPartFileItem setFormField(boolean state)
 	{
 		throw new UnsupportedOperationException("setFormField");
 	}
@@ -186,7 +190,7 @@ class ServletPartFileItem implements FileItem
 	@Override
 	public FileItemHeaders getHeaders()
 	{
-		FileItemHeadersImpl fileItemHeaders = new FileItemHeadersImpl();
+		FileItemHeaders fileItemHeaders = AbstractFileItemBuilder.newFileItemHeaders();
 		for (String headerName : part.getHeaderNames())
 		{
 			Collection<String> headerValues = part.getHeaders(headerName);
@@ -199,7 +203,7 @@ class ServletPartFileItem implements FileItem
 	}
 
 	@Override
-	public void setHeaders(FileItemHeaders headers)
+	public ServletPartFileItem setHeaders(FileItemHeaders headers)
 	{
 		throw new UnsupportedOperationException("setHeaders");
 	}
