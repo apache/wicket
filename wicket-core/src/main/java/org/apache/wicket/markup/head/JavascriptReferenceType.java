@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.markup.head;
 
+/**
+ * To be used to define the "type"-Attribute of the script-Tag written by a {@link AbstractJavaScriptReferenceHeaderItem}.
+ *
+ * @see ISubresourceHeaderItem#setCrossOrigin(org.apache.wicket.markup.html.CrossOrigin)
+ */
 public enum JavascriptReferenceType {
 
 	TEXT_JAVASCRIPT("text/javascript"), MODULE("module");
