@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.head;
 
-import static org.apache.wicket.markup.head.JavascriptReferenceType.*;
+import static org.apache.wicket.markup.head.JavascriptReferenceType.TEXT_JAVASCRIPT;
 
 import java.util.Objects;
 import java.util.Optional;
