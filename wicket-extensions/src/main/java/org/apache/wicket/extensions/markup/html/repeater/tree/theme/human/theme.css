@@ -20,6 +20,10 @@
   padding: 0px;
 }
 
+html[dir="rtl"] .tree-theme-human div.tree-subtree {
+  margin: 0px 18px 0px 0px;
+}
+
 .tree-theme-human div.tree-branch {
   margin: 0px;
   padding: 0px;
@@ -39,6 +43,10 @@
   width: 18px;
 }
 
+html[dir="rtl"] .tree-theme-human .tree-junction {
+  float: right;
+}
+
 .tree-theme-human .tree-junction-expanded {
   display: block;
   float: left;
@@ -49,8 +57,18 @@
   text-decoration: none;
 }
 
+html[dir="rtl"] .tree-theme-human .tree-junction-expanded {
+  float: right;
+  background-image: url(tree-rtl.gif);
+  background-position-x: -36px;
+}
+
 .tree-theme-human .tree-junction-expanded:hover {
   background-position: -54px center;
+}
+
+html[dir="rtl"] .tree-theme-human .tree-junction-expanded:hover {
+  background-position-x: 0px;
 }
 
 .tree-theme-human .tree-junction-collapsed {
@@ -63,13 +81,27 @@
   text-decoration: none;
 }
 
+html[dir="rtl"] .tree-theme-human .tree-junction-collapsed {
+  float: right;
+  background-image: url(tree-rtl.gif);
+  background-position-x: -54px;
+}
+
 .tree-theme-human .tree-junction-collapsed:hover {
   background-position: -36px center;
+}
+
+html[dir="rtl"] .tree-theme-human .tree-junction-collapsed:hover {
+  background-position: -18px center;
 }
 
 .tree-theme-human span.tree-content {
   display: block;
   margin-left: 18px;
+}
+
+html[dir="rtl"] .tree-theme-human span.tree-content {
+  margin-right: 18px;
 }
 
 /* tabletree */
@@ -105,22 +137,46 @@
 }
 
 .tree-theme-human .tree-folder-closed {
+  display: inline-block;
   padding-left: 18px;
   background-image: url(folder.gif);
   background-position: 0px 50%;
   background-repeat: no-repeat;
+}
+
+html[dir="rtl"] .tree-theme-human .tree-folder-closed {
+  background-image: url(folder-rtl.gif);
+  background-position-x: right;
+  padding-right: 18px;
+  padding-left: initial;
 }
 
 .tree-theme-human .tree-folder-open {
+  display: inline-block;
   padding-left: 18px;
   background-image: url(folder.gif);
   background-position: 0px 50%;
   background-repeat: no-repeat;
 }
 
+html[dir="rtl"] .tree-theme-human .tree-folder-open {
+  background-image: url(folder-rtl.gif);
+  background-position-x: right;
+  padding-right: 18px;
+  padding-left: initial;
+}
+
 .tree-theme-human .tree-folder-other {
+  display: inline-block;
   padding-left: 18px;
   background-image: url(folder-other.gif);
   background-position: 0px 50%;
   background-repeat: no-repeat;
+}
+
+html[dir="rtl"] .tree-theme-human .tree-folder-other {
+  background-image: url(folder-rtl-other.gif);
+  background-position-x: right;
+  padding-right: 18px;
+  padding-left: initial;
 }
