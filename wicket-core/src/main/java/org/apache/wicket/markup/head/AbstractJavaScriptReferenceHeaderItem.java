@@ -16,10 +16,7 @@
  */
 package org.apache.wicket.markup.head;
 
-import static org.apache.wicket.markup.head.JavascriptReferenceType.TEXT_JAVASCRIPT;
-
 import java.util.Objects;
-import java.util.Optional;
 
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.html.CrossOrigin;
@@ -37,7 +34,7 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 	private String charset;
 	private CrossOrigin crossOrigin;
 	private String integrity;
-	private JavascriptReferenceType type = TEXT_JAVASCRIPT;
+	private JavaScriptReferenceType type = JavaScriptReferenceType.TEXT_JAVASCRIPT;
 
 	/**
 	 * @return if the script should be loaded and executed asynchronously
@@ -107,11 +104,11 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 		return this;
 	}
 
-	public JavascriptReferenceType getType() {
+	public JavaScriptReferenceType getType() {
 		return type;
 	}
 
-	public AbstractJavaScriptReferenceHeaderItem setType(final JavascriptReferenceType type) {
+	public AbstractJavaScriptReferenceHeaderItem setType(final JavaScriptReferenceType type) {
 		this.type = type;
 		return this;
 	}
@@ -125,7 +122,10 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 
 	final AttributeMap createAttributeMap(final String url) {
 		final AttributeMap attributes = new AttributeMap();
-		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, Optional.ofNullable(type).orElse(TEXT_JAVASCRIPT).getType());
+		final JavaScriptReferenceType type = getType();
+		if (type != null) {
+			attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, type.getType());
+		}
 		attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
 		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_DEFER, defer);
 		// XXX this attribute is not necessary for modern browsers
