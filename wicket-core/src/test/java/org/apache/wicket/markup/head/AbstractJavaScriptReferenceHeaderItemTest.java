@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.head;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
@@ -26,15 +27,34 @@ import org.junit.jupiter.api.Test;
 class AbstractJavaScriptReferenceHeaderItemTest {
 
 	@Test
-	public void testDefaultType() {
-		final AttributeMap attributeMap = new TestJavascriptReferenceHeaderItem().createAttributeMap("https://wicket.apache.org/");
+	void typeDefault() {
+		final AttributeMap attributeMap = new TestJavascriptReferenceHeaderItem()
+				.createAttributeMap("https://wicket.apache.org/");
 		assertEquals("text/javascript", attributeMap.get(JavaScriptUtils.ATTR_TYPE));
 	}
 
 	@Test
-	public void testSetType() {
-		final AttributeMap attributeMap = new TestJavascriptReferenceHeaderItem().setType(JavascriptReferenceType.MODULE).createAttributeMap("https://wicket.apache.org/");
+	void typeTextJavascript() {
+		final AttributeMap attributeMap = new TestJavascriptReferenceHeaderItem()
+				.setType(JavaScriptReferenceType.TEXT_JAVASCRIPT)
+				.createAttributeMap("https://wicket.apache.org/");
+		assertEquals("text/javascript", attributeMap.get(JavaScriptUtils.ATTR_TYPE));
+	}
+
+	@Test
+	void typeModule() {
+		final AttributeMap attributeMap = new TestJavascriptReferenceHeaderItem()
+				.setType(JavaScriptReferenceType.MODULE)
+				.createAttributeMap("https://wicket.apache.org/");
 		assertEquals("module", attributeMap.get(JavaScriptUtils.ATTR_TYPE));
+	}
+
+	@Test
+	void typeCustom() {
+		final AttributeMap attributeMap = new TestJavascriptReferenceHeaderItem()
+				.setType(new JavaScriptReferenceType("custom-type"))
+				.createAttributeMap("https://wicket.apache.org/");
+		assertEquals("custom-type", attributeMap.get(JavaScriptUtils.ATTR_TYPE));
 	}
 
 	static class TestJavascriptReferenceHeaderItem extends AbstractJavaScriptReferenceHeaderItem {

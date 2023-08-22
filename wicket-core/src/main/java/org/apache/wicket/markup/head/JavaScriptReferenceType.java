@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.markup.head;
 
-/**
- * To be used to define the "type"-Attribute of the script-Tag written by a {@link AbstractJavaScriptReferenceHeaderItem}.
- *
- * @see ISubresourceHeaderItem#setCrossOrigin(org.apache.wicket.markup.html.CrossOrigin)
- */
-public enum JavascriptReferenceType {
+import org.apache.wicket.util.lang.Args;
 
-	TEXT_JAVASCRIPT("text/javascript"), MODULE("module");
+/**
+ * To be used to define the "type" attribute of the script tag written
+ * by a {@link AbstractJavaScriptReferenceHeaderItem}.
+ */
+public class JavaScriptReferenceType {
+
+	public static final JavaScriptReferenceType TEXT_JAVASCRIPT = new JavaScriptReferenceType("text/javascript");
+	public static final JavaScriptReferenceType MODULE = new JavaScriptReferenceType("module");
 
 	private final String type;
 
-	JavascriptReferenceType(final String type) {
-		this.type = type;
+	public JavaScriptReferenceType(final String type) {
+		this.type = Args.notEmpty(type, "type");
 	}
 
 	public String getType() {
