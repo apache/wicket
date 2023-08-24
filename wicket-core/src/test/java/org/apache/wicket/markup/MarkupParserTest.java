@@ -133,12 +133,12 @@ final class MarkupParserTest extends WicketTestCase
 		log.info("tok(4)=" + tokens.get(4));
 		log.info("tok(5)=" + tokens.get(5));
 
-		assertEquals("This is a test ", tokens.get(0));
+		assertEquals("This is a test ", tokens.get(0).toString());
 
 		final ComponentTag a = (ComponentTag)tokens.get(1);
 
 		assertEquals(9, a.getAttributes().getInt("componentName:id"));
-		assertEquals(" <b>bold</b> ", tokens.get(2));
+		assertEquals(" <b>bold</b> ", tokens.get(2).toString());
 
 		final ComponentTag b = (ComponentTag)tokens.get(3);
 
@@ -147,7 +147,7 @@ final class MarkupParserTest extends WicketTestCase
 		final ComponentTag closeA = (ComponentTag)tokens.get(5);
 
 		assertEquals("a", closeA.getName());
-		assertEquals(" of the emergency broadcasting system", tokens.get(6));
+		assertEquals(" of the emergency broadcasting system", tokens.get(6).toString());
 	}
 
 	/**
