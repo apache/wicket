@@ -19,6 +19,7 @@ package org.apache.wicket;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -64,50 +65,46 @@ class ApplicationSettingsTest
 		assertEquals("n/a", settings.getVersion());
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	void testExceptionOnMissingResourceDefaultValue() throws Exception
+	void testExceptionOnMissingResourceDefaultValue()
 	{
-		ResourceSettings settings = new ResourceSettings(new MockApplication());
-		assertTrue(settings.getThrowExceptionOnMissingResource(),
-			"exceptionOnMissingResource should default to true");
+		assertThrows(Exception.class, () -> {
+			ResourceSettings settings = new ResourceSettings(new MockApplication());
+			assertTrue(settings.getThrowExceptionOnMissingResource(),
+				"exceptionOnMissingResource should default to true");
+		});
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	void testExceptionOnMissingResourceSetsCorrectly() throws Exception
+	void testExceptionOnMissingResourceSetsCorrectly()
 	{
-		ResourceSettings settings = new ResourceSettings(new MockApplication());
-		settings.setThrowExceptionOnMissingResource(false);
-		assertFalse(settings.getThrowExceptionOnMissingResource(),
-			"exceptionOnMissingResource should have been set to false");
+		assertThrows(Exception.class, () -> {
+			ResourceSettings settings = new ResourceSettings(new MockApplication());
+			settings.setThrowExceptionOnMissingResource(false);
+			assertFalse(settings.getThrowExceptionOnMissingResource(),
+				"exceptionOnMissingResource should have been set to false");
+		});
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	void testUseDefaultOnMissingResourceDefaultValue() throws Exception
+	void testUseDefaultOnMissingResourceDefaultValue()
 	{
-		ResourceSettings settings = new ResourceSettings(new MockApplication());
-		assertTrue(settings.getUseDefaultOnMissingResource(),
-			"useDefaultOnMissingResource should default to true");
+		assertThrows(Exception.class, () -> {
+			ResourceSettings settings = new ResourceSettings(new MockApplication());
+			assertTrue(settings.getUseDefaultOnMissingResource(),
+				"useDefaultOnMissingResource should default to true");
+		});
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
-	void testUseDefaultOnMissingResourceSetsCorrectly() throws Exception
+	void testUseDefaultOnMissingResourceSetsCorrectly()
 	{
-		ResourceSettings settings = new ResourceSettings(new MockApplication());
-		settings.setUseDefaultOnMissingResource(false);
-		assertFalse(settings.getUseDefaultOnMissingResource(),
-			"useDefaultOnMissingResource should have been set to false");
+		assertThrows(Exception.class, () -> {
+			ResourceSettings settings = new ResourceSettings(new MockApplication());
+			settings.setUseDefaultOnMissingResource(false);
+			assertFalse(settings.getUseDefaultOnMissingResource(),
+				"useDefaultOnMissingResource should have been set to false");
+		});
 	}
 
 	/**
