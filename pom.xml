@@ -202,7 +202,7 @@
 		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
 		<maven-toolchains-plugin.version>3.1.0</maven-toolchains-plugin.version>
 		<maven-war-plugin.version>3.3.2</maven-war-plugin.version>
-		<yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
+		<resources-optimizer-maven-plugin.version>2.4.1</resources-optimizer-maven-plugin.version>
 
 		<osgi.dynamicimport.package />
 		<osgi.export.package>*</osgi.export.package>
@@ -875,24 +875,6 @@
 					</configuration>
 				</plugin>
 				<plugin>
-					<groupId>net.alchim31.maven</groupId>
-					<artifactId>yuicompressor-maven-plugin</artifactId>
-					<version>${yuicompressor-maven-plugin.version}</version>
-					<configuration>
-						<statistics>true</statistics>
-						<jswarn>false</jswarn>
-						<suffix>.min</suffix>
-						<outputDirectory>${project.build.directory}/generated-res</outputDirectory>
-					</configuration>
-					<executions>
-						<execution>
-							<goals>
-								<goal>compress</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
 					<version>${maven-bundle-plugin.version}</version>
@@ -1203,11 +1185,11 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>net.alchim31.maven</groupId>
-										<artifactId>yuicompressor-maven-plugin</artifactId>
+										<groupId>org.primefaces.extensions</groupId>
+										<artifactId>resources-optimizer-maven-plugin</artifactId>
 										<versionRange>[1.3.0,)</versionRange>
 										<goals>
-											<goal>compress</goal>
+											<goal>optimize</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
@@ -1270,6 +1252,30 @@
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.primefaces.extensions</groupId>
+					<artifactId>resources-optimizer-maven-plugin</artifactId>
+					<version>${resources-optimizer-maven-plugin.version}</version>
+					<configuration>
+						<suffix>.min</suffix>
+						<inputDir>${project.build.directory}/classes</inputDir>
+						<useDataUri>false</useDataUri>
+						<resourcesSets>
+							<resourcesSet>
+								<excludes>
+									<exclude>**/jquery*.js</exclude>
+								</excludes>
+							</resourcesSet>
+						</resourcesSets>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>optimize</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
