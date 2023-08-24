@@ -35,8 +35,8 @@
 		component model backed by POJO data beans that can easily be
 		persisted using your favorite technology.
 	</description>
-        <properties>
-                <osgi.export.package>
+		<properties>
+			<osgi.export.package>
 org.apache.wicket;-noimport:=true,
 org.apache.wicket.ajax;-noimport:=true,
 org.apache.wicket.ajax.attributes;-noimport:=true,
@@ -143,13 +143,9 @@ org.apache.wicket.util.template;-noimport:=true,
 org.apache.wicket.util.tester;-noimport:=true,
 org.apache.wicket.validation;-noimport:=true,
 org.apache.wicket.validation.validator;-noimport:=true
- 		</osgi.export.package>
-<<<<<<< HEAD
-                <osgi.import.package>!java*,!kotlin*,!sun.nio.ch,!com.sun.crypto.provider,org.slf4j*;version="[1.7,3)",jakarta.servlet,jakarta.servlet.http,*</osgi.import.package>
-=======
-                <osgi.import.package>!java*,!kotlin*,!sun.nio.ch,!com.sun.crypto.provider,org.slf4j*;version="[1.7,3)",javax.servlet,javax.servlet.http,*</osgi.import.package>
->>>>>>> d4ca66c442 ([WICKET-7068] minimizing plugin is updated (#602))
-        </properties>
+		</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,!com.sun.crypto.provider,org.slf4j*;version="[1.7,3)",jakarta.servlet,jakarta.servlet.http,*</osgi.import.package>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
