@@ -28,11 +28,11 @@
 	<name>Wicket Core</name>
 	<description>
 		Wicket is a Java web application framework that takes simplicity,
-		separation of concerns and ease of development to a whole new level. 
-		Wicket pages can be mocked up, previewed and later revised using 
-		standard WYSIWYG HTML design tools. Dynamic content processing and 
-		form handling is all handled in Java code using a first-class 
-		component model backed by POJO data beans that can easily be 
+		separation of concerns and ease of development to a whole new level.
+		Wicket pages can be mocked up, previewed and later revised using
+		standard WYSIWYG HTML design tools. Dynamic content processing and
+		form handling is all handled in Java code using a first-class
+		component model backed by POJO data beans that can easily be
 		persisted using your favorite technology.
 	</description>
         <properties>
@@ -142,7 +142,7 @@ org.apache.wicket.util.template;-noimport:=true,
 org.apache.wicket.util.tester;-noimport:=true,
 org.apache.wicket.validation;-noimport:=true,
 org.apache.wicket.validation.validator;-noimport:=true
- 		</osgi.export.package> 
+ 		</osgi.export.package>
                 <osgi.import.package>!java*,!kotlin*,!sun.nio.ch,!com.sun.crypto.provider,org.slf4j*;version="[1.7,3)",javax.servlet,javax.servlet.http,*</osgi.import.package>
         </properties>
 	<dependencies>
@@ -196,23 +196,10 @@ org.apache.wicket.validation.validator;-noimport:=true
 		</dependency>
 	</dependencies>
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>net.alchim31.maven</groupId>
-					<artifactId>yuicompressor-maven-plugin</artifactId>
-					<configuration>
-						<excludes>
-							<exclude>**/jquery*.js</exclude>
-						</excludes>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<plugins>
 			<plugin>
-				<groupId>net.alchim31.maven</groupId>
-				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<groupId>org.primefaces.extensions</groupId>
+				<artifactId>resources-optimizer-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
