@@ -45,8 +45,8 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>net.alchim31.maven</groupId>
-				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<groupId>org.primefaces.extensions</groupId>
+				<artifactId>resources-optimizer-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

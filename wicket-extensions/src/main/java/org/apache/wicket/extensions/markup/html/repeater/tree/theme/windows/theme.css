@@ -38,7 +38,7 @@ html[dir="rtl"] .tree-theme-windows div.tree-subtree {
 
 html[dir="rtl"] .tree-theme-windows div.tree-branch-mid {
   background-image: url(tree-rtl.gif);
-  background-position-x: calc(100%/* to skip */ +/* minimizer */ 54px);
+  background-position-x: calc(100% + 54px);
 }
 
 .tree-theme-windows div.tree-branch-last {
