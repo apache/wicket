@@ -51,4 +51,11 @@ class PackagePrivateConcreteObject
 		return message;
 	}
 
+	/**
+	 * @return message
+	 */
+	String internalGetMessage()
+	{
+		return message;
+	}
 }

@@ -167,7 +167,8 @@ public class ComponentInfo
 	@Override
 	public String toString()
 	{
-		StringBuilder result = new StringBuilder();
+		String path = encodeComponentPath(componentPath);
+		StringBuilder result = new StringBuilder(path.length() + 12);
 
 		if (renderCount != null)
 		{
@@ -183,7 +184,7 @@ public class ComponentInfo
 			result.append(behaviorId);
 		}
 		result.append(SEPARATOR);
-		result.append(encodeComponentPath(componentPath));
+		result.append(path);
 
 		return result.toString();
 	}

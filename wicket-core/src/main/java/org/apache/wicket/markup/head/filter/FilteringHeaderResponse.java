@@ -31,7 +31,7 @@ import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.response.StringResponse;
+import org.apache.wicket.response.LazyStringResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -241,7 +241,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 			return "";
 		}
 		List<HeaderItem> resp = responseFilterMap.get(filterName);
-		final StringResponse strResponse = new StringResponse();
+		final LazyStringResponse strResponse = new LazyStringResponse();
 		IHeaderResponse headerRenderer = new HeaderResponse()
 		{
 			@Override

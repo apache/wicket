@@ -10,12 +10,12 @@ During its life a Wicket component goes through the following stages:
 
 The following picture shows the state diagram of component lifecycle:
 
-image::../img/component-lifecycle.png[]
+image::./img/component-lifecycle.png[]
 
 Once a component has been removed it could be added again to a container, but the initialization stage won't be executed again - it is easier to just create a new component instance instead.
 
 NOTE: If you read the JavaDoc of class _Component_ you will find a more detailed description of component lifecycle.
-However this description introduces some advanced topics we didn't covered yet hence, to avoid confusion, in this chapter some details have been omitted and they will be covered later in the next chapters. 
+However this description introduces some advanced topics we didn't covered yet hence, to avoid confusion, in this chapter some details have been omitted and they will be covered later in the next chapters.
 
 For now you can consider just the simplified version of the lifecycle described above.
 

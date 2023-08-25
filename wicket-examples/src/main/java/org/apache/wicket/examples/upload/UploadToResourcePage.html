@@ -1,0 +1,44 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <title>Wicket Examples - upload</title>
+	<style>
+		legend { border: 1px solid #e9601a; background-color: #bbb; color: #fff; padding: 4px;}
+		fieldset { border: 1px solid #e9601a; padding: 10px; margin-top: 10px;}
+	</style>
+</head>
+<body>
+    <wicket:extend>
+		<p>Wicket can upload to a <em>mounted resource.</em></p>
+		<p>This upload is done via jQuery AJAX and <em>does not</em> block Wicket AJAX</p>
+		<p><em>Upload progressbar</em> has been updated to work with this component</p>
+		<br/>
+
+		<div>
+		 <fieldset>
+			 <legend>Upload a file(s) to a <em>mounted resource</em></legend>
+			<p>
+				<label wicket:for="fileInput">File</label>
+				<input wicket:id="fileInput" type="file" multiple="multiple"/>
+			</p>
+			<form wicket:id="form">
+				<p>
+					<input wicket:id="allowToLeavePageWhileUploading" type="checkbox"/>
+					<label wicket:for="allowToLeavePageWhileUploading">Block leaving page while upload is happening?</label>
+				</p>
+			</form>
+			 <div>
+				 <span wicket:id="progress">[[upload progressbar]]</span>
+			 </div>
+			 <input wicket:id="upload" type="button" value="Upload to a resource"/>
+			 <input wicket:id="cancelUpload" type="button" value="Cancel upload via AJAX request"/>
+			 <input wicket:id="cancelUploadClientSide" type="button" value="Cancel upload at client side"/>
+			 <button wicket:id="counter" type="button">Click me</button>
+		 </fieldset>
+		</div>
+		<br/>
+		<div>
+			<span wicket:id="uploadFeedback"/>
+		</div>
+	</wicket:extend>
+</body>
+</html>

@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>9.13.0-SNAPSHOT</version>
+		<version>9.15.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-extensions</artifactId>
@@ -45,8 +45,8 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>net.alchim31.maven</groupId>
-				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<groupId>org.primefaces.extensions</groupId>
+				<artifactId>resources-optimizer-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

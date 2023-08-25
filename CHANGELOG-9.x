@@ -2,6 +2,56 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.14.0
+
+** Bug
+
+    * [WICKET-7013] - IndexOutOfBoundsException in InSessionPageStore
+    * [WICKET-7052] - Interrupting a task should not be logged as an error
+    * [WICKET-7054] - Tag <script> mus be wrapped in CDATA for 'type' values 'module' and 'importmap' 
+    * [WICKET-7055] - AjaxEventBehavior onload event unstable
+
+** New Feature
+
+    * [WICKET-7033] - add support to uploading to a resource
+
+** Improvement
+
+    * [WICKET-6979] - Cut back slightly on some String instance creation in PageInfo and friends.
+    * [WICKET-7045] - Avoid allocations in PageParameters.getNamedKeys
+    * [WICKET-7046] - Avoid allocating StringResponse when no response filters are active
+    * [WICKET-7047] - Improve initial buffer capacity for Strings.toMultilineMarkup
+    * [WICKET-7049] - Avoid allocation for empty buckets in FilteringHeaderResponse
+
+=======================================================================
+
+Release Notes - Wicket - Version 9.13.0
+
+** Bug
+
+    * [WICKET-7005] - ByteBuddy IllegalStateException: Cannot inject already loaded type
+    * [WICKET-7022] - JavaScriptStripper fails to detect regular expression correctly
+    * [WICKET-7028] - CSP header not rendered when using RedirectPolicy.NEVER_REDIRECT
+    * [WICKET-7034] - WebSocket.Closed event not fired when error occurred
+    * [WICKET-7037] - [Ajax Download] cookie used to track download complete misses the SameSite attribute
+    * [WICKET-7044] - Images in the Wicket 9.x reference guide are not displayed.
+
+** Improvement
+
+    * [WICKET-7011] - Improve usage of JUnit 5.x APIs
+    * [WICKET-7014] - Use new API for forward compatibility with CDI 4
+    * [WICKET-7016] - Support GCM-SIV for page store encryption
+    * [WICKET-7017] - ListenerRequestHandler should not hide IndexOutOfBoundsException
+    * [WICKET-7021] - Additional OSGi import fixes
+    * [WICKET-7025] - Package private methods should be proxied by ByteBuddy
+    * [WICKET-7031] - Update to JQuery 3.6.4
+    * [WICKET-7032] - Update the JS tests to use latest version of QUnit (2.x)
+    * [WICKET-7035] - fileCountMax should be added to control the amount of files being uploaded
+    * [WICKET-7041] - Reduce allocations when rendering component headers
+    * [WICKET-7042] - Improve sizing of StringResponse when writing scripts in PartialPageResponse
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.12.0
 
 ** Bug

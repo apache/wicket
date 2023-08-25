@@ -28,7 +28,7 @@
 	Wicket.AjaxDownload = {
 		initiate : function(settings) {
 			document.cookie = settings.name +
-				'=;path=/;Max-Age=0;expires=Thu, 01 Jan 1970 00:00:01 GMT';
+				'=;path=/;Max-Age=0;expires=Thu, 01 Jan 1970 00:00:01 GMT' + settings.sameSite;
 			var notifyServer = function(result) {
 				settings.attributes.ep = settings.attributes.ep || {};
 				settings.attributes.ep.result = result;

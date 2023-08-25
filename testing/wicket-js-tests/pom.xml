@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>9.13.0-SNAPSHOT</version>
+		<version>9.15.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-js-tests</artifactId>
@@ -99,8 +99,8 @@
 								</goals>
 								<phase>generate-resources</phase>
 								<configuration>
-									<npmVersion>7.24.2</npmVersion>
-									<nodeVersion>v14.18.3</nodeVersion>
+									<npmVersion>9.6.1</npmVersion>
+									<nodeVersion>v18.15.0</nodeVersion>
 								</configuration>
 							</execution>
 							<execution>

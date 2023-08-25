@@ -30,6 +30,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 public class StringResponse extends Response
 {
 
+	private static final int DEFAULT_INITIAL_CAPACITY = 128;
+
 	/** StringWriter to write to */
 	protected final AppendingStringBuffer out;
 
@@ -38,7 +40,18 @@ public class StringResponse extends Response
 	 */
 	public StringResponse()
 	{
-		out = new AppendingStringBuffer(128);
+		this(DEFAULT_INITIAL_CAPACITY);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param initialCapacity
+	 *            the initial capacity of the internal buffer
+	 */
+	public StringResponse(int initialCapacity)
+	{
+		out = new AppendingStringBuffer(initialCapacity);
 	}
 
 	/**

@@ -21,7 +21,7 @@ This approach is error-prone and fragile, because we always have to pay attentio
 
 The solution is the Hollywood principle: "Don't call us, we'll call you". Take a look at the following diagram illustrating an application flow with some calls. We avoid three calls through the http://en.wikipedia.org/wiki/Hollywood_Principle[Hollywood-Principle] and we just have to instantiate the _LoginBoxPanel_.
 
-image::../img/login_calls_hollywood.png[]
+image::./img/login_calls_hollywood.png[]
 
 *Listing 7:*
 

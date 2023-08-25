@@ -60,13 +60,13 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	/**
 	 * Create a lazy init proxy for the specified type. The target object will be located using the
 	 * provided locator upon first method invocation.
-	 * 
+	 *
 	 * @param type
 	 *            type that proxy will represent
-	 * 
+	 *
 	 * @param locator
 	 *            object locator that will locate the object the proxy represents
-	 * 
+	 *
 	 * @return lazily initializable proxy
 	 */
 	@Override
@@ -75,7 +75,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 		Class<T> proxyClass = createOrGetProxyClass(type);
 
 		T instance;
-		
+
 		if (!hasNoArgConstructor(type))
 		{
 			instance = INSTANTIATOR.newInstance(proxyClass);
@@ -91,10 +91,10 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 				throw new WicketRuntimeException(e);
 			}
 		}
-		
+
 		ByteBuddyInterceptor interceptor = new ByteBuddyInterceptor(type, locator);
 		((InterceptorMutator) instance).setInterceptor(interceptor);
-		
+
 		return instance;
 	}
 
@@ -106,7 +106,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 				new TypeCache.SimpleKey(type),
 				() -> BYTE_BUDDY
 						.subclass(type)
-						.method(ElementMatchers.isPublic())
+						.method(ElementMatchers.isPublic().or(ElementMatchers.isPackagePrivate()))
 							.intercept(
 								MethodDelegation
 									.withDefaultConfiguration()
@@ -116,7 +116,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 						.implement(InterceptorMutator.class).intercept(FieldAccessor.ofBeanProperty())
 						.implement(Serializable.class, IWriteReplace.class, ILazyInitProxy.class).intercept(MethodDelegation.toField(INTERCEPTOR_FIELD_NAME))
 						.make()
-						.load(classLoader, ClassLoadingStrategy.Default.INJECTION)
+						.load(classLoader, ClassLoadingStrategy.Default.INJECTION.allowExistingTypes())
 						.getLoaded());
 	}
 

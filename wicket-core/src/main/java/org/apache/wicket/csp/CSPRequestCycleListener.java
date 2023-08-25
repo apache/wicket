@@ -31,7 +31,7 @@ import org.apache.wicket.request.http.WebResponse;
  */
 public class CSPRequestCycleListener implements IRequestCycleListener
 {
-	private ContentSecurityPolicySettings settings;
+	private final ContentSecurityPolicySettings settings;
 
 	public CSPRequestCycleListener(ContentSecurityPolicySettings settings)
 	{
@@ -40,6 +40,18 @@ public class CSPRequestCycleListener implements IRequestCycleListener
 
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
+	{
+		// WICKET-7028- this is needed for redirect to buffer use case.
+		protect(cycle, handler);
+	}
+
+	@Override
+	public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
+	{
+		protect(cycle, handler);
+	}
+
+	protected void protect(RequestCycle cycle, IRequestHandler handler)
 	{
 		if (!mustProtect(handler) || !(cycle.getResponse() instanceof WebResponse))
 		{
@@ -53,16 +65,16 @@ public class CSPRequestCycleListener implements IRequestCycleListener
 		}
 
 		settings.getConfiguration().entrySet().stream().filter(entry -> entry.getValue().isSet())
-			.forEach(entry -> {
-				CSPHeaderMode mode = entry.getKey();
-				CSPHeaderConfiguration config = entry.getValue();
-				String headerValue = config.renderHeaderValue(settings, cycle);
-				webResponse.setHeader(mode.getHeader(), headerValue);
-				if (config.isAddLegacyHeaders())
-				{
-					webResponse.setHeader(mode.getLegacyHeader(), headerValue);
-				}
-			});
+				.forEach(entry -> {
+					CSPHeaderMode mode = entry.getKey();
+					CSPHeaderConfiguration config = entry.getValue();
+					String headerValue = config.renderHeaderValue(settings, cycle);
+					webResponse.setHeader(mode.getHeader(), headerValue);
+					if (config.isAddLegacyHeaders())
+					{
+						webResponse.setHeader(mode.getLegacyHeader(), headerValue);
+					}
+				});
 	}
 
 	/**

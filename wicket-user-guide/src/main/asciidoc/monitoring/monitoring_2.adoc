@@ -18,7 +18,7 @@ this.
 [source,java]
 ----
 	private GraphiteReporter reporter;
-	
+
 	@Override
 	protected void init()
 	{
@@ -27,7 +27,7 @@ this.
 		reporter = GraphiteReporter.forRegistry(metricRegistry).prefixedWith("WebApplications")
 			.convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.MILLISECONDS)
 			.filter(MetricFilter.ALL).build(graphite);
-		
+
 		// Collects data every 5 seconds
 		reporter.start(5, TimeUnit.SECONDS);
 	}
@@ -42,8 +42,8 @@ this.
 
 (3) Install and setup graphite on your system. Example installation for Mac (beware that this is only a quickstart setup!):
 
-- (1) Install homebrew:  http://brew.sh/[brew] 
-- (2) Install  https://git-scm.com/[Git] 
+- (1) Install homebrew:  http://brew.sh/[brew]
+- (2) Install  https://git-scm.com/[Git]
 
 - (3) brew install python
 
@@ -53,14 +53,14 @@ this.
 
 - (6) pip install Django==1.5
 
-- (7) pip install "django-tagging<0.4" 
+- (7) pip install "django-tagging<0.4"
 - (8) sudo pip install carbon
 
 - (9) pip install whisper
 
 - (10) sudo pip install graphite-web
 
-- (11) sudo pip install Twisted==11.1.0 
+- (11) sudo pip install Twisted==11.1.0
 
 - (12) sudo chown -R <your username>:staff /opt/graphite
 
@@ -80,9 +80,9 @@ this.
 
 - (20) Go to http://localhost:8080
 
-* (18) and (19) have to be executed if the mac has been restarted 
+* (18) and (19) have to be executed if the mac has been restarted
 
 (4) Now start your tomcat server configured like mentioned in the previous chapter.
 
-image::../img/wicket_metrics_graphite.png[]
+image::./img/wicket_metrics_graphite.png[]
 
