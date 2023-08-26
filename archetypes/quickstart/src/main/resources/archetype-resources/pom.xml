@@ -57,6 +57,11 @@
 			<artifactId>wicket-core</artifactId>
 			<version>${wicket.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-native-websocket-javax</artifactId>
+			<version>${wicket.version}</version>
+		</dependency>
 		<!-- OPTIONAL DEPENDENCY
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -83,13 +88,25 @@
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<scope>test</scope>
+			<artifactId>jetty-server</artifactId>
 			<version>${jetty9.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>${jetty9.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-jmx</artifactId>
+			<version>${jetty9.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>javax-websocket-server-impl</artifactId>
 			<version>${jetty9.version}</version>
 			<scope>test</scope>
 		</dependency>
