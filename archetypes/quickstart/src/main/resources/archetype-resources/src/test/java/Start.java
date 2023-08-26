@@ -1,9 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ${package};
 
 import java.lang.management.ManagementFactory;
 
 import javax.management.MBeanServer;
 
+import org.apache.wicket.protocol.ws.javax.WicketServerEndpointConfig;
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -11,9 +28,13 @@ import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.server.session.DefaultSessionCache;
+import org.eclipse.jetty.server.session.FileSessionDataStore;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
 
 /**
  * Separate startup class for people that want to run the examples directly. Use parameter
@@ -26,7 +47,7 @@ public class Start
 	 *
 	 * @param args
 	 */
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
 	{
 		System.setProperty("wicket.configuration", "development");
 
@@ -43,7 +64,7 @@ public class Start
 
 		server.addConnector(http);
 
-		Resource keystore = Resource.newClassPathResource("/keystore.p12");
+		Resource keystore = Resource.newClassPathResource("/keystore");
 		if (keystore != null && keystore.exists())
 		{
 			// if a keystore for a SSL certificate is available, start a SSL
@@ -53,13 +74,15 @@ public class Start
 			// use this certificate anywhere important as the passwords are
 			// available in the source.
 
-			SslContextFactory sslContextFactory = new SslContextFactory();
+			SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
 			sslContextFactory.setKeyStoreResource(keystore);
 			sslContextFactory.setKeyStorePassword("wicket");
 			sslContextFactory.setKeyManagerPassword("wicket");
 
 			HttpConfiguration https_config = new HttpConfiguration(http_config);
-			https_config.addCustomizer(new SecureRequestCustomizer());
+			SecureRequestCustomizer src = new SecureRequestCustomizer();
+			src.setSniHostCheck(false);
+			https_config.addCustomizer(src);
 
 			ServerConnector https = new ServerConnector(server, new SslConnectionFactory(
 				sslContextFactory, "http/1.1"), new HttpConnectionFactory(https_config));
@@ -83,6 +106,11 @@ public class Start
 		// ServerContainer serverContainer = WebSocketServerContainerInitializer.configureContext(bb);
 		// serverContainer.addEndpoint(new WicketServerEndpointConfig());
 
+//		bb.getSessionHandler().setSessionCache(sessionCache);
+
+		ServletContextHandler contextHandler = ServletContextHandler.getServletContextHandler(bb.getServletContext());
+		JakartaWebSocketServletContainerInitializer.configure(contextHandler,
+				(servletContext, container) -> container.addEndpoint(new WicketServerEndpointConfig()));
 		// uncomment next line if you want to test with JSESSIONID encoded in the urls
 		// ((AbstractSessionManager)
 		// bb.getSessionHandler().getSessionManager()).setUsingCookies(false);
