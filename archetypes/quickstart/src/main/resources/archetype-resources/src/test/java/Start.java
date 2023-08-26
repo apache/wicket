@@ -97,11 +97,6 @@ public class Start
 		bb.setContextPath("/");
 		bb.setWar("src/main/webapp");
 
-		// uncomment the next two lines if you want to start Jetty with WebSocket (JSR-356) support
-		// you need org.apache.wicket:wicket-native-websocket-javax in the classpath!
-		// ServerContainer serverContainer = WebSocketServerContainerInitializer.configureContext(bb);
-		// serverContainer.addEndpoint(new WicketServerEndpointConfig());
-
 		// bb.getSessionHandler().setSessionCache(sessionCache);
 
 		ServerContainer serverContainer = WebSocketServerContainerInitializer.initialize(bb);
