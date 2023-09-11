@@ -140,7 +140,7 @@
 		<aspectj.version>1.9.19</aspectj.version>
 		<assertj-core.version>3.24.2</assertj-core.version>
 		<bouncycastle.version>1.74</bouncycastle.version>
-		<byte-buddy.version>1.14.2</byte-buddy.version>
+		<byte-buddy.version>1.14.7</byte-buddy.version>
 		<cdi-unit.version>4.1.0</cdi-unit.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<commons-fileupload.version>2.0.0-M1</commons-fileupload.version>
@@ -170,7 +170,7 @@
 		<hibernate-validator.version>7.0.5.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
 		<metrics.version>4.2.17</metrics.version>
-		<mockito.version>5.2.0</mockito.version>
+		<mockito.version>5.5.0</mockito.version>
 		<objenesis.version>3.3</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
 		<slf4j.version>2.0.6</slf4j.version>
@@ -192,7 +192,7 @@
 		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
 		<maven-install-plugin.version>3.1.0</maven-install-plugin.version>
 		<maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
-		<maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
+		<maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
 		<maven-project-info-reports-plugin.version>3.4.1</maven-project-info-reports-plugin.version>
 		<maven-release-plugin.version>3.0.0-M7</maven-release-plugin.version>
 		<maven-remote-resources-plugin.version>3.0.0</maven-remote-resources-plugin.version>
@@ -1490,6 +1490,32 @@
 			</build>
 		</profile>
 		<profile>
+			<id>java21</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-toolchains-plugin</artifactId>
+						<version>${maven-toolchains-plugin.version}</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>toolchain</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<toolchains>
+								<jdk>
+									<version>21</version>
+								</jdk>
+							</toolchains>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
 			<id>on-jdk-11-or-12</id>
 			<activation>
 				<jdk>[11,12]</jdk>
@@ -1501,7 +1527,7 @@
 		<profile>
 			<id>on-jdk-early-access</id>
 			<activation>
-				<jdk>[18,)</jdk>
+				<jdk>[21,)</jdk>
 			</activation>
 			<properties>
 				<javadoc.jdk.apidocs.link>https://download.java.net/java/early_access/jdk${java.specification.version}/docs/api/</javadoc.jdk.apidocs.link>
