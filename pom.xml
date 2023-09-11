@@ -260,6 +260,12 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
+				<groupId>jakarta.websocket</groupId>
+				<artifactId>jakarta.websocket-client-api</artifactId>
+				<version>${jakarta.websocket-api.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.hamcrest</groupId>
 				<artifactId>hamcrest</artifactId>
 				<version>${hamcrest.version}</version>

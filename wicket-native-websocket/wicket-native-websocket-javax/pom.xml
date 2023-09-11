@@ -48,6 +48,10 @@
 			<artifactId>jakarta.websocket-api</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>jakarta.websocket</groupId>
+			<artifactId>jakarta.websocket-client-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-native-websocket-core</artifactId>
 		</dependency>
