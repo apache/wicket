@@ -1,6 +1,13 @@
 name: Java CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  MAVEN_VERSION: 3.9.4
 
 jobs:
   build:
@@ -11,6 +18,7 @@ jobs:
         java:
         - '17'
         - '21-ea'
+        - '22-ea'
 
     steps:
     - uses: actions/checkout@v4
@@ -29,10 +37,8 @@ jobs:
 
     - name: Install Maven
       run: |
-        MAVEN_VERSION=3.9.4
         wget https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
         tar -xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz
-        export PATH=$PWD/apache-maven-${MAVEN_VERSION}/bin:$PATH
 
     - name: Cache Maven packages
       uses: actions/cache@v3
@@ -44,5 +50,4 @@ jobs:
     - name: Build with Maven
       run: |
         java -version 
-        mvn -version
-        mvn clean verify -Pjs-test
+        ./apache-maven-${MAVEN_VERSION}/bin/mvn --show-version clean verify -Pjs-test
