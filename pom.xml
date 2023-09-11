@@ -167,7 +167,7 @@
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.7</logback.version>
 		<hamcrest.version>2.2</hamcrest.version>
-		<hibernate-validator.version>7.0.5.Final</hibernate-validator.version>
+		<hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
 		<metrics.version>4.2.17</metrics.version>
 		<mockito.version>5.5.0</mockito.version>
