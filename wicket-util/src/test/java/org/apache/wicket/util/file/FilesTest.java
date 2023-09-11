@@ -93,13 +93,24 @@ public class FilesTest
 	@Test
 	public void dontWaitTooMuchIfCantDelete()
 	{
-		java.io.File f = mock(java.io.File.class);
-		when(f.isFile()).thenReturn(true);
-		when(f.delete()).thenReturn(false);
+		java.io.File f = new java.io.File("dummy/path")
+		{
+			@Override
+			public boolean isFile()
+			{
+				return true;
+			}
+
+			@Override
+			public boolean delete()
+			{
+				return false;
+			}
+		};
 		long start = currentTimeMillis();
 		Files.remove(f);
 		long end = currentTimeMillis();
-		assertTrue((end - start) < 5000l);
+		assertTrue((end - start) < 5000L);
 	}
 
 	/**
