@@ -31,7 +31,7 @@
 	</description>
 
 	<properties>
-		<asciidoctor-maven-plugin.version>2.2.2</asciidoctor-maven-plugin.version>
+		<asciidoctor-maven-plugin.version>2.2.4</asciidoctor-maven-plugin.version>
 		<japicmp.skip>true</japicmp.skip>
 	</properties>
 
