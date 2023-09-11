@@ -139,7 +139,7 @@
 		<asm.version>9.4</asm.version>
 		<aspectj.version>1.9.20.1</aspectj.version>
 		<assertj-core.version>3.24.2</assertj-core.version>
-		<bouncycastle.version>1.74</bouncycastle.version>
+		<bouncycastle.version>1.76</bouncycastle.version>
 		<byte-buddy.version>1.14.7</byte-buddy.version>
 		<cdi-unit.version>4.1.0</cdi-unit.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
