@@ -17,8 +17,8 @@ jobs:
       matrix:
         java:
         - '17'
+        - '20'
         - '21-ea'
-        - '22-ea'
 
     steps:
     - uses: actions/checkout@v4
