@@ -169,7 +169,7 @@
 		<hamcrest.version>2.2</hamcrest.version>
 		<hibernate-validator.version>7.0.5.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
-		<metrics.version>4.2.17</metrics.version>
+		<metrics.version>4.2.19</metrics.version>
 		<mockito.version>5.5.0</mockito.version>
 		<objenesis.version>3.3</objenesis.version>
 		<openjson.version>1.0.12</openjson.version>
