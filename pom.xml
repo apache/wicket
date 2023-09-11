@@ -150,7 +150,7 @@
 		<el-impl.version>2.2.1-b05</el-impl.version>
 		<forbiddenapis.version>3.5.1</forbiddenapis.version>
 		<jacoco.version>0.8.10</jacoco.version>
-		<jackson.version>2.14.2</jackson.version>
+		<jackson.version>2.15.2</jackson.version>
 		<jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
 		<jakarta.el.version>4.0.2</jakarta.el.version>
 		<jakarta.el-api.version>5.0.1</jakarta.el-api.version>
