@@ -8,6 +8,7 @@
     </parent>
     <artifactId>wicket-migration</artifactId>
     <name>Wicket Migration</name>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -34,12 +35,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.junit-pioneer</groupId>
-                <artifactId>junit-pioneer</artifactId>
-                <version>2.1.0</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-recipe-bom</artifactId>
                 <version>2.2.1</version>
@@ -54,9 +49,8 @@
             <artifactId>rewrite-migrate-java</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.junit-pioneer</groupId>
-            <artifactId>junit-pioneer</artifactId>
-            <scope>test</scope>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openrewrite</groupId>

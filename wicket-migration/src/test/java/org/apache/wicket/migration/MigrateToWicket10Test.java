@@ -16,8 +16,8 @@
 
 package org.apache.wicket.migration;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junitpioneer.jupiter.ExpectedToFail;
 import org.openrewrite.config.Environment;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.test.RecipeSpec;
@@ -78,7 +78,7 @@ class MigrateToWicket10Test implements RewriteTest {
     }
 
     @Test
-    @ExpectedToFail("Requires first release of 10.x before we can update the version")
+    @Disabled("Requires first release of 10.x before we can update the version")
     void migrateDependencies() {
         //language=xml
         rewriteRun(
