@@ -12,7 +12,7 @@
     "grunt-cli": "1.4.3",
     "grunt-contrib-connect": "4.0.0",
     "grunt-contrib-jshint": "3.2.0",
-    "grunt-contrib-nodeunit": "4.0.0",
+    "grunt-contrib-nodeunit": "5.0.0",
     "grunt-contrib-qunit": "7.0.1"
   },
   "scripts": {
