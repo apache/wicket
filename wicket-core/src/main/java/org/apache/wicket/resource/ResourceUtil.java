@@ -19,8 +19,8 @@ package org.apache.wicket.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Url;
@@ -39,7 +39,10 @@ import org.apache.wicket.util.string.Strings;
 public class ResourceUtil
 {
 
-	private static final Pattern ESCAPED_ATTRIBUTE_PATTERN = Pattern.compile("(\\w)~(\\w)");
+	/**
+	 * Used to denote {@code null} in encoded strings.
+	 */
+	private static final String NULL_VALUE = "null";
 
 	/**
 	 * Reads resource reference attributes (style, locale, variation) encoded in the given string.
@@ -52,24 +55,12 @@ public class ResourceUtil
 	 */
 	public static ResourceReference.UrlAttributes decodeResourceReferenceAttributes(String encodedAttributes)
 	{
-		Locale locale = null;
-		String style = null;
-		String variation = null;
+		String[] decodeAttributes = decodeStringParts(encodedAttributes);
 
-		if (Strings.isEmpty(encodedAttributes) == false)
-		{
-			String split[] = Strings.split(encodedAttributes, '-');
-			locale = parseLocale(split[0]);
-			if (split.length == 2)
-			{
-				style = Strings.defaultIfEmpty(unescapeAttributesSeparator(split[1]), null);
-			}
-			else if (split.length == 3)
-			{
-				style = Strings.defaultIfEmpty(unescapeAttributesSeparator(split[1]), null);
-				variation = Strings.defaultIfEmpty(unescapeAttributesSeparator(split[2]), null);
-			}
-		}
+		Locale locale = decodeAttributes.length > 0 ? parseLocale(decodeAttributes[0]) : null;
+		String style = decodeAttributes.length > 1 ? decodeAttributes[1] : null;
+		String variation = decodeAttributes.length > 2 ? decodeAttributes[2] : null;
+
 		return new ResourceReference.UrlAttributes(locale, style, variation);
 	}
 	
@@ -109,37 +100,18 @@ public class ResourceUtil
 	public static String encodeResourceReferenceAttributes(ResourceReference.UrlAttributes attributes)
 	{
 		if (attributes == null ||
-			(attributes.getLocale() == null && attributes.getStyle() == null && attributes.getVariation() == null))
-		{
-			return null;
-		}
-		else
-		{
-			StringBuilder res = new StringBuilder(32);
-			if (attributes.getLocale() != null)
+				(attributes.getLocale() == null && attributes.getStyle() == null && attributes.getVariation() == null))
 			{
-				res.append(attributes.getLocale());
+				return null;
 			}
-			boolean styleEmpty = Strings.isEmpty(attributes.getStyle());
-			if (!styleEmpty)
+			else
 			{
-				res.append('-');
-				res.append(escapeAttributesSeparator(attributes.getStyle()));
+				StringBuilder buffer = new StringBuilder(32);
+				encodeStringPart(attributes.getLocale() == null ? null : attributes.getLocale().toString(), buffer);
+				encodeStringPart(attributes.getStyle(), buffer);
+				encodeStringPart(attributes.getVariation(), buffer);
+				return buffer.toString();
 			}
-			if (!Strings.isEmpty(attributes.getVariation()))
-			{
-				if (styleEmpty)
-				{
-					res.append("--");
-				}
-				else
-				{
-					res.append('-');
-				}
-				res.append(escapeAttributesSeparator(attributes.getVariation()));
-			}
-			return res.toString();
-		}
 	}
 
 	/**
@@ -162,20 +134,6 @@ public class ResourceUtil
 		{
 			url.getQueryParameters().add(new Url.QueryParameter(encoded, ""));
 		}
-	}
-
-	/**
-	 * Escapes any occurrences of <em>-</em> character in the style and variation
-	 * attributes with <em>~</em>. Any occurrence of <em>~</em> is encoded as <em>~~</em>.
-	 *
-	 * @param attribute
-	 *      the attribute to escape
-	 * @return the attribute with escaped separator character
-	 */
-	public static CharSequence escapeAttributesSeparator(String attribute)
-	{
-		CharSequence tmp = Strings.replaceAll(attribute, "~", "~~");
-		return Strings.replaceAll(tmp, "-", "~");
 	}
 
 	/**
@@ -268,17 +226,65 @@ public class ResourceUtil
 	}
 
 	/**
-	 * Reverts the escaping applied by {@linkplain #escapeAttributesSeparator(String)} - unescapes
-	 * occurrences of <em>~</em> character in the style and variation attributes with <em>-</em>.
+	 * Encode the {@code part} in the format <string length encoded in base ten ASCII>~<string data>.
 	 *
-	 * @param attribute
-	 *      the attribute to unescape
-	 * @return the attribute with escaped separator character
+	 * If the {@code part} is {@code null} the special value {@link #NULL_VALUE} is used;
+	 *
+	 * @param part
+	 *     The string to encode.
+	 * @param buffer
+	 *     The buffer into which the {@code part} is encoded.
+	 * @return The {@code buffer} for chaining.
 	 */
-	public static String unescapeAttributesSeparator(String attribute)
+	static StringBuilder encodeStringPart(String part, StringBuilder buffer)
 	{
-		String tmp = ESCAPED_ATTRIBUTE_PATTERN.matcher(attribute).replaceAll("$1-$2");
-		return Strings.replaceAll(tmp, "~~", "~").toString();
+		if (part == null) {
+			return buffer.append(NULL_VALUE);
+		}
+
+		int length = part.length();
+		return buffer.append(length).append('~').append(part);
+	}
+
+	/**
+	 * Decodes the {@code encoded} parts of a string decoded by {@link #encodeStringPart(String)}.
+	 *
+	 * @param encoded
+	 * @return An array containing the parts of {@code encoded}.
+	 *     The array can contain {@code null} but is itself never {@code null}
+	 */
+	static String[] decodeStringParts(String encoded)
+	{
+		ArrayList<String> result = new ArrayList<>();
+
+		StringBuilder lengthString = new StringBuilder();
+		char[] chars = encoded.toCharArray();
+		for (int i = 0; i < chars.length; i++)
+		{
+			boolean isAtStartOfPart = lengthString.length() == 0;
+			if (isAtStartOfPart && chars.length >= i + NULL_VALUE.length() &&
+					String.valueOf(chars, i, NULL_VALUE.length()).equals(NULL_VALUE)) {
+				result.add(null);
+				i += NULL_VALUE.length() - 1;
+				continue;
+			}
+
+			char c = chars[i];
+			if (c >= '0' && c <= '9') {
+				lengthString.append(c);
+			} else {
+				if (isAtStartOfPart || c != '~') { // Not a (valid) resource attribute string
+					return new String[0];
+				}
+
+				int length = Integer.parseInt(lengthString.toString());
+				lengthString.setLength(0); // reset the length buffer
+				result.add(String.valueOf(chars, i + 1, length));
+				i += length;
+			}
+		}
+
+		return result.toArray(String[]::new);
 	}
 
 	private ResourceUtil()

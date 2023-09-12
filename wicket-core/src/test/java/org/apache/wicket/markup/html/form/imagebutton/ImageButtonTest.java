@@ -38,19 +38,19 @@ class ImageButtonTest extends WicketTestCase
 		tester.startPage(Home.class);
 
 		tester.clickLink("goCanadian");
-		tester.assertContains("resource/org.apache.wicket.markup.html.form.imagebutton.Home/Beer.gif\\?en_CA\"");
+		tester.assertContains("resource/org.apache.wicket.markup.html.form.imagebutton.Home/Beer.gif\\?5~en_CAnullnull\"");
 
 		tester.clickLink("goChinese");
-		tester.assertContains("resource/org.apache.wicket.markup.html.form.imagebutton.Home/Beer.gif\\?zh_CN\"");
+		tester.assertContains("resource/org.apache.wicket.markup.html.form.imagebutton.Home/Beer.gif\\?5~zh_CNnullnull\"");
 
 		tester.clickLink("goDanish");
-		tester.assertContains("resource/org.apache.wicket.markup.html.form.imagebutton.Home/Beer.gif\\?da_DK\"");
+		tester.assertContains("resource/org.apache.wicket.markup.html.form.imagebutton.Home/Beer.gif\\?5~da_DKnullnull\"");
 
 		tester.clickLink("goDutch");
-		tester.assertContains("resource/org.apache.wicket.markup.html.form.imagebutton.Home/Beer.gif\\?nl_NL\"");
+		tester.assertContains("resource/org.apache.wicket.markup.html.form.imagebutton.Home/Beer.gif\\?5~nl_NLnullnull\"");
 
 		tester.clickLink("goGerman");
-		tester.assertContains("resource/org.apache.wicket.markup.html.form.imagebutton.Home/Beer.gif\\?de_DE\"");
+		tester.assertContains("resource/org.apache.wicket.markup.html.form.imagebutton.Home/Beer.gif\\?5~de_DEnullnull\"");
 
 		tester.clickLink("goUS");
 		tester.assertContains("resource/org.apache.wicket.markup.html.form.imagebutton.Home/Beer.gif\"");

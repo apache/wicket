@@ -83,7 +83,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	@Test
 	void decode1A()
 	{
-		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference1?en");
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference1?2~ennullnull");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		// assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class); // TODO use hamcrest or assertj
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
@@ -120,7 +120,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	@Test
 	void decode2A()
 	{
-		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference1?-style&p1=v1&p2=v2");
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference1?null5~stylenull&p1=v1&p2=v2");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
@@ -139,7 +139,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	@Test
 	void decode3()
 	{
-		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN");
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?5~en_ENnullnull");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
@@ -158,7 +158,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	@Test
 	void decode3A()
 	{
-		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN-style");
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?5~en_EN5~stylenull");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
@@ -188,7 +188,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	void decode4()
 	{
 		Url url = Url
-			.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN&p1=v1&p2=v2");
+			.parse("wicket/resource/" + CLASS_NAME + "/reference2/name2?5~en_ENnullnull&p1=v1&p2=v2");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
@@ -206,7 +206,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	@Test
 	void decode5()
 	{
-		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference3?-style");
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference3?null5~stylenull");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
@@ -224,7 +224,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	@Test
 	void decode6()
 	{
-		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference3?-style&p1=v1&p2=v2");
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference3?null5~stylenull&p1=v1&p2=v2");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
@@ -244,7 +244,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	@Test
 	void decode7()
 	{
-		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference4?en-style");
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference4?2~en5~stylenull");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
@@ -262,7 +262,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	@Test
 	void decode7A()
 	{
-		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference4?sk");
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference4?2~sknullnull");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertNull(handler);
 	}
@@ -273,7 +273,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	@Test
 	void decode8()
 	{
-		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference4?en-style&p1=v1&p2=v2");
+		Url url = Url.parse("wicket/resource/" + CLASS_NAME + "/reference4?2~en5~stylenull&p1=v1&p2=v2");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
@@ -293,7 +293,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	void decode9()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME
-			+ "/reference5?en--variation&p1=v1&p2=v2");
+			+ "/reference5?2~ennull9~variation&p1=v1&p2=v2");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
@@ -313,7 +313,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	void decode10()
 	{
 		Url url = Url.parse("wicket/resource/" + CLASS_NAME
-			+ "/reference6?en-style-variation&p1=v1&p2=v2");
+			+ "/reference6?2~en5~style9~variation&p1=v1&p2=v2");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
@@ -375,7 +375,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference2,
 			null);
 		Url url = encoder.mapHandler(handler);
-		assertEquals("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN", url.toString());
+		assertEquals("wicket/resource/" + CLASS_NAME + "/reference2/name2?5~en_ENnullnull", url.toString());
 	}
 
 	/**
@@ -392,7 +392,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 			parameters);
 
 		Url url = encoder.mapHandler(handler);
-		assertEquals("wicket/resource/" + CLASS_NAME + "/reference2/name2?en_EN&p1=v1&p2=v2",
+		assertEquals("wicket/resource/" + CLASS_NAME + "/reference2/name2?5~en_ENnullnull&p1=v1&p2=v2",
 			url.toString());
 	}
 
@@ -405,7 +405,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference3,
 			null);
 		Url url = encoder.mapHandler(handler);
-		assertEquals("wicket/resource/" + CLASS_NAME + "/reference3?-style", url.toString());
+		assertEquals("wicket/resource/" + CLASS_NAME + "/reference3?null5~stylenull", url.toString());
 	}
 
 	/**
@@ -422,7 +422,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 			parameters);
 
 		Url url = encoder.mapHandler(handler);
-		assertEquals("wicket/resource/" + CLASS_NAME + "/reference3?-style&p1=v1&p2=v2",
+		assertEquals("wicket/resource/" + CLASS_NAME + "/reference3?null5~stylenull&p1=v1&p2=v2",
 			url.toString());
 	}
 
@@ -435,7 +435,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference4,
 			null);
 		Url url = encoder.mapHandler(handler);
-		assertEquals("wicket/resource/" + CLASS_NAME + "/reference4?en-style", url.toString());
+		assertEquals("wicket/resource/" + CLASS_NAME + "/reference4?2~en5~stylenull", url.toString());
 	}
 
 	/**
@@ -452,7 +452,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 			parameters);
 
 		Url url = encoder.mapHandler(handler);
-		assertEquals("wicket/resource/" + CLASS_NAME + "/reference4?en-style&p1=v1&p2=v2",
+		assertEquals("wicket/resource/" + CLASS_NAME + "/reference4?2~en5~stylenull&p1=v1&p2=v2",
 			url.toString());
 	}
 
@@ -466,7 +466,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 			null);
 
 		Url url = encoder.mapHandler(handler);
-		assertEquals("wicket/resource/" + CLASS_NAME + "/reference5?en--variation", url.toString());
+		assertEquals("wicket/resource/" + CLASS_NAME + "/reference5?2~ennull9~variation", url.toString());
 	}
 
 	/**
