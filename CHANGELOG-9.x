@@ -2,6 +2,29 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.15.0
+
+** Bug
+
+    * [WICKET-7061] - When I move from 9.13.0->9.14.0, my importmaps fail to parse correctly due to presence of the CDATA wrapping.
+    * [WICKET-7065] - TextFilteredPropertyColumn violates CSP
+    * [WICKET-7067] - DefaultExceptionMapper should not set disableCaching for  WebSocketResponse
+    * [WICKET-7070] - Quick start generated app has multiple errors
+    * [WICKET-7071] - Problems when calling request.getInputStream() before executing WicketFilter
+
+** Improvement
+
+    * [WICKET-7039] - Improve Accessibility of wicket-autocomplete.js
+    * [WICKET-7063] - Convert all Application_*.properties to Application_*.utf8.properties
+    * [WICKET-7066] - Add possibility to define type-Attribute of JavascriptHeaderItem as "module"
+    * [WICKET-7068] - Current tree themes are not RTL friendly
+
+** Task
+
+    * [WICKET-7069] - assertTrue(equals()) in tests should be replaced with assertEquals
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.14.0
 
 ** Bug
