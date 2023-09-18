@@ -16,14 +16,19 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.DefaultExceptionMapper;
 import org.apache.wicket.Page;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.ajax.AjaxNewWindowNotifyingBehavior;
 import org.apache.wicket.application.IComponentInitializationListener;
+import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.ajax.builtin.modal.ModalDialogPage;
 import org.apache.wicket.examples.ajax.builtin.modal.ModalWindowPage;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
 
 
@@ -36,6 +41,18 @@ public class AjaxApplication extends WicketExampleApplication
 	protected void init()
 	{
 		super.init();
+
+		setExceptionMapperProvider(()-> new DefaultExceptionMapper()
+		{
+			@Override
+			protected IRequestHandler mapUnexpectedExceptions(Exception e, Application application) {
+				if (e instanceof ErrorRenderingPage.WeirdException) {
+					System.out.println("ErrorRenderingPage!");
+					return createPageRequestHandler(new PageProvider(ErrorPage.class));
+				}
+				return super.mapUnexpectedExceptions(e, application);
+			}
+		});
 
 		getApplicationSettings().setUploadProgressUpdatesEnabled(true);
 
@@ -71,8 +88,15 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("world-clock", WorldClockPage.class);
 		mountPage("upload", FileUploadPage.class);
 		mountPage("download", AjaxDownloadPage.class);
+		mountPage("dynamicError", AjaxDownloadPage.class);
+		mountPage("error", ErrorPage.class);
 
 		mountResource("dynamic-text-file", AjaxDownloadPage.DynamicTextFileResource.instance);
+	}
+
+	@Override
+	public RuntimeConfigurationType getConfigurationType() {
+		return RuntimeConfigurationType.DEPLOYMENT;
 	}
 
 	/**
