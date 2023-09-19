@@ -273,14 +273,16 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 		final List<IResponseFilter> filters = Application.get()
 			.getRequestCycleSettings()
 			.getResponseFilters();
+		// KP-7074 we need to write to a temporary buffer, otherwise, if an exception is produced,
+		// and a redirect is done we will end up with a malformed XML
+		final StringResponse bodyResponse = new StringResponse();
+		update.writeTo(bodyResponse, encoding);
 		if (filters == null || filters.isEmpty())
 		{
-			update.writeTo(response, encoding);
+			response.write(bodyResponse.getBuffer());
 		}
 		else
 		{
-			final StringResponse bodyResponse = new StringResponse();
-			update.writeTo(bodyResponse, encoding);
 			CharSequence filteredResponse = invokeResponseFilters(bodyResponse, filters);
 			response.write(filteredResponse);
 		}
