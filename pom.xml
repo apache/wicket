@@ -129,7 +129,6 @@
 		<javadoc.additionalJOption />
 		<javadoc.jdk.apidocs.link>https://docs.oracle.com/en/java/javase/${java.specification.version}/docs/api/</javadoc.jdk.apidocs.link>
 
-		<maven.compiler.optimize>true</maven.compiler.optimize>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
 		<maven.compiler.source>17</maven.compiler.source>
@@ -580,6 +579,13 @@
 						<artifactId>commons-logging</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-util</artifactId>
+				<version>10.0.0-M2-SNAPSHOT</version>
+				<type>test-jar</type>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.assertj</groupId>
@@ -1533,7 +1539,7 @@
 		<profile>
 			<id>on-jdk-early-access</id>
 			<activation>
-				<jdk>[21,)</jdk>
+				<jdk>[22,)</jdk>
 			</activation>
 			<properties>
 				<javadoc.jdk.apidocs.link>https://download.java.net/java/early_access/jdk${java.specification.version}/docs/api/</javadoc.jdk.apidocs.link>
