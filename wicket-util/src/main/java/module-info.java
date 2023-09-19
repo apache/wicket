@@ -25,7 +25,6 @@ module org.apache.wicket.util {
     requires org.apache.commons.collections4;
     requires org.slf4j;
     requires static jakarta.servlet;
-    requires org.junit.jupiter.api;
 
     exports org.apache.wicket.util;
     exports org.apache.wicket.util.collections;
@@ -39,7 +38,6 @@ module org.apache.wicket.util {
     exports org.apache.wicket.util.io;
     exports org.apache.wicket.util.lang;
     exports org.apache.wicket.util.listener;
-    exports org.apache.wicket.util.markup.xhtml;
     exports org.apache.wicket.util.parse.metapattern;
     exports org.apache.wicket.util.parse.metapattern.parsers;
     exports org.apache.wicket.util.resource;
