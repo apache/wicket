@@ -34,20 +34,28 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.MockPageWithLinkAndComponent;
+import org.apache.wicket.Page;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.response.filter.IResponseFilter;
+import org.apache.wicket.settings.RequestCycleSettings;
 import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.time.Instants;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -304,6 +312,104 @@ class AjaxRequestHandlerTest extends WicketTestCase
 			tester.getLastResponse().getHeader("Expires"));
 		assertEquals("no-cache", tester.getLastResponse().getHeader("Pragma"));
 		assertEquals("no-cache, no-store", tester.getLastResponse().getHeader("Cache-Control"));
+	}
+
+	private static class Wicket7074Application extends MockApplication
+	{
+		private RequestCycleSettings requestCycleSettings;
+
+		@Override
+		public Class<? extends Page> getHomePage()
+		{
+			return Wicket7074.class;
+		}
+
+		public final RequestCycleSettings getRequestCycleSettings()
+		{
+			checkSettingsAvailable();
+			if (requestCycleSettings == null)
+			{
+				requestCycleSettings = new RequestCycleSettings() {
+					@Override
+					public RequestCycleSettings addResponseFilter(IResponseFilter responseFilter) {
+						// do nothing
+						return this;
+					}
+				};
+			}
+			return requestCycleSettings;
+		}
+	}
+
+	private static class WeirdException extends IllegalStateException {
+
+	}
+
+	private static class Wicket7074 extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		private boolean generateError = false;
+
+		private final Component label;
+		/**
+		 * Construct.
+		 */
+		private Wicket7074()
+		{
+			setOutputMarkupId(true);
+
+			add(new AjaxLink<Void>("action")
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void onClick(AjaxRequestTarget target)
+				{
+					// we simulate producing an exception in rendering phase
+					generateError = true;
+					target.add(label);
+				}
+			});
+
+			add(label = new Label("label", "error")
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void onBeforeRender()
+				{
+					super.onBeforeRender();
+					// we simulate producing an exception in rendering phase
+					if (generateError)
+					{
+						throw new WeirdException();
+					}
+				}
+			}.setOutputMarkupId(true));
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+													   Class<?> containerClass)
+		{
+			return new StringResourceStream(
+					"<html><body><a wicket:id='action'>link1</a><br/><br/><br/><span wicket:id='label'>Link2</span></body></html>");
+		}
+	}
+
+	@Test
+	void ajaxResponseIsEmptyIfExceptionIsProducedDuringRenderingAndNoFiltersAreSet() {
+		Wicket7074Application application = new Wicket7074Application();
+		WicketTester tester = newWicketTester(application);
+		// the page renders normally the first time
+		tester.startPage(new Wicket7074());
+		// click on action to produce render phase error
+		assertThrows(WeirdException.class, () -> {
+			tester.clickLink("action");
+		});
+		// AJAX response is written now into a buffer and to the response => response should empty
+		assertTrue(tester.getLastResponseAsString().isEmpty());
 	}
 
 	/**

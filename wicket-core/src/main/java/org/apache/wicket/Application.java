@@ -1171,7 +1171,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	/**
 	 * @return Application's request cycle related settings
 	 */
-	public final RequestCycleSettings getRequestCycleSettings()
+	public RequestCycleSettings getRequestCycleSettings()
 	{
 		checkSettingsAvailable();
 		if (requestCycleSettings == null)
