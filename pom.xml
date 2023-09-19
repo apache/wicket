@@ -1539,7 +1539,7 @@
 		<profile>
 			<id>on-jdk-early-access</id>
 			<activation>
-				<jdk>[21,)</jdk>
+				<jdk>[22,)</jdk>
 			</activation>
 			<properties>
 				<javadoc.jdk.apidocs.link>https://download.java.net/java/early_access/jdk${java.specification.version}/docs/api/</javadoc.jdk.apidocs.link>
