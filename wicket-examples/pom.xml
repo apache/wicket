@@ -135,6 +135,11 @@
 			<artifactId>wicket-velocity</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-util</artifactId>
+			<type>test-jar</type>
+		</dependency>
+		<dependency>
 			<groupId>org.codelibs</groupId>
 			<artifactId>jhighlight</artifactId>
 		</dependency>

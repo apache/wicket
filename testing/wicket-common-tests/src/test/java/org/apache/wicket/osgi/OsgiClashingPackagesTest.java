@@ -39,7 +39,7 @@ class OsgiClashingPackagesTest
 		for (String dependency : dependencies)
 		{
 			// process only wicket-xyz.jar
-			if (dependency.contains("wicket-") && dependency.endsWith(".jar"))
+			if (dependency.contains("wicket-") && dependency.endsWith(".jar") && !dependency.endsWith("-tests.jar"))
 			{
 				JarFile jarFile = new JarFile(dependency);
 				try

@@ -442,6 +442,12 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-util</artifactId>
+				<version>10.0.0-M2-SNAPSHOT</version>
+				<type>test-jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-velocity</artifactId>
 				<version>10.0.0-M2-SNAPSHOT</version>
 				<type>jar</type>
