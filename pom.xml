@@ -129,7 +129,6 @@
 		<javadoc.additionalJOption />
 		<javadoc.jdk.apidocs.link>https://docs.oracle.com/en/java/javase/${java.specification.version}/docs/api/</javadoc.jdk.apidocs.link>
 
-		<maven.compiler.optimize>true</maven.compiler.optimize>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
 		<maven.compiler.source>17</maven.compiler.source>
