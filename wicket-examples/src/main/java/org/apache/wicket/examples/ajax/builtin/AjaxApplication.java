@@ -47,7 +47,6 @@ public class AjaxApplication extends WicketExampleApplication
 			@Override
 			protected IRequestHandler mapUnexpectedExceptions(Exception e, Application application) {
 				if (e instanceof ErrorRenderingPage.WeirdException) {
-					System.out.println("ErrorRenderingPage!");
 					return createPageRequestHandler(new PageProvider(ErrorPage.class));
 				}
 				return super.mapUnexpectedExceptions(e, application);
