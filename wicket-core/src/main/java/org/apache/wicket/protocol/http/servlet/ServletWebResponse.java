@@ -91,7 +91,7 @@ public class ServletWebResponse extends WebResponse
 	@Override
 	public boolean isHeaderSupported()
 	{
-		return true;
+		return !httpServletResponse.isCommitted();
 	}
 	
 	@Override
