@@ -26,8 +26,6 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -90,8 +88,6 @@ public class ParallelInjectionTest implements ApplicationContextAware {
         }
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(ParallelInjectionTest.class);
-
     private ApplicationContext context;
 
     @BeforeAll
@@ -115,7 +111,7 @@ public class ParallelInjectionTest implements ApplicationContextAware {
         ExecutorService executor = Executors.newFixedThreadPool(nThreads);
 
         Callable<String> callableTask = () -> {
-            LOG.debug("Thread id: {}", Thread.currentThread().getId());
+            //LOG.debug("Thread id: {}", Thread.currentThread().getId());
             ThreadContext.setApplication(tester.getApplication());
             var panel = new DemoComponent();
             Injector.get().inject(panel);
@@ -131,7 +127,8 @@ public class ParallelInjectionTest implements ApplicationContextAware {
 
         futures.forEach(f -> {
             try {
-                LOG.debug("Returned {}", f.get());
+            	f.get();
+                //LOG.debug("Returned {}", f.get());
             } catch (Exception e) {
                 throw new RuntimeException("A problem occurred", e);
             }
