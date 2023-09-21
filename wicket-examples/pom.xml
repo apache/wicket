@@ -140,6 +140,11 @@
 			<type>test-jar</type>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core</artifactId>
+			<type>test-jar</type>
+		</dependency>
+		<dependency>
 			<groupId>org.codelibs</groupId>
 			<artifactId>jhighlight</artifactId>
 		</dependency>
