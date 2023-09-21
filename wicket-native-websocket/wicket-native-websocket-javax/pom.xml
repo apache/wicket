@@ -57,12 +57,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-util</artifactId>
+			<artifactId>wicket-core</artifactId>
 			<type>test-jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-core</artifactId>
+			<artifactId>wicket-util</artifactId>
 			<type>test-jar</type>
 		</dependency>
 		<dependency>
