@@ -99,6 +99,7 @@
 		<!-- wicket-eclipse-settings is separate released -->
 		<module>wicket</module>
 		<module>wicket-core</module>
+		<module>wicket-tester</module>
 		<module>wicket-util</module>
 		<module>wicket-request</module>
 		<module>wicket-devutils</module>
@@ -585,6 +586,12 @@
 				<artifactId>wicket-core</artifactId>
 				<version>10.0.0-M2-SNAPSHOT</version>
 				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-tester</artifactId>
+				<version>10.0.0-M2-SNAPSHOT</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
