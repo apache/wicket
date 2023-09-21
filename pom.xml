@@ -437,6 +437,13 @@
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-util</artifactId>
 				<version>10.0.0-M2-SNAPSHOT</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-util</artifactId>
+				<version>10.0.0-M2-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
@@ -579,13 +586,6 @@
 						<artifactId>commons-logging</artifactId>
 					</exclusion>
 				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-util</artifactId>
-				<version>10.0.0-M2-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
