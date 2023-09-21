@@ -21,12 +21,11 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.UUID;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.util.value.ValueMap;
+
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
-
-import org.apache.wicket.Session;
-import org.apache.wicket.util.tester.BaseWicketTester;
-import org.apache.wicket.util.value.ValueMap;
 
 
 /**
@@ -146,7 +145,8 @@ public class MockHttpSession implements HttpSession, Serializable
 	@Override
 	public void invalidate()
 	{
-		Session session = (Session) attributes.get("wicket:" + BaseWicketTester.TestFilterConfig.class.getName() + ":session");
+		Session session = (Session) attributes.get("wicket:" + "BaseWicketTester.TestFilterConfig" + ":session"); // TODO
+		//Session session = (Session) attributes.get("wicket:" + BaseWicketTester.TestFilterConfig.class.getName() + ":session");
 		if (session != null)
 		{
 			session.onInvalidate();

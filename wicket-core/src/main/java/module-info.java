@@ -29,7 +29,6 @@ module org.apache.wicket.core {
     requires static jakarta.servlet;
     requires org.danekja.jdk.serializable.functional;
     requires com.github.openjson;
-    requires org.junit.jupiter.api;
     requires static org.bouncycastle.provider;
 
     provides org.apache.wicket.IInitializer with org.apache.wicket.Initializer;
@@ -139,7 +138,6 @@ module org.apache.wicket.core {
     exports org.apache.wicket.util.image;
     exports org.apache.wicket.util.reference;
     exports org.apache.wicket.util.template;
-    exports org.apache.wicket.util.tester;
     exports org.apache.wicket.validation;
     exports org.apache.wicket.validation.validator;
 }

@@ -60,6 +60,12 @@
 						<goals>
 							<goal>test-jar</goal>
 						</goals>
+						<configuration>
+							<includes>
+	          					<include>org/apache/wicket/util/license/**</include>
+	          					<include>org/apache/wicket/util/markup/xhtml/**</include>
+	        				</includes>						
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

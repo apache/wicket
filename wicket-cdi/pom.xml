@@ -43,6 +43,11 @@
 			<type>test-jar</type>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core</artifactId>
+			<type>test-jar</type>
+		</dependency>
+		<dependency>
 			<groupId>jakarta.annotation</groupId>
 			<artifactId>jakarta.annotation-api</artifactId>
 		</dependency>
