@@ -67,19 +67,28 @@
 		</dependency>
 	</dependencies>
 
+	<!-- 
+	WICKET-7072:
+	To run this project successfully we need two things:
+	(1) no module-info,
+	    otherwise error "The package org.apache.wicket conflicts with a package accessible from another module")
+	(2) useModulePath=false for maven-compiler plugin available for 3.11+ (see also WICKET-7019),
+	    otherwise error "Can't compile test sources when main sources are missing a module descriptor")
+	    see https://maven.apache.org/plugins/maven-compiler-plugin/plugin-info.html
+	-->
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId> <!-- Plugin versions have to be declared in <pluginManagement>: -->
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
         		<executions>
           			<execution>
 						<id>test-compile</id>
 						<goals>
-							<goal>testCompile</goal> <!-- https://maven.apache.org/plugins/maven-compiler-plugin/plugin-info.html -->
+							<goal>testCompile</goal>
 						</goals>
 						<configuration>
-							<useModulePath>false</useModulePath> <!-- since 3.11; https://issues.apache.org/jira/browse/WICKET-7019 -->
+							<useModulePath>false</useModulePath>
 						</configuration>
           			</execution>
        			</executions>
