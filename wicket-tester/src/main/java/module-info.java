@@ -15,4 +15,16 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.tester {}
+module org.apache.wicket.tester {
+	requires org.apache.wicket.util;
+	requires org.apache.wicket.request;
+	requires org.apache.wicket.core;
+    requires org.slf4j;
+    requires static jakarta.servlet;
+    requires org.junit.jupiter.api;
+    requires org.apache.commons.collections4;
+    requires org.danekja.jdk.serializable.functional;
+    requires org.assertj.core;
+
+    exports org.apache.wicket.util.tester;
+}

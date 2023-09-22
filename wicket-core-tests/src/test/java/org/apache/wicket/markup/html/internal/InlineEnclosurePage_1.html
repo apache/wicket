@@ -1,0 +1,50 @@
+<html xmlns:wicket>
+<body>
+
+<span wicket:enclosure=""> <span wicket:id="label1">Test</span> </span>
+
+<div wicket:enclosure="label2">
+	<table>
+		<tr>
+			<td><span wicket:id="label2">Test</span></td>
+		</tr>
+	</table>
+</div>
+
+<span wicket:enclosure=""> <span wicket:id="label3">Test</span> </span>
+
+<div wicket:enclosure="label6">
+	<table>
+		<tr>
+			<td><span wicket:id="label4">Test</span></td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><span wicket:id="label5">Test</span></td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><span wicket:id="label6">Test</span></td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><span wicket:id="label7">Test</span></td>
+		</tr>
+	</table>
+</div>
+
+<div wicket:enclosure="container:label8"><span
+	wicket:id="container"> <span wicket:id="label8">Test</span> </span></div>
+
+<div wicket:enclosure=""><span wicket:id="label9">Test</span></div>
+
+<div wicket:id="customInlineEnclosureId"
+	wicket:enclosure="label10"><span wicket:id="label10">Test</span>
+</div>
+
+
+</body>
+</html>

@@ -205,6 +205,7 @@ org.apache.wicket.validation.validator;-noimport:=true
 				<groupId>org.primefaces.extensions</groupId>
 				<artifactId>resources-optimizer-maven-plugin</artifactId>
 			</plugin>
+			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -221,6 +222,7 @@ org.apache.wicket.validation.validator;-noimport:=true
 					</execution>
 				</executions>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 </project>

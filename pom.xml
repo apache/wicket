@@ -100,6 +100,7 @@
 		<module>wicket</module>
 		<module>wicket-core</module>
 		<module>wicket-tester</module>
+		<module>wicket-core-tests</module>
 		<module>wicket-util</module>
 		<module>wicket-request</module>
 		<module>wicket-devutils</module>
@@ -593,6 +594,12 @@
 				<artifactId>wicket-tester</artifactId>
 				<version>10.0.0-M2-SNAPSHOT</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-core-tests</artifactId>
+				<version>10.0.0-M2-SNAPSHOT</version>
+				<!-- <scope>test</scope> -->
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
