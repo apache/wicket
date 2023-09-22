@@ -25,7 +25,7 @@
 	</parent>
 	<artifactId>wicket-core-tests</artifactId>
 	<packaging>jar</packaging>
-	<name>Wicket Tester Tests</name>
+	<name>Wicket Core Tests</name>
 	<description>
 		Internal JUnit Tests for Wicket Core (and Tester).
 	</description>
@@ -40,4 +40,25 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId> <!-- Plugin versions have to be declared in <pluginManagement>: -->
+				<artifactId>maven-compiler-plugin</artifactId>
+        		<executions>
+          			<execution>
+						<id>test-compile</id>
+						<goals>
+							<goal>testCompile</goal> <!-- https://maven.apache.org/plugins/maven-compiler-plugin/plugin-info.html -->
+						</goals>
+						<configuration>
+							<useModulePath>false</useModulePath> <!-- since 3.11; https://issues.apache.org/jira/browse/WICKET-7019 -->
+						</configuration>
+          			</execution>
+       			</executions>
+			</plugin>
+		</plugins>
+	</build>
+  	
 </project>
