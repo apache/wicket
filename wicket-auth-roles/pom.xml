@@ -41,8 +41,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-core</artifactId>
-			<type>test-jar</type>
+			<artifactId>wicket-tester</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
