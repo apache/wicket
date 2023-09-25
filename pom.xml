@@ -192,8 +192,8 @@
 		<version.maven-resources-plugin>3.3.1</version.maven-resources-plugin>
 		<version.maven-site-plugin>4.0.0-M9</version.maven-site-plugin>
 		<version.maven-surefire>3.1.2</version.maven-surefire>
-		<build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
-		<japicmp-maven-plugin.version>0.17.2</japicmp-maven-plugin.version>
+		<build-helper-maven-plugin.version>3.4.0</build-helper-maven-plugin.version>
+		<japicmp-maven-plugin.version>0.18.0</japicmp-maven-plugin.version>
 		<maven-archetype-plugin.version>3.2.1</maven-archetype-plugin.version>
 		<maven-bundle-plugin.version>5.1.9</maven-bundle-plugin.version>
 		<maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
