@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.util.tester;
+package org.apache.wicket.protocol.ws.tester;
 
 import java.io.IOException;
 import java.util.concurrent.Future;
@@ -22,7 +22,6 @@ import java.util.concurrent.Future;
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
-import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
 
 /**

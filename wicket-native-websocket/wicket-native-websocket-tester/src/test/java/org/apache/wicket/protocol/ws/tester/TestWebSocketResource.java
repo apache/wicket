@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.util.tester;
+package org.apache.wicket.protocol.ws.tester;
 
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.WebSocketResource;
@@ -28,10 +28,6 @@ import org.apache.wicket.util.string.Strings;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-/**
- *
- */
 public class TestWebSocketResource extends WebSocketResource
 {
 	static final String TEXT = "TestWebSocketResource-text";
