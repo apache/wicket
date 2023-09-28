@@ -17,6 +17,8 @@
 package org.apache.wicket.devutils.util.license;
 
 import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test that the license headers are in place in this project. The tests are run from
@@ -33,4 +35,19 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 	{
 		// addHeaders = true;
 	}
+	
+	@BeforeEach
+	@Override
+	public void before()
+	{
+		super.before();
+	}
+
+	@Test
+	@Override
+	public void licenseHeaders()
+	{
+		super.licenseHeaders();
+	}
+	
 }

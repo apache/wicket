@@ -49,25 +49,4 @@
 			<artifactId>junit-jupiter-engine</artifactId>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-						<configuration>
-							<includes>
-	          					<include>org/apache/wicket/util/license/**</include>
-	          					<include>org/apache/wicket/util/markup/xhtml/**</include>
-	        				</includes>						
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 </project>

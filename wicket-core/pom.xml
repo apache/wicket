@@ -169,11 +169,6 @@ org.apache.wicket.validation.validator;-noimport:=true
 			<artifactId>jdk-serializable-functional</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-util</artifactId>
-			<type>test-jar</type>
-		</dependency>
-		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 		</dependency>

@@ -27,8 +27,6 @@ import java.util.Objects;
 
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,8 +93,8 @@ public abstract class ApacheLicenseHeaderTestCase
 	/**
 	 *
 	 */
-	@BeforeEach
-	final void before()
+	//@BeforeEach
+	protected void before()
 	{
 		// setup the base directory for when running inside maven (building a release
 		// comes to mind).
@@ -110,8 +108,8 @@ public abstract class ApacheLicenseHeaderTestCase
 	/**
 	 * Test all the files in the project which has an associated {@link ILicenseHeaderHandler}.
 	 */
-	@Test
-	void licenseHeaders()
+	//@Test
+	protected void licenseHeaders()
 	{
 		licenseHeaderHandlers = new ILicenseHeaderHandler[] {
 				new JavaLicenseHeaderHandler(javaIgnore),

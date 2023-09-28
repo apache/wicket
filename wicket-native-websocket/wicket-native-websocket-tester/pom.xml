@@ -47,10 +47,5 @@
             <artifactId>wicket-tester</artifactId>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-util</artifactId>
-            <type>test-jar</type>
-        </dependency>
     </dependencies>
 </project>

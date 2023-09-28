@@ -45,11 +45,6 @@
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-tester</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-util</artifactId>
-			<type>test-jar</type>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
