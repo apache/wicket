@@ -18,7 +18,6 @@ package org.apache.wicket.spring;
 
 import java.util.Map;
 
-import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletContext;
 
 import org.apache.wicket.protocol.http.IWebApplicationFactory;
@@ -36,9 +35,9 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 /**
  * Implementation of IWebApplicationFactory that pulls the WebApplication object out of spring
  * application context.
- * 
+ *
  * Configuration example:
- * 
+ *
  * <pre>
  * &lt;filter&gt;
  *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
@@ -49,12 +48,12 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  *   &lt;/init-param&gt;
  * &lt;/filter&gt;
  * </pre>
- * 
+ *
  * <code>applicationBean</code> init parameter can be used if there are multiple WebApplications
  * defined on the spring application context.
- * 
+ *
  * Example:
- * 
+ *
  * <pre>
  * &lt;filter&gt;
  *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
@@ -69,13 +68,13 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  *   &lt;/init-param&gt;
  * &lt;/filter&gt;
  * </pre>
- * 
+ *
  * <p>
  * This factory is also capable of creating a {@link WebApplication}-specific application context
  * (path to which is specified via the {@code contextConfigLocation} filter param) and chaining it
  * to the global one
  * </p>
- * 
+ *
  * <pre>
  * &lt;filter&gt;
  *   &lt;filter-name&gt;MyApplication&lt;/filter-name&gt;
@@ -90,10 +89,10 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  *   &lt;/init-param&gt;
  * &lt;/filter&gt;
  * </pre>
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
  * @author Janne Hietam&auml;ki (jannehietamaki)
- * 
+ *
  */
 public class SpringWebApplicationFactory implements IWebApplicationFactory
 {
@@ -104,30 +103,19 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	/**
 	 * Returns location of context config that will be used to create a {@link WebApplication}
 	 * -specific application context.
-	 * 
+	 *
 	 * @param filter
 	 * @return location of context config
 	 */
 	protected final String getContextConfigLocation(final WicketFilter filter)
 	{
-		String contextConfigLocation;
-
-		final FilterConfig filterConfig = filter.getFilterConfig();
-		contextConfigLocation = filterConfig.getInitParameter("contextConfigLocation");
-
-		if (contextConfigLocation == null)
-		{
-			final ServletContext servletContext = filterConfig.getServletContext();
-			contextConfigLocation = servletContext.getInitParameter("contextConfigLocation");
-		}
-
-		return contextConfigLocation;
+		return filter.getFilterConfig().getInitParameter("contextConfigLocation");
 	}
 
 	/**
 	 * Factory method used to create a new instance of the web application context, by default an
 	 * instance of {@link XmlWebApplicationContext} will be created.
-	 * 
+	 *
 	 * @return application context instance
 	 */
 	protected ConfigurableWebApplicationContext newApplicationContext()
@@ -191,7 +179,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	/**
 	 * Creates and initializes a new {@link WebApplicationContext}, with the given context as the
 	 * parent. Based on the logic in Spring's FrameworkServlet#createWebApplicationContext()
-	 * 
+	 *
 	 * @param parent
 	 *            parent application context
 	 * @param filter
@@ -216,7 +204,7 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	/**
 	 * This is a hook for potential subclasses to perform additional processing on the context.
 	 * Based on the logic in Spring's FrameworkServlet#postProcessWebApplicationContext()
-	 * 
+	 *
 	 * @param wac
 	 *            additional application context
 	 * @param filter
