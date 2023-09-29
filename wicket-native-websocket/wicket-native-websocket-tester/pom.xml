@@ -47,5 +47,11 @@
             <artifactId>wicket-tester</artifactId>
             <scope>compile</scope>
         </dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>compile</scope>
+			<optional>false</optional>
+		</dependency>
     </dependencies>
 </project>

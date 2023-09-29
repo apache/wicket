@@ -21,6 +21,7 @@ module org.apache.wicket.websocket.tester {
     requires org.apache.wicket.core;
     requires org.apache.wicket.websocket.core;
     requires static jakarta.servlet;
+    requires org.junit.jupiter.api;
     requires org.slf4j;
     requires org.apache.wicket.tester;
 
