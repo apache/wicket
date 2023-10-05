@@ -103,11 +103,18 @@ public class HttpSessionStore implements ISessionStore
 			{
 				// register an unbinding listener for cleaning up
 				String applicationKey = Application.get().getName();
-				httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
-					new SessionBindingListener(applicationKey, newSession));
+				try
+				{
+					httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
+						new SessionBindingListener(applicationKey, newSession));
 
-				// register the session object itself
-				setWicketSession(request, newSession);
+					// register the session object itself
+					setWicketSession(request, newSession);
+				}
+				catch (IllegalStateException e)
+				{
+					logInvalidHttpSession(httpSession, e);
+				}
 			}
 		}
 	}
@@ -161,8 +168,16 @@ public class HttpSessionStore implements ISessionStore
 		HttpSession httpSession = getHttpSession(request, false);
 		if (httpSession != null)
 		{
-			// tell the app server the session is no longer valid
-			httpSession.invalidate();
+			try
+			{
+				// tell the app server the session is no longer valid
+				httpSession.invalidate();
+			}
+			catch (IllegalStateException e)
+			{
+				logInvalidHttpSession(httpSession, e);
+			}
+
 		}
 	}
 
@@ -253,7 +268,16 @@ public class HttpSessionStore implements ISessionStore
 		HttpSession httpSession = getHttpSession(request, false);
 		if (httpSession != null)
 		{
-			return (Serializable)httpSession.getAttribute(getSessionAttributePrefix(request) + name);
+			try
+			{
+				return (Serializable)httpSession
+					.getAttribute(getSessionAttributePrefix(request) + name);
+			}
+			catch (IllegalStateException e)
+			{
+				logInvalidHttpSession(httpSession, e);
+			}
+
 		}
 		return null;
 	}
@@ -265,17 +289,25 @@ public class HttpSessionStore implements ISessionStore
 		HttpSession httpSession = getHttpSession(request, false);
 		if (httpSession != null)
 		{
-			@SuppressWarnings("unchecked")
-			final Enumeration<String> names = httpSession.getAttributeNames();
-			final String prefix = getSessionAttributePrefix(request);
-			while (names.hasMoreElements())
+			try
 			{
-				final String name = names.nextElement();
-				if (name.startsWith(prefix))
+				@SuppressWarnings("unchecked")
+				final Enumeration<String> names = httpSession.getAttributeNames();
+				final String prefix = getSessionAttributePrefix(request);
+				while (names.hasMoreElements())
 				{
-					list.add(name.substring(prefix.length()));
+					final String name = names.nextElement();
+					if (name.startsWith(prefix))
+					{
+						list.add(name.substring(prefix.length()));
+					}
 				}
 			}
+			catch (IllegalStateException e)
+			{
+				logInvalidHttpSession(httpSession, e);
+			}
+
 		}
 		return list;
 	}
@@ -289,15 +321,23 @@ public class HttpSessionStore implements ISessionStore
 			String attributeName = getSessionAttributePrefix(request) + name;
 
 			IRequestLogger logger = Application.get().getRequestLogger();
-			if (logger != null)
+			try
 			{
-				Object value = httpSession.getAttribute(attributeName);
-				if (value != null)
+				if (logger != null)
 				{
-					logger.objectRemoved(value);
+					Object value = httpSession.getAttribute(attributeName);
+					if (value != null)
+					{
+						logger.objectRemoved(value);
+					}
 				}
+				httpSession.removeAttribute(attributeName);
 			}
-			httpSession.removeAttribute(attributeName);
+			catch (IllegalStateException e)
+			{
+				logInvalidHttpSession(httpSession, e);
+			}
+
 		}
 	}
 
@@ -311,18 +351,26 @@ public class HttpSessionStore implements ISessionStore
 		{
 			String attributeName = getSessionAttributePrefix(request) + name;
 			IRequestLogger logger = Application.get().getRequestLogger();
-			if (logger != null)
+			try
 			{
-				if (httpSession.getAttribute(attributeName) == null)
+				if (logger != null)
 				{
-					logger.objectCreated(value);
+					if (httpSession.getAttribute(attributeName) == null)
+					{
+						logger.objectCreated(value);
+					}
+					else
+					{
+						logger.objectUpdated(value);
+					}
 				}
-				else
-				{
-					logger.objectUpdated(value);
-				}
+				httpSession.setAttribute(attributeName, value);
 			}
-			httpSession.setAttribute(attributeName, value);
+			catch (IllegalStateException e)
+			{
+				logInvalidHttpSession(httpSession, e);
+			}
+
 		}
 	}
 
@@ -445,5 +493,10 @@ public class HttpSessionStore implements ISessionStore
 				}
 			}
 		}
+	}
+
+	private void logInvalidHttpSession(HttpSession httpSession, IllegalStateException e)
+	{
+		log.debug("HTTP session {} invalid: {}", httpSession.getId(), e.getMessage());
 	}
 }
