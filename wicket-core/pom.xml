@@ -179,24 +179,6 @@ org.apache.wicket.validation.validator;-noimport:=true
 				<groupId>org.primefaces.extensions</groupId>
 				<artifactId>resources-optimizer-maven-plugin</artifactId>
 			</plugin>
-			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-						<configuration>
-							<includes>
-	          					<include>org/apache/wicket/util/tester/**</include>
-	        				</includes>						
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			-->
 		</plugins>
 	</build>
 </project>
