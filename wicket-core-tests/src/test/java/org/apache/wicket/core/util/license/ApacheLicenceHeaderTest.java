@@ -17,7 +17,11 @@
 package org.apache.wicket.core.util.license;
 
 
+import java.io.File;
+
 import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test that the license headers are in place in this project. The tests are run from
@@ -32,7 +36,7 @@ class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 	 */
     ApacheLicenceHeaderTest()
 	{
-// addHeaders = true;
+		// addHeaders = true;
 
 		/*
 		 * See NOTICE.txt
@@ -107,5 +111,42 @@ class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		javaScriptIgnore.add("src/test/js/qunit/blanket.min.js");
 		javaScriptIgnore.add("src/test/js/amd/require.js");
 		javaScriptIgnore.add("src/test/js/data/ajax/nonWicketResponse.json"); // no way to add licence in JSON
+	}
+
+	@BeforeEach
+	@Override
+	public void before()
+	{
+		super.before();
+	}
+
+	/**
+	 * Checks the license headers of wicket-core-tests.
+	 */
+	@Test
+	@Override
+	public void licenseHeaders()
+	{
+		super.licenseHeaders();
+	}
+
+	/**
+	 * Checks the license headers of wicket-core.
+	 */
+	@Test
+	public void checkWicketCoreLicenseHeaders()
+	{
+		final String propertyName = "basedir";
+		final String basedir = System.getProperty(propertyName);
+		try
+		{
+			System.setProperty(propertyName, "../wicket-core");
+			super.before();
+			super.licenseHeaders();
+		}
+		finally
+		{
+			System.setProperty(propertyName, basedir);
+		}
 	}
 }

@@ -93,7 +93,6 @@ public abstract class ApacheLicenseHeaderTestCase
 	/**
 	 *
 	 */
-	//@BeforeEach
 	protected void before()
 	{
 		// setup the base directory for when running inside maven (building a release
@@ -108,7 +107,6 @@ public abstract class ApacheLicenseHeaderTestCase
 	/**
 	 * Test all the files in the project which has an associated {@link ILicenseHeaderHandler}.
 	 */
-	//@Test
 	protected void licenseHeaders()
 	{
 		licenseHeaderHandlers = new ILicenseHeaderHandler[] {
