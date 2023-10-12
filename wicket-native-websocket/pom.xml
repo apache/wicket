@@ -30,5 +30,6 @@
 	<modules>
 		<module>wicket-native-websocket-core</module>
 		<module>wicket-native-websocket-javax</module>
+		<module>wicket-native-websocket-tester</module>
 	</modules>
 </project>

@@ -1,0 +1,121 @@
+<html xmlns:wicket>
+<head>
+<wicket:head>
+	<script type="text/javascript">
+	function doFocus()
+	{
+	    if(document.getElementById('username').value == "")
+	        document.getElementById('username').focus();
+	    else
+	    {
+	    	var arr=document.getElementById('loginForm').elements;
+	    	var i=0;
+	    	for(i;i<arr.length;i++)
+	    	{
+	    		if(arr[i] && arr[i].type && arr[i].type=="password")
+	    		{
+	    			arr[i].focus();
+	    			break;
+	    		}
+	    	}
+	    }
+    }
+	function getkey(e)
+	{
+		if (window.event)
+			return window.event.keyCode;
+		else if (e)
+			return e.which;
+		else
+			return null;
+	}
+	</script>
+	<!--[if lt IE 7]>
+	<script type="text/javascript">
+		jQuery.noConflict();
+		
+		jQuery(document).ready(function(){
+			jQuery("#loginForm").hide();
+			jQuery("#continueLink").click(function(){
+				jQuery("#ie6warn").hide();
+				jQuery("#loginForm").show();
+			});
+		});
+	</script>
+	<![endif]-->
+</wicket:head>
+</head>
+<body>
+<wicket:panel>
+	<form id="loginForm" method="post" wicket:id="signInForm">
+	<fieldset>
+	<table>
+		<tbody>
+			<tr>
+				<td>Gebruikersnaam</td>
+				<td><input type="text" id="username" wicket:id="username" /></td>
+			</tr>
+			<tr>
+				<td>Wachtwoord</td>
+				<td><input type="password" name="password" wicket:id="password" /></td>
+			</tr>
+			<tr>
+				<td>Domein</td>
+				<td><select name="instelling" wicket:id="domain" onkeypress="if (getkey(event)==13) getElementById('loginForm').submit();">
+					<option>School 01</option>
+					<option>School 02</option>
+					<option>School 03</option>
+				</select></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input type="checkbox" class="checkbox" name="rememberme"
+					id="rememberme" wicket:id="rememberMe" /> <label for="rememberme">Bewaar mijn gegevens</label></td>
+			</tr>
+			<tr wicket:id="loginZonderTokenContainer">
+				<td></td>
+				<td>
+					<input type="checkbox" class="checkbox" name="loginZonderToken"
+					id="loginZonderToken" wicket:id="loginZonderToken" /> 
+					<label for="loginZonderToken">Inloggen zonder token</label>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<div class="widget-button">
+						<a href="#" wicket:id="aanmelden" title="Aanmelden bij DBS">
+							<span>Aanmelden</span>
+						</a>
+					</div>
+					<input type="submit" style="width:0px; height:0px; position:absolute; top:-300px;" tabIndex="-1"/>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	</fieldset>
+	</form>
+	<!--[if lt IE 7]>
+	<div id="ie6warn">
+		<div class="highlight">U gebruikt Internet Explorer 6 of ouder. Deze applicatie vereist functionaliteit die niet door deze browser ondersteund wordt.</div>
+		Het is aan te raden een van de volgende browsers te gebruiken: 
+		<table>
+			<tr>
+				<td class="unit_80"><a href="http://www.firefox.com" id="firefoxlink" class="logolink"></a></td>
+				<td class="unit_130"><a href="http://www.microsoft.com/ie" id="ielink" class="logolink"></a></td>
+				<td class="unit_80"><a href="http://www.opera.com" id="operalink" class="logolink"></a></td>
+				<td class="unit_130"><a href="http://www.apple.com/safari" id="safarilink" class="logolink"></a></td>
+			</tr>
+			<tr class="browsernames">
+				<td>Firefox 3</td>
+				<td>Internet Explorer 7</td>
+				<td>Opera 9.5</td>
+				<td>Safari 3</td>
+			</tr>
+		</table>
+		<div class="right">Klik <a href="#" id="continueLink">hier</a> om toch uw eigen browser te gebruiken.</div>
+	</div>
+	<![endif]-->
+</wicket:panel>
+</body>
+</html>

@@ -128,7 +128,7 @@ module.exports = function(grunt) {
 			server: {
 				options: {
 					port: 38887,
-//					debug: true,
+					debug: true,
 					middleware: function(connect, options, middlewares) {
 						middlewares.unshift(function(req, res, next) {
 							if (req.url.indexOf('submitNestedForm') > 0) {

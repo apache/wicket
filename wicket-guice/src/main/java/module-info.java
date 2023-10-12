@@ -18,6 +18,7 @@
 module org.apache.wicket.guice {
     requires static jakarta.servlet;
     requires org.apache.wicket.util;
+    requires org.apache.wicket.request;
     requires org.apache.wicket.core;
     requires org.apache.wicket.ioc;
     requires jakarta.inject;

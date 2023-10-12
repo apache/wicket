@@ -16,17 +16,17 @@
  */
 package org.apache.wicket.protocol.http.mock;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.UUID;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.util.value.ValueMap;
+
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
-
-import org.apache.wicket.Session;
-import org.apache.wicket.util.tester.BaseWicketTester;
-import org.apache.wicket.util.value.ValueMap;
 
 
 /**
@@ -36,6 +36,7 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public class MockHttpSession implements HttpSession, Serializable
 {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private final ValueMap attributes = new ValueMap();
@@ -146,7 +147,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	@Override
 	public void invalidate()
 	{
-		Session session = (Session) attributes.get("wicket:" + BaseWicketTester.TestFilterConfig.class.getName() + ":session");
+		Session session = (Session) attributes.get("wicket:org.apache.wicket.util.tester.BaseWicketTester.TestFilterConfig:session");
 		if (session != null)
 		{
 			session.onInvalidate();

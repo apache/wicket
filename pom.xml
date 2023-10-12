@@ -99,6 +99,8 @@
 		<!-- wicket-eclipse-settings is separate released -->
 		<module>wicket</module>
 		<module>wicket-core</module>
+		<module>wicket-tester</module>
+		<module>wicket-core-tests</module>
 		<module>wicket-util</module>
 		<module>wicket-request</module>
 		<module>wicket-devutils</module>
@@ -184,7 +186,7 @@
 		<maven-archetype-plugin.version>3.2.1</maven-archetype-plugin.version>
 		<maven-bundle-plugin.version>5.1.8</maven-bundle-plugin.version>
 		<maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
-		<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+		<maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
 		<maven-deploy-plugin.version>3.1.0</maven-deploy-plugin.version>
 		<maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
 		<maven-enforcer-plugin.version>3.1.0</maven-enforcer-plugin.version>
@@ -371,6 +373,12 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-core</artifactId>
+				<version>10.0.0-M2-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-core-tests</artifactId>
 				<version>10.0.0-M2-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
@@ -582,9 +590,8 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-util</artifactId>
+				<artifactId>wicket-tester</artifactId>
 				<version>10.0.0-M2-SNAPSHOT</version>
-				<type>test-jar</type>
 				<scope>test</scope>
 			</dependency>
 			<dependency>

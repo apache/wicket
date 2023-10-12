@@ -19,6 +19,8 @@ package org.apache.wicket.cdi;
 import java.util.Arrays;
 
 import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test that the license headers are in place in this project. The tests are run
@@ -39,4 +41,19 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		xmlIgnore.add("src/test/java/simplelogger.properties");
 		xmlPrologIgnore = Arrays.asList("src");
 	}
+	
+	@BeforeEach
+	@Override
+	public void before()
+	{
+		super.before();
+	}
+
+	@Test
+	@Override
+	public void licenseHeaders()
+	{
+		super.licenseHeaders();
+	}
+	
 }

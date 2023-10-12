@@ -40,7 +40,6 @@
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -52,8 +51,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-util</artifactId>
-			<type>test-jar</type>
+			<artifactId>wicket-tester</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

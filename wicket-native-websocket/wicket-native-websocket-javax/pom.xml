@@ -56,11 +56,6 @@
 			<artifactId>wicket-native-websocket-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-util</artifactId>
-			<type>test-jar</type>
-		</dependency>
-		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
 		</dependency>

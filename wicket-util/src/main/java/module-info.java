@@ -37,7 +37,9 @@ module org.apache.wicket.util {
     exports org.apache.wicket.util.file;
     exports org.apache.wicket.util.io;
     exports org.apache.wicket.util.lang;
+    exports org.apache.wicket.util.license;
     exports org.apache.wicket.util.listener;
+    exports org.apache.wicket.util.markup.xhtml;
     exports org.apache.wicket.util.parse.metapattern;
     exports org.apache.wicket.util.parse.metapattern.parsers;
     exports org.apache.wicket.util.resource;

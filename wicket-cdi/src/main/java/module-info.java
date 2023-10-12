@@ -24,6 +24,7 @@ module org.apache.wicket.cdi {
     requires org.apache.wicket.request;
     requires org.apache.wicket.core;
     requires org.slf4j;
+    requires static jakarta.servlet;
 
     exports org.apache.wicket.cdi;
 }
