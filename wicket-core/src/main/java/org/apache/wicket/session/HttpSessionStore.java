@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,9 +52,9 @@ public class HttpSessionStore implements ISessionStore
 {
 	private static final Logger log = LoggerFactory.getLogger(HttpSessionStore.class);
 
-	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<UnboundListener>();
+	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<>();
 
-	private final Set<BindListener> bindListeners = new CopyOnWriteArraySet<BindListener>();
+	private final Set<BindListener> bindListeners = new CopyOnWriteArraySet<>();
 
 	/**
 	 * @param request The Wicket request
@@ -62,7 +63,7 @@ public class HttpSessionStore implements ISessionStore
 	protected final HttpServletRequest getHttpServletRequest(final Request request)
 	{
 		Object containerRequest = request.getContainerRequest();
-		if (containerRequest == null || (containerRequest instanceof HttpServletRequest) == false)
+		if ((containerRequest instanceof HttpServletRequest) == false)
 		{
 			throw new IllegalArgumentException("Request must be ServletWebRequest");
 		}
@@ -103,11 +104,14 @@ public class HttpSessionStore implements ISessionStore
 			{
 				// register an unbinding listener for cleaning up
 				String applicationKey = Application.get().getName();
-				httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
-					new SessionBindingListener(applicationKey, newSession));
+				withSession(httpSession.getId(), () -> {
+					httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
+							new SessionBindingListener(applicationKey, newSession));
 
-				// register the session object itself
-				setWicketSession(request, newSession);
+					// register the session object itself
+					setWicketSession(request, newSession);
+					return null;
+				});
 			}
 		}
 	}
@@ -161,8 +165,10 @@ public class HttpSessionStore implements ISessionStore
 		HttpSession httpSession = getHttpSession(request, false);
 		if (httpSession != null)
 		{
-			// tell the app server the session is no longer valid
-			httpSession.invalidate();
+			withSession(httpSession.getId(), () -> {
+				httpSession.invalidate();
+				return null;
+			});
 		}
 	}
 
@@ -253,7 +259,10 @@ public class HttpSessionStore implements ISessionStore
 		HttpSession httpSession = getHttpSession(request, false);
 		if (httpSession != null)
 		{
-			return (Serializable)httpSession.getAttribute(getSessionAttributePrefix(request) + name);
+			return withSession(httpSession.getId(), () -> {
+				return (Serializable)httpSession
+					.getAttribute(getSessionAttributePrefix(request) + name);
+			});
 		}
 		return null;
 	}
@@ -261,21 +270,23 @@ public class HttpSessionStore implements ISessionStore
 	@Override
 	public final List<String> getAttributeNames(final Request request)
 	{
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		HttpSession httpSession = getHttpSession(request, false);
 		if (httpSession != null)
 		{
-			@SuppressWarnings("unchecked")
-			final Enumeration<String> names = httpSession.getAttributeNames();
-			final String prefix = getSessionAttributePrefix(request);
-			while (names.hasMoreElements())
-			{
-				final String name = names.nextElement();
-				if (name.startsWith(prefix))
+			withSession(httpSession.getId(), () -> {
+				final Enumeration<String> names = httpSession.getAttributeNames();
+				final String prefix = getSessionAttributePrefix(request);
+				while (names.hasMoreElements())
 				{
-					list.add(name.substring(prefix.length()));
+					final String name = names.nextElement();
+					if (name.startsWith(prefix))
+					{
+						list.add(name.substring(prefix.length()));
+					}
 				}
-			}
+				return null;
+			});
 		}
 		return list;
 	}
@@ -289,15 +300,18 @@ public class HttpSessionStore implements ISessionStore
 			String attributeName = getSessionAttributePrefix(request) + name;
 
 			IRequestLogger logger = Application.get().getRequestLogger();
-			if (logger != null)
-			{
-				Object value = httpSession.getAttribute(attributeName);
-				if (value != null)
+			withSession(httpSession.getId(), () -> {
+				if (logger != null)
 				{
-					logger.objectRemoved(value);
+					Object value = httpSession.getAttribute(attributeName);
+					if (value != null)
+					{
+						logger.objectRemoved(value);
+					}
 				}
-			}
-			httpSession.removeAttribute(attributeName);
+				httpSession.removeAttribute(attributeName);
+				return null;
+			});
 		}
 	}
 
@@ -311,18 +325,21 @@ public class HttpSessionStore implements ISessionStore
 		{
 			String attributeName = getSessionAttributePrefix(request) + name;
 			IRequestLogger logger = Application.get().getRequestLogger();
-			if (logger != null)
-			{
-				if (httpSession.getAttribute(attributeName) == null)
+			withSession(httpSession.getId(), () -> {
+				if (logger != null)
 				{
-					logger.objectCreated(value);
+					if (httpSession.getAttribute(attributeName) == null)
+					{
+						logger.objectCreated(value);
+					}
+					else
+					{
+						logger.objectUpdated(value);
+					}
 				}
-				else
-				{
-					logger.objectUpdated(value);
-				}
-			}
-			httpSession.setAttribute(attributeName, value);
+				httpSession.setAttribute(attributeName, value);
+				return null;
+			});
 		}
 	}
 
@@ -445,5 +462,24 @@ public class HttpSessionStore implements ISessionStore
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param sessionId The id of the HTTP session that might happen to be invalidated 
+	 *                  in the meantime
+	 * @return prefix for session attributes
+	 */
+	private <V> V withSession(String sessionId, Callable<V> callable) {
+		try
+		{
+			return callable.call();
+		}
+		catch (IllegalStateException isx)
+		{
+			log.debug("HTTP session {} is no more valid!", sessionId, isx);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return null;
 	}
 }
