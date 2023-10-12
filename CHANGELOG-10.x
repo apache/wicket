@@ -2,6 +2,38 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.0.0-M2
+
+** Bug
+
+    * [WICKET-7056] - HttpSessionStore#getAttribute called on invalidated session
+    * [WICKET-7061] - When I move from 9.13.0->9.14.0, my importmaps fail to parse correctly due to presence of the CDATA wrapping.
+    * [WICKET-7065] - TextFilteredPropertyColumn violates CSP
+    * [WICKET-7067] - DefaultExceptionMapper should not set disableCaching for  WebSocketResponse
+    * [WICKET-7070] - Quick start generated app has multiple errors
+    * [WICKET-7071] - Problems when calling request.getInputStream() before executing WicketFilter
+    * [WICKET-7072] - JUnit code in /src/main/java breaks JPMS support in Eclipse IDE
+    * [WICKET-7074] - [AJAX] malformed XML is produced if an error is produced during AJAX rendering and a redirect is issued 
+    * [WICKET-7076] - JavaScriptReferenceType newly created is not serializable
+    * [WICKET-7077] - 2 spring web application contexts are created
+
+** Improvement
+
+    * [WICKET-7039] - Improve Accessibility of wicket-autocomplete.js
+    * [WICKET-7060] - Minor improvements to wicket-examples
+    * [WICKET-7063] - Convert all Application_*.properties to Application_*.utf8.properties
+    * [WICKET-7066] - Add possibility to define type-Attribute of JavascriptHeaderItem as "module"
+    * [WICKET-7068] - Current tree themes are not RTL friendly
+    * [WICKET-7078] - CSP: inline JS in Choices and Selection of Palette
+
+** Task
+
+    * [WICKET-7064] - commons-fileupload2 dependency should be added back
+    * [WICKET-7069] - assertTrue(equals()) in tests should be replaced with assertEquals
+    * [WICKET-7073] - Update JQuery to 3.7.1
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.0.0-M1
 
 ** Bug
@@ -126,5 +158,4 @@ Release Notes - Wicket - Version 10.0.0-M1
     * [WICKET-7053] - Update Guice to 7.x (javax -> jakarta)
 
 =======================================================================
-
 
