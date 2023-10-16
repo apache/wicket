@@ -31,6 +31,11 @@ public interface IEvent<T>
 	void stop();
 
 	/**
+	 * @return true iff event has been stopped.
+	 */
+	boolean isStop();
+
+	/**
 	 * Stops the broadcast of this event any deeper into the hierarchy of the current sink
 	 */
 	void dontBroadcastDeeper();

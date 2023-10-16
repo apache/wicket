@@ -17,6 +17,7 @@
 package org.apache.wicket;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.annotation.ElementType;
@@ -123,6 +124,53 @@ class EventDispatcherTest extends WicketTestCase
 
 		@EventCallback
 		public void testCallback()
+		{
+			invocationTimes++;
+		}
+	}
+
+	@Test
+	void noEventsDispatch()
+	{
+		tester.getApplication().getFrameworkSettings().setDefaultEventDispatcher(null);
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		TestComponentI testComponent = new TestComponentI(MockPageWithOneComponent.COMPONENT_ID);
+		page.add(testComponent);
+		page.send(page, Broadcast.DEPTH, null);
+		assertFalse(testComponent.callbackInvoked);
+		assertEquals(testComponent.getBehaviors(TestBehaviorI.class).get(0).invocationTimes, 0);
+	}
+
+	public static class TestComponentI extends WebComponent
+	{
+		private static final long serialVersionUID = 1L;
+		boolean callbackInvoked;
+
+		/**
+		 * @param id
+		 */
+		TestComponentI(String id)
+		{
+			super(id);
+
+			add(new TestBehaviorI());
+		}
+
+		@Override
+		public void onEvent(IEvent<?> event) {
+			callbackInvoked = true;
+		}
+	}
+
+	private static class TestBehaviorI extends Behavior
+	{
+
+		private static final long serialVersionUID = 1;
+
+		int invocationTimes = 0;
+
+		@Override
+		public void onEvent(Component component, IEvent<?> event)
 		{
 			invocationTimes++;
 		}
