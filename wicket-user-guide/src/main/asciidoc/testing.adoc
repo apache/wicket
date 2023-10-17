@@ -2,4 +2,6 @@ http://en.wikipedia.org/wiki/Test-driven_development[Test Driven Development] ha
 
 In this chapter we will see how to write unit tests for our applications and components and we will learn how to use helper classes to simulate user navigation and write acceptance tests without the need of any testing framework other than JUnit.
 
-The JUnit version used in this chapter is 4.x.   
+The JUnit version used in this chapter is 5.x.
+
+NOTE: from version 10 module _wicket-tester_ is required as test dependency in order to access the utility classes used in this chapter.
