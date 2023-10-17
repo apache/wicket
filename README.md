@@ -69,6 +69,7 @@ You will find the source code here:
 	    |-- wicket-bean-validation
 	    |-- wicket-cdi
 	    |-- wicket-core
+            |-- wicket-tester
 	    |-- wicket-devutils
 	    |-- wicket-eclipse-settings
 	    |-- wicket-examples
@@ -91,6 +92,7 @@ You will find the source code here:
 Here is a list of projects in the distribution and what they do.
 
  - wicket-core: the core project, includes the framework and basic components;
+ - wicket-tester: contains common classes for unit testing and test cases for wicket-core
  - wicket-extensions: contains utilities and more specialized components;
  - wicket-auth-roles: a basic authorization package based on roles;
  - wicket-jmx: registers JMX beans for managing things like your Wicket 
