@@ -27,4 +27,7 @@ module org.apache.wicket.tester {
     requires org.assertj.core;
 
     exports org.apache.wicket.util.tester;
+
+    //opening packages to allow resources access
+    opens org.apache.wicket.util.tester;
 }
