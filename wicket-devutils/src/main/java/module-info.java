@@ -30,4 +30,10 @@ module org.apache.wicket.devutils {
     exports org.apache.wicket.devutils.pagestore;
     exports org.apache.wicket.devutils.pagestore.browser;
     exports org.apache.wicket.devutils.stateless;
+
+    //opening packages to allow resources access
+    opens org.apache.wicket.devutils;
+    opens org.apache.wicket.devutils.inspector;
+    opens org.apache.wicket.devutils.pagestore;
+    opens org.apache.wicket.devutils.debugbar;
 }
