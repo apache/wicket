@@ -578,7 +578,8 @@ public class Form<T> extends WebMarkupContainer
 	 * @param submitter
 	 *            the submitter
 	 * @param triggerEvent
-	 *            When true, the form will be submited via a javascript submit event, when false via
+	 *            When true, the form will be submitted via standard form submission ({@code requestSubmit()})
+	 *            including client side validation and firing a javascript submit event, when false via
 	 *            the {@code submit()} method.
 	 * @return the javascript code that submits the form.
 	 *
@@ -599,7 +600,7 @@ public class Form<T> extends WebMarkupContainer
 
 		if (triggerEvent)
 		{
-			buffer.append("Wicket.Event.fire(f, 'submit');");
+			buffer.append("f.requestSubmit();");
 		}
 		else
 		{
