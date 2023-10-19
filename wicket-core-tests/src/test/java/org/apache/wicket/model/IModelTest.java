@@ -234,4 +234,42 @@ class IModelTest
 		assertNotNull(clone);
 		assertEquals("Some Name", clone.getObject());
 	}
+
+	sealed interface TextMatchingStatus
+	{
+		record NotSubmitted() implements TextMatchingStatus {}
+		record Queued() implements TextMatchingStatus {}
+		record Analysed(int matchingInPercent) implements TextMatchingStatus {}
+		record Error(int errorCode, String humanReadableMessage) implements TextMatchingStatus {}
+	}
+
+	@Test
+	void polymorphicModelWrongClass()
+	{
+		IModel<TextMatchingStatus> statusModel = LoadableDetachableModel.of(() ->
+				new TextMatchingStatus.Error(3, "File too big"));
+		IModel<TextMatchingStatus.Queued> poly = statusModel.poly(TextMatchingStatus.Queued.class);
+
+		assertNull(poly.getObject());
+	}
+
+	@Test
+	void polymorphicModelCorrectClass()
+	{
+		IModel<TextMatchingStatus> statusModel = LoadableDetachableModel.of(() ->
+				new TextMatchingStatus.Analysed(14));
+		IModel<TextMatchingStatus.Analysed> poly = statusModel.poly(TextMatchingStatus.Analysed.class);
+
+		assertNotNull(poly.getObject());
+		assertEquals(new TextMatchingStatus.Analysed(14), poly.getObject());
+	}
+
+	@Test
+	void nullPoly()
+	{
+		assertThrows(IllegalArgumentException.class, () -> {
+			LoadableDetachableModel.of(TextMatchingStatus.NotSubmitted::new).poly(null);
+		});
+	}
+
 }
