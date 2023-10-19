@@ -29,4 +29,7 @@ module org.apache.wicket.websocket.core {
     exports org.apache.wicket.protocol.ws.api.registry;
     exports org.apache.wicket.protocol.ws.concurrent;
     exports org.apache.wicket.protocol.ws.util.tester;
+
+    //opening packages to allow resources access
+    opens org.apache.wicket.protocol.ws.api.res.js;
 }
