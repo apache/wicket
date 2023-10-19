@@ -371,6 +371,19 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
+	 * Returns an IModel, returning the object typed as {@code R} if it is an instance of that type,
+	 * otherwise {@code null}.
+	 *
+	 * @param <R> the type the object should be an instance of
+	 * @param clazz the {@code Class} the current model object should be an instance of
+	 * @return a new IModel
+	 */
+	default <R extends T> IModel<R> poly(Class<R> clazz) {
+		Args.notNull(clazz, "clazz");
+		return filter(clazz::isInstance).map(clazz::cast);
+	}
+
+	/**
 	 * Suppresses generics warning when casting model types.
 	 *
 	 * @param <T>
