@@ -28,4 +28,7 @@ module org.apache.wicket.websocket.core {
     exports org.apache.wicket.protocol.ws.api.message;
     exports org.apache.wicket.protocol.ws.api.registry;
     exports org.apache.wicket.protocol.ws.concurrent;
+
+    //opening packages to allow resources access
+    opens org.apache.wicket.protocol.ws.api.res.js;
 }
