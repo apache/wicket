@@ -244,31 +244,31 @@ class IModelTest
 	}
 
 	@Test
-	void polymorphicModelWrongClass()
+	void asModelWrongClass()
 	{
 		IModel<TextMatchingStatus> statusModel = LoadableDetachableModel.of(() ->
 				new TextMatchingStatus.Error(3, "File too big"));
-		IModel<TextMatchingStatus.Queued> poly = statusModel.poly(TextMatchingStatus.Queued.class);
+		IModel<TextMatchingStatus.Queued> poly = statusModel.as(TextMatchingStatus.Queued.class);
 
 		assertNull(poly.getObject());
 	}
 
 	@Test
-	void polymorphicModelCorrectClass()
+	void asModelCorrectClass()
 	{
 		IModel<TextMatchingStatus> statusModel = LoadableDetachableModel.of(() ->
 				new TextMatchingStatus.Analysed(14));
-		IModel<TextMatchingStatus.Analysed> poly = statusModel.poly(TextMatchingStatus.Analysed.class);
+		IModel<TextMatchingStatus.Analysed> poly = statusModel.as(TextMatchingStatus.Analysed.class);
 
 		assertNotNull(poly.getObject());
 		assertEquals(new TextMatchingStatus.Analysed(14), poly.getObject());
 	}
 
 	@Test
-	void nullPoly()
+	void nullAs()
 	{
 		assertThrows(IllegalArgumentException.class, () -> {
-			LoadableDetachableModel.of(TextMatchingStatus.NotSubmitted::new).poly(null);
+			LoadableDetachableModel.of(TextMatchingStatus.NotSubmitted::new).as(null);
 		});
 	}
 

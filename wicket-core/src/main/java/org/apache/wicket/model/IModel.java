@@ -378,7 +378,7 @@ public interface IModel<T> extends IDetachable
 	 * @param clazz the {@code Class} the current model object should be an instance of
 	 * @return a new IModel
 	 */
-	default <R extends T> IModel<R> poly(Class<R> clazz) {
+	default <R extends T> IModel<R> as(Class<R> clazz) {
 		Args.notNull(clazz, "clazz");
 		return filter(clazz::isInstance).map(clazz::cast);
 	}
