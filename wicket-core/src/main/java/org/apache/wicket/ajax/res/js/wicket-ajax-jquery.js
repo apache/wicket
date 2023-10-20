@@ -2422,6 +2422,22 @@
 			},
 
 			/**
+			 * Submits the given form using, if available, standard form processing
+			 * including client-side validation and firing of SubmitEvent.
+			 * If it is not available, uses jQuery event triggering to submit the form
+			 * and send out the SubmitEvent.
+			 *
+			 * @param form {HTMLFormElement} form to submit
+			 */
+			requestSubmit: function(form) {
+				if (form.requestSubmit) {
+					form.requestSubmit();
+				} else {
+					jQuery(form).trigger('submit');
+				}
+			},
+
+			/**
 			 * The names of the topics on which Wicket notifies
 			 */
 			Topic: {

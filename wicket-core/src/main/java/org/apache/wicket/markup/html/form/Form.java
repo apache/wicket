@@ -600,7 +600,7 @@ public class Form<T> extends WebMarkupContainer
 
 		if (triggerEvent)
 		{
-			buffer.append("f.requestSubmit();");
+			buffer.append("Wicket.Event.requestSubmit(f);");
 		}
 		else
 		{
