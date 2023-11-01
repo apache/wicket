@@ -235,12 +235,26 @@ class IModelTest
 		assertEquals("Some Name", clone.getObject());
 	}
 
-	sealed interface TextMatchingStatus
+	interface TextMatchingStatus
 	{
-		record NotSubmitted() implements TextMatchingStatus {}
-		record Queued() implements TextMatchingStatus {}
-		record Analysed(int matchingInPercent) implements TextMatchingStatus {}
-		record Error(int errorCode, String humanReadableMessage) implements TextMatchingStatus {}
+		class NotSubmitted implements TextMatchingStatus {}
+		class Queued implements TextMatchingStatus {}
+		class Analysed implements TextMatchingStatus {
+			int matchingInPercent;
+
+			public Analysed(int matchingInPercent) {
+				this.matchingInPercent = matchingInPercent;
+			}
+		}
+		class Error implements TextMatchingStatus {
+			public int errorCode;
+			public String humanReadableMessage;
+
+			public Error(int errorCode, String humanReadableMessage) {
+				this.errorCode = errorCode;
+				this.humanReadableMessage = humanReadableMessage;
+			}
+		}
 	}
 
 	@Test
