@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.Serializable;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.lambda.Address;
 import org.apache.wicket.model.lambda.Person;
@@ -235,7 +236,7 @@ class IModelTest
 		assertEquals("Some Name", clone.getObject());
 	}
 
-	interface TextMatchingStatus
+	interface TextMatchingStatus extends Serializable
 	{
 		class NotSubmitted implements TextMatchingStatus {}
 		class Queued implements TextMatchingStatus {}
