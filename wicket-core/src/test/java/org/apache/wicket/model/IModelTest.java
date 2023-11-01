@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.Serializable;
+import java.util.Objects;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.lambda.Address;
 import org.apache.wicket.model.lambda.Person;
@@ -236,16 +237,33 @@ class IModelTest
 		assertEquals("Some Name", clone.getObject());
 	}
 
-	interface TextMatchingStatus extends Serializable
+	interface TextMatchingStatus
 	{
-		class NotSubmitted implements TextMatchingStatus {}
+		class NotSubmitted implements TextMatchingStatus {
+
+		}
 		class Queued implements TextMatchingStatus {}
 		class Analysed implements TextMatchingStatus {
 			int matchingInPercent;
 
+			@Override
+			public boolean equals(Object o) {
+				if (this == o) return true;
+				if (o == null || getClass() != o.getClass()) return false;
+				Analysed analysed = (Analysed) o;
+				return matchingInPercent == analysed.matchingInPercent;
+			}
+
+			@Override
+			public int hashCode() {
+				return Objects.hash(matchingInPercent);
+			}
+
 			public Analysed(int matchingInPercent) {
 				this.matchingInPercent = matchingInPercent;
 			}
+
+
 		}
 		class Error implements TextMatchingStatus {
 			public int errorCode;
@@ -254,6 +272,19 @@ class IModelTest
 			public Error(int errorCode, String humanReadableMessage) {
 				this.errorCode = errorCode;
 				this.humanReadableMessage = humanReadableMessage;
+			}
+
+			@Override
+			public boolean equals(Object o) {
+				if (this == o) return true;
+				if (o == null || getClass() != o.getClass()) return false;
+				Error error = (Error) o;
+				return errorCode == error.errorCode && Objects.equals(humanReadableMessage, error.humanReadableMessage);
+			}
+
+			@Override
+			public int hashCode() {
+				return Objects.hash(errorCode, humanReadableMessage);
 			}
 		}
 	}
