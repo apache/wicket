@@ -22,6 +22,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -140,11 +141,9 @@ public class FilterForm<T> extends Form<T>
 			}
 
 			@Override
-			public void onComponentTag(final Component component, final ComponentTag tag)
-			{
-				tag.put("onfocus", getFocusTrackingHandler(component));
-
-				super.onComponentTag(component, tag);
+			public void renderHead(Component component, IHeaderResponse response) {
+				response.render(OnEventHeaderItem.forComponent(component, "focus",
+						getFocusTrackingHandler(component)));
 			}
 		});
 	}

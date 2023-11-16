@@ -4445,8 +4445,12 @@ public abstract class Component
 	@Override
 	public final <T> void send(IEventSink sink, Broadcast type, T payload)
 	{
-		new ComponentEventSender(this, getApplication().getFrameworkSettings()).send(sink, type,
-			payload);
+		// if there are no event dispatchers then don't even try to send event
+		if (getApplication().getFrameworkSettings().hasAnyEventDispatchers())
+		{
+			new ComponentEventSender(this, getApplication().getFrameworkSettings()).send(sink, type,
+					payload);
+		}
 	}
 
 	/**

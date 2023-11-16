@@ -14,22 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.wicket.markup.head;
 
-module org.apache.wicket.websocket.core {
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.request;
-    requires org.apache.wicket.core;
-    requires static javax.servlet.api;
-    requires org.slf4j;
+import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.util.lang.Args;
 
-    exports org.apache.wicket.protocol.ws;
-    exports org.apache.wicket.protocol.ws.api;
-    exports org.apache.wicket.protocol.ws.api.event;
-    exports org.apache.wicket.protocol.ws.api.message;
-    exports org.apache.wicket.protocol.ws.api.registry;
-    exports org.apache.wicket.protocol.ws.concurrent;
-    exports org.apache.wicket.protocol.ws.util.tester;
+/**
+ * To be used to define the "type" attribute of the script tag written
+ * by a {@link AbstractJavaScriptReferenceHeaderItem}.
+ */
+public class JavaScriptReferenceType implements IClusterable {
 
-    //opening packages to allow resources access
-    opens org.apache.wicket.protocol.ws.api.res.js;
+	public static final JavaScriptReferenceType TEXT_JAVASCRIPT = new JavaScriptReferenceType("text/javascript");
+	public static final JavaScriptReferenceType MODULE = new JavaScriptReferenceType("module");
+
+	private final String type;
+
+	public JavaScriptReferenceType(final String type) {
+		this.type = Args.notEmpty(type, "type");
+	}
+
+	public String getType() {
+		return type;
+	}
 }
