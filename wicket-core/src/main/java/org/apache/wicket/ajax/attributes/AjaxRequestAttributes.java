@@ -17,7 +17,7 @@
 package org.apache.wicket.ajax.attributes;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -276,7 +276,7 @@ public final class AjaxRequestAttributes
 	{
 		if (extraParameters == null)
 		{
-			extraParameters = new HashMap<>();
+			extraParameters = new LinkedHashMap<>();
 		}
 		return extraParameters;
 	}
