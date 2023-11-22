@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import java.io.Serial;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
@@ -186,7 +187,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * 
 	 * @return update interval, must not be {@code null}
 	 */
-	protected Duration getUpdateInterval() {
+	public Duration getUpdateInterval() {
 		return Duration.ofSeconds(1);
 	}
 
@@ -200,7 +201,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * 
 	 * @see #isContentReady()
 	 */
-	protected final boolean isLoaded() {
+	public final boolean isLoaded() {
 		if (loaded == false)
 		{
 			if (isContentReady())
@@ -234,8 +235,9 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * 
 	 * @see AjaxLazyLoadPanel#isLoaded()
 	 */
-	static class AjaxLazyLoadTimer extends AbstractAjaxTimerBehavior
+	public static class AjaxLazyLoadTimer extends AbstractAjaxTimerBehavior
 	{
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		public AjaxLazyLoadTimer()

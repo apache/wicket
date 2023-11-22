@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.ajax.markup.html;
+package org.apache.wicket.extensions.tester;
 
 import java.util.List;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel.AjaxLazyLoadTimer;
 import org.apache.wicket.util.tester.BaseWicketTester;
 import java.time.Duration;

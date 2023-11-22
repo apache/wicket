@@ -99,7 +99,6 @@
 		<!-- wicket-eclipse-settings is separate released -->
 		<module>wicket</module>
 		<module>wicket-core</module>
-		<module>wicket-tester</module>
 		<module>wicket-core-tests</module>
 		<module>wicket-util</module>
 		<module>wicket-request</module>
@@ -122,6 +121,8 @@
 		<module>wicket-bean-validation</module>
 		<module>wicket-user-guide</module>
         <module>wicket-migration</module>
+		<module>wicket-tester</module>
+		<module>wicket-extensions-tester</module>
     </modules>
 	<properties>
 		<!-- Encoding -->
@@ -401,6 +402,12 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-extensions-tester</artifactId>
+				<version>10.0.0-M3-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-guice</artifactId>
 				<version>10.0.0-M3-SNAPSHOT</version>
 				<type>jar</type>
@@ -426,6 +433,12 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-javax</artifactId>
+				<version>10.0.0-M3-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-native-websocket-tester</artifactId>
 				<version>10.0.0-M3-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
