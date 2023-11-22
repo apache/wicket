@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
+import jakarta.inject.Inject;
+import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.BeanWithGeneric;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
@@ -26,7 +28,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -148,7 +149,7 @@ class SpringBeanWithGenericsTest
 		assertEquals("two", arrayListStrings.get(1));
 		assertEquals("three", arrayListStrings.get(2));
 
-		ArrayList<Integer> arrayListIntegers = page.getArrayListIntegers();
+		List<Integer> arrayListIntegers = page.getArrayListIntegers();
 		assertNotNull(arrayListIntegers);
 		assertEquals(3, arrayListIntegers.size());
 		assertEquals(Integer.valueOf(1), arrayListIntegers.get(0));
@@ -237,7 +238,7 @@ class SpringBeanWithGenericsTest
 		}
 	}
 
-	class AnnotatedListField extends DummyHomePage
+	static class AnnotatedListField extends DummyHomePage
 	{
 		@SpringBean
 		private List<String> stringsList;
@@ -256,9 +257,9 @@ class SpringBeanWithGenericsTest
 		}
 
 		@SpringBean
-		private ArrayList<Integer> arrayListIntegers;
+		private List<Integer> arrayListIntegers;
 
-		public ArrayList<Integer> getArrayListIntegers()
+		public List<Integer> getArrayListIntegers()
 		{
 			return arrayListIntegers;
 		}
@@ -304,7 +305,7 @@ class SpringBeanWithGenericsTest
 		}
 
 		@Bean
-		public ArrayList<Integer> arrayListIntegers()
+		public List<Integer> arrayListIntegers()
 		{
 			ArrayList<Integer> arrayList = new ArrayList<>();
 			arrayList.add(1);
@@ -319,6 +320,33 @@ class SpringBeanWithGenericsTest
 			myList.add("one");
 			return myList;
 		}
+
+		@Bean
+		public List<Boolean> booleans() {
+			return List.of(true, false);
+		}
+	}
+
+	private static class Wicket7086 {
+		@Inject
+		private List<Boolean> injected;
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-7086">WICKET-7086</a>
+	 */
+	@Test
+	void manualInjectionOfTypeWithGenerics() {
+		tester.startPage(new AnnotatedListField());
+
+		// Created by hand, not by Spring, fields are not injected.
+		Wicket7086 manuallyInjected = new Wicket7086();
+
+		// Manual injection.
+		Injector.get().inject(manuallyInjected);
+
+		Boolean item = manuallyInjected.injected.get(0);
+		assertTrue(item);
 	}
 
 	public static class MyList<T> extends ArrayList<T> {}
