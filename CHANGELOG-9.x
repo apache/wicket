@@ -2,6 +2,28 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.16.0
+
+** Bug
+
+    * [WICKET-7056] - HttpSessionStore#getAttribute called on invalidated session
+    * [WICKET-7074] - [AJAX] malformed XML is produced if an error is produced during AJAX rendering and a redirect is issued 
+    * [WICKET-7076] - JavaScriptReferenceType newly created is not serializable
+    * [WICKET-7081] - Open packages to expose resources to other modules 
+
+** Improvement
+
+    * [WICKET-7078] - CSP: inline JS in Choices and Selection of Palette
+    * [WICKET-7080] - [Events] make default events delivery machinery pluggable and roll usable annotation based one
+    * [WICKET-7082] - Easier to work with polymorphic values inside IModel
+    * [WICKET-7083] - Trigger client side validation when using SubmitLinks
+
+** Task
+
+    * [WICKET-7073] - Update JQuery to 3.7.1
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.15.0
 
 ** Bug
