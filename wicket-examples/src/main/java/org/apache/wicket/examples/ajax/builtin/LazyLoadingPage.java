@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import java.io.Serial;
 import java.time.Duration;
 import java.util.Random;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -26,14 +27,13 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.RepeatingView;
 
-@SuppressWarnings({ "javadoc", "serial" })
 public class LazyLoadingPage extends BasePage
 {
-	private Random r = new Random();
-	private WebMarkupContainer nonblocking;
-	private WebMarkupContainer blocking;
-	private RepeatingView blockingRepeater;
-	private RepeatingView nonBlockingRepeater;
+	private final Random random = new Random();
+	private final WebMarkupContainer nonblocking;
+	private final WebMarkupContainer blocking;
+	private final RepeatingView blockingRepeater;
+	private final RepeatingView nonBlockingRepeater;
 
 	public LazyLoadingPage()
 	{
@@ -93,11 +93,12 @@ public class LazyLoadingPage extends BasePage
 		for (int i = 0; i < 10; i++)
 			nonBlockingRepeater.add(new AjaxLazyLoadPanel<Label>(nonBlockingRepeater.newChildId())
 			{
+				@Serial
 				private static final long serialVersionUID = 1L;
 
-				private long startTime = System.currentTimeMillis();
+				private final long startTime = System.currentTimeMillis();
 
-				private int seconds = r.nextInt(10);
+				private final long seconds = random.nextLong(10);
 
 				@Override
 				protected boolean isContentReady()
@@ -107,7 +108,7 @@ public class LazyLoadingPage extends BasePage
 				}
 				
 				@Override
-				protected Duration getUpdateInterval()
+				public Duration getUpdateInterval()
 				{
 					return Duration.ofMillis(seconds * 1000 / 10);
 				}
@@ -129,9 +130,10 @@ public class LazyLoadingPage extends BasePage
 		for (int i = 0; i < 5; i++)
 			blockingRepeater.add(new AjaxLazyLoadPanel<Label>(blockingRepeater.newChildId())
 			{
+				@Serial
 				private static final long serialVersionUID = 1L;
 
-				private int seconds = r.nextInt(5);
+				private final long seconds = random.nextLong(5);
 
 				@Override
 				public Label getLazyLoadComponent(String markupId)
@@ -142,6 +144,7 @@ public class LazyLoadingPage extends BasePage
 					}
 					catch (InterruptedException e)
 					{
+						Thread.currentThread().interrupt();
 					}
 					return new Label(markupId,
 						"Lazy loaded after blocking the Wicket thread for " + seconds + " seconds");
