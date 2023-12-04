@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -291,13 +292,23 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@Override
 	public String[] getBeanNamesForType(ResolvableType resolvableType)
 	{
-		return new String[0];
+		return getBeanNamesForType(resolvableType, true, true);
 	}
 
 	@Override
 	public String[] getBeanNamesForType(ResolvableType resolvableType, boolean includeNonSingletons, boolean allowEagerInit)
 	{
-		return new String[0];
+		List<String> names = new ArrayList<>();
+		for (Entry<String, Object> entry : beans.entrySet())
+		{
+			Object bean = entry.getValue();
+
+			if (resolvableType.isAssignableFrom(bean.getClass()))
+			{
+				names.add(entry.getKey());
+			}
+		}
+		return names.toArray(new String[0]);
 	}
 
 	@Override

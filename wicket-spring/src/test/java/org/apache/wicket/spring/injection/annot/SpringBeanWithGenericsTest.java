@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
-import jakarta.inject.Inject;
+import javax.inject.Inject;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.spring.BeanWithGeneric;
 import org.apache.wicket.util.tester.DummyHomePage;
