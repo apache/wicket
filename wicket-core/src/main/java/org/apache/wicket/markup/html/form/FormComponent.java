@@ -1665,7 +1665,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	private static <S> Collection<S> newCollection(Class<?> hint, Collection<S> elements)
 	{
 		if (Set.class.isAssignableFrom(hint)) {
-			return new HashSet<>(elements);
+			return new LinkedHashSet<>(elements);
 		} else {
 			return new ArrayList<>(elements);
 		}
