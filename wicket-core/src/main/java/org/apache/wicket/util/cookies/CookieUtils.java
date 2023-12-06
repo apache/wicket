@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -338,7 +339,15 @@ public class CookieUtils
 		cookie.setSecure(settings.getSecure());
 		cookie.setMaxAge(settings.getMaxAge());
 		cookie.setHttpOnly(settings.isHttpOnly());
-		cookie.setAttribute("SameSite", settings.getSameSite().name());
+
+		if (WebApplication.exists())
+		{
+			final ServletContext servletContext = WebApplication.get().getServletContext();
+			if (servletContext.getEffectiveMajorVersion() >= 6)
+			{
+				cookie.setAttribute("SameSite", settings.getSameSite().name());
+			}
+		}
 	}
 
 	/**

@@ -386,7 +386,7 @@ public class MockServletContext implements ServletContext
 	@Override
 	public int getMajorVersion()
 	{
-		return 3;
+		return 6;
 	}
 
 	@Override
@@ -398,7 +398,7 @@ public class MockServletContext implements ServletContext
 	@Override
 	public int getEffectiveMajorVersion()
 	{
-		return 3;
+		return 6;
 	}
 
 	@Override
