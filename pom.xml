@@ -177,20 +177,6 @@
 		<velocity-engine-core.version>2.3</velocity-engine-core.version>
 
 		<!-- Maven plugins -->
-		<version.maven-clean-plugin>3.3.2</version.maven-clean-plugin>
-		<version.maven-war-plugin>3.4.0</version.maven-war-plugin>
-		<version.maven-compiler-plugin>3.11.0</version.maven-compiler-plugin>
-		<version.maven-deploy-plugin>3.1.1</version.maven-deploy-plugin>
-		<version.maven-source-plugin>3.3.0</version.maven-source-plugin>
-		<version.maven-gpg-plugin>3.1.0</version.maven-gpg-plugin>
-		<version.maven-install-plugin>3.1.1</version.maven-install-plugin>
-		<version.maven-jar-plugin>3.3.0</version.maven-jar-plugin>
-		<version.maven-javadoc-plugin>3.6.2</version.maven-javadoc-plugin>
-		<version.maven-project-info-reports-plugin>3.5.0</version.maven-project-info-reports-plugin>
-		<version.maven-release-plugin>3.0.1</version.maven-release-plugin>
-		<version.maven-remote-resources-plugin>3.1.0</version.maven-remote-resources-plugin>
-		<version.maven-resources-plugin>3.3.1</version.maven-resources-plugin>
-		<version.maven-site-plugin>4.0.0-M9</version.maven-site-plugin>
 		<version.maven-surefire>3.2.2</version.maven-surefire>
 		<build-helper-maven-plugin.version>3.4.0</build-helper-maven-plugin.version>
 		<japicmp-maven-plugin.version>0.18.3</japicmp-maven-plugin.version>
