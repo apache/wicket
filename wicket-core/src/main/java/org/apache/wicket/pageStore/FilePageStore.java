@@ -229,7 +229,7 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 
 	private void checkMaxSize(String sessionIdentifier)
 	{
-		File[] files = folders.get(sessionIdentifier, true).listFiles();
+		File[] files = Files.list(folders.get(sessionIdentifier, true));
 		Arrays.sort(files, new LastModifiedComparator());
 
 		long total = 0;
@@ -277,7 +277,7 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		File folder = folders.get(sessionIdentifier, false);
 		if (folder.exists())
 		{
-			File[] files = folder.listFiles();
+			File[] files = Files.list(folder);
 			Arrays.sort(files, new LastModifiedComparator());
 			for (File file : files)
 			{
@@ -368,7 +368,7 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 
 		for (File folder : folders.getAll())
 		{
-			for (File file : folder.listFiles())
+			for (File file : Files.list(folder))
 			{
 				String name = file.getName();
 				if (name.endsWith(FILE_SUFFIX))

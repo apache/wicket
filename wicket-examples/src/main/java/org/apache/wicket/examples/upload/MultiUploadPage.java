@@ -190,7 +190,7 @@ public class MultiUploadPage extends WicketExamplePage
 			@Override
 			protected List<File> load()
 			{
-				return Arrays.asList(getUploadFolder().listFiles());
+				return Arrays.asList(Files.list(getUploadFolder()));
 			}
 		});
 		add(fileListView);
