@@ -146,7 +146,7 @@
 		<cdi-unit.version>4.1.0</cdi-unit.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<commons-fileupload.version>2.0.0-M1</commons-fileupload.version>
-		<commons-io.version>2.13.0</commons-io.version>
+		<commons-io.version>2.15.1</commons-io.version>
 		<commons-lang3.version>3.14.0</commons-lang3.version>
 		<guice.version>7.0.0</guice.version>
 		<el-impl.version>2.2.1-b05</el-impl.version>
