@@ -39,6 +39,7 @@ import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
 import org.apache.wicket.util.cookies.CookieDefaults;
+import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.lang.Args;
 
 import com.github.openjson.JSONObject;
@@ -431,7 +432,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		// cookie when it is set from a different path - which is the case when a
 		// ResourceReference is used
 		cookie.setPath("/");
-		cookie.setAttribute("SameSite", sameSite.name());
+		CookieUtils.setSameSiteAttribute(cookie, sameSite.name());
 
 		return cookie;
 	}

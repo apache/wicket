@@ -340,12 +340,23 @@ public class CookieUtils
 		cookie.setMaxAge(settings.getMaxAge());
 		cookie.setHttpOnly(settings.isHttpOnly());
 
+		setSameSiteAttribute(cookie, settings.getSameSite().name());
+	}
+
+	/**
+	 * Sets <code>SameSite</code> attribute on Servlet 6+
+	 * 
+	 * @param cookie
+	 * @param sameSiteValue
+	 */
+	public static void setSameSiteAttribute(final Cookie cookie, String sameSiteValue)
+	{
 		if (WebApplication.exists())
 		{
 			final ServletContext servletContext = WebApplication.get().getServletContext();
 			if (servletContext.getEffectiveMajorVersion() >= 6)
 			{
-				cookie.setAttribute("SameSite", settings.getSameSite().name());
+				cookie.setAttribute("SameSite", sameSiteValue);
 			}
 		}
 	}
