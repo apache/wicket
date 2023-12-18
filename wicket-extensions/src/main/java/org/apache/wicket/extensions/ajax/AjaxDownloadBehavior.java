@@ -432,7 +432,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		// cookie when it is set from a different path - which is the case when a
 		// ResourceReference is used
 		cookie.setPath("/");
-		CookieUtils.setSameSiteAttribute(cookie, sameSite.name());
+		CookieUtils.setAttribute(cookie, "SameSite", sameSite.name());
 
 		return cookie;
 	}

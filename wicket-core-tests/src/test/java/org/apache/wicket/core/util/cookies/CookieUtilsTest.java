@@ -18,6 +18,7 @@ package org.apache.wicket.core.util.cookies;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -26,8 +27,13 @@ import java.util.Collections;
 import java.util.List;
 import jakarta.servlet.http.Cookie;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Page;
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.util.cookies.CookieDefaults;
 import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -155,6 +161,57 @@ class CookieUtilsTest extends WicketTestCase
 		before(); // execute a request cycle, so the response cookie is send with the next request
 		Cookie result = utils.getCookie(key);
 		assertNull(result.getComment());
+	}
+
+	@Test
+	void setAttribute_nullName()
+	{
+		Cookie cookie = new Cookie("key", "value");
+		IllegalArgumentException x = assertThrows(IllegalArgumentException.class, () -> CookieUtils.setAttribute(cookie, null, "Some attr value"));
+		assertEquals("Argument 'attributeName' may not be null or empty.", x.getMessage());
+	}
+
+	@Test
+	void setAttribute_emptyName()
+	{
+		Cookie cookie = new Cookie("key", "value");
+		IllegalArgumentException x = assertThrows(IllegalArgumentException.class, () -> CookieUtils.setAttribute(cookie, "", "Some attr value"));
+		assertEquals("Argument 'attributeName' may not be null or empty.", x.getMessage());
+	}
+
+	@Test
+	void setAttribute_successful()
+	{
+		Cookie cookie = new Cookie("key", "value");
+		CookieUtils.setAttribute(cookie, "SomeAttrName", "Some attr value");
+		final String attribute = cookie.getAttribute("SomeAttrName");
+		assertEquals("Some attr value", attribute);
+	}
+
+	@Test
+	void setAttribute_oldServletVersion()
+	{
+		Application oldApplication = ThreadContext.getApplication();
+		try {
+			WebApplication application = new MockApplication();
+			MockServletContext servletContext = new MockServletContext(application, "/path") {
+				@Override
+				public int getEffectiveMajorVersion() {
+					return 5;
+				}
+			};
+			application.setServletContext(servletContext);
+			ThreadContext.setApplication(application);
+
+			Cookie cookie = new Cookie("key", "value");
+			CookieUtils.setAttribute(cookie, "SomeAttrName", "Some attr value");
+			String attribute = cookie.getAttribute("SomeAttrName");
+			assertNull(attribute);
+		}
+		finally
+		{
+			ThreadContext.setApplication(oldApplication);
+		}
 	}
 
 	private void copyCookieFromResponseToRequest()
