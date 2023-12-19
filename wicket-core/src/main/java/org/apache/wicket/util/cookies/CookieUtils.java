@@ -29,6 +29,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -340,12 +341,29 @@ public class CookieUtils
 		cookie.setMaxAge(settings.getMaxAge());
 		cookie.setHttpOnly(settings.isHttpOnly());
 
+		setAttribute(cookie, "SameSite", settings.getSameSite().name());
+	}
+
+	/**
+	 * Sets a custom attribute on Servlet 6+
+	 * 
+	 * @param cookie
+	 * 		The cookie to set the attribute on
+	 * @param attributeName
+	 * 		The name of the attribute
+	 * @param attributeValue
+	 * 		The value of the attribute
+	 */
+	public static void setAttribute(final Cookie cookie, String attributeName, String attributeValue)
+	{
+		Args.notEmpty(attributeName, "attributeName");
+
 		if (WebApplication.exists())
 		{
 			final ServletContext servletContext = WebApplication.get().getServletContext();
 			if (servletContext.getEffectiveMajorVersion() >= 6)
 			{
-				cookie.setAttribute("SameSite", settings.getSameSite().name());
+				cookie.setAttribute(attributeName, attributeValue);
 			}
 		}
 	}
