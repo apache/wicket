@@ -916,9 +916,9 @@
 					<executions>
 						<execution>
 							<id>default-bundle</id>
-							<phase>package</phase>
+							<phase>process-classes</phase>
 							<goals>
-								<goal>bundle</goal>
+								<goal>manifest</goal>
 							</goals>
 							<configuration>
 								<instructions>
@@ -1060,6 +1060,7 @@
 					<version>${maven-jar-plugin.version}</version>
 					<configuration>
 						<archive>
+							<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
 							<manifest>
 								<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>

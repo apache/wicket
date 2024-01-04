@@ -23,7 +23,7 @@
     <version>10.0.0-M3-SNAPSHOT</version>
   </parent>
   <artifactId>wicket-request</artifactId>
-  <packaging>bundle</packaging>
+  <packaging>jar</packaging>
   <name>Wicket Request</name>
   <url>http://maven.apache.org</url>
 

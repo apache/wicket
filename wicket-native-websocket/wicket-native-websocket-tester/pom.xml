@@ -26,7 +26,7 @@
     </parent>
 
     <artifactId>wicket-native-websocket-tester</artifactId>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
     <name>Wicket Native WebSocket Tester</name>
     <description>Provides the helper classes for testing WebSocket based applications</description>
 	<properties>
