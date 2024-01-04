@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-extensions</artifactId>
-	<packaging>bundle</packaging>
+	<packaging>jar</packaging>
 	<name>Wicket Extensions</name>
 	<description>Wicket Extensions is a rich component library for the Wicket framework.</description>
 	<properties>
