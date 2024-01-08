@@ -33,7 +33,7 @@ public class FixedCSPValue implements CSPRenderable
 
 	/**
 	 * Creates a new {@code FixedCSPValue} for the given value.
-	 * 
+	 *
 	 * @param value
 	 *            the value to render;
 	 */
@@ -51,12 +51,16 @@ public class FixedCSPValue implements CSPRenderable
 	{
 		return value;
 	}
-	
+
 	@Override
 	public void checkValidityForSrc()
 	{
 		String strValue = value;
-		if ("data:".equals(strValue) || "https:".equals(strValue))
+		if ("data:".equals(strValue) ||
+				"blob:".equals(strValue) ||
+				"mediastream:".equals(strValue) ||
+				"filesystem:".equals(strValue) ||
+				"https:".equals(strValue))
 		{
 			return;
 		}
@@ -77,7 +81,7 @@ public class FixedCSPValue implements CSPRenderable
 			throw new IllegalArgumentException("Illegal URI for -src directive", urise);
 		}
 	}
-	
+
 	@Override
 	public String toString()
 	{
