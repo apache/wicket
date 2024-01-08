@@ -19,6 +19,7 @@ package org.apache.wicket.csp;
 import static org.apache.wicket.csp.CSPDirective.CHILD_SRC;
 import static org.apache.wicket.csp.CSPDirective.DEFAULT_SRC;
 import static org.apache.wicket.csp.CSPDirective.FRAME_SRC;
+import static org.apache.wicket.csp.CSPDirective.IMG_SRC;
 import static org.apache.wicket.csp.CSPDirective.REPORT_URI;
 import static org.apache.wicket.csp.CSPDirective.SANDBOX;
 import static org.apache.wicket.csp.CSPDirectiveSandboxValue.ALLOW_FORMS;
@@ -27,6 +28,7 @@ import static org.apache.wicket.csp.CSPDirectiveSrcValue.NONE;
 import static org.apache.wicket.csp.CSPDirectiveSrcValue.SELF;
 import static org.apache.wicket.csp.CSPDirectiveSrcValue.WILDCARD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -44,8 +46,10 @@ import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-public class CSPSettingRequestCycleListenerTest extends WicketTestCase
+class CSPSettingRequestCycleListenerTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -68,7 +72,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testNullSrcInputIsRejected()
+	void testNullSrcInputIsRejected()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -77,7 +81,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testEmptySrcInputIsRejected()
+	void testEmptySrcInputIsRejected()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -90,7 +94,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	 * you can use {@link CSPDirectiveSrcValue}) or a correct URI.
 	 */
 	@Test
-	public void testInvalidSrcInputIsRejected()
+	void testInvalidSrcInputIsRejected()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -103,7 +107,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	 * directive.
 	 */
 	@Test
-	public void testMultipleSrcInputWithNoneIsRejected1()
+	void testMultipleSrcInputWithNoneIsRejected1()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -116,7 +120,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	 * directive.
 	 */
 	@Test
-	public void testMultipleSrcInputWithNoneIsRejected2()
+	void testMultipleSrcInputWithNoneIsRejected2()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -129,7 +133,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	 * that directive.
 	 */
 	@Test
-	public void testMultipleSrcInputWithStarIsRejected1()
+	void testMultipleSrcInputWithStarIsRejected1()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(DEFAULT_SRC, SELF);
@@ -143,7 +147,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	 * that directive.
 	 */
 	@Test
-	public void testMultipleSrcInputWithStarIsRejected2()
+	void testMultipleSrcInputWithStarIsRejected2()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(DEFAULT_SRC, WILDCARD);
@@ -153,7 +157,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testWrongSrcInputIsRejected()
+	void testWrongSrcInputIsRejected()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -162,7 +166,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testWrongSandboxInputIsRejected()
+	void testWrongSandboxInputIsRejected()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -171,7 +175,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testNullSandboxInputIsRejected()
+	void testNullSandboxInputIsRejected()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -180,14 +184,14 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testEmptySandboxInputIsAccepted()
+	void testEmptySandboxInputIsAccepted()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(SANDBOX, CSPDirectiveSandboxValue.EMPTY);
 	}
 
 	@Test
-	public void testInvalidSandboxInputIsRejected()
+	void testInvalidSandboxInputIsRejected()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -196,7 +200,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testMultipleSandboxInputWithEmptyStringIsRejected1()
+	void testMultipleSandboxInputWithEmptyStringIsRejected1()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(SANDBOX, ALLOW_FORMS);
@@ -206,7 +210,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testMultipleSandboxInputWithEmptyStringIsRejected2()
+	void testMultipleSandboxInputWithEmptyStringIsRejected2()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(SANDBOX, EMPTY);
@@ -216,7 +220,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testNullReportUriInputIsRejected()
+	void testNullReportUriInputIsRejected()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -225,7 +229,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testEmptyReportUriInputIsRejected()
+	void testEmptyReportUriInputIsRejected()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -234,7 +238,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testInvalidReportUriInputIsRejected()
+	void testInvalidReportUriInputIsRejected()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -243,7 +247,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testAllCSPSrcDefaultEnumsAreSetCorrectly() throws NoSuchAlgorithmException
+	void testAllCSPSrcDefaultEnumsAreSetCorrectly() throws NoSuchAlgorithmException
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 
@@ -272,7 +276,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testCSPReportUriDirectiveSetCorrectly()
+	void testCSPReportUriDirectiveSetCorrectly()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(REPORT_URI, "http://report.example.com");
@@ -287,7 +291,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testCSPSandboxDirectiveSetCorrectly()
+	void testCSPSandboxDirectiveSetCorrectly()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		final int cspSandboxDirectiveValueCount = CSPDirectiveSandboxValue.values().length;
@@ -314,7 +318,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	 * frame-src is added when child-src is added.
 	 */
 	@Test
-	public void testChildSrcDirectiveAlsoSetsFrameSrcDirective()
+	void testChildSrcDirectiveAlsoSetsFrameSrcDirective()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(CHILD_SRC, SELF);
@@ -328,7 +332,7 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	}
 
 	@Test
-	public void testChildIsClonedIntoFrame()
+	void testChildIsClonedIntoFrame()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(CHILD_SRC, SELF);
@@ -349,6 +353,34 @@ public class CSPSettingRequestCycleListenerTest extends WicketTestCase
 		assertEquals("'self' https://wicket.apache.org", childSrc);
 		assertEquals(childSrc, frameSrc);
 	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"blob", "data", "mediastream", "filesystem", "https"})
+	void testConstantValues_whenValidConstant_acceptedByConfigurer(String source)
+	{
+	    // Arrange
+	    final var settings = tester.getApplication().getCspSettings();
+		settings.blocking().add(IMG_SRC, source + ":");
+
+	    // Act
+		tester.startPage(DummyHomePage.class);
+
+	    //Assert
+		final var imgSrc = renderDirective(settings.blocking().getDirectives().get(IMG_SRC),
+				settings, tester.getRequestCycle());
+		assertEquals(source + ":", imgSrc);
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"foo", "datadata", "blob2", "random", "*"})
+	void testConstantValues_whenInvalidConstant_acceptedByConfigurer(String source)
+	{
+	    // Arrange
+	    final var settings = tester.getApplication().getCspSettings().blocking();
+		// Act
+		assertThrows(IllegalArgumentException.class, () -> settings.add(IMG_SRC, source + ":"));
+	}
+
 
 	private String renderDirective(List<CSPRenderable> values,
 		ContentSecurityPolicySettings settings, RequestCycle cycle)
