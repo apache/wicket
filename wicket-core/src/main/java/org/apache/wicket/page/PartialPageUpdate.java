@@ -567,7 +567,7 @@ public abstract class PartialPageUpdate
 				LOG.warn("Component '{}' not cannot be updated because it was already removed from page", component);
 				return;
 			}
-			else if (pageOfComponent != page) 
+			else if (!pageOfComponent.equals(page))
 			{
 				// on another page
 				throw new IllegalArgumentException("Component " + component.toString() + " cannot be updated because it is on another page.");
