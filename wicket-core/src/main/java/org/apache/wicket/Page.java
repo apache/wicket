@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.wicket.authorization.UnauthorizedActionException;
@@ -1011,5 +1012,22 @@ public abstract class Page extends MarkupContainer
 	public final boolean wasRendered(Component component)
 	{
 		return renderedComponents != null && renderedComponents.contains(component);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Page that = (Page) o;
+		return autoIndex == that.autoIndex && numericId == that.numericId;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(autoIndex, numericId);
 	}
 }

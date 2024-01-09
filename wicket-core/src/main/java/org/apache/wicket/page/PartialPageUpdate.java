@@ -552,7 +552,7 @@ public abstract class PartialPageUpdate
 
 		if (component instanceof Page)
 		{
-			if (component != page)
+			if (!component.equals(page))
 			{
 				throw new IllegalArgumentException("Cannot add another page");
 			}
