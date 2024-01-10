@@ -22,7 +22,6 @@ import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.lang.Packages;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import jakarta.servlet.FilterConfig;
@@ -38,8 +37,6 @@ import static org.junit.jupiter.api.Assertions.fail;
  * 
  * @author svenmeier
  */
-// FIXME Wicket 10
-@Disabled
 class SpringWebApplicationFactoryTest
 {
 
@@ -60,7 +57,7 @@ class SpringWebApplicationFactoryTest
 		assertTrue(Destroyable.instance.destroyed, "is not destroyed");
 	}
 
-	private class FilterConfigImpl implements FilterConfig
+	private static class FilterConfigImpl implements FilterConfig
 	{
 
 		@Override

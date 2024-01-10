@@ -25,21 +25,21 @@ import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestConversationalPage;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jsarman
  */
-// FIXME Wicket 10
-@Ignore
-public class ConversationPropagatorTest extends WicketCdiTestCase
+// FIXME Wicket 10. Re-enable once cdi-unit is adapted to jakarta.**
+@Disabled
+class ConversationPropagatorTest extends WicketCdiTestCase
 {
 	@Inject
 	Conversation conversation;
 
 	@Test
-	public void testAutoConversationNonBookmarkable()
+	void testAutoConversationNonBookmarkable()
 	{
 		configure(new CdiConfiguration());
 
@@ -59,7 +59,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	}
 
 	@Test
-	public void testAutoConversationBookmarkable()
+	void testAutoConversationBookmarkable()
 	{
 		configure(new CdiConfiguration());
 
@@ -81,7 +81,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	}
 
 	@Test
-	public void testPropagationAllNonBookmarkable()
+	void testPropagationAllNonBookmarkable()
 	{
 		configure(new CdiConfiguration().setPropagation(ConversationPropagation.ALL));
 
@@ -101,7 +101,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	}
 
 	@Test
-	public void testPropagationAllHybrid()
+	void testPropagationAllHybrid()
 	{
 		configure(new CdiConfiguration().setPropagation(ConversationPropagation.ALL));
 		tester.getApplication().getRootRequestMapperAsCompound().add(new MountedMapper("segment/${pageType}", TestConversationPage.class));
@@ -123,10 +123,10 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	}
 
 	/**
-	 * https://issues.apache.org/jira/browse/WICKET-6257
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-6257">WICKET-6257</a>
 	 */
 	@Test
-	public void testPropagationAllHybridRefresh()
+	void testPropagationAllHybridRefresh()
 	{
 		configure(new CdiConfiguration().setPropagation(ConversationPropagation.ALL));
 		tester.getApplication().getRootRequestMapperAsCompound().add(new MountedMapper("segment/${pageType}", TestConversationPage.class));
@@ -142,7 +142,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	}
 
 	@Test
-	public void testPropagationAllBookmarkable()
+	void testPropagationAllBookmarkable()
 	{
 		configure(new CdiConfiguration().setPropagation(ConversationPropagation.ALL));
 
@@ -163,7 +163,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	}
 
 	@Test
-	public void testPropagationNonBookmarkable()
+	void testPropagationNonBookmarkable()
 	{
 		configure(new CdiConfiguration());
 
@@ -184,7 +184,7 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	}
 
 	@Test
-	public void testPropagationNone()
+	void testPropagationNone()
 	{
 		configure(new CdiConfiguration().setPropagation(ConversationPropagation.NONE));
 

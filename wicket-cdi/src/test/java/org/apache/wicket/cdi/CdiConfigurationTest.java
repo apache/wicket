@@ -22,18 +22,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestPage;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jsarman
  */
-// FIXME Wicket 10
-@Ignore
-public class CdiConfigurationTest extends WicketCdiTestCase
+// FIXME Wicket 10. Re-enable once cdi-unit is adapted to jakarta.**
+@Disabled
+class CdiConfigurationTest extends WicketCdiTestCase
 {
 	@Test
-	public void testApplicationScope()
+	void testApplicationScope()
 	{
 		configure(new CdiConfiguration());
 		tester.startPage(TestPage.class);
@@ -41,7 +41,7 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 	}
 
 	@Test
-	public void testConversationScope()
+	void testConversationScope()
 	{
 		configure(new CdiConfiguration());
 		tester.startPage(TestConversationPage.class);
@@ -53,7 +53,7 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 	}
 
 	@Test
-	public void testConfigureTwice()
+	void testConfigureTwice()
 	{
 		configure(new CdiConfiguration());
 
@@ -64,7 +64,7 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 	}
 
 	@Test
-	public void testApplicationLevelConfiguration()
+	void testApplicationLevelConfiguration()
 	{
 		WicketTester tester = new WicketTester();
 		CdiConfiguration config = new CdiConfiguration();
