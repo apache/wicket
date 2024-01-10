@@ -74,12 +74,12 @@ public class ContextManager
 
 		// FIXME Wicket 10
 		currentRequest = null;// new LifecycleAwareRequest(new CdiUnitInitialListenerImpl(), new javax.servlet.http.HttpServletRequest(request));
-		lifecycle.requestInitialized(new javax.servlet.http.HttpServletRequest.Impl(currentRequest), null);
+		lifecycle.requestInitialized(currentRequest, null);
 	}
 
 	public void deactivateContexts()
 	{
-		lifecycle.requestDestroyed(new javax.servlet.http.HttpServletRequest.Impl(currentRequest));
+		lifecycle.requestDestroyed(currentRequest);
 		currentSession = currentRequest.getSession(false);
 		currentRequest = null;
 	}
@@ -93,7 +93,7 @@ public class ContextManager
 
 		if (currentSession != null)
 		{
-			lifecycle.sessionDestroyed(new javax.servlet.http.HttpSession.Impl(currentSession));
+			lifecycle.sessionDestroyed(currentSession);
 			currentSession = null;
 		}
 	}
