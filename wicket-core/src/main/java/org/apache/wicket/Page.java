@@ -1023,11 +1023,11 @@ public abstract class Page extends MarkupContainer
 			return false;
 		}
 		Page that = (Page) o;
-		return autoIndex == that.autoIndex && numericId == that.numericId;
+		return numericId == that.numericId;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(autoIndex, numericId);
+		return Objects.hash(numericId);
 	}
 }
