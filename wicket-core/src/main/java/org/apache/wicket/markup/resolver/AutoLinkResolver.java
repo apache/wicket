@@ -25,6 +25,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
@@ -619,6 +620,13 @@ public final class AutoLinkResolver implements IComponentResolver
 
 				// generate the href attribute
 				tag.put(attribute, url);
+
+				// add nonce if required
+				final var csp = getWebApplication().getCspSettings();
+				if(csp.isNonceEnabled())
+				{
+					tag.put(JavaScriptUtils.ATTR_CSP_NONCE, csp.getNonce(getRequestCycle()));
+				}
 			}
 		}
 
