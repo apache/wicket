@@ -82,7 +82,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 	private final ConcurrentMap<SpringBeanLocator, Object> cache = Generics.newConcurrentHashMap();
 
-	private final ConcurrentMap<SimpleEntry<Class<?>, Class<?>>, 
+	private final ConcurrentMap<SimpleEntry<Class<?>, ResolvableType>,
 								String> beanNameCache = Generics.newConcurrentHashMap();
 
 	private final boolean wrapInProxies;
@@ -131,8 +131,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 				required = true;
 			}
 
-			Class<?> generic = ResolvableType.forField(field).resolveGeneric(0);
-			String beanName = getBeanName(field, name, required, generic);
+			ResolvableType resolvableType = ResolvableType.forField(field);
+			String beanName = getBeanName(field, name, required, resolvableType);
 
 			SpringBeanLocator locator = new SpringBeanLocator(beanName, field.getType(), field, contextLocator);
 
@@ -185,17 +185,17 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 * @param field
 	 * @return bean name
 	 */
-	private String getBeanName(final Field field, String name, boolean required, Class<?> generic)
+	private String getBeanName(final Field field, String name, boolean required, ResolvableType resolvableType)
 	{
 		if (Strings.isEmpty(name))
 		{
 			Class<?> fieldType = field.getType();
 			
-			SimpleEntry<Class<?>, Class<?>> key = new SimpleEntry<Class<?>, Class<?>>(fieldType, generic);
+			SimpleEntry<Class<?>, ResolvableType> key = new SimpleEntry<>(fieldType, resolvableType);
 			name = beanNameCache.get(key);
 			if (name == null)
 			{
-				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, generic, field.getName());
+				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, resolvableType, field.getName());
 				if (name != null)
 				{
 					String tmpName = beanNameCache.putIfAbsent(key, name);
@@ -223,11 +223,11 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 * @return spring name of the bean
 	 */
 	private String getBeanNameOfClass(final ApplicationContext ctx, final Class<?> clazz,
-		final Class<?> generic, String fieldName)
+		final ResolvableType resolvableType, String fieldName)
 	{
 		// get the list of all possible matching beans
 		List<String> names = new ArrayList<>(
-			Arrays.asList(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, clazz)));
+			Arrays.asList(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(ctx, resolvableType)));
 
 		// filter out beans that are not candidates for autowiring
 		if (ctx instanceof AbstractApplicationContext)
@@ -277,12 +277,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			{
 				return names.get(nameIndex);
 			}
-			
-			if (generic != null)
-			{
-				return null;
-			}
-			
+
 			StringBuilder msg = new StringBuilder();
 			msg.append("More than one bean of type [");
 			msg.append(clazz.getName());

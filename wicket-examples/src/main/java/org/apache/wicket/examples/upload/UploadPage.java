@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import org.apache.wicket.markup.html.basic.Label;
@@ -178,7 +177,7 @@ public class UploadPage extends WicketExamplePage
 			@Override
 			protected List<File> load()
 			{
-				return Arrays.asList(getUploadFolder().listFiles());
+				return Arrays.asList(Files.list(getUploadFolder()));
 			}
 		});
 		add(fileListView);
