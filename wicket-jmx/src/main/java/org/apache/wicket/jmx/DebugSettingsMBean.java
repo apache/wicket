@@ -71,6 +71,8 @@ public interface DebugSettingsMBean
 	 * Enables wrapping output of markup container in html comments that contain markup container's
 	 * class name. (Useful for determining which part of page belongs to which markup file).
 	 * 
+	 * //TODO WICKET-6890 JMX Probably does not work with enum, What do we do here?
+	 * 
 	 * @param enable
 	 */
 	void setOutputMarkupContainerClassName(boolean enable);

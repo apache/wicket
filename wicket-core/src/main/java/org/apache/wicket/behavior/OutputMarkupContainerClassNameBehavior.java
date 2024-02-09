@@ -28,9 +28,9 @@ import org.apache.wicket.util.lang.Classes;
  * the markup element of {@link ComponentTag} with value the fully
  * qualified class name of the markup container.</p>
  *
- * <p>It is used internally by Wicket when {@link DebugSettings#isOutputMarkupContainerClassName()} is active.</p>
+ * <p>It is used internally by Wicket when {@link org.apache.wicket.settings.DebugSettings.ClassOutputStrategy#TAG_ATTRIBUTE} is active.</p>
  *
- * @see DebugSettings#setOutputMarkupContainerClassName(boolean) 
+ * @see DebugSettings#setOutputMarkupContainerClassNameStrategy(DebugSettings.ClassOutputStrategy)  
  */
 public class OutputMarkupContainerClassNameBehavior extends Behavior {
 
