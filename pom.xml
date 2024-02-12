@@ -136,7 +136,7 @@
 		<!-- Project Versions -->
 		<asm.version>9.6</asm.version>
 		<aspectj.version>1.9.21</aspectj.version>
-		<assertj-core.version>3.24.2</assertj-core.version>
+		<assertj-core.version>3.25.3</assertj-core.version>
 		<bouncycastle.version>1.77</bouncycastle.version>
 		<byte-buddy.version>1.14.10</byte-buddy.version>
 		<cdi-unit.version>4.1.0</cdi-unit.version>
