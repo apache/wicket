@@ -24,7 +24,7 @@ module org.apache.wicket.core {
     requires org.apache.commons.io;
     requires org.apache.commons.collections4;
     requires org.apache.commons.fileupload2.core;
-    requires org.apache.commons.fileupload2.jakarta;
+    requires org.apache.commons.fileupload2.jakarta.servlet5;
     requires org.slf4j;
     requires static jakarta.servlet;
     requires org.danekja.jdk.serializable.functional;
