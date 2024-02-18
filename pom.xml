@@ -185,7 +185,7 @@
 
 		<!-- Maven plugins -->
 		<build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
-		<japicmp-maven-plugin.version>0.18.3</japicmp-maven-plugin.version>
+		<japicmp-maven-plugin.version>0.18.4</japicmp-maven-plugin.version>
 		<maven-archetype-plugin.version>3.2.1</maven-archetype-plugin.version>
 		<maven-bundle-plugin.version>5.1.9</maven-bundle-plugin.version>
 		<maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
