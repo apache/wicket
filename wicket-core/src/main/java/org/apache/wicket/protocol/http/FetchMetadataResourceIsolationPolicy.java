@@ -83,7 +83,7 @@ public class FetchMetadataResourceIsolationPolicy implements IResourceIsolationP
 		String dest = request.getHeader(SEC_FETCH_DEST_HEADER);
 
 		boolean isSimpleTopLevelNavigation = MODE_NAVIGATE.equals(mode)
-			|| "GET".equals(request.getMethod());
+			&& "GET".equals(request.getMethod());
 		boolean isNotObjectOrEmbedRequest = !DEST_EMBED.equals(dest) && !DEST_OBJECT.equals(dest);
 
 		return isSimpleTopLevelNavigation && isNotObjectOrEmbedRequest;
