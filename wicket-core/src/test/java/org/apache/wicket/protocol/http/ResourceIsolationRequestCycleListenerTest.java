@@ -19,8 +19,9 @@ package org.apache.wicket.protocol.http;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.CROSS_SITE;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.DEST_EMBED;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.DEST_OBJECT;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.DEST_DOCUMENT;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.MODE_NAVIGATE;
-import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SAME_ORIGIN;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.MODE_NO_CORS;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SAME_SITE;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SEC_FETCH_DEST_HEADER;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SEC_FETCH_MODE_HEADER;
@@ -86,6 +87,19 @@ public class ResourceIsolationRequestCycleListenerTest extends WicketTestCase
 	}
 
 	/**
+	 * Tests whether cross site requests are aborted
+	 */
+	@Test
+	void destNoCorsGetAborted()
+	{
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+		tester.addRequestHeader(SEC_FETCH_DEST_HEADER, DEST_DOCUMENT);
+		tester.addRequestHeader(SEC_FETCH_MODE_HEADER, MODE_NO_CORS);
+
+		assertRequestAborted();
+	}
+
+	/**
 	 * Tests whether object requests (sec-fetch-dest :"object" ) are aborted by FM checks
 	 */
 	@Test
@@ -103,7 +117,7 @@ public class ResourceIsolationRequestCycleListenerTest extends WicketTestCase
 	@Test
 	void topLevelNavigationAllowedFM()
 	{
-		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, SAME_ORIGIN);
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
 		tester.addRequestHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
 
 		assertRequestAccepted();
@@ -191,15 +205,17 @@ public class ResourceIsolationRequestCycleListenerTest extends WicketTestCase
 
 	private void assertRequestAborted()
 	{
+		tester.getRequest().setMethod("GET");
 		tester.clickLink("link");
-		assertEquals(tester.getLastResponse().getStatus(),
-			javax.servlet.http.HttpServletResponse.SC_FORBIDDEN);
-		assertEquals(tester.getLastResponse().getErrorMessage(),
-			ResourceIsolationRequestCycleListener.ERROR_MESSAGE);
+		assertEquals(javax.servlet.http.HttpServletResponse.SC_FORBIDDEN,
+			tester.getLastResponse().getStatus());
+		assertEquals(ResourceIsolationRequestCycleListener.ERROR_MESSAGE,
+			tester.getLastResponse().getErrorMessage());
 	}
 
 	private void assertRequestAccepted()
 	{
+		tester.getRequest().setMethod("GET");
 		tester.clickLink("link");
 		tester.assertRenderedPage(SecondPage.class);
 	}
