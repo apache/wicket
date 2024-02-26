@@ -42,10 +42,12 @@ public class FetchMetadataResourceIsolationPolicy implements IResourceIsolationP
 	public static final String SAME_SITE = "same-site";
 	public static final String NONE = "none";
 	public static final String MODE_NAVIGATE = "navigate";
+	public static final String MODE_NO_CORS = "no-cors";
 	public static final String DEST_OBJECT = "object";
 	public static final String DEST_EMBED = "embed";
 	public static final String CROSS_SITE = "cross-site";
 	public static final String CORS = "cors";
+	public static final String DEST_DOCUMENT = "document";
 	public static final String DEST_SCRIPT = "script";
 	public static final String DEST_IMAGE = "image";
 	
@@ -83,7 +85,7 @@ public class FetchMetadataResourceIsolationPolicy implements IResourceIsolationP
 		String dest = request.getHeader(SEC_FETCH_DEST_HEADER);
 
 		boolean isSimpleTopLevelNavigation = MODE_NAVIGATE.equals(mode)
-			|| "GET".equals(request.getMethod());
+			&& "GET".equalsIgnoreCase(request.getMethod());
 		boolean isNotObjectOrEmbedRequest = !DEST_EMBED.equals(dest) && !DEST_OBJECT.equals(dest);
 
 		return isSimpleTopLevelNavigation && isNotObjectOrEmbedRequest;
