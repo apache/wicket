@@ -124,6 +124,18 @@ public class ResourceIsolationRequestCycleListenerTest extends WicketTestCase
 	}
 
 	/**
+	 * Tests that a POST is not a simple top-level navigation request and is blocked
+	 */
+	@Test
+	void topLevelNavigationPostAborted()
+	{
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+		tester.addRequestHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
+
+		assertRequestAborted("POST");
+	}
+
+	/**
 	 * Tests that requests rejected by fetch metadata have the Vary header set
 	 */
 	@Test
@@ -205,7 +217,12 @@ public class ResourceIsolationRequestCycleListenerTest extends WicketTestCase
 
 	private void assertRequestAborted()
 	{
-		tester.getRequest().setMethod("GET");
+		assertRequestAborted("GET");
+	}
+
+	private void assertRequestAborted(String requestMethod)
+	{
+		tester.getRequest().setMethod(requestMethod);
 		tester.clickLink("link");
 		assertEquals(javax.servlet.http.HttpServletResponse.SC_FORBIDDEN,
 			tester.getLastResponse().getStatus());
