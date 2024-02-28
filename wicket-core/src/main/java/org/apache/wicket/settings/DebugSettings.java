@@ -197,7 +197,7 @@ public class DebugSettings
 	}
 
 	/**
-	 * Sets the strategy for outputting the class of a markup
+	 * Sets the strategy for outputting the Java class name of a markup
 	 * 
 	 * @param strategy
 	 * @return {@code this} object for chaining
