@@ -197,7 +197,7 @@ public class DebugSettings
 	}
 
 	/**
-	 * Sets the strategy for outputting the Java class name of a markup
+	 * Sets the strategy for outputting the Java class name of a markup container in the HTML output.
 	 * 
 	 * @param strategy
 	 * @return {@code this} object for chaining
@@ -206,6 +206,18 @@ public class DebugSettings
 	{
 		outputMarkupContainerClassNameStrategy = Args.notNull(strategy, "strategy");
 		return this;
+	}
+
+	/**
+	 * Sets the strategy for outputting the Java class name of a markup container in the HTML output.
+	 *
+	 * @param strategyName the enum name of the {@link ClassOutputStrategy} to use
+	 * @return {@code this} object for chaining
+	 */
+	public DebugSettings setOutputMarkupContainerClassNameStrategy(String strategyName)
+	{
+		final ClassOutputStrategy strategy = Enum.valueOf(ClassOutputStrategy.class, strategyName);
+		return setOutputMarkupContainerClassNameStrategy(strategy);
 	}
 
 	/**
