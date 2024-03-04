@@ -827,7 +827,6 @@ public abstract class Page extends MarkupContainer
 			getSession().getPageManager().touchPage(this);
 		}
 
-		//TODO WICKET-6890 What about TAG_ATTRIBUTE?
 		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
 		{
 			final String className = Classes.name(getClass());
