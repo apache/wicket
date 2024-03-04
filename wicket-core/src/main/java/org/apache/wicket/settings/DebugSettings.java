@@ -107,9 +107,9 @@ public class DebugSettings
 
 	/**
 	 * Returns whether the output of markup container's should contain the
-	 * container's class name.
+	 * container's Java class name.
 	 *
-	 * @return true if the markup container's class name should be written to response
+	 * @return true if the markup container's Java class name should be written to response
 	 * @deprecated use {@link #getOutputMarkupContainerClassNameStrategy()} instead
 	 */
 	@Deprecated(forRemoval = true)
@@ -119,9 +119,9 @@ public class DebugSettings
 	}
 
 	/**
-	 * Returns the strategy for outputting the class of a markup
+	 * Returns the strategy for outputting the Java class name of a markup container
 	 * 
-	 * @return the strategy for outputting the class of a markup
+	 * @return the strategy for outputting the Java class name of a markup container
 	 */
 	public ClassOutputStrategy getOutputMarkupContainerClassNameStrategy() 
 	{
@@ -263,7 +263,7 @@ public class DebugSettings
 	}
 	
 	/**
-	 * Strategy for outputting the class of a markup container
+	 * Strategy for outputting the Java class name of a markup container
 	 */
 	public enum ClassOutputStrategy 
 	{
