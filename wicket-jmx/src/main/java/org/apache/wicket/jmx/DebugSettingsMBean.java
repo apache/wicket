@@ -85,10 +85,9 @@ public interface DebugSettingsMBean
 	void setOutputMarkupContainerClassNameStrategy(String strategyName);
 
 	/**
-	 * Returns whether the output of markup container's should be wrapped by comments containing the
-	 * container's class name.
+	 * Returns whether the markup container's Java class name should be written to the response.
 	 * 
-	 * @return true if the markup container's class name should be written to response
+	 * @return true if the markup container's Java class name should be written to response
 	 */
 	boolean isOutputMarkupContainerClassName();
 
