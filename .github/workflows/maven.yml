@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 env:
-  MAVEN_VERSION: 3.9.4
+  MAVEN_VERSION: 3.9.6
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
         java:
         - '17'
         - '21'
-        - '23-ea'
+#        - '23-ea'
 
     steps:
     - uses: actions/checkout@v4
