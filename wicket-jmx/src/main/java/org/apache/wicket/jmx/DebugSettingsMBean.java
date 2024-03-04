@@ -72,14 +72,22 @@ public interface DebugSettingsMBean
 	 * class name. (Useful for determining which part of page belongs to which markup file).
 	 * 
 	 * @param enable
+	 * @deprecated use {@link #setOutputMarkupContainerClassNameStrategy(String)} instead
 	 */
 	void setOutputMarkupContainerClassName(boolean enable);
 
 	/**
-	 * Returns whether the output of markup container's should be wrapped by comments containing the
-	 * container's class name.
+	 * Sets the strategy for outputting the Java class name of a markup container in the HTML output.
+	 * (Useful for determining which part of page belongs to which markup file).
+	 *
+	 * @param strategyName the enum name of the class output strategy to use
+	 */
+	void setOutputMarkupContainerClassNameStrategy(String strategyName);
+
+	/**
+	 * Returns whether the markup container's Java class name should be written to the response.
 	 * 
-	 * @return true if the markup container's class name should be written to response
+	 * @return true if the markup container's Java class name should be written to response
 	 */
 	boolean isOutputMarkupContainerClassName();
 
