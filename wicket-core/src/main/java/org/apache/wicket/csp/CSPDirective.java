@@ -51,6 +51,7 @@ public enum CSPDirective
 	 * {@code frame-src} directive when {@code child-src} is added.
 	 */
 	FRAME_SRC("frame-src"),
+	FROM_ACTION("form-action"),
 	SANDBOX("sandbox")
 	{
 		/**
