@@ -20,7 +20,7 @@
   <parent>
     <artifactId>wicket-parent</artifactId>
     <groupId>org.apache.wicket</groupId>
-    <version>10.0.0-M3-SNAPSHOT</version>
+    <version>10.0.0</version>
   </parent>
   <artifactId>wicket-request</artifactId>
   <packaging>jar</packaging>
