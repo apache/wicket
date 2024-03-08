@@ -2,6 +2,38 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.0.0
+
+** Sub-task
+
+    * [WICKET-7089] - Set cookie SameSite only if the container supports it
+
+** Bug
+
+    * [WICKET-7081] - Open packages to expose resources to other modules 
+    * [WICKET-7086] - Injecting Spring bean may cause ClassCastException
+    * [WICKET-7087] - AjaxLazyLoadPanelTester not available in 10.0.0-M2
+    * [WICKET-7090] - Files in release jars do not have a modification timestamp set
+    * [WICKET-7091] - FilePageStore throws NPE
+    * [WICKET-7096] - stylesheets referenced via automatic linking miss nonce attribute
+
+** Improvement
+
+    * [WICKET-7080] - [Events] make default events delivery machinery pluggable and roll usable annotation based one
+    * [WICKET-7082] - Easier to work with polymorphic values inside IModel
+    * [WICKET-7083] - Trigger client side validation when using SubmitLinks
+    * [WICKET-7088] - Improve test reliability by resolving nondeterministic order of Set and Map
+    * [WICKET-7093] - Add support for missing CSP directives
+    * [WICKET-7094] - Make all CSP schemes configurable
+    * [WICKET-7099] - Validate FormTester constructor parameter workingForm
+
+** Task
+
+    * [WICKET-7079] - Update the user guide with the new wicket-tester module
+    * [WICKET-7100] - Update commons-fileupload2 to 2.0.0-M2
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.0.0-M2
 
 ** Bug
