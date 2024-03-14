@@ -18,17 +18,20 @@ package org.apache.wicket.markup.html.form;
 
 import java.io.Serializable;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.request.handler.ComponentNotFoundException;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
@@ -72,7 +75,8 @@ public class AutoLabelResolver implements IComponentResolver
 	private static final Logger logger = LoggerFactory.getLogger(AutoLabelResolver.class);
 
 	static final String WICKET_FOR = ":for";
-	
+	static final String WICKET_AUTO = ":auto";
+
 	public static final String LABEL_ATTR = "label_attr";
 	
 	public static final String CSS_REQUIRED_KEY = CssUtils.key(AutoLabel.class, "required");
@@ -127,7 +131,10 @@ public class AutoLabelResolver implements IComponentResolver
 
 		if (component instanceof FormComponent)
 		{
-			component.setMetaData(MARKER_KEY, new AutoLabelMarker((FormComponent<?>)component));
+			final String auto = tag.getAttribute(getWicketNamespace(markupStream) + WICKET_AUTO);
+			boolean isAuto = Application.get().getMarkupSettings().isUpdateAutoLabelsTogetherWithFormComponent();
+			isAuto = isAuto || !Strings.isEmpty(auto) && Boolean.parseBoolean(auto.trim());
+			component.setMetaData(MARKER_KEY, new AutoLabelMarker((FormComponent<?>)component, isAuto));
 		}
 
 		return new AutoLabel(tag.getId(), component);
@@ -213,25 +220,37 @@ public class AutoLabelResolver implements IComponentResolver
 		public static final short VALID = 0x01;
 		public static final short REQUIRED = 0x02;
 		public static final short ENABLED = 0x04;
+		public static final short AUTO = 0x08;
 
 		private short flags;
 
 		public AutoLabelMarker(FormComponent<?> component)
 		{
+			this(component, false);
+		}
+
+		public AutoLabelMarker(FormComponent<?> component, boolean auto)
+		{
 			setFlag(VALID, component.isValid());
 			setFlag(REQUIRED, component.isRequired());
 			setFlag(ENABLED, component.isEnabledInHierarchy());
+			setFlag(AUTO, auto);
 		}
 
-		public void updateFrom(FormComponent<?> component, AjaxRequestTarget target)
+		@Deprecated(since = "9.17.0, 10.0.0", forRemoval = true)
+		public void updateFrom(FormComponent<?> component, AjaxRequestTarget target) {
+			updateFrom(component, (IPartialPageRequestHandler)target);
+		}
+
+		public void updateFrom(FormComponent<?> component, IPartialPageRequestHandler target)
 		{
 			boolean valid = component.isValid(), required = component.isRequired(), enabled = component.isEnabledInHierarchy();
 
 			if (isValid() != valid)
 			{
 				target.appendJavaScript(String.format("Wicket.DOM.toggleClass('%s', '%s', %s);",
-					getLabelIdFor(component), component.getString(CSS_ERROR_KEY, null, CSS_ERROR_DEFAULT),
-					!valid));
+						getLabelIdFor(component), component.getString(CSS_ERROR_KEY, null, CSS_ERROR_DEFAULT),
+						!valid));
 			}
 
 			if (isRequired() != required)
@@ -251,6 +270,11 @@ public class AutoLabelResolver implements IComponentResolver
 			setFlag(VALID, valid);
 			setFlag(REQUIRED, required);
 			setFlag(ENABLED, enabled);
+		}
+
+		public boolean isAuto()
+		{
+			return getFlag(AUTO);
 		}
 
 		public boolean isValid()
