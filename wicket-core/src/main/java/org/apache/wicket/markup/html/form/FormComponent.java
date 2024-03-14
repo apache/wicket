@@ -39,6 +39,7 @@ import org.apache.wicket.Localizer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AutoLabelResolver.AutoLabelMarker;
@@ -301,6 +302,13 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 		}
 	}
 
+	@Override
+	protected void onBeforeRender()
+	{
+		// WICKET-7101 update related auto-label
+		getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(handler -> updateAutoLabels(handler, true));
+		super.onBeforeRender();
+	}
 
 	/**
 	 * Adapter that makes this component appear as {@link IValidatable}
@@ -1558,9 +1566,9 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * Updates auto label css classes such as error/required during ajax updates when the labels may
 	 * not be directly repainted in the response.
 	 * 
-	 * @param target
+	 * @param target The {@link IPartialPageRequestHandler}
 	 */
-	public final void updateAutoLabels(AjaxRequestTarget target)
+	public final void updateAutoLabels(IPartialPageRequestHandler target, boolean auto)
 	{
 		AutoLabelMarker marker = getMetaData(AutoLabelResolver.MARKER_KEY);
 	
@@ -1570,7 +1578,28 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			return;
 		}
 
+		if (auto)
+		{
+			if (marker.isAuto())
+			{
+				marker.updateFrom(this, target);
+				return;
+			} else {
+				return;
+			}
+		}
+
 		marker.updateFrom(this, target);
+	}
+
+
+	/**
+	 * @deprecated method in favor of the one receiving {@link IPartialPageRequestHandler}
+	 */
+	@Deprecated(since = "9.17.0, 10.0.0", forRemoval = true)
+	public final void updateAutoLabels(AjaxRequestTarget target)
+	{
+		updateAutoLabels((IPartialPageRequestHandler) target, false);
 	}
 
 	/**
