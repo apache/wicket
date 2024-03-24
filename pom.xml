@@ -477,7 +477,7 @@
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-http2-jetty</artifactId>
-				<version>0.25-SNAPSHOT</version>
+				<version>0.28</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
