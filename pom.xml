@@ -152,7 +152,7 @@
 		<commons-lang3.version>3.14.0</commons-lang3.version>
 		<guice.version>7.0.0</guice.version>
 		<el-impl.version>2.2.1-b05</el-impl.version>
-		<forbiddenapis.version>3.6</forbiddenapis.version>
+		<forbiddenapis.version>3.7</forbiddenapis.version>
 		<jacoco.version>0.8.11</jacoco.version>
 		<jackson.version>2.14.3</jackson.version>
 		<jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
