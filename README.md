@@ -143,7 +143,7 @@ the root folder.
 
  - wicket and wicket-extensions:
 
-    You only need to include the Servlet API (3.1, just for compiling), SLF4J
+    You only need to include the Jakarta Servlet API (5, just for compiling), SLF4J
     API and the SLF4J logging implementation you want. You cannot use Wicket
     without adding a SLF4J logging implementation to your classpath. 
     Please see the SLF4J site (https://www.slf4j.org/) for more information.
