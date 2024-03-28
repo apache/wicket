@@ -1567,8 +1567,9 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * not be directly repainted in the response.
 	 * 
 	 * @param target The {@link IPartialPageRequestHandler}
+	 * @param checkAuto if true then we check is the related auto-label is marked as auto before updating it.
 	 */
-	public final void updateAutoLabels(IPartialPageRequestHandler target, boolean auto)
+	public final void updateAutoLabels(IPartialPageRequestHandler target, boolean checkAuto)
 	{
 		AutoLabelMarker marker = getMetaData(AutoLabelResolver.MARKER_KEY);
 	
@@ -1578,15 +1579,14 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			return;
 		}
 
-		if (auto)
+		if (checkAuto)
 		{
-			if (marker.isAuto())
+			if (!marker.isAuto())
 			{
-				marker.updateFrom(this, target);
-				return;
-			} else {
 				return;
 			}
+			marker.updateFrom(this, target);
+			return;
 		}
 
 		marker.updateFrom(this, target);
@@ -1599,7 +1599,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	@Deprecated(since = "9.17.0, 10.0.0", forRemoval = true)
 	public final void updateAutoLabels(AjaxRequestTarget target)
 	{
-		updateAutoLabels((IPartialPageRequestHandler) target, false);
+		updateAutoLabels(target, false);
 	}
 
 	/**

@@ -874,7 +874,7 @@ public class Form<T> extends WebMarkupContainer
 				@Override
 				public void component(FormComponent<?> component, IVisit<Void> visit)
 				{
-					component.updateAutoLabels((IPartialPageRequestHandler)target, false);
+					component.updateAutoLabels(target, false);
 				}
 			});
 		});

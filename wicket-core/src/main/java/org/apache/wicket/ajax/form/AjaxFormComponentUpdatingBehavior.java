@@ -158,7 +158,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			onError(target, e);
 		}
-		formComponent.updateAutoLabels((IPartialPageRequestHandler)target, false);
+		formComponent.updateAutoLabels(target, false);
 	}
 
 	/**
