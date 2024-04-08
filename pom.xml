@@ -164,7 +164,6 @@
 		<jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
 		<jakarta.websocket-api.version>2.1.1</jakarta.websocket-api.version>
 		<jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
-		<japicmp.skip>true</japicmp.skip> <!-- TODO Wicket 10 Remove this once 10.0.0 is released -->
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
 		<jetty.version>11.0.14</jetty.version>
 		<junit.version>5.10.2</junit.version>
