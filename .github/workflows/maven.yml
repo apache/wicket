@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 env:
-  MAVEN_VERSION: 3.9.4
+  MAVEN_VERSION: 3.9.6
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
         java:
         - '17'
         - '21'
-        - '22-ea'
+#        - '23-ea'
 
     steps:
     - uses: actions/checkout@v4
@@ -41,7 +41,7 @@ jobs:
         tar -xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz
 
     - name: Cache Maven packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}

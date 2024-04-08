@@ -787,9 +787,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		try
 		{
 			setIgnoreAttributeModifier(true);
-			final boolean outputClassName = getApplication().getDebugSettings()
-					.isOutputMarkupContainerClassName();
-			if (outputClassName)
+			
+			final DebugSettings.ClassOutputStrategy outputClassName = getApplication().getDebugSettings()
+					.getOutputMarkupContainerClassNameStrategy();
+			if (outputClassName == DebugSettings.ClassOutputStrategy.TAG_ATTRIBUTE)
 			{
 				associatedMarkupOpenTag.addBehavior(OutputMarkupContainerClassNameBehavior.INSTANCE);
 			}
@@ -797,7 +798,23 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			renderComponentTag(associatedMarkupOpenTag);
 			associatedMarkupStream.next();
 
+			String className = null;
+			if (outputClassName == DebugSettings.ClassOutputStrategy.HTML_COMMENT)
+			{
+				className = Classes.name(getClass());
+				getResponse().write("<!-- MARKUP FOR ");
+				getResponse().write(className);
+				getResponse().write(" BEGIN -->");
+			}
+
 			renderComponentTagBody(associatedMarkupStream, associatedMarkupOpenTag);
+
+			if (outputClassName == DebugSettings.ClassOutputStrategy.HTML_COMMENT)
+			{
+				getResponse().write("<!-- MARKUP FOR ");
+				getResponse().write(className);
+				getResponse().write(" END -->");
+			}
 
 			renderClosingComponentTag(associatedMarkupStream, associatedMarkupOpenTag, false);
 		}

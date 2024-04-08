@@ -11,6 +11,7 @@
 		<attributeGroup name="xhtml.label.attlist">
 			<attributeGroup ref="xhtml.label.attlist"/>
 			<attribute ref="wicket:for"/>
+			<attribute ref="wicket:auto" use="optional"></attribute>
 		</attributeGroup>
 	</redefine>
 
@@ -90,7 +91,7 @@
 
 	<attribute name="for">
 		<annotation>
-			<documentation>Can be used in HTML <![CDATA[<label]]> element to automatically link it
+			<documentation>This attribute can be used in HTML <![CDATA[<label]]> element to automatically link it
 				to a form element. The value of this attribute must have the same value of
 				the form component's wicket:id attribute.
 			</documentation>
@@ -100,6 +101,15 @@
 				<pattern value="([^:]+(:[^:]+)*)?" />
 			</restriction>
 		</simpleType>
+	</attribute>
+
+	<attribute name="auto" type="boolean">
+		<annotation>
+			<documentation>This attribute can be used in HTML <![CDATA[<label]]> to indicate the label will be automatically updated
+				whenever the associated form component is updated (via a partial request target, .i.e AJAX or
+				websocket request target)
+			</documentation>
+		</annotation>
 	</attribute>
 
 	<attribute name="message">

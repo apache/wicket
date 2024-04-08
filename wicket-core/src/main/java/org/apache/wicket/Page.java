@@ -829,7 +829,7 @@ public abstract class Page extends MarkupContainer
 
 		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
 		{
-			String className = Classes.name(getClass());
+			final String className = Classes.name(getClass());
 			getResponse().write("<!-- Page Class ");
 			getResponse().write(className);
 			getResponse().write(" END -->\n");

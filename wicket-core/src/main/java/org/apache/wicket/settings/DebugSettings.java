@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.settings;
 
+import org.apache.wicket.util.lang.Args;
+
 /**
  * Settings class for various debug settings
  * <p>
@@ -54,7 +56,7 @@ public class DebugSettings
 	/**
 	 * Whether the container's class name should be printed to response (in a html comment).
 	 */
-	private boolean outputMarkupContainerClassName = false;
+	private ClassOutputStrategy outputMarkupContainerClassNameStrategy = ClassOutputStrategy.NONE;
 
 	private String componentPathAttributeName = null;
 
@@ -104,14 +106,26 @@ public class DebugSettings
 	}
 
 	/**
-	 * Returns whether the output of markup container's should be wrapped by comments containing the
-	 * container's class name.
+	 * Returns whether the output of markup container's should contain the
+	 * container's Java class name.
 	 *
-	 * @return true if the markup container's class name should be written to response
+	 * @return true if the markup container's Java class name should be written to response
+	 * @deprecated use {@link #getOutputMarkupContainerClassNameStrategy()} instead
 	 */
+	@Deprecated(forRemoval = true)
 	public boolean isOutputMarkupContainerClassName()
 	{
-		return outputMarkupContainerClassName;
+		return outputMarkupContainerClassNameStrategy != ClassOutputStrategy.NONE;
+	}
+
+	/**
+	 * Returns the strategy for outputting the Java class name of a markup container
+	 * 
+	 * @return the strategy for outputting the Java class name of a markup container
+	 */
+	public ClassOutputStrategy getOutputMarkupContainerClassNameStrategy() 
+	{
+		return outputMarkupContainerClassNameStrategy;
 	}
 
 	/**
@@ -173,11 +187,37 @@ public class DebugSettings
 	 *
 	 * @param enable
 	 * @return {@code this} object for chaining
+	 * @deprecated use {@link #setOutputMarkupContainerClassNameStrategy(ClassOutputStrategy)} instead
 	 */
+	@Deprecated(forRemoval = true)
 	public DebugSettings setOutputMarkupContainerClassName(boolean enable)
 	{
-		outputMarkupContainerClassName = enable;
+		outputMarkupContainerClassNameStrategy = enable ? ClassOutputStrategy.HTML_COMMENT : ClassOutputStrategy.NONE;
 		return this;
+	}
+
+	/**
+	 * Sets the strategy for outputting the Java class name of a markup container in the HTML output.
+	 * 
+	 * @param strategy
+	 * @return {@code this} object for chaining
+	 */
+	public DebugSettings setOutputMarkupContainerClassNameStrategy(ClassOutputStrategy strategy) 
+	{
+		outputMarkupContainerClassNameStrategy = Args.notNull(strategy, "strategy");
+		return this;
+	}
+
+	/**
+	 * Sets the strategy for outputting the Java class name of a markup container in the HTML output.
+	 *
+	 * @param strategyName the enum name of the {@link ClassOutputStrategy} to use
+	 * @return {@code this} object for chaining
+	 */
+	public DebugSettings setOutputMarkupContainerClassNameStrategy(String strategyName)
+	{
+		final ClassOutputStrategy strategy = Enum.valueOf(ClassOutputStrategy.class, strategyName);
+		return setOutputMarkupContainerClassNameStrategy(strategy);
 	}
 
 	/**
@@ -232,5 +272,24 @@ public class DebugSettings
 	public boolean isDevelopmentUtilitiesEnabled()
 	{
 		return developmentUtilitiesEnabled;
+	}
+	
+	/**
+	 * Strategy for outputting the Java class name of a markup container
+	 */
+	public enum ClassOutputStrategy 
+	{
+		/**
+		 * Output the container's class name in an HTML comment
+		 */
+		HTML_COMMENT, 
+		/**
+		 * Output the container's class name in a tag attribute
+		 */
+		TAG_ATTRIBUTE, 
+		/**
+		 * Do not output the container's class name
+		 */
+		NONE
 	}
 }

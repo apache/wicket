@@ -21,15 +21,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.MockPanelWithLink;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
 class OutputMarkupContainerClassNameBehaviorTest extends WicketTestCase {
 
     @Test
-    void whenDebugIsEnabled_thenRenderAttribute()
+    void whenDebugIsEnabledWithAttribute_thenRenderAttribute()
     {
-        tester.getApplication().getDebugSettings().setOutputMarkupContainerClassName(true);
+        tester.getApplication().getDebugSettings().setOutputMarkupContainerClassNameStrategy(DebugSettings.ClassOutputStrategy.TAG_ATTRIBUTE);
 
         MockPanelWithLink component = new MockPanelWithLink("test") {
             @Override
@@ -43,9 +44,25 @@ class OutputMarkupContainerClassNameBehaviorTest extends WicketTestCase {
     }
 
     @Test
-    void whenDebugIsDisabled_thenDontRenderAttribute()
+    void whenDebugIsEnabledWithComment_thenRenderComment()
     {
-        tester.getApplication().getDebugSettings().setOutputMarkupContainerClassName(false);
+        tester.getApplication().getDebugSettings().setOutputMarkupContainerClassNameStrategy(DebugSettings.ClassOutputStrategy.HTML_COMMENT);
+
+        MockPanelWithLink component = new MockPanelWithLink("test") {
+            @Override
+            protected void onLinkClick(AjaxRequestTarget target) {
+
+            }
+        };
+        tester.startComponentInPage(component);
+
+        assertTrue(tester.getLastResponseAsString().contains("<!-- MARKUP FOR org.apache.wicket.MockPanelWithLink BEGIN -->"));
+    }
+
+    @Test
+    void whenDebugIsDisabled_thenDontRenderAttributeOrComment()
+    {
+        tester.getApplication().getDebugSettings().setOutputMarkupContainerClassNameStrategy(DebugSettings.ClassOutputStrategy.NONE);
 
         MockPanelWithLink component = new MockPanelWithLink("test") {
             @Override
@@ -56,5 +73,6 @@ class OutputMarkupContainerClassNameBehaviorTest extends WicketTestCase {
         tester.startComponentInPage(component);
 
         assertFalse(tester.getLastResponseAsString().contains("<wicket:panel wicket:className=\"org.apache.wicket.MockPanelWithLink\">"));
+        assertFalse(tester.getLastResponseAsString().contains("<!-- MARKUP FOR org.apache.wicket.MockPanelWithLink BEGIN -->"));
     }
 }

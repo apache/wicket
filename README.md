@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://wicket.apache.org">
-    <img height="300" src="https://wicket.apache.org/img/wicket-9-sun.png" alt="Wicket version header image">
+    <img height="100%" src="https://wicket.apache.org/img/wicket10-title.png" alt="Wicket version header image">
   </a>
 </p>
 
@@ -143,7 +143,7 @@ the root folder.
 
  - wicket and wicket-extensions:
 
-    You only need to include the Servlet API (3.1, just for compiling), SLF4J
+    You only need to include the Jakarta Servlet API (5, just for compiling), SLF4J
     API and the SLF4J logging implementation you want. You cannot use Wicket
     without adding a SLF4J logging implementation to your classpath. 
     Please see the SLF4J site (https://www.slf4j.org/) for more information.
@@ -188,7 +188,7 @@ the source and JavaDoc jars to the Maven repository used by the Maven build
 tool as well. So there is actually no specific need to build Wicket yourself 
 from the distribution.
 
-When building using Maven 2 or 3, execute one of the following in the root folder:
+When building using Maven 3, execute one of the following in the root folder:
 
  - mvn package
 
@@ -199,12 +199,12 @@ When building using Maven 2 or 3, execute one of the following in the root folde
     creates wicket-(subproject)-x.y.z.jar(s) in according target subdirectories and 
     installs the jar files into your local Maven repository for use in other projects.
 
-Migrating from 8.x
+Migrating from 9.x
 ------------------
 
 This file is a copy of the migration guide available on our Wiki:
 
-    https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+9.0
+    https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+10.0
     
 Getting help
 ------------
@@ -231,8 +231,8 @@ of the project.
 Java/Application server requirements
 ------------------------------------
 
-Wicket 9 requires at least Java 11. The application server for running your web
-application should adhere to the servlet specification version 3.1 or newer.
+Wicket 10 requires at least Java 17. The application server for running your web
+application should adhere to the Jakarta Servlet 5 specification or newer.
 
 Cryptographic Software Notice
 -----------------------------

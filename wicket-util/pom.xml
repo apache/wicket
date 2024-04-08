@@ -20,11 +20,11 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>10.0.0-M3-SNAPSHOT</version>
+		<version>10.1.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-util</artifactId>
-	<packaging>bundle</packaging>
+	<packaging>jar</packaging>
 	<name>Wicket Util</name>
 	<properties>
 		<osgi.export.package>org.apache.wicket.util*;-noimport:=true</osgi.export.package>
@@ -42,7 +42,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-fileupload2-jakarta</artifactId>
+			<artifactId>commons-fileupload2-jakarta-servlet5</artifactId>
 		</dependency>
 	</dependencies>
 </project>

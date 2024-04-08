@@ -16,6 +16,11 @@ description: Migrates Wicket 9.x to Wicket 10.x, as well as Java 17 and Jakarta.
 recipeList:
   - org.openrewrite.java.migrate.UpgradeToJava17
   - org.openrewrite.java.migrate.jakarta.JavaxMigrationToJakarta
+  - org.openrewrite.java.dependencies.AddDependency:
+      groupId: org.apache.wicket
+      artifactId: wicket-tester
+      version: 10.x
+      onlyIfUsing: org.apache.wicket.util.tester.*
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.apache.wicket.http2.markup.head.PushHeaderItem
       newFullyQualifiedTypeName: org.apache.wicket.markup.head.http2.PushHeaderItem
