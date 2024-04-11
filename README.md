@@ -48,7 +48,7 @@ from, and get started quickly:
 What does Wicket's download package contain?
 -----------------------
 
-You can download Wicket's source package here: https://wicket.apache.org/start/wicket-9.x.html . 
+You can download Wicket's source package here: https://wicket.apache.org/start/wicket-10.x.html . 
 It contains the source code and the jars of the core projects of Wicket. 
 If you are just starting out, you probably only need to include wicket-util-x.jar, wicket-request-x.jar and
 wicket-core-x.jar, where x stands for the version. As a rule, use just the jars
