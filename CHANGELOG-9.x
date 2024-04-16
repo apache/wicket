@@ -2,6 +2,23 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.17.0
+
+** Bug
+
+    * [WICKET-7086] - Injecting Spring bean may cause ClassCastException
+    * [WICKET-7091] - FilePageStore throws NPE
+    * [WICKET-7096] - stylesheets referenced via automatic linking miss nonce attribute
+    * [WICKET-7097] - ServletWebResponse allows writing headers to committed HttpServletResponse
+
+** Improvement
+
+    * [WICKET-7093] - Add support for missing CSP directives
+    * [WICKET-7094] - Make all CSP schemes configurable
+    * [WICKET-7099] - Validate FormTester constructor parameter workingForm
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.16.0
 
 ** Bug

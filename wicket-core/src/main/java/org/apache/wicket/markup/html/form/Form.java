@@ -36,6 +36,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
@@ -873,7 +874,7 @@ public class Form<T> extends WebMarkupContainer
 				@Override
 				public void component(FormComponent<?> component, IVisit<Void> visit)
 				{
-					component.updateAutoLabels(target);
+					component.updateAutoLabels(target, false);
 				}
 			});
 		});
