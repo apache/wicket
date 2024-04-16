@@ -41,7 +41,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * <dt>modal-dialog-content</dt>
  * <dd>any additional styling for the content of this dialog</dd>
  * </dl>
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
  * @author svenmeier
  */
@@ -56,7 +56,7 @@ public class ModalDialog extends Panel
 
 	/**
 	 * The id for the content of this dialoh.
-	 * 
+	 *
 	 * @see #setContent(Component)
 	 * @see #open(Component, AjaxRequestTarget)
 	 */
@@ -84,9 +84,9 @@ public class ModalDialog extends Panel
 
 	/**
 	 * Factory method for the overlay markup around the dialog.
-	 * 
+	 *
 	 * @param overlayId
-	 *            id
+	 * 	id
 	 * @return overlay
 	 */
 	protected WebMarkupContainer newOverlay(String overlayId)
@@ -96,9 +96,9 @@ public class ModalDialog extends Panel
 
 	/**
 	 * Factory method for the dialog markup around the content.
-	 * 
+	 *
 	 * @param dialogId
-	 *            id
+	 * 	id
 	 * @return overlay
 	 */
 	protected WebMarkupContainer newDialog(String dialogId)
@@ -108,9 +108,8 @@ public class ModalDialog extends Panel
 
 	/**
 	 * Set a content.
-	 * 
+	 *
 	 * @param content
-	 * 
 	 * @see #open(AjaxRequestTarget)
 	 */
 	public void setContent(Component content)
@@ -130,13 +129,12 @@ public class ModalDialog extends Panel
 	 * Open the dialog with a content.
 	 * <p>
 	 * The content will be removed on close of the dialog.
-	 * 
+	 *
 	 * @param content
-	 *            the content
+	 * 	the content
 	 * @param target
-	 *            an optional Ajax target
+	 * 	an optional Ajax target
 	 * @return this
-	 * 
 	 * @see #setContent(Component)
 	 * @see #close(AjaxRequestTarget)
 	 */
@@ -157,18 +155,18 @@ public class ModalDialog extends Panel
 
 	/**
 	 * Open the dialog.
-	 * 
+	 *
 	 * @param target
-	 *            an optional Ajax target
+	 * 	an optional Ajax target
 	 * @return this
-	 * 
 	 * @see #setContent(Component)
 	 */
 	public ModalDialog open(AjaxRequestTarget target)
 	{
 		if (overlay.size() == 0)
 		{
-			throw new WicketRuntimeException(String.format("ModalDialog with id '%s' has no content set!", getId()));
+			throw new WicketRuntimeException(
+				String.format("ModalDialog with id '%s' has no content set!", getId()));
 		}
 
 		overlay.setVisible(true);
@@ -183,7 +181,7 @@ public class ModalDialog extends Panel
 
 	/**
 	 * Is this dialog open.
-	 * 
+	 *
 	 * @return <code>true</code> if open
 	 */
 	public boolean isOpen()
@@ -196,11 +194,10 @@ public class ModalDialog extends Panel
 	 * <p>
 	 * If opened via {@link #open(Component, AjaxRequestTarget)}, the content is removed from the
 	 * component tree
-	 * 
+	 *
 	 * @param target
-	 *            an optional Ajax target
+	 * 	an optional Ajax target
 	 * @return this
-	 * 
 	 * @see #open(Component, AjaxRequestTarget)
 	 */
 	public ModalDialog close(AjaxRequestTarget target)
@@ -221,7 +218,7 @@ public class ModalDialog extends Panel
 
 	/**
 	 * Close this dialog on press of escape key.
-	 * 
+	 *
 	 * @return this
 	 */
 	public ModalDialog closeOnEscape()
@@ -238,7 +235,7 @@ public class ModalDialog extends Panel
 
 	/**
 	 * Close this dialog on click outside.
-	 * 
+	 *
 	 * @return this
 	 */
 	public ModalDialog closeOnClick()
@@ -247,7 +244,8 @@ public class ModalDialog extends Panel
 		{
 			protected CharSequence getPrecondition()
 			{
-				return String.format("return attrs.event.target.id === '%s';", overlay.getMarkupId());
+				return String.format("return attrs.event.target.id === '%s';",
+					overlay.getMarkupId());
 			}
 		});
 		return this;
@@ -255,16 +253,27 @@ public class ModalDialog extends Panel
 
 	/**
 	 * Convenience method to trap focus inside the overlay.
-	 * 
-	 * @see TrapFocusBehavior
-	 * 
+	 *
 	 * @return this
+	 * @see TrapFocusBehavior
 	 */
 	public ModalDialog trapFocus()
 	{
 		overlay.add(new TrapFocusBehavior());
 
 		return this;
+	}
+
+	/**
+	 * can be overridden to change the {@link AjaxRequestAttributes} of the default
+	 * {@link CloseBehavior} executed on close. For example to change the Ajax Channel.
+	 *
+	 * @param attributes
+	 * 	the {@link AjaxRequestAttributes} of the default {@link CloseBehavior}
+	 */
+	protected void postProcessCloseBehaviorAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+		// no op
 	}
 
 	private abstract class CloseBehavior extends AjaxEventBehavior
@@ -290,6 +299,8 @@ public class ModalDialog extends Panel
 					return CloseBehavior.this.getPrecondition();
 				}
 			});
+
+			postProcessCloseBehaviorAjaxAttributes(attributes);
 		}
 
 		protected CharSequence getPrecondition()
