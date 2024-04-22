@@ -58,7 +58,7 @@ public abstract class AbstractPartialPageRequestHandler implements IPartialPageR
     }
 
     @Override
-    public final void add(Component... components)
+    public void add(Component... components)
     {
         for (final Component component : components)
         {
