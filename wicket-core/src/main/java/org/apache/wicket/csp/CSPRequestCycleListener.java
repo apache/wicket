@@ -18,6 +18,7 @@ package org.apache.wicket.csp;
 
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
@@ -39,14 +40,7 @@ public class CSPRequestCycleListener implements IRequestCycleListener
 	}
 
 	@Override
-	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
-	{
-		// WICKET-7028- this is needed for redirect to buffer use case.
-		protect(cycle, handler);
-	}
-
-	@Override
-	public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
+	public void onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url)
 	{
 		protect(cycle, handler);
 	}
