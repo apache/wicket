@@ -2921,6 +2921,14 @@ public class BaseWicketTester
 			super.addHeader(name, value);
 			headers.add(name, value);
 		}
+
+		@Override
+		public void reset()
+		{
+			super.reset();
+			cookies.clear();
+			headers.clear();
+		}
 	}
 
 	private class LastPageRecordingPageRendererProvider implements IPageRendererProvider
