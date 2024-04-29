@@ -19,7 +19,7 @@ jobs:
         - '17'
         - '21'
         - '22'
-        - '23-ea'
+#        - '23-ea'
 
     steps:
     - uses: actions/checkout@v4
