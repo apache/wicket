@@ -23,16 +23,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.AbstractPartialPageRequestHandler;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.page.PartialPageUpdate;
 import org.apache.wicket.page.XmlPartialPageUpdate;
 import org.apache.wicket.request.ILogData;
 import org.apache.wicket.request.IRequestCycle;
-import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -181,13 +178,16 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
-		if (update != null)
-		{
-			if (shouldPushWhenEmpty() || !update.isEmpty())
-			{
-				update.writeTo(requestCycle.getResponse(), "UTF-8");
-			}
-		}
+        if (update != null && (shouldPushWhenEmpty() || !update.isEmpty())) {
+            // see WICKET-7098
+            // A malformed XML is generated if a runtime exception happen during rendering phase of a web
+            // socket push request. Writing to a buffer allows to generate a proper XML
+            // as request's buffer will not be polluted by partial write operations
+            StringResponse bodyResponse = new StringResponse();
+            // additionally, we use the charset for the request instead of a hardcoded UTF-8
+            update.writeTo(bodyResponse, requestCycle.getRequest().getCharset().name());
+            requestCycle.getResponse().write(bodyResponse.getBuffer());
+        }
 	}
 
 	@Override
