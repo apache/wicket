@@ -16,15 +16,20 @@
  */
 package org.apache.wicket.examples.compref;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.GroupedDropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.io.IClusterable;
 
 
@@ -41,6 +46,26 @@ public class DropDownChoicePage extends WicketExamplePage
 	/** available numbers for selection. */
 	private static final List<Integer> INTEGERS = Arrays.asList(1, 2, 3);
 
+	private static final List<Service> SERVICES = new ArrayList<>();
+
+	static
+	{
+		SERVICES.add(new Service("Service0-no-group", null));
+		SERVICES.add(new Service("Service0.1-no-group", null));
+		SERVICES.add(new Service("Service1", "main"));
+		SERVICES.add(new Service("Service2", "main"));
+		SERVICES.add(new Service("Service2.1-no-group", null));
+		SERVICES.add(new Service("Service2.2-no-group", null));
+		SERVICES.add(new Service("Service3", "secondary"));
+		SERVICES.add(new Service("Service4", "secondary"));
+		SERVICES.add(new Service("Service5", "secondary"));
+		SERVICES.add(new Service("Service5.1-no-group", null));
+		SERVICES.add(new Service("Service5.2-no-group", null));
+		SERVICES.add(new Service("Service6", "other"));
+		SERVICES.add(new Service("Service6.1", "other"));
+		SERVICES.add(new Service("Service7-no-group", null));
+		SERVICES.add(new Service("Service8-no-group", null));
+	}
 	/**
 	 * Constructor
 	 */
@@ -128,6 +153,62 @@ public class DropDownChoicePage extends WicketExamplePage
 				return String.valueOf(INTEGERS.get(index));
 			}
 		}));
+
+		form.add(new GroupedDropDownChoice<Service>("service", SERVICES, new IChoiceRenderer<Service>() {
+				@Override
+				public Object getDisplayValue(Service object) {
+					return object.getTitle();
+				}
+			}) {
+
+			@Override
+			protected boolean isNewGroup(Service previous, Service current) {
+				return previous == null || (current.getGroup() != null && !current.getGroup().equals(previous.getGroup())) ;
+			}
+
+			@Override
+			protected boolean hasNoGroup(Service current) {
+				return current.getGroup() == null;
+			}
+
+			@Override
+			protected IModel<String> getGroupLabel(Service current) {
+				return Model.of(current.getGroup());
+			}
+		});
+
+	}
+
+	private static class Service implements IClusterable
+	{
+		private final String title;
+		private final String group;
+
+		public Service(String title, String group) {
+			this.title = title;
+			this.group = group;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getGroup() {
+			return group;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (!(o instanceof Service)) return false;
+			Service service = (Service) o;
+			return Objects.equals(title, service.title);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(title);
+		}
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
@@ -138,6 +219,8 @@ public class DropDownChoicePage extends WicketExamplePage
 
 		/** the selected integer. */
 		public Integer integer = INTEGERS.get(0);
+
+		public Service service = SERVICES.get(0);
 
 		@Override
 		public String toString()
