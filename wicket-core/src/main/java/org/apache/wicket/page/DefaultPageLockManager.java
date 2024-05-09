@@ -228,7 +228,7 @@ public class DefaultPageLockManager implements IPageLockManager {
 	}
 }
 
-static class PageLockedException extends Exception
+class PageLockedException extends Exception
 {
 	PageLockedException(Thread pageHoldingThread, int pageId) 
 	{
