@@ -133,8 +133,8 @@ public class DefaultPageLockManager implements IPageLockManager {
 		}
 		else
 		{
-			final String previousThreadName = previous != null ? previous.getThread().getName() : "N/A";
 			final Thread previousThread = previous != null ? previous.getThread() : null;
+			final String previousThreadName = previousThread != null ? previousThread.getName() : "N/A";
 			if (logger.isWarnEnabled())
 			{
 				logger.warn(
@@ -228,11 +228,11 @@ public class DefaultPageLockManager implements IPageLockManager {
 	}
 }
 
-class PageLockedException extends Exception
+static class PageLockedException extends Exception
 {
-	PageLockedException(Thread previousThread, int pageId) 
+	PageLockedException(Thread pageHoldingThread, int pageId) 
 	{
-		super("This thread " + previousThread.getName() + " holds the lock to page " + pageId);
-		setStackTrace(previousThread.getStackTrace());
+		super("This thread " + pageHoldingThread.getName() + " holds the lock to page " + pageId);
+		setStackTrace(pageHoldingThread.getStackTrace());
 	}
 }
