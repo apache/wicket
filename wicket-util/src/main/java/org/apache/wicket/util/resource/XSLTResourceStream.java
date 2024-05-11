@@ -42,9 +42,6 @@ import org.apache.wicket.util.lang.Bytes;
  */
 public class XSLTResourceStream extends AbstractResourceStream
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private final transient ByteArrayOutputStream out;
 
@@ -77,7 +74,7 @@ public class XSLTResourceStream extends AbstractResourceStream
 			javax.xml.transform.Result result = new javax.xml.transform.stream.StreamResult(out);
 
 			// create an instance of TransformerFactory
-			javax.xml.transform.TransformerFactory transFact = javax.xml.transform.TransformerFactory.newInstance();
+			javax.xml.transform.TransformerFactory transFact = getTransformerFactory();
 
 			javax.xml.transform.Transformer trans = transFact.newTransformer(xsltSource);
 			Map<Object, Object> parameters = getParameters();
@@ -100,6 +97,16 @@ public class XSLTResourceStream extends AbstractResourceStream
 			IOUtils.closeQuietly(xmlResource);
 			IOUtils.closeQuietly(xsltResource);
 		}
+	}
+
+	/**
+	 * Used to provide a configured {@link javax.xml.transform.TransformerFactory}.
+	 *
+	 * @return the transformer factory
+	 */
+	protected javax.xml.transform.TransformerFactory getTransformerFactory()
+	{
+		return javax.xml.transform.TransformerFactory.newInstance();
 	}
 
 	/**
