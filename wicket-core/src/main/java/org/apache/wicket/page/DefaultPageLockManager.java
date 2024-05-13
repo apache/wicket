@@ -133,9 +133,10 @@ public class DefaultPageLockManager implements IPageLockManager {
 		}
 		else
 		{
+			final Thread previousThread = previous != null ? previous.getThread() : null;
+			final String previousThreadName = previousThread != null ? previousThread.getName() : "N/A";
 			if (logger.isWarnEnabled())
 			{
-				final String previousThreadName = previous != null ? previous.getThread().getName() : "N/A";
 				logger.warn(
 						"Thread '{}' failed to acquire lock to page with id '{}', attempted for {} out of allowed {}." +
 								" The thread that holds the lock has name '{}'.",
@@ -151,7 +152,6 @@ public class DefaultPageLockManager implements IPageLockManager {
 							Threads.dumpAllThreads(logger);
 							break;
 						case THREAD_HOLDING_LOCK :
-							final Thread previousThread = previous != null ? previous.getThread() : null;
 							if (previousThread != null)
 							{
 								Threads.dumpSingleThread(logger, previousThread);
@@ -166,6 +166,11 @@ public class DefaultPageLockManager implements IPageLockManager {
 							// do nothing
 					}
 				}
+			}
+			if(previousThread != null)
+			{
+				var cause = new PageLockedException(previousThread, pageId);
+				throw new CouldNotLockPageException(pageId, thread.getName(), pageTimeout, cause);
 			}
 			throw new CouldNotLockPageException(pageId, thread.getName(), pageTimeout);
 		}
@@ -220,5 +225,14 @@ public class DefaultPageLockManager implements IPageLockManager {
 	Supplier<ConcurrentMap<Integer, PageAccessSynchronizer.PageLock>> getLocks()
 	{
 		return locks;
+	}
+}
+
+class PageLockedException extends Exception
+{
+	PageLockedException(Thread pageHoldingThread, int pageId) 
+	{
+		super("This thread " + pageHoldingThread.getName() + " holds the lock to page " + pageId);
+		setStackTrace(pageHoldingThread.getStackTrace());
 	}
 }

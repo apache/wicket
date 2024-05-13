@@ -53,6 +53,26 @@ public class CouldNotLockPageException extends RuntimeException
 	}
 
 	/**
+	 * Construct.
+	 * 
+	 * @param page
+	 *      the id of the page instance which is already locked
+	 * @param threadName
+	 *      the name of the thread that attempts to acquire the lock on the page
+	 * @param timeout
+	 *      the duration that the second thread waited for the lock
+	 * @param cause
+	 * 		a placeholder for the stacktrace of the thread that holds the lock
+	 */
+	public CouldNotLockPageException(int page, String threadName, Duration timeout, Throwable cause)
+	{
+		super("Could not lock page " + page + ". Attempt lasted " + timeout, cause);
+		this.page = page;
+		this.timeout = timeout;
+		this.threadName = threadName;
+	}
+
+	/**
 	 * @return page
 	 */
 	public int getPage()
