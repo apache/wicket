@@ -81,7 +81,8 @@ public class XSLTResourceStream extends AbstractResourceStream
 	 *
 	 * @return a default transformer factory
 	 */
-	private static TransformerFactory defaultTransformerFactory() {
+	private static TransformerFactory defaultTransformerFactory()
+	{
 		TransformerFactory factory = TransformerFactory.newInstance();
 		try
 		{
