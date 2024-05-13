@@ -56,13 +56,27 @@ public class XSLTResourceStream extends AbstractResourceStream
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param xsltResource
 	 *            the XSL stylesheet as an {@link IResourceStream}
 	 * @param xmlResource
 	 *            the input XML document as an {@link IResourceStream}
 	 */
 	public XSLTResourceStream(final IResourceStream xsltResource, final IResourceStream xmlResource)
+	{
+		this(xsltResource, xmlResource, javax.xml.transform.TransformerFactory.newInstance());
+	}
+	/**
+	 * Construct.
+	 * 
+	 * @param xsltResource
+	 *            the XSL stylesheet as an {@link IResourceStream}
+	 * @param xmlResource
+	 *            the input XML document as an {@link IResourceStream}
+	 * @param transformerFactory
+	 * 			  the transformer factory used to transform the xmlResource
+	 */
+	public XSLTResourceStream(final IResourceStream xsltResource, final IResourceStream xmlResource, javax.xml.transform.TransformerFactory transformerFactory)
 	{
 		try
 		{
@@ -74,7 +88,7 @@ public class XSLTResourceStream extends AbstractResourceStream
 			javax.xml.transform.Result result = new javax.xml.transform.stream.StreamResult(out);
 
 			// create an instance of TransformerFactory
-			javax.xml.transform.TransformerFactory transFact = getTransformerFactory();
+			javax.xml.transform.TransformerFactory transFact = transformerFactory;
 
 			javax.xml.transform.Transformer trans = transFact.newTransformer(xsltSource);
 			Map<Object, Object> parameters = getParameters();
@@ -97,16 +111,6 @@ public class XSLTResourceStream extends AbstractResourceStream
 			IOUtils.closeQuietly(xmlResource);
 			IOUtils.closeQuietly(xsltResource);
 		}
-	}
-
-	/**
-	 * Used to provide a configured {@link javax.xml.transform.TransformerFactory}.
-	 *
-	 * @return the transformer factory
-	 */
-	protected javax.xml.transform.TransformerFactory getTransformerFactory()
-	{
-		return javax.xml.transform.TransformerFactory.newInstance();
 	}
 
 	/**
