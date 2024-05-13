@@ -83,7 +83,8 @@ public class XSLTResourceStream extends AbstractResourceStream
 	 */
 	private static TransformerFactory defaultTransformerFactory() {
 		TransformerFactory factory = TransformerFactory.newInstance();
-		try {
+		try
+		{
 			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 		} catch (TransformerConfigurationException e) {
 			throw new RuntimeException(e);
