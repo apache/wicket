@@ -26,6 +26,15 @@ import java.util.Map.Entry;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Bytes;
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
 /**
  * {@link IResourceStream} that applies XSLT on an input {@link IResourceStream}. The XSL stylesheet
  * itself is also an {@link IResourceStream}. Override {@link #getParameters()} to pass parameters
@@ -64,8 +73,24 @@ public class XSLTResourceStream extends AbstractResourceStream
 	 */
 	public XSLTResourceStream(final IResourceStream xsltResource, final IResourceStream xmlResource)
 	{
-		this(xsltResource, xmlResource, javax.xml.transform.TransformerFactory.newInstance());
+		this(xsltResource, xmlResource, defaultTransformerFactory());
 	}
+
+	/**
+	 * Creates a default transformer factory with XMLConstants.FEATURE_SECURE_PROCESSING set to true
+	 *
+	 * @return a default transformer factory
+	 */
+	private static TransformerFactory defaultTransformerFactory() {
+		TransformerFactory factory = TransformerFactory.newInstance();
+		try {
+			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+		} catch (TransformerConfigurationException e) {
+			throw new RuntimeException(e);
+		}
+		return factory;
+	}
+
 	/**
 	 * Construct.
 	 * 
@@ -76,21 +101,17 @@ public class XSLTResourceStream extends AbstractResourceStream
 	 * @param transformerFactory
 	 * 			  the transformer factory used to transform the xmlResource
 	 */
-	public XSLTResourceStream(final IResourceStream xsltResource, final IResourceStream xmlResource, javax.xml.transform.TransformerFactory transformerFactory)
+	public XSLTResourceStream(final IResourceStream xsltResource, final IResourceStream xmlResource, TransformerFactory transformerFactory)
 	{
 		try
 		{
-			javax.xml.transform.Source xmlSource = new javax.xml.transform.stream.StreamSource(
-				xmlResource.getInputStream());
-			javax.xml.transform.Source xsltSource = new javax.xml.transform.stream.StreamSource(
-				xsltResource.getInputStream());
+			Source xmlSource = new StreamSource(xmlResource.getInputStream());
+			Source xsltSource = new StreamSource(xsltResource.getInputStream());
 			out = new ByteArrayOutputStream();
-			javax.xml.transform.Result result = new javax.xml.transform.stream.StreamResult(out);
+			Result result = new StreamResult(out);
 
-			// create an instance of TransformerFactory
-			javax.xml.transform.TransformerFactory transFact = transformerFactory;
+			Transformer trans = transformerFactory.newTransformer(xsltSource);
 
-			javax.xml.transform.Transformer trans = transFact.newTransformer(xsltSource);
 			Map<Object, Object> parameters = getParameters();
 			if (parameters != null)
 			{
