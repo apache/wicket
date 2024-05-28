@@ -2,6 +2,31 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.1.0
+
+** Bug
+
+    * [WICKET-7102] - Error in LiveSessionsPage
+    * [WICKET-7104] - wicket-autocomplete.min.js minified too aggressively
+    * [WICKET-7111] - Greek Application i18n is broken due to wrong file name
+
+** New Feature
+
+    * [WICKET-7109] - Create a ready to use dropdown supporting grouping
+
+** Improvement
+
+    * [WICKET-7098] - [Websockets] malformed XML is generated if runtime exceptions happen during rendering phase of a web socket push request
+    * [WICKET-7101] - auto-label is not automatically updated when related form component is updated.
+    * [WICKET-7103] - Enhance ModalDialog API
+    * [WICKET-7110] - Add stack trace of lock holding thread in CouldNotLockPageException
+
+** Wish
+
+    * [WICKET-7105] - Remove 'final' from AbstractPartialPageRequestHandler#add(Component...)
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.0.0
 
 ** Sub-task
