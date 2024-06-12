@@ -2,6 +2,14 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.16.0
+
+** Bug
+
+    * [WICKET-7056] - HttpSessionStore#getAttribute called on invalidated session
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.15.0
 
 ** Improvement
