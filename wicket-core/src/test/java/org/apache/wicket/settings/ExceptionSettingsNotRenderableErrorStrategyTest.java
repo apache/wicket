@@ -116,9 +116,8 @@ class ExceptionSettingsNotRenderableErrorStrategyTest extends WicketTestCase {
 
     private void assertRenderBodyOnlyException(final WicketRuntimeException wrx) {
         assertThat(wrx.getCause().getMessage(), is(equalTo("Markup id set on a component that renders its body only. " +
-                "Markup id: test1, component id: test, class-type: class org.apache.wicket.markup.html.basic.Label, parent markup id: id12, " +
-                "parent relative path: org.apache.wicket.settings.ExceptionSettingsNotRenderableErrorStrategyTest$RenderBodyOnlyTestPage:, " +
-                "url: wicket/page?1")));
+                "Markup id: test1, component id: test, class-type: class org.apache.wicket.markup.html.basic.Label, " +
+                "path: class org.apache.wicket.settings.ExceptionSettingsNotRenderableErrorStrategyTest$RenderBodyOnlyTestPage:test")));
     }
 
     private static class WicketTagTestPage extends WebPage implements IMarkupResourceStreamProvider

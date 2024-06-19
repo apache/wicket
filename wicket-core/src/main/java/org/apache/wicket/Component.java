@@ -2478,8 +2478,8 @@ public abstract class Component
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
 					String message = String.format("Markup id set on a component that renders its body only. " +
-					                               "Markup id: %s, component id: %s, class-type: %s, parent markup id: %s, parent relative path: %s, url: %s",
-							getMarkupId(), getId(), getClass(), getParent().getMarkupId(), getParent().getClassRelativePath(), getRequest().getOriginalUrl());
+					                               "Markup id: %s, component id: %s, class-type: %s, path: %s",
+							getMarkupId(), getId(), getClass(), getPage().getPageClass() + ":" + getPageRelativePath());
 					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
 					{
 						throw new IllegalStateException(message);
@@ -2489,8 +2489,8 @@ public abstract class Component
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
 					String message = String.format("Placeholder tag set on a component that renders its body only. " +
-					                               "Component id: %s, class-type: %s, parent markup id: %s, parent relative path: %s, url: %s\", ",
-							getId(), getClass(), getParent().getMarkupId(), getParent().getClassRelativePath(), getRequest().getOriginalUrl());
+					                               "Component id: %s, class-type: %s, path: %s\", ",
+							getId(), getClass(), getPage().getPageClass() + ":" + getPageRelativePath());
 					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
 					{
 						throw new IllegalStateException(message);
