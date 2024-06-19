@@ -2478,7 +2478,7 @@ public abstract class Component
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
 					String message = String.format("Markup id set on a component that renders its body only. " +
-					                               "Markup id: %s, component id: %s, class-type: %s, path: %s",
+					                               "Markup id: %s, component id: %s, type: %s, path: %s",
 							getMarkupId(), getId(), getClass(), getPage().getPageClass() + ":" + getPageRelativePath());
 					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
 					{
@@ -2489,7 +2489,7 @@ public abstract class Component
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
 					String message = String.format("Placeholder tag set on a component that renders its body only. " +
-					                               "Component id: %s, class-type: %s, path: %s\", ",
+					                               "Component id: %s, type: %s, path: %s\", ",
 							getId(), getClass(), getPage().getPageClass() + ":" + getPageRelativePath());
 					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
 					{
