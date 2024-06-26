@@ -12,7 +12,7 @@ Session.get().setLocale(locale)
 
 === Style and variation parameters for bundles
 
-In addition to locale's informations, Wicket supports two further parameters to identify a resource bundle: style and variation. Parameter style is a string value and is defined at session-level. To set/get the style for the current session we can use the corresponding setter and getter of class Session:
+In addition to locale's information, Wicket supports two further parameters to identify a resource bundle: style and variation. Parameter style is a string value and is defined at session-level. To set/get the style for the current session we can use the corresponding setter and getter of class Session:
 
 [source,java]
 ----
@@ -20,7 +20,7 @@ Session.get().setStyle("myStyle");
 Session.get().getStyle();
 ----
 
-If set, style's value contributes to the final full name of the bundle and it is placed between the base name and the locale's informations:
+If set, style's value contributes to the final full name of the bundle and it is placed between the base name and the locale's information:
 
 [source,java]
 ----
@@ -115,7 +115,7 @@ add(form.add(changeLocale))
 
 === Localization of markup files
 
-Although resource bundles exist to extract local-dependent elements from our code and from UI components, in Wicket we can decide to provide different markup files for different locale settings. Just like standard markup files, by default localized markup files must be placed next to component's class and their file name must contain the locale's informations. In the following picture, CustomPanel comes with a standard (or default) markup file and with another one localized for German:
+Although resource bundles exist to extract local-dependent elements from our code and from UI components, in Wicket we can decide to provide different markup files for different locale settings. Just like standard markup files, by default localized markup files must be placed next to component's class and their file name must contain the locale's information. In the following picture, CustomPanel comes with a standard (or default) markup file and with another one localized for German:
 
 image::./img/comp-with-markup-german.png[]
 

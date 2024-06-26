@@ -34,7 +34,7 @@ public enum AjaxAttributeName {
 	THROTTLING("tr"),
 
 	/**
-	 * throttling - postpone timer on upate (p)
+	 * throttling - postpone timer on update (p)
 	 * 
 	 * @see ThrottlingSettings#getPostponeTimerOnUpdate()
 	 */

@@ -164,7 +164,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 
 			try
 			{
-				// Tranform the data
+				// Transform the data
 				CharSequence output = transform(this, response.toString());
 				webResponse.write(output);
 			}

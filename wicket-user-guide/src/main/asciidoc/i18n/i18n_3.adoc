@@ -15,7 +15,7 @@ To better grasp this concept let's consider the component hierarchy depicted in 
 
 image::./img/custom-panel-bundle.png[]
 
-If CustomPanel tries to retrieve the string resource having 'message' as key, it will get the value 'Wellcome!' and not the one defined inside its own bundle file.
+If CustomPanel tries to retrieve the string resource having 'message' as key, it will get the value 'Welcome!' and not the one defined inside its own bundle file.
 
 The default message-lookup algorithm is not limited to component hierarchy but it also includes the class hierarchy of every component visited in the search strategy described so far. This makes bundle files inheritable, just like markup files. When the hierarchy of a container component is explored, any ancestor has the priority over children components. Consider for example the hierarchy in the following picture:
 

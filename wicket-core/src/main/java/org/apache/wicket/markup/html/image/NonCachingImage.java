@@ -117,7 +117,7 @@ public class NonCachingImage extends Image
 	}
 
 	/**
-	 * Overriden to precent caching.
+	 * Overridden to precent caching.
 	 * 
 	 * @return always {@code true}
 	 */

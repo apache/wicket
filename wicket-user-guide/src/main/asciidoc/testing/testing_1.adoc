@@ -109,9 +109,9 @@ Method _startComponentInPage(Component)_ can be used to test a component in isol
 public void testCustomPanelContainsLabel(){
 	TemperatureDegreeField field = new TemperatureDegreeField("field", Model.of(0.00));
 	//Use standard JUnit class Assert
-	Assert.assertNull(field.get("mesuramentUnit"));
+	Assert.assertNull(field.get("measurementUnit"));
 	tester.startComponentInPage(field);
-	Assert.assertNotNull(field.get("mesuramentUnit"));
+	Assert.assertNotNull(field.get("measurementUnit"));
 }
 //...
 ----

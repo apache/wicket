@@ -59,7 +59,7 @@ public enum ORDER_STATUS {
 }
 ----
 
-Now what we want to do in this page is to print a simple label which displays the status of an order and the date on  which the order has been submitted. All the informations about the order will be passed to a StringResourceModel with a model containing the bean Order. The bundle in use contains the following key/value pairs:
+Now what we want to do in this page is to print a simple label which displays the status of an order and the date on  which the order has been submitted. All the information about the order will be passed to a StringResourceModel with a model containing the bean Order. The bundle in use contains the following key/value pairs:
 
 [source,java]
 ----

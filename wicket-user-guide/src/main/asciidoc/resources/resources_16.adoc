@@ -1,5 +1,5 @@
 
-The FileSystemResourceRenference comes along with the FileSystemResource, FileSystemResourceStreamReference and the FileSystemResourceStream. Those classes provide a simple way to handle resources with Java's NIO API in Wicket starting from JDK version 7.0. (Available since Wicket 7.2.0 / Wicket 8.0.0)
+The FileSystemResourceReference comes along with the FileSystemResource, FileSystemResourceStreamReference and the FileSystemResourceStream. Those classes provide a simple way to handle resources with Java's NIO API in Wicket starting from JDK version 7.0. (Available since Wicket 7.2.0 / Wicket 8.0.0)
 
 Example: To include a resource which is zipped into a file and located in a specific folder in the file system you can simply write code like this:
 

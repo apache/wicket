@@ -46,7 +46,7 @@ class FormComponentTest extends WicketTestCase
 	}
 
 	@Test
-	void multiDimentionalArrayType()
+	void multiDimensionalArrayType()
 	{
 		final FormComponent<?> fc = new TextField<String>("foo");
 		fc.setType(String[][][].class);
@@ -62,7 +62,7 @@ class FormComponentTest extends WicketTestCase
 	}
 
 	@Test
-	void getDefaultlabel()
+	void getDefaultLabel()
 	{
 		tester.startPage(TestPage1.class);
 		TestPage1 page = (TestPage1)tester.getLastRenderedPage();

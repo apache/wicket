@@ -31,7 +31,7 @@ class AjaxChannelTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4024
 	 */
 	@Test
-	void getChannelNameRetursCorrectStringForStackableChannels()
+	void getChannelNameReturnsCorrectStringForStackableChannels()
 	{
 		String channelName = "channelName";
 		String expectedForStackables = channelName + "|s";

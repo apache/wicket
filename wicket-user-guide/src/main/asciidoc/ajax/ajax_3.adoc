@@ -120,5 +120,5 @@ dynamicLabel.add(new AbstractAjaxTimerBehavior(Duration.seconds(3)) {
 add(dynamicLabel);
 ----
 
-NOTE: By default AJAX components and behaviors are _stateful_, but as we will see very soon they can be easily turned to statelss if we need to use them in stateless pages.
+NOTE: By default AJAX components and behaviors are _stateful_, but as we will see very soon they can be easily turned to stateless if we need to use them in stateless pages.
 

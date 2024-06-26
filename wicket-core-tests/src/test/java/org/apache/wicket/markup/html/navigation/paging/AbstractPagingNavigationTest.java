@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.wicket.util.tester.WicketTestCase;
 
 /**
- * Base class for testing the navigation links, supplies a mock object for exercizing the links.
+ * Base class for testing the navigation links, supplies a mock object for exercising the links.
  * 
  * @author Martijn Dashorst
  */

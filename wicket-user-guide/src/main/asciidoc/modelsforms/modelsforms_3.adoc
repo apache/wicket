@@ -121,7 +121,7 @@ Label label = new Label("spouse.name");
 add(label);
 ----
 
-Note that now the id of the label is equal to the property expression previously used with PropertyModel. Now as a further example let's say we want to extend the code above to display all of the main informations of a person (name, surname, address and email). All we have to do is to add one label for every additional information using the relative property expression as component id:
+Note that now the id of the label is equal to the property expression previously used with PropertyModel. Now as a further example let's say we want to extend the code above to display all of the main information of a person (name, surname, address and email). All we have to do is to add one label for every additional information using the relative property expression as component id:
 
 [source,java]
 ----

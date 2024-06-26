@@ -26,14 +26,18 @@ import org.apache.wicket.util.string.Strings;
  * Contains the logic to locate a resource based on a path, style (see
  * {@link org.apache.wicket.Session}), variation, locale and extension strings. The full filename
  * will be built like:
- * &lt;path&gt;_&lt;variation&gt;_&lt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
+ * &lt;path&gt;_&lt;variation&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
  * <p>
  * Resource matches will be attempted in the following order:
  * <ol>
- * <li>1. &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
- * <li>2. &lt;path&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
- * <li>3. &lt;path&gt;_&lt;style&gt;.&lt;extension&gt;</li>
- * <li>4. &lt;path&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;variation&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;variation&gt;_&lt;style&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;style&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;variation&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;variation&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;.&lt;extension&gt;</li>
  * </ol>
  * <p>
  * Locales may contain a language, a country and a region or variant. Combinations of these

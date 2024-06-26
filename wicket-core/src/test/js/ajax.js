@@ -1182,7 +1182,7 @@ jQuery(document).ready(function() {
 		});
 
 		/**
-		 * The DOM elememt of the HTML element is used as a context (this)
+		 * The DOM element of the HTML element is used as a context (this)
 		 * in the callbacks.
 		 * https://issues.apache.org/jira/browse/WICKET-5025
 		 */
@@ -1216,7 +1216,7 @@ jQuery(document).ready(function() {
 		});
 
 		/**
-		 * The DOM elememt of the HTML element is used as a context (this)
+		 * The DOM element of the HTML element is used as a context (this)
 		 * in the callbacks.
 		 * https://issues.apache.org/jira/browse/WICKET-5025
 		 */

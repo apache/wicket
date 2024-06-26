@@ -5,7 +5,7 @@ In chapter 6 we have seen how Wicket uses serialization to store page instances.
 For model objects this could be a serious issue for (at least) two main reasons:
 
 1. The model object could be a very large instance, hence serialization would become very expensive in terms of time and memory.
-2. We simply may not be able to use a serializable object as model object. In paragraphs 1.4 and 9.2 we stated that Wicket allows us to use a POJO as backing object, but  http://en.wikipedia.org/wiki/Plain_Old_Java_Object#Definition[POJOs] are ordinary objects with no prespecified interface, annotation or superclass, hence they are not required to implement the standard Serializable interface.
+2. We simply may not be able to use a serializable object as model object. In paragraphs 1.4 and 9.2 we stated that Wicket allows us to use a POJO as backing object, but  http://en.wikipedia.org/wiki/Plain_Old_Java_Object#Definition[POJOs] are ordinary objects with no prescribed interface, annotation or superclass, hence they are not required to implement the standard Serializable interface.
 
 To cope with these problems IModel extends another interface called IDetachable.
 
@@ -73,7 +73,7 @@ public class JpaLoadableModel<T> extends LoadableDetachableModel<T> {
 }
 ----
 
-The constructor of the model takes as input two parameters: an implementation of the JPA interface  javax.persistence.EntityManagerFactory to manage JPA entities and the entity that must be handled by this model. Inside its constructor the model saves the class of the entity and its id (which could be null if the entity has not been persisted yet). These two informations are required to retrieve the entity at a later time and are used by the load method.
+The constructor of the model takes as input two parameters: an implementation of the JPA interface  javax.persistence.EntityManagerFactory to manage JPA entities and the entity that must be handled by this model. Inside its constructor the model saves the class of the entity and its id (which could be null if the entity has not been persisted yet). These two information are required to retrieve the entity at a later time and are used by the load method.
 
 onDetach is responsible for updating the entity id before detachment occurs. The id can change the first time an entity is persisted (JPA generates a new id and assigns it to the entity). Please note that this model is not responsible for saving any changes occurred to the entity object before it is detached. If we don't want to loose these changes we must explicitly persist the entity before the detaching phase occurs.
 

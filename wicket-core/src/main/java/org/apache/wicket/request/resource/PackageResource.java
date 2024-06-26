@@ -241,7 +241,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	}
 
 	/**
-	 * get text encoding (intented for character-based resources)
+	 * get text encoding (intended for character-based resources)
 	 *
 	 * @return custom encoding or {@code null} to use default
 	 */
@@ -251,7 +251,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	}
 
 	/**
-	 * set text encoding (intented for character-based resources)
+	 * set text encoding (intended for character-based resources)
 	 *
 	 * @param textEncoding
 	 *            custom encoding or {@code null} to use default
@@ -489,7 +489,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 	/**
 	 * Gets the {@link IJavaScriptCompressor} to be used. By default returns the configured
-	 * compressor on application level, but can be overriden by the user application to provide
+	 * compressor on application level, but can be overridden by the user application to provide
 	 * compressor specific to the resource.
 	 *
 	 * @return the configured application level JavaScript compressor. May be {@code null}.

@@ -355,7 +355,7 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 	}
 
 	/**
-	 * Determines whether or not the textfield should trim its input prior to processing it. The
+	 * Determines whether or not the text field should trim its input prior to processing it. The
 	 * default value is <code>true</code>
 	 * 
 	 * @return True if the input should be trimmed.

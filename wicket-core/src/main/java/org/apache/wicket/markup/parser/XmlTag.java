@@ -551,7 +551,7 @@ public class XmlTag
 
 	/**
 	 * Assuming some attributes have been changed, toXmlString() rebuilds the String on based on the
-	 * tags informations.
+	 * tags information.
 	 * 
 	 * @return A xml string matching the tag
 	 */

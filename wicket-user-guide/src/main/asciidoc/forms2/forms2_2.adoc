@@ -228,7 +228,7 @@ In the example seen in the previous paragraph we have a form which uses success 
 		<br/>
 		<input type="submit"/>
 	</form>
-	<div style="color:green" wicket:id="succesMessage">
+	<div style="color:green" wicket:id="successMessage">
 	</div>
 	<div style="color:red" wicket:id="feedbackMessage">
 	</div>
@@ -257,7 +257,7 @@ public class HomePage extends WebPage {
 
 	add(new FeedbackPanel("feedbackMessage",
 		new ExactErrorLevelFilter(FeedbackMessage.ERROR)));
-	add(new FeedbackPanel("succesMessage",
+	add(new FeedbackPanel("successMessage",
 		new ExactErrorLevelFilter(FeedbackMessage.SUCCESS)));
 
 	add(form);

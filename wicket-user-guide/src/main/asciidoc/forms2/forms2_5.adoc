@@ -1,7 +1,7 @@
 
 
 
-Besides submitting forms with a standard HTML submit button, Wicket allows us to use special components which implement interface IFormSubmittingComponent. This entity is a subinterface of  IFormSubmitter:
+Besides submitting forms with a standard HTML submit button, Wicket allows us to use special components which implement interface IFormSubmittingComponent. This entity is a subinterface of IFormSubmitter:
 
 image::./img/class-diag-IFormSubmittingComponent.png[]
 
@@ -9,7 +9,7 @@ At the beginning of this chapter we have seen that form processing is started by
 
 A submitting component is added to a form just like any other child component using method add(Component...).
 
-A form can have any number of submitting components and we can specify which one among them is the default one by calling the Form's method setDefaultButton(IFormSubmittingComponent  component). The default submitter is the one that will be used when user presses 'Enter' key in a field of the form. In order to make the default button work, Wicket will add to our form a hidden <div> tag containing a text field and a submit button with some JavaScript code to trigger it:
+A form can have any number of submitting components and we can specify which one among them is the default one by calling the Form's method setDefaultButton(IFormSubmittingComponent component). The default submitter is the one that will be used when user presses 'Enter' key in a field of the form. In order to make the default button work, Wicket will add to our form a hidden <div> tag containing a text field and a submit button with some JavaScript code to trigger it:
 
 [source,html]
 ----

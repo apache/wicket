@@ -79,7 +79,7 @@ image::./img/multi-select-transfer-component-wicket.png[]
 
 The last two parameters of the Palette's constructor (an integer value and a boolean value) are, respectively, the number of visible rows for the two lists and a flag to choose if we want to display the two optional buttons which move selected options up and down. The descriptions of the two lists (“Available” and “Selected”) can be customized providing two resources with keys palette.available and palette.selected.
 
-The markup of this component uses a number of CSS classes which can be extended/overriden to customize the style of the component. We can find these classes and see which tags they decorate in the default markup file of the component:
+The markup of this component uses a number of CSS classes which can be extended/overridden to customize the style of the component. We can find these classes and see which tags they decorate in the default markup file of the component:
 
 [source,html]
 ----
