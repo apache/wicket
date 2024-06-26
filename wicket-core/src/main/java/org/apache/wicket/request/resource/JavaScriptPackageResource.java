@@ -57,7 +57,7 @@ public class JavaScriptPackageResource extends PackageResource
 
 	/**
 	 * Gets the {@link IJavaScriptCompressor} to be used. By default returns the configured
-	 * compressor on application level, but can be overriden by the user application to provide
+	 * compressor on application level, but can be overridden by the user application to provide
 	 * compressor specific to the resource.
 	 * 
 	 * @return the configured application level JavaScript compressor. May be {@code null}.

@@ -359,7 +359,7 @@ public class CaptchaImageResource extends DynamicImageResource
 	 * The {@code RandomNumberGeneratorFactory} uses {@link java.security.SecureRandom} as RNG and {@code NativePRNG}
 	 * on unix and {@code Windows-PRNG} on windows if it exists. Else it will fallback to {@code SHA1PRNG}.
 	 * <p/>
-	 * Please keep in mind that {@link java.security.SecureRandom} uses {@code /dev/random} as default on unix systems
+	 * Please keep in mind that {@link java.security.SecureRandom} uses {@code /dev/random} as default on unix systems
 	 * which is a blocking call. It is possible to change this by adding {@code -Djava.security.egd=file:/dev/urandom}
 	 * to your application server startup script.
 	 */

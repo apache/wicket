@@ -1,7 +1,7 @@
 
 
 
-Visibility of components is an important topic. In Wicket you control any component's visibility via the methods _isVisible()_ and _setVisible()_. These methods are within Wicket's base class _Component_ and therefore it is applicable for every component and page. Let's have a look at a concrete example of _LoginBoxPanel_. The panel just gets displayed when the user is not logged in.
+Visibility of components is an important topic. In Wicket you control any component's visibility via the methods _isVisible()_ and _setVisible()_. These methods are within Wicket's base class _Component_ and therefore it is applicable for every component and page. Let's have a look at a concrete example of _LoginBoxPanel_. The panel just gets displayed when the user is not logged in.
 
 *Listing 6:*
 
@@ -13,7 +13,7 @@ loginBox.setVisible(MySession.get().isNotLoggedIn());
 add(loginBox);
 ----
 
-Listing 6 shows a poor implementation, because a decision about the visibility is made while instanciating the component. Again, in Wicket instances of components exist for several requests.
+Listing 6 shows a poor implementation, because a decision about the visibility is made while instantiating the component. Again, in Wicket instances of components exist for several requests.
 
 To reuse the same instance you have to call _loginBox.setVisible(false)_. This is very unhandy, because we always have to call _setVisible()_ and manage the visibility manually from the outside.
 
@@ -33,12 +33,12 @@ public class LoginBoxPanel {
     public void onConfigure() {
         setVisible(MySession.get().isNotLoggedIn());
     }
-};
+}
 ----
 
 Now the control over visibility has been inverted, the _LoginBoxPanel_ decides on its visibility autonomously.
 
-For each call of _onConfigure()_ there is a refreshed interpretion of the login state. Hence, there is no additional state that might be outdated. The logic is centralized in one line code and not spread throughout the application. Furthermore, you can easily identify that the technical aspect of visibility correlates to the business aspect "logged in".
+For each call of _onConfigure()_ there is a refreshed interpretation of the login state. Hence, there is no additional state that might be outdated. The logic is centralized in one line code and not spread throughout the application. Furthermore, you can easily identify that the technical aspect of visibility correlates to the business aspect "logged in".
 
 TIP: The same approach can be used to control when a component is enabled.
 

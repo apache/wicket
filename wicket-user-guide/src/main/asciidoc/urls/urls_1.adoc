@@ -1,7 +1,7 @@
 
 
 
-A common practice in web development is to pass data to a page using query string parameters (like ?paramName1=paramValu1&paramName2=paramValue2...). Wicket offers a more flexible and object oriented way to do this with models (we will see them in the next chapter). However, even if we are using Wicket, we still need to use query string parameters to exchange data with other Internet-based services. Consider for example a classic confirmation page which is linked inside an email to let users confirm important actions like password changing or the subscription to a mailing list. This kind of page usually expects to receive a query string parameter containing the id of the action to confirm.
+A common practice in web development is to pass data to a page using query string parameters (like ?paramName1=paramValue1&paramName2=paramValue2...). Wicket offers a more flexible and object oriented way to do this with models (we will see them in the next chapter). However, even if we are using Wicket, we still need to use query string parameters to exchange data with other Internet-based services. Consider for example a classic confirmation page which is linked inside an email to let users confirm important actions like password changing or the subscription to a mailing list. This kind of page usually expects to receive a query string parameter containing the id of the action to confirm.
 
 Query string parameters can also be referred to as named parameters. In Wicket they are handled with class _org.apache.wicket.request.mapper.parameter.PageParameters_. Since named parameters are basically name-value pairs, PageParameters works in much the same way as Java Map providing two methods to create/modify a parameter (add(String name, Object value) and set(String name, Object value)),  one method to remove an existing parameter (remove(String name)) and one to retrieve the value of a given parameter (get(String name)) . Here is a snippet to illustrate the usage of PageParameters:
 
@@ -64,7 +64,7 @@ The code is quite straightforward and it’s more interesting to look at the URL
 
 At first glance the URL above could seem a little weird, except for the last part which contains the two named parameters used to build the target page.
 
-The reason for this “strange” URL is that, as we explained in paragraph 8.3, when a page is instantiated using a constructor with no argument or using a constructor that accepts only a PageParameters, Wicket will try to generate a static URL for it, with no session-relative informations. This kind of URL is called bookmarkable because it can be saved by the users as a bookmark and accessed at a later time.
+The reason for this “strange” URL is that, as we explained in paragraph 8.3, when a page is instantiated using a constructor with no argument or using a constructor that accepts only a PageParameters, Wicket will try to generate a static URL for it, with no session-relative information. This kind of URL is called bookmarkable because it can be saved by the users as a bookmark and accessed at a later time.
 
 A bookmarkable URL is composed by a fixed prefix (which by default is bookmarkable) and the qualified name of the page class (org.wicketTutorial.PageWithParameters in our example). Segment wicket is another fixed prefix added by default during URL generation. In paragraph 10.6 we will see how to customize fixed prefixes with a custom implementation of IMapperContext interface.
 

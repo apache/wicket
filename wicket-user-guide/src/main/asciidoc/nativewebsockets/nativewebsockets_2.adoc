@@ -86,8 +86,8 @@ Use _message.getText()_ to read the message sent by the client and use _handler.
 
 * *WebSocketResource*
 
-Wicket allows one thread at a time to use a page instance to simplify the usage of the pages in multithreaded enviroment. When a WebSocket message is sent to a page Wicket needs to acquire the lock to that page to be able to pass the _IWebSocketMessage_ to the _WebSocketBehavior_. This may be problematic when the application needs to send many messages from the client to the server.
-For this reason Wicket provides _WebSocketResource_ - an IResource implemetation that provides the same APIs as _WebSocketBehavior_. The benefit is that there is no need of synchronization as with the pages and the drawback is that _WebSocketRequesthandler.add(Component...)_ method cannot be used because there is no access to the components in an _IResource_.
+Wicket allows one thread at a time to use a page instance to simplify the usage of the pages in multithreaded environment. When a WebSocket message is sent to a page Wicket needs to acquire the lock to that page to be able to pass the _IWebSocketMessage_ to the _WebSocketBehavior_. This may be problematic when the application needs to send many messages from the client to the server.
+For this reason Wicket provides _WebSocketResource_ - an IResource implementation that provides the same APIs as _WebSocketBehavior_. The benefit is that there is no need of synchronization as with the pages and the drawback is that _WebSocketRequestHandler.add(Component...)_ method cannot be used because there is no access to the components in an _IResource_.
 
 To register such WebSocket resource add such line to _YourApplication1.init()_ method:
 [source,java]

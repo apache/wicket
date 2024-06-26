@@ -34,7 +34,7 @@ public void onEvent(IEvent event) {
 }
 ----
 
-Project _InterComponetsEventsExample_ provides a concrete example of sending an event to a component (named 'container in the middle') using all the available broadcast methods:
+Project _InterComponentsEventsExample_ provides a concrete example of sending an event to a component (named 'container in the middle') using all the available broadcast methods:
 
 image::./img/InterComponentsEventsExample-screenshot.png[]
 

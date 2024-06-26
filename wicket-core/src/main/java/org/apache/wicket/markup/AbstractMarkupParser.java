@@ -375,20 +375,20 @@ public abstract class AbstractMarkupParser
 		// - Repeat until no match, then special-case the fragment after the
 		// last <pre>.
 		Matcher m = PRE_BLOCK.matcher(rawMarkup);
-		int lastend = 0;
+		int lastEnd = 0;
 		StringBuilder sb = null;
 		while (true)
 		{
 			boolean matched = m.find();
-			String nonPre = matched ? rawMarkup.substring(lastend, m.start())
-				: rawMarkup.substring(lastend);
+			String nonPre = matched ? rawMarkup.substring(lastEnd, m.start())
+				: rawMarkup.substring(lastEnd);
 			nonPre = SPACE_OR_TAB_PATTERN.matcher(nonPre).replaceAll(" ");
 			nonPre = NEW_LINE_PATTERN.matcher(nonPre).replaceAll("\n");
 
 			// Don't create a StringBuilder if we don't actually need one.
 			// This optimizes the trivial common case where there is no <pre>
 			// tag at all down to just doing the replaceAlls above.
-			if (lastend == 0)
+			if (lastEnd == 0)
 			{
 				if (matched)
 				{
@@ -403,7 +403,7 @@ public abstract class AbstractMarkupParser
 			if (matched)
 			{
 				sb.append(m.group());
-				lastend = m.end();
+				lastEnd = m.end();
 			}
 			else
 			{

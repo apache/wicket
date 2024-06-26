@@ -20,7 +20,7 @@ public final RequestCycle getRequestCycle() {
 
 === RequestCycle and request processing
 
-NOTE: This paragraph will provide just the basic informations about what happens behind the scenes of request processing. When you work with Wicket it's unlikely to have a need for customizing this process, so we won't cover this topic in detail.
+NOTE: This paragraph will provide just the basic information about what happens behind the scenes of request processing. When you work with Wicket it's unlikely to have a need for customizing this process, so we won't cover this topic in detail.
 
 In order to process a request, _RequestCycle_ delegates the task to another entity which implements interface _org.apache.wicket.request.IRequestHandler_. There are different implementations of this interface, each suited for a particular type of requested resource (a page to render, an AJAX request, an URL to an external page, etc.).
 

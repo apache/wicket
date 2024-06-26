@@ -98,7 +98,7 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 		}
 
 		/**
-		 * Overriden to use native {@code addEventListener('DOMContentLoaded')} instead.
+		 * Overridden to use native {@code addEventListener('DOMContentLoaded')} instead.
 		 */
 		@Override
 		public void render(Response response)
@@ -129,7 +129,7 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 		}
 
 		/**
-		 * Overriden to use native {@code addEventListener('load')} instead.
+		 * Overridden to use native {@code addEventListener('load')} instead.
 		 */
 		@Override
 		public void render(Response response)

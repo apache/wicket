@@ -1,5 +1,5 @@
 
-During request handling, Wicket manages page instances through interface _org.apache.wicket.request.handler.IPageProvider_. This interface creates a new page instance or loads a previously serialized page instance if we provide the corrisponding page id. _IPageProvider_ delegates page creation and retrieval to interface _org.apache.wicket.request.mapper.IPageSource_.
+During request handling, Wicket manages page instances through interface _org.apache.wicket.request.handler.IPageProvider_. This interface creates a new page instance or loads a previously serialized page instance if we provide the corresponding page id. _IPageProvider_ delegates page creation and retrieval to interface _org.apache.wicket.request.mapper.IPageSource_.
 When page class is provided _IPageSource_ delegates page creation to interface _org.apache.wicket.IPageFactory_, while when page id is provided it uses interface _org.apache.wicket.page.IPageManager_ to load the previously serialized page.
 
 The following workflow diagram summarizes the mechanism seen so far:
@@ -21,7 +21,7 @@ NOTE: Wicket gets the default _IPageManager_ using a supplier interface called _
 
 _org.apache.wicket.pageStore.IPageStore_'s role is to mediate the storing and loading of page instances. The default chain of _IPageStore_ used by Wicket contains the following ordered list of _IDataStore_:
 
-* *RequestPageStore:* collect all page instances involved in the last request. During the detach stage, stateful pages are passed to the othr steps of the chain to be persisted on file.
+* *RequestPageStore:* collect all page instances involved in the last request. During the detach stage, stateful pages are passed to the other steps of the chain to be persisted on file.
 * *InSessionPageStore:* with _InSessionPageStore_ the default chain keeps the last rendered page instance into the HTTP session for fast access.
 * *SerializingPageStore:* _SerializingPageStore_ turns page instances into a more serialization-friendly format represented by class _org.apache.wicket.pageStore.SerializedPage_. This is a struct of:
 
@@ -38,7 +38,7 @@ i.e. this is the serialized page instance (data) plus additional information nee
 
 * *AsynchronousPageStore:* The role of _AsynchronousPageStore_ is to detach the http worker thread from waiting for the write of the page bytes to the disk. To disable it use: _org.apache.wicket.settings.StoreSettings.setAsynchronous(false)_. _AsynchronousPageStore_ can delay the storage of page's bytes for at most _org.apache.wicket.settings.StoreSettings.setAsynchronousQueueCapacity(int)_ pages. If this capacity is exceeded then the page's bytes are written synchronously to the backing _IPageStore_.
 
-* *CryptingPageStore:* page instances might contain sensible informations, therefore it's important to have the chance to encrypt their content before persist them on disk. _CryptingPageStore_ encrypts _SerializedPage_'s with a 256 bit AES before passing them to the underling _DiskPageStore_. Buy default this stage is disabled and not added to the default chain. To change this behavior we can use _org.apache.wicket.settings.StoreSettings.setEncrypted_.
+* *CryptingPageStore:* page instances might contain sensible information, therefore it's important to have the chance to encrypt their content before persist them on disk. _CryptingPageStore_ encrypts _SerializedPage_'s with a 256 bit AES before passing them to the underling _DiskPageStore_. Buy default this stage is disabled and not added to the default chain. To change this behavior we can use _org.apache.wicket.settings.StoreSettings.setEncrypted_.
 
 * *DiskPageStore:* stores _SerializedPage_ on a session-scoped file on disk. The location of the folder where the files are stored is configurable via _org.apache.wicket.settings.StoreSettings.setFileStoreFolder(File)_, by default the web container's work folder is used (ServletContext attribute 'javax.servlet.context.tempdir'). In this folder a sub-folder is created named _'applicationName-filestore'_.
 This folder contains a sub-folder for each active http session. This session folder contains a single file named 'data' which contains the bytes for the pages. The size of this 'data' file is configurable via _org.apache.wicket.settings.StoreSettings.setMaxSizePerSession(Bytes)_. When this size is exceeded the newly stored files overwrite the oldest ones.

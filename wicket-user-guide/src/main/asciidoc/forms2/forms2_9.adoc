@@ -117,5 +117,5 @@ Now we can look at the rest of the code containing the convertInput and onBefore
 
 Since our component does not directly receive the user input, convertInput() must read this value from the inner text field using FormComponent's getConvertedInput() method which returns the input value already converted to the type specified for the component (Double in our case). Once we have the user input we convert it to kelvin degrees and we use the resulting value to set the converted input for our custom component (using method setConvertedInput(T convertedInput)).
 
-Method onBeforeRender() is responsible for synchronizing the model of the inner textfield with the model of our custom component. To do this we retrieve the model object of the custom component with the getDefaultModelObject() method, then we convert it to the temperature scale adopted by the user and finally we use this value to set the model object of the text field.
+Method onBeforeRender() is responsible for synchronizing the model of the inner text field with the model of our custom component. To do this we retrieve the model object of the custom component with the getDefaultModelObject() method, then we convert it to the temperature scale adopted by the user and finally we use this value to set the model object of the text field.
 

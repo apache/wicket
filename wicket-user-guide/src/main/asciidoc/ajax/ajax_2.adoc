@@ -29,7 +29,7 @@ An editable label is a special label that can be edited by the user when she/he 
 * *AjaxEditableMultiLineLabel*: this label supports multi-line values and uses a text area as editor component.
 * *AjaxEditableChoiceLabel*: this label uses a drop-down menu to edit its value.
 
-Base component AjaxEditableLabel exposes the following set of AJAX-aware methods that can be overriden:
+Base component AjaxEditableLabel exposes the following set of AJAX-aware methods that can be overridden:
 
 * *onEdit(AjaxRequestTarget target)*: called when user clicks on component. The default implementation shows the component used to edit the value of the label.
 * *onSubmit(AjaxRequestTarget target)*: called when the value has been successfully updated with the new input.

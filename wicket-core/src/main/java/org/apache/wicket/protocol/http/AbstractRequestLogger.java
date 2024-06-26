@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * information about the events that transpired during a single request. Typical HTTPD and/or
  * Servlet container log files are unusable for determining what happened in the application since
  * they contain the requested URLs of the form http://example.com/app?wicket:interface:0:0:0, which
- * doesn't convey any useful information. Requestloggers can show which page was the target of the
+ * doesn't convey any useful information. Request loggers can show which page was the target of the
  * request, and which page was rendered as a response, and anything else: resources, Ajax request,
  * etc.
  * <p>
@@ -323,7 +323,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 		RequestData requestdata = RequestCycle.get().getMetaData(REQUEST_DATA);
 		if (requestdata != null)
 		{
-			// log the request- and sessiondata (the latter can be null)
+			// log the request and session data (the latter can be null)
 			SessionData sessiondata = RequestCycle.get().getMetaData(SESSION_DATA);
 			log(requestdata, sessiondata);
 		}
@@ -354,7 +354,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 			// use the oldest request data to recalculate the average request time
 			RequestData old = requestWindow[indexInWindow];
 
-			// replace the oldest request with the nweset request
+			// replace the oldest request with the newest request
 			requestWindow[indexInWindow] = rd;
 
 			// move the cursor to the next writable position containing the oldest request or if the

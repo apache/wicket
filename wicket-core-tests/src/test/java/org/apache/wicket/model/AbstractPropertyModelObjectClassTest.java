@@ -67,7 +67,7 @@ public class AbstractPropertyModelObjectClassTest
 	}
 
 	/**
-	 * Just asserting that the the property expression for the somePropety is aware of this property
+	 * Just asserting that the the property expression for the someProperty is aware of this property
 	 * type.
 	 * 
 	 * @param modelForCustomTypeObject

@@ -95,7 +95,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	}
 
 	/**
-	 * Get the next xml element from the markup. If eof, than retun null. Ignore raw markup. Invoke
+	 * Get the next xml element from the markup. If eof, than return null. Ignore raw markup. Invoke
 	 * nextTag(tag) if a tag was found.
 	 */
 	@Override
@@ -136,7 +136,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 */
 
 	/**
-	 * Invoked when a tags (e.g. DOCTYPE, PROCESSING_INSTRUCTIION, etc. which have been identified
+	 * Invoked when a tags (e.g. DOCTYPE, PROCESSING_INSTRUCTION, etc. which have been identified
 	 * as special tags by the xml parser.
 	 * 
 	 * @param tag

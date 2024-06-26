@@ -95,7 +95,7 @@ include::keepControl.adoc[]
 
 include::keepControl/keepControl_1.adoc[leveloffset=+1]
 
-=== Modifing tag attributes
+=== Modifying tag attributes
 
 include::keepControl/keepControl_2.adoc[leveloffset=+1]
 

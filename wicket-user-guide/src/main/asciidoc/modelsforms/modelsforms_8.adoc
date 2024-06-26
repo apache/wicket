@@ -10,7 +10,7 @@ Sometimes our custom components may need to use more than a single model to work
  * fooModel is used as main model while beeModel must be manually detached
  *
  */
-public class ComponetTwoModels extends Component{
+public class ComponentTwoModels extends Component{
 
 	private IModel<Bee> beeModel;
 

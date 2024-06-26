@@ -133,7 +133,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * @param item
 	 *            the autocomplete item to get a custom javascript expression for
 	 * @return javascript to execute on selection or <code>null</code> if default behavior is
-	 *         intented
+	 *         intended
 	 */
 	protected CharSequence getOnSelectJavaScriptExpression(final T item)
 	{

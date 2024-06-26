@@ -7,21 +7,21 @@ Introduced in Wicket 6.20.0 / Wicket 7.0.0 there is a default way to be used in 
 [source,java]
 ----
 ...
-    public class WicketApplication extends WebApplication
-    {
-        @Override
-        public Class<? extends WebPage> getHomePage()
-        {
-            return HomePage.class;
-        }
-    
-        @Override
-        public void init()
-        {
-            super.init();
-            getResourceSettings().setCssCompressor(new CssUrlReplacer());
-        }
-    }
+    public class WicketApplication extends WebApplication
+    {
+        @Override
+        public Class<? extends WebPage> getHomePage()
+        {
+            return HomePage.class;
+        }
+
+        @Override
+        public void init()
+        {
+           super.init();
+            getResourceSettings().setCssCompressor(new CssUrlReplacer());
+        }
+    }
 ...
 ----
 
@@ -42,7 +42,7 @@ mycss.css (in package my/company/res/css/):
 ----
 ...
 body{
-    background-image:url('../images/some.png');
+    background-image:url('../images/some.png');
 }
 ...
 ----
@@ -55,7 +55,7 @@ Output of mycss.css:
 ----
 ...
 body{
-    background-image:url('../images/some-ver-1425904170000.png');
+    background-image:url('../images/some-ver-1425904170000.png');
 }
 ...
 ----
@@ -68,7 +68,7 @@ Output of mycss.css:
 ----
 ...
 body{
-    background-image: url(data:image/png;base64,R0lGODlh1wATAX....);
+    background-image: url(data:image/png;base64,R0lGODlh1wATAX....);
 }
 ...
 ----

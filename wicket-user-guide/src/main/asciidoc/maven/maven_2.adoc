@@ -83,10 +83,10 @@ Starting from version 6.7, NetBeans includes Maven support, hence we can start i
 
 image::./img/netbeans-maven-import.png[]
 
-*Intellj IDEA*
-Intellj IDEA comes with a Maven importing functionality that can be started under “File/New Project/Import from external model/Maven”. Then, we just have to select the pom.xml file of our project:
+*IntelliJ IDEA*
+IntelliJ IDEA comes with a Maven importing functionality that can be started under “File/New Project/Import from external model/Maven”. Then, we just have to select the pom.xml file of our project:
 
-image::./img/intellj-maven-import.png[]
+image::./img/intellij-maven-import.png[]
 
 *Eclipse*
 Just like the other IDEs Eclipse supports Maven projects out of the box. Open the “File/Import...” dialog and search for Maven:
@@ -107,10 +107,10 @@ Now that we have our project loaded into our IDE we could start coding our compo
 NetBeans offers Wicket support through 'NetBeans Plugin for Wicket' hosted at  http://plugins.netbeans.org/plugin/3586/wicket-1-4-support[http://plugins.netbeans.org/plugin/3586/wicket-1-4-support] . This plugin is released under CDDL-1.0 license.
 You can  find a nice introduction guide to this plugin at  http://netbeans.org/kb/docs/web/quickstart-webapps-wicket.html[http://netbeans.org/kb/docs/web/quickstart-webapps-wicket.html] .
 
-*Intellj IDEA*
+*IntelliJ IDEA*
 For JetBrain IDEA we can use WicketForge plugin, hosted at Google Code  http://code.google.com/p/wicketforge/[http://code.google.com/p/wicketforge/] . The plugin is released under ASF 2.0 license.
 
 *Eclipse*
-With Eclipse we can install one of the plugins that supports Wicket. As of the writing of this document, the most popular is probably Qwickie, available in the Eclipse Marketplace and hosted on Google Code at https://github.com/count-negative/qwickie/[https://github.com/count-negative/qwickie/].
-QWickie is released under ASF 2.0 license.
+With Eclipse we can install one of the plugins that supports Wicket. As of the writing of this document, the most popular is probably qwickie, available in the Eclipse Marketplace and hosted on Google Code at https://github.com/count-negative/qwickie/[https://github.com/count-negative/qwickie/].
+qwickie is released under ASF 2.0 license.
 

@@ -69,7 +69,7 @@ The markup and the code for this example are the following:
 [source,java]
 ----
 public HomePage(final PageParameters parameters) {
-    RegistrationInfo registrtionInfo = new RegistrationInfo();
+    RegistrationInfo registrationInfo = new RegistrationInfo();
     registrtionInfo.setSubscribeList(true);
 
     Form<Void> form = new Form<>("form",
@@ -85,7 +85,7 @@ public HomePage(final PageParameters parameters) {
 }
 ----
 
-Please note that the checkbox will be initially selected because we have set to true the subscribe flag during the model object creation (with instruction registrtionInfo.setSubscribeList(true)):
+Please note that the checkbox will be initially selected because we have set to true the subscribe flag during the model object creation (with instruction registrationInfo.setSubscribeList(true)):
 
 image::./img/subscribe-checkbox-set.png[]
 

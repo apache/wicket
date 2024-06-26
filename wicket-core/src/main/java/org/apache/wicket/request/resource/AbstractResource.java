@@ -683,7 +683,7 @@ public abstract class AbstractResource implements IResource
 	}
 
 	/**
-	 * check if header is directly modifyable
+	 * check if header is directly modifiable
 	 * 
 	 * @param name
 	 *            header name

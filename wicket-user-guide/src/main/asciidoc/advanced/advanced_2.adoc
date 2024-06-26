@@ -96,7 +96,7 @@ public void onComponentTag(Component component, ComponentTag tag) {
 }
 ----
 
-The goal of _onComponentTag_ is to build an onchange handler that forces user's browser to move to the callback URL (modifing standard property window.location.href). Please note that we have appended the expected parameter (choiceId) to the URL retrieving its value with a JQuery selector suited for the current type of component (a drop-down menu or a radio group). Since we are using JQuery in our JavaScript code, the behavior comes also with method _renderHead_ that adds the bundled JQuery library to the current page.
+The goal of _onComponentTag_ is to build an onchange handler that forces user's browser to move to the callback URL (modifying standard property window.location.href). Please note that we have appended the expected parameter (choiceId) to the URL retrieving its value with a JQuery selector suited for the current type of component (a drop-down menu or a radio group). Since we are using JQuery in our JavaScript code, the behavior comes also with method _renderHead_ that adds the bundled JQuery library to the current page.
 
 Method _getCallbackUrl()_ is used to generate the callback URL for our custom behavior:
 

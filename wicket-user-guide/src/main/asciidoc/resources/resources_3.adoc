@@ -30,7 +30,7 @@ In the following example taken from project ImageAsPackageRes, CustomPanel loads
 </html>
 ----
 
-*Jave Code:*
+*Java Code:*
 [source,java]
 ----
 public class CustomPanel extends Panel {

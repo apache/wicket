@@ -47,7 +47,7 @@ DisableComponentListener = {
       $(hiderId).css('text-align', 'center');
       $(hiderId).css('background-color', 'WhiteSmoke');
       $(hiderId).css('border', '1px solid DarkGray');
-      //set the dimention of the overlay <div>
+      //set the dimension of the overlay <div>
       $(hiderId).width($(elementId).outerWidth());
       $(hiderId).height($(elementId).outerHeight());
       //positioning the overlay <div> on the component that must be disabled.
