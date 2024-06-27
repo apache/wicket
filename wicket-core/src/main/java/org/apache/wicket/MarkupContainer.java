@@ -308,7 +308,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		// Add the child to the parent.
 
 		// Arguably child.setParent() can be used as well. It connects the child to the parent and
-		// that's all what most auto-components need. Unfortunately child.onDetach() will not / can
+		// that's all what most auto components need. Unfortunately child.onDetach() will not / can
 		// not be invoked, since the parent doesn't known its one of his children. Hence we need to
 		// properly add it.
 		children_remove(component.getId());
@@ -1958,7 +1958,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				// dequeue
 				child = dequeue.findComponentToDequeue(tag);
 				
-				//if tag has an autocomponent factory let's use it
+				//if tag has an auto component factory let's use it
 				if (child == null && tag.getAutoComponentFactory() != null)
 				{
 					IAutoComponentFactory autoComponentFactory = tag.getAutoComponentFactory();

@@ -203,7 +203,7 @@ include::requestProcessing/requestProcessing_2.adoc[leveloffset=+1]
 
 include::requestProcessing/requestProcessing_3.adoc[leveloffset=+1]
 
-=== Session Class
+=== Session class
 
 include::requestProcessing/requestProcessing_4.adoc[leveloffset=+1]
 
@@ -351,15 +351,15 @@ include::forms2/forms2_13.adoc[leveloffset=+1]
 
 include::repeaters.adoc[]
 
-=== The RepeatingView Component
+=== The RepeatingView component
 
 include::repeaters/repeaters_1.adoc[leveloffset=+1]
 
-=== The ListView Component
+=== The ListView component
 
 include::repeaters/repeaters_2.adoc[leveloffset=+1]
 
-=== The RefreshingView Component
+=== The RefreshingView component
 
 include::repeaters/repeaters_3.adoc[leveloffset=+1]
 
@@ -415,7 +415,7 @@ include::i18n/i18n_3.adoc[leveloffset=+1]
 
 include::i18n/i18n_4.adoc[leveloffset=+1]
 
-=== Internationalization and Models
+=== Internationalization and models
 
 include::i18n/i18n_5.adoc[leveloffset=+1]
 
@@ -663,15 +663,15 @@ include::security/security_5.adoc[leveloffset=+1]
 
 include::security/security_6.adoc[leveloffset=+1]
 
-=== Cross Origin Isolation with COOP and COEP
+=== Cross-origin isolation with COOP and COEP
 
 include::security/security_10.adoc[leveloffset=+1]
 
-=== Package Resource Guard
+=== Package resource guard
 
 include::security/security_7.adoc[leveloffset=+1]
 
-=== External Security Checks
+=== External security checks
 
 include::security/security_8.adoc[leveloffset=+1]
 
@@ -715,7 +715,7 @@ include::testingspring/testingspring_2.adoc[leveloffset=+1]
 
 include::testingspring/testingspring_3.adoc[leveloffset=+1]
 
-== Wicket Best Practices
+== Wicket best practices
 
 include::bestpractices.adoc[]
 
@@ -779,7 +779,7 @@ include::bestpractices/bestpractices_14.adoc[leveloffset=+1]
 
 include::bestpractices/bestpractices_15.adoc[leveloffset=+1]
 
-=== The argument "Bad documentation"
+=== The argument "bad documentation"
 
 include::bestpractices/bestpractices_16.adoc[leveloffset=+1]
 
@@ -787,7 +787,7 @@ include::bestpractices/bestpractices_16.adoc[leveloffset=+1]
 
 include::bestpractices/bestpractices_17.adoc[leveloffset=+1]
 
-== Wicket Internals
+== Wicket internals
 
 include::internals.adoc[]
 
@@ -795,23 +795,23 @@ include::internals.adoc[]
 
 include::internals/pagestoring.adoc[leveloffset=+1]
 
-=== Markup parsing and Autocomponents
+=== Markup parsing and auto components
 
 include::internals/autocomponents.adoc[leveloffset=+1]
 
-== Wicket HTTP/2 Support (Experimental)
+== Wicket HTTP/2 support (experimental)
 
 include::http2push.adoc[]
 
-=== Example Usage
+=== Example usage
 
 include::http2push/http2push_1.adoc[leveloffset=+3]
 
-=== Create server specific http/2 push support
+=== Create server specific HTTP/2 push support
 
 include::http2push/http2push_2.adoc[leveloffset=+3]
 
-== Wicket Metrics Monitoring (Experimental)
+== Wicket metrics monitoring (experimental)
 
 include::monitoring.adoc[]
 
@@ -878,7 +878,7 @@ include::wicketstuff/wicketstuff_6.adoc[leveloffset=+1]
 include::wicketstuff/wicketstuff_7.adoc[leveloffset=+1]
 
 [appendix]
-== Lost In Redirection With Apache Wicket
+== Lost in redirection with Apache Wicket
 
 include::redirects.adoc[]
 

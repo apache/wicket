@@ -24,7 +24,7 @@ import org.apache.wicket.markup.IMarkupCache;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
-class AutocomponetsGenerationTest extends WicketTestCase
+class AutoComponentsGenerationTest extends WicketTestCase
 {
 
 	/*
@@ -32,7 +32,7 @@ class AutocomponetsGenerationTest extends WicketTestCase
 	 * and for https://issues.apache.org/jira/browse/WICKET-5908
 	 */
 	@Test
-	void autocomponetsNumberDoesntChange()
+	void autoComponentsNumberDoesntChange()
 	{
 		AutoComponentsPage autoComponentsPage = new AutoComponentsPage();
 		tester.startPage(autoComponentsPage);
@@ -53,13 +53,13 @@ class AutocomponetsGenerationTest extends WicketTestCase
 	 * Test for https://issues.apache.org/jira/browse/WICKET-6116
 	 */
 	@Test
-	void borderResolvesAutocomponents() throws Exception
+	void borderResolvesAutoComponents() throws Exception
 	{
 		AutoComponentsBorder border = new AutoComponentsBorder("id");
 		
 		ComponentRenderer.renderComponent(border);
 		
-		//we expect to have a body container and an autocomponent for <img> tag
+		//we expect to have a body container and an auto component for <img> tag
 		assertEquals(2, border.size());
 		
 		//let's render the same border again
@@ -79,7 +79,7 @@ class AutocomponetsGenerationTest extends WicketTestCase
 		
 		tester.startPage(page);
 		
-		//render page again. Autocomponents must have the same id
+		//render page again. Auto components must have the same id
 		tester.startPage(page);		
 	}
 }

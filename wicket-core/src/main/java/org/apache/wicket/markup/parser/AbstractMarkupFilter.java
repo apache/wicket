@@ -208,7 +208,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 * Returns an id using the request-relative counter associated with the 
 	 * underlying {@link org.apache.wicket.markup.MarkupResourceStream}'s owner container 
 	 * (see {@link org.apache.wicket.markup.MarkupResourceStream#getContainerInfo()}). 
-	 * This can be useful for autocomponent tags that need to get a tag id.
+	 * This can be useful for auto component tags that need to get a tag id.
 	 * 
 	 * @return
 	 * 		the request-relative id

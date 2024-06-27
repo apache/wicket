@@ -780,7 +780,7 @@ public abstract class Component
 
 	/**
 	 * Set the markup for the component. Note that the component's markup variable is transient and
-	 * thus must only be used for one render cycle. E.g. auto-component are using it. You may also
+	 * thus must only be used for one render cycle. E.g. auto components are using it. You may also
 	 * it if you subclassed getMarkup().
 	 * 
 	 * @param markup

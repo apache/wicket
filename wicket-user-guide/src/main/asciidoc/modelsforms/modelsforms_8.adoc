@@ -14,7 +14,7 @@ public class ComponentTwoModels extends Component{
 
 	private IModel<Bee> beeModel;
 
-	public ComponetTwoModels(String id, IModel<Foo> fooModel, IModel<Bee> beeModel) {
+	public ComponentTwoModels(String id, IModel<Foo> fooModel, IModel<Bee> beeModel) {
 		super(id, fooModel);
 		this.beeModel = beeModel;
 	}

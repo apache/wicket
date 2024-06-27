@@ -168,7 +168,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 	 * 
 	 * @param tag
 	 *            The current tag being parsed
-	 * @return If true, tag will become auto-component
+	 * @return If true, tag will become auto component
 	 */
 	protected boolean analyzeAutolinkCondition(final ComponentTag tag)
 	{

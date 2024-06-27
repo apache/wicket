@@ -53,16 +53,16 @@ There are a couple of reasons:
 
 We will examine these below.
 
-=== Markup Id Ambiguities
+=== Markup ID ambiguities
 
 In the example above we have a form that collects the name of a customer along with the name of their child and the child’s date of birth. We mapped the name of the customer and child to form components with wicket ids _first_ and _last_. If we were to add all the components to the same parent we would get an error because we cannot have two components with the same wicket id under the same parent (two components with id _first_ and two with id _last_). 
 Without hierarchy in Java we would have to make sure that all wicket ids in a markup file are unique, no small feat in a non-trivial page or panel. But, with hierarchy on the Java side we just have to make sure that no parent has two children with the same id, which is trivial.
 
-=== Inheriting State From Parents
+=== Inheriting state from parents
 
 Suppose we wanted to hide form fields related to the child in the example above when certain conditions are met. Without hierarchy we would have to modify the _first_, _last_, and _dob_ fields to implement the visibility check. Worse, whenever we would add a new child related field we would have to remember to implement the same check; this is a maintenance headache. With hierarchy this is easy, simply hide the parent container and all children will be hidden as well — the code lives in one place and is automatically inherited by all descendant components. Thus, hierarchy on the Java side allows us to write succinct and maintainable code by making use of the parent-child relationship of components.
 
-=== Pain Points of the Java-Side Hierarchy
+=== Pain points of the Java-side hierarchy
 
 While undeniably useful, the Java-side hierarchy can be a pain to maintain. It is very common to get requests to change things because the designer needs to wrap some components in a _div_ with a dynamic style or class attribute. Essentially we want to go from:
 
@@ -113,7 +113,7 @@ Another common change is to tweak the nesting of markup tags. This is something 
 
 In large pages with a lot of components these kinds of simple changes tend to cause a lot of annoyance for the developers.
 
-=== Component Queueing To The Rescue
+=== Component queueing to the rescue
 
 The idea behind component queueing is simple: instead of adding components to their parents directly, the developer can queue them in any ancestor and have Wicket automatically ‘dequeue’ them to the correct parent using the hierarchy defined in the markup. This will give us the best of both worlds: the developer only has to define the hierarchy once in markup, and have it automatically constructed in Java land.
 

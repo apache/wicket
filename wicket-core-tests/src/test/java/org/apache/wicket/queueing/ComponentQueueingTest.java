@@ -634,7 +634,7 @@ class ComponentQueueingTest extends WicketTestCase
 	}
 	
 	/**
-	 * Test autocomponent inside not-queue region
+	 * Test auto component inside not-queue region
 	 */
 	@Test
 	void autosInsideNotQueueRegion()

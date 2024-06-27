@@ -99,7 +99,7 @@ image::./img/eclipse-maven-select.png[]
 
 Once the project has been imported into Eclipse, we are free to use our favourite plug-ins to run it or debug it (like for example https://github.com/xzer/run-jetty-run/[run-jetty-run]).
 
-=== Speeding up development with plugins.
+=== Speeding up development with plugins
 
 Now that we have our project loaded into our IDE we could start coding our components directly by hand. However it would be a shame to not leverage the free and good Wicket plugins available for our IDE. The following is a brief overview of the most widely used plugins for each of the three main IDEs considered so far.
 

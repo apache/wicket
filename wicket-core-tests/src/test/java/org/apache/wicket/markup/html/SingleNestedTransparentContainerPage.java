@@ -41,7 +41,7 @@ public class SingleNestedTransparentContainerPage extends WebPage
 
 		// The src attribute of the image tag inside this WebMarkupContainer is
 		// essential in triggering this bug. This causes Wicket to insert an
-		// autocomponent (also a TransparentWebMarkupContainer)
+		// auto component (also a TransparentWebMarkupContainer)
 		add(new WebMarkupContainer("group"));
 
 		// if you add this TransparentWebMarkupContainer as first component in

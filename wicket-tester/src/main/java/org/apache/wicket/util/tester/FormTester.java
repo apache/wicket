@@ -60,7 +60,7 @@ import org.apache.wicket.util.visit.IVisitor;
  */
 public class FormTester
 {
-	private static final String NO_FORM_FOR_PATH = "No Form componet found for path '%s'. Check if path value is correct and "
+	private static final String NO_FORM_FOR_PATH = "No Form component found for path '%s'. Check if path value is correct and "
 	        + "if form component is visible and active.";
 
     /**
