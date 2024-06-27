@@ -24,14 +24,14 @@ import org.apache.wicket.util.lang.Args;
 /**
  * <code>&lt;wicket:enclosure&gt;</code> is nice and prevents that users have to add boilerplate to
  * their application. But it is not without problems. The child components are children in the
- * markup, but the auto-component generated for the enclosure tag will not magically re-parent the
+ * markup, but the auto component generated for the enclosure tag will not magically re-parent the
  * child components. Thus, the markup hierarchy and the component hierarchy will be out of sync. The
  * automatically created enclosure container will be created alongside its "children" with both
  * attached to the very same parent container. That leads to a tricky situation since e.g.
  * <code>onBeforeRender()</code> will be called for enclosure children even if the enclosure is made
  * invisible by it controlling child.
  * <p>
- * On top auto-components cannot keep any state. A new instance is created during each render
+ * On top auto components cannot keep any state. A new instance is created during each render
  * process and automatically deleted at the end. That implies that we cannot prevent
  * <code>validation()</code> from being called, since validation() is called before the actual
  * render process has started.

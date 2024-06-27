@@ -584,11 +584,11 @@ public abstract class MediaComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Gets the cross origin settings
+	 * Gets the cross-origin settings
 	 *
 	 * @see #setCrossOrigin(Cors)
 	 *
-	 * @return the cross origins settings
+	 * @return the cross-origins settings
 	 */
 	public Cors getCrossOrigin()
 	{
@@ -596,7 +596,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Sets the cross origin settings<br>
+	 * Sets the cross-origin settings<br>
 	 * <br>
 	 *
 	 * <b>ANONYMOUS</b>: Cross-origin CORS requests for the element will not have the credentials
@@ -610,7 +610,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * when the attribute is omitted, is the No CORS state
 	 *
 	 * @param crossOrigin
-	 *            the cross origins settings to set
+	 *            the cross-origins settings to set
 	 */
 	public void setCrossOrigin(Cors crossOrigin)
 	{

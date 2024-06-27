@@ -116,7 +116,7 @@ public class ExternalSource extends ExternalImage
 	 * Unsupported for source tag
 	 */
 	@Override
-	public void setCrossOrigin(CrossOrigin crossorigin)
+	public void setCrossOrigin(CrossOrigin crossOrigin)
 	{
 		throw new UnsupportedOperationException(
 			"It is not allowed to set the crossorigin attribute for source tag");

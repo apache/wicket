@@ -20,7 +20,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 
 /**
- * Page containing only autocomponents (header, enclosures, img tags, etc...)
+ * Page containing only auto components (header, enclosures, img tags, etc...)
  *
  * @author andrea del bene
  */

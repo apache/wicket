@@ -35,7 +35,7 @@ This component must be bound to a <select> tag but the attribute multiple="multi
 
 The number of visible rows can be set with the setMaxRows(int maxRows) method.
 
-=== Component Palette
+=== Component palette
 
 While multiple choice list solves the problem of handling a big number of multiple choices, it is not much intuitive for end users. That's why desktop GUIs have introduced a more complex component which can be generally referred to as multi select transfer component (it doesn't have an actual official name):
 

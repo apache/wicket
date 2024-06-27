@@ -24,7 +24,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 /**
  * Interface for the resource isolation policies.
  * <p>
- * Resource isolation policies are designed to protect against cross origin attacks.
+ * Resource isolation policies are designed to protect against cross-origin attacks.
  * <p>
  * See {@link FetchMetadataResourceIsolationPolicy} for the default implementation used
  * by {@link ResourceIsolationRequestCycleListener}.

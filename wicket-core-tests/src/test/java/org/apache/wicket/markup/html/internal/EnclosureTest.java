@@ -200,7 +200,7 @@ class EnclosureTest extends WicketTestCase
 		page.reset();
 		page.get("form:label").setVisible(false);
 		executePage(page, "EnclosurePageExpectedResult_9-1.html");
-		// It should be FALSE, but because of auto-component etc. it doesn't
+		// It should be FALSE, but because of auto component etc. it doesn't
 		// assertFalse(page.inputOnBeforeRender);
 		assertTrue(page.inputOnBeforeRender);
 		assertFalse(page.inputValidate);
@@ -274,10 +274,10 @@ class EnclosureTest extends WicketTestCase
 		tester.submitForm("form");
 		tester.assertRenderedPage(clazz);
 		assertResultPage("EnclosurePageExpectedResult_9-2-1.html");
-		// It should be FALSE, but because of auto-component etc. it doesn't
+		// It should be FALSE, but because of auto component etc. it doesn't
 		// assertFalse(page.inputOnBeforeRender);
 		assertTrue(page.inputOnBeforeRender);
-		// It should be FALSE, but because of auto-component etc. it doesn't
+		// It should be FALSE, but because of auto component etc. it doesn't
 		// assertFalse(page.inputValidate);
 		assertTrue(page.inputValidate);
 		assertFalse(page.labelOnBeforeRender);

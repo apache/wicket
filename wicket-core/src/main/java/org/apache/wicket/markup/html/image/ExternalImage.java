@@ -51,7 +51,7 @@ public class ExternalImage extends WebComponent
 	private List<String> sizes = null;
 
 	/**
-	 * Cross origin settings
+	 * Cross-origin settings
 	 */
 	private CrossOrigin crossOrigin = null;
 
@@ -280,11 +280,11 @@ public class ExternalImage extends WebComponent
 	}
 
 	/**
-	 * Gets the cross origin settings
+	 * Gets the cross-origin settings
 	 * 
 	 * @see org.apache.wicket.markup.html.image.Image#setCrossOrigin(CrossOrigin)
 	 *
-	 * @return the cross origins settings
+	 * @return the cross-origins settings
 	 */
 	public CrossOrigin getCrossOrigin()
 	{
@@ -292,11 +292,11 @@ public class ExternalImage extends WebComponent
 	}
 
 	/**
-	 * Sets the cross origin settings
+	 * Sets the cross-origin settings
 	 * 
 	 * @see org.apache.wicket.markup.html.image.Image#setCrossOrigin(CrossOrigin)
 	 * @param crossOrigin
-	 *            the cross origins settings to set
+	 *            the cross-origins settings to set
 	 */
 	public void setCrossOrigin(CrossOrigin crossOrigin)
 	{
