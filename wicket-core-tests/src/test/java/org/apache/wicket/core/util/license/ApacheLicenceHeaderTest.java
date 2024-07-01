@@ -17,8 +17,6 @@
 package org.apache.wicket.core.util.license;
 
 
-import java.io.File;
-
 import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -146,7 +144,11 @@ class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		}
 		finally
 		{
-			System.setProperty(propertyName, basedir);
+			if (basedir == null) {
+				System.clearProperty(propertyName);
+			} else {
+				System.setProperty(propertyName, basedir);
+			}
 		}
 	}
 }

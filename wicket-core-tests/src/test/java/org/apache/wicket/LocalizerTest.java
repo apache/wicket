@@ -18,7 +18,6 @@ package org.apache.wicket;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
@@ -36,7 +35,6 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
 import org.apache.wicket.settings.ResourceSettings;
-import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.value.ValueMap;
 import org.junit.jupiter.api.AfterEach;
@@ -68,7 +66,7 @@ class LocalizerTest
 	}
 
 	@AfterEach
-	void tearDown() throws Exception
+	void tearDown()
 	{
 		tester.destroy();
 	}
@@ -151,7 +149,7 @@ class LocalizerTest
 		ValueMap vm = new ValueMap();
 		vm.put("user", "John Doe");
 		vm.put("rating", 4.5);
-		IModel<ValueMap> model = new Model<ValueMap>(vm);
+		IModel<ValueMap> model = new Model<>(vm);
 		assertEquals("John Doe gives 4,5 stars",
 			localizer.getString("test.substitute", null, model, null),
 			"Property substitution should occur");
@@ -194,7 +192,7 @@ class LocalizerTest
 	{
 		Session.get().setLocale(Locale.GERMAN);
 
-		HashMap<String, Object> model = new HashMap<String, Object>();
+		HashMap<String, Object> model = new HashMap<>();
 		model.put("user", "juergen");
 		model.put("rating", 4.5);
 
@@ -216,6 +214,10 @@ class LocalizerTest
 	void test_1851_1()
 	{
 		MyMockPage page = new MyMockPage();
+		// Set it to any locale except for Dutch (or a variant thereof), because there is a file
+		// containing Dutch translations for MyMockPage. Those translations will not match
+		// 'value 1' below.
+		tester.getSession().setLocale(Locale.FRENCH);
 
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
 		tester.getApplication().getResourceSettings().setUseDefaultOnMissingResource(false);
@@ -226,10 +228,7 @@ class LocalizerTest
 
 		option = localizer.getStringIgnoreSettings("dummy.null", page.drop1, null, null);
 		assertNull(option);
-		if (Strings.isEmpty(option))
-		{
-			option = localizer.getString("null", page.drop1, "CHOOSE_ONE");
-		}
+		option = localizer.getString("null", page.drop1, "CHOOSE_ONE");
 		assertEquals("value 1", option);
 
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
@@ -247,7 +246,7 @@ class LocalizerTest
 		try
 		{
 			localizer.getString("dummy.null", page.drop1, null, null);
-			assertTrue(false, "Expected an exception to happen");
+			fail("Expected an exception to happen");
 		}
 		catch (MissingResourceException ex)
 		{
@@ -269,12 +268,12 @@ class LocalizerTest
 		 */
 		MyMockPage()
 		{
-			final Form<Void> form = new Form<Void>("form");
+			final Form<Void> form = new Form<>("form");
 			add(form);
 
 			String[] choices = { "choice1", "choice2" };
-			drop1 = new DropDownChoice<String>("drop1", Arrays.asList(choices));
-			drop2 = new DropDownChoice<String>("drop2", Arrays.asList(choices));
+			drop1 = new DropDownChoice<>("drop1", Arrays.asList(choices));
+			drop2 = new DropDownChoice<>("drop2", Arrays.asList(choices));
 
 			form.add(drop1);
 			form.add(drop2);
