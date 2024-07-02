@@ -5,8 +5,8 @@
 <!-- This configuration must be used in conjunction with jetty.xml -->
 <!-- and either jetty-https.xml or jetty-spdy.xml (but not both)   -->
 <!-- ============================================================= -->
-<Configure id="sslContextFactory" class="org.eclipse.jetty.util.ssl.SslContextFactory">
-  <Set name="KeyStorePath"><Property name="maven.project.build.directory.test-classes" default="." />/<Property name="jetty.keystore" default="keystore"/></Set>
+<Configure id="sslContextFactory" class="org.eclipse.jetty.util.ssl.SslContextFactory$Server">
+  <Set name="KeyStorePath"><Property name="jetty.base" default="." />/<Property name="jetty.keystore" default="target/test-classes/keystore"/></Set>
   <Set name="KeyStorePassword"><Property name="jetty.keystore.password" default="wicket"/></Set>
   <Set name="KeyManagerPassword"><Property name="jetty.keymanager.password" default="wicket"/></Set>
   <Set name="EndpointIdentificationAlgorithm"></Set>
@@ -51,7 +51,11 @@
   <New id="sslHttpConfig" class="org.eclipse.jetty.server.HttpConfiguration">
     <Arg><Ref refid="httpConfig"/></Arg>
     <Call name="addCustomizer">
-      <Arg><New class="org.eclipse.jetty.server.SecureRequestCustomizer"/></Arg>
+      <Arg>
+        <New class="org.eclipse.jetty.server.SecureRequestCustomizer">
+          <Set name="SniHostCheck"><Property name="jetty.ssl.sniHostCheck" default="false"/></Set>
+        </New>
+      </Arg>
     </Call>
   </New>
 </Configure>
