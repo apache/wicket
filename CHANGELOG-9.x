@@ -2,6 +2,23 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.18.0
+
+** Bug
+
+    * [WICKET-7102] - Error in LiveSessionsPage
+    * [WICKET-7104] - wicket-autocomplete.min.js minified too aggressively
+
+** New Feature
+
+    * [WICKET-7109] - Create a ready to use dropdown supporting grouping
+
+** Improvement
+
+    * [WICKET-7101] - auto-label is not automatically updated when related form component is updated.
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.17.0
 
 ** Bug
