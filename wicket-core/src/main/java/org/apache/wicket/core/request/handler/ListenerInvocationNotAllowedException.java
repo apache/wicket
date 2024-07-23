@@ -52,7 +52,8 @@ public class ListenerInvocationNotAllowedException extends RuntimeException
 		StringBuilder detail = new StringBuilder("Component: ").append(component.toString(false));
 		if (behavior != null)
 		{
-			detail.append(" Behavior: ").append(behavior.toString());
+			detail.append(" Behavior: ").append(behavior);
+			detail.append(" Path: ").append(component.getPath());
 		}
 		return detail.toString();
 	}
