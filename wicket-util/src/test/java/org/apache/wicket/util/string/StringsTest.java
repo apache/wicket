@@ -53,13 +53,14 @@ class StringsTest
 		// WICKET-6858
 		final Field sessionIdParamField = Strings.class.getDeclaredField("SESSION_ID_PARAM");
 		sessionIdParamField.setAccessible(true);
+		String origSessionIdParam = (String) sessionIdParamField.get(null);
 		try {
 			final String customSessionIdParam = ";Custom seSsion - ид=";
 			sessionIdParamField.set(null, customSessionIdParam);
 			assertEquals(url + ";a=b;c=d?param=a;b",
 			             Strings.stripJSessionId(url + ";a=b;c=d" + customSessionIdParam + "12345?param=a;b"));
 		} finally {
-			sessionIdParamField.set(null, "jsessionid");
+			sessionIdParamField.set(null, origSessionIdParam);
 			sessionIdParamField.setAccessible(false);
 		}
 	}
