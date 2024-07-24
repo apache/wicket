@@ -372,9 +372,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 			 * Call out the fact that we are processing an exception in a loud way, helps to notice
 			 * them when developing even if they get wrapped or processed in a custom handler.
 			 */
-			logExtra.warn("********************************");
-			logExtra.warn("Handling the following exception", e);
-			logExtra.warn("********************************");
+			logExtra.warn("###***===--- Handling the following exception ---===***###", e);
 		}
 
 		IRequestHandler handler = listeners.onException(this, e);
