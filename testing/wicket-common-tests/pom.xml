@@ -55,7 +55,7 @@
 			<dependency>
 				<groupId>org.jboss.logging</groupId>
 				<artifactId>jboss-logging-annotations</artifactId>
-				<version>3.0.0.Final</version>
+				<version>3.0.1.Final</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
