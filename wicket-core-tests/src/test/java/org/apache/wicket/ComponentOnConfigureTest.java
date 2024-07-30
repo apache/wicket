@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -41,6 +42,16 @@ class ComponentOnConfigureTest extends WicketTestCase
 	private static final AtomicInteger BEHAVIOR = new AtomicInteger(0);
 	private static final AtomicInteger APPLICATION_LISTENER = new AtomicInteger(0);
 
+	@BeforeEach
+	void resetCounters()
+	{
+		COUNTER.set(0);
+		PAGE.set(0);
+		COMPONENT.set(0);
+		BEHAVIOR.set(0);
+		APPLICATION_LISTENER.set(0);
+	}
+	
 	/**
 	 * testOrder()
 	 */
