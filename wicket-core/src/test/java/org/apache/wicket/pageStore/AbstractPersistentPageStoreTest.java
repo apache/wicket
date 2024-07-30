@@ -88,6 +88,8 @@ class AbstractPersistentPageStoreTest
 		};
 		assertTrue(store.canBeAsynchronous(context));
 		
+		store.destroy();
+		
 	}
 
 }

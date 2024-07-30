@@ -23,7 +23,11 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.Path;
+import java.util.Collections;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
@@ -55,8 +59,14 @@ class FileSystemResourceReferenceTest extends WicketTestCase
 		try
 		{
 			URL resource = FileSystemResourceReferenceTest.class.getResource("FileSystemResourceReferenceTest.zip");
-			Path path = FileSystemResourceReference.getPath(URI.create("jar:" + resource.toURI() +
-				"!/folderInZip/FileSystemResourceReference.txt"));
+			URI uri = URI.create("jar:" + resource.toURI() + "!/folderInZip/FileSystemResourceReference.txt");
+			FileSystem fs = null;
+			try {
+				fs = FileSystems.newFileSystem(uri, Collections.emptyMap());
+			} catch (FileSystemAlreadyExistsException e) {
+				fs = FileSystems.getFileSystem(uri);
+			}
+			Path path = fs.getPath("/folderInZip/FileSystemResourceReference.txt");
 			final FileSystemResource fileSystemResource = new FileSystemResource(path);
 			FileSystemResourceReference fileSystemResourceReference = new FileSystemResourceReference(
 				"test", path)
