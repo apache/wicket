@@ -63,6 +63,11 @@ public class DebugSettings
 	private boolean developmentUtilitiesEnabled = false;
 
 	/**
+	 * Configure noisy Logging in Exceptions
+	 */
+	private boolean loudExceptionLogging = true;
+
+	/**
 	 * @return true if componentUseCheck is enabled
 	 */
 	public boolean getComponentUseCheck()
@@ -273,20 +278,43 @@ public class DebugSettings
 	{
 		return developmentUtilitiesEnabled;
 	}
-	
+
+	/**
+	 * Configure the Logging of exceptions Development-Mode. True: As-is behavior. False: Remove the
+	 * additional Log-Lines with no informational value.
+	 *
+	 * @param loudExceptionLogging
+	 * 	true, or false (default: true)
+	 * @return this
+	 */
+	public DebugSettings setLoudExceptionLogging(boolean loudExceptionLogging)
+	{
+		this.loudExceptionLogging = loudExceptionLogging;
+		return this;
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isLoudExceptionLogging()
+	{
+		return loudExceptionLogging;
+	}
+
 	/**
 	 * Strategy for outputting the Java class name of a markup container
 	 */
-	public enum ClassOutputStrategy 
+	public enum ClassOutputStrategy
 	{
 		/**
 		 * Output the container's class name in an HTML comment
 		 */
-		HTML_COMMENT, 
+		HTML_COMMENT,
 		/**
 		 * Output the container's class name in a tag attribute
 		 */
-		TAG_ATTRIBUTE, 
+		TAG_ATTRIBUTE,
 		/**
 		 * Do not output the container's class name
 		 */
