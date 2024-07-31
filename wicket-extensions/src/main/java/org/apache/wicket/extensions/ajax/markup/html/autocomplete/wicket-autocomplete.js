@@ -333,9 +333,7 @@
 		}
 
 		function getAutocompleteContainer() {
-			var node=getAutocompleteMenu().parentNode;
-
-			return node;
+			return getAutocompleteMenu().parentNode;
 		}
 
 		function updateChoices(showAll){
@@ -400,10 +398,25 @@
 		}
 
 		function showAutoComplete() {
-			var input = Wicket.$(ajaxAttributes.c);
-			var container = getAutocompleteContainer();
-			var index=getOffsetParentZIndex(ajaxAttributes.c);
+			let input = Wicket.$(ajaxAttributes.c);
+			let container = getAutocompleteContainer();
+			let index=getOffsetParentZIndex(ajaxAttributes.c);
 			container.show();
+
+			// Accessibility
+			let container_jquery = $(container);
+			let size = container_jquery.find("li").size;
+
+			container_jquery.find("li").each((index, el) => {
+				$(el).attr("aria-posinset", index + 1).attr("aria-setsize", size).attr("tabindex", -1).attr("role", "option");
+			});
+
+			container_jquery.find("ul").each((i, el) => {
+				$(el).attr("id", "wicket-autocomplete-listbox-" + ajaxAttributes.c).attr("role", "listbox");
+			});
+			$(input).attr("aria-expanded", "true");
+
+
 			if (!isNaN(Number(index))) {
 				container.style.zIndex=(Number(index)+1);
 			}
@@ -441,6 +454,10 @@
 
 		function hideAutoComplete(){
 			hideAutoCompleteTimer = undefined;
+
+			var input = Wicket.$(ajaxAttributes.c);
+			$(input).attr("aria-expanded", "false");
+
 			visible = 0;
 			setSelected(-1);
 
@@ -458,7 +475,6 @@
 
 			if (triggerChangeOnHide) {
 				triggerChangeOnHide = false;
-				var input = Wicket.$(ajaxAttributes.c);
 				isTriggeredChange = true;
 				jQuery(input).trigger('change');
 			}
@@ -484,10 +500,10 @@
 
 		function getWindowScrollXY() {
 			var scrOfX = 0, scrOfY = 0;
-			if( typeof( window.pageYOffset ) === 'number' ) {
+			if( typeof( window.scrollY ) === 'number' ) {
 				//Netscape compliant
-				scrOfY = window.pageYOffset;
-				scrOfX = window.pageXOffset;
+				scrOfY = window.scrollY;
+				scrOfX = window.scrollX;
 			} else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
 				//DOM compliant
 				scrOfY = document.body.scrollTop;
@@ -758,12 +774,24 @@
 			{
 				var origClassNames = node.className;
 				var classNames = origClassNames.replace(re, "");
+
 				if(selected===i){
 					classNames += " selected";
+
+					if (node && node instanceof HTMLElement && node.attributes) {
+						node.setAttribute("aria-selected", "true");
+					}
+
 					if (adjustScroll) {
 						adjustScrollOffset(menu.parentNode, node);
 					}
 				}
+				else {
+					if (node && node instanceof HTMLElement && node.attributes) {
+						node.setAttribute("aria-selected", "false");
+					}
+				}
+
 				if (classNames !== origClassNames) {
 					node.className = classNames;
 				}
