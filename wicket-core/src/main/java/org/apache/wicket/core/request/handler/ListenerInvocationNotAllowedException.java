@@ -54,7 +54,8 @@ public class ListenerInvocationNotAllowedException extends RuntimeException
 
 		if (behavior != null)
 		{
-			detail.append(" Behavior: ").append(behavior);
+			detail.append(", behavior: ").append(behavior);
+
 		}
 		return detail.toString();
 	}
