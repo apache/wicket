@@ -407,11 +407,11 @@
 			var container_jquery = $(container);
 			var size = container_jquery.find("li").size;
 
-			container_jquery.find("li").each((index, el) => {
+			container_jquery.find("li").each(function (index, el) {
 				$(el).attr("aria-posinset", index + 1).attr("aria-setsize", size).attr("tabindex", -1).attr("role", "option");
 			});
 
-			container_jquery.find("ul").each((i, el) => {
+			container_jquery.find("ul").each(function (i, el) {
 				$(el).attr("id", "wicket-autocomplete-listbox-" + ajaxAttributes.c).attr("role", "listbox");
 			});
 			$(input).attr("aria-expanded", "true");
