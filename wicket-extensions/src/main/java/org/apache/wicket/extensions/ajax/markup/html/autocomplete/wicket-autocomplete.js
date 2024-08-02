@@ -398,14 +398,14 @@
 		}
 
 		function showAutoComplete() {
-			let input = Wicket.$(ajaxAttributes.c);
-			let container = getAutocompleteContainer();
-			let index=getOffsetParentZIndex(ajaxAttributes.c);
+			var input = Wicket.$(ajaxAttributes.c);
+			var container = getAutocompleteContainer();
+			var index=getOffsetParentZIndex(ajaxAttributes.c);
 			container.show();
 
 			// Accessibility
-			let container_jquery = $(container);
-			let size = container_jquery.find("li").size;
+			var container_jquery = $(container);
+			var size = container_jquery.find("li").size;
 
 			container_jquery.find("li").each((index, el) => {
 				$(el).attr("aria-posinset", index + 1).attr("aria-setsize", size).attr("tabindex", -1).attr("role", "option");
