@@ -284,6 +284,9 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 
 		// disable browser's autocomplete
 		tag.put("autocomplete", "off");
+		tag.put("role", "combobox");
+		tag.put("aria-autocomplete", "list");
+		tag.put("aria-controls", "wicket-autocomplete-listbox-" + getMarkupId());
 	}
 
 	/**
