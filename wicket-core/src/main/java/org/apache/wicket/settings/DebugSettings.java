@@ -63,11 +63,6 @@ public class DebugSettings
 	private boolean developmentUtilitiesEnabled = false;
 
 	/**
-	 * Configure noisy Logging in Exceptions
-	 */
-	private boolean loudExceptionLogging = true;
-
-	/**
 	 * @return true if componentUseCheck is enabled
 	 */
 	public boolean getComponentUseCheck()
@@ -277,29 +272,6 @@ public class DebugSettings
 	public boolean isDevelopmentUtilitiesEnabled()
 	{
 		return developmentUtilitiesEnabled;
-	}
-
-	/**
-	 * Configure the Logging of exceptions Development-Mode. True: As-is behavior. False: Remove the
-	 * additional Log-Lines with no informational value.
-	 *
-	 * @param loudExceptionLogging
-	 * 	true, or false (default: true)
-	 * @return this
-	 */
-	public DebugSettings setLoudExceptionLogging(boolean loudExceptionLogging)
-	{
-		this.loudExceptionLogging = loudExceptionLogging;
-		return this;
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	public boolean isLoudExceptionLogging()
-	{
-		return loudExceptionLogging;
 	}
 
 	/**

@@ -368,7 +368,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 		if (Application.exists() && Application.get().usesDevelopmentConfig())
 		{
-			var loudExceptionLogging = Application.get().getDebugSettings().isLoudExceptionLogging();
+			var loudExceptionLogging = Application.get().getExceptionSettings().isLoudExceptionLogging();
 			if (loudExceptionLogging) {
 				logExtra.warn("********************************");
 			}
