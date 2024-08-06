@@ -21,7 +21,7 @@ class ListenerInvocationNotAllowedExceptionTest
 		// Act
 
 		//Assert
-		assertThat(cut.getMessage()).startsWith("no no noComponent: [Component id = id] Path: id Behavior:");
+		assertThat(cut.getMessage()).startsWith("no no noComponent: [Component id = id], Path: id, Behavior:");
 	}
 
 }
