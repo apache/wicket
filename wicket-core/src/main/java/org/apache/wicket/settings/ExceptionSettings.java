@@ -226,9 +226,9 @@ public class ExceptionSettings
 	}
 
 	/**
-	 * Configure noisy Logging in Exceptions
+	 * Configure noisy Logging in Exceptions. Default: true.
 	 */
-	private boolean loudExceptionLogging;
+	private boolean loudExceptionLogging = true;
 
 	/**
 	 * Configure the Logging of exceptions Development-Mode. True: As-is behavior. False: Remove the
