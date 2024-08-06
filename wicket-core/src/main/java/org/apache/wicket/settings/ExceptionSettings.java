@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.settings;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.EnumeratedType;
+import org.slf4j.Logger;
 
 /**
- *
  * Settings class for configuring exception handling related settings.
  * <p>
  * <i>unexpectedExceptionDisplay </i> (defaults to SHOW_EXCEPTION_PAGE) - Determines how exceptions
@@ -41,6 +42,7 @@ import org.apache.wicket.util.lang.EnumeratedType;
  */
 public class ExceptionSettings
 {
+
 	/**
 	 * Enumerated type for different ways of displaying unexpected exceptions.
 	 */
@@ -59,26 +61,27 @@ public class ExceptionSettings
 	 * unexpected exception is thrown.
 	 */
 	public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-			"SHOW_EXCEPTION_PAGE");
+		"SHOW_EXCEPTION_PAGE");
 	/**
 	 * Indicates a generic internal error page should be shown when an unexpected exception is
 	 * thrown.
 	 */
 	public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
-			"SHOW_INTERNAL_ERROR_PAGE");
+		"SHOW_INTERNAL_ERROR_PAGE");
 
 	/**
 	 * Indicates that no exception page should be shown when an unexpected exception is thrown.
 	 */
 	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-			"SHOW_NO_EXCEPTION_PAGE");
+		"SHOW_NO_EXCEPTION_PAGE");
 
 	/**
 	 * How to handle errors while processing an Ajax request
 	 *
 	 * @author igor
 	 */
-	public enum AjaxErrorStrategy {
+	public enum AjaxErrorStrategy
+	{
 		/** redirect to error page, just like a normal requset */
 		REDIRECT_TO_ERROR_PAGE,
 		/** invoke client side failure handler */
@@ -90,7 +93,8 @@ public class ExceptionSettings
 	 *
 	 * @author papegaaij
 	 */
-	public enum ThreadDumpStrategy {
+	public enum ThreadDumpStrategy
+	{
 		/** Do not dump any stacktraces */
 		NO_THREADS,
 		/** Dump the stacktrace of the thread holding the lock */
@@ -100,15 +104,16 @@ public class ExceptionSettings
 	}
 
 	/**
-	 * A strategy defining what to do when a component that will not render its
-	 * markup tag (because of {@link org.apache.wicket.Component#setRenderBodyOnly(boolean) setRenderBodyOnly(true)}
-	 * or used with &lt;wicket:xyz&gt;) is also asked to output a
-	 * markup {@link org.apache.wicket.Component#setOutputMarkupId(boolean) id} or
-	 * {@link org.apache.wicket.Component#setOutputMarkupPlaceholderTag(boolean) placeholder tag}
+	 * A strategy defining what to do when a component that will not render its markup tag (because
+	 * of {@link Component#setRenderBodyOnly(boolean) setRenderBodyOnly(true)} or used with
+	 * &lt;wicket:xyz&gt;) is also asked to output a markup
+	 * {@link Component#setOutputMarkupId(boolean) id} or
+	 * {@link Component#setOutputMarkupPlaceholderTag(boolean) placeholder tag}
 	 */
-	public enum NotRenderableErrorStrategy {
+	public enum NotRenderableErrorStrategy
+	{
 		/**
-		 * Log a message with level {@link org.slf4j.Logger#warn(String) WARNING}
+		 * Log a message with level {@link Logger#warn(String) WARNING}
 		 */
 		LOG_WARNING,
 		/**
@@ -158,10 +163,11 @@ public class ExceptionSettings
 	 * ServletException wrapper.
 	 *
 	 * @param unexpectedExceptionDisplay
-	 *            The unexpectedExceptionDisplay to set.
+	 * 	The unexpectedExceptionDisplay to set.
 	 * @return {@code this} object for chaining
 	 */
-	public ExceptionSettings setUnexpectedExceptionDisplay(UnexpectedExceptionDisplay unexpectedExceptionDisplay)
+	public ExceptionSettings setUnexpectedExceptionDisplay(
+		UnexpectedExceptionDisplay unexpectedExceptionDisplay)
 	{
 		this.unexpectedExceptionDisplay = unexpectedExceptionDisplay;
 		return this;
@@ -208,11 +214,43 @@ public class ExceptionSettings
 		return threadDumpStrategy;
 	}
 
-	public NotRenderableErrorStrategy getNotRenderableErrorStrategy() {
+	public NotRenderableErrorStrategy getNotRenderableErrorStrategy()
+	{
 		return notRenderableErrorStrategy;
 	}
 
-	public void setNotRenderableErrorStrategy(final NotRenderableErrorStrategy notRenderableErrorStrategy) {
+	public void setNotRenderableErrorStrategy(
+		final NotRenderableErrorStrategy notRenderableErrorStrategy)
+	{
 		this.notRenderableErrorStrategy = notRenderableErrorStrategy;
+	}
+
+	/**
+	 * Configure noisy Logging in Exceptions. Default: true.
+	 */
+	private boolean loudExceptionLogging = true;
+
+	/**
+	 * Configure the Logging of exceptions Development-Mode. True: As-is behavior. False: Remove the
+	 * additional Log-Lines with no informational value.
+	 *
+	 * @param loudExceptionLogging
+	 * 	true, or false (default: true)
+	 * @return this
+	 */
+	public ExceptionSettings setLoudExceptionLogging(boolean loudExceptionLogging)
+	{
+		this.loudExceptionLogging = loudExceptionLogging;
+		return this;
+	}
+
+	/**
+	 * If additional Lines should be logged in Exceptions for better visibilty.
+	 *
+	 * @return true if yes, false if no
+	 */
+	public boolean isLoudExceptionLogging()
+	{
+		return loudExceptionLogging;
 	}
 }
