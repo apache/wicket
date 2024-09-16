@@ -1098,16 +1098,7 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Sets the default IFormSubmittingComponent. If set (not null), a hidden submit component will
-	 * be rendered right after the form tag, so that when users press enter in a textfield, this
-	 * submit component's action will be selected. If no default component is set (so unset by
-	 * calling this method with null), nothing additional is rendered.
-	 * <p>
-	 * WARNING: note that this is a best effort only. Unfortunately having a 'default' button in a
-	 * form is ill defined in the standards, and of course IE has it's own way of doing things.
-	 * </p>
-	 * There can be only one default button per form hierarchy. So if you set default button on a
-	 * nested form, it will actually delegate the call to root form. </b>
+	 * Sets the default IFormSubmittingComponent.
 	 *
 	 * @param submittingComponent
 	 *            The component to set as the default submitting component, or null when you want to
@@ -1115,14 +1106,7 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public final void setDefaultButton(IFormSubmittingComponent submittingComponent)
 	{
-		if (isRootForm())
-		{
-			defaultSubmittingComponent = submittingComponent;
-		}
-		else
-		{
-			getRootForm().setDefaultButton(submittingComponent);
-		}
+		defaultSubmittingComponent = submittingComponent;
 	}
 
 	/**
@@ -1310,14 +1294,13 @@ public class Form<T> extends WebMarkupContainer
 	protected void addDefaultSubmitButtonHandler(IHeaderResponse headerResponse)
 	{
 		final Component submittingComponent = (Component) defaultSubmittingComponent;
-		AppendingStringBuffer buffer = new AppendingStringBuffer();
-		buffer.append("var b=document.getElementById('");
-		buffer.append(submittingComponent.getMarkupId());
-		buffer.append("'); if (b!=null && b.onclick!=null && typeof(b.onclick) != 'undefined') ");
-		buffer.append(
-			"{  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;");
-		headerResponse.render(OnEventHeaderItem
-			.forMarkupId(getHiddenFieldsId(HIDDEN_FIELDS_SUBMIT_IDX), "click", buffer.toString()));
+
+		AppendingStringBuffer script = new AppendingStringBuffer();
+		script.append("if (event.which == 13) { var s = $('#");
+		script.append(submittingComponent.getMarkupId());
+		script.append("'); if (s.is(\":visible\")) s.click(); }");
+
+		headerResponse.render(OnEventHeaderItem.forMarkupId(getMarkupId(), "keypress", script.toString()));
 	}
 
 	/**
