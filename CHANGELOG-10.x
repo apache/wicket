@@ -2,6 +2,25 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.2.0
+
+** Bug
+
+    * [WICKET-7117] - 2 tests that fail under some circumstances
+    * [WICKET-7118] - Quickstart for 10.x doesn't start HTTPS
+    * [WICKET-7119] - 5 unit tests are non-idempotent (passes in the first run but fails in subsequent runs in the same environment)
+
+** Improvement
+
+    * [WICKET-7112] - Expand error messages in Component class
+    * [WICKET-7115] - Spelling corrections, and removal of non-breaking spaces. Some doc improvements
+    * [WICKET-7116] - Spelling corrections, and consistent heading case
+    * [WICKET-7120] - Improve Accessibility of AutoCompleteBehavior
+    * [WICKET-7121] - Make it possible to disable the noisy logs by RequestCycle
+    * [WICKET-7122] - Update Wicket-CDI bean archive descriptor to use Jakarta XML namespace
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.1.0
 
 ** Bug
