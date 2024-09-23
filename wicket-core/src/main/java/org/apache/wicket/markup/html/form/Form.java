@@ -1249,56 +1249,33 @@ public class Form<T> extends WebMarkupContainer
 		});
 	}
 
-	/**
-	 * If a default IFormSubmittingComponent was set on this form, this method will be called to
-	 * render an extra field with an invisible style so that pressing enter in one of the textfields
-	 * will do a form submit using this component. This method is overridable as what we do is best
-	 * effort only, and may not what you want in specific situations. So if you have specific
-	 * usability concerns, or want to follow another strategy, you may override this method.
-	 *
-	 * @see #addDefaultSubmitButtonHandler(IHeaderResponse)
-	 */
-	protected void appendDefaultButtonField()
-	{
-		AppendingStringBuffer buffer = new AppendingStringBuffer();
-
-		// hidden div
-		buffer.append(String.format("<div hidden=\"\" class=\"%s\">",
-			getString(HIDDEN_FIELDS_CSS_CLASS_KEY)));
-
-		// add an empty textfield (otherwise IE doesn't work)
-		buffer.append("<input type=\"text\" tabindex=\"-1\" autocomplete=\"off\"/>");
-
-		// add the submitting component
-		buffer
-			.append(String.format("<input id=\"%s\" type=\"submit\" tabindex=\"-1\" name=\"%s\" />",
-				getHiddenFieldsId(HIDDEN_FIELDS_SUBMIT_IDX),
-				defaultSubmittingComponent.getInputName()));
-
-		// close div
-		buffer.append("</div>");
-
-		getResponse().write(buffer);
-	}
 
 	/**
-	 * Where {@link #appendDefaultButtonField()} renders the markup for default submit button
-	 * handling, this method attaches the event handler to its 'click' event. The 'click' event on
-	 * the hidden submit button will be dispatched to the selected default submit button. As with
-	 * {@link #appendDefaultButtonField()} this method can be overridden when the generated code
-	 * needs to be adjusted for a specific usecase.
+	 * This method attaches the event handler to its 'enter' event.
 	 *
 	 * @param headerResponse
 	 *            The header response.
 	 */
 	protected void addDefaultSubmitButtonHandler(IHeaderResponse headerResponse)
 	{
-		final Component submittingComponent = (Component) defaultSubmittingComponent;
+		final Component component = (Component) defaultSubmittingComponent;
+		String submitId = component.getMarkupId();
 
 		AppendingStringBuffer script = new AppendingStringBuffer();
-		script.append("if (event.which == 13) { var s = $('#");
-		script.append(submittingComponent.getMarkupId());
-		script.append("'); if (s.is(\":visible\")) s.click(); }");
+		script.append("var s = $('#").append(submitId).append("');");
+		script.append("if (s.is(':hidden')) return;");
+		script.append("if (e.which == 13) {");
+		script.append("e.stopPropagation();");
+		script.append("e.preventDefault();");
+		script.append("var b = document.getElementById(").append(submitId).append(");");
+		script.append("if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {");
+		script.append("var r = Wicket.bind(b.onclick, b)();");
+		script.append("if (r != false) b.click();");
+		script.append("} else {");
+		script.append("b.click();");
+		script.append("}");
+		script.append("return false;");
+		script.append("}");
 
 		headerResponse.render(OnEventHeaderItem.forMarkupId(getMarkupId(), "keypress", script.toString()));
 	}
@@ -1775,8 +1752,7 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Writes the markup for the hidden input fields and default button field if applicable to the
-	 * current response.
+	 * Writes the markup for the hidden input fields if applicable to the current response.
 	 */
 	public final void writeHiddenFields()
 	{
@@ -1798,12 +1774,6 @@ public class Form<T> extends WebMarkupContainer
 			getResponse().write(buffer);
 		}
 		getResponse().write("</div>");
-
-		// if a default submitting component was set, handle the rendering of that
-		if (hasDefaultSubmittingComponent())
-		{
-			appendDefaultButtonField();
-		}
 	}
 
 	private boolean hasDefaultSubmittingComponent()
