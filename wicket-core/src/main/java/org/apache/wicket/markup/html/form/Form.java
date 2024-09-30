@@ -1273,11 +1273,11 @@ public class Form<T> extends WebMarkupContainer
 		String submitId = component.getMarkupId();
 
 		AppendingStringBuffer script = new AppendingStringBuffer();
-		script.append("if ($('#").append(submitId).append("').is(':hidden')) return;");
+		script.append("var b = document.getElementById('").append(submitId).append("');");
+		script.append("if (window.getComputedStyle(b).visibility === 'hidden') return;");
 		script.append("if (event.which == 13) {");
 		script.append("event.stopPropagation();");
 		script.append("event.preventDefault();");
-		script.append("var b = document.getElementById('").append(submitId).append("');");
 		script.append("if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {");
 		script.append("var r = Wicket.bind(b.onclick, b)();");
 		script.append("if (r != false) b.click();");
