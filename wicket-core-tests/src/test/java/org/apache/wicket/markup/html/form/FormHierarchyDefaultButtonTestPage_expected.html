@@ -1,0 +1,38 @@
+<html>
+<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-3.7.1.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
+<script type="text/javascript" id="wicket-ajax-debug-enable">
+/*<![CDATA[*/
+Wicket.Log.enabled=true;
+/*]]>*/
+</script>
+<script type="text/javascript" id="wicket-ajax-base-url">
+/*<![CDATA[*/
+Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.form.FormHierarchyDefaultButtonTestPage?0";
+/*]]>*/
+</script>
+<script type="text/javascript">
+/*<![CDATA[*/
+Wicket.Event.add(window, "domready", function(event) { 
+Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.form.FormHierarchyDefaultButtonTestPage?0-1.0-parentForm-parentSubmit","m":"POST","c":"parentSubmit2","f":"parentForm1","sc":"parentSubmit","e":"click"});;
+Wicket.Event.add('childForm4', 'keypress', function(event) { var b = document.getElementById('childSubmit3');if (window.getComputedStyle(b).visibility === 'hidden') return;if (event.which == 13) {event.stopPropagation();event.preventDefault();if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {var r = Wicket.bind(b.onclick, b)();if (r != false) b.click();} else {b.click();}return false;};});;
+Wicket.Event.add('parentForm1', 'keypress', function(event) { var b = document.getElementById('parentSubmit2');if (window.getComputedStyle(b).visibility === 'hidden') return;if (event.which == 13) {event.stopPropagation();event.preventDefault();if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {var r = Wicket.bind(b.onclick, b)();if (r != false) b.click();} else {b.click();}return false;};});;
+Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
+;});
+/*]]>*/
+</script>
+</head><body>
+<form wicket:id="parentForm" id="parentForm1" method="post" action="./org.apache.wicket.markup.html.form.FormHierarchyDefaultButtonTestPage?0-1.-parentForm"><div id="parentForm1_hf_0" hidden="" class="hidden-fields"></div>
+
+    <input type="text" wicket:id="parentInput" value="" name="parentInput"/>
+
+    <button wicket:id="parentSubmit" name="parentSubmit" id="parentSubmit2"></button>
+
+    <div wicket:id="childForm" id="childForm4">
+        <input type="text" wicket:id="childInput" value="" name="childForm:childInput"/>
+
+        <button wicket:id="childSubmit" name="childForm:childSubmit" id="childSubmit3"></button>
+    </div>
+</form>
+</body>
+</html>

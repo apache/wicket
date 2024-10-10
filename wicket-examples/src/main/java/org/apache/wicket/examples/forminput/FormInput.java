@@ -16,45 +16,40 @@
  */
 package org.apache.wicket.examples.forminput;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.convert.MaskConverter;
+import org.apache.wicket.validation.validator.RangeValidator;
+
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.Check;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.CheckGroup;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.form.ListMultipleChoice;
-import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioChoice;
-import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.convert.MaskConverter;
-import org.apache.wicket.validation.validator.RangeValidator;
-
-
 /**
  * Example for form input.
- * 
+ *
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
@@ -67,9 +62,9 @@ public class FormInput extends WicketExamplePage
 	{
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param name
-		 *            Component name
+		 * 	Component name
 		 */
 		@SuppressWarnings("serial")
 		public InputForm(String name)
@@ -80,9 +75,11 @@ public class FormInput extends WicketExamplePage
 			add(new LocaleDropDownChoice("localeSelect"));
 
 			// Link to return to default locale
-			add(new Link<Void>("defaultLocaleLink") {
-				public void onClick() {
-					WebRequest request = (WebRequest)getRequest();
+			add(new Link<Void>("defaultLocaleLink")
+			{
+				public void onClick()
+				{
+					WebRequest request = (WebRequest) getRequest();
 					setLocale(request.getLocale());
 				}
 			});
@@ -177,7 +174,8 @@ public class FormInput extends WicketExamplePage
 
 			add(new Button("saveButton"));
 
-			add(new Button("resetButton") {
+			add(new Button("resetButton")
+			{
 				@Override
 				public void onSubmit()
 				{
@@ -194,12 +192,14 @@ public class FormInput extends WicketExamplePage
 		}
 	}
 
-	/** list view to be nested in the form. */
+	/**
+	 * list view to be nested in the form.
+	 */
 	private static final class LinesListView extends ListView<String>
 	{
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param id
 		 */
 		public LinesListView(String id)
@@ -238,9 +238,9 @@ public class FormInput extends WicketExamplePage
 	{
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param id
-		 *            component id
+		 * 	component id
 		 */
 		public LocaleDropDownChoice(String id)
 		{
@@ -249,8 +249,9 @@ public class FormInput extends WicketExamplePage
 			// set the model that gets the current locale, and that is used for
 			// updating the current locale to property 'locale' of FormInput
 			setModel(new PropertyModel<>(FormInput.this, "locale"));
-			
-			add(new FormComponentUpdatingBehavior() {
+
+			add(new FormComponentUpdatingBehavior()
+			{
 				@Override
 				protected void onUpdate()
 				{
@@ -283,13 +284,35 @@ public class FormInput extends WicketExamplePage
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		add(feedback);
 		add(new InputForm("inputForm"));
+
+		IModel<ParentFormData> model = Model.of(new ParentFormData());
+
+		add(new ParentForm("parentForm", model)
+		{
+
+			@Override
+			public Component getParentFormDataTable()
+			{
+				return FormInput.this.get("parentFormDataTable");
+			}
+		});
+		add(new ParentFormDataTable("parentFormDataTable", model));
+
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(
+			CssHeaderItem.forReference(new CssResourceReference(FormInput.class, "forminput.css")));
 	}
 
 	/**
 	 * Sets locale for the user's session (getLocale() is inherited from Component)
-	 * 
+	 *
 	 * @param locale
-	 *            The new locale
+	 * 	The new locale
 	 */
 	public void setLocale(Locale locale)
 	{
@@ -320,6 +343,99 @@ public class FormInput extends WicketExamplePage
 		public String convertToString(URL value, Locale locale)
 		{
 			return value != null ? value.toString() : null;
+		}
+	}
+
+	private static class ParentForm extends Form<ParentFormData>
+	{
+
+		public ParentForm(String id, IModel<ParentFormData> model)
+		{
+			super(id);
+
+			TextField<?> parentText = new TextField<>("parentText", new PropertyModel<>(model, "parentText"));
+			add(parentText);
+
+			AjaxSubmitLink parentSubmit = new AjaxSubmitLink("parentSubmit")
+			{
+
+				@Override
+				protected void onSubmit(AjaxRequestTarget target)
+				{
+					info("Parent form submitted");
+
+					target.add(getParentFormDataTable());
+				}
+			};
+			add(parentSubmit);
+			setDefaultButton(parentSubmit);
+
+			Form<?> childForm = new Form<>("childForm");
+			add(childForm);
+
+			TextField<?> childText = new TextField<>("childText", new PropertyModel<>(model, "childText"));
+			childForm.add(childText);
+
+			AjaxSubmitLink childSubmit = new AjaxSubmitLink("childSubmit")
+			{
+
+				@Override
+				protected void onSubmit(AjaxRequestTarget target)
+				{
+					info("Child form submitted");
+
+					target.add(getParentFormDataTable());
+				}
+			};
+			childForm.add(childSubmit);
+			childForm.setDefaultButton(childSubmit);
+		}
+
+		public Component getParentFormDataTable()
+		{
+			return null;
+		}
+	}
+
+	private static final class ParentFormDataTable extends WebMarkupContainer
+	{
+
+		public ParentFormDataTable(String id, IModel<ParentFormData> model)
+		{
+			super(id);
+
+			setOutputMarkupId(true);
+
+			add(new Label("parentData", new PropertyModel<>(model, "parentText")));
+			add(new Label("childData", new PropertyModel<>(model, "childText")));
+		}
+	}
+
+	private static class ParentFormData implements Serializable
+	{
+
+		private String parentText;
+
+		private String childText;
+
+		public String getParentText()
+		{
+			return parentText;
+		}
+
+		public void setParentText(String parentText)
+		{
+			this.parentText = parentText;
+		}
+
+		public String getChildText()
+		{
+			return childText;
+		}
+
+		public void setChildText(String childText)
+		{
+			this.childText = childText;
 		}
 	}
 }

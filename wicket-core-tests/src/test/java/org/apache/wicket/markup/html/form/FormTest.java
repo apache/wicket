@@ -66,6 +66,15 @@ public class FormTest extends WicketTestCase
 	}
 
 	/**
+	 * WICKET-7123
+	 */
+	@Test
+	void defaultButtonHierarchy() throws Exception
+	{
+		executeTest(FormHierarchyDefaultButtonTestPage.class, "FormHierarchyDefaultButtonTestPage_expected.html");
+	}
+
+	/**
 	 * WICKET-6525 / WICKET-6348
 	 */
 	@Test
