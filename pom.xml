@@ -140,7 +140,7 @@
 		<maven.compiler.target>17</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<asm.version>9.7</asm.version>
+		<asm.version>9.7.1</asm.version>
 		<aspectj.version>1.9.22.1</aspectj.version>
 		<assertj-core.version>3.26.3</assertj-core.version>
 		<bouncycastle.version>1.78.1</bouncycastle.version>
