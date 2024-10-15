@@ -119,19 +119,20 @@
 				<input type="submit" wicket:id="childSubmit" wicket:message="value:FormInput.childSubmit"/>
 			</div>
 		</form>
+
+		<div wicket:id="parentFormDataTable" class="parent-data-table">
+			<h3><wicket:message key="FormInput.submittedData"/></h3>
+			<div class="gap-1">
+				<wicket:message key="FormInput.parentTextLabel"/>
+				<span wicket:id="parentData"/>
+			</div>
+			<div class="gap-1">
+				<wicket:message key="FormInput.childTextLabel"/>
+				<span wicket:id="childData"/>
+			</div>
+		</div>
 	</form>
 
-	<div wicket:id="parentFormDataTable" class="parent-data-table">
-		<h3><wicket:message key="FormInput.submittedData"/></h3>
-		<div class="gap-1">
-			<wicket:message key="FormInput.parentTextLabel"/>
-			<span wicket:id="parentData"/>
-		</div>
-		<div class="gap-1">
-			<wicket:message key="FormInput.childTextLabel"/>
-			<span wicket:id="childData"/>
-		</div>
-	</div>
 </wicket:extend>
 </body>
 </html>

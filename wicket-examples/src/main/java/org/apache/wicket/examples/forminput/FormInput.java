@@ -19,6 +19,8 @@ package org.apache.wicket.examples.forminput;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -281,23 +283,24 @@ public class FormInput extends WicketExamplePage
 	public FormInput()
 	{
 		// Construct form and feedback panel and hook them up
-		final FeedbackPanel feedback = new FeedbackPanel("feedback");
+		final FeedbackPanel feedback = new FeedbackPanel("feedback")
+		{
+			@Override
+			public void onEvent(IEvent<?> event) {
+				final Object payload = event.getPayload();
+				if (payload instanceof IPartialPageRequestHandler)
+				{
+					((IPartialPageRequestHandler) payload).add(this);
+				}
+			}
+		};
+		feedback.setOutputMarkupId(true);
 		add(feedback);
 		add(new InputForm("inputForm"));
 
 		IModel<ParentFormData> model = Model.of(new ParentFormData());
 
-		add(new ParentForm("parentForm", model)
-		{
-
-			@Override
-			public Component getParentFormDataTable()
-			{
-				return FormInput.this.get("parentFormDataTable");
-			}
-		});
-		add(new ParentFormDataTable("parentFormDataTable", model));
-
+		add(new ParentForm("parentForm", model));
 	}
 
 	@Override
@@ -353,8 +356,11 @@ public class FormInput extends WicketExamplePage
 		{
 			super(id);
 
-			TextField<?> parentText = new TextField<>("parentText", new PropertyModel<>(model, "parentText"));
+			TextField<String> parentText = new TextField<>("parentText", new PropertyModel<>(model, "parentText"));
 			add(parentText);
+
+			final ParentFormDataTable parentFormDataTable = new ParentFormDataTable("parentFormDataTable", model);
+			add(parentFormDataTable);
 
 			AjaxSubmitLink parentSubmit = new AjaxSubmitLink("parentSubmit")
 			{
@@ -364,16 +370,16 @@ public class FormInput extends WicketExamplePage
 				{
 					info("Parent form submitted");
 
-					target.add(getParentFormDataTable());
+					target.add(parentFormDataTable);
 				}
 			};
 			add(parentSubmit);
 			setDefaultButton(parentSubmit);
 
-			Form<?> childForm = new Form<>("childForm");
+			Form<Void> childForm = new Form<>("childForm");
 			add(childForm);
 
-			TextField<?> childText = new TextField<>("childText", new PropertyModel<>(model, "childText"));
+			TextField<String> childText = new TextField<>("childText", new PropertyModel<>(model, "childText"));
 			childForm.add(childText);
 
 			AjaxSubmitLink childSubmit = new AjaxSubmitLink("childSubmit")
@@ -384,16 +390,11 @@ public class FormInput extends WicketExamplePage
 				{
 					info("Child form submitted");
 
-					target.add(getParentFormDataTable());
+					target.add(parentFormDataTable);
 				}
 			};
 			childForm.add(childSubmit);
 			childForm.setDefaultButton(childSubmit);
-		}
-
-		public Component getParentFormDataTable()
-		{
-			return null;
 		}
 	}
 
