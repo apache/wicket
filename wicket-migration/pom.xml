@@ -17,9 +17,49 @@
                 <version>2.1.3</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>1.12.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrewrite.recipe</groupId>
+                <artifactId>rewrite-java</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.openrewrite.recipe</groupId>
+                        <artifactId>rewrite-xml</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.openrewrite.recipe</groupId>
+                        <artifactId>rewrite-yaml</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.openrewrite.recipe</groupId>
+                <artifactId>rewrite-migrate-java</artifactId>
+                <version>2.26.1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.openrewrite.recipe</groupId>
+                        <artifactId>rewrite-gradle</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.openrewrite.recipe</groupId>
+                        <artifactId>rewrite-java-8</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
                 <groupId>com.google.errorprone</groupId>
                 <artifactId>error_prone_annotations</artifactId>
-                <version>2.33.0</version>
+                <version>${error_prone_annotations.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-core</artifactId>
+                <version>1.13.5</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -37,7 +77,7 @@
             <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-recipe-bom</artifactId>
-                <version>2.9.0</version>
+                <version>2.21.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
