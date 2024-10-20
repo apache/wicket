@@ -152,7 +152,7 @@
 		<commons-lang3.version>3.17.0</commons-lang3.version>
 		<guice.version>7.0.0</guice.version>
 		<el-impl.version>2.2.1-b05</el-impl.version>
-		<error_prone_annotations.version>2.33.0</error_prone_annotations.version>
+		<error_prone_annotations.version>2.34.0</error_prone_annotations.version>
 		<forbiddenapis.version>3.8</forbiddenapis.version>
 		<jacoco.version>0.8.12</jacoco.version>
 		<jackson.version>2.14.3</jackson.version>
