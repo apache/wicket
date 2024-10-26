@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.core.request.resource;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -26,7 +30,10 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.request.Request;
@@ -43,6 +50,8 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReference.UrlAttributes;
 import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -394,6 +403,69 @@ class PackageResourceReferenceTest extends WicketTestCase
 		assertEquals(locales[1], resource.getResourceStream().getLocale());
 		assertEquals(styles[1], resource.getResourceStream().getStyle());
 		assertEquals(variations[1], resource.getResourceStream().getVariation());
+	}
+
+	@Test
+	public void getResouceWithNoStyle()
+	{
+		tester.executeUrl(
+			"wicket/resource/org.apache.wicket.core.request.resource.PackageResourceReferenceTest/a.css");
+
+		assertThat(tester.getLastResponseAsString(), not(containsString("color")));
+	}
+
+	@Test
+	public void getStyleFromSession()
+	{
+		tester.getSession().setStyle("blue");
+		tester.executeUrl(
+			"wicket/resource/org.apache.wicket.core.request.resource.PackageResourceReferenceTest/a.css");
+
+		assertThat(tester.getLastResponseAsString(), containsString("blue"));
+	}
+
+	@Test
+	public void decodeStyleFromUrl()
+	{
+		tester.getSession().setStyle("blue");
+		tester.executeUrl(
+			"wicket/resource/org.apache.wicket.core.request.resource.PackageResourceReferenceTest/a.css?-orange");
+
+		assertThat(tester.getLastResponseAsString(), containsString("orange"));
+	}
+
+	/**
+	 * @see https://issues.apache.org/jira/browse/WICKET-7024
+	 */
+	@Test
+	public void notDecodeStyleFromUrl()
+	{
+		tester.executeUrl(
+			"wicket/bookmarkable/org.apache.wicket.core.request.resource.PackageResourceReferenceTest$TestPage?0-1.0-resumeButton&_=1730041277224");
+
+		TestPage page = (TestPage)tester.getLastRenderedPage();
+
+		assertThat(page.resource.getStyle(), is(not("1.0")));
+	}
+
+	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	{
+		CssPackageResource resource;
+
+		@Override
+		protected void onConfigure()
+		{
+			super.onConfigure();
+			resource = (CssPackageResource)new PackageResourceReference(scope, "a.css")
+				.getResource();
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><head></head><body></body></html>");
+		}
 	}
 
 }

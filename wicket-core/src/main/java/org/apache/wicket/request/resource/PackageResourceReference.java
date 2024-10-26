@@ -26,6 +26,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.Packages;
@@ -114,7 +115,8 @@ public class PackageResourceReference extends ResourceReference
 
 		RequestCycle requestCycle = RequestCycle.get();
 		UrlAttributes urlAttributes = null;
-		if (requestCycle != null)
+		if (requestCycle != null
+			&& requestCycle.getActiveRequestHandler() instanceof ResourceReferenceRequestHandler)
 		{
 			//resource attributes (locale, style, variation) might be encoded in the URL
 			final Url url = requestCycle.getRequest().getUrl();
