@@ -181,7 +181,7 @@
 		<spring.version>6.1.14</spring.version>
 		<wagon-ssh-external.version>3.5.3</wagon-ssh-external.version>
 		<weld.version>4.0.3.Final</weld.version>
-		<velocity-engine-core.version>2.4</velocity-engine-core.version>
+		<velocity-engine-core.version>2.4.1</velocity-engine-core.version>
 
 		<!-- Maven plugins -->
 		<build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
