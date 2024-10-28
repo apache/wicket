@@ -432,6 +432,7 @@ class PackageResourceReferenceTest extends WicketTestCase
 			"wicket/resource/org.apache.wicket.core.request.resource.PackageResourceReferenceTest/a.css?-orange");
 
 		assertThat(tester.getLastResponseAsString(), containsString("orange"));
+		assertThat(tester.getLastResponseAsString(), not(containsString("blue")));
 	}
 
 	/**
@@ -445,7 +446,7 @@ class PackageResourceReferenceTest extends WicketTestCase
 
 		TestPage page = (TestPage)tester.getLastRenderedPage();
 
-		assertThat(page.resource.getStyle(), is(not("1.0")));
+		assertThat(page.resource.getStyle(), not(is("1.0")));
 	}
 
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
