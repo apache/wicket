@@ -531,8 +531,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	@Override
 	public IResourceStream getResourceStream()
 	{
-		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());
- 	}
+		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale(), isCachingEnabled());
+	}
 
 	/**
 	 * @return whether {@link org.apache.wicket.resource.ITextResourceCompressor} can be used to
@@ -552,13 +552,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		this.compress = compress;
 	}
 
-	private IResourceStream internalGetResourceStream(final String style, final Locale locale)
+	private IResourceStream internalGetResourceStream(final String style, final Locale locale, boolean updateCache)
 	{
 		IResourceStreamLocator resourceStreamLocator = Application.get()
 			.getResourceSettings()
 			.getResourceStreamLocator();
 		IResourceStream resourceStream = resourceStreamLocator.locate(getScope(), absolutePath,
-			style, variation, locale, null, false);
+			style, variation, locale, null, false, updateCache);
 
 		String realPath = absolutePath;
 		if (resourceStream instanceof IFixedLocationResourceStream)
@@ -855,4 +855,5 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		this.readBuffered = readBuffered;
 		return this;
 	}
+
 }

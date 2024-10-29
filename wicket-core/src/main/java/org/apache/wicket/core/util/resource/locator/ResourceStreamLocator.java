@@ -140,10 +140,25 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 	 * @see org.apache.wicket.core.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
 	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Locale,
 	 *      java.lang.String, boolean)
+	 * @deprecated
 	 */
 	@Override
 	public IResourceStream locate(final Class<?> clazz, String path, final String style,
 		final String variation, Locale locale, final String extension, final boolean strict)
+	{
+		return locate(clazz, path, style, variation, locale, extension, strict, true);
+	}
+
+	/**
+	 * 
+	 * @see org.apache.wicket.core.util.resource.locator.IResourceStreamLocator#locate(java.lang.Class,
+	 *      java.lang.String, java.lang.String, java.lang.String, java.util.Locale,
+	 *      java.lang.String, boolean)
+	 */
+	@Override
+	public IResourceStream locate(final Class<?> clazz, String path, final String style,
+		final String variation, Locale locale, final String extension, final boolean strict,
+		boolean updateCache)
 	{
 		// If path contains a locale, then it'll replace the locale provided to this method
 		PathLocale data = ResourceUtils.getLocaleFromFilename(path);
