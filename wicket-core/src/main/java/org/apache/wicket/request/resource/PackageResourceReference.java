@@ -18,6 +18,7 @@ package org.apache.wicket.request.resource;
 
 import static org.apache.wicket.util.resource.ResourceUtils.MIN_POSTFIX_DEFAULT_AS_EXTENSION;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentMap;
 
@@ -123,11 +124,41 @@ public class PackageResourceReference extends ResourceReference
 			urlAttributes = ResourceUtil.decodeResourceReferenceAttributes(url);
 		}
 
-		final String currentVariation = getCurrentVariation(urlAttributes);
-		final String currentStyle = getCurrentStyle(urlAttributes);
-		final Locale currentLocale = getCurrentLocale(urlAttributes);
-		final Class<?> scope = getScope();
-		final String name = getName();
+		String currentVariation = getCurrentVariation(urlAttributes);
+		String currentStyle = getCurrentStyle(urlAttributes);
+		Locale currentLocale = getCurrentLocale(urlAttributes);
+		Class<?> scope = getScope();
+		String name = getName();
+
+		if (urlAttributes != null) // sanitize
+		{
+			PackageResource urlResource = new PackageResource(scope, name, currentLocale,
+				currentStyle, currentVariation);
+			urlResource.setCachingEnabled(false);
+			IResourceStream filesystemMatch = urlResource.getResourceStream();
+
+			ResourceReference.Key urlKey = new ResourceReference.Key(scope.getName(), name,
+				currentLocale, currentStyle, currentVariation);
+
+			ResourceReference.Key filesystemKey = new ResourceReference.Key(scope.getName(), name,
+				filesystemMatch.getLocale(), filesystemMatch.getStyle(),
+				filesystemMatch.getVariation());
+
+			if (!urlKey.equals(filesystemKey))
+			{
+				currentLocale = filesystemKey.getLocale();
+				currentStyle = filesystemKey.getStyle();
+				currentVariation = filesystemKey.getVariation();
+			}
+			try
+			{
+				filesystemMatch.close();
+			}
+			catch (IOException e)
+			{
+				log.error("failed to close", e);
+			}
+		}
 
 		if (CSS_EXTENSION.equals(extension))
 		{

@@ -109,9 +109,19 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	@Override
 	public IResourceStream locate(Class<?> scope, String path, String style, String variation,
 		Locale locale, String extension, boolean strict)
+	{
+		return locate(scope, path, style, variation, locale, extension, strict, true);
+	}
+
+	@Override
+	public IResourceStream locate(Class<?> scope, String path, String style, String variation,
+		Locale locale, String extension, boolean strict, boolean updateCache)
 	{
 		CacheKey key = new CacheKey(scope.getName(), path, extension, locale, style, variation, strict);
 		IResourceStreamReference resourceStreamReference = cache.get(key);
@@ -119,9 +129,12 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 		final IResourceStream result;
 		if (resourceStreamReference == null)
 		{
-			result = delegate.locate(scope, path, style, variation, locale, extension, strict);
+			result = delegate.locate(scope, path, style, variation, locale, extension, strict, updateCache);
 
-			updateCache(key, result);
+			if (updateCache)
+			{
+				updateCache(key, result);
+			}
 		}
 		else
 		{
