@@ -738,7 +738,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 *            The component's variation (of the style)
 	 * @return {@code true} if a resource could be loaded, {@code false} otherwise
 	 *
-	 * @deprecated @see {@link PackageResource#exists(Class, String, Locale, String, String, boolean)}
+	 * @deprecated use {@link PackageResource#exists(Class, String, Locale, String, String, boolean)}
 	 */
 	public static boolean exists(final Class<?> scope, final String path, final Locale locale,
 		final String style, final String variation)

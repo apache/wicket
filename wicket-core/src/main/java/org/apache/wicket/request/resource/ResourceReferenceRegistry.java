@@ -187,7 +187,7 @@ public class ResourceReferenceRegistry
 	}
 
 	/**
-	 * @deprecated @see {@link ResourceReferenceRegistry#getResourceReference(Class, String, Locale, String, String, boolean, boolean, boolean)}
+	 * @deprecated use {@link ResourceReferenceRegistry#getResourceReference(Class, String, Locale, String, String, boolean, boolean, boolean)}
 	 */
 	public final ResourceReference getResourceReference(final Class<?> scope, final String name,
 		final Locale locale, final String style, final String variation, final boolean strict,
@@ -237,7 +237,7 @@ public class ResourceReferenceRegistry
 	}
 
 	/**
-	 * @deprecated @see {@link ResourceReferenceRegistry#getResourceReference(Key, boolean, boolean, boolean)}
+	 * @deprecated use {@link ResourceReferenceRegistry#getResourceReference(Key, boolean, boolean, boolean)}
 	 */
 	public final ResourceReference getResourceReference(final Key key, final boolean strict,
 		final boolean createIfNotFound){
@@ -262,7 +262,7 @@ public class ResourceReferenceRegistry
 	 * @param createIfNotFound
 	 *            If true a default resource reference is created if no entry can be found in the
 	 *            registry. The newly created resource reference will be added to the registry.
-	 * @param strict
+	 * @param updateCache
 	 *            If true, the server resource stream reference cache should be updated
 	 * @return Either the resource reference found in the registry or, if requested, a resource
 	 *         reference automatically created based on the parameters provided. The automatically
@@ -412,7 +412,7 @@ public class ResourceReferenceRegistry
 	}
 
 	/**
-	 * @deprecated @see {@link ResourceReferenceRegistry#createDefaultResourceReference(Key, boolean)}
+	 * @deprecated use {@link ResourceReferenceRegistry#createDefaultResourceReference(Key, boolean)}
 	 */
 	protected ResourceReference createDefaultResourceReference(final Key key)
 	{
