@@ -168,7 +168,7 @@ class CachingResourceStreamLocatorTest
 		FileResourceStream frs = new FileResourceStream(new File("."));
 
 		when(resourceStreamLocator.locate(String.class, "path", "style", "variation", null,
-			"extension", true, true)).thenReturn(frs);
+			"extension", true)).thenReturn(frs);
 
 		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(
 			resourceStreamLocator);
@@ -178,7 +178,7 @@ class CachingResourceStreamLocatorTest
 
 		// there is a file resource with that Key so expect just one call to the delegate
 		verify(resourceStreamLocator, times(1)).locate(String.class, "path", "style", "variation",
-			null, "extension", true, true);
+			null, "extension", true);
 	}
 
 	/**
@@ -192,7 +192,7 @@ class CachingResourceStreamLocatorTest
 		FileResourceStream frs = new FileResourceStream(new File("."));
 
 		when(resourceStreamLocator.locate(String.class, "path", "style", "variation", null,
-			"extension", true, true)).thenReturn(frs);
+			"extension", true)).thenReturn(frs);
 
 		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(
 			resourceStreamLocator);
@@ -203,9 +203,9 @@ class CachingResourceStreamLocatorTest
 
 		// there is a file resource with that Key so expect just one call to the delegate
 		verify(resourceStreamLocator, times(1)).locate(String.class, "path", "style", "variation",
-			null, "extension", true, true);
+			null, "extension", true);
 		verify(resourceStreamLocator, times(1)).locate(String.class, "path", "style", "variation",
-			null, "extension2", true, true);
+			null, "extension2", true);
 	}
 
 	/**
@@ -244,7 +244,7 @@ class CachingResourceStreamLocatorTest
 		StringResourceStream srs = new StringResourceStream("anything");
 
 		when(resourceStreamLocator.locate(String.class, "path", "style", "variation", null,
-			"extension", true, true)).thenReturn(srs);
+			"extension", true)).thenReturn(srs);
 
 		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(
 			resourceStreamLocator);
@@ -255,6 +255,6 @@ class CachingResourceStreamLocatorTest
 		// lightweight resource streams should not be cached so expect just a call to the delegate
 		// for each call to the caching locator
 		verify(resourceStreamLocator, times(2)).locate(String.class, "path", "style", "variation",
-			null, "extension", true, true);
+			null, "extension", true);
 	}
 }

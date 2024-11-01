@@ -32,6 +32,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.core.util.resource.locator.caching.CachingResourceStreamLocator;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.mock.MockWebRequest;
@@ -150,6 +151,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private boolean cachingEnabled = true;
 
 	/**
+	 * controls whether
+	 * {@link org.apache.wicket.core.util.resource.locator.caching.CachingResourceStreamLocator}
+	 * should update the cache
+	 */
+	private boolean serverResourceStreamReferenceCacheUpdate = true;
+
+	/**
 	 * text encoding (may be null) - only makes sense for character-based resources
 	 */
 	private String textEncoding = null;
@@ -238,6 +246,27 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	public void setCachingEnabled(final boolean enabled)
 	{
 		this.cachingEnabled = enabled;
+	}
+
+	/**
+	 * Returns true if the cache should be updated for this resource
+	 *
+	 * @return if the cache update is enabled
+	 */
+	public boolean isServerResourceStreamReferenceCacheUpdate()
+	{
+		return serverResourceStreamReferenceCacheUpdate;
+	}
+
+	/**
+	 * Sets the cache update for this resource to be enabled
+	 *
+	 * @param enabled
+	 * 	if the cache update should be enabled
+	 */
+	public void setServerResourceStreamReferenceCacheUpdate(final boolean enabled)
+	{
+		this.serverResourceStreamReferenceCacheUpdate = enabled;
 	}
 
 	/**
@@ -531,7 +560,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	@Override
 	public IResourceStream getResourceStream()
 	{
-		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale(), isCachingEnabled());
+		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale(), isServerResourceStreamReferenceCacheUpdate());
 	}
 
 	/**
@@ -557,8 +586,18 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		IResourceStreamLocator resourceStreamLocator = Application.get()
 			.getResourceSettings()
 			.getResourceStreamLocator();
-		IResourceStream resourceStream = resourceStreamLocator.locate(getScope(), absolutePath,
-			style, variation, locale, null, false, updateCache);
+		IResourceStream resourceStream = null;
+
+		if (resourceStreamLocator instanceof CachingResourceStreamLocator cache)
+		{
+			resourceStream = cache.locate(getScope(), absolutePath, style, variation, locale, null,
+				false, updateCache);
+		}
+		else
+		{
+			resourceStream = resourceStreamLocator.locate(getScope(), absolutePath, style,
+				variation, locale, null, false);
+		}
 
 		String realPath = absolutePath;
 		if (resourceStream instanceof IFixedLocationResourceStream)
@@ -854,6 +893,41 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	{
 		this.readBuffered = readBuffered;
 		return this;
+	}
+
+	public static ResourceReference.UrlAttributes sanitize(
+		ResourceReference.UrlAttributes urlAttributes, Class<?> scope, String name)
+	{
+		PackageResource urlResource = new PackageResource(scope, name, urlAttributes.getLocale(),
+			urlAttributes.getStyle(), urlAttributes.getVariation());
+		urlResource.setServerResourceStreamReferenceCacheUpdate(false);
+		IResourceStream filesystemMatch = urlResource.getResourceStream();
+
+		ResourceReference.Key urlKey = new ResourceReference.Key(scope.getName(), name,
+			urlAttributes.getLocale(), urlAttributes.getStyle(), urlAttributes.getVariation());
+
+		ResourceReference.Key filesystemKey = new ResourceReference.Key(scope.getName(), name,
+			filesystemMatch.getLocale(), filesystemMatch.getStyle(),
+			filesystemMatch.getVariation());
+
+		try
+		{
+			filesystemMatch.close();
+		}
+		catch (IOException e)
+		{
+			log.error("failed to close", e);
+		}
+
+		if (!urlKey.equals(filesystemKey))
+		{
+			return new ResourceReference.UrlAttributes(filesystemKey.getLocale(),
+				filesystemKey.getStyle(), filesystemKey.getVariation());
+		}
+		else
+		{
+			return urlAttributes;
+		}
 	}
 
 }

@@ -24,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +34,9 @@ import java.util.Locale;
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.core.util.resource.UrlResourceStream;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.core.util.resource.locator.caching.CachingResourceStreamLocator;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
@@ -50,10 +55,12 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReference.UrlAttributes;
 import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -62,6 +69,7 @@ import org.junit.jupiter.api.Test;
 class PackageResourceReferenceTest extends WicketTestCase
 {
 	private static Class<PackageResourceReferenceTest> scope = PackageResourceReferenceTest.class;
+	private static final Locale	defaultLocale = Locale.CHINA;
 	private static final Locale[] locales = { null, new Locale("en"), new Locale("en", "US") };
 	private static final String[] styles = { null, "style" };
 	private static final String[] variations = { null, "var" };
@@ -406,7 +414,7 @@ class PackageResourceReferenceTest extends WicketTestCase
 	}
 
 	@Test
-	public void getResouceWithNoStyle()
+	public void getResourceWithNoStyle()
 	{
 		tester.executeUrl(
 			"wicket/resource/org.apache.wicket.core.request.resource.PackageResourceReferenceTest/a.css");
@@ -433,6 +441,48 @@ class PackageResourceReferenceTest extends WicketTestCase
 
 		assertThat(tester.getLastResponseAsString(), containsString("orange"));
 		assertThat(tester.getLastResponseAsString(), not(containsString("blue")));
+	}
+
+	@Test
+	@Disabled
+	public void doNotFindResourceInTheCache()
+	{
+		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
+		when(resourceStreamLocator.locate(scope, "org/apache/wicket/core/request/resource/a.css",
+			"yellow", null, defaultLocale, null, false)).thenReturn(
+			new UrlResourceStream(scope.getResource("a.css")));
+
+		tester.getApplication().getResourceSettings()
+			.setResourceStreamLocator(new CachingResourceStreamLocator(resourceStreamLocator));
+
+		tester.executeUrl(
+			"wicket/resource/org.apache.wicket.core.request.resource.PackageResourceReferenceTest/a.css?-yellow");
+		tester.executeUrl(
+			"wicket/resource/org.apache.wicket.core.request.resource.PackageResourceReferenceTest/a.css?-yellow");
+
+		verify(resourceStreamLocator, times(2)).locate(PackageResourceReferenceTest.class,
+			"org/apache/wicket/core/request/resource/a.css", "yellow", null, defaultLocale, null, false);
+	}
+
+	@Test
+	public void doNotFindMountedResourceInTheCache()
+	{
+		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
+		when(resourceStreamLocator.locate(scope, "org/apache/wicket/core/request/resource/a.css",
+			"yellow", null, defaultLocale, null, false)).thenReturn(
+			new UrlResourceStream(scope.getResource("a.css")));
+
+		tester.getApplication().getResourceSettings()
+			.setResourceStreamLocator(new CachingResourceStreamLocator(resourceStreamLocator));
+		tester.getApplication()
+			.mountResource("/a.css", new PackageResourceReference(scope, "a.css"));
+
+		tester.executeUrl("a.css?-yellow");
+		tester.executeUrl("a.css?-yellow");
+
+		verify(resourceStreamLocator, times(2)).locate(scope,
+			"org/apache/wicket/core/request/resource/a.css", "yellow", null, defaultLocale, null,
+			false);
 	}
 
 	/**

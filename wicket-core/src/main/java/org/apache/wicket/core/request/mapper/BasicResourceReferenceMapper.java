@@ -27,10 +27,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.MetaInfStaticResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.ResourceReferenceRegistry;
+import org.apache.wicket.request.resource.*;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
@@ -132,6 +129,8 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 			ResourceReference.UrlAttributes attributes = ResourceUtil.decodeResourceReferenceAttributes(url);
 
 			Class<?> scope = resolveClass(className);
+
+			// attributes = PackageResource.sanitize(attributes, scope, name.toString());
 
 			if (scope != null && scope.getPackage() != null)
 			{

@@ -119,7 +119,6 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 		return locate(scope, path, style, variation, locale, extension, strict, true);
 	}
 
-	@Override
 	public IResourceStream locate(Class<?> scope, String path, String style, String variation,
 		Locale locale, String extension, boolean strict, boolean updateCache)
 	{
@@ -129,7 +128,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 		final IResourceStream result;
 		if (resourceStreamReference == null)
 		{
-			result = delegate.locate(scope, path, style, variation, locale, extension, strict, updateCache);
+			result = delegate.locate(scope, path, style, variation, locale, extension, strict);
 
 			if (updateCache)
 			{
