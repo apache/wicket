@@ -64,33 +64,9 @@ public interface IResourceStreamLocator
 	 * @param strict
 	 *            whether the specified attributes must match exactly
 	 * @return The resource or null
-	 * @deprecated
 	 */
 	IResourceStream locate(Class<?> clazz, String path, String style, String variation,
 		Locale locale, String extension, boolean strict);
-
-	/**
-	 * Locate a resource by combining the given path, style, variation, locale and extension
-	 * parameters. The exact search order depends on the implementation.
-	 * 
-	 * @param clazz
-	 *            The class loader for delegating the loading of the resource
-	 * @param path
-	 *            The path of the resource
-	 * @param style
-	 *            Any resource style, such as a skin style (see {@link org.apache.wicket.Session})
-	 * @param variation
-	 *            The component's variation (of the style)
-	 * @param locale
-	 *            The locale of the resource to load
-	 * @param extension
-	 *            A comma separate list of extensions
-	 * @param strict
-	 *            whether the specified attributes must match exactly
-	 * @return The resource or null
-	 */
-	IResourceStream locate(Class<?> clazz, String path, String style, String variation,
-		Locale locale, String extension, boolean strict, boolean updateCache);
 
 	/**
 	 * Markup resources and Properties files both need to iterate over different combinations of
