@@ -69,7 +69,7 @@ import org.junit.jupiter.api.Test;
 class PackageResourceReferenceTest extends WicketTestCase
 {
 	private static Class<PackageResourceReferenceTest> scope = PackageResourceReferenceTest.class;
-	private static final Locale	defaultLocale = Locale.CHINA;
+	private static final Locale defaultLocale = Locale.CHINA;
 	private static final Locale[] locales = { null, new Locale("en"), new Locale("en", "US") };
 	private static final String[] styles = { null, "style" };
 	private static final String[] variations = { null, "var" };
@@ -444,12 +444,14 @@ class PackageResourceReferenceTest extends WicketTestCase
 	}
 
 	@Test
-	@Disabled
 	public void doNotFindResourceInTheCache()
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 		when(resourceStreamLocator.locate(scope, "org/apache/wicket/core/request/resource/a.css",
 			"yellow", null, defaultLocale, null, false)).thenReturn(
+			new UrlResourceStream(scope.getResource("a.css")));
+		when(resourceStreamLocator.locate(scope, "org/apache/wicket/core/request/resource/a.css",
+			"yellow", null, null, null, false)).thenReturn(
 			new UrlResourceStream(scope.getResource("a.css")));
 
 		tester.getApplication().getResourceSettings()
@@ -460,8 +462,12 @@ class PackageResourceReferenceTest extends WicketTestCase
 		tester.executeUrl(
 			"wicket/resource/org.apache.wicket.core.request.resource.PackageResourceReferenceTest/a.css?-yellow");
 
+		// WICKET-7129: proposal to remove the duplicated resource resolution
 		verify(resourceStreamLocator, times(2)).locate(PackageResourceReferenceTest.class,
-			"org/apache/wicket/core/request/resource/a.css", "yellow", null, defaultLocale, null, false);
+			"org/apache/wicket/core/request/resource/a.css", "yellow", null, null, null, false);
+		verify(resourceStreamLocator, times(2)).locate(PackageResourceReferenceTest.class,
+			"org/apache/wicket/core/request/resource/a.css", "yellow", null, defaultLocale, null,
+			false);
 	}
 
 	@Test

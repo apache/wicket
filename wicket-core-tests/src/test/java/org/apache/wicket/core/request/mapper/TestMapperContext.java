@@ -126,7 +126,7 @@ public class TestMapperContext implements IMapperContext
 	private final ResourceReferenceRegistry registry = new ResourceReferenceRegistry()
 	{
 		@Override
-		protected ResourceReference createDefaultResourceReference(Key key)
+		protected ResourceReference createDefaultResourceReference(Key key, boolean updateCache)
 		{
 			// Do not create package resource here because it requires "real" application
 			return null;

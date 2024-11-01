@@ -737,15 +737,50 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * @param variation
 	 *            The component's variation (of the style)
 	 * @return {@code true} if a resource could be loaded, {@code false} otherwise
+	 *
+	 * @deprecated @see {@link PackageResource#exists(Class, String, Locale, String, String, boolean)}
 	 */
 	public static boolean exists(final Class<?> scope, final String path, final Locale locale,
 		final String style, final String variation)
 	{
+		return exists(scope, path, locale, style, variation, true);
+	}
+
+	/**
+	 * Checks whether a resource for a given set of criteria exists.
+	 *
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in. Typically this is the class in
+	 *            which you call this method
+	 * @param path
+	 *            The path to the resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The style of the resource (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The component's variation (of the style)
+	 * @param updateCache
+	 *            if the server resource stream reference cache should be updated
+	 * @return {@code true} if a resource could be loaded, {@code false} otherwise
+	 */
+	public static boolean exists(final Class<?> scope, final String path, final Locale locale,
+		final String style, final String variation, final boolean updateCache)
+	{
 		String absolutePath = Packages.absolutePath(scope, path);
-		return Application.get()
-			.getResourceSettings()
-			.getResourceStreamLocator()
-			.locate(scope, absolutePath, style, variation, locale, null, false) != null;
+		IResourceStreamLocator resourceStreamLocator = Application.get().getResourceSettings()
+			.getResourceStreamLocator();
+		if (resourceStreamLocator instanceof CachingResourceStreamLocator cache)
+		{
+			return cache.locate(scope, absolutePath, style, variation, locale, null, false,
+				updateCache) != null;
+		}
+		else
+		{
+			return resourceStreamLocator.locate(scope, absolutePath, style, variation, locale, null,
+				false) != null;
+		}
 	}
 
 	@Override
