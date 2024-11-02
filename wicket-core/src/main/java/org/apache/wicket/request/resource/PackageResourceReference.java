@@ -18,7 +18,6 @@ package org.apache.wicket.request.resource;
 
 import static org.apache.wicket.util.resource.ResourceUtils.MIN_POSTFIX_DEFAULT_AS_EXTENSION;
 
-import java.io.IOException;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentMap;
 

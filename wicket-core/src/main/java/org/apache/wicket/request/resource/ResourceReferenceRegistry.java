@@ -75,14 +75,8 @@ public class ResourceReferenceRegistry
 		@Override
 		public ResourceReference create(Key key)
 		{
-			return create(key, true);
-		}
-
-		public ResourceReference create(Key key, boolean updateCache)
-		{
 			ResourceReference result = null;
-			if (PackageResource.exists(key.getScopeClass(), key.getName(), key.getLocale(),
-				key.getStyle(), key.getVariation(), updateCache))
+			if (PackageResource.exists(key))
 			{
 				result = new PackageResourceReference(key);
 			}
@@ -187,27 +181,16 @@ public class ResourceReferenceRegistry
 	}
 
 	/**
-	 * @deprecated use {@link ResourceReferenceRegistry#getResourceReference(Class, String, Locale, String, String, boolean, boolean, boolean)}
-	 */
-	public final ResourceReference getResourceReference(final Class<?> scope, final String name,
-		final Locale locale, final String style, final String variation, final boolean strict,
-		final boolean createIfNotFound)
-	{
-		return getResourceReference(scope, name, locale, style, variation, strict, createIfNotFound,
-			true);
-	}
-
-	/**
 	 * Get a resource reference matching the parameters from the registry or if not found and
 	 * requested, create an default resource reference and add it to the registry.
 	 * <p>
 	 * Part of the search is scanning the class (scope) and it's superclass for static
 	 * ResourceReference fields. Found fields get registered automatically (but are different from
 	 * auto-generated ResourceReferences).
-	 *
+	 * 
 	 * @see #createDefaultResourceReference(org.apache.wicket.request.resource.ResourceReference.Key)
 	 * @see ClassScanner
-	 *
+	 * 
 	 * @param scope
 	 *            The scope of resource reference (e.g. the Component's class)
 	 * @param name
@@ -223,25 +206,16 @@ public class ResourceReferenceRegistry
 	 * @param createIfNotFound
 	 *            If true a default resource reference is created if no entry can be found in the
 	 *            registry. The newly created resource reference will be added to the registry.
-	 * @param updateCache
-	 *            If true, the server resource stream reference cache should be updated
 	 * @return Either the resource reference found in the registry or, if requested, a resource
 	 *         reference automatically created based on the parameters provided. The automatically
 	 *         created resource reference will automatically be added to the registry.
 	 */
-	public ResourceReference getResourceReference(Class<?> scope, String name, Locale locale,
-		String style, String variation, boolean strict, boolean createIfNotFound, boolean updateCache)
+	public final ResourceReference getResourceReference(final Class<?> scope, final String name,
+		final Locale locale, final String style, final String variation, final boolean strict,
+		final boolean createIfNotFound)
 	{
 		return getResourceReference(new Key(scope.getName(), name, locale, style, variation),
-			strict, createIfNotFound, updateCache);
-	}
-
-	/**
-	 * @deprecated use {@link ResourceReferenceRegistry#getResourceReference(Key, boolean, boolean, boolean)}
-	 */
-	public final ResourceReference getResourceReference(final Key key, final boolean strict,
-		final boolean createIfNotFound){
-		return getResourceReference(key, strict, createIfNotFound, true);
+			strict, createIfNotFound);
 	}
 
 	/**
@@ -262,14 +236,12 @@ public class ResourceReferenceRegistry
 	 * @param createIfNotFound
 	 *            If true a default resource reference is created if no entry can be found in the
 	 *            registry. The newly created resource reference will be added to the registry.
-	 * @param updateCache
-	 *            If true, the server resource stream reference cache should be updated
 	 * @return Either the resource reference found in the registry or, if requested, a resource
 	 *         reference automatically created based on the parameters provided. The automatically
 	 *         created resource reference will automatically be added to the registry.
 	 */
 	public final ResourceReference getResourceReference(final Key key, final boolean strict,
-		final boolean createIfNotFound, boolean updateCache)
+		final boolean createIfNotFound)
 	{
 		ResourceReference resource = _getResourceReference(key.getScope(), key.getName(),
 			key.getLocale(), key.getStyle(), key.getVariation(), strict);
@@ -290,7 +262,7 @@ public class ResourceReferenceRegistry
 			// Still nothing found => Shall a new reference be auto-created?
 			if ((resource == null) && createIfNotFound)
 			{
-				resource = addDefaultResourceReference(key, updateCache);
+				resource = addDefaultResourceReference(key);
 			}
 		}
 
@@ -362,12 +334,12 @@ public class ResourceReferenceRegistry
 	 *      the data making up the resource reference
 	 * @return The default resource created
 	 */
-	private ResourceReference addDefaultResourceReference(final Key key, final boolean updateCache)
+	private ResourceReference addDefaultResourceReference(final Key key)
 	{
 		// Can be subclassed to create other than PackagedResourceReference
-		ResourceReference reference = createDefaultResourceReference(key, updateCache);
+		ResourceReference reference = createDefaultResourceReference(key);
 
-		if (reference != null && updateCache)
+		if (reference != null)
 		{
 			// number of RRs which can be auto-added is restricted (cache size). Remove entries, and
 			// unregister excessive ones, if needed.
@@ -412,14 +384,6 @@ public class ResourceReferenceRegistry
 	}
 
 	/**
-	 * @deprecated use {@link ResourceReferenceRegistry#createDefaultResourceReference(Key, boolean)}
-	 */
-	protected ResourceReference createDefaultResourceReference(final Key key)
-	{
-		return createDefaultResourceReference(key, true);
-	}
-
-	/**
 	 * Creates a default resource reference in case no registry entry and it was requested to create
 	 * one.
 	 * <p>
@@ -429,20 +393,14 @@ public class ResourceReferenceRegistry
 	 *      the data making up the resource reference
 	 * @return The {@link ResourceReference} created or {@code null} if not successful
 	 */
-	protected ResourceReference createDefaultResourceReference(final Key key, final boolean updateCache)
+	protected ResourceReference createDefaultResourceReference(final Key key)
 	{
 		IResourceReferenceFactory factory = getResourceReferenceFactory();
 		if (factory == null)
 		{
 			factory = new DefaultResourceReferenceFactory();
 		}
-		if (factory instanceof DefaultResourceReferenceFactory defaultFactory)
-		{
-			return defaultFactory.create(key, updateCache);
-
-		} else {
-			return factory.create(key);
-		}
+		return factory.create(key);
 	}
 
 	/**

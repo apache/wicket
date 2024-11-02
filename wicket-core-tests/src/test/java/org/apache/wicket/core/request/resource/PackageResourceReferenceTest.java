@@ -448,9 +448,6 @@ class PackageResourceReferenceTest extends WicketTestCase
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 		when(resourceStreamLocator.locate(scope, "org/apache/wicket/core/request/resource/a.css",
-			"yellow", null, defaultLocale, null, false)).thenReturn(
-			new UrlResourceStream(scope.getResource("a.css")));
-		when(resourceStreamLocator.locate(scope, "org/apache/wicket/core/request/resource/a.css",
 			"yellow", null, null, null, false)).thenReturn(
 			new UrlResourceStream(scope.getResource("a.css")));
 
@@ -462,12 +459,8 @@ class PackageResourceReferenceTest extends WicketTestCase
 		tester.executeUrl(
 			"wicket/resource/org.apache.wicket.core.request.resource.PackageResourceReferenceTest/a.css?-yellow");
 
-		// WICKET-7129: proposal to remove the duplicated resource resolution
 		verify(resourceStreamLocator, times(2)).locate(PackageResourceReferenceTest.class,
 			"org/apache/wicket/core/request/resource/a.css", "yellow", null, null, null, false);
-		verify(resourceStreamLocator, times(2)).locate(PackageResourceReferenceTest.class,
-			"org/apache/wicket/core/request/resource/a.css", "yellow", null, defaultLocale, null,
-			false);
 	}
 
 	@Test
@@ -475,7 +468,7 @@ class PackageResourceReferenceTest extends WicketTestCase
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 		when(resourceStreamLocator.locate(scope, "org/apache/wicket/core/request/resource/a.css",
-			"yellow", null, defaultLocale, null, false)).thenReturn(
+			"yellow", null, null, null, false)).thenReturn(
 			new UrlResourceStream(scope.getResource("a.css")));
 
 		tester.getApplication().getResourceSettings()
@@ -487,12 +480,11 @@ class PackageResourceReferenceTest extends WicketTestCase
 		tester.executeUrl("a.css?-yellow");
 
 		verify(resourceStreamLocator, times(2)).locate(scope,
-			"org/apache/wicket/core/request/resource/a.css", "yellow", null, defaultLocale, null,
-			false);
+			"org/apache/wicket/core/request/resource/a.css", "yellow", null, null, null, false);
 	}
 
 	/**
-	 * @see https://issues.apache.org/jira/browse/WICKET-7024
+	 * https://issues.apache.org/jira/browse/WICKET-7024
 	 */
 	@Test
 	public void notDecodeStyleFromUrl()

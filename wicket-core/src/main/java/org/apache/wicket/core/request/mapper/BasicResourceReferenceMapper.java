@@ -132,17 +132,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 
 			if (scope != null && scope.getPackage() != null)
 			{
-				ResourceReference auxRes = getContext().getResourceReferenceRegistry()
-					.getResourceReference(scope, name.toString(), attributes.getLocale(),
-						attributes.getStyle(), attributes.getVariation(), true, true, false);
-				if (auxRes != null)
-				{
-					IResource resource = auxRes.getResource();
-					if (resource instanceof PackageResource packageResource)
-					{
-						attributes = PackageResource.sanitize(attributes, scope, name.toString());
-					}
-				}
+				attributes = PackageResource.sanitize(attributes, scope, name.toString());
 
 				ResourceReference res = getContext().getResourceReferenceRegistry()
 					.getResourceReference(scope, name.toString(), attributes.getLocale(),

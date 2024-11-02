@@ -29,7 +29,11 @@ import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.resource.*;
+import org.apache.wicket.request.resource.CssPackageResource;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.PackageResource;
+import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -50,7 +54,7 @@ class LessResourceReferenceTest extends WicketTestCase
 	 * An {@link org.apache.wicket.request.resource.IResourceReferenceFactory} that creates
 	 * LessResourceReference for resources with extension '.less'
 	 */
-	static class LessResourceReferenceFactory implements IResourceReferenceFactory
+	static class LessResourceReferenceFactory extends ResourceReferenceRegistry.DefaultResourceReferenceFactory
 	{
 		@Override
 		public ResourceReference create(ResourceReference.Key key)
@@ -64,8 +68,7 @@ class LessResourceReferenceTest extends WicketTestCase
 				}
 				else
 				{
-					result = new ResourceReferenceRegistry.DefaultResourceReferenceFactory().create(
-						key);
+					result = super.create(key);
 				}
 			}
 			return result;

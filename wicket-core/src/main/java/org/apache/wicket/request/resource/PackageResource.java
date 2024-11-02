@@ -151,13 +151,6 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private boolean cachingEnabled = true;
 
 	/**
-	 * controls whether
-	 * {@link org.apache.wicket.core.util.resource.locator.caching.CachingResourceStreamLocator}
-	 * should update the cache
-	 */
-	private boolean serverResourceStreamReferenceCacheUpdate = true;
-
-	/**
 	 * text encoding (may be null) - only makes sense for character-based resources
 	 */
 	private String textEncoding = null;
@@ -246,27 +239,6 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	public void setCachingEnabled(final boolean enabled)
 	{
 		this.cachingEnabled = enabled;
-	}
-
-	/**
-	 * Returns true if the cache should be updated for this resource
-	 *
-	 * @return if the cache update is enabled
-	 */
-	public boolean isServerResourceStreamReferenceCacheUpdate()
-	{
-		return serverResourceStreamReferenceCacheUpdate;
-	}
-
-	/**
-	 * Sets the cache update for this resource to be enabled
-	 *
-	 * @param enabled
-	 * 	if the cache update should be enabled
-	 */
-	public void setServerResourceStreamReferenceCacheUpdate(final boolean enabled)
-	{
-		this.serverResourceStreamReferenceCacheUpdate = enabled;
 	}
 
 	/**
@@ -560,8 +532,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	@Override
 	public IResourceStream getResourceStream()
 	{
-		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale(), isServerResourceStreamReferenceCacheUpdate());
-	}
+		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());
+ 	}
 
 	/**
 	 * @return whether {@link org.apache.wicket.resource.ITextResourceCompressor} can be used to
@@ -581,23 +553,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		this.compress = compress;
 	}
 
-	private IResourceStream internalGetResourceStream(final String style, final Locale locale, boolean updateCache)
+	private IResourceStream internalGetResourceStream(final String style, final Locale locale)
 	{
 		IResourceStreamLocator resourceStreamLocator = Application.get()
 			.getResourceSettings()
 			.getResourceStreamLocator();
-		IResourceStream resourceStream = null;
-
-		if (resourceStreamLocator instanceof CachingResourceStreamLocator cache)
-		{
-			resourceStream = cache.locate(getScope(), absolutePath, style, variation, locale, null,
-				false, updateCache);
-		}
-		else
-		{
-			resourceStream = resourceStreamLocator.locate(getScope(), absolutePath, style,
-				variation, locale, null, false);
-		}
+		IResourceStream resourceStream = resourceStreamLocator.locate(getScope(), absolutePath,
+			style, variation, locale, null, false);
 
 		String realPath = absolutePath;
 		if (resourceStream instanceof IFixedLocationResourceStream)
@@ -737,35 +699,14 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * @param variation
 	 *            The component's variation (of the style)
 	 * @return {@code true} if a resource could be loaded, {@code false} otherwise
-	 *
-	 * @deprecated use {@link PackageResource#exists(Class, String, Locale, String, String, boolean)}
 	 */
 	public static boolean exists(final Class<?> scope, final String path, final Locale locale,
 		final String style, final String variation)
 	{
-		return exists(scope, path, locale, style, variation, true);
+		return getResourceStream(scope, path, locale, style, variation, true) != null;
 	}
 
-	/**
-	 * Checks whether a resource for a given set of criteria exists.
-	 *
-	 * @param scope
-	 *            This argument will be used to get the class loader for loading the package
-	 *            resource, and to determine what package it is in. Typically this is the class in
-	 *            which you call this method
-	 * @param path
-	 *            The path to the resource
-	 * @param locale
-	 *            The locale of the resource
-	 * @param style
-	 *            The style of the resource (see {@link org.apache.wicket.Session})
-	 * @param variation
-	 *            The component's variation (of the style)
-	 * @param updateCache
-	 *            if the server resource stream reference cache should be updated
-	 * @return {@code true} if a resource could be loaded, {@code false} otherwise
-	 */
-	public static boolean exists(final Class<?> scope, final String path, final Locale locale,
+	private static IResourceStream getResourceStream(final Class<?> scope, final String path, final Locale locale,
 		final String style, final String variation, final boolean updateCache)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
@@ -773,13 +714,11 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			.getResourceStreamLocator();
 		if (resourceStreamLocator instanceof CachingResourceStreamLocator cache)
 		{
-			return cache.locate(scope, absolutePath, style, variation, locale, null, false,
-				updateCache) != null;
+			return cache.locate(scope, absolutePath, style, variation, locale, null, false, updateCache);
 		}
 		else
 		{
-			return resourceStreamLocator.locate(scope, absolutePath, style, variation, locale, null,
-				false) != null;
+			return resourceStreamLocator.locate(scope, absolutePath, style, variation, locale, null, false);
 		}
 	}
 
@@ -933,10 +872,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	public static ResourceReference.UrlAttributes sanitize(
 		ResourceReference.UrlAttributes urlAttributes, Class<?> scope, String name)
 	{
-		PackageResource urlResource = new PackageResource(scope, name, urlAttributes.getLocale(),
-			urlAttributes.getStyle(), urlAttributes.getVariation());
-		urlResource.setServerResourceStreamReferenceCacheUpdate(false);
-		IResourceStream filesystemMatch = urlResource.getResourceStream();
+		IResourceStream filesystemMatch = getResourceStream(scope, name, urlAttributes.getLocale(),
+			urlAttributes.getStyle(), urlAttributes.getVariation(), false);
+
+		if (filesystemMatch == null)
+		{
+			return urlAttributes;
+		}
 
 		ResourceReference.Key urlKey = new ResourceReference.Key(scope.getName(), name,
 			urlAttributes.getLocale(), urlAttributes.getStyle(), urlAttributes.getVariation());
