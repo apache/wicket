@@ -869,24 +869,19 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		return this;
 	}
 
+	/**
+	 * @return UrlAttributes with an existent locale/style/variation if a resource is bound to the
+	 * 	scope+name
+	 */
 	public static ResourceReference.UrlAttributes sanitize(
 		ResourceReference.UrlAttributes urlAttributes, Class<?> scope, String name)
 	{
 		IResourceStream filesystemMatch = getResourceStream(scope, name, urlAttributes.getLocale(),
 			urlAttributes.getStyle(), urlAttributes.getVariation(), false);
-
 		if (filesystemMatch == null)
 		{
 			return urlAttributes;
 		}
-
-		ResourceReference.Key urlKey = new ResourceReference.Key(scope.getName(), name,
-			urlAttributes.getLocale(), urlAttributes.getStyle(), urlAttributes.getVariation());
-
-		ResourceReference.Key filesystemKey = new ResourceReference.Key(scope.getName(), name,
-			filesystemMatch.getLocale(), filesystemMatch.getStyle(),
-			filesystemMatch.getVariation());
-
 		try
 		{
 			filesystemMatch.close();
@@ -895,16 +890,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		{
 			log.error("failed to close", e);
 		}
-
-		if (!urlKey.equals(filesystemKey))
-		{
-			return new ResourceReference.UrlAttributes(filesystemKey.getLocale(),
-				filesystemKey.getStyle(), filesystemKey.getVariation());
-		}
-		else
-		{
-			return urlAttributes;
-		}
+		return new ResourceReference.UrlAttributes(filesystemMatch.getLocale(),
+			filesystemMatch.getStyle(), filesystemMatch.getVariation());
 	}
 
 }
