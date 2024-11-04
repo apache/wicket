@@ -41,6 +41,9 @@ import org.apache.wicket.util.ValueProvider;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTester;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -60,6 +63,20 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 			return context;
 		}
 	};
+
+	WicketTester tester;
+	@Before
+	public void setup()
+	{
+		// set the application ResourceSettings, used by the BasicResourceReferenceMapper
+		tester = new WicketTester();
+	}
+
+	@After
+	public void destroy()
+	{
+		tester.destroy();
+	}
 
 	/**
 	 *
