@@ -444,6 +444,25 @@ class PackageResourceReferenceTest extends WicketTestCase
 	}
 
 	@Test
+	public void doNotFindNullResourceInTheCache()
+	{
+		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
+		when(resourceStreamLocator.locate(scope, "org/apache/wicket/core/request/resource/z.css",
+			"orange", null, null, null, false)).thenReturn(null);
+
+		tester.getApplication().getResourceSettings()
+			.setResourceStreamLocator(new CachingResourceStreamLocator(resourceStreamLocator));
+
+		tester.executeUrl(
+			"wicket/resource/org.apache.wicket.core.request.resource.PackageResourceReferenceTest/z.css?-orange");
+		tester.executeUrl(
+			"wicket/resource/org.apache.wicket.core.request.resource.PackageResourceReferenceTest/z.css?-orange");
+
+		verify(resourceStreamLocator, times(2)).locate(PackageResourceReferenceTest.class,
+			"org/apache/wicket/core/request/resource/z.css", "orange", null, null, null, false);
+	}
+
+	@Test
 	public void doNotFindResourceInTheCache()
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);

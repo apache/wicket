@@ -871,7 +871,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 	/**
 	 * @return UrlAttributes with an existent locale/style/variation if a resource is bound to the
-	 * 	scope+name
+	 * 	scope+name, otherwise returns null
 	 */
 	public static ResourceReference.UrlAttributes sanitize(
 		ResourceReference.UrlAttributes urlAttributes, Class<?> scope, String name)
@@ -880,7 +880,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			urlAttributes.getStyle(), urlAttributes.getVariation(), false);
 		if (filesystemMatch == null)
 		{
-			return urlAttributes;
+			return null;
 		}
 		try
 		{

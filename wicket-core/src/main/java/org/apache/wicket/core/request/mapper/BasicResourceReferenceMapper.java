@@ -132,11 +132,17 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 
 			if (scope != null && scope.getPackage() != null)
 			{
-				attributes = PackageResource.sanitize(attributes, scope, name.toString());
+				ResourceReference.UrlAttributes sanitized = PackageResource.sanitize(attributes, scope, name.toString());
+				boolean createIfNotFound = false;
+				if (sanitized != null)
+				{
+					attributes = sanitized;
+					createIfNotFound = true;
+				}
 
 				ResourceReference res = getContext().getResourceReferenceRegistry()
 					.getResourceReference(scope, name.toString(), attributes.getLocale(),
-						attributes.getStyle(), attributes.getVariation(), true, true);
+						attributes.getStyle(), attributes.getVariation(), true, createIfNotFound);
 
 				if (res != null)
 				{
