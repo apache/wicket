@@ -23,18 +23,17 @@
 		<version>10.3.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>wicket-cdi</artifactId>
+	<artifactId>wicket-cdi-tests</artifactId>
 	<packaging>jar</packaging>
-	<name>Wicket CDI</name>
+	<name>Wicket CDI tests</name>
 	<description>
-		Provides integration between Wicket and CDI containers. Enables injection of
-		components and behaviors, as well as other non-contextual object instances.
-		Also enables propagation of conversations between wicket artifacts such as pages
-		and resources.
+		Provides tests for the Wicket and CDI module.
 	</description>
 	<properties>
 		<osgi.export.package>org.apache.wicket.cdi*;-noimport:=true</osgi.export.package>
 		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+		<maven.deploy.skip>true</maven.deploy.skip>
+		<japicmp.skip>true</japicmp.skip> <!-- this module is not released -->
 	</properties>
 	<dependencies>
 		<dependency>
@@ -51,20 +50,44 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-core</artifactId>
+			<artifactId>wicket-cdi</artifactId>
+		</dependency>
+		<dependency>
+		  <groupId>io.github.cdi-unit</groupId>
+		  <artifactId>cdi-unit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-tester</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.weld.module</groupId>
+			<artifactId>weld-web</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.weld.se</groupId>
+			<artifactId>weld-se-core</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-enforcer-plugin</artifactId>
-					<configuration>
-						<skip>true</skip>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+        		<executions>
+          			<execution>
+						<id>test-compile</id>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+						<configuration>
+							<useModulePath>false</useModulePath>
+						</configuration>
+          			</execution>
+       			</executions>
+			</plugin>
+		</plugins>
 	</build>
 </project>
