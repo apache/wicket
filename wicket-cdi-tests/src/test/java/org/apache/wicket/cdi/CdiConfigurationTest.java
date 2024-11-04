@@ -32,8 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * @author jsarman
  */
-// FIXME Wicket 11. Re-enable once the tests are moved to its own module
-@Disabled
 @ActivatedAlternatives(AlternativeTestAppScope.class)
 class CdiConfigurationTest extends WicketCdiTestCase
 {

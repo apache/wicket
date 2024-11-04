@@ -22,7 +22,6 @@ import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestConversationalPage;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import jakarta.enterprise.context.Conversation;
@@ -31,8 +30,6 @@ import jakarta.inject.Inject;
 /**
  * @author jsarman
  */
-//FIXME Wicket 11. Re-enable once the tests are moved to its own module
-@Disabled
 class ConversationPropagatorTest extends WicketCdiTestCase
 {
 	@Inject
