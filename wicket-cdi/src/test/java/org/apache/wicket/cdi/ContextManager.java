@@ -16,16 +16,18 @@
  */
 package org.apache.wicket.cdi;
 
+import org.jboss.weld.bean.builtin.BeanManagerProxy;
+import org.jboss.weld.module.web.servlet.HttpContextLifecycle;
+import org.jboss.weld.servlet.spi.helpers.AcceptingHttpContextActivationFilter;
+
+import io.github.cdiunit.internal.servlet.CdiUnitInitialListenerImpl;
+import io.github.cdiunit.internal.servlet.LifecycleAwareRequest;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
-import org.jboss.weld.bean.builtin.BeanManagerProxy;
-import org.jboss.weld.module.web.servlet.HttpContextLifecycle;
-import org.jboss.weld.servlet.spi.helpers.AcceptingHttpContextActivationFilter;
 
 /**
  * @author jsarman
@@ -72,8 +74,7 @@ public class ContextManager
 		if (currentRequest != null)
 			return;
 
-		// FIXME Wicket 10
-		currentRequest = null;// new LifecycleAwareRequest(new CdiUnitInitialListenerImpl(), new javax.servlet.http.HttpServletRequest(request));
+		currentRequest = new LifecycleAwareRequest(new CdiUnitInitialListenerImpl(), request);
 		lifecycle.requestInitialized(currentRequest, null);
 	}
 
