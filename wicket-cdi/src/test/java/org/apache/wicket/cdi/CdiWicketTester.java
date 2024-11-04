@@ -94,24 +94,6 @@ public class CdiWicketTester extends WicketTester
 		return ret;
 	}
 
-	@PreDestroy
-	public void finish()
-	{
-		try
-		{
-			logger.debug("Destroying Cdi Wicket Tester");
-			if (getLastRequest() != null)
-			{
-				contextManager.deactivateContexts();
-			}
-			contextManager.destroy();
-			destroy();
-		}
-		catch (Throwable t)
-		{
-		}
-	}
-
 	/**
 	 * Asserts that the response contains the right count. This can only be done by parsing the
 	 * markup because models only contain valid values during a request, not after.

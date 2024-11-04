@@ -21,7 +21,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.cdi.testapp.TestAppScope;
-import org.apache.wicket.cdi.testapp.TestCdiApplication;
 import org.apache.wicket.cdi.testapp.TestConversationBean;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -42,8 +41,7 @@ import jakarta.inject.Inject;
 @AdditionalClasses({ CdiWicketTester.class, BehaviorInjector.class, CdiConfiguration.class,
 		CdiShutdownCleaner.class, ComponentInjector.class, ConversationExpiryChecker.class,
 		ConversationPropagator.class, DetachEventEmitter.class, SessionInjector.class,
-		TestAppScope.class, TestConversationBean.class, TestCdiApplication.class,
-		AutoConversation.class })
+		TestAppScope.class, TestConversationBean.class, AutoConversation.class })
 public abstract class WicketCdiTestCase
 {
 	@Inject
