@@ -22,9 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jakarta.annotation.PreDestroy;
-import jakarta.inject.Inject;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -35,6 +32,8 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.annotation.PreDestroy;
+
 /**
  * @author jsarman
  */
@@ -43,14 +42,17 @@ public class CdiWicketTester extends WicketTester
 	private static final Pattern COUNT_PATTERN = Pattern.compile("COUNT=x([0-9]+)x");
 	private static final Logger logger = LoggerFactory.getLogger(CdiWicketTester.class);
 
-	@Inject
 	ContextManager contextManager;
 
 	public CdiWicketTester(WebApplication app)
 	{
 		super(app);
-		NonContextual.of(CdiWicketTester.class).inject(this);
 		getHttpSession().setTemporary(false);
+	}
+
+	public void setContextManager(ContextManager contextManager)
+	{
+		this.contextManager = contextManager;
 	}
 
 	/**

@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.cdi;
 
-import jakarta.inject.Inject;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ThreadContext;
@@ -29,16 +27,18 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
-import org.jglue.cdiunit.AdditionalClasses;
-import org.jglue.cdiunit.CdiRunner;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import io.github.cdiunit.AdditionalClasses;
+import io.github.cdiunit.junit5.CdiJUnit5Extension;
+import jakarta.inject.Inject;
 
 /**
  * @author jsarman
  */
-@RunWith(CdiRunner.class) // TODO upgrade to junit 5 ExtendWith when Cdi project has Junit 5 support
+@ExtendWith(CdiJUnit5Extension.class)
 @AdditionalClasses({ CdiWicketTester.class, BehaviorInjector.class, CdiConfiguration.class,
 		CdiShutdownCleaner.class, ComponentInjector.class, ConversationExpiryChecker.class,
 		ConversationPropagator.class, DetachEventEmitter.class, SessionInjector.class,
@@ -53,7 +53,9 @@ public abstract class WicketCdiTestCase
 
 	protected CdiWicketTester newWicketTester(WebApplication app)
 	{
-		return new CdiWicketTester(app);
+		CdiWicketTester cdiWicketTester = new CdiWicketTester(app);
+		cdiWicketTester.setContextManager(contextManager);
+		return cdiWicketTester;
 	}
 
 	public void configure(CdiConfiguration configuration)
@@ -61,7 +63,7 @@ public abstract class WicketCdiTestCase
 		configuration.configure(tester.getApplication());
 	}
 
-	@After
+	@AfterEach
 	public void end()
 	{
 		if (contextManager.isRequestActive())
@@ -69,9 +71,13 @@ public abstract class WicketCdiTestCase
 			contextManager.deactivateContexts();
 			contextManager.destroy();
 		}
+		tester.destroy();
+
+		// make sure no leaked BeanManager are present
+		BeanManagerLookup.detach();
 	}
 
-	@Before
+	@BeforeEach
 	public void commonBefore()
 	{
 		// make sure no leaked threadlocals are present
@@ -90,17 +96,8 @@ public abstract class WicketCdiTestCase
 	}
 
 	/**
-	 * 
-	 */
-	@After
-	public void commonAfter()
-	{
-		tester.destroy();
-	}
-
-	/**
-	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically
-	 * replace the expected output file.
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
+	 * output file.
 	 * 
 	 * @param <T>
 	 * 
@@ -109,14 +106,14 @@ public abstract class WicketCdiTestCase
 	 * @throws Exception
 	 */
 	protected <T extends Page> void executeTest(final Class<T> pageClass, final String filename)
-			throws Exception
+		throws Exception
 	{
 		tester.executeTest(getClass(), pageClass, filename);
 	}
 
 	/**
-	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically
-	 * replace the expected output file.
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
+	 * output file.
 	 * 
 	 * @param page
 	 * @param filename
@@ -128,8 +125,8 @@ public abstract class WicketCdiTestCase
 	}
 
 	/**
-	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically
-	 * replace the expected output file.
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
+	 * output file.
 	 * 
 	 * @param <T>
 	 * 
@@ -138,8 +135,8 @@ public abstract class WicketCdiTestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected <T extends Page> void executeTest(final Class<T> pageClass,
-			PageParameters parameters, final String filename) throws Exception
+	protected <T extends Page> void executeTest(final Class<T> pageClass, PageParameters parameters,
+		final String filename) throws Exception
 	{
 		tester.executeTest(getClass(), pageClass, parameters, filename);
 	}
@@ -151,7 +148,7 @@ public abstract class WicketCdiTestCase
 	 * @throws Exception
 	 */
 	protected void executeListener(final Component component, final String filename)
-			throws Exception
+		throws Exception
 	{
 		tester.executeListener(getClass(), component, filename);
 	}
@@ -163,14 +160,14 @@ public abstract class WicketCdiTestCase
 	 * @throws Exception
 	 */
 	protected void executeBehavior(final AbstractAjaxBehavior behavior, final String filename)
-			throws Exception
+		throws Exception
 	{
 		tester.executeBehavior(getClass(), behavior, filename);
 	}
 
 	/**
-	 * Returns the current Maven build directory taken from the <tt>basedir</tt>
-	 * system property, or null if not set
+	 * Returns the current Maven build directory taken from the <tt>basedir</tt> system property, or
+	 * null if not set
 	 * 
 	 * @return path with a trailing slash
 	 */
