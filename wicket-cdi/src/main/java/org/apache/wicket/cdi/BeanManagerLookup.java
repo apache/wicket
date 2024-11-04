@@ -26,12 +26,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Defines several strategies for looking up a CDI BeanManager in a portable
- * way. The following strategies are tried (in order):
+ * Defines several strategies for looking up a CDI BeanManager in a portable way. The following
+ * strategies are tried (in order):
  * <ul>
  * <li>JNDI under java:comp/BeanManager (default location)</li>
- * <li>JNDI under java:comp/env/BeanManager (for servlet containers like Tomcat
- * and Jetty)</li>
+ * <li>JNDI under java:comp/env/BeanManager (for servlet containers like Tomcat and Jetty)</li>
  * <li>CDI.current().getBeanManager() (portable lookup)</li>
  * <li>{@linkplain CdiConfiguration#getFallbackBeanManager() Fallback}</li>
  * </ul>
@@ -44,7 +43,21 @@ public final class BeanManagerLookup
 {
 	private static final Logger log = LoggerFactory.getLogger(BeanManagerLookup.class);
 
-	private enum BeanManagerLookupStrategy {
+	private enum BeanManagerLookupStrategy
+	{
+		CUSTOM {
+			@Override
+			public BeanManager lookup()
+			{
+				CdiConfiguration cdiConfiguration = CdiConfiguration.get(Application.get());
+
+				if (cdiConfiguration == null)
+					throw new IllegalStateException(
+						"NonContextual injection can only be used after a CdiConfiguration is set");
+
+				return cdiConfiguration.getBeanManager();
+			}
+		},
 		JNDI {
 			@Override
 			public BeanManager lookup()
@@ -99,7 +112,7 @@ public final class BeanManagerLookup
 		public abstract BeanManager lookup();
 	}
 
-	private static BeanManagerLookupStrategy lastSuccessful = BeanManagerLookupStrategy.JNDI;
+	private static BeanManagerLookupStrategy lastSuccessful = BeanManagerLookupStrategy.CUSTOM;
 
 	private BeanManagerLookup()
 	{
@@ -122,7 +135,12 @@ public final class BeanManagerLookup
 		}
 
 		throw new IllegalStateException(
-				"No BeanManager found via the CDI provider and no fallback specified. Check your "
-						+ "CDI setup or specify a fallback BeanManager in the CdiConfiguration.");
+			"No BeanManager found via the CDI provider and no fallback specified. Check your "
+				+ "CDI setup or specify a fallback BeanManager in the CdiConfiguration.");
+	}
+
+	static void detach()
+	{
+		lastSuccessful = BeanManagerLookupStrategy.CUSTOM;
 	}
 }
