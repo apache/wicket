@@ -65,10 +65,7 @@ import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.util.value.LongValue;
-import org.apache.wicket.util.visit.ClassVisitFilter;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
-import org.apache.wicket.util.visit.Visits;
+import org.apache.wicket.util.visit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -166,22 +163,9 @@ public class Form<T> extends WebMarkupContainer
 		@Override
 		public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
 		{
-
-			Form<?> form = formComponent.getForm();
-			if (!form.isVisibleInHierarchy() || !form.isEnabledInHierarchy())
-			{
-				// do not validate formComponent or any of formComponent's children
-				visit.dontGoDeeper();
-				return;
-			}
-
 			if (formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy())
 			{
 				validate(formComponent);
-			}
-			if (formComponent.processChildren() == false)
-			{
-				visit.dontGoDeeper();
 			}
 		}
 
@@ -1052,22 +1036,16 @@ public class Form<T> extends WebMarkupContainer
 		}
 
 		// invoke Form#onSubmit(..) going from innermost to outermost
-		Visits.visitPostOrder(processingForm, new IVisitor<Form<?>, Void>()
-		{
-			@Override
-			public void component(Form<?> form, IVisit<Void> visit)
+		visitFormsPostOrder(processingForm, (form, visit) -> {
+			if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
 			{
-				if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
-				{
-					visit.dontGoDeeper();
-					return;
-				}
-				if (form.hasError())
-				{
-					form.onError();
-				}
+				return;
 			}
-		}, new ClassVisitFilter(Form.class));
+			if (form.hasError())
+			{
+				form.onError();
+			}
+		});
 	}
 
 
@@ -1077,22 +1055,12 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	private void markFormsSubmitted(IFormSubmitter submitter)
 	{
-		setFlag(FLAG_SUBMITTED, true);
 		Form<?> formToProcess = findFormToProcess(submitter);
 
-		visitChildren(Form.class, new IVisitor<Component, Void>()
-		{
-			@Override
-			public void component(final Component component, final IVisit<Void> visit)
+		visitFormsPostOrder(formToProcess, (form, visit) -> {
+			if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 			{
-				Form<?> form = (Form<?>)component;
-				if ((form.wantSubmitOnParentFormSubmit() || form == formToProcess)
-					&& form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
-				{
-					form.setFlag(FLAG_SUBMITTED, true);
-					return;
-				}
-				visit.dontGoDeeper();
+				form.setFlag(FLAG_SUBMITTED, true);
 			}
 		});
 	}
@@ -1211,6 +1179,38 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
+	 * Visits forms from the @parameter form down in postorder, skipping any branch not flagged as
+	 * form visitor participant
+	 *
+	 * @param formToProcess
+	 * @param visitor
+	 */
+	private static void visitFormsPostOrder(Form<?> formToProcess, IVisitor<Form<?>, Void> visitor)
+	{
+		Visits.visitPostOrder(formToProcess, visitor, new IVisitFilter()
+		{
+			@Override
+			public boolean visitObject(Object object)
+			{
+				if (object instanceof Form form)
+				{
+					return form == formToProcess || form.wantSubmitOnParentFormSubmit();
+				}
+				return false;
+			}
+			@Override
+			public boolean visitChildren(Object object)
+			{
+				if (object instanceof Form form)
+				{
+					return form.wantSubmitOnParentFormSubmit();
+				}
+				return true;
+			}
+		});
+	}
+
+	/**
 	 * Find out whether there is any registered error for a form component.
 	 *
 	 * @return whether there is any registered error for a form component
@@ -1324,17 +1324,12 @@ public class Form<T> extends WebMarkupContainer
 
 		// collect all forms innermost to outermost before any hierarchy is changed
 		final List<Form<?>> forms = Generics.newArrayList(3);
-		Visits.visitPostOrder(processingForm, new IVisitor<Form<?>, Void>()
-		{
-			@Override
-			public void component(Form<?> form, IVisit<Void> visit)
+		visitFormsPostOrder(processingForm, (form, visit) -> {
+			if (form.isSubmitted())
 			{
-				if (form.isSubmitted())
-				{
-					forms.add(form);
-				}
+				forms.add(form);
 			}
-		}, new ClassVisitFilter(Form.class));
+		});
 
 		// process submitting component (if specified)
 		if (submittingComponent != null)
@@ -1563,8 +1558,8 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected final void markFormComponentsValid()
 	{
-		internalMarkFormComponentsValid();
 		markNestedFormComponentsValid();
+		internalMarkFormComponentsValid();
 	}
 
 	/**
@@ -1572,19 +1567,14 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	private void markNestedFormComponentsValid()
 	{
-		visitChildren(Form.class, new IVisitor<Form<?>, Void>()
-		{
-			@Override
-			public void component(final Form<?> form, final IVisit<Void> visit)
+		visitFormsPostOrder(this, (form, visit) -> {
+			if (form == Form.this)
 			{
-				if (form.isSubmitted())
-				{
-					form.internalMarkFormComponentsValid();
-				}
-				else
-				{
-					visit.dontGoDeeper();
-				}
+				return;
+			}
+			if (form.isSubmitted())
+			{
+				form.internalMarkFormComponentsValid();
 			}
 		});
 	}
@@ -1890,8 +1880,8 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected final void updateFormComponentModels()
 	{
-		internalUpdateFormComponentModels();
 		updateNestedFormComponentModels();
+		internalUpdateFormComponentModels();
 	}
 
 	/**
@@ -1901,19 +1891,14 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	private void updateNestedFormComponentModels()
 	{
-		visitChildren(Form.class, new IVisitor<Form<?>, Void>()
-		{
-			@Override
-			public void component(final Form<?> form, final IVisit<Void> visit)
+		visitFormsPostOrder(this, (form, visit) -> {
+			if (form == Form.this)
 			{
-				if (form.isSubmitted())
-				{
-					form.internalUpdateFormComponentModels();
-				}
-				else
-				{
-					visit.dontGoDeeper();
-				}
+				return;
+			}
+			if (form.isSubmitted())
+			{
+				form.internalUpdateFormComponentModels();
 			}
 		});
 	}
@@ -1963,22 +1948,17 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	private void internalOnValidateModelObjects()
 	{
-		onValidateModelObjects();
-		visitChildren(Form.class, new IVisitor<Form<?>, Void>()
-		{
-			@Override
-			public void component(Form<?> form, IVisit<Void> visit)
+		visitFormsPostOrder(this, (form, visit) -> {
+			if (form == Form.this)
 			{
-				if (form.isSubmitted())
-				{
-					form.onValidateModelObjects();
-				}
-				else
-				{
-					visit.dontGoDeeper();
-				}
+				return;
+			}
+			if (form.isSubmitted())
+			{
+				form.onValidateModelObjects();
 			}
 		});
+		onValidateModelObjects();
 	}
 
 	/**
@@ -2016,25 +1996,6 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Checks if the specified form component visible and is attached to a page
-	 *
-	 * @param fc
-	 *            form component
-	 *
-	 * @return true if the form component and all its parents are visible and there component is in
-	 *         page's hierarchy
-	 */
-	private boolean isFormComponentVisibleInPage(FormComponent<?> fc)
-	{
-		if (fc == null)
-		{
-			throw new IllegalArgumentException("Argument `fc` cannot be null");
-		}
-		return fc.isVisibleInHierarchy();
-	}
-
-
-	/**
 	 * Validates form with the given form validator
 	 *
 	 * @param validator
@@ -2059,13 +2020,13 @@ public class Form<T> extends WebMarkupContainer
 				}
 				// check if the dependent component is visible and is attached to
 				// the page
-				else if (!isFormComponentVisibleInPage(dependent))
+				else if (!dependent.isVisibleInHierarchy() || !dependent.isEnabledInHierarchy() || !dependent.isFormParticipant())
 				{
 					if (log.isWarnEnabled())
 					{
 						log.warn("IFormValidator in form `" +
 							getPageRelativePath() +
-							"` depends on a component that has been removed from the page or is no longer visible. " +
+							"` depends on a component that has been removed from the page or is no longer visible/enabled. " +
 							"Offending component id `" + dependent.getId() + "`.");
 					}
 					validate = false;
@@ -2101,26 +2062,19 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	private void validateNestedForms()
 	{
-		Visits.visitPostOrder(this, new IVisitor<Form<?>, Void>()
-		{
-			@Override
-			public void component(final Form<?> form, final IVisit<Void> visit)
+		visitFormsPostOrder(this, (form, visit) -> {
+			if (form == Form.this)
 			{
-				if (form == Form.this)
-				{
-					// skip self, only process children
-					visit.stop();
-					return;
-				}
-
-				if (form.isSubmitted())
-				{
-					form.validateComponents();
-					form.validateFormValidators();
-					form.onValidate();
-				}
+				return;
 			}
-		}, new ClassVisitFilter(Form.class));
+
+			if (form.isSubmitted())
+			{
+				form.validateComponents();
+				form.validateFormValidators();
+				form.onValidate();
+			}
+		});
 	}
 
 	/**
