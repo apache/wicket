@@ -65,10 +65,7 @@ import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.util.value.LongValue;
-import org.apache.wicket.util.visit.ClassVisitFilter;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
-import org.apache.wicket.util.visit.Visits;
+import org.apache.wicket.util.visit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -168,6 +165,7 @@ public class Form<T> extends WebMarkupContainer
 		{
 
 			Form<?> form = formComponent.getForm();
+			// TODO remove and document this visitor is only for postorder traversal
 			if (!form.isVisibleInHierarchy() || !form.isEnabledInHierarchy())
 			{
 				// do not validate formComponent or any of formComponent's children
@@ -1052,22 +1050,18 @@ public class Form<T> extends WebMarkupContainer
 		}
 
 		// invoke Form#onSubmit(..) going from innermost to outermost
-		Visits.visitPostOrder(processingForm, new IVisitor<Form<?>, Void>()
-		{
-			@Override
-			public void component(Form<?> form, IVisit<Void> visit)
+		visitFormsPostOrder(processingForm, (form, visit) -> {
+			// TODO: remove, already at the deeper level here
+			if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
 			{
-				if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
-				{
-					visit.dontGoDeeper();
-					return;
-				}
-				if (form.hasError())
-				{
-					form.onError();
-				}
+				visit.dontGoDeeper();
+				return;
 			}
-		}, new ClassVisitFilter(Form.class));
+			if (form.hasError())
+			{
+				form.onError();
+			}
+		});
 	}
 
 
@@ -1211,6 +1205,34 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
+	 * Visits forms from the @parameter form down in postorder, skipping any branch not flagged as
+	 * form visitor participant
+	 *
+	 * @param form
+	 * @param visitor
+	 */
+	private static void visitFormsPostOrder(Form<?> form, IVisitor<Form<?>, Void> visitor)
+	{
+		Visits.visitPostOrder(form, visitor, new IVisitFilter()
+		{
+			@Override
+			public boolean visitObject(Object object)
+			{
+				return object instanceof Form;
+			}
+			@Override
+			public boolean visitChildren(Object object)
+			{
+				if (object instanceof IFormVisitorParticipant participant)
+				{
+					return participant.processChildren();
+				}
+				return true;
+			}
+		});
+	}
+
+	/**
 	 * Find out whether there is any registered error for a form component.
 	 *
 	 * @return whether there is any registered error for a form component
@@ -1324,17 +1346,12 @@ public class Form<T> extends WebMarkupContainer
 
 		// collect all forms innermost to outermost before any hierarchy is changed
 		final List<Form<?>> forms = Generics.newArrayList(3);
-		Visits.visitPostOrder(processingForm, new IVisitor<Form<?>, Void>()
-		{
-			@Override
-			public void component(Form<?> form, IVisit<Void> visit)
+		visitFormsPostOrder(processingForm, (form, visit) -> {
+			if (form.isSubmitted())
 			{
-				if (form.isSubmitted())
-				{
-					forms.add(form);
-				}
+				forms.add(form);
 			}
-		}, new ClassVisitFilter(Form.class));
+		});
 
 		// process submitting component (if specified)
 		if (submittingComponent != null)
@@ -2101,26 +2118,22 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	private void validateNestedForms()
 	{
-		Visits.visitPostOrder(this, new IVisitor<Form<?>, Void>()
-		{
-			@Override
-			public void component(final Form<?> form, final IVisit<Void> visit)
+		visitFormsPostOrder(this, (form, visit) -> {
+			// TODO: remove, the traversal would stop at the tree root anyway
+			if (form == Form.this)
 			{
-				if (form == Form.this)
-				{
-					// skip self, only process children
-					visit.stop();
-					return;
-				}
-
-				if (form.isSubmitted())
-				{
-					form.validateComponents();
-					form.validateFormValidators();
-					form.onValidate();
-				}
+				// skip self, only process children
+				visit.stop();
+				return;
 			}
-		}, new ClassVisitFilter(Form.class));
+
+			if (form.isSubmitted())
+			{
+				form.validateComponents();
+				form.validateFormValidators();
+				form.onValidate();
+			}
+		});
 	}
 
 	/**
