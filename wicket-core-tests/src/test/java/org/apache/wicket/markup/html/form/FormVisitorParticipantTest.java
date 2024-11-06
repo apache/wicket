@@ -46,12 +46,12 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	public void initialize()
 	{
 		page = new TestFormPage();
+		tester.startPage(page);
 	}
 
 	@Test
 	public void validateInnerForm()
 	{
-		tester.startPage(page);
 		tester.newFormTester("outerForm").submit();
 
 		assertTrue(page.innerForm.onValidateCalled);
@@ -61,7 +61,6 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	public void dontValidateInnerForm()
 	{
 		page.outerForm.processChildren = false;
-		tester.startPage(page);
 		tester.newFormTester("outerForm").submit();
 
 		assertFalse(page.innerForm.onValidateCalled);
@@ -71,18 +70,26 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	public void callInnerFormOnError()
 	{
 		page.innerField.add(new AlwaysFail());
-		tester.startPage(page);
 		tester.newFormTester("outerForm").submit();
 
 		assertTrue(page.innerForm.onErrorCalled);
 	}
 
 	@Test
-	public void dontCallInnerFormOnError()
+	public void dontCallInnerFormOnErrorIfNotProcessChildren()
 	{
 		page.innerField.add(new AlwaysFail());
 		page.outerForm.processChildren = false;
-		tester.startPage(page);
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(page.innerForm.onErrorCalled);
+	}
+
+	@Test
+	public void dontCallInnerFormOnErrorIfNotEnabled()
+	{
+		page.innerField.add(new AlwaysFail());
+		page.innerForm.setEnabled(false);
 		tester.newFormTester("outerForm").submit();
 
 		assertFalse(page.innerForm.onErrorCalled);
@@ -91,7 +98,6 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	@Test
 	public void submitInnerForm()
 	{
-		tester.startPage(page);
 		tester.newFormTester("outerForm").submit();
 
 		assertTrue(page.innerForm.onSubmit);
@@ -101,10 +107,41 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	public void dontSubmitInnerForm()
 	{
 		page.outerForm.processChildren = false;
-		tester.startPage(page);
 		tester.newFormTester("outerForm").submit();
 
 		assertFalse(page.innerForm.onSubmit);
+	}
+
+	@Test
+	public void validateInnerFormField()
+	{
+		AlwaysFail validator = new AlwaysFail();
+		page.innerField.add(validator);
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(validator.validated);
+	}
+
+	@Test
+	public void dontValidateInnerFormFieldIfNotProcessChildren()
+	{
+		AlwaysFail validator = new AlwaysFail();
+		page.innerField.add(validator);
+		page.outerForm.processChildren = false;
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(validator.validated);
+	}
+
+	@Test
+	public void dontValidateInnerFormFieldIfNotEnabled()
+	{
+		AlwaysFail validator = new AlwaysFail();
+		page.innerField.add(validator);
+		page.innerForm.setEnabled(false);
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(validator.validated);
 	}
 
 	public static class TestFormPage extends WebPage implements IMarkupResourceStreamProvider

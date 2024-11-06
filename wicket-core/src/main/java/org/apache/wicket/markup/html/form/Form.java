@@ -163,23 +163,9 @@ public class Form<T> extends WebMarkupContainer
 		@Override
 		public void component(final FormComponent<?> formComponent, final IVisit<Void> visit)
 		{
-
-			Form<?> form = formComponent.getForm();
-			// TODO remove and document this visitor is only for postorder traversal
-			if (!form.isVisibleInHierarchy() || !form.isEnabledInHierarchy())
-			{
-				// do not validate formComponent or any of formComponent's children
-				visit.dontGoDeeper();
-				return;
-			}
-
 			if (formComponent.isVisibleInHierarchy() && formComponent.isEnabledInHierarchy())
 			{
 				validate(formComponent);
-			}
-			if (formComponent.processChildren() == false)
-			{
-				visit.dontGoDeeper();
 			}
 		}
 
@@ -1051,10 +1037,8 @@ public class Form<T> extends WebMarkupContainer
 
 		// invoke Form#onSubmit(..) going from innermost to outermost
 		visitFormsPostOrder(processingForm, (form, visit) -> {
-			// TODO: remove, already at the deeper level here
 			if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
 			{
-				visit.dontGoDeeper();
 				return;
 			}
 			if (form.hasError())
@@ -2119,11 +2103,8 @@ public class Form<T> extends WebMarkupContainer
 	private void validateNestedForms()
 	{
 		visitFormsPostOrder(this, (form, visit) -> {
-			// TODO: remove, the traversal would stop at the tree root anyway
 			if (form == Form.this)
 			{
-				// skip self, only process children
-				visit.stop();
 				return;
 			}
 
