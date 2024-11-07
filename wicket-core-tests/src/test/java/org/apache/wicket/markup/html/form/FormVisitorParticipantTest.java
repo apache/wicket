@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.Model;
@@ -144,43 +145,83 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		assertFalse(validator.validated);
 	}
 
+	@Test
+	public void validateFormValidator()
+	{
+		FormValidator validator = new FormValidator(page.innerField);
+		page.innerForm.add(validator);
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(validator.validated);
+	}
+
+	@Test
+	public void dontValidateFormValidatorIfNotProcessOuterFormChildren()
+	{
+		FormValidator validator = new FormValidator(page.innerField);
+		page.innerForm.add(validator);
+		page.outerForm.processChildren = false;
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(validator.validated);
+	}
+
+	@Test
+	public void dontValidateFormValidatorIfNotProcessInnerFormChildren()
+	{
+		FormValidator validator = new FormValidator(page.innerField);
+		page.innerForm.add(validator);
+		page.innerForm.processChildren = false;
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(validator.validated);
+	}
+
+	@Test
+	public void dontValidateFormValidatorIfInnerFormNotEnabled()
+	{
+		FormValidator validator = new FormValidator(page.innerField);
+		page.innerForm.add(validator);
+		page.innerForm.setEnabled(false);
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(validator.validated);
+	}
+
+	@Test
+	public void dontValidateFormValidatorIfInnerContainerNotEnabled()
+	{
+		FormValidator validator = new FormValidator(page.innerField);
+		page.innerForm.add(validator);
+		page.innerContainer.setEnabled(false);
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(validator.validated);
+	}
+
 	public static class TestFormPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		private OuterForm outerForm;
-		private InnerForm innerForm;
+		private TestForm outerForm;
+		private TestForm innerForm;
+		private WebMarkupContainer innerContainer;
 		private TextField<String> innerField;
 
 		public TestFormPage()
 		{
-			add(outerForm = new OuterForm("outerForm"));
-			outerForm.add(innerForm = new InnerForm("innerForm"));
-			innerForm.add(innerField = new TextField<String>("innerField", Model.of((String)null)));
+			add(outerForm = new TestForm("outerForm"));
+			outerForm.add(innerForm = new TestForm("innerForm"));
+			innerForm.add(innerContainer = new WebMarkupContainer("innerContainer"));
+			innerContainer.add(innerField = new TextField<String>("innerField", Model.of((String)null)));
 		}
 
-		class OuterForm extends Form<Void> implements IFormVisitorParticipant
-		{
-			boolean processChildren = true;
-
-			public OuterForm(String id)
-			{
-				super(id);
-			}
-
-			@Override
-			public boolean processChildren()
-			{
-				return processChildren;
-			}
-		}
-
-		class InnerForm extends Form<Void> implements IFormVisitorParticipant
+		class TestForm extends Form<Void> implements IFormVisitorParticipant
 		{
 			boolean processChildren = true;
 			boolean onValidateCalled;
 			private boolean onErrorCalled;
 			private boolean onSubmit;
 
-			public InnerForm(String id)
+			public TestForm(String id)
 			{
 				super(id);
 			}
@@ -216,7 +257,9 @@ public class FormVisitorParticipantTest extends WicketTestCase
 			return new StringResourceStream("" //
 				+ "<html><body>" //
 				+ "  <form wicket:id=\"outerForm\">" //
-				+ "    <form wicket:id=\"innerForm\"><input wicket:id=\"innerField\" /></form>" //
+				+ "    <form wicket:id=\"innerForm\">" //
+				+ "      <div wicket:id=\"innerContainer\"><input wicket:id=\"innerField\" /></div>" //
+				+ "    </form>" //
 				+ "  </form>"//
 				+ "</body></html>");
 		}

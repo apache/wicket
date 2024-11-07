@@ -2017,25 +2017,6 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Checks if the specified form component visible and is attached to a page
-	 *
-	 * @param fc
-	 *            form component
-	 *
-	 * @return true if the form component and all its parents are visible and there component is in
-	 *         page's hierarchy
-	 */
-	private boolean isFormComponentVisibleInPage(FormComponent<?> fc)
-	{
-		if (fc == null)
-		{
-			throw new IllegalArgumentException("Argument `fc` cannot be null");
-		}
-		return fc.isVisibleInHierarchy();
-	}
-
-
-	/**
 	 * Validates form with the given form validator
 	 *
 	 * @param validator
@@ -2060,13 +2041,13 @@ public class Form<T> extends WebMarkupContainer
 				}
 				// check if the dependent component is visible and is attached to
 				// the page
-				else if (!isFormComponentVisibleInPage(dependent))
+				else if (!dependent.isVisibleInHierarchy() || !dependent.isEnabledInHierarchy() || !dependent.isFormParticipant())
 				{
 					if (log.isWarnEnabled())
 					{
 						log.warn("IFormValidator in form `" +
 							getPageRelativePath() +
-							"` depends on a component that has been removed from the page or is no longer visible. " +
+							"` depends on a component that has been removed from the page or is no longer visible/enabled. " +
 							"Offending component id `" + dependent.getId() + "`.");
 					}
 					validate = false;

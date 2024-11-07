@@ -1603,6 +1603,19 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	}
 
 	/**
+	 * @return if this form component is visited during the form processing
+	 */
+	public boolean isFormParticipant()
+	{
+		IFormVisitorParticipant parent = findParent(IFormVisitorParticipant.class);
+		if (parent != null && !parent.processChildren())
+		{
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Update the model of a {@link FormComponent} containing a {@link Collection}.
 	 * 
 	 * If the model object does not yet exists, a new suitable collection is filled with the converted
