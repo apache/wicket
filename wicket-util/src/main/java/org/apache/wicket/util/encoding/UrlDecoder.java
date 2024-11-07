@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
  * The difference is important because a space is encoded as a + in a query string, but this is a
  * valid value in a path component (and is therefore not decode back to a space).
  *
+ * @author Doug Donohoe
  * @author Thomas Heigl
  * @see <a href="http://www.ietf.org/rfc/rfc2396.txt">RFC-2396</a>
  */
