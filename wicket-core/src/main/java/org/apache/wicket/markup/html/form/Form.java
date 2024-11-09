@@ -1878,8 +1878,8 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected final void updateFormComponentModels()
 	{
-		internalUpdateFormComponentModels();
 		updateNestedFormComponentModels();
+		internalUpdateFormComponentModels();
 	}
 
 	/**
@@ -1889,19 +1889,14 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	private void updateNestedFormComponentModels()
 	{
-		visitChildren(Form.class, new IVisitor<Form<?>, Void>()
-		{
-			@Override
-			public void component(final Form<?> form, final IVisit<Void> visit)
+		visitFormsPostOrder(this, (form, visit) -> {
+			if (form == Form.this)
 			{
-				if (form.isSubmitted())
-				{
-					form.internalUpdateFormComponentModels();
-				}
-				else
-				{
-					visit.dontGoDeeper();
-				}
+				return;
+			}
+			if (form.isSubmitted())
+			{
+				form.internalUpdateFormComponentModels();
 			}
 		});
 	}

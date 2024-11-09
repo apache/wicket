@@ -103,7 +103,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	{
 		tester.newFormTester("outerForm").submit();
 
-		assertTrue(page.innerForm.onSubmit);
+		assertTrue(page.innerForm.onSubmitCalled);
 	}
 
 	@Test
@@ -112,7 +112,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		page.outerForm.processChildren = false;
 		tester.newFormTester("outerForm").submit();
 
-		assertFalse(page.innerForm.onSubmit);
+		assertFalse(page.innerForm.onSubmitCalled);
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		page.outerForm.processChildren = false;
 		tester.newFormTester("outerForm").submit();
 
-		assertFalse(page.innerForm.isSubmitted);
+		assertFalse(page.innerForm.isSubmittedFlagged);
 	}
 
 	@Test
@@ -131,7 +131,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		page.innerField.add(validator);
 		tester.newFormTester("outerForm").submit();
 
-		assertTrue(validator.validated);
+		assertTrue(validator.validatedCalled);
 	}
 
 	@Test
@@ -142,7 +142,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		page.outerForm.processChildren = false;
 		tester.newFormTester("outerForm").submit();
 
-		assertFalse(validator.validated);
+		assertFalse(validator.validatedCalled);
 	}
 
 	@Test
@@ -153,7 +153,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		page.innerForm.setEnabled(false);
 		tester.newFormTester("outerForm").submit();
 
-		assertFalse(validator.validated);
+		assertFalse(validator.validatedCalled);
 	}
 
 	@Test
@@ -163,7 +163,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		page.innerForm.add(validator);
 		tester.newFormTester("outerForm").submit();
 
-		assertTrue(validator.validated);
+		assertTrue(validator.validatedCalled);
 	}
 
 	@Test
@@ -174,7 +174,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		page.outerForm.processChildren = false;
 		tester.newFormTester("outerForm").submit();
 
-		assertFalse(validator.validated);
+		assertFalse(validator.validatedCalled);
 	}
 
 	@Test
@@ -185,7 +185,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		page.innerForm.processChildren = false;
 		tester.newFormTester("outerForm").submit();
 
-		assertFalse(validator.validated);
+		assertFalse(validator.validatedCalled);
 	}
 
 	@Test
@@ -196,7 +196,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		page.innerForm.setEnabled(false);
 		tester.newFormTester("outerForm").submit();
 
-		assertFalse(validator.validated);
+		assertFalse(validator.validatedCalled);
 	}
 
 	@Test
@@ -207,7 +207,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		page.innerContainer.setEnabled(false);
 		tester.newFormTester("outerForm").submit();
 
-		assertFalse(validator.validated);
+		assertFalse(validator.validatedCalled);
 	}
 
 	@Test
@@ -215,7 +215,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	{
 		tester.newFormTester("outerForm").submit();
 
-		assertTrue(page.innerField.onValid);
+		assertTrue(page.innerField.onValidCalled);
 	}
 
 	@Test
@@ -224,15 +224,40 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		page.outerForm.processChildren = false;
 		tester.newFormTester("outerForm").submit();
 
-		assertFalse(page.innerField.onValid);
+		assertFalse(page.innerField.onValidCalled);
 	}
 
 	@Test
-	public void validateFormComponentsInPostOrder()
+	public void validateFormComponentsInPostorder()
 	{
 		tester.newFormTester("outerForm").submit();
 
 		assertTrue(page.innerField.onValidCallOrder < page.outerField.onValidCallOrder);
+	}
+
+	@Test
+	public void updateInnerFormComponentModel()
+	{
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(page.innerField.updateModelCalled);
+	}
+
+	@Test
+	public void dontUpdateInnerFormComponentModel()
+	{
+		page.outerForm.processChildren = false;
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(page.innerField.updateModelCalled);
+	}
+
+	@Test
+	public void updateFormComponentModelInPostorder()
+	{
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(page.innerField.updateModelOrder < page.outerField.updateModelOrder);
 	}
 
 	public static class TestFormPage extends WebPage implements IMarkupResourceStreamProvider
@@ -251,7 +276,6 @@ public class FormVisitorParticipantTest extends WicketTestCase
 			innerForm.add(innerContainer = new WebMarkupContainer("innerContainer"));
 			innerContainer.add(innerField = new TestField("innerField"));
 		}
-
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
@@ -273,8 +297,8 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		boolean processChildren = true;
 		boolean onValidateCalled;
 		boolean onErrorCalled;
-		boolean onSubmit;
-		boolean isSubmitted;
+		boolean onSubmitCalled;
+		boolean isSubmittedFlagged;
 
 		public TestForm(String id)
 		{
@@ -284,14 +308,14 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		@Override
 		protected void onSubmit()
 		{
-			onSubmit = true;
+			onSubmitCalled = true;
 		}
 
 		@Override
 		protected void onConfigure()
 		{
 			super.onConfigure();
-			isSubmitted = isSubmitted();
+			isSubmittedFlagged = isSubmitted();
 		}
 
 		@Override
@@ -313,10 +337,12 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		}
 	}
 
-	static class TestField extends TextField<String>
+	static class TestField extends TextField<String> implements IFormModelUpdateListener
 	{
 
-		boolean onValid;
+		boolean onValidCalled;
+		boolean updateModelCalled;
+		int updateModelOrder;
 		int onValidCallOrder;
 
 		public TestField(String id)
@@ -327,15 +353,23 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		@Override
 		protected void onValid()
 		{
-			onValid = true;
+			onValidCalled = true;
 			onValidCallOrder = SEQUENCE++;
+		}
+
+		@Override
+		public void updateModel()
+		{
+			super.updateModel();
+			updateModelCalled = true;
+			updateModelOrder = SEQUENCE++;
 		}
 	}
 
 	static class FormValidator implements IFormValidator
 	{
 		private FormComponent<?>[] dependencies;
-		private boolean validated;
+		private boolean validatedCalled;
 
 		public FormValidator(FormComponent<?>... dependencies)
 		{
@@ -349,20 +383,20 @@ public class FormVisitorParticipantTest extends WicketTestCase
 
 		public void validate(Form<?> form)
 		{
-			validated = true;
+			validatedCalled = true;
 		}
 
 	}
 
 	static class AlwaysFail implements IValidator<String>, INullAcceptingValidator<String>
 	{
-		boolean validated;
+		boolean validatedCalled;
 
 		@Override
 		public void validate(IValidatable<String> validatable)
 		{
 			validatable.error(new ValidationError("foo"));
-			validated = true;
+			validatedCalled = true;
 		}
 	}
 
