@@ -37,11 +37,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * <a href="https://issues.apache.org/jira/browse/WICKET-3899">WICKET-3899</a>
+ *
  * @author Pedro Santos
  */
 public class FormVisitorParticipantTest extends WicketTestCase
 {
-	private TestFormPage page;
+	TestFormPage page;
+	static int SEQUENCE;
 
 	@BeforeEach
 	public void initialize()
@@ -208,65 +210,48 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		assertFalse(validator.validated);
 	}
 
+	@Test
+	public void validateFormComponent()
+	{
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(page.innerField.onValid);
+	}
+
+	@Test
+	public void dontValidateFormComponent()
+	{
+		page.outerForm.processChildren = false;
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(page.innerField.onValid);
+	}
+
+	@Test
+	public void validateFormComponentsInPostOrder()
+	{
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(page.innerField.onValidCallOrder < page.outerField.onValidCallOrder);
+	}
+
 	public static class TestFormPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private TestForm outerForm;
 		private TestForm innerForm;
+		private TestField outerField;
+		private TestField innerField;
 		private WebMarkupContainer innerContainer;
-		private TextField<String> innerField;
 
 		public TestFormPage()
 		{
 			add(outerForm = new TestForm("outerForm"));
 			outerForm.add(innerForm = new TestForm("innerForm"));
+			outerForm.add(outerField = new TestField("outerField"));
 			innerForm.add(innerContainer = new WebMarkupContainer("innerContainer"));
-			innerContainer.add(innerField = new TextField<String>("innerField", Model.of((String)null)));
+			innerContainer.add(innerField = new TestField("innerField"));
 		}
 
-		class TestForm extends Form<Void> implements IFormVisitorParticipant
-		{
-			boolean processChildren = true;
-			boolean onValidateCalled;
-			private boolean onErrorCalled;
-			private boolean onSubmit;
-			private boolean isSubmitted;
-
-			public TestForm(String id)
-			{
-				super(id);
-			}
-
-			@Override
-			protected void onSubmit()
-			{
-				onSubmit = true;
-			}
-
-			@Override
-			protected void onConfigure()
-			{
-				super.onConfigure();
-				isSubmitted = isSubmitted();
-			}
-
-			@Override
-			public boolean processChildren()
-			{
-				return processChildren;
-			}
-
-			@Override
-			protected void onValidate()
-			{
-				onValidateCalled = true;
-			}
-
-			@Override
-			protected void onError()
-			{
-				onErrorCalled = true;
-			}
-		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
@@ -274,6 +259,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 			return new StringResourceStream("" //
 				+ "<html><body>" //
 				+ "  <form wicket:id=\"outerForm\">" //
+				+ "    <input wicket:id=\"outerField\" />" //
 				+ "    <form wicket:id=\"innerForm\">" //
 				+ "      <div wicket:id=\"innerContainer\"><input wicket:id=\"innerField\" /></div>" //
 				+ "    </form>" //
@@ -282,7 +268,71 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		}
 	}
 
-	private class FormValidator implements IFormValidator
+	static class TestForm extends Form<Void> implements IFormVisitorParticipant
+	{
+		boolean processChildren = true;
+		boolean onValidateCalled;
+		boolean onErrorCalled;
+		boolean onSubmit;
+		boolean isSubmitted;
+
+		public TestForm(String id)
+		{
+			super(id);
+		}
+
+		@Override
+		protected void onSubmit()
+		{
+			onSubmit = true;
+		}
+
+		@Override
+		protected void onConfigure()
+		{
+			super.onConfigure();
+			isSubmitted = isSubmitted();
+		}
+
+		@Override
+		public boolean processChildren()
+		{
+			return processChildren;
+		}
+
+		@Override
+		protected void onValidate()
+		{
+			onValidateCalled = true;
+		}
+
+		@Override
+		protected void onError()
+		{
+			onErrorCalled = true;
+		}
+	}
+
+	static class TestField extends TextField<String>
+	{
+
+		boolean onValid;
+		int onValidCallOrder;
+
+		public TestField(String id)
+		{
+			super(id, Model.of((String)null));
+		}
+
+		@Override
+		protected void onValid()
+		{
+			onValid = true;
+			onValidCallOrder = SEQUENCE++;
+		}
+	}
+
+	static class FormValidator implements IFormValidator
 	{
 		private FormComponent<?>[] dependencies;
 		private boolean validated;
@@ -304,7 +354,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 
 	}
 
-	private class AlwaysFail implements IValidator<String>, INullAcceptingValidator<String>
+	static class AlwaysFail implements IValidator<String>, INullAcceptingValidator<String>
 	{
 		boolean validated;
 

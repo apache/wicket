@@ -1556,8 +1556,8 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected final void markFormComponentsValid()
 	{
-		internalMarkFormComponentsValid();
 		markNestedFormComponentsValid();
+		internalMarkFormComponentsValid();
 	}
 
 	/**
@@ -1565,19 +1565,14 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	private void markNestedFormComponentsValid()
 	{
-		visitChildren(Form.class, new IVisitor<Form<?>, Void>()
-		{
-			@Override
-			public void component(final Form<?> form, final IVisit<Void> visit)
+		visitFormsPostOrder(this, (form, visit) -> {
+			if (form == Form.this)
 			{
-				if (form.isSubmitted())
-				{
-					form.internalMarkFormComponentsValid();
-				}
-				else
-				{
-					visit.dontGoDeeper();
-				}
+				return;
+			}
+			if (form.isSubmitted())
+			{
+				form.internalMarkFormComponentsValid();
 			}
 		});
 	}
