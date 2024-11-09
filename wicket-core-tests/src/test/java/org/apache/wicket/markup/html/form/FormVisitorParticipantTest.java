@@ -167,7 +167,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	}
 
 	@Test
-	public void dontValidateFormValidatorIfNotProcessOuterFormChildren()
+	public void dontValidateFormValidatorIfNotProcessChildren()
 	{
 		FormValidator validator = new FormValidator(page.innerField);
 		page.innerForm.add(validator);
@@ -211,7 +211,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	}
 
 	@Test
-	public void validateFormComponent()
+	public void validateInnerFormComponent()
 	{
 		tester.newFormTester("outerForm").submit();
 
@@ -219,7 +219,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	}
 
 	@Test
-	public void dontValidateFormComponent()
+	public void dontValidateInnerFormComponent()
 	{
 		page.outerForm.processChildren = false;
 		tester.newFormTester("outerForm").submit();
@@ -253,11 +253,37 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	}
 
 	@Test
-	public void updateFormComponentModelInPostorder()
+	public void updateFormComponentModelsInPostorder()
 	{
 		tester.newFormTester("outerForm").submit();
 
 		assertTrue(page.innerField.updateModelOrder < page.outerField.updateModelOrder);
+	}
+
+	@Test
+	public void callInnerFormOnValidateModelObjects()
+	{
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(page.innerForm.onValidateModelObjectsCalled);
+	}
+
+	@Test
+	public void dontCallInnerFormOnValidateModelObjects()
+	{
+		page.outerForm.processChildren = false;
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(page.innerForm.onValidateModelObjectsCalled);
+	}
+
+	@Test
+	public void callFormOnValidateModelObjectsInPostorder()
+	{
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(
+			page.innerForm.onValidateModelObjectsCallOrder < page.outerForm.onValidateModelObjectsCallOrder);
 	}
 
 	public static class TestFormPage extends WebPage implements IMarkupResourceStreamProvider
@@ -299,6 +325,8 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		boolean onErrorCalled;
 		boolean onSubmitCalled;
 		boolean isSubmittedFlagged;
+		boolean onValidateModelObjectsCalled;
+		int onValidateModelObjectsCallOrder;
 
 		public TestForm(String id)
 		{
@@ -328,6 +356,13 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		protected void onValidate()
 		{
 			onValidateCalled = true;
+		}
+
+		@Override
+		protected void onValidateModelObjects()
+		{
+			onValidateModelObjectsCalled = true;
+			onValidateModelObjectsCallOrder = SEQUENCE++;
 		}
 
 		@Override

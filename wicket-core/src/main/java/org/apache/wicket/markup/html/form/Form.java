@@ -1946,22 +1946,17 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	private void internalOnValidateModelObjects()
 	{
-		onValidateModelObjects();
-		visitChildren(Form.class, new IVisitor<Form<?>, Void>()
-		{
-			@Override
-			public void component(Form<?> form, IVisit<Void> visit)
+		visitFormsPostOrder(this, (form, visit) -> {
+			if (form == Form.this)
 			{
-				if (form.isSubmitted())
-				{
-					form.onValidateModelObjects();
-				}
-				else
-				{
-					visit.dontGoDeeper();
-				}
+				return;
+			}
+			if (form.isSubmitted())
+			{
+				form.onValidateModelObjects();
 			}
 		});
+		onValidateModelObjects();
 	}
 
 	/**
