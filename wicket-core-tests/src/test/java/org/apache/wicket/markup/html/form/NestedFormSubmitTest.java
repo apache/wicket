@@ -35,14 +35,12 @@ class NestedFormSubmitTest extends WicketTestCase
 		private final IModel<Boolean> submitted;
 		private final Button submit;
 		private final boolean wantInclusion;
-		private final boolean wantExclusion;
 
-		TestForm(String id, IModel<Boolean> submitted, boolean wantInclusion, boolean wantExclusion)
+		TestForm(String id, IModel<Boolean> submitted, boolean wantInclusion)
 		{
 			super(id);
 			this.submitted = submitted;
 			this.wantInclusion = wantInclusion;
-			this.wantExclusion = wantExclusion;
 
 			submit = new Button("submit");
 			add(submit);
@@ -61,11 +59,6 @@ class NestedFormSubmitTest extends WicketTestCase
 			return wantInclusion;
 		}
 
-		@Override
-		public boolean wantSubmitOnParentFormSubmit()
-		{
-			return wantExclusion;
-		}
 	}
 
 	class TestPage extends WebPage
@@ -76,14 +69,13 @@ class NestedFormSubmitTest extends WicketTestCase
 
 		TestPage(IModel<Boolean> submittedOuter, boolean outerWantsInclusion,
 				 IModel<Boolean> submittedMiddle, boolean middleWantsInclusion,
-				 boolean middleWantsExclusion, IModel<Boolean> submittedInner)
+				 IModel<Boolean> submittedInner)
 		{
-			outer = new TestForm<Void>("outer", submittedOuter, outerWantsInclusion, true);
+			outer = new TestForm<Void>("outer", submittedOuter, outerWantsInclusion);
 			this.add(outer);
-			middle = new TestForm<Void>("middle", submittedMiddle, middleWantsInclusion,
-				middleWantsExclusion);
+			middle = new TestForm<Void>("middle", submittedMiddle, middleWantsInclusion);
 			outer.add(middle);
-			inner = new TestForm<Void>("inner", submittedInner, false, true);
+			inner = new TestForm<Void>("inner", submittedInner, false);
 			middle.add(inner);
 		}
 	}
@@ -144,42 +136,42 @@ class NestedFormSubmitTest extends WicketTestCase
 	@Test
 	void testDefaultOuterSubmitShouldSubmitAll() throws Exception
 	{
-		startPage(false, false, true);
+		startPage(false, false);
 		assertFormSubmitOuter(true, true, true);
 	}
 
 	@Test
 	void testDefaultMiddleSubmitShouldSubmitMiddleAndInner() throws Exception
 	{
-		startPage(false, false, true);
+		startPage(false, false);
 		assertFormSubmitMiddle(false, true, true);
 	}
 
 	@Test
 	void testDefaultInnerSubmitShouldSubmitOnlyInner() throws Exception
 	{
-		startPage(false, false, true);
+		startPage(false, false);
 		assertFormSubmitInner(false, false, true);
 	}
 
 	@Test
 	void testWithOuterInclusionOuterIsSubmittedOnMiddleSubmit() throws Exception
 	{
-		startPage(true, false, true);
+		startPage(true, false);
 		assertFormSubmitMiddle(true, true, true);
 	}
 
 	@Test
 	void testWithOuterInclusionOuterIsSubmittedOnInnerSubmit() throws Exception
 	{
-		startPage(true, false, true);
+		startPage(true, false);
 		assertFormSubmitInner(true, true, true);
 	}
 
 	@Test
 	void testWithMiddleInclusionMiddleIsSubmittedOnInnerSubmit() throws Exception
 	{
-		startPage(false, true, true);
+		startPage(false, true);
 		assertFormSubmitInner(false, true, true);
 	}
 
@@ -187,21 +179,13 @@ class NestedFormSubmitTest extends WicketTestCase
 	void testWithMiddleAndOuterInclusionMiddleAndOuterIsSubmittedOnInnerSubmit()
 		throws Exception
 	{
-		startPage(true, true, true);
+		startPage(true, true);
 		assertFormSubmitInner(true, true, true);
 	}
 
-	@Test
-	void testWithMiddleExclusionAndOuterIsSubmitted() throws Exception
-	{
-		startPage(false, false, false);
-		assertFormSubmitOuter(true, false, false);
-	}
-
-	private void startPage(boolean outerWantsInclusion, boolean middleWantsInclusion,
-		boolean middleWantsExclusion)
+	private void startPage(boolean outerWantsInclusion, boolean middleWantsInclusion)
 	{
 		page = (TestPage)tester.startPage(new TestPage(submittedOuter, outerWantsInclusion,
-			submittedMiddle, middleWantsInclusion, middleWantsExclusion, submittedInner));
+			submittedMiddle, middleWantsInclusion, submittedInner));
 	}
 }

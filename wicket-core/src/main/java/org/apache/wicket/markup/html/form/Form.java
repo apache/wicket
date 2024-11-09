@@ -952,6 +952,7 @@ public class Form<T> extends WebMarkupContainer
 	 * method is overridden to return false, it will not be validated, processed nor submitted.
 	 *
 	 * @return {@code true} by default
+	 * @deprecated use {@link IFormVisitorParticipant} instead
 	 */
 	protected boolean wantSubmitOnParentFormSubmit()
 	{
@@ -1058,19 +1059,10 @@ public class Form<T> extends WebMarkupContainer
 		setFlag(FLAG_SUBMITTED, true);
 		Form<?> formToProcess = findFormToProcess(submitter);
 
-		visitChildren(Form.class, new IVisitor<Component, Void>()
-		{
-			@Override
-			public void component(final Component component, final IVisit<Void> visit)
+		visitFormsPostOrder(this, (form, visit) -> {
+			if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 			{
-				Form<?> form = (Form<?>)component;
-				if ((form.wantSubmitOnParentFormSubmit() || form == formToProcess)
-					&& form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
-				{
-					form.setFlag(FLAG_SUBMITTED, true);
-					return;
-				}
-				visit.dontGoDeeper();
+				form.setFlag(FLAG_SUBMITTED, true);
 			}
 		});
 	}

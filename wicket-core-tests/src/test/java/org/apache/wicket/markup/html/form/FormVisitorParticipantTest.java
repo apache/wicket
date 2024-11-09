@@ -114,6 +114,15 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	}
 
 	@Test
+	public void dontSetInnerFormSubmittedFlag()
+	{
+		page.outerForm.processChildren = false;
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(page.innerForm.isSubmitted);
+	}
+
+	@Test
 	public void validateInnerFormField()
 	{
 		AlwaysFail validator = new AlwaysFail();
@@ -220,6 +229,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 			boolean onValidateCalled;
 			private boolean onErrorCalled;
 			private boolean onSubmit;
+			private boolean isSubmitted;
 
 			public TestForm(String id)
 			{
@@ -230,6 +240,13 @@ public class FormVisitorParticipantTest extends WicketTestCase
 			protected void onSubmit()
 			{
 				onSubmit = true;
+			}
+
+			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+				isSubmitted = isSubmitted();
 			}
 
 			@Override

@@ -91,11 +91,6 @@ class AjaxFormSubmitBehaviorTest extends WicketTestCase
 		{
 			Form<Void> inner = new Form<>("inner") {
 				@Override
-				protected boolean wantSubmitOnParentFormSubmit() {
-					return false;
-				}
-
-				@Override
 				protected void onSubmit() {
 					super.onSubmit();
 					innerSubmitted = true;
