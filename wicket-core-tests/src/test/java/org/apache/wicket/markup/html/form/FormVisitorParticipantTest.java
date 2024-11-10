@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class FormVisitorParticipantTest extends WicketTestCase
 {
 	TestFormPage page;
-	static int SEQUENCE;
+	static int sequence;
 
 	@BeforeEach
 	public void initialize()
@@ -116,6 +116,14 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	}
 
 	@Test
+	public void setInnerFormSubmittedFlag()
+	{
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(page.innerForm.isSubmittedFlagged);
+	}
+
+	@Test
 	public void dontSetInnerFormSubmittedFlag()
 	{
 		page.outerForm.processChildren = false;
@@ -178,7 +186,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 	}
 
 	@Test
-	public void dontValidateFormValidatorIfNotProcessInnerFormChildren()
+	public void dontValidateFormValidatorIfInnerFormNotProcessChildren()
 	{
 		FormValidator validator = new FormValidator(page.innerField);
 		page.innerForm.add(validator);
@@ -362,7 +370,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		protected void onValidateModelObjects()
 		{
 			onValidateModelObjectsCalled = true;
-			onValidateModelObjectsCallOrder = SEQUENCE++;
+			onValidateModelObjectsCallOrder = sequence++;
 		}
 
 		@Override
@@ -389,7 +397,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		protected void onValid()
 		{
 			onValidCalled = true;
-			onValidCallOrder = SEQUENCE++;
+			onValidCallOrder = sequence++;
 		}
 
 		@Override
@@ -397,7 +405,7 @@ public class FormVisitorParticipantTest extends WicketTestCase
 		{
 			super.updateModel();
 			updateModelCalled = true;
-			updateModelOrder = SEQUENCE++;
+			updateModelOrder = sequence++;
 		}
 	}
 
