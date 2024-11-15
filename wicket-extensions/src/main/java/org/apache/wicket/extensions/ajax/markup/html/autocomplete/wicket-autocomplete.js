@@ -447,8 +447,10 @@
 			hideAutoCompleteTimer = undefined;
 
 			var input = Wicket.$(ajaxAttributes.c);
-			input.setAttribute("aria-expanded", "false");
-			input.removeAttribute("aria-activedescendant");
+			if (input) {
+				input.setAttribute("aria-expanded", "false");
+				input.removeAttribute("aria-activedescendant");
+			}
 
 			visible = 0;
 			setSelected(-1);
