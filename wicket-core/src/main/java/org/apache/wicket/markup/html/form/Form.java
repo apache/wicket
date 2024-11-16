@@ -741,7 +741,7 @@ public class Form<T> extends WebMarkupContainer
 	@Override
 	public final void onRequest()
 	{
-		onFormSubmitted(null);
+		onFormSubmitted(findSubmitter());
 	}
 
 	/**
