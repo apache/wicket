@@ -136,6 +136,7 @@
 								showAutoComplete();
 							}
 							render(true, false);
+							jqEvent.preventDefault();
 						}
 
 						break;
@@ -153,6 +154,7 @@
 								render(true, false);
 								showAutoComplete();
 							}
+							jqEvent.preventDefault();
 						}
 
 						break;
@@ -243,7 +245,7 @@
 		{
 			// Remove the autocompletion menu if still present from
 			// a previous call. This is required to properly register
-			// the mouse event handler again 
+			// the mouse event handler again
 			var choiceDiv=document.getElementById(getMenuId());
 			if (choiceDiv !== null) {
 				choiceDiv.parentNode.parentNode.removeChild(choiceDiv.parentNode);
@@ -325,7 +327,6 @@
 				container.appendChild(choiceDiv);
 				choiceDiv.id=getMenuId();
 				choiceDiv.className = "wicket-aa";
-				choiceDiv.ariaLive = "polite";
 			}
 
 
@@ -456,7 +457,10 @@
 			hideAutoCompleteTimer = undefined;
 
 			var input = Wicket.$(ajaxAttributes.c);
-			$(input).attr("aria-expanded", "false");
+			if (input) {
+				input.setAttribute("aria-expanded", "false");
+				input.removeAttribute("aria-activedescendant");
+			}
 
 			visible = 0;
 			setSelected(-1);
@@ -628,6 +632,7 @@
 				selChSinceLastRender = true; // selected item will not have selected style until rendrered
 			}
 			element.innerHTML=resp;
+			element.firstChild.role = "listbox";
 			var selectableElements = getSelectableElements();
 			if (selectableElements) {
 				elementCount=selectableElements.length;
@@ -675,6 +680,11 @@
 					node.onclick = clickFunc;
 					node.onmouseover = mouseOverFunc;
 					node.onmousedown = mouseDownFunc;
+					node.role = "option";
+					node.id = getMenuId() + '-item-' + i;
+					node.setAttribute("tabindex", -1);
+					node.setAttribute("aria-posinset", i + 1);
+					node.setAttribute("aria-setsize", elementCount);
 				}
 			} else {
 				elementCount=0;
@@ -770,6 +780,8 @@
 			var node=getSelectableElement(0);
 			var re = /\bselected\b/gi;
 			var sizeAffected = false;
+			var input=Wicket.$(ajaxAttributes.c);
+
 			for(var i=0;i<elementCount;i++)
 			{
 				var origClassNames = node.className;
@@ -780,6 +792,7 @@
 
 					if (node && node instanceof HTMLElement && node.attributes) {
 						node.setAttribute("aria-selected", "true");
+						input.setAttribute("aria-activedescendant", node.id);
 					}
 
 					if (adjustScroll) {
