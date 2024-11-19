@@ -187,6 +187,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		{
 			sb.append(",className: '").append(settings.getCssClassName()).append('\'');
 		}
+		sb.append(",disableSelectOnTab: ").append(settings.isDisableSelectOnTab());
 		sb.append('}');
 		return sb.toString();
 	}

@@ -169,6 +169,9 @@
 						}
 						break;
 					case KEY_TAB:
+						if (cfg.disableSelectOnTab) {
+							return true;
+						}
 					case KEY_ENTER:
 						ignoreKeyEnter = false;
 

@@ -74,6 +74,8 @@ public final class AutoCompleteSettings implements IClusterable
 
 	private int minInputLength = 1;
 
+	private boolean disableSelectOnTab = false;
+
 	/**
 	 * Indicates whether the first item in the list is automatically selected when the autocomplete
 	 * list is shown.
@@ -378,5 +380,26 @@ public final class AutoCompleteSettings implements IClusterable
 	{
 		this.minInputLength = minInputLength;
 		return this;
+	}
+
+	/**
+	 * @param disableSelectOnTab if <code>true</code>, the tab key will not select any marked
+	 * item in the dropdown when leaving the input field,
+	 * <code>false</code> for default browser behavior
+	 * @return this {@link AutoCompleteSettings}
+	 */
+	public AutoCompleteSettings setDisableSelectOnTab(boolean disableSelectOnTab)
+	{
+		this.disableSelectOnTab = disableSelectOnTab;
+		return this;
+	}
+
+	/**
+	 * @return <code>true</code> if the tab key will not select any marked item in the dropdown
+	 * when leaving the input field, <code>false</code> for default browser behavior
+	 */
+	public boolean isDisableSelectOnTab()
+	{
+		return disableSelectOnTab;
 	}
 }
