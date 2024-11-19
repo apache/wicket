@@ -102,7 +102,11 @@
 				//workaround for IE. Clicks on scrollbar trigger
 				//'blur' event on input field. (See https://issues.apache.org/jira/browse/WICKET-5882)
 				if (menuId !== document.activeElement.id && (menuId + "-container") !== document.activeElement.id) {
-					hideAutoCompleteTimer = window.setTimeout(hideAutoComplete, 500);
+					hideAutoCompleteTimer = window.setTimeout(function() {
+							hideAutoComplete();
+							isTriggeredChange = false;
+							triggerChangeOnHide = false;
+					}, 500);
 				} else {
 					jQuery(this).trigger("focus");
 				}
