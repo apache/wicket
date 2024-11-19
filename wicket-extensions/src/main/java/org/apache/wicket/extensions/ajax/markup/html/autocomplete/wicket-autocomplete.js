@@ -469,7 +469,6 @@
 
 			if (triggerChangeOnHide) {
 				triggerChangeOnHide = false;
-				var input = Wicket.$(ajaxAttributes.c);
 				isTriggeredChange = true;
 				jQuery(input).trigger('change');
 			}
@@ -623,7 +622,7 @@
 				selChSinceLastRender = true; // selected item will not have selected style until rendrered
 			}
 			element.innerHTML=resp;
-			element.firstChild.role = "listbox"
+			element.firstChild.role = "listbox";
 			var selectableElements = getSelectableElements();
 			if (selectableElements) {
 				elementCount=selectableElements.length;
@@ -674,8 +673,8 @@
 					node.role = "option";
 					node.id = getMenuId() + '-item-' + i;
 					node.setAttribute("tabindex", -1);
-					node.setAttribute("aria-posinset", i + 1)
-					node.setAttribute("aria-setsize", elementCount)
+					node.setAttribute("aria-posinset", i + 1);
+					node.setAttribute("aria-setsize", elementCount);
 				}
 			} else {
 				elementCount=0;
