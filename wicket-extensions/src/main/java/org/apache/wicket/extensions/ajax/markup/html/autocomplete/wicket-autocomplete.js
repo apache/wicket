@@ -169,6 +169,10 @@
 						}
 						break;
 					case KEY_TAB:
+						if (cfg.focusInputOnTabSelection && selected > -1) {
+							// prevent moving focus to the next component if an item in the dropdown is selected
+							jqEvent.preventDefault();
+						}
 					case KEY_ENTER:
 						ignoreKeyEnter = false;
 
