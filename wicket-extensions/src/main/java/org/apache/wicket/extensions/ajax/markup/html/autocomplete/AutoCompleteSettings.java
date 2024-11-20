@@ -74,6 +74,8 @@ public final class AutoCompleteSettings implements IClusterable
 
 	private int minInputLength = 1;
 
+	private boolean focusInputOnTabSelection = false;
+
 	/**
 	 * Indicates whether the first item in the list is automatically selected when the autocomplete
 	 * list is shown.
@@ -377,6 +379,32 @@ public final class AutoCompleteSettings implements IClusterable
 	public AutoCompleteSettings setMinInputLength(int minInputLength)
 	{
 		this.minInputLength = minInputLength;
+		return this;
+	}
+
+	/**
+	 * Indicates how the Tab key should be handled when having an item in the autocomplete list
+	 * selected.
+	 *
+	 * @return <code>true</code> if the focus should return to the input field, <code>false</code>
+	 * moves the focus to the next component.
+	 */
+	public boolean shouldFocusInputOnTabSelection()
+	{
+		return focusInputOnTabSelection;
+	}
+
+	/**
+	 * Set how the tab key should be handled when having an item in the autocomplete list selected.
+	 *
+	 * @param focusInputOnTabSelection <code>true</code> if the focus should return to the input
+	 * field when the Tab key pressed, <code>false</code> is the default which moves the focus to
+	 * the next component.
+	 * @return this {@link AutoCompleteSettings}
+	 */
+	public AutoCompleteSettings setFocusInputOnTabSelection(boolean focusInputOnTabSelection)
+	{
+		this.focusInputOnTabSelection = focusInputOnTabSelection;
 		return this;
 	}
 }
