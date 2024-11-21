@@ -126,7 +126,8 @@
 			});
 
 			Wicket.Event.add(obj, 'keydown', function (jqEvent) {
-				switch(Wicket.Event.keyCode(jqEvent)){
+				var keyCode = Wicket.Event.keyCode(jqEvent);
+				switch (keyCode) {
 					case KEY_UP:
 						if (elementCount > 0) {
 							if (selected>-1) {
@@ -169,10 +170,6 @@
 						}
 						break;
 					case KEY_TAB:
-						if (cfg.focusInputOnTabSelection && selected > -1) {
-							// prevent moving focus to the next component if an item in the dropdown is selected
-							jqEvent.preventDefault();
-						}
 					case KEY_ENTER:
 						ignoreKeyEnter = false;
 
@@ -186,6 +183,12 @@
 							}
 
 							hideAutoComplete();
+
+							if (cfg.focusInputOnTabSelection && keyCode === KEY_TAB) {
+								// prevent moving focus to the next component if an item in the dropdown is selected
+								// using the Tab key
+								jqEvent.preventDefault();
+							}
 
 							ignoreKeyEnter = true;
 						} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {
