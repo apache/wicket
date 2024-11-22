@@ -187,7 +187,8 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		{
 			sb.append(",className: '").append(settings.getCssClassName()).append('\'');
 		}
-		sb.append(",focusInputOnTabSelection: ").append(settings.shouldFocusInputOnTabSelection());
+		sb.append(",tabBehavior: '").append(
+			settings.getTabBehavior().getValue()).append('\'');
 		sb.append('}');
 		return sb.toString();
 	}

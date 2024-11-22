@@ -184,7 +184,7 @@
 
 							hideAutoComplete();
 
-							if (cfg.focusInputOnTabSelection && keyCode === KEY_TAB) {
+							if (cfg.tabBehavior === 'selectFocusAutocompleteInput' && keyCode === KEY_TAB) {
 								// prevent moving focus to the next component if an item in the dropdown is selected
 								// using the Tab key
 								jqEvent.preventDefault();
