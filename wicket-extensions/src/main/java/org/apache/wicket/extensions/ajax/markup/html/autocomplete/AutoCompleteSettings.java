@@ -74,7 +74,7 @@ public final class AutoCompleteSettings implements IClusterable
 
 	private int minInputLength = 1;
 
-	private boolean focusInputOnTabSelection = false;
+	private TabBehavior tabBehavior = TabBehavior.SELECT_FOCUS_NEXT_ELEMENT;
 
 	/**
 	 * Indicates whether the first item in the list is automatically selected when the autocomplete
@@ -384,27 +384,52 @@ public final class AutoCompleteSettings implements IClusterable
 
 	/**
 	 * Indicates how the Tab key should be handled when having an item in the autocomplete list
-	 * selected.
+	 * selected, {@link TabBehavior#SELECT_FOCUS_NEXT_ELEMENT} is the default behavior.
 	 *
-	 * @return <code>true</code> if the focus should return to the input field, <code>false</code>
-	 * moves the focus to the next component.
+	 * @return the behavior that should be used when the Tab key is pressed
 	 */
-	public boolean shouldFocusInputOnTabSelection()
+	public TabBehavior getTabBehavior()
 	{
-		return focusInputOnTabSelection;
+		return tabBehavior;
 	}
 
 	/**
-	 * Set how the tab key should be handled when having an item in the autocomplete list selected.
+	 * Set how the Tab key should be handled when having an item in the autocomplete list selected.
 	 *
-	 * @param focusInputOnTabSelection <code>true</code> if the focus should return to the input
-	 * field when the Tab key pressed, <code>false</code> is the default which moves the focus to
-	 * the next component.
+	 * @param tabSelectBehavior the behavior that should be used when the Tab key is pressed,
+	 * {@link TabBehavior#SELECT_FOCUS_NEXT_ELEMENT} is the default behavior
 	 * @return this {@link AutoCompleteSettings}
 	 */
-	public AutoCompleteSettings setFocusInputOnTabSelection(boolean focusInputOnTabSelection)
+	public AutoCompleteSettings setTabBehavior(TabBehavior tabSelectBehavior)
 	{
-		this.focusInputOnTabSelection = focusInputOnTabSelection;
+		this.tabBehavior = tabSelectBehavior;
 		return this;
+	}
+
+	/**
+	 * A behavior that can be used to control how the Tab key should be handled when having an item
+	 * in the autocomplete list is marked.
+	 */
+	public enum TabBehavior {
+		/**
+		 * Select the currently marked item and move the focus to the next focusable element.
+		 */
+		SELECT_FOCUS_NEXT_ELEMENT("selectFocusNextElement"),
+		/**
+		 * Select the currently marked item and move the focus to the auto complete input field.
+		 */
+		SELECT_FOCUS_INPUT("selectFocusAutocompleteInput");
+
+		private final String value;
+
+		TabBehavior(String value)
+		{
+			this.value = value;
+		}
+
+		public String getValue()
+		{
+			return value;
+		}
 	}
 }
