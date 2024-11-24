@@ -74,7 +74,7 @@ public final class AutoCompleteSettings implements IClusterable
 
 	private int minInputLength = 1;
 
-	private TabBehavior tabBehavior = TabBehavior.SELECT_FOCUS_NEXT_ELEMENT;
+	private KeyTabBehavior keyTabBehavior = KeyTabBehavior.SELECT_FOCUS_NEXT_ELEMENT;
 
 	/**
 	 * Indicates whether the first item in the list is automatically selected when the autocomplete
@@ -384,25 +384,25 @@ public final class AutoCompleteSettings implements IClusterable
 
 	/**
 	 * Indicates how the Tab key should be handled when having an item in the autocomplete list
-	 * selected, {@link TabBehavior#SELECT_FOCUS_NEXT_ELEMENT} is the default behavior.
+	 * selected, {@link KeyTabBehavior#SELECT_FOCUS_NEXT_ELEMENT} is the default behavior.
 	 *
 	 * @return the behavior that should be used when the Tab key is pressed
 	 */
-	public TabBehavior getTabBehavior()
+	public KeyTabBehavior getKeyTabBehavior()
 	{
-		return tabBehavior;
+		return keyTabBehavior;
 	}
 
 	/**
 	 * Set how the Tab key should be handled when having an item in the autocomplete list selected.
 	 *
-	 * @param tabSelectBehavior the behavior that should be used when the Tab key is pressed,
-	 * {@link TabBehavior#SELECT_FOCUS_NEXT_ELEMENT} is the default behavior
+	 * @param keyTabBehavior the behavior that should be used when the Tab key is pressed,
+	 * {@link KeyTabBehavior#SELECT_FOCUS_NEXT_ELEMENT} is the default behavior
 	 * @return this {@link AutoCompleteSettings}
 	 */
-	public AutoCompleteSettings setTabBehavior(TabBehavior tabSelectBehavior)
+	public AutoCompleteSettings setKeyTabBehavior(KeyTabBehavior keyTabBehavior)
 	{
-		this.tabBehavior = tabSelectBehavior;
+		this.keyTabBehavior = keyTabBehavior;
 		return this;
 	}
 
@@ -410,7 +410,8 @@ public final class AutoCompleteSettings implements IClusterable
 	 * A behavior that can be used to control how the Tab key should be handled when having an item
 	 * in the autocomplete list is marked.
 	 */
-	public enum TabBehavior {
+	public enum KeyTabBehavior
+	{
 		/**
 		 * Select the currently marked item and move the focus to the next focusable element.
 		 */
@@ -422,7 +423,7 @@ public final class AutoCompleteSettings implements IClusterable
 
 		private final String value;
 
-		TabBehavior(String value)
+		KeyTabBehavior(String value)
 		{
 			this.value = value;
 		}
