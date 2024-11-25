@@ -108,7 +108,7 @@ class CachingResourceStreamLocatorTest
 
 		String style = null;
 		String variation = null;
-		Locale locale = new Locale("nl", "NL");
+		Locale locale = Locale.of("nl", "NL");
 		String extension = null;
 
 		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js";
@@ -138,7 +138,7 @@ class CachingResourceStreamLocatorTest
 
 		String style = null;
 		String variation = null;
-		Locale locale = new Locale("nl", "NL");
+		Locale locale = Locale.of("nl", "NL");
 		String extension = null;
 
 		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js";

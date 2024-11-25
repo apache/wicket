@@ -179,7 +179,7 @@ class LocalizerTest
 		assertEquals("value 1", localizer.getString("null", page.drop1));
 		assertEquals("value 2", localizer.getString("null", page.drop2));
 
-		Session.get().setLocale(new Locale("nl"));
+		Session.get().setLocale(Locale.of("nl"));
 		assertEquals("waarde 1", localizer.getString("null", page.drop1));
 		assertEquals("waarde 2", localizer.getString("null", page.drop2));
 	}
