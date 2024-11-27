@@ -18,6 +18,8 @@ package org.apache.wicket.util.io;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
 import org.apache.wicket.util.WicketTestTag;
@@ -36,7 +38,7 @@ class ConnectionsTest
 	@Test
 	void getLastModified() throws Exception
 	{
-		URL url = new URL("https://wicket.apache.org/learn/books/wia.png");
+		URL url = URI.create("https://wicket.apache.org/learn/books/wia.png").toURL();
 		Instant lastModified = Connections.getLastModified(url);
 		assertNotNull(lastModified);
 		assertNotEquals(0L, lastModified.toEpochMilli());

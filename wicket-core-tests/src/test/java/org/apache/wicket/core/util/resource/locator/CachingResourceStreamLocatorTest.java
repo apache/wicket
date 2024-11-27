@@ -24,6 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
 import java.util.Locale;
 
@@ -218,7 +219,7 @@ class CachingResourceStreamLocatorTest
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 
-		UrlResourceStream urs = new UrlResourceStream(new URL("file:///"));
+		UrlResourceStream urs = new UrlResourceStream(URI.create("file:///").toURL());
 
 		when(resourceStreamLocator.locate(String.class, "path")).thenReturn(urs);
 
