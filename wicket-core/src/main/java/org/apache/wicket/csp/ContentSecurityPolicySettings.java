@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
+import org.apache.wicket.core.request.handler.BufferedResponseRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -69,14 +70,18 @@ public class ContentSecurityPolicySettings
 	private final Map<CSPHeaderMode, CSPHeaderConfiguration> configs = new EnumMap<>(
 		CSPHeaderMode.class);
 
-	private Predicate<IRequestHandler> protectedFilter = RenderPageRequestHandler.class::isInstance;
+	private Predicate<IRequestHandler> protectedFilter;
 
 	private Supplier<String> nonceCreator;
 	
 	public ContentSecurityPolicySettings(Application application)
 	{
 		Args.notNull(application, "application");
-		
+
+		Predicate<IRequestHandler> isPage = RenderPageRequestHandler.class::isInstance;
+		Predicate<IRequestHandler> isBufferedPage = BufferedResponseRequestHandler.class::isInstance;
+		protectedFilter = isPage.or(isBufferedPage);
+
 		nonceCreator = () ->
 				application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
 	}

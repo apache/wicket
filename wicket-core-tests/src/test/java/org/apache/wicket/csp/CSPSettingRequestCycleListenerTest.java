@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.csp;
 
-import static org.apache.wicket.csp.CSPDirective.CHILD_SRC;
-import static org.apache.wicket.csp.CSPDirective.DEFAULT_SRC;
-import static org.apache.wicket.csp.CSPDirective.FRAME_SRC;
-import static org.apache.wicket.csp.CSPDirective.IMG_SRC;
-import static org.apache.wicket.csp.CSPDirective.REPORT_URI;
-import static org.apache.wicket.csp.CSPDirective.SANDBOX;
-import static org.apache.wicket.csp.CSPDirectiveSandboxValue.ALLOW_FORMS;
-import static org.apache.wicket.csp.CSPDirectiveSandboxValue.EMPTY;
-import static org.apache.wicket.csp.CSPDirectiveSrcValue.NONE;
-import static org.apache.wicket.csp.CSPDirectiveSrcValue.SELF;
-import static org.apache.wicket.csp.CSPDirectiveSrcValue.WILDCARD;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.DummyHomePage;
+import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -39,15 +41,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.util.tester.DummyHomePage;
-import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import static org.apache.wicket.csp.CSPDirective.*;
+import static org.apache.wicket.csp.CSPDirectiveSandboxValue.ALLOW_FORMS;
+import static org.apache.wicket.csp.CSPDirectiveSandboxValue.EMPTY;
+import static org.apache.wicket.csp.CSPDirectiveSrcValue.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CSPSettingRequestCycleListenerTest extends WicketTestCase
 {
@@ -379,6 +380,36 @@ class CSPSettingRequestCycleListenerTest extends WicketTestCase
 	    final var settings = tester.getApplication().getCspSettings().blocking();
 		// Act
 		assertThrows(IllegalArgumentException.class, () -> settings.add(IMG_SRC, source + ":"));
+	}
+
+	@Test
+	void addCspDirectiveInBufferedPageResponses()
+	{
+		tester.setFollowRedirects(true);
+		tester.getApplication().getCspSettings().blocking().add(STYLE_SRC, SELF);
+
+		tester.startPage(RedirectPage.class);
+
+		assertThat(tester.getLastResponse().getHeader("Content-Security-Policy"),
+			containsString(STYLE_SRC.getValue()));
+	}
+
+	public static class Page extends WebPage implements IMarkupResourceStreamProvider
+	{
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><head></head><body></body></html>");
+		}
+	}
+
+	public static class RedirectPage extends Page
+	{
+		public RedirectPage()
+		{
+			throw new RestartResponseException(new Page());
+		}
 	}
 
 
