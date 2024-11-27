@@ -96,7 +96,7 @@ public class InSessionPageStoreConcurrencyTest
 		};
 
 		Callable<Void> serializeSessionTask = () -> {
-			final NullOutputStream nullOutputStream = NullOutputStream.NULL_OUTPUT_STREAM;
+			final NullOutputStream nullOutputStream = NullOutputStream.INSTANCE;
 			try(final ObjectOutputStream objectOutputStream = new ObjectOutputStream(nullOutputStream))
 			{
 				objectOutputStream.writeObject(wicketTester.getSession());

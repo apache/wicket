@@ -141,12 +141,13 @@ public class PartWriterCallback extends WriteCallback
 				{
 					// Stream is going to be read from the starting point next to the skipped bytes
 					// till the end byte computed by the range between startbyte / endbyte
-					boundedInputStream = new BoundedInputStream(inputStream,
-						(endbyte - startbyte) + 1);
-
-					// The original input stream is going to be closed by the end of the request
-					// so set propagate close to false
-					boundedInputStream.setPropagateClose(false);
+					boundedInputStream = BoundedInputStream.builder()
+							.setInputStream(inputStream)
+							.setMaxCount((endbyte - startbyte) + 1)
+							// The original input stream is going to be closed by the end of the request
+							// so set propagate close to false
+							.setPropagateClose(false)
+							.get();
 
 					// The read bytes in the current buffer
 					int readBytes;
