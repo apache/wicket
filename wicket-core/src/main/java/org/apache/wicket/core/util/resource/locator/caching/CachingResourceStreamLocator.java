@@ -110,8 +110,9 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated use {@link #locate(Class, String, String, String, Locale, String, boolean, boolean)}
 	 */
+	@Deprecated(since = "9.19.0, 10.3.0")
 	@Override
 	public IResourceStream locate(Class<?> scope, String path, String style, String variation,
 		Locale locale, String extension, boolean strict)
