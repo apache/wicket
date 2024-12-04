@@ -106,7 +106,7 @@ public class Threads
 		variables.put("name", thread.getName());
 		variables.put("isDaemon", thread.isDaemon() ? " daemon" : "");
 		variables.put("priority", thread.getPriority());
-		variables.put("threadIdDec", thread.threadId());
+		variables.put("threadIdDec", thread.getId());
 		variables.put("state", thread.getState());
 
 		ThreadDump throwable = new ThreadDump();

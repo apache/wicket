@@ -39,7 +39,7 @@ class ResourceNameIteratorTest extends WicketTestCase
 	@Test
 	void localeResourceNameIterator()
 	{
-		Locale locale = Locale.of("a", "b", "c");
+		Locale locale = new Locale("a", "b", "c");
 		LocaleResourceNameIterator iterator = new LocaleResourceNameIterator(locale, false);
 		HashSet<String> variations = new HashSet<String>();
 		while (iterator.hasNext())
@@ -52,7 +52,7 @@ class ResourceNameIteratorTest extends WicketTestCase
 		assertTrue(variations.contains("_a"));
 		assertTrue(variations.contains(""));
 
-		locale = Locale.of("a", "b");
+		locale = new Locale("a", "b");
 		iterator = new LocaleResourceNameIterator(locale, false);
 		variations = new HashSet<String>();
 		while (iterator.hasNext())
@@ -64,7 +64,7 @@ class ResourceNameIteratorTest extends WicketTestCase
 		assertTrue(variations.contains("_a"));
 		assertTrue(variations.contains(""));
 
-		locale = Locale.of("a");
+		locale = new Locale("a");
 		iterator = new LocaleResourceNameIterator(locale, false);
 		variations = new HashSet<String>();
 		while (iterator.hasNext())

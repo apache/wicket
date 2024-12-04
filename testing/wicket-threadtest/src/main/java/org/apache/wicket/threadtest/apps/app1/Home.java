@@ -324,9 +324,9 @@ public class Home extends WebPage
 	}
 
 	/** Relevant locales wrapped in a list. */
-	private static final List<Locale> LOCALES = Arrays.asList(Locale.ENGLISH, Locale.of("nl"),
-		Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE, Locale.of("pt", "BR"),
-		Locale.of("fa", "IR"), Locale.of("da", "DK"));
+	private static final List<Locale> LOCALES = Arrays.asList(Locale.ENGLISH, new Locale("nl"),
+		Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE, new Locale("pt", "BR"),
+		new Locale("fa", "IR"), new Locale("da", "DK"));
 
 	/** available sites for the multiple select. */
 	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby",

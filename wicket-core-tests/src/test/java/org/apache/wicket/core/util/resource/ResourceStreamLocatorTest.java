@@ -44,21 +44,21 @@ import org.junit.jupiter.api.Test;
  */
 public class ResourceStreamLocatorTest extends WicketTestCase
 {
-	private final Locale locale_de = Locale.of("de");
-	private final Locale locale_de_DE = Locale.of("de", "DE");
-	private final Locale locale_de_DE_POSIX = Locale.of("de", "DE", "POSIX");
-	private final Locale locale_de_POSIX = Locale.of("de", "", "POSIX");
-	private final Locale locale_de_CH = Locale.of("de", "CH");
+	private final Locale locale_de = new Locale("de");
+	private final Locale locale_de_DE = new Locale("de", "DE");
+	private final Locale locale_de_DE_POSIX = new Locale("de", "DE", "POSIX");
+	private final Locale locale_de_POSIX = new Locale("de", "", "POSIX");
+	private final Locale locale_de_CH = new Locale("de", "CH");
 
-	private final Locale locale_en = Locale.of("en");
-	private final Locale locale_en_US = Locale.of("en", "US");
-	private final Locale locale_en_US_WIN = Locale.of("en", "US", "WIN");
-	private final Locale locale_en_WIN = Locale.of("en", "", "WIN");
+	private final Locale locale_en = new Locale("en");
+	private final Locale locale_en_US = new Locale("en", "US");
+	private final Locale locale_en_US_WIN = new Locale("en", "US", "WIN");
+	private final Locale locale_en_WIN = new Locale("en", "", "WIN");
 
-	private final Locale locale_fr = Locale.of("fr");
-	private final Locale locale_fr_FR = Locale.of("fr", "FR");
-	private final Locale locale_fr_FR_WIN = Locale.of("fr", "FR", "WIN");
-	private final Locale locale_fr_WIN = Locale.of("fr", "", "WIN");
+	private final Locale locale_fr = new Locale("fr");
+	private final Locale locale_fr_FR = new Locale("fr", "FR");
+	private final Locale locale_fr_FR_WIN = new Locale("fr", "FR", "WIN");
+	private final Locale locale_fr_WIN = new Locale("fr", "", "WIN");
 
 	/**
 	 * 

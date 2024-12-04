@@ -50,7 +50,7 @@ import org.junit.jupiter.api.condition.JRE;
 final class ConvertersTest
 {
 	/** Dutch locale for localized testing. */
-	private static final Locale DUTCH_LOCALE = Locale.of("nl", "NL");
+	private static final Locale DUTCH_LOCALE = new Locale("nl", "NL");
 
 	@Test
 	void thousandSeparator() {

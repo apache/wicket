@@ -40,36 +40,36 @@ class DefaultMarkupCacheKeyProviderTest extends WicketTestCase
 		Foo foo = new Foo("foo");
 		assertEquals("org.apache.wicket.markup.Foo.html", provider.getCacheKey(foo, foo.getClass()));
 
-		foo.locale = Locale.of("");
+		foo.locale = new Locale("");
 		assertEquals("org.apache.wicket.markup.Foo_.html",
 			provider.getCacheKey(foo, foo.getClass()));
 
-		foo.locale = Locale.of("language");
+		foo.locale = new Locale("language");
 		assertEquals("org.apache.wicket.markup.Foo_language.html", provider.getCacheKey(foo,
 			foo.getClass()));
 
-		foo.locale = Locale.of("", "COUNTRY");
+		foo.locale = new Locale("", "COUNTRY");
 		assertEquals("org.apache.wicket.markup.Foo__COUNTRY.html", provider.getCacheKey(foo,
 			foo.getClass()));
 
 		// variant only is ignored
-		foo.locale = Locale.of("", "", "variant");
+		foo.locale = new Locale("", "", "variant");
 		assertEquals("org.apache.wicket.markup.Foo_.html",
 			provider.getCacheKey(foo, foo.getClass()));
 
-		foo.locale = Locale.of("language", "COUNTRY");
+		foo.locale = new Locale("language", "COUNTRY");
 		assertEquals("org.apache.wicket.markup.Foo_language_COUNTRY.html", provider.getCacheKey(
 			foo, foo.getClass()));
 
-		foo.locale = Locale.of("language", "", "variant");
+		foo.locale = new Locale("language", "", "variant");
 		assertEquals("org.apache.wicket.markup.Foo_language__variant.html", provider.getCacheKey(
 			foo, foo.getClass()));
 
-		foo.locale = Locale.of("", "COUNTRY", "variant");
+		foo.locale = new Locale("", "COUNTRY", "variant");
 		assertEquals("org.apache.wicket.markup.Foo__COUNTRY_variant.html", provider.getCacheKey(
 			foo, foo.getClass()));
 
-		foo.locale = Locale.of("language", "COUNTRY", "variant");
+		foo.locale = new Locale("language", "COUNTRY", "variant");
 		assertEquals("org.apache.wicket.markup.Foo_language_COUNTRY_variant.html",
 			provider.getCacheKey(foo, foo.getClass()));
 	}

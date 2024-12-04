@@ -183,7 +183,7 @@ class ValidatorPropertiesTest extends WicketTestCase
 
 		// now test Dutch
 
-		tester.getSession().setLocale(Locale.of("nl"));
+		tester.getSession().setLocale(new Locale("nl"));
 		page = new TestPage();
 		form = (Form<?>)page.get("form1");
 		assertNotNull(form);

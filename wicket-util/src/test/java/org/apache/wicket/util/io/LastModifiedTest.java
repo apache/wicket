@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
 import org.apache.wicket.util.file.Files;
@@ -44,7 +43,7 @@ public class LastModifiedTest
 	{
 		File file = new File("/does/not/exists/4iorp4opergere.txt");
 		assertNull(Files.getLastModified(file));
-		assertNull(Connections.getLastModified(URI.create("file:" + file.getAbsolutePath()).toURL()));
+		assertNull(Connections.getLastModified(new URL("file:" + file.getAbsolutePath())));
 	}
 
 	/**
@@ -86,7 +85,7 @@ public class LastModifiedTest
 				final Instant expected = Instant.ofEpochMilli(lm);
 				assertEquals(expected, Files.getLastModified(file));
 				assertEquals(expected,
-					Connections.getLastModified(URI.create("file:" + file.getAbsolutePath()).toURL()));
+					Connections.getLastModified(new URL("file:" + file.getAbsolutePath())));
 			}
 		}
 		finally

@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
@@ -67,7 +66,7 @@ class UrlResourceStreamTest {
 
 		final AtomicInteger connectCounter = new AtomicInteger(0);
 		final AtomicInteger streamCounter = new AtomicInteger(0);
-		URL url = URL.of(URI.create("test://anything"), new CountingURLStreamHandler(realURL,
+		URL url = new URL(null, "test://anything", new CountingURLStreamHandler(realURL,
 				connectCounter, streamCounter));
 
 		UrlResourceStream countingStream = new UrlResourceStream(url);

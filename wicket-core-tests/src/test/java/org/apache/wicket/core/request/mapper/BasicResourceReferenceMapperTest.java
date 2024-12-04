@@ -162,7 +162,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
 		assertEquals(resource2, h.getResource());
-		assertEquals(Locale.of("en", "en"), h.getLocale());
+		assertEquals(new Locale("en", "en"), h.getLocale());
 		assertNull(h.getStyle());
 		assertNull(h.getVariation());
 		assertEquals(0, h.getPageParameters().getIndexedCount());
@@ -180,7 +180,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
 		assertEquals(resource2, h.getResource());
-		assertEquals(Locale.of("en", "en"), h.getLocale());
+		assertEquals(new Locale("en", "en"), h.getLocale());
 		assertEquals("style", h.getStyle());
 		assertNull(h.getVariation());
 		assertEquals(0, h.getPageParameters().getIndexedCount());
@@ -210,7 +210,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 		assertThat(handler).isInstanceOf(ResourceReferenceRequestHandler.class);
 		ResourceReferenceRequestHandler h = (ResourceReferenceRequestHandler)handler;
 		assertEquals(resource2, h.getResource());
-		assertEquals(Locale.of("en", "en"), h.getLocale());
+		assertEquals(new Locale("en", "en"), h.getLocale());
 		assertNull(h.getStyle());
 		assertNull(h.getVariation());
 		assertEquals("v1", h.getPageParameters().get("p1").toString());

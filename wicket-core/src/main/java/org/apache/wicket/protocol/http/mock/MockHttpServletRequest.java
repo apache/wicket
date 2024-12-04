@@ -650,11 +650,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 		if (bits.length > 1)
 		{
 			final String country = bits[1].toUpperCase(Locale.ROOT);
-			return Locale.of(language, country);
+			return new Locale(language, country);
 		}
 		else
 		{
-			return Locale.of(language);
+			return new Locale(language);
 		}
 	}
 

@@ -138,7 +138,7 @@ public class ResourceUtils
 				String basePath = path.substring(0, languagePos) + (min == null ? "" : min) +
 					extension;
 
-				Locale locale = Locale.of(language, country != null ? country : "",
+				Locale locale = new Locale(language, country != null ? country : "",
 					variant != null ? variant : "");
 
 				return new PathLocale(basePath, locale);

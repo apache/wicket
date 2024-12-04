@@ -68,12 +68,12 @@ public final class Home extends WicketExamplePage
 		// locale
 		add(new SetLocaleLink("goCanadian", Locale.CANADA));
 		add(new SetLocaleLink("goUS", Locale.US));
-		add(new SetLocaleLink("goDutch", Locale.of("nl", "NL")));
-		add(new SetLocaleLink("goGerman", Locale.of("de", "DE")));
-		add(new SetLocaleLink("goChinese", Locale.of("zh", "CN")));
-		add(new SetLocaleLink("goDanish", Locale.of("da", "DK")));
-		add(new SetLocaleLink("goKorean", Locale.of("ko", "KR")));
-		add(new SetLocaleLink("goHungarian", Locale.of("hu")));
+		add(new SetLocaleLink("goDutch", new Locale("nl", "NL")));
+		add(new SetLocaleLink("goGerman", new Locale("de", "DE")));
+		add(new SetLocaleLink("goChinese", new Locale("zh", "CN")));
+		add(new SetLocaleLink("goDanish", new Locale("da", "DK")));
+		add(new SetLocaleLink("goKorean", new Locale("ko", "KR")));
+		add(new SetLocaleLink("goHungarian", new Locale("hu")));
 	}
 
 	private static class SetLocaleLink extends Link<Void> {

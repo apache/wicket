@@ -33,7 +33,7 @@ class ImageButtonTest extends WicketTestCase
 	@Test
     void imageButton() throws Exception
 	{
-		Locale.setDefault(Locale.of("en", "US"));
+		Locale.setDefault(new Locale("en", "US"));
 
 		tester.startPage(Home.class);
 

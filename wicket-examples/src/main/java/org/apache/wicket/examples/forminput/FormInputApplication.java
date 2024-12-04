@@ -40,9 +40,9 @@ public class FormInputApplication extends WicketExampleApplication
 {
 	/** Relevant locales wrapped in a list. */
 	public static final List<Locale> LOCALES = Arrays.asList(Locale.ENGLISH,
-		Locale.of("nl", "NL"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
-		Locale.of("pt", "BR"), Locale.of("fa", "IR"), Locale.of("da", "DK"),
-		Locale.of("th", "TH"), Locale.of("ru"), Locale.of("ko", "KR"));
+		new Locale("nl", "NL"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
+		new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK"),
+		new Locale("th", "TH"), new Locale("ru"), new Locale("ko", "KR"));
 
 	@Override
 	public Class<? extends Page> getHomePage()
@@ -92,7 +92,7 @@ public class FormInputApplication extends WicketExampleApplication
 
 		// Persian buttons
 		Font fontFa = new Font("Serif", Font.BOLD, 16);
-		Locale farsi = Locale.of("fa", "IR");
+		Locale farsi = new Locale("fa", "IR");
 		DefaultButtonImageResource imgSaveFa = new DefaultButtonImageResource(
 			"\u0630\u062e\u064a\u0631\u0647");
 		imgSaveFa.setFont(fontFa);

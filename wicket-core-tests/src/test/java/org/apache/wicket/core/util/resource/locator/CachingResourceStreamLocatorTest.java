@@ -24,7 +24,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import java.net.URI;
 import java.net.URL;
 import java.util.Locale;
 
@@ -109,7 +108,7 @@ class CachingResourceStreamLocatorTest
 
 		String style = null;
 		String variation = null;
-		Locale locale = Locale.of("nl", "NL");
+		Locale locale = new Locale("nl", "NL");
 		String extension = null;
 
 		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js";
@@ -139,7 +138,7 @@ class CachingResourceStreamLocatorTest
 
 		String style = null;
 		String variation = null;
-		Locale locale = Locale.of("nl", "NL");
+		Locale locale = new Locale("nl", "NL");
 		String extension = null;
 
 		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js";
@@ -219,7 +218,7 @@ class CachingResourceStreamLocatorTest
 	{
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 
-		UrlResourceStream urs = new UrlResourceStream(URI.create("file:///").toURL());
+		UrlResourceStream urs = new UrlResourceStream(new URL("file:///"));
 
 		when(resourceStreamLocator.locate(String.class, "path")).thenReturn(urs);
 

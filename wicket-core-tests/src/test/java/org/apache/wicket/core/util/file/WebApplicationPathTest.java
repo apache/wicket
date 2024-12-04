@@ -19,7 +19,6 @@ package org.apache.wicket.core.util.file;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.net.URI;
 import java.net.URL;
 import jakarta.servlet.ServletContext;
 
@@ -36,7 +35,7 @@ class WebApplicationPathTest
 	@Test
 	void doNotServeResourcesFromWebInf() throws Exception
 	{
-		URL webUrl = URI.create("file://dummyFile").toURL();
+		URL webUrl = new URL("file://dummyFile");
 
 		ServletContext context = Mockito.mock(ServletContext.class);
 		Mockito.when(context.getResource(ArgumentMatchers.any(String.class))).thenReturn(webUrl);
