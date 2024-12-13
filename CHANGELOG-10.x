@@ -2,6 +2,23 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.3.0
+
+** Bug
+
+    * [WICKET-3899] - IFormVisitorParticipant don't get tested when validating form validators dependent components
+    * [WICKET-7024] - Wrong static resource urls when their generation is triggered by <wicket:link>
+    * [WICKET-7124] - The quickstart archetype fails to build 
+    * [WICKET-7125] - To use cdi-unit CreationalContext to inject beans in Wicket components during tests
+
+** Improvement
+
+    * [WICKET-7123] - Form.setDefaultButton() supports only one button per form hierarchy
+    * [WICKET-7131] - Improve accessibility and screen reader support for auto-complete component
+    * [WICKET-7133] - Ability move focus back to the autocomplete field when selecting an item using the Tab key
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.2.0
 
 ** Bug
