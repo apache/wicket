@@ -35,6 +35,8 @@ import org.apache.wicket.markup.head.ResourceAggregator.RecordedHeaderItem;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.resource.IResourceUrlSanitizer;
+import org.apache.wicket.request.resource.PackageResourceUrlSanitizer;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
@@ -162,6 +164,9 @@ public class ResourceSettings implements IPropertiesFactoryContext
 
 	// resource caching strategy
 	private IResourceCachingStrategy resourceCachingStrategy;
+
+	// resource URL sanitizer
+	private IResourceUrlSanitizer resourceUrlSanitizer = new PackageResourceUrlSanitizer();
 
 	// application these settings are bound to
 	private final Application application;
@@ -687,6 +692,24 @@ public class ResourceSettings implements IPropertiesFactoryContext
 		}
 		resourceCachingStrategy = strategy;
 		return this;
+	}
+
+	/**
+	 * @return the resource URL sanitizer, null if none
+	 */
+	public IResourceUrlSanitizer getUrlSanitizer()
+	{
+		return resourceUrlSanitizer;
+	}
+
+	/**
+	 * Sets the resource URL sanitizer
+	 * 
+	 * @param resourceUrlSanitizer
+	 */
+	public void setUrlSanitizer(IResourceUrlSanitizer resourceUrlSanitizer)
+	{
+		this.resourceUrlSanitizer = resourceUrlSanitizer;
 	}
 
 	/**

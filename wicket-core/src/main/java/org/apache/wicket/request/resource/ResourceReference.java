@@ -351,6 +351,18 @@ public abstract class ResourceReference implements IClusterable
 		}
 
 		/**
+		 * @param scope
+		 * @param name
+		 * @return sanitized URL attributes if a sanitizer is set for the app
+		 */
+		public UrlAttributes sanitize(Class<?> scope, String name)
+		{
+			IResourceUrlSanitizer sanitizer = Application.get().getResourceSettings()
+				.getUrlSanitizer();
+			return sanitizer == null ? this : sanitizer.sanitize(this, scope, name);
+		}
+
+		/**
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
 		@Override
