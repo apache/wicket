@@ -2,6 +2,21 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.19.0
+
+** Bug
+
+    * [WICKET-7024] - Wrong static resource urls when their generation is triggered by <wicket:link>
+    * [WICKET-7124] - The quickstart archetype fails to build 
+    * [WICKET-7132] - Tabbing from AutoComplete fields and back doesn't work as expected
+
+** Improvement
+
+    * [WICKET-7131] - Improve accessibility and screen reader support for auto-complete component
+    * [WICKET-7133] - Ability move focus back to the autocomplete field when selecting an item using the Tab key
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.18.0
 
 ** Bug
