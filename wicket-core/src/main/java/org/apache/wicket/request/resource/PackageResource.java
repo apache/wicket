@@ -706,7 +706,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		return getResourceStream(scope, path, locale, style, variation, true) != null;
 	}
 
-	private static IResourceStream getResourceStream(final Class<?> scope, final String path, final Locale locale,
+	public static IResourceStream getResourceStream(final Class<?> scope, final String path, final Locale locale,
 		final String style, final String variation, final boolean updateCache)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
@@ -869,31 +869,6 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	{
 		this.readBuffered = readBuffered;
 		return this;
-	}
-
-	/**
-	 * @return UrlAttributes with an existent locale/style/variation if a resource is bound to the
-	 * 	scope+name, otherwise returns null
-	 */
-	public static ResourceReference.UrlAttributes sanitize(
-		ResourceReference.UrlAttributes urlAttributes, Class<?> scope, String name)
-	{
-		IResourceStream filesystemMatch = getResourceStream(scope, name, urlAttributes.getLocale(),
-			urlAttributes.getStyle(), urlAttributes.getVariation(), false);
-		if (filesystemMatch == null)
-		{
-			return null;
-		}
-		try
-		{
-			filesystemMatch.close();
-		}
-		catch (IOException e)
-		{
-			log.error("failed to close", e);
-		}
-		return new ResourceReference.UrlAttributes(filesystemMatch.getLocale(),
-			filesystemMatch.getStyle(), filesystemMatch.getVariation());
 	}
 
 }
