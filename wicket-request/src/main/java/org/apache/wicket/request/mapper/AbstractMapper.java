@@ -216,22 +216,22 @@ public abstract class AbstractMapper implements IRequestMapper
 		}
 
 		Url parametersUrl = encoder.encodePageParameters(pageParameters);
-		if (parametersUrl != null)
+		
+		// copy the url
+		Url urlCopy = new Url(url);
+
+		for (String s : parametersUrl.getSegments())
 		{
-			// copy the url
-			url = new Url(url);
-
-			for (String s : parametersUrl.getSegments())
-			{
-				url.getSegments().add(s);
-			}
-			for (QueryParameter p : parametersUrl.getQueryParameters())
-			{
-				url.getQueryParameters().add(p);
-			}
+			urlCopy.getSegments().add(s);
 		}
-
-		return url;
+		for (QueryParameter p : parametersUrl.getQueryParameters())
+		{
+			urlCopy.getQueryParameters().add(p);
+		}
+		
+		urlCopy.setFragment(parametersUrl.getFragment());
+		
+		return urlCopy;
 	}
 
 	/**

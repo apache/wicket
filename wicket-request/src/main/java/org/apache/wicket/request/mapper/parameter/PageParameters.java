@@ -54,6 +54,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	private List<String> indexedParameters;
 
 	private List<NamedPair> namedParameters;
+	
+	private String fragment;
 
 	private Locale locale = Locale.getDefault(Locale.Category.DISPLAY);
 
@@ -75,7 +77,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		if (copy != null)
 		{
 			mergeWith(copy);
-			setLocale(copy.locale);
+			setFragment(copy.getFragment());
 		}
 	}
 
@@ -454,6 +456,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			mergeIndexed(other);
 			mergeNamed(other);
+			setFragment(other.getFragment());
 		}
 		return this;
 	}
@@ -495,6 +498,16 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		}
 	}
 
+	public String getFragment()
+	{
+		return fragment;
+	}
+
+	public void setFragment(String fragment)
+	{
+		this.fragment = fragment;
+	}
+	
 	@Override
 	public int hashCode()
 	{

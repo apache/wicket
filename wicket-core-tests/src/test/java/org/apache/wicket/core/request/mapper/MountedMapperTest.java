@@ -370,11 +370,12 @@ class MountedMapperTest extends AbstractMapperTest
 		parameters.set(1, "i2");
 		parameters.set("a", "b", INamedParameters.Type.QUERY_STRING);
 		parameters.set("b", "c", INamedParameters.Type.QUERY_STRING);
+		parameters.setFragment("fragment");
 		PageProvider provider = new PageProvider(MockPage.class, parameters);
 		provider.setPageSource(context);
 		IRequestHandler handler = new BookmarkablePageRequestHandler(provider);
 		Url url = encoder.mapHandler(handler);
-		assertEquals("some/mount/path/i1/i2?a=b&b=c", url.toString());
+		assertEquals("some/mount/path/i1/i2?a=b&b=c#fragment", url.toString());
 	}
 
 	/**
