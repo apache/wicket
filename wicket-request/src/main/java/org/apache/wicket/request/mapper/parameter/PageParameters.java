@@ -439,6 +439,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			indexedParameters = other.indexedParameters;
 			namedParameters = other.namedParameters;
 			locale = other.locale;
+			fragment = other.fragment;
 		}
 		return this;
 	}
@@ -456,7 +457,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			mergeIndexed(other);
 			mergeNamed(other);
-			setFragment(other.getFragment());
+			
+			fragment = Objects.defaultIfNull(other.fragment, fragment);
 		}
 		return this;
 	}
@@ -515,6 +517,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		int result = 1;
 		result = prime * result + ((indexedParameters == null) ? 0 : indexedParameters.hashCode());
 		result = prime * result + ((namedParameters == null) ? 0 : namedParameters.hashCode());
+		result = prime * result + ((fragment == null) ? 0 : fragment.hashCode());
 		return result;
 	}
 
@@ -544,6 +547,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			return false;
 		else if (!CollectionUtils.isEqualCollection(namedParameters, other.namedParameters))
 			return false;
+		if(!Strings.isEqual(other.fragment, fragment))
+			return false;
 		return true;
 	}
 
@@ -562,11 +567,11 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			return true;
 		}
-		if ((p1 == null) && (p2.getIndexedCount() == 0) && p2.getNamedCount() == 0)
+		if ((p1 == null) && (p2.getIndexedCount() == 0) && p2.getNamedCount() == 0 && p2.fragment == null)
 		{
 			return true;
 		}
-		if ((p2 == null) && (p1.getIndexedCount() == 0) && p1.getNamedCount() == 0)
+		if ((p2 == null) && (p1.getIndexedCount() == 0) && p1.getNamedCount() == 0 && p1.fragment == null)
 		{
 			return true;
 		}
@@ -574,11 +579,11 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	}
 
 	/**
-	 * @return <code>true</code> if the parameters are empty, <code>false</code> otherwise.
+	 * @return <code>true</code> if the parameters are empty and fragment is null, <code>false</code> otherwise.
 	 */
 	public boolean isEmpty()
 	{
-		return getIndexedCount() == 0 && getNamedCount() == 0;
+		return getIndexedCount() == 0 && getNamedCount() == 0 && fragment == null;
 	}
 
 	public PageParameters setLocale(Locale locale)
@@ -628,6 +633,14 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 				str.append('[').append(entry.getValue()).append(']');
 			}
 		}
+		
+		if (str.length() > 0)
+		{
+			str.append(", ");
+		}
+		
+		str.append("fragment=").append('\'').append(fragment).append('\'');
+		
 		return str.toString();
 	}
 }
