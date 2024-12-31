@@ -77,6 +77,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		if (copy != null)
 		{
 			mergeWith(copy);
+			setLocale(copy.locale);
 			setFragment(copy.getFragment());
 		}
 	}
