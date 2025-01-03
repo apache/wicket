@@ -44,7 +44,7 @@ import org.apache.wicket.util.string.Strings;
  * </p>
  * <p>
  * How those parameters are populated depends on the {@link IRequestMapper}s
- * 
+ *
  * @author Matej Knopp
  */
 public class PageParameters implements IClusterable, IIndexedParameters, INamedParameters
@@ -54,7 +54,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	private List<String> indexedParameters;
 
 	private List<NamedPair> namedParameters;
-	
+
 	private String fragment;
 
 	private Locale locale = Locale.getDefault(Locale.Category.DISPLAY);
@@ -68,7 +68,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	/**
 	 * Copy constructor.
-	 * 
+	 *
 	 * @param copy
 	 *          The parameters to copy from
 	 */
@@ -78,7 +78,6 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			mergeWith(copy);
 			setLocale(copy.locale);
-			setFragment(copy.getFragment());
 		}
 	}
 
@@ -161,7 +160,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	/**
 	 * Checks if the parameter with the given name exists
-	 * 
+	 *
 	 * @param name the parameter name
 	 * @return {@code true} if the parameter exists, {@code false} otherwise
 	 */
@@ -301,7 +300,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	/**
 	 * Adds a page parameter to these with {@code name} and {@code value}
-	 * 
+	 *
 	 * @param name
 	 * @param value
 	 * @return these
@@ -335,7 +334,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return this;
 	}
 
-	private void addNamed(String name, String[] values, int index, Type type) 
+	private void addNamed(String name, String[] values, int index, Type type)
 	{
 		if (namedParameters == null && values.length > 0)
 		{
@@ -348,7 +347,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		}
 	}
 
-	private void addNamed(String name, String value, int index, Type type) 
+	private void addNamed(String name, String value, int index, Type type)
 	{
 		if (namedParameters == null)
 		{
@@ -369,7 +368,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	/**
 	 * Sets the page parameter with {@code name} and {@code value} at the given {@code index}
-	 * 
+	 *
 	 * @param name
 	 * @param value
 	 * @param index
@@ -394,7 +393,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	/**
 	 * Sets the page parameter with {@code name} and {@code value}
-	 * 
+	 *
 	 * @param name
 	 * @param value
 	 * @return this
@@ -428,7 +427,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	/**
 	 * Copy the page parameters
-	 * 
+	 *
 	 * @param other
 	 *          The new parameters
 	 * @return this instance, for chaining
@@ -447,7 +446,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	/**
 	 * Merges the page parameters into this, overwriting existing values
-	 * 
+	 *
 	 * @param other
 	 *          The parameters to merge
 	 * @return this instance, for chaining
@@ -458,7 +457,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			mergeIndexed(other);
 			mergeNamed(other);
-			
+
 			fragment = Objects.defaultIfNull(other.fragment, fragment);
 		}
 		return this;
@@ -477,7 +476,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		}
 	}
 
-	private void mergeNamed(PageParameters other) 
+	private void mergeNamed(PageParameters other)
 	{
 		final List<NamedPair> otherNamed = other.namedParameters;
 		if (otherNamed == null || otherNamed.isEmpty())
@@ -510,7 +509,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	{
 		this.fragment = fragment;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -555,7 +554,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	/**
 	 * Compares two {@link PageParameters} objects.
-	 * 
+	 *
 	 * @param p1
 	 *          The first parameters
 	 * @param p2
@@ -634,14 +633,14 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 				str.append('[').append(entry.getValue()).append(']');
 			}
 		}
-		
+
 		if (str.length() > 0)
 		{
 			str.append(", ");
 		}
-		
+
 		str.append("fragment=").append('\'').append(fragment).append('\'');
-		
+
 		return str.toString();
 	}
 }
