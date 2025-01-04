@@ -217,6 +217,10 @@ public abstract class AbstractMapper implements IRequestMapper
 
 		Url parametersUrl = encoder.encodePageParameters(pageParameters);
 		
+		if (parametersUrl == null) {
+			return url;
+		}
+		
 		// copy the url
 		Url urlCopy = new Url(url);
 
