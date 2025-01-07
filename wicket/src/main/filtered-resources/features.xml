@@ -20,6 +20,7 @@
 		<bundle>mvn:org.apache.wicket/wicket-devutils/${project.version}</bundle>
 		<bundle>mvn:org.apache.wicket/wicket-extensions/${project.version}</bundle>
 		<bundle>mvn:org.apache.wicket/wicket-jmx/${project.version}</bundle>
+		<bundle>mvn:org.apache.wicket/wicket-objectsizeof-agent/${project.version}</bundle>
 		<capability>wicket;provider:=apache-wicket</capability>
 	</feature>
 </features>
