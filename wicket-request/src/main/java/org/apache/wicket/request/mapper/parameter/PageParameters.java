@@ -636,13 +636,12 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 		if (fragment != null)
 		{
-
-    		if (str.length() > 0)
-    		{
-    			str.append(", ");
-    		}
-
-    		str.append("fragment=").append('\'').append(fragment).append('\'');
+			if (str.length() > 0)
+			{ 
+				str.append(", ");
+			}
+			
+			str.append("fragment=").append('\'').append(fragment).append('\'');
 		}
 
 		return str.toString();
