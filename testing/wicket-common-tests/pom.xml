@@ -61,7 +61,7 @@
 			<dependency>
 				<groupId>org.jboss.logging</groupId>
 				<artifactId>jboss-logging-processor</artifactId>
-				<version>3.0.2.Final</version>
+				<version>3.0.3.Final</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
