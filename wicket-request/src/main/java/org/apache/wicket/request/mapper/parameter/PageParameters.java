@@ -634,12 +634,16 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			}
 		}
 
-		if (str.length() > 0)
+		if (fragment != null)
 		{
-			str.append(", ");
-		}
 
-		str.append("fragment=").append('\'').append(fragment).append('\'');
+    		if (str.length() > 0)
+    		{
+    			str.append(", ");
+    		}
+
+    		str.append("fragment=").append('\'').append(fragment).append('\'');
+		}
 
 		return str.toString();
 	}
