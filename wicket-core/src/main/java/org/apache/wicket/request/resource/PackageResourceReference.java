@@ -123,7 +123,7 @@ public class PackageResourceReference extends ResourceReference
 			//resource attributes (locale, style, variation) might be encoded in the URL
 			final Url url = requestCycle.getRequest().getUrl();
 			urlAttributes = ResourceUtil.decodeResourceReferenceAttributes(url);
-			urlAttributes = PackageResource.sanitize(urlAttributes, scope, name);
+			urlAttributes = urlAttributes.sanitize(scope, name);
 		}
 
 		String currentVariation = getCurrentVariation(urlAttributes);

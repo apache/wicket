@@ -14,41 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi.testapp;
+package org.apache.wicket.request.resource;
 
-import jakarta.inject.Inject;
-
-import org.apache.wicket.Page;
-import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.resource.ResourceReference.UrlAttributes;
 
 /**
- * @author jsarman
+ * Sanitizes the resource URL parameters. Implementations should be concerned to return a set of
+ * style/locale/variation that is safe to end up as keys in the server resource cache, without
+ * causing unnecessary values to be kept in the primary memory.
+ * 
+ * @author Pedro Santos
  */
-public class TestCdiApplication extends WebApplication
+public interface IResourceUrlSanitizer
 {
 
-	@Inject
-	@TestQualifier
-	String testString;
-
-
-	@Override
-	public Class<? extends Page> getHomePage()
-	{
-		return TestPage.class;
-	}
-
-	@Override
-	protected void init()
-	{
-		super.init();
-		new CdiConfiguration().configure(this);
-	}
-
-	public String getInjectedTestString()
-	{
-		return testString;
-	}
+	/**
+	 * Sanitizes the {@link UrlAttributes} and returns a new instance with style/locale/variation
+	 * values that are safe to be kept in-memory.
+	 * 
+	 * @param urlAttributes
+	 * @param scope
+	 * @param name
+	 * @return null if there are no resource matching the scope/name
+	 */
+	public UrlAttributes sanitize(UrlAttributes urlAttributes, Class<?> scope, String name);
 
 }

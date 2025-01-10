@@ -19,53 +19,75 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-native-websocket</artifactId>
+		<artifactId>wicket-parent</artifactId>
 		<version>10.4.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>wicket-native-websocket-javax</artifactId>
+	<artifactId>wicket-cdi-tests</artifactId>
 	<packaging>jar</packaging>
-	<name>Wicket Native WebSocket Javax</name>
-	<description>Provides the common code needed for the different integrations with web container's WebSocket implementations</description>
+	<name>Wicket CDI tests</name>
+	<description>
+		Provides tests for the Wicket and CDI module.
+	</description>
 	<properties>
-		<osgi.export.package>org.apache.wicket.protocol.ws.javax*;-noimport:=true</osgi.export.package>
+		<osgi.export.package>org.apache.wicket.cdi*;-noimport:=true</osgi.export.package>
 		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+		<maven.deploy.skip>true</maven.deploy.skip>
+		<japicmp.skip>true</japicmp.skip> <!-- this module is not released -->
 	</properties>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>jakarta.interceptor</groupId>
-				<artifactId>jakarta.interceptor-api</artifactId>
-				<version>2.2.0</version>
-				<scope>provided</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
 	<dependencies>
 		<dependency>
-			<groupId>jakarta.websocket</groupId>
-			<artifactId>jakarta.websocket-api</artifactId>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>jakarta.websocket</groupId>
-			<artifactId>jakarta.websocket-client-api</artifactId>
+			<groupId>jakarta.enterprise</groupId>
+			<artifactId>jakarta.enterprise.cdi-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-native-websocket-core</artifactId>
+			<artifactId>wicket-cdi</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
+		  <groupId>io.github.cdi-unit</groupId>
+		  <artifactId>cdi-unit</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-tester</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>websocket-jakarta-server</artifactId>
+			<groupId>org.jboss.weld.module</groupId>
+			<artifactId>weld-web</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.weld.se</groupId>
+			<artifactId>weld-se-core</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+        		<executions>
+          			<execution>
+						<id>test-compile</id>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+						<configuration>
+							<useModulePath>false</useModulePath>
+						</configuration>
+          			</execution>
+       			</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

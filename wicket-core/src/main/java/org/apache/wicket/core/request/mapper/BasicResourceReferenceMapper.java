@@ -132,7 +132,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 
 			if (scope != null && scope.getPackage() != null)
 			{
-				ResourceReference.UrlAttributes sanitized = PackageResource.sanitize(attributes, scope, name.toString());
+				ResourceReference.UrlAttributes sanitized = attributes.sanitize(scope, name.toString());
 				boolean createIfNotFound = false;
 				if (sanitized != null)
 				{
