@@ -1273,11 +1273,20 @@ public class Form<T> extends WebMarkupContainer
 		String submitId = component.getMarkupId();
 
 		AppendingStringBuffer script = new AppendingStringBuffer();
+        // check keypress event is Enter
 		script.append("if (event.which != 13) return true;");
+        // contenteditable elements will not submit
+        script.append("if (event.target.getAttribute('contenteditable') === 'true') return true;");
 		// text area will submit on CTRL+Enter
 		script.append("if (event.target.tagName.toLowerCase() === 'textarea' && !event.ctrlKey) return true;");
+        // only allow submit for input and textarea
+        script.append("if (event.target.tagName.toLowerCase() !== 'input' && event.target.tagName.toLowerCase() !== 'textarea') return true;");
+
 		script.append("var b = document.getElementById('" + submitId + "');");
+        // if submit button is not visible, do not submit
 		script.append("if (window.getComputedStyle(b).visibility === 'hidden') return true;");
+
+        // execute submit via default submit button click
 		script.append("event.stopPropagation();");
 		script.append("event.preventDefault();");
 		script.append("if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {");
@@ -1286,6 +1295,8 @@ public class Form<T> extends WebMarkupContainer
 		script.append("} else {");
 		script.append("b.click();");
 		script.append("}");
+
+        // stop event propagation
 		script.append("return false;");
 
 		headerResponse.render(OnEventHeaderItem.forMarkupId(getMarkupId(), "keypress", script.toString()));
