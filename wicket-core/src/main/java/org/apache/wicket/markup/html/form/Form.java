@@ -1273,9 +1273,11 @@ public class Form<T> extends WebMarkupContainer
 		String submitId = component.getMarkupId();
 
 		AppendingStringBuffer script = new AppendingStringBuffer();
-		script.append("var b = document.getElementById('").append(submitId).append("');");
-		script.append("if (window.getComputedStyle(b).visibility === 'hidden') return;");
-		script.append("if (event.which == 13) {");
+		script.append("if (event.which != 13) return true;");
+		// text area will submit on CTRL+Enter
+		script.append("if (event.target.tagName.toLowerCase() === 'textarea' && !event.ctrlKey) return true;");
+		script.append("var b = document.getElementById('" + submitId + "');");
+		script.append("if (window.getComputedStyle(b).visibility === 'hidden') return true;");
 		script.append("event.stopPropagation();");
 		script.append("event.preventDefault();");
 		script.append("if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {");
@@ -1285,7 +1287,6 @@ public class Form<T> extends WebMarkupContainer
 		script.append("b.click();");
 		script.append("}");
 		script.append("return false;");
-		script.append("}");
 
 		headerResponse.render(OnEventHeaderItem.forMarkupId(getMarkupId(), "keypress", script.toString()));
 	}

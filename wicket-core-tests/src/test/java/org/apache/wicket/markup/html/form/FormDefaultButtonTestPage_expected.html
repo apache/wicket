@@ -4,7 +4,7 @@
 <script type="text/javascript">
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
-Wicket.Event.add('form2', 'keypress', function(event) { var b = document.getElementById('default1');if (window.getComputedStyle(b).visibility === 'hidden') return;if (event.which == 13) {event.stopPropagation();event.preventDefault();if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {var r = Wicket.bind(b.onclick, b)();if (r != false) b.click();} else {b.click();}return false;};});;
+Wicket.Event.add('form2', 'keypress', function(event) { if (event.which != 13) return true;if (event.target.tagName.toLowerCase() === 'textarea' && !event.ctrlKey) return true;var b = document.getElementById('default1');if (window.getComputedStyle(b).visibility === 'hidden') return true;event.stopPropagation();event.preventDefault();if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {var r = Wicket.bind(b.onclick, b)();if (r != false) b.click();} else {b.click();}return false;;});;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
