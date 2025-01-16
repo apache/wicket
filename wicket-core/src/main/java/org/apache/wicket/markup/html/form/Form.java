@@ -1035,7 +1035,7 @@ public class Form<T> extends WebMarkupContainer
 			submitter.onError();
 		}
 
-		// invoke Form#onSubmit(..) going from innermost to outermost
+		// invoke Form#onError(..) going from innermost to outermost
 		visitFormsPostOrder(processingForm, (form, visit) -> {
 			if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
 			{
