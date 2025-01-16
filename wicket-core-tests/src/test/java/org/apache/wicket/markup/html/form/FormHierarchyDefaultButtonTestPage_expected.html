@@ -11,12 +11,13 @@ Wicket.Log.enabled=true;
 Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.form.FormHierarchyDefaultButtonTestPage?0";
 /*]]>*/
 </script>
+<script type="text/javascript" src="../resource/org.apache.wicket.markup.html.form.Form/Form.js"></script>
 <script type="text/javascript">
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
 Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.form.FormHierarchyDefaultButtonTestPage?0-1.0-parentForm-parentSubmit","m":"POST","c":"parentSubmit2","f":"parentForm1","sc":"parentSubmit","e":"click"});;
-Wicket.Event.add('childForm4', 'keypress', function(event) { if (event.which != 13) return true;if (event.target.tagName.toLowerCase() === 'textarea' && !event.ctrlKey) return true;var b = document.getElementById('childSubmit3');if (window.getComputedStyle(b).visibility === 'hidden') return true;event.stopPropagation();event.preventDefault();if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {var r = Wicket.bind(b.onclick, b)();if (r != false) b.click();} else {b.click();}return false;;});;
-Wicket.Event.add('parentForm1', 'keypress', function(event) { if (event.which != 13) return true;if (event.target.tagName.toLowerCase() === 'textarea' && !event.ctrlKey) return true;var b = document.getElementById('parentSubmit2');if (window.getComputedStyle(b).visibility === 'hidden') return true;event.stopPropagation();event.preventDefault();if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {var r = Wicket.bind(b.onclick, b)();if (r != false) b.click();} else {b.click();}return false;;});;
+Wicket.Event.add('childForm4', 'keypress', function(event) { handleDefaultSubmit(event, 'childSubmit3','NONE');;});;
+Wicket.Event.add('parentForm1', 'keypress', function(event) { handleDefaultSubmit(event, 'parentSubmit2','NONE');;});;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
