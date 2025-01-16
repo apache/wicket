@@ -42,6 +42,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
@@ -56,6 +57,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.parameter.EmptyRequestParameters;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
@@ -245,6 +247,39 @@ public class Form<T> extends WebMarkupContainer
 	public static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
 	public static final String UPLOAD_SINGLE_FILE_TOO_LARGE_RESOURCE_KEY = "uploadSingleFileTooLarge";
 	public static final String UPLOAD_TOO_MANY_FILES_RESOURCE_KEY = "uploadTooManyFiles";
+
+    /**
+     * Enumeration that allows different keystrokes to be used to submit a form
+     * multi-line input field e.g. a text area or contenteditable.
+     */
+    public enum MultiRowInputDefaultSubmitKeyStroke {
+
+        /**
+         * No submit at all.
+         */
+        NONE,
+
+        /**
+         * Submit on enter.
+         */
+        ENTER,
+
+        /**
+         * Submit on ctrl+enter.
+         */
+        CTRL_ENTER,
+
+        /**
+         * Submit on shift+enter.
+         */
+        SHIFT_ENTER
+    }
+
+    /**
+     * Default keystroke to submit a form multi-line input field e.g. a text area or contenteditable
+     * if {@link #defaultSubmittingComponent} is defined.
+     */
+    private MultiRowInputDefaultSubmitKeyStroke multiRowInputDefaultSubmitKeyStroke = null;
 
 	/**
 	 * Any default IFormSubmittingComponent. If set, a hidden submit component will be rendered
@@ -1267,40 +1302,20 @@ public class Form<T> extends WebMarkupContainer
 	 * @param headerResponse
 	 *            The header response.
 	 */
-	protected void addDefaultSubmitButtonHandler(IHeaderResponse headerResponse)
-	{
-		final Component component = (Component) defaultSubmittingComponent;
-		String submitId = component.getMarkupId();
+    protected void addDefaultSubmitButtonHandler(IHeaderResponse headerResponse)
+    {
+        final Component component = (Component) defaultSubmittingComponent;
+        String submitId = component.getMarkupId();
 
-		AppendingStringBuffer script = new AppendingStringBuffer();
-        // check keypress event is Enter
-		script.append("if (event.which != 13) return true;");
-        // contenteditable elements will not submit
-        script.append("if (event.target.getAttribute('contenteditable') === 'true') return true;");
-		// text area will submit on CTRL+Enter
-		script.append("if (event.target.tagName.toLowerCase() === 'textarea' && !event.ctrlKey) return true;");
-        // only allow submit for input and textarea
-        script.append("if (event.target.tagName.toLowerCase() !== 'input' && event.target.tagName.toLowerCase() !== 'textarea') return true;");
+        String multiRow = multiRowInputDefaultSubmitKeyStroke != null ?
+            multiRowInputDefaultSubmitKeyStroke.name() :
+            MultiRowInputDefaultSubmitKeyStroke.NONE.name();
 
-		script.append("var b = document.getElementById('" + submitId + "');");
-        // if submit button is not visible, do not submit
-		script.append("if (window.getComputedStyle(b).visibility === 'hidden') return true;");
+        headerResponse.render(JavaScriptReferenceHeaderItem.forReference(new JavaScriptResourceReference(Form.class, "Form.js")));
 
-        // execute submit via default submit button click
-		script.append("event.stopPropagation();");
-		script.append("event.preventDefault();");
-		script.append("if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {");
-		script.append("var r = Wicket.bind(b.onclick, b)();");
-		script.append("if (r != false) b.click();");
-		script.append("} else {");
-		script.append("b.click();");
-		script.append("}");
-
-        // stop event propagation
-		script.append("return false;");
-
-		headerResponse.render(OnEventHeaderItem.forMarkupId(getMarkupId(), "keypress", script.toString()));
-	}
+        headerResponse.render(OnEventHeaderItem.forMarkupId(getMarkupId(), "keypress",
+            "handleDefaultSubmit(event, '" + submitId + "','" + multiRow + "');"));
+    }
 
 	/**
 	 * Template method to allow clients to do any processing (like recording the current model so
@@ -2213,4 +2228,23 @@ public class Form<T> extends WebMarkupContainer
 		 */
 		ABORT
 	}
+
+    /**
+     *
+     * @return Default submit keystroke for multi-row input fields, used if {@link #defaultSubmittingComponent}
+     * is not null. Default behavior is no submit {@see MultiRowInputDefaultSubmitKeyStroke#NONE}.
+     */
+    public MultiRowInputDefaultSubmitKeyStroke getMultiRowInputDefaultSubmitKeyStroke()
+    {
+        return multiRowInputDefaultSubmitKeyStroke;
+    }
+
+    /**
+     * Set default submit keystroke for multi-row input fields, used if {@link #defaultSubmittingComponent} is not null.
+     * @param multiRowInputDefaultSubmitKeyStroke
+     */
+    public void setMultiRowInputDefaultSubmitKeyStroke(MultiRowInputDefaultSubmitKeyStroke multiRowInputDefaultSubmitKeyStroke)
+    {
+        this.multiRowInputDefaultSubmitKeyStroke = multiRowInputDefaultSubmitKeyStroke;
+    }
 }

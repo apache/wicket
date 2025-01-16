@@ -378,6 +378,7 @@ public class FormInput extends WicketExamplePage
 			};
 			add(parentSubmit);
 			setDefaultButton(parentSubmit);
+            setMultiRowInputDefaultSubmitKeyStroke(MultiRowInputDefaultSubmitKeyStroke.SHIFT_ENTER);
 
 			Form<Void> childForm = new Form<>("childForm");
 			add(childForm);
@@ -401,6 +402,7 @@ public class FormInput extends WicketExamplePage
 			};
 			childForm.add(childSubmit);
 			childForm.setDefaultButton(childSubmit);
+            childForm.setMultiRowInputDefaultSubmitKeyStroke(MultiRowInputDefaultSubmitKeyStroke.CTRL_ENTER);
 		}
 	}
 
