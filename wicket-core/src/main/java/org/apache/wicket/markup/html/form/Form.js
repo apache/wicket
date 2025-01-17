@@ -16,8 +16,8 @@
  */
 
 function handleDefaultSubmit(event, submitId, keyStroke) {
-    var tag = event.target.tagName.toLowerCase();
-    var contenteditable = event.target.getAttribute('contenteditable') === 'true';
+    const tag = event.target.tagName.toLowerCase();
+    const contenteditable = event.target.getAttribute('contenteditable') === 'true';
 
     // we're interested only in inputs, textareas and contenteditable fields
     if (tag !== 'input' && tag !== 'textarea' && !contenteditable) return;
@@ -35,14 +35,14 @@ function handleDefaultSubmit(event, submitId, keyStroke) {
         }
     }
 
-    var b = document.getElementById(submitId);
+    const b = document.getElementById(submitId);
     if (window.getComputedStyle(b).visibility === 'hidden') return;
 
     event.stopPropagation();
     event.preventDefault();
 
     if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {
-        var r = Wicket.bind(b.onclick, b)();
+        const r = Wicket.bind(b.onclick, b)();
         if (r != false) b.click();
     } else {
         b.click();
