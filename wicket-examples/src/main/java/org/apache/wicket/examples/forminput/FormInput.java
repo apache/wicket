@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.forminput;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
@@ -401,7 +400,6 @@ public class FormInput extends WicketExamplePage
 			};
 			childForm.add(childSubmit);
 			childForm.setDefaultButton(childSubmit);
-            childForm.setMultiRowInputDefaultSubmitKeyStroke(MultiRowInputDefaultSubmitKeyStroke.CTRL_ENTER);
 		}
 	}
 
