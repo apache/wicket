@@ -1273,12 +1273,12 @@ public class Form<T> extends WebMarkupContainer
 
 		AppendingStringBuffer script = new AppendingStringBuffer();
 		script.append("if (event.target.tagName.toLowerCase() !== 'input' || event.which != 13) return;");
-		script.append("const b = document.getElementById('" + submitId + "');");
+		script.append("var b = document.getElementById('" + submitId + "');");
 		script.append("if (window.getComputedStyle(b).visibility === 'hidden') return;");
 		script.append("event.stopPropagation();");
 		script.append("event.preventDefault();");
 		script.append("if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {");
-		script.append("const r = Wicket.bind(b.onclick, b)();");
+		script.append("var r = Wicket.bind(b.onclick, b)();");
 		script.append("if (r != false) b.click();");
 		script.append("} else {");
 		script.append("b.click();");

@@ -1267,7 +1267,6 @@
 								</excludes>
 							</resourcesSet>
 						</resourcesSets>
-                        <languageIn>ECMASCRIPT_2015</languageIn>
 					</configuration>
 					<executions>
 						<execution>
