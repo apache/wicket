@@ -1,11 +1,10 @@
 <html>
-<head><script type="text/javascript" src="../resource/org.apache.wicket.markup.html.form.Form/Form.js"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-3.7.1.js"></script>
+<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-3.7.1.js"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
 <script type="text/javascript">
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
-Wicket.Event.add('form2', 'keypress', function(event) { handleDefaultSubmit(event, 'default1','NONE');;});;
+Wicket.Event.add('form2', 'keypress', function(event) { if (event.target.tagName.toLowerCase() !== 'input' || event.which != 13) return;const b = document.getElementById('default1');if (window.getComputedStyle(b).visibility === 'hidden') return;event.stopPropagation();event.preventDefault();if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {const r = Wicket.bind(b.onclick, b)();if (r != false) b.click();} else {b.click();}return false;;});;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
