@@ -378,7 +378,6 @@ public class FormInput extends WicketExamplePage
 			};
 			add(parentSubmit);
 			setDefaultButton(parentSubmit);
-            setMultiRowInputDefaultSubmitKeyStroke(MultiRowInputDefaultSubmitKeyStroke.SHIFT_ENTER);
 
 			Form<Void> childForm = new Form<>("childForm");
 			add(childForm);
