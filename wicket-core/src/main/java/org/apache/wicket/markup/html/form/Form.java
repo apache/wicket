@@ -36,7 +36,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
@@ -1273,9 +1272,9 @@ public class Form<T> extends WebMarkupContainer
 		String submitId = component.getMarkupId();
 
 		AppendingStringBuffer script = new AppendingStringBuffer();
-		script.append("var b = document.getElementById('").append(submitId).append("');");
+		script.append("if (event.target.tagName.toLowerCase() !== 'input' || event.which != 13) return;");
+		script.append("var b = document.getElementById('" + submitId + "');");
 		script.append("if (window.getComputedStyle(b).visibility === 'hidden') return;");
-		script.append("if (event.which == 13) {");
 		script.append("event.stopPropagation();");
 		script.append("event.preventDefault();");
 		script.append("if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {");
@@ -1285,7 +1284,6 @@ public class Form<T> extends WebMarkupContainer
 		script.append("b.click();");
 		script.append("}");
 		script.append("return false;");
-		script.append("}");
 
 		headerResponse.render(OnEventHeaderItem.forMarkupId(getMarkupId(), "keypress", script.toString()));
 	}

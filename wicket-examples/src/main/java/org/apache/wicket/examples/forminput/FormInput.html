@@ -95,10 +95,6 @@
       </fieldset>
     </form>
 
-	<div id="feedbackPanel">
-		<span wicket:id="feedback"/>
-    </div>
-
 	<h2 class="example-title"><wicket:message key="FormInput.formHierarchyExample"/></h2>
 
 	<form wicket:id="parentForm" class="parent-form">
@@ -107,6 +103,10 @@
 		<div class="gap-1">
 			<label for="parentText"><wicket:message key="FormInput.parentTextLabel"/></label>
 			<input type="text" wicket:id="parentText" id="parentText"/>
+
+			<label for="parentTextarea"><wicket:message key="FormInput.parentTextareaLabel"/></label>
+			<textarea wicket:id="parentTextarea" id="parentTextarea"></textarea>
+
 			<input type="submit" wicket:id="parentSubmit" wicket:message="value:FormInput.parentSubmit"/>
 		</div>
 
@@ -116,6 +116,10 @@
 			<div class="gap-1">
 				<label for="childText"><wicket:message key="FormInput.childTextLabel"/></label>
 				<input type="text" wicket:id="childText" id="childText"/>
+
+				<label for="childTextarea"><wicket:message key="FormInput.childTextareaLabel"/></label>
+				<textarea wicket:id="childTextarea" id="childTextarea"></textarea>
+
 				<input type="submit" wicket:id="childSubmit" wicket:message="value:FormInput.childSubmit"/>
 			</div>
 		</form>
@@ -126,12 +130,24 @@
 				<wicket:message key="FormInput.parentTextLabel"/>
 				<span wicket:id="parentData"/>
 			</div>
+	        <div class="gap-1">
+				<wicket:message key="FormInput.parentTextareaLabel"/>
+				<span wicket:id="parentTextarea"/>
+			</div>
 			<div class="gap-1">
 				<wicket:message key="FormInput.childTextLabel"/>
 				<span wicket:id="childData"/>
 			</div>
+			<div class="gap-1">
+				<wicket:message key="FormInput.childTextareaLabel"/>
+				<span wicket:id="childTextarea"/>
+			</div>
 		</div>
 	</form>
+
+    <div id="feedbackPanel">
+        <span wicket:id="feedback"/>
+    </div>
 
 </wicket:extend>
 </body>

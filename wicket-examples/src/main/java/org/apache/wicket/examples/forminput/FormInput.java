@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.forminput;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
@@ -359,6 +358,9 @@ public class FormInput extends WicketExamplePage
 			TextField<String> parentText = new TextField<>("parentText", new PropertyModel<>(model, "parentText"));
 			add(parentText);
 
+			TextArea<String> parentTextarea = new TextArea<>("parentTextarea", new PropertyModel<>(model, "parentTextarea"));
+			add(parentTextarea);
+
 			final ParentFormDataTable parentFormDataTable = new ParentFormDataTable("parentFormDataTable", model);
 			add(parentFormDataTable);
 
@@ -381,6 +383,9 @@ public class FormInput extends WicketExamplePage
 
 			TextField<String> childText = new TextField<>("childText", new PropertyModel<>(model, "childText"));
 			childForm.add(childText);
+
+			TextArea<String> childTextarea = new TextArea<>("childTextarea", new PropertyModel<>(model, "childTextarea"));
+			childForm.add(childTextarea);
 
 			AjaxSubmitLink childSubmit = new AjaxSubmitLink("childSubmit")
 			{
@@ -408,7 +413,9 @@ public class FormInput extends WicketExamplePage
 			setOutputMarkupId(true);
 
 			add(new Label("parentData", new PropertyModel<>(model, "parentText")));
+			add(new Label("parentTextarea", new PropertyModel<>(model, "parentTextarea")));
 			add(new Label("childData", new PropertyModel<>(model, "childText")));
+			add(new Label("childTextarea", new PropertyModel<>(model, "childTextarea")));
 		}
 	}
 
@@ -418,6 +425,10 @@ public class FormInput extends WicketExamplePage
 		private String parentText;
 
 		private String childText;
+
+		private String parentTextarea;
+
+		private String childTextarea;
 
 		public String getParentText()
 		{
@@ -437,6 +448,26 @@ public class FormInput extends WicketExamplePage
 		public void setChildText(String childText)
 		{
 			this.childText = childText;
+		}
+
+		public String getChildTextarea()
+		{
+			return childTextarea;
+		}
+
+		public void setChildTextarea(String childTextarea)
+		{
+			this.childTextarea = childTextarea;
+		}
+
+		public String getParentTextarea()
+		{
+			return parentTextarea;
+		}
+
+		public void setParentTextarea(String parentTextarea)
+		{
+			this.parentTextarea = parentTextarea;
 		}
 	}
 }

@@ -15,8 +15,8 @@ Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.form.Form
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
 Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.form.FormHierarchyDefaultButtonTestPage?0-1.0-parentForm-parentSubmit","m":"POST","c":"parentSubmit2","f":"parentForm1","sc":"parentSubmit","e":"click"});;
-Wicket.Event.add('childForm4', 'keypress', function(event) { var b = document.getElementById('childSubmit3');if (window.getComputedStyle(b).visibility === 'hidden') return;if (event.which == 13) {event.stopPropagation();event.preventDefault();if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {var r = Wicket.bind(b.onclick, b)();if (r != false) b.click();} else {b.click();}return false;};});;
-Wicket.Event.add('parentForm1', 'keypress', function(event) { var b = document.getElementById('parentSubmit2');if (window.getComputedStyle(b).visibility === 'hidden') return;if (event.which == 13) {event.stopPropagation();event.preventDefault();if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {var r = Wicket.bind(b.onclick, b)();if (r != false) b.click();} else {b.click();}return false;};});;
+Wicket.Event.add('childForm4', 'keypress', function(event) { if (event.target.tagName.toLowerCase() !== 'input' || event.which != 13) return;var b = document.getElementById('childSubmit3');if (window.getComputedStyle(b).visibility === 'hidden') return;event.stopPropagation();event.preventDefault();if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {var r = Wicket.bind(b.onclick, b)();if (r != false) b.click();} else {b.click();}return false;;});;
+Wicket.Event.add('parentForm1', 'keypress', function(event) { if (event.target.tagName.toLowerCase() !== 'input' || event.which != 13) return;var b = document.getElementById('parentSubmit2');if (window.getComputedStyle(b).visibility === 'hidden') return;event.stopPropagation();event.preventDefault();if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {var r = Wicket.bind(b.onclick, b)();if (r != false) b.click();} else {b.click();}return false;;});;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
@@ -26,10 +26,14 @@ Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 
     <input type="text" wicket:id="parentInput" value="" name="parentInput"/>
 
+    <textarea wicket:id="parentTextarea" name="parentTextarea"></textarea>
+
     <button wicket:id="parentSubmit" name="parentSubmit" id="parentSubmit2"></button>
 
     <div wicket:id="childForm" id="childForm4">
         <input type="text" wicket:id="childInput" value="" name="childForm:childInput"/>
+
+        <textarea wicket:id="childTextarea" name="childForm:childTextarea"></textarea>
 
         <button wicket:id="childSubmit" name="childForm:childSubmit" id="childSubmit3"></button>
     </div>

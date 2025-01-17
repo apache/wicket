@@ -33,6 +33,8 @@ public class FormHierarchyDefaultButtonTestPage extends WebPage {
     public final Button childSubmit;
     public final TextField<?> parentInput;
     public final TextField<?> childInput;
+    public final TextArea<?> parentTextarea;
+    public final TextArea<?> childTextarea;
 
     /**
      * Construct.
@@ -43,6 +45,9 @@ public class FormHierarchyDefaultButtonTestPage extends WebPage {
 
         parentInput = new TextField<>("parentInput");
         parentForm.add(parentInput);
+
+        parentTextarea = new TextArea<>("parentTextarea");
+        parentForm.add(parentTextarea);
 
         parentSubmit = new Button("parentSubmit");
         parentSubmit.add(new AjaxFormSubmitBehavior(parentForm, "click") {
@@ -61,6 +66,9 @@ public class FormHierarchyDefaultButtonTestPage extends WebPage {
 
         childInput = new TextField<>("childInput");
         childForm.add(childInput);
+
+        childTextarea = new TextArea<>("childTextarea");
+        childForm.add(childTextarea);
 
         childSubmit = new Button("childSubmit");
         childForm.setDefaultButton(childSubmit);
