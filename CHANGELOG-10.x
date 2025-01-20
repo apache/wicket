@@ -2,6 +2,23 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.4.0
+
+** Bug
+
+    * [WICKET-7140] - Form submit triggered by pressing return in textareas
+
+** Improvement
+
+    * [WICKET-7137] - Make resource URL sanitization extendable
+    * [WICKET-7138] - Support URL fragment with PageParameters class
+
+** Task
+
+    * [WICKET-7139] - Update OSGi imports for Wicket 9.x
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.3.0
 
 ** Bug
