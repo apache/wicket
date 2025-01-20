@@ -514,8 +514,8 @@ gpg --armor --detach-sign --use-agent --sign target/dist/apache-wicket-$version.
 gpg --armor --detach-sign --use-agent --sign target/dist/apache-wicket-$version.zip
 
 pushd target/dist
-sha256sum apache-wicket-$version.tar.gz > apache-wicket-$version.tar.gz.sha256
-sha256sum apache-wicket-$version.zip > apache-wicket-$version.zip.sha256
+sha512sum apache-wicket-$version.tar.gz > apache-wicket-$version.tar.gz.sha512
+sha512sum apache-wicket-$version.zip > apache-wicket-$version.zip.sha512
 popd
 
 echo "Create and sign the binaries"
@@ -537,8 +537,8 @@ gpg --armor --detach-sign --use-agent --sign dist/binaries/apache-wicket-$versio
 gpg --armor --detach-sign --use-agent --sign dist/binaries/apache-wicket-$version-bin.zip
 
 pushd dist/binaries
-sha256sum apache-wicket-$version-bin.tar.gz > apache-wicket-$version-bin.tar.gz.sha256
-sha256sum apache-wicket-$version-bin.zip > apache-wicket-$version-bin.zip.sha256
+sha512sum apache-wicket-$version-bin.tar.gz > apache-wicket-$version-bin.tar.gz.sha512
+sha512sum apache-wicket-$version-bin.zip > apache-wicket-$version-bin.zip.sha512
 popd
 popd
 
