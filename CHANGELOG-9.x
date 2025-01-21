@@ -2,6 +2,18 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.20.0
+
+** Improvement
+
+    * [WICKET-7137] - Make resource URL sanitization extendable
+
+** Task
+
+    * [WICKET-7139] - Update OSGi imports for Wicket 9.x
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.19.0
 
 ** Bug
