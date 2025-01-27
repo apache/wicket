@@ -2,6 +2,18 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.17.0
+
+** Bug
+
+    * [WICKET-7024] - Wrong static resource urls when their generation is triggered by <wicket:link>
+
+** Improvement
+
+    * [WICKET-7137] - Make resource URL sanitization extendable
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.16.0
 
 ** Bug
