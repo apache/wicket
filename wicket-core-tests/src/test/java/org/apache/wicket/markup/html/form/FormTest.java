@@ -42,7 +42,7 @@ public class FormTest extends WicketTestCase
 	private IVisitor<?, ?> visitor;
 
 	/**
-	 * 
+	 *
 	 */
 	@BeforeEach
 	void before()
@@ -71,7 +71,8 @@ public class FormTest extends WicketTestCase
 	@Test
 	void defaultButtonHierarchy() throws Exception
 	{
-		executeTest(FormHierarchyDefaultButtonTestPage.class, "FormHierarchyDefaultButtonTestPage_expected.html");
+		executeTest(FormHierarchyDefaultButtonTestPage.class,
+			"FormHierarchyDefaultButtonTestPage_expected.html");
 	}
 
 	/**
@@ -81,15 +82,17 @@ public class FormTest extends WicketTestCase
 	void formMethods() throws Exception
 	{
 		executeTest(FormMethodTestPage.class, "FormMethodTestPage_expected.html");
-		
+
 		FormMethodTestPage page = (FormMethodTestPage)tester.getLastRenderedPage();
-	
+
 		// form action contains path and query 
-		assertEquals("var f = document.getElementById('formpost1');f.action='path?param1&param2=val%20ue';Wicket.Event.fire(f, 'submit');",
+		assertEquals(
+			"var f = document.getElementById('formpost1');f.action='path?param1&param2=val%20ue';Wicket.Event.fire(f, 'submit');",
 			page.postForm.getJsForListenerUrl("path?param1&param2=val%20ue").toString());
-		
+
 		// form action must not contain query (since ignored by browser), put into hidden form parameters instead 
-		assertEquals("document.getElementById('formget2_hf_0').innerHTML = '<input type=\"hidden\" name=\"param1\" value=\"\" /><input type=\"hidden\" name=\"param2\" value=\"val ue\" />';var f = document.getElementById('formget2');f.action='path';Wicket.Event.fire(f, 'submit');",
+		assertEquals(
+			"document.getElementById('formget2_hf_0').innerHTML = '<input type=\"hidden\" name=\"param1\" value=\"\" /><input type=\"hidden\" name=\"param2\" value=\"val ue\" />';var f = document.getElementById('formget2');f.action='path';Wicket.Event.fire(f, 'submit');",
 			page.getForm.getJsForListenerUrl("path?param1&param2=val%20ue").toString());
 	}
 
@@ -105,7 +108,7 @@ public class FormTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
 	void actionUrlNotDoubleEscaped()
@@ -149,7 +152,8 @@ public class FormTest extends WicketTestCase
 			}
 
 			@Override
-			public IResourceStream getMarkupResourceStream(final MarkupContainer container,
+			public IResourceStream getMarkupResourceStream(
+				final MarkupContainer container,
 				Class<?> containerClass)
 			{
 				return new StringResourceStream("<form wicket:id='form'></form>");
@@ -170,11 +174,11 @@ public class FormTest extends WicketTestCase
 		assertTrue(page.error);
 	}
 
-	/** */
+	/**  */
 	public static class TestPage extends MockPageParametersAware
 	{
 		private static final long serialVersionUID = 1L;
-		/** */
+		/**  */
 		static final String TEST_QUERY_STRING = "&query_p_1=value_1";
 
 		@Override
@@ -196,7 +200,7 @@ public class FormTest extends WicketTestCase
 
 	/**
 	 * Tests if a stateful form does not render the pageparameters from the page
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
