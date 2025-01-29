@@ -42,7 +42,7 @@ public class FormTest extends WicketTestCase
 	private IVisitor<?, ?> visitor;
 
 	/**
-	 *
+	 * 
 	 */
 	@BeforeEach
 	void before()
@@ -108,7 +108,7 @@ public class FormTest extends WicketTestCase
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	@Test
 	void actionUrlNotDoubleEscaped()
@@ -178,7 +178,7 @@ public class FormTest extends WicketTestCase
 	public static class TestPage extends MockPageParametersAware
 	{
 		private static final long serialVersionUID = 1L;
-		/**  */
+		/** */
 		static final String TEST_QUERY_STRING = "&query_p_1=value_1";
 
 		@Override
@@ -200,7 +200,7 @@ public class FormTest extends WicketTestCase
 
 	/**
 	 * Tests if a stateful form does not render the pageparameters from the page
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
