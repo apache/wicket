@@ -24,11 +24,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
-import org.apache.commons.fileupload2.core.FileUploadSizeException;
+import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
+import org.apache.commons.fileupload2.core.FileUploadSizeException;
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.IRequestListener;
@@ -64,9 +63,14 @@ import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.apache.wicket.util.value.LongValue;
-import org.apache.wicket.util.visit.*;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitFilter;
+import org.apache.wicket.util.visit.IVisitor;
+import org.apache.wicket.util.visit.Visits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 
 /**
@@ -801,25 +805,31 @@ public class Form<T> extends WebMarkupContainer
 			if (submitter == null)
 			{
 				submitter = findSubmitter();
+			}
 
-				if (submitter instanceof IFormSubmittingComponent)
-				{
-					IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)submitter;
-					Component component = (Component)submitter;
+			if (submitter instanceof IFormSubmittingComponent formSubmittingComponent) {
+				Component component = (Component) submitter;
 
-					if (!component.isVisibleInHierarchy())
-					{
-						throw new WicketRuntimeException("Submit Button " +
-							submittingComponent.getInputName() + " (path=" +
-							component.getPageRelativePath() + ") is not visible");
-					}
+				if (!component.isVisibleInHierarchy()) {
+					throw new WicketRuntimeException(
+							"Submit Button "
+									+
+									formSubmittingComponent.getInputName()
+									+ " (path="
+									+
+									component.getPageRelativePath()
+									+ ") is not visible");
+				}
 
-					if (!component.isEnabledInHierarchy())
-					{
-						throw new WicketRuntimeException("Submit Button " +
-							submittingComponent.getInputName() + " (path=" +
-							component.getPageRelativePath() + ") is not enabled");
-					}
+				if (!component.isEnabledInHierarchy()) {
+					throw new WicketRuntimeException(
+							"Submit Button "
+									+
+									formSubmittingComponent.getInputName()
+									+ " (path="
+									+
+									component.getPageRelativePath()
+									+ ") is not enabled");
 				}
 			}
 

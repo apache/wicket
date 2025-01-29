@@ -16,15 +16,19 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.markup.html.form.NestedFormsPage.NestableForm;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -46,7 +50,7 @@ class FormSubmitTest extends WicketTestCase
 	@BeforeEach
 	void before()
 	{
-		tester.startPage(new NestedFormsPage());
+		tester.startPage(new NestedFormsPage(true, true));
 		page = (NestedFormsPage)tester.getLastRenderedPage();
 		outerForm = (NestableForm)page.get("outerForm");
 		middleForm = (NestableForm)page.get("outerForm:middleForm");
@@ -271,6 +275,81 @@ class FormSubmitTest extends WicketTestCase
 
 		assertOnSubmitCalled(true, false, false);
 		assertOnErrorCalled(false, false, false);
+	}
+
+	@Nested
+	class WhenSubmitterInvisibleFormSubmitTest {
+
+		@BeforeEach
+		void before() {
+			tester.startPage(new NestedFormsPage(false, true));
+		}
+
+		@Test
+		void doNotSubmitInvisibleButtons_middleForm() {
+			assertEnabledState(true, true, true);
+
+			FormTester formTester = tester.newFormTester("outerForm:middleForm");
+			var message = assertThrows(WicketRuntimeException.class, () -> formTester.submit("submit")).getMessage();
+			assertThat(message).contains("is not visible");
+		}
+
+		@Test
+		void doNotSubmitInvisibleButtons_outerForm() {
+			assertEnabledState(true, true, true);
+
+			FormTester formTester = tester.newFormTester("outerForm");
+			var message = assertThrows(WicketRuntimeException.class, () -> formTester.submit("submit")).getMessage();
+			assertThat(message).contains("is not visible");
+		}
+
+		@Test
+		void doNotSubmitInvisibleButtons_innerForm() {
+			assertEnabledState(true, true, true);
+
+			FormTester formTester = tester.newFormTester("outerForm:middleForm:innerForm");
+			var message = assertThrows(WicketRuntimeException.class, () -> formTester.submit("submit")).getMessage();
+			assertThat(message).contains("is not visible");
+		}
+
+	}
+
+	@Nested
+	class WhenSubmitterDisabledFormSubmitTest {
+
+		@BeforeEach
+		void before() {
+			tester.startPage(new NestedFormsPage(true, false));
+		}
+
+		@Test
+		void doNotSubmitInvisibleButtons_middleForm() {
+			assertEnabledState(true, true, true);
+
+			FormTester formTester = tester.newFormTester("outerForm:middleForm");
+
+			var message = assertThrows(WicketRuntimeException.class, () -> formTester.submit("submit")).getMessage();
+			assertThat(message).contains("is not enabled");
+		}
+
+		@Test
+		void doNotSubmitInvisibleButtons_outerForm() {
+			assertEnabledState(true, true, true);
+
+			FormTester formTester = tester.newFormTester("outerForm");
+			var message = assertThrows(WicketRuntimeException.class, () -> formTester.submit("submit")).getMessage();
+			assertThat(message).contains("is not enabled");
+		}
+
+		@Test
+		void doNotSubmitInvisibleButtons_innerForm() {
+			assertEnabledState(true, true, true);
+
+			FormTester formTester = tester.newFormTester("outerForm:middleForm:innerForm");
+			var message = assertThrows(WicketRuntimeException.class, () -> formTester.submit("submit")).getMessage();
+			assertThat(message).contains("is not enabled");
+		}
+
 	}
 
 	/**
