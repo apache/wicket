@@ -50,7 +50,7 @@ import org.apache.wicket.util.convert.ConversionException;
  *          ...
  *        }
  *      });
- *      return recorder;
+ *      return dateField;
  *    }
  *  }
  * }</pre>

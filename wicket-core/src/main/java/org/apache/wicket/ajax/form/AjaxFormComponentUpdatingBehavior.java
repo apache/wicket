@@ -25,8 +25,8 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.util.lang.Args;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
@@ -121,6 +121,11 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		super.updateAjaxAttributes(attributes);
 
 		attributes.setMethod(Method.POST);
+
+		if (getComponent() instanceof FormComponentPanel<?> formComponentPanel) {
+			formComponentPanel.wantChildrenToProcessInputInAjaxUpdate();
+			attributes.setSerializeRecursively(true);
+		}
 	}
 
 	@Override
@@ -135,6 +140,12 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 
 		try
 		{
+			if (formComponent instanceof FormComponentPanel<?> formComponentPanel) {
+				if (formComponentPanel.wantChildrenToProcessInputInAjaxUpdate()) {
+					((FormComponentPanel<?>)formComponent).processInputOfChildren();
+				}
+			}
+
 			formComponent.inputChanged();
 			formComponent.validate();
 			if (formComponent.isValid())
