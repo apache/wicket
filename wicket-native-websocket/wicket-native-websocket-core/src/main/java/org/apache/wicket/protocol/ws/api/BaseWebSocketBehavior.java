@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.ws.api;
 import java.util.Map;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.SessionTrackingMode;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -94,7 +95,7 @@ public class BaseWebSocketBehavior extends Behavior
 	 *  @param connectionToken
 	 *  		an optional token to support connections to the same resource from multiple browser tabs
 	 */
-	public BaseWebSocketBehavior(String resourceName, String connectionToken)
+	public BaseWebSocketBehavior(@Nonnull String resourceName, String connectionToken)
 	{
 		this.resourceName = Args.notEmpty(resourceName, "resourceName");
 		this.connectionToken = connectionToken;

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource.caching;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
@@ -79,8 +81,8 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 	 * @param resourceVersion
 	 *                resource version provider
 	 */
-	public QueryStringWithVersionResourceCachingStrategy(String versionParameter, 
-	                                                     IResourceVersion resourceVersion)
+	public QueryStringWithVersionResourceCachingStrategy(@Nonnull String versionParameter,
+			                                             @Nonnull IResourceVersion resourceVersion)
 	{
 		this.versionParameter = Args.notEmpty(versionParameter, "versionParameter");
 		this.resourceVersion = Args.notNull(resourceVersion, "resourceVersion");

@@ -18,6 +18,8 @@ package org.apache.wicket;
 
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEventSink;
@@ -45,7 +47,7 @@ final class ComponentEventSender implements IEventSource
 	 *            component that originated the event
 	 * @param dispatcher
 	 */
-	public ComponentEventSender(Component source, IEventDispatcher dispatcher)
+	public ComponentEventSender(@Nonnull Component source, @Nonnull IEventDispatcher dispatcher)
 	{
 		Args.notNull(source, "source");
 		Args.notNull(dispatcher, "dispatcher");
@@ -55,7 +57,7 @@ final class ComponentEventSender implements IEventSource
 
 	/** {@inheritDoc} */
 	@Override
-	public <T> void send(IEventSink sink, Broadcast type, T payload)
+	public <T> void send(IEventSink sink, @Nonnull Broadcast type, T payload)
 	{
 		ComponentEvent<?> event = new ComponentEvent<T>(sink, source, type, payload);
 		Args.notNull(type, "type");

@@ -18,6 +18,8 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 import java.util.Iterator;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -79,7 +81,7 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 	 * @param settings
 	 *            settings for the autocomplete list
 	 */
-	public AutoCompleteBehavior(final IAutoCompleteRenderer<T> renderer,
+	public AutoCompleteBehavior(@Nonnull final IAutoCompleteRenderer<T> renderer,
 		final AutoCompleteSettings settings)
 	{
 		super(settings);

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.ws.tester;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -90,7 +91,7 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	 *      the page that may have registered {@link org.apache.wicket.protocol.ws.api.WebSocketBehavior}
 	 * @return a mock http request
 	 */
-	private static HttpServletRequest createRequest(final WicketTester wicketTester, final Page page)
+	private static HttpServletRequest createRequest(final WicketTester wicketTester, @Nonnull final Page page)
 	{
 		Args.notNull(page, "page");
 		MockHttpServletRequest request = createRequest(wicketTester);
@@ -106,7 +107,7 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	 *      the page that may have registered {@link org.apache.wicket.protocol.ws.api.WebSocketBehavior}
 	 * @return a mock http request
 	 */
-	private static HttpServletRequest createRequest(final WicketTester wicketTester, final String resourceName, final Page page)
+	private static HttpServletRequest createRequest(final WicketTester wicketTester, @Nonnull final String resourceName, final Page page)
 	{
 		Args.notNull(resourceName, "resourceName");
 		MockHttpServletRequest request = createRequest(wicketTester);

@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.guice;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import jakarta.inject.Inject;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
+import javax.annotation.Nonnull;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * A behavior that will be use injected services
@@ -38,7 +39,7 @@ public class JakartaInjectTestBehavior extends Behavior
 	private ITestService injectedFieldBlue;
 
 	@Override
-	public void bind(Component component)
+	public void bind(@Nonnull Component component)
 	{
 		super.bind(component);
 

@@ -23,6 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.LazyInitializer;
@@ -62,7 +64,7 @@ public class DefaultPageLockManager implements IPageLockManager {
 	 * @param timeout
 	 *            timeout value for acquiring a page lock
 	 */
-	public DefaultPageLockManager(Duration timeout)
+	public DefaultPageLockManager(@Nonnull Duration timeout)
 	{
 		this.timeout = Args.notNull(timeout, "timeout");
 	}

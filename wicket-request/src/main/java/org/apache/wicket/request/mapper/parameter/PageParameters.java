@@ -24,6 +24,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.util.io.IClusterable;
@@ -164,7 +166,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	 * @param name the parameter name
 	 * @return {@code true} if the parameter exists, {@code false} otherwise
 	 */
-	public boolean contains(final String name)
+	public boolean contains(@Nonnull final String name)
 	{
 		Args.notNull(name, "name");
 
@@ -182,7 +184,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	}
 
 	@Override
-	public StringValue get(final String name)
+	public StringValue get(@Nonnull final String name)
 	{
 		Args.notNull(name, "name");
 
@@ -200,7 +202,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	}
 
 	@Override
-	public List<StringValue> getValues(final String name)
+	public List<StringValue> getValues(@Nonnull final String name)
 	{
 		Args.notNull(name, "name");
 
@@ -266,7 +268,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	}
 
 	@Override
-	public PageParameters remove(final String name, final String... values)
+	public PageParameters remove(@Nonnull final String name, final String... values)
 	{
 		Args.notNull(name, "name");
 
@@ -317,7 +319,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	}
 
 	@Override
-	public PageParameters add(final String name, final Object value, final int index, Type type)
+	public PageParameters add(@Nonnull final String name, @Nonnull final Object value, final int index, Type type)
 	{
 		Args.notEmpty(name, "name");
 		Args.notNull(value, "value");

@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -381,7 +383,7 @@ public class FormTester
 	 *            specifies whether to fill child <code>TextComponent</code>s with blank
 	 *            <code>String</code>s
 	 */
-	protected FormTester(final String path, final Form<?> workingForm,
+	protected FormTester(final String path, @Nonnull final Form<?> workingForm,
 		final BaseWicketTester wicketTester, final boolean fillBlankString)
 	{
 		this.workingForm = Objects.requireNonNull(workingForm, String.format(NO_FORM_FOR_PATH, path));
@@ -599,7 +601,7 @@ public class FormTester
 	 *            the field value
 	 * @return This
 	 */
-	public FormTester setValue(final Component formComponent, final String value)
+	public FormTester setValue(@Nonnull final Component formComponent, final String value)
 	{
 		Args.notNull(formComponent, "formComponent");
 
@@ -749,7 +751,7 @@ public class FormTester
 	 *            relative path (from <code>Form</code>) to the button
 	 * @return This
 	 */
-	public FormTester submit(final Component buttonComponent)
+	public FormTester submit(@Nonnull final Component buttonComponent)
 	{
 		Args.notNull(buttonComponent, "buttonComponent");
 

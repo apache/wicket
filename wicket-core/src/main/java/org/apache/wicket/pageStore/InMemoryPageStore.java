@@ -27,6 +27,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
@@ -339,7 +341,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 
 		private long size;
 
-		public SizeLimitedData(Bytes maxBytes)
+		public SizeLimitedData(@Nonnull Bytes maxBytes)
 		{
 			Args.notNull(maxBytes, "maxBytes");
 

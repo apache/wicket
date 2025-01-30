@@ -19,6 +19,7 @@ module org.apache.wicket.bean.validation {
     requires org.apache.wicket.util;
     requires org.apache.wicket.core;
     requires jakarta.validation;
+    requires jakarta.annotation;
 
     exports org.apache.wicket.bean.validation;
 }

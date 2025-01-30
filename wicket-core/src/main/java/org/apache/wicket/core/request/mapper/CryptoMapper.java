@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.core.request.handler.RequestSettingRequestHandler;
 import org.apache.wicket.protocol.http.PageExpiredException;
@@ -138,7 +140,7 @@ public class CryptoMapper implements IRequestMapperDelegate
 	 * @param cryptProvider
 	 *            the custom crypt provider
 	 */
-	public CryptoMapper(final IRequestMapper wrappedMapper, final Supplier<ICrypt> cryptProvider)
+	public CryptoMapper(@Nonnull final IRequestMapper wrappedMapper, @Nonnull final Supplier<ICrypt> cryptProvider)
 	{
 		this.wrappedMapper = Args.notNull(wrappedMapper, "wrappedMapper");
 		this.cryptProvider = Args.notNull(cryptProvider, "cryptProvider");

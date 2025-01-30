@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.ServletContext;
 
 import org.apache.wicket.IGenericComponent;
@@ -156,7 +157,7 @@ public class Include extends WebComponent implements IGenericComponent<String, I
 	 *            the url to import
 	 * @return the imported url's contents
 	 */
-	private String importRelativeUrl(String url)
+	private String importRelativeUrl(@Nonnull String url)
 	{
 		Args.notEmpty(url, "url");
 

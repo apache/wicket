@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.authentication.strategy;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.util.cookies.CookieDefaults;
 import org.apache.wicket.util.cookies.CookieUtils;
@@ -59,7 +61,7 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	 * @param crypt
 	 *            the crypt
 	 */
-	public DefaultAuthenticationStrategy(final String cookieKey, ICrypt crypt)
+	public DefaultAuthenticationStrategy(@Nonnull final String cookieKey, @Nonnull ICrypt crypt)
 	{
 		this.cookieKey = Args.notEmpty(cookieKey, "cookieKey");
 		this.crypt = Args.notNull(crypt, "crypt");

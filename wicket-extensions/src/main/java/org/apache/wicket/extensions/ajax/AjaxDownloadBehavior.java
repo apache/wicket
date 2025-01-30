@@ -17,7 +17,11 @@
 package org.apache.wicket.extensions.ajax;
 
 import java.util.Locale;
+
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.Cookie;
+
+import com.github.openjson.JSONObject;
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
@@ -41,8 +45,6 @@ import org.apache.wicket.resource.JQueryPluginResourceReference;
 import org.apache.wicket.util.cookies.CookieDefaults;
 import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.lang.Args;
-
-import com.github.openjson.JSONObject;
 
 /**
  * Download resources via Ajax.
@@ -136,7 +138,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 * @param resource
 	 *            resource to download
 	 */
-	public AjaxDownloadBehavior(IResource resource)
+	public AjaxDownloadBehavior(@Nonnull IResource resource)
 	{
 		Args.notNull(resource, "resource");
 		this.resourceBehavior = new ResourceBehavior(resource);
@@ -170,7 +172,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 * @param resourceParameters
 	 *            parameters for the resource
 	 */
-	public AjaxDownloadBehavior(ResourceReference reference, PageParameters resourceParameters)
+	public AjaxDownloadBehavior(@Nonnull ResourceReference reference, PageParameters resourceParameters)
 	{
 		this.resourceBehavior = null;
 
@@ -338,7 +340,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		return location;
 	}
 
-	public AjaxDownloadBehavior setLocation(final Location location) {
+	public AjaxDownloadBehavior setLocation(@Nonnull final Location location) {
 		this.location = Args.notNull(location, "location");
 		return this;
 	}
@@ -360,7 +362,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		private static final long serialVersionUID = 1L;
 		private final IResource resource;
 
-		private ResourceBehavior(IResource resource)
+		private ResourceBehavior(@Nonnull IResource resource)
 		{
 			this.resource = Args.notNull(resource, "resource");
 		}
@@ -450,7 +452,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 *
 	 * @param sameSite The non-null sameSite attribute
 	 */
-	public void setSameSite(CookieDefaults.SameSite sameSite)
+	public void setSameSite(@Nonnull CookieDefaults.SameSite sameSite)
 	{
 		Args.notNull(sameSite, "sameSite");
 		this.sameSite = sameSite;

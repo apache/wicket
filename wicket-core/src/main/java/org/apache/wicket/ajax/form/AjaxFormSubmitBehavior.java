@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.form;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -313,7 +315,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * @return the {@link AjaxFormSubmitBehavior}
 	 */
 	public static AjaxFormSubmitBehavior onSubmit(String eventName,
-		SerializableConsumer<AjaxRequestTarget> onSubmit)
+		@Nonnull SerializableConsumer<AjaxRequestTarget> onSubmit)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 

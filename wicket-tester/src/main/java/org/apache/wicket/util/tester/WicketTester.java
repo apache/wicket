@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.ServletContext;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -320,7 +321,7 @@ public class WicketTester extends BaseWicketTester
 	 * @param expectedBehaviorClass
 	 *            expected <code>Behavior</code> class
 	 */
-	public void assertBehavior(String path, Class<? extends Behavior> expectedBehaviorClass)
+	public void assertBehavior(String path, @Nonnull Class<? extends Behavior> expectedBehaviorClass)
 	{
 		Args.notNull(expectedBehaviorClass, "expectedBehaviorClass");
 
@@ -537,7 +538,7 @@ public class WicketTester extends BaseWicketTester
 	 *            the filter that decides in which messages to look in. E.g. with a specific level,
 	 *            rendered or not, etc.
 	 */
-	public void assertComponentFeedbackMessage(Component component, String key, IModel<?> model,
+	public void assertComponentFeedbackMessage(Component component, @Nonnull String key, IModel<?> model,
 		IFeedbackMessageFilter filter)
 	{
 		Args.notNull(key, "key");

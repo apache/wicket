@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.Cookie;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
@@ -186,7 +188,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	@Override
-	public void setDateHeader(String name, Instant date)
+	public void setDateHeader(String name, @Nonnull Instant date)
 	{
 		Args.notNull(date, "date");
 		actions.add(ActionType.HEADER.action(res -> res.setDateHeader(name, date)));
@@ -336,7 +338,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	 * 
 	 * @param response
 	 */
-	public void writeTo(final WebResponse response)
+	public void writeTo(@Nonnull final WebResponse response)
 	{
 		Args.notNull(response, "response");
 

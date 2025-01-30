@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -155,7 +157,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	}
 
 	@Override
-	public void addListener(AjaxRequestTarget.IListener listener) throws IllegalStateException
+	public void addListener(@Nonnull AjaxRequestTarget.IListener listener) throws IllegalStateException
 	{
 		Args.notNull(listener, "listener");
 		assertListenersNotFrozen();

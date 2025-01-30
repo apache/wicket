@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.breadcrumb.panel;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.extensions.breadcrumb.BreadCrumbLink;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant;
@@ -84,8 +86,8 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 * @param breadCrumbPanelFactory
 	 *            The factory to create bread crumb panels
 	 */
-	public BreadCrumbPanelLink(final String id, final IBreadCrumbModel breadCrumbModel,
-		final IBreadCrumbPanelFactory breadCrumbPanelFactory)
+	public BreadCrumbPanelLink(final String id, @Nonnull final IBreadCrumbModel breadCrumbModel,
+		@Nonnull final IBreadCrumbPanelFactory breadCrumbPanelFactory)
 	{
 		super(id, breadCrumbModel);
 

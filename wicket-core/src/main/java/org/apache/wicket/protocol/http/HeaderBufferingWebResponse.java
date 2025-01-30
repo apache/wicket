@@ -17,6 +17,8 @@
 package org.apache.wicket.protocol.http;
 
 import java.time.Instant;
+
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.wicket.request.http.WebResponse;
@@ -129,7 +131,7 @@ class HeaderBufferingWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	@Override
-	public void setDateHeader(String name, Instant date)
+	public void setDateHeader(String name, @Nonnull Instant date)
 	{
 		Args.notNull(date, "date");
 		getMetaResponse().setDateHeader(name, date);

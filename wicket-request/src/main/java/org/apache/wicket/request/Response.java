@@ -19,6 +19,8 @@ package org.apache.wicket.request;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -124,7 +126,7 @@ public abstract class Response
 	{
 		private final Response response;
 
-		public StreamAdapter(Response response)
+		public StreamAdapter(@Nonnull Response response)
 		{
 			Args.notNull(response, "response");
 			this.response = response;

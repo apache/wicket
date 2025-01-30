@@ -19,6 +19,8 @@ package org.apache.wicket.util.visit;
 import java.util.Collections;
 import java.util.Iterator;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -126,7 +128,7 @@ public class Visits
 
 	@SuppressWarnings("unchecked")
 	private static <S, R> void visitChildren(final Iterable<? super S> container,
-		final IVisitor<S, R> visitor, final IVisitFilter filter, final Visit<R> visit)
+		@Nonnull final IVisitor<S, R> visitor, final IVisitFilter filter, final Visit<R> visit)
 	{
 		Args.notNull(visitor, "visitor");
 
@@ -237,7 +239,7 @@ public class Visits
 	 * @return return value from the {@code visitor} or {@code null} if none
 	 */
 	public static <S, R> R visitPostOrder(final Object root,
-		final org.apache.wicket.util.visit.IVisitor<S, R> visitor, final IVisitFilter filter)
+		@Nonnull final org.apache.wicket.util.visit.IVisitor<S, R> visitor, final IVisitFilter filter)
 	{
 		Args.notNull(visitor, "visitor");
 

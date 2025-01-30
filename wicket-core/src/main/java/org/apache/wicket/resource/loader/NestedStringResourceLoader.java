@@ -28,6 +28,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * Creates a nested string resource loader which resolves nested keys.<br>
  * <br>
@@ -64,7 +66,7 @@ public class NestedStringResourceLoader implements IStringResourceLoader
 	 *            the pattern for nested keys. Example for <b>#(key)</b> is the pattern:
 	 *            <b>Pattern.compile("#\\(([^ ]*?)\\)");</b>
 	 */
-	public NestedStringResourceLoader(List<IStringResourceLoader> loaders, Pattern pattern)
+	public NestedStringResourceLoader(List<IStringResourceLoader> loaders, @Nonnull Pattern pattern)
 	{
 		this.loaders = new ArrayList<>(loaders);
 		this.pattern = Args.notNull(pattern, "pattern");

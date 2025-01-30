@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.ajax.IAjaxRegionMarkupIdProvider;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.authorization.Action;
@@ -2701,7 +2703,7 @@ public abstract class Component
 	 *            component to replace this one
 	 * @return the component which replaced this one
 	 */
-	public Component replaceWith(Component replacement)
+	public Component replaceWith(@Nonnull Component replacement)
 	{
 		Args.notNull(replacement, "replacement");
 
@@ -2835,7 +2837,7 @@ public abstract class Component
 	 * 
 	 * @param comp
 	 */
-	final void setMarkupId(Component comp)
+	final void setMarkupId(@Nonnull Component comp)
 	{
 		Args.notNull(comp, "comp");
 
@@ -2863,7 +2865,7 @@ public abstract class Component
 	 *            markup id value or null to clear any previous user defined value
 	 * @return this for chaining
 	 */
-	public Component setMarkupId(String markupId)
+	public Component setMarkupId(@Nonnull String markupId)
 	{
 		Args.notEmpty(markupId, "markupId");
 
@@ -3411,7 +3413,7 @@ public abstract class Component
 	 */
 	@SuppressWarnings("unchecked")
 	public final <R, C extends MarkupContainer> R visitParents(final Class<C> parentClass,
-		final IVisitor<C, R> visitor, IVisitFilter filter)
+		final IVisitor<C, R> visitor, @Nonnull IVisitFilter filter)
 	{
 		Args.notNull(filter, "filter");
 
@@ -4446,7 +4448,7 @@ public abstract class Component
 
 	/** {@inheritDoc} */
 	@Override
-	public final <T> void send(IEventSink sink, Broadcast type, T payload)
+	public final <T> void send(IEventSink sink, @Nonnull Broadcast type, T payload)
 	{
 		// if there are no event dispatchers then don't even try to send event
 		if (getApplication().getFrameworkSettings().hasAnyEventDispatchers())

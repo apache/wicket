@@ -20,6 +20,7 @@ module org.apache.wicket.ioc {
     requires org.apache.wicket.core;
     requires net.bytebuddy;
     requires org.objenesis;
+    requires jakarta.annotation;
 
     exports org.apache.wicket.injection;
     exports org.apache.wicket.proxy;

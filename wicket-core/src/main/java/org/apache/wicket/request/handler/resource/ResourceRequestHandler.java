@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.handler.resource;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
@@ -42,7 +44,7 @@ public class ResourceRequestHandler implements IRequestHandler
 	 * @param resource
 	 * @param parameters
 	 */
-	public ResourceRequestHandler(IResource resource, PageParameters parameters)
+	public ResourceRequestHandler(@Nonnull IResource resource, PageParameters parameters)
 	{
 		Args.notNull(resource, "resource");
 

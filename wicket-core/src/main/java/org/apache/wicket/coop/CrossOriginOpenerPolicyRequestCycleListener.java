@@ -25,6 +25,7 @@ import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -57,7 +58,7 @@ public class CrossOriginOpenerPolicyRequestCycleListener implements IRequestCycl
 
 	private final CrossOriginOpenerPolicyConfiguration coopConfig;
 
-	public CrossOriginOpenerPolicyRequestCycleListener(CrossOriginOpenerPolicyConfiguration coopConfig)
+	public CrossOriginOpenerPolicyRequestCycleListener(@Nonnull CrossOriginOpenerPolicyConfiguration coopConfig)
 	{
 		this.coopConfig = Args.notNull(coopConfig, "coopConfig");
 	}

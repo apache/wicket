@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
@@ -316,7 +318,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *              The preferred position for the label
 	 * @return {@code this} instance, for chaining
 	 */
-	public CheckBoxMultipleChoice<T> setLabelPosition(LabelPosition labelPosition)
+	public CheckBoxMultipleChoice<T> setLabelPosition(@Nonnull LabelPosition labelPosition)
 	{
 		Args.notNull(labelPosition, "labelPosition");
 		this.labelPosition = labelPosition;

@@ -22,6 +22,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
@@ -43,7 +45,7 @@ public class UrlRequestParametersAdapter implements IRequestParameters
 	 * 
 	 * @param url
 	 */
-	public UrlRequestParametersAdapter(final Url url)
+	public UrlRequestParametersAdapter(@Nonnull final Url url)
 	{
 		Args.notNull(url, "url");
 

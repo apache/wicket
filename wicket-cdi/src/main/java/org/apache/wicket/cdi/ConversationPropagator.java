@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.cdi;
 
+import jakarta.annotation.Nonnull;
 import jakarta.enterprise.context.ContextNotActiveException;
 import jakarta.enterprise.context.Conversation;
 import jakarta.enterprise.context.ConversationScoped;
@@ -77,7 +78,7 @@ public class ConversationPropagator implements IRequestCycleListener
 	 * @param application
 	 * @param propagation
 	 */
-	public ConversationPropagator(Application application, IConversationPropagation propagation)
+	public ConversationPropagator(@Nonnull Application application, @Nonnull IConversationPropagation propagation)
 	{
 		Args.notNull(application, "application");
 		Args.notNull(propagation, "propagation");

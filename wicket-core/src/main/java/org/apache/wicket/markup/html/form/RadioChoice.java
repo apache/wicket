@@ -19,6 +19,8 @@ package org.apache.wicket.markup.html.form;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.settings.DebugSettings;
@@ -311,7 +313,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T>
 	 *              The preferred position for the label
 	 * @return {@code this} instance, for chaining
 	 */
-	public RadioChoice<T> setLabelPosition(LabelPosition labelPosition)
+	public RadioChoice<T> setLabelPosition(@Nonnull LabelPosition labelPosition)
 	{
 		Args.notNull(labelPosition, "labelPosition");
 		this.labelPosition = labelPosition;

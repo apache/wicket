@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
@@ -126,7 +127,7 @@ public class ForwardAttributes
 	 * @param request
 	 * @return instance of request contains forward attributes or {@code null} if it does not.
 	 */
-	public static ForwardAttributes of(HttpServletRequest request, String filterPrefix)
+	public static ForwardAttributes of(@Nonnull HttpServletRequest request, String filterPrefix)
 	{
 		Args.notNull(request, "request");
 

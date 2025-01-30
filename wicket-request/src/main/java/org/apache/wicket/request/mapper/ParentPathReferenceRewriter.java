@@ -18,6 +18,8 @@ package org.apache.wicket.request.mapper;
 
 import java.util.function.Supplier;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -43,8 +45,8 @@ public class ParentPathReferenceRewriter implements IRequestMapperDelegate
 	 * 
 	 * @param escapeSequence
 	 */
-	public ParentPathReferenceRewriter(final IRequestMapper chain,
-		final Supplier<String> escapeSequence)
+	public ParentPathReferenceRewriter(@Nonnull final IRequestMapper chain,
+		@Nonnull final Supplier<String> escapeSequence)
 	{
 		Args.notNull(chain, "chain");
 		Args.notNull(escapeSequence, "relativePathPartEscapeSequence");

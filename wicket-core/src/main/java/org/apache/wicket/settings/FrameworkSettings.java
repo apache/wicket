@@ -19,6 +19,8 @@ package org.apache.wicket.settings;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IComponentAwareEventSink;
@@ -138,7 +140,7 @@ public class FrameworkSettings implements IEventDispatcher
 	 * @param dispatcher {@link IEventDispatcher}
 	 * @return {@code this} object for chaining
 	 */
-	public FrameworkSettings add(IEventDispatcher dispatcher)
+	public FrameworkSettings add(@Nonnull IEventDispatcher dispatcher)
 	{
 		Args.notNull(dispatcher, "dispatcher");
 		if (eventDispatchers == null)
@@ -209,7 +211,7 @@ public class FrameworkSettings implements IEventDispatcher
 	 *            the {@link ISerializer} to use
 	 * @return {@code this} object for chaining
 	 */
-	public FrameworkSettings setSerializer(ISerializer serializer)
+	public FrameworkSettings setSerializer(@Nonnull ISerializer serializer)
 	{
 		this.serializer = Args.notNull(serializer, "serializer");
 		return this;

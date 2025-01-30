@@ -18,6 +18,8 @@ package org.apache.wicket.examples.wizard;
 
 import java.lang.reflect.Constructor;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.wizard.Wizard;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -41,7 +43,7 @@ public class WizardPage extends WicketExamplePage
 	 * @param wizardClass
 	 *            class of the wizard component
 	 */
-	public <C extends Wizard> WizardPage(Class<C> wizardClass)
+	public <C extends Wizard> WizardPage(@Nonnull Class<C> wizardClass)
 	{
 		Args.notNull(wizardClass, "wizardClass");
 		try

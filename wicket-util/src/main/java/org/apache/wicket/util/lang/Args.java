@@ -18,6 +18,8 @@ package org.apache.wicket.util.lang;
 
 import java.util.Collection;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -135,8 +137,8 @@ public class Args
 	 * @return the {code value}
 	 * @throws IllegalArgumentException
 	 */
-	public static <T extends Comparable<? super T>> T withinRange(final T min, final T max,
-		final T value, final String name)
+	public static <T extends Comparable<? super T>> T withinRange(@Nonnull final T min, @Nonnull final T max,
+		@Nonnull final T value, final String name)
 	{
 		notNull(min, name);
 		notNull(max, name);

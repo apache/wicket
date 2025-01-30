@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * Specifies the configuration for Cross-Origin Embedder Policy to be used for
  * {@link CrossOriginEmbedderPolicyRequestCycleListener}. Users can specify the paths that should be exempt from COEP and
@@ -70,13 +72,13 @@ public class CrossOriginEmbedderPolicyConfiguration
 	private final Set<String> exemptions = new HashSet<>();
 	private final CoepMode mode;
 
-	public CrossOriginEmbedderPolicyConfiguration(CoepMode mode, String... exemptions)
+	public CrossOriginEmbedderPolicyConfiguration(@Nonnull CoepMode mode, String... exemptions)
 	{
 		this.exemptions.addAll(Arrays.asList(exemptions));
 		this.mode = Args.notNull(mode, "mode");
 	}
 
-	public CrossOriginEmbedderPolicyConfiguration(CoepMode mode)
+	public CrossOriginEmbedderPolicyConfiguration(@Nonnull CoepMode mode)
 	{
 		this.mode = Args.notNull(mode, "mode");
 	}

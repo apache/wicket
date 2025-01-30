@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
@@ -104,7 +106,7 @@ public class AjaxChannel implements IClusterable
 	 * @param type
 	 *            the behavior type of this channel
 	 */
-	public AjaxChannel(final String name, final Type type)
+	public AjaxChannel(@Nonnull final String name, @Nonnull final Type type)
 	{
 		this.name = Args.notNull(name, "name");
 		this.type = Args.notNull(type, "type");

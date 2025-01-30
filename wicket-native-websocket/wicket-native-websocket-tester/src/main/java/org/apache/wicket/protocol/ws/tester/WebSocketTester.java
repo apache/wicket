@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.tester;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -45,7 +47,7 @@ public class WebSocketTester
 	 * @param page
 	 *      the page that may have registered {@link org.apache.wicket.protocol.ws.api.WebSocketBehavior}
 	 */
-	public WebSocketTester(final WicketTester wicketTester, final Page page)
+	public WebSocketTester(@Nonnull final WicketTester wicketTester, @Nonnull final Page page)
 	{
 		Args.notNull(wicketTester, "wicketTester");
 		Args.notNull(page, "page");
@@ -85,7 +87,7 @@ public class WebSocketTester
 	 * @param resourceName
 	 *      the name of the shared WebSocketResource that will handle the web socket messages
 	 */
-	public WebSocketTester(final WicketTester wicketTester, final String resourceName)
+	public WebSocketTester(@Nonnull final WicketTester wicketTester, @Nonnull final String resourceName)
 	{
 		Args.notNull(wicketTester, "wicketTester");
 		Args.notNull(resourceName, "resourceName");

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.util;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
@@ -40,7 +42,7 @@ public class SortParam<T> implements IClusterable
 	 *            <code>true<code> if sort order is ascending, <code>false</code> if sort order is
 	 *            descending
 	 */
-	public SortParam(final T property, final boolean ascending)
+	public SortParam(@Nonnull final T property, final boolean ascending)
 	{
 		Args.notNull(property, "property");
 		this.property = property;

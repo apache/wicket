@@ -17,6 +17,8 @@
 package org.apache.wicket.util.file;
 
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.apache.wicket.util.lang.Args;
@@ -34,7 +36,7 @@ public class FileCleanerTrackerAdapter extends FileCleaningTracker
 	 * @param fileCleaner
 	 *            the cleaner to adapt
 	 */
-	public FileCleanerTrackerAdapter(IFileCleaner fileCleaner)
+	public FileCleanerTrackerAdapter(@Nonnull IFileCleaner fileCleaner)
 	{
 		this.fileCleaner = Args.notNull(fileCleaner, "fileCleaner");
 	}

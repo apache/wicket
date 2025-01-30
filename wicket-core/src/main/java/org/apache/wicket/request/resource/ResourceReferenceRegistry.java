@@ -21,6 +21,8 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.resource.ResourceReference.Key;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
@@ -107,7 +109,7 @@ public class ResourceReferenceRegistry
 	 * @param resourceReferenceFactory
 	 *      The factory that will create ResourceReference by Key when there is no registered one
 	 */
-	public ResourceReferenceRegistry(IResourceReferenceFactory resourceReferenceFactory)
+	public ResourceReferenceRegistry(@Nonnull IResourceReferenceFactory resourceReferenceFactory)
 	{
 		this.resourceReferenceFactory = Args.notNull(resourceReferenceFactory, "resourceReferenceFactory");
 
@@ -142,7 +144,7 @@ public class ResourceReferenceRegistry
 	 * @return {@code true} if the resource was registered successfully or has been registered previously
 	 *         already.
 	 */
-	private Key _registerResourceReference(final ResourceReference reference)
+	private Key _registerResourceReference(@Nonnull final ResourceReference reference)
 	{
 		Args.notNull(reference, "reference");
 
@@ -164,7 +166,7 @@ public class ResourceReferenceRegistry
 	 *            the {@link ResourceReference}'s identifier
 	 * @return The removed ResourceReference or {@code null} if the registry did not contain an entry for this key.
 	 */
-	public final ResourceReference unregisterResourceReference(final Key key)
+	public final ResourceReference unregisterResourceReference(@Nonnull final Key key)
 	{
 		Args.notNull(key, "key");
 

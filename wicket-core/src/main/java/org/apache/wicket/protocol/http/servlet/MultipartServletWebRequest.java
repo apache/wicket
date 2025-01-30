@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http.servlet;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload2.core.FileItem;
@@ -122,7 +123,7 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 		return maxSize;
 	}
 
-	public void setMaxSize(Bytes maxSize)
+	public void setMaxSize(@Nonnull Bytes maxSize)
 	{
 		Args.notNull(maxSize, "maxSize");
 		this.maxSize = maxSize;

@@ -24,6 +24,7 @@ module org.apache.wicket.websocket.tester {
     requires org.junit.jupiter.api;
     requires org.slf4j;
     requires org.apache.wicket.tester;
+    requires jakarta.annotation;
 
     exports org.apache.wicket.protocol.ws.tester;
 }

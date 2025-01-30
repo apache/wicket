@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
@@ -42,7 +44,7 @@ public class RequestSettingRequestHandler implements IRequestHandlerDelegate
 	 * @param delegate
 	 *      The request handler to delegate responding to
 	 */
-	public RequestSettingRequestHandler(Request request, IRequestHandler delegate)
+	public RequestSettingRequestHandler(@Nonnull Request request, @Nonnull IRequestHandler delegate)
 	{
 		this.request = Args.notNull(request, "request");
 		this.delegate = Args.notNull(delegate,"delegate");

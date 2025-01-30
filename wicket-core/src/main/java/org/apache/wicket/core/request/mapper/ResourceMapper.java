@@ -18,6 +18,7 @@ package org.apache.wicket.core.request.mapper;
 
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
@@ -108,7 +109,7 @@ public class ResourceMapper extends AbstractBookmarkableMapper
 	 * @param encoder
 	 *            encoder for url parameters
 	 */
-	public ResourceMapper(String path, ResourceReference resourceReference,
+	public ResourceMapper(String path, @Nonnull ResourceReference resourceReference,
 		IPageParametersEncoder encoder)
 	{
 		super(path, encoder);

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
@@ -47,8 +49,8 @@ public final class HeaderPartContainer extends WebMarkupContainer implements ICo
 	 *            The Panel (or bordered page) the header part is associated with
 	 * @param markup
 	 */
-	public HeaderPartContainer(final String id, final MarkupContainer container,
-		final IMarkupFragment markup)
+	public HeaderPartContainer(final String id, @Nonnull final MarkupContainer container,
+		@Nonnull final IMarkupFragment markup)
 	{
 		super(id);
 

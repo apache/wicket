@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.transformer;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -85,7 +87,7 @@ public class XsltTransformerBehavior extends AbstractTransformerBehavior
 	}
 
 	@Override
-	public void bind(final Component component)
+	public void bind(@Nonnull final Component component)
 	{
 		if (component instanceof Page)
 		{

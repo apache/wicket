@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
@@ -133,7 +135,7 @@ public class AjaxIndicatorAppender extends Behavior
 	}
 
 	@Override
-	public final void bind(final Component component)
+	public final void bind(@Nonnull final Component component)
 	{
 		this.component = component;
 	}

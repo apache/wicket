@@ -18,6 +18,8 @@ package org.apache.wicket.ajax;
 
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -105,7 +107,7 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 	 *             if {@link AjaxRequestTarget.IListener}'s events are currently being fired or have both been fired
 	 *             already
 	 */
-	void addListener(AjaxRequestTarget.IListener listener);
+	void addListener(@Nonnull AjaxRequestTarget.IListener listener);
 
 	/**
 	 * Register the given respond listener. The listener's

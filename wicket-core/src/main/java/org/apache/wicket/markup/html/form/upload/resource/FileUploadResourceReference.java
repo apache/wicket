@@ -17,6 +17,9 @@
 package org.apache.wicket.markup.html.form.upload.resource;
 
 import java.util.List;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.resource.IResource;
@@ -67,7 +70,7 @@ public class FileUploadResourceReference extends ResourceReference
 		return instance;
 	}
 
-	protected FileUploadResourceReference(IUploadsFileManager uploadFileManager)
+	protected FileUploadResourceReference(@Nonnull IUploadsFileManager uploadFileManager)
 	{
 		super(FileUploadResourceReference.class, "file-uploads");
 

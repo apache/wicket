@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 
+import jakarta.annotation.Nonnull;
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -99,8 +100,8 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	 *            tag modifier to use
 	 * @return {@code this}
 	 */
-	public <T extends Annotation> BeanValidationConfiguration register(Class<T> annotationType,
-		ITagModifier<T> modifier)
+	public <T extends Annotation> BeanValidationConfiguration register(@Nonnull Class<T> annotationType,
+		@Nonnull ITagModifier<T> modifier)
 	{
 		Args.notNull(annotationType, "annotationType");
 		Args.notNull(modifier, "modifier");
@@ -117,7 +118,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T extends Annotation> ITagModifier<T> getTagModifier(Class<T> annotationType)
+	public <T extends Annotation> ITagModifier<T> getTagModifier(@Nonnull Class<T> annotationType)
 	{
 		Args.notNull(annotationType, "annotationType");
 
@@ -131,7 +132,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	 * @param resolver
 	 * @return {@code this}
 	 */
-	public BeanValidationConfiguration add(IPropertyResolver resolver)
+	public BeanValidationConfiguration add(@Nonnull IPropertyResolver resolver)
 	{
 		Args.notNull(resolver, "resolver");
 
@@ -156,7 +157,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	 * 
 	 * @param validatorProvider
 	 */
-	public void setValidatorProvider(Supplier<Validator> validatorProvider)
+	public void setValidatorProvider(@Nonnull Supplier<Validator> validatorProvider)
 	{
 		Args.notNull(validatorProvider, "validatorProvider");
 
@@ -187,7 +188,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	 *            A violation translator that will convert {@link jakarta.validation.ConstraintViolation}s into Wicket's
 	 *            {@link org.apache.wicket.validation.ValidationError}s
 	 */
-	public void setViolationTranslator(IViolationTranslator violationTranslator)
+	public void setViolationTranslator(@Nonnull IViolationTranslator violationTranslator)
 	{
 		Args.notNull(violationTranslator, "violationTranslator");
 

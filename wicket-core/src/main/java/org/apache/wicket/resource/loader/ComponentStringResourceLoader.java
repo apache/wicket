@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -268,7 +270,7 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 	 * @param component
 	 * @return path
 	 */
-	protected String getResourcePath(final Component component)
+	protected String getResourcePath(@Nonnull final Component component)
 	{
 		Component current = Args.notNull(component, "component");
 

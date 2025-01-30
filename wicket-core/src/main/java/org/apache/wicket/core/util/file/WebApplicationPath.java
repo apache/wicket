@@ -18,6 +18,7 @@ package org.apache.wicket.core.util.file;
 
 import java.net.URL;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.ServletContext;
 
 import org.apache.wicket.core.util.resource.UrlResourceStream;
@@ -73,7 +74,7 @@ public final class WebApplicationPath implements IResourceFinder
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
 	@Override
-	public IResourceStream find(final Class<?> clazz, final String pathname)
+	public IResourceStream find(final Class<?> clazz, @Nonnull final String pathname)
 	{
 		IResourceStream resourceStream = null;
 		if (pathname.startsWith(WEB_INF) == false)

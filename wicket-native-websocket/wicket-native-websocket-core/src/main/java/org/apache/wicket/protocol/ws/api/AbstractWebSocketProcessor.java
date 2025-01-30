@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -103,7 +104,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * @param application
 	 *      the current Wicket Application
 	 */
-	public AbstractWebSocketProcessor(final HttpServletRequest request, final WebApplication application)
+	public AbstractWebSocketProcessor(final HttpServletRequest request, @Nonnull final WebApplication application)
 	{
 		final HttpSession httpSession = request.getSession(true);
 		if (httpSession == null)

@@ -31,6 +31,8 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.wicket.behavior.OutputMarkupContainerClassNameBehavior;
 import org.apache.wicket.core.util.string.ComponentStrings;
@@ -293,7 +295,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            stream to be used to render the component.
 	 * @return True, if component has been added
 	 */
-	public final boolean autoAdd(final Component component, MarkupStream markupStream)
+	public final boolean autoAdd(@Nonnull final Component component, MarkupStream markupStream)
 	{
 		Args.notNull(component, "component");
 
@@ -324,7 +326,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            True if all descendents should be considered
 	 * @return True if the component is contained in this container
 	 */
-	public boolean contains(final Component component, final boolean recurse)
+	public boolean contains(@Nonnull final Component component, final boolean recurse)
 	{
 		Args.notNull(component, "component");
 
@@ -689,7 +691,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            Component to remove from this container
 	 * @return {@code this} for chaining
 	 */
-	public MarkupContainer remove(final Component component)
+	public MarkupContainer remove(@Nonnull final Component component)
 	{
 		checkHierarchyChange(component);
 
@@ -708,7 +710,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            The id of the component to remove
 	 * @return {@code this} for chaining
 	 */
-	public MarkupContainer remove(final String id)
+	public MarkupContainer remove(@Nonnull final String id)
 	{
 		Args.notNull(id, "id");
 
@@ -833,7 +835,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *             Thrown if there was no child with the same id.
 	 * @return This
 	 */
-	public MarkupContainer replace(final Component child)
+	public MarkupContainer replace(@Nonnull final Component child)
 	{
 		Args.notNull(child, "child");
 
@@ -992,7 +994,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param child
 	 *            Component being added
 	 */
-	private void addedComponent(final Component child)
+	private void addedComponent(@Nonnull final Component child)
 	{
 		// Check for degenerate case
 		Args.notNull(child, "child");

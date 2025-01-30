@@ -25,6 +25,9 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
@@ -67,7 +70,7 @@ public class ZipResourceStream extends AbstractResourceStream
 	 * @param recursive
 	 *            If true, all subdirs will be zipped as well
 	 */
-	public ZipResourceStream(final File dir, final boolean recursive)
+	public ZipResourceStream(@Nonnull final File dir, final boolean recursive)
 	{
 		Args.notNull(dir, "dir");
 		Args.isTrue(dir.isDirectory(), "Not a directory: '{}'", dir);
@@ -119,7 +122,7 @@ public class ZipResourceStream extends AbstractResourceStream
 	 *            If true, all subdirs will be zipped as well
 	 * @throws IOException
 	 */
-	private static void zipDir(final File dir, final ZipOutputStream out, final String path,
+	private static void zipDir(@Nonnull final File dir, final ZipOutputStream out, final String path,
 		final boolean recursive) throws IOException
 	{
 		Args.notNull(dir, "dir");

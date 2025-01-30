@@ -23,6 +23,8 @@ import org.apache.wicket.util.lang.Args;
 
 import java.util.concurrent.Future;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * Abstract class handling the Web Socket broadcast messages.
  */
@@ -41,7 +43,7 @@ public abstract class AbstractWebSocketConnection implements IWebSocketConnectio
 	 * @param webSocketProcessor
 	 *      the web socket processor to delegate to
 	 */
-	public AbstractWebSocketConnection(AbstractWebSocketProcessor webSocketProcessor)
+	public AbstractWebSocketConnection(@Nonnull AbstractWebSocketProcessor webSocketProcessor)
 	{
 		this.applicationName = webSocketProcessor.getApplication().getName();
 		this.sessionId = webSocketProcessor.getSessionId();

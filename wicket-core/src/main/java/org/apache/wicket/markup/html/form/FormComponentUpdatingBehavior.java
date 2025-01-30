@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
@@ -54,7 +56,7 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 	}
 
 	@Override
-	public final void bind(final Component component)
+	public final void bind(@Nonnull final Component component)
 	{
 		Args.notNull(component, "component");
 

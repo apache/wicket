@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.border;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.DequeueContext;
 import org.apache.wicket.DequeueTagAction;
@@ -244,7 +246,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	}
 
 	@Override
-	public Border remove(final Component component)
+	public Border remove(final @Nonnull Component component)
 	{
 		if (component == body)
 		{
@@ -262,7 +264,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	
 	
 	@Override
-	public Border remove(final String id)
+	public Border remove(final @Nonnull String id)
 	{
 		if (body.getId().equals(id))
 		{
@@ -285,7 +287,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	}
 
 	@Override
-	public Border replace(final Component replacement)
+	public Border replace(final @Nonnull Component replacement)
 	{
 		if (body.getId().equals(replacement.getId()))
 		{
@@ -544,7 +546,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		 * @param name
 		 * @return null, if not found
 		 */
-		private IMarkupFragment findByName(final IMarkupFragment markup, final String name)
+		private IMarkupFragment findByName(final IMarkupFragment markup, @Nonnull final String name)
 		{
 			Args.notEmpty(name, "name");
 

@@ -16,14 +16,12 @@
  */
 package org.apache.wicket.core.request.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
+
+import jakarta.annotation.Nonnull;
 
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
@@ -46,6 +44,10 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Matej Knopp
@@ -584,7 +586,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 		 * @param version
 		 *             static version string to deliver for all queries resources
 		 */
-		AlphaDigitResourceVersion(String version)
+		AlphaDigitResourceVersion(@Nonnull String version)
 		{
 			this.version = Args.notNull(version, "version");
 		}

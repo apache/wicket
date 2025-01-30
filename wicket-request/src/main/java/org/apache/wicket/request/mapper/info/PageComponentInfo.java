@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.mapper.info;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
@@ -39,7 +41,7 @@ public class PageComponentInfo
 	 * @param pageInfo
 	 * @param componentInfo
 	 */
-	public PageComponentInfo(final PageInfo pageInfo, final ComponentInfo componentInfo)
+	public PageComponentInfo(@Nonnull final PageInfo pageInfo, final ComponentInfo componentInfo)
 	{
 		Args.notNull(pageInfo, "pageInfo");
 

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
@@ -339,7 +340,7 @@ public class Form<T> extends WebMarkupContainer
 	 *             if validator is null
 	 * @see IFormValidator
 	 */
-	public void add(final IFormValidator validator)
+	public void add(@Nonnull final IFormValidator validator)
 	{
 		Args.notNull(validator, "validator");
 
@@ -362,7 +363,7 @@ public class Form<T> extends WebMarkupContainer
 	 *             if validator is null
 	 * @see IFormValidator
 	 */
-	public void remove(final IFormValidator validator)
+	public void remove(@Nonnull final IFormValidator validator)
 	{
 		Args.notNull(validator, "validator");
 
@@ -1998,7 +1999,7 @@ public class Form<T> extends WebMarkupContainer
 	 *
 	 * @param validator
 	 */
-	protected final void validateFormValidator(final IFormValidator validator)
+	protected final void validateFormValidator(@Nonnull final IFormValidator validator)
 	{
 		Args.notNull(validator, "validator");
 

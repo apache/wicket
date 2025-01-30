@@ -19,6 +19,8 @@ package org.apache.wicket.authroles.authorization.strategies.role;
 import java.util.Collection;
 import java.util.HashSet;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringList;
@@ -53,7 +55,7 @@ public class Roles extends HashSet<String> implements IClusterable
 	 * @param roles
 	 *            Roles as a comma separated list, like "ADMIN, USER"
 	 */
-	public Roles(final String roles)
+	public Roles(@Nonnull final String roles)
 	{
 		Args.notNull(roles, "roles");
 		for (final String role : roles.split("\\s*,\\s*"))
@@ -68,7 +70,7 @@ public class Roles extends HashSet<String> implements IClusterable
 	 * @param roles
 	 *            Roles
 	 */
-	public Roles(final String[] roles)
+	public Roles(@Nonnull final String[] roles)
 	{
 		Args.notNull(roles, "roles");
 		for (final String role : roles)
@@ -77,7 +79,7 @@ public class Roles extends HashSet<String> implements IClusterable
 		}
 	}
 
-	public Roles(final Collection<String> roles) {
+	public Roles(@Nonnull final Collection<String> roles) {
 		Args.notNull(roles, "roles");
 		addAll(roles);
 	}

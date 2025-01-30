@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.lang.Args;
@@ -150,7 +152,7 @@ public class Url implements Serializable
 	 * @param url
 	 *            url being copied
 	 */
-	public Url(final Url url)
+	public Url(@Nonnull final Url url)
 	{
 		Args.notNull(url, "url");
 
@@ -193,7 +195,7 @@ public class Url implements Serializable
 	 * @param parameters
 	 * @param charset
 	 */
-	public Url(final List<String> segments, final List<QueryParameter> parameters,
+	public Url(@Nonnull final List<String> segments, @Nonnull final List<QueryParameter> parameters,
 		final Charset charset)
 	{
 		Args.notNull(segments, "segments");
@@ -239,7 +241,7 @@ public class Url implements Serializable
 	 *            a hint whether to try to parse the protocol, host and port part of the url
 	 * @return Url object
 	 */
-	public static Url parse(CharSequence _url, Charset charset, boolean isFullHint)
+	public static Url parse(@Nonnull CharSequence _url, Charset charset, boolean isFullHint)
 	{
 		Args.notNull(_url, "_url");
 
@@ -577,7 +579,7 @@ public class Url implements Serializable
 	 * 
 	 * @param newSegments
 	 */
-	public void prependLeadingSegments(final List<String> newSegments)
+	public void prependLeadingSegments(@Nonnull final List<String> newSegments)
 	{
 		Args.notNull(newSegments, "segments");
 		segments.addAll(0, newSegments);
@@ -965,7 +967,7 @@ public class Url implements Serializable
 		 * @param value
 		 *            parameter value
 		 */
-		public QueryParameter(final String name, final String value)
+		public QueryParameter(@Nonnull final String name, @Nonnull final String value)
 		{
 			Args.notNull(name, "name");
 			Args.notNull(value, "value");
@@ -1233,7 +1235,7 @@ public class Url implements Serializable
 	 *
 	 * @return path string
 	 */
-	private CharSequence getPathInternal(Charset charset)
+	private CharSequence getPathInternal(@Nonnull Charset charset)
 	{
 		Args.notNull(charset, "charset");
 
@@ -1282,7 +1284,7 @@ public class Url implements Serializable
      *            the return value does not contain any "?" and could be null
 	 * @return query string (null if empty)
 	 */
-	public String getQueryString(Charset charset)
+	public String getQueryString(@Nonnull Charset charset)
 	{
 		Args.notNull(charset, "charset");
 

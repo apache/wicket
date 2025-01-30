@@ -19,6 +19,8 @@ package org.apache.wicket.markup.html;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.util.lang.Args;
@@ -50,7 +52,7 @@ public class HeaderResponseDecoratorCollection implements IHeaderResponseDecorat
 	 *            The decorator to add, cannot be null.
 	 * @return {@code this} for chaining.
 	 */
-	public HeaderResponseDecoratorCollection add(IHeaderResponseDecorator decorator)
+	public HeaderResponseDecoratorCollection add(@Nonnull IHeaderResponseDecorator decorator)
 	{
 		Args.notNull(decorator, "decorator");
 		decorators.add(0, decorator);
@@ -68,7 +70,7 @@ public class HeaderResponseDecoratorCollection implements IHeaderResponseDecorat
 	 * @see ResourceAggregator
 	 */
 	public HeaderResponseDecoratorCollection addPreResourceAggregationDecorator(
-		IHeaderResponseDecorator decorator)
+		@Nonnull IHeaderResponseDecorator decorator)
 	{
 		Args.notNull(decorator, "decorator");
 
@@ -93,7 +95,7 @@ public class HeaderResponseDecoratorCollection implements IHeaderResponseDecorat
 	 * @return {@code this} for chaining.
 	 */
 	public HeaderResponseDecoratorCollection addPostProcessingDecorator(
-		IHeaderResponseDecorator decorator)
+		@Nonnull IHeaderResponseDecorator decorator)
 	{
 		Args.notNull(decorator, "decorator");
 		decorators.add(decorator);
@@ -108,7 +110,7 @@ public class HeaderResponseDecoratorCollection implements IHeaderResponseDecorat
 	 *            The decorator to add, cannot be null.
 	 * @return {@code this} for chaining.
 	 */
-	public HeaderResponseDecoratorCollection replaceAll(IHeaderResponseDecorator decorator)
+	public HeaderResponseDecoratorCollection replaceAll(@Nonnull IHeaderResponseDecorator decorator)
 	{
 		Args.notNull(decorator, "decorator");
 		decorators.clear();

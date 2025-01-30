@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.form;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -124,7 +126,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
 	 */
 	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(
-		SerializableConsumer<AjaxRequestTarget> onUpdateChoice)
+		@Nonnull SerializableConsumer<AjaxRequestTarget> onUpdateChoice)
 	{
 		Args.notNull(onUpdateChoice, "onUpdateChoice");
 		return new AjaxFormChoiceComponentUpdatingBehavior()

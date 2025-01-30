@@ -18,6 +18,8 @@ package org.apache.wicket.core.request.handler;
 
 import java.util.Collection;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -61,7 +63,7 @@ public interface IPartialPageRequestHandler extends IPageRequestHandler
 	 *            Must not be null. If you want to traverse all components use ` Component.class as
 	 *            the value for this argument.
 	 */
-	void addChildren(MarkupContainer parent, Class<?> childCriteria);
+	void addChildren(@Nonnull MarkupContainer parent, @Nonnull Class<?> childCriteria);
 
 	/**
 	 * Add JavasSript that will be evaluated on the client side after components are replaced

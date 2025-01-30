@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -247,7 +249,7 @@ public class Select<T> extends FormComponent<T>
 	 * @param option
 	 * @return {@code true} if the option is selected, {@code false} otherwise
 	 */
-	boolean isSelected(final SelectOption<?> option)
+	boolean isSelected(@Nonnull final SelectOption<?> option)
 	{
 		Args.notNull(option, "option");
 

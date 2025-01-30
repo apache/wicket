@@ -18,6 +18,8 @@ package org.apache.wicket.markup;
 
 import java.util.Iterator;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -57,7 +59,7 @@ public class MarkupFragment extends AbstractMarkupFragment
 	 * @throws IndexOutOfBoundsException
 	 *             if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
 	 */
-	public MarkupFragment(final IMarkupFragment markup, final int startIndex)
+	public MarkupFragment(@Nonnull final IMarkupFragment markup, final int startIndex)
 	{
 		Args.notNull(markup, "markup");
 

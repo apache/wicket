@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -354,7 +355,7 @@ public class CookieUtils
 	 * @param attributeValue
 	 * 		The value of the attribute
 	 */
-	public static void setAttribute(final Cookie cookie, String attributeName, String attributeValue)
+	public static void setAttribute(final Cookie cookie, @Nonnull String attributeName, String attributeValue)
 	{
 		Args.notEmpty(attributeName, "attributeName");
 

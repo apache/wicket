@@ -20,6 +20,8 @@ import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.core.util.resource.locator.IResourceNameIterator;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
@@ -53,7 +55,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 	 * @param resourceStreamLocator
 	 *            the delegate
 	 */
-	public CachingResourceStreamLocator(final IResourceStreamLocator resourceStreamLocator)
+	public CachingResourceStreamLocator(@Nonnull final IResourceStreamLocator resourceStreamLocator)
 	{
 		Args.notNull(resourceStreamLocator, "resourceStreamLocator");
 

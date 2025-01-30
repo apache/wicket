@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -52,7 +54,7 @@ public class FormComponentLabel extends WebMarkupContainer
 	 * @param component
 	 *            component that this label is linked to
 	 */
-	public FormComponentLabel(String id, LabeledWebMarkupContainer component)
+	public FormComponentLabel(String id, @Nonnull LabeledWebMarkupContainer component)
 	{
 		super(id);
 

@@ -17,6 +17,9 @@
 package org.apache.wicket.ajax;
 
 import java.time.Duration;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
@@ -253,7 +256,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 *            the consumer which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AbstractAjaxTimerBehavior}
 	 */
-	public static AbstractAjaxTimerBehavior onTimer(Duration interval, SerializableConsumer<AjaxRequestTarget> onTimer)
+	public static AbstractAjaxTimerBehavior onTimer(Duration interval, @Nonnull SerializableConsumer<AjaxRequestTarget> onTimer)
 	{
 		Args.notNull(onTimer, "onTimer");
 

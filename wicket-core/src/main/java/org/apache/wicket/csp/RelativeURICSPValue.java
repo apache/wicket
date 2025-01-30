@@ -19,6 +19,8 @@ package org.apache.wicket.csp;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 
@@ -37,7 +39,7 @@ public class RelativeURICSPValue implements CSPRenderable
 	 * @param relativeUri
 	 *            The part of the URI relative to the context root of the Wicket application.
 	 */
-	public RelativeURICSPValue(String relativeUri)
+	public RelativeURICSPValue(@Nonnull String relativeUri)
 	{
 		Args.notEmpty(relativeUri, "relativeUri");
 		this.relativeUri = relativeUri;

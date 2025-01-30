@@ -19,6 +19,8 @@ package org.apache.wicket.devutils.debugbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -207,7 +209,7 @@ public class DebugBar extends DevUtilsPanel
 	 * @param contrib
 	 *            custom contributor - can not be null
 	 */
-	public static void registerContributor(final IDebugBarContributor contrib,
+	public static void registerContributor(@Nonnull final IDebugBarContributor contrib,
 		final Application application)
 	{
 		Args.notNull(contrib, "contrib");
@@ -223,7 +225,7 @@ public class DebugBar extends DevUtilsPanel
 		return list == null ? new ArrayList<IDebugBarContributor>() : list;
 	}
 
-	public static void setContributors(List<IDebugBarContributor> contributors, Application application)
+	public static void setContributors(List<IDebugBarContributor> contributors, @Nonnull Application application)
 	{
 		Args.notNull(application, "application");
 

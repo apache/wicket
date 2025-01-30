@@ -18,6 +18,8 @@ package org.apache.wicket.protocol.http.servlet;
 
 import java.io.IOException;
 import java.time.Instant;
+
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -46,7 +48,7 @@ public class ServletWebResponse extends WebResponse
 	 * @param webRequest
 	 * @param httpServletResponse
 	 */
-	public ServletWebResponse(ServletWebRequest webRequest, HttpServletResponse httpServletResponse)
+	public ServletWebResponse(@Nonnull ServletWebRequest webRequest, @Nonnull HttpServletResponse httpServletResponse)
 	{
 		Args.notNull(webRequest, "webRequest");
 		Args.notNull(httpServletResponse, "httpServletResponse");
@@ -82,7 +84,7 @@ public class ServletWebResponse extends WebResponse
 	}
 
 	@Override
-	public void setDateHeader(String name, Instant date)
+	public void setDateHeader(String name, @Nonnull Instant date)
 	{
 		Args.notNull(date, "date");
 		httpServletResponse.setDateHeader(name, date.toEpochMilli());
@@ -173,7 +175,7 @@ public class ServletWebResponse extends WebResponse
 	}
 
 	@Override
-	public String encodeURL(CharSequence url)
+	public String encodeURL(@Nonnull CharSequence url)
 	{
 		Args.notNull(url, "url");
 
@@ -223,7 +225,7 @@ public class ServletWebResponse extends WebResponse
 	}
 
 	@Override
-	public String encodeRedirectURL(CharSequence url)
+	public String encodeRedirectURL(@Nonnull CharSequence url)
 	{
 		Args.notNull(url, "url");
 

@@ -20,6 +20,8 @@ import static java.util.Collections.singletonList;
 
 import java.util.Collection;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
@@ -39,7 +41,7 @@ public class WebSocketPushBroadcaster
 {
 	private final IWebSocketConnectionRegistry registry;
 
-	public WebSocketPushBroadcaster(IWebSocketConnectionRegistry registry)
+	public WebSocketPushBroadcaster(@Nonnull IWebSocketConnectionRegistry registry)
 	{
 		Args.notNull(registry, "registry");
 
@@ -63,7 +65,7 @@ public class WebSocketPushBroadcaster
 	 * @param message
 	 *			The push message event
 	 */
-	public void broadcast(ConnectedMessage connection, IWebSocketPushMessage message)
+	public void broadcast(@Nonnull ConnectedMessage connection, @Nonnull IWebSocketPushMessage message)
 	{
 		Args.notNull(connection, "connection");
 		Args.notNull(message, "message");
@@ -96,7 +98,7 @@ public class WebSocketPushBroadcaster
 	 * @param message
 	 *			The push message event
 	 */
-	public void broadcastAll(Application application, IWebSocketPushMessage message)
+	public void broadcastAll(@Nonnull Application application, @Nonnull IWebSocketPushMessage message)
 	{
 		Args.notNull(application, "application");
 		Args.notNull(message, "message");
@@ -129,7 +131,7 @@ public class WebSocketPushBroadcaster
 	 * @param message
 	 *			The push message event
 	 */
-	public void broadcastAllInSession(Application application, String sessionId, IWebSocketPushMessage message)
+	public void broadcastAllInSession(@Nonnull Application application, @Nonnull String sessionId, @Nonnull IWebSocketPushMessage message)
 	{
 		Args.notNull(application, "application");
 		Args.notNull(message, "message");
@@ -163,7 +165,7 @@ public class WebSocketPushBroadcaster
 	 * @param message
 	 *			The push message event
 	 */
-	public void broadcastAllMatchingFilter(Application application, IWebSocketConnectionRegistry.IConnectionsFilter connectionsFilter, IWebSocketPushMessage message)
+	public void broadcastAllMatchingFilter(@Nonnull Application application, @Nonnull IWebSocketConnectionRegistry.IConnectionsFilter connectionsFilter, @Nonnull IWebSocketPushMessage message)
 	{
 		Args.notNull(application, "application");
 		Args.notNull(message, "message");

@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.Filter;
 
 import org.apache.wicket.util.lang.Args;
@@ -62,7 +63,7 @@ public class CustomEntityResolver implements EntityResolver
 	 * @param locator
 	 *            locator for looking up entity
 	 */
-	public void put(final EntityKey key, final EntityLocator locator)
+	public void put(@Nonnull final EntityKey key, @Nonnull final EntityLocator locator)
 	{
 		Args.notNull(key, "key");
 		Args.notNull(locator, "locator");
@@ -94,7 +95,7 @@ public class CustomEntityResolver implements EntityResolver
 		private final String id;
 		private final String url;
 
-		private EntityKey(final String id, final String url)
+		private EntityKey(@Nonnull final String id, @Nonnull final String url)
 		{
 			Args.notEmpty(id, "id");
 			Args.notEmpty(url, "url");

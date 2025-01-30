@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.util.lang.Args;
@@ -53,7 +54,7 @@ public class WebSocketConnectionOriginFilter implements IWebSocketConnectionFilt
 
 	private final List<String> allowedDomains;
 
-	public WebSocketConnectionOriginFilter(final List<String> allowedDomains)
+	public WebSocketConnectionOriginFilter(@Nonnull final List<String> allowedDomains)
 	{
 		this.allowedDomains = Args.notNull(allowedDomains, "allowedDomains");
 	}

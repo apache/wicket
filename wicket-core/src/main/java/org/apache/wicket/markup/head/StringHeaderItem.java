@@ -19,6 +19,8 @@ package org.apache.wicket.markup.head;
 import java.util.Collections;
 import java.util.Objects;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.lang.Args;
 
@@ -49,7 +51,7 @@ public class StringHeaderItem extends HeaderItem
 	 * 
 	 * @param string
 	 */
-	public StringHeaderItem(CharSequence string)
+	public StringHeaderItem(@Nonnull CharSequence string)
 	{
 		this.string = Args.notNull(string, "string");
 	}

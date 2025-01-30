@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.settings;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.EnumeratedType;
@@ -200,7 +202,7 @@ public class ExceptionSettings
 	 * @param strategy
 	 * @return {@code this} object for chaining
 	 */
-	public ExceptionSettings setThreadDumpStrategy(ThreadDumpStrategy strategy)
+	public ExceptionSettings setThreadDumpStrategy(@Nonnull ThreadDumpStrategy strategy)
 	{
 		threadDumpStrategy = Args.notNull(strategy, "strategy");
 		return this;

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.border;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -73,7 +75,7 @@ public class Body extends WebMarkupContainer
 	 * @param markupProvider
 	 *            Usually a Panel
 	 */
-	public Body(final String id, final IModel<?> model, final MarkupContainer markupProvider)
+	public Body(final String id, final IModel<?> model, @Nonnull final MarkupContainer markupProvider)
 	{
 		super(id, model);
 

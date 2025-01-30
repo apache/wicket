@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.renderStrategy;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.util.lang.Args;
@@ -58,7 +60,7 @@ public abstract class DeepChildFirstVisitor implements IVisitor<Component, Void>
 	 * @param visit
 	 * @return The object return by component()
 	 */
-	public final Visit<Void> visit(final Component rootComponent, final Visit<Void> visit)
+	public final Visit<Void> visit(@Nonnull final Component rootComponent, @Nonnull final Visit<Void> visit)
 	{
 		Args.notNull(rootComponent, "rootComponent");
 		Args.notNull(visit, "visit");

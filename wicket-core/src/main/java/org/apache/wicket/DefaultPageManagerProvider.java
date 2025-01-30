@@ -18,6 +18,8 @@ package org.apache.wicket;
 
 import java.io.File;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageManager;
 import org.apache.wicket.pageStore.AsynchronousPageStore;
@@ -90,7 +92,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	 * @param application
 	 *            The application instance
 	 */
-	public DefaultPageManagerProvider(Application application)
+	public DefaultPageManagerProvider(@Nonnull Application application)
 	{
 		this.application = Args.notNull(application, "application");
 	}

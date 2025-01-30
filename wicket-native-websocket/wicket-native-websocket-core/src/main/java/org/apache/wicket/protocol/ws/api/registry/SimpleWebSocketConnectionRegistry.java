@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
@@ -42,7 +44,7 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 	};
 
 	@Override
-	public IWebSocketConnection getConnection(Application application, String sessionId, IKey key)
+	public IWebSocketConnection getConnection(@Nonnull Application application, @Nonnull String sessionId, @Nonnull IKey key)
 	{
 		Args.notNull(application, "application");
 		Args.notNull(sessionId, "sessionId");
@@ -62,7 +64,7 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 	}
 
 	@Override
-	public Collection<IWebSocketConnection> getConnections(Application application, String sessionId)
+	public Collection<IWebSocketConnection> getConnections(@Nonnull Application application, @Nonnull String sessionId)
 	{
 		Args.notNull(application, "application");
 		Args.notNull(sessionId, "sessionId");
@@ -81,7 +83,7 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 	}
 
 	@Override
-	public Collection<IWebSocketConnection> getConnections(Application application, IConnectionsFilter connectionsFilter)
+	public Collection<IWebSocketConnection> getConnections(@Nonnull Application application, @Nonnull IConnectionsFilter connectionsFilter)
 	{
 		Args.notNull(application, "application");
 		Args.notNull(connectionsFilter, "connectionsFilter");
@@ -113,7 +115,7 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 	 * @return a collection of currently active websockets
 	 */
 	@Override
-	public Collection<IWebSocketConnection> getConnections(Application application)
+	public Collection<IWebSocketConnection> getConnections(@Nonnull Application application)
 	{
 		Args.notNull(application, "application");
 
@@ -130,7 +132,7 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 	}
 
 	@Override
-	public void setConnection(Application application, String sessionId, IKey key, IWebSocketConnection connection)
+	public void setConnection(@Nonnull Application application, @Nonnull String sessionId, @Nonnull IKey key, IWebSocketConnection connection)
 	{
 		Args.notNull(application, "application");
 		Args.notNull(sessionId, "sessionId");

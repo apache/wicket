@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
@@ -123,7 +125,7 @@ public class RenderPageRequestHandler
 	 * @param pageProvider
 	 * @param redirectPolicy
 	 */
-	public RenderPageRequestHandler(IPageProvider pageProvider, RedirectPolicy redirectPolicy)
+	public RenderPageRequestHandler(@Nonnull IPageProvider pageProvider, @Nonnull RedirectPolicy redirectPolicy)
 	{
 		Args.notNull(pageProvider, "pageProvider");
 		Args.notNull(redirectPolicy, "redirectPolicy");

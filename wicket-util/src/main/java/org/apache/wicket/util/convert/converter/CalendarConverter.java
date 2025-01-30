@@ -20,6 +20,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
 
@@ -46,7 +48,7 @@ public class CalendarConverter implements IConverter<Calendar>
 	 * @param dateConverter
 	 *            delegated converter, not null
 	 */
-	public CalendarConverter(IConverter<Date> dateConverter)
+	public CalendarConverter(@Nonnull IConverter<Date> dateConverter)
 	{
 		Args.notNull(dateConverter, "dateConverter");
 

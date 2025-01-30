@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api.message;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.util.lang.Args;
@@ -40,7 +42,7 @@ public class TextMessage extends AbstractClientMessage
 	 * @param text
 	 *      the message sent from the client
 	 */
-	public TextMessage(Application application, String sessionId, IKey key, CharSequence text)
+	public TextMessage(Application application, String sessionId, IKey key, @Nonnull CharSequence text)
 	{
 		super(application, sessionId, key);
 		this.text = Args.notEmpty(text, "text");

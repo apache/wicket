@@ -149,6 +149,10 @@ org.apache.wicket.validation.validator;-noimport:=true
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.github.openjson</groupId>
 			<artifactId>openjson</artifactId>
 		</dependency>

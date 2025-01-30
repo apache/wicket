@@ -17,6 +17,8 @@
 package org.apache.wicket.model;
 
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.danekja.java.util.function.serializable.SerializableBiFunction;
@@ -98,7 +100,7 @@ public interface IModel<T> extends IDetachable
 	 *            a predicate to be used for testing the contained object
 	 * @return a new IModel
 	 */
-	default IModel<T> filter(SerializablePredicate<? super T> predicate)
+	default IModel<T> filter(@Nonnull SerializablePredicate<? super T> predicate)
 	{
 		Args.notNull(predicate, "predicate");
 		return new IModel<T>()
@@ -134,7 +136,7 @@ public interface IModel<T> extends IDetachable
 	 *            a mapper, to be applied to the contained object
 	 * @return a new IModel
 	 */
-	default <R> IModel<R> map(SerializableFunction<? super T, R> mapper)
+	default <R> IModel<R> map(@Nonnull SerializableFunction<? super T, R> mapper)
 	{
 		Args.notNull(mapper, "mapper");
 		return new IModel<R>() {
@@ -173,8 +175,8 @@ public interface IModel<T> extends IDetachable
 	 *            a function combining this and the others object to a result.
 	 * @return a new IModel
 	 */
-	default <R, U> IModel<R> combineWith(IModel<U> other,
-		SerializableBiFunction<? super T, ? super U, R> combiner)
+	default <R, U> IModel<R> combineWith(@Nonnull IModel<U> other,
+		@Nonnull SerializableBiFunction<? super T, ? super U, R> combiner)
 	{
 		Args.notNull(combiner, "combiner");
 		Args.notNull(other, "other");
@@ -212,7 +214,7 @@ public interface IModel<T> extends IDetachable
 	 * @return a new IModel
 	 * @see LambdaModel#of(IModel, SerializableFunction, SerializableBiConsumer)
 	 */
-	default <R> IModel<R> flatMap(SerializableFunction<? super T, IModel<R>> mapper)
+	default <R> IModel<R> flatMap(@Nonnull SerializableFunction<? super T, IModel<R>> mapper)
 	{
 		Args.notNull(mapper, "mapper");
 		return new IModel<R>()
@@ -324,7 +326,7 @@ public interface IModel<T> extends IDetachable
 	 *            a supplier to be used as a default
 	 * @return a new IModel
 	 */
-	default IModel<T> orElseGet(SerializableSupplier<? extends T> other)
+	default IModel<T> orElseGet(@Nonnull SerializableSupplier<? extends T> other)
 	{
 		Args.notNull(other, "other");
 		return new IModel<T>() {
@@ -378,7 +380,7 @@ public interface IModel<T> extends IDetachable
 	 * @param clazz the {@code Class} the current model object should be an instance of
 	 * @return a new IModel
 	 */
-	default <R extends T> IModel<R> as(Class<R> clazz) {
+	default <R extends T> IModel<R> as(@Nonnull Class<R> clazz) {
 		Args.notNull(clazz, "clazz");
 		return filter(clazz::isInstance).map(clazz::cast);
 	}

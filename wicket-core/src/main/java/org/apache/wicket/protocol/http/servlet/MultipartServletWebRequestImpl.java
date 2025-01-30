@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
@@ -117,7 +118,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *             Thrown if something goes wrong with upload
 	 */
 	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
-		Bytes maxSize, String upload, FileItemFactory factory) throws FileUploadException
+		Bytes maxSize, @Nonnull String upload, FileItemFactory factory) throws FileUploadException
 	{
 		super(request, filterPrefix);
 
@@ -521,7 +522,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *            upload identifier
 	 * @return {@link UploadInfo} object from session, or null if not found
 	 */
-	public static UploadInfo getUploadInfo(final HttpServletRequest req, String upload)
+	public static UploadInfo getUploadInfo(@Nonnull final HttpServletRequest req, String upload)
 	{
 		Args.notNull(req, "req");
 		return (UploadInfo)req.getSession().getAttribute(getSessionKey(upload));
@@ -537,8 +538,8 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 * @param uploadInfo
 	 *            {@link UploadInfo} object to be put into session, not null
 	 */
-	public static void setUploadInfo(final HttpServletRequest req, String upload,
-		final UploadInfo uploadInfo)
+	public static void setUploadInfo(@Nonnull final HttpServletRequest req, @Nonnull String upload,
+		@Nonnull final UploadInfo uploadInfo)
 	{
 		Args.notNull(req, "req");
 		Args.notNull(upload, "upload");
@@ -554,7 +555,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 * @param upload
 	 *            upload identifier
 	 */
-	public static void clearUploadInfo(final HttpServletRequest req, String upload)
+	public static void clearUploadInfo(@Nonnull final HttpServletRequest req, @Nonnull String upload)
 	{
 		Args.notNull(req, "req");
 		Args.notNull(upload, "upload");

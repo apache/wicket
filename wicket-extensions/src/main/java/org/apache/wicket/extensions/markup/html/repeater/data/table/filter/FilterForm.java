@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -134,7 +136,7 @@ public class FilterForm<T> extends Form<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void bind(Component component)
+			public void bind(@Nonnull Component component)
 			{
 				super.bind(component);
 				component.setOutputMarkupId(true);

@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -131,7 +132,7 @@ public class PushHeaderItem extends HeaderItem
 		this(page, pageRequest, pageResponse, new PushBuilder());
 	}
 
-	public PushHeaderItem(Page page, Request pageRequest, Response pageResponse, IPushBuilder pushBuilder)
+	public PushHeaderItem(Page page, Request pageRequest, Response pageResponse, @Nonnull IPushBuilder pushBuilder)
 	{
 		if (!(page instanceof WebPage) || !(pageRequest instanceof WebRequest) || !(pageResponse instanceof WebResponse))
 		{

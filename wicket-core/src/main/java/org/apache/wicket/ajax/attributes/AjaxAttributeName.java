@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.attributes;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.util.lang.Args;
 
@@ -246,7 +248,7 @@ public enum AjaxAttributeName {
 
 	private final String jsonName;
 
-	AjaxAttributeName(String jsonName)
+	AjaxAttributeName(@Nonnull String jsonName)
 	{
 		this.jsonName = Args.notNull(jsonName, "jsonName");
 	}

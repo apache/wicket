@@ -31,6 +31,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IConverterLocator;
@@ -424,7 +426,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * @return the visitor's result
 	 */
 	public static <R> R visitComponentsPostOrder(Component component,
-		final org.apache.wicket.util.visit.IVisitor<Component, R> visitor)
+		@Nonnull final org.apache.wicket.util.visit.IVisitor<Component, R> visitor)
 	{
 		Args.notNull(visitor, "visitor");
 
@@ -520,7 +522,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * @see IValidator
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public final FormComponent<T> add(final IValidator<? super T> validator)
+	public final FormComponent<T> add(@Nonnull final IValidator<? super T> validator)
 	{
 		Args.notNull(validator, "validator");
 
@@ -546,7 +548,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * @see #add(IValidator)
 	 * @return form component for chaining
 	 */
-	public final FormComponent<T> remove(final IValidator<? super T> validator)
+	public final FormComponent<T> remove(@Nonnull final IValidator<? super T> validator)
 	{
 		Args.notNull(validator, "validator");
 		Behavior match = null;
@@ -590,7 +592,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 *             if validator is null
 	 * @see IValidator
 	 */
-	public final FormComponent<T> add(final IValidator<? super T>... validators)
+	public final FormComponent<T> add(@Nonnull final IValidator<? super T>... validators)
 	{
 		Args.notNull(validators, "validators");
 
@@ -657,7 +659,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * @param error
 	 *            validation error
 	 */
-	public void error(IValidationError error)
+	public void error(@Nonnull IValidationError error)
 	{
 		Args.notNull(error, "error");
 

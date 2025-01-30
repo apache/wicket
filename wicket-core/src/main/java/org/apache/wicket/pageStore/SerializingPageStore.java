@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.pageStore;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.util.lang.Args;
@@ -35,7 +37,7 @@ public class SerializingPageStore extends DelegatingPageStore
 	 * @param serializer
 	 *            serializer to use if session gets persisted
 	 */
-	public SerializingPageStore(IPageStore delegate, ISerializer serializer)
+	public SerializingPageStore(IPageStore delegate, @Nonnull ISerializer serializer)
 	{
 		super(delegate);
 

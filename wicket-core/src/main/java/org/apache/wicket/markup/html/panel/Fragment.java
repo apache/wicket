@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.DequeueContext;
 import org.apache.wicket.IQueueRegion;
@@ -88,7 +90,7 @@ public class Fragment extends WebMarkupContainer implements IQueueRegion
 	 * @param model
 	 *            The model for this fragment
 	 */
-	public Fragment(final String id, final String markupId, final MarkupContainer markupProvider,
+	public Fragment(final String id, @Nonnull final String markupId, final MarkupContainer markupProvider,
 		final IModel<?> model)
 	{
 		super(id, model);

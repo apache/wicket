@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
@@ -120,7 +122,7 @@ public class MarkupCache implements IMarkupCache
 	 * local application.
 	 */
 	@Override
-	public final IMarkupFragment removeMarkup(final String cacheKey)
+	public final IMarkupFragment removeMarkup(@Nonnull final String cacheKey)
 	{
 		Args.notNull(cacheKey, "cacheKey");
 

@@ -18,6 +18,8 @@ package org.apache.wicket;
 
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReference.Key;
@@ -43,7 +45,7 @@ public class SharedResources
 	 * 
 	 * @param registry
 	 */
-	public SharedResources(ResourceReferenceRegistry registry)
+	public SharedResources(@Nonnull ResourceReferenceRegistry registry)
 	{
 		this.registry = Args.notNull(registry, "registry");
 	}

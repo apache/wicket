@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.core.request.handler.AbstractPartialPageRequestHandler;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
@@ -50,14 +52,14 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 
 	private PageLogData logData;
 
-	public WebSocketRequestHandler(final Component component, final IWebSocketConnection connection)
+	public WebSocketRequestHandler(@Nonnull final Component component, @Nonnull final IWebSocketConnection connection)
 	{
 		super(Args.notNull(component, "component").getPage());
 		this.connection = Args.notNull(connection, "connection");
 	}
 
 	@Override
-	public void push(CharSequence message)
+	public void push(@Nonnull CharSequence message)
 	{
 		if (connection.isOpen())
 		{
@@ -77,7 +79,7 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 	}
 
 	@Override
-	public Future<Void> pushAsync(CharSequence message, long timeout)
+	public Future<Void> pushAsync(@Nonnull CharSequence message, long timeout)
 	{
 		if (connection.isOpen())
 		{
@@ -98,7 +100,7 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 	}
 
 	@Override
-	public void push(byte[] message, int offset, int length)
+	public void push(@Nonnull byte[] message, int offset, int length)
 	{
 		if (connection.isOpen())
 		{
@@ -118,13 +120,13 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 	}
 
 	@Override
-	public Future<Void> pushAsync(byte[] message, int offset, int length)
+	public Future<Void> pushAsync(@Nonnull byte[] message, int offset, int length)
 	{
 		return pushAsync(message, offset, length, -1);
 	}
 
 	@Override
-	public Future<Void> pushAsync(byte[] message, int offset, int length, long timeout)
+	public Future<Void> pushAsync(@Nonnull byte[] message, int offset, int length, long timeout)
 	{
 		if (connection.isOpen())
 		{

@@ -18,6 +18,8 @@ package org.apache.wicket.ajax.form;
 
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -226,7 +228,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * @return the {@link AjaxFormComponentUpdatingBehavior}
 	 */
 	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName,
-		SerializableConsumer<AjaxRequestTarget> onUpdate)
+		@Nonnull SerializableConsumer<AjaxRequestTarget> onUpdate)
 	{
 		Args.notNull(onUpdate, "onUpdate");
 

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.lang.Args;
 
@@ -52,7 +54,7 @@ public class OrderByLink<S> extends Link<Void>
 	 *            sorted properties
 	 *
 	 */
-	public OrderByLink(final String id, final S property, final ISortStateLocator<S> stateLocator)
+	public OrderByLink(final String id, @Nonnull final S property, final ISortStateLocator<S> stateLocator)
 	{
 		super(id);
 

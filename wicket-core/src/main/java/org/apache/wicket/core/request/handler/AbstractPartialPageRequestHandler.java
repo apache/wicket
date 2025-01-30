@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
@@ -36,12 +38,12 @@ public abstract class AbstractPartialPageRequestHandler implements IPartialPageR
     /** The associated Page */
     private final Page page;
 
-    protected AbstractPartialPageRequestHandler(Page page) {
+    protected AbstractPartialPageRequestHandler(@Nonnull Page page) {
         this.page = Args.notNull(page, "page");
     }
 
     @Override
-    public final void addChildren(MarkupContainer parent, Class<?> childCriteria)
+    public final void addChildren(@Nonnull MarkupContainer parent, @Nonnull Class<?> childCriteria)
     {
         Args.notNull(parent, "parent");
         Args.notNull(childCriteria, "childCriteria");

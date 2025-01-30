@@ -21,6 +21,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.TimeZone;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Session;
 import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.model.IModel;
@@ -43,7 +45,7 @@ public class ZonedToLocalDateTimeModel implements IModel<LocalDateTime>
 	 *  
 	 * @param model zoned date time
 	 */
-	public ZonedToLocalDateTimeModel(IModel<ZonedDateTime> model)
+	public ZonedToLocalDateTimeModel(@Nonnull IModel<ZonedDateTime> model)
 	{
 		Args.notNull(model, "model");
 		

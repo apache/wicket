@@ -18,6 +18,8 @@ package org.apache.wicket.util.value;
 
 import java.io.Serializable;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Primitives;
 
@@ -227,7 +229,7 @@ public class LongValue implements Comparable<LongValue>, Serializable
 	 *             if either argument is {@code null}
 	 * @return min value
 	 */
-	public static <T extends LongValue> T min(final T lhs, final T rhs)
+	public static <T extends LongValue> T min(@Nonnull final T lhs, @Nonnull final T rhs)
 	{
 		Args.notNull(lhs, "lhs");
 		Args.notNull(rhs, "rhs");
@@ -248,7 +250,7 @@ public class LongValue implements Comparable<LongValue>, Serializable
 	 *             if either argument is {@code null}
 	 * @return max value
 	 */
-	public static <T extends LongValue> T max(final T lhs, final T rhs)
+	public static <T extends LongValue> T max(@Nonnull final T lhs, @Nonnull final T rhs)
 	{
 		Args.notNull(lhs, "lhs");
 		Args.notNull(rhs, "rhs");

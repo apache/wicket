@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.feedback;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.util.lang.Args;
@@ -39,7 +41,7 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 	 * @param container
 	 *            The container that message reporters must be a child of
 	 */
-	public ContainerFeedbackMessageFilter(MarkupContainer container)
+	public ContainerFeedbackMessageFilter(@Nonnull MarkupContainer container)
 	{
 		this.container = Args.notNull(container, "container");
 	}

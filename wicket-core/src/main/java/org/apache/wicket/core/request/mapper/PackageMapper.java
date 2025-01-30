@@ -19,6 +19,8 @@ package org.apache.wicket.core.request.mapper;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
@@ -84,7 +86,7 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	 * @param packageName
 	 * @param pageParametersEncoder
 	 */
-	public PackageMapper(String mountPath, final PackageName packageName,
+	public PackageMapper(String mountPath, @Nonnull final PackageName packageName,
 		final IPageParametersEncoder pageParametersEncoder)
 	{
 		super(mountPath, pageParametersEncoder);

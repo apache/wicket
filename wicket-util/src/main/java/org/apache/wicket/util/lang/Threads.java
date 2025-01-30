@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
 import org.slf4j.Logger;
 
@@ -49,7 +51,7 @@ public class Threads
 	 * @param logger
 	 *            the logger where the collected information will be written
 	 */
-	public static void dumpAllThreads(Logger logger)
+	public static void dumpAllThreads(@Nonnull Logger logger)
 	{
 		Args.notNull(logger, "logger");
 		if (!logger.isWarnEnabled())
@@ -89,7 +91,7 @@ public class Threads
 	 * @param thread
 	 *            the thread to dump
 	 */
-	public static void dumpSingleThread(Logger logger, Thread thread)
+	public static void dumpSingleThread(@Nonnull Logger logger, Thread thread)
 	{
 		Args.notNull(logger, "logger");
 		if (!logger.isWarnEnabled())

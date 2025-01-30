@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -55,7 +57,7 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 	 * @param delegate
 	 *           resource version provider to cache
 	 */
-	public RequestCycleCachedResourceVersion(IResourceVersion delegate)
+	public RequestCycleCachedResourceVersion(@Nonnull IResourceVersion delegate)
 	{
 		this.delegate = Args.notNull(delegate, "delegate");
 	}

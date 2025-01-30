@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api.registry;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
@@ -33,7 +35,7 @@ public class PageIdKey extends AbstractKey
 		this(pageId, null);
 	}
 
-	public PageIdKey(Integer pageId, String context)
+	public PageIdKey(@Nonnull Integer pageId, String context)
 	{
 		super(context);
 		this.pageId = Args.notNull(pageId, "pageId");

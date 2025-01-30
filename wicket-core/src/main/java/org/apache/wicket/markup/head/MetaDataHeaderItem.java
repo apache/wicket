@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
@@ -59,7 +61,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	 * @param tagName
 	 * 		the name of the tag
 	 */
-	public MetaDataHeaderItem(String tagName)
+	public MetaDataHeaderItem(@Nonnull String tagName)
 	{
 		this.tagName = Args.notEmpty(tagName, "tagName");
 		this.tagAttributes = new ValueMap();
@@ -77,7 +79,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	 * @return
 	 * 		The current item.
 	 */
-	public MetaDataHeaderItem addTagAttribute(String attributeName, Object attributeValue)
+	public MetaDataHeaderItem addTagAttribute(@Nonnull String attributeName, @Nonnull Object attributeValue)
 	{
 		Args.notEmpty(attributeName, "attributeName");
 		Args.notNull(attributeValue, "attributeValue");
@@ -95,7 +97,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	 * @return
 	 * 		The current item.
 	 */
-	public MetaDataHeaderItem addTagAttribute(String attributeName)
+	public MetaDataHeaderItem addTagAttribute(@Nonnull String attributeName)
 	{
 		Args.notEmpty(attributeName, "attributeName");
 		

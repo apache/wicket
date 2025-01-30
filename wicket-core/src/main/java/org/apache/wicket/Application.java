@@ -25,6 +25,9 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.application.ComponentInstantiationListenerCollection;
 import org.apache.wicket.application.ComponentOnAfterRenderListenerCollection;
@@ -673,7 +676,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 		return exceptionMapperProvider;
 	}
 
-	public void setExceptionMapperProvider(Supplier<IExceptionMapper> exceptionMapperProvider) {
+	public void setExceptionMapperProvider(@Nonnull Supplier<IExceptionMapper> exceptionMapperProvider) {
 		this.exceptionMapperProvider = Args.notNull(exceptionMapperProvider, "exceptionMapperProvider");
 	}
 
@@ -690,7 +693,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	 * 
 	 * @param sessionStoreProvider
 	 */
-	public final Application setSessionStoreProvider(final Supplier<ISessionStore> sessionStoreProvider)
+	public final Application setSessionStoreProvider(@Nonnull final Supplier<ISessionStore> sessionStoreProvider)
 	{
 		this.sessionStoreProvider = Args.notNull(sessionStoreProvider, "sessionStoreProvider");
 		this.sessionStore = null;
@@ -800,7 +803,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	 * @param name
 	 *            unique application name
 	 */
-	public final void setName(final String name)
+	public final void setName(@Nonnull final String name)
 	{
 		Args.notEmpty(name, "name");
 
@@ -1392,7 +1395,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	 * 
 	 * @param pageRendererProvider
 	 */
-	public final Application setPageRendererProvider(final IPageRendererProvider pageRendererProvider)
+	public final Application setPageRendererProvider(@Nonnull final IPageRendererProvider pageRendererProvider)
 	{
 		Args.notNull(pageRendererProvider, "pageRendererProvider");
 		this.pageRendererProvider = pageRendererProvider;
@@ -1519,7 +1522,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	 * @param requestCycle
 	 * @return Session
 	 */
-	public Session fetchCreateAndSetSession(final RequestCycle requestCycle)
+	public Session fetchCreateAndSetSession(@Nonnull final RequestCycle requestCycle)
 	{
 		Args.notNull(requestCycle, "requestCycle");
 

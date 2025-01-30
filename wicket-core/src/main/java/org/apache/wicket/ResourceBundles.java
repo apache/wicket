@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -58,7 +60,7 @@ public class ResourceBundles
 	 * @param registry
 	 *      the registry that keeps all referenced resources
 	 */
-	public ResourceBundles(final ResourceReferenceRegistry registry)
+	public ResourceBundles(@Nonnull final ResourceReferenceRegistry registry)
 	{
 		this.registry = Args.notNull(registry, "registry");
 		this.providedResourcesToBundles = new HashMap<HeaderItem, HeaderItem>();

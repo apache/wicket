@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.MarkupContainer;
 
 /**
@@ -59,7 +61,7 @@ public interface IMarkupCache
 	 * @param cacheKey
 	 * @return The markup removed from the cache. Null, if nothing was found.
 	 */
-	IMarkupFragment removeMarkup(final String cacheKey);
+	IMarkupFragment removeMarkup(@Nonnull final String cacheKey);
 
 	/**
 	 * @return the number of elements currently in the cache.

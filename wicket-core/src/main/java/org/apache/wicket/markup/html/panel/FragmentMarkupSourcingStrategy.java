@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import jakarta.annotation.Nonnull;
+
 import static org.apache.wicket.markup.parser.filter.WicketTagIdentifier.FRAGMENT;
 
 import org.apache.wicket.Component;
@@ -52,7 +54,7 @@ public class FragmentMarkupSourcingStrategy extends AbstractMarkupSourcingStrate
 	 * @param markupProvider
 	 *            The component whose markup contains the fragment's markup
 	 */
-	public FragmentMarkupSourcingStrategy(final String markupId,
+	public FragmentMarkupSourcingStrategy(@Nonnull final String markupId,
 		final MarkupContainer markupProvider)
 	{
 		Args.notNull(markupId, "markupId");

@@ -18,6 +18,8 @@ package org.apache.wicket.request.handler.resource;
 
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
@@ -56,7 +58,7 @@ public class ResourceReferenceRequestHandler implements IRequestHandler, ILoggab
 	 * @param resourceReference
 	 * @param pageParameters
 	 */
-	public ResourceReferenceRequestHandler(ResourceReference resourceReference,
+	public ResourceReferenceRequestHandler(@Nonnull ResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		Args.notNull(resourceReference, "resourceReference");

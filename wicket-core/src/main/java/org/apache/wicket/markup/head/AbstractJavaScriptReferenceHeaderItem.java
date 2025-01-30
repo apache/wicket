@@ -18,6 +18,8 @@ package org.apache.wicket.markup.head;
 
 import java.util.Objects;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.request.Response;
@@ -113,7 +115,7 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 		return this;
 	}
 
-	protected final void internalRenderJavaScriptReference(Response response, String url)
+	protected final void internalRenderJavaScriptReference(Response response, @Nonnull String url)
 	{
 		Args.notEmpty(url, "url");
 		final AttributeMap attributes = createAttributeMap(url);

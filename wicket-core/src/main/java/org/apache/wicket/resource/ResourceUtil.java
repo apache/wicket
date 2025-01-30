@@ -22,6 +22,8 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -82,7 +84,7 @@ public class ResourceUtil
 	 * 
 	 * @see ResourceReference.UrlAttributes
 	 */
-	public static ResourceReference.UrlAttributes decodeResourceReferenceAttributes(Url url)
+	public static ResourceReference.UrlAttributes decodeResourceReferenceAttributes(@Nonnull Url url)
 	{
 		Args.notNull(url, "url");
 	
@@ -152,7 +154,7 @@ public class ResourceUtil
 	 * @see ResourceReference.UrlAttributes
 	 * @see Url
 	 */
-	public static void encodeResourceReferenceAttributes(Url url, ResourceReference reference)
+	public static void encodeResourceReferenceAttributes(@Nonnull Url url, @Nonnull ResourceReference reference)
 	{
 		Args.notNull(url, "url");
 		Args.notNull(reference, "reference");

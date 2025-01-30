@@ -23,6 +23,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.collections.UrlExternalFormComparator;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
@@ -89,7 +91,7 @@ public class CompoundClassResolver implements IClassResolver
 	 * @return An {@link Iterator} of all the {@link URL}s matching the resource name.
 	 */
 	@Override
-	public Iterator<URL> getResources(final String name)
+	public Iterator<URL> getResources(@Nonnull final String name)
 	{
 		Args.notNull(name, "name");
 
@@ -134,7 +136,7 @@ public class CompoundClassResolver implements IClassResolver
 	 *            The resolver to add
 	 * @return {@code this} for chaining
 	 */
-	public CompoundClassResolver add(final IClassResolver resolver)
+	public CompoundClassResolver add(@Nonnull final IClassResolver resolver)
 	{
 		Args.notNull(resolver, "resolver");
 		resolvers.add(resolver);

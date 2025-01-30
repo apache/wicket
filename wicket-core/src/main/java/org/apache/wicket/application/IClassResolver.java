@@ -19,6 +19,8 @@ package org.apache.wicket.application;
 import java.net.URL;
 import java.util.Iterator;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * An interface to code which finds classes and resources
  * 
@@ -45,7 +47,7 @@ public interface IClassResolver
 	 * @param name
 	 * @return iterator over matching resources
 	 */
-	Iterator<URL> getResources(String name);
+	Iterator<URL> getResources(@Nonnull String name);
 
 	/**
 	 * Returns the {@link ClassLoader} to be used for resolving classes
