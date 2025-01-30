@@ -35,26 +35,11 @@ import org.apache.wicket.util.convert.ConversionException;
  * Works on a {@link java.time.temporal.Temporal} object, aggregating a {@link LocalDateTextField} and a {@link TimeField}.
  * <p>
  * <strong>Ajaxifying an AbstractDateTimeField</strong>:
- * If you want to update this component with an {@link AjaxFormComponentUpdatingBehavior}, you have to attach it
- * to the contained components by overriding {@link #newDateField(String, IModel)}:
- * 
- * <pre>{@code
- *  DateTimeField dateTimeField = new DateTimeField(...) {
- *    protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel)
- *    {
- *      DateTextField dateField = super.newDateTextField(id, dateFieldModel);     
- *      dateField.add(new AjaxFormComponentUpdatingBehavior("change") {
- *        protected void onUpdate(AjaxRequestTarget target) {
- *          processInput(); // let DateTimeField process input too
+ * If you want to update this component with an {@link AjaxFormComponentUpdatingBehavior}, you have to override
+ * {@link #wantChildrenToProcessInputInAjaxUpdate()} and return <code>true</code>, and override
+ * {@link #newTimeField(String, IModel)} and return a subclass of <code>TimeField</code> that also returns
+ * <code>true</code> from <code>wantChildrenToProcessInputInAjaxUpdate()</code>.
  *
- *          ...
- *        }
- *      });
- *      return dateField;
- *    }
- *  }
- * }</pre>
- * 
  * @author eelcohillenius
  */
 abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPanel<T>
@@ -138,6 +123,13 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 		// since we override convertInput, we can let this method return a value
 		// that is just suitable for error reporting
 		return String.format("%s, %s", localDateField.getInput(), timeField.getInput());
+	}
+
+	@Override
+	public void processInputOfChildren()
+	{
+		processInputOfChild(localDateField);
+		processInputOfChild(timeField);
 	}
 
 	/**

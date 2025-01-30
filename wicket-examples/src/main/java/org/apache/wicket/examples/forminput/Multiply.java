@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.forminput;
 
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -29,7 +30,12 @@ import org.apache.wicket.model.PropertyModel;
  * with the lhs and rhs. You would use this component's model (value) primarily to write the result
  * to some object, without ever directly setting it in code yourself.
  * </p>
- * 
+ * <p>
+ * <strong>Ajaxifying a Multiply</strong>:
+ * If you want to update this component with an {@link AjaxFormComponentUpdatingBehavior}, you have to override
+ * {@link #wantChildrenToProcessInputInAjaxUpdate()} and return <code>true</code>.
+ * </p>
+ *
  * @author eelcohillenius
  */
 public class Multiply extends FormComponentPanel<Integer>
@@ -108,6 +114,13 @@ public class Multiply extends FormComponentPanel<Integer>
 		add(right = new TextField<>("right", new PropertyModel<>(this, "rhs")));
 		left.setRequired(true);
 		right.setRequired(true);
+	}
+
+	@Override
+	public void processInputOfChildren()
+	{
+		processInputOfChild(left);
+		processInputOfChild(right);
 	}
 
 	/**
