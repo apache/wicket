@@ -113,3 +113,24 @@ add(new Link<Void>("pageWithNamedIndexParam") {
 
 The URL generated for the linked page (PageWithParameters) is the one seen at the beginning of the paragraph.
 
+=== URL fragment
+
+Starting from version 10.4.0 _PageParameters_ offers native support for URL fragment. Just use method _setFragment_ to specify fragment's value:
+
+[source,java]
+----
+add(new Link<Void>("pageWithNamedIndexParam") {
+
+	@Override
+ 	public void onClick() {
+				
+		PageParameters pageParameters = new PageParameters();
+		parameters.setFragment("fragmentValue");
+				
+		//page url will have #fragmentValue at the end.
+		setResponsePage(PageWithParameters.class, pageParameters);
+	}
+			
+});
+----
+
