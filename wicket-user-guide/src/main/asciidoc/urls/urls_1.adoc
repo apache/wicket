@@ -125,7 +125,7 @@ add(new Link<Void>("pageWithNamedIndexParam") {
  	public void onClick() {
 				
 		PageParameters pageParameters = new PageParameters();
-		parameters.setFragment("fragmentValue");
+		pageParameters.setFragment("fragmentValue");
 				
 		//page url will have #fragmentValue at the end.
 		setResponsePage(PageWithParameters.class, pageParameters);
