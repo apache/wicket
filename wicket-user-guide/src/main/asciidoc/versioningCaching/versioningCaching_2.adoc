@@ -71,9 +71,9 @@ If for any reason we need to switch off versioning for a given page, we can call
 
 === Pluggable serialization
 
-Starting from version 1.5 it is possible to choose which implementation of Java serialization will be used by Wicket to store page versions. Wicket serializes pages using an implementation of interface _org.apache.wicket.serialize.ISerializer_. The default implementation is _org.apache.wicket.serialize.java.JavaSerializer_ and it uses the standard Java serialization mechanism based on classes _ObjectOutputStream_ and _ObjectInputStream_. However on internet we can find other interesting serialization libraries like https://github.com/EsotericSoftware/kryo[Kryo].
+Wicket serializes pages using an implementation of interface _org.apache.wicket.serialize.ISerializer_. The default implementation is _org.apache.wicket.serialize.java.JavaSerializer_ and it uses the standard Java serialization mechanism based on classes _ObjectOutputStream_ and _ObjectInputStream_. However on internet we can find other interesting serialization libraries like https://github.com/EsotericSoftware/kryo[Kryo].
 
-We can access this class inside the method _init_ of the class _Application_ using the _getFrameworkSettings()_ method :
+We can set a custom serializer inside _init_ method accessing Wicket settings with _getFrameworkSettings()_:
 
 [source,java]
 ----
