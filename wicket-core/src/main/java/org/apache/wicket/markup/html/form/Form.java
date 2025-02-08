@@ -1006,6 +1006,9 @@ public class Form<T> extends WebMarkupContainer
 			// Update model using form data
 			updateFormComponentModels();
 
+			// after updating, call the interception method for clients
+			afterUpdateFormComponentModels();
+
 			// validate model objects after input values have been bound
 			internalOnValidateModelObjects();
 			if (hasError())
@@ -1294,6 +1297,14 @@ public class Form<T> extends WebMarkupContainer
 	 * actual updating of form component models is done.
 	 */
 	protected void beforeUpdateFormComponentModels()
+	{
+	}
+
+	/**
+	 * Template method to allow clients to do any processing after the actual updating of form
+	 * component models is done.
+	 */
+	protected void afterUpdateFormComponentModels()
 	{
 	}
 
