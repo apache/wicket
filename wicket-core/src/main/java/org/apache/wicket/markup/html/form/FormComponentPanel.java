@@ -172,4 +172,38 @@ public abstract class FormComponentPanel<T> extends FormComponent<T> implements 
 			}
 		});
 	}
+
+	/**
+	 * By returning <code>true</code> (and implementing {@link #processInputOfChildren()}) it will be possible to add a
+	 * {@link org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior AjaxFormComponentUpdatingBehavior} to this
+	 * panel, and be able to access the updated model object of this panel in that behavior.
+	 *
+	 * @return <code>true</code> if this panel wants children to process the input on an Ajax update, <code>false</code>
+	 * otherwise.
+	 */
+	public boolean wantChildrenToProcessInputInAjaxUpdate() {
+		return false;
+	}
+
+	/**
+	 * Called by {@link org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior AjaxFormComponentUpdatingBehavior}
+	 * if {@link #wantChildrenToProcessInputInAjaxUpdate()} returns <code>true</code>. Each nested form component must
+	 * be asked to process its input. You should use {@link #processInputOfChild(FormComponent)} as this method takes
+	 * nested <code>FormComponentPanel</code>s that also want their children to process the input into account.
+	 */
+	public void processInputOfChildren() {
+	}
+
+	/**
+	 * Tell the given child component to process its input. If the child component is a <code>FormComponentPanel</code>
+	 * that wants its children to process their input, it will be told to do so.
+	 *
+	 * @param child the component to tell to process its children.
+	 */
+	protected final void processInputOfChild(FormComponent<?> child) {
+		if (child instanceof FormComponentPanel<?> formComponentPanel && formComponentPanel.wantChildrenToProcessInputInAjaxUpdate()) {
+			formComponentPanel.processInputOfChildren();
+		}
+		child.processInput();
+	}
 }
