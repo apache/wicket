@@ -801,25 +801,28 @@ public class Form<T> extends WebMarkupContainer
 			if (submitter == null)
 			{
 				submitter = findSubmitter();
+			}
 
-				if (submitter instanceof IFormSubmittingComponent)
+			if (submitter instanceof IFormSubmittingComponent formSubmittingComponent)
+			{
+				Component component = (Component)submitter;
+
+				if (!component.isVisibleInHierarchy())
 				{
-					IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)submitter;
-					Component component = (Component)submitter;
+					throw new WicketRuntimeException("Submit Button " +
+						formSubmittingComponent.getInputName() +
+						" (path=" +
+						component.getPageRelativePath() +
+						") is not visible");
+				}
 
-					if (!component.isVisibleInHierarchy())
-					{
-						throw new WicketRuntimeException("Submit Button " +
-							submittingComponent.getInputName() + " (path=" +
-							component.getPageRelativePath() + ") is not visible");
-					}
-
-					if (!component.isEnabledInHierarchy())
-					{
-						throw new WicketRuntimeException("Submit Button " +
-							submittingComponent.getInputName() + " (path=" +
-							component.getPageRelativePath() + ") is not enabled");
-					}
+				if (!component.isEnabledInHierarchy())
+				{
+					throw new WicketRuntimeException("Submit Button " +
+						formSubmittingComponent.getInputName() +
+						" (path=" +
+						component.getPageRelativePath() +
+						") is not enabled");
 				}
 			}
 
