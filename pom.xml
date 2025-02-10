@@ -163,7 +163,7 @@
 		<jakarta.enterprise.cdi-api.version>3.0.1</jakarta.enterprise.cdi-api.version>
 		<jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
 		<jakarta.servlet.jsp-api.version>3.1.1</jakarta.servlet.jsp-api.version>
-		<jakarta.validation-api.version>3.1.0</jakarta.validation-api.version>
+		<jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
 		<jakarta.websocket-api.version>2.2.0</jakarta.websocket-api.version>
 		<jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
