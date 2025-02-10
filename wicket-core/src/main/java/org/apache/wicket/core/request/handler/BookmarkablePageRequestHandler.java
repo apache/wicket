@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
@@ -43,7 +45,7 @@ public class BookmarkablePageRequestHandler
 	 *
 	 * @param pageProvider
 	 */
-	public BookmarkablePageRequestHandler(IPageProvider pageProvider)
+	public BookmarkablePageRequestHandler(@Nonnull IPageProvider pageProvider)
 	{
 
 		Args.notNull(pageProvider, "pageProvider");

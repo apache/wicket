@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.request.component.IRequestablePage;
@@ -63,9 +64,9 @@ public class OriginResourceIsolationPolicy implements IResourceIsolationPolicy
 	 *            the acceptable origin
 	 * @return this
 	 */
-	public OriginResourceIsolationPolicy addAcceptedOrigin(String acceptedOrigin)
+	public OriginResourceIsolationPolicy addAcceptedOrigin(@Nonnull String acceptedOrigin)
 	{
-		Checks.notNull("acceptedOrigin", acceptedOrigin);
+		Checks.notNull(acceptedOrigin, "acceptedOrigin");
 
 		// strip any leading dot characters
 		final int len = acceptedOrigin.length();

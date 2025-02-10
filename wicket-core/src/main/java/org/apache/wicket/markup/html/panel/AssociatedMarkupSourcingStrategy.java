@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
@@ -49,7 +51,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	 * @param tagName
 	 *            Either "panel" or "border"
 	 */
-	public AssociatedMarkupSourcingStrategy(final String tagName)
+	public AssociatedMarkupSourcingStrategy(@Nonnull final String tagName)
 	{
 		this.tagName = Args.notNull(tagName, "tagName");
 	}

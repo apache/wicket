@@ -20,6 +20,7 @@ module org.apache.wicket.auth.roles {
     requires org.apache.wicket.util;
     requires org.apache.wicket.request;
     requires org.apache.wicket.core;
+    requires jakarta.annotation;
 
     exports org.apache.wicket.authroles.authentication;
     exports org.apache.wicket.authroles.authentication.pages;

@@ -18,6 +18,8 @@ package org.apache.wicket.markup.repeater.data;
 
 import java.util.Iterator;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.repeater.Item;
@@ -273,7 +275,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 		 * @param rows
 		 *            iterator over child row views
 		 */
-		public ItemsIterator(Iterator<MarkupContainer> rows)
+		public ItemsIterator(@Nonnull Iterator<MarkupContainer> rows)
 		{
 			this.rows = Args.notNull(rows, "rows");
 			findNext();

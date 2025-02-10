@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Session;
 import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
@@ -85,7 +87,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		 *            optional parameter providing pageParameters
 		 */
 		public UrlInfo(PageComponentInfo pageComponentInfo,
-			Class<? extends IRequestablePage> pageClass, PageParameters pageParameters)
+			@Nonnull Class<? extends IRequestablePage> pageClass, PageParameters pageParameters)
 		{
 			Args.notNull(pageClass, "pageClass");
 
@@ -162,7 +164,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		this("notUsed", new PageParametersEncoder());
 	}
 
-	public AbstractBookmarkableMapper(String mountPath, IPageParametersEncoder pageParametersEncoder)
+	public AbstractBookmarkableMapper(@Nonnull String mountPath, @Nonnull IPageParametersEncoder pageParametersEncoder)
 	{
 		Args.notEmpty(mountPath, "mountPath");
 
@@ -461,7 +463,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		return null;
 	}
 
-	protected final PageInfo getPageInfo(IPageRequestHandler handler)
+	protected final PageInfo getPageInfo(@Nonnull IPageRequestHandler handler)
 	{
 		Args.notNull(handler, "handler");
 

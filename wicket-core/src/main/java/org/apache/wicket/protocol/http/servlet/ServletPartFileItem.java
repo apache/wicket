@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collection;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.Part;
 
 import org.apache.commons.fileupload2.core.FileItem;
@@ -50,7 +51,7 @@ class ServletPartFileItem implements FileItem
 	/**
 	 * Constructor
 	 */
-	ServletPartFileItem(Part part)
+	ServletPartFileItem(@Nonnull Part part)
 	{
 		Args.notNull(part, "part");
 		this.part = part;

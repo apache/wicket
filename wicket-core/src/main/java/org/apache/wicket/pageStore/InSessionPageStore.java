@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpSession;
 
 import org.apache.wicket.MetaDataKey;
@@ -194,7 +195,7 @@ public class InSessionPageStore implements IPageStore
 		 * Call this method if session serialization should be supported, i.e. all pages get
 		 * serialized along with the session.
 		 */
-		public void supportSessionSerialization(ISerializer serializer)
+		public void supportSessionSerialization(@Nonnull ISerializer serializer)
 		{
 			this.serializer = Args.notNull(serializer, "serializer");
 		}
@@ -328,7 +329,7 @@ public class InSessionPageStore implements IPageStore
 
 		private long size;
 
-		public SizeLimitedData(Bytes maxBytes)
+		public SizeLimitedData(@Nonnull Bytes maxBytes)
 		{
 			Args.notNull(maxBytes, "maxBytes");
 

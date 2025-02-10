@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 
+import jakarta.annotation.Nonnull;
 
 
 /**
@@ -111,7 +112,7 @@ public interface IXmlPullParser
 	 * @throws IOException
 	 *             Error while reading the resource
 	 */
-	void parse(final CharSequence string) throws IOException;
+	void parse(@Nonnull final CharSequence string) throws IOException;
 
 	/**
 	 * Reads and parses markup from an input stream, using UTF-8 encoding by default when not
@@ -135,7 +136,7 @@ public interface IXmlPullParser
 	 * @throws IOException
 	 *             Error while reading the resource
 	 */
-	void parse(InputStream inputStream, final String encoding) throws IOException;
+	void parse(@Nonnull InputStream inputStream, final String encoding) throws IOException;
 
 	/**
 	 * Move to the next XML element

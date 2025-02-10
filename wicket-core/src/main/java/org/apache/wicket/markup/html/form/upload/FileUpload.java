@@ -24,6 +24,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.commons.fileupload2.core.FileItem;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
@@ -54,7 +56,7 @@ public class FileUpload
 	 * @param item
 	 *            The uploaded file item
 	 */
-	public FileUpload(final FileItem item)
+	public FileUpload(@Nonnull final FileItem item)
 	{
 		Args.notNull(item, "item");
 		this.item = item;
@@ -106,7 +108,7 @@ public class FileUpload
 	 *
 	 * @return The cryptographic digest of the file
 	 */
-	public byte[] getDigest(String algorithm)
+	public byte[] getDigest(@Nonnull String algorithm)
 	{
 		try
 		{

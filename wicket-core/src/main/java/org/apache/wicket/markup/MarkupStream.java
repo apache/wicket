@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -60,7 +62,7 @@ public class MarkupStream
 	 * @param markup
 	 *            List of markup elements
 	 */
-	public MarkupStream(final IMarkupFragment markup)
+	public MarkupStream(@Nonnull final IMarkupFragment markup)
 	{
 		Args.notNull(markup, "markup");
 

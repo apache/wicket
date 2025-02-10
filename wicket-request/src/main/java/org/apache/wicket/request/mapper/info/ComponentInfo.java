@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.mapper.info;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
@@ -127,7 +129,7 @@ public class ComponentInfo
 	 * @param componentPath
 	 * @param behaviorId
 	 */
-	public ComponentInfo(final Integer renderCount, final String componentPath, final Integer behaviorId)
+	public ComponentInfo(final Integer renderCount, @Nonnull final String componentPath, final Integer behaviorId)
 	{
 		Args.notNull(componentPath, "componentPath");
 

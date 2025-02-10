@@ -22,6 +22,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -177,7 +179,7 @@ public class UrlEncoder
 	 *            charset to use for encoding
 	 * @return encoded string
 	 */
-	public String encode(final String s, final String charsetName)
+	public String encode(final String s, @Nonnull final String charsetName)
 	{
 		Args.notNull(charsetName, "charsetName");
 
@@ -198,7 +200,7 @@ public class UrlEncoder
 	 *            encoding to use
 	 * @return encoded string
 	 */
-	public String encode(final String unsafeInput, final Charset charset)
+	public String encode(final String unsafeInput, @Nonnull final Charset charset)
 	{
 		if (unsafeInput == null || unsafeInput.isEmpty())
 		{

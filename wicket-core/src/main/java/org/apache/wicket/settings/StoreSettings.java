@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.function.Supplier;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.pageStore.crypt.DefaultCrypter;
@@ -85,7 +87,7 @@ public class StoreSettings
 	 *            bytes.
 	 * @return {@code this} object for chaining
 	 */
-	public StoreSettings setMaxSizePerSession(final Bytes maxSizePerSession)
+	public StoreSettings setMaxSizePerSession(@Nonnull final Bytes maxSizePerSession)
 	{
 		this.maxSizePerSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
 		return this;
@@ -130,7 +132,7 @@ public class StoreSettings
 	 *            the new location
 	 * @return {@code this} object for chaining
 	 */
-	public StoreSettings setFileStoreFolder(final File fileStoreFolder)
+	public StoreSettings setFileStoreFolder(@Nonnull final File fileStoreFolder)
 	{
 		this.fileStoreFolder = Args.notNull(fileStoreFolder, "fileStoreFolder");
 		return this;

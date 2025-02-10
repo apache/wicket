@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.https;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Session;
@@ -73,7 +74,7 @@ public class HttpsMapper implements IRequestMapperDelegate
 	 * @param delegate
 	 * @param config
 	 */
-	public HttpsMapper(IRequestMapper delegate, HttpsConfig config)
+	public HttpsMapper(@Nonnull IRequestMapper delegate, HttpsConfig config)
 	{
 		this.delegate = Args.notNull(delegate, "delegate");
 		this.config = config;
@@ -320,7 +321,7 @@ public class HttpsMapper implements IRequestMapperDelegate
 		 * @param url
 		 *            redirect location
 		 */
-		public RedirectHandler(String url, HttpsConfig config)
+		public RedirectHandler(@Nonnull String url, @Nonnull HttpsConfig config)
 		{
 			this.url = Args.notNull(url, "url");
 			this.config = Args.notNull(config, "config");

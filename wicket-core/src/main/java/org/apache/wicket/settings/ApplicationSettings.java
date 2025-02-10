@@ -18,6 +18,8 @@ package org.apache.wicket.settings;
 
 import java.lang.ref.WeakReference;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.application.DefaultClassResolver;
 import org.apache.wicket.application.IClassResolver;
@@ -186,7 +188,7 @@ public class ApplicationSettings
 	 * @return {@code this} object for chaining
 	 * @see org.apache.wicket.request.cycle.IRequestCycleListener#onException(RequestCycle, Exception)
 	 */
-	public ApplicationSettings setInternalErrorPage(final Class<? extends Page> internalErrorPage)
+	public ApplicationSettings setInternalErrorPage(@Nonnull final Class<? extends Page> internalErrorPage)
 	{
 		Args.notNull(internalErrorPage, "internalErrorPage");
 		checkPageClass(internalErrorPage);
@@ -202,7 +204,7 @@ public class ApplicationSettings
 	 *            The pageExpiredErrorPage to set.
 	 * @return {@code this} object for chaining
 	 */
-	public ApplicationSettings setPageExpiredErrorPage(final Class<? extends Page> pageExpiredErrorPage)
+	public ApplicationSettings setPageExpiredErrorPage(@Nonnull final Class<? extends Page> pageExpiredErrorPage)
 	{
 		Args.notNull(pageExpiredErrorPage, "pageExpiredErrorPage");
 		checkPageClass(pageExpiredErrorPage);
@@ -252,7 +254,7 @@ public class ApplicationSettings
 	 * @param filter
 	 * @return {@code this} object for chaining
 	 */
-	public ApplicationSettings setFeedbackMessageCleanupFilter(IFeedbackMessageFilter filter)
+	public ApplicationSettings setFeedbackMessageCleanupFilter(@Nonnull IFeedbackMessageFilter filter)
 	{
 		Args.notNull(filter, "filter");
 		feedbackMessageCleanupFilter = filter;

@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import jakarta.validation.groups.Default;
@@ -150,7 +151,7 @@ public class PropertyValidator<T> extends Behavior implements INullAcceptingVali
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void bind(Component component)
+	public void bind(@Nonnull Component component)
 	{
 		if (this.component != null)
 		{

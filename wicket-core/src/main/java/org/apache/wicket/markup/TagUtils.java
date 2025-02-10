@@ -19,6 +19,8 @@ package org.apache.wicket.markup;
 import java.util.Deque;
 import java.util.LinkedList;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.value.IValueMap;
@@ -229,7 +231,7 @@ public class TagUtils
 	 *		The offset in the markup stream from which to start searching.
 	 * @return the {@link IMarkupFragment} of the component tag if found, {@code null} is not found.
 	 */
-	public static final IMarkupFragment findTagMarkup(IMarkupFragment fragment, String id, String tagName, int streamOffset)
+	public static final IMarkupFragment findTagMarkup(IMarkupFragment fragment, @Nonnull String id, String tagName, int streamOffset)
 	{
 		/*
 		 * We need streamOffset because MarkupFragment starts searching from offset 1.

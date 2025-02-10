@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Instants;
 
@@ -100,7 +103,7 @@ public class HttpHeaderCollection
 	 * @param value
 	 *            header value
 	 */
-	public void addHeader(String name, String value)
+	public void addHeader(String name, @Nonnull String value)
 	{
 		// be lenient and strip leading / trailing blanks
 		value = Args.notNull(value, "value").trim();
@@ -315,7 +318,7 @@ public class HttpHeaderCollection
 		private final String key;
 		private final String name;
 
-		private HeaderKey(String name)
+		private HeaderKey(@Nonnull String name)
 		{
 			this.name = Args.notEmpty(name, "name").trim();
 			key = this.name.toLowerCase(Locale.US);

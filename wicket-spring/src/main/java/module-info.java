@@ -25,6 +25,7 @@ module org.apache.wicket.spring {
     requires spring.context;
     requires spring.core;
     requires spring.web;
+    requires jakarta.annotation;
 
     exports org.apache.wicket.spring;
     exports org.apache.wicket.spring.injection.annot;

@@ -18,6 +18,8 @@ package org.apache.wicket.markup.repeater.data;
 
 import java.util.Iterator;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.repeater.AbstractPageableView;
 import org.apache.wicket.markup.repeater.RefreshingView;
@@ -52,7 +54,7 @@ public abstract class DataViewBase<T> extends AbstractPageableView<T>
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataViewBase(String id, IDataProvider<T> dataProvider)
+	public DataViewBase(String id, @Nonnull IDataProvider<T> dataProvider)
 	{
 		super(id);
 

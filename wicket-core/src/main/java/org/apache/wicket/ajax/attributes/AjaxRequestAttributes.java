@@ -25,6 +25,8 @@ import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.util.lang.Args;
 import java.time.Duration;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * Attributes of an Ajax Request.
  * 
@@ -219,7 +221,7 @@ public final class AjaxRequestAttributes
 	 *            the type of the Ajax request
 	 * @return {@code this} object for chaining
 	 */
-	public AjaxRequestAttributes setMethod(final Method method)
+	public AjaxRequestAttributes setMethod(@Nonnull final Method method)
 	{
 		this.method = Args.notNull(method, "method");
 		return this;
@@ -370,7 +372,7 @@ public final class AjaxRequestAttributes
 	 *            the type of the stop
 	 * @return {@code this} object, for chaining
 	 */
-	public AjaxRequestAttributes setEventPropagation(EventPropagation eventPropagation)
+	public AjaxRequestAttributes setEventPropagation(@Nonnull EventPropagation eventPropagation)
 	{
 		this.eventPropagation = Args.notNull(eventPropagation, "eventPropagation");
 		return this;
@@ -428,7 +430,7 @@ public final class AjaxRequestAttributes
 	 *            the names of the events which will trigger the Ajax call
 	 * @return {@code this} object for chaining
 	 */
-	public AjaxRequestAttributes setEventNames(String... eventNames)
+	public AjaxRequestAttributes setEventNames(@Nonnull String... eventNames)
 	{
 		Args.notNull(eventNames, "eventNames");
 		this.eventNames = eventNames;
@@ -510,7 +512,7 @@ public final class AjaxRequestAttributes
 	 *            the type of the data in the Ajax response.
 	 * @return {@code this} object for chaining
 	 */
-	public AjaxRequestAttributes setDataType(final String dataType)
+	public AjaxRequestAttributes setDataType(@Nonnull final String dataType)
 	{
 		this.dataType = Args.notEmpty(dataType, "dataType");
 		return this;

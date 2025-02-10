@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.head.HeaderItem;
@@ -53,7 +55,7 @@ public abstract class ResourceReference implements IClusterable
 	 * @param key
 	 *            The data making up the resource reference
 	 */
-	public ResourceReference(final Key key)
+	public ResourceReference(@Nonnull final Key key)
 	{
 		Args.notNull(key, "key");
 
@@ -74,7 +76,7 @@ public abstract class ResourceReference implements IClusterable
 	 * @param variation
 	 *            resource variation
 	 */
-	public ResourceReference(Class<?> scope, String name, Locale locale, String style,
+	public ResourceReference(@Nonnull Class<?> scope, @Nonnull String name, Locale locale, String style,
 		String variation)
 	{
 		Args.notNull(scope, "scope");
@@ -279,13 +281,13 @@ public abstract class ResourceReference implements IClusterable
 		
 		final SerializableSupplier<IResource> resourceBuilder;
 
-		public LambdaResourceReference(String name, SerializableSupplier<IResource> resourceBuilder) 
+		public LambdaResourceReference(String name, @Nonnull SerializableSupplier<IResource> resourceBuilder)
 		{
 			super(name);
 			this.resourceBuilder = Args.notNull(resourceBuilder, "resourceBuilder");
 		}
 
-		public LambdaResourceReference(Key key, SerializableSupplier<IResource> resourceBuilder) 
+		public LambdaResourceReference(Key key, @Nonnull SerializableSupplier<IResource> resourceBuilder)
 		{
 			super(key);
 			this.resourceBuilder = Args.notNull(resourceBuilder, "resourceBuilder");
@@ -437,7 +439,7 @@ public abstract class ResourceReference implements IClusterable
 		 * @param variation
 		 *            resource variation
 		 */
-		public Key(final String scope, final String name, final Locale locale, final String style,
+		public Key(@Nonnull final String scope, @Nonnull final String name, final Locale locale, final String style,
 			final String variation)
 		{
 			Args.notNull(scope, "scope");

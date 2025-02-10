@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.behavior;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IComponentAwareEventSink;
@@ -100,7 +102,7 @@ public abstract class Behavior
 	 * @param component
 	 *            the component to bind to
 	 */
-	public void bind(Component component)
+	public void bind(@Nonnull Component component)
 	{
 	}
 
@@ -277,7 +279,7 @@ public abstract class Behavior
 	 *            the {@code SerializableConsumer} that accepts the {@link ComponentTag}
 	 * @return The created behavior
 	 */
-	public static Behavior onTag(SerializableBiConsumer<Component, ComponentTag> onTagConsumer)
+	public static Behavior onTag(@Nonnull SerializableBiConsumer<Component, ComponentTag> onTagConsumer)
 	{
 		Args.notNull(onTagConsumer, "onTagConsumer");
 
@@ -308,8 +310,8 @@ public abstract class Behavior
 	 *            returns a new value
 	 * @return The created behavior
 	 */
-	public static Behavior onAttribute(String name,
-		SerializableFunction<String, CharSequence> onAttribute)
+	public static Behavior onAttribute(@Nonnull String name,
+		@Nonnull SerializableFunction<String, CharSequence> onAttribute)
 	{
 		Args.notEmpty(name, "name");
 		Args.notNull(onAttribute, "onAttribute");

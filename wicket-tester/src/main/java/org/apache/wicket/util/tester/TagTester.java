@@ -26,6 +26,8 @@ import java.util.Stack;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
@@ -245,7 +247,7 @@ public class TagTester
 	 *            the tag name to search for
 	 * @return <code>true</code> if this tag has a child with the given <code>tagName</code>.
 	 */
-	public boolean hasChildTag(String tagName)
+	public boolean hasChildTag(@Nonnull String tagName)
 	{
 		Args.notEmpty(tagName, "tagName");
 
@@ -292,7 +294,7 @@ public class TagTester
 	 *            the tag name to search for
 	 * @return <code>true</code> if this tag has a child with the given <code>tagName</code>.
 	 */
-	public TagTester getChild(String tagName)
+	public TagTester getChild(@Nonnull String tagName)
 	{
 		Args.notNull(tagName, "tagName");
 

@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -117,7 +118,7 @@ public class WicketFilter implements Filter
 	 * @param application
 	 *            web application
 	 */
-	public WicketFilter(WebApplication application)
+	public WicketFilter(@Nonnull WebApplication application)
 	{
 		this.application = Args.notNull(application, "application");
 	}

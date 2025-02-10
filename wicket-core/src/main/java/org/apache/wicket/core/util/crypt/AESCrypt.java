@@ -24,6 +24,8 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
+import jakarta.annotation.Nonnull;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -68,8 +70,8 @@ public class AESCrypt extends AbstractJceCrypt
 	 * @param randomSupplier
 	 *              The {@link ISecureRandomSupplier} to use to generate random values.
 	 */
-	public AESCrypt(SecretKey secretKey, String algorithm, 
-		ISecureRandomSupplier randomSupplier)
+	public AESCrypt(@Nonnull SecretKey secretKey, @Nonnull String algorithm,
+		@Nonnull ISecureRandomSupplier randomSupplier)
 	{
 		Args.notNull(secretKey, "secretKey");
 		Args.notNull(algorithm, "algorithm");

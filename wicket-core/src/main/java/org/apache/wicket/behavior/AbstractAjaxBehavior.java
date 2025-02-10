@@ -25,6 +25,8 @@ import org.apache.wicket.util.lang.Args;
 
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for javascript specific
  * implementations, like ones based on Dojo or Scriptaculous, or Wicket's default.
@@ -54,7 +56,7 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IRequestL
 	 *            the component to bind to
 	 */
 	@Override
-	public final void bind(final Component hostComponent)
+	public final void bind(@Nonnull final Component hostComponent)
 	{
 		Args.notNull(hostComponent, "hostComponent");
 

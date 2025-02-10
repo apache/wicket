@@ -23,6 +23,8 @@ import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.XmlTag.TextSegment;
 import org.apache.wicket.util.io.FullyBufferedReader;
@@ -561,7 +563,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 *             Error while reading the resource
 	 */
 	@Override
-	public void parse(final CharSequence string) throws IOException
+	public void parse(@Nonnull final CharSequence string) throws IOException
 	{
 		Args.notNull(string, "string");
 
@@ -598,7 +600,7 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @throws IOException
 	 */
 	@Override
-	public void parse(final InputStream inputStream, final String encoding) throws IOException
+	public void parse(@Nonnull final InputStream inputStream, final String encoding) throws IOException
 	{
 		Args.notNull(inputStream, "inputStream");
 

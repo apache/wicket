@@ -85,6 +85,7 @@ import org.apache.wicket.util.watch.IModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -323,7 +324,7 @@ public abstract class WebApplication extends Application
 	 * @param mapper
 	 *            the encoder that will be used for this mount
 	 */
-	public void mount(final IRequestMapper mapper)
+	public void mount(@Nonnull final IRequestMapper mapper)
 	{
 		Args.notNull(mapper, "mapper");
 		getRootRequestMapperAsCompound().add(mapper);
@@ -405,7 +406,7 @@ public abstract class WebApplication extends Application
 	 * @param path
 	 *            the path to unmount
 	 */
-	public void unmount(String path)
+	public void unmount(@Nonnull String path)
 	{
 		Args.notNull(path, "path");
 
@@ -670,7 +671,7 @@ public abstract class WebApplication extends Application
 	 * @param wicketFilter
 	 *            The wicket filter instance for this application
 	 */
-	public final void setWicketFilter(final WicketFilter wicketFilter)
+	public final void setWicketFilter(@Nonnull final WicketFilter wicketFilter)
 	{
 		Args.notNull(wicketFilter, "wicketFilter");
 		this.wicketFilter = wicketFilter;
@@ -804,7 +805,7 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param configurationType
 	 */
-	public Application setConfigurationType(RuntimeConfigurationType configurationType)
+	public Application setConfigurationType(@Nonnull RuntimeConfigurationType configurationType)
 	{
 		if (this.configurationType != null)
 		{

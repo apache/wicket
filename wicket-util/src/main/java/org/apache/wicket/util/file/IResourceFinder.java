@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.file;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.resource.IResourceStream;
 
 /**
@@ -35,5 +37,5 @@ public interface IResourceFinder
 	 *            The filename with possible path
 	 * @return The resource stream
 	 */
-	IResourceStream find(final Class<?> clazz, final String pathname);
+	IResourceStream find(final Class<?> clazz, @Nonnull final String pathname);
 }

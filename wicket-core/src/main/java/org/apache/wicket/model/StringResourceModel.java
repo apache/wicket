@@ -20,6 +20,8 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Localizer;
@@ -300,7 +302,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 * @param model
 	 *            The model to use for property substitutions
 	 */
-	public StringResourceModel(final String resourceKey, final Component component, final IModel<?> model)
+	public StringResourceModel(@Nonnull final String resourceKey, final Component component, final IModel<?> model)
 	{
 		Args.notNull(resourceKey, "resource key");
 

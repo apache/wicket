@@ -22,6 +22,9 @@ import java.time.Instant;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.lang.Args;
@@ -97,7 +100,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	 * @param containerInfo
 	 * @param markupClass
 	 */
-	public MarkupResourceStream(final IResourceStream resourceStream,
+	public MarkupResourceStream(@Nonnull final IResourceStream resourceStream,
 		final ContainerInfo containerInfo, final Class<?> markupClass)
 	{
 		this.resourceStream = Args.notNull(resourceStream, "resourceStream");

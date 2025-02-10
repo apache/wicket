@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.head;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
@@ -30,7 +32,7 @@ public class JavaScriptReferenceType implements IClusterable {
 
 	private final String type;
 
-	public JavaScriptReferenceType(final String type) {
+	public JavaScriptReferenceType(@Nonnull final String type) {
 		this.type = Args.notEmpty(type, "type");
 	}
 

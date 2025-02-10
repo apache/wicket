@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.IUrlRenderer;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlUtils;
@@ -75,7 +77,7 @@ public class UrlResourceReference extends ResourceReference
 		this.url = url;
 	}
 
-	private static String asName(Url externalUrl)
+	private static String asName(@Nonnull Url externalUrl)
 	{
 		Args.notNull(externalUrl, "url");
 		return externalUrl.toString();

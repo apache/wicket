@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.lang.Args;
 
@@ -38,7 +40,7 @@ public class NestedFolders
 	 * 
 	 * @param base base has to be a folder
 	 */
-	public NestedFolders(File base)
+	public NestedFolders(@Nonnull File base)
 	{
 		this.base = Args.notNull(base, "base");
 	}

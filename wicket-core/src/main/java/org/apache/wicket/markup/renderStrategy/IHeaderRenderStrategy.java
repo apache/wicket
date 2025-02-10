@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.renderStrategy;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer.HeaderStreamState;
@@ -40,6 +42,6 @@ public interface IHeaderRenderStrategy
 	 * @param component
 	 *            The root component (e.g. Page) to start the render process
 	 */
-	void renderHeader(HtmlHeaderContainer headerContainer, HeaderStreamState headerStreamState,
-		Component component);
+	void renderHeader(@Nonnull HtmlHeaderContainer headerContainer, HeaderStreamState headerStreamState,
+		@Nonnull Component component);
 }

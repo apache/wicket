@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.validation;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.util.lang.Args;
 
@@ -38,7 +40,7 @@ public class ValidatorAdapter<T> extends Behavior implements IValidator<T>
 	 * @param validator
 	 *            validator to be adapted
 	 */
-	public ValidatorAdapter(IValidator<T> validator)
+	public ValidatorAdapter(@Nonnull IValidator<T> validator)
 	{
 		Args.notNull(validator, "validator");
 

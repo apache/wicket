@@ -18,6 +18,8 @@ package org.apache.wicket.extensions.markup.html.tabs;
 
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.string.CssUtils;
@@ -116,7 +118,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 	 * @param model
 	 *            model holding the index of the selected tab
 	 */
-	public TabbedPanel(final String id, final List<T> tabs, IModel<Integer> model)
+	public TabbedPanel(final String id, @Nonnull final List<T> tabs, IModel<Integer> model)
 	{
 		super(id, model);
 

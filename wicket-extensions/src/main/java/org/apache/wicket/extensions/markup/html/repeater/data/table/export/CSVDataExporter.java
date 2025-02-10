@@ -25,6 +25,8 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.Session;
@@ -100,7 +102,7 @@ public class CSVDataExporter extends AbstractDataExporter
 	 *      The character set encoding to be used when exporting data.
 	 * @return {@code this}, for chaining.
 	 */
-	public CSVDataExporter setCharacterSet(String characterSet)
+	public CSVDataExporter setCharacterSet(@Nonnull String characterSet)
 	{
 		this.characterSet = Args.notNull(characterSet, "characterSer");
 		return this;

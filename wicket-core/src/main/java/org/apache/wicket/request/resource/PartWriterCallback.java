@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.wicket.protocol.http.servlet.ResponseIOException;
 import org.apache.wicket.request.resource.AbstractResource.WriteCallback;
@@ -90,7 +92,7 @@ public class PartWriterCallback extends WriteCallback
 	 *            the end position to read to (if not null the stream is going to be read till
 	 *            endbyte, else to the end of the whole stream)
 	 */
-	public PartWriterCallback(InputStream inputStream, Long contentLength, Long startbyte,
+	public PartWriterCallback(InputStream inputStream, @Nonnull Long contentLength, Long startbyte,
 		Long endbyte)
 	{
 		this.inputStream = inputStream;

@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.IEvent;
@@ -57,7 +59,7 @@ public class CompoundValidator<T> extends Behavior implements IValidator<T>
 	 *            an <code>IValidator</code> to be added
 	 * @return this <code>ValidationError</code> for chaining purposes
 	 */
-	public final CompoundValidator<T> add(IValidator<T> validator)
+	public final CompoundValidator<T> add(@Nonnull IValidator<T> validator)
 	{
 		Args.notNull(validator, "validator");
 
@@ -109,7 +111,7 @@ public class CompoundValidator<T> extends Behavior implements IValidator<T>
 	}
 
 	@Override
-	public void bind(Component component)
+	public void bind(@Nonnull Component component)
 	{
 		for (IValidator<T> validator : validators) {
 			if (validator instanceof Behavior) {

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.util;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.util.io.IClusterable;
@@ -36,7 +38,7 @@ public class SingleSortState<T> implements ISortState<T>, IClusterable
 	SortParam<T> param;
 
 	@Override
-	public void setPropertySortOrder(final T property, final SortOrder order)
+	public void setPropertySortOrder(@Nonnull final T property, @Nonnull final SortOrder order)
 	{
 		Args.notNull(property, "property");
 		Args.notNull(order, "order");
@@ -55,7 +57,7 @@ public class SingleSortState<T> implements ISortState<T>, IClusterable
 	}
 
 	@Override
-	public SortOrder getPropertySortOrder(final T property)
+	public SortOrder getPropertySortOrder(@Nonnull final T property)
 	{
 		Args.notNull(property, "property");
 

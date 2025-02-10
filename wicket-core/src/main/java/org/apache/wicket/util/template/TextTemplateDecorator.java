@@ -23,6 +23,9 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
@@ -49,7 +52,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 * @param textTemplate
 	 *            a <code>TextTemplate</code> to decorate
 	 */
-	public TextTemplateDecorator(TextTemplate textTemplate)
+	public TextTemplateDecorator(@Nonnull TextTemplate textTemplate)
 	{
 		Args.notNull(textTemplate, "textTemplate");
 

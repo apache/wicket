@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.settings;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
@@ -171,7 +173,7 @@ public class SecuritySettings
 	 *            new authorization strategy
 	 * @return {@code this} object for chaining
 	 */
-	public SecuritySettings setAuthorizationStrategy(IAuthorizationStrategy strategy)
+	public SecuritySettings setAuthorizationStrategy(@Nonnull IAuthorizationStrategy strategy)
 	{
 		Args.notNull(strategy, "strategy");
 		authorizationStrategy = strategy;
@@ -185,7 +187,7 @@ public class SecuritySettings
 	 * @param cryptFactory
 	 * @return {@code this} object for chaining
 	 */
-	public SecuritySettings setCryptFactory(ICryptFactory cryptFactory)
+	public SecuritySettings setCryptFactory(@Nonnull ICryptFactory cryptFactory)
 	{
 		Args.notNull(cryptFactory, "cryptFactory");
 		this.cryptFactory = cryptFactory;
@@ -201,7 +203,7 @@ public class SecuritySettings
 	 *            The new supplier, must not be null.
 	 * @return {@code this} object for chaining
 	 */
-	public SecuritySettings setRandomSupplier(ISecureRandomSupplier randomSupplier)
+	public SecuritySettings setRandomSupplier(@Nonnull ISecureRandomSupplier randomSupplier)
 	{
 		Args.notNull(randomSupplier, "randomSupplier");
 		this.randomSupplier = randomSupplier;

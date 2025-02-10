@@ -18,6 +18,8 @@ package org.apache.wicket.bean.validation;
 
 import java.io.Serializable;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.reference.ClassReference;
 
@@ -31,7 +33,7 @@ public final class Property implements Serializable
 	private final ClassReference<?> owner;
 	private final String name;
 
-	public Property(ClassReference<?> owner, String name)
+	public Property(@Nonnull ClassReference<?> owner, @Nonnull String name)
 	{
 		Args.notNull(owner, "owner");
 		Args.notEmpty(name, "name");

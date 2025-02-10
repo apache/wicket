@@ -19,6 +19,8 @@ package org.apache.wicket.pageStore;
 import java.io.Serializable;
 import java.security.SecureRandom;
 
+import jakarta.annotation.Nonnull;
+
 import javax.crypto.SecretKey;
 
 import org.apache.wicket.Application;
@@ -56,7 +58,7 @@ public class CryptingPageStore extends DelegatingPageStore
 	 * @param application
 	 *            the application
 	 */
-	public CryptingPageStore(IPageStore delegate, Application application)
+	public CryptingPageStore(IPageStore delegate, @Nonnull Application application)
 	{
 		super(delegate);
 		this.application = Args.notNull(application, "application");
@@ -146,7 +148,7 @@ public class CryptingPageStore extends DelegatingPageStore
 
 		private final SecretKey key;
 
-		public SessionData(SecretKey key)
+		public SessionData(@Nonnull SecretKey key)
 		{
 			Args.notNull(key, "key");
 

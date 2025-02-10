@@ -26,6 +26,7 @@ module org.apache.wicket.extensions {
     requires org.apache.wicket.request;
     requires org.apache.wicket.core;
     requires org.danekja.jdk.serializable.functional;
+    requires jakarta.annotation;
 
     provides org.apache.wicket.IInitializer with org.apache.wicket.extensions.Initializer;
 

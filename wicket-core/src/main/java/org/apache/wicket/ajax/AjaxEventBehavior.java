@@ -19,6 +19,8 @@ package org.apache.wicket.ajax;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -79,7 +81,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * @param event
 	 *      the event this behavior will be attached to
 	 */
-	public AjaxEventBehavior(String event)
+	public AjaxEventBehavior(@Nonnull String event)
 	{
 		Args.notEmpty(event, "event");
 
@@ -164,7 +166,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxEventBehavior}
 	 */
-	public static AjaxEventBehavior onEvent(String eventName, SerializableConsumer<AjaxRequestTarget> onEvent)
+	public static AjaxEventBehavior onEvent(String eventName, @Nonnull SerializableConsumer<AjaxRequestTarget> onEvent)
 	{
 		Args.notNull(onEvent, "onEvent");
 

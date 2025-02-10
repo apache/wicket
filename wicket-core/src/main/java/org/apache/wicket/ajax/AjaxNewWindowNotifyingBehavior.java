@@ -18,6 +18,8 @@ package org.apache.wicket.ajax;
 
 import java.util.UUID;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
@@ -154,7 +156,7 @@ public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxNewWindowNotifyingBehavior}
 	 */
-	public static AjaxNewWindowNotifyingBehavior onNewWindow(SerializableConsumer<AjaxRequestTarget> onNewWindow)
+	public static AjaxNewWindowNotifyingBehavior onNewWindow(@Nonnull SerializableConsumer<AjaxRequestTarget> onNewWindow)
 	{
 		Args.notNull(onNewWindow, "onNewWindow");
 

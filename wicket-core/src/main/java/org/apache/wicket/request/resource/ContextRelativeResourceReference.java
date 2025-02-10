@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.ResourceUtils;
@@ -92,7 +94,7 @@ public class ContextRelativeResourceReference extends ResourceReference
 	 * @param minifyIt 
 	 * 				says if the resource name can be minified or not
 	 */
-	public ContextRelativeResourceReference(final String name, final String minPostfix, final boolean minifyIt)
+	public ContextRelativeResourceReference(final String name, @Nonnull final String minPostfix, final boolean minifyIt)
 	{
 		super(name);
 		

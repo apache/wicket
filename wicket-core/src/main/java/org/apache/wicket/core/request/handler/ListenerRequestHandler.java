@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Page;
@@ -59,7 +61,7 @@ public class ListenerRequestHandler
 	 * @param pageComponentProvider
 	 * @param behaviorIndex
 	 */
-	public ListenerRequestHandler(IPageAndComponentProvider pageComponentProvider, Integer behaviorIndex)
+	public ListenerRequestHandler(@Nonnull IPageAndComponentProvider pageComponentProvider, Integer behaviorIndex)
 	{
 		Args.notNull(pageComponentProvider, "pageComponentProvider");
 

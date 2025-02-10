@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
@@ -73,7 +75,7 @@ public class ContentSecurityPolicySettings
 
 	private Supplier<String> nonceCreator;
 	
-	public ContentSecurityPolicySettings(Application application)
+	public ContentSecurityPolicySettings(@Nonnull Application application)
 	{
 		Args.notNull(application, "application");
 		
@@ -99,7 +101,7 @@ public class ContentSecurityPolicySettings
 	 *            The new creator, must not be null.
 	 * @return {@code this} for chaining.
 	 */
-	public ContentSecurityPolicySettings setNonceCreator(Supplier<String> nonceCreator)
+	public ContentSecurityPolicySettings setNonceCreator(@Nonnull Supplier<String> nonceCreator)
 	{
 		Args.notNull(nonceCreator, "nonceCreator");
 		this.nonceCreator = nonceCreator;
@@ -115,7 +117,7 @@ public class ContentSecurityPolicySettings
 	 * @return {@code this} for chaining.
 	 */
 	public ContentSecurityPolicySettings setProtectedFilter(
-		Predicate<IRequestHandler> protectedFilter)
+		@Nonnull Predicate<IRequestHandler> protectedFilter)
 	{
 		Args.notNull(protectedFilter, "protectedFilter");
 		this.protectedFilter = protectedFilter;

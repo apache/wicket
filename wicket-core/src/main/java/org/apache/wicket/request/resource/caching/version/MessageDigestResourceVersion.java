@@ -22,6 +22,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.io.IOUtils;
@@ -113,7 +115,7 @@ public class MessageDigestResourceVersion implements IResourceVersion
 	 * @param bufferSize
 	 *            maximum size for internal buffer            
 	 */
-	public MessageDigestResourceVersion(String algorithm, Bytes bufferSize)
+	public MessageDigestResourceVersion(@Nonnull String algorithm, @Nonnull Bytes bufferSize)
 	{
 		this.algorithm = Args.notEmpty(algorithm, "algorithm");
 		this.bufferSize = Args.notNull(bufferSize, "bufferSize");

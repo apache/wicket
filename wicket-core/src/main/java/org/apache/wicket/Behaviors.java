@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.InvalidBehaviorIdException;
 import org.apache.wicket.util.lang.Args;
@@ -37,7 +39,7 @@ final class Behaviors
 		// utility class
 	}
 
-	public static void add(Component component, Behavior... behaviors)
+	public static void add(Component component, @Nonnull Behavior... behaviors)
 	{
 		Args.notNull(behaviors, "behaviors");
 
@@ -107,7 +109,7 @@ final class Behaviors
 	}
 
 
-	public static void remove(Component component, Behavior behavior)
+	public static void remove(Component component, @Nonnull Behavior behavior)
 	{
 		Args.notNull(behavior, "behavior");
 
@@ -294,7 +296,7 @@ final class Behaviors
 		}
 	}
 
-	public static int getBehaviorId(Component component, Behavior behavior)
+	public static int getBehaviorId(Component component, @Nonnull Behavior behavior)
 	{
 		Args.notNull(behavior, "behavior");
 

@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.Locale;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 
@@ -37,7 +40,7 @@ public class ResourceStreamWrapper implements IResourceStream
 	 * 
 	 * @param delegate
 	 */
-	public ResourceStreamWrapper(IResourceStream delegate)
+	public ResourceStreamWrapper(@Nonnull IResourceStream delegate)
 	{
 		this.delegate = Args.notNull(delegate, "delegate");
 	}

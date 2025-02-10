@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -53,7 +55,7 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 	 *            id that will be used to filter duplicate reference (it's still filtered by URL
 	 *            too)
 	 */
-	public JavaScriptReferenceHeaderItem(ResourceReference reference, PageParameters pageParameters, String id)
+	public JavaScriptReferenceHeaderItem(@Nonnull ResourceReference reference, PageParameters pageParameters, String id)
 	{
 		this.reference = Args.notNull(reference, "reference");
 		this.pageParameters = pageParameters;

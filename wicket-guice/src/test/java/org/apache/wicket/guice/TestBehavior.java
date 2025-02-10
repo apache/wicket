@@ -38,7 +38,7 @@ public class TestBehavior extends Behavior
 	private ITestService injectedFieldBlue;
 
 	@Override
-	public void bind(Component component)
+	public void bind(@jakarta.annotation.Nonnull Component component)
 	{
 		super.bind(component);
 

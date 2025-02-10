@@ -17,6 +17,9 @@
 package org.apache.wicket.examples.upload;
 
 import java.util.List;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -50,7 +53,7 @@ public class UploadToResourcePage extends WicketExamplePage
 	{
 
 		@Override
-		public void bind(Component component)
+		public void bind(@Nonnull Component component)
 		{
 			component.setOutputMarkupPlaceholderTag(true);
 		}

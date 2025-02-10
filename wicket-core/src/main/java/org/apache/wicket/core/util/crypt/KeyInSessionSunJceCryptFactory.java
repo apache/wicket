@@ -27,6 +27,8 @@ import java.security.Provider;
 import java.security.Security;
 import java.util.UUID;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * Crypt factory that produces {@link SunJceCrypt} instances based on session-specific
  * encryption key. This allows each user to have his own encryption key, hardening against CSRF
@@ -55,7 +57,7 @@ public class KeyInSessionSunJceCryptFactory extends AbstractKeyInSessionCryptFac
 	 * @param cryptMethod
 	 *              the name of the crypt method (cipher)
 	 */
-	public KeyInSessionSunJceCryptFactory(String cryptMethod)
+	public KeyInSessionSunJceCryptFactory(@Nonnull String cryptMethod)
 	{
 		this.cryptMethod = Args.notNull(cryptMethod, "Crypt method");
 

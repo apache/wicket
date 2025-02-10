@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
@@ -264,7 +265,7 @@ public abstract class AbstractResource implements IResource
 		 *
 		 * @return {@code this}, for chaining.
 		 */
-		public ResourceResponse setContentDisposition(ContentDisposition contentDisposition)
+		public ResourceResponse setContentDisposition(@Nonnull ContentDisposition contentDisposition)
 		{
 			Args.notNull(contentDisposition, "contentDisposition");
 			this.contentDisposition = contentDisposition;
@@ -483,7 +484,7 @@ public abstract class AbstractResource implements IResource
 		 *
 		 * @return {@code this}, for chaining.
 		 */
-		public ResourceResponse setCacheDuration(Duration duration)
+		public ResourceResponse setCacheDuration(@Nonnull Duration duration)
 		{
 			cacheDuration = Args.notNull(duration, "duration");
 			return this;
@@ -540,7 +541,7 @@ public abstract class AbstractResource implements IResource
 		 *
 		 * @return {@code this}, for chaining.
 		 */
-		public ResourceResponse setCacheScope(WebResponse.CacheScope scope)
+		public ResourceResponse setCacheScope(@Nonnull WebResponse.CacheScope scope)
 		{
 			cacheScope = Args.notNull(scope, "scope");
 			return this;
@@ -559,7 +560,7 @@ public abstract class AbstractResource implements IResource
 		 *
 		 * @return {@code this}, for chaining.
 		 */
-		public ResourceResponse setWriteCallback(final WriteCallback writeCallback)
+		public ResourceResponse setWriteCallback(@Nonnull final WriteCallback writeCallback)
 		{
 			Args.notNull(writeCallback, "writeCallback");
 			this.writeCallback = writeCallback;
@@ -691,7 +692,7 @@ public abstract class AbstractResource implements IResource
 	 * @throws IllegalArgumentException
 	 *             if access is forbidden
 	 */
-	private void checkHeaderAccess(String name)
+	private void checkHeaderAccess(@Nonnull String name)
 	{
 		name = Args.notEmpty(name.trim().toLowerCase(Locale.ROOT), "name");
 

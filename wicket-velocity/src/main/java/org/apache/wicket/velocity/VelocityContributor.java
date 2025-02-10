@@ -19,6 +19,8 @@ package org.apache.wicket.velocity;
 import java.io.StringWriter;
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.wicket.Component;
@@ -56,7 +58,7 @@ public class VelocityContributor extends Behavior
 	 * @param templateName
 	 * @param model
 	 */
-	public VelocityContributor(final String templateName, final IModel<? extends Map<String, Object>> model)
+	public VelocityContributor(final String templateName, @Nonnull final IModel<? extends Map<String, Object>> model)
 	{
 		Args.notNull(model, "model");
 

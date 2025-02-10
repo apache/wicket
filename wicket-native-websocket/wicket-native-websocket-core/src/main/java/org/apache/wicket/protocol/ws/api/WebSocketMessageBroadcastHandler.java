@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
@@ -51,7 +53,7 @@ public class WebSocketMessageBroadcastHandler implements IRequestHandler
 	 * @param payload
 	 *          The payload to broadcast
 	 */
-	WebSocketMessageBroadcastHandler(int pageId, String resourceName, WebSocketPayload<?> payload)
+	WebSocketMessageBroadcastHandler(int pageId, String resourceName, @Nonnull WebSocketPayload<?> payload)
 	{
 		this.pageId = pageId;
 		this.resourceName = resourceName;

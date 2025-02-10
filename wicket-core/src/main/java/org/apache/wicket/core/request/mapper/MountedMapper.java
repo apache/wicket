@@ -19,6 +19,8 @@ package org.apache.wicket.core.request.mapper;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
@@ -111,7 +113,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	 * @param pageParametersEncoder
 	 */
 	public MountedMapper(String mountPath,
-		Supplier<Class<? extends IRequestablePage>> pageClassProvider,
+		@Nonnull Supplier<Class<? extends IRequestablePage>> pageClassProvider,
 		IPageParametersEncoder pageParametersEncoder)
 	{
 		super(mountPath, pageParametersEncoder);

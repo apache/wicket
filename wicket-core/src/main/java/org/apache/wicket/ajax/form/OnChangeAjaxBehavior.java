@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.form;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -88,7 +90,7 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link OnChangeAjaxBehavior}
 	 */
-	public static OnChangeAjaxBehavior onChange(SerializableConsumer<AjaxRequestTarget> onChange)
+	public static OnChangeAjaxBehavior onChange(@Nonnull SerializableConsumer<AjaxRequestTarget> onChange)
 	{
 		Args.notNull(onChange, "onChange");
 

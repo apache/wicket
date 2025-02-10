@@ -18,6 +18,8 @@ package org.apache.wicket.util.file;
 
 import java.io.IOException;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 
@@ -68,7 +70,7 @@ public class Path implements IResourceFinder
 	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
 	 */
 	@Override
-	public IResourceStream find(final Class<?> clazz, final String pathname)
+	public IResourceStream find(final Class<?> clazz, @Nonnull final String pathname)
 	{
 		final File file = new File(folder, pathname);
 

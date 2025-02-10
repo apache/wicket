@@ -23,6 +23,7 @@ module org.apache.wicket.websocket.javax {
     requires static jakarta.servlet;
     requires jakarta.websocket;
     requires org.slf4j;
+    requires jakarta.annotation;
 
     exports org.apache.wicket.protocol.ws.javax;
 }

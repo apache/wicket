@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
@@ -45,7 +47,7 @@ public class BookmarkableListenerRequestHandler
 	 * @param behaviorIndex
 	 */
 	public BookmarkableListenerRequestHandler(
-		IPageAndComponentProvider pageComponentProvider,
+		@Nonnull IPageAndComponentProvider pageComponentProvider,
 		Integer behaviorIndex)
 	{
 		Args.notNull(pageComponentProvider, "pageComponentProvider");

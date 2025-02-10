@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.request.IRequestMapper;
@@ -66,7 +68,7 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	 * @param url
 	 * @param info
 	 */
-	protected void encodePageComponentInfo(Url url, PageComponentInfo info)
+	protected void encodePageComponentInfo(@Nonnull Url url, PageComponentInfo info)
 	{
 		Args.notNull(url, "url");
 
@@ -100,7 +102,7 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	 *              The raw class name parsed from the url
 	 * @return The cleaned class name
 	 */
-	protected String cleanClassName(String className)
+	protected String cleanClassName(@Nonnull String className)
 	{
 		Args.notEmpty(className, "className");
 

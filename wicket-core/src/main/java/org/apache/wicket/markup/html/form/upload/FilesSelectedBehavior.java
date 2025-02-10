@@ -18,6 +18,9 @@ package org.apache.wicket.markup.html.form.upload;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -113,7 +116,7 @@ public abstract class FilesSelectedBehavior extends OnChangeAjaxBehavior {
      * @return the {@link FilesSelectedBehavior} behavior
      */
     public static FilesSelectedBehavior onSelected(
-            SerializableBiConsumer<AjaxRequestTarget, List<FileDescription>> select)
+			@Nonnull SerializableBiConsumer<AjaxRequestTarget, List<FileDescription>> select)
     {
         Args.notNull(select, "select");
 

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
@@ -51,7 +53,7 @@ public interface IResource extends IClusterable
 		 * @param response
 		 * @param parameters
 		 */
-		public Attributes(Request request, Response response, PageParameters parameters)
+		public Attributes(@Nonnull Request request, @Nonnull Response response, PageParameters parameters)
 		{
 			Args.notNull(request, "request");
 			Args.notNull(response, "response");

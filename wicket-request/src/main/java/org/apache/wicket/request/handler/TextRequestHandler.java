@@ -19,6 +19,8 @@ package org.apache.wicket.request.handler;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
@@ -67,7 +69,7 @@ public class TextRequestHandler implements IRequestHandler
 	 * @param string
 	 *            string for the response
 	 */
-	public TextRequestHandler(final String contentType, final String encoding, final String string)
+	public TextRequestHandler(@Nonnull final String contentType, final String encoding, @Nonnull final String string)
 	{
 		this.contentType = Args.notEmpty(contentType, "contentType");
 		this.string = Args.notNull(string, "string");

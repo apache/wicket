@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.model;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
@@ -89,7 +91,7 @@ public abstract class LambdaModel<T> implements IModel<T>
 	 * @param <R>
 	 *            model object type
 	 */
-	public static <R> IModel<R> of(SerializableSupplier<R> getter, SerializableConsumer<R> setter)
+	public static <R> IModel<R> of(@Nonnull SerializableSupplier<R> getter, @Nonnull SerializableConsumer<R> setter)
 	{
 		Args.notNull(getter, "getter");
 		Args.notNull(setter, "setter");
@@ -138,8 +140,8 @@ public abstract class LambdaModel<T> implements IModel<T>
 	 * @return model
 	 * @see IModel#flatMap(SerializableFunction)
 	 */
-	public static <X, R> IModel<R> of(IModel<X> target, SerializableFunction<X, R> getter,
-		SerializableBiConsumer<X, R> setter)
+	public static <X, R> IModel<R> of(@Nonnull IModel<X> target, @Nonnull SerializableFunction<X, R> getter,
+		@Nonnull SerializableBiConsumer<X, R> setter)
 	{
 		Args.notNull(target, "target");
 		Args.notNull(getter, "getter");

@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
@@ -122,7 +124,7 @@ public class OnEventHeaderItem extends AbstractCspHeaderItem
 	 * @param event
 	 * @param javaScript
 	 */
-	public OnEventHeaderItem(String target, String event, CharSequence javaScript)
+	public OnEventHeaderItem(@Nonnull String target, @Nonnull String event, CharSequence javaScript)
 	{
 		this.target = Args.notEmpty(target, "target");
 

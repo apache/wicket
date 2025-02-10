@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.basic;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.util.lang.Args;
@@ -65,7 +67,7 @@ public class EnclosureContainer extends WebMarkupContainer
 	 * @param child
 	 *            child component that will control the visibility of the enclosure
 	 */
-	public EnclosureContainer(final String id, final Component child)
+	public EnclosureContainer(final String id, @Nonnull final Component child)
 	{
 		super(id);
 

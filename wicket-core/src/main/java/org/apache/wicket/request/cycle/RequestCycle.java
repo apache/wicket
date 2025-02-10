@@ -18,6 +18,8 @@ package org.apache.wicket.request.cycle;
 
 import java.util.Optional;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.IMetadataContext;
 import org.apache.wicket.IWicketInternalException;
@@ -130,7 +132,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 *
 	 * @param context
 	 */
-	public RequestCycle(RequestCycleContext context)
+	public RequestCycle(@Nonnull RequestCycleContext context)
 	{
 		Args.notNull(context, "context");
 		Args.notNull(context.getRequest(), "context.request");
@@ -283,7 +285,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 *
 	 * @param handler
 	 */
-	private void execute(IRequestHandler handler)
+	private void execute(@Nonnull IRequestHandler handler)
 	{
 		Args.notNull(handler, "handler");
 

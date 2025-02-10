@@ -19,6 +19,9 @@ package org.apache.wicket.markup.html.form.upload.resource;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.util.file.File;
@@ -35,7 +38,7 @@ public class FolderUploadsFileManager implements IUploadsFileManager
 
     private final File folder;
 
-    public FolderUploadsFileManager(File folder)
+    public FolderUploadsFileManager(@Nonnull File folder)
     {
         Args.notNull(folder, "folder");
         if (!folder.exists())

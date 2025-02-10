@@ -32,6 +32,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.pageStore.disk.NestedFolders;
@@ -75,7 +77,7 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 	 * 
 	 * @see SerializingPageStore
 	 */
-	public FilePageStore(String applicationName, File fileStoreFolder, Bytes maxSizePerSession)
+	public FilePageStore(String applicationName, File fileStoreFolder, @Nonnull Bytes maxSizePerSession)
 	{
 		super(applicationName);
 		

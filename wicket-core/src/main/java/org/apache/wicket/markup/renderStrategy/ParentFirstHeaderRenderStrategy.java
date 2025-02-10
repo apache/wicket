@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.renderStrategy;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -44,8 +46,8 @@ public class ParentFirstHeaderRenderStrategy extends AbstractHeaderRenderStrateg
 	}
 
 	@Override
-	protected void renderChildHeaders(final HtmlHeaderContainer headerContainer,
-		final Component rootComponent)
+	protected void renderChildHeaders(@Nonnull final HtmlHeaderContainer headerContainer,
+		@Nonnull final Component rootComponent)
 	{
 		Args.notNull(headerContainer, "headerContainer");
 		Args.notNull(rootComponent, "rootComponent");

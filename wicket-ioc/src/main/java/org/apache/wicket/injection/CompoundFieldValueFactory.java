@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -42,7 +44,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 * 
 	 * @param factories
 	 */
-	public CompoundFieldValueFactory(final IFieldValueFactory[] factories)
+	public CompoundFieldValueFactory(@Nonnull final IFieldValueFactory[] factories)
 	{
 		Args.notNull(factories, "factories");
 
@@ -54,7 +56,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 * 
 	 * @param factories
 	 */
-	public CompoundFieldValueFactory(final List<IFieldValueFactory> factories)
+	public CompoundFieldValueFactory(@Nonnull final List<IFieldValueFactory> factories)
 	{
 		Args.notNull(factories, "factories");
 
@@ -67,7 +69,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 * @param f1
 	 * @param f2
 	 */
-	public CompoundFieldValueFactory(final IFieldValueFactory f1, final IFieldValueFactory f2)
+	public CompoundFieldValueFactory(@Nonnull final IFieldValueFactory f1, @Nonnull final IFieldValueFactory f2)
 	{
 		Args.notNull(f1, "f1");
 		Args.notNull(f2, "f2");
@@ -81,7 +83,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 * 
 	 * @param factory
 	 */
-	public void addFactory(final IFieldValueFactory factory)
+	public void addFactory(@Nonnull final IFieldValueFactory factory)
 	{
 		Args.notNull(factory, "factory");
 

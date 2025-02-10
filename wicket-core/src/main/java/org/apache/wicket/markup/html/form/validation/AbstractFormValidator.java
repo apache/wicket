@@ -19,6 +19,8 @@ package org.apache.wicket.markup.html.form.validation;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
@@ -46,7 +48,7 @@ public abstract class AbstractFormValidator extends Behavior implements IFormVal
 	 *             if component is not a form
 	 */
 	@Override
-	public void bind(Component component)
+	public void bind(@Nonnull Component component)
 	{
 		if (!(component instanceof Form))
 		{
@@ -113,7 +115,7 @@ public abstract class AbstractFormValidator extends Behavior implements IFormVal
 	 * @param vars
 	 *            The model for variable interpolation
 	 */
-	public void error(FormComponent<?> fc, final String resourceKey, Map<String, Object> vars)
+	public void error(@Nonnull FormComponent<?> fc, @Nonnull final String resourceKey, @Nonnull Map<String, Object> vars)
 	{
 		Args.notNull(fc, "fc");
 		Args.notNull(vars, "vars");

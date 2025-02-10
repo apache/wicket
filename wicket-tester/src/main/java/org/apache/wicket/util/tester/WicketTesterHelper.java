@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -200,7 +202,7 @@ public class WicketTesterHelper
 	 * @param event
 	 * @return a list of all found AjaxEventBehavior or an empty list
 	 */
-	public static List<AjaxEventBehavior> findAjaxEventBehaviors(Component component, String event)
+	public static List<AjaxEventBehavior> findAjaxEventBehaviors(Component component, @Nonnull String event)
 	{
 		Args.notEmpty(event, "event");
 		List<AjaxEventBehavior> behaviors = new ArrayList<>();

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.event;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * Objects that can send events
  * 
@@ -38,5 +40,5 @@ public interface IEventSource
 	 * @param payload
 	 *            event payload
 	 */
-	<T> void send(IEventSink sink, Broadcast broadcast, T payload);
+	<T> void send(IEventSink sink, @Nonnull Broadcast broadcast, T payload);
 }

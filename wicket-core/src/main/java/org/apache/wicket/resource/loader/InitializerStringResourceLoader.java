@@ -23,6 +23,8 @@ import org.apache.wicket.util.lang.Args;
 import java.util.List;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 
 /**
  * This is one of Wicket's default string resource loaders. It is designed to let wicket extension
@@ -48,7 +50,7 @@ public class InitializerStringResourceLoader extends ComponentStringResourceLoad
 	 * @param initializers
 	 *            initializers
 	 */
-	public InitializerStringResourceLoader(List<IInitializer> initializers)
+	public InitializerStringResourceLoader(@Nonnull List<IInitializer> initializers)
 	{
 		this.initializers = Args.notNull(initializers, "initializers");
 	}

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.feedback.FeedbackDelay;
 import org.apache.wicket.request.component.IRequestableComponent;
@@ -55,7 +57,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	 * @param page
 	 * @param component
 	 */
-	public PageAndComponentProvider(IRequestablePage page, IRequestableComponent component)
+	public PageAndComponentProvider(IRequestablePage page, @Nonnull IRequestableComponent component)
 	{
 		super(page);
 
@@ -135,7 +137,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 		setComponentPath(componentPath);
 	}
 
-	public PageAndComponentProvider(IRequestablePage page, IRequestableComponent component,
+	public PageAndComponentProvider(IRequestablePage page, @Nonnull IRequestableComponent component,
 		PageParameters parameters)
 	{
 		super(page);
@@ -210,7 +212,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	 *
 	 * @param componentPath
 	 */
-	private void setComponentPath(String componentPath)
+	private void setComponentPath(@Nonnull String componentPath)
 	{
 		Args.notNull(componentPath, "componentPath");
 

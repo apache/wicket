@@ -26,6 +26,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
@@ -142,7 +144,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		 */
 		private final Map<MetaDataKey<?>, Serializable> dataCache = new HashMap<>();
 
-		public PendingAdd(final IPageContext context, final IManageablePage page)
+		public PendingAdd(@Nonnull final IPageContext context, @Nonnull final IManageablePage page)
 		{
 			this.context = Args.notNull(context, "context");
 			this.page = Args.notNull(page, "page");

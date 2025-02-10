@@ -24,6 +24,9 @@ import java.net.URLConnection;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.util.io.Connections;
 import org.apache.wicket.util.io.IOUtils;
@@ -96,7 +99,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	 * @param url
 	 *            URL of resource
 	 */
-	public UrlResourceStream(final URL url)
+	public UrlResourceStream(@Nonnull final URL url)
 	{
 		this.url = Args.notNull(url, "url");
 	}

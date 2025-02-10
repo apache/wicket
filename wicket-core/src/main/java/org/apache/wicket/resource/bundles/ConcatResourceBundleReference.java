@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.ResourceBundles;
 import org.apache.wicket.markup.head.HeaderItem;
@@ -114,7 +116,7 @@ public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHead
 	 *            the resources that are concatenated
 	 */
 	public ConcatResourceBundleReference(Class<?> scope, String name, Locale locale, String style,
-		String variation, List<T> resources)
+		String variation, @Nonnull List<T> resources)
 	{
 		super(scope, name, locale, style, variation);
 		providedResources = Args.notNull(resources, "resources");

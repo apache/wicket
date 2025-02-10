@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.core.request.mapper.IPageSource;
 import org.apache.wicket.core.request.mapper.StalePageException;
@@ -146,7 +148,7 @@ public class PageProvider implements IPageProvider, IClusterable
 	 * 
 	 * @param page
 	 */
-	public PageProvider(IRequestablePage page)
+	public PageProvider(@Nonnull IRequestablePage page)
 	{
 		Args.notNull(page, "page");
 
@@ -300,7 +302,7 @@ public class PageProvider implements IPageProvider, IClusterable
 	 * 
 	 * @param pageClass
 	 */
-	private void setPageClass(Class<? extends IRequestablePage> pageClass)
+	private void setPageClass(@Nonnull Class<? extends IRequestablePage> pageClass)
 	{
 		Args.notNull(pageClass, "pageClass");
 

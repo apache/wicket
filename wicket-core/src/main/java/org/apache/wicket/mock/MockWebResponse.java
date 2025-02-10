@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.Cookie;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.HttpHeaderCollection;
@@ -143,7 +145,7 @@ public class MockWebResponse extends WebResponse
 	}
 
 	@Override
-	public void setDateHeader(String name, Instant date)
+	public void setDateHeader(String name, @Nonnull Instant date)
 	{
 		Args.notNull(date, "date");
 		headers.setDateHeader(name, date);

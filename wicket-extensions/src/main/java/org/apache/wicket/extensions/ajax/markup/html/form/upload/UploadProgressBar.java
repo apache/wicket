@@ -18,6 +18,8 @@ package org.apache.wicket.extensions.ajax.markup.html.form.upload;
 
 import java.util.Formatter;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.MarkupContainer;
@@ -167,7 +169,7 @@ public class UploadProgressBar extends Panel
 	 *            the file upload field to check for a file upload, or null to display the upload
 	 *            field for every submit of the given form
 	 */
-	public UploadProgressBar(final String id, final Form<?> form, final FileUploadField uploadField)
+	public UploadProgressBar(final String id, @Nonnull final Form<?> form, final FileUploadField uploadField)
 	{
 		super(id);
 

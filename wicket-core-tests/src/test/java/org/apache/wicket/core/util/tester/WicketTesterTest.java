@@ -692,7 +692,7 @@ class WicketTesterTest extends WicketTestCase
 		// executeAjaxEvent weren't submitting the form the name would have been
 		// reset to null, because the form would have been updated but there
 		// wouldn't be any data to update it with.
-		assertNotNull("executeAjaxEvent() did not properly submit the form", pojo.getName());
+		assertNotNull(pojo.getName(), "executeAjaxEvent() did not properly submit the form");
 		assertEquals("Mock name", pojo.getName());
 	}
 

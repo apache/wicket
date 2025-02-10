@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -88,7 +90,7 @@ public class ServletWebRequest extends WebRequest
 	 *            contentPath + filterPath, used to extract the actual {@link Url}
 	 * @param url
 	 */
-	public ServletWebRequest(HttpServletRequest httpServletRequest, String filterPrefix, Url url)
+	public ServletWebRequest(@Nonnull HttpServletRequest httpServletRequest, @Nonnull String filterPrefix, Url url)
 	{
 		Args.notNull(httpServletRequest, "httpServletRequest");
 		Args.notNull(filterPrefix, "filterPrefix");

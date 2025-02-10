@@ -19,6 +19,8 @@ package org.apache.wicket.markup.html.form;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -142,7 +144,7 @@ class JavaScriptReservedNames
 	 *
 	 * @return {@code true} if the name is used by the JavaScript DOM API.
 	 */
-	public static boolean isNameReserved(String name)
+	public static boolean isNameReserved(@Nonnull String name)
 	{
 		Args.notNull(name, "name");
 

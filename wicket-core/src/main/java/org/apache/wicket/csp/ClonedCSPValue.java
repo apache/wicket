@@ -19,6 +19,8 @@ package org.apache.wicket.csp;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 
@@ -41,7 +43,7 @@ public class ClonedCSPValue implements CSPRenderable
 	 * @param sourceDirective
 	 *            the directive to clone;
 	 */
-	public ClonedCSPValue(CSPHeaderConfiguration headerConfiguration, CSPDirective sourceDirective)
+	public ClonedCSPValue(@Nonnull CSPHeaderConfiguration headerConfiguration, @Nonnull CSPDirective sourceDirective)
 	{
 		this.headerConfiguration = Args.notNull(headerConfiguration, "headerConfiguration");
 		this.sourceDirective = Args.notNull(sourceDirective, "sourceDirective");

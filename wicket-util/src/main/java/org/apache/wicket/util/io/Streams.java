@@ -26,6 +26,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -144,7 +146,7 @@ public final class Streams
 	 * @return the input stream for this url
 	 * @throws IOException when a connection cannot be opened
 	 */
-	public static InputStream readNonCaching(final URL url) throws IOException
+	public static InputStream readNonCaching(@Nonnull final URL url) throws IOException
 	{
 		Args.notNull(url, "url");
 

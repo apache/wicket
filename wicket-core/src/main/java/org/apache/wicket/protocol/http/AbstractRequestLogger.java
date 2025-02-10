@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
@@ -495,7 +498,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	 *            the date to format
 	 * @return the formatted date
 	 */
-	protected String formatDate(final Date date)
+	protected String formatDate(@Nonnull final Date date)
 	{
 		Args.notNull(date, "date");
 

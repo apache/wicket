@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api.registry;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -30,7 +32,7 @@ public class ResourceNameKey extends AbstractKey
 		this(resourceName, null);
 	}
 
-	public ResourceNameKey(String resourceName, String context)
+	public ResourceNameKey(@Nonnull String resourceName, String context)
 	{
 		super(context);
 		this.resourceName = Args.notNull(resourceName, "resourceName");

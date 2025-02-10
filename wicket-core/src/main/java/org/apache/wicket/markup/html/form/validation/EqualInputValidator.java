@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form.validation;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.lang.Args;
@@ -48,7 +50,7 @@ public class EqualInputValidator extends AbstractFormValidator
 	 * @param formComponent2
 	 *            a form component
 	 */
-	public EqualInputValidator(FormComponent<?> formComponent1, FormComponent<?> formComponent2)
+	public EqualInputValidator(@Nonnull FormComponent<?> formComponent1, @Nonnull FormComponent<?> formComponent2)
 	{
 		Args.notNull(formComponent1, "formComponent1");
 		Args.notNull(formComponent2, "formComponent2");

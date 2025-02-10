@@ -29,6 +29,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.core.request.ClientInfo;
@@ -220,7 +222,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 * @param locale - locale to check
 	 * @return <code>true</code> in case passed locale is right-to-left
 	 */
-	public static boolean isRtlLanguage(final Locale locale) {
+	public static boolean isRtlLanguage(@Nonnull final Locale locale) {
 		Args.notNull(locale, "locale");
 		return RTL_LOCALE_RE.matcher(locale.toLanguageTag()).find();
 	}
@@ -644,7 +646,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 * @param locale
 	 *            New locale
 	 */
-	public Session setLocale(final Locale locale)
+	public Session setLocale(@Nonnull final Locale locale)
 	{
 		Args.notNull(locale, "locale");
 

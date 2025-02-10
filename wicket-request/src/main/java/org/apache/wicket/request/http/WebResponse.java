@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.Cookie;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.encoding.UrlEncoder;
@@ -84,7 +86,7 @@ public abstract class WebResponse extends Response
 	 * @param name
 	 * @param date
 	 */
-	public abstract void setDateHeader(String name, Instant date);
+	public abstract void setDateHeader(String name, @Nonnull Instant date);
 
 	/**
 	 * Set the content length on the response, if appropriate in the subclass. This default
@@ -258,7 +260,7 @@ public abstract class WebResponse extends Response
 	 *
 	 * @see WebResponse#MAX_CACHE_DURATION
 	 */
-	public void enableCaching(Duration duration, final WebResponse.CacheScope scope)
+	public void enableCaching(@Nonnull Duration duration, @Nonnull final WebResponse.CacheScope scope)
 	{
 		Args.notNull(duration, "duration");
 		Args.notNull(scope, "scope");

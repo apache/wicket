@@ -23,6 +23,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
+
+import jakarta.annotation.Nonnull;
+
 import javax.imageio.ImageIO;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.DynamicImageResource;
@@ -61,7 +64,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 * @param maxSize
 	 *            maximum size (width or height) for resize operation
 	 */
-	public ThumbnailImageResource(final IResource unscaledImageResource, final int maxSize)
+	public ThumbnailImageResource(@Nonnull final IResource unscaledImageResource, final int maxSize)
 	{
 		Args.notNull(unscaledImageResource, "unscaledImageResource");
 		

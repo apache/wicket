@@ -23,6 +23,8 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Random;
 
+import jakarta.annotation.Nonnull;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -77,7 +79,7 @@ public class SunJceCrypt extends AbstractCrypt
 	 * @param iterationCount
 	 * 				iteration count
 	 */
-	public SunJceCrypt(String cryptMethod, byte[] salt, int iterationCount)
+	public SunJceCrypt(@Nonnull String cryptMethod, @Nonnull byte[] salt, int iterationCount)
 	{
 		this.cryptMethod = Args.notNull(cryptMethod, "Crypt method");
 		this.salt = Args.notNull(salt, "salt");

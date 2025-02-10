@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.http.handler;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.request.IRequestCycle;
@@ -77,7 +78,7 @@ public class RedirectRequestHandler implements IRequestHandler
 	 * @param status
 	 *            301 (Moved permanently) or 302 (Moved temporarily)
 	 */
-	public RedirectRequestHandler(final String redirectUrl, final int status)
+	public RedirectRequestHandler(@Nonnull final String redirectUrl, final int status)
 	{
 		if ((status != HttpServletResponse.SC_MOVED_PERMANENTLY) &&
 			(status != HttpServletResponse.SC_MOVED_TEMPORARILY) &&

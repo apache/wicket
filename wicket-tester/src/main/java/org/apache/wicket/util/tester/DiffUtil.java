@@ -26,6 +26,8 @@ import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.util.diff.Diff;
@@ -100,7 +102,7 @@ public final class DiffUtil
 	 * @return true, if equal
 	 * @throws IOException
 	 */
-	public static boolean validatePage(String document, final Class<?> clazz,
+	public static boolean validatePage(@Nonnull String document, final Class<?> clazz,
 		final String file, boolean failWithAssert) throws IOException
 	{
 		Args.notNull(document, "document");

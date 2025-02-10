@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * Specifies the configuration for Cross-Origin Opener Policy to be used by
  * {@link CrossOriginOpenerPolicyRequestCycleListener} when adding COOP headers. Users can specify the paths that
@@ -74,13 +76,13 @@ public class CrossOriginOpenerPolicyConfiguration
 	private final Set<String> exemptions = new HashSet<>();
 	private final CoopMode mode;
 
-	public CrossOriginOpenerPolicyConfiguration(CoopMode mode, String... exemptions)
+	public CrossOriginOpenerPolicyConfiguration(@Nonnull CoopMode mode, String... exemptions)
 	{
 		this.exemptions.addAll(Arrays.asList(exemptions));
 		this.mode = Args.notNull(mode, "mode");
 	}
 
-	public CrossOriginOpenerPolicyConfiguration(CoopMode mode)
+	public CrossOriginOpenerPolicyConfiguration(@Nonnull CoopMode mode)
 	{
 		this.mode = Args.notNull(mode, "mode");
 	}

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api.event;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.apache.wicket.util.lang.Args;
@@ -30,7 +32,7 @@ public class WebSocketTextPayload extends WebSocketPayload<TextMessage>
 {
 	private final TextMessage data;
 	
-	public WebSocketTextPayload(TextMessage data, WebSocketRequestHandler handler)
+	public WebSocketTextPayload(@Nonnull TextMessage data, WebSocketRequestHandler handler)
 	{
 		super(handler);
 

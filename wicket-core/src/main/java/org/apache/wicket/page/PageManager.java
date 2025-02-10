@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.page;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.pageStore.DefaultPageContext;
 import org.apache.wicket.pageStore.IPageContext;
 import org.apache.wicket.pageStore.IPageStore;
@@ -31,7 +33,7 @@ public class PageManager implements IPageManager
 {
 	private final IPageStore store;
 	
-	public PageManager(IPageStore store) {
+	public PageManager(@Nonnull IPageStore store) {
 		this.store = Args.notNull(store, "store");
 	}
 

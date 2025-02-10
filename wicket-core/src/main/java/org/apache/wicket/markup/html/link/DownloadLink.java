@@ -30,6 +30,8 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 import java.time.Duration;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * A link that streams a file to the client. When clicked this link will prompt the save as dialog
  * in the browser.
@@ -79,7 +81,7 @@ public class DownloadLink extends Link<File>
 	 * @param file
 	 *            file to stream to client
 	 */
-	public DownloadLink(String id, File file)
+	public DownloadLink(String id, @Nonnull File file)
 	{
 		this(id, new Model<File>(Args.notNull(file, "file")));
 	}
@@ -122,7 +124,7 @@ public class DownloadLink extends Link<File>
 	 * @param fileName
 	 *            name of the file
 	 */
-	public DownloadLink(String id, File file, String fileName)
+	public DownloadLink(String id, @Nonnull File file, String fileName)
 	{
 		this(id, Model.of(Args.notNull(file, "file")), Model.of(fileName));
 	}

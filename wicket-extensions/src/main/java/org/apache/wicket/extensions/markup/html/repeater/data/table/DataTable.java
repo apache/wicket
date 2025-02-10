@@ -18,6 +18,8 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
@@ -141,7 +143,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DataTable(final String id, final List<? extends IColumn<T, S>> columns,
+	public DataTable(final String id, @Nonnull final List<? extends IColumn<T, S>> columns,
 		final IDataProvider<T> dataProvider, final long rowsPerPage)
 	{
 		super(id);
@@ -376,7 +378,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 		return datagrid.getItemCount();
 	}
 
-	private void addToolbar(final AbstractToolbar toolbar, final ToolbarsContainer container)
+	private void addToolbar(@Nonnull final AbstractToolbar toolbar, final ToolbarsContainer container)
 	{
 		Args.notNull(toolbar, "toolbar");
 

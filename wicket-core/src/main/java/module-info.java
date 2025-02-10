@@ -30,6 +30,7 @@ module org.apache.wicket.core {
     requires org.danekja.jdk.serializable.functional;
     requires com.github.openjson;
     requires static org.bouncycastle.provider;
+    requires jakarta.annotation;
 
     provides org.apache.wicket.IInitializer with org.apache.wicket.Initializer;
     provides org.apache.wicket.resource.FileSystemPathService with org.apache.wicket.resource.FileSystemJarPathService;

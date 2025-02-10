@@ -24,6 +24,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -1311,7 +1313,7 @@ public final class Strings
 	 *            (optional) character set to use when converting string to bytes
 	 * @return length of string in bytes
 	 */
-	public static int lengthInBytes(final String string, final Charset charset)
+	public static int lengthInBytes(@Nonnull final String string, final Charset charset)
 	{
 		Args.notNull(string, "string");
 		if (charset != null)
@@ -1518,7 +1520,7 @@ public final class Strings
 	 *
 	 * @return hex string 
 	 */
-	public static String toHexString(byte[] bytes)
+	public static String toHexString(@Nonnull byte[] bytes)
 	{
 		Args.notNull(bytes, "bytes");
 
@@ -1542,7 +1544,7 @@ public final class Strings
 	 *            the enum type
 	 * @return an enum value
 	 */
-	public static <T extends Enum<T>> T toEnum(final CharSequence value, final Class<T> enumClass)
+	public static <T extends Enum<T>> T toEnum(@Nonnull final CharSequence value, @Nonnull final Class<T> enumClass)
 	{
 		Args.notNull(enumClass, "enumClass");
 		Args.notNull(value, "value");

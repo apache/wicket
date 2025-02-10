@@ -22,6 +22,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceFactory;
@@ -419,7 +421,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *            The package resource guard
 	 * @return {@code this} object for chaining
 	 */
-	public ResourceSettings setPackageResourceGuard(IPackageResourceGuard packageResourceGuard)
+	public ResourceSettings setPackageResourceGuard(@Nonnull IPackageResourceGuard packageResourceGuard)
 	{
 		this.packageResourceGuard = Args.notNull(packageResourceGuard, "packageResourceGuard");
 		return this;
@@ -447,7 +449,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *            The resourceFinders to set
 	 * @return {@code this} object for chaining
 	 */
-	public ResourceSettings setResourceFinders(final List<IResourceFinder> resourceFinders)
+	public ResourceSettings setResourceFinders(@Nonnull final List<IResourceFinder> resourceFinders)
 	{
 		Args.notNull(resourceFinders, "resourceFinders");
 		this.resourceFinders = resourceFinders;
@@ -539,7 +541,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 * @see org.apache.wicket.request.http.WebResponse#MAX_CACHE_DURATION
 	 * @return {@code this} object for chaining
 	 */
-	public final ResourceSettings setDefaultCacheDuration(Duration duration)
+	public final ResourceSettings setDefaultCacheDuration(@Nonnull Duration duration)
 	{
 		Args.notNull(duration, "duration");
 		defaultCacheDuration = duration;

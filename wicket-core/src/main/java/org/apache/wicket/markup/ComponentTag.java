@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
@@ -203,7 +205,7 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @param behavior
 	 */
-	public final void addBehavior(final Behavior behavior)
+	public final void addBehavior(@Nonnull final Behavior behavior)
 	{
 		Args.notNull(behavior, "behavior");
 

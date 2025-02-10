@@ -19,6 +19,8 @@ package org.apache.wicket.util.convert;
 import java.text.ParseException;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import javax.swing.text.MaskFormatter;
 
 import org.apache.wicket.util.lang.Args;
@@ -100,7 +102,7 @@ public class MaskConverter<C> implements IConverter<C>
 	 * @param maskFormatter
 	 *            The mask formatter to use for masking and unmasking values
 	 */
-	public MaskConverter(final MaskFormatter maskFormatter)
+	public MaskConverter(@Nonnull final MaskFormatter maskFormatter)
 	{
 		Args.notNull(maskFormatter, "maskFormatter");
 

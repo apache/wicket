@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Future;
 
+import jakarta.annotation.Nonnull;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.RemoteEndpoint;
 import jakarta.websocket.Session;
@@ -48,7 +49,7 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 	 * @param session
 	 *            the WebSocket session
 	 */
-	public JavaxWebSocketConnection(Session session, AbstractWebSocketProcessor webSocketProcessor)
+	public JavaxWebSocketConnection(@Nonnull Session session, AbstractWebSocketProcessor webSocketProcessor)
 	{
 		super(webSocketProcessor);
 		this.session = Args.notNull(session, "session");

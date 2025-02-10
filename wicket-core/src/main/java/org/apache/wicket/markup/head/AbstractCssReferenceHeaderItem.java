@@ -18,6 +18,8 @@ package org.apache.wicket.markup.head;
 
 import java.util.Objects;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.request.Response;
@@ -82,7 +84,7 @@ public abstract class AbstractCssReferenceHeaderItem extends CssHeaderItem imple
 		return this;
 	}
 
-	protected final void internalRenderCSSReference(Response response, String url)
+	protected final void internalRenderCSSReference(Response response, @Nonnull String url)
 	{
 		Args.notEmpty(url, "url");
 

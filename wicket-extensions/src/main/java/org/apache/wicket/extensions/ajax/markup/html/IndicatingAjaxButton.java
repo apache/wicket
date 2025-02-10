@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -97,7 +99,7 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 
 
 	public static IndicatingAjaxButton onSubmit(String id,
-		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
+		@Nonnull SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 

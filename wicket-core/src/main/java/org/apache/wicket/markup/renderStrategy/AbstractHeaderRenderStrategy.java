@@ -18,6 +18,8 @@ package org.apache.wicket.markup.renderStrategy;
 
 import java.lang.reflect.InvocationTargetException;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -96,8 +98,8 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 	}
 
 	@Override
-	public void renderHeader(final HtmlHeaderContainer headerContainer,
-		HeaderStreamState headerStreamState, final Component rootComponent)
+	public void renderHeader(@Nonnull final HtmlHeaderContainer headerContainer,
+		HeaderStreamState headerStreamState, @Nonnull final Component rootComponent)
 	{
 		Args.notNull(headerContainer, "headerContainer");
 		Args.notNull(rootComponent, "rootComponent");
@@ -173,15 +175,15 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 	 * @param headerContainer
 	 * @param rootComponent
 	 */
-	abstract protected void renderChildHeaders(final HtmlHeaderContainer headerContainer,
-		final Component rootComponent);
+	abstract protected void renderChildHeaders(@Nonnull final HtmlHeaderContainer headerContainer,
+		@Nonnull final Component rootComponent);
 
 	/**
 	 * Render the application level headers
 	 * 
 	 * @param headerContainer
 	 */
-	protected final void renderApplicationLevelHeaders(final HtmlHeaderContainer headerContainer)
+	protected final void renderApplicationLevelHeaders(@Nonnull final HtmlHeaderContainer headerContainer)
 	{
 		Args.notNull(headerContainer, "headerContainer");
 

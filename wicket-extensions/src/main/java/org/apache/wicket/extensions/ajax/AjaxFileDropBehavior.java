@@ -19,6 +19,8 @@ package org.apache.wicket.extensions.ajax;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.commons.fileupload2.core.FileItem;
 import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.wicket.Component;
@@ -165,7 +167,7 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 	 *
 	 * @param maxSize maximum size, must not be null
 	 */
-	public void setMaxSize(Bytes maxSize)
+	public void setMaxSize(@Nonnull Bytes maxSize)
 	{
 		Args.notNull(maxSize, "maxSize");
 		this.maxSize = maxSize;

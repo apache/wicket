@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.ServletContext;
 
 import org.apache.wicket.Application;
@@ -104,7 +105,7 @@ public class SpringComponentInjector extends Injector
 	 *            whether or not wicket should wrap dependencies with specialized proxies that can
 	 *            be safely serialized. in most cases this should be set to true.
 	 */
-	public SpringComponentInjector(final WebApplication webapp, final ApplicationContext ctx,
+	public SpringComponentInjector(@Nonnull final WebApplication webapp, @Nonnull final ApplicationContext ctx,
 		final boolean wrapInProxies)
 	{
 		Args.notNull(webapp, "webapp");
@@ -185,7 +186,7 @@ public class SpringComponentInjector extends Injector
 	 * @param context
 	 *            context to use as default if non is explicitely specified for the injector
 	 */
-	public static void setDefaultContext(final WebApplication webapp, ApplicationContext context)
+	public static void setDefaultContext(final WebApplication webapp, @Nonnull ApplicationContext context)
 	{
 		Args.notNull(context, "context");
 

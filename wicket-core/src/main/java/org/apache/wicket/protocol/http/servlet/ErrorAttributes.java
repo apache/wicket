@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
@@ -142,7 +143,7 @@ public class ErrorAttributes
 	 * @param request
 	 * @return instance of request contains error attributes or {@code null} if it does not.
 	 */
-	public static ErrorAttributes of(HttpServletRequest request, String filterPrefix)
+	public static ErrorAttributes of(@Nonnull HttpServletRequest request, String filterPrefix)
 	{
 		Args.notNull(request, "request");
 		Integer code = (Integer)request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);

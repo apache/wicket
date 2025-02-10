@@ -24,6 +24,9 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
@@ -53,7 +56,7 @@ public class FileSystemResourceStream extends AbstractResourceStream
 	 * @param path
 	 *            {@link Path} containing resource
 	 */
-	public FileSystemResourceStream(final Path path)
+	public FileSystemResourceStream(@Nonnull final Path path)
 	{
 		Args.notNull(path, "path");
 		this.path = path;
@@ -65,7 +68,7 @@ public class FileSystemResourceStream extends AbstractResourceStream
 	 * @param file
 	 *            {@link java.io.File} containing resource
 	 */
-	public FileSystemResourceStream(final java.io.File file)
+	public FileSystemResourceStream(@Nonnull final java.io.File file)
 	{
 		Args.notNull(file, "file");
 		this.path = file.toPath();
@@ -77,7 +80,7 @@ public class FileSystemResourceStream extends AbstractResourceStream
 	 * @param file
 	 *            {@link File} containing resource
 	 */
-	public FileSystemResourceStream(final File file)
+	public FileSystemResourceStream(@Nonnull final File file)
 	{
 		Args.notNull(file, "file");
 		this.path = file.toPath();

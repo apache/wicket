@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api.event;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.util.lang.Args;
@@ -29,7 +31,7 @@ public class WebSocketBinaryPayload extends WebSocketPayload<BinaryMessage>
 {
 	private final BinaryMessage binaryMessage;
 
-	public WebSocketBinaryPayload(BinaryMessage binaryMessage, WebSocketRequestHandler handler)
+	public WebSocketBinaryPayload(@Nonnull BinaryMessage binaryMessage, WebSocketRequestHandler handler)
 	{
 		super(handler);
 

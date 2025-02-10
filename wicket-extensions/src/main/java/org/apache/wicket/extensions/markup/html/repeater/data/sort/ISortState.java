@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -36,7 +38,7 @@ public interface ISortState<S> extends IClusterable
 	 * @param order
 	 *            sort order
 	 */
-	void setPropertySortOrder(S property, SortOrder order);
+	void setPropertySortOrder(@Nonnull S property, @Nonnull SortOrder order);
 
 	/**
 	 * Gets the sort order of a property
@@ -45,6 +47,6 @@ public interface ISortState<S> extends IClusterable
 	 *            sort property to be checked
 	 * @return sort order
 	 */
-	SortOrder getPropertySortOrder(S property);
+	SortOrder getPropertySortOrder(@Nonnull S property);
 
 }

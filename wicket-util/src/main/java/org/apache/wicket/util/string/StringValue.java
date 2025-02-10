@@ -25,6 +25,8 @@ import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
@@ -901,7 +903,7 @@ public class StringValue implements IClusterable
 	 * @return The value as an enum
 	 */
 	@SuppressWarnings("unchecked")
-	public final <T extends Enum<T>> T toEnum(final T defaultValue)
+	public final <T extends Enum<T>> T toEnum(@Nonnull final T defaultValue)
 	{
 		Args.notNull(defaultValue, "defaultValue");
 		return toEnum((Class<T>)defaultValue.getClass(), defaultValue);

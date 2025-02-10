@@ -19,6 +19,8 @@ package org.apache.wicket.resource.loader;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.util.lang.Args;
 
@@ -44,7 +46,7 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 	 * @param clazz
 	 *            The class that this resource loader is associated with
 	 */
-	public ClassStringResourceLoader(final Class<?> clazz)
+	public ClassStringResourceLoader(@Nonnull final Class<?> clazz)
 	{
 		Args.notNull(clazz, "clazz");
 		clazzRef = new WeakReference<>(clazz);

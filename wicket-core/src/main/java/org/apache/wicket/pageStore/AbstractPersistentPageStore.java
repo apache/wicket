@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpSessionBindingEvent;
 import jakarta.servlet.http.HttpSessionBindingListener;
 
@@ -58,7 +59,7 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 
 	private final String storeKey;
 
-	protected AbstractPersistentPageStore(String applicationName)
+	protected AbstractPersistentPageStore(@Nonnull String applicationName)
 	{
 		this.storeKey = Args.notNull(applicationName, "applicationName") + ":" + getClass().getSimpleName();
 
@@ -197,7 +198,7 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 		 */
 		public final String sessionIdentifier;
 
-		public SessionAttribute(String storeKey, String sessionIdentifier)
+		public SessionAttribute(@Nonnull String storeKey, @Nonnull String sessionIdentifier)
 		{
 			this.storeKey = Args.notNull(storeKey, "storeKey");
 			this.sessionIdentifier = Args.notNull(sessionIdentifier, "sessionIdentifier");

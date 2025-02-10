@@ -21,6 +21,7 @@ module org.apache.wicket.devutils {
     requires org.apache.wicket.core;
     requires org.apache.wicket.extensions;
     requires org.slf4j;
+    requires jakarta.annotation;
 
     provides org.apache.wicket.IInitializer with org.apache.wicket.devutils.debugbar.DebugBarInitializer;
 

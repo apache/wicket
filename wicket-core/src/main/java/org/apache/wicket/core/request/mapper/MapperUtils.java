@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
@@ -39,7 +41,7 @@ public class MapperUtils
 	 *
 	 * @return The parsed {@link PageComponentInfo}, or {@code null} if the parameter could not be parsed.
 	 */
-	public static PageComponentInfo parsePageComponentInfoParameter(final Url.QueryParameter parameter)
+	public static PageComponentInfo parsePageComponentInfoParameter(@Nonnull final Url.QueryParameter parameter)
 	{
 		Args.notNull(parameter, "parameter");
 
@@ -59,7 +61,7 @@ public class MapperUtils
 	 *
 	 * @return PageComponentInfo instance if one was encoded in URL, <code>null</code> otherwise.
 	 */
-	public static PageComponentInfo getPageComponentInfo(final Url url)
+	public static PageComponentInfo getPageComponentInfo(@Nonnull final Url url)
 	{
 		Args.notNull(url, "url");
 

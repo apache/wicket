@@ -27,6 +27,9 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.io.IClusterable;
 import java.time.Duration;
+
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
@@ -86,7 +89,7 @@ public class AjaxFormValidatingBehavior extends Behavior
 	}
 
 	@Override
-	public void bind(Component component)
+	public void bind(@Nonnull Component component)
 	{
 		super.bind(component);
 

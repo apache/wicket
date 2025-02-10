@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http.mock;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.Cookie;
 
 import org.apache.wicket.util.lang.Args;
@@ -69,7 +70,7 @@ public final class Cookies
 	 *            the second cookie
 	 * @return {@code true} only if the cookies have the same name, path and domain
 	 */
-	public static boolean isEqual(Cookie c1, Cookie c2)
+	public static boolean isEqual(@Nonnull Cookie c1, @Nonnull Cookie c2)
 	{
 		Args.notNull(c1, "c1");
 		Args.notNull(c2, "c2");
@@ -95,7 +96,7 @@ public final class Cookies
 		private final String path;
 		private final String domain;
 
-		protected Key(Cookie cookie)
+		protected Key(@Nonnull Cookie cookie)
 		{
 			Args.notNull(cookie, "cookie");
 			name = cookie.getName();

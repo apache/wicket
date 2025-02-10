@@ -21,6 +21,7 @@ module org.apache.wicket.request {
     requires org.apache.wicket.util;
     requires org.slf4j;
     requires static jakarta.servlet;
+    requires jakarta.annotation;
 
     exports org.apache.wicket.request;
     exports org.apache.wicket.request.flow;

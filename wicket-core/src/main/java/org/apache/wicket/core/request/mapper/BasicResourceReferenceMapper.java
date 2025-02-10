@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.function.Supplier;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
@@ -71,7 +73,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 	 * @param pageParametersEncoder
 	 * @param cachingStrategy
 	 */
-	public BasicResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
+	public BasicResourceReferenceMapper(@Nonnull IPageParametersEncoder pageParametersEncoder,
 		Supplier<? extends IResourceCachingStrategy> cachingStrategy)
 	{
 		this.pageParametersEncoder = Args.notNull(pageParametersEncoder, "pageParametersEncoder");

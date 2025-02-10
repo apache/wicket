@@ -19,6 +19,8 @@ package org.apache.wicket.protocol.ws.api;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.Instant;
+
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.Cookie;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebResponse;
@@ -151,7 +153,7 @@ public class WebSocketResponse extends WebResponse
 	}
 
 	@Override
-	public String encodeURL(CharSequence url)
+	public String encodeURL(@Nonnull CharSequence url)
 	{
 		return url.toString();
 	}
@@ -192,7 +194,7 @@ public class WebSocketResponse extends WebResponse
 	}
 
 	@Override
-	public void setDateHeader(String name, Instant date)
+	public void setDateHeader(String name, @Nonnull Instant date)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -226,7 +228,7 @@ public class WebSocketResponse extends WebResponse
 	}
 
 	@Override
-	public String encodeRedirectURL(CharSequence url)
+	public String encodeRedirectURL(@Nonnull CharSequence url)
 	{
 		return url.toString();
 	}

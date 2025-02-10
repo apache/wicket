@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.IExportableColumn;
 import org.apache.wicket.markup.html.basic.Label;
@@ -73,7 +75,7 @@ public class LambdaColumn<T, S> extends AbstractColumn<T, S> implements IExporta
 	 *            Wicket function to be applied to each row
 	 */
 	public LambdaColumn(final IModel<String> displayModel, final S sortProperty,
-		final SerializableFunction<T, ?> function)
+		@Nonnull final SerializableFunction<T, ?> function)
 	{
 		super(displayModel, sortProperty);
 		

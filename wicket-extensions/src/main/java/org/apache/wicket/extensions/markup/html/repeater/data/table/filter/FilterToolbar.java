@@ -19,6 +19,8 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 import java.util.LinkedList;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
@@ -59,7 +61,7 @@ public class FilterToolbar extends AbstractToolbar
 	 *            the type of filter state object
 	 * 
 	 */
-	public <T, S, F> FilterToolbar(final DataTable<T, S> table, final FilterForm<F> form)
+	public <T, S, F> FilterToolbar(@Nonnull final DataTable<T, S> table, final FilterForm<F> form)
 	{
 		super(table);
 

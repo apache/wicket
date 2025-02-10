@@ -18,6 +18,7 @@ package org.apache.wicket.bean.validation;
 
 import java.lang.annotation.Annotation;
 
+import jakarta.annotation.Nonnull;
 import jakarta.validation.Validator;
 import jakarta.validation.metadata.ConstraintDescriptor;
 
@@ -41,7 +42,7 @@ public interface BeanValidationContext extends IPropertyResolver
 	 * @param annotationType
 	 * @return tag modifier or {@code null} if none
 	 */
-	<T extends Annotation> ITagModifier<T> getTagModifier(Class<T> annotationType);
+	<T extends Annotation> ITagModifier<T> getTagModifier(@Nonnull Class<T> annotationType);
 
 	/**
 	 * @return the validator

@@ -25,6 +25,7 @@ module org.apache.wicket.util {
     requires org.apache.commons.collections4;
     requires org.slf4j;
     requires static jakarta.servlet;
+    requires jakarta.annotation;
 
     exports org.apache.wicket.util;
     exports org.apache.wicket.util.collections;

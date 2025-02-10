@@ -18,6 +18,8 @@ package org.apache.wicket.request.resource.caching;
 
 import java.util.regex.Pattern;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.AbstractResource;
@@ -83,8 +85,8 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 	 * 
 	 * @see #FilenameWithVersionResourceCachingStrategy(org.apache.wicket.request.resource.caching.version.IResourceVersion) 
 	 */
-	public FilenameWithVersionResourceCachingStrategy(String versionPrefix,
-	                                                  IResourceVersion resourceVersion)
+	public FilenameWithVersionResourceCachingStrategy(@Nonnull String versionPrefix,
+			                                          @Nonnull IResourceVersion resourceVersion)
 	{
 		this.resourceVersion = Args.notNull(resourceVersion, "resourceVersion");
 		this.versionPrefix = Args.notEmpty(versionPrefix, "versionPrefix");

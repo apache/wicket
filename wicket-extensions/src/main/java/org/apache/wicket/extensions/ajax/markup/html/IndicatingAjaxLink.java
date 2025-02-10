@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -68,7 +70,7 @@ public abstract class IndicatingAjaxLink<T> extends AjaxLink<T> implements IAjax
 
 
 	public static <T> IndicatingAjaxLink<T> onClick(String id,
-		SerializableBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
+		@Nonnull SerializableBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
 	{
 		Args.notNull(onClick, "onClick");
 

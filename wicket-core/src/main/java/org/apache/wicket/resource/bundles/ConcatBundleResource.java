@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
@@ -72,7 +73,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	 * 
 	 * @param providedResources
 	 */
-	public ConcatBundleResource(List<? extends IReferenceHeaderItem> providedResources)
+	public ConcatBundleResource(@Nonnull List<? extends IReferenceHeaderItem> providedResources)
 	{
 		this.providedResources = Args.notNull(providedResources, "providedResources");
 		cachingEnabled = true;

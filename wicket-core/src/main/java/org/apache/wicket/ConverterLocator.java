@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.BigDecimalConverter;
@@ -257,7 +259,7 @@ public class ConverterLocator implements IConverterLocator
 	 * @return The previous registered converter for class c or null if none was registered yet for
 	 *         class c
 	 */
-	public final IConverter<?> set(final Class<?> c, final IConverter<?> converter)
+	public final IConverter<?> set(@Nonnull final Class<?> c, @Nonnull final IConverter<?> converter)
 	{
 		Args.notNull(c, "Class");
 		Args.notNull(converter, "converter");

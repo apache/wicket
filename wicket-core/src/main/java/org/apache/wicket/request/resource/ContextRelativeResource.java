@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.resource.WebExternalResourceStream;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
@@ -51,7 +53,7 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 	 * 
 	 * @param pathRelativeToContextRoot
 	 */
-	public ContextRelativeResource(String pathRelativeToContextRoot)
+	public ContextRelativeResource(@Nonnull String pathRelativeToContextRoot)
 	{
 		Args.notNull(pathRelativeToContextRoot, "pathRelativeToContextRoot");
 

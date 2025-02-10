@@ -18,6 +18,8 @@ package org.apache.wicket.markup.repeater.util;
 
 import java.util.Iterator;
 
+import jakarta.annotation.Nonnull;
+
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
@@ -41,7 +43,7 @@ public abstract class ModelIteratorAdapter<T> implements Iterator<IModel<T>>
 	 * @param iterable
 	 *            iterable whose iterator will be wrapped
 	 */
-	public ModelIteratorAdapter(Iterable<T> iterable)
+	public ModelIteratorAdapter(@Nonnull Iterable<T> iterable)
 	{
 		Args.notNull(iterable, "iterable");
 		this.delegate = iterable.iterator();
