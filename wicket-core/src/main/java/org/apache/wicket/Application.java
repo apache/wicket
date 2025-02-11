@@ -25,6 +25,7 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.application.ComponentInstantiationListenerCollection;
 import org.apache.wicket.application.ComponentOnAfterRenderListenerCollection;
@@ -512,7 +513,11 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	@Override
 	public final <T> Application setMetaData(final MetaDataKey<T> key, final T object)
 	{
-		metaData.put(key, object);
+		if (object == null) {
+			metaData.remove(key);
+		} else {
+			metaData.put(key, object);
+		}
 		return this;
 	}
 
