@@ -24,6 +24,7 @@ import java.util.Locale;
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
@@ -47,6 +48,10 @@ public abstract class ResourceReference implements IClusterable
 
 	private final Key data;
 
+	private String integrity;
+	
+	private CrossOrigin crossOrigin;
+	
 	/**
 	 * Creates new {@link ResourceReference} instance.
 	 * 
@@ -242,6 +247,46 @@ public abstract class ResourceReference implements IClusterable
 	{
 		return new UrlAttributes(getLocale(), getStyle(), getVariation());
 	}
+	
+	/**
+	 * Returns the integrity value of the resource which is a string containing
+	 * one or more base64 encoded hashes.
+	 * 
+	 * hashes are whitespace separated (see reference below): 
+	 *     https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity  
+	 */
+	public String getIntegrity() {
+		return integrity;
+	}
+
+	/**
+	 * Sets the integrity value of the resource which containes one or more 
+	 * base64 encoded hashes 
+	 * 
+	 * hashes are whitespace separated (see reference below): 
+	 *     https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity  
+	 */
+	public void setIntegrity(String integrity) {
+		this.integrity = integrity;
+	}
+
+	/**
+	 * Returns the cross origin policy to use when creating the header reference 
+	 * for the resource.
+	 * 
+	 *  @return cross origin policy
+	 */
+	public CrossOrigin getCrossOrigin() {
+		return crossOrigin;
+	}
+
+	/**
+	 * Sets the cross origin policy to use when creating the header reference 
+	 * for the resource. 
+	 */
+	public void setCrossOrigin(CrossOrigin crossOrigin) {
+		this.crossOrigin = crossOrigin;
+	}	
 	
 	/**
 	 * Factory method to build a resource reference that uses the provided supplier to return

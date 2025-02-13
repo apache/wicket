@@ -103,13 +103,23 @@ public class CssReferenceHeaderItem extends AbstractCssReferenceHeaderItem imple
 	@Override
 	public CrossOrigin getCrossOrigin()
 	{
-		return null;
+		CrossOrigin tempOrigin = super.getCrossOrigin();
+		if (tempOrigin == null)
+		{
+			tempOrigin = reference.getCrossOrigin();
+		}
+		return tempOrigin;
 	}
 	
-	@Override
+	@Override 
 	public String getIntegrity()
 	{
-		return null;
+		String tempIntegrity = super.getIntegrity();
+		if (tempIntegrity == null)
+		{
+			tempIntegrity = reference.getIntegrity();
+		}
+		return tempIntegrity;
 	}
 	
 	@Override

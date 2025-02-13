@@ -93,8 +93,8 @@ public abstract class AbstractCssReferenceHeaderItem extends CssHeaderItem imple
 		attributes.putAttribute(CssUtils.ATTR_ID, getId());
 		attributes.putAttribute(CssUtils.ATTR_LINK_MEDIA, getMedia());
 		attributes.putAttribute(CssUtils.ATTR_CROSS_ORIGIN,
-			crossOrigin == null ? null : crossOrigin.getRealName());
-		attributes.putAttribute(CssUtils.ATTR_INTEGRITY, integrity);
+			getCrossOrigin() == null ? null : getCrossOrigin().getRealName());
+		attributes.putAttribute(CssUtils.ATTR_INTEGRITY, getIntegrity());
 		attributes.putAttribute(CssUtils.ATTR_CSP_NONCE, getNonce());
 		CssUtils.writeLink(response, attributes);
 
