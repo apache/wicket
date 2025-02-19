@@ -59,7 +59,7 @@
             <dependency>
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-core</artifactId>
-                <version>1.14.3</version>
+                <version>1.14.4</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
