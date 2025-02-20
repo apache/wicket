@@ -16,10 +16,9 @@
  */
 package org.apache.wicket.markup.html;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.IOException;
-import java.text.ParseException;
+import java.io.Serial;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -32,7 +31,6 @@ import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
@@ -46,169 +44,122 @@ class JsCssReferenceHeaderItemTest extends WicketTestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(JsCssReferenceHeaderItemTest.class);
 	
-	private static String jsResourceHash = "sha384-jsResourceHash2856816aw771";
-	private static String jsReferenceHash = "sha384-jssReferenceHash28546qt8725171";
-	private static String cssResourceHash = "sha384-cssResourceHash2512ab6wts23";
-	private static String cssReferenceHash = "sha384-cssReferenceHash2awet512asd623";
+	private static final String JS_RESOURCE_HASH = "sha384-jsResourceHash2856816aw771";
+	private static final String JS_REFERENCE_HASH = "sha384-jssReferenceHash28546qt8725171";
+	private static final String CSS_RESOURCE_HASH = "sha384-cssResourceHash2512ab6wts23";
+	private static final String CSS_REFERENCE_HASH = "sha384-cssReferenceHash2awet512asd623";
 	
 	/**
 	 * Basic ResourceReference integrity hash check
-	 * 
-	 * @throws IOException
-	 * @throws ResourceStreamNotFoundException
-	 * @throws ParseException
 	 */
 	@Test
-	void resourceReferenceTest_basic() throws IOException, ResourceStreamNotFoundException,
-		ParseException
+	void resourceReferenceTest_basic() throws Exception
 	{
 		tester.startPage(TestPage.class);
 		XmlPullParser parser = new XmlPullParser();
 		parser.parse(tester.getLastResponseAsString());
 		XmlTag tag = parser.nextTag();
-		boolean hasIntegrity = false;
-		boolean hasCrossOrigin = false;
+		CharSequence integrity = null;
+		CharSequence crossOrigin = null;
 		do
 		{
-			if (tag.isOpen() && "script".equals(tag.getName()) && tag.getAttribute("id").equals("jsref"))
+			if (tag != null && tag.isOpen() && "script".equals(tag.getName()) && "jsref".contentEquals(tag.getAttribute("id")))
 			{
-				System.out.println(" SCRIPT TAG: " + tag.toDebugString() + "\nExpect js resource hash: " + jsResourceHash
+				log.info(" SCRIPT TAG: " + tag.toDebugString() + "\nExpect js resource hash: " + JS_RESOURCE_HASH
 						+ "\nExpect crossOrigin: " + CrossOrigin.USE_CREDENTIALS.getRealName());
-				CharSequence seq = tag.getAttribute("integrity");
-				if (seq != null)
-				{
-					hasIntegrity = seq.toString().equals(jsResourceHash);
-				}
-				seq = tag.getAttribute("crossOrigin");
-				if (seq != null)
-				{
-					hasCrossOrigin = seq.toString().equals(CrossOrigin.USE_CREDENTIALS.getRealName());
-				}
+				integrity = tag.getAttribute("integrity");
+				crossOrigin = tag.getAttribute("crossOrigin");
 				break;
 			}
 		}
 		while ((tag = parser.nextTag()) != null);
-		assertTrue(hasIntegrity);
-		assertTrue(hasCrossOrigin);
+		assertEquals(JS_RESOURCE_HASH, integrity);
+		assertEquals(CrossOrigin.USE_CREDENTIALS.getRealName(), crossOrigin);
 	}
 	
 
 	/**
 	 * Basic JavaScriptReferenceHeaderItem integrity check - should override any integrity at resource level
-	 * 
-	 * @throws IOException
-	 * @throws ResourceStreamNotFoundException
-	 * @throws ParseException
 	 */
 	@Test
-	void javaScriptReferenceIntegrityTest_override() throws IOException, ResourceStreamNotFoundException,
-		ParseException
+	void javaScriptReferenceIntegrityTest_override() throws Exception
 	{
 		tester.startPage(TestPage.class);
 		XmlPullParser parser = new XmlPullParser();
 		parser.parse(tester.getLastResponseAsString());
 		XmlTag tag = parser.nextTag();
-		boolean hasIntegrity = false;
-		boolean hasCrossOrigin = false;
+		CharSequence integrity = null;
+		CharSequence crossOrigin = null;
 		do
 		{
-			if (tag.isOpen() && "script".equals(tag.getName()) && tag.getAttribute("id").equals("jsref2"))
+			if (tag != null && tag.isOpen() && "script".equals(tag.getName()) && "jsref2".contentEquals(tag.getAttribute("id")))
 			{
-				System.out.println(" SCRIPT TAG: " + tag.toDebugString() + "\nExpect js reference hash: " + jsReferenceHash
+				log.info(" SCRIPT TAG: " + tag.toDebugString() + "\nExpect js reference hash: " + JS_REFERENCE_HASH
 						+ "\nExpect crossOrigin: " + CrossOrigin.ANONYMOUS.getRealName());
-				CharSequence seq = tag.getAttribute("integrity");
-				if (seq != null)
-				{
-					hasIntegrity = seq.toString().equals(jsReferenceHash);
-				}
-				seq = tag.getAttribute("crossOrigin");
-				if (seq != null)
-				{
-					hasCrossOrigin = seq.toString().equals(CrossOrigin.ANONYMOUS.getRealName());
-				}
+				integrity = tag.getAttribute("integrity");
+				crossOrigin = tag.getAttribute("crossOrigin");
 				break;
 			}
 		}
 		while ((tag = parser.nextTag()) != null);
-		assertTrue(hasIntegrity);
-		assertTrue(hasCrossOrigin);
+		assertEquals(JS_REFERENCE_HASH, integrity);
+		assertEquals(CrossOrigin.ANONYMOUS.getRealName(), crossOrigin);
 	}
-	
-	
-	
 		
 	@Test
-	void cssReferenceIntegrityTest_basic() throws IOException, ResourceStreamNotFoundException, ParseException
+	void cssReferenceIntegrityTest_basic() throws Exception
 	{
 		tester.startPage(TestPage.class);
 		XmlPullParser parser = new XmlPullParser();
 		parser.parse(tester.getLastResponseAsString());
 		XmlTag tag = parser.nextTag();
-		boolean hasIntegrity = false;
-		boolean hasCrossOrigin = false;
+		CharSequence integrity = null;
+		CharSequence crossOrigin = null;
 		do
 		{
-			if ("link".equals(tag.getName()) && tag.getAttribute("id").equals("cssref"))
+			if (tag != null && "link".equals(tag.getName()) && tag.getAttribute("id").equals("cssref"))
 			{
-				System.out.println(" LINK TAG: " + tag.toDebugString() + "\nExpect resource hash: " + cssResourceHash
+				log.debug(" LINK TAG: " + tag.toDebugString() + "\nExpect resource hash: " + CSS_RESOURCE_HASH
 					+ "\nExpect crossOrigin: " + CrossOrigin.ANONYMOUS.getRealName());
-				CharSequence seq = tag.getAttribute("integrity");
-				if (seq != null)
-				{
-					hasIntegrity = seq.toString().equals(cssResourceHash);
-				}
-				seq = tag.getAttribute("crossOrigin");
-				if (seq != null)
-				{
-					hasCrossOrigin = seq.toString().equals(CrossOrigin.ANONYMOUS.getRealName());
-				}
+				integrity = tag.getAttribute("integrity");
+				crossOrigin = tag.getAttribute("crossOrigin");
 				break;
 			}
 		}
 		while ((tag = parser.nextTag()) != null);
-		assertTrue(hasIntegrity);
-		assertTrue(hasCrossOrigin);
+		assertEquals(CSS_RESOURCE_HASH, integrity);
+		assertEquals(CrossOrigin.ANONYMOUS.getRealName(), crossOrigin);
 	}
 
 	
 	@Test
-	void cssReferenceIntegrityTest_override() throws IOException, ResourceStreamNotFoundException, ParseException
+	void cssReferenceIntegrityTest_override() throws Exception
 	{
 		tester.startPage(TestPage.class);
 		XmlPullParser parser = new XmlPullParser();
 		parser.parse(tester.getLastResponseAsString());
 		XmlTag tag = parser.nextTag();
-		boolean hasIntegrity = false;
-		boolean hasCrossOrigin = false;
+		CharSequence integrity = null;
+		CharSequence crossOrigin = null;
 		do
 		{
-			if ("link".equals(tag.getName()) && tag.getAttribute("id").equals("cssref2"))
+			if (tag != null && "link".equals(tag.getName()) && tag.getAttribute("id").equals("cssref2"))
 			{
-				System.out.println(" LINK TAG: " + tag.toDebugString() + "\nExpect reference hash: " + cssReferenceHash
+				log.debug(" LINK TAG: " + tag.toDebugString() + "\nExpect reference hash: " + CSS_REFERENCE_HASH
 					+ "\nExpect crossOrigin: " + CrossOrigin.USE_CREDENTIALS.getRealName());
-				CharSequence seq = tag.getAttribute("integrity");
-				if (seq != null)
-				{
-					hasIntegrity = seq.toString().equals(cssReferenceHash);
-				}
-				seq = tag.getAttribute("crossOrigin");
-				if (seq != null)
-				{
-					hasCrossOrigin = seq.toString().equals(CrossOrigin.USE_CREDENTIALS.getRealName());
-				}
+				integrity = tag.getAttribute("integrity");
+				crossOrigin = tag.getAttribute("crossOrigin");
 				break;
 			}
 		}
 		while ((tag = parser.nextTag()) != null);
-		assertTrue(hasIntegrity);
-		assertTrue(hasCrossOrigin);
+		assertEquals(CSS_REFERENCE_HASH, integrity);
+		assertEquals(CrossOrigin.USE_CREDENTIALS.getRealName(), crossOrigin);
 	}	
 
-	/**
-	 * 
-	 */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		@Override
@@ -218,23 +169,23 @@ class JsCssReferenceHeaderItemTest extends WicketTestCase
 
 			// JS Reference - Basic
 			PackageResourceReference jsRef = new PackageResourceReference("jsres");
-			jsRef.setIntegrity(jsResourceHash);
+			jsRef.setIntegrity(JS_RESOURCE_HASH);
 			jsRef.setCrossOrigin(CrossOrigin.USE_CREDENTIALS);
 			JavaScriptReferenceHeaderItem jsHeaderItem = JavaScriptHeaderItem.forReference(jsRef, "jsref");
 			response.render(jsHeaderItem);
 			
 			// JS Reference - Override
 			jsRef = new PackageResourceReference("jsres2");
-			jsRef.setIntegrity(jsResourceHash);
+			jsRef.setIntegrity(JS_RESOURCE_HASH);
 			jsRef.setCrossOrigin(CrossOrigin.USE_CREDENTIALS);
 			jsHeaderItem = JavaScriptHeaderItem.forReference(jsRef, "jsref2");
-			jsHeaderItem.setIntegrity(jsReferenceHash);
+			jsHeaderItem.setIntegrity(JS_REFERENCE_HASH);
 			jsHeaderItem.setCrossOrigin(CrossOrigin.ANONYMOUS);
 			response.render(jsHeaderItem);
 
 			// CSS Reference - Basic
 			PackageResourceReference cssRef = new PackageResourceReference("cssres");
-			cssRef.setIntegrity(cssResourceHash);
+			cssRef.setIntegrity(CSS_RESOURCE_HASH);
 			cssRef.setCrossOrigin(CrossOrigin.ANONYMOUS);
 			CssReferenceHeaderItem cssHeaderItem = CssHeaderItem.forReference(cssRef);
 			cssHeaderItem.setId("cssref");
@@ -242,11 +193,11 @@ class JsCssReferenceHeaderItemTest extends WicketTestCase
 
 			// CSS References - Override
 			cssRef = new PackageResourceReference("cssres2");
-			cssRef.setIntegrity(cssResourceHash);
+			cssRef.setIntegrity(CSS_RESOURCE_HASH);
 			cssRef.setCrossOrigin(CrossOrigin.ANONYMOUS);
 			cssHeaderItem = CssHeaderItem.forReference(cssRef);
 			cssHeaderItem.setId("cssref2");
-			cssHeaderItem.setIntegrity(cssReferenceHash);
+			cssHeaderItem.setIntegrity(CSS_REFERENCE_HASH);
 			cssHeaderItem.setCrossOrigin(CrossOrigin.USE_CREDENTIALS);
 			response.render(cssHeaderItem);
 		}
