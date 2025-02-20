@@ -71,7 +71,12 @@ import org.apache.wicket.resource.JQueryPluginResourceReference;
  *    }
  *  }
  * }</pre>
- * 
+ *
+ * <p>
+ * Alternatively you can override {@link #wantChildrenToProcessInputInAjaxUpdate()} and return <code>true</code>, but
+ * this will submit more data than needed: it will include the form data of the choices and selection components too.
+ *
+ * <p>
  * You can add a {@link DefaultTheme} to style this component in a left to right fashion.
  * 
  * @author Igor Vaynberg ( ivaynberg )
@@ -563,6 +568,12 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	public int getRows()
 	{
 		return rows;
+	}
+
+	@Override
+	public void processInputOfChildren()
+	{
+		processInputOfChild(recorderComponent);
 	}
 
 	@Override
