@@ -71,7 +71,10 @@ public class HeadersToolbar<S> extends AbstractToolbar
 
 				for (IColumn<T, S> column : table.getColumns())
 				{
-					columnsModels.add(Model.of(column));
+					if (column.isVisible())
+					{
+						columnsModels.add(Model.of(column));
+					}
 				}
 
 				return columnsModels.iterator();
