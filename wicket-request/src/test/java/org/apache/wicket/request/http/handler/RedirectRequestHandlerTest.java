@@ -16,24 +16,32 @@
  */
 package org.apache.wicket.request.http.handler;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_FOUND;
+import static jakarta.servlet.http.HttpServletResponse.SC_MOVED_PERMANENTLY;
+import static jakarta.servlet.http.HttpServletResponse.SC_SEE_OTHER;
+import static jakarta.servlet.http.HttpServletResponse.SC_TEMPORARY_REDIRECT;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * RedirectRequestHandlerTest
+ *
+ * @see <a href="https://issues.apache.org/jira/browse/WICKET-5131">WICKET-5131: Support for 303</a>
+ * @see <a href="https://issues.apache.org/jira/browse/WICKET-6764">WICKET-6c764: RedirectToUrlException change the second question mark in URL from "?" to "%3F"</a>
  */
 class RedirectRequestHandlerTest
 {
 	private static final String REDIRECT_URL = "redirectUrl";
+	private static final int SC_PERMANENT_REDIRECT = 308; // Replace with static import of HttpServletResponse.SC_PERMANENT_REDIRECT, requires Jakarta servlet-api 6.1
 
 	private final IRequestCycle requestCycle = mock(IRequestCycle.class);
 	private final WebResponse webResponse = mock(WebResponse.class);
@@ -45,97 +53,76 @@ class RedirectRequestHandlerTest
 		when(requestCycle.getRequest()).thenReturn(webRequest);
 	}
 
-	@Test
-	void permanentlyMovedShouldSetLocationHeader()
+	@ParameterizedTest
+	@ValueSource(ints = { SC_MOVED_PERMANENTLY, SC_FOUND, SC_SEE_OTHER, SC_TEMPORARY_REDIRECT, SC_PERMANENT_REDIRECT })
+	void modeRedirectAlwaysSendsRedirect(int status)
 	{
-		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
-			HttpServletResponse.SC_MOVED_PERMANENTLY);
-
-		handler.respond(requestCycle);
-
-		verify(webResponse).setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-		verify(webResponse).setHeader("Location", REDIRECT_URL);
-	}
-
-	/**
-	 * tempMovedShouldRedirect()
-	 */
-	@Test
-	void tempMovedShouldRedirect()
-	{
-		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
-			HttpServletResponse.SC_MOVED_TEMPORARILY);
-
-		IRequestCycle requestCycle = mock(IRequestCycle.class);
-		WebResponse webResponse = mock(WebResponse.class);
-
-		when(requestCycle.getResponse()).thenReturn(webResponse);
-
+		final RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL, status).mode(RedirectRequestHandler.Mode.REDIRECT);
 		handler.respond(requestCycle);
 
 		verify(webResponse).sendRedirect(REDIRECT_URL);
 	}
 
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5131
-	 */
-	@Test
-	void seeOtherShouldSetLocationHeader()
+	@ParameterizedTest
+	@ValueSource(ints = { SC_MOVED_PERMANENTLY, SC_FOUND, SC_SEE_OTHER, SC_TEMPORARY_REDIRECT, SC_PERMANENT_REDIRECT })
+	void modeStatusSetsLocationHeaderAndStatus(int status)
 	{
-		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
-			HttpServletResponse.SC_SEE_OTHER);
-
+		when(webRequest.isAjax()).thenReturn(false);
+		final RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL, status).mode(RedirectRequestHandler.Mode.STATUS);
 		handler.respond(requestCycle);
 
-		verify(webResponse).setStatus(HttpServletResponse.SC_SEE_OTHER);
+		verify(webResponse).setStatus(status);
 		verify(webResponse).setHeader("Location", REDIRECT_URL);
 	}
 
 	/**
-	 * https://issues.apache.org/jira/browse/WICKET-6638
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-6638">WICKET-6638: Ajax-Support for RedirectRequestHandler</a>
 	 */
-	@Test
-	public void seeOtherShouldSetAjaxLocationHeaderForAjaxRequests()
+	@ParameterizedTest
+	@ValueSource(ints = { SC_MOVED_PERMANENTLY, SC_FOUND, SC_SEE_OTHER, SC_TEMPORARY_REDIRECT, SC_PERMANENT_REDIRECT })
+	void modeStatusSetsAjaxLocationHeaderAndStatusDuringAjaxRequest(int status)
 	{
-		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
-				HttpServletResponse.SC_SEE_OTHER);
-
 		when(webRequest.isAjax()).thenReturn(true);
-
+		final RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL, status).mode(RedirectRequestHandler.Mode.STATUS);
 		handler.respond(requestCycle);
 
-		verify(webResponse).setStatus(HttpServletResponse.SC_SEE_OTHER);
+		verify(webResponse).setStatus(status);
 		verify(webResponse).setHeader("Ajax-Location", REDIRECT_URL);
 	}
 
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-6764
-	 */
-	@Test
-	void movedPermanentlyAndModeRedirect_shouldSendRedirect()
+	@ParameterizedTest
+	@ValueSource(ints = {  SC_MOVED_PERMANENTLY, SC_SEE_OTHER, SC_TEMPORARY_REDIRECT, SC_PERMANENT_REDIRECT })
+	void modeAutoSetsLocationHeaderAndStatusExceptFor302(int status)
 	{
-		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
-		                                                            HttpServletResponse.SC_MOVED_PERMANENTLY);
-		handler.mode(RedirectRequestHandler.Mode.REDIRECT);
-
+		when(webRequest.isAjax()).thenReturn(false);
+		final RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL, status).mode(RedirectRequestHandler.Mode.AUTO);
 		handler.respond(requestCycle);
 
-		verify(webResponse).sendRedirect(REDIRECT_URL);
+		verify(webResponse).setStatus(status);
+		verify(webResponse).setHeader("Location", REDIRECT_URL);
 	}
 
 	/**
-	 * https://issues.apache.org/jira/browse/WICKET-6764
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-6638">WICKET-6638: Ajax-Support for RedirectRequestHandler</a>
 	 */
-	@Test
-	void movedTemporarilyAndModeStatus_shouldSetLocation()
+	@ParameterizedTest
+	@ValueSource(ints = {  SC_MOVED_PERMANENTLY, SC_SEE_OTHER, SC_TEMPORARY_REDIRECT, SC_PERMANENT_REDIRECT })
+	void modeAutoSetsAjaxLocationHeaderAndStatusExceptFor302DuringAjaxRequest(int status)
 	{
-		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
-		                                                            HttpServletResponse.SC_MOVED_TEMPORARILY);
-		handler.mode(RedirectRequestHandler.Mode.STATUS);
-
+		when(webRequest.isAjax()).thenReturn(true);
+		final RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL, status).mode(RedirectRequestHandler.Mode.AUTO);
 		handler.respond(requestCycle);
 
-		verify(webResponse).setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
-		verify(webResponse).setHeader("Location", REDIRECT_URL);
+		verify(webResponse).setStatus(status);
+		verify(webResponse).setHeader("Ajax-Location", REDIRECT_URL);
+	}
+
+	@Test
+	void modeAutoSendsRedirectFor302()
+	{
+		final RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL, SC_FOUND).mode(RedirectRequestHandler.Mode.AUTO);
+		handler.respond(requestCycle);
+
+		verify(webResponse).sendRedirect(REDIRECT_URL);
 	}
 }

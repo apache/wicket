@@ -75,15 +75,21 @@ public class RedirectRequestHandler implements IRequestHandler
 	 * @param redirectUrl
 	 *            URL to redirect to.
 	 * @param status
-	 *            301 (Moved permanently) or 302 (Moved temporarily)
+	 *            301 (Moved permanently) or
+	 *            302 (Found (former Moved temporarily)) or
+	 *            303 (See other) or
+	 *            307 (Temporary redirect) or
+	 *            308 (Permanent recirect)
 	 */
 	public RedirectRequestHandler(final String redirectUrl, final int status)
 	{
 		if ((status != HttpServletResponse.SC_MOVED_PERMANENTLY) &&
-			(status != HttpServletResponse.SC_MOVED_TEMPORARILY) &&
-			(status != HttpServletResponse.SC_SEE_OTHER))
+			(status != HttpServletResponse.SC_FOUND) &&
+			(status != HttpServletResponse.SC_SEE_OTHER) &&
+			(status != HttpServletResponse.SC_TEMPORARY_REDIRECT) &&
+		 	(status != 308 /* Constant HttpServletResponse.SC_PERMANENT_REDIRECT, requires Jakarta servlet-api 6.1 */))
 		{
-			throw new IllegalStateException("Status must be either 301, 302 or 303, but was: " + status);
+			throw new IllegalStateException("Status must be either 301, 302, 303, 307 or 308 but was: " + status);
 		}
 		this.redirectUrl = Args.notEmpty(redirectUrl, "redirectUrl");
 		this.status = status;
@@ -142,7 +148,7 @@ public class RedirectRequestHandler implements IRequestHandler
 			setStatus(response, requestCycle, location);
 		}
 		// Mode.AUTO
-		else if (status == HttpServletResponse.SC_MOVED_TEMPORARILY)
+		else if (status == HttpServletResponse.SC_FOUND)
 		{
 			response.sendRedirect(location);
 		}
