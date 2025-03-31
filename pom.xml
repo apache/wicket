@@ -141,11 +141,11 @@
 		<maven.compiler.target>17</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<asm.version>9.7.1</asm.version>
+		<asm.version>9.8</asm.version>
 		<aspectj.version>1.9.23</aspectj.version>
 		<assertj-core.version>3.27.3</assertj-core.version>
 		<bouncycastle.version>1.80</bouncycastle.version>
-		<byte-buddy.version>1.17.3</byte-buddy.version>
+		<byte-buddy.version>1.17.4</byte-buddy.version>
 		<cdi-unit.version>5.0.0-EA7</cdi-unit.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
 		<commons-fileupload.version>2.0.0-M2</commons-fileupload.version>
