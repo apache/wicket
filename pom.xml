@@ -175,7 +175,7 @@
 		<hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
 		<metrics.version>4.2.30</metrics.version>
-		<mockito.version>5.16.1</mockito.version>
+		<mockito.version>5.17.0</mockito.version>
 		<objenesis.version>3.4</objenesis.version>
 		<openjson.version>1.0.13</openjson.version>
 		<slf4j.version>2.0.17</slf4j.version>
