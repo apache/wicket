@@ -2,6 +2,27 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.5.0
+
+** Bug
+
+    * [WICKET-7147] - Paramter order of null checks incorrect
+    * [WICKET-7148] - Removing Metadata from Application not possible
+    * [WICKET-7150] - Cyclic dependency between wicket-native-websocket-core and wicket-native-websocket-javax modules
+
+** New Feature
+
+    * [WICKET-7152] - Extend RedirectRequestHandler for statusCodes 307 and 308
+
+** Improvement
+
+    * [WICKET-7134] - To refactor Form processing code
+    * [WICKET-7149] - Add Integrity and CrossOrigin values to ResourceReference and related code
+    * [WICKET-7151] - Misleading message when a Link component is added with wrong id
+    * [WICKET-7153] - [Resources] modify RootMapper in order to allow to define a refferent ResourceReferenceMapper
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.4.0
 
 ** Bug
