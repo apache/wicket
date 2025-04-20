@@ -2,6 +2,20 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.21.0
+
+** Bug
+
+    * [WICKET-7147] - Paramter order of null checks incorrect
+    * [WICKET-7148] - Removing Metadata from Application not possible
+    * [WICKET-7150] - Cyclic dependency between wicket-native-websocket-core and wicket-native-websocket-javax modules
+
+** Improvement
+
+    * [WICKET-7153] - [Resources] modify RootMapper in order to allow to define a refferent ResourceReferenceMapper
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.20.0
 
 ** Improvement
