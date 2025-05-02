@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>10.6.0-SNAPSHOT</version>
+		<version>11.1.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-util</artifactId>
@@ -42,7 +42,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-fileupload2-jakarta-servlet5</artifactId>
+			<artifactId>commons-fileupload2-jakarta-servlet6</artifactId>
 		</dependency>
 	</dependencies>
 </project>

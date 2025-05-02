@@ -34,8 +34,8 @@ import org.apache.commons.fileupload2.core.FileItemFactory;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.commons.fileupload2.core.DiskFileItemFactory;
-import org.apache.commons.fileupload2.jakarta.servlet5.JakartaServletFileUpload;
-import org.apache.commons.fileupload2.jakarta.servlet5.JakartaServletRequestContext;
+import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
+import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletRequestContext;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.file.FileCleanerTrackerAdapter;
@@ -187,11 +187,12 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			// try to parse the file uploads by using Apache Commons FileUpload APIs
 			// because they are feature richer (e.g. progress updates, cleaner)
 			items = fileUpload.parseRequest(new JakartaServletRequestContext(request));
-			if (items.isEmpty())
-			{
-				// fallback to Servlet 3.0 APIs
-				items = readServlet3Parts(request);
-			}
+		}
+
+		if (items.isEmpty())
+		{
+			// fallback to Servlet 3.0 APIs
+			items = readServlet3Parts(request);
 		}
 
 		// Loop through items
