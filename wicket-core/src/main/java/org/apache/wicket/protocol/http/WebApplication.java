@@ -24,6 +24,8 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.function.Function;
 
+import org.apache.commons.fileupload2.core.FileItemFactory;
+import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
@@ -56,8 +58,10 @@ import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.markup.resolver.AutoLinkResolver;
 import org.apache.wicket.protocol.http.servlet.AbstractRequestWrapperFactory;
 import org.apache.wicket.protocol.http.servlet.FilterFactoryManager;
+import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
+import org.apache.wicket.protocol.http.servlet.TomcatNativeMultipartServletWebRequestImpl;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -79,6 +83,7 @@ import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.watch.IModificationWatcher;
@@ -561,6 +566,23 @@ public abstract class WebApplication extends Application
 	 */
 	public WebRequest newWebRequest(HttpServletRequest servletRequest, final String filterPath)
 	{
+		if (getApplicationSettings().isUseTomcatNativeFileUpload())
+		{
+			return new ServletWebRequest(servletRequest, filterPath)
+			{
+				@Override
+				public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload) throws FileUploadException
+				{
+					return new TomcatNativeMultipartServletWebRequestImpl(getContainerRequest(), getFilterPrefix(), maxSize);
+				}
+
+				@Override
+				public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload, FileItemFactory factory) throws FileUploadException
+				{
+					return new TomcatNativeMultipartServletWebRequestImpl(getContainerRequest(), getFilterPrefix(), maxSize);
+				}
+			};
+		}
 		return new ServletWebRequest(servletRequest, filterPath);
 	}
 

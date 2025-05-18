@@ -81,7 +81,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * @see jakarta.servlet.http.HttpServletResponse#addCookie(javax.servlet.http.Cookie)
+	 * @see jakarta.servlet.http.HttpServletResponse#addCookie(jakarta.servlet.http.Cookie)
 	 */
 	@Override
 	public void addCookie(Cookie cookie)
@@ -156,6 +156,18 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	{
 		isOpen();
 		redirect = location;
+	}
+
+	@Override
+	public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+		isOpen();
+		realResponse.sendRedirect(location);
+	}
+
+	@Override
+	public void sendEarlyHints() {
+		isOpen();
+		realResponse.sendEarlyHints();
 	}
 
 	/**

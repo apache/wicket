@@ -159,6 +159,10 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 		return getFileUploads();
 	}
 
+	public String getUploadId() {
+		return getMarkupId();
+	}
+
 	@Override
 	public boolean isMultiPart()
 	{

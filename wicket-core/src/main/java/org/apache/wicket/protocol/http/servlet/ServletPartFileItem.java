@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -63,6 +62,10 @@ class ServletPartFileItem implements FileItem
 	public InputStream getInputStream() throws IOException
 	{
 		return part.getInputStream();
+	}
+
+	public Part getPart() {
+		return part;
 	}
 
 	@Override

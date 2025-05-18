@@ -39,8 +39,18 @@ public class UploadInfo implements IClusterable
 
 	/**
 	 * @param totalBytes
+	 * @deprecated We need to keep it for backwards compatibility
 	 */
 	public UploadInfo(final int totalBytes)
+	{
+		timeStarted = System.currentTimeMillis();
+		this.totalBytes = totalBytes;
+	}
+
+	/**
+	 * @param totalBytes
+	 */
+	public UploadInfo(final long totalBytes)
 	{
 		timeStarted = System.currentTimeMillis();
 		this.totalBytes = totalBytes;
@@ -56,8 +66,8 @@ public class UploadInfo implements IClusterable
 
 	/**
 	 * Sets bytes uploaded so far
-	 * 
-	 * @param bytesUploaded
+	 *
+	 * @param bytesUploaded The number of bytes uploaded
 	 */
 	public void setBytesUploaded(final long bytesUploaded)
 	{
@@ -65,7 +75,7 @@ public class UploadInfo implements IClusterable
 	}
 
 	/**
-	 * @return human readable string of bytes uploaded so far
+	 * @return human-readable string of bytes uploaded so far
 	 */
 	public String getBytesUploadedString()
 	{

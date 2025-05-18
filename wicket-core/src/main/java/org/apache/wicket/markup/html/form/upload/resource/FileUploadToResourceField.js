@@ -27,8 +27,9 @@
     {
         this.settings = settings;
         this.inputName = settings.inputName;
+        this.uploadId = settings.uploadId;
         this.input = document.getElementById(this.inputName);
-        this.resourceUrl = settings.resourceUrl + "?uploadId=" + this.inputName + "&maxSize=" + this.settings.maxSize;
+        this.resourceUrl = settings.resourceUrl + "?uploadId=" + this.uploadId + "&maxSize=" + this.settings.maxSize;
         if (this.settings.fileMaxSize != null) {
             this.resourceUrl = this.resourceUrl + "&fileMaxSize=" + this.settings.fileMaxSize;
         }
