@@ -63,6 +63,8 @@ public class ApplicationSettings
 
 	private boolean uploadProgressUpdatesEnabled = false;
 
+	private boolean useTomcatNativeFileUpload = false;
+
 	private IFeedbackMessageFilter feedbackMessageCleanupFilter = new DefaultCleanupFeedbackMessageFilter();
 
 	/**
@@ -124,6 +126,16 @@ public class ApplicationSettings
 	public boolean isUploadProgressUpdatesEnabled()
 	{
 		return uploadProgressUpdatesEnabled;
+	}
+
+	/**
+	 * Gets whether wicket is using Tomcat 11+ native upload machinery or not.
+	 *
+	 * @return if true, Wicket will use tomcat native upload machinery
+	 */
+	public boolean isUseTomcatNativeFileUpload()
+	{
+		return useTomcatNativeFileUpload;
 	}
 
 	/**
@@ -221,6 +233,19 @@ public class ApplicationSettings
 	public ApplicationSettings setUploadProgressUpdatesEnabled(boolean uploadProgressUpdatesEnabled)
 	{
 		this.uploadProgressUpdatesEnabled = uploadProgressUpdatesEnabled;
+		return this;
+	}
+
+
+	/**
+	 * Sets whether wicket should use Tomcat (11+) native file upload
+	 *
+	 * @param useTomcatNativeFileUpload
+	 *            if true, Wicket will use tomcat native file upload
+	 * @return {@code this} object for chaining
+	 */
+	public ApplicationSettings setUseTomcatNativeFileUpload(boolean useTomcatNativeFileUpload) {
+		this.useTomcatNativeFileUpload = useTomcatNativeFileUpload;
 		return this;
 	}
 

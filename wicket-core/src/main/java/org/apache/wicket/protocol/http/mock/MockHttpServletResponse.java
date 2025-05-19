@@ -554,6 +554,17 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 		status = HttpServletResponse.SC_FOUND;
 	}
 
+	@Override
+	public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+		redirectLocation = location;
+		status = sc;
+	}
+
+	@Override
+	public void sendEarlyHints() {
+
+	}
+
 	/**
 	 * Method ignored.
 	 * 
