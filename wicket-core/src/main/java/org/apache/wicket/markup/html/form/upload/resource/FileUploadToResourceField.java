@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import org.apache.commons.io.IOUtils;
+import org.apache.wicket.Application;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxUtils;
@@ -38,6 +40,7 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.servlet.TomcatUploadProgressListenerFactory;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -58,6 +61,8 @@ import com.github.openjson.JSONObject;
 public abstract class FileUploadToResourceField extends FileUploadField
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUploadToResourceField.class);
+
+    private String uploadId;
 
     /**
      * Info regarding an upload.
@@ -180,7 +185,7 @@ public abstract class FileUploadToResourceField extends FileUploadField
                 // at this point files were stored at the server side by resource
                 // UploadFieldId acts as a discriminator at application level
                 // so that uploaded files are isolated.
-                uploadInfo.setFile(fileManager().getFile(getUploadFieldId(), uploadInfo.clientFileName));
+                uploadInfo.setFile(fileManager().getFile(getUploadId(), uploadInfo.clientFileName));
             }
             return fileInfos;
         }
@@ -194,9 +199,9 @@ public abstract class FileUploadToResourceField extends FileUploadField
         protected abstract IUploadsFileManager fileManager();
 
         /*
-            This is an application unique ID assigned to upload field.
+            This is an application wide unique ID assigned to upload field.
          */
-        protected abstract String getUploadFieldId();
+        protected abstract String getUploadId();
 
         protected abstract List<UploadInfo> getFileUploadInfos();
     }
@@ -235,9 +240,9 @@ public abstract class FileUploadToResourceField extends FileUploadField
             }
 
             @Override
-            protected String getUploadFieldId()
+            protected String getUploadId()
             {
-                return FileUploadToResourceField.this.getMarkupId();
+                return FileUploadToResourceField.this.getUploadId();
             }
 
             @Override
@@ -357,13 +362,13 @@ public abstract class FileUploadToResourceField extends FileUploadField
         return "WRFUF_" + UUID.randomUUID().toString().replace("-", "_");
     }
 
-
     @Override
     public void renderHead(IHeaderResponse response) {
         CoreLibrariesContributor.contributeAjax(getApplication(), response);
         response.render(JavaScriptHeaderItem.forReference(JS));
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("inputName", getMarkupId());
+        jsonObject.put("uploadId", getUploadId());
         jsonObject.put("resourceUrl", urlFor(getFileUploadResourceReference(), new PageParameters()).toString());
         jsonObject.put("ajaxCallBackUrl", ajaxBehavior.getCallbackUrl());
         jsonObject.put("maxSize", getMaxSize().bytes());
@@ -380,6 +385,33 @@ public abstract class FileUploadToResourceField extends FileUploadField
                 + getClientSideSuccessCallBack() + ","
                 + getClientSideCancelCallBack() + ","
                 + getClientSideUploadErrorCallBack() + ");"));
+    }
+
+    /**
+     * @return the unique upload ID.
+     */
+    public final String getUploadId() {
+        if (uploadId != null)
+        {
+            return uploadId;
+        }
+        uploadId = computeUploadId();
+        return uploadId;
+    }
+
+    /**
+     * Comoputes the upload ID.
+     * @return
+     */
+    private String computeUploadId() {
+        if (Application.get().getApplicationSettings().isUseTomcatNativeFileUpload()) {
+            String uploadId = TomcatUploadProgressListenerFactory.getUploadId();
+            if (uploadId != null) {
+                return uploadId;
+            }
+            throw new WicketRuntimeException("If you are using Tomcat for uploading files you should have registered a TomcatUploadProgressListenerFactory");
+        }
+        return getMarkupId();
     }
 
     /**
