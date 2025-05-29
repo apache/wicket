@@ -16,21 +16,25 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.markup.html.form.NestedFormsPage.NestableForm;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 /**
  * Please see <a href="http://cwiki.apache.org/WICKET/nested-forms.html">"Nested Forms"</a> for more
  * details on nested forms
- * 
+ *
  * @author Gerolf Seitz
  */
 class FormSubmitTest extends WicketTestCase
@@ -46,7 +50,7 @@ class FormSubmitTest extends WicketTestCase
 	@BeforeEach
 	void before()
 	{
-		tester.startPage(new NestedFormsPage());
+		tester.startPage(new NestedFormsPage(true, true));
 		page = (NestedFormsPage)tester.getLastRenderedPage();
 		outerForm = (NestableForm)page.get("outerForm");
 		middleForm = (NestableForm)page.get("outerForm:middleForm");
@@ -273,13 +277,104 @@ class FormSubmitTest extends WicketTestCase
 		assertOnErrorCalled(false, false, false);
 	}
 
+	@Nested
+	class WhenSubmitterInvisibleFormSubmitTest
+	{
+
+		@BeforeEach
+		void before()
+		{
+			tester.startPage(new NestedFormsPage(false, true));
+		}
+
+		@Test
+		void doNotSubmitInvisibleButtons_middleForm()
+		{
+			assertEnabledState(true, true, true);
+
+			FormTester formTester = tester.newFormTester("outerForm:middleForm");
+			var message = assertThrows(WicketRuntimeException.class,
+				() -> formTester.submit("submit")).getMessage();
+			assertThat(message).contains("is not visible");
+		}
+
+		@Test
+		void doNotSubmitInvisibleButtons_outerForm()
+		{
+			assertEnabledState(true, true, true);
+
+			FormTester formTester = tester.newFormTester("outerForm");
+			var message = assertThrows(WicketRuntimeException.class,
+				() -> formTester.submit("submit")).getMessage();
+			assertThat(message).contains("is not visible");
+		}
+
+		@Test
+		void doNotSubmitInvisibleButtons_innerForm()
+		{
+			assertEnabledState(true, true, true);
+
+			FormTester formTester = tester.newFormTester("outerForm:middleForm:innerForm");
+			var message = assertThrows(WicketRuntimeException.class,
+				() -> formTester.submit("submit")).getMessage();
+			assertThat(message).contains("is not visible");
+		}
+
+	}
+
+	@Nested
+	class WhenSubmitterDisabledFormSubmitTest
+	{
+
+		@BeforeEach
+		void before()
+		{
+			tester.startPage(new NestedFormsPage(true, false));
+		}
+
+		@Test
+		void doNotSubmitInvisibleButtons_middleForm()
+		{
+			assertEnabledState(true, true, true);
+
+			FormTester formTester = tester.newFormTester("outerForm:middleForm");
+
+			var message = assertThrows(WicketRuntimeException.class,
+				() -> formTester.submit("submit")).getMessage();
+			assertThat(message).contains("is not enabled");
+		}
+
+		@Test
+		void doNotSubmitInvisibleButtons_outerForm()
+		{
+			assertEnabledState(true, true, true);
+
+			FormTester formTester = tester.newFormTester("outerForm");
+			var message = assertThrows(WicketRuntimeException.class,
+				() -> formTester.submit("submit")).getMessage();
+			assertThat(message).contains("is not enabled");
+		}
+
+		@Test
+		void doNotSubmitInvisibleButtons_innerForm()
+		{
+			assertEnabledState(true, true, true);
+
+			FormTester formTester = tester.newFormTester("outerForm:middleForm:innerForm");
+			var message = assertThrows(WicketRuntimeException.class,
+				() -> formTester.submit("submit")).getMessage();
+			assertThat(message).contains("is not enabled");
+		}
+
+	}
+
 	/**
-	 * 
 	 * @param isOuterFormEnabled
 	 * @param isMiddleFormEnabled
 	 * @param isInnerFormEnabled
 	 */
-	private void assertEnabledState(boolean isOuterFormEnabled, boolean isMiddleFormEnabled,
+	private void assertEnabledState(
+		boolean isOuterFormEnabled, boolean isMiddleFormEnabled,
 		boolean isInnerFormEnabled)
 	{
 		assertEquals(isOuterFormEnabled, outerForm.isEnabled());
@@ -288,12 +383,12 @@ class FormSubmitTest extends WicketTestCase
 	}
 
 	/**
-	 * 
 	 * @param isOuterFormOnErrorCalled
 	 * @param isMiddleFormOnErrorCalled
 	 * @param isInnerFormOnErrorCalled
 	 */
-	private void assertOnErrorCalled(boolean isOuterFormOnErrorCalled,
+	private void assertOnErrorCalled(
+		boolean isOuterFormOnErrorCalled,
 		boolean isMiddleFormOnErrorCalled, boolean isInnerFormOnErrorCalled)
 	{
 		assertEquals(isOuterFormOnErrorCalled, outerForm.onErrorCalled);
@@ -302,12 +397,12 @@ class FormSubmitTest extends WicketTestCase
 	}
 
 	/**
-	 * 
 	 * @param isOuterFormOnSubmitCalled
 	 * @param isMiddleFormOnSubmitCalled
 	 * @param isInnerFormOnSubmitCalled
 	 */
-	private void assertOnSubmitCalled(boolean isOuterFormOnSubmitCalled,
+	private void assertOnSubmitCalled(
+		boolean isOuterFormOnSubmitCalled,
 		boolean isMiddleFormOnSubmitCalled, boolean isInnerFormOnSubmitCalled)
 	{
 		assertEquals(isOuterFormOnSubmitCalled, outerForm.onSubmitCalled);
@@ -317,12 +412,13 @@ class FormSubmitTest extends WicketTestCase
 
 	/**
 	 * @param formToBeSubmitted
-	 *            absolute path of the form to be submitted
+	 * 	absolute path of the form to be submitted
 	 * @param componentToGetError
-	 *            relative path to <code>formToBeSumitted</code> of the component to be changed
+	 * 	relative path to <code>formToBeSumitted</code> of the component to be changed
 	 * @return a {@link FormTester} instance
 	 */
-	private FormTester causeValidationErrorAndSubmit(String formToBeSubmitted,
+	private FormTester causeValidationErrorAndSubmit(
+		String formToBeSubmitted,
 		String componentToGetError)
 	{
 		FormTester formTester;
