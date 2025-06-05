@@ -21,6 +21,7 @@ import java.util.Formatter;
 import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -259,8 +260,12 @@ public class UploadProgressBar extends Panel
 
 		final String status = new StringResourceModel(RESOURCE_STARTING, this, null).getString();
 
-		CharSequence url = form != null ? urlFor(ref, UploadStatusResource.newParameter(getPage().getId())) :
-				urlFor(ref, UploadStatusResource.newParameter(uploadField.getMarkupId()));
+		if (form == null && uploadField == null) {
+			throw new WicketRuntimeException("Either form or uploadField must be set");
+		}
+
+		CharSequence url = (form != null && form.isMultiPart()) ? urlFor(ref, UploadStatusResource.newParameter(form.getUploadId())) :
+				urlFor(ref, UploadStatusResource.newParameter(uploadField.getUploadId()));
 
 		StringBuilder builder = new StringBuilder(128);
 		Formatter formatter = new Formatter(builder);
