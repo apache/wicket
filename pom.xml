@@ -185,7 +185,7 @@
 		<velocity-engine-core.version>2.4.1</velocity-engine-core.version>
 
 		<!-- Maven plugins -->
-		<build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
+		<build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
 		<japicmp-maven-plugin.version>0.23.1</japicmp-maven-plugin.version>
 		<maven-archetype-plugin.version>3.4.0</maven-archetype-plugin.version>
 		<maven-bundle-plugin.version>5.1.9</maven-bundle-plugin.version>
