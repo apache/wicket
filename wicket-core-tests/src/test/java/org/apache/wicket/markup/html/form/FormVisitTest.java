@@ -270,7 +270,7 @@ public class FormVisitTest extends WicketTestCase
 		page.innerContainer.setEnabled(false);
 		tester.newFormTester("outerForm").submit();
 
-		assertFalse(formValidator.validatedCalled);
+		assertTrue(formValidator.validatedCalled);
 	}
 
 	@Test
