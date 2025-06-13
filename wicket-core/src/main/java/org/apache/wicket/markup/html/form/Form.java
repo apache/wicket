@@ -1986,7 +1986,7 @@ public class Form<T> extends WebMarkupContainer
 				}
 				// check if the dependent component is visible and is attached to
 				// the page
-				else if (!dependent.isVisibleInHierarchy() || !dependent.isEnabledInHierarchy() || !dependent.isFormParticipant())
+				else if (!dependent.isVisibleInHierarchy() || !dependent.isFormParticipant())
 				{
 					if (log.isWarnEnabled())
 					{
