@@ -26,7 +26,7 @@ jobs:
     - name: Build with Maven
       run: |
         MAVEN_VERSION=3.8.7
-        wget https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
+        wget --retry-connrefused --tries=5 --waitretry=5 --read-timeout=20 --timeout=15 https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
         tar -xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz
         export PATH=$PWD/apache-maven-${MAVEN_VERSION}/bin:$PATH
         export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64 
