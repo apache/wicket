@@ -1,4 +1,4 @@
-FROM tomcat:9.0-jre11
+FROM tomcat:10.1-jre17
 MAINTAINER Apache Wicket Team <dev@wicket.apache.org>
 
 RUN rm -rf /usr/local/tomcat/webapps/*
