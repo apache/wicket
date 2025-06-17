@@ -1972,10 +1972,31 @@ public class Form<T> extends WebMarkupContainer
 
 		final FormComponent<?>[] dependents = validator.getDependentFormComponents();
 
-		boolean validate = true;
-
 		if (dependents != null)
 		{
+			boolean validate = false;
+
+			for (final FormComponent<?> dependent : dependents)
+			{
+				if (dependent.isEnabledInHierarchy())
+				{
+					validate = true;
+					break;
+				}
+			}
+
+			if (!validate)
+			{
+				// no enabled dependents, so no need to validate
+				if (log.isWarnEnabled())
+				{
+					log.warn("IFormValidator in form `" +
+						getPageRelativePath() +
+						"` depends on components, but none have been enabled.");
+				}
+				return;
+			}
+
 			for (final FormComponent<?> dependent : dependents)
 			{
 				// check if the dependent component is valid
@@ -1986,24 +2007,24 @@ public class Form<T> extends WebMarkupContainer
 				}
 				// check if the dependent component is visible and is attached to
 				// the page
-				else if (!dependent.isVisibleInHierarchy() || !dependent.isEnabledInHierarchy() || !dependent.isFormParticipant())
+				else if (!dependent.isVisibleInHierarchy() || !dependent.isFormParticipant())
 				{
 					if (log.isWarnEnabled())
 					{
 						log.warn("IFormValidator in form `" +
 							getPageRelativePath() +
-							"` depends on a component that has been removed from the page or is no longer visible/enabled. " +
+							"` depends on a component that has been removed from the page or is no longer visible. " +
 							"Offending component id `" + dependent.getId() + "`.");
 					}
 					validate = false;
 					break;
 				}
 			}
-		}
 
-		if (validate)
-		{
-			validator.validate(this);
+			if (validate)
+			{
+				validator.validate(this);
+			}
 		}
 	}
 
