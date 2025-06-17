@@ -1972,10 +1972,25 @@ public class Form<T> extends WebMarkupContainer
 
 		final FormComponent<?>[] dependents = validator.getDependentFormComponents();
 
-		boolean validate = true;
-
 		if (dependents != null)
 		{
+			boolean validate = false;
+
+			for (final FormComponent<?> dependent : dependents)
+			{
+				if (dependent.isEnabledInHierarchy())
+				{
+					validate = true;
+					break;
+				}
+			}
+
+			if (!validate)
+			{
+				// no enabled dependents, so no need to validate
+				return;
+			}
+
 			for (final FormComponent<?> dependent : dependents)
 			{
 				// check if the dependent component is valid
@@ -1999,11 +2014,11 @@ public class Form<T> extends WebMarkupContainer
 					break;
 				}
 			}
-		}
 
-		if (validate)
-		{
-			validator.validate(this);
+			if (validate)
+			{
+				validator.validate(this);
+			}
 		}
 	}
 

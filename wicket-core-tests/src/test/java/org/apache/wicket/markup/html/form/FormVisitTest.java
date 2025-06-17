@@ -65,7 +65,7 @@ public class FormVisitTest extends WicketTestCase
 		assertTrue(page.outerForm.onValidateModelObjectsCalled);
 		assertTrue(page.outerField.onValidCalled);
 		assertTrue(page.outerField.updateModelCalled);
-		assertTrue(formValidator.validatedCalled);
+		assertFalse(formValidator.validatedCalled);
 		assertTrue(page.innerForm.onValidateCalled);
 		assertTrue(page.innerForm.onSubmitCalled);
 		assertTrue(page.innerForm.isSubmittedFlagged);
@@ -87,7 +87,7 @@ public class FormVisitTest extends WicketTestCase
 		assertTrue(page.outerForm.onValidateModelObjectsCalled);
 		assertTrue(page.outerField.onValidCalled);
 		assertTrue(page.outerField.updateModelCalled);
-		assertTrue(formValidator.validatedCalled);
+		assertFalse(formValidator.validatedCalled);
 		assertFalse(page.innerForm.onValidateCalled);
 		assertFalse(page.innerForm.onSubmitCalled);
 		assertFalse(page.innerForm.isSubmittedFlagged);
@@ -240,7 +240,7 @@ public class FormVisitTest extends WicketTestCase
 		page.innerForm.add(formValidator);
 		tester.newFormTester("outerForm").submit();
 
-		assertTrue(formValidator.validatedCalled);
+		assertFalse(formValidator.validatedCalled);
 	}
 
 	@Test
@@ -270,7 +270,7 @@ public class FormVisitTest extends WicketTestCase
 		page.innerContainer.setEnabled(false);
 		tester.newFormTester("outerForm").submit();
 
-		assertTrue(formValidator.validatedCalled);
+		assertFalse(formValidator.validatedCalled);
 	}
 
 	@Test
@@ -379,6 +379,25 @@ public class FormVisitTest extends WicketTestCase
 
 		assertTrue(
 			page.innerForm.onValidateModelObjectsCallOrder < page.outerForm.onValidateModelObjectsCallOrder);
+	}
+
+	@Test
+	public void validationNotPerformedIfAllDependentsDisabled() {
+		formValidator.setDependency(page.outerField);
+		page.outerField.setEnabled(false);
+		page.outerForm.add(formValidator);
+		tester.newFormTester("outerForm").submit();
+		assertFalse(formValidator.validatedCalled, "Validation should not be performed if all dependents are disabled");
+	}
+
+	@Test
+	public void validationPerformedIfAtLeastOneDependentEnabled() {
+		page.innerField.setEnabled(false);
+		page.outerField.setEnabled(true);
+		formValidator.dependencies = new FormComponent<?>[] { page.outerField, page.innerField };
+		page.outerForm.add(formValidator);
+		tester.newFormTester("outerForm").submit();
+		assertTrue(formValidator.validatedCalled, "Validation should be performed if at least one dependent is enabled");
 	}
 
 	public static class TestFormPage extends WebPage implements IMarkupResourceStreamProvider
@@ -535,7 +554,7 @@ public class FormVisitTest extends WicketTestCase
 			validatedCalled = true;
 		}
 
-		public FormValidator setDependency(FormComponent component)
+		public FormValidator setDependency(FormComponent<?> component)
 		{
 			this.dependencies = new FormComponent<?>[] { component };
 			return this;
