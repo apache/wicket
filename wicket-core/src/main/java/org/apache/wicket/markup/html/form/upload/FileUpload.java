@@ -95,7 +95,14 @@ public class FileUpload
 	 */
 	public byte[] getBytes()
 	{
-		return item.get();
+		try 
+		{
+			return item.get();
+		} 
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 
 	/**

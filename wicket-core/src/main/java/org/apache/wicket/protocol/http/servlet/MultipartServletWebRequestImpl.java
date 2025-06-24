@@ -203,20 +203,21 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			{
 				// Set parameter value
 				final String value;
-				if (encoding != null)
+				
+				try 
 				{
-					try
+					if (encoding != null)
 					{
 						value = item.getString(Charset.forName(encoding));
 					}
-					catch (IOException e)
+					else
 					{
-						throw new WicketRuntimeException(e);
+						value = item.getString();
 					}
 				}
-				else
+				catch (IOException e)
 				{
-					value = item.getString();
+					throw new WicketRuntimeException(e);
 				}
 
 				addParameter(item.getFieldName(), value);
