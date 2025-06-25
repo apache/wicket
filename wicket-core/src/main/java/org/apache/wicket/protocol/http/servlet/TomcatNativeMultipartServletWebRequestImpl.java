@@ -17,87 +17,47 @@
 package org.apache.wicket.protocol.http.servlet;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.Part;
-import org.apache.commons.fileupload2.core.AbstractFileUpload;
 import org.apache.commons.fileupload2.core.FileItem;
 import org.apache.commons.fileupload2.core.FileItemFactory;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadException;
-import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import org.apache.commons.fileupload2.jakarta.servlet5.JakartaServletFileUpload;
-import org.apache.commons.fileupload2.jakarta.servlet5.JakartaServletRequestContext;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.util.file.FileCleanerTrackerAdapter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.value.ValueMap;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
 
 /**
- * Servlet specific WebRequest subclass for multipart content uploads.
+ * Servlet-specific WebRequest subclass for multipart content uploads. Aimed to be used with tomcat 11+. This in
+ * combination with {@link TomcatUploadProgressListenerFactory} and the setting {@link org.apache.wicket.settings.ApplicationSettings#setUseTomcatNativeFileUpload(boolean)}
+ * allows to use tomcat's native multipart processing with progress reporting.
  *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Cameron Braid
  * @author Ate Douma
  * @author Igor Vaynberg (ivaynberg)
+ * @author Ernesto Reinaldo Barreiro (reiern70)
  */
-public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
+public class TomcatNativeMultipartServletWebRequestImpl extends MultipartServletWebRequest
 {
 	/** Map of file items. */
 	private final Map<String, List<FileItem>> files;
 
 	/** Map of parameters. */
 	private final ValueMap parameters;
-
-	private final String upload;
-	private final FileItemFactory fileItemFactory;
-
-	/**
-	 * total bytes uploaded (downloaded from server's pov) so far. used for upload notifications
-	 */
-	private int bytesUploaded;
-
-	/** content length cache, used for upload notifications */
-	private int totalBytes;
-
-	/**
-	 * Constructor.
-	 *
-	 * This constructor will use {@link DiskFileItemFactory} to store uploads.
-	 *
-	 * @param request
-	 *            the servlet request
-	 * @param filterPrefix
-	 *            prefix to wicket filter mapping
-	 * @param maxSize
-	 *            the maximum size allowed for this request
-	 * @param upload
-	 *            upload identifier for {@link UploadInfo}
-	 * @throws FileUploadException
-	 *             Thrown if something goes wrong with upload
-	 */
-	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
-										  Bytes maxSize, String upload) throws FileUploadException
-	{
-		this(request, filterPrefix, maxSize, upload,
-			DiskFileItemFactory.builder()
-					.setFileCleaningTracker(new FileCleanerTrackerAdapter(Application.get()
-							.getResourceSettings()
-							.getFileCleaner()))
-					.get());
-	}
 
 	/**
 	 * Constructor
@@ -108,22 +68,12 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *            prefix to wicket filter mapping
 	 * @param maxSize
 	 *            the maximum size allowed for this request
-	 * @param upload
-	 *            upload identifier for {@link UploadInfo}
-	 * @param factory
-	 *            {@link DiskFileItemFactory} to use when creating file items used to represent
-	 *            uploaded files
-	 * @throws FileUploadException
-	 *             Thrown if something goes wrong with upload
 	 */
-	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
-		Bytes maxSize, String upload, FileItemFactory factory) throws FileUploadException
+	public TomcatNativeMultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
+													  Bytes maxSize)
 	{
 		super(request, filterPrefix);
 
-		Args.notNull(upload, "upload");
-		this.upload = upload;
-		this.fileItemFactory = factory;
 		parameters = new ValueMap();
 		files = new HashMap<>();
 
@@ -156,43 +106,8 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 		}
 
-		AbstractFileUpload fileUpload = newFileUpload(encoding);
 
-		List<FileItem> items;
-
-		if (wantUploadProgressUpdates())
-		{
-			JakartaServletRequestContext ctx = new JakartaServletRequestContext(request)
-			{
-				@Override
-				public InputStream getInputStream() throws IOException
-				{
-					return new CountingInputStream(super.getInputStream());
-				}
-			};
-			totalBytes = request.getContentLength();
-
-			onUploadStarted(totalBytes);
-			try
-			{
-				items = fileUpload.parseRequest(ctx);
-			}
-			finally
-			{
-				onUploadCompleted();
-			}
-		}
-		else
-		{
-			// try to parse the file uploads by using Apache Commons FileUpload APIs
-			// because they are feature richer (e.g. progress updates, cleaner)
-			items = fileUpload.parseRequest(new JakartaServletRequestContext(request));
-			if (items.isEmpty())
-			{
-				// fallback to Servlet 3.0 APIs
-				items = readServlet3Parts(request);
-			}
-		}
+		List<FileItem> items = readServletParts(request);
 
 		// Loop through items
 		for (final FileItem item : items)
@@ -203,21 +118,20 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			{
 				// Set parameter value
 				final String value;
-				
-				try 
+				if (encoding != null)
 				{
-					if (encoding != null)
+					try
 					{
 						value = item.getString(Charset.forName(encoding));
 					}
-					else
+					catch (IOException e)
 					{
-						value = item.getString();
+						throw new WicketRuntimeException(e);
 					}
 				}
-				catch (IOException e)
+				else
 				{
-					throw new WicketRuntimeException(e);
+					value = item.getString();
 				}
 
 				addParameter(item.getFieldName(), value);
@@ -237,17 +151,19 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	}
 
 	/**
-	 * Reads the uploads' parts by using Servlet 3.0 APIs.
+	 * Reads the uploads' parts by using Servlet APIs. This is meant to be used with tomcat 11+;
 	 *
-	 * <strong>Note</strong>: By using Servlet 3.0 APIs the application won't be able to use
-	 * upload progress updates.
+	 * <strong>Note</strong>: Mind that in to get file upload with prpgres working you need to:
+	 *
+	 * 1) register a {@link TomcatUploadProgressListenerFactory}
+	 * 2) set to true {@link org.apache.wicket.settings.ApplicationSettings#setUseTomcatNativeFileUpload}
 	 *
 	 * @param request
 	 *              The http request with the upload data
 	 * @return A list of {@link FileItem}s
 	 * @throws FileUploadException
 	 */
-	private List<FileItem> readServlet3Parts(HttpServletRequest request) throws FileUploadException
+	private List<FileItem> readServletParts(HttpServletRequest request) throws FileUploadException
 	{
 		List<FileItem> itemsFromParts = new ArrayList<>();
 		try
@@ -257,7 +173,15 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			{
 				for (Part part : parts)
 				{
-					FileItem fileItem = new ServletPartFileItem(part);
+					FileItem fileItem = new ServletPartFileItem(part) {
+						@Override
+						public ServletPartFileItem write(Path path) throws IOException {
+							// we need to override this because supper method only uses file name and file is
+							// not stored.
+							getPart().write(path.toFile().getAbsolutePath());
+							return this;
+						}
+					};
 					itemsFromParts.add(fileItem);
 				}
 			}
@@ -266,36 +190,6 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			throw new FileUploadException("An error occurred while reading the upload parts", e);
 		}
 		return itemsFromParts;
-	}
-
-	/**
-	 * Factory method for creating new instances of AbstractFileUpload
-	 *
-	 * @param encoding
-	 *            The encoding to use while reading the data
-	 * @return A new instance of AbstractFileUpload
-	 */
-	protected AbstractFileUpload newFileUpload(String encoding) {
-		// Configure the factory here, if desired.
-		JakartaServletFileUpload fileUpload = new JakartaServletFileUpload(fileItemFactory);
-
-		// set encoding specifically when we found it
-		if (encoding != null)
-		{
-			Charset charset = Charset.forName(encoding);
-			fileUpload.setHeaderCharset(charset);
-		}
-
-		fileUpload.setSizeMax(getMaxSize().bytes());
-
-		Bytes fileMaxSize = getFileMaxSize();
-		if (fileMaxSize != null) {
-			fileUpload.setFileSizeMax(fileMaxSize.bytes());
-		}
-
-		fileUpload.setFileCountMax(getFileCountMax());
-
-		return fileUpload;
 	}
 
     /**
@@ -370,119 +264,6 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		return res;
 	}
 
-	/**
-	 * Subclasses that want to receive upload notifications should return true. By default, it takes
-	 * the value from {@link org.apache.wicket.settings.ApplicationSettings#isUploadProgressUpdatesEnabled()}.
-	 *
-	 * @return true if upload status update event should be invoked
-	 */
-	protected boolean wantUploadProgressUpdates()
-	{
-		return Application.get().getApplicationSettings().isUploadProgressUpdatesEnabled();
-	}
-
-	/**
-	 * Upload start callback
-	 *
-	 * @param totalBytes
-	 */
-	protected void onUploadStarted(int totalBytes)
-	{
-		onUploadStarted(getContainerRequest(), upload, totalBytes);
-	}
-
-	public static void onUploadStarted(HttpServletRequest request, String upload, long totalBytes)
-	{
-		UploadInfo info = new UploadInfo(totalBytes);
-
-		setUploadInfo(request, upload, info);
-	}
-
-	/**
-	 * Upload status update callback
-	 *
-	 * @param bytesUploaded
-	 * @param total
-	 */
-	protected void onUploadUpdate(int bytesUploaded, int total)
-	{
-		onUploadUpdate(getContainerRequest(), upload, bytesUploaded, total);
-	}
-
-	public static void onUploadUpdate(HttpServletRequest request, String upload, long bytesUploaded, long total)
-	{
-		UploadInfo info = getUploadInfo(request, upload);
-		if (info == null)
-		{
-			throw new IllegalStateException(
-					"could not find UploadInfo object in session which should have been set when uploaded started");
-		}
-		info.setBytesUploaded(bytesUploaded);
-		setUploadInfo(request, upload, info);
-	}
-
-	/**
-	 * Upload completed callback
-	 */
-	protected void onUploadCompleted()
-	{
-		clearUploadInfo(getContainerRequest(), upload);
-	}
-
-	public static void onUploadCompleted(HttpServletRequest request, String upload)
-	{
-		clearUploadInfo(request, upload);
-	}
-
-	/**
-	 * An {@link InputStream} that updates total number of bytes read
-	 *
-	 * @author Igor Vaynberg (ivaynberg)
-	 */
-	private class CountingInputStream extends InputStream
-	{
-
-		private final InputStream in;
-
-		/**
-		 * Constructs a new CountingInputStream.
-		 *
-		 * @param in
-		 *            InputStream to delegate to
-		 */
-		public CountingInputStream(InputStream in)
-		{
-			this.in = in;
-		}
-
-		@Override
-		public int read() throws IOException
-		{
-			int read = in.read();
-			bytesUploaded += (read < 0) ? 0 : 1;
-			onUploadUpdate(bytesUploaded, totalBytes);
-			return read;
-		}
-
-		@Override
-		public int read(byte[] b) throws IOException
-		{
-			int read = in.read(b);
-			bytesUploaded += (read < 0) ? 0 : read;
-			onUploadUpdate(bytesUploaded, totalBytes);
-			return read;
-		}
-
-		@Override
-		public int read(byte[] b, int off, int len) throws IOException
-		{
-			int read = in.read(b, off, len);
-			bytesUploaded += (read < 0) ? 0 : read;
-			onUploadUpdate(bytesUploaded, totalBytes);
-			return read;
-		}
-
-	}
 
 	@Override
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload)
@@ -519,7 +300,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		return this;
 	}
 
-	private static final String SESSION_KEY = MultipartServletWebRequestImpl.class.getName();
+	private static final String SESSION_KEY = TomcatNativeMultipartServletWebRequestImpl.class.getName();
 
 	private static String getSessionKey(String upload)
 	{

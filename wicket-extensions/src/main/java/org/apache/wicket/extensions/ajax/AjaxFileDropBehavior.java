@@ -31,6 +31,7 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
@@ -121,7 +122,7 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 		{
 			ServletWebRequest request = (ServletWebRequest)getComponent().getRequest();
 			final MultipartServletWebRequest multipartWebRequest = request
-				.newMultipartWebRequest(getMaxSize(), getComponent().getPage().getId());
+				.newMultipartWebRequest(getMaxSize(), Form.computeUploadId(getComponent().getPage()));
 			multipartWebRequest.setFileMaxSize(getFileMaxSize());
 			multipartWebRequest.setFileCountMax(getFileCountMax());
 			multipartWebRequest.parseFileParts();

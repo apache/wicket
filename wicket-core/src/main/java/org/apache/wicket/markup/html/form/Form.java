@@ -29,6 +29,7 @@ import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
 import org.apache.commons.fileupload2.core.FileUploadSizeException;
 import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.IRequestListener;
@@ -50,6 +51,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.protocol.http.servlet.TomcatUploadProgressListenerFactory;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
@@ -277,6 +279,11 @@ public class Form<T> extends WebMarkupContainer
 
 	/** True if the form has enctype of multipart/form-data */
 	private short multiPart = 0;
+
+	/**
+	 * The ID of the file upload.
+	 */
+	private String uploadId;
 
 	/**
 	 * A user has explicitly called {@link #setMultiPart(boolean)} with value {@code true} forcing
@@ -1451,7 +1458,7 @@ public class Form<T> extends WebMarkupContainer
 			{
 				ServletWebRequest request = (ServletWebRequest)getRequest();
 				final MultipartServletWebRequest multipartWebRequest = request.newMultipartWebRequest(
-					getMaxSize(), getPage().getId());
+					getMaxSize(), getUploadId());
 				multipartWebRequest.setFileMaxSize(getFileMaxSize());
 				multipartWebRequest.setFileCountMax(getFileCountMax());
 				multipartWebRequest.parseFileParts();
@@ -1475,6 +1482,37 @@ public class Form<T> extends WebMarkupContainer
 			}
 		}
 		return true;
+	}
+
+	/**
+	 *
+	 * @return The upload ID.
+	 */
+	public final String getUploadId()
+	{
+		if (uploadId != null)
+		{
+			return uploadId;
+		}
+		uploadId = computeUploadId(getPage());
+		return uploadId;
+	}
+
+	/**
+	 *	Computes the upload ID.
+	 *
+	 * @param page The {@link Page}
+	 * @return the upload ID.
+	 */
+	public static String computeUploadId(Page page) {
+		if (Application.get().getApplicationSettings().isUseTomcatNativeFileUpload()) {
+			String uploadId = TomcatUploadProgressListenerFactory.getUploadId();
+			if (uploadId != null) {
+				return uploadId;
+			}
+			throw new WicketRuntimeException("If you are using Tomcat for uploading files you should have registered a TomcatUploadProgressListenerFactory");
+		}
+		return page.getId();
 	}
 
 	/**
@@ -1669,6 +1707,9 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected CharSequence getActionUrl()
 	{
+		if (isMultiPart()) {
+			return urlForListener(new PageParameters().add("uploadId", getUploadId()));
+		}
 		return urlForListener(new PageParameters());
 	}
 

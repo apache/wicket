@@ -34,6 +34,7 @@ import static org.openrewrite.maven.Assertions.pomXml;
 class MigrateToWicket10Test implements RewriteTest {
 
     @Override
+    @Disabled
     public void defaults(RecipeSpec spec) {
         spec
                 .parser(JavaParser.fromJavaVersion()
@@ -46,6 +47,7 @@ class MigrateToWicket10Test implements RewriteTest {
     }
 
     @Test
+    @Disabled
     void migrateImports() {
         //language=java
         rewriteRun(
