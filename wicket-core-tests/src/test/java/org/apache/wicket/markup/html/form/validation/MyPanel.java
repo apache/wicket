@@ -57,7 +57,8 @@ public class MyPanel extends Panel
 			@Override
 			public FormComponent<?>[] getDependentFormComponents()
 			{
-				return null;
+				FormComponent textfield = (FormComponent) MyPanel.this.get("form3:textfield1");
+				return new FormComponent[] { textfield };
 			}
 
 			@Override
