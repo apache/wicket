@@ -65,7 +65,7 @@ public class FormVisitTest extends WicketTestCase
 		assertTrue(page.outerForm.onValidateModelObjectsCalled);
 		assertTrue(page.outerField.onValidCalled);
 		assertTrue(page.outerField.updateModelCalled);
-		assertFalse(formValidator.validatedCalled);
+		assertTrue(formValidator.validatedCalled);
 		assertTrue(page.innerForm.onValidateCalled);
 		assertTrue(page.innerForm.onSubmitCalled);
 		assertTrue(page.innerForm.isSubmittedFlagged);
@@ -87,7 +87,7 @@ public class FormVisitTest extends WicketTestCase
 		assertTrue(page.outerForm.onValidateModelObjectsCalled);
 		assertTrue(page.outerField.onValidCalled);
 		assertTrue(page.outerField.updateModelCalled);
-		assertFalse(formValidator.validatedCalled);
+		assertTrue(formValidator.validatedCalled);
 		assertFalse(page.innerForm.onValidateCalled);
 		assertFalse(page.innerForm.onSubmitCalled);
 		assertFalse(page.innerForm.isSubmittedFlagged);
@@ -240,7 +240,7 @@ public class FormVisitTest extends WicketTestCase
 		page.innerForm.add(formValidator);
 		tester.newFormTester("outerForm").submit();
 
-		assertFalse(formValidator.validatedCalled);
+		assertTrue(formValidator.validatedCalled);
 	}
 
 	@Test

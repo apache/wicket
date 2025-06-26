@@ -1962,7 +1962,9 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Validates form with the given form validator
+	 * Validates form with the given form validator. This method will validate the form
+	 * if there are no dependents or if at least one of the dependents is enabled, valid
+	 * and visible.
 	 *
 	 * @param validator
 	 */
@@ -2025,6 +2027,8 @@ public class Form<T> extends WebMarkupContainer
 			{
 				validator.validate(this);
 			}
+		} else
+			validator.validate(this);{
 		}
 	}
 
