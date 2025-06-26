@@ -1994,9 +1994,9 @@ public class Form<T> extends WebMarkupContainer
 				// no enabled dependents, so no need to validate
 				if (log.isWarnEnabled())
 				{
-                    log.warn("IFormValidator in form `" +
-                        getPageRelativePath() +
-                        "` depends on components, but none have been enabled.");
+					log.warn("IFormValidator in form `" +
+						getPageRelativePath() +
+						"` depends on components, but none have been enabled.");
 				}
 				return;
 			}
@@ -2015,10 +2015,10 @@ public class Form<T> extends WebMarkupContainer
 				{
 					if (log.isWarnEnabled())
 					{
-                        log.warn("IFormValidator in form `" +
-                            getPageRelativePath() +
-                            "` depends on a component that has been removed from the page or is no longer visible. " +
-                            "Offending component id `" + dependent.getId() + "`.");
+						log.warn("IFormValidator in form `" +
+							getPageRelativePath() +
+							"` depends on a component that has been removed from the page or is no longer visible. " +
+							"Offending component id `" + dependent.getId() + "`.");
 					}
 					validate = false;
 					break;
