@@ -1962,9 +1962,7 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Validates form with the given form validator. This method will validate the form
-	 * if there are no dependents or if at least one of the dependents is enabled, valid
-	 * and visible.
+	 * Validates form with the given form validator.
 	 *
 	 * @param validator
 	 */
@@ -1974,61 +1972,60 @@ public class Form<T> extends WebMarkupContainer
 
 		final FormComponent<?>[] dependents = validator.getDependentFormComponents();
 
-		if (dependents != null)
+		boolean validate = false;
+
+        if (dependents == null) {
+            validate = true;
+        } else {
+            for (final FormComponent<?> dependent : dependents)
+            {
+                if (dependent.isEnabledInHierarchy())
+                {
+                    validate = true;
+                    break;
+                }
+            }
+
+            if (!validate)
+            {
+                // no enabled dependents, so no need to validate
+                if (log.isWarnEnabled())
+                {
+                    log.warn("IFormValidator in form `" +
+                        getPageRelativePath() +
+                        "` depends on components, but none have been enabled.");
+                }
+                return;
+            }
+
+            for (final FormComponent<?> dependent : dependents)
+            {
+                // check if the dependent component is valid
+                if (!dependent.isValid())
+                {
+                    validate = false;
+                    break;
+                }
+                // check if the dependent component is visible and is attached to
+                // the page
+                else if (!dependent.isVisibleInHierarchy() || !dependent.isFormParticipant())
+                {
+                    if (log.isWarnEnabled())
+                    {
+                        log.warn("IFormValidator in form `" +
+                            getPageRelativePath() +
+                            "` depends on a component that has been removed from the page or is no longer visible. " +
+                            "Offending component id `" + dependent.getId() + "`.");
+                    }
+                    validate = false;
+                    break;
+                }
+            }
+        }
+
+        if (validate)
 		{
-			boolean validate = false;
-
-			for (final FormComponent<?> dependent : dependents)
-			{
-				if (dependent.isEnabledInHierarchy())
-				{
-					validate = true;
-					break;
-				}
-			}
-
-			if (!validate)
-			{
-				// no enabled dependents, so no need to validate
-				if (log.isWarnEnabled())
-				{
-					log.warn("IFormValidator in form `" +
-						getPageRelativePath() +
-						"` depends on components, but none have been enabled.");
-				}
-				return;
-			}
-
-			for (final FormComponent<?> dependent : dependents)
-			{
-				// check if the dependent component is valid
-				if (!dependent.isValid())
-				{
-					validate = false;
-					break;
-				}
-				// check if the dependent component is visible and is attached to
-				// the page
-				else if (!dependent.isVisibleInHierarchy() || !dependent.isFormParticipant())
-				{
-					if (log.isWarnEnabled())
-					{
-						log.warn("IFormValidator in form `" +
-							getPageRelativePath() +
-							"` depends on a component that has been removed from the page or is no longer visible. " +
-							"Offending component id `" + dependent.getId() + "`.");
-					}
-					validate = false;
-					break;
-				}
-			}
-
-			if (validate)
-			{
-				validator.validate(this);
-			}
-		} else
-			validator.validate(this);{
+			validator.validate(this);
 		}
 	}
 
