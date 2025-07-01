@@ -45,18 +45,18 @@ public class NestedFormsPage extends WebPage
 	/**
 	 * Construct.
 	 */
-	public NestedFormsPage()
+	public NestedFormsPage(boolean submitterVisible, boolean submitterEnabled)
 	{
 		feedback = new FeedbackPanel("feedback");
 		add(feedback.setOutputMarkupId(true));
 
-		Form<?> outerForm = new NestableForm("outerForm");
+		Form<?> outerForm = new NestableForm("outerForm", submitterVisible, submitterEnabled);
 		add(outerForm.setOutputMarkupId(true));
 
-		Form<?> middleForm = new NestableForm("middleForm");
+		Form<?> middleForm = new NestableForm("middleForm", submitterVisible, submitterEnabled);
 		outerForm.add(middleForm.setOutputMarkupId(true));
 
-		Form<?> innerForm = new NestableForm("innerForm");
+		Form<?> innerForm = new NestableForm("innerForm", submitterVisible, submitterEnabled);
 		middleForm.add(innerForm.setOutputMarkupId(true));
 	}
 
@@ -79,11 +79,11 @@ public class NestedFormsPage extends WebPage
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param id
 		 *            the form's id
 		 */
-        NestableForm(String id)
+		NestableForm(String id, boolean submitterVisible, boolean submitterEnabled)
 		{
 			super(id);
 			setDefaultModel(new CompoundPropertyModel<NestableForm>(this));
@@ -111,7 +111,7 @@ public class NestedFormsPage extends WebPage
 				}
 			});
 			add(new ToggleLink("toggle", this));
-			add(new SubmitLink("submit"));
+			add(new SubmitLink("submit").setVisible(submitterVisible).setEnabled(submitterEnabled));
 		}
 
 		@Override
