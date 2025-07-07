@@ -2,6 +2,20 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.6.0
+
+** Bug
+
+    * [WICKET-7156] - wicket-ioc: dependency on objenesis is optional in pom but not in module-info
+    * [WICKET-7159] - IFormValidator Skipped When Any Dependent Component is Disabled in Wicket 10.x
+
+** Improvement
+
+    * [WICKET-7154] - wicket multipart support is broken for tomcat 11.0.6
+    * [WICKET-7157] - Coping Url fragment when we use copy constructor 
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.5.0
 
 ** Bug
