@@ -62,7 +62,7 @@ class ApplicationSettingsTest
 	{
 		FrameworkSettings settings = new FrameworkSettings(new MockApplication());
 		String version = settings.getVersion();
-		assertTrue(version.equals("n/a") || version.matches("^(\\d+)\\.(\\d+)\\.(\\d+)(-SNAPSHOT?)$"));
+		assertTrue(version.equals("n/a") || version.matches("^(\\d+)\\.(\\d+)\\.(\\d+)(-SNAPSHOT)?$"));
 	}
 
 	/**
