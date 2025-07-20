@@ -179,7 +179,7 @@
 		<objenesis.version>3.4</objenesis.version>
 		<openjson.version>1.0.13</openjson.version>
 		<slf4j.version>2.0.17</slf4j.version>
-		<spring.version>6.2.8</spring.version>
+		<spring.version>6.2.9</spring.version>
 		<wagon-ssh-external.version>3.5.3</wagon-ssh-external.version>
 		<weld.version>4.0.3.Final</weld.version>
 		<velocity-engine-core.version>2.4.1</velocity-engine-core.version>
