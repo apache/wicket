@@ -111,7 +111,7 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IRequestL
 	 * 
 	 * @return the component that this handler is bound to
 	 */
-	protected final Component getComponent()
+	public final Component getComponent()
 	{
 		return component;
 	}
