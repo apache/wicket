@@ -21,6 +21,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.Decoder;
 import jakarta.websocket.Encoder;
 import jakarta.websocket.Extension;
@@ -127,18 +128,33 @@ public class WicketServerEndpointConfig implements ServerEndpointConfig
 			// do not store null keys/values because Tomcat 8 uses ConcurrentMap for UserProperties
 
 			Map<String, Object> userProperties = sec.getUserProperties();
+
+			URI requestURI = request.getRequestURI();
+			LOG.trace("requestURI: {}", requestURI);
+			if (requestURI != null)
+			{
+				userProperties.put("requestURI", requestURI);
+				String path = requestURI.getPath();
+				if (path != null && path.indexOf("/wicket") > 0) {
+					String contextPath = path.substring(0, path.indexOf("/wicket"));
+					userProperties.put(JavaxUpgradeHttpRequest.CONTEXT_PATH, contextPath);
+				}
+			}
+
 			Object httpSession = request.getHttpSession();
 			LOG.trace("httpSession: {}", httpSession);
-			if (httpSession != null)
+			userProperties.put(JavaxUpgradeHttpRequest.SESSION, httpSession);
+			if (httpSession instanceof HttpSession)
 			{
-				userProperties.put("session", httpSession);
+				userProperties.put(JavaxUpgradeHttpRequest.CONTEXT_PATH,((HttpSession)httpSession).getServletContext().getContextPath());
 			}
+
 
 			Map<String, List<String>> headers = request.getHeaders();
 			LOG.trace("headers: {}", headers);
 			if (headers != null)
 			{
-				userProperties.put("headers", headers);
+				userProperties.put(JavaxUpgradeHttpRequest.HEADERS, headers);
 			}
 
 
@@ -155,14 +171,6 @@ public class WicketServerEndpointConfig implements ServerEndpointConfig
 			if (queryString != null)
 			{
 				userProperties.put("queryString", queryString);
-			}
-
-
-			URI requestURI = request.getRequestURI();
-			LOG.trace("requestURI: {}", requestURI);
-			if (requestURI != null)
-			{
-				userProperties.put("requestURI", requestURI);
 			}
 
 			Principal userPrincipal = request.getUserPrincipal();

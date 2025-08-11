@@ -49,6 +49,8 @@ import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.Session;
 
 import org.apache.wicket.util.string.StringValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An artificial HttpServletRequest with data collected from the
@@ -56,6 +58,11 @@ import org.apache.wicket.util.string.StringValue;
  */
 public class JavaxUpgradeHttpRequest implements HttpServletRequest
 {
+	public static final String SESSION = "session";
+	public static final String HEADERS = "headers";
+	public static final String CONTEXT_PATH = "contextPath";
+	private static final Logger log = LoggerFactory.getLogger(JavaxUpgradeHttpRequest.class);
+
 	private final HttpSession httpSession;
 	private final String queryString;
 	private final Principal userPrincipal;
@@ -75,14 +82,13 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 			userProperties = endpointConfig.getUserProperties();
 		}
 
-		this.httpSession = (HttpSession) userProperties.get("session");
-		this.headers = (Map<String, List<String>>) userProperties.get("headers");
+		this.httpSession = (HttpSession) userProperties.get(SESSION);
+		this.headers = (Map<String, List<String>>) userProperties.get(HEADERS);
 		this.queryString = session.getQueryString();
 		this.userPrincipal = session.getUserPrincipal();
 		Object requestURI = session.getRequestURI();
 		this.requestUri = requestURI != null ? requestURI.toString() : "";
-		this.contextPath = httpSession.getServletContext().getContextPath();
-
+		this.contextPath = (String)userProperties.get(CONTEXT_PATH);
 		this.parametersMap = new HashMap<>();
 
 		Map<String, List<String>> parameters = session.getRequestParameterMap();
