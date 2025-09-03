@@ -65,6 +65,18 @@
                         <artifactId>jackson-core</artifactId>
                     </exclusion>
                     <exclusion>
+                        <groupId>com.fasterxml.jackson.datatype</groupId>
+                        <artifactId>jackson-datatype-jsr310</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.dataformat</groupId>
+                        <artifactId>jackson-dataformat-smile</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.module</groupId>
+                        <artifactId>jackson-module-parameter-names</artifactId>
+                    </exclusion>                    
+                    <exclusion>
                         <groupId>com.google.errorprone</groupId>
                         <artifactId>*</artifactId>
                     </exclusion>
