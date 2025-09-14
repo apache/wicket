@@ -38,7 +38,7 @@
             <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-migrate-java</artifactId>
-                <version>3.16.0</version>
+                <version>3.17.0</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.openrewrite.recipe</groupId>
