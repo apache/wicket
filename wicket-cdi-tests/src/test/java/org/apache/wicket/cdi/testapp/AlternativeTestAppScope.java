@@ -16,24 +16,19 @@
  */
 package org.apache.wicket.cdi.testapp;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.protocol.http.WebApplication;
+import jakarta.enterprise.inject.Alternative;
 
 /**
  * @author jsarman
  */
-public class TestApplication extends WebApplication
+@Alternative
+public class AlternativeTestAppScope extends TestAppScope
 {
 
 	@Override
-	public Class<? extends Page> getHomePage()
+	public String test()
 	{
-		return TestPage.class;
+		return "Alternative ok";
 	}
 
-	@Override
-	protected void init()
-	{
-		super.init();
-	}
 }

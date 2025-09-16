@@ -36,7 +36,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
@@ -1035,7 +1034,7 @@ public class Form<T> extends WebMarkupContainer
 			submitter.onError();
 		}
 
-		// invoke Form#onSubmit(..) going from innermost to outermost
+		// invoke Form#onError(..) going from innermost to outermost
 		visitFormsPostOrder(processingForm, (form, visit) -> {
 			if (!form.isEnabledInHierarchy() || !form.isVisibleInHierarchy())
 			{
@@ -1273,9 +1272,9 @@ public class Form<T> extends WebMarkupContainer
 		String submitId = component.getMarkupId();
 
 		AppendingStringBuffer script = new AppendingStringBuffer();
-		script.append("var b = document.getElementById('").append(submitId).append("');");
+		script.append("if (event.target.tagName.toLowerCase() !== 'input' || event.which != 13) return;");
+		script.append("var b = document.getElementById('" + submitId + "');");
 		script.append("if (window.getComputedStyle(b).visibility === 'hidden') return;");
-		script.append("if (event.which == 13) {");
 		script.append("event.stopPropagation();");
 		script.append("event.preventDefault();");
 		script.append("if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {");
@@ -1285,7 +1284,6 @@ public class Form<T> extends WebMarkupContainer
 		script.append("b.click();");
 		script.append("}");
 		script.append("return false;");
-		script.append("}");
 
 		headerResponse.render(OnEventHeaderItem.forMarkupId(getMarkupId(), "keypress", script.toString()));
 	}
@@ -1325,7 +1323,7 @@ public class Form<T> extends WebMarkupContainer
 		// collect all forms innermost to outermost before any hierarchy is changed
 		final List<Form<?>> forms = Generics.newArrayList(3);
 		visitFormsPostOrder(processingForm, (form, visit) -> {
-			if (form.isSubmitted())
+			if (form.isVisibleInHierarchy() && form.isEnabledInHierarchy())
 			{
 				forms.add(form);
 			}
@@ -1558,21 +1556,8 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected final void markFormComponentsValid()
 	{
-		markNestedFormComponentsValid();
-		internalMarkFormComponentsValid();
-	}
-
-	/**
-	 * Mark each form component on nested form valid.
-	 */
-	private void markNestedFormComponentsValid()
-	{
 		visitFormsPostOrder(this, (form, visit) -> {
-			if (form == Form.this)
-			{
-				return;
-			}
-			if (form.isSubmitted())
+			if (form.isVisibleInHierarchy() && form.isEnabledInHierarchy())
 			{
 				form.internalMarkFormComponentsValid();
 			}
@@ -1880,23 +1865,8 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected final void updateFormComponentModels()
 	{
-		updateNestedFormComponentModels();
-		internalUpdateFormComponentModels();
-	}
-
-	/**
-	 * Update the model of all components on nested forms.
-	 *
-	 * @see #updateFormComponentModels()
-	 */
-	private void updateNestedFormComponentModels()
-	{
 		visitFormsPostOrder(this, (form, visit) -> {
-			if (form == Form.this)
-			{
-				return;
-			}
-			if (form.isSubmitted())
+			if (form.isVisibleInHierarchy() && form.isEnabledInHierarchy())
 			{
 				form.internalUpdateFormComponentModels();
 			}
@@ -1924,14 +1894,15 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected final void validate()
 	{
-		// since this method can be called directly by users, this additional check is needed
-		if (isEnabledInHierarchy() && isVisibleInHierarchy())
-		{
-			validateNestedForms();
-			validateComponents();
-			validateFormValidators();
-			onValidate();
-		}
+		visitFormsPostOrder(this, (form, visit) -> {
+			// since this method can be called directly by users, this additional check is needed
+			if (form.isVisibleInHierarchy() && form.isEnabledInHierarchy())
+			{
+				form.validateComponents();
+				form.validateFormValidators();
+				form.onValidate();
+			}
+		});
 	}
 
 	/**
@@ -1949,16 +1920,11 @@ public class Form<T> extends WebMarkupContainer
 	private void internalOnValidateModelObjects()
 	{
 		visitFormsPostOrder(this, (form, visit) -> {
-			if (form == Form.this)
-			{
-				return;
-			}
-			if (form.isSubmitted())
+			if (form.isVisibleInHierarchy() && form.isEnabledInHierarchy())
 			{
 				form.onValidateModelObjects();
 			}
 		});
-		onValidateModelObjects();
 	}
 
 	/**
@@ -1996,7 +1962,7 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Validates form with the given form validator
+	 * Validates form with the given form validator.
 	 *
 	 * @param validator
 	 */
@@ -2006,10 +1972,35 @@ public class Form<T> extends WebMarkupContainer
 
 		final FormComponent<?>[] dependents = validator.getDependentFormComponents();
 
-		boolean validate = true;
+		boolean validate = false;
 
-		if (dependents != null)
+		if (dependents == null || dependents.length == 0)
 		{
+			validate = true;
+		}
+		else
+		{
+			for (final FormComponent<?> dependent : dependents)
+			{
+				if (dependent.isEnabledInHierarchy())
+				{
+					validate = true;
+					break;
+				}
+			}
+
+			if (!validate)
+			{
+				// no enabled dependents, so no need to validate
+				if (log.isWarnEnabled())
+				{
+					log.warn("IFormValidator in form `" +
+						getPageRelativePath() +
+						"` depends on components, but none have been enabled.");
+				}
+				return;
+			}
+
 			for (final FormComponent<?> dependent : dependents)
 			{
 				// check if the dependent component is valid
@@ -2020,13 +2011,13 @@ public class Form<T> extends WebMarkupContainer
 				}
 				// check if the dependent component is visible and is attached to
 				// the page
-				else if (!dependent.isVisibleInHierarchy() || !dependent.isEnabledInHierarchy() || !dependent.isFormParticipant())
+				else if (!dependent.isVisibleInHierarchy() || !dependent.isFormParticipant())
 				{
 					if (log.isWarnEnabled())
 					{
 						log.warn("IFormValidator in form `" +
 							getPageRelativePath() +
-							"` depends on a component that has been removed from the page or is no longer visible/enabled. " +
+							"` depends on a component that has been removed from the page or is no longer visible. " +
 							"Offending component id `" + dependent.getId() + "`.");
 					}
 					validate = false;
@@ -2053,28 +2044,6 @@ public class Form<T> extends WebMarkupContainer
 				validateFormValidator((IFormValidator)behavior);
 			}
 		}
-	}
-
-	/**
-	 * Validates {@link FormComponent}s as well as {@link IFormValidator}s in nested {@link Form}s.
-	 *
-	 * @see #validate()
-	 */
-	private void validateNestedForms()
-	{
-		visitFormsPostOrder(this, (form, visit) -> {
-			if (form == Form.this)
-			{
-				return;
-			}
-
-			if (form.isSubmitted())
-			{
-				form.validateComponents();
-				form.validateFormValidators();
-				form.onValidate();
-			}
-		});
 	}
 
 	/**

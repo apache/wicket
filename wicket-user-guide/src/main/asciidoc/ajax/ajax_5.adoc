@@ -1,7 +1,7 @@
 
 
 
-Starting from version 6.0 Wicket has introduced two entities which allow us to control how an AJAX request is generated on client side and to specify the custom JavaScript code we want to execute during request handling. These entities are class _AjaxRequestAttributes_ and interface _IAjaxCallListener_, both placed in package _org.apache.wicket.ajax.attributes_.
+Wicket has two entities which allow us to control how an AJAX request is generated on client side and to specify the custom JavaScript code we want to execute during request handling. These entities are class _AjaxRequestAttributes_ and interface _IAjaxCallListener_, both placed in package _org.apache.wicket.ajax.attributes_.
 
 AjaxRequestAttributes exposes the attributes used to generate the JavaScript call invoked on client side to start an AJAX request. Each attribute will be passed as a  http://en.wikipedia.org/wiki/JSON[JSON] parameter to the JavaScript function _Wicket.Ajax.ajax_ which is responsible for sending the concrete AJAX request. Every JSON parameter is identified by a short name. Here is a partial list of the available parameters:
 

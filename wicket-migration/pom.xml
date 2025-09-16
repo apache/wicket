@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.apache.wicket</groupId>
         <artifactId>wicket-parent</artifactId>
-        <version>10.3.0-SNAPSHOT</version>
+        <version>10.7.0-SNAPSHOT</version>
     </parent>
     <artifactId>wicket-migration</artifactId>
     <name>Wicket Migration</name>
@@ -14,12 +14,12 @@
             <dependency>
                 <groupId>jakarta.activation</groupId>
                 <artifactId>jakarta.activation-api</artifactId>
-                <version>2.1.3</version>
+                <version>2.1.4</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
-                <version>1.12.0</version>
+                <version>1.14.0</version>
             </dependency>
             <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
@@ -38,7 +38,7 @@
             <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-migrate-java</artifactId>
-                <version>2.29.0</version>
+                <version>3.17.0</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.openrewrite.recipe</groupId>
@@ -47,6 +47,50 @@
                     <exclusion>
                         <groupId>org.openrewrite.recipe</groupId>
                         <artifactId>rewrite-java-8</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.github.ben-manes.caffeine</groupId>
+                        <artifactId>caffeine</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-beans</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-annotations</artifactId>
+                    </exclusion>	
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.datatype</groupId>
+                        <artifactId>jackson-datatype-jsr310</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.dataformat</groupId>
+                        <artifactId>jackson-dataformat-smile</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.module</groupId>
+                        <artifactId>jackson-module-parameter-names</artifactId>
+                    </exclusion>                    
+                    <exclusion>
+                        <groupId>com.google.errorprone</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                     <exclusion>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.projectreactor</groupId>
+                        <artifactId>reactor-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.reactivestreams</groupId>
+                        <artifactId>reactive-streams</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -59,25 +103,25 @@
             <dependency>
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-core</artifactId>
-                <version>1.14.1</version>
+                <version>1.15.4</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.checkerframework</groupId>
                 <artifactId>checker-qual</artifactId>
-                <version>3.48.2</version>
+                <version>3.51.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
-                <version>26.0.1</version>
+                <version>26.0.2-1</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-recipe-bom</artifactId>
-                <version>2.21.1</version>
+                <version>3.14.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

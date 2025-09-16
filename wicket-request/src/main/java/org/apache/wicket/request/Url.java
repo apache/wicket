@@ -159,6 +159,7 @@ public class Url implements Serializable
 		port = url.port;
 		segments = new ArrayList<>(url.segments);
 		parameters = new ArrayList<>(url.parameters);
+		fragment = url.fragment;
 		charsetName = url.charsetName;
 		_charset = url._charset;
 		shouldRenderAsFull = url.shouldRenderAsFull;

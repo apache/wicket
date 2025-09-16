@@ -21,11 +21,11 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
- * Interface that represents validators that check multiple components. These validators are added
- * to the form and only executed if all form components returned by
+ * Interface representing validators that check multiple components. These validators are added
+ * to a form and are executed only if all form components returned by
  * {@link IFormValidator#getDependentFormComponents()} have been successfully validated before this
- * validator runs.
- * 
+ * validator is executed. The validator is also executed if the dependent form components
+ * return null or an empty array.
  *
  * @see AbstractFormValidator
  * @see org.apache.wicket.validation.IValidator
@@ -39,8 +39,10 @@ public interface IFormValidator extends IClusterable
 	FormComponent<?>[] getDependentFormComponents();
 
 	/**
-	 * This method is ran if all components returned by
-	 * {@link IFormValidator#getDependentFormComponents()} are valid.
+	 * This method is executed if there are no dependent form components, or if all components
+	 * returned by {@link IFormValidator#getDependentFormComponents()} are valid and visible.
+	 * If the dependent form components array is not empty, at least one of the components
+	 * must be enabled.
 	 *
 	 * <p>
 	 * To report validation error use

@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * Normally Urls are rendered relative to the base Url. Base Url is normally Url of the page being
  * rendered. However, during Ajax request and redirect to buffer rendering the BaseUrl needs to be
  * adjusted.
- * 
+ *
  * @author Matej Knopp
  * @author Igor Vaynberg
  */
@@ -53,7 +53,7 @@ public class UrlRenderer
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param request
 	 *            Request that serves as the base for rendering urls
 	 */
@@ -65,7 +65,7 @@ public class UrlRenderer
 
 	/**
 	 * Sets the base Url. All generated URLs will be relative to this Url.
-	 * 
+	 *
 	 * @param base
 	 * @return original base Url
 	 */
@@ -80,7 +80,7 @@ public class UrlRenderer
 
 	/**
 	 * Returns the base Url.
-	 * 
+	 *
 	 * @return base Url
 	 */
 	public Url getBaseUrl()
@@ -90,7 +90,7 @@ public class UrlRenderer
 
 	/**
 	 * Renders the Url
-	 * 
+	 *
 	 * @param url
 	 * @return Url rendered as string
 	 */
@@ -122,7 +122,7 @@ public class UrlRenderer
 
 	/**
 	 * Renders a full URL in the {@code protocol://hostname:port/path} format
-	 * 
+	 *
 	 * @param url
 	 * @return rendered URL
 	 */
@@ -148,10 +148,6 @@ public class UrlRenderer
 			Url base = new Url(baseUrl);
 			base.resolveRelative(url);
 			path = new StringBuilder(base.toString());
-		}
-		if (url.getFragment() != null)
-		{
-			path.append('#').append(url.getFragment());
 		}
 
 		StringBuilder render = new StringBuilder();
@@ -183,7 +179,7 @@ public class UrlRenderer
 
 	/**
 	 * Gets port that should be used to render the url
-	 * 
+	 *
 	 * @param url
 	 *            url being rendered
 	 * @return port or {@code null} if none is set
@@ -195,7 +191,7 @@ public class UrlRenderer
 
 	/**
 	 * Gets the host name that should be used to render the url
-	 * 
+	 *
 	 * @param url
 	 *            url being rendered
 	 * @return the host name or {@code null} if none is set
@@ -207,7 +203,7 @@ public class UrlRenderer
 
 	/**
 	 * Gets the protocol that should be used to render the url
-	 * 
+	 *
 	 * @param url
 	 *            url being rendered
 	 * @return the protocol or {@code null} if none is set
@@ -220,12 +216,12 @@ public class UrlRenderer
 
 	/**
 	 * Renders the Url relative to currently set Base Url.
-	 * 
+	 *
 	 * This method is only intended for Wicket URLs, because the {@link Url} object represents part
 	 * of URL after Wicket Filter.
-	 * 
+	 *
 	 * For general URLs within context use {@link #renderContextRelativeUrl(String)}
-	 * 
+	 *
 	 * @param url
 	 * @return Url rendered as string
 	 */
@@ -312,7 +308,7 @@ public class UrlRenderer
 
 	/**
 	 * Removes common prefixes like empty first segment, context path and filter path.
-	 * 
+	 *
 	 * @param request
 	 *            the current web request
 	 * @param segments
@@ -355,7 +351,7 @@ public class UrlRenderer
 
 	/**
 	 * Determines whether a URL should be rendered in its full form
-	 * 
+	 *
 	 * @param url
 	 * @return {@code true} if URL should be rendered in the full form
 	 */
@@ -390,7 +386,7 @@ public class UrlRenderer
 
 	/**
 	 * Renders the URL within context relative to current base URL.
-	 * 
+	 *
 	 * @param url
 	 * @return relative URL
 	 */

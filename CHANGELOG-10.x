@@ -2,6 +2,75 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.6.0
+
+** Bug
+
+    * [WICKET-7156] - wicket-ioc: dependency on objenesis is optional in pom but not in module-info
+    * [WICKET-7159] - IFormValidator Skipped When Any Dependent Component is Disabled in Wicket 10.x
+
+** Improvement
+
+    * [WICKET-7154] - wicket multipart support is broken for tomcat 11.0.6
+    * [WICKET-7157] - Coping Url fragment when we use copy constructor 
+
+=======================================================================
+
+Release Notes - Wicket - Version 10.5.0
+
+** Bug
+
+    * [WICKET-7147] - Paramter order of null checks incorrect
+    * [WICKET-7148] - Removing Metadata from Application not possible
+    * [WICKET-7150] - Cyclic dependency between wicket-native-websocket-core and wicket-native-websocket-javax modules
+
+** New Feature
+
+    * [WICKET-7152] - Extend RedirectRequestHandler for statusCodes 307 and 308
+
+** Improvement
+
+    * [WICKET-7134] - To refactor Form processing code
+    * [WICKET-7149] - Add Integrity and CrossOrigin values to ResourceReference and related code
+    * [WICKET-7151] - Misleading message when a Link component is added with wrong id
+    * [WICKET-7153] - [Resources] modify RootMapper in order to allow to define a refferent ResourceReferenceMapper
+
+=======================================================================
+
+Release Notes - Wicket - Version 10.4.0
+
+** Bug
+
+    * [WICKET-7140] - Form submit triggered by pressing return in textareas
+
+** Improvement
+
+    * [WICKET-7137] - Make resource URL sanitization extendable
+    * [WICKET-7138] - Support URL fragment with PageParameters class
+
+** Task
+
+    * [WICKET-7139] - Update OSGi imports for Wicket 9.x
+
+=======================================================================
+
+Release Notes - Wicket - Version 10.3.0
+
+** Bug
+
+    * [WICKET-3899] - IFormVisitorParticipant don't get tested when validating form validators dependent components
+    * [WICKET-7024] - Wrong static resource urls when their generation is triggered by <wicket:link>
+    * [WICKET-7124] - The quickstart archetype fails to build 
+    * [WICKET-7125] - To use cdi-unit CreationalContext to inject beans in Wicket components during tests
+
+** Improvement
+
+    * [WICKET-7123] - Form.setDefaultButton() supports only one button per form hierarchy
+    * [WICKET-7131] - Improve accessibility and screen reader support for auto-complete component
+    * [WICKET-7133] - Ability move focus back to the autocomplete field when selecting an item using the Tab key
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.2.0
 
 ** Bug

@@ -19,7 +19,7 @@ module org.apache.wicket.ioc {
     requires org.apache.wicket.util;
     requires org.apache.wicket.core;
     requires net.bytebuddy;
-    requires org.objenesis;
+    requires static org.objenesis;
 
     exports org.apache.wicket.injection;
     exports org.apache.wicket.proxy;

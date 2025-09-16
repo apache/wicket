@@ -126,7 +126,8 @@
 			});
 
 			Wicket.Event.add(obj, 'keydown', function (jqEvent) {
-				switch(Wicket.Event.keyCode(jqEvent)){
+				var keyCode = Wicket.Event.keyCode(jqEvent);
+				switch (keyCode) {
 					case KEY_UP:
 						if (elementCount > 0) {
 							if (selected>-1) {
@@ -182,6 +183,12 @@
 							}
 
 							hideAutoComplete();
+
+							if (cfg.keyTabBehavior === 'selectFocusAutocompleteInput' && keyCode === KEY_TAB) {
+								// prevent moving focus to the next component if an item in the dropdown is selected
+								// using the Tab key
+								jqEvent.preventDefault();
+							}
 
 							ignoreKeyEnter = true;
 						} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {

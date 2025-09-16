@@ -781,7 +781,7 @@ class UrlTest
 		String protocol = "myProtocol";
 		String host = "www.example.com";
 		Integer port = 12345;
-		Url url = Url.parse("segment1/segment2?name1=value1");
+		Url url = Url.parse("segment1/segment2?name1=value1#fragment");
 		url.setProtocol(protocol);
 		url.setHost(host);
 		url.setPort(port);
@@ -798,6 +798,7 @@ class UrlTest
 		assertEquals(protocol, copy.getProtocol());
 		assertEquals(host, copy.getHost());
 		assertEquals(port, copy.getPort());
+		assertEquals("fragment", copy.getFragment());
 	}
 
 	/**

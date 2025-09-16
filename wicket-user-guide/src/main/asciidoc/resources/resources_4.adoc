@@ -12,8 +12,8 @@ Header entries are instances of abstract class _org.apache.wicket.markup.head.He
 * *OnLoadHeaderItem:* the JavaScript code added with this class is executed after the whole page is loaded, external files included. The factory method is _forScript(CharSequence javaScript)_.
 * *PriorityHeaderItem:* it wraps another header item and ensures that it will have the priority over the other items during rendering phase.
 * *StringHeaderItem:* with this class we can add an arbitrary text to the header section. Factory method is _forString(CharSequence string)_.
-* *MetaDataHeaderItem:* starting from version 6.17.0, Wicket provides this class to handle meta information such as <meta> tags or http://en.wikipedia.org/wiki/Canonical_link_element[canonical link element]
-* *HtmlImportHeaderItem:* introduced in Wicket 6.19.0, provides a HTML5 functionality to include other wicket pages (other html files) into the current generated. Factory methods provided by this class are _forImportLinkTag_ which takes the page class or the url of the page / html to be included.
+* *MetaDataHeaderItem:* Wicket provides this class to handle meta information such as <meta> tags or http://en.wikipedia.org/wiki/Canonical_link_element[canonical link element]
+* *HtmlImportHeaderItem:* provides a HTML5 functionality to include other wicket pages (other html files) into the current generated. Factory methods provided by this class are _forImportLinkTag_ which takes the page class or the url of the page / html to be included.
 
 
 In the following example our custom component loads a CSS file as a package resource (placed in the same package) and it adds it to header section. 

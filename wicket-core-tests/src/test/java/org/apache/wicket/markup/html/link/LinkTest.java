@@ -14,41 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi.testapp;
+package org.apache.wicket.markup.html.link;
 
-import jakarta.inject.Inject;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.MockPageWithLink;
+import org.apache.wicket.markup.MarkupNotFoundException;
+import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.jupiter.api.Test;
 
-/**
- * @author jsarman
- */
-public class TestCdiApplication extends WebApplication
+public class LinkTest extends WicketTestCase
 {
+    @Test
+    void testWrongComponentId()
+    {
+        MockPageWithLink mockPageWithLink = new MockPageWithLink();
+        Link<Void> link = new Link<Void>("linkx")
+        {
+            private static final long serialVersionUID = 1L;
 
-	@Inject
-	@TestQualifier
-	String testString;
+            @Override
+            public void onClick()
+            {
+            }
 
+        };
 
-	@Override
-	public Class<? extends Page> getHomePage()
-	{
-		return TestPage.class;
-	}
-
-	@Override
-	protected void init()
-	{
-		super.init();
-		new CdiConfiguration().configure(this);
-	}
-
-	public String getInjectedTestString()
-	{
-		return testString;
-	}
-
+        mockPageWithLink.add(link);
+        assertThrows(MarkupNotFoundException.class, () -> tester.startPage(mockPageWithLink));
+    }
 }

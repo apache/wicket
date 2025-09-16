@@ -1,6 +1,6 @@
 
 Wicket makes working with AJAX easy and pleasant with its component-oriented abstraction. However as side effect, AJAX components and behaviors make their hosting page stateful. This can be quite annoying if we are working on a page that must be stateless (for example a login page).
-Starting from version 7.4.0 Wicket has made quite easy forcing existing AJAX components to be stateless. All we have to do is to override component's method _getStatelessHint_ returning true:
+Wicket makes quite easy forcing existing AJAX components to be stateless. All we have to do is to override component's method _getStatelessHint_ returning true:
 
 [source,java]
 ----

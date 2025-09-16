@@ -1,5 +1,5 @@
 
-Starting from version 1.5 Wicket offers an event-based infrastructure for inter-component communication. The infrastructure is based on two simple interfaces (both in package _org.apache.wicket.event_) : _IEventSource_ and _IEventSink_.
+Wicket offers an event-based infrastructure for inter-component communication. The infrastructure is based on two simple interfaces (both in package _org.apache.wicket.event_) : _IEventSource_ and _IEventSink_.
 
 The first interface must be implemented by those entities that want to broadcast en event while the second interface must be implemented by those entities that want to receive a broadcast event.
 

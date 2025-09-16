@@ -2578,7 +2578,7 @@ public class BaseWicketTester
 	public String getContentTypeFromResponseHeader()
 	{
 		String contentType = getLastResponse().getContentType();
-		assertNotNull("No Content-Type header found", contentType);
+		assertNotNull(contentType, "No Content-Type header found");
 		return contentType;
 	}
 
@@ -2590,7 +2590,7 @@ public class BaseWicketTester
 	public int getContentLengthFromResponseHeader()
 	{
 		String contentLength = getLastResponse().getHeader("Content-Length");
-		assertNotNull("No Content-Length header found", contentLength);
+		assertNotNull(contentLength, "No Content-Length header found");
 		return Integer.parseInt(contentLength);
 	}
 

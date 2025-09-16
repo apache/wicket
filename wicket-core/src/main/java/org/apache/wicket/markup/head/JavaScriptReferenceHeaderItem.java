@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -39,6 +40,8 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 	implements
 		IReferenceHeaderItem
 {
+	private static final long serialVersionUID = 1L;
+	
 	private final ResourceReference reference;
 	private final PageParameters pageParameters;
 
@@ -140,4 +143,26 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 		return java.util.Objects.equals(reference, that.reference) &&
 				java.util.Objects.equals(pageParameters, that.pageParameters);
 	}
+	
+	@Override 
+	public String getIntegrity()
+	{
+		String tempIntegrity = super.getIntegrity();
+		if (tempIntegrity == null)
+		{
+			tempIntegrity = reference.getIntegrity();
+		}
+		return tempIntegrity;
+	}
+	
+	@Override
+	public CrossOrigin getCrossOrigin()
+	{
+		CrossOrigin tempOrigin = super.getCrossOrigin();
+		if (tempOrigin == null)
+		{
+			tempOrigin = reference.getCrossOrigin();
+		}
+		return tempOrigin;
+	}	
 }

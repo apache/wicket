@@ -68,6 +68,7 @@ You will find the source code here:
 	    |-- wicket-auth-roles
 	    |-- wicket-bean-validation
 	    |-- wicket-cdi
+	    |-- wicket-cdi-tests
 	    |-- wicket-core
 	    |-- wicket-tester
 	    |-- wicket-core-tests

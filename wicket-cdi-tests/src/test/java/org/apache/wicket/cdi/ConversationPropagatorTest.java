@@ -18,21 +18,18 @@ package org.apache.wicket.cdi;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import jakarta.enterprise.context.Conversation;
-import jakarta.inject.Inject;
-
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestConversationalPage;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import jakarta.enterprise.context.Conversation;
+import jakarta.inject.Inject;
 
 /**
  * @author jsarman
  */
-// FIXME Wicket 10. Re-enable once cdi-unit is adapted to jakarta.**
-@Disabled
 class ConversationPropagatorTest extends WicketCdiTestCase
 {
 	@Inject

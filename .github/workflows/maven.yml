@@ -16,14 +16,15 @@ jobs:
     strategy:
       matrix:
         java:
+        - '17'
         - '21'
-        - '23'
+        - '24'
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Setup Temurin JDK
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
@@ -36,7 +37,7 @@ jobs:
 
     - name: Install Maven
       run: |
-        wget https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
+        wget --retry-connrefused --tries=5 --waitretry=5 --read-timeout=20 --timeout=15 https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
         tar -xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz
 
     - name: Cache Maven packages

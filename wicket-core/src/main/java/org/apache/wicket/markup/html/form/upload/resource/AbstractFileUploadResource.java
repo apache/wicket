@@ -31,8 +31,10 @@ import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,7 +96,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 		final ServletWebRequest webRequest = (ServletWebRequest) attributes.getRequest();
 
 		// get the ID of the upload field (it should be unique per application)
-		String uploadId = webRequest.getRequestParameters().getParameterValue(UPLOAD_ID).toString("resource");
+		String uploadId = getUploadId(webRequest);
 
 		Bytes maxSize = getMaxSize(webRequest);
 		Bytes fileMaxSize = getFileMaxSize(webRequest);
@@ -244,6 +246,14 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 		}
 	}
 
+	// Use getQueryParameters() instead of getRequestParameters() to avoid reading POST parameters
+	// Consuming the POST parameters would cause the request to be empty when reading it as
+	// MultipartServletWebRequest
+	// See WICKET-7154 for more details
+	private StringValue getParameterValue(WebRequest request, String parameterName) {
+		return request.getQueryParameters().getParameterValue(parameterName);
+	}
+
 	/**
 	 * Defines what is the maximum (total) size  of the uploaded files.
 	 *
@@ -253,7 +263,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	{
 		try
 		{
-			return Bytes.bytes(webRequest.getRequestParameters().getParameterValue("maxSize").toLong());
+			return Bytes.bytes(getParameterValue(webRequest, "maxSize").toLong());
 		}
 		catch (StringValueConversionException e)
 		{
@@ -269,8 +279,18 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 */
 	private Bytes getFileMaxSize(ServletWebRequest webRequest)
 	{
-		long fileMaxSize = webRequest.getRequestParameters().getParameterValue("fileMaxSize").toLong(-1);
+		long fileMaxSize = getParameterValue(webRequest, "fileMaxSize").toLong(-1);
 		return fileMaxSize > 0 ? Bytes.bytes(fileMaxSize) : null;
+	}
+
+	/**
+	 * Return the unique ID identifying the upload.
+	 *
+	 * @return String
+	 */
+	private String getUploadId(ServletWebRequest webRequest)
+	{
+		return getParameterValue(webRequest, UPLOAD_ID).toString("upload");
 	}
 
 	/**
@@ -280,7 +300,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 */
 	private long getFileCountMax(ServletWebRequest webRequest)
 	{
-		return webRequest.getRequestParameters().getParameterValue("fileCountMax").toLong(-1);
+		return getParameterValue(webRequest, "fileCountMax").toLong(-1);
 	}
 
 	/**
