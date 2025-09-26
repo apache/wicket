@@ -529,13 +529,15 @@ public class FormVisitTest extends WicketTestCase
 		}
 
 		@Override
-		protected void onBeforeUpdateFormComponentModels() {
+		protected void onBeforeUpdateFormComponentModels()
+		{
 			onBeforeUpdateFormComponentModelsCalled = true;
 			onBeforeUpdateFormComponentModelsCallOrder = sequence++;
 		}
 
 		@Override
-		protected void onAfterUpdateFormComponentModels() {
+		protected void onAfterUpdateFormComponentModels()
+		{
 			onAfterUpdateFormComponentModelsCalled = true;
 			onAfterUpdateFormComponentModelsCallOrder = sequence++;
 		}
