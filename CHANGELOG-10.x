@@ -2,6 +2,19 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.7.0
+
+** Improvement
+
+    * [WICKET-7141] - Add hook method afterUpdateFormComponentModels() in Form process
+    * [WICKET-7162] - avoid NPE when web socket upgrade request is done in a stateless context
+
+** Wish
+
+    * [WICKET-7142] - Allow public access for AbstractAjaxBehavior#getComponent()
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.6.0
 
 ** Bug
