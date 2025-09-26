@@ -62,6 +62,8 @@ public class FormVisitTest extends WicketTestCase
 		assertTrue(page.outerForm.onValidateCalled);
 		assertTrue(page.outerForm.onSubmitCalled);
 		assertTrue(page.outerForm.isSubmittedFlagged);
+		assertTrue(page.outerForm.onBeforeUpdateFormComponentModelsCalled);
+		assertTrue(page.outerForm.onAfterUpdateFormComponentModelsCalled);
 		assertTrue(page.outerForm.onValidateModelObjectsCalled);
 		assertTrue(page.outerField.onValidCalled);
 		assertTrue(page.outerField.updateModelCalled);
@@ -69,6 +71,8 @@ public class FormVisitTest extends WicketTestCase
 		assertTrue(page.innerForm.onValidateCalled);
 		assertTrue(page.innerForm.onSubmitCalled);
 		assertTrue(page.innerForm.isSubmittedFlagged);
+		assertTrue(page.innerForm.onBeforeUpdateFormComponentModelsCalled);
+		assertTrue(page.innerForm.onAfterUpdateFormComponentModelsCalled);
 		assertTrue(page.innerForm.onValidateModelObjectsCalled);
 		assertTrue(page.innerField.onValidCalled);
 		assertTrue(page.innerField.updateModelCalled);
@@ -84,6 +88,8 @@ public class FormVisitTest extends WicketTestCase
 		assertTrue(page.outerForm.onValidateCalled);
 		assertTrue(page.outerForm.onSubmitCalled);
 		assertTrue(page.outerForm.isSubmittedFlagged);
+		assertTrue(page.outerForm.onBeforeUpdateFormComponentModelsCalled);
+		assertTrue(page.outerForm.onAfterUpdateFormComponentModelsCalled);
 		assertTrue(page.outerForm.onValidateModelObjectsCalled);
 		assertTrue(page.outerField.onValidCalled);
 		assertTrue(page.outerField.updateModelCalled);
@@ -91,6 +97,8 @@ public class FormVisitTest extends WicketTestCase
 		assertFalse(page.innerForm.onValidateCalled);
 		assertFalse(page.innerForm.onSubmitCalled);
 		assertFalse(page.innerForm.isSubmittedFlagged);
+		assertFalse(page.innerForm.onBeforeUpdateFormComponentModelsCalled);
+		assertFalse(page.innerForm.onAfterUpdateFormComponentModelsCalled);
 		assertFalse(page.innerForm.onValidateModelObjectsCalled);
 		assertFalse(page.innerField.onValidCalled);
 		assertFalse(page.innerField.updateModelCalled);
@@ -105,6 +113,8 @@ public class FormVisitTest extends WicketTestCase
 		assertFalse(page.outerForm.onValidateCalled);
 		assertFalse(page.outerForm.onSubmitCalled);
 		assertFalse(page.outerForm.isSubmittedFlagged);
+		assertFalse(page.outerForm.onBeforeUpdateFormComponentModelsCalled);
+		assertFalse(page.outerForm.onAfterUpdateFormComponentModelsCalled);
 		assertFalse(page.outerForm.onValidateModelObjectsCalled);
 		assertFalse(page.outerField.onValidCalled);
 		assertFalse(page.outerField.updateModelCalled);
@@ -112,6 +122,8 @@ public class FormVisitTest extends WicketTestCase
 		assertTrue(page.innerForm.onValidateCalled);
 		assertTrue(page.innerForm.onSubmitCalled);
 		assertTrue(page.innerForm.isSubmittedFlagged);
+		assertTrue(page.innerForm.onBeforeUpdateFormComponentModelsCalled);
+		assertTrue(page.innerForm.onAfterUpdateFormComponentModelsCalled);
 		assertTrue(page.innerForm.onValidateModelObjectsCalled);
 		assertTrue(page.innerField.onValidCalled);
 		assertTrue(page.innerField.updateModelCalled);
@@ -329,6 +341,32 @@ public class FormVisitTest extends WicketTestCase
 
 		assertTrue(page.innerField.onValidCallOrder < page.outerField.onValidCallOrder);
 	}
+	
+	@Test
+	public void callInnerFormOnBeforeUpdateFormComponentModels()
+	{
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(page.innerForm.onBeforeUpdateFormComponentModelsCalled);
+	}
+
+	@Test
+	public void dontCallInnerFormOnBeforeUpdateFormComponentModels()
+	{
+		page.innerForm.wantSubmitOnParentFormSubmit = false;
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(page.innerForm.onBeforeUpdateFormComponentModelsCalled);
+	}
+
+	@Test
+	public void callFormOnBeforeUpdateFormComponentModelsInPostOrder()
+	{
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(
+			page.innerForm.onBeforeUpdateFormComponentModelsCallOrder < page.outerForm.onBeforeUpdateFormComponentModelsCallOrder);
+	}
 
 	@Test
 	public void updateInnerFormComponentModel()
@@ -353,6 +391,32 @@ public class FormVisitTest extends WicketTestCase
 		tester.newFormTester("outerForm").submit();
 
 		assertTrue(page.innerField.updateModelOrder < page.outerField.updateModelOrder);
+	}
+
+	@Test
+	public void callInnerFormOnAfterUpdateFormComponentModels()
+	{
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(page.innerForm.onAfterUpdateFormComponentModelsCalled);
+	}
+
+	@Test
+	public void dontCallInnerFormOnAfterUpdateFormComponentModels()
+	{
+		page.innerForm.wantSubmitOnParentFormSubmit = false;
+		tester.newFormTester("outerForm").submit();
+
+		assertFalse(page.innerForm.onAfterUpdateFormComponentModelsCalled);
+	}
+
+	@Test
+	public void callFormOnAfterUpdateFormComponentModelsInPostOrder()
+	{
+		tester.newFormTester("outerForm").submit();
+
+		assertTrue(
+			page.innerForm.onAfterUpdateFormComponentModelsCallOrder < page.outerForm.onAfterUpdateFormComponentModelsCallOrder);
 	}
 
 	@Test
@@ -445,6 +509,10 @@ public class FormVisitTest extends WicketTestCase
 		boolean onErrorCalled;
 		boolean onSubmitCalled;
 		boolean isSubmittedFlagged;
+		boolean onBeforeUpdateFormComponentModelsCalled;
+		int onBeforeUpdateFormComponentModelsCallOrder;
+		boolean onAfterUpdateFormComponentModelsCalled;
+		int onAfterUpdateFormComponentModelsCallOrder;
 		boolean onValidateModelObjectsCalled;
 		int onValidateModelObjectsCallOrder;
 		int numberOfOnErrorCalls;
@@ -477,6 +545,20 @@ public class FormVisitTest extends WicketTestCase
 		protected void onValidate()
 		{
 			onValidateCalled = true;
+		}
+
+		@Override
+		protected void onBeforeUpdateFormComponentModels()
+		{
+			onBeforeUpdateFormComponentModelsCalled = true;
+			onBeforeUpdateFormComponentModelsCallOrder = sequence++;
+		}
+
+		@Override
+		protected void onAfterUpdateFormComponentModels()
+		{
+			onAfterUpdateFormComponentModelsCalled = true;
+			onAfterUpdateFormComponentModelsCallOrder = sequence++;
 		}
 
 		@Override
