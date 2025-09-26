@@ -1292,7 +1292,6 @@ public class Form<T> extends WebMarkupContainer
 		headerResponse.render(OnEventHeaderItem.forMarkupId(getMarkupId(), "keypress", script.toString()));
 	}
 
-
 	/**
 	 * Template method to allow clients to do any processing (like recording the current model so
 	 * that, in case onSubmit does further validation, the model can be rolled back) before the
