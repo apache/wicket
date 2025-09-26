@@ -411,7 +411,7 @@ public class FormVisitTest extends WicketTestCase
 	}
 
 	@Test
-	public void callFormOnAfterUpdateFormComponentModelsInPostorder()
+	public void callFormOnAfterUpdateFormComponentModelsInPostOrder()
 	{
 		tester.newFormTester("outerForm").submit();
 
