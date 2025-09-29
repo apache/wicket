@@ -72,7 +72,7 @@ org.apache.wicket.extensions.validation.validator;-noimport:=true,
 org.apache.wicket.extensions.wizard;-noimport:=true,
 org.apache.wicket.extensions.wizard.dynamic;-noimport:=true
                 </osgi.export.package>
-		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",javax.servlet,javax.servlet.http,*</osgi.import.package>
 	</properties>
 	<dependencies>
 		<dependency>
