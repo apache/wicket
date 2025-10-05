@@ -18,6 +18,7 @@ jobs:
         java:
         - '17'
         - '21'
+        - '25'
 
     steps:
     - uses: actions/checkout@v5
