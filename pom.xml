@@ -1474,7 +1474,7 @@
 		<profile>
 			<id>on-jdk-early-access</id>
 			<activation>
-				<jdk>[25,)</jdk>
+				<jdk>[26,)</jdk>
 			</activation>
 			<properties>
 				<javadoc.jdk.apidocs.link>https://download.java.net/java/early_access/jdk${java.specification.version}/docs/api/</javadoc.jdk.apidocs.link>
