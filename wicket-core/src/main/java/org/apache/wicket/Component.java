@@ -2386,7 +2386,7 @@ public abstract class Component
 		// prefer concatenation over String#format() for performance 
 		response.write(
 			"<" + name + " id=\"" + getAjaxRegionMarkupId() +
-				"\" hidden=\"\" data-wicket-placeholder=\"\"></" + name + ">");
+				"\" aria-hidden=\"true\" hidden=\"\" data-wicket-placeholder=\"\"></" + name + ">");
 	}
 
 
