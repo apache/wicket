@@ -893,6 +893,7 @@
 								<instructions>
 									<Export-Package>${osgi.export.package}</Export-Package>
 									<Import-Package>${osgi.import.package}</Import-Package>
+                                                                        <Include-Resource>${project.build.outputDirectory}, {maven-resources}</Include-Resource>
 									<DynamicImport-Package>${osgi.dynamicimport.package}</DynamicImport-Package>
 									<_nouses>true</_nouses>
 									<_noee>true</_noee>
@@ -1256,6 +1257,8 @@
 					</configuration>
 					<executions>
 						<execution>
+                                                        <id>optimize</id>
+                                                        <phase>prepare-package</phase>
 							<goals>
 								<goal>optimize</goal>
 							</goals>
