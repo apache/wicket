@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-bean-validation</artifactId>
-	<packaging>bundle</packaging>
+	<packaging>jar</packaging>
 	<name>Wicket Bean Validation</name>
 	<properties>
 		<osgi.export.package>org.apache.wicket.bean.validation*;-noimport:=true</osgi.export.package>
