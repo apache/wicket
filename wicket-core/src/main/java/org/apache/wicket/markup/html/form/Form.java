@@ -1206,7 +1206,7 @@ public class Form<T> extends WebMarkupContainer
 			{
 				if (object instanceof Form form)
 				{
-					return form.wantSubmitOnParentFormSubmit();
+					return form == formToProcess || form.wantSubmitOnParentFormSubmit();
 				}
 				return true;
 			}
