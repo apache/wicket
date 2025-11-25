@@ -64,9 +64,9 @@ public class ApplicationContextMock extends AbstractApplicationContext implement
 	 * @param name
 	 * @param bean
 	 */
-	public <T extends Object> void putBean(final String name, final T bean)
+	public <T> void putBean(final String name, final T bean)
 	{
-		beanFactory.registerBeanDefinition(name, new RootBeanDefinition((Class<T>)bean.getClass(), () -> bean));
+		beanFactory.registerBeanDefinition(name, new RootBeanDefinition((Class<T>) bean.getClass(), () -> bean));
 	}
 
 	/**
