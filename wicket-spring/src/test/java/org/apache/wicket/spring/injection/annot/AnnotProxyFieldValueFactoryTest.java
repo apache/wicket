@@ -39,7 +39,7 @@ import jakarta.inject.Inject;
  * 
  * @author hosea
  */
-public class AnnotProxyFieldValueFactoryDefaultCandidateTest
+public class AnnotProxyFieldValueFactoryTest
 {
 
 	@ParameterizedTest
