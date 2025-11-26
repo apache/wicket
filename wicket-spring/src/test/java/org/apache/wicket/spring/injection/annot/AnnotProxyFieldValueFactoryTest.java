@@ -80,23 +80,6 @@ public abstract class AnnotProxyFieldValueFactoryTest
 	}
 
 	/**
-	 * Test creation fails with null springcontextlocator
-	 */
-	@Test
-	public void testNullContextLocator()
-	{
-		try
-		{
-			new AnnotProxyFieldValueFactory(null);
-			fail();
-		}
-		catch (IllegalArgumentException e)
-		{
-			// noop
-		}
-	}
-
-	/**
 	 * @throws Exception
 	 */
 	@Test

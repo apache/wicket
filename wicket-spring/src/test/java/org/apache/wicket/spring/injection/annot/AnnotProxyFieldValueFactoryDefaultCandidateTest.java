@@ -58,6 +58,7 @@ public class AnnotProxyFieldValueFactoryDefaultCandidateTest
 		assertSame(somebean, beanByClassLocator.locateProxyTarget());
 	}
 
+
 	@ParameterizedTest
 	@MethodSource("beans")
 	public void shouldCreateProxyForClass(final Object obj) throws Exception {
@@ -154,6 +155,15 @@ public class AnnotProxyFieldValueFactoryDefaultCandidateTest
 		return Stream.of(new SpringBeanInjectable(), new JakartaInjectInjectable());
 	}
 
+	/**
+	 * Test creation fails with null springcontextlocator
+	 * Mock for an object with some Jakarta-Inject annotations
+	 */
+   @Test
+   public void testNullContextLocator()
+   {
+	   Assertions.assertThrows(IllegalArgumentException.class, () -> new AnnotProxyFieldValueFactory(null));
+   }
 
 	/**
 	 * Mock for an object with some Jakarta-Inject annotations
