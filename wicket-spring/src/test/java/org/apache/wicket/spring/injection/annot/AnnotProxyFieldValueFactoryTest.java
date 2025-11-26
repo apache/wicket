@@ -35,8 +35,8 @@ import jakarta.inject.Inject;
 
 /**
  * Tests for AnnotProxyFieldValueFactory
- * https://issues.apache.org/jira/browse/WICKET-7170
  * 
+ * @author igor
  * @author hosea
  */
 public class AnnotProxyFieldValueFactoryTest
@@ -145,6 +145,7 @@ public class AnnotProxyFieldValueFactoryTest
 		assertNull(beanByClassProxy);
 	}
 
+	// https://issues.apache.org/jira/browse/WICKET-7170
 	@ParameterizedTest
 	@MethodSource("beans")
 	public void shouldCreateProxyForUniqueDefaultCandidate_beanNameAmbiguous(final Object obj) throws Exception {
