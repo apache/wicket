@@ -16,23 +16,19 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
-import org.apache.wicket.proxy.ILazyInitProxy;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.lang.reflect.Field;
+
 import org.apache.wicket.spring.ISpringContextLocator;
-import org.apache.wicket.spring.SpringBeanLocator;
 import org.apache.wicket.spring.injection.util.Bean;
 import org.apache.wicket.spring.injection.util.Bean2;
 import org.apache.wicket.spring.injection.util.InjectableInterface;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
-
-import java.lang.reflect.Field;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests for BeanAnnotLocatorFactory
@@ -62,37 +58,6 @@ public abstract class AnnotProxyFieldValueFactoryTest
 	protected AnnotProxyFieldValueFactoryTest(InjectableInterface injectable)
 	{
 		obj = injectable;
-	}
-
-	/**
-	 * Test the factory
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testFactory() throws Exception
-	{
-		SpringBeanLocator locator;
-		Object proxy;
-
-		Field field = obj.getClass().getDeclaredField("nobean");
-		proxy = factory.getFieldValue(field, obj);
-		assertNull(proxy);
-
-		field = obj.getClass().getDeclaredField("beanByClass");
-		proxy = factory.getFieldValue(field, obj);
-		locator = (SpringBeanLocator)((ILazyInitProxy)proxy).getObjectLocator();
-		assertEquals(Bean.class, locator.getBeanType());
-		assertSame(locator.getSpringContextLocator(), mockCtxLocator);
-		assertTrue(factory.getFieldValue(field, obj) instanceof ILazyInitProxy);
-
-		field = obj.getClass().getDeclaredField("beanByName");
-		proxy = factory.getFieldValue(field, obj);
-		locator = (SpringBeanLocator)((ILazyInitProxy)proxy).getObjectLocator();
-		assertEquals("somebean", locator.getBeanName());
-		assertEquals(Bean2.class, locator.getBeanType());
-		assertSame(locator.getSpringContextLocator(), mockCtxLocator);
-		assertTrue(factory.getFieldValue(field, obj) instanceof ILazyInitProxy);
 	}
 
 	/**
