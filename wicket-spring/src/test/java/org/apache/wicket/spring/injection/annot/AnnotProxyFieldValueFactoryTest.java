@@ -16,224 +16,102 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import org.apache.wicket.proxy.ILazyInitProxy;
+import org.apache.wicket.spring.ISpringContextLocator;
+import org.apache.wicket.spring.SpringBeanLocator;
+import org.apache.wicket.spring.injection.util.Bean;
+import org.apache.wicket.spring.injection.util.Bean2;
+import org.apache.wicket.spring.injection.util.InjectableInterface;
+import org.apache.wicket.spring.test.ApplicationContextMock;
+import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Field;
-import java.util.stream.Stream;
 
-import org.apache.wicket.proxy.ILazyInitProxy;
-import org.apache.wicket.proxy.IProxyTargetLocator;
-import org.apache.wicket.spring.test.ApplicationContextMock;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests for BeanAnnotLocatorFactory
  * 
  * @author igor
  */
-public class AnnotProxyFieldValueFactoryTest
+public abstract class AnnotProxyFieldValueFactoryTest
 {
-	@ParameterizedTest
-	@MethodSource("beans")
-	public void shouldCreateProxyForBeanName(final Object obj) throws Exception {
-		final Bean somebean = new Bean();
-		final ApplicationContextMock applicationContext = new ApplicationContextMock();
-		// add two beans to make sure wiring by name is different by wiring by class
-		applicationContext.putBean(new Bean());
-		applicationContext.putBean("somebean", somebean);
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
-		final Field beanByClassField = obj.getClass().getDeclaredField("beanByName");
-		final Object beanByClassProxy = factory.getFieldValue(beanByClassField, obj);
-		final ILazyInitProxy lazyInitProxy = assertInstanceOf(ILazyInitProxy.class, beanByClassProxy);
-		final IProxyTargetLocator beanByClassLocator = lazyInitProxy.getObjectLocator();
-		assertSame(somebean, beanByClassLocator.locateProxyTarget());
-	}
+	ISpringContextLocator mockCtxLocator = new ISpringContextLocator()
+	{
+		private static final long serialVersionUID = 1L;
 
-	@ParameterizedTest
-	@MethodSource("beans")
-	public void shouldThrowExceptionIfBeanNameNotFound(final Object obj) throws Exception {
-		final Bean somebean = new Bean();
-		final ApplicationContextMock applicationContext = new ApplicationContextMock();
-		// add two beans to make sure wiring by name is different by wiring by class
-		applicationContext.putBean(new Bean());
-		applicationContext.putBean("wrongNameBean", somebean);
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
+		@Override
+		public ApplicationContext getSpringContext()
+		{
+			ApplicationContextMock mock = new ApplicationContextMock();
+			mock.putBean(new Bean());
+			mock.putBean("somebean", new Bean2());
+			return mock;
+		}
+	};
 
-		final Field beanByClassField = obj.getClass().getDeclaredField("beanByName");
-		Assertions.assertThrows(IllegalStateException.class,  () -> factory.getFieldValue(beanByClassField, obj));
-	}
+	protected final InjectableInterface obj;
 
-	@ParameterizedTest
-	@MethodSource("beans")
-	public void shouldCreateProxyForClass(final Object obj) throws Exception {
-		final Bean bean = new Bean();
-		final ApplicationContextMock applicationContext = new ApplicationContextMock();
-		applicationContext.putBean(bean);
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
+	protected final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(mockCtxLocator);
 
-		final Field beanByClassField = obj.getClass().getDeclaredField("beanByClass");
-		final Object proxy = factory.getFieldValue(beanByClassField, obj);
-		final ILazyInitProxy lazyInitProxy = assertInstanceOf(ILazyInitProxy.class, proxy);
-		final IProxyTargetLocator beanByClassLocator = lazyInitProxy.getObjectLocator();
-		assertSame(bean, beanByClassLocator.locateProxyTarget());
-	}
-
-	@ParameterizedTest
-	@MethodSource("beans")
-	public void shouldThrowException_beanNameAmbiguous(final Object obj) throws Exception {
-		final Bean primaryBean = new Bean();
-		final ApplicationContextMock applicationContext = new ApplicationContextMock();
-		// add two beans to make ambiguous
-		applicationContext.putBean("anyBean", new Bean());
-		applicationContext.putBean("primaryBean", primaryBean);
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
-
-		final Field beanByClassField = obj.getClass().getDeclaredField("beanByClass");
-		Assertions.assertThrows(IllegalStateException.class, () -> factory.getFieldValue(beanByClassField, obj));
-	}
-
-	@ParameterizedTest
-	@MethodSource("beans")
-	public void shouldCreateProxyForUniquePrimary_beanNameAmbiguous(final Object obj) throws Exception {
-		final Bean primaryBean = new Bean();
-		final ApplicationContextMock applicationContext = new ApplicationContextMock();
-		// add two beans to make ambiguous
-		applicationContext.putBean("anyBean", new Bean());
-		applicationContext.putBean("primaryBean", primaryBean);
-		applicationContext.getBeanFactory().getBeanDefinition("primaryBean").setPrimary(true);
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
-
-		final Field beanByClassField = obj.getClass().getDeclaredField("beanByClass");
-		final Object beanByClassProxy = factory.getFieldValue(beanByClassField, obj);
-		final ILazyInitProxy lazyInitProxy = assertInstanceOf(ILazyInitProxy.class, beanByClassProxy);
-		final IProxyTargetLocator beanByClassLocator = lazyInitProxy.getObjectLocator();
-		assertSame(primaryBean, beanByClassLocator.locateProxyTarget());
-	}
-
-	@ParameterizedTest
-	@MethodSource("beans")
-	public void shouldCreateProxyForUniqueDefaultCandidate_beanNameAmbiguous(final Object obj) throws Exception {
-		final Bean defaultCandidate = new Bean();
-		final ApplicationContextMock applicationContext = new ApplicationContextMock();
-		// add two beans to make ambiguous
-		applicationContext.putBean("anyBean", new Bean());
-		applicationContext.putBean("primaryBean", defaultCandidate);
-		final AbstractBeanDefinition abstractBeanDefinition = (AbstractBeanDefinition) applicationContext.getBeanFactory().getBeanDefinition("anyBean");
-		abstractBeanDefinition.setDefaultCandidate(false);
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
-
-		final Field beanByClassField = obj.getClass().getDeclaredField("beanByClass");
-		final Object beanByClassProxy = factory.getFieldValue(beanByClassField, obj);
-		final ILazyInitProxy lazyInitProxy = assertInstanceOf(ILazyInitProxy.class, beanByClassProxy);
-		final IProxyTargetLocator beanByClassLocator = lazyInitProxy.getObjectLocator();
-		assertSame(defaultCandidate, beanByClassLocator.locateProxyTarget());
-	}
-
-	@ParameterizedTest
-	@MethodSource("beans")
-	public void shouldCreateProxyForFieldname_beanNameAmbiguous(final Object obj) throws Exception {
-		final Bean bean = new Bean();
-		final ApplicationContextMock applicationContext = new ApplicationContextMock();
-		applicationContext.putBean(new Bean());
-		applicationContext.putBean("beanByClass", bean);
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
-
-		final Field beanByClassField = obj.getClass().getDeclaredField("beanByClass");
-		final Object proxy = factory.getFieldValue(beanByClassField, obj);
-		final ILazyInitProxy lazyInitProxy = assertInstanceOf(ILazyInitProxy.class, proxy);
-		final IProxyTargetLocator beanByClassLocator = lazyInitProxy.getObjectLocator();
-		assertSame(bean, beanByClassLocator.locateProxyTarget());
-	}
-
-	@ParameterizedTest
-	@MethodSource("beans")
-	public void shouldIgnoreUnannotatedFields(final Object obj) throws Exception {
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(ApplicationContextMock::new);
-
-		final Field beanByClassField = obj.getClass().getDeclaredField("nobean");
-		final Object beanByClassProxy = factory.getFieldValue(beanByClassField, obj);
-		assertNull(beanByClassProxy);
+	protected AnnotProxyFieldValueFactoryTest(InjectableInterface injectable)
+	{
+		obj = injectable;
 	}
 
 	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5686
+	 * Test the factory
+	 * 
 	 * @throws Exception
 	 */
-	@ParameterizedTest
-	@MethodSource("beans")
-	public void required(final Object obj) throws Exception
-	{
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(ApplicationContextMock::new);
-		final Field field = obj.getClass().getDeclaredField("beanByClass");
-		Assertions.assertThrows(IllegalStateException.class, () -> factory.getFieldValue(field, obj));
-	}
-
 	@Test
-	public void optional() throws Exception
+	public void testFactory() throws Exception
 	{
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(ApplicationContextMock::new);
-		final SpringBeanInjectable springBeanInjectable = new SpringBeanInjectable();
-		final Field field = springBeanInjectable.getClass().getDeclaredField("optional");
-		Assertions.assertNull(factory.getFieldValue(field, springBeanInjectable));
-	}
+		SpringBeanLocator locator;
+		Object proxy;
 
-	@ParameterizedTest
-	@MethodSource("beans")
-	public void lookupNonProxy(final Object obj) throws Exception{
-		final Bean bean = new Bean();
-		final ApplicationContextMock applicationContext = new ApplicationContextMock();
-		applicationContext.putBean(bean);
-		final boolean wrapInProxies = false;
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext, wrapInProxies);
+		Field field = obj.getClass().getDeclaredField("nobean");
+		proxy = factory.getFieldValue(field, obj);
+		assertNull(proxy);
 
-		final Field beanByClassField = obj.getClass().getDeclaredField("beanByClass");
-		final Object value = factory.getFieldValue(beanByClassField, obj);
-		assertSame(bean, value);
+		field = obj.getClass().getDeclaredField("beanByClass");
+		proxy = factory.getFieldValue(field, obj);
+		locator = (SpringBeanLocator)((ILazyInitProxy)proxy).getObjectLocator();
+		assertEquals(Bean.class, locator.getBeanType());
+		assertSame(locator.getSpringContextLocator(), mockCtxLocator);
+		assertTrue(factory.getFieldValue(field, obj) instanceof ILazyInitProxy);
+
+		field = obj.getClass().getDeclaredField("beanByName");
+		proxy = factory.getFieldValue(field, obj);
+		locator = (SpringBeanLocator)((ILazyInitProxy)proxy).getObjectLocator();
+		assertEquals("somebean", locator.getBeanName());
+		assertEquals(Bean2.class, locator.getBeanType());
+		assertSame(locator.getSpringContextLocator(), mockCtxLocator);
+		assertTrue(factory.getFieldValue(field, obj) instanceof ILazyInitProxy);
 	}
 
 	/**
 	 * test the cache, make sure the same proxy is returned for the same dependency it represents
+	 * 
+	 * @throws Exception
 	 */
-	@ParameterizedTest
-	@MethodSource("beans")
-	public void testCacheForBeanName(final Object obj) throws Exception
+	@Test
+	public void testCache() throws Exception
 	{
-		final ApplicationContextMock applicationContext = new ApplicationContextMock();
-		applicationContext.putBean(new Bean());
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
-
-		final Field field = obj.getClass().getDeclaredField("beanByClass");
-		final Object proxy1 = factory.getFieldValue(field, obj);
-		final Object proxy2 = factory.getFieldValue(field, obj);
+		Field field = obj.getClass().getDeclaredField("beanByClass");
+		Object proxy1 = factory.getFieldValue(field, obj);
+		Object proxy2 = factory.getFieldValue(field, obj);
 		assertSame(proxy1, proxy2);
-	}
 
-	@ParameterizedTest
-	@MethodSource("beans")
-	public void testCacheForClass(final Object obj) throws Exception
-	{
-		final ApplicationContextMock applicationContext = new ApplicationContextMock();
-		applicationContext.putBean(new Bean());
-		applicationContext.putBean("somebean", new Bean());
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
-
-		final Field field = obj.getClass().getDeclaredField("beanByName");
-		final Object proxy1 = factory.getFieldValue(field, obj);
-		final Object proxy2 = factory.getFieldValue(field, obj);
+		field = obj.getClass().getDeclaredField("beanByName");
+		proxy1 = factory.getFieldValue(field, obj);
+		proxy2 = factory.getFieldValue(field, obj);
 		assertSame(proxy1, proxy2);
-	}
-
-	private static Stream<Object> beans() {
-		return Stream.of(new SpringBeanInjectable(), new JakartaInjectInjectable());
 	}
 
 	/**
@@ -242,63 +120,46 @@ public class AnnotProxyFieldValueFactoryTest
 	@Test
 	public void testNullContextLocator()
 	{
-		Assertions.assertThrows(IllegalArgumentException.class, () -> new AnnotProxyFieldValueFactory(null));
-	}
-
-
-	/**
-	 * Mock for an object with some SpringBean annotations
-	 *
-	 * @author Igor Vaynberg (ivaynberg)
-	 *
-	 */
-	public static class JakartaInjectInjectable
-	{
-		private Bean nobean;
-
-		@Inject
-		private Bean beanByClass;
-
-		@Inject
-		@Named("somebean")
-		private Bean beanByName;
-
-		@Override
-		public String toString() {
-			return "JakartaInjectInjectable";
+		try
+		{
+			new AnnotProxyFieldValueFactory(null);
+			fail();
+		}
+		catch (IllegalArgumentException e)
+		{
+			// noop
 		}
 	}
 
 	/**
-	 * Mock for an object with some SpringBean annotations
-	 *
-	 * @author Igor Vaynberg (ivaynberg)
+	 * @throws Exception
 	 */
-	public static class SpringBeanInjectable
+	@Test
+	public void testFailsIfBeanWithIdIsNotFound() throws Exception
 	{
-		private Bean nobean;
-
-		@SpringBean
-		private Bean beanByClass;
-
-		@SpringBean(name = "somebean")
-		private Bean beanByName;
-
-		@SpringBean(required = false)
-		private Bean optional;
-
-		@Override
-		public String toString() {
-			return "SpringBeanInjectable";
+		InjectableWithReferenceToNonexistingBean obj = new InjectableWithReferenceToNonexistingBean();
+		Field field = obj.getClass().getDeclaredField("nonExisting");
+		try
+		{
+			final Bean bean = (Bean)factory.getFieldValue(field, obj);
+			/*
+			 * returned bean will not be null even though the bean is not found. what we get instead
+			 * is a proxy. we invoke a method on the proxy in order to cause it to try to locate the
+			 * bean and that is when it will fail
+			 */
+			bean.method();
+			fail();
+		}
+		catch (RuntimeException e)
+		{
+			// expected
+			assertTrue(true);
 		}
 	}
 
-	/**
-	 * Mock spring bean
-	 *
-	 * @author Igor Vaynberg (ivaynberg)
-	 */
-	public static class Bean
+	static class InjectableWithReferenceToNonexistingBean
 	{
+		@SpringBean(name = "nonExisting")
+		private Bean nonExisting;
 	}
 }
