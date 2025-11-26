@@ -218,6 +218,19 @@ public class AnnotProxyFieldValueFactoryDefaultCandidateTest
 		Assertions.assertNull(factory.getFieldValue(field, springBeanInjectable));
 	}
 
+	@ParameterizedTest
+	@MethodSource("beans")
+	public void lookupNonProxy(final Object obj) throws Exception{
+		final Bean bean = new Bean();
+		final ApplicationContextMock applicationContext = new ApplicationContextMock();
+		applicationContext.putBean(bean);
+		final boolean wrapInProxies = false;
+		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext, wrapInProxies);
+
+		final Field beanByClassField = obj.getClass().getDeclaredField("beanByClass");
+		final Object value = factory.getFieldValue(beanByClassField, obj);
+		assertSame(bean, value);
+	}
 
 	private static Stream<Object> beans() {
 		return Stream.of(new SpringBeanInjectable(), new JakartaInjectInjectable());

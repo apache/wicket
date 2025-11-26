@@ -36,5 +36,5 @@ public class JakartaInjectAnnotProxyFieldValueFactoryTest extends AnnotProxyFiel
 	{
 		super(new JakartaInjectInjectable());
 	}
-	
+
 }
