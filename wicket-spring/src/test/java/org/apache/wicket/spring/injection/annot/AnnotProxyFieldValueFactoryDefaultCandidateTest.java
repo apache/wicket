@@ -196,6 +196,28 @@ public class AnnotProxyFieldValueFactoryDefaultCandidateTest
 		assertSame(proxy1, proxy2);
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5686
+	 * @throws Exception
+	 */
+	@ParameterizedTest
+	@MethodSource("beans")
+	public void required(final Object obj) throws Exception
+	{
+		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(ApplicationContextMock::new);
+		final Field field = obj.getClass().getDeclaredField("beanByClass");
+		Assertions.assertThrows(IllegalStateException.class, () -> factory.getFieldValue(field, obj));
+	}
+
+	@Test
+	public void optional() throws Exception
+	{
+		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(ApplicationContextMock::new);
+		final SpringBeanInjectable springBeanInjectable = new SpringBeanInjectable();
+		final Field field = springBeanInjectable.getClass().getDeclaredField("optional");
+		Assertions.assertNull(factory.getFieldValue(field, springBeanInjectable));
+	}
+
 
 	private static Stream<Object> beans() {
 		return Stream.of(new SpringBeanInjectable(), new JakartaInjectInjectable());

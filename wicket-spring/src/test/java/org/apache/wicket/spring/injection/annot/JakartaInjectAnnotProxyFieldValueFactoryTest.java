@@ -36,24 +36,5 @@ public class JakartaInjectAnnotProxyFieldValueFactoryTest extends AnnotProxyFiel
 	{
 		super(new JakartaInjectInjectable());
 	}
-
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5686
-	 * @throws Exception
-	 */
-	@Test
-	public void required() throws Exception
-	{
-		Field field = obj.getClass().getDeclaredField("nonExisting");
-		try
-		{
-			factory.getFieldValue(field, obj);
-			fail("Fields annotated with @Inject are required!");
-		}
-		catch (IllegalStateException isx)
-		{
-			// expected
-			assertTrue(true);
-		}
-	}
+	
 }
