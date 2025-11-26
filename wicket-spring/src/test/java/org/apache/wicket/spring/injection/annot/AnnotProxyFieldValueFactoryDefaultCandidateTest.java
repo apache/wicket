@@ -164,6 +164,39 @@ public class AnnotProxyFieldValueFactoryDefaultCandidateTest
 		assertSame(defaultCandidate, beanByClassLocator.locateProxyTarget());
 	}
 
+	/**
+	 * test the cache, make sure the same proxy is returned for the same dependency it represents
+	 */
+	@ParameterizedTest
+	@MethodSource("beans")
+	public void testCacheForBeanName(final Object obj) throws Exception
+	{
+		final ApplicationContextMock applicationContext = new ApplicationContextMock();
+		applicationContext.putBean(new Bean());
+		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
+
+		final Field field = obj.getClass().getDeclaredField("beanByClass");
+		final Object proxy1 = factory.getFieldValue(field, obj);
+		final Object proxy2 = factory.getFieldValue(field, obj);
+		assertSame(proxy1, proxy2);
+	}
+
+	@ParameterizedTest
+	@MethodSource("beans")
+	public void testCacheForClass(final Object obj) throws Exception
+	{
+		final ApplicationContextMock applicationContext = new ApplicationContextMock();
+		applicationContext.putBean(new Bean());
+		applicationContext.putBean("somebean", new Bean());
+		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
+
+		final Field field = obj.getClass().getDeclaredField("beanByName");
+		final Object proxy1 = factory.getFieldValue(field, obj);
+		final Object proxy2 = factory.getFieldValue(field, obj);
+		assertSame(proxy1, proxy2);
+	}
+
+
 	private static Stream<Object> beans() {
 		return Stream.of(new SpringBeanInjectable(), new JakartaInjectInjectable());
 	}
