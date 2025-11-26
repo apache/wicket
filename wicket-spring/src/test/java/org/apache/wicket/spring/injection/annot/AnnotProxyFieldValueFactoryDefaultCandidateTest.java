@@ -58,6 +58,19 @@ public class AnnotProxyFieldValueFactoryDefaultCandidateTest
 		assertSame(somebean, beanByClassLocator.locateProxyTarget());
 	}
 
+	@ParameterizedTest
+	@MethodSource("beans")
+	public void shouldThrowExceptionIfBeanNameNotFound(final Object obj) throws Exception {
+		final Bean somebean = new Bean();
+		final ApplicationContextMock applicationContext = new ApplicationContextMock();
+		// add two beans to make sure wiring by name is different by wiring by class
+		applicationContext.putBean(new Bean());
+		applicationContext.putBean("wrongNameBean", somebean);
+		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
+
+		final Field beanByClassField = obj.getClass().getDeclaredField("beanByName");
+		Assertions.assertThrows(IllegalStateException.class,  () -> factory.getFieldValue(beanByClassField, obj));
+	}
 
 	@ParameterizedTest
 	@MethodSource("beans")
