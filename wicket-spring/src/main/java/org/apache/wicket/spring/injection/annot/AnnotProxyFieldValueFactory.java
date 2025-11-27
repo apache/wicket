@@ -256,7 +256,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			// 2. Is there a bean with the same name as the field?
 			// 3. Is there exactly one bean marked as default candidate?
 			final String exactMatchBeanName = Optional.ofNullable(detectPrimaryBeanName(ctx, names))
-			  .or(() -> Optional.ofNullable(detectBeanNameByFieldname(fieldName, names)))
+			  .or(() -> Optional.ofNullable(detectBeanNameByFieldName(fieldName, names)))
 			  .orElseGet(() -> detectDefaultCandidateBeanName(ctx, names));
 
 			// If so: take that beanname
