@@ -17,6 +17,7 @@
 package org.apache.wicket.spring.injection.annot;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.lang.reflect.Field;
@@ -32,6 +33,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Tests for AnnotProxyFieldValueFactory
@@ -44,7 +46,8 @@ public class AnnotProxyFieldValueFactoryTest
 
 	@ParameterizedTest
 	@MethodSource("beans")
-	public void shouldCreateProxyForBeanName(final Object obj) throws Exception {
+	public void shouldCreateProxyForBeanName(final Object obj) throws Exception
+	{
 		final Bean somebean = new Bean();
 		final ApplicationContextMock applicationContext = new ApplicationContextMock();
 		// add two beans to make sure wiring by name is different by wiring by class
@@ -60,7 +63,8 @@ public class AnnotProxyFieldValueFactoryTest
 
 	@ParameterizedTest
 	@MethodSource("beans")
-	public void shouldThrowExceptionIfBeanNameNotFound(final Object obj) throws Exception {
+	public void shouldThrowExceptionIfBeanNameNotFound(final Object obj) throws Exception
+	{
 		final Bean somebean = new Bean();
 		final ApplicationContextMock applicationContext = new ApplicationContextMock();
 		// add two beans to make sure wiring by name is different by wiring by class
@@ -74,7 +78,8 @@ public class AnnotProxyFieldValueFactoryTest
 
 	@ParameterizedTest
 	@MethodSource("beans")
-	public void shouldCreateProxyForClass(final Object obj) throws Exception {
+	public void shouldCreateProxyForClass(final Object obj) throws Exception
+	{
 		final Bean bean = new Bean();
 		final ApplicationContextMock applicationContext = new ApplicationContextMock();
 		applicationContext.putBean(bean);
@@ -89,7 +94,8 @@ public class AnnotProxyFieldValueFactoryTest
 
 	@ParameterizedTest
 	@MethodSource("beans")
-	public void shouldThrowException_beanNameAmbiguous(final Object obj) throws Exception {
+	public void shouldThrowException_beanNameAmbiguous(final Object obj) throws Exception
+	{
 		final Bean primaryBean = new Bean();
 		final ApplicationContextMock applicationContext = new ApplicationContextMock();
 		// add two beans to make ambiguous
@@ -103,7 +109,8 @@ public class AnnotProxyFieldValueFactoryTest
 
 	@ParameterizedTest
 	@MethodSource("beans")
-	public void shouldCreateProxyForUniquePrimary_beanNameAmbiguous(final Object obj) throws Exception {
+	public void shouldCreateProxyForUniquePrimary_beanNameAmbiguous(final Object obj) throws Exception
+	{
 		final Bean primaryBean = new Bean();
 		final ApplicationContextMock applicationContext = new ApplicationContextMock();
 		// add two beans to make ambiguous
@@ -121,7 +128,8 @@ public class AnnotProxyFieldValueFactoryTest
 
 	@ParameterizedTest
 	@MethodSource("beans")
-	public void shouldCreateProxyForFieldname_beanNameAmbiguous(final Object obj) throws Exception {
+	public void shouldCreateProxyForFieldname_beanNameAmbiguous(final Object obj) throws Exception
+	{
 		final Bean bean = new Bean();
 		final ApplicationContextMock applicationContext = new ApplicationContextMock();
 		applicationContext.putBean(new Bean());
@@ -137,7 +145,8 @@ public class AnnotProxyFieldValueFactoryTest
 
 	@ParameterizedTest
 	@MethodSource("beans")
-	public void shouldIgnoreUnannotatedFields(final Object obj) throws Exception {
+	public void shouldIgnoreUnannotatedFields(final Object obj) throws Exception
+	{
 		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(ApplicationContextMock::new);
 
 		final Field beanByClassField = obj.getClass().getDeclaredField("nobean");
@@ -148,7 +157,8 @@ public class AnnotProxyFieldValueFactoryTest
 	// https://issues.apache.org/jira/browse/WICKET-7170
 	@ParameterizedTest
 	@MethodSource("beans")
-	public void shouldCreateProxyForUniqueDefaultCandidate_beanNameAmbiguous(final Object obj) throws Exception {
+	public void shouldCreateProxyForUniqueDefaultCandidate_beanNameAmbiguous(final Object obj) throws Exception
+	{
 		final Bean defaultCandidate = new Bean();
 		final ApplicationContextMock applicationContext = new ApplicationContextMock();
 		// add two beans to make ambiguous
@@ -221,7 +231,8 @@ public class AnnotProxyFieldValueFactoryTest
 
 	@ParameterizedTest
 	@MethodSource("beans")
-	public void lookupNonProxy(final Object obj) throws Exception{
+	public void lookupNonProxy(final Object obj) throws Exception
+	{
 		final Bean bean = new Bean();
 		final ApplicationContextMock applicationContext = new ApplicationContextMock();
 		applicationContext.putBean(bean);
@@ -248,7 +259,14 @@ public class AnnotProxyFieldValueFactoryTest
    }
 
 	/**
-	 * Mock for an object with some Jakarta-Inject annotations
+	 * Class with Jakarta-Inject annotations for several scenarios:
+	 * <UL>
+	 *     <LI>@{@link Inject} inject by class</LI>
+	 *     <LI>@{@link Inject} inject by name / @{@link Named}</LI>
+	 *     <LI>no possible injection as not annotated</LI>
+	 * </UL>
+	 * Same property names for the same scenarios as in {@link SpringBeanInjectable}
+	 * so both beans can be used with the same test methods, this makes @ParameterizedTest - Tests possible
 	 */
 	public static class JakartaInjectInjectable
 	{
@@ -268,7 +286,16 @@ public class AnnotProxyFieldValueFactoryTest
 	}
 
 	/**
-	 * Mock for an object with some SpringBean annotations
+	 * Class with SpringBean annotations for several scnenarios:
+	 * * <UL>
+	 * 		<LI>@{@link SpringBean} inject by class</LI>
+	 * 		<LI>@{@link SpringBean} inject by name / "name=..."</LI>
+	 * 	    <LI>no possible injection as not annotated</LI>
+	 * 	</UL>
+	 * 	Same property names for the same scenarios as in {@link JakartaInjectInjectable},
+	 * 	so both beans can be used with the same test methods, this makes @ParameterizedTest - Tests possible
+	 *
+	 * 	Additional this class has an optional injection to test the required=false feature
 	 */
 	public static class SpringBeanInjectable
 	{
@@ -290,7 +317,7 @@ public class AnnotProxyFieldValueFactoryTest
 	}
 
 	/**
-	 * Mock spring bean
+	 * Just a type.
 	 */
 	public static class Bean
 	{
