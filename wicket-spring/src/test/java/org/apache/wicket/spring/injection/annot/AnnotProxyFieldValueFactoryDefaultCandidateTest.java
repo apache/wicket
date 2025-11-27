@@ -32,7 +32,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 /**
  * Tests for AnnotProxyFieldValueFactory
