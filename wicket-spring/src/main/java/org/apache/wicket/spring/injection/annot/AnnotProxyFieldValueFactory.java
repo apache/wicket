@@ -290,7 +290,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		return detectBeanName(ctx, beanNames, AbstractBeanDefinition::isDefaultCandidate);
 	}
 
-	private String detectBeanName(final ApplicationContext ctx, final List<String> beanNames, final Predicate<AbstractBeanDefinition> predicate) {
+	private String detectBeanName(final ApplicationContext ctx, final List<String> beanNames, final Predicate<AbstractBeanDefinition> predicate)
+	{
 		final List<String> found = new ArrayList<>();
 		if (ctx instanceof AbstractApplicationContext abstractApplicationContext)
 		{
