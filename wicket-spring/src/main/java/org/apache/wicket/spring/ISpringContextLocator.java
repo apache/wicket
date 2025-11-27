@@ -47,6 +47,7 @@ import org.springframework.context.ApplicationContext;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
+@FunctionalInterface
 public interface ISpringContextLocator extends IClusterable
 {
 	/**
