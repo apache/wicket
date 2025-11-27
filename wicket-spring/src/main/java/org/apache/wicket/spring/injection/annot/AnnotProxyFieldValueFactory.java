@@ -307,7 +307,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		return found.size() == 1 ? found.get(0) : null;
 	}
 
-	private String detectBeanNameByFieldname(final String fieldName, final List<String> beanNames) {
+	private String detectBeanNameByFieldName(final String fieldName, final List<String> beanNames) 
+	{
 		return fieldName != null && beanNames.contains(fieldName) ? fieldName : null;
 	}
 
