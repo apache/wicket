@@ -260,7 +260,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			  .orElseGet(() -> detectDefaultCandidateBeanName(ctx, names));
 
 			// If so: take that beanname
-			if (exactMatchBeanName != null) {
+			if (exactMatchBeanName != null)
+			{
 				return exactMatchBeanName;
 			}
 
