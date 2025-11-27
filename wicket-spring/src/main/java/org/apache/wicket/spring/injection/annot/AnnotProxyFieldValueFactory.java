@@ -252,7 +252,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		if (names.size() > 1)
 		{
 			// Check, if we can reduce the set of beannames to exactly one beanname probing the following criterias:
-			// 1. Ist there exactly one bean marked as primary?
+			// 1. Is there exactly one bean marked as primary?
 			// 2. Is there a bean with the same name as the field?
 			// 3. Is there exactly one bean marked as default candidate?
 			final String exactMatchBeanName = Optional.ofNullable(detectPrimaryBeanName(ctx, names))
