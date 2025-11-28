@@ -26,6 +26,7 @@ import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
@@ -44,7 +45,11 @@ import org.apache.wicket.validation.validator.RangeValidator;
  * AM/PM field. The format (12h/24h) of the hours field depends on the time format of this
  * {@link TimeField}'s {@link Locale}, as does the visibility of the AM/PM field (see
  * {@link TimeField#use12HourFormat}).
- * 
+ * <p>
+ * <strong>Ajaxifying a TimeField</strong>:
+ * If you want to update this component with an {@link AjaxFormComponentUpdatingBehavior}, you have to override
+ * {@link #wantChildrenToProcessInputInAjaxUpdate()} and return <code>true</code>.
+ *
  * @author eelcohillenius
  */
 public class TimeField extends FormComponentPanel<LocalTime>
@@ -244,6 +249,14 @@ public class TimeField extends FormComponentPanel<LocalTime>
 		// since we override convertInput, we can let this method return a value
 		// that is just suitable for error reporting
 		return String.format("%s:%s", hoursField.getInput(), minutesField.getInput());
+	}
+
+	@Override
+	public void processInputOfChildren()
+	{
+		processInputOfChild(hoursField);
+		processInputOfChild(minutesField);
+		processInputOfChild(amOrPmChoice);
 	}
 
 	@Override
