@@ -145,7 +145,7 @@
 		<aspectj.version>1.9.25</aspectj.version>
 		<assertj-core.version>3.27.6</assertj-core.version>
 		<bouncycastle.version>1.82</bouncycastle.version>
-		<byte-buddy.version>1.18.1</byte-buddy.version>
+		<byte-buddy.version>1.18.2</byte-buddy.version>
 		<cdi-unit.version>5.0.0-EA7</cdi-unit.version>
 		<commons-collections4.version>4.5.0</commons-collections4.version>
 		<commons-fileupload.version>2.0.0-M4</commons-fileupload.version>
