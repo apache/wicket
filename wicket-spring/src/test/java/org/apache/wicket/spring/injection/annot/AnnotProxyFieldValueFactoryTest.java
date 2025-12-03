@@ -286,7 +286,7 @@ public class AnnotProxyFieldValueFactoryTest
 	}
 
 	/**
-	 * Class with SpringBean annotations for several scnenarios:
+	 * Class with SpringBean annotations for several scenarios:
 	 * * <UL>
 	 * 		<LI>@{@link SpringBean} inject by class</LI>
 	 * 		<LI>@{@link SpringBean} inject by name / "name=..."</LI>
