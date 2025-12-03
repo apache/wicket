@@ -244,7 +244,8 @@ public class AnnotProxyFieldValueFactoryTest
 		assertSame(bean, value);
 	}
 
-	private static Stream<Object> beans() {
+	private static Stream<Object> beans() 
+	{
 		return Stream.of(new SpringBeanInjectable(), new JakartaInjectInjectable());
 	}
 
