@@ -251,13 +251,12 @@ public class AnnotProxyFieldValueFactoryTest
 
 	/**
 	 * Test creation fails with null springcontextlocator
-	 * Mock for an object with some Jakarta-Inject annotations
 	 */
-   @Test
-   public void testNullContextLocator()
-   {
-	   Assertions.assertThrows(IllegalArgumentException.class, () -> new AnnotProxyFieldValueFactory(null));
-   }
+	@Test
+	public void testNullContextLocator()
+	{
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new AnnotProxyFieldValueFactory(null));
+	}
 
 	/**
 	 * Class with Jakarta-Inject annotations for several scenarios:
