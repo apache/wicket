@@ -180,7 +180,7 @@ public class AnnotProxyFieldValueFactoryTest
 	 */
 	@ParameterizedTest
 	@MethodSource("beans")
-	public void testCacheForBeanName(final Object obj) throws Exception
+	public void testCacheForBeanByClass(final Object obj) throws Exception
 	{
 		final ApplicationContextMock applicationContext = new ApplicationContextMock();
 		applicationContext.putBean(new Bean());
