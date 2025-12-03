@@ -280,7 +280,8 @@ public class AnnotProxyFieldValueFactoryTest
 		private Bean beanByName;
 
 		@Override
-		public String toString() {
+		public String toString() 
+		{
 			return "JakartaInjectInjectable";
 		}
 	}
