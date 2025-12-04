@@ -26,6 +26,7 @@ import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
@@ -44,7 +45,41 @@ import org.apache.wicket.validation.validator.RangeValidator;
  * AM/PM field. The format (12h/24h) of the hours field depends on the time format of this
  * {@link TimeField}'s {@link Locale}, as does the visibility of the AM/PM field (see
  * {@link TimeField#use12HourFormat}).
- * 
+ * <p>
+ * If you want to Ajaxify this component with an {@link AjaxFormComponentUpdatingBehavior}, it be done in 2 ways:
+ * </p>
+ * <ul>
+ *     <li>
+ *         On <code>TimeField</code>: easy, less code, larger requests, and (unfortunately) excessive requests.
+ *         <p>
+ *         Create an instance and:
+ *         <ul>
+ *             <li>
+ *                 Set {@link #WANT_CHILDREN_TO_PROCESS_INPUT_IN_AJAX_UPDATE} to <code>true</code>.
+ *             </li>
+ *             <li>
+ *                 Add the <code>AjaxFormComponentUpdatingBehavior</code> with event <code>"input change"</code> to it.
+ *             </li>
+ *         </ul>
+ *     </li>
+ *     <li>
+ *         On the descendent form components: cumbersone, quite a bit of code, but few, smallest possible requests.
+ *         <p>
+ *         Create an instance and:
+ *         <ul>
+ *             <li>
+ *                 Use {@link TimeField#getHoursField()}, {@link TimeField#getMinutesField()} and
+ *                 {@link TimeField#getAmOrPmChoice()} to get the subfields, and add
+ *                 <code>AjaxFormComponentUpdatingBehavior</code> with event <code>"change"</code> to them.
+ *                 <p>
+ *                 {@link IModel#setObject(Object)} of these fields is also a no-op. So use
+ *                 <code>getConvertedInput()</code> to get the submitted values, and update the model object of these
+ *                 fields manually.
+ *             </li>
+ *         </ul>
+ *     </li>
+ * </ul>
+ *
  * @author eelcohillenius
  */
 public class TimeField extends FormComponentPanel<LocalTime>
@@ -60,7 +95,7 @@ public class TimeField extends FormComponentPanel<LocalTime>
 	 */
 	public enum AM_PM
 	{
-		AM, PM;
+		AM, PM
 	}
 
 	private static final IConverter<Integer> MINUTES_CONVERTER = new IntegerConverter()
@@ -125,6 +160,39 @@ public class TimeField extends FormComponentPanel<LocalTime>
 		});
 	}
 
+	/**
+	 * Get the hours field to customize it with (Ajax) behaviors, adding it to
+	 * {@link org.apache.wicket.ajax.AjaxRequestTarget AjaxRequestTarget}s, etc.
+	 * 
+	 * @return the hours field.
+	 */
+	public TextField<Integer> getHoursField()
+	{
+		return hoursField;
+	}
+
+	/**
+	 * Get the minutes field to customize it with (Ajax) behaviors, adding it to
+	 * {@link org.apache.wicket.ajax.AjaxRequestTarget AjaxRequestTarget}s, etc.
+	 *
+	 * @return the minutes field.
+	 */
+	public TextField<Integer> getMinutesField()
+	{
+		return minutesField;
+	}
+
+	/**
+	 * Get the AM/PM field to customize it with (Ajax) behaviors, adding it to
+	 * {@link org.apache.wicket.ajax.AjaxRequestTarget AjaxRequestTarget}s, etc.
+	 *
+	 * @return the AM/PM field.
+	 */
+	public DropDownChoice<AM_PM> getAmOrPmChoice()
+	{
+		return amOrPmChoice;
+	}
+
 	@Override
 	protected void onInitialize()
 	{
@@ -137,9 +205,10 @@ public class TimeField extends FormComponentPanel<LocalTime>
 		add(minutesField = newMinutesTextField("minutes", new MinutesModel(), Integer.class));
 
 		// Create and add the "AM/PM" choice
-		add(amOrPmChoice = new DropDownChoice<AM_PM>("amOrPmChoice", new AmPmModel(),
-			Arrays.asList(AM_PM.values())) {
-				private static final long serialVersionUID = 1L;
+		add(amOrPmChoice = new DropDownChoice<>("amOrPmChoice", new AmPmModel(),
+				Arrays.asList(AM_PM.values()))
+		{
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected boolean localizeDisplayValues()
@@ -163,14 +232,14 @@ public class TimeField extends FormComponentPanel<LocalTime>
 	protected TextField<Integer> newHoursTextField(final String id, IModel<Integer> model,
 		Class<Integer> type)
 	{
-		TextField<Integer> hoursTextField = new TextField<Integer>(id, model, type)
+		TextField<Integer> hoursTextField = new TextField<>(id, model, type)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected String[] getInputTypes()
 			{
-				return new String[] { "number" };
+				return new String[]{"number"};
 			}
 
 			@Override
@@ -203,7 +272,7 @@ public class TimeField extends FormComponentPanel<LocalTime>
 	protected TextField<Integer> newMinutesTextField(final String id, IModel<Integer> model,
 		Class<Integer> type)
 	{
-		TextField<Integer> minutesField = new TextField<Integer>(id, model, type)
+		TextField<Integer> minutesField = new TextField<>(id, model, type)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -220,7 +289,7 @@ public class TimeField extends FormComponentPanel<LocalTime>
 			@Override
 			protected String[] getInputTypes()
 			{
-				return new String[] { "number" };
+				return new String[]{"number"};
 			}
 
 			@Override
@@ -244,6 +313,14 @@ public class TimeField extends FormComponentPanel<LocalTime>
 		// since we override convertInput, we can let this method return a value
 		// that is just suitable for error reporting
 		return String.format("%s:%s", hoursField.getInput(), minutesField.getInput());
+	}
+
+	@Override
+	public void processInputOfChildren()
+	{
+		processInputOfChild(hoursField);
+		processInputOfChild(minutesField);
+		processInputOfChild(amOrPmChoice);
 	}
 
 	@Override

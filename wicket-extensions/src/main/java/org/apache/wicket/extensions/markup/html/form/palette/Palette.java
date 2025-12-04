@@ -16,12 +16,14 @@
  */
 package org.apache.wicket.extensions.markup.html.form.palette;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Choices;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Recorder;
@@ -50,28 +52,33 @@ import org.apache.wicket.resource.JQueryPluginResourceReference;
  * When creating a Palette object make sure your IChoiceRenderer returns a specific ID, not the
  * index.
  * <p>
- * <strong>Ajaxifying the palette</strong>: If you want to update a Palette with an
- * {@link AjaxFormComponentUpdatingBehavior}, you have to attach it to the contained
- * {@link Recorder} by overriding {@link #newRecorderComponent()} and calling
- * {@link #processInput()}:
- * 
- * <pre>{@code
- *  Palette palette=new Palette(...) {
- *    protected Recorder newRecorderComponent()
- *    {
- *      Recorder recorder=super.newRecorderComponent();     
- *      recorder.add(new AjaxFormComponentUpdatingBehavior("change") {
- *        protected void onUpdate(AjaxRequestTarget target) {
- *          processInput(); // let Palette process input too
+ * If you want to Ajaxify this component with an {@link AjaxFormComponentUpdatingBehavior}, it be done in 2 ways:
+ * </p>
+ * <ul>
+ *     <li>
+ *         On <code>Palette</code>: just as with simple fields, but with larger and (unfortunately) excessive requests.
+ *         <p>
+ *         Create an instance and:
+ *         <ul>
+ *             <li>
+ *                 Set {@link #WANT_CHILDREN_TO_PROCESS_INPUT_IN_AJAX_UPDATE} to <code>true</code>.
+ *             </li>
+ *             <li>
+ *                 Add the <code>AjaxFormComponentUpdatingBehavior</code> with event <code>"change"</code> to it.
+ *             </li>
+ *         </ul>
+ *     </li>
+ *     <li>
+ *         On the descendent form components: a bit more code, but minimal number of smallest possible requests.
+ *         <p>
+ *         Create a subclass and override {@link #newRecorderComponent()}. Add a
+ *         <code>AjaxFormComponentUpdatingBehavior</code> with event <code>"change"</code> to the component created by
+ *         the superclass. In {@link AjaxFormComponentUpdatingBehavior#onUpdate(AjaxRequestTarget)} call
+ *         {@link FormComponent#processInput()}.
+ *     </li>
+ * </ul>
  *
- *          ...
- *        }
- *      });
- *      return recorder;
- *    }
- *  }
- * }</pre>
- * 
+ * <p>
  * You can add a {@link DefaultTheme} to style this component in a left to right fashion.
  * 
  * @author Igor Vaynberg ( ivaynberg )
@@ -392,7 +399,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	 */
 	protected Component newSelectionComponent()
 	{
-		return new Selection<T>("selection", this)
+		return new Selection<>("selection", this)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -470,7 +477,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	 */
 	protected Component newChoicesComponent()
 	{
-		return new Choices<T>("choices", this)
+		return new Choices<>("choices", this)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -566,6 +573,12 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	}
 
 	@Override
+	public void processInputOfChildren()
+	{
+		processInputOfChild(recorderComponent);
+	}
+
+	@Override
 	public void convertInput()
 	{
 		List<T> selectedList = getRecorderComponent().getSelectedList();
@@ -581,7 +594,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 
 	/**
 	 * The model object is assumed to be a Collection, and it is modified in-place. Then
-	 * {@link Model#setObject(Object)} is called with the same instance: it allows the Model to be
+	 * {@link Model#setObject(Serializable)} is called with the same instance: it allows the Model to be
 	 * notified of changes even when {@link Model#getObject()} returns a different
 	 * {@link Collection} at every invocation.
 	 * 

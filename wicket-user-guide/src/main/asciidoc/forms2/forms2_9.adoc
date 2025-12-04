@@ -39,23 +39,23 @@ As shown in the markup above FormComponentPanel uses the same <wicket:panel> tag
 [source,java]
 ----
 public class TemperatureDegreeField extends FormComponentPanel<Double> {
-	
+
 	private TextField<Double> userDegree;
 
 	public TemperatureDegreeField(String id) {
 		super(id);		
 	}
-	
+
 	public TemperatureDegreeField(String id, IModel<Double> model) {
 		super(id, model);		
 	}
-	
+
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();	
-		
+
 		IModel<String> labelModel = () -> getLocale().equals(Locale.US) ? "°F" : "°C";
-		
+
 		add(new Label("measurementUnit", labelModel));
 		add(userDegree=new TextField<Double>("registeredTemperature", new 
                         Model<Double>()));
@@ -77,39 +77,39 @@ Now we can look at the rest of the code containing the convertInput and onBefore
 	protected void convertInput() {
 		Double userDegreeVal = userDegree.getConvertedInput();
 		Double kelvinDegree;
-		
+
 		if(getLocale().equals(Locale.US)){
 			kelvinDegree = userDegreeVal +  459.67;
 			BigDecimal bdKelvin = new BigDecimal(kelvinDegree);
 			BigDecimal fraction = new BigDecimal(5).divide(new BigDecimal(9));
-			
+
 			kelvinDegree = bdKelvin.multiply(fraction).doubleValue();
 		}else{
 			kelvinDegree = userDegreeVal + 273.15;
 		}
-		
+
 		setConvertedInput(kelvinDegree);
 	}
-	
+
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-		
+
 		Double kelvinDegree = (Double) getDefaultModelObject();		
 		Double userDegreeVal = null;
-		
+
 		if(kelvinDegree == null) return;
-		
+
 		if(getLocale().equals(Locale.US)){
 			BigDecimal bdKelvin = new BigDecimal(kelvinDegree);
 			BigDecimal fraction = new BigDecimal(9).divide(new BigDecimal(5));
-			
+
 			kelvinDegree = bdKelvin.multiply(fraction).doubleValue();
 			userDegreeVal = kelvinDegree - 459.67;
 		}else{
 			userDegreeVal = kelvinDegree - 273.15;
 		}
-		
+
 		userDegree.setModelObject(userDegreeVal);
 	}
 }
@@ -119,3 +119,61 @@ Since our component does not directly receive the user input, convertInput() mus
 
 Method onBeforeRender() is responsible for synchronizing the model of the inner text field with the model of our custom component. To do this we retrieve the model object of the custom component with the getDefaultModelObject() method, then we convert it to the temperature scale adopted by the user and finally we use this value to set the model object of the text field.
 
+=== FormComponentPanel and Ajax
+
+There are 2 ways to use FormComponentPanel with Ajax:
+
+* Add Ajax behaviors to 1 or more of the child components. This allows fine-grained updates, but during an Ajax request only the updated value of the child component is available. You will have to update the model of the panel using the child value manually.
+* Indicate that the panel wants its children to be processed in an Ajax update, and add an Ajax behavior to the panel. This makes all values of the child components available during an Ajax request. Do not use this method if the panel contains 1 or more inputs that can have large values (e.g. large text areas).
+
+==== Ajax on child components
+
+This method is a bit more cumbersome than Ajax on the panel itself, and requires a bit more code. But fewer requests will be made, and the requests will have the smallest possible size.
+
+[source,java]
+----
+var descendentsModel = new ListModel<>(new ArrayList<Person>());
+var persons = ...;
+var renderer = new ChoiceRenderer<>("fullName", "fullName");
+var ajaxOnDescendents = new Palette<>("paletteOnDescendents", descendentsModel, new CollectionModel<>(persons), renderer, 10, true, true)
+{
+    @Override
+    protected Recorder<Person> newRecorderComponent()
+    {
+        var recorder = super.newRecorderComponent();
+        recorder.add(new AjaxFormComponentUpdatingBehavior("change")
+        {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target)
+            {
+                processInput();
+                // The model will now contain the correct people.
+            }
+        });
+        return recorder;
+    }
+};
+ajaxOnDescendents.add(new DefaultTheme());
+----
+
+==== Ajax on panel with processing of children
+
+With this method adding Ajax behavior to a panel works just like with simple form fields. Ajax can be used with less code than Ajax on child components. But the requests will be larger because data of all children will be sent with each request. And in some cases (and unfortunately) requests will be sent for more JavaScript events, even if there was no change in the form data.
+
+[source,java]
+----
+var panelModel = new ListModel<>(new ArrayList<Person>());
+var persons = ...;
+var renderer = new ChoiceRenderer<>("fullName", "fullName");
+var ajaxOnPanel = new Palette<>("paletteOnPanel", panelModel, new CollectionModel<>(persons), renderer, 10, true, true);
+ajaxOnPanel.add(new DefaultTheme());
+ajaxOnPanel.setMetaData(WANT_CHILDREN_TO_PROCESS_INPUT_IN_AJAX_UPDATE, true);
+ajaxOnPanel.add(new AjaxFormComponentUpdatingBehavior("change")
+{
+    @Override
+    protected void onUpdate(AjaxRequestTarget target)
+    {
+        // The model will now contain the correct people.
+    }
+});
+----

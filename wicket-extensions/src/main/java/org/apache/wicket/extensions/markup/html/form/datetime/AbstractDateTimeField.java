@@ -22,7 +22,6 @@ import java.time.format.FormatStyle;
 import java.time.temporal.Temporal;
 import java.util.Date;
 
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
@@ -33,28 +32,7 @@ import org.apache.wicket.util.convert.ConversionException;
 
 /**
  * Works on a {@link java.time.temporal.Temporal} object, aggregating a {@link LocalDateTextField} and a {@link TimeField}.
- * <p>
- * <strong>Ajaxifying an AbstractDateTimeField</strong>:
- * If you want to update this component with an {@link AjaxFormComponentUpdatingBehavior}, you have to attach it
- * to the contained components by overriding {@link #newDateField(String, IModel)}:
- * 
- * <pre>{@code
- *  DateTimeField dateTimeField = new DateTimeField(...) {
- *    protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel)
- *    {
- *      DateTextField dateField = super.newDateTextField(id, dateFieldModel);     
- *      dateField.add(new AjaxFormComponentUpdatingBehavior("change") {
- *        protected void onUpdate(AjaxRequestTarget target) {
- *          processInput(); // let DateTimeField process input too
  *
- *          ...
- *        }
- *      });
- *      return recorder;
- *    }
- *  }
- * }</pre>
- * 
  * @author eelcohillenius
  */
 abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPanel<T>
@@ -99,17 +77,17 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 				super.onConfigure();
 
 				timeField.configure();
-				
+
 				setVisible(timeField.isVisible());
 			}
 		});
 	}
-	
+
 	@Override
 	protected void onInitialize()
 	{
 		super.onInitialize();
-		
+
 		add(localDateField = newDateField("date", new DateModel()));
 		add(timeField = newTimeField("time", new TimeModel()));
 	}
@@ -138,6 +116,13 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 		// since we override convertInput, we can let this method return a value
 		// that is just suitable for error reporting
 		return String.format("%s, %s", localDateField.getInput(), timeField.getInput());
+	}
+
+	@Override
+	public void processInputOfChildren()
+	{
+		processInputOfChild(localDateField);
+		processInputOfChild(timeField);
 	}
 
 	/**
@@ -172,16 +157,17 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 			if (time == null)
 			{
 				time = getDefaultTime();
-				if (time == null) {
+				if (time == null)
+				{
 					error(newValidationError(new ConversionException("Cannot create temporal without time").setTargetType(getType())));
 					return;
 				}
 			}
-			
+
 			// Use the input to create proper date-time
 			temporal = createTemporal(date, time);
 		}
-		
+
 		setConvertedInput(temporal);
 	}
 
@@ -206,14 +192,15 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 	 */
 	protected LocalDateTextField newDateField(String id, IModel<LocalDate> dateFieldModel)
 	{
-		return new LocalDateTextField(id, dateFieldModel, FormatStyle.SHORT) {
+		return new LocalDateTextField(id, dateFieldModel, FormatStyle.SHORT)
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
-				
+
 				tag.append("class", getString(DATE_CSS_CLASS_KEY), " ");
 			}
 		};
@@ -230,14 +217,15 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 	 */
 	protected TimeField newTimeField(String id, IModel<LocalTime> timeFieldModel)
 	{
-		return new TimeField(id, timeFieldModel) {
+		return new TimeField(id, timeFieldModel)
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
-				
+
 				tag.append("class", getString(TIME_CSS_CLASS_KEY), " ");
 			}
 		};
@@ -288,10 +276,11 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 		public LocalDate getObject()
 		{
 			T temporal = getModelObject();
-			if (temporal == null) {
+			if (temporal == null)
+			{
 				return null;
 			}
-			
+
 			return getLocalDate(temporal);
 		}
 
@@ -310,10 +299,11 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 		public LocalTime getObject()
 		{
 			T temporal = getModelObject();
-			if (temporal == null) {
+			if (temporal == null)
+			{
 				return null;
 			}
-			
+
 			return getLocalTime(temporal);
 		}
 
