@@ -2,6 +2,20 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.22.0
+
+** Bug
+
+    * [WICKET-7090] - Files in release jars do not have a modification timestamp set
+    * [WICKET-7156] - wicket-ioc: dependency on objenesis is optional in pom but not in module-info
+    * [WICKET-7163] - Missing imports for javax.servlet.http in wicket-extensions
+
+** Wish
+
+    * [WICKET-7142] - Allow public access for AbstractAjaxBehavior#getComponent()
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.21.0
 
 ** Bug
