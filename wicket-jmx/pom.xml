@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>9.19.0-SNAPSHOT</version>
+		<version>9.22.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-jmx</artifactId>
@@ -29,7 +29,7 @@
 	<description>Wicket Java Management Extensions</description>
 	<properties>
 		<osgi.export.package>org.apache.wicket.jmx*;-noimport:=true</osgi.export.package>
-		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",javax.management,*</osgi.import.package>
 	</properties>
 	<dependencies>
 		<dependency>

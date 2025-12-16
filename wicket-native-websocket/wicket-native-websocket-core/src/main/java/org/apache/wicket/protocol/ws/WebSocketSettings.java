@@ -61,27 +61,6 @@ public class WebSocketSettings
 	{
 	};
 
-	/**
-	 * A flag indicating whether JavaxWebSocketFilter is in use.
-	 * When using JSR356 based implementations the ws:// url should not
-	 * use the WicketFilter's filterPath because JSR356 Upgrade connections
-	 * are never passed to the Servlet Filters.
-	 */
-	private static boolean USING_JAVAX_WEB_SOCKET = false;
-
-	static
-	{
-		try
-		{
-			Class.forName("org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter");
-			USING_JAVAX_WEB_SOCKET = true;
-			LOG.debug("Using JSR356 Native WebSocket implementation!");
-		} catch (ClassNotFoundException e)
-		{
-			LOG.debug("Using non-JSR356 Native WebSocket implementation!");
-		}
-	}
-
 	private final AtomicReference<CharSequence> filterPrefix = new AtomicReference<>();
 	private final AtomicReference<CharSequence> contextPath = new AtomicReference<>();
 	private final AtomicReference<CharSequence> baseUrl = new AtomicReference<>();
@@ -380,14 +359,7 @@ public class WebSocketSettings
 	{
 		if (filterPrefix.get() == null)
 		{
-			if (USING_JAVAX_WEB_SOCKET)
-			{
-				filterPrefix.compareAndSet(null, "");
-			}
-			else
-			{
-				filterPrefix.compareAndSet(null, RequestCycle.get().getRequest().getFilterPath());
-			}
+			filterPrefix.compareAndSet(null, "");
 		}
 		return filterPrefix.get();
 	}

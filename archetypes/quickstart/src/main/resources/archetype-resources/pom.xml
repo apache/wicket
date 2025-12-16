@@ -24,7 +24,7 @@
 	<artifactId>${artifactId}</artifactId>
 	<packaging>war</packaging>
 	<version>${version}</version>
-	#literal()
+	#[[
 	<!-- TODO project name  -->
 	<name>quickstart</name>
 	<description></description>
@@ -201,5 +201,5 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	#end
+	]]#
 </project>

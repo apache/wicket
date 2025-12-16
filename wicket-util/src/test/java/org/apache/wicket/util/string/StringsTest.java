@@ -57,6 +57,7 @@ class StringsTest
 		sessionIdParamField.setAccessible(true);
 		Field modifiersField = getModifiersField();
 		modifiersField.setAccessible(true);
+		String origSessionIdParam = (String) sessionIdParamField.get(null);
 		try {
 			final String customSessionIdParam = ";Custom seSsion - ид=";
 			modifiersField.setInt(sessionIdParamField, sessionIdParamField.getModifiers() & ~Modifier.FINAL );
@@ -64,7 +65,7 @@ class StringsTest
 			assertEquals(url + ";a=b;c=d?param=a;b",
 			             Strings.stripJSessionId(url + ";a=b;c=d" + customSessionIdParam + "12345?param=a;b"));
 		} finally {
-			sessionIdParamField.set(null, "jsessionid");
+			sessionIdParamField.set(null, origSessionIdParam);
 			modifiersField.setInt(sessionIdParamField, sessionIdParamField.getModifiers() & Modifier.FINAL );
 			modifiersField.setAccessible(false);
 			sessionIdParamField.setAccessible(false);

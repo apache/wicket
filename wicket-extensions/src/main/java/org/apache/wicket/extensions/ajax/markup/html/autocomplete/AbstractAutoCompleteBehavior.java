@@ -187,6 +187,8 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		{
 			sb.append(",className: '").append(settings.getCssClassName()).append('\'');
 		}
+		sb.append(",keyTabBehavior: '").append(
+			settings.getKeyTabBehavior().getValue()).append('\'');
 		sb.append('}');
 		return sb.toString();
 	}
