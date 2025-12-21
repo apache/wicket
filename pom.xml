@@ -142,7 +142,7 @@
 
 		<!-- Project Versions -->
 		<asm.version>9.9.1</asm.version>
-		<aspectj.version>1.9.25</aspectj.version>
+		<aspectj.version>1.9.25.1</aspectj.version>
 		<assertj-core.version>3.27.6</assertj-core.version>
 		<bouncycastle.version>1.83</bouncycastle.version>
 		<byte-buddy.version>1.18.3</byte-buddy.version>
