@@ -159,7 +159,7 @@ public enum CSPDirective
 				throw new IllegalArgumentException("Directive " + this + " supports only one value");
 			}
 
-			if (!(value == CSPDirectiveSrcValue.NONE ||  value == CSPDirectiveSrcValue.UNSAFE_INLINE)) 
+			if (value != CSPDirectiveSrcValue.NONE && value != CSPDirectiveSrcValue.UNSAFE_INLINE) 
 			{
 				throw new IllegalArgumentException("Unsupported directive value: " + value + " for -src-attr directive");
 			}
