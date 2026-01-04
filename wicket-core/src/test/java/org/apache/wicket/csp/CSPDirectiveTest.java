@@ -25,7 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CSPDirectiveTest {
 
     @Test
-    void scriptSrcAttrAndStyleSrcAttributesSupportValues() {
+    void scriptSrcAttrAndStyleSrcAttributesSupportValues() 
+    {
         CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of());
         CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of());
         CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of());
@@ -33,13 +34,15 @@ class CSPDirectiveTest {
     }
 
     @Test
-    void scriptSrcAttrAndStyleSrcAttributesOnlySupportOneValue() {
+    void scriptSrcAttrAndStyleSrcAttributesOnlySupportOneValue() 
+    {
         assertThrows(IllegalArgumentException.class, () -> CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of(CSPDirectiveSrcValue.UNSAFE_INLINE)));
         assertThrows(IllegalArgumentException.class, () -> CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of(CSPDirectiveSrcValue.UNSAFE_INLINE)));
     }
 
     @Test
-    void scriptSrcAttrAndStyleSrcAttributesOnlySupportNoneAndUnsafeInline() {
+    void scriptSrcAttrAndStyleSrcAttributesOnlySupportNoneAndUnsafeInline() 
+    {
         assertThrows(IllegalArgumentException.class, () -> CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.SELF, List.of()));
         assertThrows(IllegalArgumentException.class, () -> CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.WILDCARD, List.of()));
     }
