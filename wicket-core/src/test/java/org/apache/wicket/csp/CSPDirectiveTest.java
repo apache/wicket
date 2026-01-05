@@ -36,15 +36,23 @@ class CSPDirectiveTest {
     @Test
     void scriptSrcAttrAndStyleSrcAttributesOnlySupportOneValue() 
     {
-        assertThrows(IllegalArgumentException.class, () -> CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of(CSPDirectiveSrcValue.UNSAFE_INLINE)));
-        assertThrows(IllegalArgumentException.class, () -> CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of(CSPDirectiveSrcValue.UNSAFE_INLINE)));
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of(CSPDirectiveSrcValue.UNSAFE_INLINE)));
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of(CSPDirectiveSrcValue.UNSAFE_INLINE)));
     }
 
     @Test
     void scriptSrcAttrAndStyleSrcAttributesOnlySupportNoneAndUnsafeInline() 
     {
-        assertThrows(IllegalArgumentException.class, () -> CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.SELF, List.of()));
-        assertThrows(IllegalArgumentException.class, () -> CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.WILDCARD, List.of()));
+        for (CSPDirectiveSrcValue value : CSPDirectiveSrcValue.values()) {
+            if (value == CSPDirectiveSrcValue.NONE || value == CSPDirectiveSrcValue.UNSAFE_INLINE) {
+                CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(value, List.of());
+                CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(value, List.of());
+            } else {
+                assertThrows(IllegalArgumentException.class, () -> CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(value, List.of()));
+            }
+        }
     }
 
 }
