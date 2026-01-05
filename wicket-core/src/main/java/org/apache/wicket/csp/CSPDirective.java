@@ -37,7 +37,6 @@ public enum CSPDirective
 	SCRIPT_SRC("script-src"),
 	SCRIPT_SRC_ATTR("script-src-attr"),
 	SCRIPT_SRC_ELEM("script-src-elem"),
-	SRC("src"),
 	STYLE_SRC("style-src"),
 	STYLE_SRC_ATTR("style-src-attr"),
 	STYLE_SRC_ELEM("style-src-elem"),
