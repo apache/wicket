@@ -37,6 +37,8 @@ public class Contact implements IClusterable
 
 	private String cellPhone;
 
+	private String age;
+
 	/**
 	 * Constructor
 	 */
@@ -51,7 +53,7 @@ public class Contact implements IClusterable
 	public String toString()
 	{
 		return "[Contact id=" + id + " firstName=" + firstName + " lastName=" + lastName +
-			" homePhone=" + homePhone + " cellPhone=" + cellPhone + "]";
+			" homePhone=" + homePhone + " cellPhone=" + cellPhone + " age=" + age + "]";
 	}
 
 	/**
@@ -74,7 +76,8 @@ public class Contact implements IClusterable
 			return other.getFirstName().equals(getFirstName()) &&
 				other.getLastName().equals(getLastName()) &&
 				other.getHomePhone().equals(getHomePhone()) &&
-				other.getCellPhone().equals(getCellPhone());
+				other.getCellPhone().equals(getCellPhone()) &&
+				other.getAge().equals(getAge());
 
 		}
 		else
@@ -173,5 +176,21 @@ public class Contact implements IClusterable
 	public void setLastName(final String lastName)
 	{
 		this.lastName = lastName;
+	}
+	
+	/**
+	 * @return age
+	 */
+	public String getAge()
+	{
+		return age;
+	}
+
+	/**
+	 * @param age
+	 */
+	public void setAge(String age)
+	{
+		this.age = age;
 	}
 }
