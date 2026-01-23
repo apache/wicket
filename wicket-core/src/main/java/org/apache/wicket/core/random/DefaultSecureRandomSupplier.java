@@ -19,7 +19,6 @@ package org.apache.wicket.core.random;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import org.apache.wicket.WicketRuntimeException;
 
 /**
  * A very simple {@link ISecureRandomSupplier} that holds a {@code SecureRandom} using
@@ -42,7 +41,7 @@ public class DefaultSecureRandomSupplier implements ISecureRandomSupplier
 		}
 		catch (NoSuchAlgorithmException e)
 		{
-			throw new WicketRuntimeException(e);
+				random = new SecureRandom();
 		}
 	}
 
