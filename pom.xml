@@ -137,8 +137,8 @@
 
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
 
 		<!-- Project Versions -->
 		<asm.version>9.9.1</asm.version>
@@ -168,7 +168,7 @@
 		<jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
 		<jetty.version>11.0.24</jetty.version>
-		<junit.version>5.13.4</junit.version>
+		<junit.version>6.0.2</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.7</logback.version>
 		<hamcrest.version>3.0</hamcrest.version>
@@ -179,7 +179,7 @@
 		<objenesis.version>3.4</objenesis.version>
 		<openjson.version>1.0.13</openjson.version>
 		<slf4j.version>2.0.17</slf4j.version>
-		<spring.version>6.2.12</spring.version>
+		<spring.version>7.0.2</spring.version>
 		<wagon-ssh-external.version>3.5.3</wagon-ssh-external.version>
 		<weld.version>4.0.3.Final</weld.version>
 		<velocity-engine-core.version>2.4.1</velocity-engine-core.version>
