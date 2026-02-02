@@ -17,6 +17,10 @@
 package org.apache.wicket.markup;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
@@ -60,6 +64,8 @@ public class MarkupFactory
 	{
 		return Application.get().getMarkupSettings().getMarkupFactory();
 	}
+
+	private final Map<IMarkupFilter, Class<? extends IMarkupFilter>> additionalMarkupFilters = new LinkedHashMap<>();
 
 	/**
 	 * Construct.
@@ -108,7 +114,7 @@ public class MarkupFactory
 	public MarkupParser newMarkupParser(final MarkupResourceStream resource)
 	{
 		// Markup parsers can not be re-used
-		return new MarkupParser(newXmlPullParser(), resource)
+		final MarkupParser markupParser = new MarkupParser(newXmlPullParser(), resource)
 		{
 			@Override
 			protected IMarkupFilter onAppendMarkupFilter(final IMarkupFilter filter)
@@ -116,6 +122,17 @@ public class MarkupFactory
 				return MarkupFactory.this.onAppendMarkupFilter(filter);
 			}
 		};
+
+		additionalMarkupFilters.entrySet().forEach((entry) -> {
+			final IMarkupFilter markupFilter = entry.getKey();
+			final Class<? extends IMarkupFilter> beforeFilter = entry.getValue();
+			if (beforeFilter == null) {
+				markupParser.add(markupFilter);
+			} else {
+				markupParser.add(markupFilter, beforeFilter);
+			}
+		});
+		return markupParser;
 	}
 
 	/**
@@ -453,5 +470,51 @@ public class MarkupFactory
 
 		// Markup not found. Errors should throw a Wicket exception
 		return null;
+	}
+
+	/**
+	 * Adds an additional {@link IMarkupFilter} to {@link MarkupParser}.
+	 * @param markupFilter added markupFilter
+	 */
+	public void addAdditionalMarkupFilter(final IMarkupFilter markupFilter) {
+		addAdditionalMarkupFilter(markupFilter, null);
+	}
+
+	/**
+	 * Adds an additional {@link IMarkupFilter} to {@link MarkupParser}.
+	 * @param markupFilter added markupFilter
+	 * @param beforeFilterClass add filter before given beforeFilterClass
+	 */
+	public void addAdditionalMarkupFilter(final IMarkupFilter markupFilter, final Class<? extends IMarkupFilter> beforeFilterClass) {
+		if (markupFilter != null) {
+			additionalMarkupFilters.put(markupFilter, beforeFilterClass);
+		}
+	}
+
+	/**
+	 * Remove an additional {@link IMarkupFilter}.
+	 * @param markupFilter removedMarkupFilter
+	 */
+	public void removeAdditionalMarkupFilter(final IMarkupFilter markupFilter) {
+		if (markupFilter !=null) {
+			additionalMarkupFilters.remove(markupFilter);
+		}
+	}
+
+	/**
+	 * Remove additional {@link IMarkupFilter}s
+	 * @param markupFilterClass filter-class
+	 */
+	public void removeAdditionalMarkupFilters(final Class<? extends IMarkupFilter> markupFilterClass) {
+		if (markupFilterClass != null) {
+			final Set<IMarkupFilter> removedMarkupFilters = additionalMarkupFilters
+			  .keySet()
+			  .stream()
+			  .filter(e -> markupFilterClass.isAssignableFrom(e.getClass()))
+			  .collect(Collectors.toSet());
+			removedMarkupFilters
+			  .stream()
+			  .forEach(additionalMarkupFilters::remove);
+		}
 	}
 }
