@@ -70,6 +70,7 @@ public class ContactGenerator
 		contact.setId(generateId());
 		contact.setHomePhone(generatePhoneNumber());
 		contact.setCellPhone(generatePhoneNumber());
+		contact.setAge(generateAge());
 		return contact;
 	}
 
@@ -99,6 +100,11 @@ public class ContactGenerator
 			.append(rint(0, 9))
 			.append(rint(0, 9))
 			.toString();
+	}
+
+	private String generateAge()
+	{
+		return new StringBuilder().append(rint(1, 999)).toString();
 	}
 
 	private int rint(final int min, final int max)

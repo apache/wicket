@@ -71,4 +71,14 @@ public interface ICellPopulator<T> extends IClusterable, IDetachable
 	 */
 	void populateItem(final Item<ICellPopulator<T>> cellItem, final String componentId,
 		final IModel<T> rowModel);
+	
+	/**
+	 * Gets whether this column is visible in a {@link DataGridView}
+	 * 
+	 * @return true if column is visible
+	 */	
+	default boolean isVisible()
+	{
+		return true;
+	};
 }
