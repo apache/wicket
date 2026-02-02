@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.apache.wicket.MockPage;
 import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.mock.MockPageStore;
+import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.request.IRequestCycle;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -58,6 +60,43 @@ public class RequestPageStoreTest
 		
 		mockStore.getPages().clear();
 		
+		assertNull(store.getPage(context, 1), "no page in request store");
+		assertNull(store.getPage(context, 2), "no page in request store");
+		assertNull(store.getPage(context, 3), "no page in request store");
+	}
+
+
+	@Test
+	void testAvoidSomePage()
+	{
+		MockPageStore mockStore = new MockPageStore();
+
+		MockPageContext context = new MockPageContext();
+
+		RequestPageStore store = new RequestPageStore(mockStore) {
+			@Override
+			protected boolean shouldSerializePage(IRequestCycle requestCycle, IManageablePage page) {
+				// we just skip serialization of third page.
+				return page.getPageId() != 3;
+			}
+		};
+
+		MockPage page1 = new MockPage(1);
+		MockPage page2 = new MockPage(2);
+		MockPage page3 = new MockPage(3);
+
+		store.addPage(context, page1);
+		store.addPage(context, page2);
+		store.addPage(context, page3);
+
+		assertTrue(mockStore.getPages().isEmpty(), "no pages delegated before detach");
+
+		store.detach(context);
+
+		assertEquals(2, mockStore.getPages().size(), "pages delegated on detach");
+
+		mockStore.getPages().clear();
+
 		assertNull(store.getPage(context, 1), "no page in request store");
 		assertNull(store.getPage(context, 2), "no page in request store");
 		assertNull(store.getPage(context, 3), "no page in request store");
