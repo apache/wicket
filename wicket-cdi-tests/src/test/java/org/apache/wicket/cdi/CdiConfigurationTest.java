@@ -16,11 +16,9 @@
  */
 package org.apache.wicket.cdi;
 
-import io.github.cdiunit.ActivatedAlternatives;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
 import org.apache.wicket.Application;
-import org.apache.wicket.cdi.testapp.AlternativeTestAppScope;
 import org.apache.wicket.cdi.testapp.ModelWithInjectedDependency;
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestPage;
@@ -32,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * @author jsarman
  */
-@ActivatedAlternatives(AlternativeTestAppScope.class)
 class CdiConfigurationTest extends WicketCdiTestCase
 {
 	@Inject
@@ -51,7 +48,7 @@ class CdiConfigurationTest extends WicketCdiTestCase
 	{
 		configure(new CdiConfiguration().setBeanManager(beanManager));
 		tester.startPage(TestPage.class);
-		tester.assertLabel("appscope", "Alternative ok");
+		tester.assertLabel("appscope", "Test ok");
 	}
 
 	@Test
