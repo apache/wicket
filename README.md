@@ -261,4 +261,3 @@ For encoding HTTP URL data (see org.apache.wicket.core.request.mapper.CryptoMapp
 Wicket requires the Java Cryptography extensions
 (http://java.sun.com/javase/technologies/security/). Wicket does not include
 these libraries itself, but is designed to use them.
-
