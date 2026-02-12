@@ -29,6 +29,7 @@ public class PageForPartialUpdate extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	public WebMarkupContainer container;
+	public WebMarkupContainer alternativeReplacement;
 
 	/**
 	 * Construct.
@@ -43,5 +44,8 @@ public class PageForPartialUpdate extends WebPage
 		};
 		container.setOutputMarkupId(true);
 		add(container);
+
+		alternativeReplacement = new WebMarkupContainer("alternativeReplacement");
+		add(alternativeReplacement);
 	}
 }

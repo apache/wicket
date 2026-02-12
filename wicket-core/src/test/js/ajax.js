@@ -202,6 +202,31 @@ jQuery(document).ready(function() {
 			execute(attrs, assert, done);
 		});
 
+		test('processComponent() use alternative replacement method.', assert => {
+			const done = assert.async();
+			assert.expect(1);
+
+			var oldReplacementMethods = Wicket.DOM.replacementMethods;
+
+			Wicket.DOM.registerReplacementMethod('alternativeReplacement', function() {
+				assert.ok(true, 'Alternative replacement method must be used!');
+
+				// restore the original replacement methods
+				Wicket.DOM.replacementMethods = oldReplacementMethods;
+			});
+
+			var attrs = {
+				u: 'data/ajax/alternativeReplacementMethod.xml',
+				c: 'componentId',
+				sh: [
+					function() {
+						done();
+					}
+				]
+			};
+			execute(attrs, assert, done);
+		});
+
 		test('non-wicket response.', assert => {
 			const done = assert.async();
 			assert.expect(2);
@@ -1463,7 +1488,7 @@ jQuery(document).ready(function() {
 
 			execute(attrs, assert, done);
 		});
-		
+
 		var metaByName = function(name) {
 			return jQuery('head meta[name=' + name + ']');
 		};
@@ -1474,7 +1499,7 @@ jQuery(document).ready(function() {
 
 			jQuery('meta').remove();
 			assert.equal(metaByName("m1").length, 0, "There must be no meta tag before the contribution.");
-			
+
 			var attrs = {
 				u: 'data/ajax/metaId.xml',
 				sh: [
@@ -1487,7 +1512,7 @@ jQuery(document).ready(function() {
 			};
 			execute(attrs, assert, done);
 		});
-		
+
 		test('processMeta() change meta tag', assert => {
 			const done = assert.async();
 			assert.expect(3);
@@ -1495,7 +1520,7 @@ jQuery(document).ready(function() {
 			jQuery('meta').remove();
 			jQuery('head').append('<meta name="m1" content="c1_old" />');
 			assert.equal(metaByName("m1").length, 1, "There must be one old meta tag before the contribution.");
-			
+
 			var attrs = {
 				u: 'data/ajax/metaId.xml',
 				sh: [
@@ -1516,7 +1541,7 @@ jQuery(document).ready(function() {
 			jQuery('meta').remove();
 			jQuery('head').append('<meta name="m2" content="c2" />');
 			assert.equal(metaByName("m2").length, 1, "There must be one old meta tag before the contribution.");
-			
+
 			var attrs = {
 				u: 'data/ajax/metaId.xml',
 				sh: [
@@ -1531,7 +1556,7 @@ jQuery(document).ready(function() {
 			};
 			execute(attrs, assert, done);
 		});
-		
+
 		test('no ajax send on component placeholder', assert => {
 			const done = assert.async();
 			assert.expect(1);
