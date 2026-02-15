@@ -39,13 +39,16 @@ public class CdiConfiguration
 
 	private BeanManager beanManager;
 
-	private BeanManager fallbackBeanManager;
-
 	/**
 	 * Constructor
 	 */
 	public CdiConfiguration()
 	{
+	}
+
+	public CdiConfiguration(BeanManager beanManager)
+	{
+		this.beanManager = beanManager;
 	}
 
 	public IConversationPropagation getPropagation()
@@ -61,46 +64,10 @@ public class CdiConfiguration
 
 	public BeanManager getBeanManager()
 	{
-		return beanManager;
-	}
-
-	/**
-	 * Sets a BeanManager that should be used at first.
-	 * 
-	 * @param beanManager
-	 * @return this instance
-	 */
-	public CdiConfiguration setBeanManager(BeanManager beanManager)
-	{
-
-		if (Application.exists() && CdiConfiguration.get(Application.get()) != null)
+		if (beanManager == null)
 			throw new IllegalStateException(
-				"A CdiConfiguration is already set for the application.");
-
-		this.beanManager = beanManager;
-		return this;
-	}
-
-	public BeanManager getFallbackBeanManager()
-	{
-		return fallbackBeanManager;
-	}
-
-	/**
-	 * Sets a BeanManager that should be used if all strategies to lookup a
-	 * BeanManager fail. This can be used in scenarios where you do not have
-	 * JNDI available and do not want to bootstrap the CDI provider. It should
-	 * be noted that the fallback BeanManager can only be used within the
-	 * context of a Wicket application (ie. Application.get() should return the
-	 * application that was configured with this CdiConfiguration).
-	 * 
-	 * @param fallbackBeanManager
-	 * @return this instance
-	 */
-	public CdiConfiguration setFallbackBeanManager(BeanManager fallbackBeanManager)
-	{
-		this.fallbackBeanManager = fallbackBeanManager;
-		return this;
+				"app not configured or no BeanManager was resolved during the configuration");
+		return beanManager;
 	}
 
 	/**
@@ -110,6 +77,13 @@ public class CdiConfiguration
 	 */
 	public void configure(Application application)
 	{
+		if(beanManager == null)
+			beanManager = BeanManagerLookup.lookup();
+
+		if (beanManager == null)
+			throw new IllegalStateException(
+				"No BeanManager was set or found via the CDI provider. Check your CDI setup or specify a BeanManager in the CdiConfiguration.");
+
 		if (application.getMetaData(CDI_CONFIGURATION_KEY) != null)
 		{
 			throw new IllegalStateException("Cdi already configured for this application");
@@ -145,6 +119,9 @@ public class CdiConfiguration
 
 	public static CdiConfiguration get(Application application)
 	{
-		return application.getMetaData(CDI_CONFIGURATION_KEY);
+		CdiConfiguration configuration = application.getMetaData(CDI_CONFIGURATION_KEY);
+		if (configuration == null)
+			throw new IllegalStateException("No CdiConfiguration is set");
+		return configuration;
 	}
 }
