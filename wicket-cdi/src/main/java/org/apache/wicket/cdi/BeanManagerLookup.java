@@ -32,7 +32,10 @@ import javax.naming.NamingException;
  * <li>JNDI under java:comp/env/BeanManager (for servlet containers like Tomcat and Jetty)</li>
  * <li>CDI.current().getBeanManager() (portable lookup)</li>
  * </ul>
- * 
+ *
+ * This is de default strategy used in {@link CdiConfiguration} to look for a BeanManger, unless
+ * one is defined in CdiConfiguration(BeanManager)
+ *
  * @author papegaaij
  */
 public final class BeanManagerLookup
@@ -86,6 +89,11 @@ public final class BeanManagerLookup
 		};
 
 		public abstract BeanManager lookup();
+	}
+
+	private BeanManagerLookup()
+	{
+
 	}
 
 	public static BeanManager lookup()

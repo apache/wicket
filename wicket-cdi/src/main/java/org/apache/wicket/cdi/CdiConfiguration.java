@@ -17,10 +17,10 @@
 package org.apache.wicket.cdi;
 
 import jakarta.enterprise.inject.spi.BeanManager;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Configures CDI integration
@@ -48,6 +48,7 @@ public class CdiConfiguration
 
 	public CdiConfiguration(BeanManager beanManager)
 	{
+		Args.notNull(beanManager, "beanManager");
 		this.beanManager = beanManager;
 	}
 
@@ -65,8 +66,11 @@ public class CdiConfiguration
 	public BeanManager getBeanManager()
 	{
 		if (beanManager == null)
+		{
 			throw new IllegalStateException(
-				"app not configured or no BeanManager was resolved during the configuration");
+				"No BeanManager was resolved during configuration. Be sure " +
+					"to specify a BeanManager in CdiConfiguration constructor or that one can be resolved by BeanManagerLookup, and that CdiConfiguration#configure is called.");
+		}
 		return beanManager;
 	}
 
@@ -77,12 +81,16 @@ public class CdiConfiguration
 	 */
 	public void configure(Application application)
 	{
-		if(beanManager == null)
+		if (beanManager == null)
+		{
 			beanManager = BeanManagerLookup.lookup();
+		}
 
 		if (beanManager == null)
+		{
 			throw new IllegalStateException(
 				"No BeanManager was set or found via the CDI provider. Check your CDI setup or specify a BeanManager in the CdiConfiguration.");
+		}
 
 		if (application.getMetaData(CDI_CONFIGURATION_KEY) != null)
 		{
