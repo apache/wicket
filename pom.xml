@@ -820,7 +820,7 @@
 							<dependency>
 								<groupId>${project.groupId}</groupId>
 								<artifactId>${project.artifactId}</artifactId>
-								<version>10.0.0</version>
+								<version>11.0.0</version>
 								<type>jar</type>
 							</dependency>
 						</oldVersion>
