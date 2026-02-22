@@ -168,7 +168,7 @@
 		<jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
 		<jetty.version>11.0.24</jetty.version>
-		<junit.version>6.0.2</junit.version>
+		<junit.version>6.0.3</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.7</logback.version>
 		<hamcrest.version>3.0</hamcrest.version>
