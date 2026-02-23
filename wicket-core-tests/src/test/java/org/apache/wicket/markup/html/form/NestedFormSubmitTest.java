@@ -198,6 +198,13 @@ class NestedFormSubmitTest extends WicketTestCase
 		assertFormSubmitOuter(true, false, false);
 	}
 
+	@Test
+	void testWithMiddleExclusionAndMiddleIsSubmitted() throws Exception
+	{
+		startPage(false, false, false);
+		assertFormSubmitMiddle(false, true, true);
+	}
+
 	private void startPage(boolean outerWantsInclusion, boolean middleWantsInclusion,
 		boolean middleWantsExclusion)
 	{

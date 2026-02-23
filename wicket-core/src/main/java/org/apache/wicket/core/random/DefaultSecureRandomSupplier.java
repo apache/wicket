@@ -32,23 +32,24 @@ import org.apache.wicket.WicketRuntimeException;
  */
 public class DefaultSecureRandomSupplier implements ISecureRandomSupplier
 {
-	private SecureRandom random;
-
-	public DefaultSecureRandomSupplier()
+	private static final class Holder
 	{
-		try
+		private static final SecureRandom INSTANCE;
+
+		static
 		{
-			random = SecureRandom.getInstance("SHA1PRNG");
-		}
-		catch (NoSuchAlgorithmException e)
-		{
-			throw new WicketRuntimeException(e);
+			try
+			{
+				INSTANCE = SecureRandom.getInstance("SHA1PRNG");
+			} catch (NoSuchAlgorithmException e) {
+				throw new WicketRuntimeException(e);
+			}
 		}
 	}
 
 	@Override
 	public SecureRandom getRandom()
 	{
-		return random;
+		return Holder.INSTANCE;
 	}
 }

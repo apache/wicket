@@ -106,7 +106,7 @@ public abstract class StringResourceLoaderTestBase
 	@Test
 	void loaderValidKeyNoStyleAlternativeLocale()
 	{
-		String s = loader.loadStringResource(component.getClass(), "test.string", new Locale("zz"),
+		String s = loader.loadStringResource(component.getClass(), "test.string", Locale.of("zz"),
 			null, null);
 		assertEquals("Flib flob", s, "Resource should be loaded");
 	}
@@ -118,7 +118,7 @@ public abstract class StringResourceLoaderTestBase
 	void loaderInvalidKeyNoStyleAlternativeLocale()
 	{
 		assertNull(loader.loadStringResource(component.getClass(), "unknown.string",
-			new Locale("zz"), null, null), "Missing key should return null");
+			Locale.of("zz"), null, null), "Missing key should return null");
 	}
 
 	/**

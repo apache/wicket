@@ -59,7 +59,7 @@ public class SecuritySettings
 	private ICryptFactory cryptFactory;
 
 	/** supplier of random data and SecureRandom */
-	private ISecureRandomSupplier randomSupplier = new DefaultSecureRandomSupplier();
+	private ISecureRandomSupplier randomSupplier;
 
 	/**
 	 * Whether mounts should be enforced. If {@code true}, requests for a page will be
@@ -139,6 +139,10 @@ public class SecuritySettings
 	 */
 	public ISecureRandomSupplier getRandomSupplier()
 	{
+		if (randomSupplier == null)
+		{
+			randomSupplier = new DefaultSecureRandomSupplier();
+		}
 		return randomSupplier;
 	}
 

@@ -73,7 +73,7 @@ public final class Home extends WebPage
 			@Override
 			public void onClick()
 			{
-				getSession().setLocale(new Locale("nl", "NL"));
+				getSession().setLocale(Locale.of("nl", "NL"));
 			}
 		});
 		add(new Link<Void>("goGerman")
@@ -83,7 +83,7 @@ public final class Home extends WebPage
 			@Override
 			public void onClick()
 			{
-				getSession().setLocale(new Locale("de", "DE"));
+				getSession().setLocale(Locale.of("de", "DE"));
 			}
 		});
 		add(new Link<Void>("goChinese")
@@ -93,7 +93,7 @@ public final class Home extends WebPage
 			@Override
 			public void onClick()
 			{
-				getSession().setLocale(new Locale("zh", "CN"));
+				getSession().setLocale(Locale.of("zh", "CN"));
 			}
 		});
 		add(new Link<Void>("goDanish")
@@ -103,7 +103,7 @@ public final class Home extends WebPage
 			@Override
 			public void onClick()
 			{
-				getSession().setLocale(new Locale("da", "DK"));
+				getSession().setLocale(Locale.of("da", "DK"));
 			}
 		});
 	}

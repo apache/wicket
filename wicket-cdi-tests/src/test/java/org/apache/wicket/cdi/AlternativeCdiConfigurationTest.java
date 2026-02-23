@@ -14,56 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.spring.injection.util;
+package org.apache.wicket.cdi;
 
+import io.github.cdiunit.ActivatedAlternatives;
+import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import org.apache.wicket.cdi.testapp.AlternativeTestAppScope;
+import org.apache.wicket.cdi.testapp.TestPage;
+import org.junit.jupiter.api.Test;
+
 
 /**
- * Mock for an object with some SpringBean annotations
- *
- * @author Igor Vaynberg (ivaynberg)
- *
+ * @author pedrosans
  */
-public class JakartaInjectInjectable implements InjectableInterface
+@ActivatedAlternatives(AlternativeTestAppScope.class)
+class AlternativeCdiConfigurationTest extends WicketCdiTestCase
 {
-	private Bean nobean;
-
 	@Inject
-	private Bean beanByClass;
+	BeanManager beanManager;
 
-	@Inject
-	@Named("somebean")
-	private Bean2 beanByName;
-
-	@Inject
-	private String nonExisting;
-
-	/**
-	 * @return test bean
-	 */
-	@Override
-	public Bean getBeanByClass()
+	@Test
+	void testApplicationScope()
 	{
-		return beanByClass;
+		configure(new CdiConfiguration());
+		tester.startPage(TestPage.class);
+		tester.assertLabel("appscope", "Alternative ok");
 	}
 
-	/**
-	 * @return test bean
-	 */
-	@Override
-	public Bean2 getBeanByName()
+	@Test
+	void testUsesCdiJUnitConfiguration()
 	{
-		return beanByName;
-	}
-
-	/**
-	 * @return test bean
-	 */
-	@Override
-	public Bean getNobean()
-	{
-		return nobean;
+		configure(new CdiConfiguration().setBeanManager(beanManager));
+		tester.startPage(TestPage.class);
+		tester.assertLabel("appscope", "Alternative ok");
 	}
 
 }

@@ -32,7 +32,7 @@ from, and get started quickly:
     
    the API Docs are available on the main site of the project:
    https://wicket.apache.org/learn/#javadoc
-    
+
  - Wicket Examples:
 
     shows all components in short usage examples, also available live on:
