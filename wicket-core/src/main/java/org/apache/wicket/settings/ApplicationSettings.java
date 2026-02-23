@@ -18,6 +18,8 @@ package org.apache.wicket.settings;
 
 import java.lang.ref.WeakReference;
 
+import org.apache.commons.fileupload2.core.AbstractFileUpload;
+import org.apache.commons.fileupload2.core.MultipartInput;
 import org.apache.wicket.Page;
 import org.apache.wicket.application.DefaultClassResolver;
 import org.apache.wicket.application.IClassResolver;
@@ -60,6 +62,8 @@ public class ApplicationSettings
 	private WeakReference<Class<? extends Page>> pageExpiredErrorPage;
 
 	private Bytes defaultMaximumUploadSize = Bytes.MAX;
+
+	private int defaultMaximumPartHeaderSize = MultipartInput.DEFAULT_PART_HEADER_SIZE_MAX;
 
 	private boolean uploadProgressUpdatesEnabled = false;
 
@@ -269,5 +273,24 @@ public class ApplicationSettings
 	public IFeedbackMessageFilter getFeedbackMessageCleanupFilter()
 	{
 		return feedbackMessageCleanupFilter;
+	}
+    
+    /**
+     * The maximumPartHeaderSize für MultipartRequests in Fileuploads.
+     * @return
+     */
+	public int getDefaultMaximumPartHeaderSize()
+	{
+		return defaultMaximumPartHeaderSize;
+	}
+
+    /**
+     * Sets the default maximumPartHeaderSize. See also: {@link AbstractFileUpload#getMaxPartHeaderSize()}
+     * @param defaultMaximumPartHeaderSize
+     *     default is {@link MultipartInput#DEFAULT_PART_HEADER_SIZE_MAX}
+     */
+	public void setDefaultMaximumPartHeaderSize(int defaultMaximumPartHeaderSize)
+	{
+		this.defaultMaximumPartHeaderSize = defaultMaximumPartHeaderSize;
 	}
 }
