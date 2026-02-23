@@ -296,9 +296,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		}
 
 		fileUpload.setMaxFileCount(getFileCountMax());
-
-		fileUpload.setMaxPartHeaderSize(
-			Application.get().getApplicationSettings().getDefaultMaximumPartHeaderSize());
+		fileUpload.setMaxPartHeaderSize(getDefaultMaximumPartHeaderSize());
 
 		return fileUpload;
 	}
