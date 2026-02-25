@@ -27,8 +27,8 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.apache.commons.fileupload2.core.FileItem;
 import org.apache.commons.fileupload2.core.DiskFileItemFactory;
+import org.apache.commons.fileupload2.core.FileItem;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.FileCleanerTrackerAdapter;
@@ -60,14 +60,16 @@ class FileUploadTest extends WicketTestCase
 		DiskFileItemFactory itemFactory = DiskFileItemFactory.builder()
 					.setFileCleaningTracker(new FileCleanerTrackerAdapter(fileUploadCleaner))
 					.get();
+
 		FileItem fileItem = itemFactory.fileItemBuilder()
 				.setContentType("text/java")
 				.setFieldName("dummyFieldName")
 				.setFormField(false)
 				.setFileName("FileUploadTest.java")
 				.get();
-		// Initialize the upload
-		fileItem.getOutputStream();
+
+        // Initialize the upload
+        fileItem.getOutputStream().close();
 
 		// Get the internal list out
 		Field inputStreamsField = FileUpload.class.getDeclaredField("inputStreamsToClose");
