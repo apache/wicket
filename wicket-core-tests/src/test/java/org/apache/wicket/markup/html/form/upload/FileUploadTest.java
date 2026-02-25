@@ -22,22 +22,19 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.apache.commons.fileupload2.core.FileItem;
 import org.apache.commons.fileupload2.core.DiskFileItemFactory;
+import org.apache.commons.fileupload2.core.FileItem;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.FileCleanerTrackerAdapter;
 import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -70,7 +67,6 @@ class FileUploadTest extends WicketTestCase
 				.setFormField(false)
 				.setFileName("FileUploadTest.java")
 				.get();
-
 
         // Initialize the upload
         fileItem.getOutputStream().close();
