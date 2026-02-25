@@ -148,7 +148,7 @@
 		<byte-buddy.version>1.18.4</byte-buddy.version>
 		<cdi-unit.version>5.0.0-EA7</cdi-unit.version>
 		<commons-collections4.version>4.5.0</commons-collections4.version>
-		<commons-fileupload.version>2.0.0-M4</commons-fileupload.version>
+		<commons-fileupload.version>2.0.0-M5</commons-fileupload.version>
 		<commons-io.version>2.21.0</commons-io.version>
 		<commons-lang3.version>3.20.0</commons-lang3.version>
 		<guice.version>7.0.0</guice.version>
