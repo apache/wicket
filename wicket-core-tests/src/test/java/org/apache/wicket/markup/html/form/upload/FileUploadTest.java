@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -35,6 +37,7 @@ import org.apache.wicket.util.file.FileCleanerTrackerAdapter;
 import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -60,14 +63,17 @@ class FileUploadTest extends WicketTestCase
 		DiskFileItemFactory itemFactory = DiskFileItemFactory.builder()
 					.setFileCleaningTracker(new FileCleanerTrackerAdapter(fileUploadCleaner))
 					.get();
+
 		FileItem fileItem = itemFactory.fileItemBuilder()
 				.setContentType("text/java")
 				.setFieldName("dummyFieldName")
 				.setFormField(false)
 				.setFileName("FileUploadTest.java")
 				.get();
-		// Initialize the upload
-		fileItem.getOutputStream();
+
+
+        // Initialize the upload
+        fileItem.getOutputStream().close();
 
 		// Get the internal list out
 		Field inputStreamsField = FileUpload.class.getDeclaredField("inputStreamsToClose");
