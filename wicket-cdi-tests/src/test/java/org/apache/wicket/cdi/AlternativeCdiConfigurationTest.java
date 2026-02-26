@@ -44,7 +44,7 @@ class AlternativeCdiConfigurationTest extends WicketCdiTestCase
 	@Test
 	void testUsesCdiJUnitConfiguration()
 	{
-		configure(new CdiConfiguration().setBeanManager(beanManager));
+		configure(new CdiConfiguration(beanManager));
 		tester.startPage(TestPage.class);
 		tester.assertLabel("appscope", "Alternative ok");
 	}
