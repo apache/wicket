@@ -24,9 +24,13 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +40,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -125,6 +130,7 @@ import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.ValueMap;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
@@ -2860,6 +2866,7 @@ public class BaseWicketTester
 			IMetaDataBufferingWebResponse
 	{
 		private List<Cookie> cookies = new ArrayList<Cookie>();
+		private final ValueMap headers = new ValueMap();
 
 		private WicketTesterServletWebResponse(ServletWebRequest request,
 			MockHttpServletResponse response)
@@ -2881,6 +2888,10 @@ public class BaseWicketTester
 			{
 				webResponse.addCookie(cookie);
 			}
+			for (String name : headers.keySet())
+			{
+				webResponse.setHeader(name, Arrays.stream(headers.getStringArray(name)).collect(Collectors.joining(";")));
+			}
 		}
 
 		@Override
@@ -2895,6 +2906,28 @@ public class BaseWicketTester
 			{
 				throw new RuntimeException(e);
 			}
+		}
+
+		@Override
+		public void setHeader(String name, String value)
+		{
+			super.setHeader(name, value);
+			headers.put(name, value);
+		}
+
+		@Override
+		public void addHeader(String name, String value)
+		{
+			super.addHeader(name, value);
+			headers.add(name, value);
+		}
+
+		@Override
+		public void reset()
+		{
+			super.reset();
+			cookies.clear();
+			headers.clear();
 		}
 	}
 
