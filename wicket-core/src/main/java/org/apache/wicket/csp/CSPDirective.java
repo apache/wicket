@@ -35,7 +35,11 @@ public enum CSPDirective
 {
 	DEFAULT_SRC("default-src"),
 	SCRIPT_SRC("script-src"),
+	SCRIPT_SRC_ATTR("script-src-attr"),
+	SCRIPT_SRC_ELEM("script-src-elem"),
 	STYLE_SRC("style-src"),
+	STYLE_SRC_ATTR("style-src-attr"),
+	STYLE_SRC_ELEM("style-src-elem"),
 	IMG_SRC("img-src"),
 	CONNECT_SRC("connect-src"),
 	FONT_SRC("font-src"),
@@ -121,7 +125,7 @@ public enum CSPDirective
 		}
 	};
 
-	private String value;
+	private final String value;
 
 	CSPDirective(String value)
 	{
@@ -135,7 +139,7 @@ public enum CSPDirective
 
 	/**
 	 * Check if {@code value} can be added to the list of other values. By default, it checks for
-	 * conflicts with wildcards and none and it checks if values are valid uris.
+	 * conflicts with wildcards and none, and it checks if values are valid uris.
 	 *
 	 * @param value
 	 *            The value to add.
@@ -147,6 +151,19 @@ public enum CSPDirective
 	public void checkValueForDirective(CSPRenderable value,
 			List<CSPRenderable> existingDirectiveValues)
 	{
+		if (this == SCRIPT_SRC_ATTR || this == STYLE_SRC_ATTR) 
+		{
+			if (!existingDirectiveValues.isEmpty()) 
+			{
+				throw new IllegalArgumentException("Directive " + this + " supports only one value");
+			}
+
+			if (!CSPDirectiveSrcValue.NONE.equals(value) && !CSPDirectiveSrcValue.UNSAFE_INLINE.equals(value)) 
+			{
+				throw new IllegalArgumentException("Unsupported directive value: " + value + " for -src-attr directive");
+			}
+		}
+
 		if (!existingDirectiveValues.isEmpty())
 		{
 			if (CSPDirectiveSrcValue.WILDCARD.equals(value)
@@ -185,11 +202,11 @@ public enum CSPDirective
 		{
 			return null;
 		}
-		for (int i = 0; i < values().length; i++)
+		for (CSPDirective directive : values())
 		{
-			if (value.equals(values()[i].getValue()))
+			if (value.equals(directive.getValue()))
 			{
-				return values()[i];
+				return directive;
 			}
 		}
 		return null;
