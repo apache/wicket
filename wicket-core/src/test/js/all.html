@@ -68,6 +68,8 @@
 		<div id="componentPlaceholderId" data-wicket-placeholder="">
 		</div>
 
+		<textarea id="componentAlternativeReplacementId"><ajax-response><component id="componentToReplace" replacement="alternativeReplacement"><![CDATA[<span id="componentToReplace">new body</span>]]></component></ajax-response></textarea>
+
 		<!--
 			DOM
 		-->
@@ -171,10 +173,6 @@
 	<script type="text/javascript" src="qunit/blanket.min.js"></script>
 
 	<!-- the module under test -->
-	<script>
-		// uncomment for error reporting from the tests
-		// Wicket.Ajax.DebugWindow.enabled = true;
-	</script>
 	<script type="text/javascript" src="channels.js"></script>
 	<script type="text/javascript" src="dom.js"></script>
 	<script type="text/javascript" src="event.js"></script>
