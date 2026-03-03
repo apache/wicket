@@ -18,12 +18,11 @@ package org.apache.wicket.cdi;
 
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.CDI;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
-import org.apache.wicket.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 /**
  * Defines several strategies for looking up a CDI BeanManager in a portable way. The following
@@ -32,11 +31,11 @@ import org.slf4j.LoggerFactory;
  * <li>JNDI under java:comp/BeanManager (default location)</li>
  * <li>JNDI under java:comp/env/BeanManager (for servlet containers like Tomcat and Jetty)</li>
  * <li>CDI.current().getBeanManager() (portable lookup)</li>
- * <li>{@linkplain CdiConfiguration#getFallbackBeanManager() Fallback}</li>
  * </ul>
- * 
- * The last successful lookup strategy is saved and tried first next time.
- * 
+ *
+ * This is de default strategy used in {@link CdiConfiguration} to look for a BeanManger, unless
+ * one is defined in CdiConfiguration(BeanManager)
+ *
  * @author papegaaij
  */
 public final class BeanManagerLookup
@@ -45,19 +44,6 @@ public final class BeanManagerLookup
 
 	private enum BeanManagerLookupStrategy
 	{
-		CUSTOM {
-			@Override
-			public BeanManager lookup()
-			{
-				CdiConfiguration cdiConfiguration = CdiConfiguration.get(Application.get());
-
-				if (cdiConfiguration == null)
-					throw new IllegalStateException(
-						"NonContextual injection can only be used after a CdiConfiguration is set");
-
-				return cdiConfiguration.getBeanManager();
-			}
-		},
 		JNDI {
 			@Override
 			public BeanManager lookup()
@@ -100,47 +86,27 @@ public final class BeanManagerLookup
 					return null;
 				}
 			}
-		},
-		FALLBACK {
-			@Override
-			public BeanManager lookup()
-			{
-				return CdiConfiguration.get(Application.get()).getFallbackBeanManager();
-			}
 		};
 
 		public abstract BeanManager lookup();
 	}
 
-	private static BeanManagerLookupStrategy lastSuccessful = BeanManagerLookupStrategy.CUSTOM;
-
 	private BeanManagerLookup()
 	{
+
 	}
 
 	public static BeanManager lookup()
 	{
-		BeanManager ret = lastSuccessful.lookup();
-		if (ret != null)
-			return ret;
-
 		for (BeanManagerLookupStrategy curStrategy : BeanManagerLookupStrategy.values())
 		{
-			ret = curStrategy.lookup();
+			BeanManager ret = curStrategy.lookup();
 			if (ret != null)
 			{
-				lastSuccessful = curStrategy;
 				return ret;
 			}
 		}
-
-		throw new IllegalStateException(
-			"No BeanManager found via the CDI provider and no fallback specified. Check your "
-				+ "CDI setup or specify a fallback BeanManager in the CdiConfiguration.");
+		return null;
 	}
 
-	static void detach()
-	{
-		lastSuccessful = BeanManagerLookupStrategy.CUSTOM;
-	}
 }
