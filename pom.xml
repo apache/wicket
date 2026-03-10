@@ -165,7 +165,7 @@
 		<jakarta.servlet.jsp-api.version>3.1.1</jakarta.servlet.jsp-api.version>
 		<jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
 		<jakarta.websocket-api.version>2.2.0</jakarta.websocket-api.version>
-		<jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
+		<jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
 		<jetty.version>11.0.24</jetty.version>
 		<junit.version>6.0.3</junit.version>
