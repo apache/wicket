@@ -286,14 +286,17 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			fileUpload.setHeaderCharset(charset);
 		}
 
-		fileUpload.setSizeMax(getMaxSize().bytes());
+		fileUpload.setMaxSize(getMaxSize().bytes());
 
 		Bytes fileMaxSize = getFileMaxSize();
-		if (fileMaxSize != null) {
-			fileUpload.setFileSizeMax(fileMaxSize.bytes());
+
+		if (fileMaxSize != null)
+		{
+			fileUpload.setMaxFileSize(fileMaxSize.bytes());
 		}
 
-		fileUpload.setFileCountMax(getFileCountMax());
+		fileUpload.setMaxFileCount(getFileCountMax());
+		fileUpload.setMaxPartHeaderSize(getDefaultMaximumPartHeaderSize());
 
 		return fileUpload;
 	}

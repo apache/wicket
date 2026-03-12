@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 
 import static java.lang.System.currentTimeMillis;
@@ -233,7 +234,7 @@ public class FilesTest
 	@Test
 	public void fileWithWhitespace() throws Exception
 	{
-		URL url = new URL("file:/file%20with%20whitespace");
+		URL url = URI.create("file:/file%20with%20whitespace").toURL();
 
 		assertEquals(java.io.File.separator + "file with whitespace",
 			Files.getLocalFileFromUrl(url).getPath());

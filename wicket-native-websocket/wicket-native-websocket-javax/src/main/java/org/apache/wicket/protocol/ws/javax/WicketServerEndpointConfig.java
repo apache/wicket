@@ -143,12 +143,14 @@ public class WicketServerEndpointConfig implements ServerEndpointConfig
 
 			Object httpSession = request.getHttpSession();
 			LOG.trace("httpSession: {}", httpSession);
-			userProperties.put(JavaxUpgradeHttpRequest.SESSION, httpSession);
-			if (httpSession instanceof HttpSession)
+			if (httpSession != null)
 			{
-				userProperties.put(JavaxUpgradeHttpRequest.CONTEXT_PATH,((HttpSession)httpSession).getServletContext().getContextPath());
+				userProperties.put(JavaxUpgradeHttpRequest.SESSION, httpSession);
+				if (httpSession instanceof HttpSession)
+				{
+					userProperties.put(JavaxUpgradeHttpRequest.CONTEXT_PATH,((HttpSession)httpSession).getServletContext().getContextPath());
+				}
 			}
-
 
 			Map<String, List<String>> headers = request.getHeaders();
 			LOG.trace("headers: {}", headers);

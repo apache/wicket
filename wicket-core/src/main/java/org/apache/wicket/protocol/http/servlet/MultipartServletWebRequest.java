@@ -19,15 +19,16 @@ package org.apache.wicket.protocol.http.servlet;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.apache.commons.fileupload2.core.FileItem;
 import org.apache.commons.fileupload2.core.FileUploadException;
+import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Servlet specific WebRequest subclass for multipart content uploads.
@@ -146,5 +147,10 @@ public abstract class MultipartServletWebRequest extends ServletWebRequest
 	public void setFileCountMax(long fileCountMax)
 	{
 		this.fileCountMax = fileCountMax;
+	}
+
+	protected int getDefaultMaximumPartHeaderSize()
+	{
+		return Application.get().getApplicationSettings().getDefaultMaximumPartHeaderSize();
 	}
 }

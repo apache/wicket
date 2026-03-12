@@ -535,7 +535,7 @@ public class WicketFilterTest
 		filter.init(new FilterTestingConfig());
 
 		HttpServletRequest request = mock(HttpServletRequest.class);
-		when(request.getLocale()).thenReturn(new Locale("bg", "BG"));
+		when(request.getLocale()).thenReturn(Locale.of("bg", "BG"));
 		when(request.getRequestURI()).thenReturn("/contextPath/js/bla.js")
 			.thenReturn("/contextPath/css/bla.css")
 			.thenReturn("/contextPath/images/bla.img")

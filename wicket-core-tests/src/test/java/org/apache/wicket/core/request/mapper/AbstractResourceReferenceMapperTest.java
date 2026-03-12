@@ -133,7 +133,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 	};
 
 	ResourceReference reference2 = new ResourceReference(
-		AbstractResourceReferenceMapperTest.class, "reference2/name2", new Locale("en", "en"),
+		AbstractResourceReferenceMapperTest.class, "reference2/name2", Locale.of("en", "en"),
 		null, null)
 	{
 		private static final long serialVersionUID = 1L;
@@ -146,7 +146,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 	};
 
 	private ResourceReference reference2_a = new ResourceReference(
-		AbstractResourceReferenceMapperTest.class, "reference2/name2", new Locale("en", "en"),
+		AbstractResourceReferenceMapperTest.class, "reference2/name2", Locale.of("en", "en"),
 		"style", null)
 	{
 		private static final long serialVersionUID = 1L;

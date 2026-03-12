@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>10.8.0-SNAPSHOT</version>
+		<version>11.0.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-common-tests</artifactId>
@@ -49,7 +49,7 @@
 			<dependency>
 				<groupId>org.jboss.logging</groupId>
 				<artifactId>jboss-logging</artifactId>
-				<version>3.6.1.Final</version>
+				<version>3.6.2.Final</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>

@@ -49,7 +49,7 @@ class PageMarkupLoadingTest extends WicketTestCase
 	@Test
     void dutch() throws Exception
 	{
-		tester.getSession().setLocale(new Locale("nl"));
+		tester.getSession().setLocale(Locale.of("nl"));
 		tester.startPage(Page1.class);
 		tester.assertRenderedPage(Page1.class);
 		tester.assertResultPage(getClass(), "PageMarkupLoadingTest$Page1_nl_expected.html");
@@ -63,7 +63,7 @@ class PageMarkupLoadingTest extends WicketTestCase
 	@Test
     void testDutchMyStyle() throws Exception
 	{
-		tester.getSession().setLocale(new Locale("nl"));
+		tester.getSession().setLocale(Locale.of("nl"));
 		tester.getSession().setStyle("mystyle");
 		tester.startPage(Page1.class);
 		tester.assertRenderedPage(Page1.class);
@@ -78,7 +78,7 @@ class PageMarkupLoadingTest extends WicketTestCase
 	@Test
     void dutchMyStyleMyVar() throws Exception
 	{
-		tester.getSession().setLocale(new Locale("nl"));
+		tester.getSession().setLocale(Locale.of("nl"));
 		tester.getSession().setStyle("mystyle");
 		tester.startPage(Page2.class);
 		tester.assertRenderedPage(Page2.class);

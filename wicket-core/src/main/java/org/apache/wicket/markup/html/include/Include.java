@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.html.include;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -187,9 +189,9 @@ public class Include extends WebComponent implements IGenericComponent<String, I
 	{
 		try
 		{
-			return importUrl(new URL(url.toString()));
+			return importUrl(new URI(url.toString()).toURL());
 		}
-		catch (MalformedURLException e)
+		catch (URISyntaxException | MalformedURLException e)
 		{
 			throw new WicketRuntimeException(e);
 		}

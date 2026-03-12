@@ -6,7 +6,7 @@
 
 What is Apache Wicket?
 =================
-
+ 
 Apache Wicket is an open source, java, component based, web application
 framework. With proper mark-up/logic separation, a POJO data model, and a
 refreshing lack of XML, Apache Wicket makes developing web-apps simple and
@@ -32,7 +32,7 @@ from, and get started quickly:
     
    the API Docs are available on the main site of the project:
    https://wicket.apache.org/learn/#javadoc
-    
+
  - Wicket Examples:
 
     shows all components in short usage examples, also available live on:

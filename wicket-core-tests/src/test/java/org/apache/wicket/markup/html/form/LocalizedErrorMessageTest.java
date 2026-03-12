@@ -33,7 +33,7 @@ class LocalizedErrorMessageTest extends WicketTestCase
 	@Test
     void wicket891()
 	{
-		tester.getSession().setLocale(new Locale("nl"));
+		tester.getSession().setLocale(Locale.of("nl"));
 
 		LocalizedMessagePage page = new LocalizedMessagePage();
 		tester.startPage(page);
@@ -42,7 +42,7 @@ class LocalizedErrorMessageTest extends WicketTestCase
 		tester.submitForm(page.form);
 
 		tester.assertErrorMessages("'Number' moet een getal zijn. ");
-		tester.getSession().setLocale(new Locale("us"));
+		tester.getSession().setLocale(Locale.of("us"));
 
 		tester.clearFeedbackMessages();
 
@@ -62,7 +62,7 @@ class LocalizedErrorMessageTest extends WicketTestCase
 	@Test
     void testConvertedVars()
 	{
-		tester.getSession().setLocale(new Locale("de"));
+		tester.getSession().setLocale(Locale.of("de"));
 
 		LocalizedMessagePage page = new LocalizedMessagePage();
 		tester.startPage(page);
@@ -84,7 +84,7 @@ class LocalizedErrorMessageTest extends WicketTestCase
     void wicket_1927()
 	{
 		tester.getApplication().getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
-		tester.getSession().setLocale(new Locale("de"));
+		tester.getSession().setLocale(Locale.of("de"));
 
 		LocalizedMessagePage page = new LocalizedMessagePage();
 		tester.startPage(page);
@@ -94,7 +94,7 @@ class LocalizedErrorMessageTest extends WicketTestCase
 		tester.submitForm(page.form);
 
 		tester.assertErrorMessages("Der Wert von 'Number' ist kein g\u00FCltiger Wert f\u00FCr 'Double'.");
-		tester.getSession().setLocale(new Locale("pl"));
+		tester.getSession().setLocale(Locale.of("pl"));
 
 		tester.clearFeedbackMessages();
 

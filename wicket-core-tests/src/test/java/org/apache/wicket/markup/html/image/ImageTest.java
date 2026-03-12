@@ -34,7 +34,7 @@ public class ImageTest extends WicketTestCase
 	@Test
     void test_1() throws Exception
 	{
-		Locale.setDefault(new Locale("en", "US"));
+		Locale.setDefault(Locale.of("en", "US"));
 		tester.startPage(Home.class);
 
 		tester.clickLink("goCanadian");

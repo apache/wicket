@@ -14,33 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.io;
+package org.apache.wicket.cdi;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.net.URI;
-import java.net.URL;
-import java.time.Instant;
-import org.apache.wicket.util.WicketTestTag;
-import org.junit.jupiter.api.Tag;
+import io.github.cdiunit.ActivatedAlternatives;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import org.apache.wicket.cdi.testapp.AlternativeTestAppScope;
+import org.apache.wicket.cdi.testapp.TestPage;
 import org.junit.jupiter.api.Test;
 
+
 /**
- * Tests for {@link Connections}
+ * @author pedrosans
  */
-@Tag(WicketTestTag.SLOW)
-class ConnectionsTest
+@ActivatedAlternatives(AlternativeTestAppScope.class)
+class AlternativeCdiConfigurationTest extends WicketCdiTestCase
 {
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5838
-	 */
+	@Inject
+	BeanManager beanManager;
+
 	@Test
-	void getLastModified() throws Exception
+	void testApplicationScope()
 	{
-		URL url = URI.create("https://wicket.apache.org/learn/books/wia.png").toURL();
-		Instant lastModified = Connections.getLastModified(url);
-		assertNotNull(lastModified);
-		assertNotEquals(0L, lastModified.toEpochMilli());
+		configure(new CdiConfiguration());
+		tester.startPage(TestPage.class);
+		tester.assertLabel("appscope", "Alternative ok");
 	}
+
+	@Test
+	void testUsesCdiJUnitConfiguration()
+	{
+		configure(new CdiConfiguration().setBeanManager(beanManager));
+		tester.startPage(TestPage.class);
+		tester.assertLabel("appscope", "Alternative ok");
+	}
+
 }

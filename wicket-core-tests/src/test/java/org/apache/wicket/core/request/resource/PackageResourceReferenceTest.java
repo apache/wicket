@@ -70,7 +70,7 @@ class PackageResourceReferenceTest extends WicketTestCase
 {
 	private static Class<PackageResourceReferenceTest> scope = PackageResourceReferenceTest.class;
 	private static final Locale defaultLocale = Locale.CHINA;
-	private static final Locale[] locales = { null, new Locale("en"), new Locale("en", "US") };
+	private static final Locale[] locales = { null, Locale.of("en"), Locale.of("en", "US") };
 	private static final String[] styles = { null, "style" };
 	private static final String[] variations = { null, "var" };
 
@@ -173,7 +173,7 @@ class PackageResourceReferenceTest extends WicketTestCase
 	@Test
 	void sessionAttributesRelevance()
 	{
-		for (Locale locale : new Locale[] { new Locale("en"), new Locale("en", "US") })
+		for (Locale locale : new Locale[] { Locale.of("en"), Locale.of("en", "US") })
 		{
 			tester.getSession().setLocale(locale);
 			for (String style : styles)
@@ -198,10 +198,10 @@ class PackageResourceReferenceTest extends WicketTestCase
 	@Test
 	void userAttributesPreference()
 	{
-		tester.getSession().setLocale(new Locale("en"));
+		tester.getSession().setLocale(Locale.of("en"));
 		tester.getSession().setStyle("style");
 
-		Locale[] userLocales = { null, new Locale("pt"), new Locale("pt", "BR") };
+		Locale[] userLocales = { null, Locale.of("pt"), Locale.of("pt", "BR") };
 		String userStyle = "style2";
 
 		for (Locale userLocale : userLocales)

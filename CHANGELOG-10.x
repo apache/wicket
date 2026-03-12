@@ -2,6 +2,15 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.8.0
+
+** Bug
+
+    * [WICKET-7167] - Submited Form with wantSubmitOnParentFormSubmit false does not cascade process.
+    * [WICKET-7170] - SpringInjector / AnnotProxyFieldValueFactory does not consider defaultCandidate
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.7.0
 
 ** Improvement
