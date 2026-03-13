@@ -8,7 +8,8 @@
  * 3) run: npm install (This will use package.json and install grunt and all dependencies)
  * 4.1) grunt jshint - checks all JavaScript files with JSHint
  * 4.2) grunt jshint:core - checks only the files in wicket-core
- * 4.3) grunt - starts the registered tasks: starting a web server and running all tests (Ajax, non-Ajax and AMD)
+ * 4.3) grunt - starts the registered tasks: starting a web server and running all tests (Ajax, non-Ajax, XML
+ *      replacement and AMD)
  */
 
  /*global module: true */
@@ -18,11 +19,10 @@ module.exports = function(grunt) {
 
 	var
 		coreJs = [
-			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
 			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
+			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/xml-replacement-method.js',
 			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckSelector.js",
 			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js",
-			"../../wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormChoiceComponentUpdatingBehavior.js",
 			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/pages/wicket-browser-info.js"
 		],
 		extensionsJs = [
@@ -30,7 +30,6 @@ module.exports = function(grunt) {
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/wicket-ajaxdownload.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/form/palette/palette.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/autocomplete/wicket-autocomplete.js",
-			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/filter/wicket-filterform.js"
 		],
 		nativeWebSocketJs = [
@@ -44,7 +43,8 @@ module.exports = function(grunt) {
 			"../../wicket-core/src/test/js/channels.js",
 			"../../wicket-core/src/test/js/event.js",
 			"../../wicket-core/src/test/js/timer.js",
-			"../../wicket-core/src/test/js/amd.js"
+			"../../wicket-core/src/test/js/amd.js",
+			"../../wicket-core/src/test/js/xml-replacement.js"
 		],
 		gymTestsJs = [
 			"../../wicket-examples/src/main/webapp/js-test/tests/ajax/form.js",
@@ -119,6 +119,17 @@ module.exports = function(grunt) {
 				options: {
 					urls: [
 						'http://localhost:38887/test/js/amd.html?3.7.1'
+					]
+				}
+			},
+
+			/**
+			 * Run XML reaplcement method tests
+			 */
+			"xml-replacement": {
+				options: {
+					urls: [
+						'http://localhost:38887/test/js/xml-replacement.html?3.7.1'
 					]
 				}
 			}
