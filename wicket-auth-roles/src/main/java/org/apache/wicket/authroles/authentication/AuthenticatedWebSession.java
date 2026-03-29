@@ -71,6 +71,7 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 		}
 		else if (authenticated && signedIn.compareAndSet(false, true))
 		{
+			changeSessionId();
 			bind();
 		}
 		return authenticated;
