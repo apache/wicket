@@ -34,7 +34,7 @@ $q(document).ready(function() {
 			$emailInput = $('input[name=email]', $form);
 
 			// enter just the name field
-			$nameInput.focus();
+			$nameInput.trigger('focus');
 			var name = 'Aj';
 			$nameInput.val(name);
 
@@ -84,7 +84,7 @@ $q(document).ready(function() {
 			$emailInput = $('input[name=email]', $form);
 
 			// enter just the name field
-			$nameInput.focus();
+			$nameInput.trigger('focus');
 			var name = 'abcdef';
 			$nameInput.val(name);
 

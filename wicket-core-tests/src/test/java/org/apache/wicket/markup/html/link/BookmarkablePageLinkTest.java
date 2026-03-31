@@ -82,7 +82,7 @@ class BookmarkablePageLinkTest extends WicketTestCase
 
 		tester.startComponentInPage(link, null);
 		String expected =
-				"<html><head><script type=\"text/javascript\" src=\"./resource/org.apache.wicket.resource.JQueryResourceReference/" + JQueryResourceReference.VERSION_3
+				"<html><head><script type=\"text/javascript\" src=\"./resource/org.apache.wicket.resource.JQueryResourceReference/" + JQueryResourceReference.VERSION_4
 				+ "\"></script>\n"
 				+ "<script type=\"text/javascript\" src=\"./resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js\"></script>\n"
 				+ "<script type=\"text/javascript\">\n" + "/*<![CDATA[*/\n"

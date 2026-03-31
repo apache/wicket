@@ -413,7 +413,7 @@
 				attrs.async = true;
 			}
 
-			if (!jQuery.isNumeric(attrs.rt)) {
+			if (!Number.isFinite(attrs.rt)) {
 				attrs.rt = 0;
 			}
 
@@ -443,7 +443,7 @@
 			var target;
 			if (attrs.event) {
 				target = attrs.event.target;
-			} else if (!jQuery.isWindow(attrs.c)) {
+			} else if (attrs.c !== null && attrs.c !== attrs.c.window) {
 				target = Wicket.$(attrs.c);
 			} else {
 				target = window;
@@ -458,7 +458,7 @@
 		 * @private
 		 */
 		_executeHandlers: function (handlers) {
-			if (jQuery.isArray(handlers)) {
+			if (Array.isArray(handlers)) {
 
 				// cut the handlers argument
 				var args = Array.prototype.slice.call(arguments).slice(1);
@@ -469,7 +469,7 @@
 
 				for (var i = 0; i < handlers.length; i++) {
 					var handler = handlers[i];
-					if (jQuery.isFunction(handler)) {
+					if (typeof(handler) === "function") {
 						handler.apply(that, args);
 					} else {
 						new Function(handler).apply(that, args);
@@ -492,7 +492,7 @@
 			var result = [],
 				value,
 				name;
-			if (jQuery.isArray(parameters)) {
+			if (Array.isArray(parameters)) {
 				result = parameters;
 			}
 			else if (jQuery.isPlainObject(parameters)) {
@@ -529,7 +529,7 @@
 			for (var i = 0; i < deps.length; i++) {
 				var dep = deps[i],
 					extraParam;
-				if (jQuery.isFunction(dep)) {
+				if (typeof(dep) === "function") {
 					extraParam = dep(attrs);
 				} else {
 					extraParam = new Function('attrs', dep)(attrs);
@@ -619,7 +619,7 @@
 
 			var preconditions = attrs.pre || [];
 			preconditions = defaultPrecondition.concat(preconditions);
-			if (jQuery.isArray(preconditions)) {
+			if (Array.isArray(preconditions)) {
 
 				var that = this._getTarget(attrs);
 
@@ -627,7 +627,7 @@
 
 					var precondition = preconditions[p];
 					var result;
-					if (jQuery.isFunction(precondition)) {
+					if (typeof(precondition) === "function") {
 						result = precondition.call(that, attrs);
 					} else {
 						result = new Function(precondition).call(that, attrs);
@@ -652,14 +652,14 @@
 					var scName = attrs.sc;
 					data = data.concat({name: scName, value: 1});
 				}
-			} else if (attrs.c && !jQuery.isWindow(attrs.c)) {
+			} else if (attrs.c !== null && attrs.c !== attrs.c.window) {
 				// serialize just the form component with id == attrs.c
 				var el = Wicket.$(attrs.c);
 				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
 			}
 			
 			// collect the dynamic extra parameters
-			if (jQuery.isArray(attrs.dep)) {
+			if (Array.isArray(attrs.dep)) {
 				var dynamicData = this._calculateDynamicParameters(attrs);
 				if (attrs.m.toLowerCase() === 'post') {
 					data = data.concat(dynamicData);
@@ -1148,7 +1148,7 @@
 					if ($select.length > 0 && $select.prop('disabled') === false) {
 						var name = $select.prop('name');
 						var values = $select.val();
-						if (jQuery.isArray(values)) {
+						if (Array.isArray(values)) {
 							for (var v = 0; v < values.length; v++) {
 								var value = values[v];
 								result.push( { name: name, value: value } );
@@ -1458,7 +1458,7 @@
 					return;
 				} else {
 					// jQuery 1.9+ expects '<' as the very first character in text
-					var cleanedText = jQuery.trim(text);
+					var cleanedText = text.trim();
 
 					var $newElement = jQuery(cleanedText);
 					jQuery(element).replaceWith($newElement);
@@ -1475,7 +1475,7 @@
 				var topic = we.Topic;
 
 				// jQuery 1.9+ expects '<' as the very first character in text
-				var cleanedText = jQuery.trim(text);
+				var cleanedText = text.trim();
 
 				var $newElement = jQuery(cleanedText);
 				jQuery(element).append($newElement);
@@ -1665,7 +1665,7 @@
 				attrs.c = attrs.c || window;
 				attrs.e = attrs.e || [ 'domready' ];
 
-				if (!jQuery.isArray(attrs.e)) {
+				if (!Array.isArray(attrs.e)) {
 					attrs.e = [ attrs.e ];
 				}
 
@@ -2194,7 +2194,7 @@
 
 						var safeFocus = function() {
 							try {
-								toFocus.focus();
+								toFocus.trigger('focus');
 							} catch (ignore) {
 								// WICKET-6209 IE fails if toFocus is disabled
 							}
