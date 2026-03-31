@@ -97,7 +97,7 @@ jQuery(document).ready(function() {
 		assert.equal($deserialized[0].tagName.toLowerCase(), 'div', 'The serialized element name should be <div>');
 		assert.equal($deserialized.prop('id'), complexElementId, 'The serialized element id should be ' + complexElementId);
 		assert.equal($deserialized.children()[0].tagName.toLowerCase(), 'a', 'The serialized element should have one child <a>');
-		assert.equal(jQuery.trim($deserialized.text()), 'Link', 'The serialized element should have text "Link"');
+		assert.equal($deserialized.text().trim(), 'Link', 'The serialized element should have text "Link"');
 	});
 
 	test("show() an element", assert => {

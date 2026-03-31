@@ -38,7 +38,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
  * -Dcom.sun.management.jmxremote to startup JMX (and e.g. connect with jconsole).
  *
  *
- * @see <a href="http://localhost:8080/ajax-tests/test/js/all.html?2.2.4">JavaScript tests</a>
+ * @see <a href="http://localhost:8080/ajax-tests/test/js/all.html?4.0.0">JavaScript tests</a>
  */
 public class StartJavaScriptTests
 {
@@ -126,16 +126,9 @@ public class StartJavaScriptTests
 		}
 	}
 
-	private static void browse() 
+	private static void browse() throws Exception
 	{
-		try
-		{
-			Desktop.getDesktop().browse(new URI("http://localhost:8080/ajax-tests/test/js/all.html?3.6.4"));
-		}
-		catch (Exception e)
-		{
-			System.out.println("can not open browser " + e);
-		}
+	  Desktop.getDesktop().browse(new URI("http://localhost:8080/ajax-tests/test/js/all.html?4.0.0"));
 	}
 
 	/**
