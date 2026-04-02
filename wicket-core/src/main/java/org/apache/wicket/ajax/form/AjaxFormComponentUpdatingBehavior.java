@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax.form;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -25,7 +26,6 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.util.lang.Args;
@@ -133,6 +133,19 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			target.focusComponent(null);
 		}
 
+		if (updateInnerComponents()) 
+		{
+			visitInnerComponents(target, formComponent);
+		}
+		else
+		{
+			visitSingleComponent(target, formComponent);
+		}
+		
+	}
+
+	private void visitSingleComponent(AjaxRequestTarget target, FormComponent<?> formComponent) 
+	{
 		try
 		{
 			formComponent.inputChanged();
@@ -158,7 +171,53 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			onError(target, e);
 		}
+		
 		formComponent.updateAutoLabels(target, false);
+	}
+
+	private void visitInnerComponents(final AjaxRequestTarget target, final FormComponent<?> formComponent)
+	{
+		try
+		{
+			Boolean validateresult = FormComponent.visitFormComponentsPostOrder(formComponent, (component, visit) -> 
+			{
+				component.inputChanged();
+				component.validate();
+				
+				if (!component.isValid()) 
+				{
+					visit.stop(false);
+				}
+			});
+			
+			if (Objects.requireNonNullElse(validateresult, true))
+			{
+				if (getUpdateModel())
+				{
+					FormComponent.visitFormComponentsPostOrder(formComponent, (component, visit) -> 
+					{
+						component.valid();
+						component.updateModel();
+					});
+				}
+				
+				onUpdate(target);
+			}
+			else
+			{		
+				formComponent.invalid();
+				onError(target, null);
+			}
+		}
+		catch (RuntimeException e)
+		{
+			onError(target, e);
+		}
+		
+		FormComponent.visitFormComponentsPostOrder(formComponent, (component, visit) -> 
+		{
+			component.updateAutoLabels(target, false);
+		});
 	}
 
 	/**
@@ -169,6 +228,11 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * @return true if the model of form component should be updated, false otherwise
 	 */
 	protected boolean getUpdateModel()
+	{
+		return true;
+	}
+	
+	protected boolean updateInnerComponents()
 	{
 		return true;
 	}
