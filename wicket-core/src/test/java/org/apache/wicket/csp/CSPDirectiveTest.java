@@ -25,34 +25,36 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CSPDirectiveTest {
 
     @Test
-    void scriptSrcAttrAndStyleSrcAttributesSupportValues() 
+    void scriptSrcAttrAndStyleSrcAttributesSupportValuesFromSpec()
     {
         CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of());
         CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of());
+        CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_HASHES, List.of());
+        CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.REPORT_SAMPLE, List.of());
+
         CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of());
         CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of());
+        CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_HASHES, List.of());
+        CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.REPORT_SAMPLE, List.of());
     }
 
     @Test
-    void scriptSrcAttrAndStyleSrcAttributesOnlySupportOneValue() 
+    void scriptSrcAttrAndStyleSrcAttributesDoesNotSupportOthersAndNone()
     {
         assertThrows(IllegalArgumentException.class, () ->
                 CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of(CSPDirectiveSrcValue.UNSAFE_INLINE)));
+
         assertThrows(IllegalArgumentException.class, () ->
-                CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of(CSPDirectiveSrcValue.UNSAFE_INLINE)));
+                CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of(CSPDirectiveSrcValue.UNSAFE_HASHES)));
     }
 
     @Test
-    void scriptSrcAttrAndStyleSrcAttributesOnlySupportNoneAndUnsafeInline() 
+    void scriptSrcAttrAndStyleSrcAttributesDoesNotSupportNoneAndOthers()
     {
-        for (CSPDirectiveSrcValue value : CSPDirectiveSrcValue.values()) {
-            if (value == CSPDirectiveSrcValue.NONE || value == CSPDirectiveSrcValue.UNSAFE_INLINE) {
-                CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(value, List.of());
-                CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(value, List.of());
-            } else {
-                assertThrows(IllegalArgumentException.class, () -> CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(value, List.of()));
-            }
-        }
-    }
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of(CSPDirectiveSrcValue.NONE)));
 
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_HASHES, List.of(CSPDirectiveSrcValue.NONE)));
+    }
 }

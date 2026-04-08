@@ -151,19 +151,6 @@ public enum CSPDirective
 	public void checkValueForDirective(CSPRenderable value,
 			List<CSPRenderable> existingDirectiveValues)
 	{
-		if (this == SCRIPT_SRC_ATTR || this == STYLE_SRC_ATTR) 
-		{
-			if (!existingDirectiveValues.isEmpty()) 
-			{
-				throw new IllegalArgumentException("Directive " + this + " supports only one value");
-			}
-
-			if (!CSPDirectiveSrcValue.NONE.equals(value) && !CSPDirectiveSrcValue.UNSAFE_INLINE.equals(value)) 
-			{
-				throw new IllegalArgumentException("Unsupported directive value: " + value + " for -src-attr directive");
-			}
-		}
-
 		if (!existingDirectiveValues.isEmpty())
 		{
 			if (CSPDirectiveSrcValue.WILDCARD.equals(value)
