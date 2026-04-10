@@ -85,12 +85,29 @@ public class DataTablePage extends WebPage
 
 		columns.add(new PropertyColumn<Contact, String>(new Model<>("Home Phone"), "homePhone"));
 		columns.add(new PropertyColumn<Contact, String>(new Model<>("Cell Phone"), "cellPhone"));
+		IColumn<Contact, String> ageColumn = new PropertyColumn<Contact, String>(new Model<>("Age"), "age")
+		{
+			private static final long serialVersionUID = 1L;
 
+			public boolean isVisible()
+			{
+				return false;
+			}
+		};
+		columns.add(ageColumn);
+		
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		DefaultDataTable defaultDataTable = new DefaultDataTable("table", columns,
 			new SortableContactDataProvider(), 8)
 		{
+			private static final long serialVersionUID = 1L;
 
+			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+			}
+			
 			@Override
 			protected IModel getCaptionModel()
 			{
