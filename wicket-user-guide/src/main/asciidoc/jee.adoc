@@ -7,6 +7,6 @@ All these new technologies are based on the concepts of container and dependency
 
 Wicket can be easily integrated with enterprise containers using component instantiation listeners. These entities are instances of interface _org.apache.wicket.application.IComponentInstantiationListener_ and can be registered during application's initialization.   IComponentInstantiationListener defines callback method onInstantiation(Component component) which can be used to provide custom instantiation logic for Wicket components. 
 
-Wicket distribution and project  https://github.com/wicketstuff[WicketStuff] already provide a set of built-in listeners to integrate our applications with EJB 3.1 compliant containers (like JBoss Seam) or with some of the most popular enterprise frameworks like  https://github.com/google/guice[Guice] or Spring.
+Wicket distribution and project  https://github.com/wicketstuff[WicketStuff] already provide a set of built-in listeners to integrate our applications with CDI/EJB compliant containers or with some of the most popular enterprise frameworks like  https://github.com/google/guice[Guice] or Spring.
 
 In this chapter we will see two basic examples of injecting a container-defined object into a page using first an implementation of the EJB 3.1 specifications (project  https://tomee.apache.org/[Apache TomEE] ) and then using Spring.
