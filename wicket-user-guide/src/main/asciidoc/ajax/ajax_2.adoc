@@ -71,7 +71,7 @@ AutoCompleteTextField field = new AutoCompleteTextField<T>("field", model) {
 };
 ----
 
-Wicket module wicket-examples contains page class _AutoCompletePagePage.java_ which shows an example of autocomplete text field. The running example is available on {wicket_examples_url}/ajax/autocomplete[examples site] .
+Wicket module wicket-examples contains page class _AutoCompletePage.java_ which shows an example of autocomplete text field. The running example is available on {wicket_examples_url}/ajax/autocomplete[examples site] .
 
 === Modal dialog
 
@@ -116,7 +116,7 @@ public HomePage(final PageParameters parameters) {
 ----
 
 Just like any other component also _ModalDialog_ must be added to a markup tag, like we did in our example using a <div> tag. Wicket will automatically hide the content of this tag in the final markup, as long as the dialog is not opened.
-This component does not provide any styling by itself, so you have can add a
+This component does not provide any styling by itself, so you can add a
 _DefaultTheme_ to this component if aren't styling these CSS classes by yourself.
 
 The modal dialog can be closed from code using its method _close(AjaxRequestTarget target)_.
@@ -137,7 +137,7 @@ In the next example (project _CheckBoxAjaxTree_) we will build a tree that displ
 
 image::./img/AJAX-tree-repeater.png[]
 
-We will start to explore the code of this example from the home page. The first portion of code we will see is where we build the nodes and the _TreeModelProvider_ for the three. As tree node we will use Swing class _javax.swing.tree.DefaultMutableTreeNode_:
+We will start to explore the code of this example from the home page. The first portion of code we will see is where we build the nodes and the _TreeModelProvider_ for the tree. As tree node we will use Swing class _javax.swing.tree.DefaultMutableTreeNode_:
 
 [source,java]
 ----

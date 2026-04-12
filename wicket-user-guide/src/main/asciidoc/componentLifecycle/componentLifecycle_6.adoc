@@ -1,6 +1,6 @@
 
 
 
-When a request has finished, the page and all its contained components move a the detached stage:
+When a request has finished, the page and all its contained components move to the detached stage:
 
 The hook method _onDetach()_ notifies each component that it should release all held resources no longer needed until the next request.

@@ -22,7 +22,7 @@ image::./img/datepicker-package-resources.png[]
 
 Along with the four static resources listed above, we can find also file calendar.jpg, which is the calendar icon used to open the pop up calendar, and file JQDatePicker.js which contains the following custom JavaScript code that binds our component to a JQuery UI datepicker:
 
-[source,java]
+[source,javascript]
 ----
 function initJQDatepicker(inputId, countryIsoCode, dateFormat,  calendarIcon) {
 	var localizedArray = $.datepicker.regional[countryIsoCode];
@@ -47,9 +47,9 @@ Function initJQDatepicker takes in input the following parameters:
 * *dateFormat*: the date format to use for parsing and displaying date values.
 * *calendarIcon*: the relative URL of the icon used as calendar icon.
 
-As we will see in the next paragraphs, its up to our component to generate this parameters and invoke the initJQDatepicker function.
+As we will see in the next paragraphs, it's up to our component to generate this parameters and invoke the initJQDatepicker function.
 
-Function initCalendar is a simple utility function that sets the initialization array for datepicker widget. For more details on JQuery UI datepicker usage see the documentation at http://jqueryui.com/ datepicker.
+Function initCalendar is a simple utility function that sets the initialization array for datepicker widget. For more details on JQuery UI datepicker usage see the documentation at https://jqueryui.com/datepicker/.
 
 === Initialization code
 
@@ -100,7 +100,7 @@ NOTE: as you might have noted in the constructor we need to pass the ISO languag
 
 === Header contributor code
 
-The rest of the code of our custom component is inside method _renderHeader_, which is responsible for adding to page header the bundled JQuery library, the three files from JQuery UI distribution, the custom file JQDatePicker.js and the invocation of function _initJQDatepicker_:
+The rest of the code of our custom component is inside method _renderHead_, which is responsible for adding to page header the bundled JQuery library, the three files from JQuery UI distribution, the custom file JQDatePicker.js and the invocation of function _initJQDatepicker_:
 
 [source,java]
 ----
@@ -134,11 +134,11 @@ public void renderHead(IHeaderResponse response) {
 }
 ----
 
-If component is disabled the calendar icon must be hidden and no datepicker must be displayed. That's why _renderHeader_ is skipped if component is not enabled.
+If component is disabled the calendar icon must be hidden and no datepicker must be displayed. That's why _renderHead_ is skipped if component is not enabled.
 
 To get a reference to the bundled JQuery library we used the JavaScript setting class _JavaScriptLibrarySettings_ and its method _getJQueryReference_.
 
-In the last part of _renderHeader_ we build the string to invoke function _initJQDatepicker_ using the values obtained inside onInitialize. Unfortunately the date format used by JQuery UI is different from the one adopted in Java so we have to convert it before building the JavaScript code. This init script is rendered into header section using a _OnLoadHeaderItem_ to ensure that it will be executed after all the other scripts have been loaded.
+In the last part of _renderHead_ we build the string to invoke function _initJQDatepicker_ using the values obtained inside onInitialize. Unfortunately the date format used by JQuery UI is different from the one adopted in Java so we have to convert it before building the JavaScript code. This init script is rendered into header section using a _OnLoadHeaderItem_ to ensure that it will be executed after all the other scripts have been loaded.
 
 NOTE: If we add more than one instance of our custom component to a single page, static resources are rendered to the header section just once. Wicket automatically checks if a static resource is already referenced by a page and if so, it will not render it again.
 

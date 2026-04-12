@@ -1,7 +1,7 @@
 
 
 
-For end-users a datepicker is one of the most appreciated widget. It allows to simply edit a date value with the help of a user-friendly pop-up calendar. That's why nearly all UI frameworks provide a version of this widget.
+For end-users a datepicker is one of the most appreciated widgets. It allows simply editing a date value with the help of a user-friendly pop-up calendar. That's why nearly all UI frameworks provide a version of this widget.
 
 Popular JavaScript libraries like YUI and JQuery come with a ready-to-use datepicker to enrich the user experience of our web applications. Wicket already provides a component which integrates a text field with a calendar widget from YUI library, but there is no built-in component that uses a datepicker based on JQuery library.
 

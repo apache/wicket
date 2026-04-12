@@ -48,7 +48,7 @@ For example:
  protected void init() {
   super.init();
   getRequestCycleListeners().add(
-	new ResourseIsolationRequestCycleListener(
+	new ResourceIsolationRequestCycleListener(
 		new FetchMetadataResourceIsolationPolicy(),
 		new OriginResourceIsolationPolicy(),
 		new MyCustomResourceIsolationPolicy()

@@ -62,7 +62,7 @@ The _RequestCycle_ comes with some hook methods which can be overridden to perfo
 * *onEndRequest():* called when the RequestCycle has finished to handle the request
 * *onDetach():* called after the request handling has completed and the RequestCycle is about to be detached from its thread. The default implementation of this method invokes detach() on the current session (the Session class will be shortly discussed in paragraph 9.4).
 
-Methods onBeforeRequest and onEndRequest can be used if we need to execute custom actions before and after business code is executed, such as opening a Hibernate/JPA session and closing it when code has terminated.
+Methods onBeginRequest and onEndRequest can be used if we need to execute custom actions before and after business code is executed, such as opening a Hibernate/JPA session and closing it when code has terminated.
 
 A more flexible way to interact with the request processing is to use the listener interface _org.apache.wicket.request.cycle.IRequestCycleListener_. In addition to the three methods already seen for RequestCycle, this interface offers further hooks into request processing:
 

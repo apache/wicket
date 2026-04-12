@@ -5,7 +5,7 @@ This stage is reached each time a component is rendered, typically when a page i
 
 Method _onConfigure()_ has been introduced in order to provide a good point to manage the component states such as its visibility or enabled state. This method is called on all components whose parent is visible.
 
-As stated in <<_hiding_or_disabling_a_component,chapter 6.1>>, _isVisible()_ and _isEnabled()_ are called multiple times when a page or a component is rendered, so it's highly recommended not to directly override these method, but rather to use _onConfigure()_ to change component states. On the contrary method _onBeforeRender_ (see the next paragraph) is not indicated for this task because it will not be invoked if component visibility is set to false.
+As stated in <<_hiding_or_disabling_a_component,chapter 6.1>>, _isVisible()_ and _isEnabled()_ are called multiple times when a page or a component is rendered, so it's highly recommended not to directly override these methods, but rather to use _onConfigure()_ to change component states. On the contrary method _onBeforeRender_ (see the next paragraph) is not recommended for this task because it will not be invoked if component visibility is set to false.
 
 === Method onBeforeRender
 
@@ -115,7 +115,7 @@ Just like we do with _onInitialize_, if we decide to override _onComponentTag_ w
 
 We have already seen in <<_modifing_tag_attributes,chapter 6.2>> how to use behavior _AttributeModifier_ to manipulate the tag's attribute. In <<_enriching_components_with_behaviors,chapter 19.1>> we will see that base class _Behavior_ offers also a callback method named _onComponentTag(ComponentTag, Component)_ that can be used in place of the hook method _onComponentTag(ComponentTag)_.
 
-=== Methods onComponentTagBody
+=== Method onComponentTagBody
 
 Method _onComponentTagBody(MarkupStream, ComponentTag)_ is called to process the component tag's body. Just like _onComponentTag_ it takes as input a _ComponentTag_ parameter representing the component tag. In addition, we also find a _MarkupStream_ parameter which represents the page markup stream that will be sent back to the client as response.
 
@@ -142,6 +142,6 @@ public class HomePage extends WebPage {
 
 Note that the original version of _onComponentTagBody_ is invoked only when we want to preserve the standard rendering mechanism for the tag's body (in our example this happens when the component is enabled).
 
-=== Methods onAfterRender
+=== Method onAfterRender
 
 Called on each rendered component immediately after it has been rendered - _onAfterRender()_ will even be called when rendering failed with an exception.

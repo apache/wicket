@@ -1,5 +1,5 @@
 
-With Wicket as developers we use to define the hierarchy of components in the markup templates:
+With Wicket as developers we used to define the hierarchy of components in the markup templates:
 
 [source,html]
 ----
@@ -75,7 +75,7 @@ While undeniably useful, the Java-side hierarchy can be a pain to maintain. It i
 
 To:
 
-[source,java]
+[source,html]
 ----
 <form wicket:id='customer'>
     <div wicket:id='container'>

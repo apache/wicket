@@ -11,7 +11,7 @@ You can contribute to this guide by following these steps:
 git clone https://github.com/<<your github username>>/wicket.git
 ----
 
-* Edit the _.adoc_ files in `wicket/wicket-user-guide/src/main/asciidoctor` folder
+* Edit the _.adoc_ files in `wicket/wicket-user-guide/src/main/asciidoc` folder
 
 * To preview your changes run _mvn clean package -P guide_ in the `wicket/wicket-user-guide` folder (You may use a run configuration in your IDE)
 

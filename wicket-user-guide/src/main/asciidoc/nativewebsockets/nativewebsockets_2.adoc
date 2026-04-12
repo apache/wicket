@@ -11,7 +11,7 @@ Add the following dependency to your application to get access to the _wicket-na
 </dependency>
 ----
 
-- for https://projects.spring.io/spring-boot/[Spring Boot] applications also add
+- for https://spring.io/projects/spring-boot[Spring Boot] applications also add
 ----
 <dependency>
  <groupId>org.springframework.boot</groupId>
@@ -30,7 +30,7 @@ In _WEB-INF/web.xml_ replace the usage of *WicketFilter* with the following:
 <filter-class>org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter</filter-class>
 ----
 
-For https://projects.spring.io/spring-boot/[Spring Boot] application:
+For https://spring.io/projects/spring-boot[Spring Boot] application:
 ----
 @Bean
     public FilterRegistrationBean wicketFilter() {
