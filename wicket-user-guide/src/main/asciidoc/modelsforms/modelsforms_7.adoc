@@ -73,9 +73,9 @@ public class JpaLoadableModel<T> extends LoadableDetachableModel<T> {
 }
 ----
 
-The constructor of the model takes as input two parameters: an implementation of the JPA interface  javax.persistence.EntityManagerFactory to manage JPA entities and the entity that must be handled by this model. Inside its constructor the model saves the class of the entity and its id (which could be null if the entity has not been persisted yet). These two information are required to retrieve the entity at a later time and are used by the load method.
+The constructor of the model takes as input two parameters: an implementation of the JPA interface  jakarta.persistence.EntityManagerFactory to manage JPA entities and the entity that must be handled by this model. Inside its constructor the model saves the class of the entity and its id (which could be null if the entity has not been persisted yet). These two pieces of information are required to retrieve the entity at a later time and are used by the load method.
 
-onDetach is responsible for updating the entity id before detachment occurs. The id can change the first time an entity is persisted (JPA generates a new id and assigns it to the entity). Please note that this model is not responsible for saving any changes occurred to the entity object before it is detached. If we don't want to loose these changes we must explicitly persist the entity before the detaching phase occurs.
+onDetach is responsible for updating the entity id before detachment occurs. The id can change the first time an entity is persisted (JPA generates a new id and assigns it to the entity). Please note that this model is not responsible for saving any changes occurred to the entity object before it is detached. If we don't want to lose these changes we must explicitly persist the entity before the detaching phase occurs.
 
 WARNING: Since the model of this example holds a reference to the EntityManager Factory, the implementation in use must be serializable.
 

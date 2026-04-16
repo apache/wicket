@@ -10,7 +10,7 @@ URI uri = URI.create("jar:file:///videosFolder/videos.zip!/folderInZip/Video.mp4
 Path path = FileSystemResourceReference.getPath(uri);
 FileSystemResourceReference ref = new FileSystemResourceReference("video",path);
 Video video = new Video("video",ref);
-add(vide);
+add(video);
 ----
 
 HTML:

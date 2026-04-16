@@ -53,7 +53,7 @@ if (webApplication.getRequestCycleSettings().getRenderStrategy() == RequestCycle
 
 So what happens in case you have 2 server running your application with session replication and load balancing turned on while using the default RenderStrategy described above?
 
-Since a Map of buffered responses is cached within a WebApplication instance that does not get replicated between the nodes obviously, a redirect request that is suppose to pick up the previously cached response (having possibly form violation messages inside) potentially get’s directed to the second node in your cluster by the load balancer. The second node does not have any responses already prepared and cached for your user. The node therefore handles the request as a completely new request for the same form page and displays a fresh new form page instance to the user accordingly.
+Since a Map of buffered responses is cached within a WebApplication instance that does not get replicated between the nodes obviously, a redirect request that is suppose to pick up the previously cached response (having possibly form violation messages inside) potentially gets directed to the second node in your cluster by the load balancer. The second node does not have any responses already prepared and cached for your user. The node therefore handles the request as a completely new request for the same form page and displays a fresh new form page instance to the user accordingly.
 
 image::./img/lost-in-redirection-mockup3.png[]
 

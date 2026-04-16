@@ -55,7 +55,7 @@ new Label("headline", headlineModel) {
     public void onConfigure() {
         // Headline visible only if text starts with "Berlusconi"
         String headline = getModelObject();
-        setVisible(headline.startWith("Berlusconi"));
+        setVisible(headline.startsWith("Berlusconi"));
     }
 }
 ----

@@ -15,7 +15,7 @@ public interface ICrypt
 
 The default implementation for this interface is class _org.apache.wicket.util.crypt.SunJceCrypt_. It provides password-based cryptography using _PBEWithMD5AndDES_ algorithm coming with the standard security providers in the Java Runtime Environment.
 
-NOTE: For better security it is recommended to install Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html[Policy Files]
+NOTE: Since Java 9, unlimited strength cryptography is enabled by default. No additional configuration is needed.
 
 By using _CryptoMapper(IRequestMapper wrappedMapper, Application application)_ constructor the mapper will use the configured _org.apache.wicket.util.crypt.ICryptFactory_ from _org.apache.wicket.settings.SecuritySettings.getCryptFactory()_. To use a stronger cryptography mechanism there are the following options:
 

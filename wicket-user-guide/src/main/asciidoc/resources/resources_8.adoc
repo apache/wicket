@@ -53,9 +53,9 @@ Please note that _HeaderResponseContainer_'s needs also a name for the correspon
 
 <html>
 
-<header>
+<head>
 <!-- no <script> tag here... -->
-</header>
+</head>
 
 <body>
 <h1 id="click-me">Click me!</h1>

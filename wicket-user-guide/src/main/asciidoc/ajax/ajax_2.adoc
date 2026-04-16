@@ -71,7 +71,7 @@ AutoCompleteTextField field = new AutoCompleteTextField<T>("field", model) {
 };
 ----
 
-Wicket module wicket-examples contains page class _AutoCompletePagePage.java_ which shows an example of autocomplete text field. The running example is available on {wicket_examples_url}/ajax/autocomplete[examples site] .
+Wicket module wicket-examples contains page class _AutoCompletePage.java_ which shows an example of autocomplete text field. The running example is available on {wicket_examples_url}/ajax/autocomplete[examples site] .
 
 === Modal dialog
 
@@ -116,7 +116,7 @@ public HomePage(final PageParameters parameters) {
 ----
 
 Just like any other component also _ModalDialog_ must be added to a markup tag, like we did in our example using a <div> tag. Wicket will automatically hide the content of this tag in the final markup, as long as the dialog is not opened.
-This component does not provide any styling by itself, so you have can add a
+This component does not provide any styling by itself, so you can add a
 _DefaultTheme_ to this component if aren't styling these CSS classes by yourself.
 
 The modal dialog can be closed from code using its method _close(AjaxRequestTarget target)_.
@@ -133,11 +133,11 @@ The basic implementation of a tree repeater shipped with Wicket is component _Ne
 
 Wicket comes with a built-in implementation of ITreeProvider called TreeModelProvider that works with the same tree model and nodes used by Swing component _javax.swing.JTree_. These Swing entities should be familiar to you if you have previously worked with the old tree repeaters (components _Tree_ and _TreeTable_) that have been deprecated with Wicket 6 and that are strongly dependent on Swing-based model and nodes. _TreeModelProvider_ can be used to migrate your code to the new tree repeaters.
 
-In the next example (project _CheckBoxAjaxTree_) we will build a tree that displays some of the main cities of three European countries: Italy, Germany and France. The cities are sub-nodes of a main node representing the relative county. The nodes of the final tree will be also selectable with a checkbox control. The whole tree will have the classic look & feel of Windows XP. This is how our tree will look like:
+In the next example (project _CheckBoxAjaxTree_) we will build a tree that displays some of the main cities of three European countries: Italy, Germany and France. The cities are sub-nodes of a main node representing the relative county. The nodes of the final tree will be also selectable with a checkbox control. The whole tree will have the classic look & feel. This is how our tree will look like:
 
 image::./img/AJAX-tree-repeater.png[]
 
-We will start to explore the code of this example from the home page. The first portion of code we will see is where we build the nodes and the _TreeModelProvider_ for the three. As tree node we will use Swing class _javax.swing.tree.DefaultMutableTreeNode_:
+We will start to explore the code of this example from the home page. The first portion of code we will see is where we build the nodes and the _TreeModelProvider_ for the tree. As tree node we will use Swing class _javax.swing.tree.DefaultMutableTreeNode_:
 
 [source,java]
 ----
@@ -190,7 +190,7 @@ Scrolling down the code we can see how the tree component is instantiated and co
 
 To use tree repeaters we must implement their abstract method _newContentComponent_ which is called internally by base class _AbstractTree_ when a new node must be built. As content component we have used built-in class _CheckedFolder_ which combines a _Folder_ component with a _CheckBox_ form control.
 
-The final step before adding the tree to its page is to apply a theme to it. Wicket comes with two behaviors, WindowsTheme and HumanTheme, which correspond to the classic Windows XP theme and to the Human theme from Ubuntu.
+The final step before adding the tree to its page is to apply a theme to it. Wicket comes with two built-in theme behaviors, WindowsTheme and HumanTheme.
 
 Our checkable tree is finished but our work is not over yet because the component doesn't offer many functionalities as it is. Unfortunately neither NestedTree nor CheckedFolder provide a means for collecting checked nodes and returning them to client code. It's up to us to implement a way to keep track of checked nodes.
 

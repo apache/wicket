@@ -125,7 +125,7 @@ public class DisableComponentListener extends AjaxCallListener {
 
 As you can see in the code above we have created a function (_getIndicatorUrl_) to retrieve the URL of the indicator picture. This was done in order to make the picture customizable by overriding this method.
 
-Once we have our listener in place, we can finally use it in our example overwriting method _updateAjaxAttributes_ of the AJAX button that submits the form:
+Once we have our listener in place, we can finally use it in our example overriding method _updateAjaxAttributes_ of the AJAX button that submits the form:
 
 [source,java]
 ----

@@ -73,6 +73,6 @@ Fragment fragment = new  Fragment ("contentArea", "formFrag", this);
 add(fragment);
 
 //form has been submitted
-Fragment fragment = new  Fragment ("contentArea", "messageFrag", this);
+fragment = new  Fragment ("contentArea", "messageFrag", this);
 replace(fragment);
 ----
