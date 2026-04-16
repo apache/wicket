@@ -28,7 +28,9 @@ public enum CSPDirectiveSrcValue implements CSPRenderable
 	SELF("'self'"),
 	UNSAFE_INLINE("'unsafe-inline'"),
 	UNSAFE_EVAL("'unsafe-eval'"),
+	UNSAFE_HASHES("'unsafe-hashes'"),
 	STRICT_DYNAMIC("'strict-dynamic'"),
+	REPORT_SAMPLE("'report-sample'"),
 	NONCE("'nonce-%1$s'")
 	{
 		@Override
