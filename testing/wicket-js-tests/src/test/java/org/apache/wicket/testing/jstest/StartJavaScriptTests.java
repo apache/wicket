@@ -21,7 +21,6 @@ import java.lang.management.ManagementFactory;
 import java.net.URI;
 
 import javax.management.MBeanServer;
-
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -114,9 +113,9 @@ public class StartJavaScriptTests
 		try
 		{
 			server.start();
-			
+
 			browse();
-			
+
 			server.join();
 		}
 		catch (Exception e)
@@ -130,7 +129,7 @@ public class StartJavaScriptTests
 	{
 		try
 		{
-			Desktop.getDesktop().browse(new URI("http://localhost:8080/ajax-tests/test/js/all.html?3.6.4"));
+			Desktop.getDesktop().browse(new URI("http://localhost:8080/ajax-tests/test/js/all.html?3.7.1"));
 		}
 		catch (Exception e)
 		{

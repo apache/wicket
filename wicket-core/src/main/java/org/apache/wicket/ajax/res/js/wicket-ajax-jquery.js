@@ -187,7 +187,7 @@
 	 * Logging functionality.
 	 */
 	Wicket.Log = {
-			
+
 		enabled: false,
 
 		log: function () {
@@ -358,12 +358,12 @@
 	 */
 	Wicket.Ajax.suspendCall = function () {
 		var suspension = Wicket.Ajax._currentSuspension;
-		
+
 		if (suspension === undefined) {
 			Wicket.Log.error("Can't suspend: no Ajax call in process");
 			return;
 		}
-		
+
 		// suspend
 		suspension.suspend();
 
@@ -562,13 +562,13 @@
 				// no id so no check whether present
 				return true;
 			}
-			
+
 			var element = Wicket.$(id);
 			if (isUndef(element)) {
 				// not present
 				return false;
 			}
-			
+
 			// present if no attributes at all or not a placeholder
 			return (!element.hasAttribute || !element.hasAttribute('data-wicket-placeholder'));
 		},
@@ -586,7 +586,7 @@
 					'Wicket-Ajax': 'true',
 					'Wicket-Ajax-BaseURL': getAjaxBaseUrl()
 				},
-				
+
 				url = attrs.u,
 
 				// the request (extra) parameters
@@ -657,7 +657,7 @@
 				var el = Wicket.$(attrs.c);
 				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
 			}
-			
+
 			// collect the dynamic extra parameters
 			if (jQuery.isArray(attrs.dep)) {
 				var dynamicData = this._calculateDynamicParameters(attrs);
@@ -676,7 +676,7 @@
 					for (var i = 0; i < data.length; i++) {
 						formData.append(data[i].name, data[i].value || "");
 					}
-					
+
 					data = formData;
 					wwwFormUrlEncoded = false;
 				} catch (exception) {
@@ -694,7 +694,7 @@
 				context: self,
 				processData: wwwFormUrlEncoded,
 				contentType: wwwFormUrlEncoded,
-				
+
 				beforeSend: function (jqXHR, settings) {
 					self._executeHandlers(attrs.bsh, attrs, jqXHR, settings);
 					we.publish(topic.AJAX_CALL_BEFORE_SEND, attrs, jqXHR, settings);
@@ -942,10 +942,11 @@
 					Wicket.Log.error("Wicket.Ajax.Call.processComponent: Component with id '%s' was not found while trying to perform markup update. " +
 						"Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.", compId);
 				} else {
+					var replacementMethod = node.getAttribute("replacement");
 					var text = Wicket.DOM.text(node);
 
 					// replace the component
-					Wicket.DOM.replace(element, text);
+					Wicket.DOM.replace(element, text, replacementMethod);
 				}
 				// continue to next step
 				return FunctionsExecuter.DONE;
@@ -1176,7 +1177,7 @@
 				var result = [];
 				if (input && input.type) {
 					var $input = jQuery(input);
-					
+
 					if (input.type === 'file') {
 						for (var f = 0; f < input.files.length; f++) {
 							result.push({"name" : input.name, "value" : input.files[f]});
@@ -1315,6 +1316,11 @@
 		 * of the DOM tree.
 		 */
 		DOM: {
+			replacementMethods: {},
+
+			registerReplacementMethod: function (identifier, replacementFunction) {
+				this.replacementMethods[identifier] = replacementFunction;
+			},
 
 			/**
 			 * Shows an element
@@ -1444,7 +1450,7 @@
 			 *
 			 * Note: the 'to be replaced' element must have an 'id' attribute
 			 */
-			replace: function (element, text) {
+			replace: function (element, text, replacementMethod) {
 
 				var we = Wicket.Event;
 				var topic = we.Topic;
@@ -1457,11 +1463,20 @@
 					document.title = titleText;
 					return;
 				} else {
-					// jQuery 1.9+ expects '<' as the very first character in text
-					var cleanedText = jQuery.trim(text);
+					if (replacementMethod) {
+						var replacementFunction = this.replacementMethods[replacementMethod];
+						if (replacementFunction) {
+							replacementFunction(element, text);
+						} else {
+							Wicket.Log.error("No replacement registerd for type: " + replacementMethod);
+						}
+					} else {
+						// jQuery 1.9+ expects '<' as the very first character in text
+						var cleanedText = jQuery.trim(text);
 
-					var $newElement = jQuery(cleanedText);
-					jQuery(element).replaceWith($newElement);
+						var $newElement = jQuery(cleanedText);
+						jQuery(element).replaceWith($newElement);
+					}
 				}
 
 				var newElement = Wicket.$(element.id);
@@ -1469,7 +1484,7 @@
 					we.publish(topic.DOM_NODE_ADDED, newElement);
 				}
 			},
-			
+
 			add: function (element, text) {
 				var we = Wicket.Event;
 				var topic = we.Topic;
@@ -1702,7 +1717,7 @@
 					}, null, attrs.sel);
 				});
 			},
-			
+
 			process: function(data) {
 				var call = new Wicket.Ajax.Call();
 				call.process(data);
@@ -1738,7 +1753,7 @@
 				parse: function (headerNode) {
 					// the header contribution is stored as CDATA section in the header-contribution element,
 					// we need to parse it since each header contribution needs to be treated separately
-					
+
 					// get the header contribution text and unescape it if necessary
 					var text = Wicket.DOM.text(headerNode);
 
@@ -1905,7 +1920,7 @@
 							var attr = attrs[a];
 							scriptDomNode[attr.name] = attr.value;
 						}
-						
+
 						// determine whether it is external javascript (has src attribute set)
 						var src = node.getAttribute("src");
 						if (src !== null && src !== "") {
@@ -1933,11 +1948,11 @@
 						} else {
 							var suspension = {
 								suspended: 0,
-										
+
 								suspend: function() {
 									suspension.suspended++;
 								},
-										
+
 								release: function() {
 									suspension.suspended--;
 									if (suspension.suspended === 0) {
@@ -1951,7 +1966,7 @@
 							// get rid of prefix and suffix, they are not eval-d correctly
 							text = text.replace(/^\n\/\*<!\[CDATA\[\*\/\n/, "");
 							text = text.replace(/\n\/\*\]\]>\*\/\n$/, "");
-							
+
 							try {
 								Wicket.Ajax._currentSuspension = suspension;
 
@@ -1990,7 +2005,7 @@
 						} else if (httpEquiv) {
 							jQuery('meta[http-equiv="' + httpEquiv + '"]').remove();
 						}
-						
+
 						jQuery.each(attrs, function() {
 							$meta.attr(this.name, this.value);
 						});
@@ -2256,7 +2271,7 @@
 					delete Wicket.TimerHandles[timerId];
 				}
 			},
-			
+
 			/**
 			 * Clear all remaining timers.
 			 */
@@ -2271,7 +2286,7 @@
 				}
 			}
 		},
-		
+
 		/**
 		 * Events related code
 		 * Based on code from Mootools (http://mootools.net)

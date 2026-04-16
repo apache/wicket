@@ -20,11 +20,12 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import jakarta.servlet.http.Cookie;
 
+import jakarta.servlet.http.Cookie;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -102,6 +103,11 @@ public abstract class PartialPageUpdate
 	protected final Map<String, Component> markupIdToComponent = new LinkedHashMap<>();
 
 	/**
+	 * The alternative replacement methods to use for components of which the markup needs to be replaced differently.
+	 */
+	protected final Map<String, String> markupIdToReplacementMethod = new HashMap<>();
+
+	/**
 	 * A flag that indicates that components cannot be added anymore.
 	 * See https://issues.apache.org/jira/browse/WICKET-3564
 	 * 
@@ -126,7 +132,7 @@ public abstract class PartialPageUpdate
 	protected final ResponseBuffer headerBuffer;
 
 	protected HtmlHeaderContainer header = null;
-	
+
 	private Component originalHeaderContainer;
 
 	// whether a header contribution is being rendered
@@ -138,7 +144,7 @@ public abstract class PartialPageUpdate
 	 * The page which components are being updated.
 	 */
 	private final Page page;
-	
+
 	/**
 	 * Constructor.
 	 *
@@ -149,7 +155,7 @@ public abstract class PartialPageUpdate
 	{
 		this.page = page;
 		this.originalHeaderContainer = page.get(HtmlHeaderSectionHandler.HEADER_ID);
-		
+
 		WebResponse response = (WebResponse) page.getResponse();
 		bodyBuffer = new ResponseBuffer(response);
 		headerBuffer = new ResponseBuffer(response);
@@ -182,7 +188,7 @@ public abstract class PartialPageUpdate
 			writeComponents(response, encoding);
 
 			onAfterRespond(response);
-			
+
 			javascriptsFrozen = true;
 
 			// queue up prepend javascripts. unlike other steps these are executed out of order so that
@@ -242,11 +248,11 @@ public abstract class PartialPageUpdate
 		if (!scripts.isEmpty())
 		{
 			CharSequence contents = renderScripts(scripts);
-			
+
 			writePriorityEvaluation(response, contents);
 		}
 	}
-	
+
 	/**
 	 *
 	 * @param response
@@ -259,7 +265,7 @@ public abstract class PartialPageUpdate
 		if (!scripts.isEmpty())
 		{
 			CharSequence contents = renderScripts(scripts);
-			
+
 			writeEvaluation(response, contents);
 		}
 	}
@@ -280,10 +286,10 @@ public abstract class PartialPageUpdate
 				return stringResponse;
 			}
 		});
-		
+
 		decoratedHeaderResponse.render(JavaScriptHeaderItem.forScript(combinedScript, null));
 		decoratedHeaderResponse.close();
-		
+
 		return stringResponse.getBuffer();
 	}
 
@@ -301,7 +307,7 @@ public abstract class PartialPageUpdate
 		componentsFrozen = true;
 
 		List<Component> toBeWritten = new ArrayList<>(markupIdToComponent.size());
-		
+
 		// delay preparation of feedbacks after all other components
 		try (FeedbackDelay delay = new FeedbackDelay(RequestCycle.get())) {
 			for (Component component : markupIdToComponent.values())
@@ -324,7 +330,7 @@ public abstract class PartialPageUpdate
 		if (header != null)
 		{
 			RequestCycle cycle = RequestCycle.get();
-			
+
 			// some header responses buffer all calls to render*** until close is called.
 			// when they are closed, they do something (i.e. aggregate all JS resource urls to a
 			// single url), and then "flush" (by writing to the real response) before closing.
@@ -360,7 +366,7 @@ public abstract class PartialPageUpdate
 		{
 			throw new IllegalStateException(
 					"A partial update is not possible for a component that has renderBodyOnly enabled. Component: " +
-							component.toString());
+                            component);
 		}
 
 		component.setOutputMarkupId(true);
@@ -384,7 +390,7 @@ public abstract class PartialPageUpdate
 			bodyBuffer.reset();
 			throw e;
 		}
-		
+
 		return true;
 	}
 
@@ -410,9 +416,9 @@ public abstract class PartialPageUpdate
 		{
 			// render any associated headers of the component
 			writeHeaderContribution(response, component);
-			
+
 			bodyBuffer.reset();
-			
+
 			try
 			{
 				component.renderPart();
@@ -446,7 +452,8 @@ public abstract class PartialPageUpdate
 	protected abstract void writeHeader(Response response, String encoding);
 
 	/**
-	 * Writes a component to the response.
+	 * Writes a component to the response. Implementations should call {@link #getReplacementMethod(String)} and modify
+	 * the response accordingly.
 	 *
 	 * @param response
 	 *      the response to write to
@@ -454,6 +461,19 @@ public abstract class PartialPageUpdate
 	 * 		the contents
 	 */
 	protected abstract void writeComponent(Response response, String markupId, CharSequence contents);
+
+	/**
+	 * Get the replacement method to use for the component with the given markup ID.
+	 *
+	 * @param markupId
+	 *      the markup ID of the component to get the replacement method for
+	 * @return
+	 *      the identifier for the replacement method, or <code>null</code> if the component markup must be replaced
+	 *      with the standard method
+	 */
+	protected final String getReplacementMethod(String markupId) {
+		return markupIdToReplacementMethod.get(markupId);
+	}
 
 	/**
 	 * Write priority-evaluation.
@@ -524,7 +544,7 @@ public abstract class PartialPageUpdate
 	public final void prependJavaScript(CharSequence javascript)
 	{
 		Args.notNull(javascript, "javascript");
-		
+
 		if (javascriptsFrozen)
 		{
 			throw new IllegalStateException("A partial update of the page is being rendered, JavaScript can no longer be added");
@@ -547,6 +567,27 @@ public abstract class PartialPageUpdate
 	 */
 	public final void add(final Component component, final String markupId)
 	{
+		add(null, component, markupId);
+	}
+
+	/**
+	 * Adds a component to be updated at the client side with its current markup, specifying the method to use to
+	 * replace the markup.
+	 *
+	 * @param replacementMethod
+	 *            the identifier of the method to use for replacing the markup. If <code>null</code>, the standard
+	 *            method is used
+	 * @param component
+	 *      the component to update
+	 * @param markupId
+	 *      the markup id to use to find the component in the page's markup
+	 * @throws IllegalArgumentException
+	 *      thrown when a Page or an AbstractRepeater is added
+	 * @throws IllegalStateException
+	 *      thrown when components no more can be added for replacement.
+	 */
+	public final void add(final String replacementMethod, final Component component, final String markupId)
+	{
 		Args.notEmpty(markupId, "markupId");
 		Args.notNull(component, "component");
 
@@ -560,17 +601,17 @@ public abstract class PartialPageUpdate
 		else
 		{
 			Page pageOfComponent = component.findParent(Page.class);
-			if (pageOfComponent == null) 
+			if (pageOfComponent == null)
 			{
 				// no longer on page - log the error but don't block the user of the application
 				// (which was the behavior in Wicket <= 7).
 				LOG.warn("Component '{}' not cannot be updated because it was already removed from page", component);
 				return;
 			}
-			else if (pageOfComponent != page) 
+			else if (pageOfComponent != page)
 			{
 				// on another page
-				throw new IllegalArgumentException("Component " + component.toString() + " cannot be updated because it is on another page.");
+				throw new IllegalArgumentException("Component " + component + " cannot be updated because it is on another page.");
 			}
 
 			if (component instanceof AbstractRepeater)
@@ -585,11 +626,14 @@ public abstract class PartialPageUpdate
 
 		if (componentsFrozen)
 		{
-			throw new IllegalStateException("A partial update of the page is being rendered, component " + component.toString() + " can no longer be added");
+			throw new IllegalStateException("A partial update of the page is being rendered, component " + component + " can no longer be added");
 		}
 
 		component.setMarkupId(markupId);
 		markupIdToComponent.put(markupId, component);
+		if (replacementMethod != null) {
+			markupIdToReplacementMethod.put(markupId, replacementMethod);
+		}
 	}
 
 	/**

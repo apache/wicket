@@ -99,3 +99,17 @@ NOTE: During request handling _AjaxRequestHandler_ sends an event to its applica
 
 The payload of the event is the _AjaxRequestHandler_ itself.
 
+=== Alternative markup replacement methods
+
+The replacement of markup can be extended with alternative methods. This is useful for when the jQuery markup replacement does not work properly, is too slow, and/or is missing features. For example: partially updating SVG markup, or updating large pieces of markup of which only a few things have changed.
+
+Using another replacement method consists of 2 steps:
+
+* Register the replacement method with Wicket AJAX. This is usually handled by a behavior added to the component for which to use the alternative method. If the method has not been registered when the AJAX response is processed (and Wicket AJAX debug mode is enabled), an error will be logged.
+* When adding the component(s) to the _AjaxRequestTarget_, specify the replacement method identifier. The identifier to use usually is a constant of the behavior registering the replacement method.
+
+*Warning*: not all replacement methods may support all features of or be fully compatible with the default replacement method that uses jQuery. A replacement method may also have additional markup requirements. Check the documentation of the replacement method, and test it to see if it works as desired for your situation.
+
+Wicket includes the following alternative replacement methods:
+
+* XML: for replacing markup of SVG and MathML. See _XmlReplacementEnablingBehavior_.
