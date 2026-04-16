@@ -32,7 +32,7 @@ we can build a panel called _HeaderPanel_ with a related markup file called Head
       </table>
    </wicket:panel>
 </body>
-<html>
+</html>
 ----
 
 The class for this panel simply extends base class _Panel_:
@@ -153,9 +153,6 @@ The resulting Java code for the login page is the following:
 ----
 package helloWorld.layoutTenda;
 import helloWorld.LoginPanel;
-import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.event.IEventSink;
-
 public class SimpleLoginPage extends JugTemplate {
 	public SimpleLoginPage(){
 		super();

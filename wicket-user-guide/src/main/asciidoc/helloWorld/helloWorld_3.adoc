@@ -57,5 +57,5 @@ We can see that the _wicket:id_ attribute is set according to the value of the c
 
 NOTE: _Label_ replaces the original content of its tag (in our example _[Label's message goes here]_) with the string passed as value (_Hello WicketWorld!_ in our example)
 
-WARNING: If we specify a _wicket:id_ attribute for a tag without adding the corresponding component in our Java code, Wicket will throw a _ComponentNotFound_ Exception.  On the contrary if we add a component in our Java code without specifying a corresponding _wicket:id_ attribute in our markup, Wicket will throw a _WicketRuntimeException_.
+WARNING: If we specify a _wicket:id_ attribute for a tag without adding the corresponding component in our Java code, Wicket will throw a _ComponentNotFoundException_.  On the contrary if we add a component in our Java code without specifying a corresponding _wicket:id_ attribute in our markup, Wicket will throw a _WicketRuntimeException_.
 

@@ -54,7 +54,7 @@ public class HttpsPage extends BaseClass {
 }
 
 // Secure page implementing IMarker:
-public class HttpsPage implements IMarker {
+public class HttpsPage extends WebPage implements IMarker {
 //Page code...
 }
 ----

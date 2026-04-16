@@ -9,15 +9,15 @@ Here is the content of TestHomePage:
 
 [source,java]
 ----
-public class TestHomePage{
+class TestHomePage{
 	private WicketTester tester;
 
-	@Before
-	public void setUp(){
+	@BeforeEach
+	void setUp(){
 		tester = new WicketTester(new WicketApplication());
 	}
 	@Test
-	public void homepageRendersSuccessfully(){
+	void homepageRendersSuccessfully(){
 		//start and render the test page
 		tester.startPage(HomePage.class);
 		//assert rendered page class
@@ -44,7 +44,7 @@ To see an example of usage of clickLink, let's consider again project _LifeCycle
 ----
 //...
 @Test
-public void switchLabelTest(){
+void switchLabelTest(){
 	//start and render the test page
 	tester.startPage(HomePage.class);
 	//assert rendered page class
@@ -85,7 +85,7 @@ In the test case from project _CustomDatepickerAjax_ we used _assertEnabled_/_as
 ----
 //...
 @Test
-public void testDisableDatePickerWithButton(){
+void testDisableDatePickerWithButton(){
 	//start and render the test page
 	tester.startPage(HomePage.class);
 	//assert that datepicker is enabled
@@ -106,12 +106,12 @@ Method _startComponentInPage(Component)_ can be used to test a component in isol
 ----
 //...
 @Test
-public void testCustomPanelContainsLabel(){
+void testCustomPanelContainsLabel(){
 	TemperatureDegreeField field = new TemperatureDegreeField("field", Model.of(0.00));
-	//Use standard JUnit class Assert
-	Assert.assertNull(field.get("measurementUnit"));
+	//Use standard JUnit class Assertions
+	Assertions.assertNull(field.get("measurementUnit"));
 	tester.startComponentInPage(field);
-	Assert.assertNotNull(field.get("measurementUnit"));
+	Assertions.assertNotNull(field.get("measurementUnit"));
 }
 //...
 ----
@@ -126,7 +126,7 @@ In the test case from project _CustomResourceMounting_ we extract the text conta
 ----
 //...
 @Test
-public void testMountedResourceResponse() throws IOException, FeedException{tester.startResource(new RSSProducerResource());
+void testMountedResourceResponse() throws IOException, FeedException{tester.startResource(new RSSProducerResource());
 	String responseTxt = tester.getLastResponse().getDocument();
 	//write the RSS feed used in the test into a ByteArrayOutputStream
 	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -135,7 +135,7 @@ public void testMountedResourceResponse() throws IOException, FeedException{test
 
 	output.output(RSSProducerResource.getFeed(), writer);
 	//the response and the RSS must be equal
-	Assert.assertEquals(responseTxt, outputStream.toString());
+	Assertions.assertEquals(responseTxt, outputStream.toString());
 }
 //...
 ----
@@ -216,7 +216,7 @@ public class HomePage extends WebPage {
 [source,java]
 ----
 @Test
-public void testAjaxBehavior(){
+void testAjaxBehavior(){
 	//start and render the test page
 	tester.startPage(HomePage.class);
 	//test if label has the initial expected value
@@ -259,11 +259,11 @@ Webapp root folder can be passed to _WicketTester_'s constructor as further para
 
 [source,java]
 ----
-public class TestHomePage{
+class TestHomePage{
    private WicketTester tester;
 
-   @Before
-   public void setUp(){
+   @BeforeEach
+   void setUp(){
       //build the path to webapp root folder
       File curDirectory = new File(System.getProperty("user.dir"));
       File webContextDir = new File(curDirectory, "src/main/webapp");
@@ -278,8 +278,8 @@ NOTE: After a test method has been executed, we may need to clear any possible s
 
 [source,java]
 ----
-@After
-public void tearDown(){
+@AfterEach
+void tearDown(){
 	//clear any side effect occurred during test.
 	tester.destroy();
 }
@@ -294,18 +294,18 @@ In some cases you might need to set one or more specific request headers to make
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SAME_SITE;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SEC_FETCH_SITE_HEADER;
 
-public class TestHomePage
+class TestHomePage
 {
 	private WicketTester tester;
 
 	@BeforeEach
-	public void setUp()
+	void setUp()
 	{
 		tester = new WicketTester(new WicketApplication());
 	}
 
 	@Test
-	public void homepageRendersSuccessfully()
+	void homepageRendersSuccessfully()
 	{
 		//start and render the test page
 		tester.startPage(HomePage.class);

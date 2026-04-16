@@ -28,7 +28,7 @@ public void init(){
 
 === Handling session attributes
 
-The Session class handles session attributes in much the same way as the standard interface _javax.servlet.http.HttpSession_. The following methods are provided to create, read and remove session attributes:
+The Session class handles session attributes in much the same way as the standard interface _jakarta.servlet.http.HttpSession_. The following methods are provided to create, read and remove session attributes:
 
 * *setAttribute(String name, Serializable value):* creates an attribute identified by the given name. If the session already contains an attribute with the same name, the new value will replace the existing one. The value must be a serializable object.
 * *getAttribute(String name):* returns the value of the attribute identified by the given name, or _null_ if the name does not correspond to any attribute.
@@ -128,7 +128,7 @@ To retrieve a previously inserted object we must use the _getMetaData(MetaDataKe
 Application class code:
 [source,java]
 ----
-public static MetaDataApp extends WebApplication{
+public class MetaDataApp extends WebApplication{
 	//Do some stuff...
 	/**
 	* Metadata key definition

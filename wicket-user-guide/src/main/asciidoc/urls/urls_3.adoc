@@ -57,19 +57,7 @@ Please note that any link to the current page (aka self link) is disabled. For e
 <a disabled="disabled">HomePage</a>
 ----
 
-The markup used to render disabled links can be customized using the markup settings (class org.apache.wicket.settings.MarkupSettings) available in the application class:
-
-[source,java]
-----
-@Override
-public void init()
-{
-	super.init();
-	//wrap disabled links with <b> tag
-	getMarkupSettings().setDefaultBeforeDisabledLink("<b>");
-	getMarkupSettings().setDefaultAfterDisabledLink("</b>");		
-}
-----
+NOTE: In previous versions of Wicket, the markup used to render disabled links could be customized using methods `setDefaultBeforeDisabledLink` and `setDefaultAfterDisabledLink` on the markup settings. This customization is no longer available in Wicket 10.
 
 The purpose of <wicket:link> tag is not limited to just simplifying the usage of bookmarkable pages. As we will see in chapter 13, this tag can also be adopted to manage web resources like pictures, CSS files, JavaScript files and so on.
 
