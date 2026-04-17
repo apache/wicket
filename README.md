@@ -3,7 +3,7 @@
     <img height="100%" src="https://wicket.apache.org/img/wicket10-title.png" alt="Wicket version header image">
   </a>
 </p>
-
+ 
 What is Apache Wicket?
 =================
 
