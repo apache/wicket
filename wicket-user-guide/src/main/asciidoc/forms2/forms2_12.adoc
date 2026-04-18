@@ -70,7 +70,7 @@ Person andrea = new Person("Andrea", "Smith");
 List<Person> theSmiths = Arrays.asList(john, bob, jill, andrea);
 ChoiceRenderer render = new ChoiceRenderer("name");
 
-form.add(new Palette("palette", Model.of(new ArrayList<String>()), new ListModel<String> (theSmiths), render, 5, true));
+form.add(new Palette("palette", Model.of(new ArrayList<Person>()), new ListModel<Person>(theSmiths), render, 5, true));
 ----
 
 *Screenshot:*

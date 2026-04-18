@@ -1,5 +1,5 @@
 
-...but we all hate spaghetti code! That's why in the first half of the 2000s we have seen the birth of so many web frameworks. Their mission was to separate our business code from presentation layer (like JSP pages).
+...but we all hate spaghetti code! That's why in the first half of the 2000s we saw the birth of so many web frameworks. Their mission was to separate our business code from presentation layer (like JSP pages).
 
 Some of them (like Struts, Spring MVC, Velocity, etc...) have become widely adopted and they made the MVC pattern very popular among developers.
 However, none of these frameworks offers a real object-oriented (OO) abstraction for web pages and we still have to take care of web-related tasks such as HTTP request/response handling, URL mapping, storing data into user sessions and so on.

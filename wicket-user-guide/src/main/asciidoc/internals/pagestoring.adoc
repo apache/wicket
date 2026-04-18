@@ -1,5 +1,5 @@
 
-During request handling, Wicket manages page instances through interface _org.apache.wicket.request.handler.IPageProvider_. This interface creates a new page instance or loads a previously serialized page instance if we provide the corresponding page id. _IPageProvider_ delegates page creation and retrieval to interface _org.apache.wicket.request.mapper.IPageSource_.
+During request handling, Wicket manages page instances through interface _org.apache.wicket.request.handler.IPageProvider_. This interface creates a new page instance or loads a previously serialized page instance if we provide the corresponding page id. _IPageProvider_ delegates page creation and retrieval to interface _org.apache.wicket.core.request.mapper.IPageSource_.
 When page class is provided _IPageSource_ delegates page creation to interface _org.apache.wicket.IPageFactory_, while when page id is provided it uses interface _org.apache.wicket.page.IPageManager_ to load the previously serialized page.
 
 The following workflow diagram summarizes the mechanism seen so far:
@@ -19,7 +19,7 @@ NOTE: Wicket gets the default _IPageManager_ using a supplier interface called _
 
 === Default IPageStore chain
 
-_org.apache.wicket.pageStore.IPageStore_'s role is to mediate the storing and loading of page instances. The default chain of _IPageStore_ used by Wicket contains the following ordered list of _IDataStore_:
+_org.apache.wicket.pageStore.IPageStore_'s role is to mediate the storing and loading of page instances. The default chain of _IPageStore_ used by Wicket contains the following ordered list of _IPageStore_:
 
 * *RequestPageStore:* collect all page instances involved in the last request. During the detach stage, stateful pages are passed to the other steps of the chain to be persisted on file.
 * *InSessionPageStore:* with _InSessionPageStore_ the default chain keeps the last rendered page instance into the HTTP session for fast access.
@@ -58,7 +58,7 @@ add(new DebugBar("debug"));
 ----
 
 HTML:
-[source,java]
+[source,html]
 ----
 <span wicket:id="debug"/>
 ----

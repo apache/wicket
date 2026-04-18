@@ -5,7 +5,7 @@ Having structured URLs in our site is a basic requirement if we want to build an
 
 === Mounting a single page
 
-With Wicket we can mount a page to a given path in much the same way as we map a servlet filter to a desired path inside file web.xml (see <<helloWorld.adoc#_configuration_of_wicket_applications,paragraph 4.2>>). Using mountPage(String path, Class <T> pageClass) method of the WepApplication class we tell Wicket to respond with a new instance of pageClass whenever a user navigates to the given path. In the application class of the project MountedPagesExample we mount MountedPage to the "/pageMount" path:
+With Wicket we can mount a page to a given path in much the same way as we map a servlet filter to a desired path inside file web.xml (see <<helloWorld.adoc#_configuration_of_wicket_applications,paragraph 4.2>>). Using mountPage(String path, Class <T> pageClass) method of the WebApplication class we tell Wicket to respond with a new instance of pageClass whenever a user navigates to the given path. In the application class of the project MountedPagesExample we mount MountedPage to the "/pageMount" path:
 
 [source,java]
 ----
@@ -93,7 +93,7 @@ Generated URL:
 
 === Mounting a package
 
-In addition to mounting a single page, Wicket allows to mount all of the pages inside a package to a given path. Method mountPackage(String path, Class<T> pageClass) of class WepApplication will mount every page inside pageClass's package to the specified path.
+In addition to mounting a single page, Wicket allows to mount all of the pages inside a package to a given path. Method mountPackage(String path, Class<T> pageClass) of class WebApplication will mount every page inside pageClass's package to the specified path.
 
 The resulting URL for package-mounted pages will have the following structure:
 
@@ -160,9 +160,9 @@ protected IMapperContext newMapperContext() {
 
 === Controlling how page parameters are encoded with IPageParametersEncoder
 
-Some request mappers (like MountedMapper and PackageMapper) can delegate page parameters encoding/decoding to interface _org.apache.wicket.request.mapper.parameter.IPage ParametersEncoder_. This entity exposes two methods: encodePageParameters() and decodePageParameters(): the first  one is invoked to encode page parameters into an URL while the second one extracts parameters from the URL.
+Some request mappers (like MountedMapper and PackageMapper) can delegate page parameters encoding/decoding to interface _org.apache.wicket.request.mapper.parameter.IPageParametersEncoder_. This entity exposes two methods: encodePageParameters() and decodePageParameters(): the first  one is invoked to encode page parameters into an URL while the second one extracts parameters from the URL.
 
-Wicket comes with a built-in implementation of this interface which encodes named page parameters as URL segments using the following pattern: /paramName1/paramValue1/paramName2/param Value2...
+Wicket comes with a built-in implementation of this interface which encodes named page parameters as URL segments using the following pattern: /paramName1/paramValue1/paramName2/paramValue2...
 
 This built-in encoder is _org.apache.wicket.request.mapper.parameter.UrlPathPageParametersEncoder_ class. In the _PageParametersEncoderExample_ project we have manually mounted a _MountedMapper_ that takes as input also an _UrlPathPageParametersEncoder_:
 

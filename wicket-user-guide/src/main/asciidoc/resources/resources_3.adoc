@@ -114,12 +114,12 @@ The component _org.apache.wicket.markup.html.image.Picture_ is used to provide a
 ...
 		Picture picture = new Picture("picture");
 
-		Source big = new Source("big", new PackageResourceReference(getClass(), "big.jpg"), new PackageResourceReference(getClass(), "big-hd.jpg");
+		Source big = new Source("big", new PackageResourceReference(getClass(), "big.jpg"), new PackageResourceReference(getClass(), "big-hd.jpg"));
 		big.setXValues("1x","2x");
 		big.setMedia("(min-width: 40em)");
 		picture.add(big);
 
-		Source small = new Source("small", new PackageResourceReference(getClass(), "small.jpg"), new PackageResourceReference(getClass(), "small-hd.jpg");
+		Source small = new Source("small", new PackageResourceReference(getClass(), "small.jpg"), new PackageResourceReference(getClass(), "small-hd.jpg"));
 		small.setXValues("1x","2x");
 		picture.add(small);
 

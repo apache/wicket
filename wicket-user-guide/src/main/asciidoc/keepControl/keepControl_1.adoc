@@ -3,7 +3,7 @@ At the end of the previous chapter we have seen how to hide a component calling 
 
 Class _Component_ provides two getter methods to determine if a component is visible or enabled: _isVisible_ and _isEnabled_.
 
-Even if nothing prevents us from overriding these two methods to implement a custom logic to determine the state of a component, we should keep in mind that methods _isVisible_ and _isEnabled_ are called multiple times before a component is fully rendered. Hence, if we place non-trivial code inside these two methods, we can sensibly deteriorate the responsiveness of our pages.
+Even if nothing prevents us from overriding these two methods to implement a custom logic to determine the state of a component, we should keep in mind that methods _isVisible_ and _isEnabled_ are called multiple times before a component is fully rendered. Hence, if we place non-trivial code inside these two methods, we can noticeably deteriorate the responsiveness of our pages.
 
 WARNING: Overriding _isVisible_ or _isEnabled_ can lead to unpredictable results when querying visibility information via _isVisibleInHierarchy_ or _isEnabledInHierarchy_.
 

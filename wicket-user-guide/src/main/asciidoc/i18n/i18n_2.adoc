@@ -39,8 +39,8 @@ Variation's value contributes to the final full name of the bundle and is placed
 
 === Using UTF-8 for resource bundles
 
-Java uses the standard character set  http://en.wikipedia.org/wiki/ISO/IEC_8859-1[ISO 8859-11] to encode text files like properties files. Unfortunately ISO 8859-1 does not support most of the extra-European languages like Chinese or Japanese. The only way to use properties files with such languages is to use escaped  http://en.wikipedia.org/wiki/List_of_Unicode_characters[Unicode] characters, but this leads to not human-readable files. For example if we wanted to write the word 'website' in simplified Chinese (the ideograms are 网站) we should write the Unicode characters _\u7F51\u7AD9_.
-For this reason ISO 8859-11 is being replaced with another Unicode-compliant character encoding called UTF-8. Text files created with this encoding can contain Unicode symbols in plain format.
+Java uses the standard character set  http://en.wikipedia.org/wiki/ISO/IEC_8859-1[ISO 8859-1] to encode text files like properties files. Unfortunately ISO 8859-1 does not support most of the extra-European languages like Chinese or Japanese. The only way to use properties files with such languages is to use escaped  http://en.wikipedia.org/wiki/List_of_Unicode_characters[Unicode] characters, but this leads to not human-readable files. For example if we wanted to write the word 'website' in simplified Chinese (the ideograms are 网站) we should write the Unicode characters _\u7F51\u7AD9_.
+For this reason ISO 8859-1 is being replaced with another Unicode-compliant character encoding called UTF-8. Text files created with this encoding can contain Unicode symbols in plain format.
 Wicket provides a useful convention to use properties file encoded with UTF-8. We just have to add prefix _.utf8._ to file extension (i.e. _.utf8.properties_).
 
 NOTE: If you want to use UTF-8 with your text files, make sure that your editor/IDE is actually using this character encoding. Some OS like Windows use a different encoding by default.

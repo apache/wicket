@@ -1,7 +1,7 @@
 
 Most of the code you will find in this document is available as a  https://github.com/bitstorm/Wicket-tutorial-examples[Git repository] and is licensed under the ASF 2.0. Examples are hosted live at {wicket_tutorial_examples_url}[{wicket_tutorial_examples_url}]. To get a local copy of the repository you can run the clone command from shell:
 
-[source,java]
+[source,bash]
 ----
 git clone https://github.com/bitstorm/Wicket-tutorial-examples.git
 ----
@@ -14,4 +14,4 @@ The repository contains a multi-module Maven project. Every subproject is contai
 
 image::./img/gitMavenPrj.png[]
 
-When the example code is used in the document, you will find the name of the subproject it belongs to. If you don't have any experience with Maven, you can read Appendix A where you can learn the basic commands needed to work with the example projects and to import them into your favourite IDE (NetBeans, IDEA or Eclipse).
+When the example code is used in the document, you will find the name of the subproject it belongs to. If you don't have any experience with Maven, you can read Appendix A to learn the basic commands needed to work with the example projects and to import them into your favourite IDE (NetBeans, IDEA or Eclipse).

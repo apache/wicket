@@ -119,7 +119,7 @@ This component can be attached to a <div> tag or to a <span> tag. No specific co
 
 CheckBoxMultipleChoice can insert a prefix and a suffix before and after each option. To configure them we can use methods _setPrefix_ and _setSuffix_.
 
-When our options are more complex objects than simple strings, we can render them using an IChoiceRender, as we did for DropDownChoice in <<modelsforms.adoc#_component_dropdownchoice,paragraph 11.5>>:
+When our options are more complex objects than simple strings, we can render them using an IChoiceRenderer, as we did for DropDownChoice in <<modelsforms.adoc#_component_dropdownchoice,paragraph 11.5>>:
 
 *HTML:*
 
@@ -139,7 +139,7 @@ Person bob = new Person("Bob", "Smith");
 Person jill = new Person("Jill", "Smith");
 List<Person> theSmiths = Arrays.asList(john, bob, jill);
 ChoiceRenderer render = new ChoiceRenderer("name");
-form.add(new CheckBoxMultipleChoice("checkGroup", new ListModel<String>(new ArrayList<String>()),
+form.add(new CheckBoxMultipleChoice("checkGroup", new ListModel<Person>(new ArrayList<Person>()),
                                     theSmiths, render));
 ----
 
@@ -195,4 +195,4 @@ form.add(new RadioChoice("radioGroup", Model.of(""), fruits));
 
 image::./img/grouped-radiobutton.png[]
 
-Just like CheckBoxMultipleChoice, this component provides the setPrefix and setSuffix methods to configure the prefix and suffix for our options and it supports IChoiceRender as well.
+Just like CheckBoxMultipleChoice, this component provides the setPrefix and setSuffix methods to configure the prefix and suffix for our options and it supports IChoiceRenderer as well.

@@ -8,7 +8,7 @@ The component that is responsible for converting input is the FormComponent itse
 [source,java]
 ----
 //this field must receive an integer value
-TextField integerField = new TextField("number", new Model()).setType(Integer.class));
+TextField integerField = new TextField("number", new Model()).setType(Integer.class);
 ----
 
 If no type has been provided, FormComponent will try to ask its model for this information. The PropertyModel and CompoundPropertyModel models can use reflection to get the type of object model. By default, if FormComponent can not obtain the type of its model object in any way, it will consider it as a simple String.
