@@ -108,7 +108,11 @@ module.exports = function(grunt) {
 				options: {
 					urls: [
 						'http://localhost:38887/test/js/all.html?4.0.0'
-					]
+					],
+					puppeteer: { 
+						headless: true, 
+						args: ['--no-sandbox'] 
+					}
 				}
 			},
 
