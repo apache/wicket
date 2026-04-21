@@ -184,7 +184,7 @@
 	};
 
     Wicket.isFunction = function (f) {
-        return typeof(f) === 'function'
+        return typeof(f) === 'function';
     }
 
     Wicket.isWindow = function (obj) { return obj != null && obj === obj.window; }
