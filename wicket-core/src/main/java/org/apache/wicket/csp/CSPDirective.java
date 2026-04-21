@@ -35,7 +35,11 @@ public enum CSPDirective
 {
 	DEFAULT_SRC("default-src"),
 	SCRIPT_SRC("script-src"),
+	SCRIPT_SRC_ATTR("script-src-attr"),
+	SCRIPT_SRC_ELEM("script-src-elem"),
 	STYLE_SRC("style-src"),
+	STYLE_SRC_ATTR("style-src-attr"),
+	STYLE_SRC_ELEM("style-src-elem"),
 	IMG_SRC("img-src"),
 	CONNECT_SRC("connect-src"),
 	FONT_SRC("font-src"),
@@ -121,7 +125,7 @@ public enum CSPDirective
 		}
 	};
 
-	private String value;
+	private final String value;
 
 	CSPDirective(String value)
 	{
@@ -135,7 +139,7 @@ public enum CSPDirective
 
 	/**
 	 * Check if {@code value} can be added to the list of other values. By default, it checks for
-	 * conflicts with wildcards and none and it checks if values are valid uris.
+	 * conflicts with wildcards and none, and it checks if values are valid uris.
 	 *
 	 * @param value
 	 *            The value to add.
@@ -185,11 +189,11 @@ public enum CSPDirective
 		{
 			return null;
 		}
-		for (int i = 0; i < values().length; i++)
+		for (CSPDirective directive : values())
 		{
-			if (value.equals(values()[i].getValue()))
+			if (value.equals(directive.getValue()))
 			{
-				return values()[i];
+				return directive;
 			}
 		}
 		return null;
