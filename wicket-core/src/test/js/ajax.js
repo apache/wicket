@@ -40,7 +40,7 @@
 jQuery(document).ready(function() {
 	"use strict";
 
-    var isWindow = function (obj) { return obj != null && obj === obj.window; }
+    var isWindow = function (obj) { return obj != null && obj === obj.window; };
 
 	const { module, test } = QUnit;
 
