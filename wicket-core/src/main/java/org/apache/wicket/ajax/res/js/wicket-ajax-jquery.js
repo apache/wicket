@@ -448,7 +448,7 @@
 			var target;
 			if (attrs.event) {
 				target = attrs.event.target;
-			} else if (!(typeof attrs.c === 'undefined') && attrs.c !== null && attrs.c !== attrs.c.window) {
+			} else if (!Wicket.isWindow(attrs.c)) {
 				target = Wicket.$(attrs.c);
 			} else {
 				target = window;
@@ -474,7 +474,7 @@
 
 				for (var i = 0; i < handlers.length; i++) {
 					var handler = handlers[i];
-					if (typeof(handler) === "function") {
+					if (Wicket.isFunction(handler)) {
 						handler.apply(that, args);
 					} else {
 						new Function(handler).apply(that, args);
@@ -534,7 +534,7 @@
 			for (var i = 0; i < deps.length; i++) {
 				var dep = deps[i],
 					extraParam;
-				if (typeof(dep) === "function") {
+				if (Wicket.isFunction(dep)) {
 					extraParam = dep(attrs);
 				} else {
 					extraParam = new Function('attrs', dep)(attrs);
@@ -632,7 +632,7 @@
 
 					var precondition = preconditions[p];
 					var result;
-					if (typeof(precondition) === "function") {
+					if (Wicket.isFunction(precondition)) {
 						result = precondition.call(that, attrs);
 					} else {
 						result = new Function(precondition).call(that, attrs);
@@ -657,7 +657,7 @@
 					var scName = attrs.sc;
 					data = data.concat({name: scName, value: 1});
 				}
-			} else if (!(typeof attrs.c === 'undefined') && attrs.c !== null && attrs.c !== attrs.c.window) {
+			} else if (attrs.c && !Wicket.isWindow(attrs.c)) {
 				// serialize just the form component with id == attrs.c
 				var el = Wicket.$(attrs.c);
 				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
