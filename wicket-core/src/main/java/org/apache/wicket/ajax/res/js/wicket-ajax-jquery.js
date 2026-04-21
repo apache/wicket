@@ -183,6 +183,11 @@
 		}
 	};
 
+    Wicket.isFunction = function (f) {
+        return typeof(f) === 'function'
+    }
+
+    Wicket.isWindow = function (obj) { return obj != null && obj === obj.window; }
 	/**
 	 * Logging functionality.
 	 */
@@ -443,7 +448,7 @@
 			var target;
 			if (attrs.event) {
 				target = attrs.event.target;
-			} else if (attrs.c !== null && attrs.c !== attrs.c.window) {
+			} else if (!(typeof attrs.c === 'undefined') && attrs.c !== null && attrs.c !== attrs.c.window) {
 				target = Wicket.$(attrs.c);
 			} else {
 				target = window;
@@ -652,7 +657,7 @@
 					var scName = attrs.sc;
 					data = data.concat({name: scName, value: 1});
 				}
-			} else if (attrs.c !== null && attrs.c !== attrs.c.window) {
+			} else if (!(typeof attrs.c === 'undefined') && attrs.c !== null && attrs.c !== attrs.c.window) {
 				// serialize just the form component with id == attrs.c
 				var el = Wicket.$(attrs.c);
 				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
