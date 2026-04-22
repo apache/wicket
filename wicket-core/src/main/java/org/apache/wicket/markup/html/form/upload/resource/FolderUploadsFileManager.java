@@ -18,7 +18,9 @@ package org.apache.wicket.markup.html.form.upload.resource;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
@@ -62,9 +64,12 @@ public class FolderUploadsFileManager implements IUploadsFileManager
     }
 
     /**
-     * Returns the path for a directory for use in path traversal checks. Uses {@code toRealPath()}
-     * when the directory exists; otherwise falls back to {@code toAbsolutePath().normalize()} to
-     * support validation when the directory has not yet been created.
+     * Returns the canonical path for a directory for use in path traversal checks.
+     * Uses {@code toRealPath()} when the directory exists; falls back to
+     * {@code toAbsolutePath().normalize()} only when the directory does not yet exist
+     * (e.g. an upload sub-folder that will be created during {@link #save}).
+     * Other {@link IOException} subtypes (e.g. permission errors) are intentionally
+     * re-thrown so they are not silently swallowed.
      */
     private static Path getPathForComparison(java.io.File dir) throws IOException
     {
@@ -72,10 +77,34 @@ public class FolderUploadsFileManager implements IUploadsFileManager
         {
             return dir.toPath().toRealPath();
         }
-        catch (IOException e)
+        catch (NoSuchFileException e)
         {
             return dir.toPath().toAbsolutePath().normalize();
         }
+    }
+
+    /**
+     * Validates {@code uploadFieldId} and {@code clientFileName} against the base folder to
+     * prevent path traversal, and returns the fully resolved, canonical target file.
+     *
+     * @throws SecurityException if either component would escape the base folder
+     */
+    private java.io.File resolveTargetFile(String uploadFieldId, String clientFileName)
+            throws IOException
+    {
+        Path baseFolderPath = getFolder().toPath().toRealPath();
+        java.io.File uploadFieldFolder = new File(getFolder(), uploadFieldId).getCanonicalFile();
+        if (!uploadFieldFolder.toPath().startsWith(baseFolderPath))
+        {
+            throw new SecurityException("Path traversal detected in uploadFieldId");
+        }
+        java.io.File target = new File(uploadFieldFolder, clientFileName).getCanonicalFile();
+        Path uploadFieldFolderPath = getPathForComparison(uploadFieldFolder);
+        if (!target.toPath().startsWith(uploadFieldFolderPath))
+        {
+            throw new SecurityException("Path traversal detected in client filename");
+        }
+        return target;
     }
 
     @Override
@@ -83,20 +112,13 @@ public class FolderUploadsFileManager implements IUploadsFileManager
     {
         try
         {
-            Path baseFolderPath = getFolder().toPath().toRealPath();
-            java.io.File uploadFieldFolder = new File(getFolder(), uploadFieldId).getCanonicalFile();
-            if (!uploadFieldFolder.toPath().startsWith(baseFolderPath))
+            java.io.File target = resolveTargetFile(uploadFieldId, fileItem.getClientFileName());
+            Files.createDirectories(target.toPath().getParent());
+            try (InputStream in = fileItem.getInputStream();
+                 FileOutputStream out = new FileOutputStream(target))
             {
-                throw new SecurityException("Path traversal detected in uploadFieldId");
+                IOUtils.copy(in, out);
             }
-            uploadFieldFolder.mkdirs();
-            java.io.File target = new File(uploadFieldFolder, fileItem.getClientFileName()).getCanonicalFile();
-            Path uploadFieldFolderPath = getPathForComparison(uploadFieldFolder);
-            if (!target.toPath().startsWith(uploadFieldFolderPath))
-            {
-                throw new SecurityException("Path traversal detected in client filename");
-            }
-            IOUtils.copy(fileItem.getInputStream(), new FileOutputStream(target));
         }
         catch (IOException e)
         {
@@ -109,19 +131,7 @@ public class FolderUploadsFileManager implements IUploadsFileManager
     {
         try
         {
-            Path baseFolderPath = getFolder().toPath().toRealPath();
-            java.io.File uploadFieldFolder = new File(getFolder(), uploadFieldId).getCanonicalFile();
-            if (!uploadFieldFolder.toPath().startsWith(baseFolderPath))
-            {
-                throw new SecurityException("Path traversal detected in uploadFieldId");
-            }
-            java.io.File target = new File(uploadFieldFolder, clientFileName).getCanonicalFile();
-            Path uploadFieldFolderPath = getPathForComparison(uploadFieldFolder);
-            if (!target.toPath().startsWith(uploadFieldFolderPath))
-            {
-                throw new SecurityException("Path traversal detected in client filename");
-            }
-            return new File(target);
+            return new File(resolveTargetFile(uploadFieldId, clientFileName));
         }
         catch (IOException e)
         {
