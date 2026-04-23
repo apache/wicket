@@ -43,8 +43,7 @@ module.exports = function(grunt) {
 			"../../wicket-core/src/test/js/dom.js",
 			"../../wicket-core/src/test/js/channels.js",
 			"../../wicket-core/src/test/js/event.js",
-			"../../wicket-core/src/test/js/timer.js",
-			"../../wicket-core/src/test/js/amd.js"
+			"../../wicket-core/src/test/js/timer.js"
 		],
 		gymTestsJs = [
 			"../../wicket-examples/src/main/webapp/js-test/tests/ajax/form.js",
@@ -113,17 +112,6 @@ module.exports = function(grunt) {
 						headless: true, 
 						args: ['--no-sandbox'] 
 					}
-				}
-			},
-
-			/**
-			 * Run Asynchronous module definition tests
-			 */
-			amd: {
-				options: {
-					urls: [
-						'http://localhost:38887/test/js/amd.html?4.0.0'
-					]
 				}
 			}
 		},

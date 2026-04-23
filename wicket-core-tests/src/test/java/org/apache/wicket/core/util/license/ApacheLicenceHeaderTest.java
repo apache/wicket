@@ -44,7 +44,6 @@ class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 
 		// the licence header breaks the tests in IE
 		htmlIgnore.add("src/test/js/all.html");
-		htmlIgnore.add("src/test/js/amd.html");
 
 		/*
 		 * See NOTICE.txt
@@ -107,7 +106,6 @@ class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		javaScriptIgnore.add("src/test/js/qunit/qunit.js");
 		javaScriptIgnore.add("src/test/js/qunit/jquery.mockjax.js");
 		javaScriptIgnore.add("src/test/js/qunit/blanket.min.js");
-		javaScriptIgnore.add("src/test/js/amd/require.js");
 		javaScriptIgnore.add("src/test/js/data/ajax/nonWicketResponse.json"); // no way to add licence in JSON
 	}
 
