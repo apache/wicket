@@ -25,7 +25,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 
 
 /**
- * The jQuery mirate library
+ * The jQuery migrate library
  */
 public class JQueryMigrateResourceReference extends JavaScriptResourceReference
 {
