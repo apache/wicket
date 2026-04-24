@@ -446,7 +446,7 @@ jQuery(document).ready(function() {
 						assert.equal(attributes.dt, 'xml', 'data type');
 						assert.equal(attributes.wr, true, 'wicket ajax response');
 						assert.equal(attributes.m, 'GET', 'method');
-						assert.ok(isWindow(attributes.c), 'component');
+						assert.ok(Wicket.isWindow(attributes.c), 'component');
 						assert.ok(attributes.f === undefined, 'form');
 						assert.ok(attributes.mp === undefined, 'multipart');
 						assert.ok(attributes.sc === undefined, 'submitting component');

@@ -1,13 +1,12 @@
 /*! jQuery Mockjax
  * A Plugin providing simple and flexible mocking of ajax requests and responses
  * 
- * Version: 2.5.0
+ * Version: 2.7.0
  * Home: https://github.com/jakerella/jquery-mockjax
- * Copyright (c) 2018 Jordan Kasper, formerly appendTo;
+ * Copyright (c) 2026 Jordan Kasper, formerly appendTo;
  * NOTE: This repository was taken over by Jordan Kasper (@jakerella) October, 2014
  * 
- * Dual licensed under the MIT or GPL licenses.
- * http://opensource.org/licenses/MIT OR http://www.gnu.org/licenses/gpl-2.0.html
+ * Licensed under the MIT license: http://opensource.org/licenses/MIT
  */
 (function(root, factory) {
 	'use strict';
@@ -79,14 +78,14 @@
 		logger.debug( mock, ['Checking mock data against request data', mock, live] );
 		var identical = true;
 
-		if ( typeof (mock) === "function") {
+		if (typeof mock === 'function') {
 			return !!mock(live);
 		}
 
 		// Test for situations where the data is a querystring (not an object)
 		if (typeof live === 'string') {
 			// Querystring may be a regex
-			if (typeof(mock.test) === "function") {
+			if (typeof mock.test === 'function') {
 				return mock.test(live);
 			} else if (typeof mock === 'object') {
 				live = getQueryParams(live);
@@ -106,7 +105,7 @@
 					}
 					identical = identical && isMockDataEqual(mock[k], live[k]);
 				} else {
-					if ( mock[k] && typeof (mock[k].test) === 'function' ) {
+					if ( mock[k] && typeof mock[k].test === 'function') {
 						identical = identical && mock[k].test(live[k]);
 					} else {
 						identical = identical && ( mock[k] === live[k] );
@@ -161,36 +160,42 @@
 	function getMockForRequest( handler, requestSettings ) {
 		// If the mock was registered with a function, let the function decide if we
 		// want to mock this request
-		if ( typeof(handler) === "function") {
+		if (typeof handler === 'function') {
 			return handler( requestSettings );
 		}
 
+		// Apply namespace prefix to the mock handler's url.
+		var namespace = handler.namespace || (typeof(handler.namespace) === 'undefined' && $.mockjaxSettings.namespace);
+
 		// Inspect the URL of the request and check if the mock handler's url
 		// matches the url for this ajax request
-		if ( typeof (handler.url.test) === 'function') {
+		if (typeof handler.url.test === 'function') {
+			// namespace exists prepend handler.url with namespace
+			if (!!namespace) {
+				namespace = namespace.replace(/(\/+)$/, '');
+				var pattern = handler.url.source.replace(/^(\^+)/, '').replace(/^/, '^(' + namespace + ')?\/?');
+				handler.url = new RegExp(pattern);
+			}
 			// The user provided a regex for the url, test it
 			if ( !handler.url.test( requestSettings.url ) ) {
 				return null;
 			}
 		} else {
 
-			var effecitveUrl = handler.url;
-
-			// Apply namespace prefix to the mock handler's url.
-			var namespace = handler.namespace || (typeof(handler.namespace) === 'undefined' && $.mockjaxSettings.namespace);
+			var effectiveUrl = handler.url;
 
 			if (!!namespace) {
 				var namespacedUrl = [
 					namespace.replace(/(\/+)$/, ''),
 					handler.url.replace(/^(\/+)/, '')
 				].join('/');
-				effecitveUrl = namespacedUrl;
+				effectiveUrl = namespacedUrl;
 			}
 
 			// Look for a simple wildcard '*' or a direct URL match
-			var star = effecitveUrl.indexOf('*');
-			if (effecitveUrl !== requestSettings.url && star === -1 ||
-					!new RegExp(effecitveUrl.replace(/[-[\]{}()+?.,\\^$|#\s]/g, '\\$&').replace(/\*/g, '.+')).test(requestSettings.url)) {
+			var star = effectiveUrl.indexOf('*');
+			if (effectiveUrl !== requestSettings.url && star === -1 ||
+					!new RegExp(effectiveUrl.replace(/[-[\]{}()+?.,\\^$|#\s]/g, '\\$&').replace(/\*/g, '.+')).test(requestSettings.url)) {
 				return null;
 			}
 		}
@@ -301,7 +306,7 @@
 						onReady = this.onload || this.onreadystatechange;
 
 						// jQuery < 1.4 doesn't have onreadystate change for xhr
-						if ( typeof ( onReady ) === 'function') {
+						if (typeof onReady === 'function') {
 							if( mockHandler.isTimeout) {
 								this.status = -1;
 							}
@@ -314,7 +319,7 @@
 
 					// We have an executable function, call it to give
 					// the mock handler a chance to update it's data
-					if ( typeof (mockHandler.response) === 'function') {
+					if (typeof mockHandler.response === 'function') {
 						// Wait for it to finish
 						if ( mockHandler.response.length === 2 ) {
 							mockHandler.response(origSettings, function () {
@@ -424,7 +429,7 @@
 				var headers = '';
 				// since jQuery 1.9 responseText type has to match contentType
 				if (mockHandler.contentType) {
-					mockHandler.headers['Content-Type'] = mockHandler.contentType;
+					mockHandler.headers['content-type'] = mockHandler.contentType;
 				}
 				$.each(mockHandler.headers, function(k, v) {
 					headers += k + ': ' + v + '\n';
@@ -490,7 +495,7 @@
 			newMock = ($.Deferred) ? (new $.Deferred()) : null;
 
 		// If the response handler on the moock is a function, call it
-		if ( mockHandler.response && typeof(mockHandler.response) === 'function') {
+		if ( mockHandler.response && typeof mockHandler.response === 'function' ) {
 
 			mockHandler.response(origSettings);
 
@@ -540,7 +545,7 @@
 
 			if ( newMock ) {
 				try {
-					json = JSON.parseJSON( mockHandler.responseText );
+					json = JSON.parse( mockHandler.responseText );
 				} catch (err) { /* just checking... */ }
 
 				newMock.resolveWith( callbackContext, [json || mockHandler.responseText] );
@@ -636,7 +641,7 @@
 		overrideCallback = function(action, mockHandler) {
 			var origHandler = origSettings[action.toLowerCase()];
 			return function() {
-				if ( typeof (origHandler) ) {
+				if (typeof origHandler === 'function') {
 					origHandler.apply(this, [].slice.call(arguments));
 				}
 				mockHandler['onAfter' + action]();
@@ -720,13 +725,13 @@
 			}
 
 			// Set up onAfter[X] callback functions
-			if ( typeof( mockHandler.onAfterSuccess ) === 'function' ) {
+			if (typeof mockHandler.onAfterSuccess === 'function') {
 				origSettings.success = overrideCallback('Success', mockHandler);
 			}
-			if ( typeof( mockHandler.onAfterError )  === 'function' ) {
+			if (typeof mockHandler.onAfterError === 'function') {
 				origSettings.error = overrideCallback('Error', mockHandler);
 			}
-			if ( typeof( mockHandler.onAfterComplete ) === 'function' ) {
+			if (typeof mockHandler.onAfterComplete === 'function') {
 				origSettings.complete = overrideCallback('Complete', mockHandler);
 			}
 
@@ -930,7 +935,7 @@
 	 */
 	$.mockjax = function(settings) {
 		// Multiple mocks.
-		if ( Array.isArray(settings) ) {
+		if (Array.isArray(settings)) {
 			return $.map(settings, function(s) {
 				return $.mockjax(s);
 			});

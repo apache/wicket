@@ -188,7 +188,7 @@
     };
 
     Wicket.isWindow = function (obj) { 
-        return obj !== null && obj === obj.window;
+        return typeof(obj) !== 'undefined' && obj !== null && obj === obj.window;
     };
     
 	/**
