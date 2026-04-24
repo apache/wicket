@@ -187,7 +187,10 @@
         return typeof(f) === 'function';
     };
 
-    Wicket.isWindow = function (obj) { return obj != null && obj === obj.window; };
+    Wicket.isWindow = function (obj) { 
+        return obj !== null && obj === obj.window;
+    };
+    
 	/**
 	 * Logging functionality.
 	 */
