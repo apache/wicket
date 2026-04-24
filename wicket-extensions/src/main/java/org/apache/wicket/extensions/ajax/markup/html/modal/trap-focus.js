@@ -70,12 +70,12 @@
 					if (e.shiftKey) {
 						if (e.target === firstFocusable || $element.is(e.target)) {
 							e.preventDefault();
-							lastFocusable.focus();
+							lastFocusable.trigger('focus');
 						}
 					} else {
 						if (e.target === lastFocusable || $element.is(e.target)) {
 							e.preventDefault();
-							firstFocusable.focus();
+							firstFocusable.trigger('focus');
 						}
 					}
 				}
@@ -91,13 +91,13 @@
 		$(document).off("focusin", focusin);
 
 		// ... pull in focus
-		findFocusable($element).first().focus();
+		findFocusable($element).first().trigger('focus');
 		
 		// ... and install new handler
 		focusin = function() {
 			if (!$.contains($element[0], document.activeElement) && $element[0] !== document.activeElement) {
 				// focus is outside of element, so pull in focus
-				findFocusable($element).first().focus();
+				findFocusable($element).first().trigger('focus');
 			}
 		};
 		$(document).on("focusin", focusin);
@@ -110,7 +110,7 @@
 			// ... restore old focus
 			if (oldActive) {
 				try {
-					oldActive.focus();
+					oldActive.trigger('focus');
 					Wicket.Log.debug("trap-focus: restored focus to element ", oldActive);
 				} catch (error) {
 					Wicket.Log.error("trap-focus: error restoring focus. Attempted to set focus to element, but got an exception", oldActive, error);

@@ -40,10 +40,12 @@
 jQuery(document).ready(function() {
 	"use strict";
 
+    var isWindow = function (obj) { return obj != null && obj === obj.window; };
+
 	const { module, test } = QUnit;
 
 	var execute = function (attributes, assert, done) {
-		const done2 = done || assert.async();
+        const done2 = done || assert.async();
 		Wicket.testDone = done2;
 
 		var defaults = {
@@ -63,7 +65,6 @@ jQuery(document).ready(function() {
 		var attrs = jQuery.extend({}, defaults, attributes);
 		var call = new Wicket.Ajax.Call();
 		call.ajax(attrs);
-
 	};
 
 	// Ajax tests are executed only when run with Web Server
@@ -327,7 +328,7 @@ jQuery(document).ready(function() {
 						assert.deepEqual(data, expected, 'Success: data deep equal');
 						assert.equal('success', textStatus, 'Success: textStatus');
 						assert.equal(attrs.u, attributes.u, 'Success: attributes equal');
-						assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Success: Assert that jqXHR is a XMLHttpRequest');
+						assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Success: Assert that jqXHR is a XMLHttpRequest');
 					}
 				],
 				fh: [
@@ -338,8 +339,8 @@ jQuery(document).ready(function() {
 				bsh: [
 					function(attributes, jqXHR, settings) {
 						assert.equal(attrs.u, attributes.u, 'Before: attributes equal');
-						assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-						assert.ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+						assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+						assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 					}
 				],
 				ah: [
@@ -349,7 +350,7 @@ jQuery(document).ready(function() {
 				],
 				coh: [
 					function(attributes, jqXHR, textStatus) {
-						assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
+						assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
 						assert.equal('success', textStatus, 'Complete: textStatus');
 						assert.equal(attrs.u, attributes.u, 'Complete: attributes equal');
 					}
@@ -391,8 +392,8 @@ jQuery(document).ready(function() {
 				bsh: [
 					function(attributes, jqXHR, settings) {
 						assert.equal(attrs.u, attributes.u);
-						assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
-						assert.ok(jQuery.isFunction(settings.beforeSend), 'Assert that settings is the object passed to jQuery.ajax()');
+						assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
+						assert.ok(Wicket.isFunction(settings.beforeSend), 'Assert that settings is the object passed to jQuery.ajax()');
 					}
 				],
 				ah: [
@@ -402,7 +403,7 @@ jQuery(document).ready(function() {
 				],
 				coh: [
 					function(attributes, jqXHR, textStatus) {
-						assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
+						assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
 						assert.equal('error', textStatus);
 						assert.equal(attrs.u, attributes.u);
 					}
@@ -445,7 +446,7 @@ jQuery(document).ready(function() {
 						assert.equal(attributes.dt, 'xml', 'data type');
 						assert.equal(attributes.wr, true, 'wicket ajax response');
 						assert.equal(attributes.m, 'GET', 'method');
-						assert.ok(jQuery.isWindow(attributes.c), 'component');
+						assert.ok(Wicket.isWindow(attributes.c), 'component');
 						assert.ok(attributes.f === undefined, 'form');
 						assert.ok(attributes.mp === undefined, 'multipart');
 						assert.ok(attributes.sc === undefined, 'submitting component');
@@ -496,7 +497,7 @@ jQuery(document).ready(function() {
 				assert.deepEqual(data, expected, 'Success: data');
 				assert.equal('success', textStatus, 'Success: textStatus');
 				assert.equal(attrs.u, attributes.u, 'Success: attrs');
-				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Success: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Success: Assert that jqXHR is a XMLHttpRequest');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/failure', function(jqEvent, attributes) {
@@ -505,8 +506,8 @@ jQuery(document).ready(function() {
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				assert.equal(attrs.u, attributes.u, 'Before: attrs');
-				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-				assert.ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attributes) {
@@ -514,7 +515,7 @@ jQuery(document).ready(function() {
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, textStatus) {
-				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
 				assert.equal('success', textStatus, 'Complete: textStatus');
 				assert.equal(attrs.u, attributes.u, 'Complete: attrs');
 			});
@@ -555,15 +556,15 @@ jQuery(document).ready(function() {
 			Wicket.Event.subscribe('/ajax/call/failure', function(jqEvent, attributes, jqXHR, errorThrown, textStatus) {
 				done();
 				assert.equal('Not Found', errorThrown, 'Failure: errorThrown');
-				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Failure: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Failure: Assert that jqXHR is a XMLHttpRequest');
 				assert.equal('error', textStatus, 'Failure: textStatus');
 				assert.equal(attrs.u, attributes.u, 'Failure: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				assert.equal(attrs.u, attributes.u, 'Before: attrs');
-				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-				assert.ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attributes) {
@@ -571,7 +572,7 @@ jQuery(document).ready(function() {
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, textStatus) {
-				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
 				assert.equal('error', textStatus, 'Complete: textStatus');
 				assert.equal(attrs.u, attributes.u, 'Complete: attrs');
 			});
@@ -675,8 +676,8 @@ jQuery(document).ready(function() {
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				assert.equal(attrs.u, attributes.u, 'Before: attrs');
-				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-				assert.ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 				assert.ok(settings.url.indexOf('one=1') > 0, 'Parameter "one" with value "1" is found');
 				assert.ok(settings.url.indexOf('two=2') > 0, 'Parameter "two" with value "2" is found');
 				done();
@@ -710,8 +711,8 @@ jQuery(document).ready(function() {
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				assert.equal(attrs.u, attributes.u, 'Before: attrs');
-				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-				assert.ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 				assert.ok(settings.data.indexOf('one=static1') > -1, 'Parameter "one" with value "static1" is found');
 				assert.ok(settings.data.indexOf('one=static2') > -1, 'Parameter "one" with value "static2" is found');
 				assert.ok(settings.data.indexOf('one=dynamic1') > -1, 'Parameter "one" with value "dynamic1" is found');

@@ -665,7 +665,7 @@
 
 					if (document.activeElement !== input) {
 						ignoreOneFocusGain = true;
-						input.focus();
+						input.trigger('focus');
 					}
 					return true;
 				};
