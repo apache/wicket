@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.markup.html;
 
-import java.util.Locale;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.SharedResources;
+import org.apache.wicket.markup.html.snake_case.TestPageInsideSnakeCasePackage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.https.HttpPage;
 import org.apache.wicket.request.resource.JavaScriptPackageResource;
 import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -29,6 +29,9 @@ import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Locale;
+
 
 /**
  * Tests for package resources.
@@ -189,4 +192,55 @@ public class PackageResourceTest extends WicketTestCase
 		final String contentType = tester.getLastResponse().getContentType();
 		assertEquals("text/javascript; charset=" + encoding, contentType);
 	}
+
+	@Test
+	public void getResourceStream()
+	{
+		PackageResource resource = new PackageResourceReference(PackageResourceTest.class,
+			"packaged1.txt").getResource();
+		assertNotNull(resource.getResourceStream());
+	}
+
+	@Test(expected = PackageResource.PackageResourceBlockedException.class)
+	public void dontGetResourceStream()
+	{
+		PackageResource resource = new PackageResourceReference(HttpPage.class,
+			"HttpPage.html").getResource();
+		resource.getResourceStream();
+	}
+
+	@Test(expected = PackageResource.PackageResourceBlockedException.class)
+	public void dontGetResourceStreamIfNameHasSuffix()
+	{
+		PackageResource resource = new PackageResourceReference(HttpPage.class,
+			"HttpPage_en.html").getResource();
+		resource.getResourceStream();
+	}
+
+	@Test
+	public void getResourceStreamInSnakeCasePackage()
+	{
+		PackageResource resource = new PackageResourceReference(
+			TestPageInsideSnakeCasePackage.class, "style.css").getResource();
+		assertNotNull(resource.getResourceStream());
+	}
+
+	@Test(expected = PackageResource.PackageResourceBlockedException.class)
+	public void dontGetResourceStreamInSnakeCasePackage()
+	{
+		PackageResource resource = new PackageResourceReference(
+			TestPageInsideSnakeCasePackage.class,
+			"TestPageInsideSnakeCasePackage.html").getResource();
+		resource.getResourceStream();
+	}
+
+	@Test(expected = PackageResource.PackageResourceBlockedException.class)
+	public void dontGetResourceStreamInSnakeCasePackageIfNameHasSuffix()
+	{
+		PackageResource resource = new PackageResourceReference(
+			TestPageInsideSnakeCasePackage.class,
+			"TestPageInsideSnakeCasePackage_en.html").getResource();
+		resource.getResourceStream();
+	}
+
 }
