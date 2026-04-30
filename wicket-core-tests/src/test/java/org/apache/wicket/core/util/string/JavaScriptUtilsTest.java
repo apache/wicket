@@ -16,10 +16,12 @@
  */
 package org.apache.wicket.core.util.string;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.value.AttributeMap;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -96,5 +98,10 @@ class JavaScriptUtilsTest
 		assertEquals("<script type=\"text/javascript\">\n/*<![CDATA[*/\n",
 			JavaScriptUtils.SCRIPT_OPEN_TAG);
 		assertEquals("\n/*]]>*/\n</script>\n", JavaScriptUtils.SCRIPT_CLOSE_TAG);
+	}
+
+	@Test
+	void escapeQuotesAndBackslash(){
+		assertThat(JavaScriptUtils.escapeQuotesAndBackslash("alert('foo\\tbar')")).isEqualTo("alert(\\'foo\\\\tbar\\')");
 	}
 }

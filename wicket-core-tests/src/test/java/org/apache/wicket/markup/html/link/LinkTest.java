@@ -16,15 +16,45 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.apache.wicket.MockPageWithLink;
+import org.apache.wicket.MockPageWithOneComponent;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
+import static org.apache.wicket.MockPageWithOneComponent.COMPONENT_ID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class LinkTest extends WicketTestCase
 {
+
+    @Test
+    void allowsJavascriptSchemeInPopupsTarget()
+    {
+        var uri = "javascript:alert(1);";
+        MockPageWithOneComponent page = new MockPageWithOneComponent();
+        page.add(new PopupLink(COMPONENT_ID, uri));
+
+        tester.startPage(page);
+
+        assertThat(tester.getLastResponseAsString()).contains(uri);
+    }
+
+    @Test
+    void escapesJavascriptQuotesInPopupsTarget()
+    {
+        var uri = "javascript:alert('foo');";
+        MockPageWithOneComponent page = new MockPageWithOneComponent();
+        page.add(new PopupLink(COMPONENT_ID, uri));
+
+        tester.startPage(page);
+
+        assertThat(tester.getLastResponseAsString()).contains("javascript:alert(\\'foo\\');");
+    }
+
     @Test
     void testWrongComponentId()
     {
@@ -43,4 +73,35 @@ public class LinkTest extends WicketTestCase
         mockPageWithLink.add(link);
         assertThrows(MarkupNotFoundException.class, () -> tester.startPage(mockPageWithLink));
     }
+
+    static class PopupLink extends Link<Void>
+    {
+		private final String uri;
+
+	    public PopupLink(String id, String uri)
+        {
+            super(id);
+	        this.uri = uri;
+			setPopupSettings(new PopupSettings());
+        }
+
+        @Override
+        public void onClick()
+        {
+        }
+
+        @Override
+        protected void onComponentTag(ComponentTag tag)
+        {
+            super.onComponentTag(tag);
+            tag.setName("a");
+        }
+
+        @Override
+        protected CharSequence getURL()
+        {
+            return uri;
+        }
+    }
+
 }
