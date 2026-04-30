@@ -2,9 +2,9 @@ name: Java CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ wicket-10.x ]
   pull_request:
-    branches: [ master ]
+    branches: [ wicket-10.x ]
 
 env:
   MAVEN_VERSION: 3.9.9
@@ -49,5 +49,5 @@ jobs:
 
     - name: Build with Maven
       run: |
-        java -version 
+        java -version
         ./apache-maven-${MAVEN_VERSION}/bin/mvn --show-version clean verify -Pjs-test
