@@ -106,7 +106,8 @@ module.exports = function(grunt) {
 			all: {
 				options: {
 					urls: [
-						'http://localhost:38887/test/js/all.html?4.0.0'
+						'http://localhost:38887/test/js/all.html?4.0.0',
+						'http://localhost:38887/test/js/all.html?3.7.1'
 					],
 					puppeteer: { 
 						headless: true, 
