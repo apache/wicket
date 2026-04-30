@@ -2,6 +2,23 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.9.0
+
+** Bug
+
+    * [WICKET-7174] - DefaultSecureRandomSupplier does not work for FIPS
+
+** New Feature
+
+    * [WICKET-7169] - Make partHeaderSizeMax in AbstractFileUpload configurable
+
+** Improvement
+
+    * [WICKET-7172] - Support new CSP style, script directives
+    * [WICKET-7179] - add support for jQuery 4.0.0
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.8.0
 
 ** Bug
