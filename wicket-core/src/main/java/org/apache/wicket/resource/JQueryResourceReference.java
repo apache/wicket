@@ -36,12 +36,19 @@ public class JQueryResourceReference extends JavaScriptResourceReference
 	 * <strong>Note</strong>: Might not work with old jQuery plugins!
 	 */
 	public static final String VERSION_3 = "jquery/jquery-3.7.1.js";
+	public static final String VERSION_4 = "jquery/jquery-4.0.0.js";
 
 	public static final JQueryResourceReference INSTANCE_3 = new JQueryResourceReference(VERSION_3);
+	public static final JQueryResourceReference INSTANCE_4 = new JQueryResourceReference(VERSION_4);
 
 	public static JQueryResourceReference getV3()
 	{
 		return INSTANCE_3;
+	}
+
+	public static JQueryResourceReference getV4()
+	{
+		return INSTANCE_4;
 	}
 
 	protected JQueryResourceReference(final String version)
