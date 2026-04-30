@@ -16,15 +16,6 @@
  */
 package org.apache.wicket.request.resource;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.util.Locale;
-import java.util.Objects;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.wicket.Application;
 import org.apache.wicket.IWicketInternalException;
@@ -52,6 +43,16 @@ import org.apache.wicket.util.resource.ResourceStreamWrapper;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Represents a localizable static resource.
@@ -555,37 +556,17 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 	private IResourceStream internalGetResourceStream(final String style, final Locale locale)
 	{
+		if (!accept(absolutePath))
+		{
+			throw new PackageResourceBlockedException(
+				"Access denied to (static) package resource " + absolutePath + ". See IPackageResourceGuard");
+		}
+
 		IResourceStreamLocator resourceStreamLocator = Application.get()
 			.getResourceSettings()
 			.getResourceStreamLocator();
 		IResourceStream resourceStream = resourceStreamLocator.locate(getScope(), absolutePath,
 			style, variation, locale, null, false);
-
-		String realPath = absolutePath;
-		if (resourceStream instanceof IFixedLocationResourceStream)
-		{
-			realPath = ((IFixedLocationResourceStream)resourceStream).locationAsString();
-			if (realPath != null)
-			{
-				int index = realPath.indexOf(absolutePath);
-				if (index != -1)
-				{
-					realPath = realPath.substring(index);
-				}
-			}
-			else
-			{
-				realPath = absolutePath;
-			}
-
-		}
-
-		if (accept(realPath) == false)
-		{
-			throw new PackageResourceBlockedException(
-				"Access denied to (static) package resource " + absolutePath +
-					". See IPackageResourceGuard");
-		}
 
 		if (resourceStream != null)
 		{
