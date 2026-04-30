@@ -16,8 +16,14 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import org.apache.wicket.MockPageWithOneComponent;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
+
+import static org.apache.wicket.MockPageWithOneComponent.COMPONENT_ID;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test ExternalLink (href="...")
@@ -26,6 +32,61 @@ import org.junit.jupiter.api.Test;
  */
 class ExternalLinkTest extends WicketTestCase
 {
+
+	@Test
+	void allowsJavascriptScheme() throws Exception
+	{
+		String uri = "javascript:alert(1)";
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		page.add(new ExternalLink(COMPONENT_ID, uri){
+			@Override
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				tag.setName("a");
+			}
+		});
+
+		tester.startPage(page);
+
+		assertThat(tester.getLastResponseAsString()).contains(uri);
+	}
+
+	@Test
+	void escapesJavascriptQuotes() throws Exception
+	{
+		String unescaped = "javascript:alert('foo')";
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		page.add(new ExternalLink(COMPONENT_ID, unescaped));
+
+		tester.startPage(page);
+
+		assertThat(tester.getLastResponseAsString()).contains("javascript:alert(\\'foo\\')");
+	}
+
+	@Test
+	void allowsJavascriptSchemeInPopupTarget() throws Exception
+	{
+		String uri = "javascript:alert(1)";
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		page.add(new ExternalLink(COMPONENT_ID, uri));
+
+		tester.startPage(page);
+
+		assertThat(tester.getLastResponseAsString()).contains(uri);
+	}
+	@Test
+	void escapeJavascriptQuotes() throws Exception
+	{
+		String uri = "javascript:alert('foo')";
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		page.add(new ExternalLink(COMPONENT_ID, uri));
+
+		tester.startPage(page);
+
+		assertThat(tester.getLastResponseAsString()).contains(JavaScriptUtils.escapeQuotes(uri));
+	}
+
 	/**
 	 * @throws Exception
 	 */

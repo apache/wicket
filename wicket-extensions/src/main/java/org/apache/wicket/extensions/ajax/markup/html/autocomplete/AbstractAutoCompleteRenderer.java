@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
@@ -50,7 +51,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 		final CharSequence handler = getOnSelectJavaScriptExpression(object);
 		if (handler != null)
 		{
-			response.write(" onselect=\"" + handler + '"');
+			response.write(" onselect=\"" + Strings.escapeMarkup(handler) + '"');
 		}
 		response.write(">");
 		renderChoice(object, response, criteria);

@@ -407,7 +407,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 			// next check for popup settings
 			if (popupSettings != null)
 			{
-				popupSettings.setTarget("'" + url + "'");
+				popupSettings.setTarget(url.toString());
 				response.render(OnEventHeaderItem.forComponent(this, "click",
 					popupSettings.getPopupJavaScript()));
 				return;

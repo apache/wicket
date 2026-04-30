@@ -16,16 +16,11 @@
  */
 package org.apache.wicket.markup.html;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.Locale;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.SharedResources;
+import org.apache.wicket.markup.html.snake_case.TestPageInsideSnakeCasePackage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.https.HttpPage;
 import org.apache.wicket.request.resource.JavaScriptPackageResource;
 import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -34,6 +29,12 @@ import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Locale;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for package resources.
@@ -193,4 +194,59 @@ public class PackageResourceTest extends WicketTestCase
 		final String contentType = tester.getLastResponse().getContentType();
 		assertEquals("text/javascript; charset=" + encoding, contentType);
 	}
+
+	@Test
+	void getResourceStream()
+	{
+		PackageResource resource = new PackageResourceReference(PackageResourceTest.class,
+			"packaged1.txt").getResource();
+		assertThat(resource.getResourceStream()).isNotNull();
+	}
+
+	@Test
+	void dontGetResourceStream()
+	{
+		PackageResource resource = new PackageResourceReference(HttpPage.class,
+			"HttpPage.html").getResource();
+		assertThatThrownBy(resource::getResourceStream).isInstanceOf(
+			PackageResource.PackageResourceBlockedException.class);
+	}
+
+	@Test
+	void dontGetResourceStreamIfNameHasSuffix()
+	{
+		PackageResource resource = new PackageResourceReference(HttpPage.class,
+			"HttpPage_en.html").getResource();
+		assertThatThrownBy(resource::getResourceStream).isInstanceOf(
+			PackageResource.PackageResourceBlockedException.class);
+	}
+
+	@Test
+	void getResourceStreamInSnakeCasePackage()
+	{
+		PackageResource resource = new PackageResourceReference(
+			TestPageInsideSnakeCasePackage.class, "style.css").getResource();
+		assertThat(resource.getResourceStream()).isNotNull();
+	}
+
+	@Test
+	void dontGetResourceStreamInSnakeCasePackage()
+	{
+		PackageResource resource = new PackageResourceReference(
+			TestPageInsideSnakeCasePackage.class,
+			"TestPageInsideSnakeCasePackage.html").getResource();
+		assertThatThrownBy(resource::getResourceStream).isInstanceOf(
+			PackageResource.PackageResourceBlockedException.class);
+	}
+
+	@Test
+	void dontGetResourceStreamInSnakeCasePackageIfNameHasSuffix()
+	{
+		PackageResource resource = new PackageResourceReference(
+			TestPageInsideSnakeCasePackage.class,
+			"TestPageInsideSnakeCasePackage_en.html").getResource();
+		assertThatThrownBy(resource::getResourceStream).isInstanceOf(
+			PackageResource.PackageResourceBlockedException.class);
+	}
+
 }
