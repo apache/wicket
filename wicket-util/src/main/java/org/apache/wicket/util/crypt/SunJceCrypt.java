@@ -18,10 +18,10 @@ package org.apache.wicket.util.crypt;
 
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -42,6 +42,7 @@ import org.apache.wicket.util.lang.Args;
  */
 public class SunJceCrypt extends AbstractCrypt
 {
+	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 	/** Name of the default encryption method */
 	public static final String DEFAULT_CRYPT_METHOD = "PBEWithMD5AndDES";
 
@@ -169,7 +170,7 @@ public class SunJceCrypt extends AbstractCrypt
 		// must be 8 bytes - for anything else PBES1Core throws
 		// InvalidAlgorithmParameterException: Salt must be 8 bytes long  
 		byte[] salt = new byte[8];
-		new Random().nextBytes(salt);
+		SECURE_RANDOM.nextBytes(salt);
 		return salt;
 	}
 }
