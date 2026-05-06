@@ -16,34 +16,43 @@
  */
 package org.apache.wicket.core.random;
 
+import org.apache.wicket.WicketRuntimeException;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import org.apache.wicket.WicketRuntimeException;
-
 /**
- * A very simple {@link ISecureRandomSupplier} that holds a {@code SecureRandom} using
- * {@code SHA1PRNG}. This {@code SecureRandom} is strong enough for generation of nonces with a
- * short lifespan, but might not be strong enough for generating long-lived keys. When your
- * application has stronger requirements on the random implementation, you should replace this class
- * by your own implementation.
+ * A simple {@link ISecureRandomSupplier} that holds a {@code SecureRandom} using
+ * {@code DRBG} (Deterministic Random Bit Generator)
+ * algorithm as defined by NIST SP 800‑90A and available in Java 9 and later.
+ * If {@code DRBG} is not available on the running JVM, it falls back to
+ * {@link SecureRandom#getInstanceStrong()}, which returns the strongest
+ * SecureRandom implementation provided by the platform.
  * 
  * @author papegaaij
  */
 public class DefaultSecureRandomSupplier implements ISecureRandomSupplier
 {
-	private static final class Holder
+    private static final class Holder
 	{
 		private static final SecureRandom INSTANCE;
 
 		static
 		{
+            SecureRandom secureRandom;
 			try
 			{
-				INSTANCE = SecureRandom.getInstance("SHA1PRNG");
-			} catch (NoSuchAlgorithmException e) {
-				throw new WicketRuntimeException(e);
-			}
+				secureRandom = SecureRandom.getInstance("DRBG");
+			} catch (NoSuchAlgorithmException e1) {
+                try {
+                    secureRandom = SecureRandom.getInstanceStrong();
+                } catch (NoSuchAlgorithmException e2) {
+                    throw new WicketRuntimeException("Critical security initialization failure: no suitable SecureRandom implementation found. " +
+                                    "The application attempted to initialize 'DRBG' and 'SecureRandom.getInstanceStrong()', " +
+                                    "but neither is available in the current JVM environment. ", e2);
+                }
+            }
+            INSTANCE = secureRandom;
 		}
 	}
 
