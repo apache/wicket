@@ -17,8 +17,11 @@
 package org.apache.wicket.core.util.string;
 
 import org.apache.wicket.response.StringResponse;
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
 
 /**
  * @since 1.5.7
@@ -88,5 +91,10 @@ public class JavaScriptUtilsTest extends Assert
 		assertEquals("<script type=\"text/javascript\">\n/*<![CDATA[*/\n",
 			JavaScriptUtils.SCRIPT_OPEN_TAG);
 		assertEquals("\n/*]]>*/\n</script>\n", JavaScriptUtils.SCRIPT_CLOSE_TAG);
+	}
+
+	@Test
+	public void escapeQuotesAndBackslash(){
+		assertThat(JavaScriptUtils.escapeQuotesAndBackslash("alert('foo\\tbar')"), is("alert(\\'foo\\\\tbar\\')"));
 	}
 }

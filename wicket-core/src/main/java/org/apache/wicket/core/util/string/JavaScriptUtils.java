@@ -96,6 +96,26 @@ public class JavaScriptUtils
 	}
 
 	/**
+	 * Escape single and double quotes so that they can be part of e.g. an alert call.
+	 *
+	 * Note: JSON values need to escape only the double quote, so this method wont help.
+	 *
+	 * @param input
+	 *            the JavaScript which needs to be escaped
+	 * @return Escaped version of the input
+	 */
+	public static CharSequence escapeQuotesAndBackslash(final CharSequence input)
+	{
+		CharSequence s = input;
+		if (s != null)
+		{
+			s = Strings.replaceAll(s, "\\", "\\\\");
+			s = escapeQuotes(s);
+		}
+		return s;
+	}
+
+	/**
 	 * Write a reference to a javascript file to the response object
 	 * 
 	 * @param response
