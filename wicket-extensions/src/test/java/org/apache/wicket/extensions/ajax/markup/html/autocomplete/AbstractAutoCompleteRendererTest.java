@@ -19,18 +19,17 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class AbstractAutoCompleteRendererTest extends WicketTestCase
 {
 	@Test
-	void escapeOnselectJSExpression()
+	public void escapeOnselectJSExpression()
 	{
-		var renderer = new Renderer("alert('hello');");
+		Renderer renderer = new Renderer("alert('hello');");
 		MockWebResponse response = new MockWebResponse();
 		renderer.render("foo", response, null);
-		Assertions.assertTrue(response.getTextResponse().toString()
+		assertTrue(response.getTextResponse().toString()
 			.contains("<li textvalue=\"foo\" onselect=\"alert(&#039;hello&#039;);\">foo</li>"));
 	}
 
