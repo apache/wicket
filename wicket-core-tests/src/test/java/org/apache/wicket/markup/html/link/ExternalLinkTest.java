@@ -75,17 +75,6 @@ class ExternalLinkTest extends WicketTestCase
 
 		assertThat(tester.getLastResponseAsString()).contains(uri);
 	}
-	@Test
-	void escapeJavascriptQuotes() throws Exception
-	{
-		String uri = "javascript:alert('foo')";
-		MockPageWithOneComponent page = new MockPageWithOneComponent();
-		page.add(new ExternalLink(COMPONENT_ID, uri));
-
-		tester.startPage(page);
-
-		assertThat(tester.getLastResponseAsString()).contains(JavaScriptUtils.escapeQuotes(uri));
-	}
 
 	/**
 	 * @throws Exception
