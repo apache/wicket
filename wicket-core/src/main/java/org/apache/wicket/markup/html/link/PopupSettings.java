@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.util.io.IClusterable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,10 +155,8 @@ public class PopupSettings implements IClusterable
 			windowTitle = windowTitle.replaceAll("\\W", "_");
 		}
 
-		StringBuilder script = new StringBuilder(//
-			"var w = window.open('"//
-				+ JavaScriptUtils.escapeQuotes(target) //
-				+ "', '").append(windowTitle).append("', '");
+	    StringBuilder script = new StringBuilder("var w = window.open(" + target + ", '").append(
+			windowTitle).append("', '");
 
 		script.append("scrollbars=").append(flagToString(SCROLLBARS));
 		script.append(",location=").append(flagToString(LOCATION_BAR));

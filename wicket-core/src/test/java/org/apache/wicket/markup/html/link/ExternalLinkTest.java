@@ -63,6 +63,18 @@ public class ExternalLinkTest extends WicketTestCase
 		assertThat(tester.getLastResponseAsString(), containsString(uri));
 	}
 
+	@Test
+	public void escapesJavascriptQuotes() throws Exception
+	{
+		String unescaped = "javascript:alert('foo')";
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		page.add(new ExternalLink(COMPONENT_ID, unescaped));
+
+		tester.startPage(page);
+
+		assertThat(tester.getLastResponseAsString(), containsString("javascript:alert(&#039;foo&#039;)"));
+	}
+
 	/**
 	 * @throws Exception
 	 */

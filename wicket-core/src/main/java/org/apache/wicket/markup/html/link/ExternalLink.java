@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -194,7 +193,7 @@ public class ExternalLink extends AbstractLink
 					// generate a popup script by asking popup settings for one
 					if (popupSettings != null)
 					{
-						popupSettings.setTarget(url);
+						popupSettings.setTarget("'" + url + "'");
 						String popupScript = popupSettings.getPopupJavaScript();
 						tag.put("onclick", popupScript);
 					}
