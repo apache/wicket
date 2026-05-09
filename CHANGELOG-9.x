@@ -2,6 +2,14 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.23.0
+
+** Bug
+
+    * [WICKET-7174] - DefaultSecureRandomSupplier does not work for FIPS
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.22.0
 
 ** Bug
