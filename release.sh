@@ -490,7 +490,7 @@ if [ $? -ne 0 ] ; then
 fi
 
 echo "Performing the release using Maven"
-mvn -Dgpg.passphrase="$passphrase" -ff -l $log release:perform -DlocalCheckout=true -Dtag=$tag -Papache-release,release
+mvn -Dgpg.passphrase="$passphrase" -ff -l $log release:perform -Daether.connector.basic.parallelPut=false -DlocalCheckout=true -Dtag=$tag -Papache-release,release
 if [ $? -ne 0 ] ; then
     fail "ERROR: mvn release:perform was not successful"
 fi
