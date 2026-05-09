@@ -14,25 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.link;
+package org.apache.wicket.markup.html.snake_case;
 
-import java.util.Locale;
+import org.apache.wicket.markup.html.WebPage;
 
-import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.jupiter.api.Test;
-
-/**
- * @since 1.5
- */
-class ClientSideImageMapTest extends WicketTestCase
+public class TestPageInsideSnakeCasePackage extends WebPage
 {
-	/**
-	 * @throws Exception
-	 */
-	@Test
-    void testRenderClientSideImageMapPage_1() throws Exception
-	{
-		tester.getSession().setLocale(Locale.US);
-		executeTest(ClientSideImageMapPage_1.class, "ClientSideImageMapPageExpectedResult_1.html");
-	}
 }

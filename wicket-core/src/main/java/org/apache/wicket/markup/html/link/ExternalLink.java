@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnEventHeaderItem;
@@ -188,7 +189,7 @@ public class ExternalLink extends AbstractLink
 		{
 			if (popupSettings != null)
 			{
-				popupSettings.setTarget("'" + url + "'");
+				popupSettings.setTarget(url);
 				response.render(OnEventHeaderItem.forComponent(this, "click",
 					popupSettings.getPopupJavaScript()));
 				return;
@@ -205,8 +206,9 @@ public class ExternalLink extends AbstractLink
 				// in firefox when the element is quickly clicked 3 times a second request is
 				// generated during page load. This check ensures that the click is ignored
 				response.render(OnEventHeaderItem.forComponent(this, "click",
-					"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; "
-						+ "if (win == window) { window.location.href='" + url
+					"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; " //
+						+ "if (win == window) { window.location.href='" //
+						+ JavaScriptUtils.escapeQuotes(url) //
 						+ "'; } ;return false"));
 				return;
 			}
