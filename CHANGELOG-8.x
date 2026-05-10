@@ -2,6 +2,10 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.18.0
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.17.0
 
 ** Bug
