@@ -2202,7 +2202,8 @@
 
 						var safeFocus = function() {
 							try {
-								toFocus.trigger('focus');
+                                // toFocus is not a JQuery object. Thus use focus.
+								toFocus.focus();
 							} catch (ignore) {
 								// WICKET-6209 IE fails if toFocus is disabled
 							}

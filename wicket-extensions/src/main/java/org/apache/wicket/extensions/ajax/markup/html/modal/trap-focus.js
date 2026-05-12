@@ -110,7 +110,8 @@
 			// ... restore old focus
 			if (oldActive) {
 				try {
-					oldActive.trigger('focus');
+                    // oldActive is not a JQuery element. Then use focus
+					oldActive.focus();
 					Wicket.Log.debug("trap-focus: restored focus to element ", oldActive);
 				} catch (error) {
 					Wicket.Log.error("trap-focus: error restoring focus. Attempted to set focus to element, but got an exception", oldActive, error);
