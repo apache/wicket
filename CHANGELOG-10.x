@@ -2,6 +2,14 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.9.1
+
+** Bug
+
+    * [WICKET-7179] - fix broken focus functionality
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.9.0
 
 ** Bug
