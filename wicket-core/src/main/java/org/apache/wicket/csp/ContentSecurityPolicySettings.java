@@ -16,12 +16,6 @@
  */
 package org.apache.wicket.csp;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
@@ -29,8 +23,17 @@ import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
+
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+import static org.apache.wicket.request.IRequestHandlerDelegate.unwrap;
 
 /**
  * Build the CSP configuration like this:
@@ -71,14 +74,24 @@ public class ContentSecurityPolicySettings
 
 	private Predicate<IRequestHandler> protectedFilter = RenderPageRequestHandler.class::isInstance;
 
+	private final CSPHeaderWriter cspHeaderWriter;
+
+
 	private Supplier<String> nonceCreator;
-	
+
 	public ContentSecurityPolicySettings(Application application)
 	{
 		Args.notNull(application, "application");
-		
+
+		cspHeaderWriter = new CSPHeaderWriter(this);
+
 		nonceCreator = () ->
 				application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
+	}
+
+	public CSPHeaderWriter getHeaderWriter()
+	{
+		return cspHeaderWriter;
 	}
 
 	public CSPHeaderConfiguration blocking()
@@ -132,7 +145,7 @@ public class ContentSecurityPolicySettings
 	 */
 	protected boolean mustProtectRequest(IRequestHandler handler)
 	{
-		return protectedFilter.test(handler);
+		return protectedFilter.test(unwrap(handler));
 	}
 
 	/**

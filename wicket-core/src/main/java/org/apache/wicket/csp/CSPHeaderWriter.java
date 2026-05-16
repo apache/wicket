@@ -18,60 +18,51 @@ package org.apache.wicket.csp;
 
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 
 import static org.apache.wicket.request.IRequestHandlerDelegate.unwrap;
 
 /**
- * An {@link IRequestCycleListener} that adds {@code Content-Security-Policy} and/or
- * {@code Content-Security-Policy-Report-Only} headers based on the supplied configuration.
+ * Adds {@code Content-Security-Policy} and/or {@code Content-Security-Policy-Report-Only} headers
+ * based on the supplied configuration.
  *
  * @author Sven Haster
  * @author Emond Papegaaij
  */
-public class CSPRequestCycleListener implements IRequestCycleListener
+public class CSPHeaderWriter
 {
 	private final ContentSecurityPolicySettings settings;
 
-	public CSPRequestCycleListener(ContentSecurityPolicySettings settings)
+	public CSPHeaderWriter(ContentSecurityPolicySettings settings)
 	{
 		this.settings = settings;
 	}
 
-	@Override
-	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
+	public void write(WebResponse webResponse, IRequestHandler handler)
 	{
-		// WICKET-7028- this is needed for redirect to buffer use case.
-		protect(cycle, handler);
-	}
-
-	@Override
-	public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
-	{
-		protect(cycle, handler);
-	}
-
-	protected void protect(RequestCycle cycle, IRequestHandler handler)
-	{
-		/*
-		 * page request handlers are protected during page rendering,
-		 * not at this point.
-		 * it's important to avoid hooking the protection here
-		 * because to call response.reset() during rendering is a
-		 * valid use case that would end up undoing the protection
-		 * made inside the listener
-		 */
-		if (//
-			unwrap(handler) instanceof RenderPageRequestHandler //
-				|| !(cycle.getResponse() instanceof WebResponse))
+		var cycle = RequestCycle.get();
+		if (!settings.mustProtectRequest(handler))
 		{
 			return;
 		}
 
-		settings.getHeaderWriter().write((WebResponse)cycle.getResponse(), handler);
-	}
+		if (!webResponse.isHeaderSupported())
+		{
+			return;
+		}
 
+		settings.getConfiguration().entrySet().stream().filter(entry -> entry.getValue().isSet())
+			.forEach(entry -> {
+				CSPHeaderMode mode = entry.getKey();
+				CSPHeaderConfiguration config = entry.getValue();
+				String headerValue = config.renderHeaderValue(settings, cycle);
+				webResponse.setHeader(mode.getHeader(), headerValue);
+				if (config.isAddLegacyHeaders())
+				{
+					webResponse.setHeader(mode.getLegacyHeader(), headerValue);
+				}
+			});
+	}
 
 }
