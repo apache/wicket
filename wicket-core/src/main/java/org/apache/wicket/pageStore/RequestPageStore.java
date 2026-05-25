@@ -21,6 +21,7 @@ import java.util.LinkedList;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,9 +108,10 @@ public class RequestPageStore extends DelegatingPageStore
 	public void detach(IPageContext context)
 	{
 		RequestData requestData = getRequestData(context);
+		IRequestCycle requestCycle = RequestCycle.get();
 		for (IManageablePage page : requestData.pages())
 		{
-			if (isPageStateless(page) == false)
+			if (isPageStateless(page) == false && shouldSerializePage(requestCycle, page))
 			{
 				getDelegate().addPage(context, page);
 			}
@@ -117,6 +119,21 @@ public class RequestPageStore extends DelegatingPageStore
 		requestData.removeAll();
 
 		getDelegate().detach(context);
+	}
+
+	/**
+	 * Give the opportunity to skip some serializations. E.g. we have some AJAX behavior that is sending some
+	 * info from client to page but page structure didn't change at all and nothing is repainted via AJAX.
+	 * But this will trigger a serialization. Returning false here would prevent that request from doing a
+	 * page serialization. For heavy pages this can really make a difference.
+	 *
+	 * @param requestCycle The request
+	 * @param page         The {@link IManageablePage}
+	 * @return <code>true</code> if page should be serialized for this request. The default is true.
+	 */
+	protected boolean shouldSerializePage(IRequestCycle requestCycle, IManageablePage page)
+	{
+		return true;
 	}
 
 	private boolean isPageStateless(final IManageablePage page) {
