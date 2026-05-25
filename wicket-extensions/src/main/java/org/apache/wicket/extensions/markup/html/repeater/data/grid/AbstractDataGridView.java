@@ -149,21 +149,23 @@ public abstract class AbstractDataGridView<T> extends DataViewBase<T>
 		for (int i = 0; i < populatorsNumber; i++)
 		{
 			ICellPopulator<T> populator = populators.get(i);
-			IModel<ICellPopulator<T>> populatorModel = new Model<>(populator);
-			Item<ICellPopulator<T>> cellItem = newCellItem(cells.newChildId(), i, populatorModel);
-			cells.add(cellItem);
-
-			populator.populateItem(cellItem, CELL_ITEM_ID, item.getModel());
-
-			if (cellItem.get("cell") == null)
+			if (populator.isVisible())
 			{
-				throw new WicketRuntimeException(
-					populator.getClass().getName() +
-						".populateItem() failed to add a component with id [" +
-						CELL_ITEM_ID +
-						"] to the provided [cellItem] object. Make sure you call add() on cellItem and make sure you gave the added component passed in 'componentId' id. ( *cellItem*.add(new MyComponent(*componentId*, rowModel) )");
+				IModel<ICellPopulator<T>> populatorModel = new Model<>(populator);
+				Item<ICellPopulator<T>> cellItem = newCellItem(cells.newChildId(), i, populatorModel);
+				cells.add(cellItem);
+
+				populator.populateItem(cellItem, CELL_ITEM_ID, item.getModel());
+
+				if (cellItem.get("cell") == null)
+				{
+					throw new WicketRuntimeException(
+						populator.getClass().getName() +
+							".populateItem() failed to add a component with id [" +
+							CELL_ITEM_ID +
+							"] to the provided [cellItem] object. Make sure you call add() on cellItem and make sure you gave the added component passed in 'componentId' id. ( *cellItem*.add(new MyComponent(*componentId*, rowModel) )");
+				}
 			}
 		}
-
 	}
 }
