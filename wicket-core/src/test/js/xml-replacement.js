@@ -110,7 +110,11 @@ jQuery(document).ready(function() {
 					function () {
 						done();
 						var complexXml = jQuery('#complexXml');
-						assert.equal(complexXml.html().trim(), '<mrow>\n' +
+						assert.equal(complexXml.html()
+							.trim()
+							.replaceAll('\r\n', '\n')
+							.replaceAll('\r', '\n'),
+							'<mrow>\n' +
 							'<mn>2</mn>\n' +
 							'<mo>⁢</mo>\n' +
 							'<mn>3</mn>\n' +
