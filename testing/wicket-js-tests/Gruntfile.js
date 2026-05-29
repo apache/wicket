@@ -121,7 +121,7 @@ module.exports = function(grunt) {
 			"xml-replacement": {
 				options: {
 					urls: [
-						'http://localhost:38887/test/js/xml-replacement.html?3.7.1'
+						'http://localhost:38887/test/js/xml-replacement.html?4.0.0'
 					]
 				}
 			}
