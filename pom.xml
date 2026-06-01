@@ -997,7 +997,7 @@
 						<dependency>
 							<groupId>com.sun.xml.bind</groupId>
 							<artifactId>jaxb-impl</artifactId>
-							<version>4.0.8</version>
+							<version>4.0.9</version>
 						</dependency>
 						<dependency>
 							<groupId>javax.activation</groupId>
