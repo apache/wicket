@@ -20,6 +20,13 @@ github:
         - root
       restrict_deletion: true
       restrict_force_push: true
+
+  features:
+    wiki: false
+    issues: true
+    projects: true
+    discussions: true
+
 notifications:
   commits: commits@wicket.apache.org
   pullrequests: commits@wicket.apache.org
