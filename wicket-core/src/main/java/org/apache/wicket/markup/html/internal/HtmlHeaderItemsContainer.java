@@ -44,7 +44,7 @@ public class HtmlHeaderItemsContainer extends HtmlHeaderContainer
 	protected void onAfterRender() {
 		super.onAfterRender();
 		final Response webResponse = getResponse();
-		webResponse.write("<meta name=\"wicket.header.items\"/>");
+		webResponse.write("<meta name=\"wicket.header.items\" content=\"\"/>");
 	}
 
 	@Override
