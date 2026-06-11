@@ -17,6 +17,7 @@
 package org.apache.wicket.util.file;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import org.apache.commons.io.FileDeleteStrategy;
 
@@ -58,6 +59,20 @@ public interface IFileCleaner
 	 *             if the file is null
 	 */
 	void track(File file, Object marker, FileDeleteStrategy deleteStrategy);
+
+	/**
+	 * {@link Path} variant for file tracking.
+	 * 
+	 * @see #track(File, Object)
+	 */
+	void track(Path file, Object marker);
+
+	/**
+	 * {@link Path} variant for file tracking.
+	 * 
+	 * @see #track(File, Object, FileDeleteStrategy)
+	 */
+	void track(Path file, Object marker, FileDeleteStrategy deleteStrategy);
 
 	/**
 	 * Call this method to stop the cleaner and to free all allocated resources by it
