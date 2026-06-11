@@ -17,6 +17,8 @@
 package org.apache.wicket.util.file;
 
 
+import java.nio.file.Path;
+
 import org.apache.commons.io.FileCleaningTracker;
 import org.apache.commons.io.FileDeleteStrategy;
 import org.apache.wicket.util.lang.Args;
@@ -61,5 +63,17 @@ public class FileCleanerTrackerAdapter extends FileCleaningTracker
 	public void track(String path, Object marker, FileDeleteStrategy deleteStrategy)
 	{
 		fileCleaner.track(new File(path), marker, deleteStrategy);
+	}
+
+	@Override
+	public void track(Path file, Object marker)
+	{
+		fileCleaner.track(file, marker);
+	}
+
+	@Override
+	public void track(Path file, Object marker, FileDeleteStrategy deleteStrategy)
+	{
+		fileCleaner.track(file, marker, deleteStrategy);
 	}
 }
