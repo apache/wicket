@@ -75,7 +75,7 @@ public abstract class PartialPageUpdate
 	 * Length of the script block that combined scripts are wrapped in. This includes the script tag,
 	 * CDATA and if CSP is enabled also the nonce.
 	 */
-	private static final int SCRIPT_BLOCK_LENGTH = 100;
+	protected static final int SCRIPT_BLOCK_LENGTH = 100;
 
 	/**
 	 * A list of scripts (JavaScript) which should be executed on the client side before the
