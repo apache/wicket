@@ -83,10 +83,10 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	private final PartialPageUpdate update;
 
 	/** a set of listeners */
-	private Set<AjaxRequestTarget.IListener> listeners = null;
+	protected Set<AjaxRequestTarget.IListener> listeners = null;
 
 	/** */
-	private final Set<ITargetRespondListener> respondListeners = new HashSet<>();
+	protected final Set<ITargetRespondListener> respondListeners = new HashSet<>();
 
 	/** see https://issues.apache.org/jira/browse/WICKET-3564 */
 	protected transient boolean respondersFrozen;
@@ -104,7 +104,18 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	{
 		super(page);
 
-		update = new XmlPartialPageUpdate(page)
+		update = newPartialPageUpdate(page);
+	}
+
+	/**
+	 * Factory method for {@link PartialPageUpdate}'s
+	 *
+	 * @param page The {@link Page}
+	 * @return an instance of {@link PartialPageUpdate}
+	 */
+	protected PartialPageUpdate newPartialPageUpdate(final Page page)
+	{
+		return new XmlPartialPageUpdate(page)
 		{
 			/**
 			 * Freezes the {@link AjaxRequestHandler#listeners} before firing the event and
@@ -130,7 +141,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 			/**
 			 * Freezes the {@link AjaxRequestHandler#listeners}, and does not un-freeze them as the
 			 * events will have been fired by now.
-			 * 
+			 *
 			 * @param response
 			 *            the response to write to
 			 */
@@ -143,7 +154,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 				if (listeners != null)
 				{
 					final Map<String, Component> components = Collections
-						.unmodifiableMap(markupIdToComponent);
+							.unmodifiableMap(markupIdToComponent);
 
 					for (AjaxRequestTarget.IListener listener : listeners)
 					{
