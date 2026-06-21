@@ -21,7 +21,11 @@ import org.apache.wicket.util.lang.Args;
 
 /**
  * To be used to define the "type" attribute of the script tag written
- * by a {@link AbstractJavaScriptReferenceHeaderItem}.
+ * by a {@link AbstractJavaScriptReferenceHeaderItem} or a
+ * {@link JavaScriptContentHeaderItem}.
+ * <p>
+ * This class should be called <code>JavaScriptType</code>, but
+ * renaming breaks backward compatibility.
  */
 public class JavaScriptReferenceType implements IClusterable {
 
