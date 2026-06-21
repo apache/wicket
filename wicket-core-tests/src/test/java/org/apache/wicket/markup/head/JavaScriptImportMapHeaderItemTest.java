@@ -59,11 +59,7 @@ public class JavaScriptImportMapHeaderItemTest extends WicketTestCase
         item.render(response);
 
         assertEquals("""
-                <script type="importmap">
-                /*<![CDATA[*/
-                {}
-                /*]]>*/
-                </script>
+                <script type="importmap">{}</script>
                 """, response.getTextResponse().toString());
 
     }
@@ -79,11 +75,7 @@ public class JavaScriptImportMapHeaderItemTest extends WicketTestCase
         item.render(response);
 
         assertEquals("""
-                <script type="importmap">
-                /*<![CDATA[*/
-                {"imports":{"themodule":"./wicket/resource/org.apache.wicket.markup.head.JavaScriptImportMapHeaderItemTest/thescript.js"}}
-                /*]]>*/
-                </script>
+                <script type="importmap">{"imports":{"themodule":"./wicket/resource/org.apache.wicket.markup.head.JavaScriptImportMapHeaderItemTest/thescript.js"}}</script>
                 """, response.getTextResponse().toString());
 
     }
@@ -101,11 +93,7 @@ public class JavaScriptImportMapHeaderItemTest extends WicketTestCase
         item.render(response);
 
         assertEquals("""
-                <script type="importmap">
-                /*<![CDATA[*/
-                {"scopes":{"thescope":{"themodule":"./wicket/resource/org.apache.wicket.markup.head.JavaScriptImportMapHeaderItemTest/thescript.js"}}}
-                /*]]>*/
-                </script>
+                <script type="importmap">{"scopes":{"thescope":{"themodule":"./wicket/resource/org.apache.wicket.markup.head.JavaScriptImportMapHeaderItemTest/thescript.js"}}}</script>
                 """, response.getTextResponse().toString());
 
     }
@@ -123,11 +111,7 @@ public class JavaScriptImportMapHeaderItemTest extends WicketTestCase
         item.render(response);
 
         assertEquals("""
-                <script type="importmap">
-                /*<![CDATA[*/
-                {"integrity":{"./wicket/resource/org.apache.wicket.markup.head.JavaScriptImportMapHeaderItemTest/thescript.js":"first-hash second-hash"}}
-                /*]]>*/
-                </script>
+                <script type="importmap">{"integrity":{"./wicket/resource/org.apache.wicket.markup.head.JavaScriptImportMapHeaderItemTest/thescript.js":"first-hash second-hash"}}</script>
                 """, response.getTextResponse().toString());
 
     }
@@ -142,11 +126,7 @@ public class JavaScriptImportMapHeaderItemTest extends WicketTestCase
         item.render(response);
 
         assertEquals("""
-                <script type="importmap" id="theId">
-                /*<![CDATA[*/
-                {}
-                /*]]>*/
-                </script>
+                <script type="importmap" id="theId">{}</script>
                 """, response.getTextResponse().toString());
 
     }
@@ -160,11 +140,7 @@ public class JavaScriptImportMapHeaderItemTest extends WicketTestCase
         item.render(response);
 
         assertEquals("""
-                <script type="importmap" nonce="theNonce">
-                /*<![CDATA[*/
-                {}
-                /*]]>*/
-                </script>
+                <script type="importmap" nonce="theNonce">{}</script>
                 """, response.getTextResponse().toString());
 
     }

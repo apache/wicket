@@ -24,6 +24,7 @@ import java.util.Map;
 import com.github.openjson.JSONObject;
 import com.github.openjson.JSONStringer;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.core.util.string.JsonUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
@@ -117,6 +118,6 @@ public class JavaScriptImportMapHeaderItem extends JavaScriptHeaderItem
         attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "importmap");
         attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
         attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
-        JavaScriptUtils.writeInlineScript(response, lazyJson.get(), attributes);
+        JsonUtils.writeInlineScript(response, lazyJson.get(), attributes);
     }
 }
