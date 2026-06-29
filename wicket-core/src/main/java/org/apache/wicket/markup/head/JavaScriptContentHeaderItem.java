@@ -34,6 +34,8 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 {
 	private final CharSequence javaScript;
 
+	private JavaScriptReferenceType type = JavaScriptReferenceType.TEXT_JAVASCRIPT;
+
 	/**
 	 * Creates a new {@code JavaScriptContentHeaderItem}.
 	 * 
@@ -57,11 +59,28 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 		return javaScript;
 	}
 
+	public JavaScriptReferenceType getType() {
+		return type;
+	}
+
+	/**
+	 * Set the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type">type</a> of
+	 * the script. If no type is set, it defaults to {@link JavaScriptReferenceType#TEXT_JAVASCRIPT}.
+	 *
+	 * @param type the new type.
+	 */
+	public JavaScriptContentHeaderItem setType(final JavaScriptReferenceType type) {
+		this.type = type;
+		return this;
+	}
+
 	@Override
 	public void render(Response response)
 	{
 		AttributeMap attributes = new AttributeMap();
-		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
+		// An empty string works the same as `text/javascript`, but use the latter for backward compatibility.
+		JavaScriptReferenceType actualType = type == null ? JavaScriptReferenceType.TEXT_JAVASCRIPT : type;
+		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, actualType.getType());
 		attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
 		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
 		JavaScriptUtils.writeInlineScript(response, getJavaScript(), attributes);
@@ -88,7 +107,8 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
 		JavaScriptContentHeaderItem that = (JavaScriptContentHeaderItem) o;
-		return Objects.equals(javaScript, that.javaScript);
+		return Objects.equals(javaScript, that.javaScript) &&
+				Objects.equals(type, that.type);
 	}
 
 	@Override
@@ -97,6 +117,7 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 		// Not using `Objects.hash` for performance reasons
 		int result = super.hashCode();
 		result = 31 * result + ((javaScript != null) ? javaScript.hashCode() : 0);
+		result = 31 * result + ((type != null) ? type.hashCode() : 0);
 		return result;
 	}
 }
