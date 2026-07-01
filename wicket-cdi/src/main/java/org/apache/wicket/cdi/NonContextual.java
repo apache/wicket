@@ -27,11 +27,12 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.util.collections.ClassMetaCache;
 
 /**
  * Manages lifecycle of non-contextual (non-CDI-managed) objects
- * 
+ *
  * @param <T>
  * @author igor
  */
@@ -48,14 +49,15 @@ public class NonContextual<T>
 	 */
 	public static void undeploy()
 	{
-		if (cache.containsKey(BeanManagerLookup.lookup()))
+		BeanManager manager = CdiConfiguration.get(Application.get()).getBeanManager();
+		if (cache.containsKey(manager))
 		{
 			synchronized (lock)
 			{
 				// copy-on-write the cache
 				Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
 						cache);
-				newCache.remove(BeanManagerLookup.lookup());
+				newCache.remove(manager);
 				cache = Collections.unmodifiableMap(newCache);
 			}
 		}
@@ -63,7 +65,7 @@ public class NonContextual<T>
 
 	/**
 	 * Convenience factory method for an instance, see {@link #of(Class)}.
-	 * 
+	 *
 	 * @param <T>
 	 * @param t
 	 * @return The NonContextual for the instance's class
@@ -76,7 +78,7 @@ public class NonContextual<T>
 
 	/**
 	 * Factory method for creating non-contextual instances
-	 * 
+	 *
 	 * @param <T>
 	 * @param clazz
 	 * @return The NonContextual for the given class
@@ -98,12 +100,12 @@ public class NonContextual<T>
 
 	private static ClassMetaCache<NonContextual<?>> getCache()
 	{
-		ClassMetaCache<NonContextual<?>> meta = cache.get(BeanManagerLookup.lookup());
+		BeanManager manager = CdiConfiguration.get(Application.get()).getBeanManager();
+		ClassMetaCache<NonContextual<?>> meta = cache.get(manager);
 		if (meta == null)
 		{
 			synchronized (lock)
 			{
-				BeanManager manager = BeanManagerLookup.lookup();
 				meta = cache.get(manager);
 				if (meta == null)
 				{
@@ -123,7 +125,7 @@ public class NonContextual<T>
 	@SuppressWarnings("unchecked")
 	private NonContextual(Class<? extends T> clazz)
 	{
-		BeanManager manager = BeanManagerLookup.lookup();
+		BeanManager manager = CdiConfiguration.get(Application.get()).getBeanManager();
 		AnnotatedType<? extends T> type = manager.createAnnotatedType(clazz);
 		this.it = (InjectionTarget<T>) manager.getInjectionTargetFactory(type)
 			.createInjectionTarget(null);
@@ -131,31 +133,33 @@ public class NonContextual<T>
 
 	/**
 	 * Injects the instance and calls any {@link PostConstruct} methods
-	 * 
+	 *
 	 * @param instance
 	 */
 	public void postConstruct(T instance)
 	{
-		CreationalContext<T> cc = BeanManagerLookup.lookup().createCreationalContext(null);
+		CreationalContext<T> cc = CdiConfiguration.get(Application.get()).getBeanManager()
+			.createCreationalContext(null);
 		it.inject(instance, cc);
 		it.postConstruct(instance);
 	}
 
 	/**
 	 * Injects the instance
-	 * 
+	 *
 	 * @param instance
 	 */
 	public void inject(T instance)
 	{
-		CreationalContext<T> cc = BeanManagerLookup.lookup().createCreationalContext(null);
+		CreationalContext<T> cc = CdiConfiguration.get(Application.get()).getBeanManager()
+			.createCreationalContext(null);
 		it.inject(instance, cc);
 	}
 
 	/**
 	 * Calls any {@link PreDestroy} methods and destroys any injected
 	 * dependencies that need to be destroyed.
-	 * 
+	 *
 	 * @param instance
 	 */
 	public void preDestroy(T instance)
