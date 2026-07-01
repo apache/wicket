@@ -80,7 +80,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	/**
 	 * Collector of page updates.
 	 */
-	private final PartialPageUpdate update;
+	private PartialPageUpdate update;
 
 	/** a set of listeners */
 	protected Set<AjaxRequestTarget.IListener> listeners = null;
@@ -103,8 +103,6 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	public AjaxRequestHandler(final Page page)
 	{
 		super(page);
-
-		update = newPartialPageUpdate(page);
 	}
 
 	/**
@@ -185,13 +183,16 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	@Override
 	public PartialPageUpdate getUpdate()
 	{
+		if (update == null) {
+			update = newPartialPageUpdate(getPage());
+		}
 		return update;
 	}
 
 	@Override
 	public final Collection<? extends Component> getComponents()
 	{
-		return update.getComponents();
+		return getUpdate().getComponents();
 	}
 
 	/**
@@ -205,7 +206,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 			logData = new PageLogData(getPage());
 		}
 
-		update.detach(requestCycle);
+		getUpdate().detach(requestCycle);
 	}
 
 	/**
@@ -217,7 +218,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 		if (obj instanceof AjaxRequestHandler)
 		{
 			AjaxRequestHandler that = (AjaxRequestHandler)obj;
-			return update.equals(that.update);
+			return getUpdate().equals(that.update);
 		}
 		return false;
 	}
@@ -229,7 +230,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	public int hashCode()
 	{
 		int result = "AjaxRequestHandler".hashCode();
-		result += update.hashCode() * 17;
+		result += getUpdate().hashCode() * 17;
 		return result;
 	}
 
@@ -276,7 +277,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 		final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
 		// Set content type based on markup type for page
-		update.setContentType(response, encoding);
+		getUpdate().setContentType(response, encoding);
 
 		// Make sure it is not cached by a client
 		response.disableCaching();
@@ -287,7 +288,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 		// WICKET-7074 we need to write to a temporary buffer, otherwise, if an exception is produced,
 		// and a redirect is done we will end up with a malformed XML
 		final StringResponse bodyResponse = new StringResponse();
-		update.writeTo(bodyResponse, encoding);
+		getUpdate().writeTo(bodyResponse, encoding);
 		if (filters == null || filters.isEmpty())
 		{
 			response.write(bodyResponse.getBuffer());
@@ -301,7 +302,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 
 	private boolean shouldRedirectToPage(IRequestCycle requestCycle)
 	{
-		if (update.containsPage())
+		if (getUpdate().containsPage())
 		{
 			return true;
 		}
@@ -344,7 +345,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	@Override
 	public String toString()
 	{
-		return "[AjaxRequestHandler@" + hashCode() + " responseObject [" + update + "]";
+		return "[AjaxRequestHandler@" + hashCode() + " responseObject [" + getUpdate() + "]";
 	}
 
 	/**
