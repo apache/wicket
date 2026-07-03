@@ -80,13 +80,12 @@ public class SchemeCrypt implements ICrypt
 	}
 
 	@Override
-	public byte[] encrypt(byte[] plainBytes)
+	public byte[] encrypt(byte[] plainBytes, byte[] associatedData)
 	{
 		Args.notNull(plainBytes, "plainBytes");
 
 		byte id = encryptionScheme.id();
-		byte[] aad = { id };
-		byte[] payload = encryptionScheme.encrypt(plainBytes, key, aad, random);
+		byte[] payload = encryptionScheme.encrypt(plainBytes, key, aad(id, associatedData), random);
 
 		byte[] result = new byte[payload.length + 1];
 		result[0] = id;
@@ -95,7 +94,7 @@ public class SchemeCrypt implements ICrypt
 	}
 
 	@Override
-	public byte[] decrypt(byte[] encryptedBytes)
+	public byte[] decrypt(byte[] encryptedBytes, byte[] associatedData)
 	{
 		if (encryptedBytes == null || encryptedBytes.length < 1)
 		{
@@ -110,8 +109,24 @@ public class SchemeCrypt implements ICrypt
 			return null;
 		}
 
-		byte[] aad = { id };
 		byte[] payload = Arrays.copyOfRange(encryptedBytes, 1, encryptedBytes.length);
-		return scheme.decrypt(payload, key, aad);
+		return scheme.decrypt(payload, key, aad(id, associatedData));
+	}
+
+	/**
+	 * Builds the AEAD associated data by prefixing the caller-supplied associated data with the
+	 * scheme marker. With no associated data this is just {@code {marker}} (unchanged behavior).
+	 */
+	private static byte[] aad(byte marker, byte[] associatedData)
+	{
+		if (associatedData == null || associatedData.length == 0)
+		{
+			return new byte[] { marker };
+		}
+
+		byte[] aad = new byte[associatedData.length + 1];
+		aad[0] = marker;
+		System.arraycopy(associatedData, 0, aad, 1, associatedData.length);
+		return aad;
 	}
 }

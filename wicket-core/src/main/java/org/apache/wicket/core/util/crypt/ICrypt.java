@@ -40,19 +40,52 @@ public interface ICrypt
 	 *
 	 * @param plainBytes
 	 *            the bytes to encrypt, must not be {@code null}
+	 * @param associatedData
+	 *            optional additional data that is authenticated but not encrypted; the identical
+	 *            value must be supplied to {@link #decrypt(byte[], byte[])} or decryption fails.
+	 *            Use it to bind the ciphertext to its context (e.g. a page id). May be
+	 *            {@code null}.
 	 * @return the encrypted bytes
 	 */
-	byte[] encrypt(byte[] plainBytes);
+	byte[] encrypt(byte[] plainBytes, byte[] associatedData);
 
 	/**
 	 * Decrypt the given bytes.
 	 *
 	 * @param encryptedBytes
 	 *            the bytes to decrypt
+	 * @param associatedData
+	 *            the same additional data that was supplied to {@link #encrypt(byte[], byte[])},
+	 *            or {@code null} if none was used
 	 * @return the decrypted bytes, or {@code null} if the input could not be decrypted for any
-	 *         reason (unknown or non-whitelisted scheme, failed authentication, malformed input)
+	 *         reason (unknown or non-whitelisted scheme, failed authentication including an
+	 *         associated-data mismatch, malformed input)
 	 */
-	byte[] decrypt(byte[] encryptedBytes);
+	byte[] decrypt(byte[] encryptedBytes, byte[] associatedData);
+
+	/**
+	 * Encrypt the given bytes without additional associated data.
+	 *
+	 * @param plainBytes
+	 *            the bytes to encrypt, must not be {@code null}
+	 * @return the encrypted bytes
+	 */
+	default byte[] encrypt(byte[] plainBytes)
+	{
+		return encrypt(plainBytes, null);
+	}
+
+	/**
+	 * Decrypt the given bytes that were encrypted without additional associated data.
+	 *
+	 * @param encryptedBytes
+	 *            the bytes to decrypt
+	 * @return the decrypted bytes, or {@code null} if the input could not be decrypted
+	 */
+	default byte[] decrypt(byte[] encryptedBytes)
+	{
+		return decrypt(encryptedBytes, null);
+	}
 
 	/**
 	 * Encrypt the given text into a URL-safe (Base64, no padding) {@code String}.

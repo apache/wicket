@@ -118,6 +118,29 @@ public class SchemeCryptTest
 		assertNull(crypt(newKey(), scheme).decrypt(enc));
 	}
 
+	@ParameterizedTest
+	@MethodSource("schemes")
+	void associatedDataMustMatch(ICryptScheme scheme)
+	{
+		SchemeCrypt crypt = crypt(newKey(), scheme);
+		byte[] plain = "data".getBytes(StandardCharsets.UTF_8);
+		byte[] aad = { 1, 2, 3, 4 };
+
+		byte[] enc = crypt.encrypt(plain, aad);
+
+		// only the identical associated data decrypts
+		assertArrayEquals(plain, crypt.decrypt(enc, aad));
+		// a different, absent, or no-arg associated data fails authentication
+		assertNull(crypt.decrypt(enc, new byte[] { 9, 9, 9, 9 }));
+		assertNull(crypt.decrypt(enc, null));
+		assertNull(crypt.decrypt(enc));
+
+		// data encrypted without associated data cannot be read as if it had some, and vice versa
+		byte[] encNoAad = crypt.encrypt(plain);
+		assertArrayEquals(plain, crypt.decrypt(encNoAad));
+		assertNull(crypt.decrypt(encNoAad, aad));
+	}
+
 	@Test
 	void emptyOrShortInputReturnsNull()
 	{

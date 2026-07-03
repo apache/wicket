@@ -119,6 +119,32 @@ public class CryptingPageStoreTest extends WicketTestCase
 		assertNull(store.getPage(context, p));
 	}
 
+	@ParameterizedTest
+	@MethodSource("schemes")
+	void pageIsBoundToItsId(ICryptScheme scheme)
+	{
+		MockPageStore delegate = new MockPageStore();
+		CryptingPageStore store = buildPageStore(scheme, delegate);
+		JavaSerializer serializer = new JavaSerializer("test");
+
+		MockPageContext context = new MockPageContext();
+
+		int n = 1;
+		int m = 2;
+		store.addPage(context, new SerializedPage(n, "foo", serializer.serialize(new MockPage(n))));
+
+		// copy page n's stored ciphertext into slot m
+		SerializedPage storedN = (SerializedPage) delegate.getPage(context, n);
+		delegate.addPage(context, new SerializedPage(m, "foo", storedN.getData()));
+
+		// reading slot m must fail: the blob is bound (via associated data) to id n
+		assertNull(store.getPage(context, m));
+
+		// page n itself still decrypts
+		SerializedPage got = (SerializedPage) store.getPage(context, n);
+		assertEquals(n, ((MockPage) serializer.deserialize(got.getData())).getPageId());
+	}
+
 	private CryptingPageStore buildPageStore(ICryptScheme scheme, MockPageStore delegate)
 	{
 		tester.getApplication()

@@ -109,13 +109,13 @@ class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 			return new ICrypt()
 			{
 				@Override
-				public byte[] encrypt(byte[] plainBytes)
+				public byte[] encrypt(byte[] plainBytes, byte[] associatedData)
 				{
 					return plainBytes;
 				}
 
 				@Override
-				public byte[] decrypt(byte[] encryptedBytes)
+				public byte[] decrypt(byte[] encryptedBytes, byte[] associatedData)
 				{
 					return encryptedBytes;
 				}

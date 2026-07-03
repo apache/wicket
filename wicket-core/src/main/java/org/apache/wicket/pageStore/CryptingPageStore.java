@@ -17,6 +17,7 @@
 package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
+import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 
 import javax.crypto.SecretKey;
@@ -126,7 +127,9 @@ public class CryptingPageStore extends DelegatingPageStore
 			SerializedPage serializedPage = (SerializedPage) page;
 
 			byte[] encrypted = serializedPage.getData();
-			byte[] decrypted = getCrypt(context).decrypt(encrypted);
+			// bind the page to the id we are looking up (the trusted method parameter), so a
+			// blob that was stored for a different id fails authentication
+			byte[] decrypted = getCrypt(context).decrypt(encrypted, aad(id));
 
 			if (decrypted == null)
 			{
@@ -152,11 +155,19 @@ public class CryptingPageStore extends DelegatingPageStore
 		SerializedPage serializedPage = (SerializedPage) page;
 
 		byte[] decrypted = serializedPage.getData();
-		byte[] encrypted = getCrypt(context).encrypt(decrypted);
+		byte[] encrypted = getCrypt(context).encrypt(decrypted, aad(serializedPage.getPageId()));
 
 		page = new SerializedPage(page.getPageId(), serializedPage.getPageType(), encrypted);
 
 		getDelegate().addPage(context, page);
+	}
+
+	/**
+	 * The associated data binding an encrypted page to its id: the page id as 4 big-endian bytes.
+	 */
+	private static byte[] aad(int pageId)
+	{
+		return ByteBuffer.allocate(Integer.BYTES).putInt(pageId).array();
 	}
 
 	private static class SessionData implements Serializable

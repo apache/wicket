@@ -27,13 +27,13 @@ package org.apache.wicket.core.util.crypt;
 public class NoCrypt implements ICrypt
 {
 	@Override
-	public byte[] encrypt(byte[] plainBytes)
+	public byte[] encrypt(byte[] plainBytes, byte[] associatedData)
 	{
 		return plainBytes;
 	}
 
 	@Override
-	public byte[] decrypt(byte[] encryptedBytes)
+	public byte[] decrypt(byte[] encryptedBytes, byte[] associatedData)
 	{
 		return encryptedBytes;
 	}
