@@ -45,6 +45,21 @@ class CryptFactoryTest extends WicketTestCase
 	}
 
 	/**
+	 * The {@link ApplicationKeyCryptFactory#ApplicationKeyCryptFactory(java.security.SecureRandom)
+	 * random-key} constructor generates its key lazily (via the configured scheme) and then keeps
+	 * it stable across {@link ICrypt} instances.
+	 */
+	@Test
+	void applicationRandomKeyIsStableAcrossCryptInstances()
+	{
+		ApplicationKeyCryptFactory factory = new ApplicationKeyCryptFactory(
+			tester.getApplication().getSecuritySettings().getRandomSupplier().getRandom());
+
+		byte[] encrypted = factory.newCrypt().encrypt("hello".getBytes(UTF_8));
+		assertArrayEquals("hello".getBytes(UTF_8), factory.newCrypt().decrypt(encrypted));
+	}
+
+	/**
 	 * The per-session key is stable within a session, so data encrypted through one {@link ICrypt}
 	 * can be decrypted through another obtained from the same factory in the same session.
 	 */

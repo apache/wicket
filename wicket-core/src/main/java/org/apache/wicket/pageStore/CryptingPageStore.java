@@ -18,10 +18,8 @@ package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
-import java.security.SecureRandom;
 
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
@@ -30,7 +28,6 @@ import org.apache.wicket.core.util.crypt.ICrypt;
 import org.apache.wicket.core.util.crypt.SchemeCrypt;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.settings.SecuritySettings;
-import org.apache.wicket.util.crypt.CipherUtils;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -97,8 +94,9 @@ public class CryptingPageStore extends DelegatingPageStore
 
 	private SecretKey generateKey()
 	{
-		SecureRandom random = application.getSecuritySettings().getRandomSupplier().getRandom();
-		return new SecretKeySpec(CipherUtils.generateKey("AES", 256, random).getEncoded(), "AES");
+		SecuritySettings settings = application.getSecuritySettings();
+		// the scheme decides what key to generate; the store only decides where it lives (session)
+		return settings.getCryptScheme().generateKey(settings.getRandomSupplier().getRandom());
 	}
 
 	/**

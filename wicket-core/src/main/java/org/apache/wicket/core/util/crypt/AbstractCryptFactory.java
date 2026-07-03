@@ -52,6 +52,21 @@ public abstract class AbstractCryptFactory implements ICryptFactory
 	}
 
 	/**
+	 * Generates a fresh key for the application's configured
+	 * {@link SecuritySettings#getCryptScheme() encryption scheme}. The scheme &mdash; not the
+	 * factory &mdash; decides what key material to produce; the factory only decides where the key
+	 * lives.
+	 *
+	 * @param random
+	 *            source of randomness
+	 * @return a new secret key
+	 */
+	protected SecretKey generateKey(SecureRandom random)
+	{
+		return Application.get().getSecuritySettings().getCryptScheme().generateKey(random);
+	}
+
+	/**
 	 * @return the secret key to use; the key source (per-session, global, ...) is the concrete
 	 *         factory's responsibility
 	 */

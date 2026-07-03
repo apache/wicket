@@ -16,15 +16,11 @@
  */
 package org.apache.wicket.core.util.crypt;
 
-import java.security.SecureRandom;
-
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
-import org.apache.wicket.util.crypt.CipherUtils;
 
 /**
  * The default {@link ICryptFactory}: it generates a fresh 256-bit AES key per user session and
@@ -57,18 +53,5 @@ public class KeyInSessionCryptFactory extends AbstractCryptFactory
 			session.setMetaData(KEY, key);
 		}
 		return key;
-	}
-
-	/**
-	 * Generates a new (serializable) 256-bit AES key.
-	 *
-	 * @param random
-	 *            source of randomness
-	 * @return a new key
-	 */
-	protected SecretKey generateKey(SecureRandom random)
-	{
-		byte[] encoded = CipherUtils.generateKey("AES", 256, random).getEncoded();
-		return new SecretKeySpec(encoded, "AES");
 	}
 }

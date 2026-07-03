@@ -17,14 +17,10 @@
 package org.apache.wicket.core.util.crypt;
 
 import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
-import java.util.Arrays;
+import java.security.spec.AlgorithmParameterSpec;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
-
-import org.apache.wicket.WicketRuntimeException;
 
 /**
  * Authenticated encryption using JDK-native AES-256-GCM ({@code AES/GCM/NoPadding}).
@@ -38,24 +34,10 @@ import org.apache.wicket.WicketRuntimeException;
  * NIST SP&nbsp;800-38D safe-usage bound for random nonces. Deployments that need nonce-misuse
  * resistance beyond that bound can switch to {@link AesGcmSivCryptScheme}.
  */
-public class AesGcmCryptScheme implements ICryptScheme
+public class AesGcmCryptScheme extends AbstractAesGcmCryptScheme
 {
 	/** Stable marker id for this scheme. */
 	public static final byte ID = 1;
-
-	private static final int NONCE_LENGTH = 12;
-
-	private static final int TAG_LENGTH_BITS = 128;
-
-	/**
-	 * @return the {@link Cipher} to use
-	 * @throws GeneralSecurityException
-	 *             if the cipher is unavailable
-	 */
-	protected Cipher getCipher() throws GeneralSecurityException
-	{
-		return Cipher.getInstance("AES/GCM/NoPadding");
-	}
 
 	@Override
 	public byte id()
@@ -64,58 +46,14 @@ public class AesGcmCryptScheme implements ICryptScheme
 	}
 
 	@Override
-	public byte[] encrypt(byte[] plaintext, SecretKey key, byte[] aad, SecureRandom random)
+	protected Cipher getCipher() throws GeneralSecurityException
 	{
-		try
-		{
-			byte[] nonce = new byte[NONCE_LENGTH];
-			random.nextBytes(nonce);
-
-			Cipher cipher = getCipher();
-			cipher.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(TAG_LENGTH_BITS, nonce),
-				random);
-			if (aad != null)
-			{
-				cipher.updateAAD(aad);
-			}
-
-			byte[] ciphertext = cipher.doFinal(plaintext);
-
-			byte[] result = Arrays.copyOf(nonce, nonce.length + ciphertext.length);
-			System.arraycopy(ciphertext, 0, result, nonce.length, ciphertext.length);
-			return result;
-		}
-		catch (GeneralSecurityException ex)
-		{
-			throw new WicketRuntimeException(ex);
-		}
+		return Cipher.getInstance("AES/GCM/NoPadding");
 	}
 
 	@Override
-	public byte[] decrypt(byte[] ciphertext, SecretKey key, byte[] aad)
+	protected AlgorithmParameterSpec newParameterSpec(byte[] nonce)
 	{
-		try
-		{
-			if (ciphertext.length < NONCE_LENGTH)
-			{
-				return null;
-			}
-
-			byte[] nonce = Arrays.copyOfRange(ciphertext, 0, NONCE_LENGTH);
-
-			Cipher cipher = getCipher();
-			cipher.init(Cipher.DECRYPT_MODE, key, new GCMParameterSpec(TAG_LENGTH_BITS, nonce));
-			if (aad != null)
-			{
-				cipher.updateAAD(aad);
-			}
-
-			return cipher.doFinal(ciphertext, NONCE_LENGTH, ciphertext.length - NONCE_LENGTH);
-		}
-		catch (GeneralSecurityException ex)
-		{
-			// authentication failure or malformed input
-			return null;
-		}
+		return new GCMParameterSpec(TAG_LENGTH_BITS, nonce);
 	}
 }

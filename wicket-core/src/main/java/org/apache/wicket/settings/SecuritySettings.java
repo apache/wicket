@@ -33,7 +33,6 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.wicket.core.random.DefaultSecureRandomSupplier;
 import org.apache.wicket.core.random.ISecureRandomSupplier;
@@ -43,7 +42,6 @@ import org.apache.wicket.core.util.crypt.ICryptFactory;
 import org.apache.wicket.core.util.crypt.ICryptScheme;
 import org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory;
 import org.apache.wicket.core.util.crypt.SchemeCrypt;
-import org.apache.wicket.util.crypt.CipherUtils;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -360,8 +358,7 @@ public class SecuritySettings
 			// application-wide key. The key is random per boot; supply a custom strategy with a
 			// stable key to keep cookies valid across application restarts.
 			SecureRandom random = getRandomSupplier().getRandom();
-			SecretKey key = new SecretKeySpec(
-				CipherUtils.generateKey("AES", 256, random).getEncoded(), "AES");
+			SecretKey key = getCryptScheme().generateKey(random);
 			ICrypt crypt = new SchemeCrypt(key, random, getCryptScheme(),
 				getWhitelistedCryptSchemes());
 			authenticationStrategy = new DefaultAuthenticationStrategy("LoggedIn", crypt);

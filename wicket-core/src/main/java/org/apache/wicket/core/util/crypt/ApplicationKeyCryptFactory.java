@@ -19,9 +19,7 @@ package org.apache.wicket.core.util.crypt;
 import java.security.SecureRandom;
 
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.wicket.util.crypt.CipherUtils;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -31,12 +29,16 @@ import org.apache.wicket.util.lang.Args;
  * <p>
  * Use {@link #ApplicationKeyCryptFactory(SecretKey)} with a stable, externally-managed key to keep
  * data decryptable across application restarts. The
- * {@link #ApplicationKeyCryptFactory(SecureRandom)} constructor generates a random key that lives
- * only for the lifetime of this factory (so data does not survive a restart).
+ * {@link #ApplicationKeyCryptFactory(SecureRandom)} constructor instead generates a key (for the
+ * application's configured {@link org.apache.wicket.settings.SecuritySettings#getCryptScheme()
+ * scheme}) on first use; that key lives only for the lifetime of this factory, so data does not
+ * survive a restart.
  */
 public class ApplicationKeyCryptFactory extends AbstractCryptFactory
 {
-	private final SecretKey key;
+	private final SecureRandom random;
+
+	private SecretKey key;
 
 	/**
 	 * @param key
@@ -45,22 +47,29 @@ public class ApplicationKeyCryptFactory extends AbstractCryptFactory
 	public ApplicationKeyCryptFactory(SecretKey key)
 	{
 		this.key = Args.notNull(key, "key");
+		this.random = null;
 	}
 
 	/**
-	 * Generates a random application-wide key. Data encrypted with it does not survive a restart.
+	 * Generates a random application-wide key on first use. Data encrypted with it does not survive
+	 * a restart.
 	 *
 	 * @param random
 	 *            source of randomness
 	 */
 	public ApplicationKeyCryptFactory(SecureRandom random)
 	{
-		this(new SecretKeySpec(CipherUtils.generateKey("AES", 256, random).getEncoded(), "AES"));
+		this.random = Args.notNull(random, "random");
 	}
 
 	@Override
-	protected SecretKey getKey()
+	protected synchronized SecretKey getKey()
 	{
+		if (key == null)
+		{
+			// generate the application-wide key lazily, once the scheme has been configured
+			key = generateKey(random);
+		}
 		return key;
 	}
 }

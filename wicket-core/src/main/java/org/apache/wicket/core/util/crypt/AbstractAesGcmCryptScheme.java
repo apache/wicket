@@ -1,0 +1,132 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.wicket.core.util.crypt;
+
+import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+import java.security.spec.AlgorithmParameterSpec;
+import java.util.Arrays;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.util.crypt.CipherUtils;
+
+/**
+ * Base class for the AES-256 GCM-family {@link ICryptScheme}s ({@link AesGcmCryptScheme} and
+ * {@link AesGcmSivCryptScheme}). It owns everything the two variants share:
+ * <ul>
+ * <li>the 256-bit AES key they consume (see {@link #generateKey(SecureRandom)}) &mdash; the key is
+ * a property of the scheme, not of the factory that decides where the key lives;</li>
+ * <li>the ciphertext layout {@code nonce(12) || ciphertext || tag(16)} and the encrypt/decrypt
+ * flow (random 96-bit nonce, 128-bit authentication tag, marker authenticated as associated
+ * data).</li>
+ * </ul>
+ * Subclasses only supply the concrete {@link Cipher} and its {@link AlgorithmParameterSpec}, plus a
+ * stable {@link #id()}.
+ */
+public abstract class AbstractAesGcmCryptScheme implements ICryptScheme
+{
+	/** AES key size in bits. */
+	protected static final int KEY_LENGTH_BITS = 256;
+
+	/** Nonce (IV) length in bytes; 96 bits is the GCM-family recommended size. */
+	protected static final int NONCE_LENGTH = 12;
+
+	/** Authentication tag length in bits. */
+	protected static final int TAG_LENGTH_BITS = 128;
+
+	@Override
+	public SecretKey generateKey(SecureRandom random)
+	{
+		// wrap in a SecretKeySpec so the key is guaranteed serializable (a per-session key is
+		// stored in the session's metadata)
+		byte[] encoded = CipherUtils.generateKey("AES", KEY_LENGTH_BITS, random).getEncoded();
+		return new SecretKeySpec(encoded, "AES");
+	}
+
+	@Override
+	public byte[] encrypt(byte[] plaintext, SecretKey key, byte[] aad, SecureRandom random)
+	{
+		try
+		{
+			byte[] nonce = new byte[NONCE_LENGTH];
+			random.nextBytes(nonce);
+
+			Cipher cipher = getCipher();
+			cipher.init(Cipher.ENCRYPT_MODE, key, newParameterSpec(nonce), random);
+			if (aad != null)
+			{
+				cipher.updateAAD(aad);
+			}
+
+			byte[] ciphertext = cipher.doFinal(plaintext);
+
+			byte[] result = Arrays.copyOf(nonce, nonce.length + ciphertext.length);
+			System.arraycopy(ciphertext, 0, result, nonce.length, ciphertext.length);
+			return result;
+		}
+		catch (GeneralSecurityException ex)
+		{
+			throw new WicketRuntimeException(ex);
+		}
+	}
+
+	@Override
+	public byte[] decrypt(byte[] ciphertext, SecretKey key, byte[] aad)
+	{
+		try
+		{
+			if (ciphertext.length < NONCE_LENGTH)
+			{
+				return null;
+			}
+
+			byte[] nonce = Arrays.copyOfRange(ciphertext, 0, NONCE_LENGTH);
+
+			Cipher cipher = getCipher();
+			cipher.init(Cipher.DECRYPT_MODE, key, newParameterSpec(nonce));
+			if (aad != null)
+			{
+				cipher.updateAAD(aad);
+			}
+
+			return cipher.doFinal(ciphertext, NONCE_LENGTH, ciphertext.length - NONCE_LENGTH);
+		}
+		catch (GeneralSecurityException ex)
+		{
+			// authentication failure or malformed input
+			return null;
+		}
+	}
+
+	/**
+	 * @return the {@link Cipher} to use
+	 * @throws GeneralSecurityException
+	 *             if the cipher is unavailable
+	 */
+	protected abstract Cipher getCipher() throws GeneralSecurityException;
+
+	/**
+	 * @param nonce
+	 *            the freshly generated nonce
+	 * @return the {@link AlgorithmParameterSpec} binding the nonce and tag length for this cipher
+	 */
+	protected abstract AlgorithmParameterSpec newParameterSpec(byte[] nonce);
+}

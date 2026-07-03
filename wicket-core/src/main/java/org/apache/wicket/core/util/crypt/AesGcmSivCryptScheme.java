@@ -17,13 +17,10 @@
 package org.apache.wicket.core.util.crypt;
 
 import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
-import java.util.Arrays;
+import java.security.spec.AlgorithmParameterSpec;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.bouncycastle.jcajce.spec.AEADParameterSpec;
 
 /**
@@ -38,24 +35,10 @@ import org.bouncycastle.jcajce.spec.AEADParameterSpec;
  * The ciphertext layout is {@code nonce(12) || ciphertext || tag(16)}; the scheme marker
  * supplied by {@link SchemeCrypt} is authenticated as associated data.
  */
-public class AesGcmSivCryptScheme implements ICryptScheme
+public class AesGcmSivCryptScheme extends AbstractAesGcmCryptScheme
 {
 	/** Stable marker id for this scheme. */
 	public static final byte ID = 2;
-
-	private static final int NONCE_LENGTH = 12;
-
-	private static final int TAG_LENGTH_BITS = 128;
-
-	/**
-	 * @return the {@link Cipher} to use
-	 * @throws GeneralSecurityException
-	 *             if the cipher is unavailable (e.g. Bouncy Castle not registered)
-	 */
-	protected Cipher getCipher() throws GeneralSecurityException
-	{
-		return Cipher.getInstance("AES/GCM-SIV/NoPadding");
-	}
 
 	@Override
 	public byte id()
@@ -64,58 +47,14 @@ public class AesGcmSivCryptScheme implements ICryptScheme
 	}
 
 	@Override
-	public byte[] encrypt(byte[] plaintext, SecretKey key, byte[] aad, SecureRandom random)
+	protected Cipher getCipher() throws GeneralSecurityException
 	{
-		try
-		{
-			byte[] nonce = new byte[NONCE_LENGTH];
-			random.nextBytes(nonce);
-
-			Cipher cipher = getCipher();
-			cipher.init(Cipher.ENCRYPT_MODE, key, new AEADParameterSpec(nonce, TAG_LENGTH_BITS),
-				random);
-			if (aad != null)
-			{
-				cipher.updateAAD(aad);
-			}
-
-			byte[] ciphertext = cipher.doFinal(plaintext);
-
-			byte[] result = Arrays.copyOf(nonce, nonce.length + ciphertext.length);
-			System.arraycopy(ciphertext, 0, result, nonce.length, ciphertext.length);
-			return result;
-		}
-		catch (GeneralSecurityException ex)
-		{
-			throw new WicketRuntimeException(ex);
-		}
+		return Cipher.getInstance("AES/GCM-SIV/NoPadding");
 	}
 
 	@Override
-	public byte[] decrypt(byte[] ciphertext, SecretKey key, byte[] aad)
+	protected AlgorithmParameterSpec newParameterSpec(byte[] nonce)
 	{
-		try
-		{
-			if (ciphertext.length < NONCE_LENGTH)
-			{
-				return null;
-			}
-
-			byte[] nonce = Arrays.copyOfRange(ciphertext, 0, NONCE_LENGTH);
-
-			Cipher cipher = getCipher();
-			cipher.init(Cipher.DECRYPT_MODE, key, new AEADParameterSpec(nonce, TAG_LENGTH_BITS));
-			if (aad != null)
-			{
-				cipher.updateAAD(aad);
-			}
-
-			return cipher.doFinal(ciphertext, NONCE_LENGTH, ciphertext.length - NONCE_LENGTH);
-		}
-		catch (GeneralSecurityException ex)
-		{
-			// authentication failure or malformed input
-			return null;
-		}
+		return new AEADParameterSpec(nonce, TAG_LENGTH_BITS);
 	}
 }

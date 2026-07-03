@@ -79,6 +79,20 @@ public class SchemeCryptTest
 
 	@ParameterizedTest
 	@MethodSource("schemes")
+	void generatedKeyIsUsableAes256(ICryptScheme scheme)
+	{
+		SecretKey key = scheme.generateKey(RANDOM);
+		assertEquals("AES", key.getAlgorithm());
+		assertEquals(32, key.getEncoded().length);
+
+		// a crypt built on the scheme-generated key round-trips
+		SchemeCrypt crypt = crypt(key, scheme);
+		byte[] plain = "generated-key".getBytes(StandardCharsets.UTF_8);
+		assertArrayEquals(plain, crypt.decrypt(crypt.encrypt(plain)));
+	}
+
+	@ParameterizedTest
+	@MethodSource("schemes")
 	void ciphertextStartsWithSchemeMarker(ICryptScheme scheme)
 	{
 		byte[] enc = crypt(newKey(), scheme).encrypt("x".getBytes(StandardCharsets.UTF_8));
