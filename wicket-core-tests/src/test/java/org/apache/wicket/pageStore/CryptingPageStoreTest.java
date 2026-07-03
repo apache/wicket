@@ -17,19 +17,17 @@
 package org.apache.wicket.pageStore;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.io.StreamCorruptedException;
-import java.security.GeneralSecurityException;
 import java.security.Security;
 import java.util.List;
 
 import org.apache.wicket.MockPage;
+import org.apache.wicket.core.util.crypt.AesGcmCryptScheme;
+import org.apache.wicket.core.util.crypt.AesGcmSivCryptScheme;
+import org.apache.wicket.core.util.crypt.ICryptScheme;
 import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.mock.MockPageStore;
-import org.apache.wicket.pageStore.crypt.DefaultCrypter;
-import org.apache.wicket.pageStore.crypt.GCMSIVCrypter;
-import org.apache.wicket.pageStore.crypt.ICrypter;
 import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -39,7 +37,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Test for {@link CryptingPageStore}.
- * 
+ *
  * @author svenmeier
  */
 public class CryptingPageStoreTest extends WicketTestCase
@@ -49,17 +47,17 @@ public class CryptingPageStoreTest extends WicketTestCase
 	{
 		Security.addProvider(new BouncyCastleProvider());
 	}
-	
-	static List<ICrypter> crypters()
+
+	static List<ICryptScheme> schemes()
 	{
-		return List.of(new DefaultCrypter(), new GCMSIVCrypter());
+		return List.of(new AesGcmCryptScheme(), new AesGcmSivCryptScheme());
 	}
 
 	@ParameterizedTest
-	@MethodSource("crypters")
-	void test(ICrypter crypter)
+	@MethodSource("schemes")
+	void test(ICryptScheme scheme)
 	{
-		CryptingPageStore store = buildPageStore(crypter);
+		CryptingPageStore store = buildPageStore(scheme, new MockPageStore());
 		JavaSerializer serializer = new JavaSerializer("test");
 
 		IPageContext context = new MockPageContext();
@@ -77,10 +75,10 @@ public class CryptingPageStoreTest extends WicketTestCase
 	}
 
 	@ParameterizedTest
-	@MethodSource("crypters")
-	void testFail(ICrypter crypter)
+	@MethodSource("schemes")
+	void wrongKeyCannotDecrypt(ICryptScheme scheme)
 	{
-		CryptingPageStore store = buildPageStore(crypter);
+		CryptingPageStore store = buildPageStore(scheme, new MockPageStore());
 		JavaSerializer serializer = new JavaSerializer("test");
 
 		MockPageContext context = new MockPageContext();
@@ -91,34 +89,42 @@ public class CryptingPageStoreTest extends WicketTestCase
 		SerializedPage serializedAdd = new SerializedPage(p, "foo", serializer.serialize(add));
 		store.addPage(context, serializedAdd);
 
-		// remove key from session
+		// remove key from session, so a new key will be generated on the next access
 		context.clearSession();
 
-		try
-		{
-			SerializedPage serializedGot = (SerializedPage) store.getPage(context, p);
-
-			MockPage got = (MockPage) serializer.deserialize(serializedGot.getData());
-			assertEquals(p, got.getPageId());
-		}
-		catch (RuntimeException ex)
-		{
-			assertTrue(
-				ex.getCause() instanceof GeneralSecurityException
-					|| ex.getCause() instanceof StreamCorruptedException,
-				"unable to decrypt with new key");
-		}
+		// the page can no longer be decrypted and is therefore treated as a cache miss
+		assertNull(store.getPage(context, p));
 	}
-	
-	private CryptingPageStore buildPageStore(ICrypter crypter)
+
+	@ParameterizedTest
+	@MethodSource("schemes")
+	void tamperedDataCannotDecrypt(ICryptScheme scheme)
 	{
-		return new CryptingPageStore(new MockPageStore(), tester.getApplication())
-		{
-			@Override
-			protected ICrypter newCrypter()
-			{
-				return crypter;
-			}
-		};
+		MockPageStore delegate = new MockPageStore();
+		CryptingPageStore store = buildPageStore(scheme, delegate);
+		JavaSerializer serializer = new JavaSerializer("test");
+
+		MockPageContext context = new MockPageContext();
+
+		int p = 7;
+		store.addPage(context, new SerializedPage(p, "foo", serializer.serialize(new MockPage(p))));
+
+		// tamper with the stored ciphertext
+		SerializedPage stored = (SerializedPage) delegate.getPage(context, p);
+		byte[] data = stored.getData();
+		data[data.length - 1] ^= 0x01;
+		delegate.addPage(context, new SerializedPage(p, "foo", data));
+
+		// authenticated encryption must detect the tampering; the page is treated as a cache miss
+		assertNull(store.getPage(context, p));
+	}
+
+	private CryptingPageStore buildPageStore(ICryptScheme scheme, MockPageStore delegate)
+	{
+		tester.getApplication()
+			.getSecuritySettings()
+			.setCryptScheme(scheme)
+			.setWhitelistedCryptSchemes(List.of(scheme));
+		return new CryptingPageStore(delegate, tester.getApplication());
 	}
 }

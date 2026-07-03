@@ -22,7 +22,7 @@ import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.resource.CssUrlReplacer;
-import org.apache.wicket.util.crypt.NoCrypt;
+import org.apache.wicket.core.util.crypt.NoCrypt;
 
 
 /**

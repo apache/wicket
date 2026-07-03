@@ -111,7 +111,6 @@ module org.apache.wicket.core {
     exports org.apache.wicket.model.util;
     exports org.apache.wicket.page;
     exports org.apache.wicket.pageStore;
-    exports org.apache.wicket.pageStore.crypt;
     exports org.apache.wicket.pageStore.disk;
     exports org.apache.wicket.protocol.http;
     exports org.apache.wicket.protocol.http.mock;

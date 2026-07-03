@@ -16,21 +16,24 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.core.request.handler.RequestSettingRequestHandler;
+import org.apache.wicket.core.util.crypt.ICrypt;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
-import org.apache.wicket.util.crypt.ICrypt;
-import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -46,8 +49,8 @@ import org.slf4j.LoggerFactory;
  * <p>
  * <strong>Important</strong>: for better security it is recommended to use
  * {@link org.apache.wicket.core.request.mapper.CryptoMapper#CryptoMapper(IRequestMapper, Supplier)}
- * constructor with {@link org.apache.wicket.util.crypt.ICrypt} implementation that generates a
- * separate key for each user. {@link org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory} provides such an
+ * constructor with {@link org.apache.wicket.core.util.crypt.ICrypt} implementation that generates a
+ * separate key for each user. {@link org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory} provides such an
  * implementation that stores the key in the HTTP session.
  * </p>
  * 
@@ -79,16 +82,15 @@ import org.slf4j.LoggerFactory;
  * 
  * <p>
  * {@link CryptoMapper} can be configured to mark encrypted URLs as encrypted, and throw a {@link PageExpiredException}
- * exception if a encrypted URL cannot be decrypted. This can occur when using {@code KeyInSessionSunJceCryptFactory}, and
+ * exception if a encrypted URL cannot be decrypted. This can occur when using {@code KeyInSessionCryptFactory}, and
  * the session has expired.
  * </p>
- * 
+ *
  * @author igor.vaynberg
  * @author Jesse Long
  * @author svenmeier
- * @see org.apache.wicket.settings.SecuritySettings#setCryptFactory(org.apache.wicket.util.crypt.ICryptFactory)
- * @see org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory
- * @see org.apache.wicket.util.crypt.SunJceCrypt
+ * @see org.apache.wicket.settings.SecuritySettings#setCryptFactory(org.apache.wicket.core.util.crypt.ICryptFactory)
+ * @see org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory
  */
 public class CryptoMapper implements IRequestMapperDelegate
 {
@@ -100,6 +102,20 @@ public class CryptoMapper implements IRequestMapperDelegate
 	private static final String ENCRYPTED_PAGE_COMPONENT_INFO_PARAMETER = "wicket-crypt";
 
 	private static final String ENCRYPTED_URL_MARKER_PREFIX = "crypt.";
+
+	/**
+	 * Per-request cache of {@code plaintext -> ciphertext} learned while decrypting the incoming
+	 * URL. Authenticated encryption uses a random nonce, so re-encrypting the same plaintext
+	 * would otherwise yield a different ciphertext than the one requested, and Wicket's URL
+	 * normalisation would redirect endlessly. By reusing the ciphertext we received for a given
+	 * plaintext, the URL generated for the current page matches the requested one. A nonce is
+	 * thereby only ever reused for the identical plaintext (reproducing the same ciphertext),
+	 * never across different plaintexts.
+	 */
+	private static final MetaDataKey<HashMap<String, String>> ENCRYPTED_URL_CACHE = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	private final IRequestMapper wrappedMapper;
 	private final Supplier<ICrypt> cryptProvider;
@@ -115,7 +131,7 @@ public class CryptoMapper implements IRequestMapperDelegate
 	 * <strong>Important</strong>: For better security it is recommended to use
 	 * {@link CryptoMapper#CryptoMapper(IRequestMapper, Supplier)} with a specific {@link ICrypt} implementation
 	 * that generates a separate key for each user.
-	 * {@link org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory} provides such an implementation that stores the
+	 * {@link org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory} provides such an implementation that stores the
 	 * key in the HTTP session.
 	 * </p>
 	 *
@@ -123,7 +139,6 @@ public class CryptoMapper implements IRequestMapperDelegate
 	 *            the non-crypted request mapper
 	 * @param application
 	 *            the current application
-	 * @see org.apache.wicket.util.crypt.SunJceCrypt
 	 */
 	public CryptoMapper(final IRequestMapper wrappedMapper, final Application application)
 	{
@@ -246,6 +261,71 @@ public class CryptoMapper implements IRequestMapperDelegate
 	}
 
 	/**
+	 * Encrypts the given plain text. If the current request already carried the same plain text in
+	 * encrypted form, that exact ciphertext is reused so the generated URL matches the requested
+	 * one (see {@link #ENCRYPTED_URL_CACHE}); otherwise a fresh (random-nonce) ciphertext is
+	 * produced and remembered for the remainder of the request.
+	 *
+	 * @param plainText
+	 *            the text to encrypt
+	 * @return the encrypted, URL-safe text
+	 */
+	private String encryptString(final String plainText)
+	{
+		Map<String, String> memo = getEncryptionMemo();
+		if (memo != null)
+		{
+			String cached = memo.get(plainText);
+			// only reuse ciphertext that our own crypt decrypts back to the same plain text
+			// (guards against a shared request when multiple CryptoMappers are installed)
+			if (cached != null && plainText.equals(getCrypt().decryptUrlSafe(cached)))
+			{
+				return cached;
+			}
+		}
+
+		String encrypted = getCrypt().encryptUrlSafe(plainText);
+		if (memo != null)
+		{
+			memo.putIfAbsent(plainText, encrypted);
+		}
+		return encrypted;
+	}
+
+	/**
+	 * Remembers, for the remainder of the current request, that {@code plainText} was received as
+	 * {@code cipherText}, so that re-encrypting it reproduces the same ciphertext.
+	 */
+	private void rememberEncryption(final String plainText, final String cipherText)
+	{
+		Map<String, String> memo = getEncryptionMemo();
+		if (memo != null && plainText != null && cipherText != null)
+		{
+			memo.putIfAbsent(plainText, cipherText);
+		}
+	}
+
+	/**
+	 * @return the per-request {@code plaintext -> ciphertext} cache, or {@code null} if there is no
+	 *         current request cycle (e.g. when generating URLs outside a request)
+	 */
+	private Map<String, String> getEncryptionMemo()
+	{
+		RequestCycle cycle = RequestCycle.get();
+		if (cycle == null)
+		{
+			return null;
+		}
+		HashMap<String, String> memo = cycle.getMetaData(ENCRYPTED_URL_CACHE);
+		if (memo == null)
+		{
+			memo = new HashMap<>();
+			cycle.setMetaData(ENCRYPTED_URL_CACHE, memo);
+		}
+		return memo;
+	}
+
+	/**
 	 * @return the wrapped root request mapper
 	 */
 	@Override
@@ -296,7 +376,7 @@ public class CryptoMapper implements IRequestMapperDelegate
 	 */
 	protected Url encryptEntireUrl(final Url url)
 	{
-		String encryptedUrlString = getCrypt().encryptUrlSafe(url.toString());
+		String encryptedUrlString = encryptString(url.toString());
 
 		Url encryptedUrl = new Url(url.getCharset());
 
@@ -338,7 +418,7 @@ public class CryptoMapper implements IRequestMapperDelegate
 			if (MapperUtils.parsePageComponentInfoParameter(qp) != null)
 			{
 				it.remove();
-				String encryptedParameterValue = getCrypt().encryptUrlSafe(qp.getName());
+				String encryptedParameterValue = encryptString(qp.getName());
 				Url.QueryParameter encryptedParameter
 					= new Url.QueryParameter(ENCRYPTED_PAGE_COMPONENT_INFO_PARAMETER, encryptedParameterValue);
 				encryptedUrl.getQueryParameters().add(0, encryptedParameter);
@@ -469,6 +549,9 @@ public class CryptoMapper implements IRequestMapperDelegate
 				return null;
 			}
 		}
+
+		// remember the ciphertext we received, so re-encrypting this url reproduces it
+		rememberEncryption(decryptedUrl, encryptedUrlString);
 
 		Url originalUrl = Url.parse(decryptedUrl, request.getCharset());
 
@@ -601,6 +684,8 @@ public class CryptoMapper implements IRequestMapperDelegate
 					}
 					else
 					{
+						// remember the ciphertext we received, so re-encrypting reproduces it
+						rememberEncryption(decryptedValue, encryptedValue);
 						Url.QueryParameter decryptedParamter = new Url.QueryParameter(decryptedValue, "");
 						url.getQueryParameters().add(0, decryptedParamter);
 					}

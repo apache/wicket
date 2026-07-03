@@ -18,16 +18,14 @@ package org.apache.wicket.protocol.http.request;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Base64;
-
 import org.apache.wicket.core.request.mapper.CryptoMapper;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.SimplePage;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.core.util.crypt.ICrypt;
+import org.apache.wicket.core.util.crypt.ICryptFactory;
 import org.apache.wicket.request.mapper.CompoundRequestMapper;
-import org.apache.wicket.util.crypt.ICrypt;
-import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -107,21 +105,20 @@ class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 		@Override
 		public ICrypt newCrypt()
 		{
+			// identity byte[] crypt: the default url-safe methods then simply Base64-encode the URL
 			return new ICrypt()
 			{
-
 				@Override
-				public String decryptUrlSafe(String text)
+				public byte[] encrypt(byte[] plainBytes)
 				{
-					return new String(Base64.getUrlDecoder().decode(text));
+					return plainBytes;
 				}
 
 				@Override
-				public String encryptUrlSafe(String plainText)
+				public byte[] decrypt(byte[] encryptedBytes)
 				{
-					return new String(Base64.getUrlEncoder().encode(plainText.getBytes()));
+					return encryptedBytes;
 				}
-
 			};
 		}
 	}
