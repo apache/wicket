@@ -18,6 +18,8 @@ package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.csp.ContentSecurityPolicySettings;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -26,6 +28,7 @@ import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -38,6 +41,8 @@ import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.apache.wicket.request.IRequestHandlerDelegate.unwrap;
 
 
 /**
@@ -147,6 +152,13 @@ public class WebPage extends Page
 	 */
 	protected void configureResponse(final WebResponse response)
 	{
+		ContentSecurityPolicySettings cspSettings = WebApplication.get().getCspSettings();
+		IRequestHandler handler = RequestCycle.get().getActiveRequestHandler();
+		if (cspSettings.isEnabled() && unwrap(handler) instanceof RenderPageRequestHandler)
+		{
+			cspSettings.getHeaderWriter().write(response, handler);
+		}
+
 		// Users may subclass setHeader() to set there own headers
 		setHeaders(response);
 
