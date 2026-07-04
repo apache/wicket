@@ -96,6 +96,33 @@ public class JavaScriptUtils
 	}
 
 	/**
+	 * Removes the surrounding single quotes from a string after trimming
+	 * leading and trailing whitespace.
+	 *
+	 * <p>Examples:</p>
+	 * <pre>
+	 * unquoteSingleQuoted(" 'url'   ") -> "url"
+	 * unquoteSingleQuoted("'url'")     -> "url"
+	 * unquoteSingleQuoted("''")        -> ""
+	 * </pre>
+	 *
+	 * @param s the single-quoted string
+	 * @return the contents between the outer single quotes
+	 */
+	public static String unquoteSingleQuoted(String s)
+	{
+		if (s != null)
+		{
+			var trimmed = s.trim();
+			if (trimmed.length() > 1 && trimmed.startsWith("'") && trimmed.endsWith("'"))
+			{
+				s = trimmed.substring(1, trimmed.length() - 1);
+			}
+		}
+		return s;
+	}
+
+	/**
 	 * Write a reference to a javascript file to the response object
 	 *
 	 * @param response
