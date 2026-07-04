@@ -27,6 +27,8 @@ import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 
+import static org.apache.wicket.core.util.string.JavaScriptUtils.escapeQuotesAndBackslash;
+
 /**
  * <p>
  * A simple anchor link (&lt;a href="http://url"&gt;) pointing to any URL. Usually this is used for
@@ -189,7 +191,7 @@ public class ExternalLink extends AbstractLink
 		{
 			if (popupSettings != null)
 			{
-				popupSettings.setTarget(url);
+				popupSettings.setTarget("'" + url + "'");
 				response.render(OnEventHeaderItem.forComponent(this, "click",
 					popupSettings.getPopupJavaScript()));
 				return;
@@ -208,7 +210,7 @@ public class ExternalLink extends AbstractLink
 				response.render(OnEventHeaderItem.forComponent(this, "click",
 					"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; " //
 						+ "if (win == window) { window.location.href='" //
-						+ JavaScriptUtils.escapeQuotes(url) //
+						+ escapeQuotesAndBackslash(url) //
 						+ "'; } ;return false"));
 				return;
 			}
