@@ -16,12 +16,6 @@
  */
 package org.apache.wicket.csp;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
@@ -30,7 +24,16 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
+
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+import static org.apache.wicket.request.IRequestHandlerDelegate.unwrap;
 
 /**
  * Build the CSP configuration like this:
@@ -71,14 +74,24 @@ public class ContentSecurityPolicySettings
 
 	private Predicate<IRequestHandler> protectedFilter = RenderPageRequestHandler.class::isInstance;
 
+	private final CSPHeaderWriter cspHeaderWriter;
+
+
 	private Supplier<String> nonceCreator;
-	
+
 	public ContentSecurityPolicySettings(Application application)
 	{
 		Args.notNull(application, "application");
-		
+
+		cspHeaderWriter = new CSPHeaderWriter(this);
+
 		nonceCreator = () ->
 				application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
+	}
+
+	public CSPHeaderWriter getHeaderWriter()
+	{
+		return cspHeaderWriter;
 	}
 
 	public CSPHeaderConfiguration blocking()
@@ -113,6 +126,9 @@ public class ContentSecurityPolicySettings
 	 * @param protectedFilter
 	 *            The new filter, must not be null.
 	 * @return {@code this} for chaining.
+	 *
+	 * @deprecated
+	 * @see org.apache.wicket.markup.html.WebPage#configureResponse
 	 */
 	public ContentSecurityPolicySettings setProtectedFilter(
 		Predicate<IRequestHandler> protectedFilter)
@@ -127,12 +143,15 @@ public class ContentSecurityPolicySettings
 	 *
 	 * @param handler
 	 * @return <code>true</code> by default for all {@link RenderPageRequestHandler}s
-	 * 
+	 *
 	 * @see #setProtectedFilter(Predicate)
+	 *
+	 * @deprecated
+	 * @see org.apache.wicket.markup.html.WebPage#configureResponse
 	 */
 	protected boolean mustProtectRequest(IRequestHandler handler)
 	{
-		return protectedFilter.test(handler);
+		return protectedFilter.test(unwrap(handler));
 	}
 
 	/**

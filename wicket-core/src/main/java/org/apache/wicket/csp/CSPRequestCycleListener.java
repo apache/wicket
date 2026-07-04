@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.csp;
 
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
+
+import static org.apache.wicket.request.IRequestHandlerDelegate.unwrap;
 
 /**
  * An {@link IRequestCycleListener} that adds {@code Content-Security-Policy} and/or
@@ -28,6 +31,8 @@ import org.apache.wicket.request.http.WebResponse;
  *
  * @author Sven Haster
  * @author Emond Papegaaij
+ * @see CSPHeaderWriter
+ * @deprecated
  */
 public class CSPRequestCycleListener implements IRequestCycleListener
 {
@@ -53,33 +58,30 @@ public class CSPRequestCycleListener implements IRequestCycleListener
 
 	protected void protect(RequestCycle cycle, IRequestHandler handler)
 	{
-		if (!mustProtect(handler) || !(cycle.getResponse() instanceof WebResponse))
+		/*
+		 * page request handlers are protected during page rendering,
+		 * not at this point.
+		 * it's important to avoid hooking the protection here
+		 * because to call response.reset() during rendering is a
+		 * valid use case that would end up undoing the protection
+		 * made inside this request listener
+		 */
+		if (unwrap(handler) instanceof RenderPageRequestHandler)
 		{
 			return;
 		}
 
-		WebResponse webResponse = (WebResponse)cycle.getResponse();
-		if (!webResponse.isHeaderSupported())
+		if (!(cycle.getResponse() instanceof WebResponse))
 		{
 			return;
 		}
 
-		settings.getConfiguration().entrySet().stream().filter(entry -> entry.getValue().isSet())
-				.forEach(entry -> {
-					CSPHeaderMode mode = entry.getKey();
-					CSPHeaderConfiguration config = entry.getValue();
-					String headerValue = config.renderHeaderValue(settings, cycle);
-					webResponse.setHeader(mode.getHeader(), headerValue);
-					if (config.isAddLegacyHeaders())
-					{
-						webResponse.setHeader(mode.getLegacyHeader(), headerValue);
-					}
-				});
+		settings.getHeaderWriter().write((WebResponse)cycle.getResponse(), handler);
 	}
 
 	/**
 	 * Must the given handler be protected.
-	 * 
+	 *
 	 * @param handler
 	 *            handler
 	 * @return <code>true</code> if must be protected
@@ -91,7 +93,7 @@ public class CSPRequestCycleListener implements IRequestCycleListener
 		{
 			return mustProtect(((IRequestHandlerDelegate)handler).getDelegateHandler());
 		}
-		
+
 		return settings.mustProtectRequest(handler);
 	}
 
