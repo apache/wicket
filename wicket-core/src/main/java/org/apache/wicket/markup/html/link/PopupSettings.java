@@ -21,6 +21,9 @@ import org.apache.wicket.util.io.IClusterable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.apache.wicket.core.util.string.JavaScriptUtils.escapeQuotesAndBackslash;
+import static org.apache.wicket.core.util.string.JavaScriptUtils.unquoteSingleQuoted;
+
 
 /**
  * A popup specification can be used as a property of the {@link Link}classes to specify that the
@@ -156,10 +159,10 @@ public class PopupSettings implements IClusterable
 			windowTitle = windowTitle.replaceAll("\\W", "_");
 		}
 
+		var escapedTarget = escapeQuotesAndBackslash(unquoteSingleQuoted(target));
 		StringBuilder script = new StringBuilder(//
-			"var w = window.open('"//
-				+ JavaScriptUtils.escapeQuotes(target) //
-				+ "', '").append(windowTitle).append("', '");
+			"var w = window.open('" + escapedTarget + "', '" //
+		).append(windowTitle).append("', '");
 
 		script.append("scrollbars=").append(flagToString(SCROLLBARS));
 		script.append(",location=").append(flagToString(LOCATION_BAR));

@@ -28,6 +28,8 @@ import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+import static org.apache.wicket.core.util.string.JavaScriptUtils.escapeQuotesAndBackslash;
+
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor (&lt;a href...)
  * element or any element that supports the onclick javascript event handler (such as buttons, td
@@ -414,7 +416,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 			// next check for popup settings
 			if (popupSettings != null)
 			{
-				popupSettings.setTarget(url.toString());
+				popupSettings.setTarget("'" + url.toString() + "'");
 				response.render(OnEventHeaderItem.forComponent(this, "click",
 					popupSettings.getPopupJavaScript()));
 				return;
@@ -431,7 +433,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 				// generated during page load. This check ensures that the click is ignored
 				response.render(OnEventHeaderItem.forComponent(this, "click",
 					"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; "
-						+ "if (win == window) { window.location.href='" + url
+						+ "if (win == window) { window.location.href='" + escapeQuotesAndBackslash(url)
 						+ "'; } ;return false"));
 			}
 		}
