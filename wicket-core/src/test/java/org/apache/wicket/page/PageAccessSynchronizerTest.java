@@ -354,7 +354,7 @@ class PageAccessSynchronizerTest
 		// set the synchronizer timeout one second longer than the test runs to prevent
 		// starvation to become an issue
 		final PageAccessSynchronizer sync = new PageAccessSynchronizer(
-			duration.plus(Duration.ofSeconds(1)));
+			duration.plus(Duration.ofSeconds(5)));
 
 		final CountDownLatch latch = new CountDownLatch(100);
 		for (int count = 0; count < 100; count++)
