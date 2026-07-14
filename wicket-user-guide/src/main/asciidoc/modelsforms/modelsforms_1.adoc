@@ -3,7 +3,7 @@
 
 Model is essentially a  http://en.wikipedia.org/wiki/Facade_pattern[facade] interface which allows components to access and modify their data without knowing any detail about how they are managed or persisted. Every component has at most one related model, while a model can be shared among different components. In Wicket a model is any implementation of the interface _org.apache.wicket.model.IModel_:
 
-image::../img/uml-imodel.png[]
+image::./img/uml-imodel.png[]
 
 The main goal of _IModel_ interface is to decouple components from concrete details about the persistence strategy adopted for their data. In order to achieve this level of abstraction IModel defines the  two methods required to get and set a data object: _getObject()_ and _setObject()_. The level of indirection introduced by models allows access data object only when it is really needed (for example during the rendering phase) and not earlier when it may not be ready to be used. In addition to _getObject()_ and _setObject()_, _IModel_ defines a richer set of methods, mostly meant to work with Java 8 lambdas. We will introduce them in the next paragraph.
 
@@ -35,20 +35,20 @@ add(new Label("helloMessage", new Model<String>("Hello WicketWorld!")));
 ----
 
 The Model class comes with a bunch of factory methods that makes it easier to build new model instances. For example the _of(T object)_ method creates a new instance of Model which wraps any Object instance inside it. So instead of writing
-	
+
 [source,java]
 ----
 new Model<String>("Hello WicketWorld!")
 ----
 
 we can write
-	
+
 [source,java]
 ----
 Model.of("Hello WicketWorld!")
 ----
 
-If the data object is a _List_, a _Map_ or a _Set_ we can use similar methods called _ofList_, _ofMap_ and _ofSet_.   
+If the data object is a _List_, a _Map_ or a _Set_ we can use similar methods called _ofList_, _ofMap_ and _ofSet_.
 From now on we will use these factory methods in our examples.
 
 It's quite clear that if our Label must display a static text it doesn't make much sense to build a model by hand like we did in the last code example.

@@ -34,9 +34,9 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Tests lazy init proxy factory
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
- * 
+ *
  */
 class PackagePrivateTest
 {
@@ -73,6 +73,9 @@ class PackagePrivateTest
 
 		// test method invocation
 		assertEquals("package-private-concrete", proxy.getMessage());
+
+		// test method invocation
+		assertEquals("package-private-concrete", proxy.internalGetMessage());
 
 		// test serialization
 		PackagePrivateConcreteObject proxy2 = WicketObjects.cloneObject(proxy);

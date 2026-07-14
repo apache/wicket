@@ -88,6 +88,14 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	}
 
 	/**
+	 * @return count of named parameters
+	 */
+	public int getNamedCount()
+	{
+		return namedParameters != null ? namedParameters.size() : 0;
+	}
+
+	/**
 	 * @see org.apache.wicket.request.mapper.parameter.IIndexedParameters#set(int, java.lang.Object)
 	 */
 	@Override
@@ -148,6 +156,29 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return Collections.unmodifiableSet(set);
 	}
 
+	/**
+	 * Checks if the parameter with the given name exists
+	 * 
+	 * @param name the parameter name
+	 * @return {@code true} if the parameter exists, {@code false} otherwise
+	 */
+	public boolean contains(final String name)
+	{
+		Args.notNull(name, "name");
+
+		if (namedParameters != null)
+		{
+			for (NamedPair entry : namedParameters)
+			{
+				if (entry.getKey().equals(name))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public StringValue get(final String name)
 	{
@@ -205,12 +236,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		}
 
 		List<NamedPair> parametersByType = new ArrayList<>();
-		Iterator<NamedPair> iterator = allNamed.iterator();
-		while (iterator.hasNext())
-		{
-			NamedPair pair = iterator.next();
-			if (type == pair.getType())
-			{
+		for (NamedPair pair : allNamed) {
+			if (type == pair.getType()) {
 				parametersByType.add(pair);
 			}
 		}
@@ -522,11 +549,11 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			return true;
 		}
-		if ((p1 == null) && (p2.getIndexedCount() == 0) && p2.getNamedKeys().isEmpty())
+		if ((p1 == null) && (p2.getIndexedCount() == 0) && p2.getNamedCount() == 0)
 		{
 			return true;
 		}
-		if ((p2 == null) && (p1.getIndexedCount() == 0) && p1.getNamedKeys().isEmpty())
+		if ((p2 == null) && (p1.getIndexedCount() == 0) && p1.getNamedCount() == 0)
 		{
 			return true;
 		}
@@ -538,7 +565,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	 */
 	public boolean isEmpty()
 	{
-		return (getIndexedCount() == 0) && getNamedKeys().isEmpty();
+		return getIndexedCount() == 0 && getNamedCount() == 0;
 	}
 
 	public PageParameters setLocale(Locale locale)

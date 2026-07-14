@@ -34,25 +34,29 @@
 	Or start StartJavaScriptTests.java in project wicket-js-tests. 
  */
 
-/*global ok: true, start: true, asyncTest: true, test: true, equal: true, deepEqual: true,
- QUnit: true, module: true, expect: true, console: true  */
+/*global ok: true, start: true, test: true, equal: true, deepEqual: true,
+ QUnit: true, expect: true, console: true  */
 
 jQuery(document).ready(function() {
 	"use strict";
 
-	var execute = function (attributes) {
+	const { module, test } = QUnit;
+
+	var execute = function (attributes, assert, done) {
+		const done2 = done || assert.async();
+		Wicket.testDone = done2;
 
 		var defaults = {
 				fh: [
 					function () {
-						start();
-						ok(false, 'Failure handler should not be executed!');
+						done2();
+						assert.ok(false, 'Failure handler should not be executed!');
 					}
 				],
 				ch: '0|s',
 				sh: [
 					function () {
-						ok(true, 'Success handler is executed');
+						assert.ok(true, 'Success handler is executed');
 					}
 				]
 		};
@@ -66,79 +70,79 @@ jQuery(document).ready(function() {
 	if ( !QUnit.isLocal ) {
 
 		module('Wicket.Ajax', {
-			setup: function() {
+			beforeEach: function() {
 				// unsubscribe all global listeners
 				Wicket.Event.unsubscribe();
 			}
 		});
 
-		asyncTest('processEvaluation with mock data.', function () {
-
-			expect(2);
+		test('processEvaluation with mock data.', assert => {
+			Wicket.assert = assert;
+			assert.expect(2);
 
 			var attrs = {
 				u: 'data/ajax/evaluationId.xml',
 				c: 'evaluationId'
 			};
-			execute(attrs);
+			execute(attrs, assert);
 		});
 
 		/**
 		 * Suspends execution.
 		 */
-		asyncTest('processEvaluation with suspend.', function () {
-
-			expect(2);
+		test('processEvaluation with suspend.', assert => {
+			Wicket.assert = assert;
+			assert.expect(2);
 
 			var attrs = {
 				u: 'data/ajax/evaluationIdentifierAndCodeId.xml',
 				c: 'evaluationIdentifierAndCodeId'
 			};
-			execute(attrs);
+			execute(attrs, assert);
 		});
 
 		/**
 		 * Suspends executions.
 		 */
-		asyncTest('processEvaluation*s* with suspend.', function () {
-
-			expect(4);
+		test('processEvaluation*s* with suspend.', assert => {
+			Wicket.assert = assert;
+			assert.expect(4);
 
 			var attrs = {
 				u: 'data/ajax/multipleEvaluationsWithIdentifier.xml',
 				c: 'multipleEvaluationsWithIdentifier'
 			};
-			execute(attrs);
+			execute(attrs, assert);
 		});
 
-		asyncTest('processComponent, normal case.', function () {
+		test('processComponent, normal case.', assert => {
+			const done = assert.async();
+			assert.expect(2);
 
-			expect(2);
-
-			equal(jQuery('#componentToReplace').text(), 'old body', 'The component is existing and has the old innerHTML');
+			assert.equal(jQuery('#componentToReplace').text(), 'old body', 'The component is existing and has the old innerHTML');
 
 			var attrs = {
 				u: 'data/ajax/componentId.xml',
 				c: 'componentId',
 				sh: [
 					function() {
-						start();
-						equal(jQuery('#componentToReplace').text(), 'new body', 'The component must be replaced');
+						done();
+						assert.equal(jQuery('#componentToReplace').text(), 'new body', 'The component must be replaced');
 					}
 				]
 			};
-			execute(attrs);
+			execute(attrs, assert, done);
 		});
 
 
-		asyncTest('processComponent() but the old component doesn\'t exist.', function () {
-
-			expect(2);
+		test('processComponent() but the old component doesn\'t exist.', assert => {
+			const done = assert.async();
+			assert.expect(2);
 
 			var oldWicketLogError = Wicket.Log.error;
 
 			Wicket.Log.error = function() {
-				equal(arguments[1], "componentToReplaceDoesNotExist");
+				assert.equal(arguments[1], "componentToReplaceDoesNotExist");
 
 				// restore the original method
 				Wicket.Log.error = oldWicketLogError;
@@ -149,36 +153,38 @@ jQuery(document).ready(function() {
 				c: 'componentDoesNotExistsId',
 				sh: [
 					function() {
-						start();
-						equal(jQuery('#componentToReplaceDoesNotExist').length, 0, 'A component with id \'componentToReplaceDoesNotExist\' must not exist!');
+						done();
+						assert.equal(jQuery('#componentToReplaceDoesNotExist').length, 0, 'A component with id \'componentToReplaceDoesNotExist\' must not exist!');
 					}
 				]
 			};
-			execute(attrs);
+			execute(attrs, assert, done);
 		});
 
-		asyncTest('processComponent() replace a component with a table with scripts inside.', function () {
-
-			expect(4);
+		test('processComponent() replace a component with a table with scripts inside.', assert => {
+			const done = assert.async();
+			Wicket.testDone = done;
+			Wicket.assert = assert;
+			assert.expect(4);
 
 			var attrs = {
 				u: 'data/ajax/complexComponentId.xml',
 				c: 'complexComponentId',
 				sh: [
 					function() {
-						start();
-						equal(jQuery('#componentToReplace')[0].tagName.toLowerCase(), 'table', 'A component with id \'componentToReplace\' must be a table now!');
+						done();
+						assert.equal(jQuery('#componentToReplace')[0].tagName.toLowerCase(), 'table', 'A component with id \'componentToReplace\' must be a table now!');
 					}
 				]
 			};
-			execute(attrs);
+			execute(attrs, assert, done);
 
 		});
 
 
-		asyncTest('processComponent() replace title\'s text.', function () {
-
-			expect(1);
+		test('processComponent() replace title\'s text.', assert => {
+			const done = assert.async();
+			assert.expect(1);
 
 			var oldTitle = jQuery('title').text();
 
@@ -187,19 +193,19 @@ jQuery(document).ready(function() {
 				c: 'componentToReplaceTitle',
 				sh: [
 					function() {
-						start();
+						done();
 						var $title = jQuery('title');
-						equal($title.text(), 'new title', 'The title text should be updated!');
+						assert.equal($title.text(), 'new title', 'The title text should be updated!');
 						$title.text(oldTitle);
 					}
 				]
 			};
-			execute(attrs);
+			execute(attrs, assert, done);
 		});
 
-		asyncTest('non-wicket response.', function () {
-
-			expect(2);
+		test('non-wicket response.', assert => {
+			const done = assert.async();
+			assert.expect(2);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
@@ -207,23 +213,23 @@ jQuery(document).ready(function() {
 				wr: false, // not Wicket's <ajax-response>
 				sh: [
 					function(attributes, jqXHR, data, textStatus) {
-						start();
+						done();
 						var expected = {
 							one: 1,
 							two: '2',
 							three: true
 						};
-						deepEqual(data, expected);
-						equal('success', textStatus);
+						assert.deepEqual(data, expected);
+						assert.equal('success', textStatus);
 					}
 				]
 			};
-			execute(attrs);
+			execute(attrs, assert, done);
 		});
 
-		asyncTest('listen on several events.', function () {
-
-			expect(4);
+		test('listen on several events.', assert => {
+			const done = assert.async();
+			assert.expect(4);
 
 			var calls = 0;
 
@@ -239,11 +245,11 @@ jQuery(document).ready(function() {
 							two: '2',
 							three: true
 						};
-						deepEqual(data, expected);
-						equal('success', textStatus);
+						assert.deepEqual(data, expected);
+						assert.equal('success', textStatus);
 
 						if (++calls === 2) {
-							start();
+							done();
 							jQuery(window).off("event1 event2");
 						}
 					}
@@ -258,9 +264,9 @@ jQuery(document).ready(function() {
 		});
 
 
-		asyncTest('throttle execution.', function () {
-
-			expect(2);
+		test('throttle execution.', assert => {
+			const done = assert.async();
+			assert.expect(2);
 
 			var attrs = {
 				tr: {
@@ -274,14 +280,14 @@ jQuery(document).ready(function() {
 				wr: false, // not Wicket's <ajax-response>
 				sh: [
 					function(attributes, jqXHR, data, textStatus) {
-						start();
+						done();
 						var expected = {
 							one: 1,
 							two: '2',
 							three: true
 						};
-						deepEqual(data, expected);
-						equal('success', textStatus);
+						assert.deepEqual(data, expected);
+						assert.equal('success', textStatus);
 					}
 				]
 			};
@@ -299,53 +305,53 @@ jQuery(document).ready(function() {
 			target.off("event1");
 		});
 
-		asyncTest('verify arguments to IAjaxCallListener handlers. Success scenario.', function () {
-
-			expect(13);
+		test('verify arguments to IAjaxCallListener handlers. Success scenario.', assert => {
+			const done = assert.async();
+			assert.expect(13);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
 				e: 'event1',
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
-				ih: [function() {ok('Init handler should be called');}],
-				dh: [function() {ok('Done handler should be called');}],
+				ih: [function() {assert.ok('Init handler should be called');}],
+				dh: [function() {assert.ok('Done handler should be called');}],
 				sh: [
 					function(attributes, jqXHR, data, textStatus) {
-						start();
+						done();
 						var expected = {
 							one: 1,
 							two: '2',
 							three: true
 						};
-						deepEqual(data, expected, 'Success: data deep equal');
-						equal('success', textStatus, 'Success: textStatus');
-						equal(attrs.u, attributes.u, 'Success: attributes equal');
-						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Success: Assert that jqXHR is a XMLHttpRequest');
+						assert.deepEqual(data, expected, 'Success: data deep equal');
+						assert.equal('success', textStatus, 'Success: textStatus');
+						assert.equal(attrs.u, attributes.u, 'Success: attributes equal');
+						assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Success: Assert that jqXHR is a XMLHttpRequest');
 					}
 				],
 				fh: [
 					function(attributes, errorMessage) {
-						ok(false, 'Should not be called');
+						assert.ok(false, 'Should not be called');
 					}
 				],
 				bsh: [
 					function(attributes, jqXHR, settings) {
-						equal(attrs.u, attributes.u, 'Before: attributes equal');
-						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-						ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+						assert.equal(attrs.u, attributes.u, 'Before: attributes equal');
+						assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+						assert.ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 					}
 				],
 				ah: [
 					function(attributes) {
-						equal(attrs.u, attributes.u, 'After: attributes equal');
+						assert.equal(attrs.u, attributes.u, 'After: attributes equal');
 					}
 				],
 				coh: [
 					function(attributes, jqXHR, textStatus) {
-						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
-						equal('success', textStatus, 'Complete: textStatus');
-						equal(attrs.u, attributes.u, 'Complete: attributes equal');
+						assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
+						assert.equal('success', textStatus, 'Complete: textStatus');
+						assert.equal(attrs.u, attributes.u, 'Complete: attributes equal');
 					}
 				]
 			};
@@ -357,48 +363,48 @@ jQuery(document).ready(function() {
 			target.off("event1");
 		});
 
-		asyncTest('verify arguments to IAjaxCallListener handlers. Failure scenario.', function () {
-
-			expect(13);
+		test('verify arguments to IAjaxCallListener handlers. Failure scenario.', assert => {
+			const done = assert.async();
+			assert.expect(13);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.json',
 				e: 'event1',
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
-				ih: [function() {ok('Init handler should be called');}],
-				dh: [function() {ok('Done handler should be called');}],
+				ih: [function() {assert.ok('Init handler should be called');}],
+				dh: [function() {assert.ok('Done handler should be called');}],
 				sh: [
 					function(attributes, jqXHR, data, textStatus) {
-						ok(false, 'Should not be called');
+						assert.ok(false, 'Should not be called');
 					}
 				],
 				fh: [
 					function(attributes, jqXHR, errorMessage, textStatus) {
-						start();
-						equal(attrs.u, attributes.u);
-						ok(typeof(jqXHR) === "object", "jqXHR should be passed");
-						equal(errorMessage, "Not Found", "Error message should be passed");
-						equal(textStatus, "error", "Text status should be passed");
+						done();
+						assert.equal(attrs.u, attributes.u);
+						assert.ok(typeof(jqXHR) === "object", "jqXHR should be passed");
+						assert.equal(errorMessage, "Not Found", "Error message should be passed");
+						assert.equal(textStatus, "error", "Text status should be passed");
 					}
 				],
 				bsh: [
 					function(attributes, jqXHR, settings) {
-						equal(attrs.u, attributes.u);
-						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
-						ok(jQuery.isFunction(settings.beforeSend), 'Assert that settings is the object passed to jQuery.ajax()');
+						assert.equal(attrs.u, attributes.u);
+						assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
+						assert.ok(jQuery.isFunction(settings.beforeSend), 'Assert that settings is the object passed to jQuery.ajax()');
 					}
 				],
 				ah: [
 					function(attributes) {
-						equal(attrs.u, attributes.u);
+						assert.equal(attrs.u, attributes.u);
 					}
 				],
 				coh: [
 					function(attributes, jqXHR, textStatus) {
-						ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
-						equal('error', textStatus);
-						equal(attrs.u, attributes.u);
+						assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
+						assert.equal('error', textStatus);
+						assert.equal(attrs.u, attributes.u);
 					}
 				]
 			};
@@ -414,49 +420,49 @@ jQuery(document).ready(function() {
 		 * Only attributes with non-default values are transferred to the client side.
 		 * All defaults are initialized at the client side.
 		 */
-		asyncTest('verify default attributes.', function () {
-
-			expect(26);
+		test('verify default attributes.', assert => {
+			const done = assert.async();
+			assert.expect(26);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
 				coh: [
 					function(attributes, jqXHR, textStatus) {
-						start();
+						done();
 						var jQueryVersion = jQuery.fn.jquery;
 						if (
 							(!!window._phantom) &&
 							(jQueryVersion.indexOf("3") === 0 || jQueryVersion.indexOf("2") === 0 )
 						) {
-							equal(textStatus, "success", "textStatus");
+							assert.equal(textStatus, "success", "textStatus");
 						} else {
-							equal(textStatus, "parsererror", "textStatus");
+							assert.equal(textStatus, "parsererror", "textStatus");
 						}
-						equal(attributes.u, attrs.u, "url");
-						deepEqual(attributes.e, [ "domready" ], "events");
-						equal(attributes.event, null, "No event for 'domready'");
-						equal(attributes.ch, '0|s', 'channel');
-						equal(attributes.dt, 'xml', 'data type');
-						equal(attributes.wr, true, 'wicket ajax response');
-						equal(attributes.m, 'GET', 'method');
-						ok(jQuery.isWindow(attributes.c), 'component');
-						ok(attributes.f === undefined, 'form');
-						ok(attributes.mp === undefined, 'multipart');
-						ok(attributes.sc === undefined, 'submitting component');
-						ok(attributes.i === undefined, 'indicator');
-						ok(attributes.pre === undefined, 'preconditions');
-						ok(attributes.ih === undefined, 'init handlers');
-						ok(attributes.bh === undefined, 'before handlers');
-						ok(attributes.ah === undefined, 'after handler');
-						ok(attributes.sh === undefined, 'success handlers');
-						ok(attributes.fh === undefined, 'failure handlers');
-						deepEqual(attrs.coh, attributes.coh, 'complete handlers');
-						ok(attributes.dh === undefined, 'done handlers');
-						ok(attributes.ep === undefined, 'extra parameters');
-						ok(attributes.dep === undefined, 'dynamic extra parameters');
-						equal(attributes.async, true, 'asynchronous');
-						equal(attributes.rt, 0, 'request timeout');
-						equal(attributes.pd, false, 'prevent default');
+						assert.equal(attributes.u, attrs.u, "url");
+						assert.deepEqual(attributes.e, [ "domready" ], "events");
+						assert.equal(attributes.event, null, "No event for 'domready'");
+						assert.equal(attributes.ch, '0|s', 'channel');
+						assert.equal(attributes.dt, 'xml', 'data type');
+						assert.equal(attributes.wr, true, 'wicket ajax response');
+						assert.equal(attributes.m, 'GET', 'method');
+						assert.ok(jQuery.isWindow(attributes.c), 'component');
+						assert.ok(attributes.f === undefined, 'form');
+						assert.ok(attributes.mp === undefined, 'multipart');
+						assert.ok(attributes.sc === undefined, 'submitting component');
+						assert.ok(attributes.i === undefined, 'indicator');
+						assert.ok(attributes.pre === undefined, 'preconditions');
+						assert.ok(attributes.ih === undefined, 'init handlers');
+						assert.ok(attributes.bh === undefined, 'before handlers');
+						assert.ok(attributes.ah === undefined, 'after handler');
+						assert.ok(attributes.sh === undefined, 'success handlers');
+						assert.ok(attributes.fh === undefined, 'failure handlers');
+						assert.deepEqual(attrs.coh, attributes.coh, 'complete handlers');
+						assert.ok(attributes.dh === undefined, 'done handlers');
+						assert.ok(attributes.ep === undefined, 'extra parameters');
+						assert.ok(attributes.dep === undefined, 'dynamic extra parameters');
+						assert.equal(attributes.async, true, 'asynchronous');
+						assert.equal(attributes.rt, 0, 'request timeout');
+						assert.equal(attributes.pd, false, 'prevent default');
 					}
 				]
 			};
@@ -464,9 +470,9 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.ajax(attrs);
 		});
 
-		asyncTest('verify arguments to global listeners. Success scenario.', function () {
-
-			expect(14);
+		test('verify arguments to global listeners. Success scenario.', assert => {
+			const done = assert.async();
+			assert.expect(14);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
@@ -476,45 +482,45 @@ jQuery(document).ready(function() {
 			};
 
 			Wicket.Event.subscribe('/ajax/call/init', function(jqEvent, attributes) {
-				equal(attrs.u, attributes.u, 'Complete: attrs');
+				assert.equal(attrs.u, attributes.u, 'Complete: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, attributes, jqXHR, data, textStatus) {
-				start();
+				done();
 				var expected = {
 					one: 1,
 					two: '2',
 					three: true
 				};
-				ok(attributes.event instanceof jQuery.Event, "There must be an event for non-'domready' events");
-				deepEqual(data, expected, 'Success: data');
-				equal('success', textStatus, 'Success: textStatus');
-				equal(attrs.u, attributes.u, 'Success: attrs');
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Success: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(attributes.event instanceof jQuery.Event, "There must be an event for non-'domready' events");
+				assert.deepEqual(data, expected, 'Success: data');
+				assert.equal('success', textStatus, 'Success: textStatus');
+				assert.equal(attrs.u, attributes.u, 'Success: attrs');
+				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Success: Assert that jqXHR is a XMLHttpRequest');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/failure', function(jqEvent, attributes) {
-				ok(false, 'Failure handler should not be called');
+				assert.ok(false, 'Failure handler should not be called');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
-				equal(attrs.u, attributes.u, 'Before: attrs');
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				assert.equal(attrs.u, attributes.u, 'Before: attrs');
+				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attributes) {
-				equal(attrs.u, attributes.u, 'After: attrs');
+				assert.equal(attrs.u, attributes.u, 'After: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, textStatus) {
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
-				equal('success', textStatus, 'Complete: textStatus');
-				equal(attrs.u, attributes.u, 'Complete: attrs');
+				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
+				assert.equal('success', textStatus, 'Complete: textStatus');
+				assert.equal(attrs.u, attributes.u, 'Complete: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attributes) {
-				equal(attrs.u, attributes.u, 'Done: attrs');
+				assert.equal(attrs.u, attributes.u, 'Done: attrs');
 
 				// unregister all subscribers
 				Wicket.Event.unsubscribe();
@@ -527,9 +533,9 @@ jQuery(document).ready(function() {
 			target.off("event1");
 		});
 
-		asyncTest('verify arguments to global listeners. Failure scenario.', function () {
-
-			expect(13);
+		test('verify arguments to global listeners. Failure scenario.', assert => {
+			const done = assert.async();
+			assert.expect(13);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.json',
@@ -539,39 +545,39 @@ jQuery(document).ready(function() {
 			};
 
 			Wicket.Event.subscribe('/ajax/call/init', function(jqEvent, attributes) {
-				equal(attrs.u, attributes.u, 'Complete: attrs');
+				assert.equal(attrs.u, attributes.u, 'Complete: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, attributes, jqXHR, data, textStatus) {
-				ok(false, 'Success handles should not be called');
+				assert.ok(false, 'Success handles should not be called');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/failure', function(jqEvent, attributes, jqXHR, errorThrown, textStatus) {
-				start();
-				equal('Not Found', errorThrown, 'Failure: errorThrown');
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Failure: Assert that jqXHR is a XMLHttpRequest');
-				equal('error', textStatus, 'Failure: textStatus');
-				equal(attrs.u, attributes.u, 'Failure: attrs');
+				done();
+				assert.equal('Not Found', errorThrown, 'Failure: errorThrown');
+				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Failure: Assert that jqXHR is a XMLHttpRequest');
+				assert.equal('error', textStatus, 'Failure: textStatus');
+				assert.equal(attrs.u, attributes.u, 'Failure: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
-				equal(attrs.u, attributes.u, 'Before: attrs');
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				assert.equal(attrs.u, attributes.u, 'Before: attrs');
+				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attributes) {
-				equal(attrs.u, attributes.u, 'After: attrs');
+				assert.equal(attrs.u, attributes.u, 'After: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attributes, jqXHR, textStatus) {
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
-				equal('error', textStatus, 'Complete: textStatus');
-				equal(attrs.u, attributes.u, 'Complete: attrs');
+				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
+				assert.equal('error', textStatus, 'Complete: textStatus');
+				assert.equal(attrs.u, attributes.u, 'Complete: attrs');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attributes) {
-				equal(attrs.u, attributes.u, 'Complete: attrs');
+				assert.equal(attrs.u, attributes.u, 'Complete: attrs');
 
 				// unregister all subscribers
 				Wicket.Event.unsubscribe();
@@ -585,9 +591,9 @@ jQuery(document).ready(function() {
 
 		});
 
-		asyncTest('show/hide incrementally (WICKET-4364)', function() {
-
-			expect(6);
+		test('show/hide incrementally (WICKET-4364)', assert => {
+			const done = assert.async();
+			assert.expect(6);
 
 			var $indicator = jQuery('<div id="indicator"></div>');
 			var $el = jQuery('<div id="elementId"></div>');
@@ -604,8 +610,8 @@ jQuery(document).ready(function() {
 			// called as 'success' for requestOne and as 'failure' for requestTwo
 			var successFailureHandler = function () {
 				var count = getCurrentCount();
-				ok(count === 1 || count === 2, "'showIncrementallyCount' must be 1 or 2. Value is: " + count);
-				equal('block', $indicator.css('display'), "Indicator's display must be 'block'");
+				assert.ok(count === 1 || count === 2, "'showIncrementallyCount' must be 1 or 2. Value is: " + count);
+				assert.equal('block', $indicator.css('display'), "Indicator's display must be 'block'");
 			};
 
 			var attrs = {
@@ -631,11 +637,11 @@ jQuery(document).ready(function() {
 			var attrsThree = jQuery.extend({}, attrs, {
 				pre: [
 					function () {
-						start();
-						ok(true, 'Request 3: Precondition called.');
+						done();
+						assert.ok(true, 'Request 3: Precondition called.');
 
 						var count = getCurrentCount();
-						equal(0, count, "'showIncrementallyCount' must be 0 after the executions but is: " + count);
+						assert.equal(0, count, "'showIncrementallyCount' must be 0 after the executions but is: " + count);
 						$indicator.remove();
 						$el.off().remove();
 
@@ -654,9 +660,9 @@ jQuery(document).ready(function() {
 		 * When using GET method the parameters should be added to 'settings.url'
 		 * WICKET-4606
 		 */
-		asyncTest('verify dynamic parameters are appended to the Ajax GET params.', function () {
-
-			expect(5);
+		test('verify dynamic parameters are appended to the Ajax GET params.', assert => {
+			const done = assert.async();
+			assert.expect(5);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.json',
@@ -668,12 +674,12 @@ jQuery(document).ready(function() {
 			};
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
-				equal(attrs.u, attributes.u, 'Before: attrs');
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
-				ok(settings.url.indexOf('one=1') > 0, 'Parameter "one" with value "1" is found');
-				ok(settings.url.indexOf('two=2') > 0, 'Parameter "two" with value "2" is found');
-				start();
+				assert.equal(attrs.u, attributes.u, 'Before: attrs');
+				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				assert.ok(settings.url.indexOf('one=1') > 0, 'Parameter "one" with value "1" is found');
+				assert.ok(settings.url.indexOf('two=2') > 0, 'Parameter "two" with value "2" is found');
+				done();
 
 				Wicket.Event.unsubscribe();
 		});
@@ -688,9 +694,9 @@ jQuery(document).ready(function() {
 		 * When using POST method the parameters should be added to 'settings.data'
 		 * WICKET-4606
 		 */
-		asyncTest('verify dynamic parameters are appended to the Ajax POST params.', function () {
-
-			expect(7);
+		test('verify dynamic parameters are appended to the Ajax POST params.', assert => {
+			const done = assert.async();
+			assert.expect(7);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.json',
@@ -703,14 +709,14 @@ jQuery(document).ready(function() {
 			};
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
-				equal(attrs.u, attributes.u, 'Before: attrs');
-				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-				ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
-				ok(settings.data.indexOf('one=static1') > -1, 'Parameter "one" with value "static1" is found');
-				ok(settings.data.indexOf('one=static2') > -1, 'Parameter "one" with value "static2" is found');
-				ok(settings.data.indexOf('one=dynamic1') > -1, 'Parameter "one" with value "dynamic1" is found');
-				ok(settings.data.indexOf('one=dynamic2') > -1, 'Parameter "one" with value "dynamic2" is found');
-				start();
+				assert.equal(attrs.u, attributes.u, 'Before: attrs');
+				assert.ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
+				assert.ok(jQuery.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				assert.ok(settings.data.indexOf('one=static1') > -1, 'Parameter "one" with value "static1" is found');
+				assert.ok(settings.data.indexOf('one=static2') > -1, 'Parameter "one" with value "static2" is found');
+				assert.ok(settings.data.indexOf('one=dynamic1') > -1, 'Parameter "one" with value "dynamic1" is found');
+				assert.ok(settings.data.indexOf('one=dynamic2') > -1, 'Parameter "one" with value "dynamic2" is found');
+				done();
 
 				Wicket.Event.unsubscribe();
 			});
@@ -725,9 +731,9 @@ jQuery(document).ready(function() {
 		 * 'before' handlers are called even before preconditions
 		 * WICKET-4649
 		 */
-		asyncTest('before handler.', function () {
-
-			expect(3);
+		test('before handler.', assert => {
+			const done = assert.async();
+			assert.expect(3);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.json',
@@ -735,21 +741,21 @@ jQuery(document).ready(function() {
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
 				bh: [function(attributes) {
-					equal(attrs.u, attributes.u, 'Before: attrs');
+					assert.equal(attrs.u, attributes.u, 'Before: attrs');
 				}],
 				pre: [function() {
-					ok(true, "Precondition is called!");
+					assert.ok(true, "Precondition is called!");
 					// do not allow calling of beforeSend handlers
 					return false;
 				}],
 				bsh: [function() {
-					ok(false, 'beforeSend handles should not be called');
+					assert.ok(false, 'beforeSend handles should not be called');
 				}]
 			};
 
 			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attributes) {
-				equal(attrs.u, attributes.u, 'Global before: attrs');
-				start();
+				assert.equal(attrs.u, attributes.u, 'Global before: attrs');
+				done();
 			});
 
 			Wicket.Ajax.ajax(attrs);
@@ -764,9 +770,9 @@ jQuery(document).ready(function() {
 		 * Three consecutive executions are made on the same Ajax channel validating
 		 * that they do not overlap.
 		 */
-		asyncTest('callbacks order - success scenario.', function () {
-
-			expect(42);
+		test('callbacks order - success scenario.', assert => {
+			const done = assert.async();
+			assert.expect(42);
 
 			var order = 0,
 
@@ -783,86 +789,86 @@ jQuery(document).ready(function() {
 				e: 'event1',
 				bh: [
 					function(attrs) {
-						equal((1 + offset(attrs.event.extraData)), ++order, "Before handler");
+						assert.equal((1 + offset(attrs.event.extraData)), ++order, "Before handler");
 					}
 				],
 				pre: [
 					function(attrs) {
-						equal((3 + offset(attrs.event.extraData)), ++order, "Precondition");
+						assert.equal((3 + offset(attrs.event.extraData)), ++order, "Precondition");
 						return true;
 					}
 				],
 				bsh: [
 					function(attrs) {
-						equal((5 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
+						assert.equal((5 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
 					}
 				],
 				ah: [
 					function(attrs) {
-						equal((7 + offset(attrs.event.extraData)), ++order, "After handler");
+						assert.equal((7 + offset(attrs.event.extraData)), ++order, "After handler");
 					}
 				],
 				sh: [
 					function(attrs) {
-						equal((9 + offset(attrs.event.extraData)), ++order, "Success handler");
+						assert.equal((9 + offset(attrs.event.extraData)), ++order, "Success handler");
 					}
 				],
 				fh: [
 					function() {
-						ok(false, 'Should not be called');
+						assert.ok(false, 'Should not be called');
 					}
 				],
 				coh: [
 					function(attrs) {
-						equal((11 + offset(attrs.event.extraData)), ++order, "Complete handler");
+						assert.equal((11 + offset(attrs.event.extraData)), ++order, "Complete handler");
 					}
 				],
 				dh: [
 					function(attrs) {
-						equal((13 + offset(attrs.event.extraData)), ++order, "Done handler");
+						assert.equal((13 + offset(attrs.event.extraData)), ++order, "Done handler");
 					}
 				]
 			};
 
 
 			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attrs) {
-				equal((2 + offset(attrs.event.extraData)), ++order, "Global before handler");
+				assert.equal((2 + offset(attrs.event.extraData)), ++order, "Global before handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/precondition', function(jqEvent, attrs) {
-				equal((4 + offset(attrs.event.extraData)), ++order, "Global precondition");
+				assert.equal((4 + offset(attrs.event.extraData)), ++order, "Global precondition");
 				return true;
 			});
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attrs) {
-				equal((6 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
+				assert.equal((6 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attrs) {
-				equal((8 + offset(attrs.event.extraData)), ++order, "Global after handler");
+				assert.equal((8 + offset(attrs.event.extraData)), ++order, "Global after handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, attrs) {
-				equal((10 + offset(attrs.event.extraData)), ++order, "Global success handler");
+				assert.equal((10 + offset(attrs.event.extraData)), ++order, "Global success handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/failure', function() {
-				ok(false, 'Global failure handler should not be called');
+				assert.ok(false, 'Global failure handler should not be called');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attrs) {
-				equal((12 + offset(attrs.event.extraData)), ++order, "Global complete handler");
+				assert.equal((12 + offset(attrs.event.extraData)), ++order, "Global complete handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attrs) {
-				equal((14 + offset(attrs.event.extraData)), ++order, "Global done handler");
+				assert.equal((14 + offset(attrs.event.extraData)), ++order, "Global done handler");
 
 				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers
 					Wicket.Event.unsubscribe();
 					jQuery(window).off("event1");
 
-					start();
+					done();
 				}
 			});
 
@@ -880,9 +886,9 @@ jQuery(document).ready(function() {
 		 * Three consecutive executions are made on the same Ajax channel validating
 		 * that they do not overlap.
 		 */
-		asyncTest('callbacks order - failure scenario.', function () {
-
-			expect(42);
+		test('callbacks order - failure scenario.', assert => {
+			const done = assert.async();
+			assert.expect(42);
 
 			var order = 0,
 
@@ -899,79 +905,79 @@ jQuery(document).ready(function() {
 				e: 'event1',
 				bh: [
 					function(attrs) {
-						equal((1 + offset(attrs.event.extraData)), ++order, "Before handler");
+						assert.equal((1 + offset(attrs.event.extraData)), ++order, "Before handler");
 					}
 				],
 				pre: [
 					function(attrs) {
-						equal((3 + offset(attrs.event.extraData)), ++order, "Precondition");
+						assert.equal((3 + offset(attrs.event.extraData)), ++order, "Precondition");
 						return true;
 					}
 				],
 				bsh: [
 					function(attrs) {
-						equal((5 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
+						assert.equal((5 + offset(attrs.event.extraData)), ++order, "BeforeSend handler");
 					}
 				],
 				ah: [
 					function(attrs) {
-						equal((7 + offset(attrs.event.extraData)), ++order, "After handler");
+						assert.equal((7 + offset(attrs.event.extraData)), ++order, "After handler");
 					}
 				],
 				sh: [
 					function() {
-						ok(false, 'Should not be called');
+						assert.ok(false, 'Should not be called');
 					}
 				],
 				fh: [
 					function(attrs) {
-						equal((9 + offset(attrs.event.extraData)), ++order, "Failure handler");
+						assert.equal((9 + offset(attrs.event.extraData)), ++order, "Failure handler");
 					}
 				],
 				coh: [
 					function(attrs) {
-						equal((11 + offset(attrs.event.extraData)), ++order, "Complete handler");
+						assert.equal((11 + offset(attrs.event.extraData)), ++order, "Complete handler");
 					}
 				],
 				dh: [
 					function(attrs) {
-						equal((13 + offset(attrs.event.extraData)), ++order, "Done handler");
+						assert.equal((13 + offset(attrs.event.extraData)), ++order, "Done handler");
 					}
 				]
 			};
 
 
 			Wicket.Event.subscribe('/ajax/call/before', function(jqEvent, attrs) {
-				equal((2 + offset(attrs.event.extraData)), ++order, "Global before handler");
+				assert.equal((2 + offset(attrs.event.extraData)), ++order, "Global before handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/precondition', function(jqEvent, attrs) {
-				equal((4 + offset(attrs.event.extraData)), ++order, "Global precondition");
+				assert.equal((4 + offset(attrs.event.extraData)), ++order, "Global precondition");
 				return true;
 			});
 
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attrs) {
-				equal((6 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
+				assert.equal((6 + offset(attrs.event.extraData)), ++order, "Global beforeSend handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attrs) {
-				equal((8 + offset(attrs.event.extraData)), ++order, "Global after handler");
+				assert.equal((8 + offset(attrs.event.extraData)), ++order, "Global after handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/success', function() {
-				ok(false, 'Global failure handler should not be called');
+				assert.ok(false, 'Global failure handler should not be called');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/failure', function(jqEvent, attrs) {
-				equal((10 + offset(attrs.event.extraData)), ++order, "Global failure handler");
+				assert.equal((10 + offset(attrs.event.extraData)), ++order, "Global failure handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attrs) {
-				equal((12 + offset(attrs.event.extraData)), ++order, "Global complete handler");
+				assert.equal((12 + offset(attrs.event.extraData)), ++order, "Global complete handler");
 			});
 
 			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attrs) {
-				equal((14 + offset(attrs.event.extraData)), ++order, "Global done handler");
+				assert.equal((14 + offset(attrs.event.extraData)), ++order, "Global done handler");
 
 				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers
@@ -979,7 +985,7 @@ jQuery(document).ready(function() {
 
 					jQuery(window).off("event1");
 
-					start();
+					done();
 				}
 			});
 
@@ -996,9 +1002,11 @@ jQuery(document).ready(function() {
 		 *
 		 * https://issues.apache.org/jira/browse/WICKET-4673
 		 */
-		asyncTest('Submit nested form.', function () {
-
-			expect(1);
+		test('Submit nested form.', assert => {
+			const done = assert.async();
+			Wicket.testDone = done;
+			Wicket.assert = assert;
+			assert.expect(1);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -1020,9 +1028,11 @@ jQuery(document).ready(function() {
 		 * is submitted with Ajax.
 		 * The url points to Ajax response that contains an evaluation that starts the test.
 		 */
-		asyncTest('Submit nested form - success scenario.', function () {
-
-			expect(9);
+		test('Submit nested form - success scenario.', assert => {
+			const done = assert.async();
+			Wicket.testDone = done;
+			Wicket.assert = assert;
+			assert.expect(9);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -1032,23 +1042,23 @@ jQuery(document).ready(function() {
 				c:  "innerSubmitButton", // the component that submits the form
 				m:  "POST", // submit method,
 				ad: true, // do not allow default behavior
-				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
-				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
+				bh: [ function(attrs) { assert.ok(true, "Before handler executed"); } ],
+				pre: [ function(attrs) {assert.ok(true, "Precondition executed"); return true; } ],
 				bsh: [ function(attrs) {
-					ok(true, "BeforeSend handler executed");
+					assert.ok(true, "BeforeSend handler executed");
 				} ],
-				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
-				sh: [ function(attrs) { ok(true, "Success handler executed"); } ],
-				fh: [ function(attrs) { ok(false, "Failure handler should not be executed"); } ],
+				ah: [ function(attrs) { assert.ok(true, "After handler executed"); } ],
+				sh: [ function(attrs) { assert.ok(true, "Success handler executed"); } ],
+				fh: [ function(attrs) { assert.ok(false, "Failure handler should not be executed"); } ],
 				coh: [
 					function(attrs) {
-						ok(true, "Complete handler executed");
-						equal(attrs.event.isDefaultPrevented(), false, "default behavior is allowed");
+						assert.ok(true, "Complete handler executed");
+						assert.equal(attrs.event.isDefaultPrevented(), false, "default behavior is allowed");
 					}
 				],
 				dep: [
 					function(attrs) {
-						ok(true, "Dynamic parameters are collected in success scenario!");
+						assert.ok(true, "Dynamic parameters are collected in success scenario!");
 						return { 'dynamicEPName': 'dynamicEPValue' };
 					}
 				],
@@ -1067,9 +1077,10 @@ jQuery(document).ready(function() {
 		 * is submitted with Ajax.
 		 * Since the url points to not existing resource the final result is a failure.
 		 */
-		asyncTest('Submit nested form - failure scenario.', function () {
-
-			expect(8);
+		test('Submit nested form - failure scenario.', assert => {
+			const done = assert.async();
+			Wicket.testDone = done;
+			assert.expect(8);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -1079,23 +1090,23 @@ jQuery(document).ready(function() {
 				c:  "innerSubmitButton", // the component that submits the form
 				m:  "POST", // submit method,
 				ad: false,
-				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
-				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
+				bh: [ function(attrs) { assert.ok(true, "Before handler executed"); } ],
+				pre: [ function(attrs) {assert.ok(true, "Precondition executed"); return true; } ],
 				bsh: [ function(attrs) {
-					ok(true, "BeforeSend handler executed");
+					assert.ok(true, "BeforeSend handler executed");
 				} ],
-				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
-				sh: [ function(attrs) { ok(false, "Success handler should not be executed"); } ],
-				fh: [ function(attrs) { ok(true, "Failure handler executed"); start(); } ],
+				ah: [ function(attrs) { assert.ok(true, "After handler executed"); } ],
+				sh: [ function(attrs) { assert.ok(false, "Success handler should not be executed"); } ],
+				fh: [ function(attrs) { assert.ok(true, "Failure handler executed"); done(); } ],
 				coh: [
 					function(attrs) {
-						ok(true, "Complete handler executed");
-						equal(attrs.event.isDefaultPrevented(), false, "default behavior is not prevented");
+						assert.ok(true, "Complete handler executed");
+						assert.equal(attrs.event.isDefaultPrevented(), false, "default behavior is not prevented");
 					}
 				],
 				dep: [
 					function(attrs) {
-						ok(true, "Dynamic parameters are collected in success scenario!");
+						assert.ok(true, "Dynamic parameters are collected in success scenario!");
 						return { 'dynamicEPName': 'dynamicEPValue' };
 					}
 				],
@@ -1114,9 +1125,10 @@ jQuery(document).ready(function() {
 		 * Tests that submitting a of multipart form calls failure and complete handlers
 		 * when the server is not reachable.
 		 */
-		asyncTest('Submit multipart form (server down).', function () {
-
-			expect(6);
+		test('Submit multipart form (server down).', assert => {
+			const done = assert.async();
+			Wicket.testDone = done;
+			assert.expect(6);
 
 			var attrs = {
 				f:  "multipartForm", // the id of the form to submit
@@ -1126,13 +1138,13 @@ jQuery(document).ready(function() {
 				c:  "multipartFormSubmit", // the component that submits the form
 				m:  "POST", // submit method,
 				rt: 100, // 100ms request timeout
-				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
-				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
-				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
-				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
-				sh: [ function(attrs) { ok(false, "Success handler should not be executed"); } ],
-				fh: [ function(attrs) { start(); ok(true, "Failure handler executed"); } ],
-				coh: [ function(attrs) { ok(true, "Complete handler executed"); } ]
+				bh: [ function(attrs) { assert.ok(true, "Before handler executed"); } ],
+				pre: [ function(attrs) {assert.ok(true, "Precondition executed"); return true; } ],
+				bsh: [ function(attrs) { assert.ok(true, "BeforeSend handler executed"); } ],
+				ah: [ function(attrs) { assert.ok(true, "After handler executed"); } ],
+				sh: [ function(attrs) { assert.ok(false, "Success handler should not be executed"); } ],
+				fh: [ function(attrs) { done(); assert.ok(true, "Failure handler executed"); } ],
+				coh: [ function(attrs) { assert.ok(true, "Complete handler executed"); } ]
 			};
 
 			Wicket.Ajax.ajax(attrs);
@@ -1146,20 +1158,22 @@ jQuery(document).ready(function() {
 		 * in setTimeout() to prevent stack size exceeds.
 		 * WICKET-4675
 		 */
-		asyncTest('Process response with 2k+ evaluations.', function () {
-
-			expect(2133);
+		test('Process response with 2k+ evaluations.', assert => {
+			const done = assert.async();
+			Wicket.testDone = done;
+			Wicket.assert = assert;
+			assert.expect(2133);
 
 			var attrs = {
 				u:  "data/ajax/manyEvaluationsResponse.xml", // the mock response
 				e:  "manyEvaluations", // the event
-				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
-				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
-				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
-				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
-				sh: [ function(attrs) { ok(true, "Success handler executed"); } ],
-				fh: [ function(attrs) { ok(false, "Failure handler should not be executed"); } ],
-				coh: [ function(attrs) { ok(true, "Complete handler executed"); } ]
+				bh: [ function(attrs) { assert.ok(true, "Before handler executed"); } ],
+				pre: [ function(attrs) {assert.ok(true, "Precondition executed"); return true; } ],
+				bsh: [ function(attrs) { assert.ok(true, "BeforeSend handler executed"); } ],
+				ah: [ function(attrs) { assert.ok(true, "After handler executed"); } ],
+				sh: [ function(attrs) { assert.ok(true, "Success handler executed"); } ],
+				fh: [ function(attrs) { assert.ok(false, "Failure handler should not be executed"); } ],
+				coh: [ function(attrs) { assert.ok(true, "Complete handler executed"); } ]
 			};
 
 			Wicket.Ajax.ajax(attrs);
@@ -1172,25 +1186,26 @@ jQuery(document).ready(function() {
 		 * in the callbacks.
 		 * https://issues.apache.org/jira/browse/WICKET-5025
 		 */
-		asyncTest('The HTML DOM element should be the context in the callbacks - success case.', function () {
-
-			expect(6);
+		test('The HTML DOM element should be the context in the callbacks - success case.', assert => {
+			const done = assert.async();
+			Wicket.testDone = done;
+			assert.expect(6);
 
 			var attrs = {
 				u: 'data/ajax/emptyAjaxResponse.xml',
 				c: 'usedAsContextWicket5025',
 				e: 'asContextSuccess',
-				bh: [ function() { equal(this.id, 'usedAsContextWicket5025', "Before handler executed"); } ],
-				pre: [ function() { equal(this.id, 'usedAsContextWicket5025', "Precondition executed"); return true; } ],
-				bsh: [ function() { equal(this.id, 'usedAsContextWicket5025', "BeforeSend handler executed"); } ],
-				ah: [ function() { equal(this.id, 'usedAsContextWicket5025', "After handler executed"); } ],
-				sh: [ function() { equal(this.id, 'usedAsContextWicket5025', "Success handler executed"); } ],
-				fh: [ function() { ok(false, "Failure handler should not be executed"); } ],
+				bh: [ function() { assert.equal(this.id, 'usedAsContextWicket5025', "Before handler executed"); } ],
+				pre: [ function() { assert.equal(this.id, 'usedAsContextWicket5025', "Precondition executed"); return true; } ],
+				bsh: [ function() { assert.equal(this.id, 'usedAsContextWicket5025', "BeforeSend handler executed"); } ],
+				ah: [ function() { assert.equal(this.id, 'usedAsContextWicket5025', "After handler executed"); } ],
+				sh: [ function() { assert.equal(this.id, 'usedAsContextWicket5025', "Success handler executed"); } ],
+				fh: [ function() { assert.ok(false, "Failure handler should not be executed"); } ],
 				coh: [
 					function() {
-						equal(this.id, 'usedAsContextWicket5025', "Complete handler executed");
+						assert.equal(this.id, 'usedAsContextWicket5025', "Complete handler executed");
 						jQuery('#usedAsContextWicket5025').off();
-						start();
+						done();
 					}
 				]
 			};
@@ -1205,25 +1220,25 @@ jQuery(document).ready(function() {
 		 * in the callbacks.
 		 * https://issues.apache.org/jira/browse/WICKET-5025
 		 */
-		asyncTest('The HTML DOM element should be the context in the callbacks - failure case.', function () {
-
-			expect(6);
+		test('The HTML DOM element should be the context in the callbacks - failure case.', assert => {
+			const done = assert.async();
+			assert.expect(6);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.xml',
 				c: 'usedAsContextWicket5025',
 				e: 'asContextFailure',
-				bh: [ function() { equal(this.id, 'usedAsContextWicket5025', "Before handler executed"); } ],
-				pre: [ function() { equal(this.id, 'usedAsContextWicket5025', "Precondition executed"); return true; } ],
-				bsh: [ function() { equal(this.id, 'usedAsContextWicket5025', "BeforeSend handler executed"); } ],
-				ah: [ function() { equal(this.id, 'usedAsContextWicket5025', "After handler executed"); } ],
-				sh: [ function() { ok(false, "Success handler should not be executed"); } ],
-				fh: [ function() { equal(this.id, 'usedAsContextWicket5025', "Failure handler should not be executed"); } ],
+				bh: [ function() { assert.equal(this.id, 'usedAsContextWicket5025', "Before handler executed"); } ],
+				pre: [ function() { assert.equal(this.id, 'usedAsContextWicket5025', "Precondition executed"); return true; } ],
+				bsh: [ function() { assert.equal(this.id, 'usedAsContextWicket5025', "BeforeSend handler executed"); } ],
+				ah: [ function() { assert.equal(this.id, 'usedAsContextWicket5025', "After handler executed"); } ],
+				sh: [ function() { assert.ok(false, "Success handler should not be executed"); } ],
+				fh: [ function() { assert.equal(this.id, 'usedAsContextWicket5025', "Failure handler should not be executed"); } ],
 				coh: [
 					function() {
-						equal(this.id, 'usedAsContextWicket5025', "Complete handler executed");
+						assert.equal(this.id, 'usedAsContextWicket5025', "Complete handler executed");
 						jQuery('#usedAsContextWicket5025').off();
-						start();
+						done();
 					}
 				]
 			};
@@ -1238,9 +1253,9 @@ jQuery(document).ready(function() {
 		 * See http://markmail.org/message/khuc2v37aakzyfth
 		 * WICKET-5759
 		 */
-		asyncTest('_asParamArray() should drop nulls.', function () {
-
-			expect(1);
+		test('_asParamArray() should drop nulls.', assert => {
+			const done = assert.async();
+			assert.expect(1);
 
 			var attrs = {
 				u: 'data/ajax/componentId.xml',
@@ -1248,8 +1263,8 @@ jQuery(document).ready(function() {
 				ep: [null, {name: "name", value: "value"}, null, null],
 				bsh: [function(attributes) {
 					var ep = attributes.ep;
-					equal(1, ep.length, 'The null values in the extra parameters should be dropped');
-					start();
+					assert.equal(1, ep.length, 'The null values in the extra parameters should be dropped');
+					done();
 				}]
 			};
 
@@ -1259,9 +1274,9 @@ jQuery(document).ready(function() {
 			target.off("event1");
 		});
 
-		asyncTest('Do not hide the indicator if redirecting.', function () {
-
-			expect(2);
+		test('Do not hide the indicator if redirecting.', assert => {
+			const done = assert.async();
+			assert.expect(2);
 
 			var oldRedirect = Wicket.Ajax.redirect;
 			Wicket.Ajax.redirect = function() {};
@@ -1272,13 +1287,13 @@ jQuery(document).ready(function() {
 				i: 'ajaxIndicator',
 				sh: [function(attrs, jqXHR, data, textStatus) {
 					var indicatorEl = Wicket.$(attrs.i);
-					equal("1", indicatorEl.getAttribute("showIncrementallyCount"));
+					assert.equal("1", indicatorEl.getAttribute("showIncrementallyCount"));
 				}],
 				coh: [function(attrs, jqXHR, textStatus) {
 					var indicatorEl = Wicket.$(attrs.i);
-					equal("1", indicatorEl.getAttribute("showIncrementallyCount"));
+					assert.equal("1", indicatorEl.getAttribute("showIncrementallyCount"));
 					Wicket.Ajax.redirect = oldRedirect;
-					start();
+					done();
 				}]
 			};
 
@@ -1288,9 +1303,9 @@ jQuery(document).ready(function() {
 			target.off("event1");
 		});
 
-		asyncTest('Do hide the indicator if not redirecting.', function () {
-
-			expect(2);
+		test('Do hide the indicator if not redirecting.', assert => {
+			const done = assert.async();
+			assert.expect(2);
 
 			var attrs = {
 				u: 'data/ajax/emptyAjaxResponse.xml',
@@ -1298,12 +1313,12 @@ jQuery(document).ready(function() {
 				i: 'ajaxIndicator',
 				sh: [function(attrs, jqXHR, data, textStatus) {
 					var indicatorEl = Wicket.$(attrs.i);
-					equal("1", indicatorEl.getAttribute("showIncrementallyCount"));
+					assert.equal("1", indicatorEl.getAttribute("showIncrementallyCount"));
 				}],
 				coh: [function(attrs, jqXHR, textStatus) {
 					var indicatorEl = Wicket.$(attrs.i);
-					equal("0", indicatorEl.getAttribute("showIncrementallyCount"));
-					start();
+					assert.equal("0", indicatorEl.getAttribute("showIncrementallyCount"));
+					done();
 				}]
 			};
 
@@ -1313,9 +1328,9 @@ jQuery(document).ready(function() {
 			target.off("event1");
 		});
 
-		asyncTest('processAjaxResponse, normal HTTP case.', function () {
-
-			expect(2);
+		test('processAjaxResponse, normal HTTP case.', assert => {
+			const done = assert.async();
+			assert.expect(2);
 
 			var originalProcessAjaxResponse = Wicket.Ajax.Call.prototype.processAjaxResponse,
 				originalRedirect = Wicket.Ajax.redirect;
@@ -1336,8 +1351,8 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.redirect = function(location) {
 				Wicket.Ajax.Call.prototype.processAjaxResponse = originalProcessAjaxResponse;
 				Wicket.Ajax.redirect = originalRedirect;
-				start();
-				equal(location, 'http://a.b.c', 'Custom HTTP address is properly handled');
+				done();
+				assert.equal(location, 'http://a.b.c', 'Custom HTTP address is properly handled');
 			};
 
 
@@ -1346,12 +1361,12 @@ jQuery(document).ready(function() {
 				c: 'componentId'
 			};
 
-			execute(attrs);
+			execute(attrs, assert, done);
 		});
 
-		asyncTest('Ajax 301 with Ajax-Location response header.', function () {
-
-			expect(2);
+		test('Ajax 301 with Ajax-Location response header.', assert => {
+			const done = assert.async();
+			assert.expect(2);
 
 			var redirectUrl = 'http://www.example.com/ajax/location';
 			var componentUrl = 'data/ajax/componentId.xml';
@@ -1368,8 +1383,8 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.redirect = function(location) {
 				Wicket.Ajax.redirect = originalRedirect;
-				start();
-				equal(location, redirectUrl, 'Ajax redirect in 301 response is properly handled');
+				done();
+				assert.equal(location, redirectUrl, 'Ajax redirect in 301 response is properly handled');
 			};
 
 			var attrs = {
@@ -1377,12 +1392,12 @@ jQuery(document).ready(function() {
 				c: 'componentId'
 			};
 
-			execute(attrs);
+			execute(attrs, assert, done);
 		});
 
-		asyncTest('processAjaxResponse, chrome-extensions case.', function () {
-
-			expect(2);
+		test('processAjaxResponse, chrome-extensions case.', assert => {
+			const done = assert.async();
+			assert.expect(2);
 
 			var originalProcessAjaxResponse = Wicket.Ajax.Call.prototype.processAjaxResponse,
 				originalRedirect = Wicket.Ajax.redirect;
@@ -1403,8 +1418,8 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.redirect = function(location) {
 				Wicket.Ajax.Call.prototype.processAjaxResponse = originalProcessAjaxResponse;
 				Wicket.Ajax.redirect = originalRedirect;
-				start();
-				equal(location, 'chrome-extensions://a.b.c', 'Custom chrome-extensions address is properly handled');
+				done();
+				assert.equal(location, 'chrome-extensions://a.b.c', 'Custom chrome-extensions address is properly handled');
 			};
 
 			var attrs = {
@@ -1412,12 +1427,12 @@ jQuery(document).ready(function() {
 				c: 'componentId'
 			};
 
-			execute(attrs);
+			execute(attrs, assert, done);
 		});
 
-		asyncTest('processAjaxResponse, no scheme case.', function () {
-
-			expect(2);
+		test('processAjaxResponse, no scheme case.', assert => {
+			const done = assert.async();
+			assert.expect(2);
 
 			var originalProcessAjaxResponse = Wicket.Ajax.Call.prototype.processAjaxResponse,
 				originalRedirect = Wicket.Ajax.redirect;
@@ -1438,8 +1453,8 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.redirect = function(location) {
 				Wicket.Ajax.Call.prototype.processAjaxResponse = originalProcessAjaxResponse;
 				Wicket.Ajax.redirect = originalRedirect;
-				start();
-				ok(location.indexOf('location-without-scheme') > 0, 'Custom address without scheme is properly handled');
+				done();
+				assert.ok(location.indexOf('location-without-scheme') > 0, 'Custom address without scheme is properly handled');
 			};
 
 			var attrs = {
@@ -1447,97 +1462,97 @@ jQuery(document).ready(function() {
 				c: 'componentId'
 			};
 
-			execute(attrs);
+			execute(attrs, assert, done);
 		});
 		
 		var metaByName = function(name) {
 			return jQuery('head meta[name=' + name + ']');
 		};
 
-		asyncTest('processMeta() create meta tag', function() {
-
-			expect(3);
+		test('processMeta() create meta tag', assert => {
+			const done = assert.async();
+			assert.expect(3);
 
 			jQuery('meta').remove();
-			equal(metaByName("m1").length, 0, "There must be no meta tag before the contribution.");
+			assert.equal(metaByName("m1").length, 0, "There must be no meta tag before the contribution.");
 			
 			var attrs = {
 				u: 'data/ajax/metaId.xml',
 				sh: [
 					function() {
-						start();
-						equal(metaByName("m1").length, 1, "There must be one meta tag after the contribution.");
-						equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+						done();
+						assert.equal(metaByName("m1").length, 1, "There must be one meta tag after the contribution.");
+						assert.equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
 					}
 				]
 			};
-			execute(attrs);
+			execute(attrs, assert, done);
 		});
 		
-		asyncTest('processMeta() change meta tag', function() {
-
-			expect(3);
+		test('processMeta() change meta tag', assert => {
+			const done = assert.async();
+			assert.expect(3);
 
 			jQuery('meta').remove();
 			jQuery('head').append('<meta name="m1" content="c1_old" />');
-			equal(metaByName("m1").length, 1, "There must be one old meta tag before the contribution.");
+			assert.equal(metaByName("m1").length, 1, "There must be one old meta tag before the contribution.");
 			
 			var attrs = {
 				u: 'data/ajax/metaId.xml',
 				sh: [
 					function() {
-						start();
-						equal(metaByName("m1").length, 1, "There must be one meta tag after the contribution.");
-						equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+						done();
+						assert.equal(metaByName("m1").length, 1, "There must be one meta tag after the contribution.");
+						assert.equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
 					}
 				]
 			};
-			execute(attrs);
+			execute(attrs, assert, done);
 		});
 
-		asyncTest('processMeta() add meta tag', function() {
-
-			expect(5);
+		test('processMeta() add meta tag', assert => {
+			const done = assert.async();
+			assert.expect(5);
 
 			jQuery('meta').remove();
 			jQuery('head').append('<meta name="m2" content="c2" />');
-			equal(metaByName("m2").length, 1, "There must be one old meta tag before the contribution.");
+			assert.equal(metaByName("m2").length, 1, "There must be one old meta tag before the contribution.");
 			
 			var attrs = {
 				u: 'data/ajax/metaId.xml',
 				sh: [
 					function() {
-						start();
-						equal(metaByName("m2").length, 1, "There must be one old meta tag after the contribution.");
-						equal(metaByName("m2").attr("content"), "c2", "The old meta tag must still have the old content.");
-						equal(metaByName("m1").length, 1, "There must be one new meta tag after the contribution.");
-						equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+						done();
+						assert.equal(metaByName("m2").length, 1, "There must be one old meta tag after the contribution.");
+						assert.equal(metaByName("m2").attr("content"), "c2", "The old meta tag must still have the old content.");
+						assert.equal(metaByName("m1").length, 1, "There must be one new meta tag after the contribution.");
+						assert.equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
 					}
 				]
 			};
-			execute(attrs);
+			execute(attrs, assert, done);
 		});
 		
-		asyncTest('no ajax send on component placeholder', function() {
-
-			expect(1);
+		test('no ajax send on component placeholder', assert => {
+			const done = assert.async();
+			assert.expect(1);
 
 			var attrs = {
 				u: 'data/ajax/componentPlaceholderId.xml',
 				c: 'componentPlaceholderId',
 				bsh: [
 					function() {
-						ok(false, 'should not be sent');
+						assert.ok(false, 'should not be sent');
 					}
 				],
 				dh: [
 					function() {
-						start();
-						ok('Done handler should be called');
+						done();
+						assert.ok('Done handler should be called');
 					}
 				]
 			};
-			execute(attrs);
+			execute(attrs, assert, done);
 		});
 	}
 });

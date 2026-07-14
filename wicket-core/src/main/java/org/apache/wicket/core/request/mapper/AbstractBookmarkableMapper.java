@@ -789,7 +789,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			String optionalPlaceholder = getOptionalPlaceholder(mountSegments[i]);
 			if (placeholder != null)
 			{
-				if (parameters.getNamedKeys().contains(placeholder))
+				if (parameters.contains(placeholder))
 				{
 					url.getSegments().set(i - dropped, parameters.get(placeholder).toString());
 					parameters.remove(placeholder);
@@ -802,7 +802,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			}
 			else if (optionalPlaceholder != null)
 			{
-				if (parameters.getNamedKeys().contains(optionalPlaceholder))
+				if (parameters.contains(optionalPlaceholder))
 				{
 					url.getSegments().set(i - dropped, parameters.get(optionalPlaceholder).toString(""));
 					parameters.remove(optionalPlaceholder);

@@ -18,7 +18,11 @@ package org.apache.wicket.examples.upload;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.markup.html.form.upload.resource.FileUploadResourceReference;
+import org.apache.wicket.markup.html.form.upload.resource.FolderUploadsFileManager;
+import org.apache.wicket.markup.html.form.upload.resource.IUploadsFileManager;
 import org.apache.wicket.util.file.Folder;
+import org.apache.wicket.util.lang.Bytes;
 
 
 /**
@@ -29,6 +33,8 @@ import org.apache.wicket.util.file.Folder;
 public class UploadApplication extends WicketExampleApplication
 {
 	private Folder uploadFolder = null;
+
+	private IUploadsFileManager uploadsFileManager;
 
 	@Override
 	public Class<? extends Page> getHomePage()
@@ -55,9 +61,22 @@ public class UploadApplication extends WicketExampleApplication
 		// Ensure folder exists
 		uploadFolder.mkdirs();
 
+		uploadsFileManager = new FolderUploadsFileManager(uploadFolder);
+
+		mountResource("/uploads", FileUploadResourceReference.createNewInstance(uploadsFileManager));
+
 		mountPage("/multi", MultiUploadPage.class);
 		mountPage("/single", UploadPage.class);
+		mountPage("/uploadToResource", UploadToResourcePage.class);
 
 		getApplicationSettings().setUploadProgressUpdatesEnabled(true);
+	}
+
+	public IUploadsFileManager getUploadsFileManager() {
+		return uploadsFileManager;
+	}
+
+	public static UploadApplication getInstance() {
+		return (UploadApplication)get();
 	}
 }

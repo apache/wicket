@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -52,14 +53,17 @@ import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * A helper class for testing validation and submission of <code>FormComponent</code>s.
- * 
+ *
  * @author Ingram Chen
  * @author Frank Bille (frankbille)
  * @since 1.2.6
  */
 public class FormTester
 {
-	/**
+	private static final String NO_FORM_FOR_PATH = "No Form componet found for path '%s'. Check if path value is correct and "
+	        + "if form component is visible and active.";
+
+    /**
 	 * An auto incrementing index used as a suffix for MultiFileUploadField's inputName
 	 */
 	private int multiFileUploadIndex = 0;
@@ -380,9 +384,9 @@ public class FormTester
 	protected FormTester(final String path, final Form<?> workingForm,
 		final BaseWicketTester wicketTester, final boolean fillBlankString)
 	{
-		this.path = path;
-		this.workingForm = workingForm;
-		tester = wicketTester;
+		this.workingForm = Objects.requireNonNull(workingForm, String.format(NO_FORM_FOR_PATH, path));
+		this.tester = wicketTester;
+	    this.path = path;
 
 		// fill blank String for Text Component.
 		workingForm.visitFormComponents(new IVisitor<FormComponent<?>, Void>()

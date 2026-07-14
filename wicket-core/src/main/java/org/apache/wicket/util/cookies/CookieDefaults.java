@@ -28,6 +28,29 @@ public class CookieDefaults implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
+	public enum SameSite
+	{
+		/**
+		 * Cookies will be sent in all contexts, i.e. in responses to both
+		 * first-party and cross-site requests. If SameSite=None is set,
+		 * the cookie Secure attribute must also be set (or the cookie will be blocked).
+		 */
+		None,
+
+		/**
+		 * Cookies will only be sent in a first-party context and not be sent
+		 * along with requests initiated by third party websites.
+		 */
+		Strict,
+
+		/**
+		 * Cookies are not sent on normal cross-site subrequests (for example to load
+		 * images or frames into a third party site), but are sent when a user is
+		 * navigating to the origin site (i.e., when following a link).
+		 */
+		Lax
+	}
+
 	/** Max age that the component will be persisted in seconds. */
 	private int maxAge = 3600 * 24 * 30; // 30 days
 

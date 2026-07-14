@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -90,6 +91,27 @@ class AjaxEventBehaviorTest extends WicketTestCase
 		});
 	}
 
+	/**
+	 * Tests execution of the 'load' event
+	 * https://issues.apache.org/jira/browse/WICKET-7055
+	 */
+	@Test
+	void executeLoadEvent()
+	{
+		AtomicInteger counter = new AtomicInteger(0);
+		LoadEventTestPage page = new LoadEventTestPage(counter);
+		tester.startPage(page);
+
+		assertEquals(0, counter.get());
+
+		// execute the first event
+		tester.executeAjaxEvent("comp", "load");
+		assertEquals(1, counter.get());
+		String responseAsString = tester.getLastResponseAsString();
+		System.err.println(responseAsString);
+		assertTrue(responseAsString.contains("function(){Wicket.Ajax.ajax({\"u\":\"./page?0-1.0-comp\",\"c\":\"comp1\",\"e\":\"load\"});"));
+	}
+
 	private static class EventNamesBehavior extends AjaxEventBehavior
 	{
 		/**
@@ -112,15 +134,10 @@ class AjaxEventBehaviorTest extends WicketTestCase
 	/**
 	 * Test page for #executeSecondEvent()
 	 */
-	private static class SecondEventTestPage extends WebPage
-		implements
-			IMarkupResourceStreamProvider
+	private static class SecondEventTestPage extends TestPage
 	{
 		private SecondEventTestPage(final AtomicInteger counter)
 		{
-			WebComponent comp = new WebComponent("comp");
-			add(comp);
-
 			// register a behavior that listens on two events
 			comp.add(new AjaxEventBehavior("eventOne eventTwo")
 			{
@@ -131,13 +148,49 @@ class AjaxEventBehaviorTest extends WicketTestCase
 				}
 			});
 		}
+	}
+
+	/**
+	 * Test page for #executeLoadEvent()
+	 */
+	private static class LoadEventTestPage extends TestPage
+	{
+		private LoadEventTestPage(final AtomicInteger counter)
+		{
+			super();
+
+			// register a behavior that listens on two events
+			comp.add(new AjaxEventBehavior("load")
+			{
+				@Override
+				protected void onEvent(AjaxRequestTarget target)
+				{
+					counter.incrementAndGet();
+					target.add(getComponent());
+				}
+			});
+		}
+	}
+
+	private static class TestPage extends WebPage
+			implements
+			IMarkupResourceStreamProvider
+	{
+		protected final WebComponent comp;
+
+		private TestPage()
+		{
+			comp = new WebComponent("comp");
+			comp.setOutputMarkupId(true);
+			add(comp);
+		}
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class<?> containerClass)
+													   Class<?> containerClass)
 		{
 			return new StringResourceStream(
-				"<html><body><span wicket:id='comp'></span></body></html>");
+					"<html><body><span wicket:id='comp'></span></body></html>");
 		}
 	}
 }

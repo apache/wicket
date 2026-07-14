@@ -141,4 +141,20 @@ module org.apache.wicket.core {
     exports org.apache.wicket.util.tester;
     exports org.apache.wicket.validation;
     exports org.apache.wicket.validation.validator;
+
+    //opening packages to allow resources access
+    opens org.apache.wicket;
+    opens org.apache.wicket.mock;
+    opens org.apache.wicket.ajax;
+    opens org.apache.wicket.ajax.res.js;
+    opens org.apache.wicket.resource.jquery;
+    opens org.apache.wicket.markup.html.panel;
+    opens org.apache.wicket.markup.html.link;
+    opens org.apache.wicket.markup.html.pages;
+    opens org.apache.wicket.markup.html.debug;
+    opens org.apache.wicket.markup.html.form;
+    opens org.apache.wicket.markup.html.form.validation;
+    opens org.apache.wicket.markup.html.form.upload;
+    opens org.apache.wicket.markup.html.form.upload.resource;
+    opens org.apache.wicket.markup.html.navigation.paging;
 }

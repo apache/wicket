@@ -7,7 +7,7 @@ However Wicket never provided a freely available documentation and even if you c
 That's quite an issue because many other popular frameworks (like Spring, Hibernate or Struts) offer a vast and very good documentation which substantially contributed to their success.
 
 This document is not intended to be a complete reference for Wicket but it simply aims to be a straightforward introduction to the framework that should significantly reduce its learning curve. What you will find here reflects my experience with Wicket and it's strictly focused on the framework.
-The various Wicket-related topics are gradually introduced using pragmatic examples of code that you can find in  https://github.com/bitstorm/Wicket-tutorial-examples[the according repository on Github.] 
+The various Wicket-related topics are gradually introduced using pragmatic examples of code that you can find in  https://github.com/bitstorm/Wicket-tutorial-examples[the according repository on Github.]
 However remember that Wicket is a vast and powerful tool, so you should feel confident with the topics exposed in this document before starting to code your real applications!
 
 For those who need further documentation on Wicket, there are  http://wicket.apache.org/learn/books/[many good books] available for this framework.
@@ -30,7 +30,7 @@ Editors: +
 *PS*: this guide is based on Wicket 9. However if you are using an older version you should find this guide useful as well, but it's likely that the code and the snippets won't work with your version. +
 *PPS*: although we try to do our best working on this guide, this document is a work in progress and may contain errors and/or omissions. That's why any feedback of any kind is REALLY appreciated!
 
-Project started by 
+Project started by
 
-image::../img/comsysto-logo.png[link="http://comsysto.com/"]
+image::./img/comsysto-logo.png[link="http://comsysto.com/"]
 

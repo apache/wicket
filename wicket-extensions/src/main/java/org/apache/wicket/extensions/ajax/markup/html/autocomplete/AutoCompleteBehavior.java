@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 import java.util.Iterator;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
@@ -84,6 +85,13 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 		super(settings);
 
 		this.renderer = Args.notNull(renderer, "renderer");
+	}
+
+	@Override
+	protected void onBind() {
+		super.onBind();
+
+		getComponent().add(new AttributeModifier("aria-autocomplete", "list"));
 	}
 
 	@Override

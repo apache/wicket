@@ -27,4 +27,8 @@ module org.apache.wicket.auth.roles {
     exports org.apache.wicket.authroles.authorization.strategies.role;
     exports org.apache.wicket.authroles.authorization.strategies.role.annotations;
     exports org.apache.wicket.authroles.authorization.strategies.role.metadata;
+
+    //opening packages to allow resources access
+    opens org.apache.wicket.authroles.authentication.pages;
+    opens org.apache.wicket.authroles.authentication.panel;
 }

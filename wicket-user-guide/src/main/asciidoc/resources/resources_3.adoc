@@ -5,17 +5,17 @@ With HTML we use to include static resources in our pages using tags like <scrip
 
 To solve this problem Wicket allows us to place static resource files into component package (like we do with markup and properties files) and load them from component code.
 
-These kinds of resources are called package resources (a CSS and a JavaScript file in this screenshot):  
+These kinds of resources are called package resources (a CSS and a JavaScript file in this screenshot):
 
-image::../img/package-resources.png[]
+image::./img/package-resources.png[]
 
 With package resources custom components become independent and self-contained and client code can use them without worrying about their dependencies.
 
-To load package resources Wicket provides class _org.apache.wicket.request.resource.PackageResourceReference_. 
+To load package resources Wicket provides class _org.apache.wicket.request.resource.PackageResourceReference_.
 
-To identify a package resource we need to specify a class inside the target package and the name of the desired resource (most of the times this will be a file name). 
+To identify a package resource we need to specify a class inside the target package and the name of the desired resource (most of the times this will be a file name).
 
-In the following example taken from project ImageAsPackageRes, CustomPanel loads a picture file available as package resource and it displays it in a <img> tag using the built-in component _org.apache.wicket.markup.html.image.Image_: 
+In the following example taken from project ImageAsPackageRes, CustomPanel loads a picture file available as package resource and it displays it in a <img> tag using the built-in component _org.apache.wicket.markup.html.image.Image_:
 
 *HTML:*
 [source,html]
@@ -37,7 +37,7 @@ public class CustomPanel extends Panel {
 
 	public CustomPanel(String id) {
 		super(id);
-		PackageResourceReference resourceReference = 
+		PackageResourceReference resourceReference =
 	            new PackageResourceReference(getClass(), "calendar.jpg");
 		add(new Image("packageResPicture", resourceReference));
 	}
@@ -52,17 +52,17 @@ In our example the URL for our picture file calendar.jpg is the following:
 
 _./wicket/resource/org.wicketTutorial.CustomPanel/calendar-ver-1297887542000.jpg_
 
-The first part of the URL is the relative path to the application root. In our example our page is already at the application's root so we have only a single-dotted segment. The next two segments, wicket and resource, are respectively the namespace and the identifier for resources seen in <<urls.adoc#_generating_structured_and_clear_urls,paragraph 10.6.4>>. 
+The first part of the URL is the relative path to the application root. In our example our page is already at the application's root so we have only a single-dotted segment. The next two segments, wicket and resource, are respectively the namespace and the identifier for resources seen in <<urls.adoc#_generating_structured_and_clear_urls,paragraph 10.6.4>>.
 
 The fourth segment is the fully qualified name of the class used to locate the resource and it is the scope of the package resource. In the last segment of the URL we can find the name of the resource (the file name).
 
-As you can see Wicket has automatically appended to the file name a version identifier (ver-1297887542000). When Wicket runs in DEVELOPMENT mode this identifier contains the timestamp in millisecond indicating the last time the resource file was modified. This can be useful when we are developing our application and resource files are frequently modified. Appending the timestamp to the original name we are sure that our browser will use always the last version of the file and not an old, out of date, cached version. 
+As you can see Wicket has automatically appended to the file name a version identifier (ver-1297887542000). When Wicket runs in DEVELOPMENT mode this identifier contains the timestamp in millisecond indicating the last time the resource file was modified. This can be useful when we are developing our application and resource files are frequently modified. Appending the timestamp to the original name we are sure that our browser will use always the last version of the file and not an old, out of date, cached version.
 
-When instead Wicket is running in DEPLOYMENT mode, the version identifier will contain the MD5 digest of the file instead of the timestamp. The digest is computed only the first time the resource is requested. This perfectly makes sense as static resources don't change so often when our application runs into production environment and when this appends the application is redeployed. 
+When instead Wicket is running in DEPLOYMENT mode, the version identifier will contain the MD5 digest of the file instead of the timestamp. The digest is computed only the first time the resource is requested. This perfectly makes sense as static resources don't change so often when our application runs into production environment and when this appends the application is redeployed.
 
 NOTE: Package resources can be localized following the same rules seen for resource bundles and markup files:
 
-image::../img/package-resource-localization.png[]
+image::./img/package-resource-localization.png[]
 
 In the example illustrated in the picture above, if we try to retrieve package resource calendar.jpg when the current locale is set to French, the actual file returned will be calendar_fr.jpg.
 
@@ -82,8 +82,8 @@ Since Wicket 7.0.0 the build-in component _org.apache.wicket.markup.html.image.I
 [source,java]
 ----
 ...
-		Image image = new Image("packageResPicture", 
-			new PackageResourceReference(getClass(),"small.jpg"), 
+		Image image = new Image("packageResPicture",
+			new PackageResourceReference(getClass(),"small.jpg"),
 			new PackageResourceReference(getClass(), "large.jpg"),
 			new PackageResourceReference(getClass(), "medium.jpg"),
 			new PackageResourceReference(getClass(), "small.jpg"));
@@ -117,7 +117,7 @@ The component _org.apache.wicket.markup.html.image.Picture_ is used to provide a
 		Source big = new Source("big", new PackageResourceReference(getClass(), "big.jpg"), new PackageResourceReference(getClass(), "big-hd.jpg");
 		big.setXValues("1x","2x");
 		big.setMedia("(min-width: 40em)");
-		picture.add(big);	
+		picture.add(big);
 
 		Source small = new Source("small", new PackageResourceReference(getClass(), "small.jpg"), new PackageResourceReference(getClass(), "small-hd.jpg");
 		small.setXValues("1x","2x");

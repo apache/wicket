@@ -16,12 +16,11 @@
  */
 package org.apache.wicket.core.util.string;
 
-import org.apache.wicket.core.util.string.JavaScriptStripper;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link JavaScriptStripper}
@@ -87,9 +86,15 @@ class JavaScriptStripperTest
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
 		String expected = " attr:  \n /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/ after regex";
 		assertEquals(expected, after);
-		System.out.println(after);
 	}
 
+	@Test
+    void regexpDoubleSlash()
+    {
+	    String before = "return/[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/gi.test(t);}}";
+	    String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
+	    assertEquals(before, after);
+    }
 	/**	 */
 	@Test
 	void WICKET1806()

@@ -29,5 +29,17 @@ alert(document.getElementById("script1").innerHTML);
 /*]]>*/</script>
 
 <script type="text/javascript">console.log('Nice')</script>
+
+<script type="module">console.log('module type')</script>
+
+<script type="importmap">
+  {
+    "imports": {
+      "square": "./module/shapes/square.js",
+      "circle": "https://example.com/shapes/circle.js"
+    }
+  }
+</script>
+
 </body>
 </html>

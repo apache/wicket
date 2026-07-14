@@ -16,46 +16,44 @@
  */
 
 /*global ok: true, start: true, test: true, equal: true, deepEqual: true,
- QUnit: true, module: true, expect: true */
+ QUnit: true, expect: true */
 
 jQuery(document).ready(function() {
 	"use strict";
 
+	const { module, test } = QUnit;
+
 	module("encode");
 
-	test("Wicket.Form.encode ", function() {
-		expect(2);
+	test("Wicket.Form.encode ", assert => {
+		assert.expect(2);
 
 		var textInputValue = jQuery('#textInputId').val();
 		var encodedASCII = Wicket.Form.encode(textInputValue);
-		equal( encodedASCII, 'textValue', "Wicket.Form.encode() shouldn't change ASCII text'" );
+		assert.equal( encodedASCII, 'textValue', "Wicket.Form.encode() shouldn't change ASCII text'" );
 
 		var textInputUTFValue = jQuery('#textInputUTFId').val();
 		var encodedUTF = Wicket.Form.encode(textInputUTFValue);
 		// the expected value is the encoded version of 'нещо на български' (translation of 'something in Bulgarian')
-		equal( encodedUTF, '%D0%BD%D0%B5%D1%89%D0%BE%20%D0%BD%D0%B0%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8', "Wicket.Form.encode() should encode UTF text'" );
+		assert.equal( encodedUTF, '%D0%BD%D0%B5%D1%89%D0%BE%20%D0%BD%D0%B0%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8', "Wicket.Form.encode() should encode UTF text'" );
 	});
-
-	module('serializeSelect');
-
-	test('Wicket.Form.serializeSelect', function() {
-		expect(2);
+	
+	test('Wicket.Form.serializeSelect', assert => {
+		assert.expect(2);
 
 		var select = Wicket.$('selectId');
 		var serializedSelect = Wicket.Form.serializeSelect(select);
 		serializedSelect = jQuery.param(serializedSelect, true);
-		equal(serializedSelect, 'select=0', 'Wicket.Form.serializeSelect should be able to serialize non-multiple select!');
+		assert.equal(serializedSelect, 'select=0', 'Wicket.Form.serializeSelect should be able to serialize non-multiple select!');
 
 		var multipleSelect = Wicket.$('multipleSelectId');
 		var serializedMultipleSelect = Wicket.Form.serializeSelect(multipleSelect);
 		serializedMultipleSelect = jQuery.param(serializedMultipleSelect, true);
-		equal(serializedMultipleSelect, 'multipleSelect=0&multipleSelect=2', 'Wicket.Form.serializeSelect should be able to serialize multiple select!');
+		assert.equal(serializedMultipleSelect, 'multipleSelect=0&multipleSelect=2', 'Wicket.Form.serializeSelect should be able to serialize multiple select!');
 	});
 
-	module('serializeInput');
-
-	test('Wicket.Form.serializeInput - input element', function() {
-		expect(1);
+	test('Wicket.Form.serializeInput - input element', assert => {
+		assert.expect(1);
 
 		var actual = [];
 		jQuery('#testForm input').each(function() {
@@ -76,12 +74,12 @@ jQuery(document).ready(function() {
 			{ name: "numberInput",    value: "16"                 },
 			{ name: "colorInput",     value: "#123456"            }
 		];
-		deepEqual(actual, expected);
+		assert.deepEqual(actual, expected);
 	});
 
 
-	test('Wicket.Form.serializeInput - textarea element', function() {
-		expect(1);
+	test('Wicket.Form.serializeInput - textarea element', assert => {
+		assert.expect(1);
 
 		var actual = [];
 		jQuery('#testForm textarea').each(function() {
@@ -95,17 +93,15 @@ jQuery(document).ready(function() {
 				value: "some text"
 			}
 		];
-		deepEqual(actual, expected);
+		assert.deepEqual(actual, expected);
 	});
 
-	module('Wicket.Form.serializeElement');
-
-	test("Wicket.Form.serializeElement should not serialize elements in Wicket.Form.excludeFromAjaxSerialization", function() {
+	test("Wicket.Form.serializeElement should not serialize elements in Wicket.Form.excludeFromAjaxSerialization", assert => {
 		Wicket.Form.excludeFromAjaxSerialization = {
 			textInputUTFId: "true"
 		};
 
-		expect(1);
+		assert.expect(1);
 
 		var actual = [];
 		jQuery('input, textarea, select', jQuery('#testForm')).each(function() {
@@ -129,13 +125,13 @@ jQuery(document).ready(function() {
 			{ name: "select",         value: "0"                  },
 			{ name: "textArea",       value: "some text"          }
 		];
-		deepEqual(actual, expected);
+		assert.deepEqual(actual, expected);
 
 		Wicket.Form.excludeFromAjaxSerialization = null;
 	});
 
-	test("Wicket.Form.serializeElement should serialize the HTMLFormElement's which a children of a non-HTMLFormElement", function() {
-		expect(1);
+	test("Wicket.Form.serializeElement should serialize the HTMLFormElement's which a children of a non-HTMLFormElement", assert => {
+		assert.expect(1);
 
 		var actual = Wicket.Form.serializeElement('nonHtmlFormElement', true);
 
@@ -156,21 +152,19 @@ jQuery(document).ready(function() {
 			{ name: "select",         value: "0"                  },
 			{ name: "textArea",       value: "some text"          }
 		];
-		deepEqual(actual, expected);
+		assert.deepEqual(actual, expected);
 	});
 
-	test("Wicket.Form.serializeElement should serialize the HTMLFormElement's which a children of a non-HTMLFormElement", function() {
-		expect(1);
+	test("Wicket.Form.serializeElement should serialize the HTMLFormElement's which a children of a non-HTMLFormElement", assert => {
+		assert.expect(1);
 
 		var actual = Wicket.Form.serializeElement('nonHtmlFormElement', false);
 
 		var expected = [];
-		deepEqual(actual, expected);
+		assert.deepEqual(actual, expected);
 	});
 
-	module('Wicket.Form.serializeForm');
-
-	test('Wicket.Form.serialize - form element WITHOUT searching for the parent form', function() {
+	test('Wicket.Form.serialize - form element WITHOUT searching for the parent form', assert => {
 
 		var dontTryToFindRootForm = true,
 			queryString = '';
@@ -180,10 +174,10 @@ jQuery(document).ready(function() {
 		});
 
 		queryString = jQuery.param(queryString, true);
-		equal(queryString, 'urlInput=http%3A%2F%2Fexample.com', 'Wicket.Form.serialize should not serialize the whole form when an element is passed and the parent form should not be searched');
+		assert.equal(queryString, 'urlInput=http%3A%2F%2Fexample.com', 'Wicket.Form.serialize should not serialize the whole form when an element is passed and the parent form should not be searched');
 	});
 
-	test('Wicket.Form.serialize - form element WITH searching for the parent form', function() {
+	test('Wicket.Form.serialize - form element WITH searching for the parent form', assert => {
 
 		var dontTryToFindRootForm = false,
 			queryString = '';
@@ -194,11 +188,11 @@ jQuery(document).ready(function() {
 
 		queryString = jQuery.param(queryString, true);
 		var space = jQuery.fn.jquery.indexOf("3") === 0 ? "%20" : "+";
-		equal(queryString, 'textInput=textValue&textUTFInput=%D0%BD%D0%B5%D1%89%D0%BE'+space+'%D0%BD%D0%B0'+space+'%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8&checkBoxInput1=cbValue1&checkBoxInput3=cbValue3&radioInput=radioValue1&emailInput=m%40g.com&urlInput=http%3A%2F%2Fexample.com&searchInput=wicket&rangeInput=67&numberInput=16&colorInput=%23123456&multipleSelect=0&multipleSelect=2&select=0&textArea=some'+space+'text', 'Wicket.Form.serialize should serialize the whole form when an element is passed and the parent form should be searched');
+		assert.equal(queryString, 'textInput=textValue&textUTFInput=%D0%BD%D0%B5%D1%89%D0%BE'+space+'%D0%BD%D0%B0'+space+'%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8&checkBoxInput1=cbValue1&checkBoxInput3=cbValue3&radioInput=radioValue1&emailInput=m%40g.com&urlInput=http%3A%2F%2Fexample.com&searchInput=wicket&rangeInput=67&numberInput=16&colorInput=%23123456&multipleSelect=0&multipleSelect=2&select=0&textArea=some'+space+'text', 'Wicket.Form.serialize should serialize the whole form when an element is passed and the parent form should be searched');
 	});
 
 
-	test('Wicket.Form.serialize - form element WITH searching for the parent form', function() {
+	test('Wicket.Form.serialize - form element WITH searching for the parent form', assert => {
 
 		var dontTryToFindRootForm = true,
 			queryString = '';
@@ -209,12 +203,12 @@ jQuery(document).ready(function() {
 
 		queryString = jQuery.param(queryString, true);
 		var space = jQuery.fn.jquery.indexOf("3") === 0 ? "%20" : "+";
-		equal(queryString, 'textInput=textValue&textUTFInput=%D0%BD%D0%B5%D1%89%D0%BE'+space+'%D0%BD%D0%B0'+space+'%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8&checkBoxInput1=cbValue1&checkBoxInput3=cbValue3&radioInput=radioValue1&emailInput=m%40g.com&urlInput=http%3A%2F%2Fexample.com&searchInput=wicket&rangeInput=67&numberInput=16&colorInput=%23123456&multipleSelect=0&multipleSelect=2&select=0&textArea=some'+space+'text', 'Wicket.Form.serialize should serialize the whole form when a the form itself is passed');
+		assert.equal(queryString, 'textInput=textValue&textUTFInput=%D0%BD%D0%B5%D1%89%D0%BE'+space+'%D0%BD%D0%B0'+space+'%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8&checkBoxInput1=cbValue1&checkBoxInput3=cbValue3&radioInput=radioValue1&emailInput=m%40g.com&urlInput=http%3A%2F%2Fexample.com&searchInput=wicket&rangeInput=67&numberInput=16&colorInput=%23123456&multipleSelect=0&multipleSelect=2&select=0&textArea=some'+space+'text', 'Wicket.Form.serialize should serialize the whole form when a the form itself is passed');
 	});
 
-	test('Wicket.Form.serializeForm - serialize nested form (div element)', function() {
+	test('Wicket.Form.serializeForm - serialize nested form (div element)', assert => {
 
-		expect(1);
+		assert.expect(1);
 
 		var $nestedForm = jQuery(
 			"<form>" +
@@ -262,7 +256,6 @@ jQuery(document).ready(function() {
 				"value": "textareaValue"
 			}
 		];
-		deepEqual(actual, expected, "Nested form successfully serialized");
+		assert.deepEqual(actual, expected, "Nested form successfully serialized");
 	});
-
 });

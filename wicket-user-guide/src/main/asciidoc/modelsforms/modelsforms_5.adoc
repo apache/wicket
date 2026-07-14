@@ -23,7 +23,7 @@ form.add(new DropDownChoice<String>("fruits", new Model(), fruits));
 
 Screenshot of generated page:
 
-image::../img/dropdown-choice.png[]
+image::./img/dropdown-choice.png[]
 
 In addition to the component id, in order to build a DropDownChoice we need to provide to its constructor two further parameters:
 

@@ -54,7 +54,7 @@ Java code:
 ----
 PageParameters pageParameters = new PageParameters();
 pageParameters.add("foo", "foo");
-				
+
 setResponsePage(MountedPageWithPlaceholder.class, pageParameters)
 ----
 
@@ -125,7 +125,7 @@ Interface _org.apache.wicket.request.mapper.IMapperContext_ is used by request m
 * Namespace: it's the first URL segment of non-mounted pages. By default its value is wicket.
 * Identifier for non-bookmarkable URLs: it's the segment that identifies non bookmarkable pages. By default its value is page.
 * Identifier for bookmarkable URLs: it's the segment that identifies bookmarkable pages. By default its value is bookmarkable (as we have seen before in <<urls.adoc#_pageparameters,paragraph 10.1.1>>).
-* Identifier for resources: it's the segment that identifies Wicket resources. Its default value is resources. The topic of resource management will be covered in 
+* Identifier for resources: it's the segment that identifies Wicket resources. Its default value is resources. The topic of resource management will be covered in
 <<_resource_management_with_wicket,chapter 16>>.
 
 IMapperContext provides a getter method for any segment listed above. By default Wicket uses class _org.apache.wicket.DefaultMapperContext_ as mapper context.
@@ -185,11 +185,11 @@ add(new Link<Void>("mountedPage") {
 
 	@Override
 	public void onClick() {
-		
+
 		PageParameters pageParameters = new PageParameters();
 		pageParameters.add("foo", "foo");
 		pageParameters.add("bar", "bar");
-			
+
 		setResponsePage(MountedPage.class, pageParameters);
 	}
 });
@@ -208,7 +208,7 @@ Sometimes URLs are a double–edged sword for our site because they can expose t
 
 To avoid this kind of security threat we can use the _CryptoMapper_ request mapper which wraps an existing mapper and encrypts the original URL producing a single encrypted segment:
 
-image::../img/url-encrypted.png[]
+image::./img/url-encrypted.png[]
 
 Typically, _CryptoMapper_ is registered into a Wicket application as the root request mapper wrapping the default one:
 
@@ -217,13 +217,13 @@ Typically, _CryptoMapper_ is registered into a Wicket application as the root re
 @Override
 public void init() {
 	super.init();
-	setRootRequestMapper(new CryptoMapper(getRootRequestMapper(), this)); 
+	setRootRequestMapper(new CryptoMapper(getRootRequestMapper(), this));
 	//pages and resources must be mounted after we have set CryptoMapper
 	mountPage("/foo/", HomePage.class);
 ----
 
 As pointed out in the code above, pages and resources must be mounted after having set _CryptoMapper_ as root mapper, otherwise the mounted paths will not work.
 
-WARNING: By default _CryptoMapper_ encrypts page URLs with a cipher that might not be strong enough for production environment. Paragraph 
+WARNING: By default _CryptoMapper_ encrypts page URLs with a cipher that might not be strong enough for production environment. Paragraph
 <<_security_with_wicket,"Security with Wicket">> will provide a more detailed description of how Wicket encrypts page URLs and we will see how to use stronger ciphers.
 

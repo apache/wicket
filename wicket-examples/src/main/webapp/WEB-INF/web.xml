@@ -123,6 +123,15 @@
 	</filter>
 
 	<filter>
+		<filter-name>AjaxHelloBrowserOnDomReadyApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.ajaxhellowbrowserondomready.HelloBrowserOnDomReadyApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
 		<filter-name>HangmanApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
@@ -600,6 +609,13 @@
 	<filter-mapping>
 		<filter-name>AjaxHelloBrowserApplication</filter-name>
 		<url-pattern>/ajaxhellobrowser/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>AjaxHelloBrowserOnDomReadyApplication</filter-name>
+		<url-pattern>/ajaxhellobrowserondomready/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>

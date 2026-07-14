@@ -37,6 +37,7 @@ import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceStreamResource;
+import org.apache.wicket.util.cookies.CookieDefaults;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 
@@ -216,6 +217,7 @@ public class AjaxDownloadPage extends BasePage
 				target.appendJavaScript("alert('Download failed');");
 			}
 		};
+		download.setSameSite(CookieDefaults.SameSite.Strict);
 		add(download);
 
 		add(new AjaxLink<Void>("downloadReference")
@@ -374,6 +376,7 @@ public class AjaxDownloadPage extends BasePage
 				target.add(downloadingContainer);
 			}
 		};
+		download.setSameSite(CookieDefaults.SameSite.Strict);
 		add(download);
 		download.setLocation(Location.Blob);
 		text = Model.of("");

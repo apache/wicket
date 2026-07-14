@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.resolver;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.Locale;
@@ -65,5 +66,20 @@ class AutoLinkResolverTest extends WicketTestCase
 
 		assertThat(tester.getLastResponseAsString(),
 			containsString(EXISTENT_RESOURCE_LOCALE.getCountry()));
+	}
+
+	@Test
+	void testNonceIsPresentForAutoLinkLocalizedResource() {
+		PageWithAutoLinkedLocalResource instance = new PageWithAutoLinkedLocalResource();
+
+		var settings = tester.getApplication().getCspSettings();
+
+		settings.blocking().disabled();
+		tester.startPage(instance);
+		assertThat(tester.getLastResponseAsString(), not(containsString("nonce=\"")));
+
+		settings.blocking().strict();
+		tester.startPage(instance);
+		assertThat(tester.getLastResponseAsString(), containsString("nonce=\""));
 	}
 }

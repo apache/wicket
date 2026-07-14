@@ -63,7 +63,7 @@ java.lang.IllegalStateException: No WebApplicationContext found: no ContextLoade
 
 As you can see above, the Exception gets raised during the initialization of the _WicketTester_ instance even before the actual test method gets executed. Even though we have applied rather cool and simple annotation based test configuration already described and passed in perfectly well prepared ApplicationContext instance to the WicketTester instance in the constructor, somewhere down the rabbit hole someone complained that no WebApplicationContext instance could have been found which seems to be required in order to initialize the WicketTester properly.
 
-image::../img/description-of-illegalstate.jpg[]
+image::./img/description-of-illegalstate.jpg[]
 
 The problem that we run against here is due to the fact that SpringComponentInjector during its own initialization is trying to get hold of an according Spring's ApplicationContext instance that would normally be there in a runtime environment but does not find any since we are running in a test environment currently. SpringComponentInjector delegates to Spring's own WebApplicationContextUtils class to retrieve the instance of ApplicationContext out of the ServletContext which is perfectly fine for a runtime environment but is unfortunately failing in a test environment:
 
@@ -135,5 +135,5 @@ public class MyWebApplication extends WebApplication implements ApplicationConte
 
 For additional clarification of how _MyWebApplication_ now relates to both Wicket and Spring framework here is an according class diagram:
 
-image::../img/mywebapp-class-diagramm.jpg[]
+image::./img/mywebapp-class-diagramm.jpg[]
 

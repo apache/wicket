@@ -45,7 +45,7 @@ public class StartExamples
 {
 	/**
 	 * Main function, starts the jetty server.
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception
@@ -106,7 +106,7 @@ public class StartExamples
 //		sessionStore.setStoreDir(new File("./jetty-session-data"));
 //		sessionCache.setSessionDataStore(sessionStore);
 //		bb.getSessionHandler().setSessionCache(sessionCache);
-		
+
 		ServerContainer serverContainer = WebSocketServerContainerInitializer.initialize(bb);
 		serverContainer.addEndpoint(new WicketServerEndpointConfig());
 

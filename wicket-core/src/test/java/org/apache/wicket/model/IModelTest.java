@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.Serializable;
+import java.util.Objects;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.lambda.Address;
 import org.apache.wicket.model.lambda.Person;
@@ -234,4 +236,86 @@ class IModelTest
 		assertNotNull(clone);
 		assertEquals("Some Name", clone.getObject());
 	}
+
+	interface TextMatchingStatus
+	{
+		class NotSubmitted implements TextMatchingStatus {
+
+		}
+		class Queued implements TextMatchingStatus {}
+		class Analysed implements TextMatchingStatus {
+			int matchingInPercent;
+
+			@Override
+			public boolean equals(Object o) {
+				if (this == o) return true;
+				if (o == null || getClass() != o.getClass()) return false;
+				Analysed analysed = (Analysed) o;
+				return matchingInPercent == analysed.matchingInPercent;
+			}
+
+			@Override
+			public int hashCode() {
+				return Objects.hash(matchingInPercent);
+			}
+
+			public Analysed(int matchingInPercent) {
+				this.matchingInPercent = matchingInPercent;
+			}
+
+
+		}
+		class Error implements TextMatchingStatus {
+			public int errorCode;
+			public String humanReadableMessage;
+
+			public Error(int errorCode, String humanReadableMessage) {
+				this.errorCode = errorCode;
+				this.humanReadableMessage = humanReadableMessage;
+			}
+
+			@Override
+			public boolean equals(Object o) {
+				if (this == o) return true;
+				if (o == null || getClass() != o.getClass()) return false;
+				Error error = (Error) o;
+				return errorCode == error.errorCode && Objects.equals(humanReadableMessage, error.humanReadableMessage);
+			}
+
+			@Override
+			public int hashCode() {
+				return Objects.hash(errorCode, humanReadableMessage);
+			}
+		}
+	}
+
+	@Test
+	void asModelWrongClass()
+	{
+		IModel<TextMatchingStatus> statusModel = LoadableDetachableModel.of(() ->
+				new TextMatchingStatus.Error(3, "File too big"));
+		IModel<TextMatchingStatus.Queued> poly = statusModel.as(TextMatchingStatus.Queued.class);
+
+		assertNull(poly.getObject());
+	}
+
+	@Test
+	void asModelCorrectClass()
+	{
+		IModel<TextMatchingStatus> statusModel = LoadableDetachableModel.of(() ->
+				new TextMatchingStatus.Analysed(14));
+		IModel<TextMatchingStatus.Analysed> poly = statusModel.as(TextMatchingStatus.Analysed.class);
+
+		assertNotNull(poly.getObject());
+		assertEquals(new TextMatchingStatus.Analysed(14), poly.getObject());
+	}
+
+	@Test
+	void nullAs()
+	{
+		assertThrows(IllegalArgumentException.class, () -> {
+			LoadableDetachableModel.of(TextMatchingStatus.NotSubmitted::new).as(null);
+		});
+	}
+
 }

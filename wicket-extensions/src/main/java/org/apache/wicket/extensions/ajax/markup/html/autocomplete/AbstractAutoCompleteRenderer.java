@@ -107,10 +107,10 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * protected CharSequence getOnSelectJavaScript(Address address)
 	 * {
 	 * 	final StringBuilder js = new StringBuilder();
-	 * 	js.append(&quot;wicketGet('street').value ='&quot; + address.getStreet() + &quot;';&quot;);
-	 * 	js.append(&quot;wicketGet('zipcode').value ='&quot; + address.getZipCode() + &quot;';&quot;);
-	 * 	js.append(&quot;wicketGet('city').value ='&quot; + address.getCity() + &quot;';&quot;);
-	 * 	js.append(&quot;input&quot;); // &lt;-- do not use return statement here!
+	 * 	js.append(&quot;Wicket.DOM.get('street').value ='&quot; + address.getStreet() + &quot;';&quot;);
+	 * 	js.append(&quot;Wicket.DOM.get('zipcode').value ='&quot; + address.getZipCode() + &quot;';&quot;);
+	 * 	js.append(&quot;Wicket.DOM.get('city').value ='&quot; + address.getCity() + &quot;';&quot;);
+	 * 	js.append(&quot;arguments[0]&quot;); // &lt;-- do not use return statement here!
 	 * 	return js.toString();
 	 * }
 	 * </pre>

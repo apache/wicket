@@ -2,6 +2,135 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.18.0
+
+** Bug
+
+    * [WICKET-7102] - Error in LiveSessionsPage
+    * [WICKET-7104] - wicket-autocomplete.min.js minified too aggressively
+
+** New Feature
+
+    * [WICKET-7109] - Create a ready to use dropdown supporting grouping
+
+** Improvement
+
+    * [WICKET-7101] - auto-label is not automatically updated when related form component is updated.
+
+=======================================================================
+
+Release Notes - Wicket - Version 9.17.0
+
+** Bug
+
+    * [WICKET-7086] - Injecting Spring bean may cause ClassCastException
+    * [WICKET-7091] - FilePageStore throws NPE
+    * [WICKET-7096] - stylesheets referenced via automatic linking miss nonce attribute
+    * [WICKET-7097] - ServletWebResponse allows writing headers to committed HttpServletResponse
+
+** Improvement
+
+    * [WICKET-7093] - Add support for missing CSP directives
+    * [WICKET-7094] - Make all CSP schemes configurable
+    * [WICKET-7099] - Validate FormTester constructor parameter workingForm
+
+=======================================================================
+
+Release Notes - Wicket - Version 9.16.0
+
+** Bug
+
+    * [WICKET-7056] - HttpSessionStore#getAttribute called on invalidated session
+    * [WICKET-7074] - [AJAX] malformed XML is produced if an error is produced during AJAX rendering and a redirect is issued 
+    * [WICKET-7076] - JavaScriptReferenceType newly created is not serializable
+    * [WICKET-7081] - Open packages to expose resources to other modules 
+
+** Improvement
+
+    * [WICKET-7078] - CSP: inline JS in Choices and Selection of Palette
+    * [WICKET-7080] - [Events] make default events delivery machinery pluggable and roll usable annotation based one
+    * [WICKET-7082] - Easier to work with polymorphic values inside IModel
+    * [WICKET-7083] - Trigger client side validation when using SubmitLinks
+
+** Task
+
+    * [WICKET-7073] - Update JQuery to 3.7.1
+
+=======================================================================
+
+Release Notes - Wicket - Version 9.15.0
+
+** Bug
+
+    * [WICKET-7061] - When I move from 9.13.0->9.14.0, my importmaps fail to parse correctly due to presence of the CDATA wrapping.
+    * [WICKET-7065] - TextFilteredPropertyColumn violates CSP
+    * [WICKET-7067] - DefaultExceptionMapper should not set disableCaching for  WebSocketResponse
+    * [WICKET-7070] - Quick start generated app has multiple errors
+    * [WICKET-7071] - Problems when calling request.getInputStream() before executing WicketFilter
+
+** Improvement
+
+    * [WICKET-7039] - Improve Accessibility of wicket-autocomplete.js
+    * [WICKET-7063] - Convert all Application_*.properties to Application_*.utf8.properties
+    * [WICKET-7066] - Add possibility to define type-Attribute of JavascriptHeaderItem as "module"
+    * [WICKET-7068] - Current tree themes are not RTL friendly
+
+** Task
+
+    * [WICKET-7069] - assertTrue(equals()) in tests should be replaced with assertEquals
+
+=======================================================================
+
+Release Notes - Wicket - Version 9.14.0
+
+** Bug
+
+    * [WICKET-7013] - IndexOutOfBoundsException in InSessionPageStore
+    * [WICKET-7052] - Interrupting a task should not be logged as an error
+    * [WICKET-7054] - Tag <script> mus be wrapped in CDATA for 'type' values 'module' and 'importmap' 
+    * [WICKET-7055] - AjaxEventBehavior onload event unstable
+
+** New Feature
+
+    * [WICKET-7033] - add support to uploading to a resource
+
+** Improvement
+
+    * [WICKET-6979] - Cut back slightly on some String instance creation in PageInfo and friends.
+    * [WICKET-7045] - Avoid allocations in PageParameters.getNamedKeys
+    * [WICKET-7046] - Avoid allocating StringResponse when no response filters are active
+    * [WICKET-7047] - Improve initial buffer capacity for Strings.toMultilineMarkup
+    * [WICKET-7049] - Avoid allocation for empty buckets in FilteringHeaderResponse
+
+=======================================================================
+
+Release Notes - Wicket - Version 9.13.0
+
+** Bug
+
+    * [WICKET-7005] - ByteBuddy IllegalStateException: Cannot inject already loaded type
+    * [WICKET-7022] - JavaScriptStripper fails to detect regular expression correctly
+    * [WICKET-7028] - CSP header not rendered when using RedirectPolicy.NEVER_REDIRECT
+    * [WICKET-7034] - WebSocket.Closed event not fired when error occurred
+    * [WICKET-7037] - [Ajax Download] cookie used to track download complete misses the SameSite attribute
+    * [WICKET-7044] - Images in the Wicket 9.x reference guide are not displayed.
+
+** Improvement
+
+    * [WICKET-7011] - Improve usage of JUnit 5.x APIs
+    * [WICKET-7014] - Use new API for forward compatibility with CDI 4
+    * [WICKET-7016] - Support GCM-SIV for page store encryption
+    * [WICKET-7017] - ListenerRequestHandler should not hide IndexOutOfBoundsException
+    * [WICKET-7021] - Additional OSGi import fixes
+    * [WICKET-7025] - Package private methods should be proxied by ByteBuddy
+    * [WICKET-7031] - Update to JQuery 3.6.4
+    * [WICKET-7032] - Update the JS tests to use latest version of QUnit (2.x)
+    * [WICKET-7035] - fileCountMax should be added to control the amount of files being uploaded
+    * [WICKET-7041] - Reduce allocations when rendering component headers
+    * [WICKET-7042] - Improve sizing of StringResponse when writing scripts in PartialPageResponse
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.12.0
 
 ** Bug

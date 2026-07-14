@@ -16,12 +16,14 @@
  */
 
 /*global ok: true, start: true, test: true, equal: true, deepEqual: true,
- QUnit: true, module: true, expect: true, stop: true */
+ QUnit: true, expect: true, stop: true */
 
 jQuery(document).ready(function() {
 	"use strict";
 
-	module('Wicket.ChannelManager');
+	const { test } = QUnit;
+
+	QUnit.module('Wicket.ChannelManager', function() {
 
 	/**
 	 * Tests queueing channel.
@@ -29,8 +31,9 @@ jQuery(document).ready(function() {
 	 * the counter to the 'result'.
 	 * Verifies that the final result contains all values of the counter.
 	 */
-	test('queue', function () {
-
+	test('queue', assert => {
+		const done = assert.async();
+		assert.expect(1);
 		stop();
 
 		var cm		= new Wicket.ChannelManager(),
@@ -45,9 +48,8 @@ jQuery(document).ready(function() {
 						cm.done(ch);
 
 						if (j === iterations - 1) {
-							start();
-
-							equal(result, '0123456789');
+							assert.equal(result, '0123456789');
+							done();
 						}
 					}, 1);
 				};
@@ -70,11 +72,11 @@ jQuery(document).ready(function() {
 	 * - !drop! for the 5th
 	 * - 6, 7, 8 and 9
 	 */
-	test('drop', function () {
+	test('drop', assert => {
+		const done = assert.async();
+		assert.expect(1);
 
-		expect(1);
-
-		stop();
+		// stop();
 
 		var cm		= new Wicket.ChannelManager(),	// the manager
 			name	= 'name',						// the channel's name
@@ -88,9 +90,8 @@ jQuery(document).ready(function() {
 				cm.done(chq);
 
 				if (k === (number - 1)) {
-					start();
-
-					equal(result, '0!drop!6789');
+					assert.equal(result, '0!drop!6789');
+					done();
 				}
 			},
 			toExecuteQueued = function (y) {
@@ -118,9 +119,9 @@ jQuery(document).ready(function() {
 	 * Schedules one long running request and 10 normal ones after it.
 	 * All 10 normal ones should be discarded.
 	 */
-	test('active', function () {
-
-		expect(1);
+	test('active', assert => {
+		const done = assert.async();
+		assert.expect(1);
 
 		stop();
 
@@ -133,15 +134,15 @@ jQuery(document).ready(function() {
 
 				// run in a timeout to simulate long running request
 				setTimeout(function() {
-					start();
-					ok(true, "The initial request is executed!");
+					assert.ok(true, "The initial request is executed!");
 
 					// mark the channel non-busy
 					cm.done(cha);
+					done();
 				}, 100);
 			},
 			toExecute = function () {
-				ok(false, "Requests in the active channel should not be executed.");
+				assert.ok(false, "Requests in the active channel should not be executed.");
 			};
 
 		// schedule the long running callback (the active one)
@@ -150,7 +151,6 @@ jQuery(document).ready(function() {
 		// try to schedule more requests
 		// they will be disacarded because the channel is busy
 		for (; i < number; i++) {
-
 			cm.schedule(cha, toExecute);
 		}
 
@@ -159,9 +159,9 @@ jQuery(document).ready(function() {
 	/**
 	 * Asserts that the ChannelManager removes entries for done()-ed channels
 	 */
-	test('clean up', function () {
-
-		expect(11);
+	test('clean up', assert => {
+		const done = assert.async();
+		assert.expect(11);
 
 		stop();
 
@@ -178,12 +178,14 @@ jQuery(document).ready(function() {
 
 		for (; i < number; i++) {
 			cm.schedule(cha, callback);
-			ok(cm.channels[name], "A channel exists.");
+			assert.ok(cm.channels[name], "A channel exists.");
 		}
 
 		window.setTimeout(function() {
-			start();
-			equal(undefined, cm.channels[name], "The channel should not be in the manager anymore");
+			assert.equal(undefined, cm.channels[name], "The channel should not be in the manager anymore");
+			done();
 		}, 500);
+	});
+	
 	});
 });

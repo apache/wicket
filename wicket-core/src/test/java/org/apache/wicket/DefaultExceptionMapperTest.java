@@ -18,7 +18,6 @@ package org.apache.wicket;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,13 +25,14 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -53,6 +53,19 @@ class DefaultExceptionMapperTest extends WicketTestCase
 			}
 		};
 	}
+	private static class TestWebResponse extends MockWebResponse {
+		boolean disableCaching = false;
+
+		@Override
+		public final void disableCaching() {
+			super.disableCaching();
+			disableCaching = true;
+		}
+
+		public boolean isDisableCaching() {
+			return disableCaching;
+		}
+	}
 
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-4659">WICKET-4659</a>
@@ -60,10 +73,31 @@ class DefaultExceptionMapperTest extends WicketTestCase
 	@Test
 	void shouldDisableCaching()
 	{
-		WebResponse response = mock(WebResponse.class);
+		TestWebResponse response = new TestWebResponse();
 		tester.getRequestCycle().setResponse(response);
 		new DefaultExceptionMapper().map(mock(Exception.class));
-		verify(response).disableCaching();
+		Assertions.assertTrue(response.isDisableCaching());
+		tester.destroy();
+	}
+
+	private static class TestNoHeadersWebResponse extends TestWebResponse {
+		@Override
+		public boolean isHeaderSupported() {
+			return false;
+		}
+	}
+
+	/**
+	 * <a href="https://issues.apache.org/jira/browse/WICKET-4659">WICKET-7067</a>
+	 */
+	@Test
+	void shouldNotDisableCaching()
+	{
+		// this request does not support headers
+		TestNoHeadersWebResponse response = new TestNoHeadersWebResponse();
+		tester.getRequestCycle().setResponse(response);
+		new DefaultExceptionMapper().map(mock(Exception.class));
+		Assertions.assertFalse(response.isDisableCaching());
 		tester.destroy();
 	}
 

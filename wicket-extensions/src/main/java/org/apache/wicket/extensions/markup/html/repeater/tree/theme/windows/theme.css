@@ -20,6 +20,11 @@
   padding: 0px;
 }
 
+html[dir="rtl"] .tree-theme-windows div.tree-subtree {
+  margin: 0px 18px 0px 0px;
+  padding: 0px;
+}
+
 .tree-theme-windows div.tree-branch {
   margin: 0px;
   padding: 0px;
@@ -29,6 +34,11 @@
   background-image: url(tree.gif);
   background-position: -54px center;
   background-repeat: repeat-y;
+}
+
+html[dir="rtl"] .tree-theme-windows div.tree-branch-mid {
+  background-image: url(tree-rtl.gif);
+  background-position-x: calc(100% + 54px);
 }
 
 .tree-theme-windows div.tree-branch-last {
@@ -45,6 +55,12 @@
   background-repeat: no-repeat;
 }
 
+html[dir="rtl"] .tree-theme-windows .tree-junction {
+  float: right;
+  background-image: url(tree-rtl.gif);
+  background-position-x: -18px;
+}
+
 .tree-theme-windows .tree-junction-expanded {
   display: block;
   float: left;
@@ -53,6 +69,12 @@
   background-position: -18px center;
   background-repeat: no-repeat;
   text-decoration: none;
+}
+
+html[dir="rtl"] .tree-theme-windows .tree-junction-expanded {
+  float: right;
+  background-image: url(tree-rtl.gif);
+  background-position-x: -36px;
 }
 
 .tree-theme-windows .tree-junction-collapsed {
@@ -65,9 +87,20 @@
   text-decoration: none;
 }
 
+html[dir="rtl"] .tree-theme-windows .tree-junction-collapsed {
+  float: right;
+  background-image: url(tree-rtl.gif);
+  background-position-x: -54px;
+}
+
 .tree-theme-windows span.tree-content {
   display: block;
   margin-left: 18px;
+}
+
+html[dir="rtl"] .tree-theme-windows span.tree-content {
+  margin-right: 18px;
+  margin-left: initial;
 }
 
 /* tabletree */
@@ -111,6 +144,13 @@
   background-repeat: no-repeat;
 }
 
+html[dir="rtl"] .tree-theme-windows .tree-folder-closed {
+  padding-right: 18px;
+  padding-left: initial;
+  background-image: url(folder-rtl-closed.gif);
+  background-position-x: right;
+}
+
 .tree-theme-windows .tree-folder-open {
   padding-left: 18px;
   background-image: url(folder-open.gif);
@@ -118,9 +158,23 @@
   background-repeat: no-repeat;
 }
 
+html[dir="rtl"] .tree-theme-windows .tree-folder-open {
+  padding-right: 18px;
+  padding-left: initial;
+  background-image: url(folder-rtl-open.gif);
+  background-position-x: right;
+}
+
 .tree-theme-windows .tree-folder-other {
   padding-left: 18px;
   background-image: url(folder-other.gif);
   background-position: 0px 50%;
   background-repeat: no-repeat;
+}
+
+html[dir="rtl"] .tree-theme-windows .tree-folder-other {
+  padding-right: 18px;
+  padding-left: initial;
+  background-image: url(folder-rtl-other.gif);
+  background-position-x: right;
 }

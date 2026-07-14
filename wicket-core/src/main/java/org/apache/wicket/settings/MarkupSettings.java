@@ -54,7 +54,7 @@ public class MarkupSettings
 	/** Factory for creating markup parsers */
 	private MarkupFactory markupFactory;
 
-	/** if true than throw an exception if the xml declaration is missing from the markup file */
+	/** if true, then throw an exception if the xml declaration is missing from the markup file */
 	private boolean throwExceptionOnMissingXmlDeclaration = false;
 
 	/** Should HTML comments be stripped during rendering? */
@@ -64,6 +64,12 @@ public class MarkupSettings
 	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be removed from output
 	 */
 	private boolean stripWicketTags = false;
+
+	/**
+	 * If true, wicket auto-labels will always be updated (via AJAX) whenever the associated form component is.
+	 * The default is false (for backward compatibility).
+	 */
+	private boolean updateAutoLabelsTogetherWithFormComponent = false;
 
 	/**
 	 * Generates the markup ids for the components with
@@ -271,6 +277,27 @@ public class MarkupSettings
 	public MarkupSettings setMarkupIdGenerator(IMarkupIdGenerator markupIdGenerator)
 	{
 		this.markupIdGenerator = Args.notNull(markupIdGenerator, "markupIdGenerator");
+		return this;
+	}
+
+	/**
+	 * @return If true, wicket auto-labels will always be updated (via AJAX) whenever the associated form component is.
+	 * 	       The default is false (for backward compatibility).
+	 */
+	public boolean isUpdateAutoLabelsTogetherWithFormComponent()
+	{
+		return updateAutoLabelsTogetherWithFormComponent;
+	}
+
+	/**
+	 *
+	 * @param updateAutoLabelsTogetherWithFormComponent If true, wicket auto-labels will always be updated (via AJAX)
+	 *                                                  whenever the associated form component is.
+	 * @return {@code this} object for chaining
+	 */
+	public MarkupSettings setUpdateAutoLabelsTogetherWithFormComponent(boolean updateAutoLabelsTogetherWithFormComponent)
+	{
+		this.updateAutoLabelsTogetherWithFormComponent = updateAutoLabelsTogetherWithFormComponent;
 		return this;
 	}
 }

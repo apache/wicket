@@ -20,7 +20,7 @@
 <head xmlns:wicket="http://wicket.apache.org">
 <script type="text/javascript">
 /*<![CDATA[*/
-ok(true, 'Evaluation 1 must be executed!');
+Wicket.assert.ok(true, 'Evaluation 1 must be executed!');
 var suspension = Wicket.Ajax.suspendCall();
 setTimeout(function() {
 	suspension();
@@ -30,18 +30,18 @@ setTimeout(function() {
 </script>
 <script type="text/javascript">
 /*<![CDATA[*/
-ok(true, 'Evaluation 2 must be executed!');
+Wicket.assert.ok(true, 'Evaluation 2 must be executed!');
 Wicket.Ajax.suspendCall()();
 /*]]]]><![CDATA[>*/
 </script>
 <script type="text/javascript">
 /*<![CDATA[*/
-ok(true, 'Evaluation 3 must be executed!');
+Wicket.assert.ok(true, 'Evaluation 3 must be executed!');
 var suspension = Wicket.Ajax.suspendCall();
 setTimeout(function() {
 	suspension();
 }, 0);
-start();
+Wicket.testDone();
 /*]]]]><![CDATA[>*/
 </script>
 </head>

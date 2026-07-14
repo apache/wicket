@@ -145,13 +145,18 @@ public final class Task
 							Instant nextExecution = startOfPeriod.plus(frequency);
 							
 							Duration timeToNextExecution = Duration.between(Instant.now(), nextExecution);
-		                    
+
 							if (!timeToNextExecution.isNegative())
 							{
-								Thread.sleep(timeToNextExecution.toMillis());
+								try {
+									Thread.sleep(timeToNextExecution.toMillis());
+								}
+								catch (InterruptedException e) {
+									Thread.currentThread().interrupt();
+								}
 							}
-							
 						}
+						log.trace("Task '{}' stopped", name);
 					}
 					catch (Exception x)
 					{

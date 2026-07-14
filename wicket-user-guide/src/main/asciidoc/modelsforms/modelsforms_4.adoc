@@ -33,7 +33,7 @@ In the next chapter we will continue to explore Wicket forms and we will see how
 
 A form should contain some input fields (like text fields, check boxes, radio buttons, drop-down lists, text areas, etc.) to interact with users. Wicket provides an abstraction for all these kinds of elements with component org.apache.wicket.markup.html.form.FormComponent:
 
-image::../img/uml-form-component.png[]
+image::./img/uml-form-component.png[]
 
 The purpose of FormComponent is to store the corresponding user input into its model when the form is submitted. The form is responsible for mapping input values to the corresponding components, avoiding us the burden of manually synchronizing models with input fields and vice versa.
 

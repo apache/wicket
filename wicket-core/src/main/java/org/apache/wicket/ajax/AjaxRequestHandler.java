@@ -139,7 +139,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 			{
 				listenersFrozen = true;
 
-				// invoke onafterresponse event on listeners
+				// invoke onAfterRespond event on listeners
 				if (listeners != null)
 				{
 					final Map<String, Component> components = Collections
@@ -270,10 +270,22 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 		// Make sure it is not cached by a client
 		response.disableCaching();
 
+		final List<IResponseFilter> filters = Application.get()
+			.getRequestCycleSettings()
+			.getResponseFilters();
+		// WICKET-7074 we need to write to a temporary buffer, otherwise, if an exception is produced,
+		// and a redirect is done we will end up with a malformed XML
 		final StringResponse bodyResponse = new StringResponse();
 		update.writeTo(bodyResponse, encoding);
-		CharSequence filteredResponse = invokeResponseFilters(bodyResponse);
-		response.write(filteredResponse);
+		if (filters == null || filters.isEmpty())
+		{
+			response.write(bodyResponse.getBuffer());
+		}
+		else
+		{
+			CharSequence filteredResponse = invokeResponseFilters(bodyResponse, filters);
+			response.write(filteredResponse);
+		}
 	}
 
 	private boolean shouldRedirectToPage(IRequestCycle requestCycle)
@@ -299,23 +311,18 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	 * 
 	 * @param contentResponse
 	 *            the Ajax {@link Response} body
+	 * @param responseFilters
+	 *            the response filters
 	 * @return filtered response
 	 */
-	private AppendingStringBuffer invokeResponseFilters(final StringResponse contentResponse)
+	private CharSequence invokeResponseFilters(final StringResponse contentResponse,
+		final List<IResponseFilter> responseFilters)
 	{
 		AppendingStringBuffer responseBuffer = new AppendingStringBuffer(
 			contentResponse.getBuffer());
-
-		List<IResponseFilter> responseFilters = Application.get()
-			.getRequestCycleSettings()
-			.getResponseFilters();
-
-		if (responseFilters != null)
+		for (IResponseFilter filter : responseFilters)
 		{
-			for (IResponseFilter filter : responseFilters)
-			{
-				responseBuffer = filter.filter(responseBuffer);
-			}
+			responseBuffer = filter.filter(responseBuffer);
 		}
 		return responseBuffer;
 	}

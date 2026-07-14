@@ -28,7 +28,7 @@ To resolve the right handler for a given HTTP request, the _RequestCycle_ uses a
 
 The following sequence diagram recaps how a request handler is resolved by the _RequestCycle_:
 
-image::../img/request-cycle-handler.png[]
+image::./img/request-cycle-handler.png[]
 
 Developers can create additional implementations of _IRequestMapper_ and add them to their application via the _mount(IRequestMapper mapper)_ method of the _WebApplication_ class. In paragraph 10.6 we will see how Wicket uses this method to add built-in mappers for mounted pages.
 

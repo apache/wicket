@@ -20,7 +20,11 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
+<<<<<<< HEAD
 		<version>9.13.0.KMC</version>
+=======
+		<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-common-tests</artifactId>

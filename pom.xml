@@ -20,11 +20,11 @@
 	<parent>
 		<groupId>org.apache</groupId>
 		<artifactId>apache</artifactId>
-		<version>23</version>
+		<version>31</version>
 	</parent>
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
-	<version>9.13.0.KMC</version>
+	<version>9.19.0.KMC</version>
 	<packaging>pom</packaging>
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
@@ -144,24 +144,20 @@
 		<maven.compiler.target>11</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<asm.version>9.1</asm.version>
-		<aspectj.version>1.9.6</aspectj.version>
-		<assertj-core.version>3.19.0</assertj-core.version>
-		<bouncycastle.version>1.72</bouncycastle.version>
+		<asm.version>9.6</asm.version>
+		<aspectj.version>1.9.21.1</aspectj.version>
+		<assertj-core.version>3.25.3</assertj-core.version>
+		<bouncycastle.version>1.77</bouncycastle.version>
+		<byte-buddy.version>1.14.12</byte-buddy.version>
 		<cdi-unit.version>4.1.0</cdi-unit.version>
 		<cglib.version>3.3.0</cglib.version>
-		<byte-buddy.version>1.11.12</byte-buddy.version>
-		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.4</commons-collections4.version>
-		<commons-fileupload.version>1.4</commons-fileupload.version>
-		<commons-io.version>2.8.0</commons-io.version>
-		<commons-lang3.version>3.12.0</commons-lang3.version>
-		<guice.version>4.2.3</guice.version>
+		<commons-fileupload.version>1.5</commons-fileupload.version>
+		<commons-io.version>2.15.1</commons-io.version>
+		<commons-lang3.version>3.14.0</commons-lang3.version>
+		<guice.version>5.1.0</guice.version>
 		<el-impl.version>2.2.1-b05</el-impl.version>
-		<forbiddenapis.version>3.1</forbiddenapis.version>
-		<jacoco.version>0.8.7</jacoco.version>
-		<jackson.version>2.10.5</jackson.version>
-		<jakarta.annotation-api.version>1.3.5</jakarta.annotation-api.version>
+		<forbiddenapis.version>3.6</forbiddenapis.version>
 		<jakarta.el.version>3.0.3</jakarta.el.version>
 		<jakarta.el-api.version>3.0.3</jakarta.el-api.version>
 		<jakarta.enterprise.cdi-api.version>2.0.2</jakarta.enterprise.cdi-api.version>
@@ -169,48 +165,52 @@
 		<jakarta.validation-api.version>2.0.2</jakarta.validation-api.version>
 		<jakarta.websocket-api.version>1.1.2</jakarta.websocket-api.version>
 		<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
+		<jacoco.version>0.8.10</jacoco.version>
+		<jackson.version>2.14.3</jackson.version>
+		<jakarta.annotation-api.version>1.3.5</jakarta.annotation-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
-		<jetty.version>9.4.44.v20210927</jetty.version>
-		<junit.version>5.8.2</junit.version>
+		<jetty.version>9.4.54.v20240208</jetty.version>
+		<junit.version>5.10.2</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.7</logback.version>
 		<hamcrest.version>2.2</hamcrest.version>
-		<hibernate-validator.version>6.2.0.Final</hibernate-validator.version>
+		<hibernate-validator.version>6.2.5.Final</hibernate-validator.version>
 		<httpunit.version>1.7.3</httpunit.version>
-		<metrics.version>4.1.19</metrics.version>
-		<mockito.version>4.3.1</mockito.version>
-		<objenesis.version>3.2</objenesis.version>
-		<openjson.version>1.0.12</openjson.version>
-		<slf4j.version>2.0.0</slf4j.version>
-		<spring.version>5.3.18</spring.version>
-		<wagon-ssh-external.version>3.4.3</wagon-ssh-external.version>
-		<weld.version>3.1.7.Final</weld.version>
+		<metrics.version>4.2.25</metrics.version>
+		<mockito.version>5.11.0</mockito.version>
+		<objenesis.version>3.3</objenesis.version>
+		<openjson.version>1.0.13</openjson.version>
+		<slf4j.version>2.0.12</slf4j.version>
+		<spring.version>5.3.32</spring.version>
+		<wagon-ssh-external.version>3.5.3</wagon-ssh-external.version>
+		<weld.version>3.1.9.Final</weld.version>
 		<velocity-engine-core.version>2.3</velocity-engine-core.version>
 
 		<!-- Maven plugins -->
-		<build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
-		<japicmp-maven-plugin.version>0.15.5</japicmp-maven-plugin.version>
-		<maven-archetype-plugin.version>3.2.0</maven-archetype-plugin.version>
-		<maven-bundle-plugin.version>5.1.8</maven-bundle-plugin.version>
-		<maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
-		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+		<version.maven-surefire>3.2.2</version.maven-surefire>
+		<build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
+		<japicmp-maven-plugin.version>0.20.0</japicmp-maven-plugin.version>
+		<maven-archetype-plugin.version>3.2.1</maven-archetype-plugin.version>
+		<maven-bundle-plugin.version>5.1.9</maven-bundle-plugin.version>
+		<maven-clean-plugin.version>3.3.2</maven-clean-plugin.version>
+		<maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
+		<maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
 		<maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
-		<maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
-		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
-		<maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
-		<maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
-		<maven-project-info-reports-plugin.version>3.1.1</maven-project-info-reports-plugin.version>
-		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-		<maven-remote-resources-plugin.version>1.7.0</maven-remote-resources-plugin.version>
-		<maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
-		<maven-site-plugin.version>3.9.1</maven-site-plugin.version>
-		<maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-		<maven-toolchains-plugin.version>3.0.0</maven-toolchains-plugin.version>
-		<maven-war-plugin.version>3.3.1</maven-war-plugin.version>
-		<yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
+		<maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
+		<maven-gpg-plugin.version>3.2.0</maven-gpg-plugin.version>
+		<maven-install-plugin.version>3.1.1</maven-install-plugin.version>
+		<maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+		<maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
+		<maven-project-info-reports-plugin.version>3.5.0</maven-project-info-reports-plugin.version>
+		<maven-release-plugin.version>3.0.1</maven-release-plugin.version>
+		<maven-remote-resources-plugin.version>3.2.0</maven-remote-resources-plugin.version>
+		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+		<maven-site-plugin.version>4.0.0-M12</maven-site-plugin.version>
+		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+		<maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+		<maven-toolchains-plugin.version>3.1.0</maven-toolchains-plugin.version>
+		<maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+		<resources-optimizer-maven-plugin.version>2.6.3</resources-optimizer-maven-plugin.version>
 
 		<osgi.dynamicimport.package />
 		<osgi.export.package>*</osgi.export.package>
@@ -296,11 +296,6 @@
 				<version>${guice.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>commons-collections</groupId>
-				<artifactId>commons-collections</artifactId>
-				<version>${commons-collections.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>commons-fileupload</groupId>
 				<artifactId>commons-fileupload</artifactId>
 				<version>${commons-fileupload.version}</version>
@@ -354,37 +349,61 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>pom</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-auth-roles</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-bean-validation</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-cdi</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-core</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-devutils</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
@@ -395,97 +414,137 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-extensions</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-guice</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-ioc</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-jmx</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-core</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-javax</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-request</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-spring</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-util</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-velocity</artifactId>
+<<<<<<< HEAD
 				<version>9.13.0.KMC</version>
+=======
+				<version>9.19.0-SNAPSHOT</version>
+>>>>>>> c9a1656391e8ba976e618711906443ce9327a85d
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-http2-core</artifactId>
-				<version>0.24-SNAPSHOT</version>
+				<version>0.30-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-http2-jetty</artifactId>
-				<version>0.24-SNAPSHOT</version>
+				<version>0.30-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-http2-servlet4</artifactId>
-				<version>0.24-SNAPSHOT</version>
+				<version>0.30-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-http2-tomcat</artifactId>
-				<version>0.24-SNAPSHOT</version>
+				<version>0.30-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-http2-undertow</artifactId>
-				<version>0.24-SNAPSHOT</version>
+				<version>0.30-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-metrics</artifactId>
-				<version>0.25-SNAPSHOT</version>
+				<version>0.31-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 
@@ -644,7 +703,7 @@
 					<!--
 						A dependency on xerces:xmlParserAPIs pulls classes (e.g. org.xml.sax.SAXException) into this
 						module, that are already defined in module JRA "java.xml". This violation of "unique visibility"
-						causes compile errors in Eclipse (see bug 536928) and (in the future, see JDK-8215739) javac. 
+						causes compile errors in Eclipse (see bug 536928) and (in the future, see JDK-8215739) javac.
 					-->
 					<exclusion>
 						<groupId>xerces</groupId>
@@ -683,6 +742,12 @@
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
 				<version>${mockito.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring.version}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -881,28 +946,10 @@
 						<failOnUnsupportedJava>false</failOnUnsupportedJava>
 						<signatures><![CDATA[
 							@defaultMessage Specify Locale.ROOT to ensure locale insensitive conversion
-							java.lang.String#toLowerCase() 
+							java.lang.String#toLowerCase()
 							java.lang.String#toUpperCase()
 						]]></signatures>
 					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>net.alchim31.maven</groupId>
-					<artifactId>yuicompressor-maven-plugin</artifactId>
-					<version>${yuicompressor-maven-plugin.version}</version>
-					<configuration>
-						<statistics>true</statistics>
-						<jswarn>false</jswarn>
-						<suffix>.min</suffix>
-						<outputDirectory>${project.build.directory}/generated-res</outputDirectory>
-					</configuration>
-					<executions>
-						<execution>
-							<goals>
-								<goal>compress</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.felix</groupId>
@@ -936,7 +983,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${maven-compiler-plugin.version}</version>
 					<inherited>true</inherited>
 					<configuration>
 						<release>${maven.compiler.source}</release>
@@ -945,7 +991,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
-					<version>${maven-deploy-plugin.version}</version>
 					<configuration>
 						<retryFailedDeploymentCount>10</retryFailedDeploymentCount>
 					</configuration>
@@ -1007,7 +1052,7 @@
 						<dependency>
 							<groupId>com.github.ferstl</groupId>
 							<artifactId>pedantic-pom-enforcers</artifactId>
-							<version>2.0.0</version>
+							<version>2.2.0</version>
 						</dependency>
 						<dependency>
 							<groupId>javax.xml.bind</groupId>
@@ -1034,7 +1079,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-gpg-plugin</artifactId>
-					<version>${maven-gpg-plugin.version}</version>
 					<executions>
 						<execution>
 							<id>sign-artifacts</id>
@@ -1047,13 +1091,7 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-install-plugin</artifactId>
-					<version>${maven-install-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>${maven-jar-plugin.version}</version>
 					<configuration>
 						<archive>
 							<manifest>
@@ -1066,7 +1104,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>${maven-javadoc-plugin.version}</version>
 					<configuration>
 						<minmemory>128m</minmemory>
 						<maxmemory>256m</maxmemory>
@@ -1092,7 +1129,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>${maven-release-plugin.version}</version>
 					<inherited>true</inherited>
 					<configuration>
 						<pushChanges>false</pushChanges>
@@ -1102,7 +1138,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-remote-resources-plugin</artifactId>
-					<version>${maven-remote-resources-plugin.version}</version>
 					<executions>
 						<execution>
 							<goals>
@@ -1120,7 +1155,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>${maven-resources-plugin.version}</version>
 					<configuration>
 						<encoding>${project.build.sourceEncoding}</encoding>
 					</configuration>
@@ -1128,19 +1162,16 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>${maven-site-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<inherited>true</inherited>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>${maven-source-plugin.version}</version>
 					<executions>
 						<execution>
 							<id>attach-sources</id>
 							<goals>
-								<goal>jar</goal>
-								<goal>test-jar</goal>
+								<goal>jar-no-fork</goal>
 							</goals>
 						</execution>
 					</executions>
@@ -1148,7 +1179,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>${maven-surefire-plugin.version}</version>
 					<configuration>
 						<includes>
 							<include>**/*Test.java</include>
@@ -1162,7 +1192,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-report-plugin</artifactId>
-					<version>${maven-surefire-plugin.version}</version>
+					<version>${version.maven-surefire}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -1186,7 +1216,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
-					<version>${maven-war-plugin.version}</version>
 					<configuration>
 						<warName>${project.artifactId}</warName>
 					</configuration>
@@ -1215,11 +1244,11 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>net.alchim31.maven</groupId>
-										<artifactId>yuicompressor-maven-plugin</artifactId>
+										<groupId>org.primefaces.extensions</groupId>
+										<artifactId>resources-optimizer-maven-plugin</artifactId>
 										<versionRange>[1.3.0,)</versionRange>
 										<goals>
-											<goal>compress</goal>
+											<goal>optimize</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
@@ -1282,6 +1311,30 @@
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.primefaces.extensions</groupId>
+					<artifactId>resources-optimizer-maven-plugin</artifactId>
+					<version>${resources-optimizer-maven-plugin.version}</version>
+					<configuration>
+						<suffix>.min</suffix>
+						<inputDir>${project.build.directory}/classes</inputDir>
+						<useDataUri>false</useDataUri>
+						<resourcesSets>
+							<resourcesSet>
+								<excludes>
+									<exclude>**/jquery*.js</exclude>
+								</excludes>
+							</resourcesSet>
+						</resourcesSets>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>optimize</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -1361,7 +1414,7 @@
 				</plugins>
 			</build>
 		</profile>
-		
+
 		<profile>
 			<id>coverage</id>
 			<build>
@@ -1370,7 +1423,7 @@
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
 						<version>${jacoco.version}</version>
-						
+
 						<executions>
 							<execution>
 								<id>jacoco-initialize</id>
@@ -1598,7 +1651,6 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>${maven-project-info-reports-plugin.version}</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -1616,7 +1668,6 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${maven-javadoc-plugin.version}</version>
 			</plugin>
 		</plugins>
 	</reporting>

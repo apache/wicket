@@ -16,10 +16,12 @@
  */
 
 /*global ok: true, start: true, test: true, equal: true, deepEqual: true,
- QUnit: true, module: true, expect: true */
+ QUnit: true, expect: true */
 
 jQuery(document).ready(function() {
 	"use strict";
+
+	const { module, test } = QUnit;
 
 	var existingId = 'testElement',
 		existingBlockId = 'testBlockElement',
@@ -32,143 +34,143 @@ jQuery(document).ready(function() {
 
 	module("Wicket.DOM");
 
-	test("Wicket.$ existing", function() {
+	test("Wicket.$ existing", assert => {
 		var el = Wicket.$(existingId);
-		equal( el.tagName.toLowerCase(), 'span', "Wicket.$ cannot find an existing element" );
+		assert.equal( el.tagName.toLowerCase(), 'span', "Wicket.$ cannot find an existing element" );
 	});
 
-	test("Wicket.$ non-existing", function() {
+	test("Wicket.$ non-existing", assert => {
 		var el = Wicket.$(nonExistingId);
-		equal( el, null, "Wicket.$ found an not existing element!" );
+		assert.equal( el, null, "Wicket.$ found an not existing element!" );
 	});
 
-	test("Wicket.$ is an alias to Wicket.DOM.get", function() {
+	test("Wicket.$ is an alias to Wicket.DOM.get", assert => {
 		var el = Wicket.DOM.get(existingId);
-		equal( el, Wicket.$(existingId), "Wicket.$ is an alias of Wicket.DOM.get" );
+		assert.equal( el, Wicket.$(existingId), "Wicket.$ is an alias of Wicket.DOM.get" );
 	});
 
-	test("Wicket.$$ looks for existing element in the current document", function() {
+	test("Wicket.$$ looks for existing element in the current document", assert => {
 		var el = Wicket.$(existingId);
-		equal( Wicket.$$(el), true, "Wicket.$$ says that 'testGet' element is not in the current document." );
+		assert.equal( Wicket.$$(el), true, "Wicket.$$ says that 'testGet' element is not in the current document." );
 	});
 
-	test("Wicket.$$ looks for non existing element", function() {
-		equal( Wicket.$$(nonExistingId), false, "Wicket.$$ should return 'false' for non existing elements." );
+	test("Wicket.$$ looks for non existing element", assert => {
+		assert.equal( Wicket.$$(nonExistingId), false, "Wicket.$$ should return 'false' for non existing elements." );
 	});
 
-	test("Wicket.$$ looks for 'window'", function() {
-		equal( Wicket.$$(window), true, "Wicket.$$ should return 'true' for 'window'." );
+	test("Wicket.$$ looks for 'window'", assert => {
+		assert.equal( Wicket.$$(window), true, "Wicket.$$ should return 'true' for 'window'." );
 	});
 
-	test("Wicket.$$ looks for element in iframe", function() {
+	test("Wicket.$$ looks for element in iframe", assert => {
 		var iframeEl = Wicket.$(iframeId);
 		var iframeDocument = (iframeEl.contentWindow || iframeEl.contentDocument);
 		if (iframeDocument.document) {
 			iframeDocument = iframeDocument.document;
 		}
 		var el = iframeDocument.createElement('span');
-		equal( Wicket.$$(el), false, "Wicket.$$ should return false for elements created in different documents." );
+		assert.equal( Wicket.$$(el), false, "Wicket.$$ should return false for elements created in different documents." );
 	});
 
-	test("containsElement looks for an existing element", function() {
+	test("containsElement looks for an existing element", assert => {
 		var el = jQuery('#'+existingId)[0];
-		equal( Wicket.DOM.containsElement(el), true, "Wicket.DOM.containsElement should return true for existing elements." );
+		assert.equal( Wicket.DOM.containsElement(el), true, "Wicket.DOM.containsElement should return true for existing elements." );
 	});
 
-	test("containsElement looks for an non-existing element", function() {
+	test("containsElement looks for an non-existing element", assert => {
 		var el = document.createElement('span');
-		equal( Wicket.DOM.containsElement(el), false, "Wicket.DOM.containsElement should return true for existing elements." );
+		assert.equal( Wicket.DOM.containsElement(el), false, "Wicket.DOM.containsElement should return true for existing elements." );
 	});
 
-	test("serializeNode a simple element", function() {
+	test("serializeNode a simple element", assert => {
 		var el = Wicket.$(existingId);
 		var asString = Wicket.DOM.serializeNode(el);
 		var $deserialized = jQuery(asString);
-		equal($deserialized[0].tagName.toLowerCase() , 'span', "Wicket.DOM.serializeNode should return <span>." );
-		equal($deserialized.prop('id') , existingId, "<span>'s must be "+existingId+"." );
+		assert.equal($deserialized[0].tagName.toLowerCase() , 'span', "Wicket.DOM.serializeNode should return <span>." );
+		assert.equal($deserialized.prop('id') , existingId, "<span>'s must be "+existingId+"." );
 	});
 
-	test("serializeNode(Children) a complex element", function() {
+	test("serializeNode(Children) a complex element", assert => {
 		var el = Wicket.$(complexElementId);
 		var asString = Wicket.DOM.serializeNode(el);
 		var $deserialized = jQuery(asString);
-		equal($deserialized[0].tagName.toLowerCase(), 'div', 'The serialized element name should be <div>');
-		equal($deserialized.prop('id'), complexElementId, 'The serialized element id should be ' + complexElementId);
-		equal($deserialized.children()[0].tagName.toLowerCase(), 'a', 'The serialized element should have one child <a>');
-		equal(jQuery.trim($deserialized.text()), 'Link', 'The serialized element should have text "Link"');
+		assert.equal($deserialized[0].tagName.toLowerCase(), 'div', 'The serialized element name should be <div>');
+		assert.equal($deserialized.prop('id'), complexElementId, 'The serialized element id should be ' + complexElementId);
+		assert.equal($deserialized.children()[0].tagName.toLowerCase(), 'a', 'The serialized element should have one child <a>');
+		assert.equal(jQuery.trim($deserialized.text()), 'Link', 'The serialized element should have text "Link"');
 	});
 
-	test("show() an element", function() {
+	test("show() an element", assert => {
 		var el = Wicket.$(existingId);
 		Wicket.DOM.hide(el);
 		Wicket.DOM.show(el, '');
-		equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
+		assert.equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
 	});
 
-	test("show() an element by id ", function() {
+	test("show() an element by id ", assert => {
 		Wicket.DOM.hide(existingId);
 		Wicket.DOM.show(existingId, '');
 		var el = Wicket.$(existingId);
-		equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
+		assert.equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
 	});
 
-	test("(show|hide)Incrementally() an element", function() {
+	test("(show|hide)Incrementally() an element", assert => {
 		var el = Wicket.$(existingId);
 		Wicket.DOM.hideIncrementally(el);
-		equal( el.style.display, 'none', "Wicket.DOM.hideIncrementally should set .style.display to 'none'." );
+		assert.equal( el.style.display, 'none', "Wicket.DOM.hideIncrementally should set .style.display to 'none'." );
 		Wicket.DOM.hideIncrementally(el);
-		equal( el.style.display, 'none', ".style.display should be 'none'." );
+		assert.equal( el.style.display, 'none', ".style.display should be 'none'." );
 		Wicket.DOM.showIncrementally(el);
-		equal( el.style.display, 'none', ".style.display should still be 'none'." );
+		assert.equal( el.style.display, 'none', ".style.display should still be 'none'." );
 		Wicket.DOM.showIncrementally(el);
-		equal( el.style.display, 'inline', "Wicket.DOM.show should set .style.display to 'inline'." );
+		assert.equal( el.style.display, 'inline', "Wicket.DOM.show should set .style.display to 'inline'." );
 	});
 
-	test("(show|hide)Incrementally() an element by id ", function() {
+	test("(show|hide)Incrementally() an element by id ", assert => {
 		Wicket.DOM.hideIncrementally(existingId);
-		equal( Wicket.$(existingId).style.display, 'none', "Wicket.DOM.hideIncrementally should set .style.display to 'none'." );
+		assert.equal( Wicket.$(existingId).style.display, 'none', "Wicket.DOM.hideIncrementally should set .style.display to 'none'." );
 		Wicket.DOM.hideIncrementally(existingId);
-		equal( Wicket.$(existingId).style.display, 'none', ".style.display should be 'none'." );
+		assert.equal( Wicket.$(existingId).style.display, 'none', ".style.display should be 'none'." );
 		Wicket.DOM.showIncrementally(existingId);
-		equal( Wicket.$(existingId).style.display, 'none', ".style.display should still be 'none'." );
+		assert.equal( Wicket.$(existingId).style.display, 'none', ".style.display should still be 'none'." );
 		Wicket.DOM.showIncrementally(existingId);
-		equal(Wicket.$(existingId).style.display, 'inline', "Wicket.DOM.show should set .style.display to 'inline'.");
+		assert.equal(Wicket.$(existingId).style.display, 'inline', "Wicket.DOM.show should set .style.display to 'inline'.");
 	});
 
-	test("(show|hide)Incrementally() a block element by id ", function() {
+	test("(show|hide)Incrementally() a block element by id ", assert => {
 		var elId = existingBlockId;
 		Wicket.DOM.hideIncrementally(elId);
-		equal( Wicket.$(elId).style.display, 'none', "Wicket.DOM.hideIncrementally should set .style.display to 'none'." );
+		assert.equal( Wicket.$(elId).style.display, 'none', "Wicket.DOM.hideIncrementally should set .style.display to 'none'." );
 		Wicket.DOM.hideIncrementally(elId);
-		equal( Wicket.$(elId).style.display, 'none', ".style.display should be 'none'." );
+		assert.equal( Wicket.$(elId).style.display, 'none', ".style.display should be 'none'." );
 		Wicket.DOM.showIncrementally(elId);
-		equal( Wicket.$(elId).style.display, 'none', ".style.display should still be 'none'." );
+		assert.equal( Wicket.$(elId).style.display, 'none', ".style.display should still be 'none'." );
 		Wicket.DOM.showIncrementally(elId);
-		equal(Wicket.$(elId).style.display, 'block', "Wicket.DOM.show should set .style.display to 'block'.");
+		assert.equal(Wicket.$(elId).style.display, 'block', "Wicket.DOM.show should set .style.display to 'block'.");
 	});
 
-	test("hide() an element", function() {
+	test("hide() an element", assert => {
 		var el = Wicket.$(existingId);
 		Wicket.DOM.show(el);
 		Wicket.DOM.hide(el);
-		equal( el.style.display, 'none', "Wicket.DOM.node should set .style.display to 'none'." );
+		assert.equal( el.style.display, 'none', "Wicket.DOM.node should set .style.display to 'none'." );
 	});
 
-	test("hide() an element by id ", function() {
+	test("hide() an element by id ", assert => {
 		Wicket.DOM.show(existingId);
 		Wicket.DOM.hide(existingId);
 		var el = Wicket.$(existingId);
-		equal( el.style.display, 'none', "Wicket.DOM.hide should set .style.display to 'none'." );
+		assert.equal( el.style.display, 'none', "Wicket.DOM.hide should set .style.display to 'none'." );
 	});
 
-	test("replace() an element with a table", function() {
+	test("replace() an element with a table", assert => {
 		var el = Wicket.$(toBeReplacedByTableId);
 		var tableMarkup = '<table id="'+toBeReplacedByTableId+'"><thead><tr><th>header</th></tr></thead><tbody><tr><td>data</td></tr></tbody><tfoot><tr><td>footer data</td></tr></tfoot></table>';
 		Wicket.DOM.replace(el, tableMarkup);
-		equal( Wicket.DOM.serializeNode(Wicket.$(toBeReplacedByTableId)).toLowerCase(), tableMarkup.toLowerCase(), "Wicket.DOM.replace replace the span with a table." );
+		assert.equal( Wicket.DOM.serializeNode(Wicket.$(toBeReplacedByTableId)).toLowerCase(), tableMarkup.toLowerCase(), "Wicket.DOM.replace replace the span with a table." );
 	});
 
-	test("replace() an element with a script", function() {
+	test("replace() an element with a script", assert => {
 		var el = Wicket.$(toBeReplacedByScriptId);
 		var counter = 0;
 		Wicket.setCounter = function (newValue) { counter = newValue; };
@@ -177,25 +179,25 @@ jQuery(document).ready(function() {
 
 		Wicket.DOM.replace(el, scriptMarkup);
 
-		equal(counter, 1, "Replacing with script should execute it." );
+		assert.equal(counter, 1, "Replacing with script should execute it." );
 	});
 
 
-	test("replace() an element with a complex element", function() {
+	test("replace() an element with a complex element", assert => {
 		var el = Wicket.$(toBeReplacedByDivWithChildrenId);
 		var complexElMarkup = '<div id="'+toBeReplacedByDivWithChildrenId+'"><div>inner div<span>inner span</span><a href="http://host/some/url">Link</a></div></div>';
 		Wicket.DOM.replace(el, complexElMarkup);
-		equal( Wicket.DOM.serializeNode(Wicket.$(toBeReplacedByDivWithChildrenId)).toLowerCase(), complexElMarkup.toLowerCase(), "Wicket.DOM.replace should replace the span with a complex element." );
+		assert.equal( Wicket.DOM.serializeNode(Wicket.$(toBeReplacedByDivWithChildrenId)).toLowerCase(), complexElMarkup.toLowerCase(), "Wicket.DOM.replace should replace the span with a complex element." );
 	});
 
-	test("replace - test event notifications", function() {
+	test("replace - test event notifications", assert => {
 
 		Wicket.Event.subscribe('/dom/node/removing', function(jqEvent, elementToBeRemoved) {
-			equal(elementToBeRemoved.id, "testDomEventNotifications", "The removed element id match!");
+			assert.equal(elementToBeRemoved.id, "testDomEventNotifications", "The removed element id match!");
 		});
 
 		Wicket.Event.subscribe('/dom/node/added', function(jqEvent, addedElement) {
-			equal(jQuery(addedElement).text(), "New One", "The added element text match!");
+			assert.equal(jQuery(addedElement).text(), "New One", "The added element text match!");
 		});
 
 		var toReplace = Wicket.$('testDomEventNotifications');
@@ -207,12 +209,12 @@ jQuery(document).ready(function() {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4650
 	 */
-	test("replace - do not publish '/dom/node/added' event notification when removing a component", function() {
+	test("replace - do not publish '/dom/node/added' event notification when removing a component", assert => {
 
-		expect(1);
+		assert.expect(1);
 
 		Wicket.Event.subscribe('/dom/node/removing', function(jqEvent, elementToBeRemoved) {
-			equal(elementToBeRemoved.id, "testDomEventNotifications", "The removed element id match!");
+			assert.equal(elementToBeRemoved.id, "testDomEventNotifications", "The removed element id match!");
 		});
 
 		Wicket.Event.subscribe('/dom/node/added', function(jqEvent, addedElement) {
@@ -225,7 +227,7 @@ jQuery(document).ready(function() {
 		jQuery(document).off();
 	});
 
-	test("text - read text from a node with single text type child", function() {
+	test("text - read text from a node with single text type child", assert => {
 
 		var node = jQuery("<div></div>")[0];
 		var doc = node.ownerDocument;
@@ -233,24 +235,24 @@ jQuery(document).ready(function() {
 		node.appendChild(textNode);
 
 		var text = Wicket.DOM.text(node);
-		equal(text, "some text", "Single text child text");
+		assert.equal(text, "some text", "Single text child text");
 	});
 
-	test("text - read text from a node with several text type children", function() {
+	test("text - read text from a node with several text type children", assert => {
 
 		var document = Wicket.Xml.parse("<root><![CDATA[text1]]>|<![CDATA[text2]]>|<![CDATA[text3]]></root>");
 		var node = document.documentElement;
 
 		var text = Wicket.DOM.text(node);
-		equal(text, "text1|text2|text3", "Several text children");
+		assert.equal(text, "text1|text2|text3", "Several text children");
 	});
 
-	test("text - read text from a node with several children (text and elements)", function() {
+	test("text - read text from a node with several children (text and elements)", assert => {
 
 		var document = Wicket.Xml.parse("<root><![CDATA[text1|]]><child1>child1text|<![CDATA[text2|]]></child1><![CDATA[text3|]]><child2>child2Test</child2></root>");
 		var node = document.documentElement;
 
 		var text = Wicket.DOM.text(node);
-		equal(text, "text1|child1text|text2|text3|child2Test", "Several text and element children");
+		assert.equal(text, "text1|child1text|text2|text3|child2Test", "Several text and element children");
 	});
 });

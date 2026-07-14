@@ -9,15 +9,15 @@ public interface IRequestListener extends IClusterable
 {
 
 	/**
-	 * Does invocation of this listener render the page. 
-	 * 
-	 * @return default {@code true}, i.e. a {@link RenderPageRequestHandler} is schedules after invocation 
+	 * Does invocation of this listener render the page.
+	 *
+	 * @return default {@code true}, i.e. a {@link RenderPageRequestHandler} is schedules after invocation
 	 */
 	default boolean rendersPage()
 	{
 		return true;
 	}
-	
+
 	/**
 	 * Called when a request is received.
 	 */
@@ -31,7 +31,7 @@ An example of a component that implements _IRequestListener_ can be seen in the 
 
 [source,java]
 ----
-public abstract class Link<T> extends AbstractLink implements IRequestListener ... 
+public abstract class Link<T> extends AbstractLink implements IRequestListener ...
 {
 	/**
 	 * Called when a link is clicked.
@@ -40,7 +40,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener .
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
-	 * 
+	 *
 	 * Called when a link is clicked. The implementation of this method is currently to simply call
 	 * onClick(), but this may be augmented in the future.
 	 */
@@ -55,13 +55,13 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener .
 
 Callback URLs can be generated with _Component_'s method _urlForListener(PageParameters)_ or with method _urlForListener(Behavior, PageParameters)_ if we are using a request listener on a component or behavior respectively (see the following example).
 
-Project _CallbackURLExample_ contains a behavior (class _OnChangeSingleChoiceBehavior_) that implements _org.apache.wicket.IRequestListener_ to update the model of an _AbstractSingleSelectChoice_ component when user changes the selected option (it provides the same functionality as _FormComponentUpdatingBehavior_). 
+Project _CallbackURLExample_ contains a behavior (class _OnChangeSingleChoiceBehavior_) that implements _org.apache.wicket.IRequestListener_ to update the model of an _AbstractSingleSelectChoice_ component when user changes the selected option (it provides the same functionality as _FormComponentUpdatingBehavior_).
 The following is the implementation of _onRequest()_ provided by _OnSelectionChangedNotifications_:
 
 [source,java]
 ----
 @Override
-public void onRequest() {	
+public void onRequest() {
 	Request request = RequestCycle.get().getRequest();
 	IRequestParameters requestParameters = request.getRequestParameters();
 	StringValue choiceId = requestParameters.getParameterValue("choiceId");
@@ -79,26 +79,26 @@ Another interesting part of _OnChangeSingleChoiceBehavior_ is its method _onComp
 @Override
 public void onComponentTag(Component component, ComponentTag tag) {
 	super.onComponentTag(component, tag);
-		
+
 	CharSequence callBackURL = getCallbackUrl();
 	String separatorChar = (callBackURL.toString().indexOf('?') > -1 ? "&" : "?");
-		
+
 	String finalScript = "var isSelect = $(this).is('select');\n" +
-				 "var component;\n" +	
+				 "var component;\n" +
 				 "if(isSelect)\n" +
 				 "	component = $(this);\n" +
 				 "else \n" +
 				 "	component = $(this).find('input:radio:checked');\n" +
-				 "window.location.href='" + callBackURL +  separatorChar + 
+				 "window.location.href='" + callBackURL +  separatorChar +
 				 "choiceId=' + " + "component.val()";
-		
+
 	tag.put("onchange", finalScript);
 }
 ----
 
 The goal of _onComponentTag_ is to build an onchange handler that forces user's browser to move to the callback URL (modifing standard property window.location.href). Please note that we have appended the expected parameter (choiceId) to the URL retrieving its value with a JQuery selector suited for the current type of component (a drop-down menu or a radio group). Since we are using JQuery in our JavaScript code, the behavior comes also with method _renderHead_ that adds the bundled JQuery library to the current page.
 
-Method _getCallbackUrl()_ is used to generate the callback URL for our custom behavior: 
+Method _getCallbackUrl()_ is used to generate the callback URL for our custom behavior:
 
 [source,java]
 ----
@@ -115,7 +115,7 @@ public CharSequence getCallbackUrl() {
 
 The home page of project _CallbackURLExample_ contains a _DropDownChoice_ and a _RadioChoice_ which use our custom behavior. There are also two labels to display the content of the models of the two components:
 
-image::../img/CallbackURLExample-screenshot.png[]
+image::./img/CallbackURLExample-screenshot.png[]
 
 NOTE: Implementing interface _IRequestListener_ makes a behavior stateful because its callback URL is specific for a given instance of component.
 

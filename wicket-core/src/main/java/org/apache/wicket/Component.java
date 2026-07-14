@@ -77,7 +77,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.response.StringResponse;
+import org.apache.wicket.response.LazyStringResponse;
 import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.IHierarchical;
@@ -2478,7 +2478,8 @@ public abstract class Component
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
 					String message = String.format("Markup id set on a component that renders its body only. " +
-					                               "Markup id: %s, component id: %s.", getMarkupId(), getId());
+					                               "Markup id: %s, component id: %s, type: %s, path: %s",
+							getMarkupId(), getId(), getClass(), getPage().getPageClass() + ":" + getPageRelativePath());
 					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
 					{
 						throw new IllegalStateException(message);
@@ -2488,7 +2489,8 @@ public abstract class Component
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
 					String message = String.format("Placeholder tag set on a component that renders its body only. " +
-					                               "Component id: %s.", getId());
+					                               "Component id: %s, type: %s, path: %s\", ",
+							getId(), getClass(), getPage().getPageClass() + ":" + getPageRelativePath());
 					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
 					{
 						throw new IllegalStateException(message);
@@ -2639,7 +2641,7 @@ public abstract class Component
 			boolean wasRendered = response.wasRendered(this);
 			if (wasRendered == false)
 			{
-				StringResponse markupHeaderResponse = new StringResponse();
+				LazyStringResponse markupHeaderResponse = new LazyStringResponse();
 				Response oldResponse = getResponse();
 				RequestCycle.get().setResponse(markupHeaderResponse);
 				try
@@ -4445,8 +4447,12 @@ public abstract class Component
 	@Override
 	public final <T> void send(IEventSink sink, Broadcast type, T payload)
 	{
-		new ComponentEventSender(this, getApplication().getFrameworkSettings()).send(sink, type,
-			payload);
+		// if there are no event dispatchers then don't even try to send event
+		if (getApplication().getFrameworkSettings().hasAnyEventDispatchers())
+		{
+			new ComponentEventSender(this, getApplication().getFrameworkSettings()).send(sink, type,
+					payload);
+		}
 	}
 
 	/**

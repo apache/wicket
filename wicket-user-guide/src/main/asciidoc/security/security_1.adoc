@@ -3,7 +3,7 @@
 
 The first step in implementing a security policy is assigning a trusted identity to our users, which means that we must authenticate them. Web applications usually adopt a form-based authentication with a login form that asks user for a unique username and the relative password:
 
-image::../img/wikipedia-login-form.png[]
+image::./img/wikipedia-login-form.png[]
 
 Wicket supports form-based authentication with session class _AuthenticatedWebSession_ and application class _AuthenticatedWebApplication_, both placed inside package _org.apache.wicket.authroles.authentication_.
 
@@ -46,7 +46,7 @@ public class AuthenticatedPage extends WebPage {
       if(!AuthenticatedWebSession.get().isSignedIn())
          app.restartResponseAtSignInPage();
    }
-   
+
    @Override
    protected void onInitialize() {
       super.onInitialize();
@@ -64,7 +64,7 @@ public class AuthenticatedPage extends WebPage {
 }
 ----
 
-Page _AuthenticatedPage_ checks inside onConfigure if user is signed in and if not, it redirects her/him to the sign in page with method _restartResponseAtSignInPage_. The page contains also a link to the homepage and another link that signs out user. 
+Page _AuthenticatedPage_ checks inside onConfigure if user is signed in and if not, it redirects her/him to the sign in page with method _restartResponseAtSignInPage_. The page contains also a link to the homepage and another link that signs out user.
 
 The sign in page is implemented in class _SignInPage_ and contains the form used to authenticate users:
 
@@ -73,29 +73,29 @@ The sign in page is implemented in class _SignInPage_ and contains the form used
 public class SignInPage extends WebPage {
    private String username;
    private String password;
-   
+
    @Override
    protected void onInitialize() {
       super.onInitialize();
-      
+
       StatelessForm<Void> form = new StatelessForm<Void>("form") {
          @Override
          protected void onSubmit() {
             if(Strings.isEmpty(username))
                return;
-            
+
             boolean authResult = AuthenticatedWebSession.get().signIn(username, password);
             //if authentication succeeds redirect user to the requested page
             if(authResult)
                continueToOriginalDestination();
          }
       };
-      
+
       form.setModel(new CompoundPropertyModel(this));
-      
+
       form.add(new TextField("username"));
       form.add(new PasswordTextField("password"));
-      
+
       add(form);
    }
 }

@@ -1,9 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ${package};
 
 import java.lang.management.ManagementFactory;
 
 import javax.management.MBeanServer;
 
+import org.apache.wicket.protocol.ws.javax.WicketServerEndpointConfig;
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -14,6 +31,8 @@ import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.websocket.jsr356.server.ServerContainer;
+import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
 /**
  * Separate startup class for people that want to run the examples directly. Use parameter
@@ -26,7 +45,7 @@ public class Start
 	 *
 	 * @param args
 	 */
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
 	{
 		System.setProperty("wicket.configuration", "development");
 
@@ -43,7 +62,7 @@ public class Start
 
 		server.addConnector(http);
 
-		Resource keystore = Resource.newClassPathResource("/keystore.p12");
+		Resource keystore = Resource.newClassPathResource("/keystore");
 		if (keystore != null && keystore.exists())
 		{
 			// if a keystore for a SSL certificate is available, start a SSL
@@ -53,7 +72,7 @@ public class Start
 			// use this certificate anywhere important as the passwords are
 			// available in the source.
 
-			SslContextFactory sslContextFactory = new SslContextFactory();
+			SslContextFactory sslContextFactory = new SslContextFactory.Server();
 			sslContextFactory.setKeyStoreResource(keystore);
 			sslContextFactory.setKeyStorePassword("wicket");
 			sslContextFactory.setKeyManagerPassword("wicket");
@@ -78,11 +97,10 @@ public class Start
 		bb.setContextPath("/");
 		bb.setWar("src/main/webapp");
 
-		// uncomment the next two lines if you want to start Jetty with WebSocket (JSR-356) support
-		// you need org.apache.wicket:wicket-native-websocket-javax in the classpath!
-		// ServerContainer serverContainer = WebSocketServerContainerInitializer.configureContext(bb);
-		// serverContainer.addEndpoint(new WicketServerEndpointConfig());
+		// bb.getSessionHandler().setSessionCache(sessionCache);
 
+		ServerContainer serverContainer = WebSocketServerContainerInitializer.initialize(bb);
+		serverContainer.addEndpoint(new WicketServerEndpointConfig());
 		// uncomment next line if you want to test with JSESSIONID encoded in the urls
 		// ((AbstractSessionManager)
 		// bb.getSessionHandler().getSessionManager()).setUsingCookies(false);

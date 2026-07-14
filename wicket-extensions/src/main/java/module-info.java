@@ -71,4 +71,33 @@ module org.apache.wicket.extensions {
     exports org.apache.wicket.extensions.validation.validator;
     exports org.apache.wicket.extensions.wizard;
     exports org.apache.wicket.extensions.wizard.dynamic;
+
+    //opening packages to allow resources access
+    opens org.apache.wicket.extensions;
+    opens org.apache.wicket.extensions.ajax;
+    opens org.apache.wicket.extensions.ajax.markup.html;
+    opens org.apache.wicket.extensions.ajax.markup.html.form.upload;
+    opens org.apache.wicket.extensions.ajax.markup.html.autocomplete;
+    opens org.apache.wicket.extensions.ajax.markup.html.repeater;
+    opens org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
+    opens org.apache.wicket.extensions.ajax.markup.html.modal;
+    opens org.apache.wicket.extensions.ajax.markup.html.modal.theme;
+    opens org.apache.wicket.extensions.breadcrumb;
+    opens org.apache.wicket.extensions.captcha.kittens;
+    opens org.apache.wicket.extensions.captcha.kittens.images;
+    opens org.apache.wicket.extensions.markup.html.form.palette;
+    opens org.apache.wicket.extensions.markup.html.form.palette.theme;
+    opens org.apache.wicket.extensions.markup.html.form.datetime;
+    opens org.apache.wicket.extensions.markup.html.tabs;
+    opens org.apache.wicket.extensions.markup.html.repeater.tree;
+    opens org.apache.wicket.extensions.markup.html.repeater.tree.nested;
+    opens org.apache.wicket.extensions.markup.html.repeater.tree.theme.human;
+    opens org.apache.wicket.extensions.markup.html.repeater.tree.theme.windows;
+    opens org.apache.wicket.extensions.markup.html.repeater.data.sort;
+    opens org.apache.wicket.extensions.markup.html.repeater.data.table;
+    opens org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
+    opens org.apache.wicket.extensions.rating;
+    opens org.apache.wicket.extensions.util.encoding;
+    opens org.apache.wicket.extensions.wizard;
+
 }

@@ -305,7 +305,7 @@ button.button--alert {
 input[type=submit],
 input[type=reset],
 input[type=button],
-button {
+button, a.button {
   background: #FF9925;
   color: #fff; }
 .button:hover,

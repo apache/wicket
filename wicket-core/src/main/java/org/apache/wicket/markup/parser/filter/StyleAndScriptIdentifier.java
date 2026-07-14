@@ -16,17 +16,17 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
-import java.text.ParseException;
-import java.util.regex.Pattern;
-
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.RawMarkup;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlPullParser;
-import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.util.lang.Args;
+
+import java.text.ParseException;
+import java.util.regex.Pattern;
 
 
 /**
@@ -34,7 +34,7 @@ import org.apache.wicket.util.lang.Args;
  * elements which are plain JavaScript in CDATA blocks. This allows the user application
  * to use unescaped XML characters without caring that those may break Wicket's XML Ajax
  * response.
- * 
+ *
  * @author Juergen Donnerstag
  */
 public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
@@ -67,7 +67,7 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 				tag.setAutoComponentTag(true);
 				tag.setFlag(ComponentTag.RENDER_RAW, true);
 			}
-			
+
 			tag.setUserData("STYLE_OR_SCRIPT", Boolean.TRUE);
 		}
 
@@ -149,8 +149,9 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 				"style".equals(openTag.getName()) ||
 
 				// script elements should be processed only if they have no type (HTML5 recommendation)
-				// or the type is "text/javascript"
-				(typeAttribute == null || "text/javascript".equalsIgnoreCase(typeAttribute));
+				// or the type is "text/javascript" or "module"
+				(typeAttribute == null || "text/javascript".equalsIgnoreCase(typeAttribute) ||
+				        "module".equalsIgnoreCase(typeAttribute));
 
 		return shouldProcess && openTag.getUserData("STYLE_OR_SCRIPT") != null;
 	}

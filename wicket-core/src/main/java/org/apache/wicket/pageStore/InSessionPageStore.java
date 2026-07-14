@@ -261,7 +261,7 @@ public class InSessionPageStore implements IPageStore
 		/**
 		 * Serialize pages before writing to output.
 		 */
-		private void writeObject(final ObjectOutputStream output) throws IOException
+		private synchronized void writeObject(final ObjectOutputStream output) throws IOException
 		{
 			// handle non-serialized pages
 			for (int p = 0; p < pages.size(); p++)

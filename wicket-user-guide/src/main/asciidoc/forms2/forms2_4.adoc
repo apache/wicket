@@ -84,4 +84,4 @@ public HomePage(final PageParameters parameters) {
 
 Now we can run our application an see that JSR 303 annotations are fully effective:
 
-image::../img/jsr303-form-validation.png[]
+image::./img/jsr303-form-validation.png[]

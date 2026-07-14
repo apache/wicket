@@ -33,5 +33,21 @@ alert(document.getElementById("script1").innerHTML);
 console.log('Nice')
 /*]]>*/
 </script>
+
+<script type="module">
+/*<![CDATA[*/
+console.log('module type')
+/*]]>*/
+</script>
+
+<script type="importmap">
+  {
+    "imports": {
+      "square": "./module/shapes/square.js",
+      "circle": "https://example.com/shapes/circle.js"
+    }
+  }
+</script>
+
 </body>
 </html>

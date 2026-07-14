@@ -43,7 +43,6 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.core.util.lang.WicketObjects;
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -56,6 +55,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -157,7 +157,7 @@ public class SourcesPage extends WebPage
 		private void addResources(final AppendingStringBuffer relativePath, final File dir,
 			List<String> resources)
 		{
-			File[] files = dir.listFiles();
+			File[] files = Files.list(dir);
 			for (File file : files)
 			{
 				if (file.isDirectory())
