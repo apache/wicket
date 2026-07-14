@@ -28,13 +28,14 @@
         this.settings = settings;
         this.inputName = settings.inputName;
         this.input = document.getElementById(this.inputName);
-        this.resourceUrl = settings.resourceUrl + "?uploadId=" + this.inputName + "&maxSize=" + this.settings.maxSize;
+        this.resourceUrl = settings.resourceUrl + "?uploadId=" + encodeURIComponent(this.inputName) + "&maxSize=" + encodeURIComponent(this.settings.maxSize);
         if (this.settings.fileMaxSize != null) {
-            this.resourceUrl = this.resourceUrl + "&fileMaxSize=" + this.settings.fileMaxSize;
+            this.resourceUrl = this.resourceUrl + "&fileMaxSize=" + encodeURIComponent(this.settings.fileMaxSize);
         }
         if (this.settings.fileCountMax != null) {
-            this.resourceUrl = this.resourceUrl + "&fileCountMax=" + this.settings.fileCountMax;
+            this.resourceUrl = this.resourceUrl + "&fileCountMax=" + encodeURIComponent(this.settings.fileCountMax);
         }
+        this.resourceUrl = this.resourceUrl + "&uploadToken=" + encodeURIComponent(this.settings.uploadToken);
         this.ajaxCallBackUrl = settings.ajaxCallBackUrl;
         this.clientBeforeSendCallBack = clientBeforeSendCallBack;
         this.clientSideSuccessCallBack = clientSideSuccessCallBack;
