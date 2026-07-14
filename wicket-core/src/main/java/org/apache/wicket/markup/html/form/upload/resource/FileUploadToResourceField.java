@@ -373,6 +373,8 @@ public abstract class FileUploadToResourceField extends FileUploadField
             jsonObject.put("fileMaxSize", fileMaxSize.bytes());
         }
         jsonObject.put("fileCountMax", getFileCountMax());
+        jsonObject.put("uploadToken", AbstractFileUploadResource.createUploadToken(getMarkupId(),
+                getMaxSize(), fileMaxSize, getFileCountMax()));
         response.render(OnDomReadyHeaderItem.forScript("Wicket.Timer."
                 + getMarkupId() + " = new Wicket.FileUploadToResourceField("
                 + jsonObject + ","
