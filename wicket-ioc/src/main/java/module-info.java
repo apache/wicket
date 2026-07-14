@@ -21,7 +21,7 @@ module org.apache.wicket.ioc {
     requires org.slf4j;
     requires cglib;
     requires net.bytebuddy;
-    requires org.objenesis;
+    requires static org.objenesis;
 
     exports org.apache.wicket.injection;
     exports org.apache.wicket.proxy;

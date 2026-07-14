@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -34,6 +35,12 @@ public class AbstractPageableViewTest extends WicketTestCase
 {
 	private static int count = 5;
 	
+	@BeforeEach
+	public void resetCount()
+	{
+		count = 5;
+	}
+
 	/**
 	 */
 	@Test

@@ -102,7 +102,11 @@
 				//workaround for IE. Clicks on scrollbar trigger
 				//'blur' event on input field. (See https://issues.apache.org/jira/browse/WICKET-5882)
 				if (menuId !== document.activeElement.id && (menuId + "-container") !== document.activeElement.id) {
-					hideAutoCompleteTimer = window.setTimeout(hideAutoComplete, 500);
+					hideAutoCompleteTimer = window.setTimeout(function() {
+							hideAutoComplete();
+							isTriggeredChange = false;
+							triggerChangeOnHide = false;
+					}, 500);
 				} else {
 					jQuery(this).trigger("focus");
 				}
@@ -122,7 +126,8 @@
 			});
 
 			Wicket.Event.add(obj, 'keydown', function (jqEvent) {
-				switch(Wicket.Event.keyCode(jqEvent)){
+				var keyCode = Wicket.Event.keyCode(jqEvent);
+				switch (keyCode) {
 					case KEY_UP:
 						if (elementCount > 0) {
 							if (selected>-1) {
@@ -136,6 +141,7 @@
 								showAutoComplete();
 							}
 							render(true, false);
+							jqEvent.preventDefault();
 						}
 
 						break;
@@ -153,6 +159,7 @@
 								render(true, false);
 								showAutoComplete();
 							}
+							jqEvent.preventDefault();
 						}
 
 						break;
@@ -176,6 +183,12 @@
 							}
 
 							hideAutoComplete();
+
+							if (cfg.keyTabBehavior === 'selectFocusAutocompleteInput' && keyCode === KEY_TAB) {
+								// prevent moving focus to the next component if an item in the dropdown is selected
+								// using the Tab key
+								jqEvent.preventDefault();
+							}
 
 							ignoreKeyEnter = true;
 						} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {
@@ -243,7 +256,7 @@
 		{
 			// Remove the autocompletion menu if still present from
 			// a previous call. This is required to properly register
-			// the mouse event handler again 
+			// the mouse event handler again
 			var choiceDiv=document.getElementById(getMenuId());
 			if (choiceDiv !== null) {
 				choiceDiv.parentNode.parentNode.removeChild(choiceDiv.parentNode);
@@ -325,7 +338,6 @@
 				container.appendChild(choiceDiv);
 				choiceDiv.id=getMenuId();
 				choiceDiv.className = "wicket-aa";
-				choiceDiv.ariaLive = "polite";
 			}
 
 
@@ -404,6 +416,9 @@
 			var container = getAutocompleteContainer();
 			var index=getOffsetParentZIndex(ajaxAttributes.c);
 			container.show();
+
+			input.setAttribute("aria-expanded", "true");
+
 			if (!isNaN(Number(index))) {
 				container.style.zIndex=(Number(index)+1);
 			}
@@ -441,6 +456,13 @@
 
 		function hideAutoComplete(){
 			hideAutoCompleteTimer = undefined;
+
+			var input = Wicket.$(ajaxAttributes.c);
+			if (input) {
+				input.setAttribute("aria-expanded", "false");
+				input.removeAttribute("aria-activedescendant");
+			}
+
 			visible = 0;
 			setSelected(-1);
 
@@ -458,7 +480,6 @@
 
 			if (triggerChangeOnHide) {
 				triggerChangeOnHide = false;
-				var input = Wicket.$(ajaxAttributes.c);
 				isTriggeredChange = true;
 				jQuery(input).trigger('change');
 			}
@@ -612,6 +633,7 @@
 				selChSinceLastRender = true; // selected item will not have selected style until rendrered
 			}
 			element.innerHTML=resp;
+			element.firstChild.role = "listbox";
 			var selectableElements = getSelectableElements();
 			if (selectableElements) {
 				elementCount=selectableElements.length;
@@ -659,6 +681,11 @@
 					node.onclick = clickFunc;
 					node.onmouseover = mouseOverFunc;
 					node.onmousedown = mouseDownFunc;
+					node.role = "option";
+					node.id = getMenuId() + '-item-' + i;
+					node.setAttribute("tabindex", -1);
+					node.setAttribute("aria-posinset", i + 1);
+					node.setAttribute("aria-setsize", elementCount);
 				}
 			} else {
 				elementCount=0;
@@ -754,16 +781,26 @@
 			var node=getSelectableElement(0);
 			var re = /\bselected\b/gi;
 			var sizeAffected = false;
+			var input=Wicket.$(ajaxAttributes.c);
+
 			for(var i=0;i<elementCount;i++)
 			{
 				var origClassNames = node.className;
 				var classNames = origClassNames.replace(re, "");
+
 				if(selected===i){
 					classNames += " selected";
+					node.setAttribute("aria-selected", "true");
+					input.setAttribute("aria-activedescendant", node.id);
+
 					if (adjustScroll) {
 						adjustScrollOffset(menu.parentNode, node);
 					}
 				}
+				else {
+					node.setAttribute("aria-selected", "false");
+				}
+
 				if (classNames !== origClassNames) {
 					node.className = classNames;
 				}

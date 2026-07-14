@@ -65,7 +65,7 @@ public class OriginResourceIsolationPolicy implements IResourceIsolationPolicy
 	 */
 	public OriginResourceIsolationPolicy addAcceptedOrigin(String acceptedOrigin)
 	{
-		Checks.notNull("acceptedOrigin", acceptedOrigin);
+		Checks.notNull(acceptedOrigin, "acceptedOrigin");
 
 		// strip any leading dot characters
 		final int len = acceptedOrigin.length();

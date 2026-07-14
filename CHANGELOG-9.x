@@ -2,6 +2,47 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.21.0
+
+** Bug
+
+    * [WICKET-7147] - Paramter order of null checks incorrect
+    * [WICKET-7148] - Removing Metadata from Application not possible
+    * [WICKET-7150] - Cyclic dependency between wicket-native-websocket-core and wicket-native-websocket-javax modules
+
+** Improvement
+
+    * [WICKET-7153] - [Resources] modify RootMapper in order to allow to define a refferent ResourceReferenceMapper
+
+=======================================================================
+
+Release Notes - Wicket - Version 9.20.0
+
+** Improvement
+
+    * [WICKET-7137] - Make resource URL sanitization extendable
+
+** Task
+
+    * [WICKET-7139] - Update OSGi imports for Wicket 9.x
+
+=======================================================================
+
+Release Notes - Wicket - Version 9.19.0
+
+** Bug
+
+    * [WICKET-7024] - Wrong static resource urls when their generation is triggered by <wicket:link>
+    * [WICKET-7124] - The quickstart archetype fails to build 
+    * [WICKET-7132] - Tabbing from AutoComplete fields and back doesn't work as expected
+
+** Improvement
+
+    * [WICKET-7131] - Improve accessibility and screen reader support for auto-complete component
+    * [WICKET-7133] - Ability move focus back to the autocomplete field when selecting an item using the Tab key
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.18.0
 
 ** Bug

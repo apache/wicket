@@ -27,10 +27,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.MetaInfStaticResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.ResourceReferenceRegistry;
+import org.apache.wicket.request.resource.*;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
@@ -135,9 +132,17 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 
 			if (scope != null && scope.getPackage() != null)
 			{
+				ResourceReference.UrlAttributes sanitized = attributes.sanitize(scope, name.toString());
+				boolean createIfNotFound = false;
+				if (sanitized != null)
+				{
+					attributes = sanitized;
+					createIfNotFound = true;
+				}
+
 				ResourceReference res = getContext().getResourceReferenceRegistry()
 					.getResourceReference(scope, name.toString(), attributes.getLocale(),
-						attributes.getStyle(), attributes.getVariation(), true, true);
+						attributes.getStyle(), attributes.getVariation(), true, createIfNotFound);
 
 				if (res != null)
 				{
