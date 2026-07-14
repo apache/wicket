@@ -533,6 +533,14 @@ public class CryptoMapper implements IRequestMapperDelegate
 			url.getSegments().add(encryptedUrl.getSegments().get(segNo));
 		}
 
+		for (Url.QueryParameter queryParameter : encryptedUrl.getQueryParameters())
+		{
+			if (MapperUtils.parsePageComponentInfoParameter(queryParameter) != null)
+			{
+				return null;
+			}
+		}
+
 		url.getQueryParameters().addAll(originalUrl.getQueryParameters());
 		// WICKET-4923 additional parameters
 		url.getQueryParameters().addAll(encryptedUrl.getQueryParameters());
