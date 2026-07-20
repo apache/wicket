@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title id="titleId">XML replacement method tests</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen" />
+</head>
+
+<body>
+	<div id="qunit"></div>
+
+	<div id="qunit-fixture">
+
+		<div>
+			<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+				<mrow>
+					<mn id="simpleXml">1</mn>
+				</mrow>
+			</math>
+		</div>
+
+		<div>
+			<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+				<mrow id="complexXml">
+					<mrow>
+						<mn>1</mn>
+						<mo>+</mo>
+						<mn>2</mn>
+					</mrow>
+					<mo>=</mo>
+					<mn>3</mn>
+				</mrow>
+			</math>
+		</div>
+
+
+		<textarea id="componentIdXml"><ajax-response><component id="simpleXml" replacement="xml"><![CDATA[<mn id="simpleXml">2</mn>]]></component></ajax-response></textarea>
+
+		<textarea id="complexComponentIdXml"><ajax-response><component id="complexXml" replacement="xml"><![CDATA[
+			<mrow id="complexXml">
+				<mrow>
+					<mn>2</mn>
+					<mo>⁢</mo>
+					<mn>3</mn>
+				</mrow>
+				<mo>=</mo>
+				<mn>6</mn>
+			</mrow>
+		]]></component></ajax-response></textarea>
+	</div>
+
+	<script>
+		// version lies between question mark and first ampersand (or end)
+		var version = location.search.match(/\?(.*?)(&|$)/)[1];
+
+		document.write("<scr"+"ipt src='../../main/java/org/apache/wicket/resource/jquery/jquery-"+version+".js'></scr"+"ipt>");
+	</script>
+	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js"></script>
+	<script src="../../main/java/org/apache/wicket/ajax/res/js/xml-replacement-method.js"></script>
+	<script type="text/javascript" src="qunit/qunit.js"></script>
+	<script type="text/javascript" src="qunit/jquery.mockjax.js"></script>
+	<script type="text/javascript" src="qunit/blanket.min.js"></script>
+
+	<!-- the module under test -->
+	<script type="text/javascript" src="xml-replacement.js"></script>
+</body>
+</html>
