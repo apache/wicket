@@ -159,7 +159,7 @@ public class PopupSettings implements IClusterable
 			windowTitle = windowTitle.replaceAll("\\W", "_");
 		}
 
-		var escapedTarget = escapeQuotesAndBackslash(unquoteSingleQuoted(target));
+		CharSequence escapedTarget = escapeQuotesAndBackslash(unquoteSingleQuoted(target));
 		StringBuilder script = new StringBuilder(//
 			"var w = window.open('" + escapedTarget + "', '" //
 		).append(windowTitle).append("', '");

@@ -130,9 +130,9 @@ public class JavaScriptUtils
 	 *
 	 * <p>Examples:</p>
 	 * <pre>
-	 * unquoteSingleQuoted(" 'url'   ") -> "url"
-	 * unquoteSingleQuoted("'url'")     -> "url"
-	 * unquoteSingleQuoted("''")        -> ""
+	 * unquoteSingleQuoted(" 'url'   ") - "url"
+	 * unquoteSingleQuoted("'url'")     - "url"
+	 * unquoteSingleQuoted("''")        - ""
 	 * </pre>
 	 *
 	 * @param s the single-quoted string
