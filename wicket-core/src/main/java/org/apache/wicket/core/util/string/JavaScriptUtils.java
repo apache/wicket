@@ -142,7 +142,7 @@ public class JavaScriptUtils
 	{
 		if (s != null)
 		{
-			var trimmed = s.trim();
+			String trimmed = s.trim();
 			if (trimmed.length() > 1 && trimmed.startsWith("'") && trimmed.endsWith("'"))
 			{
 				s = trimmed.substring(1, trimmed.length() - 1);
