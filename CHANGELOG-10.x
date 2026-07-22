@@ -2,6 +2,23 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.10.0
+
+** Bug
+
+    * [WICKET-7107] - CSP Header not rendered when using RedirectPolicy.AUTO_REDIRECT
+    * [WICKET-7182] - Wicket Autocomplete calls event on a non jquery object
+    * [WICKET-7186] - wicket 10.9.0 / 10.9.1 leaks File Reaper threads
+    * [WICKET-7189] - make partial page update creation pluggable.
+
+** Improvement
+
+    * [WICKET-7184] - Make <wicket:header-items/> HTML spec compliant
+    * [WICKET-7187] - JavaScript header items: `module` for content, and import maps
+    * [WICKET-7188] - Sign file upload resource constraints
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.9.1
 
 ** Bug
