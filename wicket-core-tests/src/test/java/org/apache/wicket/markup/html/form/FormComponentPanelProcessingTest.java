@@ -16,13 +16,19 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static java.lang.Boolean.TRUE;
+import static org.apache.wicket.markup.html.form.FormComponentPanel.WANT_CHILDREN_TO_PROCESS_INPUT_IN_AJAX_UPDATE;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Serializable;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -60,10 +66,56 @@ class FormComponentPanelProcessingTest extends WicketTestCase
 		tester.assertRenderedPage(TestPage.class);
 
 		TestFormComponentPanel fcp = (TestFormComponentPanel) tester.getComponentFromLastRenderedPage("form:panel");
-		assertEquals(false, fcp.isChildClearInputCalled());
+		assertFalse(fcp.isChildClearInputCalled());
 
 		fcp.clearInput();
-		assertEquals(true, fcp.isChildClearInputCalled());
+		assertTrue(fcp.isChildClearInputCalled());
+	}
+
+	@Test
+	void processInputOfChildAsksChildFormComponentPanelWithProcessingOfChildrenEnabledToProcessInputOnly()
+	{
+		var behavior = new AjaxFormComponentUpdatingBehavior("theEvent")
+		{
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+			}
+		};
+		var form = new Form<Void>("form");
+		var outer = new OuterFormComponentPanel("outer", false);
+		outer.setMetaData(WANT_CHILDREN_TO_PROCESS_INPUT_IN_AJAX_UPDATE, TRUE);
+		outer.add(behavior);
+		form.add(outer);
+		tester.startComponentInPage(form, Markup.of("<form wicket:id=\"form\"><span wicket:id=\"outer\"></span></form>"));
+
+		tester.executeAjaxEvent(outer, "theEvent");
+
+		assertFalse(outer.inner.wasAskedToProcessInputOfChildren, "Inner must not be asked to process input of children");
+		assertTrue(outer.inner.wasAskedToProcessInput, "Inner must be asked to process input");
+	}
+
+	@Test
+	void processInputOfChildAsksChildFormComponentPanelWithProcessingOfChildrenEnabledToProcessChildrenAndInput()
+	{
+		var behavior = new AjaxFormComponentUpdatingBehavior("theEvent")
+		{
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+			}
+		};
+		var form = new Form<Void>("form");
+		var outer = new OuterFormComponentPanel("outer", true);
+		outer.setMetaData(WANT_CHILDREN_TO_PROCESS_INPUT_IN_AJAX_UPDATE, TRUE);
+		outer.add(behavior);
+		form.add(outer);
+		tester.startComponentInPage(form, Markup.of("<form wicket:id=\"form\"><span wicket:id=\"outer\"></span></form>"));
+
+		tester.executeAjaxEvent(outer, "theEvent");
+
+		assertTrue(outer.inner.wasAskedToProcessInputOfChildren, "Inner must be asked to process input of children");
+		assertTrue(outer.inner.wasAskedToProcessInput, "Inner must be asked to process input");
 	}
 
 	private static class TestFormComponentPanel extends FormComponentPanel<Serializable>
@@ -79,7 +131,7 @@ class FormComponentPanelProcessingTest extends WicketTestCase
 		private TestFormComponentPanel(String id, IModel<Serializable> model)
 		{
 			super(id, model);
-			add(new TextField<Serializable>("text", new Model<>())
+			add(new TextField<>("text", new Model<>())
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -106,7 +158,8 @@ class FormComponentPanelProcessingTest extends WicketTestCase
 			});
 		}
 
-		private boolean isChildClearInputCalled() {
+		private boolean isChildClearInputCalled()
+		{
 			return childClearInputCalled;
 		}
 
@@ -168,5 +221,49 @@ class FormComponentPanelProcessingTest extends WicketTestCase
 				"<body><form wicket:id='form'><div wicket:id='panel'></div></form></body>");
 		}
 
+	}
+
+	private static class OuterFormComponentPanel extends FormComponentPanel<String>
+	{
+		public InnerFormComponentPanel inner = new InnerFormComponentPanel("inner");
+
+		public OuterFormComponentPanel(String id, boolean mustEnableProcessingOfChilderenInAjaxUpdateOfInner)
+		{
+			super(id, Model.of());
+
+			inner.setMetaData(WANT_CHILDREN_TO_PROCESS_INPUT_IN_AJAX_UPDATE, mustEnableProcessingOfChilderenInAjaxUpdateOfInner);
+			add(inner);
+		}
+
+		@Override
+		public void processInputOfChildren()
+		{
+			processInputOfChild(inner);
+		}
+	}
+
+	private static class InnerFormComponentPanel extends FormComponentPanel<String>
+	{
+		public boolean wasAskedToProcessInputOfChildren;
+		public boolean wasAskedToProcessInput;
+
+		public InnerFormComponentPanel(String id)
+		{
+			super(id, Model.of());
+		}
+
+		@Override
+		public void processInputOfChildren()
+		{
+			wasAskedToProcessInputOfChildren = true;
+		}
+
+		@Override
+		public void validate()
+		{
+			wasAskedToProcessInput = true;
+
+			super.validate();
+		}
 	}
 }
