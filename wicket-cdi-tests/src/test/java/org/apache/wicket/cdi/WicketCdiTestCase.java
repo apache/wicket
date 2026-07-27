@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.cdi;
 
+import io.github.cdiunit.AdditionalClasses;
+import io.github.cdiunit.junit5.CdiJUnit5Extension;
+import jakarta.inject.Inject;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ThreadContext;
@@ -29,10 +32,6 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import io.github.cdiunit.AdditionalClasses;
-import io.github.cdiunit.junit5.CdiJUnit5Extension;
-import jakarta.inject.Inject;
 
 /**
  * @author jsarman
@@ -70,9 +69,6 @@ public abstract class WicketCdiTestCase
 			contextManager.destroy();
 		}
 		tester.destroy();
-
-		// make sure no leaked BeanManager are present
-		BeanManagerLookup.detach();
 	}
 
 	@BeforeEach

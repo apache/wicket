@@ -18,7 +18,6 @@ package org.apache.wicket.cdi;
 
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
-import org.apache.wicket.Application;
 import org.apache.wicket.cdi.testapp.ModelWithInjectedDependency;
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestPage;
@@ -46,7 +45,7 @@ class CdiConfigurationTest extends WicketCdiTestCase
 	@Test
 	void testUsesCdiJUnitConfiguration()
 	{
-		configure(new CdiConfiguration().setBeanManager(beanManager));
+		configure(new CdiConfiguration(beanManager));
 		tester.startPage(TestPage.class);
 		tester.assertLabel("appscope", "Test ok");
 	}
@@ -68,17 +67,6 @@ class CdiConfigurationTest extends WicketCdiTestCase
 	{
 		assertThrows(IllegalStateException.class, () -> {
 			new ModelWithInjectedDependency();
-		});
-
-	}
-
-	@Test
-	void testAlreadyConfigured()
-	{
-		configure(new CdiConfiguration());
-
-		assertThrows(IllegalStateException.class, () -> {
-			CdiConfiguration.get(Application.get()).setBeanManager(beanManager);
 		});
 
 	}
