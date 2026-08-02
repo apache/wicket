@@ -24,7 +24,6 @@ import org.apache.wicket.page.PartialPageUpdate;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
 /**
@@ -43,22 +42,30 @@ public abstract class AbstractPartialPageRequestHandler implements IPartialPageR
     @Override
     public final void addChildren(MarkupContainer parent, Class<?> childCriteria)
     {
+        addChildren(null, parent, childCriteria);
+    }
+
+    @Override
+    public void addChildren(String replacementMethod, MarkupContainer parent, Class<?> childCriteria)
+    {
         Args.notNull(parent, "parent");
         Args.notNull(childCriteria, "childCriteria");
 
-        parent.visitChildren(childCriteria, new IVisitor<Component, Void>()
+        parent.visitChildren(childCriteria, (IVisitor<Component, Void>) (component, visit) ->
         {
-            @Override
-            public void component(final Component component, final IVisit<Void> visit)
-            {
-                add(component);
-                visit.dontGoDeeper();
-            }
+            add(replacementMethod, component);
+            visit.dontGoDeeper();
         });
     }
 
     @Override
     public void add(Component... components)
+    {
+        add(null, components);
+    }
+
+    @Override
+    public void add(String replacementMethod, Component... components)
     {
         for (final Component component : components)
         {
@@ -68,10 +75,10 @@ public abstract class AbstractPartialPageRequestHandler implements IPartialPageR
             {
                 throw new IllegalArgumentException(
                         "cannot update component that does not have setOutputMarkupId property set to true. Component: " +
-                                component.toString());
+                                component);
             }
 
-            add(component, component.getMarkupId());
+            add(replacementMethod, component, component.getMarkupId());
         }
     }
 
@@ -100,6 +107,12 @@ public abstract class AbstractPartialPageRequestHandler implements IPartialPageR
     }
 
     @Override
+    public void add(String replacementMethod, Component component, String markupId)
+    {
+        getUpdate().add(replacementMethod, component, markupId);
+    }
+
+    @Override
     public final void prependJavaScript(CharSequence javascript)
     {
         getUpdate().prependJavaScript(javascript);
@@ -118,7 +131,7 @@ public abstract class AbstractPartialPageRequestHandler implements IPartialPageR
         {
             throw new IllegalArgumentException(
                     "cannot update component that does not have setOutputMarkupId property set to true. Component: " +
-                            component.toString());
+                            component);
         }
         final String id = component != null ? ("'" + component.getMarkupId() + "'") : "null";
         appendJavaScript("Wicket.Focus.setFocusOnId(" + id + ");");
