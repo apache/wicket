@@ -282,6 +282,24 @@ class CryptoMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * Tests that plaintext IRequestListener parameters cannot be appended to an otherwise
+	 * encrypted bookmarkable page URL.
+	 */
+	@Test
+	void bookmarkablePageForceEncryptionOfAppendedRequestListener()
+	{
+		PageAndComponentProvider provider = new PageAndComponentProvider(Page2.class, "link");
+		IRequestHandler requestHandler = new BookmarkableListenerRequestHandler(provider);
+		Url plainListenerUrl = mapper.getDelegateMapper().mapHandler(requestHandler);
+		Url encryptedUrl = mapper.mapHandler(
+			new RenderPageRequestHandler(new PageProvider(Page2.class, new PageParameters())));
+
+		encryptedUrl.getQueryParameters().addAll(plainListenerUrl.getQueryParameters());
+
+		assertNull(mapper.mapRequest(getRequest(encryptedUrl)));
+	}
+
+	/**
 	 * Tests that URLs for page instances are encrypted (/wicket/page?5)
 	 */
 	@Test
