@@ -58,7 +58,16 @@ import org.apache.wicket.util.lang.Args;
  * 
  * any request to <em>http://hostname:httpPort/secured</em> will be redirected to
  * <em>https://hostname:httpsPort/secured</em>
- * 
+ * <p>
+ * <strong>Deployment note:</strong> the <em>hostname</em> in the generated redirect is the host
+ * reported by the servlet container ({@link HttpServletRequest#getServerName()}, i.e. the
+ * {@code Host} header), which Wicket trusts as its own identity. This mapper deliberately performs
+ * no hostname validation, because only the deployment knows its canonical names. Configure the
+ * container, virtual host or reverse proxy to reject requests carrying an unexpected {@code Host}
+ * rather than routing them to the application; otherwise the redirect - like every absolute URL
+ * Wicket renders - will echo the host the client supplied. See {@code SECURITY.md} for Wicket's
+ * trust assumptions about the container-reported host, port and scheme.
+ *
  * @author igor
  */
 public class HttpsMapper implements IRequestMapperDelegate
@@ -139,7 +148,12 @@ public class HttpsMapper implements IRequestMapperDelegate
 
 	/**
 	 * Constructs a redirect url that should switch the user to the specified {@code scheme}
-	 * 
+	 * <p>
+	 * The host is taken from the container-reported server name, so the redirect stays on the
+	 * authority the client already connected to and only the scheme changes. Validating that
+	 * authority is the container's or reverse proxy's responsibility - see the class javadoc.
+	 * Override this method to derive the host from configuration instead.
+	 *
 	 * @param handler
 	 *            request handler being accessed
 	 * @param request
