@@ -62,6 +62,73 @@ class ResourceUtilTest
 	}
 
 	@Test
+	void rejectPathSeparators() throws Exception
+	{
+		assertEquals("style", ResourceUtil.rejectPathSeparators("style", "style"));
+		assertEquals("my-style", ResourceUtil.rejectPathSeparators("my-style", "style"));
+		assertEquals("", ResourceUtil.rejectPathSeparators("", "style"));
+		assertNull(ResourceUtil.rejectPathSeparators(null, "style"));
+
+		assertNull(ResourceUtil.rejectPathSeparators("a/b", "style"));
+		assertNull(ResourceUtil.rejectPathSeparators("a\\b", "style"));
+		assertNull(ResourceUtil.rejectPathSeparators("..", "style"));
+		assertNull(ResourceUtil.rejectPathSeparators("../../etc", "style"));
+		assertNull(ResourceUtil.rejectPathSeparators("a\0b", "style"));
+		assertNull(ResourceUtil.rejectPathSeparators("\0", "style"));
+	}
+
+	@Test
+	void rejectPathSeparatorsForLocale() throws Exception
+	{
+		assertEquals(Locale.UK, ResourceUtil.rejectPathSeparators(Locale.UK));
+		assertNull(ResourceUtil.rejectPathSeparators((Locale)null));
+
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("../../etc")));
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("a/b")));
+	}
+
+	/**
+	 * A locale, style or variation carrying a path separator is dropped: each becomes a single
+	 * component of the resource lookup path, so a separator would make the lookup resolve in a
+	 * different directory than the resource it belongs to.
+	 */
+	@Test
+	void decodeResourceReferenceAttributesRejectsPathSeparators() throws Exception
+	{
+		for (String value : new String[] { "../../etc", "..\\..\\etc", "a/b", "a\\b", "..",
+			"a\0b" })
+		{
+			UrlAttributes attributes = ResourceUtil.decodeResourceReferenceAttributes(value);
+			assertNull(attributes.getLocale(), "locale should be dropped for '" + value + "'");
+
+			attributes = ResourceUtil.decodeResourceReferenceAttributes("en-" + value);
+			assertEquals(Locale.ENGLISH, attributes.getLocale());
+			assertNull(attributes.getStyle(), "style should be dropped for '" + value + "'");
+
+			attributes = ResourceUtil.decodeResourceReferenceAttributes("en-style-" + value);
+			assertEquals(Locale.ENGLISH, attributes.getLocale());
+			assertEquals("style", attributes.getStyle());
+			assertNull(attributes.getVariation(),
+				"variation should be dropped for '" + value + "'");
+		}
+	}
+
+	/**
+	 * The separator check runs after {@code ~} has been restored to {@code -}, and must not disturb
+	 * that restoration.
+	 */
+	@Test
+	void decodeResourceReferenceAttributesKeepsEscapedSeparator() throws Exception
+	{
+		UrlAttributes attributes =
+			ResourceUtil.decodeResourceReferenceAttributes("en-my~style-my~variation");
+
+		assertEquals(Locale.ENGLISH, attributes.getLocale());
+		assertEquals("my-style", attributes.getStyle());
+		assertEquals("my-variation", attributes.getVariation());
+	}
+
+	@Test
 	void decodeResourceReferenceAttributesWithUrl() throws Exception
 	{
 		Url url = Url.parse("www.funny.url/?param1=value1");
