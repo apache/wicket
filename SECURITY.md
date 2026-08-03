@@ -166,6 +166,31 @@ protected against modification depends entirely on the implementation in use,
 and the default implementation is not authenticated. Consult the javadoc of the
 `ICrypter` you configure and rely on no more than it states.
 
+### Another origin may not invoke a listener
+
+Where `ResourceIsolationRequestCycleListener` is registered, a request originating
+from another origin must not be able to invoke a listener on a page — a
+`Link.onClick()`, a `Form.onSubmit()`, or an AJAX behaviour. A demonstrated way
+for another origin to reach one is a vulnerability.
+
+Two things sit deliberately outside that boundary:
+
+- **Rendering a page is allowed.** A page may be reached by a simple top-level
+  navigation from anywhere, so that pages remain linkable from other sites. Only
+  the invocation of a listener is refused. Requests that are not top-level
+  navigations — subresource loads, `fetch`, `<object>` and `<embed>` — are
+  refused for renders too.
+- **Sibling origins may be trusted explicitly.** `Sec-Fetch-Site: same-site`
+  means a different origin on the same registrable domain and scheme, such as
+  another subdomain, and is refused by default. A deployment that trusts every
+  origin on its own site can allow it; sibling-origin actions are then that
+  deployment's decision rather than a framework vulnerability.
+
+This listener is opt-in and is not registered by default. Without it Wicket
+enforces no cross-origin boundary on listener invocation at all. `CryptoMapper`
+raises the cost of forging a URL but is not a substitute for it, for the reason
+below.
+
 ### `CryptoMapper` is not an authorization mechanism
 
 `CryptoMapper` encrypts URLs so that page and component identifiers are not
