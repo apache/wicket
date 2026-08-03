@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -90,7 +91,9 @@ public class ResourceNameIterator implements IResourceNameIterator
 	public ResourceNameIterator(final String path, final String style, final String variation,
 		final Locale locale, final Iterable<String> extensions, final boolean strict)
 	{
-		this.locale = locale;
+		// the style, variation and locale each become a single component of the paths built below, so
+		// a value carrying a path separator would resolve in a different directory than the resource
+		this.locale = ResourceUtil.rejectPathSeparators(locale);
 
 		boolean noext = extensions == null || !extensions.iterator().hasNext();
 
@@ -106,7 +109,9 @@ public class ResourceNameIterator implements IResourceNameIterator
 			this.path = path;
 		}
 
-		styleIterator = newStyleAndVariationResourceNameIterator(style, variation);
+		styleIterator = newStyleAndVariationResourceNameIterator(
+			ResourceUtil.rejectPathSeparators(style, "style"),
+			ResourceUtil.rejectPathSeparators(variation, "variation"));
 		this.strict = strict;
 	}
 
