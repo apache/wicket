@@ -38,10 +38,27 @@ i.e. this is the serialized page instance (data) plus additional information nee
 
 * *AsynchronousPageStore:* The role of _AsynchronousPageStore_ is to detach the http worker thread from waiting for the write of the page bytes to the disk. To disable it use: _org.apache.wicket.settings.StoreSettings.setAsynchronous(false)_. _AsynchronousPageStore_ can delay the storage of page's bytes for at most _org.apache.wicket.settings.StoreSettings.setAsynchronousQueueCapacity(int)_ pages. If this capacity is exceeded then the page's bytes are written synchronously to the backing _IPageStore_.
 
-* *CryptingPageStore:* page instances might contain sensible information, therefore it's important to have the chance to encrypt their content before persist them on disk. _CryptingPageStore_ encrypts _SerializedPage_'s with a 256 bit AES before passing them to the underling _DiskPageStore_. Buy default this stage is disabled and not added to the default chain. To change this behavior we can use _org.apache.wicket.settings.StoreSettings.setEncrypted_.
+* *CryptingPageStore:* page instances might contain sensible information, therefore it's important to have the chance to encrypt their content before persist them on disk. _CryptingPageStore_ encrypts _SerializedPage_'s with a 256 bit AES key, held in the session, before passing them to the underlying _DiskPageStore_. By default this stage is disabled and not added to the default chain. To change this behavior we can use _org.apache.wicket.settings.StoreSettings.setEncrypted_. What that encryption protects against depends on the crypter in use - see <<pagestore-choosing-a-crypter,Choosing a crypter for CryptingPageStore>> below.
 
 * *DiskPageStore:* stores _SerializedPage_ on a session-scoped file on disk. The location of the folder where the files are stored is configurable via _org.apache.wicket.settings.StoreSettings.setFileStoreFolder(File)_, by default the web container's work folder is used (ServletContext attribute 'javax.servlet.context.tempdir'). In this folder a sub-folder is created named _'applicationName-filestore'_.
 This folder contains a sub-folder for each active http session. This session folder contains a single file named 'data' which contains the bytes for the pages. The size of this 'data' file is configurable via _org.apache.wicket.settings.StoreSettings.setMaxSizePerSession(Bytes)_. When this size is exceeded the newly stored files overwrite the oldest ones.
+
+[#pagestore-choosing-a-crypter]
+=== Choosing a crypter for CryptingPageStore
+
+When page store encryption is enabled, the actual encryption is performed by an implementation of _org.apache.wicket.pageStore.crypt.ICrypter_, configurable with _org.apache.wicket.settings.StoreSettings.setCrypter_. Which implementation we pick determines what the encryption protects against, and the difference matters because Wicket deserializes whatever it reads back from the store:
+
+* _DefaultCrypter_ (AES-256-CBC) is the default. It is *not* authenticated, so it provides confidentiality only: the stored pages are unreadable, but CBC ciphertext is malleable and its integrity is not verified on decryption, so someone able to write to the store can still influence what gets deserialized.
+* _GCMSIVCrypter_ (AES-256-GCM-SIV) is authenticated. Modified or substituted ciphertext fails to decrypt instead of reaching the deserializer, which makes the stored bytes tamper-evident as well as confidential. It requires Bouncy Castle - an optional dependency of _wicket-core_ that we must add ourselves - and is noticeably slower, which is why it is not the default.
+
+So if we enable encryption because the store lives somewhere we do not fully control, rather than merely to keep page contents private, we should select the authenticated crypter explicitly:
+
+[source,java]
+----
+getStoreSettings().setEncrypted(true).setCrypter(GCMSIVCrypter::new);
+----
+
+In both cases the key is held in the session, so encryption protects the pages against parties who can read or write the stored bytes - not against one who already controls the session. A custom _ICrypter_ only provides tamper detection if the cipher it returns uses an AEAD mode.
 
 === InMemoryPageStore
 

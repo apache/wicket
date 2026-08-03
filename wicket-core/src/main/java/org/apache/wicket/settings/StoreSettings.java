@@ -212,7 +212,11 @@ public class StoreSettings
 	/**
 	 * Sets the supplier for the {@link ICrypter} used by a
 	 * {@link org.apache.wicket.pageStore.CryptingPageStore}.
-	 * 
+	 * <p>
+	 * The default {@link DefaultCrypter} is not authenticated and gives confidentiality only. Set
+	 * {@link org.apache.wicket.pageStore.crypt.GCMSIVCrypter} here if the stored bytes must also be
+	 * tamper-evident.
+	 *
 	 * @param crypter
 	 *            The new supplier for an {@link ICrypter}.
 	 * @return {@code this} object for chaining
@@ -226,7 +230,8 @@ public class StoreSettings
 	/**
 	 * @return the supplier used to create a {@link ICrypter} for a
 	 *         {@link org.apache.wicket.pageStore.CryptingPageStore}. The default is
-	 *         {@link DefaultCrypter}.
+	 *         {@link DefaultCrypter}, which is not authenticated - see
+	 *         {@link #setCrypter(Supplier)}.
 	 */
 	public Supplier<ICrypter> getCrypter()
 	{

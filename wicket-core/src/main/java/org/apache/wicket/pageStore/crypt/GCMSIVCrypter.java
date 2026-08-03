@@ -30,13 +30,24 @@ import org.bouncycastle.jcajce.spec.AEADParameterSpec;
 
 /**
  * Encryption and decryption implementation using AES-256-GCM-SIV authenticated encryption.
- * 
- * This implementation requires Bouncy Castle. It is more secure than the {@link DefaultCrypter},
- * but also more expensive. Simple measurements have shown {@link DefaultCrypter} to be about 10 to
+ * <p>
+ * Because GCM-SIV is an AEAD mode, this implementation provides integrity as well as
+ * confidentiality: modified or substituted ciphertext fails to decrypt instead of being handed to
+ * the deserializer. It is therefore the implementation to choose when the page store needs to be
+ * tamper-evident and not merely unreadable - unlike the unauthenticated {@link DefaultCrypter},
+ * which is the default. Note that the key is held in the session, so this protects against parties
+ * who can read or write the stored bytes, not against one who already controls the session.
+ * <p>
+ * This implementation requires Bouncy Castle, which is an optional dependency of {@code
+ * wicket-core} and must be added explicitly. It is more secure than the {@link DefaultCrypter}, but
+ * also more expensive. Simple measurements have shown {@link DefaultCrypter} to be about 10 to
  * 15 times faster than this implementation. This is likely caused by not-so-optimal implementation
  * of the algorithm in Java by BC. When the JDK gets support for GCM-SIV
  * (https://bugs.openjdk.org/browse/JDK-8256530), this implementation will likely be faster than or
  * about as fast as CBC.
+ *
+ * @see DefaultCrypter
+ * @see ICrypter
  */
 public class GCMSIVCrypter implements ICrypter
 {

@@ -23,6 +23,19 @@ import javax.crypto.SecretKey;
 
 /**
  * An encrypter and decrypter of pages.
+ * <p>
+ * Implementations are not required to provide <em>authenticated</em> encryption, and callers must
+ * not assume that they do. An unauthenticated implementation gives confidentiality only: it hides
+ * the contents of a serialized page, but it does not detect modification of the stored bytes, so
+ * tampered ciphertext may still be handed to the deserializer. Of the implementations shipped with
+ * Wicket, {@link GCMSIVCrypter} is authenticated and {@link DefaultCrypter} - the default - is not.
+ * <p>
+ * If you implement this interface and want tamper detection, use an AEAD cipher mode (such as
+ * GCM, GCM-SIV or CCM) rather than adding encryption on top of an unauthenticated mode. See
+ * {@code SECURITY.md} for the trust assumptions Wicket makes about the page store.
+ *
+ * @see org.apache.wicket.pageStore.CryptingPageStore
+ * @see org.apache.wicket.settings.StoreSettings#setCrypter(java.util.function.Supplier)
  */
 public interface ICrypter {
 	SecretKey generateKey(SecureRandom random);
