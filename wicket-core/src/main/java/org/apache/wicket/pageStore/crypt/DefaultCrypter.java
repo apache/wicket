@@ -29,7 +29,21 @@ import javax.crypto.spec.IvParameterSpec;
 import org.apache.wicket.WicketRuntimeException;
 
 /**
- * Default encryption and decryption implementation.
+ * Default encryption and decryption implementation, using AES-256 in CBC mode.
+ * <p>
+ * <strong>This implementation is not authenticated and provides confidentiality only.</strong> CBC
+ * ciphertext is malleable and its integrity is not verified on decryption, so an attacker who can
+ * write to the underlying store can alter the stored bytes and have the result passed to the
+ * deserializer. Enabling encryption with this crypter therefore hides the contents of stored pages,
+ * but does not make the page store safe against tampering - the underlying store must still be
+ * treated as trusted, private storage.
+ * <p>
+ * Use {@link GCMSIVCrypter} instead where the stored bytes need to be tamper-evident as well as
+ * confidential. It is slower (see its javadoc) and requires Bouncy Castle, which is why this
+ * implementation remains the default.
+ *
+ * @see GCMSIVCrypter
+ * @see ICrypter
  */
 public class DefaultCrypter implements ICrypter
 {

@@ -59,3 +59,18 @@ public class HttpsPage extends WebPage implements IMarker {
 }
 ----
 
+=== The redirect host comes from the container
+
+When _HttpsMapper_ builds the redirect that switches a request to HTTPS, the hostname it uses is the one reported by the servlet container - _HttpServletRequest.getServerName()_, which is the _Host_ header of the incoming request. The same is true of every absolute URL Wicket renders, and of the target URI that Wicket's resource-isolation policies compare incoming _Origin_ and _Referer_ headers against.
+
+Wicket trusts this value as its own identity and performs no hostname validation of its own: only the deployment knows which hostnames are canonical, so the framework cannot decide this for us. Making sure that only expected _Host_ values ever reach the application is therefore part of deploying a Wicket application, not something the framework does for us:
+
+* configure the container or virtual host to reject requests carrying an unrecognised _Host_, returning a 400 or 404 instead of routing them to the application;
+* when TLS is terminated at a reverse proxy, have the proxy set _Host_ to the canonical name rather than passing on whatever the client sent;
+* avoid exposing a Wicket application through a catch-all or default virtual host that accepts any _Host_;
+* serve the application over HTTPS and enable HSTS, so that the plain HTTP requests _HttpsMapper_ exists to upgrade are not part of the normal flow.
+
+On a deployment that does accept arbitrary _Host_ values, redirects and absolute URLs will contain the host the client supplied. Note that this is not a way for an attacker to reach an origin they did not already control - a browser derives the _Host_ header from the URL it is fetching, so the host in the response is always the authority the client had already connected to. It does, however, weaken the _Origin_ and _Referer_ checks mentioned above, which is the better reason to get the container configuration right.
+
+Wicket also ignores the _X-Forwarded-For_ and _X-Forwarded-Proto_ headers unless we explicitly install _XForwardedRequestWrapperFactory_, which should only be enabled when a trusted proxy in front of the application strips any client-supplied copies of them. Note that Wicket does not implement _X-Forwarded-Host_ at all; the host always comes from the container.
+
