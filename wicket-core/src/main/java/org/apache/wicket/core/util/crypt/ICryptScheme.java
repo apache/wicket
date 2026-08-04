@@ -38,6 +38,11 @@ import javax.crypto.SecretKey;
  * <p>
  * Implementations must be thread-safe and pick a unique, stable {@link #id()}. Wicket reserves
  * ids {@code 1..31}; custom schemes should use ids {@code >= 32}.
+ * <p>
+ * A custom scheme that does not honour the AEAD contract - returning unverified plaintext instead
+ * of {@code null} on authentication failure - silently removes the tamper detection that callers
+ * rely on. See {@code SECURITY.md} for the trust assumptions Wicket makes about encrypted data,
+ * and {@link org.apache.wicket.pageStore.CryptingPageStore} for the page-store use of a scheme.
  */
 public interface ICryptScheme
 {

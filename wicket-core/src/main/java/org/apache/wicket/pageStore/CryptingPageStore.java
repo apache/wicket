@@ -43,6 +43,12 @@ import org.apache.wicket.util.lang.Args;
  * Each session gets its own random 256-bit AES key. Encryption uses the application's configured
  * {@link SecuritySettings#getCryptScheme() crypt scheme}; a page that can no longer be decrypted
  * (e.g. because the session key is gone or the data was tampered with) is treated as a cache miss.
+ * <p>
+ * Because the key lives in the session, the encryption protects the stored pages against a party
+ * who can read or write the underlying store - not against one who already controls the session.
+ * The store should therefore still be treated as trusted, private storage: Wicket deserializes
+ * whatever it reads back from it. See {@code SECURITY.md} for the trust assumptions Wicket makes
+ * about the page store.
  */
 public class CryptingPageStore extends DelegatingPageStore
 {
