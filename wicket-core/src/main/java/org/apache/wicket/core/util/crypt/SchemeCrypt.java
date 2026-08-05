@@ -32,7 +32,9 @@ import org.apache.wicket.util.lang.Args;
  * {@link ICryptScheme#id() id} of the scheme that produced the payload.
  * <p>
  * <strong>Encryption</strong> always uses the configured {@code encryptionScheme} (the strongest
- * scheme). <strong>Decryption</strong> reads the marker, looks the scheme up in a whitelist and,
+ * scheme), either randomized ({@link #encrypt}) or deterministic
+ * ({@link #encryptDeterministic}); both write the same format.
+ * <strong>Decryption</strong> reads the marker, looks the scheme up in a whitelist and,
  * if allowed, hands the rest to that scheme; otherwise it returns {@code null}. The marker is
  * authenticated as associated data, so it cannot be altered to force a different scheme, and any
  * scheme not in the whitelist is refused &mdash; together these prevent downgrade attacks.
@@ -85,12 +87,18 @@ public class SchemeCrypt implements ICrypt
 		Args.notNull(plainBytes, "plainBytes");
 
 		byte id = encryptionScheme.id();
-		byte[] payload = encryptionScheme.encrypt(plainBytes, key, aad(id, associatedData), random);
+		return marked(id,
+			encryptionScheme.encrypt(plainBytes, key, aad(id, associatedData), random));
+	}
 
-		byte[] result = new byte[payload.length + 1];
-		result[0] = id;
-		System.arraycopy(payload, 0, result, 1, payload.length);
-		return result;
+	@Override
+	public byte[] encryptDeterministic(byte[] plainBytes, byte[] associatedData)
+	{
+		Args.notNull(plainBytes, "plainBytes");
+
+		byte id = encryptionScheme.id();
+		return marked(id,
+			encryptionScheme.encryptDeterministic(plainBytes, key, aad(id, associatedData)));
 	}
 
 	@Override
@@ -111,6 +119,17 @@ public class SchemeCrypt implements ICrypt
 
 		byte[] payload = Arrays.copyOfRange(encryptedBytes, 1, encryptedBytes.length);
 		return scheme.decrypt(payload, key, aad(id, associatedData));
+	}
+
+	/**
+	 * Prefixes a scheme payload with the marker identifying the scheme that produced it.
+	 */
+	private static byte[] marked(byte marker, byte[] payload)
+	{
+		byte[] result = new byte[payload.length + 1];
+		result[0] = marker;
+		System.arraycopy(payload, 0, result, 1, payload.length);
+		return result;
 	}
 
 	/**

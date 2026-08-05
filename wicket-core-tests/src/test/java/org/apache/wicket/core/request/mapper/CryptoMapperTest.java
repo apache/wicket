@@ -288,17 +288,17 @@ class CryptoMapperTest extends AbstractMapperTest
 	}
 
 	/**
-	 * Authenticated encryption uses a random nonce, so encrypting the same URL twice yields
-	 * different ciphertext. To avoid Wicket's URL normalisation redirecting endlessly, the mapper
-	 * reuses within a request the ciphertext it has already seen for a given plaintext: after
-	 * decrypting an incoming URL, re-encrypting that same page reproduces exactly the URL that was
-	 * requested, so {@code targetUrl == currentUrl} and no redirect happens. This test documents
-	 * that behavior.
+	 * The mapper encrypts URLs deterministically, so the same page always maps to the same URL for
+	 * as long as the key lives. Two things depend on that: a URL regenerated while rendering
+	 * matches the one the client requested, so {@code targetUrl == currentUrl} and Wicket's URL
+	 * normalisation does not redirect endlessly; and a URL stays valid and identical across
+	 * requests, which is what makes encrypted resource URLs cacheable.
 	 */
 	@Test
-	void encryptedUrlIsReusedWithinRequestToStayStable()
+	void encryptedUrlIsStableAcrossRequests()
 	{
-		// the underlying authenticated crypt is non-deterministic (fresh random nonce each time)
+		// the randomized entry point of the very same crypt is non-deterministic; only the
+		// deterministic one is stable, and that is what the mapper uses
 		assertNotEquals(crypt.encryptUrlSafe(PLAIN_BOOKMARKABLE_URL),
 			crypt.encryptUrlSafe(PLAIN_BOOKMARKABLE_URL));
 
@@ -306,21 +306,26 @@ class CryptoMapperTest extends AbstractMapperTest
 		Url encrypted = mapper.mapHandler(
 			new RenderPageRequestHandler(new PageProvider(Page2.class, new PageParameters())));
 
-		// start a fresh request (with an empty per-request cache), simulating the client coming
-		// back with that URL
+		// start a fresh request, simulating the client coming back with that URL
 		tester.startPage(HomePage.class);
 
-		// decrypting the incoming URL teaches the mapper the plaintext -> ciphertext mapping...
+		// the URL received in this new request still decrypts...
 		IRequestHandler requestHandler = mapper.mapRequest(getRequest(encrypted));
 		assertNotNull(requestHandler);
 		assertEquals(Page2.class, ((RenderPageRequestHandler) unwrapRequestHandlerDelegate(
 			requestHandler)).getPageClass());
 
-		// ...so re-encrypting the same page reproduces exactly the requested URL (nonce reuse),
-		// which is what stops the infinite redirect
+		// ...and re-encrypting the same page reproduces exactly that URL, which is what stops the
+		// infinite redirect
 		Url regenerated = mapper.mapHandler(
 			new RenderPageRequestHandler(new PageProvider(Page2.class, new PageParameters())));
 		assertEquals(encrypted.toString(), regenerated.toString());
+
+		// the same holds in yet another request, without having decrypted anything in it
+		tester.startPage(HomePage.class);
+		assertEquals(encrypted.toString(), mapper.mapHandler(
+			new RenderPageRequestHandler(new PageProvider(Page2.class, new PageParameters())))
+			.toString());
 	}
 
 	/**
@@ -610,6 +615,25 @@ class CryptoMapperTest extends AbstractMapperTest
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
 		assertEquals("crypt/crypt.txt", handler.getResourceReference().getName());
+	}
+
+	/**
+	 * A resource URL must encrypt to the same text in every request, otherwise the browser sees a
+	 * new URL on each page view and re-downloads the resource despite its long-lived cache headers.
+	 */
+	@Test
+	void encryptedResourceUrlIsStableAcrossRequests()
+	{
+		PackageResourceReference resource = new PackageResourceReference(getClass(),
+			"crypt/crypt.txt");
+
+		Url firstRequest = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
+
+		tester.startPage(HomePage.class);
+
+		Url secondRequest = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
+
+		assertEquals(firstRequest.toString(), secondRequest.toString());
 	}
 
 	/**

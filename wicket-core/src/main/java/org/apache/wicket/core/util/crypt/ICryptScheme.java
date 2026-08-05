@@ -36,6 +36,11 @@ import javax.crypto.SecretKey;
  * externally supplied). All schemes sharing one {@link SchemeCrypt} must produce mutually
  * compatible keys, since existing ciphertext is decrypted with the current key during migration.
  * <p>
+ * A scheme offers both a randomized ({@link #encrypt}) and a deterministic
+ * ({@link #encryptDeterministic}) encryption path, the latter for callers that need a stable
+ * result &mdash; see {@link ICrypt#encryptDeterministic(byte[], byte[])}. Both must produce the
+ * same ciphertext format, so that a single {@link #decrypt} handles either.
+ * <p>
  * Implementations must be thread-safe and pick a unique, stable {@link #id()}. Wicket reserves
  * ids {@code 1..31}; custom schemes should use ids {@code >= 32}.
  * <p>
@@ -76,10 +81,34 @@ public interface ICryptScheme
 	byte[] encrypt(byte[] plaintext, SecretKey key, byte[] aad, SecureRandom random);
 
 	/**
+	 * Encrypt the given plaintext deterministically: the same {@code plaintext}, {@code key} and
+	 * {@code aad} must always produce the same ciphertext. Note the deliberate absence of a
+	 * {@link SecureRandom} parameter &mdash; a scheme derives whatever it would otherwise draw at
+	 * random from its inputs, for instance by deriving the nonce from the plaintext with a
+	 * pseudo-random function.
+	 * <p>
+	 * The result must be decryptable by {@link #decrypt} exactly like the output of
+	 * {@link #encrypt}. An implementation that returns randomized ciphertext here breaks the
+	 * callers that rely on stability, notably
+	 * {@link org.apache.wicket.core.request.mapper.CryptoMapper}, whose URLs would then change on
+	 * every request.
+	 *
+	 * @param plaintext
+	 *            the bytes to encrypt
+	 * @param key
+	 *            the secret key
+	 * @param aad
+	 *            additional authenticated data (the scheme marker); authenticated but not encrypted
+	 * @return the ciphertext (including nonce and authentication tag)
+	 */
+	byte[] encryptDeterministic(byte[] plaintext, SecretKey key, byte[] aad);
+
+	/**
 	 * Decrypt the given ciphertext.
 	 *
 	 * @param ciphertext
-	 *            the bytes produced by {@link #encrypt} (nonce + ciphertext + tag)
+	 *            the bytes produced by {@link #encrypt} or {@link #encryptDeterministic} (nonce +
+	 *            ciphertext + tag)
 	 * @param key
 	 *            the secret key
 	 * @param aad

@@ -110,6 +110,66 @@ public class SchemeCryptTest
 
 	@ParameterizedTest
 	@MethodSource("schemes")
+	void deterministicEncryptionIsStable(ICryptScheme scheme)
+	{
+		SchemeCrypt crypt = crypt(newKey(), scheme);
+		byte[] plain = "same input".getBytes(StandardCharsets.UTF_8);
+
+		byte[] deterministic = crypt.encryptDeterministic(plain);
+
+		// the same input always yields the same ciphertext...
+		assertArrayEquals(deterministic, crypt.encryptDeterministic(plain));
+		// ...which is not what the randomized path produces...
+		assertFalse(Arrays.equals(deterministic, crypt.encrypt(plain)));
+		// ...and it is read back by the ordinary decrypt, in the same format
+		assertEquals(scheme.id(), deterministic[0]);
+		assertArrayEquals(plain, crypt.decrypt(deterministic));
+	}
+
+	@ParameterizedTest
+	@MethodSource("schemes")
+	void deterministicEncryptionDiffersPerKey(ICryptScheme scheme)
+	{
+		byte[] plain = "same input".getBytes(StandardCharsets.UTF_8);
+
+		assertFalse(Arrays.equals(crypt(newKey(), scheme).encryptDeterministic(plain),
+			crypt(newKey(), scheme).encryptDeterministic(plain)));
+	}
+
+	@ParameterizedTest
+	@MethodSource("schemes")
+	void deterministicEncryptionDiffersPerAssociatedData(ICryptScheme scheme)
+	{
+		SchemeCrypt crypt = crypt(newKey(), scheme);
+		byte[] plain = "same input".getBytes(StandardCharsets.UTF_8);
+		byte[] aad = { 1, 2, 3, 4 };
+
+		byte[] withAad = crypt.encryptDeterministic(plain, aad);
+
+		assertFalse(Arrays.equals(withAad, crypt.encryptDeterministic(plain)));
+		// each still round-trips with its own associated data only
+		assertArrayEquals(plain, crypt.decrypt(withAad, aad));
+		assertNull(crypt.decrypt(withAad));
+	}
+
+	@ParameterizedTest
+	@MethodSource("schemes")
+	void deterministicNonceDiffersPerPlaintext(ICryptScheme scheme)
+	{
+		// a nonce shared by two *different* plaintexts is what AES-GCM does not survive, so the
+		// derived nonce must vary with the plaintext. Layout is marker(1) || nonce(12) || ...
+		final int nonceEnd = 1 + 12;
+
+		SchemeCrypt crypt = crypt(newKey(), scheme);
+		byte[] first = crypt.encryptDeterministic("plaintext one".getBytes(StandardCharsets.UTF_8));
+		byte[] second = crypt.encryptDeterministic("plaintext two".getBytes(StandardCharsets.UTF_8));
+
+		assertFalse(Arrays.equals(Arrays.copyOfRange(first, 1, nonceEnd),
+			Arrays.copyOfRange(second, 1, nonceEnd)));
+	}
+
+	@ParameterizedTest
+	@MethodSource("schemes")
 	void tamperingAnywhereIsDetected(ICryptScheme scheme)
 	{
 		SchemeCrypt crypt = crypt(newKey(), scheme);
@@ -226,5 +286,16 @@ public class SchemeCryptTest
 		String value = "a value with / and + and a space";
 		assertEquals(value, crypt.decryptUrlSafe(crypt.encryptUrlSafe(value)));
 		assertNull(crypt.decryptUrlSafe("not-valid-ciphertext"));
+	}
+
+	@Test
+	void urlSafeDeterministicRoundTripIsStable()
+	{
+		SchemeCrypt crypt = crypt(newKey(), new AesGcmCryptScheme());
+		String value = "wicket/bookmarkable/com.example.MyPage";
+
+		String encrypted = crypt.encryptUrlSafeDeterministic(value);
+		assertEquals(encrypted, crypt.encryptUrlSafeDeterministic(value));
+		assertEquals(value, crypt.decryptUrlSafe(encrypted));
 	}
 }

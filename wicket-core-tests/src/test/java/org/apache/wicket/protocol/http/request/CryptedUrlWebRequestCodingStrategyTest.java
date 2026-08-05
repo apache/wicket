@@ -115,6 +115,12 @@ class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 				}
 
 				@Override
+				public byte[] encryptDeterministic(byte[] plainBytes, byte[] associatedData)
+				{
+					return plainBytes;
+				}
+
+				@Override
 				public byte[] decrypt(byte[] encryptedBytes, byte[] associatedData)
 				{
 					return encryptedBytes;

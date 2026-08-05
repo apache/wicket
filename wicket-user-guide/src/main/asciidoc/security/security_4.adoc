@@ -7,10 +7,15 @@ public interface ICrypt
 {
 	byte[] encrypt(byte[] plainBytes, byte[] associatedData);
 
+	byte[] encryptDeterministic(byte[] plainBytes, byte[] associatedData);
+
 	byte[] decrypt(byte[] encryptedBytes, byte[] associatedData);
 
-	// URL-safe (Base64) String convenience layer used by CryptoMapper
+	// URL-safe (Base64) String convenience layer
 	default String encryptUrlSafe(String plainText) { ... }
+
+	// what CryptoMapper uses
+	default String encryptUrlSafeDeterministic(String plainText) { ... }
 
 	default String decryptUrlSafe(String encryptedText) { ... }
 
@@ -19,6 +24,10 @@ public interface ICrypt
 ----
 
 _ICrypt_ works on raw bytes and provides a URL-safe Base64 _String_ layer on top. The same interface is used everywhere Wicket encrypts data: encrypted URLs (_CryptoMapper_), the page store (see <<_page_storing,the chapter on page storing>>) and the "remember me" cookie. Decryption returns `null` on _any_ failure (unknown cipher, failed authentication, malformed input) instead of throwing, so undecryptable data is uniformly treated as absent.
+
+Encryption comes in two flavours. _encrypt_ is *randomized*: it draws a fresh nonce per call, so encrypting the same data twice gives two different results. This is what the page store and the "remember me" cookie use. _encryptDeterministic_ is *stable*: the same input always produces the same ciphertext for as long as the key lives. Both write the same format and are read back by the same _decrypt_.
+
+_CryptoMapper_ uses the deterministic flavour, because two things depend on an encrypted URL being stable. A URL regenerated while a page renders must match the one the client requested, or Wicket's URL normalisation would redirect to the newly generated URL, which would again differ, and so on. And a resource URL (JavaScript, CSS, images) must be identical on every page view, or the browser cannot recognise the resource it already holds and re-downloads it every time, however long-lived the cache headers are. The price is that identical URLs are recognisable as identical; with the default per-session key that observation is confined to a single user's session, and an attacker still cannot produce a URL without holding that key.
 
 The default implementation is _org.apache.wicket.core.util.crypt.SchemeCrypt_. It produces *self-describing, authenticated* ciphertext: every ciphertext is prefixed with a one-byte marker identifying the cipher (the "scheme") that produced it, and the payload is protected with authenticated encryption (AEAD) so any tampering is detected on decryption. The actual cipher is a pluggable _org.apache.wicket.core.util.crypt.ICryptScheme_; by default this is _AesGcmCryptScheme_, which uses JDK-native, authenticated *AES-256-GCM* and needs no extra dependencies.
 
@@ -53,6 +62,6 @@ public void init() {
 
 The default factory is _org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory_. It generates a unique, random 256-bit key for each user and stores it in her HTTP session. This way it helps to protect the application against https://owasp.org/www-community/attacks/csrf[CSRF] for each user of the application: the url itself serves as an https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html[encrypted token].
 
-WARNING: _KeyInSessionCryptFactory_ binds the HTTP session if it is not already bound! If the application needs to run in stateless mode it must provide a factory that does not rely on the session &mdash; for example _org.apache.wicket.core.util.crypt.ApplicationKeyCryptFactory_ with a stable, application-wide key. Note that an application-wide key means encrypted URLs are no longer isolated per user.
+WARNING: _KeyInSessionCryptFactory_ binds the HTTP session if it is not already bound! If the application needs to run in stateless mode it must provide a factory that does not rely on the session &mdash; for example _org.apache.wicket.core.util.crypt.ApplicationKeyCryptFactory_ with a stable, application-wide key. Note that an application-wide key means encrypted URLs are no longer isolated per user: the same URL encrypts to the same text for everybody, so anyone who can obtain the key can confirm which page a leaked encrypted URL points to.
 
 Finally, _CryptoMapper_ offers two constructors: _CryptoMapper(IRequestMapper wrappedMapper, Application application)_ uses the _ICryptFactory_ configured on _SecuritySettings_, while _CryptoMapper(IRequestMapper wrappedMapper, Supplier<ICrypt> cryptProvider)_ lets you supply a specific _ICrypt_ instance directly.

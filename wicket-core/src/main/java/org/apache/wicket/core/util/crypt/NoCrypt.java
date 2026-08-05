@@ -33,6 +33,12 @@ public class NoCrypt implements ICrypt
 	}
 
 	@Override
+	public byte[] encryptDeterministic(byte[] plainBytes, byte[] associatedData)
+	{
+		return plainBytes;
+	}
+
+	@Override
 	public byte[] decrypt(byte[] encryptedBytes, byte[] associatedData)
 	{
 		return encryptedBytes;
@@ -40,6 +46,12 @@ public class NoCrypt implements ICrypt
 
 	@Override
 	public String encryptUrlSafe(String plainText)
+	{
+		return plainText;
+	}
+
+	@Override
+	public String encryptUrlSafeDeterministic(String plainText)
 	{
 		return plainText;
 	}

@@ -32,6 +32,12 @@ import java.util.Base64;
  * <p>
  * The default {@link #encryptUrlSafe(String)} / {@link #decryptUrlSafe(String)} methods add a
  * URL-safe Base64 {@code String} layer on top of the {@code byte[]} core.
+ * <p>
+ * Encryption comes in two flavours: {@link #encrypt(byte[], byte[])} is randomized (a fresh nonce
+ * per call, so the same input yields different ciphertext every time) while
+ * {@link #encryptDeterministic(byte[], byte[])} is stable (the same input yields the same
+ * ciphertext for as long as the key lives). Both produce the same ciphertext format and are
+ * decrypted by the same {@link #decrypt(byte[], byte[])}.
  */
 public interface ICrypt
 {
@@ -64,6 +70,26 @@ public interface ICrypt
 	byte[] decrypt(byte[] encryptedBytes, byte[] associatedData);
 
 	/**
+	 * Encrypt the given bytes <em>deterministically</em>: the same {@code plainBytes} and
+	 * {@code associatedData} always produce the same ciphertext for as long as the key lives. The
+	 * result is decrypted by {@link #decrypt(byte[], byte[])} just like randomized ciphertext.
+	 * <p>
+	 * Use this only where a stable result is required &mdash; encrypted URLs, so that a regenerated
+	 * URL matches the one the client requested and stays cacheable. Prefer
+	 * {@link #encrypt(byte[], byte[])} everywhere else: determinism reveals that two ciphertexts
+	 * encrypt equal plaintexts, and lets anyone holding the key confirm a guessed plaintext by
+	 * re-encrypting it.
+	 *
+	 * @param plainBytes
+	 *            the bytes to encrypt, must not be {@code null}
+	 * @param associatedData
+	 *            optional additional data that is authenticated but not encrypted, as for
+	 *            {@link #encrypt(byte[], byte[])}. May be {@code null}.
+	 * @return the encrypted bytes
+	 */
+	byte[] encryptDeterministic(byte[] plainBytes, byte[] associatedData);
+
+	/**
 	 * Encrypt the given bytes without additional associated data.
 	 *
 	 * @param plainBytes
@@ -73,6 +99,19 @@ public interface ICrypt
 	default byte[] encrypt(byte[] plainBytes)
 	{
 		return encrypt(plainBytes, null);
+	}
+
+	/**
+	 * Deterministically encrypt the given bytes without additional associated data.
+	 *
+	 * @param plainBytes
+	 *            the bytes to encrypt, must not be {@code null}
+	 * @return the encrypted bytes
+	 * @see #encryptDeterministic(byte[], byte[])
+	 */
+	default byte[] encryptDeterministic(byte[] plainBytes)
+	{
+		return encryptDeterministic(plainBytes, null);
 	}
 
 	/**
@@ -101,7 +140,25 @@ public interface ICrypt
 	}
 
 	/**
-	 * Decrypt a URL-safe (Base64) {@code String} produced by {@link #encryptUrlSafe(String)}.
+	 * Deterministically encrypt the given text into a URL-safe (Base64, no padding)
+	 * {@code String}: the same {@code plainText} always yields the same result for as long as the
+	 * key lives. This is what {@link org.apache.wicket.core.request.mapper.CryptoMapper} uses, so
+	 * that encrypted URLs are stable.
+	 *
+	 * @param plainText
+	 *            the text to encrypt
+	 * @return the encrypted, URL-safe text
+	 * @see #encryptDeterministic(byte[], byte[])
+	 */
+	default String encryptUrlSafeDeterministic(String plainText)
+	{
+		byte[] encrypted = encryptDeterministic(plainText.getBytes(StandardCharsets.UTF_8));
+		return Base64.getUrlEncoder().withoutPadding().encodeToString(encrypted);
+	}
+
+	/**
+	 * Decrypt a URL-safe (Base64) {@code String} produced by {@link #encryptUrlSafe(String)} or
+	 * {@link #encryptUrlSafeDeterministic(String)}.
 	 *
 	 * @param encryptedText
 	 *            the encrypted, URL-safe text

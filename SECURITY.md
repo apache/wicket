@@ -210,6 +210,21 @@ mechanism. Authorization must be enforced with `IAuthorizationStrategy` (or
 equivalent) so that it holds regardless of whether a URL was guessed,
 replayed, leaked through a referrer, or found in a log.
 
+### Encrypted URLs are deterministic by design
+
+`CryptoMapper` encrypts a URL to the same text every time, for as long as the
+key lives. It has to: a URL regenerated during rendering must match the one the
+client requested, and a resource URL must stay identical across requests or the
+browser re-downloads the resource on every page view. The consequence is that
+equal URLs are recognisable as equal, and that anyone holding the key can
+confirm a guessed URL by encrypting it themselves. With the default
+`KeyInSessionCryptFactory` the key is per session, so this is confined to a
+single user; with an application-wide key it is not. Encrypted URLs are
+therefore an obfuscation and a per-session CSRF token, never a secret in their
+own right — which is the same reason they are not an authorization mechanism.
+Everything Wicket encrypts elsewhere (the page store, the "remember me" cookie)
+uses the randomized path and does not have this property.
+
 ## Reporting Something That Is Not a Vulnerability
 
 Findings that are real but not vulnerabilities are still welcome — please raise
