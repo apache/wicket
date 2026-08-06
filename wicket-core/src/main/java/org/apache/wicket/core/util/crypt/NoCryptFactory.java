@@ -14,25 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.crypt;
-
-import java.security.GeneralSecurityException;
+package org.apache.wicket.core.util.crypt;
 
 /**
- * THIS CLASS IS FOR TESTING PURPOSES ONLY. DO NOT USE IT IN PRODUCTION CODE!
- * 
- * @author Jonathan Locke
+ * An {@link ICryptFactory} that returns a {@link NoCrypt} (no encryption). Only for environments
+ * without a suitable security provider; <strong>do not use in production</strong>.
  */
-public class TrivialCrypt extends AbstractCrypt
+public class NoCryptFactory implements ICryptFactory
 {
+	private final ICrypt crypt = new NoCrypt();
+
 	@Override
-	protected byte[] crypt(final byte[] input, final int mode) throws GeneralSecurityException
+	public ICrypt newCrypt()
 	{
-		final byte[] result = new byte[input.length];
-		for (int i = 0; i < input.length; i++)
-		{
-			result[i] = (byte)(input[i] ^ 0xff);
-		}
-		return result;
+		return crypt;
 	}
 }

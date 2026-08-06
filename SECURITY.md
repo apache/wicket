@@ -157,13 +157,24 @@ session store as trusted, private storage: do not point them at storage that
 untrusted parties can write to, and do not accept externally supplied
 serialized page or session data.
 
-The exception is a page store configured with encryption
-(`StoreSettings#setEncrypted(true)`), and then only as far as the configured
-`ICrypter` implementation documents. Encryption does not by itself imply
-tamper detection: whether the stored bytes are merely confidential or are also
-protected against modification depends entirely on the implementation in use,
-and the default implementation is not authenticated. Consult the javadoc of the
-`ICrypter` you configure and rely on no more than it states.
+The partial exception is a page store configured with encryption
+(`StoreSettings#setEncrypted(true)`). Every `ICryptScheme` Wicket ships is
+authenticated (AEAD), so encrypted pages are tamper-evident as well as
+confidential: modified or substituted bytes fail to decrypt and the page is
+treated as absent instead of being handed to the deserializer. Each page is
+additionally bound to the page id it was stored under, so a stored page cannot
+be replayed as a different one. The scheme marker prefixing each ciphertext is
+authenticated too, and is refused unless it is one of the schemes accepted by
+`SecuritySettings#setWhitelistedCryptSchemes`, so an attacker cannot force
+decryption with a weaker scheme.
+
+Three limits on that exception are worth stating. The key lives in the user's
+session, so this protects the stored pages against a party who can read or
+write the store, not against one who already controls the session. It covers
+the page store only — the container's session store, and anything else holding
+serialized Wicket data, remains trusted storage. And a custom `ICryptScheme`
+inherits the guarantee only if it honours the contract: `decrypt` must return
+`null` on authentication failure rather than returning unverified plaintext.
 
 ### Another origin may not invoke a listener
 
@@ -197,6 +208,21 @@ guessable. It raises the cost of forging a URL, but it is not an access-control
 mechanism. Authorization must be enforced with `IAuthorizationStrategy` (or
 equivalent) so that it holds regardless of whether a URL was guessed,
 replayed, leaked through a referrer, or found in a log.
+
+### Encrypted URLs are deterministic by design
+
+`CryptoMapper` encrypts a URL to the same text every time, for as long as the
+key lives. It has to: a URL regenerated during rendering must match the one the
+client requested, and a resource URL must stay identical across requests or the
+browser re-downloads the resource on every page view. The consequence is that
+equal URLs are recognisable as equal, and that anyone holding the key can
+confirm a guessed URL by encrypting it themselves. With the default
+`KeyInSessionCryptFactory` the key is per session, so this is confined to a
+single user; with an application-wide key it is not. Encrypted URLs are
+therefore an obfuscation and a per-session CSRF token, never a secret in their
+own right — which is the same reason they are not an authorization mechanism.
+Everything Wicket encrypts elsewhere (the page store, the "remember me" cookie)
+uses the randomized path and does not have this property.
 
 ## Reporting Something That Is Not a Vulnerability
 

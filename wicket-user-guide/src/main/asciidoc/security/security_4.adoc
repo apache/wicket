@@ -1,27 +1,54 @@
 
-In chapter <<_generating_structured_and_clear_urls,10.6>> we have seen how to encrypt URLs using _CryptoMapper_ request mapper. To encrypt/decrypt page URLs _CryptoMapper_ uses an instance of _org.apache.wicket.util.crypt.ICrypt_ interface:
+In chapter <<_generating_structured_and_clear_urls,10.6>> we have seen how to encrypt URLs using _CryptoMapper_ request mapper. To encrypt/decrypt page URLs _CryptoMapper_ uses an instance of the _org.apache.wicket.core.util.crypt.ICrypt_ interface:
 
 [source,java]
 ----
 public interface ICrypt
 {
-	String encryptUrlSafe(final String plainText);
+	byte[] encrypt(byte[] plainBytes, byte[] associatedData);
 
-	String decryptUrlSafe(final String encryptedText);
+	byte[] encryptDeterministic(byte[] plainBytes, byte[] associatedData);
+
+	byte[] decrypt(byte[] encryptedBytes, byte[] associatedData);
+
+	// URL-safe (Base64) String convenience layer
+	default String encryptUrlSafe(String plainText) { ... }
+
+	// what CryptoMapper uses
+	default String encryptUrlSafeDeterministic(String plainText) { ... }
+
+	default String decryptUrlSafe(String encryptedText) { ... }
 
 	...
 }
 ----
 
-The default implementation for this interface is class _org.apache.wicket.util.crypt.SunJceCrypt_. It provides password-based cryptography using _PBEWithMD5AndDES_ algorithm coming with the standard security providers in the Java Runtime Environment.
+_ICrypt_ works on raw bytes and provides a URL-safe Base64 _String_ layer on top. The same interface is used everywhere Wicket encrypts data: encrypted URLs (_CryptoMapper_), the page store (see <<_page_storing,the chapter on page storing>>) and the "remember me" cookie. Decryption returns `null` on _any_ failure (unknown cipher, failed authentication, malformed input) instead of throwing, so undecryptable data is uniformly treated as absent.
 
-NOTE: Since Java 9, unlimited strength cryptography is enabled by default. No additional configuration is needed.
+Encryption comes in two flavours. _encrypt_ is *randomized*: it draws a fresh nonce per call, so encrypting the same data twice gives two different results. This is what the page store and the "remember me" cookie use. _encryptDeterministic_ is *stable*: the same input always produces the same ciphertext for as long as the key lives. Both write the same format and are read back by the same _decrypt_.
 
-By using _CryptoMapper(IRequestMapper wrappedMapper, Application application)_ constructor the mapper will use the configured _org.apache.wicket.util.crypt.ICryptFactory_ from _org.apache.wicket.settings.SecuritySettings.getCryptFactory()_. To use a stronger cryptography mechanism there are the following options:
+_CryptoMapper_ uses the deterministic flavour, because two things depend on an encrypted URL being stable. A URL regenerated while a page renders must match the one the client requested, or Wicket's URL normalisation would redirect to the newly generated URL, which would again differ, and so on. And a resource URL (JavaScript, CSS, images) must be identical on every page view, or the browser cannot recognise the resource it already holds and re-downloads it every time, however long-lived the cache headers are. The price is that identical URLs are recognisable as identical; with the default per-session key that observation is confined to a single user's session, and an attacker still cannot produce a URL without holding that key.
 
-* The first option is to use constructor _CryptoMapper(IRequestMapper wrappedMapper, Supplier<ICrypt> cryptProvider)_ and give it an implementation of _java.util.function.Supplier_ that returns a custom _org.apache.wicket.util.crypt.ICrypt_.
+The default implementation is _org.apache.wicket.core.util.crypt.SchemeCrypt_. It produces *self-describing, authenticated* ciphertext: every ciphertext is prefixed with a one-byte marker identifying the cipher (the "scheme") that produced it, and the payload is protected with authenticated encryption (AEAD) so any tampering is detected on decryption. The actual cipher is a pluggable _org.apache.wicket.core.util.crypt.ICryptScheme_; by default this is _AesGcmCryptScheme_, which uses JDK-native, authenticated *AES-256-GCM* and needs no extra dependencies.
 
-* The second option is to register a cipher factory at application level with method _setCryptFactory(ICryptFactory cryptFactory)_ of class _SecuritySettings_:
+NOTE: Since Java 9 unlimited strength cryptography is enabled by default, so AES-256 works out of the box with no additional configuration.
+
+The scheme is configured application-wide through _org.apache.wicket.settings.SecuritySettings_:
+
+[source,java]
+----
+@Override
+public void init() {
+	super.init();
+	// switch to AES-256-GCM-SIV (nonce-misuse resistant); requires Bouncy Castle
+	getSecuritySettings().setCryptScheme(new AesGcmSivCryptScheme());
+	setRootRequestMapper(new CryptoMapper(getRootRequestMapper(), this));
+}
+----
+
+_AesGcmSivCryptScheme_ (AES-256-GCM-SIV) is also available but requires https://www.bouncycastle.org/[Bouncy Castle] on the classpath with its provider registered. On decryption, the scheme marker must match one of the schemes accepted by _SecuritySettings.setWhitelistedCryptSchemes_ (the encryption scheme is always accepted); unknown or non-whitelisted schemes are refused, which prevents downgrade attacks. To migrate to a stronger scheme without breaking existing data, temporarily whitelist the old scheme alongside the new one, then drop it once the data has been rewritten.
+
+While the scheme decides _how_ data is encrypted, an _org.apache.wicket.core.util.crypt.ICryptFactory_ decides _which key_ to use. The factory is configured with _SecuritySettings.setCryptFactory(ICryptFactory)_:
 
 [source,java]
 ----
@@ -33,11 +60,8 @@ public void init() {
 }
 ----
 
+The default factory is _org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory_. It generates a unique, random 256-bit key for each user and stores it in her HTTP session. This way it helps to protect the application against https://owasp.org/www-community/attacks/csrf[CSRF] for each user of the application: the url itself serves as an https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html[encrypted token].
 
-Since version 6.19.0 Wicket uses _org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory_ as a default factory for _ICrypt_ objects. This factory generates a unique key for each user that is stored in her HTTP 
-session. This way it helps to protect the application against https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)[CSRF]
-for each user of the application. The url itself serves as https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet#Encrypted_Token_Pattern[encrypted token]
+WARNING: _KeyInSessionCryptFactory_ binds the HTTP session if it is not already bound! If the application needs to run in stateless mode it must provide a factory that does not rely on the session &mdash; for example _org.apache.wicket.core.util.crypt.ApplicationKeyCryptFactory_ with a stable, application-wide key. Note that an application-wide key means encrypted URLs are no longer isolated per user: the same URL encrypts to the same text for everybody, so anyone who can obtain the key can confirm which page a leaked encrypted URL points to.
 
-WARNING: _org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory_ binds the http session if it is not already bound! If the application needs to run in stateless mode then the application will have to provide a custom 
-implementation of _ICryptFactory_ that stores the user specific keys by other means.
-
+Finally, _CryptoMapper_ offers two constructors: _CryptoMapper(IRequestMapper wrappedMapper, Application application)_ uses the _ICryptFactory_ configured on _SecuritySettings_, while _CryptoMapper(IRequestMapper wrappedMapper, Supplier<ICrypt> cryptProvider)_ lets you supply a specific _ICrypt_ instance directly.

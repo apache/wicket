@@ -45,3 +45,44 @@ recipeList:
       artifactId: "*"
       newVersion: 10.x
 ---
+# https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+11.0
+#
+# The cryptography subsystem was unified and rebuilt in Wicket 11. The two former
+# interfaces (org.apache.wicket.util.crypt.ICrypt and
+# org.apache.wicket.pageStore.crypt.ICrypter) are replaced by a single
+# org.apache.wicket.core.util.crypt.ICrypt, and the following classes were removed with no
+# drop-in replacement (encryption now always uses an authenticated scheme selected via
+# org.apache.wicket.settings.SecuritySettings#setCryptScheme):
+#   SunJceCrypt, AbstractCrypt, TrivialCrypt, CryptFactoryCachingDecorator,
+#   AESCrypt, AbstractJceCrypt, KeyInSessionSunJceCryptFactory,
+#   AbstractKeyInSessionCryptFactory, DefaultCrypter, GCMSIVCrypter, ICrypter.
+# These require manual migration; see the guide above. Data encrypted by Wicket 10 cannot
+# be decrypted by Wicket 11 (per-session keys and formats change).
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.wicket.MigrateToWicket11
+displayName: Migrate to Wicket 11.x
+description: Migrates Wicket 10.x to Wicket 11.x, as well as Java 21.
+recipeList:
+  - org.openrewrite.java.migrate.UpgradeToJava21
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.util.crypt.ICrypt
+      newFullyQualifiedTypeName: org.apache.wicket.core.util.crypt.ICrypt
+      ignoreDefinition: "True"
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.util.crypt.ICryptFactory
+      newFullyQualifiedTypeName: org.apache.wicket.core.util.crypt.ICryptFactory
+      ignoreDefinition: "True"
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.util.crypt.NoCrypt
+      newFullyQualifiedTypeName: org.apache.wicket.core.util.crypt.NoCrypt
+      ignoreDefinition: "True"
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.util.crypt.NoCryptFactory
+      newFullyQualifiedTypeName: org.apache.wicket.core.util.crypt.NoCryptFactory
+      ignoreDefinition: "True"
+  - org.openrewrite.maven.UpgradeDependencyVersion:
+      groupId: org.apache.wicket
+      artifactId: "*"
+      newVersion: 11.x
+      versionPattern: -SNAPSHOT
+---
