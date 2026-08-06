@@ -11,8 +11,7 @@ discloses the issue publicly before a fix is available.
 Report suspected vulnerabilities privately to:
 
 - **security@apache.org** — the ASF Security Team, who will forward the report
-  to the Wicket PMC, or
-- **private@wicket.apache.org** — the Wicket PMC directly.
+  to the Wicket PMC.
 
 A useful report includes:
 
