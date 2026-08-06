@@ -30,6 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.protocol.http.IResourceIsolationPolicy.RequestType;
 import org.apache.wicket.protocol.http.IResourceIsolationPolicy.ResourceIsolationOutcome;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
@@ -284,6 +285,25 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 			&& !(handler instanceof RenderPageRequestHandler);
 	}
 
+	/**
+	 * Determines what the request does with the targeted page, so that the policies can distinguish
+	 * a render - which may legitimately be the result of a top-level navigation from another site -
+	 * from a listener invocation, which must never come from another site.
+	 * <p>
+	 * Note that {@link #isChecked(IRequestHandler)} excludes renders by default, so policies only
+	 * see {@link RequestType#RENDER} when that method is overridden to extend resource isolation to
+	 * page renders.
+	 *
+	 * @param handler
+	 *            the handler that is currently processing
+	 * @return the type of request
+	 */
+	protected RequestType getRequestType(IRequestHandler handler)
+	{
+		return handler instanceof RenderPageRequestHandler ? RequestType.RENDER
+			: RequestType.LISTENER;
+	}
+
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
 	{
@@ -322,10 +342,12 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 				return;
 			}
 
+			RequestType requestType = getRequestType(handler);
+
 			for (IResourceIsolationPolicy policy : resourceIsolationPolicies)
 			{
-				ResourceIsolationOutcome outcome = policy
-					.isRequestAllowed(containerRequest, targetedPage);
+				ResourceIsolationOutcome outcome = policy.isRequestAllowed(containerRequest,
+					targetedPage, requestType);
 				if (ResourceIsolationOutcome.DISALLOWED.equals(outcome))
 				{
 					log.debug("Isolation policy {} has rejected a request to {}",
