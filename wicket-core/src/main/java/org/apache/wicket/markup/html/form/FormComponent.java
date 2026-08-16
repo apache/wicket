@@ -1409,6 +1409,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			onDisabled(tag);
 		}
 
+		if (isRequired())
+		{
+			onRequired(tag);
+		}
+
 		super.onComponentTag(tag);
 	}
 
@@ -1422,6 +1427,19 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	{
 		super.onDetach();
 		convertedInput = null;
+	}
+
+	/**
+	 * Called by {@link #onComponentTag(ComponentTag)} when the component is required. By default,
+	 * this method will add a required="required" attribute to the tag. Components may override this
+	 * method to tweak the tag as they think is fit.
+	 * 
+	 * @param tag
+	 *            the tag that is being rendered
+	 */
+	protected void onRequired(final ComponentTag tag)
+	{
+		tag.put("required", "required");
 	}
 
 	/**
