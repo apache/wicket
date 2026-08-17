@@ -29,7 +29,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for JCE based ICrypt implementations.
- * 
+ * <p>
+ * This class does not choose a cipher mode, but the implementations shipped with Wicket use
+ * unauthenticated ones and so provide confidentiality only - see {@link SunJceCrypt}. A value that
+ * decrypts without error has therefore not been shown to be unmodified, and callers must not treat
+ * successful decryption as proof of integrity. Subclasses that want tamper detection should use an
+ * AEAD cipher mode (such as GCM, GCM-SIV or CCM) rather than layering something on top of an
+ * unauthenticated mode.
+ *
  * @author Juergen Donnerstag
  */
 public abstract class AbstractCrypt implements ICrypt
