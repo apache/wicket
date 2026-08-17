@@ -16,21 +16,19 @@
  */
 package org.apache.wicket.csp;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
+
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Build the CSP configuration like this:
@@ -69,16 +67,23 @@ public class ContentSecurityPolicySettings
 	private final Map<CSPHeaderMode, CSPHeaderConfiguration> configs = new EnumMap<>(
 		CSPHeaderMode.class);
 
-	private Predicate<IRequestHandler> protectedFilter = RenderPageRequestHandler.class::isInstance;
+	private final CSPHeaderWriter cspHeaderWriter;
 
 	private Supplier<String> nonceCreator;
-	
+
 	public ContentSecurityPolicySettings(Application application)
 	{
 		Args.notNull(application, "application");
-		
+
+		cspHeaderWriter = new CSPHeaderWriter(this);
+
 		nonceCreator = () ->
 				application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
+	}
+
+	public CSPHeaderWriter getHeaderWriter()
+	{
+		return cspHeaderWriter;
 	}
 
 	public CSPHeaderConfiguration blocking()
@@ -106,35 +111,6 @@ public class ContentSecurityPolicySettings
 		return this;
 	}
 	
-	/**
-	 * Sets the predicate that determines which requests must be protected by the CSP. When the
-	 * predicate evaluates to false, the request will not be protected.
-	 * 
-	 * @param protectedFilter
-	 *            The new filter, must not be null.
-	 * @return {@code this} for chaining.
-	 */
-	public ContentSecurityPolicySettings setProtectedFilter(
-		Predicate<IRequestHandler> protectedFilter)
-	{
-		Args.notNull(protectedFilter, "protectedFilter");
-		this.protectedFilter = protectedFilter;
-		return this;
-	}
-
-	/**
-	 * Should any request be protected by CSP.
-	 *
-	 * @param handler
-	 * @return <code>true</code> by default for all {@link RenderPageRequestHandler}s
-	 * 
-	 * @see #setProtectedFilter(Predicate)
-	 */
-	protected boolean mustProtectRequest(IRequestHandler handler)
-	{
-		return protectedFilter.test(handler);
-	}
-
 	/**
 	 * Returns true if any of the headers includes a directive with a nonce.
 	 * 
@@ -203,7 +179,6 @@ public class ContentSecurityPolicySettings
 	 */
 	public void enforce(WebApplication application)
 	{
-		application.getRequestCycleListeners().add(new CSPRequestCycleListener(this));
 		application.getHeaderResponseDecorators()
 			.addPreResourceAggregationDecorator(response -> new CSPNonceHeaderResponseDecorator(response, this));
 		application.mount(new ReportCSPViolationMapper(this));

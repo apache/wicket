@@ -147,6 +147,12 @@ public class WebPage extends Page
 	 */
 	protected void configureResponse(final WebResponse response)
 	{
+		var cspSettings = WebApplication.get().getCspSettings();
+		if (cspSettings.isEnabled() && response.isHeaderSupported())
+		{
+			cspSettings.getHeaderWriter().write(response, getRequestCycle());
+		}
+
 		// Users may subclass setHeader() to set there own headers
 		setHeaders(response);
 
