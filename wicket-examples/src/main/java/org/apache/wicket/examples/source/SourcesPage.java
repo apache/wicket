@@ -101,6 +101,12 @@ public class SourcesPage extends WebPage
 			try
 			{
 				source = (name != null) ? name : sourceParam.toString();
+				if (!packagedResources.getObject().contains(source))
+				{
+					log.error("user is trying to access resource: {} which is not part of the package of {}",
+						source, getPageTargetClass().getName());
+					return "Unable to read the source for " + source;
+				}
 				resourceAsStream = getPageTargetClass().getResourceAsStream(source);
 				if (resourceAsStream == null)
 				{
@@ -198,7 +204,7 @@ public class SourcesPage extends WebPage
 					}
 					else
 					{
-						String absolutePath = scope.getResource("").toExternalForm();
+						String absolutePath = resource.toExternalForm();
 						File basedir;
 						URI uri;
 						try
@@ -290,7 +296,7 @@ public class SourcesPage extends WebPage
 		private FilesBrowser(String id)
 		{
 			super(id);
-			ListView<String> lv = new ListView<String>("file", new PackagedResourcesModel())
+			ListView<String> lv = new ListView<String>("file", packagedResources)
 			{
 				@Override
 				protected void populateItem(final ListItem<String> item)
@@ -376,6 +382,12 @@ public class SourcesPage extends WebPage
 	 * The selected name of the packaged resource to display.
 	 */
 	private String name;
+
+	/**
+	 * The resources of the package of the selected page. Doubles as the white list of what may be
+	 * displayed.
+	 */
+	private final PackagedResourcesModel packagedResources = new PackagedResourcesModel();
 
 	private transient Class<? extends Page> page;
 
