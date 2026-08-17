@@ -30,12 +30,12 @@ published and the PMC has announced it. In return, we will keep you informed of
 our assessment and of the release timeline, and credit you in the announcement
 unless you ask us not to.
 
-Note that reports are assessed against the security model below. A report that
-depends on the framework distrusting something this model treats as trusted may
-be closed as a deployment or configuration issue rather than a framework
-vulnerability. If you believe the model itself is wrong, that is a legitimate
-and useful thing to report — please say so explicitly, so we discuss the model
-rather than the individual code path.
+Note that reports are assessed against the scope and the security model below.
+A report that depends on the framework distrusting something this model treats
+as trusted may be closed as a deployment or configuration issue rather than a
+framework vulnerability. If you believe the model itself is wrong, that is a
+legitimate and useful thing to report — please say so explicitly, so we discuss
+the model rather than the individual code path.
 
 Conversely, a demonstrated bypass of a boundary this model does claim — for
 example the package resource guard, or an authorization strategy — is a
@@ -60,6 +60,82 @@ current status and the latest release of each line.
 If you are running a discontinued version, the fix is to upgrade. See the
 [Migration to Wicket 10.0](https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+10.0)
 guide on our wiki, which links the guides for the earlier lines.
+
+## Scope
+
+The table above says which release lines receive security fixes. Two categories
+of code inside those lines sit outside this process.
+
+### Deprecated code is out of scope
+
+`@Deprecated` is our statement that code has no future and that an application
+should stop relying on it. Where an application has to reach that code
+deliberately — calling a deprecated method, extending a deprecated class,
+setting a deprecated setting — the remedy for a problem in it is to stop using
+it, not to harden something we intend to remove. Such a report is closed with a
+pointer to whatever the migration is; it receives no CVE, and the deprecated
+code is not fixed.
+
+Two limits on that, both of which cut in the reporter's favour:
+
+- **Deprecation is per release line.** A member deprecated on `master` may still
+  be current in 10.x or 9.x. A report is judged against the line it targets, not
+  against `master`.
+- **Deprecating a member does not deprecate the behaviour behind it.** Where a
+  deprecated accessor merely fronts a feature that is still current and still
+  reachable without the application opting in, the feature is in scope and the
+  deprecated accessor is beside the point. What this section excludes is
+  functionality an application chooses to use, not behaviour it gets whether it
+  asks for it or not.
+
+Where something is deprecated *because* it is insecure, the javadoc says so.
+Usually it also names what to use instead. Sometimes it cannot: where the design
+rather than the implementation is the problem, a feature may be one that cannot
+be made safe, and we will deprecate it with no replacement offered — the secure
+course is to stop doing the thing at all rather than to do it differently, so
+there is nothing to migrate to. Deprecation is the fix in that case, and the code
+is out of scope on the same footing as any other deprecated code. The javadoc
+says which of the two applies, so it is clear before reporting.
+
+### `wicket-examples` is sample code, not production code
+
+`wicket-examples` exists to demonstrate framework features in as few lines as
+possible. It is not written to production standards, and some of it is
+deliberately insecure so that the examples run anywhere out of the box.
+`WicketExampleApplication`, the base class of every example, installs `NoCrypt`
+as the crypt factory — a no-op cipher, so that nothing depends on the local JCE
+setup — and enables the development utilities; the source says in as many words
+not to do either in a real application. Individual examples go further:
+`authentication1` hardcodes its one credential pair in the source. Do not read
+the examples as a security reference, and do not copy them into an application
+unchanged.
+
+We do want to hear about problems in them, because example code gets copied and
+a misleading pattern propagates from there into real applications. But fixing
+one is a correction to teaching material rather than a fix to a vulnerability in
+the framework, so:
+
+- the PMC will not request a CVE for it;
+- it is fixed on `master` only. `wicket-examples` ships as a WAR in every
+  release, and we knowingly leave the released examples as they are;
+- once we have confirmed the problem is example-only, it is tracked in public
+  [JIRA](https://issues.apache.org/jira/projects/WICKET), since there is nothing
+  to embargo.
+
+The same reasoning covers `wicket-devutils`, a development aid rather than a
+production module (see
+[Deployment configuration](#deployment-configuration-is-the-operators-responsibility)),
+and the internal test modules that are never published. It does **not** cover
+`wicket-tester` or `wicket-extensions-tester`, which are released artifacts that
+applications depend on, and it does not cover the quickstart archetype:
+applications are started from the archetype, so it is expected to be secure by
+default and is in scope like any other module.
+
+The examples are also hosted publicly by the ASF. Those deployments are ASF
+infrastructure, not a Wicket release. If you find something that affects the
+hosting rather than the example application itself, it is still worth reporting
+to **security@apache.org** — say that it concerns the hosted site, so that it can
+be routed to ASF Infrastructure as well as to the PMC.
 
 ## Security Model
 
@@ -118,7 +194,7 @@ belongs at the container or proxy, per the points above.
 Wicket ignores `X-Forwarded-For` and `X-Forwarded-Proto` unless you explicitly
 enable `XForwardedRequestWrapperFactory`. When enabled, it overrides
 `getRemoteAddr()`, `getRemoteHost()`, `getScheme()` and `getServerPort()` from
-those headers, subject to its `internalProxies` and `trustedProxies`
+those headers, subject to its `allowedInternalProxies` and `trustedProxies`
 configuration.
 
 Only enable it when a trusted proxy in front of the application appends to
@@ -146,7 +222,8 @@ only reachable in `DEVELOPMENT` mode are treated as configuration errors rather
 than vulnerabilities.
 
 Likewise, `wicket-devutils` is a development aid. Do not deploy it in
-production.
+production; it is out of scope for the same reason the examples are (see
+[Scope](#scope)).
 
 ### Serialized data is trusted
 
