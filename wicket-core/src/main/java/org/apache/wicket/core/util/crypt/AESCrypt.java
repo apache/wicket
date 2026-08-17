@@ -34,7 +34,20 @@ import javax.crypto.spec.IvParameterSpec;
 /**
  * AES based {@link ICrypt} encrypt and decrypt strings such as passwords or URL segments.
  * Based on http://stackoverflow.com/a/992413
- * 
+ * <p>
+ * <strong>This implementation is not authenticated and provides confidentiality only.</strong> The
+ * default {@code AES/CBC/PKCS5Padding} produces malleable ciphertext whose integrity is not
+ * verified on decryption, so someone able to modify an encrypted value may change what it decrypts
+ * to instead of being detected. Never treat the fact that a value was encrypted as evidence that it
+ * has not been tampered with, and never use encryption here in place of an authorization check.
+ * <p>
+ * Passing a different {@code algorithm} does not change this: the cipher is initialised with an
+ * {@link javax.crypto.spec.IvParameterSpec} sized from the cipher block size, so this class is
+ * built for IV-based unauthenticated modes. Tamper detection needs a different {@link ICrypt}
+ * implementation, not another algorithm string. See {@code SECURITY.md} for the trust assumptions
+ * Wicket makes here, and {@link org.apache.wicket.core.request.mapper.CryptoMapper} for why
+ * encrypted URLs are not an access-control mechanism.
+ *
  * @see ICrypt
  */
 public class AESCrypt extends AbstractJceCrypt
