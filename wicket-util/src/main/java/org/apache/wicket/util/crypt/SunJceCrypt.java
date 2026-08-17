@@ -37,7 +37,16 @@ import org.apache.wicket.util.lang.Args;
  * implementation is based around Sun's security providers and uses the <a
  * href="http://www.ietf.org/rfc/rfc2898.txt">PBEWithMD5AndDES</a> method to encrypt and decrypt the
  * data.
- * 
+ * <p>
+ * <strong>This implementation is not authenticated and provides confidentiality only.</strong>
+ * {@code PBEWithMD5AndDES} is DES in CBC mode: the ciphertext is malleable and its integrity is not
+ * verified on decryption, so someone able to modify an encrypted value may change what it decrypts
+ * to instead of being detected. Never treat the fact that a value was encrypted as evidence that it
+ * has not been tampered with, and never use encryption here in place of an authorization check.
+ * Passing another {@code cryptMethod} does not by itself change this. See {@code SECURITY.md} for
+ * the trust assumptions Wicket makes here, and {@code CryptoMapper} for why encrypted URLs are not
+ * an access-control mechanism.
+ *
  * @author Juergen Donnerstag
  */
 public class SunJceCrypt extends AbstractCrypt
