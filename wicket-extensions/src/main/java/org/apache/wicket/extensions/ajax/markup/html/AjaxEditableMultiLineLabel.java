@@ -94,6 +94,13 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			}
 
 			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+				setEscapeModelStrings(AjaxEditableMultiLineLabel.this.getEscapeModelStrings());
+			}
+
+			@Override
 			public void onComponentTagBody(final MarkupStream markupStream,
 				final ComponentTag openTag)
 			{

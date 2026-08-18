@@ -390,6 +390,13 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 			}
 
 			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+				setEscapeModelStrings(AjaxEditableLabel.this.getEscapeModelStrings());
+			}
+
+			@Override
 			public void onComponentTagBody(final MarkupStream markupStream,
 				final ComponentTag openTag)
 			{
