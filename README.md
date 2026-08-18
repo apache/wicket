@@ -36,7 +36,7 @@ from, and get started quickly:
  - Wicket Examples:
 
     shows all components in short usage examples, also available live on:
-    https://examples9x.wicket.apache.org
+    https://examples10x.wicket.apache.org/index.html
 
  - Wicket Quickstart - https://wicket.apache.org/start/quickstart.html:
 
