@@ -14,49 +14,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.crypt;
-
+package org.apache.wicket.core.util.crypt;
 
 /**
- * Due to legal reasons in some countries the JRE is shipped without a security provider. As a
- * convenience solution, we provide a default implementation which does not encrypt/decrypt the
- * data. It does not modify the data at all. Thus we strongly recommend not to use it for production
- * sites.
- * 
- * @author Juergen Donnerstag
+ * An {@link ICrypt} that does <strong>not</strong> encrypt anything &mdash; it returns its input
+ * unchanged. It exists only for environments where the JRE ships without a suitable security
+ * provider.
+ * <p>
+ * <strong>Do not use this in production.</strong> It provides neither confidentiality nor
+ * integrity.
  */
 public class NoCrypt implements ICrypt
 {
-	/**
-	 * Constructor
-	 */
-	public NoCrypt()
+	@Override
+	public byte[] encrypt(byte[] plainBytes, byte[] associatedData)
 	{
+		return plainBytes;
 	}
 
-	/**
-	 * Decrypts a string into a string.
-	 * 
-	 * @param text
-	 *            text to decrypt
-	 * @return the decrypted text
-	 */
 	@Override
-	public final String decryptUrlSafe(final String text)
+	public byte[] encryptDeterministic(byte[] plainBytes, byte[] associatedData)
 	{
-		return text;
+		return plainBytes;
 	}
 
-	/**
-	 * Encrypt a string into a string
-	 * 
-	 * @param plainText
-	 *            text to encrypt
-	 * @return encrypted string
-	 */
 	@Override
-	public final String encryptUrlSafe(final String plainText)
+	public byte[] decrypt(byte[] encryptedBytes, byte[] associatedData)
+	{
+		return encryptedBytes;
+	}
+
+	@Override
+	public String encryptUrlSafe(String plainText)
 	{
 		return plainText;
+	}
+
+	@Override
+	public String encryptUrlSafeDeterministic(String plainText)
+	{
+		return plainText;
+	}
+
+	@Override
+	public String decryptUrlSafe(String encryptedText)
+	{
+		return encryptedText;
 	}
 }

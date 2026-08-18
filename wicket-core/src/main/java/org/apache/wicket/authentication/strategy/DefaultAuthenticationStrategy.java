@@ -17,9 +17,9 @@
 package org.apache.wicket.authentication.strategy;
 
 import org.apache.wicket.authentication.IAuthenticationStrategy;
+import org.apache.wicket.core.util.crypt.ICrypt;
 import org.apache.wicket.util.cookies.CookieDefaults;
 import org.apache.wicket.util.cookies.CookieUtils;
-import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -95,17 +95,13 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 		String value = getCookieUtils().load(cookieKey);
 		if (Strings.isEmpty(value) == false)
 		{
-			try
-			{
-				value = getCrypt().decryptUrlSafe(value);
-			}
-			catch (RuntimeException e)
+			value = getCrypt().decryptUrlSafe(value);
+			if (value == null)
 			{
 				logger.info(
-					"Error decrypting login cookie: {}. The cookie will be deleted. Possible cause is that a session-relative encryption key was used to encrypt this cookie while this decryption attempt is happening in a different session, eg user coming back to the application after session expiration",
+					"Could not decrypt login cookie: {}. The cookie will be deleted. A possible cause is that the encryption key changed (e.g. the application was restarted with a session-relative or per-boot key), so a cookie created earlier can no longer be decrypted",
 					cookieKey);
 				getCookieUtils().remove(cookieKey);
-				value = null;
 			}
 			return decode(value);
 		}

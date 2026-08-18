@@ -14,40 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.util.crypt;
-
-
-import org.apache.wicket.util.lang.Args;
+package org.apache.wicket.core.util.crypt;
 
 /**
- * {@link ICryptFactory} decorator that caches the call to {@link ICryptFactory#newCrypt()}
- * 
- * @author Igor Vaynberg (ivaynberg)
+ * A factory producing {@link ICrypt} instances. The factory owns the <em>key source</em> (e.g. a
+ * per-session key or a global application key); the encryption scheme and decryption whitelist
+ * come from the application's
+ * {@link org.apache.wicket.settings.SecuritySettings crypto settings}.
  */
-public class CryptFactoryCachingDecorator implements ICryptFactory
+public interface ICryptFactory
 {
-	private final ICryptFactory delegate;
-	private ICrypt cache;
-
 	/**
-	 * Construct.
-	 * 
-	 * @param delegate
-	 *            the crypt factory whose {@link ICryptFactory#newCrypt()} call will be cached
+	 * @return a (possibly cached) {@link ICrypt} bound to this factory's key
 	 */
-	public CryptFactoryCachingDecorator(final ICryptFactory delegate)
-	{
-		Args.notNull(delegate, "delegate");
-		this.delegate = delegate;
-	}
-
-	@Override
-	public final ICrypt newCrypt()
-	{
-		if (cache == null)
-		{
-			cache = delegate.newCrypt();
-		}
-		return cache;
-	}
+	ICrypt newCrypt();
 }
