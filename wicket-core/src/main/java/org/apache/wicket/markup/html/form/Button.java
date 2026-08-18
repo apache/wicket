@@ -236,6 +236,15 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 
 		super.onComponentTagBody(markupStream, openTag);
 	}
+	
+	@Override
+	protected void onFormComponentTag(ComponentTag tag)
+	{
+		if (!getDefaultFormProcessing())
+		{
+			tag.put("formnovalidate", "formnovalidate");
+		}
+	}
 
 	@Override
 	public void onError()

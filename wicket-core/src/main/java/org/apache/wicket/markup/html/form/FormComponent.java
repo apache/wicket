@@ -67,6 +67,7 @@ import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.ValidatorAdapter;
+import org.apache.wicket.validation.validator.PatternValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1409,12 +1410,43 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			onDisabled(tag);
 		}
 
+		onFormComponentTag(tag);
+		
+		super.onComponentTag(tag);
+	}
+
+	/**
+	 * FormComponent specific tag processing.
+	 * 
+	 * @param tag
+	 *            Tag to modify
+	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
+	 */
+	protected void onFormComponentTag(final ComponentTag tag)
+	{
 		if (isRequired())
 		{
 			onRequired(tag);
 		}
+		
+		IModel<String> label = getLabel();
+		if (label != null && label.getObject() != null)
+		{
+			tag.put("placeholder", label.getObject());
+		}
 
-		super.onComponentTag(tag);
+		for (IValidator<?> validator : getValidators())
+		{
+			while (validator instanceof ValidatorAdapter)
+			{
+				validator = ((ValidatorAdapter<?>)validator).getValidator();
+			}
+
+			if (validator instanceof PatternValidator)
+			{
+				tag.put("pattern", ((PatternValidator)validator).getPattern().toString());
+			}
+		}
 	}
 
 	/**
