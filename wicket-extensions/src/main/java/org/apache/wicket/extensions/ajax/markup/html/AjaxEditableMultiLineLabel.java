@@ -87,6 +87,13 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+				setEscapeModelStrings(AjaxEditableMultiLineLabel.this.getEscapeModelStrings());
+			}
+
+			@Override
 			public void onComponentTagBody(final MarkupStream markupStream,
 				final ComponentTag openTag)
 			{
