@@ -289,6 +289,10 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * 
 	 * Otherwise no additional default choice will be returned.
 	 * 
+	 * The body of the option is escaped according to {@link #getEscapeModelStrings()}, the same way
+	 * the body of every other option is. An override that builds an option itself is responsible for
+	 * escaping what it puts in the body.
+	 * 
 	 * @see #getNullValidKey()
 	 * @see #getNullKey()
 	 * @see org.apache.wicket.markup.html.form.AbstractChoice#getDefaultChoice(String)
@@ -315,7 +319,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			}
 
 			// Add body of option tag
-			buffer.append(" value=\"\">").append(option).append("</option>");
+			buffer.append(" value=\"\">").append(escapeOptionBody(option)).append("</option>");
 			return buffer;
 		}
 		else
@@ -325,10 +329,23 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			{
 				// Force the user to pick a non-null value
 				String option = getNullKeyDisplayValue();
-				return "\n<option selected=\"selected\" value=\"\">" + option + "</option>";
+				return "\n<option selected=\"selected\" value=\"\">" + escapeOptionBody(option)
+					+ "</option>";
 			}
 		}
 		return "";
+	}
+
+	/**
+	 * Escapes the body of the default option, the way
+	 * {@code AbstractChoice#renderValue} escapes the body of every other option. The value
+	 * is escaped here rather than in {@link #getNullValidDisplayValue()} and
+	 * {@link #getNullKeyDisplayValue()} because those return a display value, which an override may
+	 * compare against a resource it looks up itself.
+	 */
+	private CharSequence escapeOptionBody(String option)
+	{
+		return getEscapeModelStrings() ? escapeOptionHtml(option) : option;
 	}
 
 	/**
