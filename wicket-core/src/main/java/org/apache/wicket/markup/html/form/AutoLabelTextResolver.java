@@ -132,10 +132,40 @@ public class AutoLabelTextResolver implements IComponentResolver
 		{
 
 			// try and find some form of label content...
-			IModel<String> labelModel = findLabelContent(markupStream, openTag);
-			// print the label text
-			replaceComponentTagBody(markupStream, openTag,
-				labelModel != null ? labelModel.getObject() : "");
+			IModel<String> labelModel = findLabelModel(openTag);
+
+			if (labelModel != null)
+			{
+				// the label is text, coming from a model or from a resource bundle, so it has to
+				// be escaped before it goes into the markup. Escaping is read from this component
+				// and not from the labeled one: TextField and Button clear the flag in their
+				// constructor so that their value attribute is not encoded twice, which would
+				// leave the label unescaped for exactly the components <wicket:label> is used with
+				String text = labelModel.getObject();
+				replaceComponentTagBody(markupStream, openTag,
+					getEscapeModelStrings() ? Strings.escapeMarkup(text) : text);
+			}
+			else
+			{
+				// as a last resort use the tag body. That body is markup this label has just
+				// rendered itself, nested components and <wicket:message> included, so it is
+				// written as is. It is also the way to put markup in a label deliberately
+				CharSequence body = new ResponseBufferZone(RequestCycle.get(), markupStream)
+				{
+					@Override
+					protected void executeInsideBufferedZone()
+					{
+						TextLabel.super.onComponentTagBody(markupStream, openTag);
+					}
+				}.execute();
+
+				replaceComponentTagBody(markupStream, openTag, body);
+
+				if (!Strings.isEmpty(body))
+				{
+					labelModel = Model.of(body.toString());
+				}
+			}
 
 			// store the label text in FormComponent's label model so its available to errors
 			if (labelModel != null)
@@ -153,8 +183,11 @@ public class AutoLabelTextResolver implements IComponentResolver
 			}
 		}
 
-		private IModel<String> findLabelContent(final MarkupStream markupStream,
-			final ComponentTag tag)
+		/**
+		 * Finds the label as text, from the labeled component or from a resource bundle. Returns
+		 * null when there is none, in which case the tag body is used instead.
+		 */
+		private IModel<String> findLabelModel(final ComponentTag tag)
 		{
 			if (labeled instanceof ILabelProvider)
 			{
@@ -198,23 +231,6 @@ public class AutoLabelTextResolver implements IComponentResolver
 					{
 						return new StringResourceModel(resourceKey, labeled);
 					}
-				}
-			}
-
-			// as last resort use the tag body
-			{
-				String text = new ResponseBufferZone(RequestCycle.get(), markupStream)
-				{
-					@Override
-					protected void executeInsideBufferedZone()
-					{
-						TextLabel.super.onComponentTagBody(markupStream, tag);
-					}
-				}.execute().toString();
-
-				if (!Strings.isEmpty(text))
-				{
-					return Model.of(text);
 				}
 			}
 
