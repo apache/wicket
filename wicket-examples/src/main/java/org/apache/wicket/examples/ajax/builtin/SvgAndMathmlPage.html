@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+	<wicket:head>
+		<title>Wicket Examples - Ajax - XML (SVG and MathML)</title>
+	</wicket:head>
+</head>
+<body>
+  <wicket:extend>
+	  <h2>SVG</h2>
+	  <p>Click the squares to place your piece, or use the buttons below. Click 'reset' to start over.</p>
+
+	  <div>
+		  <svg
+				  width="300"
+				  height="300"
+				  viewBox="0 0 79.374998 79.375"
+		          wicket:id="ticTacToe">
+			  <g>
+				  <rect
+						  class="grid"
+						  width="3.96875"
+						  height="79.375"
+						  x="23.8125"
+						  y="0" />
+				  <rect
+						  class="grid"
+						  width="3.96875"
+						  height="79.375"
+						  x="51.59375"
+						  y="0" />
+				  <rect
+						  class="grid"
+						  width="79.375"
+						  height="3.96875"
+						  x="7.1054274e-15"
+						  y="51.59375" />
+				  <rect
+						  class="grid"
+						  width="79.375"
+						  height="3.96875"
+						  x="7.1054274e-15"
+						  y="23.8125" />
+				  <a wicket:id="squareA1">
+					  <g>
+						  <rect
+								  class="square"
+								  width="23.8125"
+								  height="23.8125"
+								  x="0"
+								  y="4.4408921e-16" />
+						  <circle
+								  class="circle"
+								  cx="11.90625"
+								  cy="11.90625"
+								  r="5.953125"
+								  wicket:id="circleA1" />
+						  <g
+								  transform="rotate(45,16.193907,14.131151)"
+								  class="cross"
+								  wicket:id="crossA1">
+							  <rect
+									  width="15.875"
+									  height="3.96875"
+									  x="3.6513329"
+									  y="13.605365" />
+							  <rect
+									  width="3.96875"
+									  height="15.875"
+									  x="9.6044579"
+									  y="7.6522398" />
+						  </g>
+					  </g>
+				  </a>
+				  <a
+						  transform="translate(27.78125)"
+						  wicket:id="squareB1">
+					  <g>
+						  <rect
+								  class="square"
+								  width="23.8125"
+								  height="23.8125"
+								  x="0"
+								  y="4.4408921e-16" />
+						  <circle
+								  class="circle"
+								  cx="11.90625"
+								  cy="11.90625"
+								  r="5.953125"
+								  wicket:id="circleB1" />
+						  <g
+								  transform="rotate(45,16.193907,14.131151)"
+								  class="cross"
+								  wicket:id="crossB1">
+							  <rect
+									  width="15.875"
+									  height="3.96875"
+									  x="3.6513329"
+									  y="13.605365" />
+							  <rect
+									  width="3.96875"
+									  height="15.875"
+									  x="9.6044579"
+									  y="7.6522398" />
+						  </g>
+					  </g>
+				  </a>
+				  <a
+						  transform="translate(55.562499)"
+						  wicket:id="squareC1">
+					  <g>
+						  <rect
+								  class="square"
+								  width="23.8125"
+								  height="23.8125"
+								  x="0"
+								  y="4.4408921e-16" />
+						  <circle
+								  class="circle"
+								  cx="11.90625"
+								  cy="11.90625"
+								  r="5.953125"
+								  wicket:id="circleC1" />
+						  <g
+								  transform="rotate(45,16.193907,14.131151)"
+								  class="cross"
+								  wicket:id="crossC1">
+							  <rect
+									  width="15.875"
+									  height="3.96875"
+									  x="3.6513329"
+									  y="13.605365" />
+							  <rect
+									  width="3.96875"
+									  height="15.875"
+									  x="9.6044579"
+									  y="7.6522398" />
+						  </g>
+					  </g>
+				  </a>
+				  <a
+						  transform="translate(0,27.78125)"
+						  wicket:id="squareA2">
+					  <g>
+						  <rect
+								  class="square"
+								  width="23.8125"
+								  height="23.8125"
+								  x="0"
+								  y="4.4408921e-16" />
+						  <circle
+								  class="circle"
+								  cx="11.90625"
+								  cy="11.90625"
+								  r="5.953125"
+								  wicket:id="circleA2" />
+						  <g
+								  transform="rotate(45,16.193907,14.131151)"
+								  class="cross"
+								  wicket:id="crossA2">
+							  <rect
+									  width="15.875"
+									  height="3.96875"
+									  x="3.6513329"
+									  y="13.605365" />
+							  <rect
+									  width="3.96875"
+									  height="15.875"
+									  x="9.6044579"
+									  y="7.6522398" />
+						  </g>
+					  </g>
+				  </a>
+				  <a
+						  transform="translate(27.78125,27.78125)"
+						  wicket:id="squareB2">
+					  <g>
+						  <rect
+								  class="square"
+								  width="23.8125"
+								  height="23.8125"
+								  x="0"
+								  y="4.4408921e-16" />
+						  <circle
+								  class="circle"
+								  cx="11.90625"
+								  cy="11.90625"
+								  r="5.953125"
+								  wicket:id="circleB2" />
+						  <g
+								  transform="rotate(45,16.193907,14.131151)"
+								  class="cross"
+								  wicket:id="crossB2">
+							  <rect
+									  width="15.875"
+									  height="3.96875"
+									  x="3.6513329"
+									  y="13.605365" />
+							  <rect
+									  width="3.96875"
+									  height="15.875"
+									  x="9.6044579"
+									  y="7.6522398" />
+						  </g>
+					  </g>
+				  </a>
+				  <a
+						  transform="translate(55.562499,27.78125)"
+						  wicket:id="squareC2">
+					  <g>
+						  <rect
+								  class="square"
+								  width="23.8125"
+								  height="23.8125"
+								  x="0"
+								  y="4.4408921e-16" />
+						  <circle
+								  class="circle"
+								  cx="11.90625"
+								  cy="11.90625"
+								  r="5.953125"
+								  wicket:id="circleC2" />
+						  <g
+								  transform="rotate(45,16.193907,14.131151)"
+								  class="cross"
+								  wicket:id="crossC2">
+							  <rect
+									  width="15.875"
+									  height="3.96875"
+									  x="3.6513329"
+									  y="13.605365" />
+							  <rect
+									  width="3.96875"
+									  height="15.875"
+									  x="9.6044579"
+									  y="7.6522398" />
+						  </g>
+					  </g>
+				  </a>
+				  <a
+						  transform="translate(0,55.562499)"
+						  wicket:id="squareA3">
+					  <g>
+						  <rect
+								  class="square"
+								  width="23.8125"
+								  height="23.8125"
+								  x="0"
+								  y="4.4408921e-16" />
+						  <circle
+								  class="circle"
+								  cx="11.90625"
+								  cy="11.90625"
+								  r="5.953125"
+								  wicket:id="circleA3" />
+						  <g
+								  transform="rotate(45,16.193907,14.131151)"
+								  class="cross"
+								  wicket:id="crossA3">
+							  <rect
+									  width="15.875"
+									  height="3.96875"
+									  x="3.6513329"
+									  y="13.605365" />
+							  <rect
+									  width="3.96875"
+									  height="15.875"
+									  x="9.6044579"
+									  y="7.6522398" />
+						  </g>
+					  </g>
+				  </a>
+				  <a
+						  transform="translate(27.78125,55.562499)"
+						  wicket:id="squareB3">
+					  <g>
+						  <rect
+								  class="square"
+								  width="23.8125"
+								  height="23.8125"
+								  x="0"
+								  y="4.4408921e-16" />
+						  <circle
+								  class="circle"
+								  cx="11.90625"
+								  cy="11.90625"
+								  r="5.953125"
+								  wicket:id="circleB3" />
+						  <g
+								  transform="rotate(45,16.193907,14.131151)"
+								  class="cross"
+								  wicket:id="crossB3">
+							  <rect
+									  width="15.875"
+									  height="3.96875"
+									  x="3.6513329"
+									  y="13.605365" />
+							  <rect
+									  width="3.96875"
+									  height="15.875"
+									  x="9.6044579"
+									  y="7.6522398" />
+						  </g>
+					  </g>
+				  </a>
+				  <a
+						  transform="translate(55.562499,55.562499)"
+						  wicket:id="squareC3">
+					  <g>
+						  <rect
+								  class="square"
+								  width="23.8125"
+								  height="23.8125"
+								  x="0"
+								  y="4.4408921e-16" />
+						  <circle
+								  class="circle"
+								  cx="11.90625"
+								  cy="11.90625"
+								  r="5.953125"
+								  wicket:id="circleC3" />
+						  <g
+								  transform="rotate(45,16.193907,14.131151)"
+								  class="cross"
+								  wicket:id="crossC3">
+							  <rect
+									  width="15.875"
+									  height="3.96875"
+									  x="3.6513329"
+									  y="13.605365" />
+							  <rect
+									  width="3.96875"
+									  height="15.875"
+									  x="9.6044579"
+									  y="7.6522398" />
+						  </g>
+					  </g>
+				  </a>
+			  </g>
+		  </svg>
+	  </div>
+	  <form wicket:id="svgForm">
+		  <p>
+			  <button wicket:id="buttonA1">A1</button>
+			  <button wicket:id="buttonB1">B1</button>
+			  <button wicket:id="buttonC1">C1</button>
+		  </p>
+		  <p>
+			  <button wicket:id="buttonA2">A2</button>
+			  <button wicket:id="buttonB2">B2</button>
+			  <button wicket:id="buttonC2">C2</button>
+		  </p>
+		  <p>
+			  <button wicket:id="buttonA3">A3</button>
+			  <button wicket:id="buttonB3">B3</button>
+			  <button wicket:id="buttonC3">C3</button>
+		  </p>
+		  <p>
+			  <button wicket:id="reset">Reset</button>
+		  </p>
+	  </form>
+
+	  <h2>MathML</h2>
+	  <p>
+		  Click on the numbers and the operator, or select them from the drop-down menus below.
+	  </p>
+	  <p>
+		  <math>
+			  <mrow>
+				  <mn wicket:id="firstNumber">1</mn>
+				  <mo wicket:id="operator">+</mo>
+				  <mn wicket:id="secondNumber">1</mn>
+				  <mo>=</mo>
+				  <mn wicket:id="outcome">2</mn>
+			  </mrow>
+		  </math>
+	  </p>
+	  <form wicket:id="mathmlForm">
+		  <p>
+			  First number: <select wicket:id="firstNumberDropDown"></select>
+		  </p>
+		  <p>
+			  Operator: <select wicket:id="operatorDropDown"></select>
+		  </p>
+		  <p>
+			  Second number: <select wicket:id="secondNumberDropDown"></select>
+		  </p>
+	  </form>
+  </wicket:extend>
+</body>
+</html>
