@@ -61,10 +61,8 @@ public class ResourceUrlAttributeValidationTest extends WicketTestCase
 		ResourceUrlAttributeValidationTest.class.getPackageName().replace('.', '/') + "/";
 
 	/**
-	 * How many {@code ../} the style needs to reach the root the finder resolves against. The style
-	 * is appended as {@code <package>/<name>_<style>}, so its first {@code ..} is glued onto
-	 * {@code PublicPage_} and forms a literal path component rather than a parent reference - hence
-	 * one extra, plus one to consume that component itself.
+	 * For every sub-package we need to move up one directory with {@code ../}, plus one for the
+	 * style and one for the component.
 	 */
 	private static final int PARENT_STEPS =
 		ResourceUrlAttributeValidationTest.class.getPackageName().split("\\.").length + 2;
