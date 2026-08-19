@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.form;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -57,9 +58,14 @@ class ButtonTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6225
+	 *
+	 * The body of a button element is escaped once, like the value attribute of an input element
+	 * is. Button clears escapeModelStrings in its constructor so that ComponentTag#writeOutput does
+	 * not encode that attribute twice, and nothing encodes an element body, so the body is escaped
+	 * where it is written instead.
 	 */
 	@Test
-	void whenButtonElement_thenModelObjectIsUsedAsTextContent()
+	void whenButtonElement_thenModelObjectIsUsedAsEscapedTextContent()
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
 		String text = "some text & another text";
@@ -76,7 +82,29 @@ class ButtonTest extends WicketTestCase
 		TagTester buttonTagTester = tester.getTagByWicketId("button");
 		assertNotNull(buttonTagTester);
 		assertNull(buttonTagTester.getAttribute("value"));
-		assertEquals(text, buttonTagTester.getValue());
+		assertEquals("some text &amp; another text", buttonTagTester.getValue());
+	}
+
+	/**
+	 * Markup in the model of a button does not become markup in the body of the button element.
+	 */
+	@Test
+	void whenButtonElement_thenMarkupInModelObjectIsEscaped()
+	{
+		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
+		TestPage testPage = new TestPage(Model.of("<script>x=1</script>")) {
+			@Override
+			public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+			{
+				return new StringResourceStream("<html><body>"
+						+ "<form wicket:id=\"form\"><button wicket:id=\"button\"></button></form></body></html>");
+			}
+		};
+		tester.startPage(testPage);
+
+		assertEquals("&lt;script&gt;x=1&lt;/script&gt;",
+			tester.getTagByWicketId("button").getValue());
+		assertFalse(tester.getLastResponseAsString().contains("<script>x=1</script>"));
 	}
 
 	/**
