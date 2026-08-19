@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -58,9 +60,14 @@ public class ButtonTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6225
+	 *
+	 * The body of a button element is escaped once, like the value attribute of an input element
+	 * is. Button clears escapeModelStrings in its constructor so that ComponentTag#writeOutput does
+	 * not encode that attribute twice, and nothing encodes an element body, so the body is escaped
+	 * where it is written instead.
 	 */
 	@Test
-	public void whenButtonElement_thenModelObjectIsUsedAsTextContent()
+	public void whenButtonElement_thenModelObjectIsUsedAsEscapedTextContent()
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
 		String text = "some text & another text";
@@ -77,7 +84,29 @@ public class ButtonTest extends WicketTestCase
 		TagTester buttonTagTester = tester.getTagByWicketId("button");
 		assertThat(buttonTagTester, is(notNullValue()));
 		assertThat(buttonTagTester.getAttribute("value"), is(nullValue()));
-		assertThat(buttonTagTester.getValue(), is(equalTo(text)));
+		assertThat(buttonTagTester.getValue(), is(equalTo("some text &amp; another text")));
+	}
+
+	/**
+	 * Markup in the model of a button does not become markup in the body of the button element.
+	 */
+	@Test
+	public void whenButtonElement_thenMarkupInModelObjectIsEscaped()
+	{
+		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
+		TestPage testPage = new TestPage(Model.of("<script>x=1</script>")) {
+			@Override
+			public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+			{
+				return new StringResourceStream("<html><body>"
+						+ "<form wicket:id=\"form\"><button wicket:id=\"button\"></button></form></body></html>");
+			}
+		};
+		tester.startPage(testPage);
+
+		assertThat(tester.getTagByWicketId("button").getValue(),
+			is(equalTo("&lt;script&gt;x=1&lt;/script&gt;")));
+		assertThat(tester.getLastResponseAsString(), not(containsString("<script>x=1</script>")));
 	}
 
 	/**
