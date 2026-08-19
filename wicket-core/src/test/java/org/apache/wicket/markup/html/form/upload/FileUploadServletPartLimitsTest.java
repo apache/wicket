@@ -86,12 +86,13 @@ import org.junit.Test;
  */
 public class FileUploadServletPartLimitsTest extends WicketTestCase
 {
-	/** Comfortably over every limit configured below. */
+	/** Comfortably over {@link #LIMIT}, the only limit these tests configure. */
 	private static final int OVERSIZED = 10_000;
 
 	/**
-	 * The size of the form field part. Large enough that buffering it would be unmistakably deliberate
-	 * rather than a rounding error, small enough to be harmless in a test.
+	 * The size of the form field part. Not a limit, but a size at which buffering the part would be
+	 * unmistakably deliberate rather than a rounding error; still small enough to be harmless in a
+	 * test.
 	 */
 	private static final int LARGE = 1 << 20;
 
