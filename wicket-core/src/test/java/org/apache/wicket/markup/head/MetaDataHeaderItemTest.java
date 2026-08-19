@@ -43,12 +43,43 @@ public class MetaDataHeaderItemTest
 		assertEquals(expectedString, metaTag.generateString());
 	}
 	
+	/**
+	 * Attribute values are escaped as markup. A backslash before a double quote means nothing in
+	 * HTML, so escaping that way left the value able to close its own attribute.
+	 */
 	@Test
-	public void testEscapeOnlyDoubleQuotes() throws Exception
+	public void testEscapesAttributeValuesAsMarkup() throws Exception
 	{
-		String expectedString = "<link rel=\"single quote \' double quotes\\\"\" href=\"\" />\n";
+		String expectedString = "<link rel=\"single quote &#039; double quotes&quot;\" href=\"\" />\n";
 		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forLinkTag("single quote \' double quotes\"", "");
 		
 		assertEquals(expectedString, metaTag.generateString());
+	}
+
+	/**
+	 * A value cannot end its attribute and add another one.
+	 */
+	@Test
+	public void testAttributeValueCannotInjectAnotherAttribute() throws Exception
+	{
+		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forMetaTag("description",
+			"x\" onload=\"x=1");
+
+		assertEquals("<meta name=\"description\" content=\"x&quot; onload=&quot;x=1\" />\n",
+			metaTag.generateString());
+	}
+
+	/**
+	 * The same for a value taken from a model.
+	 */
+	@Test
+	public void testAttributeValueFromModelIsEscaped() throws Exception
+	{
+		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forLinkTag("stylesheet", "");
+		metaTag.addTagAttribute("title", Model.of("<script>x=1</script>"));
+
+		assertEquals(
+			"<link rel=\"stylesheet\" href=\"\" title=\"&lt;script&gt;x=1&lt;/script&gt;\" />\n",
+			metaTag.generateString());
 	}
 }
