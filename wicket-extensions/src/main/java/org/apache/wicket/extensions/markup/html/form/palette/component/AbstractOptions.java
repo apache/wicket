@@ -124,9 +124,9 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 				for (Map.Entry<String, String> entry : additionalAttributesMap.entrySet())
 				{
 					buffer.append(' ')
-						.append(entry.getKey())
+						.append(Strings.escapeMarkup(entry.getKey()))
 						.append("=\"")
-						.append(entry.getValue())
+						.append(Strings.escapeMarkup(entry.getValue()))
 						.append("\"");
 				}
 			}
