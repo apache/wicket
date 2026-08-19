@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+
+This example demonstrates how Ajax can be used with FormComponentPanels:
+
+<ul>
+    <li>Ajax behaviors on the descendent components.</li>
+    <li>Ajax behaviors on the FormComponentPanel itself.</li>
+</ul>
+
+<br/><br/>
+
+<form wicket:id="form">
+    <h2>LocalDateTimeField, and its subfield TimeField</h2>
+    <h3>On descendents</h3>
+    <div>
+        <span wicket:id="localDateTimeOnDescendents"></span>
+    </div>
+    <ul wicket:id="localDateTimeDescendentsValue">
+        <li wicket:id="descendentsDate"></li>
+        <li wicket:id="descendentsHour"></li>
+        <li wicket:id="descendentsMinute"></li>
+    </ul>
+
+    <h3>On panel</h3>
+    <p>Note: this method generates excessive Ajax updates for some events.</p>
+    <div>
+        <span wicket:id="localDateTimeOnPanel"></span>
+    </div>
+    <ul wicket:id="localDateTimePanelValue">
+        <li wicket:id="panelDate"></li>
+        <li wicket:id="panelHour"></li>
+        <li wicket:id="panelMinute"></li>
+    </ul>
+
+    <h2>Multiply</h2>
+    <h3>On descendents</h3>
+    <p>
+        Multiply was not designed with Ajax on its subfields in mind.
+    </p>
+
+    <h3>On panel</h3>
+    <div>
+        <span wicket:id="multiplyOnPanel"></span>
+    </div>
+    <p>
+        Result: <span wicket:id="multiplyPanelValue"></span>
+    </p>
+
+    <h2>Palette</h2>
+    <h3>On descendents</h3>
+    <div wicket:id="paletteOnDescendents"></div>
+    <p>
+        Selected people: <span wicket:id="paletteDescendentsValue"></span>
+    </p>
+
+    <h3>On panel</h3>
+    <p>Note: this method generates excessive Ajax updates for some events.</p>
+    <div wicket:id="paletteOnPanel"></div>
+    <p>
+        Selected people: <span wicket:id="palettePanelValue"></span>
+    </p>
+
+    <h2>Groups and Choices</h2>
+    <h3>On descendents</h3>
+    <p>
+        GroupsAndChoicesPanel was not designed with Ajax on its subfields in mind.
+    </p>
+
+    <h3>On panel</h3>
+    <div wicket:id="groupsAndChoices"></div>
+    <p>
+        <span wicket:id="groupsAndChoicesValues"></span>
+    </p>
+</form>
+</wicket:extend>
