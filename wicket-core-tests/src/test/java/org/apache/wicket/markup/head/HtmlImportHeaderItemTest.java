@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.markup.html.basic.SimplePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +55,9 @@ class HtmlImportHeaderItemTest
 		MetaDataHeaderItem importLink = HtmlImportHeaderItem.forImportLinkTag(SimplePage.class,
 			parameters, "monitor", true);
 
-		assertEquals("<link rel=\"import\" href=\"" + pageUrl + "\" media=\"monitor\" async />\n",
-			importLink.generateString());
+		// the href is escaped as markup, like every other attribute Wicket writes. The url holds
+		// a literal & between its two parameters, which has to be written as an entity
+		assertEquals("<link rel=\"import\" href=\"" + Strings.escapeMarkup(pageUrl)
+			+ "\" media=\"monitor\" async />\n", importLink.generateString());
 	}
 }
