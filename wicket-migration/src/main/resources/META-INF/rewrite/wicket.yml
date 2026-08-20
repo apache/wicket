@@ -58,6 +58,13 @@ recipeList:
 #   AbstractKeyInSessionCryptFactory, DefaultCrypter, GCMSIVCrypter, ICrypter.
 # These require manual migration; see the guide above. Data encrypted by Wicket 10 cannot
 # be decrypted by Wicket 11 (per-session keys and formats change).
+#
+# org.apache.wicket.markup.html.include.Include was removed with no drop-in replacement. It
+# fetched the URL its model resolved to and wrote the response into the page body unescaped,
+# which cannot be made safe: the model value decided what the server connected to, what ended
+# up in the page and how much of it was read. Applications composing pages with it should use
+# Panels, Borders and markup inheritance instead; there is no replacement for including remote
+# content. It is deprecated in 8.19.0, 9.24.0 and 10.11.0.
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.wicket.MigrateToWicket11
 displayName: Migrate to Wicket 11.x
