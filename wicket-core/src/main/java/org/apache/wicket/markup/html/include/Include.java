@@ -77,9 +77,30 @@ import org.apache.wicket.util.lang.Args;
  * </pre>
  * 
  * </p>
+ * <p>
+ * <strong>This component is deprecated for security reasons and cannot be made safe.</strong> It
+ * connects to whatever URL its model resolves to and writes the response into the page body
+ * without escaping it, so the model value decides three separate things at once: what the server
+ * connects to, what ends up in the page, and how much of it is read. Where anything in the request
+ * can influence that value, a caller reaches {@code file:}, {@code jar:} and {@code ftp:} URLs as
+ * well as hosts only the server can see, places arbitrary markup and script in the application's
+ * own origin, and pins a render thread on a read that has neither a size limit nor a timeout.
+ * </p>
+ * <p>
+ * None of that is a defect in the implementation. Fetching an arbitrary URL and splicing its raw
+ * content into a page is what this component is for, and restricting the scheme, the host, the size
+ * or the escaping would leave nothing of it, so there is no replacement and no configuration that
+ * makes it safe. Applications using it for page composition &mdash; the reason most reach for it
+ * &mdash; should use Panels, Borders and markup inheritance as described above; for including
+ * remote content there is nothing to migrate to. See {@code SECURITY.md} for the scope this places
+ * the component in.
+ * </p>
  * 
  * @author Eelco Hillenius
+ * @deprecated no replacement; see above. Fetching a URL and rendering its content unescaped cannot
+ *             be made safe, so this component is removed in Wicket 11.
  */
+@Deprecated(since = "8.19.0, 9.24.0, 10.11.0", forRemoval = true)
 public class Include extends WebComponent implements IGenericComponent<String, Include>
 {
 	private static final long serialVersionUID = 1L;
