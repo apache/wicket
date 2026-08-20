@@ -74,6 +74,12 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * Render the visual portion of the assist. Usually the html representing the assist choice
 	 * object is written out to the response use {@link Response#write(CharSequence)}
 	 * 
+	 * <p>
+	 * <b>Whatever is written to the response reaches the markup as is, without escaping.</b>
+	 * Any part of it that comes from user input or other dynamic content must be escaped
+	 * before it is written, with {@link Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param object
 	 *            current assist choice
 	 * @param response

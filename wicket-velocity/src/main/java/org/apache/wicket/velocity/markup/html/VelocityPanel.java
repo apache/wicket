@@ -186,6 +186,12 @@ public abstract class VelocityPanel extends Panel
 	/**
 	 * Gets whether to escape HTML characters.
 	 * 
+	 * <p>
+	 * <b>While this returns false, the output of the template is written to the markup as
+	 * is, without escaping.</b> A template that interpolates user input or other dynamic
+	 * content then puts it in the page unescaped.
+	 * </p>
+	 *
 	 * @return whether to escape HTML characters. The default value is false.
 	 */
 	protected boolean escapeHtml()

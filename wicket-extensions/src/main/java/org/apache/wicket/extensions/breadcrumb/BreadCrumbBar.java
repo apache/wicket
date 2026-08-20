@@ -245,6 +245,12 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	}
 
 	/**
+	 * <p>
+	 * <b>The return value is written to the markup as is, without escaping.</b> Any part of
+	 * it that comes from user input or other dynamic content must be escaped with
+	 * {@link org.apache.wicket.util.string.Strings#escapeMarkup(CharSequence) Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @return markup used as a separator between breadcrumbs. By default <code>/</code> is used,
 	 *         but <code>&gt;&gt;</code> is also a popular choice.
 	 */
