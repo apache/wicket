@@ -32,6 +32,12 @@ public interface ITransformer
 	 * Will be invoked after all child components have been processed to allow for transforming the
 	 * markup generated.
 	 * 
+	 * <p>
+	 * <b>The return value is written to the markup as is, without escaping.</b> Any part of
+	 * it that comes from user input or other dynamic content must be escaped with
+	 * {@link org.apache.wicket.util.string.Strings#escapeMarkup(CharSequence) Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param component
 	 *            The associated Wicket component
 	 * @param output

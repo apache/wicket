@@ -239,6 +239,12 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T>
 	}
 
 	/**
+	 * <p>
+	 * <b>The return value is written to the markup as is, without escaping.</b> Any part of
+	 * it that comes from user input or other dynamic content must be escaped with
+	 * {@link Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @return Prefix to use before choice
 	 */
 	public String getPrefix()
@@ -247,6 +253,12 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T>
 	}
 
 	/**
+	 * <p>
+	 * <b>The return value is written to the markup as is, without escaping.</b> Any part of
+	 * it that comes from user input or other dynamic content must be escaped with
+	 * {@link Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param index
 	 *            index of the choice
 	 * @param choice
@@ -260,6 +272,12 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T>
 	}
 
 	/**
+	 * <p>
+	 * <b>The return value is written to the markup as is, without escaping.</b> Any part of
+	 * it that comes from user input or other dynamic content must be escaped with
+	 * {@link Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param index
 	 *            index of the choice
 	 * @param choice
@@ -273,6 +291,12 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T>
 	}
 
 	/**
+	 * <p>
+	 * <b>The value passed here is written to the markup as is, without escaping.</b> Any
+	 * part of it that comes from user input or other dynamic content must be escaped with
+	 * {@link Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param prefix
 	 *            Prefix to use before choice
 	 * @return this
@@ -286,6 +310,12 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T>
 	}
 
 	/**
+	 * <p>
+	 * <b>The return value is written to the markup as is, without escaping.</b> Any part of
+	 * it that comes from user input or other dynamic content must be escaped with
+	 * {@link Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @return Separator to use between radio options
 	 */
 	public String getSuffix()
@@ -294,6 +324,12 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T>
 	}
 
 	/**
+	 * <p>
+	 * <b>The value passed here is written to the markup as is, without escaping.</b> Any
+	 * part of it that comes from user input or other dynamic content must be escaped with
+	 * {@link Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param suffix
 	 *            Separator to use between radio options
 	 * @return this

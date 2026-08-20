@@ -324,6 +324,14 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	/**
 	 * Get a default choice to be rendered additionally to the choices available in the model.
 	 * 
+	 * <p>
+	 * <b>The return value of an override is written to the markup as is, without escaping.</b>
+	 * This implementation returns no choice at all, and the override in
+	 * {@link AbstractSingleSelectChoice} escapes the body of the option it builds. An override
+	 * that builds an option itself must escape the option body with
+	 * {@link Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param selectedValue
 	 *            The currently selected value
 	 * @return Any default choice, such as "Choose One", depending on the subclass
@@ -394,6 +402,13 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	/**
 	 * Generates and appends html for a single choice into the provided buffer
 	 * 
+	 * <p>
+	 * <b>Whatever an override appends reaches the markup as is, without escaping.</b> This
+	 * implementation escapes the body of the option it appends, according to
+	 * {@link #getEscapeModelStrings()}. An override that assembles an option itself must do
+	 * the same for whatever it puts there, with {@link Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param buffer
 	 *            Appending string buffer that will have the generated html appended
 	 * @param choice
@@ -445,6 +460,13 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	/**
 	 * Sets the attributes of a single choice into the provided buffer.
 	 *
+	 * <p>
+	 * <b>Whatever an override appends reaches the markup as is, without escaping.</b> This
+	 * implementation escapes the value of the id attribute it writes. An override that adds
+	 * attributes of its own must escape their values with
+	 * {@link Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param buffer
 	 *            Appending string buffer that will have the generated html appended
 	 * @param choice
@@ -474,6 +496,12 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	/**
 	 * Method to override if you want special escaping of the options html.
 	 * 
+	 * <p>
+	 * <b>The return value is written to the body of the option as is, without escaping.</b> An
+	 * override that returns the display value without escaping it puts user input and other
+	 * dynamic content into the page as markup.
+	 * </p>
+	 *
 	 * @param displayValue
 	 * @return The escaped display value
 	 */
