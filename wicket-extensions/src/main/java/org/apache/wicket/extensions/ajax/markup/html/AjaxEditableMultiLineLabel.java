@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * An inplace editor much like {@link AjaxEditableLabel}, but now with support for multi line
@@ -100,7 +101,9 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 				Object modelObject = getDefaultModelObject();
 				if ((modelObject == null) || (modelObject instanceof String && ((String) modelObject).isEmpty()))
 				{
-					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
+					String nullLabel = defaultNullLabel();
+					replaceComponentTagBody(markupStream, openTag,
+						getEscapeModelStrings() ? Strings.escapeMarkup(nullLabel) : nullLabel);
 				}
 				else
 				{

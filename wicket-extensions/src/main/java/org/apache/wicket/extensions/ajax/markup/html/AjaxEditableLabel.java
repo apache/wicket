@@ -40,6 +40,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.validation.IValidator;
 
 /**
@@ -415,7 +416,9 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 				Object modelObject = getDefaultModelObject();
 				if ((modelObject == null) || (modelObject instanceof String && ((String) modelObject).isEmpty()))
 				{
-					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
+					String nullLabel = defaultNullLabel();
+					replaceComponentTagBody(markupStream, openTag,
+						getEscapeModelStrings() ? Strings.escapeMarkup(nullLabel) : nullLabel);
 				}
 				else
 				{
