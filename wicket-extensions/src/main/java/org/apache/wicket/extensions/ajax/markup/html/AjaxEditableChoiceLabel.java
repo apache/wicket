@@ -303,7 +303,9 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 
 				if (Strings.isEmpty(displayValue))
 				{
-					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
+					String nullLabel = defaultNullLabel();
+					replaceComponentTagBody(markupStream, openTag,
+						getEscapeModelStrings() ? Strings.escapeMarkup(nullLabel) : nullLabel);
 				}
 				else
 				{
