@@ -188,6 +188,12 @@ public class PagingNavigation extends Loop
 	/**
 	 * Gets the seperator.
 	 *
+	 * <p>
+	 * <b>The return value is written to the markup as is, without escaping.</b> Any part of
+	 * it that comes from user input or other dynamic content must be escaped with
+	 * {@link org.apache.wicket.util.string.Strings#escapeMarkup(CharSequence) Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @return the seperator
 	 */
 	public String getSeparator()
@@ -228,6 +234,12 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Sets the seperator. Null meaning, no separator at all.
+	 *
+	 * <p>
+	 * <b>The value passed here is written to the markup as is, without escaping.</b> Any
+	 * part of it that comes from user input or other dynamic content must be escaped with
+	 * {@link org.apache.wicket.util.string.Strings#escapeMarkup(CharSequence) Strings#escapeMarkup(CharSequence)}.
+	 * </p>
 	 *
 	 * @param separator
 	 *            the seperator
