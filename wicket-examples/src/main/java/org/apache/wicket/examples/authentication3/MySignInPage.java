@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.authentication3;
 
-import org.apache.wicket.authroles.authentication.panel.SignInPanel;
+import org.apache.wicket.authroles.authentication.panel.UsernamePasswordPanel;
 import org.apache.wicket.examples.WicketExamplePage;
 
 
@@ -32,9 +32,8 @@ public final class MySignInPage extends WicketExamplePage
 	 */
 	public MySignInPage()
 	{
-		// That is all you need to add a logon panel to your application with rememberMe
-		// functionality based on Cookies. Meaning username and password are persisted in a Cookie.
-		// Please see ISecuritySettings#getAuthenticationStrategy() for details.
-		add(new SignInPanel("signInPanel"));
+		// That is all you need to add a logon panel to your application. The panel signs the user
+		// in for the duration of the session and persists nothing on the client.
+		add(new UsernamePasswordPanel("signInPanel"));
 	}
 }

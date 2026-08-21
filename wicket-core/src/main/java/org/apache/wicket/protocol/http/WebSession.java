@@ -53,23 +53,6 @@ public class WebSession extends Session
 	}
 
 	/**
-	 * Call signOut() and remove the logon data from whereever they have been persisted (e.g.
-	 * Cookies)
-	 * 
-	 * @see org.apache.wicket.Session#invalidate()
-	 */
-	@Override
-	public void invalidate()
-	{
-		if (isSessionInvalidated() == false)
-		{
-			getApplication().getSecuritySettings().getAuthenticationStrategy().remove();
-
-			super.invalidate();
-		}
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * <p>

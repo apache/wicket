@@ -27,8 +27,7 @@ import org.apache.wicket.util.value.ValueMap;
 
 /**
  * Simple example of a sign in page. Even simpler, as shown in the authentication-2 example, is
- * using the SignInPanel from the auth-role package. Beside that this simple example does not
- * support "rememberMe".
+ * using the UsernamePasswordPanel from the auth-role package.
  * 
  * @author Jonathan Locke
  */

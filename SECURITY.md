@@ -298,8 +298,8 @@ confirm a guessed URL by encrypting it themselves. With the default
 single user; with an application-wide key it is not. Encrypted URLs are
 therefore an obfuscation and a per-session CSRF token, never a secret in their
 own right — which is the same reason they are not an authorization mechanism.
-Everything Wicket encrypts elsewhere (the page store, the "remember me" cookie)
-uses the randomized path and does not have this property.
+Everything Wicket encrypts elsewhere, such as the page store, uses the randomized
+path and does not have this property.
 
 ## Reporting Something That Is Not a Vulnerability
 

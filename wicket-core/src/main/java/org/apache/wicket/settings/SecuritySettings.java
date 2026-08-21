@@ -18,8 +18,6 @@ package org.apache.wicket.settings;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.authentication.IAuthenticationStrategy;
-import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.IUnauthorizedResourceRequestListener;
@@ -28,20 +26,15 @@ import org.apache.wicket.coep.CrossOriginEmbedderPolicyConfiguration;
 import org.apache.wicket.coep.CrossOriginEmbedderPolicyConfiguration.CoepMode;
 import org.apache.wicket.coop.CrossOriginOpenerPolicyConfiguration;
 import org.apache.wicket.coop.CrossOriginOpenerPolicyConfiguration.CoopMode;
-import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.List;
-
-import javax.crypto.SecretKey;
 
 import org.apache.wicket.core.random.DefaultSecureRandomSupplier;
 import org.apache.wicket.core.random.ISecureRandomSupplier;
 import org.apache.wicket.core.util.crypt.AesGcmCryptScheme;
-import org.apache.wicket.core.util.crypt.ICrypt;
 import org.apache.wicket.core.util.crypt.ICryptFactory;
 import org.apache.wicket.core.util.crypt.ICryptScheme;
 import org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory;
-import org.apache.wicket.core.util.crypt.SchemeCrypt;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -60,9 +53,6 @@ public class SecuritySettings
 {
 	/** The authorization strategy. */
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
-
-	/** The authentication strategy. */
-	private IAuthenticationStrategy authenticationStrategy;
 
 	/** factory for creating crypt objects */
 	private ICryptFactory cryptFactory;
@@ -342,40 +332,6 @@ public class SecuritySettings
 		this.unauthorizedResourceRequestListener = listener == null ?
 				DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER :
 				listener;
-		return this;
-	}
-
-	/**
-	 * Gets the authentication strategy.
-	 *
-	 * @return Returns the authentication strategy.
-	 */
-	public IAuthenticationStrategy getAuthenticationStrategy()
-	{
-		if (authenticationStrategy == null)
-		{
-			// a "remember me" cookie must be decryptable across sessions, so it uses an
-			// application-wide key. The key is random per boot; supply a custom strategy with a
-			// stable key to keep cookies valid across application restarts.
-			SecureRandom random = getRandomSupplier().getRandom();
-			SecretKey key = getCryptScheme().generateKey(random);
-			ICrypt crypt = new SchemeCrypt(key, random, getCryptScheme(),
-				getWhitelistedCryptSchemes());
-			authenticationStrategy = new DefaultAuthenticationStrategy("LoggedIn", crypt);
-		}
-		return authenticationStrategy;
-	}
-
-	/**
-	 * Sets the authentication strategy.
-	 *
-	 * @param strategy
-	 *            new authentication strategy
-	 * @return {@code this} object for chaining
-	 */
-	public SecuritySettings setAuthenticationStrategy(final IAuthenticationStrategy strategy)
-	{
-		authenticationStrategy = strategy;
 		return this;
 	}
 

@@ -47,9 +47,9 @@ public abstract class WicketExampleApplication extends WebApplication
 	{
 		super.init();
 		
-		// WARNING: DO NOT do this on a real world application unless
-		// you really want your app's passwords all passed around and
-		// stored in unencrypted browser cookies (BAD IDEA!)!!!
+		// WARNING: DO NOT do this on a real world application. NoCrypt encrypts nothing, so
+		// everything that goes through the crypt factory -- the URLs CryptoMapper produces and
+		// the file upload tokens -- is readable and forgeable by anyone (BAD IDEA!)!!!
 
 		// The NoCrypt class is being used here because not everyone
 		// has the java security classes required by Crypt installed

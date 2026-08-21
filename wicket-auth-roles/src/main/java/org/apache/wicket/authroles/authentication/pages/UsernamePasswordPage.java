@@ -16,24 +16,25 @@
  */
 package org.apache.wicket.authroles.authentication.pages;
 
-import org.apache.wicket.authroles.authentication.panel.SignInPanel;
+import org.apache.wicket.authroles.authentication.panel.UsernamePasswordPanel;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
 /**
- * A base class which provide standard functionality for sign in.
+ * A base class which provide standard functionality for sign in, by hosting a
+ * {@link UsernamePasswordPanel}.
  * 
  * @author Jonathan Locke
  */
-public class SignInPage extends WebPage
+public class UsernamePasswordPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct
 	 */
-	public SignInPage()
+	public UsernamePasswordPage()
 	{
 		this(null);
 	}
@@ -44,8 +45,10 @@ public class SignInPage extends WebPage
 	 * @param parameters
 	 *            The page parameters
 	 */
-	public SignInPage(final PageParameters parameters)
+	public UsernamePasswordPage(final PageParameters parameters)
 	{
-		add(new SignInPanel("signInPanel"));
+		super(parameters);
+
+		add(new UsernamePasswordPanel("signInPanel"));
 	}
 }

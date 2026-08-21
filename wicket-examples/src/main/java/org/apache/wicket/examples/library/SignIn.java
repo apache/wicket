@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.library;
 
-import org.apache.wicket.authroles.authentication.panel.SignInPanel;
+import org.apache.wicket.authroles.authentication.panel.UsernamePasswordPanel;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -45,6 +45,6 @@ public final class SignIn extends WicketExamplePage
 	public SignIn(final PageParameters parameters)
 	{
 		super(parameters);
-		add(new SignInPanel("signInPanel", false));
+		add(new UsernamePasswordPanel("signInPanel"));
 	}
 }

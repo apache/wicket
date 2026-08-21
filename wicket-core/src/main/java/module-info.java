@@ -45,8 +45,6 @@ module org.apache.wicket.core {
     exports org.apache.wicket.ajax.markup.html.form;
     exports org.apache.wicket.ajax.markup.html.navigation.paging;
     exports org.apache.wicket.application;
-    exports org.apache.wicket.authentication;
-    exports org.apache.wicket.authentication.strategy;
     exports org.apache.wicket.authorization;
     exports org.apache.wicket.authorization.strategies;
     exports org.apache.wicket.authorization.strategies.action;

@@ -65,6 +65,22 @@ recipeList:
 # up in the page and how much of it was read. Applications composing pages with it should use
 # Panels, Borders and markup inheritance instead; there is no replacement for including remote
 # content. It is deprecated in 8.19.0, 9.24.0 and 10.11.0.
+#
+# org.apache.wicket.authentication.IAuthenticationStrategy, its two implementations and the
+# SecuritySettings#getAuthenticationStrategy()/#setAuthenticationStrategy() accessors were removed
+# with no replacement. The interface persisted sign-in credentials on the client so that a later
+# visit could replay them, which cannot be made safe: whatever it persists is what signs the user
+# in, so the stored value is the password itself. An application that needs a persistent login has
+# to implement one, with a random, revocable, per-device token rather than with the password.
+# With the interface gone, org.apache.wicket.protocol.http.WebSession no longer overrides
+# invalidate(), and nothing clears a "LoggedIn" cookie left over from a Wicket 10 deployment --
+# those expire on their own within thirty days.
+#
+# The "remember me" support went with it, so SignInPanel and SignInPage in wicket-auth-roles are
+# replaced by UsernamePasswordPanel and UsernamePasswordPage, which are the same types without it.
+# The ChangeType entries below handle the common case; getRememberMe(), setRememberMe(),
+# onSignInRemembered() and the two-argument SignInPanel constructor have no equivalent and need
+# hand-editing. Both are deprecated in 8.19.0, 9.24.0 and 10.11.0.
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.wicket.MigrateToWicket11
 displayName: Migrate to Wicket 11.x
@@ -86,6 +102,14 @@ recipeList:
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.apache.wicket.util.crypt.NoCryptFactory
       newFullyQualifiedTypeName: org.apache.wicket.core.util.crypt.NoCryptFactory
+      ignoreDefinition: "True"
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.authroles.authentication.panel.SignInPanel
+      newFullyQualifiedTypeName: org.apache.wicket.authroles.authentication.panel.UsernamePasswordPanel
+      ignoreDefinition: "True"
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.authroles.authentication.pages.SignInPage
+      newFullyQualifiedTypeName: org.apache.wicket.authroles.authentication.pages.UsernamePasswordPage
       ignoreDefinition: "True"
   - org.openrewrite.maven.UpgradeDependencyVersion:
       groupId: org.apache.wicket
