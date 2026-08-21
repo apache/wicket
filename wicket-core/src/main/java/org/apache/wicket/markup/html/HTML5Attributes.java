@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
+import java.text.Normalizer.Form;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.behavior.Behavior;
@@ -33,7 +35,10 @@ import org.apache.wicket.validation.validator.PatternValidator;
  * 
  * @see #onInput(AbstractTextComponent, ComponentTag)
  * @see #onButton(Button, ComponentTag)
+ * @deprecated HTML 5 attributes are now automatically applied 
+ * in {@link FormComponent#onComponentTagBody(MarkupStream, ComponentTag)}
  */
+@Deprecated(forRemoval = true)
 public class HTML5Attributes extends Behavior
 {
 	private static final long serialVersionUID = 1L;
@@ -49,6 +54,15 @@ public class HTML5Attributes extends Behavior
 		{
 			onButton((Button)component, tag);
 		}
+	}
+	
+	/**
+	 * This behavior is disabled by default as it's deprecated and marked for removal
+	 */
+	@Override
+	public boolean isEnabled(Component component)
+	{
+		return false;
 	}
 
 	/**

@@ -45,7 +45,6 @@ class TextAreaTest extends WicketTestCase
 		testPage.textArea.setOutputMarkupId(true);
 		testPage.textArea.setType(String.class);
 		testPage.textArea.setRequired(true);
-		testPage.textArea.add(new HTML5Attributes());
 		tester.startPage(testPage);
 
 		TagTester tagTester = tester.getTagById(testPage.textArea.getMarkupId());
