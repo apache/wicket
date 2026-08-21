@@ -53,6 +53,7 @@ public class SecuritySettings
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
 	/** The authentication strategy. */
+	@SuppressWarnings("removal")
 	private IAuthenticationStrategy authenticationStrategy;
 
 	/** factory for creating crypt objects */
@@ -269,8 +270,11 @@ public class SecuritySettings
 	 * Gets the authentication strategy.
 	 *
 	 * @return Returns the authentication strategy.
+	 * @deprecated no replacement; see {@link IAuthenticationStrategy}. Persisting credentials on the
+	 *             client cannot be made safe, so this is removed in Wicket 11.
 	 */
-	@SuppressWarnings("deprecation")
+	@Deprecated(since = "8.19.0, 9.24.0, 10.11.0", forRemoval = true)
+	@SuppressWarnings("removal")
 	public IAuthenticationStrategy getAuthenticationStrategy()
 	{
 		if (authenticationStrategy == null)
@@ -286,7 +290,11 @@ public class SecuritySettings
 	 * @param strategy
 	 *            new authentication strategy
 	 * @return {@code this} object for chaining
+	 * @deprecated no replacement; see {@link IAuthenticationStrategy}. Persisting credentials on the
+	 *             client cannot be made safe, so this is removed in Wicket 11.
 	 */
+	@Deprecated(since = "8.19.0, 9.24.0, 10.11.0", forRemoval = true)
+	@SuppressWarnings("removal")
 	public SecuritySettings setAuthenticationStrategy(final IAuthenticationStrategy strategy)
 	{
 		authenticationStrategy = strategy;
