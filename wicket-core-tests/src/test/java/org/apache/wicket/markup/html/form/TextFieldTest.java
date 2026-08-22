@@ -101,6 +101,17 @@ class TextFieldTest extends WicketTestCase
 		String required = tagTester.getAttribute("required");
 		assertEquals("required", required);
 	}
+	
+	@Test
+	void testSearchType()
+	{
+		TestPage testPage = new TestPage();
+		testPage.pageMarkup = testPage.pageMarkup.replace("<input", "<input type=\"search\"");
+		
+		tester.startPage(testPage);
+
+		tester.assertRenderedPage(TestPage.class);
+	}
 
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
@@ -109,20 +120,24 @@ class TextFieldTest extends WicketTestCase
 		Form<Void> form;
 		TextField<String> textField;
 		IModel<String> textModel = Model.of((String)null);
+		
+		String pageMarkup = "";
 
 		/** */
 		TestPage()
 		{
 			add(form = new Form<>("form"));
 			form.add(textField = new TextField<>("text", textModel));
+			this.pageMarkup = "<html><body>"
+					+ "<form wicket:id=\"form\"><input wicket:id=\"text\" /></form></body></html>";
 		}
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
-			return new StringResourceStream("<html><body>"
-				+ "<form wicket:id=\"form\"><input wicket:id=\"text\" /></form></body></html>");
+			return new StringResourceStream(pageMarkup);
 		}
+
 	}
 }
