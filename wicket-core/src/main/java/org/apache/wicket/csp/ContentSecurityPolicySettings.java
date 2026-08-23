@@ -127,9 +127,14 @@ public class ContentSecurityPolicySettings
 	 *            The new filter, must not be null.
 	 * @return {@code this} for chaining.
 	 *
-	 * @deprecated
 	 * @see org.apache.wicket.markup.html.WebPage#configureResponse
+	 *
+	 * @deprecated Pages are now protected while they configure their response, see
+	 *             {@link org.apache.wicket.markup.html.WebPage#configureResponse}. This handler
+	 *             based filter will be replaced by a {@code Predicate<WebPage>} testing the page
+	 *             being rendered.
 	 */
+	@Deprecated(since = "9.24.0", forRemoval = true)
 	public ContentSecurityPolicySettings setProtectedFilter(
 		Predicate<IRequestHandler> protectedFilter)
 	{
@@ -145,10 +150,13 @@ public class ContentSecurityPolicySettings
 	 * @return <code>true</code> by default for all {@link RenderPageRequestHandler}s
 	 *
 	 * @see #setProtectedFilter(Predicate)
-	 *
-	 * @deprecated
 	 * @see org.apache.wicket.markup.html.WebPage#configureResponse
+	 *
+	 * @deprecated Pages are now protected while they configure their response, see
+	 *             {@link org.apache.wicket.markup.html.WebPage#configureResponse}. This check will
+	 *             be replaced by one that receives the {@code WebPage} being rendered.
 	 */
+	@Deprecated(since = "9.24.0", forRemoval = true)
 	protected boolean mustProtectRequest(IRequestHandler handler)
 	{
 		return protectedFilter.test(unwrap(handler));

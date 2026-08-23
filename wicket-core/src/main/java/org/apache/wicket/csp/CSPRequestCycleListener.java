@@ -32,8 +32,12 @@ import static org.apache.wicket.request.IRequestHandlerDelegate.unwrap;
  * @author Sven Haster
  * @author Emond Papegaaij
  * @see CSPHeaderWriter
- * @deprecated
+ *
+ * @deprecated Pages write their own CSP headers, see
+ *             {@link org.apache.wicket.markup.html.WebPage#configureResponse}. This listener only
+ *             protects the remaining request handlers and will be removed.
  */
+@Deprecated(since = "9.24.0", forRemoval = true)
 public class CSPRequestCycleListener implements IRequestCycleListener
 {
 	private final ContentSecurityPolicySettings settings;
