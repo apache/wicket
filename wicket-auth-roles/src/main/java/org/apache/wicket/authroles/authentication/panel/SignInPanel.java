@@ -35,14 +35,40 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * passing the username and password submitted. The signIn() method should authenticate the user's
  * session.
  * 
- * @see IAuthenticationStrategy
- * @see org.apache.wicket.settings.SecuritySettings#getAuthenticationStrategy()
- * @see DefaultAuthenticationStrategy
+ * <p>
+ * <strong>This panel is deprecated for security reasons.</strong> Its "remember me" support hands
+ * the username and the password to {@link IAuthenticationStrategy}, whose default implementation
+ * {@link DefaultAuthenticationStrategy} writes them into a cookie, so the password is stored on the
+ * client and replayed on every visit. That mechanism is deprecated with no replacement, because
+ * whatever it persists is what signs the user in; see {@link IAuthenticationStrategy} for why it
+ * cannot be made safe.
+ * </p>
+ * <p>
+ * Use {@link UsernamePasswordPanel} instead. It is this panel without the "remember me" option and
+ * with the same API otherwise, so switching over is a change of type name. An application that needs
+ * a persistent login has to implement one itself, with a random, revocable, per-device token rather
+ * than with the password.
+ * </p>
+ * <p>
+ * Two properties of the "remember me" support here are worth knowing before relying on it, and
+ * neither is going to be fixed: the remedy is to stop using this panel rather than to harden
+ * something that is being removed. Passing {@code false} to {@link #SignInPanel(String, boolean)}
+ * only hides the checkbox &mdash; the {@code rememberMe} property still starts out {@code true}, an
+ * invisible form component is never updated from the request, and so the credentials are persisted
+ * on every successful sign in regardless. And {@link #onConfigure()} consults neither flag, so any
+ * instance of this panel signs a visitor in from an existing cookie. See {@code SECURITY.md} for the
+ * scope this places the panel in.
+ * </p>
  *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
+ * @deprecated use {@link UsernamePasswordPanel}, which is this panel without the "remember me"
+ *             option. Persisting credentials on the client cannot be made safe, so this panel is
+ *             removed in Wicket 11.
  */
+@Deprecated
+@SuppressWarnings("deprecation")
 public class SignInPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;

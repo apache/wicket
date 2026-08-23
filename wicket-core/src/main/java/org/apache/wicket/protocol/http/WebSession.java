@@ -59,6 +59,9 @@ public class WebSession extends Session
 	 * 
 	 * @see org.apache.wicket.Session#invalidate()
 	 */
+	// the authentication strategy is deprecated for removal, but clearing whatever it persisted is
+	// exactly what has to keep happening while it still exists
+	@SuppressWarnings("deprecation")
 	@Override
 	public void invalidate()
 	{

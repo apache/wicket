@@ -16,37 +16,25 @@
  */
 package org.apache.wicket.authroles.authentication.pages;
 
-import org.apache.wicket.authroles.authentication.panel.SignInPanel;
+import org.apache.wicket.authroles.authentication.panel.UsernamePasswordPanel;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
 /**
- * A base class which provide standard functionality for sign in.
- * <p>
- * <strong>This page is deprecated for security reasons.</strong> It hosts a {@link SignInPanel},
- * whose "remember me" support stores the username and the password in a cookie on the client. Use
- * {@link UsernamePasswordPage} instead, which hosts a
- * {@link org.apache.wicket.authroles.authentication.panel.UsernamePasswordPanel} and is otherwise
- * the same page. See {@link SignInPanel} for the mechanism and {@code SECURITY.md} for the scope
- * this places the page in.
- * </p>
+ * A base class which provide standard functionality for sign in, by hosting a
+ * {@link UsernamePasswordPanel}.
  * 
  * @author Jonathan Locke
- * @deprecated use {@link UsernamePasswordPage}, which is this page without the "remember me" option.
- *             Persisting credentials on the client cannot be made safe, so this page is removed in
- *             Wicket 11.
  */
-@Deprecated
-@SuppressWarnings("deprecation")
-public class SignInPage extends WebPage
+public class UsernamePasswordPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct
 	 */
-	public SignInPage()
+	public UsernamePasswordPage()
 	{
 		this(null);
 	}
@@ -57,8 +45,10 @@ public class SignInPage extends WebPage
 	 * @param parameters
 	 *            The page parameters
 	 */
-	public SignInPage(final PageParameters parameters)
+	public UsernamePasswordPage(final PageParameters parameters)
 	{
-		add(new SignInPanel("signInPanel"));
+		super(parameters);
+
+		add(new UsernamePasswordPanel("signInPanel"));
 	}
 }

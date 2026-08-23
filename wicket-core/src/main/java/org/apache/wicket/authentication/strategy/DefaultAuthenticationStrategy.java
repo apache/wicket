@@ -31,8 +31,20 @@ import org.slf4j.LoggerFactory;
  * Wicket's default implementation of an authentication strategy. It'll concatenate username and
  * password, encrypt it and put it into one Cookie.
  * 
+ * <p>
+ * <strong>This class is deprecated for security reasons and cannot be made safe.</strong> It joins
+ * the username and the password with {@code -sep-} and writes the result to a cookie, so the
+ * password itself is stored on the client and replayed on every visit. See
+ * {@link IAuthenticationStrategy} for why there is no replacement, and {@code SECURITY.md} for the
+ * scope this places the class in.
+ * </p>
+ * 
  * @author Juergen Donnerstag
+ * @deprecated no replacement; see {@link IAuthenticationStrategy}. Persisting credentials on the
+ *             client cannot be made safe, so this is removed in Wicket 11.
  */
+@Deprecated
+@SuppressWarnings("deprecation")
 public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 {
 	private static final Logger logger = LoggerFactory.getLogger(DefaultAuthenticationStrategy.class);
