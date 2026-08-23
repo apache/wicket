@@ -92,7 +92,27 @@ import org.apache.wicket.util.string.Strings;
  * </ul>
  * </li>
  * </ul>
+ * <p>
+ * The label taken from a model or from a resource bundle is text, so it is escaped before it is
+ * written. A tag can ask for it to be written as is instead:
  * 
+ * <pre>
+ * {@literal
+ * <wicket:label escape="false"/>
+ * }
+ * </pre>
+ * 
+ * The application then takes responsibility for the content. The attribute accepts
+ * <code>true</code>/<code>false</code>, <code>on</code>/<code>off</code>,
+ * <code>yes</code>/<code>no</code>, <code>y</code>/<code>n</code> and <code>1</code>/<code>0</code>;
+ * any other value raises a
+ * {@link org.apache.wicket.util.string.StringValueConversionException}. Leaving the attribute out,
+ * or leaving it empty, keeps the escaping.
+ * <p>
+ * The attribute says nothing about the tag body. That body is markup this label has just rendered
+ * itself and is always written as is. Note also that <code>{@literal <wicket:message>}</code>
+ * spells the same attribute the other way round: a message is written as markup by default and
+ * <code>escape="true"</code> asks for it to be escaped.
  * 
  * @author Carl-Eric Menzel
  * @author igor
@@ -100,6 +120,8 @@ import org.apache.wicket.util.string.Strings;
 public class AutoLabelTextResolver implements IComponentResolver
 {
 	public static final String LABEL = "label";
+
+	public static final String ESCAPE_ATTRIBUTE = "escape";
 
 	/**
 	 * This is inserted by the resolver to render the label.
@@ -278,7 +300,10 @@ public class AutoLabelTextResolver implements IComponentResolver
 			else
 			{
 				// ...found the form component, so we can return our label.
-				return new TextLabel(tag.getId(), related);
+				TextLabel label = new TextLabel(tag.getId(), related);
+				String escape = tag.getAttribute(ESCAPE_ATTRIBUTE);
+				label.setEscapeModelStrings(Strings.isEmpty(escape) || Strings.isTrue(escape));
+				return label;
 			}
 		}
 		return null;
