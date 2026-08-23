@@ -35,10 +35,7 @@ import org.apache.wicket.validation.validator.PatternValidator;
  * 
  * @see #onInput(AbstractTextComponent, ComponentTag)
  * @see #onButton(Button, ComponentTag)
- * @deprecated HTML 5 attributes are now automatically applied 
- * in {@link FormComponent#onComponentTagBody(MarkupStream, ComponentTag)}
  */
-@Deprecated(forRemoval = true)
 public class HTML5Attributes extends Behavior
 {
 	private static final long serialVersionUID = 1L;
@@ -50,19 +47,6 @@ public class HTML5Attributes extends Behavior
 		{
 			onInput((AbstractTextComponent<?>)component, tag);
 		}
-		else if (component instanceof Button)
-		{
-			onButton((Button)component, tag);
-		}
-	}
-	
-	/**
-	 * This behavior is disabled by default as it's deprecated and marked for removal
-	 */
-	@Override
-	public boolean isEnabled(Component component)
-	{
-		return false;
 	}
 
 	/**
@@ -81,11 +65,6 @@ public class HTML5Attributes extends Behavior
 	 */
 	protected void onInput(AbstractTextComponent<?> input, ComponentTag tag)
 	{
-		if (input.isRequired())
-		{
-			tag.put("required", "required");
-		}
-
 		IModel<String> label = input.getLabel();
 		if (label != null && label.getObject() != null)
 		{
