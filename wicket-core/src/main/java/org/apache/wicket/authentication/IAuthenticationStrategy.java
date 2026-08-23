@@ -22,9 +22,34 @@ import org.apache.wicket.Application;
  * The interface of an authentication strategy which is accessible via
  * {@link Application#getSecuritySettings()}. Implementations determine how logon data (username and
  * password) are persisted (e.g. Cookie), retrieved and removed.
+ * <p>
+ * <strong>This interface is deprecated for security reasons and cannot be made safe.</strong>
+ * Whatever it persists is what signs the user in: {@link #load()} hands its result straight to
+ * {@code AuthenticatedWebSession#signIn(String, String)}, so what is stored on the client is the
+ * password, and it is replayed on every visit for as long as the cookie lives. Wicket's own
+ * implementation joins the username and the password with a fixed separator and writes them to a
+ * cookie that has a thirty day lifetime and no {@code Secure} attribute, encrypted with
+ * {@code PBEWithMD5AndDES} &mdash; DES in an unauthenticated mode &mdash; under a key that is
+ * regenerated on every restart. Anyone who obtains that cookie can sign in as the user, and the
+ * fixed separator gives them a crib for recovering the password itself.
+ * </p>
+ * <p>
+ * None of that is a defect in the implementation. {@code AuthenticatedWebSession} already says that
+ * a cookie based login "may not rely on putting username and password into the cookie but something
+ * else that safely identifies the user", and this contract cannot express that: {@link #load()}
+ * returns credentials for {@code authenticate(String, String)} to check, so a token can only be
+ * carried here by making the application accept that token as a password. There is therefore no
+ * replacement and no configuration that makes this safe. An application that needs a persistent
+ * login has to implement one itself, with a random, revocable, per-device token, and can sign the
+ * session in with {@code AuthenticatedWebSession#signIn(boolean)} once it has verified that token
+ * for itself. See {@code SECURITY.md} for the scope this places the interface in.
+ * </p>
  * 
  * @author Juergen Donnerstag
+ * @deprecated no replacement; see above. Persisting credentials on the client so that a later visit
+ *             can replay them cannot be made safe, so this is removed in Wicket 11.
  */
+@Deprecated(since = "8.19.0, 9.24.0, 10.11.0", forRemoval = true)
 public interface IAuthenticationStrategy
 {
 	/**

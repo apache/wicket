@@ -22,7 +22,11 @@ import org.apache.wicket.authentication.IAuthenticationStrategy;
  * A no-op implementation. No username or password will be persisted or retrieved.
  * 
  * @author Juergen Donnerstag
+ * @deprecated no replacement; this implementation goes with the deprecated
+ *             {@link IAuthenticationStrategy} it implements, and is removed in Wicket 11.
  */
+@Deprecated(since = "8.19.0, 9.24.0, 10.11.0", forRemoval = true)
+@SuppressWarnings("removal")
 public class NoOpAuthenticationStrategy implements IAuthenticationStrategy
 {
 	@Override
