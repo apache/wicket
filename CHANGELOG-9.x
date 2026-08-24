@@ -2,6 +2,14 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.24.0
+
+** Task
+
+    * [WICKET-7193] - Deprecate and remove IAuthenticationStrategy
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.23.0
 
 ** Bug
