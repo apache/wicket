@@ -53,4 +53,28 @@ jobs:
     - name: Build with Maven
       run: |
         java -version
-        ./apache-maven-${MAVEN_VERSION}/bin/mvn --show-version clean verify -Pjs-test
+        ./apache-maven-${MAVEN_VERSION}/bin/mvn --show-version \
+          clean verify -Pjs-test \
+          ${{ matrix.java == '21' && '-Pcoverage' || '' }}
+
+    # Fails if the measurement itself has broken - for instance if a future
+    # <argLine> override drops the @{jacoco.argLine} placeholder, which would
+    # silently zero a module's coverage rather than failing the build.
+    - name: Check coverage report
+      if: matrix.java == '21'
+      run: python3 .github/scripts/check-coverage-report.py
+
+    # Coverage is measured on one JDK only: a single number is all that is needed,
+    # and this leaves the other legs' timings untouched. The aggregated report is
+    # produced by the wicket-coverage module; see the 'coverage' profile in pom.xml.
+    - name: Upload coverage to Codecov
+      # v7.0.0 - external actions must be pinned to a commit SHA:
+      # https://infra.apache.org/github-actions-policy.html
+      uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f
+      if: matrix.java == '21' && github.repository_owner == 'apache'
+      with:
+        files: ./wicket-coverage/target/site/jacoco-aggregate/jacoco.xml
+        # Empty for pull requests from forks, which upload tokenlessly. Do NOT switch
+        # to pull_request_target to get at the secret; ASF policy forbids it.
+        token: ${{ secrets.CODECOV_TOKEN }}
+        disable_search: true
