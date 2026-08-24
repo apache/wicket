@@ -2,6 +2,23 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.11.0
+
+** New Feature
+
+    * [WICKET-7196] - Allow unescaped wicket:label tags
+
+** Improvement
+
+    * [WICKET-7192] - restrict SourcesPage to resources of the page's own package
+    * [WICKET-7195] - Add tag type="search" to those supported by  TextField
+
+** Task
+
+    * [WICKET-7193] - Deprecate and remove IAuthenticationStrategy
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.10.0
 
 ** Bug
