@@ -200,6 +200,29 @@ When building using Maven 3, execute one of the following in the root folder:
     creates wicket-(subproject)-x.y.z.jar(s) in according target subdirectories and 
     installs the jar files into your local Maven repository for use in other projects.
 
+Code coverage
+-------------
+
+Coverage is measured with JaCoCo and aggregated into a single report, because most
+Wicket tests live in a module other than the code they exercise (the tests for
+wicket-core are in wicket-core-tests, for example). To produce it:
+
+ - mvn clean verify -Pcoverage
+
+    writes the aggregated report to
+    wicket-coverage/target/site/jacoco-aggregate/index.html
+
+To build only the modules that feed the report, which is considerably faster:
+
+ - mvn clean verify -Pcoverage -pl wicket-coverage -am
+
+Note that a build without "clean" merges the previous run's data into the new report,
+because the JaCoCo agent appends by default.
+
+Every push and pull request also uploads this report to
+https://app.codecov.io/gh/apache/wicket. Coverage is reported there, never enforced:
+no coverage check can fail a build or block a merge.
+
 Migrating from 9.x
 ------------------
 

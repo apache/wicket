@@ -124,6 +124,8 @@
         <module>wicket-migration</module>
 		<module>wicket-tester</module>
 		<module>wicket-extensions-tester</module>
+		<!-- must stay last: aggregates the JaCoCo data of every module above -->
+		<module>wicket-coverage</module>
     </modules>
 	<properties>
 		<!-- Encoding -->
@@ -132,6 +134,17 @@
 
 		<project.build.outputTimestamp>2026-01-31T19:00:35Z</project.build.outputTimestamp>
 
+		<!--
+			Late-bound placeholder for the JaCoCo agent's -javaagent argument, consumed
+			by maven-surefire-plugin's <argLine> as @{jacoco.argLine}.
+
+			This property MUST stay declared, even though it is empty: surefire only
+			substitutes @{x} for properties that actually exist, otherwise it passes the
+			literal "@{x}" to the forked JVM and every test module fails with
+			"Unrecognized option". jacoco:prepare-agent overwrites the value; see
+			<propertyName> in the 'coverage' profile.
+		-->
+		<jacoco.argLine />
 		<javadoc.additionalJOption />
 		<javadoc.jdk.apidocs.link>https://docs.oracle.com/en/java/javase/${java.specification.version}/docs/api/</javadoc.jdk.apidocs.link>
 
@@ -1123,7 +1136,14 @@
 						<includes>
 							<include>**/*Test.java</include>
 						</includes>
-						<argLine>--add-opens java.base/jdk.internal.loader=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED
+						<!--
+							@{jacoco.argLine} is replaced by surefire at fork time, and is empty
+							unless -Pcoverage is active. Any future override of <argLine> (in a
+							profile or a module) MUST keep this placeholder, or coverage for that
+							module silently drops to zero.
+						-->
+						<argLine>@{jacoco.argLine}
+							--add-opens java.base/jdk.internal.loader=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED
 							--add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED
 							--add-modules=ALL-SYSTEM</argLine>
 						<useModulePath>false</useModulePath>
@@ -1254,6 +1274,11 @@
 					</configuration>
 				</plugin>
 				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco.version}</version>
+				</plugin>
+				<plugin>
 					<groupId>org.primefaces.extensions</groupId>
 					<artifactId>resources-optimizer-maven-plugin</artifactId>
 					<version>${resources-optimizer-maven-plugin.version}</version>
@@ -1357,30 +1382,37 @@
 		</profile>
 
 		<profile>
+			<!--
+				Attaches the JaCoCo agent to every surefire fork by setting the
+				'jacoco.argLine' property, which surefire's <argLine> consumes as
+				@{jacoco.argLine}.
+
+				The aggregated report is produced by the wicket-coverage module, which
+				declares a profile with this same id. Deliberately NO per-module 'report'
+				goal: most tests live in a module other than the code they exercise
+				(wicket-core has no tests of its own, wicket-core-tests has ~500), so
+				per-module reports would show 0% for wicket-core.
+
+				Usage: mvn clean verify -Pcoverage
+				Result: wicket-coverage/target/site/jacoco-aggregate/{index.html,jacoco.xml}
+			-->
 			<id>coverage</id>
 			<build>
 				<plugins>
 					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>${jacoco.version}</version>
-
 						<executions>
 							<execution>
 								<id>jacoco-initialize</id>
 								<goals>
 									<goal>prepare-agent</goal>
 								</goals>
-							</execution>
-							<execution>
-								<id>jacoco-site</id>
-								<phase>package</phase>
-								<goals>
-									<goal>report</goal>
-								</goals>
+								<configuration>
+									<propertyName>jacoco.argLine</propertyName>
+								</configuration>
 							</execution>
 						</executions>
-
 					</plugin>
 				</plugins>
 			</build>
