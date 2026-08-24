@@ -27,6 +27,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.util.lang.Args;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
@@ -121,6 +122,10 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		super.updateAjaxAttributes(attributes);
 
 		attributes.setMethod(Method.POST);
+		if (getComponent() instanceof FormComponentPanel && updateInnerComponents())
+		{
+			attributes.setSerializeRecursively(true);
+		}
 	}
 
 	@Override
@@ -231,7 +236,17 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	{
 		return true;
 	}
-	
+
+	/**
+	 * Whether to update the inner components. Enabled by default so this behavior works as expected for
+	 * {@link org.apache.wicket.markup.html.form.FormComponentPanel}s: the model has been updated using the input of
+	 * the inner components of the panel on calling {@link #onUpdate(AjaxRequestTarget)}.
+	 * <p>
+	 * This is new behavior from Wicket 11. Before Wicket 11 using Ajax with <code>FormComponentPanel</code>s was more
+	 * cumbersome. If you need to revert to the pre-Wicket 11 behavior, return <code>false</code>.
+	 *
+	 * @return <code>true</code> to process the inner components, <code>false</code> otherwise.
+	 */
 	protected boolean updateInnerComponents()
 	{
 		return true;

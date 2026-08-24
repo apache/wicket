@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Choices;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Recorder;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Selection;
@@ -50,28 +49,6 @@ import org.apache.wicket.resource.JQueryPluginResourceReference;
  * When creating a Palette object make sure your IChoiceRenderer returns a specific ID, not the
  * index.
  * <p>
- * <strong>Ajaxifying the palette</strong>: If you want to update a Palette with an
- * {@link AjaxFormComponentUpdatingBehavior}, you have to attach it to the contained
- * {@link Recorder} by overriding {@link #newRecorderComponent()} and calling
- * {@link #processInput()}:
- * 
- * <pre>{@code
- *  Palette palette=new Palette(...) {
- *    protected Recorder newRecorderComponent()
- *    {
- *      Recorder recorder=super.newRecorderComponent();     
- *      recorder.add(new AjaxFormComponentUpdatingBehavior("change") {
- *        protected void onUpdate(AjaxRequestTarget target) {
- *          processInput(); // let Palette process input too
- *
- *          ...
- *        }
- *      });
- *      return recorder;
- *    }
- *  }
- * }</pre>
- * 
  * You can add a {@link DefaultTheme} to style this component in a left to right fashion.
  * 
  * @author Igor Vaynberg ( ivaynberg )
