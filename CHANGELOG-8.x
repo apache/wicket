@@ -2,6 +2,14 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.19.0
+
+** Task
+
+    * [WICKET-7193] - Deprecate and remove IAuthenticationStrategy
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.18.0
 
 =======================================================================
