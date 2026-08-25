@@ -369,12 +369,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-commons-fileupload</artifactId>
-				<version>10.0.0-M2-SNAPSHOT</version>
-				<type>jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-core</artifactId>
 				<version>10.11.0-SNAPSHOT</version>
 				<type>jar</type>
