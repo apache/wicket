@@ -30,7 +30,9 @@ published and the PMC has announced it. In return, we will keep you informed of
 our assessment and of the release timeline, and credit you in the announcement
 unless you ask us not to.
 
-Note that reports are assessed against the scope and the security model below.
+Note that reports are assessed against the scope, the two conditions in
+[Reports We Do Not Assess](#reports-we-do-not-assess), and the security model
+below.
 A report that depends on the framework distrusting something this model treats
 as trusted may be closed as a deployment or configuration issue rather than a
 framework vulnerability. If you believe the model itself is wrong, that is a
@@ -136,6 +138,60 @@ infrastructure, not a Wicket release. If you find something that affects the
 hosting rather than the example application itself, it is still worth reporting
 to **security@apache.org** — say that it concerns the hosted site, so that it can
 be routed to ASF Infrastructure as well as to the PMC.
+
+## Reports We Do Not Assess
+
+The two conditions below are about the report rather than about the code. Both
+exist because a report that cannot be verified costs as much to triage as one
+that can, and neither is a judgement on whether the concern behind it is real.
+
+### A finding must be verified against a supported branch tip
+
+Verify the issue against the current tip of the line you are reporting against:
+`wicket-8.x`, `wicket-9.x`, `wicket-10.x`, or `master`. One of them is enough —
+say which, and name the commit you tested. A failing test against that commit is
+ideal. Reporting only the release you happen to be running is not sufficient: a
+released artifact is always behind its branch, and what you found may already be
+fixed there.
+
+We do not assess a report verified only against an older version. A release that
+is not its branch tip may be missing fixes that are already public, and the
+discontinued lines — 7.x and earlier — receive no security fixes at all, so the
+remedy there is to upgrade whether or not the behaviour you found is a
+vulnerability. Note also that git branches exist for every line Wicket has ever
+shipped; a branch existing is not a statement that the line is supported. The
+table above is.
+
+Before reporting, check the advisories already published for the line you tested,
+at [security.apache.org/projects/wicket/](https://security.apache.org/projects/wicket/).
+An issue fixed in a later release of that same line is not a vulnerability
+report; it is a reason to upgrade.
+
+This is a condition on the evidence, not on the finding. If the behaviour does
+reproduce on a supported tip, re-verify it there and send it again — arriving
+first against the wrong version is not held against a report.
+
+### A report must refer to code that exists
+
+We do not assess a report whose subject cannot be found in the codebase: a class,
+method, setting, or file that does not exist on the branch the report names. Such
+a report cannot be confirmed or ruled out, and there is nothing in it for us to
+fix.
+
+Quote the code you are describing, from the branch you are targeting, and give
+paths as they appear in the repository. Where a reference is merely inaccurate —
+the right class named under the wrong module, a line number that has moved since
+you looked — we will resolve it ourselves and say so. What we close unassessed is
+a report whose subject is not in the code at all: a method that was never
+written, a field given a value it does not have, a call chain whose steps do not
+exist.
+
+How the report was produced does not matter to us: by hand, with tooling, or
+with a model. Accuracy is what matters. A report whose subject we cannot locate
+is indistinguishable from a real finding until every claim in it has been checked
+against the code, and that is effort we would rather spend on the reports that
+hold up. Tell us what you verified and where you verified it, and we will take it
+from there.
 
 ## Security Model
 
