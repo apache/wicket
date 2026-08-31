@@ -197,6 +197,7 @@
 		<wagon-ssh-external.version>3.5.3</wagon-ssh-external.version>
 		<weld.version>6.0.4.Final</weld.version>
 		<velocity-engine-core.version>2.4.1</velocity-engine-core.version>
+		<jspecific.version>1.0.1</jspecific.version>
 
 		<!-- Maven plugins -->
 		<build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
@@ -587,6 +588,12 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+			<dependency>
+          <groupId>org.jspecify</groupId>
+          <artifactId>jspecify</artifactId>
+          <version>${jspecific.version}</version>
+      </dependency>
+			
 			<dependency>
 				<groupId>io.github.cdi-unit</groupId>
 				<artifactId>cdi-unit</artifactId>
