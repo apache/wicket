@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
+import java.text.Normalizer.Form;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.behavior.Behavior;
@@ -45,10 +47,6 @@ public class HTML5Attributes extends Behavior
 		{
 			onInput((AbstractTextComponent<?>)component, tag);
 		}
-		else if (component instanceof Button)
-		{
-			onButton((Button)component, tag);
-		}
 	}
 
 	/**
@@ -67,11 +65,6 @@ public class HTML5Attributes extends Behavior
 	 */
 	protected void onInput(AbstractTextComponent<?> input, ComponentTag tag)
 	{
-		if (input.isRequired())
-		{
-			tag.put("required", "required");
-		}
-
 		IModel<String> label = input.getLabel();
 		if (label != null && label.getObject() != null)
 		{
