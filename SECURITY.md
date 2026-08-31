@@ -440,9 +440,11 @@ Two things sit deliberately outside that boundary:
 
 - **Rendering a page is allowed.** A page may be reached by a simple top-level
   navigation from anywhere, so that pages remain linkable from other sites. Only
-  the invocation of a listener is refused. Requests that are not top-level
-  navigations — subresource loads, `fetch`, `<object>` and `<embed>` — are
-  refused for renders too.
+  the invocation of a listener is refused. This holds for every render, not only
+  for top-level navigations: a page reached as a subresource load, through
+  `fetch`, or inside an `<object>` or `<embed>` is not refused either, because
+  the listener does not consult a policy for renders at all. A page whose render
+  alone discloses something sensitive cannot rely on this listener.
 - **Sibling origins may be trusted explicitly.** `Sec-Fetch-Site: same-site`
   means a different origin on the same registrable domain and scheme, such as
   another subdomain, and is refused by default. A deployment that trusts every
