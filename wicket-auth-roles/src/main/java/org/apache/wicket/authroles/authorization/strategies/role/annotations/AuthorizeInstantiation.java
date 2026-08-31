@@ -44,10 +44,18 @@ import java.lang.annotation.Target;
  *  import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
  * </pre>
  *
+ * An annotation on a class replaces the annotations on its package, rather than adding to them. Since
+ * this annotation is {@link Inherited}, that also holds for an annotation inherited from a superclass
+ * in another package: such an inherited annotation suppresses the annotation of the subclass' own
+ * package. See {@link AnnotationsRoleAuthorizationStrategy} for the complete resolution rules and for
+ * the pitfalls of annotating packages.
+ *
  * @see org.apache.wicket.authorization.IAuthorizationStrategy
  * @see AnnotationsRoleAuthorizationStrategy
+ * @see AuthorizeInstantiations
  * @see AuthorizeActions
  * @see AuthorizeAction
+ * @see AuthorizeResource
  *
  * @author Eelco hillenius
  */
@@ -60,7 +68,8 @@ public @interface AuthorizeInstantiation {
 	/**
 	 * Gets the roles that are allowed to take the action.
 	 *
-	 * @return the roles that are allowed. Returns a zero length array by default
+	 * @return the roles that are allowed. Returns a zero length array by default, which authorizes
+	 *         everybody
 	 */
 	String[] value() default { };
 }

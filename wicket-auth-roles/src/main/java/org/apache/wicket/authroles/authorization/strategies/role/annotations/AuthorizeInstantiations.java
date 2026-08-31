@@ -43,14 +43,19 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  * 
+ * It can be placed on a package as well, by specifying it in the <code>package-info.java</code> file
+ * of that package. A ruleset on a class replaces the instantiation rules of its package, just like a
+ * single {@link AuthorizeInstantiation} does; see {@link AnnotationsRoleAuthorizationStrategy} for
+ * the complete resolution rules.
+ * 
  * @see org.apache.wicket.authorization.IAuthorizationStrategy
  * @see AnnotationsRoleAuthorizationStrategy
  * @see AuthorizeInstantiation
- * @see AuthorizeInstantiations
+ * @see AuthorizeResource
  * @author René Dieckmann (rene.dieckmann@menoto.de)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
+@Target({ ElementType.PACKAGE, ElementType.TYPE })
 @Documented
 @Inherited
 public @interface AuthorizeInstantiations {

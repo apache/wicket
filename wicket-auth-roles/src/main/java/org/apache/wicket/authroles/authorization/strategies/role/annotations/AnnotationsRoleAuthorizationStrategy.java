@@ -16,6 +16,12 @@
  */
 package org.apache.wicket.authroles.authorization.strategies.role.annotations;
 
+import java.lang.reflect.AnnotatedElement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authroles.authorization.strategies.role.AbstractRoleAuthorizationStrategy;
@@ -27,8 +33,85 @@ import org.apache.wicket.request.resource.IResource;
 
 
 /**
- * Strategy that checks the {@link AuthorizeInstantiation} annotation.
- * 
+ * Strategy that checks the role annotations in this package:
+ * <ul>
+ * <li>{@link AuthorizeInstantiation} and {@link AuthorizeInstantiations} guard the instantiation of
+ * a component,</li>
+ * <li>{@link AuthorizeAction} and {@link AuthorizeActions} guard an {@link Action} on a component
+ * instance, such as {@link org.apache.wicket.Component#RENDER} and
+ * {@link org.apache.wicket.Component#ENABLE},</li>
+ * <li>{@link AuthorizeResource} guards the request of a resource.</li>
+ * </ul>
+ * <p>
+ * Each of these annotations can be placed on a class or on a package. A package is annotated through
+ * its <code>package-info.java</code> file:
+ *
+ * <pre>
+ *  // only users with role ADMIN are allowed to create instances of pages in this package
+ *  &#064;AuthorizeInstantiation(&quot;ADMIN&quot;)
+ *  package com.example.admin;
+ *
+ *  import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+ * </pre>
+ *
+ * <p>
+ * <b>Annotations on a class replace the annotations on its package.</b> The annotations on a package
+ * are a default that a class can override: when a class carries any annotation relevant to the check
+ * being performed, the annotations on its package are not consulted at all. Annotations at the same
+ * level are combined with AND, so every one of them has to grant access. For actions this is decided
+ * per action name, which means that a class restricting only <code>ENABLE</code> still inherits the
+ * <code>RENDER</code> restriction of its package. Within a single {@link AuthorizeAction},
+ * {@link AuthorizeAction#deny()} is evaluated before {@link AuthorizeAction#roles()}: a user holding
+ * a denied role is refused even when that user also holds an accepted one.
+ * <p>
+ * Because all of these annotations are {@link java.lang.annotation.Inherited}, the annotations
+ * &quot;on a class&quot; include those declared on any of its superclasses, in any package. That is
+ * worth spelling out, because it is easy to be caught by:
+ *
+ * <pre>
+ *  // com/example/base/SecuredPage.java
+ *  &#064;AuthorizeInstantiation(&quot;USER&quot;)
+ *  public class SecuredPage extends WebPage
+ *
+ *  // com/example/admin/package-info.java
+ *  &#064;AuthorizeInstantiation(&quot;ADMIN&quot;)
+ *  package com.example.admin;
+ *
+ *  // com/example/admin/ReportPage.java -- requires USER, not ADMIN!
+ *  public class ReportPage extends SecuredPage
+ * </pre>
+ *
+ * <p>
+ * <code>ReportPage</code> inherits <code>&#064;AuthorizeInstantiation(&quot;USER&quot;)</code> from
+ * its superclass, that inherited annotation counts as an annotation on the class, and therefore the
+ * ADMIN restriction of its own package is never applied. Annotate such a subclass explicitly to give
+ * it the roles of its package.
+ * <p>
+ * Further points to keep in mind when annotating packages:
+ * <ul>
+ * <li>A package annotation applies to that one package only. Java has no annotation inheritance
+ * between packages, so <code>com.example</code> does not pass its annotations on to
+ * <code>com.example.admin</code>.</li>
+ * <li>{@link java.lang.annotation.Inherited} has no meaning on a package, and inheritance between
+ * classes never crosses over to interfaces.</li>
+ * <li>The <code>package-info.java</code> file has to be compiled and shipped, and to be loaded by
+ * the same class loader as the classes of the package, or its annotations cannot be found at
+ * runtime.</li>
+ * <li>An annotation without any roles, such as <code>&#064;AuthorizeInstantiation()</code>,
+ * authorizes everybody. Because it still replaces the annotations on the package, it is the way to
+ * exempt a single class from the restrictions of its package.</li>
+ * </ul>
+ * <p>
+ * Note that
+ * {@link org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy}
+ * resolves its permissions quite differently: it looks up the exact component class and has no
+ * package or superclass fallback at all. When both strategies are combined, as
+ * {@link org.apache.wicket.authroles.authorization.strategies.role.RoleAuthorizationStrategy} does,
+ * they are combined with AND: both have to grant access.
+ *
+ * @see org.apache.wicket.authorization.IAuthorizationStrategy
+ * @see org.apache.wicket.authroles.authorization.strategies.role.RoleAuthorizationStrategy
+ *
  * @author Eelco Hillenius
  */
 public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizationStrategy
@@ -51,69 +134,18 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
 		final Class<T> componentClass)
 	{
-		// We are authorized unless we are found not to be
-		boolean authorized = true;
-
-		// Check class annotation first because it is more specific than package annotation
-		final AuthorizeInstantiation classAnnotation = componentClass.getAnnotation(AuthorizeInstantiation.class);
-		if (classAnnotation != null)
+		for (final AuthorizeInstantiation rule : resolve(componentClass,
+			AnnotationsRoleAuthorizationStrategy::instantiationRules))
 		{
-			authorized = check(classAnnotation);
-		}
-		else
-		{
-			// Check package annotation if there is no one on the the class
-			final Package componentPackage = componentClass.getPackage();
-			if (componentPackage != null)
+			if (!hasAny(new Roles(rule.value())))
 			{
-				final AuthorizeInstantiation packageAnnotation = componentPackage.getAnnotation(AuthorizeInstantiation.class);
-				if (packageAnnotation != null)
-				{
-					authorized = check(packageAnnotation);
-				}
+				return false;
 			}
 		}
 
-		// Check for multiple instantiations
-		final AuthorizeInstantiations authorizeInstantiationsAnnotation = componentClass
-			.getAnnotation(AuthorizeInstantiations.class);
-		if (authorizeInstantiationsAnnotation != null)
-		{
-			for (final AuthorizeInstantiation authorizeInstantiationAnnotation : authorizeInstantiationsAnnotation
-				.ruleset())
-			{
-				if (!check(authorizeInstantiationAnnotation))
-				{
-					authorized = false;
-				}
-			}
-		}
-
-		return authorized;
+		return true;
 	}
 
-	/**
-	 * Check if annotated instantiation is allowed.
-	 * 
-	 * @param authorizeInstantiationAnnotation
-	 *            The annotations information
-	 * @return False if the instantiation is not authorized
-	 */
-	private <T extends IRequestableComponent> boolean check(
-		final AuthorizeInstantiation authorizeInstantiationAnnotation)
-	{
-		// We are authorized unless we are found not to be
-		boolean authorized = true;
-
-		// Check class annotation first because it is more specific than package annotation
-		if (authorizeInstantiationAnnotation != null)
-		{
-			authorized = hasAny(new Roles(authorizeInstantiationAnnotation.value()));
-		}
-
-		return authorized;
-	}
-	
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
@@ -127,24 +159,46 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		return isActionAuthorized(componentClass, action);
 	}
 
+	/**
+	 * Checks whether the given action is authorized for the given component class. Rules are
+	 * resolved per action: the rules on the class replace the rules of its package only for the
+	 * action they name.
+	 * 
+	 * @param componentClass
+	 *            the class of the component the action is performed on
+	 * @param action
+	 *            the action to check
+	 * @return false if the action is not authorized
+	 */
 	protected boolean isActionAuthorized(final Class<?> componentClass, final Action action)
 	{
-		// Check for a single action
-		if (!check(action, componentClass.getAnnotation(AuthorizeAction.class)))
+		for (final AuthorizeAction rule : resolve(componentClass,
+			element -> actionRules(element, action)))
 		{
-			return false;
+			final Roles deniedRoles = new Roles(rule.deny());
+			if (isEmpty(deniedRoles) == false && hasAny(deniedRoles))
+			{
+				return false;
+			}
+
+			if (!hasAny(new Roles(rule.roles())))
+			{
+				return false;
+			}
 		}
 
-		// Check for multiple actions
-		final AuthorizeActions authorizeActionsAnnotation = componentClass.getAnnotation(AuthorizeActions.class);
-		if (authorizeActionsAnnotation != null)
+		return true;
+	}
+
+	@Override
+	public boolean isResourceAuthorized(IResource resource, PageParameters pageParameters)
+	{
+		for (final AuthorizeResource rule : resolve(resource.getClass(),
+			AnnotationsRoleAuthorizationStrategy::resourceRules))
 		{
-			for (final AuthorizeAction authorizeActionAnnotation : authorizeActionsAnnotation.actions())
+			if (!hasAny(new Roles(rule.value())))
 			{
-				if (!check(action, authorizeActionAnnotation))
-				{
-					return false;
-				}
+				return false;
 			}
 		}
 
@@ -152,56 +206,114 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	}
 
 	/**
-	 * @param action
-	 *            The action to check
-	 * @param authorizeActionAnnotation
-	 *            The annotations information
-	 * @return False if the action is not authorized
+	 * Resolves the rules that apply to the given class: the rules declared on the class itself if
+	 * there are any, and the rules declared on its package otherwise. Since all annotations in this
+	 * package are {@link java.lang.annotation.Inherited}, the rules declared on the class include
+	 * those it inherits from a superclass in another package, and such an inherited rule therefore
+	 * suppresses the rules of the class' own package.
+	 * 
+	 * @param annotatedClass
+	 *            the component or resource class to resolve the rules for
+	 * @param rules
+	 *            extracts the rules relevant to the check being performed from a class or a package
+	 * @return the rules that apply, empty if the class is not restricted
 	 */
-	private boolean check(final Action action, final AuthorizeAction authorizeActionAnnotation)
+	private static <R> List<R> resolve(final Class<?> annotatedClass,
+		final Function<AnnotatedElement, List<R>> rules)
 	{
-		if (authorizeActionAnnotation != null)
-		{
-			if (action.getName().equals(authorizeActionAnnotation.action()))
-			{
-				Roles deniedRoles = new Roles(authorizeActionAnnotation.deny());
-				if (isEmpty(deniedRoles) == false && hasAny(deniedRoles))
-				{
-					return false;
-				}
+		List<R> resolved = rules.apply(annotatedClass);
 
-				Roles acceptedRoles = new Roles(authorizeActionAnnotation.roles());
-				if (!hasAny(acceptedRoles))
-				{
-					return false;
-				}
+		if (resolved.isEmpty())
+		{
+			// Only fall back to the package when the class itself says nothing
+			final Package annotatedPackage = annotatedClass.getPackage();
+			if (annotatedPackage != null)
+			{
+				resolved = rules.apply(annotatedPackage);
 			}
 		}
-		return true;
+
+		return resolved;
 	}
 
-	@Override
-	public boolean isResourceAuthorized(IResource resource, PageParameters pageParameters)
+	/**
+	 * @param element
+	 *            a class or a package
+	 * @return the instantiation rules declared on the given element, both the single
+	 *         {@link AuthorizeInstantiation} and the {@link AuthorizeInstantiations} ruleset
+	 */
+	private static List<AuthorizeInstantiation> instantiationRules(final AnnotatedElement element)
 	{
-		Class<? extends IResource> resourceClass = resource.getClass();
-		boolean allowedByResourceItself = isResourceAnnotationSatisfied(
-				resourceClass.getAnnotation(AuthorizeResource.class));
-		boolean allowedByPackage = isResourceAnnotationSatisfied(
-				resourceClass.getPackage().getAnnotation(AuthorizeResource.class));
-		return allowedByResourceItself && allowedByPackage;
+		final AuthorizeInstantiation single = element.getAnnotation(AuthorizeInstantiation.class);
+		final AuthorizeInstantiations ruleset = element.getAnnotation(AuthorizeInstantiations.class);
+
+		if (single == null && ruleset == null)
+		{
+			return Collections.emptyList();
+		}
+
+		final List<AuthorizeInstantiation> rules = new ArrayList<>();
+		if (single != null)
+		{
+			rules.add(single);
+		}
+		if (ruleset != null)
+		{
+			Collections.addAll(rules, ruleset.ruleset());
+		}
+
+		return rules;
 	}
 
-	private boolean isResourceAnnotationSatisfied(AuthorizeResource annotation)
+	/**
+	 * @param element
+	 *            a class or a package
+	 * @param action
+	 *            the action being checked
+	 * @return the rules declared on the given element that apply to the given action, both the
+	 *         single {@link AuthorizeAction} and the ones grouped by {@link AuthorizeActions}
+	 */
+	private static List<AuthorizeAction> actionRules(final AnnotatedElement element,
+		final Action action)
 	{
-		if (annotation != null)
+		final AuthorizeAction single = element.getAnnotation(AuthorizeAction.class);
+		final AuthorizeActions grouped = element.getAnnotation(AuthorizeActions.class);
+
+		if (grouped == null)
 		{
-			// we have an annotation => we must check for the required roles
-			return hasAny(new Roles(annotation.value()));
+			// The common case: at most one annotation, so avoid building a list for it
+			if (single != null && action.getName().equals(single.action()))
+			{
+				return Collections.singletonList(single);
+			}
+			return Collections.emptyList();
 		}
-		else
+
+		final List<AuthorizeAction> rules = new ArrayList<>();
+		if (single != null && action.getName().equals(single.action()))
 		{
-			// no annotation => no required roles => this resource can be accessed
-			return true;
+			rules.add(single);
 		}
+		for (final AuthorizeAction rule : grouped.actions())
+		{
+			if (action.getName().equals(rule.action()))
+			{
+				rules.add(rule);
+			}
+		}
+
+		return rules;
+	}
+
+	/**
+	 * @param element
+	 *            a class or a package
+	 * @return the {@link AuthorizeResource} declared on the given element, if any
+	 */
+	private static List<AuthorizeResource> resourceRules(final AnnotatedElement element)
+	{
+		final AuthorizeResource rule = element.getAnnotation(AuthorizeResource.class);
+
+		return rule != null ? Collections.singletonList(rule) : Collections.emptyList();
 	}
 }
