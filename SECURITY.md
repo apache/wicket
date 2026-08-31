@@ -65,8 +65,8 @@ guide on our wiki, which links the guides for the earlier lines.
 
 ## Scope
 
-The table above says which release lines receive security fixes. Two categories
-of code inside those lines sit outside this process.
+The table above says which release lines receive security fixes. Three
+categories of code inside those lines sit outside this process.
 
 ### Deprecated code is out of scope
 
@@ -98,6 +98,74 @@ course is to stop doing the thing at all rather than to do it differently, so
 there is nothing to migrate to. Deprecation is the fix in that case, and the code
 is out of scope on the same footing as any other deprecated code. The javadoc
 says which of the two applies, so it is clear before reporting.
+
+### `OriginResourceIsolationPolicy` is out of scope
+
+Wicket ships two `IResourceIsolationPolicy` implementations, and only one of them
+carries the boundary described in
+[Another origin may not invoke a listener](#another-origin-may-not-invoke-a-listener).
+
+`FetchMetadataResourceIsolationPolicy`, added in 9.1.0, is the supported one. It
+reads the `Sec-Fetch-*` request headers, which the browser sets and which page
+content can neither forge nor remove.
+
+`OriginResourceIsolationPolicy` is the older mechanism, kept so that
+`ResourceIsolationRequestCycleListener` still has something to say about a client
+that does not send those headers. It compares the `Origin` and `Referer` headers
+against the requested URL, and the limits of that approach are inherent in the
+headers rather than in the implementation:
+
+- **Neither header need arrive.** Browsers send `Origin` on a form submit, but
+  not on a plain GET — which is how a `Link` and most Ajax behaviours invoke their
+  listener. There the check falls back to `Referer`, and `Referer` is suppressed
+  by the referring page's own `Referrer-Policy`, by `rel="noreferrer"`, and by an
+  HTTPS-to-HTTP downgrade. The document on the other origin chooses its own
+  referrer policy, so it is the party deciding whether a source header reaches us
+  at all.
+- **A missing source is not a rejection.** With no usable header the outcome is
+  `UNKNOWN` and the request is settled by
+  `ResourceIsolationRequestCycleListener#setUnknownOutcomeAction`, which defaults
+  to aborting — but which deployments relax precisely because legitimate traffic
+  also arrives without the headers.
+- **It cannot express the boundary.** The policy ignores the `RequestType`, so it
+  cannot distinguish a page render, which may legitimately be a top-level
+  navigation from another site, from a listener invocation, which may not.
+- **Its idea of the target is the trusted host.** It builds the URI it compares
+  against from the container-reported host, port and scheme (see
+  [Wicket trusts the container-reported host, port and scheme](#wicket-trusts-the-container-reported-host-port-and-scheme)),
+  and `addAcceptedOrigin` matches subdomains, so accepting a domain accepts every
+  host beneath it.
+
+We therefore do not assess a report that a request can get past this policy, and
+we will not harden it. The remedy is `FetchMetadataResourceIsolationPolicy`, which
+is what the framework claims; a deployment that does not want the fallback at all
+can construct the listener without it:
+`new ResourceIsolationRequestCycleListener(new FetchMetadataResourceIsolationPolicy())`.
+The class is not marked `@Deprecated` only because it remains a reasonable
+fallback for a legacy client, where the alternative is to refuse the request
+outright.
+
+What this exclusion does not cover is the chain around it. The default policy list
+is `FetchMetadataResourceIsolationPolicy` followed by
+`OriginResourceIsolationPolicy`, checked in order, and the first policy to return
+an outcome other than `UNKNOWN` decides. A request carrying `Sec-Fetch-Site` is
+consequently always settled by the fetch-metadata policy and never reaches the
+origin policy, and another document cannot make a browser omit that header. So a
+report showing that a request *with* `Sec-Fetch-Site` present is nonetheless
+decided by the origin policy is in scope, as is anything else in
+`ResourceIsolationRequestCycleListener` itself.
+
+**8.x has no supported resource isolation implementation.** The
+`IResourceIsolationPolicy` mechanism arrived in 9.1.0. On 8.x the only
+cross-origin check Wicket offers is `CsrfPreventionRequestCycleListener`, which
+reads the same two headers with the same limits; 9.x deprecates it in favour of
+the resource isolation listener and it is therefore already out of scope there
+under [Deprecated code is out of scope](#deprecated-code-is-out-of-scope), while
+on 8.x it is not deprecated only because that line has nothing to migrate to. An
+8.x application that needs anything stronger has to upgrade or implement the check
+itself: we will not backport the fetch-metadata policy, and reports against
+`CsrfPreventionRequestCycleListener` are out of scope on the same footing as the
+origin policy.
 
 ### `wicket-examples` is sample code, not production code
 
@@ -220,8 +288,11 @@ There is no hostname allowlist in the framework and no attempt to verify the
 This is a deliberate design decision, not an oversight. Only the deployment
 knows its own canonical hostnames; the framework cannot infer them. Note in
 particular that the third item means the container-reported host is a trusted
-input to Wicket's own request-forgery defences — a deployment that lets
-arbitrary `Host` values through weakens more than URL rendering.
+input to a request-forgery defence — a deployment that lets arbitrary `Host`
+values through weakens more than URL rendering. That policy is the legacy one and
+is [out of scope](#originresourceisolationpolicy-is-out-of-scope);
+`FetchMetadataResourceIsolationPolicy`, the supported one, does not consult the
+host at all.
 
 **Therefore the deployment is responsible for ensuring that only expected
 `Host` values reach the application.** Concretely:
@@ -377,6 +448,11 @@ Two things sit deliberately outside that boundary:
   another subdomain, and is refused by default. A deployment that trusts every
   origin on its own site can allow it; sibling-origin actions are then that
   deployment's decision rather than a framework vulnerability.
+
+The boundary is `FetchMetadataResourceIsolationPolicy`'s. The listener also
+consults `OriginResourceIsolationPolicy` by default, for clients that send no
+`Sec-Fetch-*` headers, and that policy is
+[out of scope](#originresourceisolationpolicy-is-out-of-scope).
 
 This listener is opt-in and is not registered by default. Without it Wicket
 enforces no cross-origin boundary on listener invocation at all. `CryptoMapper`
