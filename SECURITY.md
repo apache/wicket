@@ -425,9 +425,9 @@ Finally, `Strings#escapeMarkup` escapes `<`, `>`, `&`, `"` and `'`. That is
 enough for element text and for a quoted attribute value, and it is not enough
 for anything else: it does not make a value safe inside `<script>` or `<style>`,
 in an unquoted attribute, or in a URL where the scheme itself is the payload.
-Wicket does not escape for a JavaScript context anywhere, so a value the
-application places in one — through `TextTemplate` variable substitution, for
-example — has to be encoded by the application.
+Wicket does not automatically escape a value the application places into a
+JavaScript context — through `TextTemplate` variable substitution, for example —
+so the application has to encode it.
 
 ### Another origin may not invoke a listener
 
