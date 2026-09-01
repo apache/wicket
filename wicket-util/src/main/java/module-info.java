@@ -23,7 +23,7 @@ module org.apache.wicket.util {
     requires java.desktop;
     requires org.apache.commons.io;
     requires org.apache.commons.collections4;
-    requires commons.fileupload;
+    requires org.apache.commons.fileupload;
     requires org.slf4j;
     requires static javax.servlet.api;
     requires org.junit.jupiter.api;
