@@ -16,15 +16,16 @@
  */
 package org.apache.wicket.extensions.requestlogger;
 
-import java.io.IOException;
 import java.io.Serializable;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.introspect.Annotated;
-import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.cfg.MapperConfig;
+import tools.jackson.databind.introspect.Annotated;
+import tools.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.ser.std.SimpleBeanPropertyFilter;
+import tools.jackson.databind.ser.std.SimpleFilterProvider;
 import org.apache.wicket.protocol.http.AbstractRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
 import org.slf4j.Logger;
@@ -33,17 +34,17 @@ import org.slf4j.LoggerFactory;
 /**
  * JsonRequestLogger uses Jackson to log requests in JSON-format. You will need jackson-mapper in
  * your classpath, ie. like:
- * 
+ *
  * <pre>
  * {@literal
  * <dependency>
- *     <groupId>com.fasterxml.jackson.core</groupId>
+ *     <groupId>tools.jackson.core</groupId>
  *     <artifactId>jackson-databind</artifactId>
- *     <version>2.7.1</version>
+ *     <version>3.2.2</version>
  * </dependency>
  * }
  * </pre>
- * 
+ *
  * @author Emond Papegaaij
  */
 public class JsonRequestLogger extends AbstractRequestLogger
@@ -58,7 +59,7 @@ public class JsonRequestLogger extends AbstractRequestLogger
 	private static final class FilteredIntrospector extends JacksonAnnotationIntrospector
 	{
 		@Override
-		public Object findFilterId(Annotated a)
+		public Object findFilterId(MapperConfig<?> config, Annotated a)
 		{
 			return "default";
 		}
@@ -98,13 +99,14 @@ public class JsonRequestLogger extends AbstractRequestLogger
 	 */
 	public JsonRequestLogger()
 	{
-		mapper = new ObjectMapper();
-		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		SimpleFilterProvider filters = new SimpleFilterProvider();
 		filters.addFilter("default",
 			SimpleBeanPropertyFilter.serializeAllExcept("eventTarget", "responseTarget"));
-		mapper.setFilterProvider(filters);
-		mapper.setAnnotationIntrospector(new FilteredIntrospector());
+		mapper = JsonMapper.builder()
+			.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+			.filterProvider(filters)
+			.annotationIntrospector(new FilteredIntrospector())
+			.build();
 	}
 
 	/**
@@ -126,13 +128,6 @@ public class JsonRequestLogger extends AbstractRequestLogger
 
 	protected String getLogString(RequestData rd, SessionData sd)
 	{
-		try
-		{
-			return getMapper().writeValueAsString(new RequestSessionTuple(rd, sd));
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
+		return getMapper().writeValueAsString(new RequestSessionTuple(rd, sd));
 	}
 }
