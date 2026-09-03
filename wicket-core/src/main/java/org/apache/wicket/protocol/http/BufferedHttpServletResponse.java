@@ -42,7 +42,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * Implementation of {@link HttpServletResponse} that saves the output in a string buffer. This is
  * used in REDIRECT_TO_BUFFER render strategy to create the buffer of the output that can be held on
  * to until the redirect part of the render strategy.
- * 
+ *
  * @author jcompagner
  */
 class BufferedHttpServletResponse implements HttpServletResponse
@@ -71,7 +71,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param realResponse
 	 *            The real response for encoding the url
 	 */
@@ -156,6 +156,16 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	{
 		isOpen();
 		redirect = location;
+	}
+
+	/**
+	 * @see jakarta.servlet.http.HttpServletResponse#sendRedirect(java.lang.String,int,boolean)
+	 */
+	@Override
+	public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+		isOpen();
+		redirect = location;
+		realResponse.sendRedirect(location, sc, clearBuffer);
 	}
 
 	/**
@@ -266,7 +276,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Set the character encoding to use for the output.
-	 * 
+	 *
 	 * @param encoding
 	 */
 	@Override
@@ -423,7 +433,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void close()
 	{
@@ -438,9 +448,9 @@ class BufferedHttpServletResponse implements HttpServletResponse
 
 	/**
 	 * Convert the string into the output encoding required
-	 * 
+	 *
 	 * @param output
-	 * 
+	 *
 	 * @param encoding
 	 *            The output encoding
 	 * @return byte[] The encoded characters converted into bytes
