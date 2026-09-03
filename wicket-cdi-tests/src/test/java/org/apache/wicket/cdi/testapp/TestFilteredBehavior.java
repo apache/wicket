@@ -14,32 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.cdi;
+package org.apache.wicket.cdi.testapp;
 
-import org.apache.wicket.ISessionListener;
-import org.apache.wicket.Session;
+import jakarta.inject.Inject;
+
+import org.apache.wicket.behavior.Behavior;
 
 /**
- * Injects components with CDI dependencies
- * 
- * @author igor
- * 
+ * A behavior that reports whether CDI was applied to it.
  */
-class SessionInjector extends AbstractInjector implements ISessionListener
+public class TestFilteredBehavior extends Behavior
 {
-	/**
-	 * Constructor
-	 * 
-	 * @param configuration
-	 */
-	public SessionInjector(CdiConfiguration configuration)
-	{
-		super(configuration);
-	}
+	private static final long serialVersionUID = 1L;
 
-	@Override
-	public void onCreated(Session session)
+	@Inject
+	TestAppScope appScope;
+
+	public boolean isInjected()
 	{
-		postConstruct(session);
+		return appScope != null;
 	}
 }

@@ -23,17 +23,26 @@ package org.apache.wicket.cdi;
  */
 class AbstractInjector
 {
-	public AbstractInjector()
+	private final CdiConfiguration configuration;
+
+	public AbstractInjector(CdiConfiguration configuration)
 	{
+		this.configuration = configuration;
 	}
 
 	protected <T> void postConstruct(T instance)
 	{
-		NonContextual.of(instance).postConstruct(instance);
+		if (configuration.isInjectionCandidate(instance.getClass()))
+		{
+			NonContextual.of(instance).postConstruct(instance);
+		}
 	}
 
 	protected <T> void inject(T instance)
 	{
-		NonContextual.of(instance).inject(instance);
+		if (configuration.isInjectionCandidate(instance.getClass()))
+		{
+			NonContextual.of(instance).inject(instance);
+		}
 	}
 }
