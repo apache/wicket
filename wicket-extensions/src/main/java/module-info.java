@@ -18,8 +18,8 @@
 module org.apache.wicket.extensions {
     requires java.desktop;
     requires static jakarta.servlet;
+    requires static com.fasterxml.jackson.databind;
     requires org.slf4j;
-    requires com.fasterxml.jackson.databind;
     requires com.github.openjson;
     requires org.apache.commons.fileupload2.core;
     requires org.apache.wicket.util;
