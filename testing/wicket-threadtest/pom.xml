@@ -45,9 +45,9 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-		</dependencies>		
+		</dependencies>
 	</dependencyManagement>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>commons-httpclient</groupId>
@@ -67,8 +67,8 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
+			<groupId>org.eclipse.jetty.ee10</groupId>
+			<artifactId>jetty-ee10-webapp</artifactId>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
