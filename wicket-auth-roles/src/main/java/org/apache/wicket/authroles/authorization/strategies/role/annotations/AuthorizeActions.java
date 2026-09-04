@@ -24,12 +24,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Groups a set (technically an array) of {@link AuthorizeAction}s for authorization. This
- * annotation works on a class level, and can be used like this:
+ * Groups a set (technically an array) of {@link AuthorizeAction}s for authorization, for when more
+ * than one action has to be restricted. A single action does not need this annotation and can be
+ * declared with {@link AuthorizeAction} directly. This annotation can be used like this:
  * 
  * <pre>
- * // A panel that is only visible for users with role ADMIN
- * &#064;AuthorizeAction(action = &quot;RENDER&quot;, roles = { &quot;ADMIN&quot;, &quot;USER&quot; })
+ * // a panel that users with role ADMIN and USER are allowed to see, but that only
+ * // users with role ADMIN are allowed to interact with
+ * &#064;AuthorizeActions(actions = {
+ * 		&#064;AuthorizeAction(action = &quot;RENDER&quot;, roles = { &quot;ADMIN&quot;, &quot;USER&quot; }),
+ * 		&#064;AuthorizeAction(action = &quot;ENABLE&quot;, roles = &quot;ADMIN&quot;) })
  * public class ForAdminsAndUsers extends Panel
  * {
  * 	public ForAdminsAndUsers(String id)
@@ -39,6 +43,10 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  * 
+ * It can be placed on a class or on a package, the latter by specifying it in the
+ * <code>package-info.java</code> file of that package. Restrictions are resolved per action; see
+ * {@link AnnotationsRoleAuthorizationStrategy} for the complete resolution rules.
+ * 
  * @see org.apache.wicket.authorization.IAuthorizationStrategy
  * @see AnnotationsRoleAuthorizationStrategy
  * @see AuthorizeAction
@@ -46,7 +54,7 @@ import java.lang.annotation.Target;
  * @author Eelco Hillenius
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
+@Target({ ElementType.PACKAGE, ElementType.TYPE })
 @Documented
 @Inherited
 public @interface AuthorizeActions {
