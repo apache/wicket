@@ -154,11 +154,18 @@ final class ComponentState implements Serializable
 	 */
 	static IModel< ? > getModel(Object state, boolean modelSet)
 	{
+		// the flag is authoritative: with no model set there is nothing to find, so the type
+		// check can be skipped entirely. Reading a model is far more common than reading the
+		// other two kinds of state, and most components have no model at all.
+		if (!modelSet)
+		{
+			return null;
+		}
 		if (state instanceof ComponentState)
 		{
 			return ((ComponentState) state).getModel();
 		}
-		return modelSet ? (IModel< ? >) state : null;
+		return (IModel< ? >) state;
 	}
 
 	/**
