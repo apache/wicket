@@ -21,6 +21,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
@@ -99,24 +101,37 @@ public class ComponentStateBenchmark
 		 * biggest saving. None of the other shapes exercise it.
 		 */
 		STABLE_ID_BEHAVIOR(false, false, false, true),
-		MODEL_STABLE_ID_BEHAVIOR(true, false, false, true);
+		MODEL_STABLE_ID_BEHAVIOR(true, false, false, true),
+		/**
+		 * A real {@link AjaxEventBehavior}, so the figure is comparable to the -36.2% serialized
+		 * saving reported on WICKET-6774. {@link #STABLE_ID_BEHAVIOR} isolates the id storage but
+		 * carries almost nothing of its own, which flatters the percentage.
+		 */
+		AJAX_BEHAVIOR(false, false, false, true, true);
 
 		private final boolean model;
 		private final boolean behavior;
 		private final boolean metaData;
 		private final boolean stableId;
+		private final boolean ajax;
 
 		Shape(boolean model, boolean behavior, boolean metaData)
 		{
-			this(model, behavior, metaData, false);
+			this(model, behavior, metaData, false, false);
 		}
 
 		Shape(boolean model, boolean behavior, boolean metaData, boolean stableId)
+		{
+			this(model, behavior, metaData, stableId, false);
+		}
+
+		Shape(boolean model, boolean behavior, boolean metaData, boolean stableId, boolean ajax)
 		{
 			this.model = model;
 			this.behavior = behavior;
 			this.metaData = metaData;
 			this.stableId = stableId;
+			this.ajax = ajax;
 		}
 
 		Component newComponent(String id)
@@ -142,11 +157,27 @@ public class ComponentStateBenchmark
 			}
 			if (stableId)
 			{
-				Behavior stable = new StableIdBehavior();
+				Behavior stable = ajax ? new AjaxTestBehavior() : new StableIdBehavior();
 				c.add(stable);
 				// rendering a callback url does this; it is what materialises the id storage
 				c.getBehaviorId(stable);
 			}
+		}
+	}
+
+	/** A real ajax behavior, with the fields and callback machinery that implies. */
+	private static class AjaxTestBehavior extends AjaxEventBehavior
+	{
+		private static final long serialVersionUID = 1L;
+
+		AjaxTestBehavior()
+		{
+			super("change");
+		}
+
+		@Override
+		protected void onEvent(AjaxRequestTarget target)
+		{
 		}
 	}
 
@@ -222,9 +253,15 @@ public class ComponentStateBenchmark
 			WicketContext.attach();
 			component = new WebMarkupContainer("c");
 			component.setDefaultModel(Model.of("m"));
-			component.setMetaData(KEY, "v");
-			component.add(AttributeModifier.replace("class", "a"),
-				AttributeModifier.replace("style", "b"), AttributeModifier.replace("title", "c"));
+			// ids have to be handed out before they can be looked up: master only builds its
+			// BehaviorIdList when getBehaviorId is called, and throws
+			// InvalidBehaviorIdException otherwise. Rendering a callback url does this.
+			for (int i = 0; i < 3; i++)
+			{
+				Behavior stable = new StableIdBehavior();
+				component.add(stable);
+				component.getBehaviorId(stable);
+			}
 		}
 
 		@TearDown(Level.Trial)
