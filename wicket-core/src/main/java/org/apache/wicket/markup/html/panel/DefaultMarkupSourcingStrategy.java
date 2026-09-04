@@ -76,7 +76,7 @@ public final class DefaultMarkupSourcingStrategy extends AbstractMarkupSourcingS
 	@Override
 	public IMarkupFragment getMarkup(final MarkupContainer container, final Component child)
 	{
-		// If the sourcing strategy did not provide one, than ask the component.
+		// If the sourcing strategy did not provide one, then ask the component.
 		// Get the markup for the container
 		IMarkupFragment containerMarkup = container.getMarkup();
 		if (containerMarkup == null)

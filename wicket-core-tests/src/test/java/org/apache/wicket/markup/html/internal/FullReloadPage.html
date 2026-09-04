@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+<table border="1" cellpadding="1" cellspacing="1">
+	<tr>
+		<th>Header row</th>
+	</tr>
+	<tr>
+		<td><a wicket:id="link">Toggle</a></td>
+	</tr>
+	<wicket:enclosure child="toggleable">
+		<tr bgcolor="red">
+			<td><input wicket:id="toggleable" type="button"
+				style="border: 1px solid black; background: lightblue;" 
+				value="This button (and red border) should appear and disappear by pressing toggle" /> 
+				(Also this)</td>
+		</tr>
+	</wicket:enclosure>
+</table>
+<br clear="all" />
+<br clear="all" />
+Here toggle is possible: no problem, because whole page is repainted (no
+ajax).
+
+</body>
+</html>

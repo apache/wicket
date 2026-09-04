@@ -39,7 +39,6 @@ import org.apache.wicket.extensions.markup.html.form.datetime.ZonedDateTimeField
 import org.apache.wicket.extensions.markup.html.form.datetime.ZonedToLocalDateTimeModel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
@@ -211,7 +210,7 @@ public class DateTimePage extends WicketExamplePage
 	/**
 	 * Choice for a locale.
 	 */
-	private final class LocaleChoiceRenderer extends ChoiceRenderer<Locale>
+	private final class LocaleChoiceRenderer implements IChoiceRenderer<Locale>
 	{
 		private static final long serialVersionUID = 1L;
 

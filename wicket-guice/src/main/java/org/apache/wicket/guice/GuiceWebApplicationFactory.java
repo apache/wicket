@@ -18,7 +18,7 @@ package org.apache.wicket.guice;
 
 import java.lang.reflect.InvocationTargetException;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

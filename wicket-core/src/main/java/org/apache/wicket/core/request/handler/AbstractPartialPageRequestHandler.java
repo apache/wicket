@@ -58,13 +58,13 @@ public abstract class AbstractPartialPageRequestHandler implements IPartialPageR
     }
 
     @Override
-    public final void add(Component... components)
+    public void add(Component... components)
     {
         for (final Component component : components)
         {
             Args.notNull(component, "component");
 
-            if (component.getOutputMarkupId() == false)
+            if (component.getOutputMarkupId() == false && !(component instanceof Page))
             {
                 throw new IllegalArgumentException(
                         "cannot update component that does not have setOutputMarkupId property set to true. Component: " +

@@ -131,7 +131,7 @@ public class MetaDataHeaderItem extends HeaderItem
 			{
 				buffer.append('=')
 					.append('"')
-					.append(Strings.replaceAll(value.toString(), "\"", "\\\""))
+					.append(Strings.escapeMarkup(value.toString()))
 					.append('"');
 			}
 		}
@@ -278,6 +278,10 @@ public class MetaDataHeaderItem extends HeaderItem
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(tagAttributes, tagMinimizedAttributes, tagName);
+		// Not using `Objects.hash` for performance reasons
+		int result = tagAttributes != null ? tagAttributes.hashCode() : 0;
+		result = 31 * result + (tagMinimizedAttributes != null ? tagMinimizedAttributes.hashCode() : 0);
+		result = 31 * result + (tagName != null ? tagName.hashCode() : 0);
+		return result;
 	}
 }

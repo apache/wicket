@@ -80,7 +80,7 @@ public class UnicodeConverter extends WicketExamplePage
 			// Ignore. We are not interested in updating any value,
 			// and we don't want to throw an exception like
 			// AbstractReadOnlyModel either. Alternatively, we
-			// could have overriden updateModel of FormInputComponent
+			// could have overridden updateModel of FormInputComponent
 			// and ignore any input there.
 		}
 	}

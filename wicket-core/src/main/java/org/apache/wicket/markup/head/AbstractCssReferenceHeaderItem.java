@@ -93,14 +93,13 @@ public abstract class AbstractCssReferenceHeaderItem extends CssHeaderItem imple
 		attributes.putAttribute(CssUtils.ATTR_ID, getId());
 		attributes.putAttribute(CssUtils.ATTR_LINK_MEDIA, getMedia());
 		attributes.putAttribute(CssUtils.ATTR_CROSS_ORIGIN,
-			crossOrigin == null ? null : crossOrigin.getRealName());
-		attributes.putAttribute(CssUtils.ATTR_INTEGRITY, integrity);
+			getCrossOrigin() == null ? null : getCrossOrigin().getRealName());
+		attributes.putAttribute(CssUtils.ATTR_INTEGRITY, getIntegrity());
 		attributes.putAttribute(CssUtils.ATTR_CSP_NONCE, getNonce());
 		CssUtils.writeLink(response, attributes);
 
 		response.write("\n");
 	}
-
 
 	@Override
 	public boolean equals(Object o)
@@ -108,6 +107,8 @@ public abstract class AbstractCssReferenceHeaderItem extends CssHeaderItem imple
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())
+			return false;
+		if (!super.equals(o))
 			return false;
 		AbstractCssReferenceHeaderItem that = (AbstractCssReferenceHeaderItem)o;
 		return Objects.equals(integrity, that.integrity)
@@ -117,6 +118,10 @@ public abstract class AbstractCssReferenceHeaderItem extends CssHeaderItem imple
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(integrity, crossOrigin);
+		// Not using `Objects.hash` for performance reasons
+		int result = super.hashCode();
+		result = 31 * result + (crossOrigin != null ? crossOrigin.hashCode() : 0);
+		result = 31 * result + (integrity != null ? integrity.hashCode() : 0);
+		return result;
 	}
 }

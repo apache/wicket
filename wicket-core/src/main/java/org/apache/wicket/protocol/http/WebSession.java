@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.protocol.http;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
@@ -50,23 +50,6 @@ public class WebSession extends Session
 	public WebSession(Request request)
 	{
 		super(request);
-	}
-
-	/**
-	 * Call signOut() and remove the logon data from whereever they have been persisted (e.g.
-	 * Cookies)
-	 * 
-	 * @see org.apache.wicket.Session#invalidate()
-	 */
-	@Override
-	public void invalidate()
-	{
-		if (isSessionInvalidated() == false)
-		{
-			getApplication().getSecuritySettings().getAuthenticationStrategy().remove();
-
-			super.invalidate();
-		}
 	}
 
 	/**

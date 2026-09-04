@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.requestmapper;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;

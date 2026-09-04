@@ -20,7 +20,7 @@
 <head xmlns:wicket="http://wicket.apache.org">
 <script type="text/javascript">
 /*<![CDATA[*/
-start(); ok(true, 'Nested form has been submitted!');
+Wicket.testDone(); Wicket.assert.ok(true, 'Nested form has been submitted!');
 /*]]]]><![CDATA[>*/
 </script>
 </head>

@@ -80,7 +80,7 @@ public class AjaxListPanel extends Panel
 	 *            optional target
 	 * @return the component
 	 * 
-	 * @param T component type
+	 * @param <T> component type
 	 */
 	public <T extends Component> T append(T component, AjaxRequestTarget target)
 	{
@@ -114,7 +114,7 @@ public class AjaxListPanel extends Panel
 	 * @return the component
 	 * @throws EmptyStackException if empty
 	 * 
-	 * @param T component type
+	 * @param <T> component type
 	 */
 	public <T extends Component> T delete(T component, AjaxRequestTarget target) {
 

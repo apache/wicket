@@ -16,14 +16,11 @@
  */
 package org.apache.wicket.core.random;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import org.apache.wicket.WicketRuntimeException;
-
 /**
- * A very simple {@link ISecureRandomSupplier} that holds a {@code SecureRandom} using
- * {@code SHA1PRNG}. This {@code SecureRandom} is strong enough for generation of nonces with a
+ * A very simple {@link ISecureRandomSupplier} that holds a {@code SecureRandom}. 
+ * This {@code SecureRandom} is strong enough for generation of nonces with a
  * short lifespan, but might not be strong enough for generating long-lived keys. When your
  * application has stronger requirements on the random implementation, you should replace this class
  * by your own implementation.
@@ -32,23 +29,15 @@ import org.apache.wicket.WicketRuntimeException;
  */
 public class DefaultSecureRandomSupplier implements ISecureRandomSupplier
 {
-	private SecureRandom random;
-
-	public DefaultSecureRandomSupplier()
+	private static final class Holder
 	{
-		try
-		{
-			random = SecureRandom.getInstance("SHA1PRNG");
-		}
-		catch (NoSuchAlgorithmException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		private static final SecureRandom INSTANCE = new SecureRandom();
 	}
+
 
 	@Override
 	public SecureRandom getRandom()
 	{
-		return random;
+		return Holder.INSTANCE;
 	}
 }

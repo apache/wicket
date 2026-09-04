@@ -16,17 +16,17 @@
  */
 package org.apache.wicket.protocol.http.mock;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.UUID;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSession;
-
 import org.apache.wicket.Session;
-import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.value.ValueMap;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
 
 
 /**
@@ -36,6 +36,7 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public class MockHttpSession implements HttpSession, Serializable
 {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private final ValueMap attributes = new ValueMap();
@@ -141,54 +142,12 @@ public class MockHttpSession implements HttpSession, Serializable
 	}
 
 	/**
-	 * NOT USED.
-	 * 
-	 * @return Always null
-	 * @deprecated
-	 */
-	@Override
-	@Deprecated
-	public javax.servlet.http.HttpSessionContext getSessionContext()
-	{
-		return null;
-	}
-
-	/**
-	 * Get the value for the given name.
-	 * 
-	 * @param name
-	 *            The name
-	 * @return The value or null
-	 * @deprecated use getAttribute(String) instead
-	 */
-	@Override
-	@Deprecated
-	public Object getValue(final String name)
-	{
-		return getAttribute(name);
-	}
-
-	/**
-	 * Get the names of the values in the session.
-	 * 
-	 * @return The names of the attributes
-	 * @deprecated use getAttributeNames() instead
-	 */
-	@Override
-	@Deprecated
-	public String[] getValueNames()
-	{
-		String[] result = new String[attributes.size()];
-		return attributes.keySet().toArray(result);
-	}
-
-	/**
 	 * Invalidate the session.
 	 */
 	@Override
 	public void invalidate()
 	{
-		Session session = (Session) attributes.get("wicket:" + BaseWicketTester.TestFilterConfig.class.getName() + ":session");
+		Session session = (Session) attributes.get("wicket:org.apache.wicket.util.tester.BaseWicketTester$TestFilterConfig:session");
 		if (session != null)
 		{
 			session.onInvalidate();
@@ -209,22 +168,6 @@ public class MockHttpSession implements HttpSession, Serializable
 	}
 
 	/**
-	 * Set a value.
-	 * 
-	 * @param name
-	 *            The name of the value
-	 * @param o
-	 *            The value
-	 * @deprecated Use setAttribute(String, Object) instead
-	 */
-	@Override
-	@Deprecated
-	public void putValue(final String name, final Object o)
-	{
-		setAttribute(name, o);
-	}
-
-	/**
 	 * Remove an attribute.
 	 * 
 	 * @param name
@@ -234,20 +177,6 @@ public class MockHttpSession implements HttpSession, Serializable
 	public void removeAttribute(final String name)
 	{
 		attributes.remove(name);
-	}
-
-	/**
-	 * Remove a value.
-	 * 
-	 * @param name
-	 *            The name of the value
-	 * @deprecated Use removeAttribute(String) instead
-	 */
-	@Override
-	@Deprecated
-	public void removeValue(String name)
-	{
-		removeAttribute(name);
 	}
 
 	/**

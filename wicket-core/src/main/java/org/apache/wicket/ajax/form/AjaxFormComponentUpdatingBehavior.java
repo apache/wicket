@@ -25,6 +25,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.util.lang.Args;
@@ -55,9 +56,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	private static final Logger log = LoggerFactory
 		.getLogger(AjaxFormComponentUpdatingBehavior.class);
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -71,10 +69,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		super(event);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onBind()
-	 */
 	@Override
 	protected void onBind()
 	{
@@ -129,10 +123,6 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		attributes.setMethod(Method.POST);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.ajax.AjaxEventBehavior#onEvent(org.apache.wicket.ajax.AjaxRequestTarget)
-	 */
 	@Override
 	protected final void onEvent(final AjaxRequestTarget target)
 	{
@@ -168,7 +158,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			onError(target, e);
 		}
-		formComponent.updateAutoLabels(target);
+		formComponent.updateAutoLabels(target, false);
 	}
 
 	/**

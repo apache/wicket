@@ -15,44 +15,46 @@
  * limitations under the License.
  */
 /*global ok: true, start: true, test: true, equal: true, deepEqual: true,
- QUnit: true, module: true, expect: true, stop: true */
+ QUnit: true, expect: true, stop: true */
 
 jQuery(document).ready(function() {
 	"use strict";
 
+	const { module, test } = QUnit;
+
 	module('Wicket.Timer');
 
-	test('set', function () {
-		stop();
-		expect(2);
+	test('set', assert => {
+		const done = assert.async();
+		assert.expect(2);
 
 		var timerId = 'timerId',
 			run = function() {
-				ok(typeof(Wicket.TimerHandles[timerId]) === 'undefined', "There is no handle to the timeout!");
-				ok("The timer is ran!");
-				start();
+				assert.ok(typeof(Wicket.TimerHandles[timerId]) === 'undefined', "There is no handle to the timeout!");
+				assert.ok("The timer is ran!");
+				done();
 			};
 
 		Wicket.Timer.set(timerId, run, 1);
 	});
 
-	test('clear', function () {
-		stop();
-		expect(2);
+	test('clear', assert => {
+		const done = assert.async();
+		assert.expect(2);
 
 		var timerId = 'timerId',
 			run = function() {
-				ok(false, "timeout is not called");
+				assert.ok(false, "timeout is not called");
 			};
 
 		Wicket.Timer.set('timerId', run, 1);
-		ok(Wicket.TimerHandles[timerId], "There is a handle to the timeout!");
+		assert.ok(Wicket.TimerHandles[timerId], "There is a handle to the timeout!");
 		
 		Wicket.Timer.clear(timerId);
-		ok(typeof(Wicket.TimerHandles[timerId]) === 'undefined', "There is no handle to the timeout!");
+		assert.ok(typeof(Wicket.TimerHandles[timerId]) === 'undefined', "There is no handle to the timeout!");
 
 		setTimeout(function() {
-			start();			
+			done();
 		}, 2);
 	});
 });

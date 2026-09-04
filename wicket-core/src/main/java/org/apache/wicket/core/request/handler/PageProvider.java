@@ -39,7 +39,7 @@ import org.apache.wicket.util.lang.Args;
  * that can use the {@link PageProvider} to access the page.
  * <p>
  * Apart from simplifying {@link IRequestMapper}s and {@link IRequestHandler}s {@link PageProvider}
- * also helps performance because creating or obtaining page from {@link IPageManager} is delayed
+ * also helps performance because creating or obtaining page from {@link org.apache.wicket.page.IPageManager} is delayed
  * until the {@link IRequestHandler} actually requires the page.
  * 
  * @author Matej Knopp

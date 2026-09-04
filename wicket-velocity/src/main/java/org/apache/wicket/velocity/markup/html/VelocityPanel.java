@@ -39,13 +39,35 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * Panel that displays the result of rendering a <a
- * href="http://jakarta.apache.org/velocity">Velocity</a> template. The template itself can be any
+ * href="http://velocity.apache.org">Velocity</a> template. The template itself can be any
  * {@link StringResourceStream} implementation, of which there are a number of convenient
- * implementations in the {@link org.apache.wicket.util} package. The model can be any normal
+ * implementations in the <em>org.apache.wicket.util</em> package. The model can be any normal
  * {@link Map}, which will be used to create the {@link VelocityContext}.
  * <p>
  * <b>Note:</b> Be sure to properly initialize the Velocity engine before using
  * {@link VelocityPanel }.
+ * </p>
+ * <p>
+ * <b>This panel renders markup.</b> By default the template's output is written into the page as
+ * markup, not as text: it is re-parsed as the panel's own component markup, which is what allows a
+ * template to contribute Wicket components. Nothing on this path is escaped. See
+ * {@link #escapeHtml()}.
+ * </p>
+ * <p>
+ * <b>The template must be authored by the developer.</b> Never build one from user input, and never
+ * use {@code #evaluate} or {@code #parse} on a value that came from a user. Velocity Template
+ * Language can invoke methods on the objects in its context, so a template an untrusted party can
+ * influence is a code execution problem, not merely a markup one — escaping the output would not
+ * help, and would give a false sense of safety. A template needs more care than a {@code .html}
+ * markup file, not the same: both are developer-authored, but markup cannot run code on the server
+ * and a Velocity template can.
+ * </p>
+ * <p>
+ * <b>Values interpolated into the template are not escaped either.</b> The Velocity context is
+ * built from this panel's model, and a {@code $reference} is substituted verbatim, so a model value
+ * carrying markup reaches the page as markup. Escape such values yourself before putting them in
+ * the model, or keep user-supplied content out of it. Note that {@code escapeModelStrings}, which
+ * governs escaping elsewhere in Wicket, has no effect on this panel.
  * </p>
  */
 public abstract class VelocityPanel extends Panel
@@ -186,6 +208,19 @@ public abstract class VelocityPanel extends Panel
 	/**
 	 * Gets whether to escape HTML characters.
 	 * 
+	 * <p>
+	 * <b>While this returns false, the output of the template is written to the markup as
+	 * is, without escaping.</b> A template that interpolates user input or other dynamic
+	 * content then puts it in the page unescaped.
+	 * </p>
+	 * <p>
+	 * Returning {@code true} escapes the <em>whole</em> rendered output, including any markup the
+	 * template itself contains, so the developer's own tags are then shown as visible text. This is
+	 * therefore not a way to escape interpolated values while still emitting markup; there is no
+	 * such mode. If the template must produce markup, keep untrusted content out of the model
+	 * instead.
+	 * </p>
+	 *
 	 * @return whether to escape HTML characters. The default value is false.
 	 */
 	protected boolean escapeHtml()

@@ -29,16 +29,16 @@ import org.slf4j.LoggerFactory;
  * Composite {@link IRequestCycleListener} that notifies all registered listeners with each
  * IRequestCycleListener event.
  * <p>
- * <h3>Order of notification</h3>
- * <p>
+ * Order of notification
+ *
  * {@link #onBeginRequest(RequestCycle)}, {@link #onRequestHandlerScheduled(RequestCycle, IRequestHandler)} and
  * {@link #onRequestHandlerResolved(RequestCycle, IRequestHandler)} are notified in first in, first out order.
  * <p>
  * {@link #onEndRequest(RequestCycle)} and {@link #onDetach(RequestCycle)} are notified in last in
  * first out order (i.e. reversed order). So for these events the collection functions as a stack.
  * <p>
- * <h3>Exception handling</h3>
- * <p>
+ * Exception handling
+ *
  * The {@code RequestCycleListenerCollection} will use the first exception handler that is returned
  * from all listeners in {@link #onException(RequestCycle, Exception)}
  */

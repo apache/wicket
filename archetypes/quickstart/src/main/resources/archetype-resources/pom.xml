@@ -24,7 +24,7 @@
 	<artifactId>${artifactId}</artifactId>
 	<packaging>war</packaging>
 	<version>${version}</version>
-	#literal()
+	#[[
 	<!-- TODO project name  -->
 	<name>quickstart</name>
 	<description></description>
@@ -43,8 +43,8 @@
 	</licenses>
 	<properties>
 		<wicket.version>@project.version@</wicket.version>
-		<jetty9.version>@jetty.version@</jetty9.version>
 		<slf4j.version>@slf4j.version@</slf4j.version>
+		<jetty.version>@jetty.version@</jetty.version>
 		<junit.version>@junit.version@</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
@@ -55,6 +55,11 @@
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
+			<version>${wicket.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-native-websocket-javax</artifactId>
 			<version>${wicket.version}</version>
 		</dependency>
 		<!-- OPTIONAL DEPENDENCY
@@ -82,26 +87,40 @@
 
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-tester</artifactId>
+			<version>${wicket.version}</version>
 			<scope>test</scope>
-			<version>${jetty9.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<scope>test</scope>
+			<version>${jetty.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-jmx</artifactId>
-			<version>${jetty9.version}</version>
 			<scope>test</scope>
+			<version>${jetty.version}</version>
 		</dependency>
-
-		<!-- uncomment if WebSocket support is needed
+			<!--
+				eeXX MUST be aligned with servlet version
+				https://jakarta.ee/specifications/servlet/
+			-->
 		<dependency>
-			<groupId>org.eclipse.jetty.websocket</groupId>
-			<artifactId>javax-websocket-server-impl</artifactId>
-			<version>${jetty9.version}</version>
+			<groupId>org.eclipse.jetty.ee11</groupId>
+			<artifactId>jetty-ee11-webapp</artifactId>
 			<scope>test</scope>
+			<version>${jetty.version}</version>
 		</dependency>
-		-->
+		<!-- comment if WebSocket support is needed -->
+		<dependency>
+			<groupId>org.eclipse.jetty.ee11.websocket</groupId>
+			<artifactId>jetty-ee11-websocket-jakarta-server</artifactId>
+			<scope>test</scope>
+			<version>${jetty.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>
@@ -141,36 +160,29 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>@maven-compiler-plugin.version@</version>
 				<configuration>
-					<source>11</source>
-					<target>11</target>
+					<source>@maven.compiler.source@</source>
+					<target>@maven.compiler.target@</target>
 					<encoding>UTF-8</encoding>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jetty9.version}</version>
-				<configuration>
-					<systemProperties>
-						<systemProperty>
-							<name>maven.project.build.directory.test-classes</name>
-							<value>${project.build.directory}/test-classes</value>
-						</systemProperty>
-					</systemProperties>
-					<jettyXml>${project.basedir}/src/test/jetty/jetty.xml,${project.basedir}/src/test/jetty/jetty-ssl.xml,${project.basedir}/src/test/jetty/jetty-http.xml,${project.basedir}/src/test/jetty/jetty-https.xml</jettyXml>
-				</configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>@maven-war-plugin.version@</version>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.10</version>
+				<groupId>org.eclipse.jetty.ee11</groupId>
+				<artifactId>jetty-ee11-maven-plugin</artifactId>
+				<version>${jetty.version}</version>
 				<configuration>
-					<downloadSources>true</downloadSources>
-					<wtpversion>${wtp.version}</wtpversion>
+					<systemProperties>
+						<maven.project.build.directory.test-classes>${project.build.directory}/test-classes</maven.project.build.directory.test-classes>
+					</systemProperties>
+					<jettyXmls>${project.basedir}/src/test/jetty/jetty.xml,${project.basedir}/src/test/jetty/jetty-ssl.xml,${project.basedir}/src/test/jetty/jetty-http.xml,${project.basedir}/src/test/jetty/jetty-https.xml</jettyXmls>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -188,5 +200,5 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	#end
+	]]#
 </project>

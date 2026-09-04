@@ -75,8 +75,8 @@ public class MarkupCache implements IMarkupCache
 	/**
 	 * A convenient helper to get the markup cache registered with the application.
 	 * 
-	 * @see {@link Application#getMarkupSettings()}
-	 * @see {@link MarkupFactory#getMarkupCache()}
+	 * @see Application#getMarkupSettings()
+	 * @see MarkupFactory#getMarkupCache()
 	 * 
 	 * @return The markup cache registered with the {@link Application}
 	 */

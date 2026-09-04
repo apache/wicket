@@ -20,12 +20,13 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javax.websocket.CloseReason;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.Session;
+import jakarta.websocket.CloseReason;
+import jakarta.websocket.Endpoint;
+import jakarta.websocket.EndpointConfig;
+import jakarta.websocket.Session;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IApplicationListener;
@@ -44,26 +45,34 @@ public class WicketEndpoint extends Endpoint
 	private static final Logger LOG = LoggerFactory.getLogger(WicketEndpoint.class);
 
 	/**
+	 * A set of started applications for which this endpoint is registered.
+	 */
+	private static final Set<String> RUNNING_APPLICATIONS = ConcurrentHashMap.newKeySet();
+
+	/**
 	 * The name of the request parameter that holds the application name
 	 */
 	private static final String WICKET_APP_PARAM_NAME = "wicket-app-name";
 
-	private final AtomicBoolean applicationDestroyed = new AtomicBoolean(false);
-
+	private String applicationName;
 	private JavaxWebSocketProcessor javaxWebSocketProcessor;
 
 	@Override
 	public void onOpen(Session session, EndpointConfig endpointConfig)
 	{
-		String appName = getApplicationName(session);
+		applicationName = getApplicationName(session);
 
-		WebApplication app = (WebApplication) WebApplication.get(appName);
-		app.getApplicationListeners().add(new ApplicationListener(applicationDestroyed));
+		WebApplication app = (WebApplication)WebApplication.get(applicationName);
+		if (RUNNING_APPLICATIONS.add(applicationName))
+		{
+			app.getApplicationListeners().add(new ApplicationListener());
+		}
 
 		try
 		{
 			ThreadContext.setApplication(app);
 			javaxWebSocketProcessor = new JavaxWebSocketProcessor(session, app, endpointConfig);
+			javaxWebSocketProcessor.onOpen(new JavaxWebSocketSession(session), app);
 		}
 		finally
 		{
@@ -82,7 +91,7 @@ public class WicketEndpoint extends Endpoint
 		LOG.debug("Web Socket connection with id '{}' has been closed with code '{}' and reason: {}",
 				session.getId(), closeCode, reasonPhrase);
 
-		if (isApplicationAlive())
+		if (javaxWebSocketProcessor != null && isApplicationAlive(applicationName))
 		{
 			javaxWebSocketProcessor.onClose(closeCode, reasonPhrase);
 		}
@@ -102,7 +111,7 @@ public class WicketEndpoint extends Endpoint
 
 		super.onError(session, t);
 
-		if (isApplicationAlive())
+		if (javaxWebSocketProcessor != null && isApplicationAlive(applicationName))
 		{
 			javaxWebSocketProcessor.onError(t);
 		}
@@ -115,15 +124,15 @@ public class WicketEndpoint extends Endpoint
 		    (t instanceof IOException && "Broken pipe".equals(t.getMessage()));
 	}
 
-	private boolean isApplicationAlive() {
-		return applicationDestroyed.get() == false;
+	private boolean isApplicationAlive(String appName)
+	{
+		return RUNNING_APPLICATIONS.contains(appName);
 	}
 
 	private String getApplicationName(Session session)
 	{
 		String appName = null;
 
-		@SuppressWarnings("unchecked")
 		Map<String, List<String>> parameters = session.getRequestParameterMap();
 		if (parameters != null)
 		{
@@ -154,17 +163,12 @@ public class WicketEndpoint extends Endpoint
 
 	private static class ApplicationListener implements IApplicationListener
 	{
-		private final AtomicBoolean applicationDestroyed;
-
-		private ApplicationListener(AtomicBoolean applicationDestroyed)
-		{
-			this.applicationDestroyed = applicationDestroyed;
-		}
-
 		@Override
 		public void onBeforeDestroyed(Application application)
 		{
-			applicationDestroyed.set(true);
+			String appName = application.getName();
+			RUNNING_APPLICATIONS.remove(appName);
+			application.getApplicationListeners().remove(this);
 		}
 	}
 }

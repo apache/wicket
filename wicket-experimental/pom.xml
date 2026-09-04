@@ -20,20 +20,19 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>9.0.0-M6-SNAPSHOT</version>
+		<version>11.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<groupId>org.apache.wicket.experimental.wicket9</groupId>
+	<groupId>org.apache.wicket.experimental.wicket10</groupId>
 	<artifactId>wicket-experimental</artifactId>
 	<packaging>pom</packaging>
 	<name>Wicket-Experimental</name>
 	<description>Wicket-Experimental contains experimental Wicket modules that may or may not be supported in the future.</description>
 	<modules>
-		<module>wicket-http2</module>
 		<module>wicket-metrics</module>
 	</modules>
 
 	<properties>
-		<clirr.skip>true</clirr.skip>
+		<japicmp.skip>true</japicmp.skip>
 	</properties>
 </project>

@@ -270,7 +270,7 @@ public abstract class Behavior
 	 *
 	 * <p>
 	 * Usage:<br/>
-	 * <code>component.add(onTag(tag -> tag.put(key, value)));</code>
+	 * <code>component.add(onTag(tag -&gt; tag.put(key, value)));</code>
 	 * </p>
 	 *
 	 * @param onTagConsumer
@@ -298,7 +298,7 @@ public abstract class Behavior
 	 * <p>
 	 * Usage:<br/>
 	 * <code>component.add(onAttribute("class",
-	 *              currentValue -> condition(currentValue) ? "positive" : "negative"));</code>
+	 *              currentValue -&gt; condition(currentValue) ? "positive" : "negative"));</code>
 	 * </p>
 	 *
 	 * @param name

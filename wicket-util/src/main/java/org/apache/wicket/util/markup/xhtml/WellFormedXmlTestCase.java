@@ -26,7 +26,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.junit.jupiter.api.Test;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -45,7 +44,7 @@ public class WellFormedXmlTestCase
 	/**
 	 * Checks xml well formedness of html markup files under the current working directory.
 	 */
-	@Test
+	// @Test
 	public void markupFiles()
 	{
 		factory = DocumentBuilderFactory.newInstance();

@@ -7,10 +7,10 @@ For example we can use this method to ensure that a custom reference to JQueryUI
 
 [source,java]
 ----
-Url jqueyuiUrl = Url.parse("https://ajax.googleapis.com/ajax/libs/jqueryui/" + 
+Url jqueryuiUrl = Url.parse("https://ajax.googleapis.com/ajax/libs/jqueryui/" +
                                                                  "1.10.2/jquery-ui.min.js");
-		
-UrlResourceReference jqueryuiRef = new UrlResourceReference(jqueyuiUrl){
+
+UrlResourceReference jqueryuiRef = new UrlResourceReference(jqueryuiUrl){
 	@Override
 	public List<HeaderItem> getDependencies() {
 		Application application = Application.get();

@@ -206,6 +206,7 @@ import org.slf4j.LoggerFactory;
  * <li><b>Security </b>- All components are subject to an {@link IAuthorizationStrategy} which
  * controls instantiation, visibility and enabling. See {@link SimplePageAuthorizationStrategy} for
  * a simple implementation.</li>
+ * </ul>
  * 
  * @author Jonathan Locke
  * @author Chris Turner
@@ -427,26 +428,34 @@ public abstract class Component
 	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED |
 		FLAG_IS_RENDER_ALLOWED | FLAG_VISIBILITY_ALLOWED | FLAG_RESERVED5 /* page's stateless hint */;
 
-	private static final short RFLAG_ENABLED_IN_HIERARCHY_VALUE = 0x1;
-	private static final short RFLAG_ENABLED_IN_HIERARCHY_SET = 0x2;
-	private static final short RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED = 0x4;
-	private static final short RFLAG_VISIBLE_IN_HIERARCHY_SET = 0x8;
+	// @formatter:off	
+	private static final short RFLAG_ENABLED_IN_HIERARCHY_VALUE        = 0x1;
+	private static final short RFLAG_ENABLED_IN_HIERARCHY_SET          = 0x2;
+	private static final short RFLAG_VISIBLE_IN_HIERARCHY_VALUE        = 0x4;
+	private static final short RFLAG_VISIBLE_IN_HIERARCHY_SET          = 0x8;
 	/** onconfigure has been called */
-	private static final short RFLAG_CONFIGURED = 0x10;
+	private static final short RFLAG_CONFIGURED                        = 0x10;
 	private static final short RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED = 0x20;
-	private static final short RFLAG_INITIALIZE_SUPER_CALL_VERIFIED = 0x40;
-	protected static final short RFLAG_CONTAINER_DEQUEING = 0x80;
-	private static final short RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED = 0x100;
+	private static final short RFLAG_INITIALIZE_SUPER_CALL_VERIFIED    = 0x40;
+	protected static final short RFLAG_CONTAINER_DEQUEING              = 0x80;
+	private static final short RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED     = 0x100;
 	/**
 	 * Flag that makes we are in before-render callback phase Set after component.onBeforeRender is
 	 * invoked (right before invoking beforeRender on children)
 	 */
-	private static final short RFLAG_RENDERING = 0x200;
-	private static final short RFLAG_PREPARED_FOR_RENDER = 0x400;
-	private static final short RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED = 0x800;
-	private static final short RFLAG_DETACHING = 0x1000;	
+	private static final short RFLAG_RENDERING                         = 0x200;
+	private static final short RFLAG_PREPARED_FOR_RENDER               = 0x400;
+	private static final short RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED  = 0x800;
+	private static final short RFLAG_DETACHING                         = 0x1000;
 	/** True when a component is being removed from the hierarchy */
-	private static final short RFLAG_REMOVING_FROM_HIERARCHY = 0x2000;
+	private static final short RFLAG_REMOVING_FROM_HIERARCHY           = 0x2000;
+	/**
+	 * This flag tracks if removals have been set on this component. Clearing this key is an
+	 * expensive operation. With this flag this expensive call can be avoided.
+	 */
+	protected static final short RFLAG_CONTAINER_HAS_REMOVALS          = 0x4000;
+	private static final short RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED  = (short) 0x8000;
+	// @formatter:on
 
 	/**
 	 * Flags that only keep their value during the request. Useful for cache markers, etc. At the
@@ -617,7 +626,7 @@ public abstract class Component
 
 	/**
 	 * Set the markup for the component. Note that the component's markup variable is transient and
-	 * thus must only be used for one render cycle. E.g. auto-component are using it. You may also
+	 * thus must only be used for one render cycle. E.g. auto components are using it. You may also
 	 * it if you subclassed getMarkup().
 	 * 
 	 * @param markup
@@ -932,7 +941,7 @@ public abstract class Component
 		if (getRequestFlag(RFLAG_REMOVING_FROM_HIERARCHY))
 		{
 			throw new IllegalStateException(Component.class.getName() +
-				" has not been properly removed from hierachy. Something in the hierarchy of " +
+				" has not been properly removed from hierarchy. Something in the hierarchy of " +
 				getClass().getName() +
 				" has not called super.onRemove() in the override of onRemove() method");
 		}
@@ -1927,15 +1936,25 @@ public abstract class Component
 	 */
 	public final boolean isVisibleInHierarchy()
 	{
+		if (getRequestFlag(RFLAG_VISIBLE_IN_HIERARCHY_SET))
+		{
+			return getRequestFlag(RFLAG_VISIBLE_IN_HIERARCHY_VALUE);
+		}
+
+		final boolean state;
 		Component parent = getParent();
 		if (parent != null && !parent.isVisibleInHierarchy())
 		{
-			return false;
+			state = false;
 		}
 		else
 		{
-			return determineVisibility();
+			state = determineVisibility();
 		}
+
+		setRequestFlag(RFLAG_VISIBLE_IN_HIERARCHY_SET, true);
+		setRequestFlag(RFLAG_VISIBLE_IN_HIERARCHY_VALUE, state);
+		return state;
 	}
 
 	/**
@@ -1947,8 +1966,6 @@ public abstract class Component
 	 * @param setRenderingFlag
 	 *            if this is false only the PREPARED_FOR_RENDER flag is removed from component, the
 	 *            RENDERING flag is not set.
-	 * 
-	 * @see #internalPrepareForRender(boolean)
 	 */
 	public final void markRendering(boolean setRenderingFlag)
 	{
@@ -2193,9 +2210,11 @@ public abstract class Component
 	{
 		String name = Strings.isEmpty(tag.getNamespace()) ? tag.getName()
 			: tag.getNamespace() + ':' + tag.getName();
+		
+		// prefer concatenation over String#format() for performance 
 		response.write(
-			String.format("<%s id=\"%s\" hidden=\"\" data-wicket-placeholder=\"\"></%s>", name,
-				getAjaxRegionMarkupId(), name));
+			"<" + name + " id=\"" + getAjaxRegionMarkupId() +
+				"\" hidden=\"\" data-wicket-placeholder=\"\"></" + name + ">");
 	}
 
 
@@ -2287,7 +2306,8 @@ public abstract class Component
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
 					String message = String.format("Markup id set on a component that renders its body only. " +
-					                               "Markup id: %s, component id: %s.", getMarkupId(), getId());
+					                               "Markup id: %s, component id: %s, type: %s, path: %s",
+							getMarkupId(), getId(), getClass(), getPage().getPageClass() + ":" + getPageRelativePath());
 					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
 					{
 						throw new IllegalStateException(message);
@@ -2297,7 +2317,8 @@ public abstract class Component
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
 					String message = String.format("Placeholder tag set on a component that renders its body only. " +
-					                               "Component id: %s.", getId());
+					                               "Component id: %s, type: %s, path: %s\", ",
+							getId(), getClass(), getPage().getPageClass() + ":" + getPageRelativePath());
 					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
 					{
 						throw new IllegalStateException(message);
@@ -2329,7 +2350,7 @@ public abstract class Component
 					{
 						// Close the manually opened tag. And since the user might have changed the
 						// tag name ...
-						getResponse().write(tag.syntheticCloseTagString());
+						tag.writeSyntheticCloseTag(getResponse());
 					}
 				}
 			}
@@ -2475,10 +2496,10 @@ public abstract class Component
 			{
 				if (isBehaviorAccepted(behavior))
 				{
-					if (response.wasRendered(behavior) == false)
+					List<IClusterable> pair = List.of(this, behavior);
+					if (!response.wasRendered(pair))
 					{
 						behavior.renderHead(this, response);
-						List<IClusterable> pair = Arrays.asList(this, behavior);
 						response.markRendered(pair);
 					}
 				}
@@ -2798,7 +2819,14 @@ public abstract class Component
 		if (!getModelComparator().compare(this, object))
 		{
 			modelChanging();
-			model.setObject(object);
+			try
+			{
+				model.setObject(object);
+			}
+			catch (UnsupportedOperationException uox)
+			{
+				throw new WicketRuntimeException("You need to use writeable IModel for component " + getPageRelativePath(), uox);
+			}
 			modelChanged();
 		}
 
@@ -2825,7 +2853,7 @@ public abstract class Component
 
 	/**
 	 * Render a placeholder tag when the component is not visible. The tag is of form:
-	 * &lt;componenttag hidden=""" id="markupid"/&gt;. This method will also call
+	 * &lt;componenttag hidden="" id="markupid"/&gt;. This method will also call
 	 * <code>setOutputMarkupId(true)</code>.
 	 * 
 	 * This is useful, for example, in ajax situations where the component starts out invisible and
@@ -3692,6 +3720,7 @@ public abstract class Component
 			// apply behaviors that are attached to the component tag.
 			if (tag.hasBehaviors())
 			{
+				tag = tag.mutable();
 				Iterator<? extends Behavior> tagBehaviors = tag.getBehaviors();
 				while (tagBehaviors.hasNext())
 				{
@@ -3997,7 +4026,7 @@ public abstract class Component
 				// Render the close tag
 				if ((renderBodyOnly == false) && needToRenderTag(openTag))
 				{
-					getResponse().write(openTag.syntheticCloseTagString());
+					openTag.writeSyntheticCloseTag(getResponse());
 				}
 			}
 			else if (openTag.requiresCloseTag())
@@ -4087,7 +4116,11 @@ public abstract class Component
 	 */
 	public final Component setVisibilityAllowed(boolean allowed)
 	{
-		setFlag(FLAG_VISIBILITY_ALLOWED, allowed);
+		if (allowed != getFlag(FLAG_VISIBILITY_ALLOWED))
+		{
+			setFlag(FLAG_VISIBILITY_ALLOWED, allowed);
+			onVisibleStateChanged();
+		}
 		return this;
 	}
 
@@ -4199,8 +4232,12 @@ public abstract class Component
 	@Override
 	public final <T> void send(IEventSink sink, Broadcast type, T payload)
 	{
-		new ComponentEventSender(this, getApplication().getFrameworkSettings()).send(sink, type,
-			payload);
+		// if there are no event dispatchers then don't even try to send event
+		if (getApplication().getFrameworkSettings().hasAnyEventDispatchers())
+		{
+			new ComponentEventSender(this, getApplication().getFrameworkSettings()).send(sink, type,
+					payload);
+		}
 	}
 
 	/**
@@ -4260,10 +4297,10 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the currently coupled {@link Behavior}s as a unmodifiable list. Returns an empty list
+	 * Gets the currently coupled {@link Behavior}s as an unmodifiable list. Returns an empty list
 	 * rather than null if there are no behaviors coupled to this component.
 	 * 
-	 * @return The currently coupled behaviors as a unmodifiable list
+	 * @return The currently coupled behaviors as an unmodifiable list
 	 */
 	public final List<? extends Behavior> getBehaviors()
 	{

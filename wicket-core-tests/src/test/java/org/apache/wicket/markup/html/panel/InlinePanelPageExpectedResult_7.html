@@ -1,0 +1,41 @@
+<html xmlns:wicket>
+<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-4.0.0.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
+<script type="text/javascript" id="wicket-ajax-debug-enable">
+/*<![CDATA[*/
+Wicket.Log.enabled=true;
+/*]]>*/
+</script>
+<script type="text/javascript" id="wicket-ajax-base-url">
+/*<![CDATA[*/
+Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.markup.html.panel.InlinePanelPage_7?0";
+/*]]>*/
+</script>
+<script type="text/javascript">
+/*<![CDATA[*/
+Wicket.Event.add(window, "domready", function(event) { 
+Wicket.Ajax.ajax({"u":"./org.apache.wicket.markup.html.panel.InlinePanelPage_7?0-1.0-provider-ajaxRefresh","c":"ajaxRefresh1","e":"click","pd":true});;
+Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
+;});
+/*]]>*/
+</script>
+</head><body>
+
+<div wicket:id="container">
+  <div wicket:id="fragment">
+  <span wicket:id="fragmentContent" id="fragmentContent2">foo</span>
+</div>
+</div>
+
+<br/>
+
+<div wicket:id="provider"><wicket:panel>
+
+
+
+<a wicket:id="ajaxRefresh" id="ajaxRefresh1" href="#">AJAX refresh</a>
+
+</wicket:panel></div>
+
+</body>
+</html>

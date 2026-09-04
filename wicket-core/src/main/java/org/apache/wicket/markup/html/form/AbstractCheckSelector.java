@@ -38,7 +38,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * @see CheckGroupSelector
  * @see CheckBoxSelector
  *
- * @author Carl-Eric Menzel <cmenzel@wicketbuch.de>
+ * @author Carl-Eric Menzel
  */
 public abstract class AbstractCheckSelector extends LabeledWebMarkupContainer
 	implements

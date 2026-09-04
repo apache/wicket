@@ -22,7 +22,6 @@ import java.util.List;
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.response.filter.ServerAndClientTimeFilter;
 
 /**
  * Application class for tree examples.

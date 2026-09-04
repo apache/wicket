@@ -23,7 +23,7 @@ import org.apache.wicket.model.IModel;
  * All panels in the wicket-devutils package should extend this panel so that they automatically get
  * checked to make sure that the utilities are enabled in the application debug settings.
  * 
- * @author Jeremy Thomerson <jthomerson@apache.org>
+ * @author Jeremy Thomerson
  */
 public class DevUtilsPanel extends Panel
 {

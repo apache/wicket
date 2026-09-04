@@ -69,13 +69,13 @@ _assertInfoMessages_ and _assertErrorMessages_ are used in the test case from pr
 [source,java]
 ----
 @Test
-public void testMessageForSuccessfulLogin(){
+void testMessageForSuccessfulLogin(){
 	inserUsernamePassword("user", "user");	
 	tester.assertInfoMessages("Username and password are correct!");
 }	
 	
 @Test
-public void testMessageForFailedLogin (){
+void testMessageForFailedLogin (){
 	inserUsernamePassword("wrongCredential", "wrongCredential");		
 	tester.assertErrorMessages("Wrong username or password");
 }
@@ -90,7 +90,7 @@ This method has been used in the test case of project _ModelChainingExample_ to 
 [source,java]
 ----
 @Test
-public void testFormSelectSameModelObject(){
+void testFormSelectSameModelObject(){
 	PersonListDetails personListDetails = new PersonListDetails();
 	DropDownChoice dropDownChoice = (DropDownChoice) personListDetails.get("persons");
 	List choices = dropDownChoice.getChoices();

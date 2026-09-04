@@ -1,0 +1,496 @@
+# Security Policy
+
+Apache Wicket follows the [Apache Software Foundation security process](https://www.apache.org/security/).
+
+## Reporting a Vulnerability
+
+**Please do not report security vulnerabilities through GitHub issues, GitHub
+discussions, pull requests, JIRA, or the public mailing lists.** Doing so
+discloses the issue publicly before a fix is available.
+
+Report suspected vulnerabilities privately to:
+
+- **security@apache.org** — the ASF Security Team, who will forward the report
+  to the Wicket PMC.
+
+A useful report includes:
+
+- the affected Wicket version(s) and the module (e.g. `wicket-core`),
+- the affected class and method, ideally with a source reference,
+- a concrete description of how an attacker reaches the code, including what
+  the attacker is assumed to control (see [Security Model](#security-model)),
+- the impact you believe follows from that, and
+- a reproducer where possible — a failing test is ideal.
+
+Please state clearly whether you have published anything about the issue, and
+whether you are requesting a CVE.
+
+We ask reporters to keep the issue confidential until a fixed release is
+published and the PMC has announced it. In return, we will keep you informed of
+our assessment and of the release timeline, and credit you in the announcement
+unless you ask us not to.
+
+Note that reports are assessed against the scope, the two conditions in
+[Reports We Do Not Assess](#reports-we-do-not-assess), and the security model
+below.
+A report that depends on the framework distrusting something this model treats
+as trusted may be closed as a deployment or configuration issue rather than a
+framework vulnerability. If you believe the model itself is wrong, that is a
+legitimate and useful thing to report — please say so explicitly, so we discuss
+the model rather than the individual code path.
+
+Conversely, a demonstrated bypass of a boundary this model does claim — for
+example the package resource guard, or an authorization strategy — is a
+vulnerability, and we want to hear about it. The boundaries below describe what
+Wicket intends to enforce; where the code falls short of them, the code is what
+needs fixing.
+
+## Supported Versions
+
+Security fixes are applied to the actively maintained release lines. Refer to
+the [download page](https://wicket.apache.org/start/download.html) for the
+current status and the latest release of each line.
+
+| Version | Status                                          |
+| ------- | ----------------------------------------------- |
+| 11.x    | In development (`master`) — not yet released     |
+| 10.x    | Current, supported                              |
+| 9.x     | Supported                                       |
+| 8.x     | Security fixes only — upgrade to 9.x or 10.x    |
+| ≤ 7.x   | Discontinued — no security fixes                |
+
+If you are running a discontinued version, the fix is to upgrade. See the
+[Migration to Wicket 10.0](https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+10.0)
+guide on our wiki, which links the guides for the earlier lines.
+
+## Scope
+
+The table above says which release lines receive security fixes. Three
+categories of code inside those lines sit outside this process.
+
+### Deprecated code is out of scope
+
+`@Deprecated` is our statement that code has no future and that an application
+should stop relying on it. Where an application has to reach that code
+deliberately — calling a deprecated method, extending a deprecated class,
+setting a deprecated setting — the remedy for a problem in it is to stop using
+it, not to harden something we intend to remove. Such a report is closed with a
+pointer to whatever the migration is; it receives no CVE, and the deprecated
+code is not fixed.
+
+Two limits on that, both of which cut in the reporter's favour:
+
+- **Deprecation is per release line.** A member deprecated on `master` may still
+  be current in 10.x or 9.x. A report is judged against the line it targets, not
+  against `master`.
+- **Deprecating a member does not deprecate the behaviour behind it.** Where a
+  deprecated accessor merely fronts a feature that is still current and still
+  reachable without the application opting in, the feature is in scope and the
+  deprecated accessor is beside the point. What this section excludes is
+  functionality an application chooses to use, not behaviour it gets whether it
+  asks for it or not.
+
+Where something is deprecated *because* it is insecure, the javadoc says so.
+Usually it also names what to use instead. Sometimes it cannot: where the design
+rather than the implementation is the problem, a feature may be one that cannot
+be made safe, and we will deprecate it with no replacement offered — the secure
+course is to stop doing the thing at all rather than to do it differently, so
+there is nothing to migrate to. Deprecation is the fix in that case, and the code
+is out of scope on the same footing as any other deprecated code. The javadoc
+says which of the two applies, so it is clear before reporting.
+
+### `OriginResourceIsolationPolicy` is out of scope
+
+Wicket ships two `IResourceIsolationPolicy` implementations, and only one of them
+carries the boundary described in
+[Another origin may not invoke a listener](#another-origin-may-not-invoke-a-listener).
+
+`FetchMetadataResourceIsolationPolicy`, added in 9.1.0, is the supported one. It
+reads the `Sec-Fetch-*` request headers, which the browser sets and which page
+content can neither forge nor remove.
+
+`OriginResourceIsolationPolicy` is the older mechanism, kept so that
+`ResourceIsolationRequestCycleListener` still has something to say about a client
+that does not send those headers. It compares the `Origin` and `Referer` headers
+against the requested URL, and the limits of that approach are inherent in the
+headers rather than in the implementation:
+
+- **Neither header need arrive.** Browsers send `Origin` on a form submit, but
+  not on a plain GET — which is how a `Link` and most Ajax behaviours invoke their
+  listener. There the check falls back to `Referer`, and `Referer` is suppressed
+  by the referring page's own `Referrer-Policy`, by `rel="noreferrer"`, and by an
+  HTTPS-to-HTTP downgrade. The document on the other origin chooses its own
+  referrer policy, so it is the party deciding whether a source header reaches us
+  at all.
+- **A missing source is not a rejection.** With no usable header the outcome is
+  `UNKNOWN` and the request is settled by
+  `ResourceIsolationRequestCycleListener#setUnknownOutcomeAction`, which defaults
+  to aborting — but which deployments relax precisely because legitimate traffic
+  also arrives without the headers.
+- **It cannot express the boundary.** The policy ignores the `RequestType`, so it
+  cannot distinguish a page render, which may legitimately be a top-level
+  navigation from another site, from a listener invocation, which may not.
+- **Its idea of the target is the trusted host.** It builds the URI it compares
+  against from the container-reported host, port and scheme (see
+  [Wicket trusts the container-reported host, port and scheme](#wicket-trusts-the-container-reported-host-port-and-scheme)),
+  and `addAcceptedOrigin` matches subdomains, so accepting a domain accepts every
+  host beneath it.
+
+We therefore do not assess a report that a request can get past this policy, and
+we will not harden it. The remedy is `FetchMetadataResourceIsolationPolicy`, which
+is what the framework claims; a deployment that does not want the fallback at all
+can construct the listener without it:
+`new ResourceIsolationRequestCycleListener(new FetchMetadataResourceIsolationPolicy())`.
+The class is not marked `@Deprecated` only because it remains a reasonable
+fallback for a legacy client, where the alternative is to refuse the request
+outright.
+
+What this exclusion does not cover is the chain around it. The default policy list
+is `FetchMetadataResourceIsolationPolicy` followed by
+`OriginResourceIsolationPolicy`, checked in order, and the first policy to return
+an outcome other than `UNKNOWN` decides. A request carrying `Sec-Fetch-Site` is
+consequently always settled by the fetch-metadata policy and never reaches the
+origin policy, and another document cannot make a browser omit that header. So a
+report showing that a request *with* `Sec-Fetch-Site` present is nonetheless
+decided by the origin policy is in scope, as is anything else in
+`ResourceIsolationRequestCycleListener` itself.
+
+**8.x has no supported resource isolation implementation.** The
+`IResourceIsolationPolicy` mechanism arrived in 9.1.0. On 8.x the only
+cross-origin check Wicket offers is `CsrfPreventionRequestCycleListener`, which
+reads the same two headers with the same limits; 9.x deprecates it in favour of
+the resource isolation listener and it is therefore already out of scope there
+under [Deprecated code is out of scope](#deprecated-code-is-out-of-scope), while
+on 8.x it is not deprecated only because that line has nothing to migrate to. An
+8.x application that needs anything stronger has to upgrade or implement the check
+itself: we will not backport the fetch-metadata policy, and reports against
+`CsrfPreventionRequestCycleListener` are out of scope on the same footing as the
+origin policy.
+
+### `wicket-examples` is sample code, not production code
+
+`wicket-examples` exists to demonstrate framework features in as few lines as
+possible. It is not written to production standards, and some of it is
+deliberately insecure so that the examples run anywhere out of the box.
+`WicketExampleApplication`, the base class of every example, installs `NoCrypt`
+as the crypt factory — a no-op cipher, so that nothing depends on the local JCE
+setup — and enables the development utilities; the source says in as many words
+not to do either in a real application. Individual examples go further:
+`authentication1` hardcodes its one credential pair in the source. Do not read
+the examples as a security reference, and do not copy them into an application
+unchanged.
+
+We do want to hear about problems in them, because example code gets copied and
+a misleading pattern propagates from there into real applications. But fixing
+one is a correction to teaching material rather than a fix to a vulnerability in
+the framework, so:
+
+- the PMC will not request a CVE for it;
+- it is fixed on `master` only. `wicket-examples` ships as a WAR in every
+  release, and we knowingly leave the released examples as they are;
+- once we have confirmed the problem is example-only, it is tracked in public
+  [JIRA](https://issues.apache.org/jira/projects/WICKET), since there is nothing
+  to embargo.
+
+The same reasoning covers `wicket-devutils`, a development aid rather than a
+production module (see
+[Deployment configuration](#deployment-configuration-is-the-operators-responsibility)),
+and the internal test modules that are never published. It does **not** cover
+`wicket-tester` or `wicket-extensions-tester`, which are released artifacts that
+applications depend on, and it does not cover the quickstart archetype:
+applications are started from the archetype, so it is expected to be secure by
+default and is in scope like any other module.
+
+The examples are also hosted publicly by the ASF. Those deployments are ASF
+infrastructure, not a Wicket release. If you find something that affects the
+hosting rather than the example application itself, it is still worth reporting
+to **security@apache.org** — say that it concerns the hosted site, so that it can
+be routed to ASF Infrastructure as well as to the PMC.
+
+## Reports We Do Not Assess
+
+The two conditions below are about the report rather than about the code. Both
+exist because a report that cannot be verified costs as much to triage as one
+that can, and neither is a judgement on whether the concern behind it is real.
+
+### A finding must be verified against a supported branch tip
+
+Verify the issue against the current tip of the line you are reporting against:
+`wicket-8.x`, `wicket-9.x`, `wicket-10.x`, or `master`. One of them is enough —
+say which, and name the commit you tested. A failing test against that commit is
+ideal. Reporting only the release you happen to be running is not sufficient: a
+released artifact is always behind its branch, and what you found may already be
+fixed there.
+
+We do not assess a report verified only against an older version. A release that
+is not its branch tip may be missing fixes that are already public, and the
+discontinued lines — 7.x and earlier — receive no security fixes at all, so the
+remedy there is to upgrade whether or not the behaviour you found is a
+vulnerability. Note also that git branches exist for every line Wicket has ever
+shipped; a branch existing is not a statement that the line is supported. The
+table above is.
+
+Before reporting, check the advisories already published for the line you tested,
+at [security.apache.org/projects/wicket/](https://security.apache.org/projects/wicket/).
+An issue fixed in a later release of that same line is not a vulnerability
+report; it is a reason to upgrade.
+
+This is a condition on the evidence, not on the finding. If the behaviour does
+reproduce on a supported tip, re-verify it there and send it again — arriving
+first against the wrong version is not held against a report.
+
+### A report must refer to code that exists
+
+We do not assess a report whose subject cannot be found in the codebase: a class,
+method, setting, or file that does not exist on the branch the report names. Such
+a report cannot be confirmed or ruled out, and there is nothing in it for us to
+fix.
+
+Quote the code you are describing, from the branch you are targeting, and give
+paths as they appear in the repository. Where a reference is merely inaccurate —
+the right class named under the wrong module, a line number that has moved since
+you looked — we will resolve it ourselves and say so. What we close unassessed is
+a report whose subject is not in the code at all: a method that was never
+written, a field given a value it does not have, a call chain whose steps do not
+exist.
+
+How the report was produced does not matter to us: by hand, with tooling, or
+with a model. Accuracy is what matters. A report whose subject we cannot locate
+is indistinguishable from a real finding until every claim in it has been checked
+against the code, and that is effort we would rather spend on the reports that
+hold up. Tell us what you verified and where you verified it, and we will take it
+from there.
+
+## Security Model
+
+Wicket is a framework, not a deployed application. It runs inside a servlet
+container, usually behind a reverse proxy, and it inherits its view of the
+outside world from that container. This section documents which of those inputs
+Wicket treats as trusted, so that operators know what they are responsible for
+and reporters know what the framework does and does not claim to defend.
+
+### Wicket trusts the container-reported host, port and scheme
+
+Wicket derives its own public identity — the scheme, host and port it believes
+it is being served on — from the servlet container, via
+`HttpServletRequest#getScheme()`, `#getServerName()` and `#getServerPort()`.
+There is no hostname allowlist in the framework and no attempt to verify the
+`Host` header, in any of the places this identity is used:
+
+- `ServletWebRequest#setParameters` sets the host, port and protocol on the
+  client URL from these three values. That URL backs `UrlRenderer`, and so
+  every absolute URL Wicket renders.
+- `HttpsMapper#createRedirectUrl` builds the scheme-switch redirect for
+  `@RequireHttps` pages from the same values.
+- `OriginResourceIsolationPolicy#getTargetUriFromRequest` builds the **trusted**
+  target URI that incoming `Origin` and `Referer` headers are compared against.
+
+This is a deliberate design decision, not an oversight. Only the deployment
+knows its own canonical hostnames; the framework cannot infer them. Note in
+particular that the third item means the container-reported host is a trusted
+input to a request-forgery defence — a deployment that lets arbitrary `Host`
+values through weakens more than URL rendering. That policy is the legacy one and
+is [out of scope](#originresourceisolationpolicy-is-out-of-scope);
+`FetchMetadataResourceIsolationPolicy`, the supported one, does not consult the
+host at all.
+
+**Therefore the deployment is responsible for ensuring that only expected
+`Host` values reach the application.** Concretely:
+
+1. Configure the container or virtual host to reject requests carrying an
+   unrecognised `Host` — return a 400 or 404 rather than routing them to the
+   application. Tomcat, Jetty and the common reverse proxies all support this.
+2. If TLS is terminated at a proxy, have the proxy set or overwrite `Host` to
+   the canonical name rather than forwarding whatever the client sent.
+3. Do not expose a Wicket application through a catch-all or default virtual
+   host that accepts any `Host`.
+4. Serve the application over HTTPS and enable HSTS, so that plaintext requests
+   — including the ones `HttpsMapper` exists to upgrade — are not part of the
+   normal flow.
+
+A consequence worth stating plainly: on a deployment that accepts arbitrary
+`Host` values, absolute URLs and redirects generated by Wicket will contain the
+host the client supplied. That is the documented behaviour of trusting the
+container. It is not treated as a framework vulnerability, because the host in
+such a response is always the same authority the client had already connected
+to — it grants an attacker no origin they did not already control. The fix
+belongs at the container or proxy, per the points above.
+
+### `X-Forwarded-*` headers are not trusted by default
+
+Wicket ignores `X-Forwarded-For` and `X-Forwarded-Proto` unless you explicitly
+enable `XForwardedRequestWrapperFactory`. When enabled, it overrides
+`getRemoteAddr()`, `getRemoteHost()`, `getScheme()` and `getServerPort()` from
+those headers, subject to its `allowedInternalProxies` and `trustedProxies`
+configuration.
+
+Only enable it when a trusted proxy in front of the application appends to
+these headers and strips any client-supplied copies; otherwise the headers are
+attacker-controlled. Wicket does not implement `X-Forwarded-Host` at all, and
+`XForwardedRequestWrapper` does not override `getServerName()` — the host always
+comes from the container as described above.
+
+### Client-supplied URLs are not trusted for authority
+
+For Ajax requests Wicket reads a client-supplied base URL — the
+`Wicket-Ajax-BaseURL` header, falling back to the `wicket-ajax-baseurl` request
+parameter — in order to resolve relative URLs against the page the client is
+actually on. The host, port and protocol of that URL are always overwritten with
+the container-reported values before use. The client can influence the path
+Wicket renders relative to, never the authority.
+
+### Deployment configuration is the operator's responsibility
+
+`RuntimeConfigurationType.DEVELOPMENT` enables debugging aids, verbose error
+reporting and development-only components, and disables some caching. It is not
+intended for production and is not hardened. Always run production deployments
+with the configuration type set to `RuntimeConfigurationType.DEPLOYMENT`. Issues
+only reachable in `DEVELOPMENT` mode are treated as configuration errors rather
+than vulnerabilities.
+
+Likewise, `wicket-devutils` is a development aid. Do not deploy it in
+production; it is out of scope for the same reason the examples are (see
+[Scope](#scope)).
+
+### Serialized data is trusted
+
+Wicket serializes page instances and session data to its page store. Java
+deserialization is not a safe operation on untrusted input, and by default
+Wicket's page store does not defend against it. Treat the page store and the
+session store as trusted, private storage: do not point them at storage that
+untrusted parties can write to, and do not accept externally supplied
+serialized page or session data.
+
+The partial exception is a page store configured with encryption
+(`StoreSettings#setEncrypted(true)`). Every `ICryptScheme` Wicket ships is
+authenticated (AEAD), so encrypted pages are tamper-evident as well as
+confidential: modified or substituted bytes fail to decrypt and the page is
+treated as absent instead of being handed to the deserializer. Each page is
+additionally bound to the page id it was stored under, so a stored page cannot
+be replayed as a different one. The scheme marker prefixing each ciphertext is
+authenticated too, and is refused unless it is one of the schemes accepted by
+`SecuritySettings#setWhitelistedCryptSchemes`, so an attacker cannot force
+decryption with a weaker scheme.
+
+Three limits on that exception are worth stating. The key lives in the user's
+session, so this protects the stored pages against a party who can read or
+write the store, not against one who already controls the session. It covers
+the page store only — the container's session store, and anything else holding
+serialized Wicket data, remains trusted storage. And a custom `ICryptScheme`
+inherits the guarantee only if it honours the contract: `decrypt` must return
+`null` on authentication failure rather than returning unverified plaintext.
+
+### Model data is escaped; markup and message bundles are trusted
+
+Wicket escapes the text a component renders from its model. `Component`'s
+`escapeModelStrings` flag is **on by default**, and a component renders
+model-derived text either through `Component#getDefaultModelObjectAsString()` or
+by applying `Strings#escapeMarkup` when that flag is set. A component that writes
+application model data into the markup unescaped in the default configuration is
+a bug in the framework and an opening for cross-site scripting (XSS). We want to
+hear about it.
+
+`setEscapeModelStrings(false)` is the application saying the content is markup
+and taking responsibility for it. Reports that depend on an application having
+cleared the flag are configuration issues rather than framework vulnerabilities.
+Note that a few components clear it themselves because their value is written
+into an attribute, which is escaped when the tag is written and would otherwise
+be encoded twice; that is an implementation detail of those components and not an
+invitation to render untrusted markup through them.
+
+Two inputs on the other side of the boundary are trusted, because both are
+authored by the developer and neither is data the application received at
+runtime:
+
+- **Markup files are trusted.** A `.html` file on the classpath is a template,
+  exactly like a JSP or a Thymeleaf template, and Wicket renders it as markup. An
+  application that serves markup from somewhere an untrusted party can write —
+  through a custom `IMarkupResourceStreamProvider`, for instance — has taken
+  that trust on itself.
+- **Message bundles are trusted.** `<wicket:message key="…"/>` renders its
+  property value as markup by default, and `escape="true"` opts in to escaping.
+  Markup in a bundle is therefore a supported way to format a message.
+
+The value a bundle string interpolates is a different matter. `${name}` in a
+message resolves first to a child component with `wicket:id="name"`, whose
+rendered markup carries that component's own escaping. Only when there is no
+such child does Wicket fall back to reading `name` from the surrounding
+component's model, and that value is written as it came — so a static bundle can
+still place model data in the markup unescaped. Prefer the child component.
+Where the fallback is unavoidable and the data is not trusted, the message needs
+`escape="true"`, which escapes the whole message and therefore any markup the
+bundle itself contains.
+
+Finally, `Strings#escapeMarkup` escapes `<`, `>`, `&`, `"` and `'`. That is
+enough for element text and for a quoted attribute value, and it is not enough
+for anything else: it does not make a value safe inside `<script>` or `<style>`,
+in an unquoted attribute, or in a URL where the scheme itself is the payload.
+Wicket does not automatically escape a value the application places into a
+JavaScript context — through `TextTemplate` variable substitution, for example —
+so the application has to encode it.
+
+### Another origin may not invoke a listener
+
+Where `ResourceIsolationRequestCycleListener` is registered, a request originating
+from another origin must not be able to invoke a listener on a page — a
+`Link.onClick()`, a `Form.onSubmit()`, or an AJAX behaviour. A demonstrated way
+for another origin to reach one is a vulnerability.
+
+Two things sit deliberately outside that boundary:
+
+- **Rendering a page is allowed.** A page may be reached by a simple top-level
+  navigation from anywhere, so that pages remain linkable from other sites. Only
+  the invocation of a listener is refused. This holds for every render, not only
+  for top-level navigations: a page reached as a subresource load, through
+  `fetch`, or inside an `<object>` or `<embed>` is not refused either, because
+  the listener does not consult a policy for renders at all. A page whose render
+  alone discloses something sensitive cannot rely on this listener.
+- **Sibling origins may be trusted explicitly.** `Sec-Fetch-Site: same-site`
+  means a different origin on the same registrable domain and scheme, such as
+  another subdomain, and is refused by default. A deployment that trusts every
+  origin on its own site can allow it; sibling-origin actions are then that
+  deployment's decision rather than a framework vulnerability.
+
+The boundary is `FetchMetadataResourceIsolationPolicy`'s. The listener also
+consults `OriginResourceIsolationPolicy` by default, for clients that send no
+`Sec-Fetch-*` headers, and that policy is
+[out of scope](#originresourceisolationpolicy-is-out-of-scope).
+
+This listener is opt-in and is not registered by default. Without it Wicket
+enforces no cross-origin boundary on listener invocation at all. `CryptoMapper`
+raises the cost of forging a URL but is not a substitute for it, for the reason
+below.
+
+### `CryptoMapper` is not an authorization mechanism
+
+`CryptoMapper` encrypts URLs so that page and component identifiers are not
+guessable. It raises the cost of forging a URL, but it is not an access-control
+mechanism. Authorization must be enforced with `IAuthorizationStrategy` (or
+equivalent) so that it holds regardless of whether a URL was guessed,
+replayed, leaked through a referrer, or found in a log.
+
+### Encrypted URLs are deterministic by design
+
+`CryptoMapper` encrypts a URL to the same text every time, for as long as the
+key lives. It has to: a URL regenerated during rendering must match the one the
+client requested, and a resource URL must stay identical across requests or the
+browser re-downloads the resource on every page view. The consequence is that
+equal URLs are recognisable as equal, and that anyone holding the key can
+confirm a guessed URL by encrypting it themselves. With the default
+`KeyInSessionCryptFactory` the key is per session, so this is confined to a
+single user; with an application-wide key it is not. Encrypted URLs are
+therefore an obfuscation and a per-session CSRF token, never a secret in their
+own right — which is the same reason they are not an authorization mechanism.
+Everything Wicket encrypts elsewhere, such as the page store, uses the randomized
+path and does not have this property.
+
+## Reporting Something That Is Not a Vulnerability
+
+Findings that are real but not vulnerabilities are still welcome — please raise
+them publicly in [JIRA](https://issues.apache.org/jira/projects/WICKET) or as a
+pull request rather than through the private security channel, so they can be
+discussed and fixed in the open. Hardening suggestions, defence-in-depth
+improvements, and clarifications to this document all fall into that category.
+
+If you are unsure which channel applies, use the private one — we would rather
+receive a non-issue privately than a real issue publicly.

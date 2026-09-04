@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.ajax.markup.html;
 
 import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -194,6 +195,13 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 				AjaxEditableChoiceLabel.this.onModelChanging();
 			}
 
+			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+				setEscapeModelStrings(AjaxEditableChoiceLabel.this.getEscapeModelStrings());
+			}
+
 		};
 
 		editor.setOutputMarkupId(true);
@@ -238,8 +246,8 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected WebComponent newLabel(final MarkupContainer parent, final String componentId,
-		final IModel<T> model)
+	protected Component newLabel(final MarkupContainer parent, final String componentId,
+								 final IModel<T> model)
 	{
 		Label label = new Label(componentId, model)
 		{
@@ -252,6 +260,13 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			public <C> IConverter<C> getConverter(final Class<C> type)
 			{
 				return AjaxEditableChoiceLabel.this.getConverter(type);
+			}
+
+			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+				setEscapeModelStrings(AjaxEditableChoiceLabel.this.getEscapeModelStrings());
 			}
 
 			/**
@@ -268,21 +283,30 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 					Object displayObject = renderer.getDisplayValue(getModelObject());
 					Class<?> objectClass = (displayObject == null ? null : displayObject.getClass());
 
+					String rendered = null;
 					if ((objectClass != null) && (objectClass != String.class))
 					{
 						@SuppressWarnings("rawtypes")
 						final IConverter converter = getConverter(objectClass);
-						displayValue = converter.convertToString(displayObject, getLocale());
+						rendered = converter.convertToString(displayObject, getLocale());
 					}
 					else if (displayObject != null)
 					{
-						displayValue = displayObject.toString();
+						rendered = displayObject.toString();
+					}
+
+					if (rendered != null)
+					{
+						displayValue = getEscapeModelStrings()
+							? Strings.escapeMarkup(rendered).toString() : rendered;
 					}
 				}
 
 				if (Strings.isEmpty(displayValue))
 				{
-					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
+					String nullLabel = defaultNullLabel();
+					replaceComponentTagBody(markupStream, openTag,
+						getEscapeModelStrings() ? Strings.escapeMarkup(nullLabel) : nullLabel);
 				}
 				else
 				{

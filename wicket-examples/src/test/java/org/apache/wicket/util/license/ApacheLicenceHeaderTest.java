@@ -18,6 +18,9 @@ package org.apache.wicket.util.license;
 
 import java.util.Arrays;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 /**
  * Test that the license headers are in place in this project. The tests are run from
  * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
@@ -78,8 +81,23 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 * Configuration files with no "intelligent" content
 		 */
 		propertiesIgnore.add("src/main/java/commons-logging.properties");
-		propertiesIgnore.add("src/main/java/log4j.properties");
+		propertiesIgnore.add("src/main/java/simplelogger.properties");
 
 		xmlPrologIgnore = Arrays.asList("src");
 	}
+	
+	@BeforeEach
+	@Override
+	public void before()
+	{
+		super.before();
+	}
+
+	@Test
+	@Override
+	public void licenseHeaders()
+	{
+		super.licenseHeaders();
+	}
+	
 }

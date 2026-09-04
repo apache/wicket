@@ -20,18 +20,17 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>9.0.0-M6-SNAPSHOT</version>
+		<version>11.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-objectsizeof-agent</artifactId>
 	<packaging>jar</packaging>
 	<name>Wicket Objects Sizeof Agent</name>
 	<description>Agent for pluggin in object size measurements using instrumentation</description>
-
 	<properties>
-		<automatic-module-name>org.apache.wicket.objectsizeof.agent</automatic-module-name>
+		<osgi.export.package>org.apache.wicket.util.instrument*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -45,18 +44,5 @@
 				<artifactId>maven-jar-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-    			<plugin>
-    				<groupId>org.apache.maven.plugins</groupId>
-    				<artifactId>maven-jar-plugin</artifactId>
-    				<configuration>
-    					<archive>
-    						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-    					</archive>
-    				</configuration>
-    			</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 </project>

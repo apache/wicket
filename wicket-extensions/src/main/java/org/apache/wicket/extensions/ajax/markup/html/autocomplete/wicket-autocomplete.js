@@ -50,7 +50,7 @@
 		var selected=-1;	// index of the currently selected item
 		var elementCount=0; // number of items on the auto complete list
 		var visible=0;		// is the list visible
-		
+
 		var ignoreKeyEnter = false;		// ignore key ENTER because is already hid the autocomplete list
 		var ignoreOneFocusGain = false; // on FF, clicking an option in the pop-up would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
 		var triggerChangeOnHide = false;		// should a change be triggered on hiding of the popup
@@ -74,6 +74,15 @@
 		//this is the minimum input length required to display the autocomplete list
 		var minInputLength = cfg.showListOnEmptyInput === true ? 0 : cfg.minInputLength || 1;
 
+		// timeout handler that cancels the hiding of the menu if the focus is still on menu items
+		var hideAutoCompleteTimer;
+
+		// A flag indicating whether the 'change' event has been triggered manually after selection
+		// from the menu.
+		// In this case we don't want to render the menu.
+		// It is usually rendered on successful Ajax response
+		var isTriggeredChange = false;
+
 		function initialize(){
 			var isShowing = false;
 			// Remove the autocompletion menu if still present from
@@ -90,11 +99,14 @@
 
 			Wicket.Event.add(obj, 'blur', function (jqEvent) {
 				var menuId=getMenuId();
-
 				//workaround for IE. Clicks on scrollbar trigger
 				//'blur' event on input field. (See https://issues.apache.org/jira/browse/WICKET-5882)
 				if (menuId !== document.activeElement.id && (menuId + "-container") !== document.activeElement.id) {
-					window.setTimeout(hideAutoComplete, 500);
+					hideAutoCompleteTimer = window.setTimeout(function() {
+							hideAutoComplete();
+							isTriggeredChange = false;
+							triggerChangeOnHide = false;
+					}, 500);
 				} else {
 					jQuery(this).trigger("focus");
 				}
@@ -114,34 +126,42 @@
 			});
 
 			Wicket.Event.add(obj, 'keydown', function (jqEvent) {
-				switch(Wicket.Event.keyCode(jqEvent)){
+				var keyCode = Wicket.Event.keyCode(jqEvent);
+				switch (keyCode) {
 					case KEY_UP:
-						if (selected>-1) {
-							setSelected(selected-1);
-						}
+						if (elementCount > 0) {
+							if (selected>-1) {
+								setSelected(selected-1);
+							}
 
-						var searchTerm = Wicket.$(ajaxAttributes.c).value;
-						if(selected === -1 && searchTerm) {
-							// select the last element
-							setSelected(elementCount-1);
-							showAutoComplete();
+							var searchTerm = Wicket.$(ajaxAttributes.c).value;
+							if(selected === -1 && searchTerm) {
+								// select the last element
+								setSelected(elementCount-1);
+								showAutoComplete();
+							}
+							render(true, false);
+							jqEvent.preventDefault();
 						}
-						render(true, false);
 
 						break;
 					case KEY_DOWN:
-						if (selected < elementCount-1) {
-							setSelected(selected+1);
-						} else if (selected === elementCount-1) {
-							// select the first element
-							setSelected(0);
+						if (elementCount > 0) {
+							if (selected < elementCount-1) {
+								setSelected(selected+1);
+							} else if (selected === elementCount-1) {
+								// select the first element
+								setSelected(0);
+							}
+							if (visible === 0) {
+								updateChoices();
+							} else {
+								render(true, false);
+								showAutoComplete();
+							}
+							jqEvent.preventDefault();
 						}
-						if (visible === 0) {
-							updateChoices();
-						} else {
-							render(true, false);
-							showAutoComplete();
-						}
+
 						break;
 					case KEY_ESC:
 						if (visible === 1) {
@@ -152,22 +172,28 @@
 					case KEY_TAB:
 					case KEY_ENTER:
 						ignoreKeyEnter = false;
-						
+
 						if (selected > -1) {
 							var value = getSelectedValue();
 							value = handleSelection(value);
-							
+
 							if (value) {
 								obj.value = value;
 								triggerChangeOnHide = true;
 							}
-							
+
 							hideAutoComplete();
-							
+
+							if (cfg.keyTabBehavior === 'selectFocusAutocompleteInput' && keyCode === KEY_TAB) {
+								// prevent moving focus to the next component if an item in the dropdown is selected
+								// using the Tab key
+								jqEvent.preventDefault();
+							}
+
 							ignoreKeyEnter = true;
 						} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {
 							hideAutoComplete();
-							
+
 							ignoreKeyEnter = true;
 						}
 
@@ -181,7 +207,7 @@
 				if (visible === 1) {
 					// don't let any other change handler get this
 					jqEvent.stopImmediatePropagation();
-					
+
 					triggerChangeOnHide = true;
 				}
 			});
@@ -230,7 +256,7 @@
 		{
 			// Remove the autocompletion menu if still present from
 			// a previous call. This is required to properly register
-			// the mouse event handler again 
+			// the mouse event handler again
 			var choiceDiv=document.getElementById(getMenuId());
 			if (choiceDiv !== null) {
 				choiceDiv.parentNode.parentNode.removeChild(choiceDiv.parentNode);
@@ -311,8 +337,7 @@
 				choiceDiv=document.createElement("div");
 				container.appendChild(choiceDiv);
 				choiceDiv.id=getMenuId();
-				choiceDiv.className="wicket-aa";
-
+				choiceDiv.className = "wicket-aa";
 			}
 
 
@@ -320,9 +345,7 @@
 		}
 
 		function getAutocompleteContainer() {
-			var node=getAutocompleteMenu().parentNode;
-
-			return node;
+			return getAutocompleteMenu().parentNode;
 		}
 
 		function updateChoices(showAll){
@@ -341,7 +364,7 @@
 		function actualUpdateChoices() {
 			prepareAndExecuteAjaxUpdate(doUpdateChoices, Wicket.$(ajaxAttributes.c).value);
 		}
-		
+
 		function prepareAndExecuteAjaxUpdate(successHandler, currentInput){
 			showIndicator();
 
@@ -356,25 +379,25 @@
 					// WICKET-6366 input might no longer be on page
 					return false;
 				}
-				
+
 				var activeIsInitial = (document.activeElement === initialElement);
 				var hasMinimumLength = input.value.length >= minInputLength;
-			
+
 				var result = hasMinimumLength && activeIsInitial;
-					
+
 				if (!result) {
 					hideAutoComplete();
 				}
-				
+
 				return result;
-			});	
+			});
 
 			attrs.sh = attrs.sh || [];
 			attrs.sh.push(successHandler);
-				
+
 			attrs.ep = attrs.ep || [];
 			attrs.ep.push({'name' : cfg.parameterName, 'value' : currentInput});
-				
+
 			Wicket.Ajax.ajax(attrs);
 		}
 
@@ -391,6 +414,21 @@
 			var container = getAutocompleteContainer();
 			var index=getOffsetParentZIndex(ajaxAttributes.c);
 			container.show();
+
+			// Accessibility
+			var container_jquery = $(container);
+			var size = container_jquery.find("li").size;
+
+			container_jquery.find("li").each(function (index, el) {
+				$(el).attr("aria-posinset", index + 1).attr("aria-setsize", size).attr("tabindex", -1).attr("role", "option");
+			});
+
+			container_jquery.find("ul").each(function (i, el) {
+				$(el).attr("id", "wicket-autocomplete-listbox-" + ajaxAttributes.c).attr("role", "listbox");
+			});
+			$(input).attr("aria-expanded", "true");
+
+
 			if (!isNaN(Number(index))) {
 				container.style.zIndex=(Number(index)+1);
 			}
@@ -406,7 +444,7 @@
 			calculateAndSetPopupBounds(input, container);
 
 			visible = 1;
-			triggerChangeOnHide = false;			
+			triggerChangeOnHide = false;
 		}
 
 		function initializeUsefulDimensions(input, container) {
@@ -427,12 +465,20 @@
 		}
 
 		function hideAutoComplete(){
+			hideAutoCompleteTimer = undefined;
+
+			var input = Wicket.$(ajaxAttributes.c);
+			if (input) {
+				input.setAttribute("aria-expanded", "false");
+				input.removeAttribute("aria-activedescendant");
+			}
+
 			visible = 0;
 			setSelected(-1);
-			
+
 			//WICKET-5382
 			hideIndicator();
-			
+
 			var container = getAutocompleteContainer();
 			if (container)
 			{
@@ -441,11 +487,11 @@
 					container.style.width = "auto"; // let browser auto-set width again next time it is shown
 				}
 			}
-			
+
 			if (triggerChangeOnHide) {
-				var input = Wicket.$(ajaxAttributes.c);
-				jQuery(input).trigger('change');
 				triggerChangeOnHide = false;
+				isTriggeredChange = true;
+				jQuery(input).trigger('change');
 			}
 		}
 
@@ -469,10 +515,10 @@
 
 		function getWindowScrollXY() {
 			var scrOfX = 0, scrOfY = 0;
-			if( typeof( window.pageYOffset ) === 'number' ) {
+			if( typeof( window.scrollY ) === 'number' ) {
 				//Netscape compliant
-				scrOfY = window.pageYOffset;
-				scrOfX = window.pageXOffset;
+				scrOfY = window.scrollY;
+				scrOfX = window.scrollX;
 			} else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
 				//DOM compliant
 				scrOfY = document.body.scrollTop;
@@ -562,7 +608,7 @@
 
 		function getPosition(obj) {
 			var rectangle = jQuery(obj).offset();
-			
+
 			var leftPosition = rectangle.left || 0;
 			var topPosition = rectangle.top || 0;
 			if (!cfg.ignoreBordersWhenPositioning) {
@@ -577,7 +623,6 @@
 			doUpdateChoices(attributes, jqXHR, resp, textStatus, -1);
 		}
 		function doUpdateChoices(attributes, jqXHR, resp, textStatus, defaultSelection) {
-
 			getAutocompleteMenu().showingAutocomplete = false;
 
 			// check if the input hasn't been cleared in the meanwhile or has been replaced by ajax
@@ -598,6 +643,7 @@
 				selChSinceLastRender = true; // selected item will not have selected style until rendrered
 			}
 			element.innerHTML=resp;
+			element.firstChild.role = "listbox";
 			var selectableElements = getSelectableElements();
 			if (selectableElements) {
 				elementCount=selectableElements.length;
@@ -608,7 +654,7 @@
 
 					var value = getSelectedValue();
 					value = handleSelection(value);
-					
+
 					var input = Wicket.$(ajaxAttributes.c);
 					if (value) {
 						input.value = value;
@@ -616,10 +662,10 @@
 					}
 
 					hideAutoComplete();
-					
+
 					if (document.activeElement !== input) {
 						ignoreOneFocusGain = true;
-						input.focus();
+						jQuery(input).trigger('focus');
 					}
 					return true;
 				};
@@ -629,10 +675,27 @@
 					render(false, false); // don't scroll - breaks mouse wheel scrolling
 					showAutoComplete();
 				};
+
+				var mouseDownFunc = function(event) {
+					// Give a chance the menu's blur event handler to be executed and eventually set
+					// 'hideAutoCompleteTimer'
+					// And then cancel the hiding of the menu
+					window.setTimeout(function() {
+						if (hideAutoCompleteTimer) {
+							window.clearTimeout(hideAutoCompleteTimer);
+						}
+					}, 50);
+				};
 				for(var i = 0;i < elementCount; i++) {
 					var node = selectableElements[i];
 					node.onclick = clickFunc;
 					node.onmouseover = mouseOverFunc;
+					node.onmousedown = mouseDownFunc;
+					node.role = "option";
+					node.id = getMenuId() + '-item-' + i;
+					node.setAttribute("tabindex", -1);
+					node.setAttribute("aria-posinset", i + 1);
+					node.setAttribute("aria-setsize", elementCount);
 				}
 			} else {
 				elementCount=0;
@@ -658,7 +721,12 @@
 					}
 					setSelected(selectedIndex);
 				}
-				showAutoComplete();
+
+				if (isTriggeredChange) {
+					isTriggeredChange = false;
+				} else {
+					showAutoComplete();
+				}
 			} else {
 				hideAutoComplete();
 			}
@@ -673,7 +741,7 @@
 		function scheduleEmptyCheck() {
 			window.setTimeout(function() {
 				var input=Wicket.$(ajaxAttributes.c);
-				
+
 				// WICKET-6366 input might no longer be on page
 				if (input) {
 					if (!cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
@@ -723,16 +791,31 @@
 			var node=getSelectableElement(0);
 			var re = /\bselected\b/gi;
 			var sizeAffected = false;
+			var input=Wicket.$(ajaxAttributes.c);
+
 			for(var i=0;i<elementCount;i++)
 			{
 				var origClassNames = node.className;
 				var classNames = origClassNames.replace(re, "");
+
 				if(selected===i){
 					classNames += " selected";
+
+					if (node && node instanceof HTMLElement && node.attributes) {
+						node.setAttribute("aria-selected", "true");
+						input.setAttribute("aria-activedescendant", node.id);
+					}
+
 					if (adjustScroll) {
 						adjustScrollOffset(menu.parentNode, node);
 					}
 				}
+				else {
+					if (node && node instanceof HTMLElement && node.attributes) {
+						node.setAttribute("aria-selected", "false");
+					}
+				}
+
 				if (classNames !== origClassNames) {
 					node.className = classNames;
 				}

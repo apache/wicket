@@ -108,108 +108,72 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 */
 	public abstract String getAfterTemplateContents();
 
-	/**
-	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#close()
-	 */
 	@Override
 	public void close() throws IOException
 	{
 		decorated.close();
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
 		return decorated.equals(obj);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#getContentType()
-	 */
 	@Override
 	public String getContentType()
 	{
 		return decorated.getContentType();
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#getInputStream()
-	 */
 	@Override
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		return decorated.getInputStream();
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.AbstractResourceStream#getLocale()
-	 */
 	@Override
 	public Locale getLocale()
 	{
 		return decorated.getLocale();
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode()
 	{
 		return decorated.hashCode();
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#lastModifiedTime()
-	 */
 	@Override
 	public Instant lastModifiedTime()
 	{
 		return decorated.lastModifiedTime();
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.AbstractResourceStream#setCharset(java.nio.charset.Charset)
-	 */
 	@Override
 	public void setCharset(Charset charset)
 	{
 		decorated.setCharset(charset);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.AbstractStringResourceStream#setLastModified(org.apache.wicket.util.time.Time)
-	 */
 	@Override
 	public void setLastModified(Instant lastModified)
 	{
 		decorated.setLastModified(lastModified);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.resource.AbstractResourceStream#setLocale(java.util.Locale)
-	 */
 	@Override
 	public void setLocale(Locale locale)
 	{
 		decorated.setLocale(locale);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.template.TextTemplate#getString()
-	 */
 	@Override
 	public String getString()
 	{
 		return decorated.getString();
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{

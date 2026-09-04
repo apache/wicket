@@ -5,7 +5,7 @@ Wicket is well-known for its capability of transparently handling the state of w
 WicketStuff module for REST provides a special resource class and a set of annotations to implement REST APIs/services in much the same way as we do it with Spring MVC or with the standard JAX-RS.
 
 The module provides class _AbstractRestResource_ as generic abstract class to implement a Wicket resource that handles the request and the response using a particular data format (XML, JSON, etc...).
-Subclassing _AbstractRestResource_ we can create custom resources and map their pubblic methods to a given subpath with annotation _MethodMapping_. The following snippet is taken from resource _PersonsRestResource_ inside module _'restannotations-examples'_:
+Subclassing _AbstractRestResource_ we can create custom resources and map their public methods to a given subpath with annotation _MethodMapping_. The following snippet is taken from resource _PersonsRestResource_ inside module _'restannotations-examples'_:
 
 [source,java]
 ----
@@ -77,6 +77,6 @@ _AbstractRestResource_ supports role-based authorizations for mapped method with
     }
 ----
 
-To use annotation _AuthorizeInvocation_ we must specify in the resource construcor an instance of Wicket interface _IRoleCheckingStrategy_.
+To use annotation _AuthorizeInvocation_ we must specify in the resource constructor an instance of Wicket interface _IRoleCheckingStrategy_.
 
 To read the complete documentation of the module and to discover more advanced feature please refer to the  https://github.com/wicketstuff/core/tree/master/wicketstuff-restannotations-parent[project homepage] 

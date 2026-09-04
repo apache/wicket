@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.examples.cdi;
 
-import javax.enterprise.context.ConversationScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.event.Reception;
+import jakarta.enterprise.context.ConversationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.event.Reception;
 
 import org.apache.wicket.cdi.DetachEvent;
 import org.slf4j.Logger;

@@ -76,6 +76,12 @@ public abstract class DelegatingPageStore implements IPageStore
 	}
 	
 	@Override
+	public void end(IPageContext context)
+	{
+		delegate.end(context);
+	}
+	
+	@Override
 	public void detach(IPageContext context)
 	{
 		delegate.detach(context);

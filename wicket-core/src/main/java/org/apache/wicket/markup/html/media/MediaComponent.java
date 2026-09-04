@@ -39,7 +39,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	/**
 	 * To be used for the <em>crossorigin</em> attribute
 	 *
-	 * @see {@link #setCrossOrigin(Cors)}
+	 * @see #setCrossOrigin(Cors)
 	 */
 	public enum Cors {
 		/**
@@ -76,7 +76,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	/**
 	 * To be used for the <em>preload</em> attribute
 	 *
-	 * @see {@link #setPreload(Preload)}
+	 * @see #setPreload(Preload)
 	 */
 	public enum Preload {
 		/**
@@ -94,7 +94,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 
 		private final String realName;
 
-		private Preload(String realname)
+		Preload(String realname)
 		{
 			realName = realname;
 		}
@@ -455,7 +455,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	/**
 	 * The type of preload
 	 *
-	 * @see {@link #setPreload(Preload)}
+	 * @see #setPreload(Preload)
 	 *
 	 * @return the preload
 	 */
@@ -491,7 +491,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	/**
 	 * Gets the position at which the media component starts the playback
 	 *
-	 * @see {@link #setStartTime(String)}
+	 * @see #setStartTime(String)
 	 *
 	 * @return the time at which position the media component starts the playback
 	 */
@@ -528,7 +528,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	/**
 	 * Gets the position at which the media component stops the playback
 	 *
-	 * @see {@link #setEndTime(String)}
+	 * @see #setEndTime(String)
 	 *
 	 * @return the time at which position the media component stops the playback
 	 */
@@ -584,11 +584,11 @@ public abstract class MediaComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Gets the cross origin settings
+	 * Gets the cross-origin settings
 	 *
-	 * @see {@link #setCrossOrigin(Cors)}
+	 * @see #setCrossOrigin(Cors)
 	 *
-	 * @return the cross origins settings
+	 * @return the cross-origins settings
 	 */
 	public Cors getCrossOrigin()
 	{
@@ -596,7 +596,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Sets the cross origin settings<br>
+	 * Sets the cross-origin settings<br>
 	 * <br>
 	 *
 	 * <b>ANONYMOUS</b>: Cross-origin CORS requests for the element will not have the credentials
@@ -610,7 +610,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * when the attribute is omitted, is the No CORS state
 	 *
 	 * @param crossOrigin
-	 *            the cross origins settings to set
+	 *            the cross-origins settings to set
 	 */
 	public void setCrossOrigin(Cors crossOrigin)
 	{
@@ -620,7 +620,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	/**
 	 * Gets the type
 	 *
-	 * @see {@link #setType(String)}
+	 * @see #setType(String)
 	 *
 	 * @return the type of this media element
 	 */

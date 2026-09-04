@@ -14,23 +14,23 @@
 
 	<span wicket:id="fragment">fragments contents come here</span>
 	</p>
-    <span wicket:id="explainPanel">panel contents come here</span>
+        <span wicket:id="explainPanel">panel contents come here</span>
 
+	<wicket:fragment wicket:id="fragmentid">
+	
+	 	<p style="border: 2px dotted #fc0; padding: 5px;">
+	 	 A fragment is like a panel, but can be 'inlined',
+	 	 meaning it does not need it's own markup file, but
+	 	 can be defined in the markup file of another. For this
+	 	 example, we use the parent's markup file as the host,
+	 	 and we do not explicitly tell the fragment which host
+	 	 to use.<br />
+	 	 Like panels, fragments can contain arbitrairy components,
+	 	 like this label: <span wicket:id="label" class="mark">to be replaced</span>, or<br />
+	 	 even another panel: <span wicket:id="otherPanel"  class="mark">also to be replaced</span>.
+	 	</p>
+	 
+	</wicket:fragment>
 </wicket:extend>
 </body>
-<wicket:fragment wicket:id="fragmentid">
-
- 	<p class="dotted-box">
- 	 A fragment is like a panel, but can be 'inlined',
- 	 meaning it does not need it's own markup file, but
- 	 can be defined in the markup file of another. For this
- 	 example, we use the parent's markup file as the host,
- 	 and we do not explicitly tell the fragment which host
- 	 to use.<br />
- 	 Like panels, fragments can contain arbitrairy components,
- 	 like this label: <span wicket:id="label" class="mark">to be replaced</span>, or<br />
- 	 even another panel: <span wicket:id="otherPanel"  class="mark">also to be replaced</span>.
- 	</p>
- 
-</wicket:fragment>
 </html>

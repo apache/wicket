@@ -17,7 +17,7 @@
 package org.apache.wicket.model;
 
 /**
- * A marker interface that represents a model that serves as a wrapper for another. Typically these
+ * A marker interface that represents a model that serves as a wrapper for another. Typically, these
  * models are produced by the following methods:
  * {@link IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)} and
  * {@link IComponentInheritedModel#wrapOnInheritance(org.apache.wicket.Component)}
@@ -38,4 +38,27 @@ public interface IWrapModel<T> extends IModel<T>
 	 * @return The wrapped model
 	 */
 	IModel<?> getWrappedModel();
+
+	/**
+	 * Calls getWrappedModel().detach();
+	 *
+	 * @see org.apache.wicket.model.IDetachable#detach()
+	 */
+	@Override
+	default void detach()
+	{
+		getWrappedModel().detach();
+	}
+
+	@Override
+	default void setObject(T object)
+	{
+	}
+
+	@Override
+	default T getObject()
+	{
+		return null;
+	}
+
 }

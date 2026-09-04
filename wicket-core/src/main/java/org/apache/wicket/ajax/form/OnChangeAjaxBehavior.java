@@ -26,12 +26,16 @@ import org.apache.wicket.util.lang.Args;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
- * A behavior that updates the hosting {@link FormComponent} via Ajax when value of the component is
- * changed.
+ * A behavior that updates the hosting {@link FormComponent}'s model via Ajax when value
+ * of the component is changed.
  * <p>
- * This behavior uses best available method to track changes on different types of form components.
- * For text input form components it uses event 'input', for other form component types the 'change'
- * event is used.
+ * For {@link TextField} and {@link TextArea} form components this behavior uses JavaScript
+ * <em>input</em> and <em>change</em> events, for other form component types only JavaScript
+ * <em>change</em> event is used.
+ * <br/>
+ * <strong>Note</strong>: JavaScript <em>change</em> event is being fired by the browser
+ * also when the HTML form element losses the focus, i.e. an Ajax call will be made even
+ * if there is no actual change of the form element's value!
  * </p>
  * 
  * @author Janne Hietam&auml;ki (janne)

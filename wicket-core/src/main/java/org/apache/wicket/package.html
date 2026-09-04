@@ -24,36 +24,31 @@
 The core Wicket package.  The key core classes you will need to learn to 
 do basic Wicket programming are:
 <ul>
-	<li><b>{@link wicket.Application} / {@link wicket.protocol.http.WebApplication}</b> - Subclass WebApplication to create your application.
+	<li><b>{@link org.apache.wicket.Application} / {@link org.apache.wicket.protocol.http.WebApplication}</b> - Subclass WebApplication to create your application.
 	Set your home page with Application.getPages().setHomePage(MyHomePage.class).
 	Configure Wicket for deployment with Application.getSettings().configure("deployment").
 	Substitute "development" to get default settings for a development environment.
 	
-	<li><b>{@link wicket.Component}</b> - You will need to carefully study this class as Component is very 
+	<li><b>{@link org.apache.wicket.Component}</b> - You will need to carefully study this class as Component is very
 	central to Wicket.  There are a large number of convenience methods in Component 
 	and, naturally, every component in Wicket is a subclass of Component, so all these
 	methods are available to all Components.
 	
-	<li><b>{@link wicket.IRequestCycleFactory}</b> - If you are working with a persistence framework
-	such as Hibernate or JDO, you may need to implement a request cycle factory in order
+	<li><b>{@link org.apache.wicket.request.cycle.IRequestCycleListener}</b> - If you are working with a persistence framework
+	such as Hibernate or JDO, you may need to implement a request cycle listener in order
 	to open a persistence session at the beginning of a request and close the session
 	at the end of the request.
-	
-	<li><b>{@link wicket.ISessionFactory}</b> - For all but the most trivial applications, you will
-	need to create your own session factory.  Your implementation of this interface
-	will generally be quite simple, generally just returning a new instance of your 
-	own application-specific subclass of WebSession.
-	
-	<li><b>{@link wicket.MarkupContainer}</b> - You will need to study MarkupContainer carefully as
+
+	<li><b>{@link org.apache.wicket.MarkupContainer}</b> - You will need to study MarkupContainer carefully as
 	this class contains all the logic for creating and maintaining component hierarchies.
 	
-	<li><b>{@link wicket.Page} / {@link wicket.markup.html.WebPage}</b> - Every page in your wicket application will extend WebPage
+	<li><b>{@link org.apache.wicket.Page} / {@link org.apache.wicket.markup.html.WebPage}</b> - Every page in your wicket application will extend WebPage
 	(or some other subclass of Page if you are writing something other than a web application).
 	There are a number of important methods in Page and you should be familiar with all of them.
 	
-	<li><b>{@link wicket.PageParameters}</b> - A simple wrapper for query string parameters.
+	<li><b>{@link org.apache.wicket.request.mapper.parameter.PageParameters}</b> - A simple wrapper for query string parameters.
 	
-	<li><b>{@link wicket.Session} / {@link wicket.protocol.http.WebSession}</b> - It is particularly important to understand Session
+	<li><b>{@link org.apache.wicket.Session} / {@link org.apache.wicket.protocol.http.WebSession}</b> - It is particularly important to understand Session
 	if you are doing clustering, but even for a very basic application you will want
 	to create your own subclass of WebSession using a session factory so that you can
 	store any session properties in a typesafe way.  Note that since Pages are first

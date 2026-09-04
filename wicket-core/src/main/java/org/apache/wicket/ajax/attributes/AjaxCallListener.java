@@ -63,7 +63,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	 * Sets the JavaScript code that will be returned by {@link #getDoneHandler(Component)}.
 	 * If this code was already set, the new one will be appended to the existing one.
 	 *
-	 * @param init
+	 * @param done
 	 * 			the JavaScript code for the corresponding handler
 	 * @return This
 	 */

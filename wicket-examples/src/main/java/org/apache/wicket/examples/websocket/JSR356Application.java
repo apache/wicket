@@ -16,13 +16,19 @@
  */
 package org.apache.wicket.examples.websocket;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.websocket.charts.ChartWebSocketResource;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -32,6 +38,8 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public class JSR356Application extends WicketExampleApplication
 {
+	private static final Logger LOGGER = LoggerFactory.getLogger(JSR356Application.class);
+
     private ScheduledExecutorService scheduledExecutorService;
 
 	@Override
@@ -50,16 +58,29 @@ public class JSR356Application extends WicketExampleApplication
 		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig(8080, 8443)));
 
 		mountPage("/behavior", WebSocketBehaviorDemoPage.class);
+		mountPage("/push", WebSocketPushUpdateProgressDemoPage.class);
 		mountPage("/resource", WebSocketResourceDemoPage.class);
 		mountPage("/resource-multi-tab", WebSocketMultiTabResourceDemoPage.class);
 
 		getSharedResources().add(ChartWebSocketResource.NAME, new ChartWebSocketResource());
 
+		final WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(this);
+
+		// use asynchronous/non-blocking push mode
+		webSocketSettings.setAsynchronousPush(true);
+		webSocketSettings.setAsynchronousPushTimeout(6000L);
+
+		webSocketSettings.setSocketSessionConfigurer(webSocketSession -> {
+			LOGGER.info("getMaxIdleTimeout = {}", webSocketSession.getMaxIdleTimeout());
+			// use 5 minutes idle timeout
+			webSocketSession.setMaxIdleTimeout(Duration.ofMinutes(5).toMillis());
+		});
+
 		if (System.getenv("OPENSHIFT_APP_NAME") != null)
 		{
 			// OpenShift uses special proxy for WebSocket connections
 			// https://blog.openshift.com/paas-websockets/
-			final WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(this);
+
 			webSocketSettings.setPort(8000);
 			webSocketSettings.setSecurePort(8443);
 		}
@@ -69,7 +90,13 @@ public class JSR356Application extends WicketExampleApplication
 		getCspSettings().blocking().disabled();
 	}
 
-    @Override
+	@Override
+	public Session newSession(Request request, Response response)
+	{
+		return new JSR356Session(request);
+	}
+
+	@Override
     protected void onDestroy() {
         scheduledExecutorService.shutdownNow();
 

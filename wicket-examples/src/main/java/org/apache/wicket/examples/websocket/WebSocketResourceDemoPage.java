@@ -19,10 +19,8 @@ package org.apache.wicket.examples.websocket;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.websocket.charts.ChartWebSocketResource;
 import org.apache.wicket.examples.websocket.charts.WebSocketChart;
-import org.apache.wicket.protocol.https.RequireHttps;
 import org.apache.wicket.protocol.ws.api.BaseWebSocketBehavior;
 
-@RequireHttps
 public class WebSocketResourceDemoPage extends WicketExamplePage
 {
 	public WebSocketResourceDemoPage()

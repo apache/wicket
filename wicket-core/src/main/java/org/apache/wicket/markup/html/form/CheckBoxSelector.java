@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  * automatically updates the state of the "select all" checkbox. Override
  * {@link AbstractCheckSelector#wantAutomaticUpdate()} to change this.
  * 
- * @author Carl-Eric Menzel <cmenzel@wicketbuch.de>
+ * @author Carl-Eric Menzel
  */
 public class CheckBoxSelector extends AbstractCheckSelector
 {

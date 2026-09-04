@@ -1,0 +1,32 @@
+<html>
+	<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-4.0.0.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
+<script type="text/javascript" id="wicket-ajax-debug-enable">
+/*<![CDATA[*/
+Wicket.Log.enabled=true;
+/*]]>*/
+</script>
+<script type="text/javascript" id="wicket-ajax-base-url">
+/*<![CDATA[*/
+Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.form.OnChangeAjaxBehaviorTestPage?0";
+/*]]>*/
+</script>
+<script type="text/javascript">
+/*<![CDATA[*/
+Wicket.Event.add(window, "domready", function(event) { 
+Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.form.OnChangeAjaxBehaviorTestPage?0-1.0-form-field","m":"POST","c":"field1","e":"input change"});;
+Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.form.OnChangeAjaxBehaviorTestPage?0-1.0-form-dropDown","m":"POST","c":"dropDown2","e":"change"});;
+Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
+;});
+/*]]>*/
+</script>
+</head><body>
+		<form wicket:id="form" id="form3" method="post" action="./org.apache.wicket.ajax.form.OnChangeAjaxBehaviorTestPage?0-1.-form"><div id="form3_hf_0" hidden="" class="hidden-fields"></div>
+			<input type="text" wicket:id="field" value="" name="field" id="field1"/>
+	
+			<select wicket:id="dropDown" name="dropDown" id="dropDown2">
+<option selected="selected" value="">Choose One</option>
+</select>
+		</form>			
+	</body>
+</html>

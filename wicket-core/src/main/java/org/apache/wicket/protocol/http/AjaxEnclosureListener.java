@@ -41,7 +41,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * 
  * Syntax for inline enclosure:
  * 
- * <tr wicket:enclosure="controllingChildId">
+ * &lt;tr wicket:enclosure="controllingChildId"&gt;
  * 
  * In this example the tag used is tr, but any other tag could be used as well. The attribute
  * "wicket:enclosure" is mandatory, and is used to recognise an inline enclosure. The value of the

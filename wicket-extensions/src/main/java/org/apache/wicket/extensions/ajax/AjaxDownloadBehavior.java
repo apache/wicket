@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.ajax;
 
 import java.util.Locale;
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
@@ -38,6 +38,8 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
+import org.apache.wicket.util.cookies.CookieDefaults;
+import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.lang.Args;
 
 import com.github.openjson.JSONObject;
@@ -54,7 +56,7 @@ import com.github.openjson.JSONObject;
  * add(new AjaxButton("download")
  * {
  * 	&#64;Override
- * 	protected void onSubmit(IPartialPageRequestHandler handler, Form&lt;?> form)
+ * 	protected void onSubmit(IPartialPageRequestHandler handler, Form&lt;?&gt; form)
  * 	{
  * 		download.initiate(handler);
  * 	}
@@ -96,7 +98,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		 * the resource has to be a {@link ContentDisposition#ATTACHMENT}.
 		 * <p>
 		 * Note: This will trigger JavaScript <em>unload</em> event on the page!
-		 * Does not support {@link AjaxDownloadBehavior#onDownloadFailed(IPartialPageRequestHandler)} callback,
+		 * Does not support {@link AjaxDownloadBehavior#onDownloadFailed(AjaxRequestTarget)} callback,
 		 * i.e. it is not possible to detect when the download has failed!
 		 */
 		SameWindow,
@@ -126,6 +128,8 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 
 	private Location location = Location.Blob;
 
+	private CookieDefaults.SameSite sameSite = CookieDefaults.SameSite.Lax;
+
 	/**
 	 * Download of a {@link IResource}.
 	 *
@@ -144,7 +148,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 * <p>
 	 * The {@link IResource} returned by {@link ResourceReference#getResource()} must call
 	 * {@link #markCompleted(Attributes)} when responding, otherwise the callback
-	 * {@link #onDownloadSuccess(IPartialPageRequestHandler)} will not work.
+	 * {@link #onDownloadSuccess(AjaxRequestTarget)} will not work.
 	 *
 	 * @param reference
 	 *            reference to resource to download
@@ -159,7 +163,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 * <p>
 	 * The {@link IResource} returned by {@link ResourceReference#getResource()} must call
 	 * {@link #markCompleted(Attributes)} when responding, otherwise the callback
-	 * {@link #onDownloadSuccess(IPartialPageRequestHandler)} will not work.
+	 * {@link #onDownloadSuccess(AjaxRequestTarget)} will not work.
 	 *
 	 * @param reference
 	 *            reference to resource to download
@@ -194,6 +198,21 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		{
 			getComponent().remove(resourceBehavior);
 		}
+	}
+
+	/**
+	 * Call this method to initiate the download. You can use the {@link #resourceParameters} to dynamically pass
+	 * information to the {@link org.apache.wicket.request.resource.IResource} in order to generate contents.
+	 *
+	 * @param handler
+	 *          the initiating RequestHandler
+	 * @param resourceParameters
+	 *          Some PageParameters that might be used by the resource in order to generate content
+	 */
+	public void initiate(IPartialPageRequestHandler handler, PageParameters resourceParameters)
+	{
+		this.resourceParameters = resourceParameters;
+		initiate(handler);
 	}
 
 	/**
@@ -237,11 +256,26 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		settings.put("attributes", new JSONFunction(renderAjaxAttributes(getComponent())));
 		settings.put("name", getName());
 		settings.put("downloadUrl", url);
+		settings.put("sameSite", generateSameSiteAttribute());
 		settings.put("method", getLocation().name().toLowerCase(Locale.ROOT));
 
 		handler.appendJavaScript(String.format("Wicket.AjaxDownload.initiate(%s);", settings));
 
 		onBeforeDownload(handler);
+	}
+
+	private String generateSameSiteAttribute() {
+		StringBuilder stringBuffer = new StringBuilder(30);
+		if (sameSite.equals(CookieDefaults.SameSite.None))
+		{
+			stringBuffer.append("; Secure");
+		}
+
+		stringBuffer.append("; SameSite=");
+		stringBuffer.append(sameSite.name());
+
+		return stringBuffer.toString();
+
 	}
 
 	protected void onBeforeDownload(IPartialPageRequestHandler handler)
@@ -342,7 +376,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		{
 			final RequestCycle requestCycle = RequestCycle.get();
 			final Response response = requestCycle.getResponse();
-			((WebResponse) response).addCookie(cookie(getName()));
+			((WebResponse) response).addCookie(cookie(getName(), sameSite));
 
 			Attributes a = new Attributes(requestCycle.getRequest(), response, null);
 
@@ -368,10 +402,29 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	{
 		String cookieName = attributes.getParameters().get(RESOURCE_PARAMETER_NAME).toString();
 
-		((WebResponse)attributes.getResponse()).addCookie(cookie(cookieName));
+		((WebResponse)attributes.getResponse()).addCookie(cookie(cookieName, CookieDefaults.SameSite.Lax));
 	}
 
-	private static Cookie cookie(String name)
+	/**
+	 * Mark a resource as complete.
+	 * <p>
+	 * Has to be called from {@link IResource#respond(Attributes)} when downloaded via
+	 * {@link #AjaxDownloadBehavior(IResource)}.
+	 *
+	 * @param attributes
+	 *            resource attributes
+	 * @param sameSite
+	 * 			  The same site attribute used to mark a download completed.
+	 *
+	 */
+	public static void markCompleted(IResource.Attributes attributes, CookieDefaults.SameSite sameSite)
+	{
+		String cookieName = attributes.getParameters().get(RESOURCE_PARAMETER_NAME).toString();
+
+		((WebResponse)attributes.getResponse()).addCookie(cookie(cookieName, sameSite));
+	}
+
+	private static Cookie cookie(String name, CookieDefaults.SameSite sameSite)
 	{
 		Cookie cookie = new Cookie(name, "complete");
 
@@ -379,7 +432,27 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		// cookie when it is set from a different path - which is the case when a
 		// ResourceReference is used
 		cookie.setPath("/");
+		CookieUtils.setAttribute(cookie, "SameSite", sameSite.name());
 
 		return cookie;
+	}
+
+	/**
+	 * @return The {@link org.apache.wicket.util.cookies.CookieDefaults.SameSite} attribute to be used for the complete download.
+	 */
+	public CookieDefaults.SameSite getSameSite()
+	{
+		return sameSite;
+	}
+
+	/**
+	 * Setter for the same {@link org.apache.wicket.util.cookies.CookieDefaults.SameSite}
+	 *
+	 * @param sameSite The non-null sameSite attribute
+	 */
+	public void setSameSite(CookieDefaults.SameSite sameSite)
+	{
+		Args.notNull(sameSite, "sameSite");
+		this.sameSite = sameSite;
 	}
 }

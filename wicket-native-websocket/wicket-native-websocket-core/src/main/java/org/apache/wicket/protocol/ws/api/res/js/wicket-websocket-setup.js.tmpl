@@ -2,7 +2,7 @@
 	'use strict';
 
 	if (typeof(Wicket.WebSocket.appName) === "undefined") {
-		jQuery.extend(Wicket.WebSocket, { pageId: ${pageId}, resourceName: '${resourceName}', connectionToken: '${connectionToken}',
+		jQuery.extend(Wicket.WebSocket, { pageId: ${pageId},  context: '${context}', resourceName: '${resourceName}', connectionToken: '${connectionToken}',
 			baseUrl: '${baseUrl}', contextPath: '${contextPath}', appName: '${applicationName}',
 			port: ${port}, securePort: ${securePort}, filterPrefix: '${filterPrefix}', sessionId: '${sessionId}' });
 		Wicket.WebSocket.createDefaultConnection();

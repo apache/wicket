@@ -76,8 +76,7 @@ public class AutoCompletePage extends BasePage
 			{
 				if (Strings.isEmpty(input))
 				{
-					List<String> emptyList = Collections.emptyList();
-					return emptyList.iterator();
+					return Collections.emptyIterator();
 				}
 
 				List<String> choices = new ArrayList<>(10);

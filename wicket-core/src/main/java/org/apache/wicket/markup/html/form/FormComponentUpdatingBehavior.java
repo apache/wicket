@@ -33,7 +33,7 @@ import org.apache.wicket.util.lang.Args;
  * Contrary to {@link AjaxFormComponentUpdatingBehavior} all notification are sent via
  * standard HTTP requests and the full page is rendered as a response.
  * <p>
- * Notification is triggered by a {@value change} JavaScript event - if needed {@link #getEvent()} can be overridden
+ * Notification is triggered by a {@code change} JavaScript event - if needed {@link #getEvent()} can be overridden
  * to deviate from this default.
  * <p>
  * Note: This behavior has limited support for {@link FormComponent}s outside of a form, i.e. multiple
@@ -126,7 +126,7 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 	/**
 	 * Which JavaScript event triggers notification.
 	 * 
-	 * @return {@value change} by default 
+	 * @return {@code change} by default
 	 */
 	protected String getEvent()
 	{
@@ -198,7 +198,7 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 	/**
 	 * Hook method invoked when the component is updated.
 	 * <p>
-	 * Note: {@link #onError(AjaxRequestTarget, RuntimeException)} is called instead when processing
+	 * Note: {@link #onError(RuntimeException)} is called instead when processing
 	 * of the {@link FormComponent} failed with conversion or validation errors!  
 	 */
 	protected void onUpdate()

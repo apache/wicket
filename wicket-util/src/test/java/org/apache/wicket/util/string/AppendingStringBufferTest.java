@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("javadoc")
@@ -69,8 +70,8 @@ public class AppendingStringBufferTest
 		assertEquals(asb, "123456789");
 
 		sb = new StringBuilder("01234567890");
-		assertFalse(asb.equals(sb));
-		assertFalse(asb.equals("01234567890"));
+		assertNotEquals(asb, sb);
+		assertNotEquals(asb, "01234567890");
 	}
 
 	@Test

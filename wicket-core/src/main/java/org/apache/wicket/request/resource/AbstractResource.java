@@ -18,7 +18,6 @@ package org.apache.wicket.request.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Time;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -26,7 +25,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
@@ -426,7 +425,7 @@ public abstract class AbstractResource implements IResource
 		/**
 		 * Check to determine if the resource data needs to be written. This method checks the
 		 * <code>If-Modified-Since</code> request header and compares it to lastModified property.
-		 * In order for this method to work {@link #setLastModified(Time)} has to be called first.
+		 * In order for this method to work {@link #setLastModified(Instant)} has to be called first.
 		 * 
 		 * @param attributes
 		 *            request attributes
@@ -497,7 +496,7 @@ public abstract class AbstractResource implements IResource
 		 * 
 		 * @return duration for caching
 		 * 
-		 * @see org.apache.wicket.settings.ResourceSettings#setDefaultCacheDuration(org.apache.wicket.util.time.Duration)
+		 * @see org.apache.wicket.settings.ResourceSettings#setDefaultCacheDuration(Duration)
 		 * @see org.apache.wicket.settings.ResourceSettings#getDefaultCacheDuration()
 		 */
 		public Duration getCacheDuration()
@@ -519,7 +518,7 @@ public abstract class AbstractResource implements IResource
 		 * @return cache scope
 		 * 
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#getCacheDuration()
-		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setCacheDuration(org.apache.wicket.util.time.Duration)
+		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setCacheDuration(Duration)
 		 * @see org.apache.wicket.request.http.WebResponse.CacheScope
 		 */
 		public WebResponse.CacheScope getCacheScope()
@@ -536,7 +535,7 @@ public abstract class AbstractResource implements IResource
 		 *            scope for caching
 		 * 
 		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#getCacheDuration()
-		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setCacheDuration(org.apache.wicket.util.time.Duration)
+		 * @see org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setCacheDuration(Duration)
 		 * @see org.apache.wicket.request.http.WebResponse.CacheScope
 		 *
 		 * @return {@code this}, for chaining.
@@ -684,7 +683,7 @@ public abstract class AbstractResource implements IResource
 	}
 
 	/**
-	 * check if header is directly modifyable
+	 * check if header is directly modifiable
 	 * 
 	 * @param name
 	 *            header name
@@ -950,7 +949,7 @@ public abstract class AbstractResource implements IResource
 		 * @param stream
 		 *            input stream
 		 */
-		protected final void writeStream(Attributes attributes, InputStream stream) throws IOException
+		protected void writeStream(Attributes attributes, InputStream stream) throws IOException
 		{
 			final Response response = attributes.getResponse();
 			Streams.copy(stream, response.getOutputStream());

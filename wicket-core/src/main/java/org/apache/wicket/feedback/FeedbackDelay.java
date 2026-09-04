@@ -40,7 +40,7 @@ public class FeedbackDelay implements Serializable, AutoCloseable
 		private static final long serialVersionUID = 1L;
 	};
 	
-	private List<IFeedback> feedbacks = new ArrayList<>();
+	private final List<IFeedback> feedbacks = new ArrayList<>();
 
 	private RequestCycle cycle;
 	

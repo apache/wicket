@@ -31,7 +31,7 @@ import org.apache.wicket.util.lang.Args;
  * this instance. It will expire the oldest entries if the maximum number 
  * of entries is exceeded.
  * 
- * @autor Peter Ertl
+ * @author Peter Ertl
  * 
  * @since 1.5
  */

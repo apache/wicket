@@ -24,7 +24,7 @@ import java.time.ZonedDateTime;
 import org.apache.wicket.model.IModel;
 
 /**
- * Works on a {@link java.time.ZonedDateTimeTime} object. See {@link AbstractDateTimeField} for
+ * Works on a {@link java.time.ZonedDateTime} object. See {@link AbstractDateTimeField} for
  * further details.
  * 
  * @author eelcohillenius

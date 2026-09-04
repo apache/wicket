@@ -255,7 +255,7 @@ public class CSVDataExporter extends AbstractDataExporter
 	/**
 	 * Wrap the given model-
 	 * 
-	 * @param displayModel
+	 * @param model
 	 * @return
 	 */
 	protected <T> IModel<T> wrapModel(IModel<T> model)

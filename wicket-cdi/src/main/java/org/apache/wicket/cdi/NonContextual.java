@@ -20,12 +20,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.InjectionTarget;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.InjectionTarget;
 
 import org.apache.wicket.util.collections.ClassMetaCache;
 
@@ -62,10 +62,10 @@ public class NonContextual<T>
 	}
 
 	/**
-	 * Convenience factory method for an instance, see {@link #of(Class).
+	 * Convenience factory method for an instance, see {@link #of(Class)}.
 	 * 
 	 * @param <T>
-	 * @param clazz
+	 * @param t
 	 * @return The NonContextual for the instance's class
 	 */
 	@SuppressWarnings("unchecked")
@@ -125,7 +125,8 @@ public class NonContextual<T>
 	{
 		BeanManager manager = BeanManagerLookup.lookup();
 		AnnotatedType<? extends T> type = manager.createAnnotatedType(clazz);
-		this.it = (InjectionTarget<T>)manager.createInjectionTarget(type);
+		this.it = (InjectionTarget<T>) manager.getInjectionTargetFactory(type)
+			.createInjectionTarget(null);
 	}
 
 	/**

@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.bean.validation;
 
 import java.util.Arrays;
@@ -5,10 +21,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import javax.validation.groups.Default;
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import jakarta.validation.groups.Default;
+import jakarta.validation.metadata.ConstraintDescriptor;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
@@ -32,14 +48,15 @@ import org.apache.wicket.validation.IValidatable;
  * 
  * <p>
  * The validator will set the required flag on the form component it is attached to based on the
- * presence of the @NotNull annotation. Notice, the required flag will only be set to {@code true},
+ * presence of the @NotNull annotation, see {@link BeanValidationContext#isRequiredConstraint(ConstraintDescriptor)}
+ * for details. Notice, the required flag will only be set to {@code true},
  * components with the required flag already set to {@code true} will not have the flag set to
  * {@code false} by this validator.
  * </p>
  * 
  * <p>
- * The validator will allow {@link ITagModifier}s configured in {@link BeanValidationConfiguration}
- * to mutate the markup tag of the component it is attached to.
+ * The validator will allow {@link ITagModifier}s registered on {@link BeanValidationContext}
+ * to mutate the markup tag of the component it is attached to, e.g. add a <code>maxlength</code> attribute.
  * </p>
  * 
  * <p>
@@ -227,7 +244,7 @@ public class PropertyValidator<T> extends Behavior implements INullAcceptingVali
 	{
 		Set<Class<?>> groups = constraint.getGroups();
 		//the constraint can be applied to default group either if its group array is empty
-		//or if it contains javax.validation.groups.Default
+		//or if it contains jakarta.validation.groups.Default
 		return groups.size() == 0 || groups.contains(Default.class);
 	}
 

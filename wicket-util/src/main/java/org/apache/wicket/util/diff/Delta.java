@@ -191,8 +191,6 @@ public abstract class Delta extends ToString
 	 * 
 	 * @param target
 	 *            the text to patch.
-	 * @throws PatchFailedException
-	 *             if the patch cannot be applied.
 	 */
 	public abstract void applyTo(List<Object> target);
 

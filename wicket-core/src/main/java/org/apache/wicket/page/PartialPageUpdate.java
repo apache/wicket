@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -49,6 +49,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.slf4j.Logger;
@@ -69,6 +70,12 @@ import org.slf4j.LoggerFactory;
 public abstract class PartialPageUpdate
 {
 	private static final Logger LOG = LoggerFactory.getLogger(PartialPageUpdate.class);
+
+	/**
+	 * Length of the script block that combined scripts are wrapped in. This includes the script tag,
+	 * CDATA and if CSP is enabled also the nonce.
+	 */
+	protected static final int SCRIPT_BLOCK_LENGTH = 100;
 
 	/**
 	 * A list of scripts (JavaScript) which should be executed on the client side before the
@@ -101,6 +108,12 @@ public abstract class PartialPageUpdate
 	 * @see #add(Component, String)
 	 */
 	protected transient boolean componentsFrozen;
+
+	/**
+	 * A flag that indicates that javascripts cannot be added anymore.
+	 * See https://issues.apache.org/jira/browse/WICKET-6902
+	 */
+	protected transient boolean javascriptsFrozen;
 
 	/**
 	 * Buffer of response body. 
@@ -143,6 +156,14 @@ public abstract class PartialPageUpdate
 	}
 
 	/**
+	 * @return returns true if and only if nothing has being added to partial update.
+	 */
+	public boolean isEmpty()
+	{
+		return prependJavaScripts.isEmpty() && appendJavaScripts.isEmpty() && domReadyJavaScripts.isEmpty() && markupIdToComponent.isEmpty();
+	}
+
+	/**
 	 * Serializes this object to the response.
 	 *
 	 * @param response
@@ -157,14 +178,16 @@ public abstract class PartialPageUpdate
 
 			onBeforeRespond(response);
 
-			// queue up prepend javascripts. unlike other steps these are executed out of order so that
-			// components can contribute them from inside their onbeforerender methods.
-			writeEvaluations(response, prependJavaScripts);
-
 			// process added components
 			writeComponents(response, encoding);
 
 			onAfterRespond(response);
+			
+			javascriptsFrozen = true;
+
+			// queue up prepend javascripts. unlike other steps these are executed out of order so that
+			// components can contribute them from during rendering.
+			writePriorityEvaluations(response, prependJavaScripts);
 
 			// execute the dom ready javascripts as first javascripts
 			// after component replacement
@@ -175,7 +198,7 @@ public abstract class PartialPageUpdate
 
 			writeFooter(response, encoding);
 		} finally {
-			if (header != null && originalHeaderContainer!= null) {
+			if (header != null && originalHeaderContainer != null) {
 				// restore a normal header
 				page.replace(originalHeaderContainer);
 				header = null;
@@ -214,33 +237,55 @@ public abstract class PartialPageUpdate
 	 * @param scripts
 	 *      the JavaScripts to evaluate
 	 */
+	protected void writePriorityEvaluations(final Response response, Collection<CharSequence> scripts)
+	{
+		if (!scripts.isEmpty())
+		{
+			CharSequence contents = renderScripts(scripts);
+			
+			writePriorityEvaluation(response, contents);
+		}
+	}
+	
+	/**
+	 *
+	 * @param response
+	 *      the response to write to
+	 * @param scripts
+	 *      the JavaScripts to evaluate
+	 */
 	protected void writeEvaluations(final Response response, Collection<CharSequence> scripts)
 	{
 		if (!scripts.isEmpty())
 		{
-			StringBuilder combinedScript = new StringBuilder(1024);
-			for (CharSequence script : scripts)
-			{
-				combinedScript.append("(function(){").append(script).append("})();");
-			}
-
-			StringResponse stringResponse = new StringResponse();
-			IHeaderResponse decoratedHeaderResponse = Application.get().decorateHeaderResponse(new HeaderResponse()
-			{
-				@Override
-				protected Response getRealResponse()
-				{
-					return stringResponse;
-				}
-			});
+			CharSequence contents = renderScripts(scripts);
 			
-			decoratedHeaderResponse.render(JavaScriptHeaderItem.forScript(combinedScript, null));
-			decoratedHeaderResponse.close();
-			
-			writeHeaderContribution(response, stringResponse.getBuffer());
+			writeEvaluation(response, contents);
 		}
 	}
 
+	private CharSequence renderScripts(Collection<CharSequence> scripts) {
+		StringBuilder combinedScript = new StringBuilder(1024);
+		for (CharSequence script : scripts)
+		{
+			combinedScript.append("(function(){").append(script).append("})();");
+		}
+
+		StringResponse stringResponse = new StringResponse(combinedScript.length() + SCRIPT_BLOCK_LENGTH);
+		IHeaderResponse decoratedHeaderResponse = Application.get().decorateHeaderResponse(new HeaderResponse()
+		{
+			@Override
+			protected Response getRealResponse()
+			{
+				return stringResponse;
+			}
+		});
+		
+		decoratedHeaderResponse.render(JavaScriptHeaderItem.forScript(combinedScript, null));
+		decoratedHeaderResponse.close();
+		
+		return stringResponse.getBuffer();
+	}
 
 	/**
 	 * Processes components added to the target. This involves attaching components, rendering
@@ -355,7 +400,39 @@ public abstract class PartialPageUpdate
 	 * @param encoding
 	 *      the encoding for the response
 	 */
-	protected abstract void writeComponent(Response response, String markupId, Component component, String encoding);
+	protected void writeComponent(Response response, String markupId, Component component, String encoding)
+	{
+		// substitute our encoding response for the old one so we can capture
+		// component's markup in a manner safe for transport inside CDATA block
+		Response oldResponse = RequestCycle.get().setResponse(bodyBuffer);
+
+		try
+		{
+			// render any associated headers of the component
+			writeHeaderContribution(response, component);
+			
+			bodyBuffer.reset();
+			
+			try
+			{
+				component.renderPart();
+			}
+			catch (RuntimeException e)
+			{
+				bodyBuffer.reset();
+				throw e;
+			}
+		}
+		finally
+		{
+			// Restore original response
+			RequestCycle.get().setResponse(oldResponse);
+		}
+
+		writeComponent(response, markupId, bodyBuffer.getContents());
+
+		bodyBuffer.reset();
+	}
 
 	/**
 	 * Writes the head part of the response.
@@ -369,12 +446,34 @@ public abstract class PartialPageUpdate
 	protected abstract void writeHeader(Response response, String encoding);
 
 	/**
-	 * Writes header contribution (&lt;link/&gt; or &lt;script/&gt;) to the response.
+	 * Writes a component to the response.
 	 *
 	 * @param response
 	 *      the response to write to
+	 * @param contents      
+	 * 		the contents
+	 */
+	protected abstract void writeComponent(Response response, String markupId, CharSequence contents);
+
+	/**
+	 * Write priority-evaluation.
+	 */
+	protected abstract void writePriorityEvaluation(Response response, CharSequence contents);
+
+	/**
+	 * Writes a header contribution to the response.
+	 *
+	 * @param response
+	 *      the response to write to
+	 * @param contents      
+	 * 		the contents
 	 */
 	protected abstract void writeHeaderContribution(Response response, CharSequence contents);
+
+	/**
+	 * Write evaluation.
+	 */
+	protected abstract void writeEvaluation(Response response, CharSequence contents);
 
 	@Override
 	public boolean equals(Object o)
@@ -408,6 +507,11 @@ public abstract class PartialPageUpdate
 	{
 		Args.notNull(javascript, "javascript");
 
+		if (javascriptsFrozen)
+		{
+			throw new IllegalStateException("A partial update of the page is being rendered, JavaScript can no longer be added");
+		}
+
 		appendJavaScripts.add(javascript);
 	}
 
@@ -420,6 +524,11 @@ public abstract class PartialPageUpdate
 	public final void prependJavaScript(CharSequence javascript)
 	{
 		Args.notNull(javascript, "javascript");
+		
+		if (javascriptsFrozen)
+		{
+			throw new IllegalStateException("A partial update of the page is being rendered, JavaScript can no longer be added");
+		}
 
 		prependJavaScripts.add(javascript);
 	}
@@ -467,10 +576,10 @@ public abstract class PartialPageUpdate
 			if (component instanceof AbstractRepeater)
 			{
 				throw new IllegalArgumentException(
-						"Component " +
-								component.getClass().getName() +
-								" is a repeater and cannot be added to a partial page update directly. " +
-								"Instead add its parent or another markup container higher in the hierarchy.");
+					"Component " +
+					Classes.name(component.getClass()) +
+					" is a repeater and cannot be added to a partial page update directly. " +
+					"Instead add its parent or another markup container higher in the hierarchy.");
 			}
 		}
 
@@ -586,6 +695,8 @@ public abstract class PartialPageUpdate
 			requestCycle.setResponse(oldResponse);
 		}
 
+		// note: in almost all cases the header will be empty here,
+		// since all header items will be rendered later on close only
 		writeHeaderContribution(response, headerBuffer.getContents());
 		headerRendering = false;
 	}

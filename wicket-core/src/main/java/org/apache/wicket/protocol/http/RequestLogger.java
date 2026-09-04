@@ -19,7 +19,6 @@ package org.apache.wicket.protocol.http;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +58,7 @@ public class RequestLogger extends AbstractRequestLogger
 
 	private String createRequestData(RequestData rd, SessionData sd)
 	{
-		AppendingStringBuffer sb = new AppendingStringBuffer(150);
+		StringBuilder sb = new StringBuilder(768);
 
 		sb.append("startTime=\"");
 		sb.append(formatDate(rd.getStartDate()));
@@ -69,9 +68,9 @@ public class RequestLogger extends AbstractRequestLogger
 		sb.append(rd.getRequestedUrl());
 		sb.append('"');
 		sb.append(",event={");
-		sb.append(getRequestHandlerString(rd.getEventTarget()));
+		appendRequestHandlerString(sb, rd.getEventTarget());
 		sb.append("},response={");
-		sb.append(getRequestHandlerString(rd.getResponseTarget()));
+		appendRequestHandlerString(sb, rd.getResponseTarget());
 		sb.append("},sessionid=\"");
 		sb.append(rd.getSessionId());
 		sb.append('"');
@@ -110,9 +109,8 @@ public class RequestLogger extends AbstractRequestLogger
 		return sb.toString();
 	}
 
-	private String getRequestHandlerString(IRequestHandler handler)
+	private void appendRequestHandlerString(StringBuilder sb, IRequestHandler handler)
 	{
-		AppendingStringBuffer sb = new AppendingStringBuffer(128);
 		if (handler != null)
 		{
 			Class<? extends IRequestHandler> handlerClass = handler.getClass();
@@ -129,6 +127,5 @@ public class RequestLogger extends AbstractRequestLogger
 		{
 			sb.append("none");
 		}
-		return sb.toString();
 	}
 }

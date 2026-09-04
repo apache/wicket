@@ -81,9 +81,6 @@ public class AddDelta extends Delta
 		init(new Chunk(origpos, 0), rev);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.diff.Delta#verify(java.util.List)
-	 */
 	@Override
 	public void verify(final List<Object> target) throws PatchFailedException
 	{
@@ -93,18 +90,12 @@ public class AddDelta extends Delta
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.util.diff.Delta#applyTo(java.util.List)
-	 */
 	@Override
 	public void applyTo(final List<Object> target)
 	{
 		revised.applyAdd(original.first(), target);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.diff.Delta#toString(StringBuilder)
-	 */
 	@Override
 	public void toString(final StringBuilder s)
 	{
@@ -115,9 +106,6 @@ public class AddDelta extends Delta
 		revised.toString(s, "> ", Diff.NL);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.diff.Delta#toRCSString(StringBuilder, String)
-	 */
 	@Override
 	public void toRCSString(final StringBuilder s, final String EOL)
 	{
@@ -129,9 +117,6 @@ public class AddDelta extends Delta
 		revised.toString(s, "", EOL);
 	}
 
-	/**
-	 * @see org.apache.wicket.util.diff.Delta#accept(org.apache.wicket.util.diff.RevisionVisitor)
-	 */
 	@Override
 	public void accept(final RevisionVisitor visitor)
 	{

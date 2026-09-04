@@ -51,7 +51,7 @@ public class SystemMapper extends CompoundRequestMapper
 		add(newBookmarkableMapper());
 		add(newHomePageMapper(new HomePageProvider(application)));
 		add(newResourceReferenceMapper(new PageParametersEncoder(),
-			new ParentFolderPlaceholderProvider(application), getResourceCachingStrategy()));
+			new ParentFolderPlaceholderProvider(application), getResourceCachingStrategy(), application));
 		add(newUrlResourceReferenceMapper());
 		add(RestartResponseAtInterceptPageException.MAPPER);
 		add(newBufferedResponseMapper());
@@ -67,9 +67,9 @@ public class SystemMapper extends CompoundRequestMapper
 		return new UrlResourceReferenceMapper();
 	}
 
-	private IRequestMapper newResourceReferenceMapper(PageParametersEncoder pageParametersEncoder,
+	protected IRequestMapper newResourceReferenceMapper(PageParametersEncoder pageParametersEncoder,
 	                                                  ParentFolderPlaceholderProvider parentFolderPlaceholderProvider,
-	                                                  Supplier<IResourceCachingStrategy> resourceCachingStrategy)
+	                                                  Supplier<IResourceCachingStrategy> resourceCachingStrategy, Application application)
 	{
 		return new ResourceReferenceMapper(pageParametersEncoder, parentFolderPlaceholderProvider,resourceCachingStrategy);
 	}

@@ -40,18 +40,12 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 		this.application = application;
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getAccessDeniedPage()
-	 */
 	@Override
 	public String getAccessDeniedPage()
 	{
 		return Classes.name(application.getApplicationSettings().getAccessDeniedPage());
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getClassResolver()
-	 */
 	@Override
 	public String getClassResolver()
 	{
@@ -64,9 +58,6 @@ public class ApplicationSettings implements ApplicationSettingsMBean
 		return application.getApplicationSettings().getDefaultMaximumUploadSize().toString();
 	}
 
-	/**
-	 * @see org.apache.wicket.jmx.ApplicationSettingsMBean#getInternalErrorPage()
-	 */
 	@Override
 	public String getInternalErrorPage()
 	{

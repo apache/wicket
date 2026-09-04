@@ -20,7 +20,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.Cookie;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
@@ -28,6 +29,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -266,9 +268,9 @@ public class CookieUtils
 	 * Gets the name of the cookie where the session id is stored.
 	 *
 	 * @param application
-	 *            The current we application holding the {@link javax.servlet.ServletContext}.
+	 *            The current we application holding the {@link jakarta.servlet.ServletContext}.
 	 *
-	 * @return The name set in {@link javax.servlet.SessionCookieConfig} or the default value 'JSESSIONID' if not set
+	 * @return The name set in {@link jakarta.servlet.SessionCookieConfig} or the default value 'JSESSIONID' if not set
 	 */
 	public String getSessionIdCookieName(WebApplication application)
 	{
@@ -328,11 +330,42 @@ public class CookieUtils
 		String path = request.getContainerRequest().getContextPath() + "/" +
 			request.getFilterPrefix();
 
+		if (settings.getSameSite() == CookieDefaults.SameSite.None)
+		{
+			settings.setSecure(true);
+		}
+
 		cookie.setPath(path);
 		cookie.setVersion(settings.getVersion());
 		cookie.setSecure(settings.getSecure());
 		cookie.setMaxAge(settings.getMaxAge());
 		cookie.setHttpOnly(settings.isHttpOnly());
+
+		setAttribute(cookie, "SameSite", settings.getSameSite().name());
+	}
+
+	/**
+	 * Sets a custom attribute on Servlet 6+
+	 * 
+	 * @param cookie
+	 * 		The cookie to set the attribute on
+	 * @param attributeName
+	 * 		The name of the attribute
+	 * @param attributeValue
+	 * 		The value of the attribute
+	 */
+	public static void setAttribute(final Cookie cookie, String attributeName, String attributeValue)
+	{
+		Args.notEmpty(attributeName, "attributeName");
+
+		if (WebApplication.exists())
+		{
+			final ServletContext servletContext = WebApplication.get().getServletContext();
+			if (servletContext.getEffectiveMajorVersion() >= 6)
+			{
+				cookie.setAttribute(attributeName, attributeValue);
+			}
+		}
 	}
 
 	/**

@@ -5,7 +5,7 @@ Models that extend _org.apache.wicket.model.ChainingModel_ can be used to build 
 
 The example page will look like this:
 
-image::../img/model-chaining.png[]
+image::./img/model-chaining.png[]
 
 What we want to do in this example is to chain the model of the DropDownChoice (which contains the selected Person) with the model of the Form. In this way the Form will work with the selected Person as backing object. The DropDownChoice component can be configured to automatically update its model each time we change the selected item on the client side. All we have to do is to add a FormComponentUpdatingBehavior to it: The behavior will submit the components value every time JavaScript event "change" occurs, and its model will be consequently updated. To leverage this functionality, the form component doesn't need to be inside a form.
 

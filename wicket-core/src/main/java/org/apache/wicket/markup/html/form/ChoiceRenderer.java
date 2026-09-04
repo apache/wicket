@@ -154,20 +154,4 @@ public class ChoiceRenderer<T> implements IChoiceRenderer<T>, IClusterable
 
 		return returnValue.toString();
 	}
-
-	@Override
-	public T getObject(String id, IModel<? extends List<? extends T>> choices)
-	{
-		List<? extends T> _choices = choices.getObject();
-		for (int index = 0; index < _choices.size(); index++)
-		{
-			// Get next choice
-			final T choice = _choices.get(index);
-			if (getIdValue(choice, index).equals(id))
-			{
-				return choice;
-			}
-		}
-		return null;
-	}
 }

@@ -1,0 +1,11 @@
+<html xmlns:wicket>
+<body>
+  <form wicket:id="form">
+    <!-- does Wicket behave different if the enclosure child is a FormComponent?? Needs testing -->
+    <wicket:enclosure child="label">
+      <input wicket:id="input" type="checkbox" value="salami"/>
+      <span wicket:id="label">label</span>
+    </wicket:enclosure>
+  </form>
+</body>
+</html>

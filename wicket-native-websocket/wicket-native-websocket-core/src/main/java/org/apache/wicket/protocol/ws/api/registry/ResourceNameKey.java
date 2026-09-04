@@ -21,12 +21,18 @@ import org.apache.wicket.util.lang.Args;
 /**
  * A key based on shared resource's name
  */
-public class ResourceNameKey implements IKey
+public class ResourceNameKey extends AbstractKey
 {
 	private final String resourceName;
 
 	public ResourceNameKey(String resourceName)
 	{
+		this(resourceName, null);
+	}
+
+	public ResourceNameKey(String resourceName, String context)
+	{
+		super(context);
 		this.resourceName = Args.notNull(resourceName, "resourceName");
 	}
 

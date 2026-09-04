@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of {@link IPackageResourceGuard}. By default, the extensions 'properties',
- * 'class' and 'java' are blocked and files like 'log4j.xml' and 'applicationContext.xml'
+ * 'class' and 'java' are blocked and also files like 'log4j.xml' and 'applicationContext.xml'
  * 
  * A more secure implementation which by default denies access to any resource is
  * {@link SecurePackageResourceGuard}

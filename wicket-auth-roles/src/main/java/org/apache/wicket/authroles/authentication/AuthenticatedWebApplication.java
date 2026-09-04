@@ -42,9 +42,6 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 		IRoleCheckingStrategy,
 		IUnauthorizedComponentInstantiationListener
 {
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#init()
-	 */
 	@Override
 	protected void init()
 	{
@@ -55,9 +52,6 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 		getSecuritySettings().setUnauthorizedComponentInstantiationListener(this);
 	}
 
-	/**
-	 * @see IRoleCheckingStrategy#hasAnyRole(Roles)
-	 */
 	@Override
 	public final boolean hasAnyRole(final Roles roles)
 	{
@@ -65,9 +59,6 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 		return (sessionRoles != null) && sessionRoles.hasAnyRole(roles);
 	}
 
-	/**
-	 * @see IUnauthorizedComponentInstantiationListener#onUnauthorizedInstantiation(Component)
-	 */
 	@Override
 	public final void onUnauthorizedInstantiation(final Component component)
 	{

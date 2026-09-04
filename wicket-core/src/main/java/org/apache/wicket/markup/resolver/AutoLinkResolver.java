@@ -25,6 +25,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
@@ -48,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * "autolink" by the MarkupParser for all tags with href attribute, such as anchor and link tags
  * with no explicit wicket id. E.g. &lt;a href="Home.html"&gt;
  * <p>
- * If href points to a *.html file, a BookmarkablePageLink<?> will automatically be created, except
+ * If href points to a *.html file, a BookmarkablePageLink will automatically be created, except
  * for absolute paths, where an ExternalLink is created.
  * <p>
  * If href points to a *.html file, it resolves the given URL by searching for a page class, either
@@ -144,7 +145,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		private final String anchor;
 
 		/**
-		 * When using <wicket:link> to let Wicket lookup for pages and create the related links,
+		 * When using &lt;wicket:link&gt; to let Wicket lookup for pages and create the related links,
 		 * it's not possible to change the "setAutoEnable" property, which defaults to true. This
 		 * affects the prototype because, sometimes designers _want_ links to be enabled.
 		 */
@@ -619,6 +620,13 @@ public final class AutoLinkResolver implements IComponentResolver
 
 				// generate the href attribute
 				tag.put(attribute, url);
+
+				// add nonce if required
+				final var csp = getWebApplication().getCspSettings();
+				if(csp.isNonceEnabled())
+				{
+					tag.put(JavaScriptUtils.ATTR_CSP_NONCE, csp.getNonce(getRequestCycle()));
+				}
 			}
 		}
 

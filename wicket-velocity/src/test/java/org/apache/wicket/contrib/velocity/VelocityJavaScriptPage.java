@@ -20,6 +20,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.collections.MiniMap;
 import org.apache.wicket.util.lang.Packages;
+import org.apache.wicket.util.value.AttributeMap;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.velocity.VelocityJavaScriptContributor;
 
@@ -29,6 +30,9 @@ import org.apache.wicket.velocity.VelocityJavaScriptContributor;
 public class VelocityJavaScriptPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
+	
+	private static final String ID = "000001";
+	
 	static final String MSG1 = "Stoopid test 1";
 
 	/**
@@ -38,9 +42,10 @@ public class VelocityJavaScriptPage extends WebPage
 	{
 		String templateName = Packages.absolutePath(getClass(), "testTemplate.vm");
 
-		String id = "000001";
 		String javascript = "msg1: Stoopid test 1\nmsg2: Stooopid test 2";
-		JavaScriptUtils.writeJavaScript(getResponse(), javascript, id);
+		AttributeMap attributes = new AttributeMap();
+		attributes.put("id", ID);
+		JavaScriptUtils.writeInlineScript(getResponse(), javascript, attributes);
 
 		IModel<MiniMap<String, Object>> model = new IModel<>()
 		{
@@ -57,6 +62,6 @@ public class VelocityJavaScriptPage extends WebPage
 
 		};
 
-		add(new VelocityJavaScriptContributor(templateName, model, id));
+		add(new VelocityJavaScriptContributor(templateName, model, ID));
 	}
 }

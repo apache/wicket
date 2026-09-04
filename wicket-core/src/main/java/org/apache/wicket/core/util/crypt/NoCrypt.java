@@ -1,0 +1,64 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.wicket.core.util.crypt;
+
+/**
+ * An {@link ICrypt} that does <strong>not</strong> encrypt anything &mdash; it returns its input
+ * unchanged. It exists only for environments where the JRE ships without a suitable security
+ * provider.
+ * <p>
+ * <strong>Do not use this in production.</strong> It provides neither confidentiality nor
+ * integrity.
+ */
+public class NoCrypt implements ICrypt
+{
+	@Override
+	public byte[] encrypt(byte[] plainBytes, byte[] associatedData)
+	{
+		return plainBytes;
+	}
+
+	@Override
+	public byte[] encryptDeterministic(byte[] plainBytes, byte[] associatedData)
+	{
+		return plainBytes;
+	}
+
+	@Override
+	public byte[] decrypt(byte[] encryptedBytes, byte[] associatedData)
+	{
+		return encryptedBytes;
+	}
+
+	@Override
+	public String encryptUrlSafe(String plainText)
+	{
+		return plainText;
+	}
+
+	@Override
+	public String encryptUrlSafeDeterministic(String plainText)
+	{
+		return plainText;
+	}
+
+	@Override
+	public String decryptUrlSafe(String encryptedText)
+	{
+		return encryptedText;
+	}
+}

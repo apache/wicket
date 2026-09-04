@@ -18,16 +18,16 @@ package org.apache.wicket.proxy.util;
 
 /**
  * Mock dependency that does not implement an interface
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
- * 
+ *
  */
 public class ConcreteObject
 {
 	private String message;
 
 	/**
-	 * Empty default constructor. It is required by cglib to create a proxy.
+	 * Empty default constructor. It is required by byte-buddy to create a proxy.
 	 */
 	public ConcreteObject()
 	{
@@ -36,7 +36,7 @@ public class ConcreteObject
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param message
 	 */
 	public ConcreteObject(final String message)

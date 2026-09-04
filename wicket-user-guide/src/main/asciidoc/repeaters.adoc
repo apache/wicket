@@ -12,7 +12,7 @@ A common task for web applications is to display a set of items. The most typica
   <%
     for(int i = 12; i<=32; i++) {
       %>
-      <div>Hello! I'm index n°<%= %></div>
+      <div>Hello! I'm index n°<%= i %></div>
   <% 
     }
   %>

@@ -16,12 +16,13 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * A renderer that abstracts autoassist specific details and allows subclasses to only render the
- * visual part of the assist instead of having to also render the necessary autoassist javascript
+ * A renderer that abstracts auto-assist specific details and allows subclasses to only render the
+ * visual part of the assist instead of having to also render the necessary auto-assist javascript
  * hooks.
  * 
  * @param <T>
@@ -50,7 +51,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 		final CharSequence handler = getOnSelectJavaScriptExpression(object);
 		if (handler != null)
 		{
-			response.write(" onselect=\"" + handler + '"');
+			response.write(" onselect=\"" + Strings.escapeMarkup(handler) + '"');
 		}
 		response.write(">");
 		renderChoice(object, response, criteria);
@@ -73,6 +74,12 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * Render the visual portion of the assist. Usually the html representing the assist choice
 	 * object is written out to the response use {@link Response#write(CharSequence)}
 	 * 
+	 * <p>
+	 * <b>Whatever is written to the response reaches the markup as is, without escaping.</b>
+	 * Any part of it that comes from user input or other dynamic content must be escaped
+	 * before it is written, with {@link Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param object
 	 *            current assist choice
 	 * @param response
@@ -107,10 +114,10 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * protected CharSequence getOnSelectJavaScript(Address address)
 	 * {
 	 * 	final StringBuilder js = new StringBuilder();
-	 * 	js.append(&quot;wicketGet('street').value ='&quot; + address.getStreet() + &quot;';&quot;);
-	 * 	js.append(&quot;wicketGet('zipcode').value ='&quot; + address.getZipCode() + &quot;';&quot;);
-	 * 	js.append(&quot;wicketGet('city').value ='&quot; + address.getCity() + &quot;';&quot;);
-	 * 	js.append(&quot;input&quot;); // &lt;-- do not use return statement here!
+	 * 	js.append(&quot;Wicket.DOM.get('street').value ='&quot; + address.getStreet() + &quot;';&quot;);
+	 * 	js.append(&quot;Wicket.DOM.get('zipcode').value ='&quot; + address.getZipCode() + &quot;';&quot;);
+	 * 	js.append(&quot;Wicket.DOM.get('city').value ='&quot; + address.getCity() + &quot;';&quot;);
+	 * 	js.append(&quot;arguments[0]&quot;); // &lt;-- do not use return statement here!
 	 * 	return js.toString();
 	 * }
 	 * </pre>
@@ -133,7 +140,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * @param item
 	 *            the autocomplete item to get a custom javascript expression for
 	 * @return javascript to execute on selection or <code>null</code> if default behavior is
-	 *         intented
+	 *         intended
 	 */
 	protected CharSequence getOnSelectJavaScriptExpression(final T item)
 	{

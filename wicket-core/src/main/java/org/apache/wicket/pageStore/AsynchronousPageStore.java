@@ -30,6 +30,7 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,6 +136,12 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		 */
 		private final Map<String, Serializable> attributeCache = new HashMap<>();
 
+		/**
+		 * Cache of session data which may filled in {@link IPageStore#canBeAsynchronous(IPageContext)},
+		 * so these are available asynchronously later on.
+		 */
+		private final Map<MetaDataKey<?>, Serializable> dataCache = new HashMap<>();
+
 		public PendingAdd(final IPageContext context, final IManageablePage page)
 		{
 			this.context = Args.notNull(context, "context");
@@ -154,7 +161,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		@Override
 		public String toString()
 		{
-			return "PendingAdd [sessionId=" + sessionId + ", pageId=" + page.getPageId() + "]";
+			return "PendingAdd [sessionId=" + sessionId + ", pageId=" + page.getPageId() + ", pageClass=" + Classes.name(page.getClass()) + "]";
 		}
 
 		/**
@@ -211,15 +218,19 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			
 			if (asynchronous)
 			{
-				value = context.getSessionData(key, () -> null);
+				value = (T)dataCache.get(key);
 				if (value == null && defaultValue.get() != null)
 				{
-						throw new WicketRuntimeException("session data can not be changed asynchronuously");
+					throw new WicketRuntimeException("session data can not be changed asynchronuously");
 				}
 			}
 			else
 			{
 				value = context.getSessionData(key, defaultValue);
+				if (value != null)
+				{
+					dataCache.put(key, value);
+				}
 			}
 			
 			return value;
@@ -242,18 +253,18 @@ public class AsynchronousPageStore extends DelegatingPageStore
 	{
 		private static final Logger log = LoggerFactory.getLogger(PageAddingRunnable.class);
 
-		private final BlockingQueue<PendingAdd> entries;
+		private final BlockingQueue<PendingAdd> queue;
 
-		private final ConcurrentMap<String, PendingAdd> addQueue;
+		private final ConcurrentMap<String, PendingAdd> map;
 
 		private final IPageStore delegate;
 
-		private PageAddingRunnable(IPageStore delegate, BlockingQueue<PendingAdd> entries,
-		                           ConcurrentMap<String, PendingAdd> entryMap)
+		private PageAddingRunnable(IPageStore delegate, BlockingQueue<PendingAdd> queue,
+		                           ConcurrentMap<String, PendingAdd> map)
 		{
 			this.delegate = delegate;
-			this.entries = entries;
-			this.addQueue = entryMap;
+			this.queue = queue;
+			this.map = map;
 		}
 
 		@Override
@@ -264,19 +275,30 @@ public class AsynchronousPageStore extends DelegatingPageStore
 				PendingAdd add = null;
 				try
 				{
-					add = entries.poll(POLL_WAIT, TimeUnit.MILLISECONDS);
+					add = queue.poll(POLL_WAIT, TimeUnit.MILLISECONDS);
 				}
 				catch (InterruptedException e)
 				{
+					log.debug("PageAddingRunnable:: Interrupted...");
 					Thread.currentThread().interrupt();
 				}
 
 				if (add != null)
 				{
-					log.debug("Saving asynchronously: {}...", add);
-					add.asynchronous = true;					
-					delegate.addPage(add, add.page);
-					addQueue.remove(add.getKey());
+					try
+					{
+						log.debug("Saving asynchronously: {}...", add);
+						add.asynchronous = true;
+						delegate.addPage(add, add.page);
+					}
+					catch (Exception x)
+					{
+						log.error("An error occurred while saving asynchronously '{}'", add, x);
+					}
+					finally
+					{
+						map.remove(add.getKey());
+					}
 				}
 			}
 		}
@@ -383,7 +405,14 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			return;
 		}
 
-		queue.removeIf(add -> add.sessionId.equals(sessionId));
+		queue.removeIf(add -> {
+			if (add.sessionId.equals(sessionId)) {
+				queueMap.remove(add.getKey());
+				return true;
+			}
+			
+			return false;
+		});
 		
 		getDelegate().removeAllPages(context);
 	}

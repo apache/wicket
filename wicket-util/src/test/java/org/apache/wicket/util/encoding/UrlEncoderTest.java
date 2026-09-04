@@ -16,30 +16,33 @@
  */
 package org.apache.wicket.util.encoding;
 
-import org.apache.wicket.util.crypt.CharEncoding;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-@SuppressWarnings("javadoc")
 public class UrlEncoderTest
 {
 
 	// starts with &auml;
-	private static final char[] encodingCandidates = "\u00c4!\"§$%&/()=?`*'_:;><,.-#+´\\}][{|".toCharArray();
-	
+	private static final char[] ENCODING_CANDIDATES = "\u00c4!\"§$%&/()=?`*'_:;><,.-#+´\\}][{|"
+		.toCharArray();
+	private static final Charset CHARSET = StandardCharsets.UTF_8;
+
 	@Test
 	public void pathUnencoded()  {
 		String unencoded = "azAZ09.-_~!$&*+,;=:@";
 		
-		assertEquals(unencoded,  UrlEncoder.PATH_INSTANCE.encode(unencoded, StandardCharsets.UTF_8));
+		assertEquals(unencoded, UrlEncoder.PATH_INSTANCE.encode(unencoded, CHARSET));
 		
-		for (char candidate : encodingCandidates) {
+		for (char candidate : ENCODING_CANDIDATES)
+		{
 			if (unencoded.indexOf(candidate) == -1) {
-				assertNotEquals("" + candidate, UrlEncoder.PATH_INSTANCE.encode("" + candidate, StandardCharsets.UTF_8));
+				assertNotEquals("" + candidate,
+					UrlEncoder.PATH_INSTANCE.encode("" + candidate, CHARSET));
 			}
 		}
 	}
@@ -48,11 +51,13 @@ public class UrlEncoderTest
 	public void queryStringUnencoded()  {
 		String unencoded = "azAZ09.-_~!$*,:@/";
 		
-		assertEquals(unencoded, UrlEncoder.QUERY_INSTANCE.encode(unencoded, StandardCharsets.UTF_8));
+		assertEquals(unencoded, UrlEncoder.QUERY_INSTANCE.encode(unencoded, CHARSET));
 
-		for (char candidate : encodingCandidates) {
+		for (char candidate : ENCODING_CANDIDATES)
+		{
 			if (unencoded.indexOf(candidate) == -1) {
-				assertNotEquals("" + candidate, UrlEncoder.QUERY_INSTANCE.encode("" + candidate, StandardCharsets.UTF_8));
+				assertNotEquals("" + candidate,
+					UrlEncoder.QUERY_INSTANCE.encode("" + candidate, CHARSET));
 			}
 		}
 	}
@@ -61,11 +66,13 @@ public class UrlEncoderTest
 	public void headerUnencoded()  {
 		String unencoded = "azAZ09.-_~!$&+#^`|";
 		
-		assertEquals(unencoded, UrlEncoder.HEADER_INSTANCE.encode(unencoded, StandardCharsets.UTF_8));
+		assertEquals(unencoded, UrlEncoder.HEADER_INSTANCE.encode(unencoded, CHARSET));
 		
-		for (char candidate : encodingCandidates) {
+		for (char candidate : ENCODING_CANDIDATES)
+		{
 			if (unencoded.indexOf(candidate) == -1) {
-				assertNotEquals("" + candidate, UrlEncoder.HEADER_INSTANCE.encode("" + candidate, StandardCharsets.UTF_8));
+				assertNotEquals("" + candidate,
+					UrlEncoder.HEADER_INSTANCE.encode("" + candidate, CHARSET));
 			}
 		}
 	}
@@ -79,7 +86,7 @@ public class UrlEncoderTest
 	public void encodeApostrophe()
 	{
 		assertEquals("someone%27s%20bad%20url",
-			UrlEncoder.PATH_INSTANCE.encode("someone's bad url", StandardCharsets.UTF_8));
+			UrlEncoder.PATH_INSTANCE.encode("someone's bad url", CHARSET));
 	}
 
 	/**
@@ -91,7 +98,7 @@ public class UrlEncoderTest
 	public void dontEncodeSemicolon()
 	{
 		String encoded = UrlEncoder.PATH_INSTANCE.encode("path;jsessionid=1234567890",
-			StandardCharsets.UTF_8);
+			CHARSET);
 		assertEquals("path;jsessionid=1234567890", encoded);
 	}
 
@@ -99,6 +106,23 @@ public class UrlEncoderTest
 	public void dontStopOnNullByte() throws Exception
 	{
 		assertEquals("someone%27s%20badNULL%20url",
-			UrlEncoder.PATH_INSTANCE.encode("someone's bad\0 url", StandardCharsets.UTF_8));
+			UrlEncoder.PATH_INSTANCE.encode("someone's bad\0 url", CHARSET));
+	}
+
+	@Test
+	public void encodePath()
+	{
+		assertEquals("", UrlEncoder.PATH_INSTANCE.encode("", CHARSET));
+		assertEquals("foobar", UrlEncoder.PATH_INSTANCE.encode("foobar", CHARSET));
+		assertEquals("%2Ffoo%2Fbar", UrlEncoder.PATH_INSTANCE.encode("/foo/bar", CHARSET));
+	}
+
+	@Test
+	public void encodeQuery()
+	{
+		assertEquals("", UrlEncoder.QUERY_INSTANCE.encode("", CHARSET));
+		assertEquals("foobar", UrlEncoder.QUERY_INSTANCE.encode("foobar", CHARSET));
+		assertEquals("foo+bar", UrlEncoder.QUERY_INSTANCE.encode("foo bar", CHARSET));
+		assertEquals("foo%26bar", UrlEncoder.QUERY_INSTANCE.encode("foo&bar", CHARSET));
 	}
 }

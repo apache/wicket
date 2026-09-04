@@ -17,6 +17,8 @@
 package org.apache.wicket.jmx;
 
 import java.io.UnsupportedEncodingException;
+
+import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 
 /**
@@ -34,8 +36,8 @@ public interface RequestCycleSettingsMBean
 	/**
 	 * Gets whether Wicket should try to get extensive client info by redirecting to
 	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by the
-	 * default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
-	 * overriden, there is no guarantee this method will be taken into account.
+	 * default implementation of {@link Session#getClientInfo()}, so if that method is
+	 * overridden, there is no guarantee this method will be taken into account.
 	 * 
 	 * @return Whether to gather extensive client info
 	 */
@@ -67,8 +69,8 @@ public interface RequestCycleSettingsMBean
 	/**
 	 * Sets whether Wicket should try to get extensive client info by redirecting to
 	 * {@link BrowserInfoPage a page that polls for client capabilities}. This method is used by the
-	 * default implementation of {@link WebRequestCycle#newClientInfo()}, so if that method is
-	 * overriden, there is no guarantee this method will be taken into account.
+	 * default implementation of {@link Session#getClientInfo()}, so if that method is
+	 * overridden, there is no guarantee this method will be taken into account.
 	 * 
 	 * @param gatherExtendedBrowserInfo
 	 *            Whether to gather extensive client info

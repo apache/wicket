@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import org.apache.wicket.markup.html.basic.Label;
@@ -40,7 +39,7 @@ import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Upload example.
- * 
+ *
  * @author Eelco Hillenius
  */
 @SuppressWarnings("serial")
@@ -53,7 +52,7 @@ public class UploadPage extends WicketExamplePage
 	{
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param name
 		 *            Component name
 		 * @param files
@@ -93,7 +92,7 @@ public class UploadPage extends WicketExamplePage
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param name
 		 *            Component name
 		 */
@@ -112,6 +111,9 @@ public class UploadPage extends WicketExamplePage
 
 			// Set maximum size per file to 90K for demo purposes
 			setFileMaxSize(Bytes.kilobytes(90));
+
+			// Set maximum file count to 5 for demo purposes
+			setFileCountMax(5L);
 		}
 
 		@Override
@@ -149,7 +151,7 @@ public class UploadPage extends WicketExamplePage
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param parameters
 	 *            Page parameters
 	 */
@@ -175,7 +177,7 @@ public class UploadPage extends WicketExamplePage
 			@Override
 			protected List<File> load()
 			{
-				return Arrays.asList(getUploadFolder().listFiles());
+				return Arrays.asList(Files.list(getUploadFolder()));
 			}
 		});
 		add(fileListView);
@@ -195,7 +197,7 @@ public class UploadPage extends WicketExamplePage
 
 	/**
 	 * Check whether the file allready exists, and if so, try to delete it.
-	 * 
+	 *
 	 * @param newFile
 	 *            the file to check
 	 */
@@ -213,6 +215,6 @@ public class UploadPage extends WicketExamplePage
 
 	private Folder getUploadFolder()
 	{
-		return ((UploadApplication)Application.get()).getUploadFolder();
+		return UploadApplication.getInstance().getUploadFolder();
 	}
 }

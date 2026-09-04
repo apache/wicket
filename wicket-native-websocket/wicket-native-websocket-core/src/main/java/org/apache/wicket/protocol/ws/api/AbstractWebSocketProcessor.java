@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
@@ -84,6 +84,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 
 	private final WebRequest webRequest;
 	private final int pageId;
+	private final String context;
 	private final String resourceName;
 	private final String connectionToken;
 	private final Url baseUrl;
@@ -112,6 +113,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		}
 		this.sessionId = httpSession.getId();
 		String pageId = request.getParameter("pageId");
+		this.context = request.getParameter("context");
 		this.resourceName = request.getParameter("resourceName");
 		this.connectionToken = request.getParameter("connectionToken");
 		if (Strings.isEmpty(pageId) && Strings.isEmpty(resourceName))
@@ -181,7 +183,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			}
 		}
 
-		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key));
+		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key), connection, webSocketSettings.isAsynchronousPush(), webSocketSettings.getAsynchronousPushTimeout());
 	}
 
 	@Override
@@ -203,6 +205,13 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		}
 	}
 
+	public final void broadcastMessage(final IWebSocketMessage message)
+	{
+		IKey key = getRegistryKey();
+		IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, key);
+		broadcastMessage(message, connection, webSocketSettings.isAsynchronousPush(), webSocketSettings.getAsynchronousPushTimeout());
+	}
+
 	/**
 	 * Exports the Wicket thread locals and broadcasts the received message from the client to all
 	 * interested components and behaviors in the page with id {@code #pageId}
@@ -214,19 +223,23 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 *
 	 * @param message
 	 *      the message to broadcast
+     * @param connection
+     * 	    the {@link org.apache.wicket.protocol.ws.api.IWebSocketConnection}
+     * @param asynchronousPush
+     * 	    whether asynchronous pus is used or not
+     * @param timeout
+     * 	    The time ut to use for operation (in milliseconds). A negative value means use default timeout
+     * 	    (specified by container).
 	 */
-	public final void broadcastMessage(final IWebSocketMessage message)
+	public final void broadcastMessage(final IWebSocketMessage message, IWebSocketConnection connection, boolean asynchronousPush, long timeout)
 	{
-		IKey key = getRegistryKey();
-		IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, key);
-
 		if (connection != null && (connection.isOpen() || isSpecialMessage(message)))
 		{
 			Application oldApplication = ThreadContext.getApplication();
 			Session oldSession = ThreadContext.getSession();
 			RequestCycle oldRequestCycle = ThreadContext.getRequestCycle();
 
-			WebResponse webResponse = webSocketSettings.newWebSocketResponse(connection);
+			WebResponse webResponse = webSocketSettings.newWebSocketResponse(connection, asynchronousPush, timeout);
 			try
 			{
 				WebSocketRequestMapper requestMapper = new WebSocketRequestMapper(application.getRootRequestMapper());
@@ -249,8 +262,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 
 				if (session == null)
 				{
-					connectionRegistry.removeConnection(application, sessionId, key);
-					LOG.debug("No Session could be found for session id '{}' and key '{}'!", sessionId, key);
+					connectionRegistry.removeConnection(application, sessionId, connection.getKey());
+					LOG.debug("No Session could be found for session id '{}' and key '{}'!", sessionId, connection.getKey());
 					return;
 				}
 
@@ -261,7 +274,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				{
 					WebSocketRequestHandler requestHandler = webSocketSettings.newWebSocketRequestHandler(page, connection);
 
-					WebSocketPayload payload = createEventPayload(message, requestHandler);
+					WebSocketPayload<?> payload = createEventPayload(message, requestHandler);
 
 					if (!(message instanceof ConnectedMessage || isSpecialMessage(message))) {
 						requestCycle.scheduleRequestHandlerAfterCurrent(requestHandler);
@@ -356,9 +369,9 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		return sessionId;
 	}
 
-	private WebSocketPayload createEventPayload(IWebSocketMessage message, WebSocketRequestHandler handler)
+	private WebSocketPayload<?> createEventPayload(IWebSocketMessage message, WebSocketRequestHandler handler)
 	{
-		final WebSocketPayload payload;
+		final WebSocketPayload<?> payload;
 		if (message instanceof TextMessage)
 		{
 			payload = new WebSocketTextPayload((TextMessage) message, handler);
@@ -399,15 +412,15 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		IKey key;
 		if (Strings.isEmpty(resourceName))
 		{
-			key = new PageIdKey(pageId);
+			key = new PageIdKey(pageId, context);
 		}
 		else
 		{
 			if (Strings.isEmpty(connectionToken))
 			{
-				key = new ResourceNameKey(resourceName);
+				key = new ResourceNameKey(resourceName, context);
 			} else {
-				key = new ResourceNameTokenKey(resourceName, connectionToken);
+				key = new ResourceNameTokenKey(resourceName, connectionToken, context);
 			}
 		}
 		return key;

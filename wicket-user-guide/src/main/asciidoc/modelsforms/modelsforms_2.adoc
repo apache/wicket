@@ -22,7 +22,7 @@ default void setObject(final T object)
 
 This means that models obtained using _IModel_ as lambda expressions are _read-only_. When we work with forms we need to use a model that support also data storing. In the next paragraph we will see a couple of models shipped with Wicket that allow us to easily use JavaBeans as backing objects.
 
-=== Lambda Goodies
+=== Lambda goodies
 
 Most of the default methods we find in _IModel_ are meant to leverage Lambda expressions to transform model object. The following is a short reference for such methods:
 

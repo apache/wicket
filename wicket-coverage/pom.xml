@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.apache.wicket</groupId>
+		<artifactId>wicket-parent</artifactId>
+		<version>11.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>wicket-coverage</artifactId>
+	<packaging>pom</packaging>
+	<name>Wicket Code Coverage</name>
+	<description>
+		Build-only module that aggregates the JaCoCo execution data of all Wicket
+		modules into a single report. Not released, and does nothing unless the
+		'coverage' profile is active.
+
+		The dependency list below IS the configuration. jacoco:report-aggregate reads
+		the scope of each dependency:
+		  compile -> the module's classes and sources appear in the report, and its
+		             own target/jacoco.exec is read;
+		  test    -> only the module's target/jacoco.exec is read. Used for the
+		             test-only modules that hold the tests of a *different* module.
+	</description>
+	<properties>
+		<japicmp.skip>true</japicmp.skip>
+		<maven.deploy.skip>true</maven.deploy.skip> <!-- this module is not released -->
+	</properties>
+	<dependencies>
+		<!--
+			compile scope: classes + sources + own execution data are reported.
+			Scopes are stated explicitly on purpose, because the whole design hinges
+			on Dependency.getScope().
+		-->
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-auth-roles</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-bean-validation</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-cdi</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-devutils</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-extensions</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-extensions-tester</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-guice</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-ioc</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-jmx</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-native-websocket-core</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-native-websocket-javax</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-native-websocket-tester</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-request</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-spring</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<!-- managed to 'test' in wicket-parent; forced to compile so that its classes are reported -->
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-tester</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-util</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-velocity</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<!--
+			test scope: execution data only, no classes or sources. These modules have
+			no main sources at all; they hold the tests for the modules above.
+			  wicket-core-tests -> the tests of wicket-core AND wicket-tester
+			  wicket-cdi-tests  -> the only tests wicket-cdi has
+
+			Deliberately omitted, and why:
+			  wicket, wicket-experimental, wicket-native-websocket
+			                         aggregator POMs, no classes
+			  wicket-examples        demo webapp, not a released library; including it
+			                         would swamp the framework signal and drag jetty,
+			                         weld and httpunit into this POM's compile graph.
+			                         To let its tests count towards wicket-core, add it
+			                         here as <scope>test</scope><type>war</type> and
+			                         re-check dependency convergence.
+			  wicket-user-guide      no Java sources (asciidoctor documentation)
+			  archetypes/quickstart  no Java sources (packaging=maven-archetype)
+			  wicket-migration       no main Java sources (OpenRewrite recipes)
+			  wicket-metrics         no tests, so it would only contribute a 0% bundle
+			  wicket-objectsizeof-agent  a -javaagent JAR, not a classpath artifact
+			  wicket-common-tests    its single test only opens jar files off the
+			                         classpath; no meaningful coverage
+			  wicket-js-tests        surefire is skipped there, so no jacoco.exec exists
+		-->
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-cdi-tests</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core-tests</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<profiles>
+		<profile>
+			<!--
+				Same id as the profile in wicket-parent that attaches the agent, so a
+				single -Pcoverage switches on both halves of the feature.
+
+				Gated on the profile rather than unconditional on purpose: with no
+				execution data present, report-aggregate still emits a well-formed 0%
+				jacoco.xml, which would be a trap for anything consuming that path.
+			-->
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<!-- report-aggregate has no default phase; binding is mandatory -->
+								<id>jacoco-aggregate-report</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>report-aggregate</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

@@ -38,33 +38,33 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 	interface IListener
 	{
 		/**
-		 * Triggered before ajax request target begins its response cycle
+		 * Triggered before the target begins writing components.
 		 *
 		 * @param map
-		 *            modifiable map (markupId -> component) of components already added to the target
+		 *            modifiable map (markupId -&gt; component) of components already added to the target
 		 * @param target
 		 *            the target itself. Could be used to add components or to append/prepend
-		 *            javascript
+		 *            JavaScript
 		 *
 		 */
 		default void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target)
 		{}
 
 		/**
-		 * Triggered after ajax request target is done with its response cycle. At this point only
-		 * additional javascript can be output to the response using the provided
-		 * {@link AjaxRequestTarget.IJavaScriptResponse} object
+		 * Triggered after the target has written components. At this point only
+		 * additional JavaScript can be added to the response.
 		 *
-		 * NOTE: During this stage of processing any calls to target that manipulate the response
-		 * (adding components, javascript) will have no effect
+		 * NOTE: During this stage of processing any calls that manipulate components will result in
+		 * an exception. After notification of all listeners no JavaScript can be added any longer.
 		 *
 		 * @param map
-		 *            read-only map:markupId->component of components already added to the target
-		 * @param response
-		 *            response object that can be used to output javascript
+		 *            read-only map:markupId-&gt;component of components already added to the target
+		 * @param target
+		 *            the target itself. Could be used to append/prepend JavaScript
 		 */
-		default void onAfterRespond(Map<String, Component> map, AjaxRequestTarget.IJavaScriptResponse response)
-		{}
+		default void onAfterRespond(Map<String, Component> map, AjaxRequestTarget target)
+		{
+		}
 
 		/**
 		 * Triggered for every Ajax behavior. Can be used to configure common settings.
@@ -80,24 +80,6 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 	}
 
 	/**
-	 * An ajax javascript response that allows users to add javascript to be executed on the client
-	 * side
-	 *
-	 * @author ivaynberg
-	 */
-	@FunctionalInterface
-	interface IJavaScriptResponse
-	{
-		/**
-		 * Adds more javascript to the ajax response that will be executed on the client side
-		 *
-		 * @param script
-		 *            javascript
-		 */
-		void addJavaScript(String script);
-	}
-
-	/**
 	 * Components can implement this interface to get a notification when AjaxRequestTarget begins
 	 * to respond. This can be used to postpone adding components to AjaxRequestTarget until the
 	 * response begins.
@@ -108,7 +90,7 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 	interface ITargetRespondListener
 	{
 		/**
-		 * Invoked when AjaxRequestTarget is about the respond.
+		 * Invoked when AjaxRequestTarget is about to respond.
 		 *
 		 * @param target
 		 */

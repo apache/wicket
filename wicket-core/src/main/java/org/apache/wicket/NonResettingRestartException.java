@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -95,8 +95,8 @@ public class NonResettingRestartException extends RequestHandlerExecutor.Replace
 	 *
 	 * @param handler
 	 *      the IRequestHandler to use
-	 * @param removeScheduled
-	 *      a flag indicating whether to remove already a scheduled IRequestHandler
+	 * @param removeAll
+	 *      a flag indicating whether to remove already a scheduled IRequestHandlers
 	 */
 	public NonResettingRestartException(final IRequestHandler handler, boolean removeAll)
 	{

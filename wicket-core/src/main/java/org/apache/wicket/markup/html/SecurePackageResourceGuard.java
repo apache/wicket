@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * Examples:
  * <table border="0">
+ * <caption>Examples</caption>
  * <tr>
  * <td>+*.gif</td>
  * <td>All gif files in all directories</td>
@@ -121,6 +122,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		addPattern("+*.swf");
 		addPattern("+*.bmp");
 		addPattern("+*.svg");
+		addPattern("+*.avif");
 
 		// allow web fonts
 		addPattern("+*.eot");

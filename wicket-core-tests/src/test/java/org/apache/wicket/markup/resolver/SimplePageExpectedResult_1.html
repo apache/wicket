@@ -1,0 +1,18 @@
+<html xmlns:wicket>
+<body>
+  <wicket:message key="myKeyNotExsts">Default Text</wicket:message>
+  <wicket:message key="myKey">myValue</wicket:message>
+  <wicket:message key="myKeyNotExsts">[Warning: Property for 'myKeyNotExsts' not found]</wicket:message>
+  <wicket:message key="myKey">myValue</wicket:message>
+
+  <!-- wicket message with some raw markup -->
+  <wicket:message key="myKey">myValue</wicket:message>
+
+  <span wicket:id="message">here it goes</span>
+  <span wicket:message="attr-name:i18n-key" attr-name="my i18n key">test 2</span>
+  <span wicket:id="message2" wicket:message="attr-name:i18n-key" attr-name="my i18n key">here it goes</span>
+  
+  <input type="image" src="../../test.gif">test 2</input>
+  <input type="image" src="../../test.gif" wicket:message="attr-name:i18n-key" attr-name="my i18n key">test 2</input>
+</body>
+</html>

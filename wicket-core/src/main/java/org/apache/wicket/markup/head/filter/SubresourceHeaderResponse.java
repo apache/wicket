@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.DecoratingHeaderResponse;
  * on how to configure the item.
  * <p>
  * Note: please don't forget to wrap with {@link ResourceAggregator} when setting it up with
- * {@link Application#setHeaderResponseDecorator}, otherwise dependencies will not be rendered.
+ * {@link Application#getHeaderResponseDecorators()}, otherwise dependencies will not be rendered.
  * 
  * @see ISubresourceHeaderItem
  */

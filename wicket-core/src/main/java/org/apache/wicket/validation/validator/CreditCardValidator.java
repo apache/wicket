@@ -24,13 +24,13 @@ import org.apache.wicket.validation.ValidationError;
 /**
  * Checks if a credit card number is valid. The number will be checked for "American Express",
  * "China UnionPay", "Diners Club Carte Blanche", "Diners Club International",
- * "Diners Club US & Canada", "Discover Card", "JCB", "Laser", "Maestro", "MasterCard", "Solo",
+ * "Diners Club US &amp; Canada", "Discover Card", "JCB", "Laser", "Maestro", "MasterCard", "Solo",
  * "Switch", "Visa" and "Visa Electron". If none of those apply to the credit card number, the
  * credit card number is considered invalid.
  * 
  * <p>
  * Card prefixes and lengths have been taken from <a
- * href="http://en.wikipedia.org/w/index.php?title=Bank_card_number&oldid=322132931">Wikipedia</a>.
+ * href="http://en.wikipedia.org/w/index.php?title=Bank_card_number&amp;oldid=322132931">Wikipedia</a>.
  * 
  * @author Johan Compagner
  * @author Joachim F. Rohde

@@ -28,6 +28,29 @@ public class CookieDefaults implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
+	public enum SameSite
+	{
+		/**
+		 * Cookies will be sent in all contexts, i.e. in responses to both
+		 * first-party and cross-site requests. If SameSite=None is set,
+		 * the cookie Secure attribute must also be set (or the cookie will be blocked).
+		 */
+		None,
+
+		/**
+		 * Cookies will only be sent in a first-party context and not be sent
+		 * along with requests initiated by third party websites.
+		 */
+		Strict,
+
+		/**
+		 * Cookies are not sent on normal cross-site subrequests (for example to load
+		 * images or frames into a third party site), but are sent when a user is
+		 * navigating to the origin site (i.e., when following a link).
+		 */
+		Lax
+	}
+
 	/** Max age that the component will be persisted in seconds. */
 	private int maxAge = 3600 * 24 * 30; // 30 days
 
@@ -44,6 +67,8 @@ public class CookieDefaults implements IClusterable
 	private int version;
 
 	private boolean httpOnly;
+
+	private SameSite sameSite = SameSite.Lax;
 
 	/**
 	 * Gets the max age. After
@@ -140,6 +165,10 @@ public class CookieDefaults implements IClusterable
 	 * @return 0 if the cookie complies with the original Netscape specification; 1 if the cookie
 	 *         complies with RFC 2109
 	 */
+	@Deprecated(
+		since = "Servlet 6.0 / Wicket 10",
+		forRemoval = true
+	)
 	public int getVersion()
 	{
 		return version;
@@ -155,6 +184,10 @@ public class CookieDefaults implements IClusterable
 	 *            0 if the cookie should comply with the original Netscape specification; 1 if the
 	 *            cookie should comply with RFC 2109
 	 */
+	@Deprecated(
+		since = "Servlet 6.0 / Wicket 10",
+		forRemoval = true
+	)
 	public void setVersion(int version)
 	{
 		this.version = version;
@@ -182,5 +215,25 @@ public class CookieDefaults implements IClusterable
 	public void setHttpOnly(boolean httpOnly)
 	{
 		this.httpOnly = httpOnly;
+	}
+
+	/**
+	 * Sets the SameSite attribute of the cookie.
+	 *
+	 * @param sameSite the SameSite attribute of the cookie
+	 */
+	public void setSameSite(SameSite sameSite)
+	{
+		this.sameSite = sameSite;
+	}
+
+	/**
+	 * Gets the SameSite attribute of the cookie.
+	 *
+	 * @return the SameSite attribute of the cookie
+	 */
+	public SameSite getSameSite()
+	{
+		return sameSite != null ? sameSite : SameSite.Lax;
 	}
 }

@@ -37,13 +37,13 @@ public class LocaleHelper
 		{
 			String lang = localeAsString.substring(0, idxOfUnderbar);
 			String country = localeAsString.substring(idxOfUnderbar + 1);
-			result = new Locale(lang, country);
+			result = Locale.of(lang, country);
 		}
 		else
 		{
 			String lang = localeAsString;
 
-			result = new Locale(lang);
+			result = Locale.of(lang);
 		}
 
 		return result;

@@ -35,7 +35,7 @@ public class PageComponentInfo
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param pageInfo
 	 * @param componentInfo
 	 */
@@ -69,23 +69,18 @@ public class PageComponentInfo
 	@Override
 	public String toString()
 	{
-		StringBuilder result = new StringBuilder();
-		if (pageInfo != null)
-		{
-			result.append(pageInfo.toString());
-		}
+		String result = pageInfo.toString();
 		if (componentInfo != null)
 		{
-			result.append(SEPARATOR);
-			result.append(componentInfo);
+			result = result + SEPARATOR + componentInfo;
 		}
 
-		return result.toString();
+		return result;
 	}
 
 	/**
 	 * Parses the given string
-	 * 
+	 *
 	 * @param s
 	 * @return {@link PageComponentInfo} or <code>null</code> if the string is not in valid format.
 	 */
@@ -101,7 +96,6 @@ public class PageComponentInfo
 
 		int i = s.indexOf(SEPARATOR);
 		if (i == -1)
-
 		{
 			pageInfo = PageInfo.parse(s);
 			componentInfo = null;

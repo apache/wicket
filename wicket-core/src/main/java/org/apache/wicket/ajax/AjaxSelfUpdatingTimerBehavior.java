@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax;
 
 import java.time.Duration;
+
 import org.apache.wicket.util.lang.Args;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
@@ -32,20 +33,6 @@ import org.danekja.java.util.function.serializable.SerializableConsumer;
 public class AjaxSelfUpdatingTimerBehavior extends AbstractAjaxTimerBehavior
 {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Construct.
-	 *
-	 * @param updateInterval
-	 *            {@link org.apache.wicket.util.time.Duration} between AJAX callbacks
-	 *
-	 * @deprecated Since Wicket 9 this constructor is deprecated. It will be removed in Wicket 10. Use {@link AjaxSelfUpdatingTimerBehavior#AjaxSelfUpdatingTimerBehavior(Duration)} instead
-	 */
-	@Deprecated
-	public AjaxSelfUpdatingTimerBehavior(final org.apache.wicket.util.time.Duration updateInterval)
-	{
-		super(updateInterval);
-	}
 
 	/**
 	 * Construct.

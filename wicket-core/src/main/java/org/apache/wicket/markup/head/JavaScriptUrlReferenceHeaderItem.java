@@ -94,6 +94,9 @@ public class JavaScriptUrlReferenceHeaderItem extends AbstractJavaScriptReferenc
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(super.hashCode(), url);
+		// Not using `Objects.hash` for performance reasons
+		int result = super.hashCode();
+		result = 31 * result + (url != null ? url.hashCode() : 0);
+		return result;
 	}
 }

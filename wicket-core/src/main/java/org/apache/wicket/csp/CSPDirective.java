@@ -35,7 +35,11 @@ public enum CSPDirective
 {
 	DEFAULT_SRC("default-src"),
 	SCRIPT_SRC("script-src"),
+	SCRIPT_SRC_ATTR("script-src-attr"),
+	SCRIPT_SRC_ELEM("script-src-elem"),
 	STYLE_SRC("style-src"),
+	STYLE_SRC_ATTR("style-src-attr"),
+	STYLE_SRC_ELEM("style-src-elem"),
 	IMG_SRC("img-src"),
 	CONNECT_SRC("connect-src"),
 	FONT_SRC("font-src"),
@@ -43,12 +47,15 @@ public enum CSPDirective
 	MANIFEST_SRC("manifest-src"),
 	MEDIA_SRC("media-src"),
 	CHILD_SRC("child-src"),
+	WORKER_SRC("worker-src"),
 	FRAME_ANCESTORS("frame-ancestors"),
+	BASE_URI("base-uri"),
 	/**
 	 * This directive was deprecated in CSP 2, but no longer in 3. Wicket will automatically add a
 	 * {@code frame-src} directive when {@code child-src} is added.
 	 */
 	FRAME_SRC("frame-src"),
+	FORM_ACTION("form-action"),
 	SANDBOX("sandbox")
 	{
 		/**
@@ -118,7 +125,7 @@ public enum CSPDirective
 		}
 	};
 
-	private String value;
+	private final String value;
 
 	CSPDirective(String value)
 	{
@@ -132,8 +139,8 @@ public enum CSPDirective
 
 	/**
 	 * Check if {@code value} can be added to the list of other values. By default, it checks for
-	 * conflicts with wildcards and none and it checks if values are valid uris.
-	 * 
+	 * conflicts with wildcards and none, and it checks if values are valid uris.
+	 *
 	 * @param value
 	 *            The value to add.
 	 * @param existingDirectiveValues
@@ -161,14 +168,14 @@ public enum CSPDirective
 						+ "a 'none', can't add " + value);
 			}
 		}
-		
+
 		if (value instanceof CSPDirectiveSandboxValue)
 		{
 			throw new IllegalArgumentException(
 				"A -src directive can't contain any of the sandbox directive values, like "
 						+ value);
 		}
-		
+
 		value.checkValidityForSrc();
 	}
 
@@ -182,11 +189,11 @@ public enum CSPDirective
 		{
 			return null;
 		}
-		for (int i = 0; i < values().length; i++)
+		for (CSPDirective directive : values())
 		{
-			if (value.equals(values()[i].getValue()))
+			if (value.equals(directive.getValue()))
 			{
-				return values()[i];
+				return directive;
 			}
 		}
 		return null;

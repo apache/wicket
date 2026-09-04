@@ -37,7 +37,7 @@ public final class HeaderPartContainer extends WebMarkupContainer implements ICo
 	/** The panel or bordered page the header part is associated with */
 	private final MarkupContainer container;
 
-	/** <wicket:head scope="...">. A kind of namespace */
+	/** &lt;wicket:head scope="..."&gt;. A kind of namespace */
 	private final String scope;
 
 	/**

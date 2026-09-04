@@ -48,10 +48,6 @@ public class ExternalSource extends ExternalImage
 	 * 
 	 * @param id
 	 *            the component id
-	 * @param src
-	 *            the source URL
-	 * @param srcSet
-	 *            a list of URLs placed in the srcset attribute
 	 */
 	public ExternalSource(String id)
 	{
@@ -63,8 +59,6 @@ public class ExternalSource extends ExternalImage
 	 * 
 	 * @param id
 	 *            the component id
-	 * @param src
-	 *            the source URL
 	 * @param srcSet
 	 *            a list of URLs placed in the srcset attribute
 	 */
@@ -78,8 +72,6 @@ public class ExternalSource extends ExternalImage
 	 * 
 	 * @param id
 	 *            the component id
-	 * @param src
-	 *            the model source URL
 	 * @param srcSetModel
 	 *            a model list of URLs placed in the srcset attribute
 	 */
@@ -124,7 +116,7 @@ public class ExternalSource extends ExternalImage
 	 * Unsupported for source tag
 	 */
 	@Override
-	public void setCrossOrigin(CrossOrigin crossorigin)
+	public void setCrossOrigin(CrossOrigin crossOrigin)
 	{
 		throw new UnsupportedOperationException(
 			"It is not allowed to set the crossorigin attribute for source tag");

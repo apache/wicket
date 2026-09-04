@@ -15,5 +15,5 @@
  * limitations under the License.
  */
 (function() {
-	start();
+	Wicket.testDone();
 })();

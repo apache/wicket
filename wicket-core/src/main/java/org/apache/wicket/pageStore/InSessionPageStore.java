@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
@@ -55,8 +55,8 @@ public class InSessionPageStore implements IPageStore
 	/**
 	 * Keep {@code maxPages} persistent in each session.
 	 * <p>
-	 * All pages added to this store <em>must</em> be {@code SerializedPage}s. You can achieve this
-	 * by letting a {@link SerializingPageStore} delegate to this store.
+	 * Any page added to this store <em>not</em> being a {@code SerializedPage} will be dropped
+	 * on serialization of the session.
 	 * 
 	 * @param maxPages
 	 *            maximum pages to keep in session
@@ -149,16 +149,9 @@ public class InSessionPageStore implements IPageStore
 
 	private SessionData getSessionData(IPageContext context, boolean create)
 	{
-		SessionData data = context.getSessionData(getKey(), () -> {
-			if (create)
-			{
-				return dataCreator.get();
-			}
-			else
-			{
-				return null;
-			}
-		});
+		SessionData data = context.getSessionData(getKey(), create ? () -> {
+			return dataCreator.get();
+		} : null);
 
 		if (data != null && serializer != null)
 		{
@@ -172,9 +165,8 @@ public class InSessionPageStore implements IPageStore
 	/**
 	 * Session data is stored under a {@link MetaDataKey}.
 	 * <p>
-	 * In cases where more than one instance is used in an application (e.g. as a fast cache
-	 * <em>and</em> a persistent store of serialized pages in the session), this method has to be
-	 * overridden to provide a separate key for each instance.
+	 * In the unlikely case that an application utilizes more than one instance of this store,
+	 * this method has to be overridden to provide a separate key for each instance.
 	 */
 	protected MetaDataKey<SessionData> getKey()
 	{
@@ -269,7 +261,7 @@ public class InSessionPageStore implements IPageStore
 		/**
 		 * Serialize pages before writing to output.
 		 */
-		private void writeObject(final ObjectOutputStream output) throws IOException
+		private synchronized void writeObject(final ObjectOutputStream output) throws IOException
 		{
 			// handle non-serialized pages
 			for (int p = 0; p < pages.size(); p++)
@@ -278,15 +270,23 @@ public class InSessionPageStore implements IPageStore
 
 				if ((page instanceof SerializedPage) == false)
 				{
+					// remove if not already serialized
+					pages.remove(p);
+					
 					if (serializer == null)
 					{
-						pages.remove(p);
+						// cannot be serialized, thus skip
 						p--;
 					}
 					else
 					{
-						pages.set(p, new SerializedPage(page.getPageId(),
-							Classes.name(page.getClass()), serializer.serialize(page)));
+						// serialize first
+						byte[] bytes = serializer.serialize(page);
+						SerializedPage serializedPage = new SerializedPage(page.getPageId(), Classes.name(page.getClass()), bytes);
+
+						// and then re-add (to prevent a serialization loop,
+						// in case the page holds a reference to the session)  
+						pages.add(p, serializedPage);
 					}
 				}
 			}

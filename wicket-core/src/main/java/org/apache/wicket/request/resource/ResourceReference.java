@@ -24,6 +24,7 @@ import java.util.Locale;
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.html.CrossOrigin;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
@@ -47,6 +48,10 @@ public abstract class ResourceReference implements IClusterable
 
 	private final Key data;
 
+	private String integrity;
+	
+	private CrossOrigin crossOrigin;
+	
 	/**
 	 * Creates new {@link ResourceReference} instance.
 	 * 
@@ -244,6 +249,46 @@ public abstract class ResourceReference implements IClusterable
 	}
 	
 	/**
+	 * Returns the integrity value of the resource which is a string containing
+	 * one or more base64 encoded hashes.
+	 * 
+	 * hashes are whitespace separated (see reference below): 
+	 *     https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity  
+	 */
+	public String getIntegrity() {
+		return integrity;
+	}
+
+	/**
+	 * Sets the integrity value of the resource which containes one or more 
+	 * base64 encoded hashes 
+	 * 
+	 * hashes are whitespace separated (see reference below): 
+	 *     https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity  
+	 */
+	public void setIntegrity(String integrity) {
+		this.integrity = integrity;
+	}
+
+	/**
+	 * Returns the cross origin policy to use when creating the header reference 
+	 * for the resource.
+	 * 
+	 *  @return cross origin policy
+	 */
+	public CrossOrigin getCrossOrigin() {
+		return crossOrigin;
+	}
+
+	/**
+	 * Sets the cross origin policy to use when creating the header reference 
+	 * for the resource. 
+	 */
+	public void setCrossOrigin(CrossOrigin crossOrigin) {
+		this.crossOrigin = crossOrigin;
+	}	
+	
+	/**
 	 * Factory method to build a resource reference that uses the provided supplier to return
 	 * the resource.
 	 * 
@@ -351,8 +396,17 @@ public abstract class ResourceReference implements IClusterable
 		}
 
 		/**
-		 * @see java.lang.Object#equals(java.lang.Object)
+		 * @param scope
+		 * @param name
+		 * @return sanitized URL attributes if a sanitizer is set for the app
 		 */
+		public UrlAttributes sanitize(Class<?> scope, String name)
+		{
+			IResourceUrlSanitizer sanitizer = Application.get().getResourceSettings()
+				.getUrlSanitizer();
+			return sanitizer == null ? this : sanitizer.sanitize(this, scope, name);
+		}
+
 		@Override
 		public boolean equals(Object obj)
 		{
@@ -370,13 +424,13 @@ public abstract class ResourceReference implements IClusterable
 				Objects.equal(getVariation(), that.getVariation());
 		}
 
-		/**
-		 * @see java.lang.Object#hashCode()
-		 */
 		@Override
-		public int hashCode()
-		{
-			return Objects.hashCode(getLocale(), getStyle(), getVariation());
+		public int hashCode() {
+			// Not using `Objects.hash` for performance reasons
+			int result = locale != null ? locale.hashCode() : 0;
+			result = 31 * result + (style != null ? style.hashCode() : 0);
+			result = 31 * result + (variation != null ? variation.hashCode() : 0);
+			return result;
 		}
 
 		/**
@@ -441,9 +495,6 @@ public abstract class ResourceReference implements IClusterable
 			this.variation = variation != null ? variation.intern() : null;
 		}
 
-		/**
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
 		@Override
 		public boolean equals(final Object obj)
 		{
@@ -463,13 +514,14 @@ public abstract class ResourceReference implements IClusterable
 				Objects.equal(variation, that.variation);
 		}
 
-		/**
-		 * @see java.lang.Object#hashCode()
-		 */
 		@Override
-		public int hashCode()
-		{
-			return Objects.hashCode(scope, name, locale, style, variation);
+		public int hashCode() {
+			int result = scope != null ? scope.hashCode() : 0;
+			result = 31 * result + (name != null ? name.hashCode() : 0);
+			result = 31 * result + (locale != null ? locale.hashCode() : 0);
+			result = 31 * result + (style != null ? style.hashCode() : 0);
+			result = 31 * result + (variation != null ? variation.hashCode() : 0);
+			return result;
 		}
 
 		/**

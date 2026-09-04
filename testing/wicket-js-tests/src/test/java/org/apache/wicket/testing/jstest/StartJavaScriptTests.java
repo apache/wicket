@@ -30,15 +30,16 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.ee11.webapp.WebAppContext;
 
 /**
  * Separate startup class for people that want to run the examples directly. Use parameter
  * -Dcom.sun.management.jmxremote to startup JMX (and e.g. connect with jconsole).
  *
  *
- * @see <a href="http://localhost:8080/ajax-tests/test/js/all.html?2.2.4">JavaScript tests</a>
+ * @see <a href="http://localhost:8080/ajax-tests/test/js/all.html?4.0.0">JavaScript tests</a>
  */
 public class StartJavaScriptTests
 {
@@ -64,7 +65,7 @@ public class StartJavaScriptTests
 
 		server.addConnector(http);
 
-		Resource keystore = Resource.newClassPathResource("/keystore");
+		Resource keystore = ResourceFactory.root().newClassLoaderResource("/keystore");
 		if (keystore != null && keystore.exists())
 		{
 			// if a keystore for a SSL certificate is available, start a SSL
@@ -74,7 +75,7 @@ public class StartJavaScriptTests
 			// use this certificate anywhere important as the passwords are
 			// available in the source.
 
-			SslContextFactory sslContextFactory = new SslContextFactory.Server();
+			SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
 			sslContextFactory.setKeyStoreResource(keystore);
 			sslContextFactory.setKeyStorePassword("wicket");
 			sslContextFactory.setKeyManagerPassword("wicket");
@@ -114,9 +115,9 @@ public class StartJavaScriptTests
 		try
 		{
 			server.start();
-			
+
 			browse();
-			
+
 			server.join();
 		}
 		catch (Exception e)
@@ -126,16 +127,9 @@ public class StartJavaScriptTests
 		}
 	}
 
-	private static void browse() 
+	private static void browse() throws Exception
 	{
-		try
-		{
-			Desktop.getDesktop().browse(new URI("http://localhost:8080/ajax-tests/test/js/all.html?2.2.4"));
-		}
-		catch (Exception e)
-		{
-			System.out.println("can not open browser " + e);
-		}
+	  Desktop.getDesktop().browse(new URI("http://localhost:8080/ajax-tests/test/js/all.html?4.0.0"));
 	}
 
 	/**

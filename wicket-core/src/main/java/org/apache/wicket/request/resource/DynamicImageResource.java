@@ -21,7 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.Instant;
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.lang.Args;
 
@@ -113,7 +113,7 @@ public abstract class DynamicImageResource extends AbstractResource
 
 	/**
 	 * Get image data for our dynamic image resource. If the subclass regenerates the data, it
-	 * should set the {@link DynamicImageResource#setLastModifiedTime(Time)} when it does so. This
+	 * should set the {@link DynamicImageResource#setLastModifiedTime(Instant)} when it does so. This
 	 * ensures that image caching works correctly.
 	 * 
 	 * @param attributes

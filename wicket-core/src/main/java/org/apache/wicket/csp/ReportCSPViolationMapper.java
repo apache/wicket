@@ -19,7 +19,7 @@ package org.apache.wicket.csp;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;

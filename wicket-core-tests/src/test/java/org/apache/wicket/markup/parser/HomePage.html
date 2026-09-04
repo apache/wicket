@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:wicket>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link rel="shortcut icon" href="assets/img/icons/favicon.ico">
+	<title wicket:id="pageTitle">EduArte</title>
+	
+	<link href="assets/css/base.css" rel="stylesheet" type="text/css"/>
+	<!--[if IE]>
+		<link href="assets/css/ie_only.css" rel="stylesheet" type="text/css"/>
+		<link href="assets/js/ie_only.js" rel="stylesheet" type="text/css"/>
+	<![endif]-->
+	<!--[if lt IE 7]>
+		<link href="assets/css/ie6_only.css" rel="stylesheet" type="text/css"/>
+	<![endif]-->
+	<script type="text/javascript" src="assets/js/yahoo-dom-event.js"></script>
+	<script type="text/javascript" src="assets/js/animation/animation.js"></script>
+	<script type="text/javascript" src="assets/js/widgets.js"></script>
+</head>
+<body class="loginPage" onload="doFocus();">
+
+<div id="loginBox">
+	<div class="loginTitle">
+		<div class="loginError" wicket:id="feedback">Uw gebruikersnaam of wachtwoord is onjuist.</div>
+	</div>
+	<div class="loginFormBox" wicket:id="signInPanel">
+		Login panel comes here
+	</div>
+	<div class="loginFooter">Versie <span wicket:id="version">0.1</span> - Powered by Topicus</div>
+</div>
+
+</body>
+</html>

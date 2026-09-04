@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>9.0.0-M6-SNAPSHOT</version>
+		<version>11.0.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-common-tests</artifactId>
@@ -29,9 +29,43 @@
 	<description>Tests for all Wicket modules</description>
 
 	<properties>
-		<automatic-module-name>org.apache.wicket.common.tests</automatic-module-name>
-		<clirr.skip>true</clirr.skip>
+		<japicmp.skip>true</japicmp.skip>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>jakarta.interceptor</groupId>
+				<artifactId>jakarta.interceptor-api</artifactId>
+				<version>2.2.0</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>jakarta.transaction</groupId>
+				<artifactId>jakarta.transaction-api</artifactId>
+				<version>2.0.1</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.logging</groupId>
+				<artifactId>jboss-logging</artifactId>
+				<version>3.6.3.Final</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.logging</groupId>
+				<artifactId>jboss-logging-annotations</artifactId>
+				<version>3.0.4.Final</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.logging</groupId>
+				<artifactId>jboss-logging-processor</artifactId>
+				<version>3.0.4.Final</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
@@ -66,6 +100,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-extensions-tester</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-guice</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -91,6 +130,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-native-websocket-tester</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-objectsizeof-agent</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
@@ -102,37 +146,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-tester</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-velocity</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket9</groupId>
-			<artifactId>wicket-http2-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket9</groupId>
-			<artifactId>wicket-http2-jetty</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket9</groupId>
-			<artifactId>wicket-http2-servlet4</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket9</groupId>
-			<artifactId>wicket-http2-tomcat</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket9</groupId>
-			<artifactId>wicket-http2-undertow</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<groupId>org.junit.jupiter</groupId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -145,14 +164,15 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-    			<plugin>
-    				<groupId>org.apache.maven.plugins</groupId>
-    				<artifactId>maven-deploy-plugin</artifactId>
-    				<configuration>
-    					<!-- Just tests. No need to deploy them -->
-    					<skip>true</skip>
-    				</configuration>
-    			</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${maven-deploy-plugin.version}</version>
+					<configuration>
+						<!-- Just tests. No need to deploy them -->
+						<skip>true</skip>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -58,30 +58,13 @@ public class AbstractUpgradeFilter extends WicketFilter
 			final FilterChain chain)
 		throws IOException, ServletException
 	{
-
-		// Assume we are able to handle the request
-		boolean res = true;
-
 		ThreadContext.setRequestCycle(requestCycle);
-
 		if (acceptWebSocket(httpServletRequest, httpServletResponse) || httpServletResponse.isCommitted())
 		{
-			res = true;
+			return true;
 		}
-		else if (requestCycle.processRequestAndDetach() || httpServletResponse.isCommitted())
-		{
-			webResponse.flush();
-		}
-		else
-		{
-			if (chain != null)
-			{
-				chain.doFilter(httpServletRequest, httpServletResponse);
-			}
-			res = false;
-		}
-
-		return res;
+		
+		return super.processRequestCycle(requestCycle, webResponse, httpServletRequest, httpServletResponse, chain);
 	}
 
 	protected boolean acceptWebSocket(HttpServletRequest req, HttpServletResponse resp)

@@ -113,6 +113,11 @@ public abstract class Request
 	}
 
 	/**
+	 * Note: Avoid calling this method yourself in you code base if you are using multipart to upload files in
+	 * combination with Tomcat 11.x. Calling this method before multipart is processed, will cause Tomcat to parse
+	 * by itself the multipart request and then wicket's multipart processing won't work. See WICKET-7154
+	 * for details.
+	 *
 	 * @return POST request parameters for this request.
 	 */
 	public IRequestParameters getPostParameters()
@@ -129,6 +134,11 @@ public abstract class Request
 	}
 
 	/**
+	 * Note: Avoid calling this method yourself in you code base if you are using multipart to upload files in
+	 * combination with Tomcat 11.x. Calling this method before multipart is processed, will cause Tomcat to parse
+	 * by itself the multipart request and then wicket's multipart processing won't work. See WICKET-7154
+	 * for details.
+	 *
 	 * @return all request parameters for this request (both POST and GET parameters)
 	 */
 	public IRequestParameters getRequestParameters()

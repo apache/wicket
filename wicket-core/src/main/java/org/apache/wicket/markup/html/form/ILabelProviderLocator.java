@@ -20,7 +20,7 @@ import org.apache.wicket.Component;
 
 /**
  * This interface can be used to mark some complex component, e.g. a Panel, as capable of providing a reference to a {@link ILabelProvider},
- * e.g a form component. The typical use case could be a user has a components factory of type "label" --> "panel with some fields". Let's say the structure of
+ * e.g a form component. The typical use case could be a user has a components factory of type "label" --&gt; "panel with some fields". Let's say the structure of
  * this panel varies but we still would like to use wicket:for="panel". In this case this panel could implement ILabelProviderLocator to point
  * to TextFiled that label should refer to.
  *

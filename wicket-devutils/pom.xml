@@ -20,22 +20,21 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>9.0.0-M6-SNAPSHOT</version>
+		<version>11.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-devutils</artifactId>
-	<packaging>bundle</packaging>
+	<packaging>jar</packaging>
 	<name>Wicket Development Utilities</name>
 	<description>
 		Wicket development utilities provide helpful features that 
 		are typically used during development only, but may be 
 		turned on for additional production debugging.
 	</description>
-
 	<properties>
-		<automatic-module-name>org.apache.wicket.devutils</automatic-module-name>
+		<osgi.export.package>org.apache.wicket.devutils*;-noimport:=true</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -44,6 +43,10 @@
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-tester</artifactId>
 		</dependency>
 	</dependencies>
 </project>

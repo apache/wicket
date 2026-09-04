@@ -548,7 +548,7 @@ public class StringValue implements IClusterable
 	 * 
 	 * @return Converted text
 	 * @throws StringValueConversionException
-	 * @see Duration#valueOf(String, java.util.Locale)
+	 * @see Duration#parse(CharSequence)
 	 */
 	public final Duration toDuration() throws StringValueConversionException
 	{
@@ -569,7 +569,7 @@ public class StringValue implements IClusterable
 	 *            the default value
 	 * @return the converted text as a duration or the default value if text is empty or
 	 *         inconvertible
-	 * @see Duration#valueOf(String, java.util.Locale)
+	 * @see Duration#parse(CharSequence)
 	 */
 	public final Duration toDuration(final Duration defaultValue)
 	{

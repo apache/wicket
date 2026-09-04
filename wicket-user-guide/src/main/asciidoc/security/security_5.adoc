@@ -2,7 +2,92 @@
 
 _CryptoMapper_ helps preventing CSRF attacks by making the urls impossible to be guessed by an attacker but still there is some theoretical chance this to happen.
 
-To further help against this kind of vulnerability Wicket provides _CsrfPreventionRequestCycleListener_ - a _IRequestCycleListener_ that forbids requests made from a different origin. By default only actions are forbidden, i.e. a request coming from different origin cannot execute _Link.onClick()_ or submit forms (_Form.onSubmit()_). Any request to render pages are still allowed so Wicket pages could be easily embedded in other applications.
+To further help against this kind of vulnerability Wicket provides _ResourceIsolationRequestCycleListener_ - a _IRequestCycleListener_ that uses __IResourceIsolationPolicy__ objects to decide whether to allow or reject cross-origin requests. 
+Just like any RequestCycle listener _ResourceIsolationRequestCycleListener_ must be registered on application initialization:
+
+[source,java]
+----
+  @Override
+ protected void init() {
+  super.init();
+  getRequestCycleListeners().add(new ResourceIsolationRequestCycleListener());
+  // ...
+ }
+----
+
+By default _ResourceIsolationRequestCycleListener_ checks only event handlers requests, i.e. a cross-origin requests cannot execute _Link.onClick()_ or submit forms (_Form.onSubmit()_). Any request to render pages are still allowed so Wicket pages could be easily embedded in other applications. To extend CSRF protection to pages we can simply override _isChecked(IRequestHandler handler)_ method to make it return always _true_:
+
+[source,java]
+----
+  @Override
+ protected void init() {
+  super.init();
+  getRequestCycleListeners().add(new ResourceIsolationRequestCycleListener() {
+	    @Override
+	    protected boolean isChecked(IRequestHandler handler) {
+	        //check everything
+	        return true;
+	    }
+	});
+  // ...
+ }
+----
+
+
+_ResourceIsolationRequestCycleListener_ is highly configurable. It allows to add exempted paths that will not be checked with the __addExemptedPath__ method. It can also be configured with multiple _ResourceIsolationPolicy_ objects to be checked in order.
+
+An __IResourceIsolationPolicy__ returns a __ResourceIsolationOutcome__ after processing a request, which can be one of 3 values (__ALLOWED__, __DISALLOWED__, __UNKNOWN__). The __ResourceIsolationRequestCycleListener__ checks the __IResourceIsolationPolicy__ objects in order and uses the first outcome that is not __UNKNOWN__ to trigger the appropriate action. If all return __UNKNOWN__ __unknownOutcomeAction__ is applied. The actions can be configured through the listener.
+
+The default constructor uses the __FetchMetadataResourceIsolationPolicy__, which checks Fetch Metadata headers, and the __OriginResourceIsolationPolicy__ which uses the Origin and Referer headers to forbid requests made from a different origin, in order. The __OriginResourceIsolationPolicy__ contains the refactored logic of the now deprecated __CsrfPreventionRequestCycleListener__.
+The listener can be configured to include custom __IResourceIsolationPolicy__ objects.
+
+For example:
+[source,java]
+----
+  @Override
+ protected void init() {
+  super.init();
+  getRequestCycleListeners().add(
+	new ResourceIsolationRequestCycleListener(
+		new FetchMetadataResourceIsolationPolicy(),
+		new OriginResourceIsolationPolicy(),
+		new MyCustomResourceIsolationPolicy()
+	));
+  // ...
+ }
+----
+
+The _Sec-Fetch-Site_ header tells __FetchMetadataResourceIsolationPolicy__ where a request came from. A value of _same-origin_ means it was made from the very same scheme, host and port. _cross-site_ means it came from a different site altogether. _same-site_ sits in between: the same registrable domain and scheme, but a *different* origin - another subdomain, or another port. A _same-site_ request is therefore always cross-origin.
+
+The policy allows _same-origin_ requests, and browser-initiated ones (_none_, such as a typed url or a bookmark). For a request from another origin it looks at what that request does with the page: rendering is allowed for a simple top-level navigation, so our pages stay linkable from anywhere, while invoking a listener is not.
+
+Because a _same-site_ request is cross-origin, it is treated as one: by default a sibling origin such as _other.example.com_ cannot execute _Link.onClick()_ or submit a form on _app.example.com_, even though the browser does send our session cookie along with such a request.
+
+Note that this decision rests entirely with the Fetch Metadata policy: __OriginResourceIsolationPolicy__ is only consulted for requests that carry no Fetch Metadata headers at all, which no current browser does.
+
+If every origin on our site is trusted - for instance when all of our subdomains are part of the same application - we can allow sibling origins to invoke listeners as well with _setSameSiteAllowed(true)_:
+
+[source,java]
+----
+  @Override
+ protected void init() {
+  super.init();
+  getRequestCycleListeners().add(
+	new ResourceIsolationRequestCycleListener(
+		new FetchMetadataResourceIsolationPolicy().setSameSiteAllowed(true),
+		new OriginResourceIsolationPolicy()
+	));
+  // ...
+ }
+----
+
+WARNING: Enabling this trusts every origin on our site. A hostile sibling origin - obtained through a subdomain takeover, through delegated user content, or through an XSS somewhere else on the site - can then perform actions on behalf of an authenticated user.
+
+_ResourceIsolationRequestCycleListener_ is not an alternative to _CryptoMapper_! Both of them could be used separately or in tandem to prevent CSRF attacks depending on the application requirements.
+
+NOTE: In the next chapter we will cover unit testing with Wicket. If your application is protected with _ResourceIsolationRequestCycleListener_ you have to properly set request header _"sec-fetch-site"_ to make you unit tests pass. In <<testing.adoc#_setting_request_headers,paragraph 23.1.10>> you will learn how to do it.
+
+Wicket also provides the deprecated (since version 9.1.0) _CsrfPreventionRequestCycleListener_ - a _IRequestCycleListener_ that forbids requests made from a different origin. Similar to the __ResourceIsolationRequestCycleListener__ by default only actions are forbidden, i.e. a request coming from different origin cannot execute _Link.onClick()_ or submit forms (_Form.onSubmit()_). Any request to render pages are still allowed so Wicket pages could be easily embedded in other applications.
 
 MyApplication.java
 [source,java]
@@ -18,4 +103,3 @@ MyApplication.java
 _CsrfPreventionRequestCycleListener_ is highly configurable. It allows to define a whitelist of allowed origins via _addAcceptedOrigin(String acceptedOrigin)_, to enable/disable it dynamically by overriding _isEnabled()_, to define different kind of actions when a request is rejected or allowed, to set custom error message and code for the rejected requests.
 
 _CsrfPreventionRequestCycleListener_ is not an alternative to _CryptoMapper_! Both of them could be used separately or in tandem to prevent CSRF attacks depending on the application requirements.
-

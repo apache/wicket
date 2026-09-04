@@ -22,9 +22,7 @@ import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.resource.CssUrlReplacer;
-import org.apache.wicket.settings.SecuritySettings;
-import org.apache.wicket.util.crypt.ClassCryptFactory;
-import org.apache.wicket.util.crypt.NoCrypt;
+import org.apache.wicket.core.util.crypt.NoCrypt;
 
 
 /**
@@ -49,16 +47,15 @@ public abstract class WicketExampleApplication extends WebApplication
 	{
 		super.init();
 		
-		// WARNING: DO NOT do this on a real world application unless
-		// you really want your app's passwords all passed around and
-		// stored in unencrypted browser cookies (BAD IDEA!)!!!
+		// WARNING: DO NOT do this on a real world application. NoCrypt encrypts nothing, so
+		// everything that goes through the crypt factory -- the URLs CryptoMapper produces and
+		// the file upload tokens -- is readable and forgeable by anyone (BAD IDEA!)!!!
 
 		// The NoCrypt class is being used here because not everyone
 		// has the java security classes required by Crypt installed
 		// and we want them to be able to run the examples out of the
 		// box.
-		getSecuritySettings().setCryptFactory(
-			new ClassCryptFactory(NoCrypt.class, SecuritySettings.DEFAULT_ENCRYPTION_KEY));
+		getSecuritySettings().setCryptFactory(NoCrypt::new);
 
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 		

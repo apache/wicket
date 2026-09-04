@@ -26,6 +26,8 @@ import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,19 +39,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterRegistration;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-import javax.servlet.ServletRegistration.Dynamic;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.SessionCookieConfig;
-import javax.servlet.SessionTrackingMode;
-import javax.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.ServletRegistration.Dynamic;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.SessionTrackingMode;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
@@ -99,6 +101,8 @@ public class MockServletContext implements ServletContext
 		private boolean httpOnly;
 		private String domain;
 		private String comment;
+
+		private final Map<String, String> attributes = new HashMap<>();
 
 		@Override
 		public void setSecure(boolean secure)
@@ -173,6 +177,21 @@ public class MockServletContext implements ServletContext
 		}
 
 		@Override
+		public void setAttribute(String s, String s1) {
+			attributes.put(s, s1);
+		}
+
+		@Override
+		public String getAttribute(String s) {
+			return attributes.get(s);
+		}
+
+		@Override
+		public Map<String, String> getAttributes() {
+			return Map.copyOf(attributes);
+		}
+
+		@Override
 		public String getDomain()
 		{
 			return domain;
@@ -184,6 +203,11 @@ public class MockServletContext implements ServletContext
 			return comment;
 		}
 	};
+
+	private int sessionTimeout = 30; // in minutes
+	private Charset requestCharacterEncoding = StandardCharsets.UTF_8;
+	private Charset responseCharacterEncoding = StandardCharsets.UTF_8;
+
 	/**
 	 * Create the mock object. As part of the creation, the context sets the root directory where
 	 * web application content is stored. This must be an ABSOLUTE directory relative to where the
@@ -228,7 +252,7 @@ public class MockServletContext implements ServletContext
 			file = new File(tmpDir);
 		}
 
-		attributes.put("javax.servlet.context.tempdir", file);
+		attributes.put("jakarta.servlet.context.tempdir", file);
 
 		mimeTypes.put("html", "text/html");
 		mimeTypes.put("htm", "text/html");
@@ -362,7 +386,7 @@ public class MockServletContext implements ServletContext
 	@Override
 	public int getMajorVersion()
 	{
-		return 3;
+		return 6;
 	}
 
 	@Override
@@ -374,7 +398,7 @@ public class MockServletContext implements ServletContext
 	@Override
 	public int getEffectiveMajorVersion()
 	{
-		return 3;
+		return 6;
 	}
 
 	@Override
@@ -583,21 +607,6 @@ public class MockServletContext implements ServletContext
 	}
 
 	/**
-	 * NOT USED - Servlet Spec requires that this always returns null.
-	 *
-	 * @param name
-	 *            Not used
-	 * @return null
-	 * @throws ServletException
-	 *             Not used
-	 */
-	@Override
-	public Servlet getServlet(String name) throws ServletException
-	{
-		return null;
-	}
-
-	/**
 	 * Return the name of the servlet context.
 	 *
 	 * @return The name
@@ -643,6 +652,12 @@ public class MockServletContext implements ServletContext
 		{
 			throw new WicketRuntimeException(e);
 		}
+	}
+
+	@Override
+	public Dynamic addJspFile(String s, String s1)
+	{
+		return null;
 	}
 
 	@Override
@@ -773,40 +788,40 @@ public class MockServletContext implements ServletContext
 		return "WicketTester 8.x";
 	}
 
-	/**
-	 * NOT USED - Servlet spec requires that this always returns null.
-	 *
-	 * @return null
-	 */
 	@Override
-	public Enumeration<String> getServletNames()
+	public int getSessionTimeout()
 	{
-		return null;
+		return sessionTimeout;
 	}
 
-	/**
-	 * NOT USED - Servlet spec requires that this always returns null.
-	 *
-	 * @return null
-	 */
 	@Override
-	public Enumeration<Servlet> getServlets()
+	public void setSessionTimeout(int sessionTimeout)
 	{
-		return null;
+		this.sessionTimeout = sessionTimeout;
 	}
 
-	/**
-	 * As part of testing we always log to the console.
-	 *
-	 * @param e
-	 *            The exception to log
-	 * @param msg
-	 *            The message to log
-	 */
 	@Override
-	public void log(Exception e, String msg)
+	public String getRequestCharacterEncoding()
 	{
-		log.error(msg, e);
+		return requestCharacterEncoding.name();
+	}
+
+	@Override
+	public void setRequestCharacterEncoding(String requestCharacterEncoding)
+	{
+		this.requestCharacterEncoding = Charset.forName(requestCharacterEncoding);
+	}
+
+	@Override
+	public String getResponseCharacterEncoding()
+	{
+		return responseCharacterEncoding.name();
+	}
+
+	@Override
+	public void setResponseCharacterEncoding(String responseCharacterEncoding)
+	{
+		this.responseCharacterEncoding = Charset.forName(responseCharacterEncoding);
 	}
 
 	/**
@@ -872,8 +887,8 @@ public class MockServletContext implements ServletContext
 
 
 	/**
-	 * Invocation handler for proxy interface of {@link javax.servlet.ServletRegistration.Dynamic}.
-	 * This class intercepts invocation for method {@link javax.servlet.ServletRegistration.Dynamic#getMappings}
+	 * Invocation handler for proxy interface of {@link jakarta.servlet.ServletRegistration.Dynamic}.
+	 * This class intercepts invocation for method {@link jakarta.servlet.ServletRegistration.Dynamic#getMappings}
 	 * and returns the servlet name.
 	 *
 	 * @author andrea del bene

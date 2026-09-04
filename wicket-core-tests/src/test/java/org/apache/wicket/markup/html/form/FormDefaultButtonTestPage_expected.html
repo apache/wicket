@@ -1,0 +1,17 @@
+<html>
+<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-4.0.0.js"></script>
+<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
+<script type="text/javascript">
+/*<![CDATA[*/
+Wicket.Event.add(window, "domready", function(event) { 
+Wicket.Event.add('form2', 'keypress', function(event) { if (event.target.tagName.toLowerCase() !== 'input' || event.which != 13) return;var b = document.getElementById('default1');if (window.getComputedStyle(b).visibility === 'hidden') return;event.stopPropagation();event.preventDefault();if (b != null && b.onclick != null && typeof (b.onclick) != 'undefined') {var r = Wicket.bind(b.onclick, b)();if (r != false) b.click();} else {b.click();}return false;;});;
+Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
+;});
+/*]]>*/
+</script>
+</head><body>
+	<form wicket:id="form" id="form2" method="post" action="./org.apache.wicket.markup.html.form.FormDefaultButtonTestPage?0-1.-form"><div id="form2_hf_0" hidden="" class="hidden-fields"></div>
+		<button wicket:id="default" name="default" id="default1"></button>
+	</form>
+</body>
+</html>

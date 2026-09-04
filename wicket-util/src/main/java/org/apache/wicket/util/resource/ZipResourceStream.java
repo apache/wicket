@@ -135,10 +135,8 @@ public class ZipResourceStream extends AbstractResourceStream
 		{
 			for (String file : files)
 			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("Adding: '{}'", file);
-				}
+				log.debug("Adding: '{}'", file);
+
 				File f = new File(dir, file);
 				if (f.isDirectory())
 				{
@@ -168,7 +166,7 @@ public class ZipResourceStream extends AbstractResourceStream
 			}
 		}
 
-		if ("".equals(path))
+		if (path.isEmpty())
 		{
 			out.close();
 		}

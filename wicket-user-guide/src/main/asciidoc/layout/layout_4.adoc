@@ -17,11 +17,11 @@ An example of a parent page using the tag _<wicket:child>_ is the following:
 
 The markup of a child page/panel must be placed inside the tag _<wicket:extend>_. Only the markup inside _<wicket:extend>_ will be included in final markup. Here is an example of child page markup:
 
-[source,java]
+[source,html]
 ----
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
     <wicket:extend>

@@ -38,16 +38,18 @@ import org.slf4j.LoggerFactory;
  * be in the component hierarchy somewhere below the group component. The model of the CheckGroup
  * component has to be an instance of java.util.Collection. The model collection of the group is
  * filled with model objects of all selected Check components.
- * 
- * ie <code>
- * <span wicket:id="checkboxgroup">
+ *
+ * <p>
+ * i.e. <code>
+ * &lt;span wicket:id="checkboxgroup"&gt;
  *   ...
- *   <input type="checkbox" wicket:id="checkbox1">choice 1</input>
+ *   &lt;input type="checkbox" wicket:id="checkbox1"&gt;choice 1&lt;/input&gt;
  *   ...
- *   <input type="checkbox" wicket:id="checkbox2">choice 2</input>
+ *   &lt;input type="checkbox" wicket:id="checkbox2"&gt;choice 2&lt;/input&gt;
  *   ...
- * </span>
+ * &lt;/span&gt;
  * </code>
+ * </p>
  * 
  * @see org.apache.wicket.markup.html.form.Check
  * @see org.apache.wicket.markup.html.form.CheckGroupSelector <p>

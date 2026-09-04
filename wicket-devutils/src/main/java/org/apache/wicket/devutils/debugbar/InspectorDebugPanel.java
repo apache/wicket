@@ -28,7 +28,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 /**
  * A panel that adds a link to the inspector to the debug bar.
  * 
- * @author Jeremy Thomerson <jthomerson@apache.org>
+ * @author Jeremy Thomerson
  */
 public class InspectorDebugPanel extends StandardDebugPanel
 {

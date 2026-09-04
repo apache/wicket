@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+
+    <h2>Uploading a single file</h2>
+
+    <div wicket:id="feedback"></div>
+
+    <form wicket:id="form">
+        Text field: <input wicket:id="text" type="text"/><br/>
+        File field: <input wicket:id="file" type="file"/> (<span wicket:id="max"></span> max)<br/><br/>
+        <br/>
+        <div wicket:id="selectedFileInfo"></div>
+        <br/>
+        <div wicket:id="progress"></div>
+        <input wicket:id="submit" type="submit" value="Regular Submit"/> <input wicket:id="ajaxSubmit" type="button" value="Ajax Submit"/>
+    </form>
+
+    <div wicket:id="drop" class="drop-zone">
+        Drop file here.
+    </div>
+</wicket:panel>
+</body>
+</html>

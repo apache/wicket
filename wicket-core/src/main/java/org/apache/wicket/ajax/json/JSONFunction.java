@@ -21,7 +21,7 @@ import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Represents a Json function. When written out these values are not escaped so its possible to write out raw
+ * Represents a Json function. When written out these values are not escaped, so it's possible to write out raw
  * JavaScript.
  */
 public class JSONFunction implements JSONString, CharSequence, IClusterable

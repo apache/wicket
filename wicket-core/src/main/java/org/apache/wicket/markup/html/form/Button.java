@@ -228,8 +228,16 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 		if ("button".equals(openTag.getName()))
 		{
 			String modelObjectAsString = getDefaultModelObjectAsString();
-			if (Strings.isEmpty(modelObjectAsString) == false) {
-				replaceComponentTagBody(markupStream, openTag, modelObjectAsString);
+			if (Strings.isEmpty(modelObjectAsString) == false)
+			{
+				// The constructor clears escapeModelStrings so that the value attribute is not
+				// encoded twice, ComponentTag#writeOutput already encodes it. An element body is
+				// not encoded anywhere, so escape here instead of relying on that flag. When an
+				// application does set the flag, getDefaultModelObjectAsString() has escaped
+				// already and escaping again would double encode.
+				replaceComponentTagBody(markupStream, openTag,
+					getEscapeModelStrings() ? modelObjectAsString
+						: Strings.escapeMarkup(modelObjectAsString));
 				return;
 			}
 		}

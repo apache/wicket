@@ -18,7 +18,7 @@ package org.apache.wicket.markup.head;
 
 /**
  * Abstract base class for all {@link HeaderItem}s that have a <em>nonce</em> to
- * allow the browser to check <em>Content Security Policye</em> (CSP) .
+ * allow the browser to check <em>Content Security Policy</em> (CSP) .
  * 
  * @author svenmeier
  */

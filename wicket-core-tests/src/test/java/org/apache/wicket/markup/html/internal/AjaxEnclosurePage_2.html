@@ -1,0 +1,31 @@
+<html xmlns:wicket>
+<body>
+
+<div>
+	<a href="#" wicket:id="toggleLabel1Link">Toggle label1</a>
+	<a href="#" wicket:id="toggleLabel2Link">Toggle label2</a>
+</div>
+
+<!--  nested inline enclosures with separate child depths and a container inside the first enclosure -->
+<div wicket:enclosure="container1:label1" style="border:2px solid red;">
+	<div wicket:id="container1">
+		<table>
+			<tr>
+				<td><span wicket:id="label1">Test</span></td>
+			</tr>
+			<tr>
+				<td>
+					<div wicket:enclosure="label2" style="border:2px solid blue;">
+						<div>
+							<span wicket:id="label2">Test</span>
+							<span wicket:id="enclosure2Marker">Test</span>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+</body>
+</html>

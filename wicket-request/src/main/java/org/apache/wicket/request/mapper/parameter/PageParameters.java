@@ -17,7 +17,6 @@
 package org.apache.wicket.request.mapper.parameter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -45,7 +44,7 @@ import org.apache.wicket.util.string.Strings;
  * </p>
  * <p>
  * How those parameters are populated depends on the {@link IRequestMapper}s
- * 
+ *
  * @author Matej Knopp
  */
 public class PageParameters implements IClusterable, IIndexedParameters, INamedParameters
@@ -55,6 +54,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	private List<String> indexedParameters;
 
 	private List<NamedPair> namedParameters;
+
+	private String fragment;
 
 	private Locale locale = Locale.getDefault(Locale.Category.DISPLAY);
 
@@ -67,7 +68,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	/**
 	 * Copy constructor.
-	 * 
+	 *
 	 * @param copy
 	 *          The parameters to copy from
 	 */
@@ -86,6 +87,14 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	public int getIndexedCount()
 	{
 		return indexedParameters != null ? indexedParameters.size() : 0;
+	}
+
+	/**
+	 * @return count of named parameters
+	 */
+	public int getNamedCount()
+	{
+		return namedParameters != null ? namedParameters.size() : 0;
 	}
 
 	/**
@@ -149,6 +158,29 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		return Collections.unmodifiableSet(set);
 	}
 
+	/**
+	 * Checks if the parameter with the given name exists
+	 *
+	 * @param name the parameter name
+	 * @return {@code true} if the parameter exists, {@code false} otherwise
+	 */
+	public boolean contains(final String name)
+	{
+		Args.notNull(name, "name");
+
+		if (namedParameters != null)
+		{
+			for (NamedPair entry : namedParameters)
+			{
+				if (entry.getKey().equals(name))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public StringValue get(final String name)
 	{
@@ -206,12 +238,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		}
 
 		List<NamedPair> parametersByType = new ArrayList<>();
-		Iterator<NamedPair> iterator = allNamed.iterator();
-		while (iterator.hasNext())
-		{
-			NamedPair pair = iterator.next();
-			if (type == pair.getType())
-			{
+		for (NamedPair pair : allNamed) {
+			if (type == pair.getType()) {
 				parametersByType.add(pair);
 			}
 		}
@@ -272,7 +300,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	/**
 	 * Adds a page parameter to these with {@code name} and {@code value}
-	 * 
+	 *
 	 * @param name
 	 * @param value
 	 * @return these
@@ -294,40 +322,53 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		Args.notEmpty(name, "name");
 		Args.notNull(value, "value");
 
+		if (value instanceof String[])
+		{
+			addNamed(name, (String[]) value, index, type);
+		}
+		else
+		{
+			addNamed(name, value.toString(), index, type);
+		}
+
+		return this;
+	}
+
+	private void addNamed(String name, String[] values, int index, Type type)
+	{
+		if (namedParameters == null && values.length > 0)
+		{
+			namedParameters = new ArrayList<>(values.length);
+		}
+
+		for (String val : values)
+		{
+			addNamed(name, val, index, type);
+		}
+	}
+
+	private void addNamed(String name, String value, int index, Type type)
+	{
 		if (namedParameters == null)
 		{
 			namedParameters = new ArrayList<>(1);
 		}
 
-		List<String> values = new ArrayList<>();
-		if (value instanceof String[])
+		NamedPair entry = new NamedPair(name, value, type);
+
+		if (index < 0 || index > namedParameters.size())
 		{
-			values.addAll(Arrays.asList((String[])value));
+			namedParameters.add(entry);
 		}
 		else
 		{
-			values.add(value.toString());
+			namedParameters.add(index, entry);
 		}
-
-		for (String val : values)
-		{
-			NamedPair entry = new NamedPair(name, val, type);
-
-			if (index < 0 || index > namedParameters.size())
-			{
-				namedParameters.add(entry);
-			}
-			else
-			{
-				namedParameters.add(index, entry);
-			}
-		}
-		return this;
 	}
 
 	/**
 	 * Sets the page parameter with {@code name} and {@code value} at the given {@code index}
-	 * 
+	 *
 	 * @param name
 	 * @param value
 	 * @param index
@@ -352,7 +393,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	/**
 	 * Sets the page parameter with {@code name} and {@code value}
-	 * 
+	 *
 	 * @param name
 	 * @param value
 	 * @return this
@@ -386,7 +427,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	/**
 	 * Copy the page parameters
-	 * 
+	 *
 	 * @param other
 	 *          The new parameters
 	 * @return this instance, for chaining
@@ -398,13 +439,14 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			indexedParameters = other.indexedParameters;
 			namedParameters = other.namedParameters;
 			locale = other.locale;
+			fragment = other.fragment;
 		}
 		return this;
 	}
 
 	/**
 	 * Merges the page parameters into this, overwriting existing values
-	 * 
+	 *
 	 * @param other
 	 *          The parameters to merge
 	 * @return this instance, for chaining
@@ -413,23 +455,59 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	{
 		if (other != null && this != other)
 		{
-			for (int index = 0; index < other.getIndexedCount(); index++)
-			{
-				if (!other.get(index).isNull())
-				{
-					set(index, other.get(index));
-				}
-			}
-			for (String name : other.getNamedKeys())
-			{
-				remove(name);
-			}
-			for (NamedPair curNamed : other.getAllNamed())
-			{
-				add(curNamed.getKey(), curNamed.getValue(), curNamed.getType());
-			}
+			mergeIndexed(other);
+			mergeNamed(other);
+
+			fragment = Objects.defaultIfNull(other.fragment, fragment);
 		}
 		return this;
+	}
+
+	private void mergeIndexed(PageParameters other)
+	{
+		final int otherIndexedCount = other.getIndexedCount();
+		for (int index = 0; index < otherIndexedCount; index++)
+		{
+			final StringValue value = other.get(index);
+			if (!value.isNull())
+			{
+				set(index, value);
+			}
+		}
+	}
+
+	private void mergeNamed(PageParameters other)
+	{
+		final List<NamedPair> otherNamed = other.namedParameters;
+		if (otherNamed == null || otherNamed.isEmpty())
+		{
+			return;
+		}
+
+		for (NamedPair curNamed : otherNamed)
+		{
+			remove(curNamed.getKey());
+		}
+
+		if (this.namedParameters == null)
+		{
+			this.namedParameters = new ArrayList<>(otherNamed.size());
+		}
+
+		for (NamedPair curNamed : otherNamed)
+		{
+			add(curNamed.getKey(), curNamed.getValue(),  curNamed.getType());
+		}
+	}
+
+	public String getFragment()
+	{
+		return fragment;
+	}
+
+	public void setFragment(String fragment)
+	{
+		this.fragment = fragment;
 	}
 
 	@Override
@@ -439,6 +517,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		int result = 1;
 		result = prime * result + ((indexedParameters == null) ? 0 : indexedParameters.hashCode());
 		result = prime * result + ((namedParameters == null) ? 0 : namedParameters.hashCode());
+		result = prime * result + ((fragment == null) ? 0 : fragment.hashCode());
 		return result;
 	}
 
@@ -468,12 +547,14 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			return false;
 		else if (!CollectionUtils.isEqualCollection(namedParameters, other.namedParameters))
 			return false;
+		if(!Strings.isEqual(other.fragment, fragment))
+			return false;
 		return true;
 	}
 
 	/**
 	 * Compares two {@link PageParameters} objects.
-	 * 
+	 *
 	 * @param p1
 	 *          The first parameters
 	 * @param p2
@@ -486,11 +567,11 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			return true;
 		}
-		if ((p1 == null) && (p2.getIndexedCount() == 0) && p2.getNamedKeys().isEmpty())
+		if ((p1 == null) && (p2.getIndexedCount() == 0) && p2.getNamedCount() == 0 && p2.fragment == null)
 		{
 			return true;
 		}
-		if ((p2 == null) && (p1.getIndexedCount() == 0) && p1.getNamedKeys().isEmpty())
+		if ((p2 == null) && (p1.getIndexedCount() == 0) && p1.getNamedCount() == 0 && p1.fragment == null)
 		{
 			return true;
 		}
@@ -498,11 +579,11 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	}
 
 	/**
-	 * @return <code>true</code> if the parameters are empty, <code>false</code> otherwise.
+	 * @return <code>true</code> if the parameters are empty and fragment is null, <code>false</code> otherwise.
 	 */
 	public boolean isEmpty()
 	{
-		return (getIndexedCount() == 0) && getNamedKeys().isEmpty();
+		return getIndexedCount() == 0 && getNamedCount() == 0 && fragment == null;
 	}
 
 	public PageParameters setLocale(Locale locale)
@@ -552,6 +633,17 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 				str.append('[').append(entry.getValue()).append(']');
 			}
 		}
+
+		if (fragment != null)
+		{
+			if (str.length() > 0)
+			{ 
+				str.append(", ");
+			}
+			
+			str.append("fragment=").append('\'').append(fragment).append('\'');
+		}
+
 		return str.toString();
 	}
 }

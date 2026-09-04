@@ -43,8 +43,7 @@ module.exports = function(grunt) {
 			"../../wicket-core/src/test/js/dom.js",
 			"../../wicket-core/src/test/js/channels.js",
 			"../../wicket-core/src/test/js/event.js",
-			"../../wicket-core/src/test/js/timer.js",
-			"../../wicket-core/src/test/js/amd.js"
+			"../../wicket-core/src/test/js/timer.js"
 		],
 		gymTestsJs = [
 			"../../wicket-examples/src/main/webapp/js-test/tests/ajax/form.js",
@@ -92,6 +91,7 @@ module.exports = function(grunt) {
 				"trailing": true,
 				"undef": true,
 				"strict": true,
+		        "esversion": 6,
 				"predef": [
 					"Wicket"
 				]
@@ -106,23 +106,12 @@ module.exports = function(grunt) {
 			all: {
 				options: {
 					urls: [
-						'http://localhost:38887/test/js/all.html?1.12.4',
-						'http://localhost:38887/test/js/all.html?2.2.4',
-						'http://localhost:38887/test/js/all.html?3.5.1'
-					]
-				}
-			},
-
-			/**
-			 * Run Asynchronous module definition tests
-			 */
-			amd: {
-				options: {
-					urls: [
-						'http://localhost:38887/test/js/amd.html?1.12.4',
-						'http://localhost:38887/test/js/amd.html?2.2.4',
-						'http://localhost:38887/test/js/amd.html?3.5.1'
-					]
+						'http://localhost:38887/test/js/all.html?4.0.0'
+					],
+					puppeteer: { 
+						headless: true, 
+						args: ['--no-sandbox'] 
+					}
 				}
 			}
 		},
@@ -131,7 +120,7 @@ module.exports = function(grunt) {
 			server: {
 				options: {
 					port: 38887,
-//					debug: true,
+					debug: true,
 					middleware: function(connect, options, middlewares) {
 						middlewares.unshift(function(req, res, next) {
 							if (req.url.indexOf('submitNestedForm') > 0) {

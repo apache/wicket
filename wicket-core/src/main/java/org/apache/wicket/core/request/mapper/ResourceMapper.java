@@ -18,7 +18,7 @@ package org.apache.wicket.core.request.mapper;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.request.IRequestHandler;
@@ -47,14 +47,15 @@ import org.apache.wicket.util.string.Strings;
  * <li>maps named parameters to query string arguments or placeholder path segments</li>
  * </ul>
  *
- * <strong>sample structure of url</strong>
- *
+ * <strong>Sample structure of url</strong>
+ * <p/>
  * <pre>
- *    /myresources/${category}/images/[indexed-param-0]/[indexed-param-1]?[named-param-1=value]&[named-param-2=value2]
+ *    /myresources/${category}/images/[indexed-param-0]/[indexed-param-1]?[named-param-1=value]&amp;[named-param-2=value2]
  * </pre>
  *
- * <h4>sample usage</h4>
+ * <strong>Sample usage</strong>
  *
+ * <p/>
  * in your wicket application's init() method use a statement like this
  * <p/>
  *

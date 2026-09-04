@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.pages;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.request.http.WebResponse;
 

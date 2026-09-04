@@ -102,43 +102,50 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 	@Override
 	protected IManageablePage getPersistedPage(String sessionIdentifier, int id)
 	{
-		byte[] data = readFile(sessionIdentifier, id);
-		if (data == null)
-		{
-			return null;
-		}
-		
-		return new SerializedPage(id, "unknown", data);
-	}
-
-	private byte[] readFile(String sessionIdentifier, int id)
-	{
 		File file = getPageFile(sessionIdentifier, id, false);
 		if (file.exists() == false)
 		{
 			return null;
 		}
 
-		byte[] data = null;
-
+		byte[] data;
 		try
 		{
-			FileChannel channel = FileChannel.open(file.toPath());
-			try
-			{
-				int size = (int)channel.size();
-				MappedByteBuffer buf = channel.map(MapMode.READ_ONLY, 0, size);
-				data = new byte[size];
-				buf.get(data);
-			}
-			finally
-			{
-				IOUtils.closeQuietly(channel);
-			}
+			data = readFile(file);
 		}
 		catch (IOException ex)
 		{
 			log.warn("cannot read page data for session {} page {}", sessionIdentifier, id, ex);
+			return null;
+		}
+
+		return new SerializedPage(id, "unknown", data);
+	}
+
+	/**
+	 * Read a file.
+	 * <p>
+	 * Note: This implementation uses a {@link FileChannel}.
+	 * 
+	 * @param file
+	 *            file to read
+	 * @throws IOException
+	 */
+	protected byte[] readFile(File file) throws IOException
+	{
+		byte[] data;
+
+		FileChannel channel = FileChannel.open(file.toPath());
+		try
+		{
+			int size = (int)channel.size();
+			MappedByteBuffer buf = channel.map(MapMode.READ_ONLY, 0, size);
+			data = new byte[size];
+			buf.get(data);
+		}
+		finally
+		{
+			IOUtils.closeQuietly(channel);
 		}
 
 		return data;
@@ -170,44 +177,59 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		{
 			throw new WicketRuntimeException("FilePageStore works with serialized pages only");
 		}
-		SerializedPage serializedPage = (SerializedPage) page;
+		SerializedPage serializedPage = (SerializedPage)page;
 
-		String type = serializedPage.getPageType();
 		byte[] data = serializedPage.getData();
 
-		writeFile(sessionIdentifier, serializedPage.getPageId(), type, data);
+		File file = getPageFile(sessionIdentifier, serializedPage.getPageId(), true);
+		try
+		{
+			writeFile(file, data);
+		}
+		catch (IOException ex)
+		{
+			log.warn("cannot store page data for session {} page {}", sessionIdentifier,
+				serializedPage.getPageId(), ex);
+		}
+
+		setPageType(file, serializedPage.getPageType());
 
 		checkMaxSize(sessionIdentifier);
 	}
 
-	private void writeFile(String sessionIdentifier, int pageId, String pageType, byte[] data)
+	/**
+	 * Write a file with given data.
+	 * <p>
+	 * Note: This implementation uses a {@link FileChannel} with
+	 * {@link StandardOpenOption#TRUNCATE_EXISTING}. This might fail on Windows systems with
+	 * "The requested operation cannot be performed on a file with a user-mapped section open", so subclasses
+	 * can omit this option to circumvent this error, although this prevents files from shrinking when pages become smaller.
+	 * Alternatively a completely different implementation can be chosen.
+	 * 
+	 * @param file
+	 *            file to write
+	 * @param data
+	 *            data to write
+	 * @throws IOException
+	 */
+	protected void writeFile(File file, byte[] data) throws IOException
 	{
-		File file = getPageFile(sessionIdentifier, pageId, true);
+		FileChannel channel = FileChannel.open(file.toPath(), StandardOpenOption.CREATE,
+			StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
 		try
 		{
-			FileChannel channel = FileChannel.open(file.toPath(), StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
-			try
-			{
-				ByteBuffer buffer = ByteBuffer.wrap(data);
-				channel.write(buffer);
-			}
-			finally
-			{
-				IOUtils.closeQuietly(channel);
-			}
+			ByteBuffer buffer = ByteBuffer.wrap(data);
+			channel.write(buffer);
 		}
-		catch (IOException ex)
+		finally
 		{
-			log.warn("cannot store page data for session {} page {}", sessionIdentifier, pageId, ex);
+			IOUtils.closeQuietly(channel);
 		}
-
-		setPageType(file, pageType);
 	}
 
 	private void checkMaxSize(String sessionIdentifier)
 	{
-		File[] files = folders.get(sessionIdentifier, true).listFiles();
+		File[] files = Files.list(folders.get(sessionIdentifier, true));
 		Arrays.sort(files, new LastModifiedComparator());
 
 		long total = 0;
@@ -255,7 +277,7 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		File folder = folders.get(sessionIdentifier, false);
 		if (folder.exists())
 		{
-			File[] files = folder.listFiles();
+			File[] files = Files.list(folder);
 			Arrays.sort(files, new LastModifiedComparator());
 			for (File file : files)
 			{
@@ -296,14 +318,14 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		String pageType = null;
 		try
 		{
-			UserDefinedFileAttributeView view = java.nio.file.Files
-				.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
+			UserDefinedFileAttributeView view = getAttributeView(file);
+			
 			ByteBuffer buffer = ByteBuffer.allocate(view.size(ATTRIBUTE_PAGE_TYPE));
 			view.read(ATTRIBUTE_PAGE_TYPE, buffer);
 			buffer.flip();
 			pageType = Charset.defaultCharset().decode(buffer).toString();
 		}
-		catch (IOException ex)
+		catch (Exception ex)
 		{
 			log.debug("cannot get pageType for {}", file);
 		}
@@ -311,10 +333,16 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		return pageType;
 	}
 
+	private UserDefinedFileAttributeView getAttributeView(File file)
+	{
+		return java.nio.file.Files
+			.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
+	}
+
 	/**
 	 * Set the type of page on the given file.
 	 * <p>
-	 * This is an optional operation that silently fails in case of an error. 
+	 * This is an optional operation that silently fails in case of an error.
 	 * 
 	 * @param file
 	 * @param pageType
@@ -323,11 +351,11 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 	{
 		try
 		{
-			UserDefinedFileAttributeView view = java.nio.file.Files
-				.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
+			UserDefinedFileAttributeView view = getAttributeView(file);
+
 			view.write(ATTRIBUTE_PAGE_TYPE, Charset.defaultCharset().encode(pageType));
 		}
-		catch (IOException ex)
+		catch (Exception ex)
 		{
 			log.debug("cannot set pageType for {}", file, ex);
 		}
@@ -340,7 +368,7 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 
 		for (File folder : folders.getAll())
 		{
-			for (File file : folder.listFiles())
+			for (File file : Files.list(folder))
 			{
 				String name = file.getName();
 				if (name.endsWith(FILE_SUFFIX))

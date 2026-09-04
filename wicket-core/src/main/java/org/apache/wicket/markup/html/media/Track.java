@@ -264,7 +264,7 @@ public class Track extends WebMarkupContainer
 	/**
 	 * Gets the kind of the track belongs to the media component
 	 *
-	 * @see {@link #setKind(Kind)}
+	 * @see #setKind(Kind)
 	 *
 	 * @return the kind
 	 */

@@ -35,31 +35,31 @@ public interface IXmlPullParser
 		/** next() must be called at least once for the Type to be valid */
 		NOT_INITIALIZED,
 
-		/** <name ...> */
+		/** &lt;name ...&gt; */
 		TAG,
 
 		/** Tag body in between two tags */
 		BODY,
 
-		/** <!-- ... --> */
+		/** &lt;!-- ... --&gt; */
 		COMMENT,
 
-		/** <!--[if ] ... --> */
+		/** &lt;!--[if ] ... --&gt; */
 		CONDITIONAL_COMMENT,
 
-		/** <![endif]--> */
+		/** &lt;![endif]--&gt; */
 		CONDITIONAL_COMMENT_ENDIF,
 
-		/** <![CDATA[ .. ]]> */
+		/** &lt;![CDATA[ .. ]]&gt; */
 		CDATA,
 
-		/** <?...> */
+		/** &lt;?...&gt; */
 		PROCESSING_INSTRUCTION,
 
-		/** <!DOCTYPE ...> */
+		/** &lt;!DOCTYPE ...&gt; */
 		DOCTYPE,
 
-		/** all other tags which look like <!.. > */
+		/** all other tags which look like &lt;!.. &gt; */
 		SPECIAL_TAG,
 	}
 

@@ -26,21 +26,23 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
-import javax.servlet.AsyncContext;
-import javax.servlet.DispatcherType;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpUpgradeHandler;
-import javax.servlet.http.Part;
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.http.Part;
 
 /**
  * A copy of the http servlet request used to create the WebSocket.
@@ -82,6 +84,7 @@ public class ServletRequestCopy implements HttpServletRequest
 	private final Principal principal;
 
 	private String characterEncoding;
+	private final String requestId;
 
 	public ServletRequestCopy(HttpServletRequest request) {
 		this.servletPath = request.getServletPath();
@@ -132,6 +135,7 @@ public class ServletRequestCopy implements HttpServletRequest
 			s = e.nextElement();
 			parameters.put(s, request.getParameterValues(s));
 		}
+		requestId = UUID.randomUUID().toString();
 	}
 
 	@Override
@@ -349,12 +353,6 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public String getRealPath(String path)
-	{
-		return null;
-	}
-
-	@Override
 	public int getRemotePort()
 	{
 		return remotePort;
@@ -417,6 +415,21 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public DispatcherType getDispatcherType()
 	{
+		return null;
+	}
+
+	@Override
+	public String getRequestId() {
+		return requestId;
+	}
+
+	@Override
+	public String getProtocolRequestId() {
+		return null;
+	}
+
+	@Override
+	public ServletConnection getServletConnection() {
 		return null;
 	}
 
@@ -501,12 +514,6 @@ public class ServletRequestCopy implements HttpServletRequest
 
 	@Override
 	public boolean isRequestedSessionIdFromURL()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isRequestedSessionIdFromUrl()
 	{
 		return false;
 	}

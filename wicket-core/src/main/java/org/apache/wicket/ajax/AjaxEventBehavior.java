@@ -23,6 +23,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
@@ -68,6 +69,8 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 	private static final long serialVersionUID = 1L;
 
+	private static final char EVENT_NAME_SEPARATOR = ' ';
+
 	private final String event;
 
 	/**
@@ -80,14 +83,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	{
 		Args.notEmpty(event, "event");
 
-		if ("inputchange".equals(event))
-		{
-			// TODO Wicket 10 remove (see WICKET-6667)
-			event = "input";
-			LOGGER.warn("Since version 9.0.0 Wicket no longer supports 'inputchange' events, please use 'input' instead");
-		}
-
-		this.event = event;
+		this.event = event;	
 	}
 
 	@Override
@@ -99,7 +95,14 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		{
 			CharSequence js = getCallbackScript(component);
 
-			response.render(OnDomReadyHeaderItem.forScript(js.toString()));
+			if ("load".equals(getEvent()))
+			{
+				response.render(OnLoadHeaderItem.forScript(js.toString()));
+			}
+			else
+			{
+				response.render(OnDomReadyHeaderItem.forScript(js.toString()));
+			}
 		}
 	}
 
@@ -119,11 +122,17 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 */
 	public String getEvent()
 	{
-		String[] splitEvents = event.split("\\s+");
+		if (event.indexOf(EVENT_NAME_SEPARATOR) == -1)
+		{
+			return event;
+		}
+
+		String[] splitEvents = Strings.split(event, EVENT_NAME_SEPARATOR);
 		List<String> cleanedEvents = new ArrayList<>(splitEvents.length);
 		for (String evt : splitEvents)
 		{
-			if (Strings.isEmpty(evt) == false)
+			evt = evt.trim();
+			if (!Strings.isEmpty(evt))
 			{
 				cleanedEvents.add(evt);
 			}

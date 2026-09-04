@@ -18,8 +18,8 @@ package org.apache.wicket.bean.validation.customconstraint;
 
 import java.util.regex.Matcher;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
 import org.apache.wicket.util.string.Strings;

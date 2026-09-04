@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Wicket Quickstart Archetype Homepage</title>
+    </head>
+    <body>
+        <strong>Wicket Quickstart Archetype Homepage</strong>
+        <br/><br/>
+        <span wicket:id="message">message will be here</span>
+        
+        <form wicket:id="form">
+          <input wicket:id="textfield"/>
+          <input type="submit" wicket:id="submit"/>
+
+        <div wicket:id="listViewContainer">
+          <wicket:container wicket:id="listView">
+             <label wicket:id="label"/><br/>
+          </wicket:container>
+        </div>
+
+        <input type="submit" href="#" wicket:id="addButton" value="Click me to add a row"/>
+
+        </form>
+        
+    </body>
+</html>
+

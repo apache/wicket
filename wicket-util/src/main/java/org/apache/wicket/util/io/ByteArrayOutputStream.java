@@ -172,6 +172,10 @@ public class ByteArrayOutputStream extends OutputStream
 			return;
 		}
 		int newcount = count + len;
+		if (newcount < 0)
+		{
+			throw new IndexOutOfBoundsException("Total size too large: " + newcount);
+		}
 		int remaining = len;
 		int inBufferPos = count - filledBufferSum;
 		while (remaining > 0)

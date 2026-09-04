@@ -20,37 +20,130 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>9.0.0-M6-SNAPSHOT</version>
+		<version>11.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-core</artifactId>
-	<packaging>bundle</packaging>
+	<packaging>jar</packaging>
 	<name>Wicket Core</name>
 	<description>
 		Wicket is a Java web application framework that takes simplicity,
-		separation of concerns and ease of development to a whole new level. 
-		Wicket pages can be mocked up, previewed and later revised using 
-		standard WYSIWYG HTML design tools. Dynamic content processing and 
-		form handling is all handled in Java code using a first-class 
-		component model backed by POJO data beans that can easily be 
+		separation of concerns and ease of development to a whole new level.
+		Wicket pages can be mocked up, previewed and later revised using
+		standard WYSIWYG HTML design tools. Dynamic content processing and
+		form handling is all handled in Java code using a first-class
+		component model backed by POJO data beans that can easily be
 		persisted using your favorite technology.
 	</description>
-
-	<properties>
-		<automatic-module-name>org.apache.wicket.core</automatic-module-name>
+		<properties>
+			<osgi.export.package>
+org.apache.wicket;-noimport:=true,
+org.apache.wicket.ajax;-noimport:=true,
+org.apache.wicket.ajax.attributes;-noimport:=true,
+org.apache.wicket.ajax.form;-noimport:=true,
+org.apache.wicket.ajax.json;-noimport:=true,
+org.apache.wicket.ajax.markup.html;-noimport:=true,
+org.apache.wicket.ajax.markup.html.form;-noimport:=true,
+org.apache.wicket.ajax.markup.html.navigation.paging;-noimport:=true,
+org.apache.wicket.application;-noimport:=true,
+org.apache.wicket.authorization;-noimport:=true,
+org.apache.wicket.authorization.strategies;-noimport:=true,
+org.apache.wicket.authorization.strategies.action;-noimport:=true,
+org.apache.wicket.authorization.strategies.page;-noimport:=true,
+org.apache.wicket.behavior;-noimport:=true,
+org.apache.wicket.coep;-noimport:=true,
+org.apache.wicket.coop;-noimport:=true,
+org.apache.wicket.core.random;-noimport:=true,
+org.apache.wicket.core.request;-noimport:=true,
+org.apache.wicket.core.request.handler;-noimport:=true,
+org.apache.wicket.core.request.handler.logger;-noimport:=true,
+org.apache.wicket.core.request.mapper;-noimport:=true,
+org.apache.wicket.core.util.crypt;-noimport:=true,
+org.apache.wicket.core.util.file;-noimport:=true,
+org.apache.wicket.core.util.lang;-noimport:=true,
+org.apache.wicket.core.util.objects.checker;-noimport:=true,
+org.apache.wicket.core.util.resource;-noimport:=true,
+org.apache.wicket.core.util.resource.locator;-noimport:=true,
+org.apache.wicket.core.util.resource.locator.caching;-noimport:=true,
+org.apache.wicket.core.util.string;-noimport:=true,
+org.apache.wicket.core.util.string.interpolator;-noimport:=true,
+org.apache.wicket.core.util.watch;-noimport:=true,
+org.apache.wicket.csp;-noimport:=true,
+org.apache.wicket.css;-noimport:=true,
+org.apache.wicket.event;-noimport:=true,
+org.apache.wicket.feedback;-noimport:=true,
+org.apache.wicket.javascript;-noimport:=true,
+org.apache.wicket.markup;-noimport:=true,
+org.apache.wicket.markup.head;-noimport:=true,
+org.apache.wicket.markup.head.filter;-noimport:=true,
+org.apache.wicket.markup.head.http2;-noimport:=true,
+org.apache.wicket.markup.head.internal;-noimport:=true,
+org.apache.wicket.markup.html;-noimport:=true,
+org.apache.wicket.markup.html.basic;-noimport:=true,
+org.apache.wicket.markup.html.border;-noimport:=true,
+org.apache.wicket.markup.html.debug;-noimport:=true,
+org.apache.wicket.markup.html.form;-noimport:=true,
+org.apache.wicket.markup.html.form.upload;-noimport:=true,
+org.apache.wicket.markup.html.form.upload.resource;-noimport:=true,
+org.apache.wicket.markup.html.form.validation;-noimport:=true,
+org.apache.wicket.markup.html.image;-noimport:=true,
+org.apache.wicket.markup.html.image.resource;-noimport:=true,
+org.apache.wicket.markup.html.internal;-noimport:=true,
+org.apache.wicket.markup.html.link;-noimport:=true,
+org.apache.wicket.markup.html.list;-noimport:=true,
+org.apache.wicket.markup.html.media;-noimport:=true,
+org.apache.wicket.markup.html.media.audio;-noimport:=true,
+org.apache.wicket.markup.html.media.video;-noimport:=true,
+org.apache.wicket.markup.html.navigation.paging;-noimport:=true,
+org.apache.wicket.markup.html.pages;-noimport:=true,
+org.apache.wicket.markup.html.panel;-noimport:=true,
+org.apache.wicket.markup.loader;-noimport:=true,
+org.apache.wicket.markup.parser;-noimport:=true,
+org.apache.wicket.markup.parser.filter;-noimport:=true,
+org.apache.wicket.markup.renderStrategy;-noimport:=true,
+org.apache.wicket.markup.repeater;-noimport:=true,
+org.apache.wicket.markup.repeater.data;-noimport:=true,
+org.apache.wicket.markup.repeater.util;-noimport:=true,
+org.apache.wicket.markup.resolver;-noimport:=true,
+org.apache.wicket.markup.transformer;-noimport:=true,
+org.apache.wicket.mock;-noimport:=true,
+org.apache.wicket.model;-noimport:=true,
+org.apache.wicket.model.util;-noimport:=true,
+org.apache.wicket.page;-noimport:=true,
+org.apache.wicket.pageStore;-noimport:=true,
+org.apache.wicket.pageStore.disk;-noimport:=true,
+org.apache.wicket.protocol.http;-noimport:=true,
+org.apache.wicket.protocol.http.mock;-noimport:=true,
+org.apache.wicket.protocol.http.request;-noimport:=true,
+org.apache.wicket.protocol.http.servlet;-noimport:=true,
+org.apache.wicket.protocol.https;-noimport:=true,
+org.apache.wicket.request.component;-noimport:=true,
+org.apache.wicket.request.cycle;-noimport:=true,
+org.apache.wicket.request.handler.render;-noimport:=true,
+org.apache.wicket.request.handler.resource;-noimport:=true,
+org.apache.wicket.request.resource;-noimport:=true,
+org.apache.wicket.request.resource.caching;-noimport:=true,
+org.apache.wicket.request.resource.caching.version;-noimport:=true,
+org.apache.wicket.resource;-noimport:=true,
+org.apache.wicket.resource.bundles;-noimport:=true,
+org.apache.wicket.resource.loader;-noimport:=true,
+org.apache.wicket.response;-noimport:=true,
+org.apache.wicket.response.filter;-noimport:=true,
+org.apache.wicket.serialize;-noimport:=true,
+org.apache.wicket.serialize.java;-noimport:=true,
+org.apache.wicket.session;-noimport:=true,
+org.apache.wicket.settings;-noimport:=true,
+org.apache.wicket.util.cookies;-noimport:=true,
+org.apache.wicket.util.image;-noimport:=true,
+org.apache.wicket.util.reference;-noimport:=true,
+org.apache.wicket.util.template;-noimport:=true,
+org.apache.wicket.util.tester;-noimport:=true,
+org.apache.wicket.validation;-noimport:=true,
+org.apache.wicket.validation.validator;-noimport:=true
+		</osgi.export.package>
+		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,!com.sun.crypto.provider,org.slf4j*;version="[1.7,3)",jakarta.servlet,jakarta.servlet.http,*</osgi.import.package>
 	</properties>
-
 	<dependencies>
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
 		<dependency>
 			<groupId>com.github.openjson</groupId>
 			<artifactId>openjson</artifactId>
@@ -64,21 +157,13 @@
 			<artifactId>wicket-util</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk18on</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>org.danekja</groupId>
 			<artifactId>jdk-serializable-functional</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-params</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -86,23 +171,10 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>net.alchim31.maven</groupId>
-					<artifactId>yuicompressor-maven-plugin</artifactId>
-					<configuration>
-						<excludes>
-							<exclude>**/jquery*.js</exclude>
-						</excludes>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<plugins>
 			<plugin>
-				<groupId>net.alchim31.maven</groupId>
-				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<groupId>org.primefaces.extensions</groupId>
+				<artifactId>resources-optimizer-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

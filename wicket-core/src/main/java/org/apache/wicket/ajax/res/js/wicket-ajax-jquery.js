@@ -183,6 +183,14 @@
 		}
 	};
 
+    Wicket.isFunction = function (f) {
+        return typeof(f) === 'function';
+    };
+
+    Wicket.isWindow = function (obj) { 
+        return typeof(obj) !== 'undefined' && obj !== null && obj === obj.window;
+    };
+    
 	/**
 	 * Logging functionality.
 	 */
@@ -413,7 +421,7 @@
 				attrs.async = true;
 			}
 
-			if (!jQuery.isNumeric(attrs.rt)) {
+			if (!Number.isFinite(attrs.rt)) {
 				attrs.rt = 0;
 			}
 
@@ -443,7 +451,7 @@
 			var target;
 			if (attrs.event) {
 				target = attrs.event.target;
-			} else if (!jQuery.isWindow(attrs.c)) {
+			} else if (!Wicket.isWindow(attrs.c)) {
 				target = Wicket.$(attrs.c);
 			} else {
 				target = window;
@@ -458,7 +466,7 @@
 		 * @private
 		 */
 		_executeHandlers: function (handlers) {
-			if (jQuery.isArray(handlers)) {
+			if (Array.isArray(handlers)) {
 
 				// cut the handlers argument
 				var args = Array.prototype.slice.call(arguments).slice(1);
@@ -469,7 +477,7 @@
 
 				for (var i = 0; i < handlers.length; i++) {
 					var handler = handlers[i];
-					if (jQuery.isFunction(handler)) {
+					if (Wicket.isFunction(handler)) {
 						handler.apply(that, args);
 					} else {
 						new Function(handler).apply(that, args);
@@ -492,7 +500,7 @@
 			var result = [],
 				value,
 				name;
-			if (jQuery.isArray(parameters)) {
+			if (Array.isArray(parameters)) {
 				result = parameters;
 			}
 			else if (jQuery.isPlainObject(parameters)) {
@@ -529,7 +537,7 @@
 			for (var i = 0; i < deps.length; i++) {
 				var dep = deps[i],
 					extraParam;
-				if (jQuery.isFunction(dep)) {
+				if (Wicket.isFunction(dep)) {
 					extraParam = dep(attrs);
 				} else {
 					extraParam = new Function('attrs', dep)(attrs);
@@ -619,7 +627,7 @@
 
 			var preconditions = attrs.pre || [];
 			preconditions = defaultPrecondition.concat(preconditions);
-			if (jQuery.isArray(preconditions)) {
+			if (Array.isArray(preconditions)) {
 
 				var that = this._getTarget(attrs);
 
@@ -627,7 +635,7 @@
 
 					var precondition = preconditions[p];
 					var result;
-					if (jQuery.isFunction(precondition)) {
+					if (Wicket.isFunction(precondition)) {
 						result = precondition.call(that, attrs);
 					} else {
 						result = new Function(precondition).call(that, attrs);
@@ -652,14 +660,14 @@
 					var scName = attrs.sc;
 					data = data.concat({name: scName, value: 1});
 				}
-			} else if (attrs.c && !jQuery.isWindow(attrs.c)) {
+			} else if (attrs.c && !Wicket.isWindow(attrs.c)) {
 				// serialize just the form component with id == attrs.c
 				var el = Wicket.$(attrs.c);
 				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
 			}
 			
 			// collect the dynamic extra parameters
-			if (jQuery.isArray(attrs.dep)) {
+			if (Array.isArray(attrs.dep)) {
 				var dynamicData = this._calculateDynamicParameters(attrs);
 				if (attrs.m.toLowerCase() === 'post') {
 					data = data.concat(dynamicData);
@@ -850,20 +858,32 @@
 				}
 
 				var steps = context.steps;
-				var stepIndexOfLastReplacedComponent = -1;
 
-				// go through the ajax response and execute all items
+				// go through the ajax response and process priority evaluations and
+				// header contributions first
 				for (var i = 0; i < root.childNodes.length; ++i) {
-					var node = root.childNodes[i];
-					
-					if (node.tagName === "header-contribution") {
-						this.processHeaderContribution(context, node);
-					} else if (node.tagName === "component") {
+					var childNode = root.childNodes[i];
+					if (childNode.tagName === "header-contribution") {
+						this.processHeaderContribution(context, childNode);
+					} else if (childNode.tagName === "priority-evaluate") {
+						this.processHeaderContribution(context, childNode);
+					}
+				}
+
+				// ... then add components, process remaining evaluations and a
+				// possible redirect
+				var stepIndexOfLastReplacedComponent = -1;
+				for (var c = 0; c < root.childNodes.length; ++c) {
+					var node = root.childNodes[c];
+
+					if (node.tagName === "component") {
 						if (stepIndexOfLastReplacedComponent === -1) {
 							this.processFocusedComponentMark(context);
 						}
 						stepIndexOfLastReplacedComponent = steps.length;
 						this.processComponent(context, node);
+					} else if (node.tagName === "evaluate") {
+						this.processHeaderContribution(context, node);
 					} else if (node.tagName === "redirect") {
 						this.processRedirect(context, node);
 					}
@@ -1136,7 +1156,7 @@
 					if ($select.length > 0 && $select.prop('disabled') === false) {
 						var name = $select.prop('name');
 						var values = $select.val();
-						if (jQuery.isArray(values)) {
+						if (Array.isArray(values)) {
 							for (var v = 0; v < values.length; v++) {
 								var value = values[v];
 								result.push( { name: name, value: value } );
@@ -1321,6 +1341,7 @@
 					} else {
 						e.style.display = display;
 					}
+					e.removeAttribute("hidden");
 				}
 			},
 
@@ -1329,6 +1350,7 @@
 				e = Wicket.$(e);
 				if (e !== null) {
 					jQuery(e).hide();
+					e.setAttribute("hidden", "");
 				}
 			},
 
@@ -1444,7 +1466,7 @@
 					return;
 				} else {
 					// jQuery 1.9+ expects '<' as the very first character in text
-					var cleanedText = jQuery.trim(text);
+					var cleanedText = text.trim();
 
 					var $newElement = jQuery(cleanedText);
 					jQuery(element).replaceWith($newElement);
@@ -1461,7 +1483,7 @@
 				var topic = we.Topic;
 
 				// jQuery 1.9+ expects '<' as the very first character in text
-				var cleanedText = jQuery.trim(text);
+				var cleanedText = text.trim();
 
 				var $newElement = jQuery(cleanedText);
 				jQuery(element).append($newElement);
@@ -1651,7 +1673,7 @@
 				attrs.c = attrs.c || window;
 				attrs.e = attrs.e || [ 'domready' ];
 
-				if (!jQuery.isArray(attrs.e)) {
+				if (!Array.isArray(attrs.e)) {
 					attrs.e = [ attrs.e ];
 				}
 
@@ -2180,6 +2202,7 @@
 
 						var safeFocus = function() {
 							try {
+                                // toFocus is not a JQuery object. Thus use focus.
 								toFocus.focus();
 							} catch (ignore) {
 								// WICKET-6209 IE fails if toFocus is disabled
@@ -2404,6 +2427,22 @@
 
 					jQuery(document).triggerHandler(topic, args);
 					jQuery(document).triggerHandler('*', args);
+				}
+			},
+
+			/**
+			 * Submits the given form using, if available, standard form processing
+			 * including client-side validation and firing of SubmitEvent.
+			 * If it is not available, uses jQuery event triggering to submit the form
+			 * and send out the SubmitEvent.
+			 *
+			 * @param form {HTMLFormElement} form to submit
+			 */
+			requestSubmit: function(form) {
+				if (form.requestSubmit) {
+					form.requestSubmit();
+				} else {
+					jQuery(form).trigger('submit');
 				}
 			},
 

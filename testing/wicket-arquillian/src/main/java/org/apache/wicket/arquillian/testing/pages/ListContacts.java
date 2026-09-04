@@ -33,7 +33,7 @@
 package org.apache.wicket.arquillian.testing.pages;
 
 import javax.annotation.Resource;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.wicket.arquillian.testing.dao.ContactDao;
 import org.apache.wicket.arquillian.testing.model.Contact;
@@ -45,7 +45,7 @@ import org.apache.wicket.markup.html.list.ListView;
 
 /**
  * Dynamic behavior for the ListContact page
- * 
+ *
  * @author Filippo Diotalevi
  */
 @SuppressWarnings("serial")

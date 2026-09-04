@@ -26,7 +26,7 @@ This test class allows to check if the generated markup contains one or more tag
 [source,java]
 ----
 @Test
-public void homePageMarkupTest()
+void homePageMarkupTest()
 {
 	//start and render the test page
 	tester.startPage(HomePage.class);
@@ -35,13 +35,13 @@ public void homePageMarkupTest()
 
 	TagTester tagTester = TagTester.createTagByAttribute(responseTxt, "class", "myClass"); 
 
-	Assert.assertNotNull(tagTester);
-	Assert.assertEquals("span", tagTester.getName());	
+	Assertions.assertNotNull(tagTester);
+	Assertions.assertEquals("span", tagTester.getName());	
 
 	List<TagTester> tagTesterList = TagTester.createTagsByAttribute(responseTxt, 
 						"class", "myClass", false);
 	
-	Assert.assertEquals(2, tagTesterList.size());
+	Assertions.assertEquals(2, tagTesterList.size());
 }
 ----
 
@@ -52,7 +52,7 @@ Another utility class that comes in handy when we want to test components markup
 [source,java]
 ----
 @Test
-public void customComponentMarkupTest()
+void customComponentMarkupTest()
 {
 	//instantiate MyComponent
 	MyComponent myComponent = //...

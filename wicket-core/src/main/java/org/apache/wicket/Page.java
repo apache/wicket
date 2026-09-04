@@ -249,7 +249,6 @@ public abstract class Page extends MarkupContainer
 		dirty(false);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean setFreezePageId(boolean freeze)
 	{
@@ -708,7 +707,7 @@ public abstract class Page extends MarkupContainer
 		// Set versioning of page based on default
 		setVersioned(getApplication().getPageSettings().getVersionPagesByDefault());
 
-		// All Pages are born dirty so they get clustered right away
+		// All Pages are born dirty, so they get clustered right away
 		dirty(true);
 
 		// this is a bit of a dirty hack, but calling dirty(true) results in isStateless called
@@ -830,7 +829,7 @@ public abstract class Page extends MarkupContainer
 
 		if (getApplication().getDebugSettings().isOutputMarkupContainerClassName())
 		{
-			String className = Classes.name(getClass());
+			final String className = Classes.name(getClass());
 			getResponse().write("<!-- Page Class ");
 			getResponse().write(className);
 			getResponse().write(" END -->\n");

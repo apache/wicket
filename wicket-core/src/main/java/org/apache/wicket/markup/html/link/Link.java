@@ -22,10 +22,13 @@ import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import static org.apache.wicket.core.util.string.JavaScriptUtils.escapeQuotesAndBackslash;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor (&lt;a href...)
@@ -34,7 +37,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * other element, a click javascript event handler will be added.
  * <p>
  * You can use a link like:
- * 
+ *
  * <pre>
  * add(new Link(&quot;myLink&quot;)
  * {
@@ -44,23 +47,23 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  *     }
  * );
  * </pre>
- * 
+ *
  * and in your HTML file:
- * 
+ *
  * <pre>
  *  &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
- * 
+ *
  * or:
- * 
+ *
  * <pre>
  *  &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
- * 
- * </p>
+ *
+ * <p>
  * The following snippet shows how to pass a parameter from the Page creating the Page to the Page
  * responded by the Link.
- * 
+ *
  * <pre>
  * add(new Link&lt;MyObject&gt;(&quot;link&quot;, listItem.getModel())
  * {
@@ -70,7 +73,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  *         setResponsePage(new MyPage(obj));
  *     }
  * </pre>
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @param <T>
@@ -120,7 +123,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 
 	/**
 	 * Gets any anchor component.
-	 * 
+	 *
 	 * @return Any anchor component to jump to, might be null
 	 */
 	public Component getAnchor()
@@ -130,7 +133,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 
 	/**
 	 * Gets whether link should automatically enable/disable based on current page.
-	 * 
+	 *
 	 * @return Whether this link should automatically enable/disable based on current page.
 	 */
 	public final boolean getAutoEnable()
@@ -141,7 +144,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 	/**
 	 * Gets the popup specification. If not-null, a javascript on-click event handler will be
 	 * generated that opens a new window using the popup properties.
-	 * 
+	 *
 	 * @return the popup specification.
 	 */
 	public final PopupSettings getPopupSettings()
@@ -180,7 +183,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
-	 * 
+	 *
 	 * Called when a link is clicked. The implementation of this method is currently to simply call
 	 * onClick(), but this may be augmented in the future.
 	 */
@@ -198,7 +201,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 	 * {@link Component#getOutputMarkupId()} flag true, or it must be attached to a &lt;a tag with a
 	 * href attribute of more than one character starting with '#' ('&lt;a href="#someAnchor" ...
 	 * ').
-	 * 
+	 *
 	 * @param anchor
 	 *            The anchor
 	 * @return this
@@ -212,7 +215,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 
 	/**
 	 * Sets whether this link should automatically enable/disable based on current page.
-	 * 
+	 *
 	 * @param autoEnable
 	 *            whether this link should automatically enable/disable based on current page.
 	 * @return This
@@ -226,7 +229,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 	/**
 	 * Sets the popup specification. If not-null, a javascript on-click event handler will be
 	 * generated that opens a new window using the popup properties.
-	 * 
+	 *
 	 * @param popupSettings
 	 *            the popup specification.
 	 * @return This
@@ -252,7 +255,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 	 * with any set anchor component yourself. You also have to manually append the '#' at the right
 	 * place.
 	 * </p>
-	 * 
+	 *
 	 * @param tag
 	 *            The component tag
 	 * @param url
@@ -320,7 +323,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 
 	/**
 	 * Gets the url to use for this link.
-	 * 
+	 *
 	 * @return The URL that this link links to
 	 */
 	protected CharSequence getURL()
@@ -330,7 +333,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 
 	/**
 	 * Whether this link refers to the given page.
-	 * 
+	 *
 	 * @param page
 	 *            A page
 	 * @return True if this link goes to the given page
@@ -342,7 +345,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 
 	/**
 	 * Handles this link's tag. OVERRIDES MUST CALL SUPER.
-	 * 
+	 *
 	 * @param tag
 	 *            the component tag
 	 * @see org.apache.wicket.Component#onComponentTag(ComponentTag)
@@ -380,7 +383,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 			disableLink(tag);
 		}
 	}
-	
+
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
@@ -389,6 +392,12 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 		if (isEnabledInHierarchy() && useJSEventBindingWhenNeeded())
 		{
 			ComponentTag tag = getMarkupTag();
+
+			if (tag == null)
+			{
+			    throw new MarkupNotFoundException("No valid ComponentTag could be found for component with id '" +
+			            getId() + "'. (Are markup id and Java id the same?)");
+            }
 
 			// Set href to link to this link's linkClicked method
 			CharSequence url = getURL();
@@ -407,7 +416,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 			// next check for popup settings
 			if (popupSettings != null)
 			{
-				popupSettings.setTarget("'" + url + "'");
+				popupSettings.setTarget("'" + url.toString() + "'");
 				response.render(OnEventHeaderItem.forComponent(this, "click",
 					popupSettings.getPopupJavaScript()));
 				return;
@@ -424,17 +433,16 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 				// generated during page load. This check ensures that the click is ignored
 				response.render(OnEventHeaderItem.forComponent(this, "click",
 					"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; "
-						+ "if (win == window) { window.location.href='" + url
+						+ "if (win == window) { window.location.href='" + escapeQuotesAndBackslash(url)
 						+ "'; } ;return false"));
-				return;
 			}
 		}
 	}
-	
+
 	/**
 	 * This method can be overridden by a subclass to disable the JS event binding or provide custom
 	 * event binding code is used.
-	 * 
+	 *
 	 * @return true when a javascripot event binding must used to handle the click event.
 	 */
 	protected boolean useJSEventBindingWhenNeeded()

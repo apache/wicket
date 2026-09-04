@@ -23,11 +23,11 @@ import org.junit.jupiter.api.Test;
  *
  * Based on https://gist.github.com/1977817, contributed by Andreas Pieber
  */
-public class OsgiClashingPackagesTest
+class OsgiClashingPackagesTest
 {
 
 	@Test
-	public void collectProjectPackages() throws IOException
+	void collectProjectPackages() throws IOException
 	{
 		char pathSeparator = System.getProperty("path.separator").charAt(0);
 		String classpath = System.getProperty("java.class.path");
@@ -39,7 +39,7 @@ public class OsgiClashingPackagesTest
 		for (String dependency : dependencies)
 		{
 			// process only wicket-xyz.jar
-			if (dependency.contains("wicket-") && dependency.endsWith(".jar"))
+			if (dependency.contains("wicket-") && dependency.endsWith(".jar") && !dependency.endsWith("-tests.jar"))
 			{
 				JarFile jarFile = new JarFile(dependency);
 				try
@@ -118,11 +118,14 @@ public class OsgiClashingPackagesTest
 		{
 			for (String packageWithContent : packagesWithContent)
 			{
-				if (!projectBuckets.containsKey(packageWithContent))
+				if (!"".equals(packageWithContent))
 				{
-					projectBuckets.put(packageWithContent, new ArrayList<>());
+					if (!projectBuckets.containsKey(packageWithContent))
+					{
+						projectBuckets.put(packageWithContent, new ArrayList<>());
+					}
+					projectBuckets.get(packageWithContent).add(this);
 				}
-				projectBuckets.get(packageWithContent).add(this);
 			}
 		}
 

@@ -31,7 +31,6 @@ import org.apache.wicket.markup.html.internal.HtmlHeaderItemsContainer;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
-import org.apache.wicket.util.tester.BaseWicketTester;
 
 
 /**

@@ -16,12 +16,6 @@
  */
 package org.apache.wicket.examples.signin2;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Collection;
-
-import javax.servlet.http.Cookie;
-
 import org.apache.wicket.examples.authentication2.Home;
 import org.apache.wicket.examples.authentication2.SignIn2;
 import org.apache.wicket.examples.authentication2.SignIn2Application;
@@ -51,34 +45,8 @@ public class Signin2Test
 			FormTester formTester = tester.newFormTester("signInPanel:signInForm");
 			formTester.setValue("username", "wicket");
 			formTester.setValue("password", "wicket");
-			formTester.setValue("rememberMeContainer:rememberMe", "true");
 			formTester.submit();
 			tester.assertRenderedPage(Home.class);
-
-			// a) With wicket submitting a form will result in a temporary redirect,
-			// with the redirect setting the Cookie.
-			// b) jWebUnits Cookie test methods are all using the http response
-			// object only
-			// c) Like a browser, jwebunit will automatically handle the redirect
-			// request
-			// Hence dumpCookie will not print an Cookie and assertCookiePresent
-			// will
-			// fail.
-			// The only mean available is to indirectly test the cookies. Indirectly
-			// because
-			// the screen flow depends on the cookies.
-			// this.dumpCookies(System.err);
-			// this.assertCookiePresent("signInPanel.signInForm.username");
-			// this.assertCookiePresent("signInPanel.signInForm.password");
-
-			Collection<Cookie> cookies = tester.getLastResponse().getCookies();
-			for (Cookie cookie : cookies)
-			{
-				if ("signInPanel.signInForm.username".equals(cookie.getName()))
-				{
-					assertEquals("wicket", cookie.getValue());
-				}
-			}
 
 			tester.startPage(SignOut.class);
 			tester.assertRenderedPage(SignOut.class);

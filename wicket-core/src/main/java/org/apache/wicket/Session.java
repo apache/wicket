@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
+
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.core.request.ClientInfo;
@@ -56,30 +58,31 @@ import org.slf4j.LoggerFactory;
  * <li><b>Access</b> - the Session can be retrieved either by {@link Component#getSession()}
  * or by directly calling the static method Session.get(). All classes which extend directly or indirectly
  * {@link org.apache.wicket.markup.html.WebMarkupContainer} can also use its convenience method
- * {@link org.apache.wicket.markup.html.WebMarkupContainer#getWebSession()}
+ * {@link org.apache.wicket.markup.html.WebMarkupContainer#getWebSession()}</li>
  * 
  * <li><b>Locale</b> - A session has a Locale property to support localization. The Locale for a
  * session can be set by calling {@link Session#setLocale(Locale)}. The Locale for a Session
- * determines how localized resources are found and loaded.
+ * determines how localized resources are found and loaded.</li>
  * 
  * <li><b>Style</b> - Besides having an appearance based on locale, resources can also have
  * different looks in the same locale (a.k.a. "skins"). The style for a session determines the look
  * which is used within the appropriate locale. The session style ("skin") can be set with the
- * setStyle() method.
+ * setStyle() method.</li>
  * 
  * <li><b>Resource Loading</b> - Based on the Session locale and style, searching for resources
  * occurs in the following order (where sourcePath is set via the ApplicationSettings object for the
  * current Application, and style and locale are Session properties):
- * <ul>
- * 1. [sourcePath]/name[style][locale].[extension] <br>
- * 2. [sourcePath]/name[locale].[extension] <br>
- * 3. [sourcePath]/name[style].[extension] <br>
- * 4. [sourcePath]/name.[extension] <br>
- * 5. [classPath]/name[style][locale].[extension] <br>
- * 6. [classPath]/name[locale].[extension] <br>
- * 7. [classPath]/name[style].[extension] <br>
- * 8. [classPath]/name.[extension] <br>
- * </ul>
+ * <ol>
+ * <li> [sourcePath]/name[style][locale].[extension]</li>
+ * <li> [sourcePath]/name[locale].[extension]</li>
+ * <li> [sourcePath]/name[style].[extension]</li>
+ * <li> [sourcePath]/name.[extension]</li>
+ * <li> [classPath]/name[style][locale].[extension]</li>
+ * <li> [classPath]/name[locale].[extension]</li>
+ * <li> [classPath]/name[style].[extension]</li>
+ * <li> [classPath]/name.[extension]</li>
+ * </ol>
+ * </li>
  * 
  * <li><b>Session Properties</b> - Arbitrary objects can be attached to a Session by installing a
  * session factory on your Application class which creates custom Session subclasses that have
@@ -87,20 +90,21 @@ import org.slf4j.LoggerFactory;
  * discourage non-typesafe access to Session properties, no setProperty() or getProperty() method is
  * provided. In a clustered environment, you should take care to call the dirty() method when you
  * change a property on your own. This way the session will be reset again in the http session so
- * that the http session knows the session is changed.
+ * that the http session knows the session is changed.</li>
  * 
  * <li><b>Class Resolver</b> - Sessions have a class resolver ( {@link IClassResolver})
- * implementation that is used to locate classes for components such as pages.
+ * implementation that is used to locate classes for components such as pages.</li>
  * 
  * <li><b>Page Factory</b> - A pluggable implementation of {@link IPageFactory} is used to
- * instantiate pages for the session.
+ * instantiate pages for the session.</li>
  * 
  * <li><b>Removal</b> - Pages can be removed from the Session forcibly by calling clear(),
- * although such an action should rarely be necessary.
+ * although such an action should rarely be necessary.</li>
  * 
  * <li><b>Flash Messages</b> - Flash messages are messages that are stored in session and are removed
  * after they are displayed to the user. Session acts as a store for these messages because they can
- * last across requests.
+ * last across requests.</li>
+ * </ul>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -127,6 +131,15 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
+
+	/**
+	 * taken from Google Closure Templates BidiUtils
+	 *
+	 * A regular expression for matching right-to-left language codes. See
+	 * {@link #isRtlLanguage} for the design.
+	 */
+	private static final Pattern RTL_LOCALE_RE = Pattern.compile("^(ar|dv|he|iw|fa|nqo|ps|sd|ug|ur|yi|.*[-_](Arab|Hebr|Thaa|Nkoo|Tfng))"
+					+ "(?!.*[-_](Latn|Cyrl)($|-|_))($|-|_)");
 
 	/** a sequence used for whenever something session-specific needs a unique value */
 	private final AtomicInteger sequence = new AtomicInteger(1);
@@ -183,6 +196,36 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	}
 
 	/**
+	 * Check if a BCP 47 / III language code indicates an RTL (right-to-left) language, i.e.
+	 * either: - a language code explicitly specifying one of the right-to-left
+	 * scripts, e.g. "az-Arab", or
+	 * <p>
+	 * - a language code specifying one of the languages normally written in a
+	 * right-to-left script, e.g. "fa" (Farsi), except ones explicitly
+	 * specifying Latin or Cyrillic script (which are the usual LTR (left-to-right)
+	 * alternatives).
+	 * <p>
+	 * <a href="http://www.unicode.org/iso15924/iso15924-num.html">
+	 * The list of right-to-left scripts appears in the 100-199 range in</a>, of which Arabic and
+	 * Hebrew are by far the most widely used. We also recognize Thaana, N'Ko,
+	 * and Tifinagh, which also have significant modern usage. The rest (Syriac,
+	 * Samaritan, Mandaic, etc.) seem to have extremely limited or no modern
+	 * usage and are not recognized. The languages usually written in a
+	 * right-to-left script are taken as those with 
+	 * <a href="http://www.iana.org/assignments/language-subtag-registry">Suppress-Script</a>:
+	 * Hebr|Arab|Thaa|Nkoo|Tfng, as well as
+	 * Sindhi (sd) and Uyghur (ug). The presence of other subtags of the
+	 * language code, e.g. regions like EG (Egypt), is ignored.
+	 *
+	 * @param locale - locale to check
+	 * @return <code>true</code> in case passed locale is right-to-left
+	 */
+	public static boolean isRtlLanguage(final Locale locale) {
+		Args.notNull(locale, "locale");
+		return RTL_LOCALE_RE.matcher(locale.toLanguageTag()).find();
+	}
+
+	/**
 	 * Cached instance of agent info which is typically designated by calling
 	 * {@link Session#getClientInfo()}.
 	 */
@@ -199,6 +242,9 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 
 	/** The locale to use when loading resources for this session. */
 	private final AtomicReference<Locale> locale;
+
+	/** True if locale's language is RTL (right-to-left) */
+	private boolean rtlLocale = false;
 
 	/** Session level meta data. */
 	private MetaDataEntry<?>[] metaData;
@@ -238,6 +284,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 				"Request#getLocale() cannot return null, request has to have a locale set on it");
 		}
 		this.locale = new AtomicReference<>(locale);
+		rtlLocale = isRtlLanguage(locale);
 
 		pageAccessSynchronizer = new PageAccessSynchronizerProvider();
 	}
@@ -526,6 +573,9 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 			invalidate();
 		}
 		
+		// clear all pages possibly pending in the request
+		getPageManager().clear();
+		
 		destroy();
 		feedbackMessages.clear();
 		setStyle(null);
@@ -601,9 +651,19 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 		if (!Objects.equal(getLocale(), locale))
 		{
 			this.locale.set(locale);
+			rtlLocale = isRtlLanguage(locale);
 			dirty();
 		}
 		return this;
+	}
+
+	/**
+	 * Method to determine if language of current locale is RTL (right-to-left) or not
+	 *
+	 * @return <code>true</code> if language of session locale is RTL (right-to-left), <code>false</code> otherwise
+	 */
+	public boolean isRtlLocale() {
+		return rtlLocale;
 	}
 
 	/**
@@ -669,16 +729,9 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	}
 
 	/**
-	 * Any detach logic for session subclasses. This is called on the end of handling a request,
-	 * when the RequestCycle is about to be detached from the current thread.
+	 * End the current request.
 	 */
-	public void detach()
-	{
-		detachFeedback();
-
-		pageAccessSynchronizer.get().unlockAllPages();
-		RequestCycle.get().setMetaData(PAGES_UNLOCKED, true);
-
+	public void endRequest() {
 		if (isSessionInvalidated())
 		{
 			invalidateNow();
@@ -688,6 +741,18 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 			// WICKET-5103 container might have changed id
 			updateId();
 		}
+	}
+	
+	/**
+	 * Any detach logic for session subclasses. This is called on the end of handling a request,
+	 * when the RequestCycle is about to be detached from the current thread.
+	 */
+	public void detach()
+	{
+		detachFeedback();
+
+		pageAccessSynchronizer.get().unlockAllPages();
+		RequestCycle.get().setMetaData(PAGES_UNLOCKED, true);
 	}
 
 	private void detachFeedback()

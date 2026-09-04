@@ -6,6 +6,6 @@ Wicket natively supports role-based authorizations with strategies _MetaDataRole
 
 After having explored how Wicket internally implements authentication and authorization, we continued with how to configure our applications to support HTTPS and how to specify which pages must be served over this protocol.
 
-We've explored the protection Wicket offers against CSRF attacks with URL encryption and the _CsrfPreventionRequestCycleListener_. This was followed by an explanation of the Content Security Policy used by Wicket and how to tune this for your application.
+We've explored the protection Wicket offers against CSRF attacks with URL encryption and the _ResourceIsolationRequestCycleListener_, or the (now deprecated) __CsrfPreventionRequestCycleListener__. This was followed by an explanation of the Content Security Policy used by Wicket and how to tune this for your application. We've also explained Cross-Origin Opener Policy and Cross-Origin Embedder policy to achieve cross-origin isolation, and how to configure the policies for your application.
 
 In the last paragraph we have seen how Wicket protects package resources with a guard entity that allows us to decide which package resources can be accessed from users.

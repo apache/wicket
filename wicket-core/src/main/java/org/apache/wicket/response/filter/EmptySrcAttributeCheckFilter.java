@@ -41,9 +41,6 @@ public class EmptySrcAttributeCheckFilter implements IResponseFilter
 	 */
 	public static final EmptySrcAttributeCheckFilter INSTANCE = new EmptySrcAttributeCheckFilter();
 
-	/**
-	 * @see org.apache.wicket.IResponseFilter#filter(AppendingStringBuffer)
-	 */
 	@Override
 	public AppendingStringBuffer filter(final AppendingStringBuffer responseBuffer)
 	{

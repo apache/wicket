@@ -34,20 +34,20 @@ import org.apache.wicket.request.Response;
  * <pre>
  * new IAutoCompleteRenderer() {
  *     void renderHead(Response r) { r.write(&quot;
- * <ul>
+ * &lt;ul&gt;
  * &quot;); }
  *     
  *     void render(Object o, Response r) {
  *        // notice the textvalue attribute we define for li element
  *        r.write(&quot;
- * <li textvalue=\""+o.toString()+"\">
+ * &lt;li textvalue=\""+o.toString()+"\"&gt;
  * &lt;i&gt;&quot;+o.toString()+&quot;&lt;/i&gt;
- * </li>
+ * &lt;/li&gt;
  * &quot;;
  *     }
  *     
  *     void renderFooter(Response r) { r.write(&quot;
- * </ul>
+ * &lt;/ul&gt;
  * &quot;); }
  * }
  * </pre>
@@ -66,6 +66,12 @@ public interface IAutoCompleteRenderer<T> extends IDetachable
 	 * Render the html fragment for the given completion object. Usually the html is written out by
 	 * calling {@link Response#write(CharSequence)}.
 	 * 
+	 * <p>
+	 * <b>Whatever is written to the response reaches the markup as is, without escaping.</b>
+	 * Any part of it that comes from user input or other dynamic content must be escaped
+	 * before it is written, with {@link org.apache.wicket.util.string.Strings#escapeMarkup(CharSequence) Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param object
 	 *            completion choice object
 	 * @param response
@@ -80,6 +86,12 @@ public interface IAutoCompleteRenderer<T> extends IDetachable
 	 * Render the html header fragment for the completion. Usually the html is written out by
 	 * calling {@link Response#write(CharSequence)}.
 	 * 
+	 * <p>
+	 * <b>Whatever is written to the response reaches the markup as is, without escaping.</b>
+	 * Any part of it that comes from user input or other dynamic content must be escaped
+	 * before it is written, with {@link org.apache.wicket.util.string.Strings#escapeMarkup(CharSequence) Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param response
 	 */
 	void renderHeader(Response response);
@@ -88,6 +100,12 @@ public interface IAutoCompleteRenderer<T> extends IDetachable
 	 * Render the html footer fragment for the completion. Usually the html is written out by
 	 * calling {@link Response#write(CharSequence)}.
 	 * 
+	 * <p>
+	 * <b>Whatever is written to the response reaches the markup as is, without escaping.</b>
+	 * Any part of it that comes from user input or other dynamic content must be escaped
+	 * before it is written, with {@link org.apache.wicket.util.string.Strings#escapeMarkup(CharSequence) Strings#escapeMarkup(CharSequence)}.
+	 * </p>
+	 *
 	 * @param response
 	 * @param count
 	 *            The number of choices rendered

@@ -25,7 +25,6 @@ import org.apache.wicket.examples.websocket.charts.ChartUpdater;
 import org.apache.wicket.examples.websocket.charts.WebSocketChart;
 import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.protocol.https.RequireHttps;
 import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
@@ -36,7 +35,6 @@ import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 
-@RequireHttps
 public class WebSocketBehaviorDemoPage extends WicketExamplePage
 {
 	private static final long serialVersionUID = 1L;

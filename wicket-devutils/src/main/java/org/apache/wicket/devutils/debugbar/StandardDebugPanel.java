@@ -30,7 +30,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * A standard looking debug panel with an img (optional) and a string of data, and the whole thing
  * is a link.
  * 
- * @author Jeremy Thomerson <jthomerson@apache.org>
+ * @author Jeremy Thomerson
  */
 public abstract class StandardDebugPanel extends DevUtilsPanel
 {

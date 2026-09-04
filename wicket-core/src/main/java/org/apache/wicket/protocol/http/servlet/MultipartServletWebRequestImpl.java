@@ -18,29 +18,29 @@ package org.apache.wicket.protocol.http.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.servlet.ServletRequestContext;
-import org.apache.commons.io.FileCleaningTracker;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
+import org.apache.commons.fileupload2.core.AbstractFileUpload;
+import org.apache.commons.fileupload2.core.FileItem;
+import org.apache.commons.fileupload2.core.FileItemFactory;
+import org.apache.commons.fileupload2.core.FileUploadByteCountLimitException;
+import org.apache.commons.fileupload2.core.FileUploadException;
+import org.apache.commons.fileupload2.core.FileUploadFileCountLimitException;
+import org.apache.commons.fileupload2.core.FileUploadSizeException;
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
+import org.apache.commons.fileupload2.jakarta.servlet5.JakartaServletFileUpload;
+import org.apache.commons.fileupload2.jakarta.servlet5.JakartaServletRequestContext;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.file.FileCleanerTrackerAdapter;
-import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.StringValue;
@@ -48,7 +48,7 @@ import org.apache.wicket.util.value.ValueMap;
 
 /**
  * Servlet specific WebRequest subclass for multipart content uploads.
- * 
+ *
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Cameron Braid
@@ -91,19 +91,14 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *             Thrown if something goes wrong with upload
 	 */
 	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
-		Bytes maxSize, String upload) throws FileUploadException
+										  Bytes maxSize, String upload) throws FileUploadException
 	{
-		this(request, filterPrefix, maxSize, upload, new DiskFileItemFactory()
-		{
-			@Override
-			public FileCleaningTracker getFileCleaningTracker()
-			{
-				IFileCleaner fileCleaner = Application.get()
-						.getResourceSettings()
-						.getFileCleaner();
-				return new FileCleanerTrackerAdapter(fileCleaner);
-			}
-		});
+		this(request, filterPrefix, maxSize, upload,
+			DiskFileItemFactory.builder()
+					.setFileCleaningTracker(new FileCleanerTrackerAdapter(Application.get()
+							.getResourceSettings()
+							.getFileCleaner()))
+					.get());
 	}
 
 	/**
@@ -135,11 +130,11 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		files = new HashMap<>();
 
 		// Check that request is multipart
-		final boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+		final boolean isMultipart = JakartaServletFileUpload.isMultipartContent(request);
 		if (!isMultipart)
 		{
 			throw new IllegalStateException(
-				"ServletRequest does not contain multipart content. One possible solution is to explicitly call Form.setMultipart(true), Wicket tries its best to auto-detect multipart forms but there are certain situation where it cannot.");
+				"ServletRequest does not contain multipart content. One possible solution is to explicitly call Form.setMultipart(true), Wicket tries its best to auto-detect multipart forms but there are certain situations where it cannot.");
 		}
 
 		setMaxSize(maxSize);
@@ -163,13 +158,13 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 		}
 
-		FileUploadBase fileUpload = newFileUpload(encoding);
+		AbstractFileUpload fileUpload = newFileUpload(encoding);
 
 		List<FileItem> items;
 
 		if (wantUploadProgressUpdates())
 		{
-			ServletRequestContext ctx = new ServletRequestContext(request)
+			JakartaServletRequestContext ctx = new JakartaServletRequestContext(request)
 			{
 				@Override
 				public InputStream getInputStream() throws IOException
@@ -193,7 +188,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		{
 			// try to parse the file uploads by using Apache Commons FileUpload APIs
 			// because they are feature richer (e.g. progress updates, cleaner)
-			items = fileUpload.parseRequest(new ServletRequestContext(request));
+			items = fileUpload.parseRequest(new JakartaServletRequestContext(request));
 			if (items.isEmpty())
 			{
 				// fallback to Servlet 3.0 APIs
@@ -210,20 +205,21 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			{
 				// Set parameter value
 				final String value;
-				if (encoding != null)
+				
+				try 
 				{
-					try
+					if (encoding != null)
 					{
-						value = item.getString(encoding);
+						value = item.getString(Charset.forName(encoding));
 					}
-					catch (UnsupportedEncodingException e)
+					else
 					{
-						throw new WicketRuntimeException(e);
+						value = item.getString();
 					}
 				}
-				else
+				catch (IOException e)
 				{
-					value = item.getString();
+					throw new WicketRuntimeException(e);
 				}
 
 				addParameter(item.getFieldName(), value);
@@ -247,11 +243,25 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *
 	 * <strong>Note</strong>: By using Servlet 3.0 APIs the application won't be able to use
 	 * upload progress updates.
+	 * <p>
+	 * The container has already parsed these parts, so the limits {@link #newFileUpload(String)}
+	 * hands to commons-fileupload never had a chance to apply to them. They are applied here instead,
+	 * with the same semantics and the same exception types, so that a request arriving along this path
+	 * is accepted or rejected exactly as it would have been had commons-fileupload done the parsing.
+	 * The checks use {@link Part#getSize()} and so complete before any part is read, which matters
+	 * because {@link #parseFileParts()} materialises every form field in memory.
+	 * <p>
+	 * The per-file and file-count limits are the ones this path did not apply before. The aggregate
+	 * {@code maxSize} is also checked, though commons-fileupload has normally rejected an oversized
+	 * request already by comparing {@code Content-Length} against it before reading the body; the
+	 * check below covers a request that declares no length at all.
 	 *
 	 * @param request
 	 *              The http request with the upload data
 	 * @return A list of {@link FileItem}s
 	 * @throws FileUploadException
+	 *              if the parts exceed the maximum upload size, the maximum size of a single file, or
+	 *              the maximum number of files
 	 */
 	private List<FileItem> readServlet3Parts(HttpServletRequest request) throws FileUploadException
 	{
@@ -261,9 +271,42 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			Collection<Part> parts = request.getParts();
 			if (parts != null)
 			{
+				final long fileCountMax = getFileCountMax();
+				final Bytes fileMaxSize = getFileMaxSize();
+				final long maxSize = getMaxSize().bytes();
+				long totalSize = 0;
+
 				for (Part part : parts)
 				{
+					// a negative fileCountMax means unlimited, as in AbstractFileUpload
+					if (fileCountMax >= 0 && itemsFromParts.size() >= fileCountMax)
+					{
+						throw new FileUploadFileCountLimitException(
+							String.format("Request '%s' failed: Maximum file count %,d exceeded.",
+								AbstractFileUpload.MULTIPART_FORM_DATA, fileCountMax),
+							fileCountMax, itemsFromParts.size());
+					}
+
 					FileItem fileItem = new ServletPartFileItem(part);
+					long size = fileItem.getSize();
+
+					// commons-fileupload applies this to every part, form fields included
+					if (fileMaxSize != null && size > fileMaxSize.bytes())
+					{
+						throw new FileUploadByteCountLimitException(
+							String.format("The field %s exceeds its maximum permitted size of %s bytes.",
+								fileItem.getFieldName(), fileMaxSize.bytes()),
+							size, fileMaxSize.bytes(), fileItem.getName(), fileItem.getFieldName());
+					}
+
+					totalSize += size;
+					if (totalSize > maxSize)
+					{
+						throw new FileUploadSizeException(String.format(
+							"the request was rejected because its size (%s) exceeds the configured maximum (%s)",
+							totalSize, maxSize), maxSize, totalSize);
+					}
+
 					itemsFromParts.add(fileItem);
 				}
 			}
@@ -275,35 +318,41 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	}
 
 	/**
-	 * Factory method for creating new instances of FileUploadBase
+	 * Factory method for creating new instances of AbstractFileUpload
 	 *
 	 * @param encoding
 	 *            The encoding to use while reading the data
-	 * @return A new instance of FileUploadBase
+	 * @return A new instance of AbstractFileUpload
 	 */
-	protected FileUploadBase newFileUpload(String encoding) {
+	protected AbstractFileUpload newFileUpload(String encoding) {
 		// Configure the factory here, if desired.
-		ServletFileUpload fileUpload = new ServletFileUpload(fileItemFactory);
+		JakartaServletFileUpload fileUpload = new JakartaServletFileUpload(fileItemFactory);
 
 		// set encoding specifically when we found it
 		if (encoding != null)
 		{
-			fileUpload.setHeaderEncoding(encoding);
+			Charset charset = Charset.forName(encoding);
+			fileUpload.setHeaderCharset(charset);
 		}
 
-		fileUpload.setSizeMax(getMaxSize().bytes());
+		fileUpload.setMaxSize(getMaxSize().bytes());
 
 		Bytes fileMaxSize = getFileMaxSize();
-		if (fileMaxSize != null) {
-			fileUpload.setFileSizeMax(fileMaxSize.bytes());
+
+		if (fileMaxSize != null)
+		{
+			fileUpload.setMaxFileSize(fileMaxSize.bytes());
 		}
+
+		fileUpload.setMaxFileCount(getFileCountMax());
+		fileUpload.setMaxPartHeaderSize(getDefaultMaximumPartHeaderSize());
 
 		return fileUpload;
 	}
 
     /**
 	 * Adds a parameter to the parameters value map
-	 * 
+	 *
 	 * @param name
 	 *            parameter name
 	 * @param value
@@ -341,7 +390,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Gets the file that was uploaded using the given field name.
-	 * 
+	 *
 	 * @param fieldName
 	 *            the field name that was used for the upload
 	 * @return the upload with the given field name
@@ -374,9 +423,9 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	}
 
 	/**
-	 * Subclasses that want to receive upload notifications should return true. By default it takes
+	 * Subclasses that want to receive upload notifications should return true. By default, it takes
 	 * the value from {@link org.apache.wicket.settings.ApplicationSettings#isUploadProgressUpdatesEnabled()}.
-	 * 
+	 *
 	 * @return true if upload status update event should be invoked
 	 */
 	protected boolean wantUploadProgressUpdates()
@@ -386,7 +435,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Upload start callback
-	 * 
+	 *
 	 * @param totalBytes
 	 */
 	protected void onUploadStarted(int totalBytes)
@@ -398,7 +447,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Upload status update callback
-	 * 
+	 *
 	 * @param bytesUploaded
 	 * @param total
 	 */
@@ -426,7 +475,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * An {@link InputStream} that updates total number of bytes read
-	 * 
+	 *
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
 	private class CountingInputStream extends InputStream
@@ -436,7 +485,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 		/**
 		 * Constructs a new CountingInputStream.
-		 * 
+		 *
 		 * @param in
 		 *            InputStream to delegate to
 		 */
@@ -445,9 +494,6 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			this.in = in;
 		}
 
-		/**
-		 * @see java.io.InputStream#read()
-		 */
 		@Override
 		public int read() throws IOException
 		{
@@ -457,9 +503,6 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			return read;
 		}
 
-		/**
-		 * @see java.io.InputStream#read(byte[])
-		 */
 		@Override
 		public int read(byte[] b) throws IOException
 		{
@@ -469,9 +512,6 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			return read;
 		}
 
-		/**
-		 * @see java.io.InputStream#read(byte[], int, int)
-		 */
 		@Override
 		public int read(byte[] b, int off, int len) throws IOException
 		{
@@ -487,27 +527,10 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload)
 		throws FileUploadException
 	{
-		// FIXME mgrigorov: Why these checks are made here ?!
-		// Why they are not done also at org.apache.wicket.protocol.http.servlet.MultipartServletWebRequestImpl.newMultipartWebRequest(org.apache.wicket.util.lang.Bytes, java.lang.String, org.apache.wicket.util.upload.FileItemFactory)() ?
-		// Why there is no check that the summary of all files' sizes is less than the set maxSize ?
-		// Setting a breakpoint here never breaks with the standard upload examples.
-
-		Bytes fileMaxSize = getFileMaxSize();
-		for (Map.Entry<String, List<FileItem>> entry : files.entrySet())
-		{
-			List<FileItem> fileItems = entry.getValue();
-			for (FileItem fileItem : fileItems)
-			{
-				if (fileMaxSize != null && fileItem.getSize() > fileMaxSize.bytes())
-				{
-					String fieldName = entry.getKey();
-					FileUploadException fslex = new FileUploadBase.FileSizeLimitExceededException("The field '" +
-							fieldName + "' exceeds its maximum permitted size of '" +
-							maxSize + "' characters.", fileItem.getSize(), fileMaxSize.bytes());
-					throw fslex;
-				}
-			}
-		}
+		// This request is already multipart, so there is nothing to create. The limits are enforced by
+		// parseFileParts(), on both the commons-fileupload and the Servlet parts path, which is after
+		// this method runs: Form#handleMultiPart() sets fileMaxSize and fileCountMax and only then
+		// parses.
 		return this;
 	}
 
@@ -527,7 +550,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Retrieves {@link UploadInfo} from session, null if not found.
-	 * 
+	 *
 	 * @param req
 	 *            http servlet request, not null
 	 * @param upload
@@ -542,7 +565,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Sets the {@link UploadInfo} object into session.
-	 * 
+	 *
 	 * @param req
 	 *            http servlet request, not null
 	 * @param upload
@@ -561,7 +584,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	/**
 	 * Clears the {@link UploadInfo} object from session if one exists.
-	 * 
+	 *
 	 * @param req
 	 *            http servlet request, not null
 	 * @param upload

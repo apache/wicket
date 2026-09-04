@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnEventHeaderItem;
@@ -146,7 +147,7 @@ public class SubmitLink extends AbstractSubmitLink
 	 * This method is here as a means to fall back on normal link behavior when this link is not
 	 * nested in a form. Not intended to be called by clients directly.
 	 * 
-	 * @see org.apache.wicket.markup.html.link.ILinkListener#onLinkClicked()
+	 * @see IRequestListener#onRequest()
 	 */
 	public final void onLinkClicked()
 	{
@@ -154,9 +155,6 @@ public class SubmitLink extends AbstractSubmitLink
 		onAfterSubmit();
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
@@ -228,9 +226,6 @@ public class SubmitLink extends AbstractSubmitLink
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onError()
-	 */
 	@Override
 	public void onError()
 	{

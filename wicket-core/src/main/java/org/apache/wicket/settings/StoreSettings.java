@@ -97,7 +97,7 @@ public class StoreSettings
 			if (WebApplication.exists())
 			{
 				fileStoreFolder = (File) WebApplication.get().getServletContext()
-					.getAttribute("javax.servlet.context.tempdir");
+					.getAttribute("jakarta.servlet.context.tempdir");
 			}
 
 			if (fileStoreFolder != null)
@@ -185,6 +185,17 @@ public class StoreSettings
 	/**
 	 * Sets a flag whether to wrap the configured {@link org.apache.wicket.pageStore.IPageStore} with
 	 * {@link org.apache.wicket.pageStore.CryptingPageStore}.
+	 * <p>
+	 * Pages are encrypted with a random 256 bit key per session, using the authenticated scheme
+	 * configured on
+	 * {@link SecuritySettings#setCryptScheme(org.apache.wicket.core.util.crypt.ICryptScheme)}, so
+	 * the stored bytes are tamper-evident as well as confidential: a modified page fails to decrypt
+	 * and is treated as no longer present rather than being handed to the deserializer.
+	 * <p>
+	 * Because the key lives in the session, this protects the stored pages against parties who can
+	 * read or write the underlying store, not against one who already controls the session. The
+	 * store should therefore still be treated as trusted, private storage - see {@code SECURITY.md}
+	 * for the trust assumptions Wicket makes about it.
 	 *
 	 * @param encrypted
 	 *            {@code true} to encrypt, {@code false} - otherwise

@@ -111,6 +111,9 @@ public class HeadersToolbar<S> extends AbstractToolbar
 
 				if (column.getHeaderColspan() > 1) {
 					header.add(AttributeModifier.replace("colspan", column.getHeaderColspan()));
+					header.add(AttributeModifier.replace("scope", "colgroup"));
+				} else {
+					header.add(AttributeModifier.replace("scope", "col"));
 				}
 
 				if (column.getHeaderRowspan() > 1) {

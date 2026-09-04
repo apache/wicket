@@ -23,7 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.application.ComponentInstantiationListenerCollection;
 import org.apache.wicket.application.ComponentOnAfterRenderListenerCollection;
@@ -159,7 +161,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	private final List<IInitializer> initializers = Generics.newArrayList();
 
 	/** Application level meta data. */
-	private MetaDataEntry<?>[] metaData;
+	private final ConcurrentHashMap<MetaDataKey<?>, Object> metaData = new ConcurrentHashMap<>();
 
 	/** Name of application subclass. */
 	private String name;
@@ -394,9 +396,10 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	 * @see MetaDataKey
 	 */
 	@Override
-	public final synchronized <T> T getMetaData(final MetaDataKey<T> key)
+	@SuppressWarnings("unchecked")
+	public final <T> T getMetaData(final MetaDataKey<T> key)
 	{
-		return key.get(metaData);
+		return (T)metaData.get(key);
 	}
 
 	/**
@@ -508,9 +511,13 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	 * @see MetaDataKey
 	 */
 	@Override
-	public synchronized final <T> Application setMetaData(final MetaDataKey<T> key, final T object)
+	public final <T> Application setMetaData(final MetaDataKey<T> key, final T object)
 	{
-		metaData = key.set(metaData, object);
+		if (object == null) {
+			metaData.remove(key);
+		} else {
+			metaData.put(key, object);
+		}
 		return this;
 	}
 
@@ -651,8 +658,8 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 
 		pageFactory = newPageFactory();
 
-		requestCycleProvider = (context) -> new RequestCycle(context);
-		exceptionMapperProvider = () -> new DefaultExceptionMapper();
+		requestCycleProvider = RequestCycle::new;
+		exceptionMapperProvider = DefaultExceptionMapper::new;
 
 		// add a request cycle listener that logs each request for the requestlogger.
 		getRequestCycleListeners().add(new RequestLoggerRequestCycleListener());
@@ -669,6 +676,10 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	public Supplier<IExceptionMapper> getExceptionMapperProvider()
 	{
 		return exceptionMapperProvider;
+	}
+
+	public void setExceptionMapperProvider(Supplier<IExceptionMapper> exceptionMapperProvider) {
+		this.exceptionMapperProvider = Args.notNull(exceptionMapperProvider, "exceptionMapperProvider");
 	}
 
 	/**
@@ -1165,7 +1176,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	/**
 	 * @return Application's request cycle related settings
 	 */
-	public final RequestCycleSettings getRequestCycleSettings()
+	public RequestCycleSettings getRequestCycleSettings()
 	{
 		checkSettingsAvailable();
 		if (requestCycleSettings == null)
@@ -1567,6 +1578,12 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 		requestCycle.getListeners().add(new IRequestCycleListener()
 		{
 			@Override
+			public void onEndRequest(RequestCycle cycle)
+			{
+				internalGetPageManager().end();
+			}
+			
+			@Override
 			public void onDetach(final RequestCycle requestCycle)
 			{
 				internalGetPageManager().detach();
@@ -1579,29 +1596,6 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 			}
 		});
 		return requestCycle;
-	}
-
-	/**
-	 * Sets an {@link IHeaderResponseDecorator} that you want your application to use to decorate
-	 * header responses.
-	 * <p>
-	 * Calling this method replaces the default decorator, which utilizes a
-	 * {@link ResourceAggregator}: The given implementation should make sure, that it too wraps
-	 * responses in a {@link ResourceAggregator}, otherwise no dependencies for {@link HeaderItem}s
-	 * will be resolved.
-	 * 
-	 * @param headerResponseDecorator
-	 *            your custom decorator, must not be null
-	 * @deprecated use {@code add(...)} on {@link #getHeaderResponseDecorators()}. This method
-	 *             removes the {@link ResourceAggregator}, which is needed to resolve resource
-	 *             dependencies.
-	 */
-	@Deprecated
-	public final Application
-			setHeaderResponseDecorator(final IHeaderResponseDecorator headerResponseDecorator)
-	{
-		headerResponseDecorators.replaceAll(headerResponseDecorator);
-		return this;
 	}
 
 	/**

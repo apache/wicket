@@ -22,6 +22,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -31,7 +32,7 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * A form with filter-related special functionality for its form components.
- * 
+ *
  * <p>
  * This form uses an invisible button to be able to submit when the user presses the <em>ENTER</em>
  * key. If there is a need to add an explicit
@@ -39,7 +40,7 @@ import org.apache.wicket.util.string.Strings;
  * {@link Form#setDefaultButton(org.apache.wicket.markup.html.form.IFormSubmittingComponent)} should
  * be used to specify this custom submitting component.
  * </p>
- * 
+ *
  * @param <T>
  *            type of filter state object
  * @author igor
@@ -85,13 +86,22 @@ public class FilterForm<T> extends Form<T>
 	{
 		super.onComponentTagBody(markupStream, openTag);
 
+		getResponse().write(generateHiddenInputMarkup());
+	}
+
+	/**
+	 * Generates the Markup for the hidden input. Can be overridden by subclasses if necessary.
+	 *
+	 * @return The markup to be appended to the response
+	 */
+	protected String generateHiddenInputMarkup() {
 		String id = Strings.escapeMarkup(getFocusTrackerFieldCssId()).toString();
 		String value = getRequest().getPostParameters().getParameterValue(id).toString("");
 		String cssClass = getString(Form.HIDDEN_FIELDS_CSS_CLASS_KEY);
 
-		getResponse().write(String.format(
+		return String.format(
 				"<div hidden='' class='%s'><input type='hidden' name='%s' id='%s' value='%s'/><input type='submit'/></div>",
-				cssClass, id, id, Strings.escapeMarkup(value)));
+				cssClass, id, id, Strings.escapeMarkup(value));
 	}
 
 	/**
@@ -113,7 +123,7 @@ public class FilterForm<T> extends Form<T>
 	/**
 	 * Adds behavior to the form component to allow this form to keep track of the component's focus
 	 * which will be restored after a form submit.
-	 * 
+	 *
 	 * @param fc
 	 *            form component
 	 */
@@ -131,11 +141,9 @@ public class FilterForm<T> extends Form<T>
 			}
 
 			@Override
-			public void onComponentTag(final Component component, final ComponentTag tag)
-			{
-				tag.put("onfocus", getFocusTrackingHandler(component));
-
-				super.onComponentTag(component, tag);
+			public void renderHead(Component component, IHeaderResponse response) {
+				response.render(OnEventHeaderItem.forComponent(component, "focus",
+						getFocusTrackingHandler(component)));
 			}
 		});
 	}
@@ -143,12 +151,12 @@ public class FilterForm<T> extends Form<T>
 	/**
 	 * Returns the javascript focus handler necessary to notify the form of focus tracking changes
 	 * on the component
-	 * 
+	 *
 	 * Useful when components want to participate in focus tracking but want to add the handler
 	 * their own way.
-	 * 
+	 *
 	 * A unique css id is required on the form component for focus tracking to work.
-	 * 
+	 *
 	 * @param component
 	 *            component to
 	 * @return the javascript focus handler necessary to notify the form of focus tracking changes

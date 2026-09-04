@@ -17,29 +17,29 @@
 -->
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-	<entry key="javax.validation.constraints.AssertFalse.message">Le champ '${label}' doit être false</entry>
-	<entry key="javax.validation.constraints.AssertTrue.message">Le champ '${label}' doit être true</entry>
-	<entry key="javax.validation.constraints.DecimalMax.message">Le champ '${label}' doit être inférieur ou égal à ${value}</entry>
-	<entry key="javax.validation.constraints.DecimalMin.message">Le champ '${label}' doit être supérieur ou égal à ${value}</entry>
-	<entry key="javax.validation.constraints.Digits.message">Le champ '${label}' valeur numérique hors limite (&lt;${integer} chiffres&gt;.&lt;${fraction} chiffres&gt; attendu)</entry>
-	<entry key="javax.validation.constraints.Email.message">Le champ '${label}' n'est pas une adresse mail valide</entry>
-	<entry key="javax.validation.constraints.Future.message">Le champ '${label}' doit être dans le futur</entry>
-	<entry key="javax.validation.constraints.FutureOrPresent.message">Le champ '${label}' doit être dans le futur ou le présent</entry>
-	<entry key="javax.validation.constraints.Max.message">Le champ '${label}' doit être inférieur ou égal à ${value}</entry>
-	<entry key="javax.validation.constraints.Min.message">Le champ '${label}' doit être supérieur ou égal à ${value}</entry>
-	<entry key="javax.validation.constraints.Negative.message">Le champ '${label}' doit être négatif,</entry>
-	<entry key="javax.validation.constraints.NegativeOrZero.message">Le champ '${label}' doit être négatif, ou zéro</entry>
-	<entry key="javax.validation.constraints.NotBlank.message">Le champ '${label}' ne peut pas être vide</entry>
-	<entry key="javax.validation.constraints.NotEmpty.message">Le champ '${label}' ne peut pas être vide</entry>
-	<entry key="javax.validation.constraints.NotNull.message">Le champ '${label}' ne doit pas être null</entry>
-	<entry key="javax.validation.constraints.Null.message">Le champ '${label}' doit être null</entry>
-	<entry key="javax.validation.constraints.Past.message">Le champ '${label}' doit être dans le passé</entry>
-	<entry key="javax.validation.constraints.PastOrPresent.message">Le champ '${label}' doit être dans le passé ou le présent</entry>
-	<entry key="javax.validation.constraints.Positive.message">Le champ '${label}' doit être positif</entry>
-	<entry key="javax.validation.constraints.PositiveOrZero.message">Le champ '${label}' doit être positif ou zéro</entry>
-	<entry key="javax.validation.constraints.Pattern.message">Le champ '${label}' doit correspondre à "${regexp}"</entry>
-	<entry key="javax.validation.constraints.Size.message">Le champ '${label}' doit être entre ${min} et ${max}</entry>
-	<entry key="javax.validation.constraints.Size.message.String">La longueur du champ '${label}' doit être entre ${min} et ${max}</entry>
+	<entry key="jakarta.validation.constraints.AssertFalse.message">Le champ '${label}' doit être false</entry>
+	<entry key="jakarta.validation.constraints.AssertTrue.message">Le champ '${label}' doit être true</entry>
+	<entry key="jakarta.validation.constraints.DecimalMax.message">Le champ '${label}' doit être inférieur ou égal à ${value}</entry>
+	<entry key="jakarta.validation.constraints.DecimalMin.message">Le champ '${label}' doit être supérieur ou égal à ${value}</entry>
+	<entry key="jakarta.validation.constraints.Digits.message">Le champ '${label}' valeur numérique hors limite (&lt;${integer} chiffres&gt;.&lt;${fraction} chiffres&gt; attendu)</entry>
+	<entry key="jakarta.validation.constraints.Email.message">Le champ '${label}' n'est pas une adresse mail valide</entry>
+	<entry key="jakarta.validation.constraints.Future.message">Le champ '${label}' doit être dans le futur</entry>
+	<entry key="jakarta.validation.constraints.FutureOrPresent.message">Le champ '${label}' doit être dans le futur ou le présent</entry>
+	<entry key="jakarta.validation.constraints.Max.message">Le champ '${label}' doit être inférieur ou égal à ${value}</entry>
+	<entry key="jakarta.validation.constraints.Min.message">Le champ '${label}' doit être supérieur ou égal à ${value}</entry>
+	<entry key="jakarta.validation.constraints.Negative.message">Le champ '${label}' doit être négatif,</entry>
+	<entry key="jakarta.validation.constraints.NegativeOrZero.message">Le champ '${label}' doit être négatif, ou zéro</entry>
+	<entry key="jakarta.validation.constraints.NotBlank.message">Le champ '${label}' ne peut pas être vide</entry>
+	<entry key="jakarta.validation.constraints.NotEmpty.message">Le champ '${label}' ne peut pas être vide</entry>
+	<entry key="jakarta.validation.constraints.NotNull.message">Le champ '${label}' ne doit pas être null</entry>
+	<entry key="jakarta.validation.constraints.Null.message">Le champ '${label}' doit être null</entry>
+	<entry key="jakarta.validation.constraints.Past.message">Le champ '${label}' doit être dans le passé</entry>
+	<entry key="jakarta.validation.constraints.PastOrPresent.message">Le champ '${label}' doit être dans le passé ou le présent</entry>
+	<entry key="jakarta.validation.constraints.Positive.message">Le champ '${label}' doit être positif</entry>
+	<entry key="jakarta.validation.constraints.PositiveOrZero.message">Le champ '${label}' doit être positif ou zéro</entry>
+	<entry key="jakarta.validation.constraints.Pattern.message">Le champ '${label}' doit correspondre à "${regexp}"</entry>
+	<entry key="jakarta.validation.constraints.Size.message">Le champ '${label}' doit être entre ${min} et ${max}</entry>
+	<entry key="jakarta.validation.constraints.Size.message.String">La longueur du champ '${label}' doit être entre ${min} et ${max}</entry>
 
 	<entry key="org.hibernate.validator.constraints.CreditCardNumber.message">Le champ '${label}' n'est pas un numéro de carte de crédit valide</entry>
 	<entry key="org.hibernate.validator.constraints.Email.message">Le champ '${label}' n'est pas une adresse mail valide</entry>

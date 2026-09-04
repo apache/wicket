@@ -25,16 +25,15 @@ Developers can also decide to use a custom exception mapper instead of _DefaultE
 [source,java]
 ----
 @Override
-public IProvider<IExceptionMapper> getExceptionMapperProvider()
+public Supplier<IExceptionMapper> getExceptionMapperProvider()
 {
     //...
 }
 ----
 
-The method returns an instance of _org.apache.wicket.util.IProvider_ that should return our custom exception mapper.
+The method returns a _java.util.function.Supplier_ that should return our custom exception mapper.
 
 === Ajax requests
 
-To control the behavior in Ajax requests the application may use _org.apache.wicket.settings.ExceptionSettings1.  setAjaxErrorHandlingStrategy(ExceptionSettings.AjaxErrorStrategy)_. By default if an error occurs during the 
-processing of an Ajax request Wicket will render the configured error page. By configuring _org.apache.wicket.settings.ExceptionSettings.  AjaxErrorStrategy2.INVOKE_FAILURE_HANDLER_ as the default strategy the application will call the JavaScript _onFailure_ callback(s) instead.
+To control the behavior in Ajax requests the application may use _org.apache.wicket.settings.ExceptionSettings.setAjaxErrorHandlingStrategy(ExceptionSettings.AjaxErrorStrategy)_. By default if an error occurs during the processing of an Ajax request Wicket will render the configured error page. By configuring _org.apache.wicket.settings.ExceptionSettings.AjaxErrorStrategy.INVOKE_FAILURE_HANDLER_ as the default strategy the application will call the JavaScript _onFailure_ callback(s) instead.
 

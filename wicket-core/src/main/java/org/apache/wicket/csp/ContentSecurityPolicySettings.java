@@ -16,20 +16,21 @@
  */
 package org.apache.wicket.csp;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.function.Predicate;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
+
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Build the CSP configuration like this:
@@ -65,16 +66,28 @@ public class ContentSecurityPolicySettings
 		private static final long serialVersionUID = 1L;
 	};
 
-	private final Application application;
-
 	private final Map<CSPHeaderMode, CSPHeaderConfiguration> configs = new EnumMap<>(
 		CSPHeaderMode.class);
 
-	private Predicate<IRequestHandler> protectedFilter = RenderPageRequestHandler.class::isInstance;
+	private final CSPHeaderWriter cspHeaderWriter;
+
+	private Predicate<WebPage> protectedFilter = page -> true;
+
+	private Supplier<String> nonceCreator;
 
 	public ContentSecurityPolicySettings(Application application)
 	{
-		this.application = Args.notNull(application, "application");
+		Args.notNull(application, "application");
+
+		cspHeaderWriter = new CSPHeaderWriter(this);
+
+		nonceCreator = () ->
+				application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
+	}
+
+	public CSPHeaderWriter getHeaderWriter()
+	{
+		return cspHeaderWriter;
 	}
 
 	public CSPHeaderConfiguration blocking()
@@ -89,15 +102,28 @@ public class ContentSecurityPolicySettings
 	}
 
 	/**
-	 * Sets the predicate that determines which requests must be protected by the CSP. When the
-	 * predicate evaluates to false, the request will not be protected.
+	 * Sets the creator of nonces.
 	 * 
+	 * @param nonceCreator
+	 *            The new creator, must not be null.
+	 * @return {@code this} for chaining.
+	 */
+	public ContentSecurityPolicySettings setNonceCreator(Supplier<String> nonceCreator)
+	{
+		Args.notNull(nonceCreator, "nonceCreator");
+		this.nonceCreator = nonceCreator;
+		return this;
+	}
+
+	/**
+	 * Sets the predicate that determines which pages must be protected by the CSP. When the
+	 * predicate evaluates to false, the page will not be protected.
+	 *
 	 * @param protectedFilter
 	 *            The new filter, must not be null.
 	 * @return {@code this} for chaining.
 	 */
-	public ContentSecurityPolicySettings setProtectedFilter(
-		Predicate<IRequestHandler> protectedFilter)
+	public ContentSecurityPolicySettings setProtectedFilter(Predicate<WebPage> protectedFilter)
 	{
 		Args.notNull(protectedFilter, "protectedFilter");
 		this.protectedFilter = protectedFilter;
@@ -105,16 +131,17 @@ public class ContentSecurityPolicySettings
 	}
 
 	/**
-	 * Should any request be protected by CSP.
+	 * Should the given page be protected by CSP.
 	 *
-	 * @param handler
-	 * @return <code>true</code> by default
-	 * 
+	 * @param page
+	 *            the page being rendered
+	 * @return <code>true</code> by default for all {@link WebPage}s
+	 *
 	 * @see #setProtectedFilter(Predicate)
 	 */
-	protected boolean mustProtectRequest(IRequestHandler handler)
+	public boolean mustProtect(WebPage page)
 	{
-		return protectedFilter.test(handler);
+		return isEnabled() && protectedFilter.test(page);
 	}
 
 	/**
@@ -155,9 +182,16 @@ public class ContentSecurityPolicySettings
 		return nonce;
 	}
 
+	/**
+	 * Create a new nonce.
+	 *
+	 * @return nonce
+	 * 
+	 * @see #setNonceCreator(Supplier)
+	 */
 	protected String createNonce()
 	{
-		return application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
+		return nonceCreator.get();
 	}
 
 	/**
@@ -178,9 +212,16 @@ public class ContentSecurityPolicySettings
 	 */
 	public void enforce(WebApplication application)
 	{
-		application.getRequestCycleListeners().add(new CSPRequestCycleListener(this));
 		application.getHeaderResponseDecorators()
-			.add(response -> new CSPNonceHeaderResponseDecorator(response, this));
+			.addPreResourceAggregationDecorator(response -> new CSPNonceHeaderResponseDecorator(response, this));
 		application.mount(new ReportCSPViolationMapper(this));
+	}
+
+	/**
+	 * Is CSP enabled.
+	 */
+	public boolean isEnabled()
+	{
+		return configs.values().stream().anyMatch(CSPHeaderConfiguration::isSet);
 	}
 }

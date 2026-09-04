@@ -18,7 +18,7 @@ public class HomePage extends WebPage {
 }		
 ----
 
-By default after _onClick_ has been executed, Wicket will send back to the current page to the client web browser. If we want to navigate to another page we must use method _setResponsePage_ of class _Component_:
+By default after _onClick_ has been executed, Wicket will send back the current page to the client web browser. If we want to navigate to another page we must use method _setResponsePage_ of class _Component_:
 
 [source,java]
 ----
@@ -35,7 +35,7 @@ public class HomePage extends WebPage {
 }
 ----
 
-In the example above we used a version of _setResponsePage_ which takes as input the class of the target page. In this way a new instance of _AnotherPage_ will be created each time we click on the link. The other version of _setResponsePage_ takes in input a page instance instead of a page class:
+In the example above we used a version of _setResponsePage_ which takes as input the class of the target page. In this way a new instance of _AnotherPage_ will be created each time we click on the link. The other version of _setResponsePage_ takes as input a page instance instead of a page class:
 
 [source,java]
 ----
@@ -50,7 +50,7 @@ public void onClick() {
 The difference between using the first version of _setResponsePage_ rather than the second one will be illustrated in 
 <<_page_versioning_and_caching,chapter 8>>, when we will introduce the topic of stateful and stateless pages. For now, we can consider them as equivalent. 
 
-Since Wicket 8 is built on Java 8, we can choose to leverage lambda expressions to specify handler method:
+Since Wicket is built on Java 17+, we can choose to leverage lambda expressions to specify handler method:
 
 [source,java]
 ----
@@ -62,5 +62,5 @@ Factory class _ComponentFactory_ is provided by the WicketStuff project. You can
 
 Wicket comes with a rich set of link components suited for every need (links to static URL, Ajax-enhanced links, links to a file to download, links to external pages and so on). We will see them in <<_wicket_links_and_url_generation,chapter 10>>.
 
-NOTE: We can specify the content of a link (i.e. the text inside it) with its method _setBody_. This method takes in input a generic Wicket model, which will be the topic of <<_wicket_models_and_forms,chapter 11>>.
+NOTE: We can specify the content of a link (i.e. the text inside it) with its method _setBody_. This method takes as input a generic Wicket model, which will be the topic of <<_wicket_models_and_forms,chapter 11>>.
 

@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>Wicket Quickstart: File upload Error page</title>
+    </head>
+    <body>
+    	<strong>Wicket Quickstart Archetype Homepage</strong>
+    	<br />
+    	<span wicket:id="message">message will be here</span>
+    	<br />
+        <br />
+    	<strong>FileUploadError Page for WicketTester</strong>
+        <br />
+        <br />
+        <form wicket:id="form">
+        	<table>
+        		<tr>
+        			<td>
+        				Mandatory TextField 
+        			</td>
+        			<td>
+        				<input type="text" wicket:id="textField" size="50" />
+        			</td>
+        		</tr>
+        		<tr>
+        			<td>
+        				FileUpload
+        			</td>
+        			<td>
+        				<input type="file" wicket:id="fileUpload" size="50" />
+        			</td>
+        		</tr>
+        		<tr>
+        			<td>
+        				<input type="submit" value="Submit" />
+        			</td>
+        			<td>
+        				<span wicket:id="feedback"></span>
+        			</td>
+				</tr>
+        	</table>
+    	</form>
+    </body>
+</html>
+

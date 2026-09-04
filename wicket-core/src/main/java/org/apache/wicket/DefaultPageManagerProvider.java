@@ -43,18 +43,20 @@ import org.apache.wicket.util.lang.Bytes;
  * A provider of a {@link PageManager} managing @link IManageablePage}s with a default chain of {@link IPageStore}s:
  * <ol>
  * <li>{@link RequestPageStore} keeping pages until end of the request</li>
- * <li>{@link InSessionPageStore} caching the last accessed page in the session</li>
- * <li>{@link AsynchronousPageStore} moving storage of pages to an asynchronous worker thread (enabled by default with {@link StoreSettings#isAsynchronous()})</li>
+ * <li>{@link CachingPageStore} caching with an ...</li>
+ * <li>{@link InSessionPageStore} keeping the last accessed page in the session</li>
  * <li>{@link SerializingPageStore} serializing all pages (so they are available for back-button)</li>
+ * <li>{@link AsynchronousPageStore} moving storage of pages to an asynchronous worker thread (enabled by default with {@link StoreSettings#isAsynchronous()})</li>
  * <li>{@link CryptingPageStore} encrypting all pages (disabled by default in {@link StoreSettings#isEncrypted()})</li>
  * <li>{@link DiskPageStore} persisting all pages, configured according to {@link StoreSettings}</li>
  * </ol>
  * An alternative chain with all pages held in-memory could be:
  * <ol>
- * <li>{@link RequestPageStore} caching pages until end of the request</li>
+ * <li>{@link RequestPageStore} keeping pages until end of the request</li>
+ * <li>{@link CachingPageStore} caching with an ...</li>
  * <li>{@link InSessionPageStore} keeping the last accessed page in the session</li>
- * <li>{@link AsynchronousPageStore} moving storage of pages to a worker thread</li>
  * <li>{@link SerializingPageStore} serializing all pages (so they are available for back-button)</li>
+ * <li>{@link AsynchronousPageStore} moving storage of pages to a worker thread</li>
  * <li>{@link InMemoryPageStore} keeping all pages in memory</li>
  * </ol>
  * ... or if all pages should be kept in the session only, without any serialization (no back-button
@@ -73,7 +75,6 @@ import org.apache.wicket.util.lang.Bytes;
  * Other stores be may inserted ad libitum, e.g.
  * <ul>
  * <li>{@link NoopPageStore} discards all pages</li>
- * <li>{@link CachingPageStore} uses a page store as a cache in front of another store</li>
  * <li>{@link GroupingPageStore} groups pages, e.g. to limit storage size on a per-group basis</li>
  * <li>{@link FilePageStore} as an alternative to the trusted {@link DiskPageStore}</li>
  * <li>other implementations from <a href="https://github.com/wicketstuff/core/tree/master/datastores-parent">wicketstuff-datastores</a></li>
@@ -101,9 +102,9 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		
 		store = newCryptingStore(store);
 
-		store = newSerializingStore(store);
-		
 		store = newAsynchronousStore(store);
+		
+		store = newSerializingStore(store);
 
 		store = newCachingStore(store);
 
@@ -137,13 +138,16 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	}
 
 	/**
-	 * Cache last page in the session for fast access.
+	 * Cache last page non-serialized in the session for fast access.
+	 * <p>
+	 * On session serialization the cached page will be dropped and re-acquired from
+	 * a persistent store. 
 	 * 
 	 * @see InSessionPageStore
 	 */
 	protected IPageStore newCachingStore(IPageStore pageStore)
 	{
-		return new CachingPageStore(pageStore, new InSessionPageStore(1, getSerializer()));
+		return new CachingPageStore(pageStore, new InSessionCache());
 	}
 
 	/**
@@ -205,5 +209,28 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		File fileStoreFolder = storeSettings.getFileStoreFolder();
 
 		return new DiskPageStore(application.getName(), fileStoreFolder, maxSizePerSession);
+	}
+	
+	private static class InSessionCache extends InSessionPageStore {
+
+		private static final MetaDataKey<SessionData> KEY = new MetaDataKey<>()
+		{
+			private static final long serialVersionUID = 1L;
+		};
+		
+		InSessionCache()
+		{
+			super(1);
+		}
+
+		/**
+		 * Use a separate key, so this store does not interfere with any additional {@link InSessionPageStore}
+		 * the application might set up.
+		 */
+		@Override
+		protected MetaDataKey<SessionData> getKey()
+		{
+			return KEY;
+		}
 	}
 }

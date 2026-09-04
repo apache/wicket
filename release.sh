@@ -140,22 +140,6 @@ function generate_signatures_from_release {
 
     echo "========================================================================
 
-    The signatures for the source release artefacts:
-
-    " > /tmp/release-$version-sigs.txt
-
-    pushd target/dist > /dev/null
-    for i in apache-wicket*{zip,tar.gz}
-    do
-        echo "Signature for $i:
-
-    $(cat $i.asc)
-    " >> /tmp/release-$version-sigs.txt
-    done
-    popd > /dev/null
-
-        echo "========================================================================
-
     CHANGELOG for $version:
     " >> /tmp/release-$version-sigs.txt
 
@@ -218,8 +202,7 @@ more. You can find more about Apache Wicket at https://wicket.apache.org
 
 This release marks another minor release of Wicket $major_version. We
 use semantic versioning for the development of Wicket, and as such no
-API breaks are present breaks are present in this release compared to
-$major_version.0.0.
+API breaks are present in this release compared to $major_version.0.0.
 
 <OPTIONAL> New and noteworthy
 <OPTIONAL> ------------------
@@ -513,7 +496,7 @@ if [ $? -ne 0 ] ; then
 fi
 
 # Determine the staging repository and close it after deploying the release to the staging area
-stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https | grep -v "CLOSED" | grep -Eo "(orgapachewicket-\d+)";)
+stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https | grep -v "CLOSED" | grep -Eo "orgapachewicket-[0-9]+" | sed 's/orgapachewicket-//';)
 
 echo "Closing staging repository with id $stagingrepoid"
 mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-close -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release has been built, awaiting vote"
@@ -531,8 +514,8 @@ gpg --armor --detach-sign --use-agent --sign target/dist/apache-wicket-$version.
 gpg --armor --detach-sign --use-agent --sign target/dist/apache-wicket-$version.zip
 
 pushd target/dist
-sha256sum apache-wicket-$version.tar.gz > apache-wicket-$version.tar.gz.sha256
-sha256sum apache-wicket-$version.zip > apache-wicket-$version.zip.sha256
+sha512sum apache-wicket-$version.tar.gz > apache-wicket-$version.tar.gz.sha512
+sha512sum apache-wicket-$version.zip > apache-wicket-$version.zip.sha512
 popd
 
 echo "Create and sign the binaries"
@@ -554,8 +537,8 @@ gpg --armor --detach-sign --use-agent --sign dist/binaries/apache-wicket-$versio
 gpg --armor --detach-sign --use-agent --sign dist/binaries/apache-wicket-$version-bin.zip
 
 pushd dist/binaries
-sha256sum apache-wicket-$version-bin.tar.gz > apache-wicket-$version-bin.tar.gz.sha256
-sha256sum apache-wicket-$version-bin.zip > apache-wicket-$version-bin.zip.sha256
+sha512sum apache-wicket-$version-bin.tar.gz > apache-wicket-$version-bin.tar.gz.sha512
+sha512sum apache-wicket-$version-bin.zip > apache-wicket-$version-bin.zip.sha512
 popd
 popd
 

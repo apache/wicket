@@ -24,6 +24,7 @@ import org.apache.wicket.util.io.IClusterable;
  * <p>
  * Default settings:
  * <table>
+ * <caption>Default settings</caption>
  * <tr>
  * <th>setting</th>
  * <th>default value</th>
@@ -72,6 +73,8 @@ public final class AutoCompleteSettings implements IClusterable
 	private String parameterName = "q";
 
 	private int minInputLength = 1;
+
+	private KeyTabBehavior keyTabBehavior = KeyTabBehavior.SELECT_FOCUS_NEXT_ELEMENT;
 
 	/**
 	 * Indicates whether the first item in the list is automatically selected when the autocomplete
@@ -326,9 +329,7 @@ public final class AutoCompleteSettings implements IClusterable
 	/**
 	 * Sets whether the popup positioning will take into account browser window visible area or not.
 	 * (so always show popup bottom-right or not)<br>
-	 * THIS WILL PRODUCE UNWANTED BEHAVIOR WITH IE versions < 8 (probably because of unreliable
-	 * clientWidth/clientHeight browser element properties).
-	 * 
+	 *
 	 * @param useSmartPositioning
 	 *            the flag
 	 * @return this {@link AutoCompleteSettings}.
@@ -379,5 +380,57 @@ public final class AutoCompleteSettings implements IClusterable
 	{
 		this.minInputLength = minInputLength;
 		return this;
+	}
+
+	/**
+	 * Indicates how the Tab key should be handled when having an item in the autocomplete list
+	 * selected, {@link KeyTabBehavior#SELECT_FOCUS_NEXT_ELEMENT} is the default behavior.
+	 *
+	 * @return the behavior that should be used when the Tab key is pressed
+	 */
+	public KeyTabBehavior getKeyTabBehavior()
+	{
+		return keyTabBehavior;
+	}
+
+	/**
+	 * Set how the Tab key should be handled when having an item in the autocomplete list selected.
+	 *
+	 * @param keyTabBehavior the behavior that should be used when the Tab key is pressed,
+	 * {@link KeyTabBehavior#SELECT_FOCUS_NEXT_ELEMENT} is the default behavior
+	 * @return this {@link AutoCompleteSettings}
+	 */
+	public AutoCompleteSettings setKeyTabBehavior(KeyTabBehavior keyTabBehavior)
+	{
+		this.keyTabBehavior = keyTabBehavior;
+		return this;
+	}
+
+	/**
+	 * A behavior that can be used to control how the Tab key should be handled when having an item
+	 * in the autocomplete list is marked.
+	 */
+	public enum KeyTabBehavior
+	{
+		/**
+		 * Select the currently marked item and move the focus to the next focusable element.
+		 */
+		SELECT_FOCUS_NEXT_ELEMENT("selectFocusNextElement"),
+		/**
+		 * Select the currently marked item and move the focus to the auto complete input field.
+		 */
+		SELECT_FOCUS_INPUT("selectFocusAutocompleteInput");
+
+		private final String value;
+
+		KeyTabBehavior(String value)
+		{
+			this.value = value;
+		}
+
+		public String getValue()
+		{
+			return value;
+		}
 	}
 }

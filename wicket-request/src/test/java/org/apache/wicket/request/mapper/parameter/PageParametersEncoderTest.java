@@ -34,7 +34,7 @@ class PageParametersEncoderTest
 	void decodeParameters() {
 		PageParametersEncoder encoder = new PageParametersEncoder();
 
-		Url url = Url.parse("idx1/idx2?named1=value1&=&named2=value2");
+		Url url = Url.parse("idx1/idx2?named1=value1&=&named2=value2#fragment");
 
 		PageParameters pageParameters = encoder.decodePageParameters(url);
 		assertEquals(2, pageParameters.getIndexedCount());
@@ -43,5 +43,6 @@ class PageParametersEncoderTest
 		assertEquals("idx2", pageParameters.get(1).toOptionalString());
 		assertEquals("value1", pageParameters.get("named1").toOptionalString());
 		assertEquals("value2", pageParameters.get("named2").toOptionalString());
+		assertEquals("fragment", pageParameters.getFragment());
 	}
 }

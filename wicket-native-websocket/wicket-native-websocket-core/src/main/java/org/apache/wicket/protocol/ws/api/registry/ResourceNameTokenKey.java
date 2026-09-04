@@ -23,13 +23,20 @@ import org.apache.wicket.util.lang.Args;
 /**
  * A key based on shared resource's name and a token
  */
-public class ResourceNameTokenKey implements IKey
+public class ResourceNameTokenKey extends AbstractKey
 {
 	private final String resourceName;
 	private final String connectionToken;
 
+
 	public ResourceNameTokenKey(String resourceName, String connectionToken)
 	{
+		this(resourceName, connectionToken, null);
+	}
+
+	public ResourceNameTokenKey(String resourceName, String connectionToken, String context)
+	{
+		super(context);
 		this.resourceName = Args.notNull(resourceName, "resourceName");
 		this.connectionToken = Args.notNull(connectionToken, "connectionToken");
 	}

@@ -1,9 +1,9 @@
 
 
 
-As its name suggests, component _org.apache.wicket.markup.html.list.ListView_ is designed to display a given list of objects which can be provided as a standard Java List or as a model containing the concrete List. ListView iterates over the list and creates a child component of type _org.apache.wicket.markup.html.list.ListItem_ for every encountered item. 
+As its name suggests, component _org.apache.wicket.markup.html.list.ListView_ is designed to display a given list of objects which can be provided as a standard Java List or as a model containing the concrete List. ListView iterates over the list and creates a child component of type _org.apache.wicket.markup.html.list.ListItem_ for every encountered item.
 
-Unlike RepeatingView this component is intended to be used with complex markup fragments containing nested components. 
+Unlike RepeatingView this component is intended to be used with complex markup fragments containing nested components.
 
 To generate its children, ListView calls its abstract method populateItem(ListItem<T> item) for each item in the list, so we must provide an implementation of this method to tell the component how to create its children components. In the following example we use a ListView to display a list of Person objects:
 
@@ -26,21 +26,21 @@ To generate its children, ListView calls its abstract method populateItem(ListIt
 [source,java]
 ----
 public HomePage(final PageParameters parameters) {
-	List<Person> persons = Arrays.asList(new Person("John", "Smith"), 
+	List<Person> persons = Arrays.asList(new Person("John", "Smith"),
                                         new Person("Dan", "Wong"));
-		
+
    	add(new ListView<Person>("persons", persons) {
 		@Override
 		protected void populateItem(ListItem<Person> item) {
 	   		item.add(new Label("fullName", new PropertyModel(item.getModel(), "fullName")));
-		}			
+		}
    });
 }
 ----
 
 *Screenshot of generated page:*
 
-image::../img/simple-listview-screenshot.png[]
+image::./img/simple-listview-screenshot.png[]
 
 In this example we have displayed the full name of two Person's instances. The most interesting part of the code is the implementation of method populateItem where parameter item is the current child component created by ListView and its model contains the corresponding element of the list. Please note that inside populateItem we must add nested components to the _item_ object and not directly to the _ListView_.
 

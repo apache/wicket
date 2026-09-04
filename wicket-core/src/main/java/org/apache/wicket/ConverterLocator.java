@@ -96,7 +96,7 @@ public class ConverterLocator implements IConverterLocator
 				return null;
 			}
 			Class<C> theType = type.get();
-			if ("".equals(value))
+			if (value.isEmpty())
 			{
 				if (String.class.equals(theType))
 				{
@@ -130,7 +130,7 @@ public class ConverterLocator implements IConverterLocator
 		@Override
 		public String convertToString(C value, Locale locale)
 		{
-			if (value == null || "".equals(value))
+			if (value == null || (value instanceof String && ((String) value).isEmpty()))
 			{
 				return "";
 			}

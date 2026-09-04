@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.cdi;
 
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.request.IRequestHandler;

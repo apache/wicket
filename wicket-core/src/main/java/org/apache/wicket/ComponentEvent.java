@@ -101,7 +101,7 @@ final class ComponentEvent<T> implements IEvent<T>
 		stop = true;
 	}
 
-	boolean isStop()
+	public boolean isStop()
 	{
 		return stop;
 	}

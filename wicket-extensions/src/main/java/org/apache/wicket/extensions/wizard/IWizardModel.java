@@ -88,7 +88,7 @@ public interface IWizardModel extends IClusterable
 	 * 
 	 * @param step
 	 *            the step to check
-	 * @return True if its the final step in the wizard, false< otherwise.
+	 * @return True if its the final step in the wizard, false otherwise.
 	 */
 	boolean isLastStep(IWizardStep step);
 

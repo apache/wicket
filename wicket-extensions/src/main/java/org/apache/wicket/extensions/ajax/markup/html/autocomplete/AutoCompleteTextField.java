@@ -225,7 +225,7 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	protected AutoCompleteBehavior<T> newAutoCompleteBehavior(
 		final IAutoCompleteRenderer<T> renderer, final AutoCompleteSettings settings)
 	{
-		return new AutoCompleteBehavior<T>(renderer, settings)
+		return new AutoCompleteBehavior<>(renderer, settings)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -284,6 +284,9 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 
 		// disable browser's autocomplete
 		tag.put("autocomplete", "off");
+		tag.put("role", "combobox");
+		tag.put("aria-autocomplete", "list");
+		tag.put("aria-controls", "wicket-autocomplete-listbox-" + getMarkupId());
 	}
 
 	/**

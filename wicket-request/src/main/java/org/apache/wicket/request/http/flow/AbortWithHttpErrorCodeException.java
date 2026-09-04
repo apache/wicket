@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.http.flow;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.request.flow.ResetResponseException;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
@@ -40,10 +40,10 @@ public final class AbortWithHttpErrorCodeException extends ResetResponseExceptio
 	 * 
 	 * @param errorCode
 	 *            the servlet error code; use one of the
-	 *            {@link javax.servlet.http.HttpServletResponse} constants
+	 *            {@link jakarta.servlet.http.HttpServletResponse} constants
 	 * @param message
 	 *            the optional message to send to the client
-	 * @see javax.servlet.http.HttpServletResponse
+	 * @see jakarta.servlet.http.HttpServletResponse
 	 */
 	public AbortWithHttpErrorCodeException(final int errorCode, final String message)
 	{
@@ -57,8 +57,8 @@ public final class AbortWithHttpErrorCodeException extends ResetResponseExceptio
 	 * 
 	 * @param errorCode
 	 *            the servlet error code; use one of the
-	 *            {@link javax.servlet.http.HttpServletResponse} constants
-	 * @see javax.servlet.http.HttpServletResponse
+	 *            {@link jakarta.servlet.http.HttpServletResponse} constants
+	 * @see jakarta.servlet.http.HttpServletResponse
 	 */
 	public AbortWithHttpErrorCodeException(final int errorCode)
 	{

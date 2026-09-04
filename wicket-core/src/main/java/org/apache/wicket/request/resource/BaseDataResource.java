@@ -18,7 +18,7 @@ package org.apache.wicket.request.resource;
 
 import java.net.URLConnection;
 import java.time.Instant;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.wicket.request.Response;
 
 /**

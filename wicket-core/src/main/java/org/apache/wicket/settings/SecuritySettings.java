@@ -18,16 +18,23 @@ package org.apache.wicket.settings;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.authentication.IAuthenticationStrategy;
-import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.IUnauthorizedResourceRequestListener;
 import org.apache.wicket.authorization.UnauthorizedInstantiationException;
+import org.apache.wicket.coep.CrossOriginEmbedderPolicyConfiguration;
+import org.apache.wicket.coep.CrossOriginEmbedderPolicyConfiguration.CoepMode;
+import org.apache.wicket.coop.CrossOriginOpenerPolicyConfiguration;
+import org.apache.wicket.coop.CrossOriginOpenerPolicyConfiguration.CoopMode;
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.wicket.core.random.DefaultSecureRandomSupplier;
 import org.apache.wicket.core.random.ISecureRandomSupplier;
-import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory;
-import org.apache.wicket.util.crypt.ICryptFactory;
+import org.apache.wicket.core.util.crypt.AesGcmCryptScheme;
+import org.apache.wicket.core.util.crypt.ICryptFactory;
+import org.apache.wicket.core.util.crypt.ICryptScheme;
+import org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -44,22 +51,20 @@ import org.apache.wicket.util.lang.Args;
  */
 public class SecuritySettings
 {
-	/**
-	 * encryption key used by default crypt factory
-	 */
-	public static final String DEFAULT_ENCRYPTION_KEY = "WiCkEt-FRAMEwork";
-
 	/** The authorization strategy. */
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
-	/** The authentication strategy. */
-	private IAuthenticationStrategy authenticationStrategy;
-
 	/** factory for creating crypt objects */
 	private ICryptFactory cryptFactory;
-	
+
+	/** the scheme used to encrypt (the strongest configured scheme) */
+	private ICryptScheme cryptScheme;
+
+	/** the schemes accepted for decryption (downgrade protection) */
+	private Collection<ICryptScheme> whitelistedCryptSchemes;
+
 	/** supplier of random data and SecureRandom */
-	private ISecureRandomSupplier randomSupplier = new DefaultSecureRandomSupplier();
+	private ISecureRandomSupplier randomSupplier;
 
 	/**
 	 * Whether mounts should be enforced. If {@code true}, requests for a page will be
@@ -68,6 +73,18 @@ public class SecuritySettings
 	 * This setting basically disables {@link org.apache.wicket.core.request.mapper.BookmarkableMapper}
 	 */
 	private boolean enforceMounts = false;
+
+	/**
+	 * Represents the configuration for Cross-Origin-Opener-Policy headers
+	 */
+	private CrossOriginOpenerPolicyConfiguration crossOriginOpenerPolicyConfiguration = new CrossOriginOpenerPolicyConfiguration(
+		CoopMode.SAME_ORIGIN);
+
+	/**
+	 * Represents the configuration for Cross-Origin-Embedder-Policy headers
+	 */
+	private CrossOriginEmbedderPolicyConfiguration crossOriginEmbedderPolicyConfiguration = new CrossOriginEmbedderPolicyConfiguration(
+		CoepMode.REPORTING);
 
 	/** Authorizer for component instantiations */
 	private static final IUnauthorizedComponentInstantiationListener DEFAULT_UNAUTHORIZED_COMPONENT_INSTANTIATION_LISTENER = new IUnauthorizedComponentInstantiationListener()
@@ -105,18 +122,83 @@ public class SecuritySettings
 	}
 
 	/**
-	 * Note: Prints a warning to stderr if no factory was set and {@link #DEFAULT_ENCRYPTION_KEY} is
-	 * used instead.
-	 * 
+	 * Returns the {@link ICryptFactory}. If no factory is set, a {@link KeyInSessionCryptFactory}
+	 * is used.
+	 *
 	 * @return crypt factory used to generate crypt objects
 	 */
 	public synchronized ICryptFactory getCryptFactory()
 	{
 		if (cryptFactory == null)
 		{
-			cryptFactory = new KeyInSessionSunJceCryptFactory();
+			cryptFactory = new KeyInSessionCryptFactory();
 		}
 		return cryptFactory;
+	}
+
+	/**
+	 * Returns the {@link ICryptScheme} used to <em>encrypt</em> (the strongest configured scheme).
+	 * If none is set, {@link AesGcmCryptScheme} (JDK-native authenticated AES-256-GCM) is used.
+	 *
+	 * @return the encryption scheme
+	 */
+	public synchronized ICryptScheme getCryptScheme()
+	{
+		if (cryptScheme == null)
+		{
+			cryptScheme = new AesGcmCryptScheme();
+		}
+		return cryptScheme;
+	}
+
+	/**
+	 * Sets the {@link ICryptScheme} used for all encryption. This should be the strongest scheme
+	 * available; existing data encrypted with an older scheme keeps decrypting only while that
+	 * scheme is whitelisted (see {@link #setWhitelistedCryptSchemes(Collection)}).
+	 *
+	 * @param cryptScheme
+	 *            the encryption scheme, must not be null
+	 * @return {@code this} object for chaining
+	 */
+	public synchronized SecuritySettings setCryptScheme(ICryptScheme cryptScheme)
+	{
+		this.cryptScheme = Args.notNull(cryptScheme, "cryptScheme");
+		return this;
+	}
+
+	/**
+	 * Returns the schemes accepted for <em>decryption</em>. Ciphertext whose scheme marker is not
+	 * in this set is refused, which protects against downgrade attacks. The encryption scheme
+	 * (see {@link #getCryptScheme()}) is always accepted for decryption regardless of this set.
+	 * If none is set, only the encryption scheme is accepted.
+	 *
+	 * @return the whitelisted decryption schemes
+	 */
+	public synchronized Collection<ICryptScheme> getWhitelistedCryptSchemes()
+	{
+		if (whitelistedCryptSchemes == null)
+		{
+			return List.of(getCryptScheme());
+		}
+		return whitelistedCryptSchemes;
+	}
+
+	/**
+	 * Sets the schemes accepted for decryption (downgrade protection). To migrate to a stronger
+	 * scheme, temporarily include the old scheme here (so existing data still decrypts) while
+	 * setting the new scheme via {@link #setCryptScheme(ICryptScheme)}; drop the old scheme once
+	 * the data has been rewritten.
+	 *
+	 * @param whitelistedCryptSchemes
+	 *            the accepted decryption schemes, must not be null
+	 * @return {@code this} object for chaining
+	 */
+	public synchronized SecuritySettings setWhitelistedCryptSchemes(
+		Collection<ICryptScheme> whitelistedCryptSchemes)
+	{
+		this.whitelistedCryptSchemes = Args.notNull(whitelistedCryptSchemes,
+			"whitelistedCryptSchemes");
+		return this;
 	}
 
 	/**
@@ -127,6 +209,10 @@ public class SecuritySettings
 	 */
 	public ISecureRandomSupplier getRandomSupplier()
 	{
+		if (randomSupplier == null)
+		{
+			randomSupplier = new DefaultSecureRandomSupplier();
+		}
 		return randomSupplier;
 	}
 
@@ -249,30 +335,51 @@ public class SecuritySettings
 		return this;
 	}
 
-	/**
-	 * Gets the authentication strategy.
-	 *
-	 * @return Returns the authentication strategy.
-	 */
-	public IAuthenticationStrategy getAuthenticationStrategy()
+	public CrossOriginOpenerPolicyConfiguration getCrossOriginOpenerPolicyConfiguration()
 	{
-		if (authenticationStrategy == null)
-		{
-			authenticationStrategy = new DefaultAuthenticationStrategy("LoggedIn");
-		}
-		return authenticationStrategy;
+		return crossOriginOpenerPolicyConfiguration;
 	}
 
 	/**
-	 * Sets the authentication strategy.
+	 * Sets the Cross-Origin Opener Policy's mode and exempted paths. The config values are only
+	 * read once at startup in Application#initApplication(), changing the config at runtime will have no effect
 	 *
-	 * @param strategy
-	 *            new authentication strategy
-	 * @return {@code this} object for chaining
+	 * @param mode
+	 *            CoopMode, one of the 4 values: UNSAFE_NONE, SAME_ORIGIN, SAME_ORIGIN_ALLOW_POPUPS, DISABLED
+	 * @param exemptions
+	 *            exempted paths for which COOP will be disabled
+	 * @return
 	 */
-	public SecuritySettings setAuthenticationStrategy(final IAuthenticationStrategy strategy)
+	public SecuritySettings setCrossOriginOpenerPolicyConfiguration(
+		CoopMode mode, String... exemptions)
 	{
-		authenticationStrategy = strategy;
+		crossOriginOpenerPolicyConfiguration = new CrossOriginOpenerPolicyConfiguration(mode, exemptions);
 		return this;
 	}
+
+
+	public CrossOriginEmbedderPolicyConfiguration getCrossOriginEmbedderPolicyConfiguration()
+	{
+		return crossOriginEmbedderPolicyConfiguration;
+	}
+
+	/**
+	 * Sets the Cross-Origin Embedder Policy's mode and exempted paths. The config values are only
+	 * read once at startup in Application#initApplication(), changing the config at runtime will
+	 * have no effect
+	 * 
+	 * @param mode
+	 *            CoepMode, one of the 3 values: ENFORCING, REPORTING, DISABLED
+	 * @param exemptions
+	 *            exempted paths for which COEP will be disabled
+	 * @return
+	 */
+	public SecuritySettings setCrossOriginEmbedderPolicyConfiguration(CoepMode mode,
+		String... exemptions)
+	{
+		crossOriginEmbedderPolicyConfiguration = new CrossOriginEmbedderPolicyConfiguration(mode,
+			exemptions);
+		return this;
+	}
+
 }

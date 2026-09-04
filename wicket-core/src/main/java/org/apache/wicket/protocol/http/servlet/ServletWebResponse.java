@@ -18,9 +18,9 @@ package org.apache.wicket.protocol.http.servlet;
 
 import java.io.IOException;
 import java.time.Instant;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
@@ -91,7 +91,7 @@ public class ServletWebResponse extends WebResponse
 	@Override
 	public boolean isHeaderSupported()
 	{
-		return true;
+		return !httpServletResponse.isCommitted();
 	}
 	
 	@Override

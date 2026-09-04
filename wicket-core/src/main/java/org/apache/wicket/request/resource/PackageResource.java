@@ -16,22 +16,14 @@
  */
 package org.apache.wicket.request.resource;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.util.Locale;
-import java.util.Objects;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.wicket.Application;
 import org.apache.wicket.IWicketInternalException;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.core.util.resource.locator.caching.CachingResourceStreamLocator;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.mock.MockWebRequest;
@@ -51,6 +43,16 @@ import org.apache.wicket.util.resource.ResourceStreamWrapper;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Represents a localizable static resource.
@@ -241,7 +243,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	}
 
 	/**
-	 * get text encoding (intented for character-based resources)
+	 * get text encoding (intended for character-based resources)
 	 *
 	 * @return custom encoding or {@code null} to use default
 	 */
@@ -251,7 +253,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	}
 
 	/**
-	 * set text encoding (intented for character-based resources)
+	 * set text encoding (intended for character-based resources)
 	 *
 	 * @param textEncoding
 	 *            custom encoding or {@code null} to use default
@@ -489,7 +491,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 	/**
 	 * Gets the {@link IJavaScriptCompressor} to be used. By default returns the configured
-	 * compressor on application level, but can be overriden by the user application to provide
+	 * compressor on application level, but can be overridden by the user application to provide
 	 * compressor specific to the resource.
 	 *
 	 * @return the configured application level JavaScript compressor. May be {@code null}.
@@ -554,37 +556,17 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 	private IResourceStream internalGetResourceStream(final String style, final Locale locale)
 	{
+		if (!accept(absolutePath))
+		{
+			throw new PackageResourceBlockedException(
+				"Access denied to (static) package resource " + absolutePath + ". See IPackageResourceGuard");
+		}
+
 		IResourceStreamLocator resourceStreamLocator = Application.get()
 			.getResourceSettings()
 			.getResourceStreamLocator();
 		IResourceStream resourceStream = resourceStreamLocator.locate(getScope(), absolutePath,
 			style, variation, locale, null, false);
-
-		String realPath = absolutePath;
-		if (resourceStream instanceof IFixedLocationResourceStream)
-		{
-			realPath = ((IFixedLocationResourceStream)resourceStream).locationAsString();
-			if (realPath != null)
-			{
-				int index = realPath.indexOf(absolutePath);
-				if (index != -1)
-				{
-					realPath = realPath.substring(index);
-				}
-			}
-			else
-			{
-				realPath = absolutePath;
-			}
-
-		}
-
-		if (accept(realPath) == false)
-		{
-			throw new PackageResourceBlockedException(
-				"Access denied to (static) package resource " + absolutePath +
-					". See IPackageResourceGuard");
-		}
 
 		if (resourceStream != null)
 		{
@@ -702,11 +684,23 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	public static boolean exists(final Class<?> scope, final String path, final Locale locale,
 		final String style, final String variation)
 	{
+		return getResourceStream(scope, path, locale, style, variation, true) != null;
+	}
+
+	public static IResourceStream getResourceStream(final Class<?> scope, final String path, final Locale locale,
+		final String style, final String variation, final boolean updateCache)
+	{
 		String absolutePath = Packages.absolutePath(scope, path);
-		return Application.get()
-			.getResourceSettings()
-			.getResourceStreamLocator()
-			.locate(scope, absolutePath, style, variation, locale, null, false) != null;
+		IResourceStreamLocator resourceStreamLocator = Application.get().getResourceSettings()
+			.getResourceStreamLocator();
+		if (resourceStreamLocator instanceof CachingResourceStreamLocator cache)
+		{
+			return cache.locate(scope, absolutePath, style, variation, locale, null, false, updateCache);
+		}
+		else
+		{
+			return resourceStreamLocator.locate(scope, absolutePath, style, variation, locale, null, false);
+		}
 	}
 
 	@Override
@@ -855,4 +849,5 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		this.readBuffered = readBuffered;
 		return this;
 	}
+
 }

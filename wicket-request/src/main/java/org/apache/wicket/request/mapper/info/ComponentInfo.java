@@ -47,8 +47,12 @@ public class ComponentInfo
 	{
 		if (path != null)
 		{
-			StringBuilder result = new StringBuilder();
 			int length = path.length();
+			if (length == 0)
+			{
+				return path.toString();
+			}
+			StringBuilder result = new StringBuilder(length);
 			for (int i = 0; i < length; i++)
 			{
 				char c = path.charAt(i);
@@ -83,8 +87,12 @@ public class ComponentInfo
 	{
 		if (path != null)
 		{
-			StringBuilder result = new StringBuilder();
 			int length = path.length();
+			if (length == 0)
+			{
+				return path.toString();
+			}
+			StringBuilder result = new StringBuilder(length);
 			for (int i = 0; i < length; i++)
 			{
 				char c = path.charAt(i);
@@ -159,7 +167,8 @@ public class ComponentInfo
 	@Override
 	public String toString()
 	{
-		StringBuilder result = new StringBuilder();
+		String path = encodeComponentPath(componentPath);
+		StringBuilder result = new StringBuilder(path.length() + 12);
 
 		if (renderCount != null)
 		{
@@ -175,7 +184,7 @@ public class ComponentInfo
 			result.append(behaviorId);
 		}
 		result.append(SEPARATOR);
-		result.append(encodeComponentPath(componentPath));
+		result.append(path);
 
 		return result.toString();
 	}
@@ -188,13 +197,13 @@ public class ComponentInfo
 	 */
 	private static boolean isNumber(final String string)
 	{
-		if ((string == null) || (string.length() == 0))
+		if (string == null || string.isEmpty())
 		{
 			return false;
 		}
 		for (int i = 0; i < string.length(); ++i)
 		{
-			if (Character.isDigit(string.charAt(i)) == false)
+			if (!Character.isDigit(string.charAt(i)))
 			{
 				return false;
 			}

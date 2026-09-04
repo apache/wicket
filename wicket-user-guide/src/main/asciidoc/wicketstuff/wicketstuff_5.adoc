@@ -1,17 +1,17 @@
 
 
 
-Module wicketstuff-inmethod-grid implements a sophisticated grid-component with class com. inmethod.grid.datagrid.DataGrid. 
+Module wicketstuff-inmethod-grid implements a sophisticated grid-component with class com. inmethod.grid.datagrid.DataGrid.
 
 Just like pageable repeaters (seen in <<repeaters.adoc#_pageable_repeaters,paragraph 13.4>>) DataGrid provides data pagination and uses interface IDataProvider as data source. In addition the component is completely ajaxified:
 
-image::../img/inmethod-grid1.png[]
+image::./img/inmethod-grid1.png[]
 
 DataGrid supports also editable cells and row selection:
 
-image::../img/inmethod-grid2.png[]
+image::./img/inmethod-grid2.png[]
 
-The following snippet illustrate how to use DataGrid and is taken from wiki page  https://github.com/wicketstuff/core/wiki/InMethodGrid[https://github.com/wicketstuff/core/wiki/InMethodGrid] : 
+The following snippet illustrate how to use DataGrid and is taken from wiki page  https://github.com/wicketstuff/core/wiki/InMethodGrid[https://github.com/wicketstuff/core/wiki/InMethodGrid] :
 
 *HTML:*
 
@@ -19,7 +19,7 @@ The following snippet illustrate how to use DataGrid and is taken from wiki page
 ----
 ...
   <div wicket:id="grid">Grid</div>
-... 
+...
 ----
 
 *Java code:*

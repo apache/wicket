@@ -41,8 +41,8 @@ public final class ErrorCodeRequestHandler implements IRequestHandler
 	 * 
 	 * @param errorCode
 	 *            the servlet error code; use one of the
-	 *            {@link javax.servlet.http.HttpServletResponse} constants
-	 * @see javax.servlet.http.HttpServletResponse
+	 *            {@link jakarta.servlet.http.HttpServletResponse} constants
+	 * @see jakarta.servlet.http.HttpServletResponse
 	 */
 	public ErrorCodeRequestHandler(final int errorCode)
 	{
@@ -54,10 +54,10 @@ public final class ErrorCodeRequestHandler implements IRequestHandler
 	 * 
 	 * @param errorCode
 	 *            the servlet error code; use one of the
-	 *            {@link javax.servlet.http.HttpServletResponse} constants
+	 *            {@link jakarta.servlet.http.HttpServletResponse} constants
 	 * @param message
 	 *            the optional message to send to the client
-	 * @see javax.servlet.http.HttpServletResponse
+	 * @see jakarta.servlet.http.HttpServletResponse
 	 */
 	public ErrorCodeRequestHandler(final int errorCode, final String message)
 	{

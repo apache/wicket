@@ -19,7 +19,7 @@ package org.apache.wicket.ajax;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,13 +32,11 @@ import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.page.PartialPageUpdate;
 import org.apache.wicket.page.XmlPartialPageUpdate;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
@@ -82,13 +80,13 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	/**
 	 * Collector of page updates.
 	 */
-	private final PartialPageUpdate update;
+	private PartialPageUpdate update;
 
-	/** a list of listeners */
-	private List<AjaxRequestTarget.IListener> listeners = null;
+	/** a set of listeners */
+	protected Set<AjaxRequestTarget.IListener> listeners = null;
 
 	/** */
-	private final Set<ITargetRespondListener> respondListeners = new HashSet<>();
+	protected final Set<ITargetRespondListener> respondListeners = new HashSet<>();
 
 	/** see https://issues.apache.org/jira/browse/WICKET-3564 */
 	protected transient boolean respondersFrozen;
@@ -105,8 +103,17 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	public AjaxRequestHandler(final Page page)
 	{
 		super(page);
+	}
 
-		update = new XmlPartialPageUpdate(page)
+	/**
+	 * Factory method for {@link PartialPageUpdate}'s
+	 *
+	 * @param page The {@link Page}
+	 * @return an instance of {@link PartialPageUpdate}
+	 */
+	protected PartialPageUpdate newPartialPageUpdate(final Page page)
+	{
+		return new XmlPartialPageUpdate(page)
 		{
 			/**
 			 * Freezes the {@link AjaxRequestHandler#listeners} before firing the event and
@@ -132,7 +139,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 			/**
 			 * Freezes the {@link AjaxRequestHandler#listeners}, and does not un-freeze them as the
 			 * events will have been fired by now.
-			 * 
+			 *
 			 * @param response
 			 *            the response to write to
 			 */
@@ -141,25 +148,15 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 			{
 				listenersFrozen = true;
 
-				// invoke onafterresponse event on listeners
+				// invoke onAfterRespond event on listeners
 				if (listeners != null)
 				{
 					final Map<String, Component> components = Collections
-						.unmodifiableMap(markupIdToComponent);
-
-					// create response that will be used by listeners to append javascript
-					final AjaxRequestTarget.IJavaScriptResponse jsresponse = new AjaxRequestTarget.IJavaScriptResponse()
-					{
-						@Override
-						public void addJavaScript(String script)
-						{
-							writeEvaluations(response, Collections.<CharSequence> singleton(script));
-						}
-					};
+							.unmodifiableMap(markupIdToComponent);
 
 					for (AjaxRequestTarget.IListener listener : listeners)
 					{
-						listener.onAfterRespond(components, jsresponse);
+						listener.onAfterRespond(components, AjaxRequestHandler.this);
 					}
 				}
 			}
@@ -174,7 +171,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 
 		if (listeners == null)
 		{
-			listeners = new LinkedList<>();
+			listeners = new LinkedHashSet<>();
 		}
 
 		if (!listeners.contains(listener))
@@ -186,13 +183,16 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	@Override
 	public PartialPageUpdate getUpdate()
 	{
+		if (update == null) {
+			update = newPartialPageUpdate(getPage());
+		}
 		return update;
 	}
 
 	@Override
 	public final Collection<? extends Component> getComponents()
 	{
-		return update.getComponents();
+		return getUpdate().getComponents();
 	}
 
 	/**
@@ -206,7 +206,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 			logData = new PageLogData(getPage());
 		}
 
-		update.detach(requestCycle);
+		getUpdate().detach(requestCycle);
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 		if (obj instanceof AjaxRequestHandler)
 		{
 			AjaxRequestHandler that = (AjaxRequestHandler)obj;
-			return update.equals(that.update);
+			return getUpdate().equals(that.update);
 		}
 		return false;
 	}
@@ -230,7 +230,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	public int hashCode()
 	{
 		int result = "AjaxRequestHandler".hashCode();
-		result += update.hashCode() * 17;
+		result += getUpdate().hashCode() * 17;
 		return result;
 	}
 
@@ -277,20 +277,32 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 		final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
 		// Set content type based on markup type for page
-		update.setContentType(response, encoding);
+		getUpdate().setContentType(response, encoding);
 
 		// Make sure it is not cached by a client
 		response.disableCaching();
 
+		final List<IResponseFilter> filters = Application.get()
+			.getRequestCycleSettings()
+			.getResponseFilters();
+		// WICKET-7074 we need to write to a temporary buffer, otherwise, if an exception is produced,
+		// and a redirect is done we will end up with a malformed XML
 		final StringResponse bodyResponse = new StringResponse();
-		update.writeTo(bodyResponse, encoding);
-		CharSequence filteredResponse = invokeResponseFilters(bodyResponse);
-		response.write(filteredResponse);
+		getUpdate().writeTo(bodyResponse, encoding);
+		if (filters == null || filters.isEmpty())
+		{
+			response.write(bodyResponse.getBuffer());
+		}
+		else
+		{
+			CharSequence filteredResponse = invokeResponseFilters(bodyResponse, filters);
+			response.write(filteredResponse);
+		}
 	}
 
 	private boolean shouldRedirectToPage(IRequestCycle requestCycle)
 	{
-		if (update.containsPage())
+		if (getUpdate().containsPage())
 		{
 			return true;
 		}
@@ -311,23 +323,18 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	 * 
 	 * @param contentResponse
 	 *            the Ajax {@link Response} body
+	 * @param responseFilters
+	 *            the response filters
 	 * @return filtered response
 	 */
-	private AppendingStringBuffer invokeResponseFilters(final StringResponse contentResponse)
+	private CharSequence invokeResponseFilters(final StringResponse contentResponse,
+		final List<IResponseFilter> responseFilters)
 	{
 		AppendingStringBuffer responseBuffer = new AppendingStringBuffer(
 			contentResponse.getBuffer());
-
-		List<IResponseFilter> responseFilters = Application.get()
-			.getRequestCycleSettings()
-			.getResponseFilters();
-
-		if (responseFilters != null)
+		for (IResponseFilter filter : responseFilters)
 		{
-			for (IResponseFilter filter : responseFilters)
-			{
-				responseBuffer = filter.filter(responseBuffer);
-			}
+			responseBuffer = filter.filter(responseBuffer);
 		}
 		return responseBuffer;
 	}
@@ -338,7 +345,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	@Override
 	public String toString()
 	{
-		return "[AjaxRequestHandler@" + hashCode() + " responseObject [" + update + "]";
+		return "[AjaxRequestHandler@" + hashCode() + " responseObject [" + getUpdate() + "]";
 	}
 
 	/**

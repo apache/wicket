@@ -55,5 +55,5 @@ public interface IProxyTargetLocator extends IClusterable
 	 * 
 	 * @return retrieved object
 	 */
-	Object locateProxyTarget();
+	<T> T locateProxyTarget();
 }

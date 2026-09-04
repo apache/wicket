@@ -24,8 +24,8 @@ import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.lang.Packages;
 import org.junit.jupiter.api.Test;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
 import java.util.Enumeration;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -37,14 +37,14 @@ import static org.junit.jupiter.api.Assertions.fail;
  * 
  * @author svenmeier
  */
-public class SpringWebApplicationFactoryTest
+class SpringWebApplicationFactoryTest
 {
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void test() throws Exception
+	void test() throws Exception
 	{
 		WicketFilter filter = new WicketFilter();
 
@@ -57,7 +57,7 @@ public class SpringWebApplicationFactoryTest
 		assertTrue(Destroyable.instance.destroyed, "is not destroyed");
 	}
 
-	private class FilterConfigImpl implements FilterConfig
+	private static class FilterConfigImpl implements FilterConfig
 	{
 
 		@Override
@@ -98,7 +98,7 @@ public class SpringWebApplicationFactoryTest
 	/**
 	 * Application configured in the application context.
 	 */
-	public static class Application extends WebApplication
+	static class Application extends WebApplication
 	{
 		@Override
 		public Class<? extends Page> getHomePage()
@@ -125,7 +125,7 @@ public class SpringWebApplicationFactoryTest
 	/**
 	 * A destroyable bean defined in the application context.
 	 */
-	public static class Destroyable
+	static class Destroyable
 	{
 		static Destroyable instance;
 
@@ -133,7 +133,7 @@ public class SpringWebApplicationFactoryTest
 
 		/**
 		 */
-		public Destroyable()
+		Destroyable()
 		{
 			instance = this;
 		}
@@ -141,7 +141,7 @@ public class SpringWebApplicationFactoryTest
 		/**
 		 * Called by Spring.
 		 */
-		public void destroy()
+		void destroy()
 		{
 			destroyed = true;
 		}

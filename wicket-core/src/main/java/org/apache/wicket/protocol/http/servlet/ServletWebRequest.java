@@ -27,11 +27,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload2.core.FileItemFactory;
+import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.IWritableRequestParameters;
@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * {@link WebRequest} subclass that wraps a {@link HttpServletRequest} object.
- * 
+ *
  * @author Matej Knopp
  * @author Juergen Donnerstag
  * @author Igor Vaynberg
@@ -70,7 +70,7 @@ public class ServletWebRequest extends WebRequest
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param httpServletRequest
 	 * @param filterPrefix
 	 *            contentPath + filterPath, used to extract the actual {@link Url}
@@ -82,7 +82,7 @@ public class ServletWebRequest extends WebRequest
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param httpServletRequest
 	 * @param filterPrefix
 	 *            contentPath + filterPath, used to extract the actual {@link Url}
@@ -115,14 +115,14 @@ public class ServletWebRequest extends WebRequest
 	 * Returns base url without context or filter mapping.
 	 * <p>
 	 * Example: if current url is
-	 * 
+	 *
 	 * <pre>
-	 * http://localhost:8080/context/filter/mapping/wicket/bookmarkable/com.foo.Page?1&id=2
+	 * http://localhost:8080/context/filter/mapping/wicket/bookmarkable/com.foo.Page?1&amp;id=2
 	 * </pre>
-	 * 
+	 *
 	 * the base url is <em>wicket/bookmarkable/com.foo.Page</em>
 	 * </p>
-	 * 
+	 *
 	 * @see org.apache.wicket.request.Request#getClientUrl()
 	 */
 	@Override
@@ -209,7 +209,7 @@ public class ServletWebRequest extends WebRequest
 
 	/**
 	 * Returns the prefix of Wicket filter (without the leading /)
-	 * 
+	 *
 	 * @return Wicket filter prefix
 	 */
 	public String getFilterPrefix()
@@ -417,7 +417,7 @@ public class ServletWebRequest extends WebRequest
 
 	/**
 	 * Creates multipart web request from this request.
-	 * 
+	 *
 	 * @param maxSize
 	 *            max allowed size of request
 	 * @param upload

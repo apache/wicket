@@ -29,7 +29,7 @@ import org.apache.wicket.util.lang.Bytes;
  * A panel for the debug bar that shows the session size and links to the page that shows more
  * information about sessions.
  * 
- * @author Jeremy Thomerson <jthomerson@apache.org>
+ * @author Jeremy Thomerson
  */
 public class SessionSizeDebugPanel extends StandardDebugPanel
 {

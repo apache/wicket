@@ -16,20 +16,29 @@
  */
 package org.apache.wicket.protocol.ws.api.registry;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Args;
 
 /**
  * A key based on page's id
  */
-public class PageIdKey implements IKey
+public class PageIdKey extends AbstractKey
 {
 	private final Integer pageId;
 
 	public PageIdKey(Integer pageId)
 	{
-		this.pageId = Args.notNull(pageId, "pageId");
+		this(pageId, null);
 	}
 
+	public PageIdKey(Integer pageId, String context)
+	{
+		super(context);
+		this.pageId = Args.notNull(pageId, "pageId");
+	}
+	
 	@Override
 	public boolean equals(Object o)
 	{

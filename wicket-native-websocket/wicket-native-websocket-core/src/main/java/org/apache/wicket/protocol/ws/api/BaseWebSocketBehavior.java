@@ -18,9 +18,10 @@ package org.apache.wicket.protocol.ws.api;
 
 import java.util.Map;
 import java.util.Set;
-import javax.servlet.SessionTrackingMode;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
+
+import jakarta.servlet.SessionTrackingMode;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -120,10 +121,22 @@ public class BaseWebSocketBehavior extends Behavior
 		return webSocketSetupTemplate.asString(parameters);
 	}
 
+	/**
+	 * Override to return a context. By default, this is the page class name.
+	 *
+	 * @param component the {@link org.apache.wicket.Component}
+	 * @return the context for this websocket behavior.
+	 */
+	protected String getContext(Component component) {
+		return component.getPage().getClass().getName();
+	}
+
 	private Map<String, Object> getParameters(Component component) {
 		Map<String, Object> variables = Generics.newHashMap();
 
-		// set falsy JS values for the non-used parameter
+		variables.put("context", getContext(component));
+
+		// set falsy JS values for the non-used parameters
 		if (Strings.isEmpty(resourceName))
 		{
 			int pageId = component.getPage().getPageId();

@@ -35,9 +35,9 @@ public class ListenerLogData extends PageLogData
 	private final Class<? extends IRequestableComponent> componentClass;
 	private final String componentPath;
 	private final Integer behaviorIndex;
-	private Class<? extends Behavior> behaviorClass;
-	private Class<? extends IRequestableComponent> submittingComponentClass;
-	private String submittingComponentPath;
+	private final Class<? extends Behavior> behaviorClass;
+	private final Class<? extends IRequestableComponent> submittingComponentClass;
+	private final String submittingComponentPath;
 
 	/**
 	 * Construct.
@@ -48,68 +48,24 @@ public class ListenerLogData extends PageLogData
 	public ListenerLogData(IPageAndComponentProvider pageAndComponentProvider, Integer behaviorIndex)
 	{
 		super(pageAndComponentProvider);
-		componentClass = tryToGetComponentClass(pageAndComponentProvider);
-		componentPath = tryToGetComponentPath(pageAndComponentProvider);
+
 		this.behaviorIndex = behaviorIndex;
-		if (behaviorIndex != null && componentClass != null)
+
+		componentClass = optional(() -> pageAndComponentProvider.getComponent().getClass());
+		componentPath = optional(() -> pageAndComponentProvider.getComponentPath());
+
+		if (behaviorIndex != null)
 		{
-			try
-			{
-				behaviorClass = pageAndComponentProvider.getComponent()
+			behaviorClass = optional(() -> pageAndComponentProvider.getComponent()
 					.getBehaviorById(behaviorIndex)
-					.getClass();
-			}
-			catch (Exception ignore)
-			{
-				behaviorClass = null;
-			}
+					.getClass());
 		}
 		else
 		{
 			behaviorClass = null;
 		}
 		
-		final Component formSubmitter = tryToGetFormSubmittingComponent(pageAndComponentProvider);
-		if (formSubmitter != null)
-		{
-			submittingComponentClass = formSubmitter.getClass();
-			submittingComponentPath = formSubmitter.getPageRelativePath();
-		}
-	}
-
-	private static Class<? extends IRequestableComponent> tryToGetComponentClass(
-		IPageAndComponentProvider pageAndComponentProvider)
-	{
-		try
-		{
-			return pageAndComponentProvider.getComponent().getClass();
-		}
-		catch (Exception e)
-		{
-			// getComponent might fail if the page does not exist (ie session timeout)
-			return null;
-		}
-	}
-
-
-	private static String tryToGetComponentPath(IPageAndComponentProvider pageAndComponentProvider)
-	{
-		try
-		{
-			return pageAndComponentProvider.getComponentPath();
-		}
-		catch (Exception e)
-		{
-			// getComponentPath might fail if the page does not exist (ie session timeout)
-			return null;
-		}
-	}
-
-	private static Component tryToGetFormSubmittingComponent(
-		IPageAndComponentProvider pageAndComponentProvider)
-	{
-		try
-		{
+		final Component formSubmitter = optional(() -> {
 			final IRequestableComponent component = pageAndComponentProvider.getComponent();
 			if (component instanceof Form)
 			{
@@ -117,11 +73,14 @@ public class ListenerLogData extends PageLogData
 				return submitter instanceof Component ? (Component)submitter : null;
 			}
 			return null;
-		}
-		catch (Exception e)
+		});
+		if (formSubmitter != null)
 		{
-			// getComponent might fail if the page does not exist (ie session timeout)
-			return null;
+			submittingComponentClass = formSubmitter.getClass();
+			submittingComponentPath = formSubmitter.getPageRelativePath();
+		} else {
+			submittingComponentClass = null;
+			submittingComponentPath = null;
 		}
 	}
 

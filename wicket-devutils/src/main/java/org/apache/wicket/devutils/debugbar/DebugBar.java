@@ -62,7 +62,7 @@ import org.apache.wicket.util.lang.Args;
  * <strong>Important</strong>: if there is an element with a z-index in this part of your page, the DebugBar will need a higher
  * "z-index" style value to show up. Or you can use different position for it. See wicket-debugbar.css.</p>
  *
- * @author Jeremy Thomerson <jthomerson@apache.org>
+ * @author Jeremy Thomerson
  * @see IDebugBarContributor
  */
 public class DebugBar extends DevUtilsPanel

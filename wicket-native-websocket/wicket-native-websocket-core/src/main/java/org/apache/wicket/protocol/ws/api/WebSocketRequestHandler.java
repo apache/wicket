@@ -19,18 +19,17 @@ package org.apache.wicket.protocol.ws.api;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.AbstractPartialPageRequestHandler;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.page.PartialPageUpdate;
 import org.apache.wicket.page.XmlPartialPageUpdate;
 import org.apache.wicket.request.ILogData;
 import org.apache.wicket.request.IRequestCycle;
-import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +77,27 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 	}
 
 	@Override
+	public Future<Void> pushAsync(CharSequence message, long timeout)
+	{
+		if (connection.isOpen())
+		{
+			Args.notNull(message, "message");
+			return connection.sendMessageAsync(message.toString(), timeout);
+		}
+		else
+		{
+			LOG.warn("The websocket connection is already closed. Cannot push the text message '{}'", message);
+		}
+		return CompletableFuture.completedFuture(null);
+	}
+
+	@Override
+	public Future<Void> pushAsync(CharSequence message)
+	{
+		return pushAsync(message, -1);
+	}
+
+	@Override
 	public void push(byte[] message, int offset, int length)
 	{
 		if (connection.isOpen())
@@ -97,7 +117,38 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 		}
 	}
 
+	@Override
+	public Future<Void> pushAsync(byte[] message, int offset, int length)
+	{
+		return pushAsync(message, offset, length, -1);
+	}
 
+	@Override
+	public Future<Void> pushAsync(byte[] message, int offset, int length, long timeout)
+	{
+		if (connection.isOpen())
+		{
+			Args.notNull(message, "message");
+			return connection.sendMessageAsync(message, offset, length, timeout);
+		}
+		else
+		{
+			LOG.warn("The websocket connection is already closed. Cannot push the binary message '{}'", message);
+		}
+		return CompletableFuture.completedFuture(null);
+	}
+
+	/**
+	 * @return if <code>true</code> then EMPTY partial updates will se send. If <code>false</code> then EMPTY
+	 *    partial updates will be skipped. A possible use case is: a page receives and a push event but no one is
+	 *    listening to it, and nothing is added to {@link org.apache.wicket.protocol.ws.api.WebSocketRequestHandler}
+	 *    thus no real push to client is needed. For compatibilities this is set to true. Thus EMPTY updates are sent
+	 *    by default.
+	 */
+	protected boolean shouldPushWhenEmpty()
+	{
+		return true;
+	}
 
 	protected PartialPageUpdate getUpdate() {
 		if (update == null) {
@@ -127,10 +178,16 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
-		if (update != null)
-		{
-			update.writeTo(requestCycle.getResponse(), "UTF-8");
-		}
+        if (update != null && (shouldPushWhenEmpty() || !update.isEmpty())) {
+            // see WICKET-7098
+            // A malformed XML is generated if a runtime exception happen during rendering phase of a web
+            // socket push request. Writing to a buffer allows to generate a proper XML
+            // as request's buffer will not be polluted by partial write operations
+            StringResponse bodyResponse = new StringResponse();
+            // additionally, we use the charset for the request instead of a hardcoded UTF-8
+            update.writeTo(bodyResponse, requestCycle.getRequest().getCharset().name());
+            requestCycle.getResponse().write(bodyResponse.getBuffer());
+        }
 	}
 
 	@Override

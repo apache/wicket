@@ -40,8 +40,8 @@ public class NavigatorLabel extends Label
 	/**
 	 * Construct.
 	 * 
-	 * @param id
-	 * @param pageable
+	 * @param id The id
+	 * @param pageable {@link org.apache.wicket.markup.html.navigation.paging.IPageableItems}
 	 */
 	public NavigatorLabel(final String id, final IPageableItems pageable)
 	{
@@ -50,7 +50,7 @@ public class NavigatorLabel extends Label
 			new Model<>(new LabelModelObject(pageable))));
 	}
 
-	private static class LabelModelObject implements IClusterable
+	public static class LabelModelObject implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 		private final IPageableItems pageable;
@@ -58,7 +58,7 @@ public class NavigatorLabel extends Label
 		/**
 		 * Construct.
 		 * 
-		 * @param table
+		 * @param table {@link org.apache.wicket.markup.html.navigation.paging.IPageableItems}
 		 */
 		public LabelModelObject(final IPageableItems table)
 		{

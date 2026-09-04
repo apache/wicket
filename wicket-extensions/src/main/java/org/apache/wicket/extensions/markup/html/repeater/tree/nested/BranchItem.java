@@ -27,7 +27,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author svenmeier
  */
-public final class BranchItem<T> extends Item<T>
+public class BranchItem<T> extends Item<T>
 {
 
 	private static final long serialVersionUID = 1L;
@@ -54,7 +54,10 @@ public final class BranchItem<T> extends Item<T>
 		}
 	}
 
-	private boolean isLast()
+	/**
+	 * Is this the last branch in the containing subtree.
+	 */
+	protected boolean isLast()
 	{
 		return getIndex() == getParent().size() - 1;
 	}

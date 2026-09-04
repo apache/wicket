@@ -81,6 +81,10 @@
 					}
 				}
 
+				if (WWS.context) {
+					url += '&context=' + encodeURIComponent(WWS.context);
+				}
+
 				url += '&wicket-ajax-baseurl=' + encodeURIComponent(WWS.baseUrl);
 				url += '&wicket-app-name=' + encodeURIComponent(WWS.appName);
 
@@ -117,16 +121,16 @@
 					if (self.ws) {
 						self.ws.close();
 						self.ws = null;
-						Wicket.Event.publish(topics.Closed, evt);
 					}
+					Wicket.Event.publish(topics.Closed, evt);
 				};
 
 				self.ws.onerror = function (evt) {
 					if (self.ws) {
 						self.ws.close();
 						self.ws = null;
-						Wicket.Event.publish(topics.Error, evt);
 					}
+					Wicket.Event.publish(topics.Error, evt);
 				};
 			} else {
 				var errMessage = '[WebSocket.initialize] WebSocket is not supported in your browser!';

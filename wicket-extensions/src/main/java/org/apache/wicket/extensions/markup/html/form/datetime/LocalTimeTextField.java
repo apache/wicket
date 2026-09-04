@@ -53,7 +53,7 @@ public class LocalTimeTextField extends TextField<LocalTime> implements ITextFor
 	 *            the component id
 	 * @param model
 	 *            the model
-	 * @param pattern
+	 * @param timePattern
 	 *            the pattern to use
 	 */
 	public LocalTimeTextField(String id, IModel<LocalTime> model, String timePattern)
@@ -82,7 +82,7 @@ public class LocalTimeTextField extends TextField<LocalTime> implements ITextFor
 	 * 
 	 * @param id
 	 *            the component id
-	 * @param pattern
+	 * @param datePattern
 	 *            the pattern to use
 	 */
 	public LocalTimeTextField(String id, String datePattern)

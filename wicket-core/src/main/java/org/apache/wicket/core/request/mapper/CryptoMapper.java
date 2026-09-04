@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.core.request.handler.RequestSettingRequestHandler;
+import org.apache.wicket.core.util.crypt.ICrypt;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
@@ -29,8 +30,6 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
-import org.apache.wicket.util.crypt.ICrypt;
-import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -46,8 +45,8 @@ import org.slf4j.LoggerFactory;
  * <p>
  * <strong>Important</strong>: for better security it is recommended to use
  * {@link org.apache.wicket.core.request.mapper.CryptoMapper#CryptoMapper(IRequestMapper, Supplier)}
- * constructor with {@link org.apache.wicket.util.crypt.ICrypt} implementation that generates a
- * separate key for each user. {@link org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory} provides such an
+ * constructor with {@link org.apache.wicket.core.util.crypt.ICrypt} implementation that generates a
+ * separate key for each user. {@link org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory} provides such an
  * implementation that stores the key in the HTTP session.
  * </p>
  * 
@@ -76,19 +75,27 @@ import org.slf4j.LoggerFactory;
  * <p>
  * When encrypting mounted URLs, we look for the {@link PageComponentInfo} parameter, and encrypt only that parameter.
  * </p>
- * 
+ *
+ * <p>
+ * URLs are encrypted with {@link ICrypt#encryptUrlSafeDeterministic(String)}, so the same URL always
+ * encrypts to the same text for as long as the key lives. Two properties depend on that: a URL
+ * regenerated while rendering matches the one the client requested, so Wicket's URL normalisation
+ * does not redirect, and encrypted resource URLs stay stable across requests, so the browser can
+ * cache them. The trade-off is that identical URLs are recognisable as such; see
+ * {@link ICrypt#encryptDeterministic(byte[], byte[])}.
+ * </p>
+ *
  * <p>
  * {@link CryptoMapper} can be configured to mark encrypted URLs as encrypted, and throw a {@link PageExpiredException}
- * exception if a encrypted URL cannot be decrypted. This can occur when using {@code KeyInSessionSunJceCryptFactory}, and
+ * exception if a encrypted URL cannot be decrypted. This can occur when using {@code KeyInSessionCryptFactory}, and
  * the session has expired.
  * </p>
- * 
+ *
  * @author igor.vaynberg
  * @author Jesse Long
  * @author svenmeier
- * @see org.apache.wicket.settings.SecuritySettings#setCryptFactory(org.apache.wicket.util.crypt.ICryptFactory)
- * @see org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory
- * @see org.apache.wicket.util.crypt.SunJceCrypt
+ * @see org.apache.wicket.settings.SecuritySettings#setCryptFactory(org.apache.wicket.core.util.crypt.ICryptFactory)
+ * @see org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory
  */
 public class CryptoMapper implements IRequestMapperDelegate
 {
@@ -112,11 +119,10 @@ public class CryptoMapper implements IRequestMapperDelegate
 	/**
 	 * Encrypt with {@link org.apache.wicket.settings.SecuritySettings#getCryptFactory()}.
 	 * <p>
-	 * <strong>Important</strong>: Encryption is done with {@link org.apache.wicket.settings.SecuritySettings#DEFAULT_ENCRYPTION_KEY} if you haven't
-	 * configured an alternative {@link ICryptFactory}. For better security it is recommended to use
+	 * <strong>Important</strong>: For better security it is recommended to use
 	 * {@link CryptoMapper#CryptoMapper(IRequestMapper, Supplier)} with a specific {@link ICrypt} implementation
 	 * that generates a separate key for each user.
-	 * {@link org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory} provides such an implementation that stores the
+	 * {@link org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory} provides such an implementation that stores the
 	 * key in the HTTP session.
 	 * </p>
 	 *
@@ -124,7 +130,6 @@ public class CryptoMapper implements IRequestMapperDelegate
 	 *            the non-crypted request mapper
 	 * @param application
 	 *            the current application
-	 * @see org.apache.wicket.util.crypt.SunJceCrypt
 	 */
 	public CryptoMapper(final IRequestMapper wrappedMapper, final Application application)
 	{
@@ -297,7 +302,7 @@ public class CryptoMapper implements IRequestMapperDelegate
 	 */
 	protected Url encryptEntireUrl(final Url url)
 	{
-		String encryptedUrlString = getCrypt().encryptUrlSafe(url.toString());
+		String encryptedUrlString = getCrypt().encryptUrlSafeDeterministic(url.toString());
 
 		Url encryptedUrl = new Url(url.getCharset());
 
@@ -339,7 +344,8 @@ public class CryptoMapper implements IRequestMapperDelegate
 			if (MapperUtils.parsePageComponentInfoParameter(qp) != null)
 			{
 				it.remove();
-				String encryptedParameterValue = getCrypt().encryptUrlSafe(qp.getName());
+				String encryptedParameterValue = getCrypt()
+					.encryptUrlSafeDeterministic(qp.getName());
 				Url.QueryParameter encryptedParameter
 					= new Url.QueryParameter(ENCRYPTED_PAGE_COMPONENT_INFO_PARAMETER, encryptedParameterValue);
 				encryptedUrl.getQueryParameters().add(0, encryptedParameter);

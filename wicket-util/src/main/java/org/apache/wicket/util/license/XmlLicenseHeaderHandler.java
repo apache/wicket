@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 import org.apache.wicket.util.diff.Diff;
 import org.apache.wicket.util.diff.Revision;
 import org.apache.wicket.util.string.Strings;
-import org.opentest4j.AssertionFailedError;
+//import org.opentest4j.AssertionFailedError;
 
 class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
@@ -82,7 +82,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		}
 		catch (Exception e)
 		{
-			throw new AssertionFailedError(e.getMessage());
+			throw new AssertionError(e.getMessage());
 		}
 
 		return revision.size() == 0;

@@ -26,6 +26,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.Packages;
@@ -109,23 +110,25 @@ public class PackageResourceReference extends ResourceReference
 	public PackageResource getResource()
 	{
 		final String extension = getExtension();
+		final Class<?> scope = getScope();
+		final String name = getName();
 
 		final PackageResource resource;
 
 		RequestCycle requestCycle = RequestCycle.get();
 		UrlAttributes urlAttributes = null;
-		if (requestCycle != null)
+		if (requestCycle != null
+			&& requestCycle.getActiveRequestHandler() instanceof ResourceReferenceRequestHandler)
 		{
 			//resource attributes (locale, style, variation) might be encoded in the URL
 			final Url url = requestCycle.getRequest().getUrl();
 			urlAttributes = ResourceUtil.decodeResourceReferenceAttributes(url);
+			urlAttributes = urlAttributes.sanitize(scope, name);
 		}
 
-		final String currentVariation = getCurrentVariation(urlAttributes);
-		final String currentStyle = getCurrentStyle(urlAttributes);
-		final Locale currentLocale = getCurrentLocale(urlAttributes);
-		final Class<?> scope = getScope();
-		final String name = getName();
+		String currentVariation = getCurrentVariation(urlAttributes);
+		String currentStyle = getCurrentStyle(urlAttributes);
+		Locale currentLocale = getCurrentLocale(urlAttributes);
 
 		if (CSS_EXTENSION.equals(extension))
 		{

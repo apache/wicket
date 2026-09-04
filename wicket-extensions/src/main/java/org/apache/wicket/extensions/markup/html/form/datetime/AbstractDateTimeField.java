@@ -32,11 +32,11 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.convert.ConversionException;
 
 /**
- * Works on a {@link java.time.Temporal} object, aggregating a {@link LocalDateTextField} and a {@link TimeField}.
+ * Works on a {@link java.time.temporal.Temporal} object, aggregating a {@link LocalDateTextField} and a {@link TimeField}.
  * <p>
  * <strong>Ajaxifying an AbstractDateTimeField</strong>:
  * If you want to update this component with an {@link AjaxFormComponentUpdatingBehavior}, you have to attach it
- * to the contained components by overriding {@link #newDateTextField(String, IModel)}:
+ * to the contained components by overriding {@link #newDateField(String, IModel)}:
  * 
  * <pre>{@code
  *  DateTimeField dateTimeField = new DateTimeField(...) {
@@ -188,7 +188,7 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 	/**
 	 * Get a default time if none was entered.
 	 * 
-	 * @return {@value null} by default
+	 * @return {@code null} by default
 	 */
 	protected LocalTime getDefaultTime()
 	{

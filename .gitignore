@@ -5,6 +5,7 @@ velocity.log
 **.settings/
 **velocity.log*
 *.idea/
+.vscode/
 *.iml
 *.ipr
 *.iws

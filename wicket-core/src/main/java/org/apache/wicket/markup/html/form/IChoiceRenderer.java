@@ -55,7 +55,9 @@ public interface IChoiceRenderer<T> extends IDetachable
 	 *            The index of the object in the choices list.
 	 * @return String
 	 */
-	String getIdValue(T object, int index);
+	default String getIdValue(T object, int index) {
+		return Integer.toString(index);
+	}
 
 	/**
 	 * This method is called to get an object back from its id representation.
@@ -69,7 +71,20 @@ public interface IChoiceRenderer<T> extends IDetachable
 	 *          The list of all rendered choices
 	 * @return A choice from the list that has this {@code id}
 	 */
-	T getObject(String id, IModel<? extends List<? extends T>> choices);
+	default T getObject(String id, IModel<? extends List<? extends T>> choices)
+	{
+		List<? extends T> _choices = choices.getObject();
+		for (int index = 0; index < _choices.size(); index++)
+		{
+			// Get next choice
+			final T choice = _choices.get(index);
+			if (getIdValue(choice, index).equals(id))
+			{
+				return choice;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Override when needed.

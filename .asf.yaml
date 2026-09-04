@@ -6,3 +6,29 @@ github:
     - java
     - web
     - html
+
+  rulesets:
+    - name: "Default Branch Protection"
+      type: branch
+      branches:
+        includes:
+          - "~DEFAULT_BRANCH"
+          - "release/*"
+          - "rel/*"
+        excludes: []
+      bypass_teams:
+        - root
+      restrict_deletion: true
+      restrict_force_push: true
+
+  features:
+    wiki: false
+    issues: true
+    projects: true
+    discussions: true
+
+notifications:
+  commits: commits@wicket.apache.org
+  pullrequests: commits@wicket.apache.org
+  jira_options: link label comment
+  discussions: dev@wicket.apache.org

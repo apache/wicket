@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Url;
@@ -29,14 +30,74 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utilities for resources.
- * 
+ *
  * @author Jeremy Thomerson
  */
 public class ResourceUtil
 {
+	private static final Logger log = LoggerFactory.getLogger(ResourceUtil.class);
+
+	private static final Pattern ESCAPED_ATTRIBUTE_PATTERN = Pattern.compile("(\\w)~(\\w)");
+
+	/**
+	 * Rejects a resource attribute that cannot be used as a single path component.
+	 * <p>
+	 * The locale, style and variation are appended to the resource lookup path by
+	 * {@link org.apache.wicket.core.util.resource.locator.ResourceNameIterator}, as
+	 * {@code <path>_<variation>_<style>_<locale>}. A value containing a path separator would
+	 * therefore contribute more than one component and the lookup would resolve in a different
+	 * directory than the resource it belongs to. None of the three can legitimately contain one.
+	 *
+	 * @param attribute
+	 *            the attribute, may be {@code null}
+	 * @param attributeName
+	 *            the attribute's name, used for logging
+	 * @return the attribute, or {@code null} if it contains {@code /}, {@code \}, {@code ..} or a
+	 *         NUL character
+	 */
+	public static String rejectPathSeparators(final String attribute, final String attributeName)
+	{
+		if (attribute == null)
+		{
+			return null;
+		}
+
+		if (attribute.contains("/") || attribute.contains("\\") || attribute.contains("..") ||
+			attribute.contains("\0"))
+		{
+			log.warn("Ignoring the {} because it contains a path separator or NUL: {}",
+				attributeName, attribute);
+
+			return null;
+		}
+
+		return attribute;
+	}
+
+	/**
+	 * Rejects a locale whose {@link Locale#toString()} cannot be used as a single path component.
+	 *
+	 * @param locale
+	 *            the locale, may be {@code null}
+	 * @return the locale, or {@code null} if its string representation contains a path separator
+	 *
+	 * @see #rejectPathSeparators(String, String)
+	 */
+	public static Locale rejectPathSeparators(final Locale locale)
+	{
+		if (locale == null || rejectPathSeparators(locale.toString(), "locale") != null)
+		{
+			return locale;
+		}
+
+		return null;
+	}
+
 	/**
 	 * Reads resource reference attributes (style, locale, variation) encoded in the given string.
 	 * 
@@ -55,15 +116,19 @@ public class ResourceUtil
 		if (Strings.isEmpty(encodedAttributes) == false)
 		{
 			String split[] = Strings.split(encodedAttributes, '-');
-			locale = parseLocale(split[0]);
+			locale = parseLocale(rejectPathSeparators(split[0], "locale"));
 			if (split.length == 2)
 			{
-				style = Strings.defaultIfEmpty(unescapeAttributesSeparator(split[1]), null);
+				style = rejectPathSeparators(
+					Strings.defaultIfEmpty(unescapeAttributesSeparator(split[1]), null), "style");
 			}
 			else if (split.length == 3)
 			{
-				style = Strings.defaultIfEmpty(unescapeAttributesSeparator(split[1]), null);
-				variation = Strings.defaultIfEmpty(unescapeAttributesSeparator(split[2]), null);
+				style = rejectPathSeparators(
+					Strings.defaultIfEmpty(unescapeAttributesSeparator(split[1]), null), "style");
+				variation = rejectPathSeparators(
+					Strings.defaultIfEmpty(unescapeAttributesSeparator(split[2]), null),
+					"variation");
 			}
 		}
 		return new ResourceReference.UrlAttributes(locale, style, variation);
@@ -192,15 +257,15 @@ public class ResourceUtil
 			String parts[] = locale.toLowerCase(Locale.ROOT).split("_", 3);
 			if (parts.length == 1)
 			{
-				return new Locale(parts[0]);
+				return Locale.of(parts[0]);
 			}
 			else if (parts.length == 2)
 			{
-				return new Locale(parts[0], parts[1]);
+				return Locale.of(parts[0], parts[1]);
 			}
 			else if (parts.length == 3)
 			{
-				return new Locale(parts[0], parts[1], parts[2]);
+				return Locale.of(parts[0], parts[1], parts[2]);
 			}
 			else
 			{
@@ -273,7 +338,7 @@ public class ResourceUtil
 	 */
 	public static String unescapeAttributesSeparator(String attribute)
 	{
-		String tmp = attribute.replaceAll("(\\w)~(\\w)", "$1-$2");
+		String tmp = ESCAPED_ATTRIBUTE_PATTERN.matcher(attribute).replaceAll("$1-$2");
 		return Strings.replaceAll(tmp, "~~", "~").toString();
 	}
 

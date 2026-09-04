@@ -52,7 +52,7 @@ public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 	/**
 	 * Returns the window's name.
 	 * 
-	 * @return name of {@value null} if not yet bound to a window
+	 * @return name of {@code null} if not yet bound to a window
 	 */
 	public String getWindowName()
 	{
@@ -132,8 +132,8 @@ public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 	}
 
 	/**
-	 * A callback method when a new window/tab is opened for a page instance which is already opened
-	 * in another window/tab.
+	 * A callback method that is called when a new window/tab is opened for a page instance
+	 * which is already opened in another window/tab.
 	 * <p>
 	 * Default implementation redirects to a new page instance with identical page parameters.
 	 *

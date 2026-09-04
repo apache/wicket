@@ -1,96 +1,68 @@
 
-During request handling, Wicket manages page instances through interface _org.apache.wicket.request.handler.IPageProvider_. This interface creates a new page instance or loads a previously serialized page instance if we provide the corrisponding page id. _IPageProvider_ delegates page creation and retrieval to interface _org.apache.wicket.request.mapper.IPageSource_.
+During request handling, Wicket manages page instances through interface _org.apache.wicket.request.handler.IPageProvider_. This interface creates a new page instance or loads a previously serialized page instance if we provide the corresponding page id. _IPageProvider_ delegates page creation and retrieval to interface _org.apache.wicket.core.request.mapper.IPageSource_.
 When page class is provided _IPageSource_ delegates page creation to interface _org.apache.wicket.IPageFactory_, while when page id is provided it uses interface _org.apache.wicket.page.IPageManager_ to load the previously serialized page.
 
 The following workflow diagram summarizes the mechanism seen so far:
 
-image::../img/page-storage.png[]
+image::./img/page-storage.png[]
 
 === IPageManager
 
 _org.apache.wicket.page.IPageManager_'s task is to manage which pages have been used in a request and store their last state in the backing stores, namely _IPageStore_.
-The default implementation _org.apache.wicket.page.PageStoreManager_ collects all stateful pages which have been used in the request cycle (more than one page can be used in a single request if for example _setResponsePage()_ or _RestartResponseException_ is used).
-At the end of the request all collected page instances are being stored in the first level cache - http session. They are stored in http session attribute named "_wicket:persistentPageManagerData-APPLICATION_NAME_" and passed to the underlying _IPageStore_.
-When the next http request comes _IPageProvider_ will ask for page with specific id and _PageStoreManager_ will look first in the http session and if no match is found then it will delegate to the IPageStore. At the end of the second request the http session based cache is being overwritten completely with the newly used page instances.
+The default implementation _org.apache.wicket.page.PageManager_ uses a chain of _IPageStore_ to collect all stateful pages which have been used in the request cycle and store them for a later use.
 
-To setup another _IPageManager_ implementation use _org.apache.wicket.Application.setPageManagerProvider(IPageManagerProvider)_.
-The custom _IPageManager_ implementation may or may not use _IPageStore/IDataStore_.
+NOTE: Keep in mind that more than one page can be used in a single request if, for example, _setResponsePage()_ or _RestartResponseException_ are used.
 
-=== IPageStore
+As said on <<versioningCaching.adoc#_page_caching,paragraph 8.2.4>> stateful pages are stored in a session-relative file using a two-levels cache to speedup the access. This process is made possible by the different implementations of _IPageStore_ that are part of the default chain and that will be introduced in the next paragraph.
 
-_org.apache.wicket.pageStore.IPageStore_'s role is to mediate the storing and loading of pages done by the underlying _IDataStore_. The default implementation _org.apache.wicket.pageStore.DefaultPageStore_ pre-processes the pages before passing them to _IDataStore.storeData(String, int, byte)_ and to post-processes them after _IDataStore.getData(String, int)_. The processing consists of transforming the page instance to _org.apache.wicket.pageStore.DefaultPageStore.SerializedPage_. This is a struct of:
+NOTE: Wicket gets the default _IPageManager_ using a supplier interface called _IPageManagerProvider_,hence to use a custom _IPageManager_ implementation we must register a specific _IPageManagerProvider_ via _org.apache.wicket.Application.setPageManagerProvider(IPageManagerProvider)_.
+
+=== Default IPageStore chain
+
+_org.apache.wicket.pageStore.IPageStore_'s role is to mediate the storing and loading of page instances. The default chain of _IPageStore_ used by Wicket contains the following ordered list of _IPageStore_:
+
+* *RequestPageStore:* collect all page instances involved in the last request. During the detach stage, stateful pages are passed to the other steps of the chain to be persisted on file.
+* *InSessionPageStore:* with _InSessionPageStore_ the default chain keeps the last rendered page instance into the HTTP session for fast access.
+* *SerializingPageStore:* _SerializingPageStore_ turns page instances into a more serialization-friendly format represented by class _org.apache.wicket.pageStore.SerializedPage_. This is a struct of:
 
 [source,java]
 ----
 {
-   sessionId: String,
+   pageType: String,
    pageId : int,
    data : byte[]
 }
 ----
 
-i.e. this is the serialized page instance (data) plus additional information needed to be able to easily find it later (sessionId, pageId).
+i.e. this is the serialized page instance (data) plus additional information needed to be able to easily find it later (pageId, pageType).
 
-When a _SerializedPage_ has to be stored _DefaultPageStore_ stores it in a application scoped cache ({sessionId, pageId} -> SerializedPage) and additionally gives it to the underlying _IDataStore.storeData(sessionId, pageId, data)_. The application scoped cache is used as second level cache. Getting a page from it is slower than the http session based cache in _PageStoreManager_ because the page has to be deserialized, but is faster than the underlying _IDataStore_ which stores the page bytes in some persistent store.
+* *AsynchronousPageStore:* The role of _AsynchronousPageStore_ is to detach the http worker thread from waiting for the write of the page bytes to the disk. To disable it use: _org.apache.wicket.settings.StoreSettings.setAsynchronous(false)_. _AsynchronousPageStore_ can delay the storage of page's bytes for at most _org.apache.wicket.settings.StoreSettings.setAsynchronousQueueCapacity(int)_ pages. If this capacity is exceeded then the page's bytes are written synchronously to the backing _IPageStore_.
 
-The size of the application scoped cache is configurable via _org.apache.wicket.settings.StoreSettings.setInmemoryCacheSize(int)_.
+* *CryptingPageStore:* page instances might contain sensible information, therefore it's important to have the chance to encrypt their content before persist them on disk. _CryptingPageStore_ encrypts _SerializedPage_'s with an authenticated cipher (by default JDK-native AES-256-GCM) before passing them to the underling _DiskPageStore_, using a random 256 bit key per session. Because the encryption is authenticated, tampering is detected on decryption (a modified page is treated as if it were no longer present). By default this stage is disabled and not added to the default chain. To change this behavior we can use _org.apache.wicket.settings.StoreSettings.setEncrypted_.
++
+The cipher (the "scheme") is configured application-wide via _org.apache.wicket.settings.SecuritySettings.setCryptScheme_ and defaults to _org.apache.wicket.core.util.crypt.AesGcmCryptScheme_. An _AesGcmSivCryptScheme_ (AES-256-GCM-SIV, nonce-misuse resistant) is also available but requires Bouncy Castle on the classpath. Each ciphertext starts with a one-byte marker identifying its scheme; on decryption the marker must match one of the schemes accepted by _SecuritySettings.setWhitelistedCryptSchemes_ (unknown or non-accepted schemes are refused, which prevents downgrade attacks). To migrate to a stronger scheme without breaking existing data, temporarily whitelist the old scheme alongside the new one, then drop it once the data has been rewritten. This same crypt configuration is used for encrypted URLs (_CryptoMapper_).
++
+Note that the key lives in the user's HTTP session, so the encryption protects the stored pages against parties who can read or write the underlying store - it does not protect them against someone who already controls the session. Wicket deserializes whatever it reads back from the store, so the store itself should still be treated as trusted, private storage.
 
-=== IDataStore
-
-_org.apache.wicket.pageStore.IDataStore_ is used to persist Wicket pages (as bytes) to a persistent store like e.g. files or databases. The default implementation is _org.apache.wicket.pageStore.DiskDataStore_ which as its name says stores the pages in files. The location of the folder where the files are stored is configurable via _org.apache.wicket.settings.StoreSettings.setFileStoreFolder(File)_, by default the web container's work folder is used (ServletContext attribute 'javax.servlet.context.tempdir'). In this folder a sub-folder is created named _'applicationName-filestore'_. 
+* *DiskPageStore:* stores _SerializedPage_ on a session-scoped file on disk. The location of the folder where the files are stored is configurable via _org.apache.wicket.settings.StoreSettings.setFileStoreFolder(File)_, by default the web container's work folder is used (ServletContext attribute 'javax.servlet.context.tempdir'). In this folder a sub-folder is created named _'applicationName-filestore'_.
 This folder contains a sub-folder for each active http session. This session folder contains a single file named 'data' which contains the bytes for the pages. The size of this 'data' file is configurable via _org.apache.wicket.settings.StoreSettings.setMaxSizePerSession(Bytes)_. When this size is exceeded the newly stored files overwrite the oldest ones.
 
-=== AsynchronousDataStore
+=== InMemoryPageStore
 
-By default Wicket wraps _DiskDataStore_ with _org.apache.wicket.pageStore.AsynchronousDataStore_. The role of _AsynchronousDataStore_ is to detach the http worker thread from waiting for the write of the page bytes to the disk.
-To disable it use: _org.apache.wicket.settings.StoreSettings.setAsynchronous(false)_. AsynchronousDataStore can delay the storage of page's bytes for at most _org.apache.wicket.settings.StoreSettings.setAsynchronousQueueCapacity(int)_ pages. If this capacity is exceeded then the page's bytes are written synchronously to the backing _IDataStore_.
-
-=== DebugDiskDataStore
-
-Wicket provides an extension of _DiskDataStore_ that can be used to browse the content of the 'data' files created by _DiskDataStore_. This extension can be found in wicket-devutils.jar and needs to be enabled in the _init_-method of your application via 
-[source,java]
-----
- DebugDiskDataStore.register(this);
-----
-The debug information can be seen at http://host:port/context/wicket/internal/debug/diskDataStore
-
-=== HttpSessionDataStore
-
-In some environments like Google AppEngine it is not allowed to write to the file system and thus _DiskDataStore_ cannot be used. In this case _org.apache.wicket.pageStore.memory.HttpSessionDataStore_ can be used as replacement. This implementation of _IDataStore_ is not persistent and puts all the data in the http session.
-Wicket comes with 2 default eviction strategies to keep the size of the http session reasonable:
-
-* *org.apache.wicket.pageStore.memory.PageNumberEvictionStrategy* - specifies how many pages can be hold
-* *org.apache.wicket.pageStore.memory.MemorySizeEvictionStrategy* - specifies the maximum amount of memory for pages per http session.
-
-To configure it:
-[source,java]
-----
-MyApp#init()
-{
-   super.init();
- 
-   setPageManagerProvider(new DefaultPageManagerProvider(this)
-   {
-       protected IDataStore newDataStore()
-       {
-           return  new HttpSessionDataStore(getPageManagerContext(), new PageNumberEvictionStrategy(20));
-       }
-   }
-}
-----
+An alternative _IPageStore_ we can use in a custom chain is _org.apache.wicket.pageStore.InMemoryPageStore_. This implementation stores pages in a session-relative variable which can be limited by size or by page instance number.
 
 === DebugBar
 
-Further insights which can be valueable during debugging can be retrieved using the _org.apache.wicket.devutils.debugbar.DebugBar_ from wicket-devutils.jar. It's a panel which you simply add:
+Further insights which can be valuable during debugging can be retrieved using the _org.apache.wicket.devutils.debugbar.DebugBar_ from wicket-devutils.jar. It's a panel which you simply add:
 
-Java: 
+Java:
 [source,java]
 ----
 add(new DebugBar("debug"));
 ----
 
 HTML:
-[source,java]
+[source,html]
 ----
 <span wicket:id="debug"/>
 ----

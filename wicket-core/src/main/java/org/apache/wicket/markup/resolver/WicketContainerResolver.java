@@ -33,12 +33,12 @@ import org.slf4j.LoggerFactory;
  * like this:
  * 
  * <code>
- * 	<table>
- * 		<span wicket:id="repeater">
- * 			<tr><td>...</td></tr>
- * 			<tr><td>...</td></tr>
- * 		</span>
- * 	</table>
+ * 	&lt;table&gt;
+ * 		&lt;span wicket:id="repeater"&gt;
+ * 			&lt;tr&gt;&lt;td&gt;...&lt;/td&gt;&lt;/tr&gt;
+ * 			&lt;tr&gt;&lt;td&gt;...&lt;/td&gt;&lt;/tr&gt;
+ * 		&lt;/span&gt;
+ * 	&lt;/table&gt;
  * </code>
  * 
  * Notice that we had to attach the repeater to a component tag - in this case a <code>span</code>,
@@ -46,12 +46,12 @@ import org.slf4j.LoggerFactory;
  * following:
  * 
  * <code>
- * 	<table>
- * 		<wicket:container wicket:id="repeater">
- * 			<tr><td>...</td></tr>
- * 			<tr><td>...</td></tr>
- * 		</wicket:container>
- * 	</table>
+ * 	&lt;table&gt;
+ * 		&lt;wicket:container wicket:id="repeater"&gt;
+ * 			&lt;tr&gt;&lt;td&gt;...&lt;/td&gt;&lt;/tr&gt;
+ * 			&lt;tr&gt;&lt;td&gt;...&lt;/td&gt;&lt;/tr&gt;
+ * 		&lt;/wicket:container&gt;
+ * 	&lt;/table&gt;
  * </code>
  * 
  * The above is valid markup because wicket namespaced tags are allowed anywhere

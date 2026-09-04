@@ -17,12 +17,13 @@
 package org.apache.wicket.guice;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
@@ -142,7 +143,7 @@ public abstract class AbstractInjectorTest
 	private void doChecksForComponent(final TestComponentInterface component)
 	{
 		assertEquals(ITestService.RESULT, component.getInjectedField().getString());
-		assertEquals(null, component.getInjectedOptionalField());
+		assertNull(component.getInjectedOptionalField());
 		assertEquals(ITestService.RESULT_RED, component.getInjectedFieldRed().getString());
 		assertEquals(ITestService.RESULT_BLUE, component.getInjectedFieldBlue().getString());
 
@@ -157,7 +158,7 @@ public abstract class AbstractInjectorTest
 	}
 
 	/**
-	 * Helper class to make binding of an instance of javax.inject.Named less verbose
+	 * Helper class to make binding of an instance of jakarta.inject.Named less verbose
 	 */
 	private static class Jsr330Named implements Named
 	{

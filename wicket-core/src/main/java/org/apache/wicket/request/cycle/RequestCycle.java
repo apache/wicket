@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IMetadataContext;
+import org.apache.wicket.IWicketInternalException;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
@@ -64,10 +65,10 @@ import org.slf4j.LoggerFactory;
  * During {@link IRequestHandler} execution the handler can schedule another {@link IRequestHandler}
  * to run after it is done, or replace all {@link IRequestHandler}s on stack with another
  * {@link IRequestHandler}.
- * 
+ *
  * @see #scheduleRequestHandlerAfterCurrent(IRequestHandler)
  * @see #replaceAllRequestHandlers(IRequestHandler)
- * 
+ *
  * @author Matej Knopp
  * @author igor.vaynberg
  */
@@ -84,7 +85,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Returns request cycle associated with current thread.
-	 * 
+	 *
 	 * @return request cycle instance or <code>null</code> if no request cycle is associated with
 	 *         current thread.
 	 */
@@ -94,7 +95,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	}
 
 	/**
-	 * 
+	 *
 	 * @param requestCycle
 	 */
 	private static void set(RequestCycle requestCycle)
@@ -126,7 +127,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param context
 	 */
 	public RequestCycle(RequestCycleContext context)
@@ -148,7 +149,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	}
 
 	/**
-	 * 
+	 *
 	 * @return a new url renderer
 	 */
 	protected UrlRenderer newUrlRenderer()
@@ -161,7 +162,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 * Get the original response the request was created with. Access to the original response may
 	 * be necessary if the response has been temporarily replaced but the components require methods
 	 * from original response (i.e. cookie methods of WebResponse, etc).
-	 * 
+	 *
 	 * @return The original response object.
 	 */
 	public Response getOriginalResponse()
@@ -171,7 +172,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Returns {@link UrlRenderer} for this {@link RequestCycle}.
-	 * 
+	 *
 	 * @return UrlRenderer instance.
 	 */
 	@Override
@@ -186,7 +187,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Resolves current request to a {@link IRequestHandler}.
-	 * 
+	 *
 	 * @return RequestHandler instance
 	 */
 	protected IRequestHandler resolveRequestHandler()
@@ -210,7 +211,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Convenience method that processes the request and detaches the {@link RequestCycle}.
-	 * 
+	 *
 	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
 	 *         otherwise.
 	 */
@@ -230,7 +231,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Processes the request.
-	 * 
+	 *
 	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
 	 *         otherwise.
 	 */
@@ -261,6 +262,16 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 		}
 		finally
 		{
+			try
+			{
+				listeners.onEndRequest(this);
+				onEndRequest();
+			}
+			catch (RuntimeException e)
+			{
+				log.error("Exception occurred during onEndRequest", e);
+			}
+
 			set(null);
 		}
 
@@ -269,7 +280,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Execute a request handler and notify registered {@link IRequestCycleListener}s.
-	 * 
+	 *
 	 * @param handler
 	 */
 	private void execute(IRequestHandler handler)
@@ -282,7 +293,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 				listeners.onRequestHandlerResolved(this, handler);
 				IRequestHandler next = requestHandlerExecutor.execute(handler);
 				listeners.onRequestHandlerExecuted(this, handler);
-				
+
 				handler = next;
 			}
 			catch (RuntimeException e)
@@ -306,7 +317,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Process the given exception.
-	 * 
+	 *
 	 * @param exception
 	 * @param retryCount
 	 */
@@ -326,7 +337,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 			listeners.onExceptionRequestHandlerResolved(this, handler, exception);
 
 			execute(handler);
-			
+
 			return true;
 		}
 		catch (Exception e)
@@ -345,7 +356,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Return {@link IRequestHandler} for the given exception.
-	 * 
+	 *
 	 * @param e exception to handle
 	 * @return RequestHandler instance
 	 *
@@ -357,13 +368,16 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 		if (Application.exists() && Application.get().usesDevelopmentConfig())
 		{
-			/*
-			 * Call out the fact that we are processing an exception in a loud way, helps to notice
-			 * them when developing even if they get wrapped or processed in a custom handler.
-			 */
-			logExtra.warn("********************************");
+			var loudExceptionLogging = Application.get().getExceptionSettings().isLoudExceptionLogging();
+			if (loudExceptionLogging) {
+				logExtra.warn("********************************");
+			}
+
 			logExtra.warn("Handling the following exception", e);
-			logExtra.warn("********************************");
+
+			if (loudExceptionLogging) {
+				logExtra.warn("********************************");
+			}
 		}
 
 		IRequestHandler handler = listeners.onException(this, e);
@@ -386,7 +400,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	/**
 	 * INTERNAL This method is for internal Wicket use. Do not call it yourself unless you know what
 	 * you are doing.
-	 * 
+	 *
 	 * @param request
 	 */
 	public void setRequest(Request request)
@@ -403,7 +417,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 * Sets the metadata for this request cycle using the given key. If the metadata object is not
 	 * of the correct type for the metadata key, an IllegalArgumentException will be thrown. For
 	 * information on creating MetaDataKeys, see {@link MetaDataKey}.
-	 * 
+	 *
 	 * @param key
 	 *            The singleton key for the metadata
 	 * @param object
@@ -421,10 +435,10 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Gets metadata for this request cycle using the given key.
-	 * 
+	 *
 	 * @param <T>
 	 *            The type of the metadata
-	 * 
+	 *
 	 * @param key
 	 *            The key for the data
 	 * @return The metadata or null if no metadata was found for the given key
@@ -444,7 +458,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 * probably need URL relative to the currently used page, for this use
 	 * {@linkplain #urlFor(org.apache.wicket.request.IRequestHandler)}
 	 * </p>
-	 * 
+	 *
 	 * @param handler
 	 *            the {@link IRequestHandler request handler} for which to create a callback url
 	 * @return Url instance or <code>null</code>
@@ -463,7 +477,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 * probably need URL relative to the currently used page, for this use
 	 * {@linkplain #urlFor(org.apache.wicket.request.resource.ResourceReference, org.apache.wicket.request.mapper.parameter.PageParameters)}
 	 * </p>
-	 * 
+	 *
 	 * @param reference
 	 *            resource reference
 	 * @param params
@@ -484,7 +498,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 * probably need URL relative to the currently used page, for this use
 	 * {@linkplain #urlFor(Class, org.apache.wicket.request.mapper.parameter.PageParameters)}
 	 * </p>
-	 * 
+	 *
 	 * @param <C>
 	 *            The type of the page
 	 * @param pageClass
@@ -503,7 +517,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Returns a rendered {@link Url} for the resource reference
-	 * 
+	 *
 	 * @param reference
 	 *            resource reference
 	 * @param params
@@ -521,9 +535,9 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 * Returns a rendered bookmarkable URL that references a given page class using a given set of
 	 * page parameters. Since the URL which is returned contains all information necessary to
 	 * instantiate and render the page, it can be stored in a user's browser as a stable bookmark.
-	 * 
+	 *
 	 * @param <C>
-	 * 
+	 *
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
@@ -543,7 +557,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 * have been rendered.
 	 * <p>
 	 * The resulting URL will be relative to current page.
-	 * 
+	 *
 	 * @param handler
 	 * @return Url String or <code>null</code>
 	 */
@@ -648,16 +662,6 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	{
 		try
 		{
-			onEndRequest();
-			listeners.onEndRequest(this);
-		}
-		catch (RuntimeException e)
-		{
-			log.error("Exception occurred during onEndRequest", e);
-		}
-
-		try
-		{
 			requestHandlerExecutor.detach();
 		}
 		catch (RuntimeException exception)
@@ -677,26 +681,14 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	}
 
 	/**
-	 * Called to handle a {@link java.lang.RuntimeException} that might be 
-	 * thrown during detaching phase. 
-	 * 
+	 * Called to handle a {@link java.lang.RuntimeException} that might be
+	 * thrown during detaching phase.
+	 *
 	 * @param exception
 	 */
-	private void handleDetachException(RuntimeException exception) 
+	private void handleDetachException(RuntimeException exception)
 	{
-		boolean isBufferedResponse = true;
-		if (Application.exists())
-		{
-			isBufferedResponse = Application.get().getRequestCycleSettings().getBufferResponse();
-		}
-
-		//if application is using a buffered response strategy,
-		//then we display exception to user.
-		if (isBufferedResponse) 
-		{
-			throw exception;
-		}
-		else 
+		if (!(exception instanceof IWicketInternalException))
 		{
 			log.error("Error detaching RequestCycle", exception);
 		}
@@ -704,7 +696,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Convenience method for setting next page to be rendered.
-	 * 
+	 *
 	 * @param page
 	 */
 	public void setResponsePage(IRequestablePage page)
@@ -720,7 +712,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Convenience method for setting next page to be rendered.
-	 * 
+	 *
 	 * @param pageClass
 	 *              The class of the page to render
 	 */
@@ -744,7 +736,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Convenience method for setting next page to be rendered.
-	 * 
+	 *
 	 * @param pageClass
 	 *              The class of the page to render
 	 * @param parameters
@@ -800,6 +792,10 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 */
 	protected void onEndRequest()
 	{
+		if (Session.exists())
+		{
+			Session.get().endRequest();
+		}
 	}
 
 	/**
@@ -874,7 +870,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	/**
 	 * Finds a IRequestHandler which is either the currently executing handler or is scheduled to be
 	 * executed.
-	 * 
+	 *
 	 * @return the found IRequestHandler or {@link Optional#empty()}
 	 */
 	@SuppressWarnings("unchecked")
@@ -890,7 +886,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 		{
 			return (Optional<T>)Optional.of(result);
 		}
-		
+
 		result = getRequestHandlerScheduledAfterCurrent();
 		if (type.isInstance(result))
 		{
@@ -902,7 +898,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 
 	/**
 	 * Adapts {@link RequestHandlerExecutor} to this {@link RequestCycle}
-	 * 
+	 *
 	 * @author Igor Vaynberg
 	 */
 	private class HandlerExecutor extends RequestHandlerExecutor

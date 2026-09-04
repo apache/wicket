@@ -43,7 +43,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * A data table builds on data grid view to introduce toolbars. Toolbars can be used to display
  * sortable column headers, paging information, filter controls, and other information.
  * <p>
- * Data table also provides its own markup for an html table so the user does not need to provide it
+ * Data table also provides its own markup for an html table so the developer does not need to provide it
  * himself. This makes it very simple to add a datatable to the markup, however, some flexibility.
  * <p>
  * Example
@@ -56,12 +56,24 @@ import org.apache.wicket.util.visit.IVisitor;
  * specified, the second column will not )
  * 
  * <pre>
- * List&lt;IColumn&lt;T&gt;&gt; columns = new ArrayList&lt;IColumn&lt;T&gt;&gt;();
+ * // Application specific POJO to view/edit
+ * public class MyEntity {
+ *   private String firstName;
+ *   private String lastName;
+ *
+ *   // getters and setters
+ * }
+ *
+ * public class MyEntityProvider implements IDataProvider&lt;MyEntity&gt; {
+ *     ...
+ * }
+ *
+ * List&lt;IColumn&lt;MyEntity, String&gt;&gt; columns = new ArrayList&lt;&gt;();
  * 
- * columns.add(new PropertyColumn(new Model&lt;String&gt;(&quot;First Name&quot;), &quot;name.first&quot;, &quot;name.first&quot;));
- * columns.add(new PropertyColumn(new Model&lt;String&gt;(&quot;Last Name&quot;), &quot;name.last&quot;));
+ * columns.add(new PropertyColumn&lt;MyEntity, String&gt;(new Model&lt;String&gt;(&quot;First Name&quot;), &quot;firstName&quot;, &quot;firstName&quot;));
+ * columns.add(new PropertyColumn&lt;MyEntity, String&gt;(new Model&lt;String&gt;(&quot;Last Name&quot;), &quot;lastName&quot;));
  * 
- * DataTable table = new DataTable(&quot;datatable&quot;, columns, new UserProvider(), 10);
+ * DataTable&lt;MyEntity,String&gt; table = new DataTable&lt;&gt;(&quot;datatable&quot;, columns, new MyEntityProvider(), 10);
  * table.addBottomToolbar(new NavigationToolbar(table));
  * table.addTopToolbar(new HeadersToolbar(table, null));
  * add(table);
@@ -185,7 +197,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	}
 
 	/**
-	 * Create the MarkupContainer for the <tbody> tag. Users may subclass it to provide their own
+	 * Create the MarkupContainer for the <tbody> tag. Developers may subclass it to provide their own
 	 * (modified) implementation.
 	 * 
 	 * @param id

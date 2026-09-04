@@ -18,9 +18,11 @@ package org.apache.wicket.protocol.ws.javax;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.concurrent.Future;
 
-import javax.websocket.CloseReason;
-import javax.websocket.Session;
+import jakarta.websocket.CloseReason;
+import jakarta.websocket.RemoteEndpoint;
+import jakarta.websocket.Session;
 
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.AbstractWebSocketProcessor;
@@ -49,7 +51,7 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 	public JavaxWebSocketConnection(Session session, AbstractWebSocketProcessor webSocketProcessor)
 	{
 		super(webSocketProcessor);
-		this.session = Args.notNull(session, "connection");
+		this.session = Args.notNull(session, "session");
 	}
 
 	@Override
@@ -82,7 +84,25 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 		return this;
 	}
 
-	@Override
+    @Override
+    public Future<Void> sendMessageAsync(String message)
+    {
+        checkClosed();
+
+        return session.getAsyncRemote().sendText(message);
+    }
+
+    @Override
+    public Future<Void> sendMessageAsync(String message, long timeOut)
+    {
+        checkClosed();
+
+        RemoteEndpoint.Async remoteEndpoint  = session.getAsyncRemote();
+        remoteEndpoint.setSendTimeout(timeOut);
+        return remoteEndpoint.sendText(message);
+    }
+
+    @Override
 	public synchronized IWebSocketConnection sendMessage(byte[] message, int offset, int length)
 		throws IOException
 	{
@@ -93,7 +113,28 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 		return this;
 	}
 
-	private void checkClosed()
+    @Override
+    public Future<Void> sendMessageAsync(byte[] message, int offset, int length)
+    {
+        checkClosed();
+
+        ByteBuffer buf = ByteBuffer.wrap(message, offset, length);
+        return session.getAsyncRemote().sendBinary(buf);
+    }
+
+    @Override
+
+    public Future<Void> sendMessageAsync(byte[] message, int offset, int length, long timeOut)
+    {
+        checkClosed();
+
+        RemoteEndpoint.Async remoteEndpoint  = session.getAsyncRemote();
+        remoteEndpoint.setSendTimeout(timeOut);
+        ByteBuffer buf = ByteBuffer.wrap(message, offset, length);
+        return remoteEndpoint.sendBinary(buf);
+    }
+
+    private void checkClosed()
 	{
 		if (!isOpen())
 		{

@@ -24,7 +24,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.visit.IVisitor;
 
 /**
- * Panel (has it's own markup, defined between <wicket:panel> tags), that can act as a form
+ * Panel (has it's own markup, defined between &lt;wicket:panel&gt; tags), that can act as a form
  * component. It typically wouldn't receive any input yourself, and often you can get by with
  * nesting form components in panels proper. However, using this panel can help you with building
  * components act to the outside world as one component, but internally uses separate components.
@@ -146,7 +146,7 @@ public abstract class FormComponentPanel<T> extends FormComponent<T> implements 
 	@Override
 	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
 	{
-		return new PanelMarkupSourcingStrategy(false);
+		return PanelMarkupSourcingStrategy.get(false);
 	}
 
 	@Override

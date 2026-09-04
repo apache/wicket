@@ -18,27 +18,30 @@ package org.apache.wicket.util.encoding;
 
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SuppressWarnings("javadoc")
 public class UrlDecoderTest
 {
+
+	private static final Charset CHARSET = StandardCharsets.UTF_8;
+
 	@Test
-	public void mustNotEmitNullByteForPath() throws Exception
+	public void mustNotEmitNullByteForPath()
 	{
 		String evil = "http://www.devil.com/highway/to%00hell";
-		String decoded = UrlDecoder.PATH_INSTANCE.decode(evil, StandardCharsets.UTF_8);
+		String decoded = UrlDecoder.PATH_INSTANCE.decode(evil, CHARSET);
 		assertEquals(-1, decoded.indexOf('\0'));
 		assertEquals("http://www.devil.com/highway/toNULLhell", decoded);
 	}
 
 	@Test
-	public void mustNotEmitNullByteForQuery() throws Exception
+	public void mustNotEmitNullByteForQuery()
 	{
 		String evil = "http://www.devil.com/highway?destination=%00hell";
-		String decoded = UrlDecoder.QUERY_INSTANCE.decode(evil, StandardCharsets.UTF_8);
+		String decoded = UrlDecoder.QUERY_INSTANCE.decode(evil, CHARSET);
 		assertEquals(-1, decoded.indexOf('\0'));
 		assertEquals("http://www.devil.com/highway?destination=NULLhell", decoded);
 	}
@@ -47,18 +50,36 @@ public class UrlDecoderTest
 	 * https://issues.apache.org/jira/browse/WICKET-4803
 	 */
 	@Test
-	public void badUrlEntities() throws Exception
+	public void badUrlEntities()
 	{
 		String url = "http://localhost/test?a=%%%";
-		String decoded = UrlDecoder.QUERY_INSTANCE.decode(url, StandardCharsets.UTF_8);
+		String decoded = UrlDecoder.QUERY_INSTANCE.decode(url, CHARSET);
 		assertEquals("http://localhost/test?a=", decoded);
 
 		url = "http://localhost/test?%%%";
-		decoded = UrlDecoder.QUERY_INSTANCE.decode(url, StandardCharsets.UTF_8);
+		decoded = UrlDecoder.QUERY_INSTANCE.decode(url, CHARSET);
 		assertEquals("http://localhost/test?", decoded);
 
 		url = "http://localhost/test?%a=%b%";
-		decoded = UrlDecoder.QUERY_INSTANCE.decode(url, StandardCharsets.UTF_8);
+		decoded = UrlDecoder.QUERY_INSTANCE.decode(url, CHARSET);
 		assertEquals("http://localhost/test?a=b", decoded);
+
+		url = "foo%2";
+		decoded = UrlDecoder.QUERY_INSTANCE.decode(url, CHARSET);
+		assertEquals("foo2", decoded);
+	}
+
+	@Test
+	public void decode()
+	{
+		assertEquals("", UrlDecoder.QUERY_INSTANCE.decode("", CHARSET));
+		assertEquals("foobar", UrlDecoder.QUERY_INSTANCE.decode("foobar", CHARSET));
+		assertEquals("foo bar", UrlDecoder.QUERY_INSTANCE.decode("foo%20bar", CHARSET));
+		assertEquals("foo+bar", UrlDecoder.QUERY_INSTANCE.decode("foo%2bbar", CHARSET));
+		assertEquals("T\u014dky\u014d",
+			UrlDecoder.QUERY_INSTANCE.decode("T%C5%8Dky%C5%8D", CHARSET));
+		assertEquals("/Z\u00fcrich", UrlDecoder.QUERY_INSTANCE.decode("/Z%C3%BCrich", CHARSET));
+		assertEquals("T\u014dky\u014d",
+			UrlDecoder.QUERY_INSTANCE.decode("T\u014dky\u014d", CHARSET));
 	}
 }

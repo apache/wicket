@@ -1,5 +1,5 @@
 
-Starting from version 6.15.0 we can specify where header contributors must be rendered inside <head> tag using the placeholder tag _<wicket:header-items/>_: 
+We can also specify where header contributors must be rendered inside <head> tag using the placeholder tag _<wicket:header-items/>_: 
 
 [source,html]
 ----

@@ -88,4 +88,17 @@ public class PackagesTest
 		String absolutePath = Packages.absolutePath(packageName, relativePath);
 		assertEquals("com/foo/bar/baz/foo/qux", absolutePath);
 	}
+	
+	/**
+	 * WICKET-6792
+	 */
+	@Test
+	public void absolutePath6() throws Exception
+	{
+		String packageName = "com.foo.bar";
+		String relativePath = "./baz";
+
+		String absolutePath = Packages.absolutePath(packageName, relativePath);
+		assertEquals("com/foo/bar/baz", absolutePath);
+	}
 }

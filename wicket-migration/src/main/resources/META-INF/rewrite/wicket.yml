@@ -1,0 +1,119 @@
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.wicket.BestPractices
+displayName: Wicket best practices
+description: Applies Wicket best practices such as minimizing anonymous inner classes and upgrading to the latest version.
+recipeList:
+  - org.openrewrite.java.cleanup.LambdaBlockToExpression
+  - org.openrewrite.java.cleanup.UseLambdaForFunctionalInterface
+  - org.apache.wicket.MigrateToWicket10
+---
+# https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+10.0
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.wicket.MigrateToWicket10
+displayName: Migrate to Wicket 10.x
+description: Migrates Wicket 9.x to Wicket 10.x, as well as Java 17 and Jakarta.
+recipeList:
+  - org.openrewrite.java.migrate.UpgradeToJava17
+  - org.openrewrite.java.migrate.jakarta.JavaxMigrationToJakarta
+  - org.openrewrite.java.dependencies.AddDependency:
+      groupId: org.apache.wicket
+      artifactId: wicket-tester
+      version: 10.x
+      onlyIfUsing: org.apache.wicket.util.tester.*
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.http2.markup.head.PushHeaderItem
+      newFullyQualifiedTypeName: org.apache.wicket.markup.head.http2.PushHeaderItem
+      ignoreDefinition: "True"
+  - org.openrewrite.maven.RemoveDependency:
+      groupId: org.apache.wicket.experimental.wicket8
+      artifactId: wicket-http2-*
+  - org.openrewrite.maven.RemoveDependency:
+      groupId: org.apache.wicket.experimental.wicket9
+      artifactId: wicket-http2-*
+  - org.openrewrite.maven.UpgradeDependencyVersion:
+      groupId: org.apache.wicket
+      artifactId: "*"
+      newVersion: 10.x
+      versionPattern: -SNAPSHOT
+  - org.openrewrite.maven.UpgradeDependencyVersion:
+      groupId: org.apache.wicket.experimental.wicket9
+      artifactId: "*"
+      newVersion: 10.x
+  - org.openrewrite.maven.UpgradeDependencyVersion:
+      groupId: org.apache.wicket.experimental.wicket9
+      artifactId: "*"
+      newVersion: 10.x
+---
+# https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+11.0
+#
+# The cryptography subsystem was unified and rebuilt in Wicket 11. The two former
+# interfaces (org.apache.wicket.util.crypt.ICrypt and
+# org.apache.wicket.pageStore.crypt.ICrypter) are replaced by a single
+# org.apache.wicket.core.util.crypt.ICrypt, and the following classes were removed with no
+# drop-in replacement (encryption now always uses an authenticated scheme selected via
+# org.apache.wicket.settings.SecuritySettings#setCryptScheme):
+#   SunJceCrypt, AbstractCrypt, TrivialCrypt, CryptFactoryCachingDecorator,
+#   AESCrypt, AbstractJceCrypt, KeyInSessionSunJceCryptFactory,
+#   AbstractKeyInSessionCryptFactory, DefaultCrypter, GCMSIVCrypter, ICrypter.
+# These require manual migration; see the guide above. Data encrypted by Wicket 10 cannot
+# be decrypted by Wicket 11 (per-session keys and formats change).
+#
+# org.apache.wicket.markup.html.include.Include was removed with no drop-in replacement. It
+# fetched the URL its model resolved to and wrote the response into the page body unescaped,
+# which cannot be made safe: the model value decided what the server connected to, what ended
+# up in the page and how much of it was read. Applications composing pages with it should use
+# Panels, Borders and markup inheritance instead; there is no replacement for including remote
+# content. It is deprecated in 8.19.0, 9.24.0 and 10.11.0.
+#
+# org.apache.wicket.authentication.IAuthenticationStrategy, its two implementations and the
+# SecuritySettings#getAuthenticationStrategy()/#setAuthenticationStrategy() accessors were removed
+# with no replacement. The interface persisted sign-in credentials on the client so that a later
+# visit could replay them, which cannot be made safe: whatever it persists is what signs the user
+# in, so the stored value is the password itself. An application that needs a persistent login has
+# to implement one, with a random, revocable, per-device token rather than with the password.
+# With the interface gone, org.apache.wicket.protocol.http.WebSession no longer overrides
+# invalidate(), and nothing clears a "LoggedIn" cookie left over from a Wicket 10 deployment --
+# those expire on their own within thirty days.
+#
+# The "remember me" support went with it, so SignInPanel and SignInPage in wicket-auth-roles are
+# replaced by UsernamePasswordPanel and UsernamePasswordPage, which are the same types without it.
+# The ChangeType entries below handle the common case; getRememberMe(), setRememberMe(),
+# onSignInRemembered() and the two-argument SignInPanel constructor have no equivalent and need
+# hand-editing. Both are deprecated in 8.19.0, 9.24.0 and 10.11.0.
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.wicket.MigrateToWicket11
+displayName: Migrate to Wicket 11.x
+description: Migrates Wicket 10.x to Wicket 11.x, as well as Java 21.
+recipeList:
+  - org.openrewrite.java.migrate.UpgradeToJava21
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.util.crypt.ICrypt
+      newFullyQualifiedTypeName: org.apache.wicket.core.util.crypt.ICrypt
+      ignoreDefinition: "True"
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.util.crypt.ICryptFactory
+      newFullyQualifiedTypeName: org.apache.wicket.core.util.crypt.ICryptFactory
+      ignoreDefinition: "True"
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.util.crypt.NoCrypt
+      newFullyQualifiedTypeName: org.apache.wicket.core.util.crypt.NoCrypt
+      ignoreDefinition: "True"
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.util.crypt.NoCryptFactory
+      newFullyQualifiedTypeName: org.apache.wicket.core.util.crypt.NoCryptFactory
+      ignoreDefinition: "True"
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.authroles.authentication.panel.SignInPanel
+      newFullyQualifiedTypeName: org.apache.wicket.authroles.authentication.panel.UsernamePasswordPanel
+      ignoreDefinition: "True"
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: org.apache.wicket.authroles.authentication.pages.SignInPage
+      newFullyQualifiedTypeName: org.apache.wicket.authroles.authentication.pages.UsernamePasswordPage
+      ignoreDefinition: "True"
+  - org.openrewrite.maven.UpgradeDependencyVersion:
+      groupId: org.apache.wicket
+      artifactId: "*"
+      newVersion: 11.x
+      versionPattern: -SNAPSHOT
+---

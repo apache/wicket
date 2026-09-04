@@ -17,12 +17,14 @@
 package org.apache.wicket.protocol.http;
 
 import static java.lang.System.arraycopy;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.wicket.Application;
@@ -39,17 +41,20 @@ import org.slf4j.LoggerFactory;
  * information about the events that transpired during a single request. Typical HTTPD and/or
  * Servlet container log files are unusable for determining what happened in the application since
  * they contain the requested URLs of the form http://example.com/app?wicket:interface:0:0:0, which
- * doesn't convey any useful information. Requestloggers can show which page was the target of the
+ * doesn't convey any useful information. Request loggers can show which page was the target of the
  * request, and which page was rendered as a response, and anything else: resources, Ajax request,
  * etc.
  * <p>
  * The information in the log files can take any format, depending on the request logger
  * implementation: currently Wicket supports two formats: a {@link RequestLogger legacy, log4j
- * compatible format}, and a {@link JsonRequestLogger JSON format}.
+ * compatible format}, and a <em>JsonRequestLogger</em> JSON format.
  */
 public abstract class AbstractRequestLogger implements IRequestLogger
 {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractRequestLogger.class);
+
+	private static final ZoneId ZID = ZoneId.of("GMT");
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss,SSS");
 
 	/**
 	 * Key for storing request data in the request cycle's meta data.
@@ -318,7 +323,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 		RequestData requestdata = RequestCycle.get().getMetaData(REQUEST_DATA);
 		if (requestdata != null)
 		{
-			// log the request- and sessiondata (the latter can be null)
+			// log the request and session data (the latter can be null)
 			SessionData sessiondata = RequestCycle.get().getMetaData(SESSION_DATA);
 			log(requestdata, sessiondata);
 		}
@@ -349,7 +354,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 			// use the oldest request data to recalculate the average request time
 			RequestData old = requestWindow[indexInWindow];
 
-			// replace the oldest request with the nweset request
+			// replace the oldest request with the newest request
 			requestWindow[indexInWindow] = rd;
 
 			// move the cursor to the next writable position containing the oldest request or if the
@@ -494,34 +499,8 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	{
 		Args.notNull(date, "date");
 
-		final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-		final StringBuilder buf = new StringBuilder(32);
-
-		cal.setTimeInMillis(date.getTime());
-
-		int year = cal.get(Calendar.YEAR);
-		int month = cal.get(Calendar.MONTH) + 1;
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		int hours = cal.get(Calendar.HOUR_OF_DAY);
-		int minutes = cal.get(Calendar.MINUTE);
-		int seconds = cal.get(Calendar.SECOND);
-		int millis = cal.get(Calendar.MILLISECOND);
-
-		buf.append(year);
-		buf.append('-');
-		buf.append(String.format("%02d", month));
-		buf.append('-');
-		buf.append(String.format("%02d", day));
-		buf.append(' ');
-		buf.append(String.format("%02d", hours));
-		buf.append(':');
-		buf.append(String.format("%02d", minutes));
-		buf.append(':');
-		buf.append(String.format("%02d", seconds));
-		buf.append(',');
-		buf.append(String.format("%03d", millis));
-
-		return buf.toString();
+		LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZID);
+		return ldt.format(FORMATTER);
 	}
 
 	private int getRequestsWindowSize()

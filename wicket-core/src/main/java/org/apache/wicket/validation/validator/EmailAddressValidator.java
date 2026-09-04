@@ -24,14 +24,15 @@ import java.util.regex.Pattern;
  * NOTICE: This validator only checks the most commonly used email address patterns. For a validator
  * that can check the entire range of rfc compliant email addresses see
  * <code>org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator</code>
- * 
+ *
+ * <p>Also see org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator</p>
+ *
  * @author Chris Turner
  * @author Jonathan Locke
  * @author Martijn Dashorst
  * @author Al Maw
- * 
- * @see org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator
- * 
+ *
+ *
  * @since 1.3
  */
 public class EmailAddressValidator extends PatternValidator

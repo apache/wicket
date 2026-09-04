@@ -1,0 +1,14 @@
+<html>
+<body>
+    <form wicket:id="form">
+        <label wicket:for="inputMarkupLabel"><wicket:label>label from markup</wicket:label></label>
+        <input type="text" wicket:id="inputMarkupLabel"/>
+        <label wicket:for="inputPropertiesLabel"><wicket:label key="msg">label from markup</wicket:label></label>
+        <input type="text" wicket:id="inputPropertiesLabel"/>
+        <label><wicket:label for="inputWithoutAutolabel">label from markup without autolabel</wicket:label></label>
+        <input type="text" wicket:id="inputWithoutAutolabel"/>
+        <label wicket:for="inputWithDefaultLabel"><wicket:label/></label>
+        <input type="text" wicket:id="inputWithDefaultLabel"/>
+    </form>
+</body>
+</html>

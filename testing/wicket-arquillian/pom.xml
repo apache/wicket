@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>9.0.0-M2-SNAPSHOT</version>
+		<version>10.0.0-M1-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -50,8 +50,6 @@
     </repositories>
 
 	<properties>
-		<automatic-module-name>org.apache.wicket.arquillian.tests</automatic-module-name>
-
 		<!-- port configuration -->
 		<wicket.arquillian.server.port>18787</wicket.arquillian.server.port>
 		<java.debug.wire.protocol.port>48787</java.debug.wire.protocol.port>
@@ -108,11 +106,6 @@
 			<artifactId>jboss-javaee-7.0</artifactId>
 			<type>pom</type>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.wildfly</groupId>

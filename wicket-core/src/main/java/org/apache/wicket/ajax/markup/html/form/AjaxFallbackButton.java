@@ -116,7 +116,24 @@ public abstract class AjaxFallbackButton extends Button
 			{
 				return AjaxFallbackButton.this.getStatelessHint();
 			}
+			
+			@Override
+			protected boolean shouldTriggerJavaScriptSubmitEvent()
+			{
+				return AjaxFallbackButton.this.shouldTriggerJavaScriptSubmitEvent();
+			}
 		};
+	}
+
+	/**
+	 * Controls whether or not a JS <code>submit</code> should be triggered on the submitting form.
+	 * False by default.
+	 * 
+	 * @return true if <code>submit</code> should be triggered, false otherwise
+	 */
+	protected boolean shouldTriggerJavaScriptSubmitEvent()
+	{
+		return false;
 	}
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)

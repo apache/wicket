@@ -71,8 +71,17 @@ public class AjaxFallbackDefaultDataTable<T, S> extends DataTable<T, S>
 		super(id, columns, dataProvider, rowsPerPage);
 		setOutputMarkupId(true);
 		setVersioned(false);
+		addToolBars(dataProvider);
+	}
+
+	/**
+	 * Factory method for toolbars
+	 * @param dataProvider {@link org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDataProvider}
+	 */
+	protected void addToolBars(final ISortableDataProvider<T, S> dataProvider)
+	{
 		addTopToolbar(new AjaxNavigationToolbar(this));
-		addTopToolbar(new AjaxFallbackHeadersToolbar(this, dataProvider));
+		addTopToolbar(new AjaxFallbackHeadersToolbar<>(this, dataProvider));
 		addBottomToolbar(new NoRecordsToolbar(this));
 	}
 

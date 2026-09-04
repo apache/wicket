@@ -27,7 +27,7 @@ import org.apache.wicket.pageStore.IPageStore;
 public interface IPageManager
 {
 	/**
-	 * Is versionining of pages supported, see {@link IPageStore#supportsVersioning()}.
+	 * Is versioning of pages supported, see {@link IPageStore#supportsVersioning()}.
 	 * 
 	 * @return {@code true} if versioning is supported
 	 */
@@ -72,6 +72,12 @@ public interface IPageManager
 	 */
 	void clear();
 
+	/**
+	 * End the request.
+	 */
+	default void end() {
+	}
+	
 	/**
 	 * Detach at end of request.
 	 */

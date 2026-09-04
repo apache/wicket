@@ -20,7 +20,7 @@ import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.ee11.webapp.WebAppContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -28,7 +28,7 @@ import com.meterware.httpunit.HttpUnitOptions;
 
 /**
  * Test decorator that starts a jetty instance
- * 
+ *
  * @author ivaynberg
  */
 public class JettyTestCaseDecorator
@@ -59,17 +59,16 @@ public class JettyTestCaseDecorator
 		server.addConnector(http);
 
 		WebAppContext web = new WebAppContext();
-		if (contextPath == null)
-			web.setContextPath("/wicket-examples");
-		else
-			web.setContextPath(contextPath);
+		web.setContextPath(contextPath == null ? "/wicket-examples" : contextPath);
 
 		if (webappLocation == null)
 		{
 			String basedir = System.getProperty("basedir");
 			String path = "";
 			if (basedir != null)
+			{
 				path = basedir + "/";
+			}
 			path += "src/main/webapp";
 
 			web.setWar(path);

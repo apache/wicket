@@ -140,16 +140,9 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 
 	private SessionData getSessionData(IPageContext context, boolean create)
 	{
-		return context.getSessionData(KEY, () -> {
-			if (create)
-			{
-				return new SessionData();
-			}
-			else
-			{
-				return null;
-			}
-		});
+		return context.getSessionData(KEY, create ? () -> {
+			return new SessionData();
+		} : null);
 	}
 
 	/**

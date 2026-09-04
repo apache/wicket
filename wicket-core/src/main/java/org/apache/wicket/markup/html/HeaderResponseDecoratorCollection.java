@@ -33,13 +33,15 @@ public class HeaderResponseDecoratorCollection implements IHeaderResponseDecorat
 {
 	private final List<IHeaderResponseDecorator> decorators = new CopyOnWriteArrayList<>();
 
+	private IHeaderResponseDecorator resourceAggregation = ResourceAggregator::new;
+
 	public HeaderResponseDecoratorCollection()
 	{
-		decorators.add(response -> new ResourceAggregator(response));
+		decorators.add(resourceAggregation);
 	}
 
 	/**
-	 * Adds a new {@link IHeaderResponseDecorator} that will be invoked prior to all already
+	 * Adds a new {@link IHeaderResponseDecorator} that will decorates prior to all already
 	 * registered decorators. That means, the first to be added will be wrapped by a
 	 * {@link ResourceAggregator} like this: {@code new ResourceAggregator(first)}. The second will
 	 * be wrapped by the first and the aggregator: {@code new ResourceAggregator(first(second))}.
@@ -56,15 +58,42 @@ public class HeaderResponseDecoratorCollection implements IHeaderResponseDecorat
 	}
 
 	/**
-	 * Adds a new {@link IHeaderResponseDecorator} that will be invoked after all already registered
+	 * Adds a new {@link IHeaderResponseDecorator} that decorates immediately prior to resource
+	 * aggregation.
+	 * 
+	 * @param decorator
+	 *            The decorator to add, cannot be null.
+	 * @return {@code this} for chaining.
+	 * 
+	 * @see ResourceAggregator
+	 */
+	public HeaderResponseDecoratorCollection addPreResourceAggregationDecorator(
+		IHeaderResponseDecorator decorator)
+	{
+		Args.notNull(decorator, "decorator");
+
+		for (int i = 0; i < decorators.size(); i++)
+		{
+			if (decorators.get(i) == resourceAggregation)
+			{
+				decorators.add(i, decorator);
+				return this;
+			}
+		}
+
+		throw new IllegalStateException("no resource aggregation");
+	}
+
+	/**
+	 * Adds a new {@link IHeaderResponseDecorator} that decorates after all already registered
 	 * decorators.
 	 * 
 	 * @param decorator
 	 *            The decorator to add, cannot be null.
 	 * @return {@code this} for chaining.
 	 */
-	public HeaderResponseDecoratorCollection
-			addPostProcessingDecorator(IHeaderResponseDecorator decorator)
+	public HeaderResponseDecoratorCollection addPostProcessingDecorator(
+		IHeaderResponseDecorator decorator)
 	{
 		Args.notNull(decorator, "decorator");
 		decorators.add(decorator);
@@ -83,6 +112,7 @@ public class HeaderResponseDecoratorCollection implements IHeaderResponseDecorat
 	{
 		Args.notNull(decorator, "decorator");
 		decorators.clear();
+		resourceAggregation = null;
 		decorators.add(decorator);
 		return this;
 	}
@@ -92,7 +122,9 @@ public class HeaderResponseDecoratorCollection implements IHeaderResponseDecorat
 	{
 		IHeaderResponse ret = response;
 		for (IHeaderResponseDecorator curDecorator : decorators)
+		{
 			ret = curDecorator.decorate(ret);
+		}
 		return ret;
 	}
 }

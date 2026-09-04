@@ -63,11 +63,11 @@ public class LocaleResourceNameIterator implements Iterator<String>
 		}
 		else if (state == 2)
 		{
-			return new Locale(locale.getLanguage(), locale.getCountry());
+			return Locale.of(locale.getLanguage(), locale.getCountry());
 		}
 		else if (state == 3)
 		{
-			return new Locale(locale.getLanguage());
+			return Locale.of(locale.getLanguage());
 		}
 		return null;
 	}

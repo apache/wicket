@@ -40,6 +40,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.validation.IValidator;
 
 /**
@@ -355,7 +356,7 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 	}
 
 	/**
-	 * Determines whether or not the textfield should trim its input prior to processing it. The
+	 * Determines whether or not the text field should trim its input prior to processing it. The
 	 * default value is <code>true</code>
 	 * 
 	 * @return True if the input should be trimmed.
@@ -383,26 +384,29 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 		{
 			private static final long serialVersionUID = 1L;
 
-			/**
-			 * {@inheritDoc}
-			 */
 			@Override
 			public <C> IConverter<C> getConverter(final Class<C> type)
 			{
 				return AjaxEditableLabel.this.getConverter(type);
 			}
 
-			/**
-			 * {@inheritDoc}
-			 */
+			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+				setEscapeModelStrings(AjaxEditableLabel.this.getEscapeModelStrings());
+			}
+
 			@Override
 			public void onComponentTagBody(final MarkupStream markupStream,
 				final ComponentTag openTag)
 			{
 				Object modelObject = getDefaultModelObject();
-				if ((modelObject == null) || "".equals(modelObject))
+				if ((modelObject == null) || (modelObject instanceof String && ((String) modelObject).isEmpty()))
 				{
-					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
+					String nullLabel = defaultNullLabel();
+					replaceComponentTagBody(markupStream, openTag,
+						getEscapeModelStrings() ? Strings.escapeMarkup(nullLabel) : nullLabel);
 				}
 				else
 				{

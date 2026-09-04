@@ -137,7 +137,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 
 		String wicketIdAttr = getWicketNamespace() + ":" + "id";
 
-		// Don't touch any wicket:id component and any auto-components
+		// Don't touch any wicket:id component and any auto components
 		if ((tag instanceof WicketTag) || (tag.isAutolinkEnabled() == true)
 			|| (tag.getAttributes().get(wicketIdAttr) != null))
 		{

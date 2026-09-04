@@ -20,8 +20,8 @@ import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
+import jakarta.servlet.http.HttpSessionBindingEvent;
+import jakarta.servlet.http.HttpSessionBindingListener;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.page.IManageablePage;
@@ -47,6 +47,14 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	 * A cache holding all store, the key is the application name suffixed with the page store implementation class.
 	 */
 	private static final ConcurrentMap<String, AbstractPersistentPageStore> STORES = new ConcurrentHashMap<>();
+
+	private static final ThreadLocal<Boolean> gettingSessionAttribute = new ThreadLocal<>()
+	{
+		protected Boolean initialValue()
+		{
+			return Boolean.FALSE;
+		}
+	};
 
 	private final String storeKey;
 
@@ -144,22 +152,22 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	 */
 	private String getSessionIdentifier(IPageContext context, boolean create)
 	{
-		String key = KEY_PREFIX + Classes.simpleName(getClass());
-		
-		SessionAttribute attribute = context.getSessionAttribute(key, () -> {
-			if (create)
-			{
-				return new SessionAttribute(storeKey, createSessionIdentifier(context));
-			}
+		gettingSessionAttribute.set(Boolean.TRUE);
+		try {
+			String key = KEY_PREFIX + Classes.simpleName(getClass());
 			
-			return null;
-		});
-		
-		if (attribute == null)
-		{
-			return null;
+			SessionAttribute attribute = context.getSessionAttribute(key, create ? () -> {
+				return new SessionAttribute(storeKey, createSessionIdentifier(context));
+			} : null);
+			
+			if (attribute == null)
+			{
+				return null;
+			}
+			return attribute.sessionIdentifier;
+		} finally {
+			gettingSessionAttribute.set(Boolean.FALSE);
 		}
-		return attribute.sessionIdentifier;
 	}
 
 	/**
@@ -212,7 +220,10 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 			}
 			else
 			{
-				store.removeAllPersistedPages(sessionIdentifier);
+				if (Boolean.FALSE.equals(gettingSessionAttribute.get()))
+				{
+					store.removeAllPersistedPages(sessionIdentifier);
+				}		
 			}
 		}
 	}

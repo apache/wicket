@@ -19,8 +19,8 @@ package org.apache.wicket.extensions.markup.html.form.palette.component;
 import java.util.Iterator;
 
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
-import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.util.value.IValueMap;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 
 
 /**
@@ -44,19 +44,17 @@ public class Choices<T> extends AbstractOptions<T>
 		super(id, palette);
 	}
 
-
 	@Override
-	protected void onComponentTag(final ComponentTag tag)
+	public void renderHead(IHeaderResponse response)
 	{
-		super.onComponentTag(tag);
-		IValueMap attrs = tag.getAttributes();
+		super.renderHead(response);
 		String onFocus = getPalette().getChoicesOnFocusJS();
 		if (onFocus != null)
 		{
-			attrs.put("onfocus", onFocus);
+			response.render(OnEventHeaderItem.forComponent(this, "focus", onFocus));
 		}
 
-		tag.getAttributes().put("ondblclick", getPalette().getAddOnClickJS());
+		response.render(OnEventHeaderItem.forComponent(this, "dblclick", getPalette().getAddOnClickJS()));
 	}
 
 	@Override
