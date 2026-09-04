@@ -21,7 +21,6 @@ import java.lang.management.ManagementFactory;
 import java.net.URI;
 
 import javax.management.MBeanServer;
-
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
