@@ -973,9 +973,12 @@ public abstract class Component
 			// children component's getmodelobject is called
 			detachModels();
 
-			// detach any behaviors
-			data = ComponentState.detachBehaviors(this, data, getFlag(FLAG_MODEL_SET),
-				getFlag(FLAG_BEHAVIOR_IDS_FIXED));
+			// detach any behaviors. A behavior can replace this component's state while it is
+			// being detached (WICKET-6877), so the remaining behaviors are stored in the state as
+			// it is after detaching, not in the state as it was captured before.
+			Object detachedBehaviors = ComponentState.detachBehaviors(this, data,
+				getFlag(FLAG_MODEL_SET), getFlag(FLAG_BEHAVIOR_IDS_FIXED));
+			data = ComponentState.setBehaviors(data, getFlag(FLAG_MODEL_SET), detachedBehaviors);
 		}
 		catch (Exception x)
 		{
@@ -4250,7 +4253,12 @@ public abstract class Component
 	 */
 	public Component remove(final Behavior... behaviors)
 	{
-		data = ComponentState.removeBehaviors(this, data, getFlag(FLAG_MODEL_SET), behaviors);
+		// removing a behavior unbinds and detaches it, which can replace this component's state
+		// (WICKET-6877), so the remaining behaviors are stored in the state as it is after
+		// removal, not in the state as it was captured before.
+		Object remainingBehaviors = ComponentState.removeBehaviors(this, data,
+			getFlag(FLAG_MODEL_SET), behaviors);
+		data = ComponentState.setBehaviors(data, getFlag(FLAG_MODEL_SET), remainingBehaviors);
 		return this;
 	}
 

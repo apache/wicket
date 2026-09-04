@@ -495,7 +495,7 @@ abstract class ComponentState implements Serializable
 	}
 
 	/**
-	 * Construct a new component state with the given behaviors removed
+	 * Remove the given behaviors from the component's behaviors
 	 * 
 	 * @param component
 	 *            the component to remove the behaviors from
@@ -505,33 +505,17 @@ abstract class ComponentState implements Serializable
 	 *            a boolean indicating if the model is set
 	 * @param behaviorsToRemove
 	 *            the behaviors to removed
-	 * @return the new component state
+	 * @return the remaining behaviors: null, one behavior or an array of behaviors
 	 */
 	static Object removeBehaviors(Component component, Object state, boolean modelSet,
 			Behavior... behaviorsToRemove)
 	{
+		Object behaviors = getBehaviors(state, modelSet);
 		if (behaviorsToRemove.length == 0)
 		{
-			return state;
+			return behaviors;
 		}
-		else if (state instanceof ComponentState)
-		{
-			ComponentState compState = (ComponentState) state;
-			return compState.setBehaviors(
-				removeBehaviors(component, compState.getBehaviors(), behaviorsToRemove));
-		}
-		else if (modelSet)
-		{
-			throw cannotRemove(behaviorsToRemove[0]);
-		}
-		else if (state instanceof MetaDataEntry || state instanceof MetaDataEntry[])
-		{
-			throw cannotRemove(behaviorsToRemove[0]);
-		}
-		else
-		{
-			return removeBehaviors(component, state, behaviorsToRemove);
-		}
+		return removeBehaviors(component, behaviors, behaviorsToRemove);
 	}
 
 	/**
@@ -993,6 +977,24 @@ abstract class ComponentState implements Serializable
 		return state;
 	}
 
+	/**
+	 * Detach the component's behaviors, unbinding and removing the temporary ones.
+	 * <p>
+	 * Detaching a behavior runs arbitrary code, which may replace the component's state (for
+	 * example by clearing a meta data entry, see WICKET-6877). This method therefore only returns
+	 * the remaining behaviors; it is up to the caller to store them in the component's state as it
+	 * is <em>after</em> detaching.
+	 * 
+	 * @param component
+	 *            the component whose behaviors are detached
+	 * @param state
+	 *            the current component state
+	 * @param modelSet
+	 *            a boolean indicating if the model is set
+	 * @param fixedIds
+	 *            a boolean indicating if the behavior ids must be kept stable
+	 * @return the remaining behaviors: null, one behavior or an array of behaviors
+	 */
 	static Object detachBehaviors(Component component, Object state, boolean modelSet,
 			boolean fixedIds)
 	{
@@ -1004,8 +1006,9 @@ abstract class ComponentState implements Serializable
 			if (behavior.isTemporary(component))
 			{
 				behavior.unbind(component);
-				return setBehaviors(state, modelSet, null);
+				return null;
 			}
+			return behavior;
 		}
 		else if (behaviors instanceof Behavior[])
 		{
@@ -1039,17 +1042,17 @@ abstract class ComponentState implements Serializable
 			int newSize = fixedIds ? Math.max(highestId + 1, filledSlots) : filledSlots;
 			if (newSize == 0)
 			{
-				return setBehaviors(state, modelSet, null);
+				return null;
 			}
 			if (newSize == 1)
 			{
-				return setBehaviors(state, modelSet, behaviorsArr[highestId]);
+				return behaviorsArr[highestId];
 			}
 
 			// the calculated size is equal to the current size, cannot compact
 			if (newSize == behaviorsArr.length)
 			{
-				return state;
+				return behaviorsArr;
 			}
 
 			// multiple behaviors (or one with an id > 0)
@@ -1074,8 +1077,8 @@ abstract class ComponentState implements Serializable
 					targetIndex++;
 				}
 			}
-			return setBehaviors(state, modelSet, ret);
+			return ret;
 		}
-		return state;
+		return behaviors;
 	}
 }
