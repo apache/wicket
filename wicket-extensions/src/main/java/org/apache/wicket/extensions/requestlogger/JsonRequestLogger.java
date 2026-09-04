@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 /**
  * JsonRequestLogger uses Jackson to log requests in JSON-format. You will need jackson-mapper in
  * your classpath, ie. like:
- * 
+ *
  * <pre>
  * {@literal
  * <dependency>
@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * </dependency>
  * }
  * </pre>
- * 
+ *
  * @author Emond Papegaaij
  */
 public class JsonRequestLogger extends AbstractRequestLogger
