@@ -35,334 +35,114 @@ import org.apache.wicket.model.IModel;
  * <li>Only a model: {@code data} contains the model
  * <li>Only one or more behaviors: {@code data} contains the behavior, or an array of behaviors
  * <li>Only one or more meta data entries: {@code data} contains the entry, or an array of entries
- * <li>A model and one or more behaviors: {@code data} contains an instance of
- * {@link ModelBehaviorsComponentState}
- * <li>A model and one or more meta data entries: {@code data} contains an instance of
- * {@link ModelMetaDataComponentState}
- * <li>One or more behaviors and one or more meta data entries: {@code data} contains an instance of
- * {@link BehaviorsMetaDataComponentState}
- * <li>A model, one or more behaviors and one or more meta data entries: {@code data} contains an
- * instance of {@link ModelBehaviorsMetaDataComponentState}
+ * <li>Any two or three of them: {@code data} contains a {@link ComponentState}, holding each
+ * kind in its own field
  * </ul>
+ * <p>
+ * A single state class rather than one class per combination: the combinations all cost the same
+ * 24 bytes on a 64 bit VM with compressed oops, so specialised classes save nothing there, while
+ * four implementations of the same accessors make every unpacking call site megamorphic and stop
+ * it from being inlined.
  * 
  * @author papegaaij
  */
-abstract class ComponentState implements Serializable
+final class ComponentState implements Serializable
 {
 	private static final long serialVersionUID = 1L;
+
+	private IModel< ? > model;
+
+	private Object behaviors;
+
+	private Object metaData;
+
+	private ComponentState(IModel< ? > model, Object behaviors, Object metaData)
+	{
+		this.model = model;
+		this.behaviors = behaviors;
+		this.metaData = metaData;
+	}
 
 	/**
 	 * @return The model stored by this state, or null.
 	 */
-	abstract IModel< ? > getModel();
+	IModel< ? > getModel()
+	{
+		return model;
+	}
 
 	/**
 	 * @param model
 	 *            the new model or null
 	 * @return the new state for the component using the rules defined above
 	 */
-	abstract Object setModel(IModel< ? > model);
+	Object setModel(IModel< ? > model)
+	{
+		this.model = model;
+		return pack();
+	}
 
 	/**
 	 * @return The behaviors stored by this state: null, a single behavior or an array of behaviors.
 	 */
-	abstract Object getBehaviors();
+	Object getBehaviors()
+	{
+		return behaviors;
+	}
 
 	/**
 	 * @param behaviors
 	 *            the new behaviors (null, one behavior or an array of behaviors)
 	 * @return the new state for the component using the rules defined above
 	 */
-	abstract Object setBehaviors(Object behaviors);
+	Object setBehaviors(Object behaviors)
+	{
+		this.behaviors = behaviors;
+		return pack();
+	}
 
 	/**
 	 * @return The meta data entries stored by this state: null, a single entry or an array of
 	 *         entries.
 	 */
-	abstract Object getMetaData();
+	Object getMetaData()
+	{
+		return metaData;
+	}
 
 	/**
 	 * @param metaData
 	 *            the new meta data entries (null, one entry or an array of entries)
 	 * @return the new state for the component using the rules defined above
 	 */
-	abstract Object setMetaData(Object metaData);
-
-	/**
-	 * Combines a model and one or more behaviors.
-	 */
-	static class ModelBehaviorsComponentState extends ComponentState
+	Object setMetaData(Object metaData)
 	{
-		private static final long serialVersionUID = 1L;
-
-		private IModel< ? > model;
-
-		private Object behaviors;
-
-		private ModelBehaviorsComponentState(IModel< ? > model, Object behaviors)
-		{
-			this.model = model;
-			this.behaviors = behaviors;
-		}
-
-		@Override
-		IModel< ? > getModel()
-		{
-			return model;
-		}
-
-		@Override
-		Object setModel(IModel< ? > model)
-		{
-			if (model == null)
-			{
-				return behaviors;
-			}
-			this.model = model;
-			return this;
-		}
-
-		@Override
-		Object getBehaviors()
-		{
-			return behaviors;
-		}
-
-		@Override
-		Object setBehaviors(Object behaviors)
-		{
-			if (behaviors == null)
-			{
-				return model;
-			}
-			this.behaviors = behaviors;
-			return this;
-		}
-
-		@Override
-		Object getMetaData()
-		{
-			return null;
-		}
-
-		@Override
-		Object setMetaData(Object metaData)
-		{
-			if (metaData == null)
-			{
-				return this;
-			}
-			return new ModelBehaviorsMetaDataComponentState(model, behaviors, metaData);
-		}
+		this.metaData = metaData;
+		return pack();
 	}
 
 	/**
-	 * Combines a model and one or more meta data entries.
+	 * This state is only worth its own allocation while it holds more than one kind of state. Once
+	 * a single kind is left, that value is stored in {@code Component.data} directly, and once
+	 * none is left the field is cleared.
+	 * 
+	 * @return this state, the single remaining value, or null
 	 */
-	static class ModelMetaDataComponentState extends ComponentState
+	private Object pack()
 	{
-		private static final long serialVersionUID = 1L;
-
-		private IModel< ? > model;
-
-		private Object metaData;
-
-		private ModelMetaDataComponentState(IModel< ? > model, Object metaData)
-		{
-			this.model = model;
-			this.metaData = metaData;
-		}
-
-		@Override
-		IModel< ? > getModel()
-		{
-			return model;
-		}
-
-		@Override
-		Object setModel(IModel< ? > model)
-		{
-			if (model == null)
-			{
-				return metaData;
-			}
-			this.model = model;
-			return this;
-		}
-
-		@Override
-		Object getBehaviors()
-		{
-			return null;
-		}
-
-		@Override
-		Object setBehaviors(Object behaviors)
-		{
-			if (behaviors == null)
-			{
-				return this;
-			}
-			return new ModelBehaviorsMetaDataComponentState(model, behaviors, metaData);
-		}
-
-		@Override
-		Object getMetaData()
-		{
-			return metaData;
-		}
-
-		@Override
-		Object setMetaData(Object metaData)
-		{
-			if (metaData == null)
-			{
-				return model;
-			}
-			this.metaData = metaData;
-			return this;
-		}
-	}
-
-	/**
-	 * Combines one or more behaviors and one ore more meta data entries.
-	 */
-	static class BehaviorsMetaDataComponentState extends ComponentState
-	{
-		private static final long serialVersionUID = 1L;
-
-		private Object behaviors;
-
-		private Object metaData;
-
-		private BehaviorsMetaDataComponentState(Object behaviors, Object metaData)
-		{
-			this.behaviors = behaviors;
-			this.metaData = metaData;
-		}
-
-		@Override
-		IModel< ? > getModel()
-		{
-			return null;
-		}
-
-		@Override
-		Object setModel(IModel< ? > model)
-		{
-			if (model == null)
-			{
-				return this;
-			}
-			return new ModelBehaviorsMetaDataComponentState(model, behaviors, metaData);
-		}
-
-		@Override
-		Object getBehaviors()
-		{
-			return behaviors;
-		}
-
-		@Override
-		Object setBehaviors(Object behaviors)
+		if (model == null)
 		{
 			if (behaviors == null)
 			{
 				return metaData;
 			}
-			this.behaviors = behaviors;
-			return this;
+			return metaData == null ? behaviors : this;
 		}
-
-		@Override
-		Object getMetaData()
-		{
-			return metaData;
-		}
-
-		@Override
-		Object setMetaData(Object metaData)
-		{
-			if (metaData == null)
-			{
-				return behaviors;
-			}
-			this.metaData = metaData;
-			return this;
-		}
-	}
-
-	/**
-	 * Combines a model, one or more behaviors and one or more meta data entries.
-	 */
-	static class ModelBehaviorsMetaDataComponentState extends ComponentState
-	{
-		private static final long serialVersionUID = 1L;
-
-		private IModel< ? > model;
-
-		private Object behaviors;
-
-		private Object metaData;
-
-		private ModelBehaviorsMetaDataComponentState(IModel< ? > model, Object behaviors,
-				Object metaData)
-		{
-			this.model = model;
-			this.behaviors = behaviors;
-			this.metaData = metaData;
-		}
-
-		@Override
-		IModel< ? > getModel()
+		if (behaviors == null && metaData == null)
 		{
 			return model;
 		}
-
-		@Override
-		Object setModel(IModel< ? > model)
-		{
-			if (model == null)
-			{
-				return new BehaviorsMetaDataComponentState(behaviors, metaData);
-			}
-			this.model = model;
-			return this;
-		}
-
-		@Override
-		Object getBehaviors()
-		{
-			return behaviors;
-		}
-
-		@Override
-		Object setBehaviors(Object behaviors)
-		{
-			if (behaviors == null)
-			{
-				return new ModelMetaDataComponentState(model, metaData);
-			}
-			this.behaviors = behaviors;
-			return this;
-		}
-
-		@Override
-		Object getMetaData()
-		{
-			return metaData;
-		}
-
-		@Override
-		Object setMetaData(Object metaData)
-		{
-			if (metaData == null)
-			{
-				return new ModelBehaviorsComponentState(model, behaviors);
-			}
-			this.metaData = metaData;
-			return this;
-		}
+		return this;
 	}
 
 	/**
@@ -444,11 +224,11 @@ abstract class ComponentState implements Serializable
 		}
 		else if (state instanceof MetaDataEntry || state instanceof MetaDataEntry[])
 		{
-			return new ModelMetaDataComponentState(model, state);
+			return new ComponentState(model, null, state);
 		}
 		else
 		{
-			return new ModelBehaviorsComponentState(model, state);
+			return new ComponentState(model, state, null);
 		}
 	}
 
@@ -480,12 +260,12 @@ abstract class ComponentState implements Serializable
 		}
 		else if (modelSet)
 		{
-			return new ModelBehaviorsComponentState((IModel< ? >) state,
-				addBehaviors(component, null, behaviorsToAdd));
+			return new ComponentState((IModel< ? >) state,
+				addBehaviors(component, null, behaviorsToAdd), null);
 		}
 		else if (state instanceof MetaDataEntry || state instanceof MetaDataEntry[])
 		{
-			return new BehaviorsMetaDataComponentState(
+			return new ComponentState(null,
 				addBehaviors(component, null, behaviorsToAdd), state);
 		}
 		else
@@ -546,11 +326,11 @@ abstract class ComponentState implements Serializable
 		}
 		else if (modelSet)
 		{
-			return new ModelBehaviorsComponentState((IModel< ? >) state, behaviors);
+			return new ComponentState((IModel< ? >) state, behaviors, null);
 		}
 		else
 		{
-			return new BehaviorsMetaDataComponentState(behaviors, state);
+			return new ComponentState(null, behaviors, state);
 		}
 	}
 
@@ -585,12 +365,12 @@ abstract class ComponentState implements Serializable
 		}
 		else if (modelSet)
 		{
-			return new ModelMetaDataComponentState((IModel< ? >) state,
+			return new ComponentState((IModel< ? >) state, null,
 				new MetaDataEntry<>(key, data));
 		}
 		else
 		{
-			return new BehaviorsMetaDataComponentState(state, new MetaDataEntry<>(key, data));
+			return new ComponentState(null, state, new MetaDataEntry<>(key, data));
 		}
 	}
 
