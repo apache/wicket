@@ -1400,7 +1400,10 @@ public abstract class Component
 		{
 			// give subclass a chance to lazy-init model
 			model = initModel();
-			setModelImpl(model);
+			if (model != null)
+			{
+				setModelImpl(model);
+			}
 		}
 
 		return model;
