@@ -27,7 +27,7 @@ import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 
-import static org.apache.wicket.core.util.string.JavaScriptUtils.escapeQuotesAndBackslash;
+import static org.apache.wicket.core.util.string.JavaScriptUtils.escapeQuotes;
 
 /**
  * <p>
@@ -210,7 +210,7 @@ public class ExternalLink extends AbstractLink
 				response.render(OnEventHeaderItem.forComponent(this, "click",
 					"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; " //
 						+ "if (win == window) { window.location.href='" //
-						+ escapeQuotesAndBackslash(url) //
+						+ escapeQuotes(url) //
 						+ "'; } ;return false"));
 				return;
 			}

@@ -85,12 +85,21 @@ public class JavaScriptUtils
 
 
 	/**
-	 * Escape single and double quotes so that they can be part of e.g. an alert call.
-	 * 
+	 * Escape the backslash and both quote characters, so that the value can be placed inside a
+	 * JavaScript string literal, e.g. the argument of an alert call.
+	 * <p>
+	 * The backslash has to be escaped, and has to be escaped first. A value that already carries a
+	 * backslash immediately before a quote would otherwise end up with two backslashes in front of
+	 * that quote: the first escapes the second, the quote itself is left unescaped and closes the
+	 * literal, and whatever the value carries after that point is no longer text but script.
+	 * <p>
+	 * Note: this method used to leave the backslash untouched. A caller that escaped the backslash
+	 * itself before calling this method now escapes it twice, and has to drop its own replacement.
+	 * <p>
 	 * Note: JSON values need to escape only the double quote, so this method wont help.
-	 * 
+	 *
 	 * @param input
-	 *            the JavaScript which needs to be escaped
+	 *            the value which needs to be escaped
 	 * @return Escaped version of the input
 	 */
 	public static CharSequence escapeQuotes(final CharSequence input)
@@ -98,6 +107,7 @@ public class JavaScriptUtils
 		CharSequence s = input;
 		if (s != null)
 		{
+			s = Strings.replaceAll(s, "\\", "\\\\");
 			s = Strings.replaceAll(s, "'", "\\'");
 			s = Strings.replaceAll(s, "\"", "\\\"");
 		}
@@ -105,23 +115,18 @@ public class JavaScriptUtils
 	}
 
 	/**
-	 * Escape single and double quotes so that they can be part of e.g. an alert call.
-	 *
-	 * Note: JSON values need to escape only the double quote, so this method wont help.
+	 * Escape the backslash and both quote characters, so that the value can be placed inside a
+	 * JavaScript string literal, e.g. the argument of an alert call.
 	 *
 	 * @param input
-	 *            the JavaScript which needs to be escaped
+	 *            the value which needs to be escaped
 	 * @return Escaped version of the input
+	 * @deprecated use {@link #escapeQuotes(CharSequence)}, which escapes the backslash as well
 	 */
+	@Deprecated(forRemoval = true)
 	public static CharSequence escapeQuotesAndBackslash(final CharSequence input)
 	{
-		CharSequence s = input;
-		if (s != null)
-		{
-			s = Strings.replaceAll(s, "\\", "\\\\");
-			s = escapeQuotes(s);
-		}
-		return s;
+		return escapeQuotes(input);
 	}
 
 	/**

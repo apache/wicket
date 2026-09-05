@@ -21,7 +21,7 @@ import org.apache.wicket.util.io.IClusterable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.apache.wicket.core.util.string.JavaScriptUtils.escapeQuotesAndBackslash;
+import static org.apache.wicket.core.util.string.JavaScriptUtils.escapeQuotes;
 import static org.apache.wicket.core.util.string.JavaScriptUtils.unquoteSingleQuoted;
 
 
@@ -159,7 +159,7 @@ public class PopupSettings implements IClusterable
 			windowTitle = windowTitle.replaceAll("\\W", "_");
 		}
 
-		CharSequence escapedTarget = escapeQuotesAndBackslash(unquoteSingleQuoted(target));
+		CharSequence escapedTarget = escapeQuotes(unquoteSingleQuoted(target));
 		StringBuilder script = new StringBuilder(//
 			"var w = window.open('" + escapedTarget + "', '" //
 		).append(windowTitle).append("', '");
