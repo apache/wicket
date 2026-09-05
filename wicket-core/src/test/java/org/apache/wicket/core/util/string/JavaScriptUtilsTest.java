@@ -89,4 +89,25 @@ public class JavaScriptUtilsTest extends Assert
 			JavaScriptUtils.SCRIPT_OPEN_TAG);
 		assertEquals("\n/*]]>*/\n</script>\n", JavaScriptUtils.SCRIPT_CLOSE_TAG);
 	}
+
+	@Test
+	public void escapeQuotes()
+	{
+		assertEquals("alert(\\'foo\\\\tbar\\')",
+			JavaScriptUtils.escapeQuotes("alert('foo\\tbar')").toString());
+	}
+
+	/**
+	 * A backslash immediately before a quote must not be able to escape the backslash that this
+	 * method puts in front of that quote, which would leave the quote free to close the literal.
+	 */
+	@Test
+	public void escapeQuotesKeepsTheValueInsideItsStringLiteral()
+	{
+		String backslashBeforeQuote = "a\\';b";
+
+		CharSequence escaped = JavaScriptUtils.escapeQuotes(backslashBeforeQuote);
+
+		assertEquals("a\\\\\\';b", escaped.toString());
+	}
 }
