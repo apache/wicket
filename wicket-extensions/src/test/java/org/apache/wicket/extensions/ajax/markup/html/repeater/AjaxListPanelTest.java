@@ -62,4 +62,34 @@ class AjaxListPanelTest extends WicketTestCase
 		tester.executeBehavior(behavior);
 		assertTrue(tester.getLastResponseAsString().contains("Wicket.DOM.remove(Wicket.DOM.get('id13'));"));
 	}
+
+	/**
+	 * The appended markup is written into a single quoted JavaScript string literal, so a backslash
+	 * in it must not be able to escape the backslash that precedes the following quote.
+	 */
+	@Test
+	void appendedMarkupStaysInsideItsJavaScriptStringLiteral()
+	{
+		final String backslashBeforeQuote = "a\\';b";
+
+		final AjaxListPanel list = new AjaxListPanel("list");
+
+		AjaxEventBehavior behavior = new AjaxEventBehavior("click") {
+			@Override
+			protected void onEvent(AjaxRequestTarget target)
+			{
+				Label label = new Label(list.newChildId());
+				label.setMarkupId(backslashBeforeQuote);
+				list.append(label, target);
+			}
+		};
+		list.add(behavior);
+
+		tester.startComponentInPage(list);
+
+		tester.executeBehavior(behavior);
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains("a\\\\&#039;;b"), "no markup was appended");
+	}
 }

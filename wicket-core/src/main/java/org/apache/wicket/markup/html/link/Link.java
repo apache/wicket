@@ -28,7 +28,7 @@ import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import static org.apache.wicket.core.util.string.JavaScriptUtils.escapeQuotesAndBackslash;
+import static org.apache.wicket.core.util.string.JavaScriptUtils.escapeQuotes;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor (&lt;a href...)
@@ -433,7 +433,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 				// generated during page load. This check ensures that the click is ignored
 				response.render(OnEventHeaderItem.forComponent(this, "click",
 					"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; "
-						+ "if (win == window) { window.location.href='" + escapeQuotesAndBackslash(url)
+						+ "if (win == window) { window.location.href='" + escapeQuotes(url)
 						+ "'; } ;return false"));
 			}
 		}

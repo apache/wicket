@@ -101,7 +101,21 @@ class JavaScriptUtilsTest
 	}
 
 	@Test
-	void escapeQuotesAndBackslash(){
-		assertThat(JavaScriptUtils.escapeQuotesAndBackslash("alert('foo\\tbar')")).isEqualTo("alert(\\'foo\\\\tbar\\')");
+	void escapeQuotes(){
+		assertThat(JavaScriptUtils.escapeQuotes("alert('foo\\tbar')")).isEqualTo("alert(\\'foo\\\\tbar\\')");
+	}
+
+	/**
+	 * A backslash immediately before a quote must not be able to escape the backslash that this
+	 * method puts in front of that quote, which would leave the quote free to close the literal.
+	 */
+	@Test
+	void escapeQuotesKeepsTheValueInsideItsStringLiteral()
+	{
+		String backslashBeforeQuote = "a\\';b";
+
+		CharSequence escaped = JavaScriptUtils.escapeQuotes(backslashBeforeQuote);
+
+		assertThat(escaped).isEqualTo("a\\\\\\';b");
 	}
 }
