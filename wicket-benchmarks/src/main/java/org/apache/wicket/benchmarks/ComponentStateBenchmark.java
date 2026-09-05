@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.benchmarks;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.AttributeModifier;
@@ -134,6 +136,11 @@ public class ComponentStateBenchmark
 			this.ajax = ajax;
 		}
 
+		boolean hasModel()
+		{
+			return model;
+		}
+
 		Component newComponent(String id)
 		{
 			Component c = new WebMarkupContainer(id);
@@ -241,6 +248,70 @@ public class ComponentStateBenchmark
 		}
 	}
 
+	/**
+	 * Only the shapes that carry a model, so every {@code data} seen at the model lookup is a
+	 * wrapper. Separates a type-profile effect from the cost of the lookup itself: if the mixed
+	 * shape penalty disappears here, it was profile pollution at the type check.
+	 */
+	@State(Scope.Benchmark)
+	public static class ModelShapes
+	{
+		Component[] components;
+
+		@Setup(Level.Trial)
+		public void setUp()
+		{
+			WicketContext.attach();
+			List<Component> cs = new ArrayList<>();
+			for (Shape shape : Shape.values())
+			{
+				if (shape.hasModel())
+				{
+					cs.add(shape.newComponent("c" + cs.size()));
+				}
+			}
+			components = cs.toArray(new Component[0]);
+		}
+
+		@TearDown(Level.Trial)
+		public void tearDown()
+		{
+			WicketContext.detach();
+		}
+	}
+
+	/**
+	 * Only the shapes with no model, so the model lookup always comes up empty. Measures the
+	 * absent path directly instead of inferring it by subtracting the all-model case, which uses
+	 * a different array and a different type profile.
+	 */
+	@State(Scope.Benchmark)
+	public static class NoModelShapes
+	{
+		Component[] components;
+
+		@Setup(Level.Trial)
+		public void setUp()
+		{
+			WicketContext.attach();
+			List<Component> cs = new ArrayList<>();
+			for (Shape shape : Shape.values())
+			{
+				if (!shape.hasModel())
+				{
+					cs.add(shape.newComponent("c" + cs.size()));
+				}
+			}
+			components = cs.toArray(new Component[0]);
+		}
+
+		@TearDown(Level.Trial)
+		public void tearDown()
+		{
+			WicketContext.detach();
+		}
+	}
+
 	/** A component that definitely carries behaviors, for the Ajax id lookup path. */
 	@State(Scope.Benchmark)
 	public static class WithBehaviors
@@ -317,6 +388,55 @@ public class ComponentStateBenchmark
 		for (Component c : ctx.components)
 		{
 			bh.consume(c.getBehaviors(Behavior.class));
+		}
+	}
+
+	/**
+	 * The floor for the mixed shape benchmarks: same array, same loop, same blackhole, reading a
+	 * plain field instead of the state. Subtract this to get the cost of the accessor alone.
+	 */
+	@Benchmark
+	public void baselineMixedShapes(AllShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getId());
+		}
+	}
+
+	@Benchmark
+	public void readModelAllHaveModel(ModelShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getDefaultModel());
+		}
+	}
+
+	@Benchmark
+	public void readModelNoneHaveModel(NoModelShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getDefaultModel());
+		}
+	}
+
+	@Benchmark
+	public void baselineNoneHaveModel(NoModelShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getId());
+		}
+	}
+
+	@Benchmark
+	public void baselineAllHaveModel(ModelShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getId());
 		}
 	}
 

@@ -32,6 +32,17 @@ actually loaded before believing any number.
 java -cp "$CP" org.openjdk.jmh.Main ComponentStateBenchmark -prof gc
 ```
 
+**Set the heap deliberately, and size it to the benchmark.** JMH forks inherit the default maximum
+heap — a quarter of physical memory, so ~15GB on a 64GB machine — which is both larger than needed
+and machine dependent. Pass an explicit `-jvmArgs "-Xmx..."` so a run means the same thing on
+another machine.
+
+Do not simply make it small. Too little heap shows up as GC noise, and it can be severe enough to
+swamp the measurement entirely: at 1GB `PageRenderBenchmark`, which allocates a page per
+invocation, reported 274 ± 437 us/op — an error bar larger than the mean. The same measurement at
+4GB is 102 ± 2 us/op. When a result looks noisy, suspect the heap before you believe the noise.
+The accessor benchmarks are content with 1GB; the render benchmark wants 4GB.
+
 `-prof gc` is not optional in practice: `gc.alloc.rate.norm` (bytes per operation) is the number
 that matters for a framework that keeps many pages in memory, and it is far steadier than
 throughput.
@@ -63,6 +74,14 @@ call sites that unpack it are monomorphic and inline, which flatters any impleme
 dispatches on shape. Real pages interleave shapes. A large gap between `readMetaData` and
 `readMetaDataMixedShapes` is the signature of dispatch that stopped inlining, and it is invisible
 to a per-shape benchmark.
+
+**Measure the case, do not derive it.** Every `read*` benchmark has a `baseline*` twin that walks
+the same array with the same blackhole and reads a plain field instead of the state; subtract it to
+get the accessor's own cost. And where a path has distinct cases, benchmark each directly rather
+than subtracting one array from another: `readModelAllHaveModel` and `readModelNoneHaveModel` exist
+because inferring the empty case by subtracting the populated one from the mixed one gave an answer
+that sent an investigation after the wrong cause. The arrays differ in length and in type profile,
+so the subtraction is not valid.
 
 **Do not measure a mutation repeatedly against one instance.** `detach()` is not idempotent: the
 first call detaches models, drops temporary behaviors and compacts the behavior array, so every
