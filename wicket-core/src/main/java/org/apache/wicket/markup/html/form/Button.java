@@ -47,6 +47,13 @@ import org.apache.wicket.util.string.Strings;
  * onSubmit method of that button is called directly, and the onSubmit method of the parent form is
  * not called. A common use for this is to create a cancel button.
  * </p>
+ * <p>
+ * The model string is escaped before it is written, as it is for any other component. Clearing
+ * {@link #setEscapeModelStrings(boolean) escapeModelStrings} renders it as markup in the body of a
+ * &lt;button&gt; element. The &quot;value&quot; attribute of an &lt;input&gt; element is escaped
+ * either way, because {@link ComponentTag#writeOutput} escapes every attribute it writes and a
+ * quoted attribute value cannot carry markup.
+ * </p>
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
@@ -91,9 +98,6 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 
 		setVersioned(true);
 		setOutputMarkupId(true);
-
-		// don't double encode the value. it is encoded by ComponentTag.writeOutput()
-		setEscapeModelStrings(false);
 	}
 
 	/**
@@ -198,11 +202,35 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 
 		if ("input".equals(tag.getName()))
 		{
-			String value = getDefaultModelObjectAsString();
+			// ComponentTag#writeOutput escapes every attribute value it writes, so the attribute is
+			// handed the model string as it is. Escaping it here as well would encode it twice. This
+			// does not depend on escapeModelStrings: a quoted attribute value cannot carry markup,
+			// so there is nothing for an application to opt out of.
+			String value = getModelObjectAsUnescapedString();
 			if (Strings.isEmpty(value) == false)
 			{
 				tag.put("value", value);
 			}
+		}
+	}
+
+	/**
+	 * Gets the model object as a string, without the escaping {@link #getEscapeModelStrings()} asks
+	 * for. Only for a value that is escaped again where it is written.
+	 * 
+	 * @return the model object as a string, unescaped
+	 */
+	private String getModelObjectAsUnescapedString()
+	{
+		boolean escapeModelStrings = getEscapeModelStrings();
+		setEscapeModelStrings(false);
+		try
+		{
+			return getDefaultModelObjectAsString();
+		}
+		finally
+		{
+			setEscapeModelStrings(escapeModelStrings);
 		}
 	}
 
@@ -230,14 +258,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 			String modelObjectAsString = getDefaultModelObjectAsString();
 			if (Strings.isEmpty(modelObjectAsString) == false)
 			{
-				// The constructor clears escapeModelStrings so that the value attribute is not
-				// encoded twice, ComponentTag#writeOutput already encodes it. An element body is
-				// not encoded anywhere, so escape here instead of relying on that flag. When an
-				// application does set the flag, getDefaultModelObjectAsString() has escaped
-				// already and escaping again would double encode.
-				replaceComponentTagBody(markupStream, openTag,
-					getEscapeModelStrings() ? modelObjectAsString
-						: Strings.escapeMarkup(modelObjectAsString));
+				replaceComponentTagBody(markupStream, openTag, modelObjectAsString);
 				return;
 			}
 		}
