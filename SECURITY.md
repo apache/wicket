@@ -255,10 +255,10 @@ hear about it.
 `setEscapeModelStrings(false)` is the application saying the content is markup
 and taking responsibility for it. Reports that depend on an application having
 cleared the flag are configuration issues rather than framework vulnerabilities.
-Note that a few components clear it themselves because their value is written
-into an attribute, which is escaped when the tag is written and would otherwise
-be encoded twice; that is an implementation detail of those components and not an
-invitation to render untrusted markup through them.
+Note that `TextField` clears it itself because its value is written into an
+attribute, which is escaped when the tag is written and would otherwise be
+encoded twice; that is an implementation detail of the component and not an
+invitation to render untrusted markup through it.
 
 Two inputs on the other side of the boundary are trusted, because both are
 authored by the developer and neither is data the application received at
