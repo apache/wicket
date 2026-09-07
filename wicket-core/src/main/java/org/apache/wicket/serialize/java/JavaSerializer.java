@@ -17,7 +17,6 @@
 package org.apache.wicket.serialize.java;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.NotSerializableException;
@@ -40,6 +39,7 @@ import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
 import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.settings.ApplicationSettings;
+import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +70,9 @@ public class JavaSerializer implements ISerializer
 	/**
 	 * The key of the application which can be used later to find the proper {@link IClassResolver}
 	 */
+	/** No page worth storing serializes into less than this, so it is where the buffer starts. */
+	private static final int INITIAL_BUFFER_SIZE = 4096;
+
 	private final String applicationKey;
 
 	/**
@@ -88,7 +91,11 @@ public class JavaSerializer implements ISerializer
 	{
 		try
 		{
-			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			// Wicket's ByteArrayOutputStream chains a new buffer when it runs out of room, where
+			// java.io's copies everything written so far into a buffer of twice the size. A page
+			// of any substance outgrows the initial buffer several times over, and each of those
+			// copies is thrown away again immediately.
+			final ByteArrayOutputStream out = new ByteArrayOutputStream(INITIAL_BUFFER_SIZE);
 			ObjectOutputStream oos = null;
 			try
 			{
