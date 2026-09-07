@@ -84,18 +84,20 @@ public abstract class AbstractAesGcmCryptScheme implements ICryptScheme
 	}
 
 	@Override
-	public byte[] encrypt(byte[] plaintext, SecretKey key, byte[] aad, SecureRandom random)
+	public byte[] encrypt(byte[] plaintext, SecretKey key, byte[] aad, SecureRandom random,
+		int prefixLength)
 	{
 		byte[] nonce = new byte[NONCE_LENGTH];
 		random.nextBytes(nonce);
 
-		return encrypt(plaintext, key, aad, nonce);
+		return encrypt(plaintext, key, aad, nonce, prefixLength);
 	}
 
 	@Override
-	public byte[] encryptDeterministic(byte[] plaintext, SecretKey key, byte[] aad)
+	public byte[] encryptDeterministic(byte[] plaintext, SecretKey key, byte[] aad,
+		int prefixLength)
 	{
-		return encrypt(plaintext, key, aad, deriveNonce(plaintext, key, aad));
+		return encrypt(plaintext, key, aad, deriveNonce(plaintext, key, aad), prefixLength);
 	}
 
 	/**
@@ -112,7 +114,8 @@ public abstract class AbstractAesGcmCryptScheme implements ICryptScheme
 	 *            the nonce to use, {@link #NONCE_LENGTH} bytes
 	 * @return {@code nonce || ciphertext || tag}
 	 */
-	private byte[] encrypt(byte[] plaintext, SecretKey key, byte[] aad, byte[] nonce)
+	private byte[] encrypt(byte[] plaintext, SecretKey key, byte[] aad, byte[] nonce,
+		int prefixLength)
 	{
 		try
 		{
@@ -123,10 +126,14 @@ public abstract class AbstractAesGcmCryptScheme implements ICryptScheme
 				cipher.updateAAD(aad);
 			}
 
-			byte[] ciphertext = cipher.doFinal(plaintext);
+			// Let the cipher write straight into the result, behind the caller's prefix and the
+			// nonce. Taking the ciphertext as an array of its own first means allocating the whole
+			// payload a second time and then copying it across.
+			byte[] result =
+				new byte[prefixLength + nonce.length + cipher.getOutputSize(plaintext.length)];
+			System.arraycopy(nonce, 0, result, prefixLength, nonce.length);
+			cipher.doFinal(plaintext, 0, plaintext.length, result, prefixLength + nonce.length);
 
-			byte[] result = Arrays.copyOf(nonce, nonce.length + ciphertext.length);
-			System.arraycopy(ciphertext, 0, result, nonce.length, ciphertext.length);
 			return result;
 		}
 		catch (GeneralSecurityException ex)
@@ -174,16 +181,16 @@ public abstract class AbstractAesGcmCryptScheme implements ICryptScheme
 	}
 
 	@Override
-	public byte[] decrypt(byte[] ciphertext, SecretKey key, byte[] aad)
+	public byte[] decrypt(byte[] ciphertext, int offset, int length, SecretKey key, byte[] aad)
 	{
 		try
 		{
-			if (ciphertext.length < NONCE_LENGTH)
+			if (length < NONCE_LENGTH)
 			{
 				return null;
 			}
 
-			byte[] nonce = Arrays.copyOfRange(ciphertext, 0, NONCE_LENGTH);
+			byte[] nonce = Arrays.copyOfRange(ciphertext, offset, offset + NONCE_LENGTH);
 
 			Cipher cipher = getCipher();
 			cipher.init(Cipher.DECRYPT_MODE, key, newParameterSpec(nonce));
@@ -192,7 +199,7 @@ public abstract class AbstractAesGcmCryptScheme implements ICryptScheme
 				cipher.updateAAD(aad);
 			}
 
-			return cipher.doFinal(ciphertext, NONCE_LENGTH, ciphertext.length - NONCE_LENGTH);
+			return cipher.doFinal(ciphertext, offset + NONCE_LENGTH, length - NONCE_LENGTH);
 		}
 		catch (GeneralSecurityException ex)
 		{

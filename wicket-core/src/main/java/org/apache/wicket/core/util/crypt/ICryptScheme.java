@@ -78,7 +78,34 @@ public interface ICryptScheme
 	 *            source of randomness for the nonce
 	 * @return the ciphertext (including nonce and authentication tag)
 	 */
-	byte[] encrypt(byte[] plaintext, SecretKey key, byte[] aad, SecureRandom random);
+	/**
+	 * Encrypts, leaving {@code prefixLength} bytes untouched at the start of the result for the
+	 * caller to fill in. {@link SchemeCrypt} puts its scheme marker there; without the reservation
+	 * it would have to copy the whole ciphertext to make room for a single byte.
+	 *
+	 * @param plaintext
+	 *            what to encrypt
+	 * @param key
+	 *            the key to encrypt with
+	 * @param aad
+	 *            additional authenticated data, may be {@code null}
+	 * @param random
+	 *            source of randomness for the nonce
+	 * @param prefixLength
+	 *            how many bytes to leave free at the start of the result
+	 * @return a freshly allocated array holding the ciphertext, preceded by {@code prefixLength}
+	 *         bytes the caller is free to write into
+	 */
+	byte[] encrypt(byte[] plaintext, SecretKey key, byte[] aad, SecureRandom random,
+		int prefixLength);
+
+	/**
+	 * @see #encrypt(byte[], SecretKey, byte[], SecureRandom, int)
+	 */
+	default byte[] encrypt(byte[] plaintext, SecretKey key, byte[] aad, SecureRandom random)
+	{
+		return encrypt(plaintext, key, aad, random, 0);
+	}
 
 	/**
 	 * Encrypt the given plaintext deterministically: the same {@code plaintext}, {@code key} and
@@ -101,7 +128,30 @@ public interface ICryptScheme
 	 *            additional authenticated data (the scheme marker); authenticated but not encrypted
 	 * @return the ciphertext (including nonce and authentication tag)
 	 */
-	byte[] encryptDeterministic(byte[] plaintext, SecretKey key, byte[] aad);
+	/**
+	 * As {@link #encrypt(byte[], SecretKey, byte[], SecureRandom, int)}, but deriving the nonce
+	 * from the input so that the same input yields the same ciphertext.
+	 *
+	 * @param plaintext
+	 *            what to encrypt
+	 * @param key
+	 *            the key to encrypt with
+	 * @param aad
+	 *            additional authenticated data, may be {@code null}
+	 * @param prefixLength
+	 *            how many bytes to leave free at the start of the result
+	 * @return a freshly allocated array holding the ciphertext, preceded by {@code prefixLength}
+	 *         bytes the caller is free to write into
+	 */
+	byte[] encryptDeterministic(byte[] plaintext, SecretKey key, byte[] aad, int prefixLength);
+
+	/**
+	 * @see #encryptDeterministic(byte[], SecretKey, byte[], int)
+	 */
+	default byte[] encryptDeterministic(byte[] plaintext, SecretKey key, byte[] aad)
+	{
+		return encryptDeterministic(plaintext, key, aad, 0);
+	}
 
 	/**
 	 * Decrypt the given ciphertext.
@@ -116,5 +166,29 @@ public interface ICryptScheme
 	 * @return the decrypted plaintext, or {@code null} if authentication fails or the input is
 	 *         malformed
 	 */
-	byte[] decrypt(byte[] ciphertext, SecretKey key, byte[] aad);
+	/**
+	 * Decrypts {@code length} bytes of {@code ciphertext} starting at {@code offset}, so that a
+	 * caller which prefixed the ciphertext can skip its own header without copying the rest.
+	 *
+	 * @param ciphertext
+	 *            the buffer holding the ciphertext
+	 * @param offset
+	 *            where the ciphertext starts
+	 * @param length
+	 *            how many bytes of ciphertext there are
+	 * @param key
+	 *            the key to decrypt with
+	 * @param aad
+	 *            additional authenticated data, may be {@code null}
+	 * @return the plaintext, or {@code null} if the input is not authentic
+	 */
+	byte[] decrypt(byte[] ciphertext, int offset, int length, SecretKey key, byte[] aad);
+
+	/**
+	 * @see #decrypt(byte[], int, int, SecretKey, byte[])
+	 */
+	default byte[] decrypt(byte[] ciphertext, SecretKey key, byte[] aad)
+	{
+		return decrypt(ciphertext, 0, ciphertext.length, key, aad);
+	}
 }
