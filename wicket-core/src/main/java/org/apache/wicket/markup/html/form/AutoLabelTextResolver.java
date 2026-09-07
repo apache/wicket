@@ -160,9 +160,9 @@ public class AutoLabelTextResolver implements IComponentResolver
 			{
 				// the label is text, coming from a model or from a resource bundle, so it has to
 				// be escaped before it goes into the markup. Escaping is read from this component
-				// and not from the labeled one: TextField and Button clear the flag in their
-				// constructor so that their value attribute is not encoded twice, which would
-				// leave the label unescaped for exactly the components <wicket:label> is used with
+				// and not from the labeled one: TextField clears the flag in its constructor so
+				// that its value attribute is not encoded twice, which would leave the label
+				// unescaped for one of the components <wicket:label> is used with
 				String text = labelModel.getObject();
 				replaceComponentTagBody(markupStream, openTag,
 					getEscapeModelStrings() ? Strings.escapeMarkup(text) : text);
