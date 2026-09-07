@@ -17,8 +17,10 @@
 package org.apache.wicket.proxy.bytebuddy;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.function.Function;
 
 import org.apache.wicket.Application;
@@ -100,8 +102,10 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> createOrGetProxyClass(Class<T> type)
-	{
+	{		
+		ClassLoadingStrategy<ClassLoader> loadingStrategy = resolveLoadingStrategy(type);
 		ClassLoader classLoader = resolveClassLoader();
+		
 		return (Class<T>) DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
 				new TypeCache.SimpleKey(type),
 				() -> BYTE_BUDDY
@@ -116,8 +120,24 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 						.implement(InterceptorMutator.class).intercept(FieldAccessor.ofBeanProperty())
 						.implement(Serializable.class, IWriteReplace.class, ILazyInitProxy.class).intercept(MethodDelegation.toField(INTERCEPTOR_FIELD_NAME))
 						.make()
-						.load(classLoader, ClassLoadingStrategy.Default.INJECTION.allowExistingTypes())
+						.load(classLoader, loadingStrategy)
 						.getLoaded());
+	}
+
+	private static ClassLoadingStrategy<ClassLoader> resolveLoadingStrategy(Class<?> type) 
+	{
+		try 
+		{
+			int modifiers = type.getModifiers();
+			
+			return !Modifier.isPublic(modifiers)
+				   ? ClassLoadingStrategy.UsingLookup.of(MethodHandles.privateLookupIn(type, MethodHandles.lookup())) 
+				   : ClassLoadingStrategy.Default.WRAPPER.allowExistingTypes();
+		} 
+		catch (IllegalAccessException e) 
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 
 	private static ClassLoader resolveClassLoader()
@@ -205,7 +225,9 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 		for (Constructor<?> constructor : type.getDeclaredConstructors())
 		{
 			if (constructor.getParameterTypes().length == 0)
+			{
 				return true;
+			}
 		}
 
 		return false;
