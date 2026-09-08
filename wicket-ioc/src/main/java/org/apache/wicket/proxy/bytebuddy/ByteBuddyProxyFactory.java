@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 import java.util.function.Function;
 
 import org.apache.wicket.Application;
