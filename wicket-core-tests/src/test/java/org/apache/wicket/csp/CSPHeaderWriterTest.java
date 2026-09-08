@@ -131,7 +131,7 @@ class CSPHeaderWriterTest extends WicketTestCase
 	@Test
 	void addCspDirectiveToPageEvenIfWrappedInMultipleIRequestHandlerDelegates()
 	{
-		tester.getApplication().mount(new MountedMapper("withdelegate/page", NoopMockPage.class)
+		tester.getApplication().mount(new MountedMapper("withdelegate/page", Page.class)
 		{
 			@Override
 			public IRequestHandler mapRequest(final Request request)
@@ -143,16 +143,13 @@ class CSPHeaderWriterTest extends WicketTestCase
 				  .orElse(null);
 			}
 		});
-		tester.startPage(NoopMockPage.class);
+		tester.startPage(Page.class);
 
-		assertThat(tester.getLastRenderedPage()).isInstanceOf(NoopMockPage.class);
+		assertThat(tester.getLastRenderedPage()).isInstanceOf(Page.class);
 		assertThat(tester.getLastResponse().getHeader("Content-Security-Policy")).contains(
 		  STYLE_SRC.getValue());
 	}
-
-	public static class NoopMockPage extends MockHomePage {
-	}
-
+	
 	static class NoopIRequestHandlerDelegate implements IRequestHandlerDelegate {
 		private final IRequestHandler delegate;
 
