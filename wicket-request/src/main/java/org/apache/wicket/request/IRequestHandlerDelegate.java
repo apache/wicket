@@ -29,11 +29,11 @@ public interface IRequestHandlerDelegate extends IRequestHandler
 	/**
 	 * @return the innermost delegated {@link IRequestHandler}
 	 */
-	static IRequestHandler unwrap(IRequestHandler handler)
+	static IRequestHandler unwrap(final IRequestHandler handler)
 	{
 		if (handler instanceof IRequestHandlerDelegate)
 		{
-			return ((IRequestHandlerDelegate)handler).getDelegateHandler();
+			return unwrap(((IRequestHandlerDelegate)handler).getDelegateHandler());
 		}
 		return handler;
 	}
