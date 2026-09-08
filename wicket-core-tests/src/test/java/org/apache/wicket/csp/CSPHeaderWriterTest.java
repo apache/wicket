@@ -20,16 +20,24 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.form.login.MockHomePage;
 import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.protocol.http.BufferedWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.IRequestCycle;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestHandlerDelegate;
+import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -113,6 +121,53 @@ class CSPHeaderWriterTest extends WicketTestCase
 		assertThat(tester.getLastRenderedPage()).isInstanceOf(Page.class);
 		assertThat(tester.getLastResponse().getHeader("Content-Security-Policy")).contains(
 			STYLE_SRC.getValue());
+	}
+
+	@Test
+	void addCspDirectiveToStatelessPageEvenIfWrappedInMultipleIRequestHandlerDelegates()
+	{
+		tester.getApplication().mount(new MountedMapper("withdelegate/page", NoopMockPage.class)
+		{
+			@Override
+			public IRequestHandler mapRequest(final Request request)
+			{
+				final IRequestHandler requestHandler = super.mapRequest(request);
+				final IRequestHandler result;
+				if (requestHandler instanceof RenderPageRequestHandler renderPageRequestHandler && NoopMockPage.class.equals(renderPageRequestHandler.getPageClass()))
+				{
+					result = new NoopIRequestHandlerDelegate(new NoopIRequestHandlerDelegate(renderPageRequestHandler));
+				} else {
+					result = requestHandler;
+				}
+				return result;
+			}
+		});
+		tester.startPage(NoopMockPage.class);
+
+		assertThat(tester.getLastRenderedPage()).isInstanceOf(NoopMockPage.class);
+		assertThat(tester.getLastResponse().getHeader("Content-Security-Policy")).contains(
+		  STYLE_SRC.getValue());
+	}
+
+	public static class NoopMockPage extends MockHomePage {
+	}
+
+	static class NoopIRequestHandlerDelegate implements IRequestHandlerDelegate {
+		private final IRequestHandler delegate;
+
+		NoopIRequestHandlerDelegate(final IRequestHandler delegate) {
+			this.delegate = delegate;
+		}
+
+		@Override
+		public IRequestHandler getDelegateHandler() {
+			return delegate;
+		}
+
+		@Override
+		public void respond(final IRequestCycle requestCycle) {
+			delegate.respond(requestCycle);
+		}
 	}
 
 	public static class Page extends WebPage implements IMarkupResourceStreamProvider
