@@ -603,13 +603,17 @@ include::jee/jee_1.adoc[leveloffset=+1]
 
 include::jee/jee_2.adoc[leveloffset=+1]
 
-=== JSR-330 annotations
+=== Integrating Wicket with CDI
 
 include::jee/jee_3.adoc[leveloffset=+1]
 
-=== Summary
+=== JSR-330 annotations
 
 include::jee/jee_4.adoc[leveloffset=+1]
+
+=== Summary
+
+include::jee/jee_5.adoc[leveloffset=+1]
 
 == Native WebSockets
 
