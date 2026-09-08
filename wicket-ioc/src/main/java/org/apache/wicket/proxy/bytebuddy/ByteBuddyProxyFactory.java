@@ -102,10 +102,9 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> createOrGetProxyClass(Class<T> type)
-	{		
-		ClassLoadingStrategy<ClassLoader> loadingStrategy = resolveLoadingStrategy(type);
+	{
 		ClassLoader classLoader = resolveClassLoader();
-		
+
 		return (Class<T>) DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
 				new TypeCache.SimpleKey(type),
 				() -> BYTE_BUDDY
