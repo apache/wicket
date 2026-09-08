@@ -232,9 +232,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 		for (Constructor<?> constructor : type.getDeclaredConstructors())
 		{
 			if (constructor.getParameterTypes().length == 0)
-			{
 				return true;
-			}
 		}
 
 		return false;
