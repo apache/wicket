@@ -119,8 +119,9 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 						.implement(InterceptorMutator.class).intercept(FieldAccessor.ofBeanProperty())
 						.implement(Serializable.class, IWriteReplace.class, ILazyInitProxy.class).intercept(MethodDelegation.toField(INTERCEPTOR_FIELD_NAME))
 						.make()
-						.load(classLoader, loadingStrategy)
-						.getLoaded());
+						.load(classLoader, resolveLoadingStrategy(type))
+						.getLoaded(),
+				DYNAMIC_CLASS_CACHE);
 	}
 
 	private static ClassLoadingStrategy<ClassLoader> resolveLoadingStrategy(Class<?> type) 
