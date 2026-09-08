@@ -124,19 +124,27 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 				DYNAMIC_CLASS_CACHE);
 	}
 
-	private static ClassLoadingStrategy<ClassLoader> resolveLoadingStrategy(Class<?> type) 
+	/**
+	 * The proxy has to be defined in the same runtime package as the type it proxies, or the
+	 * package private methods it overrides are not overridden at all. Only a proxy for a
+	 * <em>java.**</em> type is renamed into another package, and needs a class loader of its own.
+	 */
+	private static ClassLoadingStrategy<ClassLoader> resolveLoadingStrategy(Class<?> type)
 	{
-		try 
+		if (type.getName().startsWith("java."))
 		{
-			int modifiers = type.getModifiers();
-			
-			return Modifier.isPublic(modifiers)
-				   ? ClassLoadingStrategy.Default.WRAPPER.allowExistingTypes()
-				   : ClassLoadingStrategy.UsingLookup.of(MethodHandles.privateLookupIn(type, MethodHandles.lookup()));
-		} 
-		catch (IllegalAccessException e) 
+			return ClassLoadingStrategy.Default.WRAPPER.allowExistingTypes();
+		}
+
+		try
 		{
-			throw new WicketRuntimeException(e);
+			return ClassLoadingStrategy.UsingLookup
+				.of(MethodHandles.privateLookupIn(type, MethodHandles.lookup()));
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new WicketRuntimeException("Cannot create a proxy for " + type.getName()
+				+ ", because its package is not open to " + ByteBuddyProxyFactory.class.getModule(), e);
 		}
 	}
 
