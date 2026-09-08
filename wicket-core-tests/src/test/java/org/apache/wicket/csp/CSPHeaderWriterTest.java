@@ -45,6 +45,8 @@ import static org.apache.wicket.csp.CSPDirectiveSrcValue.SELF;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Optional;
+
 class CSPHeaderWriterTest extends WicketTestCase
 {
 
@@ -127,7 +129,7 @@ class CSPHeaderWriterTest extends WicketTestCase
 	}
 
 	@Test
-	void addCspDirectiveToStatelessPageEvenIfWrappedInMultipleIRequestHandlerDelegates()
+	void addCspDirectiveToPageEvenIfWrappedInMultipleIRequestHandlerDelegates()
 	{
 		tester.getApplication().mount(new MountedMapper("withdelegate/page", NoopMockPage.class)
 		{
@@ -135,14 +137,10 @@ class CSPHeaderWriterTest extends WicketTestCase
 			public IRequestHandler mapRequest(final Request request)
 			{
 				final IRequestHandler requestHandler = super.mapRequest(request);
-				final IRequestHandler result;
-				if (requestHandler instanceof RenderPageRequestHandler renderPageRequestHandler && NoopMockPage.class.equals(renderPageRequestHandler.getPageClass()))
-				{
-					result = new NoopIRequestHandlerDelegate(new NoopIRequestHandlerDelegate(renderPageRequestHandler));
-				} else {
-					result = requestHandler;
-				}
-				return result;
+				return Optional.ofNullable(requestHandler)
+				  .map(NoopIRequestHandlerDelegate::new)
+				  .map(NoopIRequestHandlerDelegate::new) // wrap twice
+				  .orElse(null);
 			}
 		});
 		tester.startPage(NoopMockPage.class);
