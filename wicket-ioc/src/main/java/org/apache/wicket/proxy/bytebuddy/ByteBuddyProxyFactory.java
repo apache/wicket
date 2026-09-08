@@ -130,9 +130,9 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 		{
 			int modifiers = type.getModifiers();
 			
-			return !Modifier.isPublic(modifiers)
-				   ? ClassLoadingStrategy.UsingLookup.of(MethodHandles.privateLookupIn(type, MethodHandles.lookup())) 
-				   : ClassLoadingStrategy.Default.WRAPPER.allowExistingTypes();
+			return Modifier.isPublic(modifiers)
+				   ? ClassLoadingStrategy.Default.WRAPPER.allowExistingTypes()
+				   : ClassLoadingStrategy.UsingLookup.of(MethodHandles.privateLookupIn(type, MethodHandles.lookup()));
 		} 
 		catch (IllegalAccessException e) 
 		{
