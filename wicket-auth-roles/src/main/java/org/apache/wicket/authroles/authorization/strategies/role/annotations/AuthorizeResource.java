@@ -26,6 +26,10 @@ import java.lang.annotation.Target;
 /**
  * Annotation for configuring what roles are allowed for requesting the annotated resource. It works analogously
  * to {@link org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation}.
+ * <p>
+ * It applies to every request that serves the annotated resource: one requested by the URL of a
+ * mounted or shared {@link org.apache.wicket.request.resource.ResourceReference}, and one served
+ * through a component that was handed the resource itself.
  *
  * @author Carl-Eric Menzel
  * @see org.apache.wicket.authorization.IAuthorizationStrategy

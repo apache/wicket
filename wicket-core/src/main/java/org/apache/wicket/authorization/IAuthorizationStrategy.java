@@ -106,11 +106,25 @@ public interface IAuthorizationStrategy
 
 	/**
 	 * Checks whether a request with some parameters is allowed to a resource.
+	 * <p>
+	 * This is asked for every request that serves an {@link IResource}: one requested by the URL of
+	 * a mounted or shared {@link org.apache.wicket.request.resource.ResourceReference}, and one
+	 * held by a component or a behavior and served from the listener URL of that component - a
+	 * {@link org.apache.wicket.markup.html.link.ResourceLink}, an
+	 * {@link org.apache.wicket.markup.html.image.Image}, an
+	 * {@link org.apache.wicket.markup.html.form.ImageButton}, or the AjaxDownloadBehavior of
+	 * wicket-extensions.
+	 * <p>
+	 * Returning {@code false} hands the request to the
+	 * {@link IUnauthorizedResourceRequestListener} of the security settings, which decides how it
+	 * is refused; the default one answers 403.
 	 *
 	 * @param resource
 	 *            The resource that should be processed
 	 * @param parameters
-	 *            The request parameters
+	 *            The request parameters, never {@code null}; they are empty for a resource served
+	 *            through the component that holds it, because a listener URL carries no resource
+	 *            parameters
 	 * @return {@code true} if the request to this resource is allowed.
 	 */
 	boolean isResourceAuthorized(IResource resource, PageParameters parameters);
