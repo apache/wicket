@@ -42,8 +42,8 @@
 	</organization>
 	<inceptionYear>2006</inceptionYear>
 	<ciManagement>
-		<system>BuildBot</system>
-		<url>http://ci.apache.org/builders/wicket-master</url>
+		<system>GitHub Actions</system>
+		<url>https://github.com/apache/wicket/actions</url>
 	</ciManagement>
 	<mailingLists>
 		<mailingList>
@@ -75,13 +75,13 @@
 		</mailingList>
 	</mailingLists>
 	<issueManagement>
-		<system>jira</system>
-		<url>http://issues.apache.org/jira/browse/WICKET</url>
+		<system>GitHub</system>
+		<url>https://github.com/apache/wicket/issues</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:git:http://git-wip-us.apache.org/repos/asf/wicket.git</connection>
-		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/wicket.git</developerConnection>
-		<url>http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git</url>
+		<connection>scm:git:https://gitbox.apache.org/repos/asf/wicket.git</connection>
+		<developerConnection>scm:git:https://gitbox.apache.org/repos/asf/wicket.git</developerConnection>
+		<url>https://github.com/apache/wicket</url>
 		<tag>HEAD</tag>
 	</scm>
 	<modules>
