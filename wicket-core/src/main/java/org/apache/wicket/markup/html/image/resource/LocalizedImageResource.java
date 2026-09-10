@@ -26,9 +26,9 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.io.IClusterable;
@@ -188,16 +188,32 @@ public final class LocalizedImageResource implements IClusterable
 	}
 
 	/**
+	 * Responds with the {@link IResource} this instance holds, once the
+	 * {@link org.apache.wicket.authorization.IAuthorizationStrategy} has authorized it.
+	 * <p>
+	 * This is the only place where a resource served through the component that owns this instance
+	 * is authorized. {@link #setSrcAttribute(ComponentTag)} renders the listener URL of that
+	 * component whenever a resource - rather than a {@link ResourceReference} - is set, so the
+	 * request is not carried by a
+	 * {@link org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler} and is
+	 * authorized here instead. Every caller arrives here: the src of an
+	 * {@link org.apache.wicket.markup.html.image.Image}, each entry of its srcset, and the image of
+	 * an {@link org.apache.wicket.markup.html.form.ImageButton}.
+	 * <p>
+	 * A resource the strategy refuses aborts the request through the
+	 * {@link org.apache.wicket.authorization.IUnauthorizedResourceRequestListener} of the security
+	 * settings, so a component that responds with several resources writes none of the ones that
+	 * follow the refused one.
+	 * 
 	 * @param parameters
-	 *            page parameters
+	 *            page parameters; the callers within Wicket pass {@code null}, because a listener
+	 *            URL carries no resource parameters, and the strategy and the resource then see the
+	 *            empty parameters that {@link ResourceRequestHandler} substitutes
 	 */
 	public final void onResourceRequested(PageParameters parameters)
 	{
 		bind();
-		RequestCycle requestCycle = RequestCycle.get();
-		Attributes attributes = new Attributes(requestCycle.getRequest(),
-			requestCycle.getResponse(), parameters);
-		resource.respond(attributes);
+		new ResourceRequestHandler(resource, parameters).respond(RequestCycle.get());
 	}
 
 	/**
