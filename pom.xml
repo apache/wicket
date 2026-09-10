@@ -75,8 +75,8 @@
 		</mailingList>
 	</mailingLists>
 	<issueManagement>
-		<system>jira</system>
-		<url>http://issues.apache.org/jira/browse/WICKET</url>
+		<system>GitHub</system>
+		<url>https://github.com/apache/wicket/issues</url>
 	</issueManagement>
 	<developers>
 		<developer>
