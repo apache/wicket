@@ -85,10 +85,9 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		{
 			String prefix = path.substring(0, ixExtension);
 
-			ClassLoader classLoader = getClass().getClassLoader();
 			while (true)
 			{
-				if (classLoader.getResource(prefix + ".class") != null)
+				if (classExists(prefix))
 				{
 					log.warn("Access denied to shared (static) resource because it is a Wicket markup file: " +
 						path);
@@ -196,6 +195,49 @@ public class PackageResourceGuard implements IPackageResourceGuard
 			file = file.trim();
 		}
 		return (!blockedFiles.contains(file));
+	}
+
+	/**
+	 * Whether a class file exists for the given path, which is what makes an html resource with
+	 * that path the markup template of a component rather than a static html file that may be
+	 * served.
+	 * <p>
+	 * The class file is looked for on the class loader that loaded Wicket itself, and on the class
+	 * loaders the application's {@link org.apache.wicket.application.IClassResolver} searches: the
+	 * one the application itself was loaded by, and the current thread's context class loader.
+	 * Wicket is not always loaded by a class loader that can see the application's classes. It can
+	 * sit in a container's shared library folder, in the library folder of an ear with the
+	 * application in the war, in an application server's global module, or in an osgi bundle that
+	 * cannot resolve a class an application bundle holds, while the markup is located by
+	 * {@link org.apache.wicket.core.util.resource.ClassPathResourceFinder}, which searches the
+	 * class loader of the scope class and the context class loader as well. Asking Wicket's own
+	 * class loader alone lets a component's markup template be served as a static resource in
+	 * exactly those deployments: a class that loader cannot see is still a class the application
+	 * has.
+	 * 
+	 * @param path
+	 *            The path of the resource without its extension, starting from the class root
+	 *            (packages are separated with forward slashes instead of dots).
+	 * @return True if a class file exists for the path, false otherwise.
+	 */
+	protected boolean classExists(String path)
+	{
+		String name = path + ".class";
+
+		// the class loader that holds Wicket itself, the one this check has always asked
+		ClassLoader ownClassLoader = getClass().getClassLoader();
+		if (ownClassLoader != null && ownClassLoader.getResource(name) != null)
+		{
+			return true;
+		}
+
+		// and the class loaders that can see the application's classes, which the one above need
+		// not be able to
+		return Application.exists() && Application.get()
+			.getApplicationSettings()
+			.getClassResolver()
+			.getResources(name)
+			.hasNext();
 	}
 
 	/**
