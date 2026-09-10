@@ -30,6 +30,10 @@ import java.lang.annotation.Target;
  * {@link AuthorizeInstantiation}: an annotation on a resource class replaces the annotation of its
  * package rather than adding to it. See {@link AnnotationsRoleAuthorizationStrategy} for the complete
  * resolution rules and for the pitfalls of annotating packages.
+ * <p>
+ * It applies to every request that serves the annotated resource: one requested by the URL of a
+ * mounted or shared {@link org.apache.wicket.request.resource.ResourceReference}, and one served
+ * through a component that was handed the resource itself.
  *
  * @author Carl-Eric Menzel
  * @see org.apache.wicket.authorization.IAuthorizationStrategy

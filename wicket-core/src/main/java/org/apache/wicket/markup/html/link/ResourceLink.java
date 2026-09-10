@@ -17,11 +17,10 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.IRequestListener;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -81,6 +80,10 @@ public class ResourceLink<T> extends Link<T> implements IRequestListener
 
 	/**
 	 * Constructs a link directly to the provided resource.
+	 * <p>
+	 * Such a resource is served from the listener URL of this link rather than from a resource URL
+	 * of its own, and it is the {@link #onRequest()} of this link that has the
+	 * {@link org.apache.wicket.authorization.IAuthorizationStrategy} authorize it on every request.
 	 * 
 	 * @param id
 	 *            See Component
@@ -146,13 +149,26 @@ public class ResourceLink<T> extends Link<T> implements IRequestListener
 		return urlForListener(resourceParameters);
 	}
 	
+	/**
+	 * Responds with the {@link IResource} this link was constructed with.
+	 * <p>
+	 * The resource is served through a {@link ResourceRequestHandler}, which asks the
+	 * {@link org.apache.wicket.authorization.IAuthorizationStrategy} to authorize it, exactly as it
+	 * is asked for a resource that is requested by its own URL. This is the only place where a
+	 * resource held by this link is authorized, because {@link #getURL()} renders the listener URL
+	 * of this link for such a resource rather than a resource URL, so the request never reaches a
+	 * {@link ResourceReferenceRequestHandler}.
+	 * <p>
+	 * A resource the strategy refuses aborts the request - the
+	 * {@link org.apache.wicket.authorization.IUnauthorizedResourceRequestListener} of the security
+	 * settings decides how, the default one answers 403 - so {@link #onClick()} is not reached
+	 * either. This method is final, so a subclass cannot serve the resource without that decision.
+	 */
 	@Override
 	public final void onRequest()
 	{
-		Attributes a = new Attributes(RequestCycle.get().getRequest(), RequestCycle.get()
-			.getResponse(), null);
-		resource.respond(a);
-		
+		new ResourceRequestHandler(resource, resourceParameters).respond(getRequestCycle());
+
 		super.onRequest();
-	}	
+	}
 }
