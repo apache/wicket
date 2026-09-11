@@ -4296,9 +4296,19 @@ public abstract class Component
 	 * @param behaviors
 	 *            The behavior modifier(s) to be added
 	 * @return this (to allow method call chaining)
+	 * @throws IllegalArgumentException
+	 *             if the array or any behavior in it is {@code null}
 	 */
 	public Component add(final Behavior... behaviors)
 	{
+		// checked before anything is stored: a null found halfway through would leave the
+		// behaviors before it added, and the slot it took would shift every id handed out after
+		Args.notNull(behaviors, "behaviors");
+		for (Behavior curBehavior : behaviors)
+		{
+			Args.notNull(curBehavior, "behavior");
+		}
+
 		data = ComponentState.addBehaviors(this, data, getFlag(FLAG_MODEL_SET), behaviors);
 		for (Behavior curBehavior : behaviors)
 		{

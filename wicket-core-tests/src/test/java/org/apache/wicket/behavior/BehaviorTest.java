@@ -89,6 +89,21 @@ class BehaviorTest extends WicketTestCase
 		assertFalse(container.getBehaviors().contains(temp2));
 	}
 
+	@Test
+	void nullBehaviorIsRejectedBeforeAnythingIsStored() {
+		WebMarkupContainer container = new WebMarkupContainer("test");
+		Behavior first = Behavior.onTag((c, tag) -> {});
+
+		assertThrows(IllegalArgumentException.class, () -> container.add((Behavior[])null));
+		assertThrows(IllegalArgumentException.class, () -> container.add(first, null));
+
+		// the rejected call must leave no trace: a behavior stored before the null was found
+		// would keep the slot it took, shifting the id of everything added afterwards
+		assertTrue(container.getBehaviors().isEmpty());
+		container.add(first);
+		assertEquals(0, container.getBehaviorId(first));
+	}
+
 	public static class TestTemporaryBehavior extends Behavior {
 		private static final long serialVersionUID = 1L;
 
