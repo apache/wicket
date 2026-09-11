@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.page;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebResponse;
@@ -58,6 +57,11 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	{
 		response.write("<component id=\"");
 		response.write(markupId);
+		String replacementType = getReplacementMethod(markupId);
+		if (replacementType != null) {
+			response.write("\" replacement=\"");
+			response.write(replacementType);
+		}
 		response.write("\" ><![CDATA[");
 		response.write(encode(contents));
 		response.write("]]></component>");
@@ -74,7 +78,7 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	{
 		writeHeaderContribution(response, "priority-evaluate", contents);
 	}
-	
+
 	@Override
 	protected void writeHeaderContribution(Response response, CharSequence contents)
 	{
