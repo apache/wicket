@@ -69,6 +69,11 @@ public class ResourceNameIterator implements IResourceNameIterator
 	// The various iterators used to locate the resource file
 	private final StyleAndVariationResourceNameIterator styleIterator;
 	private LocaleResourceNameIterator localeIterator;
+
+	// The variation and style parts of the name, rebuilt only when the style iterator advances.
+	private String variationPart = "";
+
+	private String stylePart = "";
 	private ExtensionResourceNameIterator extensionsIterator;
 
 	/**
@@ -199,6 +204,8 @@ public class ResourceNameIterator implements IResourceNameIterator
 		while (styleIterator.hasNext())
 		{
 			styleIterator.next();
+			variationPart = part(styleIterator.getVariation(), '_');
+			stylePart = part(styleIterator.getStyle(), '_');
 
 			localeIterator = newLocaleResourceNameIterator(locale, strict);
 			while (localeIterator.hasNext())
@@ -244,19 +251,22 @@ public class ResourceNameIterator implements IResourceNameIterator
 	@Override
 	public String toString()
 	{
-		return path + prepend(getVariation(), '_') + prepend(getStyle(), '_') +
-			prepend(getLocale(), '_') + prepend(getExtension(), '.');
+		// The locale part was already built by LocaleResourceNameIterator.next(); deriving it
+		// again through getLocale() would cost a Locale.of() lookup and its string form for every
+		// candidate name. Each branch is a single concatenation, so only the result is allocated.
+		String localePart = localeIterator != null ? localeIterator.getSuffix() : "";
+		String extension = getExtension();
+
+		if (extension == null)
+		{
+			return path + variationPart + stylePart + localePart;
+		}
+		return path + variationPart + stylePart + localePart + '.' + extension;
 	}
 
-	/**
-	 * 
-	 * @param string
-	 * @param prepend
-	 * @return The string prepended with the char
-	 */
-	private String prepend(Object string, char prepend)
+	private static String part(String value, char prepend)
 	{
-		return (string != null) ? prepend + string.toString() : "";
+		return value == null ? "" : prepend + value;
 	}
 
 	/**

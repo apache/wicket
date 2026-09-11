@@ -158,6 +158,7 @@
 			  archetypes/quickstart  no Java sources (packaging=maven-archetype)
 			  wicket-migration       no main Java sources (OpenRewrite recipes)
 			  wicket-metrics         no tests, so it would only contribute a 0% bundle
+			  wicket-benchmarks      a development aid with no tests, same as wicket-metrics
 			  wicket-objectsizeof-agent  a -javaagent JAR, not a classpath artifact
 			  wicket-common-tests    its single test only opens jar files off the
 			                         classpath; no meaningful coverage

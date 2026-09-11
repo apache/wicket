@@ -88,6 +88,54 @@ class ResourceUtilTest
 	}
 
 	/**
+	 * A locale without a variant, script or extensions is validated by inspecting its language and
+	 * country rather than its {@link Locale#toString()}, so both subtags must still be checked, and
+	 * a separator has to be caught wherever it sits.
+	 */
+	@Test
+	void rejectPathSeparatorsForLanguageAndCountry() throws Exception
+	{
+		assertEquals(Locale.of("nl"), ResourceUtil.rejectPathSeparators(Locale.of("nl")));
+		assertEquals(Locale.of("nl", "NL"), ResourceUtil.rejectPathSeparators(Locale.of("nl", "NL")));
+		assertEquals(Locale.of("", "NL"), ResourceUtil.rejectPathSeparators(Locale.of("", "NL")));
+
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("nl", "N/L")));
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("nl", "N\\L")));
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("nl", "..")));
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("nl", "N\0L")));
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("a\\b", "NL")));
+
+		// a single dot is a legal subtag character; only a doubled one escapes the directory
+		assertEquals(Locale.of("a.b", "NL"), ResourceUtil.rejectPathSeparators(Locale.of("a.b", "NL")));
+	}
+
+	/**
+	 * A locale carrying a variant, a script or extensions is validated against its
+	 * {@link Locale#toString()}, which drops some subtags - a variant without a language or country
+	 * among them - so the two routes must agree on what reaches the path.
+	 */
+	@Test
+	void rejectPathSeparatorsForRicherLocales() throws Exception
+	{
+		Locale variant = Locale.of("nl", "NL", "vlaams");
+		assertEquals(variant, ResourceUtil.rejectPathSeparators(variant));
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("nl", "NL", "a/b")));
+
+		Locale script = new Locale.Builder().setLanguage("zh").setScript("Hans").build();
+		assertEquals(script, ResourceUtil.rejectPathSeparators(script));
+
+		Locale extension =
+			new Locale.Builder().setLanguage("nl").setRegion("NL").setExtension('u', "ca-buddhist").build();
+		assertEquals(extension, ResourceUtil.rejectPathSeparators(extension));
+
+		// Locale#toString() omits a variant that has neither a language nor a country, so it never
+		// reaches the lookup path and must not cause the locale to be dropped
+		Locale strayVariant = Locale.of("", "", "a/b");
+		assertEquals("", strayVariant.toString());
+		assertEquals(strayVariant, ResourceUtil.rejectPathSeparators(strayVariant));
+	}
+
+	/**
 	 * A locale, style or variation carrying a path separator is dropped: each becomes a single
 	 * component of the resource lookup path, so a separator would make the lookup resolve in a
 	 * different directory than the resource it belongs to.
