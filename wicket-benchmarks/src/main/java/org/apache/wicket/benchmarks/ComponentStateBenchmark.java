@@ -17,7 +17,10 @@
 package org.apache.wicket.benchmarks;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.AttributeModifier;
@@ -85,60 +88,57 @@ public class ComponentStateBenchmark
 		private static final long serialVersionUID = 1L;
 	};
 
-	/** The eight shapes the flexible state of a component can take. */
+	/** One ingredient of a {@link Shape}. */
+	enum Trait
+	{
+		/** A default model. */
+		MODEL,
+		/** A behavior that never needs an id, the way an {@link AttributeModifier} does not. */
+		BEHAVIOR,
+		/** A single meta data entry. */
+		METADATA,
+		/**
+		 * A behavior whose id has been handed out, as every link and ajax-enabled component has.
+		 * Master keeps those ids in a {@code BehaviorIdList} held in the component's meta data;
+		 * storing the id as the behavior's own array index removes that list, which WICKET-6774
+		 * claimed as its biggest saving. {@link #BEHAVIOR} does not exercise it.
+		 */
+		STABLE_ID,
+		/**
+		 * Makes {@link #STABLE_ID} carry a real {@link AjaxEventBehavior} rather than a bare one,
+		 * so the figure is comparable to the -36.2% serialized saving reported on WICKET-6774. A
+		 * bare behavior isolates the id storage but carries almost nothing of its own, which
+		 * flatters the percentage.
+		 */
+		AJAX;
+	}
+
+	/** The shapes the flexible state of a component can take. */
 	public enum Shape
 	{
-		NONE(false, false, false),
-		MODEL(true, false, false),
-		BEHAVIOR(false, true, false),
-		METADATA(false, false, true),
-		MODEL_BEHAVIOR(true, true, false),
-		MODEL_METADATA(true, false, true),
-		BEHAVIOR_METADATA(false, true, true),
-		MODEL_BEHAVIOR_METADATA(true, true, true),
-		/**
-		 * A behavior with a stable id, as every link and ajax-enabled component has. Master keeps
-		 * those ids in a {@code BehaviorIdList} held in the component's meta data; storing the id
-		 * as the behavior's own array index removes that list, which WICKET-6774 claimed as its
-		 * biggest saving. None of the other shapes exercise it.
-		 */
-		STABLE_ID_BEHAVIOR(false, false, false, true),
-		MODEL_STABLE_ID_BEHAVIOR(true, false, false, true),
-		/**
-		 * A real {@link AjaxEventBehavior}, so the figure is comparable to the -36.2% serialized
-		 * saving reported on WICKET-6774. {@link #STABLE_ID_BEHAVIOR} isolates the id storage but
-		 * carries almost nothing of its own, which flatters the percentage.
-		 */
-		AJAX_BEHAVIOR(false, false, false, true, true);
+		NONE,
+		MODEL(Trait.MODEL),
+		BEHAVIOR(Trait.BEHAVIOR),
+		METADATA(Trait.METADATA),
+		MODEL_BEHAVIOR(Trait.MODEL, Trait.BEHAVIOR),
+		MODEL_METADATA(Trait.MODEL, Trait.METADATA),
+		BEHAVIOR_METADATA(Trait.BEHAVIOR, Trait.METADATA),
+		MODEL_BEHAVIOR_METADATA(Trait.MODEL, Trait.BEHAVIOR, Trait.METADATA),
+		STABLE_ID_BEHAVIOR(Trait.STABLE_ID),
+		MODEL_STABLE_ID_BEHAVIOR(Trait.MODEL, Trait.STABLE_ID),
+		AJAX_BEHAVIOR(Trait.STABLE_ID, Trait.AJAX);
 
-		private final boolean model;
-		private final boolean behavior;
-		private final boolean metaData;
-		private final boolean stableId;
-		private final boolean ajax;
+		private final Set<Trait> traits;
 
-		Shape(boolean model, boolean behavior, boolean metaData)
+		Shape(Trait... traits)
 		{
-			this(model, behavior, metaData, false, false);
-		}
-
-		Shape(boolean model, boolean behavior, boolean metaData, boolean stableId)
-		{
-			this(model, behavior, metaData, stableId, false);
-		}
-
-		Shape(boolean model, boolean behavior, boolean metaData, boolean stableId, boolean ajax)
-		{
-			this.model = model;
-			this.behavior = behavior;
-			this.metaData = metaData;
-			this.stableId = stableId;
-			this.ajax = ajax;
+			this.traits = EnumSet.noneOf(Trait.class);
+			Collections.addAll(this.traits, traits);
 		}
 
 		boolean hasModel()
 		{
-			return model;
+			return traits.contains(Trait.MODEL);
 		}
 
 		Component newComponent(String id)
@@ -150,21 +150,22 @@ public class ComponentStateBenchmark
 
 		void populate(Component c)
 		{
-			if (model)
+			if (traits.contains(Trait.MODEL))
 			{
 				c.setDefaultModel(Model.of(c.getId()));
 			}
-			if (behavior)
+			if (traits.contains(Trait.BEHAVIOR))
 			{
 				c.add(AttributeModifier.replace("class", "a"));
 			}
-			if (metaData)
+			if (traits.contains(Trait.METADATA))
 			{
 				c.setMetaData(KEY, "v");
 			}
-			if (stableId)
+			if (traits.contains(Trait.STABLE_ID))
 			{
-				Behavior stable = ajax ? new AjaxTestBehavior() : new StableIdBehavior();
+				Behavior stable = traits.contains(Trait.AJAX) ? new AjaxTestBehavior()
+					: new StableIdBehavior();
 				c.add(stable);
 				// rendering a callback url does this; it is what materialises the id storage
 				c.getBehaviorId(stable);
