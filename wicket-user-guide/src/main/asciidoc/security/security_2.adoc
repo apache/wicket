@@ -116,11 +116,11 @@ class BasicAuthenticationRolesSession extends AuthenticatedWebSession {
 }
 ----
 
-Roles can be adopted to apply security restrictions on our pages and components. This can be done  using one of the two built-in authorization strategies that extend super class _AbstractRoleAuthorizationStrategyWicket_: _MetaDataRoleAuthorizationStrategy_ and _AnnotationsRoleAuthorizationStrategy_
+Roles can be adopted to apply security restrictions on our pages and components. This can be done  using one of the two built-in authorization strategies that extend super class _AbstractRoleAuthorizationStrategy_: _MetaDataRoleAuthorizationStrategy_ and _AnnotationsRoleAuthorizationStrategy_
 
 The difference between these two strategies is that _MetaDataRoleAuthorizationStrategy_ handles role-based authorizations with Wicket metadata while _AnnotationsRoleAuthorizationStrategy_ uses Java annotations.
 
-NOTE: Application class _AuthenticatedWebApplication_ already sets _MetaDataRoleAuthorizationStrategy_ and _AnnotationsRoleAuthorizationStrategy_ as its own authorization strategies (it uses a compound strategy as we will see in <<security.adoc#_authorizations,paragraph 22.2>>).
+NOTE: Application class _AuthenticatedWebApplication_ already sets _MetaDataRoleAuthorizationStrategy_ and _AnnotationsRoleAuthorizationStrategy_ as its own authorization strategies (it uses a compound strategy, as we will see in <<_strategy_roleauthorizationstrategy,the last paragraph of this chapter>>).
 
 The code that we will see in the next examples is for illustrative purpose only. If our application class inherits from _AuthenticatedWebApplication_ we won't need to configure anything to use these two strategies.
 
@@ -203,7 +203,7 @@ public class BasicAuthenticationSession extends AuthenticatedWebSession {
 
 The code that instantiates _MetaDataRoleAuthorizationStrategy_ and set it as application's strategy is inside application class method _init()_.
 
-Any subclass of _AbstractRoleAuthorizationStrategyWicket_ needs an implementation of interface _IRoleCheckingStrategy_ to be instantiated. For this purpose in the code above we used the application class itself because its base class _AuthenticatedWebApplication_ already implements interface _IRoleCheckingStrategy_. By default _AuthenticatedWebApplication_ checks for authorizations using the roles returned by the current _AbstractAuthenticatedWebSession_. As final step inside init we grant the access to page _AdminOnlyPage_ to ADMIN role calling method authorize.
+Any subclass of _AbstractRoleAuthorizationStrategy_ needs an implementation of interface _IRoleCheckingStrategy_ to be instantiated. For this purpose in the code above we used the application class itself because its base class _AuthenticatedWebApplication_ already implements interface _IRoleCheckingStrategy_. By default _AuthenticatedWebApplication_ checks for authorizations using the roles returned by the current _AbstractAuthenticatedWebSession_. As final step inside init we grant the access to page _AdminOnlyPage_ to ADMIN role calling method authorize.
 
 The code from session class has three interesting methods. The first is _authenticate()_ which considers as valid credentials every pair of username and password having the same value. The second notable method is _getRoles()_ which returns role SIGNED_IN if user is authenticated and it adds role ADMIN if username is equal to superuser. Finally, we have method _signOut()_ which has been overridden in order to clean the username field used internally to generate roles.
 
@@ -227,7 +227,16 @@ Just like custom “Page expired” page (see <<versioningCaching.adoc#_stateful
 
 ==== Using roles with annotations
 
-Strategy _AnnotationsRoleAuthorizationStrategy_ relies on two built-in annotations to handle role-based authorizations. These annotations are _AuthorizeInstantiation_ and _AuthorizeAction_. As their names suggest the first annotation specifies which roles are allowed to instantiate the annotated component while the second must be used to indicate which roles are allowed to perform a specific action on the annotated component.
+Strategy _AnnotationsRoleAuthorizationStrategy_ relies on a set of built-in annotations to handle role-based authorizations:
+
+|===
+|Annotation | Restricts
+|*_AuthorizeInstantiation_* |which roles are allowed to instantiate the annotated component
+|*_AuthorizeInstantiations_* |a group of _AuthorizeInstantiation_ rules that must all be satisfied
+|*_AuthorizeAction_* |which roles are allowed to perform a given action on the annotated component
+|*_AuthorizeActions_* |a group of _AuthorizeAction_ rules, one for each action
+|*_AuthorizeResource_* |which roles are allowed to request the annotated resource
+|===
 
 In the following example we use annotations to make a page accessible only to signed-in users and to enable it only if user has the ADMIN role:
 
@@ -251,6 +260,49 @@ public class AdminOnlyPage extends WebPage {
     //Page class code...
 }
 ----
+
+An annotation that lists no roles at all, like _@AuthorizeInstantiation()_, authorizes everybody. The next paragraph explains why that is useful.
+
+===== Annotations on packages
+
+Each of these annotations can be applied to an entire package instead of to a single class. A package is annotated in its _package-info.java_ file. Note the unusual order of the declarations: the annotations come before the package declaration, and the imports they need come after it.
+
+[source,java]
+----
+// only users with role ADMIN are allowed to create instances of pages in this package
+@AuthorizeInstantiation("ADMIN")
+package org.mycompany.admin;
+
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+----
+
+The annotations on a package are a default that a class can override: *the annotations on a class replace the annotations on its package*, they are not added to them. Annotations at the same level are combined with AND, so every one of them has to grant access. For actions this is decided per action, which means that a class restricting only ENABLE still inherits the RENDER restriction of its package.
+
+This is what makes an annotation without roles useful: because _@AuthorizeInstantiation()_ replaces the rule of its package and requires no roles at all, it is the way to exempt a single class from the restrictions of its package.
+
+All of these annotations are _@Inherited_, and that has a consequence which is easy to overlook. The annotations *on a class* include the ones it inherits from a superclass, in whatever package that superclass happens to live. Such an inherited annotation counts as an annotation on the class, so it suppresses the annotation of the class' own package:
+
+[source,java]
+----
+//org/mycompany/base/SecuredPage.java
+@AuthorizeInstantiation("USER")
+public class SecuredPage extends WebPage {
+}
+
+//org/mycompany/admin/package-info.java
+@AuthorizeInstantiation("ADMIN")
+package org.mycompany.admin;
+
+//org/mycompany/admin/ReportPage.java
+public class ReportPage extends SecuredPage {
+}
+----
+
+WARNING: In the example above _ReportPage_ requires role USER and *not* role ADMIN. It inherits the annotation of _SecuredPage_, so the ADMIN restriction of its own package is never applied. This means that moving a page into a restricted package has no effect at all when one of its superclasses is annotated. Annotate such a subclass explicitly to give it the roles of its package.
+
+NOTE: A package annotation applies to that one package and to nothing else. Java has no annotation inheritance between packages, so annotating _org.mycompany_ does not restrict the classes in _org.mycompany.admin_.
+
+NOTE: The _package-info.java_ file has to be compiled and shipped with the application, and it has to be loaded by the same class loader as the classes of its package, or its annotations cannot be found at runtime.
 
 === Catching an unauthorized component instantiation
 

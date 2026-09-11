@@ -24,12 +24,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for configuring what roles are allowed for requesting the annotated resource. It works analogously
- * to {@link org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation}.
+ * Annotation for configuring what roles are allowed for requesting the annotated resource. It can be
+ * placed on a class or on a package, the latter by specifying it in the
+ * <code>package-info.java</code> file of that package, and it is resolved just like
+ * {@link AuthorizeInstantiation}: an annotation on a resource class replaces the annotation of its
+ * package rather than adding to it. See {@link AnnotationsRoleAuthorizationStrategy} for the complete
+ * resolution rules and for the pitfalls of annotating packages.
  *
  * @author Carl-Eric Menzel
  * @see org.apache.wicket.authorization.IAuthorizationStrategy
  * @see AnnotationsRoleAuthorizationStrategy
+ * @see AuthorizeInstantiation
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PACKAGE, ElementType.TYPE})
@@ -41,7 +46,8 @@ public @interface AuthorizeResource
 	/**
 	 * Gets the roles that are allowed to take the action.
 	 *
-	 * @return the roles that are allowed. Returns a zero length array by default
+	 * @return the roles that are allowed. Returns a zero length array by default, which authorizes
+	 *         everybody
 	 */
 	String[] value() default {};
 }
