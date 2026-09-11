@@ -846,11 +846,16 @@
 					<artifactId>japicmp-maven-plugin</artifactId>
 					<version>${japicmp-maven-plugin.version}</version>
 					<configuration>
+						<!--
+							The first release of this line. It does not exist yet on the development
+							line, so japicmp finds no baseline there and stays quiet; on a maintenance
+							branch it resolves and the check runs. No pom change at release time.
+						-->
 						<oldVersion>
 							<dependency>
 								<groupId>${project.groupId}</groupId>
 								<artifactId>${project.artifactId}</artifactId>
-								<version>11.0.0-SNAPSHOT</version>
+								<version>${project.artifact.selectedVersion.majorVersion}.0.0</version>
 								<type>jar</type>
 							</dependency>
 						</oldVersion>
@@ -860,6 +865,7 @@
 							</file>
 						</newVersion>
 						<parameter>
+							<ignoreMissingOldVersion>true</ignoreMissingOldVersion>
 							<skipXmlReport>true</skipXmlReport>
 							<skipHtmlReport>true</skipHtmlReport>
 							<breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
