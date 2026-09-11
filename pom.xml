@@ -830,12 +830,6 @@
 							<breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
 							<onlyBinaryIncompatible>true</onlyBinaryIncompatible>
 							<ignoreMissingClasses>true</ignoreMissingClasses>
-							<excludes>
-								<exclude>
-									<!-- [ERROR] Failed to execute goal com.github.siom79.japicmp:japicmp-maven-plugin:0.15.3:cmp (default) on project wicket-core: There is at least one incompatibility: org.apache.wicket.markup.html.form.EnumChoiceRenderer:METHOD_REMOVED_IN_SUPERCLASS -->
-									org.apache.wicket.markup.html.form.EnumChoiceRenderer
-								</exclude>
-							</excludes>
 							<overrideCompatibilityChangeParameters>
 								<overrideCompatibilityChangeParameter>
 									<compatibilityChange>METHOD_ABSTRACT_NOW_DEFAULT</compatibilityChange>
