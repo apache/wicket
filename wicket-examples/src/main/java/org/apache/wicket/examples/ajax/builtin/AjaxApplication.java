@@ -52,6 +52,7 @@ public class AjaxApplication extends WicketExampleApplication
 
 		mountPage("autocomplete", AutoCompletePage.class);
 		mountPage("choice", ChoicePage.class);
+		mountPage("form-component-panel", FormComponentPanelPage.class);
 		mountPage("clock", ClockPage.class);
 		mountPage("editable-label", EditableLabelPage.class);
 		mountPage("effects", EffectsPage.class);

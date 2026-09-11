@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.io.Serializable;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
@@ -66,6 +68,42 @@ class FormComponentPanelProcessingTest extends WicketTestCase
 		assertEquals(true, fcp.isChildClearInputCalled());
 	}
 
+	@Test
+	void ajaxFormComponentUpdatingBehavior()
+	{
+		AjaxFormComponentUpdatingBehavior ajaxBehavior = new AjaxFormComponentUpdatingBehavior("update")
+		{
+			
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				//"updating"
+			}			
+		};
+		
+		OuterFormComponentPanel ofcp = new OuterFormComponentPanel("outPanel");
+		ofcp.add(ajaxBehavior);
+		ofcp.setOutputMarkupId(true);
+		
+		tester.startComponentInPage(ofcp);
+		
+		tester.executeBehavior(ajaxBehavior);
+		
+		//inner component has a required field we haven't set
+		assertEquals(false, ofcp.isValid());
+		assertEquals(false, ofcp.childModelUpdated);
+		
+		//let's set the inner field
+		tester.getRequest()
+			.getPostParameters()
+			.setParameterValue(((TextField<?>) ofcp.inner.get("subfield")).getInputName(), "textVal");
+	
+		//now submission should regularly happen 
+		tester.executeBehavior(ajaxBehavior);
+		assertEquals(true, ofcp.childModelUpdated);
+		assertEquals(true, ofcp.inner.isValid());
+	}
+	
 	private static class TestFormComponentPanel extends FormComponentPanel<Serializable>
 		implements
 			IMarkupResourceStreamProvider
@@ -169,4 +207,64 @@ class FormComponentPanelProcessingTest extends WicketTestCase
 		}
 
 	}
+	
+	private static class OuterFormComponentPanel extends FormComponentPanel<String> implements
+		IMarkupResourceStreamProvider
+		{
+			public InnerFormComponentPanel inner = new InnerFormComponentPanel("inner");
+			public boolean childModelUpdated;
+	
+			public OuterFormComponentPanel(String id)
+			{
+				super(id, Model.of());
+	
+				add(inner);
+				add(new TextField<String>("username", Model.of("")));
+			}
+			
+			@Override
+			public void updateModel() 
+			{
+				super.updateModel();
+				childModelUpdated = true;
+			}
+			
+			@Override
+			public IResourceStream getMarkupResourceStream(MarkupContainer container,
+				Class<?> containerClass)
+			{
+				return new StringResourceStream(
+					"<wicket:panel><span wicket:id=\"inner\"></span><input type=\"text\" id=\"username\" name=\"username\" wicket:id=\"username\"></wicket:panel>");
+			}
+		
+		}
+	
+		private static class InnerFormComponentPanel extends FormComponentPanel<String> implements
+		IMarkupResourceStreamProvider
+		{
+			public boolean wasAskedToProcessInput;
+	
+			public InnerFormComponentPanel(String id)
+			{
+				super(id, Model.of());
+				add(new TextField<String>("subfield", Model.of("")).setRequired(true));
+			}
+	
+			
+			@Override
+			public void validate()
+			{
+				wasAskedToProcessInput = true;
+	
+				super.validate();
+			}
+			
+			@Override
+			public IResourceStream getMarkupResourceStream(MarkupContainer container,
+				Class<?> containerClass)
+			{
+				return new StringResourceStream(
+					"<wicket:panel><input type=\"text\" id=\"subfield\" name=\"subfield\" wicket:id=\"subfield\" required></wicket:panel>");
+			}
+		}
 }
