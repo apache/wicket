@@ -1,0 +1,467 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.wicket.benchmarks;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.Model;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Param;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Threads;
+import org.openjdk.jmh.annotations.TearDown;
+import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.infra.Blackhole;
+
+/**
+ * Benchmarks the per-request accessors on {@link Component}'s flexible state (model, behaviors and
+ * meta data) plus the mutate-and-detach cycle.
+ * <p>
+ * Deliberately written against public Wicket API only, so that the exact same source can be run
+ * against different implementations of the state storage and compared.
+ * <p>
+ * Three things are measured separately, because they answer different questions:
+ * <ul>
+ * <li>{@code read*} - the cost of reading state, per state shape. Reads do not mutate, so a
+ * trial-scoped component is correct here and no per-invocation harness overhead is paid.
+ * <li>{@code read*MixedShapes} - the same reads, but over a component array holding every shape at
+ * once. This is the interesting one: with a single shape the call sites inside the state lookup are
+ * monomorphic and inline, which flatters any implementation that dispatches on the shape. Real
+ * pages interleave shapes. A large gap between the per-shape and mixed numbers is the signature of
+ * dispatch that stopped inlining.
+ * <li>{@code buildAndDetach} - construct a component, populate its state and detach it, as one
+ * operation. Detaching mutates state (temporary behaviors are removed, arrays are compacted), so it
+ * cannot be measured repeatedly against the same instance; folding construction into the operation
+ * keeps every invocation doing the real work without resorting to {@code Level.Invocation}.
+ * </ul>
+ * Single threaded on purpose: component state is per component and never contended, so extra
+ * threads measure nothing new while making the Wicket thread-local setup harder to get right.
+ * <p>
+ * Always run with {@code -prof gc}: {@code gc.alloc.rate.norm} (bytes per operation) is the number
+ * that matters for a framework that has to keep many pages in memory, and it is far more stable
+ * than throughput.
+ */
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@Fork(3)
+@Threads(1)
+@Warmup(iterations = 3, time = 2, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 5, time = 2, timeUnit = TimeUnit.SECONDS)
+public class ComponentStateBenchmark
+{
+	static final MetaDataKey<String> KEY = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	/** One ingredient of a {@link Shape}. */
+	enum Trait
+	{
+		/** A default model. */
+		MODEL,
+		/** A behavior that never needs an id, the way an {@link AttributeModifier} does not. */
+		BEHAVIOR,
+		/** A single meta data entry. */
+		METADATA,
+		/**
+		 * A behavior whose id has been handed out, as every link and ajax-enabled component has.
+		 * Master keeps those ids in a {@code BehaviorIdList} held in the component's meta data;
+		 * storing the id as the behavior's own array index removes that list, which WICKET-6774
+		 * claimed as its biggest saving. {@link #BEHAVIOR} does not exercise it.
+		 */
+		STABLE_ID,
+		/**
+		 * Makes {@link #STABLE_ID} carry a real {@link AjaxEventBehavior} rather than a bare one,
+		 * so the figure is comparable to the -36.2% serialized saving reported on WICKET-6774. A
+		 * bare behavior isolates the id storage but carries almost nothing of its own, which
+		 * flatters the percentage.
+		 */
+		AJAX;
+	}
+
+	/** The shapes the flexible state of a component can take. */
+	public enum Shape
+	{
+		NONE,
+		MODEL(Trait.MODEL),
+		BEHAVIOR(Trait.BEHAVIOR),
+		METADATA(Trait.METADATA),
+		MODEL_BEHAVIOR(Trait.MODEL, Trait.BEHAVIOR),
+		MODEL_METADATA(Trait.MODEL, Trait.METADATA),
+		BEHAVIOR_METADATA(Trait.BEHAVIOR, Trait.METADATA),
+		MODEL_BEHAVIOR_METADATA(Trait.MODEL, Trait.BEHAVIOR, Trait.METADATA),
+		STABLE_ID_BEHAVIOR(Trait.STABLE_ID),
+		MODEL_STABLE_ID_BEHAVIOR(Trait.MODEL, Trait.STABLE_ID),
+		AJAX_BEHAVIOR(Trait.STABLE_ID, Trait.AJAX);
+
+		private final Set<Trait> traits;
+
+		Shape(Trait... traits)
+		{
+			this.traits = EnumSet.noneOf(Trait.class);
+			Collections.addAll(this.traits, traits);
+		}
+
+		boolean hasModel()
+		{
+			return traits.contains(Trait.MODEL);
+		}
+
+		Component newComponent(String id)
+		{
+			Component c = new WebMarkupContainer(id);
+			populate(c);
+			return c;
+		}
+
+		void populate(Component c)
+		{
+			if (traits.contains(Trait.MODEL))
+			{
+				c.setDefaultModel(Model.of(c.getId()));
+			}
+			if (traits.contains(Trait.BEHAVIOR))
+			{
+				c.add(AttributeModifier.replace("class", "a"));
+			}
+			if (traits.contains(Trait.METADATA))
+			{
+				c.setMetaData(KEY, "v");
+			}
+			if (traits.contains(Trait.STABLE_ID))
+			{
+				Behavior stable = traits.contains(Trait.AJAX) ? new AjaxTestBehavior()
+					: new StableIdBehavior();
+				c.add(stable);
+				// rendering a callback url does this; it is what materialises the id storage
+				c.getBehaviorId(stable);
+			}
+		}
+	}
+
+	/** A real ajax behavior, with the fields and callback machinery that implies. */
+	private static class AjaxTestBehavior extends AjaxEventBehavior
+	{
+		private static final long serialVersionUID = 1L;
+
+		AjaxTestBehavior()
+		{
+			super("change");
+		}
+
+		@Override
+		protected void onEvent(AjaxRequestTarget target)
+		{
+		}
+	}
+
+	/** Requires a stable behavior id, the way an ajax behavior or link does. */
+	private static class StableIdBehavior extends Behavior
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public boolean getStatelessHint(Component component)
+		{
+			return false;
+		}
+	}
+
+	/** One component of the shape under test: the state lookup sees a single shape. */
+	@State(Scope.Benchmark)
+	public static class OneShape
+	{
+		@Param
+		public Shape shape;
+
+		Component component;
+
+		@Setup(Level.Trial)
+		public void setUp()
+		{
+			WicketContext.attach();
+			component = shape.newComponent("c");
+		}
+
+		@TearDown(Level.Trial)
+		public void tearDown()
+		{
+			WicketContext.detach();
+		}
+	}
+
+	/** Every shape at once: the state lookup sees all of them, as it does on a real page. */
+	@State(Scope.Benchmark)
+	public static class AllShapes
+	{
+		Component[] components;
+
+		@Setup(Level.Trial)
+		public void setUp()
+		{
+			WicketContext.attach();
+			Shape[] shapes = Shape.values();
+			components = new Component[shapes.length];
+			for (int i = 0; i < shapes.length; i++)
+			{
+				components[i] = shapes[i].newComponent("c" + i);
+			}
+		}
+
+		@TearDown(Level.Trial)
+		public void tearDown()
+		{
+			WicketContext.detach();
+		}
+	}
+
+	/**
+	 * Only the shapes that carry a model, so every {@code data} seen at the model lookup is a
+	 * wrapper. Separates a type-profile effect from the cost of the lookup itself: if the mixed
+	 * shape penalty disappears here, it was profile pollution at the type check.
+	 */
+	@State(Scope.Benchmark)
+	public static class ModelShapes
+	{
+		Component[] components;
+
+		@Setup(Level.Trial)
+		public void setUp()
+		{
+			WicketContext.attach();
+			List<Component> cs = new ArrayList<>();
+			for (Shape shape : Shape.values())
+			{
+				if (shape.hasModel())
+				{
+					cs.add(shape.newComponent("c" + cs.size()));
+				}
+			}
+			components = cs.toArray(new Component[0]);
+		}
+
+		@TearDown(Level.Trial)
+		public void tearDown()
+		{
+			WicketContext.detach();
+		}
+	}
+
+	/**
+	 * Only the shapes with no model, so the model lookup always comes up empty. Measures the
+	 * absent path directly instead of inferring it by subtracting the all-model case, which uses
+	 * a different array and a different type profile.
+	 */
+	@State(Scope.Benchmark)
+	public static class NoModelShapes
+	{
+		Component[] components;
+
+		@Setup(Level.Trial)
+		public void setUp()
+		{
+			WicketContext.attach();
+			List<Component> cs = new ArrayList<>();
+			for (Shape shape : Shape.values())
+			{
+				if (!shape.hasModel())
+				{
+					cs.add(shape.newComponent("c" + cs.size()));
+				}
+			}
+			components = cs.toArray(new Component[0]);
+		}
+
+		@TearDown(Level.Trial)
+		public void tearDown()
+		{
+			WicketContext.detach();
+		}
+	}
+
+	/** A component that definitely carries behaviors, for the Ajax id lookup path. */
+	@State(Scope.Benchmark)
+	public static class WithBehaviors
+	{
+		Component component;
+
+		@Setup(Level.Trial)
+		public void setUp()
+		{
+			WicketContext.attach();
+			component = new WebMarkupContainer("c");
+			component.setDefaultModel(Model.of("m"));
+			// ids have to be handed out before they can be looked up: master only builds its
+			// BehaviorIdList when getBehaviorId is called, and throws
+			// InvalidBehaviorIdException otherwise. Rendering a callback url does this.
+			for (int i = 0; i < 3; i++)
+			{
+				Behavior stable = new StableIdBehavior();
+				component.add(stable);
+				component.getBehaviorId(stable);
+			}
+		}
+
+		@TearDown(Level.Trial)
+		public void tearDown()
+		{
+			WicketContext.detach();
+		}
+	}
+
+	// ---------------------------------------------------------------- reads, one shape at a time
+
+	@Benchmark
+	public Object readMetaData(OneShape ctx)
+	{
+		return ctx.component.getMetaData(KEY);
+	}
+
+	@Benchmark
+	public Object readModel(OneShape ctx)
+	{
+		return ctx.component.getDefaultModel();
+	}
+
+	@Benchmark
+	public Object readBehaviors(OneShape ctx)
+	{
+		return ctx.component.getBehaviors(Behavior.class);
+	}
+
+	// ------------------------------------------------------------------- reads, shapes interleaved
+
+	@Benchmark
+	public void readMetaDataMixedShapes(AllShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getMetaData(KEY));
+		}
+	}
+
+	@Benchmark
+	public void readModelMixedShapes(AllShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getDefaultModel());
+		}
+	}
+
+	@Benchmark
+	public void readBehaviorsMixedShapes(AllShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getBehaviors(Behavior.class));
+		}
+	}
+
+	/**
+	 * The floor for the mixed shape benchmarks: same array, same loop, same blackhole, reading a
+	 * plain field instead of the state. Subtract this to get the cost of the accessor alone.
+	 */
+	@Benchmark
+	public void baselineMixedShapes(AllShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getId());
+		}
+	}
+
+	@Benchmark
+	public void readModelAllHaveModel(ModelShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getDefaultModel());
+		}
+	}
+
+	@Benchmark
+	public void readModelNoneHaveModel(NoModelShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getDefaultModel());
+		}
+	}
+
+	@Benchmark
+	public void baselineNoneHaveModel(NoModelShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getId());
+		}
+	}
+
+	@Benchmark
+	public void baselineAllHaveModel(ModelShapes ctx, Blackhole bh)
+	{
+		for (Component c : ctx.components)
+		{
+			bh.consume(c.getId());
+		}
+	}
+
+	// ------------------------------------------------------------------------- the Ajax id lookup
+
+	@Benchmark
+	public Object readBehaviorById(WithBehaviors ctx)
+	{
+		return ctx.component.getBehaviorById(1);
+	}
+
+	// -------------------------------------------------------------------- mutate, then detach
+
+	@Benchmark
+	public Object buildAndDetach(OneShape ctx)
+	{
+		Component c = ctx.shape.newComponent("c");
+		c.detach();
+		return c;
+	}
+
+	@Benchmark
+	public Object buildOnly(OneShape ctx)
+	{
+		return ctx.shape.newComponent("c");
+	}
+}
