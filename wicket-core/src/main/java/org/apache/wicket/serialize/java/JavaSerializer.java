@@ -67,12 +67,12 @@ public class JavaSerializer implements ISerializer
 	}
 
 
+	/** Where the serialization buffer starts, sized so that a modest page never has to grow it. */
+	private static final int INITIAL_BUFFER_SIZE = 4096;
+
 	/**
 	 * The key of the application which can be used later to find the proper {@link IClassResolver}
 	 */
-	/** No page worth storing serializes into less than this, so it is where the buffer starts. */
-	private static final int INITIAL_BUFFER_SIZE = 4096;
-
 	private final String applicationKey;
 
 	/**
