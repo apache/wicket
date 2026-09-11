@@ -89,7 +89,7 @@ public class SchemeCrypt implements ICrypt
 		Args.notNull(plainBytes, "plainBytes");
 
 		byte id = encryptionScheme.id();
-		return marked(id,
+		return writeMarker(id,
 			encryptionScheme.encrypt(plainBytes, key, aad(id, associatedData), random, MARKER_LENGTH));
 	}
 
@@ -99,7 +99,7 @@ public class SchemeCrypt implements ICrypt
 		Args.notNull(plainBytes, "plainBytes");
 
 		byte id = encryptionScheme.id();
-		return marked(id, encryptionScheme.encryptDeterministic(plainBytes, key,
+		return writeMarker(id, encryptionScheme.encryptDeterministic(plainBytes, key,
 			aad(id, associatedData), MARKER_LENGTH));
 	}
 
@@ -124,13 +124,11 @@ public class SchemeCrypt implements ICrypt
 	}
 
 	/**
-	 * Prefixes a scheme payload with the marker identifying the scheme that produced it.
+	 * Writes the marker identifying the scheme that produced the payload into the
+	 * {@link #MARKER_LENGTH} bytes the scheme was asked to leave free at the front, and returns
+	 * that same array.
 	 */
-	/**
-	 * The scheme left {@link #MARKER_LENGTH} bytes free at the front for exactly this, so the
-	 * marker is written in place rather than by copying the whole ciphertext along one byte.
-	 */
-	private static byte[] marked(byte marker, byte[] payload)
+	private static byte[] writeMarker(byte marker, byte[] payload)
 	{
 		payload[0] = marker;
 		return payload;

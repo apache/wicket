@@ -22,6 +22,7 @@ import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
+import java.util.Objects;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -132,9 +133,14 @@ public abstract class AbstractAesGcmCryptScheme implements ICryptScheme
 			byte[] result =
 				new byte[prefixLength + nonce.length + cipher.getOutputSize(plaintext.length)];
 			System.arraycopy(nonce, 0, result, prefixLength, nonce.length);
-			cipher.doFinal(plaintext, 0, plaintext.length, result, prefixLength + nonce.length);
+			int written =
+				cipher.doFinal(plaintext, 0, plaintext.length, result, prefixLength + nonce.length);
 
-			return result;
+			// getOutputSize only promises an upper bound, so a provider is free to write less
+			// than it reserved and leave the tail as zeroes. Both schemes shipped here fill it
+			// exactly and return the buffer untouched; anything else pays for one copy.
+			int length = prefixLength + nonce.length + written;
+			return length == result.length ? result : Arrays.copyOf(result, length);
 		}
 		catch (GeneralSecurityException ex)
 		{
@@ -183,6 +189,8 @@ public abstract class AbstractAesGcmCryptScheme implements ICryptScheme
 	@Override
 	public byte[] decrypt(byte[] ciphertext, int offset, int length, SecretKey key, byte[] aad)
 	{
+		Objects.checkFromIndexSize(offset, length, ciphertext.length);
+
 		try
 		{
 			if (length < NONCE_LENGTH)

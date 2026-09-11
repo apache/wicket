@@ -66,7 +66,10 @@ public interface ICryptScheme
 	SecretKey generateKey(SecureRandom random);
 
 	/**
-	 * Encrypt the given plaintext.
+	 * Encrypt the given plaintext, leaving {@code prefixLength} bytes untouched at the start of
+	 * the result for the caller to fill in. {@link SchemeCrypt} puts its scheme marker there;
+	 * without the reservation it would have to copy the whole ciphertext to make room for a
+	 * single byte.
 	 *
 	 * @param plaintext
 	 *            the bytes to encrypt
@@ -76,25 +79,11 @@ public interface ICryptScheme
 	 *            additional authenticated data (the scheme marker); authenticated but not encrypted
 	 * @param random
 	 *            source of randomness for the nonce
-	 * @return the ciphertext (including nonce and authentication tag)
-	 */
-	/**
-	 * Encrypts, leaving {@code prefixLength} bytes untouched at the start of the result for the
-	 * caller to fill in. {@link SchemeCrypt} puts its scheme marker there; without the reservation
-	 * it would have to copy the whole ciphertext to make room for a single byte.
-	 *
-	 * @param plaintext
-	 *            what to encrypt
-	 * @param key
-	 *            the key to encrypt with
-	 * @param aad
-	 *            additional authenticated data, may be {@code null}
-	 * @param random
-	 *            source of randomness for the nonce
 	 * @param prefixLength
 	 *            how many bytes to leave free at the start of the result
-	 * @return a freshly allocated array holding the ciphertext, preceded by {@code prefixLength}
-	 *         bytes the caller is free to write into
+	 * @return a freshly allocated array holding the ciphertext (including nonce and
+	 *         authentication tag), preceded by {@code prefixLength} bytes the caller is free to
+	 *         write into
 	 */
 	byte[] encrypt(byte[] plaintext, SecretKey key, byte[] aad, SecureRandom random,
 		int prefixLength);
@@ -126,22 +115,12 @@ public interface ICryptScheme
 	 *            the secret key
 	 * @param aad
 	 *            additional authenticated data (the scheme marker); authenticated but not encrypted
-	 * @return the ciphertext (including nonce and authentication tag)
-	 */
-	/**
-	 * As {@link #encrypt(byte[], SecretKey, byte[], SecureRandom, int)}, but deriving the nonce
-	 * from the input so that the same input yields the same ciphertext.
-	 *
-	 * @param plaintext
-	 *            what to encrypt
-	 * @param key
-	 *            the key to encrypt with
-	 * @param aad
-	 *            additional authenticated data, may be {@code null}
 	 * @param prefixLength
-	 *            how many bytes to leave free at the start of the result
-	 * @return a freshly allocated array holding the ciphertext, preceded by {@code prefixLength}
-	 *         bytes the caller is free to write into
+	 *            how many bytes to leave free at the start of the result, as for
+	 *            {@link #encrypt(byte[], SecretKey, byte[], SecureRandom, int)}
+	 * @return a freshly allocated array holding the ciphertext (including nonce and
+	 *         authentication tag), preceded by {@code prefixLength} bytes the caller is free to
+	 *         write into
 	 */
 	byte[] encryptDeterministic(byte[] plaintext, SecretKey key, byte[] aad, int prefixLength);
 
@@ -154,33 +133,25 @@ public interface ICryptScheme
 	}
 
 	/**
-	 * Decrypt the given ciphertext.
+	 * Decrypt {@code length} bytes of the given ciphertext starting at {@code offset}, so that a
+	 * caller which prefixed the ciphertext can skip its own header without copying the rest.
 	 *
 	 * @param ciphertext
-	 *            the bytes produced by {@link #encrypt} or {@link #encryptDeterministic} (nonce +
-	 *            ciphertext + tag)
+	 *            the buffer holding the bytes produced by {@link #encrypt} or
+	 *            {@link #encryptDeterministic} (nonce + ciphertext + tag)
+	 * @param offset
+	 *            where the ciphertext starts
+	 * @param length
+	 *            how many bytes of ciphertext there are
 	 * @param key
 	 *            the secret key
 	 * @param aad
 	 *            the additional authenticated data that was supplied on encryption (the marker)
 	 * @return the decrypted plaintext, or {@code null} if authentication fails or the input is
 	 *         malformed
-	 */
-	/**
-	 * Decrypts {@code length} bytes of {@code ciphertext} starting at {@code offset}, so that a
-	 * caller which prefixed the ciphertext can skip its own header without copying the rest.
-	 *
-	 * @param ciphertext
-	 *            the buffer holding the ciphertext
-	 * @param offset
-	 *            where the ciphertext starts
-	 * @param length
-	 *            how many bytes of ciphertext there are
-	 * @param key
-	 *            the key to decrypt with
-	 * @param aad
-	 *            additional authenticated data, may be {@code null}
-	 * @return the plaintext, or {@code null} if the input is not authentic
+	 * @throws IndexOutOfBoundsException
+	 *             if {@code offset} and {@code length} do not describe a range within
+	 *             {@code ciphertext}
 	 */
 	byte[] decrypt(byte[] ciphertext, int offset, int length, SecretKey key, byte[] aad);
 
