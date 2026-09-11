@@ -38,7 +38,6 @@
 		<osgi.export.package />
 	</properties>
 	<dependencies>
-		<!-- order enforced by pedantic-pom-enforcers: scope, then groupId, then artifactId -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
@@ -78,19 +77,6 @@
 									<version>${jmh.version}</version>
 								</path>
 							</annotationProcessorPaths>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.github.siom79.japicmp</groupId>
-				<artifactId>japicmp-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<!-- a new module has no previous release to compare against -->
-						<id>default</id>
-						<configuration>
-							<skip>true</skip>
 						</configuration>
 					</execution>
 				</executions>
