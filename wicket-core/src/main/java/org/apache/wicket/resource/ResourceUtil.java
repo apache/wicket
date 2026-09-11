@@ -90,12 +90,48 @@ public class ResourceUtil
 	 */
 	public static Locale rejectPathSeparators(final Locale locale)
 	{
-		if (locale == null || rejectPathSeparators(locale.toString(), "locale") != null)
+		if (locale == null)
 		{
 			return locale;
 		}
 
-		return null;
+		// Every resource lookup validates the locale, and Locale#toString() builds a new string
+		// each time it is called. Without a variant, a script or extensions it returns nothing but
+		// the language and the country joined by '_', so inspecting those two directly is
+		// equivalent and allocates nothing. Richer locales are rare and take the general route.
+		if (locale.getVariant().isEmpty() && locale.getScript().isEmpty() &&
+			locale.getExtensionKeys().isEmpty())
+		{
+			if (isPathComponent(locale.getLanguage()) && isPathComponent(locale.getCountry()))
+			{
+				return locale;
+			}
+
+			log.warn("Ignoring the locale because it contains a path separator or NUL: {}", locale);
+
+			return null;
+		}
+
+		return rejectPathSeparators(locale.toString(), "locale") != null ? locale : null;
+	}
+
+	/**
+	 * @return whether the value can be used as a single path component, i.e. contains none of
+	 *         {@code /}, {@code \}, {@code ..} or a NUL character
+	 */
+	private static boolean isPathComponent(final String value)
+	{
+		for (int i = 0; i < value.length(); i++)
+		{
+			char c = value.charAt(i);
+			if (c == '/' || c == '\\' || c == '\0' ||
+				(c == '.' && i > 0 && value.charAt(i - 1) == '.'))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
