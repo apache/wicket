@@ -78,9 +78,10 @@ header — copy it when you add one.
 
 ## API compatibility
 
-- japicmp fails the build on binary-incompatible changes. On a maintenance branch it compares
-  against that line's first release, so nothing incompatible can land there. On `master` it
-  compares against the previous `11.0.0-SNAPSHOT`, which leaves it quiet about most breaks.
+- japicmp fails the build on binary-incompatible changes. Its baseline is the first release of
+  the line the branch is on, derived from the project version: on a maintenance branch that
+  release exists and nothing incompatible can land there, while on `master` it does not exist
+  yet, so no comparison happens and the plugin only warns.
 - Quiet is not permission. Changing or removing public API on `master` is allowed but not free:
   it needs a justification in the commit message, and where the old member can survive next to
   the new one, deprecate it rather than remove it.
