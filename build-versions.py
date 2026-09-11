@@ -16,7 +16,7 @@
 #    build-milestone.py 7.0.0-M1 7.0.0-SNAPSHOT
 #
 
-import sys
+'''import sys
 from xml.dom.minidom import parse
 
 groupId = "org.apache.wicket"
@@ -54,4 +54,47 @@ for version in relVersions:
 print
 
 for version in devVersions:
-    print version
+    print version'''
+import argparse
+from xml.dom.minidom import parse
+
+GROUP_ID = "org.apache.wicket"
+
+def add_versions(group_id, module, rel_version, dev_version):
+    return [
+        f"project.rel.{group_id}\\:{m}={rel_version}"
+        for m in module
+    ], [
+        f"project.dev.{group_id}\\:{m}={dev_version}"
+        for m in module
+    ]
+
+def get_modules_from_parent(parent_pom_file):
+    pom = parse(parent_pom_file)
+
+    modules = [
+        module_tag.childNodes[0].nodeValue.replace("testing/", "").replace("archetypes/quickstart", "wicket-archetype-quickstart")
+        for module_tag in pom.getElementsByTagName('module')
+    ]
+
+    return modules
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Add versions to a POM file')
+    parser.add_argument('release_version', type=str, help='the release version')
+    parser.add_argument('dev_version', type=str, help='the development version')
+    args = parser.parse_args()
+
+    release_version = args.release_version
+    dev_version = args.dev_version
+
+    rel_versions, dev_versions = add_versions(
+        GROUP_ID,
+        ["wicket-parent", "wicket-experimental"] + get_modules_from_parent("pom.xml") + get_modules_from_parent("wicket-native-websocket/pom.xml"),
+        release_version,
+        dev_version
+    )
+
+    print("\n".join(rel_versions))
+    print()
+    print("\n".join(dev_versions))
