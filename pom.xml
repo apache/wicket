@@ -124,6 +124,7 @@
         <module>wicket-migration</module>
 		<module>wicket-tester</module>
 		<module>wicket-extensions-tester</module>
+		<module>wicket-benchmarks</module>
     </modules>
 	<properties>
 		<!-- Encoding -->
@@ -168,6 +169,8 @@
 		<jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
 		<jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
 		<jetty.version>11.0.24</jetty.version>
+		<jmh.version>1.37</jmh.version>
+		<jol.version>0.17</jol.version>
 		<junit.version>5.13.4</junit.version>
 		<jsr305.version>3.0.2</jsr305.version>
 		<logback.version>1.2.7</logback.version>
@@ -273,6 +276,12 @@
 				<groupId>org.hamcrest</groupId>
 				<artifactId>hamcrest</artifactId>
 				<version>${hamcrest.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.openjdk.jmh</groupId>
+				<artifactId>jmh-generator-annprocess</artifactId>
+				<version>${jmh.version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -504,6 +513,16 @@
 				<groupId>org.objenesis</groupId>
 				<artifactId>objenesis</artifactId>
 				<version>${objenesis.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openjdk.jmh</groupId>
+				<artifactId>jmh-core</artifactId>
+				<version>${jmh.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openjdk.jol</groupId>
+				<artifactId>jol-core</artifactId>
+				<version>${jol.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.ow2.asm</groupId>
