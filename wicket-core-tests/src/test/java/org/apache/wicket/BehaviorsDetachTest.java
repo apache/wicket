@@ -22,7 +22,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
- * Tests for {@link Behaviors#detach(Component)} method
+ * Tests for behavior detaching, see
+ * {@link ComponentState#detachBehaviors(Component, Object, boolean, boolean)}
  */
 class BehaviorsDetachTest extends WicketTestCase {
 
