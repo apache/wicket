@@ -106,4 +106,68 @@ public class DefaultLinkParserTest extends Assert
 		assertEquals("Expected chars to left of - to be included in the link.", testExpectedLink,
 			result);
 	}
+
+	/**
+	 * The schemes the javadoc promises are linkified, case-insensitively.
+	 */
+	@Test
+	public void allowedSchemesAreLinkified()
+	{
+		ILinkParser parser = new DefaultLinkParser();
+		for (String url : new String[] { "http://www.test.com", "https://www.test.com",
+				"ftp://ftp.test.com/pub", "HTTPS://www.test.com", "Http://www.test.com" })
+		{
+			assertEquals("<a href=\"" + url + "\">" + url + "</a>", parser.parse(url));
+			assertEquals("text <a href=\"" + url + "\">" + url + "</a> text",
+				parser.parse("text " + url + " text"));
+		}
+	}
+
+	/**
+	 * A URL with any other scheme is left as it is, alone and inside other text.
+	 */
+	@Test
+	public void otherSchemesAreNotLinkified()
+	{
+		ILinkParser parser = new DefaultLinkParser();
+		for (String url : new String[] { "sftp://ftp.test.com/pub", "ssh://www.test.com",
+				"file://etc/hosts", "gopher://www.test.com/1", "httpx://www.test.com",
+				"Ftps://ftp.test.com", "news://www.test.com?x=1" })
+		{
+			assertEquals(url, parser.parse(url));
+			assertEquals("Look at " + url + " please", parser.parse("Look at " + url + " please"));
+		}
+	}
+
+	/**
+	 * A URL that is not linkified does not affect an allowed one next to it, and the other way
+	 * round.
+	 */
+	@Test
+	public void mixedSchemesInOneText()
+	{
+		ILinkParser parser = new DefaultLinkParser();
+		assertEquals(
+			"sftp://ftp.test.com and <a href=\"http://www.test.com\">http://www.test.com</a>",
+			parser.parse("sftp://ftp.test.com and http://www.test.com"));
+	}
+
+	/**
+	 * The render strategy only builds links for http, https and ftp on its own, whatever the pattern
+	 * it is paired with matched.
+	 */
+	@Test
+	public void urlRenderStrategyOnlyLinksAllowedSchemes()
+	{
+		ILinkRenderStrategy strategy = DefaultLinkParser.URL_RENDER_STRATEGY;
+		assertEquals("<a href=\"http://www.test.com\">http://www.test.com</a>",
+			strategy.buildLink("http://www.test.com"));
+		assertEquals("sftp://ftp.test.com/pub", strategy.buildLink("sftp://ftp.test.com/pub"));
+		assertEquals("Ssh://www.test.com", strategy.buildLink("Ssh://www.test.com"));
+
+		LinkParser wide = new LinkParser();
+		wide.addLinkRenderStrategy("[a-zA-Z]+://[\\w\\.\\/]+", strategy);
+		assertEquals("sftp://ftp.test.com/pub", wide.parse("sftp://ftp.test.com/pub"));
+		assertEquals("<a href=\"http://test\">http://test</a>", wide.parse("http://test"));
+	}
 }
