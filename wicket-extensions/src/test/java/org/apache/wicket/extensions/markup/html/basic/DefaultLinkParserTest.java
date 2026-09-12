@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Test for {@link DefaultLinkParser}.
@@ -108,5 +110,65 @@ public class DefaultLinkParserTest
 		final String result = parser.parse(testEmailAddress);
 		assertEquals(testExpectedLink, result,
 			"Expected chars to left of - to be included in the link.");
+	}
+
+	/**
+	 * The schemes the javadoc promises are linkified, case-insensitively.
+	 */
+	@ParameterizedTest
+	@ValueSource(strings = { "http://www.test.com", "https://www.test.com", "ftp://ftp.test.com/pub",
+			"HTTPS://www.test.com", "Http://www.test.com" })
+	public void allowedSchemesAreLinkified(String url)
+	{
+		ILinkParser parser = new DefaultLinkParser();
+		assertEquals("<a href=\"" + url + "\">" + url + "</a>", parser.parse(url));
+		assertEquals("text <a href=\"" + url + "\">" + url + "</a> text",
+			parser.parse("text " + url + " text"));
+	}
+
+	/**
+	 * A URL with any other scheme is left as it is, alone and inside other text.
+	 */
+	@ParameterizedTest
+	@ValueSource(strings = { "sftp://ftp.test.com/pub", "ssh://www.test.com", "file://etc/hosts",
+			"gopher://www.test.com/1", "httpx://www.test.com", "Ftps://ftp.test.com",
+			"news://www.test.com?x=1" })
+	public void otherSchemesAreNotLinkified(String url)
+	{
+		ILinkParser parser = new DefaultLinkParser();
+		assertEquals(url, parser.parse(url));
+		assertEquals("Look at " + url + " please", parser.parse("Look at " + url + " please"));
+	}
+
+	/**
+	 * A URL that is not linkified does not affect an allowed one next to it, and the other way
+	 * round.
+	 */
+	@Test
+	public void mixedSchemesInOneText()
+	{
+		ILinkParser parser = new DefaultLinkParser();
+		assertEquals(
+			"sftp://ftp.test.com and <a href=\"http://www.test.com\">http://www.test.com</a>",
+			parser.parse("sftp://ftp.test.com and http://www.test.com"));
+	}
+
+	/**
+	 * The render strategy only builds links for http, https and ftp on its own, whatever the pattern
+	 * it is paired with matched.
+	 */
+	@Test
+	public void urlRenderStrategyOnlyLinksAllowedSchemes()
+	{
+		ILinkRenderStrategy strategy = DefaultLinkParser.URL_RENDER_STRATEGY;
+		assertEquals("<a href=\"http://www.test.com\">http://www.test.com</a>",
+			strategy.buildLink("http://www.test.com"));
+		assertEquals("sftp://ftp.test.com/pub", strategy.buildLink("sftp://ftp.test.com/pub"));
+		assertEquals("Ssh://www.test.com", strategy.buildLink("Ssh://www.test.com"));
+
+		LinkParser wide = new LinkParser();
+		wide.addLinkRenderStrategy("[a-zA-Z]+://[\\w\\.\\/]+", strategy);
+		assertEquals("sftp://ftp.test.com/pub", wide.parse("sftp://ftp.test.com/pub"));
+		assertEquals("<a href=\"http://test\">http://test</a>", wide.parse("http://test"));
 	}
 }
