@@ -104,7 +104,7 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 			{
 				String css = getComponent().getString(DRAG_OVER_CLASS_KEY);
 
-				return String.format("jQuery('#' + attrs.c).toggleClass('%s', attrs.event.type === 'dragover'); return (attrs.event.type === 'drop');", css);
+				return String.format("document.getElementById(attrs.c).classList.toggle('%s', attrs.event.type === 'dragover'); return (attrs.event.type === 'drop');", css);
 			}
 		});
 
@@ -219,6 +219,7 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 	 */
 	protected void onFileUpload(AjaxRequestTarget target, List<FileUpload> files)
 	{
+		// TO BE OVERRIDDEN
 	}
 
 	/**

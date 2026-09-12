@@ -587,6 +587,10 @@ include::ajax/ajax_8.adoc[leveloffset=+1]
 
 include::ajax/ajax_9.adoc[leveloffset=+1]
 
+=== Choosing between the JQuery and the plain JavaScript AJAX implementation
+
+include::ajax/ajax_11.adoc[leveloffset=+1]
+
 === Summary
 
 include::ajax/ajax_10.adoc[leveloffset=+1]

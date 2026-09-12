@@ -1302,6 +1302,7 @@
 						<suffix>.min</suffix>
 						<inputDir>${project.build.directory}/classes</inputDir>
 						<useDataUri>false</useDataUri>
+						<languageIn>ECMASCRIPT_2015</languageIn>
 						<resourcesSets>
 							<resourcesSet>
 								<excludes>

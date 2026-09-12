@@ -16,7 +16,7 @@
  */
 
 /*jshint evil: true, nomen: false, onevar: false, regexp: false, strict: true, boss: true, undef: true, maxlen: 160, curly: true, eqeqeq: true */
-/*global document: false, jQuery:false, DOMParser: true, window: false, Wicket: true */
+/*global document: false, DOMParser: true, window: false, Wicket: true */
 
 ;(function (undefined) {
 
@@ -26,7 +26,7 @@
 		throw 'Wicket.WebSocket needs wicket-ajax.js as prerequisite.';
 	}
 
-	jQuery.extend(Wicket.Event.Topic, {
+	Object.assign(Wicket.Event.Topic, {
 		WebSocket: {
 			Opened:       '/websocket/open',
 			Message:      '/websocket/message',
@@ -45,19 +45,18 @@
 		ws: null,
 
 		initialize: function () {
-			var topics = Wicket.Event.Topic.WebSocket;
+			const topics = Wicket.Event.Topic.WebSocket;
 
 			if (('WebSocket' in window)) {
 
-				var self = this,
-					url,
-					protocol,
-					WWS = Wicket.WebSocket,
-					port = WWS.port || document.location.port,
-					securePort = WWS.securePort || document.location.port,
+				const self = this;
+				let url,
 					_port;
+				const WWS = Wicket.WebSocket,
+					port = WWS.port || document.location.port,
+					securePort = WWS.securePort || document.location.port;
 
-				protocol = document.location.protocol
+				const protocol = document.location.protocol
 					.replace('https:', 'wss:')
 					.replace('http:', 'ws:');
 
@@ -96,20 +95,20 @@
 
 				self.ws.onmessage = function (event) {
 
-					var message = event.data;
+					const message = event.data;
 					if (typeof(message) === 'string' && message.indexOf('<ajax-response>') > -1) {
 						Wicket.channelManager.schedule(Wicket.WebSocket.MESSAGE_CHANNEL, Wicket.bind(function () {
-							var context = {
+							const context = {
 								attrs: {},
 								steps: []
 							};
-							var xmlDocument = Wicket.Xml.parse(message);
+							const xmlDocument = Wicket.Xml.parse(message);
 							this.loadedCallback(xmlDocument, context);
 							context.steps.push(function () {
 								Wicket.channelManager.done(Wicket.WebSocket.MESSAGE_CHANNEL);
 								return Wicket.ChannelManager.FunctionsExecuter.DONE;
 							});
-							var executer = new Wicket.ChannelManager.FunctionsExecuter(context.steps);
+							const executer = new Wicket.ChannelManager.FunctionsExecuter(context.steps);
 							executer.start();
 						}, new Wicket.Ajax.Call()));
 					} else {
@@ -133,7 +132,7 @@
 					Wicket.Event.publish(topics.Error, evt);
 				};
 			} else {
-				var errMessage = '[WebSocket.initialize] WebSocket is not supported in your browser!';
+				const errMessage = '[WebSocket.initialize] WebSocket is not supported in your browser!';
 				Wicket.Log.error(errMessage);
 				Wicket.Event.publish(topics.NotSupported, errMessage);
 			}

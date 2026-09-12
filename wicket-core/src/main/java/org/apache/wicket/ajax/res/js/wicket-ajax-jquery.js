@@ -36,7 +36,7 @@
 		return;
 	}
 
-	var isUndef = function (target) {
+	const isUndef = function (target) {
 		return (typeof(target) === 'undefined' || target === null);
 	};
 
@@ -46,8 +46,8 @@
 	 * return '.' (current folder) as base URL.
 	 * Used for request header and parameter
 	 */
-	var getAjaxBaseUrl = function () {
-		var baseUrl = Wicket.Ajax.baseUrl || '.';
+	const getAjaxBaseUrl = function () {
+		const baseUrl = Wicket.Ajax.baseUrl || '.';
 		return baseUrl;
 	};
 
@@ -57,9 +57,9 @@
 	 * @param nodeList The NodeList to convert
 	 * @returns {Array} The array with document nodes
 	 */
-	var nodeListToArray = function (nodeList) {
-		var arr = [],
-			nodeId;
+	const nodeListToArray = function (nodeList) {
+		const arr = [];
+		let nodeId;
 		if (nodeList && nodeList.length) {
 			for (nodeId = 0; nodeId < nodeList.length; nodeId++) {
 				arr.push(nodeList.item(nodeId));
@@ -79,7 +79,7 @@
 	 *
 	 * @param functions {Array} - an array of functions to execute
 	 */
-	var FunctionsExecuter = function (functions) {
+	const FunctionsExecuter = function (functions) {
 
 		this.functions = functions;
 
@@ -101,12 +101,12 @@
 
 		this.processNext = function () {
 			if (this.current < this.functions.length) {
-				var f, run;
+				let run;
 
-				f = this.functions[this.current];
+				const f = this.functions[this.current];
 				run = function () {
 					try {
-						var n = jQuery.proxy(this.notify, this);
+						const n = jQuery.proxy(this.notify, this);
 						return f(n);
 					}
 					catch (e) {
@@ -122,7 +122,7 @@
 					this.depth = 0;
 					window.setTimeout(run, 1);
 				} else {
-					var retValue = run();
+					const retValue = run();
 					if (isUndef(retValue) || retValue === FunctionsExecuter.ASYNC) {
 						this.depth++;
 					}
@@ -132,7 +132,7 @@
 		};
 
 		this.start = function () {
-			var retValue = FunctionsExecuter.DONE;
+			let retValue = FunctionsExecuter.DONE;
 			while (retValue === FunctionsExecuter.DONE) {
 				retValue = this.processNext();
 			}
@@ -247,7 +247,7 @@
 	Wicket.Channel.prototype = {
 		initialize: function (name) {
 			name = name || '0|s';
-			var res = name.match(/^([^|]+)\|(d|s|a)$/);
+			const res = name.match(/^([^|]+)\|(d|s|a)$/);
 			if (isUndef(res)) {
 				this.name = '0'; // '0' is the default channel name
 				this.type = 's'; // default to stack/queue
@@ -270,7 +270,7 @@
 					Wicket.Log.error("An error occurred while executing Ajax request:", exception);
 				}
 			} else {
-				var busyChannel = "Channel '"+ this.name+"' is busy";
+				const busyChannel = "Channel '"+ this.name+"' is busy";
 				if (this.type === 's') { // stack/queue
 					Wicket.Log.info("%s - scheduling the callback to be executed when the previous request finish.", busyChannel);
 					this.callbacks.push(callback);
@@ -287,7 +287,7 @@
 		},
 
 		done: function () {
-			var callback = null;
+			let callback = null;
 
 			if (this.callbacks.length > 0) {
 				callback = this.callbacks.shift();
@@ -316,8 +316,8 @@
 
 		// Schedules the callback to channel with given name.
 		schedule: function (channel, callback) {
-			var parsed = new Wicket.Channel(channel);
-			var c = this.channels[parsed.name];
+			const parsed = new Wicket.Channel(channel);
+			let c = this.channels[parsed.name];
 			if (isUndef(c)) {
 				c = parsed;
 				this.channels[c.name] = c;
@@ -330,8 +330,8 @@
 		// Tells the ChannelManager that the current callback in channel with given name
 		// has finished processing and another scheduled callback can be executed (if any).
 		done: function (channel) {
-			var parsed = new Wicket.Channel(channel);
-			var c = this.channels[parsed.name];
+			const parsed = new Wicket.Channel(channel);
+			const c = this.channels[parsed.name];
 			if (!isUndef(c)) {
 				c.done();
 				if (!c.busy) {
@@ -365,7 +365,7 @@
 	 * evaluated.
 	 */
 	Wicket.Ajax.suspendCall = function () {
-		var suspension = Wicket.Ajax._currentSuspension;
+		let suspension = Wicket.Ajax._currentSuspension;
 		
 		if (suspension === undefined) {
 			Wicket.Log.error("Can't suspend: no Ajax call in process");
@@ -448,7 +448,7 @@
 		 * @private
 		 */
 		_getTarget: function (attrs) {
-			var target;
+			let target;
 			if (attrs.event) {
 				target = attrs.event.target;
 			} else if (!Wicket.isWindow(attrs.c)) {
@@ -469,14 +469,14 @@
 			if (Array.isArray(handlers)) {
 
 				// cut the handlers argument
-				var args = Array.prototype.slice.call(arguments).slice(1);
+				const args = Array.prototype.slice.call(arguments).slice(1);
 
 				// assumes that the Ajax attributes is always the first argument
-				var attrs = args[0];
-				var that = this._getTarget(attrs);
+				const attrs = args[0];
+				const that = this._getTarget(attrs);
 
-				for (var i = 0; i < handlers.length; i++) {
-					var handler = handlers[i];
+				for (let i = 0; i < handlers.length; i++) {
+					const handler = handlers[i];
 					if (Wicket.isFunction(handler)) {
 						handler.apply(that, args);
 					} else {
@@ -497,7 +497,7 @@
 		 * @private
 		 */
 		_asParamArray: function(parameters) {
-			var result = [],
+			let result = [],
 				value,
 				name;
 			if (Array.isArray(parameters)) {
@@ -512,7 +512,7 @@
 				}
 			}
 
-			for (var i = 0; i < result.length; i++) {
+			for (let i = 0; i < result.length; i++) {
 				if (result[i] === null) {
 					result.splice(i, 1);
 					i--;
@@ -531,12 +531,12 @@
 		 * @private
 		 */
 		_calculateDynamicParameters: function(attrs) {
-			var deps = attrs.dep,
-				params = [];
+			const deps = attrs.dep;
+			let params = [];
 
-			for (var i = 0; i < deps.length; i++) {
-				var dep = deps[i],
-					extraParam;
+			for (let i = 0; i < deps.length; i++) {
+				const dep = deps[i];
+				let extraParam;
 				if (Wicket.isFunction(dep)) {
 					extraParam = dep(attrs);
 				} else {
@@ -556,7 +556,7 @@
 		ajax: function (attrs) {
 			this._initializeDefaults(attrs);
 
-			var res = Wicket.channelManager.schedule(attrs.ch, Wicket.bind(function () {
+			const res = Wicket.channelManager.schedule(attrs.ch, Wicket.bind(function () {
 				this.doAjax(attrs);
 			}, this));
 			return res !== null ? res: true;
@@ -571,7 +571,7 @@
 				return true;
 			}
 			
-			var element = Wicket.$(id);
+			const element = Wicket.$(id);
 			if (isUndef(element)) {
 				// not present
 				return false;
@@ -588,34 +588,33 @@
 		 */
 		doAjax: function (attrs) {
 
-			var
-				// the headers to use for each Ajax request
-				headers = {
-					'Wicket-Ajax': 'true',
-					'Wicket-Ajax-BaseURL': getAjaxBaseUrl()
-				},
-				
-				url = attrs.u,
+			// the headers to use for each Ajax request
+			const headers = {
+				'Wicket-Ajax': 'true',
+				'Wicket-Ajax-BaseURL': getAjaxBaseUrl()
+			};
 
-				// the request (extra) parameters
-				data = this._asParamArray(attrs.ep),
+			let url = attrs.u;
 
-				self = this,
+			// the request (extra) parameters
+			let data = this._asParamArray(attrs.ep);
 
-				// the precondition to use if there are no explicit ones
-				defaultPrecondition = [ function (attributes) {
-					return self._isPresent(attributes.c) && self._isPresent(attributes.f); 
-				}],
+			const self = this;
 
-				// a context that brings the common data for the success/fialure/complete handlers
-				context = {
-					attrs: attrs,
+			// the precondition to use if there are no explicit ones
+			const defaultPrecondition = [ function (attributes) {
+				return self._isPresent(attributes.c) && self._isPresent(attributes.f);
+			}];
 
-					// initialize the array for steps (closures that execute each action)
-					steps: []
-				},
-				we = Wicket.Event,
-				topic = we.Topic;
+			// a context that brings the common data for the success/fialure/complete handlers
+			const context = {
+				attrs: attrs,
+
+				// initialize the array for steps (closures that execute each action)
+				steps: []
+			};
+			const we = Wicket.Event;
+			const topic = we.Topic;
 
 			if (Wicket.Focus.lastFocusId) {
 				// WICKET-6568 might contain non-ASCII
@@ -625,16 +624,16 @@
 			self._executeHandlers(attrs.bh, attrs);
 			we.publish(topic.AJAX_CALL_BEFORE, attrs);
 
-			var preconditions = attrs.pre || [];
+			let preconditions = attrs.pre || [];
 			preconditions = defaultPrecondition.concat(preconditions);
 			if (Array.isArray(preconditions)) {
 
-				var that = this._getTarget(attrs);
+				const that = this._getTarget(attrs);
 
-				for (var p = 0; p < preconditions.length; p++) {
+				for (let p = 0; p < preconditions.length; p++) {
 
-					var precondition = preconditions[p];
-					var result;
+					const precondition = preconditions[p];
+					let result;
 					if (Wicket.isFunction(precondition)) {
 						result = precondition.call(that, attrs);
 					} else {
@@ -652,36 +651,36 @@
 
 			if (attrs.f) {
 				// serialize the form with id == attrs.f
-				var form = Wicket.$(attrs.f);
+				const form = Wicket.$(attrs.f);
 				data = data.concat(Wicket.Form.serializeForm(form));
 
 				// set the submitting component input name
 				if (attrs.sc) {
-					var scName = attrs.sc;
+					const scName = attrs.sc;
 					data = data.concat({name: scName, value: 1});
 				}
 			} else if (attrs.c && !Wicket.isWindow(attrs.c)) {
 				// serialize just the form component with id == attrs.c
-				var el = Wicket.$(attrs.c);
+				const el = Wicket.$(attrs.c);
 				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
 			}
 			
 			// collect the dynamic extra parameters
 			if (Array.isArray(attrs.dep)) {
-				var dynamicData = this._calculateDynamicParameters(attrs);
+				const dynamicData = this._calculateDynamicParameters(attrs);
 				if (attrs.m.toLowerCase() === 'post') {
 					data = data.concat(dynamicData);
 				} else {
-					var separator = url.indexOf('?') > -1 ? '&' : '?';
+					const separator = url.indexOf('?') > -1 ? '&' : '?';
 					url = url + separator + jQuery.param(dynamicData);
 				}
 			}
 
-			var wwwFormUrlEncoded; // undefined is jQuery's default
+			let wwwFormUrlEncoded; // undefined is jQuery's default
 			if (attrs.mp) {
 				try {
-					var formData = new FormData();
-					for (var i = 0; i < data.length; i++) {
+					const formData = new FormData();
+					for (let i = 0; i < data.length; i++) {
 						formData.append(data[i].name, data[i].value || "");
 					}
 					
@@ -696,7 +695,7 @@
 			Wicket.Log.debug(attrs);
 
 			// execute the request
-			var jqXHR = jQuery.ajax({
+			const jqXHR = jQuery.ajax({
 				url: url,
 				type: attrs.m,
 				context: self,
@@ -747,7 +746,7 @@
 						return FunctionsExecuter.DONE;
 					}, self));
 
-					var executer = new FunctionsExecuter(context.steps);
+					const executer = new FunctionsExecuter(context.steps);
 					executer.start();
 				}
 			});
@@ -765,13 +764,13 @@
 		 * @param data {XmlDocument} - the <ajax-response> XML document
 		 */
 		process: function(data) {
-			var context =  {
+			const context =  {
 					attrs: {},
 					steps: []
 				};
-			var xmlDocument = Wicket.Xml.parse(data);
+			const xmlDocument = Wicket.Xml.parse(data);
 			this.loadedCallback(xmlDocument, context);
-			var executer = new FunctionsExecuter(context.steps);
+			const executer = new FunctionsExecuter(context.steps);
 			executer.start();
 		},
 
@@ -788,7 +787,7 @@
 			if (jqXHR.readyState === 4) {
 
 				// first try to get the redirect header
-				var redirectUrl;
+				let redirectUrl;
 				try {
 					redirectUrl = jqXHR.getResponseHeader('Ajax-Location');
 				} catch (ignore) { // might happen in older mozilla
@@ -801,7 +800,7 @@
 					// A file download popup will appear but the page in the browser won't change.
 					this.success(context);
 
-					var withScheme  = /^[a-z][a-z0-9+.-]*:\/\//;  // checks whether the string starts with a scheme
+					const withScheme  = /^[a-z][a-z0-9+.-]*:\/\//;  // checks whether the string starts with a scheme
 
 					// support/check for non-relative redirectUrl like as provided and needed in a portlet context
 					if (redirectUrl.charAt(0) === '/' || withScheme.test(redirectUrl)) {
@@ -809,16 +808,16 @@
 						Wicket.Ajax.redirect(redirectUrl);
 					}
 					else {
-						var urlDepth = 0;
+						let urlDepth = 0;
 						while (redirectUrl.substring(0, 3) === "../") {
 							urlDepth++;
 							redirectUrl = redirectUrl.substring(3);
 						}
 						// Make this a string.
-						var calculatedRedirect = window.location.pathname;
+						let calculatedRedirect = window.location.pathname;
 						while (urlDepth > -1) {
 							urlDepth--;
-							var i = calculatedRedirect.lastIndexOf("/");
+							const i = calculatedRedirect.lastIndexOf("/");
 							if (i > -1) {
 								calculatedRedirect = calculatedRedirect.substring(0, i);
 							}
@@ -849,7 +848,7 @@
 			// the order in which scripts are loaded and we have to delay the next steps until the script is
 			// loaded.
 			try {
-				var root = envelope.getElementsByTagName("ajax-response")[0];
+				const root = envelope.getElementsByTagName("ajax-response")[0];
 
 				// the root element must be <ajax-response
 				if (isUndef(root) || root.tagName !== "ajax-response") {
@@ -857,12 +856,12 @@
 					return;
 				}
 
-				var steps = context.steps;
+				const steps = context.steps;
 
 				// go through the ajax response and process priority evaluations and
 				// header contributions first
-				for (var i = 0; i < root.childNodes.length; ++i) {
-					var childNode = root.childNodes[i];
+				for (let i = 0; i < root.childNodes.length; ++i) {
+					const childNode = root.childNodes[i];
 					if (childNode.tagName === "header-contribution") {
 						this.processHeaderContribution(context, childNode);
 					} else if (childNode.tagName === "priority-evaluate") {
@@ -872,9 +871,9 @@
 
 				// ... then add components, process remaining evaluations and a
 				// possible redirect
-				var stepIndexOfLastReplacedComponent = -1;
-				for (var c = 0; c < root.childNodes.length; ++c) {
-					var node = root.childNodes[c];
+				let stepIndexOfLastReplacedComponent = -1;
+				for (let c = 0; c < root.childNodes.length; ++c) {
+					const node = root.childNodes[c];
 
 					if (node.tagName === "component") {
 						if (stepIndexOfLastReplacedComponent === -1) {
@@ -905,7 +904,7 @@
 			context.steps.push(jQuery.proxy(function (notify) {
 				Wicket.Log.info("Response processed successfully.");
 
-				var attrs = context.attrs;
+				const attrs = context.attrs;
 				this._executeHandlers(attrs.sh, attrs, null, null, 'success');
 				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_SUCCESS, attrs, null, null, 'success');
 
@@ -922,7 +921,7 @@
 				if (errorMessage) {
 					Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: %s", errorMessage);
 				}
-				var attrs = context.attrs;
+				const attrs = context.attrs;
 				this._executeHandlers(attrs.fh, attrs, jqXHR, errorMessage, textStatus);
 				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_FAILURE, attrs, jqXHR, errorMessage, textStatus);
 
@@ -941,16 +940,16 @@
 		processComponent: function (context, node) {
 			context.steps.push(function (notify) {
 				// get the component id
-				var compId = node.getAttribute("id");
+				const compId = node.getAttribute("id");
 
 				// get existing component
-				var element = Wicket.$(compId);
+				const element = Wicket.$(compId);
 
 				if (isUndef(element)) {
 					Wicket.Log.error("Wicket.Ajax.Call.processComponent: Component with id '%s' was not found while trying to perform markup update. " +
 						"Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.", compId);
 				} else {
-					var text = Wicket.DOM.text(node);
+					const text = Wicket.DOM.text(node);
 
 					// replace the component
 					Wicket.DOM.replace(element, text);
@@ -962,13 +961,13 @@
 
 		// Adds a closure that processes a header contribution
 		processHeaderContribution: function (context, node) {
-			var c = Wicket.Head.Contributor;
+			const c = Wicket.Head.Contributor;
 			c.processContribution(context, node);
 		},
 
 		// Adds a closure that processes a redirect
 		processRedirect: function (context, node) {
-			var text = Wicket.DOM.text(node);
+			const text = Wicket.DOM.text(node);
 			Wicket.Log.info("Redirecting to: %s", text);
 			context.isRedirecting = true;
 			Wicket.Ajax.redirect(text);
@@ -1046,9 +1045,9 @@
 		},
 
 		throttle: function (id, millis, func) {
-			var entries = Wicket.Throttler.entries;
-			var entry = entries[id];
-			var me = this;
+			const entries = Wicket.Throttler.entries;
+			let entry = entries[id];
+			const me = this;
 			if (typeof(entry) === 'undefined') {
 				entry = new Wicket.ThrottlerEntry(func);
 				entry.setTimeoutVar(window.setTimeout(function() { me.execute(id); }, millis));
@@ -1064,10 +1063,10 @@
 		},
 
 		execute: function (id) {
-			var entries = Wicket.Throttler.entries;
-			var entry = entries[id];
+			const entries = Wicket.Throttler.entries;
+			const entry = entries[id];
 			if (typeof(entry) !== 'undefined') {
-				var func = entry.getFunc();
+				const func = entry.getFunc();
 				entries[id] = undefined;
 				return func();
 			}
@@ -1118,9 +1117,9 @@
 
 		Xml: {
 			parse: function (text) {
-				var parser = new DOMParser();
+				const parser = new DOMParser();
 
-				var xmlDocument = parser.parseFromString(text, "text/xml");
+				const xmlDocument = parser.parseFromString(text, "text/xml");
 
 				return xmlDocument;
 			}
@@ -1150,15 +1149,15 @@
 			 *		or empty object if the form element is disabled.
 			 */
 			serializeSelect: function (select){
-				var result = [];
+				const result = [];
 				if (select) {
-					var $select = jQuery(select);
+					const $select = jQuery(select);
 					if ($select.length > 0 && $select.prop('disabled') === false) {
-						var name = $select.prop('name');
-						var values = $select.val();
+						const name = $select.prop('name');
+						const values = $select.val();
 						if (Array.isArray(values)) {
-							for (var v = 0; v < values.length; v++) {
-								var value = values[v];
+							for (let v = 0; v < values.length; v++) {
+								const value = values[v];
 								result.push( { name: name, value: value } );
 							}
 						} else {
@@ -1181,12 +1180,12 @@
 			 * @return the URL encoded key=value pair or empty string if the form element is disabled.
 			 */
 			serializeInput: function (input) {
-				var result = [];
+				let result = [];
 				if (input && input.type) {
-					var $input = jQuery(input);
+					const $input = jQuery(input);
 					
 					if (input.type === 'file') {
-						for (var f = 0; f < input.files.length; f++) {
+						for (let f = 0; f < input.files.length; f++) {
 							result.push({"name" : input.name, "value" : input.files[f]});
 						}
 					} else if (!(input.type === 'image' || input.type === 'submit')) {
@@ -1230,20 +1229,20 @@
 					return [];
 				}
 
-				var tag = element.tagName.toLowerCase();
+				const tag = element.tagName.toLowerCase();
 				if (tag === "select") {
 					return Wicket.Form.serializeSelect(element);
 				} else if (tag === "input" || tag === "textarea") {
 					return Wicket.Form.serializeInput(element);
 				} else {
-					var result = [];
+					let result = [];
 					if (serializeRecursively) {
-						var elements = nodeListToArray(element.getElementsByTagName("input"));
+						let elements = nodeListToArray(element.getElementsByTagName("input"));
 						elements = elements.concat(nodeListToArray(element.getElementsByTagName("select")));
 						elements = elements.concat(nodeListToArray(element.getElementsByTagName("textarea")));
 
-						for (var i = 0; i < elements.length; ++i) {
-							var el = elements[i];
+						for (let i = 0; i < elements.length; ++i) {
+							const el = elements[i];
 							if (el.name && el.name !== "") {
 								result = result.concat(Wicket.Form.serializeElement(el, serializeRecursively));
 							}
@@ -1254,7 +1253,7 @@
 			},
 
 			serializeForm: function (form) {
-				var result = [],
+				let result = [],
 					elements;
 
 				if (form) {
@@ -1271,8 +1270,8 @@
 					}
 				}
 
-				for (var i = 0; i < elements.length; ++i) {
-					var el = elements[i];
+				for (let i = 0; i < elements.length; ++i) {
+					const el = elements[i];
 					if (el.name && el.name !== "") {
 						result = result.concat(Wicket.Form.serializeElement(el, false));
 					}
@@ -1289,7 +1288,7 @@
 					return Wicket.Form.serializeForm(element);
 				} else {
 					// try to find a form in DOM parents
-					var elementBck = element;
+					const elementBck = element;
 
 					if (dontTryToFindRootForm !== true) {
 						do {
@@ -1302,12 +1301,12 @@
 					} else {
 						// there is not form in dom hierarchy
 						// simulate it
-						var form = document.createElement("form");
-						var parent = elementBck.parentNode;
+						const form = document.createElement("form");
+						const parent = elementBck.parentNode;
 
 						parent.replaceChild(form, elementBck);
 						form.appendChild(elementBck);
-						var result = Wicket.Form.serializeForm(form);
+						const result = Wicket.Form.serializeForm(form);
 						parent.replaceChild(elementBck, form);
 
 						return result;
@@ -1375,7 +1374,7 @@
 				if (e === null) {
 					return;
 				}
-				var count = e.getAttribute("showIncrementallyCount");
+				let count = e.getAttribute("showIncrementallyCount");
 				count = parseInt(isUndef(count) ? 0 : count, 10);
 				if (count >= 0) {
 					Wicket.DOM.show(e);
@@ -1389,7 +1388,7 @@
 				if (e === null) {
 					return;
 				}
-				var count = e.getAttribute("showIncrementallyCount");
+				let count = e.getAttribute("showIncrementallyCount");
 				count = parseInt(isUndef(count) ? 0 : count - 1, 10);
 				if (count <= 0) {
 					Wicket.DOM.hide(e);
@@ -1402,8 +1401,8 @@
 					return null;
 				}
 				if (arguments.length > 1) {
-					var e = [];
-					for (var i = 0; i < arguments.length; i++) {
+					const e = [];
+					for (let i = 0; i < arguments.length; i++) {
 						e.push(Wicket.DOM.get(arguments[i]));
 					}
 					return e;
@@ -1429,7 +1428,7 @@
 					return false;
 				}
 
-				var id = element.getAttribute('id');
+				const id = element.getAttribute('id');
 				if (isUndef(id) || id === "") {
 					return element.ownerDocument === document;
 				}
@@ -1454,49 +1453,49 @@
 			 */
 			replace: function (element, text) {
 
-				var we = Wicket.Event;
-				var topic = we.Topic;
+				const we = Wicket.Event;
+				const topic = we.Topic;
 
 				we.publish(topic.DOM_NODE_REMOVING, element);
 
 				if (element.tagName.toLowerCase() === "title") {
 					// match the text between the tags
-					var titleText = />(.*?)</.exec(text)[1];
+					const titleText = />(.*?)</.exec(text)[1];
 					document.title = titleText;
 					return;
 				} else {
 					// jQuery 1.9+ expects '<' as the very first character in text
-					var cleanedText = text.trim();
+					const cleanedText = text.trim();
 
-					var $newElement = jQuery(cleanedText);
+					const $newElement = jQuery(cleanedText);
 					jQuery(element).replaceWith($newElement);
 				}
 
-				var newElement = Wicket.$(element.id);
+				const newElement = Wicket.$(element.id);
 				if (newElement) {
 					we.publish(topic.DOM_NODE_ADDED, newElement);
 				}
 			},
 			
 			add: function (element, text) {
-				var we = Wicket.Event;
-				var topic = we.Topic;
+				const we = Wicket.Event;
+				const topic = we.Topic;
 
 				// jQuery 1.9+ expects '<' as the very first character in text
-				var cleanedText = text.trim();
+				const cleanedText = text.trim();
 
-				var $newElement = jQuery(cleanedText);
+				const $newElement = jQuery(cleanedText);
 				jQuery(element).append($newElement);
 
-				var newElement = Wicket.$(element.id);
+				const newElement = Wicket.$(element.id);
 				if (newElement) {
 					we.publish(topic.DOM_NODE_ADDED, newElement);
 				}
 			},
 
 			remove: function (element) {
-				var we = Wicket.Event;
-				var topic = we.Topic;
+				const we = Wicket.Event;
+				const topic = we.Topic;
 
 				we.publish(topic.DOM_NODE_REMOVING, element);
 
@@ -1509,11 +1508,11 @@
 				if (isUndef(node)) {
 					return "";
 				}
-				var result = [];
+				const result = [];
 
 				if (node.childNodes.length > 0) {
-					for (var i = 0; i < node.childNodes.length; i++) {
-						var thisNode = node.childNodes[i];
+					for (let i = 0; i < node.childNodes.length; i++) {
+						const thisNode = node.childNodes[i];
 						switch (thisNode.nodeType) {
 							case 1: // ELEMENT_NODE
 							case 5: // ENTITY_REFERENCE_NODE
@@ -1547,13 +1546,13 @@
 				if (isUndef(node)) {
 					return "";
 				}
-				var result = [];
+				const result = [];
 				result.push("<");
 				result.push(node.nodeName);
 
 				if (node.attributes && node.attributes.length > 0) {
 
-					for (var i = 0; i < node.attributes.length; i++) {
+					for (let i = 0; i < node.attributes.length; i++) {
 						// serialize the attribute only if it has meaningful value that is not inherited
 						if (node.attributes[i].nodeValue && node.attributes[i].specified) {
 							result.push(" ");
@@ -1575,7 +1574,7 @@
 
 			// Utility function that determines whether given element is part of the current document
 			containsElement: function (element) {
-				var id = element.getAttribute("id");
+				const id = element.getAttribute("id");
 				if (id) {
 					return Wicket.$(id) !== null;
 				}
@@ -1595,11 +1594,11 @@
 					return "";
 				}
 
-				var result = [];
+				const result = [];
 
 				if (node.childNodes.length > 0) {
-					for (var i = 0; i < node.childNodes.length; i++) {
-						var thisNode = node.childNodes[i];
+					for (let i = 0; i < node.childNodes.length; i++) {
+						const thisNode = node.childNodes[i];
 						switch (thisNode.nodeType) {
 							case 1: // ELEMENT_NODE
 							case 5: // ENTITY_REFERENCE_NODE
@@ -1635,7 +1634,7 @@
 			 * @param {Object} attrs - the Ajax request attributes configured at the server side
 			 */
 			_handleEventCancelation: function(attrs) {
-				var evt = attrs.event;
+				const evt = attrs.event;
 				if (evt) {
 					if (attrs.pd) {
 						try {
@@ -1679,8 +1678,8 @@
 
 				jQuery.each(attrs.e, function (idx, evt) {
 					Wicket.Event.add(attrs.c, evt, function (jqEvent, data) {
-						var call = new Wicket.Ajax.Call();
-						var attributes = jQuery.extend({}, attrs);
+						const call = new Wicket.Ajax.Call();
+						const attributes = jQuery.extend({}, attrs);
 
 						if (evt !== "domready") {
 							attributes.event = Wicket.Event.fix(jqEvent);
@@ -1692,10 +1691,10 @@
 						call._executeHandlers(attributes.ih, attributes);
 						Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_INIT, attributes);
 
-						var throttlingSettings = attributes.tr;
+						const throttlingSettings = attributes.tr;
 						if (throttlingSettings) {
-							var postponeTimerOnUpdate = throttlingSettings.p || false;
-							var throttler = new Wicket.Throttler(postponeTimerOnUpdate);
+							const postponeTimerOnUpdate = throttlingSettings.p || false;
+							const throttler = new Wicket.Throttler(postponeTimerOnUpdate);
 							throttler.throttle(throttlingSettings.id, throttlingSettings.d,
 								Wicket.bind(function () {
 									call.ajax(attributes);
@@ -1712,7 +1711,7 @@
 			},
 			
 			process: function(data) {
-				var call = new Wicket.Ajax.Call();
+				const call = new Wicket.Ajax.Call();
 				call.process(data);
 			},
 
@@ -1748,10 +1747,10 @@
 					// we need to parse it since each header contribution needs to be treated separately
 					
 					// get the header contribution text and unescape it if necessary
-					var text = Wicket.DOM.text(headerNode);
+					const text = Wicket.DOM.text(headerNode);
 
 					// build a DOM tree of the contribution
-					var xmldoc = Wicket.Xml.parse(text);
+					const xmldoc = Wicket.Xml.parse(text);
 					return xmldoc;
 				},
 
@@ -1759,7 +1758,7 @@
 				// created by DOMParser if there is a error in XML parsing
 				// TODO: move out of the API section
 				_checkParserError: function (node) {
-					var result = false;
+					let result = false;
 
 					if (!isUndef(node.tagName) && node.tagName.toLowerCase() === "parsererror") {
 						Wicket.Log.error("Error in parsing: %s", node.textContent);
@@ -1770,8 +1769,8 @@
 
 				// Processes the parsed header contribution
 				processContribution: function (context, headerNode) {
-					var xmldoc = this.parse(headerNode);
-					var rootNode = xmldoc.documentElement;
+					const xmldoc = this.parse(headerNode);
+					const rootNode = xmldoc.documentElement;
 
 					// Firefox and Opera reports the error in the documentElement
 					if (this._checkParserError(rootNode)) {
@@ -1779,8 +1778,8 @@
 					}
 
 					// go through the individual elements and process them according to their type
-					for (var i = 0; i < rootNode.childNodes.length; i++) {
-						var node = rootNode.childNodes[i];
+					for (let i = 0; i < rootNode.childNodes.length; i++) {
+						let node = rootNode.childNodes[i];
 
 						// Chromium reports the error as a child node
 						if (this._checkParserError(node)) {
@@ -1788,13 +1787,13 @@
 						}
 
 						if (!isUndef(node.tagName)) {
-							var name = node.tagName.toLowerCase();
+							let name = node.tagName.toLowerCase();
 
 							// it is possible that a reference is surrounded by a <wicket:link
 							// in that case, we need to find the inner element
 							if (name === "wicket:link") {
-								for (var j = 0; j < node.childNodes.length; ++j) {
-									var childNode = node.childNodes[j];
+								for (let j = 0; j < node.childNodes.length; ++j) {
+									const childNode = node.childNodes[j];
 									// try to find a regular node inside wicket:link
 									if (childNode.nodeType === 1) {
 										node = childNode;
@@ -1823,8 +1822,8 @@
 				// Process an external stylesheet element
 				processLink: function (context, node) {
 					context.steps.push(function (notify) {
-						var res = Wicket.Head.containsElement(node, "href");
-						var oldNode = res.oldNode;
+						const res = Wicket.Head.containsElement(node, "href");
+						const oldNode = res.oldNode;
 						if (res.contains) {
 							// an element with same href attribute is in document, skip it
 							return FunctionsExecuter.DONE;
@@ -1834,16 +1833,16 @@
 						}
 
 						// create link element
-						var css = Wicket.Head.createElement("link");
+						const css = Wicket.Head.createElement("link");
 
 						// copy supplied attributes only.
-						var attributes = jQuery(node).prop("attributes");
-						var $css = jQuery(css);
+						const attributes = jQuery(node).prop("attributes");
+						const $css = jQuery(css);
 						jQuery.each(attributes, function() {
 							$css.attr(this.name, this.value);
 						});
 
-						var notifyCalled = false;
+						let notifyCalled = false;
 						function doNotify() {
 							if (!notifyCalled) {
 								notifyCalled = true;
@@ -1867,17 +1866,17 @@
 							return FunctionsExecuter.DONE;
 						}
 						// serialize the style to string
-						var content = Wicket.DOM.serializeNodeChildren(node);
+						const content = Wicket.DOM.serializeNodeChildren(node);
 
 						// create style element
-						var style = Wicket.Head.createElement("style");
+						const style = Wicket.Head.createElement("style");
 
 						// copy id attribute
 						style.id = node.getAttribute("id");
 						// copy nonce attribute
 						style.nonce = node.getAttribute("nonce");
 
-						var textNode = document.createTextNode(content);
+						const textNode = document.createTextNode(content);
 						style.appendChild(textNode);
 
 						Wicket.Head.addElement(style);
@@ -1895,8 +1894,8 @@
 							// if an inline element with same id is already in document, skip it
 							return FunctionsExecuter.DONE;
 						} else {
-							var res = Wicket.Head.containsElement(node, "src");
-							var oldNode = res.oldNode;
+							const res = Wicket.Head.containsElement(node, "src");
+							const oldNode = res.oldNode;
 							if (res.contains) {
 								// an element with same src attribute is in document, skip it
 								return FunctionsExecuter.DONE;
@@ -1907,17 +1906,17 @@
 						}
 
 						// convert the XML node to DOM node
-						var scriptDomNode = document.createElement("script");
-						var attrs = node.attributes;
-						for (var a = 0; a < attrs.length; a++) {
-							var attr = attrs[a];
+						const scriptDomNode = document.createElement("script");
+						const attrs = node.attributes;
+						for (let a = 0; a < attrs.length; a++) {
+							const attr = attrs[a];
 							scriptDomNode[attr.name] = attr.value;
 						}
 						
 						// determine whether it is external javascript (has src attribute set)
-						var src = node.getAttribute("src");
+						const src = node.getAttribute("src");
 						if (src !== null && src !== "") {
-							var onScriptReady = function () {
+							const onScriptReady = function () {
 								notify();
 							};
 
@@ -1939,7 +1938,7 @@
 
 							return FunctionsExecuter.ASYNC;
 						} else {
-							var suspension = {
+							const suspension = {
 								suspended: 0,
 										
 								suspend: function() {
@@ -1955,7 +1954,7 @@
 							};
 
 							// serialize the element content to string
-							var text = Wicket.DOM.serializeNodeChildren(node);
+							let text = Wicket.DOM.serializeNodeChildren(node);
 							// get rid of prefix and suffix, they are not eval-d correctly
 							text = text.replace(/^\n\/\*<!\[CDATA\[\*\/\n/, "");
 							text = text.replace(/\n\/\*\]\]>\*\/\n$/, "");
@@ -1965,7 +1964,7 @@
 
 								scriptDomNode.innerHTML = text;
 
-								var id = node.getAttribute("id");
+								const id = node.getAttribute("id");
 								Wicket.Head.addElement(scriptDomNode, typeof(id) !== "string" || id.length === 0);
 							} catch (exception) {
 								Wicket.Log.error("Ajax.Call.processEvaluation: Exception evaluating javascript: %s", text, exception);
@@ -1987,7 +1986,7 @@
 
 				processMeta: function (context, node) {
 					context.steps.push(function (notify) {
-						var meta = Wicket.Head.createElement("meta"),
+						const meta = Wicket.Head.createElement("meta"),
 							$meta = jQuery(meta),
 							attrs = jQuery(node).prop("attributes"),
 							name = node.getAttribute("name"),
@@ -2012,7 +2011,7 @@
 				// process (conditional) comments
 				processComment: function (context, node) {
 					context.steps.push(function (notify) {
-						var comment = document.createComment(node.nodeValue);
+						const comment = document.createComment(node.nodeValue);
 						Wicket.Head.addElement(comment);
 						return FunctionsExecuter.DONE;
 					});
@@ -2030,11 +2029,11 @@
 
 			// Adds the element to page head
 			addElement: function (element, remove) {
-				var headItems = document.querySelector('head meta[name="wicket.header.items"]');
+				const headItems = document.querySelector('head meta[name="wicket.header.items"]');
 				if (headItems) {
 					headItems.parentNode.insertBefore(element, headItems);
 				} else {
-					var head = document.querySelector("head");
+					const head = document.querySelector("head");
 					if (head) {
 						head.appendChild(element);
 					}
@@ -2052,33 +2051,33 @@
 			// is an element in head that is of same type as myElement, and whose src
 			// attribute is same as myElement.src.
 			containsElement: function (element, mandatoryAttribute) {
-				var attr = element.getAttribute(mandatoryAttribute);
+				const attr = element.getAttribute(mandatoryAttribute);
 				if (isUndef(attr) || attr === "") {
 					return {
 						contains: false
 					};
 				}
 
-				var elementTagName = element.tagName.toLowerCase();
-				var elementId = element.getAttribute("id");
-				var head = document.getElementsByTagName("head")[0];
+				const elementTagName = element.tagName.toLowerCase();
+				const elementId = element.getAttribute("id");
+				let head = document.getElementsByTagName("head")[0];
 
 				if (elementTagName === "script") {
 					head = document;
 				}
 
-				var nodes = head.getElementsByTagName(elementTagName);
+				const nodes = head.getElementsByTagName(elementTagName);
 
-				for (var i = 0; i < nodes.length; ++i) {
-					var node = nodes[i];
+				for (let i = 0; i < nodes.length; ++i) {
+					const node = nodes[i];
 
 					// check node names and mandatory attribute values
 					// we also have to check for attribute name that is suffixed by "_".
 					// this is necessary for filtering script references
 					if (node.tagName.toLowerCase() === elementTagName) {
 
-						var loadedUrl = node.getAttribute(mandatoryAttribute);
-						var loadedUrl_ = node.getAttribute(mandatoryAttribute+"_");
+						const loadedUrl = node.getAttribute(mandatoryAttribute);
+						const loadedUrl_ = node.getAttribute(mandatoryAttribute+"_");
 						if (loadedUrl === attr || loadedUrl_ === attr) {
 							return {
 								contains: true
@@ -2107,11 +2106,11 @@
 			focusin: function (event) {
 				event = Wicket.Event.fix(event);
 
-				var target = event.target;
+				const target = event.target;
 				if (target) {
-					var WF = Wicket.Focus;
+					const WF = Wicket.Focus;
 					WF.refocusLastFocusedComponentAfterResponse = false;
-					var id = target.id;
+					const id = target.id;
 					WF.lastFocusId = id;
 					Wicket.Log.info("focus set on '%s'", id);
 				}
@@ -2120,10 +2119,10 @@
 			focusout: function (event) {
 				event = Wicket.Event.fix(event);
 
-				var target = event.target;
-				var WF = Wicket.Focus;
+				const target = event.target;
+				const WF = Wicket.Focus;
 				if (target && WF.lastFocusId === target.id) {
-					var id = target.id;
+					const id = target.id;
 					if (WF.refocusLastFocusedComponentAfterResponse) {
 						// replaced components seem to blur when replaced only on Safari - so do not modify lastFocusId so it gets refocused
 						Wicket.Log.info("focus removed from '%s' but ignored because of component replacement", id);
@@ -2135,16 +2134,16 @@
 			},
 
 			getFocusedElement: function () {
-				var lastFocusId = Wicket.Focus.lastFocusId;
+				const lastFocusId = Wicket.Focus.lastFocusId;
 				if (lastFocusId) {
-					var focusedElement = Wicket.$(lastFocusId);
+					const focusedElement = Wicket.$(lastFocusId);
 					Wicket.Log.info("returned focused element:", focusedElement);
 					return  focusedElement;
 				}
 			},
 
 			setFocusOnId: function (id) {
-				var WF = Wicket.Focus;
+				const WF = Wicket.Focus;
 				if (id) {
 					WF.refocusLastFocusedComponentAfterResponse = true;
 					WF.focusSetFromServer = true;
@@ -2158,8 +2157,8 @@
 
 			// mark the focused component so that we know if it has been replaced or not by response
 			markFocusedComponent: function () {
-				var WF = Wicket.Focus;
-				var focusedElement = WF.getFocusedElement();
+				const WF = Wicket.Focus;
+				const focusedElement = WF.getFocusedElement();
 				if (focusedElement) {
 					// create a property of the focused element that would not remain there if component is replaced
 					focusedElement.wasFocusedBeforeComponentReplacements = true;
@@ -2172,9 +2171,9 @@
 
 			// detect if the focused component was replaced
 			checkFocusedComponentReplaced: function () {
-				var WF = Wicket.Focus;
+				const WF = Wicket.Focus;
 				if (WF.refocusLastFocusedComponentAfterResponse) {
-					var focusedElement = WF.getFocusedElement();
+					const focusedElement = WF.getFocusedElement();
 					if (focusedElement) {
 						if (typeof(focusedElement.wasFocusedBeforeComponentReplacements) !== "undefined") {
 							// focus component was not replaced - no need to refocus it
@@ -2193,14 +2192,14 @@
 				// (if focus was not changed from server) but if not, and the focus component should
 				// remain the same, do not re-focus - fixes problem on IE6 for combos that have
 				// the popup open (refocusing closes popup)
-				var WF = Wicket.Focus;
+				const WF = Wicket.Focus;
 				if (WF.refocusLastFocusedComponentAfterResponse && WF.lastFocusId) {
-					var toFocus = Wicket.$(WF.lastFocusId);
+					const toFocus = Wicket.$(WF.lastFocusId);
 
 					if (toFocus) {
 						Wicket.Log.info("Calling focus on '%s'", WF.lastFocusId);
 
-						var safeFocus = function() {
+						const safeFocus = function() {
 							try {
                                 // toFocus is not a JQuery object. Thus use focus.
 								toFocus.focus();
@@ -2214,7 +2213,7 @@
 							window.setTimeout(safeFocus, 0);
 						} else {
 							// avoid loops like - onfocus triggering an event the modifies the tag => refocus => the event is triggered again
-							var temp = toFocus.onfocus;
+							const temp = toFocus.onfocus;
 							toFocus.onfocus = null;
 
 							// IE needs setTimeout (it seems not to call onfocus sync. when focus() is called
@@ -2270,9 +2269,9 @@
 			 * Clear all remaining timers.
 			 */
 			clearAll: function() {
-				var WTH = Wicket.TimerHandles;
+				const WTH = Wicket.TimerHandles;
 				if (WTH) {
-					for (var th in WTH) {
+					for (const th in WTH) {
 						if (WTH.hasOwnProperty(th)) {
 							Wicket.Timer.clear(th);
 						}
@@ -2288,9 +2287,13 @@
 		Event: {
 			idCounter: 0,
 
+			// maps element -> { eventType -> [{ fn, wrapper }] } so that remove() can
+			// find the wrapper registered for a given original handler in add()
+			_listenerRegistry: (typeof(WeakMap) !== 'undefined') ? new WeakMap() : null,
+
 			getId: function (element) {
-				var $el = jQuery(element),
-					id = $el.prop("id");
+				const $el = jQuery(element);
+				let id = $el.prop("id");
 
 				if (typeof(id) === "string" && id.length > 0) {
 					return id;
@@ -2325,11 +2328,23 @@
 			 * If no event is given as argument (IE), window.event is returned.
 			 */
 			fix: function (evt) {
-				return jQuery.event.fix(evt || window.event);
+				const fixed = jQuery.event.fix(evt || window.event);
+
+				// jQuery.Event only exposes isDefaultPrevented() - mirror it as a live
+				// 'defaultPrevented' property so callers can use the same native Event
+				// API regardless of which Ajax engine (jQuery or vanilla) is active.
+				Object.defineProperty(fixed, 'defaultPrevented', {
+					configurable: true,
+					get: function () {
+						return this.isDefaultPrevented();
+					}
+				});
+
+				return fixed;
 			},
 
-			fire: function (element, event) {
-				jQuery(element).trigger(event);
+			fire: function (element, event, data) {
+				jQuery(Wicket.$(element)).trigger(event, data);
 			},
 
 			/**
@@ -2355,7 +2370,7 @@
 						jQuery(fn);
 					});
 				} else {
-					var el = element;
+					let el = element;
 					if (typeof(element) === 'string') {
 						el = document.getElementById(element);
 					}
@@ -2364,7 +2379,26 @@
 						Wicket.Log.error("Cannot bind a listener for event '%s' because the element is not in the DOM", type, element);
 					}
 
-					jQuery(el).on(type, selector, data, fn);
+					// trigger-time extra data (passed via Wicket.Event.fire) takes precedence
+					// over the bind-time 'data' given here, which is used as a fallback
+					const wrapper = function (jqEvent) {
+						const extraData = arguments.length > 1 ? arguments[1] : data;
+						return fn.call(this, jqEvent, extraData);
+					};
+
+					jQuery(el).on(type, selector, wrapper);
+
+					if (el && Wicket.Event._listenerRegistry) {
+						let map = Wicket.Event._listenerRegistry.get(el);
+						if (!map) {
+							map = {};
+							Wicket.Event._listenerRegistry.set(el, map);
+						}
+						if (!map[type]) {
+							map[type] = [];
+						}
+						map[type].push({ fn: fn, wrapper: wrapper });
+					}
 				}
 				return element;
 			},
@@ -2373,11 +2407,36 @@
 			 * Unbinds an event listener for an element
 			 *
 			 * @param element {HTMLElement} The host HTML element
-			 * @param type {String} The type of the DOM event
-			 * @param fn {Function} The event handler to unbind
+			 * @param type {String} The type of the DOM event. Several space separated
+			 *      event types can be given at once
+			 * @param fn {Function} The event handler to unbind. If omitted, every listener
+			 *      bound through Wicket.Event.add() for this type is removed.
 			 */
 			remove: function (element, type, fn) {
-				jQuery(element).off(type, fn);
+				let el = element;
+				if (typeof(element) === 'string') {
+					el = document.getElementById(element);
+				}
+				if (!el || !Wicket.Event._listenerRegistry) {
+					return;
+				}
+				const map = Wicket.Event._listenerRegistry.get(el);
+				if (!map) {
+					return;
+				}
+				const types = type ? type.split(/\s+/) : Object.keys(map);
+				for (let t = 0; t < types.length; t++) {
+					const entries = map[types[t]];
+					if (!entries) {
+						continue;
+					}
+					for (let i = entries.length - 1; i >= 0; i--) {
+						if (!fn || entries[i].fn === fn) {
+							jQuery(el).off(types[t], entries[i].wrapper);
+							entries.splice(i, 1);
+						}
+					}
+				}
 			},
 
 			/**
@@ -2423,7 +2482,7 @@
 			publish: function (topic) {
 				if (topic) {
 					// cut the topic argument
-					var args = Array.prototype.slice.call(arguments).slice(1);
+					const args = Array.prototype.slice.call(arguments).slice(1);
 
 					jQuery(document).triggerHandler(topic, args);
 					jQuery(document).triggerHandler('*', args);

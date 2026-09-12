@@ -18,12 +18,14 @@ package org.apache.wicket.examples.ajax.builtin;
 
 import java.util.Optional;
 
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxChannel.Type;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.examples.AjaxEngineSelector;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -32,7 +34,10 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
 
 /**
- * Demonstrates ajax effects
+ * Demonstrates ajax effects. Requires the jQuery-based Ajax engine: the effects it shows
+ * ({@code .effect()}, {@code .fadeOut()}, {@code .fadeIn()}) come from jQuery UI, which has no
+ * plain JavaScript equivalent in {@code wicket-ajax.js}. Unreachable under
+ * {@link AjaxEngineSelector.Engine#VANILLA}.
  */
 public class EffectsPage extends BasePage
 {
@@ -97,6 +102,12 @@ public class EffectsPage extends BasePage
 	 */
 	public EffectsPage()
 	{
+		if (AjaxEngineSelector.getEffectiveEngine() == AjaxEngineSelector.Engine.VANILLA)
+		{
+			// jQuery UI effects are not available under the jQuery-free Ajax engine
+			throw new RestartResponseException(Index.class);
+		}
+
 		final Label c1 = new Label("c1", new PropertyModel<>(this, "counter1"));
 		c1.setOutputMarkupId(true);
 		add(c1);
@@ -178,7 +189,7 @@ public class EffectsPage extends BasePage
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-		response.render(JavaScriptHeaderItem.forUrl("jquery-ui-1.10.3.custom.js"));
+		response.render(JavaScriptHeaderItem.forUrl("jquery-ui-v1.14.2.custom.js"));
 		response.render(OnDomReadyHeaderItem.forScript("jQuery.noConflict();"));
 		// make effects work nicely with inline elements 
 		response.render(CssHeaderItem.forCSS(
