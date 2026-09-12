@@ -16,3 +16,7 @@ release.properties
 nb-configuration.xml
 .DS_Store
 **.launch
+MAVEN.md
+/mvnw
+/mvnw.cmd
+/.mvn/

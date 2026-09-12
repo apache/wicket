@@ -20,8 +20,10 @@ module.exports = function(grunt) {
 		coreJs = [
 			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
 			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
+			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax.js',
 			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckSelector.js",
 			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js",
+			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/resource/FileUploadToResourceField.js",
 			"../../wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormChoiceComponentUpdatingBehavior.js",
 			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/pages/wicket-browser-info.js"
 		],
@@ -100,7 +102,7 @@ module.exports = function(grunt) {
 
 		qunit: {
 			/*
-			 * Runs all tests (w/ ajax).
+			 * Runs all tests (w/ ajax) against the default, JQuery-based wicket-ajax.js.
 			 * See ajax.js header for details how to setup it.
 			 */
 			all: {
@@ -108,9 +110,25 @@ module.exports = function(grunt) {
 					urls: [
 						'http://localhost:38887/test/js/all.html?4.0.0'
 					],
-					puppeteer: { 
-						headless: true, 
-						args: ['--no-sandbox'] 
+					puppeteer: {
+						headless: true,
+						args: ['--no-sandbox']
+					}
+				}
+			},
+
+			/*
+			 * Runs the very same tests again against the JQuery-free wicket-ajax.js,
+			 * to make sure both implementations of the Wicket.* client-side API stay in sync.
+			 */
+			vanilla: {
+				options: {
+					urls: [
+						'http://localhost:38887/test/js/all.html?vanilla'
+					],
+					puppeteer: {
+						headless: true,
+						args: ['--no-sandbox']
 					}
 				}
 			}

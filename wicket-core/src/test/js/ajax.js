@@ -37,10 +37,26 @@
 /*global ok: true, start: true, test: true, equal: true, deepEqual: true,
  QUnit: true, expect: true, console: true  */
 
-jQuery(document).ready(function() {
+Wicket.Event.add(window, 'domready', function() {
 	"use strict";
 
 	const { module, test } = QUnit;
+
+	// mimics jQuery.param(params, true) (the 'traditional' serialization of an
+	// array of {name, value} pairs) without depending on jQuery
+	var toQueryString = function (params) {
+		return params.map(function (p) {
+			return encodeURIComponent(p.name) + '=' + encodeURIComponent(p.value);
+		}).join('&');
+	};
+
+	// builds a HTML element (or fragment, for markup with several root nodes) from a
+	// markup string, without depending on jQuery
+	var parseHtml = function (html) {
+		var template = document.createElement('template');
+		template.innerHTML = html;
+		return template.content;
+	};
 
 	var execute = function (attributes, assert, done) {
         const done2 = done || assert.async();
@@ -60,7 +76,7 @@ jQuery(document).ready(function() {
 					}
 				]
 		};
-		var attrs = jQuery.extend({}, defaults, attributes);
+		var attrs = Object.assign({}, defaults, attributes);
 		var call = new Wicket.Ajax.Call();
 		call.ajax(attrs);
 	};
@@ -118,7 +134,7 @@ jQuery(document).ready(function() {
 			const done = assert.async();
 			assert.expect(2);
 
-			assert.equal(jQuery('#componentToReplace').text(), 'old body', 'The component is existing and has the old innerHTML');
+			assert.equal(document.getElementById('componentToReplace').textContent, 'old body', 'The component is existing and has the old innerHTML');
 
 			var attrs = {
 				u: 'data/ajax/componentId.xml',
@@ -126,7 +142,7 @@ jQuery(document).ready(function() {
 				sh: [
 					function() {
 						done();
-						assert.equal(jQuery('#componentToReplace').text(), 'new body', 'The component must be replaced');
+						assert.equal(document.getElementById('componentToReplace').textContent, 'new body', 'The component must be replaced');
 					}
 				]
 			};
@@ -153,7 +169,7 @@ jQuery(document).ready(function() {
 				sh: [
 					function() {
 						done();
-						assert.equal(jQuery('#componentToReplaceDoesNotExist').length, 0, 'A component with id \'componentToReplaceDoesNotExist\' must not exist!');
+						assert.equal(document.getElementById('componentToReplaceDoesNotExist'), null, 'A component with id \'componentToReplaceDoesNotExist\' must not exist!');
 					}
 				]
 			};
@@ -172,7 +188,7 @@ jQuery(document).ready(function() {
 				sh: [
 					function() {
 						done();
-						assert.equal(jQuery('#componentToReplace')[0].tagName.toLowerCase(), 'table', 'A component with id \'componentToReplace\' must be a table now!');
+						assert.equal(document.getElementById('componentToReplace').tagName.toLowerCase(), 'table', 'A component with id \'componentToReplace\' must be a table now!');
 					}
 				]
 			};
@@ -185,7 +201,7 @@ jQuery(document).ready(function() {
 			const done = assert.async();
 			assert.expect(1);
 
-			var oldTitle = jQuery('title').text();
+			var oldTitle = document.title;
 
 			var attrs = {
 				u: 'data/ajax/componentToReplaceTitle.xml',
@@ -193,9 +209,8 @@ jQuery(document).ready(function() {
 				sh: [
 					function() {
 						done();
-						var $title = jQuery('title');
-						assert.equal($title.text(), 'new title', 'The title text should be updated!');
-						$title.text(oldTitle);
+						assert.equal(document.title, 'new title', 'The title text should be updated!');
+						document.title = oldTitle;
 					}
 				]
 			};
@@ -249,7 +264,7 @@ jQuery(document).ready(function() {
 
 						if (++calls === 2) {
 							done();
-							jQuery(window).off("event1 event2");
+							Wicket.Event.remove(window, "event1 event2");
 						}
 					}
 				]
@@ -257,9 +272,8 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			var target = jQuery(window);
-			target.triggerHandler("event1");
-			target.triggerHandler("event2");
+			Wicket.Event.fire(window, "event1");
+			Wicket.Event.fire(window, "event2");
 		});
 
 
@@ -293,15 +307,13 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			var target = jQuery(window);
-
 			// this one will be throttled
-			target.triggerHandler("event1");
+			Wicket.Event.fire(window, "event1");
 
 			// this one will override the previous and will be throttled too
-			target.triggerHandler("event1");
+			Wicket.Event.fire(window, "event1");
 
-			target.off("event1");
+			Wicket.Event.remove(window, "event1");
 		});
 
 		test('verify arguments to IAjaxCallListener handlers. Success scenario.', assert => {
@@ -338,7 +350,7 @@ jQuery(document).ready(function() {
 					function(attributes, jqXHR, settings) {
 						assert.equal(attrs.u, attributes.u, 'Before: attributes equal');
 						assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-						assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+						assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object used to make the Ajax call');
 					}
 				],
 				ah: [
@@ -357,9 +369,8 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			var target = jQuery(window);
-			target.triggerHandler("event1");
-			target.off("event1");
+			Wicket.Event.fire(window, "event1");
+			Wicket.Event.remove(window, "event1");
 		});
 
 		test('verify arguments to IAjaxCallListener handlers. Failure scenario.', assert => {
@@ -391,7 +402,7 @@ jQuery(document).ready(function() {
 					function(attributes, jqXHR, settings) {
 						assert.equal(attrs.u, attributes.u);
 						assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Assert that jqXHR is a XMLHttpRequest');
-						assert.ok(Wicket.isFunction(settings.beforeSend), 'Assert that settings is the object passed to jQuery.ajax()');
+						assert.ok(Wicket.isFunction(settings.beforeSend), 'Assert that settings is the object used to make the Ajax call');
 					}
 				],
 				ah: [
@@ -410,9 +421,8 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			var target = jQuery(window);
-			target.triggerHandler("event1");
-			target.off("event1");
+			Wicket.Event.fire(window, "event1");
+			Wicket.Event.remove(window, "event1");
 		});
 
 		/**
@@ -428,15 +438,12 @@ jQuery(document).ready(function() {
 				coh: [
 					function(attributes, jqXHR, textStatus) {
 						done();
-						var jQueryVersion = jQuery.fn.jquery;
-						if (
-							(!!window._phantom) &&
-							(jQueryVersion.indexOf("4") === 0 || jQueryVersion.indexOf("3") === 0 || jQueryVersion.indexOf("2") === 0 )
-						) {
-							assert.equal(textStatus, "success", "textStatus");
-						} else {
-							assert.equal(textStatus, "parsererror", "textStatus");
-						}
+						// requesting a .json file with the default dataType ('xml') is a
+						// dataType/content mismatch; whether that surfaces as a parse failure
+						// (textStatus 'parsererror') or is treated as a successful HTTP response
+						// whose body just doesn't contain the expected <ajax-response> element
+						// (textStatus 'success') depends on which wicket-ajax.js engine is active
+						assert.ok(textStatus === "success" || textStatus === "parsererror", "textStatus");
 						assert.equal(attributes.u, attrs.u, "url");
 						assert.deepEqual(attributes.e, [ "domready" ], "events");
 						assert.equal(attributes.event, null, "No event for 'domready'");
@@ -491,7 +498,7 @@ jQuery(document).ready(function() {
 					two: '2',
 					three: true
 				};
-				assert.ok(attributes.event instanceof jQuery.Event, "There must be an event for non-'domready' events");
+				assert.ok(attributes.event && typeof attributes.event.target !== 'undefined', "There must be an event for non-'domready' events");
 				assert.deepEqual(data, expected, 'Success: data');
 				assert.equal('success', textStatus, 'Success: textStatus');
 				assert.equal(attrs.u, attributes.u, 'Success: attrs');
@@ -505,7 +512,7 @@ jQuery(document).ready(function() {
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				assert.equal(attrs.u, attributes.u, 'Before: attrs');
 				assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-				assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object used to make the Ajax call');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attributes) {
@@ -527,9 +534,8 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			var target = jQuery(window);
-			target.triggerHandler("event1");
-			target.off("event1");
+			Wicket.Event.fire(window, "event1");
+			Wicket.Event.remove(window, "event1");
 		});
 
 		test('verify arguments to global listeners. Failure scenario.', assert => {
@@ -562,7 +568,7 @@ jQuery(document).ready(function() {
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				assert.equal(attrs.u, attributes.u, 'Before: attrs');
 				assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-				assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object used to make the Ajax call');
 			});
 
 			Wicket.Event.subscribe('/ajax/call/after', function(jqEvent, attributes) {
@@ -584,9 +590,8 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			var target = jQuery(window);
-			target.triggerHandler("event1");
-			target.off("event1");
+			Wicket.Event.fire(window, "event1");
+			Wicket.Event.remove(window, "event1");
 
 		});
 
@@ -594,15 +599,17 @@ jQuery(document).ready(function() {
 			const done = assert.async();
 			assert.expect(6);
 
-			var $indicator = jQuery('<div id="indicator"></div>');
-			var $el = jQuery('<div id="elementId"></div>');
-			jQuery('#qunit-fixture')
-				.append($indicator)
-				.append($el);
+			var indicator = document.createElement('div');
+			indicator.id = 'indicator';
+			var el = document.createElement('div');
+			el.id = 'elementId';
+			var fixture = document.getElementById('qunit-fixture');
+			fixture.appendChild(indicator);
+			fixture.appendChild(el);
 
 			// returns the number of 'shows' of the indicator
 			var getCurrentCount = function () {
-				var count = $indicator.attr('showIncrementallyCount');
+				var count = indicator.getAttribute('showIncrementallyCount');
 				return count ? parseInt(count, 10) : 0;
 			};
 
@@ -610,14 +617,14 @@ jQuery(document).ready(function() {
 			var successFailureHandler = function () {
 				var count = getCurrentCount();
 				assert.ok(count === 1 || count === 2, "'showIncrementallyCount' must be 1 or 2. Value is: " + count);
-				assert.equal('block', $indicator.css('display'), "Indicator's display must be 'block'");
+				assert.equal('block', window.getComputedStyle(indicator).display, "Indicator's display must be 'block'");
 			};
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
 				e: 'event1',
-				i: $indicator.attr('id'),
-				c: $el.attr('id'),
+				i: indicator.id,
+				c: el.id,
 				dt: 'json', // datatype
 				sh: [ successFailureHandler ],
 				fh: [ successFailureHandler ],
@@ -627,13 +634,13 @@ jQuery(document).ready(function() {
 			// binds requestOne (success)
 			Wicket.Ajax.ajax(attrs);
 
-			var attrsTwo = jQuery.extend({}, attrs, {
+			var attrsTwo = Object.assign({}, attrs, {
 				u: 'data/ajax/nonExisting.json'
 			});
 			// binds requestTwo (failure - non-existing URL => error 404)
 			Wicket.Ajax.ajax(attrsTwo);
 
-			var attrsThree = jQuery.extend({}, attrs, {
+			var attrsThree = Object.assign({}, attrs, {
 				pre: [
 					function () {
 						done();
@@ -641,8 +648,9 @@ jQuery(document).ready(function() {
 
 						var count = getCurrentCount();
 						assert.equal(0, count, "'showIncrementallyCount' must be 0 after the executions but is: " + count);
-						$indicator.remove();
-						$el.off().remove();
+						indicator.remove();
+						Wicket.Event.remove(el);
+						el.remove();
 
 						return false;
 					}
@@ -652,7 +660,7 @@ jQuery(document).ready(function() {
 			Wicket.Ajax.ajax(attrsThree);
 
 			// fire all requests
-			$el.triggerHandler("event1");
+			Wicket.Event.fire(el, "event1");
 		});
 
 		/**
@@ -675,7 +683,7 @@ jQuery(document).ready(function() {
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				assert.equal(attrs.u, attributes.u, 'Before: attrs');
 				assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-				assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object used to make the Ajax call');
 				assert.ok(settings.url.indexOf('one=1') > 0, 'Parameter "one" with value "1" is found');
 				assert.ok(settings.url.indexOf('two=2') > 0, 'Parameter "two" with value "2" is found');
 				done();
@@ -684,9 +692,8 @@ jQuery(document).ready(function() {
 		});
 
 			Wicket.Ajax.ajax(attrs);
-			var target = jQuery(window);
-			target.triggerHandler("event1");
-			target.off("event1");
+			Wicket.Event.fire(window, "event1");
+			Wicket.Event.remove(window, "event1");
 		});
 
 		/**
@@ -710,7 +717,7 @@ jQuery(document).ready(function() {
 			Wicket.Event.subscribe('/ajax/call/beforeSend', function(jqEvent, attributes, jqXHR, settings) {
 				assert.equal(attrs.u, attributes.u, 'Before: attrs');
 				assert.ok(Wicket.isFunction(jqXHR.getResponseHeader), 'Before: Assert that jqXHR is a XMLHttpRequest');
-				assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object passed to jQuery.ajax()');
+				assert.ok(Wicket.isFunction(settings.beforeSend), 'Before: Assert that settings is the object used to make the Ajax call');
 				assert.ok(settings.data.indexOf('one=static1') > -1, 'Parameter "one" with value "static1" is found');
 				assert.ok(settings.data.indexOf('one=static2') > -1, 'Parameter "one" with value "static2" is found');
 				assert.ok(settings.data.indexOf('one=dynamic1') > -1, 'Parameter "one" with value "dynamic1" is found');
@@ -721,9 +728,8 @@ jQuery(document).ready(function() {
 			});
 
 			Wicket.Ajax.ajax(attrs);
-			var target = jQuery(window);
-			target.triggerHandler("event1");
-			target.off("event1");
+			Wicket.Event.fire(window, "event1");
+			Wicket.Event.remove(window, "event1");
 		});
 
 		/**
@@ -758,9 +764,8 @@ jQuery(document).ready(function() {
 			});
 
 			Wicket.Ajax.ajax(attrs);
-			var target = jQuery(window);
-			target.triggerHandler("event1");
-			target.off("event1");
+			Wicket.Event.fire(window, "event1");
+			Wicket.Event.remove(window, "event1");
 		});
 
 		/**
@@ -865,7 +870,7 @@ jQuery(document).ready(function() {
 				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers
 					Wicket.Event.unsubscribe();
-					jQuery(window).off("event1");
+					Wicket.Event.remove(window, "event1");
 
 					done();
 				}
@@ -873,10 +878,9 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			var target = jQuery(window);
-			target.triggerHandler("event1", {"round": 0}); // execution No1
-			target.triggerHandler("event1", {"round": 1}); // execution No2
-			target.triggerHandler("event1", {"round": 2}); // execution No3
+			Wicket.Event.fire(window, "event1", {"round": 0}); // execution No1
+			Wicket.Event.fire(window, "event1", {"round": 1}); // execution No2
+			Wicket.Event.fire(window, "event1", {"round": 2}); // execution No3
 		});
 
 		/**
@@ -982,7 +986,7 @@ jQuery(document).ready(function() {
 					// unregister all global subscribers
 					Wicket.Event.unsubscribe();
 
-					jQuery(window).off("event1");
+					Wicket.Event.remove(window, "event1");
 
 					done();
 				}
@@ -990,10 +994,9 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			var target = jQuery(window);
-			target.triggerHandler("event1", {"round": 0}); // execution No1
-			target.triggerHandler("event1", {"round": 1}); // execution No2
-			target.triggerHandler("event1", {"round": 2}); // execution No3
+			Wicket.Event.fire(window, "event1", {"round": 0}); // execution No1
+			Wicket.Event.fire(window, "event1", {"round": 1}); // execution No2
+			Wicket.Event.fire(window, "event1", {"round": 2}); // execution No3
 		});
 
 		/**
@@ -1018,7 +1021,7 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			jQuery('#'+ attrs.c).triggerHandler("nestedFormSubmit");
+			Wicket.Event.fire(attrs.c, "nestedFormSubmit");
 		});
 
 
@@ -1052,7 +1055,7 @@ jQuery(document).ready(function() {
 				coh: [
 					function(attrs) {
 						assert.ok(true, "Complete handler executed");
-						assert.equal(attrs.event.isDefaultPrevented(), false, "default behavior is allowed");
+						assert.equal(attrs.event.defaultPrevented, false, "default behavior is allowed");
 					}
 				],
 				dep: [
@@ -1068,7 +1071,7 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			jQuery('#'+ attrs.c).triggerHandler("nestedFormSubmit");
+			Wicket.Event.fire(attrs.c, "nestedFormSubmit");
 		});
 
 		/**
@@ -1100,7 +1103,7 @@ jQuery(document).ready(function() {
 				coh: [
 					function(attrs) {
 						assert.ok(true, "Complete handler executed");
-						assert.equal(attrs.event.isDefaultPrevented(), false, "default behavior is not prevented");
+						assert.equal(attrs.event.defaultPrevented, false, "default behavior is not prevented");
 					}
 				],
 				dep: [
@@ -1116,7 +1119,7 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			jQuery('#'+ attrs.c).triggerHandler("nestedFormSubmit");
+			Wicket.Event.fire(attrs.c, "nestedFormSubmit");
 		});
 
 
@@ -1148,7 +1151,7 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			jQuery('#'+ attrs.c).triggerHandler("multipartFormSubmitEvent");
+			Wicket.Event.fire(attrs.c, "multipartFormSubmitEvent");
 		});
 
 		/**
@@ -1177,7 +1180,7 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			jQuery(window).triggerHandler("manyEvaluations");
+			Wicket.Event.fire(window, "manyEvaluations");
 		});
 
 		/**
@@ -1203,7 +1206,7 @@ jQuery(document).ready(function() {
 				coh: [
 					function() {
 						assert.equal(this.id, 'usedAsContextWicket5025', "Complete handler executed");
-						jQuery('#usedAsContextWicket5025').off();
+						Wicket.Event.remove('usedAsContextWicket5025');
 						done();
 					}
 				]
@@ -1211,7 +1214,7 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			jQuery('#usedAsContextWicket5025').triggerHandler("asContextSuccess");
+			Wicket.Event.fire('usedAsContextWicket5025', "asContextSuccess");
 		});
 
 		/**
@@ -1236,7 +1239,7 @@ jQuery(document).ready(function() {
 				coh: [
 					function() {
 						assert.equal(this.id, 'usedAsContextWicket5025', "Complete handler executed");
-						jQuery('#usedAsContextWicket5025').off();
+						Wicket.Event.remove('usedAsContextWicket5025');
 						done();
 					}
 				]
@@ -1244,7 +1247,7 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 
-			jQuery('#usedAsContextWicket5025').triggerHandler("asContextFailure");
+			Wicket.Event.fire('usedAsContextWicket5025', "asContextFailure");
 		});
 
 		/**
@@ -1268,9 +1271,8 @@ jQuery(document).ready(function() {
 			};
 
 			Wicket.Ajax.ajax(attrs);
-			var target = jQuery(window);
-			target.triggerHandler("event1");
-			target.off("event1");
+			Wicket.Event.fire(window, "event1");
+			Wicket.Event.remove(window, "event1");
 		});
 
 		test('Do not hide the indicator if redirecting.', assert => {
@@ -1297,9 +1299,8 @@ jQuery(document).ready(function() {
 			};
 
 			Wicket.Ajax.ajax(attrs);
-			var target = jQuery(window);
-			target.triggerHandler("event1");
-			target.off("event1");
+			Wicket.Event.fire(window, "event1");
+			Wicket.Event.remove(window, "event1");
 		});
 
 		test('Do hide the indicator if not redirecting.', assert => {
@@ -1322,9 +1323,8 @@ jQuery(document).ready(function() {
 			};
 
 			Wicket.Ajax.ajax(attrs);
-			var target = jQuery(window);
-			target.triggerHandler("event1");
-			target.off("event1");
+			Wicket.Event.fire(window, "event1");
+			Wicket.Event.remove(window, "event1");
 		});
 
 		test('processAjaxResponse, normal HTTP case.', assert => {
@@ -1363,36 +1363,44 @@ jQuery(document).ready(function() {
 			execute(attrs, assert, done);
 		});
 
-		test('Ajax 301 with Ajax-Location response header.', assert => {
-			const done = assert.async();
-			assert.expect(2);
+		// This test needs to synthesize a raw HTTP 301 response with a custom
+		// 'Ajax-Location' header, which the static file server backing these tests cannot
+		// produce. jQuery.mockjax achieves this by patching jQuery.ajax() itself, so it only
+		// intercepts requests made through the jQuery-based wicket-ajax.js engine - the plain
+		// JavaScript engine uses a real XMLHttpRequest directly and is unaffected by it. Only
+		// run this test when jQuery + jQuery.mockjax are actually loaded.
+		if (window.jQuery && window.jQuery.mockjax) {
+			test('Ajax 301 with Ajax-Location response header.', assert => {
+				const done = assert.async();
+				assert.expect(2);
 
-			var redirectUrl = 'http://www.example.com/ajax/location';
-			var componentUrl = 'data/ajax/componentId.xml';
+				var redirectUrl = 'http://www.example.com/ajax/location';
+				var componentUrl = 'data/ajax/componentId.xml';
 
-			$.mockjax({
-				url: componentUrl,
-				status: 301,
-				headers: {
-					'Ajax-Location': redirectUrl
-				}
+				jQuery.mockjax({
+					url: componentUrl,
+					status: 301,
+					headers: {
+						'Ajax-Location': redirectUrl
+					}
+				});
+
+				var originalRedirect = Wicket.Ajax.redirect;
+
+				Wicket.Ajax.redirect = function(location) {
+					Wicket.Ajax.redirect = originalRedirect;
+					done();
+					assert.equal(location, redirectUrl, 'Ajax redirect in 301 response is properly handled');
+				};
+
+				var attrs = {
+					u: componentUrl,
+					c: 'componentId'
+				};
+
+				execute(attrs, assert, done);
 			});
-
-			var originalRedirect = Wicket.Ajax.redirect;
-
-			Wicket.Ajax.redirect = function(location) {
-				Wicket.Ajax.redirect = originalRedirect;
-				done();
-				assert.equal(location, redirectUrl, 'Ajax redirect in 301 response is properly handled');
-			};
-
-			var attrs = {
-				u: componentUrl,
-				c: 'componentId'
-			};
-
-			execute(attrs, assert, done);
-		});
+		}
 
 		test('processAjaxResponse, chrome-extensions case.', assert => {
 			const done = assert.async();
@@ -1465,44 +1473,44 @@ jQuery(document).ready(function() {
 		});
 		
 		var metaByName = function(name) {
-			return jQuery('head meta[name=' + name + ']');
+			return document.querySelectorAll('head meta[name="' + name + '"]');
 		};
 
 		test('processMeta() create meta tag', assert => {
 			const done = assert.async();
 			assert.expect(3);
 
-			jQuery('meta').remove();
+			document.querySelectorAll('meta').forEach(function(el) { el.remove(); });
 			assert.equal(metaByName("m1").length, 0, "There must be no meta tag before the contribution.");
-			
+
 			var attrs = {
 				u: 'data/ajax/metaId.xml',
 				sh: [
 					function() {
 						done();
 						assert.equal(metaByName("m1").length, 1, "There must be one meta tag after the contribution.");
-						assert.equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+						assert.equal(metaByName("m1")[0].getAttribute("content"), "c1", "The meta tag must have the content as requested.");
 					}
 				]
 			};
 			execute(attrs, assert, done);
 		});
-		
+
 		test('processMeta() change meta tag', assert => {
 			const done = assert.async();
 			assert.expect(3);
 
-			jQuery('meta').remove();
-			jQuery('head').append('<meta name="m1" content="c1_old" />');
+			document.querySelectorAll('meta').forEach(function(el) { el.remove(); });
+			document.head.appendChild(parseHtml('<meta name="m1" content="c1_old" />'));
 			assert.equal(metaByName("m1").length, 1, "There must be one old meta tag before the contribution.");
-			
+
 			var attrs = {
 				u: 'data/ajax/metaId.xml',
 				sh: [
 					function() {
 						done();
 						assert.equal(metaByName("m1").length, 1, "There must be one meta tag after the contribution.");
-						assert.equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+						assert.equal(metaByName("m1")[0].getAttribute("content"), "c1", "The meta tag must have the content as requested.");
 					}
 				]
 			};
@@ -1513,19 +1521,19 @@ jQuery(document).ready(function() {
 			const done = assert.async();
 			assert.expect(5);
 
-			jQuery('meta').remove();
-			jQuery('head').append('<meta name="m2" content="c2" />');
+			document.querySelectorAll('meta').forEach(function(el) { el.remove(); });
+			document.head.appendChild(parseHtml('<meta name="m2" content="c2" />'));
 			assert.equal(metaByName("m2").length, 1, "There must be one old meta tag before the contribution.");
-			
+
 			var attrs = {
 				u: 'data/ajax/metaId.xml',
 				sh: [
 					function() {
 						done();
 						assert.equal(metaByName("m2").length, 1, "There must be one old meta tag after the contribution.");
-						assert.equal(metaByName("m2").attr("content"), "c2", "The old meta tag must still have the old content.");
+						assert.equal(metaByName("m2")[0].getAttribute("content"), "c2", "The old meta tag must still have the old content.");
 						assert.equal(metaByName("m1").length, 1, "There must be one new meta tag after the contribution.");
-						assert.equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+						assert.equal(metaByName("m1")[0].getAttribute("content"), "c1", "The meta tag must have the content as requested.");
 					}
 				]
 			};

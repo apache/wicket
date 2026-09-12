@@ -36,69 +36,69 @@
 	};
 
 	Wicket.AutoComplete=function(ajaxAttributes, cfg){
-		var KEY_TAB=9;
-		var KEY_ENTER=13;
-		var KEY_ESC=27;
-		var KEY_LEFT=37;
-		var KEY_UP=38;
-		var KEY_RIGHT=39;
-		var KEY_DOWN=40;
-		var KEY_SHIFT=16;
-		var KEY_CTRL=17;
-		var KEY_ALT=18;
+		const KEY_TAB=9;
+		const KEY_ENTER=13;
+		const KEY_ESC=27;
+		const KEY_LEFT=37;
+		const KEY_UP=38;
+		const KEY_RIGHT=39;
+		const KEY_DOWN=40;
+		const KEY_SHIFT=16;
+		const KEY_CTRL=17;
+		const KEY_ALT=18;
 
-		var selected=-1;	// index of the currently selected item
-		var elementCount=0; // number of items on the auto complete list
-		var visible=0;		// is the list visible
+		let selected=-1;	// index of the currently selected item
+		let elementCount=0; // number of items on the auto complete list
+		let visible=0;		// is the list visible
 
-		var ignoreKeyEnter = false;		// ignore key ENTER because is already hid the autocomplete list
-		var ignoreOneFocusGain = false; // on FF, clicking an option in the pop-up would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
-		var triggerChangeOnHide = false;		// should a change be triggered on hiding of the popup
+		let ignoreKeyEnter = false;		// ignore key ENTER because is already hid the autocomplete list
+		let ignoreOneFocusGain = false; // on FF, clicking an option in the pop-up would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
+		let triggerChangeOnHide = false;		// should a change be triggered on hiding of the popup
 
-		var initialElement;
+		let initialElement;
 
 		// holds the eventual margins, padding, etc. of the menu container.
 		// it is computed when the menu is first rendered, and then reused.
-		var initialDelta = -1;
+		let initialDelta = -1;
 		// remember popup container border size so we can use style.width/height = ... correctly; array [horizontal, vertical]
-		var usefulDimensionsInitialized = false;
-		var containerBorderWidths = [0, 0];
-		var scrollbarSize = 0;
-		var selChSinceLastRender = false;
+		let usefulDimensionsInitialized = false;
+		const containerBorderWidths = [0, 0];
+		let scrollbarSize = 0;
+		let selChSinceLastRender = false;
 
 		// holds a throttler, for not sending many requests if the user types
 		// too quickly.
-		var localThrottler = new Wicket.Throttler(true);
-		var throttleDelay = cfg.throttleDelay;
+		const localThrottler = new Wicket.Throttler(true);
+		const throttleDelay = cfg.throttleDelay;
 
 		//this is the minimum input length required to display the autocomplete list
-		var minInputLength = cfg.showListOnEmptyInput === true ? 0 : cfg.minInputLength || 1;
+		const minInputLength = cfg.showListOnEmptyInput === true ? 0 : cfg.minInputLength || 1;
 
 		// timeout handler that cancels the hiding of the menu if the focus is still on menu items
-		var hideAutoCompleteTimer;
+		let hideAutoCompleteTimer;
 
 		// A flag indicating whether the 'change' event has been triggered manually after selection
 		// from the menu.
 		// In this case we don't want to render the menu.
 		// It is usually rendered on successful Ajax response
-		var isTriggeredChange = false;
+		let isTriggeredChange = false;
 
 		function initialize(){
-			var isShowing = false;
+			let isShowing = false;
 			// Remove the autocompletion menu if still present from
 			// a previous call. This is required to properly register
 			// the mouse event handler again 
-			var choiceDiv = document.getElementById(getMenuId());
+			const choiceDiv = document.getElementById(getMenuId());
 			if (choiceDiv !== null) {
 				isShowing = choiceDiv.showingAutocomplete;
 				choiceDiv.parentNode.parentNode.removeChild(choiceDiv.parentNode);
 			}
 
-			var obj = Wicket.$(ajaxAttributes.c);
+			const obj = Wicket.$(ajaxAttributes.c);
 			initialElement = obj;
 
 			Wicket.Event.add(obj, 'blur', function (jqEvent) {
-				var menuId=getMenuId();
+				const menuId=getMenuId();
 				//workaround for IE. Clicks on scrollbar trigger
 				//'blur' event on input field. (See https://issues.apache.org/jira/browse/WICKET-5882)
 				if (menuId !== document.activeElement.id && (menuId + "-container") !== document.activeElement.id) {
@@ -108,12 +108,12 @@
 							triggerChangeOnHide = false;
 					}, 500);
 				} else {
-					jQuery(this).trigger("focus");
+					this.focus();
 				}
 			});
 
 			Wicket.Event.add(obj, 'focus', function (jqEvent) {
-				var input = jqEvent.target;
+				const input = jqEvent.target;
 				if (!ignoreOneFocusGain && (cfg.showListOnFocusGain || (cfg.showListOnEmptyInput && (!input.value))) && visible === 0) {
 					getAutocompleteMenu().showingAutocomplete = true;
 					if (cfg.showCompleteListOnFocusGain) {
@@ -126,7 +126,7 @@
 			});
 
 			Wicket.Event.add(obj, 'keydown', function (jqEvent) {
-				var keyCode = Wicket.Event.keyCode(jqEvent);
+				const keyCode = Wicket.Event.keyCode(jqEvent);
 				switch (keyCode) {
 					case KEY_UP:
 						if (elementCount > 0) {
@@ -134,7 +134,7 @@
 								setSelected(selected-1);
 							}
 
-							var searchTerm = Wicket.$(ajaxAttributes.c).value;
+							const searchTerm = Wicket.$(ajaxAttributes.c).value;
 							if(selected === -1 && searchTerm) {
 								// select the last element
 								setSelected(elementCount-1);
@@ -174,7 +174,7 @@
 						ignoreKeyEnter = false;
 
 						if (selected > -1) {
-							var value = getSelectedValue();
+							let value = getSelectedValue();
 							value = handleSelection(value);
 
 							if (value) {
@@ -213,7 +213,7 @@
 			});
 
 			Wicket.Event.add(obj, 'input change', function (jqEvent) {
-				var kc = Wicket.Event.keyCode(jqEvent);
+				const kc = Wicket.Event.keyCode(jqEvent);
 				switch(kc) {
 					case KEY_TAB:
 					case KEY_ENTER:
@@ -257,7 +257,7 @@
 			// Remove the autocompletion menu if still present from
 			// a previous call. This is required to properly register
 			// the mouse event handler again
-			var choiceDiv=document.getElementById(getMenuId());
+			const choiceDiv=document.getElementById(getMenuId());
 			if (choiceDiv !== null) {
 				choiceDiv.parentNode.parentNode.removeChild(choiceDiv.parentNode);
 			}
@@ -271,19 +271,19 @@
 		}
 
 		function handleSelection(input) {
-			var attr = getSelectableElement(selected).attributes.onselect;
+			const attr = getSelectableElement(selected).attributes.onselect;
 			return attr ? eval(attr.value) : input;
 		}
 
 		function getSelectableElements() {
-			var menu = getAutocompleteMenu();
-			var firstChild = menu.firstChild;
-			var selectableElements = [];
+			const menu = getAutocompleteMenu();
+			const firstChild = menu.firstChild;
+			const selectableElements = [];
 			if (firstChild.tagName.toLowerCase() === 'table') {
-				var selectableInd=0;
-				for (var i = 0; i < firstChild.childNodes.length; i++) {
-					var tbody = firstChild.childNodes[i];
-					for (var j = 0; j < tbody.childNodes.length; j++) {
+				let selectableInd=0;
+				for (let i = 0; i < firstChild.childNodes.length; i++) {
+					const tbody = firstChild.childNodes[i];
+					for (let j = 0; j < tbody.childNodes.length; j++) {
 						selectableElements[selectableInd++]=tbody.childNodes[j];
 					}
 				}
@@ -293,13 +293,13 @@
 			}
 		}
 		function getSelectableElement(selected) {
-			var menu = getAutocompleteMenu();
-			var firstChild = menu.firstChild;
+			const menu = getAutocompleteMenu();
+			const firstChild = menu.firstChild;
 			if (firstChild.tagName.toLowerCase() === 'table') {
-				var selectableInd=0;
-				for (var i = 0; i < firstChild.childNodes.length; i++) {
-					var tbody = firstChild.childNodes[i];
-					for (var j = 0; j < tbody.childNodes.length; j++) {
+				let selectableInd=0;
+				for (let i = 0; i < firstChild.childNodes.length; i++) {
+					const tbody = firstChild.childNodes[i];
+					for (let j = 0; j < tbody.childNodes.length; j++) {
 						if (selectableInd === selected) {
 							return tbody.childNodes[j];
 						}
@@ -316,9 +316,9 @@
 		}
 
 		function getAutocompleteMenu() {
-			var choiceDiv=document.getElementById(getMenuId());
+			let choiceDiv=document.getElementById(getMenuId());
 			if (choiceDiv === null) {
-				var container = document.createElement("div");
+				const container = document.createElement("div");
 				container.className ="wicket-aa-container";
 				if(cfg.className) {
 				  container.className += ' ' + cfg.className;
@@ -368,22 +368,22 @@
 		function prepareAndExecuteAjaxUpdate(successHandler, currentInput){
 			showIndicator();
 
-			var attrs = jQuery.extend({}, ajaxAttributes);
+			const attrs = Object.assign({}, ajaxAttributes);
 
 			attrs.c = undefined;
 
 			attrs.pre = attrs.pre || [];
 			attrs.pre.push(function (attributes) {
-				var input = Wicket.$(ajaxAttributes.c);
+				const input = Wicket.$(ajaxAttributes.c);
 				if (!input) {
 					// WICKET-6366 input might no longer be on page
 					return false;
 				}
 
-				var activeIsInitial = (document.activeElement === initialElement);
-				var hasMinimumLength = input.value.length >= minInputLength;
+				const activeIsInitial = (document.activeElement === initialElement);
+				const hasMinimumLength = input.value.length >= minInputLength;
 
-				var result = hasMinimumLength && activeIsInitial;
+				const result = hasMinimumLength && activeIsInitial;
 
 				if (!result) {
 					hideAutoComplete();
@@ -410,23 +410,27 @@
 		}
 
 		function showAutoComplete() {
-			var input = Wicket.$(ajaxAttributes.c);
-			var container = getAutocompleteContainer();
-			var index=getOffsetParentZIndex(ajaxAttributes.c);
+			const input = Wicket.$(ajaxAttributes.c);
+			const container = getAutocompleteContainer();
+			const index=getOffsetParentZIndex(ajaxAttributes.c);
 			container.show();
 
 			// Accessibility
-			var container_jquery = $(container);
-			var size = container_jquery.find("li").size;
+			const liElements = container.querySelectorAll("li");
+			const size = liElements.length;
 
-			container_jquery.find("li").each(function (index, el) {
-				$(el).attr("aria-posinset", index + 1).attr("aria-setsize", size).attr("tabindex", -1).attr("role", "option");
+			liElements.forEach(function (el, index) {
+				el.setAttribute("aria-posinset", index + 1);
+				el.setAttribute("aria-setsize", size);
+				el.setAttribute("tabindex", -1);
+				el.setAttribute("role", "option");
 			});
 
-			container_jquery.find("ul").each(function (i, el) {
-				$(el).attr("id", "wicket-autocomplete-listbox-" + ajaxAttributes.c).attr("role", "listbox");
+			container.querySelectorAll("ul").forEach(function (el) {
+				el.setAttribute("id", "wicket-autocomplete-listbox-" + ajaxAttributes.c);
+				el.setAttribute("role", "listbox");
 			});
-			$(input).attr("aria-expanded", "true");
+			input.setAttribute("aria-expanded", "true");
 
 
 			if (!isNaN(Number(index))) {
@@ -437,7 +441,7 @@
 				initializeUsefulDimensions(input, container);
 			}
 			if (cfg.adjustInputWidth) {
-				var newW = input.offsetWidth-containerBorderWidths[0];
+				const newW = input.offsetWidth-containerBorderWidths[0];
 				container.style.width = (newW >= 0 ? newW : input.offsetWidth)+'px';
 			}
 
@@ -451,7 +455,7 @@
 			usefulDimensionsInitialized = true;
 			// a few checks to increase the odds that we can count on clientWidth/Height
 			if (typeof (container.clientWidth) !== "undefined" && typeof (container.clientHeight) !== "undefined" && container.clientWidth > 0 && container.clientHeight > 0) {
-				var tmp = container.style.overflow; // clientWidth & clientHeight exclude border and scollbars
+				const tmp = container.style.overflow; // clientWidth & clientHeight exclude border and scollbars
 				container.style.overflow = "visible";
 				containerBorderWidths[0] = container.offsetWidth - container.clientWidth;
 				containerBorderWidths[1] = container.offsetHeight - container.clientHeight;
@@ -467,7 +471,7 @@
 		function hideAutoComplete(){
 			hideAutoCompleteTimer = undefined;
 
-			var input = Wicket.$(ajaxAttributes.c);
+			const input = Wicket.$(ajaxAttributes.c);
 			if (input) {
 				input.setAttribute("aria-expanded", "false");
 				input.removeAttribute("aria-activedescendant");
@@ -479,7 +483,7 @@
 			//WICKET-5382
 			hideIndicator();
 
-			var container = getAutocompleteContainer();
+			const container = getAutocompleteContainer();
 			if (container)
 			{
 				container.hide();
@@ -491,51 +495,23 @@
 			if (triggerChangeOnHide) {
 				triggerChangeOnHide = false;
 				isTriggeredChange = true;
-				jQuery(input).trigger('change');
+				Wicket.Event.fire(input, 'change');
 			}
 		}
 
 		function getWindowWidthAndHeigth() {
-			var myWidth = 0, myHeight = 0;
-			if( typeof( window.innerWidth ) === 'number' ) {
-				//Non-IE
-				myWidth = window.innerWidth;
-				myHeight = window.innerHeight;
-			} else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
-				//IE 6+ in 'standards compliant mode'
-				myWidth = document.documentElement.clientWidth;
-				myHeight = document.documentElement.clientHeight;
-			} else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
-				//IE 4 compatible
-				myWidth = document.body.clientWidth;
-				myHeight = document.body.clientHeight;
-			}
-			return [ myWidth, myHeight ];
+			return [ window.innerWidth, window.innerHeight ];
 		}
 
 		function getWindowScrollXY() {
-			var scrOfX = 0, scrOfY = 0;
-			if( typeof( window.scrollY ) === 'number' ) {
-				//Netscape compliant
-				scrOfY = window.scrollY;
-				scrOfX = window.scrollX;
-			} else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
-				//DOM compliant
-				scrOfY = document.body.scrollTop;
-				scrOfX = document.body.scrollLeft;
-			} else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
-				//IE6 standards compliant mode
-				scrOfY = document.documentElement.scrollTop;
-				scrOfX = document.documentElement.scrollLeft;
-			}
-			return [ scrOfX, scrOfY ];
+			return [ window.scrollX, window.scrollY ];
 		}
 
 		function calculateAndSetPopupBounds(input, popup)
 		{
-			var leftPosition=0;
-			var topPosition=0;
-			var inputPosition=getPosition(input);
+			let leftPosition=0;
+			let topPosition=0;
+			const inputPosition=getPosition(input);
 			if (cfg.useSmartPositioning) {
 				// there are 4 possible positions for the popup: top-left, top-right, buttom-left, bottom-right
 				// relative to the field; we will try to use the position that does not get out of the visible page
@@ -543,30 +519,30 @@
 					popup.style.left = "0px"; // allow browser to stretch div as much as needed to see where the popup should be put
 					popup.style.top = "0px";
 				}
-				var windowScrollXY = getWindowScrollXY();
-				var windowWH = getWindowWidthAndHeigth();
-				var windowScrollX = windowScrollXY[0];
-				var windowScrollY = windowScrollXY[1];
-				var windowWidth = windowWH[0];
-				var windowHeight = windowWH[1];
+				const windowScrollXY = getWindowScrollXY();
+				const windowWH = getWindowWidthAndHeigth();
+				const windowScrollX = windowScrollXY[0];
+				const windowScrollY = windowScrollXY[1];
+				const windowWidth = windowWH[0];
+				const windowHeight = windowWH[1];
 
-				var dx1 = windowScrollX + windowWidth - inputPosition[0] - popup.offsetWidth;
-				var dx2 = inputPosition[0] + input.offsetWidth - popup.offsetWidth - windowScrollX;
+				let dx1 = windowScrollX + windowWidth - inputPosition[0] - popup.offsetWidth;
+				let dx2 = inputPosition[0] + input.offsetWidth - popup.offsetWidth - windowScrollX;
 				if (popup.style.width === "auto" && dx1 < 0 && dx2 < 0) {
 					// browser determined popup width; if it does not fit either right or left aligned with the input, calculate and set fixed width
 					// so that after initial position calculation after popup opens, bounds do not change every time a mouse over or other event happens.
 					// The browser can change the width/height when div if repositioned - if they were not already restricted because of maxHeight and field width (and that can result in a relocation of the div and so on).
-					var newW = popup.offsetWidth + Math.max(dx1, dx2) - containerBorderWidths[0];
+					const newW = popup.offsetWidth + Math.max(dx1, dx2) - containerBorderWidths[0];
 					popup.style.width = (newW >= 0 ? newW : popup.offsetWidth + Math.max(dx1, dx2))+'px';
 					dx1 = windowScrollX + windowWidth - inputPosition[0] - popup.offsetWidth;
 					dx2 = inputPosition[0] + input.offsetWidth - popup.offsetWidth - windowScrollX;
 				}
 
-				var dy1 = windowScrollY + windowHeight - inputPosition[1] - input.offsetHeight - popup.offsetHeight;
-				var dy2 = inputPosition[1] - popup.offsetHeight - windowScrollY;
+				let dy1 = windowScrollY + windowHeight - inputPosition[1] - input.offsetHeight - popup.offsetHeight;
+				let dy2 = inputPosition[1] - popup.offsetHeight - windowScrollY;
 				if (dy1 < 0 && dy2 < 0) {
 					// limit height if it gets outside the screen
-					var newH = popup.offsetHeight + Math.max(dy1, dy2) - containerBorderWidths[1];
+					const newH = popup.offsetHeight + Math.max(dy1, dy2) - containerBorderWidths[1];
 					popup.style.height = (newH >= 0 ? newH : popup.offsetHeight + Math.max(dy1, dy2))+'px';
 					dy1 = windowScrollY + windowHeight - inputPosition[1] - input.offsetHeight - popup.offsetHeight;
 					dy2 = inputPosition[1] - popup.offsetHeight - windowScrollY;
@@ -595,7 +571,7 @@
 					}
 				}
 				if (popup.style.width === "auto") {
-					var newWidth = popup.offsetWidth - containerBorderWidths[0];
+					const newWidth = popup.offsetWidth - containerBorderWidths[0];
 					popup.style.width = (newWidth >= 0 ? (newWidth + (popup.scrollWidth-popup.clientWidth)) : popup.offsetWidth)+'px';
 				}
 			} else {
@@ -607,10 +583,10 @@
 		}
 
 		function getPosition(obj) {
-			var rectangle = jQuery(obj).offset();
+			const rectangle = obj.getBoundingClientRect();
 
-			var leftPosition = rectangle.left || 0;
-			var topPosition = rectangle.top || 0;
+			let leftPosition = (rectangle.left + window.scrollX) || 0;
+			let topPosition = (rectangle.top + window.scrollY) || 0;
 			if (!cfg.ignoreBordersWhenPositioning) {
 				topPosition += obj.clientTop || 0;
 				leftPosition += obj.clientLeft || 0;
@@ -626,7 +602,7 @@
 			getAutocompleteMenu().showingAutocomplete = false;
 
 			// check if the input hasn't been cleared in the meanwhile or has been replaced by ajax
-			var input=Wicket.$(ajaxAttributes.c);
+			const input=Wicket.$(ajaxAttributes.c);
 			if ((input !== initialElement) || (document.activeElement !== input) || !cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
 				hideAutoComplete();
 				hideIndicator();
@@ -637,25 +613,25 @@
 				return;
 			}
 
-			var element = getAutocompleteMenu();
+			const element = getAutocompleteMenu();
 			if (!cfg.adjustInputWidth && element.parentNode && element.parentNode.style.width !== "auto") {
 				element.parentNode.style.width = "auto"; // let browser auto-set width again as displayed elements may change
 				selChSinceLastRender = true; // selected item will not have selected style until rendrered
 			}
 			element.innerHTML=resp;
 			element.firstChild.role = "listbox";
-			var selectableElements = getSelectableElements();
+			const selectableElements = getSelectableElements();
 			if (selectableElements) {
 				elementCount=selectableElements.length;
 
-				var clickFunc = function(event) {
+				const clickFunc = function(event) {
 					// mouseOver might not be called, so select here at least
 					setSelected(getElementIndex(this));
 
-					var value = getSelectedValue();
+					let value = getSelectedValue();
 					value = handleSelection(value);
 
-					var input = Wicket.$(ajaxAttributes.c);
+					const input = Wicket.$(ajaxAttributes.c);
 					if (value) {
 						input.value = value;
 						triggerChangeOnHide = true;
@@ -665,18 +641,18 @@
 
 					if (document.activeElement !== input) {
 						ignoreOneFocusGain = true;
-						jQuery(input).trigger('focus');
+						input.focus();
 					}
 					return true;
 				};
 
-				var mouseOverFunc = function(event) {
+				const mouseOverFunc = function(event) {
 					setSelected(getElementIndex(this));
 					render(false, false); // don't scroll - breaks mouse wheel scrolling
 					showAutoComplete();
 				};
 
-				var mouseDownFunc = function(event) {
+				const mouseDownFunc = function(event) {
 					// Give a chance the menu's blur event handler to be executed and eventually set
 					// 'hideAutoCompleteTimer'
 					// And then cancel the hiding of the menu
@@ -686,8 +662,8 @@
 						}
 					}, 50);
 				};
-				for(var i = 0;i < elementCount; i++) {
-					var node = selectableElements[i];
+				for(let i = 0;i < elementCount; i++) {
+					const node = selectableElements[i];
 					node.onclick = clickFunc;
 					node.onmouseover = mouseOverFunc;
 					node.onmousedown = mouseDownFunc;
@@ -703,11 +679,11 @@
 
 			if(elementCount>0){
 				if(cfg.preselect === true){
-					var selectedIndex = defaultSelection?defaultSelection:0;
-					for(var ec = 0; ec < elementCount; ec++) {
-						var selectableElement = selectableElements[ec];
-						var attr = selectableElement.attributes.textvalue;
-						var value;
+					let selectedIndex = defaultSelection?defaultSelection:0;
+					for(let ec = 0; ec < elementCount; ec++) {
+						const selectableElement = selectableElements[ec];
+						const attr = selectableElement.attributes.textvalue;
+						let value;
 						if (attr === undefined) {
 							value = selectableElement.innerHTML;
 						} else {
@@ -740,7 +716,7 @@
 
 		function scheduleEmptyCheck() {
 			window.setTimeout(function() {
-				var input=Wicket.$(ajaxAttributes.c);
+				const input=Wicket.$(ajaxAttributes.c);
 
 				// WICKET-6366 input might no longer be on page
 				if (input) {
@@ -753,9 +729,9 @@
 
 		function getSelectedValue(){
 			getAutocompleteMenu();
-			var selectableElement = getSelectableElement(selected);
-			var attr=selectableElement.attributes.textvalue;
-			var value;
+			const selectableElement = getSelectableElement(selected);
+			const attr=selectableElement.attributes.textvalue;
+			let value;
 			if (!attr) {
 				value=selectableElement.innerHTML;
 			} else {
@@ -765,9 +741,9 @@
 		}
 
 		function getElementIndex(element) {
-			var selectableElements = getSelectableElements();
-			for(var i=0;i<selectableElements.length;i++){
-				var node=selectableElements[i];
+			const selectableElements = getSelectableElements();
+			for(let i=0;i<selectableElements.length;i++){
+				const node=selectableElements[i];
 				if(node === element) {
 					return i;
 				}
@@ -786,17 +762,17 @@
 		}
 
 		function render(adjustScroll, adjustHeight) {
-			var menu=getAutocompleteMenu();
-			var height=0;
-			var node=getSelectableElement(0);
-			var re = /\bselected\b/gi;
-			var sizeAffected = false;
-			var input=Wicket.$(ajaxAttributes.c);
+			const menu=getAutocompleteMenu();
+			let height=0;
+			let node=getSelectableElement(0);
+			const re = /\bselected\b/gi;
+			let sizeAffected = false;
+			const input=Wicket.$(ajaxAttributes.c);
 
-			for(var i=0;i<elementCount;i++)
+			for(let i=0;i<elementCount;i++)
 			{
-				var origClassNames = node.className;
-				var classNames = origClassNames.replace(re, "");
+				const origClassNames = node.className;
+				let classNames = origClassNames.replace(re, "");
 
 				if(selected===i){
 					classNames += " selected";
@@ -832,7 +808,7 @@
 					initialDelta = menu.parentNode.offsetHeight - height;
 				}
 				if (height + initialDelta > cfg.maxHeight) {
-					var newH = cfg.maxHeight - containerBorderWidths[1];
+					const newH = cfg.maxHeight - containerBorderWidths[1];
 					menu.parentNode.style.height = (newH >= 0 ? newH : cfg.maxHeight) + "px";
 					sizeAffected = true;
 				} else if (menu.parentNode.style.height !== "auto") { // if height is limited
@@ -855,20 +831,8 @@
 			} // update stuff related to bounds if needed
 		}
 
-		// From http://www.robertnyman.com/2006/04/24/get-the-rendered-style-of-an-element/
-		function getStyle(obj,cssRule) {
-			var cssRuleAlt = cssRule.replace(/\-(\w)/g,function(strMatch,p1){return p1.toUpperCase();});
-			var value=obj.style[cssRuleAlt];
-			if (!value) {
-				if (document.defaultView && document.defaultView.getComputedStyle) {
-					value = document.defaultView.getComputedStyle(obj,"").getPropertyValue(cssRule);
-				}
-				else if (obj.currentStyle)
-				{
-					value=obj.currentStyle[cssRuleAlt];
-				}
-			}
-			return value;
+		function getStyle(obj, cssRule) {
+			return window.getComputedStyle(obj).getPropertyValue(cssRule);
 		}
 
 		function isVisible(obj) {
@@ -878,9 +842,9 @@
 		function getOffsetParentZIndex(obj) {
 		obj=typeof obj === "string" ? Wicket.$(obj):obj;
 			obj=obj.offsetParent;
-			var index="auto";
+			let index="auto";
 			do {
-				var pos=getStyle(obj,"position");
+				const pos=getStyle(obj,"position");
 				if(pos === "relative"||pos === "absolute"||pos === "fixed") {
 					index=getStyle(obj,"z-index");
 				}

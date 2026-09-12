@@ -53,7 +53,7 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		/*
 		 * jQuery UI, released under MIT. See NOTICE
 		 */
-		javaScriptIgnore.add("src/main/webapp/jquery-ui-1.10.3.custom.js");
+		javaScriptIgnore.add("src/main/webapp/jquery-ui-v1.14.2.custom.js");
 		/*
 		 * Behaviour, released under BSD. See NOTICE
 		 */

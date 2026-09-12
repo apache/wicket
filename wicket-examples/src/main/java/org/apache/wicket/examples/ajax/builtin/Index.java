@@ -16,12 +16,14 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import org.apache.wicket.examples.AjaxEngineSelector;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.homepage.HomePage;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
  * Wicket ajax example index page
- * 
+ *
  * @author Igor Vaynberg (ivaynberg)
  */
 public class Index extends BasePage
@@ -31,6 +33,11 @@ public class Index extends BasePage
 	 */
 	public Index()
 	{
+		// EffectsPage needs jQuery UI, which the plain JavaScript Ajax engine does not load
+		WebMarkupContainer effectsSection = new WebMarkupContainer("effectsSection");
+		effectsSection.setVisible(
+			AjaxEngineSelector.getEffectiveEngine() == AjaxEngineSelector.Engine.JQUERY);
+		add(effectsSection);
 	}
 
 	@Override

@@ -687,6 +687,9 @@ button.button--alert {
     display: inline-block;
     width: 240px; }
 
+.ajax-engine {
+  float: right; }
+
 .jumbotron.header {
   background-color: #111;
   background-image: url("background-2.jpg");

@@ -16,18 +16,27 @@
  */
 
 /*global ok: true, start: true, stop: true, test: true, equal: true, deepEqual: true,
- QUnit: true, module: true, expect: true */
+ QUnit: true, module: true, expect: true, KeyboardEvent: true */
 
-jQuery(document).ready(function() {
+Wicket.Event.add(window, 'domready', function() {
 	"use strict";
 
 	const { module, test } = QUnit;
+
+	// creates a test element inside #qunit-fixture, without depending on jQuery
+	var createTestElement = function (id) {
+		var el = document.createElement('div');
+		el.id = id || 'addTestId';
+		el.textContent = 'element body';
+		document.getElementById('qunit-fixture').appendChild(el);
+		return el;
+	};
 
 	module('Wicket.Event.getId');
 
 	test('getId - of an element with specified id', assert => {
 
-		var element = jQuery('.getIdClass1')[0];
+		var element = document.querySelector('.getIdClass1');
 		var id = Wicket.Event.getId(element);
 
 		assert.equal(id, 'specifiedId', 'The specified element id is properly read');
@@ -35,49 +44,69 @@ jQuery(document).ready(function() {
 
 	test('getId - of an element without specified id', assert => {
 
-		var element = jQuery('.getIdClass2')[0];
+		var element = document.querySelector('.getIdClass2');
 		var id = Wicket.Event.getId(element);
 
 		assert.equal(id, 'wicket-generated-id-0', 'The element without specified id will have an auto generated one');
 
-		var element2 = jQuery('.getIdClass2');
-		assert.equal(element2.prop('id'), 'wicket-generated-id-0', 'The generated id is assigned');
+		var element2 = document.querySelector('.getIdClass2');
+		assert.equal(element2.id, 'wicket-generated-id-0', 'The generated id is assigned');
 	});
 
 	module('Wicket.Event.keyCode');
 
 	test('keyCode', assert => {
 
-		var evt = jQuery.Event("keydown", { keyCode: 123 });
+		var evt = new KeyboardEvent("keydown", { keyCode: 123 });
 
 		assert.equal(Wicket.Event.keyCode(evt), 123, 'event.keyCode should be used if available');
-	});
-
-	test('which', assert => {
-
-		var evt = jQuery.Event("which", { keyCode: 123 });
-
-		assert.equal(Wicket.Event.keyCode(evt), 123, 'event.which should be used if event.keyCode is not available');
 	});
 
 	module('Wicket.Event.stop');
 
 	test('stop', assert => {
 
-		var evt = jQuery.Event("keydown", { keyCode: 123 });
+		var fixture = document.getElementById('qunit-fixture');
 
-		assert.equal(evt.isPropagationStopped(), false);
-		assert.equal(evt.isImmediatePropagationStopped(), false);
+		// stopPropagation(): must prevent the event from bubbling to the parent,
+		// but must not stop other listeners registered on the same element
+		var parent1 = document.createElement('div');
+		var child1 = document.createElement('div');
+		parent1.appendChild(child1);
+		fixture.appendChild(parent1);
 
-		Wicket.Event.stop(evt);
+		var parent1Notified = false;
+		parent1.addEventListener('click', function () { parent1Notified = true; });
 
-		assert.equal(evt.isPropagationStopped(), true);
-		assert.equal(evt.isImmediatePropagationStopped(), false);
+		var secondListener1Notified = false;
+		child1.addEventListener('click', function (evt) { Wicket.Event.stop(evt); });
+		child1.addEventListener('click', function () { secondListener1Notified = true; });
 
-		Wicket.Event.stop(evt, true);
+		child1.dispatchEvent(new Event('click', { bubbles: true, cancelable: true }));
 
-		assert.equal(evt.isPropagationStopped(), true);
-		assert.equal(evt.isImmediatePropagationStopped(), true);
+		assert.equal(parent1Notified, false, "stop() should prevent the event from bubbling to the parent");
+		assert.equal(secondListener1Notified, true, "stop() without 'immediate' should not stop other listeners on the same element");
+
+		// stopImmediatePropagation(): must also prevent other listeners on the same element
+		var parent2 = document.createElement('div');
+		var child2 = document.createElement('div');
+		parent2.appendChild(child2);
+		fixture.appendChild(parent2);
+
+		var parent2Notified = false;
+		parent2.addEventListener('click', function () { parent2Notified = true; });
+
+		var secondListener2Notified = false;
+		child2.addEventListener('click', function (evt) { Wicket.Event.stop(evt, true); });
+		child2.addEventListener('click', function () { secondListener2Notified = true; });
+
+		child2.dispatchEvent(new Event('click', { bubbles: true, cancelable: true }));
+
+		assert.equal(parent2Notified, false, "stop(evt, true) should prevent the event from bubbling to the parent");
+		assert.equal(secondListener2Notified, false, "stop(evt, true) should stop other listeners on the same element");
+
+		parent1.remove();
+		parent2.remove();
 	});
 
 	module('Wicket.Event.fix');
@@ -86,66 +115,63 @@ jQuery(document).ready(function() {
 
 		assert.expect(1);
 
-		var evt = jQuery.Event("keydown", { keyCode: 123 });
-		jQuery(document)
-			.on('keydown', function(event) {
-				var fixedEvt = Wicket.Event.fix(event);
-				assert.deepEqual(fixedEvt, evt);
-			})
-			.trigger(evt);
+		var handler = function (event) {
+			Wicket.Event.remove(document, 'keydown', handler);
+			var fixedEvt = Wicket.Event.fix(event);
+			assert.strictEqual(fixedEvt, event, "Wicket.Event.fix() should return the same event it was given");
+		};
+		Wicket.Event.add(document, 'keydown', handler);
+
+		document.dispatchEvent(new Event('keydown', { bubbles: true, cancelable: true }));
 	});
-	
-	
+
+
 	module('Wicket.Event.fire');
 
 	test('fire', assert => {
 
 		assert.expect(1);
 
-		var $el = jQuery('<div id="fireTestId">element body</div>');
-		$el.appendTo(jQuery('#qunit-fixture'));
-		$el.on('click', function() {
+		var el = createTestElement('fireTestId');
+		el.addEventListener('click', function() {
 			assert.ok(true, 'This event must be fired!');
 		});
 
-		Wicket.Event.fire($el[0], 'click');
+		Wicket.Event.fire(el, 'click');
 
-		$el.remove();
+		el.remove();
 	});
 
-	
+
 	module('Wicket.Event.add');
 
 	test('add - any event', assert => {
 
 		assert.expect(1);
 
-		var $el = jQuery('<div id="addTestId">element body</div>');
-		$el.appendTo(jQuery('#qunit-fixture'));
+		var el = createTestElement();
 
 		var handler = function() {
 			assert.ok(true, 'This event must be fired!');
 		};
 
-		Wicket.Event.add($el[0], 'click', handler);
+		Wicket.Event.add(el, 'click', handler);
 
-		Wicket.Event.fire($el[0], 'click');
+		Wicket.Event.fire(el, 'click');
 
-		$el.remove();
+		el.remove();
 	});
 
 	test('remove - any event', assert => {
 
 		assert.expect(1);
 
-		var $el = jQuery('<div id="addTestId">element body</div>');
-		$el.appendTo(jQuery('#qunit-fixture'));
+		var el = createTestElement();
 
 		var handler = function() {
 			assert.ok(true, 'This event must be fired!');
 		};
 
-		var el = $el[0];
 		Wicket.Event.add(el, 'click', handler);
 
 		Wicket.Event.fire(el, 'click');
@@ -153,65 +179,64 @@ jQuery(document).ready(function() {
 		Wicket.Event.remove(el, 'click', handler);
 
 		Wicket.Event.fire(el, 'click');
+
+		el.remove();
 	});
-	
+
 	test('add - mousewheel', assert => {
 
 		assert.expect(1);
 
-		var $el = jQuery('<div id="addTestId">element body</div>');
-		$el.appendTo(jQuery('#qunit-fixture'));
+		var el = createTestElement();
 
 		var handler = function() {
 			assert.ok(true, 'This event must be fired!');
 		};
 
-		Wicket.Event.add($el[0], 'mousewheel', handler);
+		Wicket.Event.add(el, 'mousewheel', handler);
 
-		Wicket.Event.fire($el[0], 'mousewheel');
+		Wicket.Event.fire(el, 'mousewheel');
 
-		$el.remove();
+		el.remove();
 	});
-	
+
 	test('add - domready on non-window element', assert => {
 		const done = assert.async();
 		assert.expect(1);
 
-		var $el = jQuery('<div id="addTestId">element body</div>');
-		$el.appendTo(jQuery('#qunit-fixture'));
+		var el = createTestElement();
 
 		var handler = function() {
 			done();
 			assert.ok(true, 'This event must be fired!');
 		};
 
-		Wicket.Event.add($el[0], 'domready', handler);
+		Wicket.Event.add(el, 'domready', handler);
 
-		Wicket.Event.fire($el[0], 'domready');
+		Wicket.Event.fire(el, 'domready');
 
-		$el.remove();
+		el.remove();
 	});
 
 	test('add - with data', assert => {
 
 		assert.expect(1);
 
-		var $el = jQuery('<div id="addTestId">element body</div>');
-		$el.appendTo(jQuery('#qunit-fixture'));
+		var el = createTestElement();
 
 		var expectedData = {
 			pass: true
 		};
 
-		var handler = function(jqEvent) {
-			assert.deepEqual(jqEvent.data, expectedData, "Wicket.Event.add should be able to pass data to the event.");
+		var handler = function(jqEvent, data) {
+			assert.deepEqual(data, expectedData, "Wicket.Event.add should be able to pass data to the event.");
 		};
 
-		Wicket.Event.add($el[0], 'dummy', handler, expectedData);
+		Wicket.Event.add(el, 'dummy', handler, expectedData);
 
-		Wicket.Event.fire($el[0], 'dummy');
+		Wicket.Event.fire(el, 'dummy');
 
-		$el.remove();
+		el.remove();
 	});
 
 	test('add - domready on window', assert => {
@@ -313,7 +338,7 @@ jQuery(document).ready(function() {
 
 		var subscriber = function () {
 			assert.ok(true, 'Should be notified for any topic name');
-			assert.equal(arguments.length, 3, "1 jQuery.Event + our two args");
+			assert.equal(arguments.length, 3, "1 event object + our two args");
 			assert.equal(arguments[1], "arg1", "'arg1' must be at position 1");
 			assert.equal(arguments[2], "arg2", "'arg2' must be at position 2");
 		};

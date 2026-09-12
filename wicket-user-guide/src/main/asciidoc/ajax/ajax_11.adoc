@@ -1,0 +1,40 @@
+
+
+By default, Wicket's client-side AJAX support (as well as the low-level DOM/event utilities every AJAX component builds on) is implemented on top of http://jquery.com/[JQuery]. Wicket also ships a second implementation of the very same JavaScript API - `Wicket.Ajax`, `Wicket.Event`, `Wicket.DOM`, `Wicket.Form`, `Wicket.Head`, `Wicket.Focus`, etc. - written with plain JavaScript and no dependency on JQuery at all.
+
+Both implementations behave identically from the point of view of Java code and of any custom JavaScript that only uses the documented `Wicket.*` API. Which one is loaded is controlled by a single setting, so applications - and third-party components - do not need to know or care which implementation is active.
+
+=== Switching to the plain JavaScript implementation
+
+The resource reference to use for `wicket-ajax.js` is configured with _JavaScriptLibrarySettings_, exactly like the JQuery reference itself. To switch the whole application away from JQuery, register _WicketAjaxResourceReference_ in the application's _init()_ method:
+
+[source,java]
+----
+public class MyApplication extends WebApplication {
+	@Override
+	protected void init() {
+		super.init();
+
+		getJavaScriptLibrarySettings()
+			.setWicketAjaxReference(WicketAjaxResourceReference.get());
+	}
+}
+----
+
+With this setting in place, Wicket will no longer contribute the JQuery library or _wicket-ajax-jquery.js_ to the page header; the plain JavaScript _wicket-ajax.js_ is rendered instead, and it depends on nothing else. This is useful for applications that want to avoid shipping JQuery altogether, for example to reduce the amount of JavaScript sent to the browser or to avoid depending on a third-party library.
+
+NOTE: The default stays JQuery-based, so existing applications are unaffected unless they explicitly opt in.
+
+=== What is covered by the switch
+
+Every built-in Wicket component and behavior that talks to the browser through the documented `Wicket.*` API automatically works with either implementation, because they only ever depend on _JavaScriptLibrarySettings#getWicketAjaxReference()_ rather than on JQuery directly. This includes, among others:
+
+* the extensions AJAX components (`AjaxDownloadBehavior`, `Palette`, `UploadProgressBar`, `AbstractAutoCompleteBehavior`, `TrapFocusBehavior`)
+* the developer debug bar (`DebugBar`)
+* Native WebSockets support (module _wicket-native-websocket_), whose client-side script depends on the same `getWicketAjaxReference()` setting and therefore also runs without JQuery once the plain implementation is enabled
+
+None of these need any additional configuration - they pick up whichever `wicket-ajax.js` implementation the application has configured.
+
+=== Custom JavaScript and JQuery
+
+Switching to the plain JavaScript implementation only removes Wicket's own dependency on JQuery. If your own components or behaviors render custom JavaScript that calls JQuery directly (e.g. `+$(...)+` or `+jQuery(...)+`, as shown for example in <<_creating_custom_ajax_call_listener,the custom AJAX call listener example>>), that code still needs JQuery to be loaded - either by keeping the default JQuery-based `wicket-ajax.js`, or by rendering a reference to _JavaScriptLibrarySettings#getJQueryReference()_ explicitly from that component's own _renderHead()_, the same way it would for any other third-party library.
