@@ -21,8 +21,10 @@ import static org.apache.wicket.csp.CSPDirective.CHILD_SRC;
 import static org.apache.wicket.csp.CSPDirective.CONNECT_SRC;
 import static org.apache.wicket.csp.CSPDirective.DEFAULT_SRC;
 import static org.apache.wicket.csp.CSPDirective.FONT_SRC;
+import static org.apache.wicket.csp.CSPDirective.FRAME_ANCESTORS;
 import static org.apache.wicket.csp.CSPDirective.IMG_SRC;
 import static org.apache.wicket.csp.CSPDirective.MANIFEST_SRC;
+import static org.apache.wicket.csp.CSPDirective.OBJECT_SRC;
 import static org.apache.wicket.csp.CSPDirective.REPORT_URI;
 import static org.apache.wicket.csp.CSPDirective.SCRIPT_SRC;
 import static org.apache.wicket.csp.CSPDirective.STYLE_SRC;
@@ -129,6 +131,17 @@ public class CSPHeaderConfiguration
 			.add(MANIFEST_SRC, SELF)
 			.add(CHILD_SRC, SELF)
 			.add(BASE_URI, SELF);
+	}
+
+	/**
+	 * Hardens the CSP configuration by adding {@code frame-ancestors 'self'} to prevent embedding
+	 * (clickjacking) and {@code object-src 'none'} to disable plugin execution.
+	 *
+	 * @return {@code this} for chaining.
+	 */
+	public CSPHeaderConfiguration enableStrictEmbeddingProtection()
+	{
+		return add(FRAME_ANCESTORS, SELF).add(OBJECT_SRC, NONE);
 	}
 
 	/**
