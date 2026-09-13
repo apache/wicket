@@ -22,6 +22,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.util.lang.Args;
@@ -72,13 +73,15 @@ public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 
 		if (boundName != null)
 		{
-			// already bound, send request only when changed
+			// already bound, send request only when changed; the name was reported by the browser
+			// and is placed inside a string literal, so it is escaped
 			attributes.getAjaxCallListeners().add(new AjaxCallListener()
 			{
 				@Override
 				public CharSequence getPrecondition(Component component)
 				{
-					return String.format("return (window.name !== '%s');", boundName);
+					return String.format("return (window.name !== '%s');",
+						JavaScriptUtils.escapeQuotes(boundName));
 				}
 			});
 		}
@@ -109,7 +112,8 @@ public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 			{
 				// create new name
 				windowName = newWindowName();
-				target.appendJavaScript(String.format("window.name = '%s';", windowName));
+				target.appendJavaScript(String.format("window.name = '%s';",
+					JavaScriptUtils.escapeQuotes(windowName)));
 			}
 
 			// now bound to window
