@@ -20,6 +20,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.csp.CSPDirective;
+import org.apache.wicket.examples.AjaxEngineSelector;
 import org.apache.wicket.markup.html.WebPage;
 
 
@@ -52,6 +53,9 @@ public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 	protected void init()
 	{
 		super.init();
+
+		AjaxEngineSelector.configure(this);
+
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 
 		getCspSettings().blocking()

@@ -157,7 +157,7 @@ Global AJAX call events are handled with JavaScript. We can register a callback 
 * '/dom/node/removing': called when a component is about to be removed via AJAX. This  happens when component markup is updated via AJAX (i.e. the component itself or one of its containers has been added to _AjaxRequestTarget_)
 * '/dom/node/added': called when a component has been added via AJAX. Just like '/dom/node/removing', this event is triggered when a component is added to _AjaxRequestTarget_.
 
-The callback function takes in input the following parameters:  attrs, jqXHR, textStatus, jqEvent and errorThrown. The first three parameters are the same seen before with _IAjaxCallListener_ while jqEvent is an event internally fired by Wicket. The last parameter errorThrown indicates if an error has occurred during the AJAX call.
+The callback function takes in input the following parameters:  attrs, jqXHR, textStatus, jqEvent and errorThrown. The first three parameters are the same seen before with _IAjaxCallListener_ while jqEvent is a lightweight event object internally fired by Wicket to notify subscribers (its shape depends on which `wicket-ajax.js` implementation is configured, see <<_choosing_between_the_jquery_and_the_plain_javascript_ajax_implementation>>). The last parameter errorThrown indicates if an error has occurred during the AJAX call.
 
 To see a basic example of use of a global AJAX call listener, let's go back to our custom datepicker created in
 <<_an_example_of_integration_with_javascript,chapter 19>>. When we built it we didn't think about a possible use of the component with AJAX.  When a complex component like our datepicker is refreshed via AJAX, the following two side effects can occur:

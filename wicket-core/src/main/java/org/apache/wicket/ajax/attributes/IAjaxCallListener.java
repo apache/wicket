@@ -94,8 +94,11 @@ public interface IAjaxCallListener
 	 * parameters:
 	 * <ol>
 	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
-	 * <li>jqXHR - the jQuery XMLHttpRequest object</li>
-	 * <li>settings - the settings used for the jQuery.ajax() call</li>
+	 * <li>jqXHR - the XMLHttpRequest object used to make the Ajax call (a jQuery-augmented
+	 * one by default, or a plain {@code XMLHttpRequest} if the application configured the
+	 * JQuery-free {@code wicket-ajax.js} implementation)</li>
+	 * <li>settings - the settings object used to make the Ajax call (its exact shape depends on
+	 * the configured {@code wicket-ajax.js} implementation)</li>
 	 * </ol>
 	 * 
 	 * @param component
@@ -133,7 +136,9 @@ public interface IAjaxCallListener
 	 * will be executed in a function that receives the following parameters:
 	 * <ol>
 	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
-	 * <li>jqXHR - the jQuery XMLHttpRequest object</li>
+	 * <li>jqXHR - the XMLHttpRequest object used to make the Ajax call (a jQuery-augmented
+	 * one by default, or a plain {@code XMLHttpRequest} if the application configured the
+	 * JQuery-free {@code wicket-ajax.js} implementation)</li>
 	 * <li>data - the Ajax response. Its type depends on {@link AjaxRequestAttributes#dataType}</li>
 	 * <li>textStatus - the status as text</li>
 	 * </ol>
@@ -152,7 +157,9 @@ public interface IAjaxCallListener
 	 * will be executed in a function that receives the following parameters:
 	 * <ol>
 	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
-	 * <li>jqXHR - the jQuery XMLHttpRequest object</li>
+	 * <li>jqXHR - the XMLHttpRequest object used to make the Ajax call (a jQuery-augmented
+	 * one by default, or a plain {@code XMLHttpRequest} if the application configured the
+	 * JQuery-free {@code wicket-ajax.js} implementation)</li>
 	 * <li>errorMessage - in case of HTTP error the textual portion of the HTTP status</li>
 	 * <li>textStatus - type of failure: null, "timeout", "error", "abort" or "parsererror"</li>
 	 * </ol>
@@ -171,7 +178,9 @@ public interface IAjaxCallListener
 	 * Ajax call. The script will be executed in a function that receives the following parameters:
 	 * <ol>
 	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
-	 * <li>jqXHR - the jQuery XMLHttpRequest object</li>
+	 * <li>jqXHR - the XMLHttpRequest object used to make the Ajax call (a jQuery-augmented
+	 * one by default, or a plain {@code XMLHttpRequest} if the application configured the
+	 * JQuery-free {@code wicket-ajax.js} implementation)</li>
 	 * <li>textStatus - the status as text</li>
 	 * </ol>
 	 * 

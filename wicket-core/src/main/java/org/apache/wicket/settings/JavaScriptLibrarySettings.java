@@ -17,6 +17,7 @@
 package org.apache.wicket.settings;
 
 import org.apache.wicket.ajax.WicketAjaxJQueryResourceReference;
+import org.apache.wicket.ajax.WicketAjaxResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.lang.Args;
@@ -30,6 +31,12 @@ import org.apache.wicket.util.lang.Args;
  * wicket-event.js, wicket-ajax.js and wicket-ajax-debug.js to use implementations on other
  * libraries, such as YUI or DOJO. The resource reference implementations need to specify the
  * {@linkplain ResourceReference#getDependencies() dependency} on the backing library, if needed.
+ * <p>
+ * Wicket also ships a jQuery-free implementation of wicket-ajax.js, exposing the exact same
+ * JavaScript API, that can be enabled with:
+ * <pre>
+ * setWicketAjaxReference(WicketAjaxResourceReference.get());
+ * </pre>
  *
  * @since 6.0
  */

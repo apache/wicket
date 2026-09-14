@@ -52,6 +52,17 @@ public class StartExamples
 	{
 		System.setProperty("wicket.configuration", "development");
 
+		// Every example application (see WicketExampleApplication#init(), which every example
+		// Application subclass calls through super.init()) reads the 'wicket.examples.use'
+		// system property to decide which client-side wicket-ajax.js implementation to use:
+		// the default JQuery-based one, or the JQuery-free plain JavaScript one (see
+		// WicketAjaxResourceReference). This is a single, JVM-wide switch since the
+		// examples are made up of many independent Application classes - set it with e.g.
+		// -Dwicket.examples.use=VANILLA on this class' command line (default: JQUERY).
+		// AjaxEngineSelector prints, to stdout, which engine each example application started
+		// with - the same way Wicket itself always prints a banner when running in development
+		// mode - so this is visible in the console no matter how the examples are launched.
+
 		Server server = new Server();
 
 		HttpConfiguration http_config = new HttpConfiguration();

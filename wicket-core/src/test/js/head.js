@@ -18,26 +18,37 @@
 /*global ok: true, start: true, test: true, equal: true, deepEqual: true,
  QUnit: true, expect: true */
 
-jQuery(document).ready(function() {
+Wicket.Event.add(window, 'domready', function() {
 	"use strict";
 
 	const { module, test } = QUnit;
 
+	// creates an element with the given tag name and attributes, without depending on jQuery
+	var createElement = function (tagName, attributes) {
+		var el = document.createElement(tagName);
+		for (var name in attributes) {
+			if (attributes.hasOwnProperty(name)) {
+				el[name] = attributes[name];
+			}
+		}
+		return el;
+	};
+
 	module("addElement");
-		
+
 	test("Wicket.Head.addElement - add link element", assert => {
 
-		var css = jQuery('<link>', {
+		var css = createElement('link', {
 			type: 'text/stylesheet',
 			rel: 'stylesheet',
 			href: 'data/test.css'
 		}),
 
-		initialHeadElementsNumber = jQuery('head').children().length;
+		initialHeadElementsNumber = document.head.children.length;
 
-		Wicket.Head.addElement(css[0]);
+		Wicket.Head.addElement(css);
 
-		var newHeadElementsNumber = jQuery('head').children().length;
+		var newHeadElementsNumber = document.head.children.length;
 
 		assert.equal(newHeadElementsNumber, initialHeadElementsNumber + 1);
 	});
@@ -47,17 +58,17 @@ jQuery(document).ready(function() {
 		const done = assert.async();
 		Wicket.testDone = done;
 		assert.expect(1);
-		
-		var script = jQuery('<script>', {
+
+		var script = createElement('script', {
 			type: 'text/javascript',
 			src: 'data/start.js'
 		}),
 
-		initialHeadElementsNumber = jQuery('head').children().length;
+		initialHeadElementsNumber = document.head.children.length;
 
-		Wicket.Head.addElement(script[0]);
+		Wicket.Head.addElement(script);
 
-		var newHeadElementsNumber = jQuery('head').children().length;
+		var newHeadElementsNumber = document.head.children.length;
 
 		assert.equal(newHeadElementsNumber, initialHeadElementsNumber + 1);
 	});
@@ -65,13 +76,15 @@ jQuery(document).ready(function() {
 	test("Wicket.Head.addElement - add style element", assert => {
 		assert.expect(1);
 
-		var $style = jQuery('<style> body: {font-family: bold;} </style>'),
+		var style = createElement('style', {
+			textContent: ' body: {font-family: bold;} '
+		}),
 
-		initialHeadElementsNumber = jQuery('head').children().length;
+		initialHeadElementsNumber = document.head.children.length;
 
-		Wicket.Head.addElement($style[0]);
+		Wicket.Head.addElement(style);
 
-		var newHeadElementsNumber = jQuery('head').children().length;
+		var newHeadElementsNumber = document.head.children.length;
 
 		assert.equal(newHeadElementsNumber, initialHeadElementsNumber + 1);
 	});
@@ -90,14 +103,14 @@ jQuery(document).ready(function() {
 
 	test('Wicket.Head.containsElement - check existence of data/test.js with jsessionid in the url', assert => {
 		var
-			script1 = jQuery('<script>', {
+			script1 = createElement('script', {
 				type: 'text/javascript',
 				src: 'data/test.js;jsessionid=1'
-			})[0],
-			script2 = jQuery('<script>', {
+			}),
+			script2 = createElement('script', {
 				type: 'text/javascript',
 				src: 'data/test.js;jsessionid=2' // different jsessionid
-			})[0];
+			});
 
 		// add just jsessionid=1
 		Wicket.Head.addElement(script1);
@@ -108,16 +121,16 @@ jQuery(document).ready(function() {
 
 	test('Wicket.Head.containsElement - check replacement of SCRIPT elements with same id', assert => {
 		var
-			script1 = jQuery('<script>', {
+			script1 = createElement('script', {
 				type: 'text/javascript',
 				src: 'data/one.js',
 				id: 'testId'
-			})[0],
-			script2 = jQuery('<script>', {
+			}),
+			script2 = createElement('script', {
 				type: 'text/javascript',
 				src: 'data/two.js',
 				id: 'testId'
-			})[0],
+			}),
 			context = {
 				steps: []
 			};
@@ -129,7 +142,7 @@ jQuery(document).ready(function() {
 		assert.ok(Wicket.Head.containsElement(script1, 'src').contains, 'script1 should be in the DOM - 2.');
 
 		// poor man's FunctionExecuter
-		jQuery.each(context.steps, function(idx, step) {
+		context.steps.forEach(function(step) {
 			step(function() {});
 		});
 
@@ -141,16 +154,16 @@ jQuery(document).ready(function() {
 
 	test('Wicket.Head.containsElement - check replacement of <link> elements with same id', assert => {
 		var
-			css1 = jQuery('<link>', {
+			css1 = createElement('link', {
 				type: 'text/css',
 				href: 'data/one.css',
 				id: 'testId'
-			})[0],
-			css2 = jQuery('<link>', {
+			}),
+			css2 = createElement('link', {
 				type: 'text/css',
 				href: 'data/two.css',
 				id: 'testId'
-			})[0],
+			}),
 			context = {
 				steps: []
 			};
@@ -164,7 +177,7 @@ jQuery(document).ready(function() {
 			assert.ok(containsCss2.contains, 'css1 should be still in the DOM');
 
 			// poor man's FunctionExecuter
-			jQuery.each(context.steps, function(idx, step) {
+			context.steps.forEach(function(step) {
 				step(function() {});
 			});
 
@@ -176,11 +189,11 @@ jQuery(document).ready(function() {
 		});
 
 	test('Wicket.Head.Contributor.parse - parse head element with three script elements inside', assert => {
-		
+
 		var xmlDocument = Wicket.Xml.parse('<header-contribution><![CDATA[<head><script type="text/javascript" src="data/test.js"></script><script type="text/javascript" id="wicket-ajax-debug-enable">/*<![CDATA[*/wicketAjaxDebugEnable=true;/*]]]]><![CDATA[>*/</script><script type="text/javascript" id="wicket-ajax-base-url">/*<![CDATA[*/Wicket.Ajax.baseUrl="clock";/*]]]]><![CDATA[>*/</script></head>]]></header-contribution>');
 		var xmlRootElement = xmlDocument.documentElement;
 		var xmlElement   = Wicket.Head.Contributor.parse(xmlRootElement);
-		var isXml = jQuery.isXMLDoc(xmlElement);
+		var isXml = xmlElement.documentElement != null && xmlElement.contentType !== 'text/html';
 
 		assert.ok(isXml, 'The result must be XML document');
 		assert.equal(xmlElement.documentElement.childNodes.length, 3, "There must be 3 children nodes.");

@@ -46,7 +46,9 @@ public abstract class WicketExampleApplication extends WebApplication
 	protected void init()
 	{
 		super.init();
-		
+
+		AjaxEngineSelector.configure(this);
+
 		// WARNING: DO NOT do this on a real world application. NoCrypt encrypts nothing, so
 		// everything that goes through the crypt factory -- the URLs CryptoMapper produces and
 		// the file upload tokens -- is readable and forgeable by anyone (BAD IDEA!)!!!

@@ -1,13 +1,55 @@
 
 
 
-Spring (and Guice) users can use standard  https://jcp.org/en/jsr/detail?id=330[JSR-330] annotations to wire their dependencies. This will make their code more interoperable with other containers that support this standard:
+Module _wicket-cdi_ integrates Wicket with a CDI container. Its entry point is class _org.apache.wicket.cdi.CdiConfiguration_, which registers the listeners injecting components, behaviors and the session and propagates the CDI conversation across requests:
 
 [source,java]
 ----
-  //inject a bean specifying its name with JSR-330 annotations
-  @Inject 
-  @Named("anotherName")
-  private EnterpriseMessage enterpriseMessage;
+public class WicketApplication extends WebApplication
+{
+  //Constructor...
+
+  @Override
+  public void init()
+  {
+    super.init();
+
+    new CdiConfiguration().configure(this);
+  }
+}
 ----
 
+The _BeanManager_ is looked up from JNDI or from the CDI provider, and it can also be set on the configuration. Once the application is configured, components inject beans with the standard _@Inject_ annotation. The following page, taken from module wicket-examples, injects an application scoped counter:
+
+[source,java]
+----
+@ApplicationScoped
+public class ApplicationCounter extends Counter
+{
+  //...
+}
+
+public class InjectionPage extends CdiExamplePage
+{
+  @Inject
+  ApplicationCounter counter;
+
+  public InjectionPage()
+  {
+    add(new Label("count", new PropertyModel<Integer>(this, "counter.count")));
+  }
+}
+----
+
+Module _wicket-cdi_ is designed to inject passivation capable CDI beans, that is beans which can be serialized with the component holding them and resolved again after deserialization. The CDI specification lists which beans qualify:
+
+* beans with a normal scope (_@ApplicationScoped_, _@SessionScoped_, _@ConversationScoped_, _@RequestScoped_ or a custom normal scope), which the container injects as a client proxy required to be serializable and to look the bean up again when deserialized;
+* _@Dependent_ beans that are serializable themselves, since these are injected directly;
+* stateless and singleton session beans;
+* resources declared as beans through a producer field annotated with _@Resource_, _@EJB_, _@PersistenceContext_, _@PersistenceUnit_ or _@WebServiceRef_, for which the container provides a serializable reference;
+* the built-in beans, such as _BeanManager_, _Instance_ and _Event_.
+
+Unlike the Spring and Guice integrations, _wicket-cdi_ does not rely on the proxies of module wicket-ioc but on that container mechanism.
+The container's _InjectionTarget_ used by the module can inject more than CDI beans though. Through the container's injection services it also fills fields annotated with _@EJB_, _@PersistenceContext_ or _@Resource_ directly, without a bean declaring them, and those references are neither handled by wicket-ioc nor guaranteed to be serializable.
+So it is up to the application to inject only passivation capable beans into its components, or to keep anything else out of the serialized page, either by making it serializable or by injecting it into a transient field.
+Note that the module does not inject a component again after deserialization, so a transient field is null on a page loaded from the store and the component must not depend on it after its construction.

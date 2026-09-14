@@ -17,20 +17,22 @@
 package org.apache.wicket.examples;
 
 import org.apache.wicket.devutils.debugbar.DebugBar;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * Navigation panel for the examples project.
- * 
+ *
  * @author Eelco Hillenius
  */
 public final class WicketExampleHeader extends Panel
 {
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param id
 	 *            id of the component
 	 * @param page
@@ -41,9 +43,34 @@ public final class WicketExampleHeader extends Panel
 		super(id);
 
 		setRenderBodyOnly(true);
-		
+
 		add(new Image("exampleheaderimage", new PackageResourceReference(
 			WicketExamplePage.class, "logo-apachewicket-examples-white.svg")));
 		add(new DebugBar("debug"));
+
+		// shows which Ajax engine (jQuery-based or the jQuery-free plain JavaScript one) is
+		// currently powering this session, and lets the visitor switch to the other one on the
+		// fly to compare them - see AjaxEngineSelector for how the switch is actually applied
+		add(new Label("ajaxEngine",
+			() -> AjaxEngineSelector.displayName(AjaxEngineSelector.getEffectiveEngine())));
+
+		Link<Void> toggleAjaxEngine = new Link<>("toggleAjaxEngine")
+		{
+			@Override
+			public void onClick()
+			{
+				AjaxEngineSelector.setSessionEngine(otherEngine());
+			}
+		};
+		toggleAjaxEngine.add(new Label("toggleAjaxEngineLabel",
+			() -> AjaxEngineSelector.displayName(otherEngine())));
+		add(toggleAjaxEngine);
+	}
+
+	private static AjaxEngineSelector.Engine otherEngine()
+	{
+		return AjaxEngineSelector.getEffectiveEngine() == AjaxEngineSelector.Engine.JQUERY
+			? AjaxEngineSelector.Engine.VANILLA
+			: AjaxEngineSelector.Engine.JQUERY;
 	}
 }

@@ -564,7 +564,7 @@ public abstract class PartialPageUpdate
 			{
 				// no longer on page - log the error but don't block the user of the application
 				// (which was the behavior in Wicket <= 7).
-				LOG.warn("Component '{}' not cannot be updated because it was already removed from page", component);
+				LOG.warn("Component '{}' cannot be updated because it was already removed from page", component);
 				return;
 			}
 			else if (pageOfComponent != page) 

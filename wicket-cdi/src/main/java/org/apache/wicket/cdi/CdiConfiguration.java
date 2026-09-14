@@ -24,6 +24,19 @@ import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
 
 /**
  * Configures CDI integration
+ * <p>
+ * The module is designed to inject passivation capable CDI beans, which the CDI specification
+ * lists: normal-scoped beans, injected as client proxies that are serializable and resolve the bean
+ * again after deserialization; {@code @Dependent} beans that are serializable themselves;
+ * stateless and singleton session beans; resources declared through a producer field; and the
+ * built-in beans such as {@code BeanManager}, {@code Instance} and {@code Event}. The container's
+ * {@link jakarta.enterprise.inject.spi.InjectionTarget} it uses can also inject other resources
+ * through the container's injection services, such as {@code @EJB} or {@code @Resource} fields.
+ * Those are neither handled by wicket-ioc nor necessarily serializable, so an application should
+ * inject only passivation capable beans into its components, or keep anything else out of the
+ * serialized page by making it serializable or injecting it into a transient field. A component is
+ * not injected again after deserialization, so a transient field is null on a page loaded from the
+ * store.
  * 
  * @author igor
  * 

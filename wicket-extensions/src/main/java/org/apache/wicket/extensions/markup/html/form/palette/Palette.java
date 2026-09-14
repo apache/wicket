@@ -39,8 +39,8 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.JQueryPluginResourceReference;
 
 
 /**
@@ -122,7 +122,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	private Component selectionComponent;
 
 	/** reference to the palette's javascript resource */
-	private static final ResourceReference JAVASCRIPT = new JQueryPluginResourceReference(
+	private static final ResourceReference JAVASCRIPT = new JavaScriptResourceReference(
 		Palette.class, "palette.js");
 
 	/**

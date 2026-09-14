@@ -1,7 +1,7 @@
 
 
 
-Wicket support for AJAX is implemented in file wicket-ajax-jquery.js which makes complete transparent to Java code any detail about AJAX communication. 
+Wicket support for AJAX is implemented in a client-side JavaScript file which makes complete transparent to Java code any detail about AJAX communication. By default this is wicket-ajax-jquery.js, which uses JQuery as its backing library, but Wicket also ships a JQuery-free implementation exposing the exact same JavaScript API - see <<_choosing_between_the_jquery_and_the_plain_javascript_ajax_implementation,further down this chapter>> for how to switch to it.
 
 AJAX components and behaviors shipped with Wicket expose one or more callback methods which are executed when they receive an AJAX request. One of the arguments of these methods is an instance of interface _org.apache.wicket.ajax.AjaxRequestTarget_. 
 

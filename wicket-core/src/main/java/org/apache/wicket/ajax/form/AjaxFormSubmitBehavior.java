@@ -183,11 +183,9 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 				@Override
 				public CharSequence getPrecondition(Component component)
 				{
-					return String.format("var p, f = jQuery('#%s'), fn = function(e) { p = e.isDefaultPrevented(); e.preventDefault(); };" //
-						+ "f.on('submit',fn);" //
-						+ "f.trigger('submit');" //
-						+ "f.off('submit',fn);" //
-						+ "return !p;", form.getMarkupId());
+					return String.format(
+						"return document.getElementById('%s').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));",
+						form.getMarkupId());
 				}
 			});
 		}

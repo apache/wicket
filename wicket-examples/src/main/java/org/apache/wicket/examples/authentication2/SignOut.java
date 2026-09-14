@@ -30,6 +30,6 @@ public class SignOut extends WicketExamplePage
 	 */
 	public SignOut()
 	{
-		getSession().invalidate();
+		getSession().invalidateNow();
 	}
 }

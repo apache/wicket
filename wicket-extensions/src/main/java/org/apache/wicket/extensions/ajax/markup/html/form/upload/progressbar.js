@@ -34,7 +34,7 @@
 			this.onProgressUpdated = onProgressUpdated;
 
 			if (formid) {
-				var formElement = Wicket.$(formid);
+				const formElement = Wicket.$(formid);
 				this.originalCallback = formElement.onsubmit;
 				formElement.onsubmit = Wicket.bind(this.submitCallback, this);
 			}
@@ -50,19 +50,19 @@
 		},
 
 		start : function(){
-			var displayprogress = true;
+			let displayprogress = true;
 			if (this.fileid) {
-				var fileupload = Wicket.$(this.fileid);
+				const fileupload = Wicket.$(this.fileid);
 				displayprogress = fileupload && fileupload.value;
 			}
 			if (displayprogress) {
 				this.setPercent(0);
 				this.setStatus(this.initialStatus);
-				var $statusId = Wicket.$(this.statusid);
+				const $statusId = Wicket.$(this.statusid);
 				if ($statusId != null) {
 					Wicket.DOM.show($statusId);
 				}
-				var $barid = Wicket.$(this.barid);
+				const $barid = Wicket.$(this.barid);
 				if ($barid != null) {
 					Wicket.DOM.show($barid);
 				}
@@ -71,11 +71,11 @@
 		},
 
 		setStatus : function(status) {
-			var label = document.createElement("label");
+			const label = document.createElement("label");
 			label.innerHTML = status;
-			var $statusId = Wicket.$(this.statusid);
+			const $statusId = Wicket.$(this.statusid);
 			if ($statusId != null) {
-				var oldLabel = $statusId.firstChild;
+				const oldLabel = $statusId.firstChild;
 				if (oldLabel != null){
 					$statusId.removeChild(oldLabel);
 				}
@@ -84,7 +84,7 @@
 		},
 
 		setPercent : function(progressPercent) {
-			var barId = Wicket.$(this.barid);
+			const barId = Wicket.$(this.barid);
 			if (barId != null && barId.firstChild != null && barId.firstChild.firstChild != null) {
 				barId.firstChild.firstChild.style.width = progressPercent + '%';
 			}
@@ -98,13 +98,16 @@
 		},
 
 		_createIFrame : function (iframeName) {
-			var $iframe = jQuery('<iframe name="'+iframeName+'" id="'+iframeName+
-				'" src="about:blank" hidden=""></iframe>');
-			return $iframe[0];
+			const iframe = document.createElement("iframe");
+			iframe.name = iframeName;
+			iframe.id = iframeName;
+			iframe.src = "about:blank";
+			iframe.setAttribute("hidden", "");
+			return iframe;
 		},
 
 		load : function() {
-			var URL = this.url;
+			const URL = this.url;
 
 	        this.iframe = this._createIFrame(""+Math.random());
 
@@ -115,18 +118,12 @@
 		},
 
 		update : function() {
-			var responseAsText;
-			if(this.iframe.contentDocument){
-				responseAsText = this.iframe.contentDocument.body.innerHTML;
-			}else{
-				// for IE 5.5, 6 and 7:
-				responseAsText = this.iframe.contentWindow.document.body.innerHTML;
-			}
+			const responseAsText = this.iframe.contentDocument.body.innerHTML;
 
-			var update = responseAsText.split('|');
+			const update = responseAsText.split('|');
 
-			var progressPercent = update[1];
-			var status = update[2];
+			const progressPercent = update[1];
+			const status = update[2];
 
 			this.setPercent(progressPercent);
 			this.setStatus( status );
@@ -135,11 +132,11 @@
 			this.iframe = null;
 
 			if (progressPercent === '100') {
-				var $statusId = Wicket.$(this.statusid);
+				const $statusId = Wicket.$(this.statusid);
 				if ($statusId != null) {
 					Wicket.DOM.hide($statusId);
 				}
-				var $barid = Wicket.$(this.barid);
+				const $barid = Wicket.$(this.barid);
 				if ($barid != null) {
 					Wicket.DOM.hide($barid);
 				}

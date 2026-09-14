@@ -17,7 +17,7 @@
 /*global ok: true, start: true, test: true, equal: true, deepEqual: true,
  QUnit: true, expect: true, stop: true */
 
-jQuery(document).ready(function() {
+Wicket.Event.add(window, 'domready', function() {
 	"use strict";
 
 	const { module, test } = QUnit;
