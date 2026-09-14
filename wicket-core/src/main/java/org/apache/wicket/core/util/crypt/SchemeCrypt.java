@@ -17,7 +17,6 @@
 package org.apache.wicket.core.util.crypt;
 
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +47,9 @@ public class SchemeCrypt implements ICrypt
 	private final SecretKey key;
 
 	private final SecureRandom random;
+
+	/** Every ciphertext starts with a one-byte marker naming the scheme that produced it. */
+	private static final int MARKER_LENGTH = 1;
 
 	private final ICryptScheme encryptionScheme;
 
@@ -87,8 +89,8 @@ public class SchemeCrypt implements ICrypt
 		Args.notNull(plainBytes, "plainBytes");
 
 		byte id = encryptionScheme.id();
-		return marked(id,
-			encryptionScheme.encrypt(plainBytes, key, aad(id, associatedData), random));
+		return writeMarker(id,
+			encryptionScheme.encrypt(plainBytes, key, aad(id, associatedData), random, MARKER_LENGTH));
 	}
 
 	@Override
@@ -97,8 +99,8 @@ public class SchemeCrypt implements ICrypt
 		Args.notNull(plainBytes, "plainBytes");
 
 		byte id = encryptionScheme.id();
-		return marked(id,
-			encryptionScheme.encryptDeterministic(plainBytes, key, aad(id, associatedData)));
+		return writeMarker(id, encryptionScheme.encryptDeterministic(plainBytes, key,
+			aad(id, associatedData), MARKER_LENGTH));
 	}
 
 	@Override
@@ -117,19 +119,19 @@ public class SchemeCrypt implements ICrypt
 			return null;
 		}
 
-		byte[] payload = Arrays.copyOfRange(encryptedBytes, 1, encryptedBytes.length);
-		return scheme.decrypt(payload, key, aad(id, associatedData));
+		return scheme.decrypt(encryptedBytes, MARKER_LENGTH, encryptedBytes.length - MARKER_LENGTH,
+			key, aad(id, associatedData));
 	}
 
 	/**
-	 * Prefixes a scheme payload with the marker identifying the scheme that produced it.
+	 * Writes the marker identifying the scheme that produced the payload into the
+	 * {@link #MARKER_LENGTH} bytes the scheme was asked to leave free at the front, and returns
+	 * that same array.
 	 */
-	private static byte[] marked(byte marker, byte[] payload)
+	private static byte[] writeMarker(byte marker, byte[] payload)
 	{
-		byte[] result = new byte[payload.length + 1];
-		result[0] = marker;
-		System.arraycopy(payload, 0, result, 1, payload.length);
-		return result;
+		payload[0] = marker;
+		return payload;
 	}
 
 	/**

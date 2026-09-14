@@ -39,6 +39,13 @@ public class LocaleResourceNameIterator implements Iterator<String>
 
 	private final boolean strict;
 
+	/** The locale part of the resource name that {@link #next()} produced for this state */
+	private String suffix = "";
+
+	private int localeState = -1;
+
+	private Locale currentLocale;
+
 	/**
 	 * Construct.
 	 *
@@ -56,6 +63,18 @@ public class LocaleResourceNameIterator implements Iterator<String>
 	 */
 	public Locale getLocale()
 	{
+		// Locale.of() is a cache lookup, not a field read, and this is called once per candidate
+		// name; the state only changes in next().
+		if (localeState != state)
+		{
+			localeState = state;
+			currentLocale = localeForState();
+		}
+		return currentLocale;
+	}
+
+	private Locale localeForState()
+	{
 		if (state == 1)
 		{
 			// Language, country, variation
@@ -70,6 +89,15 @@ public class LocaleResourceNameIterator implements Iterator<String>
 			return Locale.of(locale.getLanguage());
 		}
 		return null;
+	}
+
+	/**
+	 * @return the locale part of the resource name for the current state, already prefixed with
+	 *         {@code '_'}, or the empty string if this state carries no locale
+	 */
+	public String getSuffix()
+	{
+		return suffix;
 	}
 
 	/**
@@ -93,6 +121,12 @@ public class LocaleResourceNameIterator implements Iterator<String>
 	 */
 	@Override
 	public String next()
+	{
+		suffix = nextSuffix();
+		return suffix;
+	}
+
+	private String nextSuffix()
 	{
 		if (locale == null)
 		{
