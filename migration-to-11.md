@@ -169,7 +169,8 @@ yourself.
 
 | | Before | After |
 |---|---|---|
-| Constructor | `UploadInfo(String clientFileName, long size, String contentType)` | `UploadInfo(String fileName, String clientFileName, long size, String contentType)`. The old one is deprecated and uses the client file name as the stored name |
+| Constructor | `UploadInfo(String clientFileName, long size, String contentType)` | `UploadInfo(String fileName, String clientFileName, String contentType)`. The old one is deprecated, uses the client file name as the stored name and ignores the size |
+| `getSize()` and `get()` | The size the browser reported | The length and the bytes of the stored file; 0 and `null` when no stored file is attached |
 | Stored name | None | `getFileName()` |
 | `equals()` and `hashCode()` | By client file name | By stored name: two files of the same client name are no longer equal |
 | `fromJson()` | Reads `clientFileName`, `size`, `contentType` | Also reads `fileName`, and falls back to `clientFileName` when it is missing, as in the answer of a resource written for Wicket 10 |

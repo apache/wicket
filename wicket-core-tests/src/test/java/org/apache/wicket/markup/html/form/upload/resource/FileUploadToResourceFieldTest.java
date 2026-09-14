@@ -222,11 +222,11 @@ class FileUploadToResourceFieldTest extends WicketTestCase
 	void uploadInfosAreEqualByTheirStoredName()
 	{
 		FileUploadToResourceField.UploadInfo info = new FileUploadToResourceField.UploadInfo(
-			"stored-1", "same.txt", 3, "text/plain");
+			"stored-1", "same.txt", "text/plain");
 		FileUploadToResourceField.UploadInfo sameStoredName =
-			new FileUploadToResourceField.UploadInfo("stored-1", "other.txt", 5, "text/html");
+			new FileUploadToResourceField.UploadInfo("stored-1", "other.txt", "text/html");
 		FileUploadToResourceField.UploadInfo otherStoredName =
-			new FileUploadToResourceField.UploadInfo("stored-2", "same.txt", 3, "text/plain");
+			new FileUploadToResourceField.UploadInfo("stored-2", "same.txt", "text/plain");
 
 		assertEquals(info, sameStoredName);
 		assertEquals(info.hashCode(), sameStoredName.hashCode());
