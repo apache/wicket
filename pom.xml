@@ -322,6 +322,12 @@
 				<version>${jakarta.inject-api.version}</version>
 			</dependency>
 			<dependency>
+				<!-- this one is required to update outdated transitive version (in httpunit for ex.) -->
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.13.2</version>
+			</dependency>
+			<dependency>
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy</artifactId>
 				<version>${byte-buddy.version}</version>
