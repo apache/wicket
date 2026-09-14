@@ -59,7 +59,7 @@
                     <exclusion>
                         <groupId>com.fasterxml.jackson.core</groupId>
                         <artifactId>jackson-annotations</artifactId>
-                    </exclusion>	
+                    </exclusion>
                     <exclusion>
                         <groupId>com.fasterxml.jackson.core</groupId>
                         <artifactId>jackson-core</artifactId>
@@ -75,7 +75,7 @@
                     <exclusion>
                         <groupId>com.fasterxml.jackson.module</groupId>
                         <artifactId>jackson-module-parameter-names</artifactId>
-                    </exclusion>                    
+                    </exclusion>
                     <exclusion>
                         <groupId>com.google.errorprone</groupId>
                         <artifactId>*</artifactId>

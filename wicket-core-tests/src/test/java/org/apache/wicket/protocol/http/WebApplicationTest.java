@@ -149,7 +149,7 @@ class WebApplicationTest extends WicketTestCase
 		};
 
 		// character encoding not set yet
-		request.setCharacterEncoding(null);
+		request.setCharacterEncoding((String)null);
 
 		application.createWebRequest(request, "/");
 
