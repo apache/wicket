@@ -33,6 +33,8 @@ import org.apache.wicket.util.lang.Args;
  */
 public class WizardPage extends WicketExamplePage
 {
+	private final Class<? extends Wizard> wizardClass;
+
 	/**
 	 * Construct.
 	 * 
@@ -44,6 +46,7 @@ public class WizardPage extends WicketExamplePage
 	public <C extends Wizard> WizardPage(Class<C> wizardClass)
 	{
 		Args.notNull(wizardClass, "wizardClass");
+		this.wizardClass = wizardClass;
 		try
 		{
 			Constructor<? extends Wizard> ctor = wizardClass.getConstructor(String.class);
@@ -54,6 +57,12 @@ public class WizardPage extends WicketExamplePage
 		{
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	protected String getExampleTitleKey()
+	{
+		return wizardClass.getSimpleName() + ".title";
 	}
 
 	@Override

@@ -16,10 +16,18 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import java.util.List;
+
 import org.apache.wicket.examples.AjaxEngineSelector;
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.examples.ajax.builtin.modal.ModalDialogPage;
 import org.apache.wicket.examples.homepage.HomePage;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.ResourceModel;
 
 /**
  * Wicket ajax example index page
@@ -28,16 +36,42 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
  */
 public class Index extends BasePage
 {
+	private static final List<Class<? extends BasePage>> EXAMPLES = List.of(
+		AutoCompletePage.class, ChoicePage.class, ClockPage.class, EditableLabelPage.class,
+		EffectsPage.class, FormPage.class, GuestBook.class, LazyLoadingPage.class,
+		LinksPage.class, FileUploadPage.class, ModalDialogPage.class,
+		OnChangeAjaxBehaviorPage.class, PageablesPage.class, RatingsPage.class,
+		TabbedPanelPage.class, TodoList.class, WorldClockPage.class, AjaxDownloadPage.class);
+
 	/**
 	 * Constructor.
 	 */
 	public Index()
 	{
+		IModel<List<Class<? extends BasePage>>> examples = () -> EXAMPLES.stream()
+			.filter(Index::isAvailable)
+			.toList();
+
+		add(new ListView<>("examples", examples)
+		{
+			@Override
+			protected void populateItem(ListItem<Class<? extends BasePage>> item)
+			{
+				Class<? extends BasePage> page = item.getModelObject();
+				BookmarkablePageLink<Void> link = new BookmarkablePageLink<>("link", page);
+				link.add(new Label("title", new ResourceModel(titleKey(page))));
+				item.add(link);
+				item.add(new Label("description",
+					new ResourceModel(page.getSimpleName() + ".description")));
+			}
+		});
+	}
+
+	private static boolean isAvailable(Class<? extends BasePage> page)
+	{
 		// EffectsPage needs jQuery UI, which the plain JavaScript Ajax engine does not load
-		WebMarkupContainer effectsSection = new WebMarkupContainer("effectsSection");
-		effectsSection.setVisible(
-			AjaxEngineSelector.getEffectiveEngine() == AjaxEngineSelector.Engine.JQUERY);
-		add(effectsSection);
+		return page != EffectsPage.class ||
+			AjaxEngineSelector.getEffectiveEngine() == AjaxEngineSelector.Engine.JQUERY;
 	}
 
 	@Override

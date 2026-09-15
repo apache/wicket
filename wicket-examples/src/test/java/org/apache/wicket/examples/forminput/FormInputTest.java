@@ -33,6 +33,6 @@ class FormInputTest extends WicketTestCase
 	{
 		tester.startPage(FormInput.class);
 
-		tester.assertContains("Wicket Examples - forminput");
+		tester.assertContains("Wicket Examples - Form Input");
 	}
 }

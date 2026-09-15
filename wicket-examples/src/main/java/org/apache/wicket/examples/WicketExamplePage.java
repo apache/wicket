@@ -20,16 +20,24 @@ import org.apache.wicket.examples.source.SourcesPage;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Base class for all example pages.
- * 
+ * <p>
+ * Shows the title of the example as the page heading and in the browser title. The title is
+ * looked up in the resource bundles under the key {@code <simple class name>.title}, usually in the
+ * {@code wicket-package.properties} of the example's package, so that an index page linking to
+ * the example can use the very same text. A page without such a key gets no heading.
+ *
  * @author Jonathan Locke
  */
 public class WicketExamplePage extends WebPage
@@ -96,7 +104,59 @@ public class WicketExamplePage extends WebPage
 	protected void explain()
 	{
 	}
-	
+
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
+		add(new Label("pageTitle", this::getPageTitle));
+		add(new Label("exampleTitle", this::getExampleTitle)
+		{
+			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+
+				setVisible(Strings.isEmpty(getExampleTitle()) == false);
+			}
+		});
+	}
+
+	/**
+	 * @param page
+	 *            an example page
+	 * @return the resource key of the title of the given example page
+	 */
+	public static String titleKey(Class<? extends WicketExamplePage> page)
+	{
+		return page.getSimpleName() + ".title";
+	}
+
+	/**
+	 * @return the resource key of the title of this example, by default the one given by
+	 *         {@link #titleKey(Class)} for this page's class
+	 */
+	protected String getExampleTitleKey()
+	{
+		return titleKey(getClass());
+	}
+
+	private String getExampleTitle()
+	{
+		return getLocalizer().getStringIgnoreSettings(getExampleTitleKey(), this, null, null);
+	}
+
+	private String getPageTitle()
+	{
+		String exampleTitle = getExampleTitle();
+		if (Strings.isEmpty(exampleTitle))
+		{
+			return getString("examplesTitle");
+		}
+		return new StringResourceModel("pageTitle", this).setParameters(exampleTitle).getString();
+	}
+
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{

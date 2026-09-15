@@ -33,7 +33,7 @@ public class TemplateTest
 		WicketTester tester = new WicketTester(new TemplateApplication());
 		tester.startPage(tester.getApplication().getHomePage());
 		String doc = tester.getLastResponse().getDocument();
-		tester.assertContains("Wicket Examples - template");
+		tester.assertContains("Wicket Examples - Template Example");
 		tester.assertContains("This example shows two different ways of building your page up from shared parts.");
 
 		tester.startPage(org.apache.wicket.examples.template.pageinheritance.Page1.class);
