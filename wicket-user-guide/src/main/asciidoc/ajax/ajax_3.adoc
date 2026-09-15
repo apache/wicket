@@ -85,9 +85,11 @@ NOTE: _AjaxFormSubmitBehavior_ does not prevent JavaScript default event handlin
 
 === AjaxFormComponentUpdatingBehavior
 
-This behavior updates the model of the form component it is attached to when a given event occurs. The standard form submitting process is skipped and the behavior validates only its form component. 
+This behavior updates the model of the form component it is attached to when a given event occurs. The standard form submitting process is skipped and the behavior validates only its form component.
 
 The behavior doesn't work with radio buttons and checkboxes. For these kinds of components we must use _AjaxFormChoiceComponentUpdatingBehavior_:
+
+From Wicket 11 it will also process the inner components of _FormComponentPanels_( regardless of the kind of descendant components). This ensures the model of the _FormComponentPanel_ has been updated before _onUpdate(...)_ is invoked. Note that this will force recursive serialization of the data of the inner components. To restore the pre-Wicket 11 behavior return _false_ from _updateInnerComponents()_.
 
 [source,java]
 ----
@@ -121,4 +123,3 @@ add(dynamicLabel);
 ----
 
 NOTE: By default AJAX components and behaviors are _stateful_, but as we will see very soon they can be easily turned to stateless if we need to use them in stateless pages.
-
