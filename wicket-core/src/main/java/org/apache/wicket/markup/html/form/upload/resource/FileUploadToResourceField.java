@@ -17,16 +17,15 @@
 package org.apache.wicket.markup.html.form.upload.resource;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import org.apache.commons.io.IOUtils;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxUtils;
@@ -34,6 +33,7 @@ import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.model.IModel;
@@ -61,21 +61,43 @@ public abstract class FileUploadToResourceField extends FileUploadField
 
     /**
      * Info regarding an upload.
+     * <p>
+     * The client file name and the content type are reported by the browser and must not be
+     * trusted. The size and the bytes are taken from the stored file.
      */
     public static final class UploadInfo
     {
         private File file;
         private final String clientFileName;
 
-        private final long size;
-
         private final String contentType;
 
-        public UploadInfo(String clientFileName, long size, String contentType)
+        /**
+         * @param clientFileName
+         *            the file name reported by the browser
+         * @param contentType
+         *            the content type reported by the browser
+         * @since 9.25.0
+         */
+        public UploadInfo(String clientFileName, String contentType)
         {
             this.clientFileName = clientFileName;
-            this.size = size;
             this.contentType = contentType;
+        }
+
+        /**
+         * @param clientFileName
+         *            the file name reported by the browser
+         * @param size
+         *            ignored, the size is taken from the stored file
+         * @param contentType
+         *            the content type reported by the browser
+         * @deprecated use {@link #UploadInfo(String, String)} instead
+         */
+        @Deprecated(since = "9.25.0", forRemoval = true)
+        public UploadInfo(String clientFileName, long size, String contentType)
+        {
+            this(clientFileName, contentType);
         }
 
         public File getFile()
@@ -93,9 +115,21 @@ public abstract class FileUploadToResourceField extends FileUploadField
             return clientFileName;
         }
 
+        /**
+         * @return the length of the stored file, or 0 if no stored file is present
+         */
         public long getSize()
         {
-            return size;
+            if (isStored())
+            {
+                return file.length();
+            }
+            return 0;
+        }
+
+        private boolean isStored()
+        {
+            return file != null && file.isFile();
         }
 
         public String getContentType()
@@ -113,35 +147,27 @@ public abstract class FileUploadToResourceField extends FileUploadField
         }
 
         /**
-         * @return the bytes associated with the upload. Return null in case no file is present
+         * Reads the stored file into memory.
+         *
+         * @return the bytes of the stored file. Return null in case no file is present
          * or some other error condition happens.
          */
         public byte[] get()
         {
-            if (file == null)
+            if (!isStored())
             {
                return null;
             }
 
-            byte[] fileData = new byte[(int) getSize()];
-            InputStream fis = null;
-
             try
             {
-                fis = new FileInputStream(file);
-                IOUtils.readFully(fis, fileData);
+                return Files.readAllBytes(file.toPath());
             }
             catch (IOException e)
             {
                 LOGGER.debug("IOException at get", e);
-                fileData = null;
+                return null;
             }
-            finally
-            {
-                IOUtils.closeQuietly(fis);
-            }
-
-            return fileData;
         }
 
         @Override
@@ -157,7 +183,7 @@ public abstract class FileUploadToResourceField extends FileUploadField
             for (int i = 0; i < jsonArray.length(); i++)
             {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                infos.add(new UploadInfo(jsonObject.getString("clientFileName"), jsonObject.getLong("size"), jsonObject.getString("contentType")));
+                infos.add(new UploadInfo(jsonObject.getString("clientFileName"), jsonObject.getString("contentType")));
             }
             return infos;
         }
@@ -182,6 +208,7 @@ public abstract class FileUploadToResourceField extends FileUploadField
                 // so that uploaded files are isolated.
                 uploadInfo.setFile(fileManager().getFile(getUploadFieldId(), uploadInfo.clientFileName));
             }
+            fileInfos.removeIf(uploadInfo -> !uploadInfo.isStored());
             return fileInfos;
         }
 
@@ -255,8 +282,20 @@ public abstract class FileUploadToResourceField extends FileUploadField
                 boolean error = request.getRequestParameters().getParameterValue("error").toBoolean(true);
                 if (!error) {
                     String filesIfo = request.getRequestParameters().getParameterValue("filesInfo").toString();
-                    fileUploadInfos = UploadInfo.fromJson(filesIfo);
-                    onUploadSuccess(target, getFileUploadInfos());
+                    List<UploadInfo> reportedInfos = UploadInfo.fromJson(filesIfo);
+                    if (getFileCountMax() > -1 && reportedInfos.size() > getFileCountMax())
+                    {
+                        reportFailure(target, Form.UPLOAD_TOO_MANY_FILES_RESOURCE_KEY);
+                        return;
+                    }
+                    fileUploadInfos = new ArrayList<>(new LinkedHashSet<>(reportedInfos));
+                    List<UploadInfo> storedInfos = getFileUploadInfos();
+                    if (storedInfos.isEmpty())
+                    {
+                        reportFailure(target, AbstractFileUploadResource.NO_FILE_SELECTED);
+                        return;
+                    }
+                    onUploadSuccess(target, storedInfos);
                 }
                 else
                 {
@@ -267,29 +306,35 @@ public abstract class FileUploadToResourceField extends FileUploadField
                     }
                     else
                     {
-                        if (AbstractFileUploadResource.NO_FILE_SELECTED.equals(errorMessage))
-                        {
-                            errorMessage = getString(AbstractFileUploadResource.NO_FILE_SELECTED);
-                        }
-                        else
-                        {
-                            final Map<String, Object> model = new HashMap<>();
-                            if (Strings.isEmpty(errorMessage)) {
-                                errorMessage = "uploadTooLarge";
-                            }
-                            model.put("exception", errorMessage);
-                            model.put("maxSize", getMaxSize());
-                            model.put("fileMaxSize", getFileMaxSize());
-                            model.put("fileCountMax", getFileCountMax());
-                            errorMessage = getString(errorMessage, Model.ofMap(model));
-                        }
-                        error(errorMessage);
-                        onUploadFailure(target, errorMessage);
+                        reportFailure(target, errorMessage);
                     }
                 }
             }
         };
         add(ajaxBehavior);
+    }
+
+    private void reportFailure(AjaxRequestTarget target, String errorMessage)
+    {
+        fileUploadInfos = new ArrayList<>();
+        if (AbstractFileUploadResource.NO_FILE_SELECTED.equals(errorMessage))
+        {
+            errorMessage = getString(AbstractFileUploadResource.NO_FILE_SELECTED);
+        }
+        else
+        {
+            final Map<String, Object> model = new HashMap<>();
+            if (Strings.isEmpty(errorMessage)) {
+                errorMessage = "uploadTooLarge";
+            }
+            model.put("exception", errorMessage);
+            model.put("maxSize", getMaxSize());
+            model.put("fileMaxSize", getFileMaxSize());
+            model.put("fileCountMax", getFileCountMax());
+            errorMessage = getString(errorMessage, Model.ofMap(model));
+        }
+        error(errorMessage);
+        onUploadFailure(target, errorMessage);
     }
 
     private List<UploadInfo> getFileUploadInfos()
@@ -321,6 +366,10 @@ public abstract class FileUploadToResourceField extends FileUploadField
 
     /**
      * Override to do something on a successful upload.
+     * <p>
+     * Only uploads whose file is present in the {@link IUploadsFileManager} are passed, each once.
+     * An upload result listing more files than {@link #getFileCountMax()}, or none that are
+     * present, is reported to {@link #onUploadFailure(AjaxRequestTarget, String)} instead.
      *
      * @param target         The {@link AjaxRequestTarget}
      * @param fileInfos      The List<FileInfo
