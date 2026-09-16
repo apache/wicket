@@ -66,8 +66,14 @@ public interface IRequestableComponent
 	 * Gets a stable id for the specified non-temporary behavior. The id remains stable from the
 	 * point this method is first called for the behavior until the behavior has been removed from
 	 * the component. This includes from one request to the next, when the component itself is
-	 * retained for the next request (i.e. is stateful). Note that the bookkeeping required for
-	 * these stable ids increases the memory footprint of the component.
+	 * retained for the next request (i.e. is stateful).
+	 * <p>
+	 * An id is a position in the component's list of behaviors, so ids are not dense and do not
+	 * necessarily start at zero: a behavior that never asks for an id still occupies a position.
+	 * Which position a behavior ends up at therefore depends on what else was added to the
+	 * component before this method was first called on it, and nothing is fixed until then. From
+	 * that point on the list is no longer compacted, so the gaps left by removed behaviors are
+	 * kept for as long as the component lives.
 	 * 
 	 * @param behavior
 	 * @return a stable id for the specified behavior
@@ -79,7 +85,8 @@ public interface IRequestableComponent
 	 * Gets the behavior for the specified id
 	 * 
 	 * @param id
-	 * @return behavior or {@code null} if none
+	 *            an id handed out by {@link #getBehaviorId(Behavior)}
+	 * @return the behavior with the given id, never {@code null}
 	 * @throws InvalidBehaviorIdException
 	 *             when behavior with this id cannot be found
 	 */

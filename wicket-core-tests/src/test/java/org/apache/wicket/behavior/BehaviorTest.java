@@ -89,6 +89,27 @@ class BehaviorTest extends WicketTestCase
 		assertFalse(container.getBehaviors().contains(temp2));
 	}
 
+	/**
+	 * {@link Component#add(Behavior...)} validates the whole argument list before it stores any of
+	 * it. A behavior's id is its position in the component's list of behaviors, so a behavior that
+	 * was already stored when a later {@code null} was rejected would keep the position it took and
+	 * shift the id of everything added after it.
+	 */
+	@Test
+	void nullBehaviorIsRejectedBeforeAnythingIsStored() {
+		WebMarkupContainer container = new WebMarkupContainer("test");
+		Behavior first = Behavior.onTag((c, tag) -> {});
+
+		assertThrows(IllegalArgumentException.class, () -> container.add((Behavior[])null));
+		assertThrows(IllegalArgumentException.class, () -> container.add(first, null));
+
+		// the rejected call must leave no trace: a behavior stored before the null was found
+		// would keep the slot it took, shifting the id of everything added afterwards
+		assertTrue(container.getBehaviors().isEmpty());
+		container.add(first);
+		assertEquals(0, container.getBehaviorId(first));
+	}
+
 	public static class TestTemporaryBehavior extends Behavior {
 		private static final long serialVersionUID = 1L;
 
