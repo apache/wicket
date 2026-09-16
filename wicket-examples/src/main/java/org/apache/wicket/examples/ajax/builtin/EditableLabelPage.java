@@ -20,13 +20,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableChoiceLabel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableLabel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableMultiLineLabel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 
@@ -62,18 +65,34 @@ public class EditableLabelPage extends BasePage
 		form.add(new AjaxEditableMultiLineLabel("text3"));
 		form.add(new AjaxEditableChoiceLabel<>("site", SITES));
 		
-		form.add(new AjaxEditableLabel<Integer>("number") {
+		final FeedbackPanel feedback = new FeedbackPanel("feedback");
+		feedback.setOutputMarkupId(true);
+		form.add(feedback);
+
+		AjaxEditableLabel<Integer> numberLabel = new AjaxEditableLabel<Integer>("number")
+		{
 			@Override
 			protected IConverter<?> createConverter(Class<?> type)
 			{
-				return new IConverter<Integer>() {
+				return new IConverter<Integer>()
+				{
 					@Override
 					public Integer convertToObject(String value, Locale locale)
 						throws ConversionException
 					{
-						return Integer.parseInt(value);
+						try
+						{
+							return Integer.parseInt(value);
+						}
+						catch (NumberFormatException e)
+						{
+							throw new ConversionException(e).setSourceValue(value)
+								.setTargetType(Integer.class)
+								.setConverter(this)
+								.setLocale(locale);
+						}
 					}
-					
+
 					@Override
 					public String convertToString(Integer value, Locale locale)
 					{
@@ -81,8 +100,23 @@ public class EditableLabelPage extends BasePage
 					}
 				};
 			}
-		});
-		
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				super.onSubmit(target);
+				target.add(feedback);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target)
+			{
+				super.onError(target);
+				target.add(feedback);
+			}
+		};
+		form.add(numberLabel);
+		numberLabel.setType(Integer.class).setRequired(true).setLabel(Model.of("Number"));
 
 		form.add(new Label("refresh-counter", () -> "" + refreshCounter));
 
