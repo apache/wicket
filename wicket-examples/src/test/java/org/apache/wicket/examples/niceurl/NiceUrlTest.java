@@ -53,7 +53,7 @@ public class NiceUrlTest
 	@Test
 	public void testHomePage()
 	{
-		tester.assertContains("Wicket Examples - niceurl");
+		tester.assertContains("Wicket Examples - Nice URLs");
 		tester.assertContains("This example displays how you can work with 'nice' urls for bookmarkable pages.");
 	}
 

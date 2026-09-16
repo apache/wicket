@@ -31,7 +31,7 @@ public class HelloWorldTest extends WicketTestCase
 	@Test
 	public void testHelloWorld() {
 		tester.startPage(HelloWorld.class);
-		tester.assertContains("Wicket Examples - helloworld");
+		tester.assertContains("Wicket Examples - Hello World");
 		tester.assertLabel("message", "Hello World!");
 	}
 }

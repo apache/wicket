@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <head>
-    <title>Wicket Examples - wizard</title>
 </head>
 <body>
     <wicket:extend>
@@ -10,13 +9,13 @@
 
       <ul>
        <li>
-    	<a wicket:id="staticWizardLink" href="#">static wizard using plain text steps</a>
+    	<a wicket:id="staticWizardLink" href="#"><wicket:message key="StaticWizard.title"/></a>
        </li>
        <li>
-    	<a wicket:id="staticWizardWithPanelsLink" href="#">static wizard using panel steps</a>
+    	<a wicket:id="staticWizardWithPanelsLink" href="#"><wicket:message key="StaticWizardWithPanels.title"/></a>
        </li>
        <li>
-    	<a wicket:id="newUserWizardLink" href="#">wizard for creating a new user</a>
+    	<a wicket:id="newUserWizardLink" href="#"><wicket:message key="NewUserWizard.title"/></a>
        </li>
       </ul>
 
