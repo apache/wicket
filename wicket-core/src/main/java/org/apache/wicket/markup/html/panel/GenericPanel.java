@@ -48,4 +48,20 @@ public class GenericPanel<T> extends Panel implements IGenericComponent<T, Gener
 	{
 		super(id, model);
 	}
+
+	/**
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the component model
+	 * @param additionalModels
+	 *            the component's additional models
+	 * @see org.apache.wicket.Component#Component(String, IModel, IModel...)
+	 * @since 11.0.0
+	 */
+	public GenericPanel(final String id, final IModel<T> model,
+		final IModel<?>... additionalModels)
+	{
+		super(id, model, additionalModels);
+	}
 }

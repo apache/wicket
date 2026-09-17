@@ -54,6 +54,16 @@ public class WebComponent extends Component
 		super(id, model);
 	}
 
+	/**
+	 * @see Component#Component(String, IModel, IModel...)
+	 * @since 11.0.0
+	 */
+	public WebComponent(final String id, final IModel<?> model,
+		final IModel<?>... additionalModels)
+	{
+		super(id, model, additionalModels);
+	}
+
 	@Override
 	protected void onRender()
 	{
