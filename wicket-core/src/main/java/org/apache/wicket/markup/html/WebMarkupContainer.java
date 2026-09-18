@@ -54,6 +54,16 @@ public class WebMarkupContainer extends MarkupContainer
 	}
 
 	/**
+	 * @see Component#Component(String, IModel, IModel...)
+	 * @since 11.0.0
+	 */
+	public WebMarkupContainer(final String id, final IModel<?> model,
+		final IModel<?>... additionalModels)
+	{
+		super(id, model, additionalModels);
+	}
+
+	/**
 	 * A convenience method to return the WebPage. Same as getPage().
 	 * 
 	 * @return WebPage

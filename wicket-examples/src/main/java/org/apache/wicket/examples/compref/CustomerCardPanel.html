@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<head>
+    <title>Wicket Examples - customer card</title>
+</head>
+<body>
+ <wicket:panel>
+
+	<p class="panel">
+		<b><span wicket:id="title">title</span></b>:
+		<span wicket:id="name" class="mark">customer name</span>
+	</p>
+
+	<table>
+		<tr>
+			<th><wicket:message key="orders.number">Order</wicket:message></th>
+			<th><wicket:message key="orders.amount">Amount</wicket:message></th>
+			<th><wicket:message key="orders.status">Status</wicket:message></th>
+		</tr>
+		<tr wicket:id="orders">
+			<td><span wicket:id="number">number</span></td>
+			<td><span wicket:id="amount">amount</span></td>
+			<td><span wicket:id="status">status</span></td>
+		</tr>
+	</table>
+
+	<p>
+		<wicket:message key="unpaid.total">Unpaid total:</wicket:message>
+		<span wicket:id="unpaidTotal" class="mark">0</span>
+	</p>
+
+	<p wicket:id="orderLoads">how often the orders were loaded</p>
+
+	<p><wicket:message key="models.header">getModels() of this panel:</wicket:message></p>
+	<ul>
+		<li wicket:id="models"><span wicket:id="model">model</span></li>
+	</ul>
+
+ </wicket:panel>
+</body>
+</html>
