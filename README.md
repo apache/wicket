@@ -67,11 +67,13 @@ You will find the source code here:
 	    |-- wicket
 	    |-- wicket-auth-roles
 	    |-- wicket-bean-validation
+	    |-- wicket-benchmarks
 	    |-- wicket-cdi
 	    |-- wicket-cdi-tests
 	    |-- wicket-core
 	    |-- wicket-tester
 	    |-- wicket-core-tests
+	    |-- wicket-coverage
 	    |-- wicket-devutils
 	    |-- wicket-eclipse-settings
 	    |-- wicket-examples
@@ -79,11 +81,13 @@ You will find the source code here:
 	    |   |-- wicket-metrics
 	    |   |-- wicket-http2
 	    |-- wicket-extensions
+	    |-- wicket-extensions-tester
 	    |-- wicket-guice
 	    |-- wicket-ioc
 	    |-- wicket-jmx
+	    |-- wicket-migration
 	    |-- wicket-native-websocket
-	    |-- wicket-objectssizeof-agent
+	    |-- wicket-objectsizeof-agent
 	    |-- wicket-request
 	    |-- wicket-spring
 	    |-- wicket-util
@@ -100,7 +104,7 @@ Here is a list of projects in the distribution and what they do.
  - wicket-auth-roles: a basic authorization package based on roles;
  - wicket-jmx: registers JMX beans for managing things like your Wicket 
    configuration and markup cache;
- - wicket-objectssizeof-agent: utility for making better estimates of object 
+ - wicket-objectsizeof-agent: utility for making better estimates of object 
    sizes in the JVM - most people probably never need this;
  - wicket-ioc: base project for IoC (aka DI) implementations such as 
    Spring and Guice;
@@ -129,6 +133,14 @@ Here is a list of projects in the distribution and what they do.
  - wicket-user-guide: the user guide of wicket
  - wicket-metrics: collects data of a running wicket application
  - wicket-http2: http/2 push support
+ - wicket-extensions-tester: contains test cases for the wicket-extensions module;
+ - wicket-migration: OpenRewrite recipes which migrate an application to the current
+   version of wicket;
+ - wicket-benchmarks: JMH benchmarks used during development. Never released and it
+   contains no unit tests; it stays in the build so the benchmarks keep compiling
+   against the current API;
+ - wicket-coverage: aggregates the JaCoCo coverage of the other modules into a single
+   report. It produces no artifact of its own.
 
 Dependencies
 ------------
