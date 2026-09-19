@@ -66,13 +66,27 @@ public class ExternalLinkTest extends WicketTestCase
 	@Test
 	public void escapesJavascriptQuotes() throws Exception
 	{
-		String unescaped = "javascript:alert('foo')";
+		String uri = "files?path=d:\\it's \"home\"";
 		MockPageWithOneComponent page = new MockPageWithOneComponent();
-		page.add(new ExternalLink(COMPONENT_ID, unescaped));
+		page.add(new ExternalLink(COMPONENT_ID, uri));
 
 		tester.startPage(page);
 
-		assertThat(tester.getLastResponseAsString(), containsString("javascript:alert(&#039;foo&#039;)"));
+		assertThat(tester.getLastResponseAsString(), containsString(
+			"window.location.href=&#039;files?path=d:\\\\it\\&#039;s \\&quot;home\\&quot;&#039;;"));
+	}
+
+	@Test
+	public void escapesJavascriptQuotesInPopupTarget() throws Exception
+	{
+		String uri = "files?path=d:\\it's \"home\"";
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		page.add(new ExternalLink(COMPONENT_ID, uri).setPopupSettings(new PopupSettings()));
+
+		tester.startPage(page);
+
+		assertThat(tester.getLastResponseAsString(), containsString(
+			"window.open(&#039;files?path=d:\\\\it\\&#039;s \\&quot;home\\&quot;&#039;, "));
 	}
 
 	/**

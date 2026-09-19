@@ -221,9 +221,13 @@ public class PopupSettings implements IClusterable
 	 * the anchor element, but clients may want to override this (e.g. when the HTML element is not an anchor) by
 	 * setting the target explicitly.
 	 *
-	 * <strong>Note</strong>: if the target is an url (relative or absolute) then it should be wrapped in
-	 * quotes, for example: <code>setTarget("'some/url'")</code>. If the url is delivered with an HTML attribute then
-	 * it should be without quotes, for example: <code>setTarget("this.dataset['popup-url']")</code> with markup like:
+	 * <strong>Note</strong>: the target is written into the onclick handler as JavaScript, as given.
+	 * If the target is an url (relative or absolute) then it should be wrapped in quotes, for example:
+	 * <code>setTarget("'some/url'")</code>, and an url that is not a constant has to be escaped for
+	 * a JavaScript string first, as {@link Link} does:
+	 * <code>setTarget("'" + JavaScriptUtils.escapeQuotes(url) + "'")</code>. If the url is delivered
+	 * with an HTML attribute then it should be without quotes, for example:
+	 * <code>setTarget("this.dataset['popup-url']")</code> with markup like:
 	 * <pre><code>&lt;a data-popup-url="some/url"&gt;Link&lt;/a&gt;</code></pre>.
 	 * 
 	 * @param target

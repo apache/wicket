@@ -24,6 +24,8 @@ import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 
+import static org.apache.wicket.core.util.string.JavaScriptUtils.escapeQuotes;
+
 /**
  * <p>
  * A simple anchor link (&lt;a href="http://url"&gt;) pointing to any URL. Usually this is used for
@@ -193,14 +195,15 @@ public class ExternalLink extends AbstractLink
 					// generate a popup script by asking popup settings for one
 					if (popupSettings != null)
 					{
-						popupSettings.setTarget("'" + url + "'");
+						popupSettings.setTarget("'" + escapeQuotes(url) + "'");
 						String popupScript = popupSettings.getPopupJavaScript();
 						tag.put("onclick", popupScript);
 					}
 					else
 					{
 						// or generate an onclick JS handler directly
-						tag.put("onclick", "window.location.href='" + url + "';return false;");
+						tag.put("onclick",
+							"window.location.href='" + escapeQuotes(url) + "';return false;");
 					}
 				}
 			}

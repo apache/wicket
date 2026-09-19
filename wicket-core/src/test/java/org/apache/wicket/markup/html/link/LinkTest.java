@@ -44,13 +44,27 @@ public class LinkTest extends WicketTestCase
 	@Test
 	public void escapesJavascriptQuotesInPopupsTarget()
 	{
-		String uri = "javascript:alert('foo');";
+		String uri = "files?path=d:\\it's \"home\"";
 		MockPageWithOneComponent page = new MockPageWithOneComponent();
 		page.add(new PopupLink(COMPONENT_ID, uri));
 
 		tester.startPage(page);
 
-		assertTrue(tester.getLastResponseAsString().contains("javascript:alert(&#039;foo&#039;);"));
+		assertTrue(tester.getLastResponseAsString().contains(
+			"window.open(&#039;files?path=d:\\\\it\\&#039;s \\&quot;home\\&quot;&#039;, "));
+	}
+
+	@Test
+	public void escapesJavascriptQuotesInOnclickOfANonAnchor()
+	{
+		String uri = "files?path=d:\\it's \"home\"";
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		page.add(new UrlLink(COMPONENT_ID, uri));
+
+		tester.startPage(page);
+
+		assertTrue(tester.getLastResponseAsString().contains(
+			"window.location.href=&#039;files?path=d:\\\\it\\&#039;s \\&quot;home\\&quot;&#039;;"));
 	}
 
 	@Test(expected = MarkupException.class)
@@ -72,15 +86,14 @@ public class LinkTest extends WicketTestCase
 		tester.startPage(mockPageWithLink);
 	}
 
-	static class PopupLink extends Link<Void>
+	static class UrlLink extends Link<Void>
 	{
 		private final String uri;
 
-		public PopupLink(String id, String uri)
+		public UrlLink(String id, String uri)
 		{
 			super(id);
 			this.uri = uri;
-			setPopupSettings(new PopupSettings());
 		}
 
 		@Override
@@ -89,16 +102,25 @@ public class LinkTest extends WicketTestCase
 		}
 
 		@Override
+		protected CharSequence getURL()
+		{
+			return uri;
+		}
+	}
+
+	static class PopupLink extends UrlLink
+	{
+		public PopupLink(String id, String uri)
+		{
+			super(id, uri);
+			setPopupSettings(new PopupSettings());
+		}
+
+		@Override
 		protected void onComponentTag(ComponentTag tag)
 		{
 			super.onComponentTag(tag);
 			tag.setName("a");
-		}
-
-		@Override
-		protected CharSequence getURL()
-		{
-			return uri;
 		}
 	}
 
