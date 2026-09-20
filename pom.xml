@@ -203,7 +203,7 @@
 		<jspecific.version>1.0.1</jspecific.version>
 
 		<!-- Maven plugins -->
-		<build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
+		<build-helper-maven-plugin.version>3.6.2</build-helper-maven-plugin.version>
 		<japicmp-maven-plugin.version>0.26.2</japicmp-maven-plugin.version>
 		<maven-archetype-plugin.version>3.4.1</maven-archetype-plugin.version>
 		<maven-bundle-plugin.version>6.2.0</maven-bundle-plugin.version>
