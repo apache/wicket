@@ -17,7 +17,10 @@
 package org.apache.wicket;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -143,8 +146,9 @@ import org.slf4j.LoggerFactory;
  * Component becomes immutable. Attempts to alter the Component will result in a
  * WicketRuntimeException.</li>
  * <li><b>Detachment </b>- Each request cycle finishes by detaching all touched components.
- * Subclasses should clean up their state by overriding {@link #onDetach()} or more specifically
- * {@link #detachModels()} if they keep references to models beside the default model.</li>
+ * Subclasses should clean up their state by overriding {@link #onDetach()}. Models beside the
+ * default model are detached automatically when they are registered with
+ * {@link #addAdditionalModel(IModel)}.</li>
  * </ul>
  * </li>
  * <li><b>Visibility </b>- If a component is not visible (see {@link #setVisible(boolean)}) it will
@@ -163,7 +167,12 @@ import org.slf4j.LoggerFactory;
  * The component's model can be passed in the constructor or set via
  * {@link Component#setDefaultModel(IModel)}. In neither case a model can be created on demand with
  * {@link #initModel()}.<br>
- * Note that a component can have more models besides its default model.</li>
+ * A component can use further models beside its default model. Such a model is registered with
+ * {@link #addAdditionalModel(IModel)}, or passed to
+ * {@link #Component(String, IModel, IModel...)}, and is then detached together with the default
+ * model at the end of each request; {@link #getModels()} returns all of them. Registering costs
+ * memory, so a component rendered in large numbers is better off detaching its models itself, as
+ * the components shipped with Wicket do.</li>
  * <li><b>Behaviors </b>- You can add multiple {@link Behavior}s to any component if you need to
  * dynamically alter the behavior of components, e.g. manipulate attributes of the markup tag to
  * which a Component is attached. Behaviors take part in the component's lifecycle through various
@@ -284,6 +293,12 @@ public abstract class Component
 
 	/** meta data for user specified markup id */
 	private static final MetaDataKey<String> MARKUP_ID_KEY = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	/** meta data for the models registered with {@link #addAdditionalModel(IModel)} */
+	private static final MetaDataKey<IModel<?>[]> ADDITIONAL_MODELS_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -546,6 +561,35 @@ public abstract class Component
 		if (model != null)
 		{
 			setModelImpl(wrap(model));
+		}
+	}
+
+	/**
+	 * Constructor. All components have names. A component's id cannot be null. This constructor
+	 * includes the default model and any number of additional models, which are registered as with
+	 * {@link #addAdditionalModel(IModel)}. All of them are detached at the end of each request.
+	 * 
+	 * @param id
+	 *            The non-null id of this component
+	 * @param model
+	 *            The component's default model, may be null
+	 * @param additionalModels
+	 *            The component's additional models, any of them may be null
+	 * 
+	 * @throws WicketRuntimeException
+	 *             Thrown if the component has been given a null id.
+	 * @since 11.0.0
+	 */
+	public Component(final String id, final IModel<?> model, final IModel<?>... additionalModels)
+	{
+		this(id, model);
+
+		if (additionalModels != null)
+		{
+			for (IModel<?> additionalModel : additionalModels)
+			{
+				addAdditionalModel(additionalModel);
+			}
 		}
 	}
 
@@ -1046,12 +1090,23 @@ public abstract class Component
 	}
 
 	/**
-	 * Detaches all models
+	 * Detaches all models: the default model, see {@link #detachModel()}, and the models registered
+	 * with {@link #addAdditionalModel(IModel)}. When a registered model is an {@link IWrapModel},
+	 * the model it wraps is detached as well.
 	 */
 	public void detachModels()
 	{
 		// Detach any detachable model from this component
 		detachModel();
+
+		IModel<?>[] additionalModels = getMetaData(ADDITIONAL_MODELS_KEY);
+		if (additionalModels != null)
+		{
+			for (IModel<?> model : additionalModels)
+			{
+				detachModel(model, true);
+			}
+		}
 	}
 
 	/**
@@ -2773,6 +2828,188 @@ public abstract class Component
 	}
 
 	/**
+	 * Registers a model beside the default model, so that it is detached at the end of each request
+	 * together with the default model. A component keeping further models in fields does not have
+	 * to detach them itself:
+	 * 
+	 * <pre>
+	 * private final IModel&lt;Foo&gt; foo = addAdditionalModel(new FooModel());
+	 * </pre>
+	 * 
+	 * The model is registered as given; unlike the default model it is not wrapped for this
+	 * component. A component using an {@link IComponentAssignedModel} passes
+	 * {@link #wrap(IModel) wrap(model)} instead. Registering a model that is already registered, or
+	 * the model wrapped by a registered {@link IWrapModel}, has no effect.
+	 * <p>
+	 * Convenience at a price: a component with registered models costs roughly 50 to 80 bytes more
+	 * than one detaching the same models by hand in {@link #onDetach()}, whatever the number of
+	 * models, because they are kept as component meta data. That is worth it for a component used
+	 * a few dozen times on a page and not for one rendered in the thousands, which is why the
+	 * components shipped with Wicket keep detaching their models themselves.
+	 * 
+	 * @param <M>
+	 *            the type of the model
+	 * @param model
+	 *            the model to register, may be null
+	 * @return the given model, so that it can be assigned in the same statement
+	 * @see #replaceAdditionalModel(IModel, IModel)
+	 * @see #removeAdditionalModel(IModel)
+	 * @since 11.0.0
+	 */
+	protected final <M extends IModel<?>> M addAdditionalModel(final M model)
+	{
+		if (model == null)
+		{
+			return null;
+		}
+		IModel<?>[] additionalModels = getMetaData(ADDITIONAL_MODELS_KEY);
+		if (indexOfAdditionalModel(additionalModels, model) >= 0)
+		{
+			return model;
+		}
+
+		if (additionalModels == null)
+		{
+			additionalModels = new IModel<?>[] { model };
+		}
+		else
+		{
+			additionalModels = Arrays.copyOf(additionalModels, additionalModels.length + 1);
+			additionalModels[additionalModels.length - 1] = model;
+		}
+		setMetaData(ADDITIONAL_MODELS_KEY, additionalModels);
+		return model;
+	}
+
+	/**
+	 * Replaces a model registered with {@link #addAdditionalModel(IModel)}, as a setter of a model
+	 * field would:
+	 * 
+	 * <pre>
+	 * this.foo = replaceAdditionalModel(this.foo, foo);
+	 * </pre>
+	 * 
+	 * Unless both are the same model, the previous model is detached and unregistered, see
+	 * {@link #removeAdditionalModel(IModel)}, and the given model is registered.
+	 * 
+	 * @param <M>
+	 *            the type of the model
+	 * @param previous
+	 *            the registered model to replace, may be null
+	 * @param model
+	 *            the model to register, may be null to only unregister the previous model
+	 * @return the given model, so that it can be assigned in the same statement
+	 * @since 11.0.0
+	 */
+	protected final <M extends IModel<?>> M replaceAdditionalModel(final IModel<?> previous,
+		final M model)
+	{
+		if (previous != model)
+		{
+			removeAdditionalModel(previous);
+			addAdditionalModel(model);
+		}
+		return model;
+	}
+
+	/**
+	 * Detaches and unregisters a model registered with {@link #addAdditionalModel(IModel)}. Given
+	 * the model wrapped by a registered {@link IWrapModel}, the wrapper is unregistered. Removing a
+	 * model that is not registered has no effect.
+	 * 
+	 * @param <M>
+	 *            the type of the model
+	 * @param model
+	 *            the model to unregister, may be null
+	 * @return the given model
+	 * @since 11.0.0
+	 */
+	protected final <M extends IModel<?>> M removeAdditionalModel(final M model)
+	{
+		IModel<?>[] additionalModels = getMetaData(ADDITIONAL_MODELS_KEY);
+		int index = indexOfAdditionalModel(additionalModels, model);
+		if (index < 0)
+		{
+			return model;
+		}
+		detachModel(additionalModels[index], true);
+
+		IModel<?>[] remainingModels = null;
+		if (additionalModels.length > 1)
+		{
+			remainingModels = new IModel<?>[additionalModels.length - 1];
+			System.arraycopy(additionalModels, 0, remainingModels, 0, index);
+			System.arraycopy(additionalModels, index + 1, remainingModels, index,
+				remainingModels.length - index);
+		}
+		setMetaData(ADDITIONAL_MODELS_KEY, remainingModels);
+		return model;
+	}
+
+	/**
+	 * Gets all models of this component: the default model first, if there is one, followed by
+	 * the models registered with {@link #addAdditionalModel(IModel)} in the order they were
+	 * registered.
+	 * Getting the models does not initialize a default model, see {@link #initModel()}.
+	 * 
+	 * @return an unmodifiable collection of the models
+	 * @since 11.0.0
+	 */
+	public final Collection<IModel<?>> getModels()
+	{
+		IModel<?> defaultModel = getModelImpl();
+		IModel<?>[] additionalModels = getMetaData(ADDITIONAL_MODELS_KEY);
+		if (additionalModels == null)
+		{
+			return defaultModel == null ? Collections.emptyList()
+				: Collections.singletonList(defaultModel);
+		}
+		List<IModel<?>> models = new ArrayList<>(additionalModels.length + 1);
+		if (defaultModel != null)
+		{
+			models.add(defaultModel);
+		}
+		Collections.addAll(models, additionalModels);
+		return Collections.unmodifiableList(models);
+	}
+
+	/**
+	 * Finds a registered model, either the given model itself or an {@link IWrapModel} wrapping it.
+	 * 
+	 * @param additionalModels
+	 *            the registered models, may be null
+	 * @param model
+	 *            the model to find, may be null
+	 * @return the index of the registered model, or -1 if it is not registered
+	 */
+	private static int indexOfAdditionalModel(final IModel<?>[] additionalModels,
+		final IModel<?> model)
+	{
+		if (additionalModels != null && model != null)
+		{
+			for (int index = 0; index < additionalModels.length; index++)
+			{
+				IModel<?> additionalModel = additionalModels[index];
+				if (additionalModel == model || unwrap(additionalModel) == model)
+				{
+					return index;
+				}
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * @param model
+	 *            a model
+	 * @return the model wrapped by the given {@link IWrapModel}, or the given model otherwise
+	 */
+	private static IModel<?> unwrap(final IModel<?> model)
+	{
+		return model instanceof IWrapModel ? ((IWrapModel<?>)model).getWrappedModel() : model;
+	}
+
+	/**
 	 * @return model
 	 */
 	IModel<?> getModelImpl()
@@ -3376,16 +3613,33 @@ public abstract class Component
 	 */
 	protected void detachModel()
 	{
-		IModel<?> model = getModelImpl();
+		detachModel(getModelImpl(), !getFlag(FLAG_INHERITABLE_MODEL));
+	}
+
+	/**
+	 * Detaches a model and, optionally, the model it wraps.
+	 * 
+	 * @param model
+	 *            the model to detach, may be null
+	 * @param detachWrappedModel
+	 *            whether the wrapped model of an {@link IWrapModel} is detached too; an inherited
+	 *            model is wrapped around the parent's model, which the parent detaches itself
+	 */
+	private static void detachModel(IModel<?> model, boolean detachWrappedModel)
+	{
 		if (model != null)
 		{
 			model.detach();
 		}
 		// also detach the wrapped model of a component assigned wrap (not
 		// inherited)
-		if (model instanceof IWrapModel && !getFlag(FLAG_INHERITABLE_MODEL))
+		if (model instanceof IWrapModel && detachWrappedModel)
 		{
-			((IWrapModel<?>)model).getWrappedModel().detach();
+			IModel<?> wrappedModel = ((IWrapModel<?>)model).getWrappedModel();
+			if (wrappedModel != null)
+			{
+				wrappedModel.detach();
+			}
 		}
 	}
 

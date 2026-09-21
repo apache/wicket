@@ -76,6 +76,15 @@ public abstract class Panel extends WebMarkupContainer implements IQueueRegion
 	}
 
 	/**
+	 * @see org.apache.wicket.Component#Component(String, IModel, IModel...)
+	 * @since 11.0.0
+	 */
+	public Panel(final String id, final IModel<?> model, final IModel<?>... additionalModels)
+	{
+		super(id, model, additionalModels);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override

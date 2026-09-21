@@ -182,6 +182,16 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
+	 * @see Component#Component(String, IModel, IModel...)
+	 * @since 11.0.0
+	 */
+	public MarkupContainer(final String id, final IModel<?> model,
+		final IModel<?>... additionalModels)
+	{
+		super(id, model, additionalModels);
+	}
+
+	/**
 	 * Adds the child component(s) to this container.
 	 * 
 	 * @param children

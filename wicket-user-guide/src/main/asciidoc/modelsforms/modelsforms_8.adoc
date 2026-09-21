@@ -1,12 +1,14 @@
 
+Sometimes our custom components may need to use more than a single model to work properly. Every model besides the default one must be detached at the end of the request as well. Until Wicket 11 this was entirely up to us: we had to keep every additional model in a field and detach it by overriding _onDetach()_. Nothing reminded us to do so, and forgetting was silent — the page still rendered, only a _LoadableDetachableModel_ stayed loaded and was serialized with the page, dragging its data along for as long as the page lived in the session.
 
+Since Wicket 11 a component can register such models with _addAdditionalModel_, and _Component_ then detaches them together with its default model. The method returns the model it was given, so it can be registered in the same statement that assigns it to a field. The following is the generic code of a component that uses two models, before and after.
 
-Sometimes our custom components may need to use more than a single model to work properly. In such a case we must manually detach the additional models used by our components. In order to do this we can override the Component's onDetach method that is called at the end of the current request. The following is the generic code of a component that uses two models:
+Before, detaching the additional model by hand:
 
 [source,java]
 ----
 /**
- * 
+ *
  * fooModel is used as main model while beeModel must be manually detached
  *
  */
@@ -21,12 +23,266 @@ public class ComponentTwoModels extends Component{
 
 	@Override
 	public void onDetach() {
-        if(beeModel != null)
-           beeModel.detach();
-             
-        super.onDetach();
+		if(beeModel != null)
+			beeModel.detach();
+
+		super.onDetach();
 	}
 }
 ----
 
+After, letting the component detach it for us:
+
+[source,java]
+----
+/**
+ *
+ * fooModel is used as main model while beeModel is registered as an additional model
+ *
+ */
+public class ComponentTwoModels extends Component{
+
+	private IModel<Bee> beeModel;
+
+	public ComponentTwoModels(String id, IModel<Foo> fooModel, IModel<Bee> beeModel) {
+		super(id, fooModel);
+		this.beeModel = addAdditionalModel(beeModel);
+	}
+}
+----
+
+Registering a null model, or registering the same model twice, has no effect, so a component that is not sure whether a model has already been registered can simply register it again.
+
+=== Models the component builds itself
+
+The most common reason for a component to use several models is that it derives them from its default model. Before, every model created in the constructor had to be matched by a line in _onDetach()_, and the two had to be kept in sync by hand:
+
+[source,java]
+----
+public class CustomerCardPanel extends GenericPanel<Customer> {
+
+	private final IModel<List<Order>> ordersModel;
+	private final IModel<Integer> unpaidCountModel;
+
+	public CustomerCardPanel(String id, IModel<Customer> customer, OrderService orders) {
+		super(id, customer);
+
+		this.ordersModel = LoadableDetachableModel.of(
+			() -> orders.findByCustomer(getModelObject()));
+
+		this.unpaidCountModel = LoadableDetachableModel.of(
+			() -> (int)ordersModel.getObject().stream().filter(Order::isUnpaid).count());
+	}
+
+	@Override
+	protected void onDetach() {
+		ordersModel.detach();
+		unpaidCountModel.detach();
+
+		super.onDetach();
+	}
+}
+----
+
+After, the registration happens where the model is created and _onDetach()_ disappears:
+
+[source,java]
+----
+public class CustomerCardPanel extends GenericPanel<Customer> {
+
+	private final IModel<List<Order>> ordersModel;
+	private final IModel<Integer> unpaidCountModel;
+
+	public CustomerCardPanel(String id, IModel<Customer> customer, OrderService orders) {
+		super(id, customer);
+
+		this.ordersModel = addAdditionalModel(LoadableDetachableModel.of(
+			() -> orders.findByCustomer(getModelObject())));
+
+		this.unpaidCountModel = addAdditionalModel(LoadableDetachableModel.of(
+			() -> (int)ordersModel.getObject().stream().filter(Order::isUnpaid).count()));
+	}
+}
+----
+
+=== Models the component keeps no reference to
+
+When a model is only passed on to a child component and never used again, before we still needed a field for it, for no other reason than to give _onDetach()_ something to reach:
+
+[source,java]
+----
+public class InvoiceHeaderPanel extends GenericPanel<Invoice> {
+
+	private final IModel<Company> issuerModel;
+	private final IModel<Customer> recipientModel;
+
+	public InvoiceHeaderPanel(String id, IModel<Invoice> invoice,
+			IModel<Company> issuer, IModel<Customer> recipient) {
+		super(id, invoice);
+
+		this.issuerModel = issuer;
+		this.recipientModel = recipient;
+
+		add(new CompanyPanel("issuer", issuer));
+		add(new CustomerPanel("recipient", recipient));
+	}
+
+	@Override
+	protected void onDetach() {
+		issuerModel.detach();
+		recipientModel.detach();
+
+		super.onDetach();
+	}
+}
+----
+
+After, we pass the models to the constructor, which registers all of them. _Component_, _MarkupContainer_, _WebComponent_, _WebMarkupContainer_, _Panel_ and _GenericPanel_ all have such a constructor:
+
+[source,java]
+----
+public class InvoiceHeaderPanel extends GenericPanel<Invoice> {
+
+	public InvoiceHeaderPanel(String id, IModel<Invoice> invoice,
+			IModel<Company> issuer, IModel<Customer> recipient) {
+		super(id, invoice, issuer, recipient);
+
+		add(new CompanyPanel("issuer", issuer));
+		add(new CustomerPanel("recipient", recipient));
+	}
+}
+----
+
+=== Replacing and removing a model
+
+A field holding an additional model needs care in its setter: the model being dropped has to be detached, but only when it is really being replaced. Before:
+
+[source,java]
+----
+public void setBeeModel(IModel<Bee> beeModel) {
+	if(this.beeModel != null && this.beeModel != beeModel)
+		this.beeModel.detach();
+
+	this.beeModel = beeModel;
+}
+----
+
+After, _replaceAdditionalModel_ does both halves — it detaches and unregisters the previous model, registers the new one and returns it — and does nothing at all when both are the same model:
+
+[source,java]
+----
+public void setBeeModel(IModel<Bee> beeModel) {
+	this.beeModel = replaceAdditionalModel(this.beeModel, beeModel);
+}
+----
+
+_removeAdditionalModel_ detaches and unregisters a model without registering another one in its place.
+
+=== Components that extend other components
+
+Additional models are tracked without an index, so a subclass does not need to know how many models its superclass has registered. Before, both classes had an _onDetach()_ and the subclass had to remember to call _super.onDetach()_ — forgetting it silently stopped the superclass' models from being detached:
+
+[source,java]
+----
+public class BaseCardPanel<T> extends GenericPanel<T> {
+
+	protected final IModel<Branding> brandingModel;
+
+	public BaseCardPanel(String id, IModel<T> model) {
+		super(id, model);
+
+		this.brandingModel = LoadableDetachableModel.of(BrandingService::current);
+	}
+
+	@Override
+	protected void onDetach() {
+		brandingModel.detach();
+
+		super.onDetach();
+	}
+}
+
+public class CustomerCardPanel extends BaseCardPanel<Customer> {
+
+	private final IModel<List<Order>> ordersModel;
+
+	//...
+
+	@Override
+	protected void onDetach() {
+		ordersModel.detach();
+
+		super.onDetach();
+	}
+}
+----
+
+After, each class registers its own models and neither knows about the other's:
+
+[source,java]
+----
+public class BaseCardPanel<T> extends GenericPanel<T> {
+
+	protected final IModel<Branding> brandingModel;
+
+	public BaseCardPanel(String id, IModel<T> model) {
+		super(id, model);
+
+		this.brandingModel = addAdditionalModel(
+			LoadableDetachableModel.of(BrandingService::current));
+	}
+}
+
+public class CustomerCardPanel extends BaseCardPanel<Customer> {
+
+	private final IModel<List<Order>> ordersModel;
+
+	public CustomerCardPanel(String id, IModel<Customer> customer, OrderService orders) {
+		super(id, customer);
+
+		this.ordersModel = addAdditionalModel(LoadableDetachableModel.of(
+			() -> orders.findByCustomer(getModelObject())));
+	}
+}
+----
+
+=== Models that must be wrapped
+
+Unlike the default model, an additional model is registered as it is given, which is what allows the methods to return the very model we passed them. If it implements _IComponentAssignedModel_ (like _ResourceModel_, _StringResourceModel_ or _CompoundPropertyModel_), the component must wrap it itself so that the model knows which component it belongs to:
+
+[source,java]
+----
+this.titleModel = addAdditionalModel(wrap(new ResourceModel("customer.card.title")));
+----
+
+For a plain model — _Model_, _LoadableDetachableModel_, a lambda model — there is nothing to wrap.
+
+=== Looking at the models of a component
+
+_getModels()_ returns the default model, if there is one, followed by all additional models in the order they were registered. It does not trigger model inheritance, so calling it never creates a model as a side effect and it is safe to use in tests and debugging tools:
+
+[source,java]
+----
+Collection<IModel<?>> models = panel.getModels();
+----
+
+=== When to keep detaching by hand
+
+Registering models is a convenience with a price: the models are kept as component meta data, which costs a component roughly 50 to 80 bytes more than detaching the same models by hand, whatever their number. That is a good trade for a component used a few dozen times on a page, and a bad one for a component rendered in the thousands, such as a cell inside a large table or an item of a long list. This is why the components shipped with Wicket detach their additional models themselves.
+
+With older versions of Wicket, for detachable state that is not a model, or when the memory of every single component instance counts, we must detach it manually. In order to do this we can override the Component's onDetach method that is called at the end of the current request:
+
+[source,java]
+----
+@Override
+public void onDetach() {
+	if(beeModel != null)
+		beeModel.detach();
+
+	super.onDetach();
+}
+----
+
 When we override onDetach we must call the super class implementation of this method, usually as last line in our custom implementation.
+
+NOTE: A running example of a component with several registered models is available in the component reference of the Wicket examples, under _org.apache.wicket.examples.compref.MultipleModelsPage_.
