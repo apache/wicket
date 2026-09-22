@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.events;
 
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
 
 /**
@@ -25,11 +24,9 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  */
 public abstract class BasePage extends WicketExamplePage
 {
-	/**
-	 * Constructor
-	 */
-	public BasePage()
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
 	{
-		add(new BookmarkablePageLink<>("back", IndexPage.class).setAutoEnable(true));
+		return IndexPage.class;
 	}
 }

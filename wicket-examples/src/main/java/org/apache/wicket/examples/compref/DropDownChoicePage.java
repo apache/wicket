@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.GroupedDropDownChoice;
@@ -38,7 +37,7 @@ import org.apache.wicket.util.io.IClusterable;
  * 
  * @author Eelco Hillenius
  */
-public class DropDownChoicePage extends WicketExamplePage
+public class DropDownChoicePage extends ComprefPage
 {
 	/** available sites for selection. */
 	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby", "Java.Net");

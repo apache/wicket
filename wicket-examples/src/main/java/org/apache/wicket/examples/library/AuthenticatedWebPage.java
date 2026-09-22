@@ -32,6 +32,12 @@ import org.apache.wicket.examples.WicketExamplePage;
  */
 public class AuthenticatedWebPage extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return Home.class;
+	}
+
 	/**
 	 * Get downcast session object
 	 * 

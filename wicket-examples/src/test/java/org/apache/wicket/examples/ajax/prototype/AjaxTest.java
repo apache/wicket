@@ -38,7 +38,7 @@ public class AjaxTest extends WicketTestCase
 		Index page = new Index();
 
 		tester.startPage(page);
-		tester.assertContains("Wicket Examples - Prototype.js / component render");
+		tester.assertContains("Wicket Examples - AJAX with Prototype.js");
 		assertEquals(0, page.get("counter").getDefaultModelObject());
 
 		tester.startPage(page);

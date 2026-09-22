@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.compref;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
@@ -34,7 +33,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author ivaynberg
  */
-public class RadioGroupPage extends WicketExamplePage
+public class RadioGroupPage extends ComprefPage
 {
 	/**
 	 * Constructor

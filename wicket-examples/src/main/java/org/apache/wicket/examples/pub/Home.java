@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.pub;
 
+import org.apache.wicket.examples.homepage.LocalizationIndex;
+
 import java.util.Locale;
 
 import org.apache.wicket.examples.WicketExamplePage;
@@ -37,6 +39,18 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public final class Home extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return LocalizationIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "localization";
+	}
+
 	/**
 	 * Constructor
 	 * 

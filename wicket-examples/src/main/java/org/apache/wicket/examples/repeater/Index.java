@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.examples.repeater;
 
+import org.apache.wicket.examples.ExampleIndexPanel;
+
 
 /**
- * index page - the links are in the template
+ * index page - the examples are the pages found next to it
  * 
  * @author igor
  * 
@@ -30,5 +32,6 @@ public class Index extends ExamplePage
 	 */
 	public Index()
 	{
+		add(new ExampleIndexPanel("examples", Index.class));
 	}
 }

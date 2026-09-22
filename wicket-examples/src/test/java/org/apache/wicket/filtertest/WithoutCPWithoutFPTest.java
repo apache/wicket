@@ -61,7 +61,7 @@ public class WithoutCPWithoutFPTest extends WicketWebTestCase
 	public void testHelloWorld() throws Exception
 	{
 		WebResponse response = beginAt("/hello?message=Test");
-		assertEquals("Wicket Examples - helloworld", response.getTitle());
+		assertEquals("Wicket Examples - Hello World", response.getTitle());
 		assertEquals("Message is: 'Test'", response.getElementWithID("message").getText());
 	}
 
@@ -74,7 +74,7 @@ public class WithoutCPWithoutFPTest extends WicketWebTestCase
 	public void testWithSlash() throws Exception
 	{
 		WebResponse response = beginAt("/hello?message=Test%2FWith%20a%20Slash");
-		assertEquals("Wicket Examples - helloworld", response.getTitle());
+		assertEquals("Wicket Examples - Hello World", response.getTitle());
 		assertEquals("Message is: 'Test/With a Slash'", response.getElementWithID("message")
 			.getText());
 	}

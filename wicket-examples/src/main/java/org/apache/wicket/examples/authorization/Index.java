@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.examples.authorization;
 
+import org.apache.wicket.examples.homepage.AuthenticationIndex;
+import org.apache.wicket.examples.WicketExamplePage;
+
 import org.apache.wicket.Session;
 import org.apache.wicket.examples.authorization.pages.AdminAnnotationsBookmarkablePage;
 import org.apache.wicket.examples.authorization.pages.AdminAnnotationsInternalPage;
@@ -38,6 +41,18 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class Index extends BasePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return AuthenticationIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "authentication";
+	}
+
 	/**
 	 * Construct.
 	 */
@@ -63,7 +78,8 @@ public class Index extends BasePage
 		});
 
 		// pages that are protected using wicket meta data
-		add(new BookmarkablePageLink<>("adminBookmarkableLink", AdminBookmarkablePage.class));
+		add(new BookmarkablePageLink<>("adminBookmarkableLink", AdminBookmarkablePage.class)
+			.setBody(title(AdminBookmarkablePage.class, this)));
 		add(new Link<Void>("adminInternalLink")
 		{
 			@Override
@@ -71,18 +87,21 @@ public class Index extends BasePage
 			{
 				setResponsePage(new AdminInternalPage("foo"));
 			}
-		});
-		add(new BookmarkablePageLink<>("panelsPageLink", PanelsPage.class));
+		}.setBody(title(AdminInternalPage.class, this)));
+		add(new BookmarkablePageLink<>("panelsPageLink", PanelsPage.class)
+			.setBody(title(PanelsPage.class, this)));
 
 		// pages that are protected using annotations
 		add(new BookmarkablePageLink<Void>("adminAnnotBookmarkableLink",
-			AdminAnnotationsBookmarkablePage.class));
+			AdminAnnotationsBookmarkablePage.class)
+				.setBody(title(AdminAnnotationsBookmarkablePage.class, this)));
 		add(new Link<Void>("adminAnnotInternalLink") {
 			public void onClick() {
 				setResponsePage(new AdminAnnotationsInternalPage("bar"));
 			}
-		});
+		}.setBody(title(AdminAnnotationsInternalPage.class, this)));
 
-		add(new BookmarkablePageLink<>("panelsAnnotPageLink", AnnotationsPanelsPage.class));
+		add(new BookmarkablePageLink<>("panelsAnnotPageLink", AnnotationsPanelsPage.class)
+			.setBody(title(AnnotationsPanelsPage.class, this)));
 	}
 }

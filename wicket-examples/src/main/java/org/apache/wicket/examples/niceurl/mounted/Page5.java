@@ -34,6 +34,12 @@ import org.apache.wicket.util.string.StringValue;
  */
 public class Page5 extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return Home.class;
+	}
+
 	private final Random random = new Random();
 
 	/**
@@ -66,7 +72,6 @@ public class Page5 extends WicketExamplePage
 
 		BookmarkablePageLink<?> link = new BookmarkablePageLink<>("refreshLink", Page5.class, params);
 		add(link);
-		add(new BookmarkablePageLink<>("homeLink", Home.class));
 	}
 
 	/**

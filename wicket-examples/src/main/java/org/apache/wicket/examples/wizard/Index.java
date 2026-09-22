@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.examples.wizard;
 
+import org.apache.wicket.examples.ExampleIndexPanel;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.wizard.Wizard;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.Link;
 
 
@@ -68,8 +70,15 @@ public class Index extends WicketExamplePage
 	 */
 	public Index()
 	{
-		add(new WizardLink("staticWizardLink", StaticWizard.class));
-		add(new WizardLink("staticWizardWithPanelsLink", StaticWizardWithPanels.class));
-		add(new WizardLink("newUserWizardLink", NewUserWizard.class));
+		add(new ExampleIndexPanel("examples", Index.class, Wizard.class, false)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected AbstractLink link(String id, Class<?> example)
+			{
+				return new WizardLink(id, example.asSubclass(Wizard.class));
+			}
+		});
 	}
 }

@@ -33,6 +33,6 @@ public class ComprefTest extends WicketTestCase
 	public void test_1() {
 		tester.startPage(Index.class);
 
-		tester.assertContains("Wicket Examples - component reference");
+		tester.assertContains("Wicket Examples - Component Reference");
 	}
 }

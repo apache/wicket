@@ -45,6 +45,12 @@ import org.apache.wicket.util.lang.Bytes;
 @SuppressWarnings("serial")
 public class UploadPage extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return Index.class;
+	}
+
 	/**
 	 * List view for files in upload folder.
 	 */

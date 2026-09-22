@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.customresourceloading;
 
+import org.apache.wicket.examples.homepage.TemplatingIndex;
+
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
@@ -27,6 +29,18 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  */
 public class Index extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return TemplatingIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "templating";
+	}
+
 	/**
 	 * Constructor.
 	 */

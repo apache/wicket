@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.examples.authentication2;
 
+import org.apache.wicket.examples.homepage.AuthenticationIndex;
+import org.apache.wicket.examples.WicketExamplePage;
+
 /**
  * Simple home page which requires authentication
  * 
@@ -23,6 +26,18 @@ package org.apache.wicket.examples.authentication2;
  */
 public class Home extends AuthenticatedWebPage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return AuthenticationIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "authentication";
+	}
+
 	/**
 	 * Constructor
 	 */
