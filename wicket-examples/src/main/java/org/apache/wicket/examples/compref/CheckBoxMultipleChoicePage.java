@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -34,7 +33,7 @@ import org.apache.wicket.util.io.IClusterable;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class CheckBoxMultipleChoicePage extends WicketExamplePage
+public class CheckBoxMultipleChoicePage extends ComprefPage
 {
 	/** available sites for selection. */
 	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby",

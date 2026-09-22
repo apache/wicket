@@ -35,7 +35,7 @@ public class RepeaterTest
 		try
 		{
 			tester.startPage(Index.class);
-			tester.assertContains("Wicket Examples - repeater views");
+			tester.assertContains("Wicket Examples - Repeaters");
 
 			checkPage(tester, RepeatingPage.class);
 			checkPage(tester, RefreshingPage.class);
@@ -57,7 +57,7 @@ public class RepeaterTest
 	private void checkPage(WicketTester tester, Class<? extends WebPage> page)
 	{
 		tester.startPage(page);
-		tester.assertContains("Wicket Examples - repeater views");
+		tester.assertVisible("exampleTitle");
 		tester.assertContains("Selected Contact: ");
 		tester.assertContains("No Contact Selected");
 	}

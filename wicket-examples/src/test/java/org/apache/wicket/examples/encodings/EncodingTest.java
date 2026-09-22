@@ -31,7 +31,7 @@ public class EncodingTest extends WicketTestCase
 	@Test
 	public void test_1() {
 		tester.startPage(Home.class);
-		tester.assertContains("Wicket Examples - encodings");
+		tester.assertContains("Wicket Examples - Encodings");
 		// the non-printable characters are: &#65533;&#65533;&#65533;
 		tester.assertContains("Hello world! Test: ���");
 	}

@@ -18,7 +18,6 @@ package org.apache.wicket.examples.compref;
 
 import java.util.Date;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -30,7 +29,7 @@ import org.apache.wicket.model.StringResourceModel;
  * 
  * @author Eelco Hillenius
  */
-public class LabelPage extends WicketExamplePage
+public class LabelPage extends ComprefPage
 {
 	/**
 	 * Constructor

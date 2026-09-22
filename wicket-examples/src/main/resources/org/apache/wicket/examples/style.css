@@ -1419,3 +1419,30 @@ div.wicket-aa ul li.selected {
 .light-grey {
 	background-color: lightgrey;
 }
+
+.explanation {
+	margin: 1em 0;
+}
+
+.explanation p {
+	margin: 0.5em 0;
+}
+
+.navigation p {
+	margin: 0.2em 0;
+}
+
+ul.examples {
+	list-style: none;
+	margin: 0.5em 0 1.5em 0;
+	padding: 0;
+}
+
+ul.examples li {
+	margin: 0.4em 0;
+}
+
+.examples-heading {
+	font-weight: bold;
+	margin: 1.5em 0 0 0;
+}

@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.compref;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 
 
@@ -25,7 +24,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * 
  * @author Eelco Hillenius
  */
-public class BorderPage extends WicketExamplePage
+public class BorderPage extends ComprefPage
 {
 	/**
 	 * Constructor

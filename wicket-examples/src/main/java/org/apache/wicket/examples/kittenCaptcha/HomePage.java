@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.kittenCaptcha;
 
+import org.apache.wicket.examples.homepage.CaptchaIndex;
+
 import java.awt.Dimension;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -29,6 +31,18 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class HomePage extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return CaptchaIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "captchas";
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	private final KittenCaptchaPanel captcha;

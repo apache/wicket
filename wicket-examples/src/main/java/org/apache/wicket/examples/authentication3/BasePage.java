@@ -25,4 +25,9 @@ import org.apache.wicket.examples.WicketExamplePage;
  */
 public class BasePage extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return HomePage.class;
+	}
 }

@@ -16,14 +16,13 @@
  */
 package org.apache.wicket.examples.authentication3;
 
-import org.apache.wicket.examples.WicketExamplePage;
 
 /**
  * Simple logout page.
  * 
  * @author Jonathan Locke
  */
-public class SignOut extends WicketExamplePage
+public class SignOut extends BasePage
 {
 	/**
 	 * Constructor

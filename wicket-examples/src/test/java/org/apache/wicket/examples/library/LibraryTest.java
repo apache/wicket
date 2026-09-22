@@ -35,7 +35,7 @@ public class LibraryTest
 		try
 		{
 			tester.startPage(SignIn.class);
-			tester.assertContains("Wicket Examples - library");
+			tester.assertContains("Wicket Examples - Library - Sign In");
 			tester.assertContains("Username and password are both");
 
 			FormTester formTester = tester.newFormTester("signInPanel:signInForm");
@@ -44,7 +44,7 @@ public class LibraryTest
 			formTester.submit();
 
 			tester.assertRenderedPage(Home.class);
-			tester.assertContains("Wicket Examples - library");
+			tester.assertContains("Wicket Examples - Library<");
 			tester.assertLabel("books:0:author", "Effective Java (Joshua Bloch)");
 		}
 		finally

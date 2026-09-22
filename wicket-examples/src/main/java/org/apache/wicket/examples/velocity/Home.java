@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.velocity;
 
+import org.apache.wicket.examples.ExampleIndexPanel;
 import org.apache.wicket.examples.WicketExamplePage;
 
 /**
@@ -23,4 +24,11 @@ import org.apache.wicket.examples.WicketExamplePage;
  */
 public class Home extends WicketExamplePage
 {
+	/**
+	 * Construct.
+	 */
+	public Home()
+	{
+		add(new ExampleIndexPanel("examples", Home.class));
+	}
 }

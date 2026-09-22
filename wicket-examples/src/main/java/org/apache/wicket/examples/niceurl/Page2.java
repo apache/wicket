@@ -31,6 +31,12 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class Page2 extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return Home.class;
+	}
+
 	private final Random random = new Random();
 
 	/**
@@ -54,7 +60,5 @@ public class Page2 extends WicketExamplePage
 
 		BookmarkablePageLink<?> link = new BookmarkablePageLink<>("refreshLink", getClass(), params);
 		add(link);
-
-		add(new BookmarkablePageLink<>("homeLink", Home.class));
 	}
 }

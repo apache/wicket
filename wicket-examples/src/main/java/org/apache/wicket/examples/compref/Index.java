@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.compref;
 
+import org.apache.wicket.examples.ExampleIndexPanel;
 import org.apache.wicket.examples.WicketExamplePage;
 
 /**
@@ -30,5 +31,6 @@ public class Index extends WicketExamplePage
 	 */
 	public Index()
 	{
+		add(new ExampleIndexPanel("examples", Index.class));
 	}
 }

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -34,7 +33,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Eelco Hillenius
  */
-public class ListMultipleChoicePage extends WicketExamplePage
+public class ListMultipleChoicePage extends ComprefPage
 {
 	/** available sites for selection. */
 	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby", "Java.Net");

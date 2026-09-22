@@ -16,10 +16,28 @@
  */
 package org.apache.wicket.examples.cdi;
 
+import org.apache.wicket.examples.homepage.InjectionIndex;
+import org.apache.wicket.examples.WicketExamplePage;
+
+import org.apache.wicket.examples.ExampleIndexPanel;
+
 
 public class CdiHomePage extends CdiExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return InjectionIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "injection";
+	}
+
 	public CdiHomePage()
 	{
+		add(new ExampleIndexPanel("examples", CdiHomePage.class));
 	}
 }

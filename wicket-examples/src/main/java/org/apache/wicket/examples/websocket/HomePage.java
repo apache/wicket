@@ -16,8 +16,13 @@
  */
 package org.apache.wicket.examples.websocket;
 
+import org.apache.wicket.examples.ExampleIndexPanel;
 import org.apache.wicket.examples.WicketExamplePage;
 
 public class HomePage extends WicketExamplePage
 {
+	public HomePage()
+	{
+		add(new ExampleIndexPanel("examples", HomePage.class));
+	}
 }

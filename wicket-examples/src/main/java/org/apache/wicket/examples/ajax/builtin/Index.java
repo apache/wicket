@@ -17,9 +17,8 @@
 package org.apache.wicket.examples.ajax.builtin;
 
 import org.apache.wicket.examples.AjaxEngineSelector;
+import org.apache.wicket.examples.ExampleIndexPanel;
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.examples.homepage.HomePage;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 
 /**
  * Wicket ajax example index page
@@ -33,16 +32,19 @@ public class Index extends BasePage
 	 */
 	public Index()
 	{
-		// EffectsPage needs jQuery UI, which the plain JavaScript Ajax engine does not load
-		WebMarkupContainer effectsSection = new WebMarkupContainer("effectsSection");
-		effectsSection.setVisible(
-			AjaxEngineSelector.getEffectiveEngine() == AjaxEngineSelector.Engine.JQUERY);
-		add(effectsSection);
+		add(new ExampleIndexPanel("examples", Index.class, true)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected boolean include(Class<?> page)
+			{
+				// EffectsPage needs jQuery UI, which the plain JavaScript Ajax engine does not load
+				return page != EffectsPage.class ||
+					AjaxEngineSelector.getEffectiveEngine() == AjaxEngineSelector.Engine.JQUERY;
+			}
+		});
 	}
 
-	@Override
-	protected Class<? extends WicketExamplePage> getBackPage() {
-		return HomePage.class;
-	}
 
 }
