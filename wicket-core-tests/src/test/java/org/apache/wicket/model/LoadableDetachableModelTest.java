@@ -18,6 +18,7 @@ package org.apache.wicket.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
@@ -132,6 +133,117 @@ class LoadableDetachableModelTest extends WicketTestCase
 		ldm.detach();
 		assertEquals(false, ldm.isAttached());
 		assertEquals(true, ldm.detachCalled);
+	}
+
+	@Test
+	void onDetachReceivesTheAttachedObject()
+	{
+		class DetachingLoad extends LoadableDetachableModel<Integer>
+		{
+			private static final long serialVersionUID = 1L;
+
+			private boolean detachCalled = false;
+
+			private Integer detached;
+
+			@Override
+			protected Integer load()
+			{
+				return 42;
+			}
+
+			@Override
+			protected void onDetach(Integer object)
+			{
+				detachCalled = true;
+				detached = object;
+			}
+		}
+
+		DetachingLoad ldm = new DetachingLoad();
+		assertThat(ldm.getObject()).isEqualTo(42);
+
+		ldm.detach();
+
+		assertEquals(true, ldm.detachCalled);
+		assertThat(ldm.detached).isEqualTo(42);
+		assertEquals(false, ldm.isAttached());
+	}
+
+	@Test
+	void onDetachReceivesNullAfterFailedLoad()
+	{
+		class ExceptionalLoad extends LoadableDetachableModel<Integer>
+		{
+			private static final long serialVersionUID = 1L;
+
+			private boolean detachCalled = false;
+
+			private Integer detached = 42;
+
+			@Override
+			protected Integer load()
+			{
+				throw new RuntimeException();
+			}
+
+			@Override
+			protected void onDetach(Integer object)
+			{
+				detachCalled = true;
+				detached = object;
+			}
+		}
+
+		ExceptionalLoad ldm = new ExceptionalLoad();
+		assertThrows(RuntimeException.class, ldm::getObject);
+
+		ldm.detach();
+
+		assertEquals(true, ldm.detachCalled);
+		assertThat(ldm.detached).isNull();
+	}
+
+	@Test
+	void onDetachAlwaysCalledEvenWhenNeverAttached()
+	{
+		class CountingLoad extends LoadableDetachableModel<Integer>
+		{
+			private static final long serialVersionUID = 1L;
+
+			private int detachCount = 0;
+
+			private int alwaysCount = 0;
+
+			@Override
+			protected Integer load()
+			{
+				return 42;
+			}
+
+			@Override
+			protected void onDetach(Integer object)
+			{
+				detachCount++;
+			}
+
+			@Override
+			protected void onDetachAlways()
+			{
+				alwaysCount++;
+			}
+		}
+
+		CountingLoad ldm = new CountingLoad();
+
+		ldm.detach();
+		assertEquals(0, ldm.detachCount);
+		assertEquals(1, ldm.alwaysCount);
+
+		ldm.getObject();
+		ldm.detach();
+		assertEquals(1, ldm.detachCount);
+		assertEquals(2, ldm.alwaysCount);
 	}
 
 	private static class SerializedLoad extends LoadableDetachableModel<Integer>

@@ -63,9 +63,9 @@ public class SessionIdentifiersModel extends LoadableDetachableModel<List<String
 	}
 	
 	@Override
-	public void detach()
+	protected void onDetachAlways()
 	{
-		super.detach();
+		super.onDetachAlways();
 		
 		store.detach();
 	}
