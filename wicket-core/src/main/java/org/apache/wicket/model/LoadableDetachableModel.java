@@ -98,7 +98,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	}
 
 	@Override
-	public void detach()
+	public final void detach()
 	{
 		// even if LDM is in partial attached state (ATTACHING) it should be detached
 		if (state != null && state != InternalState.DETACHED)
@@ -115,6 +115,8 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 				log.debug("removed transient object for '{}'", this);
 			}
 		}
+
+		onDetachAlways();
 	}
 
 	@Override
@@ -178,8 +180,45 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	/**
 	 * Detaches from the current request. Implement this method with custom behavior, such as
 	 * setting the model object to null.
+	 * <p>
+	 * This implementation delegates to {@link #onDetach(Object)}, passing the object this model is
+	 * currently holding. An override that does not call {@code super.onDetach()} suppresses that
+	 * callback.
 	 */
 	protected void onDetach()
+	{
+		onDetach(transientModelObject);
+	}
+
+	/**
+	 * Detaches from the current request, handing over the object this model is holding before it is
+	 * discarded. This is the place to release resources tied to that object.
+	 * <p>
+	 * The object is the one returned by the last {@link #load()} or passed to
+	 * {@link #setObject(Object)}. It is {@code null} when that value was {@code null}, and also when
+	 * the model is detached while still attaching - {@link #load()} is then either running or has
+	 * thrown.
+	 * 
+	 * @param object
+	 *            the object that was attached, may be {@code null}
+	 * @since 11.0.0
+	 */
+	protected void onDetach(T object)
+	{
+	}
+
+	/**
+	 * Detaches from the current request, whether this model was attached or not. Unlike
+	 * {@link #onDetach()} this is invoked on every call to {@link #detach()}, so it is the place for
+	 * cleanup that is not tied to the loaded object - detaching models this one was handed, for
+	 * instance, which may have been attached without this model ever loading.
+	 * <p>
+	 * When the model was attached, this runs after {@link #onDetach()} and after the loaded object
+	 * has been discarded.
+	 * 
+	 * @since 11.0.0
+	 */
+	protected void onDetachAlways()
 	{
 	}
 

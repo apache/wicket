@@ -242,20 +242,23 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		}
 
 		@Override
-		public void detach()
+		protected void onDetach()
 		{
-			super.detach();
+			super.onDetach();
 
-			StringResourceModel.this.detach();
+			if (StringResourceModel.this.component == null)
+			{
+				// without an explicit component the wrapped model never attaches itself
+				StringResourceModel.this.onDetach();
+			}
 		}
 
 		@Override
-		protected void onDetach()
+		protected void onDetachAlways()
 		{
-			if (StringResourceModel.this.component == null)
-			{
-				StringResourceModel.this.onDetach();
-			}
+			super.onDetachAlways();
+
+			StringResourceModel.this.detach();
 		}
 
 		@Override
@@ -619,9 +622,9 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	}
 
 	@Override
-	public final void detach()
+	protected final void onDetachAlways()
 	{
-		super.detach();
+		super.onDetachAlways();
 
 		// detach any model
 		if (model != null)

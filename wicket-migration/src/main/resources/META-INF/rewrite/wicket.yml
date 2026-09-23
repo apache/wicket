@@ -81,6 +81,14 @@ recipeList:
 # The ChangeType entries below handle the common case; getRememberMe(), setRememberMe(),
 # onSignInRemembered() and the two-argument SignInPanel constructor have no equivalent and need
 # hand-editing. Both are deprecated in 8.19.0, 9.24.0 and 10.11.0.
+#
+# org.apache.wicket.model.LoadableDetachableModel#detach() is final, so a subclass can no longer
+# step into the attach/detach state machine. An override of it moves its body to one of two hooks
+# and drops the super.detach() call: onDetachAlways(), which runs on every detach() just as the
+# override did, or onDetach(), which runs only when the model was attached. The new onDetach(T) is
+# handed the object the model was holding before that object is discarded; the default onDetach()
+# delegates to it, so an override of onDetach() that does not call super suppresses it. These
+# require manual migration.
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.wicket.MigrateToWicket11
 displayName: Migrate to Wicket 11.x
