@@ -17,6 +17,8 @@
 package org.apache.wicket.pageStore;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -162,7 +164,7 @@ public class AsynchronousPageStoreTest
 
 		assertEquals(page, pageBack);
 		
-		store.destroy();
+		asyncPageStore.destroy();
 	}
 
 	/**
@@ -218,7 +220,7 @@ public class AsynchronousPageStoreTest
 
 		assertEquals(page, pageBack);
 		
-		store.destroy();
+		asyncPageStore.destroy();
 	}
 
 	/**
@@ -272,7 +274,7 @@ public class AsynchronousPageStoreTest
 		
 		assertEquals(null, asyncPageStore.getPage(context, pageId));
 		
-		store.destroy();
+		asyncPageStore.destroy();
 
 		semaphore.release();
 	}
@@ -363,7 +365,9 @@ public class AsynchronousPageStoreTest
 	public void storeAsynchronousContextClosed() throws Throwable
 	{
 		final AtomicReference<Throwable> asyncFail = new AtomicReference<>();
-		
+
+		final CountDownLatch added = new CountDownLatch(1);
+
 		IPageStore store = new MockPageStore() {
 			
 			@Override
@@ -387,38 +391,39 @@ public class AsynchronousPageStoreTest
 			@Override
 			public synchronized void addPage(IPageContext context, IManageablePage page)
 			{
-				// can get session id
-				context.getSessionId(true);
-				
-				// cannot access request
-				try {
-					context.getRequestData(KEY1, () -> null);
-					asyncFail.set(new Exception().fillInStackTrace());
-				} catch (WicketRuntimeException expected) {
-				}
-				try {
-					context.getRequestData(KEY2, () -> null);
-					asyncFail.set(new Exception().fillInStackTrace());
-				} catch (WicketRuntimeException expected) {
-				}
+				// an assertion failing here would die with the page saving thread
+				try
+				{
+					// can get session id
+					context.getSessionId(true);
 
-				// can read session data 
-				assertEquals("value1", context.getSessionData(KEY1, () -> "value2"));
-				assertEquals(null, context.getSessionData(KEY2, () -> null));
-				// .. but cannot set
-				try {
-					context.getSessionData(KEY2, () -> "value2");
-					asyncFail.set(new Exception().fillInStackTrace());
-				} catch (WicketRuntimeException expected) {
+					// cannot access request
+					assertThrows(WicketRuntimeException.class,
+						() -> context.getRequestData(KEY1, () -> null));
+					assertThrows(WicketRuntimeException.class,
+						() -> context.getRequestData(KEY2, () -> null));
+
+					// can read session data 
+					assertEquals("value1", context.getSessionData(KEY1, () -> "value2"));
+					assertEquals(null, context.getSessionData(KEY2, () -> null));
+					// .. but cannot set
+					assertThrows(WicketRuntimeException.class,
+						() -> context.getSessionData(KEY2, () -> "value2"));
+
+					// can read session attribute already read
+					assertEquals("value1", context.getSessionAttribute("key1", () -> null));
+					assertNull(context.getSessionAttribute("key2", () -> null));
+					// .. but cannot set
+					assertThrows(WicketRuntimeException.class,
+						() -> context.getSessionAttribute("key2", () -> "value2"));
 				}
-				
-				// can read session attribute already read
-				assertEquals("value1", context.getSessionAttribute("key1", () -> null));
-				// .. but nothing new
-				try {
-					context.getSessionAttribute("key2", () -> null);
-					asyncFail.set(new Exception().fillInStackTrace());
-				} catch (WicketRuntimeException expected) {
+				catch (Throwable failure)
+				{
+					asyncFail.set(failure);
+				}
+				finally
+				{
+					added.countDown();
 				}
 			}
 		};
@@ -430,9 +435,11 @@ public class AsynchronousPageStoreTest
 		IPageContext context = new MockPageContext();
 		
 		asyncPageStore.addPage(context , page);
-		
-		store.destroy();
-		
+
+		assertTrue(added.await(30, TimeUnit.SECONDS), "page was never added asynchronously");
+
+		asyncPageStore.destroy();
+
 		if (asyncFail.get() != null) {
 			throw asyncFail.get();
 		}
@@ -525,9 +532,10 @@ public class AsynchronousPageStoreTest
 			}
 		}
 
-		lock.await(pages * sessions * (writeMillis + readMillis), TimeUnit.MILLISECONDS);
+		assertTrue(lock.await(pages * sessions * (writeMillis + readMillis), TimeUnit.MILLISECONDS),
+			"not all pages were added");
 
-		pageStore.destroy();
+		asyncPageStore.destroy();
 		
 		return results;
 	}
