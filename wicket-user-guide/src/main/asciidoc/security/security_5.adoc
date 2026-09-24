@@ -65,6 +65,8 @@ Because a _same-site_ request is cross-origin, it is treated as one: by default 
 
 Note that this decision rests entirely with the Fetch Metadata policy: __OriginResourceIsolationPolicy__ is only consulted for requests that carry no Fetch Metadata headers at all, which no current browser does.
 
+A request that is interrupted and resumed later is judged on where it originally came from. An application that refuses an unauthenticated visitor by throwing _RestartResponseAtInterceptPageException_ has the url that visitor asked for remembered, and _continueToOriginalDestination()_ returns them to it once they have signed in. That second request is a redirect from inside our own application, so it says _same-origin_ no matter which origin chose the url in the first place. The listener therefore records where every request came from, and when a remembered destination is resumed it asks the policies about both: the resume is allowed only where the request that chose the url would have been allowed as well. A client that sent no origin headers at all is settled by _setUnknownOutcomeAction()_, exactly as it is when it invokes a listener directly. If a policy of our own reads something else, _recordOrigin()_ decides what is recorded.
+
 If every origin on our site is trusted - for instance when all of our subdomains are part of the same application - we can allow sibling origins to invoke listeners as well with _setSameSiteAllowed(true)_:
 
 [source,java]
