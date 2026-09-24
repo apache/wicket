@@ -94,6 +94,13 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 */
 	static final String NOT_AUTHORIZED = "Not authorized";
 
+	/**
+	 * The reason given to a client whose HTTP session has ended. It is sent with close code
+	 * {@value WebSocketConnectionOriginFilter#POLICY_VIOLATION_ERROR_CODE}, the policy violation
+	 * code of RFC 6455, which is the one a rejected connection already uses.
+	 */
+	static final String SESSION_ENDED = "Session ended";
+
 	private final WebRequest webRequest;
 	private final int pageId;
 	private final String context;
@@ -248,6 +255,16 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 *     the connection is no longer in the registry to be found. The decision is taken once, per
 	 *     connection; it is not repeated for the messages that follow on an accepted one.
 	 * </p>
+	 * <p>
+	 *     The session is resolved again for every message, out of the HTTP session the connection
+	 *     was opened on. When that session has ended - invalidated by the application, by a filter,
+	 *     by a container-managed logout, or by an idle timeout - there is nothing left to resolve,
+	 *     and the connection is removed from the registry and closed with
+	 *     {@value WebSocketConnectionOriginFilter#POLICY_VIOLATION_ERROR_CODE} rather than carrying
+	 *     the identity it was opened with any further. A ClosedMessage, ErrorMessage or
+	 *     AbortedMessage is still dropped silently in that case, because closing a connection that
+	 *     is already going away says nothing.
+	 * </p>
 	 *
 	 * @param message
 	 *      the message to broadcast
@@ -292,6 +309,10 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				{
 					connectionRegistry.removeConnection(application, sessionId, connection.getKey());
 					LOG.debug("No Session could be found for session id '{}' and key '{}'!", sessionId, connection.getKey());
+					if (isSpecialMessage(message) == false)
+					{
+						connection.close(WebSocketConnectionOriginFilter.POLICY_VIOLATION_ERROR_CODE, SESSION_ENDED);
+					}
 					return;
 				}
 
