@@ -28,7 +28,14 @@ import javax.servlet.http.HttpSessionContext;
  * A copy of the HttpSession used at the WebSocket connection creation time
  *
  * @since 6.0
+ * @deprecated Nothing copies the session any more. A request is discarded at the end of the
+ *             request and {@link ServletRequestCopy} therefore copies it; a session is not, and
+ *             a copy of one only detaches the connection from the session it was opened on - it
+ *             does not see that session end, and what it writes never reaches it.
+ *             {@link ServletRequestCopy#getSession(boolean)} hands back the live
+ *             {@link HttpSession} instead.
  */
+@Deprecated
 public class HttpSessionCopy implements HttpSession
 {
 	private final long creationTime;
