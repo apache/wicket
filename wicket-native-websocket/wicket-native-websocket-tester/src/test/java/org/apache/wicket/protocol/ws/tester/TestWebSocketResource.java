@@ -22,6 +22,7 @@ import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.apache.wicket.util.string.Strings;
 
@@ -36,6 +37,17 @@ public class TestWebSocketResource extends WebSocketResource
 	static final AtomicBoolean ON_CONNECT_CALLED = new AtomicBoolean(false);
 	static final AtomicBoolean ON_CLOSE_CALLED = new AtomicBoolean(false);
 	static final AtomicBoolean ON_ABORT_CALLED = new AtomicBoolean(false);
+	static final AtomicBoolean ON_MESSAGE_CALLED = new AtomicBoolean(false);
+	static final AtomicBoolean ON_PUSH_CALLED = new AtomicBoolean(false);
+
+	static void resetCallbacks()
+	{
+		ON_CONNECT_CALLED.set(false);
+		ON_CLOSE_CALLED.set(false);
+		ON_ABORT_CALLED.set(false);
+		ON_MESSAGE_CALLED.set(false);
+		ON_PUSH_CALLED.set(false);
+	}
 
 	private final String expectedMessage;
 
@@ -82,9 +94,17 @@ public class TestWebSocketResource extends WebSocketResource
 	}
 
 	@Override
+	protected void onPush(WebSocketRequestHandler handler, IWebSocketPushMessage message)
+	{
+		super.onPush(handler, message);
+		ON_PUSH_CALLED.set(true);
+	}
+
+	@Override
 	protected void onMessage(WebSocketRequestHandler handler, TextMessage message)
 	{
 		super.onMessage(handler, message);
+		ON_MESSAGE_CALLED.set(true);
 
 		String text = message.getText();
 		assertEquals(expectedMessage, text);
@@ -95,6 +115,7 @@ public class TestWebSocketResource extends WebSocketResource
 	protected void onMessage(WebSocketRequestHandler handler, BinaryMessage binaryMessage)
 	{
 		super.onMessage(handler, binaryMessage);
+		ON_MESSAGE_CALLED.set(true);
 
 		byte[] data = binaryMessage.getData();
 		int offset = binaryMessage.getOffset();

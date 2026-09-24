@@ -24,6 +24,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
+import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.page.IPageManager;
@@ -58,6 +59,9 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
@@ -81,6 +85,14 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * A pageId indicating that the endpoint is WebSocketResource
 	 */
 	static final int NO_PAGE_ID = -1;
+
+	/**
+	 * The reason given to a client whose shared {@link WebSocketResource} the
+	 * {@link IAuthorizationStrategy} refused. It is sent with close code
+	 * {@value WebSocketConnectionOriginFilter#POLICY_VIOLATION_ERROR_CODE}, the policy violation
+	 * code of RFC 6455, which is the one a rejected connection already uses.
+	 */
+	static final String NOT_AUTHORIZED = "Not authorized";
 
 	private final WebRequest webRequest;
 	private final int pageId;
@@ -162,6 +174,12 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 
 	/**
 	 * A helper that registers the opened connection in the application-level registry.
+	 * <p>
+	 * The connection may already be closed again when this returns. Broadcasting the
+	 * {@link ConnectedMessage} is where the {@link IAuthorizationStrategy} is asked about a shared
+	 * {@link WebSocketResource}, and a refusal closes the connection there. This happens before the
+	 * transport registers its message handlers, so no frame of the client can be delivered to a
+	 * resource that was refused.
 	 *
 	 * @param connection
 	 *            the web socket connection to use to communicate with the client
@@ -220,6 +238,16 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 *     components/behaviors write in the WebSocketRequestHandler will be ignored because the protocol
 	 *     doesn't expect response from the user.
 	 * </p>
+	 * <p>
+	 *     A ConnectedMessage for a connection that named a shared {@link WebSocketResource} is where
+	 *     that resource is authorized. When the {@link IAuthorizationStrategy} refuses it, this
+	 *     method removes the connection from the registry and closes it with
+	 *     {@value WebSocketConnectionOriginFilter#POLICY_VIOLATION_ERROR_CODE} instead of
+	 *     broadcasting, so none of the callbacks of the resource is reached - not
+	 *     {@code onConnect()}, and not the {@code onClose()} that follows the close either, because
+	 *     the connection is no longer in the registry to be found. The decision is taken once, per
+	 *     connection; it is not repeated for the messages that follow on an accepted one.
+	 * </p>
 	 *
 	 * @param message
 	 *      the message to broadcast
@@ -264,6 +292,15 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				{
 					connectionRegistry.removeConnection(application, sessionId, connection.getKey());
 					LOG.debug("No Session could be found for session id '{}' and key '{}'!", sessionId, connection.getKey());
+					return;
+				}
+
+				if (message instanceof ConnectedMessage && isResourceAuthorized(session) == false)
+				{
+					LOG.warn("The IAuthorizationStrategy refused the WebSocketResource named '{}'. " +
+							"Closing the connection with key '{}'.", resourceName, connection.getKey());
+					connectionRegistry.removeConnection(application, sessionId, connection.getKey());
+					connection.close(WebSocketConnectionOriginFilter.POLICY_VIOLATION_ERROR_CODE, NOT_AUTHORIZED);
 					return;
 				}
 
@@ -338,6 +375,42 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		});
 		requestCycle.getUrlRenderer().setBaseUrl(baseUrl);
 		return requestCycle;
+	}
+
+	/**
+	 * Asks the {@link IAuthorizationStrategy} whether the client that opened this connection may
+	 * use the shared {@link WebSocketResource} it named in the handshake.
+	 * <p>
+	 * A connection to a page is never asked about and always allowed here: a page was authorized
+	 * when it was instantiated and rendered, and the message is delivered to a behavior of that
+	 * very page, out of the page store of the caller's own session.
+	 * <p>
+	 * The question is the one the constructor of
+	 * {@link org.apache.wicket.request.handler.resource.ResourceRequestHandler} puts for the HTTP
+	 * routes to a resource, with the same empty parameters: the query of a WebSocket URL carries
+	 * only Wicket's own connection parameters, which the client chooses, and they are not the
+	 * parameters of a request to the resource. The refusal is not the same, because a status code
+	 * cannot be delivered over this transport - see
+	 * {@link #broadcastMessage(IWebSocketMessage, IWebSocketConnection, boolean, long)}.
+	 *
+	 * @param session
+	 *      the session of the client that opened the connection
+	 * @return {@code false} only when a shared resource was named and the strategy refused it
+	 */
+	private boolean isResourceAuthorized(Session session)
+	{
+		if (Strings.isEmpty(resourceName))
+		{
+			return true;
+		}
+
+		IAuthorizationStrategy authorizationStrategy = session != null
+			? session.getAuthorizationStrategy()
+			: application.getSecuritySettings().getAuthorizationStrategy();
+
+		IResource resource = new SharedResourceReference(resourceName).getResource();
+
+		return authorizationStrategy.isResourceAuthorized(resource, new PageParameters());
 	}
 
 	/**
