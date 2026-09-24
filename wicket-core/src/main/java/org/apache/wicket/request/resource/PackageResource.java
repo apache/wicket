@@ -38,6 +38,7 @@ import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.ResourceStreamWrapper;
+import org.apache.wicket.util.resource.ResourceUtils;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -269,11 +270,9 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		String currentStyle = getCurrentStyle();
 		Locale currentLocale = getCurrentLocale();
 		
-		 IResourceStream packageResource = Application.get()
-			.getResourceSettings()
-			.getResourceStreamLocator()
-			.locate(scope, absolutePath, currentStyle, variation, currentLocale, null, false);
-		 
+		IResourceStream packageResource = getResourceStream(scope, name, currentLocale,
+			currentStyle, variation, true);
+
 		// if resource stream can not be found do not cache
 		if (packageResource != null)
 		{
@@ -569,6 +568,17 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 		if (resourceStream != null)
 		{
+			String locatedPath = locatedPath(absolutePath, resourceStream);
+
+			// absolutePath was accepted above, so denying the located path is the mismatch that
+			// #acceptsLocatedPath(String, IResourceStream) tests on the existence path
+			if (!locatedPath.equals(absolutePath) && !accept(locatedPath))
+			{
+				throw new PackageResourceBlockedException("Access denied to (static) package resource " +
+					absolutePath + ", which the style, variation and locale completed into " +
+					locatedPath + ". See IPackageResourceGuard");
+			}
+
 			resourceStream = new ProcessingResourceStream(resourceStream);
 		}
 		return resourceStream;
@@ -636,6 +646,11 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 *
 	 * By default IPackageResourceGuard is used to check the permissions but the resource itself can
 	 * also make the check.
+	 * <p>
+	 * An override is only consulted while the resource is being served. The static
+	 * {@link #getResourceStream(Class, String, Locale, String, String, boolean)}, which decides
+	 * whether a package resource exists at all, asks the configured IPackageResourceGuard
+	 * directly, and only about a path the style, the variation or the locale has completed.
 	 *
 	 * @param path
 	 *            resource path
@@ -686,21 +701,179 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		return getResourceStream(scope, path, locale, style, variation, true) != null;
 	}
 
+	/**
+	 * Locates the resource stream for the given set of criteria, or {@code null} when there is no
+	 * package resource that may be served for them.
+	 *
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in
+	 * @param path
+	 *            The path to the resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The style of the resource (see {@link org.apache.wicket.Session})
+	 * @param variation
+	 *            The component's variation (of the style)
+	 * @param updateCache
+	 *            Whether the resource stream locator may cache the result
+	 * @return the resource stream, or {@code null} if there is none, or if the style, the
+	 *         variation and the locale completed the path into a resource the configured
+	 *         {@link IPackageResourceGuard} denies
+	 */
 	public static IResourceStream getResourceStream(final Class<?> scope, final String path, final Locale locale,
 		final String style, final String variation, final boolean updateCache)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
 		IResourceStreamLocator resourceStreamLocator = Application.get().getResourceSettings()
 			.getResourceStreamLocator();
+		IResourceStream resourceStream;
 		if (resourceStreamLocator instanceof CachingResourceStreamLocator)
 		{
 			CachingResourceStreamLocator cache = (CachingResourceStreamLocator)resourceStreamLocator;
-			return cache.locate(scope, absolutePath, style, variation, locale, null, false,
+			resourceStream = cache.locate(scope, absolutePath, style, variation, locale, null, false,
 				updateCache);
 		}
 		else
 		{
-			return resourceStreamLocator.locate(scope, absolutePath, style, variation, locale, null, false);
+			resourceStream = resourceStreamLocator.locate(scope, absolutePath, style, variation, locale, null, false);
+		}
+
+		if (resourceStream != null && !acceptsLocatedPath(absolutePath, resourceStream))
+		{
+			return null;
+		}
+
+		return resourceStream;
+	}
+
+	/**
+	 * Whether the resource that was located may be served, given that the path the locator was
+	 * asked about may be.
+	 * <p>
+	 * A path the guard denies on its own account is not this method's concern: it is denied when
+	 * the resource is served, whichever answer is given here, and reporting it as absent would
+	 * change which resource references exist. What this method is for is the path the style, the
+	 * variation and the locale have completed into a different one, which the guard was never
+	 * asked about.
+	 * <p>
+	 * Not to be confused with {@link #accept(String)}, which asks the guard about a single given
+	 * path. The serving path applies this same rule through that method: there
+	 * {@code absolutePath} has been accepted already, so denying the located path on its own is
+	 * the same mismatch.
+	 *
+	 * @param absolutePath
+	 *            the path the locator was asked for
+	 * @param stream
+	 *            the stream the locator returned
+	 * @return {@code false} only if the guard accepts {@code absolutePath} but denies the resource
+	 *         that was located
+	 */
+	private static boolean acceptsLocatedPath(final String absolutePath, final IResourceStream stream)
+	{
+		String locatedPath = locatedPath(absolutePath, stream);
+
+		if (locatedPath.equals(absolutePath))
+		{
+			return true;
+		}
+
+		IPackageResourceGuard guard = Application.get()
+			.getResourceSettings()
+			.getPackageResourceGuard();
+
+		return !guard.accept(absolutePath) || guard.accept(locatedPath);
+	}
+
+	/**
+	 * Rebuilds the path of the resource a resource stream locator has located.
+	 * <p>
+	 * The style, variation and locale are not part of the path the locator is given: it appends
+	 * them itself, as {@code <path>_<variation>_<style>_<locale>} before the extension, so the
+	 * resource it opens is not the resource the path it was given names. The located stream carries
+	 * the three values that were used, and
+	 * {@link org.apache.wicket.resource.ResourceUtil#rejectPathSeparators(String, String)}
+	 * guarantees that none of them can contribute a path component of its own, so only the file
+	 * name can differ.
+	 *
+	 * @param absolutePath
+	 *            the path the locator was asked for
+	 * @param stream
+	 *            the stream the locator returned
+	 * @return the path of the located resource, or {@code absolutePath} itself when the locator
+	 *         appended nothing to it
+	 */
+	private static String locatedPath(final String absolutePath, final IResourceStream stream)
+	{
+		final String variation = stream.getVariation();
+		final String style = stream.getStyle();
+		final Locale locale = stream.getLocale();
+
+		// A locale in the file name itself replaces the one the locator was given, and
+		// ResourceUtils only recognizes one that an underscore introduces. So a file name without
+		// an underscore, located with none of the three attributes, is the path itself.
+		final boolean mayCarryLocale =
+			absolutePath.indexOf('_', absolutePath.lastIndexOf('/') + 1) != -1;
+
+		if (variation == null && style == null && locale == null && !mayCarryLocale)
+		{
+			return absolutePath;
+		}
+
+		String path = absolutePath;
+		if (mayCarryLocale)
+		{
+			ResourceUtils.PathLocale pathLocale = ResourceUtils.getLocaleFromFilename(absolutePath);
+			if (pathLocale != null && pathLocale.locale != null)
+			{
+				path = pathLocale.path;
+			}
+		}
+
+		final String localeName = locale != null ? locale.toString() : null;
+
+		// the extension is split off and re-appended where the locator splits and re-appends it
+		final int ixExtension = path.lastIndexOf('.');
+		final int ixInsert = ixExtension != -1 ? ixExtension : path.length();
+
+		final StringBuilder locatedPath = new StringBuilder(path.length() +
+			appendedLength(variation) + appendedLength(style) + appendedLength(localeName));
+
+		locatedPath.append(path, 0, ixInsert);
+		append(locatedPath, variation);
+		append(locatedPath, style);
+		append(locatedPath, localeName);
+		locatedPath.append(path, ixInsert, path.length());
+
+		return locatedPath.toString();
+	}
+
+	/**
+	 * @param attribute
+	 *            a style, variation or locale, may be {@code null}
+	 * @return the number of characters {@link #append(StringBuilder, String)} adds for it
+	 */
+	private static int appendedLength(final String attribute)
+	{
+		return attribute != null ? attribute.length() + 1 : 0;
+	}
+
+	/**
+	 * Appends an attribute preceded by an underscore, the way
+	 * {@link org.apache.wicket.core.util.resource.locator.ResourceNameIterator} does, and nothing
+	 * at all when the attribute is {@code null}.
+	 *
+	 * @param path
+	 *            the path being built
+	 * @param attribute
+	 *            a style, variation or locale, may be {@code null}
+	 */
+	private static void append(final StringBuilder path, final String attribute)
+	{
+		if (attribute != null)
+		{
+			path.append('_').append(attribute);
 		}
 	}
 
