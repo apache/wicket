@@ -52,10 +52,10 @@ import org.apache.wicket.request.resource.IResource;
  * The question is put once, when the connection is opened, and is not repeated for the messages
  * that follow: a connection that was allowed stays allowed for as long as it is open, even if the
  * privileges of the session change meanwhile. That is deliberate - this resource exists to carry
- * many messages cheaply, without the page lock a {@link WebSocketBehavior} takes - and it is what
- * this transport can honestly offer, since it resolves its session from a copy made during the
- * handshake and does not see a session that was replaced. Close the connection from the
- * application when the privileges it was opened with are withdrawn.
+ * many messages cheaply, without the page lock a {@link WebSocketBehavior} takes, and a registry
+ * lookup and a strategy call in front of every message would tax exactly that. The connection
+ * does end with the HTTP session it was opened on, but privileges withdrawn from a session that
+ * lives on are not noticed: close the connection from the application when that happens.
  */
 public abstract class WebSocketResource implements IResource
 {
