@@ -35,6 +35,27 @@ import org.apache.wicket.request.resource.IResource;
 
 /**
  * An IResource that can be used as WebSocket endpoint
+ * <p>
+ * Unlike other resources this one is never served over HTTP - {@link #respond(Attributes)} is final
+ * and empty - so a WebSocket connection is the only way to reach it. Register it as a shared
+ * resource and let a {@link BaseWebSocketBehavior} name it, and every callback below is driven by
+ * the client that opened the connection.
+ * <p>
+ * The {@link org.apache.wicket.authorization.IAuthorizationStrategy} of the application is asked
+ * whether that client may use this resource, through
+ * {@link org.apache.wicket.authorization.IAuthorizationStrategy#isResourceAuthorized(IResource, org.apache.wicket.request.mapper.parameter.PageParameters)},
+ * so a restriction on it - for example the {@code AuthorizeResource} annotation of wicket-auth-roles
+ * - is enforced. A refused client is disconnected and reaches none of the callbacks, not even
+ * {@link #onClose(org.apache.wicket.protocol.ws.api.message.ClosedMessage)} or
+ * {@link #onAbort(org.apache.wicket.protocol.ws.api.message.AbortedMessage)}.
+ * <p>
+ * The question is put once, when the connection is opened, and is not repeated for the messages
+ * that follow: a connection that was allowed stays allowed for as long as it is open, even if the
+ * privileges of the session change meanwhile. That is deliberate - this resource exists to carry
+ * many messages cheaply, without the page lock a {@link WebSocketBehavior} takes - and it is what
+ * this transport can honestly offer, since it resolves its session from a copy made during the
+ * handshake and does not see a session that was replaced. Close the connection from the
+ * application when the privileges it was opened with are withdrawn.
  */
 public abstract class WebSocketResource implements IResource
 {
@@ -167,6 +188,14 @@ public abstract class WebSocketResource implements IResource
 	{
 	}
 
+	/**
+	 * Does nothing, deliberately: a WebSocketResource has no representation to serve over HTTP, and
+	 * a request for one writes an empty response. Its callbacks are reached over a WebSocket
+	 * connection instead, which is where the
+	 * {@link org.apache.wicket.authorization.IAuthorizationStrategy} is asked about it - so unlike
+	 * the note on {@link IResource#respond(Attributes)}, nothing is served here without being
+	 * authorized, because nothing is served here at all.
+	 */
 	@Override
 	public final void respond(Attributes attributes)
 	{

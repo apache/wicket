@@ -147,6 +147,8 @@ and
 ----
 to any page. This will prepare the JavaScript connection for you.
 
+A _WebSocketResource_ is a shared resource like any other, so the application's _IAuthorizationStrategy_ decides who may use it: _isResourceAuthorized()_ is asked when a client opens a connection to it, and an _@AuthorizeResource_ annotation on the resource class applies. A client that is refused is disconnected with WebSocket close code 1008 and reaches none of the callbacks - there is no 403 to send, because an HTTP status code cannot be delivered over this transport. The decision is taken for the connection, once, and is not repeated for each message, so close the connection yourself when the privileges it was opened with are withdrawn. This is unrelated to _WebSocketSettings#setConnectionFilter()_, which is the application's own policy over the handshake (the _Origin_ header, for instance) and does not replace the authorization above.
+
 * *WebSocket connection registry*
 
 To push data to one or more clients the application can use the _IWebSocketConnectionRegistry_ to find all registered connections and send data to all/any of them:

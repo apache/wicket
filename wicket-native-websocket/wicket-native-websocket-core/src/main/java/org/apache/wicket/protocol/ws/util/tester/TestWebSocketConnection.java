@@ -28,6 +28,8 @@ import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 abstract class TestWebSocketConnection implements IWebSocketConnection
 {
 	private boolean isOpen = true;
+	private int closeCode = -1;
+	private String closeReason;
 
 	@Override
 	public boolean isOpen()
@@ -39,6 +41,24 @@ abstract class TestWebSocketConnection implements IWebSocketConnection
 	public void close(int code, String reason)
 	{
 		isOpen = false;
+		closeCode = code;
+		closeReason = reason;
+	}
+
+	/**
+	 * @return the code this connection was closed with, or {@code -1} when it was never closed
+	 */
+	int getCloseCode()
+	{
+		return closeCode;
+	}
+
+	/**
+	 * @return the reason this connection was closed with, or {@code null} when it was never closed
+	 */
+	String getCloseReason()
+	{
+		return closeReason;
 	}
 
 	@Override

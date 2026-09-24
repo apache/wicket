@@ -36,6 +36,8 @@ import org.apache.wicket.util.tester.WicketTester;
  */
 abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 {
+	private TestWebSocketConnection testConnection;
+
 	/**
 	 *
 	 * Constructor.
@@ -126,7 +128,7 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	@Override
 	public void onOpen(Object connection)
 	{
-		onConnect(new TestWebSocketConnection() {
+		testConnection = new TestWebSocketConnection() {
 
 			@Override
 			protected void onOutMessage(String message)
@@ -145,7 +147,18 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 			{
 				TestWebSocketProcessor.this.broadcastMessage(message);
 			}
-		});
+		};
+
+		onConnect(testConnection);
+	}
+
+	/**
+	 * @return the connection this processor opened, or {@code null} when {@link #onOpen(Object)}
+	 *      has not been called yet
+	 */
+	TestWebSocketConnection getTestConnection()
+	{
+		return testConnection;
 	}
 
 	/**
