@@ -56,6 +56,10 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 	/**
 	 * Try to sign in the user. It'll call {@link #authenticate(String, String)} to do the real work
 	 * and that is what you need to subclass to provide your own authentication mechanism.
+	 * <p>
+	 * Every successful authentication renews the session id through
+	 * {@link Session#changeSessionId()}, not only the first one, so that an id that was known
+	 * before the authentication is never carried into the authenticated session.
 	 * 
 	 * @param username
 	 * @param password
@@ -69,10 +73,14 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 		{
 			signOut();
 		}
-		else if (authenticated && signedIn.compareAndSet(false, true))
+		else if (authenticated)
 		{
 			changeSessionId();
-			bind();
+
+			if (signedIn.compareAndSet(false, true))
+			{
+				bind();
+			}
 		}
 		return authenticated;
 	}
