@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Page;
@@ -173,24 +176,32 @@ public class ListenerRequestHandler
 			((Page)page).internalInitialize();
 		}
 
+		if (freshPage && component != null)
+		{
+			configureForListener((Component)component);
+		}
+
 		RedirectPolicy policy = page.isPageStateless()
 			? RedirectPolicy.NEVER_REDIRECT
 			: RedirectPolicy.AUTO_REDIRECT;
 
-		boolean blockIfExpired = component != null && !component.canCallListenerAfterExpiry();
+		boolean blockOnFreshPage = component != null && !component.canCallListenerAfterExpiry();
 
 		boolean lateComponent = component == null && freshPage;
 
-		if ((pageComponentProvider.wasExpired() && blockIfExpired) || lateComponent)
+		if ((freshPage && blockOnFreshPage) || lateComponent)
 		{
-			// A request listener is invoked on an expired page or the component couldn't be
-			// determined. The best we can do is to re-paint the newly constructed page.
+			// A request listener is invoked on a page instance that was created for this very
+			// request - because the stored page had expired, or because the URL carried no page
+			// identifier at all - and the component does not allow that, or the component couldn't
+			// be determined. The best we can do is to re-paint the newly constructed page.
 			// Reference: WICKET-4454, WICKET-6288
 
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug(
-					"An IRequestListener was called but its page/component({}) couldn't be resolved. "
+					"An IRequestListener was called on a freshly created page, or its page/component({}) "
+						+ "couldn't be resolved. "
 						+ "Scheduling re-create of the page and ignoring the listener interface...",
 					getComponentPath());
 			}
@@ -206,6 +217,49 @@ public class ListenerRequestHandler
 		}
 
 		invokeListener(requestCycle, policy, isAjax);
+	}
+
+	/**
+	 * Configures a component of a page instance that was created for this very request, along with
+	 * all of its parents.
+	 * <p>
+	 * Such an instance has never been rendered, and {@link Component#configure()} is the only place
+	 * where the {@link Component#RENDER} decision of the
+	 * {@link org.apache.wicket.authorization.IAuthorizationStrategy} is made and where
+	 * {@link Component#onConfigure()} is called. Both are read by
+	 * {@link Component#canCallListener()}, which decides below whether the listener may be invoked
+	 * at all, and by {@link Component#isStateless()}, on which
+	 * {@link Component#canCallListenerAfterExpiry()} depends - so without this a listener would be
+	 * gated on the constructor defaults of a component the application may well have denied.
+	 * <p>
+	 * The component is configured from the page down, because a parent's {@code onConfigure()}
+	 * decides what its children inherit, and because {@link Component#isVisibleInHierarchy()} and
+	 * {@link Component#isEnabledInHierarchy()} walk exactly this chain. Configuring is idempotent
+	 * within a request, so a page that was already configured - by
+	 * {@link PageAndComponentProvider#getComponent()} resolving a component that is added in a
+	 * lifecycle callback, for instance - is left alone.
+	 *
+	 * @param component
+	 *            the component the listener is about to be invoked on
+	 */
+	private void configureForListener(Component component)
+	{
+		Page page = component.getPage();
+		if (!page.isInitialized())
+		{
+			page.internalInitialize();
+		}
+
+		Deque<Component> hierarchy = new ArrayDeque<>();
+		for (Component current = component; current != null; current = current.getParent())
+		{
+			hierarchy.addFirst(current);
+		}
+
+		for (Component current : hierarchy)
+		{
+			current.configure();
+		}
 	}
 
 	private void invokeListener(IRequestCycle requestCycle, RedirectPolicy policy, boolean ajax)

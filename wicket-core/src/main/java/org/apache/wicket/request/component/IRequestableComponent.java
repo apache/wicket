@@ -110,8 +110,18 @@ public interface IRequestableComponent
 	void detach();
 
 	/**
-	 * @return {@code true} if it is save to call an {@link org.apache.wicket.IRequestListener} on this component
-	 *      when the owner page is freshly created after expiration
+	 * Whether an {@link org.apache.wicket.IRequestListener} may be called on this component when
+	 * the owner page is not the instance the client was served, but one created for the very
+	 * request that carries the listener URL. That happens when the stored page has expired, and
+	 * also when the URL carries no page identifier at all - which is the shape Wicket writes for a
+	 * stateless page.
+	 * <p>
+	 * Such an instance has none of the state the client acted on, and the page parameters it was
+	 * built from come from the caller, so the default is to refuse. A component that does not carry
+	 * state of its own is safe either way.
+	 *
+	 * @return {@code true} if it is safe to call an {@link org.apache.wicket.IRequestListener} on
+	 *         this component when the owner page is freshly created
 	 */
 	boolean canCallListenerAfterExpiry();
 }
