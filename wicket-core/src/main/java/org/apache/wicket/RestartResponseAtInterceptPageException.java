@@ -113,6 +113,66 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 	}
 
 	/**
+	 * Attaches data to the request that is being handled, to be remembered along with the
+	 * destination should this request be intercepted. The request that later resumes that
+	 * destination reads it back with {@link #getInterceptMetaData(MetaDataKey)}.
+	 * <p>
+	 * A request is not intercepted where it is interrupted: any code can throw this exception - a
+	 * page constructor, a listener, the render of a page - and one request can be intercepted more
+	 * than once, each interception replacing what the previous one remembered. Data attached here
+	 * travels with the destination whichever of those happens, which data collected at a particular
+	 * throw site cannot.
+	 * <p>
+	 * The data is remembered in the session, so it has to be serializable, and it is handed to every
+	 * request that resumes the destination, so it should be immutable.
+	 * 
+	 * @param <T>
+	 *            the type of the data
+	 * @param key
+	 *            the key to attach the data under
+	 * @param data
+	 *            the data, or {@code null} to remove what was attached under {@code key}
+	 */
+	public static <T> void setInterceptMetaData(MetaDataKey<T> key, T data)
+	{
+		RequestCycle cycle = RequestCycle.get();
+		if (cycle != null)
+		{
+			cycle.setMetaData(pendingMetaDataKey,
+				key.set(cycle.getMetaData(pendingMetaDataKey), data));
+		}
+	}
+
+	/**
+	 * The data that {@link #setInterceptMetaData(MetaDataKey, Object)} attached to the request whose
+	 * destination the current request resumes.
+	 * 
+	 * @param <T>
+	 *            the type of the data
+	 * @param key
+	 *            the key the data was attached under
+	 * @return the data, or {@code null} when the current request resumes no destination, or when
+	 *         nothing was attached under {@code key}
+	 */
+	public static <T> T getInterceptMetaData(MetaDataKey<T> key)
+	{
+		RequestCycle cycle = RequestCycle.get();
+		return cycle == null ? null : key.get(cycle.getMetaData(resumedMetaDataKey));
+	}
+
+	/** What is attached to the request being handled, in case it is intercepted. */
+	private static final MetaDataKey<MetaDataEntry<?>[]> pendingMetaDataKey = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	/** What was attached to the request whose destination the current request resumes. */
+	private static final MetaDataKey<MetaDataEntry<?>[]> resumedMetaDataKey = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	/**
 	 * INTERNAL CLASS, DO NOT USE
 	 * 
 	 * @author igor.vaynberg
@@ -123,6 +183,7 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 
 		private Url originalUrl;
 		private Map<String, List<StringValue>> postParameters;
+		private MetaDataEntry<?>[] metaData;
 
 		public Url getOriginalUrl()
 		{
@@ -139,7 +200,9 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 			Session session = Session.get();
 			session.bind();
 			InterceptData data = new InterceptData();
-			Request request = RequestCycle.get().getRequest();
+			RequestCycle cycle = RequestCycle.get();
+			Request request = cycle.getRequest();
+			data.metaData = cycle.getMetaData(pendingMetaDataKey);
 			data.originalUrl = request.getOriginalUrl();
 			Iterator<QueryParameter> itor = data.originalUrl.getQueryParameters().iterator();
 			while (itor.hasNext())
@@ -235,6 +298,11 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 					{
 						parameters.setParameterValues(s, data.postParameters.get(s));
 					}
+				}
+				RequestCycle cycle = RequestCycle.get();
+				if (cycle != null)
+				{
+					cycle.setMetaData(resumedMetaDataKey, data.metaData);
 				}
 				InterceptData.clear();
 			}
