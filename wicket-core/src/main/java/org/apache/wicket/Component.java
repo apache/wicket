@@ -4417,6 +4417,14 @@ public abstract class Component
 	 * method so that image data can be streamed. Such a component would override this method and
 	 * return {@literal true}.
 	 * </p>
+	 * <p>
+	 * NOTE: the visibility half of this check reads {@link #isRenderAllowed()}, which holds the
+	 * outcome of the {@link #RENDER} authorization and is computed in {@link #configure()} alone. A
+	 * caller that consults this method outside the render phase - on a page instance that was
+	 * created for the current request, say - has to {@link #configure()} the component and its
+	 * parents first, or it reads the constructor default rather than the decision the
+	 * {@link org.apache.wicket.authorization.IAuthorizationStrategy} would make.
+	 * </p>
 	 * 
 	 * @return {@literal true} iff the listener method can be invoked on this component
 	 */
