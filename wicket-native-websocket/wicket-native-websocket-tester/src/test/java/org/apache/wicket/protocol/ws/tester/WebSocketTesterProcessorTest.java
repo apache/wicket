@@ -84,7 +84,7 @@ public class WebSocketTesterProcessorTest
 	public void after()
 	{
 		tester.destroy();
-		TestWebSocketResource.ON_ABORT_CALLED.set(false);
+		TestWebSocketResource.resetCallbacks();
 	}
 
 	@Test

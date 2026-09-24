@@ -53,5 +53,10 @@
 			<scope>compile</scope>
 			<optional>false</optional>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-auth-roles</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

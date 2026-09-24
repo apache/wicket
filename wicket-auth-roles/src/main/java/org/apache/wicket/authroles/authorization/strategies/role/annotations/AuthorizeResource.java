@@ -33,7 +33,9 @@ import java.lang.annotation.Target;
  * <p>
  * It applies to every request that serves the annotated resource: one requested by the URL of a
  * mounted or shared {@link org.apache.wicket.request.resource.ResourceReference}, and one served
- * through a component that was handed the resource itself.
+ * through a component that was handed the resource itself. On a WebSocketResource of
+ * wicket-native-websocket it decides whether a client may open a connection to it, which is the
+ * only way such a resource is reached.
  *
  * @author Carl-Eric Menzel
  * @see org.apache.wicket.authorization.IAuthorizationStrategy
