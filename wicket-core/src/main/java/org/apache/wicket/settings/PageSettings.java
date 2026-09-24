@@ -48,6 +48,9 @@ public class PageSettings
 	/**
 	 * determines whether an {@link IRequestListener} can be executed
 	 * when its owning page is freshly created after expiration
+	 * <p>
+	 * A page is freshly created for a listener URL that carries no page identifier as well, so this
+	 * setting governs that case too.
 	 */
 	private boolean callListenerAfterExpiry = false;
 
@@ -131,7 +134,8 @@ public class PageSettings
 
 	/**
 	 * @return {@code true} if Wicket should execute an {@link IRequestListener} on a component
-	 *      which owning page is freshly created after expiration of the old one
+	 *      which owning page is freshly created - after expiration of the old one, or because the
+	 *      listener URL carried no page identifier
 	 * @see #getRecreateBookmarkablePagesAfterExpiry()
 	 * @see org.apache.wicket.request.component.IRequestableComponent#canCallListenerAfterExpiry()
 	 */
@@ -142,7 +146,8 @@ public class PageSettings
 
 	/**
 	 * Sets a setting that determines whether Wicket should execute the {@link IRequestListener} on a component
-	 * which owner page is freshly created after expiration of the old one
+	 * which owner page is freshly created after expiration of the old one, or because the listener
+	 * URL carried no page identifier
 	 *
 	 * @param callAfterExpiry
 	 *          {@code true} if Wicket should execute the listener
