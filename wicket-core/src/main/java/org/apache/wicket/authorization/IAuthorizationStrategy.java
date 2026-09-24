@@ -115,16 +115,24 @@ public interface IAuthorizationStrategy
 	 * {@link org.apache.wicket.markup.html.form.ImageButton}, or the AjaxDownloadBehavior of
 	 * wicket-extensions.
 	 * <p>
+	 * It is also asked about a shared WebSocketResource of wicket-native-websocket, once, when a
+	 * client opens a WebSocket connection naming it. That resource serves nothing over HTTP, so a
+	 * connection is the only way to reach it, and the decision is taken for the connection rather
+	 * than for each message on it.
+	 * <p>
 	 * Returning {@code false} hands the request to the
 	 * {@link IUnauthorizedResourceRequestListener} of the security settings, which decides how it
-	 * is refused; the default one answers 403.
+	 * is refused; the default one answers 403. A refused WebSocket connection is the exception: no
+	 * status code can reach a client over that transport, so the connection is closed instead and
+	 * the listener is not involved.
 	 *
 	 * @param resource
 	 *            The resource that should be processed
 	 * @param parameters
 	 *            The request parameters, never {@code null}; they are empty for a resource served
 	 *            through the component that holds it, because a listener URL carries no resource
-	 *            parameters
+	 *            parameters, and for a WebSocketResource, because the query of a WebSocket URL
+	 *            carries only the connection parameters of the framework itself
 	 * @return {@code true} if the request to this resource is allowed.
 	 */
 	boolean isResourceAuthorized(IResource resource, PageParameters parameters);
