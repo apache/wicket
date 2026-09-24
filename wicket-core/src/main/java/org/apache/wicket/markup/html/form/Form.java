@@ -435,6 +435,12 @@ public class Form<T> extends WebMarkupContainer
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * <p>
 	 * Gets the IFormSubmittingComponent which submitted this form.
+	 * <p>
+	 * The component is resolved from the request parameters alone: no visibility, enablement or
+	 * authorization check is performed here, so the component returned may well be one the client
+	 * should not be able to submit. Callers that act on the result must verify
+	 * {@link Component#isVisibleInHierarchy()} and {@link Component#isEnabledInHierarchy()} first,
+	 * as {@link #onFormSubmitted(IFormSubmitter)} does.
 	 *
 	 * @return The component which submitted this form, or null if the processing was not triggered
 	 *         by a registered IFormSubmittingComponent
@@ -734,6 +740,9 @@ public class Form<T> extends WebMarkupContainer
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
 	 * <p>
 	 * Handles form submissions.
+	 * <p>
+	 * The submitting component is named by the client, so it is
+	 * {@link #onFormSubmitted(IFormSubmitter) onFormSubmitted} that verifies it may be invoked.
 	 *
 	 * @see #onFormSubmitted(IFormSubmitter)
 	 */
@@ -764,6 +773,10 @@ public class Form<T> extends WebMarkupContainer
 	 * @param submitter
 	 *            listener that will receive form processing events, if {@code null} the form will
 	 *            attempt to locate one
+	 * @throws WicketRuntimeException
+	 *             if the submitter is an {@link IFormSubmittingComponent} that is not visible or
+	 *             not enabled in its hierarchy. This holds for a submitter passed in as well as
+	 *             for one located by {@link #findSubmitter()}
 	 *
 	 * @see Form#validate()
 	 */
@@ -790,6 +803,8 @@ public class Form<T> extends WebMarkupContainer
 			}
 		}
 
+		checkSubmittingComponent(submitter);
+
 		markFormsSubmitted(submitter);
 
 		if (handleMultiPart())
@@ -797,30 +812,14 @@ public class Form<T> extends WebMarkupContainer
 			// Tells FormComponents that a new user input has come
 			inputChanged();
 
-			// First, see if the processing was triggered by a IFormSubmittingComponent
+			// First, see if the processing was triggered by a IFormSubmittingComponent.
+			// A multipart request only exposes its parameters once the body has been parsed,
+			// so for such a request this is where the submitter becomes known.
 			if (submitter == null)
 			{
 				submitter = findSubmitter();
 
-				if (submitter instanceof IFormSubmittingComponent)
-				{
-					IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)submitter;
-					Component component = (Component)submitter;
-
-					if (!component.isVisibleInHierarchy())
-					{
-						throw new WicketRuntimeException("Submit Button " +
-							submittingComponent.getInputName() + " (path=" +
-							component.getPageRelativePath() + ") is not visible");
-					}
-
-					if (!component.isEnabledInHierarchy())
-					{
-						throw new WicketRuntimeException("Submit Button " +
-							submittingComponent.getInputName() + " (path=" +
-							component.getPageRelativePath() + ") is not enabled");
-					}
-				}
+				checkSubmittingComponent(submitter);
 			}
 
 			// When processing was triggered by a Wicket IFormSubmittingComponent and that
@@ -860,6 +859,51 @@ public class Form<T> extends WebMarkupContainer
 				}
 			});
 		});
+	}
+
+	/**
+	 * Checks that a component which submitted this form may be invoked at all, that is, that it is
+	 * visible and enabled in its hierarchy.
+	 * <p>
+	 * This is the only place where the {@link Component#RENDER} and {@link Component#ENABLE}
+	 * decisions of the {@link org.apache.wicket.authorization.IAuthorizationStrategy} are enforced
+	 * for the component that submitted a form: {@link #findSubmitter()} resolves that component
+	 * from the request parameters alone, and the request handler has only authorized the form
+	 * itself. A browser never submits a control it did not render, or rendered as disabled, so a
+	 * request naming one is not a submission the application offered.
+	 * <p>
+	 * An {@link IFormSubmitter} that is not a {@link Component} is not checked here. Such a
+	 * submitter is not named by the client but supplied by a {@link Behavior} - see
+	 * {@link org.apache.wicket.ajax.form.AjaxFormSubmitBehavior} and
+	 * {@link FormComponentUpdatingBehavior} - and the invocation of a behavior is already
+	 * authorized against the component it is attached to.
+	 *
+	 * @param submitter
+	 *            the submitter to check, may be {@code null}
+	 * @throws WicketRuntimeException
+	 *             if the submitter is a component that is not visible or not enabled in hierarchy
+	 */
+	private void checkSubmittingComponent(IFormSubmitter submitter)
+	{
+		if (submitter instanceof IFormSubmittingComponent && submitter instanceof Component)
+		{
+			IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)submitter;
+			Component component = (Component)submitter;
+
+			if (!component.isVisibleInHierarchy())
+			{
+				throw new WicketRuntimeException("Submit Button " +
+					submittingComponent.getInputName() + " (path=" +
+					component.getPageRelativePath() + ") is not visible");
+			}
+
+			if (!component.isEnabledInHierarchy())
+			{
+				throw new WicketRuntimeException("Submit Button " +
+					submittingComponent.getInputName() + " (path=" +
+					component.getPageRelativePath() + ") is not enabled");
+			}
+		}
 	}
 
 	/**
