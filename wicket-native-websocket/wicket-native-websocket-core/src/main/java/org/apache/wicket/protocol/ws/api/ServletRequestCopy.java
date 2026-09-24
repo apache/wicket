@@ -47,6 +47,13 @@ import javax.servlet.http.Part;
  * Copy its details because they are discarded at the end of the request (even if we
  * use AsyncContext from Servlet 3 spec). This copy is used later for following requests
  * through the WebSocket connection to construct WebSocketRequest.
+ * <p>
+ * The session is the one thing that is <em>not</em> copied. A request is discarded at the
+ * end of the request; a session is not, it lives for as long as the client keeps it, and
+ * copying it would detach the connection from it. {@link #getSession(boolean)} hands back
+ * the live session instead, and {@code null} once that session has ended - so a connection
+ * stops resolving a {@link org.apache.wicket.Session} the moment the HTTP session it was
+ * opened on is invalidated, whether by Wicket or by the container.
  *
  * @since 6.0
  */
@@ -56,7 +63,7 @@ public class ServletRequestCopy implements HttpServletRequest
 	private final String servletPath;
 	private final String pathInfo;
 	private final String requestUri;
-	private final HttpSessionCopy httpSession;
+	private final HttpSession httpSession;
 	private final StringBuffer requestURL;
 	private final Map<String, Object> attributes = new HashMap<>();
 	private final Map<String, Enumeration<String>> headers = new HashMap<>();
@@ -110,8 +117,7 @@ public class ServletRequestCopy implements HttpServletRequest
 		this.requestedSessionId = request.getRequestedSessionId();
 		this.principal = request.getUserPrincipal();
 
-		HttpSession session = request.getSession(true);
-		httpSession = new HttpSessionCopy(session);
+		httpSession = request.getSession(true);
 
 		String s;
 		Enumeration<String> e = request.getHeaderNames();
@@ -162,9 +168,30 @@ public class ServletRequestCopy implements HttpServletRequest
 		return remoteHost;
 	}
 
+	/**
+	 * The session this connection was opened on, or {@code null} once it has ended.
+	 * <p>
+	 * {@code create} is ignored. A WebSocket frame has no response to carry a session cookie
+	 * on, so a session cannot be started from one; the session of a connection is the one that
+	 * existed when it was opened, for as long as that one lasts.
+	 *
+	 * @param create
+	 *            ignored
+	 * @return the live {@link HttpSession}, or {@code null} when it has been invalidated
+	 */
 	@Override
 	public HttpSession getSession(boolean create) {
-		return httpSession;
+		try
+		{
+			// throws once the session has been invalidated, which is the answer wanted here:
+			// there is no session on this connection any more
+			httpSession.getCreationTime();
+			return httpSession;
+		}
+		catch (IllegalStateException ended)
+		{
+			return null;
+		}
 	}
 
 	@Override
@@ -478,7 +505,7 @@ public class ServletRequestCopy implements HttpServletRequest
 
 	@Override
 	public HttpSession getSession() {
-		return httpSession;
+		return getSession(true);
 	}
 
 	@Override
