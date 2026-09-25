@@ -84,6 +84,10 @@ public class MyPage extends WebPage {
 
 Use _message.getText()_ to read the message sent by the client and use _handler.push(String)_ to push a text message to the connected client. Additionally you can use _handler.add(Component...)_ to add Wicket components for re-render, _handler.prependJavaScript(CharSequence)_ and _handler.appendJavaScript(CharSequence)_ as you do with _AjaxRequestTarget_.
 
+A page has a single WebSocket connection, whichever of its behaviors opened it, and a message sent by the client over it is delivered to every _WebSocketBehavior_ of the page. Like an Ajax behavior, a _WebSocketBehavior_ is passed the messages of the client only when _canCallListener(Component)_ allows it for the component it is attached to, so by default a behavior of a component that is not visible or not enabled - including one the _IAuthorizationStrategy_ does not allow to render or to be enabled - does not receive them. Override _canCallListener(Component)_ to receive them regardless. The other callbacks, such as _onPush()_ and _onConnect()_, are always called.
+
+The messages are also sent as an event to every component of the page, as a _WebSocketTextPayload_ or a _WebSocketBinaryPayload_, and like any other event broadcast this reaches components that are not visible or not enabled too. A component that handles these payloads in its own _onEvent()_ receives what the client sent and has to make any checks itself.
+
 * *WebSocketResource*
 
 Wicket allows one thread at a time to use a page instance to simplify the usage of the pages in multithreaded environment. When a WebSocket message is sent to a page Wicket needs to acquire the lock to that page to be able to pass the _IWebSocketMessage_ to the _WebSocketBehavior_. This may be problematic when the application needs to send many messages from the client to the server.
