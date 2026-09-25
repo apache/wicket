@@ -33,15 +33,34 @@ import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.ErrorMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A behavior that provides optional callbacks for the WebSocket
  * messages (connect, message, close)
+ * <p>
+ * A page has a single WebSocket connection, whichever of its behaviors opened it, and a message
+ * the client sends over it is delivered to every WebSocketBehavior of the page. A message sent by
+ * the client is passed to {@link #onMessage(WebSocketRequestHandler, TextMessage)} or
+ * {@link #onMessage(WebSocketRequestHandler, BinaryMessage)} only when
+ * {@link #canCallListener(Component)} allows it for the component this behavior is attached to,
+ * the same check that decides whether the client may invoke an Ajax behavior of that component.
+ * By default, therefore, a behavior of a component that is not visible or not enabled - including
+ * one the {@link org.apache.wicket.authorization.IAuthorizationStrategy} does not allow to render
+ * or to be enabled - does not receive the messages of the client. Override
+ * {@link #canCallListener(Component)} to receive them regardless.
+ * </p>
+ * <p>
+ * The other callbacks are notifications of the server and are always called.
+ * </p>
  *
  * @since 6.0
  */
 public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 {
+	private static final Logger LOG = LoggerFactory.getLogger(WebSocketBehavior.class);
+
 	public WebSocketBehavior()
 	{
 	}
@@ -59,15 +78,21 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 
 			if (payload instanceof WebSocketTextPayload)
 			{
-				WebSocketTextPayload textPayload = (WebSocketTextPayload) payload;
-				TextMessage data = textPayload.getMessage();
-				onMessage(webSocketHandler, data);
+				if (canReceiveClientMessage(component))
+				{
+					WebSocketTextPayload textPayload = (WebSocketTextPayload) payload;
+					TextMessage data = textPayload.getMessage();
+					onMessage(webSocketHandler, data);
+				}
 			}
 			else if (wsPayload instanceof WebSocketBinaryPayload)
 			{
-				WebSocketBinaryPayload binaryPayload = (WebSocketBinaryPayload) wsPayload;
-				BinaryMessage binaryData = binaryPayload.getMessage();
-				onMessage(webSocketHandler, binaryData);
+				if (canReceiveClientMessage(component))
+				{
+					WebSocketBinaryPayload binaryPayload = (WebSocketBinaryPayload) wsPayload;
+					BinaryMessage binaryData = binaryPayload.getMessage();
+					onMessage(webSocketHandler, binaryData);
+				}
 			}
 			else if (wsPayload instanceof WebSocketConnectedPayload)
 			{
@@ -100,6 +125,26 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 				onPush(webSocketHandler, message);
 			}
 		}
+	}
+
+	/**
+	 * Decides whether a message sent by the client is passed on to this behavior, with the check
+	 * that decides whether the client may invoke a listener of it.
+	 *
+	 * @param component
+	 *          the component this behavior is attached to
+	 * @return {@code true} if {@link #canCallListener(Component)} allows it
+	 */
+	private boolean canReceiveClientMessage(Component component)
+	{
+		if (canCallListener(component))
+		{
+			return true;
+		}
+
+		LOG.debug("A message of the client is not passed to {} of component '{}', because " +
+				"canCallListener() does not allow it.", getClass().getName(), component.getPageRelativePath());
+		return false;
 	}
 
 	/**
@@ -160,6 +205,10 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 
 	/**
 	 * A callback method called when there is a text message sent by the client
+	 * <p>
+	 * It is only called when {@link #canCallListener(Component)} allows it for the component this
+	 * behavior is attached to.
+	 * </p>
 	 *
 	 * @param handler
 	 *          The request handler that can be used to send messages back to the client
@@ -172,6 +221,10 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 
 	/**
 	 * A callback method called when there is a binary message sent by the client
+	 * <p>
+	 * It is only called when {@link #canCallListener(Component)} allows it for the component this
+	 * behavior is attached to.
+	 * </p>
 	 *
 	 * @param handler
 	 *          The request handler that can be used to send messages back to the client
