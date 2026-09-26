@@ -86,7 +86,7 @@
 				if(!box.options[i-1].selected) {
 					box.insertBefore(box.options[i],box.options[i-1]);
 					dirty=true;
-					box.trigger('focus');
+					box.focus();
 				}
 			}
 		}
