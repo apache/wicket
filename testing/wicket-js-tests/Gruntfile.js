@@ -48,7 +48,8 @@ module.exports = function(grunt) {
 			"../../wicket-core/src/test/js/timer.js"
 		],
 		extensionsTestsJs = [
-			"../../wicket-extensions/src/test/js/palette-test.js"
+			"../../wicket-extensions/src/test/js/palette-test.js",
+			"../../wicket-extensions/src/test/js/trapfocus-test.js"
 		],
 		gymTestsJs = [
 			"../../wicket-examples/src/main/webapp/js-test/tests/ajax/form.js",
@@ -113,7 +114,8 @@ module.exports = function(grunt) {
 				options: {
 					urls: [
 						'http://localhost:38887/test/js/all.html?4.0.0',
-						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?4.0.0'
+						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?4.0.0'
 					],
 					puppeteer: {
 						headless: true,
@@ -130,7 +132,8 @@ module.exports = function(grunt) {
 				options: {
 					urls: [
 						'http://localhost:38887/test/js/all.html?vanilla',
-						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?vanilla'
+						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?vanilla'
 					],
 					puppeteer: {
 						headless: true,
