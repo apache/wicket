@@ -47,6 +47,9 @@ module.exports = function(grunt) {
 			"../../wicket-core/src/test/js/event.js",
 			"../../wicket-core/src/test/js/timer.js"
 		],
+		extensionsTestsJs = [
+			"../../wicket-extensions/src/test/js/palette-test.js"
+		],
 		gymTestsJs = [
 			"../../wicket-examples/src/main/webapp/js-test/tests/ajax/form.js",
 			"../../wicket-examples/src/main/webapp/js-test/tests/bean-validation/birthdate.js",
@@ -74,6 +77,7 @@ module.exports = function(grunt) {
 			extensions: extensionsJs,
 			nativeWebSocket: nativeWebSocketJs,
 			testsJs: testsJs,
+			extensionsTestsJs: extensionsTestsJs,
 			gymTestsJs: gymTestsJs,
 			grunt: gruntJs,
 
@@ -108,7 +112,8 @@ module.exports = function(grunt) {
 			all: {
 				options: {
 					urls: [
-						'http://localhost:38887/test/js/all.html?4.0.0'
+						'http://localhost:38887/test/js/all.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?4.0.0'
 					],
 					puppeteer: {
 						headless: true,
@@ -124,7 +129,8 @@ module.exports = function(grunt) {
 			vanilla: {
 				options: {
 					urls: [
-						'http://localhost:38887/test/js/all.html?vanilla'
+						'http://localhost:38887/test/js/all.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?vanilla'
 					],
 					puppeteer: {
 						headless: true,
@@ -151,6 +157,15 @@ module.exports = function(grunt) {
 						return middlewares;
 					  },
 					base: '../../wicket-core/src'
+				}
+			},
+			// serves wicket-extensions' own JavaScript and its QUnit tests; a separate
+			// target because they live outside the wicket-core/src root above
+			extensions: {
+				options: {
+					port: 38888,
+					debug: true,
+					base: '../..'
 				}
 			}
 		}
