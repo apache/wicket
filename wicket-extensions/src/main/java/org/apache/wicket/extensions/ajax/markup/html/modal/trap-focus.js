@@ -70,12 +70,12 @@
 					if (e.shiftKey) {
 						if (e.target === firstFocusable || $element.is(e.target)) {
 							e.preventDefault();
-							lastFocusable.trigger('focus');
+							lastFocusable.focus();
 						}
 					} else {
 						if (e.target === lastFocusable || $element.is(e.target)) {
 							e.preventDefault();
-							firstFocusable.trigger('focus');
+							firstFocusable.focus();
 						}
 					}
 				}
