@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.html.form.upload.resource;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +59,10 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractFileUploadResource.class);
 
 	public static final String PARAM_NAME = "WICKET-FILE-UPLOAD";
+	public static final String MAX_SIZE = "maxSize";
+	public static final String FILE_MAX_SIZE = "fileMaxSize";
+	public static final String FILE_COUNT_MAX = "fileCountMax";
+	public static final String UPLOAD_TOKEN = "uploadToken";
 
 	/**
 	 * This resource is usually an application singleton. Thus, client side pass
@@ -76,6 +82,14 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	public AbstractFileUploadResource(IUploadsFileManager fileManager)
 	{
 		this.fileManager = fileManager;
+	}
+
+	static String createUploadToken(String uploadId, Bytes maxSize, Bytes fileMaxSize,
+		long fileCountMax)
+	{
+		String plainText = serializeUploadSettings(uploadId, maxSize, fileMaxSize, fileCountMax);
+		return Application.get().getSecuritySettings().getCryptFactory().newCrypt()
+			.encryptUrlSafe(plainText);
 	}
 
 	/**
@@ -98,6 +112,12 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 		Bytes maxSize = getMaxSize(webRequest);
 		Bytes fileMaxSize = getFileMaxSize(webRequest);
 		long fileCountMax = getFileCountMax(webRequest);
+		if (!hasValidUploadToken(webRequest, uploadId, maxSize, fileMaxSize, fileCountMax))
+		{
+			LOG.warn("Rejected upload for '{}' because the signed upload settings were invalid",
+				uploadId);
+			return createErrorResponse(resourceResponse, Form.UPLOAD_FAILED_RESOURCE_KEY);
+		}
 		try
 		{
 			MultipartServletWebRequest multiPartRequest = webRequest.newMultipartWebRequest(maxSize, uploadId);
@@ -183,6 +203,64 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 		return resourceResponse;
 	}
 
+	private static String serializeUploadSettings(String uploadId, Bytes maxSize, Bytes fileMaxSize,
+		long fileCountMax)
+	{
+		return uploadId + '\n' + bytesValue(maxSize) + '\n' + bytesValue(fileMaxSize) + '\n' +
+			fileCountMax;
+	}
+
+	private static String bytesValue(Bytes value)
+	{
+		return value != null ? Long.toString(value.bytes()) : "";
+	}
+
+	private boolean hasValidUploadToken(ServletWebRequest webRequest, String uploadId, Bytes maxSize,
+		Bytes fileMaxSize, long fileCountMax)
+	{
+		String actualToken = webRequest.getRequestParameters().getParameterValue(UPLOAD_TOKEN)
+			.toOptionalString();
+		if (actualToken == null)
+		{
+			return false;
+		}
+
+		// the token is authenticated but not deterministic - encryption uses a fresh nonce per
+		// message - so it cannot be validated by re-encrypting and comparing ciphertext. Decrypt
+		// it instead and compare the settings it carries; the authentication tag is what makes it
+		// unforgeable, and decryption fails on anything that was tampered with.
+		String decryptedToken = Application.get().getSecuritySettings().getCryptFactory().newCrypt()
+			.decryptUrlSafe(actualToken);
+		if (decryptedToken == null)
+		{
+			return false;
+		}
+
+		String expectedSettings = serializeUploadSettings(uploadId, maxSize, fileMaxSize,
+			fileCountMax);
+		return MessageDigest.isEqual(expectedSettings.getBytes(StandardCharsets.UTF_8),
+			decryptedToken.getBytes(StandardCharsets.UTF_8));
+	}
+
+	private ResourceResponse createErrorResponse(ResourceResponse resourceResponse, String errorMessage)
+	{
+		resourceResponse.setContentType("application/json");
+		resourceResponse.setStatusCode(HttpServletResponse.SC_OK);
+		JSONObject json = new JSONObject();
+		json.put("error", true);
+		json.put("errorMessage", errorMessage);
+		String error = json.toString();
+		resourceResponse.setWriteCallback(new WriteCallback()
+		{
+			@Override
+			public void writeData(Attributes attributes) throws IOException
+			{
+				attributes.getResponse().write(error);
+			}
+		});
+		return resourceResponse;
+	}
+
 
 	protected String getFileUploadExceptionKey(final FileUploadException e)
 	{
@@ -252,7 +330,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	{
 		try
 		{
-			return Bytes.bytes(webRequest.getRequestParameters().getParameterValue("maxSize").toLong());
+			return Bytes.bytes(webRequest.getRequestParameters().getParameterValue(MAX_SIZE).toLong());
 		}
 		catch (StringValueConversionException e)
 		{
@@ -268,7 +346,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 */
 	private Bytes getFileMaxSize(ServletWebRequest webRequest)
 	{
-		long fileMaxSize = webRequest.getRequestParameters().getParameterValue("fileMaxSize").toLong(-1);
+		long fileMaxSize = webRequest.getRequestParameters().getParameterValue(FILE_MAX_SIZE).toLong(-1);
 		return fileMaxSize > 0 ? Bytes.bytes(fileMaxSize) : null;
 	}
 
@@ -279,7 +357,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 */
 	private long getFileCountMax(ServletWebRequest webRequest)
 	{
-		return webRequest.getRequestParameters().getParameterValue("fileCountMax").toLong(-1);
+		return webRequest.getRequestParameters().getParameterValue(FILE_COUNT_MAX).toLong(-1);
 	}
 
 	/**
