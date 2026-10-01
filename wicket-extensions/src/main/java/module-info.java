@@ -40,6 +40,7 @@ module org.apache.wicket.extensions {
     exports org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
     exports org.apache.wicket.extensions.ajax.markup.html.repeater.data.table;
     exports org.apache.wicket.extensions.ajax.markup.html.tabs;
+    exports org.apache.wicket.extensions.ajax.veil;
     exports org.apache.wicket.extensions.breadcrumb;
     exports org.apache.wicket.extensions.breadcrumb.panel;
     exports org.apache.wicket.extensions.captcha.kittens;
@@ -82,6 +83,7 @@ module org.apache.wicket.extensions {
     opens org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
     opens org.apache.wicket.extensions.ajax.markup.html.modal;
     opens org.apache.wicket.extensions.ajax.markup.html.modal.theme;
+    opens org.apache.wicket.extensions.ajax.veil;
     opens org.apache.wicket.extensions.breadcrumb;
     opens org.apache.wicket.extensions.captcha.kittens;
     opens org.apache.wicket.extensions.captcha.kittens.images;

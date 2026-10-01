@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+
+<h2>Page veil</h2>
+
+<p>
+	Page clicks: <span wicket:id="pageCounter" class="page-counter"></span>
+</p>
+
+<ul>
+	<li><a href="#" wicket:id="slow">Slow request</a>: takes a second, so the spinner shows.</li>
+	<li><a href="#" wicket:id="medium">Medium request</a>: takes 400 ms, so the spinner shows, and stays for its minimum time of 500 ms.</li>
+	<li><a href="#" wicket:id="fast">Fast request</a>: takes 100 ms, the page is veiled but no spinner shows.</li>
+	<li><a href="#" wicket:id="unveiled">Unveiled request</a>: takes a second, but opts out of the veil, so the page stays usable.</li>
+</ul>
+
+<h2>Nested local veils</h2>
+
+<div wicket:id="outer" class="veil-panel veil-outer">
+	<p>
+		This panel has its own veil with the default timings: the spinner shows after 300 ms and
+		stays for at least 500 ms. Requests fired from inside it veil only the panel, so the rest
+		of the page stays usable.
+	</p>
+	<p>
+		Outer panel clicks: <span wicket:id="outerCounter" class="outer-counter"></span>
+	</p>
+	<p>
+		<a href="#" wicket:id="outerSlow">Slow request from the outer panel</a>: takes two seconds and veils the whole outer panel, inner panel included.
+	</p>
+
+	<div wicket:id="inner" class="veil-panel veil-inner">
+		<p>
+			This nested panel has a veil of its own, configured with
+			<code>setSpinnerDelay(100 ms)</code> and <code>setMinimumSpinnerTime(1 s)</code>.
+			Requests fired from inside it veil only this panel: the innermost veil takes the request.
+		</p>
+		<p>
+			Inner panel clicks: <span wicket:id="innerCounter" class="inner-counter"></span>
+		</p>
+		<ul>
+			<li><a href="#" wicket:id="innerSlow">Slow request from the inner panel</a>: takes two seconds.</li>
+			<li><a href="#" wicket:id="innerShort">Short request from the inner panel</a>: takes 200 ms, but the spinner shows after 100 ms and stays for a second.</li>
+		</ul>
+	</div>
+</div>
+
+</wicket:extend>

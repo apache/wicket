@@ -88,8 +88,30 @@ engine/jQuery version combination by hand in a real browser.
   suite (`jshint:testsJs` / `qunit:all` / `qunit:vanilla` targets in
   `testing/wicket-js-tests/Gruntfile.js`), covering both Ajax engines plus `Wicket.DOM`,
   `Wicket.Event`, `Wicket.Form`, `Wicket.Head`, and the channel manager.
+- `wicket-extensions/src/test/js/*-test.js` - QUnit tests for `wicket-extensions`' own scripts
+  (`Wicket.Palette`, `Wicket.trapFocus`, `Wicket.Veil`), each with its own page next to it
+  (`palette.html`, `trap-focus.html`, `veil.html`), served on `http://localhost:38888` and run
+  against both engines.
 - `jshint:core` / `jshint:extensions` / `jshint:nativeWebSocket` - lint-only coverage
   (ES6+, no test runtime) for the rest of the framework's JS: `wicket-extensions`
   Ajax components (autocomplete, palette, upload progress bar, ajax download, trap focus),
   the dev debug bar, and native WebSocket support.
 - `jshint:gymTestsJs` - the `wicket-examples` JS tests.
+
+## Browser tests with Selenium
+
+The QUnit tests exercise the scripts in isolation, with the Ajax topics published by hand.
+Behaviour that only shows in a real page - a veil that swallows clicks, timings measured
+against real requests - is tested with Selenium in `wicket-examples`, against the examples
+webapp started in Jetty by `JettyTestCaseDecorator`. `VeilPageSeleniumTest` drives
+`ajax/veil` in headless Chrome, once per Ajax engine.
+
+They need Chrome, so they do not run by default. Enable them with a system property:
+
+```bash
+mvn install -DskipTests -Pfast
+mvn verify -pl wicket-examples -Dwicket.selenium=true -Dtest=VeilPageSeleniumTest
+```
+
+Selenium Manager, which ships with Selenium, finds a matching ChromeDriver, and downloads
+Chrome for Testing too when no Chrome is installed, so the first run needs network access.
