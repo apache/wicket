@@ -127,6 +127,97 @@ class FileUploadToResourceFieldSecurityTest extends WicketTestCase
 		assertTrue(tester.getLastResponseAsString().contains("uploadFailed"));
 	}
 
+	@Test
+	void tokenDoesNotDependOnCryptFactory() throws Exception
+	{
+		FolderUploadsFileManager fileManager = newFileManager();
+		UploadPage page = new UploadPage(new TestFileUploadResourceReference(fileManager));
+		tester.startPage(page);
+		String url = page.field.buildUploadUrl();
+
+		SecretKey key = KeyGenerator.getInstance("AES").generateKey();
+		ISecureRandomSupplier randomSupplier = tester.getApplication().getSecuritySettings()
+			.getRandomSupplier();
+		tester.getApplication().getSecuritySettings()
+			.setCryptFactory(() -> new AESCrypt(key, randomSupplier));
+
+		File upload = createUploadFile("allowed.txt", 256);
+		submitUpload(url, upload);
+
+		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
+		assertTrue(storedFile.exists());
+	}
+
+	@Test
+	void rejectsUploadWithoutToken() throws Exception
+	{
+		FolderUploadsFileManager fileManager = newFileManager();
+		UploadPage page = new UploadPage(new TestFileUploadResourceReference(fileManager));
+		tester.startPage(page);
+
+		File upload = createUploadFile("allowed.txt", 256);
+		submitUpload(page.field.buildUploadUrl(null), upload);
+
+		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
+		assertFalse(storedFile.exists());
+		assertTrue(tester.getLastResponseAsString().contains("uploadFailed"));
+	}
+
+	@Test
+	void rejectsTamperedToken() throws Exception
+	{
+		FolderUploadsFileManager fileManager = newFileManager();
+		UploadPage page = new UploadPage(new TestFileUploadResourceReference(fileManager));
+		tester.startPage(page);
+
+		String validToken = page.field.createUploadToken();
+		String tamperedToken = (validToken.charAt(0) == 'A' ? 'B' : 'A') + validToken.substring(1);
+
+		File upload = createUploadFile("allowed.txt", 256);
+		submitUpload(page.field.buildUploadUrl(tamperedToken), upload);
+
+		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
+		assertFalse(storedFile.exists());
+		assertTrue(tester.getLastResponseAsString().contains("uploadFailed"));
+	}
+
+	@Test
+	void rejectsTokenWithoutSessionKey() throws Exception
+	{
+		FolderUploadsFileManager fileManager = newFileManager();
+		UploadPage page = new UploadPage(new TestFileUploadResourceReference(fileManager));
+		tester.startPage(page);
+		String url = page.field.buildUploadUrl();
+
+		tester.getSession().invalidateNow();
+
+		File upload = createUploadFile("allowed.txt", 256);
+		submitUpload(url, upload);
+
+		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
+		assertFalse(storedFile.exists());
+		assertTrue(tester.getLastResponseAsString().contains("uploadFailed"));
+	}
+
+	@Test
+	void rejectsTokenFromAnotherSession() throws Exception
+	{
+		FolderUploadsFileManager fileManager = newFileManager();
+		UploadPage page = new UploadPage(new TestFileUploadResourceReference(fileManager));
+		tester.startPage(page);
+		String url = page.field.buildUploadUrl();
+
+		tester.getSession().invalidateNow();
+		tester.startPage(new UploadPage(new TestFileUploadResourceReference(fileManager)));
+
+		File upload = createUploadFile("allowed.txt", 256);
+		submitUpload(url, upload);
+
+		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
+		assertFalse(storedFile.exists());
+		assertTrue(tester.getLastResponseAsString().contains("uploadFailed"));
+	}
+
 	private FolderUploadsFileManager newFileManager() throws IOException
 	{
 		tempDir = Files.createTempDirectory("wicket-upload-security");
@@ -186,6 +277,11 @@ class FileUploadToResourceFieldSecurityTest extends WicketTestCase
 
 		String buildUploadUrl()
 		{
+			return buildUploadUrl(createUploadToken());
+		}
+
+		String buildUploadUrl(String token)
+		{
 			StringBuilder url = new StringBuilder(getResourceUrl());
 			url.append('?').append(AbstractFileUploadResource.UPLOAD_ID).append('=')
 				.append(getMarkupId());
@@ -193,10 +289,18 @@ class FileUploadToResourceFieldSecurityTest extends WicketTestCase
 				.append(getMaxSize().bytes());
 			url.append('&').append(AbstractFileUploadResource.FILE_COUNT_MAX).append('=')
 				.append(getFileCountMax());
-			url.append('&').append(AbstractFileUploadResource.UPLOAD_TOKEN).append('=')
-				.append(AbstractFileUploadResource.createUploadToken(getMarkupId(), getMaxSize(),
-					getFileMaxSize(), getFileCountMax()));
+			if (token != null)
+			{
+				url.append('&').append(AbstractFileUploadResource.UPLOAD_TOKEN).append('=')
+					.append(token);
+			}
 			return url.toString();
+		}
+
+		String createUploadToken()
+		{
+			return AbstractFileUploadResource.createUploadToken(getMarkupId(), getMaxSize(),
+				getFileMaxSize(), getFileCountMax());
 		}
 
 		String getResourceUrl()

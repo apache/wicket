@@ -18,16 +18,23 @@ package org.apache.wicket.markup.html.form.upload.resource;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileCountLimitExceededException;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.Application;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Session;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
@@ -77,6 +84,16 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 */
 	public static final String NO_FILE_SELECTED = "wicket.no.files.selected";
 
+	private static final String UPLOAD_TOKEN_ALGORITHM = "HmacSHA256";
+
+	/**
+	 * The key the upload tokens of a session are signed with.
+	 */
+	private static final MetaDataKey<byte[]> UPLOAD_TOKEN_KEY = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
 	private final IUploadsFileManager fileManager;
 
 	public AbstractFileUploadResource(IUploadsFileManager fileManager)
@@ -87,9 +104,21 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	static String createUploadToken(String uploadId, Bytes maxSize, Bytes fileMaxSize,
 		long fileCountMax)
 	{
-		String plainText = serializeUploadSettings(uploadId, maxSize, fileMaxSize, fileCountMax);
-		return Application.get().getSecuritySettings().getCryptFactory().newCrypt()
-			.encryptUrlSafe(plainText);
+		Session session = Session.get();
+		session.bind();
+
+		byte[] key;
+		synchronized (session)
+		{
+			key = session.getMetaData(UPLOAD_TOKEN_KEY);
+			if (key == null)
+			{
+				key = Application.get().getSecuritySettings().getRandomSupplier()
+					.getRandomBytes(32);
+				session.setMetaData(UPLOAD_TOKEN_KEY, key);
+			}
+		}
+		return sign(key, serializeUploadSettings(uploadId, maxSize, fileMaxSize, fileCountMax));
 	}
 
 	/**
@@ -215,6 +244,24 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 		return value != null ? Long.toString(value.bytes()) : "";
 	}
 
+	// the settings are signed rather than encrypted with the application's ICrypt: the configured
+	// crypt may be neither deterministic nor authenticated, and then no check built on it is both
+	// usable and unforgeable
+	private static String sign(byte[] key, String settings)
+	{
+		try
+		{
+			Mac mac = Mac.getInstance(UPLOAD_TOKEN_ALGORITHM);
+			mac.init(new SecretKeySpec(key, UPLOAD_TOKEN_ALGORITHM));
+			return Base64.getUrlEncoder().withoutPadding()
+				.encodeToString(mac.doFinal(settings.getBytes(StandardCharsets.UTF_8)));
+		}
+		catch (GeneralSecurityException e)
+		{
+			throw new WicketRuntimeException("Unable to sign the upload settings", e);
+		}
+	}
+
 	private boolean hasValidUploadToken(ServletWebRequest webRequest, String uploadId, Bytes maxSize,
 		Bytes fileMaxSize, long fileCountMax)
 	{
@@ -225,21 +272,17 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 			return false;
 		}
 
-		// the token is authenticated but not deterministic - encryption uses a fresh nonce per
-		// message - so it cannot be validated by re-encrypting and comparing ciphertext. Decrypt
-		// it instead and compare the settings it carries; the authentication tag is what makes it
-		// unforgeable, and decryption fails on anything that was tampered with.
-		String decryptedToken = Application.get().getSecuritySettings().getCryptFactory().newCrypt()
-			.decryptUrlSafe(actualToken);
-		if (decryptedToken == null)
+		// only a session that rendered an upload field has a key; never create one here
+		byte[] key = Session.get().getMetaData(UPLOAD_TOKEN_KEY);
+		if (key == null)
 		{
 			return false;
 		}
 
-		String expectedSettings = serializeUploadSettings(uploadId, maxSize, fileMaxSize,
-			fileCountMax);
-		return MessageDigest.isEqual(expectedSettings.getBytes(StandardCharsets.UTF_8),
-			decryptedToken.getBytes(StandardCharsets.UTF_8));
+		String expectedToken = sign(key,
+			serializeUploadSettings(uploadId, maxSize, fileMaxSize, fileCountMax));
+		return MessageDigest.isEqual(expectedToken.getBytes(StandardCharsets.UTF_8),
+			actualToken.getBytes(StandardCharsets.UTF_8));
 	}
 
 	private ResourceResponse createErrorResponse(ResourceResponse resourceResponse, String errorMessage)
