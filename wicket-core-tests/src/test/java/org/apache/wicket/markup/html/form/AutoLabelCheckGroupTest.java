@@ -19,11 +19,15 @@ package org.apache.wicket.markup.html.form;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
@@ -50,12 +54,14 @@ class AutoLabelCheckGroupTest extends WicketTestCase
 		tester.startPage(page);
 
 		assertFalse(group.getOutputMarkupId());
+		assertNull(group.getMarkupId(false));
 		TagTester label = TagTester.createTagByAttribute(tester.getLastResponseAsString(), "wicket:for", "categories");
 		assertNotNull(label);
 		assertFalse(label.hasAttribute("for"));
 		assertEquals("Categories", label.getValue());
 		assertTrue(label.getAttribute("class").contains("required"));
-		assertEquals(AutoLabelResolver.getLabelIdFor(group), label.getAttribute("id"));
+		String labelId = label.getAttribute("id");
+		assertEquals(AutoLabelResolver.getLabelIdFor(group), labelId);
 
 		group.setEnabled(false);
 		group.error("Invalid selection");
@@ -66,6 +72,29 @@ class AutoLabelCheckGroupTest extends WicketTestCase
 		assertFalse(label.hasAttribute("for"));
 		assertTrue(label.getAttribute("class").contains("disabled"));
 		assertTrue(label.getAttribute("class").contains("error"));
+		assertEquals(labelId, label.getAttribute("id"));
+		assertNull(group.getMarkupId(false));
+	}
+
+	@Test
+	void ajaxUpdatesUseTheBodyOnlyTargetsLabelId()
+	{
+		CheckGroupPage page = new CheckGroupPage();
+		tester.startPage(page);
+		CheckGroup<?> group = (CheckGroup<?>)page.get("form:categories");
+		String labelId = AutoLabelResolver.getLabelIdFor(group);
+		IPartialPageRequestHandler target = mock(IPartialPageRequestHandler.class);
+
+		group.setRequired(true);
+		group.setEnabled(false);
+		group.error("Invalid selection");
+		group.getMetaData(AutoLabelResolver.MARKER_KEY).updateFrom(group, target);
+
+		verify(target).appendJavaScript("Wicket.DOM.toggleClass('" + labelId + "', 'required', true);");
+		verify(target).appendJavaScript("Wicket.DOM.toggleClass('" + labelId + "', 'disabled', true);");
+		verify(target).appendJavaScript("Wicket.DOM.toggleClass('" + labelId + "', 'error', true);");
+		assertFalse(group.getOutputMarkupId());
+		assertNull(group.getMarkupId(false));
 	}
 
 	public static class CheckGroupPage extends WebPage implements IMarkupResourceStreamProvider

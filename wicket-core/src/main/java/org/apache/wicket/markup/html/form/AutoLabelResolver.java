@@ -199,21 +199,24 @@ public class AutoLabelResolver implements IComponentResolver
 		return null;
 	}
 
+	private static final MetaDataKey<String> LABEL_ID_KEY = new MetaDataKey<>()
+	{
+	};
+
 	public static String getLabelIdFor(Component component)
 	{
-		boolean outputMarkupId = component.getOutputMarkupId();
-		try
+		if (!component.getRenderBodyOnly())
 		{
 			return component.getMarkupId() + "-w-lbl";
 		}
-		finally
+
+		String labelId = component.getMetaData(LABEL_ID_KEY);
+		if (labelId == null)
 		{
-			// A body-only target needs a stable label ID, but cannot render its own ID.
-			if (component.getRenderBodyOnly())
-			{
-				component.setOutputMarkupId(outputMarkupId);
-			}
+			labelId = "w-lbl-" + Integer.toHexString(component.getSession().nextSequenceValue());
+			component.setMetaData(LABEL_ID_KEY, labelId);
 		}
+		return labelId;
 	}
 
 	public static final MetaDataKey<AutoLabelMarker> MARKER_KEY = new MetaDataKey<>()
