@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form.upload.resource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,11 +30,16 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.random.ISecureRandomSupplier;
+import org.apache.wicket.core.util.crypt.AESCrypt;
 import org.apache.wicket.markup.html.form.upload.resource.FileUploadToResourceField.UploadInfo;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -100,6 +106,119 @@ class FileUploadToResourceFieldSecurityTest extends WicketTestCase
 			AbstractFileUploadResource.UPLOAD_TOKEN + '=' + validToken;
 
 		submitUpload(tamperedUrl, upload);
+
+		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
+		assertFalse(storedFile.exists());
+		assertTrue(tester.getLastResponseAsString().contains("uploadFailed"));
+	}
+
+	@Test
+	void acceptsUploadWhenEncryptionIsNotDeterministic() throws Exception
+	{
+		SecretKey key = KeyGenerator.getInstance("AES").generateKey();
+		ISecureRandomSupplier randomSupplier = tester.getApplication().getSecuritySettings()
+			.getRandomSupplier();
+		tester.getApplication().getSecuritySettings()
+			.setCryptFactory(() -> new AESCrypt(key, randomSupplier));
+		ICrypt crypt = tester.getApplication().getSecuritySettings().getCryptFactory().newCrypt();
+		assertNotEquals(crypt.encryptUrlSafe("settings"), crypt.encryptUrlSafe("settings"));
+
+		FolderUploadsFileManager fileManager = newFileManager();
+		UploadPage page = new UploadPage(new TestFileUploadResourceReference(fileManager));
+		tester.startPage(page);
+
+		File upload = createUploadFile("allowed.txt", 256);
+		submitUpload(page.field.buildUploadUrl(), upload);
+
+		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
+		assertTrue(storedFile.exists());
+	}
+
+	@Test
+	void tokenDoesNotDependOnCryptFactory() throws Exception
+	{
+		FolderUploadsFileManager fileManager = newFileManager();
+		UploadPage page = new UploadPage(new TestFileUploadResourceReference(fileManager));
+		tester.startPage(page);
+		String url = page.field.buildUploadUrl();
+
+		SecretKey key = KeyGenerator.getInstance("AES").generateKey();
+		ISecureRandomSupplier randomSupplier = tester.getApplication().getSecuritySettings()
+			.getRandomSupplier();
+		tester.getApplication().getSecuritySettings()
+			.setCryptFactory(() -> new AESCrypt(key, randomSupplier));
+
+		File upload = createUploadFile("allowed.txt", 256);
+		submitUpload(url, upload);
+
+		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
+		assertTrue(storedFile.exists());
+	}
+
+	@Test
+	void rejectsUploadWithoutToken() throws Exception
+	{
+		FolderUploadsFileManager fileManager = newFileManager();
+		UploadPage page = new UploadPage(new TestFileUploadResourceReference(fileManager));
+		tester.startPage(page);
+
+		File upload = createUploadFile("allowed.txt", 256);
+		submitUpload(page.field.buildUploadUrl(null), upload);
+
+		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
+		assertFalse(storedFile.exists());
+		assertTrue(tester.getLastResponseAsString().contains("uploadFailed"));
+	}
+
+	@Test
+	void rejectsTamperedToken() throws Exception
+	{
+		FolderUploadsFileManager fileManager = newFileManager();
+		UploadPage page = new UploadPage(new TestFileUploadResourceReference(fileManager));
+		tester.startPage(page);
+
+		String validToken = page.field.createUploadToken();
+		String tamperedToken = (validToken.charAt(0) == 'A' ? 'B' : 'A') + validToken.substring(1);
+
+		File upload = createUploadFile("allowed.txt", 256);
+		submitUpload(page.field.buildUploadUrl(tamperedToken), upload);
+
+		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
+		assertFalse(storedFile.exists());
+		assertTrue(tester.getLastResponseAsString().contains("uploadFailed"));
+	}
+
+	@Test
+	void rejectsTokenWithoutSessionKey() throws Exception
+	{
+		FolderUploadsFileManager fileManager = newFileManager();
+		UploadPage page = new UploadPage(new TestFileUploadResourceReference(fileManager));
+		tester.startPage(page);
+		String url = page.field.buildUploadUrl();
+
+		tester.getSession().invalidateNow();
+
+		File upload = createUploadFile("allowed.txt", 256);
+		submitUpload(url, upload);
+
+		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
+		assertFalse(storedFile.exists());
+		assertTrue(tester.getLastResponseAsString().contains("uploadFailed"));
+	}
+
+	@Test
+	void rejectsTokenFromAnotherSession() throws Exception
+	{
+		FolderUploadsFileManager fileManager = newFileManager();
+		UploadPage page = new UploadPage(new TestFileUploadResourceReference(fileManager));
+		tester.startPage(page);
+		String url = page.field.buildUploadUrl();
+
+		tester.getSession().invalidateNow();
+		tester.startPage(new UploadPage(new TestFileUploadResourceReference(fileManager)));
+
+		File upload = createUploadFile("allowed.txt", 256);
+		submitUpload(url, upload);
 
 		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
 		assertFalse(storedFile.exists());
@@ -302,6 +421,11 @@ class FileUploadToResourceFieldSecurityTest extends WicketTestCase
 
 		String buildUploadUrl()
 		{
+			return buildUploadUrl(createUploadToken());
+		}
+
+		String buildUploadUrl(String token)
+		{
 			StringBuilder url = new StringBuilder(getResourceUrl());
 			url.append('?').append(AbstractFileUploadResource.UPLOAD_ID).append('=')
 				.append(getMarkupId());
@@ -309,10 +433,18 @@ class FileUploadToResourceFieldSecurityTest extends WicketTestCase
 				.append(getMaxSize().bytes());
 			url.append('&').append(AbstractFileUploadResource.FILE_COUNT_MAX).append('=')
 				.append(getFileCountMax());
-			url.append('&').append(AbstractFileUploadResource.UPLOAD_TOKEN).append('=')
-				.append(AbstractFileUploadResource.createUploadToken(getMarkupId(), getMaxSize(),
-					getFileMaxSize(), getFileCountMax()));
+			if (token != null)
+			{
+				url.append('&').append(AbstractFileUploadResource.UPLOAD_TOKEN).append('=')
+					.append(token);
+			}
 			return url.toString();
+		}
+
+		String createUploadToken()
+		{
+			return AbstractFileUploadResource.createUploadToken(getMarkupId(), getMaxSize(),
+				getFileMaxSize(), getFileCountMax());
 		}
 
 		String getResourceUrl()
