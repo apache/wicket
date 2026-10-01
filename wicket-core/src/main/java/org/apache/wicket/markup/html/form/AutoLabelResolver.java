@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * without having to add any additional components in code:
  * <ul>
  * <li>Outputs the {@code for} attribute with the value equivalent to the markup id of the
- * referenced form component</li>
+ * referenced form component, unless it renders its body only</li>
  * <li>Appends {@code required} css class to the {@code <label>} tag if the referenced form
  * component is required. Name of the css class can be overwritten by having a i18n property defined
  * for key AutoLabel.CSS.required</li>
@@ -118,7 +118,7 @@ public class AutoLabelResolver implements IComponentResolver
 					+ "', pointed to by wicket:for attribute '" + path + "', does not implement " + ILabelProvider.class.getName());
 		}
 
-		if (!component.getOutputMarkupId())
+		if (!component.getRenderBodyOnly() && !component.getOutputMarkupId())
 		{
 			component.setOutputMarkupId(true);
 			if (component.hasBeenRendered())
@@ -201,7 +201,19 @@ public class AutoLabelResolver implements IComponentResolver
 
 	public static String getLabelIdFor(Component component)
 	{
-		return component.getMarkupId() + "-w-lbl";
+		boolean outputMarkupId = component.getOutputMarkupId();
+		try
+		{
+			return component.getMarkupId() + "-w-lbl";
+		}
+		finally
+		{
+			// A body-only target needs a stable label ID, but cannot render its own ID.
+			if (component.getRenderBodyOnly())
+			{
+				component.setOutputMarkupId(outputMarkupId);
+			}
+		}
 	}
 
 	public static final MetaDataKey<AutoLabelMarker> MARKER_KEY = new MetaDataKey<>()
@@ -335,7 +347,10 @@ public class AutoLabelResolver implements IComponentResolver
 		protected void onComponentTag(ComponentTag tag)
 		{
 			super.onComponentTag(tag);
-			tag.put("for", component.getMarkupId());
+			if (!component.getRenderBodyOnly())
+			{
+				tag.put("for", component.getMarkupId());
+			}
 
 			if (component instanceof FormComponent)
 			{
