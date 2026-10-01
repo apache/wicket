@@ -61,6 +61,7 @@ public class JSR356Application extends WicketExampleApplication
 		mountPage("/push", WebSocketPushUpdateProgressDemoPage.class);
 		mountPage("/resource", WebSocketResourceDemoPage.class);
 		mountPage("/resource-multi-tab", WebSocketMultiTabResourceDemoPage.class);
+		mountPage("/veil", WebSocketVeilDemoPage.class);
 
 		getSharedResources().add(ChartWebSocketResource.NAME, new ChartWebSocketResource());
 

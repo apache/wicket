@@ -567,6 +567,10 @@ include::ajax/ajax_3.adoc[leveloffset=+1]
 
 include::ajax/ajax_4.adoc[leveloffset=+1]
 
+=== Blocking the page while an AJAX request is running
+
+include::ajax/ajax_12.adoc[leveloffset=+1]
+
 === AJAX request attributes and call listeners
 
 include::ajax/ajax_5.adoc[leveloffset=+1]

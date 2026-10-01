@@ -68,6 +68,7 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("todo-list", TodoList.class);
 		mountPage("world-clock", WorldClockPage.class);
 		mountPage("upload", FileUploadPage.class);
+		mountPage("veil", VeilPage.class);
 		mountPage("download", AjaxDownloadPage.class);
 
 		mountResource("dynamic-text-file", AjaxDownloadPage.DynamicTextFileResource.instance);
