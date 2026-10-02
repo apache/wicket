@@ -57,6 +57,8 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 
 	private static final String INNER_VEIL = ".veil-inner > .wicket-veil";
 
+	private static final String ROW_VEIL = ".veil-row > .wicket-veil";
+
 	/**
 	 * Logs when a veil is added, gets its spinner and is removed, with the time of each, into
 	 * {@code window.veilLog}.
@@ -306,6 +308,151 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 		double shown = time(log, "removed") - time(log, "busy");
 		assertTrue(shown >= 980,
 			"the spinner was shown for " + shown + " ms instead of the configured 1 s");
+	}
+
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void aDelegatedClickVeilsTheRowThatWasClicked(Engine engine)
+	{
+		open(engine);
+
+		List<WebElement> rows = driver.findElements(By.cssSelector(".veil-row"));
+		String rowId = rows.get(1).getDomAttribute("id");
+		rows.get(1).click();
+
+		wait.until(ExpectedConditions.presenceOfElementLocated(
+			By.cssSelector("#" + rowId + " > .wicket-veil")));
+		assertEquals(1, driver.findElements(By.cssSelector(ROW_VEIL)).size(),
+			"another row was veiled too");
+		assertTrue(driver.findElements(By.cssSelector(PAGE_VEIL)).isEmpty(),
+			"the page was veiled");
+
+		wait.until(ExpectedConditions.textToBe(
+			By.cssSelector("[data-row='1'] .row-counter"), "1"));
+		awaitNoVeil();
+	}
+
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void aHostWithTheIdOfAnObjectMemberIsVeiled(Engine engine)
+	{
+		open(engine);
+
+		driver.findElement(By.cssSelector("#constructor a")).click();
+
+		wait.until(ExpectedConditions.presenceOfElementLocated(
+			By.cssSelector("#constructor > .wicket-veil")));
+		assertTrue(driver.findElements(By.cssSelector(PAGE_VEIL)).isEmpty(),
+			"the page was veiled instead");
+		wait.until(ExpectedConditions.textToBe(By.cssSelector(".constructor-counter"), "1"));
+		awaitNoVeil();
+	}
+
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void theVeilOfAScrolledHostCoversItsVisiblePart(Engine engine)
+	{
+		open(engine);
+
+		WebElement scroller = driver.findElement(By.cssSelector(".veil-scroller"));
+		js().executeScript("arguments[0].scrollIntoView({ block: 'center' });" +
+			"arguments[0].scrollTop = arguments[0].scrollHeight;", scroller);
+		List<WebElement> links = scroller.findElements(By.tagName("a"));
+		new Actions(driver).moveToElement(links.get(links.size() - 1)).click().perform();
+		wait.until(ExpectedConditions.presenceOfElementLocated(
+			By.cssSelector(".veil-scroller > .wicket-veil.wicket-veil-busy")));
+
+		assertCoveredByItsVeil(scroller);
+		js().executeScript("arguments[0].scrollTop = 100;", scroller);
+		assertCoveredByItsVeil(scroller);
+
+		wait.until(ExpectedConditions.textToBe(By.cssSelector(".scroller-counter"), "1"));
+		awaitNoVeil();
+	}
+
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void aPositionedHostStaysWhereItIs(Engine engine)
+	{
+		open(engine);
+
+		WebElement card = driver.findElement(By.cssSelector(".veil-positioned"));
+		Object before = offsetInStage(card);
+		card.findElement(By.tagName("a")).click();
+		wait.until(ExpectedConditions.presenceOfElementLocated(
+			By.cssSelector(".veil-positioned > .wicket-veil")));
+
+		assertEquals(before, offsetInStage(card), "the host moved while it was veiled");
+		assertEquals("absolute", card.getCssValue("position"));
+
+		wait.until(ExpectedConditions.textToBe(By.cssSelector(".positioned-counter"), "1"));
+		awaitNoVeil();
+	}
+
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void theVeilStaysBehindAStickyHeaderInFrontOfItsHost(Engine engine)
+	{
+		open(engine);
+
+		WebElement panel = driver.findElement(By.cssSelector(".veil-under-header"));
+		js().executeScript("arguments[0].scrollIntoView({ block: 'center' });", panel);
+		panel.findElement(By.tagName("a")).click();
+		wait.until(ExpectedConditions.presenceOfElementLocated(
+			By.cssSelector(".veil-under-header > .wicket-veil.wicket-veil-busy")));
+
+		Object hit = js().executeAsyncScript("""
+			var callback = arguments[arguments.length - 1];
+			var scroller = document.querySelector('.veil-sticky-scroller');
+			var header = document.querySelector('.veil-sticky-header');
+			var panel = document.querySelector('.veil-under-header');
+			scroller.scrollTop += panel.getBoundingClientRect().top -
+				scroller.getBoundingClientRect().top;
+			requestAnimationFrame(function () {
+				var rect = header.getBoundingClientRect();
+				var x = rect.left + rect.width / 2;
+				var y = rect.top + rect.height / 2;
+				var under = panel.getBoundingClientRect();
+				callback({
+					panelUnderHeader: under.top <= y && y <= under.bottom,
+					hit: document.elementFromPoint(x, y) === header
+				});
+			});
+			""");
+		assertEquals(Map.of("panelUnderHeader", true, "hit", true), hit,
+			"the veil paints over the sticky header");
+
+		wait.until(ExpectedConditions.textToBe(By.cssSelector(".under-header-counter"), "1"));
+		awaitNoVeil();
+	}
+
+	private void assertCoveredByItsVeil(WebElement host)
+	{
+		Object result = js().executeAsyncScript("""
+			var host = arguments[0];
+			var callback = arguments[arguments.length - 1];
+			requestAnimationFrame(function () {
+				var veil = host.querySelector(':scope > .wicket-veil');
+				var rect = host.getBoundingClientRect();
+				var points = [[0.1, 0.1], [0.5, 0.5], [0.9, 0.9]].filter(function (point) {
+					var x = rect.left + host.clientWidth * point[0];
+					var y = rect.top + host.clientHeight * point[1];
+					return document.elementFromPoint(x, y) !== veil;
+				});
+				callback(points.length === 0 ? 'covered' :
+					'not covered at ' + JSON.stringify(points) + ', scrollTop ' + host.scrollTop);
+			});
+			""", host);
+		assertEquals("covered", result);
+	}
+
+	private Object offsetInStage(WebElement element)
+	{
+		return js().executeScript("""
+			var r = arguments[0].getBoundingClientRect();
+			var stage = arguments[0].parentNode.getBoundingClientRect();
+			return [r.left - stage.left, r.top - stage.top, r.width, r.height].join(',');
+			""", element);
 	}
 
 	private WebElement outerPanel()
