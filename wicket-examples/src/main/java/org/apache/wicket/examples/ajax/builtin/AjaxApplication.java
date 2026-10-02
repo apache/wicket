@@ -55,6 +55,7 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("form-component-panel", FormComponentPanelPage.class);
 		mountPage("clock", ClockPage.class);
 		mountPage("collapsible", CollapsiblePage.class);
+		mountPage("progress-bar", ProgressBarPage.class);
 		mountPage("editable-label", EditableLabelPage.class);
 		mountPage("effects", EffectsPage.class);
 		mountPage("form", FormPage.class);

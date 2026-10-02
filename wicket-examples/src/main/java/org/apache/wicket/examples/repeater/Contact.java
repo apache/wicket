@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.examples.repeater;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.wicket.util.io.IClusterable;
 
@@ -39,7 +41,15 @@ public class Contact implements IClusterable
 	private String cellPhone;
 	
 	private Date bornDate;
-	
+
+	private String address;
+
+	private String city;
+
+	private String country;
+
+	private volatile int progress;
+
 	/**
 	 * Constructor
 	 */
@@ -201,4 +211,87 @@ public class Contact implements IClusterable
 	    this.bornDate = bornDate;
 	}
 
+	/**
+	 * @return the born date as {@code yyyy-MM-dd}, or {@code null}
+	 */
+	public String getBorn()
+	{
+		return bornDate != null ? new SimpleDateFormat("yyyy-MM-dd").format(bornDate) : null;
+	}
+
+	/**
+	 * @return the progress of some work on the contact, from 0 to 100
+	 */
+	public int getProgress()
+	{
+		return progress;
+	}
+
+	/**
+	 * @param progress
+	 *            the progress of some work on the contact, from 0 to 100
+	 */
+	public void setProgress(int progress)
+	{
+		this.progress = progress;
+	}
+
+	/**
+	 * @return the street address
+	 */
+	public String getAddress()
+	{
+		return address;
+	}
+
+	/**
+	 * @param address
+	 *            the street address
+	 */
+	public void setAddress(String address)
+	{
+		this.address = address;
+	}
+
+	/**
+	 * @return the city
+	 */
+	public String getCity()
+	{
+		return city;
+	}
+
+	/**
+	 * @param city
+	 *            the city
+	 */
+	public void setCity(String city)
+	{
+		this.city = city;
+	}
+
+	/**
+	 * @return the ISO 3166 code of the country
+	 */
+	public String getCountry()
+	{
+		return country;
+	}
+
+	/**
+	 * @param country
+	 *            the ISO 3166 code of the country
+	 */
+	public void setCountry(String country)
+	{
+		this.country = country;
+	}
+
+	/**
+	 * @return the English name of the country
+	 */
+	public String getCountryName()
+	{
+		return country != null ? Locale.of("", country).getDisplayCountry(Locale.ENGLISH) : null;
+	}
 }

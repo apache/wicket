@@ -49,6 +49,12 @@ public class ContactGenerator
 			"Baker", "Gonzalez", "Nelson", "Moore", "Wilson", "Graham", "Fisher", "Cruz", "Ortiz",
 			"Gomez", "Murray" };
 
+	private final String[] streets = { "Main Street", "Oak Avenue", "Maple Road", "Hill Lane",
+			"Park Boulevard", "River Drive", "Lake View", "Station Road" };
+	private final String[][] places = { { "US", "Springfield" }, { "US", "Portland" },
+			{ "GB", "Leeds" }, { "DE", "Hamburg" }, { "FR", "Lyon" }, { "ES", "Valencia" },
+			{ "CA", "Calgary" }, { "AU", "Perth" }, { "NL", "Utrecht" }, { "MX", "Puebla" } };
+
 	private ContactGenerator()
 	{
 
@@ -74,6 +80,10 @@ public class ContactGenerator
 		contact.setHomePhone(generatePhoneNumber());
 		contact.setCellPhone(generatePhoneNumber());
 		contact.setBornDate(generateDate());
+		String[] place = places[rint(0, places.length)];
+		contact.setCountry(place[0]);
+		contact.setCity(place[1]);
+		contact.setAddress(rint(1, 999) + " " + randomString(streets));
 		
 		return contact;
 	}
