@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
  */
 class DynamicDataTablePageTest
 {
-	private static final String TABLE = "table";
+	private static final String TABLE = "themed:table";
 
 	private static final String FORM = TABLE + ":overlay:window:content:body:form";
 

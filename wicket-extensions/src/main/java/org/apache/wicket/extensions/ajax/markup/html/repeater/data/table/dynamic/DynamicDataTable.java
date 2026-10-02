@@ -139,7 +139,8 @@ import com.github.openjson.JSONObject;
  * provider; checking or unchecking a row afterwards turns the selection back into the rows the
  * page shows checked.
  * <p>
- * The table carries the CSS class {@value #CSS_CLASS}.
+ * The table carries the CSS class {@value #CSS_CLASS}, and takes its colors from the
+ * {@link org.apache.wicket.extensions.theme.Theme theme} it is rendered in, if any.
  * <p>
  * A column implementing {@link IHeaderContributor}, such as a {@link ProgressBarColumn}, renders
  * its header items, for example a style sheet, along with the table.

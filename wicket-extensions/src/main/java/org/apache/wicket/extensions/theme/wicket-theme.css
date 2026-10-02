@@ -1,0 +1,198 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * The themes of wicket-extensions. Each one sets these properties, which the style sheets of the
+ * components read:
+ *
+ *   --wicket-theme-primary          headers, the bar of a progress bar
+ *   --wicket-theme-primary-dark     borders and gradients next to the primary color
+ *   --wicket-theme-on-primary       text on the primary color
+ *   --wicket-theme-accent           links, focus and drag indicators
+ *   --wicket-theme-text             text
+ *   --wicket-theme-surface          background of content, such as rows
+ *   --wicket-theme-surface-alt      alternating background, such as every other row
+ *   --wicket-theme-hover            background of the content under the pointer
+ *   --wicket-theme-selected         background of selected content
+ *   --wicket-theme-highlight        background of notices, such as the selection bar of a table
+ *   --wicket-theme-toolbar          background of toolbars, such as the navigation of a table
+ *   --wicket-theme-border           borders
+ *   --wicket-theme-progress         the filled part of a progress bar
+ *   --wicket-theme-progress-dark    the gradient end of the filled part
+ *   --wicket-theme-track            the empty part of a progress bar
+ *   --wicket-theme-veil             the dimming over content blocked by a veil or an overlay
+ *   --wicket-theme-color-scheme     the color scheme of form controls, such as text fields and
+ *                                   check boxes, so they match the theme whatever the page uses
+ */
+.wicket-theme-default {
+	--wicket-theme-primary: #1f3a68;
+	--wicket-theme-primary-dark: #142a4f;
+	--wicket-theme-on-primary: #ffffff;
+	--wicket-theme-accent: #1f5fa8;
+	--wicket-theme-text: #1f2933;
+	--wicket-theme-surface: #ffffff;
+	--wicket-theme-surface-alt: #edf2f9;
+	--wicket-theme-hover: #dce7f5;
+	--wicket-theme-selected: #fff3c4;
+	--wicket-theme-highlight: #fff8dc;
+	--wicket-theme-toolbar: #f4f6f9;
+	--wicket-theme-border: #c5d0de;
+	--wicket-theme-progress: #2f80c9;
+	--wicket-theme-progress-dark: #1f5fa8;
+	--wicket-theme-track: #eef1f4;
+	--wicket-theme-veil: rgba(255, 255, 255, 0.6);
+	--wicket-theme-color-scheme: light;
+}
+
+.wicket-theme-blue {
+	--wicket-theme-primary: #1565c0;
+	--wicket-theme-primary-dark: #0d47a1;
+	--wicket-theme-on-primary: #ffffff;
+	--wicket-theme-accent: #1976d2;
+	--wicket-theme-text: #102a43;
+	--wicket-theme-surface: #ffffff;
+	--wicket-theme-surface-alt: #e3f2fd;
+	--wicket-theme-hover: #bbdefb;
+	--wicket-theme-selected: #fff59d;
+	--wicket-theme-highlight: #e1f5fe;
+	--wicket-theme-toolbar: #f1f8ff;
+	--wicket-theme-border: #90caf9;
+	--wicket-theme-progress: #42a5f5;
+	--wicket-theme-progress-dark: #1565c0;
+	--wicket-theme-track: #e3f2fd;
+	--wicket-theme-veil: rgba(255, 255, 255, 0.6);
+	--wicket-theme-color-scheme: light;
+}
+
+.wicket-theme-red {
+	--wicket-theme-primary: #b71c1c;
+	--wicket-theme-primary-dark: #7f0000;
+	--wicket-theme-on-primary: #ffffff;
+	--wicket-theme-accent: #c62828;
+	--wicket-theme-text: #2b1a1a;
+	--wicket-theme-surface: #ffffff;
+	--wicket-theme-surface-alt: #fdecea;
+	--wicket-theme-hover: #f9d0cc;
+	--wicket-theme-selected: #ffe0b2;
+	--wicket-theme-highlight: #fff0f0;
+	--wicket-theme-toolbar: #fbf3f2;
+	--wicket-theme-border: #e6a9a3;
+	--wicket-theme-progress: #e53935;
+	--wicket-theme-progress-dark: #b71c1c;
+	--wicket-theme-track: #fdecea;
+	--wicket-theme-veil: rgba(255, 255, 255, 0.6);
+	--wicket-theme-color-scheme: light;
+}
+
+.wicket-theme-grey {
+	--wicket-theme-primary: #4a5258;
+	--wicket-theme-primary-dark: #30363a;
+	--wicket-theme-on-primary: #ffffff;
+	--wicket-theme-accent: #455a64;
+	--wicket-theme-text: #263238;
+	--wicket-theme-surface: #ffffff;
+	--wicket-theme-surface-alt: #f2f4f5;
+	--wicket-theme-hover: #e4e8ea;
+	--wicket-theme-selected: #fff3c4;
+	--wicket-theme-highlight: #f5f5f5;
+	--wicket-theme-toolbar: #eceff1;
+	--wicket-theme-border: #b0bec5;
+	--wicket-theme-progress: #78909c;
+	--wicket-theme-progress-dark: #455a64;
+	--wicket-theme-track: #eceff1;
+	--wicket-theme-veil: rgba(255, 255, 255, 0.6);
+	--wicket-theme-color-scheme: light;
+}
+
+.wicket-theme-green {
+	--wicket-theme-primary: #2e7d32;
+	--wicket-theme-primary-dark: #1b5e20;
+	--wicket-theme-on-primary: #ffffff;
+	--wicket-theme-accent: #388e3c;
+	--wicket-theme-text: #1b2e1c;
+	--wicket-theme-surface: #ffffff;
+	--wicket-theme-surface-alt: #eef6ee;
+	--wicket-theme-hover: #dcedc8;
+	--wicket-theme-selected: #fff9c4;
+	--wicket-theme-highlight: #e8f5e9;
+	--wicket-theme-toolbar: #f1f8f1;
+	--wicket-theme-border: #a5d6a7;
+	--wicket-theme-progress: #43a047;
+	--wicket-theme-progress-dark: #2e7d32;
+	--wicket-theme-track: #e8f5e9;
+	--wicket-theme-veil: rgba(255, 255, 255, 0.6);
+	--wicket-theme-color-scheme: light;
+}
+
+.wicket-theme-orange {
+	--wicket-theme-primary: #c2410c;
+	--wicket-theme-primary-dark: #9a3412;
+	--wicket-theme-on-primary: #ffffff;
+	--wicket-theme-accent: #c2410c;
+	--wicket-theme-text: #2b1d12;
+	--wicket-theme-surface: #ffffff;
+	--wicket-theme-surface-alt: #fff4ea;
+	--wicket-theme-hover: #ffe3cc;
+	--wicket-theme-selected: #fff3b0;
+	--wicket-theme-highlight: #fff7ed;
+	--wicket-theme-toolbar: #fff8f1;
+	--wicket-theme-border: #f2b98d;
+	--wicket-theme-progress: #f97316;
+	--wicket-theme-progress-dark: #c2410c;
+	--wicket-theme-track: #ffedd5;
+	--wicket-theme-veil: rgba(255, 255, 255, 0.6);
+	--wicket-theme-color-scheme: light;
+}
+
+.wicket-theme-light-blue {
+	--wicket-theme-primary: #4a90c8;
+	--wicket-theme-primary-dark: #2f74ad;
+	--wicket-theme-on-primary: #ffffff;
+	--wicket-theme-accent: #2f74ad;
+	--wicket-theme-text: #16324a;
+	--wicket-theme-surface: #ffffff;
+	--wicket-theme-surface-alt: #f2f8fd;
+	--wicket-theme-hover: #e0eef9;
+	--wicket-theme-selected: #fff6c2;
+	--wicket-theme-highlight: #eef7fd;
+	--wicket-theme-toolbar: #f6fbff;
+	--wicket-theme-border: #b7d6ee;
+	--wicket-theme-progress: #6db3e8;
+	--wicket-theme-progress-dark: #3b8fd0;
+	--wicket-theme-track: #e6f2fb;
+	--wicket-theme-veil: rgba(255, 255, 255, 0.6);
+	--wicket-theme-color-scheme: light;
+}
+
+.wicket-theme-dark {
+	--wicket-theme-primary: #34557a;
+	--wicket-theme-primary-dark: #24405f;
+	--wicket-theme-on-primary: #f1f4f8;
+	--wicket-theme-accent: #7cb7ff;
+	--wicket-theme-text: #e6eaf0;
+	--wicket-theme-surface: #1e242c;
+	--wicket-theme-surface-alt: #252c35;
+	--wicket-theme-hover: #313b47;
+	--wicket-theme-selected: #4a4325;
+	--wicket-theme-highlight: #2f3a2c;
+	--wicket-theme-toolbar: #262d36;
+	--wicket-theme-border: #3d4856;
+	--wicket-theme-progress: #4f9cf0;
+	--wicket-theme-progress-dark: #2f7ad0;
+	--wicket-theme-track: #333d4a;
+	--wicket-theme-veil: rgba(10, 14, 20, 0.6);
+	--wicket-theme-color-scheme: dark;
+}

@@ -101,8 +101,8 @@ table.dynamic-data-table .dynamic-data-table-moving {
 	z-index: 1001;
 	padding: 0.3em 0.6em;
 	border-radius: 0.2em;
-	background: #1f3a68;
-	color: #fff;
+	background: var(--wicket-theme-primary, #1f3a68);
+	color: var(--wicket-theme-on-primary, #fff);
 	font-weight: 600;
 	white-space: nowrap;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -115,7 +115,7 @@ table.dynamic-data-table .dynamic-data-table-moving {
 	z-index: 1000;
 	width: 3px;
 	margin-left: -1.5px;
-	background: #2f80c9;
+	background: var(--wicket-theme-accent, #2f80c9);
 	pointer-events: none;
 }
 
@@ -130,12 +130,12 @@ table.dynamic-data-table .dynamic-data-table-moving {
 
 .dynamic-data-table-drop-marker::before {
 	top: -14px;
-	border-top-color: #2f80c9;
+	border-top-color: var(--wicket-theme-accent, #2f80c9);
 }
 
 .dynamic-data-table-drop-marker::after {
 	bottom: -14px;
-	border-bottom-color: #2f80c9;
+	border-bottom-color: var(--wicket-theme-accent, #2f80c9);
 }
 
 .dynamic-data-table-sort-asc,
@@ -170,16 +170,16 @@ table.dynamic-data-table .dynamic-data-table-moving {
 
 .dynamic-data-table-navigation :is(input[type="text"], input[type="search"], select) {
 	padding: 0.15em 0.4em;
-	border: 1px solid ButtonBorder;
+	border: 1px solid var(--wicket-theme-border, ButtonBorder);
 	border-radius: 0.3em;
-	background: Field;
-	color: FieldText;
+	background: var(--wicket-theme-surface, Field);
+	color: var(--wicket-theme-text, FieldText);
 	font: inherit;
 	font-weight: normal;
 }
 
 .dynamic-data-table-navigation :is(input, select):focus-visible {
-	outline: 2px solid Highlight;
+	outline: 2px solid var(--wicket-theme-accent, Highlight);
 	outline-offset: -1px;
 }
 
@@ -202,8 +202,8 @@ table.dynamic-data-table .dynamic-data-table-moving {
 
 table.dynamic-data-table .dynamic-data-table-action:hover,
 table.dynamic-data-table .dynamic-data-table-action:focus-visible {
-	background: #2f80c9;
-	color: #ffffff;
+	background: var(--wicket-theme-accent, #2f80c9);
+	color: var(--wicket-theme-on-primary, #ffffff);
 }
 
 .dynamic-data-table-page-size {
@@ -238,10 +238,10 @@ table.dynamic-data-table > tfoot > tr > td {
 	z-index: 20;
 	min-width: 12em;
 	padding: 0.4em;
-	border: 1px solid #c5d0de;
+	border: 1px solid var(--wicket-theme-border, #c5d0de);
 	border-radius: 0.3em;
-	background: #ffffff;
-	color: #1f2933;
+	background: var(--wicket-theme-surface, #ffffff);
+	color: var(--wicket-theme-text, #1f2933);
 	box-shadow: 0 0.3em 1em rgba(0, 0, 0, 0.2);
 	font-weight: normal;
 	text-align: left;
@@ -277,14 +277,14 @@ table.dynamic-data-table > tfoot .dynamic-data-table-column-chooser-menu {
 
 .dynamic-data-table-column-chooser-column:hover,
 .dynamic-data-table-column-chooser-column:focus-visible {
-	background: rgba(0, 0, 0, 0.06);
+	background: var(--wicket-theme-hover, rgba(0, 0, 0, 0.06));
 	outline: none;
 }
 
 .dynamic-data-table-column-chooser-tick {
 	flex: none;
 	width: 1em;
-	color: inherit;
+	color: var(--wicket-theme-accent, inherit);
 	font-weight: bold;
 	visibility: hidden;
 }
@@ -313,9 +313,65 @@ td.dynamic-data-table-selection {
 	text-align: center;
 }
 
+/*
+ * Colors come from the theme properties (see wicket-theme.css); without a theme the table keeps
+ * the colors of the page.
+ */
+table.dynamic-data-table :is(input, select, textarea, button) {
+	color-scheme: var(--wicket-theme-color-scheme);
+	accent-color: var(--wicket-theme-accent);
+}
+
+table.dynamic-data-table {
+	color: var(--wicket-theme-text);
+	border-bottom: 2px solid var(--wicket-theme-primary);
+}
+
+table.dynamic-data-table > thead > tr > th {
+	background: var(--wicket-theme-primary);
+	color: var(--wicket-theme-on-primary);
+}
+
 table.dynamic-data-table > thead > tr > th a,
 table.dynamic-data-table > thead > tr > th a:visited {
 	color: inherit;
+}
+
+table.dynamic-data-table > tbody > tr.even {
+	background: var(--wicket-theme-surface);
+}
+
+table.dynamic-data-table > tbody > tr.odd {
+	background: var(--wicket-theme-surface-alt);
+}
+
+table.dynamic-data-table > tbody > tr:hover {
+	background: var(--wicket-theme-hover);
+}
+
+table.dynamic-data-table > tbody > tr.selected {
+	background: var(--wicket-theme-selected);
+}
+
+table.dynamic-data-table > tbody a,
+table.dynamic-data-table > tbody a:visited {
+	color: var(--wicket-theme-accent);
+}
+
+table.dynamic-data-table > thead > tr > td,
+table.dynamic-data-table > tfoot > tr > td {
+	background: var(--wicket-theme-toolbar);
+	color: var(--wicket-theme-text);
+}
+
+table.dynamic-data-table > thead > tr.dynamic-data-table-selection-toolbar > td,
+table.dynamic-data-table > tfoot > tr.dynamic-data-table-selection-toolbar > td {
+	background: var(--wicket-theme-highlight);
+}
+
+table.dynamic-data-table tr.dynamic-data-table-selection-toolbar a,
+table.dynamic-data-table .dynamic-data-table-action {
+	color: var(--wicket-theme-accent);
 }
 
 table.dynamic-data-table {
@@ -329,7 +385,7 @@ table.dynamic-data-table > tbody > tr > td {
 .dynamic-data-table-icon-action {
 	padding: 0.1em;
 	background: transparent;
-	color: inherit;
+	color: var(--wicket-theme-accent, inherit);
 	font: inherit;
 	cursor: pointer;
 }
@@ -359,7 +415,7 @@ caption.dynamic-data-table-overlay[hidden] {
 .dynamic-data-table-overlay-veil {
 	position: absolute;
 	inset: 0;
-	background: rgba(31, 41, 51, 0.45);
+	background: var(--wicket-theme-veil, rgba(31, 41, 51, 0.45));
 }
 
 .dynamic-data-table-overlay-window {
@@ -386,22 +442,22 @@ caption.dynamic-data-table-overlay[hidden] {
 
 .dynamic-data-table-button {
 	padding: 0.3em 1em;
-	border: 1px solid #9aa5b1;
+	border: 1px solid var(--wicket-theme-border, #9aa5b1);
 	border-radius: 0.3em;
-	background: #f4f6f9;
-	color: #1f2933;
+	background: var(--wicket-theme-toolbar, #f4f6f9);
+	color: var(--wicket-theme-text, #1f2933);
 	font: inherit;
 	cursor: pointer;
 }
 
 .dynamic-data-table-button-primary {
-	border-color: #142a4f;
-	background: #1f3a68;
-	color: #ffffff;
+	border-color: var(--wicket-theme-primary-dark, #142a4f);
+	background: var(--wicket-theme-primary, #1f3a68);
+	color: var(--wicket-theme-on-primary, #ffffff);
 }
 
 .dynamic-data-table-button:focus-visible,
 .dynamic-data-table-icon-action:focus-visible {
-	outline: 2px solid Highlight;
+	outline: 2px solid var(--wicket-theme-accent, Highlight);
 	outline-offset: 1px;
 }

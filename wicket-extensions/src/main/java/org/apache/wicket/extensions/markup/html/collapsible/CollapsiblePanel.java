@@ -37,8 +37,9 @@ import org.apache.wicket.request.resource.ResourceReference;
  * collapsing happens in the browser, without JavaScript, is keyboard accessible and needs no
  * inline script or style, so it works under a strict Content Security Policy. The look comes from
  * {@link #CSS}. The color of the body's text is the CSS custom property
- * {@code --wicket-collapsible-text} if it is set, for example on the page, else the color of the
- * panel's parent.
+ * {@code --wicket-collapsible-text} if it is set, for example on the page, else the text color of
+ * the {@link org.apache.wicket.extensions.theme.Theme theme} the panel is in, else the color of
+ * the panel's parent.
  * <p>
  * By default the server does not learn when the user expands or collapses the panel, and renders
  * it again in the state of {@link #setExpanded(boolean)}. With

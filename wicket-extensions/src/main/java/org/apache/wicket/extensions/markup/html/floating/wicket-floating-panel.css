@@ -20,12 +20,12 @@
 	grid-template-columns: 1fr auto;
 	grid-template-rows: auto 1fr;
 	box-sizing: border-box;
-	border: 1px solid #c5d0de;
+	border: 1px solid var(--wicket-theme-border, #c5d0de);
 	border-radius: 0.4em;
 	overflow: hidden;
-	background: #ffffff;
-	color: #1f2933;
-	color-scheme: light;
+	background: var(--wicket-theme-surface, #ffffff);
+	color: var(--wicket-theme-text, #1f2933);
+	color-scheme: var(--wicket-theme-color-scheme, light);
 	box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.35);
 }
 
@@ -35,8 +35,8 @@
 	align-items: center;
 	gap: 1em;
 	padding: 0.4em 2.5em 0.4em 1em;
-	background: #1f3a68;
-	color: #ffffff;
+	background: var(--wicket-theme-primary, #1f3a68);
+	color: var(--wicket-theme-on-primary, #ffffff);
 	font-weight: bold;
 }
 
@@ -57,7 +57,7 @@
 	border: none;
 	border-radius: 0.3em;
 	background: transparent;
-	color: #ffffff;
+	color: var(--wicket-theme-on-primary, #ffffff);
 	cursor: pointer;
 }
 
@@ -72,7 +72,7 @@
 
 .wicket-floating-panel-close:hover,
 .wicket-floating-panel-close:focus-visible {
-	background: rgba(0, 0, 0, 0.25);
+	background: var(--wicket-theme-primary-dark, rgba(0, 0, 0, 0.25));
 	outline: none;
 }
 

@@ -34,6 +34,9 @@ import org.apache.wicket.request.resource.ResourceReference;
  * A bar whose model holds {@code null} is indeterminate: it shows that something is going on
  * without saying how far it got, as moving stripes over the whole bar and without a label.
  * <p>
+ * The colors come from the {@link org.apache.wicket.extensions.theme.Theme theme} the bar is
+ * rendered in, if any.
+ * <p>
  * The component is attached to a {@code <div>}. Its markup is available as a string from
  * {@link #markup(String)}, so the same bar can be produced elsewhere, for example as a
  * {@link org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.dynamic.ProgressBarColumn

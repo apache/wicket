@@ -75,6 +75,7 @@ module org.apache.wicket.extensions {
     exports org.apache.wicket.extensions.model;
     exports org.apache.wicket.extensions.rating;
     exports org.apache.wicket.extensions.requestlogger;
+    exports org.apache.wicket.extensions.theme;
     exports org.apache.wicket.extensions.util.encoding;
     exports org.apache.wicket.extensions.validation.validator;
     exports org.apache.wicket.extensions.wizard;
@@ -111,6 +112,7 @@ module org.apache.wicket.extensions {
     opens org.apache.wicket.extensions.markup.html.repeater.data.table;
     opens org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
     opens org.apache.wicket.extensions.rating;
+    opens org.apache.wicket.extensions.theme;
     opens org.apache.wicket.extensions.util.encoding;
     opens org.apache.wicket.extensions.wizard;
 
