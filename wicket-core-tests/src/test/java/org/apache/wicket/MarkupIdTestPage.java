@@ -30,7 +30,7 @@ public class MarkupIdTestPage extends WebPage
 	 */
 	public MarkupIdTestPage()
 	{
-		Label label = new Label("foo bar", "test");
+		Label label = new Label("foo.bar", "test");
 		label.setOutputMarkupId(true);
 		add(label);
 	}
