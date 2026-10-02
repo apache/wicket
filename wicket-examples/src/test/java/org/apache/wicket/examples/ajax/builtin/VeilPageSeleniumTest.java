@@ -18,7 +18,6 @@ package org.apache.wicket.examples.ajax.builtin;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
@@ -34,12 +33,12 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -198,11 +197,12 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 
 		click("Slow request");
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PAGE_VEIL)));
+		WebElement fastRequest = driver.findElement(By.linkText("Fast request"));
 		@SuppressWarnings("unchecked")
-		Map<String, Object> hit = (Map<String, Object>)js().executeScript(HIT_TEST,
-			driver.findElement(By.linkText("Fast request")));
+		Map<String, Object> hit = (Map<String, Object>)js().executeScript(HIT_TEST, fastRequest);
 		assertEquals(Boolean.TRUE, hit.get("veiled"), "the veil does not cover the link: " + hit);
-		assertThrows(ElementClickInterceptedException.class, () -> click("Fast request"));
+		// WebElement.click() would wait for the veil to come down before clicking
+		new Actions(driver).moveToElement(fastRequest).click().perform();
 
 		awaitPageCounter("1");
 		awaitNoVeil();
