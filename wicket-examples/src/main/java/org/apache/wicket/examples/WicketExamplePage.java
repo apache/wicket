@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.examples.homepage.HomePage;
 import org.apache.wicket.examples.source.SourcesPage;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -164,16 +165,14 @@ public class WicketExamplePage extends WebPage
 				setVisible(Strings.isEmpty(getExampleTitle()) == false);
 			}
 		});
-		add(new Label("explanation", this::getExampleExplanation)
+		add(newExplanation("explanation", this::getExampleExplanation).add(new Behavior()
 		{
 			@Override
-			protected void onConfigure()
+			public void onConfigure(Component component)
 			{
-				super.onConfigure();
-
-				setVisible(Strings.isEmpty(getExampleExplanation()) == false);
+				component.setVisible(Strings.isEmpty(getExampleExplanation()) == false);
 			}
-		}.setEscapeModelStrings(false));
+		}));
 		add(new BackToIndexPanel("navigation", getIndexPage(), getIndexPath()));
 	}
 
@@ -203,6 +202,21 @@ public class WicketExamplePage extends WebPage
 	protected String getIndexPath()
 	{
 		return null;
+	}
+
+	/**
+	 * Creates the component showing the explanation, by default a label writing it into the page
+	 * as it stands, without escaping.
+	 *
+	 * @param id
+	 *            the id the component must have
+	 * @param explanation
+	 *            the explanation, markup authored with the example
+	 * @return the component
+	 */
+	protected Component newExplanation(String id, IModel<String> explanation)
+	{
+		return new Label(id, explanation).setEscapeModelStrings(false);
 	}
 
 	/**
