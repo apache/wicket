@@ -66,6 +66,8 @@ public class WebSocketVeilDemoPage extends WicketExamplePage
 
 	private final Label lastWork;
 
+	private int panelRequests;
+
 	/**
 	 * Constructor.
 	 */
@@ -84,6 +86,20 @@ public class WebSocketVeilDemoPage extends WicketExamplePage
 		counterPanel.add(counter);
 		lastWork = new Label("lastWork", Model.of("No update pushed yet."));
 		counterPanel.add(lastWork);
+		counterPanel.add(new Label("panelRequests", () -> panelRequests));
+		counterPanel.add(new AjaxLink<Void>("strayUnveil")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				sendStrayUnveil();
+				sleep(Duration.ofSeconds(2));
+				panelRequests++;
+				target.add(counterPanel);
+			}
+		});
 
 		add(new AjaxLink<Void>("start")
 		{
@@ -123,6 +139,49 @@ public class WebSocketVeilDemoPage extends WicketExamplePage
 		}
 	}
 
+	private void sendStrayUnveil()
+	{
+		String applicationName = getApplication().getName();
+		String sessionId = getSession().getId();
+		int pageId = getPageId();
+		String unveilMessage = veil.getUnveilMessage();
+		JSR356Application.get().getScheduledExecutorService().schedule(() -> {
+			IWebSocketConnection connection = connection(applicationName, sessionId, pageId);
+			if (connection != null && connection.isOpen())
+			{
+				try
+				{
+					connection.sendMessage(unveilMessage);
+				}
+				catch (IOException e)
+				{
+					LOGGER.error("Sending the unveil message failed", e);
+				}
+			}
+		}, 500, TimeUnit.MILLISECONDS);
+	}
+
+	private static IWebSocketConnection connection(String applicationName, String sessionId,
+		int pageId)
+	{
+		Application application = Application.get(applicationName);
+		return WebSocketSettings.Holder.get(application)
+			.getConnectionRegistry()
+			.getConnection(application, sessionId, new PageIdKey(pageId));
+	}
+
+	private static void sleep(Duration duration)
+	{
+		try
+		{
+			Thread.sleep(duration.toMillis());
+		}
+		catch (InterruptedException e)
+		{
+			Thread.currentThread().interrupt();
+		}
+	}
+
 	private String taskKey()
 	{
 		return getSession().getId() + "#" + getPageId();
@@ -133,15 +192,23 @@ public class WebSocketVeilDemoPage extends WicketExamplePage
 	{
 		super.onEvent(event);
 
-		if (event.getPayload() instanceof WebSocketPushPayload payload &&
-			payload.getMessage() instanceof CounterUpdate update)
+		if (event.getPayload() instanceof WebSocketPushPayload payload)
 		{
-			counter.setDefaultModelObject(update.value);
-			lastWork.setDefaultModelObject(String.format(
-				"Update %d of %d took %d ms on the server.", update.value, ROUNDS,
-				update.work.toMillis()));
-			payload.getHandler().add(counterPanel);
-			veil.unveil(payload.getHandler());
+			if (payload.getMessage() instanceof CounterUpdate update)
+			{
+				counter.setDefaultModelObject(update.value);
+				lastWork.setDefaultModelObject(String.format(
+					"Update %d of %d took %d ms on the server.", update.value, ROUNDS,
+					update.work.toMillis()));
+				payload.getHandler().add(counterPanel);
+				veil.unveil(payload.getHandler());
+			}
+			else if (payload.getMessage() instanceof Progress progress)
+			{
+				lastWork.setDefaultModelObject(String.format(
+					"Working on update %d of %d, halfway through.", progress.round, ROUNDS));
+				payload.getHandler().add(counterPanel);
+			}
 		}
 	}
 
@@ -171,9 +238,23 @@ public class WebSocketVeilDemoPage extends WicketExamplePage
 	}
 
 	/**
+	 * Reports halfway through the work, without lifting the veil.
+	 */
+	private static class Progress implements IWebSocketPushMessage
+	{
+		private final int round;
+
+		Progress(int round)
+		{
+			this.round = round;
+		}
+	}
+
+	/**
 	 * Recomputes the counter a number of times, alternating long and short work. Both outlast the
-	 * spinner delay; the short work ends within the spinner's minimum time, so the spinner stays
-	 * on the redrawn panel for the rest of it.
+	 * spinner delay; the long work reports its progress halfway through, which redraws the veiled
+	 * panel; the short work ends within the spinner's minimum time, so the spinner stays on the
+	 * redrawn panel for the rest of it.
 	 */
 	private static class PushTask implements Runnable
 	{
@@ -211,15 +292,26 @@ public class WebSocketVeilDemoPage extends WicketExamplePage
 			{
 				for (int round = 1; round <= ROUNDS && !canceled; round++)
 				{
-					IWebSocketConnection connection = connection();
+					IWebSocketConnection connection = connection(applicationName, sessionId,
+						pageId);
 					if (connection == null || !connection.isOpen())
 					{
 						return;
 					}
 
 					connection.sendMessage(veilMessage);
-					Duration work = Duration.ofMillis(round % 2 == 1 ? 1500 : 600);
-					TimeUnit.MILLISECONDS.sleep(work.toMillis());
+					boolean longWork = round % 2 == 1;
+					Duration work = Duration.ofMillis(longWork ? 3000 : 600);
+					if (longWork)
+					{
+						TimeUnit.MILLISECONDS.sleep(work.toMillis() / 2);
+						connection.sendMessage(new Progress(round));
+						TimeUnit.MILLISECONDS.sleep(work.toMillis() / 2);
+					}
+					else
+					{
+						TimeUnit.MILLISECONDS.sleep(work.toMillis());
+					}
 					connection.sendMessage(new CounterUpdate(round, work));
 
 					TimeUnit.SECONDS.sleep(1);
@@ -237,14 +329,6 @@ public class WebSocketVeilDemoPage extends WicketExamplePage
 			{
 				TASKS.remove(key);
 			}
-		}
-
-		private IWebSocketConnection connection()
-		{
-			Application application = Application.get(applicationName);
-			return WebSocketSettings.Holder.get(application)
-				.getConnectionRegistry()
-				.getConnection(application, sessionId, new PageIdKey(pageId));
 		}
 	}
 }
