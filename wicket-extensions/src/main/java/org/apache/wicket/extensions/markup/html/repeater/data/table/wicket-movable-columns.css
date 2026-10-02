@@ -62,8 +62,8 @@ table .wicket-col-moving {
 	z-index: 1001;
 	padding: 0.3em 0.6em;
 	border-radius: 0.2em;
-	background: #1f3a68;
-	color: #fff;
+	background: var(--wicket-theme-primary, #1f3a68);
+	color: var(--wicket-theme-on-primary, #fff);
 	font-weight: 600;
 	white-space: nowrap;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -76,7 +76,7 @@ table .wicket-col-moving {
 	z-index: 1000;
 	width: 3px;
 	margin-left: -1.5px;
-	background: #2f80c9;
+	background: var(--wicket-theme-accent, #2f80c9);
 	pointer-events: none;
 }
 
@@ -91,10 +91,10 @@ table .wicket-col-moving {
 
 .wicket-col-drop-marker::before {
 	top: -14px;
-	border-top-color: #2f80c9;
+	border-top-color: var(--wicket-theme-accent, #2f80c9);
 }
 
 .wicket-col-drop-marker::after {
 	bottom: -14px;
-	border-bottom-color: #2f80c9;
+	border-bottom-color: var(--wicket-theme-accent, #2f80c9);
 }

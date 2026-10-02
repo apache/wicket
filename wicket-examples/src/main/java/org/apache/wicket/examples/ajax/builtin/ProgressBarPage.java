@@ -21,12 +21,17 @@ import java.time.Duration;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.examples.ThemeChoice;
 import org.apache.wicket.extensions.markup.html.progress.ProgressBar;
+import org.apache.wicket.extensions.theme.Theme;
+import org.apache.wicket.extensions.theme.ThemeBehavior;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 /**
- * {@link ProgressBar}s on their own: one advanced by an Ajax timer, and an indeterminate one.
+ * {@link ProgressBar}s on their own: one advanced by an Ajax timer, and an indeterminate one, in a
+ * theme the user chooses.
  */
 public class ProgressBarPage extends BasePage
 {
@@ -36,15 +41,32 @@ public class ProgressBarPage extends BasePage
 
 	private boolean running;
 
+	private Theme theme = Theme.DEFAULT;
+
 	/**
 	 * Constructor.
 	 */
 	public ProgressBarPage()
 	{
+		WebMarkupContainer themed = new WebMarkupContainer("themed");
+		themed.setOutputMarkupId(true);
+		themed.add(new ThemeBehavior(new PropertyModel<>(this, "theme")));
+		add(themed);
+		themed.add(new ThemeChoice("theme", new PropertyModel<>(this, "theme"))
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onThemeChanged(AjaxRequestTarget target)
+			{
+				target.add(themed);
+			}
+		});
+
 		ProgressBar bar = new ProgressBar("bar", new PropertyModel<>(this, "progress"));
 		bar.setOutputMarkupId(true);
-		add(bar);
-		add(new ProgressBar("indeterminate", Model.of((Integer)null)));
+		themed.add(bar);
+		themed.add(new ProgressBar("indeterminate", Model.of((Integer)null)));
 
 		bar.add(new AbstractAjaxTimerBehavior(Duration.ofMillis(300))
 		{
@@ -62,7 +84,7 @@ public class ProgressBarPage extends BasePage
 			}
 		});
 
-		add(new AjaxLink<Void>("toggle")
+		themed.add(new AjaxLink<Void>("toggle")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -74,7 +96,7 @@ public class ProgressBarPage extends BasePage
 			}
 		}.setBody(() -> running ? "Pause" : "Start").setOutputMarkupId(true));
 
-		add(new AjaxLink<Void>("reset")
+		themed.add(new AjaxLink<Void>("reset")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -83,7 +105,7 @@ public class ProgressBarPage extends BasePage
 			{
 				progress = 0;
 				running = false;
-				target.add(bar, get("toggle"));
+				target.add(bar, themed.get("toggle"));
 			}
 		});
 	}

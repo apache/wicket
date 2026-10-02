@@ -33,6 +33,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.examples.ThemeChoice;
 import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior.Location;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.dynamic.AbstractDynamicToolbar;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.dynamic.AjaxDownloadActionColumnContributor;
@@ -71,6 +72,8 @@ import org.apache.wicket.extensions.markup.html.icon.FontAwesomeIcon;
 import org.apache.wicket.extensions.markup.html.icon.IIcon;
 import org.apache.wicket.extensions.markup.html.icon.SvgIcon;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
+import org.apache.wicket.extensions.theme.Theme;
+import org.apache.wicket.extensions.theme.ThemeBehavior;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -118,6 +121,10 @@ public class DynamicDataTablePage extends BasePage
 
 	private final ResizableColumnsBehavior resizableColumns =
 		new ResizableColumnsBehavior(ResizableColumnsBehavior.Mode.STRETCH);
+
+	private final WebMarkupContainer themed;
+
+	private Theme theme = Theme.DEFAULT;
 
 	private Icons icons = Icons.BUILT_IN;
 
@@ -236,7 +243,7 @@ public class DynamicDataTablePage extends BasePage
 			@Override
 			protected void onSelectionChanged(AjaxRequestTarget target)
 			{
-				target.add(DynamicDataTablePage.this.get("selection"));
+				target.add(themed.get("selection"));
 			}
 		};
 		hidden.forEach(column -> table.setColumnVisible(column, false));
@@ -257,8 +264,12 @@ public class DynamicDataTablePage extends BasePage
 		table.addToolbarAction(new CsvExportToolbarAction<Contact, Long>()
 			.setFileName("contacts.csv"));
 
-		add(table);
-		add(new Label("selection", this::describeSelection).setOutputMarkupId(true));
+		themed = new WebMarkupContainer("themed");
+		themed.setOutputMarkupId(true);
+		themed.add(new ThemeBehavior(new PropertyModel<>(this, "theme")));
+		add(themed);
+		themed.add(table);
+		themed.add(new Label("selection", this::describeSelection).setOutputMarkupId(true));
 
 		WebMarkupContainer options = new WebMarkupContainer("options");
 		options.setOutputMarkupId(true);
@@ -312,6 +323,16 @@ public class DynamicDataTablePage extends BasePage
 				table.setColumnState(initialColumnState).setColumnWidths((double[])null);
 				table.getColumnStateStore().save(table.getColumnStateKey(), table.getColumnState());
 				target.add(table);
+			}
+		});
+		options.add(new ThemeChoice("theme", new PropertyModel<>(this, "theme"))
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onThemeChanged(AjaxRequestTarget target)
+			{
+				target.add(themed, DynamicDataTablePage.this.get("explanation"));
 			}
 		});
 
@@ -484,7 +505,9 @@ public class DynamicDataTablePage extends BasePage
 			{
 				return DynamicDataTablePage.super.newExplanation(id, explanation);
 			}
-		}.setRememberExpanded(true).setOutputMarkupId(true);
+		}.setRememberExpanded(true)
+			.add(new ThemeBehavior(new PropertyModel<>(this, "theme")))
+			.setOutputMarkupId(true);
 	}
 
 	@Override

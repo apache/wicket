@@ -29,9 +29,9 @@
 	transform: translateY(-50%);
 	padding: 0.1em 0.2em;
 	border-radius: 0.3em;
-	background: Canvas;
-	color: #2e7d32;
-	box-shadow: 0 0 0 1px currentColor;
+	background: var(--wicket-theme-surface, Canvas);
+	color: var(--wicket-theme-accent, #2e7d32);
+	box-shadow: 0 0 0 1px var(--wicket-theme-border, currentColor);
 }
 
 .wicket-clipboard-copied svg {

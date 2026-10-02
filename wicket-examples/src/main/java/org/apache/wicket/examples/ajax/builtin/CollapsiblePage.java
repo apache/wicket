@@ -18,9 +18,13 @@ package org.apache.wicket.examples.ajax.builtin;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.examples.ThemeChoice;
 import org.apache.wicket.extensions.markup.html.collapsible.CollapsiblePanel;
+import org.apache.wicket.extensions.theme.Theme;
+import org.apache.wicket.extensions.theme.ThemeBehavior;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -30,11 +34,14 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 
 /**
- * {@link CollapsiblePanel}s: collapsed, expanded, and one remembering its state on the server.
+ * {@link CollapsiblePanel}s: collapsed, expanded, and one remembering its state on the server,
+ * in a theme the user chooses.
  */
 public class CollapsiblePage extends BasePage
 {
 	private static final long serialVersionUID = 1L;
+
+	private Theme theme = Theme.DEFAULT;
 
 	private String name;
 
@@ -45,13 +52,28 @@ public class CollapsiblePage extends BasePage
 	 */
 	public CollapsiblePage()
 	{
-		add(textPanel("collapsed"));
-		add(textPanel("expanded").setExpanded(true));
+		WebMarkupContainer themed = new WebMarkupContainer("themed");
+		themed.setOutputMarkupId(true);
+		themed.add(new ThemeBehavior(new PropertyModel<>(this, "theme")));
+		add(themed);
+		themed.add(new ThemeChoice("theme", new PropertyModel<>(this, "theme"))
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onThemeChanged(AjaxRequestTarget target)
+			{
+				target.add(themed);
+			}
+		});
+
+		themed.add(textPanel("collapsed"));
+		themed.add(textPanel("expanded").setExpanded(true));
 
 		Label count = new Label("toggles", () -> toggles);
 		count.setOutputMarkupId(true);
-		add(count);
-		add(new CollapsiblePanel("remembered", new ResourceModel("remembered.title"))
+		themed.add(count);
+		themed.add(new CollapsiblePanel("remembered", new ResourceModel("remembered.title"))
 		{
 			private static final long serialVersionUID = 1L;
 

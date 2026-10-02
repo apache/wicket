@@ -31,10 +31,11 @@
  <label><wicket:message key="bodyHeightUnits"/> <select wicket:id="bodyHeightUnits"></select></label>
  <label><wicket:message key="overlay"/> <select wicket:id="overlay"></select></label>
  <label><wicket:message key="icons"/> <select wicket:id="icons"></select></label>
+ <label><wicket:message key="theme"/> <select wicket:id="theme"></select></label>
  <label><wicket:message key="columnState"/> <select wicket:id="columnState"></select></label>
  <a href="#" wicket:id="resetColumns"><wicket:message key="resetColumns"/></a>
 </div>
-<div>
+<div wicket:id="themed">
 <div>
  <table class="dynamic-dataview" cellspacing="0" wicket:id="table">[table]</table>
 </div>

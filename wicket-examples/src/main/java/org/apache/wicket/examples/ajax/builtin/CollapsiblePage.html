@@ -18,7 +18,8 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:extend>
-<div class="collapsible-examples">
+<div wicket:id="themed" class="collapsible-examples">
+	<p><label>Theme: <select wicket:id="theme"></select></label></p>
 	<div wicket:id="collapsed"></div>
 	<div wicket:id="expanded"></div>
 	<div wicket:id="remembered"></div>

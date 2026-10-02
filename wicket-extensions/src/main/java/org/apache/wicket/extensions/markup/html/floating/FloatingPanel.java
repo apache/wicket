@@ -40,7 +40,9 @@ import org.apache.wicket.util.lang.Args;
  * The title bar shows the title, escaped, and a button closing the panel, which calls
  * {@link #onClose(AjaxRequestTarget)}; {@link #isClosable()} hides it. The body is the component
  * returned by {@link #newBody(String)}. The panel needs no inline script or style, so it works
- * under a strict Content Security Policy. The look comes from {@link #CSS}.
+ * under a strict Content Security Policy. The look comes from {@link #CSS}; inside a
+ * {@link org.apache.wicket.extensions.theme.Theme theme} the title bar takes the colors of the
+ * theme's table headings.
  *
  * @since 11.0.0
  */

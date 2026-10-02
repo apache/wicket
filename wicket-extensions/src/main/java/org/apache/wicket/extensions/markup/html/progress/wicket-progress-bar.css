@@ -14,14 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
+ * Colors come from the theme properties (see wicket-theme.css), with fallbacks for pages without
+ * a theme.
+ */
 .wicket-progress-bar {
 	position: relative;
 	box-sizing: border-box;
 	min-width: 6em;
 	height: 1.4em;
-	border: 1px solid #9aa5b1;
+	border: 1px solid var(--wicket-theme-border, #9aa5b1);
 	border-radius: 0.6em;
-	background: #eef1f4;
+	background: var(--wicket-theme-track, #eef1f4);
 	overflow: hidden;
 }
 
@@ -33,7 +37,7 @@
 	height: 100%;
 	border: none;
 	background: transparent;
-	color: #2f80c9;
+	color: var(--wicket-theme-progress-dark, #2f80c9);
 }
 
 .wicket-progress-bar-value::-webkit-progress-bar {
@@ -44,7 +48,8 @@
 	background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.25) 25%, transparent 25%,
 			transparent 50%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.25) 75%,
 			transparent 75%, transparent),
-		linear-gradient(to bottom, #6cb4f0, #2f80c9);
+		linear-gradient(to bottom, var(--wicket-theme-progress, #6cb4f0),
+			var(--wicket-theme-progress-dark, #2f80c9));
 	background-size: 1em 1em, auto;
 	animation: wicket-progress-bar-stripes 1s linear infinite;
 	transition: width 0.3s ease-out;
@@ -54,20 +59,21 @@
 	background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.25) 25%, transparent 25%,
 			transparent 50%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.25) 75%,
 			transparent 75%, transparent),
-		linear-gradient(to bottom, #6cb4f0, #2f80c9);
+		linear-gradient(to bottom, var(--wicket-theme-progress, #6cb4f0),
+			var(--wicket-theme-progress-dark, #2f80c9));
 	background-size: 1em 1em, auto;
 	animation: wicket-progress-bar-stripes 1s linear infinite;
 }
 
 .wicket-progress-bar-value[value="100"]::-webkit-progress-value {
-	background-image: linear-gradient(to bottom, #6cb4f0,
-			#2f80c9);
+	background-image: linear-gradient(to bottom, var(--wicket-theme-progress, #6cb4f0),
+			var(--wicket-theme-progress-dark, #2f80c9));
 	animation: none;
 }
 
 .wicket-progress-bar-value[value="100"]::-moz-progress-bar {
-	background-image: linear-gradient(to bottom, #6cb4f0,
-			#2f80c9);
+	background-image: linear-gradient(to bottom, var(--wicket-theme-progress, #6cb4f0),
+			var(--wicket-theme-progress-dark, #2f80c9));
 	animation: none;
 }
 
@@ -75,7 +81,8 @@
 	background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%,
 			transparent 50%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.3) 75%,
 			transparent 75%, transparent),
-		linear-gradient(to bottom, #6cb4f0, #2f80c9);
+		linear-gradient(to bottom, var(--wicket-theme-progress, #6cb4f0),
+			var(--wicket-theme-progress-dark, #2f80c9));
 	background-size: 1.5em 1.5em, auto;
 	animation: wicket-progress-bar-stripes 1s linear infinite;
 }
@@ -99,12 +106,12 @@
 	display: block;
 	padding: 0 0.5em;
 	border-radius: 0.6em;
-	background: #eef1f4;
+	background: var(--wicket-theme-track, #eef1f4);
 	font-size: 0.85em;
 	font-weight: bold;
 	line-height: 0;
 	white-space: nowrap;
-	color: #1f2933;
+	color: var(--wicket-theme-text, #1f2933);
 }
 
 /* centers the digits (cap height) rather than the font's line box, in every browser */

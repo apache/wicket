@@ -14,7 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+.wicket-collapsible {
+	border: 1px solid var(--wicket-theme-border);
+	border-radius: 0.3em;
+	overflow: hidden;
+	background: var(--wicket-theme-surface);
+	color: var(--wicket-theme-text);
+}
+
 .wicket-collapsible-title {
+	padding: 0.3em 0.5em;
+	background: var(--wicket-theme-primary);
+	color: var(--wicket-theme-on-primary);
 	display: list-item;
 	list-style: none;
 	cursor: pointer;
@@ -38,7 +49,12 @@
 	transform: rotate(90deg);
 }
 
+.wicket-collapsible :is(input, select, textarea, button) {
+	color-scheme: var(--wicket-theme-color-scheme);
+	accent-color: var(--wicket-theme-accent);
+}
+
 .wicket-collapsible-body {
-	padding: 0.5em 0 0 1em;
-	color: var(--wicket-collapsible-text);
+	padding: 0.5em 0.5em 0.5em 1.5em;
+	color: var(--wicket-collapsible-text, var(--wicket-theme-text));
 }
