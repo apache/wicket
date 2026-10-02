@@ -21,8 +21,7 @@
  * The veil is transparent and only blocks the mouse. If a request is still running after the
  * target's spinner delay, the veil gets the 'wicket-veil-busy' class, which shows a spinner;
  * once shown, the spinner stays for at least the target's minimum time, so it does not flicker.
- * A request carrying the extra parameter 'wicket_nb' is never veiled. A request whose response
- * redirects the browser keeps its veil until the page is left.
+ * A request carrying the extra parameter 'wicket_nb' is never veiled.
  *
  * A local veil can also be raised by the server, for a component it is about to update through a
  * WebSocket push: a WebSocket text message {"wicketVeil":"show","id":"<markup id>"} raises it,
@@ -247,9 +246,9 @@
 		acquire(target);
 	}
 
-	function onDone(jqEvent, attrs, isRedirecting) {
+	function onDone(jqEvent, attrs) {
 		const target = attrs && attrs.wicketVeil;
-		if (!target || isRedirecting === true) {
+		if (!target) {
 			return;
 		}
 		delete attrs.wicketVeil;
@@ -259,13 +258,6 @@
 	function onDomNodeAdded() {
 		for (const target of localTargets.values()) {
 			reattach(target);
-		}
-	}
-
-	function onPageShow(event) {
-		// a page restored from the back-forward cache may still carry the veil of a redirect
-		if (event.persisted) {
-			lowerAll();
 		}
 	}
 
@@ -293,7 +285,6 @@
 			Wicket.Event.subscribe(Wicket.Event.Topic.AJAX_CALL_DONE, onDone);
 			Wicket.Event.subscribe(Wicket.Event.Topic.DOM_NODE_ADDED, onDomNodeAdded);
 			Wicket.Event.subscribe(WEBSOCKET_MESSAGE_TOPIC, onWebSocketMessage);
-			window.addEventListener('pageshow', onPageShow);
 		}
 	}
 

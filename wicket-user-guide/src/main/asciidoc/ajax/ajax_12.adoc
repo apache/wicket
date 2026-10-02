@@ -18,8 +18,6 @@ public class BasePage extends WebPage {
 
 Adding it to any other component throws an _IllegalArgumentException_.
 
-When the response redirects the browser to another page, for example after _setResponsePage()_, the veil stays up until the browser leaves the page, so a second click cannot send the request again in the meantime. A redirect that does not leave the page, such as one to a file download, leaves the veil up as well; offer downloads through _AjaxDownloadBehavior_ instead.
-
 === Veiling a single component
 
 _LocalVeilBehavior_ veils only the component it is added to, and only during the AJAX requests fired by that component or by a component nested in it. The rest of the page stays usable:

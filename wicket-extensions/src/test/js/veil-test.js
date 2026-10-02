@@ -71,8 +71,8 @@ Wicket.Event.add(window, 'domready', function() {
 		return attrs;
 	}
 
-	function done(attrs, isRedirecting) {
-		Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_DONE, attrs, isRedirecting === true);
+	function done(attrs) {
+		Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_DONE, attrs);
 	}
 
 	function push(message) {
@@ -502,24 +502,6 @@ Wicket.Event.add(window, 'domready', function() {
 		Wicket.Veil.hide('veilOuter');
 		clock.tick(500);
 		assert.equal(veils().length, 0, "the veil stayed after it was hidden");
-	});
-
-	test("a response redirecting the browser keeps the veil until the page is left", assert => {
-		Wicket.Veil.page(OPTIONS);
-
-		const attrs = send({ c: 'veilPageLink' });
-		done(attrs, true);
-		clock.tick(1000);
-		assert.ok(veilOf(document.body), "the veil came down although the browser is leaving the page");
-		assert.ok(isBusy(veilOf(document.body)), "the spinner did not show while the browser is leaving the page");
-
-		window.dispatchEvent(new window.PageTransitionEvent('pageshow', { persisted: true }));
-		assert.equal(veils().length, 0, "the veil stayed on the page restored from the back-forward cache");
-
-		const next = send({ c: 'veilPageLink' });
-		assert.ok(veilOf(document.body), "the next request was not veiled");
-		done(next);
-		assert.equal(veils().length, 0, "the veil stayed after the next request finished");
 	});
 
 	test("an unmatched hide leaves the veil of a running request alone", assert => {
