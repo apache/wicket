@@ -22,6 +22,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -269,7 +270,7 @@ public class UploadProgressBar extends Panel
 
 		formatter.format(getVarName() + " = new Wicket.WUPB(%s, '%s', '%s', '%s', %s, '%s', %s);",
 				form != null ? "'" + form.getMarkupId() + "'" : "null", statusDiv.getMarkupId(), barDiv.getMarkupId(), url, uploadFieldId,
-			status, getOnProgressUpdatedCallBack());
+			JavaScriptUtils.escapeQuotes(status), getOnProgressUpdatedCallBack());
 		response.render(OnDomReadyHeaderItem.forScript(builder.toString()));
 	}
 
