@@ -528,6 +528,12 @@ public class Form<T> extends WebMarkupContainer
 	 * Warning: This code should only be called in the rendering phase for form components inside
 	 * the form because it uses the css/javascript id of the form which can be stored in the markup.
 	 *
+	 * <strong>Note</strong>: the url is written into the generated script as it stands, inside the
+	 * single-quoted string literal the form action is assigned from. A url Wicket rendered is safe
+	 * there, because {@link org.apache.wicket.util.encoding.UrlEncoder} percent-encodes the quote
+	 * and the backslash; a url the caller builds itself stays the caller's to encode, for example
+	 * with {@link org.apache.wicket.core.util.string.JavaScriptUtils#escapeQuotes(CharSequence)}.
+	 *
 	 * @param url
 	 *            The listener url to be submitted to
 	 * @return the javascript code that submits the form.
