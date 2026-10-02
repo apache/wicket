@@ -17,18 +17,22 @@
 package org.apache.wicket.markup.html.form.upload;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -105,6 +109,36 @@ class MultiFileUploadFieldTest extends WicketTestCase
 		tester.startPage(page);
 
 		tester.assertContains("disabled=\"disabled\"");
+	}
+
+	/**
+	 * The localized text of the delete button is written into a JavaScript string literal.
+	 */
+	@Test
+	void deleteMessageIsEscapedForJavaScript()
+	{
+		tester.getApplication().getResourceSettings().getStringResourceLoaders().add(0,
+			new IStringResourceLoader()
+			{
+				@Override
+				public String loadStringResource(Class<?> clazz, String key, Locale locale,
+					String style, String variation)
+				{
+					return "org.apache.wicket.mfu.delete".equals(key) ? "l'\\item" : null;
+				}
+
+				@Override
+				public String loadStringResource(Component component, String key,
+					Locale locale, String style, String variation)
+				{
+					return loadStringResource((Class<?>)null, key, locale, style, variation);
+				}
+			});
+
+		tester.startPage(new TestPage(new ListModel<>(new ArrayList<FileUpload>())));
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains("'l\\'\\\\item'"), response);
 	}
 
 	private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
