@@ -43,6 +43,7 @@ public class HomePageApplication extends WicketExampleApplication
 		mountPage("browserinfo", BrowserInfoIndex.class);
 		mountPage("localization", LocalizationIndex.class);
 		mountPage("captchas", CaptchaIndex.class);
+		mountPage("extensions", ExtensionsIndex.class);
 		mountPage("templating", TemplatingIndex.class);
 		mountPage("injection", InjectionIndex.class);
 	}
