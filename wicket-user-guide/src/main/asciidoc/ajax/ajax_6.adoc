@@ -153,7 +153,7 @@ Global AJAX call events are handled with JavaScript. We can register a callback 
 * '/ajax/call/success': called if the AJAX call has successfully returned.
 * '/ajax/call/failure': called if the AJAX call has returned with a failure.
 * '/ajax/call/complete': called when the AJAX call has completed.
-* '/ajax/call/done': called when the AJAX call is done.
+* '/ajax/call/done': called when the AJAX call is done. Its callback gets, after attrs, a boolean telling whether the response is redirecting the browser to another page, in which case the page is about to be left and anything blocking it can stay up.
 * '/dom/node/removing': called when a component is about to be removed via AJAX. This  happens when component markup is updated via AJAX (i.e. the component itself or one of its containers has been added to _AjaxRequestTarget_)
 * '/dom/node/added': called when a component has been added via AJAX. Just like '/dom/node/removing', this event is triggered when a component is added to _AjaxRequestTarget_.
 

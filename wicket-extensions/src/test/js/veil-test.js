@@ -71,8 +71,8 @@ Wicket.Event.add(window, 'domready', function() {
 		return attrs;
 	}
 
-	function done(attrs) {
-		Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_DONE, attrs);
+	function done(attrs, isRedirecting) {
+		Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_DONE, attrs, isRedirecting === true);
 	}
 
 	function push(message) {
@@ -239,6 +239,66 @@ Wicket.Event.add(window, 'domready', function() {
 		done(attrs);
 		assert.equal(veils().length, 0, "the local veil stayed after the request finished");
 		assert.notOk(outer.classList.contains('wicket-veil-host'), "the host class stayed");
+		assert.notOk(outer.classList.contains('wicket-veil-host-static'), "the static host class stayed");
+	});
+
+	test("a static host is positioned and isolated while it is veiled", assert => {
+		Wicket.Veil.local('veilOuter', OPTIONS);
+		const outer = document.getElementById('veilOuter');
+
+		const attrs = send({ c: 'veilOuterLink' });
+		assert.ok(outer.classList.contains('wicket-veil-host-static'), "the static host is not marked");
+		assert.equal(getComputedStyle(outer).position, 'relative', "the static host is not positioned");
+		assert.equal(getComputedStyle(outer).isolation, 'isolate', "the host is not isolated");
+
+		done(attrs);
+		assert.equal(getComputedStyle(outer).position, 'static', "the host stayed positioned");
+	});
+
+	test("a host positioned by a stylesheet rule keeps its position", assert => {
+		const rule = document.createElement('style');
+		rule.textContent = '.veil-test-absolute { position: absolute; }';
+		document.head.insertBefore(rule, document.head.firstChild);
+		Wicket.Veil.local('veilOuter', OPTIONS);
+		const outer = document.getElementById('veilOuter');
+		outer.classList.add('veil-test-absolute');
+
+		const attrs = send({ c: 'veilOuterLink' });
+		assert.notOk(outer.classList.contains('wicket-veil-host-static'), "the positioned host was marked static");
+		assert.equal(getComputedStyle(outer).position, 'absolute', "the host lost its position");
+
+		done(attrs);
+		rule.remove();
+	});
+
+	test("a local veil covers the visible part of a scrolled host", assert => {
+		Wicket.Veil.local('veilOuter', OPTIONS);
+		const outer = document.getElementById('veilOuter');
+		outer.style.height = '40px';
+		outer.style.overflow = 'auto';
+		const filler = document.createElement('div');
+		filler.style.height = '400px';
+		outer.appendChild(filler);
+		outer.scrollTop = 100;
+
+		const attrs = send({ c: 'veilOuterLink' });
+		const veil = veilOf(outer);
+		const covers = function () {
+			const veilBox = veil.getBoundingClientRect();
+			const hostBox = outer.getBoundingClientRect();
+			return Math.round(veilBox.top) === Math.round(hostBox.top + outer.clientTop) &&
+				Math.round(veilBox.height) === outer.clientHeight;
+		};
+		assert.ok(covers(), "the veil does not cover the visible part of the host");
+
+		outer.scrollTop = 150;
+		outer.dispatchEvent(new Event('scroll'));
+		assert.ok(covers(), "the veil did not follow the host's scrolling");
+
+		done(attrs);
+		outer.scrollTop = 0;
+		outer.dispatchEvent(new Event('scroll'));
+		assert.equal(veils().length, 0, "the local veil stayed after the request finished");
 	});
 
 	test("a local veil shows the spinner after its delay and keeps it for its minimum time", assert => {
@@ -291,6 +351,44 @@ Wicket.Event.add(window, 'domready', function() {
 		assert.equal(veils().length, 1, "more than the innermost component was veiled");
 
 		done(attrs);
+	});
+
+	test("a delegated request is taken by the innermost veil around the element that was clicked", assert => {
+		Wicket.Veil.page(OPTIONS);
+		Wicket.Veil.local('veilOuter', OPTIONS);
+		Wicket.Veil.local('veilInner', OPTIONS);
+
+		const attrs = send({ c: 'veilOuter', event: { target: document.getElementById('veilInnerLink') } });
+		assert.ok(veilOf(document.getElementById('veilInner')), "the veil around the clicked element was not raised");
+		assert.equal(veils().length, 1, "more than the innermost veil was raised");
+
+		done(attrs);
+	});
+
+	test("a request whose clicked element is gone is taken by the veil around its component", assert => {
+		Wicket.Veil.local('veilOuter', OPTIONS);
+		Wicket.Veil.local('veilInner', OPTIONS);
+
+		const attrs = send({ c: 'veilOuterLink', event: { target: document.createElement('a') } });
+		assert.ok(veilOf(document.getElementById('veilOuter')), "the component's veil was not raised");
+		assert.equal(veils().length, 1, "more than the component's veil was raised");
+
+		done(attrs);
+	});
+
+	test("markup ids naming Object members do not break the veils", assert => {
+		Wicket.Veil.page(OPTIONS);
+		Wicket.Veil.local('constructor', OPTIONS);
+		const link = document.createElement('a');
+		link.id = 'toString';
+		document.getElementById('qunit-fixture').appendChild(link);
+
+		const attrs = send({ c: 'toString' });
+		assert.ok(veilOf(document.body), "the page was not veiled");
+		assert.strictEqual(Object.delay, undefined, "the options were written onto Object");
+
+		done(attrs);
+		assert.equal(veils().length, 0, "the veil stayed after the request finished");
 	});
 
 	test("a request from outside a local veil falls back to the page veil", assert => {
@@ -368,6 +466,73 @@ Wicket.Event.add(window, 'domready', function() {
 		clock.tick(1);
 		assert.equal(veils().length, 0, "the veil stayed beyond the spinner's minimum time");
 		assert.notOk(replacement.classList.contains('wicket-veil-host'), "the host class stayed");
+	});
+
+	test("a veil whose component is replaced during the request moves onto the new element at once", assert => {
+		Wicket.Veil.local('veilOuter', OPTIONS);
+
+		const attrs = send({ c: 'veilOuterLink' });
+		clock.tick(300);
+		Wicket.DOM.replace(document.getElementById('veilOuter'),
+			'<div id="veilOuter"><a id="veilOuterLink" href="#outer">outer</a></div>');
+		const replacement = document.getElementById('veilOuter');
+
+		const veil = veilOf(replacement);
+		assert.ok(veil, "the veil did not move onto the new element");
+		assert.ok(isBusy(veil), "the moved veil lost its spinner");
+		assert.ok(replacement.classList.contains('wicket-veil-host'), "the new element is not marked as host");
+
+		done(attrs);
+		clock.tick(500);
+		assert.equal(veils().length, 0, "the veil stayed beyond the spinner's minimum time");
+	});
+
+	test("a pushed veil follows its component when a progress update replaces it", assert => {
+		Wicket.Veil.local('veilOuter', OPTIONS);
+
+		push('{"wicketVeil":"show","id":"veilOuter"}');
+		Wicket.DOM.replace(document.getElementById('veilOuter'),
+			'<div id="veilOuter"><a id="veilOuterLink" href="#outer">outer</a></div>');
+		clock.tick(300);
+
+		const veil = veilOf(document.getElementById('veilOuter'));
+		assert.ok(veil, "the veil did not move onto the new element");
+		assert.ok(isBusy(veil), "the spinner was not shown on the moved veil");
+
+		Wicket.Veil.hide('veilOuter');
+		clock.tick(500);
+		assert.equal(veils().length, 0, "the veil stayed after it was hidden");
+	});
+
+	test("a response redirecting the browser keeps the veil until the page is left", assert => {
+		Wicket.Veil.page(OPTIONS);
+
+		const attrs = send({ c: 'veilPageLink' });
+		done(attrs, true);
+		clock.tick(1000);
+		assert.ok(veilOf(document.body), "the veil came down although the browser is leaving the page");
+		assert.ok(isBusy(veilOf(document.body)), "the spinner did not show while the browser is leaving the page");
+
+		window.dispatchEvent(new window.PageTransitionEvent('pageshow', { persisted: true }));
+		assert.equal(veils().length, 0, "the veil stayed on the page restored from the back-forward cache");
+
+		const next = send({ c: 'veilPageLink' });
+		assert.ok(veilOf(document.body), "the next request was not veiled");
+		done(next);
+		assert.equal(veils().length, 0, "the veil stayed after the next request finished");
+	});
+
+	test("an unmatched hide leaves the veil of a running request alone", assert => {
+		Wicket.Veil.local('veilOuter', OPTIONS);
+		const outer = document.getElementById('veilOuter');
+
+		const attrs = send({ c: 'veilOuterLink' });
+		Wicket.Veil.hide('veilOuter');
+		push('{"wicketVeil":"hide","id":"veilOuter"}');
+		assert.ok(veilOf(outer), "an unmatched hide lowered the veil of a running request");
+
+		done(attrs);
+		assert.equal(veils().length, 0, "the veil stayed after the request finished");
 	});
 
 	test("other WebSocket messages, unknown ids and unmatched hides are ignored", assert => {

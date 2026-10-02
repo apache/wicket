@@ -742,7 +742,7 @@
 						self._executeHandlers(attrs.coh, attrs, jqXHR, textStatus);
 						we.publish(topic.AJAX_CALL_COMPLETE, attrs, jqXHR, textStatus);
 
-						self.done(attrs);
+						self.done(attrs, context.isRedirecting === true);
 						return FunctionsExecuter.DONE;
 					}, self));
 
@@ -929,9 +929,9 @@
 			}, this));
 		},
 
-		done: function (attrs) {
+		done: function (attrs, isRedirecting) {
 			this._executeHandlers(attrs.dh, attrs);
-			Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_DONE, attrs);
+			Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_DONE, attrs, isRedirecting === true);
 
 			Wicket.channelManager.done(attrs.ch);
 		},

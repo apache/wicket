@@ -21,7 +21,8 @@
  * The veil is transparent and only blocks the mouse. If a request is still running after the
  * target's spinner delay, the veil gets the 'wicket-veil-busy' class, which shows a spinner;
  * once shown, the spinner stays for at least the target's minimum time, so it does not flicker.
- * A request carrying the extra parameter 'wicket_nb' is never veiled.
+ * A request carrying the extra parameter 'wicket_nb' is never veiled. A request whose response
+ * redirects the browser keeps its veil until the page is left.
  *
  * A local veil can also be raised by the server, for a component it is about to update through a
  * WebSocket push: a WebSocket text message {"wicketVeil":"show","id":"<markup id>"} raises it,
@@ -38,25 +39,42 @@
 	const VEIL_CLASS = 'wicket-veil';
 	const BUSY_CLASS = 'wicket-veil-busy';
 	const HOST_CLASS = 'wicket-veil-host';
+	const STATIC_HOST_CLASS = 'wicket-veil-host-static';
 	const WEBSOCKET_MESSAGE_TOPIC = '/websocket/message';
 	const MESSAGE_PREFIX = '{"wicketVeil"';
 
 	let pageTarget = null;
-	let localTargets = {};
+	const localTargets = new Map();
 	let subscribed = false;
 
+	// the veil scrolls with the content of its host, so it is moved back over the visible part
+	function follow(target) {
+		const style = target.veil.style;
+		const top = target.host.scrollTop;
+		const left = target.host.scrollLeft;
+		style.top = top ? top + 'px' : '';
+		style.bottom = top ? -top + 'px' : '';
+		style.left = left ? left + 'px' : '';
+		style.right = left ? -left + 'px' : '';
+	}
+
 	function createTarget(id, options) {
-		return {
+		const target = {
 			id: id,
 			delay: options.delay,
 			minimum: options.minimum,
 			count: 0,
+			raised: 0,
 			host: null,
 			veil: null,
 			shownAt: -1,
 			spinnerTimer: null,
 			hideTimer: null
 		};
+		target.onScroll = function () {
+			follow(target);
+		};
+		return target;
 	}
 
 	function configure(target, options) {
@@ -76,22 +94,41 @@
 	}
 
 	function findTarget(attrs) {
-		let node = attrs.c ? document.getElementById(attrs.c) : null;
+		let node = attrs.event && attrs.event.target;
+		if (!node || !node.isConnected) {
+			node = typeof(attrs.c) === "string" ? document.getElementById(attrs.c) : null;
+		}
 		for (; node && node !== document; node = node.parentNode) {
-			if (node.id && localTargets[node.id]) {
-				return localTargets[node.id];
+			const target = node.id && localTargets.get(node.id);
+			if (target) {
+				return target;
 			}
 		}
 		return pageTarget;
 	}
 
 	function dropStaleTargets() {
-		for (const id in localTargets) {
-			if (Object.prototype.hasOwnProperty.call(localTargets, id) &&
-				localTargets[id].count === 0 && !document.getElementById(id)) {
-				delete localTargets[id];
+		for (const [id, target] of localTargets) {
+			if (target.count === 0 && !document.getElementById(id)) {
+				localTargets.delete(id);
 			}
 		}
+	}
+
+	function attach(target, host) {
+		host.classList.add(HOST_CLASS);
+		if (getComputedStyle(host).position === 'static') {
+			host.classList.add(STATIC_HOST_CLASS);
+		}
+		host.appendChild(target.veil);
+		host.addEventListener('scroll', target.onScroll);
+		target.host = host;
+		follow(target);
+	}
+
+	function detach(target) {
+		target.host.classList.remove(HOST_CLASS, STATIC_HOST_CLASS);
+		target.host.removeEventListener('scroll', target.onScroll);
 	}
 
 	function hide(target) {
@@ -105,7 +142,7 @@
 			target.veil.parentNode.removeChild(target.veil);
 		}
 		if (target.host && target !== pageTarget) {
-			target.host.classList.remove(HOST_CLASS);
+			detach(target);
 		}
 		target.veil = null;
 		target.host = null;
@@ -123,15 +160,15 @@
 			hide(target);
 		}
 
-		const host = target === pageTarget ? document.body : document.getElementById(target.id);
 		const veil = document.createElement('div');
 		veil.className = VEIL_CLASS;
-		if (target !== pageTarget) {
-			host.classList.add(HOST_CLASS);
-		}
-		host.appendChild(veil);
-		target.host = host;
 		target.veil = veil;
+		if (target === pageTarget) {
+			document.body.appendChild(veil);
+			target.host = document.body;
+		} else {
+			attach(target, document.getElementById(target.id));
+		}
 
 		target.spinnerTimer = clock.setTimeout(function () {
 			target.spinnerTimer = null;
@@ -146,9 +183,8 @@
 		}
 		const host = document.getElementById(target.id);
 		if (host) {
-			host.classList.add(HOST_CLASS);
-			host.appendChild(target.veil);
-			target.host = host;
+			detach(target);
+			attach(target, host);
 		}
 	}
 
@@ -186,6 +222,18 @@
 		}
 	}
 
+	function lowerAll() {
+		const targets = Array.from(localTargets.values());
+		if (pageTarget !== null) {
+			targets.push(pageTarget);
+		}
+		targets.forEach(function (target) {
+			target.count = 0;
+			target.raised = 0;
+			hide(target);
+		});
+	}
+
 	function onBeforeSend(jqEvent, attrs) {
 		if (!attrs || isOptedOut(attrs)) {
 			return;
@@ -199,13 +247,26 @@
 		acquire(target);
 	}
 
-	function onDone(jqEvent, attrs) {
+	function onDone(jqEvent, attrs, isRedirecting) {
 		const target = attrs && attrs.wicketVeil;
-		if (!target) {
+		if (!target || isRedirecting === true) {
 			return;
 		}
 		delete attrs.wicketVeil;
 		releaseOne(target);
+	}
+
+	function onDomNodeAdded() {
+		for (const target of localTargets.values()) {
+			reattach(target);
+		}
+	}
+
+	function onPageShow(event) {
+		// a page restored from the back-forward cache may still carry the veil of a redirect
+		if (event.persisted) {
+			lowerAll();
+		}
 	}
 
 	function onWebSocketMessage(jqEvent, message) {
@@ -230,7 +291,9 @@
 			subscribed = true;
 			Wicket.Event.subscribe(Wicket.Event.Topic.AJAX_CALL_BEFORE_SEND, onBeforeSend);
 			Wicket.Event.subscribe(Wicket.Event.Topic.AJAX_CALL_DONE, onDone);
+			Wicket.Event.subscribe(Wicket.Event.Topic.DOM_NODE_ADDED, onDomNodeAdded);
 			Wicket.Event.subscribe(WEBSOCKET_MESSAGE_TOPIC, onWebSocketMessage);
+			window.addEventListener('pageshow', onPageShow);
 		}
 	}
 
@@ -260,11 +323,11 @@
 		 */
 		local: function (id, options) {
 			subscribe();
-			const target = localTargets[id];
+			const target = localTargets.get(id);
 			if (target) {
 				configure(target, options);
 			} else {
-				localTargets[id] = createTarget(id, options);
+				localTargets.set(id, createTarget(id, options));
 			}
 		},
 
@@ -275,21 +338,24 @@
 		 * @param id {String} - the markup id of a component with a local veil
 		 */
 		show: function (id) {
-			const target = localTargets[id];
+			const target = localTargets.get(id);
 			if (target && document.getElementById(id)) {
+				target.raised++;
 				acquire(target);
 			}
 		},
 
 		/**
 		 * Lowers the local veil raised by show(), respecting the spinner's minimum time. Calls
-		 * without a matching show() are ignored.
+		 * without a matching show() are ignored, and leave the veil of a running Ajax request
+		 * alone.
 		 *
 		 * @param id {String} - the markup id of a component with a local veil
 		 */
 		hide: function (id) {
-			const target = localTargets[id];
-			if (target) {
+			const target = localTargets.get(id);
+			if (target && target.raised > 0) {
+				target.raised--;
 				releaseOne(target);
 			}
 		},
@@ -309,16 +375,9 @@
 		},
 
 		_reset: function () {
-			if (pageTarget !== null) {
-				hide(pageTarget);
-			}
-			for (const id in localTargets) {
-				if (Object.prototype.hasOwnProperty.call(localTargets, id)) {
-					hide(localTargets[id]);
-				}
-			}
+			lowerAll();
 			pageTarget = null;
-			localTargets = {};
+			localTargets.clear();
 		}
 	};
 })();

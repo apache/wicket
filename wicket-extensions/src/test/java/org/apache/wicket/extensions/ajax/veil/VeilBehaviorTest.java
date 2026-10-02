@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
+import java.util.Locale;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -103,6 +104,25 @@ class VeilBehaviorTest extends WicketTestCase
 		String response = tester.getLastResponseAsString();
 		assertTrue(response.contains("Wicket.Veil.local(\"" + page.container.getMarkupId() +
 			"\", {\"delay\":0,\"minimum\":2000});"), response);
+	}
+
+	@Test
+	void timingsDoNotDependOnTheDefaultLocale()
+	{
+		Locale defaultLocale = Locale.getDefault();
+		Locale.setDefault(Locale.forLanguageTag("th-TH-u-nu-thai"));
+		try
+		{
+			tester.startPage(new TestPage(new PageVeilBehavior(), null, false));
+		}
+		finally
+		{
+			Locale.setDefault(defaultLocale);
+		}
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains("Wicket.Veil.page({\"delay\":300,\"minimum\":500});"),
+			response);
 	}
 
 	@Test
