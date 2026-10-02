@@ -1,0 +1,19 @@
+
+
+APACHE WICKET EXAMPLES SUBCOMPONENTS:
+
+The Apache Wicket examples include subcomponents with separate copyright notices and license
+terms. Your use of these subcomponents is subject to the terms and conditions of the following
+licenses.
+
+Font Awesome Free (https://fontawesome.com), Copyright Fonticons, Inc., bundled as the web jar
+org.webjars.npm:fortawesome__fontawesome-free:
+
+  - the icons (SVG and JS files) are licensed under the Creative Commons Attribution 4.0
+    International License, https://creativecommons.org/licenses/by/4.0/
+  - the fonts are licensed under the SIL Open Font License 1.1, https://openfontlicense.org/
+  - the code (CSS and other files) is licensed under the MIT License,
+    https://opensource.org/licenses/MIT
+
+The full license texts are in META-INF/resources/webjars/fortawesome__fontawesome-free/*/LICENSE.txt
+of that web jar, see also https://fontawesome.com/license/free.

@@ -1,0 +1,44 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+
+<p>
+ <a href="#" wicket:id="addContact">Add a contact and refresh the table via web sockets</a> |
+ <a href="#" wicket:id="pushRows">Push the rows of this page in reverse order via web sockets</a> |
+ <a href="#" wicket:id="switchLocale">[language]</a>
+</p>
+<div wicket:id="options" class="dynamic-dataview-options">
+ <label><wicket:message key="resize"/> <select wicket:id="resize"></select></label>
+ <label><wicket:message key="width"/> <select wicket:id="width"></select></label>
+ <label><wicket:message key="proportions"/> <select wicket:id="proportions"></select></label>
+ <label><wicket:message key="navigation"/> <select wicket:id="navigation"></select></label>
+ <label><wicket:message key="selectionBar"/> <select wicket:id="selectionBar"></select></label>
+ <label><wicket:message key="bodyHeight"/> <input type="number" wicket:id="bodyHeight"/></label>
+ <label><wicket:message key="bodyHeightUnits"/> <select wicket:id="bodyHeightUnits"></select></label>
+ <label><wicket:message key="overlay"/> <select wicket:id="overlay"></select></label>
+ <label><wicket:message key="icons"/> <select wicket:id="icons"></select></label>
+ <label><wicket:message key="columnState"/> <select wicket:id="columnState"></select></label>
+ <a href="#" wicket:id="resetColumns"><wicket:message key="resetColumns"/></a>
+</div>
+<div>
+<div>
+ <table class="dynamic-dataview" cellspacing="0" wicket:id="table">[table]</table>
+</div>
+<p wicket:id="selection" class="dynamic-dataview-selection">[selection]</p>
+</div>
+<div wicket:id="details">[details]</div>
+</wicket:extend>

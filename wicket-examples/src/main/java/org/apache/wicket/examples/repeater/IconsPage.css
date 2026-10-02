@@ -1,0 +1,59 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.icons-form {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1em;
+	margin-bottom: 0.5em;
+}
+
+.icons-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
+	gap: 0.5em;
+	padding: 0;
+	list-style: none;
+}
+
+.icons-tile {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.8em 0.3em;
+	border: 1px solid #d5dbe3;
+	border-radius: 0.3em;
+	cursor: copy;
+}
+
+.icons-tile:hover {
+	border-color: #2f80c9;
+	background: rgba(47, 128, 201, 0.08);
+}
+
+.icons-glyph {
+	font-size: 1.6em;
+	line-height: 1;
+}
+
+.icons-name {
+	max-width: 100%;
+	overflow: hidden;
+	font-size: 0.75em;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

@@ -1,0 +1,107 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+table.dynamic-dataview {
+	margin-bottom: 10px;
+	border-collapse: collapse;
+}
+
+table.dynamic-dataview colgroup {
+	border: none;
+}
+
+table.dynamic-dataview thead th {
+	font-weight: bold;
+	text-align: left;
+	padding: 6px 8px;
+}
+
+table.dynamic-dataview thead th a[href]:hover {
+	text-decoration: underline;
+}
+
+table.dynamic-dataview td {
+	padding: 4px 8px;
+}
+
+table.dynamic-dataview tr.navigation td,
+table.dynamic-dataview tr.dynamic-data-table-selection-toolbar td {
+	padding: 6px 8px;
+}
+
+table.dynamic-dataview tr.dynamic-data-table-selection-toolbar a {
+	font-weight: bold;
+}
+
+.dynamic-dataview-options {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 0.6em 1.5em;
+	margin: 0 0 1em 0;
+}
+
+.dynamic-dataview-options label {
+	display: flex;
+	flex-direction: column;
+	gap: 0.2em;
+	font-weight: 600;
+}
+
+.dynamic-dataview-options :is(select, input) {
+	width: 100%;
+	font-weight: normal;
+}
+
+@media (max-width: 50em) {
+	.dynamic-dataview-options {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.contact-filter input {
+	width: 12em;
+}
+
+.contact-edit {
+	min-width: 22em;
+}
+
+.contact-edit label {
+	display: block;
+	margin-bottom: 0.6em;
+	font-weight: 400;
+}
+
+.contact-edit input,
+.contact-edit select {
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	margin-top: 0.2em;
+	padding: 0.25em 0.4em;
+	font: inherit;
+}
+
+.contact-edit [aria-invalid="true"] {
+	border-color: #c62828;
+	outline: 1px solid #c62828;
+}
+
+.contact-phones {
+	display: grid;
+	grid-template-columns: max-content max-content;
+	column-gap: 0.4em;
+}

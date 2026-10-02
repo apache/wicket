@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+<caption wicket:id="overlay" class="dynamic-data-table-overlay">
+	<div class="dynamic-data-table-overlay-veil"></div>
+	<div wicket:id="window" class="dynamic-data-table-overlay-window" role="dialog" aria-modal="true"><div wicket:id="content"></div></div>
+</caption>
+<thead>
+	<tr wicket:id="topNavigation"></tr>
+	<tr wicket:id="topSelection"></tr>
+	<tr wicket:id="topToolbars"></tr>
+	<tr wicket:id="headersRow" class="dynamic-data-table-headers">
+		<th wicket:id="headers"><div class="dynamic-data-table-header"><button type="button" wicket:id="move" class="wicket-col-mover"><svg aria-hidden="true" focusable="false" viewBox="0 0 10 16" width="8" height="13"><path fill="currentColor" d="M2 1h2v2H2zm4 0h2v2H6zM2 7h2v2H2zm4 0h2v2H6zm-4 6h2v2H2zm4 0h2v2H6z"/></svg></button><a wicket:id="sort" class="dynamic-data-table-sort"><span wicket:id="header" class="dynamic-data-table-sort-title"></span></a><a wicket:id="arrows" class="dynamic-data-table-sort-arrows" aria-hidden="true" tabindex="-1"><span class="dynamic-data-table-sort-asc">&#9650;</span><span class="dynamic-data-table-sort-desc">&#9660;</span></a></div></th>
+		<th wicket:id="filler" class="dynamic-data-table-filler" data-resizable-skip="true" aria-hidden="true"></th>
+	</tr>
+</thead>
+<tbody></tbody>
+<tfoot>
+	<tr wicket:id="bottomToolbars"></tr>
+	<tr wicket:id="bottomSelection"></tr>
+	<tr wicket:id="bottomNavigation"></tr>
+</tfoot>
+</wicket:panel>

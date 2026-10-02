@@ -34,4 +34,13 @@ public class DatabaseLocator
 		RepeaterApplication app = (RepeaterApplication)Application.get();
 		return app.getContactsDB();
 	}
+
+	/**
+	 * @return contacts database of a thousand contacts
+	 */
+	public static ContactsDatabase getLargeDatabase()
+	{
+		RepeaterApplication app = (RepeaterApplication)Application.get();
+		return app.getLargeContactsDB();
+	}
 }
