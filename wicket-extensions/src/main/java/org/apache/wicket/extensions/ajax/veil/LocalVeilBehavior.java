@@ -30,10 +30,13 @@ import com.github.openjson.JSONObject;
  * page, even when it has a {@link PageVeilBehavior}. Requests fired from elsewhere leave the
  * component alone.
  * <p>
- * The veil is appended to the component's element, which gets the class
- * {@code wicket-veil-host} with {@code position: relative} for the duration, so the component
- * has to render an element that can hold a {@code div}. The behavior makes the component output
- * its markup id.
+ * The veil is appended to the component's element, so the component has to render an element
+ * that can hold a {@code div}. For the duration, the element gets the class
+ * {@code wicket-veil-host}, which isolates it so the veil stays within its stacking context, and,
+ * unless it is positioned already, {@code wicket-veil-host-static} with
+ * {@code position: relative}. When the element scrolls, the veil covers its visible part. If an
+ * Ajax update or a push replaces the element while it is veiled, the veil moves onto the new
+ * element. The behavior makes the component output its markup id.
  * <p>
  * The server can raise the veil too, for an update it is about to push to the component, for
  * example through a WebSocket connection: send {@link #getVeilMessage()} as a text message when

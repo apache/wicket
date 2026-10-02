@@ -18,6 +18,8 @@ public class BasePage extends WebPage {
 
 Adding it to any other component throws an _IllegalArgumentException_.
 
+When the response redirects the browser to another page, for example after _setResponsePage()_, the veil stays up until the browser leaves the page, so a second click cannot send the request again in the meantime. A redirect that does not leave the page, such as one to a file download, leaves the veil up as well; offer downloads through _AjaxDownloadBehavior_ instead.
+
 === Veiling a single component
 
 _LocalVeilBehavior_ veils only the component it is added to, and only during the AJAX requests fired by that component or by a component nested in it. The rest of the page stays usable:
@@ -28,7 +30,7 @@ WebMarkupContainer searchPanel = new WebMarkupContainer("search");
 searchPanel.add(new LocalVeilBehavior());
 ----
 
-A request fired from inside a component with a local veil does not veil the page, even when the page has a _PageVeilBehavior_. When local veils are nested, the innermost one takes the request. The behavior makes the component output its markup id, and it appends the veil to the component's element, so the component has to render an element that can hold a _div_.
+A request fired from inside a component with a local veil does not veil the page, even when the page has a _PageVeilBehavior_. When local veils are nested, the innermost one takes the request; for a behavior that listens on a container for events of its children, it is the veil around the element that was clicked. The behavior makes the component output its markup id, and it appends the veil to the component's element, so the component has to render an element that can hold a _div_. When the element scrolls, the veil covers its visible part. If an AJAX update or a push replaces the element while it is veiled, the veil moves onto the new element.
 
 === Veiling a component during a WebSocket push
 
@@ -99,6 +101,7 @@ The look comes from the stylesheet _wicket-veil.css_, contributed by the behavio
 
 * _wicket-veil_: the veil itself, a _div_ covering the page (_position: fixed_) or the component (_position: absolute_).
 * _wicket-veil-busy_: added to the veil once the spinner delay has passed. It gives the veil its background, and its `::after` pseudo-element draws the spinner.
-* _wicket-veil-host_: added to the element of a component with a local veil while it is veiled. It gives the element _position: relative_, so the veil covers exactly that element.
+* _wicket-veil-host_: added to the element of a component with a local veil while it is veiled. It gives the element _isolation: isolate_, so the veil stays within the element's stacking context and does not paint over a sticky header or a modal dialog in front of it.
+* _wicket-veil-host-static_: added together with _wicket-veil-host_ when the element is not positioned already. It gives the element _position: relative_, so the veil covers exactly that element; an element that is _absolute_, _fixed_ or _sticky_ keeps its position.
 
-On the client side the veil is implemented by _Wicket.Veil_, which subscribes to the global AJAX topics '/ajax/call/beforeSend' and '/ajax/call/done' listed among the global AJAX call listeners later in this chapter. It works with the JQuery-based and with the plain JavaScript AJAX implementation alike.
+On the client side the veil is implemented by _Wicket.Veil_, which subscribes to the global AJAX topics '/ajax/call/beforeSend', '/ajax/call/done' and '/dom/node/added' listed among the global AJAX call listeners later in this chapter. It works with the JQuery-based and with the plain JavaScript AJAX implementation alike.

@@ -27,6 +27,10 @@
 }
 
 .wicket-veil-host {
+	isolation: isolate;
+}
+
+.wicket-veil-host-static {
 	position: relative;
 }
 

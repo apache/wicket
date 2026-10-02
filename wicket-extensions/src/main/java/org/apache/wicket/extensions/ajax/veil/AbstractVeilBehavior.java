@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.ajax.veil;
 
 import java.time.Duration;
+import java.util.Locale;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
@@ -43,8 +44,14 @@ import org.apache.wicket.util.lang.Args;
  * alike, and can be changed per behavior with {@link #setSpinnerDelay(Duration)} and
  * {@link #setMinimumSpinnerTime(Duration)}. The veil does not intercept the keyboard.
  * <p>
+ * When the response redirects the browser to another page, the veil stays up until the browser
+ * leaves the page, so the request cannot be sent again meanwhile. A redirect that does not leave
+ * the page, such as one to a file download, leaves the veil up too; offer downloads through
+ * {@link org.apache.wicket.extensions.ajax.AjaxDownloadBehavior} instead.
+ * <p>
  * The look comes from {@code wicket-veil.css} and can be overridden with the classes
- * {@code wicket-veil}, {@code wicket-veil-busy} and {@code wicket-veil-host}.
+ * {@code wicket-veil}, {@code wicket-veil-busy}, {@code wicket-veil-host} and
+ * {@code wicket-veil-host-static}.
  * <p>
  * A request is left unveiled when it carries the extra parameter
  * {@value PageVeilBehavior#NO_VEIL_PARAMETER}, see {@link PageVeilBehavior#noVeil}.
@@ -144,7 +151,7 @@ public abstract class AbstractVeilBehavior extends Behavior
 	 */
 	protected final String getOptions()
 	{
-		return String.format("{\"delay\":%d,\"minimum\":%d}", getSpinnerDelay().toMillis(),
-			getMinimumSpinnerTime().toMillis());
+		return String.format(Locale.ROOT, "{\"delay\":%d,\"minimum\":%d}",
+			getSpinnerDelay().toMillis(), getMinimumSpinnerTime().toMillis());
 	}
 }
