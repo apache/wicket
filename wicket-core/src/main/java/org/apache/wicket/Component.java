@@ -400,6 +400,12 @@ public abstract class Component
 	 */
 	private static final String MARKUP_ID_ATTR_NAME = "id";
 
+	/** Characters a component id or a markup id must not contain, see {@link #isValidId(String)} */
+	private static final String INVALID_ID_CHARS = "'\"`\\()[]{}<>;";
+
+	private static final String INVALID_ID_MESSAGE =
+		"must not contain quotes, backslashes, brackets, ';' or control characters.";
+
 	/**
 	 * Meta data key for line precise error logging for the moment of addition. Made package private
 	 * for access in {@link MarkupContainer} and {@link Page}
@@ -762,6 +768,9 @@ public abstract class Component
 
 	/**
 	 * @return The 'id' attribute from the associated markup tag
+	 * @throws WicketRuntimeException
+	 *             if the id contains a quote, a backslash, a bracket, {@code ';'} or a control
+	 *             character
 	 */
 	public final String getMarkupIdFromMarkup()
 	{
@@ -771,7 +780,7 @@ public abstract class Component
 			String id = tag.getAttribute("id");
 			if (Strings.isEmpty(id) == false)
 			{
-				return id.trim();
+				return checkMarkupIdFromMarkup(id.trim());
 			}
 		}
 
@@ -1480,7 +1489,7 @@ public abstract class Component
 	 * @param createIfDoesNotExist
 	 *            When there is no existing markup id, determines whether it should be generated or
 	 *            whether <code>null</code> should be returned.
-	 * 
+	 *
 	 * @return markup id of the component
 	 */
 	public String getMarkupId(boolean createIfDoesNotExist)
@@ -2806,7 +2815,8 @@ public abstract class Component
 	}
 
 	/**
-	 * Set markup ID, which must be String or Integer
+	 * Set markup ID, which must be String or Integer. A String must not contain quotes,
+	 * backslashes, brackets, {@code ';'} or control characters.
 	 * 
 	 * @param markupId
 	 */
@@ -2815,6 +2825,11 @@ public abstract class Component
 		if (markupId != null && !(markupId instanceof String) && !(markupId instanceof Integer))
 		{
 			throw new IllegalArgumentException("markupId must be String or Integer");
+		}
+		if (markupId instanceof String && !isValidId((String)markupId))
+		{
+			throw new IllegalArgumentException(
+				"The markup id '" + markupId + "' " + INVALID_ID_MESSAGE);
 		}
 
 		setOutputMarkupId(true);
@@ -2860,7 +2875,9 @@ public abstract class Component
 	 * @see #getMarkupId()
 	 * 
 	 * @param markupId
-	 *            markup id value or null to clear any previous user defined value
+	 *            markup id value or null to clear any previous user defined value. It must not
+	 *            contain quotes, backslashes, brackets, {@code ';'} or control characters, because
+	 *            Wicket writes it into the JavaScript it generates.
 	 * @return this for chaining
 	 */
 	public Component setMarkupId(String markupId)
@@ -4274,6 +4291,55 @@ public abstract class Component
 		{
 			throw new WicketRuntimeException("The component ID must not contain ':' or '~' chars.");
 		}
+
+		if ((id != null) && !isValidId(id))
+		{
+			throw new WicketRuntimeException("The component ID '" + id + "' " + INVALID_ID_MESSAGE);
+		}
+	}
+
+	/**
+	 * Checks the characters of a component id or a markup id. Wicket writes both into the
+	 * JavaScript it generates, the markup id as it is and the component id as part of an input name,
+	 * so characters that can end a JavaScript string literal or statement are not allowed: quotes,
+	 * backslashes, brackets, {@code ';'} and control characters, line breaks included.
+	 *
+	 * @param id
+	 *            the id to check
+	 * @return {@code true} if no character of the id is disallowed
+	 */
+	private static boolean isValidId(final String id)
+	{
+		for (int i = 0; i < id.length(); i++)
+		{
+			char c = id.charAt(i);
+			if (INVALID_ID_CHARS.indexOf(c) != -1 || Character.isISOControl(c) || c == '\u2028' ||
+				c == '\u2029')
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Checks the characters of the id attribute in the markup of this component.
+	 *
+	 * @param markupId
+	 *            the id attribute
+	 * @return the id attribute
+	 * @throws WicketRuntimeException
+	 *             if the id attribute contains a character that is not allowed
+	 * @see #isValidId(String)
+	 */
+	private String checkMarkupIdFromMarkup(final String markupId)
+	{
+		if (!isValidId(markupId))
+		{
+			throw new WicketRuntimeException("The id attribute '" + markupId +
+				"' in the markup of " + this + " " + INVALID_ID_MESSAGE);
+		}
+		return markupId;
 	}
 
 	/**

@@ -18,9 +18,13 @@ package org.apache.wicket.extensions.ajax.markup.html.repeater;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -70,16 +74,13 @@ class AjaxListPanelTest extends WicketTestCase
 	@Test
 	void appendedMarkupStaysInsideItsJavaScriptStringLiteral()
 	{
-		final String backslashBeforeQuote = "a\\';b";
-
-		final AjaxListPanel list = new AjaxListPanel("list");
+		final AjaxListPanel list = new BackslashBeforeQuotePanel("list");
 
 		AjaxEventBehavior behavior = new AjaxEventBehavior("click") {
 			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
 				Label label = new Label(list.newChildId());
-				label.setMarkupId(backslashBeforeQuote);
 				list.append(label, target);
 			}
 		};
@@ -91,5 +92,29 @@ class AjaxListPanelTest extends WicketTestCase
 
 		String response = tester.getLastResponseAsString();
 		assertTrue(response.contains("a\\\\&#039;;b"), "no markup was appended");
+	}
+
+	/**
+	 * A list panel whose repeater tag carries a backslash before a quote, which ends up in the
+	 * appended markup.
+	 */
+	private static class BackslashBeforeQuotePanel extends AjaxListPanel
+		implements
+			IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		BackslashBeforeQuotePanel(String id)
+		{
+			super(id);
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("<wicket:panel><div wicket:id=\"container\">" +
+				"<div wicket:id=\"repeater\" title=\"a\\';b\"></div></div></wicket:panel>");
+		}
 	}
 }
