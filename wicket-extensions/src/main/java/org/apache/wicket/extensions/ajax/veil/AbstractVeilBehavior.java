@@ -44,11 +44,6 @@ import org.apache.wicket.util.lang.Args;
  * alike, and can be changed per behavior with {@link #setSpinnerDelay(Duration)} and
  * {@link #setMinimumSpinnerTime(Duration)}. The veil does not intercept the keyboard.
  * <p>
- * When the response redirects the browser to another page, the veil stays up until the browser
- * leaves the page, so the request cannot be sent again meanwhile. A redirect that does not leave
- * the page, such as one to a file download, leaves the veil up too; offer downloads through
- * {@link org.apache.wicket.extensions.ajax.AjaxDownloadBehavior} instead.
- * <p>
  * The look comes from {@code wicket-veil.css} and can be overridden with the classes
  * {@code wicket-veil}, {@code wicket-veil-busy}, {@code wicket-veil-host} and
  * {@code wicket-veil-host-static}.

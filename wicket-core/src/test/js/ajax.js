@@ -1327,46 +1327,6 @@ Wicket.Event.add(window, 'domready', function() {
 			Wicket.Event.remove(window, "event1");
 		});
 
-		test('The done topic tells its subscribers that the response redirects.', assert => {
-			const done = assert.async();
-			assert.expect(1);
-
-			var oldRedirect = Wicket.Ajax.redirect;
-			Wicket.Ajax.redirect = function() {};
-
-			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attributes, isRedirecting) {
-				assert.strictEqual(isRedirecting, true, 'Done: isRedirecting');
-				Wicket.Event.unsubscribe();
-				Wicket.Ajax.redirect = oldRedirect;
-				done();
-			});
-
-			Wicket.Ajax.ajax({
-				u: 'data/ajax/redirectAjaxResponse.xml',
-				e: 'event1'
-			});
-			Wicket.Event.fire(window, "event1");
-			Wicket.Event.remove(window, "event1");
-		});
-
-		test('The done topic tells its subscribers that the response does not redirect.', assert => {
-			const done = assert.async();
-			assert.expect(1);
-
-			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attributes, isRedirecting) {
-				assert.strictEqual(isRedirecting, false, 'Done: isRedirecting');
-				Wicket.Event.unsubscribe();
-				done();
-			});
-
-			Wicket.Ajax.ajax({
-				u: 'data/ajax/emptyAjaxResponse.xml',
-				e: 'event1'
-			});
-			Wicket.Event.fire(window, "event1");
-			Wicket.Event.remove(window, "event1");
-		});
-
 		test('processAjaxResponse, normal HTTP case.', assert => {
 			const done = assert.async();
 			assert.expect(2);
