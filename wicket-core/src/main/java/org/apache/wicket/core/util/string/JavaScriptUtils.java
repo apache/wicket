@@ -113,7 +113,11 @@ public class JavaScriptUtils
 	 *
 	 * @param s the single-quoted string
 	 * @return the contents between the outer single quotes
+	 * @deprecated no longer used:
+	 *             {@link org.apache.wicket.markup.html.link.PopupSettings#getPopupJavaScript()}
+	 *             writes its target as given
 	 */
+	@Deprecated(forRemoval = true)
 	public static String unquoteSingleQuoted(String s)
 	{
 		if (s != null)

@@ -191,7 +191,7 @@ public class ExternalLink extends AbstractLink
 		{
 			if (popupSettings != null)
 			{
-				popupSettings.setTarget("'" + url + "'");
+				popupSettings.setTarget("'" + escapeQuotes(url) + "'");
 				response.render(OnEventHeaderItem.forComponent(this, "click",
 					popupSettings.getPopupJavaScript()));
 				return;
