@@ -23,6 +23,7 @@
 	}
 
 	Wicket.WUPB = Wicket.Class.create();
+	Wicket.WUPB.instances = {};
 	Wicket.WUPB.prototype = {
 
 		initialize : function(formid, statusid, barid, url, fileid, initialStatus, onProgressUpdated) {

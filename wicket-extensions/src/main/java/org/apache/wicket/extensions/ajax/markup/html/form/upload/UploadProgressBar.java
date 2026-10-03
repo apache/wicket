@@ -285,7 +285,7 @@ public class UploadProgressBar extends Panel
 	}
 
 	private String getVarName() {
-		return "window.upb_" + barDiv.getMarkupId();
+		return "Wicket.WUPB.instances['" + barDiv.getMarkupId() + "']";
 	}
 
 
