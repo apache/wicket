@@ -43,7 +43,7 @@
 	const MESSAGE_PREFIX = '{"wicketVeil"';
 
 	let pageTarget = null;
-	const localTargets = new Map();
+	let localTargets = Object.create(null);
 	let subscribed = false;
 
 	// the veil scrolls with the content of its host, so it is moved back over the visible part
@@ -98,7 +98,7 @@
 			node = typeof(attrs.c) === "string" ? document.getElementById(attrs.c) : null;
 		}
 		for (; node && node !== document; node = node.parentNode) {
-			const target = node.id && localTargets.get(node.id);
+			const target = node.id && localTargets[node.id];
 			if (target) {
 				return target;
 			}
@@ -107,11 +107,11 @@
 	}
 
 	function dropStaleTargets() {
-		for (const [id, target] of localTargets) {
-			if (target.count === 0 && !document.getElementById(id)) {
-				localTargets.delete(id);
+		Object.keys(localTargets).forEach(function (id) {
+			if (localTargets[id].count === 0 && !document.getElementById(id)) {
+				delete localTargets[id];
 			}
-		}
+		});
 	}
 
 	function attach(target, host) {
@@ -222,7 +222,9 @@
 	}
 
 	function lowerAll() {
-		const targets = Array.from(localTargets.values());
+		const targets = Object.keys(localTargets).map(function (id) {
+			return localTargets[id];
+		});
 		if (pageTarget !== null) {
 			targets.push(pageTarget);
 		}
@@ -256,9 +258,9 @@
 	}
 
 	function onDomNodeAdded() {
-		for (const target of localTargets.values()) {
-			reattach(target);
-		}
+		Object.keys(localTargets).forEach(function (id) {
+			reattach(localTargets[id]);
+		});
 	}
 
 	function onWebSocketMessage(jqEvent, message) {
@@ -314,11 +316,11 @@
 		 */
 		local: function (id, options) {
 			subscribe();
-			const target = localTargets.get(id);
+			const target = localTargets[id];
 			if (target) {
 				configure(target, options);
 			} else {
-				localTargets.set(id, createTarget(id, options));
+				localTargets[id] = createTarget(id, options);
 			}
 		},
 
@@ -329,7 +331,7 @@
 		 * @param id {String} - the markup id of a component with a local veil
 		 */
 		show: function (id) {
-			const target = localTargets.get(id);
+			const target = localTargets[id];
 			if (target && document.getElementById(id)) {
 				target.raised++;
 				acquire(target);
@@ -344,7 +346,7 @@
 		 * @param id {String} - the markup id of a component with a local veil
 		 */
 		hide: function (id) {
-			const target = localTargets.get(id);
+			const target = localTargets[id];
 			if (target && target.raised > 0) {
 				target.raised--;
 				releaseOne(target);
@@ -368,7 +370,7 @@
 		_reset: function () {
 			lowerAll();
 			pageTarget = null;
-			localTargets.clear();
+			localTargets = Object.create(null);
 		}
 	};
 })();
