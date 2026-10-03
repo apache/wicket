@@ -16,6 +16,14 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
+import static org.junit.Assert.assertTrue;
+
+import java.util.Locale;
+
+import org.apache.wicket.Component;
+import org.apache.wicket.core.util.string.CssUtils;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
@@ -25,5 +33,35 @@ public class FilterFormTest extends WicketTestCase
 	@Test
 	public void test() throws Exception {
 		executeTest(FilterFormTestPage.class, "FilterFormTestPage_expected.html");
+	}
+
+	/**
+	 * The css class from the resource bundle is written into the markup of the hidden fields.
+	 */
+	@Test
+	public void cssClassIsEscapedAsMarkup()
+	{
+		tester.getApplication().getResourceSettings().getStringResourceLoaders().add(0,
+			new IStringResourceLoader()
+			{
+				@Override
+				public String loadStringResource(Class<?> clazz, String key, Locale locale,
+					String style, String variation)
+				{
+					return CssUtils.key(Form.class, "hidden-fields").equals(key) ? "a'b" : null;
+				}
+
+				@Override
+				public String loadStringResource(Component component, String key, Locale locale,
+					String style, String variation)
+				{
+					return loadStringResource((Class<?>)null, key, locale, style, variation);
+				}
+			});
+
+		tester.startPage(FilterFormTestPage.class);
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response, response.contains("class='a&#039;b'"));
 	}
 }

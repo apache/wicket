@@ -93,7 +93,7 @@ public class FilterForm<T> extends Form<T>
 		getResponse().write(
 			String.format(
 				"<div style='position: absolute; left: -9999px; width: 1px; height: 1px;' class='%s'><input type='hidden' name='%s' id='%s' value='%s'/><input type='submit'/></div>",
-				cssClass, id, id, Strings.escapeMarkup(value)));
+				Strings.escapeMarkup(cssClass), id, id, Strings.escapeMarkup(value)));
 	}
 
 	/**
