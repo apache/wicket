@@ -66,6 +66,20 @@ class UploadProgressBarTest extends WicketTestCase
 		assertTrue(response.contains("'l\\'\\\\envoi'"), response);
 	}
 
+	/**
+	 * The progress bar instance is kept in a map keyed by the markup id of the bar, so an id that
+	 * is not a legal JavaScript identifier, e.g. one carrying a hyphen or a dot, still works.
+	 */
+	@Test
+	void barMarkupIdNeedNotBeAJavaScriptIdentifier()
+	{
+		tester.startPage(new CustomBarIdPage());
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains("Wicket.WUPB.instances['my-bar.1'] = new Wicket.WUPB("),
+			response);
+	}
+
 	private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
@@ -75,6 +89,37 @@ class UploadProgressBarTest extends WicketTestCase
 			Form<Void> form = new Form<>("form");
 			add(form);
 			form.add(new UploadProgressBar("bar", form));
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><head></head><body>" +
+				"<form wicket:id=\"form\"><div wicket:id=\"bar\"></div></form></body></html>");
+		}
+	}
+
+	private static class CustomBarIdPage extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		CustomBarIdPage()
+		{
+			Form<Void> form = new Form<>("form");
+			add(form);
+			form.add(new UploadProgressBar("bar", form)
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected MarkupContainer newBarComponent(String id)
+				{
+					MarkupContainer bar = super.newBarComponent(id);
+					bar.setMarkupId("my-bar.1");
+					return bar;
+				}
+			});
 		}
 
 		@Override
