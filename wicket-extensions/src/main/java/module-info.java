@@ -46,6 +46,7 @@ module org.apache.wicket.extensions {
     exports org.apache.wicket.extensions.captcha.kittens;
     exports org.apache.wicket.extensions.markup.html.basic;
     exports org.apache.wicket.extensions.markup.html.captcha;
+    exports org.apache.wicket.extensions.markup.html.clipboard;
     exports org.apache.wicket.extensions.markup.html.collapsible;
     exports org.apache.wicket.extensions.markup.html.floating;
     exports org.apache.wicket.extensions.markup.html.form;
@@ -89,6 +90,7 @@ module org.apache.wicket.extensions {
     opens org.apache.wicket.extensions.breadcrumb;
     opens org.apache.wicket.extensions.captcha.kittens;
     opens org.apache.wicket.extensions.captcha.kittens.images;
+    opens org.apache.wicket.extensions.markup.html.clipboard;
     opens org.apache.wicket.extensions.markup.html.collapsible;
     opens org.apache.wicket.extensions.markup.html.floating;
     opens org.apache.wicket.extensions.markup.html.form.palette;
