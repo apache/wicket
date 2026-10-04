@@ -55,6 +55,7 @@ module org.apache.wicket.extensions {
     exports org.apache.wicket.extensions.markup.html.form.palette.component;
     exports org.apache.wicket.extensions.markup.html.form.palette.theme;
     exports org.apache.wicket.extensions.markup.html.form.select;
+    exports org.apache.wicket.extensions.markup.html.icon;
     exports org.apache.wicket.extensions.markup.html.image.resource;
     exports org.apache.wicket.extensions.markup.html.repeater.data.grid;
     exports org.apache.wicket.extensions.markup.html.repeater.data.sort;
