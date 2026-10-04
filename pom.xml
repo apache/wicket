@@ -170,6 +170,7 @@
 		<el-impl.version>2.2.1-b05</el-impl.version>
 		<error_prone_annotations.version>2.50.0</error_prone_annotations.version>
 		<forbiddenapis.version>3.11</forbiddenapis.version>
+		<fontawesome-free.version>7.3.1</fontawesome-free.version>
 		<jacoco.version>0.8.15</jacoco.version>
 		<jackson.version>3.2.3</jackson.version>
 		<jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
@@ -612,6 +613,11 @@
 						<artifactId>commons-logging</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars.npm</groupId>
+				<artifactId>fortawesome__fontawesome-free</artifactId>
+				<version>${fontawesome-free.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>tools.jackson.core</groupId>
