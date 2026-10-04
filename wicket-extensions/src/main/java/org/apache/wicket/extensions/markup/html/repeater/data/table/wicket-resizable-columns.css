@@ -1,0 +1,118 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+table.wicket-resizable-columns th {
+	position: relative;
+}
+
+table.wicket-resizable-columns th,
+table.wicket-resizable-columns td {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+table.wicket-resizable-columns th:has(> .wicket-col-resizer) {
+	padding-right: 12px;
+}
+
+.wicket-col-resizer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 10px;
+	height: 100%;
+	cursor: col-resize;
+	z-index: 1;
+	user-select: none;
+}
+
+.wicket-col-resizer::after {
+	content: "||";
+	font-size: 0.7em;
+	letter-spacing: -1px;
+	opacity: 0.55;
+}
+
+.wicket-col-resizer:hover,
+.wicket-col-resizer:focus-visible {
+	background: var(--wicket-theme-primary-dark, rgba(47, 128, 201, 0.35));
+	outline: none;
+}
+
+.wicket-col-resizer:hover::after,
+.wicket-col-resizer:focus-visible::after {
+	content: "";
+	width: 2px;
+	height: 100%;
+	background: var(--wicket-theme-on-primary, currentColor);
+	opacity: 1;
+}
+
+.wicket-col-resize-guide {
+	position: absolute;
+	width: 2px;
+	margin-left: -1px;
+	background: var(--wicket-theme-accent, #2f80c9);
+	z-index: 1000;
+	pointer-events: none;
+}
+
+.wicket-col-resize-guide::before,
+.wicket-col-resize-guide::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	margin-left: -7px;
+	border: 7px solid transparent;
+}
+
+.wicket-col-resize-guide::before {
+	top: -14px;
+	border-top-color: var(--wicket-theme-accent, #2f80c9);
+}
+
+.wicket-col-resize-guide::after {
+	bottom: -14px;
+	border-bottom-color: var(--wicket-theme-accent, #2f80c9);
+}
+
+.wicket-col-resize-label {
+	position: absolute;
+	top: 4px;
+	left: 6px;
+	padding: 0.1em 0.4em;
+	border-radius: 0.2em;
+	background: var(--wicket-theme-accent, #2f80c9);
+	color: var(--wicket-theme-on-primary, #fff);
+	font-size: 0.8em;
+	white-space: nowrap;
+}
+
+.wicket-col-resize-band {
+	position: absolute;
+	z-index: 999;
+	background: var(--wicket-theme-accent, #2f80c9);
+	opacity: 0.12;
+	pointer-events: none;
+}
+
+table.wicket-resizing {
+	cursor: col-resize;
+	user-select: none;
+}

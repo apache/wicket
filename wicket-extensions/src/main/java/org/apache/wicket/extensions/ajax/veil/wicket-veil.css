@@ -40,7 +40,7 @@
 }
 
 .wicket-veil-busy {
-	background: rgba(255, 255, 255, 0.5);
+	background: var(--wicket-theme-veil, rgba(255, 255, 255, 0.5));
 }
 
 .wicket-veil-busy::after {
@@ -52,8 +52,8 @@
 	width: 2.5em;
 	height: 2.5em;
 	margin: -1.25em 0 0 -1.25em;
-	border: 0.3em solid rgba(0, 0, 0, 0.15);
-	border-top-color: rgba(0, 0, 0, 0.6);
+	border: 0.3em solid var(--wicket-theme-track, rgba(0, 0, 0, 0.15));
+	border-top-color: var(--wicket-theme-accent, rgba(0, 0, 0, 0.6));
 	border-radius: 50%;
 	animation: wicket-veil-spin 0.8s linear infinite;
 }

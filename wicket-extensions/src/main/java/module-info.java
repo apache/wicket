@@ -25,6 +25,7 @@ module org.apache.wicket.extensions {
     requires org.apache.wicket.util;
     requires org.apache.wicket.request;
     requires org.apache.wicket.core;
+    requires static org.apache.wicket.websocket.core;
     requires org.danekja.jdk.serializable.functional;
 
     provides org.apache.wicket.IInitializer with org.apache.wicket.extensions.Initializer;
@@ -39,6 +40,7 @@ module org.apache.wicket.extensions {
     exports org.apache.wicket.extensions.ajax.markup.html.repeater;
     exports org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
     exports org.apache.wicket.extensions.ajax.markup.html.repeater.data.table;
+    exports org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.dynamic;
     exports org.apache.wicket.extensions.ajax.markup.html.tabs;
     exports org.apache.wicket.extensions.ajax.veil;
     exports org.apache.wicket.extensions.breadcrumb;
@@ -46,13 +48,18 @@ module org.apache.wicket.extensions {
     exports org.apache.wicket.extensions.captcha.kittens;
     exports org.apache.wicket.extensions.markup.html.basic;
     exports org.apache.wicket.extensions.markup.html.captcha;
+    exports org.apache.wicket.extensions.markup.html.clipboard;
+    exports org.apache.wicket.extensions.markup.html.collapsible;
+    exports org.apache.wicket.extensions.markup.html.floating;
     exports org.apache.wicket.extensions.markup.html.form;
     exports org.apache.wicket.extensions.markup.html.form.datetime;
     exports org.apache.wicket.extensions.markup.html.form.palette;
     exports org.apache.wicket.extensions.markup.html.form.palette.component;
     exports org.apache.wicket.extensions.markup.html.form.palette.theme;
     exports org.apache.wicket.extensions.markup.html.form.select;
+    exports org.apache.wicket.extensions.markup.html.icon;
     exports org.apache.wicket.extensions.markup.html.image.resource;
+    exports org.apache.wicket.extensions.markup.html.progress;
     exports org.apache.wicket.extensions.markup.html.repeater.data.grid;
     exports org.apache.wicket.extensions.markup.html.repeater.data.sort;
     exports org.apache.wicket.extensions.markup.html.repeater.data.table;
@@ -68,6 +75,7 @@ module org.apache.wicket.extensions {
     exports org.apache.wicket.extensions.model;
     exports org.apache.wicket.extensions.rating;
     exports org.apache.wicket.extensions.requestlogger;
+    exports org.apache.wicket.extensions.theme;
     exports org.apache.wicket.extensions.util.encoding;
     exports org.apache.wicket.extensions.validation.validator;
     exports org.apache.wicket.extensions.wizard;
@@ -81,15 +89,20 @@ module org.apache.wicket.extensions {
     opens org.apache.wicket.extensions.ajax.markup.html.autocomplete;
     opens org.apache.wicket.extensions.ajax.markup.html.repeater;
     opens org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
+    opens org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.dynamic;
     opens org.apache.wicket.extensions.ajax.markup.html.modal;
     opens org.apache.wicket.extensions.ajax.markup.html.modal.theme;
     opens org.apache.wicket.extensions.ajax.veil;
     opens org.apache.wicket.extensions.breadcrumb;
     opens org.apache.wicket.extensions.captcha.kittens;
     opens org.apache.wicket.extensions.captcha.kittens.images;
+    opens org.apache.wicket.extensions.markup.html.clipboard;
+    opens org.apache.wicket.extensions.markup.html.collapsible;
+    opens org.apache.wicket.extensions.markup.html.floating;
     opens org.apache.wicket.extensions.markup.html.form.palette;
     opens org.apache.wicket.extensions.markup.html.form.palette.theme;
     opens org.apache.wicket.extensions.markup.html.form.datetime;
+    opens org.apache.wicket.extensions.markup.html.progress;
     opens org.apache.wicket.extensions.markup.html.tabs;
     opens org.apache.wicket.extensions.markup.html.repeater.tree;
     opens org.apache.wicket.extensions.markup.html.repeater.tree.nested;
@@ -99,6 +112,7 @@ module org.apache.wicket.extensions {
     opens org.apache.wicket.extensions.markup.html.repeater.data.table;
     opens org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
     opens org.apache.wicket.extensions.rating;
+    opens org.apache.wicket.extensions.theme;
     opens org.apache.wicket.extensions.util.encoding;
     opens org.apache.wicket.extensions.wizard;
 

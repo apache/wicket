@@ -29,6 +29,8 @@ public class RepeaterApplication extends WicketExampleApplication
 {
 	private final ContactsDatabase contactsDB = new ContactsDatabase(50);
 
+	private final ContactsDatabase largeContactsDB = new ContactsDatabase(1000);
+
 	@Override
 	protected void init()
 	{
@@ -36,6 +38,10 @@ public class RepeaterApplication extends WicketExampleApplication
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 
 		getMarkupSettings().setStripWicketTags(true);
+
+		mountPage("dynamic-data-table", DynamicDataTablePage.class);
+		mountPage("icons", IconsPage.class);
+		mountResource(FontAwesomeResourceReference.PATH, FontAwesomeResourceReference.INSTANCE);
 	}
 
 	/**
@@ -44,6 +50,14 @@ public class RepeaterApplication extends WicketExampleApplication
 	public ContactsDatabase getContactsDB()
 	{
 		return contactsDB;
+	}
+
+	/**
+	 * @return a contacts database of a thousand contacts, for the examples that page through many
+	 */
+	public ContactsDatabase getLargeContactsDB()
+	{
+		return largeContactsDB;
 	}
 
 	@Override

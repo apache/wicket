@@ -140,6 +140,17 @@ public class ContactsDatabase
 	}
 
 	/**
+	 * Keeps the sort orders right after a contact was changed in place.
+	 * 
+	 * @param contact
+	 *            the changed contact
+	 */
+	public void update(final Contact contact)
+	{
+		updateIndecies();
+	}
+
+	/**
 	 * delete contact from the database
 	 * 
 	 * @param contact

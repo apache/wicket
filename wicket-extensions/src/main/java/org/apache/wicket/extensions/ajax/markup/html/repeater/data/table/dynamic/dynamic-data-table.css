@@ -1,0 +1,463 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.dynamic-data-table-header {
+	display: flex;
+	align-items: center;
+	gap: 0.3em;
+}
+
+.dynamic-data-table-header > .dynamic-data-table-sort,
+.dynamic-data-table-header > .dynamic-data-table-sort-title {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+a.dynamic-data-table-sort[href] {
+	display: flex;
+	align-items: center;
+	color: inherit;
+	text-decoration: none;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.dynamic-data-table-sort-title {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.dynamic-data-table-sort-arrows {
+	display: inline-flex;
+	flex: none;
+	flex-direction: column;
+	font-size: 0.6em;
+	line-height: 1;
+	color: inherit;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.dynamic-data-table-move {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	padding: 0.15em 0.1em;
+	border: none;
+	border-radius: 0.2em;
+	background: transparent;
+	color: inherit;
+	opacity: 0.6;
+	cursor: grab;
+}
+
+.dynamic-data-table-move:hover,
+.dynamic-data-table-move:focus-visible {
+	opacity: 1;
+}
+
+.dynamic-data-table-move:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 1px;
+}
+
+.dynamic-data-table-move {
+	touch-action: none;
+}
+
+table.dynamic-data-table-dragging,
+table.dynamic-data-table-dragging .dynamic-data-table-move {
+	cursor: grabbing;
+	user-select: none;
+}
+
+table.dynamic-data-table-dragging.dynamic-data-table-no-drop,
+table.dynamic-data-table-dragging.dynamic-data-table-no-drop .dynamic-data-table-move {
+	cursor: no-drop;
+}
+
+table.dynamic-data-table .dynamic-data-table-moving {
+	opacity: 0.4;
+}
+
+.dynamic-data-table-move-ghost {
+	position: absolute;
+	z-index: 1001;
+	padding: 0.3em 0.6em;
+	border-radius: 0.2em;
+	background: var(--wicket-theme-primary, #1f3a68);
+	color: var(--wicket-theme-on-primary, #fff);
+	font-weight: 600;
+	white-space: nowrap;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+	opacity: 0.9;
+	pointer-events: none;
+}
+
+.dynamic-data-table-drop-marker {
+	position: absolute;
+	z-index: 1000;
+	width: 3px;
+	margin-left: -1.5px;
+	background: var(--wicket-theme-accent, #2f80c9);
+	pointer-events: none;
+}
+
+.dynamic-data-table-drop-marker::before,
+.dynamic-data-table-drop-marker::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	margin-left: -7px;
+	border: 7px solid transparent;
+}
+
+.dynamic-data-table-drop-marker::before {
+	top: -14px;
+	border-top-color: var(--wicket-theme-accent, #2f80c9);
+}
+
+.dynamic-data-table-drop-marker::after {
+	bottom: -14px;
+	border-bottom-color: var(--wicket-theme-accent, #2f80c9);
+}
+
+.dynamic-data-table-sort-asc,
+.dynamic-data-table-sort-desc {
+	opacity: 0.35;
+}
+
+.wicket_orderUp .dynamic-data-table-sort-asc,
+.wicket_orderDown .dynamic-data-table-sort-desc {
+	opacity: 1;
+	font-weight: bold;
+}
+
+.dynamic-data-table-navigation {
+	font-weight: 600;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5em 1.5em;
+}
+
+.dynamic-data-table-navigation > div {
+	display: inline-block;
+}
+
+.dynamic-data-table-navigation > .dynamic-data-table-paging {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5em 1.5em;
+}
+
+.dynamic-data-table-navigation :is(input[type="text"], input[type="search"], select) {
+	padding: 0.15em 0.4em;
+	border: 1px solid var(--wicket-theme-border, ButtonBorder);
+	border-radius: 0.3em;
+	background: var(--wicket-theme-surface, Field);
+	color: var(--wicket-theme-text, FieldText);
+	font: inherit;
+	font-weight: normal;
+}
+
+.dynamic-data-table-navigation :is(input, select):focus-visible {
+	outline: 2px solid var(--wicket-theme-accent, Highlight);
+	outline-offset: -1px;
+}
+
+.dynamic-data-table-actions {
+	white-space: nowrap;
+}
+
+.dynamic-data-table-action {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 1.8em;
+	min-height: 1.8em;
+	border: 1px solid currentColor;
+	border-radius: 0.3em;
+	color: inherit;
+	text-decoration: none;
+	vertical-align: middle;
+}
+
+table.dynamic-data-table .dynamic-data-table-action:hover,
+table.dynamic-data-table .dynamic-data-table-action:focus-visible {
+	background: var(--wicket-theme-accent, #2f80c9);
+	color: var(--wicket-theme-on-primary, #ffffff);
+}
+
+.dynamic-data-table-page-size {
+	margin-left: auto;
+	white-space: nowrap;
+}
+
+table.dynamic-data-table > thead > tr > td,
+table.dynamic-data-table > tfoot > tr > td {
+	overflow: visible;
+}
+
+.dynamic-data-table-column-chooser {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.dynamic-data-table-column-chooser > summary {
+	list-style: none;
+	cursor: pointer;
+}
+
+.dynamic-data-table-column-chooser > summary::-webkit-details-marker {
+	display: none;
+}
+
+.dynamic-data-table-column-chooser-menu {
+	position: absolute;
+	top: calc(100% + 0.3em);
+	right: 0;
+	z-index: 20;
+	min-width: 12em;
+	padding: 0.4em;
+	border: 1px solid var(--wicket-theme-border, #c5d0de);
+	border-radius: 0.3em;
+	background: var(--wicket-theme-surface, #ffffff);
+	color: var(--wicket-theme-text, #1f2933);
+	box-shadow: 0 0.3em 1em rgba(0, 0, 0, 0.2);
+	font-weight: normal;
+	text-align: left;
+}
+
+table.dynamic-data-table > tfoot .dynamic-data-table-column-chooser-menu {
+	top: auto;
+	bottom: calc(100% + 0.3em);
+}
+
+.dynamic-data-table-column-chooser-menu > ul {
+	margin: 0 0 0.4em 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dynamic-data-table-column-chooser-column {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	box-sizing: border-box;
+	width: 100%;
+	padding: 0.25em 0.5em;
+	border: none;
+	border-radius: 0.2em;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	text-align: left;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.dynamic-data-table-column-chooser-column:hover,
+.dynamic-data-table-column-chooser-column:focus-visible {
+	background: var(--wicket-theme-hover, rgba(0, 0, 0, 0.06));
+	outline: none;
+}
+
+.dynamic-data-table-column-chooser-tick {
+	flex: none;
+	width: 1em;
+	color: var(--wicket-theme-accent, inherit);
+	font-weight: bold;
+	visibility: hidden;
+}
+
+.dynamic-data-table-column-chooser-column[aria-pressed="true"]
+	> .dynamic-data-table-column-chooser-tick {
+	visibility: visible;
+}
+
+.dynamic-data-table-column-chooser-menu > .dynamic-data-table-button {
+	width: 100%;
+}
+
+.dynamic-data-table-column-chooser-menu > .dynamic-data-table-button:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+
+.dynamic-data-table-selection-toolbar > td {
+	text-align: center;
+}
+
+th.dynamic-data-table-selection,
+td.dynamic-data-table-selection {
+	width: 2em;
+	text-align: center;
+}
+
+/*
+ * Colors come from the theme properties (see wicket-theme.css); without a theme the table keeps
+ * the colors of the page.
+ */
+table.dynamic-data-table :is(input, select, textarea, button) {
+	color-scheme: var(--wicket-theme-color-scheme);
+	accent-color: var(--wicket-theme-accent);
+}
+
+table.dynamic-data-table {
+	color: var(--wicket-theme-text);
+	border-bottom: 2px solid var(--wicket-theme-primary);
+}
+
+table.dynamic-data-table > thead > tr > th {
+	background: var(--wicket-theme-primary);
+	color: var(--wicket-theme-on-primary);
+}
+
+table.dynamic-data-table > thead > tr > th a,
+table.dynamic-data-table > thead > tr > th a:visited {
+	color: inherit;
+}
+
+table.dynamic-data-table > tbody > tr.even {
+	background: var(--wicket-theme-surface);
+}
+
+table.dynamic-data-table > tbody > tr.odd {
+	background: var(--wicket-theme-surface-alt);
+}
+
+table.dynamic-data-table > tbody > tr:hover {
+	background: var(--wicket-theme-hover);
+}
+
+table.dynamic-data-table > tbody > tr.selected {
+	background: var(--wicket-theme-selected);
+}
+
+table.dynamic-data-table > tbody a,
+table.dynamic-data-table > tbody a:visited {
+	color: var(--wicket-theme-accent);
+}
+
+table.dynamic-data-table > thead > tr > td,
+table.dynamic-data-table > tfoot > tr > td {
+	background: var(--wicket-theme-toolbar);
+	color: var(--wicket-theme-text);
+}
+
+table.dynamic-data-table > thead > tr.dynamic-data-table-selection-toolbar > td,
+table.dynamic-data-table > tfoot > tr.dynamic-data-table-selection-toolbar > td {
+	background: var(--wicket-theme-highlight);
+}
+
+table.dynamic-data-table tr.dynamic-data-table-selection-toolbar a,
+table.dynamic-data-table .dynamic-data-table-action {
+	color: var(--wicket-theme-accent);
+}
+
+table.dynamic-data-table {
+	position: relative;
+}
+
+table.dynamic-data-table > tbody > tr > td {
+	vertical-align: middle;
+}
+
+.dynamic-data-table-icon-action {
+	padding: 0.1em;
+	background: transparent;
+	color: var(--wicket-theme-accent, inherit);
+	font: inherit;
+	cursor: pointer;
+}
+
+.dynamic-data-table-icon-action + .dynamic-data-table-icon-action {
+	margin-left: 0.3em;
+}
+
+table.dynamic-data-table > tbody > tr > td:has(> .dynamic-data-table-icon-action) {
+	white-space: nowrap;
+}
+
+caption.dynamic-data-table-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 10;
+	display: block;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+}
+
+caption.dynamic-data-table-overlay[hidden] {
+	display: none;
+}
+
+.dynamic-data-table-overlay-veil {
+	position: absolute;
+	inset: 0;
+	background: var(--wicket-theme-veil, rgba(31, 41, 51, 0.45));
+}
+
+.dynamic-data-table-overlay-window {
+	position: absolute;
+	top: 1em;
+	left: 50%;
+	transform: translateX(-50%);
+	box-sizing: border-box;
+	width: max-content;
+	min-width: min(20em, calc(100% - 2em));
+	max-width: calc(100% - 2em);
+}
+
+.dynamic-data-table-confirmation-question {
+	margin: 0 0 1em 0;
+	font-weight: bold;
+}
+
+.dynamic-data-table-overlay-buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5em;
+}
+
+.dynamic-data-table-button {
+	padding: 0.3em 1em;
+	border: 1px solid var(--wicket-theme-border, #9aa5b1);
+	border-radius: 0.3em;
+	background: var(--wicket-theme-toolbar, #f4f6f9);
+	color: var(--wicket-theme-text, #1f2933);
+	font: inherit;
+	cursor: pointer;
+}
+
+.dynamic-data-table-button-primary {
+	border-color: var(--wicket-theme-primary-dark, #142a4f);
+	background: var(--wicket-theme-primary, #1f3a68);
+	color: var(--wicket-theme-on-primary, #ffffff);
+}
+
+.dynamic-data-table-button:focus-visible,
+.dynamic-data-table-icon-action:focus-visible {
+	outline: 2px solid var(--wicket-theme-accent, Highlight);
+	outline-offset: 1px;
+}

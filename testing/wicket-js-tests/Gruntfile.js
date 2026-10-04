@@ -34,7 +34,11 @@ module.exports = function(grunt) {
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/autocomplete/wicket-autocomplete.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/filter/wicket-filterform.js",
-			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/veil/wicket-veil.js"
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/veil/wicket-veil.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/repeater/data/table/dynamic/dynamic-data-table.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/repeater/data/table/dynamic/handlebars-adapter.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/wicket-resizable-columns.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/clipboard/wicket-clipboard.js"
 		],
 		nativeWebSocketJs = [
 			"../../wicket-native-websocket/wicket-native-websocket-core/src/main/java/org/apache/wicket/protocol/ws/api/res/js/wicket-websocket-jquery.js"
@@ -51,7 +55,11 @@ module.exports = function(grunt) {
 		extensionsTestsJs = [
 			"../../wicket-extensions/src/test/js/palette-test.js",
 			"../../wicket-extensions/src/test/js/trapfocus-test.js",
-			"../../wicket-extensions/src/test/js/veil-test.js"
+			"../../wicket-extensions/src/test/js/veil-test.js",
+			"../../wicket-extensions/src/test/js/dynamic-data-table-test.js",
+			"../../wicket-extensions/src/test/js/resizable-columns-test.js",
+			"../../wicket-extensions/src/test/js/clipboard-test.js",
+			"../../wicket-extensions/src/test/js/progress-bar-test.js"
 		],
 		gymTestsJs = [
 			"../../wicket-examples/src/main/webapp/js-test/tests/ajax/form.js",
@@ -118,7 +126,11 @@ module.exports = function(grunt) {
 						'http://localhost:38887/test/js/all.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?4.0.0',
-						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?4.0.0'
+						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/dynamic-data-table.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/resizable-columns.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/clipboard.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/progress-bar.html?4.0.0'
 					],
 					puppeteer: {
 						headless: true,
@@ -137,7 +149,11 @@ module.exports = function(grunt) {
 						'http://localhost:38887/test/js/all.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?vanilla',
-						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?vanilla'
+						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/dynamic-data-table.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/resizable-columns.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/clipboard.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/progress-bar.html?vanilla'
 					],
 					puppeteer: {
 						headless: true,

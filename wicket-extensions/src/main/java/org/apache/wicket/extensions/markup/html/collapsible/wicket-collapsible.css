@@ -1,0 +1,60 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.wicket-collapsible {
+	border: 1px solid var(--wicket-theme-border);
+	border-radius: 0.3em;
+	overflow: hidden;
+	background: var(--wicket-theme-surface);
+	color: var(--wicket-theme-text);
+}
+
+.wicket-collapsible-title {
+	padding: 0.3em 0.5em;
+	background: var(--wicket-theme-primary);
+	color: var(--wicket-theme-on-primary);
+	display: list-item;
+	list-style: none;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.wicket-collapsible-title::-webkit-details-marker {
+	display: none;
+}
+
+.wicket-collapsible-title::before {
+	content: "\25B8";
+	display: inline-block;
+	width: 1em;
+	margin-right: 0.25em;
+	text-align: center;
+	transition: transform 0.15s ease-in-out;
+}
+
+.wicket-collapsible[open] > .wicket-collapsible-title::before {
+	transform: rotate(90deg);
+}
+
+.wicket-collapsible :is(input, select, textarea, button) {
+	color-scheme: var(--wicket-theme-color-scheme);
+	accent-color: var(--wicket-theme-accent);
+}
+
+.wicket-collapsible-body {
+	padding: 0.5em 0.5em 0.5em 1.5em;
+	color: var(--wicket-collapsible-text, var(--wicket-theme-text));
+}

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples;
 
+import org.apache.wicket.protocol.ws.javax.WicketServerEndpointConfig;
+import org.eclipse.jetty.ee11.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
@@ -77,6 +79,8 @@ public class JettyTestCaseDecorator
 		{
 			web.setWar(webappLocation);
 		}
+		JakartaWebSocketServletContainerInitializer.configure(web,
+			(servletContext, container) -> container.addEndpoint(new WicketServerEndpointConfig()));
 		server.setHandler(web);
 
 		server.start();
