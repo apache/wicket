@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -135,6 +136,20 @@ public class WebSocketTesterBehaviorTest
 
 		assertTrue(messageReceived.get());
 		webSocketTester.destroy();
+	}
+
+	/**
+	 * The script that sets up the connection runs with either Ajax engine, so it must not need
+	 * jQuery.
+	 */
+	@Test
+	public void setupScriptDoesNotNeedJQuery()
+	{
+		tester.startPage(new WebSocketBehaviorTestPage());
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains("Object.assign(Wicket.WebSocket, {"));
+		assertFalse(response.contains("jQuery."));
 	}
 
 	static class BroadcastMessage implements IWebSocketPushMessage
