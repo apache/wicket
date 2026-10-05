@@ -183,6 +183,66 @@ Wicket.Event.add(window, 'domready', function() {
 		el.remove();
 	});
 
+	test('remove - several event types at once', assert => {
+
+		assert.expect(0);
+
+		var el = createTestElement();
+
+		var handler = function() {
+			assert.ok(false, 'This event must not be fired!');
+		};
+
+		Wicket.Event.add(el, 'input change', handler);
+
+		Wicket.Event.remove(el, 'input change', handler);
+
+		Wicket.Event.fire(el, 'input');
+		Wicket.Event.fire(el, 'change');
+
+		el.remove();
+	});
+
+	test('remove - one of several event types', assert => {
+
+		assert.expect(1);
+
+		var el = createTestElement();
+
+		var handler = function(event) {
+			assert.equal(event.type, 'change', 'Only the event that was not removed must be fired');
+		};
+
+		Wicket.Event.add(el, 'input change', handler);
+
+		Wicket.Event.remove(el, 'input', handler);
+
+		Wicket.Event.fire(el, 'input');
+		Wicket.Event.fire(el, 'change');
+
+		el.remove();
+	});
+
+	test('remove - several event types without a handler', assert => {
+
+		assert.expect(0);
+
+		var el = createTestElement();
+
+		var handler = function() {
+			assert.ok(false, 'This event must not be fired!');
+		};
+
+		Wicket.Event.add(el, 'input change', handler);
+
+		Wicket.Event.remove(el, 'input change');
+
+		Wicket.Event.fire(el, 'input');
+		Wicket.Event.fire(el, 'change');
+
+		el.remove();
+	});
+
 	test('add - mousewheel', assert => {
 
 		assert.expect(1);
