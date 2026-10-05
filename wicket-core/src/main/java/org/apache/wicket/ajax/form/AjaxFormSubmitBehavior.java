@@ -143,6 +143,9 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	/**
 	 * Controls whether or not a JS <code>submit</code> should be triggered on the submitting form.
 	 * False by default.
+	 * <p>
+	 * The event runs the submit handlers of the form, and a handler cancelling it stops the Ajax
+	 * request. The browser does not submit the form for this event; the Ajax request does.
 	 * 
 	 * @return true if <code>submit</code> should be triggered, false otherwise
 	 */
@@ -184,7 +187,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 				public CharSequence getPrecondition(Component component)
 				{
 					return String.format(
-						"return document.getElementById('%s').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));",
+						"return Wicket.Event.triggerSubmit(document.getElementById('%s'));",
 						form.getMarkupId());
 				}
 			});

@@ -252,6 +252,66 @@ Wicket.Event.add(window, 'domready', function() {
 	});
 
 
+	module('Wicket.Event.triggerSubmit');
+
+	// a form posting into a hidden frame, so a submission the test fails to stop does not leave
+	// the test page
+	var createTestForm = function () {
+		var fixture = document.getElementById('qunit-fixture');
+		var frame = document.createElement('iframe');
+		frame.name = 'triggerSubmitSink';
+		fixture.appendChild(frame);
+		var form = document.createElement('form');
+		form.action = 'about:blank';
+		form.target = frame.name;
+		fixture.appendChild(form);
+		return form;
+	};
+
+	test('runs the submit handlers and keeps the browser from submitting', assert => {
+		var form = createTestForm();
+		var events = [];
+		form.addEventListener('submit', function (event) {
+			events.push(event);
+		});
+		document.addEventListener('submit', function bubbled(event) {
+			document.removeEventListener('submit', bubbled);
+			assert.notOk(event.defaultPrevented, 'not cancelled while the handlers run');
+		});
+
+		assert.ok(Wicket.Event.triggerSubmit(form), 'the Ajax request may go on');
+		assert.equal(events.length, 1, 'the handler ran');
+		assert.ok(events[0].defaultPrevented, 'the browser does not submit the form');
+	});
+
+	test('a handler cancelling the event stops the Ajax request', assert => {
+		var form = createTestForm();
+		form.onsubmit = function () {
+			return false;
+		};
+
+		assert.notOk(Wicket.Event.triggerSubmit(form));
+	});
+
+	test('a listener cancelling the event stops the Ajax request', assert => {
+		var form = createTestForm();
+		document.addEventListener('submit', function cancel(event) {
+			document.removeEventListener('submit', cancel);
+			event.preventDefault();
+		});
+
+		assert.notOk(Wicket.Event.triggerSubmit(form));
+	});
+
+	test('a handler stopping the propagation without cancelling lets the Ajax request go on', assert => {
+		var form = createTestForm();
+		form.addEventListener('submit', function (event) {
+			event.stopPropagation();
+		});
+
+		assert.ok(Wicket.Event.triggerSubmit(form));
+	});
+
 	module('Wicket.Event.pubsub');
 
 	test('specified topic', assert => {

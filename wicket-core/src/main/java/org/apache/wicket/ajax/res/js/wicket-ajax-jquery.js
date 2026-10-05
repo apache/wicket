@@ -2506,6 +2506,32 @@
 			},
 
 			/**
+			 * Fires a submit event on the given form, so that its submit handlers run, without
+			 * submitting the form: an Ajax request submits it instead. Firefox submits a form for
+			 * a submit event fired by a script unless the event is cancelled, so the event is
+			 * cancelled once it has bubbled up to the window.
+			 *
+			 * @param form {HTMLFormElement} the form
+			 * @returns {boolean} false if a submit handler cancelled the event
+			 */
+			triggerSubmit: function(form) {
+				let cancelledByHandler = null;
+				const cancel = function (event) {
+					cancelledByHandler = event.defaultPrevented;
+					event.preventDefault();
+				};
+				let notCancelled;
+				window.addEventListener('submit', cancel);
+				try {
+					notCancelled = form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+				} finally {
+					window.removeEventListener('submit', cancel);
+				}
+				// null when a handler stopped the propagation before the window
+				return cancelledByHandler === null ? notCancelled : !cancelledByHandler;
+			},
+
+			/**
 			 * The names of the topics on which Wicket notifies
 			 */
 			Topic: {
