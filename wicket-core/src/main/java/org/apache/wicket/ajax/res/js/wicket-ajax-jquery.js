@@ -2355,7 +2355,8 @@
 			 * before loading external resources (images, scripts, ...)
 			 *
 			 * @param element {HTMLElement} The host HTML element
-			 * @param type {String} The type of the DOM event
+			 * @param type {String} The type of the DOM event. Several space separated
+			 *      event types can be given at once, e.g. 'input change'
 			 * @param fn {Function} The event handler to unbind
 			 * @param data {Object} Extra data for the event
 			 * @param selector {String} A selector string to filter the descendants of the selected
@@ -2394,10 +2395,13 @@
 							map = {};
 							Wicket.Event._listenerRegistry.set(el, map);
 						}
-						if (!map[type]) {
-							map[type] = [];
+						const types = type.split(/\s+/);
+						for (let t = 0; t < types.length; t++) {
+							if (!map[types[t]]) {
+								map[types[t]] = [];
+							}
+							map[types[t]].push({ fn: fn, wrapper: wrapper });
 						}
-						map[type].push({ fn: fn, wrapper: wrapper });
 					}
 				}
 				return element;
