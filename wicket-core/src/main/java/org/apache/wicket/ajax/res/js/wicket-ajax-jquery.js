@@ -2509,25 +2509,40 @@
 			 * Fires a submit event on the given form, so that its submit handlers run, without
 			 * submitting the form: an Ajax request submits it instead. Firefox submits a form for
 			 * a submit event fired by a script unless the event is cancelled, so the event is
-			 * cancelled once it has bubbled up to the window.
+			 * cancelled once the handlers on the form have run, as the last listener on the form.
 			 *
 			 * @param form {HTMLFormElement} the form
-			 * @returns {boolean} false if a submit handler cancelled the event
+			 * @returns {boolean} false if a handler on the form, or one capturing the event on its
+			 *      way there, cancelled the event
 			 */
 			triggerSubmit: function(form) {
+				const event = new Event('submit', { cancelable: true, bubbles: true });
 				let cancelledByHandler = null;
-				const cancel = function (event) {
-					cancelledByHandler = event.defaultPrevented;
-					event.preventDefault();
+				const cancel = function () {
+					if (cancelledByHandler === null) {
+						cancelledByHandler = event.defaultPrevented;
+						event.preventDefault();
+					}
+				};
+				const cancelOwnEvent = function (e) {
+					if (e === event) {
+						cancel();
+					}
+				};
+				// a handler stopping the immediate propagation keeps cancelOwnEvent from running
+				const stopImmediatePropagation = event.stopImmediatePropagation;
+				event.stopImmediatePropagation = function () {
+					stopImmediatePropagation.call(this);
+					cancel();
 				};
 				let notCancelled;
-				window.addEventListener('submit', cancel);
+				form.addEventListener('submit', cancelOwnEvent);
 				try {
-					notCancelled = form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+					notCancelled = form.dispatchEvent(event);
 				} finally {
-					window.removeEventListener('submit', cancel);
+					form.removeEventListener('submit', cancelOwnEvent);
 				}
-				// null when a handler stopped the propagation before the window
+				// null when a capturing handler stopped the propagation before the form
 				return cancelledByHandler === null ? notCancelled : !cancelledByHandler;
 			},
 

@@ -144,8 +144,10 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * Controls whether or not a JS <code>submit</code> should be triggered on the submitting form.
 	 * False by default.
 	 * <p>
-	 * The event runs the submit handlers of the form, and a handler cancelling it stops the Ajax
-	 * request. The browser does not submit the form for this event; the Ajax request does.
+	 * The event runs the submit handlers of the form. A handler on the form, or one capturing the
+	 * event on its way there, cancelling it stops the Ajax request; handlers further up see it
+	 * cancelled already. The browser does not submit the form for this event, the Ajax request
+	 * does, unless a capturing handler stops the event before it reaches the form.
 	 * 
 	 * @return true if <code>submit</code> should be triggered, false otherwise
 	 */

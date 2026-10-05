@@ -256,7 +256,7 @@ Wicket.Event.add(window, 'domready', function() {
 
 	// a form posting into a hidden frame, so a submission the test fails to stop does not leave
 	// the test page
-	var createTestForm = function () {
+	var createTestForm = function (parent) {
 		var fixture = document.getElementById('qunit-fixture');
 		var frame = document.createElement('iframe');
 		frame.name = 'triggerSubmitSink';
@@ -264,24 +264,40 @@ Wicket.Event.add(window, 'domready', function() {
 		var form = document.createElement('form');
 		form.action = 'about:blank';
 		form.target = frame.name;
-		fixture.appendChild(form);
+		(parent || fixture).appendChild(form);
 		return form;
 	};
 
-	test('runs the submit handlers and keeps the browser from submitting', assert => {
-		var form = createTestForm();
+	// a browser submitting the form fires formdata before dispatchEvent() returns
+	var recordSubmissions = function (form) {
+		var submissions = [];
+		form.addEventListener('formdata', function (event) {
+			submissions.push(event);
+		});
+		return submissions;
+	};
+
+	var recordSubmitEvents = function (form) {
 		var events = [];
 		form.addEventListener('submit', function (event) {
 			events.push(event);
 		});
-		document.addEventListener('submit', function bubbled(event) {
-			document.removeEventListener('submit', bubbled);
-			assert.notOk(event.defaultPrevented, 'not cancelled while the handlers run');
+		return events;
+	};
+
+	test('runs the submit handlers and keeps the browser from submitting', assert => {
+		assert.expect(5);
+		var form = createTestForm();
+		var submissions = recordSubmissions(form);
+		form.addEventListener('submit', function (event) {
+			assert.notOk(event.defaultPrevented, 'not cancelled while the handlers on the form run');
 		});
+		var events = recordSubmitEvents(form);
 
 		assert.ok(Wicket.Event.triggerSubmit(form), 'the Ajax request may go on');
 		assert.equal(events.length, 1, 'the handler ran');
-		assert.ok(events[0].defaultPrevented, 'the browser does not submit the form');
+		assert.ok(events[0].defaultPrevented, 'the event is cancelled');
+		assert.equal(submissions.length, 0, 'the browser does not submit the form');
 	});
 
 	test('a handler cancelling the event stops the Ajax request', assert => {
@@ -293,23 +309,92 @@ Wicket.Event.add(window, 'domready', function() {
 		assert.notOk(Wicket.Event.triggerSubmit(form));
 	});
 
-	test('a listener cancelling the event stops the Ajax request', assert => {
+	test('a capturing listener cancelling the event stops the Ajax request', assert => {
 		var form = createTestForm();
-		document.addEventListener('submit', function cancel(event) {
-			document.removeEventListener('submit', cancel);
+		var cancel = function (event) {
 			event.preventDefault();
+		};
+		document.addEventListener('submit', cancel, true);
+		try {
+			assert.notOk(Wicket.Event.triggerSubmit(form));
+		} finally {
+			document.removeEventListener('submit', cancel, true);
+		}
+	});
+
+	test('a listener above the form sees the event cancelled already', assert => {
+		var form = createTestForm();
+		var cancelled;
+		var record = function (event) {
+			cancelled = event.defaultPrevented;
+		};
+		document.addEventListener('submit', record);
+		try {
+			assert.ok(Wicket.Event.triggerSubmit(form), 'the Ajax request may go on');
+			assert.ok(cancelled, 'the event is cancelled when it bubbles up');
+		} finally {
+			document.removeEventListener('submit', record);
+		}
+	});
+
+	test('a handler stopping the propagation without cancelling lets the Ajax request go on', assert => {
+		var form = createTestForm();
+		var submissions = recordSubmissions(form);
+		form.addEventListener('submit', function (event) {
+			event.stopPropagation();
+		});
+		var events = recordSubmitEvents(form);
+
+		assert.ok(Wicket.Event.triggerSubmit(form), 'the Ajax request may go on');
+		assert.ok(events[0].defaultPrevented, 'the event is cancelled');
+		assert.equal(submissions.length, 0, 'the browser does not submit the form');
+	});
+
+	test('a handler stopping the immediate propagation without cancelling lets the Ajax request go on', assert => {
+		var form = createTestForm();
+		var submissions = recordSubmissions(form);
+		var event;
+		form.addEventListener('submit', function (e) {
+			event = e;
+			e.stopImmediatePropagation();
+		});
+
+		assert.ok(Wicket.Event.triggerSubmit(form), 'the Ajax request may go on');
+		assert.ok(event.defaultPrevented, 'the event is cancelled');
+		assert.equal(submissions.length, 0, 'the browser does not submit the form');
+	});
+
+	test('a handler cancelling the event and stopping the immediate propagation stops the Ajax request', assert => {
+		var form = createTestForm();
+		form.addEventListener('submit', function (event) {
+			event.preventDefault();
+			event.stopImmediatePropagation();
 		});
 
 		assert.notOk(Wicket.Event.triggerSubmit(form));
 	});
 
-	test('a handler stopping the propagation without cancelling lets the Ajax request go on', assert => {
-		var form = createTestForm();
-		form.addEventListener('submit', function (event) {
-			event.stopPropagation();
+	test('a form in a shadow root is not submitted', assert => {
+		var host = createTestElement('triggerSubmitShadowHost');
+		var form = createTestForm(host.attachShadow({ mode: 'open' }));
+		var submissions = recordSubmissions(form);
+		var events = recordSubmitEvents(form);
+
+		assert.ok(Wicket.Event.triggerSubmit(form), 'the Ajax request may go on');
+		assert.ok(events[0].defaultPrevented, 'the event is cancelled');
+		assert.equal(submissions.length, 0, 'the browser does not submit the form');
+	});
+
+	test('a submit triggered from a submit handler is not cancelled by the outer one', assert => {
+		var outer = createTestForm();
+		var inner = createTestForm();
+		var innerResult;
+		outer.addEventListener('submit', function () {
+			innerResult = Wicket.Event.triggerSubmit(inner);
 		});
 
-		assert.ok(Wicket.Event.triggerSubmit(form));
+		assert.ok(Wicket.Event.triggerSubmit(outer), 'the outer Ajax request may go on');
+		assert.ok(innerResult, 'the inner Ajax request may go on');
 	});
 
 	module('Wicket.Event.pubsub');
