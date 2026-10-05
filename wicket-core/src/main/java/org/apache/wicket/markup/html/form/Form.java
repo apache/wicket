@@ -1269,7 +1269,8 @@ public class Form<T> extends WebMarkupContainer
 		String cssClass = getString(CssUtils.key(Form.class, "hidden-fields"));
 
 		// div that is not visible (but not display:none either)
-		buffer.append(String.format("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\" class=\"%s\">", cssClass));
+		buffer.append(String.format("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\" class=\"%s\">",
+			Strings.escapeMarkup(cssClass)));
 
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" tabindex=\"-1\" autocomplete=\"off\"/>");
@@ -1277,9 +1278,10 @@ public class Form<T> extends WebMarkupContainer
 		// add the submitting component
 		final Component submittingComponent = (Component)defaultSubmittingComponent;
 		buffer.append("<input type=\"submit\" tabindex=\"-1\" name=\"");
-		buffer.append(defaultSubmittingComponent.getInputName());
+		buffer.append(Strings.escapeMarkup(defaultSubmittingComponent.getInputName()));
 		buffer.append("\" onclick=\" var b=document.getElementById('");
-		buffer.append(submittingComponent.getMarkupId());
+		// the browser decodes the attribute before it runs the handler
+		buffer.append(Strings.escapeMarkup(submittingComponent.getMarkupId()));
 		buffer.append("'); if (b!=null&amp;&amp;b.onclick!=null&amp;&amp;typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
 
