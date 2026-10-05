@@ -96,7 +96,7 @@ function drawChart() {
 	Wicket.Event.subscribe("/websocket/message", function(jqEvent, message) {
 		// new record is pushed by the server
 
-		var record = jQuery.parseJSON(message);
+		var record = JSON.parse(message);
 		if (record && record.year) {
 			updateChartData(record);
 		}
