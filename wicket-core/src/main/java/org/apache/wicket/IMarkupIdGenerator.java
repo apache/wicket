@@ -26,8 +26,8 @@ public interface IMarkupIdGenerator
 	 * Generates markup id for the given component
 	 * <p>
 	 * Wicket writes the markup id into the JavaScript it generates, without escaping it. A
-	 * generated markup id must therefore not contain quotes, backslashes, brackets, {@code ';'} or
-	 * control characters. An id the component already has, from
+	 * generated markup id must therefore not contain quotes, backslashes, brackets, {@code ';'},
+	 * {@code '&'} or control characters. An id the component already has, from
 	 * {@link Component#setMarkupId(String)} or from the id attribute in its markup, has been
 	 * checked already.
 	 *

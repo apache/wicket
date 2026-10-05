@@ -399,10 +399,10 @@ public abstract class Component
 	private static final String MARKUP_ID_ATTR_NAME = "id";
 
 	/** Characters a component id or a markup id must not contain, see {@link #isValidId(String)} */
-	private static final String INVALID_ID_CHARS = "'\"`\\()[]{}<>;";
+	private static final String INVALID_ID_CHARS = "'\"`\\()[]{}<>;&";
 
 	private static final String INVALID_ID_MESSAGE =
-		"must not contain quotes, backslashes, brackets, ';' or control characters.";
+		"must not contain quotes, backslashes, brackets, ';', '&' or control characters.";
 
 	/**
 	 * Meta data key for line precise error logging for the moment of addition. Made package private
@@ -767,8 +767,8 @@ public abstract class Component
 	/**
 	 * @return The 'id' attribute from the associated markup tag
 	 * @throws WicketRuntimeException
-	 *             if the id contains a quote, a backslash, a bracket, {@code ';'} or a control
-	 *             character
+	 *             if the id contains a quote, a backslash, a bracket, {@code ';'}, {@code '&'} or a
+	 *             control character
 	 */
 	public final String getMarkupIdFromMarkup()
 	{
@@ -2805,7 +2805,7 @@ public abstract class Component
 
 	/**
 	 * Set markup ID, which must be String or Integer. A String must not contain quotes,
-	 * backslashes, brackets, {@code ';'} or control characters.
+	 * backslashes, brackets, {@code ';'}, {@code '&'} or control characters.
 	 * 
 	 * @param markupId
 	 */
@@ -2865,8 +2865,8 @@ public abstract class Component
 	 * 
 	 * @param markupId
 	 *            markup id value or null to clear any previous user defined value. It must not
-	 *            contain quotes, backslashes, brackets, {@code ';'} or control characters, because
-	 *            Wicket writes it into the JavaScript it generates.
+	 *            contain quotes, backslashes, brackets, {@code ';'}, {@code '&'} or control
+	 *            characters, because Wicket writes it into the JavaScript it generates.
 	 * @return this for chaining
 	 */
 	public Component setMarkupId(String markupId)
@@ -4289,7 +4289,10 @@ public abstract class Component
 	 * Checks the characters of a component id or a markup id. Wicket writes both into the
 	 * JavaScript it generates, the markup id as it is and the component id as part of an input name,
 	 * so characters that can end a JavaScript string literal or statement are not allowed: quotes,
-	 * backslashes, brackets, {@code ';'} and control characters, line breaks included.
+	 * backslashes, brackets, {@code ';'} and control characters, line breaks included. {@code '&'}
+	 * is not allowed either: in a script written into an attribute, such as an event handler, the
+	 * browser decodes a character reference before the script runs, so {@code &#39} would end the
+	 * literal as well.
 	 *
 	 * @param id
 	 *            the id to check

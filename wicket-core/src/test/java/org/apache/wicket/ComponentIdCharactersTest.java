@@ -30,12 +30,12 @@ import org.junit.Test;
  */
 public class ComponentIdCharactersTest extends WicketTestCase
 {
-	private static final String[] INVALID_IDS = { "a'b", "a\"b", "a`b", "a\\b", "a;b", "a(b",
-			"a)b", "a[b", "a]b", "a{b", "a}b", "a<b", "a>b", "a\nb", "a\rb", "a\tb", "a\u0000b",
+	private static final String[] INVALID_IDS = { "a'b", "a\"b", "a`b", "a\\b", "a;b", "a(b", "a)b",
+			"a[b", "a]b", "a{b", "a}b", "a<b", "a>b", "a&b", "a\nb", "a\rb", "a\tb", "a\u0000b",
 			"a b", "a b" };
 
 	/** Characters that cannot end a JavaScript string literal are still allowed */
-	private static final String VALID_ID = "a b&c=d/e+f,g.h-i_j*k!lüber1";
+	private static final String VALID_ID = "a b#c=d/e+f,g.h-i_j*k!lüber1";
 
 	/** */
 	@Test
@@ -82,8 +82,8 @@ public class ComponentIdCharactersTest extends WicketTestCase
 	@Test
 	public void markupIdFromTheMarkupIsChecked()
 	{
-		tester.startPage(new MarkupIdPage("a-b_c.d1 e&amp;f"));
-		assertTrue(tester.getLastResponseAsString().contains("id=\"a-b_c.d1 e&amp;f\""));
+		tester.startPage(new MarkupIdPage("a-b_c.d1 e#f"));
+		assertTrue(tester.getLastResponseAsString().contains("id=\"a-b_c.d1 e#f\""));
 
 		Throwable e = assertRejected(WicketRuntimeException.class,
 			() -> tester.startPage(new MarkupIdPage("a&#039;b")), "a'b");
