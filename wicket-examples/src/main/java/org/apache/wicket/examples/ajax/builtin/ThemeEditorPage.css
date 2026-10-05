@@ -14,12 +14,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* The look of the bar itself comes from the ProgressBar's style sheet. */
-.wupb-progressBar {
-	width: 20em;
-	margin: 0.5em auto 0 auto;
+.theme-editor {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 2em;
+	align-items: start;
 }
 
-.wupb-uploadStatus {
-	text-align: center;
+.theme-editor-properties table {
+	border-collapse: collapse;
+}
+
+.theme-editor-properties td {
+	padding: 0.25em 0.5em 0.25em 0;
+	vertical-align: middle;
+}
+
+.theme-editor-properties small {
+	color: #5f6b7a;
+}
+
+.theme-editor-css {
+	width: 100%;
+	box-sizing: border-box;
+	font-family: monospace;
+}
+
+.theme-editor-preview {
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	padding: 1em;
+	border-radius: 0.4em;
+	background: var(--wicket-theme-surface-alt);
+	color: var(--wicket-theme-text);
+}
+
+@media (max-width: 60em) {
+	.theme-editor {
+		grid-template-columns: minmax(0, 1fr);
+	}
 }

@@ -57,4 +57,12 @@ public class AutoCompleteTest extends WicketTestCase
 		// autocomplete setup comes before event handler
 		assertTrue(autoCompleteEventHandler2 < eventHandler2);
 	}
+
+	@Test
+	public void theStyleSheetOfTheThemedSuggestionsIsRendered()
+	{
+		tester.startPage(new AutoCompletePage());
+
+		assertTrue(tester.getLastResponseAsString().contains("wicket-autocomplete-theme"));
+	}
 }

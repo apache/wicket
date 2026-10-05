@@ -85,7 +85,19 @@
 
 		setPercent : function(progressPercent) {
 			const barId = Wicket.$(this.barid);
-			if (barId != null && barId.firstChild != null && barId.firstChild.firstChild != null) {
+			const progress = barId != null ? barId.querySelector('progress') : null;
+			const percent = Number(progressPercent);
+			if (progress != null) {
+				if (isFinite(percent)) {
+					const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+					progress.value = clamped;
+					progress.textContent = clamped + '%';
+					const label = barId.querySelector('.wicket-progress-bar-label');
+					if (label != null) {
+						label.textContent = clamped + '%';
+					}
+				}
+			} else if (barId != null && barId.firstChild != null && barId.firstChild.firstChild != null) {
 				barId.firstChild.firstChild.style.width = progressPercent + '%';
 			}
 			if (this.onProgressUpdated) {

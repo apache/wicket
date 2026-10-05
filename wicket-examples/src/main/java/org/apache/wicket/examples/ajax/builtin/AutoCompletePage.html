@@ -4,6 +4,10 @@
 
 		<wicket:extend>
 
+		<div class="example-options">
+			<label><wicket:message key="theme"/> <select wicket:id="theme"></select></label>
+		</div>
+		<div wicket:id="themed">
 		<form wicket:id="form">
 			Country: <input type="text" wicket:id="ac" size="50"/>
 			<br/>
@@ -11,6 +15,7 @@
 			<br/>
 			<div wicket:id="history"></div>
 		</form>
+		</div>
 
 		</wicket:extend>
 

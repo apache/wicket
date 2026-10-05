@@ -18,10 +18,7 @@ package org.apache.wicket.examples.ajax.builtin;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.examples.ThemeChoice;
 import org.apache.wicket.extensions.markup.html.collapsible.CollapsiblePanel;
-import org.apache.wicket.extensions.theme.Theme;
-import org.apache.wicket.extensions.theme.ThemeBehavior;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -41,8 +38,6 @@ public class CollapsiblePage extends BasePage
 {
 	private static final long serialVersionUID = 1L;
 
-	private Theme theme = Theme.DEFAULT;
-
 	private String name;
 
 	private int toggles;
@@ -52,20 +47,9 @@ public class CollapsiblePage extends BasePage
 	 */
 	public CollapsiblePage()
 	{
-		WebMarkupContainer themed = new WebMarkupContainer("themed");
-		themed.setOutputMarkupId(true);
-		themed.add(new ThemeBehavior(new PropertyModel<>(this, "theme")));
+		WebMarkupContainer themed = newThemedContainer("themed");
 		add(themed);
-		themed.add(new ThemeChoice("theme", new PropertyModel<>(this, "theme"))
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onThemeChanged(AjaxRequestTarget target)
-			{
-				target.add(themed);
-			}
-		});
+		add(newThemeChoice("theme", themed));
 
 		themed.add(textPanel("collapsed"));
 		themed.add(textPanel("expanded").setExpanded(true));

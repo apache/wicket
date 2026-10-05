@@ -14,12 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* The look of the bar itself comes from the ProgressBar's style sheet. */
-.wupb-progressBar {
-	width: 20em;
-	margin: 0.5em auto 0 auto;
+.example-options {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 0.6em 1.5em;
+	margin: 0 0 1em 0;
 }
 
-.wupb-uploadStatus {
-	text-align: center;
+.example-options label {
+	display: flex;
+	flex-direction: column;
+	gap: 0.2em;
+	font-weight: 600;
+}
+
+.example-options select {
+	width: 100%;
+	font-weight: normal;
+}
+
+@media (max-width: 50em) {
+	.example-options {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
 }

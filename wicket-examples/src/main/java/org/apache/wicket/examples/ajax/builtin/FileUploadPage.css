@@ -14,12 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* The look of the bar itself comes from the ProgressBar's style sheet. */
-.wupb-progressBar {
-	width: 20em;
-	margin: 0.5em auto 0 auto;
+.example-options .upload-slow {
+	justify-content: flex-end;
+	font-weight: normal;
 }
 
-.wupb-uploadStatus {
-	text-align: center;
+.upload-buttons {
+	display: flex;
+	gap: 0.5em;
+	margin: 0.5em 0;
+}
+
+button.upload-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	border: 1px solid var(--wicket-theme-primary-dark, #142a4f);
+	border-radius: 0.3em;
+	background: var(--wicket-theme-primary, #1f3a68);
+	color: var(--wicket-theme-on-primary, #ffffff);
+}
+
+button.upload-button:hover:enabled {
+	background: var(--wicket-theme-primary-dark, #142a4f);
+	color: var(--wicket-theme-on-primary, #ffffff);
+}
+
+button.upload-button:focus-visible {
+	outline: 2px solid var(--wicket-theme-accent, Highlight);
+	outline-offset: 1px;
+}
+
+button.upload-button:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
 }

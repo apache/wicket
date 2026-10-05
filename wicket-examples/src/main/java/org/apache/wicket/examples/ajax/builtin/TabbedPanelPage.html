@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
-	<p>
-		<div wicket:id="tabs" class="tabpanel">[tabbed panel will be here]</div>
-	</p>
+	<div class="example-options">
+		<label><wicket:message key="style"/> <select wicket:id="style"></select></label>
+		<label><wicket:message key="theme"/> <select wicket:id="theme"></select></label>
+	</div>
+	<div wicket:id="themed">
+		<div wicket:id="tabs">[tabbed panel will be here]</div>
+	</div>
 </wicket:extend>

@@ -18,8 +18,10 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:extend>
+<div class="example-options">
+	<label><wicket:message key="theme"/> <select wicket:id="theme"></select></label>
+</div>
 <div wicket:id="themed">
-	<p><label>Theme: <select wicket:id="theme"></select></label></p>
 	<h3>Known progress</h3>
 	<div wicket:id="bar"></div>
 	<p><a href="#" wicket:id="toggle">[toggle]</a> | <a href="#" wicket:id="reset">Reset</a></p>

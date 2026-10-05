@@ -19,10 +19,19 @@ package org.apache.wicket.examples.ajax.builtin;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
+import org.apache.wicket.extensions.markup.html.tabs.TabsStyle;
+import org.apache.wicket.extensions.markup.html.tabs.TabsStyleBehavior;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.EnumChoiceRenderer;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
 
 
@@ -33,6 +42,10 @@ import org.apache.wicket.model.Model;
  */
 public class TabbedPanelPage extends BasePage
 {
+	private static final long serialVersionUID = 1L;
+
+	private TabsStyle style = TabsStyle.TABS;
+
 	/**
 	 * Constructor
 	 */
@@ -67,7 +80,30 @@ public class TabbedPanelPage extends BasePage
 			}
 		});
 
-		add(new AjaxTabbedPanel<>("tabs", tabs));
+		WebMarkupContainer themed = newThemedContainer("themed");
+		add(themed);
+		add(newThemeChoice("theme", themed));
+
+		AjaxTabbedPanel<ITab> tabbedPanel = new AjaxTabbedPanel<>("tabs", tabs);
+		tabbedPanel.add(new TabsStyleBehavior(() -> style));
+		tabbedPanel.add(AttributeModifier.append("class", () -> style == null ? "tabpanel" : null));
+		themed.add(tabbedPanel);
+
+		DropDownChoice<TabsStyle> styleChoice = new DropDownChoice<>("style",
+			LambdaModel.of(() -> style, chosen -> style = chosen), List.of(TabsStyle.values()),
+			new EnumChoiceRenderer<>(this));
+		styleChoice.setNullValid(true);
+		styleChoice.add(new AjaxFormComponentUpdatingBehavior("change")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				target.add(themed);
+			}
+		});
+		add(styleChoice);
 	}
 
 	/**

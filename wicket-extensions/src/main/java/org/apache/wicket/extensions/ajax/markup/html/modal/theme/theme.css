@@ -24,7 +24,7 @@
 	padding: 0;
 	z-index: 1000;
 	
-	background: rgba(0, 0, 0, 0.2);
+	background: var(--wicket-theme-veil, rgba(0, 0, 0, 0.2));
 
 	/* center .modal-dialog */
 	display: flex;
@@ -37,8 +37,42 @@
 	position: absolute;
 	top: 10%;
 	
-	background: white;
+	background: var(--wicket-theme-surface, white);
 	box-shadow: 0 0 60px 10px rgba(0, 0, 0, 0.7);
+}
+
+/* inside a theme of wicket-extensions: the dialog and its optional header, body and footer */
+
+.wicket-theme .dialog-theme-default .modal-dialog {
+	color: var(--wicket-theme-text);
+	color-scheme: var(--wicket-theme-color-scheme);
+	border: 1px solid var(--wicket-theme-border);
+	border-radius: 0.4em;
+	overflow: hidden;
+}
+
+.wicket-theme .dialog-theme-default .modal-dialog a {
+	color: var(--wicket-theme-accent);
+}
+
+.wicket-theme .dialog-theme-default .modal-dialog-header {
+	margin: 0;
+	padding: 0.5em 1em;
+	border-radius: 0;
+	background: var(--wicket-theme-primary);
+	color: var(--wicket-theme-on-primary);
+	font-size: 1.1em;
+	text-align: left;
+}
+
+.wicket-theme .dialog-theme-default .modal-dialog-body {
+	padding: 1em;
+}
+
+.wicket-theme .dialog-theme-default .modal-dialog-footer {
+	padding: 0.5em 1em;
+	border-top: 1px solid var(--wicket-theme-border);
+	background: var(--wicket-theme-toolbar);
 }
 
 .modal-dialog .modal-dialog-content {

@@ -61,7 +61,8 @@ module.exports = function(grunt) {
 			"../../wicket-extensions/src/test/js/resizable-columns-test.js",
 			"../../wicket-extensions/src/test/js/movable-columns-test.js",
 			"../../wicket-extensions/src/test/js/clipboard-test.js",
-			"../../wicket-extensions/src/test/js/progress-bar-test.js"
+			"../../wicket-extensions/src/test/js/progress-bar-test.js",
+			"../../wicket-extensions/src/test/js/themes-test.js"
 		],
 		gymTestsJs = [
 			"../../wicket-examples/src/main/webapp/js-test/tests/ajax/form.js",
@@ -133,7 +134,8 @@ module.exports = function(grunt) {
 						'http://localhost:38888/wicket-extensions/src/test/js/resizable-columns.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/movable-columns.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/clipboard.html?4.0.0',
-						'http://localhost:38888/wicket-extensions/src/test/js/progress-bar.html?4.0.0'
+						'http://localhost:38888/wicket-extensions/src/test/js/progress-bar.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/themes.html?4.0.0'
 					],
 					puppeteer: {
 						headless: true,
@@ -157,7 +159,8 @@ module.exports = function(grunt) {
 						'http://localhost:38888/wicket-extensions/src/test/js/resizable-columns.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/movable-columns.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/clipboard.html?vanilla',
-						'http://localhost:38888/wicket-extensions/src/test/js/progress-bar.html?vanilla'
+						'http://localhost:38888/wicket-extensions/src/test/js/progress-bar.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/themes.html?vanilla'
 					],
 					puppeteer: {
 						headless: true,

@@ -35,6 +35,34 @@
 		enterHidesWithNoSelection : false
 	};
 
+	/**
+	 * The theme properties the style sheet of the suggestions reads. The suggestions are appended
+	 * to the body, outside the theme the field is in, so they get them from the field.
+	 */
+	const THEME_PROPERTIES = ['--wicket-theme-primary', '--wicket-theme-on-primary',
+		'--wicket-theme-text', '--wicket-theme-surface', '--wicket-theme-hover',
+		'--wicket-theme-border', '--wicket-theme-color-scheme'];
+
+	const THEMED_CLASS = 'wicket-aa-themed';
+
+	/**
+	 * Gives the container of the suggestions the theme of the field, if it is in one.
+	 */
+	const copyTheme = function (input, container) {
+		const style = window.getComputedStyle(input);
+		let themed = false;
+		THEME_PROPERTIES.forEach(function (name) {
+			const value = style.getPropertyValue(name).trim();
+			if (value) {
+				container.style.setProperty(name, value);
+				themed = true;
+			} else {
+				container.style.removeProperty(name);
+			}
+		});
+		container.classList.toggle(THEMED_CLASS, themed);
+	};
+
 	Wicket.AutoComplete=function(ajaxAttributes, cfg){
 		const KEY_TAB=9;
 		const KEY_ENTER=13;
@@ -413,6 +441,7 @@
 			const input = Wicket.$(ajaxAttributes.c);
 			const container = getAutocompleteContainer();
 			const index=getOffsetParentZIndex(ajaxAttributes.c);
+			copyTheme(input, container);
 			container.show();
 
 			// Accessibility
@@ -855,4 +884,6 @@
 
 		initialize();
 	};
+
+	Wicket.AutoComplete.copyTheme = copyTheme;
 })();

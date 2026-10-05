@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxNewWindowNotifyingBehavior;
@@ -23,6 +25,7 @@ import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.ajax.builtin.modal.ModalDialogPage;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.http.WebRequest;
 
 
 /**
@@ -67,6 +70,7 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("pageables", PageablesPage.class);
 		mountPage("ratings", RatingsPage.class);
 		mountPage("tabbed-panel", TabbedPanelPage.class);
+		mountPage("theme-editor", ThemeEditorPage.class);
 		mountPage("todo-list", TodoList.class);
 		mountPage("world-clock", WorldClockPage.class);
 		mountPage("upload", FileUploadPage.class);
@@ -74,6 +78,12 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("download", AjaxDownloadPage.class);
 
 		mountResource("dynamic-text-file", AjaxDownloadPage.DynamicTextFileResource.instance);
+	}
+
+	@Override
+	public WebRequest newWebRequest(HttpServletRequest servletRequest, String filterPath)
+	{
+		return new SlowUploadWebRequest(servletRequest, filterPath);
 	}
 
 	/**

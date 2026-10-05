@@ -26,6 +26,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -46,8 +47,12 @@ public class AutoCompletePage extends BasePage
 	 */
 	public AutoCompletePage()
 	{
+		WebMarkupContainer themed = newThemedContainer("themed");
+		add(themed);
+		add(newThemeChoice("theme", themed));
+
 		Form<Void> form = new Form<>("form");
-		add(form);
+		themed.add(form);
 
 		final IModel<String> model = new IModel<String>()
 		{

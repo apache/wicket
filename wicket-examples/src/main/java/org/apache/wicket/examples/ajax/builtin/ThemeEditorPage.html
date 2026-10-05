@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+<div class="example-options">
+	<label><wicket:message key="base"/> <select wicket:id="theme"></select></label>
+	<label><wicket:message key="className"/> <input type="text" class="theme-editor-class" value="my-theme" pattern="-?[a-zA-Z_][a-zA-Z0-9_-]*"/></label>
+</div>
+<div class="theme-editor">
+	<form wicket:id="editor" class="theme-editor-properties">
+		<table>
+			<tr wicket:id="properties">
+				<td><code wicket:id="name"></code><br/><small wicket:id="description"></small></td>
+				<td wicket:id="input"></td>
+			</tr>
+		</table>
+		<p><wicket:message key="css"/></p>
+		<textarea class="theme-editor-css" readonly="readonly" rows="20" cols="48" aria-label="CSS"></textarea>
+		<p><button type="button" class="theme-editor-copy" wicket:id="copy"><wicket:message key="copy"/></button></p>
+	</form>
+	<div wicket:id="preview" class="theme-editor-preview">
+		<div wicket:id="bar"></div>
+		<div wicket:id="indeterminate"></div>
+		<div wicket:id="collapsible"></div>
+		<div wicket:id="tabs"></div>
+		<p><label><wicket:message key="country"/> <input type="text" wicket:id="country" size="24"/></label></p>
+		<p><a href="#" wicket:id="openDialog"><wicket:message key="openDialog"/></a></p>
+		<div wicket:id="dialog"></div>
+	</div>
+</div>
+<wicket:fragment wicket:id="color"><input type="color" wicket:id="field"/></wicket:fragment>
+<wicket:fragment wicket:id="text"><input type="text" size="24" wicket:id="field"/></wicket:fragment>
+<wicket:fragment wicket:id="scheme"><select wicket:id="field"><option value="light">light</option><option value="dark">dark</option></select></wicket:fragment>
+</wicket:extend>
+</body>
+</html>

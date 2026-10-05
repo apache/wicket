@@ -69,6 +69,10 @@ public class ModalDialogPage extends BasePage
 		queue(new Radio<Boolean>("yes", Model.of(true)));
 		queue(new Radio<Boolean>("no", Model.of(false)));
 
+		WebMarkupContainer themed = newThemedContainer("themed");
+		queue(themed);
+		queue(newThemeChoice("theme", themed));
+
 		queue(new ModalFragment("start"));
 
 		stackedDialogs = new AjaxListPanel("stackedDialogs");

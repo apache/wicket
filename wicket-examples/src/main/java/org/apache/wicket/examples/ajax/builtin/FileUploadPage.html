@@ -3,9 +3,15 @@
 <body>
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
 
-    <div wicket:id="singleFileUpload"></div>
-    <br/>
-    <div wicket:id="multipleFileUpload"></div>
+    <div class="example-options">
+        <label><wicket:message key="theme"/> <select wicket:id="theme"></select></label>
+        <label class="upload-slow"><span><input type="checkbox" wicket:id="slowUpload"/> <wicket:message key="slowUpload"/></span></label>
+    </div>
+    <div wicket:id="themed">
+        <div wicket:id="singleFileUpload"></div>
+        <br/>
+        <div wicket:id="multipleFileUpload"></div>
+    </div>
 
 </wicket:extend>
 </body>

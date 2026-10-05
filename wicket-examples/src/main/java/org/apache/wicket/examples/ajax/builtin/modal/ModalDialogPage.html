@@ -3,14 +3,20 @@
 	<body>
 		<wicket:extend xmlns:wicket="http://wicket.apache.org">
 		
+			<div class="example-options">
+				<label><wicket:message key="theme"/> <select wicket:id="theme"></select></label>
+			</div>
+
 			<p wicket:id="stacked">
 				<input type="radio" wicket:id="no" /> <label wicket:for="no">nested</label>
 				<input type="radio" wicket:id="yes" /> <label wicket:for="yes">stacked dialogs</label> 
 			</p>
-			
-			<div wicket:id="start"></div>
-			
-			<div wicket:id="stackedDialogs"></div>	
+
+			<div wicket:id="themed">
+				<div wicket:id="start"></div>
+
+				<div wicket:id="stackedDialogs"></div>
+			</div>
 			
 			<wicket:fragment wicket:id="fragment">
 				<form wicket:id="form" class="modal-dialog-form">

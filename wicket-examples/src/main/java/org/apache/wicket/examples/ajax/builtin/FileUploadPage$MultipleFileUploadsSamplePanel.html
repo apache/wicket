@@ -24,13 +24,16 @@
 
     <form wicket:id="form">
         Text field: <input wicket:id="text" type="text"/><br/>
-        File field (can select multiple files): <input wicket:id="file" type="file" multiple="multiple"/> (<span wicket:id="max"></span> max)<br/><br/>
+        File field (can select multiple files): <input wicket:id="file" type="file" autocomplete="off" multiple="multiple"/> (<span wicket:id="max"></span> max)<br/><br/>
         <br/>
         <table wicket:id="selectedFileInfo" class="files">
         </table>
         <br/>
         <div wicket:id="progress"></div>
-        <input wicket:id="submit" type="submit" value="Regular Submit"/> <input wicket:id="ajaxSubmit" type="button" value="Ajax Submit"/>
+        <div class="upload-buttons">
+            <button wicket:id="submit" type="submit" class="upload-button"><wicket:container wicket:id="icon"></wicket:container> Regular Submit</button>
+            <button wicket:id="ajaxSubmit" type="button" class="upload-button"><wicket:container wicket:id="icon"></wicket:container> Ajax Submit</button>
+        </div>
     </form>
 </wicket:panel>
 </body>

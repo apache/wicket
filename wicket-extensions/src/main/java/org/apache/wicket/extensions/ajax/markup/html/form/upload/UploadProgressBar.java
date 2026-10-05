@@ -22,6 +22,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
+import org.apache.wicket.extensions.markup.html.progress.ProgressBar;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -59,6 +60,9 @@ import org.apache.wicket.util.lang.Args;
  * </pre>
  * 
  * For customizing starting text see {@link #RESOURCE_STARTING}.
+ * <p>
+ * The bar looks like a {@link ProgressBar}, with the percentage as its label, and takes its colors
+ * from the {@link org.apache.wicket.extensions.theme.Theme theme} it is rendered in, if any.
  * 
  * Implementation detail: Despite being located in an Ajax package, the progress communication is
  * not done via Ajax but with an IFrame instead due to a bug in Webkit based browsers, see
@@ -228,7 +232,9 @@ public class UploadProgressBar extends Panel
 	}
 
 	/**
-	 * Override this to provide your own CSS, or return null to avoid including the default.
+	 * Override this to provide your own CSS, or return null to avoid including the default: this
+	 * style sheet, which places the bar and the status, and {@link ProgressBar#CSS}, which styles
+	 * the bar itself.
 	 * 
 	 * @return ResourceReference for your CSS.
 	 */
@@ -250,6 +256,7 @@ public class UploadProgressBar extends Panel
 		ResourceReference css = getCss();
 		if (css != null)
 		{
+			response.render(CssHeaderItem.forReference(ProgressBar.CSS));
 			response.render(CssHeaderItem.forReference(css));
 		}
 

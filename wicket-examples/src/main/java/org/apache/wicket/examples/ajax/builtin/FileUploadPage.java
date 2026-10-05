@@ -25,12 +25,18 @@ import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.extensions.ajax.AjaxFileDropBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
+import org.apache.wicket.extensions.markup.html.icon.IIcon;
+import org.apache.wicket.extensions.markup.html.icon.SvgIcon;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -43,7 +49,9 @@ import org.apache.wicket.markup.html.form.upload.FilesSelectedBehavior;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.validation.validator.StringValidator;
 
@@ -56,73 +64,93 @@ public class FileUploadPage extends BasePage
 {
 	private static final long serialVersionUID = 1L;
 
-	private static class SingleFileUploadSamplePanel extends Panel {
+	/**
+	 * A form with a text field, a file field and an upload progress bar, whose submit buttons are
+	 * enabled only while the file field holds files that can be uploaded.
+	 */
+	private abstract static class UploadSamplePanel extends Panel
+	{
+		private static final long serialVersionUID = 1L;
 
-		private final FileUploadField file;
-		private final TextField<String> text;
-		private final Label selectedFileInfo;
-		private final AjaxButton ajaxSubmit;
-		private final Button submit;
-		private String fileInfo;
+		final Component feedback;
 
-		public SingleFileUploadSamplePanel(String id) {
+		final Form<?> form;
+
+		final TextField<String> text;
+
+		final FileUploadField file;
+
+		final Button submit;
+
+		final AjaxButton ajaxSubmit;
+
+		private boolean uploadable;
+
+		UploadSamplePanel(String id)
+		{
 			super(id);
 
-			// create a feedback panel
-			final Component feedback = new FeedbackPanel("feedback").setOutputMarkupId(true);
+			feedback = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this))
+				.setOutputMarkupId(true);
 			add(feedback);
 
-			// create the form
-			final Form<?> form = new Form<Void>("form")
+			form = new Form<Void>("form")
 			{
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				protected void onSubmit()
 				{
-					// display uploaded info
 					info("Text: " + text.getModelObject());
-					FileUpload upload = file.getFileUpload();
-					if (upload == null)
+					List<FileUpload> uploads = file.getFileUploads();
+					if (uploads.isEmpty())
 					{
 						info("No file uploaded");
 					}
-					else
+					for (FileUpload upload : uploads)
 					{
 						info("File-Name: " + upload.getClientFileName() + " File-Size: " +
-								Bytes.bytes(upload.getSize()).toString());
+							Bytes.bytes(upload.getSize()).toString());
 					}
 				}
 			};
-			form.setMaxSize(Bytes.megabytes(1));
+			form.setMaxSize(Bytes.megabytes(10));
 			add(form);
 
-			// create a textfield to demo non-file content
 			form.add(text = new TextField<>("text", Model.of()));
 			text.add(StringValidator.minimumLength(2));
 
-			// create the file upload field
-			form.add(file = new FileUploadField("file"));
+			form.add(file = new FileUploadField("file")
+			{
+				private static final long serialVersionUID = 1L;
 
-			add(selectedFileInfo = new Label("selectedFileInfo", (IModel<String>) () -> fileInfo) {
 				@Override
-				protected void onAfterRender() {
-					super.onAfterRender();
-					fileInfo = null;
+				protected void onBeforeRender()
+				{
+					// a rendered file field is empty
+					uploadable = false;
+					super.onBeforeRender();
 				}
 			});
-			selectedFileInfo.setOutputMarkupId(true);
-			form.add(selectedFileInfo);
 
 			form.add(new Label("max", form::getMaxSize));
 
 			form.add(new UploadProgressBar("progress", form, file));
 
-			// create a submit button
-			form.add(submit = new Button("submit"));
+			form.add(submit = new Button("submit")
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void onConfigure()
+				{
+					super.onConfigure();
+					setEnabled(uploadable);
+				}
+			});
+			submit.add(newIcon(SvgIcon.UPLOAD));
 			submit.setOutputMarkupId(true);
 
-			// create the ajax button used to submit the form
 			form.add(ajaxSubmit = new AjaxButton("ajaxSubmit")
 			{
 				private static final long serialVersionUID = 1L;
@@ -137,50 +165,81 @@ public class FileUploadPage extends BasePage
 				}
 
 				@Override
+				protected void onConfigure()
+				{
+					super.onConfigure();
+					setEnabled(uploadable);
+				}
+
+				@Override
 				protected void onSubmit(AjaxRequestTarget target)
 				{
 					info("This request was processed using AJAX");
 
-					// ajax-update the feedback panel
 					target.add(feedback);
 				}
 
 				@Override
 				protected void onError(AjaxRequestTarget target)
 				{
-					// update feedback to display errors
 					target.add(feedback);
 				}
-
 			});
+			ajaxSubmit.add(newIcon(SvgIcon.CLOUD_ARROW_UP));
 			ajaxSubmit.setOutputMarkupId(true);
 
 			file.add(FilesSelectedBehavior.onSelected(
-					(AjaxRequestTarget target, List<FileDescription> fileDescriptions)->
-					{
-						FileDescription fileDescription = fileDescriptions.get(0);
-						Bytes bytes = Bytes.bytes(fileDescription.getFileSize());
-						fileInfo = "File " + fileDescription.getFileName() +
-								" (with size " + bytes + ") was selected at client side. "
-								+ "File was last modified at: " + fileDescription.getLastModified()
-								+ " and is of type " + fileDescription.getMimeType() +
-								". It has not been uploaded yet. ";
-						if (bytes.greaterThan(form.getMaxSize()))
-						{
-							fileInfo += " File exceeds max allowed size.";
-							// disable buttons as file is not valid
-							submit.setEnabled(false);
-							ajaxSubmit.setEnabled(false);
-						}
-						else
-						{
-							fileInfo += " You can click on buttons bellow in order to upload it.";
-							// enable buttons as file is valid
-							submit.setEnabled(true);
-							ajaxSubmit.setEnabled(true);
-						}
-						target.add(selectedFileInfo, submit, ajaxSubmit);
-					}));
+				(AjaxRequestTarget target, List<FileDescription> fileDescriptions) -> {
+					Bytes size = Bytes.bytes(fileDescriptions.stream()
+						.mapToLong(FileDescription::getFileSize)
+						.sum());
+					uploadable = !fileDescriptions.isEmpty() && !size.greaterThan(form.getMaxSize());
+					onFilesSelected(target, fileDescriptions, uploadable);
+					target.add(submit, ajaxSubmit);
+				}));
+		}
+
+		private static Component newIcon(IIcon icon)
+		{
+			return new Label("icon", icon.getMarkup()).setEscapeModelStrings(false);
+		}
+
+		/**
+		 * Tells the user about the files selected in the file field, which have not been uploaded
+		 * yet.
+		 *
+		 * @param target
+		 *            the request target
+		 * @param fileDescriptions
+		 *            the selected files
+		 * @param uploadable
+		 *            whether the files are within the maximum size, which enables the buttons
+		 */
+		abstract void onFilesSelected(AjaxRequestTarget target,
+			List<FileDescription> fileDescriptions, boolean uploadable);
+	}
+
+	private static class SingleFileUploadSamplePanel extends UploadSamplePanel
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final Label selectedFileInfo;
+
+		private String fileInfo;
+
+		public SingleFileUploadSamplePanel(String id)
+		{
+			super(id);
+
+			form.add(selectedFileInfo = new Label("selectedFileInfo", (IModel<String>) () -> fileInfo) {
+				@Override
+				protected void onAfterRender() {
+					super.onAfterRender();
+					fileInfo = null;
+				}
+			});
+			selectedFileInfo.setOutputMarkupId(true);
+
 			WebMarkupContainer drop = new WebMarkupContainer("drop");
 			drop.add(new AjaxFileDropBehavior() {
 				protected void onFileUpload(AjaxRequestTarget target, List<FileUpload> files) {
@@ -211,9 +270,33 @@ public class FileUploadPage extends BasePage
 			});
 			add(drop);
 		}
+
+		@Override
+		void onFilesSelected(AjaxRequestTarget target, List<FileDescription> fileDescriptions,
+			boolean uploadable)
+		{
+			FileDescription fileDescription = fileDescriptions.get(0);
+			Bytes bytes = Bytes.bytes(fileDescription.getFileSize());
+			fileInfo = "File " + fileDescription.getFileName() +
+					" (with size " + bytes + ") was selected at client side. "
+					+ "File was last modified at: " + fileDescription.getLastModified()
+					+ " and is of type " + fileDescription.getMimeType() +
+					". It has not been uploaded yet. ";
+			if (uploadable)
+			{
+				fileInfo += " You can click on buttons bellow in order to upload it.";
+			}
+			else
+			{
+				fileInfo += " File exceeds max allowed size.";
+			}
+			target.add(selectedFileInfo);
+		}
 	}
 
-	private static class MultipleFileUploadsSamplePanel extends Panel {
+	private static class MultipleFileUploadsSamplePanel extends UploadSamplePanel
+	{
+		private static final long serialVersionUID = 1L;
 
 		private static class DataProvider extends SortableDataProvider<FileDescription, String> {
 
@@ -251,44 +334,13 @@ public class FileUploadPage extends BasePage
 			}
 		}
 
-		private final FileUploadField file;
-		private final TextField<String> text;
-		private DataProvider dataProvider;
-		private AjaxFallbackDefaultDataTable<FileDescription, String> selectedFileInfo;
-		private final AjaxButton ajaxSubmit;
-		private final Button submit;
+		private final DataProvider dataProvider;
 
-		public MultipleFileUploadsSamplePanel(String id) {
+		private final AjaxFallbackDefaultDataTable<FileDescription, String> selectedFileInfo;
+
+		public MultipleFileUploadsSamplePanel(String id)
+		{
 			super(id);
-
-			// create a feedback panel
-			final Component feedback = new FeedbackPanel("feedback").setOutputMarkupId(true);
-			add(feedback);
-
-			// create the form
-			final Form<?> form = new Form<Void>("form")
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				protected void onSubmit()
-				{
-					// display uploaded info
-					info("Text: " + text.getModelObject());
-					FileUpload upload = file.getFileUpload();
-					if (upload == null)
-					{
-						info("No file uploaded");
-					}
-					else
-					{
-						info("File-Name: " + upload.getClientFileName() + " File-Size: " +
-								Bytes.bytes(upload.getSize()).toString());
-					}
-				}
-			};
-			form.setMaxSize(Bytes.megabytes(1));
-			add(form);
 
 			List<IColumn<FileDescription, String>> columns = new ArrayList<>();
 			columns.add(new PropertyColumn<>(Model.of("File Name"), "fileName"));
@@ -304,86 +356,54 @@ public class FileUploadPage extends BasePage
 			};
 			form.add(selectedFileInfo);
 			selectedFileInfo.setOutputMarkupPlaceholderTag(true);
+		}
 
-			// create a textfield to demo non-file content
-			form.add(text = new TextField<>("text", Model.of()));
-			text.add(StringValidator.minimumLength(2));
-
-			// create the file upload field
-			form.add(file = new FileUploadField("file"));
-
-			form.add(new Label("max", form::getMaxSize));
-
-			form.add(new UploadProgressBar("progress", form, file));
-
-			// create a submit button
-			form.add(submit = new Button("submit"));
-			submit.setOutputMarkupId(true);
-
-			// create the ajax button used to submit the form
-			form.add(ajaxSubmit = new AjaxButton("ajaxSubmit")
+		@Override
+		void onFilesSelected(AjaxRequestTarget target, List<FileDescription> fileDescriptions,
+			boolean uploadable)
+		{
+			dataProvider.setFileDescriptions(fileDescriptions);
+			if (uploadable)
 			{
-				private static final long serialVersionUID = 1L;
-
-				/**
-				 * Need to trigger submit to initiate progressbar.
-				 */
-				@Override
-				protected boolean shouldTriggerJavaScriptSubmitEvent()
-				{
-					return true;
-				}
-
-				@Override
-				protected void onSubmit(AjaxRequestTarget target)
-				{
-					info("This request was processed using AJAX");
-
-					// ajax-update the feedback panel
-					target.add(feedback);
-				}
-
-				@Override
-				protected void onError(AjaxRequestTarget target)
-				{
-					// update feedback to display errors
-					target.add(feedback);
-				}
-
-			});
-			ajaxSubmit.setOutputMarkupId(true);
-			file.add(FilesSelectedBehavior.onSelected(
-					(AjaxRequestTarget target, List<FileDescription> fileDescriptions) ->
+				form.info("You can click on buttons bellow in order to upload selected files.");
+			}
+			else
 			{
-				dataProvider.setFileDescriptions(fileDescriptions);
-				Bytes bytes = Bytes.bytes(fileDescriptions.stream().mapToLong(FileDescription::getFileSize).sum());
-				if (bytes.greaterThan(form.getMaxSize()))
-				{
-					form.error("Total file size exceeds max allowed size.");
-					// disable buttons as file is not valid
-					submit.setEnabled(false);
-					ajaxSubmit.setEnabled(false);
-				}
-				else
-				{
-					form.info("You can click on buttons bellow in order to upload selected files.");
-					// enable buttons as file is valid
-					submit.setEnabled(true);
-					ajaxSubmit.setEnabled(true);
-				}
-				target.add(selectedFileInfo, submit, ajaxSubmit, feedback);
-			}));
+				form.error("Total file size exceeds max allowed size.");
+			}
+			target.add(selectedFileInfo, feedback);
 		}
 	}
+
 	/**
 	 * Constructor
 	 */
 	public FileUploadPage()
 	{
-		// sample of a single uploaded file.
-		add(new SingleFileUploadSamplePanel("singleFileUpload"));
-		add(new MultipleFileUploadsSamplePanel("multipleFileUpload"));
+		WebMarkupContainer themed = newThemedContainer("themed");
+		add(themed);
+		add(newThemeChoice("theme", themed));
 
+		add(new AjaxCheckBox("slowUpload",
+			LambdaModel.of(SlowUploadWebRequest::isSlow, SlowUploadWebRequest::setSlow))
+		{
+			private static final long serialVersionUID = 1L;
 
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+			}
+		});
+
+		themed.add(new SingleFileUploadSamplePanel("singleFileUpload"));
+		themed.add(new MultipleFileUploadsSamplePanel("multipleFileUpload"));
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(CssHeaderItem.forReference(
+			new CssResourceReference(FileUploadPage.class, "FileUploadPage.css")));
 	}
 }

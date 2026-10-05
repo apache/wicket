@@ -21,10 +21,7 @@ import java.time.Duration;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.examples.ThemeChoice;
 import org.apache.wicket.extensions.markup.html.progress.ProgressBar;
-import org.apache.wicket.extensions.theme.Theme;
-import org.apache.wicket.extensions.theme.ThemeBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -41,27 +38,14 @@ public class ProgressBarPage extends BasePage
 
 	private boolean running;
 
-	private Theme theme = Theme.DEFAULT;
-
 	/**
 	 * Constructor.
 	 */
 	public ProgressBarPage()
 	{
-		WebMarkupContainer themed = new WebMarkupContainer("themed");
-		themed.setOutputMarkupId(true);
-		themed.add(new ThemeBehavior(new PropertyModel<>(this, "theme")));
+		WebMarkupContainer themed = newThemedContainer("themed");
 		add(themed);
-		themed.add(new ThemeChoice("theme", new PropertyModel<>(this, "theme"))
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onThemeChanged(AjaxRequestTarget target)
-			{
-				target.add(themed);
-			}
-		});
+		add(newThemeChoice("theme", themed));
 
 		ProgressBar bar = new ProgressBar("bar", new PropertyModel<>(this, "progress"));
 		bar.setOutputMarkupId(true);

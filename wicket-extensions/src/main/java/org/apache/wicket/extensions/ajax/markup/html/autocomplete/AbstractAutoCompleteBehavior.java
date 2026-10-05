@@ -26,6 +26,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.IWrappedHeaderItem;
@@ -34,6 +35,7 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
@@ -112,6 +114,15 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	public static final ResourceReference AUTOCOMPLETE_JS = new JavaScriptResourceReference(
 		AutoCompleteBehavior.class, "wicket-autocomplete.js");
 
+	/**
+	 * The style sheet giving the suggestions the colors of the theme of wicket-extensions the field
+	 * is in. It styles nothing outside a theme.
+	 *
+	 * @since 11.0.0
+	 */
+	public static final ResourceReference THEME_CSS = new CssResourceReference(
+		AutoCompleteBehavior.class, "wicket-autocomplete-theme.css");
+
 	private static final long serialVersionUID = 1L;
 
 	protected AutoCompleteSettings settings;
@@ -155,6 +166,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	private void renderAutocompleteHead(final IHeaderResponse response)
 	{
 		response.render(JavaScriptHeaderItem.forReference(AUTOCOMPLETE_JS));
+		response.render(CssHeaderItem.forReference(THEME_CSS));
 
 		String initJS = String.format("new Wicket.AutoComplete(%s, %s);", renderAjaxAttributes(getComponent()), constructSettingsJS());
 

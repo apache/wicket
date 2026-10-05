@@ -27,6 +27,13 @@ import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * Default theme for {@link ModalDialog}.
+ * <p>
+ * Inside a {@link org.apache.wicket.extensions.theme.Theme theme} of wicket-extensions the dialog
+ * takes the theme's colors: the overlay dims with the theme's veil, the dialog has its surface,
+ * text and border colors and its color scheme, and content using the CSS classes
+ * {@code modal-dialog-header}, {@code modal-dialog-body} and {@code modal-dialog-footer} gets a
+ * header in the theme's primary colors, a padded body and a footer in the toolbar color. Outside a
+ * theme the dialog looks as without one.
  * 
  * @author svenmeier
  */

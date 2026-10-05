@@ -1,0 +1,47 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * The suggestions of a field in a theme of wicket-extensions: the script copies the theme's
+ * properties onto them and marks them with wicket-aa-themed. Suggestions of a field outside a
+ * theme are not marked and keep their look.
+ */
+div.wicket-aa-container.wicket-aa-themed {
+	border-color: var(--wicket-theme-border);
+	border-radius: 0.3em;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	color-scheme: var(--wicket-theme-color-scheme);
+}
+
+div.wicket-aa-themed div.wicket-aa {
+	background-color: var(--wicket-theme-surface);
+	color: var(--wicket-theme-text);
+}
+
+div.wicket-aa-themed div.wicket-aa ul li {
+	padding: 0.2em 0.4em;
+	border-radius: 0.2em;
+	cursor: pointer;
+}
+
+div.wicket-aa-themed div.wicket-aa ul li:hover {
+	background-color: var(--wicket-theme-hover);
+}
+
+div.wicket-aa-themed div.wicket-aa ul li.selected {
+	background-color: var(--wicket-theme-primary);
+	color: var(--wicket-theme-on-primary);
+}

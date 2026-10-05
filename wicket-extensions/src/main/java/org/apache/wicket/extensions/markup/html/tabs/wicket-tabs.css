@@ -1,0 +1,135 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * The looks of TabsStyle. Colors come from the theme properties (see wicket-theme.css), with
+ * fallbacks for pages without a theme.
+ */
+.wicket-tabs .tab-row ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25em;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.wicket-tabs .tab-row li {
+	margin: 0;
+	padding: 0;
+}
+
+.wicket-tabs .tab-row a {
+	display: block;
+	padding: 0.45em 1em;
+	color: var(--wicket-theme-accent, #1f5fa8);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.wicket-tabs .tab-row a:focus-visible {
+	outline: 2px solid var(--wicket-theme-accent, #1f5fa8);
+	outline-offset: -2px;
+}
+
+.wicket-tabs .tab-row li.selected a {
+	font-weight: 600;
+}
+
+.wicket-tabs .tab-panel {
+	color: var(--wicket-theme-text, currentColor);
+	color-scheme: var(--wicket-theme-color-scheme, normal);
+}
+
+/* tabs */
+
+.wicket-tabs-tabs .tab-row {
+	border-bottom: 1px solid var(--wicket-theme-border, #c5d0de);
+}
+
+.wicket-tabs-tabs .tab-row ul {
+	padding: 0 0.5em;
+}
+
+.wicket-tabs-tabs .tab-row li {
+	margin-bottom: -1px;
+}
+
+.wicket-tabs-tabs .tab-row a {
+	border: 1px solid transparent;
+	border-radius: 0.4em 0.4em 0 0;
+}
+
+.wicket-tabs-tabs .tab-row a:hover {
+	background: var(--wicket-theme-hover, #dce7f5);
+}
+
+.wicket-tabs-tabs .tab-row li.selected a {
+	border-color: var(--wicket-theme-border, #c5d0de);
+	border-bottom-color: var(--wicket-theme-surface, #ffffff);
+	background: var(--wicket-theme-surface, #ffffff);
+	color: var(--wicket-theme-text, #1f2933);
+}
+
+.wicket-tabs-tabs .tab-panel {
+	padding: 1em;
+	border: 1px solid var(--wicket-theme-border, #c5d0de);
+	border-top: none;
+	background: var(--wicket-theme-surface, #ffffff);
+}
+
+/* pills */
+
+.wicket-tabs-pills .tab-row a {
+	border-radius: 999px;
+}
+
+.wicket-tabs-pills .tab-row a:hover {
+	background: var(--wicket-theme-hover, #dce7f5);
+}
+
+.wicket-tabs-pills .tab-row li.selected a {
+	background: var(--wicket-theme-primary, #1f3a68);
+	color: var(--wicket-theme-on-primary, #ffffff);
+}
+
+.wicket-tabs-pills .tab-panel {
+	padding: 1em 0.25em;
+}
+
+/* underline */
+
+.wicket-tabs-underline .tab-row {
+	border-bottom: 1px solid var(--wicket-theme-border, #c5d0de);
+}
+
+.wicket-tabs-underline .tab-row a {
+	margin-bottom: -1px;
+	border-bottom: 3px solid transparent;
+}
+
+.wicket-tabs-underline .tab-row a:hover {
+	border-bottom-color: var(--wicket-theme-border, #c5d0de);
+}
+
+.wicket-tabs-underline .tab-row li.selected a {
+	border-bottom-color: var(--wicket-theme-primary, #1f3a68);
+	color: var(--wicket-theme-text, #1f2933);
+}
+
+.wicket-tabs-underline .tab-panel {
+	padding: 1em 0.25em;
+}
