@@ -2509,7 +2509,8 @@
 			 * Fires a submit event on the given form, so that its submit handlers run, without
 			 * submitting the form: an Ajax request submits it instead. Firefox submits a form for
 			 * a submit event fired by a script unless the event is cancelled, so the event is
-			 * cancelled once the handlers on the form have run, as the last listener on the form.
+			 * cancelled once the handlers on the form have run, as the last listener on the form,
+			 * or as soon as a handler stops it from getting there.
 			 *
 			 * @param form {HTMLFormElement} the form
 			 * @returns {boolean} false if a handler on the form, or one capturing the event on its
@@ -2531,13 +2532,18 @@
 				};
 				// a handler stopping the propagation before the form, or the immediate propagation,
 				// keeps cancelOwnEvent from running
-				['stopPropagation', 'stopImmediatePropagation'].forEach(function (name) {
-					const stop = event[name];
-					event[name] = function () {
-						stop.call(this);
+				const stopPropagation = event.stopPropagation;
+				event.stopPropagation = function () {
+					stopPropagation.call(this);
+					if (this.eventPhase === Event.CAPTURING_PHASE) {
 						cancel();
-					};
-				});
+					}
+				};
+				const stopImmediatePropagation = event.stopImmediatePropagation;
+				event.stopImmediatePropagation = function () {
+					stopImmediatePropagation.call(this);
+					cancel();
+				};
 				let notCancelled;
 				form.addEventListener('submit', cancelOwnEvent);
 				try {

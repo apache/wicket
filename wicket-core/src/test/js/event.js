@@ -350,6 +350,21 @@ Wicket.Event.add(window, 'domready', function() {
 		assert.equal(submissions.length, 0, 'the browser does not submit the form');
 	});
 
+	test('a handler on the form cancelling after another one stopped the propagation stops the Ajax request', assert => {
+		const form = createTestForm();
+		form.addEventListener('submit', function (event) {
+			event.stopPropagation();
+		});
+		let cancelledAlready;
+		form.addEventListener('submit', function (event) {
+			cancelledAlready = event.defaultPrevented;
+			event.preventDefault();
+		});
+
+		assert.notOk(Wicket.Event.triggerSubmit(form), 'the Ajax request is stopped');
+		assert.notOk(cancelledAlready, 'not cancelled while the handlers on the form run');
+	});
+
 	test('a capturing handler stopping the propagation before the form lets the Ajax request go on', assert => {
 		const form = createTestForm();
 		const submissions = recordSubmissions(form);
