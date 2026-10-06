@@ -81,6 +81,11 @@ public class DefaultMarkupIdGenerator implements IMarkupIdGenerator
 		markupId = markupId.replace('.', '_');
 		markupId = markupId.replace('-', '_');
 		markupId = markupId.replace(' ', '_');
+		// a component id may contain these, a markup id may not
+		markupId = markupId.replace('(', '_');
+		markupId = markupId.replace(')', '_');
+		markupId = markupId.replace('[', '_');
+		markupId = markupId.replace(']', '_');
 
 		return markupId;
 	}

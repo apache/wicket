@@ -29,7 +29,8 @@ public interface IMarkupIdGenerator
 	 * generated markup id must therefore not contain quotes, backslashes, brackets, {@code ';'},
 	 * {@code '&'} or control characters. An id the component already has, from
 	 * {@link Component#setMarkupId(String)} or from the id attribute in its markup, has been
-	 * checked already.
+	 * checked already. The component id may contain {@code '('}, {@code ')'}, {@code '['} and
+	 * {@code ']'}, so a generator that builds the markup id from it must replace these.
 	 *
 	 * @param component
 	 *            The component for which to generate a markup id
