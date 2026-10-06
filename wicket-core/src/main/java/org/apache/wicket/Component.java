@@ -398,11 +398,22 @@ public abstract class Component
 	 */
 	private static final String MARKUP_ID_ATTR_NAME = "id";
 
-	/** Characters a component id or a markup id must not contain, see {@link #isValidId(String)} */
+	/** Characters a markup id must not contain, see {@link #isValidId(String, String)} */
 	private static final String INVALID_ID_CHARS = "'\"`\\()[]{}<>;&";
 
 	private static final String INVALID_ID_MESSAGE =
 		"must not contain quotes, backslashes, brackets, ';', '&' or control characters.";
+
+	/**
+	 * Characters a component id must not contain, see {@link #isValidId(String, String)}. Unlike a
+	 * markup id, a component id may contain {@code '('}, {@code ')'}, {@code '['} and {@code ']'},
+	 * so it can be a {@code map[key]} or {@code method()} expression for a
+	 * {@link org.apache.wicket.model.CompoundPropertyModel}.
+	 */
+	private static final String INVALID_COMPONENT_ID_CHARS = "'\"`\\{}<>;&";
+
+	private static final String INVALID_COMPONENT_ID_MESSAGE =
+		"must not contain quotes, backslashes, '{', '}', '<', '>', ';', '&' or control characters.";
 
 	/**
 	 * Meta data key for line precise error logging for the moment of addition. Made package private
@@ -2815,7 +2826,7 @@ public abstract class Component
 		{
 			throw new IllegalArgumentException("markupId must be String or Integer");
 		}
-		if (markupId instanceof String && !isValidId((String)markupId))
+		if (markupId instanceof String && !isValidId((String)markupId, INVALID_ID_CHARS))
 		{
 			throw new IllegalArgumentException(
 				"The markup id '" + markupId + "' " + INVALID_ID_MESSAGE);
@@ -4279,31 +4290,39 @@ public abstract class Component
 			throw new WicketRuntimeException("The component ID must not contain ':' or '~' chars.");
 		}
 
-		if ((id != null) && !isValidId(id))
+		if ((id != null) && !isValidId(id, INVALID_COMPONENT_ID_CHARS))
 		{
-			throw new WicketRuntimeException("The component ID '" + id + "' " + INVALID_ID_MESSAGE);
+			throw new WicketRuntimeException(
+				"The component ID '" + id + "' " + INVALID_COMPONENT_ID_MESSAGE);
 		}
 	}
 
 	/**
 	 * Checks the characters of a component id or a markup id. Wicket writes both into the
-	 * JavaScript it generates, the markup id as it is and the component id as part of an input name,
-	 * so characters that can end a JavaScript string literal or statement are not allowed: quotes,
-	 * backslashes, brackets, {@code ';'} and control characters, line breaks included. {@code '&'}
-	 * is not allowed either: in a script written into an attribute, such as an event handler, the
-	 * browser decodes a character reference before the script runs, so {@code &#39} would end the
-	 * literal as well.
+	 * JavaScript it generates, so characters that can end a JavaScript string literal are not
+	 * allowed: quotes, backslashes and control characters, line breaks included. {@code '&'} is not
+	 * allowed either: in a script written into an attribute, such as an event handler, the browser
+	 * decodes a character reference before the script runs, so {@code &#39} would end the literal
+	 * as well.
+	 * <p>
+	 * A markup id is also written into the JavaScript outside a string literal, for instance as
+	 * {@code Wicket.Timer.<markupId>}, so it must not contain brackets or {@code ';'} either, see
+	 * {@link #INVALID_ID_CHARS}. A component id is only written into a string literal, as part of an
+	 * input name, and may contain {@code '('}, {@code ')'}, {@code '['} and {@code ']'}, see
+	 * {@link #INVALID_COMPONENT_ID_CHARS}.
 	 *
 	 * @param id
 	 *            the id to check
+	 * @param invalidChars
+	 *            the characters the id must not contain, besides control characters
 	 * @return {@code true} if no character of the id is disallowed
 	 */
-	private static boolean isValidId(final String id)
+	private static boolean isValidId(final String id, final String invalidChars)
 	{
 		for (int i = 0; i < id.length(); i++)
 		{
 			char c = id.charAt(i);
-			if (INVALID_ID_CHARS.indexOf(c) != -1 || Character.isISOControl(c) || c == '\u2028' ||
+			if (invalidChars.indexOf(c) != -1 || Character.isISOControl(c) || c == '\u2028' ||
 				c == '\u2029')
 			{
 				return false;
@@ -4320,11 +4339,11 @@ public abstract class Component
 	 * @return the id attribute
 	 * @throws WicketRuntimeException
 	 *             if the id attribute contains a character that is not allowed
-	 * @see #isValidId(String)
+	 * @see #isValidId(String, String)
 	 */
 	private String checkMarkupIdFromMarkup(final String markupId)
 	{
-		if (!isValidId(markupId))
+		if (!isValidId(markupId, INVALID_ID_CHARS))
 		{
 			throw new WicketRuntimeException("The id attribute '" + markupId +
 				"' in the markup of " + this + " " + INVALID_ID_MESSAGE);
