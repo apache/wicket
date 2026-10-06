@@ -554,7 +554,8 @@ public class Form<T> extends WebMarkupContainer
 		}
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
 		buffer.append(String.format("f.action='%s';", action));
-		buffer.append("if (Wicket.Event.triggerSubmit(f)) { f.submit(); }");
+		buffer.append(
+			"if (Wicket.Event.triggerSubmit(f)) { HTMLFormElement.prototype.submit.call(f); }");
 		return buffer;
 	}
 

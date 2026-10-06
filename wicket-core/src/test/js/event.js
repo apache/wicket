@@ -350,6 +350,53 @@ Wicket.Event.add(window, 'domready', function() {
 		assert.equal(submissions.length, 0, 'the browser does not submit the form');
 	});
 
+	test('a capturing handler stopping the propagation before the form lets the Ajax request go on', assert => {
+		const form = createTestForm();
+		const submissions = recordSubmissions(form);
+		let event;
+		const stop = function (e) {
+			event = e;
+			e.stopPropagation();
+		};
+		document.addEventListener('submit', stop, true);
+		try {
+			assert.ok(Wicket.Event.triggerSubmit(form), 'the Ajax request may go on');
+		} finally {
+			document.removeEventListener('submit', stop, true);
+		}
+		assert.ok(event.defaultPrevented, 'the event is cancelled');
+		assert.equal(submissions.length, 0, 'the browser does not submit the form');
+	});
+
+	test('a capturing handler cancelling the event and stopping the propagation stops the Ajax request', assert => {
+		const form = createTestForm();
+		const stop = function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+		};
+		document.addEventListener('submit', stop, true);
+		try {
+			assert.notOk(Wicket.Event.triggerSubmit(form));
+		} finally {
+			document.removeEventListener('submit', stop, true);
+		}
+	});
+
+	test('a form with a control named submit is submitted by the form\'s own method', assert => {
+		const form = createTestForm();
+		const control = document.createElement('input');
+		control.name = 'submit';
+		form.appendChild(control);
+		const submissions = recordSubmissions(form);
+
+		// as Form#getJsForListenerUrl() submits it
+		if (Wicket.Event.triggerSubmit(form)) {
+			HTMLFormElement.prototype.submit.call(form);
+		}
+
+		assert.equal(submissions.length, 1, 'the form is submitted once');
+	});
+
 	test('a handler stopping the immediate propagation without cancelling lets the Ajax request go on', assert => {
 		const form = createTestForm();
 		const submissions = recordSubmissions(form);

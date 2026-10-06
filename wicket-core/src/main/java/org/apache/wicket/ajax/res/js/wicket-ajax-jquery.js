@@ -2529,12 +2529,15 @@
 						cancel();
 					}
 				};
-				// a handler stopping the immediate propagation keeps cancelOwnEvent from running
-				const stopImmediatePropagation = event.stopImmediatePropagation;
-				event.stopImmediatePropagation = function () {
-					stopImmediatePropagation.call(this);
-					cancel();
-				};
+				// a handler stopping the propagation before the form, or the immediate propagation,
+				// keeps cancelOwnEvent from running
+				['stopPropagation', 'stopImmediatePropagation'].forEach(function (name) {
+					const stop = event[name];
+					event[name] = function () {
+						stop.call(this);
+						cancel();
+					};
+				});
 				let notCancelled;
 				form.addEventListener('submit', cancelOwnEvent);
 				try {
@@ -2542,7 +2545,6 @@
 				} finally {
 					form.removeEventListener('submit', cancelOwnEvent);
 				}
-				// null when a capturing handler stopped the propagation before the form
 				return cancelledByHandler === null ? notCancelled : !cancelledByHandler;
 			},
 
