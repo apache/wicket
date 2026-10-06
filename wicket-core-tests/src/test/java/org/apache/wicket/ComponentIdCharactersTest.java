@@ -17,15 +17,25 @@
 package org.apache.wicket;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.wicket.markup.IMarkupCacheKeyProvider;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -34,9 +44,11 @@ import org.junit.jupiter.api.Test;
  */
 class ComponentIdCharactersTest extends WicketTestCase
 {
-	private static final String[] INVALID_IDS = { "a'b", "a\"b", "a`b", "a\\b", "a;b", "a(b", "a)b",
-			"a[b", "a]b", "a{b", "a}b", "a<b", "a>b", "a&b", "a\nb", "a\rb", "a\tb", "a\u0000b",
-			"a\u2028b", "a\u2029b" };
+	private static final String[] INVALID_IDS = { "a'b", "a\"b", "a`b", "a\\b", "a;b", "a{b", "a}b",
+			"a<b", "a>b", "a&b", "a\nb", "a\rb", "a\tb", "a\u0000b", "a\u2028b", "a\u2029b" };
+
+	/** A component id may contain brackets and parentheses, a markup id may not */
+	private static final String[] INVALID_MARKUP_IDS = { "a(b", "a)b", "a[b", "a]b" };
 
 	/** Characters that cannot end a JavaScript string literal are still allowed */
 	private static final String VALID_ID = "a b#c=d/e+f,g.h-i_j*k!l\u00fcber1";
@@ -45,6 +57,10 @@ class ComponentIdCharactersTest extends WicketTestCase
 	void componentIdMayContainOtherCharacters()
 	{
 		assertEquals(VALID_ID, new WebComponent(VALID_ID).getId());
+		for (String id : INVALID_MARKUP_IDS)
+		{
+			assertEquals(id, new WebComponent(id).getId());
+		}
 	}
 
 	@Test
@@ -56,6 +72,32 @@ class ComponentIdCharactersTest extends WicketTestCase
 		}
 		assertThrows(WicketRuntimeException.class, () -> new WebComponent("a:b"));
 		assertThrows(WicketRuntimeException.class, () -> new WebComponent("a~b"));
+	}
+
+	/**
+	 * A {@link CompoundPropertyModel} uses the component id as its property expression, and
+	 * {@code PropertyResolver} supports {@code map[key]} and {@code method()} expressions.
+	 */
+	@Test
+	void componentIdMayBeAPropertyExpression()
+	{
+		Bean bean = new Bean();
+		bean.map.put("key", "value");
+
+		tester.startPage(new PropertyExpressionPage(bean));
+		tester.assertLabel("form:name()", "Alice");
+		tester.assertModelValue("form:map[key]", "value");
+
+		Component field = tester.getComponentFromLastRenderedPage("form:map[key]");
+		String markupId = field.getMarkupId();
+		assertTrue(markupId.startsWith("map_key_"), markupId);
+		assertFalse(markupId.contains("["), markupId);
+
+		FormTester formTester = tester.newFormTester("form");
+		formTester.setValue("map[key]", "changed");
+		formTester.submit();
+
+		assertEquals("changed", bean.map.get("key"));
 	}
 
 	@Test
@@ -72,6 +114,11 @@ class ComponentIdCharactersTest extends WicketTestCase
 	{
 		WebComponent component = new WebComponent("component");
 		for (String id : INVALID_IDS)
+		{
+			assertThrows(IllegalArgumentException.class, () -> component.setMarkupId(id), id);
+			assertThrows(IllegalArgumentException.class, () -> component.setMarkupIdImpl(id), id);
+		}
+		for (String id : INVALID_MARKUP_IDS)
 		{
 			assertThrows(IllegalArgumentException.class, () -> component.setMarkupId(id), id);
 			assertThrows(IllegalArgumentException.class, () -> component.setMarkupIdImpl(id), id);
@@ -99,6 +146,53 @@ class ComponentIdCharactersTest extends WicketTestCase
 			}
 		}
 		assertTrue(false, "no cause mentions " + text + ": " + e);
+	}
+
+	/**
+	 * A bean bound with property expressions that are not plain property names.
+	 */
+	public static class Bean implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final Map<String, String> map = new HashMap<>();
+
+		public Map<String, String> getMap()
+		{
+			return map;
+		}
+
+		public String name()
+		{
+			return "Alice";
+		}
+	}
+
+	/**
+	 * A page that binds its components with a {@link CompoundPropertyModel}.
+	 */
+	public static class PropertyExpressionPage extends WebPage
+		implements
+			IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		PropertyExpressionPage(Bean bean)
+		{
+			Form<Bean> form = new Form<>("form", new CompoundPropertyModel<>(bean));
+			add(form);
+			form.add(new Label("name()"));
+			form.add(new TextField<String>("map[key]").setOutputMarkupId(true));
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><body><form wicket:id=\"form\">" +
+				"<span wicket:id=\"name()\"></span>" +
+				"<input type=\"text\" wicket:id=\"map[key]\"/></form></body></html>");
+		}
 	}
 
 	/**
