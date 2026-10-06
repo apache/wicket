@@ -2786,6 +2786,55 @@
 		},
 
 		/**
+		 * Fires a submit event on the given form, so that its submit handlers run, without
+		 * submitting the form: an Ajax request submits it instead. Firefox submits a form for
+		 * a submit event fired by a script unless the event is cancelled, so the event is
+		 * cancelled once the handlers on the form have run, as the last listener on the form,
+		 * or as soon as a handler stops it from getting there.
+		 *
+		 * @param form {HTMLFormElement} the form
+		 * @returns {boolean} false if a handler on the form, or one capturing the event on its
+		 *      way there, cancelled the event
+		 */
+		triggerSubmit: function(form) {
+			const event = new Event('submit', { cancelable: true, bubbles: true });
+			let cancelledByHandler = null;
+			const cancel = function () {
+				if (cancelledByHandler === null) {
+					cancelledByHandler = event.defaultPrevented;
+					event.preventDefault();
+				}
+			};
+			const cancelOwnEvent = function (e) {
+				if (e === event) {
+					cancel();
+				}
+			};
+			// a handler stopping the propagation before the form, or the immediate propagation,
+			// keeps cancelOwnEvent from running
+			const stopPropagation = event.stopPropagation;
+			event.stopPropagation = function () {
+				stopPropagation.call(this);
+				if (this.eventPhase === Event.CAPTURING_PHASE) {
+					cancel();
+				}
+			};
+			const stopImmediatePropagation = event.stopImmediatePropagation;
+			event.stopImmediatePropagation = function () {
+				stopImmediatePropagation.call(this);
+				cancel();
+			};
+			let notCancelled;
+			form.addEventListener('submit', cancelOwnEvent);
+			try {
+				notCancelled = form.dispatchEvent(event);
+			} finally {
+				form.removeEventListener('submit', cancelOwnEvent);
+			}
+			return cancelledByHandler === null ? notCancelled : !cancelledByHandler;
+		},
+
+		/**
 		 * The names of the topics on which Wicket notifies
 		 */
 		Topic: {

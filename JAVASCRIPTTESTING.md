@@ -115,3 +115,16 @@ mvn verify -pl wicket-examples -Dwicket.selenium=true -Dtest=VeilPageSeleniumTes
 
 Selenium Manager, which ships with Selenium, finds a matching ChromeDriver, and downloads
 Chrome for Testing too when no Chrome is installed, so the first run needs network access.
+
+`SubmitEventSeleniumTest` checks the forms that fire a `submit` event from a script, which
+Firefox and Chrome handle differently, so it is worth running in both. It takes the browser,
+and optionally a Selenium grid to run it on, from system properties - for example against the
+`selenium/standalone-firefox` Docker image:
+
+```bash
+docker run -d --rm -p 4444:4444 --add-host host.docker.internal:host-gateway \
+	--shm-size 2g selenium/standalone-firefox
+mvn verify -pl wicket-examples -Dwicket.selenium=true -Dtest=SubmitEventSeleniumTest \
+	-Dwicket.selenium.browser=firefox -Dwicket.selenium.remote=http://localhost:4444 \
+	-Dwicket.selenium.host=host.docker.internal
+```
