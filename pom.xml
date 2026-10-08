@@ -94,6 +94,18 @@
 		<url>http://git-wip-us.apache.org/repos/asf/wicket/repo?p=wicket.git</url>
 		<tag>HEAD</tag>
 	</scm>
+	<repositories>
+		<repository>
+			<id>codegenome</id>
+			<url>https://artifacts.codegenomeproject.org/maven</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>codegenome</id>
+			<url>https://artifacts.codegenomeproject.org/maven</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<modules>
 		<!-- wicket-eclipse-settings is separate released -->

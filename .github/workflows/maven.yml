@@ -51,9 +51,14 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Build with Maven
+      env:
+        CODEGENOME_USER: ${{ secrets.CODEGENOME_USER }}
+        CODEGENOME_TOKEN: ${{ secrets.CODEGENOME_TOKEN }}
       run: |
+        echo "<settings><servers><server><id>codegenome</id><username>$CODEGENOME_USER</username><password>$CODEGENOME_TOKEN</password></server></servers></settings>" > ${{runner.temp}}/settings.xml
         java -version
         ./apache-maven-${MAVEN_VERSION}/bin/mvn --show-version \
+          --settings ${{runner.temp}}/settings.xml \
           clean verify -Pjs-test \
           ${{ matrix.java == '21' && '-Pcoverage' || '' }}
 
