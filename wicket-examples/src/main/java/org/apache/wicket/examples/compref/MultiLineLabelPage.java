@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.compref;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 
 
@@ -25,7 +24,7 @@ import org.apache.wicket.markup.html.basic.MultiLineLabel;
  * 
  * @author Eelco Hillenius
  */
-public class MultiLineLabelPage extends WicketExamplePage
+public class MultiLineLabelPage extends ComprefPage
 {
 	/**
 	 * Constructor

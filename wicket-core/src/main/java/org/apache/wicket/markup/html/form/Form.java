@@ -519,6 +519,9 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Generate a piece of JavaScript that submits the form to the given URL of an {@link IRequestListener}.
+	 * <p>
+	 * It fires a {@code submit} event on the form first, and submits the form unless a handler
+	 * cancels that event. The form is submitted without client-side validation.
 	 *
 	 * Warning: This code should only be called in the rendering phase for form components inside
 	 * the form because it uses the css/javascript id of the form which can be stored in the markup.
@@ -551,7 +554,8 @@ public class Form<T> extends WebMarkupContainer
 		}
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
 		buffer.append(String.format("f.action='%s';", action));
-		buffer.append("Wicket.Event.fire(f, 'submit');");
+		buffer.append(
+			"if (Wicket.Event.triggerSubmit(f)) { HTMLFormElement.prototype.submit.call(f); }");
 		return buffer;
 	}
 

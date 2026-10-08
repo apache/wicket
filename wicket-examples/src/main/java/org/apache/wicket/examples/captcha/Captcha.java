@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.captcha;
 
+import org.apache.wicket.examples.homepage.CaptchaIndex;
+
 import org.apache.wicket.examples.WicketExamplePage;
 
 /**
@@ -25,6 +27,18 @@ import org.apache.wicket.examples.WicketExamplePage;
  */
 public class Captcha extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return CaptchaIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "captchas";
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	/**

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.tree;
 
+import org.apache.wicket.examples.ExampleIndexPanel;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -28,6 +29,13 @@ public abstract class AbstractTreePage extends WicketExamplePage
 {
 
 	private static final long serialVersionUID = 1L;
+
+	/** The tree examples are listed on no index of their own, so each of them links to all. */
+	public AbstractTreePage()
+	{
+		add(new ExampleIndexPanel("examples", AbstractTreePage.class));
+	}
+
 
 	@Override
 	public void renderHead(IHeaderResponse response)

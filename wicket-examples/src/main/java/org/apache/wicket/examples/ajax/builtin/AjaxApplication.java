@@ -52,6 +52,7 @@ public class AjaxApplication extends WicketExampleApplication
 
 		mountPage("autocomplete", AutoCompletePage.class);
 		mountPage("choice", ChoicePage.class);
+		mountPage("form-component-panel", FormComponentPanelPage.class);
 		mountPage("clock", ClockPage.class);
 		mountPage("editable-label", EditableLabelPage.class);
 		mountPage("effects", EffectsPage.class);
@@ -67,6 +68,7 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("todo-list", TodoList.class);
 		mountPage("world-clock", WorldClockPage.class);
 		mountPage("upload", FileUploadPage.class);
+		mountPage("veil", VeilPage.class);
 		mountPage("download", AjaxDownloadPage.class);
 
 		mountResource("dynamic-text-file", AjaxDownloadPage.DynamicTextFileResource.instance);

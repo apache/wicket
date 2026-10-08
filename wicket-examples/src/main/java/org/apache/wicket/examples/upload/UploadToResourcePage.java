@@ -46,6 +46,12 @@ import org.apache.wicket.util.lang.Bytes;
  */
 public class UploadToResourcePage extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return Index.class;
+	}
+
 	private static class UpdateInEachAjaxRequestBehavior extends Behavior
 	{
 

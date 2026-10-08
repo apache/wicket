@@ -101,7 +101,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 		{
 			if (tag.getAttributes().containsKey("type"))
 			{
-				checkComponentTagAttribute(tag, "type", "text");
+				checkComponentTagAttribute(tag, "type", "text", "search");
 			}
 		}
 

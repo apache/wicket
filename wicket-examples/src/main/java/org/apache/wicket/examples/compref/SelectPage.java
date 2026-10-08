@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.extensions.markup.html.form.select.SelectOption;
@@ -40,7 +39,7 @@ import org.apache.wicket.util.io.IClusterable;
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
  */
-public class SelectPage extends WicketExamplePage
+public class SelectPage extends ComprefPage
 {
 	/** available choices for large selection box. */
 	private static final List<String> MANY_CHOICES = Arrays.asList("Choice1", "Choice2",

@@ -43,8 +43,8 @@ _IAjaxCallListener_ defines a set of methods which return the JavaScript code (a
 * *getPrecondition(Component)*: returns the JavaScript code that will be used as precondition for the AJAX call. If the script returns false then neither the Ajax call nor the other handlers will be executed. The code is executed in a scope where it can use variable attrs, which is the same variable seen for getBeforeHandler. 
 * *getBeforeSendHandler(Component)*: returns the JavaScript code that will be executed just before the AJAX call is performed. The code is executed in a scope where it can use variables attrs, jqXHR and settings:
 ** attrs is the same variable seen for getBeforeHandler.
-** jqXHR is the the jQuery XMLHttpRequest object used to make the AJAX call.
-** settings contains the settings used for calling jQuery.ajax().
+** jqXHR is the XMLHttpRequest object used to make the AJAX call - a jQuery-augmented one by default, or a plain `XMLHttpRequest` if the application has switched to the JQuery-free `wicket-ajax.js` implementation (see <<_choosing_between_the_jquery_and_the_plain_javascript_ajax_implementation>>).
+** settings contains the settings object used to make the call; its exact shape depends on which `wicket-ajax.js` implementation is configured.
 * *getAfterHandler(Component)*: returns the JavaScript code that will be executed after the AJAX call. The code is executed in a scope where it can use variable attrs, which is the same variable seen before for getBeforeHandler. 
 * *getSuccessHandler(Component)*: returns the JavaScript code that will be executed if the AJAX call has successfully returned. The code is executed in a scope where it can use variables attrs, jqXHR, data and textStatus:
 ** attrs and jqXHR are same variables seen for getBeforeSendHandler:

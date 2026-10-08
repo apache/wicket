@@ -17,11 +17,9 @@
 package org.apache.wicket.markup.html.form.encryption;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.apache.wicket.util.crypt.ICrypt;
-import org.apache.wicket.util.crypt.NoCrypt;
-import org.apache.wicket.util.crypt.SunJceCrypt;
+import org.apache.wicket.core.util.crypt.ICrypt;
+import org.apache.wicket.core.util.crypt.NoCrypt;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -30,40 +28,12 @@ import org.junit.jupiter.api.Test;
  */
 class CryptTest extends WicketTestCase
 {
-	@Test
-	void crypt()
-	{
-		final SunJceCrypt crypt = new SunJceCrypt(new byte[]{ (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
-			(byte)0x66, (byte)0x51, (byte)0x2a, (byte)0xbc }, 17);
-		crypt.setKey("someStableKey");
-
-		try
-		{
-			if (crypt.encryptUrlSafe("test") != null)
-			{
-				final String text = "abcdefghijkABC: A test which creates a '/' and/or a '+'";
-				final String expectedUrlSafeEncrypted = "xXMS3UMELV--qVINGVFaYaiqUPOtryc_E4x0MyMFgYl-TgTGKxczTzPvwJrE-4YEVMpl-F3eDAg";
-
-				final String encrypted = crypt.encryptUrlSafe(text);
-				assertEquals(expectedUrlSafeEncrypted, encrypted);
-				assertEquals(text, crypt.decryptUrlSafe(expectedUrlSafeEncrypted));
-				assertNull(crypt.decryptUrlSafe("style.css"));
-			}
-		}
-		catch (Exception ex)
-		{
-			// fails on JVMs without security provider (e.g. seems to be on
-			// MAC in US)
-		}
-	}
-
 	/**
-	 * 
+	 * The {@link NoCrypt} implementation does not modify the string at all.
 	 */
 	@Test
 	void noCrypt()
 	{
-		// The NoCrypt implementation does not modify the string at all
 		final ICrypt crypt = new NoCrypt();
 
 		assertEquals("test", crypt.encryptUrlSafe("test"));

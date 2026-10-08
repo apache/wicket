@@ -18,12 +18,9 @@ package org.apache.wicket.settings;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Supplier;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.pageStore.crypt.DefaultCrypter;
-import org.apache.wicket.pageStore.crypt.ICrypter;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
@@ -53,8 +50,6 @@ public class StoreSettings
 	private boolean asynchronous = true;
 	
 	private boolean encrypted = false;
-	
-	private Supplier<ICrypter> crypter = DefaultCrypter::new;
 
 	/**
 	 * Construct.
@@ -190,6 +185,17 @@ public class StoreSettings
 	/**
 	 * Sets a flag whether to wrap the configured {@link org.apache.wicket.pageStore.IPageStore} with
 	 * {@link org.apache.wicket.pageStore.CryptingPageStore}.
+	 * <p>
+	 * Pages are encrypted with a random 256 bit key per session, using the authenticated scheme
+	 * configured on
+	 * {@link SecuritySettings#setCryptScheme(org.apache.wicket.core.util.crypt.ICryptScheme)}, so
+	 * the stored bytes are tamper-evident as well as confidential: a modified page fails to decrypt
+	 * and is treated as no longer present rather than being handed to the deserializer.
+	 * <p>
+	 * Because the key lives in the session, this protects the stored pages against parties who can
+	 * read or write the underlying store, not against one who already controls the session. The
+	 * store should therefore still be treated as trusted, private storage - see {@code SECURITY.md}
+	 * for the trust assumptions Wicket makes about it.
 	 *
 	 * @param encrypted
 	 *            {@code true} to encrypt, {@code false} - otherwise
@@ -207,34 +213,5 @@ public class StoreSettings
 	public boolean isEncrypted()
 	{
 		return encrypted;
-	}
-	
-	/**
-	 * Sets the supplier for the {@link ICrypter} used by a
-	 * {@link org.apache.wicket.pageStore.CryptingPageStore}.
-	 * <p>
-	 * The default {@link DefaultCrypter} is not authenticated and gives confidentiality only. Set
-	 * {@link org.apache.wicket.pageStore.crypt.GCMSIVCrypter} here if the stored bytes must also be
-	 * tamper-evident.
-	 *
-	 * @param crypter
-	 *            The new supplier for an {@link ICrypter}.
-	 * @return {@code this} object for chaining
-	 */
-	public StoreSettings setCrypter(Supplier<ICrypter> crypter)
-	{
-		this.crypter = crypter;
-		return this;
-	}
-
-	/**
-	 * @return the supplier used to create a {@link ICrypter} for a
-	 *         {@link org.apache.wicket.pageStore.CryptingPageStore}. The default is
-	 *         {@link DefaultCrypter}, which is not authenticated - see
-	 *         {@link #setCrypter(Supplier)}.
-	 */
-	public Supplier<ICrypter> getCrypter()
-	{
-		return crypter;
 	}
 }

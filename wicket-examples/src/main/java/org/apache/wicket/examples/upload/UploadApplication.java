@@ -39,7 +39,7 @@ public class UploadApplication extends WicketExampleApplication
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
-		return UploadPage.class;
+		return Index.class;
 	}
 
 	/**
@@ -65,6 +65,7 @@ public class UploadApplication extends WicketExampleApplication
 
 		mountResource("/uploads", FileUploadResourceReference.createNewInstance(uploadsFileManager));
 
+		mountPage("/index", Index.class);
 		mountPage("/multi", MultiUploadPage.class);
 		mountPage("/single", UploadPage.class);
 		mountPage("/uploadToResource", UploadToResourcePage.class);

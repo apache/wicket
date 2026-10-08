@@ -16,14 +16,13 @@
  */
 package org.apache.wicket.examples.compref;
 
-import org.apache.wicket.examples.WicketExamplePage;
 
 /**
  * Page with examples on {@link org.apache.wicket.markup.html.panel.Panel}.
  * 
  * @author Eelco Hillenius
  */
-public class PanelPage extends WicketExamplePage
+public class PanelPage extends ComprefPage
 {
 	/**
 	 * Constructor

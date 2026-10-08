@@ -18,11 +18,19 @@ package org.apache.wicket.core.request.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.security.SecureRandom;
+import java.util.List;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
@@ -48,8 +56,9 @@ import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.UrlResourceReference;
-import org.apache.wicket.util.crypt.ICrypt;
-import org.apache.wicket.util.crypt.SunJceCrypt;
+import org.apache.wicket.core.util.crypt.AesGcmCryptScheme;
+import org.apache.wicket.core.util.crypt.ICrypt;
+import org.apache.wicket.core.util.crypt.SchemeCrypt;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
@@ -64,12 +73,12 @@ class CryptoMapperTest extends AbstractMapperTest
 {
 	private static final String PLAIN_BOOKMARKABLE_URL = "wicket/bookmarkable/" +
 		Page2.class.getName();
-	private static final String ENCRYPTED_BOOKMARKABLE_URL = "L7ExSNbPC4sb6TPJDblCAopL53TWmZP5y7BQEaJSJAC05HXod5M5U7gT2yNT0lK5L6L09ZAOoZkGyUhseyPrC4S5tqUUrV6zipc4_Ni877EmwR8AyCyA-A/L7E59/5y7f2";
 	private static final String PLAIN_PAGE_INSTANCE_URL = "wicket/page?5";
-	private static final String ENCRYPTED_PAGE_INSTANCE_URL = "fyBfZ9p6trOhokHCzsQS6Q/fyBce";
 	private static final String MOUNTED_URL = "path/to/mounted/page";
 
 	private CryptoMapper mapper;
+
+	private ICrypt crypt;
 
 	private WicketTester tester;
 
@@ -96,9 +105,17 @@ class CryptoMapperTest extends AbstractMapperTest
 		WebApplication application = tester.getApplication();
 		application.mountPage(MOUNTED_URL, Page1.class);
 
-		SunJceCrypt crypt = new SunJceCrypt(new byte[]{ (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
-			(byte)0x66, (byte)0x51, (byte)0x2a, (byte)0xbc }, 17);
-		crypt.setKey("WiCkEt-FRAMEwork");
+		// a fixed-key authenticated crypt keeps the tests self-contained; note that
+		// authenticated encryption uses a random nonce, so ciphertext is not deterministic and
+		// tests must round-trip (encrypt then decrypt) rather than assert exact encrypted strings
+		byte[] keyBytes = new byte[32];
+		for (int i = 0; i < keyBytes.length; i++)
+		{
+			keyBytes[i] = (byte)i;
+		}
+		SecretKey key = new SecretKeySpec(keyBytes, "AES");
+		AesGcmCryptScheme scheme = new AesGcmCryptScheme();
+		crypt = new SchemeCrypt(key, new SecureRandom(), scheme, List.of(scheme));
 
 		mapper = new CryptoMapper(application.getRootRequestMapper(), () -> crypt);
 	}
@@ -188,7 +205,15 @@ class CryptoMapperTest extends AbstractMapperTest
 		assertEquals(PLAIN_BOOKMARKABLE_URL, plainTextUrl.toString());
 
 		Url encryptedUrl = mapper.mapHandler(renderPage2BookmarkableHandler);
-		assertEquals(ENCRYPTED_BOOKMARKABLE_URL, encryptedUrl.toString());
+		assertNotEquals(PLAIN_BOOKMARKABLE_URL, encryptedUrl.toString());
+		assertFalse(encryptedUrl.getSegments().isEmpty());
+		assertNotEquals("wicket", encryptedUrl.getSegments().get(0));
+
+		// the encrypted url must round-trip back to the same page
+		IRequestHandler requestHandler = unwrapRequestHandlerDelegate(
+			mapper.mapRequest(getRequest(encryptedUrl)));
+		assertThat(requestHandler).isInstanceOf(RenderPageRequestHandler.class);
+		assertEquals(Page2.class, ((RenderPageRequestHandler)requestHandler).getPageClass());
 	}
 
 	/**
@@ -198,7 +223,10 @@ class CryptoMapperTest extends AbstractMapperTest
 	@Test
 	void bookmarkablePageDecrypt()
 	{
-		Request request = getRequest(Url.parse(ENCRYPTED_BOOKMARKABLE_URL));
+		Url encryptedUrl = mapper.mapHandler(
+			new RenderPageRequestHandler(new PageProvider(Page2.class, new PageParameters())));
+
+		Request request = getRequest(encryptedUrl);
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
 		assertNotNull(requestHandler);
@@ -219,9 +247,12 @@ class CryptoMapperTest extends AbstractMapperTest
 	@Test
 	void bookmarkablePageDecrypt2()
 	{
-		String encryptedExtraSegments = "/i87b7/i87b7";
-		Request request = getRequest(
-			Url.parse(ENCRYPTED_BOOKMARKABLE_URL + encryptedExtraSegments));
+		Url encryptedUrl = mapper.mapHandler(
+			new RenderPageRequestHandler(new PageProvider(Page2.class, new PageParameters())));
+		// extra trailing (checksum) segments must be ignored
+		encryptedUrl.getSegments().add("i87b7");
+		encryptedUrl.getSegments().add("i87b7");
+		Request request = getRequest(encryptedUrl);
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
 		assertNotNull(requestHandler);
@@ -240,7 +271,9 @@ class CryptoMapperTest extends AbstractMapperTest
 	@Test
 	void bookmarkablePageDecryptMultipleCryptoMapper()
 	{
-		Request request = getRequest(Url.parse(ENCRYPTED_BOOKMARKABLE_URL));
+		Url encryptedUrl = mapper.mapHandler(
+			new RenderPageRequestHandler(new PageProvider(Page2.class, new PageParameters())));
+		Request request = getRequest(encryptedUrl);
 
 		IRequestHandler requestHandler = new CryptoMapper(mapper, tester.getApplication())
 			.mapRequest(request);
@@ -252,6 +285,47 @@ class CryptoMapperTest extends AbstractMapperTest
 
 		RenderPageRequestHandler handler = (RenderPageRequestHandler)requestHandler;
 		assertEquals(Page2.class, handler.getPageClass());
+	}
+
+	/**
+	 * The mapper encrypts URLs deterministically, so the same page always maps to the same URL for
+	 * as long as the key lives. Two things depend on that: a URL regenerated while rendering
+	 * matches the one the client requested, so {@code targetUrl == currentUrl} and Wicket's URL
+	 * normalisation does not redirect endlessly; and a URL stays valid and identical across
+	 * requests, which is what makes encrypted resource URLs cacheable.
+	 */
+	@Test
+	void encryptedUrlIsStableAcrossRequests()
+	{
+		// the randomized entry point of the very same crypt is non-deterministic; only the
+		// deterministic one is stable, and that is what the mapper uses
+		assertNotEquals(crypt.encryptUrlSafe(PLAIN_BOOKMARKABLE_URL),
+			crypt.encryptUrlSafe(PLAIN_BOOKMARKABLE_URL));
+
+		// a properly-formed encrypted URL for a bookmarkable page, as a previous response produced
+		Url encrypted = mapper.mapHandler(
+			new RenderPageRequestHandler(new PageProvider(Page2.class, new PageParameters())));
+
+		// start a fresh request, simulating the client coming back with that URL
+		tester.startPage(HomePage.class);
+
+		// the URL received in this new request still decrypts...
+		IRequestHandler requestHandler = mapper.mapRequest(getRequest(encrypted));
+		assertNotNull(requestHandler);
+		assertEquals(Page2.class, ((RenderPageRequestHandler) unwrapRequestHandlerDelegate(
+			requestHandler)).getPageClass());
+
+		// ...and re-encrypting the same page reproduces exactly that URL, which is what stops the
+		// infinite redirect
+		Url regenerated = mapper.mapHandler(
+			new RenderPageRequestHandler(new PageProvider(Page2.class, new PageParameters())));
+		assertEquals(encrypted.toString(), regenerated.toString());
+
+		// the same holds in yet another request, without having decrypted anything in it
+		tester.startPage(HomePage.class);
+		assertEquals(encrypted.toString(), mapper.mapHandler(
+			new RenderPageRequestHandler(new PageProvider(Page2.class, new PageParameters())))
+			.toString());
 	}
 
 	/**
@@ -292,7 +366,15 @@ class CryptoMapperTest extends AbstractMapperTest
 
 		assertEquals(PLAIN_PAGE_INSTANCE_URL,
 			mapper.getDelegateMapper().mapHandler(requestHandler).toString());
-		assertEquals(ENCRYPTED_PAGE_INSTANCE_URL, mapper.mapHandler(requestHandler).toString());
+
+		Url encryptedUrl = mapper.mapHandler(requestHandler);
+		assertNotEquals(PLAIN_PAGE_INSTANCE_URL, encryptedUrl.toString());
+
+		// the encrypted url must round-trip back to the same page instance
+		IRequestHandler rt = unwrapRequestHandlerDelegate(
+			mapper.mapRequest(getRequest(encryptedUrl)));
+		assertThat(rt).isInstanceOf(RenderPageRequestHandler.class);
+		assertEquals(5, ((RenderPageRequestHandler)rt).getPageId().intValue());
 	}
 
 	/**
@@ -301,8 +383,9 @@ class CryptoMapperTest extends AbstractMapperTest
 	@Test
 	void pageInstanceDecrypt()
 	{
-		IRequestHandler requestHandler = mapper
-			.mapRequest(getRequest(Url.parse(ENCRYPTED_PAGE_INSTANCE_URL)));
+		Url encryptedUrl = mapper
+			.mapHandler(new RenderPageRequestHandler(new PageProvider(new MockPage(5))));
+		IRequestHandler requestHandler = mapper.mapRequest(getRequest(encryptedUrl));
 
 		assertNotNull(requestHandler);
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
@@ -318,8 +401,10 @@ class CryptoMapperTest extends AbstractMapperTest
 	@Test
 	void pageInstanceDecryptMultipleCryptoMapper()
 	{
+		Url encryptedUrl = mapper
+			.mapHandler(new RenderPageRequestHandler(new PageProvider(new MockPage(5))));
 		IRequestHandler requestHandler = new CryptoMapper(mapper, tester.getApplication())
-			.mapRequest(getRequest(Url.parse(ENCRYPTED_PAGE_INSTANCE_URL)));
+			.mapRequest(getRequest(encryptedUrl));
 
 		assertNotNull(requestHandler);
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
@@ -440,14 +525,18 @@ class CryptoMapperTest extends AbstractMapperTest
 
 		int delegateBookmarkableScore = mapper.getDelegateMapper()
 			.getCompatibilityScore(getRequest(Url.parse(PLAIN_BOOKMARKABLE_URL)));
+		Url encryptedBookmarkableUrl = mapper.mapHandler(
+			new RenderPageRequestHandler(new PageProvider(Page2.class, new PageParameters())));
 		int cryptoBookmarkableScore = mapper
-			.getCompatibilityScore(getRequest(Url.parse(ENCRYPTED_BOOKMARKABLE_URL)));
+			.getCompatibilityScore(getRequest(encryptedBookmarkableUrl));
 		assertEquals(delegateBookmarkableScore, cryptoBookmarkableScore);
 
 		int delegatePageInstanceScore = mapper.getDelegateMapper()
 			.getCompatibilityScore(getRequest(Url.parse(PLAIN_PAGE_INSTANCE_URL)));
+		Url encryptedPageInstanceUrl = mapper
+			.mapHandler(new RenderPageRequestHandler(new PageProvider(new MockPage(5))));
 		int cryptoPageInstanceScore = mapper
-			.getCompatibilityScore(getRequest(Url.parse(ENCRYPTED_PAGE_INSTANCE_URL)));
+			.getCompatibilityScore(getRequest(encryptedPageInstanceUrl));
 		assertEquals(delegatePageInstanceScore, cryptoPageInstanceScore);
 	}
 
@@ -470,8 +559,6 @@ class CryptoMapperTest extends AbstractMapperTest
 	@Test
 	void pageParameters()
 	{
-		String expectedEncrypted = "L7ExSNbPC4sb6TPJDblCAopL53TWmZP5y7BQEaJSJAC05HXod5M5U7gT2yNT0lK5L6L09ZAOoZkGyUhseyPrC4S5tqUUrV6zipc4_Ni877FDOOoE5C_Cd7YCyK1xSScpVhno6LeBz2wiu5oWyf7hB1RKcv6zkhEBmbx8vU7K7-e4xe1_LO8Y3fhEjMSQyU9BVh7Uz4HKzkR2OxFo5LaDzQ/L7E59/yPr6a/5L6ae/OxF2c";
-
 		PageParameters expectedParameters = new PageParameters();
 		expectedParameters.add("namedKey1", "namedValue1");
 		expectedParameters.add("namedKey2", "namedValue2");
@@ -480,7 +567,7 @@ class CryptoMapperTest extends AbstractMapperTest
 		RenderPageRequestHandler renderPageRequestHandler = new RenderPageRequestHandler(
 			new PageProvider(Page2.class, expectedParameters));
 		Url url = mapper.mapHandler(renderPageRequestHandler);
-		assertEquals(expectedEncrypted, url.toString());
+		assertNotEquals(PLAIN_BOOKMARKABLE_URL, url.toString());
 
 		Request request = getRequest(url);
 		IRequestHandler requestHandler = mapper.mapRequest(request);
@@ -528,6 +615,25 @@ class CryptoMapperTest extends AbstractMapperTest
 
 		assertEquals(getClass(), handler.getResourceReference().getScope());
 		assertEquals("crypt/crypt.txt", handler.getResourceReference().getName());
+	}
+
+	/**
+	 * A resource URL must encrypt to the same text in every request, otherwise the browser sees a
+	 * new URL on each page view and re-downloads the resource despite its long-lived cache headers.
+	 */
+	@Test
+	void encryptedResourceUrlIsStableAcrossRequests()
+	{
+		PackageResourceReference resource = new PackageResourceReference(getClass(),
+			"crypt/crypt.txt");
+
+		Url firstRequest = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
+
+		tester.startPage(HomePage.class);
+
+		Url secondRequest = mapper.mapHandler(new ResourceReferenceRequestHandler(resource));
+
+		assertEquals(firstRequest.toString(), secondRequest.toString());
 	}
 
 	/**
@@ -637,7 +743,10 @@ class CryptoMapperTest extends AbstractMapperTest
 	void markedEncryptedUrlDecrypt()
 	{
 		mapper.setMarkEncryptedUrls(true);
-		Request request = getRequest(Url.parse("crypt." + ENCRYPTED_BOOKMARKABLE_URL));
+		Url encryptedUrl = mapper.mapHandler(
+			new RenderPageRequestHandler(new PageProvider(Page2.class, new PageParameters())));
+		assertTrue(encryptedUrl.getSegments().get(0).startsWith("crypt."));
+		Request request = getRequest(encryptedUrl);
 		IRequestHandler requestHandler = mapper.mapRequest(request);
 
 		assertNotNull(requestHandler);

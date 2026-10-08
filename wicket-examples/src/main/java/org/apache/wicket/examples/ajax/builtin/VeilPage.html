@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+
+<h2>Page veil</h2>
+
+<p>
+	Page clicks: <span wicket:id="pageCounter" class="page-counter"></span>
+</p>
+
+<ul>
+	<li><a href="#" wicket:id="slow">Slow request</a>: takes a second, so the spinner shows.</li>
+	<li><a href="#" wicket:id="medium">Medium request</a>: takes 400 ms, so the spinner shows, and stays for its minimum time of 500 ms.</li>
+	<li><a href="#" wicket:id="fast">Fast request</a>: takes 100 ms, the page is veiled but no spinner shows.</li>
+	<li><a href="#" wicket:id="unveiled">Unveiled request</a>: takes a second, but opts out of the veil, so the page stays usable.</li>
+</ul>
+
+<h2>Nested local veils</h2>
+
+<div wicket:id="outer" class="veil-panel veil-outer">
+	<p>
+		This panel has its own veil with the default timings: the spinner shows after 300 ms and
+		stays for at least 500 ms. Requests fired from inside it veil only the panel, so the rest
+		of the page stays usable.
+	</p>
+	<p>
+		Outer panel clicks: <span wicket:id="outerCounter" class="outer-counter"></span>
+	</p>
+	<p>
+		<a href="#" wicket:id="outerSlow">Slow request from the outer panel</a>: takes two seconds and veils the whole outer panel, inner panel included.
+	</p>
+
+	<div wicket:id="inner" class="veil-panel veil-inner">
+		<p>
+			This nested panel has a veil of its own, configured with
+			<code>setSpinnerDelay(100 ms)</code> and <code>setMinimumSpinnerTime(1 s)</code>.
+			Requests fired from inside it veil only this panel: the innermost veil takes the request.
+		</p>
+		<p>
+			Inner panel clicks: <span wicket:id="innerCounter" class="inner-counter"></span>
+		</p>
+		<ul>
+			<li><a href="#" wicket:id="innerSlow">Slow request from the inner panel</a>: takes two seconds.</li>
+			<li><a href="#" wicket:id="innerShort">Short request from the inner panel</a>: takes 200 ms, but the spinner shows after 100 ms and stays for a second.</li>
+		</ul>
+	</div>
+</div>
+
+<h2>Delegated clicks</h2>
+
+<p>
+	One <code>AjaxEventBehavior</code> on the list handles the clicks on all of its rows through a
+	child selector, and every row has a local veil of its own. A click on a row takes a second and
+	veils only the row that was clicked, not the list or the page.
+</p>
+<ul wicket:id="rows" class="veil-rows">
+	<li wicket:id="row" class="veil-row">
+		Row <span wicket:id="rowNumber"></span>, clicked
+		<span wicket:id="rowCounter" class="row-counter"></span> times. Click anywhere on the row.
+	</li>
+</ul>
+
+<h2>A markup id named after an object member</h2>
+
+<div wicket:id="constructor" class="veil-panel">
+	This panel's markup id is <code>constructor</code>, the name of a member every JavaScript
+	object has. It is veiled like any other:
+	<a href="#" wicket:id="constructorSlow">Slow request</a>, clicked
+	<span wicket:id="constructorCounter" class="constructor-counter"></span> times.
+</div>
+
+<h2>Scrolling host</h2>
+
+<p>
+	This box scrolls and has a local veil. Scroll down and click a request: the veil covers the
+	part of the box you see, with the spinner in its middle, and follows the box while you scroll
+	it. Requests sent: <span wicket:id="scrollerCounter" class="scroller-counter"></span>.
+</p>
+<div wicket:id="scroller" class="veil-panel veil-scroller">
+	<p wicket:id="line">
+		Line <span wicket:id="lineNumber"></span>:
+		<a href="#" wicket:id="lineSlow">slow request</a>
+	</p>
+</div>
+
+<h2>Positioned host</h2>
+
+<div class="veil-stage">
+	<p>
+		The card on the right is absolutely positioned and has a local veil. A request from it
+		takes two seconds, and the card stays where it is.
+	</p>
+	<div wicket:id="positioned" class="veil-panel veil-positioned">
+		<a href="#" wicket:id="positionedSlow">Slow request</a>, clicked
+		<span wicket:id="positionedCounter" class="positioned-counter"></span> times
+	</div>
+</div>
+
+<h2>Under a sticky header</h2>
+
+<p>
+	The panel in this box has a local veil. Click its request, which takes three seconds, then
+	scroll the box so the panel slides under the sticky header: the header stays in front of the
+	veil and its spinner.
+</p>
+<div class="veil-panel veil-sticky-scroller">
+	<div class="veil-sticky-header">Sticky header</div>
+	<p>Scroll down to the panel.</p>
+	<div wicket:id="underHeader" class="veil-panel veil-under-header">
+		<a href="#" wicket:id="underHeaderSlow">Slow request</a>, clicked
+		<span wicket:id="underHeaderCounter" class="under-header-counter"></span> times
+	</div>
+	<p class="veil-filler">Scroll on, so the panel can move under the header.</p>
+</div>
+
+</wicket:extend>

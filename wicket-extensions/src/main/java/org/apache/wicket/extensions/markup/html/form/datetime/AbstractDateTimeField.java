@@ -22,7 +22,6 @@ import java.time.format.FormatStyle;
 import java.time.temporal.Temporal;
 import java.util.Date;
 
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
@@ -33,28 +32,7 @@ import org.apache.wicket.util.convert.ConversionException;
 
 /**
  * Works on a {@link java.time.temporal.Temporal} object, aggregating a {@link LocalDateTextField} and a {@link TimeField}.
- * <p>
- * <strong>Ajaxifying an AbstractDateTimeField</strong>:
- * If you want to update this component with an {@link AjaxFormComponentUpdatingBehavior}, you have to attach it
- * to the contained components by overriding {@link #newDateField(String, IModel)}:
- * 
- * <pre>{@code
- *  DateTimeField dateTimeField = new DateTimeField(...) {
- *    protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel)
- *    {
- *      DateTextField dateField = super.newDateTextField(id, dateFieldModel);     
- *      dateField.add(new AjaxFormComponentUpdatingBehavior("change") {
- *        protected void onUpdate(AjaxRequestTarget target) {
- *          processInput(); // let DateTimeField process input too
  *
- *          ...
- *        }
- *      });
- *      return recorder;
- *    }
- *  }
- * }</pre>
- * 
  * @author eelcohillenius
  */
 abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPanel<T>

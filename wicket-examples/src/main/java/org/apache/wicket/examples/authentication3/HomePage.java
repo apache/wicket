@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.examples.authentication3;
 
+import org.apache.wicket.examples.homepage.AuthenticationIndex;
+import org.apache.wicket.examples.WicketExamplePage;
+
 
 /**
  * Simple home page with no authorization requirements - can be accessed by everybody.
@@ -24,4 +27,16 @@ package org.apache.wicket.examples.authentication3;
  */
 public class HomePage extends BasePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return AuthenticationIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "authentication";
+	}
+
 }

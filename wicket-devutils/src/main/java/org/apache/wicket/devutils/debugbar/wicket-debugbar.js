@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-;(function (jQuery, undefined) {
+;(function (undefined) {
 
 	'use strict';
 
@@ -26,23 +26,27 @@
 		return;
 	}
 
+	function isVisible(element) {
+		return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
+	}
+
 	Wicket.debugBar = function() {
-		
+
 		function setExpandedCookie(value) {
-			document.cookie =  "wicketDebugBarState=" + window.escape(value);
+			document.cookie =  "wicketDebugBarState=" + window.encodeURIComponent(value);
 		}
-		
+
 		function getExpandedCookie() {
-			var name = 'wicketDebugBarState';
+			const name = 'wicketDebugBarState';
 			if (document.cookie.length > 0) {
-				var start = document.cookie.indexOf (name + "=");
+				let start = document.cookie.indexOf (name + "=");
 				if (start !== -1) {
 					start = start + name.length + 1;
-					var end = document.cookie.indexOf(";", start);
+					let end = document.cookie.indexOf(";", start);
 					if (end === -1) {
 						end = document.cookie.length;
 					}
-					return window.unescape(document.cookie.substring(start,end));
+					return window.decodeURIComponent(document.cookie.substring(start,end));
 				} else {
 					return null;
 				}
@@ -51,32 +55,46 @@
 			}
 		}
 
-		jQuery('#wicketDebugBarCollapse').on("click", function() {
-			var content = jQuery('#wicketDebugBarContents');
-			setExpandedCookie(!content.is(':visible'));
-			content.toggle(400);
-		});
+		const collapse = document.getElementById('wicketDebugBarCollapse');
+		if (collapse) {
+			collapse.addEventListener("click", function() {
+				const content = document.getElementById('wicketDebugBarContents');
+				const wasVisible = isVisible(content);
+				setExpandedCookie(!wasVisible);
+				if (wasVisible) {
+					Wicket.DOM.hide(content);
+				} else {
+					Wicket.DOM.show(content);
+				}
+			});
+		}
 
-		jQuery('#wicketDebugBarRemove').on("click", function() {
-			var bar = jQuery('#wicketDebugBar');
-			setExpandedCookie(!bar.is(':visible'));
-			bar.hide();
-		});
+		const remove = document.getElementById('wicketDebugBarRemove');
+		if (remove) {
+			remove.addEventListener("click", function() {
+				const bar = document.getElementById('wicketDebugBar');
+				setExpandedCookie(!isVisible(bar));
+				Wicket.DOM.hide(bar);
+			});
+		}
 
 	    // determine state and set it
 		if (getExpandedCookie() === 'false') {
-			jQuery('#wicketDebugBarContents').hide();
+			Wicket.DOM.hide(document.getElementById('wicketDebugBarContents'));
 		}
-		
-		var original = Wicket.Log.error;
+
+		const original = Wicket.Log.error;
 		Wicket.Log.error = function() {
 			original.apply(Wicket.Log, arguments);
-			
-			jQuery('#wicketDebugBar')
-				.addClass('wicketDebugBarError')
-				.one('animationend', function() {
-					jQuery(this).removeClass('wicketDebugBarError');
-				});
+
+			const bar = document.getElementById('wicketDebugBar');
+			if (bar) {
+				bar.classList.add('wicketDebugBarError');
+				bar.addEventListener('animationend', function onAnimationEnd() {
+					bar.classList.remove('wicketDebugBarError');
+					bar.removeEventListener('animationend', onAnimationEnd);
+				}, { once: true });
+			}
 		};
 	};
-})(jQuery);
+})();

@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.util.io.IClusterable;
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.ListChoice;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -32,7 +31,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class ListChoicePage extends WicketExamplePage
+public class ListChoicePage extends ComprefPage
 {
 	/** available sites for selection. */
 	private static final List<String> SITES = Arrays.asList("The Server Side", "Java Lobby", "Java.Net");

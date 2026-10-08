@@ -18,8 +18,6 @@ package org.apache.wicket.settings;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.authentication.IAuthenticationStrategy;
-import org.apache.wicket.authentication.strategy.DefaultAuthenticationStrategy;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import org.apache.wicket.authorization.IUnauthorizedResourceRequestListener;
@@ -28,11 +26,15 @@ import org.apache.wicket.coep.CrossOriginEmbedderPolicyConfiguration;
 import org.apache.wicket.coep.CrossOriginEmbedderPolicyConfiguration.CoepMode;
 import org.apache.wicket.coop.CrossOriginOpenerPolicyConfiguration;
 import org.apache.wicket.coop.CrossOriginOpenerPolicyConfiguration.CoopMode;
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.wicket.core.random.DefaultSecureRandomSupplier;
 import org.apache.wicket.core.random.ISecureRandomSupplier;
-import org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory;
-import org.apache.wicket.util.crypt.ICryptFactory;
-import org.apache.wicket.util.crypt.SunJceCrypt;
+import org.apache.wicket.core.util.crypt.AesGcmCryptScheme;
+import org.apache.wicket.core.util.crypt.ICryptFactory;
+import org.apache.wicket.core.util.crypt.ICryptScheme;
+import org.apache.wicket.core.util.crypt.KeyInSessionCryptFactory;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -52,11 +54,14 @@ public class SecuritySettings
 	/** The authorization strategy. */
 	private IAuthorizationStrategy authorizationStrategy = IAuthorizationStrategy.ALLOW_ALL;
 
-	/** The authentication strategy. */
-	private IAuthenticationStrategy authenticationStrategy;
-
 	/** factory for creating crypt objects */
 	private ICryptFactory cryptFactory;
+
+	/** the scheme used to encrypt (the strongest configured scheme) */
+	private ICryptScheme cryptScheme;
+
+	/** the schemes accepted for decryption (downgrade protection) */
+	private Collection<ICryptScheme> whitelistedCryptSchemes;
 
 	/** supplier of random data and SecureRandom */
 	private ISecureRandomSupplier randomSupplier;
@@ -117,18 +122,83 @@ public class SecuritySettings
 	}
 
 	/**
-	 * Returns the {@link ICryptFactory}. If no factory is set, a {@link KeyInSessionSunJceCryptFactory}
+	 * Returns the {@link ICryptFactory}. If no factory is set, a {@link KeyInSessionCryptFactory}
 	 * is used.
-	 * 
+	 *
 	 * @return crypt factory used to generate crypt objects
 	 */
 	public synchronized ICryptFactory getCryptFactory()
 	{
 		if (cryptFactory == null)
 		{
-			cryptFactory = new KeyInSessionSunJceCryptFactory();
+			cryptFactory = new KeyInSessionCryptFactory();
 		}
 		return cryptFactory;
+	}
+
+	/**
+	 * Returns the {@link ICryptScheme} used to <em>encrypt</em> (the strongest configured scheme).
+	 * If none is set, {@link AesGcmCryptScheme} (JDK-native authenticated AES-256-GCM) is used.
+	 *
+	 * @return the encryption scheme
+	 */
+	public synchronized ICryptScheme getCryptScheme()
+	{
+		if (cryptScheme == null)
+		{
+			cryptScheme = new AesGcmCryptScheme();
+		}
+		return cryptScheme;
+	}
+
+	/**
+	 * Sets the {@link ICryptScheme} used for all encryption. This should be the strongest scheme
+	 * available; existing data encrypted with an older scheme keeps decrypting only while that
+	 * scheme is whitelisted (see {@link #setWhitelistedCryptSchemes(Collection)}).
+	 *
+	 * @param cryptScheme
+	 *            the encryption scheme, must not be null
+	 * @return {@code this} object for chaining
+	 */
+	public synchronized SecuritySettings setCryptScheme(ICryptScheme cryptScheme)
+	{
+		this.cryptScheme = Args.notNull(cryptScheme, "cryptScheme");
+		return this;
+	}
+
+	/**
+	 * Returns the schemes accepted for <em>decryption</em>. Ciphertext whose scheme marker is not
+	 * in this set is refused, which protects against downgrade attacks. The encryption scheme
+	 * (see {@link #getCryptScheme()}) is always accepted for decryption regardless of this set.
+	 * If none is set, only the encryption scheme is accepted.
+	 *
+	 * @return the whitelisted decryption schemes
+	 */
+	public synchronized Collection<ICryptScheme> getWhitelistedCryptSchemes()
+	{
+		if (whitelistedCryptSchemes == null)
+		{
+			return List.of(getCryptScheme());
+		}
+		return whitelistedCryptSchemes;
+	}
+
+	/**
+	 * Sets the schemes accepted for decryption (downgrade protection). To migrate to a stronger
+	 * scheme, temporarily include the old scheme here (so existing data still decrypts) while
+	 * setting the new scheme via {@link #setCryptScheme(ICryptScheme)}; drop the old scheme once
+	 * the data has been rewritten.
+	 *
+	 * @param whitelistedCryptSchemes
+	 *            the accepted decryption schemes, must not be null
+	 * @return {@code this} object for chaining
+	 */
+	public synchronized SecuritySettings setWhitelistedCryptSchemes(
+		Collection<ICryptScheme> whitelistedCryptSchemes)
+	{
+		this.whitelistedCryptSchemes = Args.notNull(whitelistedCryptSchemes,
+			"whitelistedCryptSchemes");
+		return this;
 	}
 
 	/**
@@ -262,34 +332,6 @@ public class SecuritySettings
 		this.unauthorizedResourceRequestListener = listener == null ?
 				DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER :
 				listener;
-		return this;
-	}
-
-	/**
-	 * Gets the authentication strategy.
-	 *
-	 * @return Returns the authentication strategy.
-	 */
-	@SuppressWarnings("deprecation")
-	public IAuthenticationStrategy getAuthenticationStrategy()
-	{
-		if (authenticationStrategy == null)
-		{
-			authenticationStrategy = new DefaultAuthenticationStrategy("LoggedIn", new SunJceCrypt(SunJceCrypt.randomSalt(), 17));
-		}
-		return authenticationStrategy;
-	}
-
-	/**
-	 * Sets the authentication strategy.
-	 *
-	 * @param strategy
-	 *            new authentication strategy
-	 * @return {@code this} object for chaining
-	 */
-	public SecuritySettings setAuthenticationStrategy(final IAuthenticationStrategy strategy)
-	{
-		authenticationStrategy = strategy;
 		return this;
 	}
 

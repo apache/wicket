@@ -18,7 +18,6 @@ package org.apache.wicket.examples.compref;
 
 import java.util.ArrayList;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
@@ -35,7 +34,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author ivaynberg
  */
-public class CheckGroupPage extends WicketExamplePage
+public class CheckGroupPage extends ComprefPage
 {
 	/**
 	 * Constructor

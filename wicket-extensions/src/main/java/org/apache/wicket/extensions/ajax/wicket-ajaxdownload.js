@@ -29,19 +29,19 @@
 		initiate : function(settings) {
 			document.cookie = settings.name +
 				'=;path=/;Max-Age=0;expires=Thu, 01 Jan 1970 00:00:01 GMT' + settings.sameSite;
-			var notifyServer = function(result) {
+			const notifyServer = function(result) {
 				settings.attributes.ep = settings.attributes.ep || {};
 				settings.attributes.ep.result = result;
 				Wicket.Ajax.ajax(settings.attributes);
 			};
 
-			var checkComplete = function(watcher) {
-				var result;
+			const checkComplete = function(watcher) {
+				let result;
 
 				if (document.cookie.indexOf(settings.name + '=') > -1) {
 					result = "success";
 				} else {
-					var html = watcher.html();
+					const html = watcher.html();
 					if (html && html.length) {
 						result = "failed";
 					}
@@ -63,20 +63,21 @@
 					window.location.assign(settings.downloadUrl);
 					checkComplete({
 						html: function() {
-							return jQuery();
+							return "";
 						},
-						
+
 						dismiss: function(result) {
 						}
 					});
 				}, 10);
 			} else if (settings.method === 'newwindow') {
-				var wo = window.open(settings.downloadUrl);
+				const wo = window.open(settings.downloadUrl);
 				checkComplete({
 					html: function() {
-						return jQuery(wo ? wo.document : undefined).find('body').html();
+						const body = wo && wo.document && wo.document.body;
+						return body ? body.innerHTML : "";
 					},
-					
+
 					dismiss: function(result) {
 						if (result === "failed") {
 							wo.close();
@@ -84,12 +85,17 @@
 					}
 				});
 			} else if (settings.method === 'iframe') {
-				var frame = jQuery("<iframe></iframe>").hide().prop("src", settings.downloadUrl).appendTo("body");
+				const frame = document.createElement("iframe");
+				frame.setAttribute("hidden", "");
+				frame.style.display = "none";
+				frame.src = settings.downloadUrl;
+				document.body.appendChild(frame);
 				checkComplete({
 					html: function() {
-						return frame.contents().find('body').html();
+						const body = frame.contentDocument && frame.contentDocument.body;
+						return body ? body.innerHTML : "";
 					},
-					
+
 					dismiss: function() {
 						// don't remove iframe immediately
 						setTimeout(function () {
@@ -99,43 +105,40 @@
 				});
 			} else {
 				// jquery does not support binary download
-				var xhr = new XMLHttpRequest();
+				const xhr = new XMLHttpRequest();
 
 				xhr.open("GET", settings.downloadUrl);
 				xhr.responseType = "blob";
 				xhr.onload = function() {
 					if (this.status === 200) {
-						var filename = "";
-						var disposition = xhr.getResponseHeader("Content-Disposition");
+						let filename = "";
+						const disposition = xhr.getResponseHeader("Content-Disposition");
 						if (disposition) {
-							var matches = /filename[^;=\n]*=(([""]).*?\2|[^;\n]*)/.exec(disposition);
+							const matches = /filename[^;=\n]*=(([""]).*?\2|[^;\n]*)/.exec(disposition);
 							if (matches !== null && matches[1]) {
 								filename = matches[1].replace(/[""]/g, "");
 								filename = decodeURIComponent(filename);
 							}
 						}
 
-						if (typeof window.navigator.msSaveOrOpenBlob !== 'undefined') {
-							window.navigator.msSaveOrOpenBlob(xhr.response, filename);
-						} else {
-							var type = xhr.getResponseHeader("Content-Type");
-							var blob = new Blob([xhr.response], {type: type});
+						const type = xhr.getResponseHeader("Content-Type");
+						const blob = new Blob([xhr.response], {type: type});
 
-							var blobUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+						const blobUrl = URL.createObjectURL(blob);
 
-							var anchor = jQuery("<a></a>")
-								.prop("href", blobUrl)
-								.prop("download", filename)
-								.appendTo("body")
-								.hide();
+						const anchor = document.createElement("a");
+						anchor.href = blobUrl;
+						anchor.download = filename;
+						anchor.setAttribute("hidden", "");
+						anchor.style.display = "none";
+						document.body.appendChild(anchor);
 
-							anchor[0].click();
+						anchor.click();
 
-							setTimeout(function () {
-								URL.revokeObjectURL(blobUrl);
-								anchor.remove();
-							}, 100);
-						}
+						setTimeout(function () {
+							URL.revokeObjectURL(blobUrl);
+							anchor.remove();
+						}, 100);
 						notifyServer("success");
 					} else {
 						notifyServer("failed");

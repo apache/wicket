@@ -17,16 +17,17 @@
 package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
-import java.security.SecureRandom;
+import java.nio.ByteBuffer;
 
 import javax.crypto.SecretKey;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.crypt.ICrypt;
+import org.apache.wicket.core.util.crypt.SchemeCrypt;
 import org.apache.wicket.page.IManageablePage;
-import org.apache.wicket.pageStore.crypt.DefaultCrypter;
-import org.apache.wicket.pageStore.crypt.ICrypter;
+import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -38,6 +39,16 @@ import org.apache.wicket.util.lang.Args;
  * <li>a {@link SerializingPageStore} delegating to this store and</li>
  * <li>delegating to a store that does not deserialize its pages, e.g. a {@link DiskPageStore}.</li>
  * </ul>
+ * <p>
+ * Each session gets its own random 256-bit AES key. Encryption uses the application's configured
+ * {@link SecuritySettings#getCryptScheme() crypt scheme}; a page that can no longer be decrypted
+ * (e.g. because the session key is gone or the data was tampered with) is treated as a cache miss.
+ * <p>
+ * Because the key lives in the session, the encryption protects the stored pages against a party
+ * who can read or write the underlying store - not against one who already controls the session.
+ * The store should therefore still be treated as trusted, private storage: Wicket deserializes
+ * whatever it reads back from it. See {@code SECURITY.md} for the trust assumptions Wicket makes
+ * about the page store.
  */
 public class CryptingPageStore extends DelegatingPageStore
 {
@@ -45,8 +56,6 @@ public class CryptingPageStore extends DelegatingPageStore
 	{
 		private static final long serialVersionUID = 1L;
 	};
-
-	private final ICrypter crypter;
 
 	private final Application application;
 
@@ -60,7 +69,6 @@ public class CryptingPageStore extends DelegatingPageStore
 	{
 		super(delegate);
 		this.application = Args.notNull(application, "application");
-		crypter = newCrypter();
 	}
 
 	/**
@@ -87,16 +95,26 @@ public class CryptingPageStore extends DelegatingPageStore
 
 	private SessionData getSessionData(IPageContext context)
 	{
-		return context.getSessionData(KEY, () -> new SessionData(crypter
-			.generateKey(application.getSecuritySettings().getRandomSupplier().getRandom())));
+		return context.getSessionData(KEY, () -> new SessionData(generateKey()));
+	}
+
+	private SecretKey generateKey()
+	{
+		SecuritySettings settings = application.getSecuritySettings();
+		// the scheme decides what key to generate; the store only decides where it lives (session)
+		return settings.getCryptScheme().generateKey(settings.getRandomSupplier().getRandom());
 	}
 
 	/**
-	 * Create a new {@link ICrypter}.
+	 * Builds an {@link ICrypt} bound to the current session's key and the application's crypto
+	 * policy (encryption scheme + decryption whitelist).
 	 */
-	protected ICrypter newCrypter()
+	private ICrypt getCrypt(IPageContext context)
 	{
-		return application.getStoreSettings().getCrypter().get();
+		SecuritySettings settings = application.getSecuritySettings();
+		return new SchemeCrypt(getSessionData(context).getKey(),
+			settings.getRandomSupplier().getRandom(), settings.getCryptScheme(),
+			settings.getWhitelistedCryptSchemes());
 	}
 
 	@Override
@@ -113,7 +131,16 @@ public class CryptingPageStore extends DelegatingPageStore
 			SerializedPage serializedPage = (SerializedPage) page;
 
 			byte[] encrypted = serializedPage.getData();
-			byte[] decrypted = getSessionData(context).decrypt(encrypted, crypter);
+			// bind the page to the id we are looking up (the trusted method parameter), so a
+			// blob that was stored for a different id fails authentication
+			byte[] decrypted = getCrypt(context).decrypt(encrypted, aad(id));
+
+			if (decrypted == null)
+			{
+				// the page could not be decrypted (e.g. a new session key or tampered data):
+				// treat it as if it were no longer present
+				return null;
+			}
 
 			page = new SerializedPage(page.getPageId(), serializedPage.getPageType(), decrypted);
 		}
@@ -132,12 +159,19 @@ public class CryptingPageStore extends DelegatingPageStore
 		SerializedPage serializedPage = (SerializedPage) page;
 
 		byte[] decrypted = serializedPage.getData();
-		byte[] encrypted = getSessionData(context).encrypt(decrypted, crypter,
-			application.getSecuritySettings().getRandomSupplier().getRandom());
+		byte[] encrypted = getCrypt(context).encrypt(decrypted, aad(serializedPage.getPageId()));
 
 		page = new SerializedPage(page.getPageId(), serializedPage.getPageType(), encrypted);
 
 		getDelegate().addPage(context, page);
+	}
+
+	/**
+	 * The associated data binding an encrypted page to its id: the page id as 4 big-endian bytes.
+	 */
+	private static byte[] aad(int pageId)
+	{
+		return ByteBuffer.allocate(Integer.BYTES).putInt(pageId).array();
 	}
 
 	private static class SessionData implements Serializable
@@ -148,19 +182,12 @@ public class CryptingPageStore extends DelegatingPageStore
 
 		public SessionData(SecretKey key)
 		{
-			Args.notNull(key, "key");
-
-			this.key = key;
+			this.key = Args.notNull(key, "key");
 		}
 
-		public byte[] encrypt(byte[] decrypted, ICrypter crypter, SecureRandom random)
+		public SecretKey getKey()
 		{
-			return crypter.encrypt(decrypted, key, random);
-		}
-
-		public byte[] decrypt(byte[] encrypted, ICrypter crypter)
-		{
-			return crypter.decrypt(encrypted, key);
+			return key;
 		}
 	}
 }

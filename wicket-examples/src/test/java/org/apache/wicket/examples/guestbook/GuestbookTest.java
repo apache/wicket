@@ -47,7 +47,7 @@ public class GuestbookTest extends WicketTestCase
 	@Test
 	public void test_1() {
 		tester.startPage(GuestBook.class);
-		tester.assertContains("Wicket Examples - guestbook");
+		tester.assertContains("Wicket Examples - Guestbook");
 
 		// check if the list of comments is empty
 		tester.assertComponent("comments", ListView.class);

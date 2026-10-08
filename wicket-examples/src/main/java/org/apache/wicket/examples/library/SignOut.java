@@ -26,6 +26,12 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class SignOut extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return Home.class;
+	}
+
 	/**
 	 * Constructor
 	 * 

@@ -16,11 +16,19 @@
  */
 package org.apache.wicket.examples.events;
 
+import org.apache.wicket.examples.ExampleIndexPanel;
+
 
 /**
  * @author igor
  */
 public class IndexPage extends BasePage
 {
-
+	/**
+	 * Construct.
+	 */
+	public IndexPage()
+	{
+		add(new ExampleIndexPanel("examples", IndexPage.class));
+	}
 }

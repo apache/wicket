@@ -16,14 +16,14 @@
  */
 package org.apache.wicket.examples.authentication2;
 
-import org.apache.wicket.authroles.authentication.panel.SignInPanel;
+import org.apache.wicket.authroles.authentication.panel.UsernamePasswordPanel;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
 /**
- * Simple example of a sign in page. It is based on auth-role's SignInPanel which already provides
- * all what is necessary.
+ * Simple example of a sign in page. It is based on auth-role's UsernamePasswordPanel which
+ * already provides all what is necessary.
  * 
  * @author Jonathan Locke
  */
@@ -41,6 +41,6 @@ public final class SignIn2 extends WicketExamplePage
 
 		// Take our standard Logon Panel from the auth-role module and add it to the Page. That is
 		// all what is necessary.
-		add(new SignInPanel("signInPanel", false));
+		add(new UsernamePasswordPanel("signInPanel"));
 	}
 }

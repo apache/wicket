@@ -567,6 +567,10 @@ include::ajax/ajax_3.adoc[leveloffset=+1]
 
 include::ajax/ajax_4.adoc[leveloffset=+1]
 
+=== Blocking the page while an AJAX request is running
+
+include::ajax/ajax_12.adoc[leveloffset=+1]
+
 === AJAX request attributes and call listeners
 
 include::ajax/ajax_5.adoc[leveloffset=+1]
@@ -587,6 +591,10 @@ include::ajax/ajax_8.adoc[leveloffset=+1]
 
 include::ajax/ajax_9.adoc[leveloffset=+1]
 
+=== Choosing between the JQuery and the plain JavaScript AJAX implementation
+
+include::ajax/ajax_11.adoc[leveloffset=+1]
+
 === Summary
 
 include::ajax/ajax_10.adoc[leveloffset=+1]
@@ -603,13 +611,17 @@ include::jee/jee_1.adoc[leveloffset=+1]
 
 include::jee/jee_2.adoc[leveloffset=+1]
 
-=== JSR-330 annotations
+=== Integrating Wicket with CDI
 
 include::jee/jee_3.adoc[leveloffset=+1]
 
-=== Summary
+=== JSR-330 annotations
 
 include::jee/jee_4.adoc[leveloffset=+1]
+
+=== Summary
+
+include::jee/jee_5.adoc[leveloffset=+1]
 
 == Native WebSockets
 

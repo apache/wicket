@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.compref;
 
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
@@ -27,7 +26,7 @@ import org.apache.wicket.model.PropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class LinkPage extends WicketExamplePage
+public class LinkPage extends ComprefPage
 {
 	/**
 	 * Constructor

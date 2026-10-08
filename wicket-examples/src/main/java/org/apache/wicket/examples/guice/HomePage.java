@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.guice;
 
+import org.apache.wicket.examples.homepage.InjectionIndex;
+
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.guice.service.IMyService;
 import org.apache.wicket.markup.html.basic.Label;
@@ -30,6 +32,18 @@ import com.google.inject.Inject;
  */
 public class HomePage extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return InjectionIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "injection";
+	}
+
 	@Inject
 	private IMyService service;
 

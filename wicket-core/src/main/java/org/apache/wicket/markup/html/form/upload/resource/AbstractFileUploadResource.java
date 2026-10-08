@@ -227,9 +227,21 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 			return false;
 		}
 
-		String expectedToken = createUploadToken(uploadId, maxSize, fileMaxSize, fileCountMax);
-		return MessageDigest.isEqual(expectedToken.getBytes(StandardCharsets.UTF_8),
-			actualToken.getBytes(StandardCharsets.UTF_8));
+		// the token is authenticated but not deterministic - encryption uses a fresh nonce per
+		// message - so it cannot be validated by re-encrypting and comparing ciphertext. Decrypt
+		// it instead and compare the settings it carries; the authentication tag is what makes it
+		// unforgeable, and decryption fails on anything that was tampered with.
+		String decryptedToken = Application.get().getSecuritySettings().getCryptFactory().newCrypt()
+			.decryptUrlSafe(actualToken);
+		if (decryptedToken == null)
+		{
+			return false;
+		}
+
+		String expectedSettings = serializeUploadSettings(uploadId, maxSize, fileMaxSize,
+			fileCountMax);
+		return MessageDigest.isEqual(expectedSettings.getBytes(StandardCharsets.UTF_8),
+			decryptedToken.getBytes(StandardCharsets.UTF_8));
 	}
 
 	private ResourceResponse createErrorResponse(ResourceResponse resourceResponse, String errorMessage)

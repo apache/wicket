@@ -48,6 +48,12 @@ import org.apache.wicket.util.lang.Bytes;
  */
 public class MultiUploadPage extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return Index.class;
+	}
+
 	/**
 	 * List view for files in upload folder.
 	 */

@@ -17,8 +17,10 @@
 package org.apache.wicket.markup.html.form;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -57,9 +59,12 @@ class ButtonTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6225
+	 *
+	 * The body of a button element is escaped once, like the value attribute of an input element
+	 * is. Escaping the body is what escapeModelStrings asks for, and it is on by default.
 	 */
 	@Test
-	void whenButtonElement_thenModelObjectIsUsedAsTextContent()
+	void whenButtonElement_thenModelObjectIsUsedAsEscapedTextContent()
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
 		String text = "some text & another text";
@@ -76,7 +81,72 @@ class ButtonTest extends WicketTestCase
 		TagTester buttonTagTester = tester.getTagByWicketId("button");
 		assertNotNull(buttonTagTester);
 		assertNull(buttonTagTester.getAttribute("value"));
-		assertEquals(text, buttonTagTester.getValue());
+		assertEquals("some text &amp; another text", buttonTagTester.getValue());
+	}
+
+	/**
+	 * Markup in the model of a button does not become markup in the body of the button element.
+	 */
+	@Test
+	void whenButtonElement_thenMarkupInModelObjectIsEscaped()
+	{
+		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
+		TestPage testPage = new TestPage(Model.of("<script>x=1</script>")) {
+			@Override
+			public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+			{
+				return new StringResourceStream("<html><body>"
+						+ "<form wicket:id=\"form\"><button wicket:id=\"button\"></button></form></body></html>");
+			}
+		};
+		tester.startPage(testPage);
+
+		assertEquals("&lt;script&gt;x=1&lt;/script&gt;",
+			tester.getTagByWicketId("button").getValue());
+		assertFalse(tester.getLastResponseAsString().contains("<script>x=1</script>"));
+	}
+
+	/**
+	 * https://github.com/apache/wicket/issues/1576
+	 *
+	 * Clearing escapeModelStrings says the model holds markup and the application takes
+	 * responsibility for it, so the body of the button element carries that markup.
+	 */
+	@Test
+	void whenEscapeModelStringsDisabled_thenMarkupInModelObjectIsRendered()
+	{
+		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
+		TestPage testPage = new TestPage(Model.of("<span>label</span>")) {
+			@Override
+			public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+			{
+				return new StringResourceStream("<html><body>"
+						+ "<form wicket:id=\"form\"><button wicket:id=\"button\"></button></form></body></html>");
+			}
+		};
+		testPage.button.setEscapeModelStrings(false);
+		tester.startPage(testPage);
+
+		assertEquals("<span>label</span>", tester.getTagByWicketId("button").getValue());
+	}
+
+	/**
+	 * Clearing escapeModelStrings does not change the value attribute of an input element:
+	 * ComponentTag#writeOutput escapes every attribute it writes, and a quoted attribute value
+	 * cannot carry markup.
+	 */
+	@Test
+	void whenEscapeModelStringsDisabled_thenValueAttributeIsStillEscapedOnce()
+	{
+		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
+		String text = "some text & another text";
+		TestPage testPage = new TestPage(Model.of(text));
+		testPage.button.setEscapeModelStrings(false);
+		tester.startPage(testPage);
+
+		assertEquals(text, tester.getTagByWicketId("button").getAttribute("value"));
+		assertTrue(
+			tester.getLastResponseAsString().contains("value=\"some text &amp; another text\""));
 	}
 
 	/**

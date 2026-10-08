@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.compref;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
 
@@ -27,7 +26,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
  * 
  * @author Eelco Hillenius
  */
-public class FragmentPage extends WicketExamplePage
+public class FragmentPage extends ComprefPage
 {
 	/**
 	 * A fragment,

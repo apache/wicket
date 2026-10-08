@@ -195,6 +195,13 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 				AjaxEditableChoiceLabel.this.onModelChanging();
 			}
 
+			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+				setEscapeModelStrings(AjaxEditableChoiceLabel.this.getEscapeModelStrings());
+			}
+
 		};
 
 		editor.setOutputMarkupId(true);
@@ -255,6 +262,13 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 				return AjaxEditableChoiceLabel.this.getConverter(type);
 			}
 
+			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+				setEscapeModelStrings(AjaxEditableChoiceLabel.this.getEscapeModelStrings());
+			}
+
 			/**
 			 * {@inheritDoc}
 			 */
@@ -269,21 +283,30 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 					Object displayObject = renderer.getDisplayValue(getModelObject());
 					Class<?> objectClass = (displayObject == null ? null : displayObject.getClass());
 
+					String rendered = null;
 					if ((objectClass != null) && (objectClass != String.class))
 					{
 						@SuppressWarnings("rawtypes")
 						final IConverter converter = getConverter(objectClass);
-						displayValue = converter.convertToString(displayObject, getLocale());
+						rendered = converter.convertToString(displayObject, getLocale());
 					}
 					else if (displayObject != null)
 					{
-						displayValue = displayObject.toString();
+						rendered = displayObject.toString();
+					}
+
+					if (rendered != null)
+					{
+						displayValue = getEscapeModelStrings()
+							? Strings.escapeMarkup(rendered).toString() : rendered;
 					}
 				}
 
 				if (Strings.isEmpty(displayValue))
 				{
-					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
+					String nullLabel = defaultNullLabel();
+					replaceComponentTagBody(markupStream, openTag,
+						getEscapeModelStrings() ? Strings.escapeMarkup(nullLabel) : nullLabel);
 				}
 				else
 				{

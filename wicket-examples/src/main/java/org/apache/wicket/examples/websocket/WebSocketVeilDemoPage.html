@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+	<p>
+		<a href="#" wicket:id="start">Start pushes</a> |
+		<a href="#" wicket:id="stop">Stop</a>
+	</p>
+
+	<div wicket:id="counterPanel" class="push-counter-panel">
+		<p>
+			Pushed counter: <span wicket:id="counter" class="push-counter"></span>
+		</p>
+		<p wicket:id="lastWork" class="push-last-work"></p>
+		<p>
+			<a href="#" wicket:id="strayUnveil">Slow request with a stray unveil</a>: an Ajax
+			request from this panel that takes two seconds. Half a second in, the server sends an
+			unveil message that no veil message preceded. The panel stays veiled until the request
+			is done. Requests sent: <span wicket:id="panelRequests" class="panel-requests"></span>
+		</p>
+	</div>
+</wicket:extend>
+</body>
+</html>

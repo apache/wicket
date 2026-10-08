@@ -1,0 +1,105 @@
+
+An activity indicator tells the user that an AJAX request is running, but it does not stop them from clicking again while it runs. A second click on a slow button can send the same request twice, and a click elsewhere can act on a page the pending response is about to replace. Package _org.apache.wicket.extensions.ajax.veil_ addresses this with two behaviors that put a veil over the page, or over a part of it, for the duration of an AJAX request.
+
+The veil appears as soon as a request is sent. It is transparent and swallows mouse clicks, so a request that is over quickly does not make the page flash. Only if the request is still running after a delay (300 ms by default) does the veil dim its region and show a spinner. Once shown, the spinner stays for a minimum time (500 ms by default), so a response that arrives just after it appeared does not make it flicker. The veil does not intercept the keyboard.
+
+=== Veiling the whole page
+
+_PageVeilBehavior_ veils the whole page during every AJAX request fired from it. It can only be added to a page, typically a base page shared by the whole application:
+
+[source,java]
+----
+public class BasePage extends WebPage {
+	public BasePage() {
+		add(new PageVeilBehavior());
+	}
+}
+----
+
+Adding it to any other component throws an _IllegalArgumentException_.
+
+=== Veiling a single component
+
+_LocalVeilBehavior_ veils only the component it is added to, and only during the AJAX requests fired by that component or by a component nested in it. The rest of the page stays usable:
+
+[source,java]
+----
+WebMarkupContainer searchPanel = new WebMarkupContainer("search");
+searchPanel.add(new LocalVeilBehavior());
+----
+
+A request fired from inside a component with a local veil does not veil the page, even when the page has a _PageVeilBehavior_. When local veils are nested, the innermost one takes the request; for a behavior that listens on a container for events of its children, it is the veil around the element that was clicked. The behavior makes the component output its markup id, and it appends the veil to the component's element, so the component has to render an element that can hold a _div_. When the element scrolls, the veil covers its visible part. If an AJAX update or a push replaces the element while it is veiled, the veil moves onto the new element.
+
+=== Veiling a component during a WebSocket push
+
+A component updated through a WebSocket push is recomputed on the server, without any AJAX request the browser could notice. _LocalVeilBehavior_ lets the server raise the veil itself: _getVeilMessage()_ returns a text message that raises the veil when it is sent through a WebSocket connection of the component's page, and _unveil(IPartialPageRequestHandler)_ lowers it once the pushed update has been applied. The spinner follows the same timings as for an AJAX request.
+
+[source,java]
+----
+LocalVeilBehavior veil = new LocalVeilBehavior();
+counterPanel.add(veil);
+
+// while handling a request, e.g. the click that schedules the work
+String veilMessage = veil.getVeilMessage();
+
+// in the background thread, when the work starts
+connection.sendMessage(veilMessage);
+// ... compute ...
+connection.sendMessage(new CounterUpdate(value));
+
+// in onEvent(), for the WebSocketPushPayload carrying the CounterUpdate
+handler.add(counterPanel);
+veil.unveil(handler);
+----
+
+_getVeilMessage()_ reads the component's markup id, so like any component access it is called while handling a request; the message is a plain string that can then be sent from any thread. When the work fails and no update follows, send _getUnveilMessage()_ instead. If the update replaces the component while its spinner is still within its minimum time, the veil moves onto the new element and stays for the rest of that time.
+
+=== Leaving a request unveiled
+
+Every AJAX request is veiled, including the ones the user did not start, such as the requests of an _AbstractAjaxTimerBehavior_ or of a lazy loading panel. A request that should leave the page usable opts out with the static method _PageVeilBehavior.noVeil(AjaxRequestAttributes)_, called from the _updateAjaxAttributes_ method of its component or behavior:
+
+[source,java]
+----
+add(new AjaxLink<Void>("refresh") {
+	@Override
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+		super.updateAjaxAttributes(attributes);
+		PageVeilBehavior.noVeil(attributes);
+	}
+
+	@Override
+	public void onClick(AjaxRequestTarget target) {
+		// ...
+	}
+});
+----
+
+_noVeil_ adds the extra parameter `wicket_nb` (`PageVeilBehavior.NO_VEIL_PARAMETER`) to the request. A request carrying it is left alone by the page veil and by every local veil, and the parameter reaches the server as well.
+
+=== Timings and appearance
+
+Both timings can be set on each behavior, for the page veil and for local veils alike, with _setSpinnerDelay(Duration)_ and _setMinimumSpinnerTime(Duration)_. A delay of _Duration.ZERO_ shows the spinner as soon as the request is sent. Nested local veils keep their own timings, so a part of the page that is known to be slow can show its spinner sooner than the rest:
+
+[source,java]
+----
+WebMarkupContainer outer = new WebMarkupContainer("outer");
+outer.add(new LocalVeilBehavior());
+add(outer);
+
+WebMarkupContainer inner = new WebMarkupContainer("inner");
+inner.add(new LocalVeilBehavior()
+	.setSpinnerDelay(Duration.ofMillis(100))
+	.setMinimumSpinnerTime(Duration.ofSeconds(1)));
+outer.add(inner);
+----
+
+A request fired from inside _inner_ veils only _inner_, with its timings; one fired from elsewhere in _outer_ veils _outer_, inner panel included. Subclasses can also override _getSpinnerDelay()_ and _getMinimumSpinnerTime()_, both declared on the common base class _AbstractVeilBehavior_.
+
+The look comes from the stylesheet _wicket-veil.css_, contributed by the behaviors, and can be overridden with the following CSS classes:
+
+* _wicket-veil_: the veil itself, a _div_ covering the page (_position: fixed_) or the component (_position: absolute_).
+* _wicket-veil-busy_: added to the veil once the spinner delay has passed. It gives the veil its background, and its `::after` pseudo-element draws the spinner.
+* _wicket-veil-host_: added to the element of a component with a local veil while it is veiled. It gives the element _isolation: isolate_, so the veil stays within the element's stacking context and does not paint over a sticky header or a modal dialog in front of it.
+* _wicket-veil-host-static_: added together with _wicket-veil-host_ when the element is not positioned already. It gives the element _position: relative_, so the veil covers exactly that element; an element that is _absolute_, _fixed_ or _sticky_ keeps its position.
+
+On the client side the veil is implemented by _Wicket.Veil_, which subscribes to the global AJAX topics '/ajax/call/beforeSend', '/ajax/call/done' and '/dom/node/added' listed among the global AJAX call listeners later in this chapter. It works with the JQuery-based and with the plain JavaScript AJAX implementation alike.

@@ -27,6 +27,12 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class Page2 extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return Home.class;
+	}
+
 	/**
 	 * Constructor
 	 * 

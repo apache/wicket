@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.hellobrowser;
 
+import org.apache.wicket.examples.homepage.BrowserInfoIndex;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -37,6 +39,18 @@ import org.apache.wicket.protocol.http.request.WebClientInfo;
  */
 public class HelloBrowser extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return BrowserInfoIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "browserinfo";
+	}
+
 	/**
 	 * Construct.
 	 */

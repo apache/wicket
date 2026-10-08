@@ -31,6 +31,6 @@ public class LinkomaticTest extends WicketTestCase
 	public void testLinkomatic()
 	{
 		tester.startPage(Home.class);
-		tester.assertContains("Wicket Examples - linkomatic");
+		tester.assertContains("Wicket Examples - Link-o-matic");
 	}
 }

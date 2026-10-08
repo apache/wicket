@@ -20,5 +20,9 @@ import org.apache.wicket.examples.WicketExamplePage;
 
 public abstract class CdiExamplePage extends WicketExamplePage
 {
-
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return CdiHomePage.class;
+	}
 }

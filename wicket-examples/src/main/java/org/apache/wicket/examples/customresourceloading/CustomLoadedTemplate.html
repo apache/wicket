@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 <meta charset="utf-8"/>
-<title>Home | Apache Wicket</title>
+<title wicket:id="pageTitle">Wicket Examples</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <link rel="shortcut icon" href="favicon.ico"
@@ -23,20 +23,9 @@
                 Source code
              </a>
             </div>
-          <p>
-            This page was loaded by a component specific override. You can use that - with care - if you have
-            to implement custom loading strategies that are very local to the component. For instance, a custom
-            component that loads it's template from a database and for which you don't want the application
-            to have to know about it's differing loading resource.
-          </p>
-          <p>
-            This example loads the custom template just once, though it may reload when resource polling is
-            turned on and the template changes. If you want a load the template every time a page (or panel)
-            is requested, you can additionally let your container implement IMarkupCacheKeyProvider, and then
-            return null in the implementation of getCacheKey; Wicket will not cache templates without a
-            cache key. This functionality can be used to e.g. when you want to load templates from a database,
-            and you know that the actual templates can be different from request to request.
-          </p>
+            <h1 wicket:id="exampleTitle">[example title]</h1>
+            <div wicket:id="explanation" class="explanation">[what this example shows]</div>
+            <wicket:container wicket:id="navigation">[navigation]</wicket:container>
         </div> 
     </main>
 </body>

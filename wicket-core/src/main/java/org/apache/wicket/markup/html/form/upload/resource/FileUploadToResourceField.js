@@ -41,59 +41,68 @@
         this.clientSideSuccessCallBack = clientSideSuccessCallBack;
         this.clientSideCancelCallBack = clientSideCancelCallBack;
         this.uploadErrorCallBack = uploadErrorCallBack;
-    }
+    };
 
     Wicket.FileUploadToResourceField.prototype.upload = function()
     {
         // get a fresh reference to input
         this.input = document.getElementById(this.inputName);
         // we add the files to a FormData object.
-        var formData = new FormData();
-        var totalfiles = this.input.files.length;
-        for (var index = 0; index < totalfiles; index++) {
+        const formData = new FormData();
+        const totalfiles = this.input.files.length;
+        for (let index = 0; index < totalfiles; index++) {
             formData.append("WICKET-FILE-UPLOAD",this.input.files[index]);
         }
-        var self = this;
-        // we use jQuery to post the files to the resource (this.resourceUrl)
-        // and we keep a reference to the request in order to be able
-        // to cancel the upload
-        this.xhr = $.ajax({
-            url: this.resourceUrl,
-            type: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (res) {
+        const self = this;
+        // we post the files to the resource (this.resourceUrl) with a plain XMLHttpRequest
+        // and keep a reference to it in order to be able to cancel the upload
+        const xhr = new XMLHttpRequest();
+        this.xhr = xhr;
+
+        xhr.open("POST", this.resourceUrl);
+
+        xhr.onload = function () {
+            let res, ep;
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    res = xhr.responseText ? JSON.parse(xhr.responseText) : {};
+                } catch (parseError) {
+                    // this error will only happen is generated JSON at server side is faulty
+                    Wicket.Log.log(xhr.responseText);
+                    return;
+                }
                 // do clean up on success
                 if (res.error) {
                     self.uploadErrorCallBack(res);
                     Wicket.Ajax.get({"u": self.ajaxCallBackUrl, "ep": res});
                 } else {
                     self.clientSideSuccessCallBack();
-                    var ep = {'error': false, 'filesInfo': JSON.stringify(res)};
+                    ep = {'error': false, 'filesInfo': JSON.stringify(res)};
                     Wicket.Ajax.get({"u": self.ajaxCallBackUrl, "ep": ep});
                 }
-            },
-            beforeSend: function (xhr) {
-                self.clientBeforeSendCallBack(xhr);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if (textStatus === "abort") {
-                    // user aborted the upload.
-                    var ep = {'error': true, 'errorMessage': 'upload.canceled'};
-                    Wicket.Ajax.get({"u": self.ajaxCallBackUrl, "ep": ep});
-                } else if (textStatus === "error"){
-                    var ep = {'error': true, "errorMessage": errorThrown};
-                    self.uploadErrorCallBack(ep);
-                    Wicket.Ajax.get({"u": self.ajaxCallBackUrl, "ep": ep});
-                } else if (textStatus === "parsererror"){
-                    // this error will only happen is generated JSON at server side is faulty
-                    var data = jqXHR.responseText;
-                    Wicket.Log.log(data);
-                }
+            } else {
+                ep = {'error': true, "errorMessage": xhr.statusText};
+                self.uploadErrorCallBack(ep);
+                Wicket.Ajax.get({"u": self.ajaxCallBackUrl, "ep": ep});
             }
-        });
-    }
+        };
+
+        xhr.onerror = function () {
+            const ep = {'error': true, "errorMessage": xhr.statusText};
+            self.uploadErrorCallBack(ep);
+            Wicket.Ajax.get({"u": self.ajaxCallBackUrl, "ep": ep});
+        };
+
+        xhr.onabort = function () {
+            // user aborted the upload.
+            const ep = {'error': true, 'errorMessage': 'upload.canceled'};
+            Wicket.Ajax.get({"u": self.ajaxCallBackUrl, "ep": ep});
+        };
+
+        self.clientBeforeSendCallBack(xhr);
+
+        xhr.send(formData);
+    };
 
     // cancel the upload
     Wicket.FileUploadToResourceField.prototype.cancel = function () {
@@ -106,5 +115,5 @@
         } else {
             Wicket.Log.log("Too late to cancel upload for field '"  + this.inputName +  "': the upload has already finished.");
         }
-    }
+    };
 })();

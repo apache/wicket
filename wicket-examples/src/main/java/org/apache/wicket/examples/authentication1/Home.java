@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.authentication1;
 
+import org.apache.wicket.examples.homepage.AuthenticationIndex;
+
 import org.apache.wicket.examples.WicketExamplePage;
 
 
@@ -26,5 +28,17 @@ import org.apache.wicket.examples.WicketExamplePage;
  */
 public class Home extends WicketExamplePage implements AuthenticatedWebPage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return AuthenticationIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "authentication";
+	}
+
 	// Nothing in here.
 }

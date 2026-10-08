@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.compref;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.link.ExternalLink;
 
 
@@ -25,7 +24,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
  * 
  * @author Eelco Hillenius
  */
-public class ExternalLinkPage extends WicketExamplePage
+public class ExternalLinkPage extends ComprefPage
 {
 	/**
 	 * Constructor

@@ -40,6 +40,7 @@ org.apache.wicket.extensions.ajax.markup.html.repeater;-noimport:=true,
 org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;-noimport:=true,
 org.apache.wicket.extensions.ajax.markup.html.repeater.data.table;-noimport:=true,
 org.apache.wicket.extensions.ajax.markup.html.tabs;-noimport:=true,
+org.apache.wicket.extensions.ajax.veil;-noimport:=true,
 org.apache.wicket.extensions.breadcrumb;-noimport:=true,
 org.apache.wicket.extensions.breadcrumb.panel;-noimport:=true,
 org.apache.wicket.extensions.captcha.kittens;-noimport:=true,
@@ -76,13 +77,13 @@ org.apache.wicket.extensions.wizard.dynamic;-noimport:=true
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>tools.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

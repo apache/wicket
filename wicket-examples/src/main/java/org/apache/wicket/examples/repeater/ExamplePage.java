@@ -25,6 +25,13 @@ import org.apache.wicket.examples.WicketExamplePage;
  */
 public abstract class ExamplePage extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return Index.class;
+	}
+
+
 	/**
 	 * Get downcast session object for easy access by subclasses
 	 * 

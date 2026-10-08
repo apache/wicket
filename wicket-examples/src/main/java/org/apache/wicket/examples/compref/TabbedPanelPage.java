@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.extensions.markup.html.tabs.TabbedPanel;
@@ -37,7 +36,7 @@ import org.apache.wicket.model.Model;
  * @author igor
  * 
  */
-public class TabbedPanelPage extends WicketExamplePage
+public class TabbedPanelPage extends ComprefPage
 {
 	private static final long serialVersionUID = 1L;
 

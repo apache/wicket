@@ -42,13 +42,14 @@ public class ExtensionResourceNameIterator implements Iterator<String>
 	public ExtensionResourceNameIterator(final Iterable<String> extensions)
 	{
 		// Fail safe: hasNext() needs to return at least once with true
-		if (extensions == null || !extensions.iterator().hasNext())
+		Iterator<String> extensionIterator = extensions == null ? null : extensions.iterator();
+		if (extensionIterator == null || !extensionIterator.hasNext())
 		{
 			this.iterator = NULL_ITERABLE.iterator();
 		}
 		else
 		{
-			this.iterator = extensions.iterator();
+			this.iterator = extensionIterator;
 		}
 	}
 

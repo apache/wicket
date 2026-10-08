@@ -25,6 +25,12 @@ import org.apache.wicket.examples.WicketExamplePage;
  */
 public class TopFrame extends WicketExamplePage
 {
+	@Override
+	protected boolean showNavigation()
+	{
+		return false;
+	}
+
 	/**
 	 * Constructor
 	 */

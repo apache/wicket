@@ -25,11 +25,17 @@ import org.apache.wicket.examples.WicketExamplePage;
  */
 public class SignOut extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return Home.class;
+	}
+
 	/**
 	 * Constructor
 	 */
 	public SignOut()
 	{
-		getSession().invalidate();
+		getSession().invalidateNow();
 	}
 }

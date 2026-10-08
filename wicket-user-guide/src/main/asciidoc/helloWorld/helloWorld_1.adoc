@@ -15,7 +15,7 @@ Wicket is available as a binary package on the main site  http://wicket.apache.o
 |wicket-ioc | This module provides common classes to support Inversion Of Control. It's used by both Spring and Guice integration module. | wicket-core, wicket-tester
 |wicket-guice | This module provides integration with the dependency injection framework developed by Google. | wicket-core, wicket-ioc, wicket-tester
 |wicket-spring | This module provides integration with Spring framework. | wicket-core, wicket-ioc, wicket-tester
-|wicket-velocity | This module provides panels and utility class to integrate Wicket with Velocity template engine. | wicket-core, wicket-tester
+|wicket-velocity | This module provides panels and utility class to integrate Wicket with Velocity template engine. Templates are rendered as markup and are not escaped, and neither are the values interpolated into them, so both must be authored by the developer: a Velocity template can invoke methods on the objects in its context, and one built from user input is a code execution risk rather than only a markup one. | wicket-core, wicket-tester
 |wicket-jmx| This module provides panels and utility class to integrate Wicket with Java Management Extensions. | wicket-core, wicket-tester
 |wicket-objectsizeof-agent | Provides integration with Java agent libraries and instrumentation tools. | wicket-core
 |===

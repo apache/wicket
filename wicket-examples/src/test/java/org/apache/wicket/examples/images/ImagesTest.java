@@ -34,7 +34,7 @@ public class ImagesTest
 		try
 		{
 			tester.startPage(Home.class);
-			tester.assertContains("Wicket Examples - images");
+			tester.assertContains("Wicket Examples - Images");
 		}
 		finally
 		{

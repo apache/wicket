@@ -27,6 +27,12 @@ import org.apache.wicket.markup.html.basic.Label;
  */
 public final class BookDetails extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return Home.class;
+	}
+
 	/**
 	 * Constructor
 	 * 

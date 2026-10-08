@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.examples.spring.common.web;
 
+import org.apache.wicket.examples.homepage.InjectionIndex;
+import org.apache.wicket.examples.WicketExamplePage;
+
 import org.apache.wicket.examples.spring.annot.web.AnnotPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
@@ -27,6 +30,18 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
  */
 public class HomePage extends BasePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return InjectionIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "injection";
+	}
+
 	/**
 	 * Construct.
 	 */

@@ -20,8 +20,10 @@ module.exports = function(grunt) {
 		coreJs = [
 			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
 			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
+			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax.js',
 			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckSelector.js",
 			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js",
+			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/resource/FileUploadToResourceField.js",
 			"../../wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormChoiceComponentUpdatingBehavior.js",
 			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/pages/wicket-browser-info.js"
 		],
@@ -31,7 +33,8 @@ module.exports = function(grunt) {
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/form/palette/palette.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/autocomplete/wicket-autocomplete.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js",
-			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/filter/wicket-filterform.js"
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/filter/wicket-filterform.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/veil/wicket-veil.js"
 		],
 		nativeWebSocketJs = [
 			"../../wicket-native-websocket/wicket-native-websocket-core/src/main/java/org/apache/wicket/protocol/ws/api/res/js/wicket-websocket-jquery.js"
@@ -44,6 +47,11 @@ module.exports = function(grunt) {
 			"../../wicket-core/src/test/js/channels.js",
 			"../../wicket-core/src/test/js/event.js",
 			"../../wicket-core/src/test/js/timer.js"
+		],
+		extensionsTestsJs = [
+			"../../wicket-extensions/src/test/js/palette-test.js",
+			"../../wicket-extensions/src/test/js/trapfocus-test.js",
+			"../../wicket-extensions/src/test/js/veil-test.js"
 		],
 		gymTestsJs = [
 			"../../wicket-examples/src/main/webapp/js-test/tests/ajax/form.js",
@@ -72,6 +80,7 @@ module.exports = function(grunt) {
 			extensions: extensionsJs,
 			nativeWebSocket: nativeWebSocketJs,
 			testsJs: testsJs,
+			extensionsTestsJs: extensionsTestsJs,
 			gymTestsJs: gymTestsJs,
 			grunt: gruntJs,
 
@@ -100,17 +109,39 @@ module.exports = function(grunt) {
 
 		qunit: {
 			/*
-			 * Runs all tests (w/ ajax).
+			 * Runs all tests (w/ ajax) against the default, JQuery-based wicket-ajax.js.
 			 * See ajax.js header for details how to setup it.
 			 */
 			all: {
 				options: {
 					urls: [
-						'http://localhost:38887/test/js/all.html?4.0.0'
+						'http://localhost:38887/test/js/all.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?4.0.0'
 					],
-					puppeteer: { 
-						headless: true, 
-						args: ['--no-sandbox'] 
+					puppeteer: {
+						headless: true,
+						args: ['--no-sandbox']
+					}
+				}
+			},
+
+			/*
+			 * Runs the very same tests again against the JQuery-free wicket-ajax.js,
+			 * to make sure both implementations of the Wicket.* client-side API stay in sync.
+			 */
+			vanilla: {
+				options: {
+					urls: [
+						'http://localhost:38887/test/js/all.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?vanilla',
+						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?vanilla'
+					],
+					puppeteer: {
+						headless: true,
+						args: ['--no-sandbox']
 					}
 				}
 			}
@@ -133,6 +164,15 @@ module.exports = function(grunt) {
 						return middlewares;
 					  },
 					base: '../../wicket-core/src'
+				}
+			},
+			// serves wicket-extensions' own JavaScript and its QUnit tests; a separate
+			// target because they live outside the wicket-core/src root above
+			extensions: {
+				options: {
+					port: 38888,
+					debug: true,
+					base: '../..'
 				}
 			}
 		}

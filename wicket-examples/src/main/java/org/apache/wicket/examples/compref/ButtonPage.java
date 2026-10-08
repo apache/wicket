@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.compref;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -27,7 +26,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  * 
  * @author Eelco Hillenius
  */
-public class ButtonPage extends WicketExamplePage
+public class ButtonPage extends ComprefPage
 {
 	/**
 	 * Constructor

@@ -131,7 +131,7 @@ public class MetaDataHeaderItem extends HeaderItem
 			{
 				buffer.append('=')
 					.append('"')
-					.append(Strings.replaceAll(value.toString(), "\"", "\\\""))
+					.append(Strings.escapeMarkup(value.toString()))
 					.append('"');
 			}
 		}

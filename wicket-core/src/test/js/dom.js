@@ -18,7 +18,7 @@
 /*global ok: true, start: true, test: true, equal: true, deepEqual: true,
  QUnit: true, expect: true */
 
-jQuery(document).ready(function() {
+Wicket.Event.add(window, 'domready', function() {
 	"use strict";
 
 	const { module, test } = QUnit;
@@ -31,6 +31,13 @@ jQuery(document).ready(function() {
 		toBeReplacedByTableId = 'toBeReplacedByTable',
 		toBeReplacedByScriptId = 'toBeReplacedByScript',
 		toBeReplacedByDivWithChildrenId = 'toBeReplacedByDivWithChildren';
+
+	// parses a HTML string into its (single) root element, without depending on jQuery
+	var parseElement = function (html) {
+		var template = document.createElement('template');
+		template.innerHTML = html;
+		return template.content.firstElementChild;
+	};
 
 	module("Wicket.DOM");
 
@@ -73,7 +80,7 @@ jQuery(document).ready(function() {
 	});
 
 	test("containsElement looks for an existing element", assert => {
-		var el = jQuery('#'+existingId)[0];
+		var el = document.getElementById(existingId);
 		assert.equal( Wicket.DOM.containsElement(el), true, "Wicket.DOM.containsElement should return true for existing elements." );
 	});
 
@@ -85,19 +92,19 @@ jQuery(document).ready(function() {
 	test("serializeNode a simple element", assert => {
 		var el = Wicket.$(existingId);
 		var asString = Wicket.DOM.serializeNode(el);
-		var $deserialized = jQuery(asString);
-		assert.equal($deserialized[0].tagName.toLowerCase() , 'span', "Wicket.DOM.serializeNode should return <span>." );
-		assert.equal($deserialized.prop('id') , existingId, "<span>'s must be "+existingId+"." );
+		var deserialized = parseElement(asString);
+		assert.equal(deserialized.tagName.toLowerCase() , 'span', "Wicket.DOM.serializeNode should return <span>." );
+		assert.equal(deserialized.id , existingId, "<span>'s must be "+existingId+"." );
 	});
 
 	test("serializeNode(Children) a complex element", assert => {
 		var el = Wicket.$(complexElementId);
 		var asString = Wicket.DOM.serializeNode(el);
-		var $deserialized = jQuery(asString);
-		assert.equal($deserialized[0].tagName.toLowerCase(), 'div', 'The serialized element name should be <div>');
-		assert.equal($deserialized.prop('id'), complexElementId, 'The serialized element id should be ' + complexElementId);
-		assert.equal($deserialized.children()[0].tagName.toLowerCase(), 'a', 'The serialized element should have one child <a>');
-		assert.equal($deserialized.text().trim(), 'Link', 'The serialized element should have text "Link"');
+		var deserialized = parseElement(asString);
+		assert.equal(deserialized.tagName.toLowerCase(), 'div', 'The serialized element name should be <div>');
+		assert.equal(deserialized.id, complexElementId, 'The serialized element id should be ' + complexElementId);
+		assert.equal(deserialized.children[0].tagName.toLowerCase(), 'a', 'The serialized element should have one child <a>');
+		assert.equal(deserialized.textContent.trim(), 'Link', 'The serialized element should have text "Link"');
 	});
 
 	test("show() an element", assert => {
@@ -197,13 +204,13 @@ jQuery(document).ready(function() {
 		});
 
 		Wicket.Event.subscribe('/dom/node/added', function(jqEvent, addedElement) {
-			assert.equal(jQuery(addedElement).text(), "New One", "The added element text match!");
+			assert.equal(addedElement.textContent, "New One", "The added element text match!");
 		});
 
 		var toReplace = Wicket.$('testDomEventNotifications');
 		var newElementMarkup = '<div id="testDomEventNotifications">New One</div>';
 		Wicket.DOM.replace(toReplace, newElementMarkup);
-		jQuery(document).off();
+		Wicket.Event.unsubscribe();
 	});
 
 	/**
@@ -224,12 +231,12 @@ jQuery(document).ready(function() {
 		var toReplace = Wicket.$('testDomEventNotifications');
 		var newElementMarkup = '';
 		Wicket.DOM.replace(toReplace, newElementMarkup);
-		jQuery(document).off();
+		Wicket.Event.unsubscribe();
 	});
 
 	test("text - read text from a node with single text type child", assert => {
 
-		var node = jQuery("<div></div>")[0];
+		var node = document.createElement("div");
 		var doc = node.ownerDocument;
 		var textNode = doc.createTextNode("some text");
 		node.appendChild(textNode);

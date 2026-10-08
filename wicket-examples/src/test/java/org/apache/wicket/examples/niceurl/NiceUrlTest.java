@@ -26,6 +26,9 @@ import org.junit.jupiter.api.Test;
  */
 public class NiceUrlTest
 {
+	/** The second step of the trail every example page shows: back to this example's index. */
+	private static final String BACK_TO_HOME = "navigation:indexes:1:back";
+
 	private WicketTester tester;
 
 	/**
@@ -53,7 +56,7 @@ public class NiceUrlTest
 	@Test
 	public void testHomePage()
 	{
-		tester.assertContains("Wicket Examples - niceurl");
+		tester.assertContains("Wicket Examples - Nice URLs");
 		tester.assertContains("This example displays how you can work with 'nice' urls for bookmarkable pages.");
 	}
 
@@ -65,7 +68,7 @@ public class NiceUrlTest
 	{
 		tester.clickLink("page1Link");
 		tester.assertRenderedPage(Page1.class);
-		tester.clickLink("homeLink");
+		tester.clickLink(BACK_TO_HOME);
 		tester.assertRenderedPage(Home.class);
 	}
 
@@ -79,7 +82,7 @@ public class NiceUrlTest
 		tester.assertRenderedPage(Page2.class);
 		tester.clickLink("refreshLink");
 		tester.assertRenderedPage(Page2.class);
-		tester.clickLink("homeLink");
+		tester.clickLink(BACK_TO_HOME);
 		tester.assertRenderedPage(Home.class);
 	}
 
@@ -93,7 +96,7 @@ public class NiceUrlTest
 		tester.assertRenderedPage(Page2PP.class);
 		tester.clickLink("refreshLink");
 		tester.assertRenderedPage(Page2PP.class);
-		tester.clickLink("homeLink");
+		tester.clickLink(BACK_TO_HOME);
 		tester.assertRenderedPage(Home.class);
 	}
 
@@ -107,7 +110,7 @@ public class NiceUrlTest
 		tester.assertRenderedPage(Page2UP.class);
 		tester.clickLink("refreshLink");
 		tester.assertRenderedPage(Page2UP.class);
-		tester.clickLink("homeLink");
+		tester.clickLink(BACK_TO_HOME);
 		tester.assertRenderedPage(Home.class);
 	}
 
@@ -119,7 +122,7 @@ public class NiceUrlTest
 	{
 		tester.clickLink("page3Link");
 		tester.assertRenderedPage(org.apache.wicket.examples.niceurl.mounted.Page3.class);
-		tester.clickLink("homeLink");
+		tester.clickLink(BACK_TO_HOME);
 		tester.assertRenderedPage(Home.class);
 	}
 
@@ -131,7 +134,7 @@ public class NiceUrlTest
 	{
 		tester.clickLink("page4Link");
 		tester.assertRenderedPage(org.apache.wicket.examples.niceurl.mounted.Page4.class);
-		tester.clickLink("homeLink");
+		tester.clickLink(BACK_TO_HOME);
 		tester.assertRenderedPage(Home.class);
 	}
 
@@ -143,7 +146,7 @@ public class NiceUrlTest
 	{
 		tester.clickLink("page5Link");
 		tester.assertRenderedPage(org.apache.wicket.examples.niceurl.mounted.Page5.class);
-		tester.clickLink("homeLink");
+		tester.clickLink(BACK_TO_HOME);
 		tester.assertRenderedPage(Home.class);
 	}
 }

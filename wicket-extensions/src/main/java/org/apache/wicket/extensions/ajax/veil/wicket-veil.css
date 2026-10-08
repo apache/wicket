@@ -1,0 +1,65 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.wicket-veil {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 10000;
+	background: transparent;
+	cursor: wait;
+}
+
+.wicket-veil-host {
+	isolation: isolate;
+}
+
+.wicket-veil-host-static {
+	position: relative;
+}
+
+.wicket-veil-host > .wicket-veil {
+	position: absolute;
+	z-index: 1000;
+}
+
+.wicket-veil-busy {
+	background: rgba(255, 255, 255, 0.5);
+}
+
+.wicket-veil-busy::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	box-sizing: border-box;
+	width: 2.5em;
+	height: 2.5em;
+	margin: -1.25em 0 0 -1.25em;
+	border: 0.3em solid rgba(0, 0, 0, 0.15);
+	border-top-color: rgba(0, 0, 0, 0.6);
+	border-radius: 50%;
+	animation: wicket-veil-spin 0.8s linear infinite;
+}
+
+@keyframes wicket-veil-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}

@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -40,7 +39,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 /**
  * An example page for {@link CheckBoxSelector}
  */
-public class CheckBoxSelectorPage extends WicketExamplePage
+public class CheckBoxSelectorPage extends ComprefPage
 {
 	private static final long serialVersionUID = 1L;
 

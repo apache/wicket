@@ -58,7 +58,22 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A unique and fun-to-use captcha technique I developed at Thoof.
- * 
+ * <p>
+ * <b>This is a very limited captcha and is not meant to protect a production application against
+ * bots.</b> Treat it as a novelty or a light nuisance filter, not as a security control. The
+ * animals are drawn from a small fixed set and are composited without rotation, scaling or noise,
+ * so an automated client can match them directly; the number of possible answers is small enough
+ * to be worth guessing; and the challenge is produced by a single generator seeded with a fixed
+ * constant and shared across the JVM, so the sequence of challenges a freshly started application
+ * produces is the same everywhere.
+ * </p>
+ * <p>
+ * If you need real protection against automated submissions, use a purpose-built captcha service,
+ * or a defence that does not rely on the client being human at all — rate limiting, or
+ * authentication. {@code CaptchaImageResource} in the sibling package randomises its challenge
+ * more carefully, but it is still a simple home-grown image captcha and the same caution applies.
+ * </p>
+ *
  * @author Jonathan Locke
  */
 public class KittenCaptchaPanel extends Panel

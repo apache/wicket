@@ -141,7 +141,7 @@ public class HangManTest
 		{
 			tester.startPage(Home.class, new PageParameters().set("word", "hangman"));
 			tester.assertComponent("start", Link.class);
-			tester.assertContains("Wicket Examples - hangman");
+			tester.assertContains("Wicket Examples - Hangman");
 			tester.clickLink("start");
 			tester.assertLabel("guessesRemaining", "5");
 			clickLetter(tester, 'f');
@@ -171,7 +171,7 @@ public class HangManTest
 		{
 			tester.startPage(Home.class, new PageParameters().set("word", "hangman"));
 			tester.assertComponent("start", Link.class);
-			tester.assertContains("Wicket Examples - hangman");
+			tester.assertContains("Wicket Examples - Hangman");
 			tester.clickLink("start");
 			tester.assertLabel("guessesRemaining", "5");
 			clickLetter(tester, 'f');

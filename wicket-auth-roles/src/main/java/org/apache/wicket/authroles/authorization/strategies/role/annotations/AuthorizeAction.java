@@ -24,8 +24,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A mapping of 1..n roles to an action. This annotions must be embedded in the
- * {@link AuthorizeActions} annotation.
+ * A mapping of 1..n roles to an action. It can be used on its own, and it can be grouped with other
+ * actions in an {@link AuthorizeActions} annotation when more than one action has to be restricted.
+ * 
+ * <pre>
+ * // a panel that only users with role ADMIN are allowed to see
+ * &#064;AuthorizeAction(action = &quot;RENDER&quot;, roles = &quot;ADMIN&quot;)
+ * public class ForAdmins extends Panel
+ * </pre>
+ * 
+ * It can be placed on a class or on a package, the latter by specifying it in the
+ * <code>package-info.java</code> file of that package. Restrictions are resolved per action, so an
+ * annotation on a class replaces the annotations of its package only for the action it names: a class
+ * restricting <code>ENABLE</code> still inherits the <code>RENDER</code> restriction of its package.
+ * See {@link AnnotationsRoleAuthorizationStrategy} for the complete resolution rules and for the
+ * pitfalls of annotating packages.
  * 
  * @see org.apache.wicket.authorization.IAuthorizationStrategy
  * @see AnnotationsRoleAuthorizationStrategy
@@ -42,7 +55,7 @@ public @interface AuthorizeAction {
 
 	/**
 	 * The action that is allowed. The default actions that are supported by Wicket are
-	 * <code>RENDER</code> and <code>ENABLE<code> as defined as constants
+	 * <code>RENDER</code> and <code>ENABLE</code> as defined as constants
 	 * of {@link org.apache.wicket.Component}.
 	 * 
 	 * @see org.apache.wicket.Component#RENDER
@@ -55,16 +68,17 @@ public @interface AuthorizeAction {
 	/**
 	 * The roles for this action.
 	 * 
-	 * @return the roles for this action. The default is an empty string (annotations do not allow
-	 *         null default values)
+	 * @return the roles for this action. The default is a zero length array (annotations do not
+	 *         allow null default values), which allows the action for everybody
 	 */
 	String[] roles() default { };
 
 	/**
-	 * The roles to deny for this action.
+	 * The roles to deny for this action. Denying takes precedence over allowing: a user holding one
+	 * of these roles is refused even when that user also holds one of the {@link #roles()}.
 	 * 
-	 * @return the roles to deny for this action. The default is an empty string (annotations do not
-	 *         allow null default values)
+	 * @return the roles to deny for this action. The default is a zero length array (annotations do
+	 *         not allow null default values), which denies the action for nobody
 	 */
 	String[] deny() default { };
 }

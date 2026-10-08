@@ -19,7 +19,6 @@ package org.apache.wicket.examples.compref;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
 import org.apache.wicket.extensions.markup.html.form.palette.theme.DefaultTheme;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -38,7 +37,7 @@ import org.apache.wicket.request.resource.CssResourceReference;
  * 
  * @author ivaynberg
  */
-public class PalettePage extends WicketExamplePage
+public class PalettePage extends ComprefPage
 {
 	private static final long serialVersionUID = 1L;
 

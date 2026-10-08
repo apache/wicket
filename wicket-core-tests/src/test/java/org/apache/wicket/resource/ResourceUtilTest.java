@@ -62,6 +62,121 @@ class ResourceUtilTest
 	}
 
 	@Test
+	void rejectPathSeparators() throws Exception
+	{
+		assertEquals("style", ResourceUtil.rejectPathSeparators("style", "style"));
+		assertEquals("my-style", ResourceUtil.rejectPathSeparators("my-style", "style"));
+		assertEquals("", ResourceUtil.rejectPathSeparators("", "style"));
+		assertNull(ResourceUtil.rejectPathSeparators(null, "style"));
+
+		assertNull(ResourceUtil.rejectPathSeparators("a/b", "style"));
+		assertNull(ResourceUtil.rejectPathSeparators("a\\b", "style"));
+		assertNull(ResourceUtil.rejectPathSeparators("..", "style"));
+		assertNull(ResourceUtil.rejectPathSeparators("../../etc", "style"));
+		assertNull(ResourceUtil.rejectPathSeparators("a\0b", "style"));
+		assertNull(ResourceUtil.rejectPathSeparators("\0", "style"));
+	}
+
+	@Test
+	void rejectPathSeparatorsForLocale() throws Exception
+	{
+		assertEquals(Locale.UK, ResourceUtil.rejectPathSeparators(Locale.UK));
+		assertNull(ResourceUtil.rejectPathSeparators((Locale)null));
+
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("../../etc")));
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("a/b")));
+	}
+
+	/**
+	 * A locale without a variant, script or extensions is validated by inspecting its language and
+	 * country rather than its {@link Locale#toString()}, so both subtags must still be checked, and
+	 * a separator has to be caught wherever it sits.
+	 */
+	@Test
+	void rejectPathSeparatorsForLanguageAndCountry() throws Exception
+	{
+		assertEquals(Locale.of("nl"), ResourceUtil.rejectPathSeparators(Locale.of("nl")));
+		assertEquals(Locale.of("nl", "NL"), ResourceUtil.rejectPathSeparators(Locale.of("nl", "NL")));
+		assertEquals(Locale.of("", "NL"), ResourceUtil.rejectPathSeparators(Locale.of("", "NL")));
+
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("nl", "N/L")));
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("nl", "N\\L")));
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("nl", "..")));
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("nl", "N\0L")));
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("a\\b", "NL")));
+
+		// a single dot is a legal subtag character; only a doubled one escapes the directory
+		assertEquals(Locale.of("a.b", "NL"), ResourceUtil.rejectPathSeparators(Locale.of("a.b", "NL")));
+	}
+
+	/**
+	 * A locale carrying a variant, a script or extensions is validated against its
+	 * {@link Locale#toString()}, which drops some subtags - a variant without a language or country
+	 * among them - so the two routes must agree on what reaches the path.
+	 */
+	@Test
+	void rejectPathSeparatorsForRicherLocales() throws Exception
+	{
+		Locale variant = Locale.of("nl", "NL", "vlaams");
+		assertEquals(variant, ResourceUtil.rejectPathSeparators(variant));
+		assertNull(ResourceUtil.rejectPathSeparators(Locale.of("nl", "NL", "a/b")));
+
+		Locale script = new Locale.Builder().setLanguage("zh").setScript("Hans").build();
+		assertEquals(script, ResourceUtil.rejectPathSeparators(script));
+
+		Locale extension =
+			new Locale.Builder().setLanguage("nl").setRegion("NL").setExtension('u', "ca-buddhist").build();
+		assertEquals(extension, ResourceUtil.rejectPathSeparators(extension));
+
+		// Locale#toString() omits a variant that has neither a language nor a country, so it never
+		// reaches the lookup path and must not cause the locale to be dropped
+		Locale strayVariant = Locale.of("", "", "a/b");
+		assertEquals("", strayVariant.toString());
+		assertEquals(strayVariant, ResourceUtil.rejectPathSeparators(strayVariant));
+	}
+
+	/**
+	 * A locale, style or variation carrying a path separator is dropped: each becomes a single
+	 * component of the resource lookup path, so a separator would make the lookup resolve in a
+	 * different directory than the resource it belongs to.
+	 */
+	@Test
+	void decodeResourceReferenceAttributesRejectsPathSeparators() throws Exception
+	{
+		for (String value : new String[] { "../../etc", "..\\..\\etc", "a/b", "a\\b", "..",
+			"a\0b" })
+		{
+			UrlAttributes attributes = ResourceUtil.decodeResourceReferenceAttributes(value);
+			assertNull(attributes.getLocale(), "locale should be dropped for '" + value + "'");
+
+			attributes = ResourceUtil.decodeResourceReferenceAttributes("en-" + value);
+			assertEquals(Locale.ENGLISH, attributes.getLocale());
+			assertNull(attributes.getStyle(), "style should be dropped for '" + value + "'");
+
+			attributes = ResourceUtil.decodeResourceReferenceAttributes("en-style-" + value);
+			assertEquals(Locale.ENGLISH, attributes.getLocale());
+			assertEquals("style", attributes.getStyle());
+			assertNull(attributes.getVariation(),
+				"variation should be dropped for '" + value + "'");
+		}
+	}
+
+	/**
+	 * The separator check runs after {@code ~} has been restored to {@code -}, and must not disturb
+	 * that restoration.
+	 */
+	@Test
+	void decodeResourceReferenceAttributesKeepsEscapedSeparator() throws Exception
+	{
+		UrlAttributes attributes =
+			ResourceUtil.decodeResourceReferenceAttributes("en-my~style-my~variation");
+
+		assertEquals(Locale.ENGLISH, attributes.getLocale());
+		assertEquals("my-style", attributes.getStyle());
+		assertEquals("my-variation", attributes.getVariation());
+	}
+
+	@Test
 	void decodeResourceReferenceAttributesWithUrl() throws Exception
 	{
 		Url url = Url.parse("www.funny.url/?param1=value1");

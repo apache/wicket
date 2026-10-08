@@ -26,6 +26,7 @@ import java.time.format.FormatStyle;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.apache.wicket.Session;
@@ -203,8 +204,10 @@ public class DateTimePage extends WicketExamplePage
 	{
 		super.onInitialize();
 
-		clientZone = ((WebClientInfo)Session.get().getClientInfo()).getProperties().getTimeZone()
-			.toZoneId();
+		TimeZone reported = ((WebClientInfo)Session.get().getClientInfo()).getProperties()
+			.getTimeZone();
+
+		clientZone = reported == null ? ZoneId.systemDefault() : reported.toZoneId();
 	}
 
 	/**

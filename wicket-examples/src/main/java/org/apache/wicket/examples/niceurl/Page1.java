@@ -28,6 +28,12 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class Page1 extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return Home.class;
+	}
+
 	/**
 	 * Constructor
 	 * 
@@ -35,6 +41,5 @@ public class Page1 extends WicketExamplePage
 	 */
 	public Page1(PageParameters parameters)
 	{
-		add(new BookmarkablePageLink<>("homeLink", Home.class));
 	}
 }

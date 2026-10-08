@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.asemail;
 
+import org.apache.wicket.examples.homepage.TemplatingIndex;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +47,18 @@ import org.apache.wicket.util.template.TextTemplate;
  */
 public class MailTemplate extends WicketExamplePage
 {
+	@Override
+	protected Class<? extends WicketExamplePage> getIndexPage()
+	{
+		return TemplatingIndex.class;
+	}
+
+	@Override
+	protected String getIndexPath()
+	{
+		return "templating";
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	/**

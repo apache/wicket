@@ -78,6 +78,33 @@ class AjaxFormSubmitBehaviorTest extends WicketTestCase
 		formTester.submit("submit");
 	}
 
+	/**
+	 * The submit event is triggered through {@code Wicket.Event.triggerSubmit()}, which keeps
+	 * Firefox from submitting the form for it besides the Ajax request.
+	 */
+	@Test
+	void theSubmitEventIsTriggeredWithoutSubmittingTheForm()
+	{
+		AjaxFormSubmitBehaviorTestPage page = new AjaxFormSubmitBehaviorTestPage();
+		page.getForm().getTextField().add(new AjaxFormSubmitBehavior("click")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected boolean shouldTriggerJavaScriptSubmitEvent()
+			{
+				return true;
+			}
+		});
+
+		tester.startPage(page);
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains("Wicket.Event.triggerSubmit(document.getElementById('" +
+			page.getForm().getMarkupId() + "'))"), response);
+		assertFalse(response.contains("dispatchEvent"), response);
+	}
+
 	public static class NestedFormTestPage extends NestedFormPage
 	{
 		

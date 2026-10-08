@@ -22,6 +22,8 @@ import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPoli
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.DEST_DOCUMENT;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.MODE_NAVIGATE;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.MODE_NO_CORS;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.NONE;
+import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SAME_ORIGIN;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SAME_SITE;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SEC_FETCH_DEST_HEADER;
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.SEC_FETCH_MODE_HEADER;
@@ -29,7 +31,9 @@ import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPoli
 import static org.apache.wicket.protocol.http.FetchMetadataResourceIsolationPolicy.VARY_HEADER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.apache.wicket.protocol.http.IResourceIsolationPolicy.RequestType;
 import org.apache.wicket.protocol.http.IResourceIsolationPolicy.ResourceIsolationOutcome;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -112,15 +116,112 @@ public class ResourceIsolationRequestCycleListenerTest extends WicketTestCase
 	}
 
 	/**
-	 * Tests whether a top level navigation request is allowed by FM checks
+	 * A top-level navigation from another site may render a page, but not invoke a listener on it.
 	 */
 	@Test
-	void topLevelNavigationAllowedFM()
+	void topLevelNavigationListenerAborted()
 	{
 		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
 		tester.addRequestHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
 
+		assertRequestAborted();
+	}
+
+	/**
+	 * The other half of {@link #topLevelNavigationListenerAborted()}: the same request may still
+	 * render the page, so that pages remain linkable from elsewhere.
+	 */
+	@Test
+	void topLevelNavigationMayRenderButNotInvokeAListener()
+	{
+		// set on the request itself: addRequestHeader() only stages headers for the next request
+		tester.getRequest().setHeader(SEC_FETCH_SITE_HEADER, CROSS_SITE);
+		tester.getRequest().setHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
+		// a simple top-level navigation is a GET; the mock request defaults to POST
+		tester.getRequest().setMethod("GET");
+
+		FetchMetadataResourceIsolationPolicy policy = new FetchMetadataResourceIsolationPolicy();
+		IRequestablePage page = tester.getLastRenderedPage();
+
+		assertEquals(ResourceIsolationOutcome.ALLOWED,
+			policy.isRequestAllowed(tester.getRequest(), page, RequestType.RENDER));
+		assertEquals(ResourceIsolationOutcome.DISALLOWED,
+			policy.isRequestAllowed(tester.getRequest(), page, RequestType.LISTENER));
+	}
+
+	/**
+	 * A sibling origin on the same site is a different origin, so it may not invoke a listener.
+	 */
+	@Test
+	void sameSiteListenerAborted()
+	{
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, SAME_SITE);
+
+		assertRequestAborted();
+	}
+
+	/**
+	 * ... unless the application declares every origin on the site to be trusted.
+	 */
+	@Test
+	void sameSiteListenerAllowedWhenConfigured()
+	{
+		withCustomListener(new ResourceIsolationRequestCycleListener(
+			new FetchMetadataResourceIsolationPolicy().setSameSiteAllowed(true),
+			new OriginResourceIsolationPolicy()));
+
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, SAME_SITE);
+
 		assertRequestAccepted();
+	}
+
+	/**
+	 * A same-site request may render a page regardless of the setting, as a top-level navigation.
+	 */
+	@Test
+	void sameSiteMayRenderRegardlessOfTheSetting()
+	{
+		tester.getRequest().setHeader(SEC_FETCH_SITE_HEADER, SAME_SITE);
+		tester.getRequest().setHeader(SEC_FETCH_MODE_HEADER, MODE_NAVIGATE);
+		tester.getRequest().setMethod("GET");
+
+		assertEquals(ResourceIsolationOutcome.ALLOWED,
+			new FetchMetadataResourceIsolationPolicy().isRequestAllowed(tester.getRequest(),
+				tester.getLastRenderedPage(), RequestType.RENDER));
+	}
+
+	/**
+	 * Requests from the page itself are allowed, which is the normal case.
+	 */
+	@Test
+	void sameOriginListenerAccepted()
+	{
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, SAME_ORIGIN);
+
+		assertRequestAccepted();
+	}
+
+	/**
+	 * {@code none} means there was no initiating document - a typed URL or a bookmark - which
+	 * another document cannot cause, so it is allowed.
+	 */
+	@Test
+	void browserInitiatedListenerAccepted()
+	{
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, NONE);
+
+		assertRequestAccepted();
+	}
+
+	/**
+	 * Without Fetch Metadata headers the policy has nothing to judge on and the next policy decides.
+	 */
+	@Test
+	void missingFetchMetadataIsUnknown()
+	{
+		assertEquals(ResourceIsolationOutcome.UNKNOWN,
+			new FetchMetadataResourceIsolationPolicy().isRequestAllowed(tester.getRequest(),
+				tester.getLastRenderedPage(), RequestType.LISTENER));
 	}
 
 	/**
@@ -165,7 +266,7 @@ public class ResourceIsolationRequestCycleListenerTest extends WicketTestCase
 	@Test
 	void varyHeaderSetWhenFetchMetadataAcceptsRequest()
 	{
-		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, SAME_SITE);
+		tester.addRequestHeader(SEC_FETCH_SITE_HEADER, SAME_ORIGIN);
 		tester.setFollowRedirects(false);
 		assertRequestAccepted();
 

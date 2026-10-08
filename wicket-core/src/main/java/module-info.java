@@ -45,8 +45,6 @@ module org.apache.wicket.core {
     exports org.apache.wicket.ajax.markup.html.form;
     exports org.apache.wicket.ajax.markup.html.navigation.paging;
     exports org.apache.wicket.application;
-    exports org.apache.wicket.authentication;
-    exports org.apache.wicket.authentication.strategy;
     exports org.apache.wicket.authorization;
     exports org.apache.wicket.authorization.strategies;
     exports org.apache.wicket.authorization.strategies.action;
@@ -87,7 +85,6 @@ module org.apache.wicket.core {
     exports org.apache.wicket.markup.html.form.validation;
     exports org.apache.wicket.markup.html.image;
     exports org.apache.wicket.markup.html.image.resource;
-    exports org.apache.wicket.markup.html.include;
     exports org.apache.wicket.markup.html.internal;
     exports org.apache.wicket.markup.html.link;
     exports org.apache.wicket.markup.html.list;
@@ -111,7 +108,6 @@ module org.apache.wicket.core {
     exports org.apache.wicket.model.util;
     exports org.apache.wicket.page;
     exports org.apache.wicket.pageStore;
-    exports org.apache.wicket.pageStore.crypt;
     exports org.apache.wicket.pageStore.disk;
     exports org.apache.wicket.protocol.http;
     exports org.apache.wicket.protocol.http.mock;

@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.compref;
 
 import org.apache.wicket.util.io.IClusterable;
-import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -29,7 +28,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class TextFieldPage extends WicketExamplePage
+public class TextFieldPage extends ComprefPage
 {
 	/**
 	 * Constructor
