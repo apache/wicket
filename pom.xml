@@ -614,11 +614,6 @@
 				</exclusions>
 			</dependency>
 			<dependency>
-          <groupId>org.jspecify</groupId>
-          <artifactId>jspecify</artifactId>
-          <version>${jspecific.version}</version>
-      </dependency>
-			<dependency>
 				<groupId>tools.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
 				<version>${jackson.version}</version>
@@ -1597,3 +1592,4 @@
 		</plugins>
 	</reporting>
 </project>
+
