@@ -21,7 +21,6 @@ import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.validation.IValidator;
@@ -32,7 +31,6 @@ import org.apache.wicket.validation.validator.PatternValidator;
  * Behavior which renders HTML5 attributes.
  * 
  * @see #onInput(AbstractTextComponent, ComponentTag)
- * @see #onButton(Button, ComponentTag)
  */
 public class HTML5Attributes extends Behavior
 {
@@ -44,10 +42,6 @@ public class HTML5Attributes extends Behavior
 		if (component instanceof AbstractTextComponent)
 		{
 			onInput((AbstractTextComponent<?>)component, tag);
-		}
-		else if (component instanceof Button)
-		{
-			onButton((Button)component, tag);
 		}
 	}
 
@@ -67,11 +61,6 @@ public class HTML5Attributes extends Behavior
 	 */
 	protected void onInput(AbstractTextComponent<?> input, ComponentTag tag)
 	{
-		if (input.isRequired())
-		{
-			tag.put("required", "required");
-		}
-
 		IModel<String> label = input.getLabel();
 		if (label != null && label.getObject() != null)
 		{
@@ -92,27 +81,7 @@ public class HTML5Attributes extends Behavior
 		}
 	}
 
-	/**
-	 * Writes HTML5 attributes for {@link Button}s:
-	 * 
-	 * <ul>
-	 * <li>{@code formnovalidate} if {@link Button#getDefaultFormProcessing()} returns {@code false}
-	 * </li>
-	 * <ul>
-	 * 
-	 * @param button
-	 *            button component
-	 * @param tag
-	 *            component tag
-	 */
-	protected void onButton(Button button, ComponentTag tag)
-	{
-		if (!button.getDefaultFormProcessing())
-		{
-			tag.put("formnovalidate", "formnovalidate");
-		}
-	}
-
+	
 	/**
 	 * A listener to instantiations of {@link FormComponent}s to add HTML5 attributes.
 	 */

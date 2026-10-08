@@ -212,6 +212,11 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 				tag.put("value", value);
 			}
 		}
+		
+		if (!getDefaultFormProcessing())
+		{
+			tag.put("formnovalidate", "formnovalidate");
+		}
 	}
 
 	/**
@@ -265,6 +270,7 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 
 		super.onComponentTagBody(markupStream, openTag);
 	}
+	
 
 	@Override
 	public void onError()

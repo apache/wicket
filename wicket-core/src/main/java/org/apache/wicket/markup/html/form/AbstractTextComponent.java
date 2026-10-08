@@ -19,9 +19,13 @@ package org.apache.wicket.markup.html.form;
 import java.text.SimpleDateFormat;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.validation.IValidator;
+import org.apache.wicket.validation.ValidatorAdapter;
+import org.apache.wicket.validation.validator.PatternValidator;
 
 /**
  * Abstract base class for TextArea and TextField.
@@ -136,6 +140,36 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 		resolveType();
 	}
 
+	@Override
+	protected void onComponentTag(ComponentTag tag) 
+	{
+		if (isRequired())
+		{
+			tag.put("required", "required");
+		}
+		
+		IModel<String> label = getLabel();
+		if (label != null && label.getObject() != null)
+		{
+			tag.put("placeholder", label.getObject());
+		}
+
+		for (IValidator<?> validator : getValidators())
+		{
+			while (validator instanceof ValidatorAdapter)
+			{
+				validator = ((ValidatorAdapter<?>)validator).getValidator();
+			}
+
+			if (validator instanceof PatternValidator)
+			{
+				tag.put("pattern", ((PatternValidator)validator).getPattern().toString());
+			}
+		}
+		
+		super.onComponentTag(tag);
+	}
+	
 	/**
 	 * 
 	 */

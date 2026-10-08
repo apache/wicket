@@ -67,6 +67,7 @@ import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.ValidatorAdapter;
+import org.apache.wicket.validation.validator.PatternValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -94,7 +94,6 @@ class TextFieldTest extends WicketTestCase
 		testPage.textField.setOutputMarkupId(true);
 		testPage.textField.setType(String.class);
 		testPage.textField.setRequired(true);
-		testPage.textField.add(new HTML5Attributes());
 		tester.startPage(testPage);
 
 		TagTester tagTester = tester.getTagById(testPage.textField.getMarkupId());

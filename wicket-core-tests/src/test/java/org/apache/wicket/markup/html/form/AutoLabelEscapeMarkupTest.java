@@ -108,7 +108,7 @@ class AutoLabelEscapeMarkupTest extends WicketTestCase
 		String response = tester.getLastResponseAsString();
 		assertTrue(response.contains(BODY_MARKUP),
 			"the tag body should be rendered as markup");
-		assertFalse(response.contains("&lt;em&gt;emphasis&lt;/em&gt;"),
+		assertFalse(response.contains(">&lt;em&gt;emphasis&lt;/em&gt;<"),
 			"the tag body should not be escaped");
 	}
 
