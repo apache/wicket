@@ -85,7 +85,7 @@ class AutoLabelEscapeAttributeTest extends WicketTestCase
 		String response = tester.getLastResponseAsString();
 		assertTrue(response.contains(FROM_MODEL),
 			"label from the model should be written as markup");
-		assertFalse(response.contains("&lt;em&gt;model&lt;/em&gt;"),
+		assertFalse(response.contains(">&lt;em&gt;model&lt;/em&gt;<"),
 			"label from the model should not be escaped");
 	}
 
@@ -98,7 +98,7 @@ class AutoLabelEscapeAttributeTest extends WicketTestCase
 		String response = tester.getLastResponseAsString();
 		assertTrue(response.contains(FROM_DEFAULT_LABEL),
 			"default label should be written as markup");
-		assertFalse(response.contains("&lt;em&gt;default&lt;/em&gt;"),
+		assertFalse(response.contains(">&lt;em&gt;default&lt;/em&gt;<"),
 			"default label should not be escaped");
 	}
 
@@ -111,7 +111,7 @@ class AutoLabelEscapeAttributeTest extends WicketTestCase
 		String response = tester.getLastResponseAsString();
 		assertTrue(response.contains(FROM_KEY),
 			"label from a message key should be written as markup");
-		assertFalse(response.contains("&lt;em&gt;key&lt;/em&gt;"),
+		assertFalse(response.contains(">&lt;em&gt;key&lt;/em&gt;<"),
 			"label from a message key should not be escaped");
 	}
 
@@ -122,7 +122,7 @@ class AutoLabelEscapeAttributeTest extends WicketTestCase
 		tester.startPage(new LabelPage());
 
 		String response = tester.getLastResponseAsString();
-		assertTrue(response.contains("&lt;em&gt;escapeTrue&lt;/em&gt;"),
+		assertTrue(response.contains(">&lt;em&gt;escapeTrue&lt;/em&gt;<"),
 			"escape=\"true\" should escape the label");
 		assertFalse(response.contains(ESCAPE_TRUE),
 			"escape=\"true\" should not let the label reach the markup as markup");
@@ -141,7 +141,7 @@ class AutoLabelEscapeAttributeTest extends WicketTestCase
 		tester.startPage(new LabelPage());
 
 		String response = tester.getLastResponseAsString();
-		assertTrue(response.contains("&lt;em&gt;escapeBlank&lt;/em&gt;"),
+		assertTrue(response.contains(">&lt;em&gt;escapeBlank&lt;/em&gt;<"),
 			"escape=\"\" should escape the label");
 		assertFalse(response.contains(ESCAPE_BLANK),
 			"escape=\"\" should not let the label reach the markup as markup");
