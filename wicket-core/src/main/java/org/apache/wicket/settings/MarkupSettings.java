@@ -78,6 +78,12 @@ public class MarkupSettings
 	private IMarkupIdGenerator markupIdGenerator = new DefaultMarkupIdGenerator();
 
 	/**
+	 * If true, a component id may contain '(', ')', '[' and ']' as well, so it can be a map[key]
+	 * or name() expression for a CompoundPropertyModel. The default is false.
+	 */
+	private boolean propertyExpressionIdsAllowed = false;
+
+	/**
 	 * Construct
 	 */
 	public MarkupSettings()
@@ -298,6 +304,36 @@ public class MarkupSettings
 	public MarkupSettings setUpdateAutoLabelsTogetherWithFormComponent(boolean updateAutoLabelsTogetherWithFormComponent)
 	{
 		this.updateAutoLabelsTogetherWithFormComponent = updateAutoLabelsTogetherWithFormComponent;
+		return this;
+	}
+
+	/**
+	 * @return If true, a component id may contain {@code '('}, {@code ')'}, {@code '['} and
+	 *         {@code ']'} besides letters, digits, {@code '_'}, {@code '-'} and {@code '.'}. The
+	 *         default is false.
+	 */
+	public boolean isPropertyExpressionIdsAllowed()
+	{
+		return propertyExpressionIdsAllowed;
+	}
+
+	/**
+	 * Allows {@code '('}, {@code ')'}, {@code '['} and {@code ']'} in a component id, so it can be
+	 * a {@code map[key]} or {@code name()} expression for a
+	 * {@link org.apache.wicket.model.CompoundPropertyModel}. Off by default: a component id is
+	 * written into input names and, by a custom {@link IMarkupIdGenerator}, into markup ids, and
+	 * with these characters it is only safe inside a JavaScript string literal. A component can
+	 * instead keep an id without them and take a {@link org.apache.wicket.model.PropertyModel}
+	 * with the expression.
+	 *
+	 * @param propertyExpressionIdsAllowed
+	 *            If true, a component id may contain {@code '('}, {@code ')'}, {@code '['} and
+	 *            {@code ']'}
+	 * @return {@code this} object for chaining
+	 */
+	public MarkupSettings setPropertyExpressionIdsAllowed(boolean propertyExpressionIdsAllowed)
+	{
+		this.propertyExpressionIdsAllowed = propertyExpressionIdsAllowed;
 		return this;
 	}
 }

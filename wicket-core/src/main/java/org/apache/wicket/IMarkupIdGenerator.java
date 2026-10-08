@@ -28,7 +28,9 @@ public interface IMarkupIdGenerator
 	 * Wicket writes the markup id into the JavaScript it generates, without escaping it. A
 	 * generated markup id may therefore only contain letters, digits, {@code '_'}, {@code '-'} and
 	 * {@code '.'}. An id the component already has, from {@link Component#setMarkupId(String)} or
-	 * from the id attribute in its markup, has been checked already.
+	 * from the id attribute in its markup, has been checked already. The component id may also
+	 * contain {@code '('}, {@code ')'}, {@code '['} and {@code ']'}, so a generator that builds the
+	 * markup id from it must replace these.
 	 *
 	 * @param component
 	 *            The component for which to generate a markup id

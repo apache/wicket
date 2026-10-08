@@ -80,6 +80,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.settings.ExceptionSettings;
+import org.apache.wicket.settings.MarkupSettings;
 import org.apache.wicket.util.IHierarchical;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.io.IClusterable;
@@ -405,6 +406,21 @@ public abstract class Component
 	 * The name of attribute that will hold markup id
 	 */
 	private static final String MARKUP_ID_ATTR_NAME = "id";
+
+	/**
+	 * Characters a markup id may contain besides letters and digits, see
+	 * {@link #isValidId(String, String)}
+	 */
+	private static final String VALID_ID_CHARS = "_-.";
+
+	/**
+	 * Characters a component id may contain besides letters and digits when
+	 * {@link MarkupSettings#isPropertyExpressionIdsAllowed()} is true, see
+	 * {@link #isValidId(String, String)}. Unlike a markup id, it may then contain {@code '('},
+	 * {@code ')'}, {@code '['} and {@code ']'}, so it can be a {@code map[key]} or
+	 * {@code method()} expression for a {@link org.apache.wicket.model.CompoundPropertyModel}.
+	 */
+	private static final String VALID_COMPONENT_ID_CHARS = "_-.()[]";
 
 	/**
 	 * Meta data key for line precise error logging for the moment of addition. Made package private
@@ -2654,7 +2670,7 @@ public abstract class Component
 		{
 			throw new IllegalArgumentException("markupId must be String or Integer");
 		}
-		if (markupId instanceof String && !isValidId((String)markupId))
+		if (markupId instanceof String && !isValidId((String)markupId, VALID_ID_CHARS))
 		{
 			throw new IllegalArgumentException("The markup id '" + markupId +
 				"' may only contain letters, digits, '_', '-' and '.' chars.");
@@ -4071,29 +4087,49 @@ public abstract class Component
 			}
 		}
 
-		if ((id != null) && !isValidId(id))
+		if (id != null)
 		{
-			throw new WicketRuntimeException("The component ID '" + id +
-				"' may only contain letters, digits, '_', '-' and '.' chars.");
+			if (getApplication().getMarkupSettings().isPropertyExpressionIdsAllowed())
+			{
+				if (!isValidId(id, VALID_COMPONENT_ID_CHARS))
+				{
+					throw new WicketRuntimeException("The component ID '" + id +
+						"' may only contain letters, digits, '_', '-', '.', '(', ')', '[' and ']' chars.");
+				}
+			}
+			else if (!isValidId(id, VALID_ID_CHARS))
+			{
+				throw new WicketRuntimeException("The component ID '" + id +
+					"' may only contain letters, digits, '_', '-' and '.' chars" +
+					" (see MarkupSettings#setPropertyExpressionIdsAllowed for '(', ')', '[' and ']').");
+			}
 		}
 	}
 
 	/**
 	 * Checks the characters of a component id or a markup id. Wicket writes both into the
-	 * JavaScript it generates, the markup id as it is and the component id as part of an input name,
-	 * so only characters that cannot change the meaning of that JavaScript are allowed: letters,
-	 * digits, {@code '_'}, {@code '-'} and {@code '.'}.
+	 * JavaScript it generates, so only characters that cannot change the meaning of that JavaScript
+	 * are allowed: letters, digits and the given characters.
+	 * <p>
+	 * A markup id is written into the JavaScript as it is, also outside a string literal, for
+	 * instance as {@code Wicket.Timer.<markupId>}, so besides letters and digits it may only contain
+	 * {@code '_'}, {@code '-'} and {@code '.'}, see {@link #VALID_ID_CHARS}. A component id is only
+	 * written into a string literal, as part of an input name, and when
+	 * {@link MarkupSettings#isPropertyExpressionIdsAllowed()} is true it may also contain
+	 * {@code '('}, {@code ')'}, {@code '['} and {@code ']'}, see {@link #VALID_COMPONENT_ID_CHARS}.
 	 *
 	 * @param id
 	 *            the id to check
+	 * @param validChars
+	 *            the characters the id may contain besides letters and digits
 	 * @return {@code true} if every character of the id is allowed
 	 */
-	private static boolean isValidId(final String id)
+	private static boolean isValidId(final String id, final String validChars)
 	{
 		for (int i = 0; i < id.length();)
 		{
 			int c = id.codePointAt(i);
-			if (!Character.isLetterOrDigit(c) && c != '_' && c != '-' && c != '.')
+			if (!Character.isLetterOrDigit(c) && validChars.indexOf(c) == -1)
 			{
 				return false;
 			}
@@ -4110,11 +4146,11 @@ public abstract class Component
 	 * @return the id attribute
 	 * @throws WicketRuntimeException
 	 *             if the id attribute contains a character that is not allowed
-	 * @see #isValidId(String)
+	 * @see #isValidId(String, String)
 	 */
 	private String checkMarkupIdFromMarkup(final String markupId)
 	{
-		if (!isValidId(markupId))
+		if (!isValidId(markupId, VALID_ID_CHARS))
 		{
 			throw new WicketRuntimeException("The id attribute '" + markupId +
 				"' in the markup of " + this +
