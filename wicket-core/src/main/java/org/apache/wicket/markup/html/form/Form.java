@@ -1851,7 +1851,7 @@ public class Form<T> extends WebMarkupContainer
 	{
 		getResponse().write(String.format("<div id=\"%s\" hidden=\"\" class=\"%s\">",
 			getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX),
-			getString(HIDDEN_FIELDS_CSS_CLASS_KEY)));
+			Strings.escapeMarkup(getString(HIDDEN_FIELDS_CSS_CLASS_KEY))));
 		// if the parameters are not in the action attribute, they have to be written as hidden fields
 		if (encodeUrlInHiddenFields())
 		{
