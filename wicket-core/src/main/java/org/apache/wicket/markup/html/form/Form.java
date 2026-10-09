@@ -1287,7 +1287,7 @@ public class Form<T> extends WebMarkupContainer
 
 		// hidden div
 		buffer.append(String.format("<div hidden=\"\" class=\"%s\">",
-			getString(HIDDEN_FIELDS_CSS_CLASS_KEY)));
+			Strings.escapeMarkup(getString(HIDDEN_FIELDS_CSS_CLASS_KEY))));
 
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" tabindex=\"-1\" autocomplete=\"off\"/>");
@@ -1296,7 +1296,7 @@ public class Form<T> extends WebMarkupContainer
 		buffer
 			.append(String.format("<input id=\"%s\" type=\"submit\" tabindex=\"-1\" name=\"%s\" />",
 				getHiddenFieldsId(HIDDEN_FIELDS_SUBMIT_IDX),
-				defaultSubmittingComponent.getInputName()));
+				Strings.escapeMarkup(defaultSubmittingComponent.getInputName())));
 
 		// close div
 		buffer.append("</div>");
