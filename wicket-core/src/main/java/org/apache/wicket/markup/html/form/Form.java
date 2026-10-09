@@ -1758,7 +1758,7 @@ public class Form<T> extends WebMarkupContainer
 		{
 			String cssClass = getString(CssUtils.key(Form.class, "hidden-fields"));
 
-			getResponse().write(String.format("<div id=\"%s\" style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\" class=\"%s\">", getHiddenFieldsId(), cssClass));
+			getResponse().write(String.format("<div id=\"%s\" style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\" class=\"%s\">", getHiddenFieldsId(), Strings.escapeMarkup(cssClass)));
 
 			AppendingStringBuffer buffer = new AppendingStringBuffer();
 
