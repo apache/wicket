@@ -31,7 +31,7 @@ public enum CrossOrigin {
 	/**
 	 * user credentials required
 	 */
-	USE_CREDENTIALS("user-credentials"),
+	USE_CREDENTIALS("use-credentials"),
 	/**
 	 * no cross origin
 	 */
