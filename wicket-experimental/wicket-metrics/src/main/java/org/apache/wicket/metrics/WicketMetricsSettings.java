@@ -85,9 +85,9 @@ public class WicketMetricsSettings
 	 */
 	public void startJmxReporter()
 	{
-		MetricRegistry metricRegistry = WicketMetrics.getMetricRegistry();
 		if (reporter == null)
 		{
+			MetricRegistry metricRegistry = WicketMetrics.getMetricRegistry();
 			reporter = JmxReporter.forRegistry(metricRegistry).build();
 			reporter.start();
 		}
