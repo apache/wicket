@@ -48,6 +48,11 @@
 				</includes>
 			</resource>
 		</resources>
+		<testResources>
+			<testResource>
+				<directory>${project.basedir}/src/test/resources</directory>
+			</testResource>
+		</testResources>
 		<extensions>
 			<extension>
 				<groupId>org.apache.maven.archetype</groupId>
