@@ -17,6 +17,7 @@
 package ${package};
 
 import java.lang.management.ManagementFactory;
+import java.time.Duration;
 
 import javax.management.MBeanServer;
 
@@ -59,7 +60,7 @@ public class Start
 
 		ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(http_config));
 		http.setPort(8080);
-		http.setIdleTimeout(1000 * 60 * 60);
+		http.setIdleTimeout(Duration.ofHours(1).toMillis());
 
 		server.addConnector(http);
 
