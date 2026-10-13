@@ -21,7 +21,7 @@ import com.codahale.metrics.jmx.JmxReporter;
 
 /**
  * Settings to configure wicket metrics
- * 
+ *
  * @author Tobias Soloschenko
  *
  */
@@ -32,9 +32,11 @@ public class WicketMetricsSettings
 
 	private String prefix = "application/";
 
+	private JmxReporter reporter = null;
+
 	/**
 	 * If the metrics should be enabled
-	 * 
+	 *
 	 * @param enabled
 	 *            if the metrics should be enabled
 	 */
@@ -45,7 +47,7 @@ public class WicketMetricsSettings
 
 	/**
 	 * If the wicket metrics are enabled
-	 * 
+	 *
 	 * @return if the wicket metrics are enabled
 	 */
 	public boolean isEnabled()
@@ -55,7 +57,7 @@ public class WicketMetricsSettings
 
 	/**
 	 * Gets the prefix.
-	 * 
+	 *
 	 * @return the prefix
 	 */
 	public String getPrefix()
@@ -65,7 +67,7 @@ public class WicketMetricsSettings
 
 	/**
 	 * Sets the prefix to be used for the statistics
-	 * 
+	 *
 	 * @param prefix
 	 *            the prefix to be used
 	 */
@@ -84,7 +86,11 @@ public class WicketMetricsSettings
 	public void startJmxReporter()
 	{
 		MetricRegistry metricRegistry = WicketMetrics.getMetricRegistry();
-		JmxReporter.forRegistry(metricRegistry).build().start();
+		if (reporter == null)
+		{
+			reporter = JmxReporter.forRegistry(metricRegistry).build();
+			reporter.start();
+		}
 	}
 
 	/**
@@ -92,7 +98,10 @@ public class WicketMetricsSettings
 	 */
 	public void stopJmxReporter()
 	{
-		MetricRegistry metricRegistry = WicketMetrics.getMetricRegistry();
-		JmxReporter.forRegistry(metricRegistry).build().stop();
+		if (reporter != null)
+		{
+			reporter.stop();
+			reporter = null;
+		}
 	}
 }
