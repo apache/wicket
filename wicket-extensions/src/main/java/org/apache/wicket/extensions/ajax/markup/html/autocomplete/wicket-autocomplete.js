@@ -271,8 +271,19 @@
 		}
 
 		function handleSelection(input) {
-			var attr = getSelectableElement(selected).attributes.onselect;
-			return attr ? eval(attr.value) : input;
+			var item = getSelectableElement(selected);
+			var onselect = item.attributes.onselect;
+			var selectEvent = new CustomEvent('wicket-autocomplete-select', {
+				bubbles: true,
+				cancelable: true,
+				detail: { item: item, value: onselect ? evalOnSelect(input, onselect.value) : input }
+			});
+			return Wicket.$(ajaxAttributes.c).dispatchEvent(selectEvent) ? selectEvent.detail.value : null;
+		}
+
+		// deprecated AbstractAutoCompleteRenderer#getOnSelectJavaScriptExpression, needs 'unsafe-eval'
+		function evalOnSelect(input, expression) {
+			return eval(expression);
 		}
 
 		function getSelectableElements() {

@@ -16,14 +16,35 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
-import org.apache.wicket.core.util.string.JavaScriptUtils;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
  * A renderer that abstracts auto-assist specific details and allows subclasses to only render the
  * visual part of the assist instead of having to also render the necessary auto-assist javascript
  * hooks.
+ * <p>
+ * When a choice is selected the autocompleter dispatches a cancelable
+ * {@code wicket-autocomplete-select} event on the input field. Its {@code detail.item} is the
+ * element of the selected choice and its {@code detail.value} the text value that will be copied
+ * into the input field. A listener may replace {@code detail.value}, or call
+ * {@code preventDefault()} to leave the input field unchanged. Data a listener needs about the
+ * choice can be written onto its element with {@link #getChoiceData(Object)}:
+ * 
+ * <pre>
+ * document.getElementById('address').addEventListener('wicket-autocomplete-select', function(event) {
+ * 	const data = event.detail.item.dataset;
+ * 	document.getElementById('zipcode').value = data.zipcode;
+ * 	document.getElementById('city').value = data.city;
+ * });
+ * </pre>
+ * 
+ * Register such a listener from {@code renderHead()}, for example with an
+ * {@code OnDomReadyHeaderItem}, so that it carries the nonce of the Content Security Policy.
  * 
  * @param <T>
  * 
@@ -34,6 +55,8 @@ import org.apache.wicket.util.string.Strings;
 public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRenderer<T>
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Pattern DATA_NAME = Pattern.compile("[a-z][a-z0-9-]*");
 
 	@Override
 	public void render(final T object, final Response response, final String criteria)
@@ -52,6 +75,22 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 		if (handler != null)
 		{
 			response.write(" onselect=\"" + Strings.escapeMarkup(handler) + '"');
+		}
+		final Map<String, ?> data = getChoiceData(object);
+		if (data != null)
+		{
+			for (Map.Entry<String, ?> entry : data.entrySet())
+			{
+				final String name = entry.getKey();
+				Args.isTrue(name != null && DATA_NAME.matcher(name).matches(),
+					"Invalid data attribute name '%s': use lowercase letters, digits and dashes",
+					name);
+				if (entry.getValue() != null)
+				{
+					response.write(" data-" + name + "=\"" +
+						Strings.escapeMarkup(entry.getValue().toString()) + '"');
+				}
+			}
 		}
 		response.write(">");
 		renderChoice(object, response, criteria);
@@ -141,8 +180,38 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 *            the autocomplete item to get a custom javascript expression for
 	 * @return javascript to execute on selection or <code>null</code> if default behavior is
 	 *         intended
+	 * @deprecated The expression is run with {@code eval()}, which the default Content Security
+	 *             Policy of Wicket blocks: it only works when the application allows
+	 *             {@code 'unsafe-eval'}. Building the expression from item data, as in the
+	 *             examples above, is also unsafe: the markup escaping of the attribute does not
+	 *             protect the data once the expression is evaluated, so any such data has to be
+	 *             escaped for a JavaScript string by the application. Listen for the
+	 *             {@code wicket-autocomplete-select} event
+	 *             instead (see the class documentation) and pass the data it needs with
+	 *             {@link #getChoiceData(Object)}.
 	 */
+	@Deprecated(since = "11.0.0", forRemoval = true)
 	protected CharSequence getOnSelectJavaScriptExpression(final T item)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns data to write onto the element of the given choice, for a
+	 * {@code wicket-autocomplete-select} listener to read from {@code event.detail.item.dataset}.
+	 * <p>
+	 * Each entry is written as a {@code data-<name>} attribute. Its value is converted with
+	 * {@code toString()} and escaped with {@link Strings#escapeMarkup(CharSequence)}; an entry with
+	 * a {@code null} value is skipped. Names must consist of lowercase letters, digits and dashes,
+	 * and start with a letter.
+	 * 
+	 * @param item
+	 *            the autocomplete choice
+	 * @return the data of the choice, keyed by attribute name without the {@code data-} prefix,
+	 *         or {@code null} for none
+	 * @since 11.0.0
+	 */
+	protected Map<String, ?> getChoiceData(final T item)
 	{
 		return null;
 	}
