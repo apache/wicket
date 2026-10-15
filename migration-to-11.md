@@ -11,8 +11,9 @@ of the migration. Its comment lists the other Wicket 11 changes that need manual
 
 ## Uploads to a resource (`FileUploadToResourceField`)
 
-Pull request [#1671](https://github.com/apache/wicket/pull/1671), issue
-[#1670](https://github.com/apache/wicket/issues/1670). All classes are in
+Pull request [#1671](https://github.com/apache/wicket/pull/1671), issues
+[#1670](https://github.com/apache/wicket/issues/1670) and
+[#1669](https://github.com/apache/wicket/issues/1669). All classes are in
 `org.apache.wicket.markup.html.form.upload.resource`. None of these changes is mechanical, so
 there is no OpenRewrite recipe for them.
 
@@ -200,6 +201,7 @@ New resource keys, in `FileUploadToResourceField.properties`:
 |---|---|
 | `uploadToResourceFailed` | The upload failed. |
 | `uploadConnectionLost` | The upload failed: the connection to the server was lost. |
+| `uploadToResourceRemove` | Remove |
 
 ### `FileUploadToResourceField`: browser side
 
@@ -207,7 +209,8 @@ New resource keys, in `FileUploadToResourceField.properties`:
 |---|---|---|
 | `getClientBeforeSendCallBack()` default | `function (xhr, settings) { return true; }`. The return value was ignored and `settings` never passed | `function (xhr) { return true; }`. Returning `false` keeps the upload from being sent and calls `onUploadCanceled()` |
 | `errorMessage` given to `getClientSideUploadErrorCallBack()` | A resource key, an HTTP status text, or an exception message | Only keys: `uploadTooLarge`, `uploadSingleFileTooLarge`, `uploadTooManyFiles`, `wicket.no.files.selected`, `uploadFailed`, `uploadConnectionLost` |
-| Upload started while one runs | A second request was sent, and the two broke each other | Refused: `upload()` returns `false` and logs it |
+| Upload started while one runs | A second request was sent, and the two broke each other | Refused: `upload()` returns `false` and logs it. This holds as well for a field rendered anew by Ajax during the upload, which takes the upload over |
+| `cancelUpload()` after an Ajax rendering of the field during an upload | Did nothing: the upload went on | Cancels the upload |
 | Files beyond a limit of the field | Sent, then refused by the server, often with a reset connection | Not sent. The error callback gets the key of the limit, `onUploadFailure()` its text |
 | Telling the field which files arrived | `GET` with the files in the URL. Beyond about 65 files the server answered 414, and `onUploadSuccess()` was never called | `POST` |
 | `cancel()` after the upload ended | Called the cancel callback and logged "canceled" | Only logs that there is nothing to cancel |
@@ -216,3 +219,11 @@ New resource keys, in `FileUploadToResourceField.properties`:
 
 To migrate, check a before-send callback that returns `false`: it used to be ignored, and now
 cancels the upload. Also check an error callback that expects HTTP status texts.
+
+### New in 11, without migration
+
+- `FileDropZoneBehavior` makes any component a drop zone for the files of a field.
+- `FileListBehavior`, on a `<ul>` or `<ol>`, lists the files chosen for the next upload, each with
+  a remove button. With it, a `multiple` input collects files over several choices.
+
+Without these behaviors, the field works as before: a new choice replaces the files of the input.

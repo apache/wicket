@@ -55,6 +55,9 @@ import com.github.openjson.JSONObject;
  * Implementation of FileUploadField capable to uploading a file into a wicket mounted resource.
  * This field does not require a {@link org.apache.wicket.markup.html.form.Form}!
  * The upload of the file id done via the {@link #startUpload(IPartialPageRequestHandler)} method.
+ * <p>
+ * A {@link FileDropZoneBehavior} makes a component a zone the files to upload can be dropped on,
+ * and a {@link FileListBehavior} lists the files chosen, which then add up over several choices.
  */
 public abstract class FileUploadToResourceField extends FileUploadField
 {
@@ -199,7 +202,7 @@ public abstract class FileUploadToResourceField extends FileUploadField
         }
     }
 
-    private static final JavaScriptResourceReference JS = new JavaScriptResourceReference(FileUploadToResourceField.class, "FileUploadToResourceField.js");
+    static final JavaScriptResourceReference JS = new JavaScriptResourceReference(FileUploadToResourceField.class, "FileUploadToResourceField.js");
 
     public static String UPLOAD_CANCELED = "upload.canceled";
 

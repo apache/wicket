@@ -1,20 +1,18 @@
 <html xmlns:wicket="http://wicket.apache.org">
-<head>
-	<style>
-		legend { border: 1px solid #e9601a; background-color: #bbb; color: #fff; padding: 4px;}
-		fieldset { border: 1px solid #e9601a; padding: 10px; margin-top: 10px;}
-	</style>
-</head>
 <body>
     <wicket:extend>
 
 		<div>
 		 <fieldset>
 			 <legend>Upload a file(s) to a <em>mounted resource</em></legend>
-			<p>
-				<label wicket:for="fileInput">File</label>
-				<input wicket:id="fileInput" type="file" multiple="multiple"/>
-			</p>
+			<div wicket:id="dropZone" class="upload-drop-zone">
+				<p>Drop files here, or choose them, as often as you like:</p>
+				<p>
+					<label wicket:for="fileInput">Files</label>
+					<input wicket:id="fileInput" type="file" multiple="multiple"/>
+				</p>
+				<ul wicket:id="fileList" class="file-list"></ul>
+			</div>
 			<form wicket:id="form">
 				<p>
 					<input wicket:id="allowToLeavePageWhileUploading" type="checkbox"/>
