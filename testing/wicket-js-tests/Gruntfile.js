@@ -46,7 +46,8 @@ module.exports = function(grunt) {
 			"../../wicket-core/src/test/js/dom.js",
 			"../../wicket-core/src/test/js/channels.js",
 			"../../wicket-core/src/test/js/event.js",
-			"../../wicket-core/src/test/js/timer.js"
+			"../../wicket-core/src/test/js/timer.js",
+			"../../wicket-core/src/test/js/upload-to-resource.js"
 		],
 		extensionsTestsJs = [
 			"../../wicket-extensions/src/test/js/palette-test.js",
