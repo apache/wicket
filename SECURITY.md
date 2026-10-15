@@ -366,7 +366,7 @@ serialized Wicket data, remains trusted storage. And a custom `ICryptScheme`
 inherits the guarantee only if it honours the contract: `decrypt` must return
 `null` on authentication failure rather than returning unverified plaintext.
 
-### Model data is escaped; markup and message bundles are trusted
+### Model data and bundle values are escaped; markup is trusted
 
 Wicket escapes the text a component renders from its model. `Component`'s
 `escapeModelStrings` flag is **on by default**, and a component renders
@@ -384,18 +384,27 @@ attribute, which is escaped when the tag is written and would otherwise be
 encoded twice; that is an implementation detail of the component and not an
 invitation to render untrusted markup through it.
 
-Two inputs on the other side of the boundary are trusted, because both are
-authored by the developer and neither is data the application received at
-runtime:
+**Markup files are trusted.** They sit on the other side of the boundary because
+they are authored by the developer and are not data the application received at
+runtime. A `.html` file on the classpath is a template, exactly like a JSP or a
+Thymeleaf template, and Wicket renders it as markup. An application that serves
+markup from somewhere an untrusted party can write — through a custom
+`IMarkupResourceStreamProvider`, for instance — has taken that trust on itself.
 
-- **Markup files are trusted.** A `.html` file on the classpath is a template,
-  exactly like a JSP or a Thymeleaf template, and Wicket renders it as markup. An
-  application that serves markup from somewhere an untrusted party can write —
-  through a custom `IMarkupResourceStreamProvider`, for instance — has taken
-  that trust on itself.
-- **Message bundles are trusted.** `<wicket:message key="…"/>` renders its
-  property value as markup by default, and `escape="true"` opts in to escaping.
-  Markup in a bundle is therefore a supported way to format a message.
+**Message bundles are values, not markup.** A bundle is authored by the developer
+too, but a property file says nothing about where its value will be written: the
+same key can end up in element text, in an attribute, or in a string literal in
+the JavaScript Wicket generates, and an application that overrides one of
+Wicket's own keys — the css class of a form's hidden fields, the starting text of
+an upload progress bar — does not get to choose the context. So the code that
+writes a bundle value escapes it for the context it writes it into,
+`Strings#escapeMarkup` for markup and `JavaScriptUtils#escapeQuotes` for a
+JavaScript literal, and a framework component that writes one as it stands is a
+bug in the framework. The one place Wicket itself renders a bundle value as markup
+is `<wicket:message key="…"/>`, and there it is the markup author's choice: the tag
+renders its property value as markup by default, and `escape="true"` opts in to
+escaping. Markup in a bundle is therefore a supported way to format a message
+there, and only there.
 
 The value a bundle string interpolates is a different matter. `${name}` in a
 message resolves first to a child component with `wicket:id="name"`, whose
