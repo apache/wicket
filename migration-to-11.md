@@ -11,8 +11,9 @@ of the migration. Its comment lists the other Wicket 11 changes that need manual
 
 ## Uploads to a resource (`FileUploadToResourceField`)
 
-Pull request [#1671](https://github.com/apache/wicket/pull/1671), issue
-[#1670](https://github.com/apache/wicket/issues/1670). All classes are in
+Pull request [#1671](https://github.com/apache/wicket/pull/1671), issues
+[#1670](https://github.com/apache/wicket/issues/1670) and
+[#1669](https://github.com/apache/wicket/issues/1669). All classes are in
 `org.apache.wicket.markup.html.form.upload.resource`. None of these changes is mechanical, so
 there is no OpenRewrite recipe for them.
 
@@ -200,6 +201,7 @@ New resource keys, in `FileUploadToResourceField.properties`:
 |---|---|
 | `uploadToResourceFailed` | The upload failed. |
 | `uploadConnectionLost` | The upload failed: the connection to the server was lost. |
+| `uploadToResourceRemove` | Remove |
 
 ### `FileUploadToResourceField`: browser side
 
@@ -215,3 +217,11 @@ New resource keys, in `FileUploadToResourceField.properties`:
 
 To migrate, check a before-send callback that returns `false`: it used to be ignored, and now
 cancels the upload. Also check an error callback that expects HTTP status texts.
+
+### New in 11, without migration
+
+- `FileDropZoneBehavior` makes any component a drop zone for the files of a field.
+- `FileListBehavior`, on a `<ul>` or `<ol>`, lists the files chosen for the next upload, each with
+  a remove button. With it, a `multiple` input collects files over several choices.
+
+Without these behaviors, the field works as before: a new choice replaces the files of the input.
