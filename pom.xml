@@ -1121,7 +1121,6 @@
 						<failOnError>true</failOnError>
 						<doclint>all,-html,-missing</doclint>
 						<additionalJOption>${javadoc.additionalJOption}</additionalJOption>
-						<source>8</source>
 					</configuration>
 					<executions>
 						<execution>
