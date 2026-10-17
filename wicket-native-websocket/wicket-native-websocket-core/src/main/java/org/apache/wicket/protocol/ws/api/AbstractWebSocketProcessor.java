@@ -122,7 +122,14 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		}
 		if (Strings.isEmpty(pageId) == false)
 		{
-			this.pageId = Integer.parseInt(pageId, 10);
+			try
+			{
+				this.pageId = Integer.parseInt(pageId, 10);
+			}
+			catch (NumberFormatException e)
+			{
+				throw new IllegalArgumentException("Request parameter 'pageId' must be a number", e);
+			}
 		}
 		else
 		{
