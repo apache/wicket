@@ -33,6 +33,7 @@ import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import com.github.openjson.JSONArray;
 
 class FileUploadToResourceFieldSecurityTest extends WicketTestCase
 {
@@ -70,7 +71,9 @@ class FileUploadToResourceFieldSecurityTest extends WicketTestCase
 		File upload = createUploadFile("allowed.txt", 256);
 		submitUpload(page.field.buildUploadUrl(), upload);
 
-		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
+		String fileName = new JSONArray(tester.getLastResponseAsString()).getJSONObject(0)
+			.getString("fileName");
+		File storedFile = fileManager.getFile(page.field.getMarkupId(), fileName);
 		assertTrue(storedFile.exists());
 		assertEquals(upload.length(), storedFile.length());
 	}
@@ -93,8 +96,7 @@ class FileUploadToResourceFieldSecurityTest extends WicketTestCase
 
 		submitUpload(tamperedUrl, upload);
 
-		File storedFile = fileManager.getFile(page.field.getMarkupId(), upload.getName());
-		assertFalse(storedFile.exists());
+		assertFalse(Files.exists(tempDir.resolve(page.field.getMarkupId())));
 		assertTrue(tester.getLastResponseAsString().contains("uploadFailed"));
 	}
 
