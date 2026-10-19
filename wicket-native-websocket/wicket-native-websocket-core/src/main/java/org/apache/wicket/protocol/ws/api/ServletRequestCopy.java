@@ -24,8 +24,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 
 import jakarta.servlet.AsyncContext;
@@ -61,7 +63,7 @@ public class ServletRequestCopy implements HttpServletRequest
 	private final HttpSessionCopy httpSession;
 	private final StringBuffer requestURL;
 	private final Map<String, Object> attributes = new HashMap<>();
-	private final Map<String, Enumeration<String>> headers = new HashMap<>();
+	private final Map<String, List<String>> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 	private final Map<String, String[]> parameters = new HashMap<>();
 	private final String method;
 	private final String serverName;
@@ -70,7 +72,7 @@ public class ServletRequestCopy implements HttpServletRequest
 	private final String scheme;
 	private final String contentType;
 	private final Locale locale;
-	private final Enumeration<Locale> locales;
+	private final List<Locale> locales;
 	private final boolean isSecure;
 	private final String remoteUser;
 	private final String remoteAddr;
@@ -100,7 +102,7 @@ public class ServletRequestCopy implements HttpServletRequest
 		this.characterEncoding = request.getCharacterEncoding();
 		this.contentType = request.getContentType();
 		this.locale = request.getLocale();
-		this.locales = request.getLocales();
+		this.locales = copy(request.getLocales());
 		this.isSecure = request.isSecure();
 		this.remoteUser = request.getRemoteUser();
 		this.remoteAddr = request.getRemoteAddr();
@@ -120,8 +122,10 @@ public class ServletRequestCopy implements HttpServletRequest
 		Enumeration<String> e = request.getHeaderNames();
 		while (e != null && e.hasMoreElements()) {
 			s = e.nextElement();
-			Enumeration<String> headerValues = request.getHeaders(s);
-			this.headers.put(s, headerValues);
+			if (headers.containsKey(s) == false)
+			{
+				headers.put(s, copy(request.getHeaders(s)));
+			}
 		}
 
 		e = request.getAttributeNames();
@@ -136,6 +140,17 @@ public class ServletRequestCopy implements HttpServletRequest
 			parameters.put(s, request.getParameterValues(s));
 		}
 		requestId = UUID.randomUUID().toString();
+	}
+
+	private static <T> List<T> copy(Enumeration<T> values)
+	{
+		return values != null ? Collections.list(values) : Collections.emptyList();
+	}
+
+	private List<String> getHeaderValues(String name)
+	{
+		return name != null ? headers.getOrDefault(name, Collections.emptyList())
+			: Collections.emptyList();
 	}
 
 	@Override
@@ -197,18 +212,14 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public String getHeader(String name)
 	{
-		Enumeration<String> values = headers.get(name);
-		if (values != null && values.hasMoreElements())
-		{
-			return values.nextElement();
-		}
-		return null;
+		List<String> values = getHeaderValues(name);
+		return values.isEmpty() ? null : values.get(0);
 	}
 
 	@Override
 	public Enumeration<String> getHeaders(final String name)
 	{
-		return headers.get(name);
+		return Collections.enumeration(getHeaderValues(name));
 	}
 
 	@Override
@@ -262,14 +273,8 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public int getIntHeader(String name)
 	{
-		Enumeration<String> values = headers.get(name);
-		int result = -1;
-		if (values.hasMoreElements())
-		{
-			String value = values.nextElement();
-			result = Integer.parseInt(value, 10);
-		}
-		return result;
+		String value = getHeader(name);
+		return value != null ? Integer.parseInt(value, 10) : -1;
 	}
 
 	@Override
@@ -337,7 +342,7 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public Enumeration getLocales()
 	{
-		return locales;
+		return Collections.enumeration(locales);
 	}
 
 	@Override
