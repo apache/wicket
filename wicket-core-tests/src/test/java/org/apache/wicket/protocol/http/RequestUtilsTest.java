@@ -186,5 +186,8 @@ class RequestUtilsTest
 
 		request.setCharacterEncoding("FOO");
 		assertEquals(StandardCharsets.UTF_8, RequestUtils.getCharset(request));
+
+		request.setCharacterEncoding("!!invalid!!");
+		assertEquals(StandardCharsets.UTF_8, RequestUtils.getCharset(request));
 	}
 }
