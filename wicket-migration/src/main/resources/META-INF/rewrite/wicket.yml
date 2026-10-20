@@ -89,6 +89,17 @@ recipeList:
 # handed the object the model was holding before that object is discarded; the default onDetach()
 # delegates to it, so an override of onDetach() that does not call super suppresses it. These
 # require manual migration.
+#
+# org.apache.wicket.markup.html.form.upload.resource.IUploadsFileManager#save() is deprecated in
+# favour of store(), which stores the file under a name of its own and returns it; getFile() then
+# receives that name. Wicket no longer calls save(), and its default throws: code calling it calls
+# store() instead. The name travels through the browser, so getFile() must not resolve it to a
+# file of another upload field. FolderUploadsFileManager stores files under random names, so code
+# finding them by client file name uses UploadInfo#getFile() or #getFileName() instead. Subclasses
+# of AbstractFileUploadResource receive the stored names in saveFiles(), prepareResponse() and
+# generateJsonResponse(), subclasses of FileUploadResourceReference in generateFileInfo(). A
+# failed upload reads "The upload failed." (resource key uploadToResourceFailed) instead of
+# ending on the error page. These require manual migration.
 type: specs.openrewrite.org/v1beta/recipe
 name: org.apache.wicket.MigrateToWicket11
 displayName: Migrate to Wicket 11.x

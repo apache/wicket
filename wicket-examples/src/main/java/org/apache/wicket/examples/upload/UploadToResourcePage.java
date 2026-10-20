@@ -26,17 +26,21 @@ import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.upload.resource.IUploadsFileManager;
+import org.apache.wicket.markup.html.form.upload.resource.FileDropZoneBehavior;
+import org.apache.wicket.markup.html.form.upload.resource.FileListBehavior;
 import org.apache.wicket.markup.html.form.upload.resource.FileUploadToResourceField;
+import org.apache.wicket.markup.html.form.upload.resource.IUploadsFileManager;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
@@ -156,7 +160,13 @@ public class UploadToResourcePage extends WicketExamplePage
 		fileUploadToResourceField.setMaxSize(Bytes.kilobytes(100));
 		fileUploadToResourceField.setFileMaxSize(Bytes.kilobytes(90));
 		fileUploadToResourceField.setFileCountMax(5L);
-		add(fileUploadToResourceField);
+
+		WebMarkupContainer dropZone = new WebMarkupContainer("dropZone");
+		dropZone.add(new FileDropZoneBehavior(fileUploadToResourceField));
+		add(dropZone);
+		dropZone.add(fileUploadToResourceField);
+		dropZone.add(new WebMarkupContainer("fileList")
+			.add(new FileListBehavior(fileUploadToResourceField)));
 
 		Form<Void> form = new Form<>("form");
 		add(form);
@@ -254,8 +264,12 @@ public class UploadToResourcePage extends WicketExamplePage
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.render(
-				OnDomReadyHeaderItem.forScript("$(window).bind('beforeunload', function(){ if (Wicket.CurrentUpload != null) { return 'leave?'; }});"));
+		response.render(CssHeaderItem.forReference(
+			new CssResourceReference(UploadToResourcePage.class, "UploadToResourcePage.css")));
+		response.render(OnDomReadyHeaderItem.forScript(
+			"Wicket.Event.add(window, 'beforeunload', function (event) {" +
+				" if (Wicket.CurrentUpload != null) { event.preventDefault(); event.returnValue = 'leave?'; }" +
+				"});"));
 	}
 
 	@Override

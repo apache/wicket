@@ -83,17 +83,18 @@ public class FileUploadResourceReference extends ResourceReference
 		{
 
 			@Override
-			protected String generateJsonResponse(ResourceResponse resourceResponse, ServletWebRequest webRequest, List<FileUpload> files)
+			protected String generateJsonResponse(ResourceResponse resourceResponse,
+				ServletWebRequest webRequest, List<FileUpload> files, List<String> fileNames)
 			{
 				JSONArray json = new JSONArray();
 
-				for (FileUpload fileItem : files)
+				for (int i = 0; i < files.size(); i++)
 				{
 					JSONObject fileJson = new JSONObject();
 
 					try
 					{
-						generateFileInfo(fileJson, fileItem);
+						generateFileInfo(fileJson, files.get(i), fileNames.get(i));
 						json.put(fileJson);
 					}
 					catch (JSONException e)
@@ -111,8 +112,21 @@ public class FileUploadResourceReference extends ResourceReference
 		return uploadFileManager;
 	}
 
-	protected void generateFileInfo(JSONObject fileJson, FileUpload fileItem)
+	/**
+	 * Puts the information about an uploaded file the field receives into the JSON answering the
+	 * upload.
+	 *
+	 * @param fileJson
+	 *            the JSON of the file
+	 * @param fileItem
+	 *            the uploaded file
+	 * @param fileName
+	 *            the name the file was stored under, see
+	 *            {@link IUploadsFileManager#store(FileUpload, String)}
+	 */
+	protected void generateFileInfo(JSONObject fileJson, FileUpload fileItem, String fileName)
 	{
+		fileJson.put("fileName", fileName);
 		fileJson.put("clientFileName", fileItem.getClientFileName());
 		fileJson.put("size", fileItem.getSize());
 		fileJson.put("contentType", fileItem.getContentType());

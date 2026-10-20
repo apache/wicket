@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.form.upload.resource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -55,6 +56,31 @@ class FolderUploadsFileManagerTest
 	}
 
 	@Test
+	void storeRejectsTraversalInUploadFieldId() throws IOException
+	{
+		FolderUploadsFileManager manager = new FolderUploadsFileManager(new File(tempDir.toFile()));
+		FileUpload fileUpload = newFileUpload("safe.txt", "content");
+
+		assertThrows(SecurityException.class, () -> manager.store(fileUpload, "../escaped"));
+	}
+
+	@Test
+	void storeKeepsFilesOfTheSameClientFileNameApart() throws IOException
+	{
+		FolderUploadsFileManager manager = new FolderUploadsFileManager(new File(tempDir.toFile()));
+
+		String first = manager.store(newFileUpload("same.txt", "first"), "uploadField");
+		String second = manager.store(newFileUpload("same.txt", "second"), "uploadField");
+
+		assertNotEquals(first, second);
+		assertEquals("first",
+			Files.readString(manager.getFile("uploadField", first).toPath(), StandardCharsets.UTF_8));
+		assertEquals("second",
+			Files.readString(manager.getFile("uploadField", second).toPath(), StandardCharsets.UTF_8));
+	}
+
+	@SuppressWarnings("removal")
+	@Test
 	void saveRejectsTraversalInUploadFieldId() throws IOException
 	{
 		FolderUploadsFileManager manager = new FolderUploadsFileManager(new File(tempDir.toFile()));
@@ -66,6 +92,7 @@ class FolderUploadsFileManagerTest
 		assertThrows(SecurityException.class, () -> manager.save(fileUpload, "../escaped"));
 	}
 
+	@SuppressWarnings("removal")
 	@Test
 	void saveRejectsTraversalInClientFileName() throws IOException
 	{
@@ -78,6 +105,7 @@ class FolderUploadsFileManagerTest
 		assertThrows(SecurityException.class, () -> manager.save(fileUpload, "uploadField"));
 	}
 
+	@SuppressWarnings("removal")
 	@Test
 	void saveSucceedsWithValidUploadFieldIdAndClientFileName() throws IOException
 	{
@@ -92,5 +120,15 @@ class FolderUploadsFileManagerTest
 		Path savedFile = tempDir.resolve("uploadField").resolve("safe.txt");
 		assertTrue(Files.exists(savedFile));
 		assertEquals("content", Files.readString(savedFile, StandardCharsets.UTF_8));
+	}
+
+	private static FileUpload newFileUpload(String clientFileName, String content)
+		throws IOException
+	{
+		FileUpload fileUpload = mock(FileUpload.class);
+		when(fileUpload.getClientFileName()).thenReturn(clientFileName);
+		when(fileUpload.getInputStream())
+			.thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
+		return fileUpload;
 	}
 }
