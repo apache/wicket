@@ -394,6 +394,47 @@ class ContentSecurityPolicySettingsTest extends WicketTestCase
 	}
 
 	@Test
+	void testRemoveChildSrcWithoutFrameSrc()
+	{
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
+		settings.blocking().strict().remove(FRAME_SRC).remove(CHILD_SRC);
+
+		String header = blockingHeader();
+		assertNull(headerDirective(header, "child-src"));
+		assertNull(headerDirective(header, "frame-src"));
+		assertEquals("'self'", headerDirective(header, "img-src"));
+	}
+
+	@Test
+	void testRemoveChildSrcKeepsFrameSrcCopyOfAnotherDirective()
+	{
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
+		CSPHeaderConfiguration blocking = settings.blocking();
+		blocking.strict().add(IMG_SRC, "https://wicket.apache.org");
+		blocking.add(FRAME_SRC, new ClonedCSPValue(blocking, IMG_SRC)).remove(CHILD_SRC);
+
+		String header = blockingHeader();
+		assertNull(headerDirective(header, "child-src"));
+		assertEquals("'self' https://wicket.apache.org", headerDirective(header, "frame-src"));
+	}
+
+	@Test
+	void testRemoveChildSrcKeepsFrameSrcCopyOfChildSrcOfAnotherConfiguration()
+	{
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
+		CSPHeaderConfiguration other = new CSPHeaderConfiguration().add(CHILD_SRC,
+			"https://wicket.apache.org");
+		settings.blocking()
+			.strict()
+			.add(FRAME_SRC, new ClonedCSPValue(other, CHILD_SRC))
+			.remove(CHILD_SRC);
+
+		String header = blockingHeader();
+		assertNull(headerDirective(header, "child-src"));
+		assertEquals("https://wicket.apache.org", headerDirective(header, "frame-src"));
+	}
+
+	@Test
 	void testRemoveFrameSrcLeavesChildSrc()
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
