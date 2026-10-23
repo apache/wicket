@@ -122,7 +122,7 @@ function getReferencedGitHubIssues {
 
 if [ "$1" = "--help" ] ; then
 	echo "
-Usage: $0 [--help] [--since <ref>] [version]
+Usage: $0 [--help] [--since <ref>] [--force] [version]
 
 Collects the issues resolved in the next release of Apache Wicket from
 JIRA and GitHub, and merges them into the CHANGELOG file.
@@ -134,6 +134,10 @@ JIRA and GitHub, and merges them into the CHANGELOG file.
   --since <ref>
       git reference of the previous release, defaults to the tag of the
       highest version before this one
+
+  --force
+      merges the release notes into the changelog even when issues in
+      them are flagged
 
   --help
       shows this help
@@ -152,10 +156,15 @@ closed as not planned or as a duplicate is left out. The issue type of a
 GitHub issue decides its group, and an issue without one goes into
 'Other'.
 
-A GitHub issue with a JIRA key in its title is a copy of that JIRA issue:
-when the JIRA issue is in the release notes, the copy is listed under the
-JIRA key only. Before merging the notes, the tool reports the GitHub
-issues in them that are still open, copies included.
+A GitHub issue whose title starts with a JIRA key, as in
+'[WICKET-1234] Summary', is a copy of that JIRA issue: when the JIRA
+issue is in the release notes, the copy is listed under the JIRA key
+only.
+
+Before merging the notes, the tool flags the GitHub issues in them that
+are still open, copies included, and those without an issue type, and
+stops. The open issues are to be closed, by hand, once every branch that
+needs the fix has it. Use --force to merge the notes anyway.
 
 Needs curl, jq, xmllint and an authenticated GitHub CLI (gh auth login).
 "
@@ -164,12 +173,16 @@ fi
 
 since_ref=""
 version=""
+force=false
 while [ $# -gt 0 ] ; do
 	case "$1" in
 		--since)
 			[ -n "$2" ] || fail "--since needs a git reference"
 			since_ref="$2"
 			shift
+			;;
+		--force)
+			force=true
 			;;
 		-*)
 			fail "Unknown option: $1, see $0 --help"
@@ -279,9 +292,8 @@ copies=$(jq -r --arg project "$jira_project" '
 		.[]
 		| . as $issue
 		| .title
-		| [scan($project + "-[0-9]+")]
-		| unique[]
-		| [., "GH-\($issue.number)", $issue.state, $issue.title]
+		| capture("^\\[?(?<key>" + $project + "-[0-9]+)")
+		| [.key, "GH-\($issue.number)", $issue.state, $issue.title]
 		| join("\t")' <<< "$titles" \
 	| grep -F -f <(awk -F '\t' '$2 == 1 { print $4 "\t" }' $issues))
 echo "$copies" | grep -c .
@@ -309,12 +321,13 @@ awk -F '\t' '
 		$2 != group { if (group != "") print ""; print "** " $2; print ""; group = $2 }
 		{ print "    * [" $5 "] - " $6 }' > /tmp/release-notes-$version.txt
 
-untyped=$(grep -c $'^Other\t' $issues)
-if [ -n "$open_copies" ] || [ -n "$open_issues" ] || [ "$untyped" -gt 0 ] ; then
+untyped=$(awk -F '\t' '$1 == "Other" { print $4 "\t" $5 }' $issues)
+if [ -n "$untyped" ] || [ -n "$open_issues" ] || [ -n "$open_copies" ] ; then
 	echo ""
-	if [ "$untyped" -gt 0 ] ; then
-		echo "GitHub issues without an issue type: $untyped. They are listed under 'Other'; set
-their type (Bug, Feature or Task) on GitHub and run this tool again to group them."
+	if [ -n "$untyped" ] ; then
+		echo "These GitHub issues have no issue type; set it (Bug, Feature or Task) on GitHub:
+"
+		echo "$untyped" | sed -e 's/^/    /'
 		echo ""
 	fi
 	if [ -n "$open_issues" ] ; then
@@ -331,8 +344,10 @@ key. They are still open; close them once every branch that needs the fix has it
 		echo "$open_copies" | sed -e 's/^/    /'
 		echo ""
 	fi
-	printf "Press <enter> to continue, or Ctrl-C to stop "
-	read
+	[ "$force" = true ] || fail "The changelog is left unchanged because of the issues above. Run this tool again
+once they are taken care of, or with --force to merge the release notes anyway."
+	echo "Merging the release notes anyway because of --force."
+	echo ""
 fi
 
 printf "  - merging release notes into changelog: "
