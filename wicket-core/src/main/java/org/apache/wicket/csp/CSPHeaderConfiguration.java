@@ -213,7 +213,9 @@ public class CSPHeaderConfiguration
 	}
 
 	/**
-	 * Removes the given directive from the configuration.
+	 * Removes the given directive from the configuration. Removing {@code child-src} also removes
+	 * the {@code frame-src} value that was copied from it. Values of {@code frame-src} that were
+	 * added explicitly are kept.
 	 *
 	 * @param directive
 	 *            The directive to remove.
@@ -222,6 +224,19 @@ public class CSPHeaderConfiguration
 	public CSPHeaderConfiguration remove(CSPDirective directive)
 	{
 		directives.remove(directive);
+		if (CSPDirective.CHILD_SRC.equals(directive))
+		{
+			List<CSPRenderable> frameValues = directives.get(CSPDirective.FRAME_SRC);
+			if (frameValues != null)
+			{
+				frameValues.removeIf(value -> value instanceof ClonedCSPValue clone
+					&& clone.isCloneOf(this, CSPDirective.CHILD_SRC));
+				if (frameValues.isEmpty())
+				{
+					directives.remove(CSPDirective.FRAME_SRC);
+				}
+			}
+		}
 		return recalculateState();
 	}
 
