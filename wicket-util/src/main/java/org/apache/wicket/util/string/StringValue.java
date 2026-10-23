@@ -283,7 +283,7 @@ public class StringValue implements IClusterable
 	 */
 	public final String beforeLast(final char c)
 	{
-		return Strings.afterLast(text, c);
+		return Strings.beforeLast(text, c);
 	}
 
 	/**
