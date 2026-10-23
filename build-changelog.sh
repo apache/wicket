@@ -32,6 +32,35 @@ xpath /pom:project/pom:version/text()
 EOF
 }
 
+# Prints one record per JIRA issue the query finds; a key in the query that JIRA does not know is
+# skipped.
+function getJiraIssues {
+	local response
+	response=$(curl -sf -G "$jira_url/search" \
+		--data-urlencode "jql=$1" \
+		--data-urlencode "validateQuery=warn" \
+		--data-urlencode "fields=issuetype,summary" \
+		--data-urlencode "maxResults=1000") \
+		|| fail "Unable to retrieve the issues from JIRA for: $1"
+	jq -e '.total == (.issues | length)' <<< "$response" > /dev/null \
+		|| fail "JIRA returned only part of the issues for: $1"
+	jq -r '.issues[]
+		| [
+			.fields.issuetype.name,
+			"1",
+			(.key | sub("^[A-Z]+-"; "")),
+			.key,
+			(.fields.summary | gsub("\\s+"; " ") | sub(" $"; ""))
+		]
+		| join("\t")' <<< "$response"
+}
+
+# Prints the JIRA keys in the subjects of the commits that git log selects with the given
+# arguments.
+function getJiraKeys {
+	git log --format=%s "$@" | grep -oE "$jira_project-[0-9]+" | sort -u
+}
+
 # Prints one record per GitHub issue resolved by the given issue and pull request numbers: a pull
 # request contributes the issues it closes.
 function getGitHubIssues {
@@ -103,7 +132,10 @@ JIRA and GitHub, and merges them into the CHANGELOG file.
       shows this help
 
 The JIRA issues are the ones resolved as Fixed with the version as fix
-version. The GitHub issues are the ones referenced from the commits since
+version, and the ones whose key is in the subject of a commit since the
+previous release but of no commit before it, unless resolved otherwise
+than as Fixed: JIRA is read-only, so a fix that went in after that can
+no longer be resolved or given a fix version there. The GitHub issues are the ones referenced from the commits since
 the previous release, either directly or through a pull request that
 closes them; a GitHub issue closed as not planned or as a duplicate is
 left out. The issue type of a GitHub issue decides its group, and an issue
@@ -199,25 +231,23 @@ printf "  - retrieving JIRA issues fixed in %s: " "$version"
 jira_versions=$(curl -sf "$jira_url/project/$jira_project/versions") \
 	|| fail "Unable to retrieve the versions from JIRA"
 if jq -e --arg version "$version" 'any(.[]; .name == $version)' <<< "$jira_versions" > /dev/null ; then
-	jira_issues=$(curl -sf -G "$jira_url/search" \
-		--data-urlencode "jql=project = $jira_project AND fixVersion = \"$version\" AND resolution = Fixed" \
-		--data-urlencode "fields=issuetype,summary" \
-		--data-urlencode "maxResults=1000") \
-		|| fail "Unable to retrieve the issues fixed in $version from JIRA"
-	jq -e '.total == (.issues | length)' <<< "$jira_issues" > /dev/null \
-		|| fail "JIRA returned only part of the issues fixed in $version"
-	jq -r '.issues[]
-		| [
-			.fields.issuetype.name,
-			"1",
-			(.key | sub("^[A-Z]+-"; "")),
-			.key,
-			(.fields.summary | gsub("\\s+"; " ") | sub(" $"; ""))
-		]
-		| join("\t")' <<< "$jira_issues" >> $issues
-	jq '.issues | length' <<< "$jira_issues"
+	jira_issues=$(getJiraIssues "project = $jira_project AND fixVersion = \"$version\" AND resolution = Fixed") \
+		|| exit 1
+	[ -n "$jira_issues" ] && echo "$jira_issues" >> $issues
+	echo "$jira_issues" | grep -c .
 else
 	echo "none, JIRA has no version $version"
+fi
+
+printf "  - retrieving JIRA issues referenced since %s: " "$since_ref"
+jira_keys=$(comm -23 <(getJiraKeys "$since_ref..$until_ref") <(getJiraKeys "$since_ref") | paste -s -d , -)
+if [ -n "$jira_keys" ] ; then
+	jira_issues=$(getJiraIssues "key in ($jira_keys) AND (resolution is EMPTY OR resolution = Fixed)") \
+		|| exit 1
+	[ -n "$jira_issues" ] && echo "$jira_issues" >> $issues
+	echo "$jira_issues" | grep -c .
+else
+	echo 0
 fi
 
 printf "  - retrieving GitHub issues referenced since %s: " "$since_ref"
