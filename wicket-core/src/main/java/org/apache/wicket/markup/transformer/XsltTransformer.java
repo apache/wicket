@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import javax.xml.XMLConstants;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
@@ -98,6 +99,10 @@ public class XsltTransformer implements ITransformer
 		{
 			// 1. Instantiate a TransformerFactory.
 			TransformerFactory tFactory = TransformerFactory.newInstance();
+			// Harden against XXE: the XML source transformed below is the component's
+			// rendered output and may embed user data, so disable external entity, DTD
+			// and stylesheet resolution (as XSLTResourceStream already does).
+			tFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 
 			// 2. Use the TransformerFactory to process the stylesheet Source
 			// and
