@@ -150,6 +150,15 @@
 	</filter>
 
 	<filter>
+		<filter-name>BuilderApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.builder.BuilderApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
 		<filter-name>GuestBookApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
@@ -623,6 +632,13 @@
 	<filter-mapping>
 		<filter-name>FormInputApplication</filter-name>
 		<url-pattern>/forminput/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>BuilderApplication</filter-name>
+		<url-pattern>/builder/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
