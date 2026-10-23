@@ -69,7 +69,7 @@ function getGitHubIssues {
 		query+=" n$number: issueOrPullRequest(number: $number) { ...issueOrPullRequest }"
 	done
 	query+=" } }
-fragment issue on Issue { number title url stateReason issueType { name } }
+fragment issue on Issue { number title url state stateReason issueType { name } }
 fragment issueOrPullRequest on IssueOrPullRequest {
 	... on Issue { ...issue }
 	... on PullRequest { closingIssuesReferences(first: 25) { nodes { ...issue } } }
@@ -92,7 +92,8 @@ fragment issueOrPullRequest on IssueOrPullRequest {
 			"2",
 			(.number | tostring),
 			"GH-\(.number)",
-			(.title | gsub("\\s+"; " ") | sub(" $"; ""))
+			(.title | gsub("\\s+"; " ") | sub(" $"; "")),
+			.state
 		]
 		| join("\t")' <<< "$response"
 }
@@ -140,6 +141,11 @@ the previous release, either directly or through a pull request that
 closes them; a GitHub issue closed as not planned or as a duplicate is
 left out. The issue type of a GitHub issue decides its group, and an issue
 without one goes into 'Other'.
+
+A GitHub issue with a JIRA key in its title is a copy of that JIRA issue:
+when the JIRA issue is in the release notes, the copy is listed under the
+JIRA key only. Before merging the notes, the tool reports the GitHub
+issues in them that are still open, copies included.
 
 Needs curl, jq, xmllint and an authenticated GitHub CLI (gh auth login).
 "
@@ -255,18 +261,28 @@ github_issues=$(getReferencedGitHubIssues "$since_ref..$until_ref") || exit 1
 [ -n "$github_issues" ] && echo "$github_issues" >> $issues
 echo "$github_issues" | grep -c .
 
-printf "  - checking for GitHub issues closed without a reference: "
-since_date=$(git log -1 --format=%cs "$since_ref")
-closed="closed:>=$since_date"
-if [ "$until_ref" != HEAD ] ; then
-	closed="closed:$since_date..$(git log -1 --format=%cs "$until_ref")"
+printf "  - looking up GitHub copies of the JIRA issues: "
+titles=$(gh issue list --repo $github_repository --state all --limit 1000 \
+	--search "$jira_project in:title" --json number,title,state) \
+	|| fail "Unable to retrieve the GitHub copies of the JIRA issues"
+copies=$(jq -r --arg project "$jira_project" '
+		.[]
+		| . as $issue
+		| .title
+		| [scan($project + "-[0-9]+")]
+		| unique[]
+		| [., "GH-\($issue.number)", $issue.state, $issue.title]
+		| join("\t")' <<< "$titles" \
+	| grep -F -f <(awk -F '\t' '$2 == 1 { print $4 "\t" }' $issues))
+echo "$copies" | grep -c .
+
+# a copy is listed under the key of its JIRA issue
+if [ -n "$copies" ] ; then
+	grep -v -F -f <(awk -F '\t' '{ print "\t" $2 "\t" }' <<< "$copies") $issues > $issues.tmp
+	mv $issues.tmp $issues
 fi
-referenced_anywhere=$(getReferencedGitHubIssues --all --since="$since_date") || exit 1
-unreferenced=$(gh issue list --repo $github_repository --state closed --limit 1000 \
-	--search "$closed reason:completed" --json number,title \
-	--jq '.[] | "GH-\(.number)\t\(.title)"' \
-	| grep -v -F -f <({ cut -f4 $issues ; echo "$referenced_anywhere" | cut -f4 ; } | grep . | sed -e 's/$/\t/'))
-echo "$unreferenced" | grep -c .
+open_copies=$(awk -F '\t' '$3 == "OPEN" { print $2 "\t" $4 }' <<< "$copies")
+open_issues=$(awk -F '\t' '$2 == 2 && $6 == "OPEN" { print $4 "\t" $5 }' $issues)
 
 [ -s $issues ] || fail "
 No resolved issues found for $version in JIRA or GitHub"
@@ -284,19 +300,25 @@ awk -F '\t' '
 		{ print "    * [" $5 "] - " $6 }' > /tmp/release-notes-$version.txt
 
 untyped=$(grep -c $'^Other\t' $issues)
-if [ -n "$unreferenced" ] || [ "$untyped" -gt 0 ] ; then
+if [ -n "$open_copies" ] || [ -n "$open_issues" ] || [ "$untyped" -gt 0 ] ; then
 	echo ""
 	if [ "$untyped" -gt 0 ] ; then
 		echo "GitHub issues without an issue type: $untyped. They are listed under 'Other'; set
 their type (Bug, Feature or Task) on GitHub and run this tool again to group them."
 		echo ""
 	fi
-	if [ -n "$unreferenced" ] ; then
-		echo "These GitHub issues were closed as completed in the same period, but no commit on
-any branch references them, so they are not in the release notes. To add one that was fixed
-in this release, edit the changelog afterwards and amend the commit:
+	if [ -n "$open_issues" ] ; then
+		echo "These GitHub issues are fixed in this release, but still open. Close them once every
+branch that needs the fix has it:
 "
-		echo "$unreferenced" | sed -e 's/^/    /'
+		echo "$open_issues" | sed -e 's/^/    /'
+		echo ""
+	fi
+	if [ -n "$open_copies" ] ; then
+		echo "These GitHub issues copy a JIRA issue fixed in this release, and are listed under its
+key. They are still open; close them once every branch that needs the fix has it:
+"
+		echo "$open_copies" | sed -e 's/^/    /'
 		echo ""
 	fi
 	printf "Press <enter> to continue, or Ctrl-C to stop "
