@@ -98,13 +98,19 @@ fragment issueOrPullRequest on IssueOrPullRequest {
 		| join("\t")' <<< "$response"
 }
 
-# Prints one record per GitHub issue referenced from the commit messages that git log selects with
-# the given arguments.
+# Prints one record per GitHub issue referenced from the commits that git log selects with the given
+# arguments: by any reference in the subject, or in the body as "GitHub issue #N" or after fixes,
+# closes or resolves.
 function getReferencedGitHubIssues {
 	local references
-	references=$(git log --format=%B "$@" \
-		| grep -oE "([[:alnum:]_.-]+/[[:alnum:]_.-]+)?#[0-9]+|GH-[0-9]+|github\.com/[[:alnum:]_.-]+/[[:alnum:]_.-]+/(issues|pull)/[0-9]+" \
-		| grep -E "^(#|GH-|$github_repository#|github\.com/$github_repository/)" \
+	references=$( \
+		{
+			git log --format=%s "$@" \
+				| grep -oE "([[:alnum:]_.-]+/[[:alnum:]_.-]+)?#[0-9]+|GH-[0-9]+|github\.com/[[:alnum:]_.-]+/[[:alnum:]_.-]+/(issues|pull)/[0-9]+" \
+				| grep -E "^(#|GH-|$github_repository#|github\.com/$github_repository/)"
+			git log --format=%b "$@" \
+				| grep -oiE "(github issues? |(fix(e[sd])?|close[sd]?|resolve[sd]?)( issue)? )#[0-9]+"
+		} \
 		| grep -oE '[0-9]+$' \
 		| sort -n -u)
 	echo $references | xargs -n 50 | while read -r numbers ; do
@@ -136,11 +142,15 @@ The JIRA issues are the ones resolved as Fixed with the version as fix
 version, and the ones whose key is in the subject of a commit since the
 previous release but of no commit before it, unless resolved otherwise
 than as Fixed: JIRA is read-only, so a fix that went in after that can
-no longer be resolved or given a fix version there. The GitHub issues are the ones referenced from the commits since
-the previous release, either directly or through a pull request that
-closes them; a GitHub issue closed as not planned or as a duplicate is
-left out. The issue type of a GitHub issue decides its group, and an issue
-without one goes into 'Other'.
+no longer be resolved or given a fix version there.
+
+The GitHub issues are the ones referenced from the commits since the
+previous release, either directly or through a pull request that closes
+them. A reference counts anywhere in the subject, and in the body as
+'GitHub issue #N' or after fixes, closes or resolves. A GitHub issue
+closed as not planned or as a duplicate is left out. The issue type of a
+GitHub issue decides its group, and an issue without one goes into
+'Other'.
 
 A GitHub issue with a JIRA key in its title is a copy of that JIRA issue:
 when the JIRA issue is in the release notes, the copy is listed under the
