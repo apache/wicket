@@ -70,11 +70,13 @@
 		</dependency>
 		-->
 
-		<!-- LOGGING DEPENDENCIES - SLF4J-SIMPLE -->
+		<!-- LOGGING DEPENDENCIES - SLF4J-SIMPLE, for Start, jetty:run and the tests only.
+			A WAR deployed to a container that has no SLF4J back end needs one added. -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4j.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<!--  JUNIT DEPENDENCY FOR TESTING -->
@@ -182,6 +184,7 @@
 					<systemProperties>
 						<maven.project.build.directory.test-classes>${project.build.directory}/test-classes</maven.project.build.directory.test-classes>
 					</systemProperties>
+					<useTestScope>true</useTestScope>
 					<jettyXmls>${project.basedir}/src/test/jetty/jetty.xml,${project.basedir}/src/test/jetty/jetty-ssl.xml,${project.basedir}/src/test/jetty/jetty-http.xml,${project.basedir}/src/test/jetty/jetty-https.xml</jettyXmls>
 				</configuration>
 			</plugin>
