@@ -1841,6 +1841,14 @@
 						jQuery.each(attributes, function() {
 							$css.attr(this.name, this.value);
 						});
+						//if the rel attribute does not contain "stylesheet" so it will directly pass the request and load element instead of 
+						//waiting for onload and onerror.
+						var rel = (css.getAttribute("rel") || "").toLowerCase().trim();
+                        var isStylesheet = rel === "stylesheet" || rel === "alternate stylesheet";
+                        if (!isStylesheet) {
+                        Wicket.Head.addElement(css);
+                        return FunctionsExecuter.DONE;
+                        }
 
 						let notifyCalled = false;
 						function doNotify() {
