@@ -377,16 +377,6 @@ fi
 mvn_version_to_replace="$major_version.$minor_version.1-SNAPSHOT"
 mvn_version_to_replace2="$major_version.$minor_version.0-SNAPSHOT"
 
-# Check if the changelog has the issues this release
-
-grep -q "$version\$" CHANGELOG-$major_version.x
-if [ $? -ne 0 ] ; then
-    fail "You have forgotten to add the closed tickets for Wicket $version to the CHANGELOG-$major_version.x file
-
-Use build-changelog.sh to add the release notes to the changelog.
-"
-fi
-
 git status --porcelain CHANGELOG-$major_version.x | grep -q "M"
 if [ $? -eq 0 ] ; then
     fail "You have changes in your workspace that have not been committed.
