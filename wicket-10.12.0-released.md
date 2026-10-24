@@ -1,0 +1,59 @@
+---
+layout: post
+title: Apache Wicket 10.12.0 released
+---
+The Apache Wicket PMC is proud to announce Apache Wicket 10.12.0!
+
+Apache Wicket is an open source Java component oriented web application
+framework that powers thousands of web applications and web sites for
+governments, stores, universities, cities, banks, email providers, and
+more. You can find more about Apache Wicket at https://wicket.apache.org
+
+This release marks another minor release of Wicket 10. We
+use semantic versioning for the development of Wicket, and as such no
+API breaks are present in this release compared to 10.0.0.
+
+<OPTIONAL> New and noteworthy
+<OPTIONAL> ------------------
+<OPTIONAL>
+Using this release
+------------------
+
+With Apache Maven update your dependency to (and don't forget to
+update any other dependencies on Wicket projects to the same version):
+
+{% highlight xml%}
+<dependency>
+    <groupId>org.apache.wicket</groupId>
+    <artifactId>wicket-core</artifactId>
+    <version>10.12.0</version>
+</dependency>
+{% endhighlight%}
+
+Or download and build the distribution yourself, or use our
+convenience binary package you can find here:
+
+ * Download: http://wicket.apache.org/start/wicket-10.x.html#manually
+
+<!--more-->
+
+Upgrading from earlier versions
+-------------------------------
+
+If you upgrade from 10.y.z this release is a drop in replacement. If
+you come from a version prior to 10.0.0, please read our Wicket 10
+migration guide found at
+
+ * http://s.apache.org/wicket10migrate
+
+Have fun!
+
+— The Wicket team
+
+
+========================================================================
+
+### This Release
+
+#### CHANGELOG for 10.12.0:
+    
