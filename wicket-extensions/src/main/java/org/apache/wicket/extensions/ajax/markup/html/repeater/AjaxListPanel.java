@@ -97,7 +97,7 @@ public class AjaxListPanel extends Panel
 			tag.getXmlTag().put("id", component.getMarkupId());
 
 			target.prependJavaScript(String.format("Wicket.DOM.add(Wicket.DOM.get('%s'), '%s');",
-				container.getMarkupId(), JavaScriptUtils.escapeQuotes(tag.toString())));
+				container.getMarkupId(), JavaScriptUtils.escapeQuotesAndBackslash(tag.toString())));
 			
 			// ... then update the appended component 
 			target.add(component);
