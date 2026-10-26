@@ -2,6 +2,32 @@ This file contains all changes done in releases for Apache Wicket 10.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 10.12.0
+
+** Bug
+
+    * [WICKET-7199] - Vulnerable dependencies need to be updated
+    * [WICKET-7203] - wicket-extensions: Dependency on jackson-databind should be optional in module-info.java
+    * [WICKET-7205] - CSP-Headers not set if RenderPageRequestHandler wrapped in more than one IRequestHandlerDelegates
+    * [GH-1576] - BUG since 10.11.0: Wrong escaping in Button label,while getEscapeModelStrings=false
+    * [GH-1618] - Palette "move up" broken since 10.9.0: moveUpHelper calls box.trigger('focus') on a plain DOM element
+    * [GH-1620] - TrapFocusBehavior: Tab/Shift+Tab at trap boundary throws TypeError on wicket-10.x
+    * [GH-1658] - The quickstart archetype's Start.java does not compile against Jetty 12
+    * [GH-1659] - CrossOrigin.USE_CREDENTIALS renders user-credentials instead of use-credentials
+    * [GH-1688] - WebSocket: Request wrappers break the Servlet header contract (case-sensitive lookup, single-use enumerations)
+
+** Improvement
+
+    * [WICKET-7204] - Don't use INJECTION for ByteBuddy proxy creation
+
+** Task
+
+    * [GH-1584] - Redundant japicmp exclusions need to removed
+    * [GH-1699] - Include GitHub issues in the release notes built by build-changelog.sh
+    * [GH-1708] - build-versions.py fails on Python 3 and misses the experimental modules
+
+=======================================================================
+
 Release Notes - Wicket - Version 10.11.0
 
 ** New Feature
