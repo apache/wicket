@@ -495,7 +495,7 @@
 				<type>jar</type>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.wicket.experimental.wicket10</groupId>
+				<groupId>org.apache.wicket.experimental.wicket11</groupId>
 				<artifactId>wicket-metrics</artifactId>
 				<version>11.0.0-SNAPSHOT</version>
 				<type>jar</type>

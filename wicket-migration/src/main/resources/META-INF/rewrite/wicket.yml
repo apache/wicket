@@ -130,6 +130,11 @@ recipeList:
       oldFullyQualifiedTypeName: org.apache.wicket.authroles.authentication.pages.SignInPage
       newFullyQualifiedTypeName: org.apache.wicket.authroles.authentication.pages.UsernamePasswordPage
       ignoreDefinition: "True"
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: org.apache.wicket.experimental.wicket10
+      oldArtifactId: wicket-metrics
+      newGroupId: org.apache.wicket.experimental.wicket11
+      newVersion: 11.x
   - org.openrewrite.maven.UpgradeDependencyVersion:
       groupId: org.apache.wicket
       artifactId: "*"
