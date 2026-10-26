@@ -2,6 +2,19 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.20.0
+
+** Bug
+
+    * [WICKET-7199] - Vulnerable dependencies need to be updated
+
+** Task
+
+    * [GH-1699] - Include GitHub issues in the release notes built by build-changelog.sh
+    * [GH-1708] - build-versions.py fails on Python 3 and misses the experimental modules
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.19.0
 
 ** Task
