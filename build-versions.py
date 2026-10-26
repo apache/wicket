@@ -9,7 +9,9 @@
 #     build-versions.py <release-version> <dev-version>
 #
 # This will generate a release.properties file that will release the
-# release-version, and will continue development on dev-version.
+# release-version, and will continue development on dev-version. A module
+# with a version of its own, such as the experimental modules, is released
+# at that version without -SNAPSHOT and continues on the next one.
 #
 # Example:
 #
@@ -32,18 +34,28 @@ devVersion = sys.argv[2]
 relVersions = []
 devVersions = []
 
-def addVersions(groupId, artifactId):
-    relVersions.append("project.rel." + groupId + "\\:" + artifactId + "=" + relVersion)
-    devVersions.append("project.dev." + groupId + "\\:" + artifactId + "=" + devVersion)
+def ownVersions(version):
+    release = version[:-len("-SNAPSHOT")] if version.endswith("-SNAPSHOT") else version
+    parts = release.split(".")
+    parts[-1] = str(int(parts[-1]) + 1)
+    return release, ".".join(parts) + "-SNAPSHOT"
+
+def addVersions(groupId, artifactId, version):
+    rel, dev = (relVersion, devVersion) if version == projectVersion else ownVersions(version)
+    relVersions.append("project.rel." + groupId + "\\:" + artifactId + "=" + rel)
+    devVersions.append("project.dev." + groupId + "\\:" + artifactId + "=" + dev)
 
 def addModule(directory):
     pom = ET.parse(os.path.join(directory, "pom.xml")).getroot()
 
     groupId = pom.findtext("pom:groupId", namespaces=NS) or pom.findtext("pom:parent/pom:groupId", namespaces=NS)
-    addVersions(groupId, pom.findtext("pom:artifactId", namespaces=NS))
+    version = pom.findtext("pom:version", namespaces=NS) or pom.findtext("pom:parent/pom:version", namespaces=NS)
+    addVersions(groupId, pom.findtext("pom:artifactId", namespaces=NS), version)
 
     for module in pom.iterfind(".//pom:modules/pom:module", NS):
         addModule(os.path.join(directory, module.text))
+
+projectVersion = ET.parse("pom.xml").getroot().findtext("pom:version", namespaces=NS)
 
 addModule(".")
 
