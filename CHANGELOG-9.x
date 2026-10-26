@@ -2,6 +2,21 @@ This file contains all changes done in releases for Apache Wicket 9.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 9.25.0
+
+** Bug
+
+    * [WICKET-7199] - Vulnerable dependencies need to be updated
+    * [WICKET-7205] - CSP-Headers not set if RenderPageRequestHandler wrapped in more than one IRequestHandlerDelegates
+    * [GH-1576] - BUG since 10.11.0: Wrong escaping in Button label,while getEscapeModelStrings=false
+
+** Task
+
+    * [GH-1699] - Include GitHub issues in the release notes built by build-changelog.sh
+    * [GH-1708] - build-versions.py fails on Python 3 and misses the experimental modules
+
+=======================================================================
+
 Release Notes - Wicket - Version 9.24.0
 
 ** Task
