@@ -126,7 +126,7 @@ svn rm https://dist.apache.org/repos/dist/dev/wicket/$version -m "Release vote h
 mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release vote has failed"
 
 # clean up remaining release files
-find . -name "*.releaseBackup" -exec rm {} \\;
+find . -name "*.releaseBackup" -exec rm {} +
 [ -f release.properties ] && rm release.properties
 
 EOF
@@ -323,6 +323,12 @@ Java used to compile (from toolchain) is: $(getJdkToolchain)
 "
 
 agentcount=`ps aux|grep gpg-agent|wc -l`
+
+echo "Checking that gpg can sign"
+echo "test" | gpg --clearsign > /dev/null || fail "gpg is unable to sign, check gpg-agent and pinentry"
+
+# the version to release comes from $GIT_BRANCH, not from a build branch left by a failed run
+git checkout $GIT_BRANCH || fail "Unable to check out $GIT_BRANCH"
 
 current_version=$(getProjectVersionFromPom)
 major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
@@ -621,7 +627,8 @@ git commit -m "Added post-release scripts and vote/release email templates"
 
 echo "Signing the release tag"
 git checkout $tag
-git tag --sign --force --message \"Signed release tag for Apache Wicket $version\" $tag >> $log
+git tag --sign --force --message "Signed release tag for Apache Wicket $version" $tag >> $log \
+    || fail "Unable to sign the release tag $tag"
 git checkout $branch
 
 echo "Pushing build artifacts to the staging repository"
