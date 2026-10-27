@@ -124,13 +124,26 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	}
 
 	/**
+	 * {@code java.*} types cannot host a generated proxy: the JVM forbids defining classes in
+	 * those packages, so they are renamed and loaded through a class loader of their own.
+	 *
+	 * @param prefix
+	 *            fully qualified name of the type to proxy
+	 * @return {@code true} when the type belongs to a {@code java.*} package
+	 */
+	private static boolean isInternalJavaType(String prefix)
+	{
+		return prefix.startsWith("java.");
+	}
+
+	/**
 	 * The proxy has to be defined in the same runtime package as the type it proxies, or the
 	 * package private methods it overrides are not overridden at all. Only a proxy for a
 	 * <em>java.**</em> type is renamed into another package, and needs a class loader of its own.
 	 */
 	private static ClassLoadingStrategy<ClassLoader> resolveLoadingStrategy(Class<?> type)
 	{
-		if (type.getName().startsWith("java."))
+		if (isInternalJavaType(type.getName()))
 		{
 			return ClassLoadingStrategy.Default.WRAPPER.allowExistingTypes();
 		}
@@ -166,7 +179,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	 */
 	private static ClassLoader resolveClassLoader(Class<?> type)
 	{
-		if (!type.getName().startsWith("java."))
+		if (!isInternalJavaType(type.getName()))
 		{
 			ClassLoader typeClassLoader = type.getClassLoader();
 			if (typeClassLoader != null)
@@ -235,7 +248,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 			String packageName = prefix.substring(0, lastIdxOfDot);
 			String className = prefix.substring(lastIdxOfDot + 1);
 			String name = packageName + ".";
-			if (prefix.startsWith("java."))
+			if (isInternalJavaType(prefix))
 			{
 				name = "bytebuddy_generated_wicket_proxy." + name + className;
 			}
