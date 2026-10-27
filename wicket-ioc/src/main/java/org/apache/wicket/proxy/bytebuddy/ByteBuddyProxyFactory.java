@@ -102,7 +102,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> createOrGetProxyClass(Class<T> type)
 	{
-		ClassLoader classLoader = resolveClassLoader();
+		ClassLoader classLoader = resolveClassLoader(type);
 
 		return (Class<T>) DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
 				new TypeCache.SimpleKey(type),
@@ -145,6 +145,37 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 			throw new WicketRuntimeException("Cannot create a proxy for " + type.getName()
 				+ ", because its package is not open to " + ByteBuddyProxyFactory.class.getModule(), e);
 		}
+	}
+
+	/**
+	 * Resolves the class loader the proxy class for the given type is defined in. It is also the
+	 * class loader the proxy class is cached for.
+	 * <p>
+	 * Unless the type is a <em>java.**</em> one (see
+	 * {@link #resolveLoadingStrategy(Class)}), the proxy class is defined by lookup in the class
+	 * loader of the proxied type, no matter which class loader the current thread resolves. The
+	 * cache has to be keyed on that same class loader: if it was keyed on the class loader of the
+	 * current thread, another thread (e.g. a servlet container request thread, whose context class
+	 * loader differs from the one of the thread that initialized the application) would miss the
+	 * cached class and try to define it a second time in the class loader of the type, failing with
+	 * a {@link LinkageError} (duplicate class definition).
+	 *
+	 * @param type
+	 *            the type to proxy
+	 * @return the class loader the proxy class is defined in and cached for
+	 */
+	private static ClassLoader resolveClassLoader(Class<?> type)
+	{
+		if (!type.getName().startsWith("java."))
+		{
+			ClassLoader typeClassLoader = type.getClassLoader();
+			if (typeClassLoader != null)
+			{
+				return typeClassLoader;
+			}
+		}
+
+		return resolveClassLoader();
 	}
 
 	private static ClassLoader resolveClassLoader()
