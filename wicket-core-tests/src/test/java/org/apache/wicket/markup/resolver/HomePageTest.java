@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.core.util.tester.apps_7;
+package org.apache.wicket.markup.resolver;
 
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
@@ -22,21 +22,47 @@ import org.junit.jupiter.api.Test;
 /**
  * Simple test using the WicketTester
  */
-class TestHomePage extends WicketTestCase
+class HomePageTest extends WicketTestCase
 {
-	/**	 */
+
 	@Test
-    void testAjaxSubmitWhileAnotherButtonIsNotVisible()
+    void testRenderMyPage_1()
 	{
 		// start and render the test page
-		tester.startPage(HomePage.class);
+		tester.startPage(HomePage_1.class);
+
 		// assert rendered page class
-		tester.assertRenderedPage(HomePage.class);
+		tester.assertRenderedPage(HomePage_1.class);
+
 		// assert rendered label component
 		tester.assertLabel("message",
 			"If you see this message wicket is properly configured and running");
 
-		// execute ajax
-		tester.executeAjaxEvent("form:ajaxButton", "click");
+		String href = "href=\"../resource/org.apache.wicket.markup.resolver.HomePage_1/main.css\"";
+
+//		String doc = tester.getLastResponseAsString();
+		tester.assertContains(href);
+
+		// When rendered the 2nd time, the result should be same. The href must not contain the
+		// locale
+		tester.startPage(HomePage_1.class);
+		tester.assertContains(href);
+	}
+
+	@Test
+    void testRenderMyPage_2()
+	{
+		// start and render the test page
+		tester.startPage(HomePage_2.class);
+
+		String href = "href=\"../resource/org.apache.wicket.markup.resolver.HomePage_2/main.css\"";
+
+//		String doc = tester.getLastResponseAsString();
+		tester.assertContains(href);
+
+		// When rendered the 2nd time, the result should be same. The href must not contain the
+		// locale
+		tester.startPage(HomePage_2.class);
+		tester.assertContains(href);
 	}
 }
