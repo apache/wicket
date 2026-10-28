@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Simple test using the WicketTester
  */
-class TestHomePage_2134 extends WicketTestCase
+class HomePage2134Test extends WicketTestCase
 {
 	/**
 	 * WICKET-2134: two forms inside a border throw a ConversionException error

@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  */
-class TestHomePage extends WicketTestCase
+class HomePageTest extends WicketTestCase
 {
 	/**
 	 * testSubmitLinkByClickingLink()
