@@ -124,16 +124,12 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	}
 
 	/**
-	 * {@code java.*} types cannot host a generated proxy: the JVM forbids defining classes in
-	 * those packages, so they are renamed and loaded through a class loader of their own.
-	 *
-	 * @param prefix
-	 *            fully qualified name of the type to proxy
-	 * @return {@code true} when the type belongs to a {@code java.*} package
+	 * The JVM does not allow a class to be defined in a <em>java.**</em> package, so the proxy for
+	 * a type in one is renamed into another package.
 	 */
-	private static boolean isInternalJavaType(String prefix)
+	private static boolean isInJavaPackage(String typeName)
 	{
-		return prefix.startsWith("java.");
+		return typeName.startsWith("java.");
 	}
 
 	/**
@@ -143,7 +139,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	 */
 	private static ClassLoadingStrategy<ClassLoader> resolveLoadingStrategy(Class<?> type)
 	{
-		if (isInternalJavaType(type.getName()))
+		if (isInJavaPackage(type.getName()))
 		{
 			return ClassLoadingStrategy.Default.WRAPPER.allowExistingTypes();
 		}
@@ -161,34 +157,16 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	}
 
 	/**
-	 * Resolves the class loader the proxy class for the given type is defined in. It is also the
-	 * class loader the proxy class is cached for.
-	 * <p>
-	 * Unless the type is a <em>java.**</em> one (see
-	 * {@link #resolveLoadingStrategy(Class)}), the proxy class is defined by lookup in the class
-	 * loader of the proxied type, no matter which class loader the current thread resolves. The
-	 * cache has to be keyed on that same class loader: if it was keyed on the class loader of the
-	 * current thread, another thread (e.g. a servlet container request thread, whose context class
-	 * loader differs from the one of the thread that initialized the application) would miss the
-	 * cached class and try to define it a second time in the class loader of the type, failing with
-	 * a {@link LinkageError} (duplicate class definition).
-	 *
-	 * @param type
-	 *            the type to proxy
-	 * @return the class loader the proxy class is defined in and cached for
+	 * The class loader the proxy for the given type is defined in, and cached for.
 	 */
 	private static ClassLoader resolveClassLoader(Class<?> type)
 	{
-		if (!isInternalJavaType(type.getName()))
+		if (isInJavaPackage(type.getName()))
 		{
-			ClassLoader typeClassLoader = type.getClassLoader();
-			if (typeClassLoader != null)
-			{
-				return typeClassLoader;
-			}
+			return resolveClassLoader();
 		}
 
-		return resolveClassLoader();
+		return type.getClassLoader();
 	}
 
 	private static ClassLoader resolveClassLoader()
@@ -248,7 +226,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 			String packageName = prefix.substring(0, lastIdxOfDot);
 			String className = prefix.substring(lastIdxOfDot + 1);
 			String name = packageName + ".";
-			if (isInternalJavaType(prefix))
+			if (isInJavaPackage(prefix))
 			{
 				name = "bytebuddy_generated_wicket_proxy." + name + className;
 			}

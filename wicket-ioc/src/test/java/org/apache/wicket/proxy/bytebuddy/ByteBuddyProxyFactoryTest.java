@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.proxy.bytebuddy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.sql.Timestamp;
 
 import org.apache.wicket.proxy.util.ConcreteObject;
+import org.apache.wicket.proxy.util.MockObjectLocator;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -30,11 +33,7 @@ import org.junit.jupiter.api.Test;
 class ByteBuddyProxyFactoryTest
 {
 	/**
-	 * The proxy class is defined in the class loader of the proxied type, so it must be cached
-	 * for that class loader, whatever class loader the current thread resolves. Otherwise a
-	 * thread with another context class loader (e.g. a servlet container request thread) does
-	 * not find the cached class and tries to define it a second time, which fails with a
-	 * {@link LinkageError} (duplicate class definition).
+	 * A thread with another context class loader gets the proxy class that is already defined.
 	 */
 	@Test
 	void proxyClassIsReusedAcrossContextClassLoaders() throws Exception
@@ -57,5 +56,18 @@ class ByteBuddyProxyFactoryTest
 		{
 			thread.setContextClassLoader(original);
 		}
+	}
+
+	/**
+	 * A type in a <em>java.**</em> package of the platform class loader, which cannot see the
+	 * interfaces the proxy implements.
+	 */
+	@Test
+	void proxiesTypeInJavaPackageOfPlatformClassLoader()
+	{
+		Timestamp proxy = new ByteBuddyProxyFactory().createProxy(Timestamp.class,
+			new MockObjectLocator(new Timestamp(42)));
+
+		assertEquals(42, proxy.getTime());
 	}
 }
