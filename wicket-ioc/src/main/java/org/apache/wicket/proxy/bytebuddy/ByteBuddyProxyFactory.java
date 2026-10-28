@@ -102,7 +102,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> createOrGetProxyClass(Class<T> type)
 	{
-		ClassLoader classLoader = resolveClassLoader();
+		ClassLoader classLoader = resolveClassLoader(type);
 
 		return (Class<T>) DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
 				new TypeCache.SimpleKey(type),
@@ -124,13 +124,22 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	}
 
 	/**
+	 * The JVM does not allow a class to be defined in a <em>java.**</em> package, so the proxy for
+	 * a type in one is renamed into another package.
+	 */
+	private static boolean isInJavaPackage(String typeName)
+	{
+		return typeName.startsWith("java.");
+	}
+
+	/**
 	 * The proxy has to be defined in the same runtime package as the type it proxies, or the
 	 * package private methods it overrides are not overridden at all. Only a proxy for a
 	 * <em>java.**</em> type is renamed into another package, and needs a class loader of its own.
 	 */
 	private static ClassLoadingStrategy<ClassLoader> resolveLoadingStrategy(Class<?> type)
 	{
-		if (type.getName().startsWith("java."))
+		if (isInJavaPackage(type.getName()))
 		{
 			return ClassLoadingStrategy.Default.WRAPPER.allowExistingTypes();
 		}
@@ -145,6 +154,19 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 			throw new WicketRuntimeException("Cannot create a proxy for " + type.getName()
 				+ ", because its package is not open to " + ByteBuddyProxyFactory.class.getModule(), e);
 		}
+	}
+
+	/**
+	 * The class loader the proxy for the given type is defined in, and cached for.
+	 */
+	private static ClassLoader resolveClassLoader(Class<?> type)
+	{
+		if (isInJavaPackage(type.getName()))
+		{
+			return resolveClassLoader();
+		}
+
+		return type.getClassLoader();
 	}
 
 	private static ClassLoader resolveClassLoader()
@@ -204,7 +226,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 			String packageName = prefix.substring(0, lastIdxOfDot);
 			String className = prefix.substring(lastIdxOfDot + 1);
 			String name = packageName + ".";
-			if (prefix.startsWith("java."))
+			if (isInJavaPackage(prefix))
 			{
 				name = "bytebuddy_generated_wicket_proxy." + name + className;
 			}
