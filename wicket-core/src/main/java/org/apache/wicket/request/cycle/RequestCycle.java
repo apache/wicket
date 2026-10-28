@@ -186,7 +186,8 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	}
 
 	/**
-	 * Resolves current request to a {@link IRequestHandler}.
+	 * Resolves current request to a {@link IRequestHandler}. A {@link ReplaceHandlerException}
+	 * thrown while resolving replaces the handler, just like one thrown while a handler executes.
 	 *
 	 * @return RequestHandler instance
 	 */
@@ -242,7 +243,15 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 			set(this);
 			listeners.onBeginRequest(this);
 			onBeginRequest();
-			IRequestHandler handler = resolveRequestHandler();
+			IRequestHandler handler;
+			try
+			{
+				handler = resolveRequestHandler();
+			}
+			catch (RuntimeException e)
+			{
+				handler = replacementOrRethrow(e);
+			}
 			if (handler == null)
 			{
 				// Did not find any suitable handler, thus not executing the request
@@ -298,21 +307,26 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 			}
 			catch (RuntimeException e)
 			{
-				ReplaceHandlerException replacer = Exceptions.findCause(e, ReplaceHandlerException.class);
-
-				if (replacer == null)
-				{
-					throw e;
-				}
-
-				if (replacer.getRemoveScheduled())
-				{
-					requestHandlerExecutor.schedule(null);
-				}
-
-				handler = replacer.getReplacementRequestHandler();
+				handler = replacementOrRethrow(e);
 			}
 		}
+	}
+
+	private IRequestHandler replacementOrRethrow(RuntimeException e)
+	{
+		ReplaceHandlerException replacer = Exceptions.findCause(e, ReplaceHandlerException.class);
+
+		if (replacer == null)
+		{
+			throw e;
+		}
+
+		if (replacer.getRemoveScheduled())
+		{
+			requestHandlerExecutor.schedule(null);
+		}
+
+		return replacer.getReplacementRequestHandler();
 	}
 
 	/**
