@@ -1,5 +1,5 @@
 Apache Wicket
-Copyright 2006-2023 The Apache Software Foundation
+Copyright 2006-2026 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -12,55 +12,36 @@ NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE
     AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE.
 
 ---------------------------------------------------------------------------
-src/./wicket-guice
+src/./testing/wicket-js-tests/node_modules/bare-path/NOTICE
 ---------------------------------------------------------------------------
-   Apache Wicket
-   Copyright 2006-2023 Apache Software Foundation
+Copyright 2023 Holepunch Inc
 
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-   This product includes Guice, developed at Google, and licensed
-   under the Apache License 2.0. (http://code.google.com/p/google-guice/).
----------------------------------------------------------------------------
-src/./wicket-examples
----------------------------------------------------------------------------
-   Apache Wicket Examples
-   Copyright 2006-2023 Apache Software Foundation
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-   
-   Contains Script.aculo.us javascript library released under a MIT license.
-   Copyright (c) 2005 Thomas Fuchs
-   
-   Contains prototype.js javascript library released under a MIT style license.
-   (c) 2005 Sam Stephenson
-   
-   Contains behaviour.js javascript library released under BSD license.
-   Behaviour v1.1 by Ben Nolan, June 2005. Based largely on the work
-   of Simon Willison
-   
-   com.meterware.httpunit.ParsedHTML is taken from HttpUnit, released
-   under a MIT style license.
-   Copyright (c) 2000-2004, Russell Gold
-   
-   Contains software developed by the Dojo foundation.
-   The dojo javascript is dual licensed under the AFL and BSD license.
-   Included in this software under the BSD license.
-   Copyright (c) 2004-2005, The Dojo Foundation
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-   This product includes software developed by the Spring Framework Project
-   (http://www.springframework.org).
+---
 
-   This product includes software developed by the ByteBuddy Project
-   (https://bytebuddy.net/).
+Copyright Joyent, Inc. and other Node contributors.
 
-   This product includes ASM, released under a BSD style license (https://asm.ow2.io/).
-   Copyright (c) 2000-2011 INRIA, France Telecom
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to permit
+persons to whom the Software is furnished to do so, subject to the
+following conditions:
 
-   This product includes jhighlight (https://jhighlight.dev.java.net/)
-   which is released under CDDL 1.0 license (http://www.opensource.org/licenses/cddl1.php).
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
 
 ---------------------------------------------------------------------------
 src/./wicket-core
@@ -98,9 +79,57 @@ src/./wicket-core
    [1]: http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
 
 ---------------------------------------------------------------------------
-src/./wicket-metrics
+src/./wicket-examples
 ---------------------------------------------------------------------------
+   Apache Wicket Examples
+   Copyright 2006-2023 Apache Software Foundation
 
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+   
+   Contains Script.aculo.us javascript library released under a MIT license.
+   Copyright (c) 2005 Thomas Fuchs
+   
+   Contains prototype.js javascript library released under a MIT style license.
+   (c) 2005 Sam Stephenson
+   
+   Contains behaviour.js javascript library released under BSD license.
+   Behaviour v1.1 by Ben Nolan, June 2005. Based largely on the work
+   of Simon Willison
+   
+   com.meterware.httpunit.ParsedHTML is taken from HttpUnit, released
+   under a MIT style license.
+   Copyright (c) 2000-2004, Russell Gold
+   
+   Contains software developed by the Dojo foundation.
+   The dojo javascript is dual licensed under the AFL and BSD license.
+   Included in this software under the BSD license.
+   Copyright (c) 2004-2005, The Dojo Foundation
+
+   This product includes software developed by the Spring Framework Project
+   (http://www.springframework.org).
+
+   This product includes software developed by the ByteBiddy Project
+   (https://bytebuddy.net/).
+
+   This product includes ASM, released under a BSD style license (https://asm.ow2.io/).
+   Copyright (c) 2000-2011 INRIA, France Telecom
+
+   This product includes jhighlight (https://jhighlight.dev.java.net/)
+   which is released under CDDL 1.0 license (http://www.opensource.org/licenses/cddl1.php).
+
+   Contains jquery.js javascript library released under a MIT style license.
+   jQuery Foundation, Inc, http://jquery.org/license
+
+   Contains qunit.js javascript library released under a MIT style license.
+   jQuery Foundation, Inc, http://jquery.org/license
+
+   Contains qunit.css released under a MIT style license.
+   jQuery Foundation, Inc, http://jquery.org/license
+
+---------------------------------------------------------------------------
+src/./wicket-experimental/wicket-metrics
+---------------------------------------------------------------------------
    Apache Wicket Metrics
    Copyright 2006-2023 Apache Software Foundation
 
@@ -109,3 +138,25 @@ src/./wicket-metrics
    
    This product uses AspectJ, developed at Eclipse, and licensed
    under the Eclipse Public License. (https://eclipse.org/aspectj/).
+
+---------------------------------------------------------------------------
+src/./wicket-guice
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2006-2023 Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+   This product includes Guice, developed at Google, and licensed
+   under the Apache License 2.0. (http://code.google.com/p/google-guice/).
+
+---------------------------------------------------------------------------
+src/./wicket-tester
+---------------------------------------------------------------------------
+   Apache Wicket
+   Copyright 2006-2023 Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
