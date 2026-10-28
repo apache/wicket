@@ -14,23 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.page;
+package org.apache.wicket.markup.parser;
 
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
 /**
- * Simple test using the WicketTester
+ * 
  */
-class TestHomePage extends WicketTestCase
+class HomePageTest extends WicketTestCase
 {
 	/**
-	 * 
+	 * Wicket-2105
 	 */
 	@Test
     void testRenderMyPage()
 	{
-		// no exception should occur
+		// start and render the test page
 		tester.startPage(HomePage.class);
+
+		// assert rendered page class
+		tester.assertRenderedPage(HomePage.class);
+
+		// assert rendered label component
+		tester.assertLabel("version", "1.0");
 	}
 }

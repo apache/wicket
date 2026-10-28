@@ -14,19 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.parser;
+package org.apache.wicket.model;
 
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
 /**
- * 
+ * Simple test for CompoundPropertyModel and id's like "A.B"
  */
-class TestHomePage extends WicketTestCase
+class HomePageTest extends WicketTestCase
 {
-	/**
-	 * Wicket-2105
-	 */
 	@Test
     void testRenderMyPage()
 	{
@@ -36,7 +34,9 @@ class TestHomePage extends WicketTestCase
 		// assert rendered page class
 		tester.assertRenderedPage(HomePage.class);
 
-		// assert rendered label component
-		tester.assertLabel("version", "1.0");
+		FormTester formTester = tester.newFormTester("bookingForm");
+		formTester.submit();
+
+		tester.assertErrorMessages("Name is required");
 	}
 }

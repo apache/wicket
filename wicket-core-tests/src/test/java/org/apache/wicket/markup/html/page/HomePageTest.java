@@ -14,29 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model;
+package org.apache.wicket.markup.html.page;
 
-import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
 /**
- * Simple test for CompoundPropertyModel and id's like "A.B"
+ * Simple test using the WicketTester
  */
-class TestHomePage extends WicketTestCase
+class HomePageTest extends WicketTestCase
 {
+	/**
+	 * 
+	 */
 	@Test
     void testRenderMyPage()
 	{
-		// start and render the test page
+		// no exception should occur
 		tester.startPage(HomePage.class);
-
-		// assert rendered page class
-		tester.assertRenderedPage(HomePage.class);
-
-		FormTester formTester = tester.newFormTester("bookingForm");
-		formTester.submit();
-
-		tester.assertErrorMessages("Name is required");
 	}
 }
