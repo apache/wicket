@@ -89,8 +89,9 @@ engine/jQuery version combination by hand in a real browser.
   `testing/wicket-js-tests/Gruntfile.js`), covering both Ajax engines plus `Wicket.DOM`,
   `Wicket.Event`, `Wicket.Form`, `Wicket.Head`, and the channel manager.
 - `wicket-extensions/src/test/js/*-test.js` - QUnit tests for `wicket-extensions`' own scripts
-  (`Wicket.Palette`, `Wicket.trapFocus`, `Wicket.Veil`), each with its own page next to it
-  (`palette.html`, `trap-focus.html`, `veil.html`), served on `http://localhost:38888` and run
+  (`Wicket.AutoComplete`, `Wicket.Palette`, `Wicket.trapFocus`, `Wicket.Veil`), each with its
+  own page next to it (`autocomplete.html`, `palette.html`, `trap-focus.html`, `veil.html`),
+  served on `http://localhost:38888` and run
   against both engines.
 - `jshint:core` / `jshint:extensions` / `jshint:nativeWebSocket` - lint-only coverage
   (ES6+, no test runtime) for the rest of the framework's JS: `wicket-extensions`
