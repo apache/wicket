@@ -283,7 +283,12 @@
 
 		// deprecated AbstractAutoCompleteRenderer#getOnSelectJavaScriptExpression, needs 'unsafe-eval'
 		function evalOnSelect(input, expression) {
-			return eval(expression);
+			try {
+				return eval(expression);
+			} catch (e) {
+				Wicket.Log.error("Wicket.AutoComplete: the onselect expression failed, the text value is used instead:", e);
+				return input;
+			}
 		}
 
 		function getSelectableElements() {
