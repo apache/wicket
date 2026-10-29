@@ -28,7 +28,7 @@ Wicket.Event.add(window, 'domready', function() {
 		'<li textvalue="Antwerp" data-country="BE">Antwerp</li>' +
 		'</ul>';
 
-	let originalAjax;
+	let originalAjax, originalLogError;
 
 	// Opens the popup with the given choices and calls back once its items can be clicked.
 	function showChoices(callback, markup) {
@@ -58,9 +58,11 @@ Wicket.Event.add(window, 'domready', function() {
 	module("Wicket.AutoComplete selection", {
 		beforeEach: function() {
 			originalAjax = Wicket.Ajax.ajax;
+			originalLogError = Wicket.Log.error;
 		},
 		afterEach: function() {
 			Wicket.Ajax.ajax = originalAjax;
+			Wicket.Log.error = originalLogError;
 			const container = document.getElementById('acInput-autocomplete-container');
 			if (container) {
 				container.parentNode.removeChild(container);
@@ -122,6 +124,31 @@ Wicket.Event.add(window, 'domready', function() {
 			done();
 		}, '<ul>' +
 			'<li textvalue="Amsterdam" onselect="arguments[0] + &quot;!&quot;">Amsterdam</li>' +
+			'<li textvalue="Antwerp">Antwerp</li>' +
+			'</ul>');
+	});
+
+	test("a deprecated onselect expression that fails is logged and the text value is used", assert => {
+		const done = assert.async();
+		const logged = [];
+		Wicket.Log.error = function() {
+			logged.push(Array.prototype.slice.call(arguments));
+		};
+		showChoices(function(input, items) {
+			let selected;
+			input.addEventListener('wicket-autocomplete-select', function(event) {
+				selected = event.detail.value;
+			});
+
+			items[0].click();
+
+			assert.equal(logged.length, 1);
+			assert.ok(logged[0][1] instanceof EvalError);
+			assert.equal(selected, 'Amsterdam');
+			assert.equal(input.value, 'Amsterdam');
+			done();
+		}, '<ul>' +
+			'<li textvalue="Amsterdam" onselect="throw new EvalError(&quot;unsafe-eval is not allowed&quot;)">Amsterdam</li>' +
 			'<li textvalue="Antwerp">Antwerp</li>' +
 			'</ul>');
 	});
