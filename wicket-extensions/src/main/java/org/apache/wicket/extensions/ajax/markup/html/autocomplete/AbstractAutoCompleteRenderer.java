@@ -28,24 +28,42 @@ import org.apache.wicket.util.string.Strings;
  * visual part of the assist instead of having to also render the necessary auto-assist javascript
  * hooks.
  * <p>
- * When a choice is selected the autocompleter dispatches a cancelable
+ * When a choice is selected the autocompleter dispatches a cancelable, bubbling
  * {@code wicket-autocomplete-select} event on the input field. Its {@code detail.item} is the
  * element of the selected choice and its {@code detail.value} the text value that will be copied
  * into the input field. A listener may replace {@code detail.value}, or call
- * {@code preventDefault()} to leave the input field unchanged. Data a listener needs about the
- * choice can be written onto its element with {@link #getChoiceData(Object)}:
- * 
+ * {@code preventDefault()} to leave the input field unchanged. An empty {@code detail.value}
+ * leaves the input field unchanged as well, like {@code preventDefault()}. Data a listener needs
+ * about the choice can be written onto its element with {@link #getChoiceData(Object)}.
+ * <p>
+ * An Ajax update that re-renders the field replaces its element, and a listener added to the old
+ * element is lost. Register the listener from the {@code renderHead()} of the field, which runs
+ * again on every re-render, with a header item such as {@code OnDomReadyHeaderItem} so that it
+ * carries the nonce of the Content Security Policy:
+ *
  * <pre>
- * document.getElementById('address').addEventListener('wicket-autocomplete-select', function(event) {
- * 	const data = event.detail.item.dataset;
- * 	document.getElementById('zipcode').value = data.zipcode;
- * 	document.getElementById('city').value = data.city;
- * });
+ * &#064;Override
+ * public void renderHead(IHeaderResponse response)
+ * {
+ * 	super.renderHead(response);
+ * 	response.render(OnDomReadyHeaderItem.forScript(&quot;Wicket.$('&quot; + getMarkupId() +
+ * 		&quot;').addEventListener('wicket-autocomplete-select', fillAddress);&quot;));
+ * }
  * </pre>
- * 
- * Register such a listener from {@code renderHead()}, for example with an
- * {@code OnDomReadyHeaderItem}, so that it carries the nonce of the Content Security Policy.
- * 
+ *
+ * with {@code fillAddress} in a JavaScript resource of the application:
+ *
+ * <pre>
+ * function fillAddress(event) {
+ * 	const data = event.detail.item.dataset;
+ * 	document.getElementById('zipcode').value = data.zipCode;
+ * 	document.getElementById('city').value = data.city;
+ * }
+ * </pre>
+ *
+ * As the event bubbles, a single listener on {@code document} that checks {@code event.target}
+ * works too and is not affected by re-rendering.
+ *
  * @param <T>
  * 
  * @since 1.2
@@ -203,8 +221,9 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 * Each entry is written as a {@code data-<name>} attribute. Its value is converted with
 	 * {@code toString()} and escaped with {@link Strings#escapeMarkup(CharSequence)}; an entry with
 	 * a {@code null} value is skipped. Names must consist of lowercase letters, digits and dashes,
-	 * and start with a letter.
-	 * 
+	 * and start with a letter. The browser exposes a dashed name in camelCase in {@code dataset}:
+	 * the entry {@code zip-code} is read as {@code dataset.zipCode}.
+	 *
 	 * @param item
 	 *            the autocomplete choice
 	 * @return the data of the choice, keyed by attribute name without the {@code data-} prefix,
