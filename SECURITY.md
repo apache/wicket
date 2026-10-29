@@ -46,16 +46,14 @@ needs fixing.
 ## Supported Versions
 
 Security fixes are applied to the actively maintained release lines. Refer to
-the [download page](https://wicket.apache.org/start/download.html) for the
-current status and the latest release of each line.
+the [releases page](https://wicket.apache.org/versions/) for the current status
+and the latest release of each line.
 
 | Version | Status                                          |
 | ------- | ----------------------------------------------- |
 | 11.x    | In development (`master`) — not yet released     |
 | 10.x    | Current, supported                              |
-| 9.x     | Supported                                       |
-| 8.x     | Security fixes only — upgrade to 9.x or 10.x    |
-| ≤ 7.x   | Discontinued — no security fixes                |
+| ≤ 9.x   | Discontinued — no security fixes                |
 
 If you are running a discontinued version, the fix is to upgrade. See the
 [Migration to Wicket 10.0](https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+10.0)
@@ -79,9 +77,8 @@ code is not fixed.
 Two limits on that, both of which cut in the reporter's favour:
 
 - **Deprecation is per release line.** A member deprecated on `master` may still
-  be current in 10.x, 9.x or 8.x. A report is judged against the line it
-  targets, not against `master`. This matters most for 8.x, which carries by far
-  the largest body of deprecated code of the supported lines.
+  be current in 10.x. A report is judged against the line it targets, not
+  against `master`.
 - **Deprecating a member does not deprecate the behaviour behind it.** Where a
   deprecated accessor merely fronts a feature that is still current and still
   reachable without the application opting in, the feature is in scope and the
@@ -110,7 +107,7 @@ not to do either in a real application. Individual examples go further:
 `authentication1` hardcodes its one credential pair in the source. Do not read
 the examples as a security reference, and do not copy them into an application
 unchanged. This applies with particular force on 8.x, where the examples
-demonstrate a release line that receives security fixes only.
+demonstrate a release line that has reached end of life.
 
 We do want to hear about problems in them, because example code gets copied and
 a misleading pattern propagates from there into real applications. But fixing
@@ -150,9 +147,10 @@ and reporters know what the framework does and does not claim to defend.
 **This copy describes Wicket 8.x.** The boundaries below are not the same as on
 9.x and 10.x, and in two places 8.x defends less: its cross-origin protection is
 the older `Origin`/`Referer` check rather than resource isolation, and it has no
-option to encrypt the page store. Both are noted where they arise. 8.x receives
-security fixes only; the current model is documented on the 9.x and 10.x
-branches, and upgrading is the way to reach it.
+option to encrypt the page store. Both are noted where they arise. 8.x reached
+end of life with 8.20.0 and receives no more security fixes; the current model
+is documented on the 10.x branch and `master`, and upgrading is the way to reach
+it.
 
 ### Wicket trusts the container-reported host, port and scheme
 
