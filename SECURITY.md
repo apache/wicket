@@ -46,16 +46,14 @@ needs fixing.
 ## Supported Versions
 
 Security fixes are applied to the actively maintained release lines. Refer to
-the [download page](https://wicket.apache.org/start/download.html) for the
-current status and the latest release of each line.
+the [releases page](https://wicket.apache.org/versions/) for the current status
+and the latest release of each line.
 
 | Version | Status                                          |
 | ------- | ----------------------------------------------- |
 | 11.x    | In development (`master`) — not yet released     |
 | 10.x    | Current, supported                              |
-| 9.x     | Supported                                       |
-| 8.x     | Security fixes only — upgrade to 9.x or 10.x    |
-| ≤ 7.x   | Discontinued — no security fixes                |
+| ≤ 9.x   | Discontinued — no security fixes                |
 
 If you are running a discontinued version, the fix is to upgrade. See the
 [Migration to Wicket 10.0](https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+10.0)
@@ -79,7 +77,7 @@ code is not fixed.
 Two limits on that, both of which cut in the reporter's favour:
 
 - **Deprecation is per release line.** A member deprecated on `master` may still
-  be current in 10.x or 9.x. A report is judged against the line it targets, not
+  be current in 10.x. A report is judged against the line it targets, not
   against `master`.
 - **Deprecating a member does not deprecate the behaviour behind it.** Where a
   deprecated accessor merely fronts a feature that is still current and still
