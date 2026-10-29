@@ -190,7 +190,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 *             instead (see the class documentation) and pass the data it needs with
 	 *             {@link #getChoiceData(Object)}.
 	 */
-	@Deprecated(since = "11.0.0", forRemoval = true)
+	@Deprecated(since = "10.12.0", forRemoval = true)
 	protected CharSequence getOnSelectJavaScriptExpression(final T item)
 	{
 		return null;
@@ -209,7 +209,7 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 *            the autocomplete choice
 	 * @return the data of the choice, keyed by attribute name without the {@code data-} prefix,
 	 *         or {@code null} for none
-	 * @since 11.0.0
+	 * @since 10.12.0
 	 */
 	protected Map<String, ?> getChoiceData(final T item)
 	{
