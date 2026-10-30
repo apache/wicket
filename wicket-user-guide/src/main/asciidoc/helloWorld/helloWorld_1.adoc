@@ -1,3 +1,19 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
 
 Wicket is available as a binary package on the main site  http://wicket.apache.org[http://wicket.apache.org] . Inside this archive we can find the distribution jars of the framework. Each jar corresponds to a sub-module of the framework. The following table reports these modules along with a short description of their purpose and with the related dependencies:
 
