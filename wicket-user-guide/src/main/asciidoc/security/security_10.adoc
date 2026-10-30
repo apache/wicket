@@ -1,3 +1,20 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
 A major consequence of transient execution attacks for the web is the risk of exposing private authenticated data to untrusted sites via microarchitectural side channels. Some web APIs increase the risk of side-channel attacks like https://meltdownattack.com/[Spectre]. To mitigate that risk, browsers offer two opt-in mechanisms to effectively isolate resources from third-party origins through Cross-Origin Opener Policy and Cross-Origin Embedder Policy.
 
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Opener-Policy[Cross-Origin Opener Policy (COOP)] is a security mitigation that lets developers isolate their resources against side-channel attacks and information leaks. The COOP response header allows a document to request a new browsing context group to better isolate itself from other untrustworthy origins.
