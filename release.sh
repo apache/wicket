@@ -452,37 +452,13 @@ git push staging --delete $tag >> release.out
 echo "Creating release branch"
 git checkout -b $branch >> release.out
 
-# Clear the current NOTICE.txt file
-echo "Creating notice file."
+echo "Updating the copyright year in NOTICE"
+sed -i -e "s/^Copyright 2006-[0-9]\{4\} /Copyright 2006-$(date +%Y) /" NOTICE
 
-NOTICE=NOTICE
-
-echo "Apache Wicket
-Copyright 2006-$(date +%Y) The Apache Software Foundation
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-
-This is an aggregated NOTICE file for the Apache Wicket projects included
-in this distribution.
-
-NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE
-    NOTICE FILE OF THE CORRESPONDING PROJECT. THE RELEASE PROCEDURE WILL
-    AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE.
-" > $NOTICE
-
-# next concatenate all NOTICE files from sub projects to the root file
-for i in `find . -name "NOTICE" -not -regex ".*/target/.*" -not -regex "./NOTICE"`
-do
-    echo "---------------------------------------------------------------------------" >> $NOTICE
-    echo "src/"$i | sed -e "s/\/src.*//g" >> $NOTICE
-    echo "---------------------------------------------------------------------------" >> $NOTICE
-    cat $i >> $NOTICE
-    echo >> $NOTICE
-done
-
-echo "Committing changes"
-git commit -am "Changes to notice files"
+if ! git diff --quiet NOTICE ; then
+    echo "Committing changes"
+    git commit -am "Update the copyright year in NOTICE"
+fi
 
 # clean all projects
 echo "Clean all projects"
@@ -529,7 +505,7 @@ mkdir target/apache-wicket-$version-bin
 pushd target/apache-wicket-$version-bin
 find ../checkout ! \( -type d -name "WEB-INF" -prune \) -regex ".*wicket-[^/]*.[j]ar" ! -name "*-sources*" ! -name "*-javadoc*" ! -name "*wicket-archetype-quickstart*" ! -name "wicket-common-tests*"  -type f -exec cp {} . \;
 find ../checkout ! \( -type d -name "WEB-INF" -prune \) -regex ".*wicket-[^/]*.[j]ar\.asc" ! -name "*-sources*" ! -name "*-javadoc*" ! -name "*wicket-archetype-quickstart*" ! -name "wicket-common-tests*"  -type f -exec cp {} . \;
-cp ../../LICENSE .
+cp ../../LICENSE-binary LICENSE
 cp ../../README .
 cp ../../NOTICE .
 cp ../../CHANGELOG* .
