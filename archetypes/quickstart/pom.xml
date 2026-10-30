@@ -28,6 +28,7 @@
 	<name>Wicket Quickstart Archetype</name>
 
 	<properties>
+		<archetype.test.localRepositoryPath>${project.build.directory}/it-repo</archetype.test.localRepositoryPath>
 		<archetype.test.skip>${skipTests}</archetype.test.skip>
 		<invoker.skip>${skipTests}</invoker.skip>
 		<japicmp.skip>true</japicmp.skip>
@@ -111,6 +112,7 @@
 							<goal>install</goal>
 						</goals>
 						<configuration>
+							<localRepositoryPath>${archetype.test.localRepositoryPath}</localRepositoryPath>
 							<scope>test</scope>
 						</configuration>
 					</execution>
