@@ -254,6 +254,12 @@ Prototype JavaScript framework 1.4.0
   Copyright (c) 2005 Sam Stephenson
   licenses/LICENSE-prototype.txt
 
+Asciidoctor default stylesheet
+  wicket-user-guide/src/main/asciidoc/css/style.css
+  Copyright (C) 2012-present Dan Allen, Sarah White, Ryan Waldron, and the
+  individual contributors to Asciidoctor
+  licenses/LICENSE-asciidoctor.txt
+
 --------------------------------------------------------------------------------
 BSD License
 --------------------------------------------------------------------------------
