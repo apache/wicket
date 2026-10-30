@@ -35,7 +35,10 @@ import org.slf4j.LoggerFactory;
  * Doesn't really make sense outside org.apache.wicket.
  * 
  * @author Frank Bille Jensen (frankbille)
+ * @deprecated Wicket checks its license headers with Apache RAT, configured in the root pom and
+ *             in {@code .rat-excludes}. Use Apache RAT in your own build instead.
  */
+@Deprecated(since = "10.12.0, 11.0.0", forRemoval = true)
 public abstract class ApacheLicenseHeaderTestCase
 {
 	/** Log. */
