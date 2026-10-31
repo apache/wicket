@@ -732,25 +732,38 @@ public abstract class AbstractResource implements IResource
 			// fixing white spaces
 			rangeHeader = rangeHeader.replaceAll(" ", "");
 
-			String range = rangeHeader.substring(rangeHeader.indexOf('=') + 1,
-					rangeHeader.length());
-			
-			// support only the first range (WICKET-5995)
-			final int idxOfComma = range.indexOf(',');
-			String firstRange = idxOfComma > -1 ? range.substring(0, idxOfComma) : range;
+			int eqIndex = rangeHeader.indexOf('=');
 
-			String[] rangeParts = Strings.split(firstRange, '-');
+			String range = eqIndex > -1 ? rangeHeader.substring(eqIndex + 1) : null;
 
-			String startByteString = rangeParts[0];
-			String endByteString = rangeParts[1];
+			if (range != null)
+			{
+				// support only the first range (WICKET-5995)
+				final int idxOfComma = range.indexOf(',');
+				String firstRange = idxOfComma > -1 ? range.substring(0, idxOfComma) : range;
 
-			long startbyte = !Strings.isEmpty(startByteString) ? Long.parseLong(startByteString) : 0;
-			long endbyte = !Strings.isEmpty(endByteString) ? Long.parseLong(endByteString) : -1;
+				String[] rangeParts = Strings.split(firstRange, '-');
 
-			// Make the content range information available for the whole request cycle
-			RequestCycle requestCycle = RequestCycle.get();
-			requestCycle.setMetaData(CONTENT_RANGE_STARTBYTE, startbyte);
-			requestCycle.setMetaData(CONTENT_RANGE_ENDBYTE, endbyte);
+				if (rangeParts.length == 2)
+				{
+					try
+					{
+						long startbyte = !Strings.isEmpty(rangeParts[0])
+								? Long.parseLong(rangeParts[0]) : 0;
+						long endbyte = !Strings.isEmpty(rangeParts[1])
+								? Long.parseLong(rangeParts[1]) : -1;
+
+						// Make the content range information available for the whole request cycle
+						RequestCycle requestCycle = RequestCycle.get();
+						requestCycle.setMetaData(CONTENT_RANGE_STARTBYTE, startbyte);
+						requestCycle.setMetaData(CONTENT_RANGE_ENDBYTE, endbyte);
+					}
+					catch (NumberFormatException e)
+					{
+						// a malformed range is ignored and the whole resource is served
+					}
+				}
+			}
 		}
 	}
 
