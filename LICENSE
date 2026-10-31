@@ -173,3 +173,147 @@
       defend, and hold each Contributor harmless for any liability
       incurred by, or claims asserted against, such Contributor by reason
       of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+================================================================================
+Third-party components
+================================================================================
+
+The Apache Wicket source distribution includes the third-party components
+listed below. They are not covered by the Apache License 2.0 but by the
+license named for each. The license texts are in the licenses/ directory,
+unless noted otherwise.
+
+--------------------------------------------------------------------------------
+MIT License
+--------------------------------------------------------------------------------
+
+jQuery 3.7.1 and 4.0.0, and jQuery Migrate 4.0.2
+  wicket-core/src/main/java/org/apache/wicket/resource/jquery/
+  Copyright OpenJS Foundation and other contributors
+  licenses/LICENSE-jquery.txt
+
+jQuery UI 1.10.3
+  wicket-examples/src/main/webapp/jquery-ui-1.10.3.custom.js
+  Copyright 2013 jQuery Foundation and other contributors, now the OpenJS
+  Foundation
+  licenses/LICENSE-jquery.txt
+
+jQuery 1.12.4 and QUnit 1.15.0
+  wicket-examples/src/main/webapp/js-test/lib/jquery.js
+  wicket-examples/src/main/webapp/js-test/lib/qunit.js
+  wicket-examples/src/main/webapp/js-test/lib/qunit.css
+  Copyright jQuery Foundation and other contributors, now the OpenJS
+  Foundation
+  licenses/LICENSE-jquery.txt
+
+QUnit 2.25.0
+  wicket-core/src/test/js/qunit/qunit.js
+  wicket-core/src/test/js/qunit/qunit.css
+  Copyright OpenJS Foundation and other contributors
+  licenses/LICENSE-jquery.txt
+
+jQuery Mockjax 2.7.0
+  wicket-core/src/test/js/qunit/jquery.mockjax.js
+  Copyright Jordan Kasper, formerly appendTo
+  licenses/LICENSE-mockjax.txt
+
+Blanket.js 1.1.5, including falafel
+  wicket-core/src/test/js/qunit/blanket.min.js
+  Copyright (c) 2013 Alex Seville
+  licenses/LICENSE-blanket.txt
+  falafel: Copyright James Halliday, licenses/LICENSE-falafel.txt
+
+Prototype JavaScript framework 1.4.0
+  wicket-examples/src/main/webapp/prototype.js
+  Copyright (c) 2005 Sam Stephenson
+  licenses/LICENSE-prototype.txt
+
+Asciidoctor default stylesheet
+  wicket-user-guide/src/main/asciidoc/css/style.css
+  Copyright (C) 2012-present Dan Allen, Sarah White, Ryan Waldron, and the
+  individual contributors to Asciidoctor
+  licenses/LICENSE-asciidoctor.txt
+
+--------------------------------------------------------------------------------
+BSD License
+--------------------------------------------------------------------------------
+
+Esprima, included in Blanket.js 1.1.5
+  wicket-core/src/test/js/qunit/blanket.min.js
+  Copyright (C) 2011-2012 Ariya Hidayat and other contributors
+  The license text is in the file.
+
+Dojo 0.2.2 (used under the BSD option of its AFL/BSD dual license)
+  wicket-examples/src/main/java/org/apache/wicket/examples/preview/dojo.js
+  Copyright (c) 2004-2005, The Dojo Foundation
+  licenses/LICENSE-dojo.txt
+
+Behaviour 1.1
+  wicket-examples/src/main/java/org/apache/wicket/examples/preview/behaviour.js
+  Copyright (c) 2005 Ben Nolan, portions Copyright (C) 2004 Simon Willison
+  The file states that it is "entirely BSD licensed", see
+  http://ripcord.co.nz/behaviour/
+
+--------------------------------------------------------------------------------
+Apache Software License, Version 1.1
+--------------------------------------------------------------------------------
+
+Diff code derived from JRCS
+  wicket-util/src/main/java/org/apache/wicket/util/diff/
+  Copyright (c) 1999-2003 The Apache Software Foundation
+  The license text is in each file.
+
+--------------------------------------------------------------------------------
+W3C Software Notice and License
+--------------------------------------------------------------------------------
+
+XHTML 1.0 DTDs and entity sets
+  wicket-util/src/main/java/org/apache/wicket/util/markup/xhtml/
+  Copyright (c) 1998-2002 W3C (MIT, INRIA, Keio); the entity sets carry
+  portions (C) International Organization for Standardization 1986 under the
+  notice in each file.
+  licenses/LICENSE-w3c.txt
+
+--------------------------------------------------------------------------------
+SIL Open Font License 1.1
+--------------------------------------------------------------------------------
+
+League Gothic, Source Code Pro and Source Sans Pro
+  wicket-examples/src/main/resources/org/apache/wicket/examples/fonts/
+  The license text is in each font's directory.
+
+--------------------------------------------------------------------------------
+Other permissive terms
+--------------------------------------------------------------------------------
+
+MultiSelector, by Stickman (http://www.the-stickman.com)
+  wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js
+  "Use this however/wherever you like, just don't blame me if it breaks
+  anything." The full terms and credits are in the file.
