@@ -16,7 +16,6 @@
 
 package org.apache.wicket.migration;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.config.Environment;
 import org.openrewrite.java.JavaParser;
@@ -78,7 +77,6 @@ class MigrateToWicket10Test implements RewriteTest {
     }
 
     @Test
-    @Disabled("Requires first release of 10.x before we can update the version")
     void migrateDependencies() {
         //language=xml
         rewriteRun(
@@ -104,7 +102,7 @@ class MigrateToWicket10Test implements RewriteTest {
                                         </project>
                                         """,
                                 spec -> spec.after(pom -> {
-                                    Matcher version = Pattern.compile("10\\..+").matcher(pom);
+                                    Matcher version = Pattern.compile("<version>(10\\.[^<]+)</version>").matcher(pom);
                                     assertThat(version.find()).describedAs("Expected 10.x in %s", pom).isTrue();
                                     return String.format("""
                                             <project>
@@ -112,6 +110,9 @@ class MigrateToWicket10Test implements RewriteTest {
                                                 <groupId>com.example</groupId>
                                                 <artifactId>wicket</artifactId>
                                                 <version>1.0.0</version>
+                                                <properties>
+                                                    <maven.compiler.release>17</maven.compiler.release>
+                                                </properties>
                                                 <dependencies>
                                                     <dependency>
                                                         <groupId>org.apache.wicket</groupId>
@@ -120,7 +121,7 @@ class MigrateToWicket10Test implements RewriteTest {
                                                     </dependency>
                                                 </dependencies>
                                             </project>
-                                            """, version.group(0));
+                                            """, version.group(1));
                                 })
                         )
                 )

@@ -35,7 +35,6 @@ recipeList:
       groupId: org.apache.wicket
       artifactId: "*"
       newVersion: 10.x
-      versionPattern: -SNAPSHOT
   - org.openrewrite.maven.UpgradeDependencyVersion:
       groupId: org.apache.wicket.experimental.wicket9
       artifactId: "*"
@@ -139,5 +138,4 @@ recipeList:
       groupId: org.apache.wicket
       artifactId: "*"
       newVersion: 11.x
-      versionPattern: -SNAPSHOT
 ---
