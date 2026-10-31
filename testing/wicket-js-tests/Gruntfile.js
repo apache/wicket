@@ -46,6 +46,7 @@ module.exports = function(grunt) {
 			"../../wicket-core/src/test/js/timer.js"
 		],
 		extensionsTestsJs = [
+			"../../wicket-extensions/src/test/js/autocomplete-test.js",
 			"../../wicket-extensions/src/test/js/palette-test.js",
 			"../../wicket-extensions/src/test/js/trapfocus-test.js"
 		],
@@ -113,6 +114,8 @@ module.exports = function(grunt) {
 					urls: [
 						'http://localhost:38887/test/js/all.html?4.0.0',
 						'http://localhost:38887/test/js/all.html?3.7.1',
+						'http://localhost:38888/wicket-extensions/src/test/js/autocomplete.html?4.0.0',
+						'http://localhost:38888/wicket-extensions/src/test/js/autocomplete.html?3.7.1',
 						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?3.7.1',
 						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?4.0.0',
