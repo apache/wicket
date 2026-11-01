@@ -40,6 +40,13 @@ xpath /pom:project/pom:version/text()
 EOF
 }
 
+function list_wicket_staging_repositories {
+    local output
+    output=$(mvn --batch-mode org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https) \
+        || { >&2 echo "$output"; return 1; }
+    echo "$output" | awk '$1 == "[INFO]" && $2 ~ /^orgapachewicket-[0-9]+$/ { print $2 }' | sort
+}
+
 function getJdkToolchain {
     xmllint ~/.m2/toolchains.xml --xpath "/toolchains/toolchain[provides/version/text() = '$JAVA_VERSION']/configuration/jdkHome/text()"
 }
@@ -493,6 +500,10 @@ git commit -am "Changes to notice files"
 echo "Clean all projects"
 mvn -q clean -Pall
 
+echo "Listing the Wicket staging repositories that exist before the deploy"
+staging_repos_before=$(list_wicket_staging_repositories) \
+    || fail "Unable to list the staging repositories at https://repository.apache.org"
+
 # package and assemble the release
 echo "Prepare the release"
 mvn --batch-mode release:prepare -X -l $log -DpreparationGoals="clean" -Dtag=$tag -Daether.connector.basic.parallelPut=false -Papache-release,release
@@ -506,11 +517,42 @@ if [ $? -ne 0 ] ; then
     fail "ERROR: mvn release:perform was not successful"
 fi
 
-# Determine the staging repository and close it after deploying the release to the staging area
-stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https | grep -v "CLOSED" | grep -Eo "orgapachewicket-[0-9]+")
+# Nexus creates the staging repository implicitly, and the deploy output doesn't name it
+staging_repos_after=$(list_wicket_staging_repositories) \
+    || fail "Unable to list the staging repositories at https://repository.apache.org"
+stagingrepoid=$(comm -13 <(echo "$staging_repos_before") <(echo "$staging_repos_after") | grep .)
+
+case $(echo "$stagingrepoid" | grep -c .) in
+    1)
+        ;;
+    0)
+        fail "The deploy did not create a new Wicket staging repository at https://repository.apache.org
+
+Wicket staging repositories before the deploy:
+${staging_repos_before:-  (none)}
+
+Wicket staging repositories after the deploy:
+${staging_repos_after:-  (none)}
+
+When a Wicket staging repository is still open from an earlier attempt, Nexus can
+deploy into it instead of creating a new one. Drop the repository that holds the
+$version artifacts at https://repository.apache.org/#stagingRepositories and run
+release.sh again."
+        ;;
+    *)
+        fail "The deploy created more than one Wicket staging repository at https://repository.apache.org:
+
+$stagingrepoid
+
+Either the artifacts of $version are split over them, or another Wicket release was
+staged at the same time. Drop the repositories of $version at
+https://repository.apache.org/#stagingRepositories and run release.sh again."
+        ;;
+esac
 
 echo "Closing staging repository with id $stagingrepoid"
-mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-close -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release has been built, awaiting vote"
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-close -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release has been built, awaiting vote" \
+    || fail "Unable to close staging repository $stagingrepoid"
 
 generate_promotion_script
 generate_rollback_script
