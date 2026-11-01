@@ -138,15 +138,18 @@ echo "$script" > revert-$version.sh
 
 function generate_signatures_from_release {
 
+    sigs=$(mktemp "${TMPDIR:-/tmp}/release-$version-sigs.XXXXXX") \
+        || fail "Unable to create a temporary file for the changelog of $version"
+
     echo "========================================================================
 
     CHANGELOG for $version:
-    " >> /tmp/release-$version-sigs.txt
+    " > "$sigs"
 
     if [ -f "/tmp/release-notes-$version.txt" ] ; then
-        tail -n +4 /tmp/release-notes-$version.txt >> /tmp/release-$version-sigs.txt
+        tail -n +4 /tmp/release-notes-$version.txt >> "$sigs"
     else
-        awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-$major_version.x >> /tmp/release-$version-sigs.txt
+        awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-$major_version.x >> "$sigs"
     fi
 }
 
@@ -187,7 +190,7 @@ Staging git repository data:
 
 " | tail -n+2 > release-vote.txt
 
-    cat /tmp/release-$version-sigs.txt >> release-vote.txt
+    cat "$sigs" >> release-vote.txt
 	git add release-vote.txt
 }
 
@@ -239,7 +242,7 @@ Have fun!
 
 " | tail -n+2 > release-announce.txt
 
-    cat /tmp/release-$version-sigs.txt >> release-announce.txt
+    cat "$sigs" >> release-announce.txt
 	git add release-announce.txt
 }
 
