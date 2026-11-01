@@ -48,6 +48,7 @@ function generate_promotion_script {
     echo "Generating release promotion script 'promote-$version.sh'"
 read -d '' script <<- EOF
 #!/bin/bash
+set -e
 echo "Promoting release $version
 
 Actions about to be performed:
@@ -98,12 +99,13 @@ function generate_rollback_script {
 	echo "Generating release rollback script 'revert-$version.sh'"
 read -d '' script <<- EOF
 #!/bin/bash
+set -e
 echo -n "Reverting release $version
 
 Actions about to be performed:
 ------------------------------
 
-\$(cat \$0 | tail -n +14)
+\$(cat \$0 | tail -n +15)
 
 ------------------------------------------
 Press enter to continue or CTRL-C to abort"
@@ -127,7 +129,7 @@ mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepo
 
 # clean up remaining release files
 find . -name "*.releaseBackup" -exec rm {} +
-[ -f release.properties ] && rm release.properties
+rm -f release.properties
 
 EOF
 echo "$script" > revert-$version.sh
