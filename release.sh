@@ -212,8 +212,16 @@ This release marks another minor release of Wicket $major_version. We
 use semantic versioning for the development of Wicket, and as such no
 API breaks are present in this release compared to $major_version.0.0.
 
-<OPTIONAL> New and noteworthy
-<OPTIONAL> ------------------
+New and noteworthy
+------------------
+
+Wicket 10 is the long term support (LTS) version of Apache Wicket. As
+part of our new release cadence we will support Wicket 10 until Wicket
+14, the next LTS version, comes out. Read about the release cadence at
+
+ * https://wicket.apache.org/news/2026/09/11/release-cadence.html
+
+<OPTIONAL> * <the highlights of this release>
 <OPTIONAL>
 Using this release
 ------------------
@@ -253,7 +261,11 @@ Have fun!
 
 function generate_announce_md {
 
-echo $'---\nlayout: post\ntitle: Apache Wicket' $version $'released\n---' > wicket-$version-released.md
+echo "---
+layout: post
+title: Apache Wicket $version (LTS) is released
+description: Apache Wicket $version is released. Wicket 10 is the long term support (LTS) version until Wicket 14, the next LTS version, comes out.
+---" > wicket-$version-released.md
 sed -e "s/$optionOpenTag/\{\% highlight xml\%\}\n$optionOpenTag/g" release-announce.txt |
 sed -e "s/$optionCloseTag/$optionCloseTag\n\{\% endhighlight\%\}/g" |
 sed -e s/'    \*'/' \*'/g |
