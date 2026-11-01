@@ -49,7 +49,7 @@ function getJdkToolchain {
 
 function generate_promotion_script {
     echo "Generating release promotion script 'promote-$version.sh'"
-read -d '' script <<- EOF
+read -r -d '' script <<- EOF
 #!/bin/bash
 set -e
 echo "Promoting release $version
@@ -88,7 +88,7 @@ Check the new versions and commit and push them to origin:
 
 Remove the previous version of Wicket using this command:
 
-  svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \\\"Remove previous version from mirrors\\\"
+  svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \"Remove previous version from mirrors\"
 
 "  
 EOF
@@ -100,7 +100,7 @@ echo "$script" > promote-$version.sh
 
 function generate_rollback_script {
 	echo "Generating release rollback script 'revert-$version.sh'"
-read -d '' script <<- EOF
+read -r -d '' script <<- EOF
 #!/bin/bash
 set -e
 echo -n "Reverting release $version
