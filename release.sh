@@ -18,11 +18,7 @@
 # set -x
 
 function fail {
-    >&2 echo "\033[31m
-FATAL ERROR
------------
-$1
-\033[0m"
+    >&2 printf '\033[31m\nFATAL ERROR\n-----------\n%s\n\033[0m\n' "$1"
     exit 1
 }
 
