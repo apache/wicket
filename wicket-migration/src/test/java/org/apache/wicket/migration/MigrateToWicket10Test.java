@@ -128,4 +128,51 @@ class MigrateToWicket10Test implements RewriteTest {
         );
     }
 
+    @Test
+    void migrateExperimentalMetrics() {
+        //language=xml
+        rewriteRun(
+                mavenProject("any-project",
+                        pomXml("""
+                                        <project>
+                                            <modelVersion>4.0.0</modelVersion>
+                                            <groupId>com.example</groupId>
+                                            <artifactId>wicket</artifactId>
+                                            <version>1.0.0</version>
+                                            <dependencies>
+                                                <dependency>
+                                                    <groupId>org.apache.wicket.experimental.wicket9</groupId>
+                                                    <artifactId>wicket-metrics</artifactId>
+                                                    <version>0.35</version>
+                                                </dependency>
+                                            </dependencies>
+                                        </project>
+                                        """,
+                                spec -> spec.after(pom -> {
+                                    Matcher version = Pattern.compile("<version>(10\\.[^<]+)</version>").matcher(pom);
+                                    assertThat(version.find()).describedAs("Expected 10.x in %s", pom).isTrue();
+                                    return String.format("""
+                                            <project>
+                                                <modelVersion>4.0.0</modelVersion>
+                                                <groupId>com.example</groupId>
+                                                <artifactId>wicket</artifactId>
+                                                <version>1.0.0</version>
+                                                <properties>
+                                                    <maven.compiler.release>17</maven.compiler.release>
+                                                </properties>
+                                                <dependencies>
+                                                    <dependency>
+                                                        <groupId>org.apache.wicket.experimental.wicket10</groupId>
+                                                        <artifactId>wicket-metrics</artifactId>
+                                                        <version>%s</version>
+                                                    </dependency>
+                                                </dependencies>
+                                            </project>
+                                            """, version.group(1));
+                                })
+                        )
+                )
+        );
+    }
+
 }
