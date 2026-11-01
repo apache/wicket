@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>11.0.0-SNAPSHOT</version>
+		<version>11.1.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-coverage</artifactId>
@@ -33,9 +33,9 @@
 
 		The dependency list below IS the configuration. jacoco:report-aggregate reads
 		the scope of each dependency:
-		  compile -> the module's classes and sources appear in the report, and its
+		  compile -&gt; the module's classes and sources appear in the report, and its
 		             own target/jacoco.exec is read;
-		  test    -> only the module's target/jacoco.exec is read. Used for the
+		  test    -&gt; only the module's target/jacoco.exec is read. Used for the
 		             test-only modules that hold the tests of a *different* module.
 	</description>
 	<properties>
