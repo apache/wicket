@@ -42,6 +42,9 @@ github:
     projects: true
     discussions: true
 
+  pull_requests:
+    del_branch_on_merge: true
+
 notifications:
   commits: commits@wicket.apache.org
   pullrequests: commits@wicket.apache.org
