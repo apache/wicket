@@ -109,12 +109,12 @@ public class UrlValidator implements IValidator<String>
 	 */
 	private static final String SCHEME_PATTERN = "^[" + SCHEME_CHARS + "].*$";
 
-	private static final String AUTHORITY_PATTERN = "^(.+(:.*)?@)?([" + AUTHORITY_CHARS +
+	private static final String AUTHORITY_PATTERN = "^(.+@)?([" + AUTHORITY_CHARS +
 		"]*)(:\\d*)?(.*)?";
 
-	private static final int PARSE_AUTHORITY_HOST_IP = 3;
-	private static final int PARSE_AUTHORITY_PORT = 4;
-	private static final int PARSE_AUTHORITY_EXTRA = 5; // Should always be empty.
+	private static final int PARSE_AUTHORITY_HOST_IP = 2;
+	private static final int PARSE_AUTHORITY_PORT = 3;
+	private static final int PARSE_AUTHORITY_EXTRA = 4; // Should always be empty.
 
 	private static final String PATH_PATTERN = "^(/[-\\w:@&?=+,.!/~*'%$_;\\(\\)]*)?$";
 

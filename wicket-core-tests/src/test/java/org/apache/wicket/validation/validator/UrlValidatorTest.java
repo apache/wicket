@@ -17,7 +17,11 @@
 package org.apache.wicket.validation.validator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.Duration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -224,6 +228,19 @@ class UrlValidatorTest
 		UrlValidator urlVal = new UrlValidator(null, UrlValidator.ALLOW_ALL_SCHEMES);
 		assertTrue(urlVal.isValid("http://user@host:80/path"));
 		assertTrue(urlVal.isValid("http://user:password@host:80/path"));
+	}
+
+	/**
+	 * An authority made of nothing but colons used to make the authority pattern backtrack
+	 * quadratically, so a submitted value of a few tens of kilobytes cost tens of seconds of CPU
+	 * in {@link UrlValidator#isValidAuthority(String)}.
+	 */
+	@Test
+	void authorityWithManyColonsIsRejectedQuickly()
+	{
+		UrlValidator urlVal = new UrlValidator(null, UrlValidator.ALLOW_ALL_SCHEMES);
+		String url = "http://" + ":".repeat(50_000);
+		assertTimeoutPreemptively(Duration.ofSeconds(2), () -> assertFalse(urlVal.isValid(url)));
 	}
 
 	/**
