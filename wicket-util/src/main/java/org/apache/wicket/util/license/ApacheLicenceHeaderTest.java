@@ -21,7 +21,10 @@ package org.apache.wicket.util.license;
  * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
  * 
  * @author Frank Bille Jensen (frankbille)
+ * @deprecated Wicket checks its license headers with Apache RAT, configured in the root pom and
+ *             in {@code .rat-excludes}.
  */
+@Deprecated(since = "10.12.0, 11.0.0", forRemoval = true)
 public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
 	/**
