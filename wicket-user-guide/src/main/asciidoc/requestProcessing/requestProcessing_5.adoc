@@ -1,3 +1,19 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
 
 Wicket uses a number of custom exceptions during the regular running of an application. We have already seen _PageExpiredException_ raised when a page version is expired. Other examples of such exceptions are _AuthorizationException_ and _RestartResponseException_. We will see them later in the next chapters.
 All the other exceptions raised during rendering phase are handled by an implementation of _org.apache.wicket.request.IExceptionMapper_ which by default is class _org.apache.wicket.DefaultExceptionMapper_. If we are working in DEVELOPMENT mode this mapper will redirect us to a page that shows the exception stacktrace (page _ExceptionErrorPage_). On the contrary, if application is running in DEPLOYMENT mode _DefaultExceptionMapper_ will display an internal error page which by default is _org.apache.wicket.markup.html.pages.InternalErrorPage_.

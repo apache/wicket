@@ -1,5 +1,19 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
 
+        http://www.apache.org/licenses/LICENSE-2.0
 
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
 
 A common practice in web development is to pass data to a page using query string parameters (like ?paramName1=paramValue1&paramName2=paramValue2...). Wicket offers a more flexible and object oriented way to do this with models (we will see them in the next chapter). However, even if we are using Wicket, we still need to use query string parameters to exchange data with other Internet-based services. Consider for example a classic confirmation page which is linked inside an email to let users confirm important actions like password changing or the subscription to a mailing list. This kind of page usually expects to receive a query string parameter containing the id of the action to confirm.
 

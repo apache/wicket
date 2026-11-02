@@ -1,5 +1,19 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
 
+        http://www.apache.org/licenses/LICENSE-2.0
 
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
 
 With HTML we use to include static resources in our pages using tags like <script>, <link> or <img>. This is what we have done so far writing our custom panels and pages. However, when we work with a component-oriented framework like Wicket, this classic approach becomes inadequate because it makes custom components hardly reusable. This happens when a component depends on a big number of resources. In such a case, if somebody wanted to use our custom component in his application, he would be forced to know which resources it depends on and make them available.
 
