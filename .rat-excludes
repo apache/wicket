@@ -1,0 +1,76 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Files in the source release that carry no Apache license header.
+# Read by Apache RAT in the build and by the Apache Trusted Releases platform.
+
+# Third-party code, listed with its license in LICENSE
+licenses/**
+wicket-core/src/main/java/org/apache/wicket/resource/jquery/*.js
+wicket-core/src/main/java/org/apache/wicket/markup/html/form/upload/MultiFileUploadField.js
+wicket-core/src/test/js/qunit/*
+wicket-util/src/main/java/org/apache/wicket/util/markup/xhtml/*.ent
+wicket-examples/src/main/webapp/jquery-ui-*.js
+wicket-examples/src/main/webapp/js-test/lib/jquery.js
+wicket-examples/src/main/webapp/js-test/lib/qunit.*
+wicket-examples/src/main/java/org/apache/wicket/examples/preview/behaviour.js
+wicket-examples/src/main/resources/org/apache/wicket/examples/fonts/**
+wicket-user-guide/src/main/asciidoc/css/style.css
+
+# Generated release notes
+CHANGELOG-*
+
+# Git settings, and manifests, which have no comment syntax
+**/.gitignore
+**/META-INF/MANIFEST.MF
+
+# IDE settings
+**/.tomcatplugin
+wicket-core/EclipseCodeFormat.xml
+wicket-eclipse-settings/files/**
+
+# Templates for the project the quickstart archetype generates, and its test input
+archetypes/quickstart/src/main/resources/archetype-resources/**
+archetypes/quickstart/src/test/resources/projects/**
+
+# Markup Wicket renders to the browser as is
+wicket-core/src/main/java/org/apache/wicket/markup/html/pages/*.html
+wicket-auth-roles/src/main/java/org/apache/wicket/authroles/authentication/pages/*.html
+wicket-native-websocket/wicket-native-websocket-core/src/main/java/org/apache/wicket/protocol/ws/api/res/js/wicket-websocket-setup.js.tmpl
+
+# Example markup, templates and data, kept free of headers so they show only the example
+wicket-examples/src/**/*.html
+wicket-examples/src/**/*.vm
+wicket-examples/src/**/*.tmpl
+wicket-examples/src/**/*.svg
+wicket-examples/src/main/java/org/apache/wicket/examples/compref/XmlPage.xml
+wicket-examples/src/main/java/org/apache/wicket/examples/asemail/resource.txt
+wicket-examples/src/main/java/org/apache/wicket/examples/hangman/WordList.txt
+
+# Test data: tests compare against these files or load them byte for byte
+**/src/test/java/**/*.html
+**/src/test/java/**/*.html_2
+**/src/test/java/**/*.properties
+**/src/test/java/**/*.css
+**/src/test/java/**/*.less
+**/src/test/java/**/*.js
+**/src/test/java/**/*.txt
+**/src/test/java/**/*.csv
+**/src/test/java/**/*.vtt
+**/src/test/java/**/*.uke
+**/src/test/java/**/*.tmpl
+**/src/test/java/**/*.vm
+**/src/test/java/**/*.png
+wicket-core/src/test/js/all.html
