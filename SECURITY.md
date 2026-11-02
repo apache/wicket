@@ -63,19 +63,20 @@ needs fixing.
 
 ## Supported Versions
 
-Security fixes are applied to the actively maintained release lines. Refer to
-the [releases page](https://wicket.apache.org/versions/) for the current status
-and the latest release of each line.
+Security fixes are applied to two release lines:
 
-| Version | Status                                          |
-| ------- | ----------------------------------------------- |
-| 11.x    | In development (`master`) — not yet released     |
-| 10.x    | Current, supported                              |
-| ≤ 9.x   | Discontinued — no security fixes                |
+- the **current** line, the most recent major release, developed on `master`.
+  It is supported until the next major release.
+- the **long-term support (LTS)** line, maintained on its `wicket-<major>.x`
+  branch. It is supported until the next LTS release.
 
-If you are running a discontinued version, the fix is to upgrade. See the
-[Migration to Wicket 10.0](https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+10.0)
-guide on our wiki, which links the guides for the earlier lines.
+When an LTS release is also the most recent major release, the two are the same
+line. Every other line is discontinued and receives no security fixes. The
+[releases page](https://wicket.apache.org/versions/) says which line is current
+and which is LTS, the latest release of each, and when support for each ends.
+
+If you are running a discontinued version, the fix is to upgrade. The releases
+page links the migration guides.
 
 ## Scope
 
@@ -95,8 +96,8 @@ code is not fixed.
 Two limits on that, both of which cut in the reporter's favour:
 
 - **Deprecation is per release line.** A member deprecated on `master` may still
-  be current in 10.x. A report is judged against the line it targets, not
-  against `master`.
+  be current on the LTS line. A report is judged against the line it targets,
+  not against `master`.
 - **Deprecating a member does not deprecate the behaviour behind it.** Where a
   deprecated accessor merely fronts a feature that is still current and still
   reachable without the application opting in, the feature is in scope and the
@@ -218,19 +219,19 @@ that can, and neither is a judgement on whether the concern behind it is real.
 ### A finding must be verified against a supported branch tip
 
 Verify the issue against the current tip of the line you are reporting against:
-`wicket-10.x` or `master`. One of them is enough —
-say which, and name the commit you tested. A failing test against that commit is
-ideal. Reporting only the release you happen to be running is not sufficient: a
-released artifact is always behind its branch, and what you found may already be
-fixed there.
+`master` for the current line, or the `wicket-<major>.x` branch of the LTS line.
+One of them is enough — say which, and name the commit you tested. A failing
+test against that commit is ideal. Reporting only the release you happen to be
+running is not sufficient: a released artifact is always behind its branch, and
+what you found may already be fixed there.
 
 We do not assess a report verified only against an older version. A release that
 is not its branch tip may be missing fixes that are already public, and the
-discontinued lines — 7.x and earlier — receive no security fixes at all, so the
-remedy there is to upgrade whether or not the behaviour you found is a
-vulnerability. Note also that git branches exist for every line Wicket has ever
-shipped; a branch existing is not a statement that the line is supported. The
-table above is.
+discontinued lines receive no security fixes at all, so the remedy there is to
+upgrade whether or not the behaviour you found is a vulnerability. Note also
+that git branches exist for every line Wicket has ever shipped; a branch
+existing is not a statement that the line is supported. The
+[Supported Versions](#supported-versions) section is.
 
 Before reporting, check the advisories already published for the line you tested,
 at [security.apache.org/projects/wicket/](https://security.apache.org/projects/wicket/).
