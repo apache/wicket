@@ -16,12 +16,15 @@
 -->
 <p align="center">
   <a href="https://wicket.apache.org">
-    <img height="100%" src="https://wicket.apache.org/img/wicket10-title.png" alt="Wicket version header image">
+    <img src="https://wicket.apache.org/img/logo-apachewicket-mark.svg" width="112" height="112" alt="Apache Wicket">
   </a>
 </p>
 
+Apache Wicket 11
+================
+
 What is Apache Wicket?
-=================
+----------------------
  
 Apache Wicket is an open source, java, component based, web application
 framework. With proper mark-up/logic separation, a POJO data model, and a
@@ -64,7 +67,7 @@ from, and get started quickly:
 What does Wicket's download package contain?
 -----------------------
 
-You can download Wicket's source package here: https://wicket.apache.org/start/wicket-10.x.html . 
+You can download Wicket's source package here: https://wicket.apache.org/versions/wicket-11.x/ . 
 It contains the source code and the jars of the core projects of Wicket. 
 If you are just starting out, you probably only need to include wicket-util-x.jar, wicket-request-x.jar and
 wicket-core-x.jar, where x stands for the version. As a rule, use just the jars
