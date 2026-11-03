@@ -16,9 +16,10 @@
 -->
 # Apache Wicket
 
-Component-based Java web framework. `master` is the 11.x development line; the maintained
-release line lives on `wicket-10.x`. `wicket-9.x` and `wicket-8.x` reached end of life with
-9.25.0 and 8.20.0. `SECURITY.md` says which lines still receive fixes.
+Component-based Java web framework. This branch, `wicket-11.x`, is the 11.x release line. The
+next major release is developed on `master`, and the LTS line lives on `wicket-10.x`. Lines that
+reached end of life are kept under `archive/`. `SECURITY.md` says which lines still receive
+fixes.
 
 Versions — the Java release, the Servlet level, library and plugin versions — are not repeated
 here, because they go stale and then mislead. Read them from `pom.xml`.
