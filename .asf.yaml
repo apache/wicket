@@ -30,6 +30,8 @@ github:
           - "~DEFAULT_BRANCH"
           - "release/*"
           - "rel/*"
+          - "wicket-*.x"
+          - "archive/*"
         excludes: []
       bypass_teams:
         - root
