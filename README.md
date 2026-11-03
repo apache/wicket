@@ -19,7 +19,13 @@
     <img height="100%" src="https://wicket.apache.org/img/wicket10-title.png" alt="Wicket version header image">
   </a>
 </p>
- 
+
+This branch holds the Wicket 10 long-term support line. It receives bug fixes and security fixes
+until the next LTS release, Wicket 14. New features are developed on `master` and released in the
+quarterly major releases; fixes land on `master` first and are cherry-picked here, so pull requests
+go to `master` unless the problem exists only in 10.x. `SECURITY.md` says which lines receive
+security fixes.
+
 What is Apache Wicket?
 =================
 
@@ -38,16 +44,16 @@ Getting started
 The Wicket project has several resources and projects where you can learn 
 from, and get started quickly:
 
- - The Wicket user guide - https://wicket.apache.org/learn/#guide: 
+ - The Wicket user guide - https://wicket.apache.org/docs/:
 
-    learn Wicket from scratch reading its user guide which gradually 
-    introduces you to the various features of the framework with 
-    many real-world examples.
+    tutorials, how-to guides and explanations of the framework, with
+    many real-world examples. The guide for this line is also available as
+    a single page: https://nightlies.apache.org/wicket/guide/10.x/single.html
 
  - The Wicket JavaDoc:
-    
-   the API Docs are available on the main site of the project:
-   https://wicket.apache.org/learn/#javadoc
+
+    the API docs of this line are published at
+    https://nightlies.apache.org/wicket/apidocs/10.x/
     
  - Wicket Examples:
 
@@ -92,14 +98,15 @@ You will find the source code here:
 	    |-- wicket-eclipse-settings
 	    |-- wicket-examples
 	    |-- wicket-experimental
-	    |   |-- wicket-metrics
-	    |   |-- wicket-http2
+	    |   `-- wicket-metrics
 	    |-- wicket-extensions
+	    |-- wicket-extensions-tester
 	    |-- wicket-guice
 	    |-- wicket-ioc
 	    |-- wicket-jmx
+	    |-- wicket-migration
 	    |-- wicket-native-websocket
-	    |-- wicket-objectssizeof-agent
+	    |-- wicket-objectsizeof-agent
 	    |-- wicket-request
 	    |-- wicket-spring
 	    |-- wicket-util
@@ -113,10 +120,12 @@ Here is a list of projects in the distribution and what they do.
  - wicket-tester: contains common classes for unit testing
  - wicket-core-tests: contains test cases for wicket-core module
  - wicket-extensions: contains utilities and more specialized components;
+ - wicket-extensions-tester: contains classes for unit testing wicket-extensions
+   components;
  - wicket-auth-roles: a basic authorization package based on roles;
  - wicket-jmx: registers JMX beans for managing things like your Wicket 
    configuration and markup cache;
- - wicket-objectssizeof-agent: utility for making better estimates of object 
+ - wicket-objectsizeof-agent: utility for making better estimates of object 
    sizes in the JVM - most people probably never need this;
  - wicket-ioc: base project for IoC (aka DI) implementations such as 
    Spring and Guice;
@@ -131,9 +140,9 @@ Here is a list of projects in the distribution and what they do.
    such as wicket-spring, wicket-velocity and wicket-auth-roles.
  - wicket-devutils: provides small utilities which can help in development
    phase and during debugging
- - wicket-bean-validation: validates beans with annotation based on 
-   javax.validation;
- - wicket-cdi: the context and dependency injection of the jee standard for wicket;
+ - wicket-bean-validation: validates beans with annotations based on
+   Jakarta Validation;
+ - wicket-cdi: Jakarta Contexts and Dependency Injection (CDI) integration for wicket;
  - wicket-experimental: experimental implementations for wicket;
  - wicket-native-websocket: wicket's native web sockets integration 
    for several servers;
@@ -142,9 +151,10 @@ Here is a list of projects in the distribution and what they do.
  - wicket-util: the util project for wicket;
  - wicket-eclipse-settings: specifies Eclipse settings for a uniform development environment.
    Most notably the formatting rules;
- - wicket-user-guide: the user guide of wicket
- - wicket-metrics: collects data of a running wicket application
- - wicket-http2: http/2 push support
+ - wicket-user-guide: the user guide of wicket;
+ - wicket-metrics: collects data of a running wicket application;
+ - wicket-migration: OpenRewrite recipes that migrate an application to a newer
+   Wicket version.
 
 Dependencies
 ------------
@@ -155,12 +165,12 @@ include the wicket dependencies you want as outlined in the wicket-quickstart.
 Maven will then take care of including the appropriate dependencies.
 
 If you do not want to use Maven, here is a break-down of the dependencies you
-need. For the complete and precise reference see the wicket-parent pom.xml in
-the root folder.
+need. The versions are not repeated here: for the complete and precise reference
+see the wicket-parent pom.xml in the root folder.
 
  - wicket and wicket-extensions:
 
-    You only need to include the Jakarta Servlet API (5, just for compiling), SLF4J
+    You only need to include the Jakarta Servlet API (just for compiling), SLF4J
     API and the SLF4J logging implementation you want. You cannot use Wicket
     without adding a SLF4J logging implementation to your classpath. 
     Please see the SLF4J site (https://www.slf4j.org/) for more information.
@@ -170,17 +180,16 @@ the root folder.
 
  - wicket-velocity:
 
-    Apache Velocity 1.7 (https://velocity.apache.org/) and it's dependencies
-    (it ships a velocity-deps jar for convenience)
+    Apache Velocity Engine (https://velocity.apache.org/) and its dependencies
 
  - wicket-ioc:
 
-    byte-buddy 1.11.12 (https://bytebuddy.net/) and 
-    asm-util 9.1 (https://asm.ow2.io/)
+    byte-buddy (https://bytebuddy.net/) and
+    asm-util (https://asm.ow2.io/)
 
  - wicket-spring:
 
-    wicket-ioc and Spring (https://spring.io/projects/spring-framework/) and it's
+    wicket-ioc and Spring (https://spring.io/projects/spring-framework/) and its
     dependencies
 
  - wicket-guice:
@@ -188,8 +197,9 @@ the root folder.
     Google Guice (https://github.com/google/guice)
 
  - wicket-cdi:
-    Component Dependency Injection 2.0
-    (https://cdi-spec.org/)
+
+    Jakarta Contexts and Dependency Injection
+    (https://jakarta.ee/specifications/cdi/)
 
  - wicket-examples:
 
@@ -231,12 +241,14 @@ Getting help
 
  - Read the migration guide above
 
- - Read the mailing archives available on Nabble, GMane and Apache
+ - Read the mailing list archives at
+   https://lists.apache.org/list.html?users@wicket.apache.org
 
  - Send a complete message containing your problem, stacktrace and problem
    you're trying to solve to our user list (users@wicket.apache.org)
 
- - Ask a question on IRC at freenode.net, channel ##wicket
+ - Ask a question in GitHub Discussions (https://github.com/apache/wicket/discussions)
+   or on IRC at Libera.Chat, channel #wicket
 
 License
 -------
