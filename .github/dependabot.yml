@@ -40,7 +40,9 @@ updates:
       day: "sunday"
 
   # The maintenance lines get minor and patch updates only: a new major
-  # version of a dependency is a change for the next Wicket major.
+  # version of a dependency is a change for the next Wicket major. Jakarta
+  # specification APIs get patch updates only, because their minor version
+  # marks the Jakarta EE release the line is built against.
 
   - package-ecosystem: "maven"
     directory: "/"
@@ -52,6 +54,16 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "jakarta.servlet*"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "jakarta.websocket*"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "jakarta.el*"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "jakarta.enterprise*"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "jakarta.validation*"
+        update-types: ["version-update:semver-minor"]
 
   - package-ecosystem: "npm"
     directory: "/testing/wicket-js-tests/"
@@ -81,6 +93,16 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "jakarta.servlet*"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "jakarta.websocket*"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "jakarta.el*"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "jakarta.enterprise*"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "jakarta.validation*"
+        update-types: ["version-update:semver-minor"]
 
   - package-ecosystem: "npm"
     directory: "/testing/wicket-js-tests/"
