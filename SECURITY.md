@@ -65,8 +65,8 @@ needs fixing.
 
 Security fixes are applied to two release lines:
 
-- the **current** line, the most recent major release, developed on `master`.
-  It is supported until the next major release.
+- the **current** line, the most recent major release, maintained on its
+  `wicket-<major>.x` branch. It is supported until the next major release.
 - the **long-term support (LTS)** line, maintained on its `wicket-<major>.x`
   branch. It is supported until the next LTS release.
 
@@ -219,7 +219,7 @@ that can, and neither is a judgement on whether the concern behind it is real.
 ### A finding must be verified against a supported branch tip
 
 Verify the issue against the current tip of the line you are reporting against:
-`master` for the current line, or the `wicket-<major>.x` branch of the LTS line.
+the `wicket-<major>.x` branch of the current line or of the LTS line.
 One of them is enough — say which, and name the commit you tested. A failing
 test against that commit is ideal. Reporting only the release you happen to be
 running is not sufficient: a released artifact is always behind its branch, and
