@@ -151,3 +151,19 @@ recipeList:
       artifactId: "*"
       newVersion: 11.x
 ---
+# https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+12.0
+type: specs.openrewrite.org/v1beta/recipe
+name: org.apache.wicket.MigrateToWicket12
+displayName: Migrate to Wicket 12.x
+description: Migrates Wicket 11.x to Wicket 12.x.
+recipeList:
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: org.apache.wicket.experimental.wicket11
+      oldArtifactId: wicket-metrics
+      newGroupId: org.apache.wicket.experimental.wicket12
+      newVersion: 12.x
+  - org.openrewrite.maven.UpgradeDependencyVersion:
+      groupId: org.apache.wicket
+      artifactId: "*"
+      newVersion: 12.x
+---

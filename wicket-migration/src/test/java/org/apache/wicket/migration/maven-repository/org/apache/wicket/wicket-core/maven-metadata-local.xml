@@ -19,11 +19,12 @@
   <groupId>org.apache.wicket</groupId>
   <artifactId>wicket-core</artifactId>
   <versioning>
-    <latest>11.0.0</latest>
-    <release>11.0.0</release>
+    <latest>12.0.0</latest>
+    <release>12.0.0</release>
     <versions>
       <version>10.12.0</version>
       <version>11.0.0</version>
+      <version>12.0.0</version>
     </versions>
   </versioning>
 </metadata>
