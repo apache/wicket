@@ -38,3 +38,64 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
+
+  # The maintenance lines get minor and patch updates only: a new major
+  # version of a dependency is a change for the next Wicket major.
+
+  - package-ecosystem: "maven"
+    directory: "/"
+    target-branch: "wicket-11.x"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    open-pull-requests-limit: 20
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "npm"
+    directory: "/testing/wicket-js-tests/"
+    target-branch: "wicket-11.x"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "wicket-11.x"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+
+  - package-ecosystem: "maven"
+    directory: "/"
+    target-branch: "wicket-10.x"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    open-pull-requests-limit: 20
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "npm"
+    directory: "/testing/wicket-js-tests/"
+    target-branch: "wicket-10.x"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "wicket-10.x"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
