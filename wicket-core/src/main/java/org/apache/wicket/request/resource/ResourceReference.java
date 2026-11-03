@@ -260,7 +260,7 @@ public abstract class ResourceReference implements IClusterable
 	}
 
 	/**
-	 * Sets the integrity value of the resource which containes one or more 
+	 * Sets the integrity value of the resource which contains one or more 
 	 * base64 encoded hashes 
 	 * 
 	 * hashes are whitespace separated (see reference below): 
