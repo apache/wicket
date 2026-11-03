@@ -930,7 +930,7 @@ public final class Strings
 		int ixQuestionMark = url.indexOf('?');
 		if (ixQuestionMark == -1)
 		{
-			// no query paramaters; cut off at ";"
+			// no query parameters; cut off at ";"
 			// http://.../abc;jsession=...
 			return url.substring(0, ixSemiColon);
 		}

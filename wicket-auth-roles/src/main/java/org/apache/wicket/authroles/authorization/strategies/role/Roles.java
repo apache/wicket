@@ -83,7 +83,7 @@ public class Roles extends HashSet<String> implements IClusterable
 	}
 
 	/**
-	 * Whether this roles object containes the provided role.
+	 * Whether this roles object contains the provided role.
 	 * 
 	 * @param role
 	 *            the role to check
