@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.http.servlet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -167,6 +168,24 @@ class ServletWebRequestTest
 		{
 			assertEquals(HttpServletResponse.SC_BAD_REQUEST, awhex.getErrorCode());
 		}
+	}
+
+	/**
+	 * Assert that ServletWebRequest#getClientUrl() will throw an AbortWithHttpErrorCodeException
+	 * with error code 400 (Bad Request) when an Ajax request provides a base url whose port is
+	 * not a number.
+	 */
+	@Test
+	void getClientUrlAjaxWithMalformedBaseUrl()
+	{
+		MockHttpServletRequest httpRequest = new MockHttpServletRequest(null, null, null);
+		httpRequest.setHeader(ServletWebRequest.HEADER_AJAX, "true");
+		httpRequest.setHeader(ServletWebRequest.HEADER_AJAX_BASE_URL, "http://localhost:80x/page");
+		ServletWebRequest webRequest = new ServletWebRequest(httpRequest, "");
+
+		AbortWithHttpErrorCodeException e = assertThrows(AbortWithHttpErrorCodeException.class,
+			webRequest::getClientUrl);
+		assertEquals(HttpServletResponse.SC_BAD_REQUEST, e.getErrorCode());
 	}
 
 	/**

@@ -211,6 +211,8 @@ public class Url implements Serializable
 	 * @param url
 	 *            absolute or relative url with query string
 	 * @return Url object
+	 * @throws NumberFormatException
+	 *             if the url has a port that is not a number
 	 */
 	public static Url parse(final CharSequence url)
 	{
@@ -224,6 +226,8 @@ public class Url implements Serializable
 	 *            absolute or relative url with query string
 	 * @param charset
 	 * @return Url object
+	 * @throws NumberFormatException
+	 *             if the url has a port that is not a number
 	 */
 	public static Url parse(CharSequence _url, Charset charset)
 	{
@@ -239,6 +243,8 @@ public class Url implements Serializable
 	 * @param isFullHint
 	 *            a hint whether to try to parse the protocol, host and port part of the url
 	 * @return Url object
+	 * @throws NumberFormatException
+	 *             if the url has a port that is not a number
 	 */
 	public static Url parse(CharSequence _url, Charset charset, boolean isFullHint)
 	{
