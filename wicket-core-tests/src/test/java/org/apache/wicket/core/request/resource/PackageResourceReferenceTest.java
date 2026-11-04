@@ -298,6 +298,14 @@ class PackageResourceReferenceTest extends WicketTestCase
 		assertEquals("var_style_en.txt", makeRangeRequest("bytes=9-"));
 		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=-"));
 		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=-25"));
+
+		// malformed ranges are ignored
+		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=5"));
+		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=abc"));
+		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=1-x"));
+		assertEquals("resource_var_style_en.txt",
+			makeRangeRequest("bytes=99999999999999999999-"));
+		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes 5-10"));
 	}
 
 	private String makeRangeRequest(String range)
