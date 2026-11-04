@@ -29,9 +29,12 @@ class SessionInjector extends AbstractInjector implements ISessionListener
 {
 	/**
 	 * Constructor
+	 * 
+	 * @param configuration
 	 */
-	public SessionInjector()
+	public SessionInjector(CdiConfiguration configuration)
 	{
+		super(configuration);
 	}
 
 	@Override

@@ -29,9 +29,12 @@ public class BehaviorInjector extends AbstractInjector implements IBehaviorInsta
 {
 	/**
 	 * Constructor
+	 * 
+	 * @param configuration
 	 */
-	public BehaviorInjector()
+	public BehaviorInjector(CdiConfiguration configuration)
 	{
+		super(configuration);
 	}
 
 	@Override
