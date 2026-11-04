@@ -263,6 +263,20 @@ handles the mechanical part of the migration. The migration guide is published
 with the 12.0.0 release. To move from 10.x, follow migration-to-11.md in the root
 folder first.
 
+The migration guide of each release line is kept on that line's branch. To
+upgrade across several major versions, follow them one after another:
+
+ - Wicket 11: https://github.com/apache/wicket/blob/wicket-11.x/migration-to-11.md
+ - Wicket 10: https://github.com/apache/wicket/blob/wicket-10.x/migration-to-10.md
+ - Wicket 9: https://github.com/apache/wicket/blob/archive/wicket-9.x/migration-to-9.md
+ - Wicket 8: https://github.com/apache/wicket/blob/archive/wicket-8.x/migration-to-8.md
+ - Wicket 7: https://github.com/apache/wicket/blob/archive/wicket-7.x/migration-to-7.md
+ - Wicket 6: https://github.com/apache/wicket/blob/archive/wicket-6.x/migration-to-6.md
+ - Wicket 1.5: https://github.com/apache/wicket/blob/archive/wicket-1.5.x/migration-to-1.5.md
+ - Wicket 1.4: https://github.com/apache/wicket/blob/archive/wicket-1.4.x/migration-to-1.4.md
+ - Wicket 1.3: https://github.com/apache/wicket/blob/archive/wicket-1.3.x/migration-to-1.3.md
+ - Wicket 1.2: https://github.com/apache/wicket/blob/archive/wicket-1.2.x/migration-to-1.2.md
+
 Getting help
 ------------
 
