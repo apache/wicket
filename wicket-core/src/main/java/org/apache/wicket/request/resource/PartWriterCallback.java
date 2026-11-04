@@ -44,13 +44,14 @@ public class PartWriterCallback extends WriteCallback
 	private final InputStream inputStream;
 
 	/**
-	 * The total length to read if {@link #endbyte} is not specified
+	 * The total length to read if {@link #endbyte} is not specified, and to count a negative
+	 * {@link #startbyte} back from
 	 */
 	private final Long contentLength;
 
 	/**
 	 * The byte to start reading from. If omitted then the input stream will be read from its
-	 * beginning
+	 * beginning. A negative value selects the last that many bytes.
 	 */
 	private Long startbyte;
 
@@ -75,17 +76,19 @@ public class PartWriterCallback extends WriteCallback
 	 * Creates a part writer callback.<br>
 	 * <br>
 	 * Reads a part of the given input stream. If the startbyte parameter is not null the number of
-	 * bytes are skipped till the stream is read. If the endbyte is not null the stream is read till
-	 * endbyte, else to the end of the whole stream. If startbyte and endbyte is null the whole
-	 * stream is copied.
+	 * bytes are skipped till the stream is read; a negative startbyte selects the last that many
+	 * bytes of the stream instead. If the endbyte is not null the stream is read till endbyte, else
+	 * to the end of the whole stream. If startbyte and endbyte is null the whole stream is copied.
 	 *
 	 * @param inputStream
 	 *            the input stream to read from
 	 * @param contentLength
-	 *            content length of the input stream. Ignored if <em>endByte</em> is specified
+	 *            content length of the input stream. Ignored if <em>endByte</em> is specified and
+	 *            <em>startbyte</em> is not negative
 	 * @param startbyte
 	 *            the start position to read from (if not null the number of bytes are skipped till
-	 *            the stream is read)
+	 *            the stream is read), or the negated number of bytes to read from the end of the
+	 *            stream
 	 * @param endbyte
 	 *            the end position to read to (if not null the stream is going to be read till
 	 *            endbyte, else to the end of the whole stream)
@@ -117,10 +120,12 @@ public class PartWriterCallback extends WriteCallback
 
 			if (startbyte != null || endbyte != null)
 			{
-				// skipping the first bytes which are
-				// requested to be skipped by the client
 				if (startbyte != null)
 				{
+					startbyte = AbstractResource.firstBytePosition(startbyte, contentLength);
+
+					// skipping the first bytes which are
+					// requested to be skipped by the client
 					inputStream.skip(startbyte);
 				}
 				else
@@ -136,6 +141,8 @@ public class PartWriterCallback extends WriteCallback
 					endbyte = contentLength;
 				}
 
+				boolean startsPastTheEnd = contentLength >= 0 && startbyte >= contentLength;
+
 				BoundedInputStream boundedInputStream = null;
 				try
 				{
@@ -143,7 +150,7 @@ public class PartWriterCallback extends WriteCallback
 					// till the end byte computed by the range between startbyte / endbyte
 					boundedInputStream = BoundedInputStream.builder()
 							.setInputStream(inputStream)
-							.setMaxCount((endbyte - startbyte) + 1)
+							.setMaxCount(startsPastTheEnd ? 0 : (endbyte - startbyte) + 1)
 							// The original input stream is going to be closed by the end of the request
 							// so set propagate close to false
 							.setPropagateClose(false)
