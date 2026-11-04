@@ -25,6 +25,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.ajaxLink.AjaxLinkPage;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.mock.MockApplication;
@@ -166,6 +168,25 @@ class ServletWebRequestTest
 		catch (AbortWithHttpErrorCodeException awhex)
 		{
 			assertEquals(HttpServletResponse.SC_BAD_REQUEST, awhex.getErrorCode());
+		}
+	}
+
+	@Test
+	void ajaxRequestWithoutBaseUrlAnswersBadRequest()
+	{
+		WicketTester tester = new WicketTester();
+		try
+		{
+			AjaxLinkPage page = tester.startPage(AjaxLinkPage.class);
+			tester.getRequest().setUrl(tester.urlFor((AjaxLink<?>)page.get("ajaxLink")));
+			tester.getRequest().setHeader(WebRequest.HEADER_AJAX, "true");
+			tester.processRequest();
+
+			assertEquals(HttpServletResponse.SC_BAD_REQUEST, tester.getLastResponse().getStatus());
+		}
+		finally
+		{
+			tester.destroy();
 		}
 	}
 
