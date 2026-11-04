@@ -43,6 +43,8 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.AbstractResource.ContentRangeType;
@@ -298,6 +300,43 @@ class PackageResourceReferenceTest extends WicketTestCase
 		assertEquals("var_style_en.txt", makeRangeRequest("bytes=9-"));
 		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=-"));
 		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=-25"));
+		assertEquals("n.txt", makeRangeRequest("bytes=-5"));
+		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=-30"));
+		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=0-99"));
+		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=20-10"));
+	}
+
+	/**
+	 * Status and Content-Range of the byte range forms in RFC 9110, section 14.1.2
+	 */
+	@Test
+	void testContentRangeResponse()
+	{
+		assertRangeResponse("bytes=3-7", 206, "bytes 3-7/25", "ource");
+		assertRangeResponse("bytes=-5", 206, "bytes 20-24/25", "n.txt");
+		assertRangeResponse("bytes=-30", 206, "bytes 0-24/25", "resource_var_style_en.txt");
+		assertRangeResponse("bytes=0-99", 206, "bytes 0-24/25", "resource_var_style_en.txt");
+		assertRangeResponse("bytes=20-10", 200, null, "resource_var_style_en.txt");
+		assertRangeResponse("bytes=25-", 416, "bytes */25", "");
+		assertRangeResponse("bytes=30-", 416, "bytes */25", "");
+		assertRangeResponse("bytes=-0", 416, "bytes */25", "");
+	}
+
+	private void assertRangeResponse(String range, int status, String contentRange, String body)
+	{
+		ResourceReference reference = new PackageResourceReference(scope, "resource.txt",
+			locales[1], styles[1], variations[1]);
+
+		ServletWebRequest request = (ServletWebRequest)tester.getRequestCycle().getRequest();
+		MockHttpServletRequest httpRequest = (MockHttpServletRequest)request.getContainerRequest();
+		httpRequest.setHeader("range", range);
+		MockHttpServletResponse httpResponse = new MockHttpServletResponse(httpRequest);
+		reference.getResource()
+			.respond(new Attributes(request, new ServletWebResponse(request, httpResponse)));
+
+		assertEquals(status, httpResponse.getStatus(), range);
+		assertEquals(contentRange, httpResponse.getHeader("Content-Range"), range);
+		assertEquals(body, new String(httpResponse.getBinaryContent()), range);
 	}
 
 	private String makeRangeRequest(String range)
