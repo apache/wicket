@@ -156,7 +156,7 @@
 		<error_prone_annotations.version>2.51.0</error_prone_annotations.version>
 		<forbiddenapis.version>3.11</forbiddenapis.version>
 		<jacoco.version>0.8.16</jacoco.version>
-		<jackson.version>2.14.3</jackson.version>
+		<jackson.version>2.22.4</jackson.version>
 		<jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
 		<jakarta.el.version>4.0.2</jakarta.el.version>
 		<jakarta.el-api.version>5.0.1</jakarta.el-api.version>
@@ -313,6 +313,12 @@
 				<groupId>jakarta.inject</groupId>
 				<artifactId>jakarta.inject-api</artifactId>
 				<version>${jakarta.inject-api.version}</version>
+			</dependency>
+			<dependency>
+				<!-- this one is required to update outdated transitive version (in httpunit for ex.) -->
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.13.2</version>
 			</dependency>
 			<dependency>
 				<groupId>net.bytebuddy</groupId>
