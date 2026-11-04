@@ -93,6 +93,9 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      # 2.7.9 brings a closure-compiler built for Java 21; wicket-10.x still builds on Java 17.
+      - dependency-name: "org.primefaces.extensions:resources-optimizer-maven-plugin"
+        versions: [">= 2.7.9"]
       - dependency-name: "jakarta.servlet*"
         update-types: ["version-update:semver-minor"]
       - dependency-name: "jakarta.websocket*"
