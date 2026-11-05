@@ -141,6 +141,15 @@
 	</filter>
 
 	<filter>
+		<filter-name>TreasureHuntApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.islands.treasurehunt.TreasureHuntApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
 		<filter-name>FormInputApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
@@ -525,6 +534,13 @@
 	<filter-mapping>
 		<filter-name>HangmanApplication</filter-name>
 		<url-pattern>/hangman/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>TreasureHuntApplication</filter-name>
+		<url-pattern>/treasurehunt/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>

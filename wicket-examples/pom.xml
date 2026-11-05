@@ -139,6 +139,10 @@
 			<artifactId>wicket-tester</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket12</groupId>
+			<artifactId>wicket-islands</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.codelibs</groupId>
 			<artifactId>jhighlight</artifactId>
 		</dependency>
@@ -294,6 +298,78 @@
 	</build>
 
 	<profiles>
+		<profile>
+			<!-- Builds the JavaScript of the island examples in src/main/frontend -->
+			<id>js-test</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.eirslett</groupId>
+						<artifactId>frontend-maven-plugin</artifactId>
+						<version>2.0.2</version>
+						<configuration>
+							<workingDirectory>src/main/frontend</workingDirectory>
+						</configuration>
+						<executions>
+							<execution>
+								<id>install node and npm</id>
+								<goals>
+									<goal>install-node-and-npm</goal>
+								</goals>
+								<phase>generate-resources</phase>
+								<configuration>
+									<npmVersion>11.12.1</npmVersion>
+									<nodeVersion>v24.15.0</nodeVersion>
+								</configuration>
+							</execution>
+							<execution>
+								<id>npm ci</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<phase>generate-resources</phase>
+								<configuration>
+									<arguments>ci</arguments>
+								</configuration>
+							</execution>
+							<execution>
+								<id>vite build</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<phase>generate-resources</phase>
+								<configuration>
+									<arguments>run build</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>add vite output</id>
+								<goals>
+									<goal>add-resource</goal>
+								</goals>
+								<phase>generate-resources</phase>
+								<configuration>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}/generated-resources/wicket-islands</directory>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>docker</id>
 			<properties>

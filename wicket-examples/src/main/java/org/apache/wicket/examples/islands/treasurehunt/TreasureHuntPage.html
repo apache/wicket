@@ -1,0 +1,29 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+	<p>
+		Find the hidden treasures. Each probe that misses tells you how far away the nearest
+		hidden treasure is. The board is a React component, mounted as a Wicket island; everything
+		around it is plain Wicket.
+	</p>
+
+	<p wicket:id="noBuild" class="treasure-notice">
+		This example was built without its JavaScript. Build the examples with
+		<code>-Pjs-test</code>, or run a Vite dev server, to play.
+	</p>
+
+	<form wicket:id="form">
+		<label>Board size <select wicket:id="size"></select></label>
+	</form>
+
+	<div wicket:id="game" class="treasure-game">
+		<p>
+			<span wicket:id="status"></span>
+			Probes left: <span wicket:id="probesLeft"></span>.
+			<a wicket:id="newGame" href="#">New game</a>
+		</p>
+		<div wicket:id="board"></div>
+	</div>
+</wicket:extend>
+</body>
+</html>
