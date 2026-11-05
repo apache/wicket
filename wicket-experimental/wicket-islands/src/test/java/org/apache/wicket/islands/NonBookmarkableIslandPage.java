@@ -14,18 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.wicket.islands;
 
 /**
- * Installs React Fast Refresh in a page Vite does not serve itself. Pass it to the Wicket Islands
- * Vite plugin, which runs it before any island module in development:
- *
- * ```js
- * wicketIslands({ islands: { ... }, devPreamble: reactRefreshPreamble })
- * ```
+ * An {@link IslandTestPage} Wicket cannot recreate once it expired.
  */
-export const reactRefreshPreamble = `import RefreshRuntime from '/@react-refresh';
-RefreshRuntime.injectIntoGlobalHook(window);
-window.$RefreshReg$ = () => {};
-window.$RefreshSig$ = () => (type) => type;
-window.__vite_plugin_react_preamble_installed__ = true;
-`;
+public class NonBookmarkableIslandPage extends IslandTestPage
+{
+	private static final long serialVersionUID = 1L;
+
+	public NonBookmarkableIslandPage(String unused)
+	{
+	}
+}

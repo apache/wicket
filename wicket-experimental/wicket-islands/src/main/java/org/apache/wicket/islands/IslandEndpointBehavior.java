@@ -48,7 +48,7 @@ final class IslandEndpointBehavior extends AbstractDefaultAjaxBehavior
 
 	static final String PARAM_PAYLOAD = "island-payload";
 
-	static final String DATA_NAME = "wicket-islands";
+	static final String PARAM_KEY = "island-key";
 
 	@Override
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
@@ -71,29 +71,42 @@ final class IslandEndpointBehavior extends AbstractDefaultAjaxBehavior
 		String callId = parameters.getParameterValue(PARAM_CALL_ID).toString("");
 		String name = parameters.getParameterValue(PARAM_CALL).toString("");
 		String payload = parameters.getParameterValue(PARAM_PAYLOAD).toOptionalString();
+		String key = parameters.getParameterValue(PARAM_KEY).toString("");
 
 		IIslandSerializer serializer = IslandSettings.get().getSerializer();
 		IslandCall call = new IslandCall(island, target);
+		List<String> invalidations = call.getInvalidations();
 
-		String outcome;
+		String answer;
+		if (!island.getKey().equals(key))
+		{
+			answer = IslandAnswer.failure(serializer, callId, "expired",
+				List.of(IslandAnswer.EXPIRED_MESSAGE), invalidations);
+			target.addData(IslandAnswer.DATA_NAME, answer);
+			return;
+		}
+
 		try
 		{
 			Object result = island.invoke(name, payload, call);
-			outcome = "\"ok\":true,\"value\":" + serializer.toJson(result);
+			answer = IslandAnswer.success(serializer, callId, result, invalidations);
 		}
 		catch (IslandCallRejectedException e)
 		{
-			outcome = failure(serializer, "invalid", e.getMessages());
+			answer = IslandAnswer.failure(serializer, callId, "invalid", e.getMessages(),
+				invalidations);
 		}
 		catch (IslandSerializationException e)
 		{
 			LOG.debug("Island call '{}' on {} failed to (de)serialize", name, island.getPath(), e);
-			outcome = failure(serializer, "invalid",
-				List.of(detail(e, "The call's payload or result could not be converted.")));
+			answer = IslandAnswer.failure(serializer, callId, "invalid",
+				List.of(detail(e, "The call's payload or result could not be converted.")),
+				invalidations);
 		}
 		catch (AuthorizationException e)
 		{
-			outcome = failure(serializer, "forbidden", List.of("The call is not allowed."));
+			answer = IslandAnswer.failure(serializer, callId, "forbidden",
+				List.of("The call is not allowed."), invalidations);
 		}
 		catch (ReplaceHandlerException e)
 		{
@@ -102,18 +115,11 @@ final class IslandEndpointBehavior extends AbstractDefaultAjaxBehavior
 		catch (RuntimeException e)
 		{
 			LOG.error("Island call '{}' on {} failed", name, island.getPath(), e);
-			outcome = failure(serializer, "error",
-				List.of(detail(e, "The call failed on the server.")));
+			answer = IslandAnswer.failure(serializer, callId, "error",
+				List.of(detail(e, "The call failed on the server.")), invalidations);
 		}
 
-		target.addData(DATA_NAME, "{\"call\":" + serializer.toJson(callId) + "," + outcome +
-			",\"invalidate\":" + serializer.toJson(call.getInvalidations()) + "}");
-	}
-
-	private static String failure(IIslandSerializer serializer, String kind, List<String> messages)
-	{
-		return "\"ok\":false,\"error\":{\"kind\":" + serializer.toJson(kind) + ",\"messages\":" +
-			serializer.toJson(messages) + "}";
+		target.addData(IslandAnswer.DATA_NAME, answer);
 	}
 
 	private static String detail(RuntimeException e, String message)

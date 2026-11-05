@@ -28,6 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.util.tester.TagTester;
 import org.junit.jupiter.api.Test;
 
@@ -120,6 +121,22 @@ class IslandRenderTest extends IslandTestCase
 		int shared = response.indexOf("wicket-islands/assets/shared-aaa111.css");
 		int own = response.indexOf("wicket-islands/assets/test-island-def456.css");
 		assertTrue(shared > 0 && own > shared, "imported style sheets come first: " + response);
+	}
+
+	@Test
+	void renderedModuleUrlServesTheModule()
+	{
+		tester.startPage(IslandTestPage.class);
+		Url pageUrl = tester.getLastRequest().getUrl();
+		Matcher src = Pattern.compile("<script type=\"module\" src=\"([^\"]+)\"")
+			.matcher(tester.getLastResponseAsString());
+		assertTrue(src.find());
+
+		pageUrl.resolveRelative(Url.parse(src.group(1)));
+		tester.executeUrl(pageUrl.toString());
+
+		assertEquals(200, tester.getLastResponse().getStatus());
+		assertEquals("export default {};\n", tester.getLastResponseAsString());
 	}
 
 	@Test

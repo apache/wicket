@@ -29,6 +29,7 @@ const DATA_NAME = 'wicket-islands';
 const PARAM_CALL = 'island-call';
 const PARAM_CALL_ID = 'island-call-id';
 const PARAM_PAYLOAD = 'island-payload';
+const PARAM_KEY = 'island-key';
 
 interface IslandState {
 	props: unknown;
@@ -195,7 +196,11 @@ export class IslandRuntime {
 		}
 
 		const id = String(++this.callSequence);
-		const parameters: Record<string, string> = { [PARAM_CALL]: name, [PARAM_CALL_ID]: id };
+		const parameters: Record<string, string> = {
+			[PARAM_CALL]: name,
+			[PARAM_CALL_ID]: id,
+			[PARAM_KEY]: island.key
+		};
 		if (payload !== undefined) {
 			parameters[PARAM_PAYLOAD] = JSON.stringify(payload);
 		}

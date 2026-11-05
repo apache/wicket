@@ -83,11 +83,19 @@ abstract class IslandTestCase extends WicketTestCase
 	 *
 	 * @return the island's answer
 	 */
-	@SuppressWarnings("unchecked")
 	Map<String, Object> call(String name, String callId, String payload)
 	{
 		IslandTestPage page = (IslandTestPage)tester.getLastRenderedPage();
+		prepareCall(name, callId, payload, page.island.getKey());
+		tester.executeBehavior(page.island.getBehaviors(IslandEndpointBehavior.class).get(0));
+		return answer();
+	}
+
+	void prepareCall(String name, String callId, String payload, String key)
+	{
 		tester.getRequest().setMethod("POST");
+		tester.getRequest().getPostParameters().setParameterValue(IslandEndpointBehavior.PARAM_KEY,
+			key);
 		tester.getRequest().getPostParameters().setParameterValue(IslandEndpointBehavior.PARAM_CALL,
 			name);
 		tester.getRequest().getPostParameters().setParameterValue(
@@ -97,8 +105,14 @@ abstract class IslandTestCase extends WicketTestCase
 			tester.getRequest().getPostParameters().setParameterValue(
 				IslandEndpointBehavior.PARAM_PAYLOAD, payload);
 		}
-		tester.executeBehavior(page.island.getBehaviors(IslandEndpointBehavior.class).get(0));
+	}
 
+	/**
+	 * @return the answer in the last response
+	 */
+	@SuppressWarnings("unchecked")
+	Map<String, Object> answer()
+	{
 		String response = tester.getLastResponseAsString();
 		Matcher matcher = DATA.matcher(response);
 		assertTrue(matcher.find(), response);

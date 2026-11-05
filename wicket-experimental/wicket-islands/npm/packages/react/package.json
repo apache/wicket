@@ -6,16 +6,14 @@
   "type": "module",
   "exports": {
     ".": "./src/index.tsx",
-    "./preamble": {
-      "types": "./src/preamble.d.ts",
-      "default": "./src/preamble.js"
+    "./vite": {
+      "types": "./src/vite.d.ts",
+      "default": "./src/vite.js"
     }
-  },
-  "dependencies": {
-    "wicket-islands": "0.0.0"
   },
   "peerDependencies": {
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "wicket-islands": "0.0.0"
   }
 }

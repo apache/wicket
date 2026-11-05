@@ -26,6 +26,8 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceType;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +37,8 @@ import org.slf4j.LoggerFactory;
  * <p>
  * The build's output directory is expected under a base path on the classpath, with Vite's
  * manifest in it. Each island type is an input of the build whose name is the island type; its
- * entry module and style sheets are rendered from the manifest, and served by
- * {@link IslandAssetResource}.
+ * entry module and style sheets are rendered from the manifest, and served by an
+ * {@link IslandAssetResource} mounted under the given reference.
  *
  * @since 12.0.0
  */
@@ -48,7 +50,7 @@ public class ViteManifestModuleLoader implements IIslandModuleLoader
 
 	private final String manifestFile;
 
-	private final String urlPrefix;
+	private final ResourceReference assets;
 
 	private volatile ViteManifest manifest;
 
@@ -59,15 +61,15 @@ public class ViteManifestModuleLoader implements IIslandModuleLoader
 	 *            the classpath location of the build's output directory, ending in a slash
 	 * @param manifestFile
 	 *            the manifest, relative to the base path
-	 * @param urlPrefix
-	 *            the context-relative URL under which {@link IslandAssetResource} serves the
-	 *            files, ending in a slash
+	 * @param assets
+	 *            the mounted reference of the {@link IslandAssetResource} serving the files; the
+	 *            path of a file is passed as its indexed parameters
 	 */
-	public ViteManifestModuleLoader(String basePath, String manifestFile, String urlPrefix)
+	public ViteManifestModuleLoader(String basePath, String manifestFile, ResourceReference assets)
 	{
 		this.basePath = Args.notEmpty(basePath, "basePath");
 		this.manifestFile = Args.notEmpty(manifestFile, "manifestFile");
-		this.urlPrefix = Args.notEmpty(urlPrefix, "urlPrefix");
+		this.assets = Args.notNull(assets, "assets");
 	}
 
 	/**
@@ -134,9 +136,21 @@ public class ViteManifestModuleLoader implements IIslandModuleLoader
 
 		for (String css : current.collectCss(key))
 		{
-			response.render(CssHeaderItem.forUrl(urlPrefix + css));
+			response.render(CssHeaderItem.forReference(assets, toParameters(css), null));
 		}
-		response.render(JavaScriptHeaderItem.forUrl(urlPrefix + current.getChunk(key).file())
+		response.render(JavaScriptHeaderItem
+			.forReference(assets, toParameters(current.getChunk(key).file()), null)
 			.setType(JavaScriptReferenceType.MODULE));
+	}
+
+	private static PageParameters toParameters(String file)
+	{
+		PageParameters parameters = new PageParameters();
+		String[] segments = file.split("/");
+		for (int i = 0; i < segments.length; i++)
+		{
+			parameters.set(i, segments[i]);
+		}
+		return parameters;
 	}
 }

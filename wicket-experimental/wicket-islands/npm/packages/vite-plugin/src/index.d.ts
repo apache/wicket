@@ -19,19 +19,28 @@ import type { Plugin } from 'vite';
 
 export interface WicketIslandsOptions {
 	/**
-	 * The island modules by island type, relative to Vite's root. Each module's default export is
-	 * the island, made by a framework adapter, e.g. `defineIsland` of wicket-islands-react.
+	 * The island modules by island type, relative to Vite's root. With an adapter, each module's
+	 * default export is a component of the adapter's framework; without one, it is an island
+	 * module made by an adapter's `defineIsland`.
 	 */
 	islands: Record<string, string>;
 
 	/**
-	 * Code run before any island module in development, e.g. `reactRefreshPreamble` of
-	 * wicket-islands-react/preamble.
+	 * The framework adapter whose `defineIsland` turns a module's default export into an island,
+	 * e.g. `wicket-islands-react`. Exporting the plain component keeps the module eligible for the
+	 * framework's hot reload.
+	 */
+	adapter?: string;
+
+	/**
+	 * Code run before any island module in development, e.g. React Fast Refresh's preamble.
 	 */
 	devPreamble?: string;
 }
 
 /**
- * Builds the islands of a Wicket application and serves them to it in development.
+ * Builds the islands of a Wicket application and serves them to it in development. A framework
+ * adapter provides the `adapter` and `devPreamble` options as a preset, e.g. `reactIslands` of
+ * wicket-islands-react/vite.
  */
 export default function wicketIslands(options: WicketIslandsOptions): Plugin;

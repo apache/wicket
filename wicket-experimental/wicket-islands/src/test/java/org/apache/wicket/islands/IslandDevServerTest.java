@@ -19,6 +19,8 @@ package org.apache.wicket.islands;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.regex.Pattern;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -45,5 +47,18 @@ class IslandDevServerTest extends IslandTestCase
 			"<script type=\"module\" src=\"http://localhost:5173/@wicket-islands/test-island\""),
 			response);
 		assertFalse(response.contains("test-island-abc123.js"), response);
+	}
+
+	@Test
+	void rendersTheCspNonceForVite()
+	{
+		tester.getApplication().getCspSettings().blocking().strict();
+
+		tester.startPage(IslandTestPage.class);
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(Pattern.compile("<meta property=\"csp-nonce\" nonce=\"[^\"]+\"")
+			.matcher(response)
+			.find(), response);
 	}
 }

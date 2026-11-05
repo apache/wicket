@@ -16,7 +16,6 @@
  */
 
 import path from 'node:path';
-import { normalizePath } from 'vite';
 
 const TYPE_PATTERN = /^[A-Za-z0-9_-]+$/;
 const ENTRY_PREFIX = 'virtual:wicket-island:';
@@ -30,8 +29,9 @@ const DEV_PATH = '/@wicket-islands/';
  * Wicket application running in development mode.
  *
  * Each island type becomes an input of the build named after the type, so Wicket finds its
- * entry in the manifest. Its entry module imports the island's module and registers it with the
- * runtime. In development, the module for a type is served at `/@wicket-islands/<type>`.
+ * entry in the manifest. Its entry module imports the island's module, turns its default export
+ * into an island with the adapter's `defineIsland` when an adapter is given, and registers it with
+ * the runtime. In development, the entry for a type is served at `/@wicket-islands/<type>`.
  *
  * @param {import('./index').WicketIslandsOptions} options
  * @returns {import('vite').Plugin}
@@ -59,6 +59,9 @@ export default function wicketIslands(options) {
 						input: Object.fromEntries(Object.keys(islands)
 							.map(type => [type, ENTRY_PREFIX + type]))
 					}
+				},
+				optimizeDeps: {
+					entries: Object.values(islands)
 				}
 			};
 		},
@@ -94,9 +97,15 @@ export default function wicketIslands(options) {
 				lines.push(`import ${JSON.stringify(PREAMBLE_ID)};`);
 			}
 			lines.push(
-				`import island from ${JSON.stringify(normalizePath(path.resolve(root, file)))};`,
-				`import { registerIsland } from 'wicket-islands';`,
-				`registerIsland(${JSON.stringify(type)}, island);`);
+				`import island from ${JSON.stringify(toPosixPath(path.resolve(root, file)))};`,
+				`import { registerIsland } from 'wicket-islands';`);
+			if (options.adapter) {
+				lines.push(
+					`import { defineIsland } from ${JSON.stringify(options.adapter)};`,
+					`registerIsland(${JSON.stringify(type)}, defineIsland(island));`);
+			} else {
+				lines.push(`registerIsland(${JSON.stringify(type)}, island);`);
+			}
 			return lines.join('\n');
 		},
 
@@ -112,4 +121,12 @@ export default function wicketIslands(options) {
 			});
 		}
 	};
+}
+
+/**
+ * @param {string} file
+ * @returns {string}
+ */
+function toPosixPath(file) {
+	return file.split(path.sep).join('/');
 }

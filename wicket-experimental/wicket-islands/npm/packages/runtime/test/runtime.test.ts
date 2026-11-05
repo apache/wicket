@@ -102,6 +102,7 @@ describe('IslandRuntime', () => {
 		expect(attributes.ep).toEqual({
 			'island-call': 'probe',
 			'island-call-id': '1',
+			'island-key': 'k1',
 			'island-payload': '{"x":1,"y":2}'
 		});
 	});
@@ -111,7 +112,11 @@ describe('IslandRuntime', () => {
 
 		ignore(recorder.context.call('reset'));
 
-		expect(requests[0].attributes.ep).toEqual({ 'island-call': 'reset', 'island-call-id': '1' });
+		expect(requests[0].attributes.ep).toEqual({
+			'island-call': 'reset',
+			'island-call-id': '1',
+			'island-key': 'k1'
+		});
 	});
 
 	it('resolves a call after the components of the response are updated', async () => {

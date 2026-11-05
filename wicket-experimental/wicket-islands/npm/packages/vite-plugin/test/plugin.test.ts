@@ -26,9 +26,10 @@ function hook(plugin: object, name: string): Hook {
 	return (plugin as Record<string, Hook>)[name];
 }
 
-function plugin(command: 'build' | 'serve', devPreamble?: string) {
+function plugin(command: 'build' | 'serve', devPreamble?: string, adapter?: string) {
 	const instance = wicketIslands({
 		islands: { 'treasure-board': 'src/islands/TreasureBoard.tsx' },
+		adapter,
 		devPreamble
 	});
 	const config = hook(instance, 'config')({}, { command, mode: 'development' });
@@ -44,8 +45,20 @@ describe('wicketIslands', () => {
 			build: {
 				manifest: true,
 				rollupOptions: { input: { 'treasure-board': 'virtual:wicket-island:treasure-board' } }
-			}
+			},
+			optimizeDeps: { entries: ['src/islands/TreasureBoard.tsx'] }
 		});
+	});
+
+	it('wraps the default export with the adapter\'s defineIsland', () => {
+		const { instance } = plugin('build', undefined, 'wicket-islands-react');
+
+		expect(hook(instance, 'load')('\0wicket-island:treasure-board')).toBe([
+			'import island from "/app/src/islands/TreasureBoard.tsx";',
+			'import { registerIsland } from \'wicket-islands\';',
+			'import { defineIsland } from "wicket-islands-react";',
+			'registerIsland("treasure-board", defineIsland(island));'
+		].join('\n'));
 	});
 
 	it('generates an entry that registers the island module', () => {

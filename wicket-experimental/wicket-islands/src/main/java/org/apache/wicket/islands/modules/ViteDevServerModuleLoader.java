@@ -16,9 +16,13 @@
  */
 package org.apache.wicket.islands.modules;
 
+import org.apache.wicket.csp.ContentSecurityPolicySettings;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceType;
+import org.apache.wicket.markup.head.MetaDataHeaderItem;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
@@ -27,8 +31,10 @@ import org.apache.wicket.util.string.Strings;
  * development.
  * <p>
  * Renders Vite's client and, for each island type, the module the Wicket Islands Vite plugin
- * serves at <code>/@wicket-islands/&lt;type&gt;</code>. The dev server's origin must be allowed by
- * the page's Content Security Policy for scripts and connections.
+ * serves at <code>/@wicket-islands/&lt;type&gt;</code>. When the page has a Content Security Policy
+ * with nonces, it also renders the nonce in the <code>csp-nonce</code> meta tag Vite reads, so the
+ * style elements Vite injects carry it. The dev server's origin must be allowed for connections,
+ * for Vite's hot module replacement.
  *
  * @since 12.0.0
  */
@@ -48,6 +54,13 @@ public class ViteDevServerModuleLoader implements IIslandModuleLoader
 	@Override
 	public void renderHead(String islandType, IHeaderResponse response)
 	{
+		ContentSecurityPolicySettings csp = WebApplication.get().getCspSettings();
+		if (csp.isNonceEnabled())
+		{
+			response.render(new MetaDataHeaderItem(MetaDataHeaderItem.META_TAG)
+				.addTagAttribute("property", "csp-nonce")
+				.addTagAttribute("nonce", csp.getNonce(RequestCycle.get())));
+		}
 		response.render(JavaScriptHeaderItem.forUrl(devServerUrl + "/@vite/client")
 			.setType(JavaScriptReferenceType.MODULE));
 		response.render(JavaScriptHeaderItem.forUrl(devServerUrl + "/@wicket-islands/" + islandType)

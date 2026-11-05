@@ -18,4 +18,22 @@
 /**
  * Installs React Fast Refresh in a page Vite does not serve itself.
  */
-export declare const reactRefreshPreamble: string;
+export const reactRefreshPreamble = `import RefreshRuntime from '/@react-refresh';
+RefreshRuntime.injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;
+window.__vite_plugin_react_preamble_installed__ = true;
+`;
+
+/**
+ * The options of the Wicket Islands Vite plugin for React islands: island modules export a plain
+ * component, which keeps them eligible for Fast Refresh.
+ *
+ * ```js
+ * wicketIslands({ islands: { 'treasure-board': 'src/TreasureBoard.tsx' }, ...reactIslands })
+ * ```
+ */
+export const reactIslands = {
+	adapter: 'wicket-islands-react',
+	devPreamble: reactRefreshPreamble
+};

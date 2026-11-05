@@ -210,6 +210,16 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 		return endpoint.handler().handle(request, call);
 	}
 
+	/**
+	 * Lets calls reach a page Wicket recreated after the original expired. The recreated island has
+	 * a new key, so the call is answered as expired instead of being handled.
+	 */
+	@Override
+	public boolean canCallListenerAfterExpiry()
+	{
+		return true;
+	}
+
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{

@@ -73,8 +73,11 @@ public class IslandSettings
 
 	private volatile ViteManifestModuleLoader manifestModuleLoader;
 
+	private ResourceReference assets;
+
 	/**
-	 * Installs the settings in an application and mounts the resource serving the built files.
+	 * Installs the settings in an application, mounts the resource serving the built files and
+	 * registers the listener that answers island calls failing before they reach their island.
 	 *
 	 * @param application
 	 *            the application
@@ -85,18 +88,19 @@ public class IslandSettings
 		Args.notNull(application, "application");
 
 		IslandSettings settings = new IslandSettings();
-		application.setMetaData(KEY, settings);
-		application.mountResource(MOUNT_PATH,
-			new ResourceReference(IslandSettings.class, "assets")
-			{
-				private static final long serialVersionUID = 1L;
+		settings.assets = new ResourceReference(IslandSettings.class, "assets")
+		{
+			private static final long serialVersionUID = 1L;
 
-				@Override
-				public IResource getResource()
-				{
-					return new IslandAssetResource(settings::getManifestModuleLoader);
-				}
-			});
+			@Override
+			public IResource getResource()
+			{
+				return new IslandAssetResource(settings::getManifestModuleLoader);
+			}
+		};
+		application.setMetaData(KEY, settings);
+		application.mountResource(MOUNT_PATH, settings.assets);
+		application.getRequestCycleListeners().add(new IslandCallFailureListener());
 		return settings;
 	}
 
@@ -210,7 +214,7 @@ public class IslandSettings
 		ViteManifestModuleLoader loader = manifestModuleLoader;
 		if (loader == null)
 		{
-			loader = new ViteManifestModuleLoader(basePath, manifestFile, MOUNT_PATH + "/");
+			loader = new ViteManifestModuleLoader(basePath, manifestFile, assets);
 			manifestModuleLoader = loader;
 		}
 		return loader;
