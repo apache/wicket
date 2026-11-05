@@ -47,4 +47,59 @@
 			<artifactId>wicket-tester</artifactId>
 		</dependency>
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<!-- Type-checks and tests the JavaScript packages in npm/ -->
+			<id>js-test</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.eirslett</groupId>
+						<artifactId>frontend-maven-plugin</artifactId>
+						<version>2.0.2</version>
+						<configuration>
+							<workingDirectory>npm</workingDirectory>
+						</configuration>
+						<executions>
+							<execution>
+								<id>install node and npm</id>
+								<goals>
+									<goal>install-node-and-npm</goal>
+								</goals>
+								<phase>generate-resources</phase>
+								<configuration>
+									<npmVersion>11.12.1</npmVersion>
+									<nodeVersion>v24.15.0</nodeVersion>
+								</configuration>
+							</execution>
+							<execution>
+								<id>npm ci</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<phase>generate-resources</phase>
+								<configuration>
+									<arguments>ci</arguments>
+								</configuration>
+							</execution>
+							<execution>
+								<id>npm test</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<phase>test</phase>
+								<configuration>
+									<arguments>test</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
