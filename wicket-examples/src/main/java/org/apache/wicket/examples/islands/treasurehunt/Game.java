@@ -41,6 +41,8 @@ public class Game implements IClusterable
 
 	private final List<ProbeOutcome> probes = new ArrayList<>();
 
+	private PlayerEntry savedBy;
+
 	Game(BoardSize size, Set<Cell> treasures)
 	{
 		this.size = size;
@@ -138,6 +140,31 @@ public class Game implements IClusterable
 	public List<ProbeOutcome> getProbes()
 	{
 		return Collections.unmodifiableList(probes);
+	}
+
+	/**
+	 * Records that the score of this game was saved for a player.
+	 *
+	 * @throws IllegalStateException
+	 *             if the game is still running or its score was saved already
+	 */
+	public void saveScore(PlayerEntry player)
+	{
+		if (getStatus() == GameStatus.RUNNING || savedBy != null)
+		{
+			throw new IllegalStateException("The score of this game cannot be saved.");
+		}
+		savedBy = player;
+	}
+
+	public boolean isScoreSaved()
+	{
+		return savedBy != null;
+	}
+
+	public PlayerEntry getSavedBy()
+	{
+		return savedBy;
 	}
 
 	/**

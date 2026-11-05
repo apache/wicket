@@ -29,14 +29,18 @@ export default defineConfig({
 		react(),
 		wicketIslands({
 			islands: {
-				'treasure-board': 'src/treasurehunt/TreasureBoard.tsx'
+				'treasure-board': 'src/treasurehunt/TreasureBoard.tsx',
+				'probe-history': 'src/treasurehunt/ProbeHistory.tsx',
+				'player-entry': 'src/treasurehunt/PlayerEntryForm.tsx',
+				'highscore-list': 'src/treasurehunt/HighScoreList.tsx'
 			},
 			...reactIslands
 		})
 	],
 	resolve: {
 		// the island packages are linked from the Wicket source tree; their imports resolve here
-		dedupe: ['react', 'react-dom', 'wicket-islands']
+		dedupe: ['react', 'react-dom', 'wicket-islands', '@tanstack/query-core',
+			'@tanstack/react-query']
 	},
 	server: {
 		port: 5173,

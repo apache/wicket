@@ -31,7 +31,7 @@
 	cursor: pointer;
 }
 
-.treasure-board .cell:disabled {
+.treasure-board .cell[aria-disabled="true"] {
 	cursor: default;
 }
 
@@ -59,4 +59,9 @@
 
 .treasure-board .message button {
 	margin-left: 1em;
+}
+
+.treasure-board .cell.hover {
+	outline: 3px solid #333;
+	outline-offset: 1px;
 }

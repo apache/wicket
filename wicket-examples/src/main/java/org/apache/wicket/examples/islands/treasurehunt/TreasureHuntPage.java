@@ -23,6 +23,7 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.islands.IslandSettings;
+import org.apache.wicket.islands.IslandTargets;
 import org.apache.wicket.islands.modules.ViteManifestModuleLoader;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -53,6 +54,12 @@ public class TreasureHuntPage extends WicketExamplePage
 
 	private final Label probesLeft;
 
+	private final ProbeHistory history;
+
+	private final ScorePanel scorePanel;
+
+	private final HighScoreList highScores;
+
 	private TreasureBoard board;
 
 	public TreasureHuntPage()
@@ -81,8 +88,25 @@ public class TreasureHuntPage extends WicketExamplePage
 		status.setOutputMarkupId(true);
 		probesLeft = new Label("probesLeft", () -> game.getObject().getProbesLeft());
 		probesLeft.setOutputMarkupId(true);
-		board = new TreasureBoard("board", game, status, probesLeft);
-		gamePanel.add(status, probesLeft, board);
+		history = new ProbeHistory("history", game);
+		scorePanel = new ScorePanel("score", game)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onScoreSaved(AjaxRequestTarget target)
+			{
+				Game saved = game.getObject();
+				PlayerEntry player = saved.getSavedBy();
+				TreasureHuntApplication.get()
+					.getHighScores()
+					.add(saved.getSize(),
+						new Score(player.name().strip(), player.colour(), saved.getScore()));
+				IslandTargets.invalidate(target, "scores");
+			}
+		};
+		board = new TreasureBoard("board", game, status, probesLeft, history, scorePanel);
+		gamePanel.add(status, probesLeft, history, scorePanel, board);
 
 		gamePanel.add(new AjaxLink<Void>("newGame")
 		{
@@ -95,6 +119,9 @@ public class TreasureHuntPage extends WicketExamplePage
 				target.add(gamePanel);
 			}
 		});
+
+		highScores = new HighScoreList("highScores", size);
+		add(highScores);
 
 		add(new WebMarkupContainer("noBuild")
 		{
@@ -118,11 +145,12 @@ public class TreasureHuntPage extends WicketExamplePage
 	private void changeSize(AjaxRequestTarget target)
 	{
 		game.setObject(Game.start(size.getObject()));
-		TreasureBoard newBoard = new TreasureBoard("board", game, status, probesLeft);
+		TreasureBoard newBoard = new TreasureBoard("board", game, status, probesLeft, history,
+			scorePanel);
 		newBoard.setMarkupId(board.getMarkupId());
 		board.replaceWith(newBoard);
 		board = newBoard;
-		target.add(newBoard, status, probesLeft);
+		target.add(newBoard, status, probesLeft, history, scorePanel, highScores);
 	}
 
 	private String getStatusText()

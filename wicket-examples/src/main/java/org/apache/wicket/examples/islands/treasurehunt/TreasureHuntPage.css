@@ -23,3 +23,17 @@
 	border: 1px solid #c90;
 	background: #fff6e0;
 }
+
+.treasure-playfield {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2em;
+	align-items: flex-start;
+}
+
+.treasure-layout {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 3em;
+	align-items: flex-start;
+}

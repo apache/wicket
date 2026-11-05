@@ -16,20 +16,11 @@
  */
 
 import { useState, type CSSProperties } from 'react';
-import { IslandCallError, useIsland } from 'wicket-islands-react';
+import { IslandCallError, useIsland, useStore } from 'wicket-islands-react';
+import { HOVER_STORE, type Cell, type ProbeOutcome } from './shared';
 import './TreasureBoard.css';
 
 type GameStatus = 'RUNNING' | 'WON' | 'LOST';
-
-interface Cell {
-	x: number;
-	y: number;
-}
-
-interface ProbeOutcome extends Cell {
-	treasure: boolean;
-	distance: number;
-}
 
 /**
  * The props of the board, as TreasureBoard.java's BoardProps sends them.
@@ -59,6 +50,7 @@ export default function TreasureBoard({ width, height, status, probes, treasures
 	const [pending, setPending] = useState<string | null>(null);
 	const [message, setMessage] = useState<string | null>(null);
 	const [expired, setExpired] = useState(false);
+	const [hover, setHover] = useStore<Cell | null>(HOVER_STORE);
 
 	const probed = new Map(probes.map(outcome => [cellKey(outcome.x, outcome.y), outcome]));
 	const treasureCells = new Set(treasures.map(treasure => cellKey(treasure.x, treasure.y)));
@@ -97,11 +89,16 @@ export default function TreasureBoard({ width, height, status, probes, treasures
 			if (pending === key) {
 				className += ' pending';
 			}
+			if (hover && hover.x === x && hover.y === y) {
+				className += ' hover';
+			}
+			const playable = running && !expired && outcome === undefined && pending === null;
 			cells.push(
 				<button key={key} type="button" className={className} style={style}
 					data-x={x} data-y={y} aria-label={`Cell ${x}, ${y}`}
-					disabled={!running || expired || outcome !== undefined || pending !== null}
-					onClick={() => void probe(x, y)}>
+					aria-disabled={!playable}
+					onClick={() => playable && void probe(x, y)}
+					onMouseEnter={() => setHover({ x, y })} onMouseLeave={() => setHover(null)}>
 					{label}
 				</button>);
 		}

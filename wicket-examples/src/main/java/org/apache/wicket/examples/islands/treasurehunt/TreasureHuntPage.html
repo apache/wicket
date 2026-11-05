@@ -16,13 +16,20 @@
 		<label>Board size <select wicket:id="size"></select></label>
 	</form>
 
-	<div wicket:id="game" class="treasure-game">
-		<p>
-			<span wicket:id="status"></span>
-			Probes left: <span wicket:id="probesLeft"></span>.
-			<a wicket:id="newGame" href="#">New game</a>
-		</p>
-		<div wicket:id="board"></div>
+	<div class="treasure-layout">
+		<div wicket:id="game" class="treasure-game">
+			<p>
+				<span wicket:id="status"></span>
+				Probes left: <span wicket:id="probesLeft"></span>.
+				<a wicket:id="newGame" href="#">New game</a>
+			</p>
+			<div class="treasure-playfield">
+				<div wicket:id="board"></div>
+				<div wicket:id="history"></div>
+			</div>
+			<div wicket:id="score"></div>
+		</div>
+		<div wicket:id="highScores"></div>
 	</div>
 </wicket:extend>
 </body>

@@ -348,6 +348,15 @@
 						</executions>
 					</plugin>
 					<plugin>
+						<groupId>org.eclipse.jetty.ee11</groupId>
+						<artifactId>jetty-ee11-maven-plugin</artifactId>
+						<configuration>
+							<webApp>
+								<extraClasspath>${project.build.directory}/generated-resources/wicket-islands</extraClasspath>
+							</webApp>
+						</configuration>
+					</plugin>
+					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>build-helper-maven-plugin</artifactId>
 						<executions>

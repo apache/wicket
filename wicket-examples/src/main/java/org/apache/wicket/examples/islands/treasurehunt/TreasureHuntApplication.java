@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.examples.islands.treasurehunt;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.islands.IPagelessAuthorization;
 import org.apache.wicket.islands.IslandSettings;
 
 /**
@@ -35,6 +37,18 @@ public class TreasureHuntApplication extends WicketExampleApplication
 	 */
 	public static final String DEV_SERVER_PROPERTY = "wicket.islands.devServer";
 
+	private final HighScores highScores = new HighScores();
+
+	public static TreasureHuntApplication get()
+	{
+		return (TreasureHuntApplication)Application.get();
+	}
+
+	public HighScores getHighScores()
+	{
+		return highScores;
+	}
+
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
@@ -47,6 +61,9 @@ public class TreasureHuntApplication extends WicketExampleApplication
 		super.init();
 
 		IslandSettings islands = IslandSettings.install(this);
+		islands.getPagelessEndpoints()
+			.register("scores", ScoresEndpoint.ScoreQuery.class, new ScoresEndpoint(highScores),
+				IPagelessAuthorization.PERMIT_ALL);
 
 		String devServer = System.getProperty(DEV_SERVER_PROPERTY);
 		if (devServer != null && usesDevelopmentConfig())
