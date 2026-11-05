@@ -12,6 +12,8 @@
     "test": "npm run typecheck && vitest run"
   },
   "devDependencies": {
+    "@tanstack/query-core": "^5.0.0",
+    "@tanstack/react-query": "^5.0.0",
     "@types/node": "^24.0.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",

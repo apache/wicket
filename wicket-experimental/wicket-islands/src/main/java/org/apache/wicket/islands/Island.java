@@ -16,21 +16,12 @@
  */
 package org.apache.wicket.islands;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.regex.Pattern;
-
 import org.apache.wicket.IGenericComponent;
-import org.apache.wicket.islands.serializer.IIslandSerializer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.io.IClusterable;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * A component whose body is rendered in the browser by a JavaScript framework component, its
@@ -80,20 +71,7 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 	 */
 	public static final String ATTR_ROOT = "data-wicket-island-root";
 
-	private static final Pattern TYPE_PATTERN = Pattern.compile("[A-Za-z0-9_-]+");
-
-	private record Endpoint(Class<?> requestType, IslandCallHandler<Object, Object> handler)
-		implements IClusterable
-	{
-	}
-
-	private final String type;
-
-	private final String key;
-
-	private final Map<String, Endpoint> endpoints = new LinkedHashMap<>();
-
-	private final IslandEndpointBehavior endpointBehavior;
+	private final IslandSupport island;
 
 	/**
 	 * @param id
@@ -106,17 +84,9 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 	public Island(String id, String type, IModel<P> props)
 	{
 		super(id, props);
-		Args.notNull(type, "type");
-		if (!TYPE_PATTERN.matcher(type).matches())
-		{
-			throw new IllegalArgumentException("Invalid island type '" + type +
-				"': use letters, digits, '-' and '_'");
-		}
-		this.type = type;
-		key = Long.toString(ThreadLocalRandom.current().nextLong() & Long.MAX_VALUE, 36);
+		island = new IslandSupport(type);
 		setOutputMarkupId(true);
-		endpointBehavior = new IslandEndpointBehavior();
-		add(endpointBehavior);
+		add(island.getBehavior());
 	}
 
 	/**
@@ -124,7 +94,7 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 	 */
 	public final String getType()
 	{
-		return type;
+		return island.getType();
 	}
 
 	/**
@@ -132,7 +102,12 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 	 */
 	public final String getKey()
 	{
-		return key;
+		return island.getKey();
+	}
+
+	final IslandSupport getIslandSupport()
+	{
+		return island;
 	}
 
 	/**
@@ -152,15 +127,10 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 	 *            the handler
 	 * @return {@code this}
 	 */
-	@SuppressWarnings("unchecked")
 	public final <Q, R> Island<P> onCall(String name, Class<Q> requestType, Class<R> resultType,
 		IslandCallHandler<Q, R> handler)
 	{
-		Args.notEmpty(name, "name");
-		Args.notNull(requestType, "requestType");
-		Args.notNull(resultType, "resultType");
-		Args.notNull(handler, "handler");
-		endpoints.put(name, new Endpoint(requestType, (IslandCallHandler<Object, Object>)handler));
+		island.addEndpoint(name, requestType, resultType, handler);
 		return this;
 	}
 
@@ -180,34 +150,36 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 	public final <Q> Island<P> onCall(String name, Class<Q> requestType,
 		IslandCallConsumer<Q> handler)
 	{
-		Args.notNull(handler, "handler");
-		return onCall(name, requestType, Void.class, (request, call) -> {
-			handler.handle(request, call);
-			return null;
-		});
+		island.addEndpoint(name, requestType, Void.class, IslandSupport.withoutResult(handler));
+		return this;
 	}
 
-	Object invoke(String name, String payload, IslandCall call)
+	/**
+	 * Makes a page-less endpoint callable by the client-side peer under the endpoint's id.
+	 *
+	 * @param endpointId
+	 *            the id the endpoint is registered under in {@link PagelessEndpoints}
+	 * @return {@code this}
+	 */
+	public final Island<P> usePageless(String endpointId)
 	{
-		Endpoint endpoint = endpoints.get(name);
-		if (endpoint == null)
-		{
-			throw new IslandCallRejectedException("Unknown call '" + name + "'.");
-		}
+		return usePageless(endpointId, endpointId);
+	}
 
-		Object request = null;
-		if (endpoint.requestType() != Void.class)
-		{
-			if (payload != null)
-			{
-				request = getSerializer().fromJson(payload, endpoint.requestType());
-			}
-			if (request == null)
-			{
-				throw new IslandCallRejectedException("The call has no payload.");
-			}
-		}
-		return endpoint.handler().handle(request, call);
+	/**
+	 * Makes a page-less endpoint callable by the client-side peer under the given name. The peer
+	 * calls it like any other call; it runs outside the page lock and cannot update components.
+	 *
+	 * @param name
+	 *            the name the client calls
+	 * @param endpointId
+	 *            the id the endpoint is registered under in {@link PagelessEndpoints}
+	 * @return {@code this}
+	 */
+	public final Island<P> usePageless(String name, String endpointId)
+	{
+		island.addPageless(name, endpointId);
+		return this;
 	}
 
 	/**
@@ -225,25 +197,13 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 	{
 		super.onComponentTag(tag);
 
-		if (tag.isOpenClose())
-		{
-			tag.setType(TagType.OPEN);
-		}
-		tag.put(ATTR_TYPE, type);
-		tag.put(ATTR_KEY, key);
+		island.onComponentTag(tag);
 	}
 
 	@Override
 	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
-		IIslandSerializer serializer = getSerializer();
-		String state = "{\"props\":" + serializer.toJson(getModelObject()) + ",\"calls\":" +
-			serializer.toJson(endpoints.keySet()) + ",\"ajax\":" +
-			endpointBehavior.renderAttributes() + "}";
-
-		replaceComponentTagBody(markupStream, openTag,
-			"<script type=\"application/json\" " + ATTR_STATE + ">" +
-				IslandJson.escapeForScript(state) + "</script><div " + ATTR_ROOT + "></div>");
+		replaceComponentTagBody(markupStream, openTag, island.renderState(getModelObject(), null));
 	}
 
 	@Override
@@ -251,11 +211,6 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 	{
 		super.renderHead(response);
 
-		IslandSettings.get().getModuleLoader().renderHead(type, response);
-	}
-
-	private IIslandSerializer getSerializer()
-	{
-		return IslandSettings.get().getSerializer();
+		island.renderHead(response);
 	}
 }

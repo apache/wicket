@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { IslandCallError, IslandRuntime, type IslandContext, type IslandModule } from '../src/index';
-import { component, data, failRequest, host, requests, respond, setUpWicket } from './wicket-fixture';
+import { component, data, failRequest, formHost, host, requests, respond, setUpWicket } from './wicket-fixture';
 
 interface Props {
 	label: string;
@@ -240,6 +240,140 @@ describe('IslandRuntime', () => {
 
 		runtime.register('chart', charts.module());
 		expect(charts.mounts).toHaveLength(1);
+	});
+
+	it('shares client stores between the islands of a page, beyond their lifetime', () => {
+		document.body.innerHTML += host('board2', 'board', 'k2', { label: 'two' });
+		runtime.register('board', recorder.module());
+		const [first, second] = recorder.mounts.map(mount => mount.context);
+		const seen: unknown[] = [];
+		second.store<string>('hover').subscribe(() => seen.push(second.store('hover').get()));
+
+		first.store<string>('hover').set('cell');
+		first.store<string>('hover').set('cell');
+
+		expect(second.store('hover').get()).toBe('cell');
+		expect(seen).toEqual(['cell']);
+
+		ignore(first.call('probe', {}));
+		respond(requests[0], component('panel', '<div id="panel"></div>'));
+		expect(recorder.unmounts).toBe(1);
+		expect(runtime.stores.get('hover').get()).toBe('cell');
+	});
+
+	it('binds the value and state of a form island to its hidden input', () => {
+		document.body.innerHTML = `<form id="form"><div id="panel">${formHost('point1', 'board', 'k5',
+			{ x: 1 }, { required: true, enabled: true, label: 'Point', errors: [] })}</div></form>`;
+		runtime.register('board', recorder.module());
+		const form = recorder.context.form!;
+		const events: string[] = [];
+		document.getElementById('form')!.addEventListener('change', () => events.push('change'));
+		document.getElementById('form')!.addEventListener('input', () => events.push('input'));
+
+		expect(form.getValue()).toEqual({ x: 1 });
+		expect(form.getState().label).toBe('Point');
+
+		form.setValue({ x: 2 });
+
+		expect(document.querySelector<HTMLInputElement>('input[data-wicket-island-value]')!.value)
+			.toBe('{"x":2}');
+		expect(form.getValue()).toEqual({ x: 2 });
+		expect(events).toEqual(['input', 'change']);
+	});
+
+	it('reads the value and state of a re-rendered form island from its new host', () => {
+		document.body.innerHTML = `<div id="panel">${formHost('point1', 'board', 'k5',
+			{ x: 1 }, { required: true, enabled: true, label: 'Point', errors: [] })}</div>`;
+		runtime.register('board', recorder.module());
+		const form = recorder.context.form!;
+		let notified = 0;
+		form.subscribe(() => notified++);
+		ignore(recorder.context.call('probe', {}));
+
+		respond(requests[0], component('panel', `<div id="panel">${formHost('point1', 'board', 'k5',
+			{ x: 9 }, { required: true, enabled: true, label: 'Point', errors: ['Too far'] })}</div>`));
+
+		expect(recorder.mounts).toHaveLength(1);
+		expect(form.getValue()).toEqual({ x: 9 });
+		expect(form.getState().errors).toEqual(['Too far']);
+		expect(notified).toBe(1);
+	});
+
+	it('gives islands that are no form components no form binding', () => {
+		runtime.register('board', recorder.module());
+
+		expect(recorder.context.form).toBeUndefined();
+	});
+
+	describe('page-less calls', () => {
+		let fetched: { url: string; init: RequestInit }[];
+
+		function answer(status: number, body: unknown) {
+			fetched = [];
+			vi.stubGlobal('fetch', (url: string, init: RequestInit) => {
+				fetched.push({ url, init });
+				return Promise.resolve(new Response(JSON.stringify(body), { status }));
+			});
+		}
+
+		beforeEach(() => {
+			document.body.innerHTML = `<div id="panel">${host('board1', 'board', 'k1', { label: 'one' },
+				'./call?board1', { scores: './wicket-islands-call/scores' })}</div>`;
+			runtime.register('board', recorder.module());
+		});
+
+		afterEach(() => {
+			vi.unstubAllGlobals();
+		});
+
+		it('posts the payload as JSON with the islands header, outside Wicket Ajax', async () => {
+			answer(200, { ok: true, value: [1, 2], invalidate: [] });
+
+			await expect(recorder.context.call('scores', { size: 'SMALL' })).resolves.toEqual([1, 2]);
+
+			expect(requests).toHaveLength(0);
+			expect(fetched[0].url).toBe('./wicket-islands-call/scores');
+			expect(fetched[0].init.method).toBe('POST');
+			expect(fetched[0].init.body).toBe('{"size":"SMALL"}');
+			expect((fetched[0].init.headers as Record<string, string>)['X-Wicket-Islands']).toBe('1');
+		});
+
+		it('rejects a failed page-less call', async () => {
+			answer(200, { ok: false, error: { kind: 'invalid', messages: ['no'] }, invalidate: [] });
+
+			await expect(recorder.context.call('scores')).rejects.toMatchObject({
+				kind: 'invalid', messages: ['no']
+			});
+		});
+
+		it('rejects a refused page-less call as forbidden', async () => {
+			answer(403, {});
+
+			await expect(recorder.context.call('scores')).rejects.toMatchObject({ kind: 'forbidden' });
+		});
+
+		it('applies the invalidations of a page-less answer', async () => {
+			answer(200, { ok: true, value: null, invalidate: ['scores'] });
+			const invalidated: string[][] = [];
+			runtime.onInvalidate(keys => invalidated.push([...keys]));
+
+			await recorder.context.call('scores');
+
+			expect(invalidated).toEqual([['scores']]);
+		});
+	});
+
+	it('invalidates the queries of the page under the keys the server names', () => {
+		runtime.register('board', recorder.module());
+		const queries = runtime.queryClient.getQueryCache();
+		runtime.queryClient.setQueryData(['scores', { size: 'SMALL' }], [1]);
+		runtime.queryClient.setQueryData(['other'], [2]);
+		ignore(recorder.context.call('probe', {}));
+
+		respond(requests[0], data({ invalidate: ['scores'] }));
+
+		expect(queries.find({ queryKey: ['scores', { size: 'SMALL' }] })?.state.isInvalidated).toBe(true);
+		expect(queries.find({ queryKey: ['other'] })?.state.isInvalidated).toBe(false);
 	});
 
 	it('tells listeners which query keys were invalidated', () => {

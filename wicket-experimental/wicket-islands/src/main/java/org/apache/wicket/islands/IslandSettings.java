@@ -18,6 +18,9 @@ package org.apache.wicket.islands;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.islands.modules.IIslandModuleLoader;
 import org.apache.wicket.islands.modules.IslandAssetResource;
 import org.apache.wicket.islands.modules.ViteDevServerModuleLoader;
@@ -56,6 +59,11 @@ public class IslandSettings
 	 */
 	public static final String MOUNT_PATH = "wicket-islands";
 
+	/**
+	 * The path page-less endpoints are served under.
+	 */
+	public static final String ENDPOINT_PATH = "wicket-islands-call";
+
 	private static final MetaDataKey<IslandSettings> KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
@@ -75,9 +83,14 @@ public class IslandSettings
 
 	private ResourceReference assets;
 
+	private ResourceReference endpoints;
+
+	private final PagelessEndpoints pagelessEndpoints = new PagelessEndpoints();
+
 	/**
-	 * Installs the settings in an application, mounts the resource serving the built files and
-	 * registers the listener that answers island calls failing before they reach their island.
+	 * Installs the settings in an application, mounts the resource serving the built files,
+	 * registers the listener that answers island calls failing before they reach their island, and
+	 * makes Ajax behaviors on a {@link FormIsland} send the hidden input holding its value.
 	 *
 	 * @param application
 	 *            the application
@@ -98,9 +111,32 @@ public class IslandSettings
 				return new IslandAssetResource(settings::getManifestModuleLoader);
 			}
 		};
+		settings.endpoints = new ResourceReference(IslandSettings.class, "endpoints")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public IResource getResource()
+			{
+				return new PagelessEndpointResource();
+			}
+		};
 		application.setMetaData(KEY, settings);
 		application.mountResource(MOUNT_PATH, settings.assets);
+		application.mountResource(ENDPOINT_PATH, settings.endpoints);
 		application.getRequestCycleListeners().add(new IslandCallFailureListener());
+		application.getAjaxRequestTargetListeners().add(new AjaxRequestTarget.IListener()
+		{
+			@Override
+			public void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior,
+				AjaxRequestAttributes attributes)
+			{
+				if (behavior.getComponent() instanceof FormIsland)
+				{
+					attributes.setSerializeRecursively(true);
+				}
+			}
+		});
 		return settings;
 	}
 
@@ -118,6 +154,19 @@ public class IslandSettings
 				"Islands are not installed: call IslandSettings.install(this) in Application#init()");
 		}
 		return settings;
+	}
+
+	/**
+	 * @return the page-less endpoints of the application
+	 */
+	public PagelessEndpoints getPagelessEndpoints()
+	{
+		return pagelessEndpoints;
+	}
+
+	ResourceReference getEndpointReference()
+	{
+		return endpoints;
 	}
 
 	/**

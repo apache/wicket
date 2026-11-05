@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**
@@ -29,24 +30,24 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  */
 public final class IslandCall
 {
-	private final Island<?> island;
+	private final Component component;
 
 	private final AjaxRequestTarget target;
 
 	private final List<String> invalidations = new ArrayList<>();
 
-	IslandCall(Island<?> island, AjaxRequestTarget target)
+	IslandCall(Component component, AjaxRequestTarget target)
 	{
-		this.island = island;
+		this.component = component;
 		this.target = target;
 	}
 
 	/**
-	 * @return the island that was called
+	 * @return the island that was called: an {@link Island} or a {@link FormIsland}
 	 */
-	public Island<?> getIsland()
+	public Component getComponent()
 	{
-		return island;
+		return component;
 	}
 
 	/**

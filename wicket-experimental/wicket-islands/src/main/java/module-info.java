@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 module org.apache.wicket.islands {
+    requires static jakarta.servlet;
     requires org.slf4j;
     requires tools.jackson.databind;
     requires org.apache.wicket.util;

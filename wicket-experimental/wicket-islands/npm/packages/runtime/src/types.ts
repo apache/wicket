@@ -15,6 +15,10 @@
  * limitations under the License.
  */
 
+import type { QueryClient } from '@tanstack/query-core';
+import type { FormBinding } from './form';
+import type { ClientStore } from './store';
+
 /**
  * The client-side half of an island: what a framework adapter provides for an island type.
  */
@@ -60,8 +64,26 @@ export interface IslandContext<P> {
 	readonly signal: AbortSignal;
 
 	/**
+	 * The value and form state of a form island; absent for other islands.
+	 */
+	readonly form?: FormBinding<unknown>;
+
+	/**
+	 * The query client of the page, shared by every island on the page. Query keys the server marks
+	 * as stale are invalidated in it.
+	 */
+	readonly queryClient: QueryClient;
+
+	/**
+	 * The page's client store of the given name, shared by every island on the page.
+	 */
+	store<S>(name: string): ClientStore<S>;
+
+	/**
 	 * Calls the island on the server. The returned promise settles after every update the
-	 * response carries has been applied: components, props of other islands, invalidations.
+	 * response carries has been applied: components, props of other islands, invalidations. A
+	 * name the island registered as page-less is called with a plain request instead, outside
+	 * the page lock; its answer carries invalidations but no component updates.
 	 */
 	call<R = unknown>(name: string, payload?: unknown): Promise<R>;
 }

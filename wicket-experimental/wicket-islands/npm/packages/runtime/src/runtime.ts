@@ -17,6 +17,9 @@
 
 import { IslandCallError, type IslandCallErrorKind, type IslandContext, type IslandInstance,
 	type IslandModule } from './types';
+import { QueryClient } from '@tanstack/query-core';
+import { HostFormBinding, type FormState } from './form';
+import { ClientStores } from './store';
 import { TOPIC_AJAX_CALL_DATA, TOPIC_AJAX_CALL_DONE, TOPIC_DOM_NODE_ADDED, wicket,
 	type WicketAjaxAttributes, type WicketApi } from './wicket';
 
@@ -30,11 +33,14 @@ const PARAM_CALL = 'island-call';
 const PARAM_CALL_ID = 'island-call-id';
 const PARAM_PAYLOAD = 'island-payload';
 const PARAM_KEY = 'island-key';
+const PAGELESS_HEADER = 'X-Wicket-Islands';
 
 interface IslandState {
 	props: unknown;
 	calls: string[];
 	ajax: WicketAjaxAttributes;
+	pageless?: Record<string, string>;
+	form?: FormState;
 }
 
 interface MountedIsland {
@@ -44,6 +50,7 @@ interface MountedIsland {
 	readonly abort: AbortController;
 	host: HTMLElement;
 	state: IslandState;
+	form?: HostFormBinding;
 	instance?: IslandInstance<unknown>;
 }
 
@@ -72,6 +79,25 @@ export class IslandRuntime {
 	private readonly pending = new Map<string, PendingCall>();
 
 	private readonly invalidationListeners = new Set<(keys: readonly string[]) => void>();
+
+	readonly stores = new ClientStores();
+
+	readonly queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				retry: (failures, error) => failures < 2 && error instanceof IslandCallError &&
+					(error.kind === 'network' || error.kind === 'error')
+			}
+		}
+	});
+
+	constructor() {
+		this.onInvalidate(keys => {
+			for (const key of keys) {
+				void this.queryClient.invalidateQueries({ queryKey: [key] });
+			}
+		});
+	}
 
 	private api?: WicketApi;
 
@@ -147,6 +173,9 @@ export class IslandRuntime {
 			state: readState(host),
 			abort: new AbortController()
 		};
+		if (island.state.form) {
+			island.form = new HostFormBinding(() => island.host, () => island.state.form!);
+		}
 		this.mounted.set(key, island);
 		island.instance = module.mount(island.root, this.createContext(island));
 	}
@@ -159,6 +188,7 @@ export class IslandRuntime {
 		island.host = host;
 		island.state = readState(host);
 		island.instance?.update(island.state.props);
+		island.form?.refresh();
 	}
 
 	private sweep(): void {
@@ -186,6 +216,9 @@ export class IslandRuntime {
 			},
 			key: island.key,
 			signal: island.abort.signal,
+			form: island.form,
+			queryClient: this.queryClient,
+			store: name => this.stores.get(name),
 			call: <R>(name: string, payload?: unknown) => this.call(island, name, payload) as Promise<R>
 		};
 	}
@@ -193,6 +226,11 @@ export class IslandRuntime {
 	private call(island: MountedIsland, name: string, payload: unknown): Promise<unknown> {
 		if (island.abort.signal.aborted) {
 			return Promise.reject(new IslandCallError('error', ['The island is no longer mounted.']));
+		}
+
+		const pageless = island.state.pageless?.[name];
+		if (pageless) {
+			return this.callPageless(pageless, payload);
 		}
 
 		const id = String(++this.callSequence);
@@ -219,6 +257,45 @@ export class IslandRuntime {
 		});
 	}
 
+	private async callPageless(url: string, payload: unknown): Promise<unknown> {
+		let response: Response;
+		try {
+			response = await fetch(url, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: { 'Content-Type': 'application/json', [PAGELESS_HEADER]: '1' },
+				body: payload === undefined ? '' : JSON.stringify(payload)
+			});
+		} catch {
+			throw new IslandCallError('network', ['The call did not complete.']);
+		}
+		if (!response.ok) {
+			throw response.status === 403
+				? new IslandCallError('forbidden', ['The call is not allowed.'])
+				: new IslandCallError('error', [`The server answered ${response.status}.`]);
+		}
+
+		let envelope: Envelope;
+		try {
+			envelope = await response.json() as Envelope;
+		} catch {
+			throw new IslandCallError('error', ['The server did not answer the call.']);
+		}
+		this.invalidate(envelope);
+		if (!envelope.ok) {
+			throw new IslandCallError(envelope.error?.kind ?? 'error', envelope.error?.messages ?? []);
+		}
+		return envelope.value;
+	}
+
+	private invalidate(envelope: Envelope): void {
+		if (envelope.invalidate && envelope.invalidate.length > 0) {
+			for (const listener of this.invalidationListeners) {
+				listener(envelope.invalidate);
+			}
+		}
+	}
+
 	private receive(value: string): void {
 		let envelope: Envelope;
 		try {
@@ -229,12 +306,7 @@ export class IslandRuntime {
 		}
 
 		this.sweep();
-
-		if (envelope.invalidate && envelope.invalidate.length > 0) {
-			for (const listener of this.invalidationListeners) {
-				listener(envelope.invalidate);
-			}
-		}
+		this.invalidate(envelope);
 
 		if (envelope.call === undefined) {
 			return;

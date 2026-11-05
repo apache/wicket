@@ -33,6 +33,10 @@ final class IslandAnswer
 	{
 	}
 
+	/**
+	 * @param callId
+	 *            the id of the call, {@code null} for a page-less call, which is answered directly
+	 */
 	static String success(IIslandSerializer serializer, String callId, Object value,
 		List<String> invalidations)
 	{
@@ -49,10 +53,18 @@ final class IslandAnswer
 			invalidations);
 	}
 
+	/**
+	 * @return an answer that only carries invalidations, for requests that are no island call
+	 */
+	static String invalidations(IIslandSerializer serializer, List<String> invalidations)
+	{
+		return "{\"invalidate\":" + serializer.toJson(invalidations) + "}";
+	}
+
 	private static String answer(IIslandSerializer serializer, String callId, String outcome,
 		List<String> invalidations)
 	{
-		return "{\"call\":" + serializer.toJson(callId) + "," + outcome + ",\"invalidate\":" +
-			serializer.toJson(invalidations) + "}";
+		String call = callId == null ? "" : "\"call\":" + serializer.toJson(callId) + ",";
+		return "{" + call + outcome + ",\"invalidate\":" + serializer.toJson(invalidations) + "}";
 	}
 }

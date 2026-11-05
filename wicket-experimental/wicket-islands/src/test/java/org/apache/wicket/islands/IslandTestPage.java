@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.islands;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 
@@ -70,6 +72,19 @@ public class IslandTestPage extends WebPage
 		island.onCall("boom", Void.class, (request, call) -> {
 			throw new IllegalStateException("secret detail");
 		});
+		island.usePageless("echo");
+		island.usePageless("sum", "echo");
 		add(island);
+
+		add(new AjaxLink<Void>("invalidate")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				IslandTargets.invalidate(target, "totals", "scores");
+			}
+		});
 	}
 }

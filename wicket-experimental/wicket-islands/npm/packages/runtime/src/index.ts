@@ -19,6 +19,8 @@ import { IslandRuntime } from './runtime';
 import type { IslandModule } from './types';
 
 export { IslandRuntime } from './runtime';
+export type { FormBinding, FormState } from './form';
+export type { ClientStore } from './store';
 export { IslandCallError } from './types';
 export type { IslandCallErrorKind, IslandContext, IslandInstance, IslandModule } from './types';
 

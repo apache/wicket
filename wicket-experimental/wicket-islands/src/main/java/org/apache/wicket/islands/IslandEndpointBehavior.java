@@ -19,6 +19,7 @@ package org.apache.wicket.islands;
 import java.util.List;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -66,7 +67,8 @@ final class IslandEndpointBehavior extends AbstractDefaultAjaxBehavior
 	@Override
 	protected void respond(AjaxRequestTarget target)
 	{
-		Island<?> island = (Island<?>)getComponent();
+		Component component = getComponent();
+		IslandSupport island = supportOf(component);
 		IRequestParameters parameters = RequestCycle.get().getRequest().getPostParameters();
 		String callId = parameters.getParameterValue(PARAM_CALL_ID).toString("");
 		String name = parameters.getParameterValue(PARAM_CALL).toString("");
@@ -74,7 +76,7 @@ final class IslandEndpointBehavior extends AbstractDefaultAjaxBehavior
 		String key = parameters.getParameterValue(PARAM_KEY).toString("");
 
 		IIslandSerializer serializer = IslandSettings.get().getSerializer();
-		IslandCall call = new IslandCall(island, target);
+		IslandCall call = new IslandCall(component, target);
 		List<String> invalidations = call.getInvalidations();
 
 		String answer;
@@ -98,7 +100,7 @@ final class IslandEndpointBehavior extends AbstractDefaultAjaxBehavior
 		}
 		catch (IslandSerializationException e)
 		{
-			LOG.debug("Island call '{}' on {} failed to (de)serialize", name, island.getPath(), e);
+			LOG.debug("Island call '{}' on {} failed to (de)serialize", name, component.getPath(), e);
 			answer = IslandAnswer.failure(serializer, callId, "invalid",
 				List.of(detail(e, "The call's payload or result could not be converted.")),
 				invalidations);
@@ -114,12 +116,21 @@ final class IslandEndpointBehavior extends AbstractDefaultAjaxBehavior
 		}
 		catch (RuntimeException e)
 		{
-			LOG.error("Island call '{}' on {} failed", name, island.getPath(), e);
+			LOG.error("Island call '{}' on {} failed", name, component.getPath(), e);
 			answer = IslandAnswer.failure(serializer, callId, "error",
 				List.of(detail(e, "The call failed on the server.")), invalidations);
 		}
 
 		target.addData(IslandAnswer.DATA_NAME, answer);
+	}
+
+	private static IslandSupport supportOf(Component component)
+	{
+		if (component instanceof Island<?> island)
+		{
+			return island.getIslandSupport();
+		}
+		return ((FormIsland<?, ?>)component).getIslandSupport();
 	}
 
 	private static String detail(RuntimeException e, String message)

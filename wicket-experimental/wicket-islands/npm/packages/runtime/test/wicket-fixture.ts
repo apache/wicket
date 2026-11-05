@@ -93,13 +93,29 @@ export function data(value: unknown): string {
 /**
  * The markup of an island host, as Island renders it.
  */
-export function host(id: string, type: string, key: string, props: unknown, url = `./call?${id}`): string {
-	const state = JSON.stringify({
-		props,
+export function host(id: string, type: string, key: string, props: unknown, url = `./call?${id}`,
+	pageless?: Record<string, string>): string {
+	return hostWith(id, type, key, { props, pageless }, '', url);
+}
+
+/**
+ * The markup of a form island host, as FormIsland renders it.
+ */
+export function formHost(id: string, type: string, key: string, value: unknown,
+	form: { required: boolean; enabled: boolean; label: string | null; errors: string[] }): string {
+	const input = `<input type="hidden" data-wicket-island-value name="${id}" ` +
+		`value="${value === undefined ? '' : JSON.stringify(value).replace(/"/g, '&quot;')}">`;
+	return hostWith(id, type, key, { props: { label: 'form' }, form }, input, `./call?${id}`);
+}
+
+function hostWith(id: string, type: string, key: string, state: object, before: string,
+	url: string): string {
+	const json = JSON.stringify({
+		...state,
 		calls: ['probe'],
 		ajax: { u: url, m: 'POST', c: id, ch: `wicket-island-${id}|s` }
 	}).replace(/</g, '\\u003c');
 	return `<div id="${id}" data-wicket-island="${type}" data-wicket-island-key="${key}">` +
-		`<script type="application/json" data-wicket-island-state>${state}</script>` +
+		before + `<script type="application/json" data-wicket-island-state>${json}</script>` +
 		'<div data-wicket-island-root></div></div>';
 }
