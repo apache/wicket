@@ -19,8 +19,8 @@
 	<div class="treasure-layout">
 		<div wicket:id="game" class="treasure-game">
 			<p>
-				<span wicket:id="status"></span>
-				Probes left: <span wicket:id="probesLeft"></span>.
+				<span wicket:id="status" class="treasure-status"></span>
+				Probes left: <span wicket:id="probesLeft" class="treasure-probes-left"></span>.
 				<a wicket:id="newGame" href="#">New game</a>
 			</p>
 			<div class="treasure-playfield">
@@ -31,6 +31,48 @@
 		</div>
 		<div wicket:id="highScores"></div>
 	</div>
+
+	<section class="treasure-notes">
+		<h3>How this page is built</h3>
+		<p>
+			Four React components are mounted as islands. Each has a Java class that places it in
+			the page, and a module under <code>frontend/src/treasurehunt</code> that renders it; the
+			source viewer shows both.
+		</p>
+		<ul>
+			<li>
+				<strong>The board</strong> (<code>TreasureBoard</code>) is an <code>Island</code>.
+				Its props are a projection of the game without the treasure positions, so the browser
+				never sees them. A click is a page-bound call: <code>probe</code> runs on the server
+				under the page lock, changes the game and adds the status line and the history to
+				the Ajax response.
+			</li>
+			<li>
+				<strong>The probe history</strong> (<code>ProbeHistory</code>) shares the hovered cell
+				with the board through a client store. Hovering never reaches the server.
+			</li>
+			<li>
+				<strong>The name and colour field</strong> (<code>PlayerEntryField</code>) is a
+				<code>FormIsland</code> in a plain Wicket form. Its value is converted from JSON and
+				checked by Wicket validators; errors show in the island and in the feedback panel.
+			</li>
+			<li>
+				<strong>The high scores</strong> (<code>HighScoreList</code>) come from the
+				page-less endpoint <code>scores</code>, which runs without the page lock. Saving a
+				score invalidates <code>scores</code>, so the list fetches them again.
+			</li>
+		</ul>
+		<p>
+			"New game" re-renders the board with Wicket; React keeps the mounted component and
+			updates its props. A new board size replaces the board component, so React mounts a new
+			one.
+		</p>
+		<p>
+			To change the React components with hot reload, run <code>npm run dev</code> in
+			<code>wicket-examples/src/main/frontend</code> and start the examples in development
+			mode with <code>-Dwicket.islands.devServer=http://localhost:5173</code>.
+		</p>
+	</section>
 </wicket:extend>
 </body>
 </html>

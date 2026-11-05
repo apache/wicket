@@ -238,6 +238,16 @@
 					<include>**/*.ttf</include>
 				</includes>
 			</resource>
+			<!-- the island modules of the Treasure Hunt, to view them next to its Java source -->
+			<resource>
+				<filtering>false</filtering>
+				<directory>${basedir}/src/main/frontend</directory>
+				<targetPath>org/apache/wicket/examples/islands/treasurehunt/frontend</targetPath>
+				<includes>
+					<include>vite.config.js</include>
+					<include>src/treasurehunt/*</include>
+				</includes>
+			</resource>
 		</resources>
 		<plugins>
 			<plugin>

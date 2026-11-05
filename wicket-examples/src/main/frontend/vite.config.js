@@ -52,6 +52,8 @@ export default defineConfig({
 	},
 	build: {
 		outDir: '../../../target/generated-resources/wicket-islands/META-INF/wicket-islands',
-		emptyOutDir: true
+		emptyOutDir: true,
+		// lists the npm packages bundled into the war and their licenses
+		license: { fileName: 'THIRD-PARTY-LICENSES.md' }
 	}
 });

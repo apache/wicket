@@ -37,3 +37,8 @@
 	gap: 3em;
 	align-items: flex-start;
 }
+
+.treasure-notes {
+	margin-top: 2em;
+	max-width: 50em;
+}
