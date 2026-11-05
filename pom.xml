@@ -497,6 +497,12 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket12</groupId>
+				<artifactId>wicket-islands</artifactId>
+				<version>12.0.0-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket.experimental.wicket12</groupId>
 				<artifactId>wicket-metrics</artifactId>
 				<version>12.0.0-SNAPSHOT</version>
 				<type>jar</type>
