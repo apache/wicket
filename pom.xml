@@ -1384,6 +1384,8 @@
 							<resourcesSet>
 								<excludes>
 									<exclude>**/jquery*.js</exclude>
+									<exclude>**/*.min.js</exclude>
+									<exclude>**/*.min.css</exclude>
 								</excludes>
 							</resourcesSet>
 						</resourcesSets>
