@@ -93,8 +93,14 @@ org.apache.wicket.extensions.wizard.dynamic;-noimport:=true
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.primefaces.extensions</groupId>
-				<artifactId>resources-optimizer-maven-plugin</artifactId>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>minify</id>
+						<phase>process-classes</phase>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
