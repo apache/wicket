@@ -44,7 +44,7 @@ public class App2Test
 		Tester tester = new Tester(getCmd, 50, false);
 
 		// new Tester(.., .., false) would not give a deadlock, as then
-		// all threads point to seperate sessions
+		// all threads point to separate sessions
 
 		tester.run();
 	}
