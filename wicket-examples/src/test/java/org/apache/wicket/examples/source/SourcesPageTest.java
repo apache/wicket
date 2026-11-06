@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.examples.helloworld.HelloWorld;
+import org.apache.wicket.examples.islands.taskboard.TaskBoardPage;
 import org.apache.wicket.examples.islands.treasurehunt.TreasureHuntPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -62,6 +63,17 @@ public class SourcesPageTest extends WicketTestCase
 			"frontend/src/treasurehunt/TreasureBoard.tsx");
 		assertTrue(response.contains("export default function TreasureBoard"));
 		assertTrue(response.contains("frontend/src/treasurehunt/HighScoreList.tsx"));
+	}
+
+	/**
+	 * The island modules of the task board are listed with its Java source.
+	 */
+	@Test
+	public void taskBoardModulesAreDisplayed()
+	{
+		String response = render(TaskBoardPage.class, "frontend/src/taskboard/TaskBoard.tsx");
+		assertTrue(response.contains("export default function TaskBoard"));
+		assertTrue(response.contains("frontend/src/taskboard/RichTextField.tsx"));
 	}
 
 	/**

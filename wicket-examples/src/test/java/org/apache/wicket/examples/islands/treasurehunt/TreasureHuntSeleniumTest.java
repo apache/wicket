@@ -21,45 +21,27 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.Duration;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import org.apache.wicket.examples.AjaxEngineSelector.Engine;
-import org.apache.wicket.examples.JettyTestCaseDecorator;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.BeforeEach;
+import org.apache.wicket.examples.islands.IslandSeleniumTestCase;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WindowType;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.logging.LogEntry;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
- * Plays the Treasure Hunt in a headless Chrome, with either Ajax engine.
- * <p>
- * Needs Chrome, so it only runs with {@code -Dwicket.selenium=true}, and the examples' JavaScript,
- * so it is skipped unless the build ran with {@code -Pjs-test}. Every test also checks that the
- * browser logged no errors, which includes violations of the content security policy.
+ * Plays the Treasure Hunt in a headless Chrome, with either Ajax engine. Every test also checks
+ * that the browser logged no errors, which includes violations of the content security policy.
  */
 @EnabledIfSystemProperty(named = "wicket.selenium", matches = "true")
-class TreasureHuntSeleniumTest extends JettyTestCaseDecorator
+class TreasureHuntSeleniumTest extends IslandSeleniumTestCase
 {
 	private static final String BOARD = "[data-wicket-island=treasure-board]";
 
@@ -72,59 +54,6 @@ class TreasureHuntSeleniumTest extends JettyTestCaseDecorator
 	private static final String PLAYER_ENTRY = ".player-entry";
 
 	private static final String HIGH_SCORES = ".highscore-list";
-
-	/**
-	 * Marks the element so a later check can tell whether it is still the same one.
-	 */
-	private static final String MARK =
-		"document.querySelector(arguments[0]).__mark = arguments[1];";
-
-	private static final String READ_MARK = """
-		var element = document.querySelector(arguments[0]);
-		return element && element.__mark ? element.__mark : null;
-		""";
-
-	private boolean started;
-
-	private WebDriver driver;
-
-	private WebDriverWait wait;
-
-	@Override
-	@BeforeEach
-	public void before() throws Exception
-	{
-		Assumptions.assumeTrue(
-			getClass().getResource("/META-INF/wicket-islands/.vite/manifest.json") != null,
-			"the island modules are built with -Pjs-test only");
-
-		super.before();
-		started = true;
-
-		LoggingPreferences logging = new LoggingPreferences();
-		logging.enable(LogType.BROWSER, Level.ALL);
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless=new", "--window-size=1280,1024");
-		options.setCapability(ChromeOptions.LOGGING_PREFS, logging);
-		driver = new ChromeDriver(options);
-		wait = new WebDriverWait(driver, Duration.ofSeconds(10), Duration.ofMillis(20));
-		// Wicket replaces the labels on every probe, possibly between finding and reading one
-		wait.ignoring(StaleElementReferenceException.class);
-	}
-
-	@Override
-	@AfterEach
-	public void after() throws Exception
-	{
-		if (driver != null)
-		{
-			driver.quit();
-		}
-		if (started)
-		{
-			super.after();
-		}
-	}
 
 	@ParameterizedTest
 	@EnumSource(Engine.class)
@@ -286,14 +215,7 @@ class TreasureHuntSeleniumTest extends JettyTestCaseDecorator
 
 	private void open(Engine engine)
 	{
-		driver.get(String.format("http://localhost:%d/wicket-examples/treasurehunt", localPort));
-		if (isJQueryLoaded() != (engine == Engine.JQUERY))
-		{
-			WebElement toggle = driver.findElement(By.partialLinkText("switch to"));
-			toggle.click();
-			wait.until(ExpectedConditions.stalenessOf(toggle));
-		}
-		assertEquals(engine == Engine.JQUERY, isJQueryLoaded(), "the Ajax engine");
+		open("treasurehunt", engine);
 		awaitIslands();
 	}
 
@@ -302,11 +224,6 @@ class TreasureHuntSeleniumTest extends JettyTestCaseDecorator
 		wait.until(driver -> !cells().isEmpty() &&
 			!driver.findElements(By.cssSelector(HISTORY)).isEmpty() &&
 			!driver.findElements(By.cssSelector(HIGH_SCORES)).isEmpty());
-	}
-
-	private boolean isJQueryLoaded()
-	{
-		return (Boolean)js().executeScript("return typeof window.jQuery === 'function';");
 	}
 
 	private List<WebElement> cells()
@@ -378,55 +295,5 @@ class TreasureHuntSeleniumTest extends JettyTestCaseDecorator
 	private String boardKey()
 	{
 		return driver.findElement(By.cssSelector(BOARD)).getDomAttribute("data-wicket-island-key");
-	}
-
-	private List<String> texts(String selector)
-	{
-		return driver.findElements(By.cssSelector(selector))
-			.stream()
-			.map(WebElement::getText)
-			.collect(Collectors.toList());
-	}
-
-	private void mark(String selector, String mark)
-	{
-		js().executeScript(MARK, selector, mark);
-	}
-
-	private Object readMark(String selector)
-	{
-		return js().executeScript(READ_MARK, selector);
-	}
-
-	/**
-	 * Every island the runtime has mounted still has its host in the document.
-	 */
-	private void assertNoLeakedIslands()
-	{
-		Object counts = js().executeScript("""
-			return [globalThis.__wicketIslandsRuntime.mounted.size,
-				document.querySelectorAll('[data-wicket-island]').length];
-			""");
-		List<?> mountedAndHosts = (List<?>)counts;
-		assertEquals(mountedAndHosts.get(1), mountedAndHosts.get(0),
-			"mounted islands versus hosts in the page");
-	}
-
-	private void assertNoBrowserErrors()
-	{
-		List<String> errors = driver.manage()
-			.logs()
-			.get(LogType.BROWSER)
-			.getAll()
-			.stream()
-			.filter(entry -> entry.getLevel().intValue() >= Level.WARNING.intValue())
-			.map(LogEntry::getMessage)
-			.collect(Collectors.toList());
-		assertTrue(errors.isEmpty(), errors.toString());
-	}
-
-	private JavascriptExecutor js()
-	{
-		return (JavascriptExecutor)driver;
 	}
 }

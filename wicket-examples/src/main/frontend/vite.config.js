@@ -32,7 +32,12 @@ export default defineConfig({
 				'treasure-board': 'src/treasurehunt/TreasureBoard.tsx',
 				'probe-history': 'src/treasurehunt/ProbeHistory.tsx',
 				'player-entry': 'src/treasurehunt/PlayerEntryForm.tsx',
-				'highscore-list': 'src/treasurehunt/HighScoreList.tsx'
+				'highscore-list': 'src/treasurehunt/HighScoreList.tsx',
+				'task-board': 'src/taskboard/TaskBoard.tsx',
+				'rich-text': 'src/taskboard/RichTextField.tsx',
+				'date-picker': 'src/taskboard/DueDateField.tsx',
+				'board-filter': 'src/taskboard/BoardFilterBar.tsx',
+				'cards-per-week': 'src/taskboard/CardsPerWeek.tsx'
 			},
 			...reactIslands
 		})

@@ -82,6 +82,10 @@
 			<artifactId>cage</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+			<artifactId>owasp-java-html-sanitizer</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
 			<scope>compile</scope>
@@ -238,7 +242,7 @@
 					<include>**/*.ttf</include>
 				</includes>
 			</resource>
-			<!-- the island modules of the Treasure Hunt, to view them next to its Java source -->
+			<!-- the island modules of the island examples, to view them next to their Java source -->
 			<resource>
 				<filtering>false</filtering>
 				<directory>${basedir}/src/main/frontend</directory>
@@ -246,6 +250,15 @@
 				<includes>
 					<include>vite.config.js</include>
 					<include>src/treasurehunt/*</include>
+				</includes>
+			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>${basedir}/src/main/frontend</directory>
+				<targetPath>org/apache/wicket/examples/islands/taskboard/frontend</targetPath>
+				<includes>
+					<include>vite.config.js</include>
+					<include>src/taskboard/*</include>
 				</includes>
 			</resource>
 		</resources>
@@ -356,15 +369,6 @@
 								</configuration>
 							</execution>
 						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.eclipse.jetty.ee11</groupId>
-						<artifactId>jetty-ee11-maven-plugin</artifactId>
-						<configuration>
-							<webApp>
-								<extraClasspath>${project.build.directory}/generated-resources/wicket-islands</extraClasspath>
-							</webApp>
-						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
