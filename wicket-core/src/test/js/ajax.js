@@ -130,6 +130,34 @@ Wicket.Event.add(window, 'domready', function() {
 			execute(attrs, assert);
 		});
 
+		test('processData publishes data entries in order, after evaluations.', assert => {
+			const done = assert.async();
+			assert.expect(5);
+
+			Wicket.dataTestEvaluated = false;
+			const received = [];
+
+			const attrs = {
+				u: 'data/ajax/dataResponse.xml'
+			};
+
+			Wicket.Event.subscribe(Wicket.Event.Topic.AJAX_CALL_DATA, function (jqEvent, callAttrs, name, value) {
+				assert.ok(Wicket.dataTestEvaluated, 'Data is published after the evaluations');
+				assert.equal(callAttrs.u, attrs.u, 'Data is published with the attributes of the call');
+				received.push([name, value]);
+			});
+
+			attrs.sh = [
+				function () {
+					assert.deepEqual(received, [['first', '{"value":"a]]>b"}'], ['second', 'two']],
+						'All data is published, in order, before the success handlers');
+					done();
+				}
+			];
+
+			execute(attrs, assert, done);
+		});
+
 		test('processComponent, normal case.', assert => {
 			const done = assert.async();
 			assert.expect(2);

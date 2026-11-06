@@ -1,0 +1,27 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+	<form wicket:id="form" class="card-form">
+		<h3>Edit card</h3>
+		<div wicket:id="feedback"></div>
+		<p>
+			<label>Title <input type="text" wicket:id="title"/></label>
+		</p>
+		<div class="card-form-field">
+			<span class="card-form-label">Description</span>
+			<div wicket:id="description"></div>
+		</div>
+		<div class="card-form-field">
+			<div wicket:id="due"></div>
+		</div>
+		<p>
+			<label>Assignee <select wicket:id="assigneeId"></select></label>
+		</p>
+		<p class="card-form-buttons">
+			<button wicket:id="save">Save</button>
+			<a wicket:id="cancel" href="#">Cancel</a>
+		</p>
+	</form>
+</wicket:panel>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "wicket-islands-workspace",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/runtime",
+    "packages/react",
+    "packages/vite-plugin"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit -p .",
+    "test": "npm run typecheck && vitest run"
+  },
+  "devDependencies": {
+    "@tanstack/query-core": "^5.0.0",
+    "@tanstack/react-query": "^5.0.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "jsdom": "^27.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0",
+    "vitest": "^4.0.0"
+  }
+}
