@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.islands;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,10 +39,13 @@ public final class PagelessCall
 
 	private final List<String> invalidations = new ArrayList<>();
 
-	PagelessCall(String endpoint, WebRequest request)
+	private final Serializable handle;
+
+	PagelessCall(String endpoint, WebRequest request, Serializable handle)
 	{
 		this.endpoint = endpoint;
 		this.request = request;
+		this.handle = handle;
 	}
 
 	/**
@@ -66,6 +70,31 @@ public final class PagelessCall
 	public Session getSession()
 	{
 		return Session.get();
+	}
+
+	/**
+	 * Returns the context of the handle the call was made with: the context the island passed to
+	 * {@code usePageless} when it rendered. The client cannot choose it, but a handle is no
+	 * permission: check that the session may access the context.
+	 *
+	 * @param <C>
+	 *            the type of the context
+	 * @param type
+	 *            the type of the context
+	 * @return the context
+	 * @throws IslandCallRejectedException
+	 *             when the call came without a handle; throw it on, so the call is answered as
+	 *             invalid
+	 * @throws ClassCastException
+	 *             when the context is not of the given type
+	 */
+	public <C> C getHandle(Class<C> type)
+	{
+		if (handle == null)
+		{
+			throw reject("The call has no handle.");
+		}
+		return type.cast(handle);
 	}
 
 	/**

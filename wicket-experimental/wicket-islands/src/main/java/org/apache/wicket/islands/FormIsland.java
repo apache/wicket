@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.islands;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -245,7 +246,34 @@ public class FormIsland<T, P> extends FormComponent<T>
 	 */
 	public final FormIsland<T, P> usePageless(String name, String endpointId)
 	{
-		island.addPageless(name, endpointId);
+		island.addPageless(name, endpointId, null);
+		return this;
+	}
+
+	/**
+	 * Makes a page-less endpoint callable by the client-side peer under the given name, with a
+	 * handle for the given context. The context is read when the island renders and kept on the
+	 * server, in the {@link IslandSettings#getHandleStore() handle store}; the client only holds the
+	 * handle and sends it with each call, and the endpoint reads the context with
+	 * {@link PagelessCall#getHandle(Class)}. Use it for context the client must not choose, such as
+	 * the record the page shows. The handle is reissued when the context changes.
+	 * <p>
+	 * <strong>A handle is not an authorization mechanism.</strong> The endpoint still checks that
+	 * the session may access the context.
+	 *
+	 * @param name
+	 *            the name the client calls
+	 * @param endpointId
+	 *            the id the endpoint is registered under in {@link PagelessEndpoints}
+	 * @param context
+	 *            the context of the calls; small, serializable and with a meaningful
+	 *            {@code equals}
+	 * @return {@code this}
+	 */
+	public final FormIsland<T, P> usePageless(String name, String endpointId,
+		IModel<? extends Serializable> context)
+	{
+		island.addPageless(name, endpointId, Args.notNull(context, "context"));
 		return this;
 	}
 
@@ -340,6 +368,7 @@ public class FormIsland<T, P> extends FormComponent<T>
 		{
 			props.detach();
 		}
+		island.detach();
 		super.onDetach();
 	}
 }

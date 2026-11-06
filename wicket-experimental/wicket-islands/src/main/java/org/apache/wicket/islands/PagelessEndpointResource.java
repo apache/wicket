@@ -18,6 +18,7 @@ package org.apache.wicket.islands;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -39,6 +40,9 @@ import jakarta.servlet.http.HttpServletRequest;
  * a CORS preflight that is never granted, and refuses a request whose <code>Sec-Fetch-Site</code>
  * is not <code>same-origin</code>. These checks apply whether or not the application uses
  * resource isolation for its pages.
+ * <p>
+ * A call made with a handle the session does not know, for example one issued before the session
+ * expired, is answered as expired.
  */
 final class PagelessEndpointResource extends AbstractResource
 {
@@ -47,6 +51,8 @@ final class PagelessEndpointResource extends AbstractResource
 	private static final Logger LOG = LoggerFactory.getLogger(PagelessEndpointResource.class);
 
 	static final String HEADER = "X-Wicket-Islands";
+
+	static final String HANDLE_HEADER = "X-Wicket-Islands-Handle";
 
 	private static final int MAX_PAYLOAD = 1024 * 1024;
 
@@ -92,7 +98,13 @@ final class PagelessEndpointResource extends AbstractResource
 			return response;
 		}
 
-		String answer = answer(id, registration, new PagelessCall(id, request), body);
+		String handleHeader = request.getHeader(HANDLE_HEADER);
+		Serializable handle = handleHeader == null ? null
+			: IslandSettings.get().getHandleStore().resolve(id, handleHeader);
+		String answer = handleHeader != null && handle == null
+			? IslandAnswer.failure(IslandSettings.get().getSerializer(), null, "expired",
+				List.of("The page this call belongs to has expired."), List.of())
+			: answer(id, registration, new PagelessCall(id, request, handle), body);
 		response.setContentType("application/json");
 		response.setTextEncoding("UTF-8");
 		response.setWriteCallback(new WriteCallback()

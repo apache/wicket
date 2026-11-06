@@ -16,15 +16,20 @@
  */
 package org.apache.wicket.islands;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
+import org.apache.wicket.csp.ContentSecurityPolicySettings;
 import org.apache.wicket.islands.serializer.IIslandSerializer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.MetaDataHeaderItem;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.io.IClusterable;
@@ -45,13 +50,53 @@ final class IslandSupport implements IClusterable
 	{
 	}
 
+	/**
+	 * A page-less endpoint the island calls, with the context of its handle and the handle last
+	 * issued for it.
+	 */
+	private static final class Pageless implements IClusterable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final String endpointId;
+
+		private final IModel<? extends Serializable> context;
+
+		private Serializable issuedFor;
+
+		private String handle;
+
+		private Pageless(String endpointId, IModel<? extends Serializable> context)
+		{
+			this.endpointId = endpointId;
+			this.context = context;
+		}
+
+		private String handle()
+		{
+			if (context == null)
+			{
+				return null;
+			}
+			Serializable current = Args.notNull(context.getObject(), "context");
+			IIslandHandleStore store = IslandSettings.get().getHandleStore();
+			if (handle == null || !current.equals(issuedFor) ||
+				store.resolve(endpointId, handle) == null)
+			{
+				handle = store.issue(endpointId, current);
+				issuedFor = current;
+			}
+			return handle;
+		}
+	}
+
 	private final String type;
 
 	private final String key;
 
 	private final Map<String, Endpoint> endpoints = new LinkedHashMap<>();
 
-	private final Map<String, String> pageless = new LinkedHashMap<>();
+	private final Map<String, Pageless> pageless = new LinkedHashMap<>();
 
 	private final IslandEndpointBehavior behavior = new IslandEndpointBehavior();
 
@@ -93,11 +138,11 @@ final class IslandSupport implements IClusterable
 		endpoints.put(name, new Endpoint(requestType, (IslandCallHandler<Object, Object>)handler));
 	}
 
-	void addPageless(String name, String endpointId)
+	void addPageless(String name, String endpointId, IModel<? extends Serializable> context)
 	{
 		Args.notEmpty(name, "name");
 		Args.notEmpty(endpointId, "endpointId");
-		pageless.put(name, endpointId);
+		pageless.put(name, new Pageless(endpointId, context));
 	}
 
 	static <Q> IslandCallHandler<Q, Void> withoutResult(IslandCallConsumer<Q> consumer)
@@ -154,28 +199,52 @@ final class IslandSupport implements IClusterable
 		IIslandSerializer serializer = serializer();
 		String state = "{\"props\":" + serializer.toJson(props) + ",\"calls\":" +
 			serializer.toJson(endpoints.keySet()) + ",\"ajax\":" + behavior.renderAttributes() +
-			",\"pageless\":" + serializer.toJson(pagelessUrls()) +
+			",\"pageless\":" + serializer.toJson(renderPageless()) +
 			(form != null ? ",\"form\":" + form : "") + "}";
 		return "<script type=\"application/json\" " + Island.ATTR_STATE + ">" +
 			IslandJson.escapeForScript(state) + "</script><div " + Island.ATTR_ROOT + "></div>";
 	}
 
-	private Map<String, String> pagelessUrls()
+	private Map<String, Map<String, String>> renderPageless()
 	{
-		Map<String, String> urls = new LinkedHashMap<>();
-		pageless.forEach((name, id) -> {
+		Map<String, Map<String, String>> rendered = new LinkedHashMap<>();
+		pageless.forEach((name, use) -> {
 			PageParameters parameters = new PageParameters();
-			parameters.set(0, id);
-			urls.put(name, RequestCycle.get()
+			parameters.set(0, use.endpointId);
+			Map<String, String> call = new LinkedHashMap<>();
+			call.put("url", RequestCycle.get()
 				.urlFor(IslandSettings.get().getEndpointReference(), parameters)
 				.toString());
+			String handle = use.handle();
+			if (handle != null)
+			{
+				call.put("handle", handle);
+			}
+			rendered.put(name, call);
 		});
-		return urls;
+		return rendered;
 	}
 
 	void renderHead(IHeaderResponse response)
 	{
+		ContentSecurityPolicySettings csp = WebApplication.get().getCspSettings();
+		if (csp.isNonceEnabled())
+		{
+			response.render(new MetaDataHeaderItem(MetaDataHeaderItem.META_TAG)
+				.addTagAttribute("property", "csp-nonce")
+				.addTagAttribute("nonce", csp.getNonce(RequestCycle.get())));
+		}
 		IslandSettings.get().getModuleLoader().renderHead(type, response);
+	}
+
+	void detach()
+	{
+		pageless.values().forEach(use -> {
+			if (use.context != null)
+			{
+				use.context.detach();
+			}
+		});
 	}
 
 	static IIslandSerializer serializer()

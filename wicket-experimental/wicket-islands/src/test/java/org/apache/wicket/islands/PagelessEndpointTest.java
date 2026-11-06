@@ -17,6 +17,10 @@
 package org.apache.wicket.islands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
@@ -26,6 +30,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.islands.IslandTestPage.Add;
 import org.apache.wicket.islands.IslandTestPage.Sum;
 import org.apache.wicket.mock.MockWebResponse;
@@ -59,7 +64,9 @@ class PagelessEndpointTest extends IslandTestCase
 			.register("secret", Void.class, (none, call) -> "secret", call -> false)
 			.register("boom", Void.class, (none, call) -> {
 				throw new IllegalStateException("broken");
-			}, IPagelessAuthorization.PERMIT_ALL);
+			}, IPagelessAuthorization.PERMIT_ALL)
+			.register("whoami", Void.class, (none, call) -> call.getHandle(String.class),
+				IPagelessAuthorization.PERMIT_ALL);
 	}
 
 	@Test
@@ -115,31 +122,108 @@ class PagelessEndpointTest extends IslandTestCase
 	@Test
 	void requestWithoutTheHeaderIsRefused()
 	{
-		assertEquals(403, send("echo", "POST", "{\"amount\":1}", null, false).getStatus());
+		assertEquals(403, send("echo", "POST", "{\"amount\":1}", null, false, null).getStatus());
 	}
 
 	@Test
 	void getIsRefused()
 	{
-		assertEquals(405, send("echo", "GET", "", null, true).getStatus());
+		assertEquals(405, send("echo", "GET", "", null, true, null).getStatus());
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	void islandStateHoldsTheUrlsOfItsPagelessCalls()
 	{
 		tester.startPage(IslandTestPage.class);
 
-		Matcher matcher = Pattern.compile(
-			"data-wicket-island-state>(.*?)</script>", Pattern.DOTALL)
-			.matcher(tester.getLastResponseAsString());
-		assertTrue(matcher.find());
-		Map<String, String> pageless = (Map<String, String>)JSON
-			.readValue(matcher.group(1), Map.class)
-			.get("pageless");
-		assertEquals(List.of("echo", "sum"), List.copyOf(pageless.keySet()));
-		assertTrue(pageless.get("echo").endsWith("wicket-islands-call/echo"), pageless.toString());
+		Map<String, Map<String, String>> pageless = renderedPageless();
+		assertEquals(List.of("echo", "sum", "customer"), List.copyOf(pageless.keySet()));
+		assertTrue(pageless.get("echo").get("url").endsWith("wicket-islands-call/echo"),
+			pageless.toString());
 		assertEquals(pageless.get("echo"), pageless.get("sum"));
+		assertFalse(pageless.get("echo").containsKey("handle"));
+		assertTrue(pageless.get("customer").get("url").endsWith("wicket-islands-call/whoami"),
+			pageless.toString());
+	}
+
+	@Test
+	void handleCarriesTheContextTheIslandRendered()
+	{
+		tester.startPage(IslandTestPage.class);
+
+		Map<String, Object> answer = answer(call("whoami", handle("customer")));
+
+		assertEquals(Boolean.TRUE, answer.get("ok"));
+		assertEquals("c1", answer.get("value"));
+	}
+
+	@Test
+	void handleIsKeptWhileTheContextIsTheSame()
+	{
+		IslandTestPage page = tester.startPage(IslandTestPage.class);
+		String first = handle("customer");
+
+		tester.startPage(page);
+		assertEquals(first, handle("customer"));
+
+		page.customer = "c2";
+		tester.startPage(page);
+		String second = handle("customer");
+		assertNotEquals(first, second);
+		assertEquals("c2", answer(call("whoami", second)).get("value"));
+	}
+
+	@Test
+	void callWithoutHandleIsInvalidWhenTheEndpointNeedsOne()
+	{
+		assertEquals("invalid", error(answer(call("whoami", null))).get("kind"));
+	}
+
+	@Test
+	void unknownHandleIsExpired()
+	{
+		tester.startPage(IslandTestPage.class);
+
+		assertEquals("expired", error(answer(call("whoami", "made-up"))).get("kind"));
+	}
+
+	@Test
+	void handleOfAnotherEndpointIsExpired()
+	{
+		tester.startPage(IslandTestPage.class);
+
+		Map<String, Object> answer = answer(
+			send("echo", "POST", "{\"amount\":1}", null, true, handle("customer")));
+
+		assertEquals("expired", error(answer).get("kind"));
+	}
+
+	@Test
+	void handleOfAnotherSessionIsExpired()
+	{
+		tester.startPage(IslandTestPage.class);
+		String handle = handle("customer");
+
+		ThreadContext.setSession(
+			tester.getApplication().newSession(tester.getRequestCycle().getRequest(),
+				tester.getRequestCycle().getResponse()));
+
+		assertEquals("expired", error(answer(call("whoami", handle))).get("kind"));
+	}
+
+	@Test
+	void storeKeepsTheMostRecentlyUsedHandles()
+	{
+		SessionHandleStore store = new SessionHandleStore(2);
+
+		String first = store.issue("whoami", "a");
+		String second = store.issue("whoami", "b");
+		assertEquals("a", store.resolve("whoami", first));
+		String third = store.issue("whoami", "c");
+
+		assertEquals("a", store.resolve("whoami", first));
+		assertNull(store.resolve("whoami", second));
+		assertEquals("c", store.resolve("whoami", third));
 	}
 
 	@Test
@@ -156,11 +240,34 @@ class PagelessEndpointTest extends IslandTestCase
 
 	private MockWebResponse post(String id, String body, String fetchSite)
 	{
-		return send(id, "POST", body, fetchSite, true);
+		return send(id, "POST", body, fetchSite, true, null);
+	}
+
+	private MockWebResponse call(String id, String handle)
+	{
+		return send(id, "POST", "", "same-origin", true, handle);
+	}
+
+	@SuppressWarnings("unchecked")
+	private Map<String, Map<String, String>> renderedPageless()
+	{
+		Matcher matcher = Pattern.compile(
+			"data-wicket-island-state>(.*?)</script>", Pattern.DOTALL)
+			.matcher(tester.getLastResponseAsString());
+		assertTrue(matcher.find());
+		return (Map<String, Map<String, String>>)JSON.readValue(matcher.group(1), Map.class)
+			.get("pageless");
+	}
+
+	private String handle(String name)
+	{
+		String handle = renderedPageless().get(name).get("handle");
+		assertNotNull(handle);
+		return handle;
 	}
 
 	private MockWebResponse send(String id, String method, String body, String fetchSite,
-		boolean header)
+		boolean header, String handle)
 	{
 		byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
 		MockHttpServletRequest http = new MockHttpServletRequest(tester.getApplication(),
@@ -205,6 +312,10 @@ class PagelessEndpointTest extends IslandTestCase
 		if (fetchSite != null)
 		{
 			http.addHeader("Sec-Fetch-Site", fetchSite);
+		}
+		if (handle != null)
+		{
+			http.addHeader(PagelessEndpointResource.HANDLE_HEADER, handle);
 		}
 		MockWebResponse response = new MockWebResponse();
 		new PagelessEndpointResource().respond(new IResource.Attributes(

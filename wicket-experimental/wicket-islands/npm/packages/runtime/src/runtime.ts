@@ -34,13 +34,23 @@ const PARAM_CALL_ID = 'island-call-id';
 const PARAM_PAYLOAD = 'island-payload';
 const PARAM_KEY = 'island-key';
 const PAGELESS_HEADER = 'X-Wicket-Islands';
+const HANDLE_HEADER = 'X-Wicket-Islands-Handle';
 
 interface IslandState {
 	props: unknown;
 	calls: string[];
 	ajax: WicketAjaxAttributes;
-	pageless?: Record<string, string>;
+	pageless?: Record<string, PagelessCall>;
 	form?: FormState;
+}
+
+/**
+ * A page-less endpoint as the island state names it: its URL, and the handle standing for the
+ * context the server keeps for the island's calls.
+ */
+interface PagelessCall {
+	url: string;
+	handle?: string;
 }
 
 interface MountedIsland {
@@ -257,13 +267,20 @@ export class IslandRuntime {
 		});
 	}
 
-	private async callPageless(url: string, payload: unknown): Promise<unknown> {
+	private async callPageless(pageless: PagelessCall, payload: unknown): Promise<unknown> {
+		const headers: Record<string, string> = {
+			'Content-Type': 'application/json',
+			[PAGELESS_HEADER]: '1'
+		};
+		if (pageless.handle) {
+			headers[HANDLE_HEADER] = pageless.handle;
+		}
 		let response: Response;
 		try {
-			response = await fetch(url, {
+			response = await fetch(pageless.url, {
 				method: 'POST',
 				credentials: 'same-origin',
-				headers: { 'Content-Type': 'application/json', [PAGELESS_HEADER]: '1' },
+				headers,
 				body: payload === undefined ? '' : JSON.stringify(payload)
 			});
 		} catch {

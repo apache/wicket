@@ -16,7 +16,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { IslandCallError, IslandRuntime, type IslandContext, type IslandModule } from '../src/index';
+import { cspNonce, IslandCallError, IslandRuntime, type IslandContext, type IslandModule } from '../src/index';
 import { component, data, failRequest, formHost, host, requests, respond, setUpWicket } from './wicket-fixture';
 
 interface Props {
@@ -318,7 +318,10 @@ describe('IslandRuntime', () => {
 
 		beforeEach(() => {
 			document.body.innerHTML = `<div id="panel">${host('board1', 'board', 'k1', { label: 'one' },
-				'./call?board1', { scores: './wicket-islands-call/scores' })}</div>`;
+				'./call?board1', {
+					scores: { url: './wicket-islands-call/scores' },
+					members: { url: './wicket-islands-call/members', handle: 'h-1' }
+				})}</div>`;
 			runtime.register('board', recorder.module());
 		});
 
@@ -336,6 +339,23 @@ describe('IslandRuntime', () => {
 			expect(fetched[0].init.method).toBe('POST');
 			expect(fetched[0].init.body).toBe('{"size":"SMALL"}');
 			expect((fetched[0].init.headers as Record<string, string>)['X-Wicket-Islands']).toBe('1');
+			expect(fetched[0].init.headers).not.toHaveProperty('X-Wicket-Islands-Handle');
+		});
+
+		it('sends the handle the island was rendered with', async () => {
+			answer(200, { ok: true, value: [], invalidate: [] });
+
+			await recorder.context.call('members', { prefix: 'a' });
+
+			expect(fetched[0].url).toBe('./wicket-islands-call/members');
+			expect((fetched[0].init.headers as Record<string, string>)['X-Wicket-Islands-Handle'])
+				.toBe('h-1');
+		});
+
+		it('rejects a call whose handle the server no longer knows as expired', async () => {
+			answer(200, { ok: false, error: { kind: 'expired', messages: ['gone'] }, invalidate: [] });
+
+			await expect(recorder.context.call('members')).rejects.toMatchObject({ kind: 'expired' });
 		});
 
 		it('rejects a failed page-less call', async () => {
@@ -385,5 +405,21 @@ describe('IslandRuntime', () => {
 		respond(requests[0], data({ call: '1', ok: true, value: null, invalidate: ['scores'] }));
 
 		expect(invalidated).toEqual([['scores']]);
+	});
+});
+
+describe('cspNonce', () => {
+	afterEach(() => {
+		document.head.innerHTML = '';
+	});
+
+	it('reads the nonce Wicket renders for the page', () => {
+		document.head.innerHTML = '<meta property="csp-nonce" nonce="n0nce">';
+
+		expect(cspNonce()).toBe('n0nce');
+	});
+
+	it('is undefined when the page has no nonce', () => {
+		expect(cspNonce()).toBeUndefined();
 	});
 });

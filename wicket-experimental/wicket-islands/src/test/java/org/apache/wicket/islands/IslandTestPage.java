@@ -47,6 +47,8 @@ public class IslandTestPage extends WebPage
 
 	private int count;
 
+	String customer = "c1";
+
 	final Label label;
 
 	final Island<TestProps> island;
@@ -74,6 +76,7 @@ public class IslandTestPage extends WebPage
 		});
 		island.usePageless("echo");
 		island.usePageless("sum", "echo");
+		island.usePageless("customer", "whoami", () -> customer);
 		add(island);
 
 		add(new AjaxLink<Void>("invalidate")

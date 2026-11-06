@@ -87,6 +87,8 @@ public class IslandSettings
 
 	private final PagelessEndpoints pagelessEndpoints = new PagelessEndpoints();
 
+	private IIslandHandleStore handleStore = new SessionHandleStore();
+
 	/**
 	 * Installs the settings in an application, mounts the resource serving the built files,
 	 * registers the listener that answers island calls failing before they reach their island, and
@@ -162,6 +164,26 @@ public class IslandSettings
 	public PagelessEndpoints getPagelessEndpoints()
 	{
 		return pagelessEndpoints;
+	}
+
+	/**
+	 * @return the store of the handles islands issue for page-less calls, by default a
+	 *         {@link SessionHandleStore}
+	 */
+	public IIslandHandleStore getHandleStore()
+	{
+		return handleStore;
+	}
+
+	/**
+	 * @param handleStore
+	 *            the store of the handles islands issue for page-less calls
+	 * @return {@code this}
+	 */
+	public IslandSettings setHandleStore(IIslandHandleStore handleStore)
+	{
+		this.handleStore = Args.notNull(handleStore, "handleStore");
+		return this;
 	}
 
 	ResourceReference getEndpointReference()

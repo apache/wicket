@@ -94,7 +94,7 @@ export function data(value: unknown): string {
  * The markup of an island host, as Island renders it.
  */
 export function host(id: string, type: string, key: string, props: unknown, url = `./call?${id}`,
-	pageless?: Record<string, string>): string {
+	pageless?: Record<string, { url: string; handle?: string }>): string {
 	return hostWith(id, type, key, { props, pageless }, '', url);
 }
 

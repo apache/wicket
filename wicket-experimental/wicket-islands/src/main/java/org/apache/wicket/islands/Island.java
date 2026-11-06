@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.islands;
 
+import java.io.Serializable;
+
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A component whose body is rendered in the browser by a JavaScript framework component, its
@@ -178,7 +181,34 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 	 */
 	public final Island<P> usePageless(String name, String endpointId)
 	{
-		island.addPageless(name, endpointId);
+		island.addPageless(name, endpointId, null);
+		return this;
+	}
+
+	/**
+	 * Makes a page-less endpoint callable by the client-side peer under the given name, with a
+	 * handle for the given context. The context is read when the island renders and kept on the
+	 * server, in the {@link IslandSettings#getHandleStore() handle store}; the client only holds the
+	 * handle and sends it with each call, and the endpoint reads the context with
+	 * {@link PagelessCall#getHandle(Class)}. Use it for context the client must not choose, such as
+	 * the record the page shows. The handle is reissued when the context changes.
+	 * <p>
+	 * <strong>A handle is not an authorization mechanism.</strong> The endpoint still checks that
+	 * the session may access the context.
+	 *
+	 * @param name
+	 *            the name the client calls
+	 * @param endpointId
+	 *            the id the endpoint is registered under in {@link PagelessEndpoints}
+	 * @param context
+	 *            the context of the calls; small, serializable and with a meaningful
+	 *            {@code equals}
+	 * @return {@code this}
+	 */
+	public final Island<P> usePageless(String name, String endpointId,
+		IModel<? extends Serializable> context)
+	{
+		island.addPageless(name, endpointId, Args.notNull(context, "context"));
 		return this;
 	}
 
@@ -212,5 +242,12 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 		super.renderHead(response);
 
 		island.renderHead(response);
+	}
+
+	@Override
+	protected void onDetach()
+	{
+		island.detach();
+		super.onDetach();
 	}
 }

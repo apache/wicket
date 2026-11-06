@@ -36,6 +36,16 @@ export function runtime(): IslandRuntime {
 }
 
 /**
+ * The nonce of the page's Content Security Policy, for style or script elements a component
+ * library injects; undefined when the policy uses no nonces. Wicket renders it in a
+ * <code>csp-nonce</code> meta tag, as Vite expects.
+ */
+export function cspNonce(): string | undefined {
+	const meta = document.querySelector<HTMLMetaElement>('meta[property="csp-nonce"]');
+	return meta?.nonce || meta?.getAttribute('nonce') || undefined;
+}
+
+/**
  * Registers the module for an island type and mounts every island of that type on the page.
  * Called by the entry modules the Vite plugin generates.
  */

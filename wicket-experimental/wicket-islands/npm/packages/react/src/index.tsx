@@ -22,7 +22,7 @@ import { createRoot } from 'react-dom/client';
 import type { FormBinding, FormState, IslandCallError, IslandContext,
 	IslandModule } from 'wicket-islands';
 
-export { IslandCallError } from 'wicket-islands';
+export { IslandCallError, cspNonce } from 'wicket-islands';
 export type { FormState, IslandCallErrorKind } from 'wicket-islands';
 
 interface PropsStore<P> {

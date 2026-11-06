@@ -41,6 +41,19 @@ class IslandRenderTest extends IslandTestCase
 		"<script type=\"application/json\" data-wicket-island-state>(.*?)</script>", Pattern.DOTALL);
 
 	@Test
+	void rendersTheCspNonceForStylesTheModulesInject()
+	{
+		tester.getApplication().getCspSettings().blocking().strict();
+
+		tester.startPage(IslandTestPage.class);
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(Pattern.compile("<meta property=\"csp-nonce\" nonce=\"[^\"]+\"")
+			.matcher(response)
+			.find(), response);
+	}
+
+	@Test
 	void rendersHostWithTypeAndKey()
 	{
 		IslandTestPage page = tester.startPage(IslandTestPage.class);
