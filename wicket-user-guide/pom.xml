@@ -101,15 +101,16 @@
 						<attributes>
 							<gemPath>${project.build.directory}/gems-provided</gemPath>
 							<allow-uri-read>allow-uri-read</allow-uri-read>
-							<stylesheet>css/style.css</stylesheet>
 							<linkcss>true</linkcss>
+							<source-highlighter>rouge</source-highlighter>
+							<rouge-css>class</rouge-css>
+							<webfonts>false</webfonts>
 						</attributes>
 						<preserveDirectories>true</preserveDirectories>
 						<requires>
 							<require>asciidoctor-diagram</require>
 						</requires>
 						<sourceDocumentName>single.adoc</sourceDocumentName>
-						<sourceHighlighter>coderay</sourceHighlighter>
 					</configuration>
 					<executions>
 						<execution>
@@ -139,6 +140,7 @@
 							<configuration>
 								<backend>pdf</backend>
 								<attributes>
+									<icons>font</icons>
 									<pagenums />
 									<idprefix />
 									<idseparator>-</idseparator>

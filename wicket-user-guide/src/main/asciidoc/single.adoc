@@ -20,8 +20,10 @@ The Apache Software Foundation
 :description: Official User Guide for Apache Wicket framework. 
 :keywords: Apache Wicket, User Guide, examples, AJAX, stateless
 :toc: left
-:icons: font
 :sectlinks:
+:docinfo: shared
+:wicket_line: 12.x
+:wicket_line_major: 12
 
 :sectnums:
 
