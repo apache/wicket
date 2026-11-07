@@ -18,7 +18,10 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
 import java.util.List;
 
-import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
@@ -130,7 +133,24 @@ public class ChoiceFilter<T> extends AbstractFilter
 
 		if (autoSubmit)
 		{
-			choice.add(AttributeModifier.replace("onchange", "this.form.submit();"));
+			choice.add(new Behavior()
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void bind(Component component)
+				{
+					super.bind(component);
+					component.setOutputMarkupId(true);
+				}
+
+				@Override
+				public void renderHead(Component component, IHeaderResponse response)
+				{
+					response.render(
+						OnEventHeaderItem.forComponent(component, "change", "this.form.submit();"));
+				}
+			});
 		}
 		enableFocusTracking(choice);
 

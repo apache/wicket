@@ -34,6 +34,11 @@ import org.apache.wicket.util.convert.IConverter;
  * {@link #getConverter(Class)} or by setting a suitable {@link IConverter} on the application's
  * {@link ConverterLocator}.
  * <p>
+ * When a choice is selected, a {@code wicket-autocomplete-select} event is dispatched on the
+ * textfield. A listener can change the value copied into the textfield or leave it unchanged, see
+ * {@link AbstractAutoCompleteRenderer} for the event and for how to register a listener that
+ * survives re-rendering.
+ * <p>
  * Note that you must add your own CSS to make the suggestion display properly, see
  * {@link DefaultCssAutoCompleteTextField} for an example.
  * 
