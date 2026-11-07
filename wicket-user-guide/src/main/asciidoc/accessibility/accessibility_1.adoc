@@ -1,0 +1,45 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+WCAG states its requirements as success criteria, and a success criterion is met or failed by a page, not by a library. No framework can therefore make an application conform to WCAG. What a framework can do is render markup that does not fail a criterion by itself, and give the application the means to meet the criteria that depend on its content.
+
+=== What Wicket takes care of
+
+Wicket renders the markup we write in our HTML files and changes only the tags that are bound to a component. For accessibility this is good news: the elements that convey structure, such as headings, lists, landmarks, tables and the labels of form fields, are written by us and reach the browser as we wrote them. In addition, several components and resolvers render markup that helps assistive technology:
+
+* a _<label>_ tag with attribute _wicket:for_ gets a _for_ attribute that points to the right form component, whatever markup id Wicket generates for it (see <<_accessible_form_errors,paragraph 25.4>>);
+* the label of a form component (_setLabel_ or _<wicket:label>_) is used in its validation messages, so an error names the field it is about;
+* text fields render the HTML5 attributes _required_ and _pattern_ when the component is required or has a _PatternValidator_;
+* _RadioChoice_ and _CheckBoxMultipleChoice_ render a _<label>_ for each option;
+* the headers of a _DataTable_ are _<th>_ cells with a _scope_ attribute, and the table renders a _<caption>_ when we give it one (see <<_accessible_data_tables,paragraph 25.7>>);
+* after an AJAX update Wicket gives focus back to the element that had it, when the update replaced that element with one with the same markup id (see <<_focus_and_announcements_after_ajax_updates,paragraph 25.5>>);
+* _ModalDialog_ can trap the focus inside the dialog and return it to where it was when the dialog closes;
+* _AutoCompleteTextField_ renders the ARIA role and states of a combobox.
+
+=== What stays with the application
+
+Most success criteria are about content and design, and those are ours: the contrast between text and background, the alternative text of images, the order and wording of headings, the text of labels, links and messages, captions for video, and a layout that still works when the text is enlarged. Wicket has no say in any of these. The same goes for ARIA attributes on our own markup: Wicket leaves them alone, and it adds very few of its own.
+
+=== Server-side components and AJAX
+
+Because Wicket renders HTML on the server, a Wicket page without AJAX behaves like any other server-rendered page: each request loads a complete page, browsers and screen readers announce its title, and focus starts at the top. Most accessibility problems of single-page applications do not arise.
+
+AJAX brings them back. When an AJAX response replaces a part of the page, the browser does not announce anything, and if the element that had the focus disappears, the focus is lost. Wicket replaces a component by replacing its whole element in the DOM, which has two consequences we will meet again in this chapter: an ARIA live region must not be the element of the component we update, and focus can only be restored to an element whose markup id survives the update.
+
+=== Where Wicket falls short today
+
+A few things an accessible page needs are not supported by Wicket at the moment: Wicket does not render a _lang_ attribute, form components do not get _aria-invalid_ when they fail validation, and the default error pages use an HTML 4.01 doctype without a _lang_ attribute. For each of them this chapter shows a workaround with the current API. An audit of all components against WCAG 2.2 AA is under way in https://github.com/apache/wicket/issues/1838[GitHub issue #1838], and its results may change some of the answers in this chapter.

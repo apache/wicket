@@ -1,0 +1,357 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+The following table lists every success criterion of WCAG 2.2 at level A and AA, in the order of the specification. For each criterion it shows what Wicket offers, what is left to the application, and where this chapter has code for it. Criteria Wicket has no bearing on are marked as such: they depend on content, design or media only, and are met or failed the same way in any web application. The criterion 4.1.1 Parsing is not in the table, because WCAG 2.2 has removed it.
+
+The descriptions of the criteria are shortened; the full text and the techniques that meet each criterion are in https://www.w3.org/TR/WCAG22/[the WCAG 2.2 specification] and https://www.w3.org/WAI/WCAG22/Understanding/[Understanding WCAG 2.2].
+
+[cols="3,1,5,5,1",options="header"]
+|===
+|Success criterion |Level |Wicket |Application |Code
+
+|1.1.1 Non-text Content
+|A
+|_Image_ and _ContextImage_ render the _alt_ attribute we write in the markup. _AjaxIndicatorAppender_ renders its busy indicator with an empty _alt_.
+|An _alt_ text for every meaningful image, _alt=""_ for decorative ones, text alternatives for icons, a CAPTCHA alternative if _CaptchaImageResource_ is used.
+|
+
+|1.2.1 Audio-only and Video-only (Prerecorded)
+|A
+|No bearing.
+|A transcript or an audio track for prerecorded media.
+|
+
+|1.2.2 Captions (Prerecorded)
+|A
+|No bearing. _Video_ and _Track_ render the _<video>_ and _<track>_ tags.
+|Captions for prerecorded video.
+|
+
+|1.2.3 Audio Description or Media Alternative (Prerecorded)
+|A
+|No bearing.
+|Audio description or a text alternative for prerecorded video.
+|
+
+|1.2.4 Captions (Live)
+|AA
+|No bearing.
+|Captions for live video.
+|
+
+|1.2.5 Audio Description (Prerecorded)
+|AA
+|No bearing.
+|Audio description for prerecorded video.
+|
+
+|1.3.1 Info and Relationships
+|A
+|Our markup reaches the browser unchanged. _wicket:for_ connects labels and fields; _RadioChoice_ and _CheckBoxMultipleChoice_ label their options; _DataTable_ renders _<th scope="col">_ and a _<caption>_. Fields do not get _aria-invalid_, and row headers in a _DataTable_ need a workaround.
+|Headings, lists, landmarks, _<fieldset>_ and _<legend>_ for groups of fields, a label for every field, table headers.
+|<<_an_accessible_base_page,25.3>>, <<_accessible_form_errors,25.4>>, <<_accessible_data_tables,25.7>>
+
+|1.3.2 Meaningful Sequence
+|A
+|Components render where their tag is in the markup.
+|A source order that matches the reading order; no reordering with CSS that changes the meaning.
+|
+
+|1.3.3 Sensory Characteristics
+|A
+|No bearing.
+|Instructions that do not rely on shape, colour, size or position only ("the button on the right").
+|
+
+|1.3.4 Orientation
+|AA
+|No bearing.
+|A layout that works in portrait and landscape.
+|
+
+|1.3.5 Identify Input Purpose
+|AA
+|Wicket keeps the _autocomplete_ attribute we write on a field.
+|An _autocomplete_ attribute with the right token on fields that ask for data about the user (_email_, _name_, _street-address_, ...).
+|<<_accessible_form_errors,25.4>>
+
+|1.4.1 Use of Color
+|A
+|The CSS classes Wicket adds (_error_ and _required_ on labels, _feedbackPanelERROR_ on messages) carry no colour of their own.
+|Errors, required fields, links and states that are not shown by colour alone.
+|<<_accessible_form_errors,25.4>>
+
+|1.4.2 Audio Control
+|A
+|No bearing.
+|A way to stop audio that plays automatically.
+|
+
+|1.4.3 Contrast (Minimum)
+|AA
+|No bearing.
+|A contrast ratio of 4.5:1 for text, 3:1 for large text.
+|
+
+|1.4.4 Resize Text
+|AA
+|No bearing.
+|A page that still works when the text is enlarged to 200%.
+|
+
+|1.4.5 Images of Text
+|AA
+|No bearing.
+|Real text instead of images of text.
+|
+
+|1.4.10 Reflow
+|AA
+|No bearing. The markup of _DataTable_ and other components is styled by us.
+|A layout that works at a width of 320 CSS pixels without scrolling in two directions; data tables may scroll horizontally.
+|
+
+|1.4.11 Non-text Contrast
+|AA
+|No bearing.
+|A contrast ratio of 3:1 for the borders of fields and buttons, focus indicators and icons that convey information.
+|
+
+|1.4.12 Text Spacing
+|AA
+|No bearing.
+|A layout that does not break when users increase line, word and letter spacing.
+|
+
+|1.4.13 Content on Hover or Focus
+|AA
+|No bearing.
+|Tooltips and pop-ups that can be dismissed, hovered and stay until dismissed.
+|
+
+|2.1.1 Keyboard
+|A
+|Links and buttons are keyboard-operable when their component is attached to _<a>_ or _<button>_. An AJAX behavior attached to any other element is not.
+|Every function operable from the keyboard; AJAX behaviors on elements that can receive focus.
+|<<_keyboard_operable_ajax_controls,25.6>>
+
+|2.1.2 No Keyboard Trap
+|A
+|_ModalDialog.trapFocus()_ keeps the focus inside an open dialog on purpose; _closeOnEscape()_ lets the user leave it.
+|A way out of every widget with the keyboard; a close button in every dialog.
+|<<_keyboard_operable_ajax_controls,25.6>>
+
+|2.1.4 Character Key Shortcuts
+|A
+|Wicket defines no keyboard shortcuts.
+|Single-key shortcuts that can be turned off or remapped, if the application defines any.
+|
+
+|2.2.1 Timing Adjustable
+|A
+|A stateful page lives in the HTTP session; when the session times out, the user sees the page expired page and loses the input. Stateless pages and forms (_StatelessForm_) do not expire.
+|A session timeout that is long enough, a warning before it expires with a way to extend it, or stateless pages for long forms.
+|
+
+|2.2.2 Pause, Stop, Hide
+|A
+|_AbstractAjaxTimerBehavior_ and _AjaxSelfUpdatingTimerBehavior_ can be stopped with _stop(target)_.
+|A way to pause content that moves or updates by itself for more than five seconds.
+|
+
+|2.3.1 Three Flashes or Below Threshold
+|A
+|No bearing.
+|No content that flashes more than three times per second.
+|
+
+|2.4.1 Bypass Blocks
+|A
+|No bearing.
+|A skip link and landmarks.
+|<<_an_accessible_base_page,25.3>>
+
+|2.4.2 Page Titled
+|A
+|A _Label_ on the _<title>_ tag gives every page its own title. The default error pages have a fixed English title.
+|A title for every page that describes its topic or purpose.
+|<<_an_accessible_base_page,25.3>>
+
+|2.4.3 Focus Order
+|A
+|After an AJAX update Wicket restores the focus only if the focused element keeps its markup id. Sort links of an AJAX _DataTable_ get new markup ids, so the focus is lost after sorting.
+|Focus moved deliberately after AJAX updates and when dialogs open and close.
+|<<_focus_and_announcements_after_ajax_updates,25.5>>, <<_accessible_data_tables,25.7>>
+
+|2.4.4 Link Purpose (In Context)
+|A
+|_PagingNavigator_ renders "<<", "<", ">" and ">>" as the text of its links and puts the description in a _title_ attribute only.
+|Link texts that describe the target, such as a "Delete" button that names what it deletes.
+|<<_focus_and_announcements_after_ajax_updates,25.5>>, <<_accessible_data_tables,25.7>>
+
+|2.4.5 Multiple Ways
+|AA
+|No bearing.
+|More than one way to find a page: navigation, search, a site map.
+|
+
+|2.4.6 Headings and Labels
+|AA
+|No bearing.
+|Headings and labels that describe the topic or purpose.
+|
+
+|2.4.7 Focus Visible
+|AA
+|Wicket's own stylesheets do not remove the focus outline.
+|A visible focus indicator on every element that can receive focus.
+|
+
+|2.4.11 Focus Not Obscured (Minimum)
+|AA
+|No bearing.
+|Sticky headers, footers and banners that do not hide the element with the focus.
+|
+
+|2.5.1 Pointer Gestures
+|A
+|No bearing.
+|A single-pointer alternative for gestures with multiple fingers or a path.
+|
+
+|2.5.2 Pointer Cancellation
+|A
+|_AjaxLink_, _AjaxButton_ and _AjaxEventBehavior_ on _click_ fire on the up-event. Behaviors on _mousedown_ or _pointerdown_ do not.
+|Actions on _click_ rather than on the down-event.
+|<<_keyboard_operable_ajax_controls,25.6>>
+
+|2.5.3 Label in Name
+|A
+|No bearing.
+|An accessible name (_aria-label_, hidden text) that starts with or contains the visible label.
+|<<_focus_and_announcements_after_ajax_updates,25.5>>
+
+|2.5.4 Motion Actuation
+|A
+|No bearing.
+|An alternative for functions triggered by shaking or tilting the device.
+|
+
+|2.5.7 Dragging Movements
+|AA
+|No bearing. _Palette_ moves items with buttons, not by dragging.
+|A single-pointer alternative for drag and drop, such as in sortable lists or file drop zones.
+|
+
+|2.5.8 Target Size (Minimum)
+|AA
+|No bearing.
+|Targets of at least 24 by 24 CSS pixels, or enough space around them.
+|
+
+|3.1.1 Language of Page
+|A
+|Wicket does not render a _lang_ attribute. A _TransparentWebMarkupContainer_ on the _<html>_ tag can add it from the session locale. The default error pages have no _lang_.
+|A _lang_ attribute on _<html>_ that matches the language of the page.
+|<<_an_accessible_base_page,25.3>>
+
+|3.1.2 Language of Parts
+|AA
+|Wicket keeps a _lang_ attribute we write in the markup, and _AttributeModifier_ can set it from code.
+|A _lang_ attribute on passages in another language.
+|<<_an_accessible_base_page,25.3>>
+
+|3.2.1 On Focus
+|A
+|AJAX behaviors on _focus_ run only when we attach them.
+|No change of context, such as navigation or a submit, when an element receives focus.
+|<<_keyboard_operable_ajax_controls,25.6>>
+
+|3.2.2 On Input
+|A
+|_FormComponentUpdatingBehavior_, _AjaxFormComponentUpdatingBehavior_ and _OnChangeAjaxBehavior_ run code whenever a value changes.
+|No navigation or other change of context on changing a value, unless the user has been told in advance; a submit button instead.
+|<<_keyboard_operable_ajax_controls,25.6>>
+
+|3.2.3 Consistent Navigation
+|AA
+|Markup inheritance gives all pages the same navigation.
+|Navigation that appears in the same order on every page.
+|<<_an_accessible_base_page,25.3>>
+
+|3.2.4 Consistent Identification
+|AA
+|Reusable panels and _wicket:message_ keep names and labels the same across pages.
+|Components with the same function labelled the same way.
+|
+
+|3.2.6 Consistent Help
+|A
+|Markup inheritance puts help links in the same place on every page.
+|Help mechanisms in the same relative order on every page.
+|<<_an_accessible_base_page,25.3>>
+
+|3.3.1 Error Identification
+|A
+|Validation messages name the field through its label. The error state reaches the _<label>_ as the CSS class _error_, but not the field: there is no _aria-invalid_ and no _aria-describedby_.
+|A message next to the field, _aria-invalid_ on the field and a reference from the field to its message.
+|<<_accessible_form_errors,25.4>>
+
+|3.3.2 Labels or Instructions
+|A
+|_wicket:for_ and _<wicket:label>_ connect a visible label to every field. Text fields copy their label into the _placeholder_ attribute.
+|A visible label for every field, required fields marked in the label, formats explained before the user types.
+|<<_accessible_form_errors,25.4>>
+
+|3.3.3 Error Suggestion
+|AA
+|Validation messages come from resource bundles and can be reworded per field and per validator.
+|Messages that say how to correct the input.
+|<<_accessible_form_errors,25.4>>
+
+|3.3.4 Error Prevention (Legal, Financial, Data)
+|AA
+|A multi-step _Wizard_ or a confirmation page can be built from regular pages and panels.
+|Review, confirmation or undo for submissions with legal or financial consequences.
+|
+
+|3.3.7 Redundant Entry
+|A
+|A form keeps its model between requests, so values entered earlier can be shown again.
+|No asking for the same information twice in one process, unless needed.
+|
+
+|3.3.8 Accessible Authentication (Minimum)
+|AA
+|_PasswordTextField_ allows pasting and password managers. _CaptchaImageResource_ is a cognitive function test.
+|Login without a cognitive test, or with an alternative; _autocomplete_ on username and password fields.
+|
+
+|4.1.2 Name, Role, Value
+|A
+|Native elements carry name, role and value. Wicket adds no roles to elements that need them: an AJAX behavior on a _<div>_, _TabbedPanel_ and _ModalDialog_ have no ARIA roles.
+|Native elements first; ARIA roles, states and names on custom widgets.
+|<<_keyboard_operable_ajax_controls,25.6>>, <<_accessible_data_tables,25.7>>
+
+|4.1.3 Status Messages
+|AA
+|_FeedbackPanel_ is not a live region, and messages that arrive by AJAX are not announced.
+|A live region that stays in the page, updated by AJAX.
+|<<_focus_and_announcements_after_ajax_updates,25.5>>
+|===
+
+Most rows say "No bearing" or put the work on the application. The rows with a link are the ones where Wicket offers a mechanism, or where its default markup needs help; the next paragraphs deal with them.

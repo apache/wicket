@@ -1,0 +1,22 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+An accessible web application can be used by people who do not see the screen, who do not use a mouse, who zoom the page to four times its size or who need more time to read and type. The reference for what that takes is the Web Content Accessibility Guidelines (WCAG), published by the W3C. In many countries WCAG level AA is also a legal requirement, for public sector websites and increasingly for commercial ones.
+
+Wicket does not make an application accessible by itself, and it does not stand in the way either: the HTML of our pages is ours to write, and most of what Wicket adds to it can be adjusted. In this chapter we will see what Wicket contributes to an accessible application, which WCAG 2.2 success criteria of level A and AA depend on what we write, and how to implement the criteria that need code: an accessible base page, form errors, focus and announcements after AJAX updates, keyboard-operable AJAX controls and data tables. The chapter ends with how to check an application against WCAG.
+
+The examples build on the base page of <<_wicket_as_page_layout_manager,chapter 5>>, on the forms of chapters <<_wicket_models_and_forms,11>> and <<_wicket_forms_in_detail,12>>, on the AJAX support of <<_working_with_ajax,chapter 19>> and on _WicketTester_ from <<_test_driven_development_with_wicket,chapter 23>>.

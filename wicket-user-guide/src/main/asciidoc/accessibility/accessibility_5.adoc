@@ -1,0 +1,166 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+When an AJAX response updates a part of the page, nothing tells the user so: the browser does not reload the page, the screen reader does not announce anything, and the keyboard focus stays where it was, if the element that had it still exists. In this paragraph we will see how to move the focus where the user needs it and how to announce what has changed.
+
+=== How Wicket replaces components
+
+Wicket updates a component by replacing its whole element in the DOM with the newly rendered markup. If the replaced element had the focus, Wicket gives the focus back to the new element with the same markup id. This works as long as the component keeps its markup id, which is the case for a component that stays in the component tree and has _setOutputMarkupId(true)_.
+
+The focus is lost when the focused element does not come back: a button that deletes its own row, a link that hides itself, or the items of a repeater that creates new components at every render, because new components get new markup ids. The focus then falls back to the start of the document, and keyboard and screen reader users have to find their way back from there (success criterion 2.4.3).
+
+=== Moving the focus with focusComponent
+
+In those cases we move the focus ourselves with _focusComponent_ of _AjaxRequestTarget_. Its argument must have _setOutputMarkupId(true)_, otherwise the method throws an _IllegalArgumentException_. Wicket sets the focus after the components of the response have been replaced, so the component may be one that is part of the same update.
+
+The next example is a page with a list of addresses, each with a button to delete it. After a deletion the button is gone, so we move the focus to the heading of the list:
+
+*AddressesPage.html:*
+
+[source,html]
+----
+<wicket:extend>
+	<h1 wicket:id="heading" tabindex="-1">Your addresses</h1>
+
+	<div role="status">
+		<span wicket:id="status"></span>
+	</div>
+
+	<ul wicket:id="list">
+		<li wicket:id="addresses">
+			<span wicket:id="address"></span>
+			<button wicket:id="delete">Delete<span class="visually-hidden"> <span wicket:id="deleteWhat"></span></span></button>
+		</li>
+	</ul>
+</wicket:extend>
+----
+
+*AddressesPage.java:*
+
+[source,java]
+----
+public class AddressesPage extends BasePage {
+
+	private final List<String> addresses = new ArrayList<>(List.of("Main Street 1", "Station Road 2"));
+
+	public AddressesPage() {
+		IModel<String> statusMessage = Model.of("");
+		Label status = new Label("status", statusMessage);
+		status.setOutputMarkupId(true);
+		add(status);
+
+		WebMarkupContainer heading = new WebMarkupContainer("heading");
+		heading.setOutputMarkupId(true);
+		add(heading);
+
+		WebMarkupContainer list = new WebMarkupContainer("list");
+		list.setOutputMarkupId(true);
+		add(list);
+
+		list.add(new ListView<>("addresses", () -> addresses) {
+			@Override
+			protected void populateItem(ListItem<String> item) {
+				item.add(new Label("address", item.getModel()));
+				AjaxLink<String> delete = new AjaxLink<>("delete", item.getModel()) {
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						addresses.remove(getModelObject());
+						statusMessage.setObject("Address " + getModelObject() + " removed.");
+
+						target.add(list, status);
+						target.focusComponent(heading);
+					}
+				};
+				delete.add(new Label("deleteWhat", item.getModel()));
+				item.add(delete);
+			}
+		});
+	}
+
+	@Override
+	protected String getPageTitle() {
+		return "Your addresses - Example";
+	}
+}
+----
+
+A heading cannot receive focus by itself, so it gets _tabindex="-1"_: this lets a script focus it without adding it to the tab order. Which element should get the focus depends on the task. After deleting an item, the next item or the heading of the list are good choices; after opening a panel, its first field or its heading; after closing it, the control that opened it.
+
+Every _Delete_ button has the same visible text, so each button gets the address as hidden text, and a screen reader announces "Delete Main Street 1" (success criterion 2.4.4). The accessible name still starts with the visible text, as success criterion 2.5.3 asks. The hidden text uses a CSS class that hides content visually but not from screen readers:
+
+[source,css]
+----
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+----
+
+=== Announcing changes with a live region
+
+A message such as "Address removed" or "Your changes have been saved" is a status message: it should be announced without moving the focus (success criterion 4.1.3). This is what ARIA live regions are for. A screen reader announces changes to the content of an element with _role="status"_ (or _aria-live="polite"_), and urgent ones in an element with _role="alert"_.
+
+A live region only works if it is in the page before its content changes. Since Wicket replaces the whole element of a component it updates, the live region must not be that element: an element that is new in the page is not announced reliably. In the example above, the _<div role="status">_ is plain markup that stays in the page, and the AJAX response replaces only the _Label_ inside it. The label is rendered with an empty text when the page loads, so the region exists, empty, from the start.
+
+The same applies to a _FeedbackPanel_. It is not a live region, and messages that it shows after an AJAX update are not announced. Wrapping it in a region that stays in the page solves this:
+
+[source,html]
+----
+<div role="status">
+	<div wicket:id="feedback"></div>
+</div>
+----
+
+[source,java]
+----
+FeedbackPanel feedback = new FeedbackPanel("feedback");
+feedback.setOutputMarkupId(true);
+add(feedback);
+----
+
+and, in the AJAX callback, _success("Your changes have been saved.")_ followed by _target.add(feedback)_. A live region is for short messages; for validation errors the field and its message, as shown in <<_accessible_form_errors,paragraph 25.4>>, work better than an announcement of all errors at once.
+
+=== Busy indicators
+
+The indicator of _AjaxIndicatorAppender_ and the indicating AJAX links and buttons is an image with an empty _alt_ attribute, so it is invisible to screen readers. For requests that take long, a "Loading..." text in a live region, set in the request's _before_ handler and cleared in the _complete_ handler (see <<_ajax_request_attributes_and_call_listeners,paragraph 19.6>>), tells all users that the application is working.
+
+=== Dialogs
+
+_ModalDialog_ from wicket-extensions can trap the focus inside the dialog with _trapFocus()_, and gives the focus back to the element that had it when the dialog is closed. With _closeOnEscape()_ the dialog can be closed with the Escape key. These are opt-in, and the dialog element has no ARIA role, so we add the role, _aria-modal_ and a reference to the title of the dialog by overriding _newDialog_:
+
+[source,java]
+----
+ModalDialog dialog = new ModalDialog("dialog") {
+	@Override
+	protected WebMarkupContainer newDialog(String dialogId) {
+		WebMarkupContainer dialog = super.newDialog(dialogId);
+		dialog.add(AttributeModifier.replace("role", "dialog"));
+		dialog.add(AttributeModifier.replace("aria-modal", "true"));
+		dialog.add(AttributeModifier.replace("aria-labelledby", "dialog-title"));
+		return dialog;
+	}
+};
+dialog.trapFocus();
+dialog.closeOnEscape();
+add(dialog);
+----
+
+The content panel of the dialog then has a heading with _id="dialog-title"_, and a button that closes the dialog.

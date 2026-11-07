@@ -1,0 +1,162 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+A form is accessible when every field has a label that is connected to it, when an error tells the user which field is wrong and how to correct it, and when the error can be found without seeing it. Wicket does the first part; for the last part we need a small behavior of our own.
+
+=== Labels with wicket:for
+
+A _<label>_ is connected to its field by the _for_ attribute, which must contain the _id_ of the field. Since Wicket generates the markup ids of components, we cannot write that _id_ in the markup ourselves. The attribute _wicket:for_ solves this: it contains the component id of the field, and Wicket renders the _for_ attribute with the markup id of that component, which it makes the field output:
+
+[source,html]
+----
+<label wicket:for="email"><wicket:label>Email address</wicket:label></label>
+<input type="email" wicket:id="email" autocomplete="email">
+----
+
+The tag _<wicket:label>_ inside the label does one more thing: if the field has no label model yet, its text becomes the label of the field. Validation messages use this label, so the message for a required field reads _'Email address' is required._ instead of naming the component id. The same can be done from code with _setLabel(IModel)_, in which case _<wicket:label>_ renders the text of the model. Either way the visible label and the name in the messages are the same text, which is what users of speech input need (success criterion 2.5.3).
+
+The attribute _autocomplete_ tells browsers and assistive technology what the field asks for (success criterion 1.3.5). Wicket leaves it alone, so we write it in the markup with the right token, such as _email_, _name_, _tel_ or _street-address_.
+
+Besides the _for_ attribute, _wicket:for_ adds the CSS class _required_ to the label of a required field, _error_ to the label of a field that failed validation and _disabled_ to the label of a disabled field. The names of these classes can be changed with the resource keys _AutoLabel.CSS.required_, _AutoLabel.CSS.error_ and _AutoLabel.CSS.disabled_. These classes are useful for styling, but they are not enough on their own: a class is not exposed to assistive technology, and a colour must not be the only sign of an error (success criterion 1.4.1). A required field should say so in the text of its label, for instance with "(required)".
+
+NOTE: Text fields render the label of the component in their _placeholder_ attribute, and replace any placeholder we wrote in the markup. Some screen readers then read the label twice. Text fields also render the HTML5 attribute _required_ when the component is required. When the form is submitted without AJAX, the browser then checks the field first and shows its own message instead of Wicket's; AJAX submits skip this check. The attribute _novalidate_ on the _<form>_ tag turns the browser validation off, so that all errors are reported the same way, by the server.
+
+=== Errors next to the field
+
+A message in a _FeedbackPanel_ at the top of the page tells the user that something went wrong, but a user who works through the form field by field does not see it there. Success criterion 3.3.1 asks that the field in error is identified, and the most robust way is a message next to the field, which the field refers to. A _ComponentFeedbackPanel_ shows the messages of one component only, so we put one after each field:
+
+[source,html]
+----
+<form wicket:id="form" novalidate>
+	<label wicket:for="email"><wicket:label>Email address</wicket:label></label>
+	<input type="email" wicket:id="email" autocomplete="email">
+	<div wicket:id="emailError" class="field-error"></div>
+
+	<button wicket:id="register">Register</button>
+</form>
+----
+
+Visually the message is now next to the field. For a screen reader it is not yet connected to it: the field must say that it is invalid, with _aria-invalid="true"_, and refer to its message with _aria-describedby_. Wicket does not render either attribute, so we add them with a behavior:
+
+[source,java]
+----
+public class AriaInvalidBehavior extends Behavior {
+
+	private final Component errorMessage;
+
+	public AriaInvalidBehavior(Component errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
+	@Override
+	public void bind(Component component) {
+		if (!(component instanceof FormComponent)) {
+			throw new IllegalArgumentException("AriaInvalidBehavior needs a FormComponent");
+		}
+		errorMessage.setOutputMarkupId(true);
+	}
+
+	@Override
+	public void onComponentTag(Component component, ComponentTag tag) {
+		if (((FormComponent<?>) component).isValid() == false) {
+			tag.put("aria-invalid", "true");
+			tag.append("aria-describedby", errorMessage.getMarkupId(), " ");
+		}
+	}
+}
+----
+
+The behavior writes both attributes only while the field has an error message, which is the case in the render that follows a failed submit. _ComponentTag.append_ keeps an _aria-describedby_ that is already in the markup, for instance one that points to a hint about the expected format. The page puts it together:
+
+[source,java]
+----
+public class RegistrationPage extends BasePage {
+
+	public RegistrationPage() {
+		Form<Void> form = new Form<>("form");
+		form.setOutputMarkupId(true);
+		add(form);
+
+		EmailTextField email = new EmailTextField("email", Model.of(""));
+		email.setRequired(true);
+		form.add(email);
+
+		ComponentFeedbackPanel emailError = new ComponentFeedbackPanel("emailError", email);
+		form.add(emailError);
+		email.add(new AriaInvalidBehavior(emailError));
+
+		form.add(new AjaxButton("register") {
+			@Override
+			protected void onSubmit(AjaxRequestTarget target) {
+				// store the registration
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target) {
+				target.add(form);
+				form.visitFormComponents((field, visit) -> {
+					if (field.isValid() == false) {
+						target.focusComponent(field);
+						visit.stop();
+					}
+				});
+			}
+		});
+	}
+
+	@Override
+	protected String getPageTitle() {
+		return "Register - Example";
+	}
+}
+----
+
+After a failed submit the field is rendered like this (the markup ids are generated by Wicket):
+
+[source,html]
+----
+<input type="email" autocomplete="email" value="" required="required" placeholder="Email address"
+	pattern="..." name="email" id="email3" aria-invalid="true" aria-describedby="emailError4">
+<div class="field-error" id="emailError4">
+	<ul class="feedbackPanel">
+		<li class="feedbackPanelERROR"><span>'Email address' is required.</span></li>
+	</ul>
+</div>
+----
+
+When the form is submitted with AJAX, as here, _onError_ moves the focus to the first field in error. A screen reader then reads the label of the field, that it is invalid, and the error message. Without the focus change the user would not notice that anything happened. When the form is submitted without AJAX, the whole page is rendered again and the focus starts at the top; a summary of the errors at the top of the form, with links to the fields, is then the way to lead the user to them.
+
+The text of the message is ours to write. Success criterion 3.3.3 asks that it suggests how to correct the input, which the generic messages of Wicket's validators do not always do. They can be reworded for a single field in the resource bundle of the page, with a key that combines the component id and the validator, for example _email.Required_ or _email.EmailAddressValidator_ (see <<_wicket_forms_in_detail,chapter 12>>).
+
+=== aria-invalid for every field
+
+Fields without a message next to them must say that they are invalid too. Instead of adding a behavior to each field, the application can register a listener that Wicket calls for the tag of every component it renders, in the _init_ method of the application:
+
+[source,java]
+----
+@Override
+protected void init() {
+	super.init();
+	getOnComponentTagListeners().add((component, tag) -> {
+		if (component instanceof FormComponent<?> field && !field.isValid()) {
+			tag.put("aria-invalid", "true");
+		}
+	});
+}
+----
+
+The listener runs in every render, AJAX updates included, before the component's own _onComponentTag_ and its behaviors. It adds nothing to the components, so unlike a behavior added to every form component it does not make the pages bigger when they are serialized. It cannot add the reference to the message, because it does not know where the message is: fields with a message next to them keep their _AriaInvalidBehavior_, as in the example above. A _FormComponentPanel_, such as a date and time field made of several inputs, is a form component too, so the listener puts _aria-invalid_ on the element the panel is attached to and not on its inputs.

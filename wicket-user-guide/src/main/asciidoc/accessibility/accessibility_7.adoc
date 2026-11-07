@@ -1,0 +1,128 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+A data table is accessible when its headers are marked as headers, so that a screen reader can announce the column (and the row) of each cell, when it has a caption that says what the table contains, and when the sort state of its columns is exposed. _DataTable_ from wicket-extensions renders most of this; this paragraph shows how to add the rest.
+
+=== What DataTable renders
+
+The headers of a _DataTable_ come from _HeadersToolbar_ or its AJAX variant _AjaxFallbackHeadersToolbar_. Each header is a _<th>_ with _scope="col"_, or _scope="colgroup"_ for a header that spans several columns. The header toolbar is placed in _<thead>_, the rows in _<tbody>_, as success criterion 1.3.1 asks. A _DataTable_ must be attached to a _<table>_ tag.
+
+=== A caption
+
+The _<caption>_ of a table is its title: screen readers announce it when the user enters the table, and it appears in their list of tables. _DataTable_ renders a caption when method _getCaptionModel_ returns a model with a text. By default it returns _null_, and the caption is not rendered:
+
+[source,java]
+----
+public class ContactsTable extends DataTable<Contact, String> {
+
+	public ContactsTable(String id, List<IColumn<Contact, String>> columns,
+		ISortableDataProvider<Contact, String> provider) {
+		super(id, columns, provider, 20);
+		setOutputMarkupId(true);
+		addTopToolbar(new AccessibleHeadersToolbar<>(this, provider));
+	}
+
+	@Override
+	protected IModel<String> getCaptionModel() {
+		return () -> "Contacts";
+	}
+}
+----
+
+_DataTable_ calls _getCaptionModel_ in its constructor, so the method must not use fields of the subclass, which are not initialized yet at that moment. A localized caption is a _ResourceModel_.
+
+=== Row headers
+
+In many tables one column identifies the row, like the name of a contact. Marking its cells as row headers lets screen readers announce the name together with the other cells of the row. _DataTable_ renders all cells of the body as _<td>_, and _IColumn_ has no way to render a _<th>_. We can rename the tag of the cells in the first column by overriding _newCellItem_ in the table:
+
+[source,java]
+----
+@Override
+protected Item<IColumn<Contact, String>> newCellItem(String id, int index,
+	IModel<IColumn<Contact, String>> model) {
+	if (index != 0) {
+		return super.newCellItem(id, index, model);
+	}
+	return new Item<>(id, index, model) {
+		@Override
+		protected void onComponentTag(ComponentTag tag) {
+			super.onComponentTag(tag);
+			tag.setName("th");
+			tag.put("scope", "row");
+		}
+	};
+}
+----
+
+The argument _index_ is the index of the column, and Wicket also renders the closing tag with the new name.
+
+=== Sortable headers
+
+A sortable header contains a link that changes the sort order, and the _<th>_ gets the CSS class _wicket_orderUp_, _wicket_orderDown_ or _wicket_orderNone_. As with the label classes of <<_accessible_form_errors,paragraph 25.4>>, the class is not exposed to assistive technology. The ARIA attribute _aria-sort_ on the header of the sorted column is: screen readers announce it as "sorted ascending" or "sorted descending". We add it in a subclass of the header toolbar:
+
+[source,java]
+----
+public class AccessibleHeadersToolbar<S> extends AjaxFallbackHeadersToolbar<S> {
+
+	public AccessibleHeadersToolbar(DataTable<?, S> table, ISortStateLocator<S> stateLocator) {
+		super(table, stateLocator);
+	}
+
+	@Override
+	protected WebMarkupContainer newSortableHeader(String headerId, S property,
+		ISortStateLocator<S> locator) {
+		WebMarkupContainer header = super.newSortableHeader(headerId, property, locator);
+		header.get("orderByLink").setMarkupId(getTable().getMarkupId() + "-sort-" + property);
+		header.add(AttributeModifier.replace("aria-sort", () -> {
+			SortOrder order = locator.getSortState().getPropertySortOrder(property);
+			return switch (order) {
+				case ASCENDING -> "ascending";
+				case DESCENDING -> "descending";
+				case NONE -> null;
+			};
+		}));
+		return header;
+	}
+}
+----
+
+The header returned by _newSortableHeader_ is rendered as the _<th>_ itself, so the attribute ends up in the right place. When the model returns _null_, _AttributeModifier_ leaves the attribute out, so only the sorted column gets _aria-sort_.
+
+The second line of the method fixes a focus problem of AJAX sorting. _AjaxFallbackHeadersToolbar_ re-creates its headers at every render, so after a click on a sort link the table comes back with new sort links, with new markup ids. As we have seen in <<_focus_and_announcements_after_ajax_updates,paragraph 25.5>>, Wicket can only restore the focus to an element with the same markup id, so a keyboard user loses the focus after every sort. Giving the sort link (which the header contains with id _orderByLink_) a markup id derived from the table and the sort property keeps the id the same across renders, and the focus stays on the link.
+
+The resulting header looks like this:
+
+[source,html]
+----
+<th class="wicket_orderUp" aria-sort="ascending" scope="col">
+	<a href="..." id="contacts1-sort-name"><span>Name</span></a>
+</th>
+----
+
+=== Paging
+
+The _NavigationToolbar_ of a _DataTable_ uses a _PagingNavigator_, whose links have the texts "<<", "<", ">" and ">>". A screen reader reads these characters as the name of the links; the descriptions "Go to first page" and so on are only in the _title_ attribute, which is not reliably announced (success criterion 2.4.4). The link of the current page, and the links to the first and previous page on the first page, are rendered without _href_ and with a _disabled_ attribute, which an _<a>_ tag does not have in HTML; the current page is not marked with _aria-current_. A subclass of _PagingNavigator_ with its own markup file can give the links a hidden text, using the same resource keys:
+
+[source,html]
+----
+<wicket:panel>
+	<a wicket:id="first"><span aria-hidden="true">&lt;&lt;</span><span class="visually-hidden"><wicket:message key="PagingNavigator.first"/></span></a>
+	...
+</wicket:panel>
+----
+
+The markup of the subclass must contain the same component ids as the original, _first_, _prev_, _navigation_ (with _pageLink_ and _pageNumber_), _next_ and _last_.

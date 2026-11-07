@@ -102,7 +102,7 @@ A notable difference between this component and Button is that SubmitLink can be
 
 [source,html]
 ----
-<html xmlns:wicket="http://wicket.apache.org">
+<html lang="en" xmlns:wicket="http://wicket.apache.org">
 	<head>
 	</head>
 	<body>

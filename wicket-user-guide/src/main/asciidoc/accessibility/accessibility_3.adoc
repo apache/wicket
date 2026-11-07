@@ -1,0 +1,135 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+Several success criteria are met once for the whole application, in the page all other pages extend. In <<_wicket_as_page_layout_manager,chapter 5>> we have built such a base page with markup inheritance; here we complete it with a title for every page, a _lang_ attribute that follows the session locale, a skip link and landmarks.
+
+*BasePage.html:*
+
+[source,html]
+----
+<!DOCTYPE html>
+<html wicket:id="html" xmlns:wicket="http://wicket.apache.org">
+<head>
+	<meta charset="utf-8">
+	<title wicket:id="pageTitle">Page title</title>
+</head>
+<body>
+	<a class="skip-link" href="#content"><wicket:message key="skipToContent">Skip to main content</wicket:message></a>
+	<header>
+		<p class="site-name">Example</p>
+	</header>
+	<nav wicket:message="aria-label:mainNavigation">
+		<ul>
+			<li><a href="#">Home</a></li>
+		</ul>
+	</nav>
+	<main id="content" tabindex="-1">
+		<wicket:child/>
+	</main>
+	<footer>
+		<p>Footer</p>
+	</footer>
+</body>
+</html>
+----
+
+*BasePage.java:*
+
+[source,java]
+----
+public abstract class BasePage extends WebPage {
+
+	public BasePage() {
+		TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html");
+		html.add(AttributeModifier.replace("lang", () -> getLocale().toLanguageTag()));
+		add(html);
+
+		add(new Label("pageTitle", this::getPageTitle));
+	}
+
+	protected abstract String getPageTitle();
+}
+----
+
+*BasePage.properties:*
+
+[source,properties]
+----
+skipToContent=Skip to main content
+mainNavigation=Main
+----
+
+=== The language of the page
+
+Screen readers choose their pronunciation from the _lang_ attribute of the _<html>_ element (success criterion 3.1.1). Wicket does not render this attribute, so we bind the _<html>_ tag to a _TransparentWebMarkupContainer_ and add the attribute with an _AttributeModifier_. Since the container is transparent, the components of the page and of its subclasses can stay where they are and need not be added to the container. Method _getLocale()_ returns the locale of the session (see <<_internationalization_with_wicket,chapter 15>>), and _toLanguageTag()_ turns it into the format _lang_ expects, such as _en-US_ or _nl-NL_. Because the model is evaluated at each render, the attribute follows when the user switches language.
+
+If an application supports only one language, a _lang_ attribute written in the markup is enough. Passages in another language than the page, such as a quote or the name of a language in a language switcher, get their own _lang_ attribute (success criterion 3.1.2), either in the markup or with an _AttributeModifier_ on the component that renders them.
+
+=== A title for every page
+
+Browsers show the title of a page in their tab, and screen readers read it first when a page loads (success criterion 2.4.2). The _<title>_ tag of the base page is bound to a _Label_, and every page provides its own text by implementing _getPageTitle_:
+
+[source,java]
+----
+public class RegistrationPage extends BasePage {
+
+	@Override
+	protected String getPageTitle() {
+		return "Register - Example";
+	}
+}
+----
+
+A localized application returns _getString("title")_ and keeps the titles in the resource bundle of each page. A title starts with what is specific to the page, so that users who have several tabs open can tell them apart.
+
+=== Skip link and landmarks
+
+The skip link is the first link of the page and points to the _<main>_ element, so keyboard users can jump past the header and the navigation (success criterion 2.4.1). The attribute _tabindex="-1"_ on _<main>_ makes sure that browsers move the keyboard focus to it, and not only the scroll position. The skip link may be hidden until it receives focus, but it must become visible then:
+
+[source,css]
+----
+.skip-link {
+	position: absolute;
+	left: -10000px;
+}
+
+.skip-link:focus {
+	left: 1em;
+	top: 1em;
+}
+----
+
+The elements _<header>_, _<nav>_, _<main>_ and _<footer>_ are exposed as landmarks, which screen reader users can list and jump to. When a page has more than one _<nav>_, each one needs a name; here the main navigation gets an _aria-label_ from the resource bundle with the attribute form of _wicket:message_.
+
+Because every page extends the base page, the navigation and any help link appear in the same place and the same order on every page, as success criteria 3.2.3 and 3.2.6 ask.
+
+=== Error pages
+
+Wicket shows its own pages when a page has expired, when access is denied and when an internal error occurs. These pages use an HTML 4.01 doctype, have no _lang_ attribute and an English title, and they do not share the layout and navigation of the application. We can replace them with pages that extend our base page:
+
+[source,java]
+----
+@Override
+protected void init() {
+	super.init();
+	getApplicationSettings().setPageExpiredErrorPage(MyPageExpiredPage.class);
+	getApplicationSettings().setAccessDeniedPage(MyAccessDeniedPage.class);
+	getApplicationSettings().setInternalErrorPage(MyInternalErrorPage.class);
+}
+----
+
+The page expired page is also what users see when their session has timed out (success criterion 2.2.1), so it deserves a text that explains what happened and what to do next.

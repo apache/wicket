@@ -20,7 +20,7 @@ Bookmarkable pages can be linked directly inside markup files without writing an
 [source,html]
 ----
 <!DOCTYPE html>
-<html xmlns:wicket="http://wicket.apache.org">
+<html lang="en" xmlns:wicket="http://wicket.apache.org">
 	<head>
 		<meta charset="utf-8" />
 		<title>Apache Wicket Quickstart</title>
@@ -48,7 +48,7 @@ If we take a look also at the markup of SubPackagePage we can see that it contai
 [source,html]
 ----
 <!DOCTYPE html>
-<html xmlns:wicket="http://wicket.apache.org">
+<html lang="en" xmlns:wicket="http://wicket.apache.org">
 	<head>
 		<meta charset="utf-8" />
 		<title>Apache Wicket Quickstart</title>
