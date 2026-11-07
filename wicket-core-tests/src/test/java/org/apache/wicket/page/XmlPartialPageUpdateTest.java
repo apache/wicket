@@ -18,6 +18,7 @@ package org.apache.wicket.page;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
@@ -100,5 +101,29 @@ class XmlPartialPageUpdateTest extends WicketTestCase
 		update.writeTo(response, "UTF-8");
 		
 		assertFalse(response.getTextResponse().toString().contains("notInPage"), "notInPage not written");
+	}
+
+	/**
+	 * https://github.com/apache/wicket/issues/1524
+	 */
+	@Test
+	void failingScriptDoesNotPreventSubsequentScripts()
+	{
+		PageForPartialUpdate page = new PageForPartialUpdate();
+
+		XmlPartialPageUpdate update = new XmlPartialPageUpdate(page);
+		update.appendJavaScript("throw new Error('fail');");
+		update.appendJavaScript("window.postFixMarker = 1;");
+
+		MockWebResponse response = new MockWebResponse();
+		update.writeTo(response, "UTF-8");
+
+		String xml = response.getTextResponse().toString();
+		int firstEvaluate = xml.indexOf("<evaluate>");
+		int secondEvaluate = xml.indexOf("<evaluate>", firstEvaluate + 1);
+		assertTrue(secondEvaluate > firstEvaluate,
+			"each contributed script must be emitted in its own evaluate element");
+		assertTrue(xml.substring(secondEvaluate).contains("postFixMarker"),
+			"script after a failing one must still be contributed");
 	}
 }
