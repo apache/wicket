@@ -33,6 +33,9 @@ header — copy it when you add one.
 - Prepare the change and stop. Whether it goes in as a direct push to master or as a pull request
   is the committer's call, and the push itself is never yours: don't push, don't open a pull
   request, don't tag unless you were told to do so.
+- Before handing a change over, and when reviewing a pull request, apply every section of
+  `REVIEW.md` the change triggers: licensing, security, OSGi and JPMS, performance,
+  serialization, accessibility, documentation and tests.
 - Fixes go on `master` first and are cherry-picked down the maintenance lines afterwards, as far
   as the fix still applies. Which lines are in scope is a decision, not an inference — ask.
 
@@ -101,10 +104,10 @@ header — copy it when you add one.
 - Quiet is not permission. Changing or removing public API on `master` is allowed but not free:
   it needs a justification in the commit message, and where the old member can survive next to
   the new one, deprecate it rather than remove it.
-- An API change owes users a migration path. Add an OpenRewrite recipe to
+- A change that breaks or changes an existing application owes users a migration path: an entry
+  in `migration-to-<major>.md` in the root of the branch, and an OpenRewrite recipe in
   `wicket-migration/src/main/resources/META-INF/rewrite/wicket.yml` where the change is
-  mechanical, and draft the migration-guide wording in the commit message or the pull request
-  description — the guide itself lives on the wiki, where only a human can put it.
+  mechanical, both in the same commit.
 
 ## Javadoc
 
