@@ -131,7 +131,8 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	 * @param value decrypted cookie value
 	 * @return decomposed values array, or null in case cookie value was empty.
 	 */
-	protected String[] decode(String value) {
+	protected String[] decode(String value)
+	{
 		if (Strings.isEmpty(value) == false)
 		{
 			String username = null;

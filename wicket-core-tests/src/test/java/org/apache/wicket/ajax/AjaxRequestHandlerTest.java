@@ -256,7 +256,7 @@ class AjaxRequestHandlerTest extends WicketTestCase
 
 		assertThrows(IllegalStateException.class, () -> {
 			tester.clickLink("link");
-	    });
+		});
 	}
 
 	/**
@@ -279,7 +279,7 @@ class AjaxRequestHandlerTest extends WicketTestCase
 	void globalAjaxRequestTargetListeners()
 	{
 		JavaScriptPrependerAppender listener = new JavaScriptPrependerAppender();
-		
+
 		tester.getApplication().getAjaxRequestTargetListeners().add(listener);
 		tester.getApplication().getRequestCycleListeners().add(listener);
 
@@ -329,9 +329,11 @@ class AjaxRequestHandlerTest extends WicketTestCase
 			checkSettingsAvailable();
 			if (requestCycleSettings == null)
 			{
-				requestCycleSettings = new RequestCycleSettings() {
+				requestCycleSettings = new RequestCycleSettings()
+				{
 					@Override
-					public RequestCycleSettings addResponseFilter(IResponseFilter responseFilter) {
+					public RequestCycleSettings addResponseFilter(IResponseFilter responseFilter)
+					{
 						// do nothing
 						return this;
 					}
@@ -341,7 +343,8 @@ class AjaxRequestHandlerTest extends WicketTestCase
 		}
 	}
 
-	private static class WeirdException extends IllegalStateException {
+	private static class WeirdException extends IllegalStateException
+	{
 
 	}
 
@@ -352,6 +355,7 @@ class AjaxRequestHandlerTest extends WicketTestCase
 		private boolean generateError = false;
 
 		private final Component label;
+
 		/**
 		 * Construct.
 		 */
@@ -391,15 +395,16 @@ class AjaxRequestHandlerTest extends WicketTestCase
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-													   Class<?> containerClass)
+			Class<?> containerClass)
 		{
 			return new StringResourceStream(
-					"<html><body><a wicket:id='action'>link1</a><br/><br/><br/><span wicket:id='label'>Link2</span></body></html>");
+				"<html><body><a wicket:id='action'>link1</a><br/><br/><br/><span wicket:id='label'>Link2</span></body></html>");
 		}
 	}
 
 	@Test
-	void ajaxResponseIsEmptyIfExceptionIsProducedDuringRenderingAndNoFiltersAreSet() {
+	void ajaxResponseIsEmptyIfExceptionIsProducedDuringRenderingAndNoFiltersAreSet()
+	{
 		Wicket7074Application application = new Wicket7074Application();
 		WicketTester tester = newWicketTester(application);
 		// the page renders normally the first time
@@ -419,10 +424,12 @@ class AjaxRequestHandlerTest extends WicketTestCase
 	void addCurrentPage()
 	{
 		final MockPageWithLink page1 = new MockPageWithLink();
-		page1.add(new AjaxLink<Void>(MockPageWithLink.LINK_ID) {
+		page1.add(new AjaxLink<Void>(MockPageWithLink.LINK_ID)
+		{
 
 			@Override
-			public void onClick(final AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target)
+			{
 				target.add(page1);
 			}
 		});
@@ -443,10 +450,12 @@ class AjaxRequestHandlerTest extends WicketTestCase
 	{
 		final MockPageWithLink currentPage = new MockPageWithLink();
 		final MockPageWithLink anotherPage = new MockPageWithLink();
-		currentPage.add(new AjaxLink<Void>(MockPageWithLink.LINK_ID) {
+		currentPage.add(new AjaxLink<Void>(MockPageWithLink.LINK_ID)
+		{
 
 			@Override
-			public void onClick(final AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target)
+			{
 				target.add(anotherPage);
 			}
 		});
@@ -529,22 +538,30 @@ class AjaxRequestHandlerTest extends WicketTestCase
 			target.prependJavaScript("AFTER_RESPOND_PREPEND");
 			target.appendJavaScript("AFTER_RESPOND_APPEND");
 		}
-		
+
 		@Override
-		public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler) {
-			if (handler instanceof AjaxRequestHandler) {
-				try {
-					((AjaxRequestHandler) handler).appendJavaScript("FAIL");
-					
+		public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
+		{
+			if (handler instanceof AjaxRequestHandler)
+			{
+				try
+				{
+					((AjaxRequestHandler)handler).appendJavaScript("FAIL");
+
 					fail("appendJavaScript should not be allowed at this state");
-				} catch (IllegalStateException javascriptFrozen) {
+				}
+				catch (IllegalStateException javascriptFrozen)
+				{
 				}
 
-				try {
-					((AjaxRequestHandler) handler).prependJavaScript("FAIL");
-					
+				try
+				{
+					((AjaxRequestHandler)handler).prependJavaScript("FAIL");
+
 					fail("prependJavaScript should not be allowed at this state");
-				} catch (IllegalStateException javascriptFrozen) {
+				}
+				catch (IllegalStateException javascriptFrozen)
+				{
 				}
 			}
 		}

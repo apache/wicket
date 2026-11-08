@@ -24,67 +24,78 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 /**
  * Tests {@link LambdaChoiceRenderer}
  */
-class LambdaChoiceRendererTest {
+class LambdaChoiceRendererTest
+{
 
-    private final Choice choice = new Choice();
+	private final Choice choice = new Choice();
 
-    @Test
-    void testLambdaChoiceRendererWithoutExpression() {
-        final LambdaChoiceRenderer<Choice> renderer = new LambdaChoiceRenderer<>();
-        assertEquals(String.valueOf(0), renderer.getIdValue(choice, 0));
-        assertSame(choice, renderer.getDisplayValue(choice));
-    }
+	@Test
+	void testLambdaChoiceRendererWithoutExpression()
+	{
+		final LambdaChoiceRenderer<Choice> renderer = new LambdaChoiceRenderer<>();
+		assertEquals(String.valueOf(0), renderer.getIdValue(choice, 0));
+		assertSame(choice, renderer.getDisplayValue(choice));
+	}
 
-    @Test
-    void testLambdaChoiceRendererWithNullObjectAndWithoutExpression() {
-        final LambdaChoiceRenderer<Choice> renderer = new LambdaChoiceRenderer<>();
-        assertEquals(String.valueOf(0), renderer.getIdValue(null, 0));
-        assertEquals("", renderer.getDisplayValue(null));
-    }
+	@Test
+	void testLambdaChoiceRendererWithNullObjectAndWithoutExpression()
+	{
+		final LambdaChoiceRenderer<Choice> renderer = new LambdaChoiceRenderer<>();
+		assertEquals(String.valueOf(0), renderer.getIdValue(null, 0));
+		assertEquals("", renderer.getDisplayValue(null));
+	}
 
-    @Test
-    void testLambdaChoiceRendererWithDisplayExpression() {
-        final LambdaChoiceRenderer<Choice> renderer = new LambdaChoiceRenderer<>(Choice::getName);
-        assertEquals(String.valueOf(0), renderer.getIdValue(choice, 0));
-        assertEquals(choice.getName(), renderer.getDisplayValue(choice));
-    }
+	@Test
+	void testLambdaChoiceRendererWithDisplayExpression()
+	{
+		final LambdaChoiceRenderer<Choice> renderer = new LambdaChoiceRenderer<>(Choice::getName);
+		assertEquals(String.valueOf(0), renderer.getIdValue(choice, 0));
+		assertEquals(choice.getName(), renderer.getDisplayValue(choice));
+	}
 
-    @Test
-    void testLambdaChoiceRendererWithDisplayAndIdExpression() {
-        final LambdaChoiceRenderer<Choice> renderer = new LambdaChoiceRenderer<>(Choice::getName, Choice::getId);
-        assertEquals(String.valueOf(choice.getId()), renderer.getIdValue(choice, 0));
-        assertEquals(choice.getName(), renderer.getDisplayValue(choice));
-    }
+	@Test
+	void testLambdaChoiceRendererWithDisplayAndIdExpression()
+	{
+		final LambdaChoiceRenderer<Choice> renderer = new LambdaChoiceRenderer<>(Choice::getName, Choice::getId);
+		assertEquals(String.valueOf(choice.getId()), renderer.getIdValue(choice, 0));
+		assertEquals(choice.getName(), renderer.getDisplayValue(choice));
+	}
 
-    @Test
-    void testLambdaChoiceRendererWithNullObjectAndDisplayAndIdExpression() {
-        final LambdaChoiceRenderer<Choice> renderer = new LambdaChoiceRenderer<>(Choice::getName, Choice::getId);
-        assertEquals("", renderer.getIdValue(null, 0));
-        assertEquals("", renderer.getDisplayValue(null));
-    }
+	@Test
+	void testLambdaChoiceRendererWithNullObjectAndDisplayAndIdExpression()
+	{
+		final LambdaChoiceRenderer<Choice> renderer = new LambdaChoiceRenderer<>(Choice::getName, Choice::getId);
+		assertEquals("", renderer.getIdValue(null, 0));
+		assertEquals("", renderer.getDisplayValue(null));
+	}
 
-    @Test
-    void testLambdaChoiceRendererWithNullReturnValueAndDisplayAndIdExpression() {
-        final LambdaChoiceRenderer<Choice> renderer = new LambdaChoiceRenderer<>(Choice::getNull, Choice::getNull);
-        assertEquals("", renderer.getIdValue(choice, 0));
-        assertEquals("", renderer.getDisplayValue(choice));
-    }
+	@Test
+	void testLambdaChoiceRendererWithNullReturnValueAndDisplayAndIdExpression()
+	{
+		final LambdaChoiceRenderer<Choice> renderer = new LambdaChoiceRenderer<>(Choice::getNull, Choice::getNull);
+		assertEquals("", renderer.getIdValue(choice, 0));
+		assertEquals("", renderer.getDisplayValue(choice));
+	}
 
-    /**
-     * Class for testing
-     */
-    private static class Choice {
-        public Long getId() {
-            return -1L;
-        }
+	/**
+	 * Class for testing
+	 */
+	private static class Choice
+	{
+		public Long getId()
+		{
+			return -1L;
+		}
 
-        public String getName() {
-            return "name";
-        }
+		public String getName()
+		{
+			return "name";
+		}
 
-        public Object getNull() {
-            return null;
-        }
-    }
+		public Object getNull()
+		{
+			return null;
+		}
+	}
 
 }

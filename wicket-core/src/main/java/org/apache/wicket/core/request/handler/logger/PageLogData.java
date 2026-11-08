@@ -58,10 +58,14 @@ public class PageLogData implements ILogData
 	 * Wrapper for optional values that might fail if the page does not exist
 	 * (i.e. session timeout).
 	 */
-	protected <T> T optional(Supplier<T> function) {
-		try {
+	protected <T> T optional(Supplier<T> function)
+	{
+		try
+		{
 			return function.get();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex)
+		{
 			return null;
 		}
 	}

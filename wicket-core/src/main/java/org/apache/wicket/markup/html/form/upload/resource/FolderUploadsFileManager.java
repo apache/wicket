@@ -36,106 +36,107 @@ import org.apache.wicket.util.lang.Args;
 public class FolderUploadsFileManager implements IUploadsFileManager
 {
 
-    private final File folder;
+	private final File folder;
 
-    public FolderUploadsFileManager(File folder)
-    {
-        Args.notNull(folder, "folder");
-        if (!folder.exists())
-        {
-            try
-            {
-                Files.createDirectories(folder.toPath());
-            }
-            catch (IOException e)
-            {
-                throw new WicketRuntimeException(e);
-            }
-        }
-        else if (folder.exists() && !folder.isDirectory())
-        {
-            throw new IllegalArgumentException("Not a folder : " + folder.getAbsolutePath());
-        }
-        this.folder = folder;
-    }
+	public FolderUploadsFileManager(File folder)
+	{
+		Args.notNull(folder, "folder");
+		if (!folder.exists())
+		{
+			try
+			{
+				Files.createDirectories(folder.toPath());
+			}
+			catch (IOException e)
+			{
+				throw new WicketRuntimeException(e);
+			}
+		}
+		else if (folder.exists() && !folder.isDirectory())
+		{
+			throw new IllegalArgumentException("Not a folder : " + folder.getAbsolutePath());
+		}
+		this.folder = folder;
+	}
 
-    public File getFolder() {
-        return folder;
-    }
+	public File getFolder()
+	{
+		return folder;
+	}
 
-    /**
-     * Returns the canonical path for a directory for use in path traversal checks.
-     * Uses {@code toRealPath()} when the directory exists; falls back to
-     * {@code toAbsolutePath().normalize()} only when the directory does not yet exist
-     * (e.g. an upload sub-folder that will be created during {@link #save}).
-     * Other {@link IOException} subtypes (e.g. permission errors) are intentionally
-     * re-thrown so they are not silently swallowed.
-     */
-    private static Path getPathForComparison(java.io.File dir) throws IOException
-    {
-        try
-        {
-            return dir.toPath().toRealPath();
-        }
-        catch (NoSuchFileException e)
-        {
-            return dir.toPath().toAbsolutePath().normalize();
-        }
-    }
+	/**
+	 * Returns the canonical path for a directory for use in path traversal checks.
+	 * Uses {@code toRealPath()} when the directory exists; falls back to
+	 * {@code toAbsolutePath().normalize()} only when the directory does not yet exist
+	 * (e.g. an upload sub-folder that will be created during {@link #save}).
+	 * Other {@link IOException} subtypes (e.g. permission errors) are intentionally
+	 * re-thrown so they are not silently swallowed.
+	 */
+	private static Path getPathForComparison(java.io.File dir) throws IOException
+	{
+		try
+		{
+			return dir.toPath().toRealPath();
+		}
+		catch (NoSuchFileException e)
+		{
+			return dir.toPath().toAbsolutePath().normalize();
+		}
+	}
 
-    /**
-     * Validates {@code uploadFieldId} and {@code clientFileName} against the base folder to
-     * prevent path traversal, and returns the fully resolved, canonical target file.
-     *
-     * @throws SecurityException if either component would escape the base folder
-     */
-    private java.io.File resolveTargetFile(String uploadFieldId, String clientFileName)
-            throws IOException
-    {
-        Path baseFolderPath = getFolder().toPath().toRealPath();
-        java.io.File uploadFieldFolder = new File(getFolder(), uploadFieldId).getCanonicalFile();
-        if (!uploadFieldFolder.toPath().startsWith(baseFolderPath))
-        {
-            throw new SecurityException("Path traversal detected in uploadFieldId");
-        }
-        java.io.File target = new File(uploadFieldFolder, clientFileName).getCanonicalFile();
-        Path uploadFieldFolderPath = getPathForComparison(uploadFieldFolder);
-        if (!target.toPath().startsWith(uploadFieldFolderPath))
-        {
-            throw new SecurityException("Path traversal detected in client filename");
-        }
-        return target;
-    }
+	/**
+	 * Validates {@code uploadFieldId} and {@code clientFileName} against the base folder to
+	 * prevent path traversal, and returns the fully resolved, canonical target file.
+	 *
+	 * @throws SecurityException if either component would escape the base folder
+	 */
+	private java.io.File resolveTargetFile(String uploadFieldId, String clientFileName)
+		throws IOException
+	{
+		Path baseFolderPath = getFolder().toPath().toRealPath();
+		java.io.File uploadFieldFolder = new File(getFolder(), uploadFieldId).getCanonicalFile();
+		if (!uploadFieldFolder.toPath().startsWith(baseFolderPath))
+		{
+			throw new SecurityException("Path traversal detected in uploadFieldId");
+		}
+		java.io.File target = new File(uploadFieldFolder, clientFileName).getCanonicalFile();
+		Path uploadFieldFolderPath = getPathForComparison(uploadFieldFolder);
+		if (!target.toPath().startsWith(uploadFieldFolderPath))
+		{
+			throw new SecurityException("Path traversal detected in client filename");
+		}
+		return target;
+	}
 
-    @Override
-    public void save(FileUpload fileItem, String uploadFieldId)
-    {
-        try
-        {
-            java.io.File target = resolveTargetFile(uploadFieldId, fileItem.getClientFileName());
-            Files.createDirectories(target.toPath().getParent());
-            try (InputStream in = fileItem.getInputStream();
-                 FileOutputStream out = new FileOutputStream(target))
-            {
-                IOUtils.copy(in, out);
-            }
-        }
-        catch (IOException e)
-        {
-            throw new WicketRuntimeException(e);
-        }
-    }
+	@Override
+	public void save(FileUpload fileItem, String uploadFieldId)
+	{
+		try
+		{
+			java.io.File target = resolveTargetFile(uploadFieldId, fileItem.getClientFileName());
+			Files.createDirectories(target.toPath().getParent());
+			try (InputStream in = fileItem.getInputStream();
+				FileOutputStream out = new FileOutputStream(target))
+			{
+				IOUtils.copy(in, out);
+			}
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+	}
 
-    @Override
-    public File getFile(String uploadFieldId, String clientFileName)
-    {
-        try
-        {
-            return new File(resolveTargetFile(uploadFieldId, clientFileName));
-        }
-        catch (IOException e)
-        {
-            throw new WicketRuntimeException(e);
-        }
-    }
+	@Override
+	public File getFile(String uploadFieldId, String clientFileName)
+	{
+		try
+		{
+			return new File(resolveTargetFile(uploadFieldId, clientFileName));
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+	}
 }

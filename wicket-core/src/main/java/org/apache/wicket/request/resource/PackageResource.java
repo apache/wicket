@@ -270,7 +270,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		Class<?> scope = getScope();
 		String currentStyle = getCurrentStyle();
 		Locale currentLocale = getCurrentLocale();
-		
+
 		IResourceStream packageResource = getResourceStream(scope, name, currentLocale,
 			currentStyle, variation, true);
 
@@ -533,7 +533,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	public IResourceStream getResourceStream()
 	{
 		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());
- 	}
+	}
 
 	/**
 	 * @return whether {@link org.apache.wicket.resource.ITextResourceCompressor} can be used to
@@ -812,8 +812,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		// A locale in the file name itself replaces the one the locator was given, and
 		// ResourceUtils only recognizes one that an underscore introduces. So a file name without
 		// an underscore, located with none of the three attributes, is the path itself.
-		final boolean mayCarryLocale =
-			absolutePath.indexOf('_', absolutePath.lastIndexOf('/') + 1) != -1;
+		final boolean mayCarryLocale = absolutePath.indexOf('_', absolutePath.lastIndexOf('/') + 1) != -1;
 
 		if (variation == null && style == null && locale == null && !mayCarryLocale)
 		{

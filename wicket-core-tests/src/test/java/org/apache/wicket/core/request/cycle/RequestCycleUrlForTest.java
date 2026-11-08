@@ -55,7 +55,7 @@ class RequestCycleUrlForTest
 	private static final String RESOURCE_URL = "res";
 
 	private RequestCycle requestCycle;
-	
+
 	@BeforeEach
 	void before()
 	{
@@ -63,7 +63,8 @@ class RequestCycleUrlForTest
 		Url baseUrl = Url.parse("");
 		when(request.getClientUrl()).thenReturn(baseUrl);
 
-		Response response = new StringResponse() {
+		Response response = new StringResponse()
+		{
 			@Override
 			public String encodeURL(CharSequence url)
 			{
@@ -73,13 +74,16 @@ class RequestCycleUrlForTest
 		IRequestMapper mapper = mock(IRequestMapper.class);
 
 		Url bookmarkablePageUrl = Url.parse(BOOKMARKABLE_PAGE_URL);
-		when(mapper.mapHandler(argThat(new ExactClassMatcher<BookmarkablePageRequestHandler>(BookmarkablePageRequestHandler.class)))).thenReturn(bookmarkablePageUrl);
+		when(mapper.mapHandler(argThat(new ExactClassMatcher<BookmarkablePageRequestHandler>(
+			BookmarkablePageRequestHandler.class)))).thenReturn(bookmarkablePageUrl);
 
 		Url resourceUrl = Url.parse(RESOURCE_URL);
-		when(mapper.mapHandler(argThat(new ExactClassMatcher<ResourceRequestHandler>(ResourceRequestHandler.class)))).thenReturn(resourceUrl);
+		when(mapper.mapHandler(argThat(new ExactClassMatcher<ResourceRequestHandler>(ResourceRequestHandler.class))))
+			.thenReturn(resourceUrl);
 
 		Url resourceReferenceUrl = Url.parse(RES_REF_URL);
-		when(mapper.mapHandler(argThat(new ExactClassMatcher<ResourceReferenceRequestHandler>(ResourceReferenceRequestHandler.class)))).thenReturn(resourceReferenceUrl);
+		when(mapper.mapHandler(argThat(new ExactClassMatcher<ResourceReferenceRequestHandler>(
+			ResourceReferenceRequestHandler.class)))).thenReturn(resourceReferenceUrl);
 
 		IExceptionMapper exceptionMapper = mock(IExceptionMapper.class);
 		RequestCycleContext context = new RequestCycleContext(request, response, mapper, exceptionMapper);
@@ -97,7 +101,7 @@ class RequestCycleUrlForTest
 	void urlForClass() throws Exception
 	{
 		CharSequence url = requestCycle.urlFor(MockHomePage.class, new PageParameters());
-		assertEquals("./bookmarkablePage"+JSESSIONID, url);
+		assertEquals("./bookmarkablePage" + JSESSIONID, url);
 	}
 
 	/**
@@ -116,10 +120,10 @@ class RequestCycleUrlForTest
 			{
 				return resource;
 			}
-		}; 
+		};
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference);
 		CharSequence url = requestCycle.urlFor(handler);
-		assertEquals("./"+RES_REF_URL, url);
+		assertEquals("./" + RES_REF_URL, url);
 	}
 
 	/**
@@ -141,7 +145,7 @@ class RequestCycleUrlForTest
 		};
 		ResourceReferenceRequestHandler handler = new ResourceReferenceRequestHandler(reference);
 		CharSequence url = requestCycle.urlFor(handler);
-		assertEquals("./"+RES_REF_URL+JSESSIONID, url);
+		assertEquals("./" + RES_REF_URL + JSESSIONID, url);
 	}
 
 	/**
@@ -155,7 +159,7 @@ class RequestCycleUrlForTest
 		IStaticCacheableResource resource = mock(IStaticCacheableResource.class);
 		ResourceRequestHandler handler = new ResourceRequestHandler(resource, new PageParameters());
 		CharSequence url = requestCycle.urlFor(handler);
-		assertEquals("./"+RESOURCE_URL, url);
+		assertEquals("./" + RESOURCE_URL, url);
 	}
 
 	/**
@@ -166,10 +170,10 @@ class RequestCycleUrlForTest
 	@Test
 	void urlForDynamicResource() throws Exception
 	{
-		ByteArrayResource resource = new ByteArrayResource(null, new byte[] {1, 2}, "test.bin");
+		ByteArrayResource resource = new ByteArrayResource(null, new byte[] { 1, 2 }, "test.bin");
 		ResourceRequestHandler handler = new ResourceRequestHandler(resource, new PageParameters());
 		CharSequence url = requestCycle.urlFor(handler);
-		assertEquals("./"+RESOURCE_URL + JSESSIONID, url);
+		assertEquals("./" + RESOURCE_URL + JSESSIONID, url);
 	}
 
 	/**

@@ -35,18 +35,18 @@ public class SerializingPageStoreTest
 	void test()
 	{
 		MockPageContext context = new MockPageContext();
-		
+
 		MockPageStore mockStore = new MockPageStore();
-		
+
 		IManageablePage original = new MockPage(1);
-		
+
 		SerializingPageStore store = new SerializingPageStore(mockStore, new JavaSerializer("test"));
-		
+
 		store.addPage(context, original);
-		
+
 		SerializedPage serialized = (SerializedPage)mockStore.getPage(context, 1);
 		assertEquals(1, serialized.getPageId(), "page was serialized");
-		
+
 		MockPage deserialized = (MockPage)store.getPage(context, 1);
 		assertEquals(1, deserialized.getPageId(), "page was deserialized");
 	}

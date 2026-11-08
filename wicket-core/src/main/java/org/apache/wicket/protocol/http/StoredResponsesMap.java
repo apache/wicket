@@ -115,7 +115,7 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
 		}
 		if (value != null)
 		{
-			Duration elapsedTime =  Duration.between(value.creationTime, Instant.now());
+			Duration elapsedTime = Duration.between(value.creationTime, Instant.now());
 			if (lifetime.compareTo(elapsedTime) > 0)
 			{
 				result = value.response;

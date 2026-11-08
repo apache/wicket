@@ -56,45 +56,49 @@ public class WizardModelTest extends WicketTestCase
 			assertEquals(model, step.getWizardModel());
 		}
 	}
-	
+
 	@Test
 	public void testWizard()
 	{
 		WizardModel model = new WizardModel();
-		
+
 		WizardStep step1 = new WizardStep();
 		model.add(step1);
-		
+
 		WizardStep step2 = new WizardStep();
 		model.add(step2, () -> false);
-		
-		class ConditionWizadStep extends WizardStep implements ICondition {
+
+		class ConditionWizadStep extends WizardStep implements ICondition
+		{
 
 			@Override
 			public boolean evaluate()
 			{
 				return false;
 			}
-			
+
 		}
 		WizardStep step3 = new ConditionWizadStep();
 		model.add(step3);
-		
+
 		WizardStep step4 = new WizardStep();
 		model.add(step4);
 
 		model.reset();
-		
+
 		Iterator<IWizardStep> iterator = model.stepIterator();
 		assertTrue(iterator.hasNext());
 		iterator.next();
 		assertTrue(iterator.hasNext());
 		iterator.next();
 		assertFalse(iterator.hasNext());
-		try {
+		try
+		{
 			iterator.next();
 			fail();
-		} catch (Exception expected) {
+		}
+		catch (Exception expected)
+		{
 		}
 
 		assertSame(step1, model.getActiveStep());
@@ -108,10 +112,13 @@ public class WizardModelTest extends WicketTestCase
 		assertTrue(model.isLastStep(model.getActiveStep()));
 		assertTrue(model.isFinishAvailable());
 
-		try {
+		try
+		{
 			model.next();
 			fail();
-		} catch (Exception expected) {
+		}
+		catch (Exception expected)
+		{
 		}
 	}
 }

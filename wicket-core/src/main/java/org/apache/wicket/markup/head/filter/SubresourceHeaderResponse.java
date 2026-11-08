@@ -55,7 +55,7 @@ public abstract class SubresourceHeaderResponse extends DecoratingHeaderResponse
 		{
 			configure((ISubresourceHeaderItem)item);
 		}
-		
+
 		super.render(item);
 	}
 
@@ -64,5 +64,5 @@ public abstract class SubresourceHeaderResponse extends DecoratingHeaderResponse
 	 * 
 	 * @param item to configure
 	 */
-	protected abstract void	configure(ISubresourceHeaderItem item);
+	protected abstract void configure(ISubresourceHeaderItem item);
 }

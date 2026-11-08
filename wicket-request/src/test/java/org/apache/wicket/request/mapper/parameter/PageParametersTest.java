@@ -71,7 +71,7 @@ class PageParametersTest
 	{
 		PageParameters parameters = new PageParameters();
 
-		String[] input = new String[] {  };
+		String[] input = new String[] { };
 		parameters.add("key", input, INamedParameters.Type.MANUAL);
 
 		assertTrue(parameters.isEmpty());
@@ -203,12 +203,12 @@ class PageParametersTest
 	}
 
 	@Test
-	void mergeEmptyParameters() 
+	void mergeEmptyParameters()
 	{
 		final PageParameters left = new PageParameters();
 		final PageParameters right = new PageParameters();
 		left.mergeWith(right);
-		
+
 		assertTrue(left.isEmpty());
 	}
 

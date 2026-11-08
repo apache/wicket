@@ -60,7 +60,7 @@ public class AjaxIndicatorAppender extends Behavior
 	{
 		this(AbstractDefaultAjaxBehavior.INDICATOR);
 	}
-	
+
 	/**
 	 * Build a new instance specifying a custom busy indicator as {@link ResourceReference}.
 	 * 

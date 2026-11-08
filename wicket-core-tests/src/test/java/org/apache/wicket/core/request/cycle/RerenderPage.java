@@ -44,7 +44,7 @@ public class RerenderPage extends WebPage
 	{
 		super(pars);
 		this.newValue = pars.get("value").toInteger();
-		
+
 		// make page statefull
 		add(new AjaxSelfUpdatingTimerBehavior(Duration.ofDays(1)));
 	}

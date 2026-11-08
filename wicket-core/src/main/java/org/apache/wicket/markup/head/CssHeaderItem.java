@@ -141,7 +141,7 @@ public abstract class CssHeaderItem extends AbstractCspHeaderItem
 	{
 		return new CssContentHeaderItem(css, id);
 	}
-	
+
 	/**
 	 * Creates a {@link CssUrlReferenceHeaderItem} for the given url.
 	 * 
@@ -201,7 +201,7 @@ public abstract class CssHeaderItem extends AbstractCspHeaderItem
 	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		CssHeaderItem that = (CssHeaderItem) o;
+		CssHeaderItem that = (CssHeaderItem)o;
 		return Objects.equals(markupId, that.markupId);
 	}
 

@@ -160,8 +160,8 @@ class BookmarkableMapperTest extends AbstractMapperTest
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
-		RenderPageRequestHandler h = (RenderPageRequestHandler) handler;
-		((PageProvider) h.getPageProvider()).setPageSource(context);
+		RenderPageRequestHandler h = (RenderPageRequestHandler)handler;
+		((PageProvider)h.getPageProvider()).setPageSource(context);
 		IRequestablePage page = h.getPage();
 		checkPage(page, 1);
 
@@ -264,7 +264,7 @@ class BookmarkableMapperTest extends AbstractMapperTest
 	{
 		assertThrows(StalePageException.class, () -> {
 			Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME
-										+ "/i1/i2?15-5.ILinkListener-foo-bar&a=b&b=c");
+				+ "/i1/i2?15-5.ILinkListener-foo-bar&a=b&b=c");
 
 			context.setNextPageRenderCount(6);
 			IRequestHandler handler = encoder.mapRequest(getRequest(url));

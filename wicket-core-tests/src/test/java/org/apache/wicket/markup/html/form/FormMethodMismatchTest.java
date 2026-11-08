@@ -25,255 +25,306 @@ import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.Test;
 
-class FormMethodMismatchTest {
+class FormMethodMismatchTest
+{
 
-    static class PlainFormPage extends WebPage {
-        PlainFormPage(Form<Void> underTest) {
-            add(underTest);
-        }
-    }
+	static class PlainFormPage extends WebPage
+	{
+		PlainFormPage(Form<Void> underTest)
+		{
+			add(underTest);
+		}
+	}
 
-    @Test
-    void formSubmittedContinuesWithCorrectMethod() {
-        final WicketTester tester = new WicketTester();
-        final boolean[] onSubmitCalled = new boolean[1];
-        final Form<Void> underTest = new Form<Void>("underTest") {
-            @Override
-            protected void onSubmit() {
-                onSubmitCalled[0] = true;
-            }
-        };
-        tester.startPage(new PlainFormPage(underTest));
-        final FormTester formTester = tester.newFormTester("underTest");
-        formTester.submit();
-        assertTrue(onSubmitCalled[0]);
-    }
+	@Test
+	void formSubmittedContinuesWithCorrectMethod()
+	{
+		final WicketTester tester = new WicketTester();
+		final boolean[] onSubmitCalled = new boolean[1];
+		final Form<Void> underTest = new Form<Void>("underTest")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				onSubmitCalled[0] = true;
+			}
+		};
+		tester.startPage(new PlainFormPage(underTest));
+		final FormTester formTester = tester.newFormTester("underTest");
+		formTester.submit();
+		assertTrue(onSubmitCalled[0]);
+	}
 
-    @Test
-    void formSubmittedContinuesByDefaultWithMismatchingMethod() {
-        final WicketTester tester = new WicketTester();
-        final boolean[] onSubmitCalled = new boolean[1];
-        final Form<Void> underTest = new Form<Void>("underTest") {
-            @Override
-            protected void onSubmit() {
-                onSubmitCalled[0] = true;
-            }
-        };
-        tester.startPage(new PlainFormPage(underTest));
-        final FormTester formTester = tester.newFormTester("underTest");
-        tester.getRequest().setMethod("GET");
-        formTester.submit();
-        assertTrue(onSubmitCalled[0]);
-    }
+	@Test
+	void formSubmittedContinuesByDefaultWithMismatchingMethod()
+	{
+		final WicketTester tester = new WicketTester();
+		final boolean[] onSubmitCalled = new boolean[1];
+		final Form<Void> underTest = new Form<Void>("underTest")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				onSubmitCalled[0] = true;
+			}
+		};
+		tester.startPage(new PlainFormPage(underTest));
+		final FormTester formTester = tester.newFormTester("underTest");
+		tester.getRequest().setMethod("GET");
+		formTester.submit();
+		assertTrue(onSubmitCalled[0]);
+	}
 
-    @Test
-    void formSubmittedAbortsByWithMismatchingMethodWhenDesired() {
-        final WicketTester tester = new WicketTester();
-        final boolean[] onSubmitCalled = new boolean[1];
-        final Form<Void> underTest = new Form<Void>("underTest") {
-            @Override
-            protected void onSubmit() {
-                onSubmitCalled[0] = true;
-            }
+	@Test
+	void formSubmittedAbortsByWithMismatchingMethodWhenDesired()
+	{
+		final WicketTester tester = new WicketTester();
+		final boolean[] onSubmitCalled = new boolean[1];
+		final Form<Void> underTest = new Form<Void>("underTest")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				onSubmitCalled[0] = true;
+			}
 
-            @Override
-            protected MethodMismatchResponse onMethodMismatch() {
-                return MethodMismatchResponse.ABORT;
-            }
-        };
-        tester.startPage(new PlainFormPage(underTest));
-        final FormTester formTester = tester.newFormTester("underTest");
-        tester.getRequest().setMethod("GET");
-        formTester.submit();
-        assertFalse(onSubmitCalled[0]);
-    }
+			@Override
+			protected MethodMismatchResponse onMethodMismatch()
+			{
+				return MethodMismatchResponse.ABORT;
+			}
+		};
+		tester.startPage(new PlainFormPage(underTest));
+		final FormTester formTester = tester.newFormTester("underTest");
+		tester.getRequest().setMethod("GET");
+		formTester.submit();
+		assertFalse(onSubmitCalled[0]);
+	}
 
-    @Test
-    void formSubmittedContinuesByWithCorrectMethodWhenDesired() {
-        final WicketTester tester = new WicketTester();
-        final boolean[] onSubmitCalled = new boolean[1];
-        final Form<Void> underTest = new Form<Void>("underTest") {
-            @Override
-            protected void onSubmit() {
-                onSubmitCalled[0] = true;
-            }
+	@Test
+	void formSubmittedContinuesByWithCorrectMethodWhenDesired()
+	{
+		final WicketTester tester = new WicketTester();
+		final boolean[] onSubmitCalled = new boolean[1];
+		final Form<Void> underTest = new Form<Void>("underTest")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				onSubmitCalled[0] = true;
+			}
 
-            @Override
-            protected MethodMismatchResponse onMethodMismatch() {
-                return MethodMismatchResponse.ABORT;
-            }
-        };
-        tester.startPage(new PlainFormPage(underTest));
-        final FormTester formTester = tester.newFormTester("underTest");
-        formTester.submit();
-        assertTrue(onSubmitCalled[0]);
-    }
+			@Override
+			protected MethodMismatchResponse onMethodMismatch()
+			{
+				return MethodMismatchResponse.ABORT;
+			}
+		};
+		tester.startPage(new PlainFormPage(underTest));
+		final FormTester formTester = tester.newFormTester("underTest");
+		formTester.submit();
+		assertTrue(onSubmitCalled[0]);
+	}
 
-    static class FormWithButtonPage extends WebPage {
-        FormWithButtonPage(Form<Void> underTest) {
-            add(underTest);
-            underTest.add(new Button("button"));
-        }
-    }
+	static class FormWithButtonPage extends WebPage
+	{
+		FormWithButtonPage(Form<Void> underTest)
+		{
+			add(underTest);
+			underTest.add(new Button("button"));
+		}
+	}
 
-    @Test
-    void withButtonFormSubmittedContinuesWithCorrectMethod() {
-        final WicketTester tester = new WicketTester();
-        final boolean[] onSubmitCalled = new boolean[1];
-        final Form<Void> underTest = new Form<Void>("underTest") {
-            @Override
-            protected void onSubmit() {
-                onSubmitCalled[0] = true;
-            }
-        };
-        tester.startPage(new FormWithButtonPage(underTest));
-        final FormTester formTester = tester.newFormTester("underTest");
-        formTester.submit("button");
-        assertTrue(onSubmitCalled[0]);
-    }
+	@Test
+	void withButtonFormSubmittedContinuesWithCorrectMethod()
+	{
+		final WicketTester tester = new WicketTester();
+		final boolean[] onSubmitCalled = new boolean[1];
+		final Form<Void> underTest = new Form<Void>("underTest")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				onSubmitCalled[0] = true;
+			}
+		};
+		tester.startPage(new FormWithButtonPage(underTest));
+		final FormTester formTester = tester.newFormTester("underTest");
+		formTester.submit("button");
+		assertTrue(onSubmitCalled[0]);
+	}
 
-    @Test
-    void withButtonFormSubmittedContinuesByDefaultWithMismatchingMethod() {
-        final WicketTester tester = new WicketTester();
-        final boolean[] onSubmitCalled = new boolean[1];
-        final Form<Void> underTest = new Form<Void>("underTest") {
-            @Override
-            protected void onSubmit() {
-                onSubmitCalled[0] = true;
-            }
-        };
-        tester.startPage(new FormWithButtonPage(underTest));
-        final FormTester formTester = tester.newFormTester("underTest");
-        tester.getRequest().setMethod("GET");
-        formTester.submit("button");
-        assertTrue(onSubmitCalled[0]);
-    }
+	@Test
+	void withButtonFormSubmittedContinuesByDefaultWithMismatchingMethod()
+	{
+		final WicketTester tester = new WicketTester();
+		final boolean[] onSubmitCalled = new boolean[1];
+		final Form<Void> underTest = new Form<Void>("underTest")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				onSubmitCalled[0] = true;
+			}
+		};
+		tester.startPage(new FormWithButtonPage(underTest));
+		final FormTester formTester = tester.newFormTester("underTest");
+		tester.getRequest().setMethod("GET");
+		formTester.submit("button");
+		assertTrue(onSubmitCalled[0]);
+	}
 
-    @Test
-    void withButtonFormSubmittedAbortsByWithMismatchingMethodWhenDesired() {
-        final WicketTester tester = new WicketTester();
-        final boolean[] onSubmitCalled = new boolean[1];
-        final Form<Void> underTest = new Form<Void>("underTest") {
-            @Override
-            protected void onSubmit() {
-                onSubmitCalled[0] = true;
-            }
+	@Test
+	void withButtonFormSubmittedAbortsByWithMismatchingMethodWhenDesired()
+	{
+		final WicketTester tester = new WicketTester();
+		final boolean[] onSubmitCalled = new boolean[1];
+		final Form<Void> underTest = new Form<Void>("underTest")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				onSubmitCalled[0] = true;
+			}
 
-            @Override
-            protected MethodMismatchResponse onMethodMismatch() {
-                return MethodMismatchResponse.ABORT;
-            }
-        };
-        tester.startPage(new FormWithButtonPage(underTest));
-        final FormTester formTester = tester.newFormTester("underTest");
-        tester.getRequest().setMethod("GET");
-        formTester.submit("button");
-        assertFalse(onSubmitCalled[0]);
-    }
+			@Override
+			protected MethodMismatchResponse onMethodMismatch()
+			{
+				return MethodMismatchResponse.ABORT;
+			}
+		};
+		tester.startPage(new FormWithButtonPage(underTest));
+		final FormTester formTester = tester.newFormTester("underTest");
+		tester.getRequest().setMethod("GET");
+		formTester.submit("button");
+		assertFalse(onSubmitCalled[0]);
+	}
 
-    @Test
-    void withButtonFormSubmittedContinuesByWithCorrectMethodWhenDesired() {
-        final WicketTester tester = new WicketTester();
-        final boolean[] onSubmitCalled = new boolean[1];
-        final Form<Void> underTest = new Form<Void>("underTest") {
-            @Override
-            protected void onSubmit() {
-                onSubmitCalled[0] = true;
-            }
+	@Test
+	void withButtonFormSubmittedContinuesByWithCorrectMethodWhenDesired()
+	{
+		final WicketTester tester = new WicketTester();
+		final boolean[] onSubmitCalled = new boolean[1];
+		final Form<Void> underTest = new Form<Void>("underTest")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				onSubmitCalled[0] = true;
+			}
 
-            @Override
-            protected MethodMismatchResponse onMethodMismatch() {
-                return MethodMismatchResponse.ABORT;
-            }
-        };
-        tester.startPage(new FormWithButtonPage(underTest));
-        final FormTester formTester = tester.newFormTester("underTest");
-        formTester.submit("button");
-        assertTrue(onSubmitCalled[0]);
-    }
+			@Override
+			protected MethodMismatchResponse onMethodMismatch()
+			{
+				return MethodMismatchResponse.ABORT;
+			}
+		};
+		tester.startPage(new FormWithButtonPage(underTest));
+		final FormTester formTester = tester.newFormTester("underTest");
+		formTester.submit("button");
+		assertTrue(onSubmitCalled[0]);
+	}
 
-    static class FormWithAjaxButtonPage extends WebPage {
-        FormWithAjaxButtonPage(Form<Void> underTest) {
-            add(underTest);
-            underTest.add(new AjaxButton("button") {
+	static class FormWithAjaxButtonPage extends WebPage
+	{
+		FormWithAjaxButtonPage(Form<Void> underTest)
+		{
+			add(underTest);
+			underTest.add(new AjaxButton("button")
+			{
 
-            });
-        }
-    }
-    @Test
-    void withAjaxButtonFormSubmittedContinuesWithCorrectMethod() {
-        final WicketTester tester = new WicketTester();
-        final boolean[] onSubmitCalled = new boolean[1];
-        final Form<Void> underTest = new Form<Void>("underTest") {
-            @Override
-            protected void onSubmit() {
-                onSubmitCalled[0] = true;
-            }
-        };
-        tester.startPage(new FormWithAjaxButtonPage(underTest));
-        final FormTester formTester = tester.newFormTester("underTest");
-        formTester.submit("button");
-        assertTrue(onSubmitCalled[0]);
-    }
+			});
+		}
+	}
 
-    @Test
-    void withAjaxButtonFormSubmittedContinuesByDefaultWithMismatchingMethod() {
-        final WicketTester tester = new WicketTester();
-        final boolean[] onSubmitCalled = new boolean[1];
-        final Form<Void> underTest = new Form<Void>("underTest") {
-            @Override
-            protected void onSubmit() {
-                onSubmitCalled[0] = true;
-            }
-        };
-        tester.startPage(new FormWithAjaxButtonPage(underTest));
-        final FormTester formTester = tester.newFormTester("underTest");
-        tester.getRequest().setMethod("GET");
-        formTester.submit("button");
-        assertTrue(onSubmitCalled[0]);
-    }
+	@Test
+	void withAjaxButtonFormSubmittedContinuesWithCorrectMethod()
+	{
+		final WicketTester tester = new WicketTester();
+		final boolean[] onSubmitCalled = new boolean[1];
+		final Form<Void> underTest = new Form<Void>("underTest")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				onSubmitCalled[0] = true;
+			}
+		};
+		tester.startPage(new FormWithAjaxButtonPage(underTest));
+		final FormTester formTester = tester.newFormTester("underTest");
+		formTester.submit("button");
+		assertTrue(onSubmitCalled[0]);
+	}
 
-    @Test
-    void withAjaxButtonFormSubmittedAbortsByWithMismatchingMethodWhenDesired() {
-        final WicketTester tester = new WicketTester();
-        final boolean[] onSubmitCalled = new boolean[1];
-        final Form<Void> underTest = new Form<Void>("underTest") {
-            @Override
-            protected void onSubmit() {
-                onSubmitCalled[0] = true;
-            }
+	@Test
+	void withAjaxButtonFormSubmittedContinuesByDefaultWithMismatchingMethod()
+	{
+		final WicketTester tester = new WicketTester();
+		final boolean[] onSubmitCalled = new boolean[1];
+		final Form<Void> underTest = new Form<Void>("underTest")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				onSubmitCalled[0] = true;
+			}
+		};
+		tester.startPage(new FormWithAjaxButtonPage(underTest));
+		final FormTester formTester = tester.newFormTester("underTest");
+		tester.getRequest().setMethod("GET");
+		formTester.submit("button");
+		assertTrue(onSubmitCalled[0]);
+	}
 
-            @Override
-            protected MethodMismatchResponse onMethodMismatch() {
-                return MethodMismatchResponse.ABORT;
-            }
-        };
-        tester.startPage(new FormWithAjaxButtonPage(underTest));
-        final FormTester formTester = tester.newFormTester("underTest");
-        tester.getRequest().setMethod("GET");
-        formTester.submit("button");
-        assertFalse(onSubmitCalled[0]);
-    }
+	@Test
+	void withAjaxButtonFormSubmittedAbortsByWithMismatchingMethodWhenDesired()
+	{
+		final WicketTester tester = new WicketTester();
+		final boolean[] onSubmitCalled = new boolean[1];
+		final Form<Void> underTest = new Form<Void>("underTest")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				onSubmitCalled[0] = true;
+			}
 
-    @Test
-    void withAjaxButtonFormSubmittedContinuesByWithCorrectMethodWhenDesired() {
-        final WicketTester tester = new WicketTester();
-        final boolean[] onSubmitCalled = new boolean[1];
-        final Form<Void> underTest = new Form<Void>("underTest") {
-            @Override
-            protected void onSubmit() {
-                onSubmitCalled[0] = true;
-            }
+			@Override
+			protected MethodMismatchResponse onMethodMismatch()
+			{
+				return MethodMismatchResponse.ABORT;
+			}
+		};
+		tester.startPage(new FormWithAjaxButtonPage(underTest));
+		final FormTester formTester = tester.newFormTester("underTest");
+		tester.getRequest().setMethod("GET");
+		formTester.submit("button");
+		assertFalse(onSubmitCalled[0]);
+	}
 
-            @Override
-            protected MethodMismatchResponse onMethodMismatch() {
-                return MethodMismatchResponse.ABORT;
-            }
-        };
-        tester.startPage(new FormWithAjaxButtonPage(underTest));
-        final FormTester formTester = tester.newFormTester("underTest");
-        formTester.submit("button");
-        assertTrue(onSubmitCalled[0]);
-    }
+	@Test
+	void withAjaxButtonFormSubmittedContinuesByWithCorrectMethodWhenDesired()
+	{
+		final WicketTester tester = new WicketTester();
+		final boolean[] onSubmitCalled = new boolean[1];
+		final Form<Void> underTest = new Form<Void>("underTest")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				onSubmitCalled[0] = true;
+			}
+
+			@Override
+			protected MethodMismatchResponse onMethodMismatch()
+			{
+				return MethodMismatchResponse.ABORT;
+			}
+		};
+		tester.startPage(new FormWithAjaxButtonPage(underTest));
+		final FormTester formTester = tester.newFormTester("underTest");
+		formTester.submit("button");
+		assertTrue(onSubmitCalled[0]);
+	}
 }
 

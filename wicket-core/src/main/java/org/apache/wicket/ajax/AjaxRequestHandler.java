@@ -152,7 +152,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 				if (listeners != null)
 				{
 					final Map<String, Component> components = Collections
-							.unmodifiableMap(markupIdToComponent);
+						.unmodifiableMap(markupIdToComponent);
 
 					for (AjaxRequestTarget.IListener listener : listeners)
 					{
@@ -183,7 +183,8 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 	@Override
 	public PartialPageUpdate getUpdate()
 	{
-		if (update == null) {
+		if (update == null)
+		{
 			update = newPartialPageUpdate(getPage());
 		}
 		return update;
@@ -357,7 +358,7 @@ public class AjaxRequestHandler extends AbstractPartialPageRequestHandler implem
 		WebRequest request = (WebRequest)getPage().getRequest();
 
 		String id = request.getHeader("Wicket-FocusedElementId");
-		
+
 		// WICKET-6568 might contain non-ASCII
 		return Strings.isEmpty(id) ? null : UrlDecoder.QUERY_INSTANCE.decode(id, request.getCharset());
 	}

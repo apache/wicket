@@ -26,7 +26,8 @@ import org.apache.wicket.markup.ComponentTag;
  * @author Igor Vaynberg (ivaynberg)
  */
 @FunctionalInterface
-public interface IOnComponentTagListener {
+public interface IOnComponentTagListener
+{
 	/**
 	 * Called before Component#onComponentTag(ComponentTag)
 	 *

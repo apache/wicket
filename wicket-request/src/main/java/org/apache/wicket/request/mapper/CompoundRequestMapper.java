@@ -185,7 +185,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 			LOG.debug("Multiple compatible mappers found for URL '{}'", url);
 			for (MapperWithScore compatibleMapper : compatibleMappers)
 			{
-		        LOG.debug(" * {}", compatibleMapper);
+				LOG.debug(" * {}", compatibleMapper);
 			}
 		}
 	}

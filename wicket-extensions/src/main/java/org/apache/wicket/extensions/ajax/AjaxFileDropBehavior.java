@@ -98,13 +98,16 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 		// default must be prevented, otherwise browser will consume the dataTransfer
 		attributes.setPreventDefault(true);
 
-		attributes.getAjaxCallListeners().add(new AjaxCallListener() {
+		attributes.getAjaxCallListeners().add(new AjaxCallListener()
+		{
 			@Override
 			public CharSequence getPrecondition(Component component)
 			{
 				String css = getComponent().getString(DRAG_OVER_CLASS_KEY);
 
-				return String.format("jQuery('#' + attrs.c).toggleClass('%s', attrs.event.type === 'dragover'); return (attrs.event.type === 'drop');", css);
+				return String.format(
+					"jQuery('#' + attrs.c).toggleClass('%s', attrs.event.type === 'dragover'); return (attrs.event.type === 'drop');",
+					css);
 			}
 		});
 

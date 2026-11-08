@@ -46,12 +46,12 @@ public class CSPNonceHeaderResponseDecorator extends DecoratingHeaderResponse
 			HeaderItem checkitem = item;
 			while (checkitem instanceof IWrappedHeaderItem)
 			{
-				checkitem = ((IWrappedHeaderItem) checkitem).getWrapped();
+				checkitem = ((IWrappedHeaderItem)checkitem).getWrapped();
 			}
 
 			if (checkitem instanceof AbstractCspHeaderItem)
 			{
-				((AbstractCspHeaderItem) checkitem).setNonce(settings.getNonce(RequestCycle.get()));
+				((AbstractCspHeaderItem)checkitem).setNonce(settings.getNonce(RequestCycle.get()));
 			}
 		}
 

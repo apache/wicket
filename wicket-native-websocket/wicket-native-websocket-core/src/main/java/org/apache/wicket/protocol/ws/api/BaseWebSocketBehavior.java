@@ -113,10 +113,11 @@ public class BaseWebSocketBehavior extends Behavior
 		response.render(OnDomReadyHeaderItem.forScript(webSocketSetupScript));
 	}
 
-	protected String getWebSocketSetupScript(Map<String, Object> parameters) {
-		PackageTextTemplate webSocketSetupTemplate =
-				new PackageTextTemplate(WicketWebSocketJQueryResourceReference.class,
-						"res/js/wicket-websocket-setup.js.tmpl");
+	protected String getWebSocketSetupScript(Map<String, Object> parameters)
+	{
+		PackageTextTemplate webSocketSetupTemplate = new PackageTextTemplate(
+			WicketWebSocketJQueryResourceReference.class,
+			"res/js/wicket-websocket-setup.js.tmpl");
 
 		return webSocketSetupTemplate.asString(parameters);
 	}
@@ -127,11 +128,13 @@ public class BaseWebSocketBehavior extends Behavior
 	 * @param component the {@link org.apache.wicket.Component}
 	 * @return the context for this websocket behavior.
 	 */
-	protected String getContext(Component component) {
+	protected String getContext(Component component)
+	{
 		return component.getPage().getClass().getName();
 	}
 
-	private Map<String, Object> getParameters(Component component) {
+	private Map<String, Object> getParameters(Component component)
+	{
 		Map<String, Object> variables = Generics.newHashMap();
 
 		variables.put("context", getContext(component));
@@ -188,15 +191,18 @@ public class BaseWebSocketBehavior extends Behavior
 		return webSocketSettings.getSecurePort();
 	}
 
-	protected CharSequence getFilterPrefix(final WebSocketSettings webSocketSettings) {
+	protected CharSequence getFilterPrefix(final WebSocketSettings webSocketSettings)
+	{
 		return webSocketSettings.getFilterPrefix();
 	}
 
-	protected CharSequence getContextPath(final WebSocketSettings webSocketSettings) {
+	protected CharSequence getContextPath(final WebSocketSettings webSocketSettings)
+	{
 		return webSocketSettings.getContextPath();
 	}
 
-	protected CharSequence getBaseUrl(final WebSocketSettings webSocketSettings) {
+	protected CharSequence getBaseUrl(final WebSocketSettings webSocketSettings)
+	{
 		return webSocketSettings.getBaseUrl();
 	}
 
@@ -208,10 +214,12 @@ public class BaseWebSocketBehavior extends Behavior
 	protected CharSequence getSessionId(final Component component)
 	{
 		String sessionId = "";
-		final WebApplication application = (WebApplication) component.getApplication();
-		final Set<SessionTrackingMode> effectiveSessionTrackingModes = application.getServletContext().getEffectiveSessionTrackingModes();
+		final WebApplication application = (WebApplication)component.getApplication();
+		final Set<SessionTrackingMode> effectiveSessionTrackingModes = application.getServletContext()
+			.getEffectiveSessionTrackingModes();
 		Object containerRequest = component.getRequest().getContainerRequest();
-		if (effectiveSessionTrackingModes.size() == 1 && SessionTrackingMode.URL.equals(effectiveSessionTrackingModes.iterator().next()))
+		if (effectiveSessionTrackingModes.size() == 1 && SessionTrackingMode.URL.equals(effectiveSessionTrackingModes
+			.iterator().next()))
 		{
 			sessionId = component.getSession().getId();
 		}
@@ -220,7 +228,7 @@ public class BaseWebSocketBehavior extends Behavior
 			CookieUtils cookieUtils = new CookieUtils();
 			final String jsessionCookieName = cookieUtils.getSessionIdCookieName(application);
 			final Cookie jsessionid = cookieUtils.getCookie(jsessionCookieName);
-			HttpServletRequest httpServletRequest = (HttpServletRequest) containerRequest;
+			HttpServletRequest httpServletRequest = (HttpServletRequest)containerRequest;
 			if (jsessionid == null || httpServletRequest.isRequestedSessionIdValid() == false)
 			{
 				sessionId = component.getSession().getId();

@@ -83,16 +83,16 @@ class AbstractDefaultAjaxBehaviorTest extends WicketTestCase
 		String expected = "{\"" +
 			AjaxAttributeName.URL + "\":\"some/url\",\"" +
 			AjaxAttributeName.BEFORE_HANDLER +
-				"\":[function(attrs){alert('Before!');}],\"" +
+			"\":[function(attrs){alert('Before!');}],\"" +
 			AjaxAttributeName.AFTER_HANDLER + "\":[function(attrs){alert('After!');}],\"" +
 			AjaxAttributeName.SUCCESS_HANDLER +
-				"\":[function(attrs, jqXHR, data, textStatus){alert('Success!');}],\"" +
+			"\":[function(attrs, jqXHR, data, textStatus){alert('Success!');}],\"" +
 			AjaxAttributeName.FAILURE_HANDLER +
-				"\":[function(attrs, jqXHR, errorMessage, textStatus){alert('Failure!');}],\"" +
+			"\":[function(attrs, jqXHR, errorMessage, textStatus){alert('Failure!');}],\"" +
 			AjaxAttributeName.COMPLETE_HANDLER +
-				"\":[function(attrs, jqXHR, textStatus){alert('Complete!');}],\"" +
+			"\":[function(attrs, jqXHR, textStatus){alert('Complete!');}],\"" +
 			AjaxAttributeName.PRECONDITION +
-				"\":[function(attrs){return somePrecondition();}],\"" +
+			"\":[function(attrs){return somePrecondition();}],\"" +
 			AjaxAttributeName.EXTRA_PARAMETERS +
 			"\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"fr_CA\"}]" +
 			"}";
@@ -117,13 +117,15 @@ class AbstractDefaultAjaxBehaviorTest extends WicketTestCase
 			}
 
 			@Override
-			protected void updateAjaxAttributes(final AjaxRequestAttributes attributes) {
+			protected void updateAjaxAttributes(final AjaxRequestAttributes attributes)
+			{
 				super.updateAjaxAttributes(attributes);
 				attributes.setMethod(AjaxRequestAttributes.Method.GET);
 			}
 
 			@Override
-			protected Form.MethodMismatchResponse onMethodMismatch() {
+			protected Form.MethodMismatchResponse onMethodMismatch()
+			{
 				return Form.MethodMismatchResponse.ABORT;
 			}
 		};
@@ -153,13 +155,15 @@ class AbstractDefaultAjaxBehaviorTest extends WicketTestCase
 			}
 
 			@Override
-			protected void updateAjaxAttributes(final AjaxRequestAttributes attributes) {
+			protected void updateAjaxAttributes(final AjaxRequestAttributes attributes)
+			{
 				super.updateAjaxAttributes(attributes);
 				attributes.setMethod(AjaxRequestAttributes.Method.GET);
 			}
 
 			@Override
-			protected Form.MethodMismatchResponse onMethodMismatch() {
+			protected Form.MethodMismatchResponse onMethodMismatch()
+			{
 				return Form.MethodMismatchResponse.ABORT;
 			}
 		};
@@ -189,13 +193,15 @@ class AbstractDefaultAjaxBehaviorTest extends WicketTestCase
 			}
 
 			@Override
-			protected void updateAjaxAttributes(final AjaxRequestAttributes attributes) {
+			protected void updateAjaxAttributes(final AjaxRequestAttributes attributes)
+			{
 				super.updateAjaxAttributes(attributes);
 				attributes.setMethod(AjaxRequestAttributes.Method.GET);
 			}
 
 			@Override
-			protected Form.MethodMismatchResponse onMethodMismatch() {
+			protected Form.MethodMismatchResponse onMethodMismatch()
+			{
 				return Form.MethodMismatchResponse.CONTINUE;
 			}
 		};

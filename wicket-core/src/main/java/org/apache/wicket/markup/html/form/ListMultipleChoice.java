@@ -229,7 +229,8 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		{
 			String idValue = getChoiceRenderer().getIdValue(choice, index);
 			// Loop through ids
-			for (final StringTokenizer tokenizer = new StringTokenizer(selected, VALUE_SEPARATOR); tokenizer.hasMoreTokens();)
+			for (final StringTokenizer tokenizer = new StringTokenizer(selected, VALUE_SEPARATOR); tokenizer
+				.hasMoreTokens();)
 			{
 				final String id = tokenizer.nextToken();
 				if (id.equals(idValue))

@@ -63,8 +63,8 @@ public class ReportCSPViolationMapper extends AbstractMapper
 				{
 					try
 					{
-						HttpServletRequest httpRequest =
-							((ServletWebRequest) requestCycle.getRequest()).getContainerRequest();
+						HttpServletRequest httpRequest = ((ServletWebRequest)requestCycle.getRequest())
+							.getContainerRequest();
 						if (log.isErrorEnabled())
 						{
 							log.error(reportToString(httpRequest));
@@ -104,7 +104,7 @@ public class ReportCSPViolationMapper extends AbstractMapper
 	{
 		if (request instanceof ServletWebRequest)
 		{
-			if (!((ServletWebRequest) request).getContainerRequest().getMethod().equals("POST"))
+			if (!((ServletWebRequest)request).getContainerRequest().getMethod().equals("POST"))
 			{
 				return false;
 			}

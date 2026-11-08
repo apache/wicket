@@ -37,7 +37,8 @@ public class AsynchronousDataStoreTest
 	private static final IPageStore ASYNC_PAGE_STORE = new AsynchronousPageStore(WRAPPED_PAGE_STORE, 100);
 
 	/** the used jsessionid's */
-	private static final IPageContext[] CONTEXT = new IPageContext[] { createContext("s1"), createContext("s2"), createContext("s3")};
+	private static final IPageContext[] CONTEXT = new IPageContext[] { createContext("s1"), createContext("s2"),
+			createContext("s3") };
 
 	/** the ids for the stored/removed pages */
 	private static final int[] PAGE_IDS = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -106,7 +107,7 @@ public class AsynchronousDataStoreTest
 		{
 			return PAGE_IDS[RND.nextInt(PAGE_IDS.length)];
 		}
-		
+
 		protected IManageablePage getPage()
 		{
 			return new MockPage(getPageId());

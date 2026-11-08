@@ -34,7 +34,8 @@ public class BasePage extends WicketExamplePage
 		add(new BookmarkablePageLink<>("back", getBackPage()));
 	}
 
-	protected Class<? extends WicketExamplePage> getBackPage() {
+	protected Class<? extends WicketExamplePage> getBackPage()
+	{
 		return Index.class;
 	}
 

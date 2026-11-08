@@ -71,7 +71,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 		headerItem.addTagAttribute("media", media);
 		return headerItem;
 	}
-	
+
 	/**
 	 * Factory method to create &lt;link&gt; tag.
 	 * 
@@ -83,7 +83,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	{
 		return forImportLinkTag(Model.of(href), false);
 	}
-	
+
 	/**
 	 * Factory method to create &lt;link&gt; tag.
 	 * 
@@ -95,7 +95,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	{
 		return forImportLinkTag(href, false);
 	}
-	
+
 	/**
 	 * Factory method to create &lt;link&gt; tag.
 	 * 
@@ -109,7 +109,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	{
 		return forImportLinkTag(Model.of(href), async);
 	}
-	
+
 	/**
 	 * Factory method to create &lt;link&gt; tag.
 	 * 
@@ -123,7 +123,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	{
 		MetaDataHeaderItem linkTag = forLinkTag(Model.of("import"), href);
 		addAsyncAttribute(linkTag, async);
-		
+
 		return linkTag;
 	}
 
@@ -137,12 +137,12 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	 */
 	private static void addAsyncAttribute(MetaDataHeaderItem linkTag, boolean async)
 	{
-		if(async)
+		if (async)
 		{
 			linkTag.addTagAttribute("async");
 		}
 	}
-	
+
 	/**
 	 * Factory method to create lt;link&gt; tag for html import.
 	 *
@@ -169,7 +169,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	{
 		return forImportLinkTag(pageClass, pageParameters, false);
 	}
-	
+
 	/**
 	 * Factory method to create lt;link&gt; tag for html import.
 	 *
@@ -186,7 +186,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	{
 		return forImportLinkTag(pageClass, pageParameters, (String)null, async);
 	}
-	
+
 	/**
 	 * Factory method to create lt;link&gt; tag for html import.
 	 *
@@ -203,7 +203,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	{
 		return forImportLinkTag(pageClass, pageParameters, Model.of(media));
 	}
-	
+
 	/**
 	 * Factory method to create lt;link&gt; tag for html import.
 	 *
@@ -239,7 +239,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	{
 		return forImportLinkTag(pageClass, pageParameters, media, false);
 	}
-	
+
 	/**
 	 * Factory method to create lt;link&gt; tag for html import.
 	 *
@@ -258,9 +258,9 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	{
 		MetaDataHeaderItem linkTag = forLinkTag(Model.of("import"),
 			Model.of(RequestCycle.get().urlFor(pageClass, pageParameters).toString()), media);
-		
+
 		addAsyncAttribute(linkTag, async);
-		
+
 		return linkTag;
 	}
 }

@@ -26,41 +26,44 @@ import org.apache.wicket.request.Request;
 
 public class JSR356Session extends WebSession
 {
-    private ProgressUpdater.ProgressUpdateTask progressUpdateTask;
+	private ProgressUpdater.ProgressUpdateTask progressUpdateTask;
 
-    public JSR356Session(Request request)
-    {
-        super(request);
-    }
+	public JSR356Session(Request request)
+	{
+		super(request);
+	}
 
-    public ProgressUpdater.ProgressUpdateTask getProgressUpdateTask()
-    {
-        return progressUpdateTask;
-    }
+	public ProgressUpdater.ProgressUpdateTask getProgressUpdateTask()
+	{
+		return progressUpdateTask;
+	}
 
-    private synchronized void startTask() {
-        if (progressUpdateTask != null && progressUpdateTask.isRunning())
-        {
-            return;
-        }
+	private synchronized void startTask()
+	{
+		if (progressUpdateTask != null && progressUpdateTask.isRunning())
+		{
+			return;
+		}
 
-        JSR356Application application = JSR356Application.get();
-        ScheduledExecutorService service = application.getScheduledExecutorService();
-        progressUpdateTask = ProgressUpdater.start(application, getId(), service);
-    }
+		JSR356Application application = JSR356Application.get();
+		ScheduledExecutorService service = application.getScheduledExecutorService();
+		progressUpdateTask = ProgressUpdater.start(application, getId(), service);
+	}
 
-    public synchronized void startOrCancelTask() {
-        if (progressUpdateTask != null && progressUpdateTask.isRunning() && !progressUpdateTask.isCanceled())
-        {
-            progressUpdateTask.cancel();
-        }
-        else
-        {
-            startTask();
-        }
-    }
+	public synchronized void startOrCancelTask()
+	{
+		if (progressUpdateTask != null && progressUpdateTask.isRunning() && !progressUpdateTask.isCanceled())
+		{
+			progressUpdateTask.cancel();
+		}
+		else
+		{
+			startTask();
+		}
+	}
 
-    public static JSR356Session get() {
-        return (JSR356Session)WebSession.get();
-    }
+	public static JSR356Session get()
+	{
+		return (JSR356Session)WebSession.get();
+	}
 }

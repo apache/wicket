@@ -38,7 +38,7 @@ public class CheckBoxSelector extends AbstractCheckSelector
 	private static final long serialVersionUID = 1L;
 
 	private final Set<CheckBox> connectedCheckBoxes = new HashSet<>();
-	
+
 	private final Behavior cleanup = new Behavior()
 	{
 		private static final long serialVersionUID = 1L;

@@ -15,22 +15,23 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.metrics {
-    requires org.apache.wicket.core;
-    requires org.aspectj.runtime;
-    requires com.codahale.metrics;
-    requires com.codahale.metrics.jmx;
-    requires static jakarta.servlet;
+module org.apache.wicket.metrics
+{
+	requires org.apache.wicket.core;
+	requires org.aspectj.runtime;
+	requires com.codahale.metrics;
+	requires com.codahale.metrics.jmx;
+	requires static jakarta.servlet;
 
-    exports org.apache.wicket.metrics;
-    exports org.apache.wicket.metrics.aspects;
-    exports org.apache.wicket.metrics.aspects.ajax;
-    exports org.apache.wicket.metrics.aspects.behavior;
-    exports org.apache.wicket.metrics.aspects.component;
-    exports org.apache.wicket.metrics.aspects.markup;
-    exports org.apache.wicket.metrics.aspects.model;
-    exports org.apache.wicket.metrics.aspects.request;
-    exports org.apache.wicket.metrics.aspects.requesthandler;
-    exports org.apache.wicket.metrics.aspects.resource;
-    exports org.apache.wicket.metrics.aspects.session;
+	exports org.apache.wicket.metrics;
+	exports org.apache.wicket.metrics.aspects;
+	exports org.apache.wicket.metrics.aspects.ajax;
+	exports org.apache.wicket.metrics.aspects.behavior;
+	exports org.apache.wicket.metrics.aspects.component;
+	exports org.apache.wicket.metrics.aspects.markup;
+	exports org.apache.wicket.metrics.aspects.model;
+	exports org.apache.wicket.metrics.aspects.request;
+	exports org.apache.wicket.metrics.aspects.requesthandler;
+	exports org.apache.wicket.metrics.aspects.resource;
+	exports org.apache.wicket.metrics.aspects.session;
 }

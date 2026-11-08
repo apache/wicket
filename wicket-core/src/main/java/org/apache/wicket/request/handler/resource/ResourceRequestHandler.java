@@ -69,7 +69,8 @@ public class ResourceRequestHandler implements IRequestHandler
 		{
 			if (Application.exists())
 			{
-				Application.get().getSecuritySettings().getUnauthorizedResourceRequestListener().onUnauthorizedRequest(resource, parameters);
+				Application.get().getSecuritySettings().getUnauthorizedResourceRequestListener().onUnauthorizedRequest(
+					resource, parameters);
 			}
 			else
 			{

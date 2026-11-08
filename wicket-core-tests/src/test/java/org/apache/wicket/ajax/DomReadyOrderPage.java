@@ -47,7 +47,7 @@ public class DomReadyOrderPage extends WebPage
 		 * 
 		 * @param id
 		 */
-        Link(String id)
+		Link(String id)
 		{
 			super(id);
 		}

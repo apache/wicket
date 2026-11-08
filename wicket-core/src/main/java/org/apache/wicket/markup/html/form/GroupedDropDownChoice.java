@@ -28,118 +28,122 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class GroupedDropDownChoice<T> extends DropDownChoice<T>
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /*
-        A reference to previous option (in order to determine if a new group was created)
-     */
-    private transient T previousChoice;
+	/*
+	    A reference to previous option (in order to determine if a new group was created)
+	 */
+	private transient T previousChoice;
 
-    private transient boolean inOptionGroup;
+	private transient boolean inOptionGroup;
 
-    public GroupedDropDownChoice(String id)
-    {
-        super(id);
-    }
+	public GroupedDropDownChoice(String id)
+	{
+		super(id);
+	}
 
-    public GroupedDropDownChoice(String id, List<? extends T> choices)
-    {
-        super(id, choices);
-    }
+	public GroupedDropDownChoice(String id, List<? extends T> choices)
+	{
+		super(id, choices);
+	}
 
-    public GroupedDropDownChoice(String id, List<? extends T> choices, IChoiceRenderer<? super T> renderer)
-    {
-        super(id, choices, renderer);
-    }
+	public GroupedDropDownChoice(String id, List<? extends T> choices, IChoiceRenderer<? super T> renderer)
+	{
+		super(id, choices, renderer);
+	}
 
-    public GroupedDropDownChoice(String id, IModel<T> model, List<? extends T> choices)
-    {
-        super(id, model, choices);
-    }
+	public GroupedDropDownChoice(String id, IModel<T> model, List<? extends T> choices)
+	{
+		super(id, model, choices);
+	}
 
-    public GroupedDropDownChoice(String id, IModel<T> model, List<? extends T> choices, IChoiceRenderer<? super T> renderer)
-    {
-        super(id, model, choices, renderer);
-    }
+	public GroupedDropDownChoice(String id, IModel<T> model, List<? extends T> choices,
+		IChoiceRenderer<? super T> renderer)
+	{
+		super(id, model, choices, renderer);
+	}
 
-    public GroupedDropDownChoice(String id, IModel<? extends List<? extends T>> choices)
-    {
-        super(id, choices);
-    }
+	public GroupedDropDownChoice(String id, IModel<? extends List<? extends T>> choices)
+	{
+		super(id, choices);
+	}
 
-    public GroupedDropDownChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices)
-    {
-        super(id, model, choices);
-    }
+	public GroupedDropDownChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices)
+	{
+		super(id, model, choices);
+	}
 
-    public GroupedDropDownChoice(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer)
-    {
-        super(id, choices, renderer);
-    }
+	public GroupedDropDownChoice(String id, IModel<? extends List<? extends T>> choices,
+		IChoiceRenderer<? super T> renderer)
+	{
+		super(id, choices, renderer);
+	}
 
-    public GroupedDropDownChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer)
-    {
-        super(id, model, choices, renderer);
-    }
+	public GroupedDropDownChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices,
+		IChoiceRenderer<? super T> renderer)
+	{
+		super(id, model, choices, renderer);
+	}
 
-    private boolean isLast(int index)
-    {
-        return index - 1 == getChoices().size();
-    }
+	private boolean isLast(int index)
+	{
+		return index - 1 == getChoices().size();
+	}
 
-    /**
-     * Determines if a new group has started
-     *
-     * @param previous The previous entry (it can be null)
-     * @param current  The current entry (always non-null)
-     * @return if a new group has started
-     */
-    protected abstract boolean isNewGroup(T previous, T current);
+	/**
+	 * Determines if a new group has started
+	 *
+	 * @param previous The previous entry (it can be null)
+	 * @param current  The current entry (always non-null)
+	 * @return if a new group has started
+	 */
+	protected abstract boolean isNewGroup(T previous, T current);
 
-    /**
-     * Determines if current entry belongs to no group
-     *
-     * @param current The current entry
-     * @return true if the current entry belongs to no group.
-     */
-    protected abstract boolean hasNoGroup(T current);
+	/**
+	 * Determines if current entry belongs to no group
+	 *
+	 * @param current The current entry
+	 * @return true if the current entry belongs to no group.
+	 */
+	protected abstract boolean hasNoGroup(T current);
 
-    /**
-     * @param current The current entry
-     * @return Returns the label for current group.
-     */
-    protected abstract IModel<String> getGroupLabel(T current);
+	/**
+	 * @param current The current entry
+	 * @return Returns the label for current group.
+	 */
+	protected abstract IModel<String> getGroupLabel(T current);
 
-    @Override
-    protected void appendOptionHtml(AppendingStringBuffer buffer, T choice, int index, String selected)
-    {
-        if (hasNoGroup(choice))
-        {
-            if (inOptionGroup) {
-                buffer.append("\n</optgroup>");
-                inOptionGroup = false;
-            }
-            super.appendOptionHtml(buffer, choice, index, selected);
-            previousChoice = choice;
-            return;
-        }
-        else if (isNewGroup(previousChoice, choice))
-        {
-            if (inOptionGroup)
-            {
-                buffer.append("\n</optgroup>");
-            }
-            inOptionGroup = true;
-            buffer.append("\n<optgroup label='");
-            buffer.append(Strings.escapeMarkup(getGroupLabel(choice).getObject()));
-            buffer.append("'>");
-        }
-        super.appendOptionHtml(buffer, choice, index, selected);
-        if (isLast(index) && inOptionGroup)
-        {
-            buffer.append("\n</optgroup>");
-            inOptionGroup = false;
-        }
-        previousChoice = choice;
-    }
+	@Override
+	protected void appendOptionHtml(AppendingStringBuffer buffer, T choice, int index, String selected)
+	{
+		if (hasNoGroup(choice))
+		{
+			if (inOptionGroup)
+			{
+				buffer.append("\n</optgroup>");
+				inOptionGroup = false;
+			}
+			super.appendOptionHtml(buffer, choice, index, selected);
+			previousChoice = choice;
+			return;
+		}
+		else if (isNewGroup(previousChoice, choice))
+		{
+			if (inOptionGroup)
+			{
+				buffer.append("\n</optgroup>");
+			}
+			inOptionGroup = true;
+			buffer.append("\n<optgroup label='");
+			buffer.append(Strings.escapeMarkup(getGroupLabel(choice).getObject()));
+			buffer.append("'>");
+		}
+		super.appendOptionHtml(buffer, choice, index, selected);
+		if (isLast(index) && inOptionGroup)
+		{
+			buffer.append("\n</optgroup>");
+			inOptionGroup = false;
+		}
+		previousChoice = choice;
+	}
 }

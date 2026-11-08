@@ -28,7 +28,8 @@ public class ZonedDateTimeConverter extends AbstractJavaTimeConverter<ZonedDateT
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.FULL);
+	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(
+		FormatStyle.MEDIUM, FormatStyle.FULL);
 
 	@Override
 	protected Class<ZonedDateTime> getTargetType()
@@ -43,7 +44,8 @@ public class ZonedDateTimeConverter extends AbstractJavaTimeConverter<ZonedDateT
 	}
 
 	@Override
-	protected DateTimeFormatter getDateTimeFormatter() {
+	protected DateTimeFormatter getDateTimeFormatter()
+	{
 		return DATE_TIME_FORMATTER;
 	}
 }

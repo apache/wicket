@@ -156,8 +156,7 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 		modelChanged();
 
 		getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(
-			target -> updateBranch(t, target)
-		);
+			target -> updateBranch(t, target));
 	}
 
 	/**
@@ -178,8 +177,7 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 		modelChanged();
 
 		getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(
-			target -> updateBranch(t, target)
-		);
+			target -> updateBranch(t, target));
 	}
 
 	/**

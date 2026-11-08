@@ -71,7 +71,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	private final String requestUri;
 	private final Map<String, String[]> parametersMap;
 	private final Map<String, List<String>> headers;
-    private final String contextPath;
+	private final String contextPath;
 	private final String requestId;
 
 	public JavaxUpgradeHttpRequest(final Session session, EndpointConfig endpointConfig)
@@ -84,8 +84,8 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 			userProperties = endpointConfig.getUserProperties();
 		}
 
-		this.httpSession = (HttpSession) userProperties.get(SESSION);
-		this.headers = copyHeaders((Map<String, List<String>>) userProperties.get(HEADERS));
+		this.httpSession = (HttpSession)userProperties.get(SESSION);
+		this.headers = copyHeaders((Map<String, List<String>>)userProperties.get(HEADERS));
 		this.queryString = session.getQueryString();
 		this.userPrincipal = session.getUserPrincipal();
 		Object requestURI = session.getRequestURI();
@@ -525,7 +525,8 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	}
 
 	@Override
-	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException
+	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse)
+		throws IllegalStateException
 	{
 		return null;
 	}
@@ -555,17 +556,20 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	}
 
 	@Override
-	public String getRequestId() {
+	public String getRequestId()
+	{
 		return requestId;
 	}
 
 	@Override
-	public String getProtocolRequestId() {
+	public String getProtocolRequestId()
+	{
 		return null;
 	}
 
 	@Override
-	public ServletConnection getServletConnection() {
+	public ServletConnection getServletConnection()
+	{
 		return null;
 	}
 }

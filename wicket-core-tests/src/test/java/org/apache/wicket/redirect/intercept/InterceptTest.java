@@ -42,24 +42,25 @@ class InterceptTest extends WicketTestCase
 			@Override
 			protected void init()
 			{
-				getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy()
-				{
-
-					private boolean block = true;
-
-					@Override
-					public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
-						Class<T> componentClass)
+				getSecuritySettings().setAuthorizationStrategy(
+					new IAuthorizationStrategy.AllowAllAuthorizationStrategy()
 					{
-						if (block &&
-							(componentClass == TargetPage.class || componentClass == HomePage.class))
+
+						private boolean block = true;
+
+						@Override
+						public <T extends IRequestableComponent> boolean isInstantiationAuthorized(
+							Class<T> componentClass)
 						{
-							block = false;
-							throw new RestartResponseAtInterceptPageException(InterceptPage.class);
+							if (block &&
+								(componentClass == TargetPage.class || componentClass == HomePage.class))
+							{
+								block = false;
+								throw new RestartResponseAtInterceptPageException(InterceptPage.class);
+							}
+							return true;
 						}
-						return true;
-					}
-				});
+					});
 				super.init();
 			}
 
@@ -76,7 +77,7 @@ class InterceptTest extends WicketTestCase
 	 * Tests a non homepage class.
 	 */
 	@Test
-    void testRestartResponseAtInterceptPageAndContinueTorOriginalDestination()
+	void testRestartResponseAtInterceptPageAndContinueTorOriginalDestination()
 	{
 		tester.startPage(TargetPage.class);
 		tester.assertRenderedPage(InterceptPage.class);
@@ -89,7 +90,7 @@ class InterceptTest extends WicketTestCase
 	 * Tests homepage class.
 	 */
 	@Test
-    void testRestartResponseAtInterceptPageAndContinueTorOriginalDestination2()
+	void testRestartResponseAtInterceptPageAndContinueTorOriginalDestination2()
 	{
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(InterceptPage.class);

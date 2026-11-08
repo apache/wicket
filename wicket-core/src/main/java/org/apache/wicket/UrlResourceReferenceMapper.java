@@ -38,7 +38,7 @@ public class UrlResourceReferenceMapper implements IRequestMapper
 		Url url = null;
 		if (requestHandler instanceof ResourceReferenceRequestHandler)
 		{
-			ResourceReferenceRequestHandler resourceReferenceRequestHandler = (ResourceReferenceRequestHandler) requestHandler;
+			ResourceReferenceRequestHandler resourceReferenceRequestHandler = (ResourceReferenceRequestHandler)requestHandler;
 			ResourceReference resourceReference = resourceReferenceRequestHandler.getResourceReference();
 
 			while (resourceReference instanceof ResourceBundleReference)
@@ -49,7 +49,7 @@ public class UrlResourceReferenceMapper implements IRequestMapper
 
 			if (resourceReference instanceof UrlResourceReference)
 			{
-				UrlResourceReference urlResourceReference = (UrlResourceReference) resourceReference;
+				UrlResourceReference urlResourceReference = (UrlResourceReference)resourceReference;
 				url = urlResourceReference.getUrl();
 			}
 		}

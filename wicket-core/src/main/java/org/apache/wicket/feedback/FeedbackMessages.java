@@ -195,7 +195,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 			message.detach();
 		}
 
-		synchronized(messages)
+		synchronized (messages)
 		{
 			int sizeBefore = messages.size();
 			messages.removeAll(toDelete);

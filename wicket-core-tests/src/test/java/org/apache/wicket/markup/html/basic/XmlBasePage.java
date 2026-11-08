@@ -32,7 +32,7 @@ public class XmlBasePage extends WebPage
 	/**
 	 * Construct.
 	 */
-    XmlBasePage()
+	XmlBasePage()
 	{
 	}
 

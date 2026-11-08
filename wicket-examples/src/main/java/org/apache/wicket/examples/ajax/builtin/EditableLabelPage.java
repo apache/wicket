@@ -46,7 +46,7 @@ public class EditableLabelPage extends BasePage
 	private String text2 = "dog";
 	private String text3 = "multiple\nlines of\ntextual content";
 	private int number = 42;
-	
+
 	private int refreshCounter = 0;
 
 	/**
@@ -61,19 +61,21 @@ public class EditableLabelPage extends BasePage
 		form.add(new AjaxEditableLabel("text2"));
 		form.add(new AjaxEditableMultiLineLabel("text3"));
 		form.add(new AjaxEditableChoiceLabel<>("site", SITES));
-		
-		form.add(new AjaxEditableLabel<Integer>("number") {
+
+		form.add(new AjaxEditableLabel<Integer>("number")
+		{
 			@Override
 			protected IConverter<?> createConverter(Class<?> type)
 			{
-				return new IConverter<Integer>() {
+				return new IConverter<Integer>()
+				{
 					@Override
 					public Integer convertToObject(String value, Locale locale)
 						throws ConversionException
 					{
 						return Integer.parseInt(value);
 					}
-					
+
 					@Override
 					public String convertToString(Integer value, Locale locale)
 					{
@@ -82,7 +84,7 @@ public class EditableLabelPage extends BasePage
 				};
 			}
 		});
-		
+
 
 		form.add(new Label("refresh-counter", () -> "" + refreshCounter));
 

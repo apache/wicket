@@ -42,14 +42,15 @@ public class CSVDataExporterTest extends WicketTestCase
 	private List<Contact> contacts;
 
 	@BeforeEach
-	public void before() {
+	public void before()
+	{
 		contacts = Arrays.asList(new Contact(), new Contact());
 		contacts.get(0).setFirstName("first0");
 		contacts.get(0).setLastName("last\"0");
 		contacts.get(1).setFirstName("first1");
 		contacts.get(1).setLastName("last\"1");
 	}
-	
+
 	@Test
 	public void test() throws IOException
 	{

@@ -33,21 +33,23 @@ public class ResourceLinkTest extends WicketTestCase
 {
 
 	IResource resource = new CharSequenceResource("text", "DATA");
-	
+
 	/**
 	 * Test resource
 	 */
 	@Test
 	public void reference()
 	{
-		ResourceReference reference = new ResourceReference(ResourceLinkTest.class, "resource") {
+		ResourceReference reference = new ResourceReference(ResourceLinkTest.class, "resource")
+		{
 			@Override
-			public IResource getResource() {
+			public IResource getResource()
+			{
 				return resource;
 			}
 		};
 		PageWithResourceLink page = new PageWithResourceLink(reference);
-		
+
 		tester.startPage(page);
 
 		assertTrue(page.isPageStateless());
@@ -60,7 +62,7 @@ public class ResourceLinkTest extends WicketTestCase
 	public void resource()
 	{
 		PageWithResourceLink page = new PageWithResourceLink(resource);
-		
+
 		tester.startPage(page);
 
 		assertFalse(page.isPageStateless());

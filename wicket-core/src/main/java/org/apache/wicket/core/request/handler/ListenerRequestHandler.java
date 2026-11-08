@@ -47,7 +47,7 @@ public class ListenerRequestHandler
 		IComponentRequestHandler,
 		ILoggableRequestHandler
 {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger(ListenerRequestHandler.class);
 
 	private final IPageAndComponentProvider pageComponentProvider;
@@ -92,7 +92,7 @@ public class ListenerRequestHandler
 				.rendersPage();
 		}
 	}
-	
+
 	@Override
 	public IRequestableComponent getComponent()
 	{
@@ -102,7 +102,7 @@ public class ListenerRequestHandler
 	@Override
 	public IRequestablePage getPage()
 	{
-		return pageComponentProvider.getPageInstance();		
+		return pageComponentProvider.getPageInstance();
 	}
 
 	@Override
@@ -167,7 +167,7 @@ public class ListenerRequestHandler
 		if ((component == null && !freshPage) || (component != null && component.getPage() != page))
 		{
 			throw new ComponentNotFoundException("Component '" + getComponentPath()
-					+ "' has been removed from page.");
+				+ "' has been removed from page.");
 		}
 
 		if (freshPage && component != null)
@@ -276,7 +276,7 @@ public class ListenerRequestHandler
 			invoke(requestCycle, policy, ajax, getComponent(), behavior);
 		}
 	}
-	
+
 	/**
 	 * Invokes a given interface on a component.
 	 * 
@@ -286,7 +286,8 @@ public class ListenerRequestHandler
 	 * @throws ListenerInvocationNotAllowedException
 	 *             when listener invocation attempted on a component that does not allow it
 	 */
-	private final void invoke(final IRequestCycle requestCycle, RedirectPolicy policy, boolean ajax, final IRequestableComponent rcomponent)
+	private final void invoke(final IRequestCycle requestCycle, RedirectPolicy policy, boolean ajax,
+		final IRequestableComponent rcomponent)
 	{
 		// we are in Wicket core land
 		final Component component = (Component)rcomponent;
@@ -312,7 +313,8 @@ public class ListenerRequestHandler
 	 * @throws ListenerInvocationNotAllowedException
 	 *             when listener invocation attempted on a component that does not allow it
 	 */
-	private final void invoke(final IRequestCycle requestCycle, RedirectPolicy policy, boolean ajax, final IRequestableComponent rcomponent, final Behavior behavior)
+	private final void invoke(final IRequestCycle requestCycle, RedirectPolicy policy, boolean ajax,
+		final IRequestableComponent rcomponent, final Behavior behavior)
 	{
 		// we are in Wicket core land
 		final Component component = (Component)rcomponent;
@@ -328,7 +330,8 @@ public class ListenerRequestHandler
 		internalInvoke(requestCycle, policy, ajax, component, behavior);
 	}
 
-	private void internalInvoke(final IRequestCycle requestCycle, RedirectPolicy policy, boolean ajax, final Component component, final Object target)
+	private void internalInvoke(final IRequestCycle requestCycle, RedirectPolicy policy, boolean ajax,
+		final Component component, final Object target)
 	{
 		// save a reference to the page because the component can be removed
 		// during the invocation of the listener and thus lose its parent
@@ -341,7 +344,7 @@ public class ListenerRequestHandler
 		}
 
 		IRequestListener requestListener = (IRequestListener)target;
-		
+
 		if (requestListener.rendersPage() && !ajax)
 		{
 			// schedule page render after current request handler is done. this can be

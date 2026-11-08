@@ -136,7 +136,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	{
 		final ResourceResponse resourceResponse = new ResourceResponse();
 
-		final ServletWebRequest webRequest = (ServletWebRequest) attributes.getRequest();
+		final ServletWebRequest webRequest = (ServletWebRequest)attributes.getRequest();
 
 		// get the ID of the upload field (it should be unique per application)
 		String uploadId = getUploadId(webRequest);
@@ -219,7 +219,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 			resourceResponse.setContentType("application/json");
 			JSONObject json = new JSONObject();
 			json.put("error", true);
-			String errorMessage = LOG.isDebugEnabled() ? fux.getMessage() :  Form.UPLOAD_FAILED_RESOURCE_KEY;
+			String errorMessage = LOG.isDebugEnabled() ? fux.getMessage() : Form.UPLOAD_FAILED_RESOURCE_KEY;
 			json.put("errorMessage", errorMessage);
 			String error = json.toString();
 			resourceResponse.setWriteCallback(new WriteCallback()
@@ -317,10 +317,10 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 		{
 			return Form.UPLOAD_TOO_MANY_FILES_RESOURCE_KEY;
 		}
-        else if (e instanceof FileUploadSizeException)
-        {
-            return Form.UPLOAD_TOO_LARGE_RESOURCE_KEY;
-        }
+		else if (e instanceof FileUploadSizeException)
+		{
+			return Form.UPLOAD_TOO_LARGE_RESOURCE_KEY;
+		}
 		else
 		{
 			return Form.UPLOAD_FAILED_RESOURCE_KEY;
@@ -337,7 +337,8 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 * @param fileItems
 	 *            List<FileUpload>
 	 */
-	protected void prepareResponse(ResourceResponse resourceResponse, ServletWebRequest webRequest, List<FileUpload> fileItems)
+	protected void prepareResponse(ResourceResponse resourceResponse, ServletWebRequest webRequest,
+		List<FileUpload> fileItems)
 	{
 		resourceResponse.setContentType("application/json");
 		final String responseContent = generateJsonResponse(resourceResponse, webRequest, fileItems);
@@ -370,7 +371,8 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	// Consuming the POST parameters would cause the request to be empty when reading it as
 	// MultipartServletWebRequest
 	// See WICKET-7154 for more details
-	private StringValue getParameterValue(WebRequest request, String parameterName) {
+	private StringValue getParameterValue(WebRequest request, String parameterName)
+	{
 		return request.getQueryParameters().getParameterValue(parameterName);
 	}
 
@@ -387,7 +389,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 		}
 		catch (StringValueConversionException e)
 		{
-			return  Application.get().getApplicationSettings().getDefaultMaximumUploadSize();
+			return Application.get().getApplicationSettings().getDefaultMaximumUploadSize();
 		}
 
 	}
@@ -435,6 +437,6 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 * @return The generated JSON
 	 */
 	protected abstract String generateJsonResponse(ResourceResponse resourceResponse,
-			ServletWebRequest webRequest, List<FileUpload> files);
+		ServletWebRequest webRequest, List<FileUpload> files);
 
 }

@@ -513,7 +513,8 @@ public interface IRequestLogger
 		 */
 		public Map<String, Object> getUserData()
 		{
-			if (userData == null) {
+			if (userData == null)
+			{
 				userData = new HashMap<>();
 			}
 

@@ -49,7 +49,7 @@ public class CustomEntityResolver implements EntityResolver
 
 		resolver.put(new EntityKey("-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN",
 			"http://java.sun.com/dtd/web-app_2_3.dtd"), new ServletApiEntityLocator(
-			"web-app_2_3.dtd"));
+				"web-app_2_3.dtd"));
 
 		return resolver;
 	}

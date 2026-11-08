@@ -137,7 +137,8 @@ public interface IModel<T> extends IDetachable
 	default <R> IModel<R> map(SerializableFunction<? super T, R> mapper)
 	{
 		Args.notNull(mapper, "mapper");
-		return new IModel<R>() {
+		return new IModel<R>()
+		{
 			@Override
 			public R getObject()
 			{
@@ -145,7 +146,8 @@ public interface IModel<T> extends IDetachable
 				if (object == null)
 				{
 					return null;
-				} else
+				}
+				else
 				{
 					return mapper.apply(object);
 				}
@@ -178,7 +180,8 @@ public interface IModel<T> extends IDetachable
 	{
 		Args.notNull(combiner, "combiner");
 		Args.notNull(other, "other");
-		return new IModel<R>() {
+		return new IModel<R>()
+		{
 			@Override
 			public R getObject()
 			{
@@ -187,7 +190,8 @@ public interface IModel<T> extends IDetachable
 				if (t != null && u != null)
 				{
 					return combiner.apply(t, u);
-				} else
+				}
+				else
 				{
 					return null;
 				}
@@ -226,11 +230,11 @@ public interface IModel<T> extends IDetachable
 				if (object != null)
 				{
 					IModel<R> model = mapper.apply(object);
-					if (model != null) 
+					if (model != null)
 					{
 						return model.getObject();
 					}
-					else 
+					else
 					{
 						return null;
 					}
@@ -294,7 +298,8 @@ public interface IModel<T> extends IDetachable
 	 */
 	default IModel<T> orElse(T other)
 	{
-		return new IModel<T>() {
+		return new IModel<T>()
+		{
 			@Override
 			public T getObject()
 			{
@@ -302,7 +307,8 @@ public interface IModel<T> extends IDetachable
 				if (object == null)
 				{
 					return other;
-				} else
+				}
+				else
 				{
 					return object;
 				}
@@ -327,7 +333,8 @@ public interface IModel<T> extends IDetachable
 	default IModel<T> orElseGet(SerializableSupplier<? extends T> other)
 	{
 		Args.notNull(other, "other");
-		return new IModel<T>() {
+		return new IModel<T>()
+		{
 			@Override
 			public T getObject()
 			{
@@ -335,7 +342,8 @@ public interface IModel<T> extends IDetachable
 				if (object == null)
 				{
 					return other.get();
-				} else
+				}
+				else
 				{
 					return object;
 				}
@@ -348,14 +356,16 @@ public interface IModel<T> extends IDetachable
 			}
 		};
 	}
-	
+
 	/**
 	 * Returns a IModel, returning whether the contained object is non-null.
 	 *
 	 * @return a new IModel
 	 */
-	default IModel<Boolean> isPresent() {
-		return new IModel<Boolean>() {
+	default IModel<Boolean> isPresent()
+	{
+		return new IModel<Boolean>()
+		{
 			@Override
 			public Boolean getObject()
 			{
@@ -378,7 +388,8 @@ public interface IModel<T> extends IDetachable
 	 * @param clazz the {@code Class} the current model object should be an instance of
 	 * @return a new IModel
 	 */
-	default <R extends T> IModel<R> as(Class<R> clazz) {
+	default <R extends T> IModel<R> as(Class<R> clazz)
+	{
 		Args.notNull(clazz, "clazz");
 		return filter(clazz::isInstance).map(clazz::cast);
 	}

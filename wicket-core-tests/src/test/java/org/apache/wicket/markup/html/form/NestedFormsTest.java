@@ -52,7 +52,8 @@ class NestedFormsTest extends WicketTestCase
 	@Test
 	void tagNamePlaceholder() throws Exception
 	{
-		tester.executeTest(NestedFormsTest.class, new TestPage().hideInner(), "NestedFormsTest_placeholder_expected.html");
+		tester.executeTest(NestedFormsTest.class, new TestPage().hideInner(),
+			"NestedFormsTest_placeholder_expected.html");
 	}
 
 	/**
@@ -156,7 +157,7 @@ class NestedFormsTest extends WicketTestCase
 		{
 			innerForm.setOutputMarkupPlaceholderTag(true);
 			innerForm.setVisible(false);
-			
+
 			return this;
 		}
 

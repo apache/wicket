@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class WebSocketConnectionFilterCollection extends ArrayList<IWebSocketConnectionFilter>
-		implements IWebSocketConnectionFilter
+	implements
+		IWebSocketConnectionFilter
 {
 	private static final long serialVersionUID = 1L;
 

@@ -78,7 +78,8 @@ class ResponseIOExceptionTest
 		TestRequestCycleListener testRequestCycleListener = new TestRequestCycleListener();
 		tester.getApplication().getRequestCycleListeners().add(testRequestCycleListener);
 		tester.startResource(new ResourceStreamResource(new StringResourceStream("asdf")));
-		assertThat(testRequestCycleListener.lastExceptionRequestHandlerResolved).isInstanceOf(EmptyRequestHandler.class);
+		assertThat(testRequestCycleListener.lastExceptionRequestHandlerResolved).isInstanceOf(
+			EmptyRequestHandler.class);
 	}
 
 	static class TestRequestCycleListener implements IRequestCycleListener
@@ -104,7 +105,7 @@ class ResponseIOExceptionTest
 		 * @param httpServletResponse
 		 */
 		ProblematicResponse(ServletWebRequest webRequest,
-							HttpServletResponse httpServletResponse)
+			HttpServletResponse httpServletResponse)
 		{
 			super(webRequest, httpServletResponse);
 		}

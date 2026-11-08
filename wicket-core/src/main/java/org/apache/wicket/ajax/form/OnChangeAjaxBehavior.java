@@ -67,7 +67,7 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	}
 
 	@Override
-	protected void updateAjaxAttributes(AjaxRequestAttributes attributes) 
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
 		super.updateAjaxAttributes(attributes);
 

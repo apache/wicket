@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.dontstoreunrendered;
 
-public class PageC extends BasePage {
+public class PageC extends BasePage
+{
 
-	public PageC() {
+	public PageC()
+	{
 		super();
-    }
+	}
 }

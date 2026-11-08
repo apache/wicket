@@ -59,7 +59,7 @@ class FormComponentPanelProcessingTest extends WicketTestCase
 		tester.startPage(new TestPage());
 		tester.assertRenderedPage(TestPage.class);
 
-		TestFormComponentPanel fcp = (TestFormComponentPanel) tester.getComponentFromLastRenderedPage("form:panel");
+		TestFormComponentPanel fcp = (TestFormComponentPanel)tester.getComponentFromLastRenderedPage("form:panel");
 		assertEquals(false, fcp.isChildClearInputCalled());
 
 		fcp.clearInput();
@@ -106,7 +106,8 @@ class FormComponentPanelProcessingTest extends WicketTestCase
 			});
 		}
 
-		private boolean isChildClearInputCalled() {
+		private boolean isChildClearInputCalled()
+		{
 			return childClearInputCalled;
 		}
 

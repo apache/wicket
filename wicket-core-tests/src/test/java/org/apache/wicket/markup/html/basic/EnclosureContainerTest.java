@@ -30,11 +30,12 @@ class EnclosureContainerTest extends WicketTestCase
 {
 
 	@Test
-	void test() {
+	void test()
+	{
 		EnclosureContainerPage page = new EnclosureContainerPage();
-			
+
 		tester.startPage(page);
-		
+
 		assertFalse(page.container.isVisible());
 	}
 }

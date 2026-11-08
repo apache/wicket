@@ -39,37 +39,38 @@ public class AjaxEnclosurePage_4 extends WebPage
 	//final Label nameLabel;
 	final TextField<String> nameField;
 	final AjaxSubmitLink submit;
-	
+
 	private String name;
-	
+
 	/**
 	 * Construct.
 	 */
 	public AjaxEnclosurePage_4()
 	{
 
-		Form<?> form=new Form<Void>("form");
+		Form<?> form = new Form<Void>("form");
 		queue(form);
-		
+
 		//nameLabel=new Label("nameLabel", "Name");
 		//queue(nameLabel);
-		
-		nameField=new TextField<String>("nameField", new PropertyModel<String>(this, "name"));
+
+		nameField = new TextField<String>("nameField", new PropertyModel<String>(this, "name"));
 		nameField.setOutputMarkupId(true);
 		queue(nameField);
 
-		submit=new AjaxSubmitLink("submit") {
+		submit = new AjaxSubmitLink("submit")
+		{
 			@Override
-			protected void onSubmit(AjaxRequestTarget target) {
-				name="submitted";
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				name = "submitted";
 				nameField.clearInput();
 				target.add(nameField);
 			}
 		};
 		queue(submit);
-		
-	}
 
+	}
 
 
 }

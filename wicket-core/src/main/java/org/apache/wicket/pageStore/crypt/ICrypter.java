@@ -37,10 +37,11 @@ import javax.crypto.SecretKey;
  * @see org.apache.wicket.pageStore.CryptingPageStore
  * @see org.apache.wicket.settings.StoreSettings#setCrypter(java.util.function.Supplier)
  */
-public interface ICrypter {
+public interface ICrypter
+{
 	SecretKey generateKey(SecureRandom random);
-	
+
 	byte[] encrypt(byte[] bytes, SecretKey key, SecureRandom random);
-	
+
 	byte[] decrypt(byte[] bytes, SecretKey key);
 }

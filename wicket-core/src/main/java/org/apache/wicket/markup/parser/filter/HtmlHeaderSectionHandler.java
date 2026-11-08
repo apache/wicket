@@ -85,7 +85,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 			return new HtmlHeaderContainer(tag.getId());
 		}
 	};
-	
+
 	private static final IAutoComponentFactory HTML_HEADER_ITEMS_FACTORY = new IAutoComponentFactory()
 	{
 		@Override
@@ -94,7 +94,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 			return new HtmlHeaderItemsContainer(tag.getId());
 		}
 	};
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -131,7 +131,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 			}
 		}
 		else if (HtmlHeaderResolver.HEADER_ITEMS.equalsIgnoreCase(tag.getName()) &&
-				tag.getNamespace().equalsIgnoreCase(getWicketNamespace()))
+			tag.getNamespace().equalsIgnoreCase(getWicketNamespace()))
 		{
 			handleHeaderItemsTag(tag);
 		}
@@ -175,12 +175,12 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		if ((tag.isOpen() || tag.isOpenClose()) && foundHeaderItemsTag)
 		{
 			throw new MarkupException(new MarkupStream(markup),
-					"More than one <wicket:header-items/> detected in the <head> element. Only one is allowed.");
+				"More than one <wicket:header-items/> detected in the <head> element. Only one is allowed.");
 		}
 		else if (foundClosingHead)
 		{
 			throw new MarkupException(new MarkupStream(markup),
-					"Detected <wicket:header-items/> after the closing </head> element.");
+				"Detected <wicket:header-items/> after the closing </head> element.");
 		}
 
 		foundHeaderItemsTag = true;
@@ -199,12 +199,12 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		// we found <head>
 		if (tag.isOpen())
 		{
-			if(foundHead)
+			if (foundHead)
 			{
 				throw new MarkupException(new MarkupStream(markup),
 					"Tag <head> is not allowed at this position (do you have multiple <head> tags in your markup?).");
 			}
-			
+
 			foundHead = true;
 
 			if (tag.getId() == null)

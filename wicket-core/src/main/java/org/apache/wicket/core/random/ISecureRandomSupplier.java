@@ -46,7 +46,7 @@ public interface ISecureRandomSupplier
 		getRandom().nextBytes(ret);
 		return ret;
 	}
-	
+
 	/**
 	 * Returns a url-base64 encoded string with random content, base on {@code length} bytes. The
 	 * length of the returned string will be {@code length/3*4}.

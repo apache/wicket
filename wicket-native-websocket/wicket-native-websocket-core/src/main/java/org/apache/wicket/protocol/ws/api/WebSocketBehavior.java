@@ -73,14 +73,14 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 		Object payload = event.getPayload();
 		if (payload instanceof WebSocketPayload)
 		{
-			WebSocketPayload<?> wsPayload = (WebSocketPayload<?>) payload;
+			WebSocketPayload<?> wsPayload = (WebSocketPayload<?>)payload;
 			WebSocketRequestHandler webSocketHandler = wsPayload.getHandler();
 
 			if (payload instanceof WebSocketTextPayload)
 			{
 				if (canReceiveClientMessage(component))
 				{
-					WebSocketTextPayload textPayload = (WebSocketTextPayload) payload;
+					WebSocketTextPayload textPayload = (WebSocketTextPayload)payload;
 					TextMessage data = textPayload.getMessage();
 					onMessage(webSocketHandler, data);
 				}
@@ -89,38 +89,38 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 			{
 				if (canReceiveClientMessage(component))
 				{
-					WebSocketBinaryPayload binaryPayload = (WebSocketBinaryPayload) wsPayload;
+					WebSocketBinaryPayload binaryPayload = (WebSocketBinaryPayload)wsPayload;
 					BinaryMessage binaryData = binaryPayload.getMessage();
 					onMessage(webSocketHandler, binaryData);
 				}
 			}
 			else if (wsPayload instanceof WebSocketConnectedPayload)
 			{
-				WebSocketConnectedPayload connectedPayload = (WebSocketConnectedPayload) wsPayload;
+				WebSocketConnectedPayload connectedPayload = (WebSocketConnectedPayload)wsPayload;
 				ConnectedMessage message = connectedPayload.getMessage();
 				onConnect(message);
 			}
 			else if (wsPayload instanceof WebSocketClosedPayload)
 			{
-				WebSocketClosedPayload closedPayload = (WebSocketClosedPayload) wsPayload;
+				WebSocketClosedPayload closedPayload = (WebSocketClosedPayload)wsPayload;
 				ClosedMessage message = closedPayload.getMessage();
 				onClose(message);
 			}
 			else if (wsPayload instanceof WebSocketErrorPayload)
 			{
-				WebSocketErrorPayload errorPayload = (WebSocketErrorPayload) wsPayload;
+				WebSocketErrorPayload errorPayload = (WebSocketErrorPayload)wsPayload;
 				ErrorMessage message = errorPayload.getMessage();
 				onError(webSocketHandler, message);
 			}
 			else if (wsPayload instanceof WebSocketAbortedPayload)
 			{
-				WebSocketAbortedPayload abortedPayload = (WebSocketAbortedPayload) wsPayload;
+				WebSocketAbortedPayload abortedPayload = (WebSocketAbortedPayload)wsPayload;
 				AbortedMessage message = abortedPayload.getMessage();
 				onAbort(message);
 			}
 			else if (wsPayload instanceof WebSocketPushPayload)
 			{
-				WebSocketPushPayload pushPayload = (WebSocketPushPayload) wsPayload;
+				WebSocketPushPayload pushPayload = (WebSocketPushPayload)wsPayload;
 				IWebSocketPushMessage message = pushPayload.getMessage();
 				onPush(webSocketHandler, message);
 			}
@@ -143,7 +143,7 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 		}
 
 		LOG.debug("A message of the client is not passed to {} of component '{}', because " +
-				"canCallListener() does not allow it.", getClass().getName(), component.getPageRelativePath());
+			"canCallListener() does not allow it.", getClass().getName(), component.getPageRelativePath());
 		return false;
 	}
 
@@ -200,7 +200,8 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 	 * @param message
 	 *          the aborted message with the info about the client
 	 */
-	protected void onAbort(AbortedMessage message) {
+	protected void onAbort(AbortedMessage message)
+	{
 	}
 
 	/**

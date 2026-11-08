@@ -196,7 +196,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 		state = InternalState.ATTACHED;
 		transientModelObject = object;
 	}
-	
+
 	/**
 	 * Create a {@link LoadableDetachableModel} for the given supplier.
 	 *

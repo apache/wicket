@@ -200,11 +200,10 @@ public class PageWindowManagerTest
 	private final PageWindowManager pageWindowManager = new PageWindowManager(1000L);
 
 	/** the execution types */
-	private final Runnable[] TASKS = new Runnable[]
-	{
-		new CreatePageWindowTask(pageWindowManager),
-		new GetPageWindowTask(pageWindowManager),
-		new RemovePageInSessionTask(pageWindowManager)
+	private final Runnable[] TASKS = new Runnable[] {
+			new CreatePageWindowTask(pageWindowManager),
+			new GetPageWindowTask(pageWindowManager),
+			new RemovePageInSessionTask(pageWindowManager)
 	};
 
 	private static final SecureRandom RND = new SecureRandom();

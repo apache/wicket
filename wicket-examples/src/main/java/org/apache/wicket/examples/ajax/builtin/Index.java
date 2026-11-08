@@ -34,7 +34,8 @@ public class Index extends BasePage
 	}
 
 	@Override
-	protected Class<? extends WicketExamplePage> getBackPage() {
+	protected Class<? extends WicketExamplePage> getBackPage()
+	{
 		return HomePage.class;
 	}
 

@@ -26,7 +26,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class JavaScriptStripper
 {
-    /*
+	/*
 	 * Determines the state of script processing.
 	 */
 	/** Inside regular text */
@@ -234,10 +234,12 @@ public class JavaScriptStripper
 				result.append(c);
 			}
 
-			if (state == TEMPLATE_LITERAL) {
+			if (state == TEMPLATE_LITERAL)
+			{
 				// to leave a template literal expression we need even (or zero) number of backslashes
 				int count = getPrevCount(original, i, '\\');
-				if (c == '`' && count % 2 == 0) {
+				if (c == '`' && count % 2 == 0)
+				{
 					state = REGULAR_TEXT;
 				}
 				result.append(c);

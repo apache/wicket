@@ -56,12 +56,13 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	private static final Set<String> RAW_TAG_NAMES = new HashSet<>();
 
 	public static final String CHILD = "child";
-	
+
 	public static final String EXTEND = "extend";
 	public static final String FRAGMENT = "fragment";
 	public static final String MARKUP_CACHE_KEY = "markupCacheKey";
 
-	static {
+	static
+	{
 		WELL_KNOWN_TAG_NAMES.add(Border.BORDER);
 		WELL_KNOWN_TAG_NAMES.add(Border.BODY);
 		WELL_KNOWN_TAG_NAMES.add(AutoLabelTextResolver.LABEL);
@@ -77,8 +78,9 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		WELL_KNOWN_TAG_NAMES.add(WicketContainerResolver.CONTAINER);
 		WELL_KNOWN_TAG_NAMES.add(WicketMessageResolver.MESSAGE);
 	}
-	
-	static {
+
+	static
+	{
 		RAW_TAG_NAMES.add(WicketTagIdentifier.CHILD);
 		RAW_TAG_NAMES.add(WicketTagIdentifier.EXTEND);
 	}
@@ -126,15 +128,15 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 				tag.setUserData(CONTAINER_INFO, getMarkupResourceStream().getContainerInfo());
 				tag.setUserData(MARKUP_CACHE_KEY, getMarkupResourceStream().getCacheKey());
 				tag.setModified(true);
-				
-				if (isRaw(tag)) 
+
+				if (isRaw(tag))
 				{
 					tag.setFlag(ComponentTag.RENDER_RAW, true);
 				}
 				else if (tag.isClose() == false)
 				{
 					tag.setAutoComponentTag(true);
-				}				
+				}
 			}
 
 			// If the tag is not a well-known wicket namespace tag

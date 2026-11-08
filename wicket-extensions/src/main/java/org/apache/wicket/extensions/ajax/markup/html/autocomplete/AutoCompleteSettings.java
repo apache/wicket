@@ -410,8 +410,7 @@ public final class AutoCompleteSettings implements IClusterable
 	 * A behavior that can be used to control how the Tab key should be handled when having an item
 	 * in the autocomplete list is marked.
 	 */
-	public enum KeyTabBehavior
-	{
+	public enum KeyTabBehavior {
 		/**
 		 * Select the currently marked item and move the focus to the next focusable element.
 		 */

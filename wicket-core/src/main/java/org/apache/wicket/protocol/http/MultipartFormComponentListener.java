@@ -37,16 +37,21 @@ public class MultipartFormComponentListener implements AjaxRequestTarget.IListen
 	@Override
 	public void onAfterRespond(final Map<String, Component> map, final AjaxRequestTarget target)
 	{
-		target.getPage().visitChildren(Form.class, (IVisitor<Form<?>, Void>) (form, formVisitor) -> {
-			if (form.isVisibleInHierarchy()) {
+		target.getPage().visitChildren(Form.class, (IVisitor<Form<?>, Void>)(form, formVisitor) -> {
+			if (form.isVisibleInHierarchy())
+			{
 				form.visitFormComponents((formComponent, visit) -> {
-					if (formComponent.isMultiPart()) {
+					if (formComponent.isMultiPart())
+					{
 						String enctype = form.isMultiPart() ? Form.ENCTYPE_MULTIPART_FORM_DATA : ENCTYPE_URL_ENCODED;
-						target.appendJavaScript(String.format("Wicket.$('%s').enctype='%s'", form.getMarkupId(), enctype));
+						target.appendJavaScript(String.format("Wicket.$('%s').enctype='%s'", form.getMarkupId(),
+							enctype));
 						visit.stop();
 					}
 				});
-			} else {
+			}
+			else
+			{
 				formVisitor.dontGoDeeper();
 			}
 		});

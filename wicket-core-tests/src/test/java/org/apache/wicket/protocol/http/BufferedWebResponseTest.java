@@ -61,7 +61,8 @@ public class BufferedWebResponseTest extends WicketTestCase
 			 * WICKET-5863
 			 */
 			@Override
-			public void disableCaching() {
+			public void disableCaching()
+			{
 				actionsSequence.add(TestAction.DISABLE_CACHING);
 			}
 		};

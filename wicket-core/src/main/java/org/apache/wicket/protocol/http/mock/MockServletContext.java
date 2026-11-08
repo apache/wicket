@@ -177,17 +177,20 @@ public class MockServletContext implements ServletContext
 		}
 
 		@Override
-		public void setAttribute(String s, String s1) {
+		public void setAttribute(String s, String s1)
+		{
 			attributes.put(s, s1);
 		}
 
 		@Override
-		public String getAttribute(String s) {
+		public String getAttribute(String s)
+		{
 			return attributes.get(s);
 		}
 
 		@Override
-		public Map<String, String> getAttributes() {
+		public Map<String, String> getAttributes()
+		{
 			return Map.copyOf(attributes);
 		}
 
@@ -430,13 +433,17 @@ public class MockServletContext implements ServletContext
 	@Override
 	public String getRealPath(String name)
 	{
-		try {
+		try
+		{
 			URL url = getResource(name);
-			if (url != null) {
+			if (url != null)
+			{
 				// WICKET-6755 do not use url.getFile() as it does not properly decode the path
 				return new File(url.toURI()).getAbsolutePath();
 			}
-		} catch (IOException | URISyntaxException e) {
+		}
+		catch (IOException | URISyntaxException e)
+		{
 			log.error(e.getMessage(), e);
 		}
 		return null;
@@ -509,12 +516,16 @@ public class MockServletContext implements ServletContext
 	@Override
 	public InputStream getResourceAsStream(String name)
 	{
-		try {
+		try
+		{
 			URL url = getResource(name);
-			if (url != null) {
+			if (url != null)
+			{
 				return url.openStream();
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			log.error(e.getMessage(), e);
 		}
 		return null;
@@ -634,7 +645,7 @@ public class MockServletContext implements ServletContext
 	public ServletRegistration.Dynamic addServlet(String servletName, Servlet servlet)
 	{
 		Dynamic mockRegistration = (Dynamic)Proxy.newProxyInstance(Dynamic.class.getClassLoader(),
-			new Class<?>[]{Dynamic.class}, new MockedServletRegistationHandler(servletName));
+			new Class<?>[] { Dynamic.class }, new MockedServletRegistationHandler(servletName));
 
 		servletRegistration.put(servletName, mockRegistration);
 

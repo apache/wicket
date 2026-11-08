@@ -33,8 +33,7 @@ import org.apache.wicket.markup.head.ResourceAggregator.RecordedHeaderItemLocati
  */
 public class PriorityFirstComparator implements Comparator<RecordedHeaderItem>, Serializable
 {
-	protected static enum HeaderItemType
-	{
+	protected static enum HeaderItemType {
 		PRIORITY, PAGE, COMPONENT;
 	}
 

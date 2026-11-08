@@ -37,7 +37,7 @@ public interface IModelComparator extends IClusterable
 	/**
 	 * A model comparator that always returns false
 	 */
-	IModelComparator ALWAYS_FALSE = (IModelComparator) (component, newObject) -> false;
+	IModelComparator ALWAYS_FALSE = (IModelComparator)(component, newObject) -> false;
 
 	/**
 	 * @param component

@@ -130,7 +130,8 @@ public class DateTimePage extends WicketExamplePage
 			}
 		});
 
-		final LocalDateTextField dateField = new LocalDateTextField("date", new PropertyModel<>(this, "date"), "dd-MM-yyyy", "d-M-yyyy");
+		final LocalDateTextField dateField = new LocalDateTextField("date", new PropertyModel<>(this, "date"),
+			"dd-MM-yyyy", "d-M-yyyy");
 		form.add(dateField);
 
 		final LocalDateTimeField datetimeField0 = new LocalDateTimeField("datetime0",

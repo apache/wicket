@@ -24,39 +24,45 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 
-class UniqueIdTest extends WebPage {
-	
+class UniqueIdTest extends WebPage
+{
+
 	@Override
-	protected void onInitialize() {
+	protected void onInitialize()
+	{
 		super.onInitialize();
 		add(new CacheKeyNullPanel("panel"));
-		
+
 	}
-	
-	
-	class CacheKeyNullPanel extends Panel implements
-		IMarkupResourceStreamProvider,
-		IMarkupCacheKeyProvider
-		 {
+
+
+	class CacheKeyNullPanel extends Panel
+		implements
+			IMarkupResourceStreamProvider,
+			IMarkupCacheKeyProvider
+	{
 
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = -437057755276096255L;
 
-		CacheKeyNullPanel(String id) {
+		CacheKeyNullPanel(String id)
+		{
 			super(id);
 		}
 
 		@Override
-		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) {
+		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+		{
 			return new StringResourceStream("<wicket:panel><img src='mypic.jpg'></wicket:panel>");
 		}
 
 		@Override
-		public String getCacheKey(MarkupContainer container, Class<?> containerClass) {
+		public String getCacheKey(MarkupContainer container, Class<?> containerClass)
+		{
 			return null;
 		}
-		
+
 	}
 }
