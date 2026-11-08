@@ -16,8 +16,14 @@
  */
 package org.apache.wicket.markup.html;
 
+import java.util.Locale;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.Session;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupElement;
+import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -124,6 +130,86 @@ public class WebPage extends Page
 		renderXmlDecl();
 
 		super.onRender();
+	}
+
+	@Override
+	protected boolean renderNext(final MarkupStream markupStream)
+	{
+		MarkupElement element = markupStream.get();
+		if (element instanceof ComponentTag tag && tag.isOpen() &&
+			tag.getFlag(ComponentTag.RENDERED_BY_PAGE))
+		{
+			ComponentTag htmlTag = tag.mutable();
+			onHtmlTag(htmlTag);
+			htmlTag.writeOutput(getResponse(), getApplication().getMarkupSettings()
+				.getStripWicketTags(), getMarkup().getMarkupResourceStream().getWicketNamespace());
+			return true;
+		}
+		return super.renderNext(markupStream);
+	}
+
+	/**
+	 * Called when the &lt;html&gt; tag of this page is rendered, to let the page add or change its
+	 * attributes. The default sets <code>lang</code> to the language tag of {@link #getLocale()},
+	 * for example <code>nl-NL</code>, so that screen readers and browsers can determine the
+	 * language of the page (WCAG 2.2 success criterion 3.1.1), and <code>dir="rtl"</code> when
+	 * that language is written right to left, see {@link Session#isRtlLanguage(Locale)}. It does
+	 * not set <code>dir="ltr"</code>, which is the default of the browser.
+	 * <p>
+	 * It leaves the tag alone when the markup already has a <code>lang</code> or
+	 * <code>xml:lang</code> attribute, so a page written in one language whatever the session
+	 * locale can say so in its markup, and when the locale has no language, such as
+	 * {@link Locale#ROOT}. A <code>dir</code> in the markup is kept as well: <code>dir="ltr"</code>
+	 * keeps a page left to right in every locale.
+	 * <p>
+	 * Override this method to add attributes that belong to the document as a whole, and call
+	 * <code>super</code> to keep the language and direction. An application whose stylesheets do
+	 * not support right-to-left layout can opt out of the direction in its base page:
+	 *
+	 * <pre>
+	 * &#64;Override
+	 * protected void onHtmlTag(ComponentTag tag)
+	 * {
+	 * 	super.onHtmlTag(tag);
+	 * 	tag.remove("dir");
+	 * }
+	 * </pre>
+	 *
+	 * Attribute values are escaped when the tag is written.
+	 * <p>
+	 * With markup inheritance the &lt;html&gt; tag is the one of the base page; markup that
+	 * chooses between several &lt;html&gt; tags with conditional comments has this method called
+	 * for each of them. An &lt;html&gt; tag with a <code>wicket:id</code> belongs to its component
+	 * and is not passed here. The tag is written from its attributes, the way a component tag is.
+	 * <p>
+	 * The &lt;html&gt; tag is only rendered with the whole page. An Ajax request does not render it
+	 * again, so an attribute that has to change in response to an Ajax request, such as a
+	 * <code>data-theme</code> switched by an <code>AjaxLink</code>, has to be changed in the
+	 * browser as well, for instance with
+	 * <code>target.appendJavaScript("document.documentElement.dataset.theme='dark'")</code>.
+	 *
+	 * @param tag
+	 *            a mutable copy of the &lt;html&gt; tag of the page's markup
+	 * @since 12.0.0
+	 */
+	protected void onHtmlTag(final ComponentTag tag)
+	{
+		if (tag.getAttribute("lang") != null || tag.getAttribute("xml:lang") != null)
+		{
+			return;
+		}
+
+		Locale locale = getLocale();
+		if (locale == null || locale.getLanguage().isEmpty())
+		{
+			return;
+		}
+
+		tag.put("lang", locale.toLanguageTag());
+		if (tag.getAttribute("dir") == null && Session.isRtlLanguage(locale))
+		{
+			tag.put("dir", "rtl");
+		}
 	}
 
 	/**
