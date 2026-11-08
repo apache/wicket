@@ -379,6 +379,14 @@ To migrate, check a before-send callback that returns `false`: it used to be ign
 
 Without these behaviors, the field works as before: a new choice replaces the files of the input.
 
+## Changes in Wicket 11 releases after 11.0.0
+
+### 11.1.0: `PageParameters` in hash-based collections
+
+`PageParameters.hashCode()` now agrees with `equals()`, which ignores the order of the named parameters ([#1866](https://github.com/apache/wicket/issues/1866)). The fix is backported from Wicket 12. Before, two `PageParameters` that differed only in that order were equal but had different hashes, so a `HashMap` or `HashSet` kept them as two keys.
+
+This shows in rendered pages. When a page renders a CSS or JavaScript reference header item twice for the same resource, with the same page parameters added in a different order, it now gets one `<link>` or `<script>` tag, with the URL of the first item. Before, it got two. An application that keeps `PageParameters` in a hash-based collection of its own now finds reordered parameters under the same entry.
+
 ## New in Wicket 11, without migration
 
 These are additions. An application that does not use them sees no difference.
