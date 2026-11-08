@@ -20,6 +20,12 @@ This guide lists the changes in Wicket 12.0.0 that break code written for Wicket
 
 To come from Wicket 10, migrate to Wicket 11 first, with the [migration guide to Wicket 11](https://github.com/apache/wicket/blob/wicket-11.x/migration-to-11.md).
 
+## `PageParameters` in hash-based collections
+
+`PageParameters.hashCode()` now agrees with `equals()`, which ignores the order of the named parameters ([#1866](https://github.com/apache/wicket/issues/1866)). The fix is backported to Wicket 11.1.0 and 10.13.0, so an application already on one of those sees no change. Before, two `PageParameters` that differed only in that order were equal but had different hashes, so a `HashMap` or `HashSet` kept them as two keys.
+
+This shows in rendered pages. When a page renders a CSS or JavaScript reference header item twice for the same resource, with the same page parameters added in a different order, it now gets one `<link>` or `<script>` tag, with the URL of the first item. Before, it got two. An application that keeps `PageParameters` in a hash-based collection of its own now finds reordered parameters under the same entry.
+
 ## Pages render `lang` and `dir` on `<html>`
 
 `WebPage` now writes the language and direction of the page on its `<html>` tag, from the page locale: `lang` with the language tag of `getLocale()`, such as `nl-NL`, and `dir="rtl"` for a language written right to left, `dir="ltr"` for every other language. Screen readers need `lang` to pronounce the page (WCAG 2.2 success criterion 3.1.1), and browsers take the base direction only from `dir`, never from `lang`.
