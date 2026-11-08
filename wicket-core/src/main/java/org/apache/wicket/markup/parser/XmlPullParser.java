@@ -34,8 +34,66 @@ import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser
 import org.apache.wicket.util.string.Strings;
 
 /**
- * A fairly shallow markup pull parser which parses a markup string of a given type of markup (for
- * example, html, xml, vxml or wml) into ComponentTag and RawMarkup tokens.
+ * A shallow pull parser that splits markup (for example html, xml, vxml or wml) into a flat
+ * sequence of tokens: tags, the text in between, comments and the other constructs listed in
+ * {@link IXmlPullParser.HttpTagType}. Each call to {@link #next()} returns the type of the next
+ * token. It does not check that tags nest or that an open tag has a matching close tag;
+ * {@link org.apache.wicket.markup.MarkupParser} and its markup filters do that.
+ *
+ * <h2>Tags</h2>
+ * A tag starts with {@code <} followed by a name, an optional namespace prefix included
+ * ({@code <wicket:panel>}), and ends at the first {@code >} that is not inside a single or double
+ * quoted section. A quoted section ends at the next occurrence of its opening quote; a backslash
+ * does not escape a quote. A quote that is not closed before the end of the input, or a tag text
+ * that does not start with a name, is rejected with a {@link ParseException}. {@code </name>} is a
+ * close tag. A tag whose text ends with {@code /} is an open-close tag, also when that slash
+ * directly follows an unquoted value: {@code <img src=a.png/>} has the {@code src} {@code a.png},
+ * where an HTML parser would read {@code a.png/}.
+ *
+ * <h2>Attributes</h2>
+ * Attributes are read the way the attribute states of the
+ * <a href="https://html.spec.whatwg.org/multipage/parsing.html#before-attribute-name-state">HTML
+ * tokenizer</a> read them:
+ * <ul>
+ * <li>A name runs up to whitespace, {@code /}, {@code =} or the end of the tag, and is kept as
+ * written, case included. Names such as {@code (click)}, {@code [value]}, {@code #ref},
+ * {@code @click.prevent} or {@code hx-on::after-request} are therefore single attributes.</li>
+ * <li>A value follows {@code =}, with optional whitespace around it. A quoted value is everything
+ * up to the matching quote, whitespace and {@code >} included. An unquoted value runs up to the
+ * next whitespace, so {@code href=https://example.org/a/b} is one value. An attribute without a
+ * value has the empty string as its value.</li>
+ * <li>Character references in values are decoded: {@code title="a &amp; b"} has the value
+ * {@code a & b}. {@link org.apache.wicket.markup.ComponentTag} escapes values again when it writes
+ * the tag; attribute names are written as parsed.</li>
+ * <li>Markup with parse errors is read as the HTML tokenizer recovers from them: a missing space
+ * between attributes is accepted, a stray {@code /} is ignored, and text such as
+ * {@code "junk"} becomes an attribute of that name. Unlike HTML, an attribute that occurs twice is
+ * rejected with a {@link ParseException}, as is a quoted value whose closing quote is outside the
+ * tag.</li>
+ * </ul>
+ *
+ * <h2>Raw text</h2>
+ * The body of a {@code <style>} element, and of a {@code <script>} element that holds a script or
+ * a data block, is returned as a single {@link IXmlPullParser.HttpTagType#BODY BODY} token: it is
+ * not searched for tags, so it may contain {@code <} freely. A script holds a script or a data
+ * block when it has no {@code type}, an empty one, a JavaScript MIME type, {@code module},
+ * {@code importmap}, {@code speculationrules} or a JSON MIME type. With any other type it is a
+ * client side template whose body is parsed as markup, so that it can contain Wicket components
+ * (WICKET-5288). The raw text ends at {@code </script} or {@code </style}, in any case, followed by
+ * whitespace, {@code /} or {@code >}. Only elements named exactly {@code script} or {@code style},
+ * without a namespace prefix, have a raw text body.
+ *
+ * <h2>Other constructs</h2>
+ * A comment runs from {@code <!--} to the next {@code -->} and a CDATA section from
+ * {@code <![CDATA[} to the next {@code ]]>}; either may contain {@code >} and quotes. The start
+ * and end of a conditional comment ({@code <!--[if IE]>}, {@code <![endif]-->}), processing
+ * instructions ({@code <?...>}), the doctype and any other {@code <!...>} construct end at the
+ * next {@code >}; the markup inside a conditional comment is parsed.
+ *
+ * <h2>Trust</h2>
+ * The parser reads markup templates, which Wicket trusts as source code (see the security model in
+ * {@code SECURITY.md}). It accepts what a browser accepts and is not a sanitizer for markup from an
+ * untrusted source.
  *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
