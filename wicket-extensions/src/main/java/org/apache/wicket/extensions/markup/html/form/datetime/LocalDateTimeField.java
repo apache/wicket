@@ -57,7 +57,8 @@ public class LocalDateTimeField extends AbstractDateTimeField<LocalDateTime>
 	}
 
 	@Override
-	protected LocalDateTime createTemporal(LocalDate date, LocalTime time) {
+	protected LocalDateTime createTemporal(LocalDate date, LocalTime time)
+	{
 		return LocalDateTime.of(date, time);
 	}
 

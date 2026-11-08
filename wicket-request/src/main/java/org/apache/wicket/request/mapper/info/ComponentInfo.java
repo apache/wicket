@@ -175,10 +175,11 @@ public class ComponentInfo
 			result.append(renderCount);
 		}
 
-		if (renderCount != null || behaviorId != null) {
+		if (renderCount != null || behaviorId != null)
+		{
 			result.append(BEHAVIOR_INDEX_SEPARATOR);
 		}
-		
+
 		if (behaviorId != null)
 		{
 			result.append(behaviorId);
@@ -251,7 +252,7 @@ public class ComponentInfo
 				{
 					behaviorIndex = Integer.valueOf(listenerParts[1]);
 				}
-				
+
 				return new ComponentInfo(renderCount, componentPath, behaviorIndex);
 			}
 			else

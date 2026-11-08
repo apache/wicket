@@ -73,7 +73,7 @@ public class AnnotProxyFieldValueFactoryTest
 		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
 
 		final Field beanByClassField = obj.getClass().getDeclaredField("beanByName");
-		Assertions.assertThrows(IllegalStateException.class,  () -> factory.getFieldValue(beanByClassField, obj));
+		Assertions.assertThrows(IllegalStateException.class, () -> factory.getFieldValue(beanByClassField, obj));
 	}
 
 	@ParameterizedTest
@@ -164,7 +164,8 @@ public class AnnotProxyFieldValueFactoryTest
 		// add two beans to make ambiguous
 		applicationContext.putBean("anyBean", new Bean());
 		applicationContext.putBean("primaryBean", defaultCandidate);
-		final AbstractBeanDefinition abstractBeanDefinition = (AbstractBeanDefinition) applicationContext.getBeanFactory().getBeanDefinition("anyBean");
+		final AbstractBeanDefinition abstractBeanDefinition = (AbstractBeanDefinition)applicationContext
+			.getBeanFactory().getBeanDefinition("anyBean");
 		abstractBeanDefinition.setDefaultCandidate(false);
 		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext);
 
@@ -237,14 +238,15 @@ public class AnnotProxyFieldValueFactoryTest
 		final ApplicationContextMock applicationContext = new ApplicationContextMock();
 		applicationContext.putBean(bean);
 		final boolean wrapInProxies = false;
-		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext, wrapInProxies);
+		final AnnotProxyFieldValueFactory factory = new AnnotProxyFieldValueFactory(() -> applicationContext,
+			wrapInProxies);
 
 		final Field beanByClassField = obj.getClass().getDeclaredField("beanByClass");
 		final Object value = factory.getFieldValue(beanByClassField, obj);
 		assertSame(bean, value);
 	}
 
-	private static Stream<Object> beans() 
+	private static Stream<Object> beans()
 	{
 		return Stream.of(new SpringBeanInjectable(), new JakartaInjectInjectable());
 	}
@@ -280,7 +282,7 @@ public class AnnotProxyFieldValueFactoryTest
 		private Bean beanByName;
 
 		@Override
-		public String toString() 
+		public String toString()
 		{
 			return "JakartaInjectInjectable";
 		}
@@ -312,7 +314,8 @@ public class AnnotProxyFieldValueFactoryTest
 		private Bean optional;
 
 		@Override
-		public String toString() {
+		public String toString()
+		{
 			return "SpringBeanInjectable";
 		}
 	}

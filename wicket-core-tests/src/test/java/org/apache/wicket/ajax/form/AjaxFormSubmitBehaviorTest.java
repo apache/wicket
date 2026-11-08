@@ -46,7 +46,7 @@ class AjaxFormSubmitBehaviorTest extends WicketTestCase
 		tester.executeAjaxEvent(testForm.getTextField(), "change");
 		assertTrue(testForm.isSubmitedByAjaxBehavior());
 	}
-	
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6455
 	 */
@@ -54,16 +54,16 @@ class AjaxFormSubmitBehaviorTest extends WicketTestCase
 	void innerFormSubmit()
 	{
 		tester.startPage(NestedFormTestPage.class);
-		
+
 		NestedFormTestPage homePage = (NestedFormTestPage)tester.getLastRenderedPage();
 		assertFalse(homePage.innerSubmitted);
-		
+
 		FormTester formTester = tester.newFormTester("outer:inner");
 		formTester.submit("submit");
-		
+
 		assertTrue(homePage.innerSubmitted);
 	}
-	
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6462
 	 * 
@@ -107,30 +107,34 @@ class AjaxFormSubmitBehaviorTest extends WicketTestCase
 
 	public static class NestedFormTestPage extends NestedFormPage
 	{
-		
+
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = -515262294201762225L;
-		
-		
+
+
 		public NestedFormTestPage()
 		{
-			Form<Void> inner = new Form<>("inner") {
+			Form<Void> inner = new Form<>("inner")
+			{
 				@Override
-				protected boolean wantSubmitOnParentFormSubmit() {
+				protected boolean wantSubmitOnParentFormSubmit()
+				{
 					return false;
 				}
 
 				@Override
-				protected void onSubmit() {
+				protected void onSubmit()
+				{
 					super.onSubmit();
 					innerSubmitted = true;
 				}
 			};
-			
-			inner.add(new AjaxButton("submit", inner) {});
-			
+
+			inner.add(new AjaxButton("submit", inner)
+			{});
+
 			get("outer:inner").replaceWith(inner);
 		}
 	}

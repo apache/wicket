@@ -143,15 +143,17 @@ public final class Task
 							// Sleep until the period is over (or not at all if it's
 							// already passed)
 							Instant nextExecution = startOfPeriod.plus(frequency);
-							
+
 							Duration timeToNextExecution = Duration.between(Instant.now(), nextExecution);
 
 							if (!timeToNextExecution.isNegative())
 							{
-								try {
+								try
+								{
 									Thread.sleep(timeToNextExecution.toMillis());
 								}
-								catch (InterruptedException e) {
+								catch (InterruptedException e)
+								{
 									Thread.currentThread().interrupt();
 								}
 							}

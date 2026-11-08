@@ -58,13 +58,14 @@ public class TestMapperContext implements IMapperContext
 	public TestMapperContext()
 	{
 		appName = APP_NAME + count++;
-		
+
 		pageContext = new MockPageContext();
-		
+
 		InMemoryPageStore inMemoryPageStore = new InMemoryPageStore(appName, Integer.MAX_VALUE);
 		InSessionPageStore inSessionPageStore = new InSessionPageStore(4, new JavaSerializer(appName));
 		pageStore = new CachingPageStore(inMemoryPageStore, inSessionPageStore);
-		pageManager = new PageManager(new RequestPageStore(pageStore)) {
+		pageManager = new PageManager(new RequestPageStore(pageStore))
+		{
 			@Override
 			protected IPageContext createPageContext()
 			{

@@ -230,7 +230,7 @@ public class MergedMarkup extends Markup
 
 				// if <head> in base markup
 				if ((tag.isClose() && TagUtils.isHeadTag(tag)) ||
-				    (tag.isClose() && TagUtils.isWicketHeaderItemsTag(tag)) ||
+					(tag.isClose() && TagUtils.isWicketHeaderItemsTag(tag)) ||
 					(tag.isOpen() && TagUtils.isBodyTag(tag)))
 				{
 					wicketHeadProcessed = true;
@@ -292,14 +292,16 @@ public class MergedMarkup extends Markup
 					else
 					{
 						throw new WicketRuntimeException(
-							"Wicket tags like <wicket:xxx> are not allowed in between <wicket:child> and </wicket:child> tags: " +
+							"Wicket tags like <wicket:xxx> are not allowed in between <wicket:child> and </wicket:child> tags: "
+								+
 								markup.toString());
 					}
 				}
 				else if (element instanceof ComponentTag)
 				{
 					throw new WicketRuntimeException(
-						"Wicket tags identified by wicket:id are not allowed in between <wicket:child> and </wicket:child> tags: " +
+						"Wicket tags identified by wicket:id are not allowed in between <wicket:child> and </wicket:child> tags: "
+							+
 							markup.toString());
 				}
 			}
@@ -332,7 +334,8 @@ public class MergedMarkup extends Markup
 			if (element instanceof ComponentTag && resource != null)
 			{
 				ComponentTag tag = (ComponentTag)element;
-				if (tag.getMarkupClass() == null){
+				if (tag.getMarkupClass() == null)
+				{
 					tag.setMarkupClass(markupClass);
 				}
 			}
@@ -353,7 +356,7 @@ public class MergedMarkup extends Markup
 			{
 				MarkupElement element = get(i);
 
-				boolean isHeadTag = (element instanceof WicketTag) && ((WicketTag) element).isHeadTag();
+				boolean isHeadTag = (element instanceof WicketTag) && ((WicketTag)element).isHeadTag();
 				if ((hasOpenWicketHead == -1) && isHeadTag)
 				{
 					hasOpenWicketHead = i;

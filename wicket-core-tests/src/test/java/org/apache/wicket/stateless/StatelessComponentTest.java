@@ -40,7 +40,8 @@ class StatelessComponentTest extends WicketTestCase
 
 		tester.getRequest()
 			.setUrl(
-				Url.parse("wicket/bookmarkable/org.apache.wicket.stateless.StatelessComponentPage?0-1.ILinkListener-link"));
+				Url.parse(
+					"wicket/bookmarkable/org.apache.wicket.stateless.StatelessComponentPage?0-1.ILinkListener-link"));
 		try
 		{
 			tester.processRequest();
@@ -91,7 +92,8 @@ class StatelessComponentTest extends WicketTestCase
 
 		tester.getRequest()
 			.setUrl(
-				Url.parse("wicket/bookmarkable/org.apache.wicket.stateless.StatelessComponentPageWithParams?0-1.-link&amp;testParam1=testValue1&amp;testParam2=testValue2"));
+				Url.parse(
+					"wicket/bookmarkable/org.apache.wicket.stateless.StatelessComponentPageWithParams?0-1.-link&amp;testParam1=testValue1&amp;testParam2=testValue2"));
 		try
 		{
 			tester.processRequest();

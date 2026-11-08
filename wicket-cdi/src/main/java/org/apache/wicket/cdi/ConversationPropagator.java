@@ -85,7 +85,7 @@ public class ConversationPropagator implements IRequestCycleListener
 		if (propagation == ConversationPropagation.NONE)
 		{
 			throw new IllegalArgumentException(
-					"If propagation is NONE do not set up the propagator");
+				"If propagation is NONE do not set up the propagator");
 		}
 
 		this.application = application;
@@ -132,7 +132,8 @@ public class ConversationPropagator implements IRequestCycleListener
 			{
 				return;
 			}
-		} catch (ContextNotActiveException cnax)
+		}
+		catch (ContextNotActiveException cnax)
 		{
 			logger.debug("There is no active context for the requested scope!", cnax);
 			return;
@@ -141,8 +142,8 @@ public class ConversationPropagator implements IRequestCycleListener
 		if (propagation.propagatesVia(handler, IPageRequestHandler.getPage(handler)))
 		{
 			logger.debug(
-					"Propagating non-transient conversation {} via page parameters of handler {}",
-					conversation.getId(), handler);
+				"Propagating non-transient conversation {} via page parameters of handler {}",
+				conversation.getId(), handler);
 
 			PageParameters parameters = getPageParameters(handler);
 			if (parameters != null)
@@ -217,10 +218,13 @@ public class ConversationPropagator implements IRequestCycleListener
 			{
 				// we do not care about pages that are being rendered from a buffer
 				return false;
-			} else if ("org.apache.wicket.protocol.ws.api.WebSocketMessageBroadcastHandler".equals(handlerClassName))
+			}
+			else if ("org.apache.wicket.protocol.ws.api.WebSocketMessageBroadcastHandler".equals(handlerClassName))
 			{
 				return false;
-			} else if ("org.apache.wicket.protocol.ws.api.WebSocketRequestHandler".equals(handlerClassName)) {
+			}
+			else if ("org.apache.wicket.protocol.ws.api.WebSocketRequestHandler".equals(handlerClassName))
+			{
 				// injection is not supported in web sockets communication
 				return false;
 			}

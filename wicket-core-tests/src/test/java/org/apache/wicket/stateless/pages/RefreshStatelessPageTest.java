@@ -36,7 +36,7 @@ class RefreshStatelessPageTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-3965
 	 */
 	@Test
-    void refreshStatelessPage()
+	void refreshStatelessPage()
 	{
 		tester.startPage(new StatefulPage());
 		tester.clickLink("link", false);

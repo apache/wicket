@@ -77,7 +77,8 @@ public class Roles extends HashSet<String> implements IClusterable
 		}
 	}
 
-	public Roles(final Collection<String> roles) {
+	public Roles(final Collection<String> roles)
+	{
 		Args.notNull(roles, "roles");
 		addAll(roles);
 	}

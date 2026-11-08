@@ -121,7 +121,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Sets the JavaScript code that will be returned by {@link #getAfterHandler(Component)}.
 	 * If this code was already set, the new one will be appended to the existing one.
@@ -142,7 +142,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Sets the JavaScript code that will be returned by {@link #getSuccessHandler(Component)}.
 	 * If this code was already set, the new one will be appended to the existing one.
@@ -205,7 +205,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Sets the JavaScript code that will be returned by {@link #getPrecondition(Component)}.
 	 * If this code was already set, the new one will be appended to the existing one.
@@ -276,7 +276,8 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	}
 
 	@Override
-	public CharSequence getDoneHandler(Component component) {
+	public CharSequence getDoneHandler(Component component)
+	{
 		return done;
 	}
 

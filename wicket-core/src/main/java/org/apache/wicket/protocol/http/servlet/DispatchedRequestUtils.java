@@ -52,7 +52,8 @@ class DispatchedRequestUtils
 		}
 
 		String uri = (String)request.getAttribute(attributeName);
-		if (uri != null && uri.startsWith(filterPrefix) && "/".equals(filterPrefix) == false) {
+		if (uri != null && uri.startsWith(filterPrefix) && "/".equals(filterPrefix) == false)
+		{
 			uri = uri.substring(filterPrefix.length());
 		}
 

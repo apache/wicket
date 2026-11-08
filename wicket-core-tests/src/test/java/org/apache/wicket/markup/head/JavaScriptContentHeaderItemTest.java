@@ -24,60 +24,60 @@ import org.junit.jupiter.api.Test;
 
 class JavaScriptContentHeaderItemTest
 {
-    @Test
-    void outputsTextJavascriptAsTypeIfNoTypeSet()
-    {
-        JavaScriptContentHeaderItem item = new JavaScriptContentHeaderItem("", "the id");
-        MockWebResponse response = new MockWebResponse();
+	@Test
+	void outputsTextJavascriptAsTypeIfNoTypeSet()
+	{
+		JavaScriptContentHeaderItem item = new JavaScriptContentHeaderItem("", "the id");
+		MockWebResponse response = new MockWebResponse();
 
-        item.render(response);
+		item.render(response);
 
-        assertEquals("""
+		assertEquals("""
                 <script type="text/javascript" id="the id">
                 /*<![CDATA[*/
                 
                 /*]]>*/
                 </script>
                 """, response.getTextResponse().toString());
-    }
+	}
 
-    @Test
-    void outputsTypeThatIsSet()
-    {
-        JavaScriptContentHeaderItem item = new JavaScriptContentHeaderItem("", "the id")
-                .setType(JavaScriptBrowserProcessedContentType.MODULE);
-        MockWebResponse response = new MockWebResponse();
+	@Test
+	void outputsTypeThatIsSet()
+	{
+		JavaScriptContentHeaderItem item = new JavaScriptContentHeaderItem("", "the id")
+			.setType(JavaScriptBrowserProcessedContentType.MODULE);
+		MockWebResponse response = new MockWebResponse();
 
-        item.render(response);
+		item.render(response);
 
-        assertEquals("""
+		assertEquals("""
                 <script type="module" id="the id">
                 /*<![CDATA[*/
                 
                 /*]]>*/
                 </script>
                 """, response.getTextResponse().toString());
-    }
+	}
 
-    @Test
-    void itemsWithSameJavascriptAndDifferentTypesAreInequal()
-    {
-        JavaScriptContentHeaderItem item1 = new JavaScriptContentHeaderItem("", "the id")
-                .setType(JavaScriptBrowserProcessedContentType.TEXT_JAVASCRIPT);
-        JavaScriptContentHeaderItem item2 = new JavaScriptContentHeaderItem("", "the id")
-                .setType(JavaScriptBrowserProcessedContentType.MODULE);
+	@Test
+	void itemsWithSameJavascriptAndDifferentTypesAreInequal()
+	{
+		JavaScriptContentHeaderItem item1 = new JavaScriptContentHeaderItem("", "the id")
+			.setType(JavaScriptBrowserProcessedContentType.TEXT_JAVASCRIPT);
+		JavaScriptContentHeaderItem item2 = new JavaScriptContentHeaderItem("", "the id")
+			.setType(JavaScriptBrowserProcessedContentType.MODULE);
 
-        assertNotEquals(item1, item2);
-    }
+		assertNotEquals(item1, item2);
+	}
 
-    @Test
-    void itemsWithSameJavascriptAndDifferentTypesHaveDifferentHashCodes()
-    {
-        JavaScriptContentHeaderItem item1 = new JavaScriptContentHeaderItem("", "the id")
-                .setType(JavaScriptBrowserProcessedContentType.TEXT_JAVASCRIPT);
-        JavaScriptContentHeaderItem item2 = new JavaScriptContentHeaderItem("", "the id")
-                .setType(JavaScriptBrowserProcessedContentType.MODULE);
+	@Test
+	void itemsWithSameJavascriptAndDifferentTypesHaveDifferentHashCodes()
+	{
+		JavaScriptContentHeaderItem item1 = new JavaScriptContentHeaderItem("", "the id")
+			.setType(JavaScriptBrowserProcessedContentType.TEXT_JAVASCRIPT);
+		JavaScriptContentHeaderItem item2 = new JavaScriptContentHeaderItem("", "the id")
+			.setType(JavaScriptBrowserProcessedContentType.MODULE);
 
-        assertNotEquals(item1.hashCode(), item2.hashCode());
-    }
+		assertNotEquals(item1.hashCode(), item2.hashCode());
+	}
 }

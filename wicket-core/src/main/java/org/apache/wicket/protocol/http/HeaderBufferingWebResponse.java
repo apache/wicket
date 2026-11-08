@@ -160,7 +160,8 @@ class HeaderBufferingWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	@Override
-	public void disableCaching() {
+	public void disableCaching()
+	{
 		getMetaResponse().disableCaching();
 	}
 

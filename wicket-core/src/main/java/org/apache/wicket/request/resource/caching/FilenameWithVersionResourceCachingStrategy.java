@@ -52,7 +52,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 	private static final Logger LOG = LoggerFactory.getLogger(FilenameWithVersionResourceCachingStrategy.class);
 
 	private static final String DEFAULT_VERSION_PREFIX = "-ver-";
-	
+
 	/** string that marks the beginning the of the version in the decorated filename */
 	private final String versionPrefix;
 
@@ -84,7 +84,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 	 * @see #FilenameWithVersionResourceCachingStrategy(org.apache.wicket.request.resource.caching.version.IResourceVersion) 
 	 */
 	public FilenameWithVersionResourceCachingStrategy(String versionPrefix,
-	                                                  IResourceVersion resourceVersion)
+		IResourceVersion resourceVersion)
 	{
 		this.resourceVersion = Args.notNull(resourceVersion, "resourceVersion");
 		this.versionPrefix = Args.notEmpty(versionPrefix, "versionPrefix");
@@ -122,7 +122,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 		// [basename][version-prefix][version](.extension)
 		//
 		final StringBuilder versionedFilename = new StringBuilder();
-		
+
 		// add filename
 		if (extensionAt == -1)
 		{
@@ -137,12 +137,12 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 		if (pos != -1 && isVersion(versionedFilename.substring(pos + versionPrefix.length())))
 		{
 			LOG.error("A resource with name '{}' contains the version prefix '{}' so the un-decoration will not work." +
-					" Either use a different version prefix or rename this resource.", filename, getVersionPrefix());
+				" Either use a different version prefix or rename this resource.", filename, getVersionPrefix());
 		}
 
 		// add version suffix
 		versionedFilename.append(versionPrefix);
-		
+
 		// add version
 		versionedFilename.append(version);
 
@@ -159,13 +159,13 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 	public void undecorateUrl(ResourceUrl url)
 	{
 		final String filename = url.getFileName();
-		
+
 		// check for extension
 		int pos = filename.lastIndexOf('.');
 
 		// get name of file without extension (but with version string)
 		final String fullname = pos == -1 ? filename : filename.substring(0, pos);
-		
+
 		// get extension of file if present
 		final String extension = pos == -1 ? null : filename.substring(pos);
 
@@ -180,7 +180,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 
 			// create filename without version string 
 			// (required for working resource lookup)
-			url.setFileName(extension == null? basename : basename + extension);
+			url.setFileName(extension == null ? basename : basename + extension);
 
 			// store the version in the request cycle
 			RequestCycle requestCycle = RequestCycle.get();
@@ -221,7 +221,7 @@ public class FilenameWithVersionResourceCachingStrategy implements IResourceCach
 	{
 		if (resourceVersion instanceof CachingResourceVersion)
 		{
-			((CachingResourceVersion) resourceVersion).invalidateAll();
+			((CachingResourceVersion)resourceVersion).invalidateAll();
 		}
 	}
 }

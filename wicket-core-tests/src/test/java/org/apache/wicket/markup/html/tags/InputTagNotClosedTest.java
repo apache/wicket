@@ -28,7 +28,7 @@ class InputTagNotClosedTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void inputVisible() throws Exception
+	void inputVisible() throws Exception
 	{
 		executeTest(InputTagVisibleWebPage.class, "InputTagVisibleWebPageResult.html");
 	}
@@ -37,7 +37,7 @@ class InputTagNotClosedTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void inputNotVisible() throws Exception
+	void inputNotVisible() throws Exception
 	{
 		executeTest(InputTagNotVisibleWebPage.class, "InputTagNotVisibleWebPageResult.html");
 	}

@@ -157,7 +157,8 @@ class EventDispatcherTest extends WicketTestCase
 		}
 
 		@Override
-		public void onEvent(IEvent<?> event) {
+		public void onEvent(IEvent<?> event)
+		{
 			callbackInvoked = true;
 		}
 	}

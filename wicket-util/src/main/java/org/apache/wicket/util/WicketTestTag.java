@@ -20,7 +20,8 @@ package org.apache.wicket.util;
  * JUnit Category marker.
  * Used to mark slow running tests which are not executed with Maven profile 'fast'
  */
-public interface WicketTestTag {
+public interface WicketTestTag
+{
 
 	String SLOW = "SLOW";
 }

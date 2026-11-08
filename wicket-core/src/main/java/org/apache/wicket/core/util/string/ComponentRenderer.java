@@ -120,13 +120,14 @@ public class ComponentRenderer
 
 	private void initApplication()
 	{
-		if (application instanceof WebApplication) {
+		if (application instanceof WebApplication)
+		{
 			WebApplication webApplication = (WebApplication)application;
-			
+
 			// WebApplication requires a servlet context
 			webApplication.setServletContext(new MockServletContext(application, null));
 		}
-		
+
 		application.setName("ComponentRenderer[" + System.identityHashCode(ComponentRenderer.this) + "]");
 		application.initApplication();
 	}

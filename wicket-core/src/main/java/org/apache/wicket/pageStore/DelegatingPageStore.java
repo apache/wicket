@@ -25,7 +25,7 @@ import org.apache.wicket.util.lang.Args;
 public abstract class DelegatingPageStore implements IPageStore
 {
 	private final IPageStore delegate;
-	
+
 	protected DelegatingPageStore(IPageStore delegate)
 	{
 		this.delegate = Args.notNull(delegate, "delegate");
@@ -35,7 +35,7 @@ public abstract class DelegatingPageStore implements IPageStore
 	{
 		return delegate;
 	}
-	
+
 	/**
 	 * Versioning is supported depending on the delegate.
 	 */
@@ -44,7 +44,7 @@ public abstract class DelegatingPageStore implements IPageStore
 	{
 		return delegate.supportsVersioning();
 	}
-	
+
 	@Override
 	public void addPage(IPageContext context, IManageablePage page)
 	{
@@ -62,7 +62,7 @@ public abstract class DelegatingPageStore implements IPageStore
 	{
 		delegate.removeAllPages(context);
 	}
-	
+
 	@Override
 	public IManageablePage getPage(IPageContext context, int id)
 	{
@@ -74,13 +74,13 @@ public abstract class DelegatingPageStore implements IPageStore
 	{
 		delegate.revertPage(context, page);
 	}
-	
+
 	@Override
 	public void end(IPageContext context)
 	{
 		delegate.end(context);
 	}
-	
+
 	@Override
 	public void detach(IPageContext context)
 	{

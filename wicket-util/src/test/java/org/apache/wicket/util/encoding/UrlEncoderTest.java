@@ -33,14 +33,16 @@ public class UrlEncoderTest
 	private static final Charset CHARSET = StandardCharsets.UTF_8;
 
 	@Test
-	public void pathUnencoded()  {
+	public void pathUnencoded()
+	{
 		String unencoded = "azAZ09.-_~!$&*+,;=:@";
-		
+
 		assertEquals(unencoded, UrlEncoder.PATH_INSTANCE.encode(unencoded, CHARSET));
-		
+
 		for (char candidate : ENCODING_CANDIDATES)
 		{
-			if (unencoded.indexOf(candidate) == -1) {
+			if (unencoded.indexOf(candidate) == -1)
+			{
 				assertNotEquals("" + candidate,
 					UrlEncoder.PATH_INSTANCE.encode("" + candidate, CHARSET));
 			}
@@ -48,29 +50,33 @@ public class UrlEncoderTest
 	}
 
 	@Test
-	public void queryStringUnencoded()  {
+	public void queryStringUnencoded()
+	{
 		String unencoded = "azAZ09.-_~!$*,:@/";
-		
+
 		assertEquals(unencoded, UrlEncoder.QUERY_INSTANCE.encode(unencoded, CHARSET));
 
 		for (char candidate : ENCODING_CANDIDATES)
 		{
-			if (unencoded.indexOf(candidate) == -1) {
+			if (unencoded.indexOf(candidate) == -1)
+			{
 				assertNotEquals("" + candidate,
 					UrlEncoder.QUERY_INSTANCE.encode("" + candidate, CHARSET));
 			}
 		}
 	}
-	
+
 	@Test
-	public void headerUnencoded()  {
+	public void headerUnencoded()
+	{
 		String unencoded = "azAZ09.-_~!$&+#^`|";
-		
+
 		assertEquals(unencoded, UrlEncoder.HEADER_INSTANCE.encode(unencoded, CHARSET));
-		
+
 		for (char candidate : ENCODING_CANDIDATES)
 		{
-			if (unencoded.indexOf(candidate) == -1) {
+			if (unencoded.indexOf(candidate) == -1)
+			{
 				assertNotEquals("" + candidate,
 					UrlEncoder.HEADER_INSTANCE.encode("" + candidate, CHARSET));
 			}

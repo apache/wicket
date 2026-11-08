@@ -80,8 +80,7 @@ public class ExceptionSettings
 	 *
 	 * @author igor
 	 */
-	public enum AjaxErrorStrategy
-	{
+	public enum AjaxErrorStrategy {
 		/** redirect to error page, just like a normal requset */
 		REDIRECT_TO_ERROR_PAGE,
 		/** invoke client side failure handler */
@@ -93,8 +92,7 @@ public class ExceptionSettings
 	 *
 	 * @author papegaaij
 	 */
-	public enum ThreadDumpStrategy
-	{
+	public enum ThreadDumpStrategy {
 		/** Do not dump any stacktraces */
 		NO_THREADS,
 		/** Dump the stacktrace of the thread holding the lock */
@@ -110,8 +108,7 @@ public class ExceptionSettings
 	 * {@link Component#setOutputMarkupId(boolean) id} or
 	 * {@link Component#setOutputMarkupPlaceholderTag(boolean) placeholder tag}
 	 */
-	public enum NotRenderableErrorStrategy
-	{
+	public enum NotRenderableErrorStrategy {
 		/**
 		 * Log a message with level {@link Logger#warn(String) WARNING}
 		 */

@@ -21,8 +21,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 /**
  * An enum representing the only possible values for the sandbox directive
  */
-public enum CSPDirectiveSandboxValue implements CSPRenderable
-{
+public enum CSPDirectiveSandboxValue implements CSPRenderable {
 	ALLOW_FORMS("allow-forms"),
 	ALLOW_SAME_ORIGIN("allow-same-origin"),
 	ALLOW_SCRIPTS("allow-scripts"),

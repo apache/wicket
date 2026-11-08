@@ -46,7 +46,7 @@ public class PreviousButton extends WizardButton
 	protected void onConfigure()
 	{
 		super.onConfigure();
-		
+
 		setEnabled(getWizardModel().isPreviousAvailable());
 	}
 

@@ -81,12 +81,15 @@ class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 
 		List<String> headerStylesheetLinks = new ArrayList<>();
 
-		while (headerStyleSheetLinkMatcher.find()){
+		while (headerStyleSheetLinkMatcher.find())
+		{
 			headerStylesheetLinks.add(headerStyleSheetLinkMatcher.group());
 		}
 
-		assertTrue(headerStylesheetLinks.contains("<link rel=\"stylesheet\" type=\"text/css\" href=\"../../enclosedInInline.css\" />"));
-		assertTrue(headerStylesheetLinks.contains("<link rel=\"stylesheet\" type=\"text/css\" href=\"../../enclosed.css\" />"));
+		assertTrue(headerStylesheetLinks.contains(
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"../../enclosedInInline.css\" />"));
+		assertTrue(headerStylesheetLinks.contains(
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"../../enclosed.css\" />"));
 
 	}
 
@@ -114,7 +117,7 @@ class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	<T extends Page> void executeCombinedTestPre1_5(final Class<T> pageClass,
-													final String filename) throws Exception
+		final String filename) throws Exception
 	{
 		// Default Config: parent first header render strategy
 		log.error("=== PARENT first header render strategy ===");

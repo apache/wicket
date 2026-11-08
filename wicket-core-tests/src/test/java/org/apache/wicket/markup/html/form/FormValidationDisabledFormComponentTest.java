@@ -146,11 +146,11 @@ class FormValidationDisabledFormComponentTest extends WicketTestCase
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-		                                               Class<?> containerClass)
+			Class<?> containerClass)
 		{
 			return new StringResourceStream("<html><body>"//
-					+ "<form wicket:id='form'><input wicket:id='field1' type='text'/></form>" //
-					+ "</body></html>");
+				+ "<form wicket:id='form'><input wicket:id='field1' type='text'/></form>" //
+				+ "</body></html>");
 		}
 	}
 

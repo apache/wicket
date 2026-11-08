@@ -68,8 +68,7 @@ public class ResourceNameIteratorBenchmark
 	 * both time and allocation: a language+country locale yields three rounds, language-only two,
 	 * and no locale one.
 	 */
-	public enum LocaleShape
-	{
+	public enum LocaleShape {
 		LANGUAGE_COUNTRY(Locale.of("nl", "NL")),
 		LANGUAGE_ONLY(Locale.of("nl")),
 		WITH_VARIANT(Locale.of("nl", "NL", "vlaams")),
@@ -92,7 +91,7 @@ public class ResourceNameIteratorBenchmark
 	@Param
 	public LocaleShape localeShape;
 
-	@Param({"false", "true"})
+	@Param({ "false", "true" })
 	public boolean styled;
 
 	@Benchmark

@@ -106,7 +106,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 				final ComponentTag openTag)
 			{
 				Object modelObject = getDefaultModelObject();
-				if ((modelObject == null) || (modelObject instanceof String && ((String) modelObject).isEmpty()))
+				if ((modelObject == null) || (modelObject instanceof String && ((String)modelObject).isEmpty()))
 				{
 					String nullLabel = defaultNullLabel();
 					replaceComponentTagBody(markupStream, openTag,
@@ -151,13 +151,13 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 			{
 				return AjaxEditableMultiLineLabel.this.getConverter(type);
 			}
-			
+
 			@Override
 			protected boolean shouldTrimInput()
 			{
 				return AjaxEditableMultiLineLabel.this.shouldTrimInput();
 			}
-			
+
 			@Override
 			protected void onModelChanged()
 			{
@@ -170,8 +170,8 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 				AjaxEditableMultiLineLabel.this.onModelChanging();
 			}
 		};
-		editor.add(new AttributeModifier("rows", (IModel<Integer>) () -> rows));
-		editor.add(new AttributeModifier("cols", (IModel<Integer>) () -> cols));
+		editor.add(new AttributeModifier("rows", (IModel<Integer>)() -> rows));
+		editor.add(new AttributeModifier("cols", (IModel<Integer>)() -> cols));
 		editor.setOutputMarkupId(true);
 		editor.setVisible(false);
 		editor.add(new EditorAjaxBehavior()
@@ -184,24 +184,23 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 				super.updateAjaxAttributes(attributes);
 				attributes.setMethod(Method.POST);
 				attributes.setEventNames("blur", "keyup");
-				CharSequence dynamicExtraParameters = 
-						"var result = [], " +
-								"kc=Wicket.Event.keyCode(attrs.event)," +
-								"evtType=attrs.event.type;" +
-								"if (evtType === 'keyup') {" +
-									// ESCAPE key
-									"if (kc===27) { result.push( { name: 'save', value: false } ); }" +
-								"}" +
-								"else if (evtType==='blur') { result = Wicket.Form.serializeElement(attrs.c); result.push( { name: 'save', value: true } ); }" +
-								"return result;";
+				CharSequence dynamicExtraParameters = "var result = [], " +
+					"kc=Wicket.Event.keyCode(attrs.event)," +
+					"evtType=attrs.event.type;" +
+					"if (evtType === 'keyup') {" +
+				// ESCAPE key
+					"if (kc===27) { result.push( { name: 'save', value: false } ); }" +
+					"}" +
+					"else if (evtType==='blur') { result = Wicket.Form.serializeElement(attrs.c); result.push( { name: 'save', value: true } ); }"
+					+
+					"return result;";
 				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
 
-				CharSequence precondition =
-						"var kc=Wicket.Event.keyCode(attrs.event),"+
-								"evtType=attrs.event.type,"+
-								"ret=false;"+
-								"if(evtType==='blur' || (evtType==='keyup' && (kc===27))) ret = true;"+
-								"return ret;";
+				CharSequence precondition = "var kc=Wicket.Event.keyCode(attrs.event)," +
+					"evtType=attrs.event.type," +
+					"ret=false;" +
+					"if(evtType==='blur' || (evtType==='keyup' && (kc===27))) ret = true;" +
+					"return ret;";
 				AjaxCallListener ajaxCallListener = new AjaxCallListener();
 				ajaxCallListener.onPrecondition(precondition);
 				attributes.getAjaxCallListeners().add(ajaxCallListener);

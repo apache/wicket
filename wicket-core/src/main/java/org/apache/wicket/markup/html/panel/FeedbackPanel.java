@@ -115,7 +115,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		{
 			return FeedbackPanel.this.newMessageItem(index, itemModel);
 		}
-    }
+	}
 
 	private static final long serialVersionUID = 1L;
 
@@ -292,28 +292,28 @@ public class FeedbackPanel extends Panel implements IFeedback
 		String cssClass;
 		switch (message.getLevel())
 		{
-			case FeedbackMessage.UNDEFINED:
+			case FeedbackMessage.UNDEFINED :
 				cssClass = getString(FeedbackMessage.UNDEFINED_CSS_CLASS_KEY);
 				break;
-			case FeedbackMessage.DEBUG:
+			case FeedbackMessage.DEBUG :
 				cssClass = getString(FeedbackMessage.DEBUG_CSS_CLASS_KEY);
 				break;
-			case FeedbackMessage.INFO:
+			case FeedbackMessage.INFO :
 				cssClass = getString(FeedbackMessage.INFO_CSS_CLASS_KEY);
 				break;
-			case FeedbackMessage.SUCCESS:
+			case FeedbackMessage.SUCCESS :
 				cssClass = getString(FeedbackMessage.SUCCESS_CSS_CLASS_KEY);
 				break;
-			case FeedbackMessage.WARNING:
+			case FeedbackMessage.WARNING :
 				cssClass = getString(FeedbackMessage.WARNING_CSS_CLASS_KEY);
 				break;
-			case FeedbackMessage.ERROR:
+			case FeedbackMessage.ERROR :
 				cssClass = getString(FeedbackMessage.ERROR_CSS_CLASS_KEY);
 				break;
-			case FeedbackMessage.FATAL:
+			case FeedbackMessage.FATAL :
 				cssClass = getString(FeedbackMessage.FATAL_CSS_CLASS_KEY);
 				break;
-			default:
+			default :
 				cssClass = "feedbackPanel" + message.getLevelAsString();
 		}
 		return cssClass;
@@ -372,7 +372,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 *            The model object of the item
 	 * @return Container that holds components of the feedback MessageListView.
 	 */
-	protected ListItem<FeedbackMessage> newMessageItem(int index, IModel<FeedbackMessage> itemModel) {
-        return new ListItem<>(index, itemModel);
-    }
+	protected ListItem<FeedbackMessage> newMessageItem(int index, IModel<FeedbackMessage> itemModel)
+	{
+		return new ListItem<>(index, itemModel);
+	}
 }

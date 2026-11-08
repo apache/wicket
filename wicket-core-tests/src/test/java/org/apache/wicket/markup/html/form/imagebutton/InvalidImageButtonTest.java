@@ -27,7 +27,7 @@ class InvalidImageButtonTest extends WicketTestCase
 	 * testInvalidImage()
 	 */
 	@Test
-    void invalidImage()
+	void invalidImage()
 	{
 		tester.startPage(InvalidImageButtonPage.class);
 		tester.assertRenderedPage(InvalidImageButtonPage.class);

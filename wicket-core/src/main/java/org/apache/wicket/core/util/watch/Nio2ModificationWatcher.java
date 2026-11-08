@@ -85,7 +85,8 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 
 			start(pollFrequency);
 
-		} catch (IOException iox)
+		}
+		catch (IOException iox)
 		{
 			throw new WicketRuntimeException("Cannot get the watch service", iox);
 		}
@@ -97,7 +98,8 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 		// Construct task with the given polling frequency
 		task = new Task("Wicket-ModificationWatcher-NIO2");
 
-		task.run(pollFrequency, new ICode() {
+		task.run(pollFrequency, new ICode()
+		{
 			@Override
 			public void run(final Logger log)
 			{
@@ -124,7 +126,7 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 			for (WatchEvent<?> event : events)
 			{
 				WatchEvent.Kind<?> eventKind = event.kind();
-				Path eventPath = (Path) event.context();
+				Path eventPath = (Path)event.context();
 
 				if (eventKind == ENTRY_CREATE)
 				{
@@ -184,7 +186,8 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 			{
 				// a directory is created. register it for notifications
 				register(path, watchService);
-			} catch (IOException iox)
+			}
+			catch (IOException iox)
 			{
 				log.warn("Cannot register folder '" + path + "' to be watched.", iox);
 			}
@@ -199,8 +202,10 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 			{
 				ThreadContext.setApplication(application);
 				application.getMarkupSettings()
-						.getMarkupFactory().getMarkupCache().removeMarkup(absolutePath);
-			} finally {
+					.getMarkupFactory().getMarkupCache().removeMarkup(absolutePath);
+			}
+			finally
+			{
 				ThreadContext.setApplication(null);
 			}
 		}
@@ -217,7 +222,8 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 			{
 				task.interrupt();
 			}
-		} finally
+		}
+		finally
 		{
 			IOUtils.closeQuietly(watchService);
 		}
@@ -244,7 +250,8 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 				{
 					register(folder, watchService);
 
-					Files.walkFileTree(folder, new SimpleFileVisitor<Path>() {
+					Files.walkFileTree(folder, new SimpleFileVisitor<Path>()
+					{
 						@Override
 						public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
 						{
@@ -256,7 +263,7 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 			}
 		}
 	}
-	
+
 	private void register(final Path folder, final WatchService watchService) throws IOException
 	{
 		WatchEvent.Kind[] watchedKinds = getWatchedKinds(folder);
@@ -271,6 +278,6 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 	 */
 	protected WatchEvent.Kind[] getWatchedKinds(Path folder)
 	{
-		return new WatchEvent.Kind[] {ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY};
+		return new WatchEvent.Kind[] { ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY };
 	}
 }

@@ -177,7 +177,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 		false);
 
 	private boolean encodeJSessionId = false;
-	
+
 	/**
 	 * Configures Wicket's default ResourceLoaders.<br>
 	 * For an example in {@code FooApplication} let {@code bar.Foo} extend {@link Component}, this

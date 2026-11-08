@@ -39,7 +39,7 @@ public class FeedbacksPage extends WebPage
 		WebMarkupContainer feedbacks = new WebMarkupContainer("feedbacks");
 		feedbacks.setOutputMarkupId(true);
 		add(feedbacks);
-		
+
 		Impl impl1 = new FeedbackImpl("id1");
 		feedbacks.add(impl1);
 
@@ -52,7 +52,7 @@ public class FeedbacksPage extends WebPage
 		Impl impl4 = new Impl("id4");
 		impl4.setOutputMarkupId(true);
 		add(impl4);
-		
+
 		ajaxLink = new AjaxLink<Void>("ajax")
 		{
 			@Override
@@ -65,7 +65,7 @@ public class FeedbacksPage extends WebPage
 		};
 		add(ajaxLink);
 	}
-	
+
 	public AjaxLink<Void> getAjaxLink()
 	{
 		return ajaxLink;

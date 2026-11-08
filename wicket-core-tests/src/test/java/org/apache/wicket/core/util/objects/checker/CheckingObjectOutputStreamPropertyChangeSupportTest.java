@@ -28,57 +28,66 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for https://issues.apache.org/jira/browse/WICKET-6704
  */
-class CheckingObjectOutputStreamPropertyChangeSupportTest {
+class CheckingObjectOutputStreamPropertyChangeSupportTest
+{
 
-    /**
-     * The test should either pass and log an ERROR
-     * or cause a JVM crash
-     */
-    @Test
-    void serializePropertyChangeSupport()
-    {
-        JavaSerializer serializer = new JavaSerializer("test");
-        serializer.serialize(new ObjectToPersist());
-    }
+	/**
+	 * The test should either pass and log an ERROR
+	 * or cause a JVM crash
+	 */
+	@Test
+	void serializePropertyChangeSupport()
+	{
+		JavaSerializer serializer = new JavaSerializer("test");
+		serializer.serialize(new ObjectToPersist());
+	}
 
-    static abstract class AbstractObjectToPersist implements Serializable {
+	static abstract class AbstractObjectToPersist implements Serializable
+	{
 
-        private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
 
-        // if we move this field to the child class, the JVM crash is not reproducible, weird !
-        private PropertyChangeSupport propertyChangeSupport;
+		// if we move this field to the child class, the JVM crash is not reproducible, weird !
+		private PropertyChangeSupport propertyChangeSupport;
 
-        protected AbstractObjectToPersist() {
-            super();
-            // if we use PropertyChangeSupport directly, the JVM crash is not reproducible, weird !
-            propertyChangeSupport = new ExtendedPropertyChangeSupport(this);
-        }
+		protected AbstractObjectToPersist()
+		{
+			super();
+			// if we use PropertyChangeSupport directly, the JVM crash is not reproducible, weird !
+			propertyChangeSupport = new ExtendedPropertyChangeSupport(this);
+		}
 
-    }
+	}
 
-    static class ExtendedPropertyChangeSupport extends PropertyChangeSupport {
+	static class ExtendedPropertyChangeSupport extends PropertyChangeSupport
+	{
 
-        ExtendedPropertyChangeSupport(Object sourceBean) {
-            super(sourceBean);
-        }
+		ExtendedPropertyChangeSupport(Object sourceBean)
+		{
+			super(sourceBean);
+		}
 
-    }
+	}
 
-    class ObjectToPersist extends AbstractObjectToPersist {
+	class ObjectToPersist extends AbstractObjectToPersist
+	{
 
-        // 1. this field is INTENTIONALLY not serializable to be able to trigger JVM crash
-        // 2. normally wicket handle this correctly by throwing the NotSerializableException, but in this example the JVM crash
-        private Future<Object> future;
+		// 1. this field is INTENTIONALLY not serializable to be able to trigger JVM crash
+		// 2. normally wicket handle this correctly by throwing the NotSerializableException, but in this example the JVM crash
+		private Future<Object> future;
 
-        ObjectToPersist() {
-            super();
+		ObjectToPersist()
+		{
+			super();
 
-            future = new FutureTask<Object>(new Callable() {
-                public Object call() throws Exception {
-                    return new Object();
-                }
-            });
-        }
-    }
+			future = new FutureTask<Object>(new Callable()
+			{
+				public Object call() throws Exception
+				{
+					return new Object();
+				}
+			});
+		}
+	}
 
 }

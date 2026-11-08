@@ -25,7 +25,9 @@ import org.apache.wicket.util.listener.ListenerCollection;
  * @author igor
  */
 public class BehaviorInstantiationListenerCollection extends
-	ListenerCollection<IBehaviorInstantiationListener> implements IBehaviorInstantiationListener
+	ListenerCollection<IBehaviorInstantiationListener>
+	implements
+		IBehaviorInstantiationListener
 {
 	@Override
 	public void onInstantiation(final Behavior behavior)

@@ -29,7 +29,7 @@ class AjaxFormValidatingBehaviorTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5999
 	 */
 	@Test
-    void ajaxUpdateOrdinaryFeedbackComponents() throws Exception
+	void ajaxUpdateOrdinaryFeedbackComponents() throws Exception
 	{
 		tester.startPage(AjaxFormValidatingBehaviorTestPage.class);
 		tester.assertRenderedPage(AjaxFormValidatingBehaviorTestPage.class);
@@ -42,7 +42,7 @@ class AjaxFormValidatingBehaviorTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5999
 	 */
 	@Test
-    void ajaxUpdateInitiallyInvisibleFeedbackComponents() throws Exception
+	void ajaxUpdateInitiallyInvisibleFeedbackComponents() throws Exception
 	{
 		tester.startPage(AjaxFormValidatingBehaviorTestPage.class);
 		tester.assertRenderedPage(AjaxFormValidatingBehaviorTestPage.class);

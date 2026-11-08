@@ -38,7 +38,7 @@ class AjaxComponentVisibilityTest extends WicketTestCase
 	 * 
 	 */
 	@BeforeEach
-    void before()
+	void before()
 	{
 		tester.startPage(new AjaxHeaderContributionPage());
 		test1 = tester.getLastRenderedPage().get("test1");
@@ -50,7 +50,7 @@ class AjaxComponentVisibilityTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-    void componentsAddedToAjax()
+	void componentsAddedToAjax()
 	{
 		test2.setVisible(false);
 		test3.setVisible(false).setOutputMarkupPlaceholderTag(true);

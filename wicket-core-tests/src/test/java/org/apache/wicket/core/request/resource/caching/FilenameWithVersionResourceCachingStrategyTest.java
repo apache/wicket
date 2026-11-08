@@ -42,8 +42,8 @@ class FilenameWithVersionResourceCachingStrategyTest
 
 	private final String versionPrefix = "--vers--";
 	private final IResourceVersion resourceVersion = new MessageDigestResourceVersion();
-	private final FilenameWithVersionResourceCachingStrategy strategy =
-			new FilenameWithVersionResourceCachingStrategy(versionPrefix, resourceVersion);
+	private final FilenameWithVersionResourceCachingStrategy strategy = new FilenameWithVersionResourceCachingStrategy(
+		versionPrefix, resourceVersion);
 
 	@Test
 	void testDecorateUrl() throws Exception
@@ -51,25 +51,28 @@ class FilenameWithVersionResourceCachingStrategyTest
 		ResourceUrl resourceUrl = new ResourceUrl("some-resource.txt", new PageParameters());
 		strategy.decorateUrl(resourceUrl, new TestResource());
 
-		assertEquals("some-resource--vers--"+TEST_RESOURCE_VERSION+".txt", resourceUrl.getFileName());
+		assertEquals("some-resource--vers--" + TEST_RESOURCE_VERSION + ".txt", resourceUrl.getFileName());
 
 		// don't issue an error
 		resourceUrl = new ResourceUrl("some-resource--vers--with-prefix.txt", new PageParameters());
 		strategy.decorateUrl(resourceUrl, new TestResource());
 
-		assertEquals("some-resource--vers--with-prefix--vers--"+TEST_RESOURCE_VERSION+".txt", resourceUrl.getFileName());
+		assertEquals("some-resource--vers--with-prefix--vers--" + TEST_RESOURCE_VERSION + ".txt", resourceUrl
+			.getFileName());
 	}
 
 	@Test
 	void testUndecorateUrl() throws Exception
 	{
-		ResourceUrl resourceUrl = new ResourceUrl("some-resource--vers--"+TEST_RESOURCE_VERSION+".txt", new PageParameters());
+		ResourceUrl resourceUrl = new ResourceUrl("some-resource--vers--" + TEST_RESOURCE_VERSION + ".txt",
+			new PageParameters());
 		strategy.undecorateUrl(resourceUrl);
 
 		assertEquals("some-resource.txt", resourceUrl.getFileName());
 
 		// test URL with versiton containing prefix in original
-		resourceUrl = new ResourceUrl("some-resource--vers--with-prefix--vers--"+TEST_RESOURCE_VERSION+".txt", new PageParameters());
+		resourceUrl = new ResourceUrl("some-resource--vers--with-prefix--vers--" + TEST_RESOURCE_VERSION + ".txt",
+			new PageParameters());
 		strategy.undecorateUrl(resourceUrl);
 
 		assertEquals("some-resource--vers--with-prefix.txt", resourceUrl.getFileName());
@@ -125,7 +128,8 @@ class FilenameWithVersionResourceCachingStrategyTest
 
 		try
 		{
-			ResourceUrl resourceUrl = new ResourceUrl("some-resource--vers--"+TEST_RESOURCE_VERSION+".txt", new PageParameters());
+			ResourceUrl resourceUrl = new ResourceUrl("some-resource--vers--" + TEST_RESOURCE_VERSION + ".txt",
+				new PageParameters());
 			strategy.undecorateUrl(resourceUrl);
 
 			String version = tester.getRequestCycle().getMetaData(IResourceCachingStrategy.URL_VERSION);

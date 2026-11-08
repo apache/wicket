@@ -47,7 +47,7 @@ class TextTemplateResourceReferenceTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-3971
 	 */
 	@Test
-    void renderInterpolatedTemplate()
+	void renderInterpolatedTemplate()
 	{
 		// the page will render just <script> element with url to the template
 		// this will register it in the application's ResourceReferenceRegistry
@@ -63,7 +63,7 @@ class TextTemplateResourceReferenceTest extends WicketTestCase
 		// update the model and re-render (WICKET-4487)
 		page.variables.put(VARIABLE_NAME, SECOND_EXPECTED_VALUE);
 		tester.executeUrl(urlForTemplate.toString());
-		tester.assertContains("TMPL_START\\|"+SECOND_EXPECTED_VALUE+"\\|TMPL_END");
+		tester.assertContains("TMPL_START\\|" + SECOND_EXPECTED_VALUE + "\\|TMPL_END");
 
 	}
 

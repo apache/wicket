@@ -92,7 +92,7 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 	public DiskPageStore(String applicationName, File fileStoreFolder, Bytes maxSizePerSession)
 	{
 		super(applicationName);
-		
+
 		this.folders = new NestedFolders(new File(fileStoreFolder, applicationName + "-filestore"));
 		this.maxSizePerSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
 
@@ -126,7 +126,7 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 	{
 		return true;
 	}
-	
+
 	@Override
 	public void destroy()
 	{
@@ -150,11 +150,11 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 				{
 					log.debug("Returning page with id '{}' in session with id '{}'", id, sessionIdentifier);
 				}
-				
+
 				return new SerializedPage(id, "unknown", data);
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -168,7 +168,7 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 			{
 				log.debug("Removing page with id '{}' in session with id '{}'", page.getPageId(), sessionIdentifier);
 			}
-			
+
 			diskData.removeData(page.getPageId());
 		}
 	}
@@ -194,11 +194,12 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 		{
 			throw new WicketRuntimeException("DiskPageStore works with serialized pages only");
 		}
-		SerializedPage serializedPage = (SerializedPage) page;
+		SerializedPage serializedPage = (SerializedPage)page;
 
 		DiskData diskData = getDiskData(sessionIdentifier, true);
 
-		log.debug("Storing data for page with id '{}' in session with id '{}'", serializedPage.getPageId(), sessionIdentifier);
+		log.debug("Storing data for page with id '{}' in session with id '{}'", serializedPage.getPageId(),
+			sessionIdentifier);
 
 		byte[] data = serializedPage.getData();
 		String type = serializedPage.getPageType();
@@ -265,7 +266,7 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 			try (OutputStream stream = new FileOutputStream(index))
 			{
 				ObjectOutputStream oos = new ObjectOutputStream(stream);
-				
+
 				ArrayList<DiskData> list = new ArrayList<>(diskDatas.size());
 				for (DiskData diskData : diskDatas.values())
 				{

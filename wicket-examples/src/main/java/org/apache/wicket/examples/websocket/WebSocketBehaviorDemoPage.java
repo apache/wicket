@@ -41,7 +41,8 @@ public class WebSocketBehaviorDemoPage extends WicketExamplePage
 	private final WebMarkupContainer downloadingContainer = new WebMarkupContainer("downloading");
 
 	@Override
-	protected void onInitialize() {
+	protected void onInitialize()
+	{
 		super.onInitialize();
 
 		ResourceStreamResource resource = new ResourceStreamResource()

@@ -36,20 +36,19 @@ import org.springframework.core.ResolvableType;
 public class FieldBeansCollector
 {
 	private final FieldType fieldType;
-	
+
 	private final Map<Object, Object> beansToInjectMap;
-	
+
 	private final Collection<Object> beansToInjectColl;
-	
-	public enum FieldType
-	{
+
+	public enum FieldType {
 		LIST, SET, MAP, NONE
 	}
 
 	public FieldBeansCollector(final ResolvableType fieldResolvableType)
 	{
 		Class<?> clazz = fieldResolvableType.resolve();
-		
+
 		// The required code starts here which replaces
 		if (clazz == Map.class)
 		{
@@ -78,7 +77,7 @@ public class FieldBeansCollector
 			beansToInjectMap = null;
 		}
 	}
-	
+
 	/**
 	 * Returns an instance containing all the beans collected for the field and
 	 * compatible with the type of the field.
@@ -91,15 +90,15 @@ public class FieldBeansCollector
 		{
 			return beansToInjectMap;
 		}
-		
+
 		if (beansToInjectColl != null && beansToInjectColl.size() > 0)
 		{
 			return beansToInjectColl;
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Adds compatible bean to the field. This means that the field type is Map, a List or a Set
 	 * and that the given bean is compatible with its elements type.
@@ -113,7 +112,7 @@ public class FieldBeansCollector
 	{
 		switch (fieldType)
 		{
-			case LIST : 
+			case LIST :
 			case SET :
 				beansToInjectColl.add(bean);
 				break;
@@ -124,7 +123,7 @@ public class FieldBeansCollector
 				break;
 		}
 	}
-	
+
 	public FieldType getFieldType()
 	{
 		return fieldType;

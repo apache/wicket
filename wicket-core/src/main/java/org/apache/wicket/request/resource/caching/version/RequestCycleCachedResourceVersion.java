@@ -37,11 +37,10 @@ import org.apache.wicket.util.lang.Generics;
  */
 public class RequestCycleCachedResourceVersion implements IResourceVersion
 {
-	private static final MetaDataKey<Map<Serializable, String>> CACHE_KEY =
-		new MetaDataKey<>()
-		{
-			private static final long serialVersionUID = 1L;
-		};
+	private static final MetaDataKey<Map<Serializable, String>> CACHE_KEY = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	/**
 	 * resource version provider which will actually do 
@@ -93,7 +92,7 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 				return cache.get(key);
 			}
 		}
-		
+
 		// no cache entry found, query version from delegate
 		final String version = delegate.getVersion(resource);
 
@@ -102,7 +101,7 @@ public class RequestCycleCachedResourceVersion implements IResourceVersion
 		{
 			cache.put(key, version);
 		}
-		
+
 		return version;
 	}
 

@@ -25,34 +25,35 @@ import org.junit.jupiter.api.Test;
 class MetaDataHeaderItemTest
 {
 	@Test
-    void testMetaTag() throws Exception
+	void testMetaTag() throws Exception
 	{
 		String expectedString = "<meta name=\"robots\" content=\"index,nofollow\" />\n";
 		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forMetaTag("robots", "index,nofollow");
-		
+
 		assertEquals(expectedString, metaTag.generateString());
 	}
-	
+
 	@Test
-    void testLinkTag() throws Exception
+	void testLinkTag() throws Exception
 	{
 		String expectedString = "<link rel=\"shortcut icon\" href=\"http://www.mysite.com/favicon.ico\" type=\"image/x-icon\" />\n";
-		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forLinkTag("shortcut icon", "http://www.mysite.com/favicon.ico");
+		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forLinkTag("shortcut icon",
+			"http://www.mysite.com/favicon.ico");
 		metaTag.addTagAttribute("type", Model.of("image/x-icon"));
-		
+
 		assertEquals(expectedString, metaTag.generateString());
 	}
-	
+
 	/**
 	 * Attribute values are escaped as markup. A backslash before a double quote means nothing in
 	 * HTML, so escaping that way left the value able to close its own attribute.
 	 */
 	@Test
-    void testEscapesAttributeValuesAsMarkup() throws Exception
+	void testEscapesAttributeValuesAsMarkup() throws Exception
 	{
 		String expectedString = "<link rel=\"single quote &#039; double quotes&quot;\" href=\"\" />\n";
 		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forLinkTag("single quote \' double quotes\"", "");
-		
+
 		assertEquals(expectedString, metaTag.generateString());
 	}
 
@@ -60,7 +61,7 @@ class MetaDataHeaderItemTest
 	 * A value cannot end its attribute and add another one.
 	 */
 	@Test
-    void testAttributeValueCannotInjectAnotherAttribute() throws Exception
+	void testAttributeValueCannotInjectAnotherAttribute() throws Exception
 	{
 		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forMetaTag("description",
 			"x\" onload=\"x=1");
@@ -73,7 +74,7 @@ class MetaDataHeaderItemTest
 	 * The same for a value taken from a model.
 	 */
 	@Test
-    void testAttributeValueFromModelIsEscaped() throws Exception
+	void testAttributeValueFromModelIsEscaped() throws Exception
 	{
 		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forLinkTag("stylesheet", "");
 		metaTag.addTagAttribute("title", Model.of("<script>x=1</script>"));

@@ -69,7 +69,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		if (Strings.isEmpty(expression))
 		{
 			// Return a meaningful value for an empty property expression
-			return (T) getInnermostModelOrObject();
+			return (T)getInnermostModelOrObject();
 		}
 		else if (expression.startsWith("."))
 		{
@@ -124,7 +124,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		else
 		{
 			PropertyResolverConverter prc = new PropertyResolverConverter(
-					Application.get().getConverterLocator(), Session.get().getLocale());
+				Application.get().getConverterLocator(), Session.get().getLocale());
 			PropertyResolver.setValue(expression, getInnermostModelOrObject(), object, prc);
 		}
 	}
@@ -160,7 +160,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		{
 			try
 			{
-				Class<?> targetClass = ((IObjectClassAwareModel<?>) getTarget()).getObjectClass();
+				Class<?> targetClass = ((IObjectClassAwareModel<?>)getTarget()).getObjectClass();
 				if (targetClass != null)
 				{
 					return PropertyResolver.getPropertyClass(expression, targetClass);

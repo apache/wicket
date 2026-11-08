@@ -23,11 +23,13 @@ public class BooleanBean
 {
 	private Boolean instantPayment;
 
-	public boolean isInstantPayment() {
+	public boolean isInstantPayment()
+	{
 		return instantPayment != null && instantPayment;
 	}
 
-	public void setInstantPayment(final Boolean instantPayment) {
+	public void setInstantPayment(final Boolean instantPayment)
+	{
 		this.instantPayment = instantPayment;
 	}
 }

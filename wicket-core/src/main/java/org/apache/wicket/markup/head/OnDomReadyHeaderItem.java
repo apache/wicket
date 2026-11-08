@@ -91,7 +91,7 @@ public class OnDomReadyHeaderItem extends AbstractCspHeaderItem
 			attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
 			attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
 			JavaScriptUtils.writeInlineScript(response, "Wicket.Event.add(window, \"domready\", " +
-					"function(event) { " + js + ";});", attributes);
+				"function(event) { " + js + ";});", attributes);
 		}
 	}
 
@@ -118,7 +118,7 @@ public class OnDomReadyHeaderItem extends AbstractCspHeaderItem
 	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		OnDomReadyHeaderItem that = (OnDomReadyHeaderItem) o;
+		OnDomReadyHeaderItem that = (OnDomReadyHeaderItem)o;
 		return Objects.equals(javaScript, that.javaScript);
 	}
 

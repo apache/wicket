@@ -65,7 +65,8 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 			try
 			{
 				connection.sendMessage(message.toString());
-			} catch (IOException iox)
+			}
+			catch (IOException iox)
 			{
 				LOG.error("An error occurred while pushing text message.", iox);
 			}
@@ -106,7 +107,8 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 			try
 			{
 				connection.sendMessage(message, offset, length);
-			} catch (IOException iox)
+			}
+			catch (IOException iox)
 			{
 				LOG.error("An error occurred while pushing binary message.", iox);
 			}
@@ -150,8 +152,10 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 		return true;
 	}
 
-	protected PartialPageUpdate getUpdate() {
-		if (update == null) {
+	protected PartialPageUpdate getUpdate()
+	{
+		if (update == null)
+		{
 			update = new XmlPartialPageUpdate(getPage());
 		}
 		return update;
@@ -161,9 +165,12 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 	@Override
 	public Collection<? extends Component> getComponents()
 	{
-		if (update == null) {
+		if (update == null)
+		{
 			return Collections.emptyList();
-		} else {
+		}
+		else
+		{
 			return update.getComponents();
 		}
 	}
@@ -178,16 +185,17 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
-        if (update != null && (shouldPushWhenEmpty() || !update.isEmpty())) {
-            // see WICKET-7098
-            // A malformed XML is generated if a runtime exception happen during rendering phase of a web
-            // socket push request. Writing to a buffer allows to generate a proper XML
-            // as request's buffer will not be polluted by partial write operations
-            StringResponse bodyResponse = new StringResponse();
-            // additionally, we use the charset for the request instead of a hardcoded UTF-8
-            update.writeTo(bodyResponse, requestCycle.getRequest().getCharset().name());
-            requestCycle.getResponse().write(bodyResponse.getBuffer());
-        }
+		if (update != null && (shouldPushWhenEmpty() || !update.isEmpty()))
+		{
+			// see WICKET-7098
+			// A malformed XML is generated if a runtime exception happen during rendering phase of a web
+			// socket push request. Writing to a buffer allows to generate a proper XML
+			// as request's buffer will not be polluted by partial write operations
+			StringResponse bodyResponse = new StringResponse();
+			// additionally, we use the charset for the request instead of a hardcoded UTF-8
+			update.writeTo(bodyResponse, requestCycle.getRequest().getCharset().name());
+			requestCycle.getResponse().write(bodyResponse.getBuffer());
+		}
 	}
 
 	@Override
@@ -198,7 +206,8 @@ public class WebSocketRequestHandler extends AbstractPartialPageRequestHandler i
 			logData = new PageLogData(getPage());
 		}
 
-		if (update != null) {
+		if (update != null)
+		{
 			update.detach(requestCycle);
 			update = null;
 		}

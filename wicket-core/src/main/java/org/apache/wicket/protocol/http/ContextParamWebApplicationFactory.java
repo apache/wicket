@@ -45,7 +45,8 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 			throw new WicketRuntimeException(
 				"servlet init param [" +
 					APP_CLASS_PARAM +
-					"] is missing. If you are trying to use your own implementation of IWebApplicationFactory and get this message then the servlet init param [" +
+					"] is missing. If you are trying to use your own implementation of IWebApplicationFactory and get this message then the servlet init param ["
+					+
 					WicketFilter.APP_FACT_PARAM + "] is missing");
 		}
 
@@ -83,8 +84,7 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 					" must be a subclass of WebApplication");
 			}
 		}
-		catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SecurityException
-				| NoSuchMethodException | InvocationTargetException e)
+		catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException e)
 		{
 			throw new WicketRuntimeException("Unable to create application of class " +
 				applicationClassName, e);

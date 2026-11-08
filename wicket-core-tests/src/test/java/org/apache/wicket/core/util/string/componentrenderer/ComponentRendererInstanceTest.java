@@ -32,20 +32,22 @@ class ComponentRendererInstanceTest
 	private ComponentRenderer renderer;
 
 	@BeforeEach
-    void setup() {
+	void setup()
+	{
 		renderer = new ComponentRenderer();
 	}
-	
+
 	@AfterEach
-    void destroy() {
+	void destroy()
+	{
 		renderer.destroy();
 	}
-	
+
 	@Test
-    void render()
+	void render()
 	{
 		CharSequence html = renderer.renderComponent(() -> new Label("id", "Hello renderer"));
-		
+
 		assertEquals("Hello renderer", html.toString());
 	}
 }

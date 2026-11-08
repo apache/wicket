@@ -79,8 +79,8 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 	 * @param resourceVersion
 	 *                resource version provider
 	 */
-	public QueryStringWithVersionResourceCachingStrategy(String versionParameter, 
-	                                                     IResourceVersion resourceVersion)
+	public QueryStringWithVersionResourceCachingStrategy(String versionParameter,
+		IResourceVersion resourceVersion)
 	{
 		this.versionParameter = Args.notEmpty(versionParameter, "versionParameter");
 		this.resourceVersion = Args.notNull(resourceVersion, "resourceVersion");
@@ -109,7 +109,7 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 	public void undecorateUrl(ResourceUrl url)
 	{
 		final INamedParameters parameters = url.getParameters();
-		
+
 		if (parameters != null)
 		{
 			// store the version in the request cycle
@@ -142,7 +142,7 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 	{
 		if (resourceVersion instanceof CachingResourceVersion)
 		{
-			((CachingResourceVersion) resourceVersion).invalidateAll();
+			((CachingResourceVersion)resourceVersion).invalidateAll();
 		}
 	}
 }

@@ -55,7 +55,7 @@ import org.openjdk.jmh.annotations.Warmup;
 @State(Scope.Thread)
 public class PageEncryptionBenchmark
 {
-	@Param({"5000", "40000"})
+	@Param({ "5000", "40000" })
 	public int payloadSize;
 
 	private SchemeCrypt crypt;

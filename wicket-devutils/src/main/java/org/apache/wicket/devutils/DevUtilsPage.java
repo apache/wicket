@@ -64,7 +64,8 @@ public class DevUtilsPage extends WebPage
 	}
 
 	@Override
-	protected void onInitialize() {
+	protected void onInitialize()
+	{
 		super.onInitialize();
 
 		add(new DebugBar("debug"));
@@ -76,7 +77,7 @@ public class DevUtilsPage extends WebPage
 		super.onBeforeRender();
 		DevelopmentUtilitiesNotEnabledException.check();
 	}
-	
+
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{

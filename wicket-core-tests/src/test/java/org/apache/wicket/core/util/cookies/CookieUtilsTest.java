@@ -167,7 +167,8 @@ class CookieUtilsTest extends WicketTestCase
 	void setAttribute_nullName()
 	{
 		Cookie cookie = new Cookie("key", "value");
-		IllegalArgumentException x = assertThrows(IllegalArgumentException.class, () -> CookieUtils.setAttribute(cookie, null, "Some attr value"));
+		IllegalArgumentException x = assertThrows(IllegalArgumentException.class, () -> CookieUtils.setAttribute(cookie,
+			null, "Some attr value"));
 		assertEquals("Argument 'attributeName' may not be null or empty.", x.getMessage());
 	}
 
@@ -175,7 +176,8 @@ class CookieUtilsTest extends WicketTestCase
 	void setAttribute_emptyName()
 	{
 		Cookie cookie = new Cookie("key", "value");
-		IllegalArgumentException x = assertThrows(IllegalArgumentException.class, () -> CookieUtils.setAttribute(cookie, "", "Some attr value"));
+		IllegalArgumentException x = assertThrows(IllegalArgumentException.class, () -> CookieUtils.setAttribute(cookie,
+			"", "Some attr value"));
 		assertEquals("Argument 'attributeName' may not be null or empty.", x.getMessage());
 	}
 
@@ -192,11 +194,14 @@ class CookieUtilsTest extends WicketTestCase
 	void setAttribute_oldServletVersion()
 	{
 		Application oldApplication = ThreadContext.getApplication();
-		try {
+		try
+		{
 			WebApplication application = new MockApplication();
-			MockServletContext servletContext = new MockServletContext(application, "/path") {
+			MockServletContext servletContext = new MockServletContext(application, "/path")
+			{
 				@Override
-				public int getEffectiveMajorVersion() {
+				public int getEffectiveMajorVersion()
+				{
 					return 5;
 				}
 			};

@@ -41,7 +41,8 @@ public final class XmlReader extends Reader
 	private static final Pattern xmlDecl = Pattern.compile("[\\s\\n\\r]*<\\?xml(\\s+.*)?\\?>");
 
 	/** Regex to find <?xml encoding ... ?> */
-	private static final Pattern encodingPattern = Pattern.compile("\\s+encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S*)).*\\?>");
+	private static final Pattern encodingPattern = Pattern.compile(
+		"\\s+encoding\\s*=\\s*([\"\'](.*?)[\"\']|(\\S*)).*\\?>");
 
 	/** Null, if JVM default. Else from <?xml encoding=""> */
 	private String encoding;

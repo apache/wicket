@@ -35,7 +35,7 @@ class RestartResponseExceptionTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-2634
 	 */
 	@Test
-    void doubleRedirect()
+	void doubleRedirect()
 	{
 		tester.startPage(RestartPage1.class);
 		tester.assertRenderedPage(MyDummyPage.class);

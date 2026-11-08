@@ -116,7 +116,7 @@ public abstract class AjaxFallbackButton extends Button
 			{
 				return AjaxFallbackButton.this.getStatelessHint();
 			}
-			
+
 			@Override
 			protected boolean shouldTriggerJavaScriptSubmitEvent()
 			{
@@ -225,10 +225,11 @@ public abstract class AjaxFallbackButton extends Button
 		String tagName = tag.getName();
 		if (!("input".equalsIgnoreCase(tagName) || "button".equalsIgnoreCase(tagName)))
 		{
-			String msg = String.format("%s must be used only with <input type=\"submit\"> or <input type=\"submit\"> markup elements. " +
+			String msg = String.format(
+				"%s must be used only with <input type=\"submit\"> or <input type=\"submit\"> markup elements. " +
 					"The fallback functionality doesn't work for other markup elements. " +
 					"Component path: %s, markup element: <%s>.",
-					AjaxFallbackButton.class.getSimpleName(), getClassRelativePath(), tagName);
+				AjaxFallbackButton.class.getSimpleName(), getClassRelativePath(), tagName);
 			findMarkupStream().throwMarkupException(msg);
 		}
 

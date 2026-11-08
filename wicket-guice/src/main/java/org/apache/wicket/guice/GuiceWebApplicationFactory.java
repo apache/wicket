@@ -148,8 +148,7 @@ public class GuiceWebApplicationFactory implements IWebApplicationFactory
 					Object moduleObject = moduleClazz.getDeclaredConstructor().newInstance();
 					modules[i] = (Module)moduleObject;
 				}
-				catch (InstantiationException | ClassNotFoundException | IllegalAccessException
-						| NoSuchMethodException | InvocationTargetException e)
+				catch (InstantiationException | ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
 				{
 					throw new RuntimeException(
 						"Could not create new instance of Guice Module class " + moduleName, e);

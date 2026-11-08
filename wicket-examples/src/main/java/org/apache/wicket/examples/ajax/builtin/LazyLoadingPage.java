@@ -40,7 +40,7 @@ public class LazyLoadingPage extends BasePage
 		nonblocking = new WebMarkupContainer("nonblocking");
 		nonblocking.setOutputMarkupId(true);
 		add(nonblocking);
-		
+
 		nonblocking.add(new Link<Void>("start")
 		{
 			@Override
@@ -57,14 +57,14 @@ public class LazyLoadingPage extends BasePage
 				addNonBlockingPanels();
 			}
 		});
-		
+
 		nonBlockingRepeater = new RepeatingView("repeater");
 		nonblocking.add(nonBlockingRepeater);
-		
+
 		blocking = new WebMarkupContainer("blocking");
 		blocking.setOutputMarkupId(true);
 		add(blocking);
-		
+
 		blocking.add(new Link<Void>("start")
 		{
 			@Override
@@ -106,7 +106,7 @@ public class LazyLoadingPage extends BasePage
 					return Duration.ofMillis(System.currentTimeMillis() - startTime)
 						.toSeconds() > seconds;
 				}
-				
+
 				@Override
 				public Duration getUpdateInterval()
 				{
@@ -119,7 +119,7 @@ public class LazyLoadingPage extends BasePage
 					return new Label(id, "Lazy Loaded after " + seconds + " seconds");
 				}
 			});
-		
+
 		getRequestCycle().find(AjaxRequestTarget.class).ifPresent(t -> t.add(nonblocking));
 	}
 
@@ -150,7 +150,7 @@ public class LazyLoadingPage extends BasePage
 						"Lazy loaded after blocking the Wicket thread for " + seconds + " seconds");
 				}
 			});
-		
+
 		getRequestCycle().find(AjaxRequestTarget.class).ifPresent(t -> t.add(blocking));
 	}
 }

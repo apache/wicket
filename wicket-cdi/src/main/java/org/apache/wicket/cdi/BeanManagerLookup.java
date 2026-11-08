@@ -43,8 +43,7 @@ public final class BeanManagerLookup
 {
 	private static final Logger log = LoggerFactory.getLogger(BeanManagerLookup.class);
 
-	private enum BeanManagerLookupStrategy
-	{
+	private enum BeanManagerLookupStrategy {
 		CUSTOM {
 			@Override
 			public BeanManager lookup()

@@ -139,7 +139,8 @@ public class CSVDataExporter extends AbstractDataExporter
 	@Override
 	public String getContentType()
 	{
-		return super.getContentType() + "; charset=" + characterSet + "; header=" + ((exportHeadersEnabled) ? "present" : "absent");
+		return super.getContentType() + "; charset=" + characterSet + "; header=" + ((exportHeadersEnabled) ? "present"
+			: "absent");
 	}
 
 	/**
@@ -176,21 +177,23 @@ public class CSVDataExporter extends AbstractDataExporter
 	 */
 	protected String quoteValue(String value)
 	{
-		return quoteCharacter + value.replace("" + quoteCharacter, "" + quoteCharacter + quoteCharacter) + quoteCharacter;
+		return quoteCharacter + value.replace("" + quoteCharacter, "" + quoteCharacter + quoteCharacter)
+			+ quoteCharacter;
 	}
 
 	@Override
-	public <T> void exportData(IDataProvider<T> dataProvider, List<IExportableColumn<T, ?>> columns, OutputStream outputStream)
+	public <T> void exportData(IDataProvider<T> dataProvider, List<IExportableColumn<T, ?>> columns,
+		OutputStream outputStream)
 		throws IOException
 	{
-		
+
 		try (Grid grid = new Grid(new OutputStreamWriter(outputStream, Charset.forName(characterSet))))
 		{
 			writeHeaders(columns, grid);
 			writeData(dataProvider, columns, grid);
 		}
 	}
-	
+
 	private <T> void writeHeaders(List<IExportableColumn<T, ?>> columns, Grid grid) throws IOException
 	{
 		if (isExportHeadersEnabled())
@@ -206,7 +209,8 @@ public class CSVDataExporter extends AbstractDataExporter
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private <T> void writeData(IDataProvider<T> dataProvider, List<IExportableColumn<T, ?>> columns, Grid grid) throws IOException
+	private <T> void writeData(IDataProvider<T> dataProvider, List<IExportableColumn<T, ?>> columns, Grid grid)
+		throws IOException
 	{
 		long numberOfRows = dataProvider.size();
 		Iterator<? extends T> rowIterator = dataProvider.iterator(0, numberOfRows);
@@ -217,7 +221,7 @@ public class CSVDataExporter extends AbstractDataExporter
 			for (IExportableColumn<T, ?> col : columns)
 			{
 				IModel<?> dataModel = col.getDataModel(dataProvider.model(row));
-				
+
 				Object value = wrapModel(dataModel).getObject();
 				if (value != null)
 				{
@@ -248,7 +252,8 @@ public class CSVDataExporter extends AbstractDataExporter
 	 *
 	 * @return locator
 	 */
-	protected IConverterLocator getConverterLocator() {
+	protected IConverterLocator getConverterLocator()
+	{
 		return Application.get().getConverterLocator();
 	}
 
@@ -262,19 +267,21 @@ public class CSVDataExporter extends AbstractDataExporter
 	{
 		return model;
 	}
-	
-	private class Grid implements Closeable{
+
+	private class Grid implements Closeable
+	{
 
 		private Writer writer;
 
 		boolean first = true;
-		
+
 		public Grid(Writer writer)
 		{
 			this.writer = writer;
 		}
 
-		public void cell(String value) throws IOException {
+		public void cell(String value) throws IOException
+		{
 			if (first)
 			{
 				first = false;
@@ -283,10 +290,10 @@ public class CSVDataExporter extends AbstractDataExporter
 			{
 				writer.write(delimiter);
 			}
-			
+
 			writer.write(value);
 		}
-		
+
 		public void row() throws IOException
 		{
 			writer.write("\r\n");

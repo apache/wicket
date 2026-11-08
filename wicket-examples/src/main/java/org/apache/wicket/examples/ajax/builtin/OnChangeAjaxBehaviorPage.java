@@ -42,7 +42,7 @@ public class OnChangeAjaxBehaviorPage extends BasePage
 			return "";
 		}
 
-	 StringBuilder buffer = new StringBuilder();
+		StringBuilder buffer = new StringBuilder();
 
 		Locale[] locales = Locale.getAvailableLocales();
 
@@ -92,7 +92,8 @@ public class OnChangeAjaxBehaviorPage extends BasePage
 	}
 
 	@Override
-	public void detachModels() {
+	public void detachModels()
+	{
 		super.detachModels();
 		inputModel.detach();
 	}

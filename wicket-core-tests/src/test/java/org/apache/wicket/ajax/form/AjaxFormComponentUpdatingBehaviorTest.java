@@ -27,68 +27,70 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AjaxFormComponentUpdatingBehaviorTest extends WicketTestCase
 {
-    @Test
-    void enablesRecursiveSerializationIfFormComponentPanelAndInnerComponentsMustBeUpdated()
-    {
-        FormComponentPanel<Object> formComponentPanel = new FormComponentPanel<>("some_id") {};
-        var behavior = new AjaxFormComponentUpdatingBehavior("some_event")
-        {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target)
-            {
-            }
-        };
-        formComponentPanel.add(behavior);
-        AjaxRequestAttributes attributes = new AjaxRequestAttributes();
+	@Test
+	void enablesRecursiveSerializationIfFormComponentPanelAndInnerComponentsMustBeUpdated()
+	{
+		FormComponentPanel<Object> formComponentPanel = new FormComponentPanel<>("some_id")
+		{};
+		var behavior = new AjaxFormComponentUpdatingBehavior("some_event")
+		{
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+			}
+		};
+		formComponentPanel.add(behavior);
+		AjaxRequestAttributes attributes = new AjaxRequestAttributes();
 
-        behavior.updateAjaxAttributes(attributes);
+		behavior.updateAjaxAttributes(attributes);
 
-        assertTrue(attributes.isSerializeRecursively());
-    }
+		assertTrue(attributes.isSerializeRecursively());
+	}
 
-    @Test
-    void doesNotModifyRecursiveSerializationIfNotFormComponentPanel()
-    {
-        TextField textField = new TextField<>("some_id");
-        var behavior = new AjaxFormComponentUpdatingBehavior("some_event")
-        {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target)
-            {
-            }
-        };
-        textField.add(behavior);
-        AjaxRequestAttributes attributes = new AjaxRequestAttributes();
-        attributes.setSerializeRecursively(true);
+	@Test
+	void doesNotModifyRecursiveSerializationIfNotFormComponentPanel()
+	{
+		TextField textField = new TextField<>("some_id");
+		var behavior = new AjaxFormComponentUpdatingBehavior("some_event")
+		{
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+			}
+		};
+		textField.add(behavior);
+		AjaxRequestAttributes attributes = new AjaxRequestAttributes();
+		attributes.setSerializeRecursively(true);
 
-        behavior.updateAjaxAttributes(attributes);
+		behavior.updateAjaxAttributes(attributes);
 
-        assertTrue(attributes.isSerializeRecursively());
-    }
+		assertTrue(attributes.isSerializeRecursively());
+	}
 
-    @Test
-    void doesNotModifyRecursiveSerializationIfInnerComponentsMustNotBeUpdated()
-    {
-        FormComponentPanel<Object> formComponentPanel = new FormComponentPanel<>("some_id") {};
-        var behavior = new AjaxFormComponentUpdatingBehavior("some_event")
-        {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target)
-            {
-            }
+	@Test
+	void doesNotModifyRecursiveSerializationIfInnerComponentsMustNotBeUpdated()
+	{
+		FormComponentPanel<Object> formComponentPanel = new FormComponentPanel<>("some_id")
+		{};
+		var behavior = new AjaxFormComponentUpdatingBehavior("some_event")
+		{
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+			}
 
-            @Override
-            protected boolean updateInnerComponents()
-            {
-                return false;
-            }
-        };
-        formComponentPanel.add(behavior);
-        AjaxRequestAttributes attributes = new AjaxRequestAttributes();
-        attributes.setSerializeRecursively(true);
+			@Override
+			protected boolean updateInnerComponents()
+			{
+				return false;
+			}
+		};
+		formComponentPanel.add(behavior);
+		AjaxRequestAttributes attributes = new AjaxRequestAttributes();
+		attributes.setSerializeRecursively(true);
 
-        behavior.updateAjaxAttributes(attributes);
+		behavior.updateAjaxAttributes(attributes);
 
-        assertTrue(attributes.isSerializeRecursively());
-    }
+		assertTrue(attributes.isSerializeRecursively());
+	}
 }

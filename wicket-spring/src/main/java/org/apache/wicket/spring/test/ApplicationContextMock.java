@@ -52,7 +52,8 @@ public class ApplicationContextMock extends AbstractApplicationContext implement
 	private final DefaultListableBeanFactory beanFactory;
 	private final long startupTime;
 
-	public ApplicationContextMock() {
+	public ApplicationContextMock()
+	{
 		this.beanFactory = new DefaultListableBeanFactory();
 		beanFactory.setSerializationId(ApplicationContextMock.class.getName());
 		startupTime = System.currentTimeMillis();
@@ -66,7 +67,7 @@ public class ApplicationContextMock extends AbstractApplicationContext implement
 	 */
 	public <T> void putBean(final String name, final T bean)
 	{
-		beanFactory.registerBeanDefinition(name, new RootBeanDefinition((Class<T>) bean.getClass(), () -> bean));
+		beanFactory.registerBeanDefinition(name, new RootBeanDefinition((Class<T>)bean.getClass(), () -> bean));
 	}
 
 	/**
@@ -191,12 +192,14 @@ public class ApplicationContextMock extends AbstractApplicationContext implement
 	}
 
 	@Override
-	public <T> ObjectProvider<T> getBeanProvider(final Class<T> aClass, final boolean b) {
+	public <T> ObjectProvider<T> getBeanProvider(final Class<T> aClass, final boolean b)
+	{
 		return beanFactory.getBeanProvider(aClass, b);
 	}
 
 	@Override
-	public <T> ObjectProvider<T> getBeanProvider(final ResolvableType resolvableType, final boolean b) {
+	public <T> ObjectProvider<T> getBeanProvider(final ResolvableType resolvableType, final boolean b)
+	{
 		return beanFactory.getBeanProvider(resolvableType, b);
 	}
 
@@ -207,7 +210,8 @@ public class ApplicationContextMock extends AbstractApplicationContext implement
 	}
 
 	@Override
-	public String[] getBeanNamesForType(ResolvableType resolvableType, boolean includeNonSingletons, boolean allowEagerInit)
+	public String[] getBeanNamesForType(ResolvableType resolvableType, boolean includeNonSingletons,
+		boolean allowEagerInit)
 	{
 		return beanFactory.getBeanNamesForType(resolvableType, includeNonSingletons, allowEagerInit);
 	}
@@ -302,15 +306,18 @@ public class ApplicationContextMock extends AbstractApplicationContext implement
 	}
 
 	@Override
-	protected void refreshBeanFactory() throws BeansException, IllegalStateException {
+	protected void refreshBeanFactory() throws BeansException, IllegalStateException
+	{
 	}
 
 	@Override
-	protected void closeBeanFactory() {
+	protected void closeBeanFactory()
+	{
 	}
 
 	@Override
-	public ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException {
+	public ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException
+	{
 		return beanFactory;
 	}
 

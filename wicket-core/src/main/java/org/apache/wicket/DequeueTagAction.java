@@ -16,8 +16,7 @@
  */
 package org.apache.wicket;
 
-public enum DequeueTagAction
-{
+public enum DequeueTagAction {
 	/** dequeue the tag */
 	DEQUEUE,
 	/** skip this tag and all its children */

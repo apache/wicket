@@ -21,16 +21,16 @@ import com.google.inject.Inject;
 // No default ctor or interface
 public class EvilTestService
 {
-    private final String id;
+	private final String id;
 
-    @Inject
-    public EvilTestService(String id, Integer value)
-    {
-        this.id = id;
-    }
+	@Inject
+	public EvilTestService(String id, Integer value)
+	{
+		this.id = id;
+	}
 
-    public String getId()
-    {
-        return id;
-    }
+	public String getId()
+	{
+		return id;
+	}
 }

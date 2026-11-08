@@ -49,7 +49,7 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 	 * 
 	 * @see org.apache.wicket.model.IModel#getObject()
 	 */
-        @Override
+	@Override
 	public final Boolean getObject()
 	{
 		return isSelected();
@@ -58,7 +58,7 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 	/**
 	 * @see org.apache.wicket.model.IModel#setObject(Object)
 	 */
-        @Override
+	@Override
 	public final void setObject(final Boolean object)
 	{
 		if (Boolean.TRUE.equals(object))

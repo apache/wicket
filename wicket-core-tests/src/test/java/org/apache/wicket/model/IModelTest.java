@@ -246,8 +246,8 @@ class IModelTest
 	@Test
 	void asModelWrongClass()
 	{
-		IModel<TextMatchingStatus> statusModel = LoadableDetachableModel.of(() ->
-				new TextMatchingStatus.Error(3, "File too big"));
+		IModel<TextMatchingStatus> statusModel = LoadableDetachableModel.of(() -> new TextMatchingStatus.Error(3,
+			"File too big"));
 		IModel<TextMatchingStatus.Queued> poly = statusModel.as(TextMatchingStatus.Queued.class);
 
 		assertNull(poly.getObject());
@@ -256,8 +256,7 @@ class IModelTest
 	@Test
 	void asModelCorrectClass()
 	{
-		IModel<TextMatchingStatus> statusModel = LoadableDetachableModel.of(() ->
-				new TextMatchingStatus.Analysed(14));
+		IModel<TextMatchingStatus> statusModel = LoadableDetachableModel.of(() -> new TextMatchingStatus.Analysed(14));
 		IModel<TextMatchingStatus.Analysed> poly = statusModel.as(TextMatchingStatus.Analysed.class);
 
 		assertNotNull(poly.getObject());

@@ -29,7 +29,7 @@ class OutputTransformerContainerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage() throws Exception
+	void renderHomePage() throws Exception
 	{
 		executeTest(Page_1.class, "PageExpectedResult_1.html");
 	}
@@ -38,7 +38,7 @@ class OutputTransformerContainerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage_2() throws Exception
+	void renderHomePage_2() throws Exception
 	{
 		executeTest(Page_2.class, "PageExpectedResult_2.html");
 	}
@@ -47,7 +47,7 @@ class OutputTransformerContainerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage_3() throws Exception
+	void renderHomePage_3() throws Exception
 	{
 		executeTest(Page_3.class, "PageExpectedResult_3.html");
 	}

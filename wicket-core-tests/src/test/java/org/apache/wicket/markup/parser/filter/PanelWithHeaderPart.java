@@ -46,9 +46,9 @@ public class PanelWithHeaderPart extends Panel
 	public void renderHead(IHeaderResponse response)
 	{
 		response.render(CssHeaderItem.forReference(new PackageResourceReference(
-				PanelWithHeaderPart.class, "test.css")));
+			PanelWithHeaderPart.class, "test.css")));
 		response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
-				PanelWithHeaderPart.class, "test.js")));
+			PanelWithHeaderPart.class, "test.js")));
 	}
 
 }

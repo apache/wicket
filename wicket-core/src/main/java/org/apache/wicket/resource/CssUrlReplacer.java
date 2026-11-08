@@ -85,7 +85,8 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 		// filter out the excluded css files
 		for (String excludeName : excludes)
 		{
-			if(name.endsWith(excludeName)){
+			if (name.endsWith(excludeName))
+			{
 				return input;
 			}
 		}

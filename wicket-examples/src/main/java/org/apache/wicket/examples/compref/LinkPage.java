@@ -40,8 +40,10 @@ public class LinkPage extends ComprefPage
 
 		// add a link which, when clicked, increases our counter when a link is clicked, its onClick
 		// method is called
-		Link<Void> link1 = new Link<Void>("link1") {
-			public void onClick() {
+		Link<Void> link1 = new Link<Void>("link1")
+		{
+			public void onClick()
+			{
 				count1.increment();
 			}
 		};
@@ -55,7 +57,8 @@ public class LinkPage extends ComprefPage
 		// because of this, and pressing the back button and clicking the link again would revert to
 		// the older value. The same thing could have been achieved by using setModelObject,
 		// which implicitly registers a state change (of type ComponentModelChange).
-		Link<Void> linkWithStateChange = new Link<Void>("linkWithStateChange") {
+		Link<Void> linkWithStateChange = new Link<Void>("linkWithStateChange")
+		{
 			@Override
 			public void onClick()
 			{
@@ -111,7 +114,8 @@ public class LinkPage extends ComprefPage
 			{
 				super(id);
 				count3 = new Count();
-				add(Behavior.onAttribute("value", oldValue -> "this button is clicked " + count3.getCount() + " times"));
+				add(Behavior.onAttribute("value", oldValue -> "this button is clicked " + count3.getCount()
+					+ " times"));
 			}
 
 			@Override

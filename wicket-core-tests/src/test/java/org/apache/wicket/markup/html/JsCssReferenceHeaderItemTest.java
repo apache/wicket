@@ -43,12 +43,12 @@ import org.slf4j.LoggerFactory;
 class JsCssReferenceHeaderItemTest extends WicketTestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(JsCssReferenceHeaderItemTest.class);
-	
+
 	private static final String JS_RESOURCE_HASH = "sha384-jsResourceHash2856816aw771";
 	private static final String JS_REFERENCE_HASH = "sha384-jssReferenceHash28546qt8725171";
 	private static final String CSS_RESOURCE_HASH = "sha384-cssResourceHash2512ab6wts23";
 	private static final String CSS_REFERENCE_HASH = "sha384-cssReferenceHash2awet512asd623";
-	
+
 	/**
 	 * Basic ResourceReference integrity hash check
 	 */
@@ -63,10 +63,11 @@ class JsCssReferenceHeaderItemTest extends WicketTestCase
 		CharSequence crossOrigin = null;
 		do
 		{
-			if (tag != null && tag.isOpen() && "script".equals(tag.getName()) && "jsref".contentEquals(tag.getAttribute("id")))
+			if (tag != null && tag.isOpen() && "script".equals(tag.getName()) && "jsref".contentEquals(tag.getAttribute(
+				"id")))
 			{
 				log.info(" SCRIPT TAG: " + tag.toDebugString() + "\nExpect js resource hash: " + JS_RESOURCE_HASH
-						+ "\nExpect crossOrigin: " + CrossOrigin.USE_CREDENTIALS.getRealName());
+					+ "\nExpect crossOrigin: " + CrossOrigin.USE_CREDENTIALS.getRealName());
 				integrity = tag.getAttribute("integrity");
 				crossOrigin = tag.getAttribute("crossOrigin");
 				break;
@@ -76,7 +77,7 @@ class JsCssReferenceHeaderItemTest extends WicketTestCase
 		assertEquals(JS_RESOURCE_HASH, integrity);
 		assertEquals(CrossOrigin.USE_CREDENTIALS.getRealName(), crossOrigin);
 	}
-	
+
 
 	/**
 	 * Basic JavaScriptReferenceHeaderItem integrity check - should override any integrity at resource level
@@ -92,10 +93,11 @@ class JsCssReferenceHeaderItemTest extends WicketTestCase
 		CharSequence crossOrigin = null;
 		do
 		{
-			if (tag != null && tag.isOpen() && "script".equals(tag.getName()) && "jsref2".contentEquals(tag.getAttribute("id")))
+			if (tag != null && tag.isOpen() && "script".equals(tag.getName()) && "jsref2".contentEquals(tag
+				.getAttribute("id")))
 			{
 				log.info(" SCRIPT TAG: " + tag.toDebugString() + "\nExpect js reference hash: " + JS_REFERENCE_HASH
-						+ "\nExpect crossOrigin: " + CrossOrigin.ANONYMOUS.getRealName());
+					+ "\nExpect crossOrigin: " + CrossOrigin.ANONYMOUS.getRealName());
 				integrity = tag.getAttribute("integrity");
 				crossOrigin = tag.getAttribute("crossOrigin");
 				break;
@@ -105,7 +107,7 @@ class JsCssReferenceHeaderItemTest extends WicketTestCase
 		assertEquals(JS_REFERENCE_HASH, integrity);
 		assertEquals(CrossOrigin.ANONYMOUS.getRealName(), crossOrigin);
 	}
-		
+
 	@Test
 	void cssReferenceIntegrityTest_basic() throws Exception
 	{
@@ -131,7 +133,7 @@ class JsCssReferenceHeaderItemTest extends WicketTestCase
 		assertEquals(CrossOrigin.ANONYMOUS.getRealName(), crossOrigin);
 	}
 
-	
+
 	@Test
 	void cssReferenceIntegrityTest_override() throws Exception
 	{
@@ -155,7 +157,7 @@ class JsCssReferenceHeaderItemTest extends WicketTestCase
 		while ((tag = parser.nextTag()) != null);
 		assertEquals(CSS_REFERENCE_HASH, integrity);
 		assertEquals(CrossOrigin.USE_CREDENTIALS.getRealName(), crossOrigin);
-	}	
+	}
 
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
@@ -173,7 +175,7 @@ class JsCssReferenceHeaderItemTest extends WicketTestCase
 			jsRef.setCrossOrigin(CrossOrigin.USE_CREDENTIALS);
 			JavaScriptReferenceHeaderItem jsHeaderItem = JavaScriptHeaderItem.forReference(jsRef, "jsref");
 			response.render(jsHeaderItem);
-			
+
 			// JS Reference - Override
 			jsRef = new PackageResourceReference("jsres2");
 			jsRef.setIntegrity(JS_RESOURCE_HASH);

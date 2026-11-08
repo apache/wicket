@@ -69,31 +69,31 @@ public abstract class AbstractClassResolver implements IClassResolver
 		{
 			switch (className)
 			{
-				case "byte":
+				case "byte" :
 					clazz = byte.class;
 					break;
-				case "short":
+				case "short" :
 					clazz = short.class;
 					break;
-				case "int":
+				case "int" :
 					clazz = int.class;
 					break;
-				case "long":
+				case "long" :
 					clazz = long.class;
 					break;
-				case "float":
+				case "float" :
 					clazz = float.class;
 					break;
-				case "double":
+				case "double" :
 					clazz = double.class;
 					break;
-				case "boolean":
+				case "boolean" :
 					clazz = boolean.class;
 					break;
-				case "char":
+				case "char" :
 					clazz = char.class;
 					break;
-				default:
+				default :
 					// synchronize on the only class member to load only one class at a time and
 					// prevent LinkageError. See above for more info
 					synchronized (classes)

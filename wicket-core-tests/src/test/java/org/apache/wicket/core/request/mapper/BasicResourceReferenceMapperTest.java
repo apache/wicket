@@ -66,6 +66,7 @@ class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTe
 	};
 
 	WicketTester tester;
+
 	@BeforeEach
 	public void setup()
 	{

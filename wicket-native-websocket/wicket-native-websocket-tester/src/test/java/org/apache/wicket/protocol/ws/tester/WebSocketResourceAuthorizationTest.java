@@ -140,7 +140,7 @@ class WebSocketResourceAuthorizationTest
 
 		assertFalse(webSocketTester.isConnectionOpen());
 		assertEquals(WebSocketConnectionOriginFilter.POLICY_VIOLATION_ERROR_CODE,
-				webSocketTester.getCloseCode());
+			webSocketTester.getCloseCode());
 		assertEquals("Not authorized", webSocketTester.getCloseReason());
 
 		assertTrue(connections().isEmpty());

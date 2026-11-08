@@ -211,8 +211,8 @@ class FileUploadToResourceFieldTest extends WicketTestCase
 	@Test
 	void anUploadInfoWithoutStoredNameIsStoredUnderItsClientFileName()
 	{
-		FileUploadToResourceField.UploadInfo info =
-			new FileUploadToResourceField.UploadInfo("file.txt", 3, "text/plain");
+		FileUploadToResourceField.UploadInfo info = new FileUploadToResourceField.UploadInfo("file.txt", 3,
+			"text/plain");
 
 		assertEquals("file.txt", info.getFileName());
 		assertEquals("file.txt", info.getClientFileName());
@@ -223,10 +223,10 @@ class FileUploadToResourceFieldTest extends WicketTestCase
 	{
 		FileUploadToResourceField.UploadInfo info = new FileUploadToResourceField.UploadInfo(
 			"stored-1", "same.txt", "text/plain");
-		FileUploadToResourceField.UploadInfo sameStoredName =
-			new FileUploadToResourceField.UploadInfo("stored-1", "other.txt", "text/html");
-		FileUploadToResourceField.UploadInfo otherStoredName =
-			new FileUploadToResourceField.UploadInfo("stored-2", "same.txt", "text/plain");
+		FileUploadToResourceField.UploadInfo sameStoredName = new FileUploadToResourceField.UploadInfo("stored-1",
+			"other.txt", "text/html");
+		FileUploadToResourceField.UploadInfo otherStoredName = new FileUploadToResourceField.UploadInfo("stored-2",
+			"same.txt", "text/plain");
 
 		assertEquals(info, sameStoredName);
 		assertEquals(info.hashCode(), sameStoredName.hashCode());
