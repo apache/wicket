@@ -61,14 +61,15 @@ public abstract class AbstractConcurrentPageStoreTest
 		return existing != null ? existing : context;
 	}
 
-	private static SerializedPage createPage(String sessionId, int id) {
+	private static SerializedPage createPage(String sessionId, int id)
+	{
 		int length = FILE_SIZE_MIN + random.nextInt(FILE_SIZE_MAX - FILE_SIZE_MIN);
 		byte[] data = new byte[length];
 		random.nextBytes(data);
-		
+
 		return new SerializedPage(id, sessionId, data);
 	}
-	
+
 	private final Map<String, AtomicInteger> sessionCounter = new ConcurrentHashMap<String, AtomicInteger>();
 	private final ConcurrentLinkedQueue<SerializedPage> pagesToSave = new ConcurrentLinkedQueue<SerializedPage>();
 	private final ConcurrentLinkedQueue<SerializedPage> filesToRead1 = new ConcurrentLinkedQueue<SerializedPage>();
@@ -194,7 +195,8 @@ public abstract class AbstractConcurrentPageStoreTest
 			{
 				if (page != null)
 				{
-					SerializedPage other = (SerializedPage)pageStore.getPage(getContext(page.getPageType()), page.getPageId());
+					SerializedPage other = (SerializedPage)pageStore.getPage(getContext(page.getPageType()), page
+						.getPageId());
 					if (Arrays.compare(page.getData(), other.getData()) != 0)
 					{
 						failures.incrementAndGet();
@@ -229,7 +231,8 @@ public abstract class AbstractConcurrentPageStoreTest
 			{
 				if (page != null)
 				{
-					SerializedPage other = (SerializedPage)pageStore.getPage(getContext(page.getPageType()), page.getPageId());
+					SerializedPage other = (SerializedPage)pageStore.getPage(getContext(page.getPageType()), page
+						.getPageId());
 					if (Arrays.compare(page.getData(), other.getData()) != 0)
 					{
 						failures.incrementAndGet();
@@ -258,7 +261,7 @@ public abstract class AbstractConcurrentPageStoreTest
 		this.pageStore = new AsynchronousPageStore(pageStore, 100);
 
 		generateSessionsAndPages();
-		
+
 		log.info("Starting...");
 		long start = System.currentTimeMillis();
 

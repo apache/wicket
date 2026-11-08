@@ -56,7 +56,7 @@ public class OnEventHeaderItem extends AbstractCspHeaderItem
 	 * @see #forMarkupId(String, String, CharSequence)
 	 */
 	public static OnEventHeaderItem forScript(String literalTarget, String event,
-			CharSequence javaScript)
+		CharSequence javaScript)
 	{
 		return new OnEventHeaderItem(literalTarget, event, javaScript);
 	}
@@ -74,7 +74,7 @@ public class OnEventHeaderItem extends AbstractCspHeaderItem
 	 * @return A newly created {@link OnEventHeaderItem}.
 	 */
 	public static OnEventHeaderItem forComponent(Component target, String event,
-			CharSequence javaScript)
+		CharSequence javaScript)
 	{
 		return forMarkupId(target.getMarkupId(), event, javaScript);
 	}
@@ -175,12 +175,12 @@ public class OnEventHeaderItem extends AbstractCspHeaderItem
 	{
 		StringBuilder result = new StringBuilder();
 		result.append("Wicket.Event.add(")
-				.append(getTarget())
-				.append(", \'")
-				.append(getEvent())
-				.append("\', function(event) { ")
-				.append(getJavaScript())
-				.append(";});");
+			.append(getTarget())
+			.append(", \'")
+			.append(getEvent())
+			.append("\', function(event) { ")
+			.append(getJavaScript())
+			.append(";});");
 		return result;
 	}
 
@@ -212,10 +212,10 @@ public class OnEventHeaderItem extends AbstractCspHeaderItem
 	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		OnEventHeaderItem that = (OnEventHeaderItem) o;
+		OnEventHeaderItem that = (OnEventHeaderItem)o;
 		return Objects.equals(target, that.target) &&
-				Objects.equals(event, that.event) &&
-				Objects.equals(javaScript, that.javaScript);
+			Objects.equals(event, that.event) &&
+			Objects.equals(javaScript, that.javaScript);
 	}
 
 	@Override

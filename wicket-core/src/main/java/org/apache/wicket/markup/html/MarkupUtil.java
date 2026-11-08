@@ -68,7 +68,7 @@ public class MarkupUtil
 
 		return rtn[0];
 	}
-	
+
 	/**
 	 * Searches for {@code tagName} in the given {@code markup}.
 	 * 

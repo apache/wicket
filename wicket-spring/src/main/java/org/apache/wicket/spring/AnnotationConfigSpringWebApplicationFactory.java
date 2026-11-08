@@ -41,9 +41,11 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
  * </pre>
  * </p>
  */
-public class AnnotationConfigSpringWebApplicationFactory extends SpringWebApplicationFactory {
-    @Override
-    protected ConfigurableWebApplicationContext newApplicationContext() {
-        return new AnnotationConfigWebApplicationContext();
-    }
+public class AnnotationConfigSpringWebApplicationFactory extends SpringWebApplicationFactory
+{
+	@Override
+	protected ConfigurableWebApplicationContext newApplicationContext()
+	{
+		return new AnnotationConfigWebApplicationContext();
+	}
 }

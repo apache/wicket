@@ -29,7 +29,7 @@ import org.apache.wicket.util.lang.Args;
 public class WebSocketTextPayload extends WebSocketPayload<TextMessage>
 {
 	private final TextMessage data;
-	
+
 	public WebSocketTextPayload(TextMessage data, WebSocketRequestHandler handler)
 	{
 		super(handler);

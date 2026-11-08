@@ -65,7 +65,7 @@ class WicketTesterSessionInvalidateTest extends WicketTestCase
 		 * 
 		 * @param pageParameters
 		 */
-        public MyPage(PageParameters pageParameters)
+		public MyPage(PageParameters pageParameters)
 		{
 			super(pageParameters);
 

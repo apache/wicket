@@ -15,14 +15,15 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.websocket.javax {
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.request;
-    requires org.apache.wicket.core;
-    requires org.apache.wicket.websocket.core;
-    requires static jakarta.servlet;
-    requires jakarta.websocket;
-    requires org.slf4j;
+module org.apache.wicket.websocket.javax
+{
+	requires org.apache.wicket.util;
+	requires org.apache.wicket.request;
+	requires org.apache.wicket.core;
+	requires org.apache.wicket.websocket.core;
+	requires static jakarta.servlet;
+	requires jakarta.websocket;
+	requires org.slf4j;
 
-    exports org.apache.wicket.protocol.ws.javax;
+	exports org.apache.wicket.protocol.ws.javax;
 }

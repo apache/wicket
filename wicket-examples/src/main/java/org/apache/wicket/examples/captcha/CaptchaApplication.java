@@ -27,7 +27,7 @@ import org.apache.wicket.examples.WicketExampleApplication;
 public class CaptchaApplication extends WicketExampleApplication
 {
 	@Override
-	public Class< ? extends Page> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return Captcha.class;
 	}

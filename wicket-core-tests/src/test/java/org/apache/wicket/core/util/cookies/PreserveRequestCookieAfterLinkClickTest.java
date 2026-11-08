@@ -50,14 +50,15 @@ class PreserveRequestCookieAfterLinkClickTest extends WicketTestCase
 		assertEquals("lostValue", firstCookie.getValue());
 	}
 
-    public static class Page1 extends WebPage implements IMarkupResourceStreamProvider
+	public static class Page1 extends WebPage implements IMarkupResourceStreamProvider
 	{
-        public Page1()
+		public Page1()
 		{
 			add(new Link<Void>("testCookieTransfer")
 			{
 				@Override
-				public void onClick() {
+				public void onClick()
+				{
 					setResponsePage(Page2.class);
 				}
 			});
@@ -70,7 +71,7 @@ class PreserveRequestCookieAfterLinkClickTest extends WicketTestCase
 		}
 	}
 
-    public static class Page2 extends WebPage implements IMarkupResourceStreamProvider
+	public static class Page2 extends WebPage implements IMarkupResourceStreamProvider
 	{
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)

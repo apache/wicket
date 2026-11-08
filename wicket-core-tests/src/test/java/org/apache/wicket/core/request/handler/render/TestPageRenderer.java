@@ -44,12 +44,14 @@ class TestPageRenderer extends WebPageRenderer
 	}
 
 	@Override
-	public boolean shouldRedirectToTargetUrl(RequestCycle cycle, Url currentUrl, Url targetUrl) {
+	public boolean shouldRedirectToTargetUrl(RequestCycle cycle, Url currentUrl, Url targetUrl)
+	{
 		return super.shouldRedirectToTargetUrl(cycle, currentUrl, targetUrl);
 	}
 
 	@Override
-	public boolean shouldRenderPageAndWriteResponse(RequestCycle cycle, Url currentUrl, Url targetUrl) {
+	public boolean shouldRenderPageAndWriteResponse(RequestCycle cycle, Url currentUrl, Url targetUrl)
+	{
 		return super.shouldRenderPageAndWriteResponse(cycle, currentUrl, targetUrl);
 	}
 

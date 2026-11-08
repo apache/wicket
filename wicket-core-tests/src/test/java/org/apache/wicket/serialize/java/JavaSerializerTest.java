@@ -109,12 +109,14 @@ class JavaSerializerTest extends WicketTestCase
 		}
 	}
 
-	private static class NotSerializableObject {}
+	private static class NotSerializableObject
+	{}
 
 	@Test
 	void normal()
 	{
-		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest-normal") {
+		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest-normal")
+		{
 			@Override
 			protected ObjectOutputStream newObjectOutputStream(OutputStream out) throws IOException
 			{
@@ -176,7 +178,7 @@ class JavaSerializerTest extends WicketTestCase
 		{
 			Throwable cause0 = x.getCause();
 			assertThat(cause0, instanceOf(WicketRuntimeException.class));
-			WicketRuntimeException wrx = (WicketRuntimeException) cause0;
+			WicketRuntimeException wrx = (WicketRuntimeException)cause0;
 
 			Throwable cause1 = wrx.getCause();
 			assertThat(cause1, instanceOf(IllegalStateException.class));

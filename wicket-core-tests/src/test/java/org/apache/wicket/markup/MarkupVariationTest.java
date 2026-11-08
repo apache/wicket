@@ -39,7 +39,7 @@ class MarkupVariationTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-3931
 	 */
 	@Test
-    void changeVariation()
+	void changeVariation()
 	{
 		tester.startPage(new VariationPage());
 		tester.assertContainsNot("Two");
@@ -60,20 +60,20 @@ class MarkupVariationTest extends WicketTestCase
 
 	private MarkupContainer getVariationPanel()
 	{
-		return (MarkupContainer) tester.getComponentFromLastRenderedPage("p");
+		return (MarkupContainer)tester.getComponentFromLastRenderedPage("p");
 	}
-	
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6231
 	 */
 	@Test
-    void changeVariationBeforeRendering() throws Exception
+	void changeVariationBeforeRendering() throws Exception
 	{
 		tester.startPage(new VariationPage());
 		FormTester formTester = tester.newFormTester("p:a_form");
-		
+
 		formTester.submit();
-		
+
 		tester.assertContainsNot("One");
 	}
 

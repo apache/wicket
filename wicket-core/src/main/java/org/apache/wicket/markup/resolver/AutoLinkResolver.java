@@ -454,7 +454,8 @@ public final class AutoLinkResolver implements IComponentResolver
 
 				try
 				{
-					final Class<? extends Page> clazz = (Class<? extends Page>)defaultClassResolver.resolveClass(className);
+					final Class<? extends Page> clazz = (Class<? extends Page>)defaultClassResolver.resolveClass(
+						className);
 					return new AutolinkBookmarkablePageLink<Void>(autoId, clazz,
 						pathInfo.pageParameters, pathInfo.anchor);
 				}
@@ -572,13 +573,13 @@ public final class AutoLinkResolver implements IComponentResolver
 			{
 				// Create the component implementing the link
 				resourceReference = new PackageResourceReference(clazz, href, null, null, null);
-				}
-				else
-				{
-					// The resource does not exist. Set to null and ignore when
-					// rendering.
-					resourceReference = null;
-				}
+			}
+			else
+			{
+				// The resource does not exist. Set to null and ignore when
+				// rendering.
+				resourceReference = null;
+			}
 		}
 
 		/**
@@ -623,7 +624,7 @@ public final class AutoLinkResolver implements IComponentResolver
 
 				// add nonce if required
 				final var csp = getWebApplication().getCspSettings();
-				if(csp.isNonceEnabled())
+				if (csp.isNonceEnabled())
 				{
 					tag.put(JavaScriptUtils.ATTR_CSP_NONCE, csp.getNonce(getRequestCycle()));
 				}

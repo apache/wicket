@@ -105,8 +105,11 @@ import org.slf4j.LoggerFactory;
  *            The model object type
  * 
  */
-public abstract class FormComponent<T> extends LabeledWebMarkupContainer implements
-	IFormVisitorParticipant, IFormModelUpdateListener, IGenericComponent<T, FormComponent<T>>
+public abstract class FormComponent<T> extends LabeledWebMarkupContainer
+	implements
+		IFormVisitorParticipant,
+		IFormModelUpdateListener,
+		IGenericComponent<T, FormComponent<T>>
 {
 	private static final Logger logger = LoggerFactory.getLogger(FormComponent.class);
 
@@ -217,14 +220,14 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 				protected String getValue(String variableName)
 				{
 					Object value = vars.get(variableName);
-					
-					if (value == null ||value instanceof String)
+
+					if (value == null || value instanceof String)
 					{
 						return String.valueOf(value);
 					}
-					
+
 					IConverter converter = getConverter(value.getClass());
-					
+
 					if (converter == null)
 					{
 						return Strings.toString(value);
@@ -1537,8 +1540,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 					catch (Exception e)
 					{
 						throw new WicketRuntimeException("Exception '" + e.getMessage() +
-								"' occurred during validation " + validator.getClass().getName() +
-								" on component " + getPath(), e);
+							"' occurred during validation " + validator.getClass().getName() +
+							" on component " + getPath(), e);
 					}
 				}
 				if (!isValid())
@@ -1573,7 +1576,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	public final void updateAutoLabels(IPartialPageRequestHandler target, boolean checkAuto)
 	{
 		AutoLabelMarker marker = getMetaData(AutoLabelResolver.MARKER_KEY);
-	
+
 		if (marker == null)
 		{
 			// this component does not have an auto label
@@ -1612,7 +1615,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 		boolean outsideParentForm = false;
 		while (parent != null)
 		{
-			if (parent instanceof IFormVisitorParticipant && !((IFormVisitorParticipant)parent).processChildren() && !outsideParentForm)
+			if (parent instanceof IFormVisitorParticipant && !((IFormVisitorParticipant)parent).processChildren()
+				&& !outsideParentForm)
 			{
 				return false;
 			}
@@ -1652,7 +1656,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	public static <S> void updateCollectionModel(FormComponent<Collection<S>> formComponent)
 	{
 		Collection<S> convertedInput = formComponent.getConvertedInput();
-		if (convertedInput == null) {
+		if (convertedInput == null)
+		{
 			convertedInput = Collections.emptyList();
 		}
 
@@ -1660,10 +1665,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 		if (collection == null)
 		{
 			Class<?> hint = null;
-			if (formComponent.getModel() instanceof IObjectClassAwareModel) {
+			if (formComponent.getModel() instanceof IObjectClassAwareModel)
+			{
 				hint = ((IObjectClassAwareModel)formComponent.getModel()).getObjectClass();
 			}
-			if (hint == null) {
+			if (hint == null)
+			{
 				hint = List.class;
 			}
 			collection = newCollection(hint, convertedInput);
@@ -1686,11 +1693,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 				if (logger.isDebugEnabled())
 				{
 					logger.debug("An error occurred while trying to modify the collection attached to "
-							+ formComponent, unmodifiable);
+						+ formComponent, unmodifiable);
 				}
 				collection = newCollection(collection.getClass(), convertedInput);
 			}
-			
+
 			try
 			{
 				formComponent.getModel().setObject(collection);
@@ -1700,19 +1707,19 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 				if (!modified)
 				{
 					throw new WicketRuntimeException("An error occurred while trying to set the collection attached to "
-							+ formComponent, noSetter);
+						+ formComponent, noSetter);
 				}
 				else if (logger.isDebugEnabled())
 				{
 					logger.debug("An error occurred while trying to set the collection attached to "
-							+ formComponent, noSetter);
+						+ formComponent, noSetter);
 				}
 			}
-			
+
 			formComponent.modelChanged();
 		}
 	}
-	
+
 	/**
 	 * Creates a new collection. 
 	 * 
@@ -1723,9 +1730,12 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 */
 	private static <S> Collection<S> newCollection(Class<?> hint, Collection<S> elements)
 	{
-		if (Set.class.isAssignableFrom(hint)) {
+		if (Set.class.isAssignableFrom(hint))
+		{
 			return new LinkedHashSet<>(elements);
-		} else {
+		}
+		else
+		{
 			return new ArrayList<>(elements);
 		}
 	}

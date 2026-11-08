@@ -89,7 +89,7 @@ public class WicketEndpoint extends Endpoint
 		final String reasonPhrase = closeReason.getReasonPhrase();
 
 		LOG.debug("Web Socket connection with id '{}' has been closed with code '{}' and reason: {}",
-				session.getId(), closeCode, reasonPhrase);
+			session.getId(), closeCode, reasonPhrase);
 
 		if (javaxWebSocketProcessor != null && isApplicationAlive(applicationName))
 		{
@@ -119,9 +119,8 @@ public class WicketEndpoint extends Endpoint
 
 	private boolean isIgnorableError(Throwable t)
 	{
-		return
-			t instanceof EOFException ||
-		    (t instanceof IOException && "Broken pipe".equals(t.getMessage()));
+		return t instanceof EOFException ||
+			(t instanceof IOException && "Broken pipe".equals(t.getMessage()));
 	}
 
 	private boolean isApplicationAlive(String appName)

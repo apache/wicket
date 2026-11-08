@@ -38,7 +38,7 @@ public class ResourceModelTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-        public TestPage()
+		public TestPage()
 		{
 			add(new Label("testlabel", new ResourceModel("testlabel")));
 

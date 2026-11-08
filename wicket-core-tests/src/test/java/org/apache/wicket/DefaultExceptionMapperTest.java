@@ -53,16 +53,20 @@ class DefaultExceptionMapperTest extends WicketTestCase
 			}
 		};
 	}
-	private static class TestWebResponse extends MockWebResponse {
+
+	private static class TestWebResponse extends MockWebResponse
+	{
 		boolean disableCaching = false;
 
 		@Override
-		public final void disableCaching() {
+		public final void disableCaching()
+		{
 			super.disableCaching();
 			disableCaching = true;
 		}
 
-		public boolean isDisableCaching() {
+		public boolean isDisableCaching()
+		{
 			return disableCaching;
 		}
 	}
@@ -80,9 +84,11 @@ class DefaultExceptionMapperTest extends WicketTestCase
 		tester.destroy();
 	}
 
-	private static class TestNoHeadersWebResponse extends TestWebResponse {
+	private static class TestNoHeadersWebResponse extends TestWebResponse
+	{
 		@Override
-		public boolean isHeaderSupported() {
+		public boolean isHeaderSupported()
+		{
 			return false;
 		}
 	}

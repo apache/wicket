@@ -39,7 +39,7 @@ public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
 	 * @return The loader instance to test
 	 */
 	@Override
-    protected IStringResourceLoader createLoader()
+	protected IStringResourceLoader createLoader()
 	{
 		return new BundleStringResourceLoader("org.apache.wicket.resource.DummyResources");
 	}
@@ -61,7 +61,7 @@ public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
 	 */
 	@Override
 	@Test
-    public void loaderUnknownResources()
+	public void loaderUnknownResources()
 	{
 		IStringResourceLoader loader = new BundleStringResourceLoader("unknown.resource");
 		assertNull(loader.loadStringResource(component.getClass(), "test.string",

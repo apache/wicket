@@ -26,11 +26,11 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.junit.jupiter.api.Test;
 
 
-
 /**
  * Tests for XmlCleaningResponseFilter
  */
-class XmlCleaningResponseFilterTest {
+class XmlCleaningResponseFilterTest
+{
 
 	/**
 	 * Tests that invalid XML characters are removed
@@ -40,14 +40,15 @@ class XmlCleaningResponseFilterTest {
 	void filterInvalid() throws Exception
 	{
 		XmlCleaningResponseFilter filter = new XmlCleaningResponseFilter();
-		int[] invalidChars = new int[] {0x0008, 0x0010, 0xD800, 0xDDDD, 0xFFFE};
+		int[] invalidChars = new int[] { 0x0008, 0x0010, 0xD800, 0xDDDD, 0xFFFE };
 
 		for (int invalidChar : invalidChars)
 		{
 			CharSequence text = createText(invalidChar);
 
 			AppendingStringBuffer filtered = filter.filter(new AppendingStringBuffer(text));
-			assertEquals(START_ROOT_ELEMENT+END_ROOT_ELEMENT, filtered.toString(), String.format("checking Unicode codepoint 0x%X:", invalidChar));
+			assertEquals(START_ROOT_ELEMENT + END_ROOT_ELEMENT, filtered.toString(), String.format(
+				"checking Unicode codepoint 0x%X:", invalidChar));
 		}
 	}
 
@@ -61,15 +62,15 @@ class XmlCleaningResponseFilterTest {
 		XmlCleaningResponseFilter filter = new XmlCleaningResponseFilter();
 		CharSequence text = new StringBuilder()
 			.append(START_ROOT_ELEMENT)
-			.append(new String(new int[]{0x0008}, 0, 1))
+			.append(new String(new int[] { 0x0008 }, 0, 1))
 			.append("a")
-			.append(new String(new int[]{0x0010}, 0, 1))
+			.append(new String(new int[] { 0x0010 }, 0, 1))
 			.append("b")
-			.append(new String(new int[]{0xD800}, 0, 1))
+			.append(new String(new int[] { 0xD800 }, 0, 1))
 			.append(END_ROOT_ELEMENT);
 
 		AppendingStringBuffer filtered = filter.filter(new AppendingStringBuffer(text));
-		assertEquals(START_ROOT_ELEMENT+"ab"+END_ROOT_ELEMENT, filtered.toString());
+		assertEquals(START_ROOT_ELEMENT + "ab" + END_ROOT_ELEMENT, filtered.toString());
 	}
 
 	/**
@@ -80,25 +81,26 @@ class XmlCleaningResponseFilterTest {
 	void filterValid() throws Exception
 	{
 		XmlCleaningResponseFilter filter = new XmlCleaningResponseFilter();
-		int[] validChars = new int[] {0x9, 0xA, 'a', 0xE000, 0xFFFC, 0x10400};
+		int[] validChars = new int[] { 0x9, 0xA, 'a', 0xE000, 0xFFFC, 0x10400 };
 
 		for (int validChar : validChars)
 		{
 			CharSequence text = createText(validChar);
 
 			AppendingStringBuffer filtered = filter.filter(new AppendingStringBuffer(text));
-			assertEquals(text.toString(), filtered.toString(), String.format("checking Unicode codepoint 0x%X:", validChar));
+			assertEquals(text.toString(), filtered.toString(), String.format("checking Unicode codepoint 0x%X:",
+				validChar));
 		}
 	}
 
 	// using a int because a Java char cannot represent all Unicode characters; some require two chars.
 	private CharSequence createText(int ch)
 	{
-		String character = new String(new int[] {ch}, 0, 1);
+		String character = new String(new int[] { ch }, 0, 1);
 		return new StringBuilder()
-				.append(START_ROOT_ELEMENT)
-				.append(character)
-				.append(END_ROOT_ELEMENT);
+			.append(START_ROOT_ELEMENT)
+			.append(character)
+			.append(END_ROOT_ELEMENT);
 	}
 
 	/**
@@ -114,8 +116,8 @@ class XmlCleaningResponseFilterTest {
 		assertFalse(filter.shouldFilter(new AppendingStringBuffer("anything")));
 
 		assertTrue(filter.shouldFilter(
-				new AppendingStringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"" +
-						" standalone=\"yes\"><ajax-response></ajax-response>")));
+			new AppendingStringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"" +
+				" standalone=\"yes\"><ajax-response></ajax-response>")));
 	}
 
 	/**
@@ -124,7 +126,8 @@ class XmlCleaningResponseFilterTest {
 	private static class XmlFilter extends XmlCleaningResponseFilter
 	{
 		@Override
-		public boolean shouldFilter(AppendingStringBuffer responseBuffer) {
+		public boolean shouldFilter(AppendingStringBuffer responseBuffer)
+		{
 			return super.shouldFilter(responseBuffer);
 		}
 	}

@@ -227,13 +227,13 @@ class ResourceAggregatorTest extends WicketTestCase
 	{
 		assertThrows(IllegalArgumentException.class, () -> {
 			Application.get()
-					.getResourceBundles()
-					.addJavaScriptBundle(Application.class, "ab.js", new ResourceReferenceA(),
-										 new ResourceReferenceB());
+				.getResourceBundles()
+				.addJavaScriptBundle(Application.class, "ab.js", new ResourceReferenceA(),
+					new ResourceReferenceB());
 			Application.get()
-					.getResourceBundles()
-					.addJavaScriptBundle(Application.class, "ac.js", new ResourceReferenceA(),
-										 new ResourceReferenceC());
+				.getResourceBundles()
+				.addJavaScriptBundle(Application.class, "ac.js", new ResourceReferenceA(),
+					new ResourceReferenceC());
 		});
 	}
 
@@ -277,35 +277,35 @@ class ResourceAggregatorTest extends WicketTestCase
 		aggregator.render(new PriorityHeaderItem(forReference(new ResourceReferenceA())));
 		assertItems(new PriorityHeaderItem(bundleAB), forReference(new ResourceReferenceX()));
 	}
-	
+
 	/**
 	 *  Test rendering for onDomReady and onLoad scripts
 	 */
-	
+
 	@Test
 	void testCombinedScripts()
-    {
-        String onLoadScript = ";alert('Hello!');";
-        String onReadyScript = ";alert('Ready!');";
-        
-        aggregator.render(OnDomReadyHeaderItem.forScript(onReadyScript));
-        aggregator.render(OnLoadHeaderItem.forScript(onLoadScript));
-        aggregator.close();
-        
-        List<HeaderItem> items = responseStub.getItems();
-        
-        OnDomReadyHeaderItem onDomReadyItem = (OnDomReadyHeaderItem) items.stream()
-            .filter(item -> (item instanceof OnDomReadyHeaderItem))
-            .findFirst().get();
-           
-        String onReadyItemScript = onDomReadyItem.getJavaScript().toString();
-        assertTrue(onReadyItemScript.contains(onReadyScript));
-        
-        OnLoadHeaderItem onLoadItem = (OnLoadHeaderItem) items.stream()
-            .filter(item -> (item instanceof OnLoadHeaderItem))
-            .findFirst().get();
-        
-        String onLoadItemScript = onLoadItem.getJavaScript().toString();
-        assertTrue(onLoadItemScript.contains(onLoadScript));
-    }
+	{
+		String onLoadScript = ";alert('Hello!');";
+		String onReadyScript = ";alert('Ready!');";
+
+		aggregator.render(OnDomReadyHeaderItem.forScript(onReadyScript));
+		aggregator.render(OnLoadHeaderItem.forScript(onLoadScript));
+		aggregator.close();
+
+		List<HeaderItem> items = responseStub.getItems();
+
+		OnDomReadyHeaderItem onDomReadyItem = (OnDomReadyHeaderItem)items.stream()
+			.filter(item -> (item instanceof OnDomReadyHeaderItem))
+			.findFirst().get();
+
+		String onReadyItemScript = onDomReadyItem.getJavaScript().toString();
+		assertTrue(onReadyItemScript.contains(onReadyScript));
+
+		OnLoadHeaderItem onLoadItem = (OnLoadHeaderItem)items.stream()
+			.filter(item -> (item instanceof OnLoadHeaderItem))
+			.findFirst().get();
+
+		String onLoadItemScript = onLoadItem.getJavaScript().toString();
+		assertTrue(onLoadItemScript.contains(onLoadScript));
+	}
 }

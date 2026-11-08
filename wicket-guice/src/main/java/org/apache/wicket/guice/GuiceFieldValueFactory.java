@@ -62,13 +62,15 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 		{
 			Inject injectAnnotation = field.getAnnotation(Inject.class);
 			jakarta.inject.Inject jakartaInjectAnnotation = field.getAnnotation(jakarta.inject.Inject.class);
-			if (!Modifier.isStatic(field.getModifiers()) && (injectAnnotation != null || jakartaInjectAnnotation != null))
+			if (!Modifier.isStatic(field.getModifiers()) && (injectAnnotation != null
+				|| jakartaInjectAnnotation != null))
 			{
 				try
 				{
 					boolean optional = injectAnnotation != null && injectAnnotation.optional();
 					Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
-					final GuiceProxyTargetLocator locator = new GuiceProxyTargetLocator(field, bindingAnnotation, optional);
+					final GuiceProxyTargetLocator locator = new GuiceProxyTargetLocator(field, bindingAnnotation,
+						optional);
 
 					Object cachedValue = cache.get(locator);
 					if (cachedValue != null)
@@ -106,8 +108,8 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 				catch (MoreThanOneBindingException e)
 				{
 					throw new RuntimeException(
-							"Can't have more than one BindingAnnotation on field " + field.getName() +
-									" of class " + fieldOwner.getClass().getName());
+						"Can't have more than one BindingAnnotation on field " + field.getName() +
+							" of class " + fieldOwner.getClass().getName());
 				}
 			}
 		}
@@ -131,7 +133,7 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 	 * @throws MoreThanOneBindingException
 	 */
 	private Annotation findBindingAnnotation(final Annotation[] annotations)
-			throws MoreThanOneBindingException
+		throws MoreThanOneBindingException
 	{
 		Annotation bindingAnnotation = null;
 
@@ -139,7 +141,7 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 		for (Annotation annotation : annotations)
 		{
 			if (annotation.annotationType().getAnnotation(BindingAnnotation.class) != null ||
-					annotation.annotationType().getAnnotation(Qualifier.class) != null)
+				annotation.annotationType().getAnnotation(Qualifier.class) != null)
 			{
 				if (bindingAnnotation != null)
 				{

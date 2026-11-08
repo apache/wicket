@@ -31,7 +31,8 @@ public class CompoundPropertyModelTwoLevelsDeepPage extends WebPage
 	{
 		Person person = new Person("Andrew", new Address("100 Main St."));
 
-		WebMarkupContainer personContainer = new WebMarkupContainer("person", new CompoundPropertyModel<Person>(person));
+		WebMarkupContainer personContainer = new WebMarkupContainer("person", new CompoundPropertyModel<Person>(
+			person));
 		add(personContainer);
 		personContainer.add(new Label("name"));
 

@@ -149,8 +149,8 @@ class ComponentQueue
 	public String toString()
 	{
 		return "ComponentQueue{" +
-				"queueSize=" + queueSize +
-				", queue=" + Arrays.toString(queue) +
-				'}';
+			"queueSize=" + queueSize +
+			", queue=" + Arrays.toString(queue) +
+			'}';
 	}
 }

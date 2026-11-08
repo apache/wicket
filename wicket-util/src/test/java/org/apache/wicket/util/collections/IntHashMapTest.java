@@ -46,7 +46,7 @@ class IntHashMapTest
 		ByteArrayInputStream bais = new ByteArrayInputStream(serialized);
 		ObjectInputStream ois = new ObjectInputStream(bais);
 
-		IntHashMap<String> deserialized = (IntHashMap<String>) ois.readObject();
+		IntHashMap<String> deserialized = (IntHashMap<String>)ois.readObject();
 		assertNotNull(deserialized);
 		assertEquals("one", deserialized.get(1));
 		assertEquals("two", deserialized.get(2));

@@ -30,7 +30,7 @@ class HeaderScopingTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void headerScoping1() throws Exception
+	void headerScoping1() throws Exception
 	{
 		executeTest(MyPage.class, "MyPageExpectedResult.html");
 	}
@@ -40,7 +40,7 @@ class HeaderScopingTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void headerScoping2() throws Exception
+	void headerScoping2() throws Exception
 	{
 		executeTest(MyPage2.class, "MyPage2_ExpectedResult.html");
 	}

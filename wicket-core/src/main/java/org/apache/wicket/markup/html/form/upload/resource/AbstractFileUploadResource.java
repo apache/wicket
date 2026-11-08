@@ -108,7 +108,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	{
 		final ResourceResponse resourceResponse = new ResourceResponse();
 
-		final ServletWebRequest webRequest = (ServletWebRequest) attributes.getRequest();
+		final ServletWebRequest webRequest = (ServletWebRequest)attributes.getRequest();
 
 		// get the ID of the upload field (it should be unique per application)
 		String uploadId = getUploadId(webRequest);
@@ -228,10 +228,10 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 		{
 			return Form.UPLOAD_TOO_MANY_FILES_RESOURCE_KEY;
 		}
-        else if (e instanceof FileUploadSizeException)
-        {
-            return Form.UPLOAD_TOO_LARGE_RESOURCE_KEY;
-        }
+		else if (e instanceof FileUploadSizeException)
+		{
+			return Form.UPLOAD_TOO_LARGE_RESOURCE_KEY;
+		}
 		else
 		{
 			return Form.UPLOAD_FAILED_RESOURCE_KEY;
@@ -291,7 +291,8 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	// Consuming the POST parameters would cause the request to be empty when reading it as
 	// MultipartServletWebRequest
 	// See WICKET-7154 for more details
-	private StringValue getParameterValue(WebRequest request, String parameterName) {
+	private StringValue getParameterValue(WebRequest request, String parameterName)
+	{
 		return request.getQueryParameters().getParameterValue(parameterName);
 	}
 
@@ -308,7 +309,7 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 		}
 		catch (StringValueConversionException e)
 		{
-			return  Application.get().getApplicationSettings().getDefaultMaximumUploadSize();
+			return Application.get().getApplicationSettings().getDefaultMaximumUploadSize();
 		}
 
 	}
@@ -359,6 +360,6 @@ public abstract class AbstractFileUploadResource extends AbstractResource
 	 * @return The generated JSON
 	 */
 	protected abstract String generateJsonResponse(ResourceResponse resourceResponse,
-			ServletWebRequest webRequest, List<FileUpload> files, List<String> fileNames);
+		ServletWebRequest webRequest, List<FileUpload> files, List<String> fileNames);
 
 }

@@ -39,14 +39,16 @@ class NestedStringResourceLoaderTest extends WicketTestCase
 	 * Tests the nested string resource loader
 	 */
 	@Test
-	void testNestedStrings(){
+	void testNestedStrings()
+	{
 		List<IStringResourceLoader> loaders = tester.getApplication().getResourceSettings().getStringResourceLoaders();
 		ClassStringResourceLoader classStringResourceLoader = new ClassStringResourceLoader(MyValidator.class);
 		loaders.add(classStringResourceLoader);
-		NestedStringResourceLoader nestedStringResourceLoader = new NestedStringResourceLoader(loaders,Pattern.compile("#\\(([^ ]*?)\\)"));
+		NestedStringResourceLoader nestedStringResourceLoader = new NestedStringResourceLoader(loaders, Pattern.compile(
+			"#\\(([^ ]*?)\\)"));
 		loaders.clear();
 		loaders.add(nestedStringResourceLoader);
-		
+
 		assertEquals("This is an assembled nested key.",
 			nestedStringResourceLoader.loadStringResource((Component)null, "nested", null, null, null));
 	}
@@ -55,11 +57,14 @@ class NestedStringResourceLoaderTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6393
 	 */
 	@Test
-	void whenAnyKeyIsMissing_thenUseTheDefaultValue(){
+	void whenAnyKeyIsMissing_thenUseTheDefaultValue()
+	{
 		List<IStringResourceLoader> loaders = tester.getApplication().getResourceSettings().getStringResourceLoaders();
-		ClassStringResourceLoader classStringResourceLoader = new ClassStringResourceLoader(NestedWithMissingKeyValidator.class);
+		ClassStringResourceLoader classStringResourceLoader = new ClassStringResourceLoader(
+			NestedWithMissingKeyValidator.class);
 		loaders.add(classStringResourceLoader);
-		NestedStringResourceLoader nestedStringResourceLoader = new NestedStringResourceLoader(loaders,Pattern.compile("#\\(([^ ]*?)\\)"));
+		NestedStringResourceLoader nestedStringResourceLoader = new NestedStringResourceLoader(loaders, Pattern.compile(
+			"#\\(([^ ]*?)\\)"));
 		loaders.clear();
 		loaders.add(nestedStringResourceLoader);
 

@@ -31,7 +31,7 @@ class InheritanceHeadTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test_1() throws Exception
+	void test_1() throws Exception
 	{
 		executeTest(MeldingPage.class, "ExpectedResult.html");
 	}

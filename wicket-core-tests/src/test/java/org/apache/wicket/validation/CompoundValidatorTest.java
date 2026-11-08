@@ -31,9 +31,10 @@ class CompoundValidatorTest
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-    void delegate() {
+	void delegate()
+	{
 		CompoundValidator<String> compound = new CompoundValidator<>();
-		
+
 		compound.add(new IValidator<String>()
 		{
 			@Override
@@ -41,7 +42,7 @@ class CompoundValidatorTest
 			{
 			}
 		});
-		
+
 		RangeValidator<String> validator = Mockito.mock(RangeValidator.class);
 		compound.add(validator);
 
@@ -57,7 +58,7 @@ class CompoundValidatorTest
 		compound.onException(component, null);
 		compound.onRemove(component);
 		compound.detach(component);
-		
+
 		Mockito.verify(validator).bind(component);
 		Mockito.verify(validator).onConfigure(component);
 		Mockito.verify(validator).renderHead(component, null);

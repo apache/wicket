@@ -29,8 +29,8 @@ import org.apache.wicket.markup.html.basic.Label;
 public class EnclosurePage_1 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
-	public int pendingAfterRenderCount = 0; 
+
+	public int pendingAfterRenderCount = 0;
 
 	/**
 	 * Construct.
@@ -44,37 +44,38 @@ public class EnclosurePage_1 extends WebPage
 		add(new AfterRenderCountingLabel("label5", "Test Label 2"));
 		add(new AfterRenderCountingLabel("label6", "Test Label 2"));
 		add(new AfterRenderCountingLabel("label7", "Test Label 2"));
-		
+
 		WebMarkupContainer container = new WebMarkupContainer("container");
 		add(container);
-		
+
 		container.add(new AfterRenderCountingLabel("label8", "Test Label 2"));
-		
+
 		add(new AfterRenderCountingLabel("label9", "Test Label 2"));
 		add(new AfterRenderCountingLabel("label10", "Test Label 3"));
 	}
-	
-	class AfterRenderCountingLabel extends Label {
+
+	class AfterRenderCountingLabel extends Label
+	{
 
 		public AfterRenderCountingLabel(String id, String model)
 		{
 			super(id, model);
 		}
-		
+
 		@Override
 		protected void onBeforeRender()
 		{
 			super.onBeforeRender();
-			
-			
+
+
 			pendingAfterRenderCount++;
 		}
-		
+
 		@Override
 		protected void onAfterRender()
 		{
 			super.onAfterRender();
-			
+
 			pendingAfterRenderCount--;
 		}
 	}

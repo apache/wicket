@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 class Issue5569Test extends WicketTestCase
 {
 	@Test
-    void testIssue5569()
+	void testIssue5569()
 	{
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);

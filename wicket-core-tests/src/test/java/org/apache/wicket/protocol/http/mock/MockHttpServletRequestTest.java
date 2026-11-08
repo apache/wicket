@@ -108,19 +108,19 @@ class MockHttpServletRequestTest extends WicketTestCase
 		assertEquals("/foo/bar/baz.html", pathInfo);
 	}
 
-    /**
-     * WICKET-4664 - no query string returns null as per HttpServletRequest
-     */
-    @Test
+	/**
+	 * WICKET-4664 - no query string returns null as per HttpServletRequest
+	 */
+	@Test
 	void testNoQueryString_returnsNull()
-    {
-        MockHttpServletRequest request = tester.getRequest();
-        request.setURL("my/servlet/without/query/param");
-        
-        Url url = request.getUrl();
-        assertNull(url.getQueryString());
-    }
-	
+	{
+		MockHttpServletRequest request = tester.getRequest();
+		request.setURL("my/servlet/without/query/param");
+
+		Url url = request.getUrl();
+		assertNull(url.getQueryString());
+	}
+
 	@Test
 	void getSessionFromNonMockHttpSession()
 	{
@@ -179,7 +179,8 @@ class MockHttpServletRequestTest extends WicketTestCase
 	}
 
 	@Test
-	void setLocale() {
+	void setLocale()
+	{
 		Session session = tester.getSession();
 		session.setLocale(Locale.US);
 		tester.getRequest().setLocale(Locale.CANADA_FRENCH);

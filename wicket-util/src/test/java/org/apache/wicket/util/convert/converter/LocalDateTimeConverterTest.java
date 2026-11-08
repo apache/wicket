@@ -32,44 +32,52 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class LocalDateTimeConverterTest
 {
 	@Test
-	@EnabledOnJre({JRE.JAVA_17, JRE.JAVA_18, JRE.JAVA_19})
-	public void convertToString_upto_jdk19() {
+	@EnabledOnJre({ JRE.JAVA_17, JRE.JAVA_18, JRE.JAVA_19 })
+	public void convertToString_upto_jdk19()
+	{
 		LocalDateTimeConverter converter = new LocalDateTimeConverter();
 		String date = converter.convertToString(LocalDateTime.of(2016, 7, 11, 1, 2, 3), Locale.ENGLISH);
 		assertEquals("Jul 11, 2016, 1:02:03 AM", date);
 	}
 
 	@Test
-	@EnabledOnJre({JRE.JAVA_20, JRE.JAVA_21}) // See https://bugs.openjdk.org/browse/JDK-8304925
-	public void convertToString_jdk20_and_newer() {
+	@EnabledOnJre({ JRE.JAVA_20, JRE.JAVA_21 }) // See https://bugs.openjdk.org/browse/JDK-8304925
+	public void convertToString_jdk20_and_newer()
+	{
 		LocalDateTimeConverter converter = new LocalDateTimeConverter();
 		String date = converter.convertToString(LocalDateTime.of(2016, 7, 11, 1, 2, 3), Locale.ENGLISH);
 		assertEquals("Jul 11, 2016, 1:02:03 AM", date);
 	}
 
 	@Test
-	@EnabledOnJre({JRE.JAVA_17, JRE.JAVA_18, JRE.JAVA_19})
-	public void convertToObject_upto_jdk19() {
+	@EnabledOnJre({ JRE.JAVA_17, JRE.JAVA_18, JRE.JAVA_19 })
+	public void convertToObject_upto_jdk19()
+	{
 		LocalDateTimeConverter converter = new LocalDateTimeConverter();
 		LocalDateTime date = converter.convertToObject("Jul 11, 2016, 1:02:03 AM", Locale.ENGLISH);
 		assertEquals(date, LocalDateTime.of(2016, 7, 11, 1, 2, 3));
 	}
 
 	@Test
-	@EnabledOnJre({JRE.JAVA_20, JRE.JAVA_21}) // See https://bugs.openjdk.org/browse/JDK-8304925
-	public void convertToObject_jdk20_and_newer() {
+	@EnabledOnJre({ JRE.JAVA_20, JRE.JAVA_21 }) // See https://bugs.openjdk.org/browse/JDK-8304925
+	public void convertToObject_jdk20_and_newer()
+	{
 		LocalDateTimeConverter converter = new LocalDateTimeConverter();
 		LocalDateTime date = converter.convertToObject("Jul 11, 2016, 1:02:03 AM", Locale.ENGLISH);
 		assertEquals(date, LocalDateTime.of(2016, 7, 11, 1, 2, 3));
 	}
-	
+
 	@Test
-	public void convertFails() {
+	public void convertFails()
+	{
 		LocalDateTimeConverter converter = new LocalDateTimeConverter();
 
-		try {
+		try
+		{
 			converter.convertToObject("aaa", Locale.ENGLISH);
-		} catch (ConversionException expected) {
+		}
+		catch (ConversionException expected)
+		{
 		}
 	}
 }

@@ -23,18 +23,21 @@ import org.apache.wicket.util.lang.Args;
  * To be used to define the "type" attribute of the script tag written
  * by a {@link AbstractJavaScriptReferenceHeaderItem}.
  */
-public class JavaScriptReferenceType implements IClusterable {
+public class JavaScriptReferenceType implements IClusterable
+{
 
 	public static final JavaScriptReferenceType TEXT_JAVASCRIPT = new JavaScriptReferenceType("text/javascript");
 	public static final JavaScriptReferenceType MODULE = new JavaScriptReferenceType("module");
 
 	private final String type;
 
-	public JavaScriptReferenceType(final String type) {
+	public JavaScriptReferenceType(final String type)
+	{
 		this.type = Args.notEmpty(type, "type");
 	}
 
-	public String getType() {
+	public String getType()
+	{
 		return type;
 	}
 }

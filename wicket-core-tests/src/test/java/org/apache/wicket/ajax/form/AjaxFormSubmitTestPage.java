@@ -103,13 +103,15 @@ public class AjaxFormSubmitTestPage extends WebPage
 				formSubmitted = formSubmitted | BUTTON_SUBMIT;
 			}
 
-			protected void onError(Optional<AjaxRequestTarget> target) {
+			protected void onError(Optional<AjaxRequestTarget> target)
+			{
 				assertEquals(target.isPresent(), getRequestCycle().find(AjaxRequestTarget.class).isPresent());
 
 				formSubmitted = formSubmitted | BUTTON_ERROR;
 			}
 
-			protected void onAfterSubmit(Optional<AjaxRequestTarget> target) {
+			protected void onAfterSubmit(Optional<AjaxRequestTarget> target)
+			{
 				assertEquals(target.isPresent(), getRequestCycle().find(AjaxRequestTarget.class).isPresent());
 			}
 		}.setDefaultFormProcessing(defaultProcessing));

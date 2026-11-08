@@ -47,7 +47,7 @@ public class SessionCountListenerAspect extends WicketMetrics
 		count("core/session/count", null, CounterOperation.INC, 1L);
 		return count;
 	}
-	
+
 	/**
 	 * Measures if a session is going to be destroyed
 	 * 

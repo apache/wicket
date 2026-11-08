@@ -85,7 +85,7 @@ public abstract class AbstractTransformerBehavior extends Behavior implements IT
 
 			if (component instanceof Page && originalResponse instanceof WebResponse)
 			{
-				tempResponse.writeMetaData((WebResponse) originalResponse);
+				tempResponse.writeMetaData((WebResponse)originalResponse);
 			}
 
 			// Transform the data

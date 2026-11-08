@@ -41,7 +41,7 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 		IReferenceHeaderItem
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final ResourceReference reference;
 	private final PageParameters pageParameters;
 
@@ -139,12 +139,12 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
-		JavaScriptReferenceHeaderItem that = (JavaScriptReferenceHeaderItem) o;
+		JavaScriptReferenceHeaderItem that = (JavaScriptReferenceHeaderItem)o;
 		return java.util.Objects.equals(reference, that.reference) &&
-				java.util.Objects.equals(pageParameters, that.pageParameters);
+			java.util.Objects.equals(pageParameters, that.pageParameters);
 	}
-	
-	@Override 
+
+	@Override
 	public String getIntegrity()
 	{
 		String tempIntegrity = super.getIntegrity();
@@ -154,7 +154,7 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 		}
 		return tempIntegrity;
 	}
-	
+
 	@Override
 	public CrossOrigin getCrossOrigin()
 	{
@@ -164,5 +164,5 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 			tempOrigin = reference.getCrossOrigin();
 		}
 		return tempOrigin;
-	}	
+	}
 }

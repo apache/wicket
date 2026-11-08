@@ -225,7 +225,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	@Override
 	public List<NamedPair> getAllNamed()
 	{
-		return namedParameters != null ? Collections.unmodifiableList(namedParameters) : Collections.<NamedPair>emptyList();
+		return namedParameters != null ? Collections.unmodifiableList(namedParameters) : Collections
+			.<NamedPair> emptyList();
 	}
 
 	@Override
@@ -238,8 +239,10 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		}
 
 		List<NamedPair> parametersByType = new ArrayList<>();
-		for (NamedPair pair : allNamed) {
-			if (type == pair.getType()) {
+		for (NamedPair pair : allNamed)
+		{
+			if (type == pair.getType())
+			{
 				parametersByType.add(pair);
 			}
 		}
@@ -324,7 +327,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 		if (value instanceof String[])
 		{
-			addNamed(name, (String[]) value, index, type);
+			addNamed(name, (String[])value, index, type);
 		}
 		else
 		{
@@ -496,7 +499,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 		for (NamedPair curNamed : otherNamed)
 		{
-			add(curNamed.getKey(), curNamed.getValue(),  curNamed.getType());
+			add(curNamed.getKey(), curNamed.getValue(), curNamed.getType());
 		}
 	}
 
@@ -547,7 +550,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			return false;
 		else if (!CollectionUtils.isEqualCollection(namedParameters, other.namedParameters))
 			return false;
-		if(!Strings.isEqual(other.fragment, fragment))
+		if (!Strings.isEqual(other.fragment, fragment))
 			return false;
 		return true;
 	}
@@ -637,10 +640,10 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		if (fragment != null)
 		{
 			if (str.length() > 0)
-			{ 
+			{
 				str.append(", ");
 			}
-			
+
 			str.append("fragment=").append('\'').append(fragment).append('\'');
 		}
 

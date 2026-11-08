@@ -149,7 +149,7 @@ public class EffectsPage extends BasePage
 				targetOptional.ifPresent(target -> {
 					target.add(c2);
 					target.appendJavaScript(String.format("jQuery('#%s').effect('highlight');",
-							c2.getMarkupId()));
+						c2.getMarkupId()));
 				});
 			}
 
@@ -169,7 +169,8 @@ public class EffectsPage extends BasePage
 			{
 				counter3++;
 				targetOptional.ifPresent(target -> {
-					target.prependJavaScript((String.format("jQuery('#%s').fadeOut(500, Wicket.Ajax.suspendCall());", c3.getMarkupId())));
+					target.prependJavaScript((String.format("jQuery('#%s').fadeOut(500, Wicket.Ajax.suspendCall());", c3
+						.getMarkupId())));
 					target.add(c3);
 					target.appendJavaScript((String.format("jQuery('#%s').hide().fadeIn(500);", c3.getMarkupId())));
 				});

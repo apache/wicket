@@ -94,7 +94,7 @@ public final class EnhancedPageView extends GenericPanel<Page>
 	public EnhancedPageView(String id, IModel<Page> model)
 	{
 		super(id, model);
-		
+
 		expandState = new ExpandState();
 		expandState.expandAll();
 		showStatefulAndParentsOnly = false;

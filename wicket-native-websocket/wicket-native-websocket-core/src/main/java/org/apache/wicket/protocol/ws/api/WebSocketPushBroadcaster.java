@@ -163,14 +163,15 @@ public class WebSocketPushBroadcaster
 	 * @param message
 	 *			The push message event
 	 */
-	public void broadcastAllMatchingFilter(Application application, IWebSocketConnectionRegistry.IConnectionsFilter connectionsFilter, IWebSocketPushMessage message)
+	public void broadcastAllMatchingFilter(Application application,
+		IWebSocketConnectionRegistry.IConnectionsFilter connectionsFilter, IWebSocketPushMessage message)
 	{
 		Args.notNull(application, "application");
 		Args.notNull(message, "message");
 		Args.notNull(connectionsFilter, "connectionsFilter");
 
 		Collection<IWebSocketConnection> wsConnections = registry.getConnections(application, connectionsFilter);
-		if (wsConnections == null  || wsConnections.isEmpty())
+		if (wsConnections == null || wsConnections.isEmpty())
 		{
 			return;
 		}
@@ -178,7 +179,7 @@ public class WebSocketPushBroadcaster
 	}
 
 	private void process(final Application application, final Collection<IWebSocketConnection> wsConnections,
-	                     final IWebSocketPushMessage message)
+		final IWebSocketPushMessage message)
 	{
 		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
 		Executor executor = webSocketSettings.getWebSocketPushMessageExecutor();

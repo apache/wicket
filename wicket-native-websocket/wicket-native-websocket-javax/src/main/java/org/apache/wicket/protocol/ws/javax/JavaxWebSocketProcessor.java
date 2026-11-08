@@ -43,7 +43,8 @@ public class JavaxWebSocketProcessor extends AbstractWebSocketProcessor
 	 * @param endpointConfig
 	 *            the {@link jakarta.websocket.EndpointConfig}
 	 */
-	public JavaxWebSocketProcessor(final Session session, final WebApplication application, EndpointConfig endpointConfig)
+	public JavaxWebSocketProcessor(final Session session, final WebApplication application,
+		EndpointConfig endpointConfig)
 	{
 		super(new JavaxUpgradeHttpRequest(session, endpointConfig), application);
 

@@ -54,13 +54,14 @@ public class ChainingModel<T> implements IModel<T>
 		if (modelObject instanceof Session)
 		{
 			LOG.warn("It is not a good idea to reference the Session instance "
-					+ "in models directly as it may lead to serialization problems. "
-					+ "If you need to access a property of the session via the model use the "
-					+ "page instance as the model object and 'session.attribute' as the path.");
-		} else if (modelObject != null && (modelObject instanceof Serializable == false))
+				+ "in models directly as it may lead to serialization problems. "
+				+ "If you need to access a property of the session via the model use the "
+				+ "page instance as the model object and 'session.attribute' as the path.");
+		}
+		else if (modelObject != null && (modelObject instanceof Serializable == false))
 		{
 			LOG.warn("It is not a good idea to reference non-serializable {} "
-					+ "in a model directly as it may lead to serialization problems.", modelObject.getClass());
+				+ "in a model directly as it may lead to serialization problems.", modelObject.getClass());
 		}
 
 		target = modelObject;
@@ -123,7 +124,7 @@ public class ChainingModel<T> implements IModel<T>
 		this.target = modelObject;
 		return this;
 	}
-	
+
 	/**
 	 * @return The target - if it is a model, null otherwise
 	 */

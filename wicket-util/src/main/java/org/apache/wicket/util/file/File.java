@@ -169,8 +169,8 @@ public class File extends java.io.File implements IModifiable
 	public Instant lastModifiedTime()
 	{
 		final long time = lastModified();
-		
-		if(time == 0)
+
+		if (time == 0)
 		{
 			return null;
 		}

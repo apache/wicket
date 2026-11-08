@@ -205,7 +205,8 @@ class UrlValidatorTest
 	{
 		String[] schemes = { "http", "https" };
 		UrlValidator urlValidator = new UrlValidator(schemes, UrlValidator.NO_FRAGMENTS);
-		urlValidator.isValid("http://www.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.log");
+		urlValidator.isValid(
+			"http://www.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.log");
 	}
 
 	/**
@@ -323,10 +324,10 @@ class UrlValidatorTest
 			new ResultPair("go.1aa", false), new ResultPair("aaa.", false),
 			new ResultPair(".aaa", false), new ResultPair("aaa", true),
 			new ResultPair("go.local", true)
-	/*
-	 * , new ResultPair("", false) In combination with "http:/" + "/test1" the expected result is
-	 * true
-	 */};
+			/*
+			 * , new ResultPair("", false) In combination with "http:/" + "/test1" the expected result is
+			 * true
+			 */ };
 	private ResultPair[] testUrlPort = { new ResultPair(":80", true), new ResultPair(":65535", true),
 			new ResultPair(":0", true), new ResultPair("", true), new ResultPair(":-1", false),
 			new ResultPair(":65636", true), new ResultPair(":65a", false) };

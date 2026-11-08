@@ -42,14 +42,14 @@ public class ReplacementResourceBundleReference extends ResourceBundleReference
 	{
 		super(bundleRef);
 	}
-	
+
 	/**
 	 * Returns the dependencies of the replacing resource reference.
 	 * 
 	 * @return the dependencies of the replacing resource reference
 	 */
 	@Override
-	public List<HeaderItem> getDependencies() 
+	public List<HeaderItem> getDependencies()
 	{
 		return getBundleReference().getDependencies();
 	}

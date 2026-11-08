@@ -50,14 +50,14 @@ public class ContextManager
 		try
 		{
 			lifecycle = new HttpContextLifecycle(BeanManagerProxy.unwrap(beanManager),
-					AcceptingHttpContextActivationFilter.INSTANCE, true, true, false, true);
+				AcceptingHttpContextActivationFilter.INSTANCE, true, true, false, true);
 		}
 		catch (NoSuchMethodError e)
 		{
 			try
 			{
 				lifecycle = HttpContextLifecycle.class.getConstructor(BeanManager.class,
-						AcceptingHttpContextActivationFilter.class).newInstance(
+					AcceptingHttpContextActivationFilter.class).newInstance(
 						BeanManagerProxy.unwrap(beanManager),
 						AcceptingHttpContextActivationFilter.INSTANCE);
 			}

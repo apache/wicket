@@ -32,7 +32,7 @@ class ResourceAggregatorRenderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void testPage1() throws Exception
+	void testPage1() throws Exception
 	{
 		tester.startPage(ResourceAggregatorTest1Page.class);
 		tester.assertResultPage(ResourceAggregatorTest1Page.class,
@@ -45,7 +45,7 @@ class ResourceAggregatorRenderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void testPage2() throws Exception
+	void testPage2() throws Exception
 	{
 		tester.startPage(ResourceAggregatorTest2Page.class);
 		tester.assertResultPage(ResourceAggregatorTest2Page.class,

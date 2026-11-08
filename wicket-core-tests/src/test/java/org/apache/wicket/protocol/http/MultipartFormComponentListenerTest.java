@@ -31,29 +31,32 @@ import org.junit.jupiter.api.Test;
  */
 class MultipartFormComponentListenerTest extends WicketTestCase
 {
-    @Test
-    void updateFormEnctype()
-    {
-        tester.startPage(MultipartFormComponentListenerPage.class);
-        tester.assertRenderedPage(MultipartFormComponentListenerPage.class);
+	@Test
+	void updateFormEnctype()
+	{
+		tester.startPage(MultipartFormComponentListenerPage.class);
+		tester.assertRenderedPage(MultipartFormComponentListenerPage.class);
 
-        TagTester formTagTester = tester.getTagByWicketId("form");
-        String formMarkupId = formTagTester.getAttribute("id");
+		TagTester formTagTester = tester.getTagByWicketId("form");
+		String formMarkupId = formTagTester.getAttribute("id");
 
-        assertEquals(Form.ENCTYPE_MULTIPART_FORM_DATA, formTagTester.getAttribute("enctype"));
+		assertEquals(Form.ENCTYPE_MULTIPART_FORM_DATA, formTagTester.getAttribute("enctype"));
 
-        tester.getRequest().setAttribute("form:dropDown", 1);
-        tester.executeAjaxEvent("form:dropDown", "change");
-        String ajaxResponse = tester.getLastResponseAsString();
-        assertTrue(ajaxResponse.contains("Wicket.$('"+formMarkupId+"').enctype='" + MultipartFormComponentListener.ENCTYPE_URL_ENCODED + "'})();"));
+		tester.getRequest().setAttribute("form:dropDown", 1);
+		tester.executeAjaxEvent("form:dropDown", "change");
+		String ajaxResponse = tester.getLastResponseAsString();
+		assertTrue(ajaxResponse.contains("Wicket.$('" + formMarkupId + "').enctype='"
+			+ MultipartFormComponentListener.ENCTYPE_URL_ENCODED + "'})();"));
 
-        tester.getRequest().setAttribute("form:dropDown", 2);
-        tester.executeAjaxEvent("form:dropDown", "change");
-        ajaxResponse = tester.getLastResponseAsString();
-        assertTrue(ajaxResponse.contains("Wicket.$('"+formMarkupId+"').enctype='" + Form.ENCTYPE_MULTIPART_FORM_DATA + "'})();"));
+		tester.getRequest().setAttribute("form:dropDown", 2);
+		tester.executeAjaxEvent("form:dropDown", "change");
+		ajaxResponse = tester.getLastResponseAsString();
+		assertTrue(ajaxResponse.contains("Wicket.$('" + formMarkupId + "').enctype='" + Form.ENCTYPE_MULTIPART_FORM_DATA
+			+ "'})();"));
 
-        tester.clickLink("toggleVisibility");
-        ajaxResponse = tester.getLastResponseAsString();
-        assertFalse(ajaxResponse.contains("Wicket.$('"+formMarkupId+"').enctype="), "enctype should not be pushed on hidden elements");
-    }
+		tester.clickLink("toggleVisibility");
+		ajaxResponse = tester.getLastResponseAsString();
+		assertFalse(ajaxResponse.contains("Wicket.$('" + formMarkupId + "').enctype="),
+			"enctype should not be pushed on hidden elements");
+	}
 }

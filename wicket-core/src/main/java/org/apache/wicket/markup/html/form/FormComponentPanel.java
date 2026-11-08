@@ -165,7 +165,7 @@ public abstract class FormComponentPanel<T> extends FormComponent<T> implements 
 		super.clearInput();
 
 		// Visit all the (visible) form components and clear the input on each.
-		visitFormComponentsPostOrder(this, (IVisitor<FormComponent<?>, Void>) (formComponent, visit) -> {
+		visitFormComponentsPostOrder(this, (IVisitor<FormComponent<?>, Void>)(formComponent, visit) -> {
 			if (formComponent != FormComponentPanel.this && formComponent.isVisibleInHierarchy())
 			{
 				formComponent.clearInput();

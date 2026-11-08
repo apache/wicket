@@ -90,13 +90,14 @@ public class AjaxHelloBrowser extends WicketExamplePage
 				return b.toString();
 			}
 			return "Unfortunately, we were not able to figure out what your time zone is, so we have"
-					+ " no idea what your time is";
+				+ " no idea what your time is";
 		};
 		final Label clientTime = new Label("clienttime", clientTimeModel);
 		clientTime.setOutputMarkupPlaceholderTag(true);
 		clientTime.setVisible(false);
 
-		add(new AjaxClientInfoBehavior() {
+		add(new AjaxClientInfoBehavior()
+		{
 
 			@Override
 			public void renderHead(Component component, IHeaderResponse response)
@@ -141,7 +142,7 @@ public class AjaxHelloBrowser extends WicketExamplePage
 		try
 		{
 			requestCycleSettings.setGatherExtendedBrowserInfo(false);
-			WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
+			WebClientInfo clientInfo = (WebClientInfo)getSession().getClientInfo();
 			properties = clientInfo.getProperties();
 		}
 		finally

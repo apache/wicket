@@ -61,7 +61,7 @@ public class CoreLibrariesContributor
 
 		ResourceReference wicketAjaxReference = jsLibrarySettings.getWicketAjaxReference();
 		response.render(JavaScriptHeaderItem.forReference(wicketAjaxReference));
-		
+
 		final DebugSettings debugSettings = application.getDebugSettings();
 		if (debugSettings.isAjaxDebugModeEnabled())
 		{

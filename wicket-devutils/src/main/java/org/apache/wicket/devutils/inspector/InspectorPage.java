@@ -54,11 +54,11 @@ public final class InspectorPage extends DevUtilsPage
 	{
 		add(new ApplicationView("application", Application.get()));
 		add(new SessionView("session", Session.get()));
-		
+
 		IModel<Page> page = () -> {
 			return reference.getPage();
 		};
-		
+
 		add(new EnhancedPageView("page", page));
 		add(new Image("bug", new PackageResourceReference(InspectorPage.class, "bug.png")));
 		add(new BookmarkablePageLink<>("allsessions", LiveSessionsPage.class));

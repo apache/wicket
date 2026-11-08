@@ -20,8 +20,7 @@ package org.apache.wicket.markup.head;
  * A <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type#value">browser-
  * processed</a> type for {@link JavaScriptContentHeaderItem}. That is, the content is not a data block.
  */
-public enum JavaScriptBrowserProcessedContentType implements JavaScriptContentType
-{
+public enum JavaScriptBrowserProcessedContentType implements JavaScriptContentType {
 	IMPORT_MAP("importmap"),
 	MODULE("module"),
 	SPECULATION_RULES("speculationrules"),
@@ -31,11 +30,11 @@ public enum JavaScriptBrowserProcessedContentType implements JavaScriptContentTy
 
 	JavaScriptBrowserProcessedContentType(String type)
 	{
-        this.type = type;
-    }
+		this.type = type;
+	}
 
 	@Override
-    public String getType()
+	public String getType()
 	{
 		return type;
 	}

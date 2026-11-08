@@ -165,7 +165,7 @@ class OpenCloseTagExpanderTest extends WicketTestCase
 
 		assertThat(markupElement).isInstanceOf(WicketTag.class);
 		assertTrue(markupElement.closes(tag));
-		assertEquals(namespace, ((ComponentTag) markupElement).getNamespace());
+		assertEquals(namespace, ((ComponentTag)markupElement).getNamespace());
 	}
 
 	private static class TestMarkupElement extends WicketTag

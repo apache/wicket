@@ -86,7 +86,8 @@ class PageProviderTest extends WicketTestCase
 
 		mapperContext.cleanSessionCache();
 
-		StatefullMockPage restauredPageAfterStateChage = (StatefullMockPage)mapperContext.getPageInstance(testPage.getPageId());
+		StatefullMockPage restauredPageAfterStateChage = (StatefullMockPage)mapperContext.getPageInstance(testPage
+			.getPageId());
 
 		// OK, if the correct page got touched/stores its change will be visible now
 		assertEquals(newState, restauredPageAfterStateChage.state);

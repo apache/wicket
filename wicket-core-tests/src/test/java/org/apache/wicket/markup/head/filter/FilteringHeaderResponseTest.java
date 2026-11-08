@@ -113,10 +113,10 @@ class FilteringHeaderResponseTest extends WicketTestCase
 	{
 		tester.getApplication().getHeaderResponseDecorators()
 			.add(response -> new JavaScriptDeferHeaderResponse(response));
-		
+
 		DeferredPage page = new DeferredPage();
 		executeTest(page, "DeferredPageExpected.html");
-		
+
 		executeBehavior(page.behavior, "DeferredPage_AjaxExpected.html");
 	}
 

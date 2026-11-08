@@ -100,7 +100,7 @@ public class LazyInitProxyFactory
 		short.class, Short.class, int.class, Integer.class, long.class, Long.class, float.class,
 		Float.class, double.class, Double.class, char.class, Character.class, boolean.class,
 		Boolean.class);
-	
+
 	private static final IProxyFactory JDK_PROXY_FACTORY = new JdkProxyFactory();
 	private static final IProxyFactory CLASS_PROXY_FACTORY = new ByteBuddyProxyFactory();
 
@@ -122,7 +122,7 @@ public class LazyInitProxyFactory
 		{
 			// We special-case primitives as sometimes people use these as
 			// SpringBeans (WICKET-603, WICKET-906). Go figure.
-			return (T) locator.locateProxyTarget();
+			return (T)locator.locateProxyTarget();
 		}
 		else if (type.isInterface())
 		{
@@ -133,7 +133,7 @@ public class LazyInitProxyFactory
 			return CLASS_PROXY_FACTORY.createProxy(type, locator);
 		}
 	}
-	
+
 	/**
 	 * This interface is used to make the proxy forward writeReplace() call to the handler instead
 	 * of invoking it on itself. This allows us to serialize the replacement object instead of the
@@ -155,7 +155,7 @@ public class LazyInitProxyFactory
 		 */
 		Object writeReplace() throws ObjectStreamException;
 	}
-	
+
 	/**
 	 * Object that replaces the proxy when it is serialized. Upon deserialization this object will
 	 * create a new proxy with the same locator.
@@ -201,8 +201,8 @@ public class LazyInitProxyFactory
 					catch (ClassNotFoundException ignored2)
 					{
 						ClassNotFoundException cause = new ClassNotFoundException(
-								"Could not resolve type [" + type +
-										"] with the currently configured org.apache.wicket.application.IClassResolver");
+							"Could not resolve type [" + type +
+								"] with the currently configured org.apache.wicket.application.IClassResolver");
 						throw new WicketRuntimeException(cause);
 					}
 				}
@@ -275,5 +275,5 @@ public class LazyInitProxyFactory
 	{
 		return (method.getReturnType() == Object.class) &&
 			(method.getParameterTypes().length == 0) && method.getName().equals("writeReplace");
-	}	
+	}
 }

@@ -31,8 +31,9 @@ import org.apache.wicket.request.resource.ResourceReference;
 public class BrowserInfoForm extends GenericPanel<ClientProperties>
 {
 	private static final long serialVersionUID = 1L;
-	
-	public static final ResourceReference JS = new JavaScriptResourceReference(BrowserInfoForm.class, "wicket-browser-info.js");
+
+	public static final ResourceReference JS = new JavaScriptResourceReference(BrowserInfoForm.class,
+		"wicket-browser-info.js");
 
 	/**
 	 * The special form that submits the client/browser info

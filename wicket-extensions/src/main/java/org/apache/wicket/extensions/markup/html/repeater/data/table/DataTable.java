@@ -175,7 +175,8 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	 *            imodel for data provider
 	 * @return the data grid view
 	 */
-	protected DataGridView<T> newDataGridView(String id, List<? extends IColumn<T, S>> columns, IDataProvider<T> dataProvider)
+	protected DataGridView<T> newDataGridView(String id, List<? extends IColumn<T, S>> columns,
+		IDataProvider<T> dataProvider)
 	{
 		return new DefaultDataGridView(id, columns, dataProvider);
 	}

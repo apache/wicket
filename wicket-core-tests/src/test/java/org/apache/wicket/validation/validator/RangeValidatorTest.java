@@ -35,7 +35,7 @@ class RangeValidatorTest
 	 * @throws Exception
 	 */
 	@Test
-    void doubleRange() throws Exception
+	void doubleRange() throws Exception
 	{
 		IValidator<Double> validator = new RangeValidator<Double>(1.1, 1.8);
 
@@ -65,7 +65,7 @@ class RangeValidatorTest
 	 * @throws Exception
 	 */
 	@Test
-    void integerRange() throws Exception
+	void integerRange() throws Exception
 	{
 		IValidator<Integer> validator = new RangeValidator<Integer>(1, 8);
 
@@ -92,7 +92,7 @@ class RangeValidatorTest
 	}
 
 	@Test
-    void resourceKeys()
+	void resourceKeys()
 	{
 		Validatable<Integer> validatable = new Validatable<Integer>(10);
 
@@ -118,7 +118,7 @@ class RangeValidatorTest
 	}
 
 	@Test
-    void onlyMinValue()
+	void onlyMinValue()
 	{
 		IValidator<Integer> validator = new RangeValidator<Integer>(1, null);
 
@@ -128,7 +128,7 @@ class RangeValidatorTest
 	}
 
 	@Test
-    void onlyMaxValue()
+	void onlyMaxValue()
 	{
 		IValidator<Integer> validator = new RangeValidator<Integer>(null, 1);
 
@@ -141,7 +141,7 @@ class RangeValidatorTest
 	 * WICKET-4717
 	 */
 	@Test
-    void exact()
+	void exact()
 	{
 		IValidator<Integer> validator = new RangeValidator<Integer>(1, 1);
 

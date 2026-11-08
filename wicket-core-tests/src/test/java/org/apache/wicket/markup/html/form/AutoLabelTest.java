@@ -195,7 +195,7 @@ class AutoLabelTest extends WicketTestCase
 		assertRendered(toggleString(page.field, "required", false));
 		// now when submitting label has no error.
 		tester.executeAjaxEvent(page.submit, "click");
-		assertNotRendered( "class='error'");
+		assertNotRendered("class='error'");
 		// set required back.
 		tester.executeAjaxEvent(page.toggleRequired, "click");
 		//required should be added from associated label
@@ -215,16 +215,21 @@ class AutoLabelTest extends WicketTestCase
 	@Test
 	void labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdatedExplicitAutoAttributeIsSetToTrue()
 	{
-		labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated("<label wicket:for='t' wicket:auto='true'><span class='label-text'>field</span></label>");
+		labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated(
+			"<label wicket:for='t' wicket:auto='true'><span class='label-text'>field</span></label>");
 	}
 
 	@Test
 	void labelTagClassesAreNotUpdatedWhenRelatedFormComponentIsUpdatedExplicitAutoAttributeIsSetToFalse()
 	{
-		try {
-			labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated("<label wicket:for='t' wicket:auto='false'><span class='label-text'>field</span></label>");
+		try
+		{
+			labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated(
+				"<label wicket:for='t' wicket:auto='false'><span class='label-text'>field</span></label>");
 			fail("Auto-label auto refresh should fave failed");
-		} catch (AssertionError e) {
+		}
+		catch (AssertionError e)
+		{
 			// ok
 		}
 
@@ -235,9 +240,12 @@ class AutoLabelTest extends WicketTestCase
 	{
 		try
 		{
-			labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated("<label wicket:for='t'><span class='label-text'>field</span></label>");
+			labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated(
+				"<label wicket:for='t'><span class='label-text'>field</span></label>");
 			fail("Auto-label auto refresh should fave failed");
-		} catch (AssertionError e) {
+		}
+		catch (AssertionError e)
+		{
 			// ok
 		}
 	}
@@ -246,30 +254,40 @@ class AutoLabelTest extends WicketTestCase
 	void labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdatedWhenRelatedMarkupSettingsIsSet()
 	{
 		tester.getApplication().getMarkupSettings().setUpdateAutoLabelsTogetherWithFormComponent(true);
-		labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated("<label wicket:for='t'><span class='label-text'>field</span></label>");
+		labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated(
+			"<label wicket:for='t'><span class='label-text'>field</span></label>");
 	}
 
 	@Test
 	void labelTagClassesAreNotUpdatedWhenRelatedFormComponentIsUpdatedWhenRelatedMarkupSettingsIsSetToFalseOrNotSet()
 	{
-		try {
+		try
+		{
 			// updateAutoLabelsTogetherWithFormComponent is set to false by default
-			labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated("<label wicket:for='t'><span class='label-text'>field</span></label>");
+			labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated(
+				"<label wicket:for='t'><span class='label-text'>field</span></label>");
 			fail("Auto-label auto refresh should fave failed");
-		} catch (AssertionError e) {
+		}
+		catch (AssertionError e)
+		{
 			//ok.
 		}
 
-		try {
+		try
+		{
 			tester.getApplication().getMarkupSettings().setUpdateAutoLabelsTogetherWithFormComponent(false);
-			labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated("<label wicket:for='t'><span class='label-text'>field</span></label>");
+			labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated(
+				"<label wicket:for='t'><span class='label-text'>field</span></label>");
 			fail("Auto-label auto refresh should fave failed");
-		} catch (AssertionError e) {
+		}
+		catch (AssertionError e)
+		{
 			// ok
 		}
 	}
 
-	private String toggleString(FormComponent<?> component, String cssClass, boolean flag) {
+	private String toggleString(FormComponent<?> component, String cssClass, boolean flag)
+	{
 		// check
 		return "Wicket.DOM.toggleClass('" + component.getMarkupId() + "-w-lbl', '" + cssClass + "', " + flag + ")";
 	}
@@ -285,10 +303,11 @@ class AutoLabelTest extends WicketTestCase
 		String markup = tester.getLastResponse().getDocument();
 		markup = markup.replace("'", "\"");
 		assertTrue(markup.contains(markupFragment.replace("'", "\"")),
-				"fragment: [" + markupFragment + "] not found in generated markup: [" + markup + "]");
+			"fragment: [" + markupFragment + "] not found in generated markup: [" + markup + "]");
 	}
 
-	private void assertNotRendered(Page page, String markupFragment) {
+	private void assertNotRendered(Page page, String markupFragment)
+	{
 		tester.startPage(page);
 		assertNotRendered(markupFragment);
 	}
@@ -298,7 +317,7 @@ class AutoLabelTest extends WicketTestCase
 		String markup = tester.getLastResponse().getDocument();
 		markup = markup.replace("'", "\"");
 		assertFalse(markup.contains(markupFragment.replace("'", "\"")),
-				"fragment: [" + markupFragment + "] not found in generated markup: [" + markup + "]");
+			"fragment: [" + markupFragment + "] not found in generated markup: [" + markup + "]");
 	}
 
 	private static class TestPage extends WebPage
@@ -357,18 +376,22 @@ class AutoLabelTest extends WicketTestCase
 
 			add(toggleRequired);
 
-			clearErrors = new AjaxLink<Void>("clearErrors") {
+			clearErrors = new AjaxLink<Void>("clearErrors")
+			{
 				@Override
-				public void onClick(AjaxRequestTarget target) {
+				public void onClick(AjaxRequestTarget target)
+				{
 					field.getFeedbackMessages().clear();
 					target.add(field, feedback);
 				}
 			};
 			add(clearErrors);
 
-			addError = new AjaxLink<Void>("addError") {
+			addError = new AjaxLink<Void>("addError")
+			{
 				@Override
-				public void onClick(AjaxRequestTarget target) {
+				public void onClick(AjaxRequestTarget target)
+				{
 					field.error("Test");
 					target.add(field, feedback);
 				}
@@ -380,8 +403,9 @@ class AutoLabelTest extends WicketTestCase
 		public IMarkupFragment getMarkup()
 		{
 			return Markup.of("<html><body><div wicket:id='feedback'></div><form wicket:id='f'>\n" + labelMarkup +
-				"\n<input type='text' wicket:id='t'/>\n<a wicket:id='submit'>Submit</a></form>\n<a wicket:id='toggleRequired'>Toggle required</a>" +
-					"\n<a wicket:id='clearErrors'>clearErrors</a>\n<a wicket:id='addError'>addError</a></body></html>");
+				"\n<input type='text' wicket:id='t'/>\n<a wicket:id='submit'>Submit</a></form>\n<a wicket:id='toggleRequired'>Toggle required</a>"
+				+
+				"\n<a wicket:id='clearErrors'>clearErrors</a>\n<a wicket:id='addError'>addError</a></body></html>");
 		}
 	}
 }

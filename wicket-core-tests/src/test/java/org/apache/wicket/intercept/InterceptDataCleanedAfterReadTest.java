@@ -38,7 +38,7 @@ class InterceptDataCleanedAfterReadTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4066
 	 */
 	@Test
-    void wicket4066()
+	void wicket4066()
 	{
 		// go to a secured page (a redirect to LoginPage with interception will be done)
 		tester.startPage(SecurePage.class);

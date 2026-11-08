@@ -128,7 +128,7 @@ public class CryptingPageStore extends DelegatingPageStore
 			{
 				throw new WicketRuntimeException("CryptingPageStore expects serialized pages");
 			}
-			SerializedPage serializedPage = (SerializedPage) page;
+			SerializedPage serializedPage = (SerializedPage)page;
 
 			byte[] encrypted = serializedPage.getData();
 			// bind the page to the id we are looking up (the trusted method parameter), so a
@@ -156,7 +156,7 @@ public class CryptingPageStore extends DelegatingPageStore
 			throw new WicketRuntimeException("CryptingPageStore works with serialized pages only");
 		}
 
-		SerializedPage serializedPage = (SerializedPage) page;
+		SerializedPage serializedPage = (SerializedPage)page;
 
 		byte[] decrypted = serializedPage.getData();
 		byte[] encrypted = getCrypt(context).encrypt(decrypted, aad(serializedPage.getPageId()));

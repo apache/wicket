@@ -346,8 +346,7 @@ public class WicketFilter implements Filter
 				throw new WicketRuntimeException("Application factory class " +
 					appFactoryClassName + " must implement IWebApplicationFactory");
 			}
-			catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SecurityException
-					| NoSuchMethodException | InvocationTargetException e)
+			catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SecurityException | NoSuchMethodException | InvocationTargetException e)
 			{
 				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
 			}
@@ -453,7 +452,7 @@ public class WicketFilter implements Filter
 			// #destroy() might not be called by the web container when #init() fails,
 			// so destroy now
 			log.error(String.format("The initialization of an application with name '%s' has failed.",
-					filterConfig.getFilterName()), e);
+				filterConfig.getFilterName()), e);
 
 			try
 			{
@@ -522,8 +521,8 @@ public class WicketFilter implements Filter
 			if (patterns.length > 1)
 			{
 				log.warn(
-						"Multiple url patterns defined for Wicket filter/servlet, using the first: {}",
-						pattern);
+					"Multiple url patterns defined for Wicket filter/servlet, using the first: {}",
+					pattern);
 			}
 
 			if ("/*".equals(pattern))

@@ -61,7 +61,7 @@ public abstract class WebResponse extends Response
 	 * @return True when this {@code WebResponse} supports setting headers.
 	 */
 	public abstract boolean isHeaderSupported();
-	
+
 	/**
 	 * Set a header to the string value in the servlet response stream.
 	 * 
@@ -298,8 +298,7 @@ public abstract class WebResponse extends Response
 	 * href="http://palisade.plynt.com/issues/2008Jul/cache-control-attributes">here</a> or in <a
 	 * href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">RFC-2616</a>.
 	 */
-	public static enum CacheScope
-	{
+	public static enum CacheScope {
 		/**
 		 * use all caches (private + public)
 		 * <p/>

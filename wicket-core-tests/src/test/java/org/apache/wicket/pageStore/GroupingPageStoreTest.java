@@ -40,8 +40,8 @@ public class GroupingPageStoreTest
 
 	private static MetaDataKey<Serializable> KEY = new MetaDataKey<Serializable>()
 	{
-	}; 
-	
+	};
+
 	private static Serializable VALUE = new Serializable()
 	{
 	};
@@ -50,61 +50,65 @@ public class GroupingPageStoreTest
 	void test()
 	{
 		String sessionId = "foo";
-		
-		IPageStore store = new MockPageStore() {
-			
-			public void addPage(IPageContext context, IManageablePage page) {
+
+		IPageStore store = new MockPageStore()
+		{
+
+			public void addPage(IPageContext context, IManageablePage page)
+			{
 
 				context.getSessionAttribute("attribute", () -> "value");
 				context.getSessionData(KEY, () -> VALUE);
 
 				assertEquals(sessionId + "_" + group(page), context.getSessionId(true));
-				
+
 				super.addPage(context, page);
 			}
-			
+
 			@Override
 			public void removeAllPages(IPageContext context)
 			{
 				assertEquals(sessionId + "_group1", context.getSessionId(true));
-				
+
 				super.removeAllPages(context);
 			}
 		};
-		
-		IPageStore groupingStore = new GroupingPageStore(store, 2) {
+
+		IPageStore groupingStore = new GroupingPageStore(store, 2)
+		{
 			@Override
 			protected String getGroup(IManageablePage page)
 			{
 				return group(page);
 			}
 		};
-		
-		MockPageContext context = new MockPageContext(sessionId) {
+
+		MockPageContext context = new MockPageContext(sessionId)
+		{
 			@Override
 			public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue)
 			{
 				assertFalse(defaultValue.get() == VALUE, "group session data not set directly in session");
-				
+
 				return super.getSessionData(key, defaultValue);
 			}
-			
+
 			@Override
 			public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> value)
 			{
 				assertTrue(key.startsWith("attribute_group"), "group session attribute starts with group");
-				
+
 				return super.getSessionAttribute(key, value);
 			}
 		};
-		
+
 		groupingStore.addPage(context, new MockPage(0)); // group 0
 		groupingStore.addPage(context, new MockPage(1)); // group 0
 		groupingStore.addPage(context, new MockPage(10)); // group 1
 		groupingStore.addPage(context, new MockPage(11)); // group 1
 		groupingStore.addPage(context, new MockPage(2)); // group 0 
 		groupingStore.addPage(context, new MockPage(21)); // group 2, expels oldest group 1
-		
+
 	}
 
 	protected String group(IManageablePage page)

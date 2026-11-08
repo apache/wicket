@@ -51,8 +51,7 @@ public class InSessionPageStoreConcurrencyTest
 		@Override
 		protected IPageManagerProvider newTestPageManagerProvider()
 		{
-			return () ->
-					new PageManager(session);
+			return () -> new PageManager(session);
 		}
 	}
 
@@ -97,11 +96,11 @@ public class InSessionPageStoreConcurrencyTest
 
 		Callable<Void> serializeSessionTask = () -> {
 			final NullOutputStream nullOutputStream = NullOutputStream.INSTANCE;
-			try(final ObjectOutputStream objectOutputStream = new ObjectOutputStream(nullOutputStream))
+			try (final ObjectOutputStream objectOutputStream = new ObjectOutputStream(nullOutputStream))
 			{
 				objectOutputStream.writeObject(wicketTester.getSession());
 			}
-			catch(final IOException e)
+			catch (final IOException e)
 			{
 				throw new RuntimeException(e);
 			}
@@ -109,23 +108,22 @@ public class InSessionPageStoreConcurrencyTest
 		};
 
 		var tasks = Stream.concat(
-				IntStream.rangeClosed(1, 500).mapToObj(i -> serializeSessionTask),
-				IntStream.rangeClosed(1, 500).mapToObj(i -> executeURLTask)
-		).collect(Collectors.toList());
+			IntStream.rangeClosed(1, 500).mapToObj(i -> serializeSessionTask),
+			IntStream.rangeClosed(1, 500).mapToObj(i -> executeURLTask)).collect(Collectors.toList());
 
 		var futures = executor.invokeAll(tasks);
 
 		futures.forEach(
-				exceptionFuture -> {
-					try
-					{
-						exceptionFuture.get();
-					}
-					catch (InterruptedException| ExecutionException e)
-					{
-						throw new RuntimeException(e);
-					}
-				});
+			exceptionFuture -> {
+				try
+				{
+					exceptionFuture.get();
+				}
+				catch (InterruptedException | ExecutionException e)
+				{
+					throw new RuntimeException(e);
+				}
+			});
 	}
 
 }

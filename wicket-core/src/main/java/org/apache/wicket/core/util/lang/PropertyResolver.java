@@ -83,7 +83,8 @@ public final class PropertyResolver
 	private static final int CREATE_NEW_VALUE = 1;
 	private static final int RESOLVE_CLASS = 2;
 
-	private static final ConcurrentHashMap<Object, IPropertyLocator> applicationToLocators = Generics.newConcurrentHashMap(2);
+	private static final ConcurrentHashMap<Object, IPropertyLocator> applicationToLocators = Generics
+		.newConcurrentHashMap(2);
 
 	private static final String GET = "get";
 	private static final String IS = "is";
@@ -269,7 +270,8 @@ public final class PropertyResolver
 	 * @param clz owning clazz
 	 * @return final getAndSet and the target to apply it on, or {@code null} if expression results in an intermediate null
 	 */
-	private static ObjectWithGetAndSet getObjectWithGetAndSet(final String expression, final Object object, final int tryToCreateNull, Class<?> clz)
+	private static ObjectWithGetAndSet getObjectWithGetAndSet(final String expression, final Object object,
+		final int tryToCreateNull, Class<?> clz)
 	{
 		String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[").toString();
 		int index = getNextDotIndex(expressionBracketsSeperated, 0);
@@ -306,7 +308,9 @@ public final class PropertyResolver
 				{
 					exp = expressionBracketsSeperated.substring(lastIndex);
 					break;
-				} else {
+				}
+				else
+				{
 					index = temp;
 					continue;
 				}
@@ -385,13 +389,14 @@ public final class PropertyResolver
 	private static IGetAndSet getGetAndSet(String exp, final Class<?> clz)
 	{
 		IPropertyLocator locator = getLocator();
-		
+
 		IGetAndSet getAndSet = locator.get(clz, exp);
-		if (getAndSet == null) {
+		if (getAndSet == null)
+		{
 			throw new WicketRuntimeException(
-					"Property could not be resolved for class: " + clz + " expression: " + exp);
+				"Property could not be resolved for class: " + clz + " expression: " + exp);
 		}
-		
+
 		return getAndSet;
 	}
 
@@ -675,7 +680,7 @@ public final class PropertyResolver
 			catch (Exception e)
 			{
 				log.warn("Cannot set new value {} at index {} for array holding elements of class {}",
-						value, index, clzComponentType, e);
+					value, index, clzComponentType, e);
 			}
 			return value;
 		}
@@ -1150,7 +1155,8 @@ public final class PropertyResolver
 		IPropertyLocator result = applicationToLocators.get(key);
 		if (result == null)
 		{
-			IPropertyLocator tmpResult = applicationToLocators.putIfAbsent(key, result = new CachingPropertyLocator(new DefaultPropertyLocator()));
+			IPropertyLocator tmpResult = applicationToLocators.putIfAbsent(key, result = new CachingPropertyLocator(
+				new DefaultPropertyLocator()));
 			if (tmpResult != null)
 			{
 				result = tmpResult;
@@ -1200,50 +1206,59 @@ public final class PropertyResolver
 	public static class CachingPropertyLocator implements IPropertyLocator
 	{
 		private final ConcurrentHashMap<String, IGetAndSet> map = Generics.newConcurrentHashMap(16);
-		
+
 		/**
 		 * Special token to put into the cache representing no located {@link IGetAndSet}. 
 		 */
-		private IGetAndSet NONE = new AbstractGetAndSet() {
+		private IGetAndSet NONE = new AbstractGetAndSet()
+		{
 
 			@Override
-			public Object getValue(Object object) {
+			public Object getValue(Object object)
+			{
 				return null;
 			}
 
 			@Override
-			public Object newValue(Object object) {
+			public Object newValue(Object object)
+			{
 				return null;
 			}
 
 			@Override
-			public void setValue(Object object, Object value, PropertyResolverConverter converter) {
+			public void setValue(Object object, Object value, PropertyResolverConverter converter)
+			{
 			}
 		};
 
 		private final IPropertyLocator locator;
 
-		public CachingPropertyLocator(IPropertyLocator locator) {
+		public CachingPropertyLocator(IPropertyLocator locator)
+		{
 			this.locator = locator;
 		}
 
 		@Override
-		public IGetAndSet get(Class<?> clz, String exp) {
+		public IGetAndSet get(Class<?> clz, String exp)
+		{
 			String key = clz.getName() + "#" + exp;
-			
+
 			IGetAndSet located = map.get(key);
-			if (located == null) {
+			if (located == null)
+			{
 				located = locator.get(clz, exp);
-				if (located == null) {
+				if (located == null)
+				{
 					located = NONE;
 				}
 				map.put(key, located);
 			}
-			
-			if (located == NONE) {
+
+			if (located == NONE)
+			{
 				located = null;
 			}
-			
+
 			return located;
 		}
 	}
@@ -1254,9 +1269,10 @@ public final class PropertyResolver
 	public static class DefaultPropertyLocator implements IPropertyLocator
 	{
 		@Override
-		public IGetAndSet get(Class<?> clz, String exp) {
+		public IGetAndSet get(Class<?> clz, String exp)
+		{
 			IGetAndSet getAndSet = null;
-			
+
 			Method method = null;
 			Field field;
 			if (exp.startsWith("["))
@@ -1385,10 +1401,10 @@ public final class PropertyResolver
 				getAndSet = new MethodGetAndSet(method, MethodGetAndSet.findSetter(method, clz),
 					field);
 			}
-			
+
 			return getAndSet;
 		}
-		
+
 		/**
 		 * @param clz
 		 * @param expression

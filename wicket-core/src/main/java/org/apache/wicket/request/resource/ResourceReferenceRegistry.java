@@ -356,7 +356,8 @@ public class ResourceReferenceRegistry
 		}
 		else
 		{
-			log.warn("A ResourceReference wont be created for a resource with key [{}] because it cannot be located.", key);
+			log.warn("A ResourceReference wont be created for a resource with key [{}] because it cannot be located.",
+				key);
 		}
 		return reference;
 	}

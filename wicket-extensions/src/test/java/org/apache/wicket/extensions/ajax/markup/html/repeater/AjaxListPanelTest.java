@@ -41,27 +41,32 @@ class AjaxListPanelTest extends WicketTestCase
 	{
 		final AjaxListPanel list = new AjaxListPanel("list");
 
-		AjaxEventBehavior behavior = new AjaxEventBehavior("click") {
+		AjaxEventBehavior behavior = new AjaxEventBehavior("click")
+		{
 			Label label;
-			
+
 			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
-				if (label == null) {
+				if (label == null)
+				{
 					label = new Label(list.newChildId());
 					list.append(label, target);
-				} else {
+				}
+				else
+				{
 					list.delete(label, target);
 					label = null;
 				}
 			}
 		};
 		list.add(behavior);
-		
+
 		tester.startComponentInPage(list);
-		
+
 		tester.executeBehavior(behavior);
-		assertTrue(tester.getLastResponseAsString().contains("Wicket.DOM.add(Wicket.DOM.get('container2'), '<div wicket:id=\\\"repeater\\\" id=\\\"id13\\\"/>');"));
+		assertTrue(tester.getLastResponseAsString().contains(
+			"Wicket.DOM.add(Wicket.DOM.get('container2'), '<div wicket:id=\\\"repeater\\\" id=\\\"id13\\\"/>');"));
 
 		tester.executeBehavior(behavior);
 		assertTrue(tester.getLastResponseAsString().contains("Wicket.DOM.remove(Wicket.DOM.get('id13'));"));
@@ -76,7 +81,8 @@ class AjaxListPanelTest extends WicketTestCase
 	{
 		final AjaxListPanel list = new BackslashBeforeQuotePanel("list");
 
-		AjaxEventBehavior behavior = new AjaxEventBehavior("click") {
+		AjaxEventBehavior behavior = new AjaxEventBehavior("click")
+		{
 			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{

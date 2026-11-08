@@ -19,7 +19,8 @@ package org.apache.wicket.markup.html.internal;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-public class BasePage extends WebPage {
+public class BasePage extends WebPage
+{
 
 	BasePage(PageParameters parameters)
 	{

@@ -25,7 +25,7 @@ public class FormDefaultButtonTestPage extends WebPage
 {
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 */
@@ -33,7 +33,7 @@ public class FormDefaultButtonTestPage extends WebPage
 	{
 		Form<Void> form = new Form<Void>("form");
 		add(form);
-		
+
 		Button button = new Button("default");
 		form.setDefaultButton(button);
 		form.add(button);

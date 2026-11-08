@@ -25,7 +25,7 @@ public class FormMethodTestPage extends WebPage
 {
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;
-	
+
 	public final Form<Void> postForm;
 
 	public final Form<Void> getForm;
@@ -37,7 +37,7 @@ public class FormMethodTestPage extends WebPage
 	{
 		postForm = new Form<Void>("formpost");
 		add(postForm);
-		
+
 		getForm = new Form<Void>("formget")
 		{
 			/** Serialization */

@@ -75,6 +75,6 @@ public class RangeTextField<N extends Number & Comparable<N>> extends NumberText
 	@Override
 	protected String[] getInputTypes()
 	{
-		return new String[] {"range"};
+		return new String[] { "range" };
 	}
 }

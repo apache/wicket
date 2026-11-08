@@ -56,7 +56,8 @@ public class StatelessCheckerTest
 	{
 		private static final long serialVersionUID = 1L;
 
-		public StatefulMarkupContainer(String id) {
+		public StatefulMarkupContainer(String id)
+		{
 			super(id);
 		}
 
@@ -141,8 +142,11 @@ public class StatelessCheckerTest
 		tester.startPage(StatelessPage.class);
 	}
 
-	private void assertNonBookmarkablePage(StatelessCheckFailureException ex) {
-		assertEquals("'[Page class = org.apache.wicket.devutils.stateless.StatelessCheckerTest$StatelessPage, id = 0, render count = 1]' claims to be stateless but isn't. Offending component: [TestLink [Component id = testPage]]", ex.getMessage());
+	private void assertNonBookmarkablePage(StatelessCheckFailureException ex)
+	{
+		assertEquals(
+			"'[Page class = org.apache.wicket.devutils.stateless.StatelessCheckerTest$StatelessPage, id = 0, render count = 1]' claims to be stateless but isn't. Offending component: [TestLink [Component id = testPage]]",
+			ex.getMessage());
 		assertEquals(StatelessPage.class, ex.getComponent().getClass());
 	}
 
@@ -168,13 +172,17 @@ public class StatelessCheckerTest
 		assertStatefulBehaviors(ex);
 	}
 
-	private void startComponentInPage(StatelessChecker checker, Component foo) {
+	private void startComponentInPage(StatelessChecker checker, Component foo)
+	{
 		tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
 		tester.startComponentInPage(foo);
 	}
 
-	private void assertStatefulBehaviors(StatelessCheckFailureException ex) {
-		assertEquals("'[Component id = foo]' claims to be stateless but isn't. Stateful behaviors: org.apache.wicket.devutils.stateless.StatelessCheckerTest$StatefulBehavior", ex.getMessage());
+	private void assertStatefulBehaviors(StatelessCheckFailureException ex)
+	{
+		assertEquals(
+			"'[Component id = foo]' claims to be stateless but isn't. Stateful behaviors: org.apache.wicket.devutils.stateless.StatelessCheckerTest$StatefulBehavior",
+			ex.getMessage());
 		assertEquals(StatelessLabel.class, ex.getComponent().getClass());
 	}
 
@@ -209,7 +217,9 @@ public class StatelessCheckerTest
 
 	private void assertStatefulMarkupContainer(StatelessCheckFailureException ex)
 	{
-		assertEquals("'[StatefulMarkupContainer [Component id = foo]]' claims to be stateless but isn't. Possible reason: no stateless hint", ex.getMessage());
+		assertEquals(
+			"'[StatefulMarkupContainer [Component id = foo]]' claims to be stateless but isn't. Possible reason: no stateless hint",
+			ex.getMessage());
 		assertEquals(StatefulMarkupContainer.class, ex.getComponent().getClass());
 	}
 }

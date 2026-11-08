@@ -40,10 +40,10 @@ public class ChartUpdater
 		Record[] data = generateData();
 
 		// create an asynchronous task that will write the data to the client
-		UpdateTask updateTask = new UpdateTask(message.getApplication(), message.getSessionId(), message.getKey(), data);
-        scheduledExecutorService.schedule(updateTask, 1, TimeUnit.SECONDS);
+		UpdateTask updateTask = new UpdateTask(message.getApplication(), message.getSessionId(), message.getKey(),
+			data);
+		scheduledExecutorService.schedule(updateTask, 1, TimeUnit.SECONDS);
 	}
-
 
 
 	/**
@@ -105,7 +105,8 @@ public class ChartUpdater
 
 			while (dataIndex < data.length)
 			{
-				IWebSocketConnection connection = webSocketConnectionRegistry.getConnection(application, sessionId, key);
+				IWebSocketConnection connection = webSocketConnectionRegistry.getConnection(application, sessionId,
+					key);
 				try
 				{
 					Record record = data[dataIndex++];

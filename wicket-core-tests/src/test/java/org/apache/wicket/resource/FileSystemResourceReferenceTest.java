@@ -61,9 +61,12 @@ class FileSystemResourceReferenceTest extends WicketTestCase
 			URL resource = FileSystemResourceReferenceTest.class.getResource("FileSystemResourceReferenceTest.zip");
 			URI uri = URI.create("jar:" + resource.toURI() + "!/folderInZip/FileSystemResourceReference.txt");
 			FileSystem fs = null;
-			try {
+			try
+			{
 				fs = FileSystems.newFileSystem(uri, Collections.emptyMap());
-			} catch (FileSystemAlreadyExistsException e) {
+			}
+			catch (FileSystemAlreadyExistsException e)
+			{
 				fs = FileSystems.getFileSystem(uri);
 			}
 			Path path = fs.getPath("/folderInZip/FileSystemResourceReference.txt");
@@ -249,7 +252,7 @@ class FileSystemResourceReferenceTest extends WicketTestCase
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			IOUtils.copy(inputStream, outputStream);
 			assertEquals("FileSystemResourceReference.zip content in normal file",
-					outputStream.toString());
+				outputStream.toString());
 		}
 		finally
 		{

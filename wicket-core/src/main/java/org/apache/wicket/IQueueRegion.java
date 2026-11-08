@@ -50,7 +50,7 @@ public interface IQueueRegion
 	 * actual dequeueing. The context's markup is retrieved using the {@link MarkupContainer#getAssociatedMarkup()}.
 	 */
 	void dequeue();
-	
+
 	/**
 	 * Returns the markup to use for queuing. Normally, this is the markup of the component 
 	 * implementing this interface.

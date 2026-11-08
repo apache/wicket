@@ -79,7 +79,7 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	{
 		List<FileUpload> fileUploads = getFileUploads();
 
-		return fileUploads.isEmpty() ? null : fileUploads.get(0) ;
+		return fileUploads.isEmpty() ? null : fileUploads.get(0);
 	}
 
 	/**
@@ -113,7 +113,8 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 				for (FileItem item : fileItems)
 				{
 					// WICKET-6270 detect empty field by missing file name
-					if (Strings.isEmpty(item.getName()) == false) {
+					if (Strings.isEmpty(item.getName()) == false)
+					{
 						fileUploads.add(new FileUpload(item));
 					}
 				}
@@ -189,7 +190,8 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	{
 		if (fileUploads != null)
 		{
-			if (forceCloseStreamsOnDetach()) {
+			if (forceCloseStreamsOnDetach())
+			{
 				for (FileUpload fu : fileUploads)
 				{
 					fu.closeStreams();

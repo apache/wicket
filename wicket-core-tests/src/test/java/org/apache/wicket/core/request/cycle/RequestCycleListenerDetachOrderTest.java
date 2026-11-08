@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
 public class RequestCycleListenerDetachOrderTest
 {
 	@Test
-    void pageDetachedBeforeListener()
+	void pageDetachedBeforeListener()
 	{
 		List<Event> events = new ArrayList<Event>();
 

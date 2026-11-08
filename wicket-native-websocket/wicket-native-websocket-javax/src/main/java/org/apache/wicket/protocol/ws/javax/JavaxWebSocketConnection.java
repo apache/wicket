@@ -68,7 +68,8 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 			try
 			{
 				session.close(new CloseReason(new CloseCode(code), reason));
-			} catch (IOException iox)
+			}
+			catch (IOException iox)
 			{
 				LOG.error("An error occurred while closing WebSocket session", iox);
 			}
@@ -84,25 +85,25 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 		return this;
 	}
 
-    @Override
-    public Future<Void> sendMessageAsync(String message)
-    {
-        checkClosed();
+	@Override
+	public Future<Void> sendMessageAsync(String message)
+	{
+		checkClosed();
 
-        return session.getAsyncRemote().sendText(message);
-    }
+		return session.getAsyncRemote().sendText(message);
+	}
 
-    @Override
-    public Future<Void> sendMessageAsync(String message, long timeOut)
-    {
-        checkClosed();
+	@Override
+	public Future<Void> sendMessageAsync(String message, long timeOut)
+	{
+		checkClosed();
 
-        RemoteEndpoint.Async remoteEndpoint  = session.getAsyncRemote();
-        remoteEndpoint.setSendTimeout(timeOut);
-        return remoteEndpoint.sendText(message);
-    }
+		RemoteEndpoint.Async remoteEndpoint = session.getAsyncRemote();
+		remoteEndpoint.setSendTimeout(timeOut);
+		return remoteEndpoint.sendText(message);
+	}
 
-    @Override
+	@Override
 	public synchronized IWebSocketConnection sendMessage(byte[] message, int offset, int length)
 		throws IOException
 	{
@@ -113,28 +114,28 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 		return this;
 	}
 
-    @Override
-    public Future<Void> sendMessageAsync(byte[] message, int offset, int length)
-    {
-        checkClosed();
+	@Override
+	public Future<Void> sendMessageAsync(byte[] message, int offset, int length)
+	{
+		checkClosed();
 
-        ByteBuffer buf = ByteBuffer.wrap(message, offset, length);
-        return session.getAsyncRemote().sendBinary(buf);
-    }
+		ByteBuffer buf = ByteBuffer.wrap(message, offset, length);
+		return session.getAsyncRemote().sendBinary(buf);
+	}
 
-    @Override
+	@Override
 
-    public Future<Void> sendMessageAsync(byte[] message, int offset, int length, long timeOut)
-    {
-        checkClosed();
+	public Future<Void> sendMessageAsync(byte[] message, int offset, int length, long timeOut)
+	{
+		checkClosed();
 
-        RemoteEndpoint.Async remoteEndpoint  = session.getAsyncRemote();
-        remoteEndpoint.setSendTimeout(timeOut);
-        ByteBuffer buf = ByteBuffer.wrap(message, offset, length);
-        return remoteEndpoint.sendBinary(buf);
-    }
+		RemoteEndpoint.Async remoteEndpoint = session.getAsyncRemote();
+		remoteEndpoint.setSendTimeout(timeOut);
+		ByteBuffer buf = ByteBuffer.wrap(message, offset, length);
+		return remoteEndpoint.sendBinary(buf);
+	}
 
-    private void checkClosed()
+	private void checkClosed()
 	{
 		if (!isOpen())
 		{

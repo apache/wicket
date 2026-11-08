@@ -40,7 +40,7 @@ public class JSR356Application extends WicketExampleApplication
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JSR356Application.class);
 
-    private ScheduledExecutorService scheduledExecutorService;
+	private ScheduledExecutorService scheduledExecutorService;
 
 	@Override
 	public Class<HomePage> getHomePage()
@@ -53,7 +53,7 @@ public class JSR356Application extends WicketExampleApplication
 	{
 		super.init();
 
-        scheduledExecutorService = Executors.newScheduledThreadPool(5);
+		scheduledExecutorService = Executors.newScheduledThreadPool(5);
 
 		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig(8080, 8443)));
 
@@ -98,19 +98,20 @@ public class JSR356Application extends WicketExampleApplication
 	}
 
 	@Override
-    protected void onDestroy() {
-        scheduledExecutorService.shutdownNow();
+	protected void onDestroy()
+	{
+		scheduledExecutorService.shutdownNow();
 
-        super.onDestroy();
-    }
+		super.onDestroy();
+	}
 
-    public ScheduledExecutorService getScheduledExecutorService()
-    {
-        return scheduledExecutorService;
-    }
+	public ScheduledExecutorService getScheduledExecutorService()
+	{
+		return scheduledExecutorService;
+	}
 
-    public static JSR356Application get()
-    {
-        return (JSR356Application) WebApplication.get();
-    }
+	public static JSR356Application get()
+	{
+		return (JSR356Application)WebApplication.get();
+	}
 }

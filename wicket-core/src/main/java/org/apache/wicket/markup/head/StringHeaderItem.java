@@ -85,7 +85,7 @@ public class StringHeaderItem extends HeaderItem
 	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		StringHeaderItem that = (StringHeaderItem) o;
+		StringHeaderItem that = (StringHeaderItem)o;
 		return Objects.equals(string, that.string);
 	}
 

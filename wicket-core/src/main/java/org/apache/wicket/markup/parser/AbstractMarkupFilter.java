@@ -153,7 +153,8 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	{
 	}
 
-	protected MarkupResourceStream getMarkupResourceStream() {
+	protected MarkupResourceStream getMarkupResourceStream()
+	{
 		return markupResourceStream;
 	}
 
@@ -219,26 +220,26 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 		Map<String, AtomicInteger> markupUniqueCounters = requestCycle.getMetaData(REQUEST_COUNTER_KEY);
 		ContainerInfo containerInfo = getMarkupResourceStream().getContainerInfo();
 		String cacheKey = containerInfo != null ? containerInfo.getContainerClass().getCanonicalName() : null;
-		
+
 		if (markupUniqueCounters == null)
 		{
 			markupUniqueCounters = new HashMap<>();
-			
+
 			requestCycle.setMetaData(REQUEST_COUNTER_KEY, markupUniqueCounters);
 		}
-		
+
 		AtomicInteger counter = markupUniqueCounters.get(cacheKey);
-		
+
 		if (counter == null)
 		{
 			counter = new AtomicInteger();
 			markupUniqueCounters.put(cacheKey, counter);
 		}
-		
- 	    int cacheHash = cacheKey == null ? 0 : cacheKey.hashCode();
-		
- 	    //add the counter value to the string hash 
- 	    //using the same algorithm of String#hashCode() 
- 	    return  cacheHash * 31 + counter.getAndIncrement();
+
+		int cacheHash = cacheKey == null ? 0 : cacheKey.hashCode();
+
+		//add the counter value to the string hash 
+		//using the same algorithm of String#hashCode() 
+		return cacheHash * 31 + counter.getAndIncrement();
 	}
 }

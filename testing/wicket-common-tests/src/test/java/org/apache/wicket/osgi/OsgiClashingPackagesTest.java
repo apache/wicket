@@ -179,14 +179,14 @@ class OsgiClashingPackagesTest
 
 		private boolean shouldCollect(final String entryName)
 		{
-            return !entryName.endsWith("/") &&
+			return !entryName.endsWith("/") &&
 
-                    // all modules have META-INF {MANIFEST.MF, Maven stuff, ..}
-                    !entryName.startsWith("META-INF/") &&
+			// all modules have META-INF {MANIFEST.MF, Maven stuff, ..}
+				!entryName.startsWith("META-INF/") &&
 
-                    // ignore Wicket's IInitializer conf files
-                    (!entryName.startsWith("META-INF/wicket") || !entryName.endsWith(".properties"));
-        }
+				// ignore Wicket's IInitializer conf files
+				(!entryName.startsWith("META-INF/wicket") || !entryName.endsWith(".properties"));
+		}
 	}
 
 }

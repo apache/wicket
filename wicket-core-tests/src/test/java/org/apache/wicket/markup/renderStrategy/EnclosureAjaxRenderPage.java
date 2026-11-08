@@ -27,30 +27,37 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * Mock for {@link ChildFirstHeaderRenderStrategyTest#testAjaxAndEnclosures()}
  */
-public class EnclosureAjaxRenderPage extends WebPage {
+public class EnclosureAjaxRenderPage extends WebPage
+{
 
-    public EnclosureAjaxRenderPage() {
+	public EnclosureAjaxRenderPage()
+	{
 
-        this.add(createEnclosureController("enclosed"));
-        this.add(createEnclosureController("enclosedInInline"));
-        this.add(new AjaxLink<Void>("ajaxLink") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                target.add(getPage().get("enclosed"));
-                target.add(getPage().get("enclosedInInline"));
-            }
-        });
+		this.add(createEnclosureController("enclosed"));
+		this.add(createEnclosureController("enclosedInInline"));
+		this.add(new AjaxLink<Void>("ajaxLink")
+		{
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				target.add(getPage().get("enclosed"));
+				target.add(getPage().get("enclosedInInline"));
+			}
+		});
 
-    }
+	}
 
-    private Component createEnclosureController(final String id){
-        return new WebMarkupContainer(id){
-            @Override
-            public void renderHead(IHeaderResponse response) {
-                super.renderHead(response);
-                response.render(CssHeaderItem.forUrl(id + ".css"));
-            }
-        }.setOutputMarkupId(true);
-    }
+	private Component createEnclosureController(final String id)
+	{
+		return new WebMarkupContainer(id)
+		{
+			@Override
+			public void renderHead(IHeaderResponse response)
+			{
+				super.renderHead(response);
+				response.render(CssHeaderItem.forUrl(id + ".css"));
+			}
+		}.setOutputMarkupId(true);
+	}
 
 }

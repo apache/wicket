@@ -47,7 +47,7 @@ public class ResourceDecorationApplication extends WicketExampleApplication
 		// use this header resource decorator to load all JavaScript resources in the page
 		// footer (after </body>)
 		getHeaderResponseDecorators()
-				.add(response -> new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS"));
+			.add(response -> new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS"));
 	}
 
 	@Override

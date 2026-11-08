@@ -28,7 +28,7 @@ class RestartWithMountedPageTest extends WicketTestCase
 	 * Tests that a protected page can redirect to a login page from mounted pages.
 	 */
 	@Test
-    void testWithMountedLoginPage()
+	void testWithMountedLoginPage()
 	{
 		tester.getApplication().mountPage("/login", LoginPage.class);
 		tester.startPage(ProtectedPage.class);

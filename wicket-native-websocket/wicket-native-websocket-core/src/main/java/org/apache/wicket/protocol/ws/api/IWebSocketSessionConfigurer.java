@@ -19,14 +19,15 @@ package org.apache.wicket.protocol.ws.api;
 /**
  * Allows to configure the {@link org.apache.wicket.protocol.ws.api.IWebSocketSession}
  */
-public interface IWebSocketSessionConfigurer {
+public interface IWebSocketSessionConfigurer
+{
 
-    /**
-     * Allows to configure {@link org.apache.wicket.protocol.ws.api.IWebSocketSession}
-     *
-     * @param webSocketSession
-     *        The {@link org.apache.wicket.protocol.ws.api.IWebSocketSession}
-     */
-    void configureSession(IWebSocketSession webSocketSession);
+	/**
+	 * Allows to configure {@link org.apache.wicket.protocol.ws.api.IWebSocketSession}
+	 *
+	 * @param webSocketSession
+	 *        The {@link org.apache.wicket.protocol.ws.api.IWebSocketSession}
+	 */
+	void configureSession(IWebSocketSession webSocketSession);
 
 }

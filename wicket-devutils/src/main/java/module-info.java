@@ -15,25 +15,26 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.devutils {
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.request;
-    requires org.apache.wicket.core;
-    requires org.apache.wicket.extensions;
-    requires org.slf4j;
+module org.apache.wicket.devutils
+{
+	requires org.apache.wicket.util;
+	requires org.apache.wicket.request;
+	requires org.apache.wicket.core;
+	requires org.apache.wicket.extensions;
+	requires org.slf4j;
 
-    provides org.apache.wicket.IInitializer with org.apache.wicket.devutils.debugbar.DebugBarInitializer;
+	provides org.apache.wicket.IInitializer with org.apache.wicket.devutils.debugbar.DebugBarInitializer;
 
-    exports org.apache.wicket.devutils;
-    exports org.apache.wicket.devutils.debugbar;
-    exports org.apache.wicket.devutils.inspector;
-    exports org.apache.wicket.devutils.pagestore;
-    exports org.apache.wicket.devutils.pagestore.browser;
-    exports org.apache.wicket.devutils.stateless;
+	exports org.apache.wicket.devutils;
+	exports org.apache.wicket.devutils.debugbar;
+	exports org.apache.wicket.devutils.inspector;
+	exports org.apache.wicket.devutils.pagestore;
+	exports org.apache.wicket.devutils.pagestore.browser;
+	exports org.apache.wicket.devutils.stateless;
 
-    //opening packages to allow resources access
-    opens org.apache.wicket.devutils;
-    opens org.apache.wicket.devutils.inspector;
-    opens org.apache.wicket.devutils.pagestore;
-    opens org.apache.wicket.devutils.debugbar;
+	//opening packages to allow resources access
+	opens org.apache.wicket.devutils;
+	opens org.apache.wicket.devutils.inspector;
+	opens org.apache.wicket.devutils.pagestore;
+	opens org.apache.wicket.devutils.debugbar;
 }
