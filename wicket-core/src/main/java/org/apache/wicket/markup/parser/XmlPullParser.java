@@ -326,6 +326,12 @@ public final class XmlPullParser implements IXmlPullParser
 			type = TagType.OPEN;
 		}
 
+		if (tagText.length() == 0)
+		{
+			throw new ParseException("Found tag without name at" + getLineAndColumnText(),
+				input.getPosition());
+		}
+
 		// Handle special tags like <!-- and <![CDATA ...
 		final char firstChar = tagText.charAt(0);
 		if ((firstChar == '!') || (firstChar == '?'))
@@ -485,25 +491,14 @@ public final class XmlPullParser implements IXmlPullParser
 			final String startText = (tagText.length() <= 8 ? tagText : tagText.substring(0, 8));
 			if (startText.toUpperCase(Locale.ROOT).equals("![CDATA["))
 			{
-				int pos1 = openBracketIndex;
-				do
+				final int end = input.find("]]>", openBracketIndex + 9);
+				if (end == -1)
 				{
-					// Get index of closing tag and advance past the tag
-					closeBracketIndex = findChar('>', pos1);
-
-					if (closeBracketIndex == -1)
-					{
-						throw new ParseException("No matching close bracket at" +
-							getLineAndColumnText(), input.getPosition());
-					}
-
-					// Get the tagtext between open and close brackets
-					tagText = input.getSubstring(openBracketIndex + 1, closeBracketIndex)
-						.toString();
-
-					pos1 = closeBracketIndex + 1;
+					throw new ParseException("No matching close bracket at" +
+						getLineAndColumnText(), input.getPosition());
 				}
-				while (tagText.endsWith("]]") == false);
+				closeBracketIndex = end + 2;
+				tagText = input.getSubstring(openBracketIndex + 1, closeBracketIndex).toString();
 
 				// Move to position after the tag
 				input.setPosition(closeBracketIndex + 1);
@@ -592,42 +587,6 @@ public final class XmlPullParser implements IXmlPullParser
 		}
 
 		return null;
-	}
-
-	/**
-	 * Find the char but ignore any text within ".." and '..'
-	 *
-	 * @param ch
-	 *            The character to search
-	 * @param startIndex
-	 *            Start index
-	 * @return -1 if not found, else the index
-	 */
-	private int findChar(final char ch, int startIndex)
-	{
-		char quote = 0;
-
-		for (; startIndex < input.size(); startIndex++)
-		{
-			final char charAt = input.charAt(startIndex);
-			if (quote != 0)
-			{
-				if (quote == charAt)
-				{
-					quote = 0;
-				}
-			}
-			else if ((charAt == '"') || (charAt == '\''))
-			{
-				quote = charAt;
-			}
-			else if (charAt == ch)
-			{
-				return startIndex;
-			}
-		}
-
-		return -1;
 	}
 
 	/**
