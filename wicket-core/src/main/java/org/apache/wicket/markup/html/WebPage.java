@@ -152,9 +152,11 @@ public class WebPage extends Page
 	 * Called when the &lt;html&gt; tag of this page is rendered, to let the page add or change its
 	 * attributes. The default sets <code>lang</code> to the language tag of {@link #getLocale()},
 	 * for example <code>nl-NL</code>, so that screen readers and browsers can determine the
-	 * language of the page (WCAG 2.2 success criterion 3.1.1), and <code>dir="rtl"</code> when
-	 * that language is written right to left, see {@link Session#isRtlLanguage(Locale)}. It does
-	 * not set <code>dir="ltr"</code>, which is the default of the browser.
+	 * language of the page (WCAG 2.2 success criterion 3.1.1), and <code>dir</code> to
+	 * <code>rtl</code> when that language is written right to left, see
+	 * {@link Session#isRtlLanguage(Locale)}, or to <code>ltr</code> otherwise. The direction is
+	 * written in both cases because the browser does not derive it from <code>lang</code>, and so
+	 * that stylesheets can select on it.
 	 * <p>
 	 * It leaves the tag alone when the markup already has a <code>lang</code> or
 	 * <code>xml:lang</code> attribute, so a page written in one language whatever the session
@@ -206,9 +208,9 @@ public class WebPage extends Page
 		}
 
 		tag.put("lang", locale.toLanguageTag());
-		if (tag.getAttribute("dir") == null && Session.isRtlLanguage(locale))
+		if (tag.getAttribute("dir") == null)
 		{
-			tag.put("dir", "rtl");
+			tag.put("dir", Session.isRtlLanguage(locale) ? "rtl" : "ltr");
 		}
 	}
 

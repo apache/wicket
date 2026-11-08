@@ -58,7 +58,7 @@ class ParentResourceEscapePathTest extends WicketTestCase
 		log.error(tester.getLastResponseAsString());
 
 		String html = tester.getLastResponseAsString();
-		assertContains(html, "<html lang=\"en-US\"><head><wicket:link><script ");
+		assertContains(html, "<html lang=\"en-US\" dir=\"ltr\"><head><wicket:link><script ");
 		assertContains(html, " type=\"text/javascript\"");
 		assertContains(html, expectedResourceUrl() + "\"");
 		assertContains(html, "\"></script></wicket:link></head></html>");

@@ -48,7 +48,7 @@ class HtmlTagTest extends WicketTestCase
 
 		tester.startPage(new InlinePage("<html>" + BODY));
 
-		assertResponseContains("<html lang=\"nl-NL\">");
+		assertResponseContains("<html lang=\"nl-NL\" dir=\"ltr\">");
 	}
 
 	@Test
@@ -56,11 +56,11 @@ class HtmlTagTest extends WicketTestCase
 	{
 		tester.getSession().setLocale(Locale.forLanguageTag("nl-NL"));
 		tester.startPage(new InlinePage("<html>" + BODY));
-		assertResponseContains("<html lang=\"nl-NL\">");
+		assertResponseContains("<html lang=\"nl-NL\" dir=\"ltr\">");
 
 		tester.getSession().setLocale(Locale.GERMANY);
 		tester.startPage(new InlinePage("<html>" + BODY));
-		assertResponseContains("<html lang=\"de-DE\">");
+		assertResponseContains("<html lang=\"de-DE\" dir=\"ltr\">");
 	}
 
 	@Test
@@ -70,7 +70,8 @@ class HtmlTagTest extends WicketTestCase
 			"<html class=\"no-js\" xmlns:wicket=\"http://wicket.apache.org\">" + BODY));
 
 		assertResponseContains(
-			"<html class=\"no-js\" xmlns:wicket=\"http://wicket.apache.org\" lang=\"en-US\">");
+			"<html class=\"no-js\" xmlns:wicket=\"http://wicket.apache.org\" lang=\"en-US\"" +
+				" dir=\"ltr\">");
 	}
 
 	@Test
@@ -105,13 +106,13 @@ class HtmlTagTest extends WicketTestCase
 	}
 
 	@Test
-	void noDirForALanguageWrittenInLatinScript()
+	void ltrForALanguageWrittenInLatinScript()
 	{
 		tester.getSession().setLocale(Locale.forLanguageTag("az-Latn"));
 
 		tester.startPage(new InlinePage("<html>" + BODY));
 
-		assertResponseContains("<html lang=\"az-Latn\">");
+		assertResponseContains("<html lang=\"az-Latn\" dir=\"ltr\">");
 	}
 
 	@Test
@@ -204,7 +205,7 @@ class HtmlTagTest extends WicketTestCase
 			}
 		});
 
-		assertResponseContains("<html lang=\"en-US\" data-theme=\"dark&quot;\">");
+		assertResponseContains("<html lang=\"en-US\" dir=\"ltr\" data-theme=\"dark&quot;\">");
 	}
 
 	@Test
@@ -214,7 +215,7 @@ class HtmlTagTest extends WicketTestCase
 
 		tester.startPage(new DerivedPage());
 
-		assertResponseContains("<html lang=\"nl-NL\">");
+		assertResponseContains("<html lang=\"nl-NL\" dir=\"ltr\">");
 		assertResponseContains("<p>derived</p>");
 	}
 
@@ -223,7 +224,7 @@ class HtmlTagTest extends WicketTestCase
 	{
 		tester.startPage(new QueuingPage());
 
-		assertResponseContains("<html lang=\"en-US\">");
+		assertResponseContains("<html lang=\"en-US\" dir=\"ltr\">");
 		assertResponseContains("<span wicket:id=\"label\">queued</span>");
 	}
 
@@ -301,7 +302,8 @@ class HtmlTagTest extends WicketTestCase
 				return new StringResourceStream("<html><body><wicket:child/></body></html>");
 			}
 			return new StringResourceStream(
-				"<html lang=\"ignored\"><body><wicket:extend><p>derived</p></wicket:extend></body></html>");
+				"<html lang=\"ignored\"><body><wicket:extend><p>derived</p></wicket:extend>" +
+					"</body></html>");
 		}
 	}
 
@@ -354,7 +356,8 @@ class HtmlTagTest extends WicketTestCase
 			Class<?> containerClass)
 		{
 			return new StringResourceStream(
-				"<html><body><a wicket:id=\"link\"></a><span wicket:id=\"label\"></span></body></html>");
+				"<html><body><a wicket:id=\"link\"></a><span wicket:id=\"label\"></span>" +
+					"</body></html>");
 		}
 	}
 }
