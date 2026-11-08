@@ -30,7 +30,6 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.XmlReader;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.parse.metapattern.parsers.TagNameParser;
-import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -697,79 +696,113 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @param tag
 	 * @param tagText
 	 *            The text between tags
-	 * @return false in case of an error
+	 * @return false if the tag text does not start with a tag name
 	 * @throws ParseException
 	 */
 	private boolean parseTagText(final XmlTag tag, final String tagText) throws ParseException
 	{
-		// Get the length of the tagtext
-		final int tagTextLength = tagText.length();
-
-		// If we match tagname pattern
 		final TagNameParser tagnameParser = new TagNameParser(tagText);
-		if (tagnameParser.matcher().lookingAt())
+		if (tagnameParser.matcher().lookingAt() == false)
 		{
-			// Extract the tag from the pattern matcher
-			tag.name = tagnameParser.getName();
-			tag.namespace = tagnameParser.getNamespace();
-
-			// Are we at the end? Then there are no attributes, so we just
-			// return the tag
-			int pos = tagnameParser.matcher().end(0);
-			if (pos == tagTextLength)
-			{
-				return true;
-			}
-
-			// Extract attributes
-			final VariableAssignmentParser attributeParser = new VariableAssignmentParser(tagText);
-			while (attributeParser.matcher().find(pos))
-			{
-				// Get key and value using attribute pattern
-				String value = attributeParser.getValue();
-
-				// In case like <html xmlns:wicket> will the value be null
-				if (value == null)
-				{
-					value = "";
-				}
-
-				// Set new position to end of attribute
-				pos = attributeParser.matcher().end(0);
-
-				// Chop off double quotes or single quotes
-				if (value.startsWith("\"") || value.startsWith("\'"))
-				{
-					value = value.substring(1, value.length() - 1);
-				}
-
-				// Trim trailing whitespace
-				value = value.trim();
-
-				// Unescape
-				value = Strings.unescapeMarkup(value).toString();
-
-				// Get key
-				final String key = attributeParser.getKey();
-
-				// Put the attribute in the attributes hash
-				if (null != tag.getAttributes().put(key, value))
-				{
-					throw new ParseException("Same attribute found twice: " + key +
-						getLineAndColumnText(), input.getPosition());
-				}
-
-				// The input has to match exactly (no left over junk after
-				// attributes)
-				if (pos == tagTextLength)
-				{
-					return true;
-				}
-			}
-
-			return true;
+			return false;
 		}
 
-		return false;
+		tag.name = tagnameParser.getName();
+		tag.namespace = tagnameParser.getNamespace();
+
+		parseAttributes(tag, tagText, tagnameParser.matcher().end(0));
+		return true;
+	}
+
+	/**
+	 * Reads the attributes the way the attribute states of the HTML tokenizer do, see the class
+	 * documentation.
+	 *
+	 * @param tag
+	 *            the tag to add the attributes to
+	 * @param tagText
+	 *            The text between tags
+	 * @param pos
+	 *            the index in the tag text right after the tag name
+	 * @throws ParseException
+	 */
+	private void parseAttributes(final XmlTag tag, final String tagText, int pos)
+		throws ParseException
+	{
+		final int length = tagText.length();
+		while (true)
+		{
+			while ((pos < length) &&
+				(isWhitespace(tagText.charAt(pos)) || (tagText.charAt(pos) == '/')))
+			{
+				pos++;
+			}
+			if (pos == length)
+			{
+				return;
+			}
+
+			// The first character of a name may be '='
+			final int nameStart = pos++;
+			while ((pos < length) && (isWhitespace(tagText.charAt(pos)) == false) &&
+				(tagText.charAt(pos) != '/') && (tagText.charAt(pos) != '='))
+			{
+				pos++;
+			}
+			final String key = tagText.substring(nameStart, pos);
+
+			while ((pos < length) && isWhitespace(tagText.charAt(pos)))
+			{
+				pos++;
+			}
+
+			String value = "";
+			if ((pos < length) && (tagText.charAt(pos) == '='))
+			{
+				pos++;
+				while ((pos < length) && isWhitespace(tagText.charAt(pos)))
+				{
+					pos++;
+				}
+
+				if (pos < length)
+				{
+					final char quote = tagText.charAt(pos);
+					if ((quote == '"') || (quote == '\''))
+					{
+						final int closingQuote = tagText.indexOf(quote, pos + 1);
+						if (closingQuote == -1)
+						{
+							throw new ParseException(
+								"Opening/closing quote not found for value of " + key +
+									getLineAndColumnText(),
+								input.getPosition());
+						}
+						value = tagText.substring(pos + 1, closingQuote);
+						pos = closingQuote + 1;
+					}
+					else
+					{
+						final int valueStart = pos;
+						while ((pos < length) && (isWhitespace(tagText.charAt(pos)) == false))
+						{
+							pos++;
+						}
+						value = tagText.substring(valueStart, pos);
+					}
+				}
+			}
+
+			if (null != tag.getAttributes().put(key, Strings.unescapeMarkup(value).toString()))
+			{
+				throw new ParseException("Same attribute found twice: " + key +
+					getLineAndColumnText(), input.getPosition());
+			}
+		}
+	}
+
+	private static boolean isWhitespace(final char ch)
+	{
+		return (ch == ' ') || (ch == '\t') || (ch == '\n') || (ch == '\r') || (ch == '\f');
 	}
 }
