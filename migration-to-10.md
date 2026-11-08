@@ -91,3 +91,11 @@ Upgrade Guice to 7.0.0 [WICKET-7053](https://issues.apache.org/jira/browse/WICKE
 #### Jackson to 2.13.x
 
 Upgrade Jackson to 2.13.4 [WICKET-7009](https://issues.apache.org/jira/browse/WICKET-7009)
+
+## **Changes in Wicket 10 releases after 10.0.0**
+
+#### 10.13.0: `PageParameters.hashCode()` ignores the order of named parameters [#1866](https://github.com/apache/wicket/issues/1866)
+
+`PageParameters.hashCode()` now agrees with `equals()`, which ignores the order of the named parameters ([#1866](https://github.com/apache/wicket/issues/1866)). The fix is backported from Wicket 12. Before, two `PageParameters` that differed only in that order were equal but had different hashes, so a `HashMap` or `HashSet` kept them as two keys.
+
+This shows in rendered pages. When a page renders a CSS or JavaScript reference header item twice for the same resource, with the same page parameters added in a different order, it now gets one `<link>` or `<script>` tag, with the URL of the first item. Before, it got two. An application that keeps `PageParameters` in a hash-based collection of its own now finds reordered parameters under the same entry.
