@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.Set;
 
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.XmlTag.TextSegment;
@@ -31,6 +32,7 @@ import org.apache.wicket.util.io.XmlReader;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.parse.metapattern.parsers.TagNameParser;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.IValueMap;
 
 /**
  * A shallow pull parser that splits markup (for example html, xml, vxml or wml) into a flat
@@ -105,6 +107,15 @@ public final class XmlPullParser implements IXmlPullParser
 	/** */
 	public static final String SCRIPT = "script";
 
+	private static final Set<String> SCRIPT_TYPES = Set.of("module", "importmap",
+		"speculationrules");
+
+	private static final Set<String> JAVASCRIPT_MIME_TYPES = Set.of("application/ecmascript",
+		"application/javascript", "application/x-ecmascript", "application/x-javascript",
+		"text/ecmascript", "text/javascript", "text/javascript1.0", "text/javascript1.1",
+		"text/javascript1.2", "text/javascript1.3", "text/javascript1.4", "text/javascript1.5",
+		"text/jscript", "text/livescript", "text/x-ecmascript", "text/x-javascript");
+
 	/**
 	 * The encoding of the XML.
 	 */
@@ -175,10 +186,8 @@ public final class XmlPullParser implements IXmlPullParser
 		final int startIndex = input.getPosition();
 		final int tagNameLen = skipUntilText.length();
 
-		int pos = input.getPosition() - 1;
-		String endTagText = null;
-		int lastPos = 0;
-		while (!skipUntilText.equalsIgnoreCase(endTagText))
+		int pos = startIndex - 1;
+		while (true)
 		{
 			pos = input.find("</", pos + 1);
 			if ((pos == -1) || ((pos + (tagNameLen + 2)) >= input.size()))
@@ -187,17 +196,23 @@ public final class XmlPullParser implements IXmlPullParser
 					skipUntilText + " tag not closed" + getLineAndColumnText(), startIndex);
 			}
 
-			lastPos = pos + 2;
-			endTagText = input.getSubstring(lastPos, lastPos + tagNameLen).toString();
+			final String endTagName = input.getSubstring(pos + 2, pos + 2 + tagNameLen).toString();
+			final char afterEndTagName = input.charAt(pos + 2 + tagNameLen);
+			if (skipUntilText.equalsIgnoreCase(endTagName) &&
+				(isWhitespace(afterEndTagName) || (afterEndTagName == '/') ||
+					(afterEndTagName == '>')))
+			{
+				break;
+			}
 		}
+		final int lastPos = pos + 2;
 
 		input.setPosition(pos);
 		lastText = input.getSubstring(startIndex, pos);
 		lastType = HttpTagType.BODY;
 
 		// Check that the tag is properly closed
-		lastPos = input.find('>', lastPos + tagNameLen);
-		if (lastPos == -1)
+		if (input.find('>', lastPos + tagNameLen) == -1)
 		{
 			throw new ParseException(skipUntilText + " tag not closed" + getLineAndColumnText(),
 				startIndex);
@@ -309,42 +324,6 @@ public final class XmlPullParser implements IXmlPullParser
 		{
 			// It must be an open tag
 			type = TagType.OPEN;
-
-			// If open tag and starts with "s" like "script" or "style", than ...
-			if ((tagText.length() > STYLE.length()) &&
-				((tagText.charAt(0) == 's') || (tagText.charAt(0) == 'S')))
-			{
-				final String lowerCase = tagText.toLowerCase(Locale.ROOT);
-				if (lowerCase.startsWith(SCRIPT))
-				{
-					String typeAttr = "type=";
-					int idxOfType = lowerCase.indexOf(typeAttr);
-					if (idxOfType > 0)
-					{
-						// +1 to remove the ' or "
-						String typePrefix = lowerCase.substring(idxOfType + typeAttr.length() + 1);
-						if (typePrefix.startsWith("text/javascript") || typePrefix.startsWith("module")
-						        || typePrefix.startsWith("importmap"))
-						{
-							// prepare to skip everything between the open and close tag
-							skipUntilText = SCRIPT;
-						}
-						// any other type is assumed to be a template so it can contain child nodes.
-						// See WICKET-5288
-					}
-					else
-					{
-						// no type attribute so it is 'text/javascript'
-						// prepare to skip everything between the open and close tag
-						skipUntilText = SCRIPT;
-					}
-				}
-				else if (lowerCase.startsWith(STYLE))
-				{
-					// prepare to skip everything between the open and close tag
-					skipUntilText = STYLE;
-				}
-			}
 		}
 
 		// Handle special tags like <!-- and <![CDATA ...
@@ -369,6 +348,11 @@ public final class XmlPullParser implements IXmlPullParser
 		// Parse the tag text and populate tag attributes
 		if (parseTagText(tag, tagText))
 		{
+			if (type == TagType.OPEN)
+			{
+				skipUntilText = rawTextEndTagName(tag);
+			}
+
 			// Move to position after the tag
 			input.setPosition(closeBracketIndex + 1);
 			lastType = HttpTagType.TAG;
@@ -378,6 +362,46 @@ public final class XmlPullParser implements IXmlPullParser
 		{
 			throw new ParseException("Malformed tag" + getLineAndColumnText(), openBracketIndex);
 		}
+	}
+
+	/**
+	 * @param tag
+	 *            an open tag
+	 * @return the name of the end tag that ends the raw text body of the tag, or {@code null} when
+	 *         its body is markup
+	 */
+	private static String rawTextEndTagName(final XmlTag tag)
+	{
+		if (tag.getNamespace() != null)
+		{
+			return null;
+		}
+		if (STYLE.equalsIgnoreCase(tag.getName()))
+		{
+			return STYLE;
+		}
+		if (SCRIPT.equalsIgnoreCase(tag.getName()) && isScriptOrDataBlock(tag))
+		{
+			return SCRIPT;
+		}
+		return null;
+	}
+
+	private static boolean isScriptOrDataBlock(final XmlTag tag)
+	{
+		final IValueMap attributes = tag.getAttributes();
+		final String typeKey = attributes.getKey("type");
+		if (typeKey == null)
+		{
+			return true;
+		}
+
+		final String type = attributes.getString(typeKey).trim().toLowerCase(Locale.ROOT);
+		final int parameters = type.indexOf(';');
+		final String essence = (parameters < 0 ? type : type.substring(0, parameters)).trim();
+		return type.isEmpty() || SCRIPT_TYPES.contains(type) ||
+			JAVASCRIPT_MIME_TYPES.contains(essence) || essence.equals("application/json") ||
+			essence.equals("text/json") || essence.endsWith("+json");
 	}
 
 	/**
