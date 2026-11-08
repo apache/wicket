@@ -22,10 +22,12 @@ import java.util.Locale;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -161,6 +163,23 @@ class HtmlTagTest extends WicketTestCase
 	}
 
 	@Test
+	void namespacedHtmlTagIsLeftAlone()
+	{
+		tester.startPage(new InlinePage(
+			"<x:html xmlns:x=\"urn:x\"><body><span wicket:id=\"label\"></span></body></x:html>"));
+
+		assertResponseContains("<x:html xmlns:x=\"urn:x\">");
+	}
+
+	@Test
+	void pageThatIsNotAWebPageWritesTheHtmlTagUnchanged()
+	{
+		tester.startPage(new PlainPage());
+
+		assertResponseContains("<html><body><span wicket:id=\"label\">text</span></body></html>");
+	}
+
+	@Test
 	void htmlTagBoundToAComponentIsLeftToTheComponent()
 	{
 		InlinePage page = new InlinePage("<html wicket:id=\"html\">" + BODY);
@@ -243,6 +262,29 @@ class HtmlTagTest extends WicketTestCase
 			Class<?> containerClass)
 		{
 			return new StringResourceStream(markup);
+		}
+	}
+
+	private static class PlainPage extends Page implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		PlainPage()
+		{
+			add(new Label("label", "text"));
+		}
+
+		@Override
+		public MarkupType getMarkupType()
+		{
+			return MarkupType.HTML_MARKUP_TYPE;
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("<html>" + BODY);
 		}
 	}
 

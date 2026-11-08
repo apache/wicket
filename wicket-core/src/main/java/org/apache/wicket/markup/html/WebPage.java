@@ -200,7 +200,7 @@ public class WebPage extends Page
 		}
 
 		Locale locale = getLocale();
-		if (locale == null || locale.getLanguage().isEmpty())
+		if (locale.getLanguage().isEmpty())
 		{
 			return;
 		}
