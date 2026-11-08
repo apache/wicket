@@ -513,10 +513,19 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	@Override
 	public int hashCode()
 	{
+		int namedParametersHashCode = 0;
+		if (namedParameters != null)
+		{
+			for (NamedPair pair : namedParameters)
+			{
+				namedParametersHashCode += pair.hashCode();
+			}
+		}
+
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((indexedParameters == null) ? 0 : indexedParameters.hashCode());
-		result = prime * result + ((namedParameters == null) ? 0 : namedParameters.hashCode());
+		result = prime * result + namedParametersHashCode;
 		result = prime * result + ((fragment == null) ? 0 : fragment.hashCode());
 		return result;
 	}
