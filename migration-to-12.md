@@ -52,3 +52,14 @@ protected void onHtmlTag(ComponentTag tag)
 ```
 
 The same method adds other attributes that belong to the whole document, such as a theme class. To render neither `lang` nor `dir`, override it without calling `super`. The `<html>` tag is not rendered again on an Ajax request, so an attribute that has to change during one, such as a theme switched by an `AjaxLink`, has to be changed in the browser with JavaScript as well.
+
+## Dependencies
+
+Wicket's modules no longer bring in libraries they don't use themselves. If your application or its tests use one of these, declare it as a dependency of your own.
+
+| Module | No longer brings in |
+|---|---|
+| `wicket-tester`, `wicket-extensions-tester`, `wicket-native-websocket-tester` | AssertJ (`org.assertj:assertj-core`), the JUnit Jupiter engine (`org.junit.jupiter:junit-jupiter-engine`) and JUnit Jupiter params (`org.junit.jupiter:junit-jupiter-params`). They bring in only `org.junit.jupiter:junit-jupiter-api`. |
+| `wicket-ioc`, and through it `wicket-spring` and `wicket-guice` | ASM (`org.ow2.asm:asm`) |
+
+Check that your build declares a JUnit engine in test scope, `org.junit.jupiter:junit-jupiter-engine` or `org.junit.jupiter:junit-jupiter`. Without one, Maven Surefire finds no tests to run and the build still passes. Projects created from the quickstart archetype declare the engine.

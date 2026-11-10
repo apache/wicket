@@ -57,13 +57,13 @@
 	</dependencyManagement>
 	<dependencies>
 		<dependency>
-			<groupId>jakarta.el</groupId>
-			<artifactId>jakarta.el-api</artifactId>
+			<groupId>jakarta.cdi</groupId>
+			<artifactId>jakarta.cdi-api</artifactId>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>jakarta.enterprise</groupId>
-			<artifactId>jakarta.enterprise.cdi-api</artifactId>
-			<scope>compile</scope>
+			<groupId>jakarta.el</groupId>
+			<artifactId>jakarta.el-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.servlet.jsp</groupId>
@@ -184,6 +184,10 @@
 		<dependency>
 			<groupId>org.httpunit</groupId>
 			<artifactId>httpunit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
