@@ -40,6 +40,7 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
@@ -196,7 +197,8 @@ public class WebPage extends Page
 	 */
 	protected void onHtmlTag(final ComponentTag tag)
 	{
-		if (tag.getAttribute("lang") != null || tag.getAttribute("xml:lang") != null)
+		IValueMap attributes = tag.getAttributes();
+		if (attributes.getKey("lang") != null || attributes.getKey("xml:lang") != null)
 		{
 			return;
 		}
@@ -208,7 +210,7 @@ public class WebPage extends Page
 		}
 
 		tag.put("lang", locale.toLanguageTag());
-		if (tag.getAttribute("dir") == null)
+		if (attributes.getKey("dir") == null)
 		{
 			tag.put("dir", Session.isRtlLanguage(locale) ? "rtl" : "ltr");
 		}

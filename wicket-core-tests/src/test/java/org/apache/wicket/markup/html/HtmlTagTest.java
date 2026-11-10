@@ -85,6 +85,36 @@ class HtmlTagTest extends WicketTestCase
 	}
 
 	@Test
+	void upperCaseLangAndDirInTheMarkupAreKept()
+	{
+		tester.getSession().setLocale(Locale.forLanguageTag("nl-NL"));
+
+		tester.startPage(new InlinePage("<html LANG=\"en\" DIR=\"ltr\">" + BODY));
+
+		assertResponseContains("<html LANG=\"en\" DIR=\"ltr\">");
+	}
+
+	@Test
+	void upperCaseXmlLangInTheMarkupIsKept()
+	{
+		tester.getSession().setLocale(Locale.forLanguageTag("nl-NL"));
+
+		tester.startPage(new InlinePage("<html XML:LANG=\"en\">" + BODY));
+
+		assertResponseContains("<html XML:LANG=\"en\">");
+	}
+
+	@Test
+	void upperCaseDirInTheMarkupIsKept()
+	{
+		tester.getSession().setLocale(Locale.forLanguageTag("he-IL"));
+
+		tester.startPage(new InlinePage("<html DIR=\"ltr\">" + BODY));
+
+		assertResponseContains("<html DIR=\"ltr\" lang=\"he-IL\">");
+	}
+
+	@Test
 	void xmlLangInTheMarkupIsKept()
 	{
 		tester.getSession().setLocale(Locale.forLanguageTag("nl-NL"));
