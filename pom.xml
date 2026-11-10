@@ -157,7 +157,7 @@
 
 		<!-- Project Versions -->
 		<asm.version>9.11.1</asm.version>
-		<aspectj.version>1.9.26</aspectj.version>
+		<aspectj.version>1.9.27</aspectj.version>
 		<assertj-core.version>3.27.7</assertj-core.version>
 		<bouncycastle.version>1.86</bouncycastle.version>
 		<byte-buddy.version>1.18.17</byte-buddy.version>
@@ -168,7 +168,7 @@
 		<commons-lang3.version>3.21.0</commons-lang3.version>
 		<guice.version>7.0.0</guice.version>
 		<el-impl.version>2.2.1-b05</el-impl.version>
-		<error_prone_annotations.version>2.51.0</error_prone_annotations.version>
+		<error_prone_annotations.version>2.52.0</error_prone_annotations.version>
 		<forbiddenapis.version>3.11</forbiddenapis.version>
 		<jacoco.version>0.8.16</jacoco.version>
 		<jackson.version>3.2.4</jackson.version>
@@ -212,7 +212,7 @@
 		<apache-rat-plugin.version>0.18</apache-rat-plugin.version>
 		<build-helper-maven-plugin.version>3.6.2</build-helper-maven-plugin.version>
 		<frontend-maven-plugin.version>2.0.2</frontend-maven-plugin.version>
-		<japicmp-maven-plugin.version>0.26.5</japicmp-maven-plugin.version>
+		<japicmp-maven-plugin.version>0.27.0</japicmp-maven-plugin.version>
 		<maven-archetype-plugin.version>3.4.1</maven-archetype-plugin.version>
 		<maven-bundle-plugin.version>6.2.0</maven-bundle-plugin.version>
 		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
@@ -1410,6 +1410,8 @@
 							<resourcesSet>
 								<excludes>
 									<exclude>**/jquery*.js</exclude>
+									<exclude>**/*.min.js</exclude>
+									<exclude>**/*.min.css</exclude>
 								</excludes>
 							</resourcesSet>
 						</resourcesSets>
