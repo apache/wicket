@@ -16,6 +16,7 @@
  */
 
 import { Group, Select, TextInput } from '@mantine/core';
+import { useDebouncedValue } from '@mantine/hooks';
 import { useState } from 'react';
 import { useIslandQuery, useStore } from 'wicket-islands-react';
 import BoardTheme from './BoardTheme';
@@ -36,7 +37,8 @@ export default function BoardFilterBar() {
 	const [stored, setFilter] = useStore<BoardFilter>(FILTER_STORE);
 	const filter = stored ?? NO_FILTER;
 	const [search, setSearch] = useState('');
-	const members = useIslandQuery<Member[]>('members', { prefix: search },
+	const [prefix] = useDebouncedValue(search, 250);
+	const members = useIslandQuery<Member[]>('members', { prefix },
 		{ placeholderData: previous => previous });
 
 	return (

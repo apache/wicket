@@ -198,6 +198,60 @@ class TaskBoardSeleniumTest extends IslandSeleniumTestCase
 		assertNoBrowserErrors();
 	}
 
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void aCardOpensFromTheKeyboard(Engine engine)
+	{
+		open(engine);
+		js().executeScript("arguments[0].focus()", card("c2"));
+
+		driver.switchTo().activeElement().sendKeys(Keys.TAB);
+		assertEquals("Edit Upgrade the build plugins",
+			driver.switchTo().activeElement().getDomAttribute("aria-label"));
+		driver.switchTo().activeElement().sendKeys(Keys.ENTER);
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(
+			By.cssSelector(FORM + " .ProseMirror")));
+		assertEquals("Upgrade the build plugins",
+			driver.findElement(By.cssSelector(FORM + " input[type=text]")).getDomProperty("value"));
+		assertNoBrowserErrors();
+	}
+
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void typingInTheDescriptionWhileItIsValidatedLosesNothing(Engine engine)
+	{
+		open(engine);
+		new Actions(driver).doubleClick(card("c1")).perform();
+		WebElement editor = wait.until(ExpectedConditions.visibilityOfElementLocated(
+			By.cssSelector(FORM + " .ProseMirror")));
+		editor.click();
+		new Actions(driver).keyDown(Keys.CONTROL).sendKeys("a").keyUp(Keys.CONTROL)
+			.sendKeys(Keys.BACK_SPACE)
+			.perform();
+
+		StringBuilder typed = new StringBuilder();
+		for (int i = 0; typed.length() <= EditCardPanel.MAX_DESCRIPTION; i++)
+		{
+			String chunk = (i == 0 ? "" : " ") + "the quick brown fox jumps over the lazy dog " + i;
+			new Actions(driver).sendKeys(chunk).pause(Duration.ofMillis(80)).perform();
+			typed.append(chunk);
+		}
+
+		wait.until(driver -> texts(FORM + " .rich-text .field-errors li").stream()
+			.anyMatch(error -> error.contains("maximum of 1000 characters")));
+		wait.until(ExpectedConditions.textToBe(By.cssSelector(FORM + " .ProseMirror"),
+			typed.toString()));
+		assertEquals("\"<p>" + typed + "</p>\"", driver
+			.findElement(By.cssSelector("[data-wicket-island=rich-text] [data-wicket-island-value]"))
+			.getDomProperty("value"));
+		assertEquals(Boolean.TRUE, js().executeScript(
+			"return document.activeElement.closest('.ProseMirror') !== null"),
+			"the editor lost the focus");
+		assertNoLeakedIslands();
+		assertNoBrowserErrors();
+	}
+
 	private void open(Engine engine)
 	{
 		open("taskboard", engine);
@@ -207,7 +261,8 @@ class TaskBoardSeleniumTest extends IslandSeleniumTestCase
 	}
 
 	/**
-	 * Drags a card into a column, near its bottom, with the pointer events dnd-kit listens to.
+	 * Drags a card onto a column's title, which stays in view, with the pointer events dnd-kit
+	 * listens to.
 	 */
 	private void drag(String cardId, Column column)
 	{
@@ -215,7 +270,7 @@ class TaskBoardSeleniumTest extends IslandSeleniumTestCase
 		new Actions(driver).clickAndHold(card(cardId))
 			.moveByOffset(10, 10)
 			.pause(Duration.ofMillis(50))
-			.moveToElement(target, 0, target.getSize().getHeight() / 2 - 20)
+			.moveToElement(target, 0, -target.getSize().getHeight() / 2 + 15)
 			.pause(Duration.ofMillis(50))
 			.release()
 			.perform();

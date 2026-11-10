@@ -16,7 +16,8 @@
  */
 
 import { RichTextEditor } from '@mantine/tiptap';
-import { useEditor } from '@tiptap/react';
+import { useEditor, type Editor } from '@tiptap/react';
+import { useEffect } from 'react';
 import StarterKit from '@tiptap/starter-kit';
 import { cspNonce, useFormState, useFormValue } from 'wicket-islands-react';
 import BoardTheme from './BoardTheme';
@@ -25,18 +26,29 @@ import './FormFields.css';
 
 /**
  * The description editor of RichTextField.java. Its value is the editor's HTML, which the server
- * sanitizes: nothing the browser sends is trusted.
+ * sanitizes: nothing the browser sends is trusted. The editor only offers what the sanitizer keeps
+ * (see Descriptions.java), and shows the value the server sends back.
  */
 export default function RichTextField() {
 	const [value, setValue] = useFormValue<string>();
 	const { enabled, errors } = useFormState();
 	const editor = useEditor({
-		extensions: [StarterKit.configure({ link: { openOnClick: false } })],
+		extensions: [StarterKit.configure({
+			heading: { levels: [3, 4] },
+			horizontalRule: false,
+			link: { openOnClick: false, HTMLAttributes: { target: null } }
+		})],
 		content: value ?? '',
 		editable: enabled,
 		injectNonce: cspNonce(),
-		onUpdate: ({ editor }) => setValue(editor.isEmpty ? '' : editor.getHTML())
+		onUpdate: ({ editor }) => setValue(htmlOf(editor))
 	});
+
+	useEffect(() => {
+		if (editor && htmlOf(editor) !== (value ?? '')) {
+			editor.commands.setContent(value ?? '', { emitUpdate: false });
+		}
+	}, [editor, value]);
 
 	return (
 		<BoardTheme>
@@ -69,4 +81,8 @@ export default function RichTextField() {
 			</div>
 		</BoardTheme>
 	);
+}
+
+function htmlOf(editor: Editor): string {
+	return editor.isEmpty ? '' : editor.getHTML();
 }

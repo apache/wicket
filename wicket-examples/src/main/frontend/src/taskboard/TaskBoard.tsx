@@ -16,11 +16,11 @@
  */
 
 import {
-	DndContext, KeyboardSensor, PointerSensor, useDraggable, useDroppable, useSensor, useSensors,
-	type DragEndEvent
+	DndContext, KeyboardSensor, PointerSensor, pointerWithin, rectIntersection, useDraggable,
+	useDroppable, useSensor, useSensors, type CollisionDetection, type DragEndEvent
 } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { Alert, Avatar, Badge, Card, Group, Text, Title } from '@mantine/core';
+import { Alert, Avatar, Badge, Button, Card, Group, Text, Title } from '@mantine/core';
 import { startTransition, useOptimistic, useState } from 'react';
 import { IslandCallError, useIsland, useStore } from 'wicket-islands-react';
 import BoardTheme from './BoardTheme';
@@ -74,7 +74,7 @@ export default function TaskBoard({ version, columns }: BoardProps) {
 						{notice}
 					</Alert>
 				)}
-				<DndContext sensors={sensors} onDragEnd={onDragEnd}>
+				<DndContext sensors={sensors} collisionDetection={underThePointer} onDragEnd={onDragEnd}>
 					<div className="columns">
 						{shown.map(column => (
 							<BoardColumn key={column.id} column={column}
@@ -120,7 +120,13 @@ function BoardCard({ card, onOpen }: { card: CardProps; onOpen(card: CardProps):
 			style={{ transform: CSS.Translate.toString(drag.transform) }}
 			withBorder padding="sm" mb="xs" data-card-id={card.id}
 			onDoubleClick={() => onOpen(card)}>
-			<Text fw={500} className="title">{card.title}</Text>
+			<Group gap="xs" justify="space-between" wrap="nowrap" align="flex-start">
+				<Text fw={500} className="title">{card.title}</Text>
+				<Button className="edit" size="compact-xs" variant="subtle"
+					aria-label={`Edit ${card.title}`} onPointerDown={event => event.stopPropagation()}
+					onKeyDown={event => event.stopPropagation()}
+					onClick={() => onOpen(card)}>Edit</Button>
+			</Group>
 			<Group gap="xs" mt={6} justify="space-between">
 				<Group gap={4}>
 					{card.labels.map(label => <Badge key={label} size="xs" variant="outline">{label}</Badge>)}
@@ -133,3 +139,11 @@ function BoardCard({ card, onOpen }: { card: CardProps; onOpen(card: CardProps):
 		</Card>
 	);
 }
+
+/**
+ * Drops where the pointer is; the keyboard, which has no pointer, falls back to the overlap.
+ */
+const underThePointer: CollisionDetection = args => {
+	const collisions = pointerWithin(args);
+	return collisions.length > 0 ? collisions : rectIntersection(args);
+};

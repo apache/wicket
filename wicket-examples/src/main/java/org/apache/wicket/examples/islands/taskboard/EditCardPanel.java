@@ -16,7 +16,12 @@
  */
 package org.apache.wicket.examples.islands.taskboard;
 
+import java.time.Duration;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.ThrottlingSettings;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -34,10 +39,17 @@ import org.apache.wicket.validation.validator.StringValidator;
 /**
  * The form of the edit dialog: classic Wicket fields next to two form islands, the description's
  * rich-text editor and the due date's picker. All of them are validated and submitted together.
+ * The description is also validated while the user types, through an Ajax behavior like any
+ * other form component's; its error reaches the editor without interrupting the typing.
  */
 public abstract class EditCardPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * The longest description, in characters of HTML.
+	 */
+	static final int MAX_DESCRIPTION = 1000;
 
 	/**
 	 * @param id
@@ -51,9 +63,8 @@ public abstract class EditCardPanel extends Panel
 	{
 		super(id);
 
-		Board current = board.getObject();
 		Form<CardForm> form = new Form<>("form", new CompoundPropertyModel<>(
-			CardForm.of(current.findCard(cardId).orElseThrow())));
+			CardForm.of(board.getObject().findCard(cardId).orElseThrow())));
 		add(form);
 
 		form.add(new FeedbackPanel("feedback"));
@@ -61,21 +72,41 @@ public abstract class EditCardPanel extends Panel
 			.add(StringValidator.lengthBetween(2, 80))
 			.setLabel(Model.of("Title")));
 		form.add(new RichTextField("description", LambdaModel.of(form.getModel(),
-			CardForm::getDescription, CardForm::setDescription)).setLabel(Model.of("Description")));
+			CardForm::getDescription, CardForm::setDescription)).setLabel(Model.of("Description"))
+			.add(StringValidator.maximumLength(MAX_DESCRIPTION))
+			.add(new AjaxFormComponentUpdatingBehavior("change")
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+				{
+					super.updateAjaxAttributes(attributes);
+					attributes.setThrottlingSettings(
+						new ThrottlingSettings(Duration.ofMillis(300), false));
+				}
+
+				@Override
+				protected void onUpdate(AjaxRequestTarget target)
+				{
+				}
+			}));
 		form.add(new DueDateField("due",
 			LambdaModel.of(form.getModel(), CardForm::getDue, CardForm::setDue))
 			.setLabel(Model.of("Due")));
-		form.add(new DropDownChoice<>("assigneeId", current.members()
-			.stream()
-			.map(Member::id)
-			.toList(), new ChoiceRenderer<String>()
+		form.add(new DropDownChoice<>("assigneeId",
+			board.map(current -> current.members().stream().map(Member::id).toList()),
+			new ChoiceRenderer<String>()
 			{
 				private static final long serialVersionUID = 1L;
 
 				@Override
 				public Object getDisplayValue(String memberId)
 				{
-					return current.findMember(memberId).map(Member::name).orElse(memberId);
+					return board.getObject()
+						.findMember(memberId)
+						.map(Member::name)
+						.orElse(memberId);
 				}
 			}).setNullValid(true).setLabel(Model.of("Assignee")));
 
@@ -88,7 +119,7 @@ public abstract class EditCardPanel extends Panel
 			{
 				boolean saved = TaskBoardApplication.get()
 					.getRepository()
-					.update(current.id(), cardId, form.getModelObject().toEdit());
+					.update(board.getObject().id(), cardId, form.getModelObject().toEdit());
 				board.detach();
 				if (saved)
 				{
