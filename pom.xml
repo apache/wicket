@@ -173,9 +173,9 @@
 		<jacoco.version>0.8.16</jacoco.version>
 		<jackson.version>3.2.4</jackson.version>
 		<jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
+		<jakarta.cdi-api.version>5.0.0</jakarta.cdi-api.version>
 		<jakarta.el.version>4.0.2</jakarta.el.version>
 		<jakarta.el-api.version>6.0.0</jakarta.el-api.version>
-		<jakarta.enterprise.cdi-api.version>5.0.0</jakarta.enterprise.cdi-api.version>
 		<jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
 		<jakarta.servlet.jsp-api.version>4.0.0</jakarta.servlet.jsp-api.version>
 		<jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
@@ -249,15 +249,15 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>jakarta.el</groupId>
-				<artifactId>jakarta.el-api</artifactId>
-				<version>${jakarta.el-api.version}</version>
+				<groupId>jakarta.cdi</groupId>
+				<artifactId>jakarta.cdi-api</artifactId>
+				<version>${jakarta.cdi-api.version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>jakarta.enterprise</groupId>
-				<artifactId>jakarta.enterprise.cdi-api</artifactId>
-				<version>${jakarta.enterprise.cdi-api.version}</version>
+				<groupId>jakarta.el</groupId>
+				<artifactId>jakarta.el-api</artifactId>
+				<version>${jakarta.el-api.version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -580,11 +580,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-ext</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-simple</artifactId>
 				<version>${slf4j.version}</version>
 			</dependency>
@@ -672,6 +667,16 @@
 				<artifactId>jetty-ee11-websocket-jakarta-server</artifactId>
 				<version>${jetty.version}</version>
 				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>jakarta.enterprise</groupId>
+						<artifactId>jakarta.enterprise.cdi-api</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>jakarta.enterprise</groupId>
+						<artifactId>jakarta.enterprise.lang-model</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.glassfish</groupId>
@@ -701,6 +706,12 @@
 						<artifactId>xmlParserAPIs</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.junit.jupiter</groupId>

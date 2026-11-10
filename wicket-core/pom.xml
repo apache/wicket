@@ -149,6 +149,14 @@ org.apache.wicket.validation.validator;-noimport:=true
 			<artifactId>openjson</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-fileupload2-jakarta-servlet5</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-request</artifactId>
 		</dependency>

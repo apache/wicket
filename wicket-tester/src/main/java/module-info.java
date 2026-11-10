@@ -23,7 +23,6 @@ module org.apache.wicket.tester {
     requires static jakarta.servlet;
     requires org.junit.jupiter.api;
     requires org.danekja.jdk.serializable.functional;
-    requires org.assertj.core;
 
     exports org.apache.wicket.util.tester;
 

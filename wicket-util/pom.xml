@@ -36,13 +36,5 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-fileupload2-jakarta-servlet5</artifactId>
-		</dependency>
 	</dependencies>
 </project>
