@@ -24,6 +24,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.RuntimeConfigurationType;
+import org.apache.wicket.islands.IslandTestPage.Add;
+import org.apache.wicket.islands.IslandTestPage.Sum;
+import org.apache.wicket.islands.IslandTestPage.Unwritable;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -68,6 +71,23 @@ abstract class IslandTestCase extends WicketTestCase
 	protected void configureIslands(IslandSettings settings)
 	{
 		settings.setBasePath("org/apache/wicket/islands/testbuild/").setManifestFile("manifest.json");
+		settings.getPagelessEndpoints()
+			.register("echo", Add.class, (add, call) -> {
+				if (add.amount() < 0)
+				{
+					throw call.reject("negative");
+				}
+				call.invalidate("totals");
+				return new Sum(add.amount() * 2);
+			}, IPagelessAuthorization.PERMIT_ALL)
+			.register("secret", Void.class, (none, call) -> "secret", call -> false)
+			.register("boom", Void.class, (none, call) -> {
+				throw new IllegalStateException("broken");
+			}, IPagelessAuthorization.PERMIT_ALL)
+			.register("whoami", Void.class, (none, call) -> call.getHandle(String.class),
+				IPagelessAuthorization.PERMIT_ALL)
+			.register("unwritable", Void.class, (none, call) -> new Unwritable(1),
+				IPagelessAuthorization.PERMIT_ALL);
 	}
 
 	/**

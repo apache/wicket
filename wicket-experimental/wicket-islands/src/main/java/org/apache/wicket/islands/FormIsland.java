@@ -18,10 +18,14 @@ package org.apache.wicket.islands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.islands.serializer.IslandSerializationException;
@@ -52,8 +56,9 @@ import org.apache.wicket.validation.ValidationError;
  * editor, must be sanitized before it is ever rendered without escaping; override
  * {@link #sanitize(Object)} to apply a sanitizer of your choice. Wicket bundles none.
  * <p>
- * After an Ajax request that validated it, a form island adds itself to the request target, so
- * its feedback messages reach the peer; see {@link #setUpdateOnValidation(boolean)}.
+ * After an Ajax request that validated it, a form island sends its form state to the peer, so its
+ * feedback messages reach it; see {@link #setUpdateOnValidation(boolean)}. The island is not
+ * re-rendered for that, so the value the user is editing stays as it is.
  *
  * @param <T>
  *            the type of the value
@@ -75,6 +80,11 @@ public class FormIsland<T, P> extends FormComponent<T>
 	private final Class<T> valueType;
 
 	private final IModel<P> props;
+
+	private static final MetaDataKey<HashSet<String>> FORM_STATES_SENT = new MetaDataKey<>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	private boolean updateOnValidation = true;
 
@@ -167,8 +177,8 @@ public class FormIsland<T, P> extends FormComponent<T>
 
 	/**
 	 * @param updateOnValidation
-	 *            whether this island adds itself to the Ajax request target after it was validated,
-	 *            so its peer receives its feedback messages; {@code true} by default
+	 *            whether this island sends its form state to its peer after an Ajax request
+	 *            validated it, so the peer receives its feedback messages; {@code true} by default
 	 * @return {@code this}
 	 */
 	public FormIsland<T, P> setUpdateOnValidation(boolean updateOnValidation)
@@ -192,13 +202,13 @@ public class FormIsland<T, P> extends FormComponent<T>
 		}
 		try
 		{
-			setConvertedInput(sanitize(IslandSupport.serializer().fromJson(input, valueType)));
+			T value = IslandSupport.serializer().fromJson(input, valueType);
+			setConvertedInput(value == null ? null : sanitize(value));
 		}
 		catch (IslandSerializationException e)
 		{
 			error(new ValidationError().addKey("FormIsland.ConversionError")
-				.setVariable("label", getLabel() != null ? getLabel().getObject() : getId())
-				.setMessage("The value is not valid."));
+				.setVariable("label", getLabel() != null ? getLabel().getObject() : getId()));
 		}
 	}
 
@@ -278,13 +288,14 @@ public class FormIsland<T, P> extends FormComponent<T>
 	}
 
 	/**
-	 * Lets calls reach a page Wicket recreated after the original expired. The recreated island has
-	 * a new key, so the call is answered as expired instead of being handled.
+	 * Lets island calls reach a page Wicket recreated after the original expired. The recreated
+	 * island has a new key, so the call is answered as expired instead of being handled. Other
+	 * behaviors on the island are refused on such a page, as on any component.
 	 */
 	@Override
 	public boolean canCallListenerAfterExpiry()
 	{
-		return true;
+		return island.getBehavior().isRequested();
 	}
 
 	@Override
@@ -335,22 +346,60 @@ public class FormIsland<T, P> extends FormComponent<T>
 	protected void onValid()
 	{
 		super.onValid();
-		addToAjaxTarget();
+		sendFormState();
 	}
 
 	@Override
 	protected void onInvalid()
 	{
 		super.onInvalid();
-		addToAjaxTarget();
+		sendFormState();
 	}
 
-	private void addToAjaxTarget()
+	private void sendFormState()
 	{
-		if (updateOnValidation)
+		if (!updateOnValidation)
 		{
-			RequestCycle.get().find(AjaxRequestTarget.class).ifPresent(target -> target.add(this));
+			return;
 		}
+		RequestCycle cycle = RequestCycle.get();
+		cycle.find(AjaxRequestTarget.class).ifPresent(ajaxTarget -> {
+			HashSet<String> sent = cycle.getMetaData(FORM_STATES_SENT);
+			if (sent == null)
+			{
+				sent = new HashSet<>();
+				cycle.setMetaData(FORM_STATES_SENT, sent);
+			}
+			if (sent.add(getKey()))
+			{
+				ajaxTarget.addListener(new AjaxRequestTarget.IListener()
+				{
+					@Override
+					public void onBeforeRespond(Map<String, Component> components,
+						AjaxRequestTarget target)
+					{
+						if (isVisibleInHierarchy() && !isRenderedBy(components))
+						{
+							target.addData(IslandAnswer.DATA_NAME, IslandAnswer.formState(
+								IslandSupport.serializer(), getKey(), renderFormState()));
+						}
+					}
+				});
+			}
+		});
+	}
+
+	private boolean isRenderedBy(Map<String, Component> components)
+	{
+		for (Component component : components.values())
+		{
+			if (component == this || component instanceof MarkupContainer container &&
+				container.contains(this, true))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

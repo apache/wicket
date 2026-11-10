@@ -136,8 +136,9 @@ export function useStore<S>(name: string): [S | undefined, (value: S) => void] {
 }
 
 /**
- * Fetches data with a call of the island, cached in the page's query client under
- * `[name, payload]`. When the server marks `name` as stale (`invalidate(name)`), every island
+ * Fetches data with a call of the island, cached in the page's query client. The cache is the
+ * island's own for a page-bound call, and shared by the islands calling the same page-less endpoint
+ * with the same handle. When the server marks `name` as stale (`invalidate(name)`), every island
  * showing it fetches it again.
  *
  * ```tsx
@@ -147,11 +148,16 @@ export function useStore<S>(name: string): [S | undefined, (value: S) => void] {
 export function useIslandQuery<R>(name: string, payload?: unknown,
 	options?: Omit<UseQueryOptions<R, IslandCallError>, 'queryKey' | 'queryFn'>
 ): UseQueryResult<R, IslandCallError> {
-	const { call } = useIsland();
+	const binding = useContext(BindingContext);
+	if (!binding) {
+		throw new Error(
+			'useIslandQuery() can only be used inside a component passed to defineIsland().');
+	}
+	const { context } = binding;
 	return useQuery<R, IslandCallError>({
 		...options,
-		queryKey: payload === undefined ? [name] : [name, payload],
-		queryFn: () => call<R>(name, payload)
+		queryKey: context.queryKey(name, payload),
+		queryFn: () => context.call<R>(name, payload)
 	});
 }
 

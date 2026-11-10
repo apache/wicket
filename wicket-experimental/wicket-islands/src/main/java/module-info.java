@@ -26,5 +26,6 @@ module org.apache.wicket.islands {
     exports org.apache.wicket.islands.modules;
     exports org.apache.wicket.islands.serializer;
 
+    opens org.apache.wicket.islands;
     opens org.apache.wicket.islands.modules to tools.jackson.databind;
 }

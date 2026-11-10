@@ -24,9 +24,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.tester.TagTester;
@@ -75,10 +80,42 @@ class IslandRenderTest extends IslandTestCase
 		Map<String, Object> props = (Map<String, Object>)state.get("props");
 		assertEquals(IslandTestPage.TRICKY_NAME, props.get("name"));
 		assertEquals(0, props.get("count"));
-		assertEquals(List.of("add", "reset", "boom"), state.get("calls"));
+		assertEquals(List.of("add", "reset", "boom", "unwritable"), state.get("calls"));
 		Map<String, Object> ajax = (Map<String, Object>)state.get("ajax");
 		assertNotNull(ajax.get("u"));
 		assertEquals("POST", ajax.get("m"));
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void stateStaysJsonWhenTheApplicationAddsCallListenersToEveryBehavior()
+	{
+		tester.getApplication().getAjaxRequestTargetListeners().add(new AjaxRequestTarget.IListener()
+		{
+			@Override
+			public void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior,
+				AjaxRequestAttributes attributes)
+			{
+				attributes.getAjaxCallListeners()
+					.add(new AjaxCallListener().onBefore("showBusy();").onComplete("hideBusy();"));
+				attributes.getAjaxCallListeners().add(new AjaxCallListener()
+					.onPrecondition("return true;"));
+			}
+		});
+
+		tester.startPage(IslandTestPage.class);
+
+		Map<String, Object> ajax = (Map<String, Object>)state().get("ajax");
+		assertEquals(Set.of("u", "m", "ch"), ajax.keySet());
+	}
+
+	@Test
+	void islandWithoutPageBoundCallsLeavesThePageStateless()
+	{
+		DisplayIslandPage page = tester.startPage(DisplayIslandPage.class);
+
+		assertTrue(page.isPageStateless());
+		assertFalse(state().containsKey("ajax"), stateJson());
 	}
 
 	@Test

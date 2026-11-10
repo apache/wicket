@@ -31,8 +31,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.ThreadContext;
-import org.apache.wicket.islands.IslandTestPage.Add;
-import org.apache.wicket.islands.IslandTestPage.Sum;
 import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
@@ -48,27 +46,6 @@ import jakarta.servlet.ServletInputStream;
  */
 class PagelessEndpointTest extends IslandTestCase
 {
-	@Override
-	protected void configureIslands(IslandSettings settings)
-	{
-		super.configureIslands(settings);
-		settings.getPagelessEndpoints()
-			.register("echo", Add.class, (add, call) -> {
-				if (add.amount() < 0)
-				{
-					throw call.reject("negative");
-				}
-				call.invalidate("totals");
-				return new Sum(add.amount() * 2);
-			}, IPagelessAuthorization.PERMIT_ALL)
-			.register("secret", Void.class, (none, call) -> "secret", call -> false)
-			.register("boom", Void.class, (none, call) -> {
-				throw new IllegalStateException("broken");
-			}, IPagelessAuthorization.PERMIT_ALL)
-			.register("whoami", Void.class, (none, call) -> call.getHandle(String.class),
-				IPagelessAuthorization.PERMIT_ALL);
-	}
-
 	@Test
 	@SuppressWarnings("unchecked")
 	void answersWithTheResultAndInvalidations()
@@ -104,6 +81,12 @@ class PagelessEndpointTest extends IslandTestCase
 	void failingEndpointIsAnError()
 	{
 		assertEquals("error", error(answer(post("boom", "", null))).get("kind"));
+	}
+
+	@Test
+	void resultThatCannotBeSerializedIsAnError()
+	{
+		assertEquals("error", error(answer(post("unwritable", "", null))).get("kind"));
 	}
 
 	@Test

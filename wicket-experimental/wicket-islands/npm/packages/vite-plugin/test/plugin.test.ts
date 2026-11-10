@@ -42,12 +42,20 @@ describe('wicketIslands', () => {
 		const { config } = plugin('build');
 
 		expect(config).toEqual({
+			base: './',
 			build: {
 				manifest: true,
 				rollupOptions: { input: { 'treasure-board': 'virtual:wicket-island:treasure-board' } }
 			},
 			optimizeDeps: { entries: ['src/islands/TreasureBoard.tsx'] }
 		});
+	});
+
+	it('keeps the base the application sets, and the dev server\'s', () => {
+		const instance = wicketIslands({ islands: { demo: 'src/demo.js' } });
+
+		expect(hook(instance, 'config')({ base: '/static/' }, { command: 'build' })).not.toHaveProperty('base');
+		expect(hook(instance, 'config')({}, { command: 'serve' })).not.toHaveProperty('base');
 	});
 
 	it('wraps the default export with the adapter\'s defineIsland', () => {

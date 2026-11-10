@@ -50,6 +50,10 @@ public class FormIslandTestPage extends WebPage
 
 	int updates;
 
+	static int updatesOnAnyInstance;
+
+	boolean addIslandOnUpdate;
+
 	public FormIslandTestPage()
 	{
 		feedback = new FeedbackPanel("feedback");
@@ -86,6 +90,20 @@ public class FormIslandTestPage extends WebPage
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 				updates++;
+				updatesOnAnyInstance++;
+				if (addIslandOnUpdate)
+				{
+					target.add(getComponent());
+				}
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, RuntimeException e)
+			{
+				if (addIslandOnUpdate)
+				{
+					target.add(getComponent());
+				}
 			}
 		});
 		form.add(island);

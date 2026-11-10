@@ -18,6 +18,7 @@ package org.apache.wicket.islands;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Thrown to reject an island call. The client's call fails with the kind <code>invalid</code> and
@@ -35,12 +36,18 @@ public class IslandCallRejectedException extends RuntimeException
 
 	/**
 	 * @param messages
-	 *            the messages for the client
+	 *            the messages for the client; a {@code null} message, such as the message of a
+	 *            caught exception that has none, is dropped
 	 */
 	public IslandCallRejectedException(String... messages)
 	{
+		this(Arrays.stream(messages).filter(Objects::nonNull).toList());
+	}
+
+	private IslandCallRejectedException(List<String> messages)
+	{
 		super(String.join("; ", messages), null, false, false);
-		this.messages = List.copyOf(Arrays.asList(messages));
+		this.messages = messages;
 	}
 
 	/**

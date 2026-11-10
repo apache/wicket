@@ -151,9 +151,9 @@ final class PagelessEndpointResource extends AbstractResource
 		}
 		catch (IslandSerializationException e)
 		{
-			LOG.debug("Page-less call '{}' failed to (de)serialize", id, e);
+			LOG.debug("Page-less call '{}' has a payload that cannot be converted", id, e);
 			return IslandAnswer.failure(serializer, null, "invalid",
-				List.of(detail(e, "The call's payload or result could not be converted.")),
+				List.of(detail(e, "The call's payload could not be converted.")),
 				invalidations);
 		}
 		catch (AuthorizationException e)

@@ -31,8 +31,9 @@ import org.apache.wicket.util.lang.Args;
  * resolve in another one. Issuing a handle binds a temporary session.
  * <p>
  * The contexts are stored in the session, so they must be small; the session is replicated with
- * them where the application replicates sessions. A handle that has been pushed out by newer ones
- * no longer resolves, and the call is answered as expired.
+ * them where the application replicates sessions. In a cluster, page-less calls with a handle
+ * therefore need sticky sessions or session replication, as page-bound calls do. A handle that has
+ * been pushed out by newer ones no longer resolves, and the call is answered as expired.
  *
  * @since 12.0.0
  */

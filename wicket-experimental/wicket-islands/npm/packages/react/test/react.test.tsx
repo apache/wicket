@@ -50,6 +50,11 @@ function Scores({ title }: Props) {
 	return <ol id="scores">{scores.data?.map(score => <li key={score}>{score}</li>)}</ol>;
 }
 
+function SharedScores() {
+	const scores = useIslandQuery<string[]>('scores');
+	return <ol>{scores.data?.map(score => <li key={score}>{score}</li>)}</ol>;
+}
+
 function Name() {
 	const [name, setName] = useFormValue<string>();
 	const { errors } = useFormState();
@@ -75,6 +80,8 @@ describe('defineIsland', () => {
 			signal: new AbortController().signal,
 			store: name => stores.get(name),
 			queryClient,
+			queryKey: (name, payload) => payload === undefined
+				? [name, props.title] : [name, props.title, payload],
 			call: vi.fn(() => Promise.resolve(undefined)) as IslandContext<Props>['call']
 		};
 	}
@@ -199,6 +206,25 @@ describe('defineIsland', () => {
 		await act(() => vi.waitFor(() =>
 			expect(scoresRoot.querySelector('#scores')?.textContent).toBe('score 2')));
 		scoresRoot.remove();
+	});
+
+	it('keeps the query results of islands apart', async () => {
+		const rootA = document.createElement('div');
+		const rootB = document.createElement('div');
+		document.body.append(rootA, rootB);
+		const answering = (answer: string) =>
+			vi.fn(() => Promise.resolve([answer])) as IslandContext<Props>['call'];
+		await act(async () => {
+			defineIsland(SharedScores).mount(rootA, { ...contextFor({ title: 'a' }), call: answering('from a') });
+			defineIsland(SharedScores).mount(rootB, { ...contextFor({ title: 'b' }), call: answering('from b') });
+		});
+
+		await act(() => vi.waitFor(() => {
+			expect(rootA.textContent).toBe('from a');
+			expect(rootB.textContent).toBe('from b');
+		}));
+		rootA.remove();
+		rootB.remove();
 	});
 
 	it('unmounts the React root', () => {

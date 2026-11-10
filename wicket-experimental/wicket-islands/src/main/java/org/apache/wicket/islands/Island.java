@@ -45,6 +45,27 @@ import org.apache.wicket.util.lang.Args;
  * <strong>Call payloads come from the browser and are untrusted.</strong> A request type should
  * contain only what the interaction may change; the handler validates it and applies it to the
  * server-side state.
+ * <p>
+ * <strong>The island's module is trusted like the page's markup.</strong> It runs with the page's
+ * privileges: it can invoke any listener on the page as the user and read the handles of every
+ * island. That trust extends to every npm package the application's build bundles, so its
+ * dependency tree deserves the same scrutiny as its Java dependencies.
+ * <p>
+ * When Wicket re-renders an island, e.g. because an ancestor was added to an Ajax request target,
+ * the mounted peer is moved into the new host element and receives the new props, keeping its
+ * client-side state. Moving it out of the document and back drops the focus inside it, pauses
+ * audio and video, reloads iframes and may reset the scroll position of elements inside it. An
+ * island is recognized by its key, which every new instance of the component gets anew: islands
+ * in a repeater that recreates its items on every render, as {@code DataView} does by default, are
+ * remounted and lose their client-side state, and issue a new handle for each page-less call with
+ * a context. An item reuse strategy such as {@code ReuseIfModelsEqualStrategy} keeps them.
+ * <p>
+ * The client-side state is not part of the page's versions: after the back button, the peer
+ * starts from the props of the version shown, and its calls reach that version, as the calls of
+ * any Ajax behavior do. An island inside a Wicket form takes part in the form like any markup: a
+ * named input its peer renders is submitted with the form and can collide with the name of a
+ * Wicket input, Enter in one of its text inputs submits the form, and a button without
+ * <code>type="button"</code> is a submit button.
  *
  * @param <P>
  *            the type of the props
@@ -213,13 +234,14 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 	}
 
 	/**
-	 * Lets calls reach a page Wicket recreated after the original expired. The recreated island has
-	 * a new key, so the call is answered as expired instead of being handled.
+	 * Lets island calls reach a page Wicket recreated after the original expired. The recreated
+	 * island has a new key, so the call is answered as expired instead of being handled. Other
+	 * behaviors on the island are refused on such a page, as on any component.
 	 */
 	@Override
 	public boolean canCallListenerAfterExpiry()
 	{
-		return true;
+		return island.getBehavior().isRequested();
 	}
 
 	@Override

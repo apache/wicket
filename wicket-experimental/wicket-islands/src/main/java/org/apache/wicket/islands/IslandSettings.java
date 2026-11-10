@@ -92,7 +92,8 @@ public class IslandSettings
 	/**
 	 * Installs the settings in an application, mounts the resource serving the built files,
 	 * registers the listener that answers island calls failing before they reach their island, and
-	 * makes Ajax behaviors on a {@link FormIsland} send the hidden input holding its value.
+	 * makes Ajax behaviors on a {@link FormIsland} send the hidden input holding its value. When the
+	 * settings are installed already, returns them unchanged.
 	 *
 	 * @param application
 	 *            the application
@@ -102,6 +103,11 @@ public class IslandSettings
 	{
 		Args.notNull(application, "application");
 
+		IslandSettings installed = application.getMetaData(KEY);
+		if (installed != null)
+		{
+			return installed;
+		}
 		IslandSettings settings = new IslandSettings();
 		settings.assets = new ResourceReference(IslandSettings.class, "assets")
 		{

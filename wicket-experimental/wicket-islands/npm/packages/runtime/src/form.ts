@@ -104,6 +104,14 @@ export class HostFormBinding implements FormBinding<unknown> {
 		this.notify();
 	}
 
+	/**
+	 * Reads the state again, leaving the value as it is.
+	 */
+	refreshState(): void {
+		this.state = this.readState();
+		this.notify();
+	}
+
 	private input(): HTMLInputElement {
 		const input = this.host().querySelector<HTMLInputElement>(SELECTOR_VALUE);
 		if (!input) {

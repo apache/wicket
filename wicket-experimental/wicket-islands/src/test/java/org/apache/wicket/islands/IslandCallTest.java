@@ -115,4 +115,10 @@ class IslandCallTest extends IslandTestCase
 		assertEquals("error", error.get("kind"));
 		assertTrue(((List<String>)error.get("messages")).get(0).contains("secret detail"));
 	}
+
+	@Test
+	void resultThatCannotBeSerializedIsAnError()
+	{
+		assertEquals("error", error(call("unwritable", "1", null)).get("kind"));
+	}
 }

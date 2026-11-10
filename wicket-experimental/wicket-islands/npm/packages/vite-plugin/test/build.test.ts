@@ -42,4 +42,27 @@ describe('wicketIslands in a Vite build', () => {
 		expect(code).toContain('registerIsland("demo"');
 		expect(code).toContain('root.textContent = context.props.label');
 	});
+
+	it('resolves assets, style sheets and lazy chunks against the module, not the server root', async () => {
+		const output = await build({
+			root: path.resolve(process.cwd(), 'packages/vite-plugin/test/fixture'),
+			logLevel: 'silent',
+			plugins: [wicketIslands({ islands: { assets: 'src/assets.js' } })],
+			build: { write: false, minify: false, assetsInlineLimit: 0 }
+		}) as Rollup.RollupOutput;
+
+		const code = output.output
+			.filter((file): file is Rollup.OutputChunk => file.type === 'chunk')
+			.map(chunk => chunk.code)
+			.join('\n');
+		const css = output.output
+			.filter((file): file is Rollup.OutputAsset => file.fileName.endsWith('.css'))
+			.map(asset => String(asset.source))
+			.join('\n');
+		expect(code).toContain('import.meta.url');
+		expect(code).not.toMatch(/["'`]\/assets\//);
+		expect(code).not.toContain('return "/" + dep');
+		expect(css).toMatch(/url\(["']?\.\/logo-/);
+		expect(css).not.toContain('url(/assets');
+	});
 });

@@ -45,6 +45,18 @@ public class IslandTestPage extends WebPage
 	{
 	}
 
+	/**
+	 * A result the serializer cannot write.
+	 */
+	public record Unwritable(int value)
+	{
+		@Override
+		public int value()
+		{
+			throw new IllegalStateException("not writable");
+		}
+	}
+
 	private int count;
 
 	String customer = "c1";
@@ -74,6 +86,8 @@ public class IslandTestPage extends WebPage
 		island.onCall("boom", Void.class, (request, call) -> {
 			throw new IllegalStateException("secret detail");
 		});
+		island.onCall("unwritable", Void.class, Unwritable.class,
+			(request, call) -> new Unwritable(1));
 		island.usePageless("echo");
 		island.usePageless("sum", "echo");
 		island.usePageless("customer", "whoami", () -> customer);

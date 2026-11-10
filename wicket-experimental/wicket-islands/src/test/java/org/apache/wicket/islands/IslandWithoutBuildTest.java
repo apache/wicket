@@ -29,6 +29,7 @@ class IslandWithoutBuildTest extends IslandTestCase
 	@Override
 	protected void configureIslands(IslandSettings settings)
 	{
+		super.configureIslands(settings);
 		settings.setBasePath("org/apache/wicket/islands/nobuild/");
 	}
 

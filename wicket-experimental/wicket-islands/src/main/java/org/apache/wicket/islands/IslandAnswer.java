@@ -19,6 +19,7 @@ package org.apache.wicket.islands;
 import java.util.List;
 
 import org.apache.wicket.islands.serializer.IIslandSerializer;
+import org.apache.wicket.islands.serializer.IslandSerializationException;
 
 /**
  * Builds the answer to an island call: the value of the data entry the client runtime reads.
@@ -36,12 +37,22 @@ final class IslandAnswer
 	/**
 	 * @param callId
 	 *            the id of the call, {@code null} for a page-less call, which is answered directly
+	 * @throws IllegalStateException
+	 *             if the value cannot be serialized, which is a fault of the server, not the client
 	 */
 	static String success(IIslandSerializer serializer, String callId, Object value,
 		List<String> invalidations)
 	{
-		return answer(serializer, callId, "\"ok\":true,\"value\":" + serializer.toJson(value),
-			invalidations);
+		String json;
+		try
+		{
+			json = serializer.toJson(value);
+		}
+		catch (IslandSerializationException e)
+		{
+			throw new IllegalStateException("The result of the call cannot be serialized", e);
+		}
+		return answer(serializer, callId, "\"ok\":true,\"value\":" + json, invalidations);
 	}
 
 	static String failure(IIslandSerializer serializer, String callId, String kind,
@@ -59,6 +70,16 @@ final class IslandAnswer
 	static String invalidations(IIslandSerializer serializer, List<String> invalidations)
 	{
 		return "{\"invalidate\":" + serializer.toJson(invalidations) + "}";
+	}
+
+	/**
+	 * @param state
+	 *            the JSON of the form state
+	 * @return an answer that carries the form state of a form island, for its peer
+	 */
+	static String formState(IIslandSerializer serializer, String key, String state)
+	{
+		return "{\"form\":{\"key\":" + serializer.toJson(key) + ",\"state\":" + state + "}}";
 	}
 
 	private static String answer(IIslandSerializer serializer, String callId, String outcome,

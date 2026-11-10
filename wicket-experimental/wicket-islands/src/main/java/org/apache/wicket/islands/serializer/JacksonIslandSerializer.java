@@ -19,16 +19,32 @@ package org.apache.wicket.islands.serializer;
 import org.apache.wicket.util.lang.Args;
 
 import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.BeanDescription;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationConfig;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.ser.ValueSerializerModifier;
+import tools.jackson.databind.ser.bean.BeanSerializerBase;
+import tools.jackson.databind.ser.std.StdSerializer;
 
 /**
  * An {@link IIslandSerializer} based on Jackson.
  * <p>
- * The default mapper rejects JSON properties the target type does not declare, so a client cannot
- * smuggle values past a request type, and leaves polymorphic type handling off. A custom mapper
- * passed to {@link #JacksonIslandSerializer(ObjectMapper)} must not enable default typing.
+ * The default mapper writes only records, collections, maps, arrays, enums and values Jackson
+ * writes as a single value, such as strings, numbers, dates and types with a {@code @JsonValue}.
+ * Any other class is refused, because Jackson would write every getter it has: handing an entity
+ * to an island would publish all its fields to the browser and could load its lazy relations. Map
+ * such objects to records made for the client.
+ * <p>
+ * The default mapper also rejects JSON properties the target type does not declare, so a client
+ * cannot smuggle values past a request type, and leaves polymorphic type handling off. A custom
+ * mapper passed to {@link #JacksonIslandSerializer(ObjectMapper)} must not enable default typing;
+ * start from {@link #defaultMapperBuilder()} to keep the rules above.
  *
  * @since 12.0.0
  */
@@ -41,7 +57,18 @@ public class JacksonIslandSerializer implements IIslandSerializer
 	 */
 	public JacksonIslandSerializer()
 	{
-		this(JsonMapper.builder().enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).build());
+		this(defaultMapperBuilder().build());
+	}
+
+	/**
+	 * @return a builder of the default mapper, to add modules or configuration to
+	 */
+	public static JsonMapper.Builder defaultMapperBuilder()
+	{
+		return JsonMapper.builder()
+			.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+			.addModule(new SimpleModule("wicket-islands-records-only")
+				.setSerializerModifier(new RecordsOnly()));
 	}
 
 	/**
@@ -66,6 +93,42 @@ public class JacksonIslandSerializer implements IIslandSerializer
 		{
 			throw new IslandSerializationException("Cannot convert a " +
 				(value == null ? "null" : value.getClass().getName()) + " to JSON", e);
+		}
+	}
+
+	/**
+	 * Refuses classes Jackson would write through their getters, unless they are records.
+	 */
+	private static final class RecordsOnly extends ValueSerializerModifier
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public ValueSerializer<?> modifySerializer(SerializationConfig config,
+			BeanDescription.Supplier beanDesc, ValueSerializer<?> serializer)
+		{
+			if (serializer instanceof BeanSerializerBase bean && !bean.handledType().isRecord())
+			{
+				return new Refused(bean.handledType());
+			}
+			return serializer;
+		}
+	}
+
+	private static final class Refused extends StdSerializer<Object>
+	{
+		private Refused(Class<?> type)
+		{
+			super(type);
+		}
+
+		@Override
+		public void serialize(Object value, JsonGenerator generator, SerializationContext context)
+		{
+			context.reportBadDefinition(handledType(), "Islands only write records, collections, " +
+				"maps, arrays, enums and single values, not a " + handledType().getName() +
+				": map it to a record, or configure the island serializer with a mapper of your " +
+				"own");
 		}
 	}
 

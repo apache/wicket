@@ -75,6 +75,12 @@ export interface IslandContext<P> {
 	readonly queryClient: QueryClient;
 
 	/**
+	 * The key to cache the results of a call under in the query client: the name first, so the
+	 * server's invalidation of the name reaches it, then who shares the results, then the payload.
+	 */
+	queryKey(name: string, payload?: unknown): readonly unknown[];
+
+	/**
 	 * The page's client store of the given name, shared by every island on the page.
 	 */
 	store<S>(name: string): ClientStore<S>;

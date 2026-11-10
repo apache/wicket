@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.islands;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -25,8 +27,10 @@ import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.authorization.AuthorizationException;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.islands.serializer.IIslandSerializer;
 import org.apache.wicket.islands.serializer.IslandSerializationException;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.RequestHandlerExecutor.ReplaceHandlerException;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -56,12 +60,48 @@ final class IslandEndpointBehavior extends AbstractDefaultAjaxBehavior
 	{
 		super.updateAjaxAttributes(attributes);
 		attributes.setMethod(AjaxRequestAttributes.Method.POST);
-		attributes.setChannel(new AjaxChannel("wicket-island-" + getComponent().getMarkupId()));
+		attributes.setChannel(channel());
 	}
 
-	CharSequence renderAttributes()
+	/**
+	 * Keeps the page stateless while the island has no page-bound calls.
+	 */
+	@Override
+	public boolean getStatelessHint(Component component)
 	{
-		return renderAjaxAttributes(getComponent());
+		return !supportOf(component).hasEndpoints();
+	}
+
+	private AjaxChannel channel()
+	{
+		return new AjaxChannel("wicket-island-" + getComponent().getMarkupId());
+	}
+
+	/**
+	 * Renders a fixed set of plain values rather than the behavior's full Ajax attributes: what an
+	 * application adds to every behavior, such as call listeners or preconditions, is rendered as
+	 * functions, which the island state cannot carry as JSON.
+	 *
+	 * @return the Ajax attributes of the island's calls
+	 */
+	Map<String, String> renderAttributes()
+	{
+		Map<String, String> attributes = new LinkedHashMap<>();
+		attributes.put("u", getCallbackUrl().toString());
+		attributes.put("m", "POST");
+		attributes.put("ch", channel().toString());
+		return attributes;
+	}
+
+	/**
+	 * @return whether the current request is a call to this behavior
+	 */
+	boolean isRequested()
+	{
+		IRequestHandler handler = RequestCycle.get().getActiveRequestHandler();
+		return handler instanceof ListenerRequestHandler listener &&
+			listener.getBehaviorIndex() != null &&
+			getComponent().getBehaviorById(listener.getBehaviorIndex()) == this;
 	}
 
 	@Override
@@ -100,9 +140,10 @@ final class IslandEndpointBehavior extends AbstractDefaultAjaxBehavior
 		}
 		catch (IslandSerializationException e)
 		{
-			LOG.debug("Island call '{}' on {} failed to (de)serialize", name, component.getPath(), e);
+			LOG.debug("Island call '{}' on {} has a payload that cannot be converted", name,
+				component.getPath(), e);
 			answer = IslandAnswer.failure(serializer, callId, "invalid",
-				List.of(detail(e, "The call's payload or result could not be converted.")),
+				List.of(detail(e, "The call's payload could not be converted.")),
 				invalidations);
 		}
 		catch (AuthorizationException e)

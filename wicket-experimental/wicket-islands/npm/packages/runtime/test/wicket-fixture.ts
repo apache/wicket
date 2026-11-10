@@ -76,10 +76,12 @@ export function respond(request: Request, content: string): void {
 }
 
 /**
- * Fails a request, as when the server cannot be reached.
+ * Fails a request: with status 0 as when the server cannot be reached, with an HTTP status as when
+ * it answers with an error, or without a response as when its answer cannot be parsed.
  */
-export function failRequest(request: Request): void {
-	run(request.attributes, (call, context) => call.failure(context, null, 'unreachable', 'error'));
+export function failRequest(request: Request, status: number | null = 0): void {
+	run(request.attributes, (call, context) => call.failure(context,
+		status === null ? null : { status }, 'failed', 'error'));
 }
 
 export function component(id: string, markup: string): string {
@@ -91,9 +93,11 @@ export function data(value: unknown): string {
 }
 
 /**
- * The markup of an island host, as Island renders it.
+ * The markup of an island host, as Island renders it; without Ajax attributes when the URL is
+ * {@code null}, as for an island without page-bound calls.
  */
-export function host(id: string, type: string, key: string, props: unknown, url = `./call?${id}`,
+export function host(id: string, type: string, key: string, props: unknown,
+	url: string | null = `./call?${id}`,
 	pageless?: Record<string, { url: string; handle?: string }>): string {
 	return hostWith(id, type, key, { props, pageless }, '', url);
 }
@@ -109,11 +113,11 @@ export function formHost(id: string, type: string, key: string, value: unknown,
 }
 
 function hostWith(id: string, type: string, key: string, state: object, before: string,
-	url: string): string {
+	url: string | null): string {
 	const json = JSON.stringify({
 		...state,
-		calls: ['probe'],
-		ajax: { u: url, m: 'POST', c: id, ch: `wicket-island-${id}|s` }
+		calls: url === null ? [] : ['probe'],
+		ajax: url === null ? undefined : { u: url, m: 'POST', ch: `wicket-island-${id}|s` }
 	}).replace(/</g, '\\u003c');
 	return `<div id="${id}" data-wicket-island="${type}" data-wicket-island-key="${key}">` +
 		before + `<script type="application/json" data-wicket-island-state>${json}</script>` +

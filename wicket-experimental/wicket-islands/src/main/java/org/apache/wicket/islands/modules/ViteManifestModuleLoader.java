@@ -19,6 +19,8 @@ package org.apache.wicket.islands.modules;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.time.Instant;
+import java.util.Objects;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
@@ -28,6 +30,7 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceType;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.io.Connections;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +56,8 @@ public class ViteManifestModuleLoader implements IIslandModuleLoader
 	private final ResourceReference assets;
 
 	private volatile ViteManifest manifest;
+
+	private volatile Instant manifestModified;
 
 	private volatile boolean manifestMissing;
 
@@ -81,31 +86,47 @@ public class ViteManifestModuleLoader implements IIslandModuleLoader
 	}
 
 	/**
+	 * Reads the manifest once in deployment mode. In development mode it is read again whenever it
+	 * changes, so a build made while the application runs is picked up.
+	 *
 	 * @return the manifest, {@code null} if there is no build on the classpath
 	 */
 	public ViteManifest getManifest()
 	{
-		if (manifest == null && !manifestMissing)
+		boolean development = Application.get().usesDevelopmentConfig();
+		if (!development && (manifest != null || manifestMissing))
 		{
-			URL url = getClassLoader().getResource(basePath + manifestFile);
-			if (url == null)
+			return manifest;
+		}
+
+		URL url = getClassLoader().getResource(basePath + manifestFile);
+		if (url == null)
+		{
+			if (!manifestMissing)
 			{
 				manifestMissing = true;
 				LOG.warn("No Vite manifest at '{}{}' on the classpath: islands are rendered without "
 					+ "their JavaScript modules.", basePath, manifestFile);
 			}
-			else
+			manifest = null;
+			return null;
+		}
+		manifestMissing = false;
+		try
+		{
+			Instant modified = development ? Connections.getLastModified(url) : null;
+			if (manifest == null || !Objects.equals(modified, manifestModified))
 			{
 				try (InputStream in = url.openStream())
 				{
 					manifest = ViteManifest.read(in);
 				}
-				catch (IOException e)
-				{
-					throw new WicketRuntimeException(
-						"Cannot read the Vite manifest at " + url, e);
-				}
+				manifestModified = modified;
 			}
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException("Cannot read the Vite manifest at " + url, e);
 		}
 		return manifest;
 	}

@@ -50,9 +50,10 @@ export default function wicketIslands(options) {
 	return {
 		name: 'wicket-islands',
 
-		config(_config, env) {
+		config(config, env) {
 			serving = env.command === 'serve';
-			return {
+			/** @type {import('vite').UserConfig} */
+			const result = {
 				build: {
 					manifest: true,
 					rollupOptions: {
@@ -64,6 +65,11 @@ export default function wicketIslands(options) {
 					entries: Object.values(islands)
 				}
 			};
+			if (!serving && config.base === undefined) {
+				// Wicket serves the build under its own mount, so URLs resolve against the module
+				result.base = './';
+			}
+			return result;
 		},
 
 		configResolved(config) {

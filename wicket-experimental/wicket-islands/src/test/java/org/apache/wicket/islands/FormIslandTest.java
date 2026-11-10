@@ -17,6 +17,7 @@
 package org.apache.wicket.islands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -27,6 +28,7 @@ import java.util.regex.Pattern;
 
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.islands.FormIslandTestPage.Point;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.TagTester;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +47,7 @@ class FormIslandTest extends IslandTestCase
 	@BeforeEach
 	void render()
 	{
+		FormIslandTestPage.updatesOnAnyInstance = 0;
 		page = tester.startPage(FormIslandTestPage.class);
 	}
 
@@ -96,7 +99,7 @@ class FormIslandTest extends IslandTestCase
 		form.submit();
 
 		assertEquals(new Point(1, 2), page.value.getObject());
-		assertEquals(List.of("The value is not valid."), errors());
+		assertEquals(List.of("The value of 'Point' is not valid."), errors());
 		assertEquals("{\"x\":3,\"admin\":true}", valueInput().getAttribute("value"));
 	}
 
@@ -130,16 +133,75 @@ class FormIslandTest extends IslandTestCase
 		form.submit("submit");
 		tester.executeAjaxEvent("form:submit", "click");
 
+		assertEquals(List.of("Not on the diagonal"), sentErrors());
+	}
+
+	@Test
+	void ajaxValidationSendsTheFormStateWithoutReRenderingTheIsland()
+	{
+		tester.getRequest().getPostParameters().setParameterValue(page.island.getInputName(),
+			"{\"x\":4,\"y\":4}");
+		tester.executeBehavior(behavior());
+
+		assertFalse(tester.getLastResponseAsString().contains("data-wicket-island-state"),
+			tester.getLastResponseAsString());
+		assertEquals(List.of("Not on the diagonal"), sentErrors());
+	}
+
+	@Test
+	void reRenderedIslandGetsNoSeparateFormState()
+	{
+		page.addIslandOnUpdate = true;
+		tester.getRequest().getPostParameters().setParameterValue(page.island.getInputName(),
+			"{\"x\":7,\"y\":8}");
+		tester.executeBehavior(behavior());
+
 		tester.assertComponentOnAjaxResponse(page.island);
-		assertTrue(tester.getLastResponseAsString().contains("Not on the diagonal"));
+		assertFalse(tester.getLastResponseAsString().contains("<data "),
+			tester.getLastResponseAsString());
+	}
+
+	@Test
+	void noFormStateIsSentWhenUpdateOnValidationIsOff()
+	{
+		page.island.setUpdateOnValidation(false);
+		tester.getRequest().getPostParameters().setParameterValue(page.island.getInputName(),
+			"{\"x\":4,\"y\":4}");
+		tester.executeBehavior(behavior());
+
+		assertFalse(tester.getLastResponseAsString().contains("<data "),
+			tester.getLastResponseAsString());
+	}
+
+	@Test
+	void ajaxBehaviorIsNotInvokedOnAPageRecreatedAfterExpiry()
+	{
+		Url url = Url.parse(behavior().getCallbackUrl());
+		tester.getSession().getPageManager().clear();
+
+		tester.getRequest().setMethod("POST");
+		tester.getRequest().getPostParameters().setParameterValue(page.island.getInputName(),
+			"{\"x\":7,\"y\":8}");
+		tester.executeAjaxUrl(url);
+
+		assertEquals(0, FormIslandTestPage.updatesOnAnyInstance);
+	}
+
+	@Test
+	void nullValueIsNotSanitizedAndFailsRequired()
+	{
+		FormTester form = tester.newFormTester("form");
+		form.setValue("point", "null");
+		form.submit();
+
+		assertEquals(new Point(1, 2), page.value.getObject());
+		assertEquals(1, errors().size());
 	}
 
 	@Test
 	void ajaxBehaviorsSendTheHiddenInput()
 	{
-		AjaxFormComponentUpdatingBehavior behavior = page.island
-			.getBehaviors(AjaxFormComponentUpdatingBehavior.class)
-			.get(0);
+		AjaxFormComponentUpdatingBehavior behavior = behavior();
 		String script = behavior.getCallbackScript().toString();
 		assertTrue(script.contains("\"sr\":true"), script);
 
@@ -149,7 +211,6 @@ class FormIslandTest extends IslandTestCase
 
 		assertEquals(1, page.updates);
 		assertEquals(new Point(7, 8), page.value.getObject());
-		tester.assertComponentOnAjaxResponse(page.island);
 	}
 
 	@Test
@@ -161,6 +222,19 @@ class FormIslandTest extends IslandTestCase
 
 		assertNull(tester.getTagByWicketId("point").getAttribute("disabled"));
 		assertEquals(Boolean.FALSE, ((Map<String, Object>)state().get("form")).get("enabled"));
+	}
+
+	private AjaxFormComponentUpdatingBehavior behavior()
+	{
+		return page.island.getBehaviors(AjaxFormComponentUpdatingBehavior.class).get(0);
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<String> sentErrors()
+	{
+		Map<String, Object> form = (Map<String, Object>)answer().get("form");
+		assertEquals(page.island.getKey(), form.get("key"));
+		return (List<String>)((Map<String, Object>)form.get("state")).get("errors");
 	}
 
 	private TagTester valueInput()

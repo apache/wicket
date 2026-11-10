@@ -39,7 +39,7 @@ const HANDLE_HEADER = 'X-Wicket-Islands-Handle';
 interface IslandState {
 	props: unknown;
 	calls: string[];
-	ajax: WicketAjaxAttributes;
+	ajax?: WicketAjaxAttributes;
 	pageless?: Record<string, PagelessCall>;
 	form?: FormState;
 }
@@ -75,6 +75,7 @@ interface Envelope {
 	value?: unknown;
 	error?: { kind: IslandCallErrorKind; messages: string[] };
 	invalidate?: string[];
+	form?: { key: string; state: FormState };
 }
 
 /**
@@ -96,7 +97,8 @@ export class IslandRuntime {
 		defaultOptions: {
 			queries: {
 				retry: (failures, error) => failures < 2 && error instanceof IslandCallError &&
-					(error.kind === 'network' || error.kind === 'error')
+					error.kind === 'network',
+				refetchOnWindowFocus: query => !isPageBound(query.queryKey)
 			}
 		}
 	});
@@ -151,7 +153,11 @@ export class IslandRuntime {
 		}
 		hosts.push(...element.querySelectorAll(`[${ATTR_TYPE}]`));
 		for (const host of hosts) {
-			this.attach(host as HTMLElement);
+			try {
+				this.attach(host as HTMLElement);
+			} catch (e) {
+				console.error(`Wicket Islands: cannot mount island host ${host.id}`, e);
+			}
 		}
 	}
 
@@ -187,7 +193,13 @@ export class IslandRuntime {
 			island.form = new HostFormBinding(() => island.host, () => island.state.form!);
 		}
 		this.mounted.set(key, island);
-		island.instance = module.mount(island.root, this.createContext(island));
+		try {
+			island.instance = module.mount(island.root, this.createContext(island));
+		} catch (e) {
+			this.mounted.delete(key);
+			island.abort.abort();
+			throw e;
+		}
 	}
 
 	/**
@@ -228,19 +240,40 @@ export class IslandRuntime {
 			signal: island.abort.signal,
 			form: island.form,
 			queryClient: this.queryClient,
+			queryKey: (name, payload) => {
+				const key: unknown[] = [name, this.queryScope(island, name)];
+				return payload === undefined ? key : [...key, payload];
+			},
 			store: name => this.stores.get(name),
 			call: <R>(name: string, payload?: unknown) => this.call(island, name, payload) as Promise<R>
 		};
 	}
 
+	/**
+	 * Who shares the cached results of a call: the island itself for a page-bound call, whose
+	 * answer can depend on the island; every island with the same handle, or without one the same
+	 * endpoint, for a page-less call.
+	 */
+	private queryScope(island: MountedIsland, name: string): string {
+		const pageless = island.state.pageless?.[name];
+		if (!pageless) {
+			return `island:${island.key}`;
+		}
+		return pageless.handle ? `handle:${pageless.handle}` : `endpoint:${pageless.url}`;
+	}
+
 	private call(island: MountedIsland, name: string, payload: unknown): Promise<unknown> {
 		if (island.abort.signal.aborted) {
-			return Promise.reject(new IslandCallError('error', ['The island is no longer mounted.']));
+			return Promise.reject(unmounted());
 		}
 
 		const pageless = island.state.pageless?.[name];
 		if (pageless) {
-			return this.callPageless(pageless, payload);
+			return this.callPageless(pageless, payload, island.abort.signal);
+		}
+		const ajax = island.state.ajax;
+		if (!ajax) {
+			return Promise.reject(new IslandCallError('invalid', [`Unknown call '${name}'.`]));
 		}
 
 		const id = String(++this.callSequence);
@@ -255,19 +288,18 @@ export class IslandRuntime {
 
 		return new Promise((resolve, reject) => {
 			this.pending.set(id, { resolve, reject });
-			const ajax = island.state.ajax;
 			this.api!.Ajax.ajax({
 				...ajax,
 				ep: parameters,
-				fh: [...(ajax.fh ?? []), () => this.fail(id, 'network',
-					'The call did not complete.')],
-				dh: [...(ajax.dh ?? []), () => this.fail(id, 'error',
-					'The server did not answer the call.')]
+				fh: [(_attributes: unknown, xhr: { status?: number } | null) => this.fail(id,
+					...(xhr ? failureOf(xhr.status) : unreadable()))],
+				dh: [() => this.fail(id, 'error', 'The server did not answer the call.')]
 			});
 		});
 	}
 
-	private async callPageless(pageless: PagelessCall, payload: unknown): Promise<unknown> {
+	private async callPageless(pageless: PagelessCall, payload: unknown,
+		signal: AbortSignal): Promise<unknown> {
 		const headers: Record<string, string> = {
 			'Content-Type': 'application/json',
 			[PAGELESS_HEADER]: '1'
@@ -281,22 +313,24 @@ export class IslandRuntime {
 				method: 'POST',
 				credentials: 'same-origin',
 				headers,
-				body: payload === undefined ? '' : JSON.stringify(payload)
+				body: payload === undefined ? '' : JSON.stringify(payload),
+				signal
 			});
 		} catch {
-			throw new IslandCallError('network', ['The call did not complete.']);
+			throw signal.aborted ? unmounted() : new IslandCallError('network',
+				['The call did not complete.']);
 		}
 		if (!response.ok) {
-			throw response.status === 403
-				? new IslandCallError('forbidden', ['The call is not allowed.'])
-				: new IslandCallError('error', [`The server answered ${response.status}.`]);
+			const [kind, message] = failureOf(response.status);
+			throw new IslandCallError(kind, [message]);
 		}
 
 		let envelope: Envelope;
 		try {
 			envelope = await response.json() as Envelope;
 		} catch {
-			throw new IslandCallError('error', ['The server did not answer the call.']);
+			throw signal.aborted ? unmounted()
+				: new IslandCallError('error', ['The server did not answer the call.']);
 		}
 		this.invalidate(envelope);
 		if (!envelope.ok) {
@@ -324,6 +358,9 @@ export class IslandRuntime {
 
 		this.sweep();
 		this.invalidate(envelope);
+		if (envelope.form) {
+			this.applyFormState(envelope.form.key, envelope.form.state);
+		}
 
 		if (envelope.call === undefined) {
 			return;
@@ -341,6 +378,14 @@ export class IslandRuntime {
 		}
 	}
 
+	private applyFormState(key: string, state: FormState): void {
+		const island = this.mounted.get(key);
+		if (island?.form) {
+			island.state = { ...island.state, form: state };
+			island.form.refreshState();
+		}
+	}
+
 	private fail(id: string, kind: IslandCallErrorKind, message: string): void {
 		const pending = this.pending.get(id);
 		if (pending) {
@@ -348,6 +393,31 @@ export class IslandRuntime {
 			pending.reject(new IslandCallError(kind, [message]));
 		}
 	}
+}
+
+function unmounted(): IslandCallError {
+	return new IslandCallError('error', ['The island is no longer mounted.']);
+}
+
+/**
+ * Why a request failed, from the HTTP status of its response; none, or 0, when no response came.
+ */
+function failureOf(status: number | undefined): [IslandCallErrorKind, string] {
+	if (status === 403) {
+		return ['forbidden', 'The call is not allowed.'];
+	}
+	if (status) {
+		return ['error', `The server answered ${status}.`];
+	}
+	return ['network', 'The call did not complete.'];
+}
+
+function unreadable(): [IslandCallErrorKind, string] {
+	return ['error', 'The answer of the server could not be read.'];
+}
+
+function isPageBound(queryKey: readonly unknown[]): boolean {
+	return typeof queryKey[1] === 'string' && queryKey[1].startsWith('island:');
 }
 
 function findRoot(host: HTMLElement): HTMLElement {

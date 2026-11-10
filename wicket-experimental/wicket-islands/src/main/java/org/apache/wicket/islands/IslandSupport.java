@@ -19,9 +19,9 @@ package org.apache.wicket.islands;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.csp.ContentSecurityPolicySettings;
 import org.apache.wicket.islands.serializer.IIslandSerializer;
 import org.apache.wicket.markup.ComponentTag;
@@ -44,6 +44,8 @@ final class IslandSupport implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	private static final Pattern TYPE_PATTERN = Pattern.compile("[A-Za-z0-9_-]+");
+
+	private static final int KEY_BYTES = 12;
 
 	private record Endpoint(Class<?> requestType, IslandCallHandler<Object, Object> handler)
 		implements IClusterable
@@ -109,7 +111,10 @@ final class IslandSupport implements IClusterable
 				"': use letters, digits, '-' and '_'");
 		}
 		this.type = type;
-		key = Long.toString(ThreadLocalRandom.current().nextLong() & Long.MAX_VALUE, 36);
+		key = Application.get()
+			.getSecuritySettings()
+			.getRandomSupplier()
+			.getRandomBase64(KEY_BYTES);
 	}
 
 	String getType()
@@ -142,7 +147,17 @@ final class IslandSupport implements IClusterable
 	{
 		Args.notEmpty(name, "name");
 		Args.notEmpty(endpointId, "endpointId");
+		if (IslandSettings.get().getPagelessEndpoints().get(endpointId) == null)
+		{
+			throw new IllegalArgumentException("No page-less endpoint is registered as '" +
+				endpointId + "'");
+		}
 		pageless.put(name, new Pageless(endpointId, context));
+	}
+
+	boolean hasEndpoints()
+	{
+		return !endpoints.isEmpty();
 	}
 
 	static <Q> IslandCallHandler<Q, Void> withoutResult(IslandCallConsumer<Q> consumer)
@@ -198,7 +213,8 @@ final class IslandSupport implements IClusterable
 	{
 		IIslandSerializer serializer = serializer();
 		String state = "{\"props\":" + serializer.toJson(props) + ",\"calls\":" +
-			serializer.toJson(endpoints.keySet()) + ",\"ajax\":" + behavior.renderAttributes() +
+			serializer.toJson(endpoints.keySet()) +
+			(hasEndpoints() ? ",\"ajax\":" + serializer.toJson(behavior.renderAttributes()) : "") +
 			",\"pageless\":" + serializer.toJson(renderPageless()) +
 			(form != null ? ",\"form\":" + form : "") + "}";
 		return "<script type=\"application/json\" " + Island.ATTR_STATE + ">" +

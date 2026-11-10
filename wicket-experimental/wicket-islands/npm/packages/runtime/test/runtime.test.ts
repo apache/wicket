@@ -158,6 +158,55 @@ describe('IslandRuntime', () => {
 		await expect(result).rejects.toMatchObject({ kind: 'network' });
 	});
 
+	it('rejects a call the server answers with an HTTP error as an error, not a network failure', async () => {
+		runtime.register('board', recorder.module());
+		const failed = recorder.context.call('probe', {});
+		const refused = recorder.context.call('probe', {});
+		const unreadable = recorder.context.call('probe', {});
+
+		failRequest(requests[0], 500);
+		failRequest(requests[1], 403);
+		failRequest(requests[2], null);
+
+		await expect(failed).rejects.toMatchObject({ kind: 'error', messages: ['The server answered 500.'] });
+		await expect(refused).rejects.toMatchObject({ kind: 'forbidden' });
+		await expect(unreadable).rejects.toMatchObject({ kind: 'error' });
+	});
+
+	it('sends only the Ajax attributes of the island state, and its own handlers', () => {
+		runtime.register('board', recorder.module());
+
+		ignore(recorder.context.call('probe', {}));
+
+		expect(Object.keys(requests[0].attributes).sort()).toEqual(['ch', 'dh', 'ep', 'fh', 'm', 'u']);
+	});
+
+	it('rejects a page-bound call of an island without page-bound calls', async () => {
+		document.body.innerHTML = host('board1', 'board', 'k1', { label: 'one' }, null);
+		runtime.register('board', recorder.module());
+
+		await expect(recorder.context.call('probe', {})).rejects.toMatchObject({ kind: 'invalid' });
+		expect(requests).toHaveLength(0);
+	});
+
+	it('does not refetch page-bound queries when the window gets the focus again', () => {
+		const options = runtime.queryClient.getDefaultOptions().queries!;
+		const refetch = options.refetchOnWindowFocus as unknown as
+			(query: { queryKey: unknown[] }) => boolean;
+
+		expect(refetch({ queryKey: ['scores', 'island:k1'] })).toBe(false);
+		expect(refetch({ queryKey: ['scores', 'endpoint:./scores'] })).toBe(true);
+	});
+
+	it('retries a query only after a network failure', () => {
+		const retry = runtime.queryClient.getDefaultOptions().queries!.retry as
+			(failures: number, error: unknown) => boolean;
+
+		expect(retry(0, new IslandCallError('network', []))).toBe(true);
+		expect(retry(0, new IslandCallError('error', []))).toBe(false);
+		expect(retry(2, new IslandCallError('network', []))).toBe(false);
+	});
+
 	it('rejects a call the server does not answer', async () => {
 		runtime.register('board', recorder.module());
 		const result = recorder.context.call('probe', {});
@@ -372,6 +421,30 @@ describe('IslandRuntime', () => {
 			await expect(recorder.context.call('scores')).rejects.toMatchObject({ kind: 'forbidden' });
 		});
 
+		it('shares the cache of a page-less call among islands with the same handle or endpoint', () => {
+			expect(recorder.context.queryKey('scores', { size: 'SMALL' })).toEqual(
+				['scores', 'endpoint:./wicket-islands-call/scores', { size: 'SMALL' }]);
+			expect(recorder.context.queryKey('members')).toEqual(['members', 'handle:h-1']);
+		});
+
+		it('aborts a pending page-less call when the island is unmounted', async () => {
+			let aborted: AbortSignal | undefined;
+			vi.stubGlobal('fetch', (_url: string, init: RequestInit) => {
+				aborted = init.signal!;
+				return new Promise((_resolve, reject) => init.signal!.addEventListener('abort',
+					() => reject(new DOMException('aborted', 'AbortError'))));
+			});
+			const result = recorder.context.call('scores');
+			document.body.innerHTML = '';
+			ignore(recorder.context.call('probe', {}));
+
+			respond(requests[0], data({ invalidate: [] }));
+
+			expect(aborted?.aborted).toBe(true);
+			await expect(result).rejects.toMatchObject({ kind: 'error',
+				messages: ['The island is no longer mounted.'] });
+		});
+
 		it('applies the invalidations of a page-less answer', async () => {
 			answer(200, { ok: true, value: null, invalidate: ['scores'] });
 			const invalidated: string[][] = [];
@@ -394,6 +467,67 @@ describe('IslandRuntime', () => {
 
 		expect(queries.find({ queryKey: ['scores', { size: 'SMALL' }] })?.state.isInvalidated).toBe(true);
 		expect(queries.find({ queryKey: ['other'] })?.state.isInvalidated).toBe(false);
+	});
+
+	it('keeps the cache of a page-bound call to the island', () => {
+		runtime.register('board', recorder.module());
+
+		expect(recorder.context.queryKey('scores', { size: 'SMALL' })).toEqual(
+			['scores', 'island:k1', { size: 'SMALL' }]);
+		expect(recorder.context.queryKey('scores')).toEqual(['scores', 'island:k1']);
+	});
+
+	it('mounts the other islands when one host is broken', () => {
+		const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+		document.body.innerHTML = '<div id="broken" data-wicket-island="board" data-wicket-island-key="k0">' +
+			'<script type="application/json" data-wicket-island-state>{"props":</script>' +
+			'<div data-wicket-island-root></div></div>' + host('board1', 'board', 'k1', { label: 'one' });
+
+		runtime.register('board', recorder.module());
+
+		expect(recorder.mounts.map(mount => mount.context.key)).toEqual(['k1']);
+		expect(error).toHaveBeenCalledWith('Wicket Islands: cannot mount island host broken',
+			expect.anything());
+		error.mockRestore();
+	});
+
+	it('does not keep an island whose module failed to mount', () => {
+		const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+		document.body.innerHTML = host('board1', 'board', 'k1', { label: 'one' }) +
+			host('board2', 'board', 'k2', { label: 'two' });
+		let failures = 1;
+		const module = recorder.module();
+		runtime.register('board', {
+			mount: (root, context: IslandContext<Props>) => {
+				if (failures-- > 0) {
+					throw new Error('cannot mount');
+				}
+				return module.mount(root, context);
+			}
+		} as IslandModule<unknown>);
+
+		expect(recorder.mounts.map(mount => mount.context.key)).toEqual(['k2']);
+		runtime.register('board', recorder.module());
+		expect(recorder.mounts.map(mount => mount.context.key)).toEqual(['k2', 'k1']);
+		error.mockRestore();
+	});
+
+	it('applies the form state the server sends without touching the value', () => {
+		document.body.innerHTML = `<div id="panel">${formHost('point1', 'board', 'k5',
+			{ x: 1 }, { required: true, enabled: true, label: 'Point', errors: [] })}</div>`;
+		runtime.register('board', recorder.module());
+		const form = recorder.context.form!;
+		form.setValue({ x: 2 });
+		let notified = 0;
+		form.subscribe(() => notified++);
+		ignore(recorder.context.call('probe', {}));
+
+		respond(requests[0], data({ form: { key: 'k5',
+			state: { required: true, enabled: true, label: 'Point', errors: ['Too far'] } } }));
+
+		expect(form.getState().errors).toEqual(['Too far']);
+		expect(form.getValue()).toEqual({ x: 2 });
+		expect(notified).toBe(1);
 	});
 
 	it('tells listeners which query keys were invalidated', () => {
