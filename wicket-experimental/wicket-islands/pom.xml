@@ -60,7 +60,6 @@
 					<plugin>
 						<groupId>com.github.eirslett</groupId>
 						<artifactId>frontend-maven-plugin</artifactId>
-						<version>2.0.2</version>
 						<configuration>
 							<workingDirectory>npm</workingDirectory>
 						</configuration>
@@ -71,10 +70,6 @@
 									<goal>install-node-and-npm</goal>
 								</goals>
 								<phase>generate-resources</phase>
-								<configuration>
-									<npmVersion>11.12.1</npmVersion>
-									<nodeVersion>v24.15.0</nodeVersion>
-								</configuration>
 							</execution>
 							<execution>
 								<id>npm ci</id>
@@ -83,7 +78,7 @@
 								</goals>
 								<phase>generate-resources</phase>
 								<configuration>
-									<arguments>ci</arguments>
+									<arguments>ci --ignore-scripts</arguments>
 								</configuration>
 							</execution>
 							<execution>

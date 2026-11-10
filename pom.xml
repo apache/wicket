@@ -204,9 +204,14 @@
 		<velocity-engine-core.version>2.4.1</velocity-engine-core.version>
 		<jspecific.version>1.0.1</jspecific.version>
 
+		<!-- Node and npm for the JavaScript builds -->
+		<node.version>v24.15.0</node.version>
+		<npm.version>11.12.1</npm.version>
+
 		<!-- Maven plugins -->
 		<apache-rat-plugin.version>0.18</apache-rat-plugin.version>
 		<build-helper-maven-plugin.version>3.6.2</build-helper-maven-plugin.version>
+		<frontend-maven-plugin.version>2.0.2</frontend-maven-plugin.version>
 		<japicmp-maven-plugin.version>0.26.5</japicmp-maven-plugin.version>
 		<maven-archetype-plugin.version>3.4.1</maven-archetype-plugin.version>
 		<maven-bundle-plugin.version>6.2.0</maven-bundle-plugin.version>
@@ -892,6 +897,15 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>com.github.eirslett</groupId>
+					<artifactId>frontend-maven-plugin</artifactId>
+					<version>${frontend-maven-plugin.version}</version>
+					<configuration>
+						<nodeVersion>${node.version}</nodeVersion>
+						<npmVersion>${npm.version}</npmVersion>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>com.github.siom79.japicmp</groupId>
 					<artifactId>japicmp-maven-plugin</artifactId>
