@@ -35,6 +35,11 @@ header — copy it when you add one.
   request, don't tag unless you were told to do so.
 - Fixes go on `master` first and are cherry-picked down the maintenance lines afterwards, as far
   as the fix still applies. Which lines are in scope is a decision, not an inference — ask.
+- Never rewrite a commit that has been pushed: no rebase, no amend, no squash of anything already
+  on a remote branch. The repository rejects force pushes, and a pull request branch is shared
+  with its reviewers. Bring a pushed branch up to date by merging `master` into it, and correct a
+  pushed commit with a new commit on top. Pull requests are merged with a merge commit, so the
+  commits of a branch you stacked on stay in `master` and never need dropping.
 
 ## Commits
 
