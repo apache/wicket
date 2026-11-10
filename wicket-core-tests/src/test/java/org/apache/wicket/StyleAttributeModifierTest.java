@@ -52,7 +52,7 @@ class StyleAttributeModifierTest
 
 		cam.replaceAttributeValue(null, tag);
 
-		String styles = (String) attributes.get(cam.getAttribute());
+		String styles = (String)attributes.get(cam.getAttribute());
 		assertEquals("color:white;font-size:9px;", styles);
 	}
 
@@ -67,9 +67,9 @@ class StyleAttributeModifierTest
 			@Override
 			protected Map<String, String> update(Map<String, String> oldStyles)
 			{
-				oldStyles.put("color", "black");           // modify the value
-				oldStyles.remove("font-size");             // remove
-				oldStyles.put("background-color", "red");  // add
+				oldStyles.put("color", "black"); // modify the value
+				oldStyles.remove("font-size"); // remove
+				oldStyles.put("background-color", "red"); // add
 				return oldStyles;
 			}
 		};
@@ -80,7 +80,7 @@ class StyleAttributeModifierTest
 
 		cam.replaceAttributeValue(null, tag);
 
-		String classes = (String) attributes.get(cam.getAttribute());
+		String classes = (String)attributes.get(cam.getAttribute());
 		assertEquals("color:black;background-color:red;", classes);
 	}
 
@@ -107,7 +107,7 @@ class StyleAttributeModifierTest
 
 		cam.replaceAttributeValue(null, tag);
 
-		String classes = (String) attributes.get(cam.getAttribute());
+		String classes = (String)attributes.get(cam.getAttribute());
 		assertNull(classes);
 	}
 

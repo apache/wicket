@@ -51,7 +51,8 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	 * Without this cache a new class will be generated for each proxy creation
 	 * and this will fill up the metaspace
 	 */
-	private static final TypeCache<TypeCache.SimpleKey> DYNAMIC_CLASS_CACHE = new TypeCache.WithInlineExpunction<>(TypeCache.Sort.SOFT);
+	private static final TypeCache<TypeCache.SimpleKey> DYNAMIC_CLASS_CACHE = new TypeCache.WithInlineExpunction<>(
+		TypeCache.Sort.SOFT);
 
 	private static final ByteBuddy BYTE_BUDDY = new ByteBuddy().with(WicketNamingStrategy.INSTANCE);
 	private static final String INTERCEPTOR_FIELD_NAME = "interceptor";
@@ -94,7 +95,7 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 		}
 
 		ByteBuddyInterceptor interceptor = new ByteBuddyInterceptor(type, locator);
-		((InterceptorMutator) instance).setInterceptor(interceptor);
+		((InterceptorMutator)instance).setInterceptor(interceptor);
 
 		return instance;
 	}
@@ -104,23 +105,24 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 	{
 		ClassLoader classLoader = resolveClassLoader(type);
 
-		return (Class<T>) DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
-				new TypeCache.SimpleKey(type),
-				() -> BYTE_BUDDY
-						.subclass(type)
-						.method(ElementMatchers.isPublic().or(ElementMatchers.isPackagePrivate()))
-							.intercept(
-								MethodDelegation
-									.withDefaultConfiguration()
-									.withBinders(Pipe.Binder.install(Function.class))
-									.toField(INTERCEPTOR_FIELD_NAME))
-						.defineField(INTERCEPTOR_FIELD_NAME, ByteBuddyInterceptor.class, Visibility.PRIVATE)
-						.implement(InterceptorMutator.class).intercept(FieldAccessor.ofBeanProperty())
-						.implement(Serializable.class, IWriteReplace.class, ILazyInitProxy.class).intercept(MethodDelegation.toField(INTERCEPTOR_FIELD_NAME))
-						.make()
-						.load(classLoader, resolveLoadingStrategy(type))
-						.getLoaded(),
-				DYNAMIC_CLASS_CACHE);
+		return (Class<T>)DYNAMIC_CLASS_CACHE.findOrInsert(classLoader,
+			new TypeCache.SimpleKey(type),
+			() -> BYTE_BUDDY
+				.subclass(type)
+				.method(ElementMatchers.isPublic().or(ElementMatchers.isPackagePrivate()))
+				.intercept(
+					MethodDelegation
+						.withDefaultConfiguration()
+						.withBinders(Pipe.Binder.install(Function.class))
+						.toField(INTERCEPTOR_FIELD_NAME))
+				.defineField(INTERCEPTOR_FIELD_NAME, ByteBuddyInterceptor.class, Visibility.PRIVATE)
+				.implement(InterceptorMutator.class).intercept(FieldAccessor.ofBeanProperty())
+				.implement(Serializable.class, IWriteReplace.class, ILazyInitProxy.class).intercept(MethodDelegation
+					.toField(INTERCEPTOR_FIELD_NAME))
+				.make()
+				.load(classLoader, resolveLoadingStrategy(type))
+				.getLoaded(),
+			DYNAMIC_CLASS_CACHE);
 	}
 
 	/**
@@ -175,10 +177,11 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 		if (Application.exists())
 		{
 			classLoader = Application.get().getApplicationSettings()
-					.getClassResolver().getClassLoader();
+				.getClassResolver().getClassLoader();
 		}
 
-		if (classLoader == null) {
+		if (classLoader == null)
+		{
 			classLoader = Thread.currentThread().getContextClassLoader();
 		}
 
@@ -220,7 +223,8 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 		}
 
 		@Override
-		protected String name(TypeDescription superClass) {
+		protected String name(TypeDescription superClass)
+		{
 			String prefix = superClass.getName();
 			int lastIdxOfDot = prefix.lastIndexOf('.');
 			String packageName = prefix.substring(0, lastIdxOfDot);
@@ -238,12 +242,14 @@ public class ByteBuddyProxyFactory implements IProxyFactory
 		}
 
 		@Override
-		public String redefine(TypeDescription typeDescription) {
+		public String redefine(TypeDescription typeDescription)
+		{
 			return typeDescription.getName();
 		}
 
 		@Override
-		public String rebase(TypeDescription typeDescription) {
+		public String rebase(TypeDescription typeDescription)
+		{
 			return typeDescription.getName();
 		}
 	}

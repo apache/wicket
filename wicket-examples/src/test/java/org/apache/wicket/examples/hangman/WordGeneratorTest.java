@@ -41,9 +41,10 @@ public class WordGeneratorTest extends WicketTestCase
 	/**
 	 * Tests word generator
 	 *
-     */
+	 */
 	@Test
-	public void testWordGenerator() {
+	public void testWordGenerator()
+	{
 		WordGenerator wg = new WordGenerator();
 		int wordCount = wg.size();
 		Set<Word> words = new HashSet<>();
@@ -70,7 +71,8 @@ public class WordGeneratorTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void testSuppliedWordConstructor() {
+	public void testSuppliedWordConstructor()
+	{
 		WordGenerator wg = new WordGenerator(new String[] { "testing" });
 		assertEquals("testing", wg.next().asString(), "Word should be as expected");
 	}

@@ -76,7 +76,7 @@ class ContentSecurityPolicySettingsTest extends WicketTestCase
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			settings.blocking().add(DEFAULT_SRC, (String) null);
+			settings.blocking().add(DEFAULT_SRC, (String)null);
 		});
 	}
 
@@ -179,7 +179,7 @@ class ContentSecurityPolicySettingsTest extends WicketTestCase
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			settings.blocking().add(SANDBOX, (String) null);
+			settings.blocking().add(SANDBOX, (String)null);
 		});
 	}
 
@@ -224,7 +224,7 @@ class ContentSecurityPolicySettingsTest extends WicketTestCase
 	{
 		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			settings.blocking().add(REPORT_URI, (String) null);
+			settings.blocking().add(REPORT_URI, (String)null);
 		});
 	}
 
@@ -259,8 +259,8 @@ class ContentSecurityPolicySettingsTest extends WicketTestCase
 			// FRAME-SRC wordt al gezet door de aanroep voor CHILD-SRC
 			if (!FRAME_SRC.equals(cspDirective) && cspDirective.getValue().endsWith("-src"))
 			{
-				final CSPDirectiveSrcValue cspDirectiveValue =
-					CSPDirectiveSrcValue.values()[i % cspDirectiveSrcValueCount];
+				final CSPDirectiveSrcValue cspDirectiveValue = CSPDirectiveSrcValue.values()[i
+					% cspDirectiveSrcValueCount];
 				settings.blocking().add(cspDirective, cspDirectiveValue);
 
 				settings.reporting().add(cspDirective, cspDirectiveValue);
@@ -355,28 +355,28 @@ class ContentSecurityPolicySettingsTest extends WicketTestCase
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"blob", "data", "mediastream", "filesystem", "https"})
+	@ValueSource(strings = { "blob", "data", "mediastream", "filesystem", "https" })
 	void testConstantValues_whenValidConstant_acceptedByConfigurer(String source)
 	{
-	    // Arrange
-	    final var settings = tester.getApplication().getCspSettings();
+		// Arrange
+		final var settings = tester.getApplication().getCspSettings();
 		settings.blocking().add(IMG_SRC, source + ":");
 
-	    // Act
+		// Act
 		tester.startPage(DummyHomePage.class);
 
-	    //Assert
+		//Assert
 		final var imgSrc = renderDirective(settings.blocking().getDirectives().get(IMG_SRC),
-				settings, tester.getRequestCycle());
+			settings, tester.getRequestCycle());
 		assertEquals(source + ":", imgSrc);
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"foo", "datadata", "blob2", "random", "*"})
+	@ValueSource(strings = { "foo", "datadata", "blob2", "random", "*" })
 	void testConstantValues_whenInvalidConstant_acceptedByConfigurer(String source)
 	{
-	    // Arrange
-	    final var settings = tester.getApplication().getCspSettings().blocking();
+		// Arrange
+		final var settings = tester.getApplication().getCspSettings().blocking();
 		// Act
 		assertThrows(IllegalArgumentException.class, () -> settings.add(IMG_SRC, source + ":"));
 	}
@@ -392,10 +392,8 @@ class ContentSecurityPolicySettingsTest extends WicketTestCase
 	{
 		List<String> headerErrors = new ArrayList<>();
 		tester.executeUrl("/");
-		String cspHeaderValue =
-			tester.getLastResponse().getHeader(CSPHeaderMode.BLOCKING.getHeader());
-		String cspReportingHeaderValue =
-			tester.getLastResponse().getHeader(CSPHeaderMode.REPORT_ONLY.getHeader());
+		String cspHeaderValue = tester.getLastResponse().getHeader(CSPHeaderMode.BLOCKING.getHeader());
+		String cspReportingHeaderValue = tester.getLastResponse().getHeader(CSPHeaderMode.REPORT_ONLY.getHeader());
 
 		if (cspHeaderValue == null)
 		{
@@ -468,10 +466,8 @@ class ContentSecurityPolicySettingsTest extends WicketTestCase
 				for (int i = 1; i < values.length; i++)
 				{
 					final String trimmedValue = values[i].trim();
-					final boolean isValidDefaultSrcValue =
-						directiveSrcValues.contains(trimmedValue);
-					final boolean isValidDefaultSandboxValue =
-						directiveSandboxValues.contains(trimmedValue);
+					final boolean isValidDefaultSrcValue = directiveSrcValues.contains(trimmedValue);
+					final boolean isValidDefaultSandboxValue = directiveSandboxValues.contains(trimmedValue);
 					if (!(isValidDefaultSrcValue || isValidDefaultSandboxValue
 						|| isValidDirectiveValue(trimmedValue)))
 					{

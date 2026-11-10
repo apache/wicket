@@ -92,7 +92,7 @@ class PageInstanceMapperTest extends AbstractMapperTest
 	void ignoreIfPageIdentifierHasSegmentsAfterIt()
 	{
 		Url url = Url.parse("wicket/page/ingore/me?4&a=3&b=3");
-		
+
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertNull(handler);
 	}

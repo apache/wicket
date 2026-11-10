@@ -29,7 +29,7 @@ public class DeferredPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	public AjaxEventBehavior behavior;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -40,7 +40,8 @@ public class DeferredPage extends WebPage
 		WebMarkupContainer c = new WebMarkupContainer("c");
 		add(c);
 
-		c.add(behavior = new AjaxEventBehavior("click") {
+		c.add(behavior = new AjaxEventBehavior("click")
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override

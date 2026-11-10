@@ -178,7 +178,7 @@ public class Image extends WebComponent implements IRequestListener
 	{
 		return false;
 	}
-	
+
 	@Override
 	public void onRequest()
 	{
@@ -282,7 +282,9 @@ public class Image extends WebComponent implements IRequestListener
 		if (xValues == null)
 		{
 			xValues = new ArrayList<>();
-		}else{
+		}
+		else
+		{
 			xValues.clear();
 		}
 		xValues.addAll(Arrays.asList(values));
@@ -308,7 +310,9 @@ public class Image extends WebComponent implements IRequestListener
 		if (this.sizes == null)
 		{
 			this.sizes = new ArrayList<>();
-		}else{
+		}
+		else
+		{
 			this.sizes.clear();
 		}
 		this.sizes.addAll(Arrays.asList(sizes));
@@ -524,7 +528,8 @@ public class Image extends WebComponent implements IRequestListener
 	@Override
 	protected boolean getStatelessHint()
 	{
-		boolean stateless = (getImageResource() == null || getImageResource() == localizedImageResource.getResource()) &&
+		boolean stateless = (getImageResource() == null || getImageResource() == localizedImageResource.getResource())
+			&&
 			localizedImageResource.isStateless();
 		boolean statelessList = false;
 		for (LocalizedImageResource localizedImageResource : localizedImageResources)

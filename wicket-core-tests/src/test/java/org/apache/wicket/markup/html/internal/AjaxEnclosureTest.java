@@ -272,7 +272,8 @@ class AjaxEnclosureTest extends WicketTestCase
 	}
 
 	@Test
-	public void controllingComponentOutsideEnclosureShouldBeRepainted() {
+	public void controllingComponentOutsideEnclosureShouldBeRepainted()
+	{
 		AjaxEnclosurePage_4 page = tester.startPage(AjaxEnclosurePage_4.class);
 		tester.clickLink(page.submit);
 		// assert the input tag is part of the ajax response

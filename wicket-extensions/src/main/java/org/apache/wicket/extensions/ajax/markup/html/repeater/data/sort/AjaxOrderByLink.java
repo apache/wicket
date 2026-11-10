@@ -46,7 +46,7 @@ public abstract class AjaxOrderByLink<S> extends OrderByLink<S> implements IAjax
 	 * @param stateLocator
 	 */
 	public AjaxOrderByLink(final String id, final S sortProperty,
-	                       final ISortStateLocator<S> stateLocator)
+		final ISortStateLocator<S> stateLocator)
 	{
 		super(id, sortProperty, stateLocator);
 	}

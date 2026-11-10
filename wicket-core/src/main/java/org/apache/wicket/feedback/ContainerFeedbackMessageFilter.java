@@ -49,7 +49,7 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 	{
 		final Component reporter = message.getReporter();
 
-		return reporter != null && 
-		       (container.contains(reporter, true) || Objects.equal(container, reporter));
+		return reporter != null &&
+			(container.contains(reporter, true) || Objects.equal(container, reporter));
 	}
 }

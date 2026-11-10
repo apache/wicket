@@ -49,7 +49,8 @@ class WriteCallbackTest
 			}
 
 			@Override
-			public void writeStream(Attributes attributes, InputStream is) throws IOException {
+			public void writeStream(Attributes attributes, InputStream is) throws IOException
+			{
 				super.writeStream(attributes, is);
 			}
 		}

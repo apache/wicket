@@ -142,7 +142,8 @@ class ByteArrayResourceTest extends WicketTestCase
 	 * Verify that HttpServletResponse#SC_NOT_FOUND is returned if there is no data.
 	 */
 	@Test
-	void noData() {
+	void noData()
+	{
 		ByteArrayResource resource = new ByteArrayResource("text/plain");
 		tester.startResource(resource);
 

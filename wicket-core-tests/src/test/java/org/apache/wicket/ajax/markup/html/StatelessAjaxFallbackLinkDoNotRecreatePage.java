@@ -27,64 +27,62 @@ import org.apache.wicket.util.string.StringValue;
 
 public class StatelessAjaxFallbackLinkDoNotRecreatePage extends WebPage
 {
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  private static final String COUNTER_PARAM = "counter";
+	private static final String COUNTER_PARAM = "counter";
 
-  /**
-   * Constructor that is invoked when page is invoked without a session.
-   *
-   * @param parameters
-   *          Page parameters
-   */
-  public StatelessAjaxFallbackLinkDoNotRecreatePage(final PageParameters parameters)
-  {
-    super(parameters);
-    setStatelessHint(true);
+	/**
+	 * Constructor that is invoked when page is invoked without a session.
+	 *
+	 * @param parameters
+	 *          Page parameters
+	 */
+	public StatelessAjaxFallbackLinkDoNotRecreatePage(final PageParameters parameters)
+	{
+		super(parameters);
+		setStatelessHint(true);
 
-    final Label incrementLabel = new Label("incrementLabel", () ->
-	    {
-	        final String counter = getParameter(parameters, COUNTER_PARAM);
-	        return counter != null ? Integer.parseInt(counter) : 0;
-	    }
-    );
-    final Link<?> incrementLink = new AjaxFallbackLink<Void>("incrementLink")
-    {
-      private static final long serialVersionUID = 1L;
+		final Label incrementLabel = new Label("incrementLabel", () -> {
+			final String counter = getParameter(parameters, COUNTER_PARAM);
+			return counter != null ? Integer.parseInt(counter) : 0;
+		});
+		final Link<?> incrementLink = new AjaxFallbackLink<Void>("incrementLink")
+		{
+			private static final long serialVersionUID = 1L;
 
-      @Override
-      public void onClick(final Optional<AjaxRequestTarget> targetOptional)
-      {
-        Integer counter = (Integer) incrementLabel.getDefaultModelObject();
-        updateParams(getPageParameters(), counter);
-        targetOptional.ifPresent(target -> target.add(incrementLabel, this));
-      }
+			@Override
+			public void onClick(final Optional<AjaxRequestTarget> targetOptional)
+			{
+				Integer counter = (Integer)incrementLabel.getDefaultModelObject();
+				updateParams(getPageParameters(), counter);
+				targetOptional.ifPresent(target -> target.add(incrementLabel, this));
+			}
 
-      @Override
-      protected boolean getStatelessHint()
-      {
-        return true;
-      }
-    };
+			@Override
+			protected boolean getStatelessHint()
+			{
+				return true;
+			}
+		};
 
-    add(incrementLink);
-    add(incrementLabel.setOutputMarkupId(true));
-  }
+		add(incrementLink);
+		add(incrementLabel.setOutputMarkupId(true));
+	}
 
-  private String getParameter(final PageParameters parameters, final String key)
-  {
-    final StringValue value = parameters.get(key);
+	private String getParameter(final PageParameters parameters, final String key)
+	{
+		final StringValue value = parameters.get(key);
 
-    if (value.isNull() || value.isEmpty())
-    {
-      return null;
-    }
+		if (value.isNull() || value.isEmpty())
+		{
+			return null;
+		}
 
-    return value.toString();
-  }
+		return value.toString();
+	}
 
-  private void updateParams(final PageParameters pageParameters, final int counter)
-  {
-    pageParameters.set(COUNTER_PARAM, Integer.toString(counter + 1));
-  }
+	private void updateParams(final PageParameters pageParameters, final int counter)
+	{
+		pageParameters.set(COUNTER_PARAM, Integer.toString(counter + 1));
+	}
 }

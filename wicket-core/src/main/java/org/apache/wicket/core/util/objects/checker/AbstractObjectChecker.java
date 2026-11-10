@@ -35,7 +35,7 @@ public abstract class AbstractObjectChecker implements IObjectChecker
 
 	protected AbstractObjectChecker()
 	{
-		this(Generics.<Class<?>>newArrayList());
+		this(Generics.<Class<?>> newArrayList());
 	}
 
 	protected AbstractObjectChecker(List<Class<?>> exclusions)
@@ -56,7 +56,7 @@ public abstract class AbstractObjectChecker implements IObjectChecker
 				if (excludedType.isAssignableFrom(objectType))
 				{
 					LOGGER.debug("Object with type '{}' wont be checked because its type is excluded ({})",
-							objectType, excludedType);
+						objectType, excludedType);
 					return result;
 				}
 			}

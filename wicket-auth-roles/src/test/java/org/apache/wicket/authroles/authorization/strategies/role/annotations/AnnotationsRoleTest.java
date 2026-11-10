@@ -42,19 +42,22 @@ class AnnotationsRoleTest
 	WicketTester tester;
 
 	@BeforeEach
-    void setUp() {
+	void setUp()
+	{
 		tester = new WicketTester();
 	}
 
 	@AfterEach
-    void tearDown() {
+	void tearDown()
+	{
 		tester.destroy();
 	}
 
 	/**
-     */
+	 */
 	@Test
-    void testClear() {
+	void testClear()
+	{
 		tester.getApplication()
 			.getSecuritySettings()
 			.setAuthorizationStrategy(new RoleAuthorizationStrategy(new UserRolesAuthorizer("FOO")));
@@ -63,9 +66,10 @@ class AnnotationsRoleTest
 	}
 
 	/**
-     */
+	 */
 	@Test
-    void testAuthorized() {
+	void testAuthorized()
+	{
 		WicketTester tester = new WicketTester();
 		tester.getApplication()
 			.getSecuritySettings()
@@ -76,9 +80,10 @@ class AnnotationsRoleTest
 	}
 
 	/**
-     */
+	 */
 	@Test
-    void testNotAuthorized() {
+	void testNotAuthorized()
+	{
 		WicketTester tester = new WicketTester();
 		tester.getApplication()
 			.getSecuritySettings()
@@ -106,7 +111,8 @@ class AnnotationsRoleTest
 		}
 		catch (Exception e)
 		{
-			if (!(e.getCause() instanceof InvocationTargetException && ((InvocationTargetException)e.getCause()).getTargetException() instanceof UnauthorizedInstantiationException))
+			if (!(e.getCause() instanceof InvocationTargetException && ((InvocationTargetException)e.getCause())
+				.getTargetException() instanceof UnauthorizedInstantiationException))
 			{
 				throw e;
 			}
@@ -125,7 +131,7 @@ class AnnotationsRoleTest
 		/**
 		 * Construct.
 		 */
-        UserRolesAuthorizer(String roles)
+		UserRolesAuthorizer(String roles)
 		{
 			this.roles = new Roles(roles);
 		}

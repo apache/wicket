@@ -202,6 +202,7 @@
 		<weld.version>7.0.0.Final</weld.version>
 		<velocity-engine-core.version>2.4.1</velocity-engine-core.version>
 		<jspecific.version>1.0.1</jspecific.version>
+		<eclipse-jdt-formatter.version>4.41</eclipse-jdt-formatter.version>
 
 		<!-- Maven plugins -->
 		<apache-rat-plugin.version>0.18</apache-rat-plugin.version>
@@ -228,6 +229,7 @@
 		<maven-toolchains-plugin.version>3.3.0</maven-toolchains-plugin.version>
 		<maven-war-plugin.version>3.5.1</maven-war-plugin.version>
 		<resources-optimizer-maven-plugin.version>2.7.9</resources-optimizer-maven-plugin.version>
+		<spotless-maven-plugin.version>3.10.4</spotless-maven-plugin.version>
 
 		<osgi.dynamicimport.package />
 		<osgi.export.package>*</osgi.export.package>
@@ -877,9 +879,33 @@
 				<artifactId>apache-rat-plugin</artifactId>
 				<inherited>false</inherited>
 			</plugin>
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>com.diffplug.spotless</groupId>
+					<artifactId>spotless-maven-plugin</artifactId>
+					<version>${spotless-maven-plugin.version}</version>
+					<configuration>
+						<java>
+							<eclipse>
+								<version>${eclipse-jdt-formatter.version}</version>
+								<file>${wicket.codestyle.dir}/wicket-formatter.xml</file>
+							</eclipse>
+						</java>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<groupId>com.github.siom79.japicmp</groupId>
 					<artifactId>japicmp-maven-plugin</artifactId>
@@ -1402,6 +1428,39 @@
 		</pluginManagement>
 	</build>
 	<profiles>
+		<profile>
+			<id>codestyle-in-basedir</id>
+			<activation>
+				<file>
+					<exists>${basedir}/codestyle/wicket-formatter.xml</exists>
+				</file>
+			</activation>
+			<properties>
+				<wicket.codestyle.dir>${basedir}/codestyle</wicket.codestyle.dir>
+			</properties>
+		</profile>
+		<profile>
+			<id>codestyle-one-up</id>
+			<activation>
+				<file>
+					<exists>${basedir}/../codestyle/wicket-formatter.xml</exists>
+				</file>
+			</activation>
+			<properties>
+				<wicket.codestyle.dir>${basedir}/../codestyle</wicket.codestyle.dir>
+			</properties>
+		</profile>
+		<profile>
+			<id>codestyle-two-up</id>
+			<activation>
+				<file>
+					<exists>${basedir}/../../codestyle/wicket-formatter.xml</exists>
+				</file>
+			</activation>
+			<properties>
+				<wicket.codestyle.dir>${basedir}/../../codestyle</wicket.codestyle.dir>
+			</properties>
+		</profile>
 		<profile>
 			<id>release</id>
 			<activation>

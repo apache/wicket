@@ -109,7 +109,8 @@ class AjaxEventBehaviorTest extends WicketTestCase
 		assertEquals(1, counter.get());
 		String responseAsString = tester.getLastResponseAsString();
 		System.err.println(responseAsString);
-		assertTrue(responseAsString.contains("function(){Wicket.Ajax.ajax({\"u\":\"./page?0-1.0-comp\",\"c\":\"comp1\",\"e\":\"load\"});"));
+		assertTrue(responseAsString.contains(
+			"function(){Wicket.Ajax.ajax({\"u\":\"./page?0-1.0-comp\",\"c\":\"comp1\",\"e\":\"load\"});"));
 	}
 
 	private static class EventNamesBehavior extends AjaxEventBehavior
@@ -173,7 +174,7 @@ class AjaxEventBehaviorTest extends WicketTestCase
 	}
 
 	private static class TestPage extends WebPage
-			implements
+		implements
 			IMarkupResourceStreamProvider
 	{
 		protected final WebComponent comp;
@@ -187,10 +188,10 @@ class AjaxEventBehaviorTest extends WicketTestCase
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-													   Class<?> containerClass)
+			Class<?> containerClass)
 		{
 			return new StringResourceStream(
-					"<html><body><span wicket:id='comp'></span></body></html>");
+				"<html><body><span wicket:id='comp'></span></body></html>");
 		}
 	}
 }

@@ -130,7 +130,7 @@ public class ConverterLocator implements IConverterLocator
 		@Override
 		public String convertToString(C value, Locale locale)
 		{
-			if (value == null || (value instanceof String && ((String) value).isEmpty()))
+			if (value == null || (value instanceof String && ((String)value).isEmpty()))
 			{
 				return "";
 			}
@@ -145,7 +145,7 @@ public class ConverterLocator implements IConverterLocator
 					value.getClass() + " to String. Possible its #toString() returned null. " +
 					"Either install a custom converter (see IConverterLocator) or " +
 					"override #toString() to return a non-null value.", e).setSourceValue(value)
-					.setConverter(this);
+						.setConverter(this);
 			}
 		}
 	}
@@ -201,7 +201,7 @@ public class ConverterLocator implements IConverterLocator
 	 */
 	public final <C> IConverter<C> get(Class<C> c)
 	{
-		return  (IConverter<C>) classToConverter.get(c.getName());
+		return (IConverter<C>)classToConverter.get(c.getName());
 	}
 
 	/**

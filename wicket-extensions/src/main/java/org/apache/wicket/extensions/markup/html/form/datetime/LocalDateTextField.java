@@ -48,7 +48,7 @@ public class LocalDateTextField extends TextField<LocalDate> implements ITextFor
 	 * The converter for the TextField
 	 */
 	private final TextFormatConverter converter;
-	
+
 	/**
 	 * Construct with a pattern.
 	 * 
@@ -61,7 +61,7 @@ public class LocalDateTextField extends TextField<LocalDate> implements ITextFor
 	{
 		this(id, null, pattern);
 	}
-	
+
 	/**
 	 * Construct with a pattern.
 	 * 
@@ -93,7 +93,8 @@ public class LocalDateTextField extends TextField<LocalDate> implements ITextFor
 	{
 		super(id, model, LocalDate.class);
 
-		this.converter = new TextFormatConverter() {
+		this.converter = new TextFormatConverter()
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -115,12 +116,15 @@ public class LocalDateTextField extends TextField<LocalDate> implements ITextFor
 
 				DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(parsePattern).withLocale(locale);
 				TemporalAccessor temporalAccessor;
-				try {
+				try
+				{
 					temporalAccessor = dateTimeFormatter.parse(value);
-				} catch (DateTimeParseException ex) {
+				}
+				catch (DateTimeParseException ex)
+				{
 					throw newConversionException("Cannot parse '" + value, value, locale);
 				}
-				
+
 				return createTemporal(temporalAccessor);
 			}
 
@@ -159,7 +163,8 @@ public class LocalDateTextField extends TextField<LocalDate> implements ITextFor
 	{
 		super(id, model, LocalDate.class);
 
-		this.converter = new TextFormatConverter() {
+		this.converter = new TextFormatConverter()
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -171,7 +176,8 @@ public class LocalDateTextField extends TextField<LocalDate> implements ITextFor
 			@Override
 			public String getTextFormat(Locale locale)
 			{
-				return DateTimeFormatterBuilder.getLocalizedDateTimePattern(dateStyle, null, IsoChronology.INSTANCE, locale);
+				return DateTimeFormatterBuilder.getLocalizedDateTimePattern(dateStyle, null, IsoChronology.INSTANCE,
+					locale);
 			}
 		};
 	}
@@ -199,7 +205,8 @@ public class LocalDateTextField extends TextField<LocalDate> implements ITextFor
 		return converter.getTextFormat(getLocale());
 	}
 
-	private abstract class TextFormatConverter extends LocalDateConverter {
+	private abstract class TextFormatConverter extends LocalDateConverter
+	{
 		private static final long serialVersionUID = 1L;
 
 		public abstract String getTextFormat(Locale locale);

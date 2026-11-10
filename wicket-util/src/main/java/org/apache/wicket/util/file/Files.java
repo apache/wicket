@@ -46,7 +46,7 @@ public class Files
 	// protocols for urls
 	private static final String URL_FILE_PREFIX = "file:";
 	private static final String URL_LOCAL_JAR_FILE_PREFIX = "jar:file:";
-	
+
 	// characters not allowed in filenames
 	private static final String FILENAME_FORBIDDEN_CHARACTERS = "\"*/:<>?\\|,";
 
@@ -468,9 +468,11 @@ public class Files
 	 * @param file directory
 	 * @return files, never {@code null}
 	 */
-	public static File[] list(File file) {
+	public static File[] list(File file)
+	{
 		File[] files = file.listFiles();
-		if (files == null) {
+		if (files == null)
+		{
 			files = new File[0];
 		}
 		return files;

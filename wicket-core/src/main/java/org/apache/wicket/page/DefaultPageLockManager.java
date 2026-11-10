@@ -35,7 +35,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Default {@link IPageLockManager} that holds a map of locks in the current session.
  */
-public class DefaultPageLockManager implements IPageLockManager {
+public class DefaultPageLockManager implements IPageLockManager
+{
 
 	private static final long serialVersionUID = 1L;
 
@@ -103,7 +104,7 @@ public class DefaultPageLockManager implements IPageLockManager {
 			if (isDebugEnabled)
 			{
 				logger.debug("'{}' attempting to acquire lock to page with id '{}'",
-						thread.getName(), pageId);
+					thread.getName(), pageId);
 			}
 
 			previous = locks.get().putIfAbsent(pageId, lock);
@@ -138,14 +139,14 @@ public class DefaultPageLockManager implements IPageLockManager {
 			if (logger.isWarnEnabled())
 			{
 				logger.warn(
-						"Thread '{}' failed to acquire lock to page with id '{}', attempted for {} out of allowed {}." +
-								" The thread that holds the lock has name '{}'.",
-						thread.getName(), pageId, Duration.between(start, Instant.now()), pageTimeout, previousThreadName);
+					"Thread '{}' failed to acquire lock to page with id '{}', attempted for {} out of allowed {}." +
+						" The thread that holds the lock has name '{}'.",
+					thread.getName(), pageId, Duration.between(start, Instant.now()), pageTimeout, previousThreadName);
 				if (Application.exists())
 				{
 					ExceptionSettings.ThreadDumpStrategy strategy = Application.get()
-							.getExceptionSettings()
-							.getThreadDumpStrategy();
+						.getExceptionSettings()
+						.getThreadDumpStrategy();
 					switch (strategy)
 					{
 						case ALL_THREADS :
@@ -158,7 +159,8 @@ public class DefaultPageLockManager implements IPageLockManager {
 							}
 							else
 							{
-								logger.warn("Cannot dump the stack of the previous thread because it is not available.");
+								logger.warn(
+									"Cannot dump the stack of the previous thread because it is not available.");
 							}
 							break;
 						case NO_THREADS :
@@ -167,7 +169,7 @@ public class DefaultPageLockManager implements IPageLockManager {
 					}
 				}
 			}
-			if(previousThread != null)
+			if (previousThread != null)
 			{
 				var cause = new PageLockedException(previousThread, pageId);
 				throw new CouldNotLockPageException(pageId, thread.getName(), pageTimeout, cause);
@@ -206,7 +208,7 @@ public class DefaultPageLockManager implements IPageLockManager {
 				if (isDebugEnabled)
 				{
 					logger.debug("'{}' released lock to page with id '{}'", thread.getName(),
-							lock.getPageId());
+						lock.getPageId());
 				}
 				// if any locks were removed notify threads waiting for a lock
 				lock.markReleased(isDebugEnabled);
@@ -230,7 +232,7 @@ public class DefaultPageLockManager implements IPageLockManager {
 
 class PageLockedException extends Exception
 {
-	PageLockedException(Thread pageHoldingThread, int pageId) 
+	PageLockedException(Thread pageHoldingThread, int pageId)
 	{
 		super("This thread " + pageHoldingThread.getName() + " holds the lock to page " + pageId);
 		setStackTrace(pageHoldingThread.getStackTrace());

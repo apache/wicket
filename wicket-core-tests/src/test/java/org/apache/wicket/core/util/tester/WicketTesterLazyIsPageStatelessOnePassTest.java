@@ -31,7 +31,8 @@ class WicketTesterLazyIsPageStatelessOnePassTest extends WicketTesterLazyIsPageS
 		return new MockApplication()
 		{
 			@Override
-			public void init() {
+			public void init()
+			{
 				super.init();
 				getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
 			}

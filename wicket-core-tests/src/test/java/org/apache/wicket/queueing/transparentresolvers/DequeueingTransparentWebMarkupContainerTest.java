@@ -41,7 +41,7 @@ class DequeueingTransparentWebMarkupContainerTest extends WicketTestCase
 		tester.assertRenderedPage(SubPage.class);
 		tester.assertComponent("html", HtmlTag.class);
 	}
-	
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5724
 	 * 
@@ -58,22 +58,22 @@ class DequeueingTransparentWebMarkupContainerTest extends WicketTestCase
 	{
 		tester.startPage(TransparentContainerQueuePage.class);
 		tester.assertRenderedPage(TransparentContainerQueuePage.class);
-		
+
 		Page lastRenderedPage = tester.getLastRenderedPage();
-		
+
 		//test if page contains the queued label
 		boolean containsQueuedLabel = lastRenderedPage.visitChildren(new IVisitor<Component, Boolean>()
 		{
 			@Override
 			public void component(Component component, IVisit<Boolean> visit)
 			{
-				if(component instanceof Label)
+				if (component instanceof Label)
 				{
 					visit.stop(true);
 				}
 			}
 		});
-		
+
 		assertTrue(containsQueuedLabel);
 	}
 }

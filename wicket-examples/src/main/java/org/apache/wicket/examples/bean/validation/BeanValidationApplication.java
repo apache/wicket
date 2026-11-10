@@ -32,7 +32,7 @@ public class BeanValidationApplication extends WicketExampleApplication
 	protected void init()
 	{
 		super.init();
-		
+
 		new BeanValidationConfiguration().configure(this);
 	}
 }

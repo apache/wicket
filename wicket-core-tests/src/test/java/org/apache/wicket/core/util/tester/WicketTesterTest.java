@@ -1361,7 +1361,8 @@ class WicketTesterTest extends WicketTestCase
 	 * WICKET-6713 component can be started via class or instance on same tester
 	 */
 	@Test
-	void componentInPage() {
+	void componentInPage()
+	{
 		tester.startComponentInPage(Label.class);
 
 		tester.assertVisible("");

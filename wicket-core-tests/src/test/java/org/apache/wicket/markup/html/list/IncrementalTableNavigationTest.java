@@ -33,7 +33,7 @@ class IncrementalTableNavigationTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void pagedTable() throws Exception
+	void pagedTable() throws Exception
 	{
 		executeTest(IncrementalTableNavigationPage.class,
 			"IncrementalTableNavigationPage_ExpectedResult_1.html");

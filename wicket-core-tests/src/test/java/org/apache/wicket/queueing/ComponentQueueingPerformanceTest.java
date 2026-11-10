@@ -195,7 +195,8 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 		AbstractPhonePanel(String id, IModel<PhoneNumber> phone)
 		{
 			super(id);
-			setPanelMarkup("<wicket:panel><span wicket:id='areacode'></span> <span wicket:id='prefix'></span>-<span wicket:id='suffix'></span></wicket:panel>");
+			setPanelMarkup(
+				"<wicket:panel><span wicket:id='areacode'></span> <span wicket:id='prefix'></span>-<span wicket:id='suffix'></span></wicket:panel>");
 		}
 	}
 
@@ -225,7 +226,8 @@ public class ComponentQueueingPerformanceTest extends WicketTestCase
 		AbstractAddressPanel(String id, IModel<Address> addr)
 		{
 			super(id);
-			setPanelMarkup("<wicket:panel><span wicket:id='street'></span><br/><span wicket:id='city'></span>, <span wicket:id='state'></span> <span wicket:id='zipcode'></span></wicket:panel>");
+			setPanelMarkup(
+				"<wicket:panel><span wicket:id='street'></span><br/><span wicket:id='city'></span>, <span wicket:id='state'></span> <span wicket:id='zipcode'></span></wicket:panel>");
 		}
 	}
 

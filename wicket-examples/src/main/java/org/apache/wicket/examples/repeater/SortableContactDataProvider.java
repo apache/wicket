@@ -33,7 +33,9 @@ import org.apache.wicket.model.IModel;
  * @author igor
  * 
  */
-public class SortableContactDataProvider extends SortableDataProvider<Contact, String> implements IFilterStateLocator<ContactFilter>
+public class SortableContactDataProvider extends SortableDataProvider<Contact, String>
+	implements
+		IFilterStateLocator<ContactFilter>
 {
 	private ContactFilter contactFilter = new ContactFilter();
 
@@ -55,36 +57,34 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact, S
 	public Iterator<Contact> iterator(long first, long count)
 	{
 		List<Contact> contactsFound = getContactsDB().getIndex(getSort());
-		
-		return filterContacts(contactsFound).
-			subList((int)first, (int)(first + count)).
-			iterator();
+
+		return filterContacts(contactsFound).subList((int)first, (int)(first + count)).iterator();
 	}
 
 	private List<Contact> filterContacts(List<Contact> contactsFound)
 	{
-	    ArrayList<Contact> result = new ArrayList<>();
-	    Date dateFrom = contactFilter.getDateFrom();
-	    Date dateTo = contactFilter.getDateTo();
-	    
-	    for (Contact contact : contactsFound)
-	    {
-		Date bornDate = contact.getBornDate();
-		
-		if(dateFrom != null && bornDate.before(dateFrom))
+		ArrayList<Contact> result = new ArrayList<>();
+		Date dateFrom = contactFilter.getDateFrom();
+		Date dateTo = contactFilter.getDateTo();
+
+		for (Contact contact : contactsFound)
 		{
-		    continue;
+			Date bornDate = contact.getBornDate();
+
+			if (dateFrom != null && bornDate.before(dateFrom))
+			{
+				continue;
+			}
+
+			if (dateTo != null && bornDate.after(dateTo))
+			{
+				continue;
+			}
+
+			result.add(contact);
 		}
-		
-		if(dateTo != null && bornDate.after(dateTo))
-		{
-		    continue;
-		}
-		
-		result.add(contact);
-	    }
-	    
-	    return result;
+
+		return result;
 	}
 
 	@Override
@@ -102,12 +102,12 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact, S
 	@Override
 	public ContactFilter getFilterState()
 	{
-	    return contactFilter;
+		return contactFilter;
 	}
 
 	@Override
 	public void setFilterState(ContactFilter state)
 	{
-	    contactFilter  = state;
+		contactFilter = state;
 	}
 }

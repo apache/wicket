@@ -37,7 +37,7 @@ public class MockPageManager implements IPageManager
 	{
 		return true;
 	}
-	
+
 	@Override
 	public void destroy()
 	{
@@ -51,7 +51,8 @@ public class MockPageManager implements IPageManager
 	}
 
 	@Override
-	public void removePage(final IManageablePage page) {
+	public void removePage(final IManageablePage page)
+	{
 		pages.remove(page.getPageId());
 	}
 
@@ -72,7 +73,7 @@ public class MockPageManager implements IPageManager
 	{
 		pages.remove(page.getPageId());
 	}
-	
+
 	@Override
 	public void detach()
 	{

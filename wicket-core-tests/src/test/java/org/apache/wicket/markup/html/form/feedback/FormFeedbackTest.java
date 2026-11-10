@@ -30,7 +30,7 @@ class FormFeedbackTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void formComponentFeedbackBorder() throws Exception
+	void formComponentFeedbackBorder() throws Exception
 	{
 		Page page = tester.startPage(FeedbackFormPage.class);
 		tester.assertRenderedPage(FeedbackFormPage.class);
@@ -44,7 +44,7 @@ class FormFeedbackTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void formComponentFeedbackIndicator() throws Exception
+	void formComponentFeedbackIndicator() throws Exception
 	{
 		Page page = tester.startPage(FeedbackIndicatorFormPage.class);
 		tester.assertRenderedPage(FeedbackIndicatorFormPage.class);

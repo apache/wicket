@@ -97,7 +97,8 @@ public class Initializer implements IInitializer
 				catch (IOException | ResourceStreamNotFoundException e)
 				{
 					throw new WicketRuntimeException(e);
-				} finally
+				}
+				finally
 				{
 					try
 					{

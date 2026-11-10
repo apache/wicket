@@ -36,46 +36,53 @@ import static org.openrewrite.maven.Assertions.pomXml;
  * Resolves the Wicket artifacts from the {@code maven-repository} fixture next to this class
  * only, so the outcome does not depend on what Maven Central or the local repository contain.
  */
-class MigrateToWicket12Test implements RewriteTest {
+class MigrateToWicket12Test implements RewriteTest
+{
 
-    @Override
-    public void defaults(RecipeSpec spec) {
-        spec
-                .executionContext(fixtureRepositoryOnly())
-                .recipe(Environment.builder()
-                        .scanRuntimeClasspath()
-                        .build()
-                        .activateRecipes("org.apache.wicket.MigrateToWicket12"));
-    }
+	@Override
+	public void defaults(RecipeSpec spec)
+	{
+		spec
+			.executionContext(fixtureRepositoryOnly())
+			.recipe(Environment.builder()
+				.scanRuntimeClasspath()
+				.build()
+				.activateRecipes("org.apache.wicket.MigrateToWicket12"));
+	}
 
-    private static ExecutionContext fixtureRepositoryOnly() {
-        String uri;
-        try {
-            uri = MigrateToWicket12Test.class.getResource("maven-repository").toURI().toString();
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException(e);
-        }
+	private static ExecutionContext fixtureRepositoryOnly()
+	{
+		String uri;
+		try
+		{
+			uri = MigrateToWicket12Test.class.getResource("maven-repository").toURI().toString();
+		}
+		catch (URISyntaxException e)
+		{
+			throw new IllegalStateException(e);
+		}
 
-        ExecutionContext ctx = new InMemoryExecutionContext(t -> {
-            throw new AssertionError(t);
-        });
-        MavenExecutionContextView.view(ctx)
-                .setAddCentralRepository(false)
-                .setAddLocalRepository(false)
-                .setRepositories(List.of(MavenRepository.builder()
-                        .id("fixture")
-                        .uri(uri)
-                        .knownToExist(true)
-                        .build()));
-        return ctx;
-    }
+		ExecutionContext ctx = new InMemoryExecutionContext(t -> {
+			throw new AssertionError(t);
+		});
+		MavenExecutionContextView.view(ctx)
+			.setAddCentralRepository(false)
+			.setAddLocalRepository(false)
+			.setRepositories(List.of(MavenRepository.builder()
+				.id("fixture")
+				.uri(uri)
+				.knownToExist(true)
+				.build()));
+		return ctx;
+	}
 
-    @Test
-    void migrateDependencies() {
-        //language=xml
-        rewriteRun(
-                mavenProject("any-project",
-                        pomXml("""
+	@Test
+	void migrateDependencies()
+	{
+		//language=xml
+		rewriteRun(
+			mavenProject("any-project",
+				pomXml("""
                                         <project>
                                             <modelVersion>4.0.0</modelVersion>
                                             <groupId>com.example</groupId>
@@ -95,7 +102,7 @@ class MigrateToWicket12Test implements RewriteTest {
                                             </dependencies>
                                         </project>
                                         """,
-                                """
+					"""
                                         <project>
                                             <modelVersion>4.0.0</modelVersion>
                                             <groupId>com.example</groupId>
@@ -114,10 +121,7 @@ class MigrateToWicket12Test implements RewriteTest {
                                                 </dependency>
                                             </dependencies>
                                         </project>
-                                        """
-                        )
-                )
-        );
-    }
+                                        """)));
+	}
 
 }

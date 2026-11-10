@@ -82,15 +82,15 @@ public class RequestPageStore extends DelegatingPageStore
 	public void revertPage(IPageContext context, IManageablePage page)
 	{
 		getRequestData(context).remove(page);
-		
+
 		getDelegate().revertPage(context, page);
 	}
-	
+
 	@Override
 	public void end(IPageContext context)
 	{
 		getDelegate().end(context);
-		
+
 		RequestData requestData = getRequestData(context);
 		for (IManageablePage page : requestData.pages())
 		{
@@ -102,7 +102,7 @@ public class RequestPageStore extends DelegatingPageStore
 			}
 		}
 	}
-	
+
 	@Override
 	public void detach(IPageContext context)
 	{
@@ -119,7 +119,8 @@ public class RequestPageStore extends DelegatingPageStore
 		getDelegate().detach(context);
 	}
 
-	private boolean isPageStateless(final IManageablePage page) {
+	private boolean isPageStateless(final IManageablePage page)
+	{
 		boolean isPageStateless;
 		try
 		{
@@ -137,14 +138,14 @@ public class RequestPageStore extends DelegatingPageStore
 	{
 		return context.getRequestData(KEY, RequestData::new);
 	}
-	
+
 	/**
 	 * Data kept in the {@link RequestCycle}.
 	 */
 	static class RequestData
 	{
 		private final LinkedList<IManageablePage> pages = new LinkedList<>();
-		
+
 		public void add(IManageablePage page)
 		{
 			// add as last
@@ -178,6 +179,6 @@ public class RequestPageStore extends DelegatingPageStore
 		public void removeAll()
 		{
 			pages.clear();
-		}		
+		}
 	}
 }

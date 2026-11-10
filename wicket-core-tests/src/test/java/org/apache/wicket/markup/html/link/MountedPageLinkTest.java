@@ -41,7 +41,8 @@ class MountedPageLinkTest extends WicketTestCase
 
 	private void mountPage(boolean argument)
 	{
-		if (argument) {
+		if (argument)
+		{
 			tester.getApplication().mountPage("mount/${param}/part2", PageWithLink.class);
 		}
 	}
@@ -56,15 +57,15 @@ class MountedPageLinkTest extends WicketTestCase
 		mountPage(doMount);
 
 		PageWithLink page = tester.startPage(PageWithLink.class,
-											 new PageParameters().add("param", "value"));
+			new PageParameters().add("param", "value"));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
 		if (doMount)
 			assertTrue(url.contains("mount/value/part2"),
-					   "URL for link should contain 'mount/value/part2': " + url);
+				"URL for link should contain 'mount/value/part2': " + url);
 		else
 			assertTrue(url.contains("param=value"),
-					   "URL for link should contain 'param=value': " + url);
+				"URL for link should contain 'param=value': " + url);
 		tester.executeUrl(url);
 	}
 

@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.velocity {
-    requires static jakarta.servlet;
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.core;
-    requires org.slf4j;
-    requires velocity.engine.core;
+module org.apache.wicket.velocity
+{
+	requires static jakarta.servlet;
+	requires org.apache.wicket.util;
+	requires org.apache.wicket.core;
+	requires org.slf4j;
+	requires velocity.engine.core;
 
-    exports org.apache.wicket.velocity;
+	exports org.apache.wicket.velocity;
 }

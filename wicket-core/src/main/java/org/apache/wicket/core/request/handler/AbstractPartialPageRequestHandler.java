@@ -33,123 +33,124 @@ import org.apache.wicket.util.visit.IVisitor;
  */
 public abstract class AbstractPartialPageRequestHandler implements IPartialPageRequestHandler
 {
-    /** The associated Page */
-    private final Page page;
+	/** The associated Page */
+	private final Page page;
 
-    protected AbstractPartialPageRequestHandler(Page page) {
-        this.page = Args.notNull(page, "page");
-    }
+	protected AbstractPartialPageRequestHandler(Page page)
+	{
+		this.page = Args.notNull(page, "page");
+	}
 
-    @Override
-    public final void addChildren(MarkupContainer parent, Class<?> childCriteria)
-    {
-        Args.notNull(parent, "parent");
-        Args.notNull(childCriteria, "childCriteria");
+	@Override
+	public final void addChildren(MarkupContainer parent, Class<?> childCriteria)
+	{
+		Args.notNull(parent, "parent");
+		Args.notNull(childCriteria, "childCriteria");
 
-        parent.visitChildren(childCriteria, new IVisitor<Component, Void>()
-        {
-            @Override
-            public void component(final Component component, final IVisit<Void> visit)
-            {
-                add(component);
-                visit.dontGoDeeper();
-            }
-        });
-    }
+		parent.visitChildren(childCriteria, new IVisitor<Component, Void>()
+		{
+			@Override
+			public void component(final Component component, final IVisit<Void> visit)
+			{
+				add(component);
+				visit.dontGoDeeper();
+			}
+		});
+	}
 
-    @Override
-    public void add(Component... components)
-    {
-        for (final Component component : components)
-        {
-            Args.notNull(component, "component");
+	@Override
+	public void add(Component... components)
+	{
+		for (final Component component : components)
+		{
+			Args.notNull(component, "component");
 
-            if (component.getOutputMarkupId() == false && !(component instanceof Page))
-            {
-                throw new IllegalArgumentException(
-                        "cannot update component that does not have setOutputMarkupId property set to true. Component: " +
-                                component.toString());
-            }
+			if (component.getOutputMarkupId() == false && !(component instanceof Page))
+			{
+				throw new IllegalArgumentException(
+					"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
+						component.toString());
+			}
 
-            add(component, component.getMarkupId());
-        }
-    }
+			add(component, component.getMarkupId());
+		}
+	}
 
-    @Override
-    public final Integer getPageId()
-    {
-        return page.getPageId();
-    }
+	@Override
+	public final Integer getPageId()
+	{
+		return page.getPageId();
+	}
 
-    @Override
-    public final Integer getRenderCount()
-    {
-        return page.getRenderCount();
-    }
+	@Override
+	public final Integer getRenderCount()
+	{
+		return page.getRenderCount();
+	}
 
-    @Override
-    public final PageParameters getPageParameters()
-    {
-        return page.getPageParameters();
-    }
+	@Override
+	public final PageParameters getPageParameters()
+	{
+		return page.getPageParameters();
+	}
 
-    @Override
-    public final void add(Component component, String markupId)
-    {
-        getUpdate().add(component, markupId);
-    }
+	@Override
+	public final void add(Component component, String markupId)
+	{
+		getUpdate().add(component, markupId);
+	}
 
-    @Override
-    public final void prependJavaScript(CharSequence javascript)
-    {
-        getUpdate().prependJavaScript(javascript);
-    }
+	@Override
+	public final void prependJavaScript(CharSequence javascript)
+	{
+		getUpdate().prependJavaScript(javascript);
+	}
 
-    @Override
-    public final void appendJavaScript(CharSequence javascript)
-    {
-        getUpdate().appendJavaScript(javascript);
-    }
+	@Override
+	public final void appendJavaScript(CharSequence javascript)
+	{
+		getUpdate().appendJavaScript(javascript);
+	}
 
-    @Override
-    public final void focusComponent(Component component)
-    {
-        if (component != null && component.getOutputMarkupId() == false)
-        {
-            throw new IllegalArgumentException(
-                    "cannot update component that does not have setOutputMarkupId property set to true. Component: " +
-                            component.toString());
-        }
-        final String id = component != null ? ("'" + component.getMarkupId() + "'") : "null";
-        appendJavaScript("Wicket.Focus.setFocusOnId(" + id + ");");
-    }
+	@Override
+	public final void focusComponent(Component component)
+	{
+		if (component != null && component.getOutputMarkupId() == false)
+		{
+			throw new IllegalArgumentException(
+				"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
+					component.toString());
+		}
+		final String id = component != null ? ("'" + component.getMarkupId() + "'") : "null";
+		appendJavaScript("Wicket.Focus.setFocusOnId(" + id + ");");
+	}
 
-    @Override
-    public final boolean isPageInstanceCreated()
-    {
-        return true;
-    }
+	@Override
+	public final boolean isPageInstanceCreated()
+	{
+		return true;
+	}
 
-    @Override
-    public final IHeaderResponse getHeaderResponse()
-    {
-        return getUpdate().getHeaderResponse();
-    }
+	@Override
+	public final IHeaderResponse getHeaderResponse()
+	{
+		return getUpdate().getHeaderResponse();
+	}
 
-    protected abstract PartialPageUpdate getUpdate();
+	protected abstract PartialPageUpdate getUpdate();
 
-    /**
-     * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPage()
-     */
-    @Override
-    public final Page getPage()
-    {
-        return page;
-    }
+	/**
+	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPage()
+	 */
+	@Override
+	public final Page getPage()
+	{
+		return page;
+	}
 
-    @Override
-    public final Class<? extends IRequestablePage> getPageClass()
-    {
-        return page.getPageClass();
-    }
+	@Override
+	public final Class<? extends IRequestablePage> getPageClass()
+	{
+		return page.getPageClass();
+	}
 }

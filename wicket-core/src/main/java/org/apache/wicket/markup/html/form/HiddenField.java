@@ -95,6 +95,6 @@ public class HiddenField<T> extends TextField<T>
 	@Override
 	protected String[] getInputTypes()
 	{
-		return new String[] {"hidden"};
+		return new String[] { "hidden" };
 	}
 }

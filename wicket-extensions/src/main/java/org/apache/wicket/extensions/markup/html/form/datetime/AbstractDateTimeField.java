@@ -44,7 +44,7 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 	public static final String TIME_CSS_CLASS_KEY = CssUtils.key(AbstractDateTimeField.class, "time");
 
 	private LocalDateTextField localDateField;
-	
+
 	private TimeField timeField;
 
 	/**
@@ -77,17 +77,17 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 				super.onConfigure();
 
 				timeField.configure();
-				
+
 				setVisible(timeField.isVisible());
 			}
 		});
 	}
-	
+
 	@Override
 	protected void onInitialize()
 	{
 		super.onInitialize();
-		
+
 		add(localDateField = newDateField("date", new DateModel()));
 		add(timeField = newTimeField("time", new TimeModel()));
 	}
@@ -144,22 +144,25 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 		{
 			if (date == null)
 			{
-				error(newValidationError(new ConversionException("Cannot create temporal without date").setTargetType(getType())));
+				error(newValidationError(new ConversionException("Cannot create temporal without date").setTargetType(
+					getType())));
 				return;
 			}
 			if (time == null)
 			{
 				time = getDefaultTime();
-				if (time == null) {
-					error(newValidationError(new ConversionException("Cannot create temporal without time").setTargetType(getType())));
+				if (time == null)
+				{
+					error(newValidationError(new ConversionException("Cannot create temporal without time")
+						.setTargetType(getType())));
 					return;
 				}
 			}
-			
+
 			// Use the input to create proper date-time
 			temporal = createTemporal(date, time);
 		}
-		
+
 		setConvertedInput(temporal);
 	}
 
@@ -184,14 +187,15 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 	 */
 	protected LocalDateTextField newDateField(String id, IModel<LocalDate> dateFieldModel)
 	{
-		return new LocalDateTextField(id, dateFieldModel, FormatStyle.SHORT) {
+		return new LocalDateTextField(id, dateFieldModel, FormatStyle.SHORT)
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
-				
+
 				tag.append("class", getString(DATE_CSS_CLASS_KEY), " ");
 			}
 		};
@@ -208,14 +212,15 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 	 */
 	protected TimeField newTimeField(String id, IModel<LocalTime> timeFieldModel)
 	{
-		return new TimeField(id, timeFieldModel) {
+		return new TimeField(id, timeFieldModel)
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
-				
+
 				tag.append("class", getString(TIME_CSS_CLASS_KEY), " ");
 			}
 		};
@@ -266,10 +271,11 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 		public LocalDate getObject()
 		{
 			T temporal = getModelObject();
-			if (temporal == null) {
+			if (temporal == null)
+			{
 				return null;
 			}
-			
+
 			return getLocalDate(temporal);
 		}
 
@@ -288,10 +294,11 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 		public LocalTime getObject()
 		{
 			T temporal = getModelObject();
-			if (temporal == null) {
+			if (temporal == null)
+			{
 				return null;
 			}
-			
+
 			return getLocalTime(temporal);
 		}
 

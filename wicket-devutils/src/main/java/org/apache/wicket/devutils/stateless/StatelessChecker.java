@@ -53,6 +53,7 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 		final StatelessComponent ann = component.getClass().getAnnotation(StatelessComponent.class);
 		return (ann != null) && ann.enabled();
 	}
+
 	/**
 	 * The given component claims to be stateless but isn't.
 	 *
@@ -113,11 +114,11 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				String reason;
 				if (statefulBehaviors.size() == 0)
 				{
-				    reason = " Possible reason: no stateless hint";
+					reason = " Possible reason: no stateless hint";
 				}
 				else
 				{
-				    reason = " Stateful behaviors: " + statefulBehaviors.join();
+					reason = " Stateful behaviors: " + statefulBehaviors.join();
 				}
 				fail(new StatelessCheckFailureException(component, reason));
 				return;

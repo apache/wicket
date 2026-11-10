@@ -15,22 +15,23 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.request {
-    requires java.sql;
-    requires org.apache.commons.collections4;
-    requires org.apache.wicket.util;
-    requires org.slf4j;
-    requires static jakarta.servlet;
+module org.apache.wicket.request
+{
+	requires java.sql;
+	requires org.apache.commons.collections4;
+	requires org.apache.wicket.util;
+	requires org.slf4j;
+	requires static jakarta.servlet;
 
-    exports org.apache.wicket.request;
-    exports org.apache.wicket.request.flow;
-    exports org.apache.wicket.request.handler;
-    exports org.apache.wicket.request.handler.logger;
-    exports org.apache.wicket.request.http;
-    exports org.apache.wicket.request.http.flow;
-    exports org.apache.wicket.request.http.handler;
-    exports org.apache.wicket.request.mapper;
-    exports org.apache.wicket.request.mapper.info;
-    exports org.apache.wicket.request.mapper.parameter;
-    exports org.apache.wicket.request.parameter;
+	exports org.apache.wicket.request;
+	exports org.apache.wicket.request.flow;
+	exports org.apache.wicket.request.handler;
+	exports org.apache.wicket.request.handler.logger;
+	exports org.apache.wicket.request.http;
+	exports org.apache.wicket.request.http.flow;
+	exports org.apache.wicket.request.http.handler;
+	exports org.apache.wicket.request.mapper;
+	exports org.apache.wicket.request.mapper.info;
+	exports org.apache.wicket.request.mapper.parameter;
+	exports org.apache.wicket.request.parameter;
 }

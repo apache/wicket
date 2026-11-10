@@ -31,7 +31,7 @@ public class DynamicWizardModelTest extends WicketTestCase
 {
 
 	private IDynamicWizardStep step4;
-	
+
 	@Test
 	public void testDynamicWizard()
 	{
@@ -49,7 +49,7 @@ public class DynamicWizardModelTest extends WicketTestCase
 				return step4;
 			}
 		};
-			
+
 		step4 = new DynamicWizardStep(step1)
 		{
 			@Override
@@ -57,33 +57,36 @@ public class DynamicWizardModelTest extends WicketTestCase
 			{
 				return true;
 			}
-			
+
 			@Override
 			public IDynamicWizardStep next()
 			{
 				return null;
 			}
 		};
-		
+
 		DynamicWizardModel model = new DynamicWizardModel(step1);
-		
+
 		model.reset();
-		
+
 		assertSame(step1, model.getActiveStep());
 		assertTrue(model.isNextAvailable());
 		assertFalse(model.isLastStep(model.getActiveStep()));
 		assertFalse(model.isFinishAvailable());
-		
+
 		model.next();
 		assertSame(step4, model.getActiveStep());
 		assertFalse(model.isNextAvailable());
 		assertTrue(model.isLastStep(model.getActiveStep()));
 		assertTrue(model.isFinishAvailable());
-		
-		try {
+
+		try
+		{
 			model.next();
 			fail();
-		} catch (Exception expected) {
+		}
+		catch (Exception expected)
+		{
 		}
 	}
 }

@@ -64,8 +64,7 @@ class DecoratingHeaderResponseTest extends WicketTestCase
 				{
 					if (item instanceof JavaScriptReferenceHeaderItem)
 					{
-						JavaScriptReferenceHeaderItem original =
-							(JavaScriptReferenceHeaderItem) item;
+						JavaScriptReferenceHeaderItem original = (JavaScriptReferenceHeaderItem)item;
 						item = JavaScriptHeaderItem.forReference(
 							new PackageResourceReference(
 								"DECORATED-" + original.getReference().getName()),
@@ -108,7 +107,7 @@ class DecoratingHeaderResponseTest extends WicketTestCase
 			for (int i = 0; i < 10; i++)
 			{
 				response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(
-						"res" + i), Integer.toString(i)));
+					"res" + i), Integer.toString(i)));
 			}
 		}
 

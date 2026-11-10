@@ -64,7 +64,7 @@ public class Index extends WicketExamplePage
 		add(new StatelessLink<Void>("linkToAjaxExamples")
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()
 			 */

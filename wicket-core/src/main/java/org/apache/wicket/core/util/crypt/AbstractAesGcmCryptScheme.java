@@ -130,11 +130,9 @@ public abstract class AbstractAesGcmCryptScheme implements ICryptScheme
 			// Let the cipher write straight into the result, behind the caller's prefix and the
 			// nonce. Taking the ciphertext as an array of its own first means allocating the whole
 			// payload a second time and then copying it across.
-			byte[] result =
-				new byte[prefixLength + nonce.length + cipher.getOutputSize(plaintext.length)];
+			byte[] result = new byte[prefixLength + nonce.length + cipher.getOutputSize(plaintext.length)];
 			System.arraycopy(nonce, 0, result, prefixLength, nonce.length);
-			int written =
-				cipher.doFinal(plaintext, 0, plaintext.length, result, prefixLength + nonce.length);
+			int written = cipher.doFinal(plaintext, 0, plaintext.length, result, prefixLength + nonce.length);
 
 			// getOutputSize only promises an upper bound, so a provider is free to write less
 			// than it reserved and leave the tail as zeroes. Both schemes shipped here fill it

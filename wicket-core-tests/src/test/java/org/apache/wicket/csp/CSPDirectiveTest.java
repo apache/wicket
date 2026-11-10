@@ -22,39 +22,40 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class CSPDirectiveTest {
+class CSPDirectiveTest
+{
 
-    @Test
-    void scriptSrcAttrAndStyleSrcAttributesSupportValuesFromSpec()
-    {
-        CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of());
-        CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of());
-        CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_HASHES, List.of());
-        CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.REPORT_SAMPLE, List.of());
+	@Test
+	void scriptSrcAttrAndStyleSrcAttributesSupportValuesFromSpec()
+	{
+		CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of());
+		CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of());
+		CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_HASHES, List.of());
+		CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.REPORT_SAMPLE, List.of());
 
-        CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of());
-        CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of());
-        CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_HASHES, List.of());
-        CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.REPORT_SAMPLE, List.of());
-    }
+		CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of());
+		CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of());
+		CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_HASHES, List.of());
+		CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.REPORT_SAMPLE, List.of());
+	}
 
-    @Test
-    void scriptSrcAttrAndStyleSrcAttributesDoesNotSupportOthersAndNone()
-    {
-        assertThrows(IllegalArgumentException.class, () ->
-                CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of(CSPDirectiveSrcValue.UNSAFE_INLINE)));
+	@Test
+	void scriptSrcAttrAndStyleSrcAttributesDoesNotSupportOthersAndNone()
+	{
+		assertThrows(IllegalArgumentException.class, () -> CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(
+			CSPDirectiveSrcValue.NONE, List.of(CSPDirectiveSrcValue.UNSAFE_INLINE)));
 
-        assertThrows(IllegalArgumentException.class, () ->
-                CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of(CSPDirectiveSrcValue.UNSAFE_HASHES)));
-    }
+		assertThrows(IllegalArgumentException.class, () -> CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(
+			CSPDirectiveSrcValue.NONE, List.of(CSPDirectiveSrcValue.UNSAFE_HASHES)));
+	}
 
-    @Test
-    void scriptSrcAttrAndStyleSrcAttributesDoesNotSupportNoneAndOthers()
-    {
-        assertThrows(IllegalArgumentException.class, () ->
-                CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_INLINE, List.of(CSPDirectiveSrcValue.NONE)));
+	@Test
+	void scriptSrcAttrAndStyleSrcAttributesDoesNotSupportNoneAndOthers()
+	{
+		assertThrows(IllegalArgumentException.class, () -> CSPDirective.SCRIPT_SRC_ATTR.checkValueForDirective(
+			CSPDirectiveSrcValue.UNSAFE_INLINE, List.of(CSPDirectiveSrcValue.NONE)));
 
-        assertThrows(IllegalArgumentException.class, () ->
-                CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_HASHES, List.of(CSPDirectiveSrcValue.NONE)));
-    }
+		assertThrows(IllegalArgumentException.class, () -> CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(
+			CSPDirectiveSrcValue.UNSAFE_HASHES, List.of(CSPDirectiveSrcValue.NONE)));
+	}
 }

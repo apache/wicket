@@ -172,10 +172,10 @@ public class WicketObjects
 			if (serialized == null)
 			{
 				throw new IllegalStateException("A problem occurred while serializing an object. " +
-						"Please check the earlier logs for more details. Problematic object: " + object);
+					"Please check the earlier logs for more details. Problematic object: " + object);
 			}
 			Object deserialized = serializer.deserialize(serialized);
-			return (T) deserialized;
+			return (T)deserialized;
 		}
 	}
 
@@ -195,7 +195,7 @@ public class WicketObjects
 			try
 			{
 				Class<?> c = WicketObjects.resolveClass(className);
-				return (T) c.getDeclaredConstructor().newInstance();
+				return (T)c.getDeclaredConstructor().newInstance();
 			}
 			catch (Exception e)
 			{
@@ -239,7 +239,7 @@ public class WicketObjects
 		if (object instanceof Component)
 		{
 			// clone to not detach the original component (WICKET-5013, 5014)
-			Component clone = (Component) cloneObject(object);
+			Component clone = (Component)cloneObject(object);
 			clone.detach();
 
 			target = clone;
@@ -247,7 +247,7 @@ public class WicketObjects
 		else if (object instanceof IDetachable)
 		{
 			// clone to not detach the original IDetachable (WICKET-5013, 5014)
-			IDetachable clone = (IDetachable) cloneObject(object);
+			IDetachable clone = (IDetachable)cloneObject(object);
 			clone.detach();
 
 			target = clone;

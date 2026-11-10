@@ -28,9 +28,10 @@ public class ComprefTest extends WicketTestCase
 	/**
 	 * Test page.
 	 *
-     */
+	 */
 	@Test
-	public void test_1() {
+	public void test_1()
+	{
 		tester.startPage(Index.class);
 
 		tester.assertContains("Wicket Examples - Component Reference");

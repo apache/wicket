@@ -33,7 +33,7 @@ public class SimpleTestPanelBase extends Panel
 	 * 
 	 * @param name
 	 */
-    SimpleTestPanelBase(String name)
+	SimpleTestPanelBase(String name)
 	{
 		super(name);
 

@@ -79,7 +79,7 @@ class ListMultipleChoiceTest extends WicketTestCase
 	}
 
 	private ListMultipleChoice<String> newListMultipleChoice(String id,
-															 IModel<List<String>> selectedValues, List<String> choices)
+		IModel<List<String>> selectedValues, List<String> choices)
 	{
 		return new ListMultipleChoice<>(id, selectedValues, choices);
 	}

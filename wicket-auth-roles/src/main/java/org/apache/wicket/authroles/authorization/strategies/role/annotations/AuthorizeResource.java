@@ -43,11 +43,10 @@ import java.lang.annotation.Target;
  * @see AuthorizeInstantiation
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PACKAGE, ElementType.TYPE})
+@Target({ ElementType.PACKAGE, ElementType.TYPE })
 @Documented
 @Inherited
-public @interface AuthorizeResource
-{
+public @interface AuthorizeResource {
 
 	/**
 	 * Gets the roles that are allowed to take the action.
@@ -55,5 +54,5 @@ public @interface AuthorizeResource
 	 * @return the roles that are allowed. Returns a zero length array by default, which authorizes
 	 *         everybody
 	 */
-	String[] value() default {};
+	String[] value() default { };
 }

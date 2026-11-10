@@ -27,8 +27,8 @@ class BorderWithForm extends Border
 		super(id);
 		WebMarkupContainer container = new WebMarkupContainer("borderContainer");
 		container.add(new Form<>("form"));
-		
+
 		addToBorder(container);
 	}
-	
+
 }

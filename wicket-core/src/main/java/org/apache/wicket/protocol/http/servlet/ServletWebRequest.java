@@ -185,7 +185,7 @@ public class ServletWebRequest extends WebRequest
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("Calculating context relative path from: context path '{}', filterPrefix '{}', uri '{}'",
-					new Object[] {contextPath, filterPrefix, uri});
+				new Object[] { contextPath, filterPrefix, uri });
 		}
 
 		final int start = contextPath.length() + filterPrefix.length() + 1;
@@ -403,7 +403,7 @@ public class ServletWebRequest extends WebRequest
 			@Override
 			public Url getOriginalUrl()
 			{
-			    return ServletWebRequest.this.getOriginalUrl();
+				return ServletWebRequest.this.getOriginalUrl();
 			}
 
 			@Override
@@ -487,7 +487,8 @@ public class ServletWebRequest extends WebRequest
 	@Override
 	public boolean shouldPreserveClientUrl()
 	{
-		return (errorAttributes != null && !Strings.isEmpty(errorAttributes.getRequestUri()) || forwardAttributes != null &&
-			!Strings.isEmpty(forwardAttributes.getRequestUri()));
+		return (errorAttributes != null && !Strings.isEmpty(errorAttributes.getRequestUri())
+			|| forwardAttributes != null &&
+				!Strings.isEmpty(forwardAttributes.getRequestUri()));
 	}
 }

@@ -159,7 +159,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 	 * or when the base url starts with
 	 * {@link org.apache.wicket.core.request.mapper.IMapperContext#getNamespace()}/{@link org.apache.wicket.core.request.mapper.IMapperContext#getPageIdentifier()}
 	 * and the request url with {@link org.apache.wicket.core.request.mapper.IMapperContext#getPageIdentifier()}
-
+	
 	 * @param request
 	 *      the request to check
 	 * @return {@code true} if the conditions match
@@ -172,12 +172,12 @@ public class PageInstanceMapper extends AbstractComponentMapper
 		String namespace = getContext().getNamespace();
 		String pageIdentifier = getContext().getPageIdentifier();
 		List<String> segments = url.getSegments();
-		
+
 		if (isNotPageInstanceUrl(segments, pageIdentifier))
 		{
 			return false;
 		}
-		
+
 		if (urlStartsWith(url, namespace, pageIdentifier))
 		{
 			matches = true;
@@ -195,15 +195,15 @@ public class PageInstanceMapper extends AbstractComponentMapper
 	}
 
 
-	private boolean isNotPageInstanceUrl(List<String> segments, String pageIdentifier) 
-	{		
-		if (segments.size() > 2 ) 
+	private boolean isNotPageInstanceUrl(List<String> segments, String pageIdentifier)
+	{
+		if (segments.size() > 2)
 		{
 			return true;
-		} 
-		
+		}
+
 		int pageIdIndex = segments.indexOf(pageIdentifier);
-		
+
 		//check if we have segments after pageIdentifier
 		return pageIdIndex < 0 || segments.size() - 1 > pageIdIndex;
 	}

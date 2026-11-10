@@ -35,17 +35,20 @@ import org.apache.wicket.markup.html.form.TextField;
  *     This Ajax behavior is client-side only, i.e. it never fires an Ajax call to the server.
  * </p>
  */
-public class AjaxPreventSubmitBehavior extends AjaxEventBehavior {
+public class AjaxPreventSubmitBehavior extends AjaxEventBehavior
+{
 
 	/**
 	 * Constructor.
 	 */
-	public AjaxPreventSubmitBehavior() {
+	public AjaxPreventSubmitBehavior()
+	{
 		super("keydown");
 	}
 
 	@Override
-	protected void updateAjaxAttributes(final AjaxRequestAttributes attributes) {
+	protected void updateAjaxAttributes(final AjaxRequestAttributes attributes)
+	{
 		super.updateAjaxAttributes(attributes);
 
 		Component component = getComponent();
@@ -55,12 +58,14 @@ public class AjaxPreventSubmitBehavior extends AjaxEventBehavior {
 		}
 
 		AjaxCallListener listener = new AjaxCallListener();
-		listener.onPrecondition("if (Wicket.Event.keyCode(attrs.event) === 13) {attrs.event.preventDefault();} return false;");
+		listener.onPrecondition(
+			"if (Wicket.Event.keyCode(attrs.event) === 13) {attrs.event.preventDefault();} return false;");
 		attributes.getAjaxCallListeners().add(listener);
 	}
 
 	@Override
-	protected final void onEvent(final AjaxRequestTarget target) {
+	protected final void onEvent(final AjaxRequestTarget target)
+	{
 		// never called
 	}
 }

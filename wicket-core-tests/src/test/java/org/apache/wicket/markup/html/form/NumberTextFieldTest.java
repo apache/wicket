@@ -54,7 +54,8 @@ class NumberTextFieldTest extends WicketTestCase
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();
-		assertTrue(response.contains("<input wicket:id=\"number\" type=\"number\" value=\"0.00\" name=\"number\" min=\"0.00\" max=\"100.00\"/>"));
+		assertTrue(response.contains(
+			"<input wicket:id=\"number\" type=\"number\" value=\"0.00\" name=\"number\" min=\"0.00\" max=\"100.00\"/>"));
 
 		FormTester formTester = tester.newFormTester(testPage.form.getId());
 		formTester.setValue(testPage.textField.getId(), "50.50");
@@ -76,7 +77,8 @@ class NumberTextFieldTest extends WicketTestCase
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();
-		assertTrue(response.contains("<input wicket:id=\"number\" type=\"number\" value=\"1000.0\" name=\"number\" min=\"0.0\" max=\"2000.0\"/>"));
+		assertTrue(response.contains(
+			"<input wicket:id=\"number\" type=\"number\" value=\"1000.0\" name=\"number\" min=\"0.0\" max=\"2000.0\"/>"));
 
 		FormTester formTester = tester.newFormTester(testPage.form.getId());
 		formTester.setValue(testPage.textField.getId(), "2,000.00");
@@ -98,7 +100,8 @@ class NumberTextFieldTest extends WicketTestCase
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();
-		assertTrue(response.contains("<input wicket:id=\"number\" type=\"number\" value=\"0\" name=\"number\" min=\"0\" max=\"100\"/>"));
+		assertTrue(response.contains(
+			"<input wicket:id=\"number\" type=\"number\" value=\"0\" name=\"number\" min=\"0\" max=\"100\"/>"));
 
 		FormTester formTester = tester.newFormTester(testPage.form.getId());
 		formTester.setValue(testPage.textField.getId(), "50");
@@ -119,7 +122,8 @@ class NumberTextFieldTest extends WicketTestCase
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();
-		assertTrue(response.contains("<input wicket:id=\"number\" step=\"any\" type=\"number\" value=\"1000.0\" name=\"number\"/>"));
+		assertTrue(response.contains(
+			"<input wicket:id=\"number\" step=\"any\" type=\"number\" value=\"1000.0\" name=\"number\"/>"));
 	}
 
 	/**
@@ -135,7 +139,8 @@ class NumberTextFieldTest extends WicketTestCase
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();
-		assertTrue(response.contains("<input wicket:id=\"number\" step=\"0.3\" type=\"number\" value=\"1000.0\" name=\"number\"/>"));
+		assertTrue(response.contains(
+			"<input wicket:id=\"number\" step=\"0.3\" type=\"number\" value=\"1000.0\" name=\"number\"/>"));
 	}
 
 	/**

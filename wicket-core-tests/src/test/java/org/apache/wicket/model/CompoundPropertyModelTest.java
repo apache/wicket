@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 class CompoundPropertyModelTest extends WicketTestCase
 {
 	@Test
-    void twoLevelsDeepHierarchy()
+	void twoLevelsDeepHierarchy()
 	{
 		tester.startPage(CompoundPropertyModelTwoLevelsDeepPage.class);
 		tester.assertRenderedPage(CompoundPropertyModelTwoLevelsDeepPage.class);

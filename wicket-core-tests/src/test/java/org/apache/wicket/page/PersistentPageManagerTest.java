@@ -60,7 +60,7 @@ class PersistentPageManagerTest
 
 		// create IPageManager (with IPageStore) and store a page instance
 		final AtomicReference<Object> sessionData = new AtomicReference<Object>(null);
-		
+
 		IPageManager pageManager = createPageManager(APP_NAME, sessionData);
 
 		// add a page
@@ -87,7 +87,8 @@ class PersistentPageManagerTest
 
 		// without available IPageStore the read SessionEntry holds
 		// the IManageablePage itself, not SerializedPage
-		assertNotNull(sessionData.get(), "Wicket needs to be able to deserialize the session entry regardless the application availability");
+		assertNotNull(sessionData.get(),
+			"Wicket needs to be able to deserialize the session entry regardless the application availability");
 
 		// provide new IPageStore which will read IManageablePage's or SerializedPage's
 		// from the SessionEntry's
@@ -106,19 +107,23 @@ class PersistentPageManagerTest
 	private IPageManager createPageManager(String appName, AtomicReference<Object> sessionData)
 	{
 		IPageStore store = new InSessionPageStore(Integer.MAX_VALUE, new JavaSerializer(APP_NAME));
-		
-		return new PageManager(store) {
+
+		return new PageManager(store)
+		{
 			@Override
 			protected IPageContext createPageContext()
 			{
-				return new MockPageContext() {
+				return new MockPageContext()
+				{
 					@Override
 					public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue)
 					{
 						T value = (T)sessionData.get();
-						if (value == null) {
+						if (value == null)
+						{
 							value = defaultValue.get();
-							if (value != null) {
+							if (value != null)
+							{
 								sessionData.set(value);
 							}
 						}
@@ -160,7 +165,8 @@ class PersistentPageManagerTest
 		}
 
 		@Override
-		public void detach() {
+		public void detach()
+		{
 		}
 	}
 }

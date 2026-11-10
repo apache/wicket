@@ -35,8 +35,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * The method to be used when submitting a form
 	 */
-	public enum Method
-	{
+	public enum Method {
 		/** get */
 		GET,
 
@@ -53,8 +52,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * The JavaScript event propagation type
 	 */
-	public enum EventPropagation
-	{
+	public enum EventPropagation {
 		/**
 		 * Stops the propagation of the JavaScript event to the parent of its target
 		 */
@@ -540,7 +538,8 @@ public final class AjaxRequestAttributes
 	 * @return whether to collect (submit) the name/value pairs for all HTML form elements
 	 *      children of the HTML element with the JavaScript listener
 	 */
-	public boolean isSerializeRecursively() {
+	public boolean isSerializeRecursively()
+	{
 		return serializeRecursively;
 	}
 
@@ -549,7 +548,8 @@ public final class AjaxRequestAttributes
 	 *          a flag indicating whether to collect (submit) the name/value pairs for all HTML form elements
 	 * children of the HTML element with the JavaScript listener
 	 */
-	public AjaxRequestAttributes setSerializeRecursively(final boolean serializeRecursively) {
+	public AjaxRequestAttributes setSerializeRecursively(final boolean serializeRecursively)
+	{
 		this.serializeRecursively = serializeRecursively;
 		return this;
 	}

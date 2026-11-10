@@ -63,7 +63,7 @@ public class ConversationExpiryChecker implements IComponentOnBeforeRenderListen
 			{
 				logger.info("Conversation {} has expired for {}", cid, page);
 				throw new ConversationExpiredException(null, cid, page, RequestCycle.get()
-						.getActiveRequestHandler());
+					.getActiveRequestHandler());
 			}
 		}
 	}

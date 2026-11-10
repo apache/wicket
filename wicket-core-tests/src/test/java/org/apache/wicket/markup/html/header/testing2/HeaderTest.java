@@ -30,7 +30,7 @@ class HeaderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test_1() throws Exception
+	void test_1() throws Exception
 	{
 		executeTest(TestExtendedPage.class, "TestExtendedPage_ExpectedResult.html");
 	}
@@ -40,7 +40,7 @@ class HeaderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test_2() throws Exception
+	void test_2() throws Exception
 	{
 		executeTest(TestExtendedPage2.class, "TestExtendedPage2_ExpectedResult.html");
 	}

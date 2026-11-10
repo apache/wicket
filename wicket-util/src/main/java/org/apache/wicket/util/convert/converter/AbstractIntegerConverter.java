@@ -32,7 +32,7 @@ public abstract class AbstractIntegerConverter<I extends Number> extends Abstrac
 	@Override
 	protected NumberFormat newNumberFormat(Locale locale)
 	{
-		NumberFormat numberFormat  = NumberFormat.getIntegerInstance(locale);
+		NumberFormat numberFormat = NumberFormat.getIntegerInstance(locale);
 		numberFormat.setParseIntegerOnly(true);
 		numberFormat.setGroupingUsed(false);
 		return numberFormat;

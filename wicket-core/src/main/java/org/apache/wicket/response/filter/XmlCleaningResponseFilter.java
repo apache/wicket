@@ -87,7 +87,8 @@ public class XmlCleaningResponseFilter implements IResponseFilter
 	 */
 	public AppendingStringBuffer stripNonValidXMLCharacters(AppendingStringBuffer input)
 	{
-		if (input == null) {
+		if (input == null)
+		{
 			return new AppendingStringBuffer();
 		}
 
@@ -113,13 +114,13 @@ public class XmlCleaningResponseFilter implements IResponseFilter
 					if (isDebugEnabled)
 					{
 						LOG.debug("An invalid character '{}' found at position '{}' in '{}'",
-								String.format("0x%X", codePoint), i, new String(chars));
+							String.format("0x%X", codePoint), i, new String(chars));
 					}
 				}
 				else if (isDebugEnabled)
 				{
 					LOG.debug(String.format("Dropping character for codePoint '0x%X' at position '%d'",
-							codePoint, i));
+						codePoint, i));
 				}
 			}
 			else if (out != null)

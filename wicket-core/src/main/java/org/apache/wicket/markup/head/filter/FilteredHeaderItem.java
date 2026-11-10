@@ -120,9 +120,9 @@ public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
 	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		FilteredHeaderItem that = (FilteredHeaderItem) o;
+		FilteredHeaderItem that = (FilteredHeaderItem)o;
 		return Objects.equals(wrapped, that.wrapped) &&
-				Objects.equals(filterName, that.filterName);
+			Objects.equals(filterName, that.filterName);
 	}
 
 	@Override

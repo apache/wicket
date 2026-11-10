@@ -571,7 +571,8 @@ public class CreditCardValidator implements IValidator<String>
 	{
 		if (creditCardNumber.length() == 16 &&
 			(creditCardNumber.startsWith("417500") || creditCardNumber.startsWith("4917") ||
-				creditCardNumber.startsWith("4913") || creditCardNumber.startsWith("4508") || creditCardNumber.startsWith("4844")))
+				creditCardNumber.startsWith("4913") || creditCardNumber.startsWith("4508") || creditCardNumber
+					.startsWith("4844")))
 		{
 			return CreditCard.VISA_ELECTRON;
 		}

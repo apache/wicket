@@ -54,7 +54,7 @@ public class ExpirationRecoveryPage extends WebPage
 		add(f = createForm("f"), createLink("link"), createAjaxLink("alink"));
 
 		f.add(new TextField<>("text", textModel), createSubmitLink("sl"), createAjaxSubmitLink("asl"));
-    }
+	}
 
 	private Form createForm(String id)
 	{

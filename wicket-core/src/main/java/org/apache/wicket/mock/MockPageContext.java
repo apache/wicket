@@ -34,7 +34,7 @@ public class MockPageContext implements IPageContext
 	final String sessionId;
 
 	MetaDataEntry<?>[] requestData;
-	
+
 	MetaDataEntry<?>[] sessionData;
 
 	Map<String, Object> sessionAttributes = new HashMap<>();
@@ -53,9 +53,11 @@ public class MockPageContext implements IPageContext
 	public <T> T getRequestData(MetaDataKey<T> key, Supplier<T> defaultValue)
 	{
 		T value = key.get(requestData);
-		if (value == null) {
+		if (value == null)
+		{
 			value = defaultValue.get();
-			if (value != null) {
+			if (value != null)
+			{
 				requestData = key.set(requestData, value);
 			}
 		}
@@ -68,23 +70,25 @@ public class MockPageContext implements IPageContext
 	{
 		@SuppressWarnings("unchecked")
 		T value = (T)sessionAttributes.get(key);
-		if (value == null && defaultValue != null) {
+		if (value == null && defaultValue != null)
+		{
 			value = defaultValue.get();
 			sessionAttributes.put(key, value);
 		}
-		
+
 		return value;
 	}
-	
+
 	@Override
 	public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue)
 	{
 		T value = key.get(sessionData);
-		if (value == null && defaultValue != null) {
+		if (value == null && defaultValue != null)
+		{
 			value = defaultValue.get();
 			sessionData = key.set(sessionData, value);
 		}
-		
+
 		return value;
 	}
 
@@ -98,8 +102,9 @@ public class MockPageContext implements IPageContext
 	{
 		requestData = null;
 	}
-	
-	public void clearSession() {
+
+	public void clearSession()
+	{
 		sessionAttributes.clear();
 		sessionData = null;
 	}

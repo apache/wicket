@@ -169,7 +169,7 @@ public class ResourceUtil
 		}
 		return new ResourceReference.UrlAttributes(locale, style, variation);
 	}
-	
+
 	/**
 	 * Reads resource reference attributes (style, locale, variation) encoded in the given URL. 
 	 * 
@@ -182,7 +182,7 @@ public class ResourceUtil
 	public static ResourceReference.UrlAttributes decodeResourceReferenceAttributes(Url url)
 	{
 		Args.notNull(url, "url");
-	
+
 		if (url.getQueryParameters().size() > 0)
 		{
 			Url.QueryParameter param = url.getQueryParameters().get(0);
@@ -343,9 +343,9 @@ public class ResourceUtil
 				byte[] bytes = IOUtils.toByteArray(stream);
 
 				if (charset == null)
-                                {
+				{
 					charset = Charset.defaultCharset();
-                                }
+				}
 
 				return new String(bytes, charset.name());
 			}

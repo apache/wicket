@@ -44,7 +44,7 @@ class StartComponentInPageRedirectToRenderTest extends WicketTestCase
 	}
 
 	@Test
-    void startComponentInPageRedirectToRender()
+	void startComponentInPageRedirectToRender()
 	{
 		tester.startComponentInPage(new Label("foo"));
 	}

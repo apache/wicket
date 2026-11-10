@@ -75,8 +75,7 @@ public final class AjaxEngineSelector
 	};
 
 	/** The two available client-side Ajax engines. */
-	public enum Engine
-	{
+	public enum Engine {
 		JQUERY,
 		VANILLA
 	}

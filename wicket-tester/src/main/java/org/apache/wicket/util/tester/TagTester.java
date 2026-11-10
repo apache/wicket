@@ -455,15 +455,18 @@ public class TagTester
 	 * @return list of <code>TagTester</code>s matching the tags in the markup, that have the given
 	 *         value on the given attribute
 	 */
-	public static List<TagTester> createTagsByAttribute(String markup, String attribute, String value, boolean stopAfterFirst)
+	public static List<TagTester> createTagsByAttribute(String markup, String attribute, String value,
+		boolean stopAfterFirst)
 	{
-		if (Strings.isEmpty(attribute)) {
+		if (Strings.isEmpty(attribute))
+		{
 			return Collections.emptyList();
 		}
-		
-		return createTags(markup, xmlTag -> Objects.equals(value, xmlTag.getAttributes().get(attribute)), stopAfterFirst);
+
+		return createTags(markup, xmlTag -> Objects.equals(value, xmlTag.getAttributes().get(attribute)),
+			stopAfterFirst);
 	}
-	
+
 	public static List<TagTester> createTags(String markup, Function<XmlTag, Boolean> accept, boolean stopAfterFirst)
 	{
 		List<TagTester> testers = new ArrayList<>();
@@ -493,7 +496,7 @@ public class TagTester
 					{
 						break;
 					}
-					
+
 					if (openTag == null)
 					{
 						if (accept.apply(xmlTag))

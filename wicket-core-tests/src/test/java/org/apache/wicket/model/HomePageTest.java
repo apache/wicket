@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 class HomePageTest extends WicketTestCase
 {
 	@Test
-    void testRenderMyPage()
+	void testRenderMyPage()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

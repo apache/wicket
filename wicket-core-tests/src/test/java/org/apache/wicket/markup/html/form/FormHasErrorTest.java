@@ -28,7 +28,7 @@ class FormHasErrorTest extends WicketTestCase
 	 * testFormHasError()
 	 */
 	@Test
-    void testFormHasError()
+	void testFormHasError()
 	{
 		tester.startPage(FormHasErrorPage.class);
 		tester.assertRenderedPage(FormHasErrorPage.class);
@@ -40,7 +40,7 @@ class FormHasErrorTest extends WicketTestCase
 	 * testFormComponentHasError()
 	 */
 	@Test
-    void testFormComponentHasError()
+	void testFormComponentHasError()
 	{
 		tester.startPage(FormHasErrorPage.class);
 		tester.assertRenderedPage(FormHasErrorPage.class);
@@ -52,7 +52,7 @@ class FormHasErrorTest extends WicketTestCase
 	 * testComponentHasError()
 	 */
 	@Test
-    void testComponentHasError()
+	void testComponentHasError()
 	{
 		tester.startPage(FormHasErrorPage.class);
 		tester.assertRenderedPage(FormHasErrorPage.class);

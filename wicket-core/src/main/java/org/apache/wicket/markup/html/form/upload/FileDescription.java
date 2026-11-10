@@ -24,53 +24,62 @@ import com.github.openjson.JSONObject;
 /**
  * Description of file properties as in browser client side.
  */
-public class FileDescription implements Serializable {
+public class FileDescription implements Serializable
+{
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private final String fileName;
-    private final long fileSize;
-    private final Date lastModified;
-    private final String mimeType;
+	private final String fileName;
+	private final long fileSize;
+	private final Date lastModified;
+	private final String mimeType;
 
-   public FileDescription(JSONObject jsonObject) {
-        this(jsonObject.getString("fileName"), jsonObject.getLong("fileSize"),
-                jsonObject.getLong("lastModified"), jsonObject.getString("mimeType"));
-    }
+	public FileDescription(JSONObject jsonObject)
+	{
+		this(jsonObject.getString("fileName"), jsonObject.getLong("fileSize"),
+			jsonObject.getLong("lastModified"), jsonObject.getString("mimeType"));
+	}
 
-    public FileDescription(String fileName, long fileSize, long lastModified, String mimeType) {
-        this.fileName = fileName;
-        this.fileSize = fileSize;
-        this.lastModified = new Date(lastModified);
-        this.mimeType = mimeType;
-    }
+	public FileDescription(String fileName, long fileSize, long lastModified, String mimeType)
+	{
+		this.fileName = fileName;
+		this.fileSize = fileSize;
+		this.lastModified = new Date(lastModified);
+		this.mimeType = mimeType;
+	}
 
-    public String getFileName() {
-        return fileName;
-    }
+	public String getFileName()
+	{
+		return fileName;
+	}
 
-    public long getFileSize() {
-        return fileSize;
-    }
+	public long getFileSize()
+	{
+		return fileSize;
+	}
 
-    public Date getLastModified() {
-        return lastModified;
-    }
+	public Date getLastModified()
+	{
+		return lastModified;
+	}
 
-    public String getMimeType() {
-        return mimeType;
-    }
+	public String getMimeType()
+	{
+		return mimeType;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FileDescription that = (FileDescription) o;
-        return fileName.equals(that.fileName);
-    }
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		FileDescription that = (FileDescription)o;
+		return fileName.equals(that.fileName);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(fileName);
-    }
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(fileName);
+	}
 }

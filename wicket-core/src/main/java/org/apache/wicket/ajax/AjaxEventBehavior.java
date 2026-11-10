@@ -83,7 +83,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	{
 		Args.notEmpty(event, "event");
 
-		this.event = event;	
+		this.event = event;
 	}
 
 	@Override

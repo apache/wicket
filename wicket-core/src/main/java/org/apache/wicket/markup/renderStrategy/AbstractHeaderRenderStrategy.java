@@ -73,8 +73,7 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 					return (IHeaderRenderStrategy)clazz.getDeclaredConstructor().newInstance();
 				}
 			}
-			catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-					| NoSuchMethodException | InvocationTargetException ex)
+			catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex)
 			{
 				// ignore
 			}
@@ -126,8 +125,9 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 
 		rootComponent.internalRenderHead(headerContainer);
 
-		if (rootComponent instanceof InlineEnclosure) {
-			renderInlineEnclosure(headerContainer, (InlineEnclosure) rootComponent);
+		if (rootComponent instanceof InlineEnclosure)
+		{
+			renderInlineEnclosure(headerContainer, (InlineEnclosure)rootComponent);
 		}
 	}
 
@@ -146,23 +146,30 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 	 * @param container the header container to render the header contributions of the enclosure's controller
 	 * @param enclosure the enclosure whose controller's contributions are going to be rendered
 	 */
-	protected void renderInlineEnclosure(HtmlHeaderContainer container, InlineEnclosure enclosure){
+	protected void renderInlineEnclosure(HtmlHeaderContainer container, InlineEnclosure enclosure)
+	{
 
 		final String childId = enclosure.getChildId();
 
 		// Visit the siblings of the enclosure to attempt and find the controller of the enclosure
-		Component enclosureController = enclosure.getParent().visitChildren(new IVisitor<Component, Component>() {
+		Component enclosureController = enclosure.getParent().visitChildren(new IVisitor<Component, Component>()
+		{
 			@Override
-			public void component(Component object, IVisit<Component> visit) {
-				if (object.getId().equals(childId)){
+			public void component(Component object, IVisit<Component> visit)
+			{
+				if (object.getId().equals(childId))
+				{
 					visit.stop(object);
-				} else {
+				}
+				else
+				{
 					visit.dontGoDeeper();
 				}
 			}
 		});
 
-		if (enclosureController != null){
+		if (enclosureController != null)
+		{
 			enclosureController.internalRenderHead(container);
 		}
 	}
@@ -187,8 +194,8 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 
 		if (Application.exists())
 		{
-			HeaderContributorListenerCollection headerContributorListenerCollection =
-					Application.get().getHeaderContributorListeners();
+			HeaderContributorListenerCollection headerContributorListenerCollection = Application.get()
+				.getHeaderContributorListeners();
 			IHeaderResponse headerResponse = headerContainer.getHeaderResponse();
 
 			for (IHeaderContributor listener : headerContributorListenerCollection)

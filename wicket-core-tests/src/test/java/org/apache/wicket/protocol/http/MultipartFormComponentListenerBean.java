@@ -18,7 +18,8 @@ package org.apache.wicket.protocol.http;
 
 import java.io.Serializable;
 
-public class MultipartFormComponentListenerBean implements Serializable {
+public class MultipartFormComponentListenerBean implements Serializable
+{
 	private String textField;
 	private String dropDown;
 	private boolean formVisible = true;
@@ -26,7 +27,8 @@ public class MultipartFormComponentListenerBean implements Serializable {
 	/**
 	 * @return the textField
 	 */
-	public String getTextField() {
+	public String getTextField()
+	{
 		return textField;
 	}
 
@@ -34,12 +36,14 @@ public class MultipartFormComponentListenerBean implements Serializable {
 	/**
 	 * @return the dropDown
 	 */
-	public String getDropDown() {
+	public String getDropDown()
+	{
 		return dropDown;
 	}
 
 
-	public boolean isFormVisible() {
+	public boolean isFormVisible()
+	{
 		return formVisible;
 	}
 
@@ -47,7 +51,8 @@ public class MultipartFormComponentListenerBean implements Serializable {
 	 * @param textField
 	 *                     the textField to set
 	 */
-	public void setTextField(String textField) {
+	public void setTextField(String textField)
+	{
 		this.textField = textField;
 	}
 
@@ -56,11 +61,13 @@ public class MultipartFormComponentListenerBean implements Serializable {
 	 * @param dropDown
 	 *                    the dropDown to set
 	 */
-	public void setDropDown(String dropDown) {
+	public void setDropDown(String dropDown)
+	{
 		this.dropDown = dropDown;
 	}
 
-	public void setFormVisible(boolean formVisible) {
+	public void setFormVisible(boolean formVisible)
+	{
 		this.formVisible = formVisible;
 	}
 }

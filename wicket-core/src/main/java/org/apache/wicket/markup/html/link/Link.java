@@ -395,9 +395,9 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 
 			if (tag == null)
 			{
-			    throw new MarkupNotFoundException("No valid ComponentTag could be found for component with id '" +
-			            getId() + "'. (Are markup id and Java id the same?)");
-            }
+				throw new MarkupNotFoundException("No valid ComponentTag could be found for component with id '" +
+					getId() + "'. (Are markup id and Java id the same?)");
+			}
 
 			// Set href to link to this link's linkClicked method
 			CharSequence url = getURL();

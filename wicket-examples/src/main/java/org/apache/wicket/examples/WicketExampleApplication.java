@@ -60,19 +60,19 @@ public abstract class WicketExampleApplication extends WebApplication
 		getSecuritySettings().setCryptFactory(NoCrypt::new);
 
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
-		
+
 		getResourceSettings().setCssCompressor(new CssUrlReplacer());
 		getCspSettings().blocking().strict().reportBack()
-		                .add(CSPDirective.STYLE_SRC,
-						"https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
-		                .add(CSPDirective.FONT_SRC, "https://maxcdn.bootstrapcdn.com");
-		
+			.add(CSPDirective.STYLE_SRC,
+				"https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
+			.add(CSPDirective.FONT_SRC, "https://maxcdn.bootstrapcdn.com");
+
 		getRequestCycleListeners().add(new IRequestCycleListener()
 		{
 			@Override
 			public void onEndRequest(RequestCycle cycle)
 			{
-				final WebResponse webResponse = (WebResponse) cycle.getResponse();
+				final WebResponse webResponse = (WebResponse)cycle.getResponse();
 				if (webResponse.isHeaderSupported())
 				{
 					final long serverTime = System.currentTimeMillis() - cycle.getStartTime();

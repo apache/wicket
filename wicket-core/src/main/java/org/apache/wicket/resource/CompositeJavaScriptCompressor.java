@@ -84,7 +84,7 @@ public class CompositeJavaScriptCompressor implements IScopeAwareTextResourcePro
 	public String compress(String original)
 	{
 		throw new UnsupportedOperationException(CompositeCssCompressor.class.getSimpleName() +
-				".process() should be used instead!");
+			".process() should be used instead!");
 	}
 
 	/**

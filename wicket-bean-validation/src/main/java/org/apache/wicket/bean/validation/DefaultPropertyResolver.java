@@ -43,7 +43,7 @@ public class DefaultPropertyResolver implements IPropertyResolver
 		{
 			return null;
 		}
-		
+
 		String name;
 		Method getter = delegate.getPropertyGetter();
 		if (getter != null)
@@ -57,12 +57,12 @@ public class DefaultPropertyResolver implements IPropertyResolver
 			else if (methodName.startsWith("is"))
 			{
 				name = methodName.substring(2, 3).toLowerCase(Locale.ROOT) +
-						methodName.substring(3);
+					methodName.substring(3);
 			}
 			else
 			{
 				throw new WicketRuntimeException("Invalid name for a getter method: '"
-						+ methodName + "'. It must start either with 'get' or 'is'.");
+					+ methodName + "'. It must start either with 'get' or 'is'.");
 			}
 			return new Property(getter.getDeclaringClass(), name);
 		}

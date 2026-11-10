@@ -23,9 +23,10 @@ kept under `archive/`. `SECURITY.md` says which lines still receive fixes.
 Versions — the Java release, the Servlet level, library and plugin versions — are not repeated
 here, because they go stale and then mislead. Read them from `pom.xml`.
 
-The code format (tabs, braces on their own line, 100 columns) comes from
-`wicket-eclipse-settings`. No plugin in the build applies or checks it, so nothing will catch you
-getting it wrong: match the file you are editing. Every source file carries the ASF license
+The Java code format (tabs, braces on their own line, 120 columns) is the Eclipse formatter profile
+`codestyle/wicket-formatter.xml`. Spotless checks it during the build and fails on any deviation;
+run `mvn spotless:apply` (add `-pl <module>` to limit it) before you build. Comments are not
+formatted, so keep Javadoc within 120 columns yourself. Every source file carries the ASF license
 header — copy it when you add one.
 
 ## How a change lands

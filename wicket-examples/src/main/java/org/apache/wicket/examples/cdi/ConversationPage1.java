@@ -38,7 +38,8 @@ public class ConversationPage1 extends CdiExamplePage
 
 		add(new Label("count", new PropertyModel<Integer>(this, "counter.count")));
 
-		add(new Link<Void>("increment") {
+		add(new Link<Void>("increment")
+		{
 			@Override
 			public void onClick()
 			{
@@ -46,8 +47,10 @@ public class ConversationPage1 extends CdiExamplePage
 			}
 		});
 
-		add(new Link<Void>("next") {
-			public void onClick() {
+		add(new Link<Void>("next")
+		{
+			public void onClick()
+			{
 				setResponsePage(new ConversationPage2());
 			}
 		});

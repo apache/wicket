@@ -31,7 +31,7 @@ class AutolinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test_1() throws Exception
+	void test_1() throws Exception
 	{
 		executeTest(MyPage.class, "MyPageExpectedResult.html");
 	}
@@ -41,7 +41,7 @@ class AutolinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test_2() throws Exception
+	void test_2() throws Exception
 	{
 		executeTest(PageA.class, "PageAExpectedResult.html");
 	}
@@ -51,7 +51,7 @@ class AutolinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test_3() throws Exception
+	void test_3() throws Exception
 	{
 		executeTest(PageB.class, "PageBExpectedResult.html");
 	}
@@ -61,7 +61,7 @@ class AutolinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test_4() throws Exception
+	void test_4() throws Exception
 	{
 		executeTest(Index.class, "Index_ExpectedResult.html");
 	}

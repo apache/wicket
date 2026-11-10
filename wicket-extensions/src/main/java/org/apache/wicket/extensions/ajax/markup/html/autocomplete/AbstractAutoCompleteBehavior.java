@@ -88,9 +88,9 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		@Override
 		public List<HeaderItem> getDependencies()
 		{
-			ResourceReference wicketAjaxReference = Application.get().
-					getJavaScriptLibrarySettings().getWicketAjaxReference();
-			return Arrays.<HeaderItem>asList(JavaScriptHeaderItem.forReference(wicketAjaxReference));
+			ResourceReference wicketAjaxReference = Application.get().getJavaScriptLibrarySettings()
+				.getWicketAjaxReference();
+			return Arrays.<HeaderItem> asList(JavaScriptHeaderItem.forReference(wicketAjaxReference));
 		}
 
 		@Override
@@ -98,7 +98,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 		{
 			if (this == o) return true;
 			if (o == null || getClass() != o.getClass()) return false;
-			WrappedHeaderItem that = (WrappedHeaderItem) o;
+			WrappedHeaderItem that = (WrappedHeaderItem)o;
 			return Objects.equals(item, that.item);
 		}
 
@@ -156,7 +156,8 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	{
 		response.render(JavaScriptHeaderItem.forReference(AUTOCOMPLETE_JS));
 
-		String initJS = String.format("new Wicket.AutoComplete(%s, %s);", renderAjaxAttributes(getComponent()), constructSettingsJS());
+		String initJS = String.format("new Wicket.AutoComplete(%s, %s);", renderAjaxAttributes(getComponent()),
+			constructSettingsJS());
 
 		final OnDomReadyHeaderItem onDomReady = OnDomReadyHeaderItem.forScript(initJS);
 
@@ -215,13 +216,13 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 		onRequest(val, requestCycle);
 	}
-	
-	@Override
-    protected void updateAjaxAttributes(AjaxRequestAttributes attributes) 
-	{
-        super.updateAjaxAttributes(attributes);
 
-        attributes.setWicketAjaxResponse(false);
-        attributes.setDataType("html");
-    }
+	@Override
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+		super.updateAjaxAttributes(attributes);
+
+		attributes.setWicketAjaxResponse(false);
+		attributes.setDataType("html");
+	}
 }
