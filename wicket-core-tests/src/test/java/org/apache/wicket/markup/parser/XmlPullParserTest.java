@@ -35,6 +35,7 @@ import java.util.Random;
 import org.apache.wicket.markup.parser.IXmlPullParser.HttpTagType;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 /**
  * Quite some tests are already with MarkupParser.
@@ -506,6 +507,7 @@ class XmlPullParserTest
 	}
 
 	@Test
+	@Timeout(30)
 	void anyMarkupEitherParsesOrIsRejectedWithParseException() throws Exception
 	{
 		String[] fragments = { "<", ">", "/", "=", "\"", "'", " ", "\n", "a", "script", "style",
