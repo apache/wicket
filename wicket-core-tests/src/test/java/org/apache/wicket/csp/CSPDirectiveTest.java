@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CSPDirectiveTest {
@@ -56,5 +58,84 @@ class CSPDirectiveTest {
 
         assertThrows(IllegalArgumentException.class, () ->
                 CSPDirective.STYLE_SRC_ATTR.checkValueForDirective(CSPDirectiveSrcValue.UNSAFE_HASHES, List.of(CSPDirectiveSrcValue.NONE)));
+    }
+
+    @Test
+    void requireTrustedTypesForSupportsScriptOnly()
+    {
+        CSPDirective.REQUIRE_TRUSTED_TYPES_FOR.checkValueForDirective(new FixedCSPValue("'script'"), List.of());
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.REQUIRE_TRUSTED_TYPES_FOR.checkValueForDirective(new FixedCSPValue("script"), List.of()));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.REQUIRE_TRUSTED_TYPES_FOR.checkValueForDirective(new FixedCSPValue("'style'"), List.of()));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.REQUIRE_TRUSTED_TYPES_FOR.checkValueForDirective(CSPDirectiveSrcValue.SELF, List.of()));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.REQUIRE_TRUSTED_TYPES_FOR.checkValueForDirective(new FixedCSPValue("'script'"), List.of(new FixedCSPValue("'script'"))));
+    }
+
+    @Test
+    void trustedTypesSupportsValuesFromSpec()
+    {
+        CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("wicket"), List.of());
+        CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("my-Policy_1#=/@.%"), List.of(new FixedCSPValue("wicket")));
+        CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("'allow-duplicates'"), List.of(new FixedCSPValue("wicket")));
+        CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("*"), List.of(new FixedCSPValue("'allow-duplicates'")));
+        CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("'none'"), List.of());
+    }
+
+    @Test
+    void trustedTypesDoesNotSupportOtherValues()
+    {
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("'wicket'"), List.of()));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("wicket default"), List.of()));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("wicket;"), List.of()));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("'self'"), List.of()));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.TRUSTED_TYPES.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of()));
+    }
+
+    @Test
+    void trustedTypesDoesNotSupportNoneAndOthers()
+    {
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("'none'"), List.of(new FixedCSPValue("wicket"))));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("wicket"), List.of(new FixedCSPValue("'none'"))));
+    }
+
+    @Test
+    void trustedTypesAreRenderedInHeader()
+    {
+        CSPHeaderConfiguration configuration = new CSPHeaderConfiguration().requireTrustedTypes()
+                .add(CSPDirective.TRUSTED_TYPES, "myPolicy", "'allow-duplicates'");
+
+        assertEquals("require-trusted-types-for 'script'; trusted-types wicket myPolicy 'allow-duplicates'",
+                configuration.renderHeaderValue(null, null));
+    }
+
+    @Test
+    void presetsDoNotRequireTrustedTypes()
+    {
+        CSPHeaderConfiguration strict = new CSPHeaderConfiguration().strict();
+        CSPHeaderConfiguration unsafeInline = new CSPHeaderConfiguration().unsafeInline();
+
+        assertFalse(strict.getDirectives().containsKey(CSPDirective.REQUIRE_TRUSTED_TYPES_FOR));
+        assertFalse(strict.getDirectives().containsKey(CSPDirective.TRUSTED_TYPES));
+        assertFalse(unsafeInline.getDirectives().containsKey(CSPDirective.REQUIRE_TRUSTED_TYPES_FOR));
+        assertFalse(unsafeInline.getDirectives().containsKey(CSPDirective.TRUSTED_TYPES));
     }
 }

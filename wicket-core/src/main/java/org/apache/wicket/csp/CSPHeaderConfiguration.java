@@ -24,8 +24,10 @@ import static org.apache.wicket.csp.CSPDirective.FONT_SRC;
 import static org.apache.wicket.csp.CSPDirective.IMG_SRC;
 import static org.apache.wicket.csp.CSPDirective.MANIFEST_SRC;
 import static org.apache.wicket.csp.CSPDirective.REPORT_URI;
+import static org.apache.wicket.csp.CSPDirective.REQUIRE_TRUSTED_TYPES_FOR;
 import static org.apache.wicket.csp.CSPDirective.SCRIPT_SRC;
 import static org.apache.wicket.csp.CSPDirective.STYLE_SRC;
+import static org.apache.wicket.csp.CSPDirective.TRUSTED_TYPES;
 import static org.apache.wicket.csp.CSPDirectiveSrcValue.NONCE;
 import static org.apache.wicket.csp.CSPDirectiveSrcValue.NONE;
 import static org.apache.wicket.csp.CSPDirectiveSrcValue.SELF;
@@ -56,6 +58,13 @@ import org.apache.wicket.request.cycle.RequestCycle;
 public class CSPHeaderConfiguration
 {
 	public static final String CSP_VIOLATION_REPORTING_URI = "cspviolation";
+
+	/**
+	 * The name of the Trusted Types policy created by Wicket's JavaScript.
+	 *
+	 * @since 12.0.0
+	 */
+	public static final String TRUSTED_TYPES_POLICY = "wicket";
 
 	private final Map<CSPDirective, List<CSPRenderable>> directives = new EnumMap<>(CSPDirective.class);
 
@@ -167,6 +176,22 @@ public class CSPHeaderConfiguration
 	public CSPHeaderConfiguration reportBackAt(String mountPath)
 	{
 		return add(REPORT_URI, new RelativeURICSPValue(mountPath));
+	}
+
+	/**
+	 * Adds {@code require-trusted-types-for 'script'; trusted-types wicket} to the CSP, which makes
+	 * the browser reject strings at script injection sinks such as {@code innerHTML}. Wicket's own
+	 * JavaScript passes the markup and scripts of an Ajax response through the
+	 * {@value #TRUSTED_TYPES_POLICY} policy unchanged, so the response of the server stays
+	 * trusted as before. Other scripts on the page have to use a policy of their own, to be allowed
+	 * with {@link #add(CSPDirective, String...)}. No preset includes these directives.
+	 *
+	 * @return {@code this} for chaining
+	 * @since 12.0.0
+	 */
+	public CSPHeaderConfiguration requireTrustedTypes()
+	{
+		return add(REQUIRE_TRUSTED_TYPES_FOR, "'script'").add(TRUSTED_TYPES, TRUSTED_TYPES_POLICY);
 	}
 
 	/**

@@ -61,6 +61,17 @@ _CSPHeaderConfiguration_ defines several methods to tune the Content Security Po
            "https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
 ----
 
+No preset requires https://developer.mozilla.org/en-US/docs/Web/API/Trusted_Types_API[Trusted Types]. With _CSPHeaderConfiguration.requireTrustedTypes()_ the directives _require-trusted-types-for 'script'_ and _trusted-types wicket_ are added, which make the browser reject strings at DOM sinks such as _innerHTML_. Wicket's own JavaScript passes the markup and the scripts of an Ajax response through a policy named _wicket_ that leaves them unchanged, so the response of your server stays trusted as before. Other scripts on the page need a policy of their own, whose name has to be added to the _trusted-types_ directive:
+
+[source,java]
+----
+  getCspSettings().blocking()
+      .requireTrustedTypes()
+      .add(CSPDirective.TRUSTED_TYPES, "myPolicy");
+----
+
+Ajax call listeners and dynamic extra parameters that reach _Wicket.Ajax_ as strings instead of functions are not executed under these directives. With the default jQuery based Ajax implementation jQuery 4 is required, and a _script_ element inside the markup of a component makes the Ajax update of that component fail, because jQuery evaluates such elements from a string. The jQuery-free implementation (_WicketAjaxResourceReference_) executes them.
+
 === Guidelines for strict CSP support
 
 To comply to the strict CSP set by default, you'll need to follow a few rules. Most importantly, you cannot use inline styling or Javascript. This includes:

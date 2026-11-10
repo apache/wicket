@@ -124,9 +124,9 @@
 			const newScript = document.createElement('script');
 			for (let a = 0; a < oldScript.attributes.length; a++) {
 				const attr = oldScript.attributes[a];
-				newScript.setAttribute(attr.name, attr.value);
+				newScript.setAttribute(attr.name, attr.name === 'src' ? Wicket.TrustedTypes.scriptURL(attr.value) : attr.value);
 			}
-			newScript.text = oldScript.textContent;
+			newScript.text = Wicket.TrustedTypes.script(oldScript.textContent);
 			oldScript.parentNode.replaceChild(newScript, oldScript);
 		}
 	};
@@ -291,6 +291,50 @@
 			}
 		}
 	};
+
+	/**
+	 * Trusted Types
+	 *
+	 * A page with the Content-Security-Policy "require-trusted-types-for 'script'" accepts no
+	 * strings at DOM sinks such as innerHTML. Wicket trusts the markup and the scripts of an Ajax
+	 * response, so the policy 'wicket' passes them on unchanged. They stay strings where the
+	 * browser has no Trusted Types or the page does not allow the policy.
+	 */
+	Wicket.TrustedTypes = (function () {
+		const identity = function (value) {
+			return value;
+		};
+		let policy;
+
+		const getPolicy = function () {
+			if (!policy) {
+				policy = { createHTML: identity, createScript: identity, createScriptURL: identity };
+				if (window.trustedTypes && window.trustedTypes.createPolicy) {
+					try {
+						policy = window.trustedTypes.createPolicy('wicket', policy);
+					} catch (exception) {
+						Wicket.Log.error("Wicket.TrustedTypes: Cannot create the policy 'wicket'", exception);
+					}
+				}
+			}
+			return policy;
+		};
+
+		return {
+			html: function (text) {
+				// innerHTML takes null as an empty string, createHTML() as "null"
+				return getPolicy().createHTML(text === null ? '' : text);
+			},
+
+			script: function (text) {
+				return getPolicy().createScript(text);
+			},
+
+			scriptURL: function (url) {
+				return getPolicy().createScriptURL(url);
+			}
+		};
+	})();
 
 	/**
 	 * Channel management
@@ -1330,7 +1374,7 @@
 		parse: function (text) {
 			const parser = new DOMParser();
 
-			const xmlDocument = parser.parseFromString(text, "text/xml");
+			const xmlDocument = parser.parseFromString(Wicket.TrustedTypes.html(text), "text/xml");
 
 			return xmlDocument;
 		}
@@ -1692,7 +1736,7 @@
 				const cleanedText = text.trim();
 
 				const template = document.createElement('template');
-				template.innerHTML = cleanedText;
+				template.innerHTML = Wicket.TrustedTypes.html(cleanedText);
 				reviveScripts(template.content);
 
 				element.replaceWith(template.content);
@@ -1711,7 +1755,7 @@
 			const cleanedText = text.trim();
 
 			const template = document.createElement('template');
-			template.innerHTML = cleanedText;
+			template.innerHTML = Wicket.TrustedTypes.html(cleanedText);
 			reviveScripts(template.content);
 
 			element.append(template.content);
@@ -2135,7 +2179,7 @@
 					const attrs = node.attributes;
 					for (let a = 0; a < attrs.length; a++) {
 						const attr = attrs[a];
-						scriptDomNode[attr.name] = attr.value;
+						scriptDomNode[attr.name] = attr.name === 'src' ? Wicket.TrustedTypes.scriptURL(attr.value) : attr.value;
 					}
 
 					// determine whether it is external javascript (has src attribute set)
@@ -2187,7 +2231,7 @@
 						try {
 							Wicket.Ajax._currentSuspension = suspension;
 
-							scriptDomNode.innerHTML = text;
+							scriptDomNode.text = Wicket.TrustedTypes.script(text);
 
 							const id = node.getAttribute("id");
 							Wicket.Head.addElement(scriptDomNode, typeof(id) !== "string" || id.length === 0);

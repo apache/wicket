@@ -158,7 +158,13 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 		};
 
 		// Set row value
-		contentsColumn.innerHTML = this.getOnlyFileNames(element);
+		var fileNames = this.getOnlyFileNames(element);
+		for (var i = 0; i < fileNames.length; i++) {
+			if (i > 0) {
+				contentsColumn.appendChild( document.createElement('br') );
+			}
+			contentsColumn.appendChild( document.createTextNode(fileNames[i]) );
+		}
 		new_row.appendChild( contentsColumn );
 
 		// Add button
@@ -176,43 +182,25 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 		if (inputElement.files && inputElement.files.length > 0)
 		{
 			var files = inputElement.files;
-			var retVal = "";
+			var retVal = [];
 			for (var i = 0; i < files.length; i++)
 			{
-				retVal += this.getOnlyFileName(files[i].name) + '<br>';
+				retVal.push(this.getOnlyFileName(files[i].name));
 			}
-			return retVal.slice(0, retVal.length - 4);
+			return retVal;
 		}
 		else
 		{
-			return this.getOnlyFileName(inputElement.value);
+			return [this.getOnlyFileName(inputElement.value)];
 		}
 	};
 
 	this.getOnlyFileName = function(stringValue)
 	{
-		var toEscape = {
-			"&": "&amp;",
-			"<": "&lt;",
-			">": "&gt;",
-			'"': '&quot;',
-			"'": '&#39;'
-		};
-
-		function replaceChar(ch) {
-			return toEscape[ch] || ch;
-		}
-
-		function htmlEscape(fileName) {
-			return fileName.replace(/[&<>'"]/g, replaceChar);
-		}
-
 		var separatorIndex1 = stringValue.lastIndexOf('\\');
 		var separatorIndex2 = stringValue.lastIndexOf('/');
 		separatorIndex1 = Math.max(separatorIndex1, separatorIndex2);
-		var fileName = separatorIndex1 >= 0 ? stringValue.slice(separatorIndex1 + 1, stringValue.length) : stringValue;
-		fileName = htmlEscape(fileName);
-		return fileName;
+		return separatorIndex1 >= 0 ? stringValue.slice(separatorIndex1 + 1, stringValue.length) : stringValue;
 	};
 
 }

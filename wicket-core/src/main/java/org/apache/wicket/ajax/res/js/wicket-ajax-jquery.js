@@ -230,6 +230,79 @@
 	};
 
 	/**
+	 * Trusted Types
+	 *
+	 * A page with the Content-Security-Policy "require-trusted-types-for 'script'" accepts no
+	 * strings at DOM sinks such as innerHTML. Wicket trusts the markup and the scripts of an Ajax
+	 * response, so the policy 'wicket' passes them on unchanged. They stay strings where the
+	 * browser has no Trusted Types or the page does not allow the policy.
+	 */
+	Wicket.TrustedTypes = (function () {
+		const identity = function (value) {
+			return value;
+		};
+		let policy;
+
+		const getPolicy = function () {
+			if (!policy) {
+				policy = { createHTML: identity, createScript: identity, createScriptURL: identity };
+				if (window.trustedTypes && window.trustedTypes.createPolicy) {
+					try {
+						policy = window.trustedTypes.createPolicy('wicket', policy);
+					} catch (exception) {
+						Wicket.Log.error("Wicket.TrustedTypes: Cannot create the policy 'wicket'", exception);
+					}
+				}
+			}
+			return policy;
+		};
+
+		return {
+			html: function (text) {
+				// innerHTML takes null as an empty string, createHTML() as "null"
+				return getPolicy().createHTML(text === null ? '' : text);
+			},
+
+			script: function (text) {
+				return getPolicy().createScript(text);
+			},
+
+			scriptURL: function (url) {
+				return getPolicy().createScriptURL(url);
+			}
+		};
+	})();
+
+	/**
+	 * Does what jQuery.parseXML does, which gives the text to the DOMParser as a string.
+	 */
+	const parseXml = function (text) {
+		if (!text || typeof(text) !== 'string') {
+			return null;
+		}
+		const xml = Wicket.Xml.parse(text);
+		const parserError = xml.getElementsByTagName('parsererror')[0];
+		if (parserError) {
+			jQuery.error('Invalid XML: ' + jQuery.map(parserError.childNodes, function (el) {
+				return el.textContent;
+			}).join('\n'));
+		}
+		return xml;
+	};
+
+	/**
+	 * jQuery parses a TrustedHTML since 4.0 only, and only one that starts and ends with a tag.
+	 * What follows the last tag of a string is dropped by jQuery, so it is cut off here.
+	 */
+	const toMarkup = function (text) {
+		const end = text.lastIndexOf('>');
+		if (parseInt(jQuery.fn.jquery, 10) >= 4 && text.charAt(0) === '<' && end > 1) {
+			return Wicket.TrustedTypes.html(text.substring(0, end + 1));
+		}
+		return text;
+	};
+
+	/**
 	 * Channel management
 	 *
 	 * Wicket Ajax requests are organized in channels. A channel maintain the order of
@@ -713,6 +786,9 @@
 				},
 				data: data,
 				dataType: attrs.dt,
+				converters: {
+					"text xml": parseXml
+				},
 				async: attrs.async,
 				timeout: attrs.rt,
 				cache: false,
@@ -1119,7 +1195,7 @@
 			parse: function (text) {
 				const parser = new DOMParser();
 
-				const xmlDocument = parser.parseFromString(text, "text/xml");
+				const xmlDocument = parser.parseFromString(Wicket.TrustedTypes.html(text), "text/xml");
 
 				return xmlDocument;
 			}
@@ -1467,7 +1543,7 @@
 					// jQuery 1.9+ expects '<' as the very first character in text
 					const cleanedText = text.trim();
 
-					const $newElement = jQuery(cleanedText);
+					const $newElement = jQuery(toMarkup(cleanedText));
 					jQuery(element).replaceWith($newElement);
 				}
 
@@ -1484,7 +1560,7 @@
 				// jQuery 1.9+ expects '<' as the very first character in text
 				const cleanedText = text.trim();
 
-				const $newElement = jQuery(cleanedText);
+				const $newElement = jQuery(toMarkup(cleanedText));
 				jQuery(element).append($newElement);
 
 				const newElement = Wicket.$(element.id);
@@ -1910,7 +1986,7 @@
 						const attrs = node.attributes;
 						for (let a = 0; a < attrs.length; a++) {
 							const attr = attrs[a];
-							scriptDomNode[attr.name] = attr.value;
+							scriptDomNode[attr.name] = attr.name === 'src' ? Wicket.TrustedTypes.scriptURL(attr.value) : attr.value;
 						}
 						
 						// determine whether it is external javascript (has src attribute set)
@@ -1962,7 +2038,7 @@
 							try {
 								Wicket.Ajax._currentSuspension = suspension;
 
-								scriptDomNode.innerHTML = text;
+								scriptDomNode.text = Wicket.TrustedTypes.script(text);
 
 								const id = node.getAttribute("id");
 								Wicket.Head.addElement(scriptDomNode, typeof(id) !== "string" || id.length === 0);
