@@ -49,4 +49,18 @@
 			<artifactId>wicket-tester</artifactId>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>minify</id>
+						<phase>process-classes</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

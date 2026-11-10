@@ -33,6 +33,12 @@ updates:
       day: "sunday"
     open-pull-requests-limit: 20
 
+  - package-ecosystem: "npm"
+    directory: "/build-tools/minify/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
