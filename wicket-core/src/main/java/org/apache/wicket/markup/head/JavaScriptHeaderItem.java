@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.markup.head;
 
+import java.io.Serial;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -29,6 +31,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  */
 public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -36,6 +39,11 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	 * this header item
 	 */
 	private String markupId;
+
+	/**
+	 * The contentType of the headerItem.
+	 */
+	private JavaScriptContentType contentType = JavaScriptContentType.TEXT_JAVASCRIPT;
 
 	/**
 	 * @return unique id for the javascript element.
@@ -54,6 +62,22 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	public JavaScriptHeaderItem setId(String markupId)
 	{
 		this.markupId = markupId;
+		return this;
+	}
+
+	/**
+	 * @return contentType ("type"-Attribute of script-Tag)
+	 */
+	public JavaScriptContentType getContentType() {
+		return contentType;
+	}
+
+	/**
+	 * Sets the contentType ("type"-Attribute of script-Tag)
+	 * @param contentType contentType
+	 */
+	public JavaScriptHeaderItem setContentType(final JavaScriptContentType contentType) {
+		this.contentType = contentType;
 		return this;
 	}
 
@@ -150,13 +174,19 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		JavaScriptHeaderItem that = (JavaScriptHeaderItem) o;
-		return Objects.equals(markupId, that.markupId);
+		final JavaScriptHeaderItem that = (JavaScriptHeaderItem) o;
+		return Objects.equals(markupId, that.markupId) && Objects.equals(this.plainContentType(), that.plainContentType());
+	}
+
+	private String plainContentType() {
+		return Optional.ofNullable(contentType)
+		  .map(JavaScriptContentType::getType)
+		  .orElse(null);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(markupId);
+		return Objects.hash(markupId, plainContentType()) ;
 	}
 }

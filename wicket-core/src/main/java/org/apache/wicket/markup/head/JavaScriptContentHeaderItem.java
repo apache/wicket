@@ -19,6 +19,7 @@ package org.apache.wicket.markup.head;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
@@ -33,8 +34,6 @@ import org.apache.wicket.util.value.AttributeMap;
 public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 {
 	private final CharSequence javaScript;
-
-	private JavaScriptContentType type = JavaScriptBrowserProcessedContentType.TEXT_JAVASCRIPT;
 
 	/**
 	 * Creates a new {@code JavaScriptContentHeaderItem}.
@@ -59,9 +58,10 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 		return javaScript;
 	}
 
+	@Deprecated // Use getContentType instead. Remove with Wicket 12
 	public JavaScriptContentType getType()
 	{
-		return type;
+		return super.getContentType();
 	}
 
 	/**
@@ -70,20 +70,20 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 	 *
 	 * @param type the new type.
 	 */
+	@Deprecated // use setContentType instead. Remove with Wicket 12
 	public JavaScriptContentHeaderItem setType(final JavaScriptContentType type)
 	{
-		this.type = type;
+		super.setContentType(type);
 		return this;
 	}
 
 	@Override
 	public void render(Response response)
 	{
-		AttributeMap attributes = new AttributeMap();
-		// No attribute or an empty string works the same as `text/javascript`,
+		final AttributeMap attributes = new AttributeMap();
+		// No attribute works the same as `text/javascript`,
 		// but use the latter for backward compatibility.
-		JavaScriptContentType actualType = type == null ?
-				JavaScriptBrowserProcessedContentType.TEXT_JAVASCRIPT : type;
+		final JavaScriptContentType actualType = Optional.ofNullable(getType()).orElse(JavaScriptContentType.TEXT_JAVASCRIPT);
 		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, actualType.getType());
 		attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
 		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
@@ -110,9 +110,8 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
-		JavaScriptContentHeaderItem that = (JavaScriptContentHeaderItem) o;
-		return Objects.equals(javaScript, that.javaScript) &&
-				Objects.equals(type, that.type);
+		final JavaScriptContentHeaderItem that = (JavaScriptContentHeaderItem) o;
+		return Objects.equals(javaScript, that.javaScript);
 	}
 
 	@Override
@@ -121,7 +120,6 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 		// Not using `Objects.hash` for performance reasons
 		int result = super.hashCode();
 		result = 31 * result + ((javaScript != null) ? javaScript.hashCode() : 0);
-		result = 31 * result + ((type != null) ? type.hashCode() : 0);
 		return result;
 	}
 }
