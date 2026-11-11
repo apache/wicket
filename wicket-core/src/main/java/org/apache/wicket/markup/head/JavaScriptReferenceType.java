@@ -23,6 +23,7 @@ import org.apache.wicket.util.lang.Args;
  * To be used to define the "type" attribute of the script tag written
  * by a {@link AbstractJavaScriptReferenceHeaderItem}.
  */
+@Deprecated // Use Constants defined by JavascriptContentType, remove with Wicket 12
 public class JavaScriptReferenceType implements IClusterable {
 
 	public static final JavaScriptReferenceType TEXT_JAVASCRIPT = new JavaScriptReferenceType("text/javascript");
