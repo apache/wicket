@@ -78,8 +78,9 @@ public class AddressesPage extends BasePage {
 				AjaxLink<String> delete = new AjaxLink<>("delete", item.getModel()) {
 					@Override
 					public void onClick(AjaxRequestTarget target) {
-						addresses.remove(getModelObject());
-						statusMessage.setObject("Address " + getModelObject() + " removed.");
+						String address = getModelObject();
+						addresses.remove(address);
+						statusMessage.setObject("Address " + address + " removed.");
 
 						target.add(list, status);
 						target.focusComponent(heading);
