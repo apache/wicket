@@ -129,6 +129,15 @@ h2 > a.link:hover, h3 > a.link:hover, h4 > a.link:hover { text-decoration: under
 	background: var(--paper); border-bottom: 1px solid var(--rule);
 	font: 500 1.0625rem/1.2 var(--sans);
 }
+.skip-link {
+	position: absolute; left: 16px; top: -100px; z-index: 100; padding: 8px 14px;
+	background: var(--ribbon); color: var(--on-ribbon); font-weight: 700; text-decoration: none;
+}
+.skip-link:focus { top: 8px; color: var(--on-ribbon); }
+.visually-hidden {
+	position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+	clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
 .mast-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
 .mast-brand:hover { text-decoration: none; }
 .mast-brand img { width: 30px; height: 30px; display: block; }
@@ -193,7 +202,7 @@ h2 > a.link:hover, h3 > a.link:hover, h4 > a.link:hover { text-decoration: under
 
 /* With the script, a chapter shows its sections only while it is read. */
 .js-toc #toc li > ul { display: none; }
-.js-toc #toc li.is-open > ul { display: block; }
+.js-toc #toc li.is-open > ul, .js-toc #toc li:focus-within > ul { display: block; }
 
 @media screen and (min-width: 768px) {
 	body.toc2 { padding-left: 0; }
@@ -284,7 +293,7 @@ pre.rouge .s, pre.rouge .s1, pre.rouge .s2, pre.rouge .sa, pre.rouge .sb, pre.ro
 pre.rouge .se, pre.rouge .sh, pre.rouge .si, pre.rouge .sx, pre.rouge .sr, pre.rouge .ss, pre.rouge .dl { color: var(--code-green); }
 pre.rouge .m, pre.rouge .mb, pre.rouge .mf, pre.rouge .mh, pre.rouge .mi, pre.rouge .mo, pre.rouge .mx, pre.rouge .il { color: var(--code-green); }
 pre.rouge .nt { color: var(--code-tag); font-weight: 400; }
-pre.rouge .na { color: var(--ribbon-deep); }
+pre.rouge .na, pre.rouge .nl { color: var(--ribbon-deep); }
 pre.rouge .nc, pre.rouge .nn, pre.rouge .ne, pre.rouge .nf, pre.rouge .fm, pre.rouge .nb, pre.rouge .bp,
 pre.rouge .no, pre.rouge .nv, pre.rouge .vc, pre.rouge .vg, pre.rouge .vi, pre.rouge .n { color: var(--ink); font-weight: 400; }
 pre.rouge .nd { color: var(--code-tag); }
@@ -349,6 +358,8 @@ table.tableblock > caption.title {
 
 .imageblock { margin: 1.5rem 0 2rem; }
 .imageblock img { border-radius: 2px; }
+/* Diagrams with a transparent background have dark lines and text. */
+@media (prefers-color-scheme: dark) { .imageblock img { background: #fff; } }
 .imageblock > .title, .videoblock > .title, .exampleblock > .title, .paragraph > .title,
 .ulist > .title, .olist > .title, .dlist > .title, .openblock > .title {
 	margin-top: 6px; color: var(--ink-soft); font: italic 400 1.05rem/1.3 var(--serif);

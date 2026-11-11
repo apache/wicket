@@ -105,6 +105,8 @@
 							<source-highlighter>rouge</source-highlighter>
 							<rouge-css>class</rouge-css>
 							<webfonts>false</webfonts>
+							<wicket_line>${parsedVersion.majorVersion}.x</wicket_line>
+							<wicket_line_major>${parsedVersion.majorVersion}</wicket_line_major>
 						</attributes>
 						<preserveDirectories>true</preserveDirectories>
 						<requires>
@@ -201,6 +203,18 @@
 					<plugin>
 						<groupId>org.asciidoctor</groupId>
 						<artifactId>asciidoctor-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>parse-version</id>
+								<goals>
+									<goal>parse-version</goal>
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>

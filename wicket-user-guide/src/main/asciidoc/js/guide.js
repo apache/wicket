@@ -26,28 +26,50 @@
 	var LANGUAGES = { java: 'Java', html: 'HTML', xml: 'XML', javascript: 'JavaScript', js: 'JavaScript',
 		bash: 'Shell', shell: 'Shell', properties: 'Properties', css: 'CSS', json: 'JSON' };
 
+	function addLandmarks() {
+		var content = document.getElementById('content');
+		if (content) {
+			content.setAttribute('role', 'main');
+		}
+		var toc = document.getElementById('toc');
+		if (toc) {
+			toc.setAttribute('role', 'navigation');
+			toc.setAttribute('aria-label', 'Table of contents');
+		}
+	}
+
 	function addCodeBars() {
+		var status = document.createElement('div');
+		status.className = 'visually-hidden';
+		status.setAttribute('role', 'status');
+		document.body.appendChild(status);
+
 		document.querySelectorAll('.listingblock > .content > pre').forEach(function (pre) {
 			var code = pre.querySelector('code');
 			var lang = code && code.getAttribute('data-lang');
+			var language = lang ? (LANGUAGES[lang] || lang) : '';
 			var bar = document.createElement('div');
 			bar.className = 'code-bar';
 
 			var label = document.createElement('span');
 			label.className = 'code-lang';
-			label.textContent = lang ? (LANGUAGES[lang] || lang) : '';
+			label.textContent = language;
 			bar.appendChild(label);
 
 			if (navigator.clipboard) {
 				var button = document.createElement('button');
 				button.type = 'button';
 				button.className = 'code-copy';
-				button.setAttribute('aria-live', 'polite');
+				button.setAttribute('aria-label', language ? 'Copy ' + language + ' code' : 'Copy code');
 				button.textContent = 'Copy';
 				button.addEventListener('click', function () {
 					navigator.clipboard.writeText(pre.textContent).then(function () {
 						button.textContent = 'Copied';
-						setTimeout(function () { button.textContent = 'Copy'; }, 2000);
+						status.textContent = 'Copied';
+						setTimeout(function () {
+							button.textContent = 'Copy';
+							status.textContent = '';
+						}, 2000);
 					});
 				});
 				bar.appendChild(button);
@@ -115,12 +137,14 @@
 			}
 			if (current) {
 				current.link.classList.remove('is-current');
+				current.link.removeAttribute('aria-current');
 			}
 			toc.querySelectorAll('li.is-open').forEach(function (li) {
 				li.classList.remove('is-open');
 			});
 			current = found;
 			current.link.classList.add('is-current');
+			current.link.setAttribute('aria-current', 'location');
 			for (var li = current.link.parentElement; li && li !== toc; li = li.parentElement) {
 				if (li.tagName === 'LI') {
 					li.classList.add('is-open');
@@ -149,6 +173,7 @@
 		update();
 	}
 
+	addLandmarks();
 	addCodeBars();
 	markWicketMarkup();
 	followSections();

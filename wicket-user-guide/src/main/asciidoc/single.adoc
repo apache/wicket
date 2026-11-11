@@ -22,8 +22,6 @@ The Apache Software Foundation
 :toc: left
 :sectlinks:
 :docinfo: shared
-:wicket_line: 12.x
-:wicket_line_major: 12
 
 :sectnums:
 
