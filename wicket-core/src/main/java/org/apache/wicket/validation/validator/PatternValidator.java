@@ -49,8 +49,9 @@ import org.apache.wicket.validation.ValidationError;
  * the input too. The browser compiles that attribute as a JavaScript regular expression with the
  * <code>v</code> flag and ignores it when it does not compile, so the pattern has to be valid there
  * as well: escape a <code>-</code> in a character class (<code>[a-z\-]</code>), for example.
- * Compile flags such as {@link Pattern#CASE_INSENSITIVE} are not rendered.
- * 
+ * Compile flags such as {@link Pattern#CASE_INSENSITIVE} are not rendered, and a
+ * {@link #setReverse(boolean) reversed} validator renders no attribute at all.
+ *
  * @see java.util.regex.Pattern
  * 
  * @author Jonathan Locke
@@ -125,8 +126,10 @@ public class PatternValidator implements IValidator<String>
 	}
 
 	/**
-	 * If set to true then input that matches the pattern is considered invalid.
-	 * 
+	 * If set to true then input that matches the pattern is considered invalid. The browser cannot
+	 * check that, so a reversed validator renders no HTML <code>pattern</code> attribute and the
+	 * input is checked on the server only.
+	 *
 	 * @param reverse
 	 * @return itself
 	 */
@@ -134,6 +137,18 @@ public class PatternValidator implements IValidator<String>
 	{
 		this.reverse = reverse;
 		return this;
+	}
+
+	/**
+	 * Tells whether input that matches the pattern is considered invalid.
+	 *
+	 * @return <code>true</code> if input that matches the pattern is invalid
+	 * @see #setReverse(boolean)
+	 * @since 12.0.0
+	 */
+	public final boolean isReverse()
+	{
+		return reverse;
 	}
 
 	/**
