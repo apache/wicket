@@ -15,7 +15,7 @@
    limitations under the License.
 ////
 
-= Wicket 12.x Reference Guide
+= Wicket {wicket_line} Reference Guide
 The Apache Software Foundation
 :description: Official User Guide for Apache Wicket framework. 
 :keywords: Apache Wicket, User Guide, examples, AJAX, stateless
