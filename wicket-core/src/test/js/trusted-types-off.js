@@ -142,8 +142,6 @@ Wicket.Event.add(window, 'domready', function() {
 		assert.strictEqual(selector.getOnlyFileNames(input), '&lt;b&gt;R&amp;D &quot;1&quot;.txt<br>it&#39;s.png');
 		assert.strictEqual(selector.getOnlyFileNames({ value: '/home/files/a&b.txt' }), 'a&amp;b.txt');
 		assert.strictEqual(selector.getOnlyFileName('C:\\files\\<b>.txt'), '&lt;b&gt;.txt');
-		assert.deepEqual(selector.getOnlyFileNamesAsArray(input), ['<b>R&D "1".txt', "it's.png"]);
-		assert.deepEqual(selector.getOnlyFileNamesAsArray({ value: '/home/files/a&b.txt' }), ['a&b.txt']);
 	});
 
 	test('MultiSelector.addListRow - file names are shown as text', assert => {
@@ -152,5 +150,25 @@ Wicket.Event.add(window, 'domready', function() {
 		selector.addListRow({ files: [ { name: 'C:\\files\\<b>R&D "1".txt' }, { name: "it's.png" } ] });
 
 		assert.equal(Wicket.$('uploadList').rows[0].cells[0].innerHTML, '&lt;b&gt;R&amp;D "1".txt<br>it\'s.png');
+	});
+
+	test('MultiSelector.addListRow - overridden functions change the list', assert => {
+		const list = document.createElement('table');
+		const selector = new MultiSelector('upload', list, 2, true, 'Remove');
+		selector.getOnlyFileName = function (stringValue) {
+			return stringValue.toUpperCase();
+		};
+
+		selector.addListRow({ value: 'a.txt' });
+
+		assert.equal(list.rows[0].cells[0].innerHTML, 'A.TXT', 'addListRow uses an overridden getOnlyFileName');
+
+		selector.getOnlyFileNames = function () {
+			return '<i>custom</i>';
+		};
+
+		selector.addListRow({ value: 'b.txt' });
+
+		assert.equal(list.rows[1].cells[0].innerHTML, '<i>custom</i>', 'addListRow uses an overridden getOnlyFileNames');
 	});
 });

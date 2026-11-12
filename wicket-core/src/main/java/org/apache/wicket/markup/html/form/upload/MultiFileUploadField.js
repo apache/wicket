@@ -158,13 +158,7 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 		};
 
 		// Set row value
-		var fileNames = this.getOnlyFileNamesAsArray(element);
-		for (var i = 0; i < fileNames.length; i++) {
-			if (i > 0) {
-				contentsColumn.appendChild( document.createElement('br') );
-			}
-			contentsColumn.appendChild( document.createTextNode(fileNames[i]) );
-		}
+		contentsColumn.innerHTML = Wicket.TrustedTypes.html(this.getOnlyFileNames(element));
 		new_row.appendChild( contentsColumn );
 
 		// Add button
@@ -177,32 +171,6 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 		
 	};
 
-	/**
-	 * @return {Array} the names of the selected files without their path, not escaped
-	 */
-	this.getOnlyFileNamesAsArray = function(inputElement)
-	{
-		var values = [];
-		if (inputElement.files && inputElement.files.length > 0)
-		{
-			for (var i = 0; i < inputElement.files.length; i++)
-			{
-				values.push(inputElement.files[i].name);
-			}
-		}
-		else
-		{
-			values.push(inputElement.value);
-		}
-		return values.map(function(stringValue) {
-			var separatorIndex = Math.max(stringValue.lastIndexOf('\\'), stringValue.lastIndexOf('/'));
-			return separatorIndex >= 0 ? stringValue.slice(separatorIndex + 1, stringValue.length) : stringValue;
-		});
-	};
-
-	/**
-	 * @deprecated the list shows the names of getOnlyFileNamesAsArray() as text
-	 */
 	this.getOnlyFileNames = function(inputElement)
 	{
 		if (inputElement.files && inputElement.files.length > 0)
@@ -221,9 +189,6 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 		}
 	};
 
-	/**
-	 * @deprecated the list shows the names of getOnlyFileNamesAsArray() as text
-	 */
 	this.getOnlyFileName = function(stringValue)
 	{
 		var toEscape = {

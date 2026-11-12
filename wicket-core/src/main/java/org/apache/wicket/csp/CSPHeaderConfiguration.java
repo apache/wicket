@@ -211,9 +211,11 @@ public class CSPHeaderConfiguration
 
 	/**
 	 * True when the {@code trusted-types} directive allows the {@value #TRUSTED_TYPES_POLICY}
-	 * policy, which makes Wicket's JavaScript create and use that policy.
+	 * policy, by its name or with {@code *}, which makes Wicket's JavaScript create and use that
+	 * policy.
 	 *
-	 * @return When the {@code trusted-types} directive contains {@value #TRUSTED_TYPES_POLICY}.
+	 * @return When the {@code trusted-types} directive contains {@value #TRUSTED_TYPES_POLICY} or
+	 *         {@code *}.
 	 * @since 12.0.0
 	 */
 	public boolean isTrustedTypesEnabled()
@@ -350,7 +352,8 @@ public class CSPHeaderConfiguration
 			.flatMap(List::stream)
 			.anyMatch(value -> value == CSPDirectiveSrcValue.NONCE);
 
-		trustedTypesEnabled = contains(TRUSTED_TYPES, TRUSTED_TYPES_POLICY);
+		trustedTypesEnabled = contains(TRUSTED_TYPES, TRUSTED_TYPES_POLICY)
+			|| contains(TRUSTED_TYPES, "*");
 
 		reportUriMountPath = null;
 		List<CSPRenderable> reportValues = directives.get(CSPDirective.REPORT_URI);

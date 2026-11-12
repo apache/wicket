@@ -140,6 +140,20 @@ class CSPTrustedTypesTest extends WicketTestCase
 	}
 
 	@Test
+	void flagIsRenderedForWildcardPolicy()
+	{
+		settings().blocking()
+			.add(CSPDirective.REQUIRE_TRUSTED_TYPES_FOR, "'script'")
+			.add(CSPDirective.TRUSTED_TYPES, "*");
+
+		tester.startPage(AjaxPage.class);
+
+		assertEquals("require-trusted-types-for 'script'; trusted-types *",
+			tester.getLastResponse().getHeader("Content-Security-Policy"));
+		assertFlagBeforeAjaxScript("wicket-ajax-jquery.js");
+	}
+
+	@Test
 	void flagIsNotRenderedOnUnprotectedPage()
 	{
 		settings().setProtectedFilter(page -> !(page instanceof AjaxPage))
