@@ -64,6 +64,7 @@ module.exports = function(grunt) {
 			"../../wicket-core/src/test/js/event.js",
 			"../../wicket-core/src/test/js/timer.js",
 			"../../wicket-core/src/test/js/trusted-types.js",
+			"../../wicket-core/src/test/js/trusted-types-off.js",
 			"../../wicket-core/src/test/js/upload-to-resource.js"
 		],
 		extensionsTestsJs = [
@@ -137,7 +138,8 @@ module.exports = function(grunt) {
 						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?4.0.0',
 						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?4.0.0',
-						'http://localhost:38888/wicket-core/src/test/js/trusted-types.html?4.0.0'
+						'http://localhost:38888/wicket-core/src/test/js/trusted-types.html?4.0.0',
+						'http://localhost:38888/wicket-core/src/test/js/trusted-types-off.html?4.0.0'
 					],
 					puppeteer: {
 						headless: true,
@@ -157,7 +159,8 @@ module.exports = function(grunt) {
 						'http://localhost:38888/wicket-extensions/src/test/js/palette.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/trap-focus.html?vanilla',
 						'http://localhost:38888/wicket-extensions/src/test/js/veil.html?vanilla',
-						'http://localhost:38888/wicket-core/src/test/js/trusted-types.html?vanilla'
+						'http://localhost:38888/wicket-core/src/test/js/trusted-types.html?vanilla',
+						'http://localhost:38888/wicket-core/src/test/js/trusted-types-off.html?vanilla'
 					],
 					puppeteer: {
 						headless: true,

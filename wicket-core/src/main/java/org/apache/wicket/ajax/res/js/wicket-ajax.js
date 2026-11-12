@@ -293,12 +293,32 @@
 	};
 
 	/**
+	 * Tells whether the server rendered <meta name="wicket-trusted-types">, which it does when
+	 * the application allows the Trusted Types policy 'wicket' in its Content-Security-Policy
+	 * (CSPHeaderConfiguration#requireTrustedTypes()).
+	 */
+	const isTrustedTypesEnabled = (function () {
+		let enabled;
+
+		return function () {
+			if (enabled === undefined) {
+				enabled = document.querySelector('meta[name="wicket-trusted-types"]') !== null;
+			}
+			return enabled;
+		};
+	})();
+
+	/**
 	 * Trusted Types
 	 *
 	 * A page with the Content-Security-Policy "require-trusted-types-for 'script'" accepts no
-	 * strings at DOM sinks such as innerHTML. Wicket trusts the markup and the scripts of an Ajax
-	 * response, so the policy 'wicket' passes them on unchanged. They stay strings where the
-	 * browser has no Trusted Types or the page does not allow the policy.
+	 * strings at DOM sinks such as innerHTML. When the application enabled Trusted Types, the
+	 * policy 'wicket' is created on first use and the markup and the scripts of an Ajax response
+	 * are passed through it unchanged. Otherwise, or where the browser has no Trusted Types, no
+	 * policy is created and html(), script() and scriptURL() return their argument as it is.
+	 *
+	 * The policy turns any string into a trusted value. These functions must only be given
+	 * markup and scripts that come from the server, never text from another source.
 	 */
 	Wicket.TrustedTypes = (function () {
 		const identity = function (value) {
@@ -309,7 +329,7 @@
 		const getPolicy = function () {
 			if (!policy) {
 				policy = { createHTML: identity, createScript: identity, createScriptURL: identity };
-				if (window.trustedTypes && window.trustedTypes.createPolicy) {
+				if (isTrustedTypesEnabled() && window.trustedTypes && window.trustedTypes.createPolicy) {
 					try {
 						policy = window.trustedTypes.createPolicy('wicket', policy);
 					} catch (exception) {
@@ -323,7 +343,7 @@
 		return {
 			html: function (text) {
 				// innerHTML takes null as an empty string, createHTML() as "null"
-				return getPolicy().createHTML(text === null ? '' : text);
+				return getPolicy().createHTML(text === null && isTrustedTypesEnabled() ? '' : text);
 			},
 
 			script: function (text) {
@@ -2231,7 +2251,11 @@
 						try {
 							Wicket.Ajax._currentSuspension = suspension;
 
-							scriptDomNode.text = Wicket.TrustedTypes.script(text);
+							if (isTrustedTypesEnabled()) {
+								scriptDomNode.text = Wicket.TrustedTypes.script(text);
+							} else {
+								scriptDomNode.innerHTML = text;
+							}
 
 							const id = node.getAttribute("id");
 							Wicket.Head.addElement(scriptDomNode, typeof(id) !== "string" || id.length === 0);

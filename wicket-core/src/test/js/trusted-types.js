@@ -84,6 +84,10 @@ Wicket.Event.add(window, 'domready', function() {
 			return script.src;
 		});
 
+		const flag = frameWindow.document.createElement('meta');
+		flag.name = 'wicket-trusted-types';
+		frameWindow.document.head.appendChild(flag);
+
 		const load = function () {
 			if (sources.length > 0) {
 				const script = frameWindow.document.createElement('script');
@@ -120,10 +124,10 @@ Wicket.Event.add(window, 'domready', function() {
 
 		assert.equal(Wicket.$('withTextAfter').tagName.toLowerCase(), 'span');
 		assert.equal(Wicket.$('withTextAfter').textContent, 'new body');
+		assert.equal(Wicket.$('withTextAfter').nextSibling.nodeValue, ' text');
 	});
 
-	// jQuery 4.0.0 evaluates the scripts of the markup it inserts itself, from a string
-	test.if('Wicket.DOM.replace - inline and external scripts in the markup', typeof(jQuery) === 'undefined', assert => {
+	test('Wicket.DOM.replace - inline and external scripts in the markup', assert => {
 		const done = assert.async();
 		assert.expect(4);
 		Wicket.assert = assert;
@@ -137,6 +141,63 @@ Wicket.Event.add(window, 'domready', function() {
 			'<script src="data/start.js?markup"></script></div>');
 
 		assert.equal(Wicket.$('withScripts').firstChild.nodeValue, 'new body');
+	});
+
+	test('Wicket.DOM.replace - the scripts run in the order of the jQuery-free implementation', assert => {
+		const done = assert.async();
+		const old = Wicket.$('withScripts');
+		Wicket.testSteps = [];
+		Wicket.testDone = function () {
+			Wicket.testSteps.push('external');
+			assert.deepEqual(Wicket.testSteps, ['first: DIV, old element removed: true', 'second: P', 'replaced', 'external']);
+			done();
+		};
+		Wicket.testOld = old;
+
+		Wicket.DOM.replace(old, '<div id="withScripts">' +
+			'<script>Wicket.testSteps.push("first: " + Wicket.$("withScripts").tagName + ", old element removed: " + !Wicket.testOld.isConnected);</script>' +
+			'<script src="data/start.js?order"></script>' +
+			'<p id="afterScripts"><script>Wicket.testSteps.push("second: " + Wicket.$("afterScripts").tagName);</script></p></div>');
+		Wicket.testSteps.push('replaced');
+	});
+
+	test('Wicket.DOM.add - inline and external scripts in the markup', assert => {
+		const done = assert.async();
+		Wicket.testSteps = [];
+		Wicket.testDone = function () {
+			Wicket.testSteps.push('external');
+			assert.deepEqual(Wicket.testSteps, ['inline: 1', 'added', 'external']);
+			done();
+		};
+
+		Wicket.DOM.add(Wicket.$('addToWithScripts'), '<li>one' +
+			'<script>Wicket.testSteps.push("inline: " + Wicket.$("addToWithScripts").children.length);</script>' +
+			'<script src="data/start.js?add"></script></li>');
+		Wicket.testSteps.push('added');
+	});
+
+	test.if('Wicket.DOM.replace - jQuery data and event handlers of the removed elements are cleaned up', typeof(jQuery) !== 'undefined', assert => {
+		const old = Wicket.$('withJQueryData');
+		const child = old.firstChild;
+		let handled = 0;
+		const handler = function () {
+			handled++;
+		};
+		jQuery(old).on('click', handler).data('key', 'value');
+		jQuery(child).on('click', handler).data('key', 'value');
+		jQuery(child).trigger('click');
+		assert.equal(handled, 2, 'Both handlers run before the replacement');
+		assert.ok(jQuery.hasData(old) && jQuery.hasData(child));
+
+		Wicket.DOM.replace(old, '<div id="withJQueryData">new body</div>');
+
+		assert.notOk(old.isConnected, 'The old element is removed');
+		assert.notOk(jQuery.hasData(old), 'No jQuery data is left at the old element');
+		assert.notOk(jQuery.hasData(child), 'No jQuery data is left at its child');
+		assert.strictEqual(jQuery(old).data('key'), undefined);
+		jQuery(child).trigger('click');
+		assert.equal(handled, 2, 'No handler is left at the old elements');
+		assert.equal(Wicket.$('withJQueryData').textContent, 'new body');
 	});
 
 	test('Wicket.DOM.add', assert => {
@@ -193,6 +254,49 @@ Wicket.Event.add(window, 'domready', function() {
 				function () {
 					assert.equal(Wicket.$('componentToReplace').textContent, 'new body');
 					done();
+				}
+			]
+		});
+	});
+
+	test('Ajax response with header contribution, priority evaluation, component and evaluation', assert => {
+		const done = assert.async();
+		Wicket.testSteps = [];
+		Wicket.testDone = function () {
+			Wicket.testSteps.push('external script: ' + document.currentScript.src.split('?')[1]);
+			if (document.currentScript.src.split('?')[1] === 'component') {
+				assert.deepEqual(Wicket.testSteps, [
+					'external script: header-contribution',
+					'header-contribution',
+					'priority-evaluate: old body',
+					'component: SPAN',
+					'evaluate: new body',
+					'success handler',
+					'complete handler',
+					'external script: component'
+				]);
+				assert.ok(document.querySelector('head link[href="data/test.css?trusted-types"]'), 'The stylesheet is added');
+				assert.equal(Wicket.$('trusted-types-header-contribution').tagName.toLowerCase(), 'script');
+				done();
+			}
+		};
+
+		Wicket.Ajax.ajax({
+			u: 'data/ajax/trustedTypes.xml',
+			c: 'componentToReplace',
+			sh: [
+				function () {
+					Wicket.testSteps.push('success handler');
+				}
+			],
+			fh: [
+				function (attrs, jqXHR, errorMessage) {
+					assert.ok(false, 'Failure handler should not be executed: ' + errorMessage);
+				}
+			],
+			coh: [
+				function () {
+					Wicket.testSteps.push('complete handler');
 				}
 			]
 		});

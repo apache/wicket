@@ -72,6 +72,8 @@ public class CSPHeaderConfiguration
 
 	private boolean nonceEnabled = false;
 
+	private boolean trustedTypesEnabled = false;
+
 	private String reportUriMountPath = null;
 
 	/**
@@ -184,14 +186,39 @@ public class CSPHeaderConfiguration
 	 * JavaScript passes the markup and scripts of an Ajax response through the
 	 * {@value #TRUSTED_TYPES_POLICY} policy unchanged, so the response of the server stays
 	 * trusted as before. Other scripts on the page have to use a policy of their own, to be allowed
-	 * with {@link #add(CSPDirective, String...)}. No preset includes these directives.
+	 * with {@link #add(CSPDirective, String...)}. No preset includes these directives. Values that
+	 * are already present are not added again, so this method can be called more than once.
+	 * <p>
+	 * The policy turns every string it is given into a trusted value, so with these directives
+	 * application JavaScript must only hand markup and scripts of the server to
+	 * {@code Wicket.DOM.replace}, {@code Wicket.DOM.add} and {@code Wicket.Xml.parse}.
 	 *
 	 * @return {@code this} for chaining
 	 * @since 12.0.0
 	 */
 	public CSPHeaderConfiguration requireTrustedTypes()
 	{
-		return add(REQUIRE_TRUSTED_TYPES_FOR, "'script'").add(TRUSTED_TYPES, TRUSTED_TYPES_POLICY);
+		if (!contains(REQUIRE_TRUSTED_TYPES_FOR, "'script'"))
+		{
+			add(REQUIRE_TRUSTED_TYPES_FOR, "'script'");
+		}
+		if (!trustedTypesEnabled)
+		{
+			add(TRUSTED_TYPES, TRUSTED_TYPES_POLICY);
+		}
+		return this;
+	}
+
+	/**
+	 * True when the {@code trusted-types} directive allows the {@value #TRUSTED_TYPES_POLICY}
+	 * policy, which makes Wicket's JavaScript create and use that policy.
+	 *
+	 * @return When the {@code trusted-types} directive contains {@value #TRUSTED_TYPES_POLICY}.
+	 * @since 12.0.0
+	 */
+	public boolean isTrustedTypesEnabled()
+	{
+		return trustedTypesEnabled;
 	}
 
 	/**
@@ -323,6 +350,8 @@ public class CSPHeaderConfiguration
 			.flatMap(List::stream)
 			.anyMatch(value -> value == CSPDirectiveSrcValue.NONCE);
 
+		trustedTypesEnabled = contains(TRUSTED_TYPES, TRUSTED_TYPES_POLICY);
+
 		reportUriMountPath = null;
 		List<CSPRenderable> reportValues = directives.get(CSPDirective.REPORT_URI);
 		if (reportValues != null && !reportValues.isEmpty())
@@ -334,6 +363,14 @@ public class CSPHeaderConfiguration
 			}
 		}
 		return this;
+	}
+
+	private boolean contains(CSPDirective directive, String value)
+	{
+		return directives.getOrDefault(directive, List.of())
+			.stream()
+			.anyMatch(existing -> existing instanceof FixedCSPValue
+				&& value.equals(existing.toString()));
 	}
 
 	private void doAddDirective(CSPDirective directive, CSPRenderable value)

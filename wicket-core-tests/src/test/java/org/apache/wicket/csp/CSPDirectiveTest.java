@@ -104,7 +104,21 @@ class CSPDirectiveTest {
                 CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("'self'"), List.of()));
 
         assertThrows(IllegalArgumentException.class, () ->
-                CSPDirective.TRUSTED_TYPES.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of()));
+                CSPDirective.TRUSTED_TYPES.checkValueForDirective(CSPDirectiveSrcValue.SELF, List.of()));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.TRUSTED_TYPES.checkValueForDirective(CSPDirectiveSrcValue.WILDCARD, List.of()));
+    }
+
+    @Test
+    void trustedTypesSupportsNoneOfCSPDirectiveSrcValue()
+    {
+        CSPDirective.TRUSTED_TYPES.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of());
+
+        CSPHeaderConfiguration configuration = new CSPHeaderConfiguration()
+                .add(CSPDirective.TRUSTED_TYPES, CSPDirectiveSrcValue.NONE);
+
+        assertEquals("trusted-types 'none'", configuration.renderHeaderValue(null, null));
     }
 
     @Test
@@ -115,6 +129,25 @@ class CSPDirectiveTest {
 
         assertThrows(IllegalArgumentException.class, () ->
                 CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("wicket"), List.of(new FixedCSPValue("'none'"))));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.TRUSTED_TYPES.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of(new FixedCSPValue("wicket"))));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.TRUSTED_TYPES.checkValueForDirective(new FixedCSPValue("wicket"), List.of(CSPDirectiveSrcValue.NONE)));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                CSPDirective.TRUSTED_TYPES.checkValueForDirective(CSPDirectiveSrcValue.NONE, List.of(CSPDirectiveSrcValue.NONE)));
+    }
+
+    @Test
+    void requireTrustedTypesIsIdempotent()
+    {
+        CSPHeaderConfiguration configuration = new CSPHeaderConfiguration().requireTrustedTypes()
+                .requireTrustedTypes();
+
+        assertEquals("require-trusted-types-for 'script'; trusted-types wicket",
+                configuration.renderHeaderValue(null, null));
     }
 
     @Test

@@ -158,7 +158,7 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 		};
 
 		// Set row value
-		var fileNames = this.getOnlyFileNames(element);
+		var fileNames = this.getOnlyFileNamesAsArray(element);
 		for (var i = 0; i < fileNames.length; i++) {
 			if (i > 0) {
 				contentsColumn.appendChild( document.createElement('br') );
@@ -177,30 +177,77 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 		
 	};
 
+	/**
+	 * @return {Array} the names of the selected files without their path, not escaped
+	 */
+	this.getOnlyFileNamesAsArray = function(inputElement)
+	{
+		var values = [];
+		if (inputElement.files && inputElement.files.length > 0)
+		{
+			for (var i = 0; i < inputElement.files.length; i++)
+			{
+				values.push(inputElement.files[i].name);
+			}
+		}
+		else
+		{
+			values.push(inputElement.value);
+		}
+		return values.map(function(stringValue) {
+			var separatorIndex = Math.max(stringValue.lastIndexOf('\\'), stringValue.lastIndexOf('/'));
+			return separatorIndex >= 0 ? stringValue.slice(separatorIndex + 1, stringValue.length) : stringValue;
+		});
+	};
+
+	/**
+	 * @deprecated the list shows the names of getOnlyFileNamesAsArray() as text
+	 */
 	this.getOnlyFileNames = function(inputElement)
 	{
 		if (inputElement.files && inputElement.files.length > 0)
 		{
 			var files = inputElement.files;
-			var retVal = [];
+			var retVal = "";
 			for (var i = 0; i < files.length; i++)
 			{
-				retVal.push(this.getOnlyFileName(files[i].name));
+				retVal += this.getOnlyFileName(files[i].name) + '<br>';
 			}
-			return retVal;
+			return retVal.slice(0, retVal.length - 4);
 		}
 		else
 		{
-			return [this.getOnlyFileName(inputElement.value)];
+			return this.getOnlyFileName(inputElement.value);
 		}
 	};
 
+	/**
+	 * @deprecated the list shows the names of getOnlyFileNamesAsArray() as text
+	 */
 	this.getOnlyFileName = function(stringValue)
 	{
+		var toEscape = {
+			"&": "&amp;",
+			"<": "&lt;",
+			">": "&gt;",
+			'"': '&quot;',
+			"'": '&#39;'
+		};
+
+		function replaceChar(ch) {
+			return toEscape[ch] || ch;
+		}
+
+		function htmlEscape(fileName) {
+			return fileName.replace(/[&<>'"]/g, replaceChar);
+		}
+
 		var separatorIndex1 = stringValue.lastIndexOf('\\');
 		var separatorIndex2 = stringValue.lastIndexOf('/');
 		separatorIndex1 = Math.max(separatorIndex1, separatorIndex2);
-		return separatorIndex1 >= 0 ? stringValue.slice(separatorIndex1 + 1, stringValue.length) : stringValue;
+		var fileName = separatorIndex1 >= 0 ? stringValue.slice(separatorIndex1 + 1, stringValue.length) : stringValue;
+		fileName = htmlEscape(fileName);
+		return fileName;
 	};
 
 }

@@ -20,6 +20,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.MetaDataHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
@@ -29,6 +31,7 @@ import org.apache.wicket.util.lang.Args;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -65,6 +68,14 @@ public class ContentSecurityPolicySettings
 	{
 		private static final long serialVersionUID = 1L;
 	};
+
+	/**
+	 * The name of the {@code meta} element that makes Wicket's JavaScript create and use the
+	 * Trusted Types policy {@value CSPHeaderConfiguration#TRUSTED_TYPES_POLICY}.
+	 *
+	 * @since 12.0.0
+	 */
+	public static final String TRUSTED_TYPES_META_NAME = "wicket-trusted-types";
 
 	private final Map<CSPHeaderMode, CSPHeaderConfiguration> configs = new EnumMap<>(
 		CSPHeaderMode.class);
@@ -152,6 +163,45 @@ public class ContentSecurityPolicySettings
 	public final boolean isNonceEnabled()
 	{
 		return configs.values().stream().anyMatch(CSPHeaderConfiguration::isNonceEnabled);
+	}
+
+	/**
+	 * Returns true if any of the headers allows the Trusted Types policy
+	 * {@value CSPHeaderConfiguration#TRUSTED_TYPES_POLICY}.
+	 *
+	 * @return If Wicket's JavaScript has to create and use its Trusted Types policy.
+	 * @since 12.0.0
+	 * @see CSPHeaderConfiguration#requireTrustedTypes()
+	 */
+	public final boolean isTrustedTypesEnabled()
+	{
+		return configs.values().stream().anyMatch(CSPHeaderConfiguration::isTrustedTypesEnabled);
+	}
+
+	/**
+	 * Returns the {@code meta} element that makes Wicket's JavaScript create and use its Trusted
+	 * Types policy. It is a dependency of the Wicket Ajax JavaScript, and it is only present when
+	 * the CSP of the page that is rendered allows the policy.
+	 *
+	 * @param cycle
+	 *            the current request cycle, may be {@code null}
+	 * @return the header item, empty if the JavaScript has to leave its values as strings
+	 * @since 12.0.0
+	 */
+	public Optional<HeaderItem> getTrustedTypesHeaderItem(RequestCycle cycle)
+	{
+		if (!isTrustedTypesEnabled())
+		{
+			return Optional.empty();
+		}
+		if (cycle != null
+			&& IPageRequestHandler.getPage(cycle.getActiveRequestHandler()) instanceof WebPage page
+			&& !mustProtect(page))
+		{
+			return Optional.empty();
+		}
+		return Optional.of(MetaDataHeaderItem.forMetaTag(TRUSTED_TYPES_META_NAME,
+			CSPHeaderConfiguration.TRUSTED_TYPES_POLICY));
 	}
 
 	public String getNonce(RequestCycle cycle)

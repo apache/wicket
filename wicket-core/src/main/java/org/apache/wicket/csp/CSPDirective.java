@@ -172,8 +172,9 @@ public enum CSPDirective
 		public void checkValueForDirective(CSPRenderable value,
 				List<CSPRenderable> existingDirectiveValues)
 		{
-			if (!(value instanceof FixedCSPValue)
-				|| !TRUSTED_TYPES_EXPRESSION.matcher(value.toString()).matches())
+			boolean none = isNone(value);
+			if (!none && (!(value instanceof FixedCSPValue)
+				|| !TRUSTED_TYPES_EXPRESSION.matcher(value.toString()).matches()))
 			{
 				throw new IllegalArgumentException(
 					"A trusted-types directive can only contain policy names, 'allow-duplicates', "
@@ -181,13 +182,13 @@ public enum CSPDirective
 			}
 			if (!existingDirectiveValues.isEmpty())
 			{
-				if ("'none'".equals(value.toString()))
+				if (none)
 				{
 					throw new IllegalArgumentException(
 						"A trusted-types directive can't contain 'none' if it already contains "
 							+ "other values: " + existingDirectiveValues);
 				}
-				if ("'none'".equals(existingDirectiveValues.get(0).toString()))
+				if (isNone(existingDirectiveValues.get(0)))
 				{
 					throw new IllegalArgumentException(
 						"A trusted-types directive can't contain other values if it already "
@@ -199,6 +200,12 @@ public enum CSPDirective
 
 	private static final Pattern TRUSTED_TYPES_EXPRESSION = Pattern
 		.compile("[A-Za-z0-9\\-#=_/@.%]+|'allow-duplicates'|'none'|\\*");
+
+	private static boolean isNone(CSPRenderable value)
+	{
+		return CSPDirectiveSrcValue.NONE.equals(value)
+			|| CSPDirectiveSrcValue.NONE.getValue().equals(value.toString());
+	}
 
 	private final String value;
 

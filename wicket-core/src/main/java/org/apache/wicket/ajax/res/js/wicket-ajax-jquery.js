@@ -230,12 +230,32 @@
 	};
 
 	/**
+	 * Tells whether the server rendered <meta name="wicket-trusted-types">, which it does when
+	 * the application allows the Trusted Types policy 'wicket' in its Content-Security-Policy
+	 * (CSPHeaderConfiguration#requireTrustedTypes()).
+	 */
+	const isTrustedTypesEnabled = (function () {
+		let enabled;
+
+		return function () {
+			if (enabled === undefined) {
+				enabled = document.querySelector('meta[name="wicket-trusted-types"]') !== null;
+			}
+			return enabled;
+		};
+	})();
+
+	/**
 	 * Trusted Types
 	 *
 	 * A page with the Content-Security-Policy "require-trusted-types-for 'script'" accepts no
-	 * strings at DOM sinks such as innerHTML. Wicket trusts the markup and the scripts of an Ajax
-	 * response, so the policy 'wicket' passes them on unchanged. They stay strings where the
-	 * browser has no Trusted Types or the page does not allow the policy.
+	 * strings at DOM sinks such as innerHTML. When the application enabled Trusted Types, the
+	 * policy 'wicket' is created on first use and the markup and the scripts of an Ajax response
+	 * are passed through it unchanged. Otherwise, or where the browser has no Trusted Types, no
+	 * policy is created and html(), script() and scriptURL() return their argument as it is.
+	 *
+	 * The policy turns any string into a trusted value. These functions must only be given
+	 * markup and scripts that come from the server, never text from another source.
 	 */
 	Wicket.TrustedTypes = (function () {
 		const identity = function (value) {
@@ -246,7 +266,7 @@
 		const getPolicy = function () {
 			if (!policy) {
 				policy = { createHTML: identity, createScript: identity, createScriptURL: identity };
-				if (window.trustedTypes && window.trustedTypes.createPolicy) {
+				if (isTrustedTypesEnabled() && window.trustedTypes && window.trustedTypes.createPolicy) {
 					try {
 						policy = window.trustedTypes.createPolicy('wicket', policy);
 					} catch (exception) {
@@ -260,7 +280,7 @@
 		return {
 			html: function (text) {
 				// innerHTML takes null as an empty string, createHTML() as "null"
-				return getPolicy().createHTML(text === null ? '' : text);
+				return getPolicy().createHTML(text === null && isTrustedTypesEnabled() ? '' : text);
 			},
 
 			script: function (text) {
@@ -291,15 +311,37 @@
 	};
 
 	/**
-	 * jQuery parses a TrustedHTML since 4.0 only, and only one that starts and ends with a tag.
-	 * What follows the last tag of a string is dropped by jQuery, so it is cut off here.
+	 * Replaces the <script> elements of parsed markup, which never run, with new ones that run
+	 * once they are inserted, see reviveScripts() of wicket-ajax.js.
+	 *
+	 * @param root {DocumentFragment} - the (still detached) parsed markup to fix up
 	 */
-	const toMarkup = function (text) {
-		const end = text.lastIndexOf('>');
-		if (parseInt(jQuery.fn.jquery, 10) >= 4 && text.charAt(0) === '<' && end > 1) {
-			return Wicket.TrustedTypes.html(text.substring(0, end + 1));
+	const reviveScripts = function (root) {
+		const scripts = root.querySelectorAll('script');
+		for (let i = 0; i < scripts.length; i++) {
+			const oldScript = scripts[i];
+			const newScript = document.createElement('script');
+			for (let a = 0; a < oldScript.attributes.length; a++) {
+				const attr = oldScript.attributes[a];
+				newScript.setAttribute(attr.name, attr.name === 'src' ? Wicket.TrustedTypes.scriptURL(attr.value) : attr.value);
+			}
+			newScript.text = Wicket.TrustedTypes.script(oldScript.textContent);
+			oldScript.parentNode.replaceChild(newScript, oldScript);
 		}
-		return text;
+	};
+
+	/**
+	 * Parses markup as wicket-ajax.js does. jQuery would evaluate the scripts of the markup from
+	 * strings, which a page that requires Trusted Types rejects.
+	 *
+	 * @param text {String} - the markup
+	 * @return {DocumentFragment} the nodes to insert with the DOM API
+	 */
+	const parseMarkup = function (text) {
+		const template = document.createElement('template');
+		template.innerHTML = Wicket.TrustedTypes.html(text);
+		reviveScripts(template.content);
+		return template.content;
 	};
 
 	/**
@@ -786,9 +828,7 @@
 				},
 				data: data,
 				dataType: attrs.dt,
-				converters: {
-					"text xml": parseXml
-				},
+				converters: isTrustedTypesEnabled() ? { "text xml": parseXml } : {},
 				async: attrs.async,
 				timeout: attrs.rt,
 				cache: false,
@@ -1543,8 +1583,14 @@
 					// jQuery 1.9+ expects '<' as the very first character in text
 					const cleanedText = text.trim();
 
-					const $newElement = jQuery(toMarkup(cleanedText));
-					jQuery(element).replaceWith($newElement);
+					if (isTrustedTypesEnabled()) {
+						element.replaceWith(parseMarkup(cleanedText));
+						// cleans up the data and the event handlers jQuery keeps for the old nodes
+						jQuery(element).remove();
+					} else {
+						const $newElement = jQuery(cleanedText);
+						jQuery(element).replaceWith($newElement);
+					}
 				}
 
 				const newElement = Wicket.$(element.id);
@@ -1560,8 +1606,12 @@
 				// jQuery 1.9+ expects '<' as the very first character in text
 				const cleanedText = text.trim();
 
-				const $newElement = jQuery(toMarkup(cleanedText));
-				jQuery(element).append($newElement);
+				if (isTrustedTypesEnabled()) {
+					element.append(parseMarkup(cleanedText));
+				} else {
+					const $newElement = jQuery(cleanedText);
+					jQuery(element).append($newElement);
+				}
 
 				const newElement = Wicket.$(element.id);
 				if (newElement) {
@@ -2038,7 +2088,11 @@
 							try {
 								Wicket.Ajax._currentSuspension = suspension;
 
-								scriptDomNode.text = Wicket.TrustedTypes.script(text);
+								if (isTrustedTypesEnabled()) {
+									scriptDomNode.text = Wicket.TrustedTypes.script(text);
+								} else {
+									scriptDomNode.innerHTML = text;
+								}
 
 								const id = node.getAttribute("id");
 								Wicket.Head.addElement(scriptDomNode, typeof(id) !== "string" || id.length === 0);
