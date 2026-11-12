@@ -73,7 +73,7 @@
 
 		setStatus : function(status) {
 			const label = document.createElement("label");
-			label.innerHTML = status;
+			label.innerHTML = Wicket.TrustedTypes.html(status);
 			const $statusId = Wicket.$(this.statusid);
 			if ($statusId != null) {
 				const oldLabel = $statusId.firstChild;

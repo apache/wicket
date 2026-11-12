@@ -618,7 +618,7 @@
 				element.parentNode.style.width = "auto"; // let browser auto-set width again as displayed elements may change
 				selChSinceLastRender = true; // selected item will not have selected style until rendrered
 			}
-			element.innerHTML=resp;
+			element.innerHTML=Wicket.TrustedTypes.html(resp);
 			element.firstChild.role = "listbox";
 			const selectableElements = getSelectableElements();
 			if (selectableElements) {
