@@ -121,6 +121,10 @@ public class TaskBoardApplication extends WicketExampleApplication
 			}
 		});
 
+		// the policies of RichTextField.tsx and of the editor's clipboard handling
+		getCspSettings().blocking()
+			.add(CSPDirective.TRUSTED_TYPES, "taskboard-rich-text", "ProseMirrorClipboard");
+
 		IslandSettings islands = IslandSettings.install(this);
 		islands.getPagelessEndpoints()
 			.register("members", MembersEndpoint.MemberQuery.class, new MembersEndpoint(repository),

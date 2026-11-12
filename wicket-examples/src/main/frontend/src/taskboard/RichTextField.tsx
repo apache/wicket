@@ -16,18 +16,35 @@
  */
 
 import { RichTextEditor } from '@mantine/tiptap';
+import { DOMParser as ProseMirrorParser, type Node, type Schema } from '@tiptap/pm/model';
 import { useEditor, type Editor } from '@tiptap/react';
 import { useEffect } from 'react';
 import StarterKit from '@tiptap/starter-kit';
-import { cspNonce, useFormState, useFormValue } from 'wicket-islands-react';
+import { useFormState, useFormValue } from 'wicket-islands-react';
 import BoardTheme from './BoardTheme';
+import 'prosemirror-view/style/prosemirror.css';
 import '@mantine/tiptap/styles.css';
 import './FormFields.css';
+
+interface TrustedTypePolicyFactory {
+	createPolicy(name: string, rules: { createHTML(html: string): string }): {
+		createHTML(html: string): string;
+	};
+}
+
+const policy = (globalThis as { trustedTypes?: TrustedTypePolicyFactory }).trustedTypes
+	?.createPolicy('taskboard-rich-text', { createHTML: html => html });
+
+const EMPTY = { type: 'doc', content: [{ type: 'paragraph' }] };
 
 /**
  * The description editor of RichTextField.java. Its value is the editor's HTML, which the server
  * sanitizes: nothing the browser sends is trusted. The editor only offers what the sanitizer keeps
  * (see Descriptions.java), and shows the value the server sends back.
+ *
+ * The page requires Trusted Types, and tiptap would hand an HTML value to DOMParser as a string.
+ * This module parses the value into the editor's document itself, through a policy of its own that
+ * is only ever given the value of the server, and loads the editor's CSS from a stylesheet.
  */
 export default function RichTextField() {
 	const [value, setValue] = useFormValue<string>();
@@ -38,15 +55,15 @@ export default function RichTextField() {
 			horizontalRule: false,
 			link: { openOnClick: false, HTMLAttributes: { target: null } }
 		})],
-		content: value ?? '',
+		content: EMPTY,
 		editable: enabled,
-		injectNonce: cspNonce(),
+		injectCSS: false,
 		onUpdate: ({ editor }) => setValue(htmlOf(editor))
 	});
 
 	useEffect(() => {
 		if (editor && htmlOf(editor) !== (value ?? '')) {
-			editor.commands.setContent(value ?? '', { emitUpdate: false });
+			editor.commands.setContent(parse(editor.schema, value ?? ''), { emitUpdate: false });
 		}
 	}, [editor, value]);
 
@@ -81,6 +98,12 @@ export default function RichTextField() {
 			</div>
 		</BoardTheme>
 	);
+}
+
+function parse(schema: Schema, html: string): Node {
+	const template = document.createElement('template');
+	template.innerHTML = policy ? policy.createHTML(html) : html;
+	return ProseMirrorParser.fromSchema(schema).parse(template.content);
 }
 
 function htmlOf(editor: Editor): string {

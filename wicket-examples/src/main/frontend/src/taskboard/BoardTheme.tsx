@@ -42,11 +42,14 @@ import './BoardTheme.css';
 /**
  * Wraps a task board island in Mantine's provider. Each island is a React root of its own, so each
  * gets one. Mantine's CSS reset is left out, as it would restyle the Wicket page around the
- * islands; the style elements Mantine injects carry the page's CSP nonce.
+ * islands. Its CSS variables come from its stylesheet: the provider would write them into a style
+ * element with innerHTML, which the page's Trusted Types policy blocks. The style elements
+ * Mantine's components inject carry the page's CSP nonce.
  */
 export default function BoardTheme({ children }: { children: ReactNode }) {
 	return (
-		<MantineProvider forceColorScheme="light" getStyleNonce={() => cspNonce() ?? ''}>
+		<MantineProvider forceColorScheme="light" withCssVariables={false} withGlobalClasses={false}
+			getStyleNonce={() => cspNonce() ?? ''}>
 			<div className="board-theme">{children}</div>
 		</MantineProvider>
 	);

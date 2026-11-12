@@ -24,7 +24,9 @@ The JavaScript of an island is part of the application, like its markup. It runs
 privileges: it can invoke any listener on the page as the user, and read the handles of every
 island. What a peer does with data is the application's responsibility, just as
 _setEscapeModelStrings(false)_ is: React's `dangerouslySetInnerHTML` with a value from the
-server writes that value into the page as is.
+server writes that value into the page as is. The same holds for a Trusted Types policy an island
+module creates: one that passes every string on, as most do, is only safe for values from the
+server, never for text the user typed.
 
 That trust extends to every npm package the build bundles, so the frontend's dependency tree
 deserves the same scrutiny as the Java dependencies. Install the packages with

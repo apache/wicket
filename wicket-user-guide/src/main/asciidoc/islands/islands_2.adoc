@@ -264,3 +264,29 @@ modules are rendered with that nonce. Component libraries that inject `<style>` 
 own need it too: every island renders the nonce in a `<meta property="csp-nonce">` tag, and
 `cspNonce()`, exported by the runtime and the React adapter, returns it. Mantine, for example,
 takes it as `<MantineProvider getStyleNonce={cspNonce}>`.
+
+==== Trusted Types
+
+Islands work on a page that requires Trusted Types, which
+_CSPHeaderConfiguration.requireTrustedTypes()_ enables. The runtime writes no markup itself: it
+reads the island state as JSON, and the answers of page-bound calls arrive in Wicket's Ajax
+response, which Wicket's own policy covers. React only writes markup for `dangerouslySetInnerHTML`.
+The development mode works as well, including hot module replacement.
+
+The JavaScript an island module bundles has to keep to the rule too. A library that assigns a
+string to `innerHTML` or hands one to `DOMParser` fails, usually while React renders, and the island
+stays empty; the browser console names the blocked sink. Such code needs a policy of its own, whose
+name the application adds to the `trusted-types` directive:
+
+[source,java]
+----
+getCspSettings().blocking()
+	.requireTrustedTypes()
+	.add(CSPDirective.TRUSTED_TYPES, "rich-text");
+----
+
+Leave the policy `wicket` to Wicket's JavaScript. The task board example shows both ways out:
+Mantine's provider writes its CSS variables into a `<style>` element with `innerHTML`, so the
+example loads them from Mantine's stylesheet with `withCssVariables={false}` instead, and its rich
+text editor parses the HTML it is given through a policy of its own, because tiptap would hand it
+to `DOMParser` as a string.
