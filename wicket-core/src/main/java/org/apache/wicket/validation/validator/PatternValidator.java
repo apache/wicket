@@ -42,6 +42,14 @@ import org.apache.wicket.validation.ValidationError;
  * The error message will be generated with the key "PatternValidator" and one additional message
  * key ${pattern} for the pattern which failed to match. See {@link FormComponent} for a list of
  * further messages keys.
+ * <p>
+ * An {@link org.apache.wicket.markup.html.form.AbstractTextComponent}, like the
+ * {@link org.apache.wicket.markup.html.HTML5Attributes} behavior, renders the pattern of its
+ * <code>PatternValidator</code> into the HTML <code>pattern</code> attribute, so the browser checks
+ * the input too. The browser compiles that attribute as a JavaScript regular expression with the
+ * <code>v</code> flag and ignores it when it does not compile, so the pattern has to be valid there
+ * as well: escape a <code>-</code> in a character class (<code>[a-z\-]</code>), for example.
+ * Compile flags such as {@link Pattern#CASE_INSENSITIVE} are not rendered.
  * 
  * @see java.util.regex.Pattern
  * 
