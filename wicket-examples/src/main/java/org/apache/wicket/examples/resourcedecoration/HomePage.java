@@ -64,7 +64,7 @@ public class HomePage extends WicketExamplePage
 			{
 				response.render(OnDomReadyHeaderItem.forScript("jQuery('#" +
 					jsPlaceholder.getMarkupId() +
-					"').html('the ondomready script ran').css('border-color', 'green');"));
+					"').text('the ondomready script ran').css('border-color', 'green');"));
 			}
 		});
 		add(jsPlaceholder);

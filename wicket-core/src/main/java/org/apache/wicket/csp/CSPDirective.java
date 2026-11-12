@@ -19,6 +19,7 @@ package org.apache.wicket.csp;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.util.string.Strings;
 
@@ -123,7 +124,88 @@ public enum CSPDirective
 				throw new IllegalArgumentException("Illegal URI for report-uri directive", urise);
 			}
 		}
+	},
+	/**
+	 * Makes the browser reject strings at script injection sinks such as {@code innerHTML}. The
+	 * only value is {@code 'script'}.
+	 *
+	 * @since 12.0.0
+	 * @see <a href="https://www.w3.org/TR/trusted-types/">https://www.w3.org/TR/trusted-types/</a>
+	 */
+	REQUIRE_TRUSTED_TYPES_FOR("require-trusted-types-for")
+	{
+		/**
+		 * Only allow {@code 'script'}, and only once.
+		 */
+		@Override
+		public void checkValueForDirective(CSPRenderable value,
+				List<CSPRenderable> existingDirectiveValues)
+		{
+			if (!existingDirectiveValues.isEmpty())
+			{
+				throw new IllegalArgumentException(
+					"A require-trusted-types-for directive can only contain one value, it already "
+						+ "contains " + existingDirectiveValues);
+			}
+			if (!(value instanceof FixedCSPValue) || !"'script'".equals(value.toString()))
+			{
+				throw new IllegalArgumentException(
+					"A require-trusted-types-for directive can only contain 'script', not "
+						+ value);
+			}
+		}
+	},
+	/**
+	 * Restricts the names of the Trusted Types policies a page may create. The values are policy
+	 * names, {@code 'allow-duplicates'}, {@code *} or a single {@code 'none'}.
+	 *
+	 * @since 12.0.0
+	 * @see <a href="https://www.w3.org/TR/trusted-types/">https://www.w3.org/TR/trusted-types/</a>
+	 */
+	TRUSTED_TYPES("trusted-types")
+	{
+		/**
+		 * Only allow policy names and the keywords of the directive, and block {@code 'none'}
+		 * next to other values.
+		 */
+		@Override
+		public void checkValueForDirective(CSPRenderable value,
+				List<CSPRenderable> existingDirectiveValues)
+		{
+			boolean none = isNone(value);
+			if (!none && (!(value instanceof FixedCSPValue)
+				|| !TRUSTED_TYPES_EXPRESSION.matcher(value.toString()).matches()))
+			{
+				throw new IllegalArgumentException(
+					"A trusted-types directive can only contain policy names, 'allow-duplicates', "
+						+ "* or 'none', not " + value);
+			}
+			if (!existingDirectiveValues.isEmpty())
+			{
+				if (none)
+				{
+					throw new IllegalArgumentException(
+						"A trusted-types directive can't contain 'none' if it already contains "
+							+ "other values: " + existingDirectiveValues);
+				}
+				if (isNone(existingDirectiveValues.get(0)))
+				{
+					throw new IllegalArgumentException(
+						"A trusted-types directive can't contain other values if it already "
+							+ "contains 'none', can't add " + value);
+				}
+			}
+		}
 	};
+
+	private static final Pattern TRUSTED_TYPES_EXPRESSION = Pattern
+		.compile("[A-Za-z0-9\\-#=_/@.%]+|'allow-duplicates'|'none'|\\*");
+
+	private static boolean isNone(CSPRenderable value)
+	{
+		return CSPDirectiveSrcValue.NONE.equals(value)
+			|| CSPDirectiveSrcValue.NONE.getValue().equals(value.toString());
+	}
 
 	private final String value;
 
