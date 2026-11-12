@@ -1,0 +1,121 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+A _FormIsland<T, P>_ is an island that is also a _FormComponent<T>_. A date picker or a rich text
+editor rendered by the peer then takes part in a Wicket form like any other field: conversion,
+validators, `required`, feedback messages, and normal and Ajax submits.
+
+[source,java]
+----
+public class PlayerEntryField extends FormIsland<PlayerEntry, PlayerEntryField.EntryProps>
+{
+	public record EntryProps(List<String> palette) implements Serializable
+	{
+	}
+
+	public PlayerEntryField(String id, IModel<PlayerEntry> model)
+	{
+		super(id, "player-entry", model, PlayerEntry.class,
+			Model.of(new EntryProps(PlayerEntry.PALETTE)));
+		setRequired(true);
+		setLabel(Model.of("Your name"));
+		add(new EntryValidator());
+	}
+}
+----
+
+The constructor takes the model of the value, the class of the value, and optionally the model
+of the props. Calls and page-less endpoints are registered as on any island, so a picker can, for
+example, fetch its suggestions from the server.
+
+=== The value
+
+The value travels as JSON in a hidden input inside the host element, outside the peer's root.
+The peer reads and writes it with _useFormValue_, and reads the form state with _useFormState_:
+
+[source,javascript]
+----
+export default function PlayerEntryForm({ palette }: EntryProps) {
+	const [entry, setEntry] = useFormValue<PlayerEntry>();
+	const { enabled, errors } = useFormState();
+	const name = entry?.name ?? '';
+	const colour = entry?.colour ?? palette[0];
+
+	return (
+		<div className="player-entry">
+			<label>
+				Name <input type="text" value={name} disabled={!enabled}
+					onChange={event => setEntry({ name: event.target.value, colour })} />
+			</label>
+			{/* the colour swatches */}
+			{errors.length > 0 && (
+				<ul className="errors">
+					{errors.map(error => <li key={error}>{error}</li>)}
+				</ul>
+			)}
+		</div>
+	);
+}
+----
+
+Setting the value writes the JSON into the hidden input and fires its `input` and `change`
+events, so Ajax behaviors on the form island, such as an _AjaxFormComponentUpdatingBehavior_,
+work as on any other form component.
+
+On the server, _convertInput_ converts the submitted JSON into `T` with the island serializer.
+JSON that does not match `T` is a conversion error with the message key
+`FormIsland.ConversionError`. Validators, `required` and the model update then work as usual.
+
+The form state tells the peer what the server knows about the component: `required`, `enabled`,
+its `label`, and its feedback messages as `errors`. A host element is a `<div>`, so it has no
+`disabled` attribute: the peer has to honour `enabled` itself. After an Ajax request that
+validated the form island, it sends the peer its new form state, so validation messages reach the
+peer at once. The island is not re-rendered for that, which would replace the value the user is
+still editing; _setUpdateOnValidation(false)_ turns this off. Adding the island to the target
+still re-renders it, and replaces the value in the browser with the one the server has: the
+submitted input while it is invalid, otherwise the model value.
+
+=== Markup as a value
+
+A form island whose value is markup, such as the HTML of a rich text editor, delivers markup the
+browser made up, which is untrusted. Override _sanitize_, which is applied in _convertInput_
+before validation, to clean it with a sanitizer of your choice; Wicket bundles none. The task
+board example uses the OWASP Java HTML Sanitizer:
+
+[source,java]
+----
+public class RichTextField extends FormIsland<String, Void>
+{
+	public RichTextField(String id, IModel<String> model)
+	{
+		super(id, "rich-text", model, String.class);
+	}
+
+	@Override
+	protected String sanitize(String value)
+	{
+		return Descriptions.sanitize(value);
+	}
+}
+----
+
+=== Islands inside a form
+
+Any island inside a Wicket form, also one that is no form component, takes part in the form like
+any markup does. A named input its peer renders is submitted with the form and can collide with
+the name of a Wicket input, Enter in one of its text inputs submits the form, and a button
+without `type="button"` is a submit button.

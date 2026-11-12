@@ -1,0 +1,47 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+The module `wicket-examples` contains two complete applications with islands, in the package
+_org.apache.wicket.examples.islands_, with their React components in `src/main/frontend`:
+
+* *Treasure Hunt* (`/treasurehunt`): a game board as an island, working together with plain
+  Wicket components on the page. It shows calls that update other components, errors and expired
+  pages, replacing an island, a client store shared by two islands, a form island, and a
+  page-less endpoint whose results are invalidated by a classic Ajax form.
+* *Task board* (`/taskboard`): a board of cards with drag and drop and optimistic updates, a
+  Wicket modal dialog opened from the island, form islands with a rich text editor and a date
+  picker, and page-less endpoints with handles for an autocomplete and a chart. It uses the
+  Mantine component library, with the page's CSP nonce.
+
+The examples' JavaScript is built under the Maven profile `js-test`; without it, the pages show
+a notice that the JavaScript is missing. For development, run `npm run dev` in
+`src/main/frontend` and start the examples in development mode with
+`-Dwicket.islands.devServer=http://localhost:5173`.
+
+=== Current limitations
+
+* React is the only framework with an adapter. The runtime and its mount contract are
+  framework-neutral, so adapters for other frameworks, such as Vue and Angular, can follow.
+* The npm packages are not published yet.
+* The frontend declares its own TypeScript types for props and payloads; they are not generated
+  from the Java types yet.
+* Client stores live on the client only. The server cannot seed them or update them yet.
+* Islands cannot contain Wicket components.
+* There is no dedicated test support yet. _WicketTester_ renders islands like any component, so a
+  test can check the host element and the state the page writes.
+* The handles of page-less endpoints are kept in the session only; a stateless store, for
+  clusters without sticky sessions, does not exist yet.

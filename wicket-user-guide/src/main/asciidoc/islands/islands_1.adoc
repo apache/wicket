@@ -1,0 +1,74 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+The server half of an island is an _Island<P>_, a _WebComponent_ without children of its own.
+Its markup is an empty element:
+
+[source,html]
+----
+<div wicket:id="board"></div>
+----
+
+The component is created with an id, an _island type_ and the model of its _props_:
+
+[source,java]
+----
+add(new Island<>("board", "treasure-board", game.map(BoardProps::of)));
+----
+
+* The *island type* names the client-side implementation, here `treasure-board`. It consists of
+  letters, digits, `-` and `_`, and maps to one entry of the JavaScript build.
+* The *props* are the object of the island's model, converted to JSON. They are what the peer
+  gets to see, and they are sent again whenever Wicket re-renders the island.
+* The *calls* are the named server operations the peer may invoke, registered with _onCall_.
+  They run on the server in the context of the component, with access to its models and to the
+  Ajax request target.
+
+When the page renders, the island writes its host element:
+
+[source,html]
+----
+<div id="board3" data-wicket-island="treasure-board" data-wicket-island-key="nT4wq0Zr8yVh2KcL">
+  <script type="application/json" data-wicket-island-state>{"props":{"width":8,"height":8,...},
+    "calls":["probe"],"ajax":{"u":"...","m":"POST","ch":"wicket-island-board3|s"},"pageless":{}}</script>
+  <div data-wicket-island-root></div>
+</div>
+----
+
+The `script` element holds the island's state: the props, the names of its calls and what the
+client needs to send them. Its header contributions load the JavaScript module of the island
+type. When that module has loaded, the client-side runtime finds every host of the type on the
+page and mounts the peer into the `data-wicket-island-root` element, which keeps the state and,
+for a form island, its hidden input out of the framework's hands. Hosts added later by an Ajax
+response are mounted the same way.
+
+The _key_ identifies the island. It is random, generated anew for every instance of the
+component, and stays the same for that instance's lifetime. It drives the lifecycle of the peer:
+
+* *Re-render.* When an Ajax response replaces the island, or any of its ancestors, the runtime
+  recognizes the key in the new markup. It moves the mounted peer into the new host and hands it
+  the new props, so the peer keeps its client-side state: what the user typed, an open
+  dropdown, a scroll position. Adding the island to an _AjaxRequestTarget_ is therefore the way
+  to send it new props.
+* *Replacement.* A new _Island_ instance has a new key, so the browser mounts a new peer for it
+  and the old one is unmounted.
+* *Removal.* A peer whose host has left the page is unmounted at the end of the Ajax request
+  that removed it.
+
+The client-side runtime uses only the public `Wicket.Ajax`, `Wicket.DOM` and `Wicket.Event` API,
+so islands work with the default jQuery-based Ajax library as well as with the plain JavaScript
+implementation, and do not need jQuery themselves.

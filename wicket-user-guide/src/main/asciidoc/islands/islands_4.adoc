@@ -1,0 +1,153 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+A call is the one way for a peer to reach the server. A fire-and-forget event is simply a call
+without a result. An island registers its calls with one of two _onCall_ methods:
+
+[source,java]
+----
+// a call with a result
+onCall("probe", Probe.class, ProbeOutcome.class,
+	(probe, call) -> game.getObject().probe(probe.x(), probe.y()));
+
+// a call without a result
+onCall("open", Open.class, (open, call) -> onOpen(open.cardId(), call.getTarget()));
+----
+
+The request type is the class the JSON payload is converted into; _Void_ declares a call without
+payload. Only registered calls can be invoked: a call with another name is refused. The handlers
+are serializable functional interfaces, because the island is stored with the page.
+
+=== What a handler can do
+
+A call is a Wicket Ajax request to a behavior of the island, so it is a page-bound call: it runs
+under the page lock, in the context of the island, and the usual checks apply. An invisible or
+disabled island cannot be called, and the authorization strategy is consulted as for any
+behavior. The _IslandCall_ the handler receives offers:
+
+[options="header"]
+|===
+|Method |Purpose
+|_getTarget()_ |The _AjaxRequestTarget_ of the request. Components added to it are updated in the
+browser, other islands among them.
+|_getComponent()_ |The island that was called.
+|_reject(String...)_ |Creates the exception that rejects the call with messages for the peer.
+Throw it: `throw call.reject("The game is over.");`
+|_invalidate(String...)_ |Marks client-side query keys as stale (see the next section).
+|===
+
+The Treasure Hunt example shows a typical handler. Probing a cell changes the game, so the board
+and the plain Wicket components that show the game's status are updated along with the result:
+
+[source,java]
+----
+onCall("probe", Probe.class, ProbeOutcome.class, (probe, call) -> {
+	try
+	{
+		ProbeOutcome outcome = game.getObject().probe(probe.x(), probe.y());
+		call.getTarget().add(this);
+		call.getTarget().add(dependents);
+		return outcome;
+	}
+	catch (IllegalProbeException e)
+	{
+		throw call.reject(e.getMessage());
+	}
+});
+----
+
+=== The order of a response
+
+The response to a call is an ordinary Wicket Ajax response, with the call's result as one more
+part of it. The browser applies it in a fixed order:
+
+. the Wicket part, as for any Ajax response: header contributions, components and scripts, and
+  with them the new props of every island that was re-rendered;
+. the invalidations of client-side queries;
+. finally the call's promise, resolved with the result or rejected.
+
+A peer can therefore rely on its props being current once `await call(...)` returns. A rejected
+call still carries everything the handler added to the target before it rejected: a refusal can
+deliver fresh props, or update a _FeedbackPanel_, in the same response.
+
+Calls are sent in an Ajax channel of their own per island. Calls of one island are queued behind
+each other, and they don't hold up other Ajax requests in the browser; on the server they still
+wait for the page lock like any request to the page.
+
+=== Errors
+
+A call either resolves with its result or is rejected with an _IslandCallError_, whose `kind`
+says what went wrong and whose `messages` hold the details:
+
+[options="header"]
+|===
+|Kind |Cause
+|`invalid` |The handler threw _call.reject(...)_; or the call is unknown, or its payload is missing
+or does not convert into the request type.
+|`forbidden` |The call is not allowed: the island is invisible or disabled, or authorization
+failed.
+|`expired` |The page has expired or changed, or the island the call reached is not the one the
+peer belongs to.
+|`error` |Any other failure. The exception is logged; its details reach the client only in
+development mode.
+|`network` |No response arrived.
+|===
+
+For a listener invocation that cannot reach its component, Wicket's default is a redirect, to
+the re-rendered page, to the page-expired page or to the access-denied page. That would leave the
+peer's promise unsettled, so the islands module answers such calls itself, with `expired` or
+`forbidden`. The peer decides what to do; the Treasure Hunt board shows the message and offers to
+reload the page.
+
+When Wicket recreates a bookmarkable page after its original expired, the recreated page holds a
+new island instance with a new key. The peer sends its key with every call, so such a call is
+answered `expired` instead of being handled by an island that is not the one the user worked
+with.
+
+=== Updating, replacing and removing an island
+
+Any Ajax request can send an island new props by adding it, or one of its ancestors, to the
+target: an island call, an _AjaxLink_, a form submit. The mounted peer stays and receives the
+new props.
+
+To start over with a fresh peer, replace the component with a new instance. The Treasure Hunt
+page does that when the board size changes, because a board of another size is a new game:
+
+[source,java]
+----
+TreasureBoard newBoard = new TreasureBoard("board", game, status, probesLeft, history,
+	scorePanel);
+newBoard.setMarkupId(board.getMarkupId());
+board.replaceWith(newBoard);
+board = newBoard;
+target.add(newBoard, status, probesLeft, history, scorePanel, highScores);
+----
+
+The same applies to repeaters. A repeater that creates its items anew on every render, as
+_DataView_ does by default, creates new islands with new keys, so their peers are remounted and
+lose their client-side state. An item reuse strategy such as _ReuseIfModelsEqualStrategy_ keeps
+them.
+
+Moving a peer into the new host takes it out of the document for a moment. That drops the focus
+inside it, pauses audio and video, reloads iframes and may reset the scroll position of elements
+inside it.
+
+Client-side state is not part of Wicket's page versions. After the back button, the peer starts
+from the props of the page version shown, and its calls reach that version, as the calls of any
+Ajax behavior do.
+
+An island without calls renders no Ajax URL and keeps its page stateless.

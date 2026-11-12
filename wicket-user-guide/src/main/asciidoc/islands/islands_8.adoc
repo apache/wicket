@@ -1,0 +1,88 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+Islands follow Wicket's security model: what the application's developers write is trusted,
+what arrives from the browser is not.
+
+=== Island modules are trusted
+
+The JavaScript of an island is part of the application, like its markup. It runs with the page's
+privileges: it can invoke any listener on the page as the user, and read the handles of every
+island. What a peer does with data is the application's responsibility, just as
+_setEscapeModelStrings(false)_ is: React's `dangerouslySetInnerHTML` with a value from the
+server writes that value into the page as is.
+
+That trust extends to every npm package the build bundles, so the frontend's dependency tree
+deserves the same scrutiny as the Java dependencies. Install the packages with
+`npm ci --ignore-scripts`, so that their install scripts cannot run on the build machine.
+
+=== Props are public
+
+Props are written into the page, where the user can read them, including whatever the peer does
+not display. The model of an island should hold an explicit projection made for the client,
+never a domain object with fields the user must not see. The Treasure Hunt board, for example,
+leaves the hidden treasures out of its props until the game is over.
+
+The default serializer enforces part of this. It writes only records, collections, maps,
+arrays, enums and values Jackson writes as a single value, such as strings, numbers and dates.
+Any other class is refused, because Jackson would write every getter it has: handing an entity
+to an island fails when the page renders, instead of publishing all its fields, or loading its
+lazy relations. An application that needs its own Jackson configuration starts from
+_JacksonIslandSerializer.defaultMapperBuilder()_ to keep these rules.
+
+The JSON is escaped for the `<script>` element it is written into: `<`, `>`, `&`, U+2028 and
+U+2029 become `\u` escapes, so the props cannot end the element or open a comment, whatever they
+contain.
+
+=== Everything from the browser is untrusted
+
+Call payloads and the values of form islands come from the browser. They are converted into the
+request or value type, so they can only hold what that type declares: the default serializer
+rejects JSON properties the type does not declare, and never honours type information sent by
+the client. A request type should contain only what the interaction may change. The handler
+validates it and merges it into the server-side state; it never saves an object built by the
+client as is. A form island's value goes through conversion and validation like any other input,
+and markup in it must be sanitized, as described above.
+
+=== Page-bound calls
+
+A page-bound call is a listener invocation on the page, so the usual protection applies. Where
+the application uses _ResourceIsolationRequestCycleListener_, another site cannot invoke it, and
+the island's visibility, enabled state and authorization are checked as for any Ajax behavior.
+
+The island state carries a fixed set of Ajax attributes rather than the behavior's full ones. Ajax
+call listeners and preconditions that an application adds to every Ajax behavior are rendered as
+JavaScript functions, which cannot be part of the JSON, so they do not apply to island calls.
+Listeners subscribed through `Wicket.Event` still fire.
+
+=== Page-less endpoints
+
+A page-less call is no listener invocation, so the endpoints enforce their isolation themselves,
+whether or not the application uses resource isolation for its pages:
+
+* only `POST` is accepted, with the header `X-Wicket-Islands` that the runtime sends: a
+  cross-site HTML form cannot send it, and a script of another origin cannot send it without a
+  CORS preflight that is never granted;
+* a request whose `Sec-Fetch-Site` header is present and not `same-origin` is refused;
+* the payload is limited to 1 MB;
+* every endpoint declares its authorization, and handles are unguessable and bound to their
+  session and endpoint.
+
+The browser never needs a token for a backend: whatever credentials an endpoint uses stay on the
+server, where the Wicket application acts as the backend for its frontend. An endpoint that
+forwards requests to a backend API should allow only what the user interface needs, because an
+API written for a trusted server-side caller may expose more than the user interface shows.
