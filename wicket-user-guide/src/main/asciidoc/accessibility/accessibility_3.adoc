@@ -28,7 +28,9 @@ Several success criteria are met once for the whole application, in the page all
 	<title wicket:id="pageTitle">Page title</title>
 </head>
 <body>
-	<a class="skip-link" href="#content"><wicket:message key="skipToContent">Skip to main content</wicket:message></a>
+	<a class="skip-link" href="#content">
+		<wicket:message key="skipToContent">Skip to main content</wicket:message>
+	</a>
 	<header>
 		<p class="site-name">Example</p>
 	</header>

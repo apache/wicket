@@ -43,7 +43,9 @@ The next example is a page with a list of addresses, each with a button to delet
 	<ul wicket:id="list">
 		<li wicket:id="addresses">
 			<span wicket:id="address"></span>
-			<button wicket:id="delete">Delete<span class="visually-hidden"> <span wicket:id="deleteWhat"></span></span></button>
+			<button wicket:id="delete">
+				Delete<span class="visually-hidden"> <span wicket:id="deleteWhat"></span></span>
+			</button>
 		</li>
 	</ul>
 </wicket:extend>

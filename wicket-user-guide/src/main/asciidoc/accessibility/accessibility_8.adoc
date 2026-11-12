@@ -175,4 +175,6 @@ No tool replaces the following checks. They take a few minutes per page, and the
 * *Contrast.* Measure the contrast of text, of the borders of fields and buttons, of the focus indicator and of icons with a contrast checker, in every state: hover, focus, disabled and error (success criteria 1.4.3 and 1.4.11).
 * *Content.* Read the alternative texts, headings, labels, link texts and error messages, and check that they make sense on their own (success criteria 1.1.1, 2.4.4, 2.4.6 and 3.3.3).
 
+The HTML version of this guide is a page to try the keyboard and screen reader checks on: the first Tab stop is a link that skips to the content, the table of contents and the content are exposed as navigation and main landmarks, the table of contents marks the current section with _aria-current_, and each copy button names the language of its listing, such as "Copy Java code".
+
 The table in <<_wcag_2_2_success_criteria_in_wicket,paragraph 25.2>> lists, for each success criterion, what the application has to take care of, and is a checklist for the remaining criteria.

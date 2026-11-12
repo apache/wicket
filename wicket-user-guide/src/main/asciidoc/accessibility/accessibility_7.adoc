@@ -120,7 +120,10 @@ The _NavigationToolbar_ of a _DataTable_ uses a _PagingNavigator_, whose links h
 [source,html]
 ----
 <wicket:panel>
-	<a wicket:id="first"><span aria-hidden="true">&lt;&lt;</span><span class="visually-hidden"><wicket:message key="PagingNavigator.first"/></span></a>
+	<a wicket:id="first">
+		<span aria-hidden="true">&lt;&lt;</span>
+		<span class="visually-hidden"><wicket:message key="PagingNavigator.first"/></span>
+	</a>
 	...
 </wicket:panel>
 ----
