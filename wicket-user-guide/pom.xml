@@ -101,15 +101,18 @@
 						<attributes>
 							<gemPath>${project.build.directory}/gems-provided</gemPath>
 							<allow-uri-read>allow-uri-read</allow-uri-read>
-							<stylesheet>css/style.css</stylesheet>
 							<linkcss>true</linkcss>
+							<source-highlighter>rouge</source-highlighter>
+							<rouge-css>class</rouge-css>
+							<webfonts>false</webfonts>
+							<wicket_line>${parsedVersion.majorVersion}.x</wicket_line>
+							<wicket_line_major>${parsedVersion.majorVersion}</wicket_line_major>
 						</attributes>
 						<preserveDirectories>true</preserveDirectories>
 						<requires>
 							<require>asciidoctor-diagram</require>
 						</requires>
 						<sourceDocumentName>single.adoc</sourceDocumentName>
-						<sourceHighlighter>coderay</sourceHighlighter>
 					</configuration>
 					<executions>
 						<execution>
@@ -139,6 +142,7 @@
 							<configuration>
 								<backend>pdf</backend>
 								<attributes>
+									<icons>font</icons>
 									<pagenums />
 									<idprefix />
 									<idseparator>-</idseparator>
@@ -199,6 +203,18 @@
 					<plugin>
 						<groupId>org.asciidoctor</groupId>
 						<artifactId>asciidoctor-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>parse-version</id>
+								<goals>
+									<goal>parse-version</goal>
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
