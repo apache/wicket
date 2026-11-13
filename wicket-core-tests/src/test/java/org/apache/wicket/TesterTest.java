@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -36,18 +36,8 @@ class TesterTest extends WicketTestCase
 	{
 		tester.startPage(new MyPage());
 		tester.debugComponentTrees();
-		try
-		{
-			tester.assertVisible("label");
-			fail("Should fail, because label is invisible");
-		}
-		catch (AssertionError e)
-		{
-		}
-		catch (NullPointerException e)
-		{
-			fail("NullPointerException shouldn't be thrown, instead it must fail.");
-		}
+		assertThrows(AssertionError.class, () -> tester.assertVisible("label"),
+			"Should fail, because label is invisible");
 	}
 
 	private static class MyPage extends WebPage
