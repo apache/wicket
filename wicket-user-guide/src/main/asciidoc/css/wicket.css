@@ -50,10 +50,10 @@
 	--code-tag: #0F4A40;
 	--code-op: #33473F;
 
-	--serif: "Alegreya", Georgia, serif;
-	--sc: "Alegreya SC", "Alegreya", Georgia, serif;
-	--sans: "Alegreya Sans", "Alegreya", sans-serif;
-	--mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+	--serif: "Alegreya", "Iowan Old Style", "Palatino Linotype", Palatino, "URW Palladio L", P052, Georgia, serif;
+	--sc: "Alegreya SC", "Alegreya", "Iowan Old Style", "Palatino Linotype", Palatino, "URW Palladio L", P052, Georgia, serif;
+	--sans: "Alegreya Sans", Seravek, "Gill Sans Nova", Ubuntu, Calibri, sans-serif;
+	--mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, "Cascadia Code", Consolas, monospace;
 
 	--measure: 68ch;
 	--column: 60rem;
