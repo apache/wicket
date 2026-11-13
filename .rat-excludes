@@ -27,7 +27,6 @@ wicket-examples/src/main/webapp/js-test/lib/jquery.js
 wicket-examples/src/main/webapp/js-test/lib/qunit.*
 wicket-examples/src/main/java/org/apache/wicket/examples/preview/behaviour.js
 wicket-examples/src/main/resources/org/apache/wicket/examples/fonts/**
-wicket-user-guide/src/main/asciidoc/fonts/**
 
 # Generated release notes
 CHANGELOG-*
