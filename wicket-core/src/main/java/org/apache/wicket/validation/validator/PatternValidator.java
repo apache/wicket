@@ -144,7 +144,7 @@ public class PatternValidator implements IValidator<String>
 	 *
 	 * @return <code>true</code> if input that matches the pattern is invalid
 	 * @see #setReverse(boolean)
-	 * @since 12.0.0
+	 * @since 10.13.0
 	 */
 	public final boolean isReverse()
 	{
