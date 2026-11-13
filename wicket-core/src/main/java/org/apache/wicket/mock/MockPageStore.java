@@ -33,7 +33,7 @@ public class MockPageStore implements IPageStore
 		// pretend versioning support, although pages are not actually serialized
 		return true;
 	}
-	
+
 	@Override
 	public void destroy()
 	{
@@ -48,8 +48,10 @@ public class MockPageStore implements IPageStore
 	@Override
 	public IManageablePage getPage(IPageContext context, int id)
 	{
-		for (IManageablePage page : pages) {
-			if (page.getPageId() == id) {
+		for (IManageablePage page : pages)
+		{
+			if (page.getPageId() == id)
+			{
 				return page;
 			}
 		}
@@ -59,8 +61,10 @@ public class MockPageStore implements IPageStore
 	@Override
 	public void removePage(IPageContext context, final IManageablePage page)
 	{
-		for (IManageablePage candidate : pages) {
-			if (candidate.getPageId() == page.getPageId()) {
+		for (IManageablePage candidate : pages)
+		{
+			if (candidate.getPageId() == page.getPageId())
+			{
 				pages.remove(candidate);
 				return;
 			}
@@ -83,7 +87,7 @@ public class MockPageStore implements IPageStore
 	public void addPage(IPageContext context, IManageablePage page)
 	{
 		removePage(context, page);
-		
+
 		pages.addLast(page);
 	}
 }

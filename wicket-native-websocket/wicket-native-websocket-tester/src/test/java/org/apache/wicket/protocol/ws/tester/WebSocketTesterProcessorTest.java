@@ -91,7 +91,7 @@ public class WebSocketTesterProcessorTest
 	public void onConnectNoOrigin()
 	{
 		// Given header 'Origin' is missing
-		configureRequest(new String[] { "http://www.example.com" }, new String[] {});
+		configureRequest(new String[] { "http://www.example.com" }, new String[] { });
 
 		// When we open a connection
 		TestWebSocketProcessor processor = new TestProcessor(tester.getRequest(), tester.getApplication());
@@ -105,7 +105,8 @@ public class WebSocketTesterProcessorTest
 	public void onConnectMultipleOrigins()
 	{
 		// Given the request contains multiple header 'Origin's
-		configureRequest(new String[] { "http://www.example.com" }, new String[] { "http://www.example.com", "http://ww2.example.com" });
+		configureRequest(new String[] { "http://www.example.com" }, new String[] { "http://www.example.com",
+				"http://ww2.example.com" });
 
 		// When we open a connection
 		TestWebSocketProcessor processor = new TestProcessor(tester.getRequest(), tester.getApplication());
@@ -146,7 +147,8 @@ public class WebSocketTesterProcessorTest
 	protected void configureRequest(String[] allowedDomains, String[] origins)
 	{
 		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
-		WebSocketConnectionOriginFilter connectionFilter = new WebSocketConnectionOriginFilter(Arrays.asList(allowedDomains));
+		WebSocketConnectionOriginFilter connectionFilter = new WebSocketConnectionOriginFilter(Arrays.asList(
+			allowedDomains));
 		webSocketSettings.setConnectionFilter(connectionFilter);
 		MockHttpServletRequest request = tester.getRequest();
 		for (String origin : origins)

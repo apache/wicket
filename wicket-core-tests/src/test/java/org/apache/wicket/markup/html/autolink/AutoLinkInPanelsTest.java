@@ -41,7 +41,7 @@ class AutoLinkInPanelsTest extends WicketTestCase
 	}
 
 	@BeforeEach
-    void setUp()
+	void setUp()
 	{
 		tester = new WicketTester(new MockApplication()
 		{
@@ -62,17 +62,19 @@ class AutoLinkInPanelsTest extends WicketTestCase
 	}
 
 	@Test
-    void imgTagWorksInPanelWithExtraContainer() throws Exception
+	void imgTagWorksInPanelWithExtraContainer() throws Exception
 	{
 		tester.startPage(TestPage.class);
 //		tester.dumpPage();
-		tester.assertContains("<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo.png\"/>");
+		tester.assertContains(
+			"<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo.png\"/>");
 	}
 
 	@Test
-    void imgTagWorksInPanelWithoutExtraContainer() throws Exception
+	void imgTagWorksInPanelWithoutExtraContainer() throws Exception
 	{
 		tester.startPage(TestPage.class);
-		tester.assertContains("<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo2.png\"/>");
+		tester.assertContains(
+			"<img src=\"\\./wicket/resource/org.apache.wicket.markup.html.autolink.sub.LogoPanel/logo2.png\"/>");
 	}
 }

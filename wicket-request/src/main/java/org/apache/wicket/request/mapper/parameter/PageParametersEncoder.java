@@ -54,7 +54,7 @@ public class PageParametersEncoder implements IPageParametersEncoder
 				parameters.add(parameterName, p.getValue(), INamedParameters.Type.QUERY_STRING);
 			}
 		}
-		
+
 		parameters.setFragment(url.getFragment());
 
 		return parameters.isEmpty() ? null : parameters;
@@ -77,7 +77,7 @@ public class PageParametersEncoder implements IPageParametersEncoder
 				QueryParameter param = new QueryParameter(pair.getKey(), pair.getValue());
 				url.getQueryParameters().add(param);
 			}
-			
+
 			url.setFragment(pageParameters.getFragment());
 		}
 

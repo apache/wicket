@@ -81,6 +81,6 @@ public abstract class AbstractDateConverter<D extends Date> extends AbstractConv
 		}
 
 		// return a clone because DateFormat.getDateInstance uses a pool
-		return (DateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale).clone();
+		return (DateFormat)DateFormat.getDateInstance(DateFormat.SHORT, locale).clone();
 	}
 }

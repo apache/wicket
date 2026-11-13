@@ -26,7 +26,7 @@ class TestResourceProvidingLabel extends Label
 {
 	public TestResourceProvidingLabel(String id)
 	{
-		super(id,"A simple Test Label");
+		super(id, "A simple Test Label");
 	}
 
 	@Override

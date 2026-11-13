@@ -51,9 +51,9 @@ public class StoreSettings
 	private int asynchronousQueueCapacity = DEFAULT_ASYNCHRONOUS_QUEUE_CAPACITY;
 
 	private boolean asynchronous = true;
-	
+
 	private boolean encrypted = false;
-	
+
 	private Supplier<ICrypter> crypter = DefaultCrypter::new;
 
 	/**
@@ -101,7 +101,7 @@ public class StoreSettings
 		{
 			if (WebApplication.exists())
 			{
-				fileStoreFolder = (File) WebApplication.get().getServletContext()
+				fileStoreFolder = (File)WebApplication.get().getServletContext()
 					.getAttribute("jakarta.servlet.context.tempdir");
 			}
 
@@ -186,7 +186,7 @@ public class StoreSettings
 	{
 		return asynchronous;
 	}
-	
+
 	/**
 	 * Sets a flag whether to wrap the configured {@link org.apache.wicket.pageStore.IPageStore} with
 	 * {@link org.apache.wicket.pageStore.CryptingPageStore}.
@@ -200,7 +200,7 @@ public class StoreSettings
 		this.encrypted = encrypted;
 		return this;
 	}
-	
+
 	/**
 	 * @return {@code true} if the storing of page is encrypted
 	 */
@@ -208,7 +208,7 @@ public class StoreSettings
 	{
 		return encrypted;
 	}
-	
+
 	/**
 	 * Sets the supplier for the {@link ICrypter} used by a
 	 * {@link org.apache.wicket.pageStore.CryptingPageStore}.

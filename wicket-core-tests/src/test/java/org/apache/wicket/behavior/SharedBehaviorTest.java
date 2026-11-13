@@ -47,7 +47,7 @@ class SharedBehaviorTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void sharedBehaviorRenderHead() throws Exception
+	void sharedBehaviorRenderHead() throws Exception
 	{
 		TestPage page = new TestPage();
 		executeTest(page, "SharedBehaviorTest_renderHead_expected.html");
@@ -78,7 +78,8 @@ class SharedBehaviorTest extends WicketTestCase
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
-			return new StringResourceStream("<html><body><div wicket:id='comp1'></div><div wicket:id='comp2'></div></body></html>");
+			return new StringResourceStream(
+				"<html><body><div wicket:id='comp1'></div><div wicket:id='comp2'></div></body></html>");
 		}
 	}
 
@@ -94,7 +95,8 @@ class SharedBehaviorTest extends WicketTestCase
 		{
 			super.renderHead(component, response);
 			renderHeadCount += 1;
-			response.render(StringHeaderItem.forString("\nRendering header contribution for component with id: " + component.getId()));
+			response.render(StringHeaderItem.forString("\nRendering header contribution for component with id: "
+				+ component.getId()));
 		}
 	}
 }

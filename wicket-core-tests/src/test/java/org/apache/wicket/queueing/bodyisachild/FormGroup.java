@@ -40,223 +40,223 @@ import org.apache.wicket.util.visit.IVisitor;
  */
 class FormGroup extends Border
 {
-    private Component label;
-    private Component help;
-    private Component feedback;
-    private String stateClassName;
-    private final IModel<String> labelModel;
-    private final IModel<String> helpModel;
+	private Component label;
+	private Component help;
+	private Component feedback;
+	private String stateClassName;
+	private final IModel<String> labelModel;
+	private final IModel<String> helpModel;
 
-    /**
-     * Construct.
-     *
-     * @param id    the wicket component id
-     * @param label the label
-     */
-    public FormGroup(final String id, final IModel<String> label)
-    {
-        this(id, label, Model.of(""));
-    }
+	/**
+	 * Construct.
+	 *
+	 * @param id    the wicket component id
+	 * @param label the label
+	 */
+	public FormGroup(final String id, final IModel<String> label)
+	{
+		this(id, label, Model.of(""));
+	}
 
-    /**
-     * Construct.
-     *
-     * @param id the wicket component id
-     */
-    private FormGroup(final String id, final IModel<String> label, final IModel<String> help)
-    {
-        super(id, Model.of(""));
+	/**
+	 * Construct.
+	 *
+	 * @param id the wicket component id
+	 */
+	private FormGroup(final String id, final IModel<String> label, final IModel<String> help)
+	{
+		super(id, Model.of(""));
 
-        this.labelModel = label;
-        this.helpModel = help;
-        this.stateClassName = "";
-    }
+		this.labelModel = label;
+		this.helpModel = help;
+		this.stateClassName = "";
+	}
 
-    /**
-     * creates a new label
-     *
-     * @param id the component id
-     * @param model the content model for this component
-     * @return new label
-     */
-    private Component newLabel(final String id, final IModel<String> model)
-    {
-        return new Label(id, model);
-    }
+	/**
+	 * creates a new label
+	 *
+	 * @param id the component id
+	 * @param model the content model for this component
+	 * @return new label
+	 */
+	private Component newLabel(final String id, final IModel<String> model)
+	{
+		return new Label(id, model);
+	}
 
-    /**
-     * creates a new container for a feedback message
-     *
-     * @param id the component id
-     * @return new feedback message container
-     */
-    private Component newFeedbackMessageContainer(final String id)
-    {
-        return new Label(id, new Model<String>());
-    }
+	/**
+	 * creates a new container for a feedback message
+	 *
+	 * @param id the component id
+	 * @return new feedback message container
+	 */
+	private Component newFeedbackMessageContainer(final String id)
+	{
+		return new Label(id, new Model<String>());
+	}
 
-    /**
-     * creates a new help label that contains a help message for the form field. This field
-     * will be set to invisible if there is no content.
-     *
-     * @param id    the component id
-     * @param model the content model for this component
-     * @return new help label
-     */
-    private Component newHelpLabel(final String id, final IModel<String> model)
-    {
-        return new Label(id, model);
-    }
+	/**
+	 * creates a new help label that contains a help message for the form field. This field
+	 * will be set to invisible if there is no content.
+	 *
+	 * @param id    the component id
+	 * @param model the content model for this component
+	 * @return new help label
+	 */
+	private Component newHelpLabel(final String id, final IModel<String> model)
+	{
+		return new Label(id, model);
+	}
 
-    @Override
-    protected void onComponentTag(ComponentTag tag)
-    {
-        super.onComponentTag(tag);
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
 
-        checkComponentTag(tag, "div");
-        tag.append("class", "form-group", " ");
-        tag.append("class", stateClassName, " ");
-    }
+		checkComponentTag(tag, "div");
+		tag.append("class", "form-group", " ");
+		tag.append("class", stateClassName, " ");
+	}
 
-    @Override
-    protected void onInitialize()
-    {
-        super.onInitialize();
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
 
-        this.label = newLabel("label", labelModel);
-        this.help = newHelpLabel("help", helpModel);
-        this.feedback = newFeedbackMessageContainer("error");
-        addToBorder(this.label, this.help, this.feedback);
+		this.label = newLabel("label", labelModel);
+		this.help = newHelpLabel("help", helpModel);
+		this.feedback = newFeedbackMessageContainer("error");
+		addToBorder(this.label, this.help, this.feedback);
 
 
-        final List<FormComponent<?>> formComponents = findFormComponents();
-        final int size = formComponents.size();
+		final List<FormComponent<?>> formComponents = findFormComponents();
+		final int size = formComponents.size();
 
-        if (size > 0)
-        {
-            addOutputMarkupId(formComponents);
+		if (size > 0)
+		{
+			addOutputMarkupId(formComponents);
 
-            final FormComponent<?> formComponent = formComponents.get(size - 1);
-            label.add(new AttributeModifier("for", formComponent.getMarkupId()));
+			final FormComponent<?> formComponent = formComponents.get(size - 1);
+			label.add(new AttributeModifier("for", formComponent.getMarkupId()));
 
-            final boolean useFormComponentLabel = true;
-            if (useFormComponentLabel)
-            {
-                label.setDefaultModel(new LoadableDetachableModel<String>()
-                {
-                    @Override
-                    protected String load() {
-                        if (formComponent.getLabel() != null && !Strings.isEmpty(formComponent.getLabel().getObject()))
-                        {
-                            return formComponent.getLabel().getObject();
-                        }
-                        else
-                        {
-                            String text = formComponent.getDefaultLabel("wicket:unknown");
-                            if (!"wicket:unknown".equals(text) && !Strings.isEmpty(text))
-                            {
-                                return text;
-                            }
-                            else
-                            {
-                                return labelModel.getObject();
-                            }
-                        }
-                    }
-                });
-            }
-        }
-    }
+			final boolean useFormComponentLabel = true;
+			if (useFormComponentLabel)
+			{
+				label.setDefaultModel(new LoadableDetachableModel<String>()
+				{
+					@Override
+					protected String load()
+					{
+						if (formComponent.getLabel() != null && !Strings.isEmpty(formComponent.getLabel().getObject()))
+						{
+							return formComponent.getLabel().getObject();
+						}
+						else
+						{
+							String text = formComponent.getDefaultLabel("wicket:unknown");
+							if (!"wicket:unknown".equals(text) && !Strings.isEmpty(text))
+							{
+								return text;
+							}
+							else
+							{
+								return labelModel.getObject();
+							}
+						}
+					}
+				});
+			}
+		}
+	}
 
-    /**
-     * sets the output markup id flag to true for all given formComponents. This is necessary to
-     * reference them in a "for" attribute on client side.
-     *
-     * @param formComponents the form components to add the output markup id
-     */
-    private void addOutputMarkupId(List<FormComponent<?>> formComponents)
-    {
-        for (final FormComponent<?> fc : formComponents)
-        {
-            fc.setOutputMarkupId(true);
-        }
-    }
+	/**
+	 * sets the output markup id flag to true for all given formComponents. This is necessary to
+	 * reference them in a "for" attribute on client side.
+	 *
+	 * @param formComponents the form components to add the output markup id
+	 */
+	private void addOutputMarkupId(List<FormComponent<?>> formComponents)
+	{
+		for (final FormComponent<?> fc : formComponents)
+		{
+			fc.setOutputMarkupId(true);
+		}
+	}
 
-    @Override
-    protected void onConfigure()
-    {
-        super.onConfigure();
+	@Override
+	protected void onConfigure()
+	{
+		super.onConfigure();
 
-        // set all components visible
-        help.setVisible(true);
-        label.setVisible(true);
-        feedback.setVisible(true);
+		// set all components visible
+		help.setVisible(true);
+		label.setVisible(true);
+		feedback.setVisible(true);
 
-        // clear feedback message and current state
-        stateClassName = "";
-        feedback.setDefaultModelObject("");
+		// clear feedback message and current state
+		stateClassName = "";
+		feedback.setDefaultModelObject("");
 
-        final List<FormComponent<?>> formComponents = findFormComponents();
-        for (final FormComponent<?> fc : formComponents)
-        {
-            final FeedbackMessages messages = fc.getFeedbackMessages();
+		final List<FormComponent<?>> formComponents = findFormComponents();
+		for (final FormComponent<?> fc : formComponents)
+		{
+			final FeedbackMessages messages = fc.getFeedbackMessages();
 
-            if (!messages.isEmpty())
-            {
-                final FeedbackMessage worstMessage = getWorstMessage(messages);
-                worstMessage.markRendered();
+			if (!messages.isEmpty())
+			{
+				final FeedbackMessage worstMessage = getWorstMessage(messages);
+				worstMessage.markRendered();
 
-                feedback.setDefaultModelObject(worstMessage.getMessage());
+				feedback.setDefaultModelObject(worstMessage.getMessage());
 
-                break; // render worst message of first found child component with feedback message
-            }
-        }
-    }
+				break; // render worst message of first found child component with feedback message
+			}
+		}
+	}
 
-    /**
-     * @return all form components that are assigned to this {@link FormGroup}
-     */
-    private List<FormComponent<?>> findFormComponents()
-    {
-        final List<FormComponent<?>> components = new ArrayList<>();
-        getBodyContainer().visitChildren(FormComponent.class, new IVisitor<FormComponent, Void>()
-        {
-            @Override
-            public void component(FormComponent formComponent, IVisit<Void> visit)
-            {
-                components.add(formComponent);
-            }
-        });
+	/**
+	 * @return all form components that are assigned to this {@link FormGroup}
+	 */
+	private List<FormComponent<?>> findFormComponents()
+	{
+		final List<FormComponent<?>> components = new ArrayList<>();
+		getBodyContainer().visitChildren(FormComponent.class, new IVisitor<FormComponent, Void>()
+		{
+			@Override
+			public void component(FormComponent formComponent, IVisit<Void> visit)
+			{
+				components.add(formComponent);
+			}
+		});
 
-        return components;
-    }
+		return components;
+	}
 
-    /**
-     * ordered list of all feedback message types.
-     */
-    private static final List<Integer> messageTypes = Arrays.asList(
-            FeedbackMessage.FATAL, FeedbackMessage.ERROR, FeedbackMessage.WARNING, FeedbackMessage.SUCCESS,
-            FeedbackMessage.INFO, FeedbackMessage.DEBUG, FeedbackMessage.UNDEFINED
-    );
+	/**
+	 * ordered list of all feedback message types.
+	 */
+	private static final List<Integer> messageTypes = Arrays.asList(
+		FeedbackMessage.FATAL, FeedbackMessage.ERROR, FeedbackMessage.WARNING, FeedbackMessage.SUCCESS,
+		FeedbackMessage.INFO, FeedbackMessage.DEBUG, FeedbackMessage.UNDEFINED);
 
-    /**
-     * returns the worst message that is available.
-     *
-     * @param messages all current feedback messages
-     * @return worst possible message or null
-     */
-    private FeedbackMessage getWorstMessage(final FeedbackMessages messages)
-    {
-        for (final Integer messageType : messageTypes)
-        {
-            final FeedbackMessage ret = messages.first(messageType);
+	/**
+	 * returns the worst message that is available.
+	 *
+	 * @param messages all current feedback messages
+	 * @return worst possible message or null
+	 */
+	private FeedbackMessage getWorstMessage(final FeedbackMessages messages)
+	{
+		for (final Integer messageType : messageTypes)
+		{
+			final FeedbackMessage ret = messages.first(messageType);
 
-            if (ret != null)
-            {
-                return ret;
-            }
-        }
+			if (ret != null)
+			{
+				return ret;
+			}
+		}
 
-        return messages.first();
-    }
+		return messages.first();
+	}
 }

@@ -91,7 +91,7 @@ final class ComponentEventSender implements IEventSource
 
 		if (sink instanceof Component)
 		{
-			dispatchToComponent(dispatcher, (Component) sink, event);
+			dispatchToComponent(dispatcher, (Component)sink, event);
 		}
 		else
 		{

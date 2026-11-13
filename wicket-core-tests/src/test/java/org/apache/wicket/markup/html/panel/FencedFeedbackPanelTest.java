@@ -189,12 +189,12 @@ class FencedFeedbackPanelTest
 	}
 
 
-    public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		FencedFeedbackPanel externalFeedback, formFeedback, containerFeedback, containerFeedback2;
 		Component externalLabel, formInput, containerInput;
 
-        public TestPage()
+		public TestPage()
 		{
 			externalFeedback = new FencedFeedbackPanel("feedback");
 			externalLabel = new Label("externalLabel");

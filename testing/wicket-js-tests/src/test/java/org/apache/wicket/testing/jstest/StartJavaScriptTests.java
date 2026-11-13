@@ -84,14 +84,14 @@ public class StartJavaScriptTests
 			https_config.addCustomizer(new SecureRequestCustomizer());
 
 			ServerConnector https = new ServerConnector(server, new SslConnectionFactory(
-					sslContextFactory, "http/1.1"), new HttpConnectionFactory(https_config));
+				sslContextFactory, "http/1.1"), new HttpConnectionFactory(https_config));
 			https.setPort(8443);
 			https.setIdleTimeout(500000);
 
 			server.addConnector(https);
 			System.out.println("SSL access to the examples has been enabled on port 8443");
 			System.out
-					.println("You can access the application using SSL on https://localhost:8443");
+				.println("You can access the application using SSL on https://localhost:8443");
 			System.out.println();
 		}
 
@@ -129,7 +129,7 @@ public class StartJavaScriptTests
 
 	private static void browse() throws Exception
 	{
-	  Desktop.getDesktop().browse(new URI("http://localhost:8080/ajax-tests/test/js/all.html?3.7.1"));
+		Desktop.getDesktop().browse(new URI("http://localhost:8080/ajax-tests/test/js/all.html?3.7.1"));
 	}
 
 	/**

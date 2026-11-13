@@ -592,7 +592,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	@Override
 	public void setContentLengthLong(long len)
 	{
-		setContentLength((int) len);
+		setContentLength((int)len);
 	}
 
 	/**

@@ -159,7 +159,7 @@ public class LiveSessionsPage extends DevUtilsPage
 				item.add(new Label("requestCount", new Model<>(sd.getNumberOfRequests())));
 				item.add(new Label("requestsTime", new Model<>(sd.getTotalTimeTaken())));
 				item.add(new Label("sessionSize",
-						() -> sd.getSessionSize() >= 0 ? Bytes.bytes(sd.getSessionSize()) : "-"));
+					() -> sd.getSessionSize() >= 0 ? Bytes.bytes(sd.getSessionSize()) : "-"));
 			}
 		};
 		add(listView);

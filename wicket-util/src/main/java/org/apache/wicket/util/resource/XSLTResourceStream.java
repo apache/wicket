@@ -87,7 +87,9 @@ public class XSLTResourceStream extends AbstractResourceStream
 		try
 		{
 			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-		} catch (TransformerConfigurationException e) {
+		}
+		catch (TransformerConfigurationException e)
+		{
 			throw new RuntimeException(e);
 		}
 		return factory;
@@ -103,7 +105,8 @@ public class XSLTResourceStream extends AbstractResourceStream
 	 * @param transformerFactory
 	 * 			  the transformer factory used to transform the xmlResource
 	 */
-	public XSLTResourceStream(final IResourceStream xsltResource, final IResourceStream xmlResource, TransformerFactory transformerFactory)
+	public XSLTResourceStream(final IResourceStream xsltResource, final IResourceStream xmlResource,
+		TransformerFactory transformerFactory)
 	{
 		try
 		{

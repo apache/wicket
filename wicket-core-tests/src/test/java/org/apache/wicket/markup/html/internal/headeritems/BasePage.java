@@ -25,14 +25,16 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * A base page that contributes a StringHeaderItem
  * and adds a Panel with its own contributions
  */
-public class BasePage extends WebPage {
+public class BasePage extends WebPage
+{
 	private static final long serialVersionUID = 1L;
 
-	BasePage(final PageParameters parameters) {
+	BasePage(final PageParameters parameters)
+	{
 		super(parameters);
 
 		add(new PanelA("panel"));
-    }
+	}
 
 	@Override
 	public void renderHead(IHeaderResponse response)

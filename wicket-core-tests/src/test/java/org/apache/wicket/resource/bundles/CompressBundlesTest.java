@@ -67,8 +67,7 @@ class CompressBundlesTest extends WicketTestCase
 
 				getResourceBundles().addJavaScriptBundle(CompressBundlesTest.class, "bundle.js",
 					new JavaScriptResourceReference(CompressBundlesTest.class, "two.js"),
-					new JavaScriptResourceReference(CompressBundlesTest.class, "one.js")
-				);
+					new JavaScriptResourceReference(CompressBundlesTest.class, "one.js"));
 			}
 		};
 	}
@@ -77,7 +76,8 @@ class CompressBundlesTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		CompressBundleTestPage() {}
+		CompressBundleTestPage()
+		{}
 
 		@Override
 		public void renderHead(IHeaderResponse response)
@@ -85,10 +85,10 @@ class CompressBundlesTest extends WicketTestCase
 			super.renderHead(response);
 
 			response.render(JavaScriptHeaderItem.forReference(
-					new JavaScriptResourceReference(CompressBundlesTest.class, "one.js")));
+				new JavaScriptResourceReference(CompressBundlesTest.class, "one.js")));
 
 			response.render(JavaScriptHeaderItem.forReference(
-					new JavaScriptResourceReference(CompressBundlesTest.class, "three.js")));
+				new JavaScriptResourceReference(CompressBundlesTest.class, "three.js")));
 		}
 
 		@Override

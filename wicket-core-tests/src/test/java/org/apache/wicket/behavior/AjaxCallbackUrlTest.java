@@ -33,62 +33,69 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for https://issues.apache.org/jira/browse/WICKET-6192
  */
-class AjaxCallbackUrlTest extends WicketTestCase {
+class AjaxCallbackUrlTest extends WicketTestCase
+{
 
-    @Test
-    void withoutPathParameters() {
-        String callbackUrl = getCallbackUrl("/a/b/c");
-        assertEquals("./a/b/c?0-1.0-link", callbackUrl);
-    }
+	@Test
+	void withoutPathParameters()
+	{
+		String callbackUrl = getCallbackUrl("/a/b/c");
+		assertEquals("./a/b/c?0-1.0-link", callbackUrl);
+	}
 
-    @Test
-    void withPathParameters() {
-        String callbackUrl = getCallbackUrl("/a/${b}/${c}");
-        assertEquals("./a/BBB/CCC?0-1.0-link", callbackUrl);
-    }
+	@Test
+	void withPathParameters()
+	{
+		String callbackUrl = getCallbackUrl("/a/${b}/${c}");
+		assertEquals("./a/BBB/CCC?0-1.0-link", callbackUrl);
+	}
 
-    private String getCallbackUrl(final String pageMountPath) {
+	private String getCallbackUrl(final String pageMountPath)
+	{
 
-        WebApplication application = tester.getApplication();
-        application.mountPage(pageMountPath, TestPage.class);
-        application.getPageSettings().setRecreateBookmarkablePagesAfterExpiry(false);
+		WebApplication application = tester.getApplication();
+		application.mountPage(pageMountPath, TestPage.class);
+		application.getPageSettings().setRecreateBookmarkablePagesAfterExpiry(false);
 
-        PageParameters pageParameters = new PageParameters();
-        pageParameters.set("b", "BBB", INamedParameters.Type.PATH);
-        pageParameters.set("c", "CCC", INamedParameters.Type.PATH);
+		PageParameters pageParameters = new PageParameters();
+		pageParameters.set("b", "BBB", INamedParameters.Type.PATH);
+		pageParameters.set("c", "CCC", INamedParameters.Type.PATH);
 
-        TestPage page = tester.startPage(TestPage.class, pageParameters);
+		TestPage page = tester.startPage(TestPage.class, pageParameters);
 
-        return page.getAjaxCallbackUrl();
-    }
+		return page.getAjaxCallbackUrl();
+	}
 
-    public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
-    {
+	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	{
 
-        private final AbstractAjaxBehavior ajaxBehavior;
+		private final AbstractAjaxBehavior ajaxBehavior;
 
-        public TestPage()
-        {
-            WebMarkupContainer link = new WebMarkupContainer("link");
-            add(link);
+		public TestPage()
+		{
+			WebMarkupContainer link = new WebMarkupContainer("link");
+			add(link);
 
-            ajaxBehavior = new AbstractAjaxBehavior() {
-                @Override
-                public void onRequest() {
+			ajaxBehavior = new AbstractAjaxBehavior()
+			{
+				@Override
+				public void onRequest()
+				{
 
-                }
-            };
-            link.add(ajaxBehavior);
-        }
+				}
+			};
+			link.add(ajaxBehavior);
+		}
 
-        private String getAjaxCallbackUrl()
-        {
-            return ajaxBehavior.getCallbackUrl().toString();
-        }
+		private String getAjaxCallbackUrl()
+		{
+			return ajaxBehavior.getCallbackUrl().toString();
+		}
 
-        @Override
-        public IResourceStream getMarkupResourceStream(final MarkupContainer container, final Class<?> containerClass) {
-            return new StringResourceStream("<html><body><a wicket:id='link'>Link</a></body></html>");
-        }
-    }
+		@Override
+		public IResourceStream getMarkupResourceStream(final MarkupContainer container, final Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><body><a wicket:id='link'>Link</a></body></html>");
+		}
+	}
 }

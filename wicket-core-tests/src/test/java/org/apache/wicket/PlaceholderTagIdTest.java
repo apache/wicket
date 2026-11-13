@@ -38,7 +38,7 @@ class PlaceholderTagIdTest extends WicketTestCase
 	 * {@link IAjaxRegionMarkupIdProvider}
 	 */
 	@Test
-    void wicket3563()
+	void wicket3563()
 	{
 		tester.startPage(TestPage.class);
 
@@ -55,7 +55,7 @@ class PlaceholderTagIdTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-        public TestPage()
+		public TestPage()
 		{
 			Form<?> form = new Form<Void>("form");
 			form.setVisible(false);

@@ -58,9 +58,9 @@ public class JavaSerializer implements ISerializer
 	private static final StackWalker STACKWALKER;
 	private static final ClassLoader PLATFORM_CLASS_LOADER;
 
-	static {
-		PrivilegedAction<StackWalker> pa1 =
-				() -> StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+	static
+	{
+		PrivilegedAction<StackWalker> pa1 = () -> StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 		PrivilegedAction<ClassLoader> pa2 = ClassLoader::getPlatformClassLoader;
 		STACKWALKER = AccessController.doPrivileged(pa1);
 		PLATFORM_CLASS_LOADER = AccessController.doPrivileged(pa2);
@@ -112,7 +112,7 @@ public class JavaSerializer implements ISerializer
 		catch (Exception e)
 		{
 			log.error("Error serializing object {} [object={}]",
-			          object.getClass(), object, e);
+				object.getClass(), object, e);
 		}
 		return null;
 	}
@@ -217,7 +217,7 @@ public class JavaSerializer implements ISerializer
 				log.debug(
 					"Class not found by the object outputstream itself, trying the IClassResolver");
 
-				Class< ? > candidate = resolveClassInWicket(desc.getName());
+				Class<?> candidate = resolveClassInWicket(desc.getName());
 				if (candidate == null)
 				{
 					throw cnfEx;
@@ -325,7 +325,7 @@ public class JavaSerializer implements ISerializer
 				{
 					final InvocationHandler invocationHandler = (proxy, method, args) -> null;
 					final Object proxyInstance = Proxy.newProxyInstance(
-							hasNonPublicInterface ? nonPublicLoader : latestLoader, classObjs, invocationHandler);
+						hasNonPublicInterface ? nonPublicLoader : latestLoader, classObjs, invocationHandler);
 					return proxyInstance.getClass();
 				}
 				catch (IllegalArgumentException e)
@@ -339,13 +339,12 @@ public class JavaSerializer implements ISerializer
 		{
 			try
 			{
-				return STACKWALKER.walk(s ->
-						s.map(StackWalker.StackFrame::getDeclaringClass)
-						.map(Class::getClassLoader)
-						.filter(Objects::nonNull)
-						.filter(cl -> !PLATFORM_CLASS_LOADER.equals(cl))
-						.findFirst()
-						.orElse(PLATFORM_CLASS_LOADER));
+				return STACKWALKER.walk(s -> s.map(StackWalker.StackFrame::getDeclaringClass)
+					.map(Class::getClassLoader)
+					.filter(Objects::nonNull)
+					.filter(cl -> !PLATFORM_CLASS_LOADER.equals(cl))
+					.findFirst()
+					.orElse(PLATFORM_CLASS_LOADER));
 			}
 			catch (IllegalArgumentException | SecurityException e)
 			{
@@ -389,8 +388,8 @@ public class JavaSerializer implements ISerializer
 					try
 					{
 						// trigger serialization again, but this time gather some more info
-						CheckingObjectOutputStream checkingObjectOutputStream =
-							new CheckingObjectOutputStream(outputStream, new ObjectSerializationChecker(nsx));
+						CheckingObjectOutputStream checkingObjectOutputStream = new CheckingObjectOutputStream(
+							outputStream, new ObjectSerializationChecker(nsx));
 						checkingObjectOutputStream.writeObject(obj);
 					}
 					catch (CheckingObjectOutputStream.ObjectCheckException x)
@@ -400,7 +399,9 @@ public class JavaSerializer implements ISerializer
 					catch (Exception x)
 					{
 						x.initCause(nsx);
-						throw new WicketRuntimeException("A problem occurred while trying to collect debug information about not serializable object", x);
+						throw new WicketRuntimeException(
+							"A problem occurred while trying to collect debug information about not serializable object",
+							x);
 					}
 
 					// if we get here, we didn't fail, while we should

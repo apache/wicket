@@ -66,7 +66,8 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 			final Package componentPackage = componentClass.getPackage();
 			if (componentPackage != null)
 			{
-				final AuthorizeInstantiation packageAnnotation = componentPackage.getAnnotation(AuthorizeInstantiation.class);
+				final AuthorizeInstantiation packageAnnotation = componentPackage.getAnnotation(
+					AuthorizeInstantiation.class);
 				if (packageAnnotation != null)
 				{
 					authorized = check(packageAnnotation);
@@ -113,7 +114,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 
 		return authorized;
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
@@ -185,9 +186,9 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	{
 		Class<? extends IResource> resourceClass = resource.getClass();
 		boolean allowedByResourceItself = isResourceAnnotationSatisfied(
-				resourceClass.getAnnotation(AuthorizeResource.class));
+			resourceClass.getAnnotation(AuthorizeResource.class));
 		boolean allowedByPackage = isResourceAnnotationSatisfied(
-				resourceClass.getPackage().getAnnotation(AuthorizeResource.class));
+			resourceClass.getPackage().getAnnotation(AuthorizeResource.class));
 		return allowedByResourceItself && allowedByPackage;
 	}
 

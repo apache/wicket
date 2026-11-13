@@ -44,19 +44,22 @@ public class SelectTestPage3 extends WebPage
 
 		List<Integer> choices = Arrays.asList(1, 2, 3);
 
-		IOptionRenderer<Integer> renderer = new IOptionRenderer<Integer>() {
-			
+		IOptionRenderer<Integer> renderer = new IOptionRenderer<Integer>()
+		{
+
 			@Override
-			public IModel<Integer> getModel(Integer value) {
+			public IModel<Integer> getModel(Integer value)
+			{
 				return Model.of(value);
 			}
-			
+
 			@Override
-			public String getDisplayValue(Integer object) {
+			public String getDisplayValue(Integer object)
+			{
 				return "<" + object + ">";
 			}
 		};
-		
-		select.add(options = new SelectOptions<Integer>("options", new ListModel<>(choices), renderer ));
+
+		select.add(options = new SelectOptions<Integer>("options", new ListModel<>(choices), renderer));
 	}
 }

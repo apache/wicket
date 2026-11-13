@@ -99,11 +99,9 @@ public class SecuritySettings
 		}
 	};
 
-	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener =
-			DEFAULT_UNAUTHORIZED_COMPONENT_INSTANTIATION_LISTENER;
+	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener = DEFAULT_UNAUTHORIZED_COMPONENT_INSTANTIATION_LISTENER;
 
-	private static final IUnauthorizedResourceRequestListener DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER =
-			new DefaultUnauthorizedResourceRequestListener();
+	private static final IUnauthorizedResourceRequestListener DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER = new DefaultUnauthorizedResourceRequestListener();
 
 	private IUnauthorizedResourceRequestListener unauthorizedResourceRequestListener = DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER;
 
@@ -196,7 +194,7 @@ public class SecuritySettings
 		this.cryptFactory = cryptFactory;
 		return this;
 	}
-	
+
 	/**
 	 * Sets the supplier of secure random data for Wicket. The implementation must use a strong
 	 * source of random data and be able to generate a lot of random data without running out of
@@ -237,9 +235,8 @@ public class SecuritySettings
 	public SecuritySettings setUnauthorizedComponentInstantiationListener(
 		IUnauthorizedComponentInstantiationListener listener)
 	{
-		this.unauthorizedComponentInstantiationListener = listener == null ?
-				DEFAULT_UNAUTHORIZED_COMPONENT_INSTANTIATION_LISTENER :
-				listener;
+		this.unauthorizedComponentInstantiationListener = listener == null
+			? DEFAULT_UNAUTHORIZED_COMPONENT_INSTANTIATION_LISTENER : listener;
 		return this;
 	}
 
@@ -260,9 +257,8 @@ public class SecuritySettings
 	 */
 	public SecuritySettings setUnauthorizedResourceRequestListener(IUnauthorizedResourceRequestListener listener)
 	{
-		this.unauthorizedResourceRequestListener = listener == null ?
-				DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER :
-				listener;
+		this.unauthorizedResourceRequestListener = listener == null ? DEFAULT_UNAUTHORIZED_RESOURCE_REQUEST_LISTENER
+			: listener;
 		return this;
 	}
 
@@ -279,7 +275,8 @@ public class SecuritySettings
 	{
 		if (authenticationStrategy == null)
 		{
-			authenticationStrategy = new DefaultAuthenticationStrategy("LoggedIn", new SunJceCrypt(SunJceCrypt.randomSalt(), 17));
+			authenticationStrategy = new DefaultAuthenticationStrategy("LoggedIn", new SunJceCrypt(SunJceCrypt
+				.randomSalt(), 17));
 		}
 		return authenticationStrategy;
 	}

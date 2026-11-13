@@ -32,11 +32,11 @@ public class AESCryptTest
 	public void encrypDecrypt() throws GeneralSecurityException
 	{
 		DefaultSecureRandomSupplier randomSupplier = new DefaultSecureRandomSupplier();
-		
+
 		SecretKey secretKey = CipherUtils.generatePBEKey(
-			"myWeakPassword", "PBKDF2WithHmacSHA1", "AES", 
+			"myWeakPassword", "PBKDF2WithHmacSHA1", "AES",
 			randomSupplier.getRandomBytes(16), 65536, 256);
-		
+
 		AbstractJceCrypt crypt = new AESCrypt(secretKey, randomSupplier);
 
 		String inputTest = "inputTest";

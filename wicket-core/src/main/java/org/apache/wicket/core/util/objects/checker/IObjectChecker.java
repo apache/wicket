@@ -32,8 +32,7 @@ public interface IObjectChecker
 	 */
 	class Result
 	{
-		public enum Status
-		{
+		public enum Status {
 			/**
 			 * The check is successful
 			 */
@@ -104,9 +103,9 @@ public interface IObjectChecker
 		public String toString()
 		{
 			return "Result{" +
-					"reason='" + reason + '\'' +
-					", status=" + status +
-					'}';
+				"reason='" + reason + '\'' +
+				", status=" + status +
+				'}';
 		}
 	}
 

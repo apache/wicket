@@ -39,7 +39,8 @@ public class TagUtils
 	 */
 	// 'public' so that user applications can add/modify the entries, if needed
 	public static final IValueMap ATTRIBUTES_SEPARATORS = new ValueMap();
-	static {
+	static
+	{
 		ATTRIBUTES_SEPARATORS.put("class", " ");
 		ATTRIBUTES_SEPARATORS.put("style", DEFAULT_ATTRIBUTE_SEPARATOR);
 		ATTRIBUTES_SEPARATORS.put("onclick", DEFAULT_ATTRIBUTE_SEPARATOR);
@@ -229,7 +230,8 @@ public class TagUtils
 	 *		The offset in the markup stream from which to start searching.
 	 * @return the {@link IMarkupFragment} of the component tag if found, {@code null} is not found.
 	 */
-	public static final IMarkupFragment findTagMarkup(IMarkupFragment fragment, String id, String tagName, int streamOffset)
+	public static final IMarkupFragment findTagMarkup(IMarkupFragment fragment, String id, String tagName,
+		int streamOffset)
 	{
 		/*
 		 * We need streamOffset because MarkupFragment starts searching from offset 1.
@@ -252,7 +254,7 @@ public class TagUtils
 
 				if (tag.isOpen() || tag.isOpenClose())
 				{
-					if (canFind && tag.getId().equals(id) && (tagName==null || tag.getName().equals(tagName)))
+					if (canFind && tag.getId().equals(id) && (tagName == null || tag.getName().equals(tagName)))
 					{
 						return stream.getMarkupFragment();
 					}

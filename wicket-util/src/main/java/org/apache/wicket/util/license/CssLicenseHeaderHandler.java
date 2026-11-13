@@ -24,7 +24,6 @@ import org.apache.wicket.util.diff.Diff;
 import org.apache.wicket.util.diff.Revision;
 
 
-
 class CssLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
 	/**

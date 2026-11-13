@@ -112,7 +112,7 @@ public class PasswordTextField extends TextField<String>
 	@Override
 	protected String[] getInputTypes()
 	{
-		return new String[] {"password"};
+		return new String[] { "password" };
 	}
 
 	/**
@@ -121,10 +121,12 @@ public class PasswordTextField extends TextField<String>
 	@Override
 	protected void onDetach()
 	{
-		if (resetPassword) {
+		if (resetPassword)
+		{
 			clearInput();
 
-			if (getModel() != null) {
+			if (getModel() != null)
+			{
 				getModel().setObject(null);
 			}
 		}

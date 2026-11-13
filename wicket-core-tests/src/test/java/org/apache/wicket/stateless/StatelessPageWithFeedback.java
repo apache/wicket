@@ -24,11 +24,13 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 /**
  * @author papegaaij
  */
-public class StatelessPageWithFeedback extends WebPage {
+public class StatelessPageWithFeedback extends WebPage
+{
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected void onInitialize() {
+	protected void onInitialize()
+	{
 		super.onInitialize();
 
 		setStatelessHint(true);
@@ -38,11 +40,13 @@ public class StatelessPageWithFeedback extends WebPage {
 		add(new FeedbackPanel("feedback"));
 		StatelessForm<Void> form = new StatelessForm<Void>("form");
 		add(form);
-		form.add(new SubmitLink("submit") {
+		form.add(new SubmitLink("submit")
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmit() {
+			public void onSubmit()
+			{
 				StatelessPageWithFeedback.this.error("error in onSubmit");
 			}
 		});

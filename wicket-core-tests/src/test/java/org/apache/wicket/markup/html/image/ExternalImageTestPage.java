@@ -77,7 +77,7 @@ public class ExternalImageTestPage extends WebPage
 	{
 
 		private static final long serialVersionUID = 1L;
-		
+
 		private String url;
 
 		/**
@@ -97,7 +97,7 @@ public class ExternalImageTestPage extends WebPage
 		 * @param url
 		 *            the url to be used
 		 */
-        void setUrl(String url)
+		void setUrl(String url)
 		{
 			this.url = url;
 		}

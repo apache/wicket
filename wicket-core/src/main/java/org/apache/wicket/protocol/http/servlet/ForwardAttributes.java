@@ -116,7 +116,8 @@ public class ForwardAttributes
 	/**
 	 * @return the path info of the request before the forward dispatch
 	 */
-	public String getPathInfo() {
+	public String getPathInfo()
+	{
 		return pathInfo;
 	}
 
@@ -130,7 +131,8 @@ public class ForwardAttributes
 	{
 		Args.notNull(request, "request");
 
-		final String requestUri = DispatchedRequestUtils.getRequestUri(request, RequestDispatcher.FORWARD_REQUEST_URI, filterPrefix);
+		final String requestUri = DispatchedRequestUtils.getRequestUri(request, RequestDispatcher.FORWARD_REQUEST_URI,
+			filterPrefix);
 		final String servletPath = (String)request.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH);
 		final String contextPath = (String)request.getAttribute(RequestDispatcher.FORWARD_CONTEXT_PATH);
 		final String queryString = (String)request.getAttribute(RequestDispatcher.FORWARD_QUERY_STRING);
@@ -150,6 +152,6 @@ public class ForwardAttributes
 	{
 		return "ForwardAttributes [requestUri=" + requestUri + ", servletPath=" + servletPath +
 			", contextPath=" + contextPath + ", queryString=" + queryString +
-			   ", pathInfo=" + pathInfo + "]";
+			", pathInfo=" + pathInfo + "]";
 	}
 }

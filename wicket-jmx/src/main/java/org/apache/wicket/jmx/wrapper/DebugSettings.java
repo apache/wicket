@@ -87,9 +87,10 @@ public class DebugSettings implements DebugSettingsMBean
 	}
 
 	@Override
-	public void setOutputMarkupContainerClassNameStrategy(final String strategyName) {
+	public void setOutputMarkupContainerClassNameStrategy(final String strategyName)
+	{
 		application.getDebugSettings().setOutputMarkupContainerClassNameStrategy(strategyName);
-	
+
 	}
 
 	@Override

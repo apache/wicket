@@ -49,7 +49,7 @@ public class CryptingPageStoreTest extends WicketTestCase
 	{
 		Security.addProvider(new BouncyCastleProvider());
 	}
-	
+
 	static List<ICrypter> crypters()
 	{
 		return List.of(new DefaultCrypter(), new GCMSIVCrypter());
@@ -70,8 +70,8 @@ public class CryptingPageStoreTest extends WicketTestCase
 			SerializedPage serializedAdd = new SerializedPage(p, "foo", serializer.serialize(add));
 			store.addPage(context, serializedAdd);
 
-			SerializedPage serializedGot = (SerializedPage) store.getPage(context, p);
-			MockPage got = (MockPage) serializer.deserialize(serializedGot.getData());
+			SerializedPage serializedGot = (SerializedPage)store.getPage(context, p);
+			MockPage got = (MockPage)serializer.deserialize(serializedGot.getData());
 			assertEquals(p, got.getPageId());
 		}
 	}
@@ -96,9 +96,9 @@ public class CryptingPageStoreTest extends WicketTestCase
 
 		try
 		{
-			SerializedPage serializedGot = (SerializedPage) store.getPage(context, p);
+			SerializedPage serializedGot = (SerializedPage)store.getPage(context, p);
 
-			MockPage got = (MockPage) serializer.deserialize(serializedGot.getData());
+			MockPage got = (MockPage)serializer.deserialize(serializedGot.getData());
 			assertEquals(p, got.getPageId());
 		}
 		catch (RuntimeException ex)
@@ -109,7 +109,7 @@ public class CryptingPageStoreTest extends WicketTestCase
 				"unable to decrypt with new key");
 		}
 	}
-	
+
 	private CryptingPageStore buildPageStore(ICrypter crypter)
 	{
 		return new CryptingPageStore(new MockPageStore(), tester.getApplication())

@@ -38,26 +38,27 @@ public class PriorityDepthsPage extends WebPage
 
 		Priority b = new Priority("b", "y");
 		add(b);
-		
+
 		b.add(new Priority("c", "x"));
 	}
 
-	private class Priority extends WebMarkupContainer {
+	private class Priority extends WebMarkupContainer
+	{
 
 		private String title;
 
 		public Priority(String id, String title)
 		{
 			super(id);
-			
+
 			this.title = title;
 		}
-		
+
 		@Override
 		public void renderHead(IHeaderResponse response)
 		{
 			super.renderHead(response);
-			
+
 			response.render(new PriorityHeaderItem(
 				StringHeaderItem.forString(String.format("<title>%s</title>\n", title))));
 		}

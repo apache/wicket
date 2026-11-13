@@ -45,7 +45,7 @@ public class LocalTimeTextField extends TextField<LocalTime> implements ITextFor
 	 * The converter for the TextField
 	 */
 	private final TextFormatConverter converter;
-	
+
 	/**
 	 * Construct with a pattern.
 	 * 
@@ -60,7 +60,8 @@ public class LocalTimeTextField extends TextField<LocalTime> implements ITextFor
 	{
 		super(id, model, LocalTime.class);
 
-		this.converter = new TextFormatConverter() {
+		this.converter = new TextFormatConverter()
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -104,7 +105,8 @@ public class LocalTimeTextField extends TextField<LocalTime> implements ITextFor
 	{
 		super(id, model, LocalTime.class);
 
-		this.converter = new TextFormatConverter() {
+		this.converter = new TextFormatConverter()
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -116,7 +118,8 @@ public class LocalTimeTextField extends TextField<LocalTime> implements ITextFor
 			@Override
 			public String getTextFormat(Locale locale)
 			{
-				return DateTimeFormatterBuilder.getLocalizedDateTimePattern(null, timeStyle, IsoChronology.INSTANCE, locale);
+				return DateTimeFormatterBuilder.getLocalizedDateTimePattern(null, timeStyle, IsoChronology.INSTANCE,
+					locale);
 			}
 		};
 	}
@@ -158,7 +161,8 @@ public class LocalTimeTextField extends TextField<LocalTime> implements ITextFor
 		return converter.getTextFormat(getLocale());
 	}
 
-	private abstract class TextFormatConverter extends LocalTimeConverter {
+	private abstract class TextFormatConverter extends LocalTimeConverter
+	{
 		private static final long serialVersionUID = 1L;
 
 		public abstract String getTextFormat(Locale locale);

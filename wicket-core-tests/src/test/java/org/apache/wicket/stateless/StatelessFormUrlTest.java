@@ -43,7 +43,8 @@ class StatelessFormUrlTest extends WicketTestCase
 	@Override
 	protected WebApplication newApplication()
 	{
-		return new MockApplication() {
+		return new MockApplication()
+		{
 			@Override
 			public Class<? extends Page> getHomePage()
 			{
@@ -86,7 +87,7 @@ class StatelessFormUrlTest extends WicketTestCase
 		/**
 		 * @param pageParameters
 		 */
-        public TestPage(PageParameters pageParameters)
+		public TestPage(PageParameters pageParameters)
 		{
 			super(pageParameters);
 			StatelessForm<Void> form = new StatelessForm<>("form");

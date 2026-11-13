@@ -41,7 +41,7 @@ public final class WicketExampleHeader extends Panel
 		super(id);
 
 		setRenderBodyOnly(true);
-		
+
 		add(new Image("exampleheaderimage", new PackageResourceReference(
 			WicketExamplePage.class, "logo-apachewicket-examples-white.svg")));
 		add(new DebugBar("debug"));

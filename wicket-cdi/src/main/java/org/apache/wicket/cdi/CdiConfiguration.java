@@ -137,9 +137,9 @@ public class CdiConfiguration
 		{
 			listeners.add(new ConversationPropagator(application, getPropagation()));
 			application.getComponentPreOnBeforeRenderListeners().add(
-					new AutoConversationManager(getPropagation()));
+				new AutoConversationManager(getPropagation()));
 			application.getComponentPreOnBeforeRenderListeners().add(
-					new ConversationExpiryChecker());
+				new ConversationExpiryChecker());
 		}
 
 		// enable detach event

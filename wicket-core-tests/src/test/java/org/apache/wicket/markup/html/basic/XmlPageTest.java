@@ -39,7 +39,7 @@ class XmlPageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage_1() throws Exception
+	void renderHomePage_1() throws Exception
 	{
 		executeTest(XmlPage_1.class, "XmlPageExpectedResult_1.xml");
 	}
@@ -48,7 +48,7 @@ class XmlPageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage_2() throws Exception
+	void renderHomePage_2() throws Exception
 	{
 		IPropertiesFactory myFac = new MyPropertiesFactory(tester.getApplication());
 		tester.getApplication().getResourceSettings().setPropertiesFactory(myFac);
@@ -60,7 +60,7 @@ class XmlPageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage_3() throws Exception
+	void renderHomePage_3() throws Exception
 	{
 		IPropertiesFactory myFac = new MyPropertiesFactory(tester.getApplication());
 		tester.getApplication().getResourceSettings().setPropertiesFactory(myFac);
@@ -75,7 +75,7 @@ class XmlPageTest extends WicketTestCase
 		 * 
 		 * @param application
 		 */
-        MyPropertiesFactory(Application application)
+		MyPropertiesFactory(Application application)
 		{
 			super(application.getResourceSettings());
 

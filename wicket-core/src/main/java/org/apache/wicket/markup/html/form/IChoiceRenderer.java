@@ -55,7 +55,8 @@ public interface IChoiceRenderer<T> extends IDetachable
 	 *            The index of the object in the choices list.
 	 * @return String
 	 */
-	default String getIdValue(T object, int index) {
+	default String getIdValue(T object, int index)
+	{
 		return Integer.toString(index);
 	}
 
@@ -93,5 +94,5 @@ public interface IChoiceRenderer<T> extends IDetachable
 	default void detach()
 	{
 	}
-	
+
 }

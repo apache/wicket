@@ -53,7 +53,8 @@ final class ConvertersTest
 	private static final Locale DUTCH_LOCALE = new Locale("nl", "NL");
 
 	@Test
-	void thousandSeparator() {
+	void thousandSeparator()
+	{
 		BigDecimalConverter bdc = new BigDecimalConverter();
 		assertEquals(new BigDecimal(3000), bdc.convertToObject("3 000", Locale.FRENCH));
 
@@ -388,7 +389,7 @@ final class ConvertersTest
 		});
 	}
 
-	@EnabledOnJre({JRE.JAVA_11, JRE.JAVA_12})
+	@EnabledOnJre({ JRE.JAVA_11, JRE.JAVA_12 })
 	@Test
 	void validDateConverters_upToJava12()
 	{
@@ -408,7 +409,7 @@ final class ConvertersTest
 		assertEquals(date, converter.convertToObject("10/24/02", Locale.US));
 	}
 
-	@EnabledOnJre({JRE.JAVA_13})
+	@EnabledOnJre({ JRE.JAVA_13 })
 	@Test
 	void validDateConverters_Java13()
 	{
@@ -446,7 +447,7 @@ final class ConvertersTest
 		});
 	}
 
-	@EnabledOnJre({JRE.JAVA_11, JRE.JAVA_12})
+	@EnabledOnJre({ JRE.JAVA_11, JRE.JAVA_12 })
 	@Test
 	void calendarConverter_upToJava12()
 	{
@@ -466,7 +467,7 @@ final class ConvertersTest
 		assertEquals(cal, converter.convertToObject("5/1/11", Locale.US));
 	}
 
-	@EnabledOnJre({JRE.JAVA_13})
+	@EnabledOnJre({ JRE.JAVA_13 })
 	@Test
 	void calendarConverter_Java13()
 	{

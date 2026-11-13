@@ -81,8 +81,7 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 	 * The action to perform when the outcome of the resource isolation policy is DISALLOWED or
 	 * UNKNOWN. 
 	 */
-	public enum CsrfAction
-	{
+	public enum CsrfAction {
 		/** Aborts the request and throws an exception when a CSRF request is detected. */
 		ABORT {
 			@Override
@@ -90,7 +89,7 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 			{
 				return "aborted";
 			}
-			
+
 			@Override
 			void apply(ResourceIsolationRequestCycleListener listener, HttpServletRequest request,
 				IRequestablePage page)
@@ -108,7 +107,7 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 			{
 				return "suppressed";
 			}
-			
+
 			@Override
 			void apply(ResourceIsolationRequestCycleListener listener, HttpServletRequest request,
 				IRequestablePage page)
@@ -124,7 +123,7 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 			{
 				return "allowed";
 			}
-			
+
 			@Override
 			void apply(ResourceIsolationRequestCycleListener listener, HttpServletRequest request,
 				IRequestablePage page)
@@ -162,7 +161,7 @@ public class ResourceIsolationRequestCycleListener implements IRequestCycleListe
 	private String errorMessage = ERROR_MESSAGE;
 
 	private final Set<String> exemptedPaths = new HashSet<>();
-	
+
 	private final List<IResourceIsolationPolicy> resourceIsolationPolicies = new ArrayList<>();
 
 	/**

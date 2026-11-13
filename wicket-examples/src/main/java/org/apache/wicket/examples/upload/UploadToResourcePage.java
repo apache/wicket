@@ -95,9 +95,11 @@ public class UploadToResourcePage extends WicketExamplePage
 			@Override
 			protected void onUploadSuccess(AjaxRequestTarget target, List<UploadInfo> infos)
 			{
-				for (UploadInfo uploadInfo : infos) {
-					info("File " + uploadInfo.getClientFileName() + " successfully uploaded. Size: " + uploadInfo.getSize() + "bytes. ContentType: "
-							+ uploadInfo.getContentType() +". Stored at " +  uploadInfo.getFile().getAbsolutePath());
+				for (UploadInfo uploadInfo : infos)
+				{
+					info("File " + uploadInfo.getClientFileName() + " successfully uploaded. Size: " + uploadInfo
+						.getSize() + "bytes. ContentType: "
+						+ uploadInfo.getContentType() + ". Stored at " + uploadInfo.getFile().getAbsolutePath());
 				}
 				updateFeedback(target);
 			}
@@ -109,7 +111,8 @@ public class UploadToResourcePage extends WicketExamplePage
 			}
 
 			@Override
-			public void startUpload(IPartialPageRequestHandler target) {
+			public void startUpload(IPartialPageRequestHandler target)
+			{
 				if (allowToLeavePageWhileUploading.getObject())
 				{
 					target.prependJavaScript("Wicket.CurrentUpload = {};");
@@ -125,7 +128,8 @@ public class UploadToResourcePage extends WicketExamplePage
 			}
 
 			@Override
-			protected CharSequence getClientSideSuccessCallBack() {
+			protected CharSequence getClientSideSuccessCallBack()
+			{
 				return "function() {Wicket.CurrentUpload = null}";
 			}
 
@@ -154,9 +158,11 @@ public class UploadToResourcePage extends WicketExamplePage
 
 		Form<Void> form = new Form<>("form");
 		add(form);
-		form.add(new AjaxCheckBox("allowToLeavePageWhileUploading", allowToLeavePageWhileUploading) {
+		form.add(new AjaxCheckBox("allowToLeavePageWhileUploading", allowToLeavePageWhileUploading)
+		{
 			@Override
-			protected void onUpdate(AjaxRequestTarget target) {
+			protected void onUpdate(AjaxRequestTarget target)
+			{
 
 			}
 		});
@@ -211,9 +217,11 @@ public class UploadToResourcePage extends WicketExamplePage
 		{
 
 			@Override
-			public void renderHead(IHeaderResponse response) {
+			public void renderHead(IHeaderResponse response)
+			{
 				super.renderHead(response);
-				response.render(OnEventHeaderItem.forComponent(this, "click", fileUploadToResourceField.getTriggerCancelUploadScript()));
+				response.render(OnEventHeaderItem.forComponent(this, "click", fileUploadToResourceField
+					.getTriggerCancelUploadScript()));
 			}
 
 			@Override
@@ -231,11 +239,12 @@ public class UploadToResourcePage extends WicketExamplePage
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
-				counter ++;
+				counter++;
 				target.add(this);
 			}
 
-		}.setBody(()-> "Click me: upload does not blocks normal wicket AJAX. I was clicked " + counter).setOutputMarkupId(true));
+		}.setBody(() -> "Click me: upload does not blocks normal wicket AJAX. I was clicked " + counter)
+			.setOutputMarkupId(true));
 		// Create feedback panels
 		uploadFeedback = new FeedbackPanel("uploadFeedback");
 		uploadFeedback.setOutputMarkupId(true);
@@ -246,10 +255,12 @@ public class UploadToResourcePage extends WicketExamplePage
 	}
 
 	@Override
-	public void renderHead(IHeaderResponse response) {
+	public void renderHead(IHeaderResponse response)
+	{
 		super.renderHead(response);
 		response.render(
-				OnDomReadyHeaderItem.forScript("$(window).bind('beforeunload', function(){ if (Wicket.CurrentUpload != null) { return 'leave?'; }});"));
+			OnDomReadyHeaderItem.forScript(
+				"$(window).bind('beforeunload', function(){ if (Wicket.CurrentUpload != null) { return 'leave?'; }});"));
 	}
 
 	@Override

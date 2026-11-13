@@ -64,7 +64,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	public ThumbnailImageResource(final IResource unscaledImageResource, final int maxSize)
 	{
 		Args.notNull(unscaledImageResource, "unscaledImageResource");
-		
+
 		this.unscaledImageResource = unscaledImageResource;
 		this.maxSize = maxSize;
 	}
@@ -99,7 +99,8 @@ public class ThumbnailImageResource extends DynamicImageResource
 		{
 			// read original image
 			ByteArrayResponse byteResponse = new ByteArrayResponse();
-			Attributes dispatchAttributes = new Attributes(attributes.getRequest(), byteResponse, attributes.getParameters());
+			Attributes dispatchAttributes = new Attributes(attributes.getRequest(), byteResponse, attributes
+				.getParameters());
 			unscaledImageResource.respond(dispatchAttributes);
 			is = new ByteArrayInputStream(byteResponse.getBytes());
 			originalImage = ImageIO.read(is);

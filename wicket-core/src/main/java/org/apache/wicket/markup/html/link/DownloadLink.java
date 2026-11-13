@@ -70,7 +70,7 @@ public class DownloadLink extends Link<File>
 	 * The default is ATTACHMENT to initiate the browser file save dialog.
 	 */
 	private ContentDisposition contentDisposition = ContentDisposition.ATTACHMENT;
-	
+
 	/**
 	 * Constructor. File name used will be the result of <code>file.getName()</code>
 	 * 
@@ -220,7 +220,7 @@ public class DownloadLink extends Link<File>
 		cacheDuration = duration;
 		return this;
 	}
-	
+
 	/**
 	 * Sets the content disposition of the request.
 	 * 
@@ -228,7 +228,8 @@ public class DownloadLink extends Link<File>
 	 *            the content disposition of the file
 	 * @return this component
 	 */
-	public DownloadLink setContentDisposition(ContentDisposition contentDisposition) {
+	public DownloadLink setContentDisposition(ContentDisposition contentDisposition)
+	{
 		this.contentDisposition = contentDisposition;
 		return this;
 	}

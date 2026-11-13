@@ -78,14 +78,13 @@ public class AutoLabelResolver implements IComponentResolver
 	static final String WICKET_AUTO = ":auto";
 
 	public static final String LABEL_ATTR = "label_attr";
-	
+
 	public static final String CSS_REQUIRED_KEY = CssUtils.key(AutoLabel.class, "required");
 	public static final String CSS_DISABLED_KEY = CssUtils.key(AutoLabel.class, "disabled");
 	public static final String CSS_ERROR_KEY = CssUtils.key(AutoLabel.class, "error");
 	private static final String CSS_DISABLED_DEFAULT = "disabled";
 	private static final String CSS_REQUIRED_DEFAULT = "required";
 	private static final String CSS_ERROR_DEFAULT = "error";
-	
 
 
 	@Override
@@ -109,13 +108,15 @@ public class AutoLabelResolver implements IComponentResolver
 		// check if component implements ILabelProviderLocator
 		if (component instanceof ILabelProviderLocator)
 		{
-			component = ((ILabelProviderLocator) component).getAutoLabelComponent();
+			component = ((ILabelProviderLocator)component).getAutoLabelComponent();
 		}
 
 		if (!(component instanceof ILabelProvider))
 		{
-			throw new WicketRuntimeException("Component '" + (component == null ? "null" : component.getClass().getName())
-					+ "', pointed to by wicket:for attribute '" + path + "', does not implement " + ILabelProvider.class.getName());
+			throw new WicketRuntimeException("Component '" + (component == null ? "null" : component.getClass()
+				.getName())
+				+ "', pointed to by wicket:for attribute '" + path + "', does not implement " + ILabelProvider.class
+					.getName());
 		}
 
 		if (!component.getOutputMarkupId())
@@ -238,19 +239,21 @@ public class AutoLabelResolver implements IComponentResolver
 		}
 
 		@Deprecated(since = "9.17.0, 10.0.0", forRemoval = true)
-		public void updateFrom(FormComponent<?> component, AjaxRequestTarget target) {
+		public void updateFrom(FormComponent<?> component, AjaxRequestTarget target)
+		{
 			updateFrom(component, (IPartialPageRequestHandler)target);
 		}
 
 		public void updateFrom(FormComponent<?> component, IPartialPageRequestHandler target)
 		{
-			boolean valid = component.isValid(), required = component.isRequired(), enabled = component.isEnabledInHierarchy();
+			boolean valid = component.isValid(), required = component.isRequired(), enabled = component
+				.isEnabledInHierarchy();
 
 			if (isValid() != valid)
 			{
 				target.appendJavaScript(String.format("Wicket.DOM.toggleClass('%s', '%s', %s);",
-						getLabelIdFor(component), component.getString(CSS_ERROR_KEY, null, CSS_ERROR_DEFAULT),
-						!valid));
+					getLabelIdFor(component), component.getString(CSS_ERROR_KEY, null, CSS_ERROR_DEFAULT),
+					!valid));
 			}
 
 			if (isRequired() != required)
@@ -326,7 +329,7 @@ public class AutoLabelResolver implements IComponentResolver
 		{
 			super(id);
 			component = fc;
-			
+
 			setMarkupId(getLabelIdFor(component));
 			setOutputMarkupId(true);
 		}

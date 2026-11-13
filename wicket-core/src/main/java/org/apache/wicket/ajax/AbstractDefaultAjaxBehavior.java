@@ -87,9 +87,9 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	protected void onBind()
 	{
 		final Component component = getComponent();
-		
+
 		component.setOutputMarkupId(true);
-		
+
 		if (getStatelessHint(component))
 		{
 			//generate behavior id
@@ -257,7 +257,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			if (Strings.isEmpty(childSelector) == false)
 			{
 				attributesJson.put(AjaxAttributeName.CHILD_SELECTOR.jsonName(),
-						childSelector);
+					childSelector);
 			}
 
 			if (attributes.isSerializeRecursively())
@@ -280,7 +280,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 						AjaxAttributeName.INIT_HANDLER.jsonName(),
 						INIT_HANDLER_FUNCTION_SIGNATURE);
 
-						CharSequence beforeHandler = ajaxCallListener.getBeforeHandler(component);
+					CharSequence beforeHandler = ajaxCallListener.getBeforeHandler(component);
 					appendListenerHandler(beforeHandler, attributesJson,
 						AjaxAttributeName.BEFORE_HANDLER.jsonName(),
 						BEFORE_HANDLER_FUNCTION_SIGNATURE);
@@ -334,7 +334,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			{
 				for (CharSequence dynamicExtraParameter : dynamicExtraParameters)
 				{
-					JSONFunction function = getJsonFunction(DYNAMIC_PARAMETER_FUNCTION_SIGNATURE, dynamicExtraParameter);
+					JSONFunction function = getJsonFunction(DYNAMIC_PARAMETER_FUNCTION_SIGNATURE,
+						dynamicExtraParameter);
 					attributesJson.append(AjaxAttributeName.DYNAMIC_PARAMETER_FUNCTION.jsonName(),
 						function);
 				}
@@ -449,7 +450,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		}
 	}
 
-	private JSONFunction getJsonFunction(String signature, CharSequence body) {
+	private JSONFunction getJsonFunction(String signature, CharSequence body)
+	{
 		String func = signature + "{" + body + "}";
 		return new JSONFunction(func);
 	}
@@ -568,8 +570,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		}
 		sb.append("var params = ").append(jsonArray).append(";\n");
 		sb.append("attrs.").append(AjaxAttributeName.EXTRA_PARAMETERS)
-				.append(" = params.concat(attrs.")
-				.append(AjaxAttributeName.EXTRA_PARAMETERS).append(" || []);\n");
+			.append(" = params.concat(attrs.")
+			.append(AjaxAttributeName.EXTRA_PARAMETERS).append(" || []);\n");
 		sb.append("Wicket.Ajax.ajax(attrs);\n");
 		return sb;
 	}
@@ -612,11 +614,12 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		{
 			AjaxRequestAttributes attrs = getAttributes();
 			String desiredMethod = attrs.getMethod().toString();
-			String actualMethod = ((HttpServletRequest) RequestCycle.get().getRequest().getContainerRequest()).getMethod();
+			String actualMethod = ((HttpServletRequest)RequestCycle.get().getRequest().getContainerRequest())
+				.getMethod();
 			if (!desiredMethod.equalsIgnoreCase(actualMethod))
 			{
 				LOG.debug("Ignoring the Ajax request because its method '{}' is different than the expected one '{}",
-				          actualMethod, desiredMethod);
+					actualMethod, desiredMethod);
 				return;
 			}
 		}

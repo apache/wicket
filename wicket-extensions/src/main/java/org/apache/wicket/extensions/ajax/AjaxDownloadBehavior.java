@@ -270,7 +270,8 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		onBeforeDownload(handler);
 	}
 
-	private String generateSameSiteAttribute() {
+	private String generateSameSiteAttribute()
+	{
 		StringBuilder stringBuffer = new StringBuilder(30);
 		if (sameSite.equals(CookieDefaults.SameSite.None))
 		{
@@ -331,20 +332,26 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	@Override
 	protected void respond(AjaxRequestTarget target)
 	{
-		String result = getComponent().getRequest().getRequestParameters().getParameterValue("result").toOptionalString();
-		if ("success".equals(result)) {
+		String result = getComponent().getRequest().getRequestParameters().getParameterValue("result")
+			.toOptionalString();
+		if ("success".equals(result))
+		{
 			onDownloadSuccess(target);
-		} else if ("failed".equals(result)) {
+		}
+		else if ("failed".equals(result))
+		{
 			onDownloadFailed(target);
 		}
 		onDownloadCompleted(target);
 	}
 
-	public Location getLocation() {
+	public Location getLocation()
+	{
 		return location;
 	}
 
-	public AjaxDownloadBehavior setLocation(final Location location) {
+	public AjaxDownloadBehavior setLocation(final Location location)
+	{
 		this.location = Args.notNull(location, "location");
 		return this;
 	}
@@ -396,7 +403,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 
 			ResourceRequestHandler handler = new ResourceRequestHandler(resource, null);
 
-			((WebResponse) response).addCookie(cookie(getName(), sameSite));
+			((WebResponse)response).addCookie(cookie(getName(), sameSite));
 
 			handler.respond(requestCycle);
 		}

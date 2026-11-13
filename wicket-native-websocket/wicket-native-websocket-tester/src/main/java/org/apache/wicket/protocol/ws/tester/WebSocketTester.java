@@ -175,7 +175,7 @@ public class WebSocketTester
 		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(webSocketSettings.getConnectionRegistry());
 		broadcaster.broadcastAll(application, message);
 	}
-	
+
 	public void destroy()
 	{
 		socketProcessor.onClose(0, "Closed by WebSocketTester");

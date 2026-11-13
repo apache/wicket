@@ -208,7 +208,8 @@ public class WicketFilterTest
 			assertNotNull(responseExpiresHeader, "Expires header must be set on not modified response");
 
 			Date responseExpires = headerDateFormat.parse(responseExpiresHeader);
-			assertTrue(responseExpires.after(new Date()), "Expected later than current date but was " + responseExpires);
+			assertTrue(responseExpires.after(new Date()), "Expected later than current date but was "
+				+ responseExpires);
 		}
 		finally
 		{
@@ -367,11 +368,11 @@ public class WicketFilterTest
 		}
 	}
 
-    public static class FilterTestingConfig implements FilterConfig
+	public static class FilterTestingConfig implements FilterConfig
 	{
 		private final Map<String, String> initParameters = new HashMap<>();
 
-        public FilterTestingConfig()
+		public FilterTestingConfig()
 		{
 			initParameters.put(WicketFilter.APP_FACT_PARAM,
 				FilterTestingApplicationFactory.class.getName());
@@ -408,7 +409,7 @@ public class WicketFilterTest
 
 	/**
 	 */
-    public static class FilterTestingApplicationFactory implements IWebApplicationFactory
+	public static class FilterTestingApplicationFactory implements IWebApplicationFactory
 	{
 		@Override
 		public WebApplication createApplication(WicketFilter filter)
@@ -444,7 +445,7 @@ public class WicketFilterTest
 		private final AtomicInteger successCount;
 
 		CheckRedirectWorker(WicketFilter filter, CountDownLatch startLatch,
-							CountDownLatch finishLatch, AtomicInteger successCount)
+			CountDownLatch finishLatch, AtomicInteger successCount)
 		{
 			this.filter = filter;
 			this.startLatch = startLatch;

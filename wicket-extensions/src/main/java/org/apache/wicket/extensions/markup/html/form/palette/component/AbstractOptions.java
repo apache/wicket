@@ -189,7 +189,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 			"if (typeof(Wicket) != \"undefined\" && typeof(Wicket.Form) != \"undefined\")"
 				+ "    Wicket.Form.excludeFromAjaxSerialization." + getMarkupId() + "='true';"));
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

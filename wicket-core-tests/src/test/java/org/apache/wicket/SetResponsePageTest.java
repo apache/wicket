@@ -27,7 +27,7 @@ class SetResponsePageTest extends WicketTestCase
 {
 	/** Fix setting response page in constructor. */
 	@Test
-    void setResponsePage()
+	void setResponsePage()
 	{
 		tester.startPage(Page1.class);
 		tester.assertRenderedPage(Page3.class);
@@ -39,7 +39,7 @@ class SetResponsePageTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 
 		/** Construct. */
-        public Page1()
+		public Page1()
 		{
 			setResponsePage(Page2.class);
 		}
@@ -63,7 +63,7 @@ class SetResponsePageTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 
 		/** Construct. */
-        public Page3()
+		public Page3()
 		{
 		}
 	}

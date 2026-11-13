@@ -87,7 +87,7 @@ public class BookmarkablePageRequestHandler
 	public String toString()
 	{
 		return "BookmarkablePageRequestHandler{" +
-				"pageProvider=" + pageProvider +
-				'}';
+			"pageProvider=" + pageProvider +
+			'}';
 	}
 }

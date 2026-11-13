@@ -45,8 +45,7 @@ public interface IResourceIsolationPolicy
 	 * 
 	 * @see IResourceIsolationPolicy#isRequestAllowed(jakarta.servlet.http.HttpServletRequest, org.apache.wicket.request.component.IRequestablePage)
 	 */
-	public enum ResourceIsolationOutcome
-	{
+	public enum ResourceIsolationOutcome {
 		ALLOWED, DISALLOWED, UNKNOWN
 	}
 
@@ -60,8 +59,7 @@ public interface IResourceIsolationPolicy
 	 * @see IResourceIsolationPolicy#isRequestAllowed(jakarta.servlet.http.HttpServletRequest,
 	 *      org.apache.wicket.request.component.IRequestablePage, RequestType)
 	 */
-	public enum RequestType
-	{
+	public enum RequestType {
 		/** The request renders the targeted page. */
 		RENDER,
 		/** The request invokes a listener on the targeted page, such as a link or a form submit. */

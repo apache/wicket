@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 class WicketTesterClickExternalLinkTest extends WicketTestCase
 {
 	@Test
-    void clickExternalLink()
+	void clickExternalLink()
 	{
 		MockPageWithLink page = new MockPageWithLink();
 		String href = "http://wicket.apache.org";

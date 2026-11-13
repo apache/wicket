@@ -33,79 +33,78 @@ import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 public class ProgressBarTogglePanel extends Panel
 {
 
-    private int progress = 0;
-    private boolean showProgress = true;
+	private int progress = 0;
+	private boolean showProgress = true;
 
 
-    public ProgressBarTogglePanel(String id)
-    {
-        super(id);
+	public ProgressBarTogglePanel(String id)
+	{
+		super(id);
 
-        setOutputMarkupId(true);
+		setOutputMarkupId(true);
 
-        add(new WebSocketBehavior()
-        {
-        });
+		add(new WebSocketBehavior()
+		{
+		});
 
-        add(new AjaxLink<Void>("hideShowProgress")
-        {
-            @Override
-            public void onClick(AjaxRequestTarget target)
-            {
-                showProgress = !showProgress;
-                target.add(ProgressBarTogglePanel.this);
-            }
-        }.setBody((IModel<String>) () -> showProgress ? "Hide progress" : "Show progress"));
+		add(new AjaxLink<Void>("hideShowProgress")
+		{
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				showProgress = !showProgress;
+				target.add(ProgressBarTogglePanel.this);
+			}
+		}.setBody((IModel<String>)() -> showProgress ? "Hide progress" : "Show progress"));
 
-        add(new AjaxLink<Void>("cancelRestartTask")
-        {
-            @Override
-            public void onClick(AjaxRequestTarget target)
-            {
-                JSR356Session.get().startOrCancelTask();
-                target.add(ProgressBarTogglePanel.this);
-            }
-        }.setBody((IModel<String>) () -> {
-            ProgressUpdater.ProgressUpdateTask progressUpdateTask = JSR356Session.get().getProgressUpdateTask();
-            return progressUpdateTask != null && progressUpdateTask.isRunning() && !progressUpdateTask.isCanceled()
-                    ? "Cancel task" :
-                    "Restart task";
-        }));
+		add(new AjaxLink<Void>("cancelRestartTask")
+		{
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				JSR356Session.get().startOrCancelTask();
+				target.add(ProgressBarTogglePanel.this);
+			}
+		}.setBody((IModel<String>)() -> {
+			ProgressUpdater.ProgressUpdateTask progressUpdateTask = JSR356Session.get().getProgressUpdateTask();
+			return progressUpdateTask != null && progressUpdateTask.isRunning() && !progressUpdateTask.isCanceled()
+				? "Cancel task" : "Restart task";
+		}));
 
-        add(new Label("progressBar", (IModel<String>) () -> {
-            ProgressUpdater.ProgressUpdateTask progressUpdateTask = JSR356Session.get().getProgressUpdateTask();
-            return progressUpdateTask != null && progressUpdateTask.isRunning()
-                    ? "Background Task is " + progress + "% completed"
-                    : "No task is running";
-        })
-        {
-            @Override
-            protected void onConfigure()
-            {
-                super.onConfigure();
-                setVisible(showProgress);
-            }
-        });
-    }
+		add(new Label("progressBar", (IModel<String>)() -> {
+			ProgressUpdater.ProgressUpdateTask progressUpdateTask = JSR356Session.get().getProgressUpdateTask();
+			return progressUpdateTask != null && progressUpdateTask.isRunning()
+				? "Background Task is " + progress + "% completed"
+				: "No task is running";
+		})
+		{
+			@Override
+			protected void onConfigure()
+			{
+				super.onConfigure();
+				setVisible(showProgress);
+			}
+		});
+	}
 
 
-    @Override
-    public void onEvent(IEvent<?> event)
-    {
-        if (event.getPayload() instanceof WebSocketPushPayload)
-        {
-            WebSocketPushPayload wsEvent = (WebSocketPushPayload) event.getPayload();
-            if (wsEvent.getMessage() instanceof ProgressUpdater.ProgressUpdate)
-            {
-                ProgressUpdater.ProgressUpdate progressUpdate = (ProgressUpdater.ProgressUpdate)wsEvent.getMessage();
-                progress = progressUpdate.getProgress();
-                wsEvent.getHandler().add(this);
-            }
-            else if (wsEvent.getMessage() instanceof ProgressUpdater.TaskCanceled)
-            {
-                // task was canceled
-                wsEvent.getHandler().add(this);
-            }
-        }
-    }
+	@Override
+	public void onEvent(IEvent<?> event)
+	{
+		if (event.getPayload() instanceof WebSocketPushPayload)
+		{
+			WebSocketPushPayload wsEvent = (WebSocketPushPayload)event.getPayload();
+			if (wsEvent.getMessage() instanceof ProgressUpdater.ProgressUpdate)
+			{
+				ProgressUpdater.ProgressUpdate progressUpdate = (ProgressUpdater.ProgressUpdate)wsEvent.getMessage();
+				progress = progressUpdate.getProgress();
+				wsEvent.getHandler().add(this);
+			}
+			else if (wsEvent.getMessage() instanceof ProgressUpdater.TaskCanceled)
+			{
+				// task was canceled
+				wsEvent.getHandler().add(this);
+			}
+		}
+	}
 }

@@ -226,6 +226,28 @@ When building using Maven 3, execute one of the following in the root folder:
     creates wicket-(subproject)-x.y.z.jar(s) in according target subdirectories and 
     installs the jar files into your local Maven repository for use in other projects.
 
+Code style
+----------
+
+The Java code format (tabs, braces on their own line, 120 columns) is defined by the
+Eclipse formatter profile codestyle/wicket-formatter.xml. The build checks every Java
+source against it and fails on a deviation. To reformat your changes:
+
+ - mvn spotless:apply
+
+Javadoc and other comments are left as written: the formatter only touches code.
+
+To get the same result in your IDE:
+
+ - Eclipse: Preferences > Java > Code Style > Formatter > Import...,
+   and select codestyle/wicket-formatter.xml.
+ - IntelliJ IDEA: install the "Adapter for Eclipse Code Formatter" plugin and
+   point it at codestyle/wicket-formatter.xml. That plugin runs the Eclipse
+   formatter itself, so its output matches the build. Importing the profile as
+   a native scheme (Settings > Editor > Code Style > Java > Import Scheme >
+   Eclipse XML Profile) comes close, but is not exact.
+ - Other editors pick up the basics from .editorconfig.
+
 Migrating from 9.x
 ------------------
 

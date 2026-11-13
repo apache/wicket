@@ -28,7 +28,7 @@ class BookmarkableHomePageLinksTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void testLinks() throws Exception
+	void testLinks() throws Exception
 	{
 		executeTest(BookmarkableHomePageLinksPage.class,
 			"BookmarkableHomePageLinksPage_result.html");

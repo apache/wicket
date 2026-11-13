@@ -56,7 +56,8 @@ public class DecoupledAjaxUpdatePage extends BasePage
 			Integer.class).setRequired(true));
 
 		// add button that will broadcast counter update event
-		form.add(new AjaxButton("submit") {
+		form.add(new AjaxButton("submit")
+		{
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{

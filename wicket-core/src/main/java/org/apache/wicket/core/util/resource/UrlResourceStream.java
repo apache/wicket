@@ -165,7 +165,8 @@ public class UrlResourceStream extends AbstractResourceStream
 			Connections.closeQuietly(data.connection);
 			if (data.inputStreams != null)
 			{
-				for (InputStream is : data.inputStreams) {
+				for (InputStream is : data.inputStreams)
+				{
 					IOUtils.closeQuietly(is);
 				}
 			}
@@ -184,7 +185,8 @@ public class UrlResourceStream extends AbstractResourceStream
 		{
 			StreamData data = getData(true);
 			InputStream is = data.connection.getInputStream();
-			if (data.inputStreams == null) {
+			if (data.inputStreams == null)
+			{
 				data.inputStreams = new ArrayList<>();
 			}
 			data.inputStreams.add(is);
@@ -240,9 +242,12 @@ public class UrlResourceStream extends AbstractResourceStream
 		if (data != null)
 		{
 			URLConnection connection = url.openConnection();
-			try {
+			try
+			{
 				data.contentLength = connection.getContentLength();
-			} finally {
+			}
+			finally
+			{
 				Connections.close(connection);
 			}
 		}

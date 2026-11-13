@@ -90,7 +90,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 	public AsynchronousPageStore(final IPageStore delegate, final int capacity)
 	{
 		super(delegate);
-		
+
 		queue = new LinkedBlockingQueue<>(capacity);
 		queueMap = new ConcurrentHashMap<>();
 
@@ -120,7 +120,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 	private static class PendingAdd implements IPageContext
 	{
 		private final IPageContext context;
-		
+
 		private final IManageablePage page;
 
 		private final String sessionId;
@@ -146,7 +146,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		{
 			this.context = Args.notNull(context, "context");
 			this.page = Args.notNull(page, "page");
-			
+
 			this.sessionId = context.getSessionId(true);
 		}
 
@@ -161,7 +161,8 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		@Override
 		public String toString()
 		{
-			return "PendingAdd [sessionId=" + sessionId + ", pageId=" + page.getPageId() + ", pageClass=" + Classes.name(page.getClass()) + "]";
+			return "PendingAdd [sessionId=" + sessionId + ", pageId=" + page.getPageId() + ", pageClass=" + Classes
+				.name(page.getClass()) + "]";
 		}
 
 		/**
@@ -174,7 +175,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			{
 				throw new WicketRuntimeException("request data not available asynchronuously");
 			}
-			
+
 			return context.getRequestData(key, value);
 		}
 
@@ -189,25 +190,27 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> defaultValue)
 		{
 			T value;
-			
+
 			if (asynchronous)
 			{
 				value = (T)attributeCache.get(key);
 				if (value == null && defaultValue.get() != null)
 				{
-						throw new WicketRuntimeException("session attribute can not be changed asynchronuously");
+					throw new WicketRuntimeException("session attribute can not be changed asynchronuously");
 				}
-			} else {
+			}
+			else
+			{
 				value = context.getSessionAttribute(key, defaultValue);
 				if (value != null)
 				{
 					attributeCache.put(key, value);
 				}
 			}
-			
+
 			return value;
 		}
-		
+
 		/**
 		 * Prevents changing of session data when called asynchronously.
 		 */
@@ -215,7 +218,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue)
 		{
 			T value;
-			
+
 			if (asynchronous)
 			{
 				value = (T)dataCache.get(key);
@@ -232,7 +235,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 					dataCache.put(key, value);
 				}
 			}
-			
+
 			return value;
 		}
 
@@ -260,7 +263,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		private final IPageStore delegate;
 
 		private PageAddingRunnable(IPageStore delegate, BlockingQueue<PendingAdd> queue,
-		                           ConcurrentMap<String, PendingAdd> map)
+			ConcurrentMap<String, PendingAdd> map)
 		{
 			this.delegate = delegate;
 			this.queue = queue;
@@ -327,10 +330,11 @@ public class AsynchronousPageStore extends DelegatingPageStore
 	public IManageablePage getPage(IPageContext context, int pageId)
 	{
 		String sessionId = context.getSessionId(false);
-		if (sessionId == null) {
+		if (sessionId == null)
+		{
 			return null;
 		}
-		
+
 		PendingAdd entry = queueMap.get(getKey(sessionId, pageId));
 		if (entry != null)
 		{
@@ -348,7 +352,8 @@ public class AsynchronousPageStore extends DelegatingPageStore
 	public void removePage(IPageContext context, IManageablePage page)
 	{
 		String sessionId = context.getSessionId(false);
-		if (sessionId == null) {
+		if (sessionId == null)
+		{
 			return;
 		}
 
@@ -393,7 +398,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		{
 			log.warn("Delegated page store '{}' can not be asynchronous", getDelegate().getClass().getName());
 		}
-		
+
 		getDelegate().addPage(context, page);
 	}
 
@@ -401,19 +406,21 @@ public class AsynchronousPageStore extends DelegatingPageStore
 	public void removeAllPages(IPageContext context)
 	{
 		String sessionId = context.getSessionId(false);
-		if (sessionId == null) {
+		if (sessionId == null)
+		{
 			return;
 		}
 
 		queue.removeIf(add -> {
-			if (add.sessionId.equals(sessionId)) {
+			if (add.sessionId.equals(sessionId))
+			{
 				queueMap.remove(add.getKey());
 				return true;
 			}
-			
+
 			return false;
 		});
-		
+
 		getDelegate().removeAllPages(context);
 	}
 }

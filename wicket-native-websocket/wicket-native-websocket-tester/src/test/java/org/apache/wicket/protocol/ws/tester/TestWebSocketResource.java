@@ -29,6 +29,7 @@ import org.apache.wicket.util.string.Strings;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class TestWebSocketResource extends WebSocketResource
 {
 	static final String TEXT = "TestWebSocketResource-text";
@@ -88,7 +89,8 @@ public class TestWebSocketResource extends WebSocketResource
 	}
 
 	@Override
-	protected void onAbort(AbortedMessage message) {
+	protected void onAbort(AbortedMessage message)
+	{
 		ON_ABORT_CALLED.set(true);
 		super.onAbort(message);
 	}

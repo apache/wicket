@@ -25,19 +25,24 @@ import org.apache.wicket.markup.html.WebPage;
  *
  * @author Domas Poliakas (disblader)
  */
-class MockPageWithLabelInEnclosure extends WebPage {
+class MockPageWithLabelInEnclosure extends WebPage
+{
 
-    public MockPageWithLabelInEnclosure() {
-        // Clicking this link re-renders the link itself
-        this.add(new AjaxLink<Void>("testLink") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                target.add(this);
-            }
-        });
-    }
+	public MockPageWithLabelInEnclosure()
+	{
+		// Clicking this link re-renders the link itself
+		this.add(new AjaxLink<Void>("testLink")
+		{
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				target.add(this);
+			}
+		});
+	}
 
-    public AjaxLink<Void> getSelfRefreshingAjaxLink(){
-        return (AjaxLink<Void>) get("testLink");
-    }
+	public AjaxLink<Void> getSelfRefreshingAjaxLink()
+	{
+		return (AjaxLink<Void>)get("testLink");
+	}
 }

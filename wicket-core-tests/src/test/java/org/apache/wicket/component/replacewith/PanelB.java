@@ -20,14 +20,14 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 class PanelB extends Panel
 {
-    public PanelB(String id)
-    {
-        super(id);
-    }
+	public PanelB(String id)
+	{
+		super(id);
+	}
 
-    @Override
-    protected void onInitialize()
-    {
-        super.onInitialize();
-    }
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+	}
 }

@@ -33,9 +33,9 @@ public class CollectAllRequestCookiesPage extends DummyHomePage
 
 	public CollectAllRequestCookiesPage()
 	{
-		cookies = ((WebRequest) getRequest()).getCookies();
+		cookies = ((WebRequest)getRequest()).getCookies();
 	}
-	
+
 	public List<Cookie> getCookies()
 	{
 		return cookies;

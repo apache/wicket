@@ -43,88 +43,95 @@ import com.github.openjson.JSONObject;
  *
  * @author Ernesto Reinaldo Barreiro (reiern70@gmail.com).
  */
-public abstract class FilesSelectedBehavior extends OnChangeAjaxBehavior {
+public abstract class FilesSelectedBehavior extends OnChangeAjaxBehavior
+{
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private static final ResourceReference JS = new JavaScriptResourceReference(FilesSelectedBehavior.class, "FilesSelectedBehavior.js");
+	private static final ResourceReference JS = new JavaScriptResourceReference(FilesSelectedBehavior.class,
+		"FilesSelectedBehavior.js");
 
-    @Override
-    protected void onBind() {
-        super.onBind();
-        Component component = getComponent();
-        if (!(component instanceof FileUploadField)) {
-            throw new WicketRuntimeException("Behavior " + getClass().getName()
-                    + " can only be added to an instance of a FileUploadField");
-        }
-    }
+	@Override
+	protected void onBind()
+	{
+		super.onBind();
+		Component component = getComponent();
+		if (!(component instanceof FileUploadField))
+		{
+			throw new WicketRuntimeException("Behavior " + getClass().getName()
+				+ " can only be added to an instance of a FileUploadField");
+		}
+	}
 
-    @Override
-    protected void onUpdate(AjaxRequestTarget target) {
-        Request request = RequestCycle.get().getRequest();
-        List<FileDescription> fileDescriptions = new ArrayList<>();
-        IRequestParameters parameters = request.getRequestParameters();
-        // data is streamed as JSON.
-        StringValue fileInfos = parameters.getParameterValue("fileInfos");
-        JSONArray jsonArray = new JSONArray(fileInfos.toString());
-        for (int i = 0; i < jsonArray.length(); i++)
-        {
-            fileDescriptions.add(new FileDescription((JSONObject)jsonArray.get(i)));
-        }
-        onSelected(target, fileDescriptions);
-    }
+	@Override
+	protected void onUpdate(AjaxRequestTarget target)
+	{
+		Request request = RequestCycle.get().getRequest();
+		List<FileDescription> fileDescriptions = new ArrayList<>();
+		IRequestParameters parameters = request.getRequestParameters();
+		// data is streamed as JSON.
+		StringValue fileInfos = parameters.getParameterValue("fileInfos");
+		JSONArray jsonArray = new JSONArray(fileInfos.toString());
+		for (int i = 0; i < jsonArray.length(); i++)
+		{
+			fileDescriptions.add(new FileDescription((JSONObject)jsonArray.get(i)));
+		}
+		onSelected(target, fileDescriptions);
+	}
 
 
-    /**
-     * Called when a file, at client side is selected.
-     *
-     * @param target           The {@link org.apache.wicket.ajax.AjaxRequestTarget}
-     * @param fileDescriptions A list of FileDescription
-     */
-    protected abstract void onSelected(AjaxRequestTarget target, List<FileDescription> fileDescriptions);
+	/**
+	 * Called when a file, at client side is selected.
+	 *
+	 * @param target           The {@link org.apache.wicket.ajax.AjaxRequestTarget}
+	 * @param fileDescriptions A list of FileDescription
+	 */
+	protected abstract void onSelected(AjaxRequestTarget target, List<FileDescription> fileDescriptions);
 
-    @Override
-    protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
-    {
-        super.updateAjaxAttributes(attributes);
-        attributes.getAjaxCallListeners().add(new IAjaxCallListener()
-        {
-            @Override
-            public CharSequence getPrecondition(Component component)
-            {
-                return "return Wicket.FilesSelected.precondition(this);";
-            }
-        });
-        attributes.getDynamicExtraParameters().add("return Wicket.FilesSelected.collectFilesDetails('" + getComponent().getMarkupId() + "');");
-    }
+	@Override
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+		super.updateAjaxAttributes(attributes);
+		attributes.getAjaxCallListeners().add(new IAjaxCallListener()
+		{
+			@Override
+			public CharSequence getPrecondition(Component component)
+			{
+				return "return Wicket.FilesSelected.precondition(this);";
+			}
+		});
+		attributes.getDynamicExtraParameters().add("return Wicket.FilesSelected.collectFilesDetails('" + getComponent()
+			.getMarkupId() + "');");
+	}
 
-    @Override
-    public void renderHead(Component component, IHeaderResponse response)
-    {
-        super.renderHead(component, response);
-        response.render(JavaScriptHeaderItem.forReference(JS));
-    }
+	@Override
+	public void renderHead(Component component, IHeaderResponse response)
+	{
+		super.renderHead(component, response);
+		response.render(JavaScriptHeaderItem.forReference(JS));
+	}
 
-    /**
-     * Creates an {@link FilesSelectedBehavior} based on lambda expressions
-     *
-     * @param select {@link SerializableBiConsumer}
-     *
-     * @return the {@link FilesSelectedBehavior} behavior
-     */
-    public static FilesSelectedBehavior onSelected(
-            SerializableBiConsumer<AjaxRequestTarget, List<FileDescription>> select)
-    {
-        Args.notNull(select, "select");
+	/**
+	 * Creates an {@link FilesSelectedBehavior} based on lambda expressions
+	 *
+	 * @param select {@link SerializableBiConsumer}
+	 *
+	 * @return the {@link FilesSelectedBehavior} behavior
+	 */
+	public static FilesSelectedBehavior onSelected(
+		SerializableBiConsumer<AjaxRequestTarget, List<FileDescription>> select)
+	{
+		Args.notNull(select, "select");
 
-        return new FilesSelectedBehavior()
-        {
-            private static final long serialVersionUID = 1L;
+		return new FilesSelectedBehavior()
+		{
+			private static final long serialVersionUID = 1L;
 
-            @Override
-            protected void onSelected(AjaxRequestTarget target, List<FileDescription> fileDescriptions) {
-                select.accept(target, fileDescriptions);
-            }
-        };
-    }
+			@Override
+			protected void onSelected(AjaxRequestTarget target, List<FileDescription> fileDescriptions)
+			{
+				select.accept(target, fileDescriptions);
+			}
+		};
+	}
 }

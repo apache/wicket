@@ -60,7 +60,7 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	 */
 	public TestWebSocketProcessor(final WicketTester wicketTester, final Page page)
 	{
-		super(createRequest(wicketTester, page), (WebApplication) page.getApplication());
+		super(createRequest(wicketTester, page), (WebApplication)page.getApplication());
 	}
 
 	/**
@@ -71,7 +71,7 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	 */
 	public TestWebSocketProcessor(final WicketTester wicketTester, final String resourceName, Page page)
 	{
-		super(createRequest(wicketTester, resourceName, page),  wicketTester.getApplication());
+		super(createRequest(wicketTester, resourceName, page), wicketTester.getApplication());
 	}
 
 	/**
@@ -82,7 +82,7 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	 */
 	public TestWebSocketProcessor(final WicketTester wicketTester, final String resourceName)
 	{
-		super(createRequest(wicketTester, resourceName, null),  wicketTester.getApplication());
+		super(createRequest(wicketTester, resourceName, null), wicketTester.getApplication());
 	}
 
 	/**
@@ -108,7 +108,8 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	 *      the page that may have registered {@link org.apache.wicket.protocol.ws.api.WebSocketBehavior}
 	 * @return a mock http request
 	 */
-	private static HttpServletRequest createRequest(final WicketTester wicketTester, final String resourceName, final Page page)
+	private static HttpServletRequest createRequest(final WicketTester wicketTester, final String resourceName,
+		final Page page)
 	{
 		Args.notNull(resourceName, "resourceName");
 		MockHttpServletRequest request = createRequest(wicketTester);
@@ -141,7 +142,8 @@ abstract class TestWebSocketProcessor extends AbstractWebSocketProcessor
 	@Override
 	public void onOpen(Object connection)
 	{
-		testConnection = new TestWebSocketConnection(getApplication(), getSessionId(), getRegistryKey()) {
+		testConnection = new TestWebSocketConnection(getApplication(), getSessionId(), getRegistryKey())
+		{
 
 			@Override
 			protected void onOutMessage(String message)

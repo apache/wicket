@@ -45,7 +45,7 @@ public interface IWizardStep extends IClusterable
 	 *            the owning wizard model
 	 */
 	void init(IWizardModel wizardModel);
-	
+
 	/**
 	 * Gets the header component for this step. This component is displayed in a special section of
 	 * the wizard.

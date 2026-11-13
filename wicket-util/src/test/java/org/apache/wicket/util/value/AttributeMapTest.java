@@ -32,14 +32,15 @@ public class AttributeMapTest
 {
 
 	@Test
-	public void encoding() {
+	public void encoding()
+	{
 		AttributeMap map = new AttributeMap();
-		
+
 		map.putAttribute("key", "-&-ö-<->-");
-		
+
 		assertEquals(" key=\"-&amp;-ö-&lt;-&gt;-\"", map.toString());
 	}
-	
+
 	@Test
 	public void putString()
 	{

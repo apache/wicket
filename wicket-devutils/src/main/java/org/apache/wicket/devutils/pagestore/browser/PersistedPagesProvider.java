@@ -56,11 +56,12 @@ class PersistedPagesProvider extends SortableDataProvider<IPersistedPage, String
 	{
 		List<IPersistedPage> pages = getPages();
 
-		if (getSort() != null) {
+		if (getSort() != null)
+		{
 			Collections.sort(pages, new SortComparator());
 		}
 
-		return pages.subList((int)first,  (int)(first + count)).iterator();
+		return pages.subList((int)first, (int)(first + count)).iterator();
 	}
 
 	private List<IPersistedPage> getPages()

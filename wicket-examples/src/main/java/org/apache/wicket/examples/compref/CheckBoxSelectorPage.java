@@ -68,7 +68,7 @@ public class CheckBoxSelectorPage extends WicketExamplePage
 
 		// ...and one selector outside the checkgroup
 		form.add(new CheckGroupSelector("groupSelectorOutside", checkgroup));
-		
+
 		final CheckBoxMultipleChoice<Integer> choice = new CheckBoxMultipleChoice<>(
 			"choice", Model.ofList(new ArrayList<>()), Arrays.asList(1, 2, 3, 4));
 		form.add(choice);
@@ -84,20 +84,28 @@ public class CheckBoxSelectorPage extends WicketExamplePage
 		// and one which will get more choices later
 		final List<Integer> extensibleChoices = new ArrayList<>(Arrays.asList(1, 2, 3));
 		final Set<Integer> selected = new HashSet<>();
-		final ListView<Integer> listView = new ListView<Integer>("list", extensibleChoices) {
+		final ListView<Integer> listView = new ListView<Integer>("list", extensibleChoices)
+		{
 			@Override
-			protected void populateItem(final ListItem<Integer> item) {
-				final CheckBox check = new CheckBox("check", new Model<Boolean>() {
+			protected void populateItem(final ListItem<Integer> item)
+			{
+				final CheckBox check = new CheckBox("check", new Model<Boolean>()
+				{
 					@Override
-					public Boolean getObject() {
+					public Boolean getObject()
+					{
 						return selected.contains(item.getModelObject());
 					}
 
 					@Override
-					public void setObject(Boolean object) {
-						if (object) {
+					public void setObject(Boolean object)
+					{
+						if (object)
+						{
 							selected.add(item.getModelObject());
-						} else {
+						}
+						else
+						{
 							selected.remove(item.getModelObject());
 						}
 					}
@@ -108,14 +116,17 @@ public class CheckBoxSelectorPage extends WicketExamplePage
 		};
 		listView.setReuseItems(true);
 		form.add(listView);
-		form.add(new Button("addChoice") {
+		form.add(new Button("addChoice")
+		{
 			@Override
-			public void onSubmit() {
+			public void onSubmit()
+			{
 				extensibleChoices.add(extensibleChoices.get(extensibleChoices.size() - 1) + 1);
 			}
 		});
-		form.add(new Button("removeChoice") {
-			
+		form.add(new Button("removeChoice")
+		{
+
 			@Override
 			protected void onConfigure()
 			{
@@ -123,17 +134,18 @@ public class CheckBoxSelectorPage extends WicketExamplePage
 
 				setEnabled(extensibleChoices.size() > 1);
 			}
-			
+
 			public void onSubmit()
 			{
-				
+
 				Integer integer = extensibleChoices.get(extensibleChoices.size() - 1);
 				extensibleChoices.remove(integer);
 				selected.remove(integer);
 			}
 		});
 
-		final CheckBoxSelector extensibleSelector = new CheckBoxSelector("extensibleSelector") {
+		final CheckBoxSelector extensibleSelector = new CheckBoxSelector("extensibleSelector")
+		{
 			@Override
 			protected Iterable<? extends CheckBox> getCheckBoxes()
 			{

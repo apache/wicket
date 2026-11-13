@@ -54,7 +54,8 @@ class BindSessionOnRedirectTest extends WicketTestCase
 	{
 		FirstPage()
 		{
-			add(new StatelessLink<Void>("link") {
+			add(new StatelessLink<Void>("link")
+			{
 
 				@Override
 				public void onClick()

@@ -125,7 +125,8 @@ public class AutoLabelLabelProviderLocatorTest extends WicketTestCase
 			add(form);
 			RepeatingView editRow = new RepeatingView("edit-row");
 			form.add(editRow);
-			for (IEditPanelProvider panelProvider: editPanelProviders) {
+			for (IEditPanelProvider panelProvider : editPanelProviders)
+			{
 				WebMarkupContainer mc = new WebMarkupContainer(editRow.newChildId());
 				mc.add(new Label("label", panelProvider.getLabelText()));
 				mc.add(panelProvider.createEditPanel("edit-component"));
@@ -219,8 +220,10 @@ public class AutoLabelLabelProviderLocatorTest extends WicketTestCase
 		}
 		catch (WicketRuntimeException e)
 		{
-			Assertions.assertEquals("Component 'org.apache.wicket.markup.html.WebMarkupContainer', pointed to by wicket:for attribute 'edit-component', does not implement org.apache.wicket.markup.html.form.ILabelProvider", e.getMessage());
+			Assertions.assertEquals(
+				"Component 'org.apache.wicket.markup.html.WebMarkupContainer', pointed to by wicket:for attribute 'edit-component', does not implement org.apache.wicket.markup.html.form.ILabelProvider",
+				e.getMessage());
 		}
- 	}
+	}
 
 }

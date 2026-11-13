@@ -78,6 +78,6 @@ public class ByteArrayResource extends BaseDataResource<byte[]>
 	@Override
 	protected Long getLength(byte[] data)
 	{
-		return (long) data.length;
+		return (long)data.length;
 	}
 }

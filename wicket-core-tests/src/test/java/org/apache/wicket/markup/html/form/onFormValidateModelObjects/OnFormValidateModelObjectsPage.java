@@ -46,21 +46,21 @@ public class OnFormValidateModelObjectsPage extends WebPage
 		super(parameters);
 
 		CompoundPropertyModel<ParentModel> parentModel = new CompoundPropertyModel<ParentModel>(
-				new LoadableDetachableModel<ParentModel>()
+			new LoadableDetachableModel<ParentModel>()
+			{
+				@Override
+				protected ParentModel load()
 				{
-					@Override
-					protected ParentModel load()
+					String id = Session.get().getId();
+					ParentModel pm = pmMap.get(id);
+					if (pm == null)
 					{
-						String id = Session.get().getId();
-						ParentModel pm = pmMap.get(id);
-						if (pm == null)
-						{
-							pm = new ParentModel();
-							pmMap.put(id, pm);
-						}
-						return pm;
+						pm = new ParentModel();
+						pmMap.put(id, pm);
 					}
-				});
+					return pm;
+				}
+			});
 
 		setDefaultModel(parentModel); // so we don't need to get it from the
 										// form.

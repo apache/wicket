@@ -88,7 +88,8 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IRequestL
 		PageParameters parameters = new PageParameters();
 		PageParameters pageParameters = component.getPage().getPageParameters();
 		List<INamedParameters.NamedPair> allNamedInPath = pageParameters.getAllNamedByType(INamedParameters.Type.PATH);
-		for (INamedParameters.NamedPair namedPair : allNamedInPath) {
+		for (INamedParameters.NamedPair namedPair : allNamedInPath)
+		{
 			parameters.add(namedPair.getKey(), namedPair.getValue(), INamedParameters.Type.PATH);
 		}
 		return getComponent().urlForListener(this, parameters);

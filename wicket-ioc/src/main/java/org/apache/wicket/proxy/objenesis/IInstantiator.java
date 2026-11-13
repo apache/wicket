@@ -48,9 +48,9 @@ public interface IInstantiator
 				public <T> T newInstance(Class<T> type)
 				{
 					throw new WicketRuntimeException(String.format(
-							"Can't create proxy for %s without default constructor"
-									+ " - you can remedy this by adding Objenesis to your project dependencies.",
-							Classes.name(type)));
+						"Can't create proxy for %s without default constructor"
+							+ " - you can remedy this by adding Objenesis to your project dependencies.",
+						Classes.name(type)));
 				}
 			};
 		}

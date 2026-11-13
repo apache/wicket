@@ -91,7 +91,8 @@ class LessResourceReferenceTest extends WicketTestCase
 			{
 				super.init();
 
-				SecurePackageResourceGuard guard = (SecurePackageResourceGuard) getResourceSettings().getPackageResourceGuard();
+				SecurePackageResourceGuard guard = (SecurePackageResourceGuard)getResourceSettings()
+					.getPackageResourceGuard();
 				guard.addPattern("+*.less");
 			}
 
@@ -140,7 +141,8 @@ class LessResourceReferenceTest extends WicketTestCase
 
 	private static class LessResourcePage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		private final LessResourceReference resourceReference = new LessResourceReference(LessResourceReferenceTest.class, "LessResourceReference.less");
+		private final LessResourceReference resourceReference = new LessResourceReference(
+			LessResourceReferenceTest.class, "LessResourceReference.less");
 
 		@Override
 		public void renderHead(IHeaderResponse response)

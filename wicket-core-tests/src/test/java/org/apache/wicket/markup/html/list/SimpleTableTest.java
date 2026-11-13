@@ -41,7 +41,8 @@ class SimpleTableTest extends WicketTestCase
 		// Does re-render do as well ??
 		ListView<?> view = (ListView<?>)tester.getLastRenderedPage().get("table");
 		assertNotNull(view);
-		assertTrue(document.contains("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>"));
+		assertTrue(document.contains(
+			"<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>"));
 
 		// Does re-render do as well ??
 		ListItem<?> item = (ListItem<?>)tester.getLastRenderedPage().get("table:0");
@@ -66,11 +67,13 @@ class SimpleTableTest extends WicketTestCase
 		// Does re-render do as well ??
 		ListView<?> view = (ListView<?>)tester.getLastRenderedPage().get("table");
 		assertNotNull(view);
-		assertTrue(document.contains("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>"));
+		assertTrue(document.contains(
+			"<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>"));
 
 		// Does re-render do as well ??
 		view = (ListView<?>)tester.getLastRenderedPage().get("table");
 		assertNotNull(view);
-		assertTrue(document.contains("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>"));
+		assertTrue(document.contains(
+			"<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>"));
 	}
 }

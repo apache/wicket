@@ -54,8 +54,8 @@ public class AbstractUpgradeFilter extends WicketFilter
 
 	@Override
 	protected boolean processRequestCycle(final RequestCycle requestCycle, final WebResponse webResponse,
-			final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
-			final FilterChain chain)
+		final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
+		final FilterChain chain)
 		throws IOException, ServletException
 	{
 		ThreadContext.setRequestCycle(requestCycle);
@@ -63,12 +63,12 @@ public class AbstractUpgradeFilter extends WicketFilter
 		{
 			return true;
 		}
-		
+
 		return super.processRequestCycle(requestCycle, webResponse, httpServletRequest, httpServletResponse, chain);
 	}
 
 	protected boolean acceptWebSocket(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException
+		throws ServletException, IOException
 	{
 		// Information required to send the server handshake message
 		String key;
@@ -127,11 +127,14 @@ public class AbstractUpgradeFilter extends WicketFilter
 	private boolean headerContainsToken(HttpServletRequest req, String headerName, String target)
 	{
 		Enumeration<String> headers = req.getHeaders(headerName);
-		while (headers.hasMoreElements()) {
+		while (headers.hasMoreElements())
+		{
 			String header = headers.nextElement();
 			String[] tokens = Strings.split(header, ',');
-			for (String token : tokens) {
-				if (target.equalsIgnoreCase(token.trim())) {
+			for (String token : tokens)
+			{
+				if (target.equalsIgnoreCase(token.trim()))
+				{
 					return true;
 				}
 			}
@@ -148,10 +151,12 @@ public class AbstractUpgradeFilter extends WicketFilter
 		List<String> result = new ArrayList<>();
 
 		Enumeration<String> headers = req.getHeaders(headerName);
-		while (headers.hasMoreElements()) {
+		while (headers.hasMoreElements())
+		{
 			String header = headers.nextElement();
 			String[] tokens = Strings.split(header, ',');
-			for (String token : tokens) {
+			for (String token : tokens)
+			{
 				result.add(token.trim());
 			}
 		}

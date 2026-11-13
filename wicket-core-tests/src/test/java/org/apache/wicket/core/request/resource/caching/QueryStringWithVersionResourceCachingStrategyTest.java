@@ -44,8 +44,8 @@ class QueryStringWithVersionResourceCachingStrategyTest
 
 	private final String versionParameter = "vers";
 	private final IResourceVersion resourceVersion = new MessageDigestResourceVersion();
-	private final IResourceCachingStrategy strategy =
-			new QueryStringWithVersionResourceCachingStrategy(versionParameter, resourceVersion);
+	private final IResourceCachingStrategy strategy = new QueryStringWithVersionResourceCachingStrategy(
+		versionParameter, resourceVersion);
 
 	@Test
 	void testDecorateUrl() throws Exception

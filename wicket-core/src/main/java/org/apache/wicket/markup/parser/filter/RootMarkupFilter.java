@@ -115,9 +115,9 @@ public final class RootMarkupFilter extends AbstractMarkupFilter
 		//once we have done filtering, we reset markup counters for ids 
 		RequestCycle requestCycle = RequestCycle.get();
 		Map<String, AtomicInteger> markupUniqueCounters = requestCycle.getMetaData(REQUEST_COUNTER_KEY);
-		
+
 		if (markupUniqueCounters != null)
-		{			
+		{
 			markupUniqueCounters.clear();
 		}
 	}

@@ -172,7 +172,8 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 		this.max = max;
 		this.useMultipleAttr = useMultipleAttr;
 
-		upload = new WebComponent("upload") {
+		upload = new WebComponent("upload")
+		{
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{

@@ -39,7 +39,7 @@ class AsyncPageStoreManagerTest
 {
 	private CountDownLatch added = new CountDownLatch(1);
 	private CountDownLatch allowAdd = new CountDownLatch(1);
-	
+
 	/*
 	 * Symptoms:
 	 * 1) Out of memory on DiskDataStore.sessionEntryMap, map contains thousands of
@@ -57,15 +57,16 @@ class AsyncPageStoreManagerTest
 	@Test
 	void invalidateSessionBeforeSave() throws InterruptedException
 	{
-		MockPageStore testStore = new MockPageStore() {
-			
+		MockPageStore testStore = new MockPageStore()
+		{
+
 			@Override
 			public void addPage(IPageContext context, IManageablePage page)
 			{
 				super.addPage(context, page);
 
 				added.countDown();
-				
+
 				try
 				{
 					allowAdd.await();
@@ -75,9 +76,9 @@ class AsyncPageStoreManagerTest
 				}
 			}
 		};
-		
+
 		IPageStore asyncPageStore = new AsynchronousPageStore(testStore, 100);
-		
+
 		IPageContext contextA = new MockPageContext("A");
 
 		// add a page to the session
@@ -100,7 +101,7 @@ class AsyncPageStoreManagerTest
 
 		// allow next page add
 		allowAdd.countDown();
-		
+
 		// wait for page being added
 		added = new CountDownLatch(1);
 		asyncPageStore.addPage(new MockPageContext("B"), new SerializedPage(3, new byte[0]));
@@ -110,7 +111,7 @@ class AsyncPageStoreManagerTest
 		// session, because they will never be cleaned!
 		assertNull(testStore.getPage(contextA, 1));
 		assertNull(testStore.getPage(contextA, 2));
-		
+
 		//destroy page manager to clean static variables 
 		testStore.destroy();
 	}

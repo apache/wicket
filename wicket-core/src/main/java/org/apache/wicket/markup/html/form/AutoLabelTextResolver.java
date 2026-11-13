@@ -295,7 +295,7 @@ public class AutoLabelTextResolver implements IComponentResolver
 			{
 				// ...or it might just not be available.
 				String forAttr = forAttributeValue != null ? " for=\"" + forAttributeValue + "\"" : "";
-				throw new ComponentNotFoundException("no related component found for <wicket:label"+forAttr+">");
+				throw new ComponentNotFoundException("no related component found for <wicket:label" + forAttr + ">");
 			}
 			else
 			{

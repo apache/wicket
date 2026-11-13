@@ -43,18 +43,20 @@ public class PageRequestHandlerTracker implements IRequestCycleListener
 	/**
 	 * The key for the first handler
 	 */
-	public static final  MetaDataKey<IPageRequestHandler> FIRST_HANDLER_KEY = new MetaDataKey<>() {};
+	public static final MetaDataKey<IPageRequestHandler> FIRST_HANDLER_KEY = new MetaDataKey<>()
+	{};
 
 	/**
 	 * The key for the last handler
 	 */
-	public static final MetaDataKey<IPageRequestHandler> LAST_HANDLER_KEY = new MetaDataKey<>() {};
+	public static final MetaDataKey<IPageRequestHandler> LAST_HANDLER_KEY = new MetaDataKey<>()
+	{};
 
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
 	{
-		registerFirstHandler(cycle,handler);
-		registerLastHandler(cycle,handler);
+		registerFirstHandler(cycle, handler);
+		registerLastHandler(cycle, handler);
 	}
 
 	/**
@@ -106,14 +108,14 @@ public class PageRequestHandlerTracker implements IRequestCycleListener
 		{
 			return (IPageRequestHandler)handler;
 		}
-	    if (handler instanceof IRequestHandlerDelegate)
-	    {
-	    	return findPageRequestHandler(((IRequestHandlerDelegate)handler).getDelegateHandler());
-	    }
-	    return null;
+		if (handler instanceof IRequestHandlerDelegate)
+		{
+			return findPageRequestHandler(((IRequestHandlerDelegate)handler).getDelegateHandler());
+		}
+		return null;
 	}
 
-   /**
+	/**
 	* retrieves last handler from request cycle
 	*
 	* @param cycle

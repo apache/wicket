@@ -35,7 +35,8 @@ public interface IWebSocketProcessor
 	 * @param application
 	 *          the {@link org.apache.wicket.protocol.http.WebApplication}
 	 */
-	default void onOpen(IWebSocketSession webSocketSession, final WebApplication application) {
+	default void onOpen(IWebSocketSession webSocketSession, final WebApplication application)
+	{
 		// find the current org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer and use it
 		// in order to configure the session
 		WebSocketSettings.Holder.get(application).getSocketSessionConfigurer().configureSession(webSocketSession);

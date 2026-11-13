@@ -53,7 +53,7 @@ class GlobalUpdateAjaxAttributesTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4958
 	 */
 	@Test
-    void globalUpdateAjaxAttributes()
+	void globalUpdateAjaxAttributes()
 	{
 		tester.startPage(new GlobalUpdateAjaxAttributesPage());
 //		System.err.println(tester.getLastResponseAsString());
@@ -64,7 +64,8 @@ class GlobalUpdateAjaxAttributesTest extends WicketTestCase
 	{
 		private GlobalUpdateAjaxAttributesPage()
 		{
-			add(new AjaxLink<Void>("ajaxLink") {
+			add(new AjaxLink<Void>("ajaxLink")
+			{
 
 				@Override
 				public void onClick(AjaxRequestTarget target)

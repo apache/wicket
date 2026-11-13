@@ -90,7 +90,7 @@ class CrossOriginOpenerPolicyRequestCycleListenerTest extends WicketTestCase
 
 		assertEquals(mode.keyword, coopHeaderValue, "Unexpected COOP header: " + coopHeaderValue);
 	}
-  
+
 	@Override
 	protected WebApplication newApplication()
 	{

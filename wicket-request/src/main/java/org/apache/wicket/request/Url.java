@@ -318,8 +318,8 @@ public class Url implements Serializable
 			//square brackets are used for ip6 URLs
 			final int closeSqrBracketAt = hostAndPort.lastIndexOf(']') + 1;
 			final int portAt = hostAndPort.substring(credentialsAt)
-										  .substring(closeSqrBracketAt)
-									      .lastIndexOf(':');
+				.substring(closeSqrBracketAt)
+				.lastIndexOf(':');
 
 			if (portAt == -1)
 			{
@@ -329,7 +329,7 @@ public class Url implements Serializable
 			else
 			{
 				final int portOffset = portAt + credentialsAt + closeSqrBracketAt;
-				
+
 				result.host = hostAndPort.substring(0, portOffset);
 				result.port = Integer.parseInt(hostAndPort.substring(portOffset + 1));
 			}
@@ -445,7 +445,9 @@ public class Url implements Serializable
 			if (Strings.isEmpty(charsetName))
 			{
 				_charset = StandardCharsets.UTF_8;
-			} else {
+			}
+			else
+			{
 				_charset = Charset.forName(charsetName);
 			}
 		}
@@ -526,7 +528,7 @@ public class Url implements Serializable
 	public boolean isDataUrl()
 	{
 		return (getProtocol() != null && getProtocol().equals("data")) || (!getSegments().isEmpty() && getSegments()
-				.get(0).startsWith("data"));
+			.get(0).startsWith("data"));
 	}
 
 	/**
@@ -1280,7 +1282,7 @@ public class Url implements Serializable
 	 * @param charset
 	 *            character set for encoding
 	 * @since Wicket 7 
-     *            the return value does not contain any "?" and could be null
+	 *            the return value does not contain any "?" and could be null
 	 * @return query string (null if empty)
 	 */
 	public String getQueryString(Charset charset)
@@ -1297,7 +1299,8 @@ public class Url implements Serializable
 		StringBuilder query = new StringBuilder(16 * parameters.size());
 		for (QueryParameter parameter : queryParameters)
 		{
-			if (query.length() != 0) {
+			if (query.length() != 0)
+			{
 				query.append('&');
 			}
 			query.append(parameter.toString(charset));

@@ -177,7 +177,8 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 		/** Whether the key was looked up using a strict matching search */
 		private final boolean strict;
 
-		private CacheKey(String scope, String name, String extension, Locale locale, String style, String variation, boolean strict)
+		private CacheKey(String scope, String name, String extension, Locale locale, String style, String variation,
+			boolean strict)
 		{
 			super(scope, name, locale, style, variation);
 

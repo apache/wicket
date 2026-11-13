@@ -218,6 +218,6 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	@Override
 	public Class<T> getObjectClass()
 	{
-		return object != null ? (Class<T>) object.getClass() : null;
+		return object != null ? (Class<T>)object.getClass() : null;
 	}
 }

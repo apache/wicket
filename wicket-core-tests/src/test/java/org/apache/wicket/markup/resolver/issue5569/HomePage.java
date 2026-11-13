@@ -62,7 +62,8 @@ public class HomePage extends WebPage
 
 	private static class ComponentResolvingWebMarkupContainer
 		extends WebMarkupContainer
-		implements IComponentResolver
+		implements
+			IComponentResolver
 	{
 		private final MarkupContainer resolveTarget;
 

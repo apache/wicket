@@ -23,7 +23,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 class PageExtendingBasePageWithHeaderItems extends BasePageWithHeaderItems
 {
-	public PageExtendingBasePageWithHeaderItems(PageParameters parameters) {
+	public PageExtendingBasePageWithHeaderItems(PageParameters parameters)
+	{
 		super(parameters);
 	}
 }

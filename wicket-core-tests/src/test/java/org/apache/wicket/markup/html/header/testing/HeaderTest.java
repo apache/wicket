@@ -30,7 +30,7 @@ class HeaderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test_1() throws Exception
+	void test_1() throws Exception
 	{
 		executeTest(TestPage.class, "TestPage_ExpectedResult.html");
 	}

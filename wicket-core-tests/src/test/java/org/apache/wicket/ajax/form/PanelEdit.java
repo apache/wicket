@@ -23,38 +23,44 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 
-public class PanelEdit extends Panel {
+public class PanelEdit extends Panel
+{
 
-    public PanelEdit(String id) {
-        super(id);
+	public PanelEdit(String id)
+	{
+		super(id);
 
-        setOutputMarkupId(true);
-    }
+		setOutputMarkupId(true);
+	}
 
-    @Override
-    protected void onInitialize() {
-        super.onInitialize();
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
 
-        Form<Void> form = new Form<>("form", null);
-        add(form);
+		Form<Void> form = new Form<>("form", null);
+		add(form);
 
-        form.add(createSubmitButton());
-    }
+		form.add(createSubmitButton());
+	}
 
-    private AjaxButton createSubmitButton() {
+	private AjaxButton createSubmitButton()
+	{
 
-        AjaxButton submit = new AjaxButton("submit") {
+		AjaxButton submit = new AjaxButton("submit")
+		{
 
-            protected void onSubmit(AjaxRequestTarget target) {
-                Component currentcomponent = PanelEdit.this;
-                Component newComponent = new Label(currentcomponent.getId())
-                		.setOutputMarkupId(true);
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				Component currentcomponent = PanelEdit.this;
+				Component newComponent = new Label(currentcomponent.getId())
+					.setOutputMarkupId(true);
 				currentcomponent.replaceWith(newComponent);
-                target.add(newComponent);
-            }
+				target.add(newComponent);
+			}
 
-        };
+		};
 
-        return submit;
-    }
+		return submit;
+	}
 }

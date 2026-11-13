@@ -18,32 +18,31 @@ package org.apache.wicket;
 
 import org.apache.wicket.markup.html.border.Border;
 
-public enum ChildToDequeueType
-{
+public enum ChildToDequeueType {
 	NULL, GENERIC_COMPONENT, MARKUP_CONTAINER, BORDER, QUEUE_REGION;
-	
-	public static ChildToDequeueType fromChild(Component child) 
+
+	public static ChildToDequeueType fromChild(Component child)
 	{
 		if (child == null)
 		{
 			return NULL;
 		}
-		
+
 		if (child instanceof Border)
 		{
 			return BORDER;
 		}
-		
+
 		if (child instanceof IQueueRegion)
 		{
 			return QUEUE_REGION;
 		}
-		
+
 		if (child instanceof MarkupContainer)
 		{
 			return MARKUP_CONTAINER;
 		}
-		
+
 		return GENERIC_COMPONENT;
 	}
 }

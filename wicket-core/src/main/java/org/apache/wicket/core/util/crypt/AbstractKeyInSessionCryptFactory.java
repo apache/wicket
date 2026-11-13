@@ -57,7 +57,7 @@ public abstract class AbstractKeyInSessionCryptFactory<T extends IClusterable>
 		session.bind();
 
 		// retrieve or generate encryption key from session
-		T key = (T) session.getMetaData(KEY);
+		T key = (T)session.getMetaData(KEY);
 		if (key == null)
 		{
 			// generate new key
