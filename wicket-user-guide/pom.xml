@@ -32,6 +32,7 @@
 
 	<properties>
 		<asciidoctor-maven-plugin.version>2.2.6</asciidoctor-maven-plugin.version>
+		<fontsource.version>5.3.0</fontsource.version>
 		<japicmp.skip>true</japicmp.skip>
 	</properties>
 
@@ -199,6 +200,87 @@
 								</fileset>
 							</filesets>
 						</configuration>
+					</plugin>
+					<plugin>
+						<!--
+							The guide's fonts are under the SIL Open Font License, which the ASF puts in
+							Category B: they may ship in the built guide, but not in the source release.
+							So they come from the fontsource webjars at build time, next to their licences.
+						-->
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>unpack-fonts</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/generated-docs/fonts</outputDirectory>
+									<!--
+										Each item takes the woff2 files that css/wicket.css uses and the webjar's
+										LICENSE. The mappers flatten .../files/alegreya-latin-400-normal.woff2 into
+										fonts/ and rename .../fontsource__alegreya-sans/5.3.0/LICENSE to
+										LICENSE-alegreya-sans.txt.
+									-->
+									<artifactItems>
+										<artifactItem>
+											<groupId>org.webjars.npm</groupId>
+											<artifactId>fontsource__alegreya</artifactId>
+											<version>${fontsource.version}</version>
+											<includes>**/LICENSE,**/files/alegreya-latin-400-normal.woff2,**/files/alegreya-latin-400-italic.woff2,**/files/alegreya-latin-700-normal.woff2</includes>
+											<fileMappers>
+												<org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+													<pattern>^.*/fontsource__([^/]+)/[^/]+/LICENSE$</pattern>
+													<replacement>LICENSE-$1.txt</replacement>
+												</org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+												<org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
+											</fileMappers>
+										</artifactItem>
+										<artifactItem>
+											<groupId>org.webjars.npm</groupId>
+											<artifactId>fontsource__alegreya-sans</artifactId>
+											<version>${fontsource.version}</version>
+											<includes>**/LICENSE,**/files/alegreya-sans-latin-400-normal.woff2,**/files/alegreya-sans-latin-500-normal.woff2,**/files/alegreya-sans-latin-700-normal.woff2</includes>
+											<fileMappers>
+												<org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+													<pattern>^.*/fontsource__([^/]+)/[^/]+/LICENSE$</pattern>
+													<replacement>LICENSE-$1.txt</replacement>
+												</org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+												<org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
+											</fileMappers>
+										</artifactItem>
+										<artifactItem>
+											<groupId>org.webjars.npm</groupId>
+											<artifactId>fontsource__alegreya-sc</artifactId>
+											<version>${fontsource.version}</version>
+											<includes>**/LICENSE,**/files/alegreya-sc-latin-500-normal.woff2</includes>
+											<fileMappers>
+												<org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+													<pattern>^.*/fontsource__([^/]+)/[^/]+/LICENSE$</pattern>
+													<replacement>LICENSE-$1.txt</replacement>
+												</org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+												<org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
+											</fileMappers>
+										</artifactItem>
+										<artifactItem>
+											<groupId>org.webjars.npm</groupId>
+											<artifactId>fontsource__jetbrains-mono</artifactId>
+											<version>${fontsource.version}</version>
+											<includes>**/LICENSE,**/files/jetbrains-mono-latin-400-normal.woff2</includes>
+											<fileMappers>
+												<org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+													<pattern>^.*/fontsource__([^/]+)/[^/]+/LICENSE$</pattern>
+													<replacement>LICENSE-$1.txt</replacement>
+												</org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+												<org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
+											</fileMappers>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 					<plugin>
 						<groupId>org.asciidoctor</groupId>

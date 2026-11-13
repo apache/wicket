@@ -302,10 +302,6 @@ League Gothic, Source Code Pro and Source Sans Pro
   wicket-examples/src/main/resources/org/apache/wicket/examples/fonts/
   The license text is in each font's directory.
 
-Alegreya, Alegreya Sans, Alegreya SC and JetBrains Mono
-  wicket-user-guide/src/main/asciidoc/fonts/
-  The license texts are in the same directory.
-
 --------------------------------------------------------------------------------
 Other permissive terms
 --------------------------------------------------------------------------------
