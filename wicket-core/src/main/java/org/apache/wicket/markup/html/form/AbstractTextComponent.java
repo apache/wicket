@@ -161,9 +161,10 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 				validator = ((ValidatorAdapter<?>)validator).getValidator();
 			}
 
-			if (validator instanceof PatternValidator)
+			if (validator instanceof PatternValidator patternValidator &&
+				!patternValidator.isReverse())
 			{
-				tag.put("pattern", ((PatternValidator)validator).getPattern().toString());
+				tag.put("pattern", patternValidator.getPattern().toString());
 			}
 		}
 		

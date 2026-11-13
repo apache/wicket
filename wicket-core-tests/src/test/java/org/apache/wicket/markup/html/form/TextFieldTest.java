@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.form;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.MarkupContainer;
@@ -31,6 +32,7 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.apache.wicket.validation.validator.PatternValidator;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.junit.jupiter.api.Test;
 
@@ -101,6 +103,43 @@ class TextFieldTest extends WicketTestCase
 		assertEquals("required", required);
 	}
 	
+	@Test
+	void patternAttribute()
+	{
+		TestPage testPage = new TestPage();
+		testPage.textField.setOutputMarkupId(true);
+		testPage.textField.add(new PatternValidator("[a-z]+"));
+		tester.startPage(testPage);
+
+		TagTester tagTester = tester.getTagById(testPage.textField.getMarkupId());
+		assertEquals("[a-z]+", tagTester.getAttribute("pattern"));
+	}
+
+	@Test
+	void noPatternAttributeForReversedPatternValidator()
+	{
+		TestPage testPage = new TestPage();
+		testPage.textField.setOutputMarkupId(true);
+		testPage.textField.add(new PatternValidator("[a-z]+").setReverse(true));
+		tester.startPage(testPage);
+
+		TagTester tagTester = tester.getTagById(testPage.textField.getMarkupId());
+		assertNull(tagTester.getAttribute("pattern"));
+	}
+
+	@Test
+	void html5AttributesRendersNoPatternAttributeForReversedPatternValidator()
+	{
+		TestPage testPage = new TestPage();
+		testPage.textField.setOutputMarkupId(true);
+		testPage.textField.add(new PatternValidator("[a-z]+").setReverse(true));
+		testPage.textField.add(new HTML5Attributes());
+		tester.startPage(testPage);
+
+		TagTester tagTester = tester.getTagById(testPage.textField.getMarkupId());
+		assertNull(tagTester.getAttribute("pattern"));
+	}
+
 	@Test
 	void testSearchType()
 	{
