@@ -70,7 +70,9 @@
 		</dependency>
 		-->
 
-		<!-- LOGGING DEPENDENCIES - SLF4J-SIMPLE -->
+		<!-- LOGGING DEPENDENCIES - SLF4J-SIMPLE, for Start, jetty:run and the tests.
+			The maven-war-plugin leaves it out of the WAR: a container without an SLF4J
+			back end of its own needs one added. -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
@@ -173,6 +175,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>@maven-war-plugin.version@</version>
+				<configuration>
+					<packagingExcludes>WEB-INF/lib/slf4j-simple-*.jar</packagingExcludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.jetty.ee10</groupId>
