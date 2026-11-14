@@ -32,6 +32,7 @@
 	<properties>
 		<osgi.export.package>org.apache.wicket.protocol.ws*;-noimport:=true</osgi.export.package>
 		<osgi.import.package>!java*,!kotlin*,!sun.nio.ch,org.slf4j*;version="[1.7,3)",*</osgi.import.package>
+		<minify.directory>${project.basedir}/../../build-tools/minify</minify.directory>
 	</properties>
     <dependencies>
         <dependency>
@@ -43,4 +44,18 @@
 			<artifactId>wicket-tester</artifactId>
 		</dependency>
     </dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>minify</id>
+						<phase>process-classes</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

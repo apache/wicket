@@ -90,7 +90,7 @@ public class NonceDemoPage extends WicketExamplePage
 
 				// append javascript (works even without unsafe-eval)
 				target.appendJavaScript(
-					"document.querySelector(\".click-me-text\").innerHTML = \"replaced\";");
+					"document.querySelector(\".click-me-text\").textContent = \"replaced\";");
 
 				delayedVisible.setVisible(true);
 				target.add(delayedVisible);
@@ -107,7 +107,7 @@ public class NonceDemoPage extends WicketExamplePage
 		super.renderHead(response);
 		// Add inline script with nonce
 		response.render(JavaScriptHeaderItem.forScript(
-			"$(function(){$(\".test-nonce-script\").html(\"Text injected by script with nonce: success\");});",
+			"$(function(){$(\".test-nonce-script\").text(\"Text injected by script with nonce: success\");});",
 			"test-nonce-script"));
 		// Add inline css with nonce
 		response.render(
