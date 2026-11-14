@@ -100,6 +100,35 @@ public interface IPartialPageRequestHandler extends IPageRequestHandler
 	void prependJavaScript(CharSequence javascript);
 
 	/**
+	 * Adds a named data entry to the response, for client-side code that subscribed to it.
+	 * <p>
+	 * The value is delivered to the client as text, exactly as given: Wicket neither interprets,
+	 * escapes nor evaluates it. On the client it is published on the topic
+	 * <code>Wicket.Event.Topic.AJAX_CALL_DATA</code> (<code>'/ajax/call/data'</code>) with the
+	 * arguments <code>(attrs, name, value)</code>, where <code>attrs</code> are the attributes of
+	 * the Ajax call. A partial update pushed over a web socket belongs to no Ajax call, so its
+	 * subscribers receive an empty object as <code>attrs</code>. Data entries are published in the
+	 * order they were added, after the components have been replaced and the JavaScripts
+	 * evaluated, and before the success handlers of the call run.
+	 * <p>
+	 * A subscriber that interprets the value, for example as JSON, has to treat it as data and
+	 * never evaluate it as script or insert it as markup.
+	 * <p>
+	 * Every subscriber on the page sees every entry, and the name is all that tells them apart.
+	 * Libraries should therefore use a name of their own, prefixed with the library's name, so
+	 * their entries do not collide with those of another library.
+	 *
+	 * @param name
+	 *            the name of the entry, used by subscribers to recognise it
+	 * @param value
+	 *            the value to deliver
+	 * @throws IllegalStateException
+	 *             if the response is already being written
+	 * @since 12.0.0
+	 */
+	void addData(String name, CharSequence value);
+
+	/**
 	 * Sets the focus in the browser to the given component. The markup id must be set. If the
 	 * component is null the focus will not be set to any component.
 	 *

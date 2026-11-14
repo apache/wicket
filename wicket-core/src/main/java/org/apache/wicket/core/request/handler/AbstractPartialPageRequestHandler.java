@@ -112,6 +112,12 @@ public abstract class AbstractPartialPageRequestHandler implements IPartialPageR
     }
 
     @Override
+    public final void addData(String name, CharSequence value)
+    {
+        getUpdate().addData(name, value);
+    }
+
+    @Override
     public final void focusComponent(Component component)
     {
         if (component != null && component.getOutputMarkupId() == false)
