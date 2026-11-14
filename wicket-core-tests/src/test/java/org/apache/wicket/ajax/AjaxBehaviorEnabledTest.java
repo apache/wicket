@@ -25,7 +25,6 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -64,7 +63,7 @@ class AjaxBehaviorEnabledTest extends WicketTestCase
     void before()
 	{
 		final IAuthorizationStrategy strategy = new CustomStrategy();
-		tester = new WicketTester(new MockApplication()
+		tester = newWicketTester(new MockApplication()
 		{
 			@Override
 			public Session newSession(Request request, Response response)

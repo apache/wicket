@@ -95,6 +95,14 @@ public class ComponentTag extends MarkupElement
 	/** If true, the current tag contains a child or a descendant with the "wicket:id" attribute */
 	public final static int CONTAINS_WICKET_ID = 0x0040;
 
+	/**
+	 * The tag is rendered by the page that owns the markup, without a component, such as the
+	 * &lt;html&gt; tag of a page. See {@link org.apache.wicket.markup.html.WebPage#onHtmlTag}.
+	 *
+	 * @since 12.0.0
+	 */
+	public final static int RENDERED_BY_PAGE = 0x0080;
+
 	/** If close tag, than reference to the corresponding open tag */
 	private ComponentTag openTag;
 

@@ -25,3 +25,30 @@ To come from Wicket 10, migrate to Wicket 11 first, with the [migration guide to
 `PageParameters.hashCode()` now agrees with `equals()`, which ignores the order of the named parameters ([#1866](https://github.com/apache/wicket/issues/1866)). The fix is backported to Wicket 11.1.0 and 10.13.0, so an application already on one of those sees no change. Before, two `PageParameters` that differed only in that order were equal but had different hashes, so a `HashMap` or `HashSet` kept them as two keys.
 
 This shows in rendered pages. When a page renders a CSS or JavaScript reference header item twice for the same resource, with the same page parameters added in a different order, it now gets one `<link>` or `<script>` tag, with the URL of the first item. Before, it got two. An application that keeps `PageParameters` in a hash-based collection of its own now finds reordered parameters under the same entry.
+
+## Pages render `lang` and `dir` on `<html>`
+
+`WebPage` now writes the language and direction of the page on its `<html>` tag, from the page locale: `lang` with the language tag of `getLocale()`, such as `nl-NL`, and `dir="rtl"` for a language written right to left, `dir="ltr"` for every other language. Screen readers need `lang` to pronounce the page (WCAG 2.2 success criterion 3.1.1), and browsers take the base direction only from `dir`, never from `lang`.
+
+What the markup says is kept:
+
+- A `lang` or `xml:lang` on `<html>` in your markup declares the language of the page. Wicket then writes neither `lang` nor `dir`.
+- A `dir` in your markup is kept. Put `dir="ltr"` on `<html>` to keep a page left to right in every locale.
+- An `<html wicket:id="...">` belongs to its component and is left alone, so a `TransparentWebMarkupContainer` that you bound to `<html>` to set `lang` keeps working. You can remove it.
+
+Because the tag is now written from its attributes, the way component tags are, attribute values get double quotes, a valueless attribute such as `xmlns:wicket` becomes `xmlns:wicket=""`, and an `<html>` tag spread over several lines is written on one line.
+
+If your tests compare rendered pages with expected files, update the `<html>` line of those files. `WicketTestCase` renders with `Locale.US`, which gives `<html lang="en-US" dir="ltr">`.
+
+If your stylesheets don't support a right-to-left layout yet, an application with Arabic, Hebrew or Persian translations now shows those pages mirrored. Put `dir="ltr"` in the markup, or override `onHtmlTag` in your base page:
+
+```java
+@Override
+protected void onHtmlTag(ComponentTag tag)
+{
+	super.onHtmlTag(tag);
+	tag.remove("dir");
+}
+```
+
+The same method adds other attributes that belong to the whole document, such as a theme class. To render neither `lang` nor `dir`, override it without calling `super`. The `<html>` tag is not rendered again on an Ajax request, so an attribute that has to change during one, such as a theme switched by an `AjaxLink`, has to be changed in the browser with JavaScript as well.

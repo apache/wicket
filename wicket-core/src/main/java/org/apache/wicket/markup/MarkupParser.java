@@ -27,6 +27,7 @@ import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.HeadForceTagIdHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import org.apache.wicket.markup.parser.filter.HtmlTagHandler;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.apache.wicket.markup.parser.filter.OpenCloseTagExpander;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
@@ -163,6 +164,7 @@ public class MarkupParser extends AbstractMarkupParser
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
 				{
 					filters.add(new HtmlHeaderSectionHandler(markup));
+					filters.add(new HtmlTagHandler(markupResourceStream));
 				}
 
 				filters.add(new HeadForceTagIdHandler(containerInfo.getContainerClass()));

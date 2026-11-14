@@ -279,7 +279,8 @@ public class TagUtils
 							 * have special extend handling).
 							 */
 						}
-						else if (!"head".equals(tag.getName()) && !tag.isAutoComponentTag())
+						else if (!"head".equals(tag.getName()) && !tag.isAutoComponentTag() &&
+							!tag.getFlag(ComponentTag.RENDERED_BY_PAGE))
 						{
 							canFind = false;
 						}
