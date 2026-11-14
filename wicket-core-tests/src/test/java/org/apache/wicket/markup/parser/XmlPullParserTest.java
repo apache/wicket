@@ -20,14 +20,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import org.apache.wicket.markup.parser.IXmlPullParser.HttpTagType;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 /**
  * Quite some tests are already with MarkupParser.
@@ -485,5 +493,128 @@ class XmlPullParserTest
 
 		type = parser.next();
 		assertEquals(HttpTagType.CONDITIONAL_COMMENT_ENDIF, type);
+	}
+
+	@Test
+	void closeTagWithoutNameIsRejected()
+	{
+		XmlPullParser parser = new XmlPullParser();
+
+		assertThrows(ParseException.class, () -> {
+			parser.parse("</>");
+			parser.next();
+		});
+	}
+
+	@Test
+	@Timeout(30)
+	void anyMarkupEitherParsesOrIsRejectedWithParseException() throws Exception
+	{
+		String[] fragments = { "<", ">", "/", "=", "\"", "'", " ", "\n", "a", "script", "style",
+				"wicket:id", "!--", "-->", "![CDATA[", "]]>", "?", "!", "[", "]", "&amp;", "&", ":",
+				"<!--[if IE]>", "<![endif]-->", "</script>", "</style>", "type=", "text/javascript",
+				"<a ", "<script ", "<style>", "!DOCTYPE", "\u00e9", "`", "#", "\\" };
+		Random random = new Random(1864);
+		for (int i = 0; i < 20_000; i++)
+		{
+			StringBuilder markup = new StringBuilder();
+			int length = 1 + random.nextInt(14);
+			for (int j = 0; j < length; j++)
+			{
+				markup.append(fragments[random.nextInt(fragments.length)]);
+			}
+
+			XmlPullParser parser = new XmlPullParser();
+			parser.parse(markup);
+			try
+			{
+				while (parser.next() != HttpTagType.NOT_INITIALIZED)
+				{
+					parser.getString();
+				}
+			}
+			catch (ParseException e)
+			{
+				// rejecting the markup is a valid outcome
+			}
+			catch (RuntimeException e)
+			{
+				fail("Parsing '" + markup + "' failed with " + e, e);
+			}
+		}
+	}
+
+	@Test
+	void tagThatDoesNotStartWithANameIsRejected()
+	{
+		XmlPullParser parser = new XmlPullParser();
+
+		ParseException e = assertThrows(ParseException.class, () -> {
+			parser.parse("<p><1a></p>");
+			parser.nextTag();
+			parser.nextTag();
+		});
+		assertTrue(e.getMessage().startsWith("Malformed tag"), e.getMessage());
+	}
+
+	@Test
+	void everyConstructIsFollowedByWhatComesAfterIt() throws Exception
+	{
+		assertEquals(List.of(HttpTagType.PROCESSING_INSTRUCTION, HttpTagType.DOCTYPE,
+			HttpTagType.COMMENT, HttpTagType.SPECIAL_TAG, HttpTagType.CONDITIONAL_COMMENT,
+			HttpTagType.COMMENT, HttpTagType.TAG, HttpTagType.CONDITIONAL_COMMENT_ENDIF,
+			HttpTagType.TAG, HttpTagType.BODY, HttpTagType.TAG, HttpTagType.BODY),
+			types("<?xml version=\"1.0\"?><!DOCTYPE html><!-- c --><!ELEMENT x>" +
+				"<!--[if (gt IE 9)|!(IE)]><!--><p><!--<![endif]--><b>x</b> tail"));
+	}
+
+	@Test
+	void emptyScriptIsClosedByItsEndTag() throws Exception
+	{
+		assertEquals(List.of(HttpTagType.TAG, HttpTagType.BODY, HttpTagType.TAG, HttpTagType.TAG),
+			types("<script></script><p>"));
+	}
+
+	@Test
+	void tagKnowsItsLineAndColumn() throws Exception
+	{
+		XmlPullParser parser = new XmlPullParser();
+		parser.parse("<a>\n  <b>");
+		parser.nextTag();
+		XmlTag tag = parser.nextTag();
+
+		assertEquals(2, tag.getLineNumber());
+		assertEquals(3, tag.getColumnNumber());
+	}
+
+	@Test
+	void parsingAStreamClosesIt() throws Exception
+	{
+		boolean[] closed = { false };
+		ByteArrayInputStream in = new ByteArrayInputStream("<p>".getBytes(StandardCharsets.UTF_8))
+		{
+			@Override
+			public void close()
+			{
+				closed[0] = true;
+			}
+		};
+
+		new XmlPullParser().parse(in);
+
+		assertTrue(closed[0]);
+	}
+
+	private static List<HttpTagType> types(String markup) throws Exception
+	{
+		XmlPullParser parser = new XmlPullParser();
+		parser.parse(markup);
+		List<HttpTagType> types = new ArrayList<>();
+		HttpTagType type;
+		while ((type = parser.next()) != HttpTagType.NOT_INITIALIZED)
+		{
+			types.add(type);
+		}
+		return types;
 	}
 }

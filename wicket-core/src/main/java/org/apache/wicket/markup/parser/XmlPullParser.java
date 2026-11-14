@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.Set;
 
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.XmlTag.TextSegment;
@@ -30,12 +31,70 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.XmlReader;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.parse.metapattern.parsers.TagNameParser;
-import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.value.IValueMap;
 
 /**
- * A fairly shallow markup pull parser which parses a markup string of a given type of markup (for
- * example, html, xml, vxml or wml) into ComponentTag and RawMarkup tokens.
+ * A shallow pull parser that splits markup (for example html, xml, vxml or wml) into a flat
+ * sequence of tokens: tags, the text in between, comments and the other constructs listed in
+ * {@link IXmlPullParser.HttpTagType}. Each call to {@link #next()} returns the type of the next
+ * token. It does not check that tags nest or that an open tag has a matching close tag;
+ * {@link org.apache.wicket.markup.MarkupParser} and its markup filters do that.
+ *
+ * <h2>Tags</h2>
+ * A tag starts with {@code <} followed by a name, an optional namespace prefix included
+ * ({@code <wicket:panel>}), and ends at the first {@code >} that is not inside a single or double
+ * quoted section. A quoted section ends at the next occurrence of its opening quote; a backslash
+ * does not escape a quote. A quote that is not closed before the end of the input, or a tag text
+ * that does not start with a name, is rejected with a {@link ParseException}. {@code </name>} is a
+ * close tag. A tag whose text ends with {@code /} is an open-close tag, also when that slash
+ * directly follows an unquoted value: {@code <img src=a.png/>} has the {@code src} {@code a.png},
+ * where an HTML parser would read {@code a.png/}.
+ *
+ * <h2>Attributes</h2>
+ * Attributes are read the way the attribute states of the
+ * <a href="https://html.spec.whatwg.org/multipage/parsing.html#before-attribute-name-state">HTML
+ * tokenizer</a> read them:
+ * <ul>
+ * <li>A name runs up to whitespace, {@code /}, {@code =} or the end of the tag, and is kept as
+ * written, case included. Names such as {@code (click)}, {@code [value]}, {@code #ref},
+ * {@code @click.prevent} or {@code hx-on::after-request} are therefore single attributes.</li>
+ * <li>A value follows {@code =}, with optional whitespace around it. A quoted value is everything
+ * up to the matching quote, whitespace and {@code >} included. An unquoted value runs up to the
+ * next whitespace, so {@code href=https://example.org/a/b} is one value. An attribute without a
+ * value has the empty string as its value.</li>
+ * <li>Character references in values are decoded: {@code title="a &amp; b"} has the value
+ * {@code a & b}. {@link org.apache.wicket.markup.ComponentTag} escapes values again when it writes
+ * the tag; attribute names are written as parsed.</li>
+ * <li>Markup with parse errors is read as the HTML tokenizer recovers from them: a missing space
+ * between attributes is accepted, a stray {@code /} is ignored, and text such as
+ * {@code "junk"} becomes an attribute of that name. Unlike HTML, an attribute that occurs twice is
+ * rejected with a {@link ParseException}, as is a quoted value whose closing quote is outside the
+ * tag.</li>
+ * </ul>
+ *
+ * <h2>Raw text</h2>
+ * The body of a {@code <style>} element, and of a {@code <script>} element that holds a script or
+ * a data block, is returned as a single {@link IXmlPullParser.HttpTagType#BODY BODY} token: it is
+ * not searched for tags, so it may contain {@code <} freely. A script holds a script or a data
+ * block when it has no {@code type}, an empty one, a JavaScript MIME type, {@code module},
+ * {@code importmap}, {@code speculationrules} or a JSON MIME type. With any other type it is a
+ * client side template whose body is parsed as markup, so that it can contain Wicket components
+ * (WICKET-5288). The raw text ends at {@code </script} or {@code </style}, in any case, followed by
+ * whitespace, {@code /} or {@code >}. Only elements named exactly {@code script} or {@code style},
+ * without a namespace prefix, have a raw text body.
+ *
+ * <h2>Other constructs</h2>
+ * A comment runs from {@code <!--} to the next {@code -->} and a CDATA section from
+ * {@code <![CDATA[} to the next {@code ]]>}; either may contain {@code >} and quotes. The start
+ * and end of a conditional comment ({@code <!--[if IE]>}, {@code <![endif]-->}), processing
+ * instructions ({@code <?...>}), the doctype and any other {@code <!...>} construct end at the
+ * next {@code >}; the markup inside a conditional comment is parsed.
+ *
+ * <h2>Trust</h2>
+ * The parser reads markup templates, which Wicket trusts as source code (see the security model in
+ * {@code SECURITY.md}). It accepts what a browser accepts and is not a sanitizer for markup from an
+ * untrusted source.
  *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -47,6 +106,15 @@ public final class XmlPullParser implements IXmlPullParser
 
 	/** */
 	public static final String SCRIPT = "script";
+
+	private static final Set<String> SCRIPT_TYPES = Set.of("module", "importmap",
+		"speculationrules");
+
+	private static final Set<String> JAVASCRIPT_MIME_TYPES = Set.of("application/ecmascript",
+		"application/javascript", "application/x-ecmascript", "application/x-javascript",
+		"text/ecmascript", "text/javascript", "text/javascript1.0", "text/javascript1.1",
+		"text/javascript1.2", "text/javascript1.3", "text/javascript1.4", "text/javascript1.5",
+		"text/jscript", "text/livescript", "text/x-ecmascript", "text/x-javascript");
 
 	/**
 	 * The encoding of the XML.
@@ -118,10 +186,8 @@ public final class XmlPullParser implements IXmlPullParser
 		final int startIndex = input.getPosition();
 		final int tagNameLen = skipUntilText.length();
 
-		int pos = input.getPosition() - 1;
-		String endTagText = null;
-		int lastPos = 0;
-		while (!skipUntilText.equalsIgnoreCase(endTagText))
+		int pos = startIndex - 1;
+		while (true)
 		{
 			pos = input.find("</", pos + 1);
 			if ((pos == -1) || ((pos + (tagNameLen + 2)) >= input.size()))
@@ -130,17 +196,23 @@ public final class XmlPullParser implements IXmlPullParser
 					skipUntilText + " tag not closed" + getLineAndColumnText(), startIndex);
 			}
 
-			lastPos = pos + 2;
-			endTagText = input.getSubstring(lastPos, lastPos + tagNameLen).toString();
+			final String endTagName = input.getSubstring(pos + 2, pos + 2 + tagNameLen).toString();
+			final char afterEndTagName = input.charAt(pos + 2 + tagNameLen);
+			if (skipUntilText.equalsIgnoreCase(endTagName) &&
+				(isWhitespace(afterEndTagName) || (afterEndTagName == '/') ||
+					(afterEndTagName == '>')))
+			{
+				break;
+			}
 		}
+		final int lastPos = pos + 2;
 
 		input.setPosition(pos);
 		lastText = input.getSubstring(startIndex, pos);
 		lastType = HttpTagType.BODY;
 
 		// Check that the tag is properly closed
-		lastPos = input.find('>', lastPos + tagNameLen);
-		if (lastPos == -1)
+		if (input.find('>', lastPos + tagNameLen) == -1)
 		{
 			throw new ParseException(skipUntilText + " tag not closed" + getLineAndColumnText(),
 				startIndex);
@@ -252,42 +324,12 @@ public final class XmlPullParser implements IXmlPullParser
 		{
 			// It must be an open tag
 			type = TagType.OPEN;
+		}
 
-			// If open tag and starts with "s" like "script" or "style", than ...
-			if ((tagText.length() > STYLE.length()) &&
-				((tagText.charAt(0) == 's') || (tagText.charAt(0) == 'S')))
-			{
-				final String lowerCase = tagText.toLowerCase(Locale.ROOT);
-				if (lowerCase.startsWith(SCRIPT))
-				{
-					String typeAttr = "type=";
-					int idxOfType = lowerCase.indexOf(typeAttr);
-					if (idxOfType > 0)
-					{
-						// +1 to remove the ' or "
-						String typePrefix = lowerCase.substring(idxOfType + typeAttr.length() + 1);
-						if (typePrefix.startsWith("text/javascript") || typePrefix.startsWith("module")
-						        || typePrefix.startsWith("importmap"))
-						{
-							// prepare to skip everything between the open and close tag
-							skipUntilText = SCRIPT;
-						}
-						// any other type is assumed to be a template so it can contain child nodes.
-						// See WICKET-5288
-					}
-					else
-					{
-						// no type attribute so it is 'text/javascript'
-						// prepare to skip everything between the open and close tag
-						skipUntilText = SCRIPT;
-					}
-				}
-				else if (lowerCase.startsWith(STYLE))
-				{
-					// prepare to skip everything between the open and close tag
-					skipUntilText = STYLE;
-				}
-			}
+		if (tagText.length() == 0)
+		{
+			throw new ParseException("Found tag without name at" + getLineAndColumnText(),
+				input.getPosition());
 		}
 
 		// Handle special tags like <!-- and <![CDATA ...
@@ -312,6 +354,11 @@ public final class XmlPullParser implements IXmlPullParser
 		// Parse the tag text and populate tag attributes
 		if (parseTagText(tag, tagText))
 		{
+			if (type == TagType.OPEN)
+			{
+				skipUntilText = rawTextEndTagName(tag);
+			}
+
 			// Move to position after the tag
 			input.setPosition(closeBracketIndex + 1);
 			lastType = HttpTagType.TAG;
@@ -321,6 +368,46 @@ public final class XmlPullParser implements IXmlPullParser
 		{
 			throw new ParseException("Malformed tag" + getLineAndColumnText(), openBracketIndex);
 		}
+	}
+
+	/**
+	 * @param tag
+	 *            an open tag
+	 * @return the name of the end tag that ends the raw text body of the tag, or {@code null} when
+	 *         its body is markup
+	 */
+	private static String rawTextEndTagName(final XmlTag tag)
+	{
+		if (tag.getNamespace() != null)
+		{
+			return null;
+		}
+		if (STYLE.equalsIgnoreCase(tag.getName()))
+		{
+			return STYLE;
+		}
+		if (SCRIPT.equalsIgnoreCase(tag.getName()) && isScriptOrDataBlock(tag))
+		{
+			return SCRIPT;
+		}
+		return null;
+	}
+
+	private static boolean isScriptOrDataBlock(final XmlTag tag)
+	{
+		final IValueMap attributes = tag.getAttributes();
+		final String typeKey = attributes.getKey("type");
+		if (typeKey == null)
+		{
+			return true;
+		}
+
+		final String type = attributes.getString(typeKey).trim().toLowerCase(Locale.ROOT);
+		final int parameters = type.indexOf(';');
+		final String essence = (parameters < 0 ? type : type.substring(0, parameters)).trim();
+		return type.isEmpty() || SCRIPT_TYPES.contains(type) ||
+			JAVASCRIPT_MIME_TYPES.contains(essence) || essence.equals("application/json") ||
+			essence.equals("text/json") || essence.endsWith("+json");
 	}
 
 	/**
@@ -404,25 +491,14 @@ public final class XmlPullParser implements IXmlPullParser
 			final String startText = (tagText.length() <= 8 ? tagText : tagText.substring(0, 8));
 			if (startText.toUpperCase(Locale.ROOT).equals("![CDATA["))
 			{
-				int pos1 = openBracketIndex;
-				do
+				final int end = input.find("]]>", openBracketIndex + 9);
+				if (end == -1)
 				{
-					// Get index of closing tag and advance past the tag
-					closeBracketIndex = findChar('>', pos1);
-
-					if (closeBracketIndex == -1)
-					{
-						throw new ParseException("No matching close bracket at" +
-							getLineAndColumnText(), input.getPosition());
-					}
-
-					// Get the tagtext between open and close brackets
-					tagText = input.getSubstring(openBracketIndex + 1, closeBracketIndex)
-						.toString();
-
-					pos1 = closeBracketIndex + 1;
+					throw new ParseException("No matching close bracket at" +
+						getLineAndColumnText(), input.getPosition());
 				}
-				while (tagText.endsWith("]]") == false);
+				closeBracketIndex = end + 2;
+				tagText = input.getSubstring(openBracketIndex + 1, closeBracketIndex).toString();
 
 				// Move to position after the tag
 				input.setPosition(closeBracketIndex + 1);
@@ -511,42 +587,6 @@ public final class XmlPullParser implements IXmlPullParser
 		}
 
 		return null;
-	}
-
-	/**
-	 * Find the char but ignore any text within ".." and '..'
-	 *
-	 * @param ch
-	 *            The character to search
-	 * @param startIndex
-	 *            Start index
-	 * @return -1 if not found, else the index
-	 */
-	private int findChar(final char ch, int startIndex)
-	{
-		char quote = 0;
-
-		for (; startIndex < input.size(); startIndex++)
-		{
-			final char charAt = input.charAt(startIndex);
-			if (quote != 0)
-			{
-				if (quote == charAt)
-				{
-					quote = 0;
-				}
-			}
-			else if ((charAt == '"') || (charAt == '\''))
-			{
-				quote = charAt;
-			}
-			else if (charAt == ch)
-			{
-				return startIndex;
-			}
-		}
-
-		return -1;
 	}
 
 	/**
@@ -639,79 +679,113 @@ public final class XmlPullParser implements IXmlPullParser
 	 * @param tag
 	 * @param tagText
 	 *            The text between tags
-	 * @return false in case of an error
+	 * @return false if the tag text does not start with a tag name
 	 * @throws ParseException
 	 */
 	private boolean parseTagText(final XmlTag tag, final String tagText) throws ParseException
 	{
-		// Get the length of the tagtext
-		final int tagTextLength = tagText.length();
-
-		// If we match tagname pattern
 		final TagNameParser tagnameParser = new TagNameParser(tagText);
-		if (tagnameParser.matcher().lookingAt())
+		if (tagnameParser.matcher().lookingAt() == false)
 		{
-			// Extract the tag from the pattern matcher
-			tag.name = tagnameParser.getName();
-			tag.namespace = tagnameParser.getNamespace();
-
-			// Are we at the end? Then there are no attributes, so we just
-			// return the tag
-			int pos = tagnameParser.matcher().end(0);
-			if (pos == tagTextLength)
-			{
-				return true;
-			}
-
-			// Extract attributes
-			final VariableAssignmentParser attributeParser = new VariableAssignmentParser(tagText);
-			while (attributeParser.matcher().find(pos))
-			{
-				// Get key and value using attribute pattern
-				String value = attributeParser.getValue();
-
-				// In case like <html xmlns:wicket> will the value be null
-				if (value == null)
-				{
-					value = "";
-				}
-
-				// Set new position to end of attribute
-				pos = attributeParser.matcher().end(0);
-
-				// Chop off double quotes or single quotes
-				if (value.startsWith("\"") || value.startsWith("\'"))
-				{
-					value = value.substring(1, value.length() - 1);
-				}
-
-				// Trim trailing whitespace
-				value = value.trim();
-
-				// Unescape
-				value = Strings.unescapeMarkup(value).toString();
-
-				// Get key
-				final String key = attributeParser.getKey();
-
-				// Put the attribute in the attributes hash
-				if (null != tag.getAttributes().put(key, value))
-				{
-					throw new ParseException("Same attribute found twice: " + key +
-						getLineAndColumnText(), input.getPosition());
-				}
-
-				// The input has to match exactly (no left over junk after
-				// attributes)
-				if (pos == tagTextLength)
-				{
-					return true;
-				}
-			}
-
-			return true;
+			return false;
 		}
 
-		return false;
+		tag.name = tagnameParser.getName();
+		tag.namespace = tagnameParser.getNamespace();
+
+		parseAttributes(tag, tagText, tagnameParser.matcher().end(0));
+		return true;
+	}
+
+	/**
+	 * Reads the attributes the way the attribute states of the HTML tokenizer do, see the class
+	 * documentation.
+	 *
+	 * @param tag
+	 *            the tag to add the attributes to
+	 * @param tagText
+	 *            The text between tags
+	 * @param pos
+	 *            the index in the tag text right after the tag name
+	 * @throws ParseException
+	 */
+	private void parseAttributes(final XmlTag tag, final String tagText, int pos)
+		throws ParseException
+	{
+		final int length = tagText.length();
+		while (true)
+		{
+			while ((pos < length) &&
+				(isWhitespace(tagText.charAt(pos)) || (tagText.charAt(pos) == '/')))
+			{
+				pos++;
+			}
+			if (pos == length)
+			{
+				return;
+			}
+
+			// The first character of a name may be '='
+			final int nameStart = pos++;
+			while ((pos < length) && (isWhitespace(tagText.charAt(pos)) == false) &&
+				(tagText.charAt(pos) != '/') && (tagText.charAt(pos) != '='))
+			{
+				pos++;
+			}
+			final String key = tagText.substring(nameStart, pos);
+
+			while ((pos < length) && isWhitespace(tagText.charAt(pos)))
+			{
+				pos++;
+			}
+
+			String value = "";
+			if ((pos < length) && (tagText.charAt(pos) == '='))
+			{
+				pos++;
+				while ((pos < length) && isWhitespace(tagText.charAt(pos)))
+				{
+					pos++;
+				}
+
+				if (pos < length)
+				{
+					final char quote = tagText.charAt(pos);
+					if ((quote == '"') || (quote == '\''))
+					{
+						final int closingQuote = tagText.indexOf(quote, pos + 1);
+						if (closingQuote == -1)
+						{
+							throw new ParseException(
+								"Opening/closing quote not found for value of " + key +
+									getLineAndColumnText(),
+								input.getPosition());
+						}
+						value = tagText.substring(pos + 1, closingQuote);
+						pos = closingQuote + 1;
+					}
+					else
+					{
+						final int valueStart = pos;
+						while ((pos < length) && (isWhitespace(tagText.charAt(pos)) == false))
+						{
+							pos++;
+						}
+						value = tagText.substring(valueStart, pos);
+					}
+				}
+			}
+
+			if (null != tag.getAttributes().put(key, Strings.unescapeMarkup(value).toString()))
+			{
+				throw new ParseException("Same attribute found twice: " + key +
+					getLineAndColumnText(), input.getPosition());
+			}
+		}
+	}
+
+	private static boolean isWhitespace(final char ch)
+	{
+		return (ch == ' ') || (ch == '\t') || (ch == '\n') || (ch == '\r') || (ch == '\f');
 	}
 }
