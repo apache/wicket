@@ -200,9 +200,67 @@ h2 > a.link:hover, h3 > a.link:hover, h4 > a.link:hover { text-decoration: under
 #toc a.is-current { color: var(--on-ribbon); background: var(--ribbon); }
 #toc a .toc-num { font-variant-numeric: tabular-nums; color: inherit; opacity: .7; margin-right: .35em; }
 
-/* With the script, a chapter shows its sections only while it is read. */
-.js-toc #toc li > ul { display: none; }
-.js-toc #toc li.is-open > ul, .js-toc #toc li:focus-within > ul { display: block; }
+/* With JavaScript, chapter subsections can be expanded independently. */
+.js-toc #toc li > ul {
+	display: none;
+}
+
+.js-toc #toc li.is-open > ul,
+.js-toc #toc li.is-manually-open > ul,
+.js-toc #toc li:focus-within > ul {
+	display: block;
+}
+
+.js-toc #toc li.is-manually-closed > ul {
+	display: none;
+}
+
+#toc .toc-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	margin: 2px 0 2px 2px;
+	padding: 0;
+	border: 0;
+	border-radius: 3px;
+	background: transparent;
+	color: var(--ink-soft);
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+#toc .toc-toggle::before {
+	content: "";
+	width: 7px;
+	height: 7px;
+	border-right: 1.5px solid currentColor;
+	border-bottom: 1.5px solid currentColor;
+	transform: rotate(-45deg);
+	transition: transform .15s ease;
+}
+
+#toc .toc-toggle[aria-expanded="true"]::before {
+	transform: rotate(45deg);
+}
+
+#toc .toc-toggle:hover {
+	background: var(--ribbon-wash);
+	color: var(--ink);
+}
+
+#toc .toc-toggle:focus-visible {
+	outline: 2px solid var(--ribbon);
+	outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+	#toc .toc-toggle {
+		width: 44px;
+		height: 44px;
+	}
+}
 
 @media screen and (min-width: 768px) {
 	body.toc2 { padding-left: 0; }
