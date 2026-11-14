@@ -1,0 +1,18 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+WCAG conformance is a property of pages, and most of what makes a Wicket page accessible is in the markup and content we write ourselves. Wicket helps with labels connected through _wicket:for_, validation messages that name their field, table headers and captions, and focus restoration after AJAX updates. Where it does not help yet, as with the _lang_ attribute, _aria-invalid_, live regions, the sort state of table headers and the default error pages, a few lines of code with the current API fill the gap. AJAX is where most care is needed: the focus has to be moved deliberately, status messages need a live region that stays in the page, and AJAX behaviors belong on elements that the keyboard can reach. Unit tests with _WicketTester_ and automated checks with axe-core catch regressions, but a keyboard and screen reader pass remains necessary.

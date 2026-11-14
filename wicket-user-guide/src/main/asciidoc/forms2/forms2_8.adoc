@@ -23,7 +23,7 @@ In the next example (project UploadSingleFile) we will see a form which allows u
 
 [source,html]
 ----
-<html>
+<html lang="en">
 	<head>
 	</head>
 	<body>

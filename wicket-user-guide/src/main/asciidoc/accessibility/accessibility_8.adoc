@@ -1,0 +1,180 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+An application is checked against WCAG at three levels: assertions on the rendered markup in unit tests, automated checks with a rule engine in a browser, and checks by hand. The first two can run in every build. They are worth having, but they are not enough: automated tools find only a part of the failures. A tool can verify that an image has an _alt_ attribute, not that the text describes the image; that a field has a label, not that the label makes sense; that focus moves, not that it moves to the right place. Most success criteria in the table of <<_wcag_2_2_success_criteria_in_wicket,paragraph 25.2>> need a person to judge them, and the column "Application" of that table is the list of what to check by hand.
+
+=== Markup assertions with WicketTester
+
+With _WicketTester_ and _TagTester_ (see <<_test_driven_development_with_wicket,chapter 23>>) we can assert the accessibility properties our own code is responsible for, without a browser and at the speed of a unit test. The following test checks the base page and the registration form of this chapter: the _lang_ attribute, the page title, a label for every field and _aria-invalid_ with a description after a failed submit.
+
+[source,java]
+----
+class AccessibilityTest {
+
+	private WicketTester tester;
+
+	@BeforeEach
+	void setUp() {
+		tester = new WicketTester(new MyApplication());
+	}
+
+	@AfterEach
+	void tearDown() {
+		tester.destroy();
+	}
+
+	@Test
+	void pageLanguageFollowsSessionLocale() {
+		tester.getSession().setLocale(Locale.forLanguageTag("nl-NL"));
+		tester.startPage(RegistrationPage.class);
+
+		TagTester html = TagTester.createTagByName(tester.getLastResponseAsString(), "html");
+		assertEquals("nl-NL", html.getAttribute("lang"));
+	}
+
+	@Test
+	void pageHasTitle() {
+		tester.startPage(RegistrationPage.class);
+
+		TagTester title = TagTester.createTagByName(tester.getLastResponseAsString(), "title");
+		assertEquals("Register - Example", title.getValue());
+	}
+
+	@Test
+	void everyFieldHasLabel() {
+		tester.startPage(RegistrationPage.class);
+		String markup = tester.getLastResponseAsString();
+
+		Set<String> fields = Set.of("input", "select", "textarea");
+		Set<String> unlabelledTypes = Set.of("hidden", "submit", "button", "reset", "image");
+		List<TagTester> tags = TagTester.createTags(markup,
+			tag -> fields.contains(tag.getName()), false);
+
+		assertFalse(tags.isEmpty());
+		for (TagTester field : tags) {
+			if (unlabelledTypes.contains(field.getAttribute("type"))) {
+				continue;
+			}
+			String id = field.getAttribute("id");
+			assertNotNull(id, "field without id: " + field.getMarkup());
+			assertNotNull(TagTester.createTagByAttribute(markup, "for", id),
+				"no <label for=\"" + id + "\">");
+		}
+	}
+
+	@Test
+	void invalidFieldIsMarkedAndDescribed() {
+		tester.startPage(RegistrationPage.class);
+
+		FormTester form = tester.newFormTester("form");
+		form.setValue("email", "");
+		tester.executeAjaxEvent("form:register", "click");
+
+		TagTester email = tester.getTagByWicketId("email");
+		assertEquals("true", email.getAttribute("aria-invalid"));
+
+		String errorId = email.getAttribute("aria-describedby");
+		TagTester error = tester.getTagById(errorId);
+		assertTrue(error.getValue().contains("is required."));
+	}
+}
+----
+
+The method _createTags_ of _TagTester_ takes a function that selects tags by their name and attributes, which makes it easy to write checks that hold for all pages, such as the label check above, and to run them over every page of the application. After an AJAX request, _getTagByWicketId_ and _getTagById_ search the markup of the components in the AJAX response.
+
+=== Automated checks in the browser
+
+Many failures only show in the browser: contrast, which depends on the CSS; the names of elements as the browser computes them; duplicate ids; ARIA attributes that do not fit the role of their element. A rule engine such as https://github.com/dequelabs/axe-core[axe-core] checks these in the rendered page. It runs in a browser that a test drives, against the running application, so the test needs the application started in the same way as for other integration tests, and a browser automation tool such as Playwright or Selenium. axe-core has integrations for both, and for other tools and languages as well.
+
+The following test uses Playwright for Java and Deque's Playwright integration for axe-core:
+
+[source,xml]
+----
+<dependency>
+	<groupId>com.deque.html.axe-core</groupId>
+	<artifactId>playwright</artifactId>
+	<version>4.10.1</version>
+	<scope>test</scope>
+</dependency>
+----
+
+[source,java]
+----
+class AccessibilityBrowserIT {
+
+	private static final String BASE_URL = System.getProperty("app.url", "http://localhost:8080");
+
+	private static final List<String> WCAG_22_AA = List.of("wcag2a", "wcag2aa", "wcag21a", "wcag21aa",
+		"wcag22aa");
+
+	private static Playwright playwright;
+
+	private static Browser browser;
+
+	@BeforeAll
+	static void launchBrowser() {
+		playwright = Playwright.create();
+		browser = playwright.chromium().launch();
+	}
+
+	@AfterAll
+	static void closeBrowser() {
+		playwright.close();
+	}
+
+	@Test
+	void registrationPage() {
+		Page page = browser.newPage();
+		page.navigate(BASE_URL + "/register");
+		assertNoViolations(page);
+
+		page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Register")).click();
+		page.locator("[aria-invalid=true]").first().waitFor();
+		assertNoViolations(page);
+	}
+
+	private static void assertNoViolations(Page page) {
+		AxeResults results = new AxeBuilder(page).withTags(WCAG_22_AA).analyze();
+		List<Rule> violations = results.getViolations();
+		assertTrue(violations.isEmpty(), () -> page.url() + "\n" + violations.stream()
+			.map(rule -> rule.getId() + ": " + rule.getHelp() + " (" + rule.getNodes().size() + "x)")
+			.collect(Collectors.joining("\n")));
+	}
+}
+----
+
+The tags restrict axe-core to the rules for WCAG 2.0, 2.1 and 2.2 at level A and AA. The test checks the page twice: as it loads, and after a failed submit. Many pages have states that only exist after an interaction, such as validation errors, an open dialog, a panel loaded by AJAX or a table sorted by another column, and each of these states needs its own check. Finding the button by its role and accessible name, as Playwright's _getByRole_ does, is a small accessibility check of its own: the test fails if the button has no name.
+
+=== HTML validation
+
+WCAG 2.2 no longer has a success criterion for valid markup, but invalid markup still breaks accessibility: a duplicate _id_ makes a _<label for>_ or an _aria-describedby_ point to the wrong element, and a misnested element can change the structure that screen readers present. The https://validator.github.io/validator/[Nu Html Checker] validates HTML5. It can be run from the command line as _vnu.jar_ with the URLs of the running application, or with files written by tests from _getLastResponseAsString()_.
+
+In development mode Wicket leaves its own tags and _wicket:id_ attributes in the markup, which the checker reports as errors. Validate the markup of the application in deployment mode, or call _getMarkupSettings().setStripWicketTags(true)_ in the test configuration.
+
+=== Checks by hand
+
+No tool replaces the following checks. They take a few minutes per page, and they are the ones that find the problems users actually run into.
+
+* *Keyboard.* Put the mouse away and use the page with Tab, Shift+Tab, Enter, Space, the arrow keys and Escape. Every function must be reachable and operable, the focus must always be visible, it must move in a logical order, it must never get stuck, and after every AJAX update it must be somewhere sensible (success criteria 2.1.1, 2.1.2, 2.4.3, 2.4.7 and 2.4.11).
+* *Screen reader.* Use the page with NVDA or JAWS on Windows, VoiceOver on macOS and iOS, or TalkBack on Android. Check that the title is read when the page loads, that headings and landmarks give an overview of the page, that every field announces its label and errors, that buttons and links announce what they do, and that status messages are announced (success criteria 1.3.1, 2.4.2, 2.4.6, 3.3.1, 4.1.2 and 4.1.3).
+* *Zoom and reflow.* Zoom the browser to 200%: all text must grow and nothing may be cut off or overlap (success criterion 1.4.4). Then make the viewport 320 CSS pixels wide, which is the same as 1280 pixels at 400% zoom: the content must be readable without scrolling in two directions, except for content such as data tables that needs two dimensions (success criterion 1.4.10). Increase the line, paragraph, letter and word spacing as described in success criterion 1.4.12 and check that no text is lost.
+* *Contrast.* Measure the contrast of text, of the borders of fields and buttons, of the focus indicator and of icons with a contrast checker, in every state: hover, focus, disabled and error (success criteria 1.4.3 and 1.4.11).
+* *Content.* Read the alternative texts, headings, labels, link texts and error messages, and check that they make sense on their own (success criteria 1.1.1, 2.4.4, 2.4.6 and 3.3.3).
+
+The HTML version of this guide is a page to try the keyboard and screen reader checks on: the first Tab stop is a link that skips to the content, the table of contents and the content are exposed as navigation and main landmarks, the table of contents marks the current section with _aria-current_, and each copy button names the language of its listing, such as "Copy Java code".
+
+The table in <<_wcag_2_2_success_criteria_in_wicket,paragraph 25.2>> lists, for each success criterion, what the application has to take care of, and is a checklist for the remaining criteria.

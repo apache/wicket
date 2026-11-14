@@ -20,7 +20,7 @@ An example of a parent page using the tag _<wicket:child>_ is the following:
 
 [source,html]
 ----
-<html>
+<html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
 </head>
@@ -51,7 +51,7 @@ Considering the two pages seen above, the final markup generated for child page 
 
 [source,html]
 ----
-<html>
+<html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
@@ -72,22 +72,27 @@ Applying _<wicket:child>_ tag to our layout example, we obtain the following mar
 
 [source,html]
 ----
-<html>
+<!DOCTYPE html>
+<html lang="en" xmlns:wicket="http://wicket.apache.org">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+	<meta charset="utf-8">
+	<title wicket:id="pageTitle">Jug4Tenda</title>
 </head>
 <body>
-<div id="header" wicket:id="headerPanel">header</div>
+<a class="skip-link" href="#content">Skip to main content</a>
+<header id="header" wicket:id="headerPanel">header</header>
 <div id="body">
-	<div id="menu" wicket:id="menuPanel">menu</div>
-	<wicket:child/>
+	<nav id="menu" wicket:id="menuPanel">menu</nav>
+	<main id="content" tabindex="-1">
+		<wicket:child/>
+	</main>
 </div>
-<div id="footer" wicket:id="footerPanel">footer</div>
+<footer id="footer" wicket:id="footerPanel">footer</footer>
 </body>
 </html>
 ----
 
-We have replaced the _<div>_ tag of the content area with the tag _<wicket:child>_. Going forward with our example we can build a login page creating class _SimpleLoginPage_ which extends the _JugTemplate_ page, but with a related markup file like this:
+We have replaced the content component inside the _<main>_ element with the tag _<wicket:child>_. The _<main>_ element itself stays in the template: it is plain markup now, and it is still the target of the skip link. Going forward with our example we can build a login page creating class _SimpleLoginPage_ which extends the _JugTemplate_ page, but with a related markup file like this:
 
 [source,html]
 ----

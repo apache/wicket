@@ -19,7 +19,7 @@ A common task for web applications is to display a set of items. The most typica
 
 [source,html]
 ----
-<html>
+<html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>

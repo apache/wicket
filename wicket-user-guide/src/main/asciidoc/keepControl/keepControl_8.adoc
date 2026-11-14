@@ -23,7 +23,7 @@ For example given the following markup and code:
 
 [source,html]
 ----
-<html>
+<html lang="en">
 <head>
   <title>Hello world page</title>
 </head>
@@ -46,7 +46,7 @@ the output will be:
 
 [source,html]
 ----
-<html>
+<html lang="en">
 <head>
   <title>Hello world page</title>
 </head>
