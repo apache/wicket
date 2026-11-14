@@ -1,0 +1,112 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+Islands on one page can work together without involving the server, through client stores, and
+they can share data fetched from the server, through the page's query client.
+
+=== Client stores
+
+A client store is a named value at page level, shared by every island on the page that uses the
+same name. In the Treasure Hunt example, the board and the list of probes highlight the cell the
+mouse is over in both islands at once:
+
+[source,javascript]
+----
+const [hover, setHover] = useStore<Cell | null>('treasure-hover');
+----
+
+A store lives as long as the page in the browser, so it outlasts the islands using it. Setting a
+value that is the same (`Object.is`) as the current one notifies nobody. A store is client-side
+only: its value reaches the server only when a peer includes it in the payload of a call.
+
+=== Queries and invalidation
+
+Data that a peer fetches from the server, rather than receives as props, is best fetched with
+_useIslandQuery_. It runs a call through https://tanstack.com/query[TanStack Query], with a query
+client per page that all islands share:
+
+[source,javascript]
+----
+const scores = useIslandQuery<Score[]>('scores', { size });
+----
+
+The result has TanStack Query's usual shape: `isPending`, `isError`, `error` (an
+_IslandCallError_), `data`. The query is cached under the call's name, then a scope, then the
+payload. For a page-bound call the scope is the island itself, so two islands with a query of the
+same name never share results. For a page-less endpoint (see below) the scope is the endpoint, or
+its handle, so islands calling the same endpoint share them.
+
+The server marks data as stale by name. Every island showing a query under that name fetches it
+again; the server does not need to know which islands are interested:
+
+[source,java]
+----
+// in an island call
+call.invalidate("throughput");
+
+// in any other Ajax request, e.g. a classic form submit
+IslandTargets.invalidate(target, "scores");
+----
+
+In the Treasure Hunt example, the high-score list queries `scores`, and the page's form that
+saves a score calls _IslandTargets.invalidate(target, "scores")_, so the list reloads after every
+saved score.
+
+The query client retries a query up to twice after a `network` failure, and never after the
+others, which a retry would not change. It does not refetch page-bound queries when the window regains
+the focus. Options passed to _useIslandQuery_ override these defaults per query.
+
+_useIslandMutation(name, options)_ wraps a call as a TanStack Query mutation, for its callbacks
+and status.
+
+=== Optimistic updates
+
+Because a call's promise settles only after the response's props have been applied, React's
+`useOptimistic` over the props is a reliable way to show a change before the server has decided
+on it. The task board example moves a dropped card at once; when the server accepts the move,
+the new props show it; when the server refuses, the optimistic state is dropped and the card is
+back where the props have it:
+
+[source,javascript]
+----
+export default function TaskBoard({ version, columns }: BoardProps) {
+	const { call } = useIsland<BoardProps>();
+	const [shown, showMove] = useOptimistic(columns, applyMove);
+	const [notice, setNotice] = useState<string | null>(null);
+
+	function onDragEnd({ active, over }: DragEndEvent) {
+		const move = over && moveFor(shown, String(active.id), String(over.id), version);
+		if (!move) {
+			return;
+		}
+		setNotice(null);
+		startTransition(async () => {
+			showMove(move);
+			try {
+				await call('move', move);
+			} catch (e) {
+				setNotice(e instanceof IslandCallError ? e.messages.join(' ') : String(e));
+			}
+		});
+	}
+	// ...
+}
+----
+
+On the server, the handler refuses a move that would exceed a column's limit, and one made on a
+board that changed in the meantime. In the latter case it adds the island to the target before
+rejecting, so the peer receives the current board in the same response.

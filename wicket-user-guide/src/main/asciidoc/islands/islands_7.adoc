@@ -1,0 +1,167 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+The calls of the previous sections are page-bound: they run in the context of the island, under
+the page lock, one at a time per page. That is right for anything that changes the page's state,
+but a poor fit for queries such as the rows of a grid, the suggestions of an autocomplete or the
+series of a chart, which only read data and would rather run in parallel.
+
+A page-less endpoint serves such queries. It is registered with the application rather than on
+an island, has no page and takes no page lock. The peer does not see the difference: it calls a
+page-less endpoint with the same `call(name, payload)`, typically through _useIslandQuery_, so a
+query can start out page-bound and move to a page-less endpoint without a change to the
+frontend code.
+
+[options="header"]
+|===
+| |Page-bound call |Page-less endpoint
+|Registered |on the island, with _onCall_ |with the application, made callable by an island
+with _usePageless_
+|Handler sees |the island, its models, the page, the _AjaxRequestTarget_ |the session and the
+request; a context through a handle
+|Concurrency |one at a time per page, under the page lock |in parallel; the endpoint must be
+thread-safe
+|Response |the result and any Wicket partial updates |the result and invalidations; there is no
+page to update
+|Page expiry |the call fails with `expired` |unaffected; a call with a handle fails with
+`expired` when the handle is no longer known
+|===
+
+=== Registering an endpoint
+
+An endpoint implements _IPagelessEndpoint<Q, R>_ and is registered once, in the application's
+_init_ method, under an id:
+
+[source,java]
+----
+public class ScoresEndpoint implements IPagelessEndpoint<ScoresEndpoint.ScoreQuery, List<Score>>
+{
+	public record ScoreQuery(BoardSize size)
+	{
+	}
+
+	private final HighScores highScores;
+
+	public ScoresEndpoint(HighScores highScores)
+	{
+		this.highScores = highScores;
+	}
+
+	@Override
+	public List<Score> handle(ScoreQuery query, PagelessCall call)
+	{
+		if (query.size() == null)
+		{
+			throw call.reject("Name a board size.");
+		}
+		return highScores.top(query.size());
+	}
+}
+----
+
+[source,java]
+----
+IslandSettings.install(this).getPagelessEndpoints().register("scores", ScoreQuery.class,
+	new ScoresEndpoint(highScores), IPagelessAuthorization.PERMIT_ALL);
+----
+
+The one endpoint instance serves every session, so it must be thread-safe and must not hold on to
+pages or components. _register_ requires an _IPagelessAuthorization_, which decides per call
+whether it may run; there is no default. An endpoint serving public data says so with
+_IPagelessAuthorization.PERMIT_ALL_, so the decision is visible where the endpoint is registered.
+
+The _PagelessCall_ an endpoint receives offers the session and the request, _reject_ and
+_invalidate_ as on a page-bound call, and _getHandle_ (see below). Errors map to the same kinds
+as for page-bound calls.
+
+=== Using an endpoint from an island
+
+An island makes an endpoint callable by its peer with _usePageless_, under the endpoint's id or
+under a name of its own:
+
+[source,java]
+----
+public class HighScoreList extends Island<HighScoreList.ListProps>
+{
+	public record ListProps(BoardSize size)
+	{
+	}
+
+	public HighScoreList(String id, IModel<BoardSize> size)
+	{
+		super(id, "highscore-list", size.map(ListProps::new));
+		usePageless("scores");   // or usePageless("name", "scores")
+	}
+}
+----
+
+[source,javascript]
+----
+export default function HighScoreList({ size }: ListProps) {
+	const scores = useIslandQuery<Score[]>('scores', { size });
+	// ...
+}
+----
+
+The endpoint has to be registered before an island uses it; _usePageless_ fails for an unknown
+id.
+
+=== Handles: page context for page-less endpoints
+
+A page-less endpoint cannot see the page, and it must not trust page context sent by the client,
+such as "the board this page shows": the user can change any value the browser sends. Instead,
+the island issues a _handle_ for that context when it renders. The context is kept on the
+server; the browser only holds the handle, an opaque, unguessable token, and sends it along with
+every call.
+
+[source,java]
+----
+add(new Island<Void>("filter", "board-filter", () -> null)
+	.usePageless("members", "members", () -> new BoardRef(boardId)));
+----
+
+The third argument is a model of the context: a small, serializable object with a meaningful
+_equals_. It is read when the island renders. The endpoint reads it back with _getHandle_:
+
+[source,java]
+----
+BoardRef board = call.getHandle(BoardRef.class);
+----
+
+The island keeps its handle as long as the context stays equal and the store still knows it, and
+issues a new one otherwise.
+
+*A handle is not an authorization mechanism.* It carries context the client cannot forge, but
+it can leak or be replayed within its session like any token. The endpoint, or its
+authorization, still checks that the session may access the context. The task board registers
+its endpoints with an authorization that does exactly that:
+
+[source,java]
+----
+static final IPagelessAuthorization MEMBERS_ONLY = call -> TaskBoardApplication
+	.mayAccess(call.getSession(), call.getHandle(BoardRef.class).boardId());
+----
+
+By default, handles are kept in the session by a _SessionHandleStore_: up to 1000 per session,
+the least recently used ones dropped first. A handle dies with its session, does not resolve in
+another session, and only resolves for the endpoint it was issued for. Issuing one binds a
+temporary session. In a cluster, page-less calls with a handle therefore need sticky sessions or
+session replication, as page-bound calls do. _IslandSettings.setHandleStore_ installs a store of
+your own, which implements _IIslandHandleStore_.
+
+A call with a handle the store does not know, for example one issued before the session expired,
+is answered `expired` before the endpoint runs.

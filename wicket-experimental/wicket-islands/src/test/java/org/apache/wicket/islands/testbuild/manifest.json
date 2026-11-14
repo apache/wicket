@@ -1,0 +1,15 @@
+{
+  "src/islands/test-island.tsx": {
+    "file": "assets/test-island-abc123.js",
+    "name": "test-island",
+    "src": "src/islands/test-island.tsx",
+    "isEntry": true,
+    "imports": ["_shared-xyz789.js"],
+    "css": ["assets/test-island-def456.css"]
+  },
+  "_shared-xyz789.js": {
+    "file": "assets/shared-xyz789.js",
+    "name": "shared",
+    "css": ["assets/shared-aaa111.css"]
+  }
+}

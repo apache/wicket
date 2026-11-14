@@ -1,0 +1,292 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+An application with islands has two builds: the Java build, and a https://vite.dev[Vite] build
+of the island modules. Vite produces one entry per island type, puts what the islands share
+(React, the islands runtime) into shared chunks, and writes a manifest. Wicket reads that
+manifest from the classpath to know which files to load for an island type, and serves them.
+
+=== The server side
+
+Add the module to the application:
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.apache.wicket.experimental.wicket12</groupId>
+  <artifactId>wicket-islands</artifactId>
+  <version>...</version>
+</dependency>
+----
+
+It depends on Jackson, which converts props, call payloads and results to and from JSON.
+
+Install the islands in the application's _init_ method:
+
+[source,java]
+----
+@Override
+protected void init()
+{
+	super.init();
+
+	IslandSettings.install(this);
+}
+----
+
+_IslandSettings.install_ mounts the resource that serves the built files at `wicket-islands/`
+and the one that serves page-less endpoints at `wicket-islands-call/`, so the application must
+not mount anything else under those paths. It also registers a request cycle listener that
+answers island calls which fail before they reach their island, and makes Ajax behaviors on a
+form island send its value. It returns the settings for further configuration:
+
+[options="header"]
+|===
+|Setting |Purpose
+|_setBasePath_ / _setManifestFile_ |Where the Vite build lies on the classpath. By default
+`META-INF/wicket-islands/`, with the manifest at `.vite/manifest.json` inside it.
+|_setDevServerUrl_ |The URL of a Vite dev server to load the modules from, in development mode
+only.
+|_setSerializer_ |The JSON serializer, by default a _JacksonIslandSerializer_.
+|_setHandleStore_ |Where the handles of page-less endpoints are kept, by default in the session.
+|_setModuleLoader_ |Replaces how island modules are contributed to the page header altogether.
+|_getPagelessEndpoints_ |The registry of page-less endpoints.
+|===
+
+=== The client side
+
+The client side consists of three npm packages:
+
+* `wicket-islands`, the framework-neutral runtime;
+* `wicket-islands-react`, the React adapter;
+* `vite-plugin-wicket-islands`, the Vite plugin that turns each island type into an entry of the
+  build.
+
+Until they are published, an application refers to them in a Wicket source tree, in
+`wicket-experimental/wicket-islands/npm/packages`. A frontend project inside the Maven project,
+say in `src/main/frontend`, then has a `package.json` like this:
+
+[source,javascript]
+----
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@tanstack/query-core": "^5.0.0",
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "wicket-islands": "file:<wicket>/wicket-experimental/wicket-islands/npm/packages/runtime",
+    "wicket-islands-react": "file:<wicket>/wicket-experimental/wicket-islands/npm/packages/react"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.0",
+    "vite": "^7.1.0",
+    "vite-plugin-wicket-islands": "file:<wicket>/wicket-experimental/wicket-islands/npm/packages/vite-plugin"
+  }
+}
+----
+
+The Vite configuration lists the island types with their modules, and writes the build where the
+Maven build picks it up as a resource:
+
+[source,javascript]
+----
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+import wicketIslands from 'vite-plugin-wicket-islands';
+import { reactIslands } from 'wicket-islands-react/vite';
+
+export default defineConfig({
+	plugins: [
+		react(),
+		wicketIslands({
+			islands: {
+				'star-rating': 'src/StarRating.tsx'
+			},
+			...reactIslands
+		})
+	],
+	resolve: {
+		// the linked packages resolve their own imports from this project
+		dedupe: ['react', 'react-dom', 'wicket-islands', '@tanstack/query-core',
+			'@tanstack/react-query']
+	},
+	server: {
+		port: 5173,
+		strictPort: true,
+		origin: 'http://localhost:5173',
+		fs: {
+			allow: ['.', '<wicket>/wicket-experimental/wicket-islands/npm/packages']
+		}
+	},
+	build: {
+		outDir: '../../../target/generated-resources/wicket-islands/META-INF/wicket-islands',
+		emptyOutDir: true
+	}
+});
+----
+
+The keys of `islands` are the island types, the same strings the Java code passes to the
+_Island_ constructor. `reactIslands` lets an island module export a plain React component, which
+keeps it eligible for React Fast Refresh during development. `resolve.dedupe` and `server.fs`
+are only needed because the island packages are linked from outside the project.
+
+The plugin switches on Vite's manifest and sets `base` to `./` for builds, unless the
+configuration sets one, so the URLs of imported assets and lazily loaded chunks resolve against
+the module, under Wicket's mount.
+
+=== Running the Vite build from Maven
+
+The https://github.com/eirslett/frontend-maven-plugin[frontend-maven-plugin] installs Node, the
+npm packages, and runs the build, and the build-helper-maven-plugin adds its output as a resource
+directory, so that the normal resource processing copies it onto the classpath:
+
+[source,xml]
+----
+<plugin>
+  <groupId>com.github.eirslett</groupId>
+  <artifactId>frontend-maven-plugin</artifactId>
+  <version>...</version>
+  <configuration>
+    <workingDirectory>src/main/frontend</workingDirectory>
+    <nodeVersion>...</nodeVersion>
+    <npmVersion>...</npmVersion>
+  </configuration>
+  <executions>
+    <execution>
+      <id>install node and npm</id>
+      <goals>
+        <goal>install-node-and-npm</goal>
+      </goals>
+      <phase>generate-resources</phase>
+    </execution>
+    <execution>
+      <id>npm ci</id>
+      <goals>
+        <goal>npm</goal>
+      </goals>
+      <phase>generate-resources</phase>
+      <configuration>
+        <arguments>ci --ignore-scripts</arguments>
+      </configuration>
+    </execution>
+    <execution>
+      <id>vite build</id>
+      <goals>
+        <goal>npm</goal>
+      </goals>
+      <phase>generate-resources</phase>
+      <configuration>
+        <arguments>run build</arguments>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+<plugin>
+  <groupId>org.codehaus.mojo</groupId>
+  <artifactId>build-helper-maven-plugin</artifactId>
+  <version>...</version>
+  <executions>
+    <execution>
+      <id>add vite output</id>
+      <goals>
+        <goal>add-resource</goal>
+      </goals>
+      <phase>generate-resources</phase>
+      <configuration>
+        <resources>
+          <resource>
+            <directory>${project.build.directory}/generated-resources/wicket-islands</directory>
+          </resource>
+        </resources>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+----
+
+`--ignore-scripts` keeps the install scripts of the npm dependencies from running on the build
+machine. React, Vite and its bundler do not need them. A separate frontend pipeline that puts the
+same output on the classpath works just as well; Wicket only reads the result.
+
+Without a build on the classpath, islands render their hosts without loading any modules, and
+Wicket logs a warning once.
+
+=== Development with hot module replacement
+
+In development mode, Wicket can load the island modules from a running Vite dev server instead
+of the build, so a change to a peer shows in the browser at once, without reloading the page;
+React Fast Refresh keeps the state of the changed components. The page and every server call
+stay real; only the JavaScript comes from the dev server:
+
+[source,java]
+----
+IslandSettings islands = IslandSettings.install(this);
+String devServer = System.getProperty("islands.devServer");
+if (devServer != null && usesDevelopmentConfig())
+{
+	islands.setDevServerUrl(devServer);
+	getCspSettings().blocking()
+		.add(CSPDirective.CONNECT_SRC, devServer, devServer.replaceFirst("^http", "ws"));
+}
+----
+
+Start the dev server with `npm run dev` in the frontend project, and the application with
+`-Dislands.devServer=http://localhost:5173`. The Content Security Policy has to allow
+connections to the dev server, over HTTP and WebSocket, for hot module replacement; the code
+above allows them in development mode only. `server.origin` in the Vite configuration makes the
+URLs of assets point at the dev server rather than at the Wicket application.
+
+=== Content Security Policy
+
+Wicket's default Content Security Policy allows scripts and styles only with the nonce of the
+page (see <<security.adoc#_content_security_policy_csp,Content Security Policy>>). The island
+modules are rendered with that nonce. Component libraries that inject `<style>` elements of their
+own need it too: every island renders the nonce in a `<meta property="csp-nonce">` tag, and
+`cspNonce()`, exported by the runtime and the React adapter, returns it. Mantine, for example,
+takes it as `<MantineProvider getStyleNonce={cspNonce}>`.
+
+==== Trusted Types
+
+Islands work on a page that requires Trusted Types, which
+_CSPHeaderConfiguration.requireTrustedTypes()_ enables. The runtime writes no markup itself: it
+reads the island state as JSON, and the answers of page-bound calls arrive in Wicket's Ajax
+response, which Wicket's own policy covers. React only writes markup for `dangerouslySetInnerHTML`.
+The development mode works as well, including hot module replacement.
+
+The JavaScript an island module bundles has to keep to the rule too. A library that assigns a
+string to `innerHTML` or hands one to `DOMParser` fails, usually while React renders, and the island
+stays empty; the browser console names the blocked sink. Such code needs a policy of its own, whose
+name the application adds to the `trusted-types` directive:
+
+[source,java]
+----
+getCspSettings().blocking()
+	.requireTrustedTypes()
+	.add(CSPDirective.TRUSTED_TYPES, "rich-text");
+----
+
+Leave the policy `wicket` to Wicket's JavaScript. The task board example shows both ways out:
+Mantine's provider writes its CSS variables into a `<style>` element with `innerHTML`, so the
+example loads them from Mantine's stylesheet with `withCssVariables={false}` instead, and its rich
+text editor parses the HTML it is given through a policy of its own, because tiptap would hand it
+to `DOMParser` as a string.

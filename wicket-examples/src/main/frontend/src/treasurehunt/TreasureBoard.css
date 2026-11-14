@@ -1,0 +1,67 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.treasure-board .grid {
+	display: grid;
+	gap: 2px;
+	margin: 1em 0;
+}
+
+.treasure-board .cell {
+	width: 2.2em;
+	height: 2.2em;
+	padding: 0;
+	border: 1px solid #888;
+	border-radius: 3px;
+	background: #e8e2d0;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.treasure-board .cell[aria-disabled="true"] {
+	cursor: default;
+}
+
+.treasure-board .cell.probed {
+	color: #fff;
+}
+
+.treasure-board .cell.found {
+	background: #f5c518;
+	color: #6b4f00;
+}
+
+.treasure-board .cell.missed {
+	background: #fff;
+	color: #c90;
+}
+
+.treasure-board .cell.pending {
+	background: #bbb;
+}
+
+.treasure-board .message {
+	color: #b00;
+}
+
+.treasure-board .message button {
+	margin-left: 1em;
+}
+
+.treasure-board .cell.hover {
+	outline: 3px solid #333;
+	outline-offset: 1px;
+}

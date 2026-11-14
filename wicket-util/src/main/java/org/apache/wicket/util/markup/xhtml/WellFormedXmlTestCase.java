@@ -105,9 +105,14 @@ public class WellFormedXmlTestCase
 		public boolean accept(File pathname)
 		{
 			String path = pathname.getAbsolutePath().replace('\\', '/');
+			if (pathname.isDirectory())
+			{
+				String name = pathname.getName();
+				return !"node".equals(name) && !"node_modules".equals(name) &&
+					!path.contains("/src/test/") && !path.contains("/target/");
+			}
 			return !path.contains("/src/test/") && !path.contains("/target/") &&
-				!"package.html".equals(pathname.getName()) &&
-				(pathname.isDirectory() || pathname.getName().endsWith(".html"));
+				!"package.html".equals(pathname.getName()) && pathname.getName().endsWith(".html");
 		}
 	};
 

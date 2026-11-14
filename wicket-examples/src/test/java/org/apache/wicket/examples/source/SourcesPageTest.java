@@ -19,7 +19,10 @@ package org.apache.wicket.examples.source;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.examples.helloworld.HelloWorld;
+import org.apache.wicket.examples.islands.taskboard.TaskBoardPage;
+import org.apache.wicket.examples.islands.treasurehunt.TreasureHuntPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
@@ -31,7 +34,12 @@ public class SourcesPageTest extends WicketTestCase
 {
 	private String render(String source)
 	{
-		PageParameters parameters = SourcesPage.generatePageParameters(HelloWorld.class, source);
+		return render(HelloWorld.class, source);
+	}
+
+	private String render(Class<? extends Page> page, String source)
+	{
+		PageParameters parameters = SourcesPage.generatePageParameters(page, source);
 		tester.startPage(SourcesPage.class, parameters);
 		return tester.getLastResponseAsString();
 	}
@@ -43,6 +51,29 @@ public class SourcesPageTest extends WicketTestCase
 	public void sourceOfThePackageIsDisplayed()
 	{
 		assertFalse(render("HelloWorld.html").contains("Unable to read the source for"));
+	}
+
+	/**
+	 * The island modules of the Treasure Hunt are listed and displayed with its Java source.
+	 */
+	@Test
+	public void islandModuleIsDisplayed()
+	{
+		String response = render(TreasureHuntPage.class,
+			"frontend/src/treasurehunt/TreasureBoard.tsx");
+		assertTrue(response.contains("export default function TreasureBoard"));
+		assertTrue(response.contains("frontend/src/treasurehunt/HighScoreList.tsx"));
+	}
+
+	/**
+	 * The island modules of the task board are listed with its Java source.
+	 */
+	@Test
+	public void taskBoardModulesAreDisplayed()
+	{
+		String response = render(TaskBoardPage.class, "frontend/src/taskboard/TaskBoard.tsx");
+		assertTrue(response.contains("export default function TaskBoard"));
+		assertTrue(response.contains("frontend/src/taskboard/RichTextField.tsx"));
 	}
 
 	/**

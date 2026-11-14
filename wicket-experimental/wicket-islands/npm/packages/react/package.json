@@ -1,0 +1,20 @@
+{
+  "name": "wicket-islands-react",
+  "version": "0.0.0",
+  "description": "React adapter for Wicket Islands",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.tsx",
+    "./vite": {
+      "types": "./src/vite.d.ts",
+      "default": "./src/vite.js"
+    }
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "wicket-islands": "0.0.0"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "wicket-islands",
+  "version": "0.0.0",
+  "description": "Client-side runtime of Wicket Islands: mounts JavaScript framework components as peers of Wicket components",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "peerDependencies": {
+    "@tanstack/query-core": "^5.0.0"
+  }
+}
