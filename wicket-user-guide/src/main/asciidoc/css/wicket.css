@@ -223,7 +223,7 @@ h2 > a.link:hover, h3 > a.link:hover, h4 > a.link:hover { text-decoration: under
 	}
 }
 @media screen and (max-width: 767px) {
-	#toc.toc2 { padding: 24px 18px 8px; margin: 0 -36px; }
+	#toc.toc2 { padding: 24px 18px 8px; margin: 0 -18px; }
 	#header, #content, #footnotes { padding-left: 18px; padding-right: 18px; }
 }
 
@@ -349,6 +349,10 @@ table.tableblock thead th.tableblock {
 table.tableblock p.tableblock, td.tableblock > .content > :last-child { font-family: var(--sans); font-size: 1em; color: var(--ink); max-width: none; }
 table.stripes-all tr, table.stripes-odd tr:nth-of-type(odd), table.stripes-even tr:nth-of-type(even),
 table.stripes-hover tr:hover, table tr.even, table tr.alt { background: none; }
+table thead,
+table tfoot {
+	background: none;
+}
 table.tableblock > caption.title {
 	padding-bottom: 6px; color: var(--ink-soft); font: italic 400 1.05rem/1.3 var(--serif); text-align: left;
 }
