@@ -259,9 +259,9 @@ Migrating from 11.x
 -------------------
 
 The OpenRewrite recipe org.apache.wicket.MigrateToWicket12 in wicket-migration
-handles the mechanical part of the migration. The migration guide is published
-with the 12.0.0 release. To move from 10.x, follow migration-to-11.md in the root
-folder first.
+handles the mechanical part of the migration. migration-to-12.md in the root
+folder describes the rest, and grows until the 12.0.0 release. To move from
+10.x, follow the Wicket 11 guide below first.
 
 The migration guide of each release line is kept on that line's branch. To
 upgrade across several major versions, follow them one after another:
