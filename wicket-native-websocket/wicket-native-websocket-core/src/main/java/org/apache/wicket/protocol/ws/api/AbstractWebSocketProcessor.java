@@ -101,6 +101,14 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 */
 	static final String SESSION_ENDED = "Session ended";
 
+	/**
+	 * The reason given to a client whose session is still there but whose page is not: the page
+	 * store no longer holds the page the connection was opened for. It is sent with close code
+	 * {@value WebSocketConnectionOriginFilter#POLICY_VIOLATION_ERROR_CODE}, like
+	 * {@link #SESSION_ENDED}, and tells a client that reloading the page is what helps.
+	 */
+	static final String PAGE_EXPIRED = "Page expired";
+
 	private final WebRequest webRequest;
 	private final int pageId;
 	private final String context;
@@ -265,6 +273,16 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 *     AbortedMessage is still dropped silently in that case, because closing a connection that
 	 *     is already going away says nothing.
 	 * </p>
+	 * <p>
+	 *     The page is looked up again for every message, too. When the session lives on but its
+	 *     page store no longer holds the page - the page was evicted, or the session outlived a
+	 *     restart that the store did not - the connection is removed from the registry and closed
+	 *     with {@value WebSocketConnectionOriginFilter#POLICY_VIOLATION_ERROR_CODE} and the reason
+	 *     "Page expired", which is distinct from the "Session ended" of an ended session so that a
+	 *     client can tell that reloading the page is what helps. No behavior of the page is reached, not
+	 *     even with the ConnectedMessage. A ClosedMessage, ErrorMessage or AbortedMessage is
+	 *     dropped silently, as for an ended session.
+	 * </p>
 	 *
 	 * @param message
 	 *      the message to broadcast
@@ -344,7 +362,13 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				}
 				else
 				{
-					LOG.debug("Page with id '{}' has been expired. No message will be broadcast!", pageId);
+					connectionRegistry.removeConnection(application, sessionId, connection.getKey());
+					LOG.debug("Page with id '{}' has expired. Closing the connection with key '{}'.",
+						pageId, connection.getKey());
+					if (isSpecialMessage(message) == false)
+					{
+						connection.close(WebSocketConnectionOriginFilter.POLICY_VIOLATION_ERROR_CODE, PAGE_EXPIRED);
+					}
 				}
 			}
 			catch (Exception x)
