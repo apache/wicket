@@ -191,7 +191,8 @@ public class KittenCaptchaPanel extends Panel
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
-				IAjaxCallListener ajaxCallListener = new AjaxCallListener() {
+				IAjaxCallListener ajaxCallListener = new AjaxCallListener()
+				{
 					@Override
 					public CharSequence getBeforeSendHandler(Component component)
 					{
@@ -200,7 +201,8 @@ public class KittenCaptchaPanel extends Panel
 				};
 				attributes.getAjaxCallListeners().add(ajaxCallListener);
 				List<CharSequence> dynamicExtraParameters = attributes.getDynamicExtraParameters();
-				dynamicExtraParameters.add("return { x: getEventX(Wicket.$(attrs.c), attrs.event), y: getEventY(Wicket.$(attrs.c), attrs.event)}");
+				dynamicExtraParameters.add(
+					"return { x: getEventX(Wicket.$(attrs.c), attrs.event), y: getEventY(Wicket.$(attrs.c), attrs.event)}");
 			}
 
 			@Override
@@ -312,7 +314,7 @@ public class KittenCaptchaPanel extends Panel
 		// Could not place animal
 		return null;
 	}
-	
+
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{

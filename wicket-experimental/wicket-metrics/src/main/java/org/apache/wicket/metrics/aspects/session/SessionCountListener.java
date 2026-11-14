@@ -52,7 +52,7 @@ public class SessionCountListener implements HttpSessionListener
 	{
 		// NOOP for aspect usage
 	}
-	
+
 	/**
 	 * Used to wire an aspect around
 	 * 

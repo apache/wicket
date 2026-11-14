@@ -40,11 +40,12 @@ public class DifferentPageChecker extends AbstractObjectChecker
 		{
 			if (root != null && root != obj)
 			{
-				result = new Result(Result.Status.FAILURE, "Trying to serialize a page which is not the component tree root!");
+				result = new Result(Result.Status.FAILURE,
+					"Trying to serialize a page which is not the component tree root!");
 			}
 			else
 			{
-				root = (Page) obj;
+				root = (Page)obj;
 			}
 		}
 

@@ -38,17 +38,17 @@ class AutoComponentsGenerationTest extends WicketTestCase
 		tester.startPage(autoComponentsPage);
 
 		int childrenNumber = tester.getLastRenderedPage().size();
-		
+
 		//clean markup cache and render the same page instance again
 		IMarkupCache markupCache = tester.getApplication().getMarkupSettings().getMarkupFactory().getMarkupCache();
-		
+
 		markupCache.clear();
 		tester.startPage(autoComponentsPage);
-		
+
 		//the number of child components must not have been changed
 		assertEquals(childrenNumber, tester.getLastRenderedPage().size());
 	}
-	
+
 	/*
 	 * Test for https://issues.apache.org/jira/browse/WICKET-6116
 	 */
@@ -56,19 +56,19 @@ class AutoComponentsGenerationTest extends WicketTestCase
 	void borderResolvesAutoComponents() throws Exception
 	{
 		AutoComponentsBorder border = new AutoComponentsBorder("id");
-		
+
 		ComponentRenderer.renderComponent(border);
-		
+
 		//we expect to have a body container and an auto component for <img> tag
 		assertEquals(2, border.size());
-		
+
 		//let's render the same border again
 		ComponentRenderer.renderComponent(border);
-		
+
 		//the number of child components must not have been changed
 		assertEquals(2, border.size());
 	}
-	
+
 	/*
 	 * Test for https://issues.apache.org/jira/browse/WICKET-6256
 	 */
@@ -76,10 +76,10 @@ class AutoComponentsGenerationTest extends WicketTestCase
 	void autoComponentsIdsGeneration() throws Exception
 	{
 		Page page = new UniqueIdTest();
-		
+
 		tester.startPage(page);
-		
+
 		//render page again. Auto components must have the same id
-		tester.startPage(page);		
+		tester.startPage(page);
 	}
 }

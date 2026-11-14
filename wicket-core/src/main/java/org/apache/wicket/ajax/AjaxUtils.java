@@ -27,29 +27,29 @@ import org.danekja.java.util.function.serializable.SerializableConsumer;
 public class AjaxUtils
 {
 
-    /**
-     * Runs action if current request is of type "AJAX". Otherwise, nothing is done.
-     *
-     * @param ajaxAction
-     *            The action to run a {@link SerializableConsumer}
-     */
-    public static void executeIfAjax(SerializableConsumer<AjaxRequestTarget> ajaxAction)
-    {
-        Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
-        target.ifPresent(ajaxAction);
-    }
+	/**
+	 * Runs action if current request is of type "AJAX". Otherwise, nothing is done.
+	 *
+	 * @param ajaxAction
+	 *            The action to run a {@link SerializableConsumer}
+	 */
+	public static void executeIfAjax(SerializableConsumer<AjaxRequestTarget> ajaxAction)
+	{
+		Optional<AjaxRequestTarget> target = RequestCycle.get().find(AjaxRequestTarget.class);
+		target.ifPresent(ajaxAction);
+	}
 
 
-    /**
-     * Runs action if current request is of type "AJAX" or a Websockets request. Otherwise, nothing is done.
-     *
-     * @param ajaxAction
-     *            The action to run a {@link SerializableConsumer}
-     */
-    public static void executeIfAjaxOrWebSockets(SerializableConsumer<IPartialPageRequestHandler> ajaxAction)
-    {
-        Optional<IPartialPageRequestHandler> target = RequestCycle.get().find(IPartialPageRequestHandler.class);
-        target.ifPresent(ajaxAction);
-    }
+	/**
+	 * Runs action if current request is of type "AJAX" or a Websockets request. Otherwise, nothing is done.
+	 *
+	 * @param ajaxAction
+	 *            The action to run a {@link SerializableConsumer}
+	 */
+	public static void executeIfAjaxOrWebSockets(SerializableConsumer<IPartialPageRequestHandler> ajaxAction)
+	{
+		Optional<IPartialPageRequestHandler> target = RequestCycle.get().find(IPartialPageRequestHandler.class);
+		target.ifPresent(ajaxAction);
+	}
 
 }

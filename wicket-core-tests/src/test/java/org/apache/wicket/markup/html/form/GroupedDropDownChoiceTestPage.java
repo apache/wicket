@@ -37,29 +37,34 @@ public class GroupedDropDownChoiceTestPage extends WebPage
 		private final String title;
 		private final String group;
 
-		public Service(String title, String group) {
+		public Service(String title, String group)
+		{
 			this.title = title;
 			this.group = group;
 		}
 
-		public String getTitle() {
+		public String getTitle()
+		{
 			return title;
 		}
 
-		public String getGroup() {
+		public String getGroup()
+		{
 			return group;
 		}
 
 		@Override
-		public boolean equals(Object o) {
+		public boolean equals(Object o)
+		{
 			if (this == o) return true;
 			if (!(o instanceof Service)) return false;
-			Service service = (Service) o;
+			Service service = (Service)o;
 			return Objects.equals(title, service.title);
 		}
 
 		@Override
-		public int hashCode() {
+		public int hashCode()
+		{
 			return Objects.hash(title);
 		}
 	}
@@ -74,24 +79,31 @@ public class GroupedDropDownChoiceTestPage extends WebPage
 		add(form);
 
 		final DropDownChoice<Service> ddc = new GroupedDropDownChoice<Service>("dropdown",
-				new PropertyModel<Service>(this, "service"), services, new IChoiceRenderer<Service>() {
+			new PropertyModel<Service>(this, "service"), services, new IChoiceRenderer<Service>()
+			{
+				@Override
+				public Object getDisplayValue(Service object)
+				{
+					return object.getTitle();
+				}
+			})
+		{
 			@Override
-			public Object getDisplayValue(Service object) {
-				return object.getTitle();
-			}
-		}) {
-			@Override
-			protected boolean isNewGroup(Service previous, Service current) {
-				return previous == null || (current.getGroup() != null && !current.getGroup().equals(previous.getGroup())) ;
+			protected boolean isNewGroup(Service previous, Service current)
+			{
+				return previous == null || (current.getGroup() != null && !current.getGroup().equals(previous
+					.getGroup()));
 			}
 
 			@Override
-			protected boolean hasNoGroup(Service current) {
+			protected boolean hasNoGroup(Service current)
+			{
 				return current.getGroup() == null;
 			}
 
 			@Override
-			protected IModel<String> getGroupLabel(Service current) {
+			protected IModel<String> getGroupLabel(Service current)
+			{
 				return Model.of(current.getGroup());
 			}
 		};

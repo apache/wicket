@@ -83,7 +83,7 @@ public class CrossOriginEmbedderPolicyRequestCycleListener implements IRequestCy
 		final Object containerRequest = cycle.getRequest().getContainerRequest();
 		if (containerRequest instanceof HttpServletRequest)
 		{
-			HttpServletRequest request = (HttpServletRequest) containerRequest;
+			HttpServletRequest request = (HttpServletRequest)containerRequest;
 			String path = request.getContextPath();
 			final String coepHeaderName = coepConfig.getCoepHeader();
 
@@ -95,7 +95,7 @@ public class CrossOriginEmbedderPolicyRequestCycleListener implements IRequestCy
 
 			if (cycle.getResponse() instanceof WebResponse)
 			{
-				WebResponse webResponse = (WebResponse) cycle.getResponse();
+				WebResponse webResponse = (WebResponse)cycle.getResponse();
 				if (webResponse.isHeaderSupported())
 				{
 					webResponse.setHeader(coepHeaderName, REQUIRE_CORP);

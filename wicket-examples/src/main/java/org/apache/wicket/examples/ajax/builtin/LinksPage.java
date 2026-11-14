@@ -138,7 +138,8 @@ public class LinksPage extends BasePage
 			{
 				super.updateAjaxAttributes(attributes);
 
-				IAjaxCallListener ajaxCallListener = new AjaxCallListener() {
+				IAjaxCallListener ajaxCallListener = new AjaxCallListener()
+				{
 					@Override
 					public CharSequence getSuccessHandler(Component component)
 					{
@@ -183,8 +184,9 @@ public class LinksPage extends BasePage
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
-				
-				IAjaxCallListener ajaxCallListener = new AjaxCallListener() {
+
+				IAjaxCallListener ajaxCallListener = new AjaxCallListener()
+				{
 					@Override
 					public CharSequence getBeforeHandler(Component component)
 					{
@@ -207,16 +209,20 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new AjaxLink<Void>("set-response-page") {
+		add(new AjaxLink<Void>("set-response-page")
+		{
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(AjaxRequestTarget target)
+			{
 				setResponsePage(LinksPage.class);
 			}
 		});
 
-		add(new AjaxLink<Void>("exception") {
+		add(new AjaxLink<Void>("exception")
+		{
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(AjaxRequestTarget target)
+			{
 				// Set the proper setting to show the error page
 				// note: will be set until the "failure" link is clicked or the application is
 				// restarted
@@ -227,7 +233,7 @@ public class LinksPage extends BasePage
 			}
 		});
 	}
-	
+
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{

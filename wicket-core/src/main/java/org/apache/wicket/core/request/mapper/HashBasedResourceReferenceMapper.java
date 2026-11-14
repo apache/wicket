@@ -56,7 +56,8 @@ public class HashBasedResourceReferenceMapper extends ParentPathReferenceRewrite
 	/**
 	 * Knows how to compute the hash of a class name.
 	 */
-	public interface IHasher {
+	public interface IHasher
+	{
 
 		long computeHash(String name);
 	}
@@ -79,15 +80,15 @@ public class HashBasedResourceReferenceMapper extends ParentPathReferenceRewrite
 		 * @param hasher method used to compute hash
 		 */
 		public HashBasedBasicResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
-													 Supplier<? extends IResourceCachingStrategy> cachingStrategy,
-													 boolean checkHashCollision,
-													 IHasher hasher)
+			Supplier<? extends IResourceCachingStrategy> cachingStrategy,
+			boolean checkHashCollision,
+			IHasher hasher)
 		{
 			super(pageParametersEncoder, cachingStrategy);
-            this.checkHashCollision = checkHashCollision;
+			this.checkHashCollision = checkHashCollision;
 			Args.notNull(hasher, "hasher");
-            this.hasher = hasher;
-        }
+			this.hasher = hasher;
+		}
 
 		@Override
 		protected Class<?> resolveClass(String name)
@@ -113,9 +114,11 @@ public class HashBasedResourceReferenceMapper extends ParentPathReferenceRewrite
 		{
 			String name = super.getClassName(scope);
 			long hash = hasher.computeHash(name);
-			if (checkHashCollision)	{
+			if (checkHashCollision)
+			{
 				String existing = hashMap.get(hash);
-				if (existing != null && !existing.equals(name)) {
+				if (existing != null && !existing.equals(name))
+				{
 					throw new WicketRuntimeException("Class " + name + " has collision with " + existing);
 				}
 			}
@@ -134,12 +137,13 @@ public class HashBasedResourceReferenceMapper extends ParentPathReferenceRewrite
 	 * @param hasher method used to compute hash
 	 */
 	public HashBasedResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
-											Supplier<String> parentPathPartEscapeSequence,
-											Supplier<IResourceCachingStrategy> cachingStrategy,
-											boolean checkHashCollision,
-											IHasher hasher)
+		Supplier<String> parentPathPartEscapeSequence,
+		Supplier<IResourceCachingStrategy> cachingStrategy,
+		boolean checkHashCollision,
+		IHasher hasher)
 	{
-		super(new HashBasedBasicResourceReferenceMapper(pageParametersEncoder, cachingStrategy, checkHashCollision, hasher), parentPathPartEscapeSequence);
+		super(new HashBasedBasicResourceReferenceMapper(pageParametersEncoder, cachingStrategy, checkHashCollision,
+			hasher), parentPathPartEscapeSequence);
 	}
 
 	/**
@@ -152,15 +156,19 @@ public class HashBasedResourceReferenceMapper extends ParentPathReferenceRewrite
 	 * @return HashBasedResourceReferenceMapper
 	 */
 	public static HashBasedResourceReferenceMapper withJavaHash(IPageParametersEncoder pageParametersEncoder,
-																Supplier<String> parentPathPartEscapeSequence,
-																Supplier<IResourceCachingStrategy> cachingStrategy,
-																boolean checkHashCollision) {
-		return withOtherHash(pageParametersEncoder, parentPathPartEscapeSequence, cachingStrategy, checkHashCollision, new IHasher() {
-			@Override
-			public long computeHash(String name) {
-				return name != null ? name.hashCode() : 0;
-			}
-		});
+		Supplier<String> parentPathPartEscapeSequence,
+		Supplier<IResourceCachingStrategy> cachingStrategy,
+		boolean checkHashCollision)
+	{
+		return withOtherHash(pageParametersEncoder, parentPathPartEscapeSequence, cachingStrategy, checkHashCollision,
+			new IHasher()
+			{
+				@Override
+				public long computeHash(String name)
+				{
+					return name != null ? name.hashCode() : 0;
+				}
+			});
 	}
 
 	/**
@@ -174,9 +182,11 @@ public class HashBasedResourceReferenceMapper extends ParentPathReferenceRewrite
 	 * @return HashBasedResourceReferenceMapper
 	 */
 	public static HashBasedResourceReferenceMapper withOtherHash(IPageParametersEncoder pageParametersEncoder,
-																Supplier<String> parentPathPartEscapeSequence,
-																Supplier<IResourceCachingStrategy> cachingStrategy,
-																boolean checkHashCollision, IHasher hasher) {
-		return new HashBasedResourceReferenceMapper(pageParametersEncoder, parentPathPartEscapeSequence, cachingStrategy, checkHashCollision, hasher);
+		Supplier<String> parentPathPartEscapeSequence,
+		Supplier<IResourceCachingStrategy> cachingStrategy,
+		boolean checkHashCollision, IHasher hasher)
+	{
+		return new HashBasedResourceReferenceMapper(pageParametersEncoder, parentPathPartEscapeSequence,
+			cachingStrategy, checkHashCollision, hasher);
 	}
 }

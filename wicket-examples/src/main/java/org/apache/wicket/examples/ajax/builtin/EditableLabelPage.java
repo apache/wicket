@@ -49,7 +49,7 @@ public class EditableLabelPage extends BasePage
 	private String text2 = "dog";
 	private String text3 = "multiple\nlines of\ntextual content";
 	private int number = 42;
-	
+
 	private int refreshCounter = 0;
 
 	/**
@@ -64,7 +64,7 @@ public class EditableLabelPage extends BasePage
 		form.add(new AjaxEditableLabel("text2"));
 		form.add(new AjaxEditableMultiLineLabel("text3"));
 		form.add(new AjaxEditableChoiceLabel<>("site", SITES));
-		
+
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		feedback.setOutputMarkupId(true);
 		form.add(feedback);

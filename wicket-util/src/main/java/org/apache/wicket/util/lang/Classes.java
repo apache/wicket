@@ -17,8 +17,6 @@
 package org.apache.wicket.util.lang;
 
 
-
-
 /**
  * Utilities for dealing with classes.
  * 

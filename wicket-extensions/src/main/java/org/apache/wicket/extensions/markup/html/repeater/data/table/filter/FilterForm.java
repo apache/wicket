@@ -94,14 +94,15 @@ public class FilterForm<T> extends Form<T>
 	 *
 	 * @return The markup to be appended to the response
 	 */
-	protected String generateHiddenInputMarkup() {
+	protected String generateHiddenInputMarkup()
+	{
 		String id = Strings.escapeMarkup(getFocusTrackerFieldCssId()).toString();
 		String value = getRequest().getPostParameters().getParameterValue(id).toString("");
 		String cssClass = getString(Form.HIDDEN_FIELDS_CSS_CLASS_KEY);
 
 		return String.format(
-				"<div hidden='' class='%s'><input type='hidden' name='%s' id='%s' value='%s'/><input type='submit'/></div>",
-				Strings.escapeMarkup(cssClass), id, id, Strings.escapeMarkup(value));
+			"<div hidden='' class='%s'><input type='hidden' name='%s' id='%s' value='%s'/><input type='submit'/></div>",
+			Strings.escapeMarkup(cssClass), id, id, Strings.escapeMarkup(value));
 	}
 
 	/**
@@ -141,9 +142,10 @@ public class FilterForm<T> extends Form<T>
 			}
 
 			@Override
-			public void renderHead(Component component, IHeaderResponse response) {
+			public void renderHead(Component component, IHeaderResponse response)
+			{
 				response.render(OnEventHeaderItem.forComponent(component, "focus",
-						getFocusTrackingHandler(component)));
+					getFocusTrackingHandler(component)));
 			}
 		});
 	}

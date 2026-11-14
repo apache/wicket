@@ -116,12 +116,14 @@ public final class AttributeMap extends ValueMap
 
 		for (String key : keySet())
 		{
-			if (key != null) {
+			if (key != null)
+			{
 				buffer.append(' ');
 				buffer.append(Strings.escapeMarkup(key));
-				
+
 				CharSequence value = getCharSequence(key);
-				if (value != null) {
+				if (value != null)
+				{
 					buffer.append("=\"");
 					buffer.append(Strings.escapeMarkup(value));
 					buffer.append('"');

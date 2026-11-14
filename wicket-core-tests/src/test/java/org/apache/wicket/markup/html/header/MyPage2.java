@@ -39,6 +39,6 @@ public class MyPage2 extends WebPage
 	public void renderHead(IHeaderResponse response)
 	{
 		response.render(CssHeaderItem.forReference(new PackageResourceReference(getClass(),
-				getClass().getSimpleName() + ".css")));
+			getClass().getSimpleName() + ".css")));
 	}
 }

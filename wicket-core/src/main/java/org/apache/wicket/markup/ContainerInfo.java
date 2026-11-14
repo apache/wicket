@@ -58,7 +58,8 @@ public class ContainerInfo
 	 */
 	public ContainerInfo(final Class<?> containerClass, final MarkupContainer container)
 	{
-		this(containerClass != null ? containerClass : container.getClass(), container.getLocale(), container.getStyle(),
+		this(containerClass != null ? containerClass : container.getClass(), container.getLocale(), container
+			.getStyle(),
 			container.getVariation(), container.getMarkupType());
 	}
 

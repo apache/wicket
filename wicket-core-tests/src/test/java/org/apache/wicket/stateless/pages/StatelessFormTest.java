@@ -55,7 +55,7 @@ class StatelessFormTest extends WicketTestCase
 	 * testBug()
 	 */
 	@Test
-    void bug()
+	void bug()
 	{
 		{
 			tester.getRequest().setUrl(Url.parse("page2"));

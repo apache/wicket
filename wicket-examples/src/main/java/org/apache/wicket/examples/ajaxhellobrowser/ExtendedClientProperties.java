@@ -25,7 +25,7 @@ import org.apache.wicket.request.IRequestParameters;
 public class ExtendedClientProperties extends ClientProperties
 {
 	private String extendedProperty;
-	
+
 	public String getExtendedProperty()
 	{
 		return extendedProperty;
@@ -43,7 +43,7 @@ public class ExtendedClientProperties extends ClientProperties
 	public void read(IRequestParameters parameters)
 	{
 		super.read(parameters);
-		
+
 		setExtendedProperty(parameters.getParameterValue("extendedProperty").toString("N/A"));
 	}
 }

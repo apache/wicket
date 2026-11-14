@@ -33,14 +33,16 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Kent Tong
  */
-class UrlResourceStreamTest {
+class UrlResourceStreamTest
+{
 	/**
 	 * lastModified() shouldn't change the content length if the file isn't really changed.
 	 *
 	 * @throws IOException
 	 */
 	@Test
-	void lastModifiedForResourceInJar() throws IOException {
+	void lastModifiedForResourceInJar() throws IOException
+	{
 		String anyClassInJarFile = "/java/lang/String.class";
 		URL url = getClass().getResource(anyClassInJarFile);
 		UrlResourceStream stream = new UrlResourceStream(url);
@@ -61,14 +63,15 @@ class UrlResourceStreamTest {
 	 * @throws ResourceStreamNotFoundException
 	 */
 	@Test
-	void loadJustOnce() throws IOException, ResourceStreamNotFoundException {
+	void loadJustOnce() throws IOException, ResourceStreamNotFoundException
+	{
 		String anyClassInJarFile = "/java/lang/String.class";
 		URL realURL = getClass().getResource(anyClassInJarFile);
 
 		final AtomicInteger connectCounter = new AtomicInteger(0);
 		final AtomicInteger streamCounter = new AtomicInteger(0);
 		URL url = URL.of(URI.create("test://anything"), new CountingURLStreamHandler(realURL,
-				connectCounter, streamCounter));
+			connectCounter, streamCounter));
 
 		UrlResourceStream countingStream = new UrlResourceStream(url);
 
@@ -113,32 +116,38 @@ class UrlResourceStreamTest {
 	/**
 	 * {@link URLStreamHandler} that counts the calls to {@link URL#openConnection()}
 	 */
-	private static final class CountingURLStreamHandler extends URLStreamHandler {
+	private static final class CountingURLStreamHandler extends URLStreamHandler
+	{
 		private final AtomicInteger connectCounter, streamCounter;
 
 		private final URL realURL;
 
 		CountingURLStreamHandler(URL realURL, AtomicInteger connectCounter,
-								 AtomicInteger streamCounter) {
+			AtomicInteger streamCounter)
+		{
 			this.connectCounter = connectCounter;
 			this.streamCounter = streamCounter;
 			this.realURL = realURL;
 		}
 
 		@Override
-		protected URLConnection openConnection(URL u) throws IOException {
+		protected URLConnection openConnection(URL u) throws IOException
+		{
 			connectCounter.getAndIncrement();
 
 			final URLConnection realConn = realURL.openConnection();
-			return new URLConnection(u) {
+			return new URLConnection(u)
+			{
 
 				@Override
-				public void connect() throws IOException {
+				public void connect() throws IOException
+				{
 					realConn.connect();
 				}
 
 				@Override
-				public InputStream getInputStream() throws IOException {
+				public InputStream getInputStream() throws IOException
+				{
 					streamCounter.incrementAndGet();
 					return realConn.getInputStream();
 				}

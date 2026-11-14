@@ -64,7 +64,7 @@ class FileUploadServletPartTest extends WicketTestCase
 		httpServletRequest.setPart(MockPageWithFormAndUploadField.FILE_UPLOAD_ID, part);
 		formTester.submit();
 
-		page = (MockPageWithFormAndUploadField) tester.getLastRenderedPage();
+		page = (MockPageWithFormAndUploadField)tester.getLastRenderedPage();
 		FileUpload fileUpload = page.getFileUpload();
 		assertArrayEquals(Servlet3Part.DATA, fileUpload.getBytes());
 		assertEquals(Servlet3Part.class.getSimpleName(), fileUpload.getClientFileName());
@@ -82,7 +82,7 @@ class FileUploadServletPartTest extends WicketTestCase
 
 	private static class Servlet3Part implements Part
 	{
-		private static final byte[] DATA = new byte[] {1, 2, 3};
+		private static final byte[] DATA = new byte[] { 1, 2, 3 };
 		static final String CONTENT_TYPE = "text/plain";
 
 		private final AtomicReference<String> written = new AtomicReference<>();
@@ -90,9 +90,11 @@ class FileUploadServletPartTest extends WicketTestCase
 		private final LinkedHashMap<String, List<String>> headers = new LinkedHashMap<>();
 		final String fieldName;
 
-		private Servlet3Part(String fieldName) {
+		private Servlet3Part(String fieldName)
+		{
 			this.fieldName = fieldName;
-			headers.put(AbstractResource.CONTENT_DISPOSITION_HEADER_NAME, Arrays.asList("attachment;filename=" + Servlet3Part.class.getSimpleName()));
+			headers.put(AbstractResource.CONTENT_DISPOSITION_HEADER_NAME, Arrays.asList("attachment;filename="
+				+ Servlet3Part.class.getSimpleName()));
 		}
 
 		@Override

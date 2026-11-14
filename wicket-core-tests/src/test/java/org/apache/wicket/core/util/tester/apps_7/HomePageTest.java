@@ -26,7 +26,7 @@ class HomePageTest extends WicketTestCase
 {
 	/**	 */
 	@Test
-    void testAjaxSubmitWhileAnotherButtonIsNotVisible()
+	void testAjaxSubmitWhileAnotherButtonIsNotVisible()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

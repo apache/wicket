@@ -60,10 +60,11 @@ class AutoLinkResolveInParentsMarkupTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void resolveResourceFromMarkupInParent() throws Exception
+	void resolveResourceFromMarkupInParent() throws Exception
 	{
 		tester.startPage(HomePage.class);
-		tester.assertContains("wicket/resource/org.apache.wicket.markup.resolver.inparent.base.BasePage/theme/logo.png");
+		tester.assertContains(
+			"wicket/resource/org.apache.wicket.markup.resolver.inparent.base.BasePage/theme/logo.png");
 	}
 
 }

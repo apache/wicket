@@ -80,7 +80,7 @@ public class FormInput extends WicketExamplePage
 			{
 				public void onClick()
 				{
-					WebRequest request = (WebRequest) getRequest();
+					WebRequest request = (WebRequest)getRequest();
 					setLocale(request.getLocale());
 				}
 			});
@@ -285,11 +285,12 @@ public class FormInput extends WicketExamplePage
 		final FeedbackPanel feedback = new FeedbackPanel("feedback")
 		{
 			@Override
-			public void onEvent(IEvent<?> event) {
+			public void onEvent(IEvent<?> event)
+			{
 				final Object payload = event.getPayload();
 				if (payload instanceof IPartialPageRequestHandler)
 				{
-					((IPartialPageRequestHandler) payload).add(this);
+					((IPartialPageRequestHandler)payload).add(this);
 				}
 			}
 		};
@@ -358,7 +359,8 @@ public class FormInput extends WicketExamplePage
 			TextField<String> parentText = new TextField<>("parentText", new PropertyModel<>(model, "parentText"));
 			add(parentText);
 
-			TextArea<String> parentTextarea = new TextArea<>("parentTextarea", new PropertyModel<>(model, "parentTextarea"));
+			TextArea<String> parentTextarea = new TextArea<>("parentTextarea", new PropertyModel<>(model,
+				"parentTextarea"));
 			add(parentTextarea);
 
 			final ParentFormDataTable parentFormDataTable = new ParentFormDataTable("parentFormDataTable", model);
@@ -384,7 +386,8 @@ public class FormInput extends WicketExamplePage
 			TextField<String> childText = new TextField<>("childText", new PropertyModel<>(model, "childText"));
 			childForm.add(childText);
 
-			TextArea<String> childTextarea = new TextArea<>("childTextarea", new PropertyModel<>(model, "childTextarea"));
+			TextArea<String> childTextarea = new TextArea<>("childTextarea", new PropertyModel<>(model,
+				"childTextarea"));
 			childForm.add(childTextarea);
 
 			AjaxSubmitLink childSubmit = new AjaxSubmitLink("childSubmit")

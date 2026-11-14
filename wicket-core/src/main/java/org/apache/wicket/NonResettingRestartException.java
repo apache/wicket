@@ -111,17 +111,17 @@ public class NonResettingRestartException extends RequestHandlerExecutor.Replace
 		Response response = cycle.getResponse();
 		if (response instanceof IMetaDataBufferingWebResponse)
 		{
-			WebResponse originalResponse = (WebResponse) cycle.getOriginalResponse();
+			WebResponse originalResponse = (WebResponse)cycle.getOriginalResponse();
 			if (originalResponse != response)
 			{
-				IMetaDataBufferingWebResponse bufferingWebResponse = (IMetaDataBufferingWebResponse) response;
+				IMetaDataBufferingWebResponse bufferingWebResponse = (IMetaDataBufferingWebResponse)response;
 				bufferingWebResponse.writeMetaData(originalResponse);
 			}
 		}
 	}
 
 	private static IRequestHandler createRequestHandler(Class<? extends Page> pageClass, PageParameters params,
-			RenderPageRequestHandler.RedirectPolicy redirectPolicy)
+		RenderPageRequestHandler.RedirectPolicy redirectPolicy)
 	{
 		return new RenderPageRequestHandler(new PageProvider(pageClass, params), redirectPolicy);
 	}

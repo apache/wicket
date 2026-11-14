@@ -187,7 +187,8 @@ public class PackageTextTemplate extends TextTemplate
 	/**
 	 * Loads the template if it is not loaded yet
 	 */
-	private void load() {
+	private void load()
+	{
 		if (buffer.length() == 0)
 		{
 			String path = Packages.absolutePath(scope, fileName);
@@ -202,7 +203,8 @@ public class PackageTextTemplate extends TextTemplate
 			if (stream == null)
 			{
 				// if the default locator didn't find the resource then fallback
-				stream = new ResourceStreamLocator().locate(scope, path, getStyle(), getVariation(), getLocale(), null, false);
+				stream = new ResourceStreamLocator().locate(scope, path, getStyle(), getVariation(), getLocale(), null,
+					false);
 			}
 
 			if (stream == null)

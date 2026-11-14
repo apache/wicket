@@ -46,7 +46,7 @@ public class EnumChoiceRendererTest
 	public enum TestEnum {
 		/** an anonymous enum value */
 		ANONYMOUS {
-		// anonymous enum value
+			// anonymous enum value
 		}
 	}
 

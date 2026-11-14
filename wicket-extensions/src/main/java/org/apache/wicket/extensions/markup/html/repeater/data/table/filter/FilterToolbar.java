@@ -64,12 +64,14 @@ public class FilterToolbar extends AbstractToolbar
 		super(table);
 
 		Args.notNull(table, "table");
-		
-		IModel<List<IColumn<T, S>>> model = new IModel<>() {
+
+		IModel<List<IColumn<T, S>>> model = new IModel<>()
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public List<IColumn<T, S>> getObject() {
+			public List<IColumn<T, S>> getObject()
+			{
 				return new LinkedList<>(table.getColumns());
 			}
 		};

@@ -40,7 +40,7 @@ class HeaderResponseTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void testAllMarkup() throws Exception
+	void testAllMarkup() throws Exception
 	{
 		executeTest(ConcretePage.class, "ExpectedResult.html");
 	}
@@ -50,21 +50,21 @@ class HeaderResponseTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void testAllMarkupPageFirst() throws Exception
+	void testAllMarkupPageFirst() throws Exception
 	{
 		tester.getApplication()
 			.getResourceSettings()
 			.setHeaderItemComparator(new PriorityFirstComparator(true));
 		executeTest(ConcretePage.class, "ExpectedResultPageFirst.html");
 	}
-	
+
 	/**
 	 * WICKET-6673 priority items are sorted by minimum depth.
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-    void testPriorityDepths() throws Exception
+	void testPriorityDepths() throws Exception
 	{
 		executeTest(PriorityDepthsPage.class, "PriorityDepthsPage_expected.html");
 	}

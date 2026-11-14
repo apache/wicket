@@ -115,7 +115,8 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		 */
 		DATA;
 
-		protected final Action action(Consumer<WebResponse> action) {
+		protected final Action action(Consumer<WebResponse> action)
+		{
 			return new Action(this, action);
 		}
 	}
@@ -229,13 +230,12 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		{
 			StringBuilder builder = new StringBuilder(4096);
 			charSequenceBuilder = builder;
-			actions.add(ActionType.DATA.action(res ->
-			{
+			actions.add(ActionType.DATA.action(res -> {
 				AppendingStringBuffer responseBuffer = new AppendingStringBuffer(builder);
 
 				List<IResponseFilter> responseFilters = Application.get()
-						.getRequestCycleSettings()
-						.getResponseFilters();
+					.getRequestCycleSettings()
+					.getResponseFilters();
 
 				if (responseFilters != null)
 				{

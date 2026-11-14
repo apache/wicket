@@ -59,8 +59,7 @@ class PageVersioningTest
 			@Override
 			protected IPageManagerProvider newTestPageManagerProvider()
 			{
-				return () ->
-				{
+				return () -> {
 					InMemoryPageStore inMemory = new InMemoryPageStore("test", Integer.MAX_VALUE);
 					SerializingPageStore serializing = new SerializingPageStore(inMemory, new JavaSerializer("test"));
 					InSessionPageStore session = new InSessionPageStore(Integer.MAX_VALUE);

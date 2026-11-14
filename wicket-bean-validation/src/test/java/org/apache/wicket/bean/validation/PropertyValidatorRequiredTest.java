@@ -100,7 +100,8 @@ public class PropertyValidatorRequiredTest
 	public void testResolveComposedConstraints() throws Exception
 	{
 		Property property = new Property(DefaultPropertyResolverTest.BeanWithPassword.class, "password");
-		PropertyValidator<DefaultPropertyResolverTest.BeanWithPassword> propertyValidator = new PropertyValidator<>(property);
+		PropertyValidator<DefaultPropertyResolverTest.BeanWithPassword> propertyValidator = new PropertyValidator<>(
+			property);
 
 		assertTrue(propertyValidator.isRequired());
 	}
@@ -159,13 +160,13 @@ public class PropertyValidatorRequiredTest
 				"bean.property")).add(new PropertyValidator<String>(GroupOne.class, GroupTwo.class));
 			input14 = new TextField<String>("input14", new PropertyModel<String>(this,
 				"bean.propertyOne")).add(new PropertyValidator<String>(GroupOne.class,
-				GroupTwo.class));
+					GroupTwo.class));
 			input15 = new TextField<String>("input15", new PropertyModel<String>(this,
 				"bean.propertyTwo")).add(new PropertyValidator<String>(GroupOne.class,
-				GroupTwo.class));
+					GroupTwo.class));
 			input16 = new TextField<String>("input16", new PropertyModel<String>(this,
 				"bean.propertyOneTwo")).add(new PropertyValidator<String>(GroupOne.class,
-				GroupTwo.class));
+					GroupTwo.class));
 
 			input17 = new TextField<String>("input17", new PropertyModel<String>(this,
 				"bean.property")).add(new PropertyValidator<String>(GroupThree.class));
@@ -207,7 +208,8 @@ public class PropertyValidatorRequiredTest
 	{
 	}
 
-	public static class TestContainedBean {
+	public static class TestContainedBean
+	{
 		@NotNull
 		String property;
 	}

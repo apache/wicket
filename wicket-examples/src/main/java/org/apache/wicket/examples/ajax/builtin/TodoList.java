@@ -424,7 +424,7 @@ public class TodoList extends BasePage
 		// add the add container for the todo items.
 		add(new AddItemsContainer("addItems"));
 	}
-	
+
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{

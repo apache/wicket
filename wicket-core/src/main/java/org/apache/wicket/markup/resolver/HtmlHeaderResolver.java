@@ -82,8 +82,9 @@ public class HtmlHeaderResolver implements IComponentResolver
 					{
 						if (component instanceof HtmlHeaderContainer)
 						{
-							visit.stop((HtmlHeaderContainer) component);
-						} else if (component instanceof TransparentWebMarkupContainer == false)
+							visit.stop((HtmlHeaderContainer)component);
+						}
+						else if (component instanceof TransparentWebMarkupContainer == false)
 						{
 							visit.dontGoDeeper();
 						}
@@ -94,7 +95,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 				// additional functionality they are merely a means of surrounding relevant
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag (class WicketHeadContainer).
-				
+
 				if (header == null)
 				{
 					// Create a special header component which will gather
@@ -104,9 +105,8 @@ public class HtmlHeaderResolver implements IComponentResolver
 					return header;
 				}
 
-				WicketHeadContainer wicketHeadContainer = 
-					header.visitChildren(new FindWicketHeadContainer());
-				
+				WicketHeadContainer wicketHeadContainer = header.visitChildren(new FindWicketHeadContainer());
+
 				//We just need one WicketHeadContainer, no matter how 
 				//many <wicket:head> we have.
 				if (wicketHeadContainer == null)
@@ -114,7 +114,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 					wicketHeadContainer = new WicketHeadContainer();
 					header.add(wicketHeadContainer);
 				}
-				
+
 				return wicketHeadContainer;
 			}
 			else if (container instanceof HtmlHeaderContainer)
@@ -134,7 +134,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 
 			throw new MarkupException(
 				"Mis-placed <wicket:head>. <wicket:head> must be outside of <wicket:panel>, <wicket:border>, " +
-						"and <wicket:extend>. Error occurred while rendering page: " +
+					"and <wicket:extend>. Error occurred while rendering page: " +
 					pageClassName + " using markup stream: " + streamName);
 		}
 
@@ -180,11 +180,12 @@ public class HtmlHeaderResolver implements IComponentResolver
 			setRenderBodyOnly(true);
 		}
 	}
-	
+
 	/**
 	 * Visitor to find children of type {@link WicketHeadContainer}}
 	 */
-	private static class FindWicketHeadContainer implements 
+	private static class FindWicketHeadContainer
+		implements
 			IVisitor<Component, WicketHeadContainer>
 	{
 		@Override
@@ -192,9 +193,9 @@ public class HtmlHeaderResolver implements IComponentResolver
 		{
 			if (component instanceof WicketHeadContainer)
 			{
-				WicketHeadContainer result = (WicketHeadContainer) component;
+				WicketHeadContainer result = (WicketHeadContainer)component;
 				visit.stop(result);
 			}
-		}	
+		}
 	}
 }

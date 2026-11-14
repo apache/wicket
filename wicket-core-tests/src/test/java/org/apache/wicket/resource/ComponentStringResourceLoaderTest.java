@@ -42,7 +42,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	 * @return The loader instance to test
 	 */
 	@Override
-    protected IStringResourceLoader createLoader()
+	protected IStringResourceLoader createLoader()
 	{
 		return new ComponentStringResourceLoader();
 	}
@@ -52,7 +52,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	 */
 	@Override
 	@Test
-    public void loaderUnknownResources()
+	public void loaderUnknownResources()
 	{
 		Component c = new DummyComponent("hello", tester.getApplication())
 		{
@@ -88,7 +88,8 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 		panel.add(c);
 		IStringResourceLoader loader = new ComponentStringResourceLoader();
 		assertEquals("Component string", loader
-			.loadStringResource(c.getClass(), "component.string", Locale.getDefault(), null, null), "Valid resourse string should be found");
+			.loadStringResource(c.getClass(), "component.string", Locale.getDefault(), null, null),
+			"Valid resourse string should be found");
 	}
 
 	/**

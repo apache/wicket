@@ -59,7 +59,7 @@ class SessionCheckerTest extends WicketTestCase
 		// WICKET-6196 force container#children to be an array
 		container.add(new Label("id1"));
 		container.add(new ComponentWithAReferenceToTheSession("id2"));
-		
+
 		byte[] serialized = serializer.serialize(container);
 		assertNull(serialized, "The produced byte[] must be null if there was an error");
 	}

@@ -53,8 +53,7 @@ class FileUploadToResourceFieldSecurityTest extends WicketTestCase
 		{
 			try (var paths = Files.walk(tempDir))
 			{
-				paths.sorted(Comparator.reverseOrder()).forEach(path ->
-				{
+				paths.sorted(Comparator.reverseOrder()).forEach(path -> {
 					try
 					{
 						Files.deleteIfExists(path);

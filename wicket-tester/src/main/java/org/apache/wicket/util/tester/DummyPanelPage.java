@@ -49,6 +49,7 @@ public class DummyPanelPage extends WebPage
 	 */
 	protected Panel getTestPanel(String id)
 	{
-		throw new UnsupportedOperationException("To use DummyPanelPage you need to implement DummyPanelPage#getTestPanel() method.");
+		throw new UnsupportedOperationException(
+			"To use DummyPanelPage you need to implement DummyPanelPage#getTestPanel() method.");
 	}
 }

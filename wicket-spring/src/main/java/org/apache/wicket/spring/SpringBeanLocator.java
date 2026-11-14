@@ -124,14 +124,14 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		beanTypeCache = new WeakReference<Class<?>>(beanType);
 		beanTypeName = beanType.getName();
 		springContextLocator = locator;
-		
+
 		if (beanField != null)
 		{
 			fieldResolvableType = ResolvableType.forField(beanField);
 			fieldElementsResolvableType = extractElementGeneric(fieldResolvableType);
 		}
 	}
-	
+
 	/**
 	 * If the field type is a collection (Map, Set or List) extracts type 
 	 * information about its elements.
@@ -143,16 +143,16 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	private ResolvableType extractElementGeneric(ResolvableType fieldResolvableType)
 	{
 		Class<?> clazz = fieldResolvableType.resolve();
-		
+
 		if (Set.class.isAssignableFrom(clazz) || List.class.isAssignableFrom(clazz))
 		{
 			return fieldResolvableType.getGeneric();
-		} 
+		}
 		else if (Map.class.isAssignableFrom(clazz))
 		{
 			return fieldResolvableType.getGeneric(1);
 		}
-		
+
 		return null;
 	}
 
@@ -164,7 +164,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	{
 		if (singletonCache == null)
 		{
-			singletonCache = getBeanName() != null && 
+			singletonCache = getBeanName() != null &&
 				getSpringContext().isSingleton(getBeanName());
 		}
 		return singletonCache;
@@ -259,15 +259,14 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			}
 
 			// If the given class is a list try to get the generic of the list
-			Class<?> lookupClass = fieldElementsResolvableType != null ? 
-				fieldElementsResolvableType.resolve() : clazz;
+			Class<?> lookupClass = fieldElementsResolvableType != null ? fieldElementsResolvableType.resolve() : clazz;
 
 			// Else the lookup is done via Generic
 			List<String> names = loadBeanNames(ctx, lookupClass);
 
 			Object foundBeans = getBeansByName(ctx, names);
 
-			if(foundBeans != null)
+			if (foundBeans != null)
 			{
 				return foundBeans;
 			}
@@ -293,32 +292,32 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 * @return a list of candidate names
 	 */
 	private List<String> loadBeanNames(ApplicationContext ctx, Class<?> lookupClass)
-	{		
+	{
 		List<String> beanNames = new ArrayList<>();
 		Class<?> fieldType = getBeanType();
 		String[] beanNamesArr = ctx.getBeanNamesForType(fieldType);
-		
+
 		//add names for field class 
 		beanNames.addAll(Arrays.asList(beanNamesArr));
-		
+
 		//add names for lookup class 
 		if (lookupClass != fieldType)
 		{
 			beanNamesArr = ctx.getBeanNamesForType(lookupClass);
 			beanNames.addAll(Arrays.asList(beanNamesArr));
 		}
-		
+
 		Iterator<String> nameIterator = beanNames.iterator();
-		
+
 		//filter those beans who don't have a definition (used internally by Spring)
 		while (nameIterator.hasNext())
 		{
 			if (!ctx.containsBeanDefinition(nameIterator.next()))
 			{
 				nameIterator.remove();
-			}			
+			}
 		}
-		
+
 		return beanNames;
 	}
 
@@ -335,7 +334,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	private Object getBeansByName(ApplicationContext ctx, List<String> names)
 	{
 		FieldBeansCollector beansCollector = new FieldBeansCollector(fieldResolvableType);
-		
+
 		for (String beanName : names)
 		{
 			RootBeanDefinition beanDef = getBeanDefinition(ctx, beanName);
@@ -366,21 +365,22 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			}
 
 			boolean exactMatch = fieldResolvableType.isAssignableFrom(candidateResolvableType);
-			boolean elementMatch = fieldElementsResolvableType != null && fieldElementsResolvableType.isAssignableFrom(candidateResolvableType);
+			boolean elementMatch = fieldElementsResolvableType != null && fieldElementsResolvableType.isAssignableFrom(
+				candidateResolvableType);
 
 			if (exactMatch)
 			{
 				this.beanName = beanName;
 				return ctx.getBean(beanName);
 			}
-			
+
 			if (elementMatch)
 			{
 				beansCollector.addBean(beanName, ctx.getBean(beanName));
 			}
 
 		}
-		
+
 		return beansCollector.getBeansToInject();
 	}
 
@@ -420,10 +420,9 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	{
 		ConfigurableListableBeanFactory beanFactory = ((AbstractApplicationContext)ctx).getBeanFactory();
 
-		BeanDefinition beanDef = beanFactory.containsBean(name) ?
-			beanFactory.getMergedBeanDefinition(name) : null;
+		BeanDefinition beanDef = beanFactory.containsBean(name) ? beanFactory.getMergedBeanDefinition(name) : null;
 
-		if (beanDef instanceof RootBeanDefinition) 
+		if (beanDef instanceof RootBeanDefinition)
 		{
 			return (RootBeanDefinition)beanDef;
 		}

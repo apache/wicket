@@ -28,7 +28,7 @@ public class Variation<T>
 {
 	private final List<T> value;
 
-	public Variation(T...values)
+	public Variation(T... values)
 	{
 		this.value = Arrays.asList(values);
 	}
@@ -40,7 +40,7 @@ public class Variation<T>
 
 	public static Variation<Boolean> ofBoolean()
 	{
-		return new Variation<>(Boolean.FALSE,Boolean.TRUE);
+		return new Variation<>(Boolean.FALSE, Boolean.TRUE);
 	}
 
 	public static <T extends Enum<T>> Variation<T> of(Class<T> enumType)

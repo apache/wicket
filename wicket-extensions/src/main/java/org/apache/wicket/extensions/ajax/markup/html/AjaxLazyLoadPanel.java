@@ -145,7 +145,8 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	{
 		super.onBeforeRender();
 
-		if (loaded == false) {
+		if (loaded == false)
+		{
 			initTimer();
 		}
 	}
@@ -158,10 +159,11 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	{
 		// when the timer is not yet installed add it
 		List<AjaxLazyLoadTimer> behaviors = getPage().getBehaviors(AjaxLazyLoadTimer.class);
-		if (behaviors.isEmpty()) {
+		if (behaviors.isEmpty())
+		{
 			AbstractAjaxTimerBehavior timer = new AjaxLazyLoadTimer();
 			getPage().add(timer);
-			
+
 			getRequestCycle().find(AjaxRequestTarget.class).ifPresent(target -> {
 				// the timer will not be rendered, so restart it immediately on the Ajax target
 				timer.restart(target);
@@ -174,7 +176,8 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	{
 		super.onConfigure();
 
-		if (get(CONTENT_ID) == null) {
+		if (get(CONTENT_ID) == null)
+		{
 			add(getLoadingComponent(CONTENT_ID));
 		}
 	}
@@ -187,7 +190,8 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * 
 	 * @return update interval, must not be {@code null}
 	 */
-	public Duration getUpdateInterval() {
+	public Duration getUpdateInterval()
+	{
 		return Duration.ofSeconds(1);
 	}
 
@@ -201,7 +205,8 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * 
 	 * @see #isContentReady()
 	 */
-	public final boolean isLoaded() {
+	public final boolean isLoaded()
+	{
 		if (loaded == false)
 		{
 			if (isContentReady())
@@ -225,7 +230,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 				target.ifPresent(t -> t.add(AjaxLazyLoadPanel.this));
 			}
 		}
-		
+
 		return loaded;
 	}
 
@@ -254,20 +259,22 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 		public void load(AjaxRequestTarget target)
 		{
 			setUpdateInterval(Duration.ofMillis(Long.MAX_VALUE));
-			
+
 			getComponent().getPage().visitChildren(AjaxLazyLoadPanel.class, new IVisitor<AjaxLazyLoadPanel<?>, Void>()
 			{
 				@Override
 				public void component(AjaxLazyLoadPanel<?> panel, IVisit<Void> visit)
 				{
-					if (panel.isVisibleInHierarchy() && panel.isLoaded() == false) {
+					if (panel.isVisibleInHierarchy() && panel.isLoaded() == false)
+					{
 						Duration updateInterval = panel.getUpdateInterval();
-						if (getUpdateInterval() == null) {
+						if (getUpdateInterval() == null)
+						{
 							throw new IllegalArgumentException("update interval must not ben null");
 						}
-						
+
 						setUpdateInterval(Comparators.min(getUpdateInterval(), updateInterval));
-					}						
+					}
 				}
 			});
 
@@ -275,7 +282,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 			if (Duration.ofMillis(Long.MAX_VALUE).equals(getUpdateInterval()))
 			{
 				stop(target);
-				
+
 				getComponent().remove(this);
 			}
 		}

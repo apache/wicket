@@ -61,7 +61,7 @@ class ConversationPropagatorTest extends WicketCdiTestCase
 		configure(new CdiConfiguration());
 
 		tester.startPage(TestConversationalPage.class,
-				new PageParameters().add("pageType", "bookmarkable"));
+			new PageParameters().add("pageType", "bookmarkable"));
 
 		int i;
 		for (i = 0; i < 3; i++)
@@ -101,7 +101,8 @@ class ConversationPropagatorTest extends WicketCdiTestCase
 	void testPropagationAllHybrid()
 	{
 		configure(new CdiConfiguration().setPropagation(ConversationPropagation.ALL));
-		tester.getApplication().getRootRequestMapperAsCompound().add(new MountedMapper("segment/${pageType}", TestConversationPage.class));
+		tester.getApplication().getRootRequestMapperAsCompound().add(new MountedMapper("segment/${pageType}",
+			TestConversationPage.class));
 
 		tester.startPage(TestConversationPage.class, new PageParameters().add("pageType", "hybrid"));
 
@@ -126,14 +127,15 @@ class ConversationPropagatorTest extends WicketCdiTestCase
 	void testPropagationAllHybridRefresh()
 	{
 		configure(new CdiConfiguration().setPropagation(ConversationPropagation.ALL));
-		tester.getApplication().getRootRequestMapperAsCompound().add(new MountedMapper("segment/${pageType}", TestConversationPage.class));
+		tester.getApplication().getRootRequestMapperAsCompound().add(new MountedMapper("segment/${pageType}",
+			TestConversationPage.class));
 
 		tester.startPage(TestConversationPage.class, new PageParameters().add("pageType", "hybrid"));
 
 		String pageId = tester.getLastRenderedPage().getId();
 		String cid = conversation.getId();
 
-		tester.executeUrl("segment/hybrid?"+pageId+"&cid="+cid);
+		tester.executeUrl("segment/hybrid?" + pageId + "&cid=" + cid);
 
 		assertEquals(pageId, tester.getLastRenderedPage().getId());
 	}
@@ -144,7 +146,7 @@ class ConversationPropagatorTest extends WicketCdiTestCase
 		configure(new CdiConfiguration().setPropagation(ConversationPropagation.ALL));
 
 		tester.startPage(TestConversationPage.class,
-				new PageParameters().add("pageType", "bookmarkable"));
+			new PageParameters().add("pageType", "bookmarkable"));
 		int i;
 		for (i = 0; i < 3; i++)
 		{
@@ -165,7 +167,7 @@ class ConversationPropagatorTest extends WicketCdiTestCase
 		configure(new CdiConfiguration());
 
 		tester.startPage(TestConversationPage.class,
-				new PageParameters().add("pageType", "bookmarkable"));
+			new PageParameters().add("pageType", "bookmarkable"));
 		int i;
 		for (i = 0; i < 3; i++)
 		{

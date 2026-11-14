@@ -57,7 +57,7 @@ public class NotDetachedModelChecker extends AbstractObjectChecker
 
 		if (obj instanceof LoadableDetachableModel<?>)
 		{
-			LoadableDetachableModel<?> model = (LoadableDetachableModel<?>) obj;
+			LoadableDetachableModel<?> model = (LoadableDetachableModel<?>)obj;
 			if (model.isAttached())
 			{
 				result = new Result(Result.Status.FAILURE, "Not detached model found!");

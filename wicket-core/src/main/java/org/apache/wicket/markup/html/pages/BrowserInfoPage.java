@@ -49,7 +49,7 @@ public class BrowserInfoPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	private BrowserInfoForm browserInfoForm;
-	
+
 	/**
 	 * Bookmarkable constructor.
 	 */
@@ -64,7 +64,7 @@ public class BrowserInfoPage extends WebPage
 		super.renderHead(response);
 
 		response.render(OnLoadHeaderItem.forScript(
-				String.format("Wicket.BrowserInfo.submitForm('%s')", browserInfoForm.getFormMarkupId())));
+			String.format("Wicket.BrowserInfo.submitForm('%s')", browserInfoForm.getFormMarkupId())));
 	}
 
 	@Override
@@ -83,12 +83,13 @@ public class BrowserInfoPage extends WebPage
 	 */
 	private void initComps()
 	{
-		IModel<WebClientInfo> info = new LoadableDetachableModel<WebClientInfo>() {
+		IModel<WebClientInfo> info = new LoadableDetachableModel<WebClientInfo>()
+		{
 			@Override
 			protected WebClientInfo load()
 			{
 				return newWebClientInfo(getRequestCycle());
-			}			
+			}
 		};
 
 		IModel<ClientProperties> properties = new LoadableDetachableModel<ClientProperties>()
@@ -121,13 +122,14 @@ public class BrowserInfoPage extends WebPage
 		};
 		add(browserInfoForm);
 	}
-	
+
 	protected ClientProperties newClientInfo()
 	{
 		return WebSession.get().getClientInfo().getProperties();
 	}
 
-	private static class ContinueLink extends Link<WebClientInfo> {
+	private static class ContinueLink extends Link<WebClientInfo>
+	{
 
 		public ContinueLink(String id, IModel<WebClientInfo> info)
 		{
@@ -141,7 +143,7 @@ public class BrowserInfoPage extends WebPage
 
 			response.render(MetaDataHeaderItem.forHttpEquiv("refresh", content));
 		}
-		
+
 		@Override
 		public void onClick()
 		{

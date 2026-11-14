@@ -88,10 +88,13 @@ public class AjaxEnclosureListener implements AjaxRequestTarget.IListener
 						final Component controller = component;
 						target.add(enclosure);
 						visit.dontGoDeeper();
-						enclosure.visitChildren(new IVisitor<Component, Void>() {
+						enclosure.visitChildren(new IVisitor<Component, Void>()
+						{
 							@Override
-							public void component(Component descendant, IVisit<Void> visit) {
-								if (descendant == controller) {
+							public void component(Component descendant, IVisit<Void> visit)
+							{
+								if (descendant == controller)
+								{
 									// if the controlling component is in the enclosure we do not need to repaint it
 									// individually, it will be repainted as part of the enclosure repaint
 									keysToRemove.add(controller.getId());
@@ -121,6 +124,6 @@ public class AjaxEnclosureListener implements AjaxRequestTarget.IListener
 		final Enclosure enclosure)
 	{
 		return (enclosure.get(enclosure.getChildId()) == component || // #queue()
-				enclosure.getParent().get(enclosure.getChildId()) == component); // #add()
+			enclosure.getParent().get(enclosure.getChildId()) == component); // #add()
 	}
 }

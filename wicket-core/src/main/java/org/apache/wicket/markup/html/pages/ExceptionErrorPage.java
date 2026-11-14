@@ -236,7 +236,8 @@ public class ExceptionErrorPage extends AbstractErrorPage
 				sb.append(traceString);
 				sb.append("\n");
 				if (stopAtWicketServlet &&
-					(traceString.startsWith("org.apache.wicket.protocol.http.WicketServlet") || traceString.startsWith("org.apache.wicket.protocol.http.WicketFilter")))
+					(traceString.startsWith("org.apache.wicket.protocol.http.WicketServlet") || traceString.startsWith(
+						"org.apache.wicket.protocol.http.WicketFilter")))
 				{
 					return;
 				}

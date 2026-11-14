@@ -123,7 +123,7 @@ public class DebugSettings
 	 * 
 	 * @return the strategy for outputting the Java class name of a markup container
 	 */
-	public ClassOutputStrategy getOutputMarkupContainerClassNameStrategy() 
+	public ClassOutputStrategy getOutputMarkupContainerClassNameStrategy()
 	{
 		return outputMarkupContainerClassNameStrategy;
 	}
@@ -202,7 +202,7 @@ public class DebugSettings
 	 * @param strategy
 	 * @return {@code this} object for chaining
 	 */
-	public DebugSettings setOutputMarkupContainerClassNameStrategy(ClassOutputStrategy strategy) 
+	public DebugSettings setOutputMarkupContainerClassNameStrategy(ClassOutputStrategy strategy)
 	{
 		outputMarkupContainerClassNameStrategy = Args.notNull(strategy, "strategy");
 		return this;
@@ -277,8 +277,7 @@ public class DebugSettings
 	/**
 	 * Strategy for outputting the Java class name of a markup container
 	 */
-	public enum ClassOutputStrategy
-	{
+	public enum ClassOutputStrategy {
 		/**
 		 * Output the container's class name in an HTML comment
 		 */

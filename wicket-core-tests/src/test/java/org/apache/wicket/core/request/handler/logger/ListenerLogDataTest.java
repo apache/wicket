@@ -23,70 +23,84 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.jupiter.api.Test;
 
-class ListenerLogDataTest {
+class ListenerLogDataTest
+{
 
 	/**
 	 * Test for WICKET-6908.
 	 */
 	@Test
-	void neverFails() {
-		IPageAndComponentProvider provider = new IPageAndComponentProvider() {
-			
+	void neverFails()
+	{
+		IPageAndComponentProvider provider = new IPageAndComponentProvider()
+		{
+
 			@Override
-			public boolean wasExpired() {
+			public boolean wasExpired()
+			{
 				throw new IllegalStateException();
 			}
-			
+
 			@Override
-			public boolean hasPageInstance() {
+			public boolean hasPageInstance()
+			{
 				throw new IllegalStateException();
 			}
-			
+
 			@Override
-			public Integer getRenderCount() {
+			public Integer getRenderCount()
+			{
 				throw new IllegalStateException();
 			}
-			
+
 			@Override
-			public PageParameters getPageParameters() throws PageExpiredException {
+			public PageParameters getPageParameters() throws PageExpiredException
+			{
 				throw new IllegalStateException();
 			}
-			
+
 			@Override
-			public IRequestablePage getPageInstance() throws PageExpiredException {
+			public IRequestablePage getPageInstance() throws PageExpiredException
+			{
 				throw new IllegalStateException();
 			}
-			
+
 			@Override
-			public Integer getPageId() {
+			public Integer getPageId()
+			{
 				throw new IllegalStateException();
 			}
-			
+
 			@Override
-			public Class<? extends IRequestablePage> getPageClass() throws PageExpiredException {
+			public Class<? extends IRequestablePage> getPageClass() throws PageExpiredException
+			{
 				throw new IllegalStateException();
 			}
-			
+
 			@Override
-			public boolean doesProvideNewPage() {
+			public boolean doesProvideNewPage()
+			{
 				throw new IllegalStateException();
 			}
-			
+
 			@Override
-			public void detach() {
+			public void detach()
+			{
 			}
-			
+
 			@Override
-			public String getComponentPath() {
+			public String getComponentPath()
+			{
 				throw new IllegalStateException();
 			}
-			
+
 			@Override
-			public IRequestableComponent getComponent() {
+			public IRequestableComponent getComponent()
+			{
 				throw new IllegalStateException();
 			}
 		};
-		
+
 		new ListenerLogData(provider, 1);
 	}
 }

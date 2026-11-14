@@ -69,7 +69,7 @@ class ResourceAuthorizationTest extends WicketTestCase
 
 		assertEquals(HttpServletResponse.SC_FORBIDDEN, tester.getLastResponse().getStatus());
 		assertEquals("The request to resource 'TestResource' with parameters '' cannot be authorized.",
-				tester.getLastResponse().getErrorMessage());
+			tester.getLastResponse().getErrorMessage());
 	}
 
 	/**

@@ -312,7 +312,7 @@ class CryptoMapperTest extends AbstractMapperTest
 		// the URL received in this new request still decrypts...
 		IRequestHandler requestHandler = mapper.mapRequest(getRequest(encrypted));
 		assertNotNull(requestHandler);
-		assertEquals(Page2.class, ((RenderPageRequestHandler) unwrapRequestHandlerDelegate(
+		assertEquals(Page2.class, ((RenderPageRequestHandler)unwrapRequestHandlerDelegate(
 			requestHandler)).getPageClass());
 
 		// ...and re-encrypting the same page reproduces exactly that URL, which is what stops the

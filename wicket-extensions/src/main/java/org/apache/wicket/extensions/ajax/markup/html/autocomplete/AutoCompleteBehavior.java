@@ -88,7 +88,8 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 	}
 
 	@Override
-	protected void onBind() {
+	protected void onBind()
+	{
 		super.onBind();
 
 		getComponent().add(new AttributeModifier("aria-autocomplete", "list"));

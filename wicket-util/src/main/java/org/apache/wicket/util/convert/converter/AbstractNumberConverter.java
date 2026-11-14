@@ -131,13 +131,13 @@ public abstract class AbstractNumberConverter<N extends Number> extends Abstract
 		if (min != null && bigDecimal.compareTo(min) < 0)
 		{
 			throw newConversionException("Value cannot be less than " + min, value, locale)
-					.setFormat(numberFormat);
+				.setFormat(numberFormat);
 		}
 
 		if (max != null && bigDecimal.compareTo(max) > 0)
 		{
 			throw newConversionException("Value cannot be greater than " + max, value, locale)
-					.setFormat(numberFormat);
+				.setFormat(numberFormat);
 		}
 
 		return bigDecimal;

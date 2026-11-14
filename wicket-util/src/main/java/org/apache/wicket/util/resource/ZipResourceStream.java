@@ -79,7 +79,9 @@ public class ZipResourceStream extends AbstractResourceStream
 			try
 			{
 				zipDir(dir, out, "", recursive);
-			} finally {
+			}
+			finally
+			{
 				out.close();
 			}
 		}
@@ -144,7 +146,8 @@ public class ZipResourceStream extends AbstractResourceStream
 					{
 						zipDir(f, out, path + f.getName() + "/", recursive);
 					}
-				} else
+				}
+				else
 				{
 					out.putNextEntry(new ZipEntry(path + f.getName()));
 
@@ -158,7 +161,8 @@ public class ZipResourceStream extends AbstractResourceStream
 						{
 							out.write(data, 0, count);
 						}
-					} finally
+					}
+					finally
 					{
 						origin.close();
 					}

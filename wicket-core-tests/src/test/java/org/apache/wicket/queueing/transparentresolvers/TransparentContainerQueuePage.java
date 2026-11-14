@@ -28,5 +28,5 @@ public class TransparentContainerQueuePage extends WebPage
 		super(parameters);
 		queue(new Label("queuedComponent", "Queued label."));
 	}
-	
+
 }

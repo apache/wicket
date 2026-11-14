@@ -99,7 +99,7 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	}
 
 	protected abstract IManageablePage getPersistedPage(String sessionIdentifier, int id);
-	
+
 	@Override
 	public void removePage(IPageContext context, IManageablePage page)
 	{
@@ -108,7 +108,7 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 		{
 			return;
 		}
-		
+
 		removePersistedPage(sessionIdentifier, page);
 	}
 
@@ -122,7 +122,7 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 		{
 			return;
 		}
-		
+
 		removeAllPersistedPages(sessionIdentifier);
 	}
 
@@ -132,7 +132,7 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	public void addPage(IPageContext context, IManageablePage page)
 	{
 		String sessionIdentifier = getSessionIdentifier(context, true);
-		
+
 		addPersistedPage(sessionIdentifier, page);
 	}
 
@@ -153,19 +153,22 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	private String getSessionIdentifier(IPageContext context, boolean create)
 	{
 		gettingSessionAttribute.set(Boolean.TRUE);
-		try {
+		try
+		{
 			String key = KEY_PREFIX + Classes.simpleName(getClass());
-			
+
 			SessionAttribute attribute = context.getSessionAttribute(key, create ? () -> {
 				return new SessionAttribute(storeKey, createSessionIdentifier(context));
 			} : null);
-			
+
 			if (attribute == null)
 			{
 				return null;
 			}
 			return attribute.sessionIdentifier;
-		} finally {
+		}
+		finally
+		{
 			gettingSessionAttribute.set(Boolean.FALSE);
 		}
 	}
@@ -216,14 +219,15 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 			if (store == null)
 			{
 				log.warn(
-					"Cannot remove data '{}' because disk store '{}' is no longer present.", sessionIdentifier, storeKey);
+					"Cannot remove data '{}' because disk store '{}' is no longer present.", sessionIdentifier,
+					storeKey);
 			}
 			else
 			{
 				if (Boolean.FALSE.equals(gettingSessionAttribute.get()))
 				{
 					store.removeAllPersistedPages(sessionIdentifier);
-				}		
+				}
 			}
 		}
 	}

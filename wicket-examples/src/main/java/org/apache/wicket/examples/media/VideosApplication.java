@@ -41,17 +41,17 @@ public class VideosApplication extends WicketExampleApplication
 	protected void init()
 	{
 		super.init();
-		
+
 		IPackageResourceGuard packageResourceGuard = getResourceSettings().getPackageResourceGuard();
 		if (packageResourceGuard instanceof SecurePackageResourceGuard)
 		{
 			SecurePackageResourceGuard guard = (SecurePackageResourceGuard)packageResourceGuard;
 			guard.addPattern("+*.mp4");
 		}
-		
+
 		getCspSettings().blocking()
-		                .add(CSPDirective.MEDIA_SRC, CSPDirectiveSrcValue.SELF)
-		                .add(CSPDirective.MEDIA_SRC, "https://w3c-test.org/media/movie_300.mp4");
+			.add(CSPDirective.MEDIA_SRC, CSPDirectiveSrcValue.SELF)
+			.add(CSPDirective.MEDIA_SRC, "https://w3c-test.org/media/movie_300.mp4");
 	}
 
 }

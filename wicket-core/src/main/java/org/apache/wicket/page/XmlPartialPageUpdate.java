@@ -74,7 +74,7 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	{
 		writeHeaderContribution(response, "priority-evaluate", contents);
 	}
-	
+
 	@Override
 	protected void writeHeaderContribution(Response response, CharSequence contents)
 	{
@@ -103,7 +103,7 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 
 	protected CharSequence encode(CharSequence str)
 	{
-		return Strings.replaceAll(str, "]]>", "]]]]><![CDATA[>"); 
+		return Strings.replaceAll(str, "]]>", "]]]]><![CDATA[>");
 	}
 
 

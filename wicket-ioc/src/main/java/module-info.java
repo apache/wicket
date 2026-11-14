@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.ioc {
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.core;
-    requires net.bytebuddy;
-    requires static org.objenesis;
+module org.apache.wicket.ioc
+{
+	requires org.apache.wicket.util;
+	requires org.apache.wicket.core;
+	requires net.bytebuddy;
+	requires static org.objenesis;
 
-    exports org.apache.wicket.injection;
-    exports org.apache.wicket.proxy;
+	exports org.apache.wicket.injection;
+	exports org.apache.wicket.proxy;
 }

@@ -40,7 +40,8 @@ import org.junit.jupiter.api.Test;
  */
 class PackagePrivateTest
 {
-	private static final PackagePrivateConcreteObject PACKAGE_PRIVATE_CONCRETE_OBJECT = new PackagePrivateConcreteObject("package-private-concrete");
+	private static final PackagePrivateConcreteObject PACKAGE_PRIVATE_CONCRETE_OBJECT = new PackagePrivateConcreteObject(
+		"package-private-concrete");
 
 	private final static IProxyTargetLocator PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR = new IProxyTargetLocator()
 	{
@@ -62,7 +63,7 @@ class PackagePrivateTest
 	void testPackagePrivateConcreteProxy()
 	{
 		PackagePrivateConcreteObject proxy = (PackagePrivateConcreteObject)LazyInitProxyFactory.createProxy(
-				PackagePrivateConcreteObject.class, PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR);
+			PackagePrivateConcreteObject.class, PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR);
 
 		// test proxy implements ILazyInitProxy
 		assertTrue(proxy instanceof ILazyInitProxy);
@@ -89,7 +90,7 @@ class PackagePrivateTest
 		// test only a single class is generated,
 		// otherwise permgen space will fill up with each proxy
 		assertSame(proxy.getClass(), LazyInitProxyFactory.createProxy(
-				PackagePrivateConcreteObject.class, PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR).getClass());
+			PackagePrivateConcreteObject.class, PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR).getClass());
 
 		IProxyTargetLocator testerLocator = new IProxyTargetLocator()
 		{
@@ -103,7 +104,7 @@ class PackagePrivateTest
 		};
 
 		ObjectMethodTester testerProxy = (ObjectMethodTester)LazyInitProxyFactory.createProxy(
-				ObjectMethodTester.class, testerLocator);
+			ObjectMethodTester.class, testerLocator);
 		testerProxy.equals(this);
 		testerProxy.hashCode();
 		testerProxy.toString();

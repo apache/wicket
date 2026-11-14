@@ -42,15 +42,16 @@ class AutoLabelWithinEnclosureTest extends WicketTestCase
 	}
 
 	@Test
-    void labelWithinEnclosure_Visible() throws Exception
+	void labelWithinEnclosure_Visible() throws Exception
 	{
 		tester.startPage(new LabelWithinEnclosurePage(true));
 		tester.dumpPage();
-		tester.assertContains("<label wicket:for=\"textfield\" id=\"textfield2-w-lbl\" for=\"textfield2\">blabla</label>");
+		tester.assertContains(
+			"<label wicket:for=\"textfield\" id=\"textfield2-w-lbl\" for=\"textfield2\">blabla</label>");
 	}
 
 	@Test
-    void labelWithinEnclosure_Invisible() throws Exception
+	void labelWithinEnclosure_Invisible() throws Exception
 	{
 		tester.startPage(new LabelWithinEnclosurePage(false));
 		tester.dumpPage();

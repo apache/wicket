@@ -21,14 +21,15 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 class EnclosurePanel extends Panel
 {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final String TEST_LINK = "http://google.com";
 
-	public EnclosurePanel(String id) {
+	public EnclosurePanel(String id)
+	{
 		super(id);
-		
+
 		ExternalLink externalLink = new ExternalLink("externalLink", TEST_LINK);
 		add(externalLink);
 	}

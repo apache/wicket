@@ -28,8 +28,7 @@ public class CookieDefaults implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-	public enum SameSite
-	{
+	public enum SameSite {
 		/**
 		 * Cookies will be sent in all contexts, i.e. in responses to both
 		 * first-party and cross-site requests. If SameSite=None is set,

@@ -70,7 +70,7 @@ public class WebSocketMessageBroadcastHandler implements IRequestHandler
 			{
 				if (pageId != AbstractWebSocketProcessor.NO_PAGE_ID)
 				{
-					Page page = (Page) Session.get().getPageManager().getPage(pageId);
+					Page page = (Page)Session.get().getPageManager().getPage(pageId);
 					page.send(application, Broadcast.BREADTH, payload);
 				}
 				else
@@ -79,15 +79,15 @@ public class WebSocketMessageBroadcastHandler implements IRequestHandler
 					IResource resource = reference.getResource();
 					if (resource instanceof WebSocketResource)
 					{
-						WebSocketResource wsResource = (WebSocketResource) resource;
+						WebSocketResource wsResource = (WebSocketResource)resource;
 						wsResource.onPayload(payload);
 					}
 					else
 					{
 						throw new IllegalStateException(
-								String.format("Shared resource with name '%s' is not a %s but %s",
-										resourceName, WebSocketResource.class.getSimpleName(),
-										Classes.name(resource.getClass())));
+							String.format("Shared resource with name '%s' is not a %s but %s",
+								resourceName, WebSocketResource.class.getSimpleName(),
+								Classes.name(resource.getClass())));
 					}
 				}
 			}

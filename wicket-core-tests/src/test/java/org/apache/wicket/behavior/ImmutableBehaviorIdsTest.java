@@ -119,7 +119,7 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 		int linkId = page.container.getBehaviorId(link);
 		int link2Id = page.container.getBehaviorId(link2);
 
-		List< ? extends Behavior> behaviors = page.getContainer().getBehaviors();
+		List<? extends Behavior> behaviors = page.getContainer().getBehaviors();
 		assertEquals(6, behaviors.size());
 
 		// test removal of various behaviors and make sure they preserve indexes as long as there is
@@ -204,7 +204,7 @@ class ImmutableBehaviorIdsTest extends WicketTestCase
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-				Class< ? > containerClass)
+			Class<?> containerClass)
 		{
 			return new StringResourceStream(
 				"<html><body><a wicket:id='container'></a></body></html>");

@@ -37,9 +37,9 @@ class SkipRenderWithSetResponsePageTest extends WicketTestCase
 		tester.assertRenderedPage(SimplePage.class);
 	}
 
-    public static class NotToRenderConstructorPage extends WebPage
+	public static class NotToRenderConstructorPage extends WebPage
 	{
-        public NotToRenderConstructorPage()
+		public NotToRenderConstructorPage()
 		{
 			setResponsePage(SimplePage.class);
 		}

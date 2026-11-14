@@ -50,120 +50,141 @@ import java.util.stream.IntStream;
 @WebAppConfiguration
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { ParallelInjectionTest.ServiceConfig.class })
-public class ParallelInjectionTest implements ApplicationContextAware {
+public class ParallelInjectionTest implements ApplicationContextAware
+{
 
-    @ComponentScan(basePackages = "org.apache.wicket.spring.injection.bytebuddy")
-    @Configuration
-    public static class ServiceConfig {
-    }
+	@ComponentScan(basePackages = "org.apache.wicket.spring.injection.bytebuddy")
+	@Configuration
+	public static class ServiceConfig
+	{
+	}
 
-    @Named
-    public static class ServiceA {
-        @Inject
-        private ServiceC serviceC;
-        @Inject
-        private ServiceD serviceD;
-    }
+	@Named
+	public static class ServiceA
+	{
+		@Inject
+		private ServiceC serviceC;
+		@Inject
+		private ServiceD serviceD;
+	}
 
-    @Named
-    public static class ServiceB {
-    }
+	@Named
+	public static class ServiceB
+	{
+	}
 
-    @Named
-    public static class ServiceC {
-    }
+	@Named
+	public static class ServiceC
+	{
+	}
 
-    @Named
-    public static class ServiceD {
-    }
+	@Named
+	public static class ServiceD
+	{
+	}
 
-    public static class DemoComponent {
+	public static class DemoComponent
+	{
 
-        @Inject
-        private ServiceB serviceB;
-        @Inject
-        private ServiceA serviceA;
+		@Inject
+		private ServiceB serviceB;
+		@Inject
+		private ServiceA serviceA;
 
-        public DemoComponent() {
-        }
-    }
+		public DemoComponent()
+		{
+		}
+	}
 
-    private ApplicationContext context;
+	private ApplicationContext context;
 
-    @BeforeAll
-    static void beforeAll() {
-        System.setProperty("wicket.ioc.useByteBuddy", Boolean.TRUE.toString());
-    }
+	@BeforeAll
+	static void beforeAll()
+	{
+		System.setProperty("wicket.ioc.useByteBuddy", Boolean.TRUE.toString());
+	}
 
-    @Test
-    void parallel() throws Exception {
-        runInjection(10);
-    }
+	@Test
+	void parallel() throws Exception
+	{
+		runInjection(10);
+	}
 
-    @Test
-    void notParallel() throws Exception {
-        runInjection(1);
-    }
+	@Test
+	void notParallel() throws Exception
+	{
+		runInjection(1);
+	}
 
-    void runInjection(int nThreads) throws InterruptedException {
-        // Arrange
-        var tester = new WicketTester(createPortalApplication());
-        ExecutorService executor = Executors.newFixedThreadPool(nThreads);
+	void runInjection(int nThreads) throws InterruptedException
+	{
+		// Arrange
+		var tester = new WicketTester(createPortalApplication());
+		ExecutorService executor = Executors.newFixedThreadPool(nThreads);
 
-        Callable<String> callableTask = () -> {
-            //LOG.debug("Thread id: {}", Thread.currentThread().getId());
-            ThreadContext.setApplication(tester.getApplication());
-            var panel = new DemoComponent();
-            Injector.get().inject(panel);
-            return "Injected";
-        };
+		Callable<String> callableTask = () -> {
+			//LOG.debug("Thread id: {}", Thread.currentThread().getId());
+			ThreadContext.setApplication(tester.getApplication());
+			var panel = new DemoComponent();
+			Injector.get().inject(panel);
+			return "Injected";
+		};
 
-        // Act
-        var tasks = IntStream.rangeClosed(1, 100)
-                .mapToObj(i -> callableTask)
-                .collect(Collectors.toList());
+		// Act
+		var tasks = IntStream.rangeClosed(1, 100)
+			.mapToObj(i -> callableTask)
+			.collect(Collectors.toList());
 
-        var futures = executor.invokeAll(tasks);
+		var futures = executor.invokeAll(tasks);
 
-        futures.forEach(f -> {
-            try {
-            	f.get();
-                //LOG.debug("Returned {}", f.get());
-            } catch (Exception e) {
-                throw new RuntimeException("A problem occurred", e);
-            }
-        });
+		futures.forEach(f -> {
+			try
+			{
+				f.get();
+				//LOG.debug("Returned {}", f.get());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException("A problem occurred", e);
+			}
+		});
 
-        // No Assert, we expect no Exception
-    }
+		// No Assert, we expect no Exception
+	}
 
-    private WebApplication createPortalApplication() {
-        var mockServletContext = new MockServletContext();
-        mockServletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, context);
+	private WebApplication createPortalApplication()
+	{
+		var mockServletContext = new MockServletContext();
+		mockServletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, context);
 
-        return new WebApplication() {
-            @Override
-            public ServletContext getServletContext() {
-                return mockServletContext;
-            }
+		return new WebApplication()
+		{
+			@Override
+			public ServletContext getServletContext()
+			{
+				return mockServletContext;
+			}
 
-            @Override
-            public Class<? extends Page> getHomePage() {
-                return DummyHomePage.class;
-            }
+			@Override
+			public Class<? extends Page> getHomePage()
+			{
+				return DummyHomePage.class;
+			}
 
-            @Override
-            protected void init() {
-                super.init();
+			@Override
+			protected void init()
+			{
+				super.init();
 
-                getComponentInstantiationListeners().add(new SpringComponentInjector(this));
-                getCspSettings().blocking().disabled();
-            }
-        };
-    }
+				getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+				getCspSettings().blocking().disabled();
+			}
+		};
+	}
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.context = applicationContext;
-    }
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
+	{
+		this.context = applicationContext;
+	}
 }

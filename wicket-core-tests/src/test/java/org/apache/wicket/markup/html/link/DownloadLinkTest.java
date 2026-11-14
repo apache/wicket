@@ -131,7 +131,9 @@ class DownloadLinkTest extends WicketTestCase
 		assertTrue(fileNameModel.detachCalled);
 	}
 
-	private class FileNameModel implements IModel<String>,
+	private class FileNameModel
+		implements
+			IModel<String>,
 			IComponentAssignedModel<String>,
 			IWrapModel<String>
 	{

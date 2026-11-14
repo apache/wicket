@@ -55,10 +55,10 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		{
 			Response response = RequestCycle.get().getResponse();
 			// WICKET-7067 WebSocketResponse doesn't allow setting headers
-			if (response instanceof WebResponse && ((WebResponse) response).isHeaderSupported())
+			if (response instanceof WebResponse && ((WebResponse)response).isHeaderSupported())
 			{
 				// we don't want to cache an exceptional reply in the browser
-				((WebResponse) response).disableCaching();
+				((WebResponse)response).disableCaching();
 			}
 			return internalMap(e);
 		}
@@ -81,15 +81,15 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		if (logger.isDebugEnabled())
 		{
 			logger.error(
-					"An error occurred while handling a previous error: " + nestedException.getMessage(), nestedException);
+				"An error occurred while handling a previous error: " + nestedException.getMessage(), nestedException);
 		}
 
 		// hmmm, we were already handling an exception! give up
 		logger.error("unexpected exception when handling another exception: " + originalException.getMessage(),
-				originalException);
+			originalException);
 		return new ErrorCodeRequestHandler(500);
 	}
-	
+
 	/**
 	 * Maps exceptions to their corresponding {@link IRequestHandler}.
 	 * 
@@ -112,16 +112,16 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		}
 
 		IRequestHandler handleExpectedExceptions = mapExpectedExceptions(e, application);
-		
+
 		if (handleExpectedExceptions != null)
 		{
 			return handleExpectedExceptions;
 		}
 
 		return mapUnexpectedExceptions(e, application);
-	
+
 	}
-	
+
 	/**
 	 * Maps expected exceptions (i.e. those internally used by Wicket) to their corresponding
 	 * {@link IRequestHandler}.
@@ -163,7 +163,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			logger.debug(e.getMessage(), e);
 			return new ErrorCodeRequestHandler(404);
 		}
-		
+
 		return null;
 	}
 
@@ -178,7 +178,8 @@ public class DefaultExceptionMapper implements IExceptionMapper
 	 */
 	protected IRequestHandler mapUnexpectedExceptions(Exception e, final Application application)
 	{
-		final ExceptionSettings.UnexpectedExceptionDisplay unexpectedExceptionDisplay = application.getExceptionSettings()
+		final ExceptionSettings.UnexpectedExceptionDisplay unexpectedExceptionDisplay = application
+			.getExceptionSettings()
 			.getUnexpectedExceptionDisplay();
 
 		logger.error("Unexpected error occurred", e);
@@ -194,7 +195,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			return createPageRequestHandler(new PageProvider(
 				application.getApplicationSettings().getInternalErrorPage()));
 		}
-		
+
 		// IExceptionSettings.SHOW_NO_EXCEPTION_PAGE
 		return new ErrorCodeRequestHandler(500);
 	}
@@ -228,7 +229,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 		return new RenderPageRequestHandler(pageProvider, redirect);
 	}
-	
+
 	/**
 	 * @return true if current request is an AJAX request, false otherwise.
 	 */

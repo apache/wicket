@@ -30,7 +30,7 @@ class ClientSideImageMapTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void testRenderClientSideImageMapPage_1() throws Exception
+	void testRenderClientSideImageMapPage_1() throws Exception
 	{
 		tester.getSession().setLocale(Locale.US);
 		executeTest(ClientSideImageMapPage_1.class, "ClientSideImageMapPageExpectedResult_1.html");

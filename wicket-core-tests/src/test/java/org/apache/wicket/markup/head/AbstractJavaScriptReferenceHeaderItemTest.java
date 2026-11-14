@@ -24,47 +24,55 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.util.value.AttributeMap;
 import org.junit.jupiter.api.Test;
 
-class AbstractJavaScriptReferenceHeaderItemTest {
+class AbstractJavaScriptReferenceHeaderItemTest
+{
 
 	@Test
-	void typeDefault() {
+	void typeDefault()
+	{
 		final AttributeMap attributeMap = new TestJavascriptReferenceHeaderItem()
-				.createAttributeMap("https://wicket.apache.org/");
+			.createAttributeMap("https://wicket.apache.org/");
 		assertEquals("text/javascript", attributeMap.get(JavaScriptUtils.ATTR_TYPE));
 	}
 
 	@Test
-	void typeTextJavascript() {
+	void typeTextJavascript()
+	{
 		final AttributeMap attributeMap = new TestJavascriptReferenceHeaderItem()
-				.setType(JavaScriptReferenceType.TEXT_JAVASCRIPT)
-				.createAttributeMap("https://wicket.apache.org/");
+			.setType(JavaScriptReferenceType.TEXT_JAVASCRIPT)
+			.createAttributeMap("https://wicket.apache.org/");
 		assertEquals("text/javascript", attributeMap.get(JavaScriptUtils.ATTR_TYPE));
 	}
 
 	@Test
-	void typeModule() {
+	void typeModule()
+	{
 		final AttributeMap attributeMap = new TestJavascriptReferenceHeaderItem()
-				.setType(JavaScriptReferenceType.MODULE)
-				.createAttributeMap("https://wicket.apache.org/");
+			.setType(JavaScriptReferenceType.MODULE)
+			.createAttributeMap("https://wicket.apache.org/");
 		assertEquals("module", attributeMap.get(JavaScriptUtils.ATTR_TYPE));
 	}
 
 	@Test
-	void typeCustom() {
+	void typeCustom()
+	{
 		final AttributeMap attributeMap = new TestJavascriptReferenceHeaderItem()
-				.setType(new JavaScriptReferenceType("custom-type"))
-				.createAttributeMap("https://wicket.apache.org/");
+			.setType(new JavaScriptReferenceType("custom-type"))
+			.createAttributeMap("https://wicket.apache.org/");
 		assertEquals("custom-type", attributeMap.get(JavaScriptUtils.ATTR_TYPE));
 	}
 
-	static class TestJavascriptReferenceHeaderItem extends AbstractJavaScriptReferenceHeaderItem {
+	static class TestJavascriptReferenceHeaderItem extends AbstractJavaScriptReferenceHeaderItem
+	{
 		@Override
-		public Iterable<?> getRenderTokens() {
+		public Iterable<?> getRenderTokens()
+		{
 			return null;
 		}
 
 		@Override
-		public void render(Response response) {
+		public void render(Response response)
+		{
 		}
 	}
 }

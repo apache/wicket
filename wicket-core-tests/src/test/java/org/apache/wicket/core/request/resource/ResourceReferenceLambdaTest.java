@@ -31,25 +31,24 @@ class ResourceReferenceLambdaTest extends WicketTestCase
 	private final String output = "lambda resource";
 
 	@Override
-	protected WicketTester newWicketTester(WebApplication app) 
+	protected WicketTester newWicketTester(WebApplication app)
 	{
 		WicketTester wicketTester = super.newWicketTester(app);
 
-		IResource res = (attributes) ->
-			attributes.getResponse().write(output);
-		
+		IResource res = (attributes) -> attributes.getResponse().write(output);
+
 		ResourceReference resRef = ResourceReference.of("lambdares", () -> res);
-		
+
 		app.mountResource("/test", resRef);
-				
+
 		return wicketTester;
 	}
-	
+
 	@Test
 	void lambdaBasedResurceReference() throws Exception
 	{
 		tester.executeUrl("./test");
-		
+
 		assertEquals(output, tester.getLastResponseAsString());
 	}
 }

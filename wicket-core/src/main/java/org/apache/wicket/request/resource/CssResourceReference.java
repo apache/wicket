@@ -75,7 +75,7 @@ public class CssResourceReference extends PackageResourceReference
 	public CssPackageResource getResource()
 	{
 		final CssPackageResource resource = new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
-				getVariation());
+			getVariation());
 		removeCompressFlagIfUnnecessary(resource);
 		return resource;
 	}

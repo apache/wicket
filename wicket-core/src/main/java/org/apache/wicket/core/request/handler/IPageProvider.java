@@ -36,20 +36,20 @@ public interface IPageProvider
 	 *
 	 * @return page instance
 	 * @throws PageExpiredException if the specified page
-     *          could not have been found and the constructor used did not provide enough information
-     *          to create new page instance
+	 *          could not have been found and the constructor used did not provide enough information
+	 *          to create new page instance
 	 */
-	IRequestablePage getPageInstance()  throws PageExpiredException;
+	IRequestablePage getPageInstance() throws PageExpiredException;
 
 	/**
 	 * Returns {@link PageParameters} of the page.
 	 *
 	 * @return page parameters
 	 * @throws PageExpiredException if the specified page
-     *          could not have been found and the constructor used did not provide enough information
-     *          to create new page instance
+	 *          could not have been found and the constructor used did not provide enough information
+	 *          to create new page instance
 	 */
-	PageParameters getPageParameters()  throws PageExpiredException;
+	PageParameters getPageParameters() throws PageExpiredException;
 
 	/**
 	 * Returns whether the provided page was expired prior to this access.
@@ -61,8 +61,8 @@ public interface IPageProvider
 	/**
 	 * Returns class of the page.
 	 * @throws PageExpiredException if the specified page
-     *          could not have been found and the constructor used did not provide enough information
-     *          to create new page instance
+	 *          could not have been found and the constructor used did not provide enough information
+	 *          to create new page instance
 	 * @return page class
 	 */
 	Class<? extends IRequestablePage> getPageClass() throws PageExpiredException;

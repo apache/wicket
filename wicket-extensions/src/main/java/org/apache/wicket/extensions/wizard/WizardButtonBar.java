@@ -48,10 +48,10 @@ public class WizardButtonBar extends Panel
 	public WizardButtonBar(final String id, final IWizard wizard)
 	{
 		super(id);
-		
+
 		this.wizard = wizard;
 	}
-	
+
 	@Override
 	protected void onInitialize()
 	{
@@ -70,9 +70,11 @@ public class WizardButtonBar extends Panel
 		super.onBeforeRender();
 
 		WizardButton button = getDefaultButton(wizard.getWizardModel());
-		if (button != null) {
+		if (button != null)
+		{
 			Form<?> form = button.getForm();
-			if (form != null) {
+			if (form != null)
+			{
 				form.setDefaultButton(button);
 			}
 		}
@@ -94,7 +96,7 @@ public class WizardButtonBar extends Panel
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Creates a new button for {@link IWizardModel#previous()}.
 	 * 

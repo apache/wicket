@@ -40,7 +40,8 @@ class EscapeAttributesInChoicesTest extends WicketTestCase
 		assertNotNull(radioTagTester);
 		assertNull(radioTagTester.getAttribute("onmouseover"));
 
-		TagTester dropDownChoiceOptionTagTester = createTagByAttribute(lastResponseAsString, "value", "apple\" onmouseover=\"alert('hi');\" \"");
+		TagTester dropDownChoiceOptionTagTester = createTagByAttribute(lastResponseAsString, "value",
+			"apple\" onmouseover=\"alert('hi');\" \"");
 		assertNotNull(dropDownChoiceOptionTagTester);
 		assertNull(dropDownChoiceOptionTagTester.getAttribute("onmouseover"));
 
@@ -49,7 +50,8 @@ class EscapeAttributesInChoicesTest extends WicketTestCase
 		assertEquals("apple\" onmouseover=\"alert('hi');\" \"", checkBoxMultipleChoiceTagTester.getAttribute("value"));
 		assertNull(checkBoxMultipleChoiceTagTester.getAttribute("onmouseover"));
 
-		TagTester labelForCheckBoxMultipleChoiceTagTester = createTagByAttribute(lastResponseAsString, "for", "checkboxfield2-checkboxfield_apple\" onmouseover=\"alert('hi');\" \"");
+		TagTester labelForCheckBoxMultipleChoiceTagTester = createTagByAttribute(lastResponseAsString, "for",
+			"checkboxfield2-checkboxfield_apple\" onmouseover=\"alert('hi');\" \"");
 		assertNotNull(labelForCheckBoxMultipleChoiceTagTester);
 		assertNull(labelForCheckBoxMultipleChoiceTagTester.getAttribute("onmouseover"));
 	}

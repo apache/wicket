@@ -36,9 +36,9 @@ public class NestedFoldersTest
 	public void escapedName() throws IOException
 	{
 		NestedFolders folders = new NestedFolders(Files.createTempDirectory(null).toFile());
-		
+
 		File sessionFolder = folders.get("x*x/x:x", false);
-		
+
 		assertEquals("x_x_x_x", sessionFolder.getName());
 	}
 
@@ -84,7 +84,7 @@ public class NestedFoldersTest
 
 		// create additional folder inside the nested folders
 		new File(sessionFolder.getParentFile().getParentFile(), "2345").mkdirs();
-		
+
 		folders.remove(sessionId);
 
 		// assert that the 'sessionId' folder and the parent one level up are removed

@@ -31,112 +31,112 @@ import jakarta.websocket.Session;
  */
 class JavaxWebSocketSession implements IWebSocketSession
 {
-    private final Session session;
+	private final Session session;
 
-    JavaxWebSocketSession(Session session)
-    {
-        this.session = session;
-    }
+	JavaxWebSocketSession(Session session)
+	{
+		this.session = session;
+	}
 
-    @Override
-    public String getProtocolVersion()
-    {
-        return session.getProtocolVersion();
-    }
+	@Override
+	public String getProtocolVersion()
+	{
+		return session.getProtocolVersion();
+	}
 
-    @Override
-    public String getNegotiatedSubprotocol()
-    {
-        return session.getNegotiatedSubprotocol();
-    }
+	@Override
+	public String getNegotiatedSubprotocol()
+	{
+		return session.getNegotiatedSubprotocol();
+	}
 
-    @Override
-    public boolean isSecure()
-    {
-        return session.isSecure();
-    }
+	@Override
+	public boolean isSecure()
+	{
+		return session.isSecure();
+	}
 
-    @Override
-    public boolean isOpen()
-    {
-        return session.isOpen();
-    }
+	@Override
+	public boolean isOpen()
+	{
+		return session.isOpen();
+	}
 
-    @Override
-    public long getMaxIdleTimeout()
-    {
-        return session.getMaxIdleTimeout();
-    }
+	@Override
+	public long getMaxIdleTimeout()
+	{
+		return session.getMaxIdleTimeout();
+	}
 
-    @Override
-    public void setMaxIdleTimeout(long milliseconds)
-    {
-        session.setMaxIdleTimeout(milliseconds);
-    }
+	@Override
+	public void setMaxIdleTimeout(long milliseconds)
+	{
+		session.setMaxIdleTimeout(milliseconds);
+	}
 
-    @Override
-    public void setMaxBinaryMessageBufferSize(int length)
-    {
-        session.setMaxBinaryMessageBufferSize(length);
-    }
+	@Override
+	public void setMaxBinaryMessageBufferSize(int length)
+	{
+		session.setMaxBinaryMessageBufferSize(length);
+	}
 
-    @Override
-    public int getMaxBinaryMessageBufferSize()
-    {
-        return session.getMaxBinaryMessageBufferSize();
-    }
+	@Override
+	public int getMaxBinaryMessageBufferSize()
+	{
+		return session.getMaxBinaryMessageBufferSize();
+	}
 
-    @Override
-    public void setMaxTextMessageBufferSize(int length)
-    {
-        session.setMaxTextMessageBufferSize(length);
-    }
+	@Override
+	public void setMaxTextMessageBufferSize(int length)
+	{
+		session.setMaxTextMessageBufferSize(length);
+	}
 
-    @Override
-    public int getMaxTextMessageBufferSize()
-    {
-        return session.getMaxTextMessageBufferSize();
-    }
+	@Override
+	public int getMaxTextMessageBufferSize()
+	{
+		return session.getMaxTextMessageBufferSize();
+	}
 
-    @Override
-    public String getId()
-    {
-        return session.getId();
-    }
+	@Override
+	public String getId()
+	{
+		return session.getId();
+	}
 
-    @Override
-    public URI getRequestURI()
-    {
-        return session.getRequestURI();
-    }
+	@Override
+	public URI getRequestURI()
+	{
+		return session.getRequestURI();
+	}
 
-    @Override
-    public Map<String, List<String>> getRequestParameterMap()
-    {
-        return session.getRequestParameterMap();
-    }
+	@Override
+	public Map<String, List<String>> getRequestParameterMap()
+	{
+		return session.getRequestParameterMap();
+	}
 
-    @Override
-    public String getQueryString()
-    {
-        return session.getQueryString();
-    }
+	@Override
+	public String getQueryString()
+	{
+		return session.getQueryString();
+	}
 
-    @Override
-    public Map<String, String> getPathParameters()
-    {
-        return session.getPathParameters();
-    }
+	@Override
+	public Map<String, String> getPathParameters()
+	{
+		return session.getPathParameters();
+	}
 
-    @Override
-    public Map<String, Object> getUserProperties()
-    {
-        return session.getUserProperties();
-    }
+	@Override
+	public Map<String, Object> getUserProperties()
+	{
+		return session.getUserProperties();
+	}
 
-    @Override
-    public Principal getUserPrincipal()
-    {
-        return session.getUserPrincipal();
-    }
+	@Override
+	public Principal getUserPrincipal()
+	{
+		return session.getUserPrincipal();
+	}
 }

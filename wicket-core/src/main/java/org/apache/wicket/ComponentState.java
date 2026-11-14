@@ -50,13 +50,13 @@ final class ComponentState implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private IModel< ? > model;
+	private IModel<?> model;
 
 	private Object behaviors;
 
 	private Object metaData;
 
-	private ComponentState(IModel< ? > model, Object behaviors, Object metaData)
+	private ComponentState(IModel<?> model, Object behaviors, Object metaData)
 	{
 		this.model = model;
 		this.behaviors = behaviors;
@@ -66,7 +66,7 @@ final class ComponentState implements Serializable
 	/**
 	 * @return The model stored by this state, or null.
 	 */
-	IModel< ? > getModel()
+	IModel<?> getModel()
 	{
 		return model;
 	}
@@ -76,7 +76,7 @@ final class ComponentState implements Serializable
 	 *            the new model or null
 	 * @return the new state for the component using the rules defined above
 	 */
-	Object setModel(IModel< ? > model)
+	Object setModel(IModel<?> model)
 	{
 		this.model = model;
 		return pack();
@@ -152,7 +152,7 @@ final class ComponentState implements Serializable
 	 *            a boolean indicating if the model is set
 	 * @return the model from the given state or null
 	 */
-	static IModel< ? > getModel(Object state, boolean modelSet)
+	static IModel<?> getModel(Object state, boolean modelSet)
 	{
 		// the flag is authoritative: with no model set there is nothing to find, so the type
 		// check can be skipped entirely. Reading a model is far more common than reading the
@@ -163,9 +163,9 @@ final class ComponentState implements Serializable
 		}
 		if (state instanceof ComponentState)
 		{
-			return ((ComponentState) state).getModel();
+			return ((ComponentState)state).getModel();
 		}
-		return (IModel< ? >) state;
+		return (IModel<?>)state;
 	}
 
 	/**
@@ -179,7 +179,7 @@ final class ComponentState implements Serializable
 	{
 		if (state instanceof ComponentState)
 		{
-			return ((ComponentState) state).getBehaviors();
+			return ((ComponentState)state).getBehaviors();
 		}
 		return modelSet || !(state instanceof Behavior || state instanceof Behavior[]) ? null
 			: state;
@@ -196,7 +196,7 @@ final class ComponentState implements Serializable
 	{
 		if (state instanceof ComponentState)
 		{
-			return ((ComponentState) state).getMetaData();
+			return ((ComponentState)state).getMetaData();
 		}
 		return modelSet || !(state instanceof MetaDataEntry || state instanceof MetaDataEntry[])
 			? null : state;
@@ -213,11 +213,11 @@ final class ComponentState implements Serializable
 	 *            a boolean indicating if the model is set
 	 * @return the new component state
 	 */
-	static Object setModel(IModel< ? > model, Object state, boolean modelSet)
+	static Object setModel(IModel<?> model, Object state, boolean modelSet)
 	{
 		if (state instanceof ComponentState)
 		{
-			ComponentState compState = (ComponentState) state;
+			ComponentState compState = (ComponentState)state;
 			return compState.setModel(model);
 		}
 		else if (modelSet || state == null)
@@ -253,7 +253,7 @@ final class ComponentState implements Serializable
 	 * @return the new component state
 	 */
 	static Object addBehaviors(Component component, Object state, boolean modelSet,
-			Behavior... behaviorsToAdd)
+		Behavior... behaviorsToAdd)
 	{
 		if (behaviorsToAdd.length == 0)
 		{
@@ -261,13 +261,13 @@ final class ComponentState implements Serializable
 		}
 		else if (state instanceof ComponentState)
 		{
-			ComponentState compState = (ComponentState) state;
+			ComponentState compState = (ComponentState)state;
 			return compState
 				.setBehaviors(addBehaviors(component, compState.getBehaviors(), behaviorsToAdd));
 		}
 		else if (modelSet)
 		{
-			return new ComponentState((IModel< ? >) state,
+			return new ComponentState((IModel<?>)state,
 				addBehaviors(component, null, behaviorsToAdd), null);
 		}
 		else if (state instanceof MetaDataEntry || state instanceof MetaDataEntry[])
@@ -295,7 +295,7 @@ final class ComponentState implements Serializable
 	 * @return the remaining behaviors: null, one behavior or an array of behaviors
 	 */
 	static Object removeBehaviors(Component component, Object state, boolean modelSet,
-			Behavior... behaviorsToRemove)
+		Behavior... behaviorsToRemove)
 	{
 		Object behaviors = getBehaviors(state, modelSet);
 		if (behaviorsToRemove.length == 0)
@@ -320,7 +320,7 @@ final class ComponentState implements Serializable
 	{
 		if (state instanceof ComponentState)
 		{
-			ComponentState compState = (ComponentState) state;
+			ComponentState compState = (ComponentState)state;
 			return compState.setBehaviors(behaviors);
 		}
 		else if (state instanceof Behavior || state instanceof Behavior[] || state == null)
@@ -333,7 +333,7 @@ final class ComponentState implements Serializable
 		}
 		else if (modelSet)
 		{
-			return new ComponentState((IModel< ? >) state, behaviors, null);
+			return new ComponentState((IModel<?>)state, behaviors, null);
 		}
 		else
 		{
@@ -358,7 +358,7 @@ final class ComponentState implements Serializable
 	{
 		if (state instanceof ComponentState)
 		{
-			ComponentState compState = (ComponentState) state;
+			ComponentState compState = (ComponentState)state;
 			return compState.setMetaData(setMetaData(compState.getMetaData(), key, data));
 		}
 		else if (state instanceof MetaDataEntry || state instanceof MetaDataEntry[]
@@ -372,7 +372,7 @@ final class ComponentState implements Serializable
 		}
 		else if (modelSet)
 		{
-			return new ComponentState((IModel< ? >) state, null,
+			return new ComponentState((IModel<?>)state, null,
 				new MetaDataEntry<>(key, data));
 		}
 		else
@@ -397,7 +397,7 @@ final class ComponentState implements Serializable
 	}
 
 	private static Object addBehaviors(Component component, Object behaviors,
-			Behavior... behaviorsToAdd)
+		Behavior... behaviorsToAdd)
 	{
 		// nothing to add
 		if (behaviorsToAdd.length == 0)
@@ -424,7 +424,7 @@ final class ComponentState implements Serializable
 		}
 		else
 		{
-			ret[0] = (Behavior) behaviors;
+			ret[0] = (Behavior)behaviors;
 		}
 
 		// fill empty slots with behaviors to add
@@ -441,7 +441,7 @@ final class ComponentState implements Serializable
 	}
 
 	private static Object removeBehaviors(Component component, Object behaviors,
-			Behavior... behaviorsToRemove)
+		Behavior... behaviorsToRemove)
 	{
 		// nothing to remove
 		if (behaviorsToRemove.length == 0)
@@ -463,11 +463,11 @@ final class ComponentState implements Serializable
 			{
 				throw cannotRemove(behaviorsToRemove[1]);
 			}
-			unbindBehavior(component, (Behavior) behaviors);
+			unbindBehavior(component, (Behavior)behaviors);
 			return null;
 		}
 
-		Behavior[] behaviorArr = (Behavior[]) behaviors;
+		Behavior[] behaviorArr = (Behavior[])behaviors;
 		for (Behavior behaviorToRemove : behaviorsToRemove)
 		{
 			boolean found = false;
@@ -513,7 +513,7 @@ final class ComponentState implements Serializable
 		{
 			return 0;
 		}
-		return behaviors instanceof Behavior[] ? ((Behavior[]) behaviors).length : 1;
+		return behaviors instanceof Behavior[] ? ((Behavior[])behaviors).length : 1;
 	}
 
 	private static int getEmptyBehaviorsSlots(Object behaviors)
@@ -522,7 +522,7 @@ final class ComponentState implements Serializable
 		{
 			return 0;
 		}
-		Behavior[] arr = (Behavior[]) behaviors;
+		Behavior[] arr = (Behavior[])behaviors;
 		int emptyCount = 0;
 		for (Behavior curBehavior : arr)
 		{
@@ -549,7 +549,7 @@ final class ComponentState implements Serializable
 		}
 		else if (metadata instanceof MetaDataEntry)
 		{
-			MetaDataEntry< ? > curEntry = (MetaDataEntry< ? >) metadata;
+			MetaDataEntry<?> curEntry = (MetaDataEntry<?>)metadata;
 			if (curEntry.key.equals(key))
 			{
 				if (data == null)
@@ -570,8 +570,8 @@ final class ComponentState implements Serializable
 				}
 				else
 				{
-					MetaDataEntry< ? >[] ret = new MetaDataEntry< ? >[2];
-					ret[0] = (MetaDataEntry< ? >) metadata;
+					MetaDataEntry<?>[] ret = new MetaDataEntry<?>[2];
+					ret[0] = (MetaDataEntry<?>)metadata;
 					ret[1] = new MetaDataEntry<>(key, data);
 					return ret;
 				}
@@ -579,10 +579,10 @@ final class ComponentState implements Serializable
 		}
 		else
 		{
-			MetaDataEntry< ? >[] metadataArr = (MetaDataEntry< ? >[]) metadata;
+			MetaDataEntry<?>[] metadataArr = (MetaDataEntry<?>[])metadata;
 			for (int i = 0; i < metadataArr.length; i++)
 			{
-				MetaDataEntry< ? > curEntry = metadataArr[i];
+				MetaDataEntry<?> curEntry = metadataArr[i];
 				if (curEntry.key.equals(key))
 				{
 					if (data == null)
@@ -593,8 +593,7 @@ final class ComponentState implements Serializable
 						}
 						else
 						{
-							MetaDataEntry< ? >[] ret =
-								new MetaDataEntry< ? >[metadataArr.length - 1];
+							MetaDataEntry<?>[] ret = new MetaDataEntry<?>[metadataArr.length - 1];
 							System.arraycopy(metadataArr, 0, ret, 0, i);
 							System.arraycopy(metadataArr, i + 1, ret, i, ret.length - i);
 							return ret;
@@ -611,7 +610,7 @@ final class ComponentState implements Serializable
 			{
 				return metadataArr;
 			}
-			MetaDataEntry< ? >[] ret = new MetaDataEntry< ? >[metadataArr.length + 1];
+			MetaDataEntry<?>[] ret = new MetaDataEntry<?>[metadataArr.length + 1];
 			System.arraycopy(metadataArr, 0, ret, 0, metadataArr.length);
 			ret[metadataArr.length] = new MetaDataEntry<>(key, data);
 			return ret;
@@ -625,12 +624,12 @@ final class ComponentState implements Serializable
 		{
 			if (id == 0)
 			{
-				return (Behavior) behaviors;
+				return (Behavior)behaviors;
 			}
 		}
 		else if (behaviors instanceof Behavior[])
 		{
-			Behavior[] behaviorsArr = (Behavior[]) behaviors;
+			Behavior[] behaviorsArr = (Behavior[])behaviors;
 			if (behaviorsArr.length > id && behaviorsArr[id] != null)
 			{
 				return behaviorsArr[id];
@@ -648,7 +647,7 @@ final class ComponentState implements Serializable
 		}
 		else if (behaviors instanceof Behavior[])
 		{
-			Behavior[] behaviorsArr = (Behavior[]) behaviors;
+			Behavior[] behaviorsArr = (Behavior[])behaviors;
 			for (int i = 0; i < behaviorsArr.length; i++)
 			{
 				if (behavior.equals(behaviorsArr[i]))
@@ -675,18 +674,18 @@ final class ComponentState implements Serializable
 		{
 			if (type == null || type.isInstance(behaviors))
 			{
-				return List.of((M) behaviors);
+				return List.of((M)behaviors);
 			}
 			return List.of();
 		}
 
-		Behavior[] behaviorsArr = (Behavior[]) behaviors;
+		Behavior[] behaviorsArr = (Behavior[])behaviors;
 		List<M> subset = new ArrayList<>(behaviorsArr.length);
 		for (Behavior curBehavior : behaviorsArr)
 		{
 			if (curBehavior != null && (type == null || type.isInstance(curBehavior)))
 			{
-				subset.add((M) curBehavior);
+				subset.add((M)curBehavior);
 			}
 		}
 		if (subset.isEmpty())
@@ -701,11 +700,11 @@ final class ComponentState implements Serializable
 		Object behaviors = getBehaviors(state, modelSet);
 		if (behaviors instanceof Behavior)
 		{
-			((Behavior) behaviors).onRemove(component);
+			((Behavior)behaviors).onRemove(component);
 		}
 		else if (behaviors instanceof Behavior[])
 		{
-			Behavior[] behaviorsArr = (Behavior[]) behaviors;
+			Behavior[] behaviorsArr = (Behavior[])behaviors;
 			for (Behavior curBehavior : behaviorsArr)
 			{
 				if (curBehavior != null)
@@ -717,7 +716,7 @@ final class ComponentState implements Serializable
 	}
 
 	static Object compactBehaviors(Component component, Object state, boolean modelSet,
-			boolean fixedIds)
+		boolean fixedIds)
 	{
 		if (fixedIds)
 		{
@@ -729,7 +728,7 @@ final class ComponentState implements Serializable
 			return state;
 		}
 
-		Behavior[] behaviorsArr = (Behavior[]) behaviors;
+		Behavior[] behaviorsArr = (Behavior[])behaviors;
 		int setIndex = 0;
 		int endIndex = behaviorsArr.length - 1;
 		int checkIndex = 0;
@@ -783,12 +782,12 @@ final class ComponentState implements Serializable
 	 * @return the remaining behaviors: null, one behavior or an array of behaviors
 	 */
 	static Object detachBehaviors(Component component, Object state, boolean modelSet,
-			boolean fixedIds)
+		boolean fixedIds)
 	{
 		Object behaviors = getBehaviors(state, modelSet);
 		if (behaviors instanceof Behavior)
 		{
-			Behavior behavior = (Behavior) behaviors;
+			Behavior behavior = (Behavior)behaviors;
 			behavior.detach(component);
 			if (behavior.isTemporary(component))
 			{
@@ -802,7 +801,7 @@ final class ComponentState implements Serializable
 			// remove temporary behaviors and compact the array
 			int highestId = -1;
 			int filledSlots = 0;
-			Behavior[] behaviorsArr = (Behavior[]) behaviors;
+			Behavior[] behaviorsArr = (Behavior[])behaviors;
 
 			// iterate over all behaviors, detaching them and removing temporary behaviors
 			// remaining behaviors are counted and for stateful behaviors slots assigned

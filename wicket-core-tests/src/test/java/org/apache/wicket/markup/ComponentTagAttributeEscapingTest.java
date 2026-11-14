@@ -63,7 +63,7 @@ class ComponentTagAttributeEscapingTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-        public ButtonValuePage()
+		public ButtonValuePage()
 		{
 			add(new Button("button"));
 			add(new Link<Void>("link")

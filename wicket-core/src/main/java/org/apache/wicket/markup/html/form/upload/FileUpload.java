@@ -95,10 +95,10 @@ public class FileUpload
 	 */
 	public byte[] getBytes()
 	{
-		try 
+		try
 		{
 			return item.get();
-		} 
+		}
 		catch (IOException e)
 		{
 			throw new WicketRuntimeException(e);

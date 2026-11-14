@@ -67,7 +67,8 @@ class FormParentDisabledRawInputTest extends WicketTestCase
 	/**
 	 */
 	@Test
-	void disabledParent() {
+	void disabledParent()
+	{
 		TestPage page = new TestPage();
 		page.enabled = false;
 		tester.startPage(page);

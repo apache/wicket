@@ -144,7 +144,8 @@ public class AjaxPagingNavigator extends PagingNavigator
 		while (container instanceof AbstractRepeater || container.getOutputMarkupId() == false)
 		{
 			Component parent = container.getParent();
-			if (parent == null) {
+			if (parent == null)
+			{
 				break;
 			}
 			container = parent;

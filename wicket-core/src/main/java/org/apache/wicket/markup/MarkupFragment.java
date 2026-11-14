@@ -207,21 +207,25 @@ public class MarkupFragment extends AbstractMarkupFragment
 	@Override
 	public Iterator<MarkupElement> iterator()
 	{
-		return new Iterator<MarkupElement>() {
+		return new Iterator<MarkupElement>()
+		{
 			int index = 0;
 
 			@Override
-			public boolean hasNext() {
+			public boolean hasNext()
+			{
 				return index < size;
 			}
 
 			@Override
-			public MarkupElement next() {
+			public MarkupElement next()
+			{
 				return get(index++);
 			}
 
 			@Override
-			public void remove() {
+			public void remove()
+			{
 				throw new UnsupportedOperationException("Cannot remove");
 			}
 		};

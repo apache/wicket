@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.text.ParseException;
 
 
-
 /**
  * The interface of a streaming XML parser as required by Wicket.
  * 

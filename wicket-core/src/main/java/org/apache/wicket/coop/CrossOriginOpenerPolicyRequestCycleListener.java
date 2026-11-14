@@ -81,7 +81,7 @@ public class CrossOriginOpenerPolicyRequestCycleListener implements IRequestCycl
 		final Object containerRequest = cycle.getRequest().getContainerRequest();
 		if (containerRequest instanceof HttpServletRequest)
 		{
-			HttpServletRequest request = (HttpServletRequest) containerRequest;
+			HttpServletRequest request = (HttpServletRequest)containerRequest;
 			String path = request.getContextPath();
 
 			if (coopConfig.getExemptions().contains(path))
@@ -92,7 +92,7 @@ public class CrossOriginOpenerPolicyRequestCycleListener implements IRequestCycl
 
 			if (cycle.getResponse() instanceof WebResponse)
 			{
-				WebResponse webResponse = (WebResponse) cycle.getResponse();
+				WebResponse webResponse = (WebResponse)cycle.getResponse();
 				if (webResponse.isHeaderSupported())
 				{
 					webResponse.setHeader(COOP_HEADER, coopConfig.getHeaderValue());

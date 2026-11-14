@@ -31,8 +31,7 @@ import org.apache.wicket.util.string.Strings;
  * @see <a href=
  *      "https://developer.mozilla.org/en-US/docs/Web/Security/CSP">https://developer.mozilla.org/en-US/docs/Web/Security/CSP</a>
  */
-public enum CSPDirective
-{
+public enum CSPDirective {
 	DEFAULT_SRC("default-src"),
 	SCRIPT_SRC("script-src"),
 	SCRIPT_SRC_ATTR("script-src-attr"),
@@ -56,15 +55,14 @@ public enum CSPDirective
 	 */
 	FRAME_SRC("frame-src"),
 	FORM_ACTION("form-action"),
-	SANDBOX("sandbox")
-	{
+	SANDBOX("sandbox") {
 		/**
 		 * Only allow {@link CSPDirectiveSandboxValue} for the {@code 'sandbox'} directive and block
 		 * conflicting options.
 		 */
 		@Override
 		public void checkValueForDirective(CSPRenderable value,
-				List<CSPRenderable> existingDirectiveValues)
+			List<CSPRenderable> existingDirectiveValues)
 		{
 			if (!existingDirectiveValues.isEmpty())
 			{
@@ -90,14 +88,13 @@ public enum CSPDirective
 			}
 		}
 	},
-	REPORT_URI("report-uri")
-	{
+	REPORT_URI("report-uri") {
 		/**
 		 * Only allow URI, and only one.
 		 */
 		@Override
 		public void checkValueForDirective(CSPRenderable value,
-				List<CSPRenderable> existingDirectiveValues)
+			List<CSPRenderable> existingDirectiveValues)
 		{
 			if (!existingDirectiveValues.isEmpty())
 			{
@@ -149,7 +146,7 @@ public enum CSPDirective
 	 *             if the given value is invalid.
 	 */
 	public void checkValueForDirective(CSPRenderable value,
-			List<CSPRenderable> existingDirectiveValues)
+		List<CSPRenderable> existingDirectiveValues)
 	{
 		if (!existingDirectiveValues.isEmpty())
 		{
@@ -173,7 +170,7 @@ public enum CSPDirective
 		{
 			throw new IllegalArgumentException(
 				"A -src directive can't contain any of the sandbox directive values, like "
-						+ value);
+					+ value);
 		}
 
 		value.checkValidityForSrc();

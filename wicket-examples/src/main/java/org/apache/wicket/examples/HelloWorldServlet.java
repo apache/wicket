@@ -34,14 +34,14 @@ public class HelloWorldServlet extends HttpServlet
 {
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
-			IOException
+		IOException
 	{
 		res.setContentType("text/html");
 		PrintWriter out = res.getWriter();
 		String message = "Hi. " +
-				(Session.exists()
-						? " I know Wicket session " + Session.get() + "."
-						: " I can't find a Wicket session.");
+			(Session.exists()
+				? " I know Wicket session " + Session.get() + "."
+				: " I can't find a Wicket session.");
 		out.println(message);
 		out.close();
 	}

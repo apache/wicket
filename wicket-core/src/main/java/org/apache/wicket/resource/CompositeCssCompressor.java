@@ -82,7 +82,8 @@ public class CompositeCssCompressor implements IScopeAwareTextResourceProcessor,
 	@Override
 	public String compress(String original)
 	{
-		throw new UnsupportedOperationException(CompositeCssCompressor.class.getSimpleName() + ".process() should be used instead!");
+		throw new UnsupportedOperationException(CompositeCssCompressor.class.getSimpleName()
+			+ ".process() should be used instead!");
 	}
 
 	/**

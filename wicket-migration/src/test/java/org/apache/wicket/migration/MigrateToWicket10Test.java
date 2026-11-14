@@ -30,31 +30,34 @@ import static org.openrewrite.java.Assertions.java;
 import static org.openrewrite.java.Assertions.mavenProject;
 import static org.openrewrite.maven.Assertions.pomXml;
 
-class MigrateToWicket10Test implements RewriteTest {
+class MigrateToWicket10Test implements RewriteTest
+{
 
-    @Override
-    public void defaults(RecipeSpec spec) {
-        spec
-                .parser(JavaParser.fromJavaVersion()
-                        .logCompilationWarningsAndErrors(true)
-                        .classpath("rewrite-migrate-java"))
-                .recipe(Environment.builder()
-                        .scanRuntimeClasspath()
-                        .build()
-                        .activateRecipes("org.apache.wicket.MigrateToWicket10"));
-    }
+	@Override
+	public void defaults(RecipeSpec spec)
+	{
+		spec
+			.parser(JavaParser.fromJavaVersion()
+				.logCompilationWarningsAndErrors(true)
+				.classpath("rewrite-migrate-java"))
+			.recipe(Environment.builder()
+				.scanRuntimeClasspath()
+				.build()
+				.activateRecipes("org.apache.wicket.MigrateToWicket10"));
+	}
 
-    @Test
-    void migrateImports() {
-        //language=java
-        rewriteRun(
-                java("""
+	@Test
+	void migrateImports()
+	{
+		//language=java
+		rewriteRun(
+			java("""
                         package org.apache.wicket.http2.markup.head;
 
                         public class PushHeaderItem {
                         }
                         """),
-                java("""
+			java("""
                                 package sample.wicket;
                                                                 
                                 import org.apache.wicket.http2.markup.head.PushHeaderItem;
@@ -63,7 +66,7 @@ class MigrateToWicket10Test implements RewriteTest {
                                    PushHeaderItem item;
                                 }
                                 """,
-                        """
+				"""
                                 package sample.wicket;
                                                                 
                                 import org.apache.wicket.markup.head.http2.PushHeaderItem;
@@ -71,17 +74,16 @@ class MigrateToWicket10Test implements RewriteTest {
                                 class ATest {
                                    PushHeaderItem item;
                                 }
-                                """
-                )
-        );
-    }
+                                """));
+	}
 
-    @Test
-    void migrateDependencies() {
-        //language=xml
-        rewriteRun(
-                mavenProject("any-project",
-                        pomXml("""
+	@Test
+	void migrateDependencies()
+	{
+		//language=xml
+		rewriteRun(
+			mavenProject("any-project",
+				pomXml("""
                                         <project>
                                             <modelVersion>4.0.0</modelVersion>
                                             <groupId>com.example</groupId>
@@ -101,10 +103,10 @@ class MigrateToWicket10Test implements RewriteTest {
                                             </dependencies>
                                         </project>
                                         """,
-                                spec -> spec.after(pom -> {
-                                    Matcher version = Pattern.compile("<version>(10\\.[^<]+)</version>").matcher(pom);
-                                    assertThat(version.find()).describedAs("Expected 10.x in %s", pom).isTrue();
-                                    return String.format("""
+					spec -> spec.after(pom -> {
+						Matcher version = Pattern.compile("<version>(10\\.[^<]+)</version>").matcher(pom);
+						assertThat(version.find()).describedAs("Expected 10.x in %s", pom).isTrue();
+						return String.format("""
                                             <project>
                                                 <modelVersion>4.0.0</modelVersion>
                                                 <groupId>com.example</groupId>
@@ -122,18 +124,16 @@ class MigrateToWicket10Test implements RewriteTest {
                                                 </dependencies>
                                             </project>
                                             """, version.group(1));
-                                })
-                        )
-                )
-        );
-    }
+					}))));
+	}
 
-    @Test
-    void migrateExperimentalMetrics() {
-        //language=xml
-        rewriteRun(
-                mavenProject("any-project",
-                        pomXml("""
+	@Test
+	void migrateExperimentalMetrics()
+	{
+		//language=xml
+		rewriteRun(
+			mavenProject("any-project",
+				pomXml("""
                                         <project>
                                             <modelVersion>4.0.0</modelVersion>
                                             <groupId>com.example</groupId>
@@ -148,10 +148,10 @@ class MigrateToWicket10Test implements RewriteTest {
                                             </dependencies>
                                         </project>
                                         """,
-                                spec -> spec.after(pom -> {
-                                    Matcher version = Pattern.compile("<version>(10\\.[^<]+)</version>").matcher(pom);
-                                    assertThat(version.find()).describedAs("Expected 10.x in %s", pom).isTrue();
-                                    return String.format("""
+					spec -> spec.after(pom -> {
+						Matcher version = Pattern.compile("<version>(10\\.[^<]+)</version>").matcher(pom);
+						assertThat(version.find()).describedAs("Expected 10.x in %s", pom).isTrue();
+						return String.format("""
                                             <project>
                                                 <modelVersion>4.0.0</modelVersion>
                                                 <groupId>com.example</groupId>
@@ -169,10 +169,7 @@ class MigrateToWicket10Test implements RewriteTest {
                                                 </dependencies>
                                             </project>
                                             """, version.group(1));
-                                })
-                        )
-                )
-        );
-    }
+					}))));
+	}
 
 }
