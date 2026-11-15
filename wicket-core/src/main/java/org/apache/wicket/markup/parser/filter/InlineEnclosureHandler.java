@@ -109,7 +109,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 				{
 					if (Strings.isEmpty(htmlId))
 					{
-						String id = getWicketNamespace() + "_" + INLINE_ENCLOSURE_ID_PREFIX + 
+						String id = getWicketNamespace() + "_" + INLINE_ENCLOSURE_ID_PREFIX +
 							getRequestUniqueId();
 						tag.setId(id);
 					}
@@ -209,7 +209,8 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 		return null;
 	}
 
-	private String getInlineEnclosureAttributeName(MarkupStream markupStream) {
+	private String getInlineEnclosureAttributeName(MarkupStream markupStream)
+	{
 		return getWicketNamespace(markupStream) + ':' + INLINE_ENCLOSURE_ATTRIBUTE_NAME;
 	}
 

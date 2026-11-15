@@ -89,8 +89,7 @@ public class ComponentStateBenchmark
 	};
 
 	/** One ingredient of a {@link Shape}. */
-	enum Trait
-	{
+	enum Trait {
 		/** A default model. */
 		MODEL,
 		/** A behavior that never needs an id, the way an {@link AttributeModifier} does not. */
@@ -114,8 +113,7 @@ public class ComponentStateBenchmark
 	}
 
 	/** The shapes the flexible state of a component can take. */
-	public enum Shape
-	{
+	public enum Shape {
 		NONE,
 		MODEL(Trait.MODEL),
 		BEHAVIOR(Trait.BEHAVIOR),

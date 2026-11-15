@@ -35,71 +35,89 @@ import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.Test;
 
-class HashBasedResourceReferenceMapperTest {
+class HashBasedResourceReferenceMapperTest
+{
 
-    public static class OtherPage extends DummyHomePage
-    {
-        private static final JavaScriptResourceReference JAVA_SCRIPT_RESOURCE_REFERENCE = new JavaScriptResourceReference(OtherPage.class, "a.js");
-        private static final CssResourceReference CSS_RESOURCE_REFERENCE = new CssResourceReference(OtherPage.class, "b.css");
+	public static class OtherPage extends DummyHomePage
+	{
+		private static final JavaScriptResourceReference JAVA_SCRIPT_RESOURCE_REFERENCE = new JavaScriptResourceReference(
+			OtherPage.class, "a.js");
+		private static final CssResourceReference CSS_RESOURCE_REFERENCE = new CssResourceReference(OtherPage.class,
+			"b.css");
 
-    }
+	}
 
-    public static class HomePage extends DummyHomePage
-    {
-        private static final JavaScriptResourceReference JAVA_SCRIPT_RESOURCE_REFERENCE = new JavaScriptResourceReference(HomePage.class, "a.js");
-        private static final CssResourceReference CSS_RESOURCE_REFERENCE = new CssResourceReference(HomePage.class, "b.css");
+	public static class HomePage extends DummyHomePage
+	{
+		private static final JavaScriptResourceReference JAVA_SCRIPT_RESOURCE_REFERENCE = new JavaScriptResourceReference(
+			HomePage.class, "a.js");
+		private static final CssResourceReference CSS_RESOURCE_REFERENCE = new CssResourceReference(HomePage.class,
+			"b.css");
 
-        @Override
-        public void renderHead(IHeaderResponse response) {
-            response.render(JavaScriptHeaderItem.forReference(JAVA_SCRIPT_RESOURCE_REFERENCE));
-            response.render(JavaScriptHeaderItem.forReference(OtherPage.JAVA_SCRIPT_RESOURCE_REFERENCE));
-            response.render(CssHeaderItem.forReference(CSS_RESOURCE_REFERENCE));
-            response.render(CssHeaderItem.forReference(OtherPage.CSS_RESOURCE_REFERENCE));
-        }
-    }
+		@Override
+		public void renderHead(IHeaderResponse response)
+		{
+			response.render(JavaScriptHeaderItem.forReference(JAVA_SCRIPT_RESOURCE_REFERENCE));
+			response.render(JavaScriptHeaderItem.forReference(OtherPage.JAVA_SCRIPT_RESOURCE_REFERENCE));
+			response.render(CssHeaderItem.forReference(CSS_RESOURCE_REFERENCE));
+			response.render(CssHeaderItem.forReference(OtherPage.CSS_RESOURCE_REFERENCE));
+		}
+	}
 
-    @Test
-    void withJavaHash() {
-        final WebApplication dummyApplication = new DummyApplication() {
-            @Override
-            public Class<? extends Page> getHomePage() {
-                return HomePage.class;
-            }
+	@Test
+	void withJavaHash()
+	{
+		final WebApplication dummyApplication = new DummyApplication()
+		{
+			@Override
+			public Class<? extends Page> getHomePage()
+			{
+				return HomePage.class;
+			}
 
-            @Override
-            protected IMapperContext newMapperContext() {
-                return new DefaultMapperContext(this) {
-                    @Override
-                    public String getNamespace() {
-                        // we want to hide wicket from URL.
-                        return "appres";
-                    }
-                };
-            }
+			@Override
+			protected IMapperContext newMapperContext()
+			{
+				return new DefaultMapperContext(this)
+				{
+					@Override
+					public String getNamespace()
+					{
+						// we want to hide wicket from URL.
+						return "appres";
+					}
+				};
+			}
 
 
-            @Override
-            protected void init() {
-                super.init();
-                setRootRequestMapper(new SystemMapper(this) {
-                    @Override
-                    protected IRequestMapper newResourceReferenceMapper(PageParametersEncoder pageParametersEncoder, ParentFolderPlaceholderProvider parentFolderPlaceholderProvider, Supplier<IResourceCachingStrategy> resourceCachingStrategy, Application application) {
-                        return HashBasedResourceReferenceMapper.withJavaHash(pageParametersEncoder, parentFolderPlaceholderProvider, resourceCachingStrategy, false);
-                    }
-                });
-            }
-        };
+			@Override
+			protected void init()
+			{
+				super.init();
+				setRootRequestMapper(new SystemMapper(this)
+				{
+					@Override
+					protected IRequestMapper newResourceReferenceMapper(PageParametersEncoder pageParametersEncoder,
+						ParentFolderPlaceholderProvider parentFolderPlaceholderProvider,
+						Supplier<IResourceCachingStrategy> resourceCachingStrategy, Application application)
+					{
+						return HashBasedResourceReferenceMapper.withJavaHash(pageParametersEncoder,
+							parentFolderPlaceholderProvider, resourceCachingStrategy, false);
+					}
+				});
+			}
+		};
 
-        final WicketTester tester = new WicketTester(dummyApplication);
-        long hash = HomePage.class.getName().hashCode();
-        long hash1 = OtherPage.class.getName().hashCode();
-        tester.startPage(HomePage.class);
-        tester.assertRenderedPage(HomePage.class);
-        // we check resource urls are hash encoded
-        tester.assertContains("./appres/resource/" + hash + "/a.js");
-        tester.assertContains("./appres/resource/" + hash1 + "/a.js");
-        tester.assertContains("./appres/resource/" + hash + "/b.css");
-        tester.assertContains("./appres/resource/" + hash1 + "/b.css");
-        tester.destroy();
-    }
+		final WicketTester tester = new WicketTester(dummyApplication);
+		long hash = HomePage.class.getName().hashCode();
+		long hash1 = OtherPage.class.getName().hashCode();
+		tester.startPage(HomePage.class);
+		tester.assertRenderedPage(HomePage.class);
+		// we check resource urls are hash encoded
+		tester.assertContains("./appres/resource/" + hash + "/a.js");
+		tester.assertContains("./appres/resource/" + hash1 + "/a.js");
+		tester.assertContains("./appres/resource/" + hash + "/b.css");
+		tester.assertContains("./appres/resource/" + hash1 + "/b.css");
+		tester.destroy();
+	}
 }

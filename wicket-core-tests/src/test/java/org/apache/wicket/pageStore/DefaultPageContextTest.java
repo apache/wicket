@@ -40,28 +40,32 @@ class DefaultPageContextTest extends WicketTestCase
 	{
 	};
 
-	MockSessionStore sessionStore = new MockSessionStore() {
-		public void setAttribute(Request request, String name, Serializable value) {
+	MockSessionStore sessionStore = new MockSessionStore()
+	{
+		public void setAttribute(Request request, String name, Serializable value)
+		{
 			super.setAttribute(request, name, value);
-			
+
 			attributeSet = true;
 		}
-		
-		public void flushSession(Request request, Session session) {
+
+		public void flushSession(Request request, Session session)
+		{
 			super.flushSession(request, session);
-			
+
 			sessionFlushed = true;
 		}
 	};
-	
+
 	private boolean attributeSet;
-	
+
 	private boolean sessionFlushed;
-	
+
 	@Override
 	protected WebApplication newApplication()
 	{
-		return new MockApplication() {
+		return new MockApplication()
+		{
 			@Override
 			protected void init()
 			{
@@ -71,13 +75,13 @@ class DefaultPageContextTest extends WicketTestCase
 			}
 		};
 	}
-	
+
 	@Test
 	void testAttribute()
 	{
 		var context = new DefaultPageContext();
-		
-		assertEquals(null, context.<String>getSessionAttribute(KEY, null));
+
+		assertEquals(null, context.<String> getSessionAttribute(KEY, null));
 		assertFalse(attributeSet);
 	}
 
@@ -85,8 +89,8 @@ class DefaultPageContextTest extends WicketTestCase
 	void testAttributeWithDefault()
 	{
 		var context = new DefaultPageContext();
-		
-		assertEquals("FOO", context.<String>getSessionAttribute(KEY, () -> {
+
+		assertEquals("FOO", context.<String> getSessionAttribute(KEY, () -> {
 			return "FOO";
 		}));
 		assertTrue(attributeSet);
@@ -97,10 +101,10 @@ class DefaultPageContextTest extends WicketTestCase
 	{
 		tester.getSession().bind();
 		tester.getSession().setAttribute(KEY, "EXISTS");
-		
+
 		var context = new DefaultPageContext();
-		
-		assertEquals("EXISTS", context.<String>getSessionAttribute(KEY, () -> {
+
+		assertEquals("EXISTS", context.<String> getSessionAttribute(KEY, () -> {
 			return "FOO";
 		}));
 		assertTrue(attributeSet);
@@ -110,9 +114,9 @@ class DefaultPageContextTest extends WicketTestCase
 	void testData()
 	{
 		var context = new DefaultPageContext();
-		
-		assertEquals(null, context.<String>getSessionData(DATA_KEY, null));
-		
+
+		assertEquals(null, context.<String> getSessionData(DATA_KEY, null));
+
 		tester.getSession().internalDetach();
 		assertFalse(sessionFlushed);
 	}
@@ -121,8 +125,8 @@ class DefaultPageContextTest extends WicketTestCase
 	void testDataWithDefault()
 	{
 		var context = new DefaultPageContext();
-		
-		assertEquals("FOO", context.<String>getSessionData(DATA_KEY, () -> {
+
+		assertEquals("FOO", context.<String> getSessionData(DATA_KEY, () -> {
 			return "FOO";
 		}));
 		tester.getSession().internalDetach();
@@ -134,10 +138,10 @@ class DefaultPageContextTest extends WicketTestCase
 	{
 		tester.getSession().setMetaData(DATA_KEY, "EXISTS");
 		tester.getSession().bind();
-		
+
 		var context = new DefaultPageContext();
-		
-		assertEquals("EXISTS", context.<String>getSessionData(DATA_KEY, () -> {
+
+		assertEquals("EXISTS", context.<String> getSessionData(DATA_KEY, () -> {
 			return "FOO";
 		}));
 		tester.getSession().internalDetach();

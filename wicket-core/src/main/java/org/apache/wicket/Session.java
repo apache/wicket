@@ -110,7 +110,12 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Session implements IClusterable, IEventSink, IMetadataContext<Serializable, Session>, IFeedbackContributor
+public abstract class Session
+	implements
+		IClusterable,
+		IEventSink,
+		IMetadataContext<Serializable, Session>,
+		IFeedbackContributor
 {
 	private static final long serialVersionUID = 1L;
 
@@ -122,7 +127,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	{
 		private static final long serialVersionUID = 1L;
 	};
-	
+
 	/** records if session has been invalidated by the current request */
 	private static final MetaDataKey<Boolean> SESSION_INVALIDATED = new MetaDataKey<>()
 	{
@@ -138,8 +143,9 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 * A regular expression for matching right-to-left language codes. See
 	 * {@link #isRtlLanguage} for the design.
 	 */
-	private static final Pattern RTL_LOCALE_RE = Pattern.compile("^(ar|dv|he|iw|fa|nqo|ps|sd|ug|ur|yi|.*[-_](Arab|Hebr|Thaa|Nkoo|Tfng))"
-					+ "(?!.*[-_](Latn|Cyrl)($|-|_))($|-|_)");
+	private static final Pattern RTL_LOCALE_RE = Pattern.compile(
+		"^(ar|dv|he|iw|fa|nqo|ps|sd|ug|ur|yi|.*[-_](Arab|Hebr|Thaa|Nkoo|Tfng))"
+			+ "(?!.*[-_](Latn|Cyrl)($|-|_))($|-|_)");
 
 	/** a sequence used for whenever something session-specific needs a unique value */
 	private final AtomicInteger sequence = new AtomicInteger(1);
@@ -220,7 +226,8 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 * @param locale - locale to check
 	 * @return <code>true</code> in case passed locale is right-to-left
 	 */
-	public static boolean isRtlLanguage(final Locale locale) {
+	public static boolean isRtlLanguage(final Locale locale)
+	{
 		Args.notNull(locale, "locale");
 		return RTL_LOCALE_RE.matcher(locale.toLanguageTag()).find();
 	}
@@ -568,14 +575,14 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 */
 	public void invalidateNow()
 	{
-		if (isSessionInvalidated() == false) 
+		if (isSessionInvalidated() == false)
 		{
 			invalidate();
 		}
-		
+
 		// clear all pages possibly pending in the request
 		getPageManager().clear();
-		
+
 		destroy();
 		feedbackMessages.clear();
 		setStyle(null);
@@ -662,7 +669,8 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 *
 	 * @return <code>true</code> if language of session locale is RTL (right-to-left), <code>false</code> otherwise
 	 */
-	public boolean isRtlLocale() {
+	public boolean isRtlLocale()
+	{
 		return rtlLocale;
 	}
 
@@ -731,7 +739,8 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	/**
 	 * End the current request.
 	 */
-	public void endRequest() {
+	public void endRequest()
+	{
 		if (isSessionInvalidated())
 		{
 			invalidateNow();
@@ -742,7 +751,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 			updateId();
 		}
 	}
-	
+
 	/**
 	 * Any detach logic for session subclasses. This is called on the end of handling a request,
 	 * when the RequestCycle is about to be detached from the current thread.
@@ -989,10 +998,11 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 */
 	public final IPageManager getPageManager()
 	{
-		if (Boolean.TRUE.equals(RequestCycle.get().getMetaData(PAGES_UNLOCKED))) {
+		if (Boolean.TRUE.equals(RequestCycle.get().getMetaData(PAGES_UNLOCKED)))
+		{
 			throw new WicketRuntimeException("The request has been processed. Access to pages is no longer allowed");
 		}
-		
+
 		IPageManager manager = Application.get().internalGetPageManager();
 		return pageAccessSynchronizer.get().adapt(manager);
 	}
@@ -1016,7 +1026,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	public void onInvalidate()
 	{
 	}
-	
+
 	/**
 	 * Change the id of the underlying (Web)Session if this last one is permanent.
 	 * <p>
@@ -1030,7 +1040,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 		{
 			return;
 		}
-		
+
 		id = generateNewSessionId();
 	}
 

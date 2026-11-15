@@ -28,12 +28,12 @@ import org.junit.jupiter.api.Test;
 class AbstractRequestLoggerTest extends WicketTestCase
 {
 	private int counter;
-	
+
 	@Test
 	void foo()
 	{
 		tester.getApplication().getRequestLoggerSettings().setRequestsWindowSize(4);
-		
+
 		AbstractRequestLogger logger = new AbstractRequestLogger()
 		{
 			@Override
@@ -41,12 +41,12 @@ class AbstractRequestLoggerTest extends WicketTestCase
 			{
 			}
 		};
-		
+
 		logger.addRequest(requestData());
 		assertEquals(1, logger.getRequests().size());
 		assertEquals("0", logger.getRequests().get(0).getRequestedUrl());
 		assertEquals("0value", logger.getRequests().get(0).getUserData("someKey"));
-		
+
 		logger.addRequest(requestData());
 		assertEquals(2, logger.getRequests().size());
 		assertEquals("1", logger.getRequests().get(1).getRequestedUrl());
@@ -58,29 +58,30 @@ class AbstractRequestLoggerTest extends WicketTestCase
 		logger.addRequest(requestData());
 		assertEquals(4, logger.getRequests().size());
 		assertEquals("3", logger.getRequests().get(3).getRequestedUrl());
-		
+
 		logger.addRequest(requestData());
 		assertEquals(4, logger.getRequests().size());
 		assertEquals("4", logger.getRequests().get(3).getRequestedUrl());
-		
+
 		logger.addRequest(requestData());
 		assertEquals(4, logger.getRequests().size());
 		assertEquals("5", logger.getRequests().get(3).getRequestedUrl());
-		
+
 		logger.addRequest(requestData());
 		assertEquals(4, logger.getRequests().size());
 		assertEquals("6", logger.getRequests().get(3).getRequestedUrl());
-		
+
 		logger.addRequest(requestData());
 		assertEquals(4, logger.getRequests().size());
 		assertEquals("7", logger.getRequests().get(3).getRequestedUrl());
-		
+
 		logger.addRequest(requestData());
 		assertEquals(4, logger.getRequests().size());
 		assertEquals("8", logger.getRequests().get(3).getRequestedUrl());
-}
-	
-	private RequestData requestData() {
+	}
+
+	private RequestData requestData()
+	{
 		RequestData data = new RequestData();
 
 		data.addUserData("someKey", "" + counter + "value");

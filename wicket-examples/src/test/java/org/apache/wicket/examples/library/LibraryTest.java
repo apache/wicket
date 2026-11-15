@@ -28,9 +28,10 @@ public class LibraryTest
 	/**
 	 * Test page.
 	 *
-     */
+	 */
 	@Test
-	public void test_1() {
+	public void test_1()
+	{
 		WicketTester tester = new WicketTester(new LibraryApplication());
 		try
 		{

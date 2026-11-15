@@ -32,17 +32,19 @@ public class ConnectionRejected
 	 * @param reason
 	 *              The reason to reject the connection
 	 */
-    public ConnectionRejected(int code, String reason)
-    {
+	public ConnectionRejected(int code, String reason)
+	{
 		this.code = code;
 		this.reason = reason;
-    }
+	}
 
-	public int getCode() {
+	public int getCode()
+	{
 		return code;
 	}
 
-	public String getReason() {
+	public String getReason()
+	{
 		return reason;
 	}
 }

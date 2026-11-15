@@ -37,7 +37,7 @@ public class PushBuilder implements IPushBuilder
 	public void push(HttpServletRequest httpServletRequest, PushItem... pushItems)
 	{
 		Request request = RequestCycle.get().getRequest();
-		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
+		HttpServletRequest httpRequest = (HttpServletRequest)request.getContainerRequest();
 		jakarta.servlet.http.PushBuilder pushBuilder = httpRequest.newPushBuilder();
 		if (pushBuilder != null)
 		{
@@ -47,19 +47,22 @@ public class PushBuilder implements IPushBuilder
 				pushItem.getHeaders().entrySet().stream().forEach(pushHeader -> {
 					String key = pushHeader.getKey();
 					PushItemHeaderValue value = pushHeader.getValue();
-					if(value.getOperation() == HeaderOperation.ADD){
+					if (value.getOperation() == HeaderOperation.ADD)
+					{
 						pushBuilder.addHeader(key, value.getValue());
-					}else{
+					}
+					else
+					{
 						pushBuilder.setHeader(key, value.getValue());
 					}
 				});
-				pushBuilder.push();	
+				pushBuilder.push();
 			}
 		}
 		else
 		{
 			LOG.warn("Attempted to use HTTP2 Push but it is not supported for the current request: {}!",
-					httpRequest);
+				httpRequest);
 		}
 	}
 }

@@ -89,7 +89,8 @@ public class AjaxDownloadPage extends BasePage
 		IResource resource = new ExampleResource("downloaded via ajax")
 			.setContentDisposition(ContentDisposition.ATTACHMENT);
 
-		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource) {
+		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource)
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -379,7 +380,7 @@ public class AjaxDownloadPage extends BasePage
 		text = Model.of("");
 		Form<Void> form = new Form<>("form");
 		add(form);
-		final TextArea<String> stringTextArea =new TextArea<>("text", text);
+		final TextArea<String> stringTextArea = new TextArea<>("text", text);
 		stringTextArea.setOutputMarkupId(true);
 		form.add(stringTextArea);
 		form.add(new AjaxSubmitLink("downloadDynamicContents")
@@ -398,7 +399,8 @@ public class AjaxDownloadPage extends BasePage
 	{
 		private static final long serialVersionUID = 1L;
 
-		StaticResource() {
+		StaticResource()
+		{
 			setFileName("File-from-ResourceReference");
 			setContentDisposition(ContentDisposition.ATTACHMENT);
 			setCacheDuration(Duration.ZERO);
@@ -451,7 +453,8 @@ public class AjaxDownloadPage extends BasePage
 		}
 
 		@Override
-		protected IResourceStream getResourceStream(Attributes attributes) {
+		protected IResourceStream getResourceStream(Attributes attributes)
+		{
 			// simulate delay
 			try
 			{
@@ -462,7 +465,8 @@ public class AjaxDownloadPage extends BasePage
 			}
 
 			count++;
-			if (count == 3) {
+			if (count == 3)
+			{
 				count = 0;
 				throw new AbortWithHttpErrorCodeException(400);
 			}
@@ -470,49 +474,56 @@ public class AjaxDownloadPage extends BasePage
 			return new StringResourceStream(getContent(attributes));
 		}
 
-		protected String getContent(Attributes attributes) {
+		protected String getContent(Attributes attributes)
+		{
 			return content;
 		}
 
 	}
 
-	public static class DynamicTextFileResource extends ResourceReference {
+	public static class DynamicTextFileResource extends ResourceReference
+	{
 
 		static final String FILE_CONTENTS = "fileContents";
 
 		public static DynamicTextFileResource instance = new DynamicTextFileResource();
 
-		public DynamicTextFileResource() {
+		public DynamicTextFileResource()
+		{
 			super(AjaxDownloadPage.class, "DynamicTextFileResource");
 		}
 
-		public static PageParameters encodeText(String  text) {
+		public static PageParameters encodeText(String text)
+		{
 			PageParameters parameters = new PageParameters();
 			parameters.add(FILE_CONTENTS, text);
 			return parameters;
 		}
 
 		@Override
-		public IResource getResource() {
-			return new ExampleResource() {
+		public IResource getResource()
+		{
+			return new ExampleResource()
+			{
 				@Override
-				protected String getContent(Attributes attributes) {
+				protected String getContent(Attributes attributes)
+				{
 					String licence = "/*\n" +
-							" * Licensed to the Apache Software Foundation (ASF) under one or more\n" +
-							" * contributor license agreements.  See the NOTICE file distributed with\n" +
-							" * this work for additional information regarding copyright ownership.\n" +
-							" * The ASF licenses this file to You under the Apache License, Version 2.0\n" +
-							" * (the \"License\"); you may not use this file except in compliance with\n" +
-							" * the License.  You may obtain a copy of the License at\n" +
-							" *\n" +
-							" *      http://www.apache.org/licenses/LICENSE-2.0\n" +
-							" *\n" +
-							" * Unless required by applicable law or agreed to in writing, software\n" +
-							" * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
-							" * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
-							" * See the License for the specific language governing permissions and\n" +
-							" * limitations under the License.\n" +
-							" */ \n\n\n";
+						" * Licensed to the Apache Software Foundation (ASF) under one or more\n" +
+						" * contributor license agreements.  See the NOTICE file distributed with\n" +
+						" * this work for additional information regarding copyright ownership.\n" +
+						" * The ASF licenses this file to You under the Apache License, Version 2.0\n" +
+						" * (the \"License\"); you may not use this file except in compliance with\n" +
+						" * the License.  You may obtain a copy of the License at\n" +
+						" *\n" +
+						" *      http://www.apache.org/licenses/LICENSE-2.0\n" +
+						" *\n" +
+						" * Unless required by applicable law or agreed to in writing, software\n" +
+						" * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+						" * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+						" * See the License for the specific language governing permissions and\n" +
+						" * limitations under the License.\n" +
+						" */ \n\n\n";
 					return licence + attributes.getParameters().get(FILE_CONTENTS).toString("");
 				}
 			};

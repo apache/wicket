@@ -82,7 +82,7 @@ public class CharSequenceResource extends BaseDataResource<CharSequence>
 	@Override
 	protected Long getLength(CharSequence data)
 	{
-		return (long) Strings.lengthInBytes(data.toString(), getCharset());
+		return (long)Strings.lengthInBytes(data.toString(), getCharset());
 	}
 
 	/**

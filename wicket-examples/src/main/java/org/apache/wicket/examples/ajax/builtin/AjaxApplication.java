@@ -44,7 +44,8 @@ public class AjaxApplication extends WicketExampleApplication
 			@Override
 			public void onInitialize(Component component)
 			{
-				if (component instanceof WebPage) {
+				if (component instanceof WebPage)
+				{
 					component.add(new AjaxNewWindowNotifyingBehavior());
 				}
 			}

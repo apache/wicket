@@ -38,7 +38,7 @@ class TagTesterTest
 	private static final String MARKUP_1 = "<p id=\"test\" class=\"class1\"><span class=\"class2\" id=\"test2\">mock</span></p>";
 
 	private static final String AJAX_MARKUP_1 = "<?xml version='1.0' encoding='UTF-8'?>" +
-			"<ajax-response><component id='comp1'><![CDATA[<div class='cls' id='compId'></div>]]></component></ajax-response>";
+		"<ajax-response><component id='comp1'><![CDATA[<div class='cls' id='compId'></div>]]></component></ajax-response>";
 
 	// WICKET-5874
 	private static final String NON_CLOSED_INPUT = "<p wicket:id=\"p\"><input wicket:id=\"wicketId\" type=\"text\"></p>";
@@ -47,7 +47,8 @@ class TagTesterTest
 	 * WICKET-6278
 	 */
 	@Test
-	void tagNoRequiredClose() {
+	void tagNoRequiredClose()
+	{
 		TagTester tester = TagTester.createTagByAttribute(NON_CLOSED_INPUT, "wicket:id", "p");
 
 		assertEquals("<input wicket:id=\"wicketId\" type=\"text\">", tester.getValue());
@@ -310,11 +311,11 @@ class TagTesterTest
 		TagTester tester = TagTester.createTagByAttribute(
 			"<div id=\"id\">" +
 				"<div class=\"radio\">" +
-					"<label>" +
-						"<input name=\"id\" type=\"radio\" value=\"0\" id=\"id1-0\"/> One" +
-					"</label>" +
+				"<label>" +
+				"<input name=\"id\" type=\"radio\" value=\"0\" id=\"id1-0\"/> One" +
+				"</label>" +
 				"</div>" +
-			"</div>", "id", "id");
+				"</div>", "id", "id");
 		assertNotNull(tester.getChild("DIV")); // case-insensitive
 		TagTester divClassRadioTagTester = tester.getChild("div");
 		assertNotNull(divClassRadioTagTester);
@@ -347,7 +348,7 @@ class TagTesterTest
 		TagTester tagTester2 = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertEquals(tagTester.getMarkup(), tagTester2.getValue());
 	}
-	
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6173
 	 */
@@ -357,114 +358,122 @@ class TagTesterTest
 		TagTester tagTester = TagTester.createTagByAttribute(MARKUP_1, "id", "test2");
 		assertEquals("mock", tagTester.getValue());
 	}
-	
-    private static final String MARKUP =
-        "<wicket:panel>" +
-            "<ul wicket:id=\"container\">" +
-                "<wicket:container wicket:id=\"items\">" +
-                    "<li wicket:id=\"item\" id=\"item1\">" +
-                        "<p wicket:id=\"p\" id=\"p1\">" +
-                            "<img wicket:id=\"img\" src=\"bild1.jpg\">" +
-                        "</p>" +
-                        "<hr wicket:id=\"hr\" id=\"hr1\"/>" +
-                    "</li>" +
-                    "<li wicket:id=\"item\" id=\"item2\">" +
-                        "<p wicket:id=\"p\" id=\"p2\">" +
-                        "<img wicket:id=\"img\" src=\"bild2.jpg\">" +
-                        "<hr wicket:id=\"hr\" id=\"hr2\"/>" +
-                    "</li>" +
-                "</wicket:container>" +
-            "</ul>" +
-        "</wicket:panel>";
 
-    private static final String WRONG_MARKUP =
-        "<wicket:panel>" +
-            "<ul wicket:id=\"container\">" +
-                "<wicket:container wicket:id=\"items\">" +
-                    "<li wicket:id=\"item\" id=\"item1\">" +
-                        "<span wicket:id=\"p\" id=\"p1\">" +
-                        "<img wicket:id=\"img\" src=\"bild1.jpg\">" +
-                        "<hr wicket:id=\"hr\" id=\"hr1\"/>" +
-                    "</li>" +
-                    "<li wicket:id=\"item\" id=\"item2\">" +
-                        "<span wicket:id=\"p\" id=\"p2\">" +
-                            "<img wicket:id=\"img\" src=\"bild2.jpg\">" +
-                            "<hr wicket:id=\"hr\" id=\"hr2\"/>" +
-                        "</span>" +
-                    "</li>" +
-                "</wicket:container>" +
-            "</ul>" +
-        "</wicket:panel>";
+	private static final String MARKUP = "<wicket:panel>" +
+		"<ul wicket:id=\"container\">" +
+		"<wicket:container wicket:id=\"items\">" +
+		"<li wicket:id=\"item\" id=\"item1\">" +
+		"<p wicket:id=\"p\" id=\"p1\">" +
+		"<img wicket:id=\"img\" src=\"bild1.jpg\">" +
+		"</p>" +
+		"<hr wicket:id=\"hr\" id=\"hr1\"/>" +
+		"</li>" +
+		"<li wicket:id=\"item\" id=\"item2\">" +
+		"<p wicket:id=\"p\" id=\"p2\">" +
+		"<img wicket:id=\"img\" src=\"bild2.jpg\">" +
+		"<hr wicket:id=\"hr\" id=\"hr2\"/>" +
+		"</li>" +
+		"</wicket:container>" +
+		"</ul>" +
+		"</wicket:panel>";
 
-    /**
-     * WICKET-6220
-     */
-    @Test
-	void testOpenAndClose() {
-        List<TagTester> tags = TagTester.createTagsByAttribute(MARKUP, "wicket:id", "item", false);
-        assertEquals(2, tags.size());
-        assertEquals("li", tags.get(0).getName());
-        assertEquals("item1", tags.get(0).getAttribute("id"));
-        assertEquals("<p wicket:id=\"p\" id=\"p1\"><img wicket:id=\"img\" src=\"bild1.jpg\"></p><hr wicket:id=\"hr\" id=\"hr1\"/>", tags.get(0).getValue());
-        assertEquals("li", tags.get(1).getName());
-        assertEquals("item2", tags.get(1).getAttribute("id"));
-        assertEquals("<p wicket:id=\"p\" id=\"p2\"><img wicket:id=\"img\" src=\"bild2.jpg\"><hr wicket:id=\"hr\" id=\"hr2\"/>", tags.get(1).getValue());
-    }
+	private static final String WRONG_MARKUP = "<wicket:panel>" +
+		"<ul wicket:id=\"container\">" +
+		"<wicket:container wicket:id=\"items\">" +
+		"<li wicket:id=\"item\" id=\"item1\">" +
+		"<span wicket:id=\"p\" id=\"p1\">" +
+		"<img wicket:id=\"img\" src=\"bild1.jpg\">" +
+		"<hr wicket:id=\"hr\" id=\"hr1\"/>" +
+		"</li>" +
+		"<li wicket:id=\"item\" id=\"item2\">" +
+		"<span wicket:id=\"p\" id=\"p2\">" +
+		"<img wicket:id=\"img\" src=\"bild2.jpg\">" +
+		"<hr wicket:id=\"hr\" id=\"hr2\"/>" +
+		"</span>" +
+		"</li>" +
+		"</wicket:container>" +
+		"</ul>" +
+		"</wicket:panel>";
 
-    /**
-     * WICKET-6220
-     */
-    @Test
-	void testWrongHtmlStructure() {
-        List<TagTester> tags = TagTester.createTagsByAttribute(WRONG_MARKUP, "wicket:id", "p", false);
-        assertEquals(1, tags.size());
-        assertEquals("span", tags.get(0).getName());
-        assertEquals("p2", tags.get(0).getAttribute("id"));
-        assertEquals("<img wicket:id=\"img\" src=\"bild2.jpg\"><hr wicket:id=\"hr\" id=\"hr2\"/>", tags.get(0).getValue());
-    }
+	/**
+	 * WICKET-6220
+	 */
+	@Test
+	void testOpenAndClose()
+	{
+		List<TagTester> tags = TagTester.createTagsByAttribute(MARKUP, "wicket:id", "item", false);
+		assertEquals(2, tags.size());
+		assertEquals("li", tags.get(0).getName());
+		assertEquals("item1", tags.get(0).getAttribute("id"));
+		assertEquals(
+			"<p wicket:id=\"p\" id=\"p1\"><img wicket:id=\"img\" src=\"bild1.jpg\"></p><hr wicket:id=\"hr\" id=\"hr1\"/>",
+			tags.get(0).getValue());
+		assertEquals("li", tags.get(1).getName());
+		assertEquals("item2", tags.get(1).getAttribute("id"));
+		assertEquals(
+			"<p wicket:id=\"p\" id=\"p2\"><img wicket:id=\"img\" src=\"bild2.jpg\"><hr wicket:id=\"hr\" id=\"hr2\"/>",
+			tags.get(1).getValue());
+	}
 
-    /**
-     * WICKET-6220
-     */
-    @Test
-	void testOpenOrClose() {
-        List<TagTester> tags = TagTester.createTagsByAttribute(MARKUP, "wicket:id", "p", false);
-        assertEquals(2, tags.size());
-        assertEquals("p", tags.get(0).getName());
-        assertEquals("p1", tags.get(0).getAttribute("id"));
-        assertEquals("<img wicket:id=\"img\" src=\"bild1.jpg\">", tags.get(0).getValue());
-        assertEquals("p", tags.get(1).getName());
-        assertEquals("p2", tags.get(1).getAttribute("id"));
-        assertEquals("<p wicket:id=\"p\" id=\"p2\">", tags.get(1).getMarkup());
-    }
+	/**
+	 * WICKET-6220
+	 */
+	@Test
+	void testWrongHtmlStructure()
+	{
+		List<TagTester> tags = TagTester.createTagsByAttribute(WRONG_MARKUP, "wicket:id", "p", false);
+		assertEquals(1, tags.size());
+		assertEquals("span", tags.get(0).getName());
+		assertEquals("p2", tags.get(0).getAttribute("id"));
+		assertEquals("<img wicket:id=\"img\" src=\"bild2.jpg\"><hr wicket:id=\"hr\" id=\"hr2\"/>", tags.get(0)
+			.getValue());
+	}
 
-    /**
-     * WICKET-6220
-     */
-    @Test
-	void testOpen() {
-        List<TagTester> tags = TagTester.createTagsByAttribute(MARKUP, "wicket:id", "img", false);
-        assertEquals(2, tags.size());
-        assertEquals("img", tags.get(0).getName());
-        assertEquals("bild1.jpg", tags.get(0).getAttribute("src"));
-        assertEquals("<img wicket:id=\"img\" src=\"bild1.jpg\">", tags.get(0).getMarkup());
-        assertEquals("img", tags.get(1).getName());
-        assertEquals("bild2.jpg", tags.get(1).getAttribute("src"));
-        assertEquals("<img wicket:id=\"img\" src=\"bild2.jpg\">", tags.get(1).getMarkup());
-    }
+	/**
+	 * WICKET-6220
+	 */
+	@Test
+	void testOpenOrClose()
+	{
+		List<TagTester> tags = TagTester.createTagsByAttribute(MARKUP, "wicket:id", "p", false);
+		assertEquals(2, tags.size());
+		assertEquals("p", tags.get(0).getName());
+		assertEquals("p1", tags.get(0).getAttribute("id"));
+		assertEquals("<img wicket:id=\"img\" src=\"bild1.jpg\">", tags.get(0).getValue());
+		assertEquals("p", tags.get(1).getName());
+		assertEquals("p2", tags.get(1).getAttribute("id"));
+		assertEquals("<p wicket:id=\"p\" id=\"p2\">", tags.get(1).getMarkup());
+	}
 
-    /**
-     * WICKET-6220
-     */
-    @Test
-	void testOpenClose() {
-        List<TagTester> tags = TagTester.createTagsByAttribute(MARKUP, "wicket:id", "hr", false);
-        assertEquals(2, tags.size());
-        assertEquals("hr", tags.get(0).getName());
-        assertEquals("hr1", tags.get(0).getAttribute("id"));
-        assertEquals("<hr wicket:id=\"hr\" id=\"hr1\"/>", tags.get(0).getMarkup());
-        assertEquals("hr", tags.get(1).getName());
-        assertEquals("hr2", tags.get(1).getAttribute("id"));
-        assertEquals("<hr wicket:id=\"hr\" id=\"hr2\"/>", tags.get(1).getMarkup());
-    }	
+	/**
+	 * WICKET-6220
+	 */
+	@Test
+	void testOpen()
+	{
+		List<TagTester> tags = TagTester.createTagsByAttribute(MARKUP, "wicket:id", "img", false);
+		assertEquals(2, tags.size());
+		assertEquals("img", tags.get(0).getName());
+		assertEquals("bild1.jpg", tags.get(0).getAttribute("src"));
+		assertEquals("<img wicket:id=\"img\" src=\"bild1.jpg\">", tags.get(0).getMarkup());
+		assertEquals("img", tags.get(1).getName());
+		assertEquals("bild2.jpg", tags.get(1).getAttribute("src"));
+		assertEquals("<img wicket:id=\"img\" src=\"bild2.jpg\">", tags.get(1).getMarkup());
+	}
+
+	/**
+	 * WICKET-6220
+	 */
+	@Test
+	void testOpenClose()
+	{
+		List<TagTester> tags = TagTester.createTagsByAttribute(MARKUP, "wicket:id", "hr", false);
+		assertEquals(2, tags.size());
+		assertEquals("hr", tags.get(0).getName());
+		assertEquals("hr1", tags.get(0).getAttribute("id"));
+		assertEquals("<hr wicket:id=\"hr\" id=\"hr1\"/>", tags.get(0).getMarkup());
+		assertEquals("hr", tags.get(1).getName());
+		assertEquals("hr2", tags.get(1).getAttribute("id"));
+		assertEquals("<hr wicket:id=\"hr\" id=\"hr2\"/>", tags.get(1).getMarkup());
+	}
 }

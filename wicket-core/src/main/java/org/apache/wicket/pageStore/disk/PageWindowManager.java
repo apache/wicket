@@ -68,7 +68,7 @@ public class PageWindowManager implements Serializable
 		{
 			return type;
 		}
-		
+
 		@Override
 		public Bytes getPageSize()
 		{
@@ -79,7 +79,7 @@ public class PageWindowManager implements Serializable
 		{
 			return filePartOffset;
 		}
-		
+
 		public int getFilePartSize()
 		{
 			return filePartSize;

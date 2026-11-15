@@ -26,10 +26,10 @@ import org.apache.wicket.markup.html.CrossOrigin;
 public interface ISubresourceHeaderItem
 {
 	CrossOrigin getCrossOrigin();
-	
+
 	HeaderItem setCrossOrigin(CrossOrigin crossOrigin);
-	
+
 	String getIntegrity();
-	
+
 	HeaderItem setIntegrity(String integrity);
 }

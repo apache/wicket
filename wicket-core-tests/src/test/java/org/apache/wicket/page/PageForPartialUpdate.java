@@ -35,10 +35,13 @@ public class PageForPartialUpdate extends WebPage
 	 */
 	public PageForPartialUpdate()
 	{
-		container = new WebMarkupContainer("container") {
+		container = new WebMarkupContainer("container")
+		{
 			@Override
-			public void renderHead(IHeaderResponse response) {
-				response.render(JavaScriptHeaderItem.forScript("// two brackets: ]] greater than: > CDATA end: ]]>", null));
+			public void renderHead(IHeaderResponse response)
+			{
+				response.render(JavaScriptHeaderItem.forScript("// two brackets: ]] greater than: > CDATA end: ]]>",
+					null));
 			}
 		};
 		container.setOutputMarkupId(true);

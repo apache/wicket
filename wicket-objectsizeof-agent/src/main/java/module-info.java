@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.objectsizeof.agent {
-    requires java.instrument;
-    requires org.slf4j;
-    requires org.apache.wicket.core;
+module org.apache.wicket.objectsizeof.agent
+{
+	requires java.instrument;
+	requires org.slf4j;
+	requires org.apache.wicket.core;
 
-    exports org.apache.wicket.util.instrument;
+	exports org.apache.wicket.util.instrument;
 }

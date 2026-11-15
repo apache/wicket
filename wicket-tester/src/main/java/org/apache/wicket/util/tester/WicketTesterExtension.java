@@ -26,7 +26,11 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
  *
  * @author igor
  */
-public class WicketTesterExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback, TestExecutionExceptionHandler
+public class WicketTesterExtension
+	implements
+		BeforeTestExecutionCallback,
+		AfterTestExecutionCallback,
+		TestExecutionExceptionHandler
 {
 	private WicketTester tester;
 
@@ -51,18 +55,21 @@ public class WicketTesterExtension implements BeforeTestExecutionCallback, After
 	}
 
 	@Override
-	public void beforeTestExecution(ExtensionContext context) {
+	public void beforeTestExecution(ExtensionContext context)
+	{
 		tester = create();
 	}
 
 	@Override
-	public void afterTestExecution(ExtensionContext context) {
+	public void afterTestExecution(ExtensionContext context)
+	{
 		tester.destroy();
 		tester = null;
 	}
 
 	@Override
-	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable
+	{
 		tester.destroy();
 		tester = null;
 

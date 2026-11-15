@@ -79,14 +79,14 @@ public class WebPageRenderer extends PageRenderer
 	 */
 	protected void storeBufferedResponse(Url url, BufferedWebResponse response)
 	{
-		if (isSessionTemporary()) 
+		if (isSessionTemporary())
 		{
 			Session.get().bind();
 		}
 
 		WebApplication.get().storeBufferedResponse(getSessionId(), url, response);
 	}
-	
+
 	/**
 	 * Renders page to a {@link BufferedWebResponse}. All URLs in page will be rendered relative to
 	 * <code>targetUrl</code>
@@ -200,7 +200,7 @@ public class WebPageRenderer extends PageRenderer
 		}
 		else if (shouldRedirectToTargetUrl(requestCycle, currentUrl, targetUrl))
 		{
-			
+
 			redirectTo(targetUrl, requestCycle);
 
 			// note: if we had session here we would render the page to buffer and then
@@ -327,10 +327,11 @@ public class WebPageRenderer extends PageRenderer
 		}
 
 		return (compatibleProtocols(currentUrl.getProtocol(), targetUrl.getProtocol())) &&
-				(neverRedirect(getRedirectPolicy())
-			|| ((isOnePassRender() && notForcedRedirect(getRedirectPolicy())) || (targetUrl
-				.equals(currentUrl) && (!isNewPageInstance() && !isPageStateless()))) || (targetUrl.equals(currentUrl) && isRedirectToRender())
-			|| (shouldPreserveClientUrl(cycle) && notForcedRedirect(getRedirectPolicy())));
+			(neverRedirect(getRedirectPolicy())
+				|| ((isOnePassRender() && notForcedRedirect(getRedirectPolicy())) || (targetUrl
+					.equals(currentUrl) && (!isNewPageInstance() && !isPageStateless()))) || (targetUrl.equals(
+						currentUrl) && isRedirectToRender())
+				|| (shouldPreserveClientUrl(cycle) && notForcedRedirect(getRedirectPolicy())));
 	}
 
 	private static boolean neverRedirect(RedirectPolicy redirectPolicy)

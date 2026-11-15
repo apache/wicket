@@ -116,7 +116,7 @@ public class RequestLogger extends AbstractRequestLogger
 			Class<? extends IRequestHandler> handlerClass = handler.getClass();
 			sb.append("handler=");
 			sb.append(handlerClass.isAnonymousClass() ? handlerClass.getName()
-					: Classes.simpleName(handlerClass));
+				: Classes.simpleName(handlerClass));
 			if (handler instanceof ILoggableRequestHandler)
 			{
 				sb.append(",data=");

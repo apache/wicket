@@ -19,11 +19,11 @@ package org.apache.wicket.markup.html.border;
 public class ExtendedBorder extends ExtedableBorder
 {
 	/**
-     * 
-     */
-    private static final long serialVersionUID = -3807276374784563518L;
+	 * 
+	 */
+	private static final long serialVersionUID = -3807276374784563518L;
 
-    public ExtendedBorder(final String id)
+	public ExtendedBorder(final String id)
 	{
 		super(id);
 	}

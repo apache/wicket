@@ -33,10 +33,11 @@ import org.junit.jupiter.api.Test;
  * https://issues.apache.org/jira/browse/WICKET-5666
  * https://issues.apache.org/jira/browse/WICKET-5643
  */
-class StatelessPageManipulatingPageParametersTest extends WicketTestCase {
+class StatelessPageManipulatingPageParametersTest extends WicketTestCase
+{
 
 	@BeforeEach
-    void before()
+	void before()
 	{
 		WebApplication application = tester.getApplication();
 		application.mountPage("first", FirstPage.class);
@@ -44,16 +45,19 @@ class StatelessPageManipulatingPageParametersTest extends WicketTestCase {
 	}
 
 	@Test
-    void submitAndRedirect() {
+	void submitAndRedirect()
+	{
 		tester.startPage(FirstPage.class);
 		FormTester failingFormTester = tester.newFormTester("form");
 		failingFormTester.submit();
 		tester.assertRenderedPage(SecondPage.class);
 	}
 
-	public static class FirstPage extends WebPage implements IMarkupResourceStreamProvider {
+	public static class FirstPage extends WebPage implements IMarkupResourceStreamProvider
+	{
 
-		public FirstPage() {
+		public FirstPage()
+		{
 
 			StatelessForm form = new StatelessForm("form")
 			{
@@ -70,14 +74,13 @@ class StatelessPageManipulatingPageParametersTest extends WicketTestCase {
 		}
 
 		@Override
-		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass) 
+		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
-			String markup = 
-					"<html><body>" + 
-						"<form wicket:id=\"form\">"
-							+ "<input type=\"submit\"/> \n" + 
-						"</form>" + 
-					"</body></html>";
+			String markup = "<html><body>" +
+				"<form wicket:id=\"form\">"
+				+ "<input type=\"submit\"/> \n" +
+				"</form>" +
+				"</body></html>";
 
 			return new StringResourceStream(markup);
 		}

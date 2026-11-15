@@ -32,7 +32,7 @@ import org.apache.wicket.util.lang.Args;
 public class NestedFolders
 {
 	private final File base;
-	
+
 	/**
 	 * Create folders in the given base folder.
 	 * 
@@ -42,12 +42,12 @@ public class NestedFolders
 	{
 		this.base = Args.notNull(base, "base");
 	}
-	
+
 	public File getBase()
 	{
 		return base;
 	}
-	
+
 	/**
 	 * Get a nested folder for the given name.
 	 * 
@@ -97,7 +97,7 @@ public class NestedFolders
 		if (folder.exists())
 		{
 			Files.removeFolder(folder);
-			
+
 			File high = folder.getParentFile();
 			final String[] highChildren = high.list();
 			if (highChildren != null && highChildren.length == 0 && Files.removeFolder(high))
@@ -120,18 +120,18 @@ public class NestedFolders
 	public Set<File> getAll()
 	{
 		Set<File> files = new HashSet<>();
-		
+
 		if (base.exists())
 		{
 			for (File low : Files.list(base))
 			{
-				for (File high: Files.list(low))
+				for (File high : Files.list(low))
 				{
 					Collections.addAll(files, Files.list(high));
 				}
 			}
 		}
-		
+
 		return files;
 	}
 }

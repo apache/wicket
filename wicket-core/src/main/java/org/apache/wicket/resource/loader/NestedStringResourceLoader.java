@@ -128,7 +128,7 @@ public class NestedStringResourceLoader implements IStringResourceLoader
 		{
 			return null;
 		}
-		
+
 		StringBuffer output = new StringBuffer();
 		Matcher matcher = pattern.matcher(value);
 		// Search for other nested keys to replace

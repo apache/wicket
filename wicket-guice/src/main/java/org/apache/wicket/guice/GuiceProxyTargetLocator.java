@@ -46,7 +46,7 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 	private Boolean isSingletonCache = null;
 
 	public GuiceProxyTargetLocator(final Field field, final Annotation bindingAnnotation,
-								   final boolean optional)
+		final boolean optional)
 	{
 		this.bindingAnnotation = bindingAnnotation;
 		this.optional = optional;
@@ -145,11 +145,11 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 			return true;
 		if (!(o instanceof GuiceProxyTargetLocator))
 			return false;
-		GuiceProxyTargetLocator that = (GuiceProxyTargetLocator) o;
+		GuiceProxyTargetLocator that = (GuiceProxyTargetLocator)o;
 		return Objects.equal(optional, that.optional) &&
-				Objects.equal(bindingAnnotation, that.bindingAnnotation) &&
-				Objects.equal(className, that.className) &&
-				Objects.equal(fieldName, that.fieldName);
+			Objects.equal(bindingAnnotation, that.bindingAnnotation) &&
+			Objects.equal(className, that.className) &&
+			Objects.equal(fieldName, that.fieldName);
 	}
 
 	@Override

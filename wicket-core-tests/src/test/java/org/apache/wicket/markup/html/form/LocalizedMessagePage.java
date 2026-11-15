@@ -34,7 +34,7 @@ public class LocalizedMessagePage extends WebPage
 	/** */
 	public TextField<Double> field;
 	/** */
-    private FeedbackPanel feedback;
+	private FeedbackPanel feedback;
 
 	/**
 	 * Construct.

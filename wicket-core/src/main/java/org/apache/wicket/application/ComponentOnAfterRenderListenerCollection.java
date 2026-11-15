@@ -23,7 +23,9 @@ import org.apache.wicket.util.listener.ListenerCollection;
  * 
  */
 public class ComponentOnAfterRenderListenerCollection extends
-	ListenerCollection<IComponentOnAfterRenderListener> implements IComponentOnAfterRenderListener
+	ListenerCollection<IComponentOnAfterRenderListener>
+	implements
+		IComponentOnAfterRenderListener
 {
 	private static final long serialVersionUID = 1L;
 

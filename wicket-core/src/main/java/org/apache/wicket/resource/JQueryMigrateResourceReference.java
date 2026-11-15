@@ -54,8 +54,8 @@ public class JQueryMigrateResourceReference extends JavaScriptResourceReference
 		if (Application.exists())
 		{
 			backingLibraryReference = Application.get()
-					.getJavaScriptLibrarySettings()
-					.getJQueryReference();
+				.getJavaScriptLibrarySettings()
+				.getJQueryReference();
 		}
 		else
 		{

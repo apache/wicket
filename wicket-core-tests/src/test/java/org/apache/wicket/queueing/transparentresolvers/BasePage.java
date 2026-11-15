@@ -19,10 +19,12 @@ package org.apache.wicket.queueing.transparentresolvers;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-public class BasePage extends WebPage {
+public class BasePage extends WebPage
+{
 	private static final long serialVersionUID = 1L;
 
-	BasePage(final PageParameters parameters) {
+	BasePage(final PageParameters parameters)
+	{
 		super(parameters);
 
 		add(new HtmlTag("html"));

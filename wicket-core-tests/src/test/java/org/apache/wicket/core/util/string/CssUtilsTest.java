@@ -46,6 +46,8 @@ class CssUtilsTest
 		attributes.putAttribute(CssUtils.ATTR_LINK_MEDIA, media);
 		attributes.putAttribute(CssUtils.ATTR_ID, "markupId");
 		CssUtils.writeLink(response, attributes);
-		assertEquals("<link rel=\"stylesheet\" type=\"text/css\" href=\"some/url;jsessionid=1234?with=parameters&amp;p1=v1\" media=\"some&amp;bad&amp;media (min-height: 680px), screen and (orientation: portrait)\" id=\"markupId\" />", response.toString());
+		assertEquals(
+			"<link rel=\"stylesheet\" type=\"text/css\" href=\"some/url;jsessionid=1234?with=parameters&amp;p1=v1\" media=\"some&amp;bad&amp;media (min-height: 680px), screen and (orientation: portrait)\" id=\"markupId\" />",
+			response.toString());
 	}
 }

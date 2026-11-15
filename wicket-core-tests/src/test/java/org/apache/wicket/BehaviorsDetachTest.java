@@ -25,16 +25,18 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * Tests for behavior detaching, see
  * {@link ComponentState#detachBehaviors(Component, Object, boolean, boolean)}
  */
-class BehaviorsDetachTest extends WicketTestCase {
+class BehaviorsDetachTest extends WicketTestCase
+{
 
-    /**
-     * https://issues.apache.org/jira/browse/WICKET-6877
-     */
-    @Test
-    void detach_whenRemovingTheLastMetaData_thenUpdateComponentDataAndDetachAllFollowingBehaviors() {
-        final BehavioursDetachTestPage page = tester.startPage(BehavioursDetachTestPage.class);
-        assertFalse(page.theModel.isAttached(), "The LoadableDetachableModel should be in detached state!");
-    }
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6877
+	 */
+	@Test
+	void detach_whenRemovingTheLastMetaData_thenUpdateComponentDataAndDetachAllFollowingBehaviors()
+	{
+		final BehavioursDetachTestPage page = tester.startPage(BehavioursDetachTestPage.class);
+		assertFalse(page.theModel.isAttached(), "The LoadableDetachableModel should be in detached state!");
+	}
 
 
 }

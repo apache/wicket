@@ -15,15 +15,16 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.websocket.tester {
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.request;
-    requires org.apache.wicket.core;
-    requires org.apache.wicket.websocket.core;
-    requires static jakarta.servlet;
-    requires org.junit.jupiter.api;
-    requires org.slf4j;
-    requires org.apache.wicket.tester;
+module org.apache.wicket.websocket.tester
+{
+	requires org.apache.wicket.util;
+	requires org.apache.wicket.request;
+	requires org.apache.wicket.core;
+	requires org.apache.wicket.websocket.core;
+	requires static jakarta.servlet;
+	requires org.junit.jupiter.api;
+	requires org.slf4j;
+	requires org.apache.wicket.tester;
 
-    exports org.apache.wicket.protocol.ws.tester;
+	exports org.apache.wicket.protocol.ws.tester;
 }

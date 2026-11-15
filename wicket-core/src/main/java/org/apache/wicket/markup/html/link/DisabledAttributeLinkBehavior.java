@@ -29,7 +29,7 @@ import org.apache.wicket.markup.ComponentTag;
 public class DisabledAttributeLinkBehavior extends Behavior
 {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public void onComponentTag(Component component, ComponentTag tag)
@@ -38,13 +38,13 @@ public class DisabledAttributeLinkBehavior extends Behavior
 		{
 			// if the tag is an anchor proper
 			String tagName = tag.getName();
-			
+
 			if (tagName.equalsIgnoreCase("a") || tagName.equalsIgnoreCase("link") ||
 				tagName.equalsIgnoreCase("area"))
 			{
-			    tag.put("disabled", "disabled");
+				tag.put("disabled", "disabled");
 			}
-			else 
+			else
 			{
 				tag.remove("rel");
 			}

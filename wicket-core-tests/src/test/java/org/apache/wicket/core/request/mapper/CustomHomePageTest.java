@@ -34,7 +34,7 @@ class CustomHomePageTest
 	 * Tests no custom home page. The home page is get from {@link Application#getHomePage()}
 	 */
 	@Test
-    void defaultHomePage()
+	void defaultHomePage()
 	{
 		final WebApplication dummyApplication = new DummyApplication();
 		final WicketTester tester = new WicketTester(dummyApplication);
@@ -49,7 +49,7 @@ class CustomHomePageTest
 	 * Tests mounting of a custom home page via {@link WebApplication#mountPage(String, Class)}
 	 */
 	@Test
-    void customHomePage()
+	void customHomePage()
 	{
 		final WebApplication dummyApplication = new DummyApplication()
 		{

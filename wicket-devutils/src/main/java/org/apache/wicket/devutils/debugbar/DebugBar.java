@@ -74,7 +74,7 @@ public class DebugBar extends DevUtilsPanel
 		private static final long serialVersionUID = 1L;
 	};
 
-	
+
 	/**
 	 * Construct.
 	 * <p/>
@@ -89,7 +89,7 @@ public class DebugBar extends DevUtilsPanel
 	{
 		this(id, true);
 	}
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -117,7 +117,7 @@ public class DebugBar extends DevUtilsPanel
 		}));
 
 		add(new Image("logo", new PackageResourceReference(DebugBar.class, "wicket.png")));
-		
+
 		add(contentSection("content", initiallyExpanded));
 	}
 
@@ -179,7 +179,7 @@ public class DebugBar extends DevUtilsPanel
 	public void renderHead(final IHeaderResponse response)
 	{
 		CoreLibrariesContributor.contributeAjax(getApplication(), response);
-		
+
 		response.render(CssHeaderItem.forReference(new CssResourceReference(DebugBar.class,
 			"wicket-debugbar.css")));
 		response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(

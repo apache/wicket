@@ -114,7 +114,7 @@ public class HttpsMapper implements IRequestMapperDelegate
 		{
 			return handler;
 		}
-		
+
 		Scheme current = getSchemeOf(request);
 		if (!desired.isCompatibleWith(current))
 		{
@@ -196,7 +196,7 @@ public class HttpsMapper implements IRequestMapperDelegate
 		{
 			return url;
 		}
-		
+
 		Scheme current = getSchemeOf(request);
 		if (!desired.isCompatibleWith(current))
 		{
@@ -233,7 +233,7 @@ public class HttpsMapper implements IRequestMapperDelegate
 	 */
 	protected Scheme getSchemeOf(Request request)
 	{
-		HttpServletRequest req = (HttpServletRequest) request.getContainerRequest();
+		HttpServletRequest req = (HttpServletRequest)request.getContainerRequest();
 
 		if ("https".equalsIgnoreCase(req.getScheme()))
 		{

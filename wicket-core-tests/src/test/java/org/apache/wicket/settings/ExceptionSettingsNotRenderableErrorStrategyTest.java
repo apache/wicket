@@ -35,119 +35,136 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for {@link ExceptionSettings#notRenderableErrorStrategy}
  */
-class ExceptionSettingsNotRenderableErrorStrategyTest extends WicketTestCase {
+class ExceptionSettingsNotRenderableErrorStrategyTest extends WicketTestCase
+{
 
-    private WicketTagTestPage wicketTagTestPage;
-    private RenderBodyOnlyTestPage renderBodyOnlyTestPage;
+	private WicketTagTestPage wicketTagTestPage;
+	private RenderBodyOnlyTestPage renderBodyOnlyTestPage;
 
-    @BeforeEach
-    void before()
-    {
-        ExceptionSettings exceptionSettings = tester.getApplication().getExceptionSettings();
-        exceptionSettings.setNotRenderableErrorStrategy(ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION);
+	@BeforeEach
+	void before()
+	{
+		ExceptionSettings exceptionSettings = tester.getApplication().getExceptionSettings();
+		exceptionSettings.setNotRenderableErrorStrategy(ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION);
 
-        wicketTagTestPage = new WicketTagTestPage();
-        renderBodyOnlyTestPage = new RenderBodyOnlyTestPage();
-    }
+		wicketTagTestPage = new WicketTagTestPage();
+		renderBodyOnlyTestPage = new RenderBodyOnlyTestPage();
+	}
 
-    @Test
-    void notRenderableErrorStrategy_whenWicketTagAndOutputId_throwException() {
-        try
-        {
-            wicketTagTestPage.component.setOutputMarkupId(true);
-            startWicketTagPage();
-        } catch (WicketRuntimeException wrx)
-        {
-            assertWicketTagException(wrx);
-        }
-    }
+	@Test
+	void notRenderableErrorStrategy_whenWicketTagAndOutputId_throwException()
+	{
+		try
+		{
+			wicketTagTestPage.component.setOutputMarkupId(true);
+			startWicketTagPage();
+		}
+		catch (WicketRuntimeException wrx)
+		{
+			assertWicketTagException(wrx);
+		}
+	}
 
-    @Test
-    void notRenderableErrorStrategy_whenWicketTagAndOutputPlaceholder_throwException() {
-        try
-        {
-            wicketTagTestPage.component.setOutputMarkupPlaceholderTag(true);
-            startWicketTagPage();
-        } catch (WicketRuntimeException wrx)
-        {
-            assertWicketTagException(wrx);
-        }
-    }
+	@Test
+	void notRenderableErrorStrategy_whenWicketTagAndOutputPlaceholder_throwException()
+	{
+		try
+		{
+			wicketTagTestPage.component.setOutputMarkupPlaceholderTag(true);
+			startWicketTagPage();
+		}
+		catch (WicketRuntimeException wrx)
+		{
+			assertWicketTagException(wrx);
+		}
+	}
 
-    @Test
-    void notRenderableErrorStrategy_whenRenderBodyOnlyAndOutputId_throwException() {
-        try
-        {
-            renderBodyOnlyTestPage.component.setOutputMarkupId(true);
-            startRenderBodyOnlyPage();
-        } catch (WicketRuntimeException wrx)
-        {
-            assertRenderBodyOnlyException(wrx);
-        }
-    }
+	@Test
+	void notRenderableErrorStrategy_whenRenderBodyOnlyAndOutputId_throwException()
+	{
+		try
+		{
+			renderBodyOnlyTestPage.component.setOutputMarkupId(true);
+			startRenderBodyOnlyPage();
+		}
+		catch (WicketRuntimeException wrx)
+		{
+			assertRenderBodyOnlyException(wrx);
+		}
+	}
 
-    @Test
-    void notRenderableErrorStrategy_whenRenderBodyOnlyAndOutputPlaceholder_throwException() {
-        try
-        {
-            renderBodyOnlyTestPage.component.setOutputMarkupPlaceholderTag(true);
-            startRenderBodyOnlyPage();
-        } catch (WicketRuntimeException wrx)
-        {
-            assertRenderBodyOnlyException(wrx);
-        }
-    }
+	@Test
+	void notRenderableErrorStrategy_whenRenderBodyOnlyAndOutputPlaceholder_throwException()
+	{
+		try
+		{
+			renderBodyOnlyTestPage.component.setOutputMarkupPlaceholderTag(true);
+			startRenderBodyOnlyPage();
+		}
+		catch (WicketRuntimeException wrx)
+		{
+			assertRenderBodyOnlyException(wrx);
+		}
+	}
 
-    private void startWicketTagPage() {
-        tester.startPage(wicketTagTestPage);
-        fail("Should have thrown exception!");
-    }
+	private void startWicketTagPage()
+	{
+		tester.startPage(wicketTagTestPage);
+		fail("Should have thrown exception!");
+	}
 
-    private void startRenderBodyOnlyPage() {
-        tester.startPage(renderBodyOnlyTestPage);
-        fail("Should have thrown exception!");
-    }
+	private void startRenderBodyOnlyPage()
+	{
+		tester.startPage(renderBodyOnlyTestPage);
+		fail("Should have thrown exception!");
+	}
 
-    private void assertWicketTagException(WicketRuntimeException wrx) {
-        assertThat(wrx.getCause().getMessage(), is(equalTo("Markup id set on a component that is usually not "
-                                                           + "rendered into markup. Markup id: test1, component id: test, "
-                                                           + "component tag: wicket:label.")));
-    }
+	private void assertWicketTagException(WicketRuntimeException wrx)
+	{
+		assertThat(wrx.getCause().getMessage(), is(equalTo("Markup id set on a component that is usually not "
+			+ "rendered into markup. Markup id: test1, component id: test, "
+			+ "component tag: wicket:label.")));
+	}
 
-    private void assertRenderBodyOnlyException(final WicketRuntimeException wrx) {
-        assertThat(wrx.getCause().getMessage(), is(equalTo("Markup id set on a component that renders its body only. " +
-                "Markup id: test1, component id: test, type: class org.apache.wicket.markup.html.basic.Label, " +
-                "path: class org.apache.wicket.settings.ExceptionSettingsNotRenderableErrorStrategyTest$RenderBodyOnlyTestPage:test")));
-    }
+	private void assertRenderBodyOnlyException(final WicketRuntimeException wrx)
+	{
+		assertThat(wrx.getCause().getMessage(), is(equalTo("Markup id set on a component that renders its body only. " +
+			"Markup id: test1, component id: test, type: class org.apache.wicket.markup.html.basic.Label, " +
+			"path: class org.apache.wicket.settings.ExceptionSettingsNotRenderableErrorStrategyTest$RenderBodyOnlyTestPage:test")));
+	}
 
-    private static class WicketTagTestPage extends WebPage implements IMarkupResourceStreamProvider
-    {
-        private Label component;
+	private static class WicketTagTestPage extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private Label component;
 
-        private WicketTagTestPage() {
-            component = new Label("test", "Test");
-            add(component);
-        }
+		private WicketTagTestPage()
+		{
+			component = new Label("test", "Test");
+			add(component);
+		}
 
-        @Override
-        public IResourceStream getMarkupResourceStream(final MarkupContainer container, final Class<?> containerClass) {
-            return new StringResourceStream("<html><body><wicket:label wicket:id='test'/></body></html>");
-        }
-    }
+		@Override
+		public IResourceStream getMarkupResourceStream(final MarkupContainer container, final Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><body><wicket:label wicket:id='test'/></body></html>");
+		}
+	}
 
-    private static class RenderBodyOnlyTestPage extends WebPage implements IMarkupResourceStreamProvider
-    {
-        private Label component;
+	private static class RenderBodyOnlyTestPage extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private Label component;
 
-        private RenderBodyOnlyTestPage() {
-            component = new Label("test", "Test");
-            component.setRenderBodyOnly(true);
-            add(component);
-        }
+		private RenderBodyOnlyTestPage()
+		{
+			component = new Label("test", "Test");
+			component.setRenderBodyOnly(true);
+			add(component);
+		}
 
-        @Override
-        public IResourceStream getMarkupResourceStream(final MarkupContainer container, final Class<?> containerClass) {
-            return new StringResourceStream("<html><body><span wicket:id='test'></span></body></html>");
-        }
-    }
+		@Override
+		public IResourceStream getMarkupResourceStream(final MarkupContainer container, final Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><body><span wicket:id='test'></span></body></html>");
+		}
+	}
 }

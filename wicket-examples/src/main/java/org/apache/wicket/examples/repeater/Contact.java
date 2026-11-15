@@ -37,9 +37,9 @@ public class Contact implements IClusterable
 	private String homePhone;
 
 	private String cellPhone;
-	
+
 	private Date bornDate;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -52,7 +52,7 @@ public class Contact implements IClusterable
 	public String toString()
 	{
 		return "[Contact id=" + id + " firstName=" + firstName + " lastName=" + lastName +
-				" homePhone=" + homePhone + " cellPhone=" + cellPhone + "]";
+			" homePhone=" + homePhone + " cellPhone=" + cellPhone + "]";
 	}
 
 	@Override
@@ -70,9 +70,9 @@ public class Contact implements IClusterable
 		{
 			Contact other = (Contact)obj;
 			return other.getFirstName().equals(getFirstName()) &&
-					other.getLastName().equals(getLastName()) &&
-					other.getHomePhone().equals(getHomePhone()) &&
-					other.getCellPhone().equals(getCellPhone());
+				other.getLastName().equals(getLastName()) &&
+				other.getHomePhone().equals(getHomePhone()) &&
+				other.getCellPhone().equals(getCellPhone());
 
 		}
 		else
@@ -189,7 +189,7 @@ public class Contact implements IClusterable
 	 */
 	public Date getBornDate()
 	{
-	    return bornDate;
+		return bornDate;
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class Contact implements IClusterable
 	 */
 	public void setBornDate(Date bornDate)
 	{
-	    this.bornDate = bornDate;
+		this.bornDate = bornDate;
 	}
 
 }

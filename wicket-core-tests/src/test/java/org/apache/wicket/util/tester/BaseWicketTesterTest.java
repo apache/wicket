@@ -22,17 +22,20 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class BaseWicketTesterTest {
+class BaseWicketTesterTest
+{
 
 	private BaseWicketTester tester;
 
 	@BeforeEach
-	public void before() {
+	public void before()
+	{
 		tester = new BaseWicketTester(new MockApplication());
 	}
 
 	@Test
-	void ggetFirstComponentFromLastRenderedPageByWicketId_whenCallPrematurely_returnEmptyOptional() {
+	void ggetFirstComponentFromLastRenderedPageByWicketId_whenCallPrematurely_returnEmptyOptional()
+	{
 		// Arrange
 		var cut = new DemoPanel("id");
 
@@ -46,7 +49,8 @@ class BaseWicketTesterTest {
 	}
 
 	@Test
-	void getFirstComponentFromLastRenderedPageByWicketId_whenComponentPresent_returnComponent() {
+	void getFirstComponentFromLastRenderedPageByWicketId_whenComponentPresent_returnComponent()
+	{
 		// Arrange
 		var cut = new DemoPanel("id");
 		tester.startComponentInPage(cut);
@@ -62,7 +66,8 @@ class BaseWicketTesterTest {
 	}
 
 	@Test
-	void getFirstComponentFromLastRenderedPageByWicketId_whenComponentNotPresent_returnEmptyOptional() {
+	void getFirstComponentFromLastRenderedPageByWicketId_whenComponentNotPresent_returnEmptyOptional()
+	{
 		// Arrange
 		var cut = new DemoPanel("id");
 		tester.startComponentInPage(cut);
@@ -77,7 +82,8 @@ class BaseWicketTesterTest {
 	}
 
 	@Test
-	void getFirstComponentFromLastRenderedPageByWicketId_whenWicketIdNull_returnEmptyOptional() {
+	void getFirstComponentFromLastRenderedPageByWicketId_whenWicketIdNull_returnEmptyOptional()
+	{
 		// Arrange
 		var cut = new DemoPanel("id");
 		tester.startComponentInPage(cut);
@@ -92,7 +98,8 @@ class BaseWicketTesterTest {
 	}
 
 	@Test
-	void getFirstComponentFromLastRenderedPageByWicketId_whenWicketIdBlank_returnEmptyOptional() {
+	void getFirstComponentFromLastRenderedPageByWicketId_whenWicketIdBlank_returnEmptyOptional()
+	{
 		// Arrange
 		var cut = new DemoPanel("id");
 		tester.startComponentInPage(cut);
@@ -107,7 +114,8 @@ class BaseWicketTesterTest {
 	}
 
 	@Test
-	void getAllComponentsFromLastRenderedPageByWicketId_whenCallPrematurely_returnEmptyList() {
+	void getAllComponentsFromLastRenderedPageByWicketId_whenCallPrematurely_returnEmptyList()
+	{
 		// Arrange
 		var cut = new DemoPanel("id");
 
@@ -121,7 +129,8 @@ class BaseWicketTesterTest {
 	}
 
 	@Test
-	void getAllComponentsFromLastRenderedPageByWicketId_whenMultipleComponentPresent_returnComponentList() {
+	void getAllComponentsFromLastRenderedPageByWicketId_whenMultipleComponentPresent_returnComponentList()
+	{
 		// Arrange
 		var cut = new DemoPanel("id");
 		tester.startComponentInPage(cut);
@@ -133,12 +142,13 @@ class BaseWicketTesterTest {
 		SoftAssertions.assertSoftly(sa -> {
 			sa.assertThat(components).hasSize(2);
 			sa.assertThat(components).extracting(Component::getPath)
-					.containsExactly("0:id:label", "0:id:otherPanel:label");
+				.containsExactly("0:id:label", "0:id:otherPanel:label");
 		});
 	}
 
 	@Test
-	void getAllComponentsFromLastRenderedPageByWicketId_whenMultipleComponentPresent2_returnComponentList() {
+	void getAllComponentsFromLastRenderedPageByWicketId_whenMultipleComponentPresent2_returnComponentList()
+	{
 		// Arrange
 		var cut = new DemoPanel("id");
 		tester.startComponentInPage(cut);
@@ -150,15 +160,16 @@ class BaseWicketTesterTest {
 		SoftAssertions.assertSoftly(sa -> {
 			sa.assertThat(components).hasSize(4);
 			sa.assertThat(components).extracting(Component::getPath).containsExactly(
-					"0:id:repeater:0:content",
-					"0:id:repeater:1:content",
-					"0:id:repeater:2:content",
-					"0:id:repeater:3:content");
+				"0:id:repeater:0:content",
+				"0:id:repeater:1:content",
+				"0:id:repeater:2:content",
+				"0:id:repeater:3:content");
 		});
 	}
 
 	@Test
-	void getAllComponentsFromLastRenderedPageByWicketId_whenNoComponentPresent2_returnEmptyList() {
+	void getAllComponentsFromLastRenderedPageByWicketId_whenNoComponentPresent2_returnEmptyList()
+	{
 		// Arrange
 		var cut = new DemoPanel("id");
 		tester.startComponentInPage(cut);
@@ -173,7 +184,8 @@ class BaseWicketTesterTest {
 	}
 
 	@Test
-	void getAllComponentsFromLastRenderedPageByWicketId_whenWicketIdNull_returnEmptyList() {
+	void getAllComponentsFromLastRenderedPageByWicketId_whenWicketIdNull_returnEmptyList()
+	{
 		// Arrange
 		var cut = new DemoPanel("id");
 		tester.startComponentInPage(cut);
@@ -188,7 +200,8 @@ class BaseWicketTesterTest {
 	}
 
 	@Test
-	void getAllComponentsFromLastRenderedPageByWicketId_whenWicketIdBlank_returnEmptyList() {
+	void getAllComponentsFromLastRenderedPageByWicketId_whenWicketIdBlank_returnEmptyList()
+	{
 		// Arrange
 		var cut = new DemoPanel("id");
 		tester.startComponentInPage(cut);

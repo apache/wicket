@@ -65,43 +65,43 @@ public abstract class WebSocketResource implements IResource
 
 		if (payload instanceof WebSocketTextPayload)
 		{
-			WebSocketTextPayload textPayload = (WebSocketTextPayload) payload;
+			WebSocketTextPayload textPayload = (WebSocketTextPayload)payload;
 			TextMessage data = textPayload.getMessage();
 			onMessage(webSocketHandler, data);
 		}
 		else if (payload instanceof WebSocketBinaryPayload)
 		{
-			WebSocketBinaryPayload binaryPayload = (WebSocketBinaryPayload) payload;
+			WebSocketBinaryPayload binaryPayload = (WebSocketBinaryPayload)payload;
 			BinaryMessage binaryData = binaryPayload.getMessage();
 			onMessage(webSocketHandler, binaryData);
 		}
 		else if (payload instanceof WebSocketConnectedPayload)
 		{
-			WebSocketConnectedPayload connectedPayload = (WebSocketConnectedPayload) payload;
+			WebSocketConnectedPayload connectedPayload = (WebSocketConnectedPayload)payload;
 			ConnectedMessage message = connectedPayload.getMessage();
 			onConnect(message);
 		}
 		else if (payload instanceof WebSocketClosedPayload)
 		{
-			WebSocketClosedPayload connectedPayload = (WebSocketClosedPayload) payload;
+			WebSocketClosedPayload connectedPayload = (WebSocketClosedPayload)payload;
 			ClosedMessage message = connectedPayload.getMessage();
 			onClose(message);
 		}
 		else if (payload instanceof WebSocketErrorPayload)
 		{
-			WebSocketErrorPayload errorPayload = (WebSocketErrorPayload) payload;
+			WebSocketErrorPayload errorPayload = (WebSocketErrorPayload)payload;
 			ErrorMessage message = errorPayload.getMessage();
 			onError(webSocketHandler, message);
 		}
 		else if (payload instanceof WebSocketAbortedPayload)
 		{
-			WebSocketAbortedPayload abortedPayload = (WebSocketAbortedPayload) payload;
+			WebSocketAbortedPayload abortedPayload = (WebSocketAbortedPayload)payload;
 			AbortedMessage message = abortedPayload.getMessage();
 			onAbort(message);
 		}
 		else if (payload instanceof WebSocketPushPayload)
 		{
-			WebSocketPushPayload pushPayload = (WebSocketPushPayload) payload;
+			WebSocketPushPayload pushPayload = (WebSocketPushPayload)payload;
 			IWebSocketPushMessage message = pushPayload.getMessage();
 			onPush(webSocketHandler, message);
 		}
@@ -131,15 +131,15 @@ public abstract class WebSocketResource implements IResource
 	{
 	}
 
-    /**
-     * A callback method called when the server has aborted the connection
-     *
-     * @param message
-     *          the aborted message with the info about the server
-     */
-    protected void onAbort(AbortedMessage message)
-    {
-    }
+	/**
+	 * A callback method called when the server has aborted the connection
+	 *
+	 * @param message
+	 *          the aborted message with the info about the server
+	 */
+	protected void onAbort(AbortedMessage message)
+	{
+	}
 
 	/**
 	 * A callback method called when a WebSocket client has closed the connection

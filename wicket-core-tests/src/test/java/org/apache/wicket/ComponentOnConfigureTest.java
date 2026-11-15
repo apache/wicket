@@ -51,7 +51,7 @@ class ComponentOnConfigureTest extends WicketTestCase
 		BEHAVIOR.set(0);
 		APPLICATION_LISTENER.set(0);
 	}
-	
+
 	/**
 	 * testOrder()
 	 */

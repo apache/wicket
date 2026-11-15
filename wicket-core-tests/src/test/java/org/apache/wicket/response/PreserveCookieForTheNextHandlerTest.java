@@ -56,9 +56,9 @@ class PreserveCookieForTheNextHandlerTest extends WicketTestCase
 		assertEquals("value", cookies.get(0).getValue());
 	}
 
-    public static final class StartPage extends WebPage implements IMarkupResourceStreamProvider
+	public static final class StartPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-        public StartPage()
+		public StartPage()
 		{
 			add(new BookmarkablePageLink<Void>("link", SetCookiePage.class));
 		}
@@ -70,7 +70,7 @@ class PreserveCookieForTheNextHandlerTest extends WicketTestCase
 		}
 	}
 
-    public static final class SetCookiePage extends WebPage implements IMarkupResourceStreamProvider
+	public static final class SetCookiePage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		@Override
 		protected void onBeforeRender()

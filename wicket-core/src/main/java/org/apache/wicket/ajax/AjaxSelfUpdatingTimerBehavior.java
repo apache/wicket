@@ -72,7 +72,8 @@ public class AjaxSelfUpdatingTimerBehavior extends AbstractAjaxTimerBehavior
 	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AbstractAjaxTimerBehavior}
 	 */
-	public static AjaxSelfUpdatingTimerBehavior onSelfUpdate(Duration interval, SerializableConsumer<AjaxRequestTarget> onTimer)
+	public static AjaxSelfUpdatingTimerBehavior onSelfUpdate(Duration interval,
+		SerializableConsumer<AjaxRequestTarget> onTimer)
 	{
 		Args.notNull(onTimer, "onTimer");
 

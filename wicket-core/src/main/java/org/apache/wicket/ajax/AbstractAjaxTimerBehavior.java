@@ -44,7 +44,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	private Duration updateInterval;
 
 	private boolean stopped = false;
-	
+
 	/**
 	 * Id of timer in JavaScript.
 	 */
@@ -102,7 +102,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		// timerId is no longer valid after timer has triggered
 		timerId = null;
-		
+
 		if (shouldTrigger())
 		{
 			onTimer(target);
@@ -124,8 +124,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected boolean shouldTrigger()
 	{
 		return isStopped() == false &&
-				isEnabled(getComponent()) &&
-				(getComponent() instanceof Page || getComponent().findParent(Page.class) != null);
+			isEnabled(getComponent()) &&
+			(getComponent() instanceof Page || getComponent().findParent(Page.class) != null);
 	}
 
 	/**
@@ -197,7 +197,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		timerId = getTimerId();
 
 		headerResponse.render(
-			OnLoadHeaderItem.forScript("Wicket.Timer.set('" + timerId + "', function(){" + js + "}, " + updateInterval.toMillis() + ");"));
+			OnLoadHeaderItem.forScript("Wicket.Timer.set('" + timerId + "', function(){" + js + "}, " + updateInterval
+				.toMillis() + ");"));
 	}
 
 	private void clearTimeout(IHeaderResponse headerResponse)
@@ -233,15 +234,17 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	public void onRemove(Component component)
 	{
-		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(target.getHeaderResponse()));
+		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(target
+			.getHeaderResponse()));
 	}
 
 	@Override
 	protected void onUnbind()
 	{
 		Component component = getComponent();
-		
-		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(target.getHeaderResponse()));
+
+		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(target
+			.getHeaderResponse()));
 	}
 
 	/**

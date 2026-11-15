@@ -15,13 +15,15 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.jmx {
-    requires java.management;
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.core;
-    requires org.slf4j;
+module org.apache.wicket.jmx
+{
+	requires java.management;
+	requires org.apache.wicket.util;
+	requires org.apache.wicket.core;
+	requires org.slf4j;
 
-    provides org.apache.wicket.IInitializer with org.apache.wicket.jmx.Initializer;
-    exports org.apache.wicket.jmx;
-    exports org.apache.wicket.jmx.wrapper;
+	provides org.apache.wicket.IInitializer with org.apache.wicket.jmx.Initializer;
+
+	exports org.apache.wicket.jmx;
+	exports org.apache.wicket.jmx.wrapper;
 }

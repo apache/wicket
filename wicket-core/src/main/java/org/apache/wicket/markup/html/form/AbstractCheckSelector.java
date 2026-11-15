@@ -59,7 +59,8 @@ public abstract class AbstractCheckSelector extends LabeledWebMarkupContainer
 		{
 			List<HeaderItem> dependencies = super.getDependencies();
 			ResourceReference wicketEventReference = WicketAjaxJQueryResourceReference.get();
-			if (Application.exists()) {
+			if (Application.exists())
+			{
 				wicketEventReference = Application.get().getJavaScriptLibrarySettings().getWicketAjaxReference();
 			}
 			dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));

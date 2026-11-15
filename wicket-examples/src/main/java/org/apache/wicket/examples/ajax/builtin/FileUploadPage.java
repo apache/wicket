@@ -56,7 +56,8 @@ public class FileUploadPage extends BasePage
 {
 	private static final long serialVersionUID = 1L;
 
-	private static class SingleFileUploadSamplePanel extends Panel {
+	private static class SingleFileUploadSamplePanel extends Panel
+	{
 
 		private final FileUploadField file;
 		private final TextField<String> text;
@@ -65,7 +66,8 @@ public class FileUploadPage extends BasePage
 		private final Button submit;
 		private String fileInfo;
 
-		public SingleFileUploadSamplePanel(String id) {
+		public SingleFileUploadSamplePanel(String id)
+		{
 			super(id);
 
 			// create a feedback panel
@@ -90,7 +92,7 @@ public class FileUploadPage extends BasePage
 					else
 					{
 						info("File-Name: " + upload.getClientFileName() + " File-Size: " +
-								Bytes.bytes(upload.getSize()).toString());
+							Bytes.bytes(upload.getSize()).toString());
 					}
 				}
 			};
@@ -104,9 +106,11 @@ public class FileUploadPage extends BasePage
 			// create the file upload field
 			form.add(file = new FileUploadField("file"));
 
-			add(selectedFileInfo = new Label("selectedFileInfo", (IModel<String>) () -> fileInfo) {
+			add(selectedFileInfo = new Label("selectedFileInfo", (IModel<String>)() -> fileInfo)
+			{
 				@Override
-				protected void onAfterRender() {
+				protected void onAfterRender()
+				{
 					super.onAfterRender();
 					fileInfo = null;
 				}
@@ -156,34 +160,35 @@ public class FileUploadPage extends BasePage
 			ajaxSubmit.setOutputMarkupId(true);
 
 			file.add(FilesSelectedBehavior.onSelected(
-					(AjaxRequestTarget target, List<FileDescription> fileDescriptions)->
+				(AjaxRequestTarget target, List<FileDescription> fileDescriptions) -> {
+					FileDescription fileDescription = fileDescriptions.get(0);
+					Bytes bytes = Bytes.bytes(fileDescription.getFileSize());
+					fileInfo = "File " + fileDescription.getFileName() +
+						" (with size " + bytes + ") was selected at client side. "
+						+ "File was last modified at: " + fileDescription.getLastModified()
+						+ " and is of type " + fileDescription.getMimeType() +
+						". It has not been uploaded yet. ";
+					if (bytes.greaterThan(form.getMaxSize()))
 					{
-						FileDescription fileDescription = fileDescriptions.get(0);
-						Bytes bytes = Bytes.bytes(fileDescription.getFileSize());
-						fileInfo = "File " + fileDescription.getFileName() +
-								" (with size " + bytes + ") was selected at client side. "
-								+ "File was last modified at: " + fileDescription.getLastModified()
-								+ " and is of type " + fileDescription.getMimeType() +
-								". It has not been uploaded yet. ";
-						if (bytes.greaterThan(form.getMaxSize()))
-						{
-							fileInfo += " File exceeds max allowed size.";
-							// disable buttons as file is not valid
-							submit.setEnabled(false);
-							ajaxSubmit.setEnabled(false);
-						}
-						else
-						{
-							fileInfo += " You can click on buttons bellow in order to upload it.";
-							// enable buttons as file is valid
-							submit.setEnabled(true);
-							ajaxSubmit.setEnabled(true);
-						}
-						target.add(selectedFileInfo, submit, ajaxSubmit);
-					}));
+						fileInfo += " File exceeds max allowed size.";
+						// disable buttons as file is not valid
+						submit.setEnabled(false);
+						ajaxSubmit.setEnabled(false);
+					}
+					else
+					{
+						fileInfo += " You can click on buttons bellow in order to upload it.";
+						// enable buttons as file is valid
+						submit.setEnabled(true);
+						ajaxSubmit.setEnabled(true);
+					}
+					target.add(selectedFileInfo, submit, ajaxSubmit);
+				}));
 			WebMarkupContainer drop = new WebMarkupContainer("drop");
-			drop.add(new AjaxFileDropBehavior() {
-				protected void onFileUpload(AjaxRequestTarget target, List<FileUpload> files) {
+			drop.add(new AjaxFileDropBehavior()
+			{
+				protected void onFileUpload(AjaxRequestTarget target, List<FileUpload> files)
+				{
 
 					// display uploaded info
 					if (files == null || files.isEmpty())
@@ -192,9 +197,10 @@ public class FileUploadPage extends BasePage
 					}
 					else
 					{
-						for (FileUpload file : files) {
+						for (FileUpload file : files)
+						{
 							info("File-Name: " + file.getClientFileName() + " File-Size: " +
-									Bytes.bytes(file.getSize()).toString());
+								Bytes.bytes(file.getSize()).toString());
 						}
 					}
 
@@ -213,39 +219,48 @@ public class FileUploadPage extends BasePage
 		}
 	}
 
-	private static class MultipleFileUploadsSamplePanel extends Panel {
+	private static class MultipleFileUploadsSamplePanel extends Panel
+	{
 
-		private static class DataProvider extends SortableDataProvider<FileDescription, String> {
+		private static class DataProvider extends SortableDataProvider<FileDescription, String>
+		{
 
 			private List<FileDescription> fileDescriptions;
 
-			public void setFileDescriptions(List<FileDescription> fileDescriptions) {
+			public void setFileDescriptions(List<FileDescription> fileDescriptions)
+			{
 				this.fileDescriptions = new ArrayList<>(fileDescriptions);
 			}
 
 			@Override
-			public Iterator<? extends FileDescription> iterator(long first, long count) {
-				if (this.fileDescriptions == null) {
+			public Iterator<? extends FileDescription> iterator(long first, long count)
+			{
+				if (this.fileDescriptions == null)
+				{
 					return EmptyIterator.emptyIterator();
 				}
 				return fileDescriptions.listIterator();
 			}
 
 			@Override
-			public long size() {
-				if (this.fileDescriptions == null) {
+			public long size()
+			{
+				if (this.fileDescriptions == null)
+				{
 					return 0L;
 				}
 				return this.fileDescriptions.size();
 			}
 
 			@Override
-			public IModel<FileDescription> model(FileDescription object) {
+			public IModel<FileDescription> model(FileDescription object)
+			{
 				return Model.of(object);
 			}
 
 			@Override
-			public void detach() {
+			public void detach()
+			{
 				super.detach();
 				this.fileDescriptions = null;
 			}
@@ -258,7 +273,8 @@ public class FileUploadPage extends BasePage
 		private final AjaxButton ajaxSubmit;
 		private final Button submit;
 
-		public MultipleFileUploadsSamplePanel(String id) {
+		public MultipleFileUploadsSamplePanel(String id)
+		{
 			super(id);
 
 			// create a feedback panel
@@ -283,7 +299,7 @@ public class FileUploadPage extends BasePage
 					else
 					{
 						info("File-Name: " + upload.getClientFileName() + " File-Size: " +
-								Bytes.bytes(upload.getSize()).toString());
+							Bytes.bytes(upload.getSize()).toString());
 					}
 				}
 			};
@@ -295,9 +311,12 @@ public class FileUploadPage extends BasePage
 			columns.add(new PropertyColumn<>(Model.of("Size"), "fileSize"));
 			columns.add(new PropertyColumn<>(Model.of("Last Modified"), "lastModified"));
 			columns.add(new PropertyColumn<>(Model.of("MIME Type"), "mimeType"));
-			selectedFileInfo = new AjaxFallbackDefaultDataTable<>("selectedFileInfo", columns, dataProvider = new DataProvider(), 100) {
+			selectedFileInfo = new AjaxFallbackDefaultDataTable<>("selectedFileInfo", columns,
+				dataProvider = new DataProvider(), 100)
+			{
 				@Override
-				protected void onConfigure() {
+				protected void onConfigure()
+				{
 					super.onConfigure();
 					setVisible(dataProvider.size() > 0);
 				}
@@ -353,28 +372,28 @@ public class FileUploadPage extends BasePage
 			});
 			ajaxSubmit.setOutputMarkupId(true);
 			file.add(FilesSelectedBehavior.onSelected(
-					(AjaxRequestTarget target, List<FileDescription> fileDescriptions) ->
-			{
-				dataProvider.setFileDescriptions(fileDescriptions);
-				Bytes bytes = Bytes.bytes(fileDescriptions.stream().mapToLong(FileDescription::getFileSize).sum());
-				if (bytes.greaterThan(form.getMaxSize()))
-				{
-					form.error("Total file size exceeds max allowed size.");
-					// disable buttons as file is not valid
-					submit.setEnabled(false);
-					ajaxSubmit.setEnabled(false);
-				}
-				else
-				{
-					form.info("You can click on buttons bellow in order to upload selected files.");
-					// enable buttons as file is valid
-					submit.setEnabled(true);
-					ajaxSubmit.setEnabled(true);
-				}
-				target.add(selectedFileInfo, submit, ajaxSubmit, feedback);
-			}));
+				(AjaxRequestTarget target, List<FileDescription> fileDescriptions) -> {
+					dataProvider.setFileDescriptions(fileDescriptions);
+					Bytes bytes = Bytes.bytes(fileDescriptions.stream().mapToLong(FileDescription::getFileSize).sum());
+					if (bytes.greaterThan(form.getMaxSize()))
+					{
+						form.error("Total file size exceeds max allowed size.");
+						// disable buttons as file is not valid
+						submit.setEnabled(false);
+						ajaxSubmit.setEnabled(false);
+					}
+					else
+					{
+						form.info("You can click on buttons bellow in order to upload selected files.");
+						// enable buttons as file is valid
+						submit.setEnabled(true);
+						ajaxSubmit.setEnabled(true);
+					}
+					target.add(selectedFileInfo, submit, ajaxSubmit, feedback);
+				}));
 		}
 	}
+
 	/**
 	 * Constructor
 	 */

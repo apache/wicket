@@ -162,7 +162,8 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @see jakarta.servlet.http.HttpServletResponse#sendRedirect(java.lang.String,int,boolean)
 	 */
 	@Override
-	public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+	public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException
+	{
 		isOpen();
 		redirect = location;
 		realResponse.sendRedirect(location, sc, clearBuffer);

@@ -32,30 +32,33 @@ import org.apache.wicket.util.lang.Classes;
  *
  * @see DebugSettings#setOutputMarkupContainerClassNameStrategy(DebugSettings.ClassOutputStrategy)  
  */
-public class OutputMarkupContainerClassNameBehavior extends Behavior {
+public class OutputMarkupContainerClassNameBehavior extends Behavior
+{
 
-    public static final OutputMarkupContainerClassNameBehavior INSTANCE = new OutputMarkupContainerClassNameBehavior();
+	public static final OutputMarkupContainerClassNameBehavior INSTANCE = new OutputMarkupContainerClassNameBehavior();
 
-    private OutputMarkupContainerClassNameBehavior()
-    {}
+	private OutputMarkupContainerClassNameBehavior()
+	{}
 
-    @Override
-    public void onComponentTag(Component component, ComponentTag tag) {
-        super.onComponentTag(component, tag);
+	@Override
+	public void onComponentTag(Component component, ComponentTag tag)
+	{
+		super.onComponentTag(component, tag);
 
-        if (component instanceof MarkupContainer)
-        {
-            String namespace = tag.getNamespace();
-            if (namespace == null)
-            {
-                namespace = "wicket";
-            }
-            tag.put(namespace + ":className", Classes.name(component.getClass()));
-        }
-    }
+		if (component instanceof MarkupContainer)
+		{
+			String namespace = tag.getNamespace();
+			if (namespace == null)
+			{
+				namespace = "wicket";
+			}
+			tag.put(namespace + ":className", Classes.name(component.getClass()));
+		}
+	}
 
-    @Override
-    public boolean isTemporary(Component component) {
-        return true;
-    }
+	@Override
+	public boolean isTemporary(Component component)
+	{
+		return true;
+	}
 }

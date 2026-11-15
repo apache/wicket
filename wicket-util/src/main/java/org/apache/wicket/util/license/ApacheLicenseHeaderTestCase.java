@@ -56,6 +56,7 @@ public abstract class ApacheLicenseHeaderTestCase
 	protected boolean addHeaders = false;
 	private ILicenseHeaderHandler[] licenseHeaderHandlers;
 	private File baseDirectory = new File("").getAbsoluteFile();
+
 	/**
 	 * Construct.
 	 */

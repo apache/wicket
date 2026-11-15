@@ -42,7 +42,7 @@ public class ResourceNameKey extends AbstractKey
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		ResourceNameKey that = (ResourceNameKey) o;
+		ResourceNameKey that = (ResourceNameKey)o;
 
 		if (!resourceName.equals(that.resourceName)) return false;
 

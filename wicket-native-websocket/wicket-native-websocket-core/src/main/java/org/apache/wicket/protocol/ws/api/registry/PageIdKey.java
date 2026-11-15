@@ -38,14 +38,14 @@ public class PageIdKey extends AbstractKey
 		super(context);
 		this.pageId = Args.notNull(pageId, "pageId");
 	}
-	
+
 	@Override
 	public boolean equals(Object o)
 	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		PageIdKey pageIdKey = (PageIdKey) o;
+		PageIdKey pageIdKey = (PageIdKey)o;
 
 		if (!pageId.equals(pageIdKey.pageId)) return false;
 

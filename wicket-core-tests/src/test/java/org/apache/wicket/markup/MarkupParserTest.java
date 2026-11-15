@@ -328,7 +328,8 @@ final class MarkupParserTest extends WicketTestCase
 		}
 
 		new MarkupParser(
-			"<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>").parse();
+			"<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>")
+				.parse();
 	}
 
 	/**
@@ -390,7 +391,7 @@ final class MarkupParserTest extends WicketTestCase
 	void scriptWithTemplate() throws ParseException, ResourceStreamNotFoundException, IOException
 	{
 		final MarkupParser parser = new MarkupParser(
-				"<html wicket:id=\"test\"><script type=\"text/x-jquery-tmpl\" language=\"JavaScript\">... <x a/> ...</script></html>");
+			"<html wicket:id=\"test\"><script type=\"text/x-jquery-tmpl\" language=\"JavaScript\">... <x a/> ...</script></html>");
 
 		IMarkupFragment markup = parser.parse();
 		assertEquals(5, markup.size());
@@ -411,7 +412,7 @@ final class MarkupParserTest extends WicketTestCase
 	void scriptWithTemplateSingleQuotes() throws ParseException, ResourceStreamNotFoundException, IOException
 	{
 		final MarkupParser parser = new MarkupParser(
-				"<html wicket:id=\"test\"><script type='text/x-jquery-tmpl' language=\"JavaScript\">... <x a/> ...</script></html>");
+			"<html wicket:id=\"test\"><script type='text/x-jquery-tmpl' language=\"JavaScript\">... <x a/> ...</script></html>");
 
 		IMarkupFragment markup = parser.parse();
 		assertEquals(5, markup.size());

@@ -33,7 +33,7 @@ class SimpleTestPanelTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage_2() throws Exception
+	void renderHomePage_2() throws Exception
 	{
 		executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
 

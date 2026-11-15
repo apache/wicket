@@ -79,14 +79,14 @@ class PageAccessSynchronizerTest
 			{
 				sync.lockPage(1);
 				t1locks[0] = Instant.now();
-                try
-                {
-                    Thread.sleep(hold.toMillis());
-                }
-                catch (InterruptedException e)
-                {
-                    throw new RuntimeException(e);
-                }
+				try
+				{
+					Thread.sleep(hold.toMillis());
+				}
+				catch (InterruptedException e)
+				{
+					throw new RuntimeException(e);
+				}
 				sync.unlockAllPages();
 			}
 		}

@@ -87,7 +87,7 @@ public class GoAndClearFilter extends GoFilter
 	 *            the object to use as original state
 	 */
 	public GoAndClearFilter(final String id, final IModel<String> goModel,
-			final IModel<String> clearModel, Object originalState)
+		final IModel<String> clearModel, Object originalState)
 	{
 		super(id, goModel);
 

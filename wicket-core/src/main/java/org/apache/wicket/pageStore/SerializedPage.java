@@ -34,7 +34,7 @@ import org.apache.wicket.util.lang.Args;
 public final class SerializedPage implements IManageablePage
 {
 	private final int pageId;
-	
+
 	private final String pageType;
 
 	private final byte[] data;
@@ -88,7 +88,8 @@ public final class SerializedPage implements IManageablePage
 	}
 
 	@Override
-	public void detach() {
+	public void detach()
+	{
 	}
 
 	@Override
@@ -96,7 +97,7 @@ public final class SerializedPage implements IManageablePage
 	{
 		return false;
 	}
-	
+
 	@Override
 	public String toString()
 	{

@@ -47,7 +47,7 @@ public class ObjectSizeOfAgent
 	{
 
 		InstrumentationObjectSizeOfStrategy strategy = new InstrumentationObjectSizeOfStrategy(
-				instrumentation);
+			instrumentation);
 		WicketObjects.setObjectSizeOfStrategy(strategy);
 	}
 
@@ -63,7 +63,7 @@ public class ObjectSizeOfAgent
 	{
 
 		InstrumentationObjectSizeOfStrategy strategy = new InstrumentationObjectSizeOfStrategy(
-				instrumentation);
+			instrumentation);
 		WicketObjects.setObjectSizeOfStrategy(strategy);
 	}
 }

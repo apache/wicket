@@ -91,14 +91,14 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *             Thrown if something goes wrong with upload
 	 */
 	public MultipartServletWebRequestImpl(HttpServletRequest request, String filterPrefix,
-										  Bytes maxSize, String upload) throws FileUploadException
+		Bytes maxSize, String upload) throws FileUploadException
 	{
 		this(request, filterPrefix, maxSize, upload,
 			DiskFileItemFactory.builder()
-					.setFileCleaningTracker(new FileCleanerTrackerAdapter(Application.get()
-							.getResourceSettings()
-							.getFileCleaner()))
-					.get());
+				.setFileCleaningTracker(new FileCleanerTrackerAdapter(Application.get()
+					.getResourceSettings()
+					.getFileCleaner()))
+				.get());
 	}
 
 	/**
@@ -205,8 +205,8 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			{
 				// Set parameter value
 				final String value;
-				
-				try 
+
+				try
 				{
 					if (encoding != null)
 					{
@@ -310,7 +310,8 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 					itemsFromParts.add(fileItem);
 				}
 			}
-		} catch (IOException | ServletException e)
+		}
+		catch (IOException | ServletException e)
 		{
 			throw new FileUploadException("An error occurred while reading the upload parts", e);
 		}
@@ -324,7 +325,8 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	 *            The encoding to use while reading the data
 	 * @return A new instance of AbstractFileUpload
 	 */
-	protected AbstractFileUpload newFileUpload(String encoding) {
+	protected AbstractFileUpload newFileUpload(String encoding)
+	{
 		// Configure the factory here, if desired.
 		JakartaServletFileUpload fileUpload = new JakartaServletFileUpload(fileItemFactory);
 
@@ -350,7 +352,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		return fileUpload;
 	}
 
-    /**
+	/**
 	 * Adds a parameter to the parameters value map
 	 *
 	 * @param name
@@ -536,7 +538,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 
 	@Override
 	public MultipartServletWebRequest newMultipartWebRequest(Bytes maxSize, String upload, FileItemFactory factory)
-			throws FileUploadException
+		throws FileUploadException
 	{
 		return this;
 	}

@@ -136,8 +136,8 @@ public class ResourceReferenceRequestHandler implements IRequestHandler, ILoggab
 	public String toString()
 	{
 		return "ResourceReferenceRequestHandler{" +
-				"resourceReference=" + resourceReference +
-				", pageParameters=" + pageParameters +
-				'}';
+			"resourceReference=" + resourceReference +
+			", pageParameters=" + pageParameters +
+			'}';
 	}
 }

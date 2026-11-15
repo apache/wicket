@@ -39,8 +39,8 @@ class PageExpirationRecoveryTest extends WicketTestCase
 {
 
 	private final PageParameters parameters = new PageParameters()
-			.set("a", "b")
-			.set("c", "d");
+		.set("a", "b")
+		.set("c", "d");
 
 	@BeforeEach
 	void before()
@@ -86,7 +86,7 @@ class PageExpirationRecoveryTest extends WicketTestCase
 		tester.getSession().invalidateNow();
 		assertFalse(page.linkClicked.get());
 		tester.clickLink("link", false);
-		page = (ExpirationRecoveryPage) tester.getLastRenderedPage();
+		page = (ExpirationRecoveryPage)tester.getLastRenderedPage();
 		// the page is properly recreated
 		assertEquals(parameters, page.getPageParameters(), "PageParameters should be preserved");
 		// but the listener interface is not executed
@@ -96,7 +96,7 @@ class PageExpirationRecoveryTest extends WicketTestCase
 		tester.getSession().invalidateNow();
 		assertFalse(page.ajaxLinkClicked.get());
 		tester.clickLink("alink", true);
-		page = (ExpirationRecoveryPage) tester.getLastRenderedPage();
+		page = (ExpirationRecoveryPage)tester.getLastRenderedPage();
 		assertFalse(page.ajaxLinkClicked.get(), "AjaxLink should not be clicked!");
 		assertEquals(parameters, page.getPageParameters(), "PageParameters should be preserved");
 
@@ -104,7 +104,7 @@ class PageExpirationRecoveryTest extends WicketTestCase
 		tester.getSession().invalidateNow();
 		assertFalse(page.submitLinkSubmitted.get());
 		tester.clickLink("f:sl", false);
-		page = (ExpirationRecoveryPage) tester.getLastRenderedPage();
+		page = (ExpirationRecoveryPage)tester.getLastRenderedPage();
 		assertFalse(page.submitLinkSubmitted.get(), "SubmitLink should not be submitted!");
 		assertEquals(parameters, page.getPageParameters(), "PageParameters should be preserved");
 
@@ -112,7 +112,7 @@ class PageExpirationRecoveryTest extends WicketTestCase
 		tester.getSession().invalidateNow();
 		assertFalse(page.ajaxSubmitLinkSubmitted.get());
 		tester.clickLink("f:asl", true);
-		page = (ExpirationRecoveryPage) tester.getLastRenderedPage();
+		page = (ExpirationRecoveryPage)tester.getLastRenderedPage();
 		assertFalse(page.ajaxSubmitLinkSubmitted.get(), "AjaxSubmitLink should not be submitted");
 		assertEquals(parameters, page.getPageParameters(), "PageParameters should be preserved");
 
@@ -123,7 +123,7 @@ class PageExpirationRecoveryTest extends WicketTestCase
 		FormTester formTester = tester.newFormTester("f");
 		formTester.setValue("text", "newValue");
 		formTester.submit();
-		page = (ExpirationRecoveryPage) tester.getLastRenderedPage();
+		page = (ExpirationRecoveryPage)tester.getLastRenderedPage();
 		assertFalse(page.formSubmitted.get(), "Form should not be submitted");
 		assertEquals(textOldValue, page.textModel.getObject(), "TextField's value should not be modified");
 		assertEquals(parameters, page.getPageParameters(), "PageParameters should be preserved");
@@ -143,7 +143,7 @@ class PageExpirationRecoveryTest extends WicketTestCase
 		tester.getSession().invalidateNow();
 		assertFalse(page.linkClicked.get());
 		tester.clickLink("link", false);
-		page = (ExpirationRecoveryPage) tester.getLastRenderedPage();
+		page = (ExpirationRecoveryPage)tester.getLastRenderedPage();
 		assertTrue(page.linkClicked.get(), "Link should be clicked!");
 		assertEquals(parameters, page.getPageParameters(), "PageParameters should be preserved");
 
@@ -151,7 +151,7 @@ class PageExpirationRecoveryTest extends WicketTestCase
 		tester.getSession().invalidateNow();
 		assertFalse(page.ajaxLinkClicked.get());
 		tester.clickLink("alink", true);
-		page = (ExpirationRecoveryPage) tester.getLastRenderedPage();
+		page = (ExpirationRecoveryPage)tester.getLastRenderedPage();
 		assertTrue(page.ajaxLinkClicked.get(), "AjaxLink should be clicked!");
 		assertEquals(parameters, page.getPageParameters(), "PageParameters should be preserved");
 
@@ -162,7 +162,7 @@ class PageExpirationRecoveryTest extends WicketTestCase
 		String newValue = "newValue";
 		formTester.setValue("text", newValue);
 		formTester.submit();
-		page = (ExpirationRecoveryPage) tester.getLastRenderedPage();
+		page = (ExpirationRecoveryPage)tester.getLastRenderedPage();
 		assertTrue(page.formSubmitted.get(), "Form should be submitted");
 		assertEquals(newValue, page.textModel.getObject(), "TextField's value should be modified");
 		assertEquals(parameters, page.getPageParameters(), "PageParameters should be preserved");
@@ -171,7 +171,7 @@ class PageExpirationRecoveryTest extends WicketTestCase
 		tester.getSession().invalidateNow();
 		assertFalse(page.submitLinkSubmitted.get());
 		tester.clickLink("f:sl", false);
-		page = (ExpirationRecoveryPage) tester.getLastRenderedPage();
+		page = (ExpirationRecoveryPage)tester.getLastRenderedPage();
 		assertTrue(page.submitLinkSubmitted.get(), "SubmitLink should be submitted!");
 		assertEquals(parameters, page.getPageParameters(), "PageParameters should be preserved");
 
@@ -179,7 +179,7 @@ class PageExpirationRecoveryTest extends WicketTestCase
 		tester.getSession().invalidateNow();
 		assertFalse(page.ajaxSubmitLinkSubmitted.get());
 		tester.clickLink("f:asl", true);
-		page = (ExpirationRecoveryPage) tester.getLastRenderedPage();
+		page = (ExpirationRecoveryPage)tester.getLastRenderedPage();
 		assertTrue(page.ajaxSubmitLinkSubmitted.get(), "AjaxSubmitLink should be submitted");
 		assertEquals(parameters, page.getPageParameters(), "PageParameters should be preserved");
 	}

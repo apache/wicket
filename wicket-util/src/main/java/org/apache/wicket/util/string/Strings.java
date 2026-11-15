@@ -54,7 +54,7 @@ public final class Strings
 			'A', 'B', 'C', 'D', 'E', 'F' };
 
 	private static final Pattern HTML_NUMBER_REGEX = Pattern.compile("&#\\d+;");
-	
+
 	private static final String[] NO_STRINGS = new String[0];
 
 	/**
@@ -364,7 +364,7 @@ public final class Strings
 					int ci = 0xffff & c;
 
 					if (
-					// if this is non-printable and not whitespace (TAB, LF, CR)
+						// if this is non-printable and not whitespace (TAB, LF, CR)
 					((ci < 32) && (ci != 9) && (ci != 10) && (ci != 13)) ||
 					// or non-ASCII (XXX: why 160+ ?!) and need to UNICODE escape it
 						(convertToHtmlUnicodeEscapes && (ci > 159)))
@@ -642,7 +642,7 @@ public final class Strings
 	 * @param separator
 	 * @param fragments
 	 * @return combined fragments
-     */
+	 */
 	public static String join(final String separator, final List<String> fragments)
 	{
 		if (fragments == null)
@@ -1088,11 +1088,11 @@ public final class Strings
 		{
 			return null;
 		}
-		
+
 		final int len = s.length();
-		
+
 		// allocate a buffer that is 10% larger than the original string to account for markup
-		final AppendingStringBuffer buffer = new AppendingStringBuffer((int) (len * 1.1) + 16);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer((int)(len * 1.1) + 16);
 		int newlineCount = 0;
 
 		buffer.append("<p>");
@@ -1259,7 +1259,8 @@ public final class Strings
 				sb.append(traceString);
 				sb.append("\n");
 				if (stopAtWicketServlet &&
-					(traceString.startsWith("org.apache.wicket.protocol.http.WicketServlet") || traceString.startsWith("org.apache.wicket.protocol.http.WicketFilter")))
+					(traceString.startsWith("org.apache.wicket.protocol.http.WicketServlet") || traceString.startsWith(
+						"org.apache.wicket.protocol.http.WicketFilter")))
 				{
 					return;
 				}
@@ -1554,7 +1555,7 @@ public final class Strings
 		catch (Exception e)
 		{
 			throw new StringValueConversionException(
-					String.format("Cannot convert '%s' to enum constant of type '%s'.", value, enumClass), e);
+				String.format("Cannot convert '%s' to enum constant of type '%s'.", value, enumClass), e);
 		}
 	}
 
@@ -1570,6 +1571,6 @@ public final class Strings
 	 */
 	public static String defaultIfEmpty(String originalString, String defaultValue)
 	{
-		return isEmpty(originalString) ? defaultValue : originalString;		
+		return isEmpty(originalString) ? defaultValue : originalString;
 	}
 }

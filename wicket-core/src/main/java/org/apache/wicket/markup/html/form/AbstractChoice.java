@@ -53,22 +53,22 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	/**
 	 * An enumeration of possible positions of the label for a choice
 	 */
-	public enum LabelPosition
-	{
+	public enum LabelPosition {
 		/**
 		 * will render the label before the choice
 		 */
 		BEFORE {
 			@Override
-			void before(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes, CharSequence renderValue)
+			void before(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes,
+				CharSequence renderValue)
 			{
 				buffer.append("<label for=\"")
-				.append(Strings.escapeMarkup(idAttr))
-				.append('"')
-				.append(extraLabelAttributes)
-				.append('>')
-				.append(renderValue)
-				.append("</label>");
+					.append(Strings.escapeMarkup(idAttr))
+					.append('"')
+					.append(extraLabelAttributes)
+					.append('>')
+					.append(renderValue)
+					.append("</label>");
 			}
 		},
 
@@ -77,15 +77,16 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 		 */
 		AFTER {
 			@Override
-			void after(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes, CharSequence renderValue)
+			void after(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes,
+				CharSequence renderValue)
 			{
 				buffer.append("<label for=\"")
-				.append(Strings.escapeMarkup(idAttr))
-				.append('"')
-				.append(extraLabelAttributes)
-				.append('>')
-				.append(renderValue)
-				.append("</label>");
+					.append(Strings.escapeMarkup(idAttr))
+					.append('"')
+					.append(extraLabelAttributes)
+					.append('>')
+					.append(renderValue)
+					.append("</label>");
 			}
 		},
 
@@ -94,17 +95,19 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 		 */
 		WRAP_BEFORE {
 			@Override
-			void before(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes, CharSequence renderValue)
+			void before(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes,
+				CharSequence renderValue)
 			{
 				buffer.append("<label")
-				.append(extraLabelAttributes)
-				.append('>')
-				.append(renderValue)
-				.append(' ');
+					.append(extraLabelAttributes)
+					.append('>')
+					.append(renderValue)
+					.append(' ');
 			}
-			
+
 			@Override
-			void after(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes, CharSequence renderValue)
+			void after(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes,
+				CharSequence renderValue)
 			{
 				buffer.append("</label>");
 			}
@@ -115,26 +118,32 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 		 */
 		WRAP_AFTER {
 			@Override
-			void before(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes, CharSequence renderValue)
+			void before(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes,
+				CharSequence renderValue)
 			{
 				buffer.append("<label")
-				.append(extraLabelAttributes)
-				.append('>');
+					.append(extraLabelAttributes)
+					.append('>');
 			}
-			
+
 			@Override
-			void after(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes, CharSequence renderValue)
+			void after(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes,
+				CharSequence renderValue)
 			{
 				buffer.append(' ')
-				.append(renderValue)
-				.append("</label>");
+					.append(renderValue)
+					.append("</label>");
 			}
 		};
-		
-		void before(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes, CharSequence renderValue) {
+
+		void before(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes,
+			CharSequence renderValue)
+		{
 		}
-		
-		void after(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes, CharSequence renderValue) {
+
+		void after(AppendingStringBuffer buffer, String idAttr, StringBuilder extraLabelAttributes,
+			CharSequence renderValue)
+		{
 		}
 	}
 
@@ -302,7 +311,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	/**
 	 * @return The model with the choices for this component
 	 */
-	public IModel<? extends List<? extends  E>> getChoicesModel()
+	public IModel<? extends List<? extends E>> getChoicesModel()
 	{
 		return this.choices;
 	}
@@ -507,21 +516,22 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 		{
 			displayValue = objectValue.toString();
 		}
-		
+
 		if (localizeDisplayValues())
 		{
 			String localized = getLocalizer().getString(getId() + "." + displayValue, this, "");
-			if (Strings.isEmpty(localized)) {
+			if (Strings.isEmpty(localized))
+			{
 				localized = getLocalizer().getString(displayValue, this, displayValue);
 			}
 			displayValue = localized;
 		}
-		
+
 		if (getEscapeModelStrings())
 		{
 			return escapeOptionHtml(displayValue);
 		}
-		
+
 		return displayValue;
 	}
 
@@ -597,12 +607,12 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 			"This class does not support type-conversion because it is performed "
 				+ "exclusively by the IChoiceRenderer assigned to this component");
 	}
-	
+
 	@Override
 	protected void onDetach()
 	{
 		renderer.detach();
-		
+
 		super.onDetach();
 	};
 }

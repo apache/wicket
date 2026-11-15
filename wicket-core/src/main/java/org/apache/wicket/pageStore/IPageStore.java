@@ -44,7 +44,7 @@ public interface IPageStore
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Stores the page-
 	 * 
@@ -79,7 +79,8 @@ public interface IPageStore
 	 * @param page
 	 *      the page that should be reverted
 	 */
-	default void revertPage(IPageContext context, IManageablePage page) {
+	default void revertPage(IPageContext context, IManageablePage page)
+	{
 	}
 
 	/**

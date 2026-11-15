@@ -62,7 +62,7 @@ public final class DefaultPageFactory implements IPageFactory
 		{
 			// throw an exception in case default constructor is missing
 			// => improved error message
-			Constructor<C> constructor = pageClass.getDeclaredConstructor((Class<?>[]) null);
+			Constructor<C> constructor = pageClass.getDeclaredConstructor((Class<?>[])null);
 
 			return processPage(newPage(constructor, null), null);
 		}
@@ -117,7 +117,7 @@ public final class DefaultPageFactory implements IPageFactory
 		final Class<PageParameters> argumentType)
 	{
 		// Get constructor for page class from cache
-		Constructor<C> constructor = (Constructor<C>) constructorForClass.get(pageClass);
+		Constructor<C> constructor = (Constructor<C>)constructorForClass.get(pageClass);
 
 		// Need to look up?
 		if (constructor == null)
@@ -128,7 +128,7 @@ public final class DefaultPageFactory implements IPageFactory
 				constructor = pageClass.getDeclaredConstructor(new Class[] { argumentType });
 
 				// Store it in the cache
-				Constructor<C> tmpConstructor = (Constructor<C>) constructorForClass.putIfAbsent(pageClass, constructor);
+				Constructor<C> tmpConstructor = (Constructor<C>)constructorForClass.putIfAbsent(pageClass, constructor);
 				if (tmpConstructor != null)
 				{
 					constructor = tmpConstructor;

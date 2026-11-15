@@ -62,11 +62,10 @@ class DefaultExceptionMapperResourceBlockedProdModeTest extends WicketTestCase
 	void packageResourceBlockedException()
 	{
 		DefaultExceptionMapper mapper = new DefaultExceptionMapper();
-		PackageResource.PackageResourceBlockedException x =
-				new PackageResource.PackageResourceBlockedException("test");
+		PackageResource.PackageResourceBlockedException x = new PackageResource.PackageResourceBlockedException("test");
 		IRequestHandler handler = mapper.map(x);
 		assertThat(handler).isInstanceOf(ErrorCodeRequestHandler.class);
-		ErrorCodeRequestHandler errorCodeRequestHandler = (ErrorCodeRequestHandler) handler;
+		ErrorCodeRequestHandler errorCodeRequestHandler = (ErrorCodeRequestHandler)handler;
 		assertEquals(HttpServletResponse.SC_NOT_FOUND, errorCodeRequestHandler.getErrorCode());
 	}
 }

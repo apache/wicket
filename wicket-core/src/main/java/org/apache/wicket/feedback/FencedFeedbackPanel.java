@@ -77,7 +77,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
  */
 public class FencedFeedbackPanel extends FeedbackPanel
 {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private static final MetaDataKey<Integer> FENCE_KEY = new MetaDataKey<>()
@@ -175,7 +175,7 @@ public class FencedFeedbackPanel extends FeedbackPanel
 
 			@Override
 			protected List<FeedbackMessage> collectMessages(Component panel,
-					IFeedbackMessageFilter filter)
+				IFeedbackMessageFilter filter)
 			{
 				if (fence == null)
 				{
@@ -203,7 +203,7 @@ public class FencedFeedbackPanel extends FeedbackPanel
 		}
 		super.onReAdd();
 	}
-	
+
 	private final class FencedFeedbackCollector extends FeedbackCollector
 	{
 		private FencedFeedbackCollector(Component component, boolean includeSession)
@@ -216,7 +216,7 @@ public class FencedFeedbackPanel extends FeedbackPanel
 		{
 			return !componentIsMarkedAsFence(component);
 		}
-		
+
 		private boolean componentIsMarkedAsFence(Component component)
 		{
 			return component.getMetaData(FENCE_KEY) != null;

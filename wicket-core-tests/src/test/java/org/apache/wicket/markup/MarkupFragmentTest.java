@@ -108,9 +108,11 @@ class MarkupFragmentTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6339
 	 */
 	@Test
-	void iteratorMustBeSameAsGetByIndex() {
+	void iteratorMustBeSameAsGetByIndex()
+	{
 		// test markup
-		Markup markup = Markup.of("<html><body><wicket:panel><wicket:container wicket:id='content'><a wicket:id='link' href='https://www.google.de'>Test</a></wicket:container></wicket:panel></body></html>");
+		Markup markup = Markup.of(
+			"<html><body><wicket:panel><wicket:container wicket:id='content'><a wicket:id='link' href='https://www.google.de'>Test</a></wicket:container></wicket:panel></body></html>");
 
 		IMarkupFragment firstLevelFragment = markup.find("content");
 		LOG.debug("First level fragment: '{}' with size '{}'", firstLevelFragment, firstLevelFragment.size());
@@ -120,11 +122,13 @@ class MarkupFragmentTest extends WicketTestCase
 		LOG.debug("Second level fragment: '{}' with size '{}'", secondLevelFragment, secondLevelFragment.size());
 
 		List<MarkupElement> iteratorElements = new ArrayList<>(secondLevelFragment.size());
-		for (MarkupElement markupElement : secondLevelFragment) {
+		for (MarkupElement markupElement : secondLevelFragment)
+		{
 			iteratorElements.add(markupElement);
 		}
 		List<MarkupElement> getElements = new ArrayList<>(secondLevelFragment.size());
-		for (int i = 0; i < secondLevelFragment.size(); i++) {
+		for (int i = 0; i < secondLevelFragment.size(); i++)
+		{
 			getElements.add(secondLevelFragment.get(i));
 		}
 

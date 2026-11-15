@@ -100,10 +100,10 @@ public abstract class AjaxFallbackLink<T> extends Link<T>
 				attributes.setPreventDefault(true);
 				AjaxFallbackLink.this.updateAjaxAttributes(attributes);
 			}
-			
+
 			@Override
 			public boolean getStatelessHint(Component component)
-			{				
+			{
 				return AjaxFallbackLink.this.getStatelessHint();
 			}
 		};

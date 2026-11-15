@@ -36,7 +36,7 @@ class HomePageTest extends WicketTestCase
 	 * testRenderMyPage()
 	 */
 	@Test
-    void testRenderMyPage()
+	void testRenderMyPage()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

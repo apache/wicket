@@ -109,7 +109,7 @@ public class PageRenderBenchmark
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class< ? > containerClass)
+			Class<?> containerClass)
 		{
 			return new StringResourceStream(
 				"<wicket:panel><div wicket:id=\"rv\"></div></wicket:panel>");

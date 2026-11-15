@@ -224,8 +224,8 @@ public class Localizer
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
 	public String getString(final String key, final Component component, final IModel<?> model,
-	                        final Locale locale, final String style, final IModel<String> defaultValue)
-			throws MissingResourceException
+		final Locale locale, final String style, final IModel<String> defaultValue)
+		throws MissingResourceException
 	{
 		final ResourceSettings resourceSettings = Application.get().getResourceSettings();
 
@@ -546,17 +546,17 @@ public class Localizer
 		}
 	}
 
-/**
-	 * Helper method to handle property variable substitution in strings.
-	 * 
-	 * @param component
-	 *            The component requesting a model value or {@code null}
-	 * @param string
-	 *            The string to substitute into
-	 * @param model
-	 *            The model
-	 * @return The resulting string
-	 */
+	/**
+		 * Helper method to handle property variable substitution in strings.
+		 * 
+		 * @param component
+		 *            The component requesting a model value or {@code null}
+		 * @param string
+		 *            The string to substitute into
+		 * @param model
+		 *            The model
+		 * @return The resulting string
+		 */
 	public String substitutePropertyExpressions(final Component component, final String string,
 		final IModel<?> model)
 	{

@@ -62,7 +62,8 @@ public class MockPageWithForm extends WebPage
 		list.add("Select me");
 		MyForm form = new MyForm("form");
 		DropDownChoice<String> dropDown = new DropDownChoice<String>("dropdown", new Model<String>(), list);
-		dropDown.add(new FormComponentUpdatingBehavior() {
+		dropDown.add(new FormComponentUpdatingBehavior()
+		{
 			@Override
 			protected void onUpdate()
 			{

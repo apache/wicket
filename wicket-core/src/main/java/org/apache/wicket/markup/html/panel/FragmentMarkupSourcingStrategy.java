@@ -127,7 +127,7 @@ public class FragmentMarkupSourcingStrategy extends AbstractMarkupSourcingStrate
 		}
 
 		// Search for the fragment markup
-		IMarkupFragment childMarkup = TagUtils.findTagMarkup(markup, markupId, FRAGMENT, 1 );
+		IMarkupFragment childMarkup = TagUtils.findTagMarkup(markup, markupId, FRAGMENT, 1);
 		if (childMarkup == null)
 		{
 			// There is one more option if the markup provider has associated markup

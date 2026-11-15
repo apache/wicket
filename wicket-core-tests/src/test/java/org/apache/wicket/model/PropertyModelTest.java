@@ -104,7 +104,7 @@ public class PropertyModelTest extends WicketTestCase
 	{
 		Person person = new Person();
 		PropertyModel<String> model = new PropertyModel<String>(person, "abstractAddress.street");
-		assertThrows(WicketRuntimeException.class, ()->{
+		assertThrows(WicketRuntimeException.class, () -> {
 			model.setObject("foo");
 		});
 

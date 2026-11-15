@@ -39,8 +39,7 @@ import org.apache.wicket.util.lang.Args;
  */
 public class RedirectRequestHandler implements IRequestHandler
 {
-	public enum Mode
-	{
+	public enum Mode {
 		/**
 		 * Use {@link WebResponse#sendRedirect(String)}.
 		 * It will call {@link WebResponse#encodeRedirectURL(CharSequence)} and may URL-encode some parts of the {@code location}
@@ -87,7 +86,7 @@ public class RedirectRequestHandler implements IRequestHandler
 			(status != HttpServletResponse.SC_FOUND) &&
 			(status != HttpServletResponse.SC_SEE_OTHER) &&
 			(status != HttpServletResponse.SC_TEMPORARY_REDIRECT) &&
-		 	(status != 308 /* Constant HttpServletResponse.SC_PERMANENT_REDIRECT, requires Jakarta servlet-api 6.1 */))
+			(status != 308 /* Constant HttpServletResponse.SC_PERMANENT_REDIRECT, requires Jakarta servlet-api 6.1 */))
 		{
 			throw new IllegalStateException("Status must be either 301, 302, 303, 307 or 308 but was: " + status);
 		}
@@ -158,7 +157,8 @@ public class RedirectRequestHandler implements IRequestHandler
 		}
 	}
 
-	private void setStatus(final WebResponse response, final IRequestCycle requestCycle, final String location) {
+	private void setStatus(final WebResponse response, final IRequestCycle requestCycle, final String location)
+	{
 		response.setStatus(status);
 
 		if (((WebRequest)requestCycle.getRequest()).isAjax())

@@ -27,13 +27,14 @@ import jakarta.servlet.http.HttpServletRequest;
  * @author Gergely Nagy
  */
 @FunctionalInterface
-public interface IWebSocketConnectionFilter {
+public interface IWebSocketConnectionFilter
+{
 
-    /**
-     * Method for rejecting connections based on the current request
-     *
-     * @param servletRequest
-     *            The servlet request holding the request headers
-     */
-    ConnectionRejected doFilter(HttpServletRequest servletRequest);
+	/**
+	 * Method for rejecting connections based on the current request
+	 *
+	 * @param servletRequest
+	 *            The servlet request holding the request headers
+	 */
+	ConnectionRejected doFilter(HttpServletRequest servletRequest);
 }

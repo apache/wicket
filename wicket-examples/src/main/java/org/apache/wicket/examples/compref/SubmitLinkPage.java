@@ -40,7 +40,7 @@ public class SubmitLinkPage extends ComprefPage
 		add(feedbackPanel);
 
 		// Add a form with 2 SubmitLinks that can be called
-		Form< ? > form = new Form("form")
+		Form<?> form = new Form("form")
 		{
 			@Override
 			public void renderHead(IHeaderResponse response)
@@ -59,7 +59,7 @@ public class SubmitLinkPage extends ComprefPage
 			{
 				return false;
 			}
-			
+
 			@Override
 			public void onSubmit()
 			{

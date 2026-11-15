@@ -44,7 +44,7 @@ class MarkupHeadFirstTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderMyPage() throws Exception
+	void renderMyPage() throws Exception
 	{
 		executeTest(MarkupHeadFirstPage.class, "MarkupHeadFirstPage.html");
 	}

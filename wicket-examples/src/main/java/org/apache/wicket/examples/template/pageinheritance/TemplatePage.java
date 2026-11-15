@@ -87,7 +87,7 @@ public abstract class TemplatePage extends WicketExamplePage
 	{
 		pageTitle = title;
 	}
-	
+
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{

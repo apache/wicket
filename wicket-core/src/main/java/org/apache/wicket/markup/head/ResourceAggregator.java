@@ -69,7 +69,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		public RecordedHeaderItemLocation(Component renderBase, int indexInRequest)
 		{
 			this.renderBase = renderBase;
-			
+
 			this.indexInRequest = indexInRequest;
 		}
 
@@ -91,18 +91,20 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 
 		public int getDepth()
 		{
-			if (depth == -1) {
+			if (depth == -1)
+			{
 				Component component = renderBase;
-				while (component != null)  {
+				while (component != null)
+				{
 					depth++;
-					
+
 					component = component.getParent();
 				}
 
 			}
 			return depth;
 		}
-		
+
 		@Override
 		public String toString()
 		{
@@ -120,7 +122,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		private final HeaderItem item;
 
 		private final List<RecordedHeaderItemLocation> locations;
-		
+
 		private int minDepth = Integer.MAX_VALUE;
 
 		/**
@@ -145,7 +147,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		void addLocation(Component renderBase, int indexInRequest)
 		{
 			locations.add(new RecordedHeaderItemLocation(renderBase, indexInRequest));
-			
+
 			minDepth = Integer.MAX_VALUE;
 		}
 
@@ -164,7 +166,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		{
 			return locations;
 		}
-		
+
 		/**
 		 * Get the minimum depth in the component tree.
 		 * 
@@ -172,12 +174,14 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		 */
 		public int getMinDepth()
 		{
-			if (minDepth == Integer.MAX_VALUE) {
-				for (RecordedHeaderItemLocation location : locations) {
+			if (minDepth == Integer.MAX_VALUE)
+			{
+				for (RecordedHeaderItemLocation location : locations)
+				{
 					minDepth = Math.min(minDepth, location.getDepth());
 				}
 			}
-			
+
 			return minDepth;
 		}
 
@@ -202,7 +206,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 * The currently rendered component
 	 */
 	private Component renderBase;
-	
+
 	private int indexInRequest;
 
 	/**
@@ -357,7 +361,8 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 				if (curItem instanceof OnDomReadyHeaderItem)
 				{
 					domReadScript.append(((OnDomReadyHeaderItem)curItem).getJavaScript());
-				} else if (curItem instanceof OnEventHeaderItem)
+				}
+				else if (curItem instanceof OnEventHeaderItem)
 				{
 					domReadScript.append(((OnEventHeaderItem)curItem).getCompleteJavaScript());
 				}
@@ -371,15 +376,15 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 
 		int onLoadLength = loadItemsToBeRendered.size() * 256;
-        StringBuilder onLoadScript = new StringBuilder(onLoadLength);
-		
+		StringBuilder onLoadScript = new StringBuilder(onLoadLength);
+
 		for (OnLoadHeaderItem curItem : loadItemsToBeRendered)
 		{
 			if (markItemRendered(curItem))
 			{
-			    onLoadScript.append('\n');
-			    onLoadScript.append(curItem.getJavaScript());
-			    onLoadScript.append(';');
+				onLoadScript.append('\n');
+				onLoadScript.append(curItem.getJavaScript());
+				onLoadScript.append(';');
 			}
 		}
 		if (onLoadScript.length() > 0)
@@ -479,13 +484,13 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		HeaderItem resultBundle;
 		if (item instanceof CssReferenceHeaderItem && bundle instanceof CssReferenceHeaderItem)
 		{
-			CssReferenceHeaderItem originalHeaderItem = (CssReferenceHeaderItem) item;
-			resultBundle = preserveCssDetails(originalHeaderItem, (CssReferenceHeaderItem) bundle);
+			CssReferenceHeaderItem originalHeaderItem = (CssReferenceHeaderItem)item;
+			resultBundle = preserveCssDetails(originalHeaderItem, (CssReferenceHeaderItem)bundle);
 		}
 		else if (item instanceof JavaScriptReferenceHeaderItem && bundle instanceof JavaScriptReferenceHeaderItem)
 		{
-			JavaScriptReferenceHeaderItem originalHeaderItem = (JavaScriptReferenceHeaderItem) item;
-			resultBundle = preserveJavaScriptDetails(originalHeaderItem, (JavaScriptReferenceHeaderItem) bundle);
+			JavaScriptReferenceHeaderItem originalHeaderItem = (JavaScriptReferenceHeaderItem)item;
+			resultBundle = preserveJavaScriptDetails(originalHeaderItem, (JavaScriptReferenceHeaderItem)bundle);
 		}
 		else
 		{
@@ -506,16 +511,17 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 * @param bundle The bundle that represents the replacement
 	 * @return the bundle with the preserved details
 	 */
-	private HeaderItem preserveJavaScriptDetails(JavaScriptReferenceHeaderItem item, JavaScriptReferenceHeaderItem bundle)
+	private HeaderItem preserveJavaScriptDetails(JavaScriptReferenceHeaderItem item,
+		JavaScriptReferenceHeaderItem bundle)
 	{
 		HeaderItem resultBundle;
 		ResourceReference bundleReference = bundle.getReference();
 		if (bundleReference instanceof ReplacementResourceBundleReference)
 		{
 			resultBundle = JavaScriptHeaderItem.forReference(bundleReference,
-					item.getPageParameters(),
-					item.getId()
-			).setCharset(item.getCharset()).setDefer(item.isDefer()).setAsync(item.isAsync()).setNonce(item.getNonce());
+				item.getPageParameters(),
+				item.getId()).setCharset(item.getCharset()).setDefer(item.isDefer()).setAsync(item.isAsync()).setNonce(
+					item.getNonce());
 		}
 		else
 		{
@@ -542,8 +548,8 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		if (bundleReference instanceof ReplacementResourceBundleReference)
 		{
 			resultBundle = CssHeaderItem.forReference(bundleReference,
-					item.getPageParameters(),
-					item.getMedia());
+				item.getPageParameters(),
+				item.getMedia());
 		}
 		else
 		{

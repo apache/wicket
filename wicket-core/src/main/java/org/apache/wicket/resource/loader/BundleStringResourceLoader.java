@@ -67,7 +67,8 @@ public class BundleStringResourceLoader implements IStringResourceLoader
 		{
 			try
 			{
-				return ResourceBundle.getBundle(bundleName, locale, Thread.currentThread().getContextClassLoader()).getString(key);
+				return ResourceBundle.getBundle(bundleName, locale, Thread.currentThread().getContextClassLoader())
+					.getString(key);
 			}
 			catch (MissingResourceException mrx2)
 			{

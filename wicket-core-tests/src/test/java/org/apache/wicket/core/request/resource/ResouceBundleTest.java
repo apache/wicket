@@ -78,10 +78,12 @@ class ResouceBundleTest extends WicketTestCase
 	void concatBundleLastModified()
 	{
 		final Instant lastModified = Instant.now();
-		
+
 		ConcatBundleResource bundle = new ConcatBundleResource(Arrays.asList(
-			JavaScriptHeaderItem.forReference(new ResourceReference("foo") {
-				public IResource getResource() {
+			JavaScriptHeaderItem.forReference(new ResourceReference("foo")
+			{
+				public IResource getResource()
+				{
 					return new IStaticCacheableResource()
 					{
 						@Override
@@ -107,19 +109,19 @@ class ResouceBundleTest extends WicketTestCase
 						{
 							return new AbstractResourceStream()
 							{
-								
+
 								@Override
 								public Instant lastModifiedTime()
 								{
 									return lastModified;
 								}
-								
+
 								@Override
 								public InputStream getInputStream() throws ResourceStreamNotFoundException
 								{
 									return fail();
 								}
-								
+
 								@Override
 								public void close() throws IOException
 								{
@@ -160,10 +162,10 @@ class ResouceBundleTest extends WicketTestCase
 	void providedResourceWithDefer() throws Exception
 	{
 		tester.getApplication()
-		.getResourceBundles()
-		.addJavaScriptBundle(ResouceBundleTest.class, "ab.js", true,
-			new JavaScriptResourceReference(ResouceBundleTest.class, "a.js"),
-			new JavaScriptResourceReference(ResouceBundleTest.class, "b.js"));
+			.getResourceBundles()
+			.addJavaScriptBundle(ResouceBundleTest.class, "ab.js", true,
+				new JavaScriptResourceReference(ResouceBundleTest.class, "a.js"),
+				new JavaScriptResourceReference(ResouceBundleTest.class, "b.js"));
 
 		executeTest(BundlesPage.class, "BundlesPage_result_defer.html");
 	}

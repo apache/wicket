@@ -98,7 +98,7 @@ class UrlResourceReferenceTest extends WicketTestCase
 	/**
 	 * A test page for #contextRelativeUrl()
 	 */
-    public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		@Override
 		public void renderHead(IHeaderResponse response)

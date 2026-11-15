@@ -28,7 +28,7 @@ public class MarkupInheritanceBase_1 extends WebPage
 	/**
 	 * Construct.
 	 */
-    MarkupInheritanceBase_1()
+	MarkupInheritanceBase_1()
 	{
 	}
 }

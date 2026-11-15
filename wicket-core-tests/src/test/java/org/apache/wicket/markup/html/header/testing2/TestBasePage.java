@@ -29,7 +29,7 @@ public class TestBasePage extends WebPage
 	/**
 	 * Construct.
 	 */
-    TestBasePage()
+	TestBasePage()
 	{
 	}
 }

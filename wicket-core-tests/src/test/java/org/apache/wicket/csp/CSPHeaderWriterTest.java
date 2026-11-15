@@ -138,32 +138,36 @@ class CSPHeaderWriterTest extends WicketTestCase
 			{
 				final IRequestHandler requestHandler = super.mapRequest(request);
 				return Optional.ofNullable(requestHandler)
-				  .map(NoopIRequestHandlerDelegate::new)
-				  .map(NoopIRequestHandlerDelegate::new) // wrap twice
-				  .orElse(null);
+					.map(NoopIRequestHandlerDelegate::new)
+					.map(NoopIRequestHandlerDelegate::new) // wrap twice
+					.orElse(null);
 			}
 		});
 		tester.startPage(Page.class);
 
 		assertThat(tester.getLastRenderedPage()).isInstanceOf(Page.class);
 		assertThat(tester.getLastResponse().getHeader("Content-Security-Policy")).contains(
-		  STYLE_SRC.getValue());
+			STYLE_SRC.getValue());
 	}
-	
-	static class NoopIRequestHandlerDelegate implements IRequestHandlerDelegate {
+
+	static class NoopIRequestHandlerDelegate implements IRequestHandlerDelegate
+	{
 		private final IRequestHandler delegate;
 
-		NoopIRequestHandlerDelegate(final IRequestHandler delegate) {
+		NoopIRequestHandlerDelegate(final IRequestHandler delegate)
+		{
 			this.delegate = delegate;
 		}
 
 		@Override
-		public IRequestHandler getDelegateHandler() {
+		public IRequestHandler getDelegateHandler()
+		{
 			return delegate;
 		}
 
 		@Override
-		public void respond(final IRequestCycle requestCycle) {
+		public void respond(final IRequestCycle requestCycle)
+		{
 			delegate.respond(requestCycle);
 		}
 	}

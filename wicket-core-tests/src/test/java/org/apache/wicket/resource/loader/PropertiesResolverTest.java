@@ -70,7 +70,7 @@ class PropertiesResolverTest
 		/**
 		 * Construct.
 		 */
-        public MyPage()
+		public MyPage()
 		{
 			MyRepeatingView repeater = new MyRepeatingView("repeater");
 			add(repeater);

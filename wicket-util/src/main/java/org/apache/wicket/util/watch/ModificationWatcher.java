@@ -156,7 +156,7 @@ public class ModificationWatcher implements IModificationWatcher
 			// modification time
 			final Instant modifiableLastModified = entry.modifiable.lastModifiedTime();
 			if ((modifiableLastModified != null) &&
-					modifiableLastModified.isAfter(entry.lastModifiedTime))
+				modifiableLastModified.isAfter(entry.lastModifiedTime))
 			{
 				// Notify all listeners that the modifiable was modified
 				entry.listeners.notifyListeners(entry.modifiable);

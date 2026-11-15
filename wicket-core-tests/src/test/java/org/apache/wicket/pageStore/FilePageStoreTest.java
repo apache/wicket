@@ -31,9 +31,9 @@ import org.junit.jupiter.api.Test;
 @Tag(WicketTestTag.SLOW)
 public class FilePageStoreTest extends AbstractConcurrentPageStoreTest
 {
-	
+
 	private static final Bytes MAX_SIZE_PER_SESSION = Bytes.megabytes(10);
-	
+
 	/**
 	 * @throws IOException 
 	 */

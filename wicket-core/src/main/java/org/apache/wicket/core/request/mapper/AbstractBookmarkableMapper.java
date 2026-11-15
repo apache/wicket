@@ -260,8 +260,8 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		/**
 		 * https://issues.apache.org/jira/browse/WICKET-5734
 		 * */
-		PageParameters constructionPageParameters = provider.hasPageInstance() ?
-			provider.getPageInstance().getPageParameters() : new PageParameters();
+		PageParameters constructionPageParameters = provider.hasPageInstance() ? provider.getPageInstance()
+			.getPageParameters() : new PageParameters();
 
 		if (PageParameters.equals(constructionPageParameters, pageParameters) == false)
 		{
@@ -312,7 +312,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		if (provider.wasExpired() && !getRecreateMountedPagesAfterExpiry())
 		{
 			throw new PageExpiredException(String.format("Bookmarkable page with id '%d' has expired.",
-					pageInfo.getPageId()));
+				pageInfo.getPageId()));
 		}
 	}
 
@@ -448,7 +448,8 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			}
 
 			PageInfo pageInfo = getPageInfo(handler);
-			ComponentInfo componentInfo = new ComponentInfo(renderCount, handler.getComponentPath(), handler.getBehaviorIndex());
+			ComponentInfo componentInfo = new ComponentInfo(renderCount, handler.getComponentPath(), handler
+				.getBehaviorIndex());
 
 			PageParameters parameters = getRecreateMountedPagesAfterExpiry() ? new PageParameters(
 				handler.getPage().getPageParameters()).mergeWith(handler.getPageParameters())
@@ -579,7 +580,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		public String toString()
 		{
 			return "(" + getSegmentIndex() + ") " + getMinParameters() + '-' + getMaxParameters() +
-					' ' + (getFixedPart() == null ? "(end)" : getFixedPart());
+				' ' + (getFixedPart() == null ? "(end)" : getFixedPart());
 		}
 	}
 
@@ -622,7 +623,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	protected PageParameters extractPageParameters(Request request, Url url)
 	{
 		int[] matchedParameters = getMatchedSegmentSizes(url);
-		
+
 		int total = 0;
 		for (int curMatchSize : matchedParameters)
 		{
@@ -638,10 +639,11 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		for (int pathSegmentIndex = 0; pathSegmentIndex < pathSegments.size(); pathSegmentIndex++)
 		{
 			MountPathSegment pathSegment = pathSegments.get(pathSegmentIndex);
-			
+
 			int totalAdded = 0;
 			int requiredAdded = 0;
-			for (int segmentParameterIndex = 0; segmentParameterIndex < pathSegment.getMaxParameters() && totalAdded < matchedParameters[pathSegmentIndex]; segmentParameterIndex++)
+			for (int segmentParameterIndex = 0; segmentParameterIndex < pathSegment.getMaxParameters()
+				&& totalAdded < matchedParameters[pathSegmentIndex]; segmentParameterIndex++)
 			{
 				if (pageParameters == null)
 				{
@@ -656,16 +658,17 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 				if (placeholder != null)
 				{
 					pageParameters.add(placeholder,
-							url.getSegments().get(segmentIndex), INamedParameters.Type.PATH);
+						url.getSegments().get(segmentIndex), INamedParameters.Type.PATH);
 					segmentIndex++;
 					totalAdded++;
 					requiredAdded++;
 				}
 				else if (optionalPlaceholder != null &&
-					matchedParameters[pathSegmentIndex] - segmentParameterIndex > pathSegment.getMinParameters() + pathSegment.getFixedPartSize() - requiredAdded)
+					matchedParameters[pathSegmentIndex] - segmentParameterIndex > pathSegment.getMinParameters()
+						+ pathSegment.getFixedPartSize() - requiredAdded)
 				{
 					pageParameters.add(optionalPlaceholder,
-							url.getSegments().get(segmentIndex), INamedParameters.Type.PATH);
+						url.getSegments().get(segmentIndex), INamedParameters.Type.PATH);
 					segmentIndex++;
 					totalAdded++;
 				}
@@ -686,12 +689,12 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			boolean foundFixedPart = false;
 			segmentIndex += curPathSegment.getMinParameters();
 			int max = Math.min(curPathSegment.getOptionalParameters() + 1,
-					url.getSegments().size() - segmentIndex);
+				url.getSegments().size() - segmentIndex);
 
 			for (int count = max - 1; count >= 0; count--)
 			{
 				if (segmentsMatch(url.getSegments()
-						.get(segmentIndex + count), curPathSegment.getFixedPart()))
+					.get(segmentIndex + count), curPathSegment.getFixedPart()))
 				{
 					foundFixedPart = true;
 					segmentIndex += count + 1;
@@ -708,7 +711,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		if (segmentIndex > url.getSegments().size())
 			return null;
 		ret[pathSegmentIndex] = Math.min(lastSegment.getMaxParameters(), url.getSegments().size() -
-				segmentIndex + lastSegment.getMinParameters());
+			segmentIndex + lastSegment.getMinParameters());
 		return ret;
 	}
 
@@ -817,7 +820,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 		return mandatoryParametersSet;
 	}
-	
+
 	protected boolean urlStartsWithMountedSegments(Url url)
 	{
 		if (url == null)

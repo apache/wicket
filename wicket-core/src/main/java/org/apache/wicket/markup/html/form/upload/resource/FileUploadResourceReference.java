@@ -108,7 +108,8 @@ public class FileUploadResourceReference extends ResourceReference
 		};
 	}
 
-	public IUploadsFileManager getUploadFileManager() {
+	public IUploadsFileManager getUploadFileManager()
+	{
 		return uploadFileManager;
 	}
 

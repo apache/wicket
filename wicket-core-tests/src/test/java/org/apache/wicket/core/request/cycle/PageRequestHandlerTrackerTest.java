@@ -44,13 +44,13 @@ import org.junit.jupiter.api.Test;
  */
 class PageRequestHandlerTrackerTest extends WicketTestCase
 {
-	
+
 	@BeforeEach
 	void before()
 	{
 		tester.getApplication().getRequestCycleListeners().add(new PageRequestHandlerTracker());
 	}
-	
+
 	/**
 	 * Uses PageRequestHandlerTracker to track the requested page and the response page
 	 * https://issues.apache.org/jira/browse/WICKET-4624
@@ -79,7 +79,7 @@ class PageRequestHandlerTrackerTest extends WicketTestCase
 
 		tester.startPage(new PageA());
 	}
-	
+
 	/**
 	 * Uses PageRequestHandlerTracker to check last IRequestHandler encapsulated in IRequestHandlerDelegate 
 	 */
@@ -91,7 +91,7 @@ class PageRequestHandlerTrackerTest extends WicketTestCase
 		tester.startPage(new PageA());
 		tester.getApplication().setRootRequestMapper(mapper);
 	}
-	
+
 
 	/**
 	 * The requested page
@@ -112,7 +112,7 @@ class PageRequestHandlerTrackerTest extends WicketTestCase
 
 			IPageRequestHandler lastHandler = PageRequestHandlerTracker.getLastHandler(getRequestCycle());
 			assertNotNull(lastHandler, "Last handler is null: probably issue in IRequestHandlerDelegate support");
-			
+
 			setResponsePage(new PageB());
 		}
 
@@ -134,14 +134,14 @@ class PageRequestHandlerTrackerTest extends WicketTestCase
 			return new StringResourceStream("<html/>");
 		}
 	}
-	
+
 	/**
 	 * Mapper which imitate behavior of {@link CryptoMapper#mapRequest(Request)}
 	 */
-	private static class MapperDelegate implements IRequestMapperDelegate 
+	private static class MapperDelegate implements IRequestMapperDelegate
 	{
 		IRequestMapper mapper;
-		
+
 		MapperDelegate(IRequestMapper mapper)
 		{
 			this.mapper = mapper;
@@ -178,6 +178,6 @@ class PageRequestHandlerTrackerTest extends WicketTestCase
 		{
 			return mapper;
 		}
-		
+
 	}
 }

@@ -31,7 +31,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public class DefaultPageContext implements IPageContext
 {
-	
+
 	/**
 	 * @see org.apache.wicket.pageStore.IPageContext#getSessionId(boolean)
 	 */
@@ -40,10 +40,11 @@ public class DefaultPageContext implements IPageContext
 	{
 		Session session = Session.get();
 
-		if (bind) {
+		if (bind)
+		{
 			session.bind();
 		}
-		
+
 		return session.getId();
 	}
 
@@ -56,19 +57,21 @@ public class DefaultPageContext implements IPageContext
 		synchronized (session)
 		{
 			T value = (T)session.getAttribute(key);
-			if (defaultValue != null) {
-				if (value == null) {
+			if (defaultValue != null)
+			{
+				if (value == null)
+				{
 					value = defaultValue.get();
 					session.bind();
-				}				
-				
+				}
+
 				session.setAttribute(key, value);
 			}
-			
+
 			return value;
 		}
 	}
-	
+
 	@Override
 	public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue)
 	{
@@ -77,12 +80,14 @@ public class DefaultPageContext implements IPageContext
 		synchronized (session)
 		{
 			T value = session.getMetaData(key);
-			if (defaultValue != null) {
-				if (value == null) {
+			if (defaultValue != null)
+			{
+				if (value == null)
+				{
 					value = defaultValue.get();
 					session.bind();
 				}
-				
+
 				session.setMetaData(key, value);
 			}
 
@@ -99,9 +104,11 @@ public class DefaultPageContext implements IPageContext
 			throw new IllegalStateException("Not a request thread.");
 		}
 		T value = requestCycle.getMetaData(key);
-		if (value == null) {
+		if (value == null)
+		{
 			value = defaultValue.get();
-			if (value != null) {
+			if (value != null)
+			{
 				requestCycle.setMetaData(key, value);
 			}
 		}

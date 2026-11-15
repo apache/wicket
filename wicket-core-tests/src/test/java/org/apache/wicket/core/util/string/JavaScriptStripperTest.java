@@ -33,7 +33,8 @@ class JavaScriptStripperTest
 	@Test
 	void unixWICKET501()
 	{
-		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\n    if ( !t.indexOf(\"//\") ) {");
+		String s = new JavaScriptStripper().stripCommentsAndWhitespace(
+			"    // Handle the common XPath // expression\n    if ( !t.indexOf(\"//\") ) {");
 		assertEquals(" \n if ( !t.indexOf(\"//\") ) {", s);
 	}
 
@@ -41,7 +42,8 @@ class JavaScriptStripperTest
 	@Test
 	void dosWICKET501()
 	{
-		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\r\n    if ( !t.indexOf(\"//\") ) {");
+		String s = new JavaScriptStripper().stripCommentsAndWhitespace(
+			"    // Handle the common XPath // expression\r\n    if ( !t.indexOf(\"//\") ) {");
 		assertEquals(" \r\nif ( !t.indexOf(\"//\") ) {", s);
 	}
 
@@ -49,7 +51,8 @@ class JavaScriptStripperTest
 	@Test
 	void macWICKET501()
 	{
-		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\r    if ( !t.indexOf(\"//\") ) {");
+		String s = new JavaScriptStripper().stripCommentsAndWhitespace(
+			"    // Handle the common XPath // expression\r    if ( !t.indexOf(\"//\") ) {");
 		assertEquals(" \r if ( !t.indexOf(\"//\") ) {", s);
 	}
 
@@ -57,7 +60,8 @@ class JavaScriptStripperTest
 	@Test
 	void regexp()
 	{
-		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );");
+		String s = new JavaScriptStripper().stripCommentsAndWhitespace(
+			"    t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );");
 		assertEquals(" t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );", s);
 	}
 
@@ -65,7 +69,8 @@ class JavaScriptStripperTest
 	@Test
 	void regexp2()
 	{
-		String s = new JavaScriptStripper().stripCommentsAndWhitespace("foo.replace(/\"//*strip me*/, \"\"); // strip me\rdoFoo();");
+		String s = new JavaScriptStripper().stripCommentsAndWhitespace(
+			"foo.replace(/\"//*strip me*/, \"\"); // strip me\rdoFoo();");
 		assertEquals("foo.replace(/\"/, \"\"); \rdoFoo();", s);
 	}
 
@@ -73,7 +78,8 @@ class JavaScriptStripperTest
 	@Test
 	void regexp3()
 	{
-		String s = new JavaScriptStripper().stripCommentsAndWhitespace("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r//foo");
+		String s = new JavaScriptStripper().stripCommentsAndWhitespace(
+			"parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r//foo");
 		assertEquals("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r",
 			s);
 	}
@@ -89,12 +95,13 @@ class JavaScriptStripperTest
 	}
 
 	@Test
-    void regexpDoubleSlash()
-    {
-	    String before = "return/[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/gi.test(t);}}";
-	    String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
-	    assertEquals(before, after);
-    }
+	void regexpDoubleSlash()
+	{
+		String before = "return/[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)/gi.test(t);}}";
+		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
+		assertEquals(before, after);
+	}
+
 	/**	 */
 	@Test
 	void WICKET1806()
@@ -178,7 +185,8 @@ class JavaScriptStripperTest
 
 	/**	*/
 	@Test
-	void templateLiteralWithTwoForwardSlashes() {
+	void templateLiteralWithTwoForwardSlashes()
+	{
 		final String before = "const url = `${protocol}//${hostname}:${port}`;";
 		final String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
 

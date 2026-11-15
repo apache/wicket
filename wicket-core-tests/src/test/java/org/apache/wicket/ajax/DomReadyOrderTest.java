@@ -33,7 +33,7 @@ class DomReadyOrderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void domReadyOrder() throws Exception
+	void domReadyOrder() throws Exception
 	{
 		tester.startPage(DomReadyOrderPage.class);
 		tester.assertResultPage(DomReadyOrderPage.class, "DomReadyOrderPage_expected.html");
@@ -46,7 +46,7 @@ class DomReadyOrderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void domReadyOrder2() throws Exception
+	void domReadyOrder2() throws Exception
 	{
 		tester.startPage(DomReadyOrderPage.class);
 		tester.assertResultPage(DomReadyOrderPage.class, "DomReadyOrderPage_expected.html");
@@ -59,7 +59,7 @@ class DomReadyOrderTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-    void ajaxSubmitWhileAnotherButtonIsNotVisible()
+	void ajaxSubmitWhileAnotherButtonIsNotVisible()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

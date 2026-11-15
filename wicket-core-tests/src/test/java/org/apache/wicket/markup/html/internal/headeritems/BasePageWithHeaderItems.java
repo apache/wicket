@@ -26,7 +26,8 @@ public class BasePageWithHeaderItems extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	BasePageWithHeaderItems(final PageParameters parameters) {
+	BasePageWithHeaderItems(final PageParameters parameters)
+	{
 		super(parameters);
 	}
 }

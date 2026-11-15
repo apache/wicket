@@ -67,7 +67,7 @@ import org.openjdk.jmh.annotations.Warmup;
 @State(Scope.Thread)
 public class PageSerializationBenchmark
 {
-	@Param({"50", "500"})
+	@Param({ "50", "500" })
 	public int components;
 
 	private WicketTester tester;
@@ -115,7 +115,7 @@ public class PageSerializationBenchmark
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class< ? > containerClass)
+			Class<?> containerClass)
 		{
 			return new StringResourceStream(
 				"<html><body><div wicket:id=\"rv\"><span wicket:id=\"label\"></span></div></body></html>");

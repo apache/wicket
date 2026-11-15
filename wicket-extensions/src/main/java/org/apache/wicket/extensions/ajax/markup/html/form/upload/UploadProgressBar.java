@@ -127,7 +127,7 @@ public class UploadProgressBar extends Panel
 	 *            the file upload field to check for a file upload, or null to display the upload
 	 *            field for every submit of the given form
 	 */
-	public UploadProgressBar(final String id,  final FileUploadField uploadField)
+	public UploadProgressBar(final String id, final FileUploadField uploadField)
 	{
 		super(id);
 
@@ -139,7 +139,6 @@ public class UploadProgressBar extends Panel
 
 		setRenderBodyOnly(true);
 	}
-
 
 
 	/**
@@ -189,7 +188,8 @@ public class UploadProgressBar extends Panel
 	{
 		super.onInitialize();
 		Form<?> form = getCallbackForm();
-		if (form != null) {
+		if (form != null)
+		{
 			form.setOutputMarkupId(true);
 		}
 
@@ -260,8 +260,8 @@ public class UploadProgressBar extends Panel
 
 		final String status = new StringResourceModel(RESOURCE_STARTING, this, null).getString();
 
-		CharSequence url = form != null ? urlFor(ref, UploadStatusResource.newParameter(getPage().getId())) :
-				urlFor(ref, UploadStatusResource.newParameter(uploadField.getMarkupId()));
+		CharSequence url = form != null ? urlFor(ref, UploadStatusResource.newParameter(getPage().getId())) : urlFor(
+			ref, UploadStatusResource.newParameter(uploadField.getMarkupId()));
 
 		StringBuilder builder = new StringBuilder(128);
 		Formatter formatter = new Formatter(builder);
@@ -269,7 +269,8 @@ public class UploadProgressBar extends Panel
 		Form<?> form = getCallbackForm();
 
 		formatter.format(getVarName() + " = new Wicket.WUPB(%s, '%s', '%s', '%s', %s, '%s', %s);",
-				form != null ? "'" + form.getMarkupId() + "'" : "null", statusDiv.getMarkupId(), barDiv.getMarkupId(), url, uploadFieldId,
+			form != null ? "'" + form.getMarkupId() + "'" : "null", statusDiv.getMarkupId(), barDiv.getMarkupId(), url,
+			uploadFieldId,
 			JavaScriptUtils.escapeQuotes(status), getOnProgressUpdatedCallBack());
 		response.render(OnDomReadyHeaderItem.forScript(builder.toString()));
 	}
@@ -284,7 +285,8 @@ public class UploadProgressBar extends Panel
 		return "function(percent) {}";
 	}
 
-	private String getVarName() {
+	private String getVarName()
+	{
 		return "Wicket.WUPB.instances['" + barDiv.getMarkupId() + "']";
 	}
 

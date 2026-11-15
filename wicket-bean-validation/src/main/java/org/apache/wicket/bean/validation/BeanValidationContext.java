@@ -60,7 +60,7 @@ public interface BeanValidationContext extends IPropertyResolver
 	 */
 	@Override
 	Property resolveProperty(FormComponent<?> component);
-	
+
 	/**
 	 * Does the given constraint make a component required.
 	 * 

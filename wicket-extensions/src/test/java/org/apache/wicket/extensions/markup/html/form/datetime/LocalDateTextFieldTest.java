@@ -90,7 +90,7 @@ public class LocalDateTextFieldTest extends WicketTestCase
 
 			form.add(field = new LocalDateTextField("field", Model.of(val), "dd-MM-yyyy", "d-M-yyyy"));
 		}
-		
+
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)

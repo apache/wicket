@@ -42,9 +42,9 @@ class LambdaModelTest
 	void explicitLambdas()
 	{
 		Person person = new Person();
-		IModel<String> personNameModel = LambdaModel.<String>of(
-				() -> person.getName(),
-				(name) -> person.setName(name));
+		IModel<String> personNameModel = LambdaModel.<String> of(
+			() -> person.getName(),
+			(name) -> person.setName(name));
 		check(personNameModel);
 	}
 

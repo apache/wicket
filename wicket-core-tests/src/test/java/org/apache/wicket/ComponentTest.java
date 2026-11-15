@@ -145,7 +145,8 @@ class ComponentTest extends WicketTestCase
 
 		// make the component such that it can call listener interface
 		// methods no matter whether it is visible or enabled
-		component = new WebComponent("someId") {
+		component = new WebComponent("someId")
+		{
 			@Override
 			public boolean canCallListener()
 			{
@@ -159,16 +160,17 @@ class ComponentTest extends WicketTestCase
 
 		// do the same set of tests on a component that is stateful "by itself"
 		// rather than from a behavior
-		Link<Void> link = new Link<Void>("someId") {
+		Link<Void> link = new Link<Void>("someId")
+		{
 			@Override
 			public void onClick()
 			{
 			}
 		};
-        
+
 		// Links are stateful by default
 		assertFalse(link.isStateless());
-        
+
 		//make the link invisible
 		link.setVisible(false);
 
@@ -179,19 +181,22 @@ class ComponentTest extends WicketTestCase
 		// same for disabled link
 		link.setVisible(true).setEnabled(false);
 		assertTrue(link.isStateless());
-        
+
 		// make the link such that it can call listener interface
 		// methods no matter whether it is visible or enabled
-		link = new Link<Void>("someId") {
+		link = new Link<Void>("someId")
+		{
 
-		    @Override
-		    public boolean canCallListener() {
-		    	return true;
-		    }
+			@Override
+			public boolean canCallListener()
+			{
+				return true;
+			}
 
-		    @Override
-		    public void onClick() {
-		    }
+			@Override
+			public void onClick()
+			{
+			}
 		};
 
 		link.setVisible(false);
@@ -268,19 +273,19 @@ class ComponentTest extends WicketTestCase
 	void isVisibleInHierarchyCachesResult()
 	{
 		final SpyComponent c = new SpyComponent("test");
-		
+
 		c.isVisibleInHierarchy();
 		c.isVisibleInHierarchy();
 		assertEquals(1, c.isVisibleCallCount);
-		
+
 		c.setVisible(false);
-		
+
 		c.isVisibleInHierarchy();
 		c.isVisibleInHierarchy();
 		assertEquals(2, c.isVisibleCallCount);
-		
+
 		c.setVisibilityAllowed(false);
-		
+
 		c.isVisibleInHierarchy();
 		c.isVisibleInHierarchy();
 		assertEquals(3, c.isVisibleCallCount);
@@ -292,7 +297,8 @@ class ComponentTest extends WicketTestCase
 	private static class FlagReserved5Component extends Component
 	{
 
-		FlagReserved5Component(final String id) {
+		FlagReserved5Component(final String id)
+		{
 			super(id);
 		}
 
@@ -302,7 +308,8 @@ class ComponentTest extends WicketTestCase
 		}
 
 		@Override
-		protected void onRender() {
+		protected void onRender()
+		{
 		}
 	}
 
@@ -332,7 +339,8 @@ class ComponentTest extends WicketTestCase
 		}
 
 		@Override
-		protected void onRender() {
+		protected void onRender()
+		{
 		}
 	}
 }

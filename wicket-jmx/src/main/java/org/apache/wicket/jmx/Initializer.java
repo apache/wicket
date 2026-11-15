@@ -133,8 +133,9 @@ public class Initializer implements IInitializer
 				catch (SecurityException e)
 				{
 					// Ignore - we're not allowed to read this property.
-					log.warn("Not allowed to read property wicket.mbean.server.class due to security settings: {}. Ignoring",
-							e.getMessage());
+					log.warn(
+						"Not allowed to read property wicket.mbean.server.class due to security settings: {}. Ignoring",
+						e.getMessage());
 				}
 				if (impl != null)
 				{
@@ -204,8 +205,7 @@ public class Initializer implements IInitializer
 			ObjectName sessionsBeanName = new ObjectName(domain + ":type=RequestLogger");
 			register(application, sessionsBean, sessionsBeanName);
 		}
-		catch (MalformedObjectNameException | InstanceAlreadyExistsException |
-				MBeanRegistrationException | NotCompliantMBeanException e)
+		catch (MalformedObjectNameException | InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException e)
 		{
 			throw new WicketRuntimeException(e);
 		}
@@ -233,13 +233,14 @@ public class Initializer implements IInitializer
 		final ObjectName objectName) throws InstanceAlreadyExistsException,
 		MBeanRegistrationException, NotCompliantMBeanException
 	{
-		StandardMBean bean = new StandardMBean(o, (Class<T>)o.getClass().getInterfaces()[0]) {
+		StandardMBean bean = new StandardMBean(o, (Class<T>)o.getClass().getInterfaces()[0])
+		{
 			@Override
 			public Object getAttribute(String attribute)
 			{
 				return withApplication(() -> super.getAttribute(attribute));
 			}
-			
+
 			@Override
 			public void setAttribute(Attribute attribute)
 			{
@@ -248,19 +249,19 @@ public class Initializer implements IInitializer
 					return null;
 				});
 			}
-			
+
 			@Override
 			public AttributeList setAttributes(AttributeList attributes)
 			{
 				return withApplication(() -> super.setAttributes(attributes));
 			}
-			
+
 			@Override
 			public Object invoke(String actionName, Object[] params, String[] signature)
 			{
 				return withApplication(() -> super.invoke(actionName, params, signature));
 			}
-			
+
 			private <R> R withApplication(Callable<R> callable)
 			{
 				boolean existed = ThreadContext.exists();

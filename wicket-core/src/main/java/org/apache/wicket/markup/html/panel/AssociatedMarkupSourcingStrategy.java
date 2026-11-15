@@ -101,14 +101,14 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 			throw new MarkupNotFoundException("Expected to find <wicket:" + tagName +
 				"> in associated markup file. Markup: " + associatedMarkup);
 		}
-		
+
 		// If child == null, than return the markup fragment starting with <wicket:panel>
 		if (child == null)
 		{
 			//clean any markup previously loaded for children
 			cleanChildrenMarkup(parent);
-			
-			return markup;			
+
+			return markup;
 		}
 
 		// Find the markup for the child component
@@ -132,9 +132,9 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	 * 
 	 * @param parent
 	 */
-	private void cleanChildrenMarkup(MarkupContainer parent) 
+	private void cleanChildrenMarkup(MarkupContainer parent)
 	{
-		for (Component child : parent) 
+		for (Component child : parent)
 		{
 			child.setMarkup(null);
 		}

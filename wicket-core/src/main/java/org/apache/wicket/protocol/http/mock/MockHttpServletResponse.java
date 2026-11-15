@@ -568,7 +568,8 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 *             Not used
 	 */
 	@Override
-	public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
+	public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException
+	{
 		redirectLocation = location;
 		status = sc;
 	}
@@ -611,7 +612,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	@Override
 	public void setContentLengthLong(long len)
 	{
-		setContentLength((int) len);
+		setContentLength((int)len);
 	}
 
 	/**

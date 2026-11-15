@@ -31,9 +31,10 @@ public class SelectTest extends WicketTestCase
 
 	/**
 	 * WICKET-4276
-     */
+	 */
 	@Test
-	public void rawInputKeepsSelectionOnError() {
+	public void rawInputKeepsSelectionOnError()
+	{
 		SelectTestPage page = new SelectTestPage();
 
 		tester.startPage(page);
@@ -74,7 +75,7 @@ public class SelectTest extends WicketTestCase
 
 		assertTrue(page.select.isSelected(page.option0));
 	}
-	
+
 	/**
 	 * WICKET-6553 option text
 	 */

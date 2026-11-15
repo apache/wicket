@@ -137,7 +137,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		}
 		return childComponent;
 	}
-	
+
 	/**
 	 * Searches for the controlling child component looking also 
 	 * through transparent components.
@@ -149,19 +149,19 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	private Component resolveChild(MarkupContainer container)
 	{
 		Component childController = container.get(childId);
-		
+
 		Iterator<Component> children = container.iterator();
-		
+
 		while (children.hasNext() && childController == null)
 		{
 			Component transparentChild = children.next();
-			
-			if(transparentChild instanceof TransparentWebMarkupContainer)
+
+			if (transparentChild instanceof TransparentWebMarkupContainer)
 			{
 				childController = resolveChild((MarkupContainer)transparentChild);
 			}
 		}
-		
+
 		return childController;
 	}
 
@@ -170,16 +170,16 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	{
 		return getChild().determineVisibility();
 	}
-	
+
 	@Override
 	protected void onConfigure()
 	{
 		super.onConfigure();
 		final Component child = getChild();
-		
+
 		child.configure();
 		boolean childVisible = child.determineVisibility();
-		
+
 		setVisible(childVisible);
 	}
 
@@ -191,7 +191,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		// necessary when queued and lives with the page instead of just during render
 		childComponent = null;
 	}
-	
+
 	/**
 	 * Get the real parent container
 	 * 
@@ -200,7 +200,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	protected MarkupContainer getEnclosureParent()
 	{
 		MarkupContainer parent = getParent();
-		
+
 		if (parent == null)
 		{
 			throw new WicketRuntimeException(

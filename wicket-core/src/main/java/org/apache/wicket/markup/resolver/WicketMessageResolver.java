@@ -309,7 +309,7 @@ public class WicketMessageResolver implements IComponentResolver
 				}
 			}.toString();
 
-			if (escapeValue) 
+			if (escapeValue)
 			{
 				text = Strings.escapeMarkup(text);
 			}

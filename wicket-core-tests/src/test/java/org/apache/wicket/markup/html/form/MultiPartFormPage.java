@@ -28,9 +28,9 @@ import org.apache.wicket.model.Model;
 public class MultiPartFormPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	public boolean multiPart;
-	
+
 	public int asked = 0;
 
 	public Form<?> form;
@@ -48,18 +48,19 @@ public class MultiPartFormPage extends WebPage
 	{
 		form = new Form<Void>("form");
 		add(form.setOutputMarkupId(true));
-		
+
 		input = new TextField<>("input", Model.of(""))
 		{
 			@Override
-			public boolean isMultiPart() {
+			public boolean isMultiPart()
+			{
 				asked++;
 
 				return multiPart;
 			}
 		};
 		form.add(input);
-		
+
 		button1 = new AjaxFallbackButton("button1", null)
 		{
 			@Override
@@ -69,7 +70,7 @@ public class MultiPartFormPage extends WebPage
 			}
 		};
 		form.add(button1);
-		
+
 		button2 = new AjaxFallbackButton("button2", null)
 		{
 			@Override

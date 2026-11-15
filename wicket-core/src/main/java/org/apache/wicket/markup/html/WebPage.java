@@ -291,8 +291,8 @@ public class WebPage extends Page
 	{
 		log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 		log.error("You probably forgot to add a <body> or <head> tag to your markup since no Header Container was \n" +
-				"found but components were found which want to write to the <head> section.\n" +
-				collectedHeaderOutput);
+			"found but components were found which want to write to the <head> section.\n" +
+			collectedHeaderOutput);
 		log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 	}
 

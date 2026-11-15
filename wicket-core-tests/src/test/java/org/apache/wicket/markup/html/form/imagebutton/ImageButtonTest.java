@@ -31,7 +31,7 @@ class ImageButtonTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void imageButton() throws Exception
+	void imageButton() throws Exception
 	{
 		Locale.setDefault(Locale.of("en", "US"));
 

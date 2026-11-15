@@ -21,20 +21,22 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 
-public class BorderWithFormPage extends WebPage {
+public class BorderWithFormPage extends WebPage
+{
 	private static final long serialVersionUID = 1L;
 	private TextField<String> field;
 
-	public BorderWithFormPage(IModel<String> model) {
+	public BorderWithFormPage(IModel<String> model)
+	{
 		super();
-		
+
 		WebMarkupContainer container = new WebMarkupContainer("borderContainer");
-		
+
 		BorderWithForm border = new BorderWithForm("formBorder");
-		
+
 		border.add(field = new TextField<>("text", model));
-		
+
 		container.add(border);
 		add(container);
-    }
+	}
 }

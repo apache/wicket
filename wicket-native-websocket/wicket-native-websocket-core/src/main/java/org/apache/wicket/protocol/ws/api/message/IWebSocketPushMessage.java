@@ -21,6 +21,7 @@ package org.apache.wicket.protocol.ws.api.message;
  *
  * @since 6.4
  */
-public interface IWebSocketPushMessage extends IWebSocketMessage {
+public interface IWebSocketPushMessage extends IWebSocketMessage
+{
 
 }

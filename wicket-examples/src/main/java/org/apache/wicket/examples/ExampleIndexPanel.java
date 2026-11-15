@@ -267,7 +267,6 @@ public class ExampleIndexPanel extends Panel
 		return WicketExamplePage.string(example, key, this);
 	}
 
-	private record Group(String heading, List<Class<?>> examples) implements Serializable
-	{
+	private record Group(String heading, List<Class<?>> examples) implements Serializable {
 	}
 }

@@ -95,7 +95,8 @@ public class ServletRequestCopy implements HttpServletRequest
 	private String characterEncoding;
 	private final String requestId;
 
-	public ServletRequestCopy(HttpServletRequest request) {
+	public ServletRequestCopy(HttpServletRequest request)
+	{
 		this.servletPath = request.getServletPath();
 		this.contextPath = request.getContextPath();
 		this.pathInfo = request.getPathInfo();
@@ -126,7 +127,8 @@ public class ServletRequestCopy implements HttpServletRequest
 
 		String s;
 		Enumeration<String> e = request.getHeaderNames();
-		while (e != null && e.hasMoreElements()) {
+		while (e != null && e.hasMoreElements())
+		{
 			s = e.nextElement();
 			if (headers.containsKey(s) == false)
 			{
@@ -135,13 +137,15 @@ public class ServletRequestCopy implements HttpServletRequest
 		}
 
 		e = request.getAttributeNames();
-		while (e != null && e.hasMoreElements()) {
+		while (e != null && e.hasMoreElements())
+		{
 			s = e.nextElement();
 			attributes.put(s, request.getAttribute(s));
 		}
 
 		e = request.getParameterNames();
-		while (e != null && e.hasMoreElements()) {
+		while (e != null && e.hasMoreElements())
+		{
 			s = e.nextElement();
 			parameters.put(s, request.getParameterValues(s));
 		}
@@ -160,12 +164,14 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public String getServerName() {
+	public String getServerName()
+	{
 		return serverName;
 	}
 
 	@Override
-	public int getServerPort() {
+	public int getServerPort()
+	{
 		return serverPort;
 	}
 
@@ -199,7 +205,8 @@ public class ServletRequestCopy implements HttpServletRequest
 	 * @return the live {@link HttpSession}, or {@code null} when it has been invalidated
 	 */
 	@Override
-	public HttpSession getSession(boolean create) {
+	public HttpSession getSession(boolean create)
+	{
 		try
 		{
 			// throws once the session has been invalidated, which is the answer wanted here:
@@ -214,7 +221,8 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public String getMethod() {
+	public String getMethod()
+	{
 		return method;
 	}
 
@@ -250,17 +258,20 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public Enumeration<String> getParameterNames() {
+	public Enumeration<String> getParameterNames()
+	{
 		return Collections.enumeration(parameters.keySet());
 	}
 
 	@Override
-	public String getParameter(String name) {
+	public String getParameter(String name)
+	{
 		return parameters.get(name) != null ? parameters.get(name)[0] : null;
 	}
 
 	@Override
-	public String[] getParameterValues(final String name) {
+	public String[] getParameterValues(final String name)
+	{
 		return parameters.get(name);
 	}
 
@@ -293,7 +304,8 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public Enumeration<String> getHeaderNames() {
+	public Enumeration<String> getHeaderNames()
+	{
 		return Collections.enumeration(headers.keySet());
 	}
 
@@ -305,12 +317,14 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public Object getAttribute(String name) {
+	public Object getAttribute(String name)
+	{
 		return attributes.get(name);
 	}
 
 	@Override
-	public Enumeration<String> getAttributeNames() {
+	public Enumeration<String> getAttributeNames()
+	{
 		return Collections.enumeration(attributes.keySet());
 	}
 
@@ -351,12 +365,14 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public void setAttribute(String name, Object o) {
+	public void setAttribute(String name, Object o)
+	{
 		attributes.put(name, o);
 	}
 
 	@Override
-	public void removeAttribute(String name) {
+	public void removeAttribute(String name)
+	{
 		attributes.remove(name);
 	}
 
@@ -421,7 +437,8 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException
+	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse)
+		throws IllegalStateException
 	{
 		return null;
 	}
@@ -451,22 +468,26 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public String getRequestId() {
+	public String getRequestId()
+	{
 		return requestId;
 	}
 
 	@Override
-	public String getProtocolRequestId() {
+	public String getProtocolRequestId()
+	{
 		return null;
 	}
 
 	@Override
-	public ServletConnection getServletConnection() {
+	public ServletConnection getServletConnection()
+	{
 		return null;
 	}
 
 	@Override
-	public String getContextPath() {
+	public String getContextPath()
+	{
 		return contextPath;
 	}
 
@@ -501,12 +522,14 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public String getServletPath() {
+	public String getServletPath()
+	{
 		return servletPath;
 	}
 
 	@Override
-	public String getPathInfo() {
+	public String getPathInfo()
+	{
 		return pathInfo;
 	}
 
@@ -517,12 +540,14 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public String getRequestURI() {
+	public String getRequestURI()
+	{
 		return requestUri;
 	}
 
 	@Override
-	public HttpSession getSession() {
+	public HttpSession getSession()
+	{
 		return getSession(true);
 	}
 
@@ -585,7 +610,8 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public StringBuffer getRequestURL() {
+	public StringBuffer getRequestURL()
+	{
 		return requestURL;
 	}
 }

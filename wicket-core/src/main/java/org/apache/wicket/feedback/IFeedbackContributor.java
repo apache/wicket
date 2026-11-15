@@ -23,15 +23,15 @@ import java.io.Serializable;
  */
 public interface IFeedbackContributor
 {
-    void success(final Serializable message);
+	void success(final Serializable message);
 
-    void info(final Serializable message);
+	void info(final Serializable message);
 
-    void warn(final Serializable message);
+	void warn(final Serializable message);
 
-    void error(final Serializable message);
+	void error(final Serializable message);
 
-    void fatal(final Serializable message);
+	void fatal(final Serializable message);
 
-    void debug(final Serializable message);
+	void debug(final Serializable message);
 }

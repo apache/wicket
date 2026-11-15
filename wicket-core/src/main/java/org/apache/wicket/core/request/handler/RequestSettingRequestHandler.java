@@ -45,7 +45,7 @@ public class RequestSettingRequestHandler implements IRequestHandlerDelegate
 	public RequestSettingRequestHandler(Request request, IRequestHandler delegate)
 	{
 		this.request = Args.notNull(request, "request");
-		this.delegate = Args.notNull(delegate,"delegate");
+		this.delegate = Args.notNull(delegate, "delegate");
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class RequestSettingRequestHandler implements IRequestHandlerDelegate
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
-		RequestCycle cycle = (RequestCycle) requestCycle;
+		RequestCycle cycle = (RequestCycle)requestCycle;
 		Request originalRequest = cycle.getRequest();
 		try
 		{

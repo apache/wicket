@@ -113,7 +113,7 @@ public class DynamicWizardModel extends AbstractWizardModel
 	{
 		return activeStep.isFinishAvailable();
 	}
-	
+
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#last()
 	 */

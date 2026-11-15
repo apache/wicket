@@ -81,7 +81,7 @@ public class HTML5Attributes extends Behavior
 		}
 	}
 
-	
+
 	/**
 	 * A listener to instantiations of {@link FormComponent}s to add HTML5 attributes.
 	 */

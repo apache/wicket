@@ -45,7 +45,7 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 public class LambdaColumn<T, S> extends AbstractColumn<T, S> implements IExportableColumn<T, S>
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private final SerializableFunction<T, ?> function;
 
 	/**
@@ -61,7 +61,7 @@ public class LambdaColumn<T, S> extends AbstractColumn<T, S> implements IExporta
 	{
 		this(displayModel, null, function);
 	}
-	
+
 	/**
 	 * Creates a property column that is also sortable.
 	 * 
@@ -76,16 +76,16 @@ public class LambdaColumn<T, S> extends AbstractColumn<T, S> implements IExporta
 		final SerializableFunction<T, ?> function)
 	{
 		super(displayModel, sortProperty);
-		
+
 		this.function = Args.notNull(function, "function");
 	}
-	
+
 	@Override
 	public void populateItem(Item<ICellPopulator<T>> item, String componentId, IModel<T> rowModel)
 	{
 		item.add(new Label(componentId, getDataModel(rowModel)));
 	}
-	
+
 	/**
 	 * Factory method for generating a model that will generated the displayed value.
 	 *
@@ -103,14 +103,17 @@ public class LambdaColumn<T, S> extends AbstractColumn<T, S> implements IExporta
 			public Object getObject()
 			{
 				T before = rowModel.getObject();
-				
-				if (before == null) {
+
+				if (before == null)
+				{
 					return null;
-				} else {
+				}
+				else
+				{
 					return function.apply(before);
 				}
 			}
-			
+
 			@Override
 			public void detach()
 			{

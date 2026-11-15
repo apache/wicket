@@ -89,7 +89,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 
 			// extract the PageParameters from URL if there are any
 			PageParameters pageParameters = extractPageParameters(request, segmentsSize,
-					pageParametersEncoder);
+				pageParametersEncoder);
 			if (pageParameters != null)
 			{
 				pageParameters.setLocale(resolveLocale());
@@ -230,16 +230,16 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 					if (resource instanceof IStaticCacheableResource)
 					{
 						final IStaticCacheableResource cacheable = (IStaticCacheableResource)resource;
-						
+
 						// is caching enabled?
-						if(cacheable.isCachingEnabled())
+						if (cacheable.isCachingEnabled())
 						{
 							// apply caching scheme to resource url
 							final ResourceUrl resourceUrl = new ResourceUrl(token, parameters);
 							getCachingStrategy().decorateUrl(resourceUrl, cacheable);
 							token = resourceUrl.getFileName();
-	
-						  Checks.notEmpty(token, "Caching strategy returned empty name for '%s'", resource);
+
+							Checks.notEmpty(token, "Caching strategy returned empty name for '%s'", resource);
 						}
 					}
 				}
@@ -281,9 +281,8 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 	{
 		List<String> segments = url.getSegments();
 		return (segments.size() >= 4 &&
-				urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()) &&
-				Strings.isEmpty(segments.get(3)) == false
-		);
+			urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()) &&
+			Strings.isEmpty(segments.get(3)) == false);
 
 	}
 }

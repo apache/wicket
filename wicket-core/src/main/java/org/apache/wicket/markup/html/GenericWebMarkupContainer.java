@@ -26,7 +26,9 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            the type of the page's model object
  */
-public class GenericWebMarkupContainer<T> extends WebMarkupContainer implements IGenericComponent<T, GenericWebMarkupContainer<T>>
+public class GenericWebMarkupContainer<T> extends WebMarkupContainer
+	implements
+		IGenericComponent<T, GenericWebMarkupContainer<T>>
 {
 	private static final long serialVersionUID = 1L;
 

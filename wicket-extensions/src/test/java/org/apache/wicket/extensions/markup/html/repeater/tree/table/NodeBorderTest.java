@@ -40,6 +40,7 @@ public class NodeBorderTest
 		tester.startComponentInPage(label);
 
 		tester
-			.assertResultPage("<div class=\"tree-branch tree-branch-mid\"><div class=\"tree-subtree\"><div class=\"tree-branch tree-branch-last\"><div class=\"tree-subtree\"><div class=\"tree-branch tree-branch-mid\"><span wicket:id=\"label\" class=\"tree-node\"></span></div></div></div></div></div>");
+			.assertResultPage(
+				"<div class=\"tree-branch tree-branch-mid\"><div class=\"tree-subtree\"><div class=\"tree-branch tree-branch-last\"><div class=\"tree-subtree\"><div class=\"tree-branch tree-branch-mid\"><span wicket:id=\"label\" class=\"tree-node\"></span></div></div></div></div></div>");
 	}
 }

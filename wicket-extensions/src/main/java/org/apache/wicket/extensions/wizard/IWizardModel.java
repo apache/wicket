@@ -58,7 +58,7 @@ public interface IWizardModel extends IClusterable
 	 *            The wizard model listener to add
 	 */
 	void addListener(IWizardModelListener listener);
-	
+
 	/**
 	 * Removes a wizard model listener.
 	 * 
@@ -66,14 +66,14 @@ public interface IWizardModel extends IClusterable
 	 *            The listener to remove
 	 */
 	void removeListener(IWizardModelListener listener);
-	
+
 	/**
 	 * Resets the model, setting it to the first step. Implementors should notify
 	 * {@link IWizardModelListener listeners} through calling
 	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
 	 */
 	void reset();
-	
+
 	/**
 	 * Returns an iterator over all the steps in the model. The iteration order is not guaranteed to
 	 * the be the order of visit. This is an optional operation; dynamic models can just return
@@ -82,7 +82,7 @@ public interface IWizardModel extends IClusterable
 	 * @return an iterator over all the steps of the model or null if the wizard model is not static
 	 */
 	Iterator<IWizardStep> stepIterator();
-	
+
 	/**
 	 * Gets whether the specified step is the last step in the wizard.
 	 * 
@@ -195,7 +195,8 @@ public interface IWizardModel extends IClusterable
 	 * @see #isLastStep(IWizardStep)
 	 * @see #finish()
 	 */
-	default boolean isFinishAvailable() {
+	default boolean isFinishAvailable()
+	{
 		return isLastStep(getActiveStep());
 	}
 

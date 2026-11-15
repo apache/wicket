@@ -42,7 +42,7 @@ public class BinaryMessage extends AbstractClientMessage
 	 * @param data
 	 *      the binary message from the client
 	 * @param offset
- *      the offset to read from
+	*      the offset to read from
 	 * @param length
 	 */
 	public BinaryMessage(WebApplication application, String sessionId, IKey key, byte[] data, int offset, int length)

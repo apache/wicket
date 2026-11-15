@@ -32,7 +32,7 @@ public class ImageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test_1() throws Exception
+	void test_1() throws Exception
 	{
 		Locale.setDefault(Locale.of("en", "US"));
 		tester.startPage(Home.class);
@@ -60,7 +60,7 @@ public class ImageTest extends WicketTestCase
 	 * testParentRelativeImage()
 	 */
 	@Test
-    void testParentRelativeImage()
+	void testParentRelativeImage()
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("$up$");
 		tester.startPage(Home.class);

@@ -39,8 +39,8 @@ public class WebSocketConnectionOriginFilter implements IWebSocketConnectionFilt
 
 	/**
 	 * Error code 1008 indicates that an endpoint is terminating the connection because it has received a message that
-     * violates its policy. This is a generic status code that can be returned when there is no other more suitable
-     * status code (e.g., 1003 or 1009) or if there is a need to hide specific details about the policy.
+	 * violates its policy. This is a generic status code that can be returned when there is no other more suitable
+	 * status code (e.g., 1003 or 1009) or if there is a need to hide specific details about the policy.
 	 * <p>
 	 * See <a href="https://tools.ietf.org/html/rfc6455#section-7.4.1">RFC 6455, Section 7.4.1 Defined Status Codes</a>.
 	 */
@@ -87,7 +87,8 @@ public class WebSocketConnectionOriginFilter implements IWebSocketConnectionFilt
 	 * @param domains
 	 *            The collection of domains
 	 */
-	public void setAllowedDomains(Iterable<String> domains) {
+	public void setAllowedDomains(Iterable<String> domains)
+	{
 		this.allowedDomains.clear();
 		if (domains != null)
 		{

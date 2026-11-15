@@ -95,8 +95,10 @@ public class Index extends BasePage
 		add(new BookmarkablePageLink<Void>("adminAnnotBookmarkableLink",
 			AdminAnnotationsBookmarkablePage.class)
 				.setBody(title(AdminAnnotationsBookmarkablePage.class, this)));
-		add(new Link<Void>("adminAnnotInternalLink") {
-			public void onClick() {
+		add(new Link<Void>("adminAnnotInternalLink")
+		{
+			public void onClick()
+			{
 				setResponsePage(new AdminAnnotationsInternalPage("bar"));
 			}
 		}.setBody(title(AdminAnnotationsInternalPage.class, this)));

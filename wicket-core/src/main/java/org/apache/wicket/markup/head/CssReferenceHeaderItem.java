@@ -56,7 +56,7 @@ public class CssReferenceHeaderItem extends AbstractCssReferenceHeaderItem imple
 		String media)
 	{
 		super(media, null);
-		
+
 		this.reference = reference;
 		this.pageParameters = pageParameters;
 	}
@@ -76,8 +76,8 @@ public class CssReferenceHeaderItem extends AbstractCssReferenceHeaderItem imple
 	public CssReferenceHeaderItem(ResourceReference reference, PageParameters pageParameters,
 		String media, String rel)
 	{
-		super(media, rel); 
-		
+		super(media, rel);
+
 		this.reference = reference;
 		this.pageParameters = pageParameters;
 	}
@@ -110,8 +110,8 @@ public class CssReferenceHeaderItem extends AbstractCssReferenceHeaderItem imple
 		}
 		return tempOrigin;
 	}
-	
-	@Override 
+
+	@Override
 	public String getIntegrity()
 	{
 		String tempIntegrity = super.getIntegrity();
@@ -121,7 +121,7 @@ public class CssReferenceHeaderItem extends AbstractCssReferenceHeaderItem imple
 		}
 		return tempIntegrity;
 	}
-	
+
 	@Override
 	public List<HeaderItem> getDependencies()
 	{

@@ -49,12 +49,12 @@ class HasPath extends TypeSafeMatcher<Component>
 
 			String id = path.get(i).getId();
 			Component child = ((MarkupContainer)cursor).get(id);
-			if (child== null)
+			if (child == null)
 			{
 				return false;
 			}
-			
-			cursor=child;
+
+			cursor = child;
 			if (!path.get(i).getType().isAssignableFrom(cursor.getClass()))
 			{
 				return false;

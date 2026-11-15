@@ -38,7 +38,7 @@ class HtmlHandlerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void loadMarkupWithNonClosedTagsDynamically() throws Exception
+	void loadMarkupWithNonClosedTagsDynamically() throws Exception
 	{
 		CustomMarkupPage page = new CustomMarkupPage();
 		tester.executeTest(HtmlHandlerTest.class, page, "DynamicMarkupPageWithNonClosedTags_expected.html");

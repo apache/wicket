@@ -41,7 +41,8 @@ class RestartResponseAtInterceptPageExceptionInAjaxTest extends WicketTestCase
 	@Override
 	protected WebApplication newApplication()
 	{
-		return new MockApplication() {
+		return new MockApplication()
+		{
 			@Override
 			public Class<? extends Page> getHomePage()
 			{
@@ -54,7 +55,7 @@ class RestartResponseAtInterceptPageExceptionInAjaxTest extends WicketTestCase
 	{
 		public HomePage()
 		{
-	        // set the intercept data
+			// set the intercept data
 			new RestartResponseAtInterceptPageException(DummyHomePage.class);
 		}
 
@@ -75,10 +76,12 @@ class RestartResponseAtInterceptPageExceptionInAjaxTest extends WicketTestCase
 	void requestAPageInAjaxButReceiveItInNonAjaxResponse()
 	{
 		// issue ajax request
-		tester.executeAjaxUrl(Url.parse("?"+WebRequest.PARAM_AJAX+"=true&"+WebRequest.PARAM_AJAX_BASE_URL+"=/"));
+		tester.executeAjaxUrl(Url.parse("?" + WebRequest.PARAM_AJAX + "=true&" + WebRequest.PARAM_AJAX_BASE_URL
+			+ "=/"));
 
 		// verify that ajax request parameters are not saved
-		RestartResponseAtInterceptPageException.InterceptData data = RestartResponseAtInterceptPageException.InterceptData.get();
+		RestartResponseAtInterceptPageException.InterceptData data = RestartResponseAtInterceptPageException.InterceptData
+			.get();
 		assertNull(data.getOriginalUrl().getQueryParameter(WebRequest.PARAM_AJAX));
 		assertNull(data.getOriginalUrl().getQueryParameter(WebRequest.PARAM_AJAX_BASE_URL));
 		assertNull(data.getPostParameters().get(WebRequest.PARAM_AJAX));

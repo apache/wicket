@@ -29,7 +29,7 @@ public abstract class AbstractMeldingPage extends AbstractSecurePage
 	/**
 	 * Construct.
 	 */
-    AbstractMeldingPage()
+	AbstractMeldingPage()
 	{
 		add(new Label("foo", "FooBar"));
 	}

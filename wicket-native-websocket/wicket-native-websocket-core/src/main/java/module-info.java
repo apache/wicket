@@ -15,20 +15,21 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.websocket.core {
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.request;
-    requires org.apache.wicket.core;
-    requires static jakarta.servlet;
-    requires org.slf4j;
+module org.apache.wicket.websocket.core
+{
+	requires org.apache.wicket.util;
+	requires org.apache.wicket.request;
+	requires org.apache.wicket.core;
+	requires static jakarta.servlet;
+	requires org.slf4j;
 
-    exports org.apache.wicket.protocol.ws;
-    exports org.apache.wicket.protocol.ws.api;
-    exports org.apache.wicket.protocol.ws.api.event;
-    exports org.apache.wicket.protocol.ws.api.message;
-    exports org.apache.wicket.protocol.ws.api.registry;
-    exports org.apache.wicket.protocol.ws.concurrent;
+	exports org.apache.wicket.protocol.ws;
+	exports org.apache.wicket.protocol.ws.api;
+	exports org.apache.wicket.protocol.ws.api.event;
+	exports org.apache.wicket.protocol.ws.api.message;
+	exports org.apache.wicket.protocol.ws.api.registry;
+	exports org.apache.wicket.protocol.ws.concurrent;
 
-    //opening packages to allow resources access
-    opens org.apache.wicket.protocol.ws.api.res.js;
+	//opening packages to allow resources access
+	opens org.apache.wicket.protocol.ws.api.res.js;
 }

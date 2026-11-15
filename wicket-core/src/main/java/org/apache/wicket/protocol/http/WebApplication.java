@@ -152,7 +152,7 @@ public abstract class WebApplication extends Application
 	 * runtime.
 	 */
 	private RuntimeConfigurationType configurationType;
-	
+
 	private ContentSecurityPolicySettings cspSettings;
 
 	/**
@@ -418,7 +418,7 @@ public abstract class WebApplication extends Application
 
 		while (mapper instanceof IRequestMapperDelegate)
 		{
-			mapper = ((IRequestMapperDelegate) mapper).getDelegateMapper();
+			mapper = ((IRequestMapperDelegate)mapper).getDelegateMapper();
 		}
 
 		/*
@@ -462,7 +462,7 @@ public abstract class WebApplication extends Application
 				}
 			};
 
-			unmountFromCompound((ICompoundRequestMapper) mapper, request);
+			unmountFromCompound((ICompoundRequestMapper)mapper, request);
 		}
 	}
 
@@ -487,12 +487,12 @@ public abstract class WebApplication extends Application
 
 				while (actualMapper instanceof IRequestMapperDelegate)
 				{
-					actualMapper = ((IRequestMapperDelegate) actualMapper).getDelegateMapper();
+					actualMapper = ((IRequestMapperDelegate)actualMapper).getDelegateMapper();
 				}
 
 				if (actualMapper instanceof ICompoundRequestMapper)
 				{
-					unmountFromCompound((ICompoundRequestMapper) actualMapper, request);
+					unmountFromCompound((ICompoundRequestMapper)actualMapper, request);
 				}
 				else
 				{
@@ -775,7 +775,8 @@ public abstract class WebApplication extends Application
 	{
 		super.validateInit();
 
-		if (getCspSettings().isEnabled()) {
+		if (getCspSettings().isEnabled())
+		{
 			getCspSettings().enforce(this);
 		}
 
@@ -832,7 +833,7 @@ public abstract class WebApplication extends Application
 			catch (SecurityException e)
 			{
 				log.warn("SecurityManager doesn't allow to read the configuration type from " +
-						"the system properties. The configuration type will be read from the web.xml.");
+					"the system properties. The configuration type will be read from the web.xml.");
 			}
 
 			// If no system parameter check filter/servlet <init-param> and <context-param>
@@ -1037,7 +1038,7 @@ public abstract class WebApplication extends Application
 		if (Strings.isEmpty(sessionId))
 		{
 			log.error("storeBufferedResponse needs a valid session id to store the response, but a null one was found. "
-					+ "Please report the problem to dev team and try to reproduce it in a quickstart project.");
+				+ "Please report the problem to dev team and try to reproduce it in a quickstart project.");
 			return;
 		}
 
@@ -1104,7 +1105,7 @@ public abstract class WebApplication extends Application
 		}
 		return filterFactoryManager;
 	}
-	
+
 	/**
 	 * Returns the {@link ContentSecurityPolicySettings} for this application. See
 	 * {@link ContentSecurityPolicySettings} and {@link CSPHeaderConfiguration} for instructions on

@@ -46,7 +46,7 @@ public class ZonedToLocalDateTimeModel implements IModel<LocalDateTime>
 	public ZonedToLocalDateTimeModel(IModel<ZonedDateTime> model)
 	{
 		Args.notNull(model, "model");
-		
+
 		this.model = model;
 	}
 

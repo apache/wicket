@@ -22,36 +22,36 @@ import org.junit.jupiter.api.Test;
 
 class JavaScriptDataBlockTypeTest
 {
-    @Test
-    void cannotBeCreatedWithNullType()
-    {
-        String message = assertThrows(IllegalArgumentException.class,
-                () -> new JavaScriptDataBlockType(null))
-                .getMessage();
-        assertEquals("Argument 'type' may not be null.", message);
-    }
+	@Test
+	void cannotBeCreatedWithNullType()
+	{
+		String message = assertThrows(IllegalArgumentException.class,
+			() -> new JavaScriptDataBlockType(null))
+				.getMessage();
+		assertEquals("Argument 'type' may not be null.", message);
+	}
 
-    @Test
-    void cannotBeCreatedWithTypeThatIsNotAMediaType()
-    {
-        String message = assertThrows(IllegalArgumentException.class,
-                () -> new JavaScriptDataBlockType("Not a media type"))
-                .getMessage();
-        assertEquals("'type' must be a media type (that is: start with a type followed by a slash).", message);
-    }
+	@Test
+	void cannotBeCreatedWithTypeThatIsNotAMediaType()
+	{
+		String message = assertThrows(IllegalArgumentException.class,
+			() -> new JavaScriptDataBlockType("Not a media type"))
+				.getMessage();
+		assertEquals("'type' must be a media type (that is: start with a type followed by a slash).", message);
+	}
 
-    @Test
-    void cannotBeCreatedWithTypeThatIsAJavaScriptMediaType()
-    {
-        String message = assertThrows(IllegalArgumentException.class,
-                () -> new JavaScriptDataBlockType("text/javascript"))
-                .getMessage();
-        assertEquals("'type' may not be a JavaScript media type.", message);
-    }
+	@Test
+	void cannotBeCreatedWithTypeThatIsAJavaScriptMediaType()
+	{
+		String message = assertThrows(IllegalArgumentException.class,
+			() -> new JavaScriptDataBlockType("text/javascript"))
+				.getMessage();
+		assertEquals("'type' may not be a JavaScript media type.", message);
+	}
 
-    @Test
-    void creationWithTypeThatIsNotAJavaScriptMediaTypeSucceeds()
-    {
-        assertDoesNotThrow(() -> new JavaScriptDataBlockType("application/json"));
-    }
+	@Test
+	void creationWithTypeThatIsNotAJavaScriptMediaTypeSucceeds()
+	{
+		assertDoesNotThrow(() -> new JavaScriptDataBlockType("application/json"));
+	}
 }

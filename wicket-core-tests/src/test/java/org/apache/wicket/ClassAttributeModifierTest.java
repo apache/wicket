@@ -53,7 +53,7 @@ class ClassAttributeModifierTest
 
 		cam.replaceAttributeValue(null, tag);
 
-		String classes = (String) attributes.get(cam.getAttribute());
+		String classes = (String)attributes.get(cam.getAttribute());
 		assertEquals("one two", classes);
 	}
 
@@ -81,7 +81,7 @@ class ClassAttributeModifierTest
 
 		cam.replaceAttributeValue(null, tag);
 
-		String classes = (String) attributes.get(cam.getAttribute());
+		String classes = (String)attributes.get(cam.getAttribute());
 		assertEquals("one three", classes);
 	}
 
@@ -108,7 +108,7 @@ class ClassAttributeModifierTest
 
 		cam.replaceAttributeValue(null, tag);
 
-		String classes = (String) attributes.get(cam.getAttribute());
+		String classes = (String)attributes.get(cam.getAttribute());
 		assertNull(classes);
 	}
 

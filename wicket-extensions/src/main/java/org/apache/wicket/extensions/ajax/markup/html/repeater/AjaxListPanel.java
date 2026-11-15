@@ -43,7 +43,7 @@ public class AjaxListPanel extends Panel
 {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private WebMarkupContainer container;
 
 	private RepeatingView repeater;
@@ -67,10 +67,11 @@ public class AjaxListPanel extends Panel
 	 * 
 	 * @see #append(Component, AjaxRequestTarget)
 	 */
-	public String newChildId() {
+	public String newChildId()
+	{
 		return repeater.newChildId();
 	}
-	
+
 	/**
 	 * Append a component.
 	 * 
@@ -85,11 +86,11 @@ public class AjaxListPanel extends Panel
 	public <T extends Component> T append(T component, AjaxRequestTarget target)
 	{
 		this.repeater.add(component);
-		
+
 		if (target != null)
 		{
 			IMarkupFragment markup = repeater.getMarkup();
-			
+
 			// append markup to be updated
 			MarkupStream stream = new MarkupStream(markup);
 			ComponentTag tag = stream.getTag().mutable();
@@ -98,14 +99,14 @@ public class AjaxListPanel extends Panel
 
 			target.prependJavaScript(String.format("Wicket.DOM.add(Wicket.DOM.get('%s'), '%s');",
 				container.getMarkupId(), JavaScriptUtils.escapeQuotes(tag.toString())));
-			
+
 			// ... then update the appended component 
 			target.add(component);
 		}
 
 		return component;
 	}
-	
+
 	/**
 	 * Delete a component.
 	 * 
@@ -116,14 +117,15 @@ public class AjaxListPanel extends Panel
 	 * 
 	 * @param <T> component type
 	 */
-	public <T extends Component> T delete(T component, AjaxRequestTarget target) {
+	public <T extends Component> T delete(T component, AjaxRequestTarget target)
+	{
 
 		this.repeater.remove(component);
 		if (target != null)
 		{
 			target.appendJavaScript(String.format("Wicket.DOM.remove(Wicket.DOM.get('%s'));", component.getMarkupId()));
 		}
-		
+
 		return (T)component;
 	}
 }

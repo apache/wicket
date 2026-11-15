@@ -30,8 +30,9 @@ import org.apache.wicket.util.lang.Args;
 public class PageManager implements IPageManager
 {
 	private final IPageStore store;
-	
-	public PageManager(IPageStore store) {
+
+	public PageManager(IPageStore store)
+	{
 		this.store = Args.notNull(store, "store");
 	}
 
@@ -40,18 +41,19 @@ public class PageManager implements IPageManager
 	{
 		return store.supportsVersioning();
 	}
-	
+
 	@Override
 	public IManageablePage getPage(int pageId)
 	{
 		IPageContext context = createPageContext();
-		
+
 		IManageablePage page = store.getPage(context, pageId);
-		
-		if (page != null) {
+
+		if (page != null)
+		{
 			store.addPage(context, page);
 		}
-		
+
 		return page;
 	}
 
@@ -78,13 +80,13 @@ public class PageManager implements IPageManager
 	{
 		store.revertPage(createPageContext(), page);
 	}
-	
+
 	@Override
 	public void end()
 	{
 		store.end(createPageContext());
 	}
-	
+
 	@Override
 	public void detach()
 	{
@@ -106,7 +108,7 @@ public class PageManager implements IPageManager
 	{
 		store.destroy();
 	}
-	
+
 	@Override
 	public IPageStore getPageStore()
 	{

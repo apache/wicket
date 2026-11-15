@@ -549,7 +549,8 @@ public class Form<T> extends WebMarkupContainer
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
 		String action = url.toString();
-		if (root.encodeUrlInHiddenFields()) {
+		if (root.encodeUrlInHiddenFields())
+		{
 			buffer.append(String.format("document.getElementById('%s').innerHTML = '",
 				root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
 
@@ -595,7 +596,7 @@ public class Form<T> extends WebMarkupContainer
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
 		buffer.append(String.format("document.getElementById('%s').innerHTML += '",
 			root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
-		writeParamsAsHiddenFields(new String[] {param}, buffer);
+		writeParamsAsHiddenFields(new String[] { param }, buffer);
 		buffer.append("';");
 
 		if (triggerEvent)
@@ -808,7 +809,7 @@ public class Form<T> extends WebMarkupContainer
 						break;
 					default :
 						throw new IllegalStateException("Invalid " +
-								MethodMismatchResponse.class.getName() + " value: " + response);
+							MethodMismatchResponse.class.getName() + " value: " + response);
 				}
 			}
 		}
@@ -1255,6 +1256,7 @@ public class Form<T> extends WebMarkupContainer
 				}
 				return false;
 			}
+
 			@Override
 			public boolean visitChildren(Object object)
 			{
@@ -1326,7 +1328,7 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected void addDefaultSubmitButtonHandler(IHeaderResponse headerResponse)
 	{
-		final Component component = (Component) defaultSubmittingComponent;
+		final Component component = (Component)defaultSubmittingComponent;
 		String submitId = component.getMarkupId();
 
 		AppendingStringBuffer script = new AppendingStringBuffer();
@@ -1502,40 +1504,43 @@ public class Form<T> extends WebMarkupContainer
 		if (multiPart == 0)
 		{
 			Boolean anyEmbeddedMultipart = visitChildren(Component.class,
-					new IVisitor<Component, Boolean>()
+				new IVisitor<Component, Boolean>()
+				{
+					@Override
+					public void component(final Component component, final IVisit<Boolean> visit)
 					{
-						@Override
-						public void component(final Component component, final IVisit<Boolean> visit)
+						boolean isMultiPart = false;
+						if (component instanceof Form<?>)
 						{
-							boolean isMultiPart = false;
-							if (component instanceof Form<?>)
+							Form<?> form = (Form<?>)component;
+							if (form.isVisibleInHierarchy() && form.isEnabledInHierarchy())
 							{
-								Form<?> form = (Form<?>)component;
-								if (form.isVisibleInHierarchy() && form.isEnabledInHierarchy())
-								{
-									isMultiPart = (form.multiPart & MULTIPART_HARD) != 0;
-								}
+								isMultiPart = (form.multiPart & MULTIPART_HARD) != 0;
 							}
-							else if (component instanceof FormComponent<?>)
+						}
+						else if (component instanceof FormComponent<?>)
+						{
+							FormComponent<?> fc = (FormComponent<?>)component;
+							if (fc.isVisibleInHierarchy() && fc.isEnabledInHierarchy())
 							{
-								FormComponent<?> fc = (FormComponent<?>)component;
-								if (fc.isVisibleInHierarchy() && fc.isEnabledInHierarchy())
-								{
-									isMultiPart = fc.isMultiPart();
-								}
-							}
-
-							if (isMultiPart)
-							{
-								visit.stop(true);
+								isMultiPart = fc.isMultiPart();
 							}
 						}
 
-					});
+						if (isMultiPart)
+						{
+							visit.stop(true);
+						}
+					}
 
-			if (Boolean.TRUE.equals(anyEmbeddedMultipart)) {
+				});
+
+			if (Boolean.TRUE.equals(anyEmbeddedMultipart))
+			{
 				multiPart |= MULTIPART_HINT_YES;
-			} else {
+			}
+			else
+			{
 				multiPart |= MULTIPART_HINT_NO;
 			}
 		}
@@ -1763,7 +1768,8 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	// WICKET-6658 form is not allowed, anything else can stay as is
-	private void adjustNestedTagName(ComponentTag tag) {
+	private void adjustNestedTagName(ComponentTag tag)
+	{
 		if ("form".equalsIgnoreCase(tag.getName()))
 		{
 			tag.setName("div");
@@ -1879,7 +1885,7 @@ public class Form<T> extends WebMarkupContainer
 	{
 		if (defaultSubmittingComponent instanceof Component)
 		{
-			final Component submittingComponent = (Component) defaultSubmittingComponent;
+			final Component submittingComponent = (Component)defaultSubmittingComponent;
 			return submittingComponent.isVisibleInHierarchy()
 				&& submittingComponent.isEnabledInHierarchy();
 		}
@@ -1938,8 +1944,10 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	@Override
-	public void onEvent(IEvent<?> event) {
-		if (event.getPayload() instanceof AjaxRequestTarget) {
+	public void onEvent(IEvent<?> event)
+	{
+		if (event.getPayload() instanceof AjaxRequestTarget)
+		{
 			// WICKET-6171 clear multipart hint, it might change during Ajax requests without this form being rendered
 			this.multiPart &= MULTIPART_HARD;
 		}
@@ -2222,7 +2230,8 @@ public class Form<T> extends WebMarkupContainer
 	 * @param component any component inside the form or the form itself
 	 * @return parameters
 	 */
-	static IRequestParameters getRequestParameters(Component component) {
+	static IRequestParameters getRequestParameters(Component component)
+	{
 		String method = Form.METHOD_POST;
 		final Request request = component.getRequest();
 		if (request.getContainerRequest() instanceof HttpServletRequest)
@@ -2232,9 +2241,12 @@ public class Form<T> extends WebMarkupContainer
 		else
 		{
 			final Form<?> form;
-			if (component instanceof Form) {
+			if (component instanceof Form)
+			{
 				form = (Form<?>)component;
-			} else {
+			}
+			else
+			{
 				form = component.findParent(Form.class);
 			}
 
@@ -2247,13 +2259,13 @@ public class Form<T> extends WebMarkupContainer
 		final IRequestParameters parameters;
 		switch (method.toLowerCase(Locale.ROOT))
 		{
-			case Form.METHOD_POST:
+			case Form.METHOD_POST :
 				parameters = request.getPostParameters();
 				break;
-			case Form.METHOD_GET:
+			case Form.METHOD_GET :
 				parameters = request.getQueryParameters();
 				break;
-			default:
+			default :
 				parameters = EmptyRequestParameters.INSTANCE;
 		}
 

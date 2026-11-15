@@ -150,7 +150,7 @@ public abstract class JavaScriptHeaderItem extends AbstractCspHeaderItem
 	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		JavaScriptHeaderItem that = (JavaScriptHeaderItem) o;
+		JavaScriptHeaderItem that = (JavaScriptHeaderItem)o;
 		return Objects.equals(markupId, that.markupId);
 	}
 

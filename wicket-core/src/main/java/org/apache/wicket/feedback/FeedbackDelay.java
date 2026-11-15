@@ -39,11 +39,11 @@ public class FeedbackDelay implements Serializable, AutoCloseable
 	{
 		private static final long serialVersionUID = 1L;
 	};
-	
+
 	private final List<IFeedback> feedbacks = new ArrayList<>();
 
 	private RequestCycle cycle;
-	
+
 	/**
 	 * Delay all feedbacks for the given cycle.
 	 * <p>
@@ -52,23 +52,26 @@ public class FeedbackDelay implements Serializable, AutoCloseable
 	 * @param cycle
 	 *            request cycle
 	 */
-	public FeedbackDelay(RequestCycle cycle) {
-		if (get(cycle).isPresent()) {
+	public FeedbackDelay(RequestCycle cycle)
+	{
+		if (get(cycle).isPresent())
+		{
 			throw new WicketRuntimeException("feedbacks are already delayed");
 		}
-		
+
 		cycle.setMetaData(KEY, this);
-		
+
 		this.cycle = cycle;
 	}
-	
+
 	/**
 	 * Get the current delay.
 	 * 
 	 * @param cycle
 	 * @return optional delay
 	 */
-	public static Optional<FeedbackDelay> get(RequestCycle cycle) {
+	public static Optional<FeedbackDelay> get(RequestCycle cycle)
+	{
 		return Optional.ofNullable(cycle.getMetaData(KEY));
 	}
 
@@ -78,9 +81,10 @@ public class FeedbackDelay implements Serializable, AutoCloseable
 	 * @param feedback
 	 * @return
 	 */
-	public FeedbackDelay postpone(IFeedback feedback) {
+	public FeedbackDelay postpone(IFeedback feedback)
+	{
 		feedbacks.add(feedback);
-		
+
 		return this;
 	}
 
@@ -89,34 +93,38 @@ public class FeedbackDelay implements Serializable, AutoCloseable
 	 * 
 	 * @see IFeedback#beforeRender()
 	 */
-	public void beforeRender() {
+	public void beforeRender()
+	{
 		cycle.setMetaData(KEY, null);
 		cycle = null;
-		
+
 		for (IFeedback feedback : feedbacks)
 		{
-			if (feedback instanceof Component) {
+			if (feedback instanceof Component)
+			{
 				Component component = (Component)feedback;
-				
+
 				// render only if it is still in the page hierarchy (WICKET-4895)
 				if (component.findParent(Page.class) == null)
 				{
 					continue;
-				}			
+				}
 			}
-		
+
 			feedback.beforeRender();
 		}
 	}
-	
+
 	/**
 	 * Close any delays.
 	 * <p>
 	 * This does not call {@link #beforeRender()} on the delayed feedbacks.
 	 */
 	@Override
-	public void close() {
-		if (cycle != null) {
+	public void close()
+	{
+		if (cycle != null)
+		{
 			cycle.setMetaData(KEY, null);
 			cycle = null;
 			feedbacks.clear();

@@ -135,7 +135,8 @@ public class WicketServerEndpointConfig implements ServerEndpointConfig
 			{
 				userProperties.put("requestURI", requestURI);
 				String path = requestURI.getPath();
-				if (path != null && path.indexOf("/wicket") > 0) {
+				if (path != null && path.indexOf("/wicket") > 0)
+				{
 					String contextPath = path.substring(0, path.indexOf("/wicket"));
 					userProperties.put(JavaxUpgradeHttpRequest.CONTEXT_PATH, contextPath);
 				}
@@ -148,7 +149,8 @@ public class WicketServerEndpointConfig implements ServerEndpointConfig
 				userProperties.put(JavaxUpgradeHttpRequest.SESSION, httpSession);
 				if (httpSession instanceof HttpSession)
 				{
-					userProperties.put(JavaxUpgradeHttpRequest.CONTEXT_PATH,((HttpSession)httpSession).getServletContext().getContextPath());
+					userProperties.put(JavaxUpgradeHttpRequest.CONTEXT_PATH, ((HttpSession)httpSession)
+						.getServletContext().getContextPath());
 				}
 			}
 

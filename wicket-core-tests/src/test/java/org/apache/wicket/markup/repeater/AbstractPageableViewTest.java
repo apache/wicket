@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 public class AbstractPageableViewTest extends WicketTestCase
 {
 	private static int count = 5;
-	
+
 	@BeforeEach
 	public void resetCount()
 	{
@@ -47,31 +47,31 @@ public class AbstractPageableViewTest extends WicketTestCase
 	public void cachedItemCount()
 	{
 		View view = new View("f");
-		
+
 		assertEquals(5, view.getItemCount());
-		
+
 		count = 6;
 
 		assertEquals(5, view.getItemCount(), "still 5 cached");
-		
+
 		view.beforeRender();
 
 		assertEquals(6, view.getItemCount(), "cached cleared before render");
 
 		byte[] bytes = tester.getApplication().getFrameworkSettings().getSerializer().serialize(view);
-		
+
 		view = (View)tester.getApplication().getFrameworkSettings().getSerializer().deserialize(bytes);
-		
+
 		count = 7;
-		
+
 		assertEquals(7, view.getItemCount(), "cached cleared when deserialized");
-		
+
 		view.detach();
-		
+
 		count = 8;
-		
+
 		assertEquals(8, view.getItemCount(), "cached cleared when detached");
-	}	
+	}
 
 	static class View extends AbstractPageableView<Integer>
 	{
@@ -84,18 +84,19 @@ public class AbstractPageableViewTest extends WicketTestCase
 		protected void populateItem(Item<Integer> item)
 		{
 		}
-		
+
 		@Override
 		protected long internalGetItemCount()
 		{
 			return count;
 		}
-		
+
 		@Override
 		protected Iterator<IModel<Integer>> getItemModels(long offset, long size)
 		{
 			List<IModel<Integer>> models = new ArrayList<>();
-			for (int m = 0; m < count; m++) {
+			for (int m = 0; m < count; m++)
+			{
 				models.add(Model.of(m));
 			}
 			return models.iterator();

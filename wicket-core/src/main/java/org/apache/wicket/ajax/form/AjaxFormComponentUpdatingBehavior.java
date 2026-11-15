@@ -138,7 +138,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			target.focusComponent(null);
 		}
 
-		if (updateInnerComponents()) 
+		if (updateInnerComponents())
 		{
 			visitInnerComponents(target, formComponent);
 		}
@@ -146,10 +146,10 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			visitSingleComponent(target, formComponent);
 		}
-		
+
 	}
 
-	private void visitSingleComponent(AjaxRequestTarget target, FormComponent<?> formComponent) 
+	private void visitSingleComponent(AjaxRequestTarget target, FormComponent<?> formComponent)
 	{
 		try
 		{
@@ -176,7 +176,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			onError(target, e);
 		}
-		
+
 		formComponent.updateAutoLabels(target, false);
 	}
 
@@ -184,32 +184,30 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	{
 		try
 		{
-			Boolean validateresult = FormComponent.visitFormComponentsPostOrder(formComponent, (component, visit) -> 
-			{
+			Boolean validateresult = FormComponent.visitFormComponentsPostOrder(formComponent, (component, visit) -> {
 				component.inputChanged();
 				component.validate();
-				
-				if (!component.isValid()) 
+
+				if (!component.isValid())
 				{
 					visit.stop(false);
 				}
 			});
-			
+
 			if (Objects.requireNonNullElse(validateresult, true))
 			{
 				if (getUpdateModel())
 				{
-					FormComponent.visitFormComponentsPostOrder(formComponent, (component, visit) -> 
-					{
+					FormComponent.visitFormComponentsPostOrder(formComponent, (component, visit) -> {
 						component.valid();
 						component.updateModel();
 					});
 				}
-				
+
 				onUpdate(target);
 			}
 			else
-			{		
+			{
 				formComponent.invalid();
 				onError(target, null);
 			}
@@ -218,9 +216,8 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			onError(target, e);
 		}
-		
-		FormComponent.visitFormComponentsPostOrder(formComponent, (component, visit) -> 
-		{
+
+		FormComponent.visitFormComponentsPostOrder(formComponent, (component, visit) -> {
 			component.updateAutoLabels(target, false);
 		});
 	}

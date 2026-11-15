@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 public class WebSocketResponse extends WebResponse
 {
 	private static final Logger LOG = LoggerFactory.getLogger(WebSocketResponse.class);
-	
+
 	private final IWebSocketConnection connection;
 
 	private StringBuilder text;
@@ -113,7 +113,7 @@ public class WebSocketResponse extends WebResponse
 					byte[] bytes = binary.toByteArray();
 					if (asynchronous)
 					{
-                       connection.sendMessageAsync(bytes, 0, bytes.length, timeout);
+						connection.sendMessageAsync(bytes, 0, bytes.length, timeout);
 					}
 					else
 					{
@@ -123,7 +123,8 @@ public class WebSocketResponse extends WebResponse
 					binary = null;
 				}
 
-			} catch (IOException iox)
+			}
+			catch (IOException iox)
 			{
 				LOG.error("An error occurred while writing response to WebSocket client.", iox);
 			}
@@ -140,7 +141,8 @@ public class WebSocketResponse extends WebResponse
 			try
 			{
 				binary.close();
-			} catch (IOException iox)
+			}
+			catch (IOException iox)
 			{
 				LOG.error("An error occurred while resetting the binary content", iox);
 			}
@@ -175,10 +177,11 @@ public class WebSocketResponse extends WebResponse
 	}
 
 	@Override
-	public boolean isHeaderSupported() {
+	public boolean isHeaderSupported()
+	{
 		return false;
 	}
-	
+
 	@Override
 	public void setHeader(String name, String value)
 	{
@@ -219,10 +222,10 @@ public class WebSocketResponse extends WebResponse
 	public void sendError(int sc, String msg)
 	{
 		LOG.warn("An HTTP error response in WebSocket communication would not be processed by the browser! " +
-				"If you need to send the error code and message to the client then configure custom WebSocketResponse " +
-				"via WebSocketSettings#newWebSocketResponse() factory method and override #sendError() method to write " +
-				"them in an appropriate format for your application. " +
-				"The ignored error code is '{}' and the message: '{}'.", sc, msg);
+			"If you need to send the error code and message to the client then configure custom WebSocketResponse " +
+			"via WebSocketSettings#newWebSocketResponse() factory method and override #sendError() method to write " +
+			"them in an appropriate format for your application. " +
+			"The ignored error code is '{}' and the message: '{}'.", sc, msg);
 	}
 
 	@Override

@@ -18,10 +18,12 @@ package org.apache.wicket.noheadnobody;
 
 import org.apache.wicket.markup.html.panel.Panel;
 
-public class NoHeadNoBodyPanel extends Panel {
+public class NoHeadNoBodyPanel extends Panel
+{
 	private static final long serialVersionUID = 1L;
 
-	public NoHeadNoBodyPanel(String id) {
+	public NoHeadNoBodyPanel(String id)
+	{
 		super(id);
 	}
 }

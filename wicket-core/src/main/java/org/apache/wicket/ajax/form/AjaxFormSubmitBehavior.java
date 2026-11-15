@@ -116,7 +116,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		Component component = getComponent();
 		if (component instanceof IFormSubmittingComponent)
 		{
-			submittingComponent = ((IFormSubmittingComponent) component);
+			submittingComponent = ((IFormSubmittingComponent)component);
 		}
 		return submittingComponent;
 	}
@@ -182,9 +182,11 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			String submittingComponentName = submittingComponent.getInputName();
 			attributes.setSubmittingComponentName(submittingComponentName);
 		}
-		
-		if (shouldTriggerJavaScriptSubmitEvent()) {
-			attributes.getAjaxCallListeners().add(new AjaxCallListener() {
+
+		if (shouldTriggerJavaScriptSubmitEvent())
+		{
+			attributes.getAjaxCallListeners().add(new AjaxCallListener()
+			{
 				@Override
 				public CharSequence getPrecondition(Component component)
 				{
@@ -201,7 +203,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	{
 		AjaxFormSubmitBehavior.AjaxFormSubmitter submitter = new AjaxFormSubmitBehavior.AjaxFormSubmitter(this, target);
 		Form<?> form = getForm();
-		
+
 		form.getRootForm().onFormSubmitted(submitter);
 	}
 

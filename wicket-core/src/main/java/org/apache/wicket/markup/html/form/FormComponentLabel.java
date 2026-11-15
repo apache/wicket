@@ -34,13 +34,13 @@ public class FormComponentLabel extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	public static final String REQUIRED_CSS_CLASS_KEY = CssUtils.key(FormComponentLabel.class,
-			"required");
+		"required");
 
 	public static final String INVALID_CSS_CLASS_KEY = CssUtils.key(FormComponentLabel.class,
-			"invalid");
+		"invalid");
 
 	public static final String DISABLED_CSS_CLASS_KEY = CssUtils.key(FormComponentLabel.class,
-			"disabled");
+		"disabled");
 
 	private final LabeledWebMarkupContainer component;
 
@@ -77,7 +77,7 @@ public class FormComponentLabel extends WebMarkupContainer
 
 		if (formComponent instanceof FormComponent<?>)
 		{
-			FormComponent<?> fc = (FormComponent<?>) formComponent;
+			FormComponent<?> fc = (FormComponent<?>)formComponent;
 
 			if (fc.isRequired())
 			{

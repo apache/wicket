@@ -105,8 +105,9 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 				if (key.startsWith(namespaceDot))
 				{
 					escalateWarning(
-						String.format("You probably want '%s:xxx' rather than '%s.xxx'. Location: ", namespaceDot, namespaceDot),
-							tag);
+						String.format("You probably want '%s:xxx' rather than '%s.xxx'. Location: ", namespaceDot,
+							namespaceDot),
+						tag);
 				}
 			}
 		}

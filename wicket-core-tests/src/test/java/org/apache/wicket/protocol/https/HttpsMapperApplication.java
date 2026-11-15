@@ -43,7 +43,7 @@ class HttpsMapperApplication extends WebApplication
 
 		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), config));
 	}
-	
+
 
 	@Override
 	public Class<? extends Page> getHomePage()

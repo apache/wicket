@@ -82,7 +82,8 @@ class LazyInitProxyFactoryTest
 		}
 
 		// This method is needed to prevent (de)serialization of this locator instance in #testByteBuddyInterceptorReplacement()
-		private Object readResolve() throws ObjectStreamException {
+		private Object readResolve() throws ObjectStreamException
+		{
 			return concreteObjectLocator;
 		}
 	};
@@ -113,7 +114,7 @@ class LazyInitProxyFactoryTest
 
 		// test proxy implements ILazyInitProxy
 		assertTrue(proxy instanceof ILazyInitProxy);
-		assertSame(((ILazyInitProxy) proxy).getObjectLocator(), interfaceObjectLocator);
+		assertSame(((ILazyInitProxy)proxy).getObjectLocator(), interfaceObjectLocator);
 
 		// test method invocation
 		assertEquals("interface", proxy.getMessage());
@@ -157,7 +158,7 @@ class LazyInitProxyFactoryTest
 
 		// test proxy implements ILazyInitProxy
 		assertTrue(proxy instanceof ILazyInitProxy);
-		final IProxyTargetLocator objectLocator = ((ILazyInitProxy) proxy).getObjectLocator();
+		final IProxyTargetLocator objectLocator = ((ILazyInitProxy)proxy).getObjectLocator();
 		assertSame(concreteObjectLocator, objectLocator);
 
 		// test we do not have a jdk dynamic proxy
@@ -224,7 +225,7 @@ class LazyInitProxyFactoryTest
 		String proxy = (String)LazyInitProxyFactory.createProxy(String.class, stringObjectLocator);
 		assertEquals("StringLiteral", proxy);
 	}
-	
+
 	/**
 	 * Test construction via objenesis.
 	 */

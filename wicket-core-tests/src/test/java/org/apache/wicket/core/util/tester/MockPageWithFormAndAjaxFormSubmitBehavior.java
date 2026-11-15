@@ -104,7 +104,7 @@ public class MockPageWithFormAndAjaxFormSubmitBehavior extends WebPage
 		 * 
 		 * @param name
 		 */
-        Pojo(String name)
+		Pojo(String name)
 		{
 			this.name = name;
 		}

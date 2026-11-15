@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.resolver;
 
 
-
 /**
  * Mock page for testing.
  * 

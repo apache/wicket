@@ -181,7 +181,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	public MockHttpServletRequest(final Application application, final HttpSession session,
-			final ServletContext context)
+		final ServletContext context)
 	{
 		this(application, session, context, Locale.getDefault());
 	}
@@ -221,7 +221,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void addFile(String fieldName, File file, String contentType)
 	{
-		if (file != null) {
+		if (file != null)
+		{
 			if (file.exists() == false)
 			{
 				throw new IllegalArgumentException(
@@ -629,7 +630,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return getLocales().nextElement();
 	}
 
-	public void setLocale(Locale locale) {
+	public void setLocale(Locale locale)
+	{
 		setHeader("Accept-Language", locale.getLanguage() + '-' + locale.getCountry());
 	}
 
@@ -671,8 +673,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 		if (header != null)
 		{
 			int idxOfSemicolon = header.indexOf(';');
-			if (idxOfSemicolon > -1) {
-				header = header.substring(0 , idxOfSemicolon);
+			if (idxOfSemicolon > -1)
+			{
+				header = header.substring(0, idxOfSemicolon);
 			}
 			final String[] locales = Strings.split(header, ',');
 			for (String value : locales)
@@ -1237,7 +1240,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return null;
 	}
 
-	public MockHttpServletRequest setPart(String name, Part part) {
+	public MockHttpServletRequest setPart(String name, Part part)
+	{
 		parts.put(name, part);
 		return this;
 	}
@@ -1534,7 +1538,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 						out.write("; name=\"".getBytes());
 						out.write(fieldName.getBytes());
 						out.write("\"; filename=\"".getBytes());
-						if (uf.getFile() != null) {
+						if (uf.getFile() != null)
+						{
 							out.write(uf.getFile().getName().getBytes());
 						}
 						out.write("\"".getBytes());
@@ -1544,7 +1549,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 						out.write(crlf.getBytes());
 						out.write(crlf.getBytes());
 
-						if (uf.getFile() != null) {
+						if (uf.getFile() != null)
+						{
 							// Load the file and put it into the the inputstream
 							FileInputStream fis = new FileInputStream(uf.getFile());
 
@@ -1748,17 +1754,20 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	@Override
-	public String getRequestId() {
+	public String getRequestId()
+	{
 		return null;
 	}
 
 	@Override
-	public String getProtocolRequestId() {
+	public String getProtocolRequestId()
+	{
 		return null;
 	}
 
 	@Override
-	public ServletConnection getServletConnection() {
+	public ServletConnection getServletConnection()
+	{
 		return null;
 	}
 

@@ -80,7 +80,7 @@ public class TabbedPanel<T extends ITab> extends Panel
 	public static final String TAB_PANEL_ID = "panel";
 
 	public static final String CONTAINER_CSS_CLASS_KEY = CssUtils.key(TabbedPanel.class,
-			"container");
+		"container");
 
 	public static final String SELECTED_CSS_CLASS_KEY = CssUtils.key(TabbedPanel.class, "selected");
 

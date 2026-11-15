@@ -33,9 +33,10 @@ public class HangManTest
 	/**
 	 * Tests the hangman class directly for a winning game.
 	 *
-     */
+	 */
 	@Test
-	public void test_1() {
+	public void test_1()
+	{
 		Game hangman = new Game();
 		hangman.newGame(5, new WordGenerator(new String[] { "testing" }));
 
@@ -104,9 +105,10 @@ public class HangManTest
 	/**
 	 * Tests the hangman class directly for a lost game.
 	 *
-     */
+	 */
 	@Test
-	public void testHangmanLoseGame() {
+	public void testHangmanLoseGame()
+	{
 		Game hangman = new Game();
 		hangman.newGame(2, new WordGenerator(new String[] { "foo" }));
 

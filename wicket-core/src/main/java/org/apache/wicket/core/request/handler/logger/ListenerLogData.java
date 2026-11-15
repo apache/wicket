@@ -57,14 +57,14 @@ public class ListenerLogData extends PageLogData
 		if (behaviorIndex != null)
 		{
 			behaviorClass = optional(() -> pageAndComponentProvider.getComponent()
-					.getBehaviorById(behaviorIndex)
-					.getClass());
+				.getBehaviorById(behaviorIndex)
+				.getClass());
 		}
 		else
 		{
 			behaviorClass = null;
 		}
-		
+
 		final Component formSubmitter = optional(() -> {
 			final IRequestableComponent component = pageAndComponentProvider.getComponent();
 			if (component instanceof Form)
@@ -78,7 +78,9 @@ public class ListenerLogData extends PageLogData
 		{
 			submittingComponentClass = formSubmitter.getClass();
 			submittingComponentPath = formSubmitter.getPageRelativePath();
-		} else {
+		}
+		else
+		{
 			submittingComponentClass = null;
 			submittingComponentPath = null;
 		}

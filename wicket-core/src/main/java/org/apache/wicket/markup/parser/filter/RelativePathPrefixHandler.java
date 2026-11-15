@@ -98,7 +98,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			}
 		}
 	};
-	
+
 	private static final IAutoComponentFactory FACTORY = new IAutoComponentFactory()
 	{
 		@Override
@@ -143,7 +143,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		{
 			return tag;
 		}
-		
+
 		// Work out whether we have any attributes that require us to add a
 		// behavior that prepends the relative path.
 		for (String attrName : attributeNames)
@@ -161,14 +161,14 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 
 				tag.addBehavior(RELATIVE_PATH_BEHAVIOR);
 				tag.setModified(true);
-				
+
 				break;
 			}
 		}
 
 		return tag;
 	}
-		
+
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
@@ -182,7 +182,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void postProcess(Markup markup)
 	{
@@ -212,7 +212,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			}
 		}
 	}
-	
+
 	private String getWicketRelativePathPrefix(final MarkupStream markupStream)
 	{
 		return getWicketNamespace(markupStream) + WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID;

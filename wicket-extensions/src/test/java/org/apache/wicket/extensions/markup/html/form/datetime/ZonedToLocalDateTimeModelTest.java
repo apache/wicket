@@ -35,31 +35,33 @@ public class ZonedToLocalDateTimeModelTest
 {
 
 	@Test
-	public void test() {
-		
+	public void test()
+	{
+
 		ZoneId targetZone = ZoneId.of("UTC");
 		ZoneId clientZone = ZoneId.of("UTC+2");
-		
+
 		IModel<ZonedDateTime> target = Model.of(ZonedDateTime.of(2000, 6, 1, 5, 0, 0, 0, targetZone));
-		
-		ZonedToLocalDateTimeModel client = new ZonedToLocalDateTimeModel(target) {
+
+		ZonedToLocalDateTimeModel client = new ZonedToLocalDateTimeModel(target)
+		{
 			@Override
 			protected ZoneId getTargetTimeZone()
 			{
 				return targetZone;
 			}
-			
+
 			@Override
 			protected ZoneId getClientTimeZone()
 			{
 				return clientZone;
 			}
 		};
-		
+
 		assertEquals(LocalDateTime.of(2000, 6, 1, 7, 0, 0, 0), client.getObject());
-		
+
 		client.setObject(LocalDateTime.of(2000, 6, 1, 7, 30, 0, 0));
-		
+
 		assertEquals(ZonedDateTime.of(2000, 6, 1, 5, 30, 0, 0, targetZone), target.getObject());
 	}
 }

@@ -28,7 +28,8 @@ public class LocalDateConverter extends AbstractJavaTimeConverter<LocalDate>
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final DateTimeFormatter SHORT_DATE_TIME_FORMATTER = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+	private static final DateTimeFormatter SHORT_DATE_TIME_FORMATTER = DateTimeFormatter.ofLocalizedDate(
+		FormatStyle.SHORT);
 
 	@Override
 	protected Class<LocalDate> getTargetType()
@@ -43,7 +44,8 @@ public class LocalDateConverter extends AbstractJavaTimeConverter<LocalDate>
 	}
 
 	@Override
-	protected DateTimeFormatter getDateTimeFormatter() {
+	protected DateTimeFormatter getDateTimeFormatter()
+	{
 		return SHORT_DATE_TIME_FORMATTER;
 	}
 }

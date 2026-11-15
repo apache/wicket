@@ -76,7 +76,7 @@ class StoredResponsesMapTest
 		TimeUnit.MILLISECONDS.sleep(timeout.toMillis() * 2); // sleep for twice longer than the timeout
 		Duration elapsedTime = Duration.between(start, Instant.now());
 		elapsedTime = elapsedTime.truncatedTo(ChronoUnit.MILLIS);
-		
+
 		assertTrue(elapsedTime.compareTo(timeout) > 0, "The timeout has passed.");
 		Object value = map.get("1");
 		assertNull(value);

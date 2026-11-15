@@ -40,7 +40,7 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
 
 		if (value == null)
 		{
-			validationResult = false; 
+			validationResult = false;
 		}
 		else if (!CONTENT.matcher(value).matches())
 		{

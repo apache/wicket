@@ -42,7 +42,7 @@ public class SqlTimeConverter extends AbstractDateConverter<Time>
 		}
 
 		// return a clone because DateFormat.getDateInstance uses a pool
-		return (DateFormat) DateFormat.getTimeInstance(DateFormat.SHORT, locale).clone();
+		return (DateFormat)DateFormat.getTimeInstance(DateFormat.SHORT, locale).clone();
 	}
 
 	@Override

@@ -58,8 +58,7 @@ public class TimeField extends FormComponentPanel<LocalTime>
 	/**
 	 * Enumerated type for different ways of handling the render part of requests.
 	 */
-	public enum AM_PM
-	{
+	public enum AM_PM {
 		AM, PM;
 	}
 
@@ -138,8 +137,9 @@ public class TimeField extends FormComponentPanel<LocalTime>
 
 		// Create and add the "AM/PM" choice
 		add(amOrPmChoice = new DropDownChoice<AM_PM>("amOrPmChoice", new AmPmModel(),
-			Arrays.asList(AM_PM.values())) {
-				private static final long serialVersionUID = 1L;
+			Arrays.asList(AM_PM.values()))
+		{
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected boolean localizeDisplayValues()

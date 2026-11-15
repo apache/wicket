@@ -42,7 +42,8 @@ class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStream
 {
 	WebSocketBehaviorTestPage()
 	{
-		add(new WebSocketBehavior() {});
+		add(new WebSocketBehavior()
+		{});
 	}
 
 	WebSocketBehaviorTestPage(final String expectedMessage)
@@ -60,7 +61,7 @@ class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStream
 			}
 		});
 	}
-	
+
 	WebSocketBehaviorTestPage(final byte[] message, final int offset, final int length)
 	{
 		add(new WebSocketBehavior()
@@ -71,10 +72,10 @@ class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStream
 				assertArrayEquals(binaryMessage.getData(), message);
 				assertEquals(offset, binaryMessage.getOffset());
 				assertEquals(length, binaryMessage.getLength());
-				
+
 				String msg = new String(message);
 				byte[] pushedMessage = Strings.capitalize(msg).getBytes();
-				
+
 				handler.push(pushedMessage, offset + 1, length - 1);
 			}
 		});
@@ -88,7 +89,7 @@ class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStream
 			protected void onPush(WebSocketRequestHandler handler, IWebSocketPushMessage message)
 			{
 				assertTrue(message instanceof WebSocketTesterBehaviorTest.BroadcastMessage);
-				WebSocketTesterBehaviorTest.BroadcastMessage broadcastMessage = (WebSocketTesterBehaviorTest.BroadcastMessage) message;
+				WebSocketTesterBehaviorTest.BroadcastMessage broadcastMessage = (WebSocketTesterBehaviorTest.BroadcastMessage)message;
 				assertSame(expectedMessage, broadcastMessage);
 
 				String pushedMessage = broadcastMessage.getText().toUpperCase();

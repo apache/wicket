@@ -26,14 +26,14 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
-public class HomePageHeader extends Panel {
+public class HomePageHeader extends Panel
+{
 
-	public HomePageHeader(String id) 
+	public HomePageHeader(String id)
 	{
 		super(id);
-		
-		add(new Label("version", () -> 
-		{
+
+		add(new Label("version", () -> {
 			/*
 			 * Read the specification version from the wicket-core MANIFEST.MF file.
 			 */
@@ -50,12 +50,13 @@ public class HomePageHeader extends Panel {
 				return version;
 			}
 		}));
-		
+
 		ExternalLink externalLink = new ExternalLink("headerhomelink",
 			Model.of(WebApplication.get().getServletContext().getContextPath()));
-		
-		externalLink.add(new Image("headerimage", new PackageResourceReference(WicketExamplePage.class, "logo-apachewicket-examples-white.svg")));
-		
+
+		externalLink.add(new Image("headerimage", new PackageResourceReference(WicketExamplePage.class,
+			"logo-apachewicket-examples-white.svg")));
+
 		add(externalLink);
 	}
 }

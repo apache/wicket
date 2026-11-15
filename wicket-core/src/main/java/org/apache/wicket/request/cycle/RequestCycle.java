@@ -287,7 +287,8 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	{
 		Args.notNull(handler, "handler");
 
-		while (handler != null) {
+		while (handler != null)
+		{
 			try
 			{
 				listeners.onRequestHandlerResolved(this, handler);
@@ -369,13 +370,15 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 		if (Application.exists() && Application.get().usesDevelopmentConfig())
 		{
 			var loudExceptionLogging = Application.get().getExceptionSettings().isLoudExceptionLogging();
-			if (loudExceptionLogging) {
+			if (loudExceptionLogging)
+			{
 				logExtra.warn("********************************");
 			}
 
 			logExtra.warn("Handling the following exception", e);
 
-			if (loudExceptionLogging) {
+			if (loudExceptionLogging)
+			{
 				logExtra.warn("********************************");
 			}
 		}
@@ -703,7 +706,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	{
 		if (page instanceof Page)
 		{
-			((Page) page).setStatelessHint(false);
+			((Page)page).setStatelessHint(false);
 		}
 
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new PageProvider(page),
@@ -729,7 +732,8 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 * @param redirectPolicy
 	 *              The policy to use when deciding whether to redirect or not
 	 */
-	public void setResponsePage(Class<? extends IRequestablePage> pageClass, RenderPageRequestHandler.RedirectPolicy redirectPolicy)
+	public void setResponsePage(Class<? extends IRequestablePage> pageClass,
+		RenderPageRequestHandler.RedirectPolicy redirectPolicy)
 	{
 		setResponsePage(pageClass, null, redirectPolicy);
 	}
@@ -759,11 +763,11 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	 *              The policy to use when deciding whether to redirect or not
 	 */
 	public void setResponsePage(Class<? extends IRequestablePage> pageClass,
-	                            PageParameters parameters, RenderPageRequestHandler.RedirectPolicy redirectPolicy)
+		PageParameters parameters, RenderPageRequestHandler.RedirectPolicy redirectPolicy)
 	{
 		IPageProvider provider = new PageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
-				redirectPolicy));
+			redirectPolicy));
 	}
 
 	/**

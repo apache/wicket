@@ -29,9 +29,9 @@ public class BorderWithEnclosure extends Border
 	public BorderWithEnclosure(String id)
 	{
 		super(id);
-		
+
 	}
-	
+
 	@Override
 	protected void onInitialize()
 	{

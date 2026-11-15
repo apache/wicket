@@ -121,10 +121,13 @@ public abstract class WebRequest extends Request
 	{
 		if (isAjax == null)
 		{
-			try {
+			try
+			{
 				isAjax = Strings.isTrue(getHeader(HEADER_AJAX)) ||
-						Strings.isTrue(getQueryParameters().getParameterValue(PARAM_AJAX).toString());
-			} catch (StringValueConversionException invalidValue) {
+					Strings.isTrue(getQueryParameters().getParameterValue(PARAM_AJAX).toString());
+			}
+			catch (StringValueConversionException invalidValue)
+			{
 				isAjax = false;
 			}
 		}

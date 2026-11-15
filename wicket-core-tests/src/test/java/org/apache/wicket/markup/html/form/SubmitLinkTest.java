@@ -39,7 +39,7 @@ class SubmitLinkTest extends WicketTestCase
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(testPage);
-		
+
 		tester.clickLink("form:link");
 	}
 
@@ -58,7 +58,7 @@ class SubmitLinkTest extends WicketTestCase
 				protected void onSubmit()
 				{
 					super.onSubmit();
-					
+
 					assertEquals(link, findSubmitter());
 				}
 			});

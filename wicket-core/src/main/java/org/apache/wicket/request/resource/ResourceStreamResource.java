@@ -130,7 +130,8 @@ public class ResourceStreamResource extends AbstractResource
 	private IResourceStream internalGetResourceStream(Attributes attributes)
 	{
 		final IResourceStream resourceStream = getResourceStream(attributes);
-		Checks.notNull(resourceStream, "%s#getResourceStream(attributes) should not return null!", getClass().getName());
+		Checks.notNull(resourceStream, "%s#getResourceStream(attributes) should not return null!", getClass()
+			.getName());
 		return resourceStream;
 	}
 

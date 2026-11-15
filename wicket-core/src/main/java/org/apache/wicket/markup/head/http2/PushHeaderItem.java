@@ -133,11 +133,14 @@ public class PushHeaderItem extends HeaderItem
 
 	public PushHeaderItem(Page page, Request pageRequest, Response pageResponse, IPushBuilder pushBuilder)
 	{
-		if (!(page instanceof WebPage) || !(pageRequest instanceof WebRequest) || !(pageResponse instanceof WebResponse))
+		if (!(page instanceof WebPage) || !(pageRequest instanceof WebRequest)
+			|| !(pageResponse instanceof WebResponse))
 		{
 			throw new WicketRuntimeException(
-				"Please hand over the web page, the web request and the web response to the push header item like \"new PushHeaderItem(page, webRequest, webResponse)\" - " +
-					"The webResponse / webRequest can be obtained via \"getRequestCycle().getRequest()\" / \"getRequestCycle().getResponse()\" and placed into the page as fields " +
+				"Please hand over the web page, the web request and the web response to the push header item like \"new PushHeaderItem(page, webRequest, webResponse)\" - "
+					+
+					"The webResponse / webRequest can be obtained via \"getRequestCycle().getRequest()\" / \"getRequestCycle().getResponse()\" and placed into the page as fields "
+					+
 					"\"private transient Response webPageResponse;\" / \"private transient Request webPageRequest;\"");
 		}
 		this.pageWebRequest = (WebRequest)pageRequest;
@@ -326,76 +329,76 @@ public class PushHeaderItem extends HeaderItem
 		RequestCycle requestCycle = RequestCycle.get();
 		if (isHttp2(getContainerRequest(requestCycle.getRequest())))
 			for (PushItem pushItem : pushItems)
+		{
+			Object object = pushItem.getObject();
+			PageParameters parameters = pushItem.getPageParameters();
+
+			if (object == null)
 			{
-				Object object = pushItem.getObject();
-				PageParameters parameters = pushItem.getPageParameters();
-
-				if (object == null)
-				{
-					throw new WicketRuntimeException(
-						"Please provide an object to the items to be pushed, so that the url can be created for the given resource.");
-				}
-
-				CharSequence url;
-				if (object instanceof ResourceReference)
-				{
-					url = requestCycle.urlFor((ResourceReference)object, parameters);
-				}
-				else if (Page.class.isAssignableFrom(object.getClass()))
-				{
-					url = requestCycle.urlFor((Class<? extends Page>)object, parameters);
-				}
-				else if (object instanceof IRequestHandler)
-				{
-					url = requestCycle.urlFor((IRequestHandler)object);
-				}
-				else if (pushItem.getUrl() != null)
-				{
-					url = pushItem.getUrl();
-				}
-				else
-				{
-					Url encoded = new PageParametersEncoder().encodePageParameters(parameters);
-					String queryString = encoded.getQueryString();
-					url = object.toString() + (queryString != null ? "?" + queryString : "");
-				}
-
-				if (url.toString().equals("."))
-				{
-					url = "/";
-				}
-				else if (url.toString().startsWith("."))
-				{
-					url = url.toString().substring(1);
-				}
-
-				// The context path and the filter have to be applied to the URL, because otherwise
-				// the resource is not pushed correctly
-				StringBuilder partialUrl = new StringBuilder();
-				String contextPath = WebApplication.get().getServletContext().getContextPath();
-				partialUrl.append(contextPath);
-				if (!"/".equals(contextPath))
-				{
-					partialUrl.append('/');
-				}
-				String filterPath = WebApplication.get().getWicketFilter().getFilterPath();
-				if ("/".equals(filterPath))
-				{
-					filterPath = "";
-				}
-				else if (filterPath.endsWith("/"))
-				{
-					filterPath = filterPath.substring(0, filterPath.length() - 1);
-				}
-				partialUrl.append(filterPath);
-				partialUrl.append(url);
-
-				// Set the url the resource is going to be pushed with
-				pushItem.setUrl(partialUrl.toString());
-
-				// Apply the push item to be used during the push process
-				this.pushItems.add(pushItem);
+				throw new WicketRuntimeException(
+					"Please provide an object to the items to be pushed, so that the url can be created for the given resource.");
 			}
+
+			CharSequence url;
+			if (object instanceof ResourceReference)
+			{
+				url = requestCycle.urlFor((ResourceReference)object, parameters);
+			}
+			else if (Page.class.isAssignableFrom(object.getClass()))
+			{
+				url = requestCycle.urlFor((Class<? extends Page>)object, parameters);
+			}
+			else if (object instanceof IRequestHandler)
+			{
+				url = requestCycle.urlFor((IRequestHandler)object);
+			}
+			else if (pushItem.getUrl() != null)
+			{
+				url = pushItem.getUrl();
+			}
+			else
+			{
+				Url encoded = new PageParametersEncoder().encodePageParameters(parameters);
+				String queryString = encoded.getQueryString();
+				url = object.toString() + (queryString != null ? "?" + queryString : "");
+			}
+
+			if (url.toString().equals("."))
+			{
+				url = "/";
+			}
+			else if (url.toString().startsWith("."))
+			{
+				url = url.toString().substring(1);
+			}
+
+			// The context path and the filter have to be applied to the URL, because otherwise
+			// the resource is not pushed correctly
+			StringBuilder partialUrl = new StringBuilder();
+			String contextPath = WebApplication.get().getServletContext().getContextPath();
+			partialUrl.append(contextPath);
+			if (!"/".equals(contextPath))
+			{
+				partialUrl.append('/');
+			}
+			String filterPath = WebApplication.get().getWicketFilter().getFilterPath();
+			if ("/".equals(filterPath))
+			{
+				filterPath = "";
+			}
+			else if (filterPath.endsWith("/"))
+			{
+				filterPath = filterPath.substring(0, filterPath.length() - 1);
+			}
+			partialUrl.append(filterPath);
+			partialUrl.append(url);
+
+			// Set the url the resource is going to be pushed with
+			pushItem.setUrl(partialUrl.toString());
+
+			// Apply the push item to be used during the push process
+			this.pushItems.add(pushItem);
+		}
 		return this;
 	}
 
@@ -442,7 +445,8 @@ public class PushHeaderItem extends HeaderItem
 		if (!(assumedHttpServletRequest instanceof HttpServletRequest))
 		{
 			throw new WicketRuntimeException(
-				"The request is not a HttpServletRequest - the usage of PushHeaderItem is not support in the current environment: " +
+				"The request is not a HttpServletRequest - the usage of PushHeaderItem is not support in the current environment: "
+					+
 					request.getClass().getName());
 		}
 		return (HttpServletRequest)assumedHttpServletRequest;

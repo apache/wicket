@@ -56,26 +56,26 @@ public interface IWebSocketConnection
 	 */
 	IWebSocketConnection sendMessage(String message) throws IOException;
 
-    /**
-     * Sends a text message to the client in an asynchronous way.
-     *
-     * @param message
-     *      the text message
-     * @return a {@link java.util.concurrent.Future} representing the send operation
-     *
-     */
-    Future<Void> sendMessageAsync(String message);
+	/**
+	 * Sends a text message to the client in an asynchronous way.
+	 *
+	 * @param message
+	 *      the text message
+	 * @return a {@link java.util.concurrent.Future} representing the send operation
+	 *
+	 */
+	Future<Void> sendMessageAsync(String message);
 
-    /**
-     * Sends a text message to the client in an asynchronous way.
-     *
-     * @param message
-     *      the text message
-     * @param timeout
-     *      the timeout for operation
-     * @return a {@link java.util.concurrent.Future} representing the send operation
-     */
-    Future<Void> sendMessageAsync(String message, long timeout);
+	/**
+	 * Sends a text message to the client in an asynchronous way.
+	 *
+	 * @param message
+	 *      the text message
+	 * @param timeout
+	 *      the timeout for operation
+	 * @return a {@link java.util.concurrent.Future} representing the send operation
+	 */
+	Future<Void> sendMessageAsync(String message, long timeout);
 
 	/**
 	 * Sends a binary message to the client.
@@ -91,33 +91,33 @@ public interface IWebSocketConnection
 	 */
 	IWebSocketConnection sendMessage(byte[] message, int offset, int length) throws IOException;
 
-    /**
-     * Sends a binary message to the client in an asynchronous way.
-     *
-     * @param message
-     *      the binary message
-     * @param offset
-     *      the offset to read from
-     * @param length
-     *      how much data to read
-     * @return a {@link java.util.concurrent.Future} representing the send operation
-     */
-    Future<Void> sendMessageAsync(byte[] message, int offset, int length);
+	/**
+	 * Sends a binary message to the client in an asynchronous way.
+	 *
+	 * @param message
+	 *      the binary message
+	 * @param offset
+	 *      the offset to read from
+	 * @param length
+	 *      how much data to read
+	 * @return a {@link java.util.concurrent.Future} representing the send operation
+	 */
+	Future<Void> sendMessageAsync(byte[] message, int offset, int length);
 
-    /**
-     * Sends a binary message to the client in an asynchronous way.
-     *
-     * @param message
-     *      the binary message
-     * @param offset
-     *      the offset to read from
-     * @param length
-     *      how much data to read
-     * @param timeout
-     *      the timeout for operation
-     * @return a {@link java.util.concurrent.Future} representing the send operation
-     */
-    Future<Void> sendMessageAsync(byte[] message, int offset, int length, long timeout);
+	/**
+	 * Sends a binary message to the client in an asynchronous way.
+	 *
+	 * @param message
+	 *      the binary message
+	 * @param offset
+	 *      the offset to read from
+	 * @param length
+	 *      how much data to read
+	 * @param timeout
+	 *      the timeout for operation
+	 * @return a {@link java.util.concurrent.Future} representing the send operation
+	 */
+	Future<Void> sendMessageAsync(byte[] message, int offset, int length, long timeout);
 
 	/**
 	 * Broadcasts a push message to the wicket page (and it's components) associated with this

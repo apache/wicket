@@ -79,11 +79,11 @@ public class ModalDialogPage extends BasePage
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-		
+
 		response.render(CssHeaderItem.forReference(new CssResourceReference(ModalDialogPage.class,
 			"dialog.css")));
 	}
-	
+
 	private class ModalFragment extends Fragment
 	{
 
@@ -95,7 +95,7 @@ public class ModalDialogPage extends BasePage
 
 			Form<Void> form = new Form<Void>("form");
 			queue(form);
-			
+
 			nestedDialog = new ModalDialog("nestedDialog");
 			nestedDialog.add(new DefaultTheme());
 			nestedDialog.trapFocus();
@@ -126,7 +126,7 @@ public class ModalDialogPage extends BasePage
 				protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 				{
 					super.updateAjaxAttributes(attributes);
-					
+
 					attributes.getAjaxCallListeners().add(new AjaxCallListener()
 					{
 						@Override
@@ -163,17 +163,18 @@ public class ModalDialogPage extends BasePage
 					findParent(ModalDialog.class).close(null);
 				}
 			});
-			
+
 			final MultiLineLabel lorem = new MultiLineLabel("lorem", "");
 			lorem.setOutputMarkupId(true);
 			queue(lorem);
-			
-			queue(new AjaxLink<Void>("ipsum") {
+
+			queue(new AjaxLink<Void>("ipsum")
+			{
 				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
 					lorem.setDefaultModelObject(lorem.getDefaultModelObject() + "\n\n" + getString("lorem"));
-					
+
 					target.add(lorem);
 				}
 			});

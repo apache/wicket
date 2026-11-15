@@ -119,7 +119,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 		maximum = Model.of((N)null);
 		step = Model.of((N)null);
 	}
-	
+
 	/**
 	 * Sets the minimum allowed value
 	 *
@@ -277,7 +277,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	@Override
 	protected String[] getInputTypes()
 	{
-		return new String[] {"number"};
+		return new String[] { "number" };
 	}
 
 	/**

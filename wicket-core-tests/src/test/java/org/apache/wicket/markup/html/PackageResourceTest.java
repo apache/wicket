@@ -114,7 +114,8 @@ public class PackageResourceTest extends WicketTestCase
 	{
 		ResourceReference invalidResource = new PackageResourceReference(PackageResourceTest.class,
 			"i_do_not_exist.txt", Locale.ENGLISH, null, null);
-		assertNotNull(invalidResource.getResource(), "resource i_do_not_exist.txt SHOULD be available as a packaged resource even if it doesn't exist");
+		assertNotNull(invalidResource.getResource(),
+			"resource i_do_not_exist.txt SHOULD be available as a packaged resource even if it doesn't exist");
 
 		assertTrue(
 			PackageResource.exists(PackageResourceTest.class, "packaged1.txt", null, null, null));

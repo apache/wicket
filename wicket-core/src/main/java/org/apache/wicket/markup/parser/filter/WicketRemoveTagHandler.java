@@ -71,7 +71,7 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 		while ((markupElement = getNextFilter().nextElement()) != null)
 		{
 			// skip non-component tags
-			if((markupElement instanceof ComponentTag) == false)
+			if ((markupElement instanceof ComponentTag) == false)
 			{
 				continue;
 			}

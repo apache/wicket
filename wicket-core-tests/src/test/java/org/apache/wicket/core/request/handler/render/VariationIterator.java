@@ -27,22 +27,25 @@ public class VariationIterator<T> implements Iterator<T>
 
 	private int idx = -1;
 
-	private VariationIterator(Variation<T> variation) {
+	private VariationIterator(Variation<T> variation)
+	{
 		this(null, variation);
 	}
 
-	private VariationIterator(VariationIterator<?> prev, Variation<T> variation) {
+	private VariationIterator(VariationIterator<?> prev, Variation<T> variation)
+	{
 		this.prev = prev;
 		this.variation = variation;
 	}
 
-	public static <T> VariationIterator<T> of(Variation<T> variation) {
+	public static <T> VariationIterator<T> of(Variation<T> variation)
+	{
 		return new VariationIterator<>(variation);
 	}
 
 	public static <T> VariationIterator<T> of(VariationIterator<?> prev, Variation<T> variation)
 	{
-		return new VariationIterator<>(prev,variation);
+		return new VariationIterator<>(prev, variation);
 	}
 
 	@Override

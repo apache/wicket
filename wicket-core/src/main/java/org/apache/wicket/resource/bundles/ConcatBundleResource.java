@@ -172,8 +172,10 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	protected byte[] readAllResources(List<IResourceStream> resources) throws IOException,
 		ResourceStreamNotFoundException
 	{
-		try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
-			for (IResourceStream curStream : resources) {
+		try (ByteArrayOutputStream output = new ByteArrayOutputStream())
+		{
+			for (IResourceStream curStream : resources)
+			{
 				IOUtils.copy(curStream.getInputStream(), output);
 			}
 
@@ -264,11 +266,13 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 			private static final long serialVersionUID = 1L;
 
 			private byte[] bytes;
-			
+
 			private ByteArrayInputStream inputStream;
 
-			private byte[] getBytes() {
-				if (bytes == null) {
+			private byte[] getBytes()
+			{
+				if (bytes == null)
+				{
 					try
 					{
 						bytes = readAllResources(streams);
@@ -282,17 +286,18 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 						return null;
 					}
 				}
-				
+
 				return bytes;
 			}
-			
+
 			@Override
 			public InputStream getInputStream() throws ResourceStreamNotFoundException
 			{
-				if (inputStream == null) {
-					inputStream = new ByteArrayInputStream(getBytes());				
+				if (inputStream == null)
+				{
+					inputStream = new ByteArrayInputStream(getBytes());
 				}
-				
+
 				return inputStream;
 			}
 
@@ -317,8 +322,9 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 			@Override
 			public void close() throws IOException
 			{
-				if (inputStream != null) {
-					inputStream.close();					
+				if (inputStream != null)
+				{
+					inputStream.close();
 				}
 			}
 		};

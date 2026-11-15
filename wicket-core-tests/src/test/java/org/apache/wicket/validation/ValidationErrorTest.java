@@ -82,7 +82,7 @@ class ValidationErrorTest
 		ValidationError error = new ValidationError(message);
 		Serializable errorMessage = error.getErrorMessage(new TestMessageSource());
 		assertThat(errorMessage).isInstanceOf(ValidationErrorFeedback.class);
-		ValidationErrorFeedback vef = (ValidationErrorFeedback) errorMessage;
+		ValidationErrorFeedback vef = (ValidationErrorFeedback)errorMessage;
 		assertEquals(message, vef.getMessage());
 	}
 

@@ -63,8 +63,7 @@ class SpringBeanWithGenericsTest
 	@Test
 	void genericAsQualifier()
 	{
-		AnnotatedBeanGenericQualifier page = 
-			tester.startPage(new AnnotatedBeanGenericQualifier());
+		AnnotatedBeanGenericQualifier page = tester.startPage(new AnnotatedBeanGenericQualifier());
 
 		assertNotNull(page.getBean());
 	}
@@ -72,14 +71,13 @@ class SpringBeanWithGenericsTest
 	@Test
 	void listOfGenerics()
 	{
-		AnnotatedListOfBeanGenericQualifier page = 
-			tester.startPage(new AnnotatedListOfBeanGenericQualifier());
+		AnnotatedListOfBeanGenericQualifier page = tester.startPage(new AnnotatedListOfBeanGenericQualifier());
 
 		List<BeanWithGeneric<?>> beans = page.getBeans();
-		
+
 		assertNotNull(beans);
 		assertEquals(2, beans.size());
-		
+
 		assertTrue(beans.contains(ctx.getBean("stringBean")));
 		assertTrue(beans.contains(ctx.getBean("integerBean")));
 	}
@@ -87,23 +85,22 @@ class SpringBeanWithGenericsTest
 	@Test
 	void listOfStringGenerics()
 	{
-		AnnotatedListOfBeanStringGenericQualifier page =
-				tester.startPage(new AnnotatedListOfBeanStringGenericQualifier());
+		AnnotatedListOfBeanStringGenericQualifier page = tester.startPage(
+			new AnnotatedListOfBeanStringGenericQualifier());
 
 		List<BeanWithGeneric<String>> beans = page.getBeans();
 
 		assertNotNull(beans);
 		assertEquals(1, beans.size());
 
-		BeanWithGeneric<String> stringBean = (BeanWithGeneric<String>) ctx.getBean("stringBean");
+		BeanWithGeneric<String> stringBean = (BeanWithGeneric<String>)ctx.getBean("stringBean");
 		assertTrue(beans.contains(stringBean));
 	}
-	
+
 	@Test
 	void mapOfGenerics()
 	{
-		AnnotatedMapOfBeanGenericQualifier page = 
-			tester.startPage(new AnnotatedMapOfBeanGenericQualifier());
+		AnnotatedMapOfBeanGenericQualifier page = tester.startPage(new AnnotatedMapOfBeanGenericQualifier());
 
 		Map<String, BeanWithGeneric<?>> beans = page.getBeans();
 
@@ -113,27 +110,25 @@ class SpringBeanWithGenericsTest
 		assertTrue(beans.containsKey("stringBean"));
 		assertTrue(beans.containsKey("integerBean"));
 	}
-	
+
 	@Test
 	void setOfGenerics()
 	{
-		AnnotatedSetOfBeanGenericQualifier page = 
-			tester.startPage(new AnnotatedSetOfBeanGenericQualifier());
+		AnnotatedSetOfBeanGenericQualifier page = tester.startPage(new AnnotatedSetOfBeanGenericQualifier());
 
 		Set<BeanWithGeneric<?>> beans = page.getBeans();
-		
+
 		assertNotNull(beans);
 		assertEquals(2, beans.size());
-		
+
 		assertTrue(beans.contains(ctx.getBean("stringBean")));
 		assertTrue(beans.contains(ctx.getBean("integerBean")));
 	}
-	
+
 	@Test
 	void listField()
 	{
-		AnnotatedListField page =
-			tester.startPage(new AnnotatedListField());
+		AnnotatedListField page = tester.startPage(new AnnotatedListField());
 
 		List<String> stringsList = page.getStringsList();
 		assertNotNull(stringsList);
@@ -141,7 +136,7 @@ class SpringBeanWithGenericsTest
 		assertEquals("foo", stringsList.get(0));
 		assertEquals("bar", stringsList.get(1));
 		assertEquals("baz", stringsList.get(2));
-		
+
 		ArrayList<String> arrayListStrings = page.getArrayListStrings();
 		assertNotNull(arrayListStrings);
 		assertEquals(3, arrayListStrings.size());
@@ -165,8 +160,7 @@ class SpringBeanWithGenericsTest
 	@Test
 	void listOfTypedGenerics()
 	{
-		AnnotatedListOfBeanTypeQualifier page = 
-			tester.startPage(new AnnotatedListOfBeanTypeQualifier());
+		AnnotatedListOfBeanTypeQualifier page = tester.startPage(new AnnotatedListOfBeanTypeQualifier());
 
 		assertNotNull(page.getBeans());
 		assertEquals(1, page.getBeans().size());
@@ -204,7 +198,7 @@ class SpringBeanWithGenericsTest
 			return beans;
 		}
 	}
-	
+
 	class AnnotatedMapOfBeanGenericQualifier extends DummyHomePage
 	{
 		@SpringBean
@@ -226,7 +220,7 @@ class SpringBeanWithGenericsTest
 			return beans;
 		}
 	}
-	
+
 	class AnnotatedListOfBeanTypeQualifier extends DummyHomePage
 	{
 		@SpringBean
@@ -315,19 +309,22 @@ class SpringBeanWithGenericsTest
 		}
 
 		@Bean
-		public MyList<String> myList() {
+		public MyList<String> myList()
+		{
 			MyList<String> myList = new MyList<>();
 			myList.add("one");
 			return myList;
 		}
 
 		@Bean
-		public List<Boolean> booleans() {
+		public List<Boolean> booleans()
+		{
 			return List.of(true, false);
 		}
 	}
 
-	private static class Wicket7086 {
+	private static class Wicket7086
+	{
 		@Inject
 		private List<Boolean> injected;
 	}
@@ -336,7 +333,8 @@ class SpringBeanWithGenericsTest
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-7086">WICKET-7086</a>
 	 */
 	@Test
-	void manualInjectionOfTypeWithGenerics() {
+	void manualInjectionOfTypeWithGenerics()
+	{
 		tester.startPage(new AnnotatedListField());
 
 		// Created by hand, not by Spring, fields are not injected.
@@ -349,5 +347,6 @@ class SpringBeanWithGenericsTest
 		assertTrue(item);
 	}
 
-	public static class MyList<T> extends ArrayList<T> {}
+	public static class MyList<T> extends ArrayList<T>
+	{}
 }

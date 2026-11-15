@@ -96,7 +96,7 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 	{
 		return formComponent;
 	}
-	
+
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{
@@ -167,13 +167,13 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 					formComponent.valid();
 					formComponent.updateModel();
 				}
-	
+
 				onUpdate();
 			}
 			else
 			{
 				formComponent.invalid();
-				
+
 				onError(null);
 			}
 		}
@@ -220,7 +220,7 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public final void onRequest()
 	{

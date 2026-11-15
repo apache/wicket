@@ -24,41 +24,45 @@ import org.junit.jupiter.api.Test;
 class RadioChoiceTest extends WicketTestCase
 {
 	@Test
-    void defaultLabelPositionIsAfter() throws Exception
+	void defaultLabelPositionIsAfter() throws Exception
 	{
 		RadioChoice<Integer> radioChoice = new RadioChoice<Integer>("testid", Arrays.asList(1));
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/><label for=\"testid1-0\">1</label>\n</span>");
+		tester.assertResultPage(
+			"<span wicket:id=\"testid\"><input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/><label for=\"testid1-0\">1</label>\n</span>");
 	}
 
 	@Test
-    void labelPositionBefore() throws Exception
+	void labelPositionBefore() throws Exception
 	{
 		RadioChoice<Integer> radioChoice = new RadioChoice<Integer>("testid", Arrays.asList(1));
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.BEFORE);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><label for=\"testid1-0\">1</label><input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/>\n</span>");
+		tester.assertResultPage(
+			"<span wicket:id=\"testid\"><label for=\"testid1-0\">1</label><input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/>\n</span>");
 	}
 
 	@Test
-    void labelPositionWrapBefore() throws Exception
+	void labelPositionWrapBefore() throws Exception
 	{
 		RadioChoice<Integer> radioChoice = new RadioChoice<Integer>("testid", Arrays.asList(1));
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_BEFORE);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><label>1 <input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/></label>\n</span>");
+		tester.assertResultPage(
+			"<span wicket:id=\"testid\"><label>1 <input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/></label>\n</span>");
 	}
 
 	@Test
-    void labelPositionWrapAfter() throws Exception
+	void labelPositionWrapAfter() throws Exception
 	{
 		RadioChoice<Integer> radioChoice = new RadioChoice<Integer>("testid", Arrays.asList(1));
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_AFTER);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><label><input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/> 1</label>\n</span>");
+		tester.assertResultPage(
+			"<span wicket:id=\"testid\"><label><input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/> 1</label>\n</span>");
 	}
 }

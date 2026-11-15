@@ -29,7 +29,7 @@ public abstract class AbstractSecurePage extends AbstractBasePage
 	/**
 	 * Construct.
 	 */
-    AbstractSecurePage()
+	AbstractSecurePage()
 	{
 		add(new Label("username", "Pietje Puk"));
 	}

@@ -58,7 +58,8 @@ public class DataTableTest extends WicketTestCase
 	/**
 	 */
 	@Test
-	public void test_1() {
+	public void test_1()
+	{
 		tester.startPage(DataTablePage.class);
 		tester.assertRenderedPage(DataTablePage.class);
 

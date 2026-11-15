@@ -128,7 +128,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		if (httpSession == null)
 		{
 			throw new IllegalStateException("There is no HTTP Session bound. Without a session Wicket won't be " +
-					"able to find the stored page to update its components");
+				"able to find the stored page to update its components");
 		}
 		this.sessionId = httpSession.getId();
 		String pageId = request.getParameter("pageId");
@@ -175,7 +175,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	@Override
 	public void onMessage(byte[] data, int offset, int length)
 	{
-		BinaryMessage binaryMessage = new BinaryMessage(getApplication(), getSessionId(), getRegistryKey(), data, offset, length);
+		BinaryMessage binaryMessage = new BinaryMessage(getApplication(), getSessionId(), getRegistryKey(), data,
+			offset, length);
 		broadcastMessage(binaryMessage);
 	}
 
@@ -192,7 +193,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 *            the web socket connection to use to communicate with the client
 	 * @see #onOpen(Object)
 	 */
-	protected final void onConnect(final IWebSocketConnection connection) {
+	protected final void onConnect(final IWebSocketConnection connection)
+	{
 		IKey key = getRegistryKey();
 		connectionRegistry.setConnection(getApplication(), getSessionId(), key, connection);
 
@@ -208,14 +210,16 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			}
 		}
 
-		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key), connection, webSocketSettings.isAsynchronousPush(), webSocketSettings.getAsynchronousPushTimeout());
+		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key), connection, webSocketSettings
+			.isAsynchronousPush(), webSocketSettings.getAsynchronousPushTimeout());
 	}
 
 	@Override
 	public void onClose(int closeCode, String message)
 	{
 		IKey key = getRegistryKey();
-		if (webSocketSettings.shouldNotifyOnCloseEvent(closeCode)) {
+		if (webSocketSettings.shouldNotifyOnCloseEvent(closeCode))
+		{
 			broadcastMessage(new ClosedMessage(getApplication(), getSessionId(), key, closeCode, message));
 		}
 		connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
@@ -224,7 +228,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	@Override
 	public void onError(Throwable t)
 	{
-		if (webSocketSettings.shouldNotifyOnErrorEvent(t)) {
+		if (webSocketSettings.shouldNotifyOnErrorEvent(t))
+		{
 			IKey key = getRegistryKey();
 			broadcastMessage(new ErrorMessage(getApplication(), getSessionId(), key, t));
 		}
@@ -234,7 +239,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	{
 		IKey key = getRegistryKey();
 		IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, key);
-		broadcastMessage(message, connection, webSocketSettings.isAsynchronousPush(), webSocketSettings.getAsynchronousPushTimeout());
+		broadcastMessage(message, connection, webSocketSettings.isAsynchronousPush(), webSocketSettings
+			.getAsynchronousPushTimeout());
 	}
 
 	/**
@@ -268,15 +274,16 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 *
 	 * @param message
 	 *      the message to broadcast
-     * @param connection
-     * 	    the {@link org.apache.wicket.protocol.ws.api.IWebSocketConnection}
-     * @param asynchronousPush
-     * 	    whether asynchronous pus is used or not
-     * @param timeout
-     * 	    The time ut to use for operation (in milliseconds). A negative value means use default timeout
-     * 	    (specified by container).
+	 * @param connection
+	 * 	    the {@link org.apache.wicket.protocol.ws.api.IWebSocketConnection}
+	 * @param asynchronousPush
+	 * 	    whether asynchronous pus is used or not
+	 * @param timeout
+	 * 	    The time ut to use for operation (in milliseconds). A negative value means use default timeout
+	 * 	    (specified by container).
 	 */
-	public final void broadcastMessage(final IWebSocketMessage message, IWebSocketConnection connection, boolean asynchronousPush, long timeout)
+	public final void broadcastMessage(final IWebSocketMessage message, IWebSocketConnection connection,
+		boolean asynchronousPush, long timeout)
 	{
 		if (connection != null && (connection.isOpen() || isSpecialMessage(message)))
 		{
@@ -308,7 +315,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				if (session == null)
 				{
 					connectionRegistry.removeConnection(application, sessionId, connection.getKey());
-					LOG.debug("No Session could be found for session id '{}' and key '{}'!", sessionId, connection.getKey());
+					LOG.debug("No Session could be found for session id '{}' and key '{}'!", sessionId, connection
+						.getKey());
 					if (isSpecialMessage(message) == false)
 					{
 						connection.close(WebSocketConnectionOriginFilter.POLICY_VIOLATION_ERROR_CODE, SESSION_ENDED);
@@ -319,7 +327,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				if (message instanceof ConnectedMessage && isResourceAuthorized(session) == false)
 				{
 					LOG.warn("The IAuthorizationStrategy refused the WebSocketResource named '{}'. " +
-							"Closing the connection with key '{}'.", resourceName, connection.getKey());
+						"Closing the connection with key '{}'.", resourceName, connection.getKey());
 					connectionRegistry.removeConnection(application, sessionId, connection.getKey());
 					connection.close(WebSocketConnectionOriginFilter.POLICY_VIOLATION_ERROR_CODE, NOT_AUTHORIZED);
 					return;
@@ -330,15 +338,18 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 
 				if (page != null)
 				{
-					WebSocketRequestHandler requestHandler = webSocketSettings.newWebSocketRequestHandler(page, connection);
+					WebSocketRequestHandler requestHandler = webSocketSettings.newWebSocketRequestHandler(page,
+						connection);
 
 					WebSocketPayload<?> payload = createEventPayload(message, requestHandler);
 
-					if (!(message instanceof ConnectedMessage || isSpecialMessage(message))) {
+					if (!(message instanceof ConnectedMessage || isSpecialMessage(message)))
+					{
 						requestCycle.scheduleRequestHandlerAfterCurrent(requestHandler);
 					}
 
-					IRequestHandler broadcastingHandler = new WebSocketMessageBroadcastHandler(pageId, resourceName, payload);
+					IRequestHandler broadcastingHandler = new WebSocketMessageBroadcastHandler(pageId, resourceName,
+						payload);
 					requestMapper.setHandler(broadcastingHandler);
 					requestCycle.processRequestAndDetach();
 				}
@@ -379,7 +390,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	private RequestCycle createRequestCycle(WebSocketRequestMapper requestMapper, WebResponse webResponse)
 	{
 		RequestCycleContext context = new RequestCycleContext(webRequest, webResponse,
-				requestMapper, application.getExceptionMapperProvider().get());
+			requestMapper, application.getExceptionMapperProvider().get());
 
 		RequestCycle requestCycle = application.getRequestCycleProvider().apply(context);
 		requestCycle.getListeners().add(application.getRequestCycleListeners());
@@ -444,7 +455,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		Page page;
 		if (pageId != -1)
 		{
-			page = (Page) pageManager.getPage(pageId);
+			page = (Page)pageManager.getPage(pageId);
 		}
 		else
 		{
@@ -468,31 +479,31 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		final WebSocketPayload<?> payload;
 		if (message instanceof TextMessage)
 		{
-			payload = new WebSocketTextPayload((TextMessage) message, handler);
+			payload = new WebSocketTextPayload((TextMessage)message, handler);
 		}
 		else if (message instanceof BinaryMessage)
 		{
-			payload = new WebSocketBinaryPayload((BinaryMessage) message, handler);
+			payload = new WebSocketBinaryPayload((BinaryMessage)message, handler);
 		}
 		else if (message instanceof ConnectedMessage)
 		{
-			payload = new WebSocketConnectedPayload((ConnectedMessage) message, handler);
+			payload = new WebSocketConnectedPayload((ConnectedMessage)message, handler);
 		}
 		else if (message instanceof ClosedMessage)
 		{
-			payload = new WebSocketClosedPayload((ClosedMessage) message, handler);
+			payload = new WebSocketClosedPayload((ClosedMessage)message, handler);
 		}
 		else if (message instanceof ErrorMessage)
 		{
-			payload = new WebSocketErrorPayload((ErrorMessage) message, handler);
+			payload = new WebSocketErrorPayload((ErrorMessage)message, handler);
 		}
 		else if (message instanceof AbortedMessage)
 		{
-			payload = new WebSocketAbortedPayload((AbortedMessage) message, handler);
+			payload = new WebSocketAbortedPayload((AbortedMessage)message, handler);
 		}
 		else if (message instanceof IWebSocketPushMessage)
 		{
-			payload = new WebSocketPushPayload((IWebSocketPushMessage) message, handler);
+			payload = new WebSocketPushPayload((IWebSocketPushMessage)message, handler);
 		}
 		else
 		{
@@ -513,7 +524,9 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			if (Strings.isEmpty(connectionToken))
 			{
 				key = new ResourceNameKey(resourceName, context);
-			} else {
+			}
+			else
+			{
 				key = new ResourceNameTokenKey(resourceName, connectionToken, context);
 			}
 		}

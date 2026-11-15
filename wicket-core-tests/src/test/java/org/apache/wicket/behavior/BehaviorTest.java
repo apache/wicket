@@ -67,7 +67,8 @@ class BehaviorTest extends WicketTestCase
 	}
 
 	@Test
-	public void temporaryBehaviorsAreRemoved() {
+	public void temporaryBehaviorsAreRemoved()
+	{
 		WebMarkupContainer container = new WebMarkupContainer("test");
 		TestTemporaryBehavior temp = new TestTemporaryBehavior();
 		container.add(temp);
@@ -77,7 +78,8 @@ class BehaviorTest extends WicketTestCase
 	}
 
 	@Test
-	public void consecutiveTemporaryBehaviorsAreRemoved() {
+	public void consecutiveTemporaryBehaviorsAreRemoved()
+	{
 		WebMarkupContainer container = new WebMarkupContainer("test");
 		TestTemporaryBehavior temp1 = new TestTemporaryBehavior();
 		TestTemporaryBehavior temp2 = new TestTemporaryBehavior();
@@ -96,7 +98,8 @@ class BehaviorTest extends WicketTestCase
 	 * shift the id of everything added after it.
 	 */
 	@Test
-	void nullBehaviorIsRejectedBeforeAnythingIsStored() {
+	void nullBehaviorIsRejectedBeforeAnythingIsStored()
+	{
 		WebMarkupContainer container = new WebMarkupContainer("test");
 		Behavior first = Behavior.onTag((c, tag) -> {});
 
@@ -110,11 +113,13 @@ class BehaviorTest extends WicketTestCase
 		assertEquals(0, container.getBehaviorId(first));
 	}
 
-	public static class TestTemporaryBehavior extends Behavior {
+	public static class TestTemporaryBehavior extends Behavior
+	{
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public boolean isTemporary(Component c) {
+		public boolean isTemporary(Component c)
+		{
 			return true;
 		}
 	}

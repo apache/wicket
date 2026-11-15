@@ -72,13 +72,15 @@ class MultiFileUploadFieldTest extends WicketTestCase
 				{
 					FileUpload fileUpload = uploads.get(i);
 					String clientFileName = fileUpload.getClientFileName();
-					String id = clientFileName.replaceAll(MultiFileUploadFieldTest.class.getSimpleName() + "(\\d).txt", "$1");
+					String id = clientFileName.replaceAll(MultiFileUploadFieldTest.class.getSimpleName() + "(\\d).txt",
+						"$1");
 					try
 					{
-						assertEquals("Test"+id, IOUtils.toString(fileUpload.getInputStream()));
-					} catch (IOException e)
+						assertEquals("Test" + id, IOUtils.toString(fileUpload.getInputStream()));
+					}
+					catch (IOException e)
 					{
-						fail("Reading file upload '"+id+"' failed: " + e.getMessage());
+						fail("Reading file upload '" + id + "' failed: " + e.getMessage());
 					}
 				}
 				submitted.set(true);
@@ -90,8 +92,12 @@ class MultiFileUploadFieldTest extends WicketTestCase
 
 		FormTester ft = tester.newFormTester("f");
 
-		ft.setFile("muf", new File("target/test-classes/org/apache/wicket/markup/html/form/upload/MultiFileUploadFieldTest0.txt"), "plain/text");
-		ft.setFile("muf", new File("target/test-classes/org/apache/wicket/markup/html/form/upload/MultiFileUploadFieldTest1.txt"), "plain/text");
+		ft.setFile("muf", new File(
+			"target/test-classes/org/apache/wicket/markup/html/form/upload/MultiFileUploadFieldTest0.txt"),
+			"plain/text");
+		ft.setFile("muf", new File(
+			"target/test-classes/org/apache/wicket/markup/html/form/upload/MultiFileUploadFieldTest1.txt"),
+			"plain/text");
 		ft.submit();
 
 		assertEquals(true, submitted.get(), "The form is not submitted");
@@ -169,11 +175,11 @@ class MultiFileUploadFieldTest extends WicketTestCase
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
 			return new StringResourceStream("<html><body>\n" +
-					"\t\t<form wicket:id=\"f\">\n" +
-					"\t\t\t<input type=\"file\" wicket:id=\"muf\" />\n" +
-					"\t\t\t<input type=\"submit\" value=\"Submit!\" />\t\n" +
-					"\t\t</form>\n" +
-					"\t</body></html>");
+				"\t\t<form wicket:id=\"f\">\n" +
+				"\t\t\t<input type=\"file\" wicket:id=\"muf\" />\n" +
+				"\t\t\t<input type=\"submit\" value=\"Submit!\" />\t\n" +
+				"\t\t</form>\n" +
+				"\t</body></html>");
 		}
 	}
 }

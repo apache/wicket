@@ -272,7 +272,7 @@ public class InSessionPageStore implements IPageStore
 				{
 					// remove if not already serialized
 					pages.remove(p);
-					
+
 					if (serializer == null)
 					{
 						// cannot be serialized, thus skip
@@ -282,7 +282,8 @@ public class InSessionPageStore implements IPageStore
 					{
 						// serialize first
 						byte[] bytes = serializer.serialize(page);
-						SerializedPage serializedPage = new SerializedPage(page.getPageId(), Classes.name(page.getClass()), bytes);
+						SerializedPage serializedPage = new SerializedPage(page.getPageId(), Classes.name(page
+							.getClass()), bytes);
 
 						// and then re-add (to prevent a serialization loop,
 						// in case the page holds a reference to the session)  

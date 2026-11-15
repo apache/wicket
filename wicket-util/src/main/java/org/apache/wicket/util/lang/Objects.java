@@ -263,13 +263,13 @@ public final class Objects
 				case FLOAT :
 				case DOUBLE :
 					double dv1 = doubleValue(v1),
-					dv2 = doubleValue(v2);
+						dv2 = doubleValue(v2);
 
 					return (dv1 == dv2) ? 0 : ((dv1 < dv2) ? -1 : 1);
 
 				default :
 					long lv1 = longValue(v1),
-					lv2 = longValue(v2);
+						lv2 = longValue(v2);
 
 					return (lv1 == lv2) ? 0 : ((lv1 < lv2) ? -1 : 1);
 			}
@@ -341,7 +341,7 @@ public final class Objects
 				}
 				if ((toType == Float.class) || (toType == Float.TYPE))
 				{
-					result = (float) doubleValue(value);
+					result = (float)doubleValue(value);
 				}
 				if (toType == BigInteger.class)
 				{

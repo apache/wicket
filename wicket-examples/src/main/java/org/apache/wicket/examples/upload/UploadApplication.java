@@ -73,11 +73,13 @@ public class UploadApplication extends WicketExampleApplication
 		getApplicationSettings().setUploadProgressUpdatesEnabled(true);
 	}
 
-	public IUploadsFileManager getUploadsFileManager() {
+	public IUploadsFileManager getUploadsFileManager()
+	{
 		return uploadsFileManager;
 	}
 
-	public static UploadApplication getInstance() {
+	public static UploadApplication getInstance()
+	{
 		return (UploadApplication)get();
 	}
 }

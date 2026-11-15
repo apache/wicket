@@ -39,7 +39,7 @@ public class NonContextual<T>
 {
 	private static final Object lock = new Object();
 	private static volatile Map<BeanManager, ClassMetaCache<NonContextual<?>>> cache = Collections
-			.emptyMap();
+		.emptyMap();
 
 	final InjectionTarget<T> it;
 
@@ -54,7 +54,7 @@ public class NonContextual<T>
 			{
 				// copy-on-write the cache
 				Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
-						cache);
+					cache);
 				newCache.remove(BeanManagerLookup.lookup());
 				cache = Collections.unmodifiableMap(newCache);
 			}
@@ -69,7 +69,8 @@ public class NonContextual<T>
 	 * @return The NonContextual for the instance's class
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> NonContextual<T> of(T t) {
+	public static <T> NonContextual<T> of(T t)
+	{
 		// cast is necessary for Eclipse compiler :/
 		return (NonContextual<T>)of(t.getClass());
 	}
@@ -111,7 +112,7 @@ public class NonContextual<T>
 
 					// copy-on-write the cache
 					Map<BeanManager, ClassMetaCache<NonContextual<?>>> newCache = new WeakHashMap<BeanManager, ClassMetaCache<NonContextual<?>>>(
-							cache);
+						cache);
 					newCache.put(manager, meta);
 					cache = Collections.unmodifiableMap(newCache);
 				}
@@ -125,7 +126,7 @@ public class NonContextual<T>
 	{
 		BeanManager manager = BeanManagerLookup.lookup();
 		AnnotatedType<? extends T> type = manager.createAnnotatedType(clazz);
-		this.it = (InjectionTarget<T>) manager.getInjectionTargetFactory(type)
+		this.it = (InjectionTarget<T>)manager.getInjectionTargetFactory(type)
 			.createInjectionTarget(null);
 	}
 

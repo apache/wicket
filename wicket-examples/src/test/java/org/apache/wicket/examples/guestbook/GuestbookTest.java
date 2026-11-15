@@ -45,7 +45,8 @@ public class GuestbookTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void test_1() {
+	public void test_1()
+	{
 		tester.startPage(GuestBook.class);
 		tester.assertContains("Wicket Examples - Guestbook");
 

@@ -75,7 +75,7 @@ public class PackagesTest
 		String absolutePath = Packages.absolutePath(packageName, relativePath);
 		assertEquals("org/apache/BlockedResourceLinkPage.html", absolutePath);
 	}
-	
+
 	/**
 	 * WICKET-5054
 	 */
@@ -88,7 +88,7 @@ public class PackagesTest
 		String absolutePath = Packages.absolutePath(packageName, relativePath);
 		assertEquals("com/foo/bar/baz/foo/qux", absolutePath);
 	}
-	
+
 	/**
 	 * WICKET-6792
 	 */

@@ -93,13 +93,13 @@ public class WebSession extends Session
 	{
 		return new BrowserInfoPage();
 	}
-	
+
 	@Override
-	protected String generateNewSessionId() 
+	protected String generateNewSessionId()
 	{
 		ServletWebRequest servletRequest = (ServletWebRequest)RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = servletRequest.getContainerRequest();
-		
+
 		return httpRequest.changeSessionId();
 	}
 }

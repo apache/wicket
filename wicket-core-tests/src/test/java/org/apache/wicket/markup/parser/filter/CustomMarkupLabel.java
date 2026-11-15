@@ -37,14 +37,16 @@ import org.apache.wicket.util.resource.StringResourceStream;
  * @see HtmlHandlerTest
  */
 class CustomMarkupLabel
-		extends MarkupContainer
-		implements IMarkupCacheKeyProvider, IMarkupResourceStreamProvider
+	extends MarkupContainer
+	implements
+		IMarkupCacheKeyProvider,
+		IMarkupResourceStreamProvider
 {
 	private static final String SAMPLE_MARKUP = "<img alt='logo' src='logo.png'><br>Some text<br>Some more text";
-	
+
 	public CustomMarkupLabel(final String id)
 	{
-		super(id); 
+		super(id);
 	}
 
 	@Override
@@ -52,7 +54,7 @@ class CustomMarkupLabel
 	{
 		return new MyMarkupSourcingStrategy(this);
 	}
-	
+
 	@Override
 	public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 	{
@@ -67,11 +69,11 @@ class CustomMarkupLabel
 	{
 		return null;
 	}
-	
+
 	//
 	// custom markup sourcing strategy
 	//
-	
+
 	private static class MyMarkupSourcingStrategy extends AbstractMarkupSourcingStrategy
 	{
 		private final CustomMarkupLabel markupProvider;

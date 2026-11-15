@@ -51,7 +51,9 @@ import org.apache.wicket.util.lang.Args;
  *            The type of the header items to bundle
  */
 public class ConcatResourceBundleReference<T extends HeaderItem & IReferenceHeaderItem> extends
-	ResourceReference implements IResourceBundle
+	ResourceReference
+	implements
+		IResourceBundle
 {
 	private static final long serialVersionUID = 1L;
 

@@ -108,7 +108,7 @@ public class ResourceLink<T> extends Link<T> implements IRequestListener
 	{
 		return false;
 	}
-	
+
 	/**
 	 * For {@link ResourceReference}s this link is stateless.
 	 * 
@@ -122,7 +122,7 @@ public class ResourceLink<T> extends Link<T> implements IRequestListener
 	protected boolean getStatelessHint()
 	{
 		return resourceReference != null;
-	}   
+	}
 
 	@Override
 	protected final CharSequence getURL()
@@ -148,7 +148,7 @@ public class ResourceLink<T> extends Link<T> implements IRequestListener
 		}
 		return urlForListener(resourceParameters);
 	}
-	
+
 	/**
 	 * Responds with the {@link IResource} this link was constructed with.
 	 * <p>

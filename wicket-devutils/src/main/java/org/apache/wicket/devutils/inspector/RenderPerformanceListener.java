@@ -101,7 +101,7 @@ public class RenderPerformanceListener implements IComponentInstantiationListene
 				if (log.isDebugEnabled())
 				{
 					String componentPath = (component instanceof Page) ? Classes.simpleName(component.getClass())
-							+ " page" : component.getPageRelativePath();
+						+ " page" : component.getPageRelativePath();
 					log.debug("rendered '{}' for {}ms", componentPath, duration);
 				}
 			}

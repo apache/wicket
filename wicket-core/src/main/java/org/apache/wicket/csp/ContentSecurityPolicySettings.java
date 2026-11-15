@@ -81,8 +81,7 @@ public class ContentSecurityPolicySettings
 
 		cspHeaderWriter = new CSPHeaderWriter(this);
 
-		nonceCreator = () ->
-				application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
+		nonceCreator = () -> application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
 	}
 
 	public CSPHeaderWriter getHeaderWriter()
@@ -157,7 +156,7 @@ public class ContentSecurityPolicySettings
 	public String getNonce(RequestCycle cycle)
 	{
 		IRequestHandler handler = cycle.getActiveRequestHandler();
-		
+
 		Page currentPage = IPageRequestHandler.getPage(handler);
 
 		String nonce = cycle.getMetaData(NONCE_KEY);

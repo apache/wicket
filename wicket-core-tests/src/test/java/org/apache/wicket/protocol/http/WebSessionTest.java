@@ -106,15 +106,19 @@ class WebSessionTest
 		}
 	}
 
-	private static Stream<String> provideLTRtags() {
+	private static Stream<String> provideLTRtags()
+	{
 		return Stream.of("en", "en-US", "ko", "bg", "ar-Latn", "fa-Cyrl");
 	}
 
-	private static Stream<String> provideRTLtags() {
-		return Stream.of("ar", "dv", "he", "iw", "fa", "nqo", "ps", "sd", "ug", "ur", "yi", "en-Arab-US", "ru-Hebr", "nl-Thaa", "fi-Nkoo", "fr-Tfng");
+	private static Stream<String> provideRTLtags()
+	{
+		return Stream.of("ar", "dv", "he", "iw", "fa", "nqo", "ps", "sd", "ug", "ur", "yi", "en-Arab-US", "ru-Hebr",
+			"nl-Thaa", "fi-Nkoo", "fr-Tfng");
 	}
 
-	private Session createSessionViaConstructor(String langTag) {
+	private Session createSessionViaConstructor(String langTag)
+	{
 		MockWebRequest rq = new MockWebRequest(Url.parse("/"));
 		rq.setLocale(Locale.forLanguageTag(langTag));
 		return new WebSession(rq);
@@ -122,21 +126,24 @@ class WebSessionTest
 
 	@ParameterizedTest
 	@MethodSource("provideLTRtags")
-	void testConstructorLtr(String langTag) {
+	void testConstructorLtr(String langTag)
+	{
 		Session session = createSessionViaConstructor(langTag);
 		assertFalse(session.isRtlLocale(), langTag + " should be LTR (left-to-right)");
 	}
 
 	@ParameterizedTest
 	@MethodSource("provideRTLtags")
-	void testConstructorRtl(String langTag) {
+	void testConstructorRtl(String langTag)
+	{
 		Session session = createSessionViaConstructor(langTag);
 		assertTrue(session.isRtlLocale(), langTag + " should be RTL (right-to-left)");
 	}
 
 	@ParameterizedTest
 	@MethodSource("provideLTRtags")
-	void testSetterLtr(String langTag) {
+	void testSetterLtr(String langTag)
+	{
 		WicketTester tester = new WicketTester(new MockApplication());
 		Session session = tester.getSession();
 
@@ -146,7 +153,8 @@ class WebSessionTest
 
 	@ParameterizedTest
 	@MethodSource("provideRTLtags")
-	void testSetterRtl(String langTag) {
+	void testSetterRtl(String langTag)
+	{
 		WicketTester tester = new WicketTester(new MockApplication());
 		Session session = tester.getSession();
 

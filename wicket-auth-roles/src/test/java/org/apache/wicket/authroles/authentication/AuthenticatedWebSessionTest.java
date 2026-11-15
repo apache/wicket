@@ -39,14 +39,16 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Pedro Santos
  */
-class AuthenticatedWebSessionTest extends WicketTestCase {
+class AuthenticatedWebSessionTest extends WicketTestCase
+{
 	private Request request;
 	private Response response;
 	private ISessionStore sessionStore;
 	private AuthenticatedWebSession session;
 
 	@BeforeEach
-    void initialize() {
+	void initialize()
+	{
 		request = mock(Request.class);
 		response = mock(Response.class);
 		sessionStore = mock(ISessionStore.class);
@@ -55,7 +57,8 @@ class AuthenticatedWebSessionTest extends WicketTestCase {
 	}
 
 	@Test
-    void shouldLookupForSessionOnce() throws InterruptedException {
+	void shouldLookupForSessionOnce() throws InterruptedException
+	{
 		ExecutorService executorService = Executors.newFixedThreadPool(10);
 		for (int i = 0; i < 10; i++)
 			executorService.submit(new SiginTask(tester.getApplication()));
@@ -66,40 +69,48 @@ class AuthenticatedWebSessionTest extends WicketTestCase {
 		verify(sessionStore, times(1)).lookup(request);
 	}
 
-	class SiginTask implements Runnable {
+	class SiginTask implements Runnable
+	{
 		Application application;
 
-		SiginTask(Application application) {
+		SiginTask(Application application)
+		{
 			this.application = application;
 		}
 
 		@Override
-		public void run() {
+		public void run()
+		{
 			ThreadContext.setRequestCycle(application.createRequestCycle(request, response));
 			session.signIn("user", "pass");
 		}
 
 	}
 
-	class TestAuthenticatedWebSession extends AuthenticatedWebSession {
+	class TestAuthenticatedWebSession extends AuthenticatedWebSession
+	{
 		private static final long serialVersionUID = 1L;
 
-		TestAuthenticatedWebSession(Request request) {
+		TestAuthenticatedWebSession(Request request)
+		{
 			super(request);
 		}
 
 		@Override
-		protected boolean authenticate(String username, String password) {
+		protected boolean authenticate(String username, String password)
+		{
 			return true;
 		}
 
 		@Override
-		protected ISessionStore getSessionStore() {
+		protected ISessionStore getSessionStore()
+		{
 			return sessionStore;
 		}
 
 		@Override
-		public Roles getRoles() {
+		public Roles getRoles()
+		{
 			return null;
 		}
 	}

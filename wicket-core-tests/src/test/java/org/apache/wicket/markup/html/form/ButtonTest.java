@@ -68,12 +68,13 @@ class ButtonTest extends WicketTestCase
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
 		String text = "some text & another text";
-		TestPage testPage = new TestPage(Model.of(text)) {
+		TestPage testPage = new TestPage(Model.of(text))
+		{
 			@Override
 			public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 			{
 				return new StringResourceStream("<html><body>"
-						+ "<form wicket:id=\"form\"><button wicket:id=\"button\"></button></form></body></html>");
+					+ "<form wicket:id=\"form\"><button wicket:id=\"button\"></button></form></body></html>");
 			}
 		};
 		tester.startPage(testPage);
@@ -91,12 +92,13 @@ class ButtonTest extends WicketTestCase
 	void whenButtonElement_thenMarkupInModelObjectIsEscaped()
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
-		TestPage testPage = new TestPage(Model.of("<script>x=1</script>")) {
+		TestPage testPage = new TestPage(Model.of("<script>x=1</script>"))
+		{
 			@Override
 			public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 			{
 				return new StringResourceStream("<html><body>"
-						+ "<form wicket:id=\"form\"><button wicket:id=\"button\"></button></form></body></html>");
+					+ "<form wicket:id=\"form\"><button wicket:id=\"button\"></button></form></body></html>");
 			}
 		};
 		tester.startPage(testPage);
@@ -116,12 +118,13 @@ class ButtonTest extends WicketTestCase
 	void whenEscapeModelStringsDisabled_thenMarkupInModelObjectIsRendered()
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
-		TestPage testPage = new TestPage(Model.of("<span>label</span>")) {
+		TestPage testPage = new TestPage(Model.of("<span>label</span>"))
+		{
 			@Override
 			public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 			{
 				return new StringResourceStream("<html><body>"
-						+ "<form wicket:id=\"form\"><button wicket:id=\"button\"></button></form></body></html>");
+					+ "<form wicket:id=\"form\"><button wicket:id=\"button\"></button></form></body></html>");
 			}
 		};
 		testPage.button.setEscapeModelStrings(false);
@@ -158,14 +161,15 @@ class ButtonTest extends WicketTestCase
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
 		String text = "some text & another text";
 		final String textInHtml = "Button label in HTML";
-		TestPage testPage = new TestPage(Model.of("")) {
+		TestPage testPage = new TestPage(Model.of(""))
+		{
 			@Override
 			public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 			{
 				return new StringResourceStream("<html><body>"
-				                                + "<form wicket:id=\"form\"><button wicket:id=\"button\">"
-				                                + textInHtml
-				                                + "</button></form></body></html>");
+					+ "<form wicket:id=\"form\"><button wicket:id=\"button\">"
+					+ textInHtml
+					+ "</button></form></body></html>");
 			}
 		};
 		tester.startPage(testPage);

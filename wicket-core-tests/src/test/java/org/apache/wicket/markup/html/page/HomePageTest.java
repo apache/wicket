@@ -28,7 +28,7 @@ class HomePageTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-    void testRenderMyPage()
+	void testRenderMyPage()
 	{
 		// no exception should occur
 		tester.startPage(HomePage.class);

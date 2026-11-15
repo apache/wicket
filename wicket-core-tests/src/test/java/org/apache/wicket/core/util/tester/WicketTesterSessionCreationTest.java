@@ -49,7 +49,7 @@ class WicketTesterSessionCreationTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 
 		/***/
-        public LocalePage()
+		public LocalePage()
 		{
 			assertEquals(EXPECTED, getSession().getLocale());
 		}

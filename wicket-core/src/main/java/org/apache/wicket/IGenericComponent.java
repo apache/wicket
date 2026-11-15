@@ -56,7 +56,7 @@ public interface IGenericComponent<T, C extends IGenericComponent<? super T, ?>>
 	default C setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
-		return (C) this;
+		return (C)this;
 	}
 
 	/**
@@ -79,7 +79,7 @@ public interface IGenericComponent<T, C extends IGenericComponent<? super T, ?>>
 	default C setModelObject(T object)
 	{
 		setDefaultModelObject(object);
-		return (C) this;
+		return (C)this;
 	}
 
 	IModel<?> getDefaultModel();
@@ -89,4 +89,4 @@ public interface IGenericComponent<T, C extends IGenericComponent<? super T, ?>>
 	Component setDefaultModelObject(Object object);
 
 	Object getDefaultModelObject();
-} 
+}

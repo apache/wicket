@@ -155,7 +155,7 @@ public class StatelessPage extends WebPage
 				info(AJAX_SUBMIT);
 				target.add(feedback);
 			}
-			
+
 			@Override
 			protected boolean getStatelessHint()
 			{

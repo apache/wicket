@@ -75,8 +75,7 @@ public abstract class AbstractResource implements IResource
 	 * All available content range types. The type name represents the name used in header
 	 * information.
 	 */
-	public enum ContentRangeType
-	{
+	public enum ContentRangeType {
 		BYTES("bytes"), NONE("none");
 
 		private final String typeName;
@@ -677,9 +676,9 @@ public abstract class AbstractResource implements IResource
 	private boolean needsBody(Integer statusCode)
 	{
 		return statusCode == null ||
-								(statusCode < 300 &&
-								statusCode != HttpServletResponse.SC_NO_CONTENT &&
-								statusCode != HttpServletResponse.SC_RESET_CONTENT);
+			(statusCode < 300 &&
+				statusCode != HttpServletResponse.SC_NO_CONTENT &&
+				statusCode != HttpServletResponse.SC_RESET_CONTENT);
 	}
 
 	/**
@@ -699,7 +698,7 @@ public abstract class AbstractResource implements IResource
 		{
 			throw new IllegalArgumentException("you are not allowed to directly access header [" +
 				name + "], " + "use one of the other specialized methods of " +
-						Classes.simpleName(getClass()) + " to get or modify its value");
+				Classes.simpleName(getClass()) + " to get or modify its value");
 		}
 	}
 
@@ -727,14 +726,14 @@ public abstract class AbstractResource implements IResource
 
 		// The content range header is only be calculated if a range is given
 		if (!Strings.isEmpty(rangeHeader) &&
-				rangeHeader.contains(ContentRangeType.BYTES.getTypeName()))
+			rangeHeader.contains(ContentRangeType.BYTES.getTypeName()))
 		{
 			// fixing white spaces
 			rangeHeader = rangeHeader.replaceAll(" ", "");
 
 			String range = rangeHeader.substring(rangeHeader.indexOf('=') + 1,
-					rangeHeader.length());
-			
+				rangeHeader.length());
+
 			// support only the first range (WICKET-5995)
 			final int idxOfComma = range.indexOf(',');
 			String firstRange = idxOfComma > -1 ? range.substring(0, idxOfComma) : range;

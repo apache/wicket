@@ -33,12 +33,12 @@ import org.apache.wicket.pageStore.IPersistentPageStore;
 public class SessionIdentifiersModel extends LoadableDetachableModel<List<String>>
 {
 	private final IModel<IPersistentPageStore> store;
-	
+
 	public SessionIdentifiersModel(IModel<IPersistentPageStore> store)
 	{
 		this.store = store;
 	}
-	
+
 	@Override
 	protected List<String> load()
 	{
@@ -61,12 +61,12 @@ public class SessionIdentifiersModel extends LoadableDetachableModel<List<String
 
 		return identifiers;
 	}
-	
+
 	@Override
 	protected void onDetachAlways()
 	{
 		super.onDetachAlways();
-		
+
 		store.detach();
 	}
 }

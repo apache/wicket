@@ -94,12 +94,12 @@ public class VelocityTemplateApplication extends WicketExampleApplication
 	protected void init()
 	{
 		super.init();
-		
+
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 		IPackageResourceGuard packageResourceGuard = getResourceSettings().getPackageResourceGuard();
 		if (packageResourceGuard instanceof SecurePackageResourceGuard)
 		{
-			SecurePackageResourceGuard guard = (SecurePackageResourceGuard) packageResourceGuard;
+			SecurePackageResourceGuard guard = (SecurePackageResourceGuard)packageResourceGuard;
 			// allow velocity macros resources
 			guard.addPattern("+*.vm");
 		}

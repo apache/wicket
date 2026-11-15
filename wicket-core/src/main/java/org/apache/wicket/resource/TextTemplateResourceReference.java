@@ -149,7 +149,7 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 				variables.detach(); // We're done with the model so detach it!
 
 				StringResourceStream resourceStream = new StringResourceStream(stringValue,
-						textTemplate.getContentType());
+					textTemplate.getContentType());
 				resourceStream.setLastModified(Instant.now());
 
 				return resourceStream;

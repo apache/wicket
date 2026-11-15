@@ -57,15 +57,15 @@ public class ResourceUrlAttributeValidationTest extends WicketTestCase
 
 	private static final String OUTSIDE_NAME = OUTSIDE_PREFIX + "Config";
 
-	private static final String PACKAGE_PREFIX =
-		ResourceUrlAttributeValidationTest.class.getPackageName().replace('.', '/') + "/";
+	private static final String PACKAGE_PREFIX = ResourceUrlAttributeValidationTest.class.getPackageName().replace('.',
+		'/') + "/";
 
 	/**
 	 * For every sub-package we need to move up one directory with {@code ../}, plus one for the
 	 * style and one for the component.
 	 */
-	private static final int PARENT_STEPS =
-		ResourceUrlAttributeValidationTest.class.getPackageName().split("\\.").length + 2;
+	private static final int PARENT_STEPS = ResourceUrlAttributeValidationTest.class.getPackageName().split(
+		"\\.").length + 2;
 
 	/**
 	 * The style is carried in the first query parameter's NAME, with an empty value. The {@code -} is
@@ -74,8 +74,8 @@ public class ResourceUrlAttributeValidationTest extends WicketTestCase
 	 * {@code -} after the split. Keeping one here means the validation is also shown to happen after
 	 * that restoration rather than before it.
 	 */
-	private static final String STYLE_WITH_SEPARATORS =
-		"en-" + "..%2F".repeat(PARENT_STEPS) + OUTSIDE_NAME.replace("-", "~").replace("/", "%2F");
+	private static final String STYLE_WITH_SEPARATORS = "en-" + "..%2F".repeat(PARENT_STEPS) + OUTSIDE_NAME.replace("-",
+		"~").replace("/", "%2F");
 
 	private static final String URL = "wicket/resource/" +
 		ResourceUrlAttributeValidationTest.class.getName() + "/PublicPage.html?" +

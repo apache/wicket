@@ -88,7 +88,7 @@ public class PropertyResolverTest extends WicketTestCase
 	@Test
 	void simpleExpression() throws Exception
 	{
-		String name = (String) PropertyResolver.getValue("name", person);
+		String name = (String)PropertyResolver.getValue("name", person);
 		assertNull(name);
 
 		PropertyResolver.setValue("name", person, "wicket", CONVERTER);
@@ -753,22 +753,23 @@ public class PropertyResolverTest extends WicketTestCase
 		Object actual = converter.convert(date, Long.class);
 		assertEquals(date.getTime(), actual);
 	}
-	
+
 	/**
 	 * WICKET-5623 custom properties
 	 */
 	@Test
-	void custom() {
+	void custom()
+	{
 		Document document = new Document();
 		document.setType("type");
 		document.setProperty("string", "string");
-		
+
 		Document nestedCustom = new Document();
 		nestedCustom.setProperty("string", "string2");
 		document.setProperty("nested", nestedCustom);
-		
+
 		PropertyResolver.setLocator(tester.getApplication(), new CachingPropertyLocator(new CustomGetAndSetLocator()));
-		
+
 		assertEquals("type", PropertyResolver.getValue("type", document));
 		assertEquals("string", PropertyResolver.getValue("string", document));
 		assertEquals("string2", PropertyResolver.getValue("nested.string", document));
@@ -782,46 +783,54 @@ public class PropertyResolverTest extends WicketTestCase
 	{
 		final BooleanBean bean = new BooleanBean();
 		PropertyResolver.setValue("instantPayment", bean, null, CONVERTER);
-		Boolean instantPayment = (Boolean) PropertyResolver.getValue("instantPayment", bean);
+		Boolean instantPayment = (Boolean)PropertyResolver.getValue("instantPayment", bean);
 		assertFalse(instantPayment);
 	}
 
-	class CustomGetAndSetLocator implements IPropertyLocator {
+	class CustomGetAndSetLocator implements IPropertyLocator
+	{
 
 		private IPropertyLocator locator = new DefaultPropertyLocator();
-		
+
 		@Override
-		public IGetAndSet get(Class<?> clz, String exp) {
+		public IGetAndSet get(Class<?> clz, String exp)
+		{
 			// first try default properties
 			IGetAndSet getAndSet = locator.get(clz, exp);
-			if (getAndSet == null && Document.class.isAssignableFrom(clz)) {
+			if (getAndSet == null && Document.class.isAssignableFrom(clz))
+			{
 				// fall back to document properties
 				getAndSet = new DocumentPropertyGetAndSet(exp);
 			}
 			return getAndSet;
 		}
 
-		public class DocumentPropertyGetAndSet extends AbstractGetAndSet {
+		public class DocumentPropertyGetAndSet extends AbstractGetAndSet
+		{
 
 			private String name;
 
-			public DocumentPropertyGetAndSet(String name) {
+			public DocumentPropertyGetAndSet(String name)
+			{
 				this.name = name;
 			}
 
 			@Override
-			public Object getValue(Object object) {
-				return ((Document) object).getProperty(name);
+			public Object getValue(Object object)
+			{
+				return ((Document)object).getProperty(name);
 			}
 
 			@Override
-			public Object newValue(Object object) {
+			public Object newValue(Object object)
+			{
 				return new Document();
 			}
 
 			@Override
-			public void setValue(Object object, Object value, PropertyResolverConverter converter) {
-				((Document) object).setProperty(name, value);
+			public void setValue(Object object, Object value, PropertyResolverConverter converter)
+			{
+				((Document)object).setProperty(name, value);
 			}
 		}
 	}

@@ -26,7 +26,7 @@ class HomePageTest extends WicketTestCase
 {
 
 	@Test
-    void testRenderMyPage_1()
+	void testRenderMyPage_1()
 	{
 		// start and render the test page
 		tester.startPage(HomePage_1.class);
@@ -50,7 +50,7 @@ class HomePageTest extends WicketTestCase
 	}
 
 	@Test
-    void testRenderMyPage_2()
+	void testRenderMyPage_2()
 	{
 		// start and render the test page
 		tester.startPage(HomePage_2.class);

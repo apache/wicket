@@ -295,7 +295,8 @@ public class ClientProperties implements IClusterable
 						dstTimeZone.getRawOffset() != timeZone.getRawOffset())
 					{
 						int dstSaving = Math.abs(dstTimeZone.getRawOffset() - timeZone.getRawOffset());
-						String[] availableIDs = TimeZone.getAvailableIDs(dstTimeZone.getRawOffset() < timeZone.getRawOffset() ? dstTimeZone.getRawOffset() : timeZone.getRawOffset());
+						String[] availableIDs = TimeZone.getAvailableIDs(dstTimeZone.getRawOffset() < timeZone
+							.getRawOffset() ? dstTimeZone.getRawOffset() : timeZone.getRawOffset());
 						for (String availableID : availableIDs)
 						{
 							TimeZone zone = TimeZone.getTimeZone(availableID);
@@ -343,7 +344,8 @@ public class ClientProperties implements IClusterable
 	 *
 	 * @return True if JavaScript is enabled
 	 */
-	public boolean isJavaScriptEnabled() {
+	public boolean isJavaScriptEnabled()
+	{
 		return javaScriptEnabled;
 	}
 
@@ -545,7 +547,8 @@ public class ClientProperties implements IClusterable
 	 * @param javaScriptEnabled
 	 *            is JavaScript supported in the browser
 	 */
-	public void setJavaScriptEnabled(boolean javaScriptEnabled) {
+	public void setJavaScriptEnabled(boolean javaScriptEnabled)
+	{
 		this.javaScriptEnabled = javaScriptEnabled;
 	}
 
@@ -555,14 +558,15 @@ public class ClientProperties implements IClusterable
 		StringBuilder b = new StringBuilder();
 
 		Class<?> clazz = getClass();
-		while (clazz != Object.class) {
+		while (clazz != Object.class)
+		{
 			Field[] fields = clazz.getDeclaredFields();
 
 			for (Field field : fields)
 			{
 				// Ignore these fields
 				if (Modifier.isStatic(field.getModifiers()) ||
-					Modifier.isTransient(field.getModifiers())  ||
+					Modifier.isTransient(field.getModifiers()) ||
 					field.isSynthetic())
 				{
 					continue;

@@ -141,14 +141,18 @@ public abstract class RequestHandlerExecutor
 			}
 			catch (Exception exception)
 			{
-				if (rethrow == null && exception instanceof RuntimeException) {
-					rethrow = (RuntimeException) exception;
-				} else {
+				if (rethrow == null && exception instanceof RuntimeException)
+				{
+					rethrow = (RuntimeException)exception;
+				}
+				else
+				{
 					log.error("Error detaching RequestHandler", exception);
 				}
 			}
 		}
-		if (rethrow != null) {
+		if (rethrow != null)
+		{
 			// WICKET-6001 runtime exceptions are rethrown
 			// TODO obsolete should component-queueing be removed
 			throw rethrow;

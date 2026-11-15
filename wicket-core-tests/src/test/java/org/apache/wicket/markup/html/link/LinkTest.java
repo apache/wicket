@@ -31,77 +31,77 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class LinkTest extends WicketTestCase
 {
 
-    @Test
-    void allowsJavascriptSchemeInPopupsTarget()
-    {
-        var uri = "javascript:alert(1);";
-        MockPageWithOneComponent page = new MockPageWithOneComponent();
-        page.add(new PopupLink(COMPONENT_ID, uri));
+	@Test
+	void allowsJavascriptSchemeInPopupsTarget()
+	{
+		var uri = "javascript:alert(1);";
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		page.add(new PopupLink(COMPONENT_ID, uri));
 
-        tester.startPage(page);
+		tester.startPage(page);
 
-        assertThat(tester.getLastResponseAsString()).contains(uri);
-    }
+		assertThat(tester.getLastResponseAsString()).contains(uri);
+	}
 
-    @Test
-    void escapesJavascriptQuotesInPopupsTarget()
-    {
-        var uri = "javascript:alert('foo');";
-        MockPageWithOneComponent page = new MockPageWithOneComponent();
-        page.add(new PopupLink(COMPONENT_ID, uri));
+	@Test
+	void escapesJavascriptQuotesInPopupsTarget()
+	{
+		var uri = "javascript:alert('foo');";
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		page.add(new PopupLink(COMPONENT_ID, uri));
 
-        tester.startPage(page);
+		tester.startPage(page);
 
-        assertThat(tester.getLastResponseAsString()).contains("javascript:alert(\\'foo\\');");
-    }
+		assertThat(tester.getLastResponseAsString()).contains("javascript:alert(\\'foo\\');");
+	}
 
-    @Test
-    void testWrongComponentId()
-    {
-        MockPageWithLink mockPageWithLink = new MockPageWithLink();
-        Link<Void> link = new Link<Void>("linkx")
-        {
-            private static final long serialVersionUID = 1L;
+	@Test
+	void testWrongComponentId()
+	{
+		MockPageWithLink mockPageWithLink = new MockPageWithLink();
+		Link<Void> link = new Link<Void>("linkx")
+		{
+			private static final long serialVersionUID = 1L;
 
-            @Override
-            public void onClick()
-            {
-            }
+			@Override
+			public void onClick()
+			{
+			}
 
-        };
+		};
 
-        mockPageWithLink.add(link);
-        assertThrows(MarkupNotFoundException.class, () -> tester.startPage(mockPageWithLink));
-    }
+		mockPageWithLink.add(link);
+		assertThrows(MarkupNotFoundException.class, () -> tester.startPage(mockPageWithLink));
+	}
 
-    static class PopupLink extends Link<Void>
-    {
+	static class PopupLink extends Link<Void>
+	{
 		private final String uri;
 
-	    public PopupLink(String id, String uri)
-        {
-            super(id);
-	        this.uri = uri;
+		public PopupLink(String id, String uri)
+		{
+			super(id);
+			this.uri = uri;
 			setPopupSettings(new PopupSettings());
-        }
+		}
 
-        @Override
-        public void onClick()
-        {
-        }
+		@Override
+		public void onClick()
+		{
+		}
 
-        @Override
-        protected void onComponentTag(ComponentTag tag)
-        {
-            super.onComponentTag(tag);
-            tag.setName("a");
-        }
+		@Override
+		protected void onComponentTag(ComponentTag tag)
+		{
+			super.onComponentTag(tag);
+			tag.setName("a");
+		}
 
-        @Override
-        protected CharSequence getURL()
-        {
-            return uri;
-        }
-    }
+		@Override
+		protected CharSequence getURL()
+		{
+			return uri;
+		}
+	}
 
 }

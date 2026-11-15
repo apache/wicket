@@ -143,7 +143,7 @@ public class CookieUtils
 		if (value != null)
 		{
 			// Assign the retrieved/persisted value to the component
-			formComponent.setModelValue(new String[] {value});
+			formComponent.setModelValue(new String[] { value });
 		}
 		return value;
 	}
@@ -244,12 +244,12 @@ public class CookieUtils
 				if (cookie != null)
 				{
 					log.debug("Found Cookie with name=" + name + " and request URI=" +
-							webRequest.getUrl().toString());
+						webRequest.getUrl().toString());
 				}
 				else
 				{
 					log.debug("Unable to find Cookie with name=" + name + " and request URI=" +
-							webRequest.getUrl().toString());
+						webRequest.getUrl().toString());
 				}
 			}
 
@@ -403,7 +403,8 @@ public class CookieUtils
 	 */
 	private String cookieToDebugString(final Cookie cookie)
 	{
-		final LocalDateTime localDateTime = Instant.ofEpochMilli(cookie.getMaxAge()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		final LocalDateTime localDateTime = Instant.ofEpochMilli(cookie.getMaxAge()).atZone(ZoneId.systemDefault())
+			.toLocalDateTime();
 		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue() +
 			", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() + ", maxAge = " +
 			localDateTime + "(" + cookie.getMaxAge() + ")" + "]";

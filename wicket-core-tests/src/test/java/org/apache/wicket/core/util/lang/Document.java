@@ -19,26 +19,31 @@ package org.apache.wicket.core.util.lang;
 import java.util.HashMap;
 import java.util.Map;
 
-class Document {
-	
+class Document
+{
+
 	private Map<String, Object> values = new HashMap<>();
-	
+
 	private String type;
-	
-	public String getType() {
+
+	public String getType()
+	{
 		return type;
 	}
-	
-	public void setType(String type) {
+
+	public void setType(String type)
+	{
 		this.type = type;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <T> T getProperty(String name) {
-		return (T) values.get(name);
+	public <T> T getProperty(String name)
+	{
+		return (T)values.get(name);
 	}
-	
-	public <T> void setProperty(String name, T t) {
+
+	public <T> void setProperty(String name, T t)
+	{
 		values.put(name, t);
 	}
 }

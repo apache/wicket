@@ -66,6 +66,7 @@ public class FrameworkSettings implements IEventDispatcher
 			}
 		}
 	}
+
 	private IDetachListener detachListener;
 
 	private IEventDispatcher defaultEventDispatcher = new DefaultEventDispatcher();

@@ -214,7 +214,7 @@ public class WizardModel extends AbstractWizardModel
 	{
 		history.clear();
 		activeStep = null;
-		
+
 		for (IWizardStep step : steps)
 		{
 			step.init(this);
@@ -248,13 +248,15 @@ public class WizardModel extends AbstractWizardModel
 	public Iterator<IWizardStep> stepIterator()
 	{
 		List<IWizardStep> filtered = new ArrayList<>();
-		
-		for (int s = 0; s < steps.size(); s++) {
-			if (conditions.get(s).evaluate()) {
+
+		for (int s = 0; s < steps.size(); s++)
+		{
+			if (conditions.get(s).evaluate())
+			{
 				filtered.add(steps.get(s));
 			}
 		}
-		
+
 		return filtered.iterator();
 	}
 

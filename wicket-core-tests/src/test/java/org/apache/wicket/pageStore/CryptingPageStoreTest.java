@@ -68,8 +68,8 @@ public class CryptingPageStoreTest extends WicketTestCase
 			SerializedPage serializedAdd = new SerializedPage(p, "foo", serializer.serialize(add));
 			store.addPage(context, serializedAdd);
 
-			SerializedPage serializedGot = (SerializedPage) store.getPage(context, p);
-			MockPage got = (MockPage) serializer.deserialize(serializedGot.getData());
+			SerializedPage serializedGot = (SerializedPage)store.getPage(context, p);
+			MockPage got = (MockPage)serializer.deserialize(serializedGot.getData());
 			assertEquals(p, got.getPageId());
 		}
 	}
@@ -110,7 +110,7 @@ public class CryptingPageStoreTest extends WicketTestCase
 		store.addPage(context, new SerializedPage(p, "foo", serializer.serialize(new MockPage(p))));
 
 		// tamper with the stored ciphertext
-		SerializedPage stored = (SerializedPage) delegate.getPage(context, p);
+		SerializedPage stored = (SerializedPage)delegate.getPage(context, p);
 		byte[] data = stored.getData();
 		data[data.length - 1] ^= 0x01;
 		delegate.addPage(context, new SerializedPage(p, "foo", data));
@@ -134,15 +134,15 @@ public class CryptingPageStoreTest extends WicketTestCase
 		store.addPage(context, new SerializedPage(n, "foo", serializer.serialize(new MockPage(n))));
 
 		// copy page n's stored ciphertext into slot m
-		SerializedPage storedN = (SerializedPage) delegate.getPage(context, n);
+		SerializedPage storedN = (SerializedPage)delegate.getPage(context, n);
 		delegate.addPage(context, new SerializedPage(m, "foo", storedN.getData()));
 
 		// reading slot m must fail: the blob is bound (via associated data) to id n
 		assertNull(store.getPage(context, m));
 
 		// page n itself still decrypts
-		SerializedPage got = (SerializedPage) store.getPage(context, n);
-		assertEquals(n, ((MockPage) serializer.deserialize(got.getData())).getPageId());
+		SerializedPage got = (SerializedPage)store.getPage(context, n);
+		assertEquals(n, ((MockPage)serializer.deserialize(got.getData())).getPageId());
 	}
 
 	private CryptingPageStore buildPageStore(ICryptScheme scheme, MockPageStore delegate)

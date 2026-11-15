@@ -61,7 +61,7 @@ class AjaxBehaviorEnabledTest extends WicketTestCase
 	 * 
 	 */
 	@BeforeEach
-    void before()
+	void before()
 	{
 		final IAuthorizationStrategy strategy = new CustomStrategy();
 		tester = new WicketTester(new MockApplication()
@@ -89,7 +89,7 @@ class AjaxBehaviorEnabledTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-1575">1575</a>
 	 */
 	@Test
-    void disabledBehavior() throws Exception
+	void disabledBehavior() throws Exception
 	{
 		executeTest(AjaxBehaviorEnabledPage.class, "AjaxBehaviorEnabled_expected.html");
 	}

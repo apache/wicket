@@ -24,17 +24,18 @@ import org.apache.wicket.pageStore.InSessionPageStore.SessionData;
  */
 public class InSessionPageStoreTest extends AbstractPageStoreTest
 {
-	
+
 	private static final MetaDataKey<SessionData> KEY = new MetaDataKey<SessionData>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
-	
+
 	@Override
 	protected IPageStore createPageStore(int maxEntries)
 	{
-		return new InSessionPageStore(maxEntries) {
-			
+		return new InSessionPageStore(maxEntries)
+		{
+
 			@Override
 			protected MetaDataKey<SessionData> getKey()
 			{

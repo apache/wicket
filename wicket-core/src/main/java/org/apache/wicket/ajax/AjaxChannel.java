@@ -150,7 +150,7 @@ public class AjaxChannel implements IClusterable
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		AjaxChannel that = (AjaxChannel) o;
+		AjaxChannel that = (AjaxChannel)o;
 
 		if (!name.equals(that.name)) return false;
 		if (type != that.type) return false;

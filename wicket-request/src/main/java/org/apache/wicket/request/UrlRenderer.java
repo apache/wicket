@@ -235,7 +235,7 @@ public class UrlRenderer
 			return renderer.renderRelativeUrl(url, getBaseUrl());
 		}
 
-		List<String> baseUrlSegments =  new ArrayList<>(getBaseUrl().getSegments());
+		List<String> baseUrlSegments = new ArrayList<>(getBaseUrl().getSegments());
 		List<String> urlSegments = new ArrayList<>(url.getSegments());
 
 		if (!getBaseUrl().isContextRelative())
@@ -357,7 +357,8 @@ public class UrlRenderer
 	 */
 	protected boolean shouldRenderAsFull(final Url url)
 	{
-		if (url.shouldRenderAsFull()) {
+		if (url.shouldRenderAsFull())
+		{
 			return true;
 		}
 

@@ -114,7 +114,7 @@ class FileUploadFieldTest extends WicketTestCase
 			}
 		}
 	}
-	
+
 	/**
 	 * @throws IOException
 	 */
@@ -139,9 +139,10 @@ class FileUploadFieldTest extends WicketTestCase
 	void testEmptyField() throws Exception
 	{
 		tester.startPage(TestValidationPage.class);
-		
+
 		FileUploadField uploadField = (FileUploadField)tester.getComponentFromLastRenderedPage("form:upload");
-		uploadField.add(new IValidator<List<FileUpload>>() {
+		uploadField.add(new IValidator<List<FileUpload>>()
+		{
 			@Override
 			public void validate(IValidatable<List<FileUpload>> validatable)
 			{
@@ -151,7 +152,7 @@ class FileUploadFieldTest extends WicketTestCase
 		});
 		FormTester formtester = tester.newFormTester("form");
 		formtester.submit();
-		
+
 		tester.assertNoErrorMessage();
 	}
 
@@ -164,7 +165,8 @@ class FileUploadFieldTest extends WicketTestCase
 		tester.startPage(TestValidationPage.class);
 
 		FileUploadField uploadField = (FileUploadField)tester.getComponentFromLastRenderedPage("form:upload");
-		uploadField.add(new IValidator<List<FileUpload>>() {
+		uploadField.add(new IValidator<List<FileUpload>>()
+		{
 			@Override
 			public void validate(IValidatable<List<FileUpload>> validatable)
 			{
@@ -200,12 +202,12 @@ class FileUploadFieldTest extends WicketTestCase
 		public void validate(IValidatable<List<FileUpload>> validatable)
 		{
 			List<FileUpload> fieldValue = validatable.getValue();
-			
+
 			if (fieldValue.size() == 0)
 			{
 				return;
 			}
-			
+
 			if (fieldValue instanceof List == false)
 			{
 				validatable.error(new ValidationError().addKey("validatable value type not expected"));

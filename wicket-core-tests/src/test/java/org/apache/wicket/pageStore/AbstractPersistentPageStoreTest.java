@@ -42,54 +42,55 @@ class AbstractPersistentPageStoreTest
 	{
 		var store = new AbstractPersistentPageStore("fooBar")
 		{
-			
+
 			@Override
 			public boolean supportsVersioning()
 			{
 				return false;
 			}
-			
+
 			@Override
 			protected void removePersistedPage(String sessionIdentifier, IManageablePage page)
 			{
 			}
-			
+
 			@Override
 			protected void removeAllPersistedPages(String sessionIdentifier)
 			{
 				fail("unexpected removal of all pages while rebinding attribute");
 			}
-			
+
 			@Override
 			protected IManageablePage getPersistedPage(String sessionIdentifier, int id)
 			{
 				return null;
 			}
-			
+
 			@Override
 			protected void addPersistedPage(String sessionIdentifier, IManageablePage page)
 			{
-				
+
 			}
 		};
-		
-		var context = new MockPageContext() {
+
+		var context = new MockPageContext()
+		{
 			@Override
 			public <T extends Serializable> T getSessionAttribute(String key,
 				Supplier<T> defaultValue)
 			{
 				T attribute = super.getSessionAttribute(key, defaultValue);
-				
+
 				// simulate container unbinding when attribute is set again
 				((HttpSessionBindingListener)attribute).valueUnbound(null);
-				
+
 				return attribute;
 			}
 		};
 		assertTrue(store.canBeAsynchronous(context));
-		
+
 		store.destroy();
-		
+
 	}
 
 }

@@ -83,7 +83,7 @@ public abstract class Panel extends WebMarkupContainer implements IQueueRegion
 	{
 		return PanelMarkupSourcingStrategy.get(false);
 	}
-	
+
 	/**
 	 * Returns the markup inside &lt;wicket:panel&gt; tag.
 	 * If such tag is not found, all the markup is returned.
@@ -94,14 +94,14 @@ public abstract class Panel extends WebMarkupContainer implements IQueueRegion
 	public IMarkupFragment getRegionMarkup()
 	{
 		IMarkupFragment markup = super.getRegionMarkup();
-		
+
 		if (markup == null)
 		{
 			return markup;
 		}
-		
+
 		IMarkupFragment panelMarkup = MarkupUtil.findStartTag(markup, PANEL);
-		
+
 		return panelMarkup != null ? panelMarkup : markup;
 	}
 }

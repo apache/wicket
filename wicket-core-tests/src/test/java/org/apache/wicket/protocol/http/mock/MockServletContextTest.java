@@ -25,15 +25,17 @@ import org.junit.jupiter.api.Test;
  * 
  * @author svenmeier
  */
-public class MockServletContextTest {
+public class MockServletContextTest
+{
 
 	/**
 	 * WICKET-6755
 	 */
 	@Test
-	void spaces() {
+	void spaces()
+	{
 		MockServletContext context = new MockServletContext(null, null);
-		
+
 		String name = "MockServletContextTest with spaces.txt";
 		assertTrue(context.getRealPath(name).endsWith(name));
 	}

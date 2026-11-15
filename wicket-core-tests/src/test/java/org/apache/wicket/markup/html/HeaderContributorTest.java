@@ -66,35 +66,36 @@ class HeaderContributorTest extends WicketTestCase
 	void testHeaderContributorOrder()
 	{
 		final AtomicInteger counter = new AtomicInteger();
-		
-		class AssertOrder implements IHeaderResponseDecorator {
-			
+
+		class AssertOrder implements IHeaderResponseDecorator
+		{
+
 			private int order;
-			
+
 			AssertOrder(int order)
 			{
 				this.order = order;
 			}
-			
+
 			@Override
 			public IHeaderResponse decorate(IHeaderResponse response)
 			{
 				assertEquals(order, counter.getAndIncrement());
-				
+
 				return response;
 			}
 		}
-		
+
 		HeaderResponseDecoratorCollection decorators = tester.getApplication().getHeaderResponseDecorators();
 		decorators.add(new AssertOrder(2));
 		decorators.add(new AssertOrder(1));
 		decorators.addPreResourceAggregationDecorator(new AssertOrder(3));
 		decorators.add(new AssertOrder(0));
 		decorators.addPostProcessingDecorator(new AssertOrder(4));
-		
+
 		tester.getApplication().decorateHeaderResponse(new HeaderResponse()
 		{
-			
+
 			@Override
 			protected Response getRealResponse()
 			{
@@ -166,7 +167,7 @@ class HeaderContributorTest extends WicketTestCase
 	 */
 	public static class HeaderContributingCallDecorator
 		extends
-			AjaxCallListener
+		AjaxCallListener
 		implements
 			IComponentAwareHeaderContributor
 	{

@@ -62,14 +62,15 @@ class CssUrlReplacerTest extends WicketTestCase
 						}
 					});
 			}
-			
+
 			@Override
-			public Session newSession(Request request, Response response) {
+			public Session newSession(Request request, Response response)
+			{
 				Session newSession = super.newSession(request, response);
 				newSession.setLocale(Locale.ROOT);
 				return newSession;
 			}
-			
+
 		};
 	}
 
@@ -126,7 +127,8 @@ class CssUrlReplacerTest extends WicketTestCase
 		String processed = replacer.process(input, scope, cssRelativePath);
 		assertThat(
 			processed,
-			is(".class {background-image: url('./wicket/resource/org.apache.wicket.resource.CssUrlReplacerTest/res/css/some.img" +
+			is(".class {background-image: url('./wicket/resource/org.apache.wicket.resource.CssUrlReplacerTest/res/css/some.img"
+				+
 				DECORATION_SUFFIX + "');}"));
 	}
 
@@ -141,7 +143,8 @@ class CssUrlReplacerTest extends WicketTestCase
 		String processed = replacer.process(input, scope, cssRelativePath);
 		assertThat(
 			processed,
-			is(".class {background-image: url('./wicket/resource/org.apache.wicket.resource.CssUrlReplacerTest/res/css/some.img" +
+			is(".class {background-image: url('./wicket/resource/org.apache.wicket.resource.CssUrlReplacerTest/res/css/some.img"
+				+
 				DECORATION_SUFFIX + "');}"));
 	}
 
@@ -156,7 +159,8 @@ class CssUrlReplacerTest extends WicketTestCase
 		String processed = replacer.process(input, scope, cssRelativePath);
 		assertThat(
 			processed,
-			is(".class {background-image: url('./wicket/resource/org.apache.wicket.resource.CssUrlReplacerTest/res/images/some.img" +
+			is(".class {background-image: url('./wicket/resource/org.apache.wicket.resource.CssUrlReplacerTest/res/images/some.img"
+				+
 				DECORATION_SUFFIX + "');}"));
 	}
 
@@ -171,7 +175,8 @@ class CssUrlReplacerTest extends WicketTestCase
 		String processed = replacer.process(input, scope, cssRelativePath);
 		assertThat(
 			processed,
-			is(".class {background-image: url('./wicket/resource/org.apache.wicket.resource.CssUrlReplacerTest/res/css/images/some.img" +
+			is(".class {background-image: url('./wicket/resource/org.apache.wicket.resource.CssUrlReplacerTest/res/css/images/some.img"
+				+
 				DECORATION_SUFFIX + "');}"));
 	}
 
@@ -185,7 +190,8 @@ class CssUrlReplacerTest extends WicketTestCase
 		String processed = replacer.process(input, scope, cssRelativePath);
 		assertThat(
 			processed,
-			containsString(".class {background-image: url(data:image/gif;base64,R0lGODlh1wATAXAAACH5BAEAAP8ALAAAAADXA"));
+			containsString(
+				".class {background-image: url(data:image/gif;base64,R0lGODlh1wATAXAAACH5BAEAAP8ALAAAAADXA"));
 	}
 
 	@Test

@@ -30,17 +30,21 @@ import org.junit.jupiter.api.Test;
  *
  * @author Hans Hosea Schaefer
  */
-public class ApplicationMetadataTest {
+public class ApplicationMetadataTest
+{
 
-	private static final MetaDataKey<Serializable> MY_METADATA_KEY = new MetaDataKey<>() {};
+	private static final MetaDataKey<Serializable> MY_METADATA_KEY = new MetaDataKey<>()
+	{};
 
 	@AfterEach
-	void detachThreadContext() {
+	void detachThreadContext()
+	{
 		ThreadContext.detach();
 	}
 
 	@Test
-	void metadataAdded() {
+	void metadataAdded()
+	{
 		final MockApplication application = new MockApplication();
 		assertNull(application.getMetaData(MY_METADATA_KEY));
 		application.setMetaData(MY_METADATA_KEY, "I love wicket");
@@ -48,7 +52,8 @@ public class ApplicationMetadataTest {
 	}
 
 	@Test
-	void metadataReplaced() {
+	void metadataReplaced()
+	{
 		final MockApplication application = new MockApplication();
 		application.setMetaData(MY_METADATA_KEY, "I love wicket");
 		application.setMetaData(MY_METADATA_KEY, "I love Idea");
@@ -56,7 +61,8 @@ public class ApplicationMetadataTest {
 	}
 
 	@Test
-	void metadataRemoved() {
+	void metadataRemoved()
+	{
 		final MockApplication application = new MockApplication();
 		application.setMetaData(MY_METADATA_KEY, "I love wicket");
 		application.setMetaData(MY_METADATA_KEY, null);

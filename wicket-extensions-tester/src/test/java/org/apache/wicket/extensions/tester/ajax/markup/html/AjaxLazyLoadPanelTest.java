@@ -30,13 +30,14 @@ public class AjaxLazyLoadPanelTest extends WicketTestCase
 {
 
 	@Test
-	public void immediatelyContentReady() {
-		
+	public void immediatelyContentReady()
+	{
+
 		AjaxLazyLoadPanelPage page = new AjaxLazyLoadPanelPage();
 		page.contentReady = true;
-		
+
 		tester.startPage(page);
-		
+
 		// loading component rendered at least once, timer set
 		tester.assertContains("LOADING");
 		tester.assertContainsNot("LOADED");
@@ -49,20 +50,21 @@ public class AjaxLazyLoadPanelTest extends WicketTestCase
 		tester.assertContains("LOADED");
 		tester.assertContainsNot("Wicket.Timer.set\\(");
 	}
-	
+
 	@Test
-	public void lateContentReady() {
-		
+	public void lateContentReady()
+	{
+
 		AjaxLazyLoadPanelPage page = new AjaxLazyLoadPanelPage();
 		page.contentReady = false;
-		
+
 		tester.startPage(page);
 
 		// no content, timer set
 		tester.assertContains("LOADING");
 		tester.assertContainsNot("LOADED");
 		tester.assertContains("Wicket.Timer.set\\(");
-		
+
 		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(tester);
 
 		// no change, timer re-set
@@ -78,30 +80,31 @@ public class AjaxLazyLoadPanelTest extends WicketTestCase
 		tester.assertContains("LOADED");
 		tester.assertContainsNot("Wicket.Timer.set\\(");
 	}
-	
+
 	@Test
-	public void lateVisible() {
-		
+	public void lateVisible()
+	{
+
 		AjaxLazyLoadPanelPage page = new AjaxLazyLoadPanelPage();
 		page.contentReady = true;
 		page.panel.setVisible(false);
-		
+
 		tester.startPage(page);
-		
+
 		// neither content nor timer since not visible 
 		tester.assertContainsNot("LOADING");
 		tester.assertContainsNot("LOADED");
 		tester.assertContainsNot("Wicket.Timer.set\\(");
 
 		tester.clickLink(page.link);
-		
+
 		// no content yet, but timer  
 		tester.assertContains("LOADING");
 		tester.assertContainsNot("LOADED");
 		tester.assertContains("Wicket.Timer.set\\(");
 
 		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(tester);
-		
+
 		// content, but no timer necessary anymore 
 		tester.assertContainsNot("LOADING");
 		tester.assertContains("LOADED");

@@ -301,7 +301,8 @@ public class MarkupSettings
 	 *                                                  whenever the associated form component is.
 	 * @return {@code this} object for chaining
 	 */
-	public MarkupSettings setUpdateAutoLabelsTogetherWithFormComponent(boolean updateAutoLabelsTogetherWithFormComponent)
+	public MarkupSettings setUpdateAutoLabelsTogetherWithFormComponent(
+		boolean updateAutoLabelsTogetherWithFormComponent)
 	{
 		this.updateAutoLabelsTogetherWithFormComponent = updateAutoLabelsTogetherWithFormComponent;
 		return this;

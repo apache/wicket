@@ -21,10 +21,10 @@ package org.apache.wicket.component.replacewith;
  */
 class ReplaceInOnConfigurePanel extends BaseReplaceWithPanel
 {
-    public ReplaceInOnConfigurePanel(String id)
-    {
-        super(id);
-    }
+	public ReplaceInOnConfigurePanel(String id)
+	{
+		super(id);
+	}
 
 	@Override
 	protected void onConfigure()

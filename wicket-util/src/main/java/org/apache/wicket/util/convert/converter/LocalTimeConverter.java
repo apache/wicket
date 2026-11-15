@@ -40,7 +40,8 @@ public class LocalTimeConverter extends AbstractJavaTimeConverter<LocalTime>
 	}
 
 	@Override
-	protected DateTimeFormatter getDateTimeFormatter() {
+	protected DateTimeFormatter getDateTimeFormatter()
+	{
 		return DateTimeFormatter.ISO_LOCAL_TIME;
 	}
 }

@@ -30,10 +30,10 @@ class OnChangeAjaxBehaviorTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void rendering() throws Exception
+	void rendering() throws Exception
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
-		
+
 		//ensure that TextField and DropDownChoice have 
 		//the appropriate event handlers
 		executeTest(OnChangeAjaxBehaviorTestPage.class,
@@ -44,7 +44,7 @@ class OnChangeAjaxBehaviorTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-    void ajaxSubmitWhileAnotherButtonIsNotVisible()
+	void ajaxSubmitWhileAnotherButtonIsNotVisible()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

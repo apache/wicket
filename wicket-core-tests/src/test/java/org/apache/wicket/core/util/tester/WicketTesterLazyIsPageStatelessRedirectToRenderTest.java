@@ -31,7 +31,8 @@ class WicketTesterLazyIsPageStatelessRedirectToRenderTest extends WicketTesterLa
 		return new MockApplication()
 		{
 			@Override
-			public void init() {
+			public void init()
+			{
 				super.init();
 				getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER);
 			}

@@ -19,15 +19,16 @@ package org.apache.wicket.protocol.ws.api.registry;
 public class AbstractKey implements IKey
 {
 
-    private final String context;
+	private final String context;
 
-    public AbstractKey(String context)
-    {
-        this.context = context;
-    }
+	public AbstractKey(String context)
+	{
+		this.context = context;
+	}
 
-    @Override
-    public String getContext() {
-        return context;
-    }
+	@Override
+	public String getContext()
+	{
+		return context;
+	}
 }

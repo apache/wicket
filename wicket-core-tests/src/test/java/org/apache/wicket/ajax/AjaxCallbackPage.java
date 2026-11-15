@@ -42,7 +42,8 @@ public class AjaxCallbackPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
 				super.updateAjaxAttributes(attributes);
 				attributes.getExtraParameters().put("param1", 123);
 				attributes.getExtraParameters().put("param2", Locale.SIMPLIFIED_CHINESE);

@@ -52,6 +52,6 @@ class ComponentRendererTest extends WicketTestCase
 		PageWithRepeater page = new PageWithRepeater();
 		CharSequence listViewOutput = ComponentRenderer.renderComponent(page.get("listView"));
 		assertEquals("<div wicket:id=\"listView\"><span wicket:id=\"label\">one</span></div>" +
-				"<div wicket:id=\"listView\"><span wicket:id=\"label\">two</span></div>", listViewOutput.toString());
+			"<div wicket:id=\"listView\"><span wicket:id=\"label\">two</span></div>", listViewOutput.toString());
 	}
 }

@@ -153,7 +153,7 @@ public class UploadInfo implements IClusterable
 	 */
 	public String getRemainingTimeString()
 	{
-		return Durations.toString(Duration.ofMillis(getRemainingMilliseconds()), 
-		    Session.get().getLocale());
+		return Durations.toString(Duration.ofMillis(getRemainingMilliseconds()),
+			Session.get().getLocale());
 	}
 }

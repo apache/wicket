@@ -122,9 +122,11 @@ public class WebSocketSettings
 	 * A {@link org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer} that allows to configure
 	 * {@link org.apache.wicket.protocol.ws.api.IWebSocketSession}s.
 	 */
-	private IWebSocketSessionConfigurer socketSessionConfigurer = new IWebSocketSessionConfigurer() {
+	private IWebSocketSessionConfigurer socketSessionConfigurer = new IWebSocketSessionConfigurer()
+	{
 		@Override
-		public void configureSession(IWebSocketSession webSocketSession) {
+		public void configureSession(IWebSocketSession webSocketSession)
+		{
 			// does nothing by default
 		}
 	};
@@ -256,7 +258,8 @@ public class WebSocketSettings
 	 * Sets the IWebSocketSessionConfigurer
 	 * @param socketSessionConfigurer A non-null {@link org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer}
 	 */
-	public void setSocketSessionConfigurer(IWebSocketSessionConfigurer socketSessionConfigurer) {
+	public void setSocketSessionConfigurer(IWebSocketSessionConfigurer socketSessionConfigurer)
+	{
 		Args.notNull(socketSessionConfigurer, "socketSessionConfigurer");
 		this.socketSessionConfigurer = socketSessionConfigurer;
 	}
@@ -264,7 +267,8 @@ public class WebSocketSettings
 	/**
 	 * @return returns the {@link org.apache.wicket.protocol.ws.api.IWebSocketSessionConfigurer}
 	 */
-	public IWebSocketSessionConfigurer getSocketSessionConfigurer() {
+	public IWebSocketSessionConfigurer getSocketSessionConfigurer()
+	{
 		return socketSessionConfigurer;
 	}
 
@@ -319,8 +323,8 @@ public class WebSocketSettings
 	 *              The active web socket connection
 	 * @param asynchronousPush
 	 *              Whether asynchronous push is wanted or not.
-     * @param timeout
-     *              The timeout to be used for push operations
+	 * @param timeout
+	 *              The timeout to be used for push operations
 	 * @return the response object that should be used to write the response back to the client
 	 */
 	public WebResponse newWebSocketResponse(IWebSocketConnection connection, boolean asynchronousPush, long timeout)
@@ -475,12 +479,13 @@ public class WebSocketSettings
 		public WebSocketPushMessageExecutor()
 		{
 			this(Runnable::run, new ThreadPoolExecutor(1, 8,
-			                                           60L, TimeUnit.SECONDS,
-			                                           new SynchronousQueue<>(),
-			                                           new ThreadFactory()));
+				60L, TimeUnit.SECONDS,
+				new SynchronousQueue<>(),
+				new ThreadFactory()));
 		}
 
-		public WebSocketPushMessageExecutor(java.util.concurrent.Executor nonHttpRequestExecutor, java.util.concurrent.Executor httpRequestExecutor)
+		public WebSocketPushMessageExecutor(java.util.concurrent.Executor nonHttpRequestExecutor,
+			java.util.concurrent.Executor httpRequestExecutor)
 		{
 			this.nonHttpRequestExecutor = nonHttpRequestExecutor;
 			this.httpRequestExecutor = httpRequestExecutor;

@@ -253,26 +253,26 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 			LOOKUP_METHOD.setAccessible(true);
 
 			GET_CLASS_DATA_LAYOUT_METHOD = ObjectStreamClass.class.getDeclaredMethod(
-					"getClassDataLayout", (Class[])null);
+				"getClassDataLayout", (Class[])null);
 			GET_CLASS_DATA_LAYOUT_METHOD.setAccessible(true);
 
 			GET_NUM_OBJ_FIELDS_METHOD = ObjectStreamClass.class.getDeclaredMethod(
-					"getNumObjFields", (Class[])null);
+				"getNumObjFields", (Class[])null);
 			GET_NUM_OBJ_FIELDS_METHOD.setAccessible(true);
 
 			GET_OBJ_FIELD_VALUES_METHOD = ObjectStreamClass.class.getDeclaredMethod(
-					"getObjFieldValues", new Class[] { Object.class, Object[].class });
+				"getObjFieldValues", new Class[] { Object.class, Object[].class });
 			GET_OBJ_FIELD_VALUES_METHOD.setAccessible(true);
 
 			GET_FIELD_METHOD = ObjectStreamField.class.getDeclaredMethod("getField", (Class[])null);
 			GET_FIELD_METHOD.setAccessible(true);
 
 			HAS_WRITE_REPLACE_METHOD_METHOD = ObjectStreamClass.class.getDeclaredMethod(
-					"hasWriteReplaceMethod", (Class[])null);
+				"hasWriteReplaceMethod", (Class[])null);
 			HAS_WRITE_REPLACE_METHOD_METHOD.setAccessible(true);
 
 			INVOKE_WRITE_REPLACE_METHOD = ObjectStreamClass.class.getDeclaredMethod(
-					"invokeWriteReplace", new Class[] { Object.class });
+				"invokeWriteReplace", new Class[] { Object.class });
 			INVOKE_WRITE_REPLACE_METHOD.setAccessible(true);
 		}
 		catch (Exception e)
@@ -333,7 +333,8 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 	 * @throws IOException
 	 * @throws SecurityException
 	 */
-	public CheckingObjectOutputStream(final OutputStream outputStream, final IObjectChecker... checkers) throws IOException, SecurityException
+	public CheckingObjectOutputStream(final OutputStream outputStream, final IObjectChecker... checkers)
+		throws IOException, SecurityException
 	{
 		this.out = new ObjectOutputStream(outputStream);
 		this.checkers = checkers;
@@ -380,8 +381,8 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 				desc = (ObjectStreamClass)LOOKUP_METHOD.invoke(null, cls, Boolean.TRUE);
 				Class<?> repCl;
 				if (!(Boolean)HAS_WRITE_REPLACE_METHOD_METHOD.invoke(desc, (Object[])null) ||
-						(obj = INVOKE_WRITE_REPLACE_METHOD.invoke(desc, obj)) == null ||
-						(repCl = obj.getClass()) == cls)
+					(obj = INVOKE_WRITE_REPLACE_METHOD.invoke(desc, obj)) == null ||
+					(repCl = obj.getClass()) == cls)
 				{
 					break;
 				}
@@ -406,7 +407,8 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 				Object[] objs = (Object[])obj;
 				for (int i = 0; i < objs.length; i++)
 				{
-					if (!isKnownToBeSerializable(objs[i])) {
+					if (!isKnownToBeSerializable(objs[i]))
+					{
 						CharSequence arrayPos = new StringBuilder(4).append('[').append(i).append(']');
 						simpleName = arrayPos;
 						fieldDescription += arrayPos;
@@ -438,7 +440,7 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 						fieldDescription += arrayPos;
 
 						check(streamObj);
-						
+
 						checked.put(streamObj, null);
 					}
 				});
@@ -609,14 +611,16 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 		}
 	}
 
-	private boolean isKnownToBeSerializable(Object obj) {
+	private boolean isKnownToBeSerializable(Object obj)
+	{
 		return isCommonClass(obj) || hasCustomSerialization(obj);
 	}
 
-	private boolean isCommonClass(Object obj) {
+	private boolean isCommonClass(Object obj)
+	{
 		return obj instanceof String || obj instanceof Number ||
-				obj instanceof Date || obj instanceof Boolean ||
-				obj instanceof Class || obj instanceof Throwable;
+			obj instanceof Date || obj instanceof Boolean ||
+			obj instanceof Class || obj instanceof Throwable;
 	}
 
 	/**
@@ -628,21 +632,22 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 	 * @param obj The object to check
 	 * @return {@code true} if the object type is one of these special ones
 	 */
-	private boolean hasCustomSerialization(Object obj) {
+	private boolean hasCustomSerialization(Object obj)
+	{
 		return obj instanceof PropertyChangeSupport ||
-				obj instanceof VetoableChangeSupport ||
-				obj instanceof Permission ||
-				obj instanceof Permissions ||
-				obj instanceof BitSet ||
-				obj instanceof ConcurrentHashMap ||
-				obj instanceof Vector ||
-				obj instanceof InetAddress ||
-				obj instanceof SocketAddress ||
-				obj instanceof Locale ||
-				obj instanceof Random ||
-				obj instanceof ThreadLocalRandom ||
-				obj instanceof StringBuffer ||
-				obj instanceof Subject;
+			obj instanceof VetoableChangeSupport ||
+			obj instanceof Permission ||
+			obj instanceof Permissions ||
+			obj instanceof BitSet ||
+			obj instanceof ConcurrentHashMap ||
+			obj instanceof Vector ||
+			obj instanceof InetAddress ||
+			obj instanceof SocketAddress ||
+			obj instanceof Locale ||
+			obj instanceof Random ||
+			obj instanceof ThreadLocalRandom ||
+			obj instanceof StringBuffer ||
+			obj instanceof Subject;
 	}
 
 	/**

@@ -99,7 +99,7 @@ public class BasePage extends ExamplePage
 		addStateChange();
 		this.selected = selected;
 	}
-	
+
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{

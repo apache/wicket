@@ -141,13 +141,13 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	}
 
 	@Override
-	protected void onComponentTag(ComponentTag tag) 
+	protected void onComponentTag(ComponentTag tag)
 	{
 		if (isRequired())
 		{
 			tag.put("required", "required");
 		}
-		
+
 		IModel<String> label = getLabel();
 		if (label != null && label.getObject() != null)
 		{
@@ -166,10 +166,10 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 				tag.put("pattern", ((PatternValidator)validator).getPattern().toString());
 			}
 		}
-		
+
 		super.onComponentTag(tag);
 	}
-	
+
 	/**
 	 * 
 	 */

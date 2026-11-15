@@ -57,10 +57,10 @@ public class FixedCSPValue implements CSPRenderable
 	{
 		String strValue = value;
 		if ("data:".equals(strValue) ||
-				"blob:".equals(strValue) ||
-				"mediastream:".equals(strValue) ||
-				"filesystem:".equals(strValue) ||
-				"https:".equals(strValue))
+			"blob:".equals(strValue) ||
+			"mediastream:".equals(strValue) ||
+			"filesystem:".equals(strValue) ||
+			"https:".equals(strValue))
 		{
 			return;
 		}

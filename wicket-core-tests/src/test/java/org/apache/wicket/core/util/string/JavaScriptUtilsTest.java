@@ -47,7 +47,7 @@ class JavaScriptUtilsTest
 		JavaScriptUtils.writeScript(response, attributes);
 
 		assertEquals(
-				"<script type=\"text/javascript\" id=\"some&quot;funny&lt;id&amp;%\" defer=\"defer\" charset=\"some&quot;funny&lt;charset&amp;%\" src=\"some/url;jsessionid=1234?p1=v1&amp;p2=v2\"></script>\n",
+			"<script type=\"text/javascript\" id=\"some&quot;funny&lt;id&amp;%\" defer=\"defer\" charset=\"some&quot;funny&lt;charset&amp;%\" src=\"some/url;jsessionid=1234?p1=v1&amp;p2=v2\"></script>\n",
 			response.toString());
 	}
 
@@ -68,8 +68,8 @@ class JavaScriptUtilsTest
 		JavaScriptUtils.writeScript(response, attributes);
 
 		assertEquals(
-				"<script type=\"text/javascript\" id=\"some&quot;funny&lt;id&amp;%\" defer=\"defer\" async=\"async\" charset=\"some&quot;funny&lt;charset&amp;%\" src=\"some/url;jsessionid=1234?p1=v1&amp;p2=v2&amp;p3=v3\"></script>\n",
-				response.toString());
+			"<script type=\"text/javascript\" id=\"some&quot;funny&lt;id&amp;%\" defer=\"defer\" async=\"async\" charset=\"some&quot;funny&lt;charset&amp;%\" src=\"some/url;jsessionid=1234?p1=v1&amp;p2=v2&amp;p3=v3\"></script>\n",
+			response.toString());
 	}
 
 	/**
@@ -101,7 +101,8 @@ class JavaScriptUtilsTest
 	}
 
 	@Test
-	void escapeQuotes(){
+	void escapeQuotes()
+	{
 		assertThat(JavaScriptUtils.escapeQuotes("alert('foo\\tbar')")).isEqualTo("alert(\\'foo\\\\tbar\\')");
 	}
 

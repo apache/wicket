@@ -24,5 +24,5 @@ import org.apache.wicket.util.io.IClusterable;
  */
 public interface JavaScriptContentType extends IClusterable
 {
-    String getType();
+	String getType();
 }

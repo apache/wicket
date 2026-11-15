@@ -72,9 +72,11 @@ public abstract class WicketTestCase
 	 */
 	protected WicketTester newWicketTester(final WebApplication app)
 	{
-		return new WicketTester(app) {
+		return new WicketTester(app)
+		{
 			@Override
-			protected Locale servletRequestLocale() {
+			protected Locale servletRequestLocale()
+			{
 				return Locale.US;
 			}
 		};
@@ -191,7 +193,8 @@ public abstract class WicketTestCase
 	 * @param markup
 	 * @param testMarkup
 	 */
-	protected final void compareMarkupWithString(IMarkupFragment markup, String testMarkup) {
+	protected final void compareMarkupWithString(IMarkupFragment markup, String testMarkup)
+	{
 		testMarkup = testMarkup.replaceAll("\r", "");
 		testMarkup = testMarkup.replaceAll("\n", "");
 		testMarkup = testMarkup.replaceAll("\t", "");

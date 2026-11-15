@@ -68,8 +68,8 @@ public class Clock extends Label
 		public String getObject()
 		{
 			DateTimeFormatter formatter = DateTimeFormatter
-					.ofLocalizedDateTime(FormatStyle.FULL)
-					.withZone(zoneId);
+				.ofLocalizedDateTime(FormatStyle.FULL)
+				.withZone(zoneId);
 			return formatter.format(LocalDateTime.now().atOffset(ZoneOffset.UTC));
 		}
 	}

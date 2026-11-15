@@ -102,7 +102,7 @@ public class ExportToolbar extends AbstractToolbar
 	public ExportToolbar(DataTable<?, ?> table, IModel<String> messageModel, IModel<String> fileNameModel)
 	{
 		super(table);
-		
+
 		setMessageModel(messageModel);
 		setFileNameModel(fileNameModel);
 	}
@@ -205,13 +205,14 @@ public class ExportToolbar extends AbstractToolbar
 			/**
 			 * Set fileName and cacheDuration lazily
 			 */
-			public void respond(Attributes attributes) {
+			public void respond(Attributes attributes)
+			{
 				setFileName(fileNameModel.getObject() + "." + dataExporter.getFileNameExtension());
 				setCacheDuration(ExportToolbar.this.getCacheDuration());
-				
+
 				super.respond(attributes);
 			}
-			
+
 			@Override
 			protected IResourceStream getResourceStream(Attributes attributes)
 			{
@@ -228,7 +229,8 @@ public class ExportToolbar extends AbstractToolbar
 	 * 
 	 * @return default is {@link Duration#ZERO}
 	 */
-	protected Duration getCacheDuration() {
+	protected Duration getCacheDuration()
+	{
 		return Duration.ZERO;
 	}
 

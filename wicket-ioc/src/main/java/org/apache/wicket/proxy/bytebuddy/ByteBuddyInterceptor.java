@@ -64,7 +64,7 @@ public class ByteBuddyInterceptor
 	public ByteBuddyInterceptor(final Class<?> type, final IProxyTargetLocator locator)
 	{
 		super();
-		
+
 		this.typeName = type.getName();
 		this.locator = locator;
 	}
@@ -89,12 +89,12 @@ public class ByteBuddyInterceptor
 		{
 			return toString();
 		}
-		
+
 		if (target == null)
 		{
 			target = locator.locateProxyTarget();
 		}
-		
+
 		return pipe.apply(target);
 	}
 

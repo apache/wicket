@@ -45,7 +45,7 @@ public class FormComponentPanelPage extends BasePage
 
 		Multiply multiply = new Multiply("multiply", result);
 		Component multiplyLabel = new Label("multiplyLabel", result)
-				.setOutputMarkupId(true);
+			.setOutputMarkupId(true);
 		multiply.add(new AjaxFormComponentUpdatingBehavior("input change")
 		{
 			@Override

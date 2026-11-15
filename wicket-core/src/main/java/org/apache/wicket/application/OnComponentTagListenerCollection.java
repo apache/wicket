@@ -26,12 +26,15 @@ import org.apache.wicket.util.listener.ListenerCollection;
  * @author Igor Vaynberg (ivaynberg)
  */
 public class OnComponentTagListenerCollection extends ListenerCollection<IOnComponentTagListener>
-	implements IOnComponentTagListener {
+	implements
+		IOnComponentTagListener
+{
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void onComponentTag(final Component component, final ComponentTag tag) {
+	public void onComponentTag(final Component component, final ComponentTag tag)
+	{
 		notify(listener -> listener.onComponentTag(component, tag));
 	}
 }
