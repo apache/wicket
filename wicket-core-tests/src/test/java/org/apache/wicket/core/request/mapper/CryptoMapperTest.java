@@ -104,6 +104,21 @@ class CryptoMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * Wraps the mapper in a second {@link CryptoMapper} with a fixed key of its own, so that the
+	 * outcome of decrypting with the wrong key is the same in every run.
+	 *
+	 * @return a second crypto mapper around {@link #mapper}
+	 */
+	private CryptoMapper outerCryptoMapper()
+	{
+		SunJceCrypt outerCrypt = new SunJceCrypt(new byte[]{ (byte)0x3e, (byte)0x91, (byte)0x07,
+			(byte)0xd2, (byte)0x5b, (byte)0xc4, (byte)0x68, (byte)0x1f }, 17);
+		outerCrypt.setKey("outer-CryptoMapper");
+
+		return new CryptoMapper(mapper, () -> outerCrypt);
+	}
+
+	/**
 	 * @throws Exception
 	 */
 	@AfterEach
@@ -242,8 +257,7 @@ class CryptoMapperTest extends AbstractMapperTest
 	{
 		Request request = getRequest(Url.parse(ENCRYPTED_BOOKMARKABLE_URL));
 
-		IRequestHandler requestHandler = new CryptoMapper(mapper, tester.getApplication())
-			.mapRequest(request);
+		IRequestHandler requestHandler = outerCryptoMapper().mapRequest(request);
 
 		assertNotNull(requestHandler);
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
@@ -318,7 +332,7 @@ class CryptoMapperTest extends AbstractMapperTest
 	@Test
 	void pageInstanceDecryptMultipleCryptoMapper()
 	{
-		IRequestHandler requestHandler = new CryptoMapper(mapper, tester.getApplication())
+		IRequestHandler requestHandler = outerCryptoMapper()
 			.mapRequest(getRequest(Url.parse(ENCRYPTED_PAGE_INSTANCE_URL)));
 
 		assertNotNull(requestHandler);
@@ -413,8 +427,7 @@ class CryptoMapperTest extends AbstractMapperTest
 		 * We anticipate that sometimes multiple cryptomappers will be used. It should still work in
 		 * these situations.
 		 */
-		requestHandler = new CryptoMapper(mapper, tester.getApplication())
-			.mapRequest(getRequest(encryptedUrl));
+		requestHandler = outerCryptoMapper().mapRequest(getRequest(encryptedUrl));
 
 		assertNotNull(requestHandler);
 
