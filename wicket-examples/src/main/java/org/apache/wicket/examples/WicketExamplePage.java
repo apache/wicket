@@ -101,9 +101,7 @@ public class WicketExamplePage extends WebPage
 	public void renderHead(IHeaderResponse response)
 	{
 		response.render(CssHeaderItem.forReference(
-				new CssResourceReference(WicketExamplePage.class, "fonts/source-code-pro/stylesheet.css"), "screen"));
-		response.render(CssHeaderItem.forReference(
-				new CssResourceReference(WicketExamplePage.class, "fonts/source-sans-pro/stylesheet.css"), "screen"));
+				new CssResourceReference(WicketExamplePage.class, "fonts.css"), "screen"));
 		response.render(CssHeaderItem.forReference(new CssResourceReference(WicketExamplePage.class, "style.css"),"screen"));
 	}
 }

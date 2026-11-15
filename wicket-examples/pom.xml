@@ -33,6 +33,8 @@
 
 	<properties>
 		<dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
+		<fontsource-jetbrains-mono.version>5.3.0</fontsource-jetbrains-mono.version>
+		<fontsource-source-sans-pro.version>5.2.5</fontsource-source-sans-pro.version>
 		<japicmp.skip>true</japicmp.skip>
 	</properties>
 
@@ -205,8 +207,6 @@
 					<include>**/*.properties</include>
 					<include>**/*.mp4</include>
 					<include>**/*.svg</include>
-					<include>**/*.woff</include>
-					<include>**/*.ttf</include>
 				</includes>
 			</resource>
 			<resource>
@@ -226,12 +226,59 @@
 					<include>**/*.tmpl</include>
 					<include>**/*.mp4</include>
 					<include>**/*.svg</include>
-					<include>**/*.woff</include>
-					<include>**/*.ttf</include>
 				</includes>
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<!--
+					The fonts are under the SIL Open Font License, which the ASF puts in Category B: they
+					may ship in the war, but not in the source release. So they come from the fontsource
+					webjars at build time, next to their licences, for fonts.css.
+				-->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack-fonts</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.outputDirectory}/org/apache/wicket/examples/fonts</outputDirectory>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.webjars.npm</groupId>
+									<artifactId>fontsource__source-sans-pro</artifactId>
+									<version>${fontsource-source-sans-pro.version}</version>
+									<includes>**/LICENSE,**/files/source-sans-pro-latin-200-normal.woff2,**/files/source-sans-pro-latin-300-normal.woff2,**/files/source-sans-pro-latin-300-italic.woff2,**/files/source-sans-pro-latin-400-normal.woff2,**/files/source-sans-pro-latin-400-italic.woff2,**/files/source-sans-pro-latin-700-normal.woff2,**/files/source-sans-pro-latin-700-italic.woff2</includes>
+									<fileMappers>
+										<org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+											<pattern>^.*/fontsource__([^/]+)/[^/]+/LICENSE$</pattern>
+											<replacement>LICENSE-$1.txt</replacement>
+										</org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+										<org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
+									</fileMappers>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.webjars.npm</groupId>
+									<artifactId>fontsource__jetbrains-mono</artifactId>
+									<version>${fontsource-jetbrains-mono.version}</version>
+									<includes>**/LICENSE,**/files/jetbrains-mono-latin-300-normal.woff2,**/files/jetbrains-mono-latin-400-normal.woff2,**/files/jetbrains-mono-latin-700-normal.woff2</includes>
+									<fileMappers>
+										<org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+											<pattern>^.*/fontsource__([^/]+)/[^/]+/LICENSE$</pattern>
+											<replacement>LICENSE-$1.txt</replacement>
+										</org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+										<org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
+									</fileMappers>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
