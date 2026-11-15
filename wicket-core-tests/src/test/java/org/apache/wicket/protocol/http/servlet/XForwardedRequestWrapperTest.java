@@ -195,7 +195,7 @@ class XForwardedRequestWrapperTest extends WicketTestCase
 	void test7() throws Exception
 	{
 		MyApplication app = new MyApplication();
-		tester = new WicketTester(app);
+		tester = newWicketTester(app);
 
 		app.factory.getConfig().setAllowedInternalProxies("192\\.168\\.0\\.10, 192\\.168\\.0\\.11");
 		app.factory.getConfig().setRemoteIPHeader("x-forwarded-for");
