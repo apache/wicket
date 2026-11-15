@@ -42,7 +42,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   text-shadow: none; }
 
 html {
-  font: 300 15px "Source Sans Pro", sans-serif;
+  font: 300 15px "Source Sans Pro", "Segoe UI", "Myriad Pro", Ubuntu, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: auto;
@@ -52,7 +52,7 @@ body {
   line-height: 1.5em; }
 
 h1, h2, legend, h3, h4, h5, h6 {
-  font-family: "Source Sans Pro";
+  font-family: "Source Sans Pro", "Segoe UI", "Myriad Pro", Ubuntu, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
   font-weight: 400;
   line-height: 1.5em;
   margin: 0 0 0.25em 0; }
@@ -286,7 +286,7 @@ button.button--alert {
   border-radius: 0.125rem;
   cursor: pointer;
   display: inline-block;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Source Sans Pro", "Segoe UI", "Myriad Pro", Ubuntu, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
   font-size: 1rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -856,7 +856,7 @@ div.quickstart-wizard {
   width: 2rem; }
 
 code, pre, code > span, pre > span {
-  font-family: 'Source Code Pro', 'courier new', monospace;
+  font-family: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, "Cascadia Code", Consolas, monospace;
   font-size: 0.875rem; }
 
 a {
