@@ -16,6 +16,12 @@
  */
 package org.apache.wicket.ajax;
 
+import java.util.List;
+
+import org.apache.wicket.Application;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 /**
@@ -50,5 +56,18 @@ public class WicketAjaxResourceReference extends JavaScriptResourceReference
 	private WicketAjaxResourceReference()
 	{
 		super(AbstractDefaultAjaxBehavior.class, "res/js/wicket-ajax.js");
+	}
+
+	@Override
+	public List<HeaderItem> getDependencies()
+	{
+		List<HeaderItem> dependencies = super.getDependencies();
+		if (Application.exists() && Application.get() instanceof WebApplication application)
+		{
+			application.getCspSettings()
+				.getTrustedTypesHeaderItem(RequestCycle.get())
+				.ifPresent(dependencies::add);
+		}
+		return dependencies;
 	}
 }

@@ -21,6 +21,8 @@ import java.util.List;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
@@ -60,6 +62,12 @@ public class WicketAjaxJQueryResourceReference extends JavaScriptResourceReferen
 			jqueryReference = JQueryResourceReference.getV3();
 		}
 		List<HeaderItem> dependencies = super.getDependencies();
+		if (Application.exists() && Application.get() instanceof WebApplication application)
+		{
+			application.getCspSettings()
+				.getTrustedTypesHeaderItem(RequestCycle.get())
+				.ifPresent(dependencies::add);
+		}
 		dependencies.add(JavaScriptHeaderItem.forReference(jqueryReference));
 		return dependencies;
 	}

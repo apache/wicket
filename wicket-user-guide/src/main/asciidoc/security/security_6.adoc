@@ -61,6 +61,21 @@ _CSPHeaderConfiguration_ defines several methods to tune the Content Security Po
            "https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
 ----
 
+No preset requires https://developer.mozilla.org/en-US/docs/Web/API/Trusted_Types_API[Trusted Types]. With _CSPHeaderConfiguration.requireTrustedTypes()_ the directives _require-trusted-types-for 'script'_ and _trusted-types wicket_ are added, which make the browser reject strings at DOM sinks such as _innerHTML_. Only then Wicket's own JavaScript creates a policy named _wicket_ and passes the markup and the scripts of an Ajax response through it unchanged, so the response of your server stays trusted as before. Without this option Wicket creates no policy and its JavaScript works with strings as it always did. Other scripts on the page need a policy of their own, whose name has to be added to the _trusted-types_ directive:
+
+[source,java]
+----
+  getCspSettings().blocking()
+      .requireTrustedTypes()
+      .add(CSPDirective.TRUSTED_TYPES, "myPolicy");
+----
+
+The policy _wicket_ turns every string it is given into a trusted value. With this option enabled your own JavaScript must therefore not pass untrusted strings, such as user input, to _Wicket.DOM.replace_, _Wicket.DOM.add_ or _Wicket.Xml.parse_, nor to the functions of _Wicket.TrustedTypes_ itself: they are meant for markup and scripts that come from the server.
+
+The option needs jQuery 4, which is the default, or the jQuery-free Ajax implementation (_WicketAjaxResourceReference_): jQuery 3 assigns a string to _innerHTML_ while it loads and does not run on such a page.
+
+One limitation remains with this option enabled: the _onselect_ expression of the choices of an auto-complete field (_AbstractAutoCompleteRenderer_) is evaluated with _eval()_ in _wicket-autocomplete.js_, which the browser blocks. Besides that, JavaScript of your application that passes Ajax call listeners, preconditions or dynamic extra parameters to _Wicket.Ajax_ as strings instead of functions will not run, because strings would have to be compiled first. Wicket itself always renders them as functions.
+
 === Guidelines for strict CSP support
 
 To comply to the strict CSP set by default, you'll need to follow a few rules. Most importantly, you cannot use inline styling or Javascript. This includes:

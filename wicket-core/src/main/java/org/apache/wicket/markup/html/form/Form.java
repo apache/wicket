@@ -48,6 +48,7 @@ import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.IRequestParameters;
@@ -537,10 +538,13 @@ public class Form<T> extends WebMarkupContainer
 	 * there, because {@link org.apache.wicket.util.encoding.UrlEncoder} percent-encodes the quote
 	 * and the backslash; a url the caller builds itself stays the caller's to encode, for example
 	 * with {@link org.apache.wicket.core.util.string.JavaScriptUtils#escapeQuotes(CharSequence)}.
+	 * When the application requires Trusted Types, the hidden fields are passed through
+	 * {@code Wicket.TrustedTypes.html()} before they are assigned to {@code innerHTML}.
 	 *
 	 * @param url
 	 *            The listener url to be submitted to
 	 * @return the javascript code that submits the form.
+	 * @see org.apache.wicket.csp.CSPHeaderConfiguration#requireTrustedTypes()
 	 */
 	public final CharSequence getJsForListenerUrl(CharSequence url)
 	{
@@ -550,7 +554,10 @@ public class Form<T> extends WebMarkupContainer
 
 		String action = url.toString();
 		if (root.encodeUrlInHiddenFields()) {
-			buffer.append(String.format("document.getElementById('%s').innerHTML = '",
+			boolean trustedTypes = isTrustedTypesEnabled();
+			buffer.append(String.format(
+				trustedTypes ? "document.getElementById('%s').innerHTML = Wicket.TrustedTypes.html('"
+					: "document.getElementById('%s').innerHTML = '",
 				root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
 
 			// parameter must be sent as hidden field, as it would be ignored in the action URL
@@ -562,7 +569,7 @@ public class Form<T> extends WebMarkupContainer
 				action = action.substring(0, i);
 			}
 
-			buffer.append("';");
+			buffer.append(trustedTypes ? "');" : "';");
 		}
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
 		buffer.append(String.format("f.action='%s';", action));
@@ -571,9 +578,17 @@ public class Form<T> extends WebMarkupContainer
 		return buffer;
 	}
 
+	private boolean isTrustedTypesEnabled()
+	{
+		return getApplication() instanceof WebApplication application
+			&& application.getCspSettings().isTrustedTypesEnabled();
+	}
+
 	/**
 	 * Generate a piece of JavaScript that submits the form with the given
-	 * {@link IFormSubmittingComponent}.
+	 * {@link IFormSubmittingComponent}. When the application requires Trusted Types, the hidden
+	 * field of the submitter is passed through {@code Wicket.TrustedTypes.html()} before it is
+	 * assigned to {@code innerHTML}.
 	 *
 	 * @param submitter
 	 *            the submitter
@@ -584,6 +599,7 @@ public class Form<T> extends WebMarkupContainer
 	 * @return the javascript code that submits the form.
 	 *
 	 * @see #findSubmitter()
+	 * @see org.apache.wicket.csp.CSPHeaderConfiguration#requireTrustedTypes()
 	 */
 	public final CharSequence getJsForSubmitter(IFormSubmittingComponent submitter, boolean triggerEvent)
 	{
@@ -593,10 +609,15 @@ public class Form<T> extends WebMarkupContainer
 
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
-		buffer.append(String.format("document.getElementById('%s').innerHTML += '",
+		boolean trustedTypes = isTrustedTypesEnabled();
+		buffer.append(String.format(
+			trustedTypes
+				? "var h = document.getElementById('%s');"
+					+ "h.innerHTML = Wicket.TrustedTypes.html(h.innerHTML + '"
+				: "document.getElementById('%s').innerHTML += '",
 			root.getHiddenFieldsId(HIDDEN_FIELDS_PARAMS_IDX)));
 		writeParamsAsHiddenFields(new String[] {param}, buffer);
-		buffer.append("';");
+		buffer.append(trustedTypes ? "');" : "';");
 
 		if (triggerEvent)
 		{

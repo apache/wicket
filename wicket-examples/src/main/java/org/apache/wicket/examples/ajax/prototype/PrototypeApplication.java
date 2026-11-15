@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.ajax.prototype;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 
@@ -33,6 +34,11 @@ public class PrototypeApplication extends WicketExampleApplication
 		super.init();
 
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
+
+		// prototype.js predates Trusted Types and assigns strings to innerHTML
+		getCspSettings().blocking()
+			.remove(CSPDirective.REQUIRE_TRUSTED_TYPES_FOR)
+			.remove(CSPDirective.TRUSTED_TYPES);
 	}
 
 	@Override

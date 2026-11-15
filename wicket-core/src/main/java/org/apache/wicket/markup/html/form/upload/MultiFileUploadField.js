@@ -158,7 +158,7 @@ function MultiSelector( eprefix, list_target, max, useMultipleAttr, del_label ){
 		};
 
 		// Set row value
-		contentsColumn.innerHTML = this.getOnlyFileNames(element);
+		contentsColumn.innerHTML = Wicket.TrustedTypes.html(this.getOnlyFileNames(element));
 		new_row.appendChild( contentsColumn );
 
 		// Add button

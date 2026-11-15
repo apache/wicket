@@ -124,9 +124,9 @@
 			const newScript = document.createElement('script');
 			for (let a = 0; a < oldScript.attributes.length; a++) {
 				const attr = oldScript.attributes[a];
-				newScript.setAttribute(attr.name, attr.value);
+				newScript.setAttribute(attr.name, attr.name === 'src' ? Wicket.TrustedTypes.scriptURL(attr.value) : attr.value);
 			}
-			newScript.text = oldScript.textContent;
+			newScript.text = Wicket.TrustedTypes.script(oldScript.textContent);
 			oldScript.parentNode.replaceChild(newScript, oldScript);
 		}
 	};
@@ -291,6 +291,70 @@
 			}
 		}
 	};
+
+	/**
+	 * Tells whether the server rendered <meta name="wicket-trusted-types">, which it does when
+	 * the application allows the Trusted Types policy 'wicket' in its Content-Security-Policy
+	 * (CSPHeaderConfiguration#requireTrustedTypes()).
+	 */
+	const isTrustedTypesEnabled = (function () {
+		let enabled;
+
+		return function () {
+			if (enabled === undefined) {
+				enabled = document.querySelector('meta[name="wicket-trusted-types"]') !== null;
+			}
+			return enabled;
+		};
+	})();
+
+	/**
+	 * Trusted Types
+	 *
+	 * A page with the Content-Security-Policy "require-trusted-types-for 'script'" accepts no
+	 * strings at DOM sinks such as innerHTML. When the application enabled Trusted Types, the
+	 * policy 'wicket' is created on first use and the markup and the scripts of an Ajax response
+	 * are passed through it unchanged. Otherwise, or where the browser has no Trusted Types, no
+	 * policy is created and html(), script() and scriptURL() return their argument as it is.
+	 *
+	 * The policy turns any string into a trusted value. These functions must only be given
+	 * markup and scripts that come from the server, never text from another source.
+	 */
+	Wicket.TrustedTypes = (function () {
+		const identity = function (value) {
+			return value;
+		};
+		let policy;
+
+		const getPolicy = function () {
+			if (!policy) {
+				policy = { createHTML: identity, createScript: identity, createScriptURL: identity };
+				if (isTrustedTypesEnabled() && window.trustedTypes && window.trustedTypes.createPolicy) {
+					try {
+						policy = window.trustedTypes.createPolicy('wicket', policy);
+					} catch (exception) {
+						Wicket.Log.error("Wicket.TrustedTypes: Cannot create the policy 'wicket'", exception);
+					}
+				}
+			}
+			return policy;
+		};
+
+		return {
+			html: function (text) {
+				// innerHTML takes null as an empty string, createHTML() as "null"
+				return getPolicy().createHTML(text === null && isTrustedTypesEnabled() ? '' : text);
+			},
+
+			script: function (text) {
+				return getPolicy().createScript(text);
+			},
+
+			scriptURL: function (url) {
+				return getPolicy().createScriptURL(url);
+			}
+		};
+	})();
 
 	/**
 	 * Channel management
@@ -1330,7 +1394,7 @@
 		parse: function (text) {
 			const parser = new DOMParser();
 
-			const xmlDocument = parser.parseFromString(text, "text/xml");
+			const xmlDocument = parser.parseFromString(Wicket.TrustedTypes.html(text), "text/xml");
 
 			return xmlDocument;
 		}
@@ -1692,7 +1756,7 @@
 				const cleanedText = text.trim();
 
 				const template = document.createElement('template');
-				template.innerHTML = cleanedText;
+				template.innerHTML = Wicket.TrustedTypes.html(cleanedText);
 				reviveScripts(template.content);
 
 				element.replaceWith(template.content);
@@ -1711,7 +1775,7 @@
 			const cleanedText = text.trim();
 
 			const template = document.createElement('template');
-			template.innerHTML = cleanedText;
+			template.innerHTML = Wicket.TrustedTypes.html(cleanedText);
 			reviveScripts(template.content);
 
 			element.append(template.content);
@@ -2135,7 +2199,7 @@
 					const attrs = node.attributes;
 					for (let a = 0; a < attrs.length; a++) {
 						const attr = attrs[a];
-						scriptDomNode[attr.name] = attr.value;
+						scriptDomNode[attr.name] = attr.name === 'src' ? Wicket.TrustedTypes.scriptURL(attr.value) : attr.value;
 					}
 
 					// determine whether it is external javascript (has src attribute set)
@@ -2187,7 +2251,11 @@
 						try {
 							Wicket.Ajax._currentSuspension = suspension;
 
-							scriptDomNode.innerHTML = text;
+							if (isTrustedTypesEnabled()) {
+								scriptDomNode.text = Wicket.TrustedTypes.script(text);
+							} else {
+								scriptDomNode.innerHTML = text;
+							}
 
 							const id = node.getAttribute("id");
 							Wicket.Head.addElement(scriptDomNode, typeof(id) !== "string" || id.length === 0);

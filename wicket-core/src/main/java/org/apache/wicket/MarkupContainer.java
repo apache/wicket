@@ -1422,6 +1422,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				return false;
 			}
 
+			if (tag.getFlag(ComponentTag.RENDERED_BY_PAGE))
+			{
+				getResponse().write(tag.toCharSequence());
+				return true;
+			}
+
 			// Get component id
 			final String id = tag.getId();
 
@@ -2118,6 +2124,11 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			}
 		}
 		
+		if (tag.getFlag(ComponentTag.RENDERED_BY_PAGE))
+		{
+			return DequeueTagAction.IGNORE;
+		}
+
 		//if is a label tag, ignore it
 		if (tag.isAutoComponentTag() 
 			&& tag.getId().startsWith(AutoLabelResolver.LABEL_ATTR))
