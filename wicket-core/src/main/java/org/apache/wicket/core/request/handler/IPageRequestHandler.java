@@ -57,7 +57,7 @@ public interface IPageRequestHandler extends IPageClassRequestHandler
 	 * @see IRequestablePage#getRenderCount()
 	 */
 	Integer getRenderCount();
-	
+
 	/**
 	 * Resolves a page instance from the request handler iff the page instance is already created
 	 * 
@@ -68,15 +68,15 @@ public interface IPageRequestHandler extends IPageClassRequestHandler
 	{
 		while (handler instanceof IRequestHandlerDelegate)
 		{
-			handler = ((IRequestHandlerDelegate) handler).getDelegateHandler();
+			handler = ((IRequestHandlerDelegate)handler).getDelegateHandler();
 		}
 
 		if (handler instanceof IPageRequestHandler)
 		{
-			IPageRequestHandler pageHandler = (IPageRequestHandler) handler;
+			IPageRequestHandler pageHandler = (IPageRequestHandler)handler;
 			if (pageHandler.isPageInstanceCreated())
 			{
-				return (Page) pageHandler.getPage();
+				return (Page)pageHandler.getPage();
 			}
 		}
 		return null;

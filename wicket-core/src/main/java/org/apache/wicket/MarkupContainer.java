@@ -440,7 +440,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					"' for component '" +
 					getClass().getName() +
 					"' not found." +
-					" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried.: " +
+					" Enable debug messages for org.apache.wicket.util.resource to get a list of all filenames tried.: "
+					+
 					toString());
 		}
 
@@ -592,7 +593,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 			private void refreshInternalIteratorIfNeeded()
 			{
-				if (expectedModCounter >= modCounter) {
+				if (expectedModCounter >= modCounter)
+				{
 					// no new modifications
 					return;
 				}
@@ -632,13 +634,16 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 			private Component findLastExistingChildAlreadyReturned(Component current)
 			{
-				if (current == null) {
+				if (current == null)
+				{
 					indexInRemovalsSinceLastUpdate = 0;
-				} else {
+				}
+				else
+				{
 					LinkedList<RemovedChild> removals = removals_get();
-					if (removals != null) {
-						check_removed:
-						while (current != null)
+					if (removals != null)
+					{
+						check_removed : while (current != null)
 						{
 							for (int i = indexInRemovalsSinceLastUpdate; i < removals.size(); i++)
 							{
@@ -647,20 +652,20 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 									removal.removedChild == null)
 								{
 									current = removal.previousSibling;
-									
+
 									// current was removed, use its sibling instead
 									continue check_removed;
 								}
 							}
-							
+
 							// current wasn't removed, keep it
 							break;
 						}
-						
+
 						indexInRemovalsSinceLastUpdate = removals.size();
 					}
 				}
-				
+
 				return current;
 			}
 		};
@@ -787,9 +792,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		try
 		{
 			setIgnoreAttributeModifier(true);
-			
+
 			final DebugSettings.ClassOutputStrategy outputClassName = getApplication().getDebugSettings()
-					.getOutputMarkupContainerClassNameStrategy();
+				.getOutputMarkupContainerClassNameStrategy();
 			if (outputClassName == DebugSettings.ClassOutputStrategy.TAG_ATTRIBUTE)
 			{
 				associatedMarkupOpenTag.addBehavior(OutputMarkupContainerClassNameBehavior.INSTANCE);
@@ -1418,7 +1423,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			// Get element as tag
 			final ComponentTag tag = (ComponentTag)element;
 
-			if (tag instanceof WicketTag && ((WicketTag)tag).isFragmentTag()){
+			if (tag instanceof WicketTag && ((WicketTag)tag).isFragmentTag())
+			{
 				return false;
 			}
 
@@ -1440,7 +1446,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					component.setMarkup(markupStream.getMarkupFragment());
 				}
 			}
-		
+
 			// Failed to find it?
 			if (component != null)
 			{
@@ -1450,9 +1456,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			{
 				// No component found, but "render as raw markup" flag found
 				if (canRenderRawTag(tag))
-				{					
+				{
 					getResponse().write(element.toCharSequence());
-				} 
+				}
 				return true;
 			}
 			else
@@ -1472,7 +1478,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		return false;
 	}
-	
+
 	/**
 	 * Says if the given tag can be handled as a raw markup.
 	 * 
@@ -1483,12 +1489,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	private boolean canRenderRawTag(MarkupElement tag)
 	{
 		boolean isWicketTag = tag instanceof WicketTag;
-		
-		boolean stripTag = isWicketTag ? Application.get().getMarkupSettings().getStripWicketTags() : false; 
-		
+
+		boolean stripTag = isWicketTag ? Application.get().getMarkupSettings().getStripWicketTags() : false;
+
 		return !stripTag;
 	}
-	
+
 	/**
 	 * Throws a {@code org.apache.wicket.markup.MarkupException} when the
 	 * component markup is not consistent.
@@ -1501,7 +1507,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	private void throwException(final MarkupStream markupStream, final ComponentTag tag)
 	{
 		final String id = tag.getId();
-		
+
 		if (tag instanceof WicketTag)
 		{
 			if (((WicketTag)tag).isChildTag())
@@ -1801,8 +1807,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		if (queue != null && !queue.isEmpty() && hasBeenRendered())
 		{
 			throw new WicketRuntimeException(
-					String.format("Detach called on component with id '%s' while it had a non-empty queue: %s",
-							getId(), queue));
+				String.format("Detach called on component with id '%s' while it had a non-empty queue: %s",
+					getId(), queue));
 		}
 	}
 
@@ -1827,12 +1833,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			queue = new ComponentQueue();
 		}
 		queue.add(components);
-		
+
 		Page page = findPage();
 
 		if (page != null)
 		{
-			dequeue();			
+			dequeue();
 		}
 
 		return this;
@@ -1856,16 +1862,16 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			{
 				return;
 			}
-			
+
 			MarkupContainer anchestor = this;
 			boolean hasQueuedChildren = !isQueueEmpty();
-			
+
 			while (!hasQueuedChildren && anchestor != queueRegion)
 			{
 				anchestor = anchestor.getParent();
 				hasQueuedChildren = !anchestor.isQueueEmpty();
 			}
-			
+
 			if (hasQueuedChildren && !queueRegion.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
 			{
 				queueRegion.dequeue();
@@ -1879,6 +1885,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		super.onInitialize();
 		dequeue();
 	}
+
 	/**
 	 * @return {@code true} when one or more components are queued
 	 */
@@ -1890,7 +1897,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * @return {@code true} when this markup container is a queue region
 	 */
-	private boolean isQueueRegion() 
+	private boolean isQueueRegion()
 	{
 		return IQueueRegion.class.isInstance(this);
 	}
@@ -1948,7 +1955,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		while (dequeue.isAtOpenOrOpenCloseTag())
 		{
 			ComponentTag tag = dequeue.takeTag();
-	
+
 			// see if child is already added to parent
 			Component child = findChildComponent(tag);
 
@@ -1957,24 +1964,24 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				// the container does not yet have a child with this id, see if we can
 				// dequeue
 				child = dequeue.findComponentToDequeue(tag);
-				
+
 				//if tag has an auto component factory let's use it
 				if (child == null && tag.getAutoComponentFactory() != null)
 				{
 					IAutoComponentFactory autoComponentFactory = tag.getAutoComponentFactory();
 					child = autoComponentFactory.newComponent(this, tag);
 				}
-				
+
 				if (child != null)
 				{
 					addDequeuedComponent(child, tag);
 				}
 			}
-			
+
 			if (tag.isOpen() && !tag.hasNoCloseTag())
-            {
-			    dequeueChild(child, tag, dequeue);
-            }
+			{
+				dequeueChild(child, tag, dequeue);
+			}
 		}
 
 	}
@@ -1990,7 +1997,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		return get(tag.getId());
 	}
-	
+
 	/**
 	 * Propagates dequeuing to child component.
 	 * 
@@ -2004,31 +2011,31 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	private void dequeueChild(Component child, ComponentTag tag, DequeueContext dequeue)
 	{
 		ChildToDequeueType childType = ChildToDequeueType.fromChild(child);
-		
+
 		if (childType == ChildToDequeueType.QUEUE_REGION ||
 			childType == ChildToDequeueType.BORDER)
 		{
-			((IQueueRegion)child).dequeue();			
+			((IQueueRegion)child).dequeue();
 		}
-		
-		if (childType == ChildToDequeueType.BORDER) 
-		{
-            Border childContainer = (Border)child;
-            // propagate dequeuing to border's body
-            MarkupContainer body = childContainer.getBodyContainer();
 
-            dequeueChildrenContainer(dequeue, body);
+		if (childType == ChildToDequeueType.BORDER)
+		{
+			Border childContainer = (Border)child;
+			// propagate dequeuing to border's body
+			MarkupContainer body = childContainer.getBodyContainer();
+
+			dequeueChildrenContainer(dequeue, body);
 		}
-		
+
 		if (childType == ChildToDequeueType.MARKUP_CONTAINER)
 		{
-            // propagate dequeuing to containers
-            MarkupContainer childContainer = (MarkupContainer)child;
+			// propagate dequeuing to containers
+			MarkupContainer childContainer = (MarkupContainer)child;
 
-            dequeueChildrenContainer(dequeue, childContainer);			
+			dequeueChildrenContainer(dequeue, childContainer);
 		}
-		
-		if (childType == ChildToDequeueType.NULL || 
+
+		if (childType == ChildToDequeueType.NULL ||
 			childType == ChildToDequeueType.QUEUE_REGION)
 		{
 			dequeue.skipToCloseTag();
@@ -2042,19 +2049,20 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			{
 				return;
 			}
-		} while ((close = dequeue.takeTag()) != null);
+		}
+		while ((close = dequeue.takeTag()) != null);
 
 		throw new IllegalStateException(String.format("Could not find the closing tag for '%s'", tag));
 	}
 
-    private void dequeueChildrenContainer(DequeueContext dequeue, MarkupContainer child)
-    {
-        dequeue.pushContainer(child);
-        child.dequeue(dequeue);
-        dequeue.popContainer();
-    }
+	private void dequeueChildrenContainer(DequeueContext dequeue, MarkupContainer child)
+	{
+		dequeue.pushContainer(child);
+		child.dequeue(dequeue);
+		dequeue.popContainer();
+	}
 
-    /** @see IQueueRegion#newDequeueContext() */
+	/** @see IQueueRegion#newDequeueContext() */
 	public DequeueContext newDequeueContext()
 	{
 		IMarkupFragment markup = getRegionMarkup();
@@ -2117,14 +2125,14 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				return null; // don't know
 			}
 		}
-		
+
 		//if is a label tag, ignore it
-		if (tag.isAutoComponentTag() 
+		if (tag.isAutoComponentTag()
 			&& tag.getId().startsWith(AutoLabelResolver.LABEL_ATTR))
 		{
 			return DequeueTagAction.IGNORE;
 		}
-		
+
 		return DequeueTagAction.DEQUEUE;
 	}
 

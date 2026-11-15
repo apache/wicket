@@ -57,7 +57,7 @@ public interface IPageManager
 	 *            page to add
 	 */
 	void touchPage(IManageablePage page);
-	
+
 	/**
 	 * Marks page as non-changed.
 	 * Could be used in Ajax requests to avoid storing the page if no changes have happened.
@@ -75,9 +75,10 @@ public interface IPageManager
 	/**
 	 * End the request.
 	 */
-	default void end() {
+	default void end()
+	{
 	}
-	
+
 	/**
 	 * Detach at end of request.
 	 */

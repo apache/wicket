@@ -43,7 +43,7 @@ class ComponentBehaviorOverComponentTagBehaviorTest extends WicketTestCase
 	 * WicketMessageTagHandler)
 	 */
 	@Test
-    void runtimeBehaviorOverMarkupBehavior()
+	void runtimeBehaviorOverMarkupBehavior()
 	{
 		tester.getApplication().getResourceSettings().getStringResourceLoaders().add(new TestStringResourceLoader());
 		WicketMessage page = new WicketMessage();
@@ -66,10 +66,11 @@ class ComponentBehaviorOverComponentTagBehaviorTest extends WicketTestCase
 			return loadStringResource(component.getClass(), key, locale, style, variation);
 		}
 	}
-	
+
 	private static class WicketMessage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		private WicketMessage() {
+		private WicketMessage()
+		{
 
 			Label label = new Label("l", "Label");
 			label.add(AttributeModifier.replace("title", "Component behavior title"));
@@ -80,8 +81,8 @@ class ComponentBehaviorOverComponentTagBehaviorTest extends WicketTestCase
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
 			return new StringResourceStream("<html><body>" +
-					"<span wicket:id=\"l\" wicket:message=\"title:markupTitle\">Test</span>" +
-					"</body></html>");
+				"<span wicket:id=\"l\" wicket:message=\"title:markupTitle\">Test</span>" +
+				"</body></html>");
 		}
 	}
 }

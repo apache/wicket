@@ -46,7 +46,7 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 	};
 
 	private final int maxGroups;
-	
+
 	/**
 	 * Is a group of a page stable.
 	 */
@@ -109,10 +109,11 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 	public void removePage(IPageContext context, IManageablePage page)
 	{
 		SessionData sessionData = getSessionData(context, false);
-		if (sessionData == null) {
+		if (sessionData == null)
+		{
 			return;
 		}
-		
+
 		sessionData.removePage(context, page, getDelegate());
 	}
 
@@ -120,7 +121,8 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 	public void removeAllPages(IPageContext context)
 	{
 		SessionData sessionData = getSessionData(context, false);
-		if (sessionData == null) {
+		if (sessionData == null)
+		{
 			return;
 		}
 
@@ -131,10 +133,11 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 	public IManageablePage getPage(IPageContext context, int id)
 	{
 		SessionData sessionData = getSessionData(context, false);
-		if (sessionData == null) {
+		if (sessionData == null)
+		{
 			return null;
 		}
-		
+
 		return sessionData.getPage(context, id, getDelegate());
 	}
 
@@ -163,8 +166,9 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 		{
 			return key.get(metaData.get(group));
 		}
-		
-		public synchronized void addPage(IPageContext context, IManageablePage page, String group, int maxGroups, boolean stableGroups, IPageStore delegate)
+
+		public synchronized void addPage(IPageContext context, IManageablePage page, String group, int maxGroups,
+			boolean stableGroups, IPageStore delegate)
 		{
 			if (stableGroups == false)
 			{
@@ -178,18 +182,18 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 			// add as last
 			groups.remove(group);
 			groups.addLast(group);
-			
+
 			// delegate
 			delegate.addPage(new GroupContext(context, this, group), page);
 
 			while (groups.size() > maxGroups)
 			{
 				String first = groups.removeFirst();
-				
+
 				delegate.removeAllPages(new GroupContext(context, this, first));
 			}
 		}
-		
+
 		public IManageablePage getPage(IPageContext context, int id, IPageStore delegate)
 		{
 			for (String group : groups)
@@ -251,14 +255,16 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 			synchronized (sessionData)
 			{
 				T data = sessionData.getMetaData(group, key);
-				if (data == null) {
+				if (data == null)
+				{
 					data = defaultValue.get();
-					
-					if (data != null) {
+
+					if (data != null)
+					{
 						sessionData.setMetaData(group, key, data);
 					}
 				}
-				
+
 				return data;
 			}
 		}

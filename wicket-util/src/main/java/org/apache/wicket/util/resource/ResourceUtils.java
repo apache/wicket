@@ -44,7 +44,7 @@ public class ResourceUtils
 	/** Stores standard ISO language codes from {@code java.util.Locale} **/
 	private final static Set<String> isoLanguages = new HashSet<>(
 		Arrays.asList(Locale.getISOLanguages()));
-	
+
 	/**
 	 * Return the minified version for a given resource name.
 	 * For example '/css/coolTheme.css' becomes '/css/coolTheme.min.css'
@@ -60,7 +60,7 @@ public class ResourceUtils
 		String minifiedName;
 		int idxOfExtension = name.lastIndexOf('.');
 		final String dottedPostfix = "." + minPostfix;
-		
+
 		if (idxOfExtension > -1)
 		{
 			String extension = name.substring(idxOfExtension);
@@ -68,17 +68,19 @@ public class ResourceUtils
 			if (!dottedPostfix.equals(extension) && !baseName.endsWith(dottedPostfix + "."))
 			{
 				minifiedName = baseName + minPostfix + extension;
-			} else
+			}
+			else
 			{
 				minifiedName = name;
 			}
-		} else
+		}
+		else
 		{
 			minifiedName = name + dottedPostfix;
 		}
 		return minifiedName;
 	}
-	
+
 	/**
 	 * Extract the locale from the filename taking into account possible minimized resource name.
 	 * 

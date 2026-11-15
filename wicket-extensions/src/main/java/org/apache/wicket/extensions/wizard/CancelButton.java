@@ -46,7 +46,7 @@ public class CancelButton extends WizardButton
 	protected void onConfigure()
 	{
 		super.onConfigure();
-		
+
 		setVisible(getWizardModel().isCancelVisible());
 	}
 

@@ -208,13 +208,13 @@ class AjaxTimerBehaviorTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 			private boolean enabled = true;
-			
+
 			@Override
 			protected void onTimer(AjaxRequestTarget target)
 			{
 				enabled = false;
 			}
-			
+
 			@Override
 			public boolean isEnabled(Component component)
 			{
@@ -341,7 +341,8 @@ class AjaxTimerBehaviorTest extends WicketTestCase
 	void arabicAddedInAjaxSetsTimout()
 	{
 		Locale def = Locale.getDefault();
-		try {
+		try
+		{
 			Locale.setDefault(Locale.forLanguageTag("ar-EG"));
 			Duration dur = Duration.ofSeconds(20);
 			final AjaxSelfUpdatingTimerBehavior timer = new AjaxSelfUpdatingTimerBehavior(dur);
@@ -372,7 +373,9 @@ class AjaxTimerBehaviorTest extends WicketTestCase
 
 			// first render sets timeout in correct Locale
 			assertMatches(", 20000", 1);
-		} finally {
+		}
+		finally
+		{
 			Locale.setDefault(def);
 		}
 	}

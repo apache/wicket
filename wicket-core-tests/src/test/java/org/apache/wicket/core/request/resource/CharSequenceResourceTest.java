@@ -31,13 +31,15 @@ class CharSequenceResourceTest
 {
 	class CSR extends CharSequenceResource
 	{
-		public CSR(String contentType) {
+		public CSR(String contentType)
+		{
 			super(contentType);
 		}
 
 		// make it public for the test
 		@Override
-		public Long getLength(CharSequence data) {
+		public Long getLength(CharSequence data)
+		{
 			return super.getLength(data);
 		}
 	}

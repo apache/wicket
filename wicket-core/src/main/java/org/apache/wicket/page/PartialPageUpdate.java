@@ -126,7 +126,7 @@ public abstract class PartialPageUpdate
 	protected final ResponseBuffer headerBuffer;
 
 	protected HtmlHeaderContainer header = null;
-	
+
 	private Component originalHeaderContainer;
 
 	// whether a header contribution is being rendered
@@ -138,7 +138,7 @@ public abstract class PartialPageUpdate
 	 * The page which components are being updated.
 	 */
 	private final Page page;
-	
+
 	/**
 	 * Constructor.
 	 *
@@ -149,8 +149,8 @@ public abstract class PartialPageUpdate
 	{
 		this.page = page;
 		this.originalHeaderContainer = page.get(HtmlHeaderSectionHandler.HEADER_ID);
-		
-		WebResponse response = (WebResponse) page.getResponse();
+
+		WebResponse response = (WebResponse)page.getResponse();
 		bodyBuffer = new ResponseBuffer(response);
 		headerBuffer = new ResponseBuffer(response);
 	}
@@ -160,7 +160,8 @@ public abstract class PartialPageUpdate
 	 */
 	public boolean isEmpty()
 	{
-		return prependJavaScripts.isEmpty() && appendJavaScripts.isEmpty() && domReadyJavaScripts.isEmpty() && markupIdToComponent.isEmpty();
+		return prependJavaScripts.isEmpty() && appendJavaScripts.isEmpty() && domReadyJavaScripts.isEmpty()
+			&& markupIdToComponent.isEmpty();
 	}
 
 	/**
@@ -173,7 +174,8 @@ public abstract class PartialPageUpdate
 	 */
 	public void writeTo(final Response response, final String encoding)
 	{
-		try {
+		try
+		{
 			writeHeader(response, encoding);
 
 			onBeforeRespond(response);
@@ -182,7 +184,7 @@ public abstract class PartialPageUpdate
 			writeComponents(response, encoding);
 
 			onAfterRespond(response);
-			
+
 			javascriptsFrozen = true;
 
 			// queue up prepend javascripts. unlike other steps these are executed out of order so that
@@ -197,8 +199,11 @@ public abstract class PartialPageUpdate
 			writeEvaluations(response, evaluationScripts);
 
 			writeFooter(response, encoding);
-		} finally {
-			if (header != null && originalHeaderContainer != null) {
+		}
+		finally
+		{
+			if (header != null && originalHeaderContainer != null)
+			{
 				// restore a normal header
 				page.replace(originalHeaderContainer);
 				header = null;
@@ -211,7 +216,8 @@ public abstract class PartialPageUpdate
 	 * 
 	 * @param response
 	 */
-	protected void onBeforeRespond(Response response) {
+	protected void onBeforeRespond(Response response)
+	{
 	}
 
 	/**
@@ -219,7 +225,8 @@ public abstract class PartialPageUpdate
 	 * 
 	 * @param response
 	 */
-	protected void onAfterRespond(Response response) {
+	protected void onAfterRespond(Response response)
+	{
 	}
 
 	/**
@@ -228,7 +235,7 @@ public abstract class PartialPageUpdate
 	 * @param encoding
 	 *      the encoding for the response
 	 */
-    protected abstract void writeFooter(Response response, String encoding);
+	protected abstract void writeFooter(Response response, String encoding);
 
 	/**
 	 *
@@ -242,11 +249,11 @@ public abstract class PartialPageUpdate
 		if (!scripts.isEmpty())
 		{
 			CharSequence contents = renderScripts(scripts);
-			
+
 			writePriorityEvaluation(response, contents);
 		}
 	}
-	
+
 	/**
 	 *
 	 * @param response
@@ -259,12 +266,13 @@ public abstract class PartialPageUpdate
 		if (!scripts.isEmpty())
 		{
 			CharSequence contents = renderScripts(scripts);
-			
+
 			writeEvaluation(response, contents);
 		}
 	}
 
-	private CharSequence renderScripts(Collection<CharSequence> scripts) {
+	private CharSequence renderScripts(Collection<CharSequence> scripts)
+	{
 		StringBuilder combinedScript = new StringBuilder(1024);
 		for (CharSequence script : scripts)
 		{
@@ -280,10 +288,10 @@ public abstract class PartialPageUpdate
 				return stringResponse;
 			}
 		});
-		
+
 		decoratedHeaderResponse.render(JavaScriptHeaderItem.forScript(combinedScript, null));
 		decoratedHeaderResponse.close();
-		
+
 		return stringResponse.getBuffer();
 	}
 
@@ -301,12 +309,14 @@ public abstract class PartialPageUpdate
 		componentsFrozen = true;
 
 		List<Component> toBeWritten = new ArrayList<>(markupIdToComponent.size());
-		
+
 		// delay preparation of feedbacks after all other components
-		try (FeedbackDelay delay = new FeedbackDelay(RequestCycle.get())) {
+		try (FeedbackDelay delay = new FeedbackDelay(RequestCycle.get()))
+		{
 			for (Component component : markupIdToComponent.values())
 			{
-				if (!containsAncestorFor(component) && prepareComponent(component)) {
+				if (!containsAncestorFor(component) && prepareComponent(component))
+				{
 					toBeWritten.add(component);
 				}
 			}
@@ -324,7 +334,7 @@ public abstract class PartialPageUpdate
 		if (header != null)
 		{
 			RequestCycle cycle = RequestCycle.get();
-			
+
 			// some header responses buffer all calls to render*** until close is called.
 			// when they are closed, they do something (i.e. aggregate all JS resource urls to a
 			// single url), and then "flush" (by writing to the real response) before closing.
@@ -359,8 +369,8 @@ public abstract class PartialPageUpdate
 		if (component.getRenderBodyOnly())
 		{
 			throw new IllegalStateException(
-					"A partial update is not possible for a component that has renderBodyOnly enabled. Component: " +
-							component.toString());
+				"A partial update is not possible for a component that has renderBodyOnly enabled. Component: " +
+					component.toString());
 		}
 
 		component.setOutputMarkupId(true);
@@ -384,7 +394,7 @@ public abstract class PartialPageUpdate
 			bodyBuffer.reset();
 			throw e;
 		}
-		
+
 		return true;
 	}
 
@@ -410,9 +420,9 @@ public abstract class PartialPageUpdate
 		{
 			// render any associated headers of the component
 			writeHeaderContribution(response, component);
-			
+
 			bodyBuffer.reset();
-			
+
 			try
 			{
 				component.renderPart();
@@ -481,7 +491,7 @@ public abstract class PartialPageUpdate
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		PartialPageUpdate that = (PartialPageUpdate) o;
+		PartialPageUpdate that = (PartialPageUpdate)o;
 
 		if (!appendJavaScripts.equals(that.appendJavaScripts)) return false;
 		if (!domReadyJavaScripts.equals(that.domReadyJavaScripts)) return false;
@@ -509,7 +519,8 @@ public abstract class PartialPageUpdate
 
 		if (javascriptsFrozen)
 		{
-			throw new IllegalStateException("A partial update of the page is being rendered, JavaScript can no longer be added");
+			throw new IllegalStateException(
+				"A partial update of the page is being rendered, JavaScript can no longer be added");
 		}
 
 		appendJavaScripts.add(javascript);
@@ -524,10 +535,11 @@ public abstract class PartialPageUpdate
 	public final void prependJavaScript(CharSequence javascript)
 	{
 		Args.notNull(javascript, "javascript");
-		
+
 		if (javascriptsFrozen)
 		{
-			throw new IllegalStateException("A partial update of the page is being rendered, JavaScript can no longer be added");
+			throw new IllegalStateException(
+				"A partial update of the page is being rendered, JavaScript can no longer be added");
 		}
 
 		prependJavaScripts.add(javascript);
@@ -560,32 +572,34 @@ public abstract class PartialPageUpdate
 		else
 		{
 			Page pageOfComponent = component.findParent(Page.class);
-			if (pageOfComponent == null) 
+			if (pageOfComponent == null)
 			{
 				// no longer on page - log the error but don't block the user of the application
 				// (which was the behavior in Wicket <= 7).
 				LOG.warn("Component '{}' not cannot be updated because it was already removed from page", component);
 				return;
 			}
-			else if (pageOfComponent != page) 
+			else if (pageOfComponent != page)
 			{
 				// on another page
-				throw new IllegalArgumentException("Component " + component.toString() + " cannot be updated because it is on another page.");
+				throw new IllegalArgumentException("Component " + component.toString()
+					+ " cannot be updated because it is on another page.");
 			}
 
 			if (component instanceof AbstractRepeater)
 			{
 				throw new IllegalArgumentException(
 					"Component " +
-					Classes.name(component.getClass()) +
-					" is a repeater and cannot be added to a partial page update directly. " +
-					"Instead add its parent or another markup container higher in the hierarchy.");
+						Classes.name(component.getClass()) +
+						" is a repeater and cannot be added to a partial page update directly. " +
+						"Instead add its parent or another markup container higher in the hierarchy.");
 			}
 		}
 
 		if (componentsFrozen)
 		{
-			throw new IllegalStateException("A partial update of the page is being rendered, component " + component.toString() + " can no longer be added");
+			throw new IllegalStateException("A partial update of the page is being rendered, component " + component
+				.toString() + " can no longer be added");
 		}
 
 		component.setMarkupId(markupId);
@@ -608,9 +622,11 @@ public abstract class PartialPageUpdate
 	 */
 	public void detach(IRequestCycle requestCycle)
 	{
-		for (final Component component : markupIdToComponent.values()) {
+		for (final Component component : markupIdToComponent.values())
+		{
 			final Page parentPage = component.findParent(Page.class);
-			if (parentPage != null) {
+			if (parentPage != null)
+			{
 				parentPage.detach();
 				break;
 			}
@@ -684,13 +700,16 @@ public abstract class PartialPageUpdate
 		// save old response, set new
 		Response oldResponse = requestCycle.setResponse(headerBuffer);
 
-		try {
+		try
+		{
 			headerBuffer.reset();
 
 			IHeaderRenderStrategy strategy = AbstractHeaderRenderStrategy.get();
 
 			strategy.renderHeader(header, null, component);
-		} finally {
+		}
+		finally
+		{
 			// revert to old response
 			requestCycle.setResponse(oldResponse);
 		}
@@ -751,11 +770,12 @@ public abstract class PartialPageUpdate
 		@Override
 		protected IHeaderResponse newHeaderResponse()
 		{
-			if (pageUpdate == null) {
+			if (pageUpdate == null)
+			{
 				throw new IllegalStateException("disconnected from pageUpdate after serialization");
 			}
 
-	        return pageUpdate.getHeaderResponse();
+			return pageUpdate.getHeaderResponse();
 		}
 	}
 
@@ -771,14 +791,14 @@ public abstract class PartialPageUpdate
 		{
 			while (item instanceof IWrappedHeaderItem)
 			{
-				item = ((IWrappedHeaderItem) item).getWrapped();
+				item = ((IWrappedHeaderItem)item).getWrapped();
 			}
 
 			if (item instanceof OnLoadHeaderItem)
 			{
 				if (!wasItemRendered(item))
 				{
-					PartialPageUpdate.this.appendJavaScript(((OnLoadHeaderItem) item).getJavaScript());
+					PartialPageUpdate.this.appendJavaScript(((OnLoadHeaderItem)item).getJavaScript());
 					markItemRendered(item);
 				}
 			}
@@ -786,7 +806,7 @@ public abstract class PartialPageUpdate
 			{
 				if (!wasItemRendered(item))
 				{
-					PartialPageUpdate.this.appendJavaScript(((OnEventHeaderItem) item).getCompleteJavaScript());
+					PartialPageUpdate.this.appendJavaScript(((OnEventHeaderItem)item).getCompleteJavaScript());
 					markItemRendered(item);
 				}
 			}
@@ -804,7 +824,8 @@ public abstract class PartialPageUpdate
 			}
 			else
 			{
-				LOG.debug("Only methods that can be called on IHeaderResponse outside renderHead() are #render(OnLoadHeaderItem) and #render(OnDomReadyHeaderItem)");
+				LOG.debug(
+					"Only methods that can be called on IHeaderResponse outside renderHead() are #render(OnLoadHeaderItem) and #render(OnDomReadyHeaderItem)");
 			}
 		}
 

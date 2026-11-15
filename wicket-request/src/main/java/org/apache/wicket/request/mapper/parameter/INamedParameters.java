@@ -34,8 +34,7 @@ public interface INamedParameters
 	/**
 	 * A hint where the parameter is read/parsed from.
 	 */
-	enum Type
-	{
+	enum Type {
 		/**
 		 * The named parameter is set manually in the application code
 		 */
@@ -120,7 +119,7 @@ public interface INamedParameters
 			if (this == o) return true;
 			if (o == null || getClass() != o.getClass()) return false;
 
-			NamedPair namedPair = (NamedPair) o;
+			NamedPair namedPair = (NamedPair)o;
 
 			if (key != null ? !key.equals(namedPair.key) : namedPair.key != null) return false;
 			if (value != null ? !value.equals(namedPair.value) : namedPair.value != null) return false;

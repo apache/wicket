@@ -178,7 +178,7 @@ public class SubmitLink extends AbstractSubmitLink
 			disableLink(tag);
 		}
 	}
-	
+
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
@@ -217,7 +217,7 @@ public class SubmitLink extends AbstractSubmitLink
 			StringBuilder script = new StringBuilder();
 			script.append(root.getJsForSubmitter(this, shouldTriggerJavaScriptSubmitEvent()));
 			script.append("return false;");
-			
+
 			return script;
 		}
 		else

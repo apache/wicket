@@ -155,7 +155,7 @@ public class ResourceStreamRequestHandler implements IRequestHandler, ILoggableR
 		else
 		{
 			resource.setContentDisposition(Strings.isEmpty(fileName) ? ContentDisposition.INLINE
-					: ContentDisposition.ATTACHMENT);
+				: ContentDisposition.ATTACHMENT);
 		}
 
 		final Duration cacheDuration = getCacheDuration();

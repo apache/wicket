@@ -114,14 +114,16 @@ class TogglePageTest extends WicketTestCase
 	{
 		{
 			// On
-			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = tester.startPage(InlineEnclosureWithAdditionalAjaxTargetPage.class);
+			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = tester.startPage(
+				InlineEnclosureWithAdditionalAjaxTargetPage.class);
 			assertVisible(ajaxPage.getLabel1());
 			assertVisible(ajaxPage.getLabel2());
 			tester.clickLink(ajaxPage.getLink().getPageRelativePath(), true);
 		}
 		{
 			// Off
-			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = (InlineEnclosureWithAdditionalAjaxTargetPage)tester.getLastRenderedPage();
+			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = (InlineEnclosureWithAdditionalAjaxTargetPage)tester
+				.getLastRenderedPage();
 			tester.assertComponentOnAjaxResponse(ajaxPage.getLabel2());
 			assertInVisible(ajaxPage.getLabel1());
 			assertInVisible(ajaxPage.getLabel2());
@@ -129,18 +131,20 @@ class TogglePageTest extends WicketTestCase
 		}
 		{
 			// On
-			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = (InlineEnclosureWithAdditionalAjaxTargetPage)tester.getLastRenderedPage();
+			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = (InlineEnclosureWithAdditionalAjaxTargetPage)tester
+				.getLastRenderedPage();
 			// WICKET-5302 - only the InlineEnclosure is in the Ajax response
 			// Label1 is inside the InlineEncosure
-			InlineEnclosure children = ajaxPage.visitChildren(InlineEnclosure.class, new IVisitor<InlineEnclosure, InlineEnclosure>()
-			{
-				@Override
-				public void component(InlineEnclosure component, IVisit<InlineEnclosure> visit)
+			InlineEnclosure children = ajaxPage.visitChildren(InlineEnclosure.class,
+				new IVisitor<InlineEnclosure, InlineEnclosure>()
 				{
-					visit.stop(component);					
-				}
-			});
-			
+					@Override
+					public void component(InlineEnclosure component, IVisit<InlineEnclosure> visit)
+					{
+						visit.stop(component);
+					}
+				});
+
 			tester.assertComponentOnAjaxResponse(children.getId());
 			tester.assertComponentOnAjaxResponse(ajaxPage.getLabel2());
 			assertVisible(ajaxPage.getLabel1());
@@ -149,7 +153,8 @@ class TogglePageTest extends WicketTestCase
 		}
 		{
 			// Off
-			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = (InlineEnclosureWithAdditionalAjaxTargetPage)tester.getLastRenderedPage();
+			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = (InlineEnclosureWithAdditionalAjaxTargetPage)tester
+				.getLastRenderedPage();
 			tester.assertComponentOnAjaxResponse(ajaxPage.getLabel2());
 			assertInVisible(ajaxPage.getLabel1());
 			assertInVisible(ajaxPage.getLabel2());

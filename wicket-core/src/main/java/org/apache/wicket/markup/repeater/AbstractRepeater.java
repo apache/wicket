@@ -134,7 +134,7 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 				if (usedComponentIds.add(componentId) == false)
 				{
 					log.warn("Repeater '{}' has multiple children with the same component id: '{}'",
-							getPageRelativePath(), componentId);
+						getPageRelativePath(), componentId);
 					// do not flood the log
 					break;
 				}
@@ -174,7 +174,7 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 				if (child instanceof MarkupContainer)
 				{
 					dequeue.popContainer(); // pop the repeater
-					MarkupContainer container = (MarkupContainer) child;
+					MarkupContainer container = (MarkupContainer)child;
 					dequeue.pushContainer(container);
 					container.dequeue(dequeue);
 					dequeue.restore(bookmark);

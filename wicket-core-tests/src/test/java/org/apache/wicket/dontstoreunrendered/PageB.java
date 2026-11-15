@@ -23,12 +23,14 @@ import org.apache.wicket.RestartResponseException;
 /**
  *
  */
-public class PageB extends BasePage {
+public class PageB extends BasePage
+{
 
 	static final AtomicBoolean PAGE_B_INITIALIZED = new AtomicBoolean(false);
-	static final AtomicBoolean PAGE_B_RENDERED    = new AtomicBoolean(false);
+	static final AtomicBoolean PAGE_B_RENDERED = new AtomicBoolean(false);
 
-	public PageB() {
+	public PageB()
+	{
 		super();
 
 		throw new RestartResponseException(PageC.class);

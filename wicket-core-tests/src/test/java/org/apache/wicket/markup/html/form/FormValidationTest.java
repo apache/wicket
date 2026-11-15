@@ -123,12 +123,12 @@ class FormValidationTest
 	}
 
 
-    public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		final TextField field1;
 		final Form form;
 
-        public TestPage()
+		public TestPage()
 		{
 			form = new Form("form");
 			add(form);

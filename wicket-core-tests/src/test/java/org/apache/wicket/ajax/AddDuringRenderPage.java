@@ -23,9 +23,9 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class AddDuringRenderPage extends WebPage
 {
-	
+
 	private boolean addToAjax;
-	
+
 	public AddDuringRenderPage()
 	{
 		add(new AjaxLink<Void>("link")
@@ -34,16 +34,17 @@ public class AddDuringRenderPage extends WebPage
 			public void onClick(AjaxRequestTarget target)
 			{
 				addToAjax = true;
-				
+
 				target.add(this);
 			}
-			
+
 			@Override
 			protected void onBeforeRender()
 			{
 				super.onBeforeRender();
-				
-				if (addToAjax) {
+
+				if (addToAjax)
+				{
 					getRequestCycle().find(AjaxRequestHandler.class).get().add(this);
 				}
 			}

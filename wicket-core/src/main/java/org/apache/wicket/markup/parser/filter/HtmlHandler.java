@@ -107,9 +107,9 @@ public final class HtmlHandler extends AbstractMarkupFilter
 		// Check tag type
 		if (tag.isOpen())
 		{
-		    // Check if open tags contains a "wicket:id" component
-		    setContainsWicketIdFlag(tag);
-		    
+			// Check if open tags contains a "wicket:id" component
+			setContainsWicketIdFlag(tag);
+
 			// Push onto stack
 			stack.push(tag);
 		}
@@ -132,7 +132,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 					{
 						top.setHasNoCloseTag(true);
 						top.setContainsWicketId(false);
-						
+
 						// Pop simple tag
 						if (stack.isEmpty())
 						{
@@ -170,7 +170,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 
 		return tag;
 	}
-	
+
 	/**
 	 * Checks if the tag is a Wicket component explicitly added. i.e 
 	 * it has the "wicket:id" attribute.
@@ -192,7 +192,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 		}
 	}
 
-    /**
+	/**
 	 * Gets whether this tag does not require a closing tag.
 	 * 
 	 * @param name

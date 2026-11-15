@@ -22,69 +22,79 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-public class BehavioursDetachTestPage extends WebPage {
-    private static final long serialVersionUID = 1L;
+public class BehavioursDetachTestPage extends WebPage
+{
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * This model should be detached after page rendering
-     */
-    final LoadableDetachableModel<String> theModel;
+	/**
+	 * This model should be detached after page rendering
+	 */
+	final LoadableDetachableModel<String> theModel;
 
-    public BehavioursDetachTestPage(final PageParameters parameters) {
-        super(parameters);
+	public BehavioursDetachTestPage(final PageParameters parameters)
+	{
+		super(parameters);
 
-        // Bug seems to only occur on stateful pages,
-        // hence a Link to force it to be stateful in this quickstart
-        Link<String> link = new Link<>("link") {
-            @Override
-            public void onClick() {/*NoOp*/}
-        };
-        queue(link);
+		// Bug seems to only occur on stateful pages,
+		// hence a Link to force it to be stateful in this quickstart
+		Link<String> link = new Link<>("link")
+		{
+			@Override
+			public void onClick()
+			{/*NoOp*/}
+		};
+		queue(link);
 
-        // A behavior that causes the problem
-        link.add(new VisibilityBehavior());
+		// A behavior that causes the problem
+		link.add(new VisibilityBehavior());
 
-        theModel = LoadableDetachableModel.of(() -> "attribute value");
+		theModel = LoadableDetachableModel.of(() -> "attribute value");
 
-        // AttributeModifier and thus its LoadableDetachableModel don't get detached
-        link.add(AttributeModifier.replace("some-random-attribute", theModel));
-    }
+		// AttributeModifier and thus its LoadableDetachableModel don't get detached
+		link.add(AttributeModifier.replace("some-random-attribute", theModel));
+	}
 
-    /**
-     * A behavior that modifies the component's data by removing the last MetaDataEntry
-     * in its detach() method
-     */
-    public static class VisibilityBehavior extends Behavior {
+	/**
+	 * A behavior that modifies the component's data by removing the last MetaDataEntry
+	 * in its detach() method
+	 */
+	public static class VisibilityBehavior extends Behavior
+	{
 
-        private static final MetaDataKey<Boolean> META_DATA_KEY = new MetaDataKey<>() {};
+		private static final MetaDataKey<Boolean> META_DATA_KEY = new MetaDataKey<>()
+		{};
 
-        @Override
-        public void onConfigure(Component component) {
-            super.onConfigure(component);
+		@Override
+		public void onConfigure(Component component)
+		{
+			super.onConfigure(component);
 
-            // If no other Behavior of this kind deemed the component to be hidden yet,
-            // calculate its visibility now
-            Boolean calculatedVisibilitySoFar = component.getMetaData(META_DATA_KEY);
-            if (!Boolean.FALSE.equals(calculatedVisibilitySoFar)) {
-                boolean calculatedVisibility = calculateVisibility();
-                component.setVisibilityAllowed(calculatedVisibility);
-                component.setMetaData(META_DATA_KEY, calculatedVisibility);
-            }
-        }
+			// If no other Behavior of this kind deemed the component to be hidden yet,
+			// calculate its visibility now
+			Boolean calculatedVisibilitySoFar = component.getMetaData(META_DATA_KEY);
+			if (!Boolean.FALSE.equals(calculatedVisibilitySoFar))
+			{
+				boolean calculatedVisibility = calculateVisibility();
+				component.setVisibilityAllowed(calculatedVisibility);
+				component.setMetaData(META_DATA_KEY, calculatedVisibility);
+			}
+		}
 
-        // usually abstract and gets overridden in subclasses with more meaningful code
-        protected boolean calculateVisibility() {
-            return true;
-        }
+		// usually abstract and gets overridden in subclasses with more meaningful code
+		protected boolean calculateVisibility()
+		{
+			return true;
+		}
 
-        @Override
-        public void detach(Component component) {
-            // Reset visibility information so it's not being used in the next request anymore.
+		@Override
+		public void detach(Component component)
+		{
+			// Reset visibility information so it's not being used in the next request anymore.
 
-            // ==> Setting the MetaData to "null" here causes the issue
-            component.setMetaData(META_DATA_KEY, null);
-            super.detach(component);
-        }
-    }
+			// ==> Setting the MetaData to "null" here causes the issue
+			component.setMetaData(META_DATA_KEY, null);
+			super.detach(component);
+		}
+	}
 
 }

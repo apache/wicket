@@ -219,14 +219,14 @@ public class PropertyValidator<T> extends Behavior implements INullAcceptingVali
 		while (it.hasNext())
 		{
 			ConstraintDescriptor<?> constraint = it.next();
-			
+
 			if (config.isRequiredConstraint(constraint))
 			{
 				if (canApplyToDefaultGroup(constraint) && groups.size() == 0)
 				{
 					return true;
 				}
-		
+
 				for (Class<?> constraintGroup : constraint.getGroups())
 				{
 					if (groups.contains(constraintGroup))

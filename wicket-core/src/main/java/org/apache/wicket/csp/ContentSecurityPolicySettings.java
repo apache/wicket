@@ -85,8 +85,7 @@ public class ContentSecurityPolicySettings
 
 		cspHeaderWriter = new CSPHeaderWriter(this);
 
-		nonceCreator = () ->
-				application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
+		nonceCreator = () -> application.getSecuritySettings().getRandomSupplier().getRandomBase64(NONCE_LENGTH);
 	}
 
 	public CSPHeaderWriter getHeaderWriter()
@@ -118,7 +117,7 @@ public class ContentSecurityPolicySettings
 		this.nonceCreator = nonceCreator;
 		return this;
 	}
-	
+
 	/**
 	 * Sets the predicate that determines which requests must be protected by the CSP. When the
 	 * predicate evaluates to false, the request will not be protected.
@@ -175,7 +174,7 @@ public class ContentSecurityPolicySettings
 	public String getNonce(RequestCycle cycle)
 	{
 		IRequestHandler handler = cycle.getActiveRequestHandler();
-		
+
 		Page currentPage = IPageRequestHandler.getPage(handler);
 
 		String nonce = cycle.getMetaData(NONCE_KEY);

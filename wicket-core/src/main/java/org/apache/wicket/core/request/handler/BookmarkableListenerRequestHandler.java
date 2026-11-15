@@ -64,10 +64,14 @@ public class BookmarkableListenerRequestHandler
 		this(pageComponentProvider, null);
 	}
 
-	public boolean includeRenderCount() {
-		if (behaviorIndex == null) {
+	public boolean includeRenderCount()
+	{
+		if (behaviorIndex == null)
+		{
 			return ((IRequestListener)getComponent()).rendersPage();
-		} else {
+		}
+		else
+		{
 			return ((IRequestListener)getComponent().getBehaviorById(getBehaviorIndex())).rendersPage();
 		}
 	}

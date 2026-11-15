@@ -38,13 +38,15 @@ public class ProgressUpdater
 	/**
 	 * Marks a page as a listener to task progress.
 	 */
-	public interface ITaskProgressListener {
+	public interface ITaskProgressListener
+	{
 
 	}
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProgressUpdater.class);
 
-	public static ProgressUpdateTask start(Application application, String session, ScheduledExecutorService scheduledExecutorService)
+	public static ProgressUpdateTask start(Application application, String session,
+		ScheduledExecutorService scheduledExecutorService)
 	{
 		// create an asynchronous task that will write the data to the client
 		ProgressUpdateTask progressUpdateTask = new ProgressUpdateTask(application, session);
@@ -112,23 +114,23 @@ public class ProgressUpdater
 			{
 				try
 				{
-					WebSocketPushBroadcaster broadcaster =
-							new WebSocketPushBroadcaster(webSocketSettings.getConnectionRegistry());
+					WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(webSocketSettings
+						.getConnectionRegistry());
 
 					if (canceled)
 					{
 						canceled = false;
 						running = false;
-						broadcaster.broadcastAllMatchingFilter(application, (sessionId, key) ->
-								ProgressUpdateTask.this.sessionId.equals(sessionId) && key instanceof PageIdKey
-										&& ITaskProgressListener.class.isAssignableFrom(getPageClass(application, key)),
-								new TaskCanceled());
+						broadcaster.broadcastAllMatchingFilter(application, (sessionId,
+							key) -> ProgressUpdateTask.this.sessionId.equals(sessionId) && key instanceof PageIdKey
+								&& ITaskProgressListener.class.isAssignableFrom(getPageClass(application, key)),
+							new TaskCanceled());
 						return;
 					}
-					broadcaster.broadcastAllMatchingFilter(application, (sessionId, key) ->
-							ProgressUpdateTask.this.sessionId.equals(sessionId) && key instanceof PageIdKey &&
-									ITaskProgressListener.class.isAssignableFrom(getPageClass(application, key)),
-							new ProgressUpdate(progress));
+					broadcaster.broadcastAllMatchingFilter(application, (sessionId,
+						key) -> ProgressUpdateTask.this.sessionId.equals(sessionId) && key instanceof PageIdKey &&
+							ITaskProgressListener.class.isAssignableFrom(getPageClass(application, key)),
+						new ProgressUpdate(progress));
 
 					// sleep for a while to simulate work
 					TimeUnit.SECONDS.sleep(1);
@@ -148,23 +150,30 @@ public class ProgressUpdater
 			running = false;
 		}
 
-		protected Class<?> getPageClass(Application application, IKey iKey) {
-			try {
+		protected Class<?> getPageClass(Application application, IKey iKey)
+		{
+			try
+			{
 				return application.getApplicationSettings().getClassResolver().resolveClass(iKey.getContext());
-			} catch (ClassNotFoundException e) {
+			}
+			catch (ClassNotFoundException e)
+			{
 				throw new WicketRuntimeException(e);
 			}
 		}
 
-		public boolean isRunning() {
+		public boolean isRunning()
+		{
 			return running;
 		}
 
-		public boolean isCanceled() {
+		public boolean isCanceled()
+		{
 			return canceled;
 		}
 
-		public void cancel() {
+		public void cancel()
+		{
 			this.canceled = true;
 			this.running = false;
 		}

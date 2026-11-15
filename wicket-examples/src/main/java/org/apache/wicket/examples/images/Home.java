@@ -127,7 +127,7 @@ public final class Home extends WicketExamplePage
 		picture.add(image3);
 		this.add(picture);
 
-		add(new InlineImage("inline", new PackageResourceReference(getClass(),"Image2.gif")));
+		add(new InlineImage("inline", new PackageResourceReference(getClass(), "Image2.gif")));
 	}
 
 	/**

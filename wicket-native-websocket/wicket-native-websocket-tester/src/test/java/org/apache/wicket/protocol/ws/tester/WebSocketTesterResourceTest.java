@@ -40,9 +40,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class WebSocketTesterResourceTest
 {
 	private static final String EXPECTED_TEXT = "expected text";
-	private static final byte[] EXPECTED_BINARY = new byte[] {1, 2, 3};
-	private static final int    EXPECTED_OFFSET = 1;
-	private static final int    EXPECTED_LENGTH = 1;
+	private static final byte[] EXPECTED_BINARY = new byte[] { 1, 2, 3 };
+	private static final int EXPECTED_OFFSET = 1;
+	private static final int EXPECTED_LENGTH = 1;
 
 	private static final AtomicBoolean ON_OUT_TEXT_CALLED = new AtomicBoolean(false);
 	private static final AtomicBoolean ON_OUT_BINARY_CALLED = new AtomicBoolean(false);
@@ -64,10 +64,10 @@ public class WebSocketTesterResourceTest
 				super.init();
 
 				getSharedResources().add(TestWebSocketResource.TEXT,
-						new TestWebSocketResource(EXPECTED_TEXT));
+					new TestWebSocketResource(EXPECTED_TEXT));
 
 				getSharedResources().add(TestWebSocketResource.BINARY,
-						new TestWebSocketResource(EXPECTED_BINARY, EXPECTED_OFFSET, EXPECTED_LENGTH));
+					new TestWebSocketResource(EXPECTED_BINARY, EXPECTED_OFFSET, EXPECTED_LENGTH));
 			}
 		};
 		tester = new WicketTester(application);

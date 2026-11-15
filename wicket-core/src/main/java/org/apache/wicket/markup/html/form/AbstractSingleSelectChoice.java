@@ -271,7 +271,7 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	{
 		final IModel<? extends List<? extends T>> choices = getChoicesModel();
 		final IChoiceRenderer<? super T> renderer = getChoiceRenderer();
-		T object = (T) renderer.getObject(id, choices);
+		T object = (T)renderer.getObject(id, choices);
 		return object;
 	}
 

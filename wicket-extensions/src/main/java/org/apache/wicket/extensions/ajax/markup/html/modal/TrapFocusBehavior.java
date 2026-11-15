@@ -41,7 +41,7 @@ public class TrapFocusBehavior extends Behavior
 	public static final String CSS_CURRENT_KEY = CssUtils.key(TrapFocusBehavior.class, "current");
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final ResourceReference JS = new JavaScriptResourceReference(
 		TrapFocusBehavior.class, "trap-focus.js");
 
@@ -49,12 +49,12 @@ public class TrapFocusBehavior extends Behavior
 	public void renderHead(Component component, IHeaderResponse response)
 	{
 		response.render(JavaScriptHeaderItem.forReference(JS));
-		
+
 		String styleClass = component.getString(CSS_CURRENT_KEY, null, "current-focus-trap");
-		
+
 		CharSequence script = String.format("Wicket.trapFocus('%s', '%s');", component.getMarkupId(),
 			JavaScriptUtils.escapeQuotes(styleClass));
-		
+
 		response.render(new PriorityHeaderItem(OnDomReadyHeaderItem.forScript(script)));
 	}
 }

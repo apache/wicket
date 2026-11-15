@@ -61,9 +61,9 @@ import org.apache.wicket.util.visit.IVisitor;
 public class FormTester
 {
 	private static final String NO_FORM_FOR_PATH = "No Form component found for path '%s'. Check if path value is correct and "
-	        + "if form component is visible and active.";
+		+ "if form component is visible and active.";
 
-    /**
+	/**
 	 * An auto incrementing index used as a suffix for MultiFileUploadField's inputName
 	 */
 	private int multiFileUploadIndex = 0;
@@ -386,7 +386,7 @@ public class FormTester
 	{
 		this.workingForm = Objects.requireNonNull(workingForm, String.format(NO_FORM_FOR_PATH, path));
 		this.tester = wicketTester;
-	    this.path = path;
+		this.path = path;
 
 		// fill blank String for Text Component.
 		workingForm.visitFormComponents(new IVisitor<FormComponent<?>, Void>()
@@ -510,7 +510,8 @@ public class FormTester
 		ChoiceSelector choiceSelector = choiceSelectorFactory.create(component);
 		choiceSelector.doSelect(index);
 
-		for (FormComponentUpdatingBehavior updater : component.getBehaviors(FormComponentUpdatingBehavior.class)) {
+		for (FormComponentUpdatingBehavior updater : component.getBehaviors(FormComponentUpdatingBehavior.class))
+		{
 			tester.invokeListener(component, updater);
 		}
 
@@ -561,7 +562,8 @@ public class FormTester
 			setValue(formComponentId, "");
 		}
 
-		ChoiceSelector choiceSelector = choiceSelectorFactory.createForMultiple((FormComponent<?>)workingForm.get(formComponentId));
+		ChoiceSelector choiceSelector = choiceSelectorFactory.createForMultiple((FormComponent<?>)workingForm.get(
+			formComponentId));
 
 		for (int index : indexes)
 		{
@@ -659,7 +661,8 @@ public class FormTester
 		}
 		else if (formComponent instanceof MultiFileUploadField)
 		{
-			String inputName = formComponent.getInputName() + MultiFileUploadField.MAGIC_SEPARATOR + multiFileUploadIndex++;
+			String inputName = formComponent.getInputName() + MultiFileUploadField.MAGIC_SEPARATOR
+				+ multiFileUploadIndex++;
 			servletRequest.addFile(inputName, file, contentType);
 		}
 		else

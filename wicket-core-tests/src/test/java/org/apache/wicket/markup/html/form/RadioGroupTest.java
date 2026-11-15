@@ -56,14 +56,16 @@ class RadioGroupTest extends WicketTestCase
 			.setParameterValue(page.group.getInputName(), page.radio1.getValue());
 		tester.submitForm(page.form);
 
-		assertEquals("radio1", model.getObject(), "group: running with choice1 selected - model must be set to value of radio1");
+		assertEquals("radio1", model.getObject(),
+			"group: running with choice1 selected - model must be set to value of radio1");
 
 		tester.getRequest()
 			.getPostParameters()
 			.setParameterValue(page.group.getInputName(), page.radio2.getValue());
 		tester.submitForm(page.form);
 
-		assertEquals("radio2", model.getObject(), "group: running with choice2 selected - model must be set to value of radio2");
+		assertEquals("radio2", model.getObject(),
+			"group: running with choice2 selected - model must be set to value of radio2");
 
 		tester.getRequest()
 			.getPostParameters()

@@ -34,7 +34,8 @@ class PageWithRepeater extends WebPage implements IMarkupResourceStreamProvider
 {
 	PageWithRepeater()
 	{
-		add(new ListView<String>("listView", Arrays.asList("one", "two")) {
+		add(new ListView<String>("listView", Arrays.asList("one", "two"))
+		{
 
 			@Override
 			protected void populateItem(ListItem<String> item)
@@ -47,6 +48,7 @@ class PageWithRepeater extends WebPage implements IMarkupResourceStreamProvider
 	@Override
 	public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 	{
-		return new StringResourceStream("<html><body><div wicket:id='listView'><span wicket:id='label'></span></div></body></html>");
+		return new StringResourceStream(
+			"<html><body><div wicket:id='listView'><span wicket:id='label'></span></div></body></html>");
 	}
 }

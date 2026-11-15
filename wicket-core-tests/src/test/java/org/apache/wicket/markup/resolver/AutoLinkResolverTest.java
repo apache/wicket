@@ -69,7 +69,8 @@ class AutoLinkResolverTest extends WicketTestCase
 	}
 
 	@Test
-	void testNonceIsPresentForAutoLinkLocalizedResource() {
+	void testNonceIsPresentForAutoLinkLocalizedResource()
+	{
 		PageWithAutoLinkedLocalResource instance = new PageWithAutoLinkedLocalResource();
 
 		var settings = tester.getApplication().getCspSettings();

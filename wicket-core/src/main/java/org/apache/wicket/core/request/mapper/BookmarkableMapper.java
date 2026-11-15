@@ -169,19 +169,19 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		}
 		// baseUrl = 'wicket/bookmarkable/com.example.SomePage[?...]', requestUrl = 'bookmarkable/com.example.SomePage'
 		else if (baseUrl.getSegments().size() == 3 && urlStartsWith(baseUrl, namespace, bookmarkableIdentifier)
-				&& segmentsSize >= 2 && urlStartsWithAndHasPageClass(url, bookmarkableIdentifier))
+			&& segmentsSize >= 2 && urlStartsWithAndHasPageClass(url, bookmarkableIdentifier))
 		{
 			matches = true;
 		}
 		// baseUrl = 'bookmarkable/com.example.SomePage', requestUrl = 'bookmarkable/com.example.SomePage'
 		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, bookmarkableIdentifier)
-				&& segmentsSize == 2 && urlStartsWithAndHasPageClass(url, bookmarkableIdentifier))
+			&& segmentsSize == 2 && urlStartsWithAndHasPageClass(url, bookmarkableIdentifier))
 		{
 			matches = true;
 		}
 		// baseUrl = 'wicket/page[?...]', requestUrl = 'bookmarkable/com.example.SomePage'
 		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, namespace, pageIdentifier)
-				&& segmentsSize >= 2 && urlStartsWithAndHasPageClass(url, bookmarkableIdentifier))
+			&& segmentsSize >= 2 && urlStartsWithAndHasPageClass(url, bookmarkableIdentifier))
 		{
 			matches = true;
 		}

@@ -78,7 +78,7 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 	public FilePageStore(String applicationName, File fileStoreFolder, Bytes maxSizePerSession)
 	{
 		super(applicationName);
-		
+
 		this.folders = new NestedFolders(new File(fileStoreFolder, applicationName + "-filestore"));
 		this.maxSizePerSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
 	}
@@ -319,7 +319,7 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		try
 		{
 			UserDefinedFileAttributeView view = getAttributeView(file);
-			
+
 			ByteBuffer buffer = ByteBuffer.allocate(view.size(ATTRIBUTE_PAGE_TYPE));
 			view.read(ATTRIBUTE_PAGE_TYPE, buffer);
 			buffer.flip();

@@ -50,7 +50,7 @@ class ValidatorStringResourceLoaderTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4379
 	 */
 	@Test
-    void interfaceValidator()
+	void interfaceValidator()
 	{
 		tester.startPage(new ValidatorLoaderPage(new InterfaceValidator()));
 		FormTester formTester = tester.newFormTester("form");
@@ -67,7 +67,7 @@ class ValidatorStringResourceLoaderTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4379
 	 */
 	@Test
-    void classValidator()
+	void classValidator()
 	{
 		tester.startPage(new ValidatorLoaderPage(new ClassValidator()));
 		FormTester formTester = tester.newFormTester("form");
@@ -76,9 +76,9 @@ class ValidatorStringResourceLoaderTest extends WicketTestCase
 
 		tester.assertErrorMessages("Class error loaded OK");
 	}
-	
+
 	@Test
-    void formValidator()
+	void formValidator()
 	{
 		tester.startPage(new FormValidatorPage());
 		FormTester formTester = tester.newFormTester("form");
@@ -87,7 +87,7 @@ class ValidatorStringResourceLoaderTest extends WicketTestCase
 		formTester.submit();
 		tester.assertErrorMessages("Form Validator loaded OK");
 	}
-	
+
 	private static class ValidatorLoaderPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private ValidatorLoaderPage(IValidator<String> validator)
@@ -103,7 +103,8 @@ class ValidatorStringResourceLoaderTest extends WicketTestCase
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
-			return new StringResourceStream("<html><body><form wicket:id='form'><input type='password' wicket:id='passwd' /></form></body></html>");
+			return new StringResourceStream(
+				"<html><body><form wicket:id='form'><input type='password' wicket:id='passwd' /></form></body></html>");
 		}
 	}
 
@@ -128,7 +129,7 @@ class ValidatorStringResourceLoaderTest extends WicketTestCase
 			validatable.error(error);
 		}
 	}
-	
+
 	private static class FormValidatorPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private FormValidatorPage()
@@ -141,17 +142,18 @@ class ValidatorStringResourceLoaderTest extends WicketTestCase
 			TextField<String> field1 = new TextField<String>("field1");
 			TextField<String> field2 = new TextField<String>("field2");
 			form.add(field1, field2);
-			
+
 			form.add(new FormValidator(field1, field2));
 		}
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
-			return new StringResourceStream("<html><body><form wicket:id='form'><input wicket:id='field1'/><input wicket:id='field2'/></form></body></html>");
+			return new StringResourceStream(
+				"<html><body><form wicket:id='form'><input wicket:id='field1'/><input wicket:id='field2'/></form></body></html>");
 		}
 	}
-	
+
 	private static class FormValidator implements IFormValidator
 	{
 		private final FormComponent<?> fc1;
@@ -162,11 +164,11 @@ class ValidatorStringResourceLoaderTest extends WicketTestCase
 			this.fc1 = fc1;
 			this.fc2 = fc2;
 		}
-		
+
 		@Override
 		public FormComponent<?>[] getDependentFormComponents()
 		{
-			return new FormComponent<?>[] {fc1, fc2};
+			return new FormComponent<?>[] { fc1, fc2 };
 		}
 
 		@Override
@@ -178,7 +180,7 @@ class ValidatorStringResourceLoaderTest extends WicketTestCase
 			}
 		}
 	}
-	
+
 	private static class FormValidatorEntity
 	{
 		private String field1;

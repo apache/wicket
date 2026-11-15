@@ -64,16 +64,17 @@ public class PersistedPanel extends GenericPanel<IPersistentPageStore>
 
 		final Label storeLabel = new Label("store", () -> {
 			IPersistentPageStore s = getModelObject();
-			
-			if (s == null) {
+
+			if (s == null)
+			{
 				return "N/A";
 			}
-			
+
 			return String.format("%s - %s", s.getClass().getName(), s.getTotalSize());
 		});
 		storeLabel.setOutputMarkupId(true);
 		add(storeLabel);
-		
+
 		final DropDownChoice<String> sessionsSelector = createSessionsSelector("sessions");
 		sessionsSelector.setOutputMarkupId(true);
 		add(sessionsSelector);
@@ -121,7 +122,8 @@ public class PersistedPanel extends GenericPanel<IPersistentPageStore>
 			}
 		});
 
-		add(new AbstractAjaxTimerBehavior(Duration.ofSeconds(5)) {
+		add(new AbstractAjaxTimerBehavior(Duration.ofSeconds(5))
+		{
 
 			@Override
 			protected void onTimer(AjaxRequestTarget target)
@@ -143,12 +145,13 @@ public class PersistedPanel extends GenericPanel<IPersistentPageStore>
 	private String getCurrentSessionIdentifier()
 	{
 		IPersistentPageStore store = getModelObject();
-		if (store == null) {
+		if (store == null)
+		{
 			return null;
 		}
 
 		IPageContext context = new DefaultPageContext();
-		
+
 		return store.getSessionIdentifier(context);
 	}
 
@@ -161,7 +164,8 @@ public class PersistedPanel extends GenericPanel<IPersistentPageStore>
 		columns.add(new AbstractColumn<IPersistedPage, String>(Model.of("Id"), "pageId")
 		{
 			@Override
-			public void populateItem(Item<ICellPopulator<IPersistedPage>> cellItem, String componentId, IModel<IPersistedPage> rowModel)
+			public void populateItem(Item<ICellPopulator<IPersistedPage>> cellItem, String componentId,
+				IModel<IPersistedPage> rowModel)
 			{
 				cellItem.add(new Link<IPersistedPage>(componentId, rowModel)
 				{
@@ -169,16 +173,16 @@ public class PersistedPanel extends GenericPanel<IPersistentPageStore>
 					protected void onComponentTag(ComponentTag tag)
 					{
 						tag.setName("a");
-						
+
 						super.onComponentTag(tag);
 					}
-					
+
 					@Override
 					public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 					{
 						replaceComponentTagBody(markupStream, openTag, "" + getModelObject().getPageId());
 					}
-					
+
 					@Override
 					public void onClick()
 					{

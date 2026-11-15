@@ -187,8 +187,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	/**
 	 * The decorator this application uses to decorate any header responses created by Wicket
 	 */
-	private HeaderResponseDecoratorCollection headerResponseDecorators =
-		new HeaderResponseDecoratorCollection();
+	private HeaderResponseDecoratorCollection headerResponseDecorators = new HeaderResponseDecoratorCollection();
 
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
@@ -513,9 +512,12 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	@Override
 	public final <T> Application setMetaData(final MetaDataKey<T> key, final T object)
 	{
-		if (object == null) {
+		if (object == null)
+		{
 			metaData.remove(key);
-		} else {
+		}
+		else
+		{
 			metaData.put(key, object);
 		}
 		return this;
@@ -561,7 +563,8 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 		}
 
 		final ServiceLoader<IInitializer> serviceLoaderInitializers = ServiceLoader.load(IInitializer.class);
-		for (IInitializer serviceLoaderInitializer : serviceLoaderInitializers) {
+		for (IInitializer serviceLoaderInitializer : serviceLoaderInitializers)
+		{
 			log.info("[{}] init: {}", getName(), serviceLoaderInitializer);
 			serviceLoaderInitializer.init(this);
 			initializers.add(serviceLoaderInitializer);
@@ -678,7 +681,8 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 		return exceptionMapperProvider;
 	}
 
-	public void setExceptionMapperProvider(Supplier<IExceptionMapper> exceptionMapperProvider) {
+	public void setExceptionMapperProvider(Supplier<IExceptionMapper> exceptionMapperProvider)
+	{
 		this.exceptionMapperProvider = Args.notNull(exceptionMapperProvider, "exceptionMapperProvider");
 	}
 
@@ -923,7 +927,8 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	/**
 	 * @return collection of application's on-component-tag listeners
 	 */
-	public final OnComponentTagListenerCollection getOnComponentTagListeners() {
+	public final OnComponentTagListenerCollection getOnComponentTagListeners()
+	{
 		return onComponentTagListeners;
 	}
 
@@ -1582,7 +1587,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 			{
 				internalGetPageManager().end();
 			}
-			
+
 			@Override
 			public void onDetach(final RequestCycle requestCycle)
 			{
@@ -1608,7 +1613,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	{
 		return headerResponseDecorators;
 	}
-	
+
 	/**
 	 * INTERNAL METHOD - You shouldn't need to call this. This is called every time Wicket creates
 	 * an IHeaderResponse. It gives you the ability to incrementally add features to an

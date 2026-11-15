@@ -249,44 +249,44 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 		TestEmbeddedAjaxComponent page = new TestEmbeddedAjaxComponent();
 		tester.startPage(page);
 		assertEquals(2, page.renderHeadCount);
-		
+
 		tester.clickLink("container:updateTransparentContainer", true);
 		assertEquals(4, page.renderHeadCount);
 	}
-	
+
 	@Test
 	void updateAjaxUpdateOfContainerWithTransparentContainer() throws Exception
 	{
 		TestEmbeddedAjaxComponent page = new TestEmbeddedAjaxComponent();
 		tester.startPage(page);
 		assertEquals(2, page.renderHeadCount);
-		
+
 		tester.clickLink("container:updateContainer", true);
 		assertEquals(4, page.renderHeadCount);
 	}
-	
+
 	@Test
 	void nestedTransparentContainer() throws Exception
 	{
 		tester.startPage(TestEmbeddedTransparentMarkupContainer.class);
 		tester.assertRenderedPage(TestEmbeddedTransparentMarkupContainer.class);
-		
+
 		final Page page = tester.getLastRenderedPage();
 		final Component label = page.get("label");
-		
+
 		assertEquals(TestEmbeddedTransparentMarkupContainer.LABEL_MARKUP,
 			label.getMarkup().toString(true));
 	}
 
-    /**
-     * https://issues.apache.org/jira/browse/WICKET-6219
-     */
-    @Test
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6219
+	 */
+	@Test
 	void shouldAllowAFragmentIdConflictingToASibilingTagWicketId() throws Exception
-    {
-            tester.startPage(SubPageWithAFragment.class);
-            assertThat(tester.getLastResponseAsString(), containsString("content"));
-    }
+	{
+		tester.startPage(SubPageWithAFragment.class);
+		assertThat(tester.getLastResponseAsString(), containsString("content"));
+	}
 
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
@@ -384,11 +384,11 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 				"</body></html>");
 		}
 	}
-	
+
 	public static class TestEmbeddedAjaxComponent extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		int renderHeadCount = 0;
 
 		/** */
@@ -397,11 +397,13 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 			final WebMarkupContainer container = new WebMarkupContainer("container");
 			container.setOutputMarkupId(true);
 			add(container);
-			
-			final Component transparentContainer = new TransparentWebMarkupContainer("transparentContainer").setOutputMarkupId(true);
+
+			final Component transparentContainer = new TransparentWebMarkupContainer("transparentContainer")
+				.setOutputMarkupId(true);
 			container.add(transparentContainer);
-			
-			container.add(new AjaxLink<Void>("updateContainer"){
+
+			container.add(new AjaxLink<Void>("updateContainer")
+			{
 
 				@Override
 				public void internalRenderHead(HtmlHeaderContainer container)
@@ -410,16 +412,17 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 
 					renderHeadCount++;
 				}
-				
+
 				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
 					target.add(container);
 				}
-				
+
 			});
-			
-			container.add(new AjaxLink<Void>("updateTransparentContainer"){
+
+			container.add(new AjaxLink<Void>("updateTransparentContainer")
+			{
 
 				@Override
 				public void internalRenderHead(HtmlHeaderContainer container)
@@ -428,13 +431,13 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 
 					renderHeadCount++;
 				}
-				
+
 				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
 					target.add(transparentContainer);
 				}
-				
+
 			});
 		}
 
@@ -453,15 +456,15 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 				"</body></html>");
 		}
 	}
-	
+
 	public static class TestEmbeddedTransparentMarkupContainer extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		static final String LABEL_MARKUP = "<span wicket:id=\"label\"></span>";
-		
+
 		/** */
-        public TestEmbeddedTransparentMarkupContainer()
+		public TestEmbeddedTransparentMarkupContainer()
 		{
 			add(new TransparentWebMarkupContainer("outer"));
 			add(new TransparentWebMarkupContainer("inner"));
@@ -483,12 +486,12 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 		}
 	}
 	public static class PageWithAChildInsideATransparentContainer extends WebPage
-			implements
-				IMarkupResourceStreamProvider
+		implements
+			IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
 
-        public PageWithAChildInsideATransparentContainer(PageParameters parameters)
+		public PageWithAChildInsideATransparentContainer(PageParameters parameters)
 		{
 			super(parameters);
 			add(new TransparentWebMarkupContainer("wrapper"));
@@ -496,21 +499,21 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-				Class<?> containerClass)
+			Class<?> containerClass)
 		{
 			return new StringResourceStream("" + //
-					"<html><body>" + //
-					" <div wicket:id=\"wrapper\">" + //
-					"	<wicket:child/>" + //
-					" </div>" + //
-					"</body></html>");
+				"<html><body>" + //
+				" <div wicket:id=\"wrapper\">" + //
+				"	<wicket:child/>" + //
+				" </div>" + //
+				"</body></html>");
 		}
 	}
 	public static class SubPageWithAFragment extends PageWithAChildInsideATransparentContainer
 	{
 		private static final long serialVersionUID = 1L;
 
-        public SubPageWithAFragment(PageParameters parameters)
+		public SubPageWithAFragment(PageParameters parameters)
 		{
 			super(parameters);
 			Fragment fragment = new Fragment("header", "header", this);
@@ -519,17 +522,17 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-				Class<?> containerClass)
+			Class<?> containerClass)
 		{
 			if (PageWithAChildInsideATransparentContainer.class.equals(containerClass))
 				return super.getMarkupResourceStream(container, containerClass);
 			return new StringResourceStream("" + //
-					"<html><body>" + //
-					"<wicket:extend>" + //
-					"	<div wicket:id=\"header\"></div>" + //
-					"	<wicket:fragment wicket:id=\"header\">content</wicket:fragment>" + //
-					"</wicket:extend>" + //
-					"</body></html>");
+				"<html><body>" + //
+				"<wicket:extend>" + //
+				"	<div wicket:id=\"header\"></div>" + //
+				"	<wicket:fragment wicket:id=\"header\">content</wicket:fragment>" + //
+				"</wicket:extend>" + //
+				"</body></html>");
 		}
 	}
 }

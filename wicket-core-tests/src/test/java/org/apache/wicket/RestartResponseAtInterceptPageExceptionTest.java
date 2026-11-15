@@ -61,7 +61,7 @@ class RestartResponseAtInterceptPageExceptionTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-3836
 	 */
 	@Test
-    void redirectToBufferForNonVersionedPage()
+	void redirectToBufferForNonVersionedPage()
 	{
 		tester.startPage(tester.getApplication().getHomePage());
 

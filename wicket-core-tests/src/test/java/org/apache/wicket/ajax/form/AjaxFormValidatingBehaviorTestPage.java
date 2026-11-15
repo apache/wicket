@@ -54,7 +54,7 @@ public class AjaxFormValidatingBehaviorTestPage extends WebPage
 		input.setRequired(true);
 		form.add(input);
 	}
-	
+
 	private void addFormWithHiddenFeedbackPanel()
 	{
 		Form<Void> form = new Form<>("form2");
@@ -79,7 +79,7 @@ public class AjaxFormValidatingBehaviorTestPage extends WebPage
 		 * @param id
 		 * @param markupContainer 
 		 */
-        HiddenFeedbackPanel(String id, MarkupContainer markupContainer)
+		HiddenFeedbackPanel(String id, MarkupContainer markupContainer)
 		{
 			super(id, new ContainerFeedbackMessageFilter(markupContainer));
 			setOutputMarkupPlaceholderTag(true);

@@ -75,7 +75,7 @@ public class Page5 extends WicketExamplePage
 	 */
 	private String join(List<StringValue> values)
 	{
-	    StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		for (StringValue sv : values)
 		{
 			if (sb.length() > 0)

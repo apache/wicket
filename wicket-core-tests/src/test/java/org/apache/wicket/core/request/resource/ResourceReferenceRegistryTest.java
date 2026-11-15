@@ -77,7 +77,7 @@ class ResourceReferenceRegistryTest extends WicketTestCase
 		RRR registry = new RRR();
 		registry.setResourceReferenceFactory(null);
 		ResourceReference.Key key = new ResourceReference.Key(ResourceReferenceRegistryTest.class.getName(),
-				"a.css", null, null, null);
+			"a.css", null, null, null);
 		ResourceReference reference = registry.createDefaultResourceReference(key);
 		assertThat(reference, instanceOf(ResourceReference.class));
 		assertThat(reference.getResource(), instanceOf(CssPackageResource.class));
@@ -89,7 +89,7 @@ class ResourceReferenceRegistryTest extends WicketTestCase
 		RRR registry = new RRR();
 		registry.setResourceReferenceFactory(new LessResourceReferenceTest.LessResourceReferenceFactory());
 		ResourceReference.Key key = new ResourceReference.Key(ResourceReferenceRegistryTest.class.getName(),
-				"LessResourceReference.less", null, null, null);
+			"LessResourceReference.less", null, null, null);
 		ResourceReference reference = registry.createDefaultResourceReference(key);
 		assertThat(reference, instanceOf(LessResourceReferenceTest.LessResourceReference.class));
 		assertThat(reference.getResource(), instanceOf(LessResourceReferenceTest.LessPackageResource.class));
@@ -99,7 +99,8 @@ class ResourceReferenceRegistryTest extends WicketTestCase
 	{
 		// make it public for the test
 		@Override
-		public ResourceReference createDefaultResourceReference(ResourceReference.Key key) {
+		public ResourceReference createDefaultResourceReference(ResourceReference.Key key)
+		{
 			return super.createDefaultResourceReference(key);
 		}
 	}

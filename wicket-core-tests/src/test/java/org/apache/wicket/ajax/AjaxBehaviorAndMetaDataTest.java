@@ -32,7 +32,7 @@ class AjaxBehaviorAndMetaDataTest extends WicketTestCase
 {
 	/**	 */
 	@Test
-    void render()
+	void render()
 	{
 		tester.startPage(AjaxBehaviorAndMetaDataPage.class);
 		tester.assertRenderedPage(AjaxBehaviorAndMetaDataPage.class);

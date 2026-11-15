@@ -55,8 +55,7 @@ import java.util.Set;
  */
 public class CrossOriginOpenerPolicyConfiguration
 {
-	public enum CoopMode
-	{
+	public enum CoopMode {
 		UNSAFE_NONE("unsafe-none"),
 		SAME_ORIGIN("same-origin"),
 		SAME_ORIGIN_ALLOW_POPUPS("same-origin-allow-popups"),

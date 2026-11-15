@@ -132,7 +132,7 @@ class CollectionFormComponentTest extends WicketTestCase
 		Object object = new Object()
 		{
 			private Collection<String> internal = new ArrayList<>();
-			
+
 			public Collection<String> getStrings()
 			{
 				return internal;
@@ -160,7 +160,7 @@ class CollectionFormComponentTest extends WicketTestCase
 		Object object = new Object()
 		{
 			private Collection<String> internal = new ArrayList<>();
-			
+
 			public Collection<String> getStrings()
 			{
 				return internal;
@@ -185,7 +185,7 @@ class CollectionFormComponentTest extends WicketTestCase
 		Object object = new Object()
 		{
 			private List<String> internal = new ArrayList<>();
-			
+
 			public List<String> getStrings()
 			{
 				return Collections.unmodifiableList(internal);
@@ -215,7 +215,7 @@ class CollectionFormComponentTest extends WicketTestCase
 		Object object = new Object()
 		{
 			private Set<String> internal = new HashSet<>();
-			
+
 			public Set<String> getStrings()
 			{
 				return Collections.unmodifiableSet(internal);
@@ -243,7 +243,7 @@ class CollectionFormComponentTest extends WicketTestCase
 		Object object = new Object()
 		{
 			private Collection<String> internal = new ArrayList<>();
-			
+
 			public Collection<String> getStrings()
 			{
 				return Collections.unmodifiableCollection(internal);
@@ -295,7 +295,7 @@ class CollectionFormComponentTest extends WicketTestCase
 
 		};
 		FormComponent<Collection<String>> formComponent = new FormComponent<Collection<String>>(
-				"formComponent", model)
+			"formComponent", model)
 		{
 
 		};

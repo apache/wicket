@@ -29,7 +29,7 @@ class UtfPropertiesFilePropertiesLoaderTest extends WicketTestCase
 	 * Test encoding.
 	 */
 	@Test
-    void encoding()
+	void encoding()
 	{
 		tester.startPage(PageWithUTF8Properties.class);
 	}

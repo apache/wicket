@@ -28,14 +28,16 @@ public class WebSocketAbortedPayload extends WebSocketPayload<AbortedMessage>
 {
 	private final AbortedMessage message;
 
-	public WebSocketAbortedPayload(AbortedMessage message, WebSocketRequestHandler handler) {
+	public WebSocketAbortedPayload(AbortedMessage message, WebSocketRequestHandler handler)
+	{
 		super(handler);
 
 		this.message = message;
 	}
 
 	@Override
-	public AbortedMessage getMessage() {
+	public AbortedMessage getMessage()
+	{
 		return message;
 	}
 }

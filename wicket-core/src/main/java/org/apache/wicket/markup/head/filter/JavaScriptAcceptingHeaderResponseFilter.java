@@ -49,9 +49,8 @@ public class JavaScriptAcceptingHeaderResponseFilter extends AbstractHeaderRespo
 	protected boolean acceptsWrapped(HeaderItem item)
 	{
 		return (item instanceof JavaScriptHeaderItem ||
-				item instanceof OnDomReadyHeaderItem ||
-				item instanceof OnLoadHeaderItem     ||
-				item instanceof OnEventHeaderItem
-		);
+			item instanceof OnDomReadyHeaderItem ||
+			item instanceof OnLoadHeaderItem ||
+			item instanceof OnEventHeaderItem);
 	}
 }

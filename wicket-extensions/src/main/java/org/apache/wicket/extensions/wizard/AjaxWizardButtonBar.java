@@ -103,7 +103,7 @@ public class AjaxWizardButtonBar extends WizardButtonBar
 
 				button.onError();
 			}
-			
+
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{

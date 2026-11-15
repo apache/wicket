@@ -339,8 +339,8 @@ public class CryptoMapper implements IRequestMapperDelegate
 			{
 				it.remove();
 				String encryptedParameterValue = getCrypt().encryptUrlSafe(qp.getName());
-				Url.QueryParameter encryptedParameter
-					= new Url.QueryParameter(ENCRYPTED_PAGE_COMPONENT_INFO_PARAMETER, encryptedParameterValue);
+				Url.QueryParameter encryptedParameter = new Url.QueryParameter(ENCRYPTED_PAGE_COMPONENT_INFO_PARAMETER,
+					encryptedParameterValue);
 				encryptedUrl.getQueryParameters().add(0, encryptedParameter);
 				encrypted = true;
 				break;

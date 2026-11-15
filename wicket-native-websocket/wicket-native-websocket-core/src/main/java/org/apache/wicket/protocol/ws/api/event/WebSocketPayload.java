@@ -32,7 +32,7 @@ public abstract class WebSocketPayload<T>
 	{
 		this.handler = Args.notNull(handler, "handler");
 	}
-	
+
 	public abstract T getMessage();
 
 	public final WebSocketRequestHandler getHandler()

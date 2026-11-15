@@ -67,7 +67,7 @@ public class KeyInSessionSunJceCryptFactory extends AbstractKeyInSessionCryptFac
 				// Initialize and add a security provider required for encryption
 				final Class<?> clazz = Class.forName("com.sun.crypto.provider.SunJCE");
 
-				final Provider provider = (Provider) clazz.getDeclaredConstructor().newInstance();
+				final Provider provider = (Provider)clazz.getDeclaredConstructor().newInstance();
 				Security.addProvider(provider);
 			}
 			catch (Exception ex)
@@ -80,32 +80,32 @@ public class KeyInSessionSunJceCryptFactory extends AbstractKeyInSessionCryptFac
 	@Override
 	protected CryptData generateKey(Session session)
 	{
-	    // generate new salt
-        byte[] salt = SunJceCrypt.randomSalt();
-        
-	    // generate new key
-        String key = session.getId() + "." + UUID.randomUUID().toString();
-        
-        return new CryptData(key, salt);
+		// generate new salt
+		byte[] salt = SunJceCrypt.randomSalt();
+
+		// generate new key
+		String key = session.getId() + "." + UUID.randomUUID().toString();
+
+		return new CryptData(key, salt);
 	}
-	
+
 	@Override
 	protected ICrypt createCrypt(CryptData keyParams)
 	{
-	    SunJceCrypt crypt = new SunJceCrypt(cryptMethod, keyParams.salt, 1000);
-        crypt.setKey(keyParams.key);
-        
-        return crypt;
+		SunJceCrypt crypt = new SunJceCrypt(cryptMethod, keyParams.salt, 1000);
+		crypt.setKey(keyParams.key);
+
+		return crypt;
 	}
 
-    static final class CryptData implements IClusterable
+	static final class CryptData implements IClusterable
 	{
-        private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
 
-        final String key;
-		
+		final String key;
+
 		final byte[] salt;
-		
+
 		CryptData(String key, byte[] salt)
 		{
 			this.key = key;

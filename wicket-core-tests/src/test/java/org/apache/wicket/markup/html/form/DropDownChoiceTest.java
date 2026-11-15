@@ -33,7 +33,7 @@ class DropDownChoiceTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@BeforeEach
-    void before() throws Exception
+	void before() throws Exception
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 	}
@@ -44,7 +44,7 @@ class DropDownChoiceTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void nullWithNullValidFalse() throws Exception
+	void nullWithNullValidFalse() throws Exception
 	{
 		executeTest(new DropDownChoiceTestPage(null, false),
 			"DropDownChoiceTestPage_null_false_expected.html");
@@ -56,7 +56,7 @@ class DropDownChoiceTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void nullWithNullValidTrue() throws Exception
+	void nullWithNullValidTrue() throws Exception
 	{
 		executeTest(new DropDownChoiceTestPage(null, true),
 			"DropDownChoiceTestPage_null_true_expected.html");
@@ -68,7 +68,7 @@ class DropDownChoiceTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void nonNullWithNullValidFalse() throws Exception
+	void nonNullWithNullValidFalse() throws Exception
 	{
 		executeTest(new DropDownChoiceTestPage("A", false),
 			"DropDownChoiceTestPage_A_false_expected.html");
@@ -80,7 +80,7 @@ class DropDownChoiceTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void nonNullWithNullValidTrue() throws Exception
+	void nonNullWithNullValidTrue() throws Exception
 	{
 		executeTest(new DropDownChoiceTestPage("A", true),
 			"DropDownChoiceTestPage_A_true_expected.html");

@@ -220,7 +220,7 @@ class AjaxCallbackFunctionTest extends WicketTestCase
 			//
 			"function (event,ui) {\n" //
 				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.1-\"," //
-					+ "\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
+				+ "\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
 				+ "var params = [{\"name\":\"sortIndex\",\"value\":$(this).find(':data(sortable-item)').index(ui.item)}," //
 				+ "{\"name\":\"sortItemId\",\"value\":$(ui.item).attr('id')}," //
 				+ "{\"name\":\"sortSenderId\",\"value\":$(ui.sender).attr('id')}];\n" //

@@ -27,35 +27,36 @@ import org.apache.wicket.model.IWrapModel;
 final class ValidationModelResolver
 {
 
-    /**
-     * Lookup for property-aware model, attached to certain form component.
-     *
-     * @param component
-     *              form component
-     *
-     * @return property-aware model, extracted from supplied component or <code>null</code>
-     */
-    public static IPropertyReflectionAwareModel<?> resolvePropertyModelFrom(FormComponent<?> component)
-    {
-        IModel<?> model = component.getModel();
-        while (model != null) {
-            if (model instanceof IPropertyReflectionAwareModel)
-            {
-                return (IPropertyReflectionAwareModel<?>) model;
-            }
-            if (model instanceof IWrapModel<?>)
-            {
-                model = ((IWrapModel<?>)model).getWrappedModel();
-                continue;
-            }
-            break; // not model found
-        }
-        return null;
-    }
+	/**
+	 * Lookup for property-aware model, attached to certain form component.
+	 *
+	 * @param component
+	 *              form component
+	 *
+	 * @return property-aware model, extracted from supplied component or <code>null</code>
+	 */
+	public static IPropertyReflectionAwareModel<?> resolvePropertyModelFrom(FormComponent<?> component)
+	{
+		IModel<?> model = component.getModel();
+		while (model != null)
+		{
+			if (model instanceof IPropertyReflectionAwareModel)
+			{
+				return (IPropertyReflectionAwareModel<?>)model;
+			}
+			if (model instanceof IWrapModel<?>)
+			{
+				model = ((IWrapModel<?>)model).getWrappedModel();
+				continue;
+			}
+			break; // not model found
+		}
+		return null;
+	}
 
-    private ValidationModelResolver()
-    {
-        // nop
-    }
+	private ValidationModelResolver()
+	{
+		// nop
+	}
 
 }

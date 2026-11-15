@@ -60,7 +60,7 @@ class InnerFeedbackTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-    void innerFeedback()
+	void innerFeedback()
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 		tester.startPage(HomePage.class);

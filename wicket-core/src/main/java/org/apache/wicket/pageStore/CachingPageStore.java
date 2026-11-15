@@ -37,7 +37,7 @@ public class CachingPageStore extends DelegatingPageStore
 	public CachingPageStore(IPageStore delegate, IPageStore cache)
 	{
 		super(delegate);
-		
+
 		this.cache = cache;
 	}
 
@@ -58,10 +58,11 @@ public class CachingPageStore extends DelegatingPageStore
 	public IManageablePage getPage(IPageContext context, int id)
 	{
 		IManageablePage page = cache.getPage(context, id);
-		if (page != null) {
+		if (page != null)
+		{
 			return page;
 		}
-		
+
 		return getDelegate().getPage(context, id);
 	}
 
@@ -77,7 +78,7 @@ public class CachingPageStore extends DelegatingPageStore
 	public void removePage(IPageContext context, IManageablePage page)
 	{
 		cache.removePage(context, page);
-		
+
 		getDelegate().removePage(context, page);
 	}
 
@@ -88,20 +89,20 @@ public class CachingPageStore extends DelegatingPageStore
 
 		getDelegate().removeAllPages(context);
 	}
-	
+
 	@Override
 	public void revertPage(IPageContext context, IManageablePage page)
 	{
 		cache.revertPage(context, page);
-		
+
 		getDelegate().revertPage(context, page);
 	}
-	
+
 	@Override
 	public void detach(IPageContext context)
 	{
 		cache.detach(context);
-		
+
 		getDelegate().detach(context);
 	}
 
@@ -109,7 +110,7 @@ public class CachingPageStore extends DelegatingPageStore
 	public void destroy()
 	{
 		cache.destroy();
-		
+
 		getDelegate().destroy();
 	}
 }

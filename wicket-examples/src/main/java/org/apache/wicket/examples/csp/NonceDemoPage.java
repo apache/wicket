@@ -37,11 +37,11 @@ import org.apache.wicket.request.resource.ResourceReference;
 public class NonceDemoPage extends WicketExamplePage
 {
 
-	private static final ResourceReference JS_DELAYED =
-		new JavaScriptResourceReference(NonceDemoPage.class, "delayedVisible.js");
+	private static final ResourceReference JS_DELAYED = new JavaScriptResourceReference(NonceDemoPage.class,
+		"delayedVisible.js");
 
-	private static final ResourceReference CSS_DELAYED =
-		new CssResourceReference(NonceDemoPage.class, "delayedVisible.css");
+	private static final ResourceReference CSS_DELAYED = new CssResourceReference(NonceDemoPage.class,
+		"delayedVisible.css");
 
 	private final IModel<Integer> clickMeCountModel = Model.of(0);
 
@@ -71,7 +71,7 @@ public class NonceDemoPage extends WicketExamplePage
 		delayedVisible.setOutputMarkupPlaceholderTag(true);
 		delayedVisible.setVisible(false);
 		add(delayedVisible);
-		
+
 		WebMarkupContainer blacktext = new WebMarkupContainer("blacktext");
 		blacktext.setOutputMarkupId(true);
 		add(blacktext);
@@ -94,7 +94,7 @@ public class NonceDemoPage extends WicketExamplePage
 
 				delayedVisible.setVisible(true);
 				target.add(delayedVisible);
-				
+
 				blacktext.add(AttributeModifier.replace("style", "color: red"));
 				target.add(blacktext);
 			}

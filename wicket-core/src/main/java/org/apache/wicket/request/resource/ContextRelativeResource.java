@@ -86,14 +86,13 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 	{
 		return new WebExternalResourceStream(path);
 	}
-	
+
 	@Override
 	protected ResourceResponse newResourceResponse(final Attributes attributes)
 	{
 		final ResourceResponse resourceResponse = new ResourceResponse();
 
-		final WebExternalResourceStream webExternalResourceStream =
-			new WebExternalResourceStream(path);
+		final WebExternalResourceStream webExternalResourceStream = new WebExternalResourceStream(path);
 		resourceResponse.setContentType(webExternalResourceStream.getContentType());
 		resourceResponse.setLastModified(webExternalResourceStream.lastModifiedTime());
 		resourceResponse.setFileName(path);
@@ -109,7 +108,8 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 					{
 						Streams.copy(inputStream, attributes.getResponse().getOutputStream());
 					}
-					finally {
+					finally
+					{
 						IOUtils.closeQuietly(inputStream);
 					}
 				}

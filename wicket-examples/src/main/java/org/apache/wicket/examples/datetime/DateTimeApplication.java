@@ -29,12 +29,12 @@ public class DateTimeApplication extends WicketExampleApplication
 	protected void init()
 	{
 		super.init();
-		
+
 		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
 	}
 
 	@Override
-	public Class< ? extends Page> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return DateTimePage.class;
 	}

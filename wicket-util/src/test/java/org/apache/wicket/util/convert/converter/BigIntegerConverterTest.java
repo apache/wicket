@@ -65,7 +65,7 @@ public class BigIntegerConverterTest
 	{
 		BigIntegerConverter converter = new BigIntegerConverter();
 		BigInteger bigInteger = converter.convertToObject("1234567890987654321234567890987654321234567890987654321",
-				Locale.GERMAN);
+			Locale.GERMAN);
 		assertEquals("1234567890987654321234567890987654321234567890987654321", bigInteger.toString());
 	}
 
@@ -74,7 +74,7 @@ public class BigIntegerConverterTest
 	{
 		BigIntegerConverter converter = new BigIntegerConverter();
 		BigInteger bigInteger = converter.convertToObject("-1234567890987654321234567890987654321234567890987654321",
-				Locale.GERMAN);
+			Locale.GERMAN);
 		assertEquals("-1234567890987654321234567890987654321234567890987654321", bigInteger.toString());
 	}
 

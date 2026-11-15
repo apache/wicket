@@ -62,7 +62,8 @@ class DifferentPageCheckerTest extends WicketTestCase
 
 	private static class ComponentThatKeepsAReferenceToAnotherPage extends WebComponent
 	{
-		private final Component member = new WebComponent("inner") {
+		private final Component member = new WebComponent("inner")
+		{
 			private final Page anotherPage = new MockHomePage();
 		};
 

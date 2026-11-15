@@ -44,7 +44,7 @@ class ComponentNotOnPageTest extends WicketTestCase
 		// this should not fail
 		tester.clickLink("refresher", true);
 	}
-	
+
 	/**
 	 * Wicket should trigger an exception signaling the
 	 * error on the developers part that a component that is part of another page is being refreshed
@@ -57,13 +57,13 @@ class ComponentNotOnPageTest extends WicketTestCase
 
 		ComponentNotOnPage otherPage = new ComponentNotOnPage(notOnPage);
 		otherPage.add(notOnPage);
-		
+
 		ComponentNotOnPage page = tester.startPage(new ComponentNotOnPage(notOnPage));
 		tester.startPage(page);
 
-                assertThrows(IllegalArgumentException.class, () -> {
-                        tester.clickLink("refresher", true);
-                });
+		assertThrows(IllegalArgumentException.class, () -> {
+			tester.clickLink("refresher", true);
+		});
 	}
 }
 

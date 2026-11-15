@@ -23,7 +23,7 @@ import org.apache.wicket.markup.html.WebPage;
 public class EnclosureContainerPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	public EnclosureContainer container;
 
 	/**
@@ -33,10 +33,10 @@ public class EnclosureContainerPage extends WebPage
 	{
 		Label label = new Label("label");
 		label.setVisible(false);
-		
+
 		container = new EnclosureContainer("container", label);
 		add(container);
-		
+
 		container.add(label);
 	}
 }

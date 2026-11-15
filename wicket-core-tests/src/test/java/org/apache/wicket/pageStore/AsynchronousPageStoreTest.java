@@ -79,7 +79,8 @@ public class AsynchronousPageStoreTest
 		}
 
 		@Override
-		public void detach() {
+		public void detach()
+		{
 		}
 
 		@Override
@@ -93,19 +94,19 @@ public class AsynchronousPageStoreTest
 		{
 			try
 			{
-				return (DummyPage) super.clone();
+				return (DummyPage)super.clone();
 			}
 			catch (CloneNotSupportedException e)
 			{
 				throw new Error(e);
 			}
 		}
-		
+
 		public String toString()
 		{
 			return "DummyPage[pageId = " + pageId + ", writeMillis = " + writeMillis +
-					", readMillis = " + readMillis + ", sessionId = " + sessionId + ", hashCode = " +
-					hashCode() + "]";
+				", readMillis = " + readMillis + ", sessionId = " + sessionId + ", hashCode = " +
+				hashCode() + "]";
 		}
 	}
 
@@ -119,9 +120,10 @@ public class AsynchronousPageStoreTest
 	void storeReturnsSameInstanceOnClosePageRequest() throws InterruptedException
 	{
 		final Semaphore semaphore = new Semaphore(0);
-		
-		IPageStore store = new NoopPageStore() {
-			
+
+		IPageStore store = new NoopPageStore()
+		{
+
 			@Override
 			public synchronized void addPage(IPageContext context, IManageablePage page)
 			{
@@ -133,10 +135,10 @@ public class AsynchronousPageStoreTest
 				catch (InterruptedException e)
 				{
 				}
-				
+
 				super.addPage(context, page);
 			}
-			
+
 			@Override
 			public IManageablePage getPage(IPageContext context, int id)
 			{
@@ -148,9 +150,9 @@ public class AsynchronousPageStoreTest
 		IPageStore asyncPageStore = new AsynchronousPageStore(store, 100);
 
 		int pageId = 0;
-		
+
 		String sessionId = "sessionId";
-		
+
 		IPageContext context = new MockPageContext(sessionId);
 
 		SerializedPage page = new SerializedPage(pageId, "", new byte[0]);
@@ -161,7 +163,7 @@ public class AsynchronousPageStoreTest
 		semaphore.release();
 
 		assertEquals(page, pageBack);
-		
+
 		store.destroy();
 	}
 
@@ -175,17 +177,18 @@ public class AsynchronousPageStoreTest
 	void storeReturnsRestoredInstanceOnDistantPageRequest() throws InterruptedException
 	{
 		final Semaphore semaphore = new Semaphore(0);
-		
-		IPageStore store = new MockPageStore() {
-			
+
+		IPageStore store = new MockPageStore()
+		{
+
 			@Override
 			public synchronized void addPage(IPageContext context, IManageablePage page)
 			{
 				super.addPage(context, page);
-				
+
 				semaphore.release();
 			}
-			
+
 			@Override
 			public IManageablePage getPage(IPageContext context, int id)
 			{
@@ -196,9 +199,9 @@ public class AsynchronousPageStoreTest
 		IPageStore asyncPageStore = new AsynchronousPageStore(store, 100);
 
 		int pageId = 0;
-		
+
 		String sessionId = "sessionId";
-		
+
 		IPageContext context = new MockPageContext(sessionId);
 
 		SerializedPage page = new SerializedPage(pageId, "", new byte[0]);
@@ -217,7 +220,7 @@ public class AsynchronousPageStoreTest
 		semaphore.release();
 
 		assertEquals(page, pageBack);
-		
+
 		store.destroy();
 	}
 
@@ -231,9 +234,10 @@ public class AsynchronousPageStoreTest
 	{
 
 		final Semaphore semaphore = new Semaphore(0);
-		
-		IPageStore store = new NoopPageStore() {
-			
+
+		IPageStore store = new NoopPageStore()
+		{
+
 			@Override
 			public synchronized void addPage(IPageContext context, IManageablePage page)
 			{
@@ -245,7 +249,7 @@ public class AsynchronousPageStoreTest
 				{
 				}
 			}
-			
+
 			@Override
 			public IManageablePage getPage(IPageContext context, int id)
 			{
@@ -256,9 +260,9 @@ public class AsynchronousPageStoreTest
 		IPageStore asyncPageStore = new AsynchronousPageStore(store, 100);
 
 		int pageId = 0;
-		
+
 		String sessionId = "sessionId";
-		
+
 		IPageContext context = new MockPageContext(sessionId);
 
 		SerializedPage page = new SerializedPage(pageId, "", new byte[0]);
@@ -269,9 +273,9 @@ public class AsynchronousPageStoreTest
 
 		// clear the queue
 		asyncPageStore.removeAllPages(context);
-		
+
 		assertEquals(null, asyncPageStore.getPage(context, pageId));
-		
+
 		store.destroy();
 
 		semaphore.release();
@@ -294,7 +298,7 @@ public class AsynchronousPageStoreTest
 		int asyncPageStoreCapacity = pages * sessions;
 
 		List<Metrics> results = runTest(sessions, pages, writeMillis, readMillis,
-				asyncPageStoreCapacity);
+			asyncPageStoreCapacity);
 
 		for (Metrics metrics : results)
 			System.out.println(metrics);
@@ -324,7 +328,7 @@ public class AsynchronousPageStoreTest
 		// pages
 
 		List<Metrics> results = runTest(sessions, pages, writeMillis, readMillis,
-				asyncPageStoreCapacity);
+			asyncPageStoreCapacity);
 
 		for (Metrics metrics : results)
 			System.out.println(metrics);
@@ -351,11 +355,11 @@ public class AsynchronousPageStoreTest
 	private MetaDataKey<Serializable> KEY1 = new MetaDataKey<Serializable>()
 	{
 	};
-	
+
 	private MetaDataKey<Serializable> KEY2 = new MetaDataKey<Serializable>()
 	{
 	};
-	
+
 	/**
 	 * Store does not allow modifications when pages are added asynchronously.
 	 */
@@ -363,15 +367,16 @@ public class AsynchronousPageStoreTest
 	public void storeAsynchronousContextClosed() throws Throwable
 	{
 		final AtomicReference<Throwable> asyncFail = new AtomicReference<>();
-		
-		IPageStore store = new MockPageStore() {
-			
+
+		IPageStore store = new MockPageStore()
+		{
+
 			@Override
 			public boolean canBeAsynchronous(IPageContext context)
 			{
 				// can get session id
 				context.getSessionId(true);
-				
+
 				// can access request data
 				assertEquals("value1", context.getRequestData(KEY1, () -> "value1"));
 
@@ -383,42 +388,54 @@ public class AsynchronousPageStoreTest
 
 				return true;
 			}
-			
+
 			@Override
 			public synchronized void addPage(IPageContext context, IManageablePage page)
 			{
 				// can get session id
 				context.getSessionId(true);
-				
+
 				// cannot access request
-				try {
+				try
+				{
 					context.getRequestData(KEY1, () -> null);
 					asyncFail.set(new Exception().fillInStackTrace());
-				} catch (WicketRuntimeException expected) {
 				}
-				try {
+				catch (WicketRuntimeException expected)
+				{
+				}
+				try
+				{
 					context.getRequestData(KEY2, () -> null);
 					asyncFail.set(new Exception().fillInStackTrace());
-				} catch (WicketRuntimeException expected) {
+				}
+				catch (WicketRuntimeException expected)
+				{
 				}
 
 				// can read session data 
 				assertEquals("value1", context.getSessionData(KEY1, () -> "value2"));
 				assertEquals(null, context.getSessionData(KEY2, () -> null));
 				// .. but cannot set
-				try {
+				try
+				{
 					context.getSessionData(KEY2, () -> "value2");
 					asyncFail.set(new Exception().fillInStackTrace());
-				} catch (WicketRuntimeException expected) {
 				}
-				
+				catch (WicketRuntimeException expected)
+				{
+				}
+
 				// can read session attribute already read
 				assertEquals("value1", context.getSessionAttribute("key1", () -> null));
 				// .. but nothing new
-				try {
+				try
+				{
 					context.getSessionAttribute("key2", () -> null);
 					asyncFail.set(new Exception().fillInStackTrace());
-				} catch (WicketRuntimeException expected) {
+				}
+				catch (WicketRuntimeException expected)
+				{
 				}
 			}
 		};
@@ -426,18 +443,19 @@ public class AsynchronousPageStoreTest
 		IPageStore asyncPageStore = new AsynchronousPageStore(store, 100);
 
 		MockPage page = new MockPage();
-		
+
 		IPageContext context = new MockPageContext();
-		
-		asyncPageStore.addPage(context , page);
-		
+
+		asyncPageStore.addPage(context, page);
+
 		store.destroy();
-		
-		if (asyncFail.get() != null) {
+
+		if (asyncFail.get() != null)
+		{
 			throw asyncFail.get();
 		}
 	}
-	
+
 	// test run
 
 	private class Metrics
@@ -450,26 +468,27 @@ public class AsynchronousPageStoreTest
 		public String toString()
 		{
 			return "Metrics[storedPage = " + storedPage + ", storingMillis = " + storingMillis +
-					", restoredPage = " + restoredPage + ", restoringMillis = " + restoringMillis + "]";
+				", restoredPage = " + restoredPage + ", restoringMillis = " + restoringMillis + "]";
 		}
 	}
 
 	private List<Metrics> runTest(int sessions, int pages, long writeMillis, long readMillis,
-	                              int asyncPageStoreCapacity) throws InterruptedException
+		int asyncPageStoreCapacity) throws InterruptedException
 	{
 
 		List<Metrics> results = new ArrayList<>();
 
 		final CountDownLatch lock = new CountDownLatch(pages * sessions);
 
-		IPageStore pageStore = new InMemoryPageStore("test", Integer.MAX_VALUE) {
+		IPageStore pageStore = new InMemoryPageStore("test", Integer.MAX_VALUE)
+		{
 			@Override
 			public void addPage(IPageContext context, IManageablePage page)
 			{
-				DummyPage dummyPage = (DummyPage) page;
+				DummyPage dummyPage = (DummyPage)page;
 
 				super.addPage(context, dummyPage.clone());
-				
+
 				try
 				{
 					Thread.sleep(dummyPage.writeMillis);
@@ -478,14 +497,15 @@ public class AsynchronousPageStoreTest
 				{
 					throw new RuntimeException(e);
 				}
-				
+
 				lock.countDown();
 			}
-			
+
 			@Override
-			public IManageablePage getPage(IPageContext context, int id) {
-				DummyPage dummyPage = (DummyPage) super.getPage(context, id);
-				
+			public IManageablePage getPage(IPageContext context, int id)
+			{
+				DummyPage dummyPage = (DummyPage)super.getPage(context, id);
+
 				try
 				{
 					Thread.sleep(dummyPage.readMillis);
@@ -494,7 +514,7 @@ public class AsynchronousPageStoreTest
 				{
 					throw new RuntimeException(e);
 				}
-				
+
 				return dummyPage;
 			}
 		};
@@ -510,7 +530,7 @@ public class AsynchronousPageStoreTest
 				Metrics metrics = new Metrics();
 
 				DummyPage page = new DummyPage(pageId, around(writeMillis), around(readMillis),
-						sessionId);
+					sessionId);
 				final long startStoring = System.currentTimeMillis();
 				asyncPageStore.addPage(context, page);
 				metrics.storedPage = page;
@@ -518,7 +538,7 @@ public class AsynchronousPageStoreTest
 
 				final long startRestoring = System.currentTimeMillis();
 				metrics.restoredPage = DummyPage.class
-						.cast(asyncPageStore.getPage(context, pageId));
+					.cast(asyncPageStore.getPage(context, pageId));
 				metrics.restoringMillis = System.currentTimeMillis() - startRestoring;
 
 				results.add(metrics);
@@ -528,7 +548,7 @@ public class AsynchronousPageStoreTest
 		lock.await(pages * sessions * (writeMillis + readMillis), TimeUnit.MILLISECONDS);
 
 		pageStore.destroy();
-		
+
 		return results;
 	}
 

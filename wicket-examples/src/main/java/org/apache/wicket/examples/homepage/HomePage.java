@@ -34,15 +34,15 @@ public class HomePage extends WicketExamplePage
 	{
 		super();
 	}
-	
+
 	@Override
-	protected Panel buildHeader(String id) 
+	protected Panel buildHeader(String id)
 	{
 		return new HomePageHeader(id);
 	}
-	
+
 	@Override
-	protected boolean showSourceButton() 
+	protected boolean showSourceButton()
 	{
 		return false;
 	}

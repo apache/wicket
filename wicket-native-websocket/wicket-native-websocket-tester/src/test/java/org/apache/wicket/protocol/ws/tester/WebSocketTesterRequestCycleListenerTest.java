@@ -94,7 +94,8 @@ public class WebSocketTesterRequestCycleListenerTest
 		detachCalled.set(false);
 
 		// broadcasts WebSocket.ConnectedMessage and notifies the listeners
-		WebSocketTester webSocketTester = new WebSocketTester(tester, page) {
+		WebSocketTester webSocketTester = new WebSocketTester(tester, page)
+		{
 			@Override
 			protected void onOutMessage(String message)
 			{

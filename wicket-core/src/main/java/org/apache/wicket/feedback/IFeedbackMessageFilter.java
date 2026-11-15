@@ -46,7 +46,8 @@ public interface IFeedbackMessageFilter extends IClusterable, Predicate<Feedback
 	boolean accept(FeedbackMessage message);
 
 	@Override
-	default boolean test(FeedbackMessage message) {
+	default boolean test(FeedbackMessage message)
+	{
 		return accept(message);
 	}
 }

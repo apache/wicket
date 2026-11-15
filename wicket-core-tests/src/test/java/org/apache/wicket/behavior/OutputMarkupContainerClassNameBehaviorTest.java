@@ -25,54 +25,68 @@ import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
-class OutputMarkupContainerClassNameBehaviorTest extends WicketTestCase {
+class OutputMarkupContainerClassNameBehaviorTest extends WicketTestCase
+{
 
-    @Test
-    void whenDebugIsEnabledWithAttribute_thenRenderAttribute()
-    {
-        tester.getApplication().getDebugSettings().setOutputMarkupContainerClassNameStrategy(DebugSettings.ClassOutputStrategy.TAG_ATTRIBUTE);
+	@Test
+	void whenDebugIsEnabledWithAttribute_thenRenderAttribute()
+	{
+		tester.getApplication().getDebugSettings().setOutputMarkupContainerClassNameStrategy(
+			DebugSettings.ClassOutputStrategy.TAG_ATTRIBUTE);
 
-        MockPanelWithLink component = new MockPanelWithLink("test") {
-            @Override
-            protected void onLinkClick(AjaxRequestTarget target) {
+		MockPanelWithLink component = new MockPanelWithLink("test")
+		{
+			@Override
+			protected void onLinkClick(AjaxRequestTarget target)
+			{
 
-            }
-        };
-        tester.startComponentInPage(component);
+			}
+		};
+		tester.startComponentInPage(component);
 
-        assertTrue(tester.getLastResponseAsString().contains("<wicket:panel wicket:className=\"org.apache.wicket.MockPanelWithLink\">"));
-    }
+		assertTrue(tester.getLastResponseAsString().contains(
+			"<wicket:panel wicket:className=\"org.apache.wicket.MockPanelWithLink\">"));
+	}
 
-    @Test
-    void whenDebugIsEnabledWithComment_thenRenderComment()
-    {
-        tester.getApplication().getDebugSettings().setOutputMarkupContainerClassNameStrategy(DebugSettings.ClassOutputStrategy.HTML_COMMENT);
+	@Test
+	void whenDebugIsEnabledWithComment_thenRenderComment()
+	{
+		tester.getApplication().getDebugSettings().setOutputMarkupContainerClassNameStrategy(
+			DebugSettings.ClassOutputStrategy.HTML_COMMENT);
 
-        MockPanelWithLink component = new MockPanelWithLink("test") {
-            @Override
-            protected void onLinkClick(AjaxRequestTarget target) {
+		MockPanelWithLink component = new MockPanelWithLink("test")
+		{
+			@Override
+			protected void onLinkClick(AjaxRequestTarget target)
+			{
 
-            }
-        };
-        tester.startComponentInPage(component);
+			}
+		};
+		tester.startComponentInPage(component);
 
-        assertTrue(tester.getLastResponseAsString().contains("<!-- MARKUP FOR org.apache.wicket.MockPanelWithLink BEGIN -->"));
-    }
+		assertTrue(tester.getLastResponseAsString().contains(
+			"<!-- MARKUP FOR org.apache.wicket.MockPanelWithLink BEGIN -->"));
+	}
 
-    @Test
-    void whenDebugIsDisabled_thenDontRenderAttributeOrComment()
-    {
-        tester.getApplication().getDebugSettings().setOutputMarkupContainerClassNameStrategy(DebugSettings.ClassOutputStrategy.NONE);
+	@Test
+	void whenDebugIsDisabled_thenDontRenderAttributeOrComment()
+	{
+		tester.getApplication().getDebugSettings().setOutputMarkupContainerClassNameStrategy(
+			DebugSettings.ClassOutputStrategy.NONE);
 
-        MockPanelWithLink component = new MockPanelWithLink("test") {
-            @Override
-            protected void onLinkClick(AjaxRequestTarget target) {
+		MockPanelWithLink component = new MockPanelWithLink("test")
+		{
+			@Override
+			protected void onLinkClick(AjaxRequestTarget target)
+			{
 
-            }
-        };
-        tester.startComponentInPage(component);
+			}
+		};
+		tester.startComponentInPage(component);
 
-        assertFalse(tester.getLastResponseAsString().contains("<wicket:panel wicket:className=\"org.apache.wicket.MockPanelWithLink\">"));
-        assertFalse(tester.getLastResponseAsString().contains("<!-- MARKUP FOR org.apache.wicket.MockPanelWithLink BEGIN -->"));
-    }
+		assertFalse(tester.getLastResponseAsString().contains(
+			"<wicket:panel wicket:className=\"org.apache.wicket.MockPanelWithLink\">"));
+		assertFalse(tester.getLastResponseAsString().contains(
+			"<!-- MARKUP FOR org.apache.wicket.MockPanelWithLink BEGIN -->"));
+	}
 }

@@ -24,11 +24,11 @@ import org.junit.jupiter.api.Test;
 
 class FormSubmitOrderTest extends WicketTestCase
 {
-    public static class TestPage extends WebPage
+	public static class TestPage extends WebPage
 	{
 		String result = "";
 
-        public TestPage()
+		public TestPage()
 		{
 			Form form = new Form<>("form")
 			{

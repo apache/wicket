@@ -38,7 +38,7 @@ public interface IRequestListener extends IClusterable
 	{
 		return true;
 	}
-	
+
 	/**
 	 * Called when a request is received.
 	 */

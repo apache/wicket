@@ -15,18 +15,19 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.spring {
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.core;
-    requires org.apache.wicket.ioc;
-    requires jakarta.inject;
-    requires static jakarta.servlet;
-    requires spring.beans;
-    requires spring.context;
-    requires spring.core;
-    requires spring.web;
+module org.apache.wicket.spring
+{
+	requires org.apache.wicket.util;
+	requires org.apache.wicket.core;
+	requires org.apache.wicket.ioc;
+	requires jakarta.inject;
+	requires static jakarta.servlet;
+	requires spring.beans;
+	requires spring.context;
+	requires spring.core;
+	requires spring.web;
 
-    exports org.apache.wicket.spring;
-    exports org.apache.wicket.spring.injection.annot;
-    exports org.apache.wicket.spring.test;
+	exports org.apache.wicket.spring;
+	exports org.apache.wicket.spring.injection.annot;
+	exports org.apache.wicket.spring.test;
 }

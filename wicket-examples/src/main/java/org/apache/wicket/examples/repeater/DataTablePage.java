@@ -94,9 +94,10 @@ public class DataTablePage extends BasePage
 
 		SortableContactDataProvider dataProvider = new SortableContactDataProvider();
 		DataTable<Contact, String> dataTable = new DefaultDataTable<>("table", columns,
-				dataProvider, 8);
-		
-		dataTable.addBottomToolbar(new ExportToolbar(dataTable).addDataExporter(new CSVDataExporter() {
+			dataProvider, 8);
+
+		dataTable.addBottomToolbar(new ExportToolbar(dataTable).addDataExporter(new CSVDataExporter()
+		{
 			/**
 			 * Use converters of this page.
 			 * 
@@ -107,7 +108,7 @@ public class DataTablePage extends BasePage
 			{
 				return DataTablePage.this;
 			}
-			
+
 			/**
 			 * Wrap models on the page so resource properties get picked up. 
 			 */
@@ -121,10 +122,10 @@ public class DataTablePage extends BasePage
 		add(dataTable);
 
 		DataTable<Contact, String> tableWithColGroup = new DataTable<>("tableWithColGroup", columns,
-				dataProvider, 8);
+			dataProvider, 8);
 		tableWithColGroup.addTopToolbar(new HeadersToolbar<>(tableWithColGroup, dataProvider));
 		add(tableWithColGroup);
-		
+
 		//This is a table that uses ColGroup to style the columns: 
 		ColGroup colgroup = tableWithColGroup.getColGroup();
 		colgroup.addCol(colgroup.new Col(AttributeModifier.append("class", "lightblue")));
@@ -134,19 +135,21 @@ public class DataTablePage extends BasePage
 		colgroup.addCol(colgroup.new Col(AttributeModifier.append("span", "2"),
 			AttributeModifier.append("class", "brown")));
 	}
-	
+
 	/**
 	 * Custom format for date in export.
 	 */
 	@Override
 	protected IConverter<?> createConverter(Class<?> type)
 	{
-		if (type == Date.class) {
-			return new DateConverter() {
+		if (type == Date.class)
+		{
+			return new DateConverter()
+			{
 				@Override
 				public DateFormat getDateFormat(Locale locale)
 				{
-					return (DateFormat) DateFormat.getDateInstance(DateFormat.LONG, locale).clone();
+					return (DateFormat)DateFormat.getDateInstance(DateFormat.LONG, locale).clone();
 				}
 			};
 		}

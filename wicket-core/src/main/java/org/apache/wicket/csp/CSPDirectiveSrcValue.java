@@ -21,8 +21,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 /**
  * An enum holding the default values for -src directives including the mandatory single quotes
  */
-public enum CSPDirectiveSrcValue implements CSPRenderable
-{
+public enum CSPDirectiveSrcValue implements CSPRenderable {
 	NONE("'none'"),
 	WILDCARD("*"),
 	SELF("'self'"),
@@ -31,8 +30,7 @@ public enum CSPDirectiveSrcValue implements CSPRenderable
 	UNSAFE_HASHES("'unsafe-hashes'"),
 	STRICT_DYNAMIC("'strict-dynamic'"),
 	REPORT_SAMPLE("'report-sample'"),
-	NONCE("'nonce-%1$s'")
-	{
+	NONCE("'nonce-%1$s'") {
 		@Override
 		public String render(ContentSecurityPolicySettings settings, RequestCycle cycle)
 		{

@@ -70,25 +70,25 @@ public class DataTableFilterToolbarPage extends ExamplePage
 		columns.add(new PropertyColumn<>(new Model<>("Home Phone"), "homePhone"));
 		columns.add(new PropertyColumn<>(new Model<>("Cell Phone"), "cellPhone"));
 
-		
+
 		SortableContactDataProvider dataProvider = new SortableContactDataProvider();
 		columns = new ArrayList<>(columns);
 		columns.add(new PropertyColumn<>(new Model<>("Born Date"), "bornDate"));
-		
+
 		DataTable<Contact, String> tableWithFilterForm = new DataTable<>("tableWithFilterForm", columns,
 			dataProvider, 8);
-		
+
 		tableWithFilterForm.setOutputMarkupId(true);
-				
+
 		FilterForm<ContactFilter> filterForm = new FilterForm<>("filterForm", dataProvider);
-		
+
 		filterForm.add(new TextField<>("dateFrom", PropertyModel.of(dataProvider, "filterState.dateFrom")));
 		filterForm.add(new TextField<>("dateTo", PropertyModel.of(dataProvider, "filterState.dateTo")));
-		
+
 		add(filterForm);
-		
+
 		FilterToolbar filterToolbar = new FilterToolbar(tableWithFilterForm, filterForm);
-		
+
 		tableWithFilterForm.addTopToolbar(filterToolbar);
 		tableWithFilterForm.addTopToolbar(new NavigationToolbar(tableWithFilterForm));
 		tableWithFilterForm.addTopToolbar(new HeadersToolbar<>(tableWithFilterForm, dataProvider));

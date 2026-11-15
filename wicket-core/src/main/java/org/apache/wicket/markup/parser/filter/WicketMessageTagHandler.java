@@ -117,7 +117,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		{
 			this.wicketMessageAttrName = wicketMessageAttrName;
 		}
-		
+
 		@Override
 		public void onComponentTag(final Component component, final ComponentTag tag)
 		{
@@ -181,7 +181,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		}
 		return null;
 	}
-	
+
 	private String getWicketMessageAttrName()
 	{
 		String wicketNamespace = getWicketNamespace();

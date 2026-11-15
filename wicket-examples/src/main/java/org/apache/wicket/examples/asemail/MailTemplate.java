@@ -87,7 +87,7 @@ public class MailTemplate extends WicketExamplePage
 			{
 				PageParameters parameters = new PageParameters();
 				parameters.set("name", name);
-				PageProvider pageProvider = new PageProvider(TemplateBasedOnPage. class, parameters);
+				PageProvider pageProvider = new PageProvider(TemplateBasedOnPage.class, parameters);
 				CharSequence pageHtml = ComponentRenderer.renderPage(pageProvider);
 
 				updateResult(result, pageHtml, target);
@@ -109,7 +109,7 @@ public class MailTemplate extends WicketExamplePage
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				CharSequence panelHtml = ComponentRenderer.renderComponent(new MailTemplatePanel("someId",
-						new PropertyModel<>(MailTemplate.this, "name")));
+					new PropertyModel<>(MailTemplate.this, "name")));
 
 				updateResult(result, panelHtml, target);
 				target.add(feedback);
@@ -133,9 +133,9 @@ public class MailTemplate extends WicketExamplePage
 				variables.put("name", name);
 
 				CharSequence relativeUrl = urlFor(new PackageResourceReference(MailTemplate.class,
-						"resource.txt"), null);
+					"resource.txt"), null);
 				String href = getRequestCycle().getUrlRenderer().renderFullUrl(
-						Url.parse(relativeUrl.toString()));
+					Url.parse(relativeUrl.toString()));
 				variables.put("downloadLink", href);
 
 				PackageTextTemplate template = new PackageTextTemplate(MailTemplate.class, "mail-template.tmpl");

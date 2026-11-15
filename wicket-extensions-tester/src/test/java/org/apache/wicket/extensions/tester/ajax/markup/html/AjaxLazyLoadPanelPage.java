@@ -28,9 +28,9 @@ import org.apache.wicket.markup.html.basic.Label;
 public class AjaxLazyLoadPanelPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	public boolean contentReady = false;
-	
+
 	public final AjaxLazyLoadPanel<Component> panel;
 
 	public final AjaxLink<Void> link;
@@ -47,13 +47,13 @@ public class AjaxLazyLoadPanelPage extends WebPage
 			{
 				return contentReady;
 			}
-			
+
 			@Override
 			public Component getLoadingComponent(String id)
 			{
 				return new Label(id, "LOADING");
 			}
-			
+
 			@Override
 			public Component getLazyLoadComponent(String id)
 			{
@@ -61,16 +61,17 @@ public class AjaxLazyLoadPanelPage extends WebPage
 			}
 		};
 		add(panel);
-		
+
 		link = new AjaxLink<Void>("link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
-				if (panel.isVisible() == false) {
+				if (panel.isVisible() == false)
+				{
 					panel.setVisible(true);
 				}
-				
+
 				target.add(panel);
 			}
 		};

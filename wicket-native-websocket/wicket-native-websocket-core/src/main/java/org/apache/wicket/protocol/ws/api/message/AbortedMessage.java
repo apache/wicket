@@ -32,7 +32,8 @@ public class AbortedMessage extends AbstractClientMessage
 	}
 
 	@Override
-	public final String toString() {
+	public final String toString()
+	{
 		return "The server aborted the client connection";
 	}
 }

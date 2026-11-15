@@ -59,7 +59,7 @@ public class SerializingPageStore extends DelegatingPageStore
 	{
 		return getDelegate().canBeAsynchronous(context);
 	}
-	
+
 	@Override
 	public IManageablePage getPage(IPageContext context, int id)
 	{

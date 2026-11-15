@@ -234,12 +234,12 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 			{
 				return AutoCompleteTextField.this.getChoices(input);
 			}
-			
+
 			@Override
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
-				
+
 				AutoCompleteTextField.this.updateAjaxAttributes(attributes);
 			}
 		};
@@ -310,12 +310,12 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	{
 		return renderer;
 	}
-	
+
 	@Override
 	protected void onDetach()
 	{
 		renderer.detach();
-		
+
 		super.onDetach();
 	}
 }

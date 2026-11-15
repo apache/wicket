@@ -150,7 +150,8 @@ public class ErrorAttributes
 		String uri = DispatchedRequestUtils.getRequestUri(request, RequestDispatcher.ERROR_REQUEST_URI, filterPrefix);
 		String servlet = (String)request.getAttribute(RequestDispatcher.ERROR_SERVLET_NAME);
 		@SuppressWarnings("unchecked")
-		Class<? extends Throwable> type = (Class<? extends Throwable>)request.getAttribute(RequestDispatcher.ERROR_EXCEPTION_TYPE);
+		Class<? extends Throwable> type = (Class<? extends Throwable>)request.getAttribute(
+			RequestDispatcher.ERROR_EXCEPTION_TYPE);
 		Throwable ex = (Throwable)request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 
 		if (!Strings.isEmpty(uri) || code != null || ex != null)
@@ -164,12 +165,12 @@ public class ErrorAttributes
 	public String toString()
 	{
 		return "ErrorAttributes{" +
-				"statusCode=" + statusCode +
-				", message='" + message + '\'' +
-				", requestUri='" + requestUri + '\'' +
-				", servletName='" + servletName + '\'' +
-				", exceptionType=" + exceptionType +
-				", exception=" + exception +
-				'}';
+			"statusCode=" + statusCode +
+			", message='" + message + '\'' +
+			", requestUri='" + requestUri + '\'' +
+			", servletName='" + servletName + '\'' +
+			", exceptionType=" + exceptionType +
+			", exception=" + exception +
+			'}';
 	}
 }

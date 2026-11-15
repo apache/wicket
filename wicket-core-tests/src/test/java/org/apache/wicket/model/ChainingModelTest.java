@@ -30,25 +30,28 @@ import org.junit.jupiter.api.Test;
 class ChainingModelTest
 {
 	@Test
-	void testNonModel() {
+	void testNonModel()
+	{
 		ChainingModel<Integer> model = new ChainingModel<>(1);
-		
+
 		assertEquals(Integer.valueOf(1), model.getObject());
 		model.setObject(2);
 		assertEquals(Integer.valueOf(2), model.getObject());
 	}
-	
+
 	@Test
-	void testNonSerializable() {
+	void testNonSerializable()
+	{
 		new ChainingModel<>(Thread.currentThread());
 	}
-	
+
 	@Test
-	void testDetachable() {
+	void testDetachable()
+	{
 		class TestDetachable implements IDetachable
 		{
 			boolean detached = false;
-			
+
 			@Override
 			public void detach()
 			{
@@ -56,37 +59,38 @@ class ChainingModelTest
 			}
 		};
 		TestDetachable test = new TestDetachable();
-		
+
 		ChainingModel<TestDetachable> model = new ChainingModel<>(test);
-		assertSame(test,  model.getObject());
+		assertSame(test, model.getObject());
 
 		test = new TestDetachable();
 		model.setObject(test);
-		assertSame(test,  model.getObject());
+		assertSame(test, model.getObject());
 
 		model.detach();
 		assertTrue(test.detached);
 	}
 
 	@Test
-	void testModel() {
+	void testModel()
+	{
 		class TestModel implements IModel<Integer>
 		{
 			boolean detached = false;
 			int value = 1;
-			
+
 			@Override
 			public Integer getObject()
 			{
 				return value;
 			}
-			
+
 			@Override
 			public void setObject(Integer object)
 			{
 				this.value = object;
 			}
-			
+
 			@Override
 			public void detach()
 			{
@@ -94,14 +98,14 @@ class ChainingModelTest
 			}
 		};
 		TestModel test = new TestModel();
-		
+
 		ChainingModel<Integer> model = new ChainingModel<>(test);
-		
+
 		assertEquals(Integer.valueOf(1), model.getObject());
 
 		model.setObject(2);
 		assertEquals(2, test.value);
-		
+
 		model.detach();
 		assertTrue(test.detached);
 	}

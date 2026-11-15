@@ -33,7 +33,7 @@ class WicketComponentTreeTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test1() throws Exception
+	void test1() throws Exception
 	{
 		// disable the component use check, as this consumes extra
 		// memory (label size doubles to 1.1K)

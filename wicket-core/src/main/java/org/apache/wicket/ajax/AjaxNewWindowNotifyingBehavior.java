@@ -59,7 +59,7 @@ public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 	{
 		return boundName;
 	}
-	
+
 	/**
 	 * Overridden to add the current window name to the request.
 	 */
@@ -102,7 +102,8 @@ public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 	@Override
 	protected void respond(AjaxRequestTarget target)
 	{
-		String windowName = getComponent().getRequest().getRequestParameters().getParameterValue(PARAM_WINDOW_NAME).toString();
+		String windowName = getComponent().getRequest().getRequestParameters().getParameterValue(PARAM_WINDOW_NAME)
+			.toString();
 
 		if (boundName == null)
 		{

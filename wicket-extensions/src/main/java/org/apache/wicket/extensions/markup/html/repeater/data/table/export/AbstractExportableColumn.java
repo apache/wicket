@@ -31,8 +31,9 @@ import org.apache.wicket.model.IModel;
  * @param <S> The type of the sort property of the table.
  */
 public abstract class AbstractExportableColumn<T, S>
-        extends AbstractColumn<T, S>
-        implements IExportableColumn<T, S>
+	extends AbstractColumn<T, S>
+	implements
+		IExportableColumn<T, S>
 {
 	/**
 	 * Creates a new {@link AbstractExportableColumn} with the provided display model, and without a sort property.

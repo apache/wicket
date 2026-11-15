@@ -88,14 +88,14 @@ public final class DefaultMarkupSourcingStrategy extends AbstractMarkupSourcingS
 		{
 			return containerMarkup;
 		}
-		
+
 		// Find the child's markup
 		IMarkupFragment childMarkup = containerMarkup.find(child.getId());
 		if (childMarkup != null)
 		{
 			return childMarkup;
 		}
-		
+
 		return searchMarkupInTransparentResolvers(container, containerMarkup, child);
 	}
 }

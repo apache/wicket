@@ -53,10 +53,10 @@ public class CookiePage extends DummyHomePage
 	{
 		super.onConfigure();
 
-		Cookie cookie = ((WebRequest) getRequest()).getCookie(cookieName);
+		Cookie cookie = ((WebRequest)getRequest()).getCookie(cookieName);
 		assertEquals(cookieValue, cookie.getValue());
 
-		WebResponse response = (WebResponse) getResponse();
+		WebResponse response = (WebResponse)getResponse();
 		response.addCookie(cookie);
 	}
 

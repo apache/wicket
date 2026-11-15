@@ -91,7 +91,7 @@ public class OnLoadHeaderItem extends AbstractCspHeaderItem
 			attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, "text/javascript");
 			attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
 			JavaScriptUtils.writeInlineScript(response, "Wicket.Event.add(window, \"load\", " +
-					"function(event) { " + js + ";});", attributes);
+				"function(event) { " + js + ";});", attributes);
 		}
 	}
 
@@ -112,7 +112,7 @@ public class OnLoadHeaderItem extends AbstractCspHeaderItem
 	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		OnLoadHeaderItem that = (OnLoadHeaderItem) o;
+		OnLoadHeaderItem that = (OnLoadHeaderItem)o;
 		return Objects.equals(javaScript, that.javaScript);
 	}
 

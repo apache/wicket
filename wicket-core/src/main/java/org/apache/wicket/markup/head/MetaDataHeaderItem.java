@@ -85,7 +85,7 @@ public class MetaDataHeaderItem extends HeaderItem
 		tagAttributes.put(attributeName, attributeValue);
 		return this;
 	}
-	
+
 	/**
 	 * Add a minimized tag attribute to the item. The attribute has no value and 
 	 * only its name is rendered (for example 'async')
@@ -98,7 +98,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	public MetaDataHeaderItem addTagAttribute(String attributeName)
 	{
 		Args.notEmpty(attributeName, "attributeName");
-		
+
 		tagMinimizedAttributes.add(attributeName);
 		return this;
 	}
@@ -135,7 +135,7 @@ public class MetaDataHeaderItem extends HeaderItem
 					.append('"');
 			}
 		}
-		
+
 		for (String attrName : tagMinimizedAttributes)
 		{
 			buffer.append(' ')
@@ -243,7 +243,7 @@ public class MetaDataHeaderItem extends HeaderItem
 	{
 		return forLinkTag(Model.of(rel), Model.of(href));
 	}
-	
+
 	/**
 	 * Factory method to create &lt;link&gt; tag.
 	 *  
@@ -269,10 +269,10 @@ public class MetaDataHeaderItem extends HeaderItem
 	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		MetaDataHeaderItem that = (MetaDataHeaderItem) o;
+		MetaDataHeaderItem that = (MetaDataHeaderItem)o;
 		return Objects.equals(tagAttributes, that.tagAttributes) &&
-				Objects.equals(tagMinimizedAttributes, that.tagMinimizedAttributes) &&
-				Objects.equals(tagName, that.tagName);
+			Objects.equals(tagMinimizedAttributes, that.tagMinimizedAttributes) &&
+			Objects.equals(tagName, that.tagName);
 	}
 
 	@Override

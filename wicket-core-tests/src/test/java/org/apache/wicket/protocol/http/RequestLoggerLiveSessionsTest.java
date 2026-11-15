@@ -34,11 +34,12 @@ import org.junit.jupiter.api.Test;
 class RequestLoggerLiveSessionsTest
 {
 	private final RequestLogger requestLogger = new RequestLogger();
-	
+
 	private final ArrayList<String> sessionIds = new ArrayList<>();
 
 	@Test
-	void concurrentModification() {
+	void concurrentModification()
+	{
 		SessionCreateThread sct = new SessionCreateThread();
 		SessionDestroyThread sdt = new SessionDestroyThread();
 		sct.start();
@@ -49,7 +50,8 @@ class RequestLoggerLiveSessionsTest
 
 		while (count-- > 0)
 		{
-			try {
+			try
+			{
 				requestLogger.getLiveSessions();
 			}
 			catch (NullPointerException e)
@@ -63,15 +65,16 @@ class RequestLoggerLiveSessionsTest
 		sct.interrupt();
 		sdt.interrupt();
 
-		if (nullPointerExceptionThrown.get()) {
+		if (nullPointerExceptionThrown.get())
+		{
 			fail("The test should not fail with NullPointerException");
 		}
 	}
-	
+
 	private class SessionCreateThread extends Thread
 	{
 		private final Random random = new Random();
-		
+
 		public void run()
 		{
 			while (!isInterrupted())
@@ -79,17 +82,19 @@ class RequestLoggerLiveSessionsTest
 				if (sessionIds.size() < 50)
 				{
 					String sessionId = UUID.randomUUID().toString();
-					synchronized (sessionIds) {
+					synchronized (sessionIds)
+					{
 						sessionIds.add(sessionId);
 					}
 					requestLogger.sessionCreated(sessionId);
 				}
-				
+
 				try
 				{
 					Thread.sleep(random.nextInt(20));
 				}
-					catch (InterruptedException e) {
+				catch (InterruptedException e)
+				{
 				}
 			}
 		}
@@ -98,7 +103,7 @@ class RequestLoggerLiveSessionsTest
 	private class SessionDestroyThread extends Thread
 	{
 		private final Random random = new Random();
-		
+
 		public void run()
 		{
 			while (!isInterrupted())
@@ -107,16 +112,18 @@ class RequestLoggerLiveSessionsTest
 				{
 					String sessionId = sessionIds.get(random.nextInt(sessionIds.size()));
 					requestLogger.sessionDestroyed(sessionId);
-					synchronized (sessionIds) {
+					synchronized (sessionIds)
+					{
 						sessionIds.remove(sessionId);
 					}
 				}
-				
+
 				try
 				{
 					Thread.sleep(random.nextInt(20));
 				}
-					catch (InterruptedException e) {
+				catch (InterruptedException e)
+				{
 				}
 			}
 		}

@@ -1241,23 +1241,24 @@ class MarkupContainerTest extends WicketTestCase
 		form.add(new TextField<>("field"));
 
 		assertTrue(loginPage.streamChildren()
-		                    .anyMatch(c -> c.getId().equals("form")));
+			.anyMatch(c -> c.getId().equals("form")));
 
 		assertTrue(loginPage.streamChildren()
-		                    .anyMatch(c -> c.getId().equals("field")));
+			.anyMatch(c -> c.getId().equals("field")));
 
 		assertTrue(loginPage.streamChildren()
-		                    .filter(TextField.class::isInstance)
-		                    .anyMatch(c -> c.getId().equals("field")));
+			.filter(TextField.class::isInstance)
+			.anyMatch(c -> c.getId().equals("field")));
 	}
 
 	// https://issues.apache.org/jira/browse/WICKET-6754
 	@Test
-	void streamChildrenNestedContainer() {
+	void streamChildrenNestedContainer()
+	{
 		WebMarkupContainer wmc = new WebMarkupContainer("parent");
 		WebMarkupContainer wmc1 = new WebMarkupContainer("wmc1");
 		wmc.add(wmc1);
-		WebMarkupContainer wmc1_2= new WebMarkupContainer("wmc1_2");
+		WebMarkupContainer wmc1_2 = new WebMarkupContainer("wmc1_2");
 		wmc1.add(wmc1_2);
 		Label lbl2 = new Label("lbl2");
 		wmc.add(lbl2);

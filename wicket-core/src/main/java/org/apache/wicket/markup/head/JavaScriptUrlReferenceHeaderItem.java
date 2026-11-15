@@ -87,7 +87,7 @@ public class JavaScriptUrlReferenceHeaderItem extends AbstractJavaScriptReferenc
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
-		JavaScriptUrlReferenceHeaderItem that = (JavaScriptUrlReferenceHeaderItem) o;
+		JavaScriptUrlReferenceHeaderItem that = (JavaScriptUrlReferenceHeaderItem)o;
 		return Objects.equals(url, that.url);
 	}
 

@@ -15,20 +15,21 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.auth.roles {
-    requires java.base;
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.request;
-    requires org.apache.wicket.core;
+module org.apache.wicket.auth.roles
+{
+	requires java.base;
+	requires org.apache.wicket.util;
+	requires org.apache.wicket.request;
+	requires org.apache.wicket.core;
 
-    exports org.apache.wicket.authroles.authentication;
-    exports org.apache.wicket.authroles.authentication.pages;
-    exports org.apache.wicket.authroles.authentication.panel;
-    exports org.apache.wicket.authroles.authorization.strategies.role;
-    exports org.apache.wicket.authroles.authorization.strategies.role.annotations;
-    exports org.apache.wicket.authroles.authorization.strategies.role.metadata;
+	exports org.apache.wicket.authroles.authentication;
+	exports org.apache.wicket.authroles.authentication.pages;
+	exports org.apache.wicket.authroles.authentication.panel;
+	exports org.apache.wicket.authroles.authorization.strategies.role;
+	exports org.apache.wicket.authroles.authorization.strategies.role.annotations;
+	exports org.apache.wicket.authroles.authorization.strategies.role.metadata;
 
-    //opening packages to allow resources access
-    opens org.apache.wicket.authroles.authentication.pages;
-    opens org.apache.wicket.authroles.authentication.panel;
+	//opening packages to allow resources access
+	opens org.apache.wicket.authroles.authentication.pages;
+	opens org.apache.wicket.authroles.authentication.panel;
 }

@@ -80,20 +80,20 @@ public abstract class PageRenderer
 
 	protected boolean isOnePassRender()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() ==
-				RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER;
+		return Application.get().getRequestCycleSettings()
+			.getRenderStrategy() == RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER;
 	}
 
 	protected boolean isRedirectToRender()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() ==
-				RequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER;
+		return Application.get().getRequestCycleSettings()
+			.getRenderStrategy() == RequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER;
 	}
 
 	protected boolean isRedirectToBuffer()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() ==
-				RequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER;
+		return Application.get().getRequestCycleSettings()
+			.getRenderStrategy() == RequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER;
 	}
 
 	/**

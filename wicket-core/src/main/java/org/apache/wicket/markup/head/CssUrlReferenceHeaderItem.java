@@ -48,7 +48,7 @@ public class CssUrlReferenceHeaderItem extends AbstractCssReferenceHeaderItem
 	public CssUrlReferenceHeaderItem(String url, String media, String rel)
 	{
 		super(media, rel);
-		
+
 		this.url = url;
 	}
 
@@ -63,7 +63,7 @@ public class CssUrlReferenceHeaderItem extends AbstractCssReferenceHeaderItem
 	public CssUrlReferenceHeaderItem(String url, String media)
 	{
 		super(media, null);
-		
+
 		this.url = url;
 	}
 

@@ -42,7 +42,7 @@ public class PasswordValidator implements ConstraintValidator<PasswordConstraint
 		}
 
 		Matcher matcher = MetaPattern.NON_WORD.matcher(value);
-		
+
 		// password must not contain non-word characters.
 		if (matcher.find())
 		{

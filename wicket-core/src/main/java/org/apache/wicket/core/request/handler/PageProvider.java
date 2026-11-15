@@ -168,12 +168,12 @@ public class PageProvider implements IPageProvider, IClusterable
 	public IRequestablePage getPageInstance() throws PageExpiredException
 	{
 		IRequestablePage page = getProvision().getPage();
-		
-		if (page == null && wasExpired()) 
+
+		if (page == null && wasExpired())
 		{
 			throw new PageExpiredException("Page with id '" + pageId + "' has expired.");
 		}
-		
+
 		return page;
 	}
 

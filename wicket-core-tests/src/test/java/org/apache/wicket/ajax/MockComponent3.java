@@ -43,6 +43,6 @@ public class MockComponent3 extends Panel
 	public void renderHead(IHeaderResponse response)
 	{
 		response.render(CssHeaderItem.forReference(new PackageResourceReference(
-				MockComponent3.class, "mockStyleSheet3.css")));
+			MockComponent3.class, "mockStyleSheet3.css")));
 	}
 }

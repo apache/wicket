@@ -48,7 +48,7 @@ public class HeaderSectionPage_20 extends WebPage
 		 * 
 		 * @param id
 		 */
-        MyLabel(final String id)
+		MyLabel(final String id)
 		{
 			super(id);
 		}

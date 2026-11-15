@@ -37,7 +37,8 @@ class SetCustomResourceSettingsTest extends WicketTestCase
 
 	@Override
 	@BeforeEach
-	public void commonBefore() {
+	public void commonBefore()
+	{
 		resSettings = mock(ResourceSettings.class);
 		when(resSettings.getParentFolderPlaceholder()).thenReturn(expected);
 
@@ -45,7 +46,8 @@ class SetCustomResourceSettingsTest extends WicketTestCase
 	}
 
 	@Test
-	void check() {
+	void check()
+	{
 		ResourceSettings settings = tester.getApplication().getResourceSettings();
 		assertEquals(expected, settings.getParentFolderPlaceholder());
 	}
@@ -53,7 +55,8 @@ class SetCustomResourceSettingsTest extends WicketTestCase
 	@Override
 	protected WebApplication newApplication()
 	{
-		return new MockApplication() {
+		return new MockApplication()
+		{
 			@Override
 			protected void init()
 			{

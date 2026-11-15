@@ -403,8 +403,7 @@ public abstract class Component
 	/** Characters a markup id must not contain, see {@link #isValidId(String, String)} */
 	private static final String INVALID_ID_CHARS = "'\"`\\()[]{}<>;&";
 
-	private static final String INVALID_ID_MESSAGE =
-		"must not contain quotes, backslashes, brackets, ';', '&' or control characters.";
+	private static final String INVALID_ID_MESSAGE = "must not contain quotes, backslashes, brackets, ';', '&' or control characters.";
 
 	/**
 	 * Characters a component id must not contain, see {@link #isValidId(String, String)}. Unlike a
@@ -414,8 +413,7 @@ public abstract class Component
 	 */
 	private static final String INVALID_COMPONENT_ID_CHARS = "'\"`\\{}<>;&";
 
-	private static final String INVALID_COMPONENT_ID_MESSAGE =
-		"must not contain quotes, backslashes, '{', '}', '<', '>', ';', '&' or control characters.";
+	private static final String INVALID_COMPONENT_ID_MESSAGE = "must not contain quotes, backslashes, '{', '}', '<', '>', ';', '&' or control characters.";
 
 	/**
 	 * Meta data key for line precise error logging for the moment of addition. Made package private
@@ -436,8 +434,7 @@ public abstract class Component
 	};
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED |
-		FLAG_IS_RENDER_ALLOWED | FLAG_VISIBILITY_ALLOWED | FLAG_RESERVED5 /* page's stateless hint */;
+	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED | FLAG_IS_RENDER_ALLOWED | FLAG_VISIBILITY_ALLOWED | FLAG_RESERVED5 /* page's stateless hint */;
 
 	// @formatter:off	
 	private static final short RFLAG_ENABLED_IN_HIERARCHY_VALUE        = 0x1;
@@ -908,7 +905,7 @@ public abstract class Component
 		else if (getFlag(FLAG_REMOVED))
 		{
 			setFlag(FLAG_REMOVED, false);
-			
+
 			setRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED, false);
 			onReAdd();
 			verifySuperCall("onReAdd", RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED);
@@ -921,7 +918,7 @@ public abstract class Component
 	final void afterRender()
 	{
 		setRequestFlag(RFLAG_PREPARED_FOR_RENDER, false);
-		
+
 		try
 		{
 			setRequestFlag(RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED, false);
@@ -949,7 +946,8 @@ public abstract class Component
 		if (this instanceof IFeedback)
 		{
 			Optional<FeedbackDelay> delay = FeedbackDelay.get(getRequestCycle());
-			if (delay.isPresent()) {
+			if (delay.isPresent())
+			{
 				delay.get().postpone((IFeedback)this);
 				return;
 			}
@@ -960,7 +958,8 @@ public abstract class Component
 		if ((determineVisibility()) && !getRequestFlag(RFLAG_RENDERING) &&
 			!getRequestFlag(RFLAG_PREPARED_FOR_RENDER))
 		{
-			try {
+			try
+			{
 				setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
 
 				Application application = getApplication();
@@ -970,7 +969,9 @@ public abstract class Component
 				application.getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
 
 				verifySuperCall("onBeforeRender", RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED);
-			} catch (RuntimeException ex) {
+			}
+			catch (RuntimeException ex)
+			{
 				setRequestFlag(RFLAG_PREPARED_FOR_RENDER, false);
 				throw ex;
 			}
@@ -1011,11 +1012,11 @@ public abstract class Component
 		{
 			clearEnabledInHierarchyCache();
 			clearVisibleInHierarchyCache();
-			
+
 			setRequestFlag(RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED, false);
 			onConfigure();
 			verifySuperCall("onConfigure", RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED);
-			
+
 			for (Behavior behavior : getBehaviors())
 			{
 				if (isBehaviorAccepted(behavior))
@@ -1042,9 +1043,10 @@ public abstract class Component
 	{
 		if (!getRequestFlag(flag))
 		{
-			throw new IllegalStateException(String.format("%s() in the hierarchy of %s has not called super.%s()", method, getClass().getName(), method));
+			throw new IllegalStateException(String.format("%s() in the hierarchy of %s has not called super.%s()",
+				method, getClass().getName(), method));
 		}
-		
+
 		setRequestFlag(flag, false);
 	}
 
@@ -1137,9 +1139,9 @@ public abstract class Component
 			if (getRequestFlag(RFLAG_DETACHING))
 			{
 				throw new IllegalStateException(Component.class.getName() +
-						" has not been properly detached. Something in the hierarchy of " +
-						getClass().getName() +
-						" has not called super.onDetach() in the override of onDetach() method");
+					" has not been properly detached. Something in the hierarchy of " +
+					getClass().getName() +
+					" has not called super.onDetach() in the override of onDetach() method");
 			}
 
 			// always detach models because they can be attached without the
@@ -1335,10 +1337,12 @@ public abstract class Component
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <C> IConverter<C> getConverter(Class<C> type) {
+	public <C> IConverter<C> getConverter(Class<C> type)
+	{
 		IConverter<?> converter = createConverter(type);
-		if (converter != null) {
-			return (IConverter<C>) converter;
+		if (converter != null)
+		{
+			return (IConverter<C>)converter;
 		}
 		return getApplication().getConverterLocator().getConverter(type);
 	}
@@ -1352,7 +1356,8 @@ public abstract class Component
 	 *
 	 * @return a converter to be used by this component
 	 */
-	protected IConverter<?> createConverter(Class<?> type) {
+	protected IConverter<?> createConverter(Class<?> type)
+	{
 		return null;
 	}
 
@@ -1548,7 +1553,7 @@ public abstract class Component
 
 	/**
 	 * Gets the meta data entries for this component as an array of {@link MetaDataEntry} objects.
-         *
+	     *
 	 * @return the meta data entries for this component
 	 */
 	private MetaDataEntry<?>[] getMetaData()
@@ -1721,7 +1726,7 @@ public abstract class Component
 		{
 			// Give up with a nice exception
 			throw new WicketRuntimeException("No Page found for component: " + this.toString(true)
-					+ ". You probably forgot to add it to its parent component.");
+				+ ". You probably forgot to add it to its parent component.");
 		}
 
 		return page;
@@ -2235,7 +2240,8 @@ public abstract class Component
 	 * 
 	 * @see #beforeRender()
 	 */
-	public final void renderPart() {
+	public final void renderPart()
+	{
 		Page page = getPage();
 
 		page.startComponentRender(this);
@@ -2243,7 +2249,7 @@ public abstract class Component
 		markRendering(true);
 
 		render();
-		
+
 		page.endComponentRender(this);
 	}
 
@@ -2264,7 +2270,7 @@ public abstract class Component
 		try
 		{
 			setRequestFlag(RFLAG_RENDERING, true);
-			
+
 			internalRender();
 		}
 		catch (final RuntimeException ex)
@@ -2402,7 +2408,7 @@ public abstract class Component
 	{
 		String name = Strings.isEmpty(tag.getNamespace()) ? tag.getName()
 			: tag.getNamespace() + ':' + tag.getName();
-		
+
 		// prefer concatenation over String#format() for performance 
 		response.write(
 			"<" + name + " id=\"" + getAjaxRegionMarkupId() +
@@ -2492,14 +2498,15 @@ public abstract class Component
 				ExceptionSettings.NotRenderableErrorStrategy notRenderableErrorStrategy = ExceptionSettings.NotRenderableErrorStrategy.LOG_WARNING;
 				if (Application.exists())
 				{
-					notRenderableErrorStrategy = getApplication().getExceptionSettings().getNotRenderableErrorStrategy();
+					notRenderableErrorStrategy = getApplication().getExceptionSettings()
+						.getNotRenderableErrorStrategy();
 				}
 
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
 					String message = String.format("Markup id set on a component that renders its body only. " +
-					                               "Markup id: %s, component id: %s, type: %s, path: %s",
-							getMarkupId(), getId(), getClass(), getPage().getPageClass() + ":" + getPageRelativePath());
+						"Markup id: %s, component id: %s, type: %s, path: %s",
+						getMarkupId(), getId(), getClass(), getPage().getPageClass() + ":" + getPageRelativePath());
 					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
 					{
 						throw new IllegalStateException(message);
@@ -2509,8 +2516,8 @@ public abstract class Component
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
 					String message = String.format("Placeholder tag set on a component that renders its body only. " +
-					                               "Component id: %s, type: %s, path: %s\", ",
-							getId(), getClass(), getPage().getPageClass() + ":" + getPageRelativePath());
+						"Component id: %s, type: %s, path: %s\", ",
+						getId(), getClass(), getPage().getPageClass() + ":" + getPageRelativePath());
 					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
 					{
 						throw new IllegalStateException(message);
@@ -2591,8 +2598,9 @@ public abstract class Component
 		}
 		else
 		{
-			log.error("Component is not connected to a Page. Cannot register the component as being rendered. Component: " +
-				toString());
+			log.error(
+				"Component is not connected to a Page. Cannot register the component as being rendered. Component: " +
+					toString());
 		}
 	}
 
@@ -2696,7 +2704,7 @@ public abstract class Component
 					}
 				}
 			}
-			
+
 			if (wasRendered == false)
 			{
 				response.markRendered(this);
@@ -3049,8 +3057,8 @@ public abstract class Component
 		{
 			throw new IllegalStateException(
 				"Attempt to set a model object on a component without a model! " +
-				"Either pass an IModel to the constructor or use #setDefaultModel(new SomeModel(object)). " +
-				"Component: " + getPageRelativePath());
+					"Either pass an IModel to the constructor or use #setDefaultModel(new SomeModel(object)). " +
+					"Component: " + getPageRelativePath());
 		}
 
 		// Check authorization
@@ -3069,7 +3077,8 @@ public abstract class Component
 			}
 			catch (UnsupportedOperationException uox)
 			{
-				throw new WicketRuntimeException("You need to use writeable IModel for component " + getPageRelativePath(), uox);
+				throw new WicketRuntimeException("You need to use writeable IModel for component "
+					+ getPageRelativePath(), uox);
 			}
 			modelChanged();
 		}
@@ -3584,8 +3593,8 @@ public abstract class Component
 			if (found == false)
 			{
 				String msg = String.format("Component [%s] (path = [%s]) must be applied to a tag "
-						+ "with [%s] attribute matching any of %s, not [%s]", getId(), getPath(), key,
-						Arrays.toString(values), tagAttributeValue);
+					+ "with [%s] attribute matching any of %s, not [%s]", getId(), getPath(), key,
+					Arrays.toString(values), tagAttributeValue);
 
 				findMarkupStream().throwMarkupException(msg);
 			}
@@ -3999,16 +4008,18 @@ public abstract class Component
 				ExceptionSettings.NotRenderableErrorStrategy notRenderableErrorStrategy = ExceptionSettings.NotRenderableErrorStrategy.LOG_WARNING;
 				if (Application.exists())
 				{
-					notRenderableErrorStrategy = getApplication().getExceptionSettings().getNotRenderableErrorStrategy();
+					notRenderableErrorStrategy = getApplication().getExceptionSettings()
+						.getNotRenderableErrorStrategy();
 				}
 
 				String tagName = tag.getNamespace() + ":" + tag.getName();
 				String componentId = getId();
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
-					String message = String.format("Markup id set on a component that is usually not rendered into markup. " +
-					                               "Markup id: %s, component id: %s, component tag: %s.",
-					                               getMarkupId(), componentId, tagName);
+					String message = String.format(
+						"Markup id set on a component that is usually not rendered into markup. " +
+							"Markup id: %s, component id: %s, component tag: %s.",
+						getMarkupId(), componentId, tagName);
 					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
 					{
 						throw new IllegalStateException(message);
@@ -4018,7 +4029,7 @@ public abstract class Component
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
 					String message = String.format(
-							"Placeholder tag set on a component that is usually not rendered into markup. " +
+						"Placeholder tag set on a component that is usually not rendered into markup. " +
 							"Component id: %s, component tag: %s.", componentId, tagName);
 					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
 					{
@@ -4480,7 +4491,7 @@ public abstract class Component
 		setRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_VALUE, state);
 		return state;
 	}
-	
+
 	/**
 	 * Says if the component is rendering currently.
 	 * 
@@ -4548,7 +4559,7 @@ public abstract class Component
 		if (getApplication().getFrameworkSettings().hasAnyEventDispatchers())
 		{
 			new ComponentEventSender(this, getApplication().getFrameworkSettings()).send(sink, type,
-					payload);
+				payload);
 		}
 	}
 
@@ -4615,9 +4626,10 @@ public abstract class Component
 	@Override
 	public boolean canCallListenerAfterExpiry()
 	{
-        	return getApplication().getPageSettings()
-        		.getCallListenerAfterExpiry() || isStateless();
+		return getApplication().getPageSettings()
+			.getCallListenerAfterExpiry() || isStateless();
 	}
+
 	/**
 	 * This method is called whenever a component is re-added to the page's component tree, if it
 	 * had been removed at some earlier time, i.e., if it is already initialized

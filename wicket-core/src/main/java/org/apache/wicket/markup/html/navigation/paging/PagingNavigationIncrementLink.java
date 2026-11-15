@@ -66,7 +66,7 @@ public class PagingNavigationIncrementLink<T> extends Link<T>
 		setAutoEnable(true);
 		this.increment = increment;
 		this.pageable = pageable;
-		
+
 		add(new DisabledAttributeLinkBehavior());
 	}
 

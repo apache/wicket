@@ -274,21 +274,21 @@ public class ApplicationSettings
 	{
 		return feedbackMessageCleanupFilter;
 	}
-    
-    /**
-     * The maximumPartHeaderSize für MultipartRequests in Fileuploads.
-     * @return
-     */
+
+	/**
+	 * The maximumPartHeaderSize für MultipartRequests in Fileuploads.
+	 * @return
+	 */
 	public int getDefaultMaximumPartHeaderSize()
 	{
 		return defaultMaximumPartHeaderSize;
 	}
 
-    /**
-     * Sets the default maximumPartHeaderSize. See also: {@link AbstractFileUpload#getMaxPartHeaderSize()}
-     * @param defaultMaximumPartHeaderSize
-     *     default is {@link MultipartInput#DEFAULT_PART_HEADER_SIZE_MAX}
-     */
+	/**
+	 * Sets the default maximumPartHeaderSize. See also: {@link AbstractFileUpload#getMaxPartHeaderSize()}
+	 * @param defaultMaximumPartHeaderSize
+	 *     default is {@link MultipartInput#DEFAULT_PART_HEADER_SIZE_MAX}
+	 */
 	public void setDefaultMaximumPartHeaderSize(int defaultMaximumPartHeaderSize)
 	{
 		this.defaultMaximumPartHeaderSize = defaultMaximumPartHeaderSize;

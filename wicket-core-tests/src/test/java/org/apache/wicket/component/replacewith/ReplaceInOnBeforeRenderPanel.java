@@ -21,10 +21,10 @@ package org.apache.wicket.component.replacewith;
  */
 class ReplaceInOnBeforeRenderPanel extends BaseReplaceWithPanel
 {
-    public ReplaceInOnBeforeRenderPanel(String id)
-    {
-        super(id);
-    }
+	public ReplaceInOnBeforeRenderPanel(String id)
+	{
+		super(id);
+	}
 
 	@Override
 	protected void onBeforeRender()

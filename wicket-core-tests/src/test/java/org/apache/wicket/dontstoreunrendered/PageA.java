@@ -18,11 +18,13 @@ package org.apache.wicket.dontstoreunrendered;
 
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 
-public class PageA extends BasePage {
+public class PageA extends BasePage
+{
 
-	public PageA() {
+	public PageA()
+	{
 		super();
 
 		add(new BookmarkablePageLink<Void>("goToB", PageB.class));
-    }
+	}
 }

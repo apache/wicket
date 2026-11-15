@@ -34,7 +34,7 @@ public class NoopPageStore implements IPageStore
 	{
 		return true;
 	}
-	
+
 	@Override
 	public void addPage(IPageContext context, IManageablePage page)
 	{

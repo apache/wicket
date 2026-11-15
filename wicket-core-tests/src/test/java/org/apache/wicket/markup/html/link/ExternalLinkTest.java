@@ -38,7 +38,8 @@ class ExternalLinkTest extends WicketTestCase
 	{
 		String uri = "javascript:alert(1)";
 		MockPageWithOneComponent page = new MockPageWithOneComponent();
-		page.add(new ExternalLink(COMPONENT_ID, uri){
+		page.add(new ExternalLink(COMPONENT_ID, uri)
+		{
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
@@ -75,6 +76,7 @@ class ExternalLinkTest extends WicketTestCase
 
 		assertThat(tester.getLastResponseAsString()).contains(uri);
 	}
+
 	@Test
 	void escapeJavascriptQuotes() throws Exception
 	{
@@ -91,7 +93,7 @@ class ExternalLinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderExternalLink_1() throws Exception
+	void renderExternalLink_1() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		executeTest(ExternalLinkPage_1.class, "ExternalLinkPageExpectedResult_1.html");
@@ -101,7 +103,7 @@ class ExternalLinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderExternalLink_2() throws Exception
+	void renderExternalLink_2() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		executeTest(ExternalLinkPage_2.class, "ExternalLinkPageExpectedResult_2.html");

@@ -99,11 +99,11 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	public IPageManager get()
 	{
 		IPageStore store = newPersistentStore();
-		
+
 		store = newCryptingStore(store);
 
 		store = newAsynchronousStore(store);
-		
+
 		store = newSerializingStore(store);
 
 		store = newCachingStore(store);
@@ -186,7 +186,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	protected IPageStore newCryptingStore(IPageStore pageStore)
 	{
 		StoreSettings storeSettings = application.getStoreSettings();
-		
+
 		if (storeSettings.isEncrypted())
 		{
 			pageStore = new CryptingPageStore(pageStore, application);
@@ -210,14 +210,15 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 
 		return new DiskPageStore(application.getName(), fileStoreFolder, maxSizePerSession);
 	}
-	
-	private static class InSessionCache extends InSessionPageStore {
+
+	private static class InSessionCache extends InSessionPageStore
+	{
 
 		private static final MetaDataKey<SessionData> KEY = new MetaDataKey<>()
 		{
 			private static final long serialVersionUID = 1L;
 		};
-		
+
 		InSessionCache()
 		{
 			super(1);

@@ -47,22 +47,25 @@ public class FormPage extends BasePage
 	public FormPage()
 	{
 		// create feedback panel to show errors
-		final FeedbackPanel feedbackErrors = new FeedbackPanel("feedbackErrors", new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR));
+		final FeedbackPanel feedbackErrors = new FeedbackPanel("feedbackErrors", new ExactLevelFeedbackMessageFilter(
+			FeedbackMessage.ERROR));
 		feedbackErrors.setOutputMarkupId(true);
 		add(feedbackErrors);
-		
+
 		// create feedback panel to show info message
-		final FeedbackPanel feedbackSuccess = new FeedbackPanel("feedbackSuccess", new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO));
+		final FeedbackPanel feedbackSuccess = new FeedbackPanel("feedbackSuccess", new ExactLevelFeedbackMessageFilter(
+			FeedbackMessage.INFO));
 		feedbackSuccess.setOutputMarkupId(true);
 		add(feedbackSuccess);
-		
+
 		// add form with markup id setter so it can be updated via ajax
 		addInstantValidationForm();
 
 		addPreventEnterSubmitForm();
 	}
 
-	private void addPreventEnterSubmitForm() {
+	private void addPreventEnterSubmitForm()
+	{
 		Bean bean = new Bean();
 		Form<Bean> form = new Form<Bean>("preventEnterForm", new CompoundPropertyModel<>(bean))
 		{
@@ -82,7 +85,8 @@ public class FormPage extends BasePage
 		form.add(new AjaxPreventSubmitBehavior());
 	}
 
-	private void addInstantValidationForm() {
+	private void addInstantValidationForm()
+	{
 		Bean bean = new Bean();
 		Form<Bean> form = new Form<Bean>("form", new CompoundPropertyModel<>(bean))
 		{
@@ -105,7 +109,8 @@ public class FormPage extends BasePage
 		form.add(new AjaxFormValidatingBehavior("keydown", Duration.ofSeconds(1)));
 	}
 
-	private void addFormComponents(final Form<Bean> form) {
+	private void addFormComponents(final Form<Bean> form)
+	{
 
 		FormComponent<String> fc = new RequiredTextField<>("name");
 		fc.add(new StringValidator(4, null));

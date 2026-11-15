@@ -397,10 +397,10 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T>
 			for (Map.Entry<String, Object> attr : labelAttrs.entrySet())
 			{
 				extraLabelAttributes.append(' ')
-						.append(Strings.escapeMarkup(attr.getKey()))
-						.append("=\"")
-						.append(Strings.escapeMarkup(attr.getValue().toString()))
-						.append('"');
+					.append(Strings.escapeMarkup(attr.getKey()))
+					.append("=\"")
+					.append(Strings.escapeMarkup(attr.getValue().toString()))
+					.append('"');
 			}
 		}
 

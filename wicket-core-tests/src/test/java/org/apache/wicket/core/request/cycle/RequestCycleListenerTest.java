@@ -171,7 +171,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		// 0 exceptions mapped
 		assertValues(0, 1, 1);
 
-		
+
 		// TEST WITH TWO LISTENERS AND AN EXCEPTION DURING RESPONSE
 		cycle = newRequestCycle(rc -> { throw new RuntimeException("testing purposes only"); });
 		cycle.getListeners().add(incrementingListener);
@@ -180,8 +180,8 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		incrementingListener.assertValues(2, 2, 2, 0, 2, 2);
 		// 1 exception mapped, 0 responded
 		assertValues(1, 0, 1);
-		
-		
+
+
 		// TEST A REPLACE EXCEPTION DURING RESPONSE
 		IRequestHandler replacement = new IRequestHandler()
 		{
@@ -205,7 +205,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 			{
 				throw new UnsupportedOperationException();
 			}
-			
+
 			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
@@ -218,7 +218,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		// 0 exception mapped, 1 responded, 2 detached
 		assertValues(0, 1, 2);
 
-		
+
 		// TEST A REPLACE EXCEPTION DURING RESPONSE
 		cycle = newRequestCycle(rc -> { throw new ReplaceHandlerException(replacement, false); });
 		cycle.scheduleRequestHandlerAfterCurrent(new IRequestHandler()
@@ -228,7 +228,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 			{
 				responses++;
 			}
-			
+
 			@Override
 			public void detach(IRequestCycle requestCycle)
 			{
@@ -284,7 +284,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		RequestCycle cycle = newRequestCycle(requestCycle -> { throw new RuntimeException("testing purposes only"); });
 		assertFalse(cycle.processRequestAndDetach());
 	}
-	
+
 	@Test
 	void scheduledHandlerAvailableForExceptionListener()
 	{
@@ -297,7 +297,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 			{
 				// scheduled still scheduled
 				assertEquals(scheduledHandler, cycle.find(scheduledHandler.getClass()).get());
-				
+
 				return new IRequestHandler()
 				{
 					@Override
@@ -310,8 +310,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 			}
 		});
 
-		RequestCycle cycle = newRequestCycle(requestCycle ->
-		{
+		RequestCycle cycle = newRequestCycle(requestCycle -> {
 			// schedule and fail immediately
 			requestCycle.scheduleRequestHandlerAfterCurrent(scheduledHandler);
 			throw new WicketRuntimeException();
@@ -351,7 +350,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		assertEquals(exceptionsMapped, this.exceptionsMapped);
 		assertEquals(responses, this.responses);
 		assertEquals(detaches, this.detaches);
-		
+
 		this.exceptionsMapped = 0;
 		this.responses = 0;
 		this.detaches = 0;
@@ -433,7 +432,8 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 			schedules++;
 		}
 
-		private void assertValues(int begins, int ends, int resolved, int executed, int exceptions, int detachesnotified)
+		private void assertValues(int begins, int ends, int resolved, int executed, int exceptions,
+			int detachesnotified)
 		{
 			assertEquals(begins, this.begins);
 			assertEquals(ends, this.ends);
@@ -441,7 +441,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 			assertEquals(executed, this.executed);
 			assertEquals(exceptions, this.exceptions);
 			assertEquals(detachesnotified, this.detachesnotified);
-			
+
 			this.begins = 0;
 			this.ends = 0;
 			this.resolved = 0;

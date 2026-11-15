@@ -54,10 +54,10 @@ public class AjaxStatelessExample extends WicketExamplePage
 	{
 		super(parameters);
 		setStatelessHint(true);
-		
+
 		add(new Label("message", new SessionModel()));
 		add(new BookmarkablePageLink<>("indexLink", Index.class));
-		
+
 		final Label incrementLabel = new Label("incrementLabel", () -> {
 			String counter = getParameter(parameters, COUNTER_PARAM);
 			return counter != null ? Integer.parseInt(counter) : 0;
@@ -72,7 +72,7 @@ public class AjaxStatelessExample extends WicketExamplePage
 
 				target.ifPresent(ajaxTarget -> ajaxTarget.add(incrementLabel, this));
 			}
-			
+
 			@Override
 			protected boolean getStatelessHint()
 			{
@@ -107,7 +107,7 @@ public class AjaxStatelessExample extends WicketExamplePage
 				selectedValue.setDefaultModelObject("Selected value: " + value);
 				target.add(selectedValue);
 			}
-			
+
 			@Override
 			public boolean getStatelessHint(Component component)
 			{
@@ -141,7 +141,7 @@ public class AjaxStatelessExample extends WicketExamplePage
 				submittedValues.setDefaultModelObject(values);
 				target.add(feedback, submittedValues);
 			}
-			
+
 			@Override
 			protected boolean getStatelessHint()
 			{
@@ -168,7 +168,7 @@ public class AjaxStatelessExample extends WicketExamplePage
 					Thread.currentThread().interrupt();
 				}
 			}
-			
+
 			@Override
 			protected boolean getStatelessHint()
 			{
@@ -194,7 +194,7 @@ public class AjaxStatelessExample extends WicketExamplePage
 					Thread.currentThread().interrupt();
 				}
 			}
-			
+
 			@Override
 			protected boolean getStatelessHint()
 			{

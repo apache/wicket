@@ -341,7 +341,7 @@ public class FormVisitTest extends WicketTestCase
 
 		assertTrue(page.innerField.onValidCallOrder < page.outerField.onValidCallOrder);
 	}
-	
+
 	@Test
 	public void callInnerFormOnBeforeUpdateFormComponentModels()
 	{
@@ -446,7 +446,8 @@ public class FormVisitTest extends WicketTestCase
 	}
 
 	@Test
-	public void validationNotPerformedIfAllDependentsDisabled() {
+	public void validationNotPerformedIfAllDependentsDisabled()
+	{
 		formValidator.setDependency(page.outerField);
 		page.outerField.setEnabled(false);
 		page.outerForm.add(formValidator);
@@ -455,13 +456,15 @@ public class FormVisitTest extends WicketTestCase
 	}
 
 	@Test
-	public void validationPerformedIfAtLeastOneDependentEnabled() {
+	public void validationPerformedIfAtLeastOneDependentEnabled()
+	{
 		page.innerField.setEnabled(false);
 		page.outerField.setEnabled(true);
 		formValidator.dependencies = new FormComponent<?>[] { page.outerField, page.innerField };
 		page.outerForm.add(formValidator);
 		tester.newFormTester("outerForm").submit();
-		assertTrue(formValidator.validatedCalled, "Validation should be performed if at least one dependent is enabled");
+		assertTrue(formValidator.validatedCalled,
+			"Validation should be performed if at least one dependent is enabled");
 	}
 
 	public static class TestFormPage extends WebPage implements IMarkupResourceStreamProvider

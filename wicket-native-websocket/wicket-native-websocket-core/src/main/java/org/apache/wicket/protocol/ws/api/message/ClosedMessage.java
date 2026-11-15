@@ -30,7 +30,7 @@ public class ClosedMessage extends AbstractClientMessage
 	private final int closeCode;
 
 	private final String message;
-	
+
 	public ClosedMessage(Application application, String sessionId, IKey key, int closeCode, String message)
 	{
 		super(application, sessionId, key);
@@ -38,11 +38,13 @@ public class ClosedMessage extends AbstractClientMessage
 		this.message = message;
 	}
 
-	public int getCloseCode() {
+	public int getCloseCode()
+	{
 		return closeCode;
 	}
 
-	public String getMessage() {
+	public String getMessage()
+	{
 		return message;
 	}
 

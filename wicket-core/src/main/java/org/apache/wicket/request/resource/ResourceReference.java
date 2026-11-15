@@ -49,9 +49,9 @@ public abstract class ResourceReference implements IClusterable
 	private final Key data;
 
 	private String integrity;
-	
+
 	private CrossOrigin crossOrigin;
-	
+
 	/**
 	 * Creates new {@link ResourceReference} instance.
 	 * 
@@ -247,7 +247,7 @@ public abstract class ResourceReference implements IClusterable
 	{
 		return new UrlAttributes(getLocale(), getStyle(), getVariation());
 	}
-	
+
 	/**
 	 * Returns the integrity value of the resource which is a string containing
 	 * one or more base64 encoded hashes.
@@ -255,7 +255,8 @@ public abstract class ResourceReference implements IClusterable
 	 * hashes are whitespace separated (see reference below): 
 	 *     https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity  
 	 */
-	public String getIntegrity() {
+	public String getIntegrity()
+	{
 		return integrity;
 	}
 
@@ -266,7 +267,8 @@ public abstract class ResourceReference implements IClusterable
 	 * hashes are whitespace separated (see reference below): 
 	 *     https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity  
 	 */
-	public void setIntegrity(String integrity) {
+	public void setIntegrity(String integrity)
+	{
 		this.integrity = integrity;
 	}
 
@@ -276,7 +278,8 @@ public abstract class ResourceReference implements IClusterable
 	 * 
 	 *  @return cross origin policy
 	 */
-	public CrossOrigin getCrossOrigin() {
+	public CrossOrigin getCrossOrigin()
+	{
 		return crossOrigin;
 	}
 
@@ -284,10 +287,11 @@ public abstract class ResourceReference implements IClusterable
 	 * Sets the cross origin policy to use when creating the header reference 
 	 * for the resource. 
 	 */
-	public void setCrossOrigin(CrossOrigin crossOrigin) {
+	public void setCrossOrigin(CrossOrigin crossOrigin)
+	{
 		this.crossOrigin = crossOrigin;
-	}	
-	
+	}
+
 	/**
 	 * Factory method to build a resource reference that uses the provided supplier to return
 	 * the resource.
@@ -321,28 +325,28 @@ public abstract class ResourceReference implements IClusterable
 	public static final class LambdaResourceReference extends ResourceReference
 	{
 		private static final long serialVersionUID = 1826862147241009289L;
-		
+
 		final SerializableSupplier<IResource> resourceBuilder;
 
-		public LambdaResourceReference(String name, SerializableSupplier<IResource> resourceBuilder) 
+		public LambdaResourceReference(String name, SerializableSupplier<IResource> resourceBuilder)
 		{
 			super(name);
 			this.resourceBuilder = Args.notNull(resourceBuilder, "resourceBuilder");
 		}
 
-		public LambdaResourceReference(Key key, SerializableSupplier<IResource> resourceBuilder) 
+		public LambdaResourceReference(Key key, SerializableSupplier<IResource> resourceBuilder)
 		{
 			super(key);
 			this.resourceBuilder = Args.notNull(resourceBuilder, "resourceBuilder");
 		}
 
 		@Override
-		public IResource getResource() 
+		public IResource getResource()
 		{
 			return resourceBuilder.get();
 		}
 	}
-	
+
 	/**
 	 * @see ResourceReference#getUrlAttributes()
 	 * 
@@ -425,7 +429,8 @@ public abstract class ResourceReference implements IClusterable
 		}
 
 		@Override
-		public int hashCode() {
+		public int hashCode()
+		{
 			// Not using `Objects.hash` for performance reasons
 			int result = locale != null ? locale.hashCode() : 0;
 			result = 31 * result + (style != null ? style.hashCode() : 0);
@@ -515,7 +520,8 @@ public abstract class ResourceReference implements IClusterable
 		}
 
 		@Override
-		public int hashCode() {
+		public int hashCode()
+		{
 			int result = scope != null ? scope.hashCode() : 0;
 			result = 31 * result + (name != null ? name.hashCode() : 0);
 			result = 31 * result + (locale != null ? locale.hashCode() : 0);

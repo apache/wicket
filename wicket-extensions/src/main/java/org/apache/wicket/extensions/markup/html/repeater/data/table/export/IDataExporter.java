@@ -32,7 +32,8 @@ import org.apache.wicket.util.io.IClusterable;
  * @see IExportableColumn
  */
 public interface IDataExporter
-	extends IClusterable
+	extends
+		IClusterable
 {
 	/**
 	 * Returns a model of the exported data format name. This should be something like "CSV" or "Excel" etc. The

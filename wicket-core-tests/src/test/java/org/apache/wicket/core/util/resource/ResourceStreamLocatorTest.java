@@ -69,7 +69,7 @@ public class ResourceStreamLocatorTest extends WicketTestCase
 	 * @param extension
 	 */
 	private void createAndTestResource(IResourceFinder sourcePath, String style, String variation,
-									   Locale locale, String extension)
+		Locale locale, String extension)
 	{
 		IResourceStreamLocator locator = new ResourceStreamLocator(sourcePath);
 		IResourceStream resource = locator.locate(this.getClass(), this.getClass()

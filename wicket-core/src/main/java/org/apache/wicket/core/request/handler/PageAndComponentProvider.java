@@ -170,12 +170,13 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 				{
 					Page p = (Page)page;
 					p.internalInitialize();
-					
+
 					// preparation of feedbacks is delayed into the render phase
-					try (FeedbackDelay delay = new FeedbackDelay(p.getRequestCycle())) {
+					try (FeedbackDelay delay = new FeedbackDelay(p.getRequestCycle()))
+					{
 						p.beforeRender();
 						p.markRendering(false);
-						
+
 						// note: no invocation of delay.onBeforeRender() 
 					}
 					component = page.get(componentPath);

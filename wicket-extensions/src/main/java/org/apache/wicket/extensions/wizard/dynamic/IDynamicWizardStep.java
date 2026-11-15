@@ -102,7 +102,8 @@ public interface IDynamicWizardStep extends IWizardStep
 	 * 
 	 * @see IWizardModel#isFinishAvailable()
 	 */
-	default boolean isFinishAvailable() {
+	default boolean isFinishAvailable()
+	{
 		return isLastStep();
 	}
 }

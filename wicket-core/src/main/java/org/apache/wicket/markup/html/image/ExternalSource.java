@@ -53,7 +53,7 @@ public class ExternalSource extends ExternalImage
 	{
 		super(id, null, Model.ofList(Collections.<Serializable> emptyList()));
 	}
-	
+
 	/**
 	 * Creates an external source
 	 * 

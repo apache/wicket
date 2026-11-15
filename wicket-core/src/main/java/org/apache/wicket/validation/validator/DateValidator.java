@@ -182,19 +182,19 @@ public class DateValidator extends RangeValidator<Date>
 
 		if (error instanceof ValidationError)
 		{
-			ValidationError ve = (ValidationError) error;
+			ValidationError ve = (ValidationError)error;
 			ve.setVariable("inputdate", validatable.getValue());
 
 			// format variables if format has been specified
 			if (format != null)
 			{
 				Locale locale;
-				
-				if (Session.exists()) 
+
+				if (Session.exists())
 				{
 					Session session = Session.get();
 					locale = session.getLocale();
-					
+
 					if (locale == null)
 					{
 						locale = Locale.getDefault(Locale.Category.FORMAT);

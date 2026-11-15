@@ -355,31 +355,32 @@ class XmlPullParserTest
 	}
 
 	@Test
-    public void skipScriptTag() throws Exception
+	public void skipScriptTag() throws Exception
 	{
-	    final XmlPullParser parser = new XmlPullParser();
-	    //ensure that script tag content is skiped if we have 'module' as type value
-        parser.parse("<html><script type=\"module\">all I need is a < char to break parser </script><body></body></html>");
-        XmlTag tag = parser.nextTag();
-        assertTrue(tag.isOpen());
-        assertEquals("html", tag.getName());
-        tag = parser.nextTag();
-        assertTrue(tag.isOpen());
-        assertEquals("script", tag.getName());
-        tag = parser.nextTag();
-        assertTrue(tag.isClose());
-        assertEquals("script", tag.getName());
-        tag = parser.nextTag();
-        assertTrue(tag.isOpen());
-        assertEquals("body", tag.getName());
-        tag = parser.nextTag();
-        assertTrue(tag.isClose());
-        assertEquals("body", tag.getName());
-        tag = parser.nextTag();
-        assertTrue(tag.isClose());
-        assertEquals("html", tag.getName());
+		final XmlPullParser parser = new XmlPullParser();
+		//ensure that script tag content is skiped if we have 'module' as type value
+		parser.parse(
+			"<html><script type=\"module\">all I need is a < char to break parser </script><body></body></html>");
+		XmlTag tag = parser.nextTag();
+		assertTrue(tag.isOpen());
+		assertEquals("html", tag.getName());
+		tag = parser.nextTag();
+		assertTrue(tag.isOpen());
+		assertEquals("script", tag.getName());
+		tag = parser.nextTag();
+		assertTrue(tag.isClose());
+		assertEquals("script", tag.getName());
+		tag = parser.nextTag();
+		assertTrue(tag.isOpen());
+		assertEquals("body", tag.getName());
+		tag = parser.nextTag();
+		assertTrue(tag.isClose());
+		assertEquals("body", tag.getName());
+		tag = parser.nextTag();
+		assertTrue(tag.isClose());
+		assertEquals("html", tag.getName());
 
-    }
+	}
 
 	/**
 	 *
@@ -471,7 +472,8 @@ class XmlPullParserTest
 	final void downlevelRevealedConditionalComments() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
-		parser.parse("<!--[if (gt IE 9)|!(IE)]><!--><html lang=\"en\" class=\"no-js\"><!--<![endif]--> <span>test</span>");
+		parser.parse(
+			"<!--[if (gt IE 9)|!(IE)]><!--><html lang=\"en\" class=\"no-js\"><!--<![endif]--> <span>test</span>");
 		HttpTagType type = parser.next();
 		assertEquals(HttpTagType.CONDITIONAL_COMMENT, type);
 

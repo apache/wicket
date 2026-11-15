@@ -27,7 +27,7 @@ public class BodyIsAChildPage extends WebPage
 	public BodyIsAChildPage(final PageParameters parameters)
 	{
 		super(parameters);
-    }
+	}
 
 	@Override
 	protected void onInitialize()

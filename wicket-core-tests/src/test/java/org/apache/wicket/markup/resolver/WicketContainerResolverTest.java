@@ -29,7 +29,7 @@ class WicketContainerResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test_1() throws Exception
+	void test_1() throws Exception
 	{
 		executeTest(SimpleContainerPage_1.class, "SimpleContainerPageExpectedResult_1.html");
 	}

@@ -86,14 +86,14 @@ public class StartExamples
 			https_config.addCustomizer(src);
 
 			ServerConnector https = new ServerConnector(server, new SslConnectionFactory(
-					sslContextFactory, "http/1.1"), new HttpConnectionFactory(https_config));
+				sslContextFactory, "http/1.1"), new HttpConnectionFactory(https_config));
 			https.setPort(8443);
 			https.setIdleTimeout(500000);
 
 			server.addConnector(https);
 			System.out.println("SSL access to the examples has been enabled on port 8443");
 			System.out
-					.println("You can access the application using SSL on https://localhost:8443");
+				.println("You can access the application using SSL on https://localhost:8443");
 			System.out.println();
 		}
 
@@ -111,7 +111,7 @@ public class StartExamples
 
 		ServletContextHandler contextHandler = ServletContextHandler.getServletContextHandler(bb.getServletContext());
 		JakartaWebSocketServletContainerInitializer.configure(contextHandler,
-				(servletContext, container) -> container.addEndpoint(new WicketServerEndpointConfig()));
+			(servletContext, container) -> container.addEndpoint(new WicketServerEndpointConfig()));
 
 		// uncomment next line if you want to test with JSESSIONID encoded in the urls
 //		((AbstractSessionManager) bb.getSessionHandler().getSessionManager()).setUsingCookies(false);

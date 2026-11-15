@@ -31,7 +31,7 @@ class LocalizedErrorMessageTest extends WicketTestCase
 	 * feedback messages to be altered as well. Testcase for WICKET-891.
 	 */
 	@Test
-    void wicket891()
+	void wicket891()
 	{
 		tester.getSession().setLocale(new Locale("nl"));
 
@@ -60,7 +60,7 @@ class LocalizedErrorMessageTest extends WicketTestCase
 	 * WICKET-4608 vars should be properly converted
 	 */
 	@Test
-    void testConvertedVars()
+	void testConvertedVars()
 	{
 		tester.getSession().setLocale(new Locale("de"));
 
@@ -81,7 +81,7 @@ class LocalizedErrorMessageTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-    void wicket_1927()
+	void wicket_1927()
 	{
 		tester.getApplication().getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
 		tester.getSession().setLocale(new Locale("de"));

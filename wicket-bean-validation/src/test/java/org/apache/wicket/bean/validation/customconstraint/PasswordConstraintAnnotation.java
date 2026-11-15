@@ -34,12 +34,11 @@ import jakarta.validation.constraints.NotNull;
 @Retention(RUNTIME)
 @Constraint(validatedBy = PasswordValidator.class)
 @Documented
-public @interface PasswordConstraintAnnotation 
-{
+public @interface PasswordConstraintAnnotation {
 	public static final String DEFAULT_BUNDLE_KEY = "default.bundle.key";
 	public static final String CUSTOM_BUNDLE_KEY = "custom.bundle.key";
-	
-	String message() default "{" + DEFAULT_BUNDLE_KEY +"}";
+
+	String message() default "{" + DEFAULT_BUNDLE_KEY + "}";
 
 	Class<?>[] groups() default { };
 

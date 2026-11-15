@@ -21,40 +21,40 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 
-public class BorderWithNestedBodyPage extends WebPage 
+public class BorderWithNestedBodyPage extends WebPage
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8364550846663714451L;
-	
+
 	//https://issues.apache.org/jira/browse/WICKET-6303
 	private boolean behaviorRendered = false;
-	
+
 	@Override
-	protected void onInitialize() 
+	protected void onInitialize()
 	{
 		super.onInitialize();
 		BorderWithNestedBody border = new BorderWithNestedBody("outerBorder");
-        border.add(new AjaxLink<Void>("ajaxClick")
-        {
-            @Override
-            public void internalRenderHead(HtmlHeaderContainer container)
-            {
-                super.internalRenderHead(container);
-                behaviorRendered = true;
-            }
+		border.add(new AjaxLink<Void>("ajaxClick")
+		{
+			@Override
+			public void internalRenderHead(HtmlHeaderContainer container)
+			{
+				super.internalRenderHead(container);
+				behaviorRendered = true;
+			}
 
-            @Override
-            public void onClick(AjaxRequestTarget target)
-            {
-            }
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+			}
 		});
-		
+
 		add(border);
 	}
 
-	public boolean isBehaviorRendered() 
+	public boolean isBehaviorRendered()
 	{
 		return behaviorRendered;
 	}

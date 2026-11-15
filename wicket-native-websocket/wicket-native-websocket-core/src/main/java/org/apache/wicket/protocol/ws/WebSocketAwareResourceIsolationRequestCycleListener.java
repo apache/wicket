@@ -35,7 +35,8 @@ public class WebSocketAwareResourceIsolationRequestCycleListener extends Resourc
 	@Override
 	protected boolean isChecked(IRequestHandler handler)
 	{
-		if (handler instanceof WebSocketRequestHandler || handler instanceof WebSocketMessageBroadcastHandler) {
+		if (handler instanceof WebSocketRequestHandler || handler instanceof WebSocketMessageBroadcastHandler)
+		{
 			return false;
 		}
 		return super.isChecked(handler);

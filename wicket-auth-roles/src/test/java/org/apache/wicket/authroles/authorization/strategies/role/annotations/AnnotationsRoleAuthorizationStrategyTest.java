@@ -36,7 +36,7 @@ class AnnotationsRoleAuthorizationStrategyTest
 	 * https://issues.apache.org/jira/browse/WICKET-3974
 	 */
 	@Test
-    void allowsRenderWithRequiredRoleAndNoDeniedRole()
+	void allowsRenderWithRequiredRoleAndNoDeniedRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role1"));
@@ -46,7 +46,7 @@ class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@Test
-    void deniesRenderWithoutRequiredRole()
+	void deniesRenderWithoutRequiredRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role2"));
@@ -55,7 +55,7 @@ class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@Test
-    void deniesRenderWithRequiredRoleAndDeniedRole()
+	void deniesRenderWithRequiredRoleAndDeniedRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role1", "role3"));
@@ -64,7 +64,7 @@ class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@Test
-    void deniesRenderWithDeniedRole()
+	void deniesRenderWithDeniedRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role3"));
@@ -73,7 +73,7 @@ class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@Test
-    void allowsEnableWithRequiredRole()
+	void allowsEnableWithRequiredRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role1"));
@@ -82,7 +82,7 @@ class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@Test
-    void deniesEnableWithoutRequiredRoleAndNoDeniedRole()
+	void deniesEnableWithoutRequiredRoleAndNoDeniedRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role2"));
@@ -91,7 +91,7 @@ class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@Test
-    void deniesEnableWithDeniedRole()
+	void deniesEnableWithDeniedRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role3"));
@@ -100,7 +100,7 @@ class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@Test
-    void deniesEnableWithRequiredRoleAndDeniedRole()
+	void deniesEnableWithRequiredRoleAndDeniedRole()
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role1", "role3"));
@@ -109,35 +109,40 @@ class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@Test
-    void allowsInstantiationWithRequiredRole() {
+	void allowsInstantiationWithRequiredRole()
+	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role1"));
 		assertTrue(strategy.isInstantiationAuthorized(TestComponent_Instantiate.class));
 	}
 
 	@Test
-    void deniesInstantiationWithoutRequiredRole() {
+	void deniesInstantiationWithoutRequiredRole()
+	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role2"));
 		assertFalse(strategy.isInstantiationAuthorized(TestComponent_Instantiate.class));
 	}
 
 	@Test
-    void allowsInstantiationWithAllRequiredRoles() {
+	void allowsInstantiationWithAllRequiredRoles()
+	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role1", "role2"));
 		assertTrue(strategy.isInstantiationAuthorized(TestComponent_Roleset_Instantiate.class));
 	}
 
 	@Test
-    void deniesInstantiationWithoutAllRequiredRoles() {
+	void deniesInstantiationWithoutAllRequiredRoles()
+	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role2"));
 		assertFalse(strategy.isInstantiationAuthorized(TestComponent_Roleset_Instantiate.class));
 	}
 
 	@Test
-    void allowsResourceWithRequiredRole() {
+	void allowsResourceWithRequiredRole()
+	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role1"));
 		IResource resource = Mockito.mock(RestrictedResource.class);
@@ -145,7 +150,8 @@ class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@Test
-    void deniesResourceWithoutRequiredRole() {
+	void deniesResourceWithoutRequiredRole()
+	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role2"));
 		IResource resource = Mockito.mock(RestrictedResource.class);
@@ -153,7 +159,8 @@ class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@Test
-    void allowsUnprotectedResourceWithRole() {
+	void allowsUnprotectedResourceWithRole()
+	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles("role2"));
 		IResource resource = Mockito.mock(UnrestrictedResource.class);
@@ -161,7 +168,8 @@ class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@Test
-    void allowsUnprotectedResourceWithoutRole() {
+	void allowsUnprotectedResourceWithoutRole()
+	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 			roles());
 		IResource resource = Mockito.mock(UnrestrictedResource.class);

@@ -95,7 +95,7 @@ public class PriorityHeaderItem extends HeaderItem implements IWrappedHeaderItem
 	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		PriorityHeaderItem that = (PriorityHeaderItem) o;
+		PriorityHeaderItem that = (PriorityHeaderItem)o;
 		return Objects.equals(wrapped, that.wrapped);
 	}
 

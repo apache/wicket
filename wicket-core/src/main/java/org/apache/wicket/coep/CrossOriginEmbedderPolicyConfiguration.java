@@ -53,8 +53,7 @@ import java.util.Set;
  */
 public class CrossOriginEmbedderPolicyConfiguration
 {
-	public enum CoepMode
-	{
+	public enum CoepMode {
 		ENFORCING("Cross-Origin-Embedder-Policy"),
 		REPORTING("Cross-Origin-Embedder-Policy-Report-Only"),
 		DISABLED("");

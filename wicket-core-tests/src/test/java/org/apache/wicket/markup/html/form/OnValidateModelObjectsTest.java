@@ -42,10 +42,12 @@ class OnValidateModelObjectsTest extends WicketTestCase
 		formTester.submit("parentSubmitBtn");
 
 		Page page = tester.getLastRenderedPage();
-		OnFormValidateModelObjectsPage.ParentModel parentModel = (OnFormValidateModelObjectsPage.ParentModel) page.getDefaultModelObject();
+		OnFormValidateModelObjectsPage.ParentModel parentModel = (OnFormValidateModelObjectsPage.ParentModel)page
+			.getDefaultModelObject();
 		assertEquals(true, parentModel.isParentValidated());
 
-		AddressFormPanel.ChildModel childPanel = (AddressFormPanel.ChildModel) page.get("parentForm:addressInfo").getDefaultModelObject();
+		AddressFormPanel.ChildModel childPanel = (AddressFormPanel.ChildModel)page.get("parentForm:addressInfo")
+			.getDefaultModelObject();
 		assertEquals(true, childPanel.isChildValidated());
 	}
 }

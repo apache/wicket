@@ -91,7 +91,7 @@ public class ComponentTag extends MarkupElement
 
 	/** Render the tag as RawMarkup even if no Component can be found */
 	public final static int RENDER_RAW = 0x0020;
-	
+
 	/** If true, the current tag contains a child or a descendant with the "wicket:id" attribute */
 	public final static int CONTAINS_WICKET_ID = 0x0040;
 
@@ -831,7 +831,7 @@ public class ComponentTag extends MarkupElement
 	{
 		setFlag(NO_CLOSE_TAG, hasNoCloseTag);
 	}
-	
+
 	/**
 	 * Sets the flag to indicate if the current tag contains a child 
 	 * or a descendant with the "wicket:id" attribute. 
@@ -847,11 +847,11 @@ public class ComponentTag extends MarkupElement
 	 * Says if the current tag contains a child or a descendant with the "wicket:id" attribute.
 	 * @return true if the current tag contains a child or a descendant with the "wicket:id" attribute.
 	 */
-    public boolean containsWicketId()
-    {
-        return getFlag(CONTAINS_WICKET_ID);
-    }
-    
+	public boolean containsWicketId()
+	{
+		return getFlag(CONTAINS_WICKET_ID);
+	}
+
 	/**
 	 * In case of inherited markup, the base and the extended markups are merged and the information
 	 * about the tags origin is lost. In some cases like wicket:head and wicket:link this

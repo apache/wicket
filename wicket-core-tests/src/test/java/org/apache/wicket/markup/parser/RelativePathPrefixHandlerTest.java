@@ -31,7 +31,7 @@ class RelativePathPrefixHandlerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void basics() throws Exception
+	void basics() throws Exception
 	{
 		executeTest(Page_1.class, "PageExpectedResult_1.html");
 	}
@@ -40,7 +40,7 @@ class RelativePathPrefixHandlerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void anchors() throws Exception
+	void anchors() throws Exception
 	{
 		executeTest(Page_2.class, "PageExpectedResult_2.html");
 	}
@@ -49,7 +49,7 @@ class RelativePathPrefixHandlerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void transparency() throws Exception
+	void transparency() throws Exception
 	{
 		executeTest(Page_3.class, "PageExpectedResult_3.html");
 	}

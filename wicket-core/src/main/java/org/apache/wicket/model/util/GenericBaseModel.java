@@ -82,13 +82,13 @@ public abstract class GenericBaseModel<T> implements IObjectClassAwareModel<T>
 	@Override
 	public Class<T> getObjectClass()
 	{
-		return object != null ? (Class<T>) object.getClass() : null;
+		return object != null ? (Class<T>)object.getClass() : null;
 	}
 
 	@Override
 	public String toString()
 	{
-	 StringBuilder sb = new StringBuilder("Model:classname=[");
+		StringBuilder sb = new StringBuilder("Model:classname=[");
 		sb.append(getClass().getName()).append(']');
 		sb.append(":object=[").append(object).append(']');
 		return sb.toString();

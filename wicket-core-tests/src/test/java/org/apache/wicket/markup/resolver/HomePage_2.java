@@ -49,6 +49,6 @@ public class HomePage_2 extends WebPage
 	public void renderHead(IHeaderResponse response)
 	{
 		response.render(CssHeaderItem.forReference(new PackageResourceReference(HomePage_2.class,
-				"main.css")));
+			"main.css")));
 	}
 }

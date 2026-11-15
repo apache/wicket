@@ -74,7 +74,7 @@ public class SqlTimestampConverter extends AbstractDateConverter<Timestamp>
 		}
 
 		// return a clone because DateFormat.getDateInstance uses a pool
-		return (DateFormat) DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale).clone();
+		return (DateFormat)DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale).clone();
 	}
 
 	@Override

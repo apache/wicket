@@ -83,7 +83,8 @@ public class FileUploadResourceReference extends ResourceReference
 		{
 
 			@Override
-			protected String generateJsonResponse(ResourceResponse resourceResponse, ServletWebRequest webRequest, List<FileUpload> files)
+			protected String generateJsonResponse(ResourceResponse resourceResponse, ServletWebRequest webRequest,
+				List<FileUpload> files)
 			{
 				JSONArray json = new JSONArray();
 
@@ -107,7 +108,8 @@ public class FileUploadResourceReference extends ResourceReference
 		};
 	}
 
-	public IUploadsFileManager getUploadFileManager() {
+	public IUploadsFileManager getUploadFileManager()
+	{
 		return uploadFileManager;
 	}
 

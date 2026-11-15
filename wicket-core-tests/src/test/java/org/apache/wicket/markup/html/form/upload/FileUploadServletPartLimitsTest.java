@@ -127,8 +127,7 @@ class FileUploadServletPartLimitsTest extends WicketTestCase
 	private MultipartServletWebRequestImpl parse(HttpServletRequest request, Bytes maxSize,
 		Bytes fileMaxSize, Long fileCountMax) throws FileUploadException
 	{
-		MultipartServletWebRequestImpl multipart =
-			new MultipartServletWebRequestImpl(request, "", maxSize, "uploadId");
+		MultipartServletWebRequestImpl multipart = new MultipartServletWebRequestImpl(request, "", maxSize, "uploadId");
 		multipart.setFileMaxSize(fileMaxSize);
 		if (fileCountMax != null)
 		{
@@ -244,8 +243,7 @@ class FileUploadServletPartLimitsTest extends WicketTestCase
 	void aggregateSizeOfPartsIsEnforcedAgainstMaxSize()
 	{
 		int half = (int)LIMIT.bytes() - 20;
-		MockHttpServletRequest request =
-			requestWithParts(new SizedPart(FIELD, half), new SizedPart(FIELD, half));
+		MockHttpServletRequest request = requestWithParts(new SizedPart(FIELD, half), new SizedPart(FIELD, half));
 
 		assertThrows(FileUploadException.class,
 			() -> parse(request, LIMIT, Bytes.bytes(half), null),
@@ -296,8 +294,7 @@ class FileUploadServletPartLimitsTest extends WicketTestCase
 	@Test
 	void fallbackDeliversFormFieldPartsWithinTheLimits() throws Exception
 	{
-		MockHttpServletRequest request =
-			requestWithParts(new SizedPart(FIELD, WITHIN_LIMIT, null));
+		MockHttpServletRequest request = requestWithParts(new SizedPart(FIELD, WITHIN_LIMIT, null));
 
 		MultipartServletWebRequestImpl multipart = parse(request, LIMIT, LIMIT, null);
 

@@ -27,11 +27,11 @@ public class BorderWithNestedBody extends Border
 	public BorderWithNestedBody(String id)
 	{
 		super(id);
-		
+
 	}
-	
+
 	@Override
-	protected void onInitialize() 
+	protected void onInitialize()
 	{
 		super.onInitialize();
 		addToBorder(new BorderComponent1("nestedBorder"));

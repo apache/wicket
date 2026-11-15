@@ -31,7 +31,7 @@ class ContextRelativeResourceReferenceTest extends WicketTestCase
 	private static final String ALREADY_MINIFIED = RESOURCE_NAME + ".min.js";
 	private static final String TO_BE_MINIFIED = RESOURCE_NAME + ".js";
 	private static final String CUSTOM_SUFFIX = "compress";
-	
+
 	@Test
 	void testMinifyResource() throws Exception
 	{
@@ -42,36 +42,38 @@ class ContextRelativeResourceReferenceTest extends WicketTestCase
 	@Test
 	void testDontMinifyResource() throws Exception
 	{
-		ContextRelativeResourceReference resourceReference = new ContextRelativeResourceReference(ALREADY_MINIFIED, false);
+		ContextRelativeResourceReference resourceReference = new ContextRelativeResourceReference(ALREADY_MINIFIED,
+			false);
 		assertTrue(testResourceKey(resourceReference, ALREADY_MINIFIED));
-		
+
 		resourceReference = new ContextRelativeResourceReference(TO_BE_MINIFIED, false);
 		assertTrue(testResourceKey(resourceReference, TO_BE_MINIFIED));
-		
+
 	}
-	
+
 	@Test
 	void testCustomSuffix() throws Exception
 	{
-		ContextRelativeResourceReference resourceReference = new ContextRelativeResourceReference(TO_BE_MINIFIED, CUSTOM_SUFFIX);
+		ContextRelativeResourceReference resourceReference = new ContextRelativeResourceReference(TO_BE_MINIFIED,
+			CUSTOM_SUFFIX);
 		assertTrue(testResourceKey(resourceReference, RESOURCE_NAME + "." + CUSTOM_SUFFIX + ".js"));
 	}
-	
+
 	@Override
 	protected WicketTester newWicketTester(WebApplication app)
 	{
 		WicketTester tester = super.newWicketTester(app);
 		app.getResourceSettings().setUseMinifiedResources(true);
-	
+
 		return tester;
 	}
-	
+
 	private boolean testResourceKey(ContextRelativeResourceReference resourceReference, String expectedName)
 	{
 		ContextRelativeResource resource = resourceReference.getResource();
 		String resourceKey = resource.getCacheKey().toString();
-		
+
 		return resourceKey.endsWith(expectedName);
 	}
-	
+
 }

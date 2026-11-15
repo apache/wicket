@@ -15,16 +15,17 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.cdi {
-    requires jakarta.annotation;
-    requires java.naming;
-    requires jakarta.cdi;
-    requires jakarta.inject;
-    requires org.apache.wicket.util;
-    requires org.apache.wicket.request;
-    requires org.apache.wicket.core;
-    requires org.slf4j;
-    requires static jakarta.servlet;
+module org.apache.wicket.cdi
+{
+	requires jakarta.annotation;
+	requires java.naming;
+	requires jakarta.cdi;
+	requires jakarta.inject;
+	requires org.apache.wicket.util;
+	requires org.apache.wicket.request;
+	requires org.apache.wicket.core;
+	requires org.slf4j;
+	requires static jakarta.servlet;
 
-    exports org.apache.wicket.cdi;
+	exports org.apache.wicket.cdi;
 }

@@ -38,8 +38,8 @@ class MediaComponentsApplication extends WebApplication
 		getResourceSettings().setCachingStrategy(NoOpResourceCachingStrategy.INSTANCE);
 
 		IPackageResourceGuard packageResourceGuard = org.apache.wicket.Application.get()
-				.getResourceSettings()
-				.getPackageResourceGuard();
+			.getResourceSettings()
+			.getPackageResourceGuard();
 		if (packageResourceGuard instanceof SecurePackageResourceGuard)
 		{
 			SecurePackageResourceGuard securePackageResourceGuard = (SecurePackageResourceGuard)packageResourceGuard;

@@ -32,7 +32,7 @@ class LabelTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void labelWithEscapeMarkup() throws Exception
+	void labelWithEscapeMarkup() throws Exception
 	{
 		executeTest(LabelWithEscapeMarkupPage.class, "LabelWithEscapeMarkupPageExpectedResult.html");
 	}
@@ -43,7 +43,7 @@ class LabelTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void labelWithoutEscapeMarkup() throws Exception
+	void labelWithoutEscapeMarkup() throws Exception
 	{
 		executeTest(LabelWithoutEscapeMarkupPage.class,
 			"LabelWithoutEscapeMarkupPageExpectedResult.html");

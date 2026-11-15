@@ -257,32 +257,32 @@ class DefaultPageFactoryTest extends WicketTestCase
 		}
 	}
 
-    public static class PrivateDefaultConstructorPage extends WebPage
+	public static class PrivateDefaultConstructorPage extends WebPage
 	{
 		private PrivateDefaultConstructorPage()
 		{
 		}
 	}
 
-    public static class PrivateConstructorWithParametersPage extends WebPage
+	public static class PrivateConstructorWithParametersPage extends WebPage
 	{
-        private PrivateConstructorWithParametersPage(PageParameters parameters)
+		private PrivateConstructorWithParametersPage(PageParameters parameters)
 		{
 			super(parameters);
 		}
 	}
 
-    public static class NonDefaultConstructorPage extends WebPage
+	public static class NonDefaultConstructorPage extends WebPage
 	{
-        public NonDefaultConstructorPage(String aa)
+		public NonDefaultConstructorPage(String aa)
 		{
 			super();
 		}
 	}
 
-    public static class ThrowExceptionInConstructorPage extends WebPage
+	public static class ThrowExceptionInConstructorPage extends WebPage
 	{
-        public ThrowExceptionInConstructorPage()
+		public ThrowExceptionInConstructorPage()
 		{
 
 			throw new RuntimeException("exception!");

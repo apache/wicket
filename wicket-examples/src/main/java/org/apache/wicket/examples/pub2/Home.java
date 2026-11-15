@@ -72,7 +72,8 @@ public final class Home extends WicketExamplePage
 		add(new SetLocaleLink("goHungarian", new Locale("hu")));
 	}
 
-	private static class SetLocaleLink extends Link<Void> {
+	private static class SetLocaleLink extends Link<Void>
+	{
 
 		private final Locale locale;
 

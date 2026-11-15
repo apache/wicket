@@ -115,7 +115,7 @@ class WicketMessageResolverTest extends WicketTestCase
 	void shouldFailWithEscapeSetToUnsupportedValue()
 	{
 
-		try 
+		try
 		{
 			tester.startPage(WicketMessageResolverEscapePageWrongEscapeValue.class);
 			fail("Expected to fail: wrong escape value");

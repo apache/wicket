@@ -35,11 +35,13 @@ import org.junit.jupiter.api.Test;
  *
  * @author Igor Vaynberg (ivaynberg)
  */
-class OnComponentTagListenerTest extends WicketTestCase {
+class OnComponentTagListenerTest extends WicketTestCase
+{
 
 
 	@Test
-	void multipleListeners() {
+	void multipleListeners()
+	{
 		TestListener listener1 = new TestListener();
 		TestListener listener2 = new TestListener();
 		tester.getApplication().getOnComponentTagListeners().add(listener1);
@@ -58,7 +60,8 @@ class OnComponentTagListenerTest extends WicketTestCase {
 	}
 
 	@Test
-	void visibility() {
+	void visibility()
+	{
 		TestListener listener = new TestListener();
 		tester.getApplication().getOnComponentTagListeners().add(listener);
 
@@ -72,15 +75,19 @@ class OnComponentTagListenerTest extends WicketTestCase {
 	}
 
 	@Test
-	void calledEvenIfNoSuper() {
+	void calledEvenIfNoSuper()
+	{
 
-		class DoesntCallSuper extends WebMarkupContainer {
-			private DoesntCallSuper(String id) {
+		class DoesntCallSuper extends WebMarkupContainer
+		{
+			private DoesntCallSuper(String id)
+			{
 				super(id);
 			}
 
 			@Override
-			protected void onComponentTag(ComponentTag tag) {
+			protected void onComponentTag(ComponentTag tag)
+			{
 				// missing call to super on purpose
 			}
 		}
@@ -99,12 +106,14 @@ class OnComponentTagListenerTest extends WicketTestCase {
 		assertEquals(1, listener.components.getCount("c3"));
 	}
 
-	static class TestPage extends WebPage implements IMarkupResourceStreamProvider {
+	static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	{
 		private static final long serialVersionUID = 1L;
 
 		private Component c1, c2, c3;
 
-		TestPage() {
+		TestPage()
+		{
 			c1 = new WebMarkupContainer("c1");
 			c2 = new WebMarkupContainer("c2");
 			c3 = new WebMarkupContainer("c3");
@@ -113,17 +122,21 @@ class OnComponentTagListenerTest extends WicketTestCase {
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class<?> containerClass) {
-			return new StringResourceStream("<html><body><div wicket:id='c1'><div wicket:id='c2'></div></div><div wicket:id='c3'></div></body></html>");
+			Class<?> containerClass)
+		{
+			return new StringResourceStream(
+				"<html><body><div wicket:id='c1'><div wicket:id='c2'></div></div><div wicket:id='c3'></div></body></html>");
 		}
 	}
 
-	private static class TestListener implements IOnComponentTagListener {
+	private static class TestListener implements IOnComponentTagListener
+	{
 
 		private MultiSet<String> components = new HashMultiSet<>();
 
 		@Override
-		public void onComponentTag(Component component, ComponentTag tag) {
+		public void onComponentTag(Component component, ComponentTag tag)
+		{
 			components.add(component.getId());
 		}
 	}

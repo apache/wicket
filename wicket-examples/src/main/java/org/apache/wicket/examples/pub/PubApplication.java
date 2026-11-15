@@ -27,7 +27,7 @@ import org.apache.wicket.examples.WicketExampleApplication;
 public class PubApplication extends WicketExampleApplication
 {
 	@Override
-	public Class< ? extends Page> getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return Home.class;
 	}

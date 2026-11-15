@@ -24,11 +24,11 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-public class ListViewInContainerPage extends BasePage 
+public class ListViewInContainerPage extends BasePage
 {
 	private static final long serialVersionUID = 1L;
 
-	public ListViewInContainerPage(final PageParameters parameters) 
+	public ListViewInContainerPage(final PageParameters parameters)
 	{
 		super(parameters);
 
@@ -38,7 +38,7 @@ public class ListViewInContainerPage extends BasePage
 		values.add(1);
 		values.add(2);
 		values.add(3);
-		
+
 		add(new ListView<Integer>("liste", values)
 		{
 			/**
@@ -56,5 +56,5 @@ public class ListViewInContainerPage extends BasePage
 				item.queue(testlib);
 			}
 		});
-    }
+	}
 }

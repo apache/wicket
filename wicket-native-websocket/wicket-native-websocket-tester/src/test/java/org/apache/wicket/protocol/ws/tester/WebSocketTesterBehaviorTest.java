@@ -66,7 +66,8 @@ public class WebSocketTesterBehaviorTest
 		WebSocketBehaviorTestPage page = new WebSocketBehaviorTestPage(expectedMessage);
 		tester.startPage(page);
 
-		WebSocketTester webSocketTester = new WebSocketTester(tester, page) {
+		WebSocketTester webSocketTester = new WebSocketTester(tester, page)
+		{
 			@Override
 			protected void onOutMessage(String message)
 			{
@@ -131,7 +132,7 @@ public class WebSocketTesterBehaviorTest
 			}
 		};
 		webSocketTester.broadcast(tester.getApplication(), tester.getHttpSession().getId(),
-				new PageIdKey(page.getPageId(), page.getClass().getName()), broadcastMessage);
+			new PageIdKey(page.getPageId(), page.getClass().getName()), broadcastMessage);
 
 		assertTrue(messageReceived.get());
 		webSocketTester.destroy();

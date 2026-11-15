@@ -102,7 +102,7 @@ class JavaScriptPackageResourceTest extends WicketTestCase
 	void cacheableStreamIsCompressed() throws ResourceStreamNotFoundException, IOException
 	{
 		JavaScriptPackageResource resource = new JavaScriptPackageResource(
-				PackageResourceTest.class, "packaged1.txt", null, null, null)
+			PackageResourceTest.class, "packaged1.txt", null, null, null)
 		{
 			private static final long serialVersionUID = 1L;
 

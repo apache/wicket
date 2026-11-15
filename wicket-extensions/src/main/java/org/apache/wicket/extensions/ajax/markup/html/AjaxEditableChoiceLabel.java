@@ -217,23 +217,23 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 				attributes.setEventNames("change", "blur", "keyup");
 
 				CharSequence dynamicExtraParameters = "var result = [], "
-						+ "kc=Wicket.Event.keyCode(attrs.event),"
-						+ "evtType=attrs.event.type;"
-						+ "if (evtType === 'blur' || (evtType === 'keyup' && kc===27)) {"
-						+ "  result.push( { name: 'save', value: false } );"
-						+ "}"
-						+ "else {"
-						+ "  result = Wicket.Form.serializeElement(attrs.c);"
-						+ "  result.push( { name: 'save', value: true } );"
-						+ "}"
-						+ "return result;";
+					+ "kc=Wicket.Event.keyCode(attrs.event),"
+					+ "evtType=attrs.event.type;"
+					+ "if (evtType === 'blur' || (evtType === 'keyup' && kc===27)) {"
+					+ "  result.push( { name: 'save', value: false } );"
+					+ "}"
+					+ "else {"
+					+ "  result = Wicket.Form.serializeElement(attrs.c);"
+					+ "  result.push( { name: 'save', value: true } );"
+					+ "}"
+					+ "return result;";
 				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
 
 				CharSequence precondition = "var kc=Wicket.Event.keyCode(attrs.event),"
-						+ "evtType=attrs.event.type,"
-						+ "ret=false;"
-						+ "if(evtType==='blur' || evtType==='change' || (evtType==='keyup' && kc===27)) ret = true;"
-						+ "return ret;";
+					+ "evtType=attrs.event.type,"
+					+ "ret=false;"
+					+ "if(evtType==='blur' || evtType==='change' || (evtType==='keyup' && kc===27)) ret = true;"
+					+ "return ret;";
 				AjaxCallListener ajaxCallListener = new AjaxCallListener();
 				ajaxCallListener.onPrecondition(precondition);
 				attributes.getAjaxCallListeners().add(ajaxCallListener);
@@ -247,7 +247,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 */
 	@Override
 	protected Component newLabel(final MarkupContainer parent, final String componentId,
-								 final IModel<T> model)
+		final IModel<T> model)
 	{
 		Label label = new Label(componentId, model)
 		{
@@ -347,12 +347,12 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 		{
 			choices.detach();
 		}
-		
+
 		if (renderer != null)
 		{
 			renderer.detach();
 		}
-		
+
 		super.onDetach();
 	}
 }

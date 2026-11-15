@@ -58,18 +58,18 @@ class FileUploadTest extends WicketTestCase
 		final IFileCleaner fileUploadCleaner = new FileCleaner();
 
 		DiskFileItemFactory itemFactory = DiskFileItemFactory.builder()
-					.setFileCleaningTracker(new FileCleanerTrackerAdapter(fileUploadCleaner))
-					.get();
+			.setFileCleaningTracker(new FileCleanerTrackerAdapter(fileUploadCleaner))
+			.get();
 
 		FileItem fileItem = itemFactory.fileItemBuilder()
-				.setContentType("text/java")
-				.setFieldName("dummyFieldName")
-				.setFormField(false)
-				.setFileName("FileUploadTest.java")
-				.get();
+			.setContentType("text/java")
+			.setFieldName("dummyFieldName")
+			.setFormField(false)
+			.setFileName("FileUploadTest.java")
+			.get();
 
-        // Initialize the upload
-        fileItem.getOutputStream().close();
+		// Initialize the upload
+		fileItem.getOutputStream().close();
 
 		// Get the internal list out
 		Field inputStreamsField = FileUpload.class.getDeclaredField("inputStreamsToClose");

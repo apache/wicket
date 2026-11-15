@@ -106,7 +106,7 @@ public abstract class AbstractMapper implements IRequestMapper
 		}
 
 		List<String> urlSegments = url.getSegments();
-		
+
 		for (int i = 0; i < segments.length; ++i)
 		{
 			String segment = segments[i];
@@ -117,16 +117,16 @@ public abstract class AbstractMapper implements IRequestMapper
 				return false;
 			}
 			else if (!segment.equals(urlSegment) &&
-			    (getPlaceholder(segment) == null &&
-			     getOptionalPlaceholder(segment) == null))
+				(getPlaceholder(segment) == null &&
+					getOptionalPlaceholder(segment) == null))
 			{
 				return false;
 			}
 		}
-			
+
 		return true;
 	}
-	
+
 	/**
 	 * Utility method to safely get an element from a list of String.
 	 * If the specified index is bigger than the size of the list
@@ -144,10 +144,10 @@ public abstract class AbstractMapper implements IRequestMapper
 		{
 			return segments.get(index);
 		}
-		
+
 		return defaultValue;
 	}
-	
+
 	/**
 	 * Extracts {@link PageParameters} from the URL using the given {@link IPageParametersEncoder} .
 	 * 
@@ -216,12 +216,13 @@ public abstract class AbstractMapper implements IRequestMapper
 		}
 
 		Url parametersUrl = encoder.encodePageParameters(pageParameters);
-		
-		if (parametersUrl == null) {
+
+		if (parametersUrl == null)
+		{
 			//nothing to do
 			return url;
 		}
-		
+
 		// copy the url
 		Url urlCopy = new Url(url);
 
@@ -233,9 +234,9 @@ public abstract class AbstractMapper implements IRequestMapper
 		{
 			urlCopy.getQueryParameters().add(p);
 		}
-		
+
 		urlCopy.setFragment(parametersUrl.getFragment());
-		
+
 		return urlCopy;
 	}
 

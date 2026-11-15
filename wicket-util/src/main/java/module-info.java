@@ -15,44 +15,45 @@
  * limitations under the License.
  */
 
-module org.apache.wicket.util {
-    requires java.base;
-    requires java.management;
-    requires java.sql;
-    requires java.xml;
-    requires java.desktop;
-    requires org.apache.commons.io;
-    requires org.apache.commons.collections4;
-    requires org.slf4j;
-    requires static jakarta.servlet;
+module org.apache.wicket.util
+{
+	requires java.base;
+	requires java.management;
+	requires java.sql;
+	requires java.xml;
+	requires java.desktop;
+	requires org.apache.commons.io;
+	requires org.apache.commons.collections4;
+	requires org.slf4j;
+	requires static jakarta.servlet;
 
-    exports org.apache.wicket.util;
-    exports org.apache.wicket.util.collections;
-    exports org.apache.wicket.util.convert;
-    exports org.apache.wicket.util.convert.converter;
-    exports org.apache.wicket.util.crypt;
-    exports org.apache.wicket.util.diff;
-    exports org.apache.wicket.util.diff.myers;
-    exports org.apache.wicket.util.encoding;
-    exports org.apache.wicket.util.file;
-    exports org.apache.wicket.util.io;
-    exports org.apache.wicket.util.lang;
-    exports org.apache.wicket.util.license;
-    exports org.apache.wicket.util.listener;
-    exports org.apache.wicket.util.markup.xhtml;
-    exports org.apache.wicket.util.parse.metapattern;
-    exports org.apache.wicket.util.parse.metapattern.parsers;
-    exports org.apache.wicket.util.resource;
-    exports org.apache.wicket.util.string;
-    exports org.apache.wicket.util.string.interpolator;
-    exports org.apache.wicket.util.thread;
-    exports org.apache.wicket.util.time;
-    exports org.apache.wicket.util.value;
-    exports org.apache.wicket.util.visit;
-    exports org.apache.wicket.util.watch;
-    exports org.apache.wicket.util.xml;
+	exports org.apache.wicket.util;
+	exports org.apache.wicket.util.collections;
+	exports org.apache.wicket.util.convert;
+	exports org.apache.wicket.util.convert.converter;
+	exports org.apache.wicket.util.crypt;
+	exports org.apache.wicket.util.diff;
+	exports org.apache.wicket.util.diff.myers;
+	exports org.apache.wicket.util.encoding;
+	exports org.apache.wicket.util.file;
+	exports org.apache.wicket.util.io;
+	exports org.apache.wicket.util.lang;
+	exports org.apache.wicket.util.license;
+	exports org.apache.wicket.util.listener;
+	exports org.apache.wicket.util.markup.xhtml;
+	exports org.apache.wicket.util.parse.metapattern;
+	exports org.apache.wicket.util.parse.metapattern.parsers;
+	exports org.apache.wicket.util.resource;
+	exports org.apache.wicket.util.string;
+	exports org.apache.wicket.util.string.interpolator;
+	exports org.apache.wicket.util.thread;
+	exports org.apache.wicket.util.time;
+	exports org.apache.wicket.util.value;
+	exports org.apache.wicket.util.visit;
+	exports org.apache.wicket.util.watch;
+	exports org.apache.wicket.util.xml;
 
-    //opening packages to allow resources access
-    opens org.apache.wicket.util.markup.xhtml;
-    opens org.apache.wicket.util.license;
+	//opening packages to allow resources access
+	opens org.apache.wicket.util.markup.xhtml;
+	opens org.apache.wicket.util.license;
 }

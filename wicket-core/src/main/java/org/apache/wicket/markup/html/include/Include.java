@@ -191,7 +191,8 @@ public class Include extends WebComponent implements IGenericComponent<String, I
 			ServletContext servletContext = getWebApplication().getServletContext();
 			URL resource = servletContext.getResource(url);
 			return importUrl(resource);
-		} catch (MalformedURLException mux)
+		}
+		catch (MalformedURLException mux)
 		{
 			throw new WicketRuntimeException(mux);
 		}

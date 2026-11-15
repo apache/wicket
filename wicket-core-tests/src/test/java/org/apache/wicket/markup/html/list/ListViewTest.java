@@ -85,8 +85,7 @@ class ListViewTest extends WicketTestCase
 				// non-fancy display of the number
 				add(new Label("label", item.getModel()));
 			}
-		}
-		;
+		};
 
 		IModel<List<Integer>> integers = new ListModel<>(new ArrayList<Integer>());
 

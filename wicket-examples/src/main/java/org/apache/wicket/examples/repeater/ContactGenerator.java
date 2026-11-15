@@ -74,7 +74,7 @@ public class ContactGenerator
 		contact.setHomePhone(generatePhoneNumber());
 		contact.setCellPhone(generatePhoneNumber());
 		contact.setBornDate(generateDate());
-		
+
 		return contact;
 	}
 
@@ -118,18 +118,18 @@ public class ContactGenerator
 
 	private Date generateDate()
 	{
-	    	GregorianCalendar gc = new GregorianCalendar();
+		GregorianCalendar gc = new GregorianCalendar();
 
-	        int year = rint(1950, 1985);
+		int year = rint(1950, 1985);
 
-	        gc.set(Calendar.YEAR, year);
+		gc.set(Calendar.YEAR, year);
 
-	        int dayOfYear = rint(1, gc.getActualMaximum(Calendar.DAY_OF_YEAR));
+		int dayOfYear = rint(1, gc.getActualMaximum(Calendar.DAY_OF_YEAR));
 
-	        gc.set(Calendar.DAY_OF_YEAR, dayOfYear);
-	        
-	        return gc.getTime();
+		gc.set(Calendar.DAY_OF_YEAR, dayOfYear);
+
+		return gc.getTime();
 	}
-	
-	
+
+
 }

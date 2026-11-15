@@ -44,7 +44,7 @@ public class DefaultMarkupIdGenerator implements IMarkupIdGenerator
 
 		Session session = component.getSession();
 		int generatedMarkupId = storedMarkupId instanceof Integer ? (Integer)storedMarkupId
-				: session.nextSequenceValue();
+			: session.nextSequenceValue();
 
 		if (generatedMarkupId == 0xAD)
 		{

@@ -30,7 +30,8 @@ public class FilterFormTest extends WicketTestCase
 {
 
 	@Test
-	public void test() throws Exception {
+	public void test() throws Exception
+	{
 		executeTest(FilterFormTestPage.class, "FilterFormTestPage_expected.html");
 	}
 

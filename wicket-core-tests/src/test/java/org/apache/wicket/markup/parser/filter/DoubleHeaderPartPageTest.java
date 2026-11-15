@@ -30,7 +30,7 @@ class DoubleHeaderPartPageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void testRenderHeaderPartPage() throws Exception
+	void testRenderHeaderPartPage() throws Exception
 	{
 		executeTest(DoubleHeaderPartPage.class, "DoubleHeaderPartPageExpectedResult.html");
 	}

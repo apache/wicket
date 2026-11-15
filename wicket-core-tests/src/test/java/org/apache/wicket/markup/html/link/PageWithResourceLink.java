@@ -38,10 +38,11 @@ public class PageWithResourceLink extends WebPage
 	{
 		this(new ResourceLink<Void>("link", resource));
 	}
-	
-	private PageWithResourceLink(Component component) {
+
+	private PageWithResourceLink(Component component)
+	{
 		add(component);
-			
+
 		setStatelessHint(true);
 	}
 }

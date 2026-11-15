@@ -67,14 +67,16 @@ class AutoFormLabelPickupTest extends WicketTestCase
 	void labelIsPrintedFromModel() throws Exception
 	{
 		tester.startPage(new PrintLabelPage(Model.of("label from model")));
-		tester.assertContains("<label wicket:for=\"input\" id=\"input2-w-lbl\" for=\"input2\">\\|label from model\\|</label>");
+		tester.assertContains(
+			"<label wicket:for=\"input\" id=\"input2-w-lbl\" for=\"input2\">\\|label from model\\|</label>");
 	}
 
 	@Test
 	void labelIsPrintedFromProperties() throws Exception
 	{
 		tester.startPage(new PrintLabelPage(Model.of((String)null)));
-		tester.assertContains("<label wicket:for=\"input\" id=\"input2-w-lbl\" for=\"input2\">\\|label from properties\\|</label>");
+		tester.assertContains(
+			"<label wicket:for=\"input\" id=\"input2-w-lbl\" for=\"input2\">\\|label from properties\\|</label>");
 	}
 
 	@Test

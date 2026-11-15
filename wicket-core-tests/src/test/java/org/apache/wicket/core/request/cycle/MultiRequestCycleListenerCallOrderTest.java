@@ -121,7 +121,7 @@ class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 			"first.onRequestHandlerScheduled", "second.onRequestHandlerScheduled",
 			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
-			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted", 
+			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
 			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
 		List<String> redirectRequest = asList("first.onBeginRequest", "second.onBeginRequest",
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
@@ -154,7 +154,7 @@ class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 			"first.onRequestHandlerScheduled", "second.onRequestHandlerScheduled",
 			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
-			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted", 
+			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
 			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
 
 		// with ajax requests we don't expect a redirect

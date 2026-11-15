@@ -161,7 +161,8 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 			final StringResponse response = new StringResponse();
 			getRequestCycle().setResponse(response);
 
-			try (IHeaderResponse headerResponse = getHeaderResponse()) {
+			try (IHeaderResponse headerResponse = getHeaderResponse())
+			{
 				if (!response.equals(headerResponse.getResponse()))
 				{
 					getRequestCycle().setResponse(headerResponse.getResponse());
@@ -173,7 +174,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 
 				// Header response will be auto-closed before rendering the header container itself
 				// See https://issues.apache.org/jira/browse/WICKET-3728
-			};
+			} ;
 
 			// Cleanup extraneous CR and LF from the response
 			CharSequence output = getCleanResponse(response);
@@ -314,7 +315,8 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	}
 
 	@Override
-	protected void onAfterRender() {
+	protected void onAfterRender()
+	{
 		super.onAfterRender();
 
 		renderedComponentsPerScope = null;

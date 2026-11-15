@@ -81,7 +81,7 @@ public class CachingResourceVersion implements IResourceVersion
 	 *          resource version provider
 	 * @param maxEntries
 	 *          maximum number of cache entries
-	 */        
+	 */
 	public CachingResourceVersion(IResourceVersion delegate, int maxEntries)
 	{
 		if (maxEntries < 1)
@@ -101,11 +101,11 @@ public class CachingResourceVersion implements IResourceVersion
 		final Serializable key = resource.getCacheKey();
 
 		// if key can not be determined do not cache
-		if(key == null)
+		if (key == null)
 		{
 			return null;
 		}
-		
+
 		// lookup version in cache
 		String version = cache.get(key);
 
@@ -130,13 +130,14 @@ public class CachingResourceVersion implements IResourceVersion
 			// replace holder with null value
 			return null;
 		}
-		
+
 		// return version string
 		return version;
 	}
 
 	@Override
-	public Pattern getVersionPattern() {
+	public Pattern getVersionPattern()
+	{
 		return delegate.getVersionPattern();
 	}
 
@@ -147,18 +148,19 @@ public class CachingResourceVersion implements IResourceVersion
 	 *           cacheable resource
 	 */
 	public void invalidate(IStaticCacheableResource resource)
-	{   
+	{
 		// get cache key for resource reference
 		final Serializable key = Args.notNull(resource, "resource").getCacheKey();
 
 		// if key is available purge cache entry
-		if(key != null)
+		if (key != null)
 		{
 			cache.remove(key);
 		}
 	}
 
-  public void invalidateAll() {
-    cache.clear();
-  }
+	public void invalidateAll()
+	{
+		cache.clear();
+	}
 }

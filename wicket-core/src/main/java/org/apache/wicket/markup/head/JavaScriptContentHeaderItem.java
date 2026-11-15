@@ -82,8 +82,7 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 		AttributeMap attributes = new AttributeMap();
 		// No attribute or an empty string works the same as `text/javascript`,
 		// but use the latter for backward compatibility.
-		JavaScriptContentType actualType = type == null ?
-				JavaScriptBrowserProcessedContentType.TEXT_JAVASCRIPT : type;
+		JavaScriptContentType actualType = type == null ? JavaScriptBrowserProcessedContentType.TEXT_JAVASCRIPT : type;
 		attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, actualType.getType());
 		attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
 		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
@@ -110,9 +109,9 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
-		JavaScriptContentHeaderItem that = (JavaScriptContentHeaderItem) o;
+		JavaScriptContentHeaderItem that = (JavaScriptContentHeaderItem)o;
 		return Objects.equals(javaScript, that.javaScript) &&
-				Objects.equals(type, that.type);
+			Objects.equals(type, that.type);
 	}
 
 	@Override

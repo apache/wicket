@@ -68,7 +68,7 @@ public class AutoConversationManager implements IComponentOnBeforeRenderListener
 	protected void autoBeginIfNecessary(Page page, IRequestHandler handler)
 	{
 		if (conversation == null || !conversation.isTransient() || page == null
-				|| !hasConversationalComponent(page) || !propagation.propagatesVia(handler, page))
+			|| !hasConversationalComponent(page) || !propagation.propagatesVia(handler, page))
 		{
 			return;
 		}
@@ -84,8 +84,8 @@ public class AutoConversationManager implements IComponentOnBeforeRenderListener
 	protected void autoEndIfNecessary(Page page, IRequestHandler handler)
 	{
 		if (conversation == null || conversation.isTransient() || page == null
-				|| hasConversationalComponent(page) || !propagation.propagatesVia(handler, page)
-				|| autoConversation.isAutomatic() == false)
+			|| hasConversationalComponent(page) || !propagation.propagatesVia(handler, page)
+			|| autoConversation.isAutomatic() == false)
 		{
 			return;
 		}

@@ -62,7 +62,7 @@ public class OrphanComponentChecker extends AbstractObjectChecker
 
 		if (object instanceof Component)
 		{
-			Component component = (Component) object;
+			Component component = (Component)object;
 			if (component instanceof Page == false && component.getParent() == null)
 			{
 				result = new Result(Result.Status.FAILURE, "A component without a parent is detected.");

@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 class JsonUtilsTest
 {
 	@Test
-    void asArray() throws Exception
+	void asArray() throws Exception
 	{
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -51,12 +51,16 @@ class JsonUtilsTest
 		List<Object> listValues = new ArrayList<Object>();
 		listValues.addAll(Arrays.asList("listValue", 2, false, null));
 		map.put("list", listValues);
-		assertEquals("[{\"name\":\"list\",\"value\":\"listValue\"},{\"name\":\"list\",\"value\":2},{\"name\":\"list\",\"value\":false}]", JsonUtils.asArray(map).toString());
+		assertEquals(
+			"[{\"name\":\"list\",\"value\":\"listValue\"},{\"name\":\"list\",\"value\":2},{\"name\":\"list\",\"value\":false}]",
+			JsonUtils.asArray(map).toString());
 
 		map.clear();
-		Object[] arrayValues = {"arrayValue", 3, null, true};
+		Object[] arrayValues = { "arrayValue", 3, null, true };
 		map.put("array", arrayValues);
-		assertEquals("[{\"name\":\"array\",\"value\":\"arrayValue\"},{\"name\":\"array\",\"value\":3},{\"name\":\"array\",\"value\":true}]", JsonUtils.asArray(map).toString());
+		assertEquals(
+			"[{\"name\":\"array\",\"value\":\"arrayValue\"},{\"name\":\"array\",\"value\":3},{\"name\":\"array\",\"value\":true}]",
+			JsonUtils.asArray(map).toString());
 
 		map.clear();
 		map.put("null", null);

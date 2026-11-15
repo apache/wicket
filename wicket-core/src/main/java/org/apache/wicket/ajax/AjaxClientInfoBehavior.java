@@ -115,7 +115,8 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 	 *            {@link WebClientInfo}
 	 * @return the {@link AjaxClientInfoBehavior}
 	 */
-	public static AjaxClientInfoBehavior onClientInfo(SerializableBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
+	public static AjaxClientInfoBehavior onClientInfo(
+		SerializableBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
 	{
 		Args.notNull(onClientInfo, "onClientInfo");
 

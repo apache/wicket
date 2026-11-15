@@ -31,23 +31,24 @@ public class SetCookiePage extends DummyHomePage
 	private final Cookie cookie;
 	private final Class<? extends Page> redirectToPageClass;
 
-	public SetCookiePage(Cookie cookie,Class<? extends Page> redirectToPageClass)
+	public SetCookiePage(Cookie cookie, Class<? extends Page> redirectToPageClass)
 	{
 		this.cookie = cookie;
 		this.redirectToPageClass = redirectToPageClass;
 	}
-	
+
 	public SetCookiePage(Cookie cookie)
 	{
-		this(cookie,null);
+		this(cookie, null);
 	}
-	
-	protected void onInitialize() {
+
+	protected void onInitialize()
+	{
 		super.onInitialize();
 
-		WebResponse response = (WebResponse) getResponse();
+		WebResponse response = (WebResponse)getResponse();
 		response.addCookie(cookie);
-		
+
 		if (redirectToPageClass != null)
 		{
 			setResponsePage(redirectToPageClass);

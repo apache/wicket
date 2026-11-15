@@ -50,7 +50,7 @@ public class DefaultViolationTranslator implements IViolationTranslator
 		{
 			error.setVariable(key, desc.getAttributes().get(key));
 		}
-		
+
 		return error;
 	}
 
@@ -59,7 +59,7 @@ public class DefaultViolationTranslator implements IViolationTranslator
 	{
 		String defaultMessage = (String)desc.getAttributes().get("message");
 		String violationMessage = violation.getMessage();
-		String violationMessageTemplate = violation.getMessageTemplate();		
+		String violationMessageTemplate = violation.getMessageTemplate();
 		List<String> messages = new ArrayList<String>();
 
 		//violation message is considered only if it is different from
@@ -68,9 +68,9 @@ public class DefaultViolationTranslator implements IViolationTranslator
 		{
 			messages.add(violationMessageTemplate);
 		}
-		
+
 		messages.add(violationMessage);
-		
+
 		//the default message is considered only if it is different from
 		//the violation message template
 		if (!Strings.isEqual(defaultMessage, violationMessageTemplate))
@@ -105,7 +105,7 @@ public class DefaultViolationTranslator implements IViolationTranslator
 		{
 			return message.substring(1, message.length() - 1);
 		}
-	
+
 		return null;
 	}
 }

@@ -36,7 +36,8 @@ public class DefaultUnauthorizedResourceRequestListener implements IUnauthorized
 		RequestCycle cycle = RequestCycle.get();
 		if (cycle != null)
 		{
-			IRequestHandler handler = new ErrorCodeRequestHandler(HttpServletResponse.SC_FORBIDDEN, createErrorMessage(resource, parameters));
+			IRequestHandler handler = new ErrorCodeRequestHandler(HttpServletResponse.SC_FORBIDDEN, createErrorMessage(
+				resource, parameters));
 			cycle.replaceAllRequestHandlers(handler);
 		}
 	}

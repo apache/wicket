@@ -41,7 +41,8 @@ class PagedTableNavigatorWithLabelProviderTest extends WicketTestCase
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 		tester.startPage(PagedTableNavigatorWithLabelProviderPage.class);
-		PagedTableNavigatorWithLabelProviderPage page = (PagedTableNavigatorWithLabelProviderPage)tester.getLastRenderedPage();
+		PagedTableNavigatorWithLabelProviderPage page = (PagedTableNavigatorWithLabelProviderPage)tester
+			.getLastRenderedPage();
 		String document = tester.getLastResponseAsString();
 		DiffUtil.validatePage(document, this.getClass(),
 			"PagedTableNavigatorWithLabelProviderExpectedResult_1.html", true);

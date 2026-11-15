@@ -31,12 +31,13 @@ public class FilterFormTestPage extends WebPage
 		add(new FilterForm<String>("form", new IFilterStateLocator<String>()
 		{
 			private String state;
-			
+
 			@Override
 			public String getFilterState()
 			{
 				return state;
 			}
+
 			@Override
 			public void setFilterState(String state)
 			{

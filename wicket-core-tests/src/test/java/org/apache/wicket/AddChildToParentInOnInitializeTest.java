@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 class AddChildToParentInOnInitializeTest extends WicketTestCase
 {
 	@Test
-    void addChildToParentInOnInitialize()
+	void addChildToParentInOnInitialize()
 	{
 		tester.startPage(TestPage.class);
 		tester.assertRenderedPage(TestPage.class);
@@ -60,12 +60,12 @@ class AddChildToParentInOnInitializeTest extends WicketTestCase
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
 			return new StringResourceStream("<html><head></head><body>" +
-					"<div wicket:id='"+ PARENT_ID +"'>" +
-						"<div wicket:id='"+FIRST_CHILD_ID+"'></div>" +
-						"<div wicket:id='"+ SECOND_CHILD_ID +"'></div>" +
-						"<div wicket:id='"+ THIRD_CHILD_ID +"'></div>" +
-					"</div>" +
-					"</body></html>");
+				"<div wicket:id='" + PARENT_ID + "'>" +
+				"<div wicket:id='" + FIRST_CHILD_ID + "'></div>" +
+				"<div wicket:id='" + SECOND_CHILD_ID + "'></div>" +
+				"<div wicket:id='" + THIRD_CHILD_ID + "'></div>" +
+				"</div>" +
+				"</body></html>");
 		}
 	}
 

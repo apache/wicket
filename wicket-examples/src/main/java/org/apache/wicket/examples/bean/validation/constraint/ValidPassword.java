@@ -28,15 +28,14 @@ import java.lang.annotation.Target;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-@Target( { METHOD, FIELD, ANNOTATION_TYPE })
+@Target({ METHOD, FIELD, ANNOTATION_TYPE })
 @Retention(RUNTIME)
 @Constraint(validatedBy = ValidPasswordValidator.class)
 @Documented
-public @interface ValidPassword 
-{
+public @interface ValidPassword {
 	String message() default "{password.validChars}";
 
-    Class<?>[] groups() default {};
+	Class<?>[] groups() default { };
 
-    Class<? extends Payload>[] payload() default {};
+	Class<? extends Payload>[] payload() default { };
 }

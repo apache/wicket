@@ -85,7 +85,7 @@ class ServletPartFileItem implements FileItem
 			if (cd.trim().startsWith("filename"))
 			{
 				return cd.substring(cd.indexOf('=') + 1).trim()
-						.replace("\"", "");
+					.replace("\"", "");
 			}
 		}
 		return null;

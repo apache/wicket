@@ -56,25 +56,25 @@ public class WicketExamplePage extends WebPage
 		BookmarkablePageLink<Void> link = new BookmarkablePageLink<Void>("sources",
 			SourcesPage.class, SourcesPage.generatePageParameters(this));
 		add(link);
-		
+
 		link.setVisible(showSourceButton());
-		
+
 		PopupSettings settings = new PopupSettings("sources", PopupSettings.RESIZABLE);
 		settings.setWidth(800);
 		settings.setHeight(600);
 		link.setPopupSettings(settings);
-		
+
 		add(buildHeader("pageHeader"));
-		
+
 		explain();
 	}
 
-	protected boolean showSourceButton() 
+	protected boolean showSourceButton()
 	{
 		return true;
 	}
 
-	protected Panel buildHeader(String id) 
+	protected Panel buildHeader(String id)
 	{
 		return new WicketExampleHeader(id);
 	}
@@ -96,14 +96,15 @@ public class WicketExamplePage extends WebPage
 	protected void explain()
 	{
 	}
-	
+
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
 		response.render(CssHeaderItem.forReference(
-				new CssResourceReference(WicketExamplePage.class, "fonts/source-code-pro/stylesheet.css"), "screen"));
+			new CssResourceReference(WicketExamplePage.class, "fonts/source-code-pro/stylesheet.css"), "screen"));
 		response.render(CssHeaderItem.forReference(
-				new CssResourceReference(WicketExamplePage.class, "fonts/source-sans-pro/stylesheet.css"), "screen"));
-		response.render(CssHeaderItem.forReference(new CssResourceReference(WicketExamplePage.class, "style.css"),"screen"));
+			new CssResourceReference(WicketExamplePage.class, "fonts/source-sans-pro/stylesheet.css"), "screen"));
+		response.render(CssHeaderItem.forReference(new CssResourceReference(WicketExamplePage.class, "style.css"),
+			"screen"));
 	}
 }

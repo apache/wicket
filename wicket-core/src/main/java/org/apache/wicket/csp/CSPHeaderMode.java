@@ -21,8 +21,7 @@ package org.apache.wicket.csp;
  * 
  * @author papegaaij
  */
-public enum CSPHeaderMode
-{
+public enum CSPHeaderMode {
 	BLOCKING("Content-Security-Policy"),
 	REPORT_ONLY("Content-Security-Policy-Report-Only");
 

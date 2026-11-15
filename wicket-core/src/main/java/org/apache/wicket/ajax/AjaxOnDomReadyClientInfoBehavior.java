@@ -96,7 +96,8 @@ public class AjaxOnDomReadyClientInfoBehavior extends AbstractDefaultAjaxBehavio
 	 *            {@link WebClientInfo}
 	 * @return the {@link AjaxOnDomReadyClientInfoBehavior}
 	 */
-	public static AjaxOnDomReadyClientInfoBehavior onClientInfo(SerializableBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
+	public static AjaxOnDomReadyClientInfoBehavior onClientInfo(
+		SerializableBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
 	{
 		Args.notNull(onClientInfo, "onClientInfo");
 

@@ -92,7 +92,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 				super.updateAjaxAttributes(attributes);
 				AjaxLink.this.updateAjaxAttributes(attributes);
 			}
-			
+
 			@Override
 			public boolean getStatelessHint(Component component)
 			{
@@ -113,7 +113,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 		if (isEnabledInHierarchy())
 		{
 			String tagName = tag.getName();
-			
+
 			if (tagName.equalsIgnoreCase("a") || tagName.equalsIgnoreCase("link") ||
 				tagName.equalsIgnoreCase("area"))
 			{

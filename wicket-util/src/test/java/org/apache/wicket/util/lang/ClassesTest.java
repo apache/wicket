@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @since 1.5.8
  */
-@SuppressWarnings({"javadoc", "serial"})
+@SuppressWarnings({ "javadoc", "serial" })
 public class ClassesTest
 {
 	@Test
@@ -35,10 +35,12 @@ public class ClassesTest
 		assertEquals("String", Classes.simpleName(String.class));
 		assertEquals("String", Classes.simpleName("".getClass()));
 
-		assertEquals("SimpleDateFormat", Classes.simpleName(new SimpleDateFormat() {}.getClass()));
+		assertEquals("SimpleDateFormat", Classes.simpleName(new SimpleDateFormat()
+		{}.getClass()));
 
 		// anonymous interface impl
-		assertEquals("Object", Classes.simpleName(new Cloneable() {}.getClass()));
+		assertEquals("Object", Classes.simpleName(new Cloneable()
+		{}.getClass()));
 	}
 
 	@Test
@@ -48,9 +50,11 @@ public class ClassesTest
 		assertEquals("java.lang.String", Classes.name(String.class));
 		assertEquals("java.lang.String", Classes.name("".getClass()));
 
-		assertEquals("java.text.SimpleDateFormat", Classes.name(new SimpleDateFormat() {}.getClass()));
+		assertEquals("java.text.SimpleDateFormat", Classes.name(new SimpleDateFormat()
+		{}.getClass()));
 
 		// anonymous interface impl
-		assertEquals("java.lang.Object", Classes.name(new Cloneable() {}.getClass()));
+		assertEquals("java.lang.Object", Classes.name(new Cloneable()
+		{}.getClass()));
 	}
 }

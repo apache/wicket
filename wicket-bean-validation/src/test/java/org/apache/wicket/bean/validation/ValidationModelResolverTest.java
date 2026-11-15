@@ -34,30 +34,31 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class ValidationModelResolverTest
 {
 
-    @RegisterExtension
-    public WicketTesterExtension scope = new WicketTesterExtension();
+	@RegisterExtension
+	public WicketTesterExtension scope = new WicketTesterExtension();
 
-    @Test
-    public void noModelBoundToComponent()
-    {
-        TextField<String> textField = new TextField<String>("field");
-        assertNull(ValidationModelResolver.resolvePropertyModelFrom(textField));
-    }
+	@Test
+	public void noModelBoundToComponent()
+	{
+		TextField<String> textField = new TextField<String>("field");
+		assertNull(ValidationModelResolver.resolvePropertyModelFrom(textField));
+	}
 
-    @Test
-    public void simpleModelBoundToComponent()
-    {
-        TextField<String> textField = new TextField<String>("text", new Model<String>());
-        assertNull(ValidationModelResolver.resolvePropertyModelFrom(textField));
-    }
+	@Test
+	public void simpleModelBoundToComponent()
+	{
+		TextField<String> textField = new TextField<String>("text", new Model<String>());
+		assertNull(ValidationModelResolver.resolvePropertyModelFrom(textField));
+	}
 
-    @Test
-    public void propertyModelBoundToComponent()
-    {
-        TextField<String> textField = new TextField<String>("text", new PropertyModel<String>(new TestValidatableBean(), "text"));
-        IPropertyReflectionAwareModel<?> model = ValidationModelResolver.resolvePropertyModelFrom(textField);
-        assertNotNull(model);
-        assertEquals("text", model.getPropertyField().getName());
-    }
+	@Test
+	public void propertyModelBoundToComponent()
+	{
+		TextField<String> textField = new TextField<String>("text", new PropertyModel<String>(new TestValidatableBean(),
+			"text"));
+		IPropertyReflectionAwareModel<?> model = ValidationModelResolver.resolvePropertyModelFrom(textField);
+		assertNotNull(model);
+		assertEquals("text", model.getPropertyField().getName());
+	}
 
 }

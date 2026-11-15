@@ -72,7 +72,7 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 		IMarkupFragment childMarkupFound = null;
 		Iterator<Component> childrenIterator = container.iterator();
 		final List<MarkupContainer> componentResolvers = new ArrayList<>();
-		
+
 		//collect all "transparent" (i.e. component resolvers) children
 		container.visitChildren(IComponentResolver.class, new IVisitor<MarkupContainer, Void>()
 		{
@@ -82,7 +82,7 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 				componentResolvers.add(child);
 			}
 		});
-				
+
 		while (childrenIterator.hasNext() && childMarkupFound == null)
 		{
 			Component sibling = childrenIterator.next();
@@ -91,25 +91,26 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 			{
 				continue;
 			}
-			
+
 			IMarkupFragment siblingMarkup = containerMarkup.find(sibling.getId());
-			
+
 			if (siblingMarkup != null)
 			{
 				if (sibling instanceof IComponentResolver)
 				{
 					childMarkupFound = searchInNestedTransparentResolvers(containerMarkup, child, componentResolvers);
 				}
-				else 
+				else
 				{
-					childMarkupFound = searchMarkupInTransparentResolvers((MarkupContainer)sibling, siblingMarkup, child);
+					childMarkupFound = searchMarkupInTransparentResolvers((MarkupContainer)sibling, siblingMarkup,
+						child);
 				}
 			}
 		}
-		
+
 		return childMarkupFound;
 	}
-	
+
 	/**
 	 * 
 	 * Search for the markup of a child that might be nested inside
@@ -133,28 +134,28 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 	 *
 	 * @return the markup fragment for the child, or {@code null}.
 	 */
-	protected IMarkupFragment searchInNestedTransparentResolvers(IMarkupFragment containerMarkup, Component child, 
+	protected IMarkupFragment searchInNestedTransparentResolvers(IMarkupFragment containerMarkup, Component child,
 		List<MarkupContainer> componentResolvers)
 	{
 		IMarkupFragment childMarkupFound = null;
-		
+
 		for (MarkupContainer componentResolver : componentResolvers)
 		{
 			IMarkupFragment resolverMarkup = containerMarkup.find(componentResolver.getId());
 			IMarkupFragment childMarkup = resolverMarkup != null ? resolverMarkup.find(child.getId()) : null;
-			
+
 			if (childMarkup != null)
 			{
-		    	IComponentResolver resolverContainer = (IComponentResolver)componentResolver;
+				IComponentResolver resolverContainer = (IComponentResolver)componentResolver;
 				MarkupStream stream = new MarkupStream(childMarkup);
 				ComponentTag tag = stream.getTag();
-				
+
 				Component resolvedComponent = componentResolver.get(tag.getId());
 				if (resolvedComponent == null)
 				{
 					resolvedComponent = resolverContainer.resolve(componentResolver, stream, tag);
 				}
-				
+
 				if (child == resolvedComponent)
 				{
 					childMarkupFound = childMarkup;
@@ -163,18 +164,18 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 			else if (resolverMarkup != null)
 			{
 				List<MarkupContainer> otherResolvers = new ArrayList<>(componentResolvers);
-				
+
 				otherResolvers.remove(componentResolver);
-				
+
 				childMarkupFound = searchInNestedTransparentResolvers(resolverMarkup, child, otherResolvers);
 			}
 
-		    if (childMarkupFound != null)
+			if (childMarkupFound != null)
 			{
 				break;
 			}
 		}
-		
+
 		return childMarkupFound;
 	}
 
@@ -209,9 +210,9 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 					"Close tag not found for tag: " +
 						openTag.toString() +
 						". For " +
-							Classes.simpleName(component.getClass()) +
-								" Components only raw markup is allow in between the tags but not other Wicket Component." +
-								". Component: " + component.toString());
+						Classes.simpleName(component.getClass()) +
+						" Components only raw markup is allow in between the tags but not other Wicket Component." +
+						". Component: " + component.toString());
 			}
 		}
 	}

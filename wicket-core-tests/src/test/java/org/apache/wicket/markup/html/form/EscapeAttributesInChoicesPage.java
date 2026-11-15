@@ -23,23 +23,28 @@ import java.util.Map;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-public class EscapeAttributesInChoicesPage extends WebPage {
+public class EscapeAttributesInChoicesPage extends WebPage
+{
 	private static final long serialVersionUID = 1L;
 
-	public EscapeAttributesInChoicesPage(final PageParameters parameters) {
+	public EscapeAttributesInChoicesPage(final PageParameters parameters)
+	{
 		super(parameters);
 
 		final Map<String, String> fruits = new HashMap<>();
 		fruits.put("apple\" onmouseover=\"alert('hi');\" \"", "Apple");
 
-		IChoiceRenderer<String> iChoiceRenderer = new IChoiceRenderer<String>() {
+		IChoiceRenderer<String> iChoiceRenderer = new IChoiceRenderer<String>()
+		{
 			@Override
-			public Object getDisplayValue(final String s) {
+			public Object getDisplayValue(final String s)
+			{
 				return fruits.get(s);
 			}
 
 			@Override
-			public String getIdValue(final String s, final int i) {
+			public String getIdValue(final String s, final int i)
+			{
 				return s;
 			}
 		};
@@ -49,5 +54,5 @@ public class EscapeAttributesInChoicesPage extends WebPage {
 		add(new CheckBoxMultipleChoice<>("checkboxfield", new ArrayList<>(fruits.keySet()), iChoiceRenderer));
 
 
-    }
+	}
 }

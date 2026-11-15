@@ -93,7 +93,7 @@ public class ServletWebResponse extends WebResponse
 	{
 		return !httpServletResponse.isCommitted();
 	}
-	
+
 	@Override
 	public void setHeader(String name, String value)
 	{

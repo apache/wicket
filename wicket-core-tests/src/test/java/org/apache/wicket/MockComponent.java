@@ -36,7 +36,7 @@ public class MockComponent implements IRequestableComponent, IRequestListener
 	/**
 	 * Construct.
 	 */
-    MockComponent()
+	MockComponent()
 	{
 	}
 
@@ -69,7 +69,7 @@ public class MockComponent implements IRequestableComponent, IRequestListener
 	 * @param id
 	 * @return <code>this</code>
 	 */
-    private MockComponent setId(String id)
+	private MockComponent setId(String id)
 	{
 		this.id = id;
 		return this;
@@ -108,7 +108,7 @@ public class MockComponent implements IRequestableComponent, IRequestListener
 	 * @param page
 	 * @return <code>this</code>
 	 */
-    private MockComponent setPage(IRequestablePage page)
+	private MockComponent setPage(IRequestablePage page)
 	{
 		this.page = page;
 		return this;
@@ -126,14 +126,15 @@ public class MockComponent implements IRequestableComponent, IRequestListener
 	 * @param path
 	 * @return <code>this</code>
 	 */
-    MockComponent setPath(String path)
+	MockComponent setPath(String path)
 	{
 		this.path = path;
 		return this;
 	}
 
 	@Override
-	public void detach() {
+	public void detach()
+	{
 	}
 
 	@Override
@@ -167,7 +168,8 @@ public class MockComponent implements IRequestableComponent, IRequestListener
 	@Override
 	public Behavior getBehaviorById(int id)
 	{
-		if (id == 4) {
+		if (id == 4)
+		{
 			return new MockBehavior();
 		}
 		return null;
@@ -177,8 +179,9 @@ public class MockComponent implements IRequestableComponent, IRequestListener
 	public void onRequest()
 	{
 	}
-	
-	private class MockBehavior extends Behavior implements IRequestListener {
+
+	private class MockBehavior extends Behavior implements IRequestListener
+	{
 
 		@Override
 		public void onRequest()

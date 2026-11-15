@@ -68,12 +68,12 @@ public class FetchMetadataResourceIsolationPolicy implements IResourceIsolationP
 	public static final String DEST_DOCUMENT = "document";
 	public static final String DEST_SCRIPT = "script";
 	public static final String DEST_IMAGE = "image";
-	
+
 	public static final String VARY_HEADER = "Vary";
-	
+
 	private static final String VARY_HEADER_VALUE = SEC_FETCH_DEST_HEADER + ", "
 		+ SEC_FETCH_SITE_HEADER + ", " + SEC_FETCH_MODE_HEADER;
-	
+
 	private boolean sameSiteAllowed = false;
 
 	/**

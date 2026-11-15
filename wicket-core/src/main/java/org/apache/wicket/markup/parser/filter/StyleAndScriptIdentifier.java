@@ -120,7 +120,8 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 	private static final Pattern CDATA_START_COMMENT = Pattern.compile("^\\s*<!\\[CDATA\\[\\s*.*", Pattern.DOTALL);
 
 	// OES/*OES<![CDATA[OES*/OES
-	private static final Pattern JS_CDATA_START_COMMENT = Pattern.compile("^\\s*\\/\\*\\s*<!\\[CDATA\\[\\s*\\*\\/\\s*.*", Pattern.DOTALL);
+	private static final Pattern JS_CDATA_START_COMMENT = Pattern.compile(
+		"^\\s*\\/\\*\\s*<!\\[CDATA\\[\\s*\\*\\/\\s*.*", Pattern.DOTALL);
 
 	boolean shouldWrapInCdata(final String elementBody)
 	{
@@ -129,10 +130,10 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 		boolean shouldWrap = true;
 
 		if (
-				HTML_START_COMMENT.matcher(elementBody).matches() ||
+			HTML_START_COMMENT.matcher(elementBody).matches() ||
 				CDATA_START_COMMENT.matcher(elementBody).matches() ||
 				JS_CDATA_START_COMMENT.matcher(elementBody).matches()
-			)
+		)
 		{
 			shouldWrap = false;
 		}
@@ -145,13 +146,13 @@ public final class StyleAndScriptIdentifier extends AbstractMarkupFilter
 		// do not wrap in CDATA any <script> which has special MIME type. WICKET-4425
 		String typeAttribute = openTag.getAttribute("type");
 		boolean shouldProcess =
-				// style elements should be processed
-				"style".equals(openTag.getName()) ||
+			// style elements should be processed
+			"style".equals(openTag.getName()) ||
 
-				// script elements should be processed only if they have no type (HTML5 recommendation)
-				// or the type is "text/javascript" or "module"
+			// script elements should be processed only if they have no type (HTML5 recommendation)
+			// or the type is "text/javascript" or "module"
 				(typeAttribute == null || "text/javascript".equalsIgnoreCase(typeAttribute) ||
-				        "module".equalsIgnoreCase(typeAttribute));
+					"module".equalsIgnoreCase(typeAttribute));
 
 		return shouldProcess && openTag.getUserData("STYLE_OR_SCRIPT") != null;
 	}

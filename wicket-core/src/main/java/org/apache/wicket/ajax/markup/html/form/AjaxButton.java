@@ -135,7 +135,7 @@ public abstract class AjaxButton extends Button
 
 				AjaxButton.this.updateAjaxAttributes(attributes);
 			}
-			
+
 			@Override
 			protected boolean shouldTriggerJavaScriptSubmitEvent()
 			{
@@ -147,7 +147,7 @@ public abstract class AjaxButton extends Button
 			{
 				return AjaxButton.this.getDefaultFormProcessing();
 			}
-			
+
 			@Override
 			public boolean getStatelessHint(Component component)
 			{

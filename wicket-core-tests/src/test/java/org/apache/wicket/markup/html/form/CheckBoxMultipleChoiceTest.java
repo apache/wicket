@@ -48,7 +48,7 @@ class CheckBoxMultipleChoiceTest extends WicketTestCase
 		 * @param show2
 		 * @param show3
 		 */
-        TestPage(final boolean show1, final boolean show2, final boolean show3, boolean show4)
+		TestPage(final boolean show1, final boolean show2, final boolean show3, boolean show4)
 		{
 			List<? extends String> choices = Arrays.asList("a", "b", "c");
 			add(new CheckBoxMultipleChoice<String>("checkWithoutPrefix", choices)
@@ -115,7 +115,7 @@ class CheckBoxMultipleChoiceTest extends WicketTestCase
 
 	/** */
 	@Test
-    void noPrefix()
+	void noPrefix()
 	{
 		tester.startPage(new TestPage(true, false, false, false));
 		tester.assertContains("<div wicket:id=\"checkWithoutPrefix\"><input name=\"checkWithoutPrefix\"");
@@ -123,7 +123,7 @@ class CheckBoxMultipleChoiceTest extends WicketTestCase
 
 	/** */
 	@Test
-    void fixedPrefix()
+	void fixedPrefix()
 	{
 		tester.startPage(new TestPage(false, true, false, false));
 		tester.assertContains("<div wicket:id=\"checkWithFixedPrefix\">pre<input name=\"checkWithFixedPrefix\"");
@@ -133,7 +133,7 @@ class CheckBoxMultipleChoiceTest extends WicketTestCase
 
 	/** */
 	@Test
-    void dynamicPrefix()
+	void dynamicPrefix()
 	{
 		tester.startPage(new TestPage(false, false, true, false));
 		tester.assertContains("<div wicket:id=\"checkWithDynamicPrefix\">pre0a<input name=\"checkWithDynamicPrefix\"");
@@ -142,21 +142,23 @@ class CheckBoxMultipleChoiceTest extends WicketTestCase
 	}
 
 	@Test
-    void disabledInHierarchy()
+	void disabledInHierarchy()
 	{
 		tester.startPage(new TestPage(false, false, false, true));
 		tester.assertContains("disabled=\"disabled\"");
 	}
 
 	@Test
-    void defaultLabelPositionIsAfter() throws Exception
+	void defaultLabelPositionIsAfter() throws Exception
 	{
-		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("testid", Arrays.asList(1)) {
+		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("testid", Arrays.asList(1))
+		{
 			@Override
 			protected IValueMap getAdditionalAttributes(int index, Integer choice)
 			{
 				return new ValueMap("class=input" + index);
 			}
+
 			@Override
 			protected IValueMap getAdditionalAttributesForLabel(int index, Integer choice)
 			{
@@ -166,18 +168,20 @@ class CheckBoxMultipleChoiceTest extends WicketTestCase
 		tester.startComponentInPage(radioChoice);
 
 		tester.assertResultPage(
-		        "<span wicket:id=\"testid\"><input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/><label for=\"testid1-testid_0\" class=\"label0\">1</label>\n</span>");
+			"<span wicket:id=\"testid\"><input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/><label for=\"testid1-testid_0\" class=\"label0\">1</label>\n</span>");
 	}
 
 	@Test
-    void labelPositionBefore() throws Exception
+	void labelPositionBefore() throws Exception
 	{
-		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("testid", Arrays.asList(1)) {
+		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("testid", Arrays.asList(1))
+		{
 			@Override
 			protected IValueMap getAdditionalAttributes(int index, Integer choice)
 			{
 				return new ValueMap("class=input" + index);
 			}
+
 			@Override
 			protected IValueMap getAdditionalAttributesForLabel(int index, Integer choice)
 			{
@@ -188,18 +192,20 @@ class CheckBoxMultipleChoiceTest extends WicketTestCase
 		tester.startComponentInPage(radioChoice);
 
 		tester.assertResultPage(
-		        "<span wicket:id=\"testid\"><label for=\"testid1-testid_0\" class=\"label0\">1</label><input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/>\n</span>");
+			"<span wicket:id=\"testid\"><label for=\"testid1-testid_0\" class=\"label0\">1</label><input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/>\n</span>");
 	}
 
 	@Test
-    void labelPositionWrapBefore() throws Exception
+	void labelPositionWrapBefore() throws Exception
 	{
-		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("testid", Arrays.asList(1)) {
+		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("testid", Arrays.asList(1))
+		{
 			@Override
 			protected IValueMap getAdditionalAttributes(int index, Integer choice)
 			{
 				return new ValueMap("class=input" + index);
 			}
+
 			@Override
 			protected IValueMap getAdditionalAttributesForLabel(int index, Integer choice)
 			{
@@ -210,18 +216,20 @@ class CheckBoxMultipleChoiceTest extends WicketTestCase
 		tester.startComponentInPage(radioChoice);
 
 		tester.assertResultPage(
-		        "<span wicket:id=\"testid\"><label class=\"label0\">1 <input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/></label>\n</span>");
+			"<span wicket:id=\"testid\"><label class=\"label0\">1 <input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/></label>\n</span>");
 	}
 
 	@Test
-    void labelPositionWrapAfter() throws Exception
+	void labelPositionWrapAfter() throws Exception
 	{
-		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("testid", Arrays.asList(1)) {
+		CheckBoxMultipleChoice<Integer> radioChoice = new CheckBoxMultipleChoice<Integer>("testid", Arrays.asList(1))
+		{
 			@Override
 			protected IValueMap getAdditionalAttributes(int index, Integer choice)
 			{
 				return new ValueMap("class=input" + index);
 			}
+
 			@Override
 			protected IValueMap getAdditionalAttributesForLabel(int index, Integer choice)
 			{
@@ -231,6 +239,7 @@ class CheckBoxMultipleChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_AFTER);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><label class=\"label0\"><input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/> 1</label>\n</span>");
+		tester.assertResultPage(
+			"<span wicket:id=\"testid\"><label class=\"label0\"><input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/> 1</label>\n</span>");
 	}
 }

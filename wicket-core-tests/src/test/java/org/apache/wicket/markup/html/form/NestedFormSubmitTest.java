@@ -75,8 +75,8 @@ class NestedFormSubmitTest extends WicketTestCase
 		private final TestForm<?> inner;
 
 		TestPage(IModel<Boolean> submittedOuter, boolean outerWantsInclusion,
-				 IModel<Boolean> submittedMiddle, boolean middleWantsInclusion,
-				 boolean middleWantsExclusion, IModel<Boolean> submittedInner)
+			IModel<Boolean> submittedMiddle, boolean middleWantsInclusion,
+			boolean middleWantsExclusion, IModel<Boolean> submittedInner)
 		{
 			outer = new TestForm<Void>("outer", submittedOuter, outerWantsInclusion, true);
 			this.add(outer);

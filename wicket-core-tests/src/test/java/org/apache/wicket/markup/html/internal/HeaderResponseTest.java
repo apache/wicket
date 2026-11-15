@@ -46,139 +46,139 @@ import org.junit.jupiter.api.Test;
  */
 class HeaderResponseTest
 {
-    private static final String RESOURCE_NAME = "resource.name";
+	private static final String RESOURCE_NAME = "resource.name";
 
-    private IHeaderResponse headerResponse;
+	private IHeaderResponse headerResponse;
 
-    private ResourceReference reference;
+	private ResourceReference reference;
 
-    /**
-     * Prepare
-     */
-    @BeforeEach
-    void before()
-    {
-        final Response realResponse = new StringResponse();
+	/**
+	 * Prepare
+	 */
+	@BeforeEach
+	void before()
+	{
+		final Response realResponse = new StringResponse();
 
-        headerResponse = new HeaderResponse()
-        {
-            @Override
-            protected Response getRealResponse()
-            {
-                return realResponse;
-            }
-        };
+		headerResponse = new HeaderResponse()
+		{
+			@Override
+			protected Response getRealResponse()
+			{
+				return realResponse;
+			}
+		};
 
-        reference = new ResourceReference("testReference")
-        {
-            private static final long serialVersionUID = 1L;
+		reference = new ResourceReference("testReference")
+		{
+			private static final long serialVersionUID = 1L;
 
-            @Override
-            public IResource getResource()
-            {
-                return null;
-            }
-        };
+			@Override
+			public IResource getResource()
+			{
+				return null;
+			}
+		};
 
-        RequestCycle requestCycle = mock(RequestCycle.class);
-        when(requestCycle.urlFor(any(IRequestHandler.class))).thenReturn(RESOURCE_NAME);
-        when(requestCycle.find(any())).thenReturn(Optional.empty());
+		RequestCycle requestCycle = mock(RequestCycle.class);
+		when(requestCycle.urlFor(any(IRequestHandler.class))).thenReturn(RESOURCE_NAME);
+		when(requestCycle.find(any())).thenReturn(Optional.empty());
 
-        Request request = mock(Request.class);
-        when(request.getCharset()).thenReturn(Charset.defaultCharset());
-        when(requestCycle.getRequest()).thenReturn(request);
+		Request request = mock(Request.class);
+		when(request.getCharset()).thenReturn(Charset.defaultCharset());
+		when(requestCycle.getRequest()).thenReturn(request);
 
-        UrlRenderer urlRenderer = mock(UrlRenderer.class);
-        when(urlRenderer.renderContextRelativeUrl((any(String.class)))).thenReturn(RESOURCE_NAME);
-        when(requestCycle.getUrlRenderer()).thenReturn(urlRenderer);
+		UrlRenderer urlRenderer = mock(UrlRenderer.class);
+		when(urlRenderer.renderContextRelativeUrl((any(String.class)))).thenReturn(RESOURCE_NAME);
+		when(requestCycle.getUrlRenderer()).thenReturn(urlRenderer);
 
-        ThreadContext.setRequestCycle(requestCycle);
-    }
+		ThreadContext.setRequestCycle(requestCycle);
+	}
 
-    /**
-     * Tear down
-     */
-    @AfterEach
-    void after()
-    {
-        ThreadContext.setRequestCycle(null);
-    }
+	/**
+	 * Tear down
+	 */
+	@AfterEach
+	void after()
+	{
+		ThreadContext.setRequestCycle(null);
+	}
 
-    /**
-     * Tests setting of 'defer' attribute
-     * <p>
-     * WICKET-3661
-     */
-    @Test
-    void deferJavaScriptReference()
-    {
-        boolean defer = true;
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setDefer(defer));
-        String expected = "<script type=\"text/javascript\" id=\"some-id\" defer=\"defer\" src=\"" +
-            RESOURCE_NAME + "\"></script>\n";
-        String actual = headerResponse.getResponse().toString();
-        assertEquals(expected, actual);
-    }
+	/**
+	 * Tests setting of 'defer' attribute
+	 * <p>
+	 * WICKET-3661
+	 */
+	@Test
+	void deferJavaScriptReference()
+	{
+		boolean defer = true;
+		headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setDefer(defer));
+		String expected = "<script type=\"text/javascript\" id=\"some-id\" defer=\"defer\" src=\"" +
+			RESOURCE_NAME + "\"></script>\n";
+		String actual = headerResponse.getResponse().toString();
+		assertEquals(expected, actual);
+	}
 
-    /**
-     * Tests non-setting of 'defer' attribute
-     * <p>
-     * WICKET-3661
-     */
-    @Test
-    void deferFalseJavaScriptReference()
-    {
-        boolean defer = false;
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setDefer(defer));
-        String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
-            "\"></script>\n";
-        String actual = headerResponse.getResponse().toString();
-        assertEquals(expected, actual);
-    }
+	/**
+	 * Tests non-setting of 'defer' attribute
+	 * <p>
+	 * WICKET-3661
+	 */
+	@Test
+	void deferFalseJavaScriptReference()
+	{
+		boolean defer = false;
+		headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setDefer(defer));
+		String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
+			"\"></script>\n";
+		String actual = headerResponse.getResponse().toString();
+		assertEquals(expected, actual);
+	}
 
-    /**
-     * Tests setting of subresource attributes
-     */
-    @Test
-    void subresourceJavaScriptReference()
-    {
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id")
-        	.setCrossOrigin(CrossOrigin.ANONYMOUS)
-        	.setIntegrity("XXXX"));
-        String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" +
-            RESOURCE_NAME + "\" crossOrigin=\"anonymous\" integrity=\"XXXX\"></script>\n";
-        String actual = headerResponse.getResponse().toString();
-        assertEquals(expected, actual);
-    }
+	/**
+	 * Tests setting of subresource attributes
+	 */
+	@Test
+	void subresourceJavaScriptReference()
+	{
+		headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id")
+			.setCrossOrigin(CrossOrigin.ANONYMOUS)
+			.setIntegrity("XXXX"));
+		String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" +
+			RESOURCE_NAME + "\" crossOrigin=\"anonymous\" integrity=\"XXXX\"></script>\n";
+		String actual = headerResponse.getResponse().toString();
+		assertEquals(expected, actual);
+	}
 
-    /**
-     * Tests setting of 'charset' attribute
-     * <p>
-     * WICKET-3909
-     */
-    @Test
-    void charsetSetJavaScriptReference()
-    {
-        String charset = "foo";
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setCharset(charset));
-        String expected = "<script type=\"text/javascript\" id=\"some-id\" charset=\"" + charset +
-            "\" src=\"" + RESOURCE_NAME + "\"></script>\n";
-        String actual = headerResponse.getResponse().toString();
-        assertEquals(expected, actual);
-    }
+	/**
+	 * Tests setting of 'charset' attribute
+	 * <p>
+	 * WICKET-3909
+	 */
+	@Test
+	void charsetSetJavaScriptReference()
+	{
+		String charset = "foo";
+		headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id").setCharset(charset));
+		String expected = "<script type=\"text/javascript\" id=\"some-id\" charset=\"" + charset +
+			"\" src=\"" + RESOURCE_NAME + "\"></script>\n";
+		String actual = headerResponse.getResponse().toString();
+		assertEquals(expected, actual);
+	}
 
-    /**
-     * Tests non-setting of 'charset' attribute
-     * <p>
-     * WICKET-3909
-     */
-    @Test
-    void charsetNotSetJavaScriptReference()
-    {
-        headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id"));
-        String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
-            "\"></script>\n";
-        String actual = headerResponse.getResponse().toString();
-        assertEquals(expected, actual);
-    }
+	/**
+	 * Tests non-setting of 'charset' attribute
+	 * <p>
+	 * WICKET-3909
+	 */
+	@Test
+	void charsetNotSetJavaScriptReference()
+	{
+		headerResponse.render(JavaScriptHeaderItem.forUrl("js-resource.js", "some-id"));
+		String expected = "<script type=\"text/javascript\" id=\"some-id\" src=\"" + RESOURCE_NAME +
+			"\"></script>\n";
+		String actual = headerResponse.getResponse().toString();
+		assertEquals(expected, actual);
+	}
 }

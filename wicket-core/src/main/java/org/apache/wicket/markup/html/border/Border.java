@@ -168,7 +168,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		body = new BorderBodyContainer(id + "_" + BODY);
 		queueToBorder(body);
 	}
-	
+
 	/**
 	 * Returns the border body container. 
 	 * 
@@ -216,9 +216,9 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			{
 				addToBorder(component);
 			}
-			else 
+			else
 			{
-				getBodyContainer().add(component);				
+				getBodyContainer().add(component);
 			}
 		}
 		return this;
@@ -235,9 +235,9 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 				// container but to border's old remove.
 				super.addOrReplace(component);
 			}
-			else 
+			else
 			{
-				getBodyContainer().addOrReplace(component);				
+				getBodyContainer().addOrReplace(component);
 			}
 		}
 		return this;
@@ -259,8 +259,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		return this;
 	}
 
-	
-	
+
 	@Override
 	public Border remove(final String id)
 	{
@@ -319,14 +318,14 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		getBodyContainer().queue(components);
 		return this;
 	}
-	
+
 	@Override
-	protected void onConfigure() 
+	protected void onConfigure()
 	{
 		super.onConfigure();
 		dequeue();
 	}
-	
+
 	/**
 	 * Queues children components to the Border itself
 	 *
@@ -661,14 +660,14 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 			//synch the tag id with the one of the body component
 			tag.setId(body.getId());
 		}
-		
+
 		return super.findComponentToDequeue(tag);
 	}
 
 	private boolean canDequeueBody(ComponentTag tag)
 	{
 		boolean isBodyTag = (tag instanceof WicketTag) && ((WicketTag)tag).isBodyTag();
-		
+
 		return isBodyTag;
 	}
 
@@ -678,7 +677,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		// components queued in border get dequeued into the border not into the body container
 		super.add(component);
 	}
-	
+
 	/**
 	 * Returns the markup inside &lt;wicket:border&gt; tag.
 	 * If such tag is not found, all the markup is returned.
@@ -689,15 +688,15 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	public IMarkupFragment getRegionMarkup()
 	{
 		IMarkupFragment markup = super.getRegionMarkup();
-		
+
 		if (markup == null)
 		{
 			return markup;
 		}
-		
+
 		IMarkupFragment borderMarkup = MarkupUtil.findStartTag(markup, BORDER);
-		
+
 		return borderMarkup != null ? borderMarkup : markup;
 	}
-	
+
 }

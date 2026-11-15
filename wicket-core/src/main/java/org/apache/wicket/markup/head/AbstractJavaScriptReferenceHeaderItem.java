@@ -27,7 +27,9 @@ import org.apache.wicket.util.value.AttributeMap;
 /**
  * A {@link org.apache.wicket.markup.head.HeaderItem} that renders a JavaScript reference.
  */
-public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHeaderItem implements ISubresourceHeaderItem
+public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
+	implements
+		ISubresourceHeaderItem
 {
 	private boolean async;
 	private boolean defer;
@@ -83,20 +85,20 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 	{
 		return crossOrigin;
 	}
-	
+
 	@Override
 	public AbstractJavaScriptReferenceHeaderItem setCrossOrigin(CrossOrigin crossOrigin)
 	{
 		this.crossOrigin = crossOrigin;
 		return this;
 	}
-	
+
 	@Override
 	public String getIntegrity()
 	{
 		return integrity;
 	}
-	
+
 	@Override
 	public AbstractJavaScriptReferenceHeaderItem setIntegrity(String integrity)
 	{
@@ -104,11 +106,13 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 		return this;
 	}
 
-	public JavaScriptReferenceType getType() {
+	public JavaScriptReferenceType getType()
+	{
 		return type;
 	}
 
-	public AbstractJavaScriptReferenceHeaderItem setType(final JavaScriptReferenceType type) {
+	public AbstractJavaScriptReferenceHeaderItem setType(final JavaScriptReferenceType type)
+	{
 		this.type = type;
 		return this;
 	}
@@ -120,10 +124,12 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 		JavaScriptUtils.writeScript(response, attributes);
 	}
 
-	final AttributeMap createAttributeMap(final String url) {
+	final AttributeMap createAttributeMap(final String url)
+	{
 		final AttributeMap attributes = new AttributeMap();
 		final JavaScriptReferenceType type = getType();
-		if (type != null) {
+		if (type != null)
+		{
 			attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, type.getType());
 		}
 		attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
@@ -133,7 +139,8 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_ASYNC, async);
 		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_SRC, url);
 		attributes.putAttribute(JavaScriptUtils.ATTR_CSP_NONCE, getNonce());
-		attributes.putAttribute(JavaScriptUtils.ATTR_CROSS_ORIGIN, getCrossOrigin() == null ? null : getCrossOrigin().getRealName());
+		attributes.putAttribute(JavaScriptUtils.ATTR_CROSS_ORIGIN, getCrossOrigin() == null ? null : getCrossOrigin()
+			.getRealName());
 		attributes.putAttribute(JavaScriptUtils.ATTR_INTEGRITY, getIntegrity());
 		return attributes;
 	}
@@ -149,9 +156,9 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 			return false;
 		AbstractJavaScriptReferenceHeaderItem that = (AbstractJavaScriptReferenceHeaderItem)o;
 		return async == that.async &&
-				defer == that.defer &&
-				Objects.equals(charset, that.charset) &&
-		  		Objects.equals(type, that.type);
+			defer == that.defer &&
+			Objects.equals(charset, that.charset) &&
+			Objects.equals(type, that.type);
 	}
 
 	@Override

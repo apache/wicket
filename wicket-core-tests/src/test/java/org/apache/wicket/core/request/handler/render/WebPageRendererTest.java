@@ -319,29 +319,29 @@ class WebPageRendererTest
 		verify(response, never()).sendRedirect(anyString());
 	}
 
-    /**
-     * Tests that when {@link WebRequest#shouldPreserveClientUrl()} is <code>true</code>
-     * but {@link RenderPageRequestHandler#getRedirectPolicy()} is
-     * {@link RedirectPolicy#ALWAYS_REDIRECT} a redirect must be issued
-     *
-     * https://issues.apache.org/jira/browse/WICKET-5486
-     */
-    @Test
+	/**
+	 * Tests that when {@link WebRequest#shouldPreserveClientUrl()} is <code>true</code>
+	 * but {@link RenderPageRequestHandler#getRedirectPolicy()} is
+	 * {@link RedirectPolicy#ALWAYS_REDIRECT} a redirect must be issued
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-5486
+	 */
+	@Test
 	void testShouldPreserveClientUrlOverruledByRedirectPolicyAlwaysRedirect()
-    {
-        TestPageRenderer renderer = new TestPageRenderer(handler);
-        renderer.shouldPreserveClientUrl = true;
-        renderer.redirectPolicy = RedirectPolicy.ALWAYS_REDIRECT;
+	{
+		TestPageRenderer renderer = new TestPageRenderer(handler);
+		renderer.shouldPreserveClientUrl = true;
+		renderer.redirectPolicy = RedirectPolicy.ALWAYS_REDIRECT;
 
-        when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("something"));
+		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("something"));
 
-        when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("different"));
+		when(requestCycle.mapUrlFor(eq(handler))).thenReturn(Url.parse("different"));
 
-        renderer.respond(requestCycle);
+		renderer.respond(requestCycle);
 
-        verify(response, never()).write(any(byte[].class));
-        verify(response).sendRedirect(isNull());
-    }
+		verify(response, never()).write(any(byte[].class));
+		verify(response).sendRedirect(isNull());
+	}
 
 	/**
 	 * Tests that when {@link RenderPageRequestHandler#getRedirectPolicy()} is
@@ -601,7 +601,8 @@ class WebPageRendererTest
 	}
 
 	@Test
-	void testShouldRenderPageAndWriteResponseCondition() {
+	void testShouldRenderPageAndWriteResponseCondition()
+	{
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 		// if
@@ -680,7 +681,8 @@ class WebPageRendererTest
 	}
 
 	@Test
-	void testShouldNOTRenderPageAndWriteResponseCondition() {
+	void testShouldNOTRenderPageAndWriteResponseCondition()
+	{
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 
@@ -718,71 +720,74 @@ class WebPageRendererTest
 	}
 
 	@Test
-	void testShouldRenderPageAndWriteResponseVariationIntegrity() {
+	void testShouldRenderPageAndWriteResponseVariationIntegrity()
+	{
 		int count = countVariations(new ShouldRenderPageAndWriteResponseVariations());
 		assertEquals(2 * 2 * 2 * 2 * 2 * 2 * 2 * 3, count);
 	}
 
 	@Test
-	void shouldRenderPageAndWriteResponseVariation() {
+	void shouldRenderPageAndWriteResponseVariation()
+	{
 
-		String match =
-						"    X       X   " +
-						"    XXXX    XXXX" +
-						"    X       X   " +
-						"    XXXX    XXXX" +
-						"                " +
-						"                " +
-						"                " +
-						"                " +
-						"XXXXXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
-						"                " +
-						"                " +
-						"                " +
-						"                " +
-						"    X   XXXXXXXX" +
-						"    XXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
-						"                " +
-						"                " +
-						"                " +
-						"                ";
+		String match = "    X       X   " +
+			"    XXXX    XXXX" +
+			"    X       X   " +
+			"    XXXX    XXXX" +
+			"                " +
+			"                " +
+			"                " +
+			"                " +
+			"XXXXXXXXXXXXXXXX" +
+			"XXXXXXXXXXXXXXXX" +
+			"XXXXXXXXXXXXXXXX" +
+			"XXXXXXXXXXXXXXXX" +
+			"                " +
+			"                " +
+			"                " +
+			"                " +
+			"    X   XXXXXXXX" +
+			"    XXXXXXXXXXXX" +
+			"XXXXXXXXXXXXXXXX" +
+			"XXXXXXXXXXXXXXXX" +
+			"                " +
+			"                " +
+			"                " +
+			"                ";
 
 		checkVariations(match, new ShouldRenderPageAndWriteResponseVariations());
 	}
 
 	@Test
-	void testShouldRedirectToTargetUrlIntegrity() {
+	void testShouldRedirectToTargetUrlIntegrity()
+	{
 		int count = countVariations(new ShouldRedirectToTargetUrl());
 		assertEquals(2 * 3 * 2 * 2 * 2 * 2 * 2, count);
 	}
 
 	@Test
-	void testShouldRedirectToTargetUrl() {
+	void testShouldRedirectToTargetUrl()
+	{
 
-		String match =
-						"XXXXXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
-						"   XXXXX        " +
-						"XXXXXXXXXXXXXXXX" +
-						"   XXXXX        " +
-						"XXXXXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
-						"   XXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX" +
-						"   XXXXXXXXXXXXX" +
-						"XXXXXXXXXXXXXXXX";
+		String match = "XXXXXXXXXXXXXXXX" +
+			"XXXXXXXXXXXXXXXX" +
+			"   XXXXX        " +
+			"XXXXXXXXXXXXXXXX" +
+			"   XXXXX        " +
+			"XXXXXXXXXXXXXXXX" +
+			"XXXXXXXXXXXXXXXX" +
+			"XXXXXXXXXXXXXXXX" +
+			"   XXXXXXXXXXXXX" +
+			"XXXXXXXXXXXXXXXX" +
+			"   XXXXXXXXXXXXX" +
+			"XXXXXXXXXXXXXXXX";
 
 		checkVariations(match, new ShouldRedirectToTargetUrl());
 	}
 
 	@Test
-	void shouldRedirectToTargetUrlCondition() {
+	void shouldRedirectToTargetUrlCondition()
+	{
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 
@@ -836,10 +841,11 @@ class WebPageRendererTest
 	}
 
 	@Test
-	void shouldNOTRedirectToTargetUrlCondition() {
+	void shouldNOTRedirectToTargetUrlCondition()
+	{
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
-		
+
 		// NOT if
 		//		render policy is always-redirect
 		// AND NOT
@@ -852,45 +858,52 @@ class WebPageRendererTest
 		//			or
 		//				session is temporary and page is stateless
 
-		renderer.ajax=false;
-		renderer.redirectPolicy=RedirectPolicy.AUTO_REDIRECT;
-		renderer.redirectToRender=false;
-		renderer.newPageInstance=false;
-		renderer.pageStateless=false;
-		renderer.sessionTemporary=false;
+		renderer.ajax = false;
+		renderer.redirectPolicy = RedirectPolicy.AUTO_REDIRECT;
+		renderer.redirectToRender = false;
+		renderer.newPageInstance = false;
+		renderer.pageStateless = false;
+		renderer.sessionTemporary = false;
 
 		Assertions.assertFalse(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test1"),
-				Url.parse("test2")));
+			Url.parse("test2")));
 	}
 
-	private int countVariations(AbstractVariations variations) {
+	private int countVariations(AbstractVariations variations)
+	{
 		int count = 0;
-		while (variations.hasNextVariation()) {
+		while (variations.hasNextVariation())
+		{
 			count++;
 			variations.nextVariation();
 		}
 		return count;
 	}
 
-	private void checkVariations(String match, AbstractVariations variations) {
-		int idx=0;
-		while (variations.hasNextVariation()) {
+	private void checkVariations(String match, AbstractVariations variations)
+	{
+		int idx = 0;
+		while (variations.hasNextVariation())
+		{
 			variations.nextVariation();
 			assertEquals(match.charAt(idx) == 'X', variations.getResult(), variations.toString());
 			idx++;
 		}
 	}
 
-	void printVariations(AbstractVariations variations) {
-		int idx=0;
+	void printVariations(AbstractVariations variations)
+	{
+		int idx = 0;
 		System.out.print("\"");
-		while (variations.hasNextVariation()) {
-			System.out.print(variations.getResult() ? 'X': ' ');
+		while (variations.hasNextVariation())
+		{
+			System.out.print(variations.getResult() ? 'X' : ' ');
 			variations.nextVariation();
 			idx++;
-			if (idx>=16) {
+			if (idx >= 16)
+			{
 				System.out.print("\"+\n\"");
-				idx=0;
+				idx = 0;
 			}
 		}
 		System.out.println("\";");

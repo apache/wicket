@@ -24,10 +24,11 @@ import org.apache.wicket.markup.html.WebPage;
 public class FocusPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	public String lastFocusedElementId;
 
-	public FocusPage( ) {
+	public FocusPage()
+	{
 		add(new AjaxLink<Void>("link")
 		{
 			@Override

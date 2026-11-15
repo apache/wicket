@@ -68,10 +68,11 @@ public class SystemMapper extends CompoundRequestMapper
 	}
 
 	protected IRequestMapper newResourceReferenceMapper(PageParametersEncoder pageParametersEncoder,
-	                                                  ParentFolderPlaceholderProvider parentFolderPlaceholderProvider,
-	                                                  Supplier<IResourceCachingStrategy> resourceCachingStrategy, Application application)
+		ParentFolderPlaceholderProvider parentFolderPlaceholderProvider,
+		Supplier<IResourceCachingStrategy> resourceCachingStrategy, Application application)
 	{
-		return new ResourceReferenceMapper(pageParametersEncoder, parentFolderPlaceholderProvider,resourceCachingStrategy);
+		return new ResourceReferenceMapper(pageParametersEncoder, parentFolderPlaceholderProvider,
+			resourceCachingStrategy);
 	}
 
 	protected IRequestMapper newBookmarkableMapper()
@@ -122,7 +123,7 @@ public class SystemMapper extends CompoundRequestMapper
 		@Override
 		public Class<C> get()
 		{
-			return (Class<C>) application.getHomePage();
+			return (Class<C>)application.getHomePage();
 		}
 	}
 }

@@ -36,7 +36,7 @@ class ComponentStringResourceLoaderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage_1() throws Exception
+	void renderHomePage_1() throws Exception
 	{
 		// The xml markup file and the search for an xml properties
 		// file get in the way
@@ -47,7 +47,7 @@ class ComponentStringResourceLoaderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage_2() throws Exception
+	void renderHomePage_2() throws Exception
 	{
 		// Avoid the conflict by limiting the search for properties files
 		// to *.properties
@@ -62,7 +62,7 @@ class ComponentStringResourceLoaderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void disabledCache() throws Exception
+	void disabledCache() throws Exception
 	{
 		IPropertiesFactory myFac = new DisabledCachePropertiesFactory(tester.getApplication()
 			.getResourceSettings());
@@ -83,7 +83,7 @@ class ComponentStringResourceLoaderTest extends WicketTestCase
 		 * 
 		 * @param context
 		 */
-        MyPropertiesFactory(IPropertiesFactoryContext context)
+		MyPropertiesFactory(IPropertiesFactoryContext context)
 		{
 			super(context);
 
@@ -102,7 +102,7 @@ class ComponentStringResourceLoaderTest extends WicketTestCase
 		 * 
 		 * @param context
 		 */
-        DisabledCachePropertiesFactory(IPropertiesFactoryContext context)
+		DisabledCachePropertiesFactory(IPropertiesFactoryContext context)
 		{
 			super(context);
 		}

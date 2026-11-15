@@ -83,322 +83,361 @@ import java.util.List;
  */
 public class BOMInputStream extends ProxyInputStream
 {
-    private final boolean include;
-    /**
-     * BOMs are sorted from longest to shortest.
-     */
-    private final List<ByteOrderMark> boms;
-    private ByteOrderMark byteOrderMark;
-    private int[] firstBytes;
-    private int fbLength;
-    private int fbIndex;
-    private int markFbIndex;
-    private boolean markedAtStart;
+	private final boolean include;
+	/**
+	 * BOMs are sorted from longest to shortest.
+	 */
+	private final List<ByteOrderMark> boms;
+	private ByteOrderMark byteOrderMark;
+	private int[] firstBytes;
+	private int fbLength;
+	private int fbIndex;
+	private int markFbIndex;
+	private boolean markedAtStart;
 
-    /**
-     * Constructs a new BOM InputStream that excludes a {@link ByteOrderMark#UTF_8} BOM.
-     * 
-     * @param delegate
-     *            the InputStream to delegate to
-     */
-    public BOMInputStream(final InputStream delegate) {
-        this(delegate, false, ByteOrderMark.UTF_8);
-    }
+	/**
+	 * Constructs a new BOM InputStream that excludes a {@link ByteOrderMark#UTF_8} BOM.
+	 * 
+	 * @param delegate
+	 *            the InputStream to delegate to
+	 */
+	public BOMInputStream(final InputStream delegate)
+	{
+		this(delegate, false, ByteOrderMark.UTF_8);
+	}
 
-    /**
-     * Constructs a new BOM InputStream that detects a a {@link ByteOrderMark#UTF_8} and optionally includes it.
-     * 
-     * @param delegate
-     *            the InputStream to delegate to
-     * @param include
-     *            true to include the UTF-8 BOM or false to exclude it
-     */
-    public BOMInputStream(final InputStream delegate, final boolean include) {
-        this(delegate, include, ByteOrderMark.UTF_8);
-    }
+	/**
+	 * Constructs a new BOM InputStream that detects a a {@link ByteOrderMark#UTF_8} and optionally includes it.
+	 * 
+	 * @param delegate
+	 *            the InputStream to delegate to
+	 * @param include
+	 *            true to include the UTF-8 BOM or false to exclude it
+	 */
+	public BOMInputStream(final InputStream delegate, final boolean include)
+	{
+		this(delegate, include, ByteOrderMark.UTF_8);
+	}
 
-    /**
-     * Constructs a new BOM InputStream that excludes the specified BOMs.
-     * 
-     * @param delegate
-     *            the InputStream to delegate to
-     * @param boms
-     *            The BOMs to detect and exclude
-     */
-    public BOMInputStream(final InputStream delegate, final ByteOrderMark... boms) {
-        this(delegate, false, boms);
-    }
+	/**
+	 * Constructs a new BOM InputStream that excludes the specified BOMs.
+	 * 
+	 * @param delegate
+	 *            the InputStream to delegate to
+	 * @param boms
+	 *            The BOMs to detect and exclude
+	 */
+	public BOMInputStream(final InputStream delegate, final ByteOrderMark... boms)
+	{
+		this(delegate, false, boms);
+	}
 
-    /**
-     * Compares ByteOrderMark objects in descending length order.
-     */
-    private static final Comparator<ByteOrderMark> ByteOrderMarkLengthComparator = new Comparator<ByteOrderMark>() {
+	/**
+	 * Compares ByteOrderMark objects in descending length order.
+	 */
+	private static final Comparator<ByteOrderMark> ByteOrderMarkLengthComparator = new Comparator<ByteOrderMark>()
+	{
 
-        @Override
-		public int compare(final ByteOrderMark bom1, final ByteOrderMark bom2) {
-            final int len1 = bom1.length();
-            final int len2 = bom2.length();
-            if (len1 > len2) {
-                return -1;
-            }
-            if (len2 > len1) {
-                return 1;
-            }
-            return 0;
-        }
-    };
+		@Override
+		public int compare(final ByteOrderMark bom1, final ByteOrderMark bom2)
+		{
+			final int len1 = bom1.length();
+			final int len2 = bom2.length();
+			if (len1 > len2)
+			{
+				return -1;
+			}
+			if (len2 > len1)
+			{
+				return 1;
+			}
+			return 0;
+		}
+	};
 
-    /**
-     * Constructs a new BOM InputStream that detects the specified BOMs and optionally includes them.
-     * 
-     * @param delegate
-     *            the InputStream to delegate to
-     * @param include
-     *            true to include the specified BOMs or false to exclude them
-     * @param boms
-     *            The BOMs to detect and optionally exclude
-     */
-    public BOMInputStream(final InputStream delegate, final boolean include, final ByteOrderMark... boms) {
-        super(delegate);
-        if (boms == null || boms.length == 0) {
-            throw new IllegalArgumentException("No BOMs specified");
-        }
-        this.include = include;
-        // Sort the BOMs to match the longest BOM first because some BOMs have the same starting two bytes.
-        Arrays.sort(boms, ByteOrderMarkLengthComparator);
-        this.boms = Arrays.asList(boms);
+	/**
+	 * Constructs a new BOM InputStream that detects the specified BOMs and optionally includes them.
+	 * 
+	 * @param delegate
+	 *            the InputStream to delegate to
+	 * @param include
+	 *            true to include the specified BOMs or false to exclude them
+	 * @param boms
+	 *            The BOMs to detect and optionally exclude
+	 */
+	public BOMInputStream(final InputStream delegate, final boolean include, final ByteOrderMark... boms)
+	{
+		super(delegate);
+		if (boms == null || boms.length == 0)
+		{
+			throw new IllegalArgumentException("No BOMs specified");
+		}
+		this.include = include;
+		// Sort the BOMs to match the longest BOM first because some BOMs have the same starting two bytes.
+		Arrays.sort(boms, ByteOrderMarkLengthComparator);
+		this.boms = Arrays.asList(boms);
 
-    }
+	}
 
-    /**
-     * Indicates whether the stream contains one of the specified BOMs.
-     * 
-     * @return true if the stream has one of the specified BOMs, otherwise false if it does not
-     * @throws IOException
-     *             if an error reading the first bytes of the stream occurs
-     */
-    public boolean hasBOM() throws IOException {
-        return getBOM() != null;
-    }
+	/**
+	 * Indicates whether the stream contains one of the specified BOMs.
+	 * 
+	 * @return true if the stream has one of the specified BOMs, otherwise false if it does not
+	 * @throws IOException
+	 *             if an error reading the first bytes of the stream occurs
+	 */
+	public boolean hasBOM() throws IOException
+	{
+		return getBOM() != null;
+	}
 
-    /**
-     * Indicates whether the stream contains the specified BOM.
-     * 
-     * @param bom
-     *            The BOM to check for
-     * @return true if the stream has the specified BOM, otherwise false if it does not
-     * @throws IllegalArgumentException
-     *             if the BOM is not one the stream is configured to detect
-     * @throws IOException
-     *             if an error reading the first bytes of the stream occurs
-     */
-    public boolean hasBOM(final ByteOrderMark bom) throws IOException {
-        if (!boms.contains(bom)) {
-            throw new IllegalArgumentException("Stream not configure to detect " + bom);
-        }
-        return byteOrderMark != null && getBOM().equals(bom);
-    }
+	/**
+	 * Indicates whether the stream contains the specified BOM.
+	 * 
+	 * @param bom
+	 *            The BOM to check for
+	 * @return true if the stream has the specified BOM, otherwise false if it does not
+	 * @throws IllegalArgumentException
+	 *             if the BOM is not one the stream is configured to detect
+	 * @throws IOException
+	 *             if an error reading the first bytes of the stream occurs
+	 */
+	public boolean hasBOM(final ByteOrderMark bom) throws IOException
+	{
+		if (!boms.contains(bom))
+		{
+			throw new IllegalArgumentException("Stream not configure to detect " + bom);
+		}
+		return byteOrderMark != null && getBOM().equals(bom);
+	}
 
-    /**
-     * Return the BOM (Byte Order Mark).
-     * 
-     * @return The BOM or null if none
-     * @throws IOException
-     *             if an error reading the first bytes of the stream occurs
-     */
-    public ByteOrderMark getBOM() throws IOException {
-        if (firstBytes == null) {
-            fbLength = 0;
-            // BOMs are sorted from longest to shortest
-            final int maxBomSize = boms.get(0).length();
-            firstBytes = new int[maxBomSize];
-            // Read first maxBomSize bytes
-            for (int i = 0; i < firstBytes.length; i++) {
-                firstBytes[i] = in.read();
-                fbLength++;
-                if (firstBytes[i] < 0) {
-                    break;
-                }
-            }
-            // match BOM in firstBytes
-            byteOrderMark = find();
-            if (byteOrderMark != null) {
-                if (!include) {
-                    if (byteOrderMark.length() < firstBytes.length) {
-                        fbIndex = byteOrderMark.length();
-                    } else {
-                        fbLength = 0;
-                    }
-                }
-            }
-        }
-        return byteOrderMark;
-    }
+	/**
+	 * Return the BOM (Byte Order Mark).
+	 * 
+	 * @return The BOM or null if none
+	 * @throws IOException
+	 *             if an error reading the first bytes of the stream occurs
+	 */
+	public ByteOrderMark getBOM() throws IOException
+	{
+		if (firstBytes == null)
+		{
+			fbLength = 0;
+			// BOMs are sorted from longest to shortest
+			final int maxBomSize = boms.get(0).length();
+			firstBytes = new int[maxBomSize];
+			// Read first maxBomSize bytes
+			for (int i = 0; i < firstBytes.length; i++)
+			{
+				firstBytes[i] = in.read();
+				fbLength++;
+				if (firstBytes[i] < 0)
+				{
+					break;
+				}
+			}
+			// match BOM in firstBytes
+			byteOrderMark = find();
+			if (byteOrderMark != null)
+			{
+				if (!include)
+				{
+					if (byteOrderMark.length() < firstBytes.length)
+					{
+						fbIndex = byteOrderMark.length();
+					}
+					else
+					{
+						fbLength = 0;
+					}
+				}
+			}
+		}
+		return byteOrderMark;
+	}
 
-    /**
-     * Return the BOM charset Name - {@link ByteOrderMark#getCharsetName()}.
-     * 
-     * @return The BOM charset Name or null if no BOM found
-     * @throws IOException
-     *             if an error reading the first bytes of the stream occurs
-     * 
-     */
-    public String getBOMCharsetName() throws IOException {
-        getBOM();
-        return byteOrderMark == null ? null : byteOrderMark.getCharsetName();
-    }
+	/**
+	 * Return the BOM charset Name - {@link ByteOrderMark#getCharsetName()}.
+	 * 
+	 * @return The BOM charset Name or null if no BOM found
+	 * @throws IOException
+	 *             if an error reading the first bytes of the stream occurs
+	 * 
+	 */
+	public String getBOMCharsetName() throws IOException
+	{
+		getBOM();
+		return byteOrderMark == null ? null : byteOrderMark.getCharsetName();
+	}
 
-    /**
-     * This method reads and either preserves or skips the first bytes in the stream. It behaves like the single-byte
-     * <code>read()</code> method, either returning a valid byte or -1 to indicate that the initial bytes have been
-     * processed already.
-     * 
-     * @return the byte read (excluding BOM) or -1 if the end of stream
-     * @throws IOException
-     *             if an I/O error occurs
-     */
-    private int readFirstBytes() throws IOException {
-        getBOM();
-        return fbIndex < fbLength ? firstBytes[fbIndex++] : -1;
-    }
+	/**
+	 * This method reads and either preserves or skips the first bytes in the stream. It behaves like the single-byte
+	 * <code>read()</code> method, either returning a valid byte or -1 to indicate that the initial bytes have been
+	 * processed already.
+	 * 
+	 * @return the byte read (excluding BOM) or -1 if the end of stream
+	 * @throws IOException
+	 *             if an I/O error occurs
+	 */
+	private int readFirstBytes() throws IOException
+	{
+		getBOM();
+		return fbIndex < fbLength ? firstBytes[fbIndex++] : -1;
+	}
 
-    /**
-     * Find a BOM with the specified bytes.
-     * 
-     * @return The matched BOM or null if none matched
-     */
-    private ByteOrderMark find() {
-        for (final ByteOrderMark bom : boms) {
-            if (matches(bom)) {
-                return bom;
-            }
-        }
-        return null;
-    }
+	/**
+	 * Find a BOM with the specified bytes.
+	 * 
+	 * @return The matched BOM or null if none matched
+	 */
+	private ByteOrderMark find()
+	{
+		for (final ByteOrderMark bom : boms)
+		{
+			if (matches(bom))
+			{
+				return bom;
+			}
+		}
+		return null;
+	}
 
-    /**
-     * Check if the bytes match a BOM.
-     * 
-     * @param bom
-     *            The BOM
-     * @return true if the bytes match the bom, otherwise false
-     */
-    private boolean matches(final ByteOrderMark bom) {
-        // if (bom.length() != fbLength) {
-        // return false;
-        // }
-        // firstBytes may be bigger than the BOM bytes
-        for (int i = 0; i < bom.length(); i++) {
-            if (bom.get(i) != firstBytes[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
+	/**
+	 * Check if the bytes match a BOM.
+	 * 
+	 * @param bom
+	 *            The BOM
+	 * @return true if the bytes match the bom, otherwise false
+	 */
+	private boolean matches(final ByteOrderMark bom)
+	{
+		// if (bom.length() != fbLength) {
+		// return false;
+		// }
+		// firstBytes may be bigger than the BOM bytes
+		for (int i = 0; i < bom.length(); i++)
+		{
+			if (bom.get(i) != firstBytes[i])
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 
-    // ----------------------------------------------------------------------------
-    // Implementation of InputStream
-    // ----------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------
+	// Implementation of InputStream
+	// ----------------------------------------------------------------------------
 
-    /**
-     * Invokes the delegate's <code>read()</code> method, detecting and optionally skipping BOM.
-     * 
-     * @return the byte read (excluding BOM) or -1 if the end of stream
-     * @throws IOException
-     *             if an I/O error occurs
-     */
-    @Override
-    public int read() throws IOException {
-        final int b = readFirstBytes();
-        return b >= 0 ? b : in.read();
-    }
+	/**
+	 * Invokes the delegate's <code>read()</code> method, detecting and optionally skipping BOM.
+	 * 
+	 * @return the byte read (excluding BOM) or -1 if the end of stream
+	 * @throws IOException
+	 *             if an I/O error occurs
+	 */
+	@Override
+	public int read() throws IOException
+	{
+		final int b = readFirstBytes();
+		return b >= 0 ? b : in.read();
+	}
 
-    /**
-     * Invokes the delegate's <code>read(byte[], int, int)</code> method, detecting and optionally skipping BOM.
-     * 
-     * @param buf
-     *            the buffer to read the bytes into
-     * @param off
-     *            The start offset
-     * @param len
-     *            The number of bytes to read (excluding BOM)
-     * @return the number of bytes read or -1 if the end of stream
-     * @throws IOException
-     *             if an I/O error occurs
-     */
-    @Override
-    public int read(final byte[] buf, int off, int len) throws IOException {
-        int firstCount = 0;
-        int b = 0;
-        while (len > 0 && b >= 0) {
-            b = readFirstBytes();
-            if (b >= 0) {
-                buf[off++] = (byte) (b & 0xFF);
-                len--;
-                firstCount++;
-            }
-        }
-        final int secondCount = in.read(buf, off, len);
-        return secondCount < 0 ? firstCount > 0 ? firstCount : -1 : firstCount + secondCount;
-    }
+	/**
+	 * Invokes the delegate's <code>read(byte[], int, int)</code> method, detecting and optionally skipping BOM.
+	 * 
+	 * @param buf
+	 *            the buffer to read the bytes into
+	 * @param off
+	 *            The start offset
+	 * @param len
+	 *            The number of bytes to read (excluding BOM)
+	 * @return the number of bytes read or -1 if the end of stream
+	 * @throws IOException
+	 *             if an I/O error occurs
+	 */
+	@Override
+	public int read(final byte[] buf, int off, int len) throws IOException
+	{
+		int firstCount = 0;
+		int b = 0;
+		while (len > 0 && b >= 0)
+		{
+			b = readFirstBytes();
+			if (b >= 0)
+			{
+				buf[off++] = (byte)(b & 0xFF);
+				len--;
+				firstCount++;
+			}
+		}
+		final int secondCount = in.read(buf, off, len);
+		return secondCount < 0 ? firstCount > 0 ? firstCount : -1 : firstCount + secondCount;
+	}
 
-    /**
-     * Invokes the delegate's <code>read(byte[])</code> method, detecting and optionally skipping BOM.
-     * 
-     * @param buf
-     *            the buffer to read the bytes into
-     * @return the number of bytes read (excluding BOM) or -1 if the end of stream
-     * @throws IOException
-     *             if an I/O error occurs
-     */
-    @Override
-    public int read(final byte[] buf) throws IOException {
-        return read(buf, 0, buf.length);
-    }
+	/**
+	 * Invokes the delegate's <code>read(byte[])</code> method, detecting and optionally skipping BOM.
+	 * 
+	 * @param buf
+	 *            the buffer to read the bytes into
+	 * @return the number of bytes read (excluding BOM) or -1 if the end of stream
+	 * @throws IOException
+	 *             if an I/O error occurs
+	 */
+	@Override
+	public int read(final byte[] buf) throws IOException
+	{
+		return read(buf, 0, buf.length);
+	}
 
-    /**
-     * Invokes the delegate's <code>mark(int)</code> method.
-     * 
-     * @param readlimit
-     *            read ahead limit
-     */
-    @Override
-    public synchronized void mark(final int readlimit) {
-        markFbIndex = fbIndex;
-        markedAtStart = firstBytes == null;
-        in.mark(readlimit);
-    }
+	/**
+	 * Invokes the delegate's <code>mark(int)</code> method.
+	 * 
+	 * @param readlimit
+	 *            read ahead limit
+	 */
+	@Override
+	public synchronized void mark(final int readlimit)
+	{
+		markFbIndex = fbIndex;
+		markedAtStart = firstBytes == null;
+		in.mark(readlimit);
+	}
 
-    /**
-     * Invokes the delegate's <code>reset()</code> method.
-     * 
-     * @throws IOException
-     *             if an I/O error occurs
-     */
-    @Override
-    public synchronized void reset() throws IOException {
-        fbIndex = markFbIndex;
-        if (markedAtStart) {
-            firstBytes = null;
-        }
+	/**
+	 * Invokes the delegate's <code>reset()</code> method.
+	 * 
+	 * @throws IOException
+	 *             if an I/O error occurs
+	 */
+	@Override
+	public synchronized void reset() throws IOException
+	{
+		fbIndex = markFbIndex;
+		if (markedAtStart)
+		{
+			firstBytes = null;
+		}
 
-        in.reset();
-    }
+		in.reset();
+	}
 
-    /**
-     * Invokes the delegate's <code>skip(long)</code> method, detecting and optionallyskipping BOM.
-     * 
-     * @param n
-     *            the number of bytes to skip
-     * @return the number of bytes to skipped or -1 if the end of stream
-     * @throws IOException
-     *             if an I/O error occurs
-     */
-    @Override
-    public long skip(long n) throws IOException {
-        while (n > 0 && readFirstBytes() >= 0) {
-            n--;
-        }
-        return in.skip(n);
-    }
+	/**
+	 * Invokes the delegate's <code>skip(long)</code> method, detecting and optionallyskipping BOM.
+	 * 
+	 * @param n
+	 *            the number of bytes to skip
+	 * @return the number of bytes to skipped or -1 if the end of stream
+	 * @throws IOException
+	 *             if an I/O error occurs
+	 */
+	@Override
+	public long skip(long n) throws IOException
+	{
+		while (n > 0 && readFirstBytes() >= 0)
+		{
+			n--;
+		}
+		return in.skip(n);
+	}
 }

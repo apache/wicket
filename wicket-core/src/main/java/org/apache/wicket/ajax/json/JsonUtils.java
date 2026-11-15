@@ -49,8 +49,9 @@ public final class JsonUtils
 			{
 				String name = entry.getKey();
 				Object value = entry.getValue();
-				if (value instanceof List) {
-					List<?> values = (List<?>) value;
+				if (value instanceof List)
+				{
+					List<?> values = (List<?>)value;
 					for (Object v : values)
 					{
 						if (v != null)
@@ -66,7 +67,7 @@ public final class JsonUtils
 				{
 					if (value.getClass().isArray())
 					{
-						Object[] array = (Object[]) value;
+						Object[] array = (Object[])value;
 						for (Object v : array)
 						{
 							if (v != null)

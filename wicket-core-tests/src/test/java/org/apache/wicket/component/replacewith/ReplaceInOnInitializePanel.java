@@ -21,15 +21,15 @@ package org.apache.wicket.component.replacewith;
  */
 class ReplaceInOnInitializePanel extends BaseReplaceWithPanel
 {
-    public ReplaceInOnInitializePanel(String id)
-    {
-        super(id);
-    }
+	public ReplaceInOnInitializePanel(String id)
+	{
+		super(id);
+	}
 
-    @Override
-    protected void onInitialize()
-    {
-        super.onInitialize();
-        replaceWith(new PanelB(getId()));
-    }
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		replaceWith(new PanelB(getId()));
+	}
 }

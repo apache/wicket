@@ -27,9 +27,10 @@ public class ImagesTest
 	/**
 	 * Test page.
 	 *
-     */
+	 */
 	@Test
-	public void testImages() {
+	public void testImages()
+	{
 		WicketTester tester = new WicketTester(new ImagesApplication());
 		try
 		{

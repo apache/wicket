@@ -33,7 +33,7 @@ class HrefTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage_1() throws Exception
+	void renderHomePage_1() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
 		executeTest(Href_1.class, "HrefExpectedResult_1.html");
@@ -45,7 +45,7 @@ class HrefTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage_2() throws Exception
+	void renderHomePage_2() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
 		executeTest(Href_1.class, "HrefExpectedResult_1-1.html");
@@ -57,7 +57,7 @@ class HrefTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage_2a() throws Exception
+	void renderHomePage_2a() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
 		executeTest(Href_2.class, "HrefExpectedResult_2.html");
@@ -69,7 +69,7 @@ class HrefTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void renderHomePage_3() throws Exception
+	void renderHomePage_3() throws Exception
 	{
 		executeTest(Href_3.class, "HrefExpectedResult_3.html");
 	}

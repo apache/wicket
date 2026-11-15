@@ -62,7 +62,7 @@ public abstract class AbstractCaptchaForm<T> extends GenericPanel<T>
 				if (!randomText.equals(captchaText))
 				{
 					error("Captcha text '" + captchaText + "' is wrong.\n" +
-							"Correct text was: " + randomText);
+						"Correct text was: " + randomText);
 				}
 				else
 				{
@@ -76,7 +76,7 @@ public abstract class AbstractCaptchaForm<T> extends GenericPanel<T>
 		add(form);
 
 		final FeedbackPanel feedback = new FeedbackPanel("feedback",
-				new ContainerFeedbackMessageFilter(AbstractCaptchaForm.this));
+			new ContainerFeedbackMessageFilter(AbstractCaptchaForm.this));
 		form.add(feedback);
 
 		captchaImageResource = createCaptchaImageResource();
@@ -84,7 +84,8 @@ public abstract class AbstractCaptchaForm<T> extends GenericPanel<T>
 		captchaImage.setOutputMarkupId(true);
 		form.add(captchaImage);
 
-		AjaxLink<Void> changeCaptchaLink = new AjaxLink<Void>("changeLink") {
+		AjaxLink<Void> changeCaptchaLink = new AjaxLink<Void>("changeLink")
+		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -95,7 +96,7 @@ public abstract class AbstractCaptchaForm<T> extends GenericPanel<T>
 		form.add(changeCaptchaLink);
 
 		form.add(new RequiredTextField<String>("text",
-				new PropertyModel<>(AbstractCaptchaForm.this, "captchaText"), String.class)
+			new PropertyModel<>(AbstractCaptchaForm.this, "captchaText"), String.class)
 		{
 			@Override
 			protected final void onComponentTag(final ComponentTag tag)

@@ -44,7 +44,7 @@ public class ExampleApplication extends WicketExampleApplication
 	protected void init()
 	{
 		super.init();
-		
+
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
 
 		// THIS LINE IS IMPORTANT - IT INSTALLS THE COMPONENT INJECTOR THAT WILL

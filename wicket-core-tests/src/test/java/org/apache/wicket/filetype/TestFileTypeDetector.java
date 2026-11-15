@@ -32,9 +32,12 @@ public class TestFileTypeDetector extends FileTypeDetector
 	@Override
 	public String probeContentType(Path path) throws IOException
 	{
-		if(path.getFileName().toString().contains("FileSystemResourceReference")){			
+		if (path.getFileName().toString().contains("FileSystemResourceReference"))
+		{
 			return "text/plain_provided_by_detector";
-		}else{
+		}
+		else
+		{
 			return null;
 		}
 	}

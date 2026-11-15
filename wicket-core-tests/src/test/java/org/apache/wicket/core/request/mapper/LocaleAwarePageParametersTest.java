@@ -72,14 +72,13 @@ class LocaleAwarePageParametersTest extends WicketTestCase
 
 				mountPage("unaware", LocaleUnawarePageParametersPage.class);
 				mount(new MountedMapper("aware", LocaleAwarePageParametersPage.class)
-				      {
-					      @Override
-					      protected Locale resolveLocale()
-					      {
-						      return resolveUserLocale();
-					      }
-				      }
-				);
+				{
+					@Override
+					protected Locale resolveLocale()
+					{
+						return resolveUserLocale();
+					}
+				});
 			}
 
 			@Override
@@ -124,17 +123,17 @@ class LocaleAwarePageParametersTest extends WicketTestCase
 		}
 	}
 
-    public static class LocaleUnawarePageParametersPage extends BasePage
+	public static class LocaleUnawarePageParametersPage extends BasePage
 	{
-        public LocaleUnawarePageParametersPage(PageParameters parameters)
+		public LocaleUnawarePageParametersPage(PageParameters parameters)
 		{
 			super(parameters);
 		}
 	}
 
-    public static class LocaleAwarePageParametersPage extends BasePage
+	public static class LocaleAwarePageParametersPage extends BasePage
 	{
-        public LocaleAwarePageParametersPage(PageParameters parameters)
+		public LocaleAwarePageParametersPage(PageParameters parameters)
 		{
 			super(parameters);
 		}

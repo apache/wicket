@@ -133,17 +133,17 @@ public class PackageResourceReference extends ResourceReference
 		if (CSS_EXTENSION.equals(extension))
 		{
 			resource = new CssPackageResource(scope, name, currentLocale,
-					currentStyle, currentVariation);
+				currentStyle, currentVariation);
 		}
 		else if (JAVASCRIPT_EXTENSION.equals(extension))
 		{
 			resource = new JavaScriptPackageResource(scope, name, currentLocale,
-					currentStyle, currentVariation);
+				currentStyle, currentVariation);
 		}
 		else
 		{
 			resource = new PackageResource(scope, name, currentLocale,
-					currentStyle, currentVariation);
+				currentStyle, currentVariation);
 		}
 		resource.readBuffered(readBuffered);
 
@@ -195,10 +195,10 @@ public class PackageResourceReference extends ResourceReference
 		Locale currentLocale = getCurrentLocale();
 
 		return currentLocale != null
-				? currentLocale
-				: attributes != null
-					? attributes.getLocale()
-					: null;
+			? currentLocale
+			: attributes != null
+				? attributes.getLocale()
+				: null;
 	}
 
 	private Locale getCurrentLocale()
@@ -223,12 +223,12 @@ public class PackageResourceReference extends ResourceReference
 		String currentStyle = getCurrentStyle();
 
 		return currentStyle != null
-				? currentStyle
-				: attributes != null
-					? attributes.getStyle()
-					: null;
+			? currentStyle
+			: attributes != null
+				? attributes.getStyle()
+				: null;
 	}
-	
+
 	private String getCurrentStyle()
 	{
 		final String style = getStyle();
@@ -245,16 +245,16 @@ public class PackageResourceReference extends ResourceReference
 
 		return style;
 	}
-	
+
 	private String getCurrentVariation(UrlAttributes attributes)
 	{
 		final String variation = getVariation();
 
 		return variation != null
-				? variation
-				: attributes != null
-					? attributes.getVariation()
-					: null;
+			? variation
+			: attributes != null
+				? attributes.getVariation()
+				: null;
 	}
 
 	/**

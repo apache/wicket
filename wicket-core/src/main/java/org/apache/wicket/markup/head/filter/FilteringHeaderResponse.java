@@ -83,7 +83,8 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 		boolean accepts(HeaderItem item);
 
 		@Override
-		default boolean test(HeaderItem item) {
+		default boolean test(HeaderItem item)
+		{
 			return accepts(item);
 		}
 	}
@@ -113,7 +114,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	 */
 	public FilteringHeaderResponse(IHeaderResponse response)
 	{
-		this(response, DEFAULT_HEADER_FILTER_NAME, Collections.<IHeaderResponseFilter>emptyList());
+		this(response, DEFAULT_HEADER_FILTER_NAME, Collections.<IHeaderResponseFilter> emptyList());
 	}
 
 	/**
@@ -207,8 +208,9 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 				responseFilterMap.put(headerFilterName, new ArrayList<HeaderItem>());
 			}
 			render(item, headerFilterName);
-			log.debug("A HeaderItem '{}' was rendered to the filtering header response, but did not match any filters, so it put in the <head>.",
-					item);
+			log.debug(
+				"A HeaderItem '{}' was rendered to the filtering header response, but did not match any filters, so it put in the <head>.",
+				item);
 		}
 	}
 

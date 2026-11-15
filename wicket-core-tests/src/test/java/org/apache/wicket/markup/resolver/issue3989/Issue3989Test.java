@@ -33,7 +33,7 @@ class Issue3989Test
 	 * the transparent markup container.
 	 */
 	@Test
-    void ajaxRenderOfTransparentlyResolvedLabel()
+	void ajaxRenderOfTransparentlyResolvedLabel()
 	{
 		WicketTester tester = new WicketTester();
 		tester.startPage(HomePage.class);

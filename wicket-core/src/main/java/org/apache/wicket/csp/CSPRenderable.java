@@ -39,7 +39,7 @@ public interface CSPRenderable
 	 * @return The rendered value.
 	 */
 	String render(ContentSecurityPolicySettings settings, RequestCycle cycle);
-	
+
 	/**
 	 * Checks if the {@code CSPRenderable} represents a valid value for a {@code -src} directive. By
 	 * default no checks are performed.

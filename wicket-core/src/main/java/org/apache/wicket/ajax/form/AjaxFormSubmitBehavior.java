@@ -116,7 +116,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		Component component = getComponent();
 		if (component instanceof IFormSubmittingComponent)
 		{
-			submittingComponent = ((IFormSubmittingComponent) component);
+			submittingComponent = ((IFormSubmittingComponent)component);
 		}
 		return submittingComponent;
 	}
@@ -177,17 +177,20 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			String submittingComponentName = submittingComponent.getInputName();
 			attributes.setSubmittingComponentName(submittingComponentName);
 		}
-		
-		if (shouldTriggerJavaScriptSubmitEvent()) {
-			attributes.getAjaxCallListeners().add(new AjaxCallListener() {
+
+		if (shouldTriggerJavaScriptSubmitEvent())
+		{
+			attributes.getAjaxCallListeners().add(new AjaxCallListener()
+			{
 				@Override
 				public CharSequence getPrecondition(Component component)
 				{
-					return String.format("var p, f = jQuery('#%s'), fn = function(e) { p = e.isDefaultPrevented(); e.preventDefault(); };" //
-						+ "f.on('submit',fn);" //
-						+ "f.trigger('submit');" //
-						+ "f.off('submit',fn);" //
-						+ "return !p;", form.getMarkupId());
+					return String.format(
+						"var p, f = jQuery('#%s'), fn = function(e) { p = e.isDefaultPrevented(); e.preventDefault(); };" //
+							+ "f.on('submit',fn);" //
+							+ "f.trigger('submit');" //
+							+ "f.off('submit',fn);" //
+							+ "return !p;", form.getMarkupId());
 				}
 			});
 		}
@@ -198,7 +201,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	{
 		AjaxFormSubmitBehavior.AjaxFormSubmitter submitter = new AjaxFormSubmitBehavior.AjaxFormSubmitter(this, target);
 		Form<?> form = getForm();
-		
+
 		form.getRootForm().onFormSubmitted(submitter);
 	}
 

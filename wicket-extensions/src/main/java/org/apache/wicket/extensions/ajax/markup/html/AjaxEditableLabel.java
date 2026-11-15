@@ -103,7 +103,8 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 		{
 			super.renderHead(component, response);
 
-			getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> target.appendJavaScript(getCallbackScript(component)));
+			getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> target.appendJavaScript(
+				getCallbackScript(component)));
 		}
 
 		@Override
@@ -402,7 +403,7 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 				final ComponentTag openTag)
 			{
 				Object modelObject = getDefaultModelObject();
-				if ((modelObject == null) || (modelObject instanceof String && ((String) modelObject).isEmpty()))
+				if ((modelObject == null) || (modelObject instanceof String && ((String)modelObject).isEmpty()))
 				{
 					String nullLabel = defaultNullLabel();
 					replaceComponentTagBody(markupStream, openTag,

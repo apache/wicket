@@ -57,7 +57,7 @@ public class AESCrypt extends AbstractJceCrypt
 	private final String algorithm;
 	private final ISecureRandomSupplier randomSupplier;
 
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -81,13 +81,13 @@ public class AESCrypt extends AbstractJceCrypt
 	 * @param randomSupplier
 	 *              The {@link ISecureRandomSupplier} to use to generate random values.
 	 */
-	public AESCrypt(SecretKey secretKey, String algorithm, 
+	public AESCrypt(SecretKey secretKey, String algorithm,
 		ISecureRandomSupplier randomSupplier)
 	{
 		Args.notNull(secretKey, "secretKey");
 		Args.notNull(algorithm, "algorithm");
 		Args.notNull(randomSupplier, "randomSupplier");
-		
+
 		this.secretKey = secretKey;
 		this.algorithm = algorithm;
 		this.randomSupplier = randomSupplier;
@@ -99,19 +99,18 @@ public class AESCrypt extends AbstractJceCrypt
 		try
 		{
 			Cipher cipher = Cipher.getInstance(algorithm);
-			
+
 			int ivSize = cipher.getBlockSize();
 			byte[] iv = new byte[ivSize];
 			byte[] ciphertext = new byte[encrypted.length - ivSize];
-			
+
 			System.arraycopy(encrypted, 0, iv, 0, ivSize);
 			System.arraycopy(encrypted, ivSize, ciphertext, 0, ciphertext.length);
 
 			cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
 			return cipher.doFinal(ciphertext);
 		}
-		catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException 
-			| InvalidKeyException | InvalidAlgorithmParameterException e)
+		catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -129,14 +128,13 @@ public class AESCrypt extends AbstractJceCrypt
 
 			byte[] ciphertext = cipher.doFinal(plainBytes);
 			byte[] finalRes = new byte[ciphertext.length + ivSize];
-			
+
 			System.arraycopy(iv, 0, finalRes, 0, ivSize);
 			System.arraycopy(ciphertext, 0, finalRes, ivSize, ciphertext.length);
-			
+
 			return finalRes;
 		}
-		catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException 
-			| InvalidKeyException | InvalidAlgorithmParameterException e)
+		catch (IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e)
 		{
 			throw new RuntimeException(e);
 		}

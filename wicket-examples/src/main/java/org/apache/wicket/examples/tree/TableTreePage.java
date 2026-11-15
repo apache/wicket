@@ -50,7 +50,8 @@ public class TableTreePage extends AdvancedTreePage
 	{
 		List<IColumn<Foo, String>> columns = createColumns();
 
-		final TableTree<Foo, String> tree = new TableTree<Foo, String>("tree", columns, provider, Integer.MAX_VALUE, state)
+		final TableTree<Foo, String> tree = new TableTree<Foo, String>("tree", columns, provider, Integer.MAX_VALUE,
+			state)
 		{
 			private static final long serialVersionUID = 1L;
 

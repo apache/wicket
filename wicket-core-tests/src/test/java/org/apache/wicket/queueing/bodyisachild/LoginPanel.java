@@ -28,35 +28,39 @@ import org.apache.wicket.model.Model;
 
 public class LoginPanel extends Panel
 {
-    public final Pojo pojo = new Pojo();
+	public final Pojo pojo = new Pojo();
 
-    public LoginPanel(String id)
-    {
-        super(id);
-        add(new LoginForm("loginForm"));
-    }
+	public LoginPanel(String id)
+	{
+		super(id);
+		add(new LoginForm("loginForm"));
+	}
 
-    public static class Pojo implements Serializable
-    {
-        public String username;
-        public String password;
-    }
+	public static class Pojo implements Serializable
+	{
+		public String username;
+		public String password;
+	}
 
-    class LoginForm extends StatelessForm {
+	class LoginForm extends StatelessForm
+	{
 
-        LoginForm(String id) {
-            super(id);
-            setModel(new CompoundPropertyModel<>(pojo));
-            add(createValidatingFormField(new TextField("username").setRequired(true), "yourUsernameHeadline"));
-            add(createValidatingFormField(new PasswordTextField("password").setResetPassword(false), "yourPasswordHeadline"));
-        }
+		LoginForm(String id)
+		{
+			super(id);
+			setModel(new CompoundPropertyModel<>(pojo));
+			add(createValidatingFormField(new TextField("username").setRequired(true), "yourUsernameHeadline"));
+			add(createValidatingFormField(new PasswordTextField("password").setResetPassword(false),
+				"yourPasswordHeadline"));
+		}
 
-        private FormGroup createValidatingFormField(final FormComponent formComponent, String labelKey) {
-            final String fieldId = formComponent.getId();
-            final FormGroup formGroup = new FormGroup(fieldId + "FormGroup", Model.of(labelKey));
-            formGroup.setOutputMarkupId(true);
-            formGroup.add(formComponent);
-            return formGroup;
-        }
-    }
+		private FormGroup createValidatingFormField(final FormComponent formComponent, String labelKey)
+		{
+			final String fieldId = formComponent.getId();
+			final FormGroup formGroup = new FormGroup(fieldId + "FormGroup", Model.of(labelKey));
+			formGroup.setOutputMarkupId(true);
+			formGroup.add(formComponent);
+			return formGroup;
+		}
+	}
 }

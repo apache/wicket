@@ -23,12 +23,15 @@ import org.apache.wicket.model.IModel;
 /**
  * A base page that provides the markup for PageA, PageB and PageC
  */
-class BasePage extends WebPage {
+class BasePage extends WebPage
+{
 	private static final long serialVersionUID = 1L;
 
-	BasePage() {
+	BasePage()
+	{
 
-		add(new Label("className", new IModel<String>() {
+		add(new Label("className", new IModel<String>()
+		{
 
 			@Override
 			public String getObject()
@@ -36,5 +39,5 @@ class BasePage extends WebPage {
 				return getPageClass().getSimpleName();
 			}
 		}));
-    }
+	}
 }

@@ -84,7 +84,7 @@ public class DynamicSubresourceIntegrity
 			if (resource instanceof IStaticCacheableResource)
 			{
 				IStaticCacheableResource cacheableResource = (IStaticCacheableResource)resource;
-				
+
 				return getIntegrity(reference, cacheableResource);
 			}
 		}
@@ -123,7 +123,7 @@ public class DynamicSubresourceIntegrity
 			// otherwise relative urls will differ from the actually served css
 			url.removeLeadingSegments(1);
 		}
-		
+
 		return url;
 	}
 

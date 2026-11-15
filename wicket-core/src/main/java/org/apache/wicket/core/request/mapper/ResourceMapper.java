@@ -160,17 +160,20 @@ public class ResourceMapper extends AbstractBookmarkableMapper
 	}
 
 	@Override
-	protected final UrlInfo parseRequest(final Request request) {
+	protected final UrlInfo parseRequest(final Request request)
+	{
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	protected final Url buildUrl(final UrlInfo info) {
+	protected final Url buildUrl(final UrlInfo info)
+	{
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	protected final boolean pageMustHaveBeenCreatedBookmarkable() {
+	protected final boolean pageMustHaveBeenCreatedBookmarkable()
+	{
 		throw new UnsupportedOperationException();
 	}
 
@@ -263,13 +266,13 @@ public class ResourceMapper extends AbstractBookmarkableMapper
 			if (resource instanceof IStaticCacheableResource)
 			{
 				final IStaticCacheableResource cacheable = (IStaticCacheableResource)resource;
-				
-				if(cacheable.isCachingEnabled())
+
+				if (cacheable.isCachingEnabled())
 				{
 					final ResourceUrl cacheUrl = new ResourceUrl(filename, parameters);
-	
+
 					getCachingStrategy().decorateUrl(cacheUrl, cacheable);
-	
+
 					if (Strings.isEmpty(cacheUrl.getFileName()))
 					{
 						if (Application.exists() && Application.get().usesDeploymentConfig())
@@ -280,7 +283,7 @@ public class ResourceMapper extends AbstractBookmarkableMapper
 						else
 						{
 							throw new IllegalStateException(
-									"caching strategy returned empty name for " + resource);
+								"caching strategy returned empty name for " + resource);
 						}
 					}
 					segments.set(lastSegmentAt, cacheUrl.getFileName());

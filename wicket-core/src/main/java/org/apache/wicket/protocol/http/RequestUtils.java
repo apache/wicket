@@ -66,12 +66,12 @@ public final class RequestUtils
 	 */
 	static void decodeParameters(String queryString, PageParameters params, Charset currentCharset)
 	{
-        
-        if (Strings.indexOf(queryString, '?') == 0)
-        {
-            queryString = queryString.substring(1);
-        }
-        
+
+		if (Strings.indexOf(queryString, '?') == 0)
+		{
+			queryString = queryString.substring(1);
+		}
+
 		for (String paramTuple : Strings.split(queryString, '&'))
 		{
 			final String[] bits = Strings.split(paramTuple, '=');
@@ -83,7 +83,8 @@ public final class RequestUtils
 			}
 			else
 			{
-				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], currentCharset), "", INamedParameters.Type.QUERY_STRING);
+				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], currentCharset), "",
+					INamedParameters.Type.QUERY_STRING);
 			}
 		}
 	}
@@ -192,12 +193,12 @@ public final class RequestUtils
 		{
 			charsetName = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 		}
-		
+
 		if (Strings.isEmpty(charsetName))
 		{
 			return StandardCharsets.UTF_8;
 		}
-		
+
 		return Charset.forName(charsetName);
 	}
 

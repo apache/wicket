@@ -31,7 +31,8 @@ class PageParametersEncoderTest
 	 *
 	 */
 	@Test
-	void decodeParameters() {
+	void decodeParameters()
+	{
 		PageParametersEncoder encoder = new PageParametersEncoder();
 
 		Url url = Url.parse("idx1/idx2?named1=value1&=&named2=value2#fragment");

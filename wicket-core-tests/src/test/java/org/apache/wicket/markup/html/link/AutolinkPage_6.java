@@ -19,14 +19,16 @@ package org.apache.wicket.markup.html.link;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 
-public class AutolinkPage_6 extends WebPage {
+public class AutolinkPage_6 extends WebPage
+{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7778422734672899670L;
-	
-	public AutolinkPage_6() {
-		add(new Label("label","label"));
+
+	public AutolinkPage_6()
+	{
+		add(new Label("label", "label"));
 	}
 }

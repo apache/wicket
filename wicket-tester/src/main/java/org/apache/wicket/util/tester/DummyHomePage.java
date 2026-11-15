@@ -52,10 +52,12 @@ public class DummyHomePage extends WebPage
 		return testPageLink;
 	}
 
-	protected Page getTestPage() {
-		throw new UnsupportedOperationException("To use DummyHomePage.TestLink you need to implement DummyHomePage#getTestPage() method.");
+	protected Page getTestPage()
+	{
+		throw new UnsupportedOperationException(
+			"To use DummyHomePage.TestLink you need to implement DummyHomePage#getTestPage() method.");
 	}
-	
+
 	/**
 	 * <code>TestLink</code> class.
 	 */

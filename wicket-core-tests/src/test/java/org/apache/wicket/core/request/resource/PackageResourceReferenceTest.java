@@ -228,13 +228,15 @@ class PackageResourceReferenceTest extends WicketTestCase
 		class PRR extends PackageResourceReference
 		{
 
-			public PRR(String key) {
+			public PRR(String key)
+			{
 				super(key);
 			}
 
 			// make it public for the test
 			@Override
-			public String getMinifiedName() {
+			public String getMinifiedName()
+			{
 				return super.getMinifiedName();
 			}
 		}
@@ -260,13 +262,16 @@ class PackageResourceReferenceTest extends WicketTestCase
 	void testJavaScriptResourceReferenceRespectsMinifiedResourcesDetection()
 	{
 		Application.get().getResourceSettings().setUseMinifiedResources(true);
-		final JavaScriptResourceReference notMinified = new JavaScriptResourceReference(PackageResourceReferenceTest.class, "a.js");
+		final JavaScriptResourceReference notMinified = new JavaScriptResourceReference(
+			PackageResourceReferenceTest.class, "a.js");
 		final JavaScriptPackageResource notMinifiedResource = notMinified.getResource();
 		assertTrue(notMinifiedResource.getCompress(), "Not minified resource should got its compress flag set to true");
 
-		final JavaScriptResourceReference alreadyMinified = new JavaScriptResourceReference(PackageResourceReferenceTest.class, "b.min.js");
+		final JavaScriptResourceReference alreadyMinified = new JavaScriptResourceReference(
+			PackageResourceReferenceTest.class, "b.min.js");
 		final JavaScriptPackageResource alreadyMinifiedResource = alreadyMinified.getResource();
-		assertFalse(alreadyMinifiedResource.getCompress(), "Already minified resource should got its compress flag set to false");
+		assertFalse(alreadyMinifiedResource.getCompress(),
+			"Already minified resource should got its compress flag set to false");
 	}
 
 	/**
@@ -280,9 +285,11 @@ class PackageResourceReferenceTest extends WicketTestCase
 		final CssPackageResource notMinifiedResource = notMinified.getResource();
 		assertTrue(notMinifiedResource.getCompress(), "Not minified resource should got its compress flag set to true");
 
-		final CssResourceReference alreadyMinified = new CssResourceReference(PackageResourceReferenceTest.class, "b.min.css");
+		final CssResourceReference alreadyMinified = new CssResourceReference(PackageResourceReferenceTest.class,
+			"b.min.css");
 		final CssPackageResource alreadyMinifiedResource = alreadyMinified.getResource();
-		assertFalse(alreadyMinifiedResource.getCompress(), "Already minified resource should got its compress flag set to false");
+		assertFalse(alreadyMinifiedResource.getCompress(),
+			"Already minified resource should got its compress flag set to false");
 	}
 
 	/**
@@ -403,7 +410,7 @@ class PackageResourceReferenceTest extends WicketTestCase
 		ThreadContext.setRequestCycle(null);
 
 		PackageResourceReference reference = new PackageResourceReference(scope, "resource.txt",
-				locales[1], styles[1], variations[1]);
+			locales[1], styles[1], variations[1]);
 
 		PackageResource resource = reference.getResource();
 		assertNotNull(resource);
@@ -468,7 +475,7 @@ class PackageResourceReferenceTest extends WicketTestCase
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 		when(resourceStreamLocator.locate(scope, "org/apache/wicket/core/request/resource/a.css",
 			"yellow", null, null, null, false)).thenReturn(
-			new UrlResourceStream(scope.getResource("a.css")));
+				new UrlResourceStream(scope.getResource("a.css")));
 
 		tester.getApplication().getResourceSettings()
 			.setResourceStreamLocator(new CachingResourceStreamLocator(resourceStreamLocator));
@@ -488,7 +495,7 @@ class PackageResourceReferenceTest extends WicketTestCase
 		IResourceStreamLocator resourceStreamLocator = mock(IResourceStreamLocator.class);
 		when(resourceStreamLocator.locate(scope, "org/apache/wicket/core/request/resource/a.css",
 			"yellow", null, null, null, false)).thenReturn(
-			new UrlResourceStream(scope.getResource("a.css")));
+				new UrlResourceStream(scope.getResource("a.css")));
 
 		tester.getApplication().getResourceSettings()
 			.setResourceStreamLocator(new CachingResourceStreamLocator(resourceStreamLocator));

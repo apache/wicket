@@ -167,7 +167,7 @@ public class XForwardedRequestWrapper extends HttpServletRequestWrapper
 		Map.Entry<String, List<String>> header = getHeaderEntry(name);
 		if (header == null || header.getValue() == null)
 		{
-			return Collections.enumeration(Collections.<String>emptyList());
+			return Collections.enumeration(Collections.<String> emptyList());
 		}
 		else
 		{

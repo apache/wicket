@@ -54,7 +54,8 @@ public class SendPayloadWithContextTest
 	{
 		tester = new WicketTester();
 		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(tester.getApplication());
-		webSocketSettings.setSendPayloadExecutor(new WebSocketSettings.SameThreadExecutor() {
+		webSocketSettings.setSendPayloadExecutor(new WebSocketSettings.SameThreadExecutor()
+		{
 			@Override
 			public void run(Runnable command)
 			{
@@ -77,7 +78,8 @@ public class SendPayloadWithContextTest
 		SendPayloadWithContextTestPage page = new SendPayloadWithContextTestPage();
 		tester.startPage(page);
 
-		WebSocketTester webSocketTester = new WebSocketTester(tester, page) {
+		WebSocketTester webSocketTester = new WebSocketTester(tester, page)
+		{
 			@Override
 			protected void onOutMessage(String message)
 			{

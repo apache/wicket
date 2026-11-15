@@ -54,7 +54,7 @@ public class ValidatorStringResourceLoader extends ComponentStringResourceLoader
 	{
 		// only care about IValidator/IFormValidator subclasses
 		if (
-				clazz == null ||
+			clazz == null ||
 				!(IValidator.class.isAssignableFrom(clazz) || IFormValidator.class.isAssignableFrom(clazz)))
 		{
 			return null;
@@ -71,11 +71,11 @@ public class ValidatorStringResourceLoader extends ComponentStringResourceLoader
 		final String resource;
 		if (component instanceof FormComponent)
 		{
-			resource = loadStringResource((FormComponent) component, key, locale, style, variation);
+			resource = loadStringResource((FormComponent)component, key, locale, style, variation);
 		}
 		else if (component instanceof Form)
 		{
-			resource = loadStringResource((Form) component, key, locale, style, variation);
+			resource = loadStringResource((Form)component, key, locale, style, variation);
 		}
 		else
 		{
@@ -93,7 +93,7 @@ public class ValidatorStringResourceLoader extends ComponentStringResourceLoader
 		{
 			Class<?> scope = getScope(validator);
 			String resource = loadStringResource(scope, key, locale, style,
-					variation);
+				variation);
 			if (resource != null)
 			{
 				return resource;
@@ -109,7 +109,7 @@ public class ValidatorStringResourceLoader extends ComponentStringResourceLoader
 		{
 			Class<?> scope = getScope(validator);
 			String resource = loadStringResource(scope, key, locale, style,
-					variation);
+				variation);
 			if (resource != null)
 			{
 				return resource;
@@ -123,7 +123,7 @@ public class ValidatorStringResourceLoader extends ComponentStringResourceLoader
 		Class<? extends IValidator> scope;
 		if (validator instanceof ValidatorAdapter)
 		{
-			scope = ((ValidatorAdapter) validator).getValidator().getClass();
+			scope = ((ValidatorAdapter)validator).getValidator().getClass();
 		}
 		else
 		{
@@ -137,7 +137,7 @@ public class ValidatorStringResourceLoader extends ComponentStringResourceLoader
 		Class<? extends IFormValidator> scope;
 		if (formValidator instanceof FormValidatorAdapter)
 		{
-			scope = ((FormValidatorAdapter) formValidator).getValidator().getClass();
+			scope = ((FormValidatorAdapter)formValidator).getValidator().getClass();
 		}
 		else
 		{

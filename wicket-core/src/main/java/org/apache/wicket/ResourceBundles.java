@@ -117,12 +117,13 @@ public class ResourceBundles
 			items.add(JavaScriptHeaderItem.forReference(curReference));
 		}
 
-		ConcatResourceBundleReference<JavaScriptReferenceHeaderItem> bundleReference =
-				newBundleResourceReference(scope, name, items);
+		ConcatResourceBundleReference<JavaScriptReferenceHeaderItem> bundleReference = newBundleResourceReference(scope,
+			name, items);
 
 		if (Application.exists())
 		{
-			IJavaScriptCompressor javaScriptCompressor = Application.get().getResourceSettings().getJavaScriptCompressor();
+			IJavaScriptCompressor javaScriptCompressor = Application.get().getResourceSettings()
+				.getJavaScriptCompressor();
 			bundleReference.setCompressor(javaScriptCompressor);
 		}
 
@@ -156,8 +157,8 @@ public class ResourceBundles
 		{
 			items.add(CssHeaderItem.forReference(curReference));
 		}
-		ConcatResourceBundleReference<CssReferenceHeaderItem> bundleReference =
-				newBundleResourceReference(scope, name, items);
+		ConcatResourceBundleReference<CssReferenceHeaderItem> bundleReference = newBundleResourceReference(scope, name,
+			items);
 		if (Application.exists())
 		{
 			ICssCompressor cssCompressor = Application.get().getResourceSettings().getCssCompressor();
@@ -179,7 +180,8 @@ public class ResourceBundles
 	 *            The type of the header items
 	 * @return A ResourceReference that will point to the bundle with the items
 	 */
-	protected <T extends HeaderItem & IReferenceHeaderItem> ConcatResourceBundleReference<T> newBundleResourceReference(Class<?> scope, String name, List<T> items)
+	protected <T extends HeaderItem & IReferenceHeaderItem> ConcatResourceBundleReference<T> newBundleResourceReference(
+		Class<?> scope, String name, List<T> items)
 	{
 		return new ConcatResourceBundleReference<T>(scope, name, items);
 	}
@@ -209,7 +211,7 @@ public class ResourceBundles
 		}
 		if (bundle instanceof IReferenceHeaderItem)
 		{
-			ResourceReference reference = ((IReferenceHeaderItem) bundle).getReference();
+			ResourceReference reference = ((IReferenceHeaderItem)bundle).getReference();
 			if (reference.canBeRegistered())
 			{
 				registry.registerResourceReference(reference);

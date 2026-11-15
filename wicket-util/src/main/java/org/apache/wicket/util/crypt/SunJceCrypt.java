@@ -57,11 +57,11 @@ public class SunJceCrypt extends AbstractCrypt
 
 	/** The name of encryption method (cipher) */
 	private final String cryptMethod;
-	
+
 	private final int iterationCount;
-	
+
 	private final byte[] salt;
- 
+
 	/**
 	 * Constructor.
 	 * 
@@ -91,7 +91,7 @@ public class SunJceCrypt extends AbstractCrypt
 	{
 		this.cryptMethod = Args.notNull(cryptMethod, "Crypt method");
 		this.salt = Args.notNull(salt, "salt");
-		this.iterationCount = Args.withinRange(1, Integer.MAX_VALUE,  iterationCount, "iterationCount");
+		this.iterationCount = Args.withinRange(1, Integer.MAX_VALUE, iterationCount, "iterationCount");
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class SunJceCrypt extends AbstractCrypt
 		KeySpec spec = createKeySpec();
 		return keyFactory.generateSecret(spec);
 	}
-	
+
 	/**
 	 * @return the parameter spec to be used for the configured crypt method
 	 */

@@ -31,7 +31,7 @@ public abstract class SimpleBasePage_6 extends WebPage
 	/**
 	 * Construct.
 	 */
-    SimpleBasePage_6()
+	SimpleBasePage_6()
 	{
 	}
 }

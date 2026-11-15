@@ -33,15 +33,20 @@ import org.apache.wicket.model.Model;
 
 import java.util.ArrayList;
 
-public class MultipartFormComponentListenerPage extends WebPage {
+public class MultipartFormComponentListenerPage extends WebPage
+{
 	private static final long serialVersionUID = 1L;
 
-	public MultipartFormComponentListenerPage() {
-		CompoundPropertyModel<MultipartFormComponentListenerBean> model = new CompoundPropertyModel<>(new MultipartFormComponentListenerBean());
+	public MultipartFormComponentListenerPage()
+	{
+		CompoundPropertyModel<MultipartFormComponentListenerBean> model = new CompoundPropertyModel<>(
+			new MultipartFormComponentListenerBean());
 		Form<MultipartFormComponentListenerBean> form = new Form<>("form", model);
-		form.add(new Behavior() {
+		form.add(new Behavior()
+		{
 			@Override
-			public void onConfigure(Component component) {
+			public void onConfigure(Component component)
+			{
 				component.setVisible(model.getObject().isFormVisible());
 			}
 		});
@@ -59,10 +64,12 @@ public class MultipartFormComponentListenerPage extends WebPage {
 		form.add(fileUpload);
 
 		DropDownChoice<String> dropDown = new DropDownChoice<>("dropDown", list);
-		dropDown.add(new OnChangeAjaxBehavior() {
+		dropDown.add(new OnChangeAjaxBehavior()
+		{
 
 			@Override
-			protected void onUpdate(AjaxRequestTarget target) {
+			protected void onUpdate(AjaxRequestTarget target)
+			{
 				fileUpload.setVisible(!fileUpload.isVisible());
 				target.add(fileUpload);
 
@@ -73,21 +80,26 @@ public class MultipartFormComponentListenerPage extends WebPage {
 		final Label label = new Label("label");
 		add(label);
 
-		form.add(new Button("submitButton") {
+		form.add(new Button("submitButton")
+		{
 			@Override
-			public void onSubmit() {
+			public void onSubmit()
+			{
 				label.setDefaultModel(new Model<>(model.getObject().getTextField()));
 			}
 
 			@Override
-			public void onError() {
+			public void onError()
+			{
 				label.setDefaultModel(new Model<>("Validation Error..."));
 			}
 		});
 
-		add(new AjaxLink<>("toggleVisibility") {
+		add(new AjaxLink<>("toggleVisibility")
+		{
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(AjaxRequestTarget target)
+			{
 				model.getObject().setFormVisible(!model.getObject().isFormVisible());
 				target.add(form);
 			}

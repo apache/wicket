@@ -32,7 +32,7 @@ public class CachingDisabledLocalizerTest extends LocalizerTest
 	 */
 	@Override
 	@BeforeEach
-    void setUp() throws Exception
+	void setUp() throws Exception
 	{
 		super.setUp();
 		localizer.setEnableCache(false);

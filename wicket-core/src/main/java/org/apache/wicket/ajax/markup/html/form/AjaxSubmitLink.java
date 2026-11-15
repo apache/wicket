@@ -117,7 +117,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			{
 				AjaxSubmitLink.this.onAfterSubmit(target);
 			}
-			
+
 			@Override
 			public boolean getStatelessHint(Component component)
 			{
@@ -158,7 +158,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 		if (isEnabledInHierarchy())
 		{
 			String tagName = tag.getName();
-			
+
 			if (tagName.equalsIgnoreCase("a") || tagName.equalsIgnoreCase("link")
 				|| tagName.equalsIgnoreCase("area"))
 			{

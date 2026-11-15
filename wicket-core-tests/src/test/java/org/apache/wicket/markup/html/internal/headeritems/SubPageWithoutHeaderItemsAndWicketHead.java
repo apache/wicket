@@ -18,10 +18,12 @@ package org.apache.wicket.markup.html.internal.headeritems;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-public class SubPageWithoutHeaderItemsAndWicketHead extends PageWithoutHeaderItems {
+public class SubPageWithoutHeaderItemsAndWicketHead extends PageWithoutHeaderItems
+{
 	private static final long serialVersionUID = 1L;
 
-	public SubPageWithoutHeaderItemsAndWicketHead(final PageParameters parameters) {
+	public SubPageWithoutHeaderItemsAndWicketHead(final PageParameters parameters)
+	{
 		super(parameters);
-    }
+	}
 }

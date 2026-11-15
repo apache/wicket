@@ -67,7 +67,7 @@ public class CaptchaImageResource extends DynamicImageResource
 		private final double shearY;
 
 		CharAttributes(final char c, final String name, final double rotation, final int rise,
-				final double shearX, final double shearY)
+			final double shearX, final double shearY)
 		{
 			this.c = c;
 			this.name = name;
@@ -112,7 +112,7 @@ public class CaptchaImageResource extends DynamicImageResource
 
 	private static int randomInt(final Random rng, final int min, final int max)
 	{
-		return (int) (rng.nextDouble() * (max - min) + min);
+		return (int)(rng.nextDouble() * (max - min) + min);
 	}
 
 	private static String randomString(final Random rng, final int min, final int max)
@@ -121,7 +121,7 @@ public class CaptchaImageResource extends DynamicImageResource
 		byte b[] = new byte[num];
 		for (int i = 0; i < num; i++)
 		{
-			b[i] = (byte) randomInt(rng, 'a', 'z');
+			b[i] = (byte)randomInt(rng, 'a', 'z');
 		}
 		return new String(b);
 	}
@@ -183,7 +183,7 @@ public class CaptchaImageResource extends DynamicImageResource
 	 *          The image's margin
 	 */
 	public CaptchaImageResource(final IModel<String> challengeId, final int fontSize,
-	                            final int margin)
+		final int margin)
 	{
 		this.challengeId = challengeId;
 		this.fontStyle = 1;
@@ -294,15 +294,15 @@ public class CaptchaImageResource extends DynamicImageResource
 			textAt.rotate(rotation);
 			textAt.shear(shearX, shearY);
 			shape = text.getOutline(textAt);
-			width += (int) shape.getBounds2D().getWidth();
-			if (height < (int) shape.getBounds2D().getHeight() + rise)
+			width += (int)shape.getBounds2D().getWidth();
+			if (height < (int)shape.getBounds2D().getHeight() + rise)
 			{
-				height = (int) shape.getBounds2D().getHeight() + rise;
+				height = (int)shape.getBounds2D().getHeight() + rise;
 			}
 		}
 
 		final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		Graphics2D gfx = (Graphics2D) image.getGraphics();
+		Graphics2D gfx = (Graphics2D)image.getGraphics();
 		gfx.setBackground(Color.WHITE);
 		int curWidth = margin;
 		for (CharAttributes cf : charAttsList)
@@ -341,9 +341,9 @@ public class CaptchaImageResource extends DynamicImageResource
 				rstr.getPixel(x, y, oldColor);
 
 				// hard noise
-				vColor[0] = (int) (Math.floor(rng.nextFloat() * 1.03) * 255);
+				vColor[0] = (int)(Math.floor(rng.nextFloat() * 1.03) * 255);
 				// soft noise
-				vColor[0] = vColor[0] ^ (170 + (int) (rng.nextFloat() * 80));
+				vColor[0] = vColor[0] ^ (170 + (int)(rng.nextFloat() * 80));
 				// xor to image
 				vColor[0] = vColor[0] ^ oldColor[0];
 				vColor[1] = vColor[0];

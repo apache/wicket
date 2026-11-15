@@ -57,26 +57,35 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 	{
 		super(response);
 	}
-	
+
 	@Override
 	public void render(HeaderItem item)
 	{
-		if (RequestCycle.get().find(AjaxRequestTarget.class).isEmpty()) {
-			while (item instanceof IWrappedHeaderItem) {
+		if (RequestCycle.get().find(AjaxRequestTarget.class).isEmpty())
+		{
+			while (item instanceof IWrappedHeaderItem)
+			{
 				item = ((IWrappedHeaderItem)item).getWrapped();
 			}
 
-			if (item instanceof AbstractJavaScriptReferenceHeaderItem) {
+			if (item instanceof AbstractJavaScriptReferenceHeaderItem)
+			{
 				((AbstractJavaScriptReferenceHeaderItem)item).setDefer(true);
-			} else if (item instanceof JavaScriptContentHeaderItem) {
+			}
+			else if (item instanceof JavaScriptContentHeaderItem)
+			{
 				item = new NativeOnDomContentLoadedHeaderItem(((JavaScriptContentHeaderItem)item).getJavaScript());
-			} else if (item instanceof OnDomReadyHeaderItem) {
+			}
+			else if (item instanceof OnDomReadyHeaderItem)
+			{
 				item = new NativeOnDomContentLoadedHeaderItem(((OnDomReadyHeaderItem)item).getJavaScript());
-			} else if (item instanceof OnLoadHeaderItem) {
+			}
+			else if (item instanceof OnLoadHeaderItem)
+			{
 				item = new NativeOnLoadHeaderItem(((OnLoadHeaderItem)item).getJavaScript());
 			}
 		}
-		
+
 		super.render(item);
 	}
 
@@ -106,11 +115,12 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 			CharSequence js = getJavaScript();
 			if (Strings.isEmpty(js) == false)
 			{
-				JavaScriptUtils.writeJavaScript(response, "document.addEventListener('DOMContentLoaded', function() { " + js + "; });");
+				JavaScriptUtils.writeJavaScript(response, "document.addEventListener('DOMContentLoaded', function() { "
+					+ js + "; });");
 			}
 		}
 	}
-	
+
 	/**
 	 * A specialization that uses native "load" events without dependency to external JavaScript 
 	 */
@@ -137,8 +147,9 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 			CharSequence js = getJavaScript();
 			if (Strings.isEmpty(js) == false)
 			{
-				JavaScriptUtils.writeJavaScript(response, "window.addEventListener('load', function() { " + js + "; });");
+				JavaScriptUtils.writeJavaScript(response, "window.addEventListener('load', function() { " + js
+					+ "; });");
 			}
 		}
-	}	
+	}
 }

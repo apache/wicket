@@ -55,9 +55,9 @@ class EnclosureTest extends WicketTestCase
 	void testRenderHomePage() throws Exception
 	{
 		executeTest(EnclosurePage_1.class, "EnclosurePageExpectedResult_1.html");
-		
+
 		EnclosurePage_1 page = (EnclosurePage_1)tester.getLastRenderedPage();
-		
+
 		assertEquals(0, page.pendingAfterRenderCount);
 	}
 
@@ -358,14 +358,15 @@ class EnclosureTest extends WicketTestCase
 				super.init();
 
 				// This should cause all SecuredContainer components to be hidden
-				getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy.AllowAllAuthorizationStrategy()
-				{
-					@Override
-					public boolean isActionAuthorized(Component component, Action action)
+				getSecuritySettings().setAuthorizationStrategy(
+					new IAuthorizationStrategy.AllowAllAuthorizationStrategy()
 					{
-						return !(component instanceof SecuredContainer_13);
-					}
-				});
+						@Override
+						public boolean isActionAuthorized(Component component, Action action)
+						{
+							return !(component instanceof SecuredContainer_13);
+						}
+					});
 			}
 		});
 
@@ -438,19 +439,19 @@ class EnclosureTest extends WicketTestCase
 
 		tester.assertContainsNot(ChildWithDeeperPathInTransparentContainerPage.LABEL_TEXT);
 	}
-	
+
 	@Test
 	void nestedEnclousers()
 	{
 		TestPageMarkup p = new TestPageMarkup();
 		p.setPageMarkup("<wicket:enclosure child='labelOuter'>tOuter Enclosure <span wicket:id='labelOuter'/>"
-				+ "<wicket:enclosure>Inner Enclosure <span wicket:id='labelInner' /></wicket:enclosure>"
-				+ "</wicket:enclosure>");
-		
+			+ "<wicket:enclosure>Inner Enclosure <span wicket:id='labelInner' /></wicket:enclosure>"
+			+ "</wicket:enclosure>");
+
 		p.add(new Label("labelOuter"), new Label("labelInner"));
 		tester.startPage(p);
 	}
-	
+
 	/**
 	 * Test case for https://issues.apache.org/jira/browse/WICKET-6043
 	 */
@@ -460,7 +461,7 @@ class EnclosureTest extends WicketTestCase
 		tester.startPage(ListViewInContainerPage.class);
 		tester.assertRenderedPage(ListViewInContainerPage.class);
 	}
-	
+
 	private static class TestPageMarkup extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private String markup;

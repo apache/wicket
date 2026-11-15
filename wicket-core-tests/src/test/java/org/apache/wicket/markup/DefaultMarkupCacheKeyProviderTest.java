@@ -31,7 +31,7 @@ class DefaultMarkupCacheKeyProviderTest extends WicketTestCase
 {
 
 	/**
-       */
+	   */
 	@Test
 	void localeLanguageCountryVariant()
 	{

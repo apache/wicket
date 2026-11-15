@@ -26,12 +26,13 @@ import org.apache.wicket.markup.html.WebPage;
 public class ComponentNotOnPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Component notOnPage;
-	
-	public ComponentNotOnPage(Component notOnPage) {
+
+	public ComponentNotOnPage(Component notOnPage)
+	{
 		this.notOnPage = notOnPage;
-		
+
 		notOnPage.setOutputMarkupId(true);
 	}
 
@@ -40,9 +41,11 @@ public class ComponentNotOnPage extends WebPage
 	{
 		super.onInitialize();
 
-		add(new AjaxLink<Void>("refresher") {
+		add(new AjaxLink<Void>("refresher")
+		{
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(AjaxRequestTarget target)
+			{
 				target.add(notOnPage);
 			}
 		});

@@ -49,9 +49,9 @@ class VariationsTest
 	@Test
 	void testDouble()
 	{
-		VariationIterator<Integer> numbers = VariationIterator.of(new Variation<>(1,2,3));
-		VariationIterator<Boolean> flag = VariationIterator.of(numbers,Variation.ofBoolean());
-		VariationIterator<?> last=flag;
+		VariationIterator<Integer> numbers = VariationIterator.of(new Variation<>(1, 2, 3));
+		VariationIterator<Boolean> flag = VariationIterator.of(numbers, Variation.ofBoolean());
+		VariationIterator<?> last = flag;
 
 		assertTrue(last.hasNext());
 		last.next();

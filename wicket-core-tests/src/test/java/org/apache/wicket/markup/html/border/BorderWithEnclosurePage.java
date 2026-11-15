@@ -26,13 +26,13 @@ public class BorderWithEnclosurePage extends WebPage
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	
+
+
 	public BorderWithEnclosurePage()
 	{
 		BorderWithEnclosure border = new BorderWithEnclosure("border");
 		border.add(new Label("label"));
-		
+
 		add(border);
 	}
 }

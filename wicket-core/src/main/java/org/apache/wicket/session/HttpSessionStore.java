@@ -106,7 +106,7 @@ public class HttpSessionStore implements ISessionStore
 				String applicationKey = Application.get().getName();
 				withSession(httpSession.getId(), () -> {
 					httpSession.setAttribute("Wicket:SessionUnbindingListener-" + applicationKey,
-							new SessionBindingListener(applicationKey, newSession));
+						new SessionBindingListener(applicationKey, newSession));
 
 					// register the session object itself
 					setWicketSession(request, newSession);
@@ -191,7 +191,7 @@ public class HttpSessionStore implements ISessionStore
 	 */
 	protected Session getWicketSession(final Request request)
 	{
-		return (Session) getAttribute(request, Session.SESSION_ATTRIBUTE_NAME);
+		return (Session)getAttribute(request, Session.SESSION_ATTRIBUTE_NAME);
 	}
 
 	/**
@@ -406,8 +406,8 @@ public class HttpSessionStore implements ISessionStore
 		private final String applicationKey;
 
 		/**
- 		 * The Wicket Session associated with the expiring HttpSession
- 		 */
+		 * The Wicket Session associated with the expiring HttpSession
+		 */
 		private final Session wicketSession;
 
 		/**
@@ -440,7 +440,7 @@ public class HttpSessionStore implements ISessionStore
 			{
 				wicketSession.onInvalidate();
 			}
-			
+
 			Application application = Application.get(applicationKey);
 			if (application == null)
 			{
@@ -453,7 +453,7 @@ public class HttpSessionStore implements ISessionStore
 			{
 				if (sessionStore instanceof HttpSessionStore)
 				{
-					((HttpSessionStore) sessionStore).onUnbind(sessionId);
+					((HttpSessionStore)sessionStore).onUnbind(sessionId);
 				}
 
 				for (UnboundListener listener : sessionStore.getUnboundListener())
@@ -469,7 +469,8 @@ public class HttpSessionStore implements ISessionStore
 	 *                  in the meantime
 	 * @return prefix for session attributes
 	 */
-	private <V> V withSession(String sessionId, Callable<V> callable) {
+	private <V> V withSession(String sessionId, Callable<V> callable)
+	{
 		try
 		{
 			return callable.call();
@@ -477,7 +478,9 @@ public class HttpSessionStore implements ISessionStore
 		catch (IllegalStateException isx)
 		{
 			log.debug("HTTP session {} is no more valid!", sessionId, isx);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			throw new RuntimeException(e);
 		}
 		return null;

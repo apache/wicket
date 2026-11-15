@@ -64,14 +64,16 @@ public interface IColumn<T, S> extends ICellPopulator<T>
 	/**
 	 * @return The number of rows the header of this column should span
 	 */
-	default int getHeaderRowspan() {
+	default int getHeaderRowspan()
+	{
 		return 1;
 	}
 
 	/**
 	 * @return The number of columns the header of this column should span
 	 */
-	default int getHeaderColspan() {
+	default int getHeaderColspan()
+	{
 		return 1;
 	}
 }

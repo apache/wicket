@@ -32,7 +32,7 @@ class InheritanceHeadTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test_2() throws Exception
+	void test_2() throws Exception
 	{
 		executeTest(ConcretePage2.class, "ExpectedResult2.html");
 	}
@@ -42,7 +42,7 @@ class InheritanceHeadTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-    void test_3() throws Exception
+	void test_3() throws Exception
 	{
 		tester.getSession().setStyle("myStyle");
 		executeTest(ConcretePage2.class, "ExpectedResult3.html");

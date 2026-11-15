@@ -29,7 +29,7 @@ import org.apache.wicket.WicketRuntimeException;
  *
  * @author Ken Sakurai
  */
-public class StatelessCheckFailureException  extends WicketRuntimeException
+public class StatelessCheckFailureException extends WicketRuntimeException
 {
 	private static final long serialVersionUID = 1L;
 

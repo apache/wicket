@@ -55,7 +55,7 @@ public class JdkProxyFactory implements IProxyFactory
 
 		try
 		{
-			return (T) Proxy.newProxyInstance(resolveClassLoader(),
+			return (T)Proxy.newProxyInstance(resolveClassLoader(),
 				new Class[] { type, Serializable.class, ILazyInitProxy.class,
 						IWriteReplace.class }, handler);
 		}
@@ -67,22 +67,23 @@ public class JdkProxyFactory implements IProxyFactory
 			 * happens, we can try and fall back to the classloader (current) that actually
 			 * loaded this class.
 			 */
-			return (T) Proxy.newProxyInstance(LazyInitProxyFactory.class.getClassLoader(),
+			return (T)Proxy.newProxyInstance(LazyInitProxyFactory.class.getClassLoader(),
 				new Class[] { type, Serializable.class, ILazyInitProxy.class,
 						IWriteReplace.class }, handler);
 		}
 	}
-	
+
 	private ClassLoader resolveClassLoader()
 	{
 		ClassLoader classLoader = null;
 		if (Application.exists())
 		{
 			classLoader = Application.get().getApplicationSettings()
-					.getClassResolver().getClassLoader();
+				.getClassResolver().getClassLoader();
 		}
 
-		if (classLoader == null) {
+		if (classLoader == null)
+		{
 			classLoader = Thread.currentThread().getContextClassLoader();
 		}
 

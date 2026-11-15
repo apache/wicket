@@ -84,8 +84,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 	private final ConcurrentMap<SpringBeanLocator, Object> cache = Generics.newConcurrentHashMap();
 
-	private final ConcurrentMap<SimpleEntry<Class<?>, ResolvableType>,
-								String> beanNameCache = Generics.newConcurrentHashMap();
+	private final ConcurrentMap<SimpleEntry<Class<?>, ResolvableType>, String> beanNameCache = Generics
+		.newConcurrentHashMap();
 
 	private final boolean wrapInProxies;
 
@@ -192,12 +192,13 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		if (Strings.isEmpty(name))
 		{
 			Class<?> fieldType = field.getType();
-			
+
 			SimpleEntry<Class<?>, ResolvableType> key = new SimpleEntry<>(fieldType, resolvableType);
 			name = beanNameCache.get(key);
 			if (name == null)
 			{
-				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, resolvableType, field.getName());
+				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, resolvableType, field
+					.getName());
 				if (name != null)
 				{
 					String tmpName = beanNameCache.putIfAbsent(key, name);
@@ -256,8 +257,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			// 2. Is there a bean with the same name as the field?
 			// 3. Is there exactly one bean marked as default candidate?
 			final String exactMatchBeanName = Optional.ofNullable(detectPrimaryBeanName(ctx, names))
-			  .or(() -> Optional.ofNullable(detectBeanNameByFieldName(fieldName, names)))
-			  .orElseGet(() -> detectDefaultCandidateBeanName(ctx, names));
+				.or(() -> Optional.ofNullable(detectBeanNameByFieldName(fieldName, names)))
+				.orElseGet(() -> detectDefaultCandidateBeanName(ctx, names));
 
 			// If so: take that beanname
 			if (exactMatchBeanName != null)
@@ -270,16 +271,17 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			msg.append("More than one bean of type [");
 			msg.append(clazz.getName());
 			msg.append("] found, you have to specify the name of the bean ");
-			msg.append("(@SpringBean(name=\"foo\")) or (@Named(\"foo\") if using @jakarta.inject classes) in order to resolve this conflict. ");
+			msg.append(
+				"(@SpringBean(name=\"foo\")) or (@Named(\"foo\") if using @jakarta.inject classes) in order to resolve this conflict. ");
 			msg.append("Matched beans: ");
 			msg.append(Strings.join(",", names));
 			throw new IllegalStateException(msg.toString());
 		}
-		else if(!names.isEmpty())
+		else if (!names.isEmpty())
 		{
 			return names.get(0);
 		}
-		
+
 		return null;
 	}
 
@@ -293,7 +295,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		return detectBeanName(ctx, beanNames, AbstractBeanDefinition::isDefaultCandidate);
 	}
 
-	private String detectBeanName(final ApplicationContext ctx, final List<String> beanNames, final Predicate<AbstractBeanDefinition> predicate)
+	private String detectBeanName(final ApplicationContext ctx, final List<String> beanNames,
+		final Predicate<AbstractBeanDefinition> predicate)
 	{
 		final List<String> found = new ArrayList<>();
 		if (ctx instanceof AbstractApplicationContext abstractApplicationContext)
@@ -302,7 +305,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			for (final String beanName : beanNames)
 			{
 				final BeanDefinition beanDefinition = getBeanDefinition(beanFactory, beanName);
-				if (beanDefinition instanceof AbstractBeanDefinition abstractBeanDefinition && predicate.test(abstractBeanDefinition))
+				if (beanDefinition instanceof AbstractBeanDefinition abstractBeanDefinition && predicate.test(
+					abstractBeanDefinition))
 				{
 					found.add(beanName);
 				}
@@ -311,7 +315,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		return found.size() == 1 ? found.get(0) : null;
 	}
 
-	private String detectBeanNameByFieldName(final String fieldName, final List<String> beanNames) 
+	private String detectBeanNameByFieldName(final String fieldName, final List<String> beanNames)
 	{
 		return fieldName != null && beanNames.contains(fieldName) ? fieldName : null;
 	}
