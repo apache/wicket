@@ -265,7 +265,7 @@ The descriptions of the criteria are shortened; the full text and the techniques
 
 |3.1.1 Language of Page
 |A
-|Wicket does not render a _lang_ attribute. A _TransparentWebMarkupContainer_ on the _<html>_ tag can add it from the session locale. The default error pages have no _lang_.
+|Wicket renders _lang_ and _dir_ on _<html>_ from the locale of the page, unless the markup has its own _lang_. The default error pages get the language of the session on English text.
 |A _lang_ attribute on _<html>_ that matches the language of the page.
 |<<_an_accessible_base_page,25.3>>
 

@@ -19,7 +19,7 @@ An application is checked against WCAG at three levels: assertions on the render
 
 === Markup assertions with WicketTester
 
-With _WicketTester_ and _TagTester_ (see <<_test_driven_development_with_wicket,chapter 23>>) we can assert the accessibility properties our own code is responsible for, without a browser and at the speed of a unit test. The following test checks the base page and the registration form of this chapter: the _lang_ attribute, the page title, a label for every field and _aria-invalid_ with a description after a failed submit.
+With _WicketTester_ and _TagTester_ (see <<_test_driven_development_with_wicket,chapter 23>>) we can assert the accessibility properties our own code is responsible for, without a browser and at the speed of a unit test. The following test checks the base page and the registration form of this chapter: the _lang_ and _dir_ attributes, the page title, a label for every field and _aria-invalid_ with a description after a failed submit.
 
 [source,java]
 ----
@@ -44,6 +44,7 @@ class AccessibilityTest {
 
 		TagTester html = TagTester.createTagByName(tester.getLastResponseAsString(), "html");
 		assertEquals("nl-NL", html.getAttribute("lang"));
+		assertEquals("ltr", html.getAttribute("dir"));
 	}
 
 	@Test

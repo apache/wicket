@@ -20,7 +20,7 @@ An example of a parent page using the tag _<wicket:child>_ is the following:
 
 [source,html]
 ----
-<html lang="en">
+<html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
 </head>
@@ -51,7 +51,7 @@ Considering the two pages seen above, the final markup generated for child page 
 
 [source,html]
 ----
-<html lang="en">
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
@@ -73,7 +73,7 @@ Applying _<wicket:child>_ tag to our layout example, we obtain the following mar
 [source,html]
 ----
 <!DOCTYPE html>
-<html lang="en" xmlns:wicket="http://wicket.apache.org">
+<html xmlns:wicket="http://wicket.apache.org">
 <head>
 	<meta charset="utf-8">
 	<title wicket:id="pageTitle">Jug4Tenda</title>

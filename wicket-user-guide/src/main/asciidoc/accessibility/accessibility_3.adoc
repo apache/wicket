@@ -15,14 +15,14 @@
    limitations under the License.
 ////
 
-Several success criteria are met once for the whole application, in the page all other pages extend. In <<_wicket_as_page_layout_manager,chapter 5>> we have built such a base page with markup inheritance; here we complete it with a title for every page, a _lang_ attribute that follows the session locale, a skip link and landmarks.
+Several success criteria are met once for the whole application, in the page all other pages extend. In <<_wicket_as_page_layout_manager,chapter 5>> we have built such a base page with markup inheritance; here we complete it with a title for every page, a skip link and landmarks, and look at the _lang_ attribute Wicket adds to it.
 
 *BasePage.html:*
 
 [source,html]
 ----
 <!DOCTYPE html>
-<html wicket:id="html" xmlns:wicket="http://wicket.apache.org">
+<html xmlns:wicket="http://wicket.apache.org">
 <head>
 	<meta charset="utf-8">
 	<title wicket:id="pageTitle">Page title</title>
@@ -56,10 +56,6 @@ Several success criteria are met once for the whole application, in the page all
 public abstract class BasePage extends WebPage {
 
 	public BasePage() {
-		TransparentWebMarkupContainer html = new TransparentWebMarkupContainer("html");
-		html.add(AttributeModifier.replace("lang", () -> getLocale().toLanguageTag()));
-		add(html);
-
 		add(new Label("pageTitle", this::getPageTitle));
 	}
 
@@ -77,9 +73,11 @@ mainNavigation=Main
 
 === The language of the page
 
-Screen readers choose their pronunciation from the _lang_ attribute of the _<html>_ element (success criterion 3.1.1). Wicket does not render this attribute, so we bind the _<html>_ tag to a _TransparentWebMarkupContainer_ and add the attribute with an _AttributeModifier_. Since the container is transparent, the components of the page and of its subclasses can stay where they are and need not be added to the container. Method _getLocale()_ returns the locale of the session (see <<_internationalization_with_wicket,chapter 15>>), and _toLanguageTag()_ turns it into the format _lang_ expects, such as _en-US_ or _nl-NL_. Because the model is evaluated at each render, the attribute follows when the user switches language.
+Screen readers choose their pronunciation from the _lang_ attribute of the _<html>_ element (success criterion 3.1.1). The base page has no such attribute in its markup, because Wicket renders it: it takes the locale of the page, which is the locale of the session (see <<_internationalization_with_wicket,chapter 15>>), and writes it in the format _lang_ expects, such as _en-US_ or _nl-NL_. Next to it Wicket writes _dir_, with the value _rtl_ for languages written from right to left, such as Arabic and Hebrew, and _ltr_ for all others. Both attributes are written each time the whole page renders, so they follow when the user switches language. An AJAX request does not render the _<html>_ tag again, so a language switch has to render the whole page, with a link that is not an AJAX link or with _setResponsePage_.
 
-If an application supports only one language, a _lang_ attribute written in the markup is enough. Passages in another language than the page, such as a quote or the name of a language in a language switcher, get their own _lang_ attribute (success criterion 3.1.2), either in the markup or with an _AttributeModifier_ on the component that renders them.
+A _lang_ attribute written in the markup takes precedence, and Wicket then renders neither _lang_ nor _dir_. That is enough for an application in a single language, but it fixes the language for every locale once the application gets translated. A component bound to the _<html>_ tag with a _wicket:id_ renders the tag itself, also without these attributes, so an application that bound the tag to a _TransparentWebMarkupContainer_ to add _lang_ should remove that container, or its pages get no _dir_. A page that needs more attributes on _<html>_, such as a class for a theme, overrides method _onHtmlTag(ComponentTag)_ of _WebPage_ and calls the method of the superclass to keep _lang_ and _dir_.
+
+Passages in another language than the page, such as a quote or the name of a language in a language switcher, get their own _lang_ attribute (success criterion 3.1.2), either in the markup or with an _AttributeModifier_ on the component that renders them.
 
 === A title for every page
 
@@ -121,7 +119,7 @@ Because every page extends the base page, the navigation and any help link appea
 
 === Error pages
 
-Wicket shows its own pages when a page has expired, when access is denied and when an internal error occurs. These pages use an HTML 4.01 doctype, have no _lang_ attribute and an English title, and they do not share the layout and navigation of the application. We can replace them with pages that extend our base page:
+Wicket shows its own pages when a page has expired, when access is denied and when an internal error occurs. These pages use an HTML 4.01 doctype and English text, which Wicket marks with the language of the session, so a screen reader reads them with the wrong pronunciation for users with another locale (https://github.com/apache/wicket/issues/1924[GitHub issue #1924]). They also do not share the layout and navigation of the application. We can replace them with pages that extend our base page:
 
 [source,java]
 ----

@@ -82,7 +82,7 @@ Now we can build a generic template page using our brand new panels. Its markup 
 [source,html]
 ----
 <!DOCTYPE html>
-<html lang="en" xmlns:wicket="http://wicket.apache.org">
+<html xmlns:wicket="http://wicket.apache.org">
 <head>
 <meta charset="utf-8">
 <title wicket:id="pageTitle">Jug4Tenda</title>
@@ -101,13 +101,12 @@ Now we can build a generic template page using our brand new panels. Its markup 
 </html>
 ----
 
-The HTML code for this page implements the generic left-menu layout of our site. Each layout area gets the HTML element that names its role: _<header>_, _<nav>_ for the menu, _<main>_ for the content and _<footer>_. Browsers and screen readers expose these elements as landmarks, so users can jump between the areas. Three more details make the template usable by everyone:
+The HTML code for this page implements the generic left-menu layout of our site. Each layout area gets the HTML element that names its role: _<header>_, _<nav>_ for the menu, _<main>_ for the content and _<footer>_. Browsers and screen readers expose these elements as landmarks, so users can jump between the areas. Two more details make the template usable by everyone:
 
-* the _lang_ attribute on _<html>_ tells browsers and screen readers which language the page is written in;
 * the _<title>_ is bound to a _Label_, so that every page can give itself its own title;
 * the first link of the page, _Skip to main content_, lets keyboard users jump past the header and the menu straight to the content area.
 
-All three are discussed in <<_accessibility,chapter 25>>, which also shows how to derive the _lang_ attribute from the session locale instead of writing it in the markup.
+The _<html>_ tag has no _lang_ attribute, because Wicket renders one from the locale of the page. It tells browsers and screen readers which language the page is written in. The title, the skip link and the language are discussed in <<_accessibility,chapter 25>>.
 
 The page class contains the code to physically assemble the page and panels:
 
