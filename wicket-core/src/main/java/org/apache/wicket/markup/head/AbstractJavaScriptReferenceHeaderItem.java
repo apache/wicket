@@ -34,6 +34,9 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 	private String charset;
 	private CrossOrigin crossOrigin;
 	private String integrity;
+
+	// Remove with Wicket 12
+	// Property only kept for staying compatible regarding method getType()
 	private JavaScriptReferenceType type = JavaScriptReferenceType.TEXT_JAVASCRIPT;
 
 	/**
@@ -104,12 +107,18 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 		return this;
 	}
 
-	public JavaScriptReferenceType getType() {
+	@Deprecated // use getContentType, remove with Wicket 12
+	public JavaScriptReferenceType getType()
+	{
 		return type;
 	}
 
-	public AbstractJavaScriptReferenceHeaderItem setType(final JavaScriptReferenceType type) {
+	@Deprecated // use setContentType, remove with Wicket 12
+	public AbstractJavaScriptReferenceHeaderItem setType(final JavaScriptReferenceType type)
+	{
 		this.type = type;
+		final JavaScriptContentType javaScriptContentType = type != null ? type::getType : null;
+		super.setContentType(javaScriptContentType);
 		return this;
 	}
 
@@ -120,11 +129,12 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 		JavaScriptUtils.writeScript(response, attributes);
 	}
 
-	final AttributeMap createAttributeMap(final String url) {
+	final AttributeMap createAttributeMap(final String url)
+	{
 		final AttributeMap attributes = new AttributeMap();
-		final JavaScriptReferenceType type = getType();
-		if (type != null) {
-			attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, type.getType());
+		final JavaScriptContentType contentType = getContentType();
+		if (contentType != null) {
+			attributes.putAttribute(JavaScriptUtils.ATTR_TYPE, contentType.getType());
 		}
 		attributes.putAttribute(JavaScriptUtils.ATTR_ID, getId());
 		attributes.putAttribute(JavaScriptUtils.ATTR_SCRIPT_DEFER, defer);
@@ -150,8 +160,7 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 		AbstractJavaScriptReferenceHeaderItem that = (AbstractJavaScriptReferenceHeaderItem)o;
 		return async == that.async &&
 				defer == that.defer &&
-				Objects.equals(charset, that.charset) &&
-		  		Objects.equals(type, that.type);
+				Objects.equals(charset, that.charset);
 	}
 
 	@Override
@@ -162,7 +171,6 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 		result = 31 * result + (async ? 1 : 0);
 		result = 31 * result + (defer ? 1 : 0);
 		result = 31 * result + (charset != null ? charset.hashCode() : 0);
-		result = 31 * result + (type != null ? type.hashCode() : 0);
 		return result;
 	}
 }
