@@ -90,6 +90,9 @@ export interface IslandContext<P> {
 	 * response carries has been applied: components, props of other islands, invalidations. A
 	 * name the island registered as page-less is called with a plain request instead, outside
 	 * the page lock; its answer carries invalidations but no component updates.
+	 *
+	 * A page-bound call the server answers with a redirect, such as to the sign-in page after
+	 * the session expired, never settles: the browser leaves the page instead.
 	 */
 	call<R = unknown>(name: string, payload?: unknown): Promise<R>;
 }

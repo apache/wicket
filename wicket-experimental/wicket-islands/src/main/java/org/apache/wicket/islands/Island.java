@@ -214,6 +214,12 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 	 * {@link PagelessCall#getHandle(Class)}. Use it for context the client must not choose, such as
 	 * the record the page shows. The handle is reissued when the context changes.
 	 * <p>
+	 * The store keeps the object the model returns, not the model. The default
+	 * {@link SessionHandleStore} puts it in the session, where it stays, with up to
+	 * {@value SessionHandleStore#DEFAULT_CAPACITY} others, until newer handles push it out or the
+	 * session ends, and it is replicated with the session in a cluster. Pass an identifier, such as
+	 * the id of the record, not the record itself.
+	 * <p>
 	 * <strong>A handle is not an authorization mechanism.</strong> The endpoint still checks that
 	 * the session may access the context.
 	 *

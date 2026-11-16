@@ -135,7 +135,9 @@ add(new Island<Void>("filter", "board-filter", () -> null)
 ----
 
 The third argument is a model of the context: a small, serializable object with a meaningful
-_equals_. It is read when the island renders. The endpoint reads it back with _getHandle_:
+_equals_. It is read when the island renders, and the store keeps the object itself, by default
+in the session. Pass an identifier, such as _BoardRef_ here, not the entity it identifies. The
+endpoint reads it back with _getHandle_:
 
 [source,java]
 ----

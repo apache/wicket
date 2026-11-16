@@ -288,14 +288,35 @@ export class IslandRuntime {
 
 		return new Promise((resolve, reject) => {
 			this.pending.set(id, { resolve, reject });
+			let sent = false;
+			let redirected = false;
 			this.api!.Ajax.ajax({
 				...ajax,
 				ep: parameters,
+				bsh: [() => {
+					sent = true;
+				}],
 				fh: [(_attributes: unknown, xhr: { status?: number } | null) => this.fail(id,
 					...(xhr ? failureOf(xhr.status) : unreadable()))],
-				dh: [() => this.fail(id, 'error', 'The server did not answer the call.')]
+				coh: [(_attributes: unknown, xhr: AjaxResponse | null) => {
+					redirected = Boolean(xhr?.getResponseHeader(AJAX_LOCATION));
+				}],
+				dh: [() => this.unanswered(id, sent, redirected)]
 			});
 		});
+	}
+
+	/**
+	 * Ends a page-bound call whose response carried no answer. After a redirect the page goes
+	 * away, so the call is left unsettled rather than failed.
+	 */
+	private unanswered(id: string, sent: boolean, redirected: boolean): void {
+		if (redirected) {
+			this.pending.delete(id);
+			return;
+		}
+		this.fail(id, 'error', sent ? 'The server did not answer the call.'
+			: 'The call was not sent.');
 	}
 
 	private async callPageless(pageless: PagelessCall, payload: unknown,
@@ -393,6 +414,12 @@ export class IslandRuntime {
 			pending.reject(new IslandCallError(kind, [message]));
 		}
 	}
+}
+
+const AJAX_LOCATION = 'Ajax-Location';
+
+interface AjaxResponse {
+	getResponseHeader(name: string): string | null;
 }
 
 function unmounted(): IslandCallError {

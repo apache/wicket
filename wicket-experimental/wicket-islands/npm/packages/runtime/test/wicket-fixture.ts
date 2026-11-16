@@ -38,6 +38,8 @@ let loaded = false;
 
 export const requests: Request[] = [];
 
+export const redirects: string[] = [];
+
 export function wicket(): Any {
 	return (globalThis as Any).Wicket;
 }
@@ -51,15 +53,29 @@ export function setUpWicket(): void {
 	wicket().Ajax.ajax = (attributes: Any) => {
 		requests.push({ attributes });
 	};
+	wicket().Ajax.redirect = (url: string) => {
+		redirects.push(url);
+	};
 	requests.length = 0;
+	redirects.length = 0;
 }
 
-function run(attributes: Any, fill: (call: Any, context: Any) => void): void {
+function xhr(status: number, headers: Record<string, string> = {}): Any {
+	return { readyState: 4, status, responseText: '', getResponseHeader: (name: string) => headers[name] ?? null };
+}
+
+/**
+ * Runs a request as the library does once it is sent: the before send handlers, then the given
+ * processing, then the complete and done handlers.
+ */
+function run(attributes: Any, response: Any, fill: (call: Any, context: Any) => void): void {
 	const W = wicket();
 	const call = new W.Ajax.Call();
 	const context = { attrs: attributes, steps: [] as unknown[] };
+	call._executeHandlers(attributes.bsh, attributes, response, {});
 	fill(call, context);
 	context.steps.push(() => {
+		call._executeHandlers(attributes.coh, attributes, response, 'success');
 		call.done(attributes);
 		return W.ChannelManager.FunctionsExecuter.DONE;
 	});
@@ -70,9 +86,19 @@ function run(attributes: Any, fill: (call: Any, context: Any) => void): void {
  * Answers a request with the given children of <ajax-response>.
  */
 export function respond(request: Request, content: string): void {
-	run(request.attributes, (call, context) => call.loadedCallback(
+	run(request.attributes, xhr(200), (call, context) => call.loadedCallback(
 		wicket().Xml.parse(`<?xml version="1.0" encoding="UTF-8"?><ajax-response>${content}</ajax-response>`),
 		context));
+}
+
+/**
+ * Answers a request with a redirect, as Wicket does when a page-bound request ends on another
+ * page; the library hands the URL to {@link redirects} instead of leaving the test page.
+ */
+export function redirect(request: Request, url: string): void {
+	const response = xhr(200, { 'Ajax-Location': url });
+	run(request.attributes, response, (call, context) => call.processAjaxResponse(
+		null, 'success', response, context));
 }
 
 /**
@@ -80,8 +106,16 @@ export function respond(request: Request, content: string): void {
  * it answers with an error, or without a response as when its answer cannot be parsed.
  */
 export function failRequest(request: Request, status: number | null = 0): void {
-	run(request.attributes, (call, context) => call.failure(context,
-		status === null ? null : { status }, 'failed', 'error'));
+	const response = status === null ? null : xhr(status);
+	run(request.attributes, response, (call, context) => call.failure(context, response, 'failed',
+		'error'));
+}
+
+/**
+ * Ends a request a precondition stopped: the library calls the done handlers without sending it.
+ */
+export function stop(request: Request): void {
+	new (wicket().Ajax.Call)().done(request.attributes);
 }
 
 export function component(id: string, markup: string): string {

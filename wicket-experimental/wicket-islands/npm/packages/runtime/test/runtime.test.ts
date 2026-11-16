@@ -17,7 +17,8 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cspNonce, IslandCallError, IslandRuntime, type IslandContext, type IslandModule } from '../src/index';
-import { component, data, failRequest, formHost, host, requests, respond, setUpWicket } from './wicket-fixture';
+import { component, data, failRequest, formHost, host, redirect, redirects, requests, respond, setUpWicket,
+	stop } from './wicket-fixture';
 
 interface Props {
 	label: string;
@@ -178,7 +179,7 @@ describe('IslandRuntime', () => {
 
 		ignore(recorder.context.call('probe', {}));
 
-		expect(Object.keys(requests[0].attributes).sort()).toEqual(['ch', 'dh', 'ep', 'fh', 'm', 'u']);
+		expect(Object.keys(requests[0].attributes).sort()).toEqual(['bsh', 'ch', 'coh', 'dh', 'ep', 'fh', 'm', 'u']);
 	});
 
 	it('rejects a page-bound call of an island without page-bound calls', async () => {
@@ -213,7 +214,29 @@ describe('IslandRuntime', () => {
 
 		respond(requests[0], '');
 
-		await expect(result).rejects.toMatchObject({ kind: 'error' });
+		await expect(result).rejects.toMatchObject({ kind: 'error',
+			messages: ['The server did not answer the call.'] });
+	});
+
+	it('rejects a call a precondition stopped as not sent', async () => {
+		runtime.register('board', recorder.module());
+		const result = recorder.context.call('probe', {});
+
+		stop(requests[0]);
+
+		await expect(result).rejects.toMatchObject({ kind: 'error', messages: ['The call was not sent.'] });
+	});
+
+	it('leaves a call the server answers with a redirect unsettled while the browser leaves the page', async () => {
+		runtime.register('board', recorder.module());
+		const settled = vi.fn();
+		recorder.context.call('probe', {}).then(settled, settled);
+
+		redirect(requests[0], '/signin');
+		await new Promise(resolve => setTimeout(resolve, 10));
+
+		expect(redirects).toEqual(['/signin']);
+		expect(settled).not.toHaveBeenCalled();
 	});
 
 	it('keeps an island alive when Wicket re-renders it, and passes the new props', () => {

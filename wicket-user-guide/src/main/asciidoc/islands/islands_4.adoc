@@ -113,6 +113,10 @@ peer's promise unsettled, so the islands module answers such calls itself, with 
 `forbidden`. The peer decides what to do; the Treasure Hunt board shows the message and offers to
 reload the page.
 
+A redirect the application asks for still happens: a _RestartResponseException_ from a handler,
+or a sign-in page when the session has ended. The browser leaves the page, and the promise of
+the call is left unsettled, so the peer does not show an error just before the page goes.
+
 When Wicket recreates a bookmarkable page after its original expired, the recreated page holds a
 new island instance with a new key. The peer sends its key with every call, so such a call is
 answered `expired` instead of being handled by an island that is not the one the user worked
