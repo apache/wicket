@@ -18,8 +18,8 @@ package org.apache.wicket.markup.html.form;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -221,25 +221,13 @@ class AutoLabelTest extends WicketTestCase
 	@Test
 	void labelTagClassesAreNotUpdatedWhenRelatedFormComponentIsUpdatedExplicitAutoAttributeIsSetToFalse()
 	{
-		try {
-			labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated("<label wicket:for='t' wicket:auto='false'><span class='label-text'>field</span></label>");
-			fail("Auto-label auto refresh should fave failed");
-		} catch (AssertionError e) {
-			// ok
-		}
-
+		assertAutoLabelIsNotRefreshed("<label wicket:for='t' wicket:auto='false'><span class='label-text'>field</span></label>");
 	}
 
 	@Test
 	void labelTagClassesAreNotUpdatedWhenRelatedFormComponentIsUpdatedWhenNoAutoAttributeIsSet()
 	{
-		try
-		{
-			labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated("<label wicket:for='t'><span class='label-text'>field</span></label>");
-			fail("Auto-label auto refresh should fave failed");
-		} catch (AssertionError e) {
-			// ok
-		}
+		assertAutoLabelIsNotRefreshed("<label wicket:for='t'><span class='label-text'>field</span></label>");
 	}
 
 	@Test
@@ -252,21 +240,18 @@ class AutoLabelTest extends WicketTestCase
 	@Test
 	void labelTagClassesAreNotUpdatedWhenRelatedFormComponentIsUpdatedWhenRelatedMarkupSettingsIsSetToFalseOrNotSet()
 	{
-		try {
-			// updateAutoLabelsTogetherWithFormComponent is set to false by default
-			labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated("<label wicket:for='t'><span class='label-text'>field</span></label>");
-			fail("Auto-label auto refresh should fave failed");
-		} catch (AssertionError e) {
-			//ok.
-		}
+		// updateAutoLabelsTogetherWithFormComponent is set to false by default
+		assertAutoLabelIsNotRefreshed("<label wicket:for='t'><span class='label-text'>field</span></label>");
 
-		try {
-			tester.getApplication().getMarkupSettings().setUpdateAutoLabelsTogetherWithFormComponent(false);
-			labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated("<label wicket:for='t'><span class='label-text'>field</span></label>");
-			fail("Auto-label auto refresh should fave failed");
-		} catch (AssertionError e) {
-			// ok
-		}
+		tester.getApplication().getMarkupSettings().setUpdateAutoLabelsTogetherWithFormComponent(false);
+		assertAutoLabelIsNotRefreshed("<label wicket:for='t'><span class='label-text'>field</span></label>");
+	}
+
+	private void assertAutoLabelIsNotRefreshed(String autoLabelMarkup)
+	{
+		assertThrows(AssertionError.class,
+			() -> labelTagClassesAreUpdatedWhenRelatedFormComponentIsUpdated(autoLabelMarkup),
+			"Auto-label auto refresh should have failed");
 	}
 
 	private String toggleString(FormComponent<?> component, String cssClass, boolean flag) {
