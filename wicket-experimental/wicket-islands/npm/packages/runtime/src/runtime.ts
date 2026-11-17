@@ -18,12 +18,14 @@
 import { IslandCallError, type IslandCallErrorKind, type IslandContext, type IslandInstance,
 	type IslandModule } from './types';
 import { HostFormBinding, type FormState } from './form';
+import { PROTOCOL } from './protocol';
 import { ClientStores } from './store';
 import { TOPIC_AJAX_CALL_DATA, TOPIC_AJAX_CALL_DONE, TOPIC_DOM_NODE_ADDED, wicket,
 	type WicketAjaxAttributes, type WicketApi } from './wicket';
 
 const ATTR_TYPE = 'data-wicket-island';
 const ATTR_KEY = 'data-wicket-island-key';
+const ATTR_PROTOCOL = 'data-wicket-island-protocol';
 const SELECTOR_STATE = ':scope > script[data-wicket-island-state]';
 const SELECTOR_ROOT = ':scope > [data-wicket-island-root]';
 
@@ -87,6 +89,8 @@ export class IslandRuntime {
 	private readonly mounted = new Map<string, MountedIsland>();
 
 	private readonly pending = new Map<string, PendingCall>();
+
+	private readonly refused = new WeakSet<HTMLElement>();
 
 	private readonly invalidationListeners = new Set<(keys: readonly string[]) => void>();
 
@@ -162,6 +166,10 @@ export class IslandRuntime {
 		if (!module) {
 			return;
 		}
+		if (host.getAttribute(ATTR_PROTOCOL) !== String(PROTOCOL)) {
+			this.refuse(host, type);
+			return;
+		}
 
 		const island: MountedIsland = {
 			type,
@@ -182,6 +190,20 @@ export class IslandRuntime {
 			island.abort.abort();
 			throw e;
 		}
+	}
+
+	/**
+	 * Leaves an island unmounted that the server rendered for another protocol, and says why once.
+	 */
+	private refuse(host: HTMLElement, type: string): void {
+		if (this.refused.has(host)) {
+			return;
+		}
+		this.refused.add(host);
+		const rendered = host.getAttribute(ATTR_PROTOCOL) ?? 'none';
+		console.error(`Wicket Islands: island ${host.id} of type '${type}' is not mounted. The ` +
+			`server rendered it for protocol ${rendered}, but its module was built for protocol ` +
+			`${PROTOCOL}: build it against the wicket-islands version the server runs.`);
 	}
 
 	/**

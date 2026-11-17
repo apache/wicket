@@ -22,6 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,8 +69,19 @@ class IslandRenderTest extends IslandTestCase
 		TagTester host = tester.getTagByWicketId("island");
 		assertEquals("test-island", host.getAttribute(Island.ATTR_TYPE));
 		assertEquals(page.island.getKey(), host.getAttribute(Island.ATTR_KEY));
+		assertEquals(String.valueOf(Island.PROTOCOL), host.getAttribute(Island.ATTR_PROTOCOL));
 		assertEquals(page.island.getMarkupId(), host.getAttribute("id"));
 		assertTrue(tester.getLastResponseAsString().contains("<div " + Island.ATTR_ROOT + "></div>"));
+	}
+
+	@Test
+	void speaksTheProtocolOfTheRuntime() throws IOException
+	{
+		String runtime = Files.readString(Path.of("npm/packages/runtime/src/protocol.ts"));
+
+		Matcher protocol = Pattern.compile("export const PROTOCOL = (\\d+);").matcher(runtime);
+		assertTrue(protocol.find(), runtime);
+		assertEquals(Island.PROTOCOL, Integer.parseInt(protocol.group(1)));
 	}
 
 	@Test

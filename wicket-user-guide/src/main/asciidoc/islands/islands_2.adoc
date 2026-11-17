@@ -49,8 +49,9 @@ protected void init()
 ----
 
 _IslandSettings.install_ mounts the resource that serves the built files at `wicket-islands/`
-and the one that serves page-less endpoints at `wicket-islands-call/`, so the application must
-not mount anything else under those paths. It also registers a request cycle listener that
+and the one that serves page-less endpoints at `wicket-islands-call/`; libraries of islands are
+served under `wicket-islands-library/`. The application must not mount anything else under these
+paths. It also registers a request cycle listener that
 answers island calls which fail before they reach their island, and makes Ajax behaviors on a
 form island send its value. It returns the settings for further configuration:
 
@@ -63,7 +64,9 @@ form island send its value. It returns the settings for further configuration:
 only.
 |_setSerializer_ |The JSON serializer, by default a _JacksonIslandSerializer_.
 |_setHandleStore_ |Where the handles of page-less endpoints are kept, by default in the session.
-|_setModuleLoader_ |Replaces how island modules are contributed to the page header altogether.
+|_setModuleLoader_ |Replaces how the application's own island modules are contributed to the
+page header altogether.
+|_addLibrary_ |Adds the prebuilt islands of a library, see below.
 |_getPagelessEndpoints_ |The registry of page-less endpoints.
 |===
 
@@ -253,6 +256,53 @@ Start the dev server with `npm run dev` in the frontend project, and the applica
 connections to the dev server, over HTTP and WebSocket, for hot module replacement; the code
 above allows them in development mode only. `server.origin` in the Vite configuration makes the
 URLs of assets point at the dev server rather than at the Wicket application.
+
+=== Islands from a library
+
+A library can ship island components with their JavaScript already built, so that an application
+uses them like any other Wicket component, without a frontend build of its own. The library's
+build is an ordinary Vite build made with the Wicket Islands plugin, whose output, manifest
+included, is packed into the library's jar under a path of its own, for example
+`META-INF/charts-islands/`. The library adds it from an _IInitializer_, which Wicket runs before
+the application's _init_:
+
+[source,java]
+----
+public class ChartsInitializer implements IInitializer
+{
+	@Override
+	public void init(Application application)
+	{
+		IslandSettings.install((WebApplication)application)
+			.addLibrary("charts", "META-INF/charts-islands/");
+	}
+
+	@Override
+	public void destroy(Application application)
+	{
+	}
+}
+----
+
+Every entry of the library's manifest is an island type of the library. Islands of these types
+load their modules from the library's build, in development mode as well; islands of every other
+type load from the application's own build or dev server as before, so islands of both kinds can
+be used on the same page. The files of the library are served under
+`wicket-islands-library/<name>/`. Island types are global, so a library should prefix its types
+with its name; adding a library that provides a type another library provides already fails.
+
+A build contains everything its modules import, the framework and the islands runtime included.
+A page that shows islands from several builds therefore loads a copy of React for each of them.
+The islands still work side by side, because each island is mounted as a React root of its own.
+They share the client stores and receive the invalidations of the server, but React context, such
+as a component library's theme, and the query cache do not cross from one build to another.
+
+The server and the runtime speak a versioned protocol (_Island.PROTOCOL_). Each island host
+carries the version it was rendered for, and the runtime mounts it only when its own version is
+the same. A library built against a `wicket-islands` version with another protocol does not
+disturb the other islands of the page: its islands stay empty, and the browser console says which
+island was refused and why. The library has to be rebuilt against the version the application
+runs.
 
 === Content Security Policy
 

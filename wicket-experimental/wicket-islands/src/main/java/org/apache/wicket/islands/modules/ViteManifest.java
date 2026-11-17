@@ -24,6 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.lang.Args;
@@ -117,6 +118,22 @@ public final class ViteManifest
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @return the input names of the build's entries
+	 */
+	public Set<String> getEntryNames()
+	{
+		Set<String> names = new TreeSet<>();
+		for (Chunk chunk : chunks.values())
+		{
+			if (Boolean.TRUE.equals(chunk.isEntry()) && chunk.name() != null)
+			{
+				names.add(chunk.name());
+			}
+		}
+		return names;
 	}
 
 	/**

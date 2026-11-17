@@ -17,6 +17,7 @@
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+import { PROTOCOL } from '../src/protocol';
 
 /**
  * Loads Wicket's plain JavaScript Ajax library into the test window, with a fake transport: a
@@ -153,7 +154,8 @@ function hostWith(id: string, type: string, key: string, state: object, before: 
 		calls: url === null ? [] : ['probe'],
 		ajax: url === null ? undefined : { u: url, m: 'POST', ch: `wicket-island-${id}|s` }
 	}).replace(/</g, '\\u003c');
-	return `<div id="${id}" data-wicket-island="${type}" data-wicket-island-key="${key}">` +
+	return `<div id="${id}" data-wicket-island="${type}" data-wicket-island-key="${key}" ` +
+		`data-wicket-island-protocol="${PROTOCOL}">` +
 		before + `<script type="application/json" data-wicket-island-state>${json}</script>` +
 		'<div data-wicket-island-root></div></div>';
 }

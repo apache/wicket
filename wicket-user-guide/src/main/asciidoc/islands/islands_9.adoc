@@ -37,6 +37,8 @@ a notice that the JavaScript is missing. For development, run `npm run dev` in
 * React is the only framework with an adapter. The runtime and its mount contract are
   framework-neutral, so adapters for other frameworks, such as Vue and Angular, can follow.
 * The npm packages are not published yet.
+* Islands from separate builds, such as the application's and a library's, each bring their own
+  copy of the framework; they cannot share one.
 * The frontend declares its own TypeScript types for props and payloads; they are not generated
   from the Java types yet.
 * Client stores live on the client only. The server cannot seed them or update them yet.

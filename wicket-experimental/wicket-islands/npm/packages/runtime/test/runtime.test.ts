@@ -16,7 +16,8 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cspNonce, IslandCallError, IslandRuntime, type IslandContext, type IslandModule } from '../src/index';
+import { cspNonce, IslandCallError, IslandRuntime, PROTOCOL, registerIsland, type IslandContext,
+	type IslandModule } from '../src/index';
 import { component, data, failRequest, formHost, host, redirect, redirects, requests, respond, setUpWicket,
 	stop } from './wicket-fixture';
 
@@ -494,7 +495,8 @@ describe('IslandRuntime', () => {
 
 	it('mounts the other islands when one host is broken', () => {
 		const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-		document.body.innerHTML = '<div id="broken" data-wicket-island="board" data-wicket-island-key="k0">' +
+		document.body.innerHTML = '<div id="broken" data-wicket-island="board" data-wicket-island-key="k0" ' +
+			`data-wicket-island-protocol="${PROTOCOL}">` +
 			'<script type="application/json" data-wicket-island-state>{"props":</script>' +
 			'<div data-wicket-island-root></div></div>' + host('board1', 'board', 'k1', { label: 'one' });
 
@@ -503,6 +505,33 @@ describe('IslandRuntime', () => {
 		expect(recorder.mounts.map(mount => mount.context.key)).toEqual(['k1']);
 		expect(error).toHaveBeenCalledWith('Wicket Islands: cannot mount island host broken',
 			expect.anything());
+		error.mockRestore();
+	});
+
+	it('refuses an island the server rendered for another protocol, and says so once', () => {
+		const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+		document.body.innerHTML = host('board1', 'board', 'k1', { label: 'one' })
+			.replace(`data-wicket-island-protocol="${PROTOCOL}"`, `data-wicket-island-protocol="${PROTOCOL + 1}"`) +
+			host('board2', 'board', 'k2', { label: 'two' });
+
+		runtime.register('board', recorder.module());
+		runtime.register('other', recorder.module());
+
+		expect(recorder.mounts.map(mount => mount.context.key)).toEqual(['k2']);
+		expect(error).toHaveBeenCalledTimes(1);
+		expect(error.mock.calls[0][0]).toContain(`rendered it for protocol ${PROTOCOL + 1}`);
+		error.mockRestore();
+	});
+
+	it('refuses an island rendered without a protocol', () => {
+		const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+		document.body.innerHTML = host('board1', 'board', 'k1', { label: 'one' })
+			.replace(` data-wicket-island-protocol="${PROTOCOL}"`, '');
+
+		runtime.register('board', recorder.module());
+
+		expect(recorder.mounts).toHaveLength(0);
+		expect(error.mock.calls[0][0]).toContain('rendered it for protocol none');
 		error.mockRestore();
 	});
 
@@ -554,6 +583,30 @@ describe('IslandRuntime', () => {
 		respond(requests[0], data({ call: '1', ok: true, value: null, invalidate: ['scores'] }));
 
 		expect(invalidated).toEqual([['scores']]);
+	});
+});
+
+describe('the runtime of the page', () => {
+	const runtimes = '__wicketIslandsRuntimes';
+
+	afterEach(() => {
+		delete (globalThis as Record<string, unknown>)[runtimes];
+		document.body.innerHTML = '';
+	});
+
+	it('is shared by the copies of the runtime speaking the same protocol', () => {
+		setUpWicket();
+		const other = new IslandRuntime();
+		(globalThis as Record<string, unknown>)[runtimes] = { [PROTOCOL + 1]: other };
+		document.body.innerHTML = host('board1', 'board', 'k1', { label: 'one' });
+		const recorder = new Recorder();
+
+		registerIsland('board', recorder.module());
+
+		const shared = (globalThis as Record<string, unknown>)[runtimes] as Record<number, IslandRuntime>;
+		expect(shared[PROTOCOL]).toBeInstanceOf(IslandRuntime);
+		expect(shared[PROTOCOL + 1]).toBe(other);
+		expect(recorder.mounts).toHaveLength(1);
 	});
 });
 

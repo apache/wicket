@@ -95,6 +95,21 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 	 */
 	public static final String ATTR_ROOT = "data-wicket-island-root";
 
+	/**
+	 * The attribute holding the version of the protocol the island was rendered for.
+	 */
+	public static final String ATTR_PROTOCOL = "data-wicket-island-protocol";
+
+	/**
+	 * The version of the protocol between this module and the client-side runtime: the markup of
+	 * the host, the island state, the calls and their answers. It changes whenever one side
+	 * changes in a way the other cannot follow. The runtime mounts an island only when it was
+	 * built for the same version, so a module built against another version of the runtime, for
+	 * example one in an outdated {@linkplain IslandSettings#addLibrary(String, String) library},
+	 * is refused rather than run against a server it does not understand.
+	 */
+	public static final int PROTOCOL = 1;
+
 	private final IslandSupport island;
 
 	/**

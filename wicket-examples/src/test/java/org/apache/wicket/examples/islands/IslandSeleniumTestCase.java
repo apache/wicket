@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import org.apache.wicket.examples.AjaxEngineSelector.Engine;
 import org.apache.wicket.examples.JettyTestCaseDecorator;
+import org.apache.wicket.islands.Island;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
@@ -148,9 +149,9 @@ public abstract class IslandSeleniumTestCase extends JettyTestCaseDecorator
 	protected void assertNoLeakedIslands()
 	{
 		List<?> mountedAndHosts = (List<?>)js().executeScript("""
-			return [globalThis.__wicketIslandsRuntime.mounted.size,
+			return [globalThis.__wicketIslandsRuntimes[arguments[0]].mounted.size,
 				document.querySelectorAll('[data-wicket-island]').length];
-			""");
+			""", Island.PROTOCOL);
 		assertEquals(mountedAndHosts.get(1), mountedAndHosts.get(0),
 			"mounted islands versus hosts in the page");
 	}

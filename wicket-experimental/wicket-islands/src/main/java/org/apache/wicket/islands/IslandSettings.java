@@ -16,6 +16,12 @@
  */
 package org.apache.wicket.islands;
 
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -23,6 +29,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.islands.modules.IIslandModuleLoader;
 import org.apache.wicket.islands.modules.IslandAssetResource;
+import org.apache.wicket.islands.modules.ViteManifest;
 import org.apache.wicket.islands.modules.ViteDevServerModuleLoader;
 import org.apache.wicket.islands.modules.ViteManifestModuleLoader;
 import org.apache.wicket.islands.serializer.IIslandSerializer;
@@ -60,9 +67,16 @@ public class IslandSettings
 	public static final String MOUNT_PATH = "wicket-islands";
 
 	/**
+	 * The path the files of a library are served under, followed by the library's name.
+	 */
+	public static final String LIBRARY_MOUNT_PATH = "wicket-islands-library";
+
+	/**
 	 * The path page-less endpoints are served under.
 	 */
 	public static final String ENDPOINT_PATH = "wicket-islands-call";
+
+	private static final Pattern LIBRARY_NAME = Pattern.compile("[A-Za-z0-9_-]+");
 
 	private static final MetaDataKey<IslandSettings> KEY = new MetaDataKey<>()
 	{
@@ -89,11 +103,18 @@ public class IslandSettings
 
 	private IIslandHandleStore handleStore = new SessionHandleStore();
 
+	private WebApplication application;
+
+	private final Map<String, ViteManifestModuleLoader> libraries = new ConcurrentHashMap<>();
+
+	private final Map<String, String> libraryTypes = new ConcurrentHashMap<>();
+
 	/**
 	 * Installs the settings in an application, mounts the resource serving the built files,
 	 * registers the listener that answers island calls failing before they reach their island, and
 	 * makes Ajax behaviors on a {@link FormIsland} send the hidden input holding its value. When the
-	 * settings are installed already, returns them unchanged.
+	 * settings are installed already, returns them unchanged, so a library can install them from
+	 * its {@link org.apache.wicket.IInitializer} as well as the application in its {@code init()}.
 	 *
 	 * @param application
 	 *            the application
@@ -109,6 +130,7 @@ public class IslandSettings
 			return installed;
 		}
 		IslandSettings settings = new IslandSettings();
+		settings.application = application;
 		settings.assets = new ResourceReference(IslandSettings.class, "assets")
 		{
 			private static final long serialVersionUID = 1L;
@@ -255,6 +277,9 @@ public class IslandSettings
 	}
 
 	/**
+	 * Replaces the loader of the application's own islands. Islands of a type a
+	 * {@linkplain #addLibrary(String, String) library} provides keep loading from the library.
+	 *
 	 * @param moduleLoader
 	 *            a loader to use instead of the default, {@code null} for the default
 	 * @return {@code this}
@@ -266,9 +291,21 @@ public class IslandSettings
 	}
 
 	/**
-	 * @return the configured loader; otherwise the dev server loader when a dev server is set and
-	 *         the application runs in development mode; otherwise the loader for the build on the
-	 *         classpath
+	 * @param islandType
+	 *            an island type
+	 * @return the loader of the library providing the type; for any other type the application's
+	 *         loader, see {@link #getModuleLoader()}
+	 */
+	public IIslandModuleLoader getModuleLoader(String islandType)
+	{
+		String library = libraryTypes.get(islandType);
+		return library != null ? libraries.get(library) : getModuleLoader();
+	}
+
+	/**
+	 * @return the loader of the application's own islands: the configured loader; otherwise the
+	 *         dev server loader when a dev server is set and the application runs in development
+	 *         mode; otherwise the loader for the build on the classpath
 	 */
 	public IIslandModuleLoader getModuleLoader()
 	{
@@ -295,5 +332,124 @@ public class IslandSettings
 			manifestModuleLoader = loader;
 		}
 		return loader;
+	}
+
+	/**
+	 * Adds a library of prebuilt islands: a Vite build of island modules on the classpath, made
+	 * with the Wicket Islands Vite plugin and shipped in the jar of the library, so that an
+	 * application uses its island components without a frontend build of its own.
+	 * <p>
+	 * Every entry of the build's manifest is an island type of the library. Islands of these types
+	 * load their modules from the library's build, in development mode too; islands of any other
+	 * type from the application's own build or dev server, so both can be used on one page. The
+	 * files of the build are served under {@value #LIBRARY_MOUNT_PATH}{@code /<name>}.
+	 * <p>
+	 * A build contains everything its modules import, the framework and the islands runtime among
+	 * them, so a page with islands from several builds loads a copy of the framework for each. The
+	 * islands still work side by side, since each is mounted as a root of its own; they share the
+	 * client stores and the invalidations of the server, but not the context of a framework or the
+	 * query cache of an adapter. A build made against another {@link Island#PROTOCOL protocol}
+	 * than this module's is refused by the runtime: its islands are not mounted, and the browser
+	 * console says why.
+	 * <p>
+	 * Island types are global, so a library should prefix its types with its name. A library
+	 * adds itself from an {@link org.apache.wicket.IInitializer}, which runs before the
+	 * application's {@code init()}:
+	 *
+	 * <pre>
+	 * public void init(Application application)
+	 * {
+	 * 	IslandSettings.install((WebApplication)application)
+	 * 		.addLibrary("charts", "META-INF/charts-islands/");
+	 * }
+	 * </pre>
+	 *
+	 * @param name
+	 *            the name of the library, used in the URLs of its files: letters, digits, '-' and
+	 *            '_'
+	 * @param basePath
+	 *            the classpath location of the build's output directory, ending in a slash, with
+	 *            the manifest in {@value #DEFAULT_MANIFEST_FILE}
+	 * @return {@code this}
+	 * @throws IllegalArgumentException
+	 *             if the name is invalid, or another library has it
+	 * @throws IllegalStateException
+	 *             if the build has no manifest, or another library provides one of its island types
+	 */
+	public IslandSettings addLibrary(String name, String basePath)
+	{
+		return addLibrary(name, basePath, DEFAULT_MANIFEST_FILE);
+	}
+
+	/**
+	 * Adds a library of prebuilt islands whose manifest is not in the default location.
+	 *
+	 * @param name
+	 *            the name of the library, used in the URLs of its files: letters, digits, '-' and
+	 *            '_'
+	 * @param basePath
+	 *            the classpath location of the build's output directory, ending in a slash
+	 * @param manifestFile
+	 *            the location of the manifest, relative to the base path
+	 * @return {@code this}
+	 * @see #addLibrary(String, String)
+	 */
+	public synchronized IslandSettings addLibrary(String name, String basePath,
+		String manifestFile)
+	{
+		Args.notEmpty(name, "name");
+		Args.notEmpty(basePath, "basePath");
+		Args.notEmpty(manifestFile, "manifestFile");
+		if (!LIBRARY_NAME.matcher(name).matches())
+		{
+			throw new IllegalArgumentException(
+				"Invalid island library name '" + name + "': use letters, digits, '-' and '_'.");
+		}
+		if (libraries.containsKey(name))
+		{
+			throw new IllegalArgumentException(
+				"The island library '" + name + "' is added already");
+		}
+
+		Set<String> types = readLibraryTypes(name, basePath + manifestFile);
+		for (String type : types)
+		{
+			String other = libraryTypes.get(type);
+			if (other != null)
+			{
+				throw new IllegalStateException("The island type '" + type + "' of library '" +
+					name + "' is provided by library '" + other + "' already");
+			}
+		}
+
+		ResourceReference files = new ResourceReference(IslandSettings.class, "library-" + name)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public IResource getResource()
+			{
+				return new IslandAssetResource(() -> libraries.get(name));
+			}
+		};
+		libraries.put(name, new ViteManifestModuleLoader(basePath, manifestFile, files));
+		types.forEach(type -> libraryTypes.put(type, name));
+		application.mountResource(LIBRARY_MOUNT_PATH + "/" + name, files);
+		return this;
+	}
+
+	private Set<String> readLibraryTypes(String name, String manifest)
+	{
+		ClassLoader classLoader = application.getApplicationSettings()
+			.getClassResolver()
+			.getClassLoader();
+		InputStream in = classLoader.getResourceAsStream(manifest);
+		if (in == null)
+		{
+			throw new IllegalStateException(
+				"No Vite manifest at '" + manifest + "' on the classpath for island library '" +
+					name + "'");
+		}
+		return ViteManifest.read(in).getEntryNames();
 	}
 }

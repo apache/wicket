@@ -200,6 +200,7 @@ final class IslandSupport implements IClusterable
 		}
 		tag.put(Island.ATTR_TYPE, type);
 		tag.put(Island.ATTR_KEY, key);
+		tag.put(Island.ATTR_PROTOCOL, Island.PROTOCOL);
 	}
 
 	/**
@@ -250,7 +251,7 @@ final class IslandSupport implements IClusterable
 				.addTagAttribute("property", "csp-nonce")
 				.addTagAttribute("nonce", csp.getNonce(RequestCycle.get())));
 		}
-		IslandSettings.get().getModuleLoader().renderHead(type, response);
+		IslandSettings.get().getModuleLoader(type).renderHead(type, response);
 	}
 
 	void detach()

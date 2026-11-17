@@ -15,24 +15,29 @@
  * limitations under the License.
  */
 
+import { PROTOCOL } from './protocol';
 import { IslandRuntime } from './runtime';
 import type { IslandModule } from './types';
 
+export { PROTOCOL } from './protocol';
 export { IslandRuntime } from './runtime';
 export type { FormBinding, FormState } from './form';
 export type { ClientStore } from './store';
 export { IslandCallError } from './types';
 export type { IslandCallErrorKind, IslandContext, IslandInstance, IslandModule } from './types';
 
-const GLOBAL_KEY = '__wicketIslandsRuntime';
+const GLOBAL_KEY = '__wicketIslandsRuntimes';
 
 /**
- * The runtime of the page. It is kept on the window, so a page that ends up with two copies of
- * this package still has a single runtime.
+ * The runtime of the page for this package's protocol. It is kept on the window, so the copies of
+ * this package in separate builds, such as an application's and a library's, share one runtime
+ * when they speak the same protocol. A copy speaking another protocol gets a runtime of its own,
+ * which refuses the islands the server rendered.
  */
 export function runtime(): IslandRuntime {
-	const scope = globalThis as { [GLOBAL_KEY]?: IslandRuntime };
-	return scope[GLOBAL_KEY] ??= new IslandRuntime();
+	const scope = globalThis as { [GLOBAL_KEY]?: Record<number, IslandRuntime> };
+	const runtimes = scope[GLOBAL_KEY] ??= {};
+	return runtimes[PROTOCOL] ??= new IslandRuntime();
 }
 
 /**
