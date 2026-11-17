@@ -6,8 +6,5 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts"
-  },
-  "peerDependencies": {
-    "@tanstack/query-core": "^5.0.0"
   }
 }

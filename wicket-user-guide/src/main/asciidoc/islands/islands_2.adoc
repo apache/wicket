@@ -90,7 +90,6 @@ say in `src/main/frontend`, then has a `package.json` like this:
     "build": "vite build"
   },
   "dependencies": {
-    "@tanstack/query-core": "^5.0.0",
     "@tanstack/react-query": "^5.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -127,8 +126,7 @@ export default defineConfig({
 	],
 	resolve: {
 		// the linked packages resolve their own imports from this project
-		dedupe: ['react', 'react-dom', 'wicket-islands', '@tanstack/query-core',
-			'@tanstack/react-query']
+		dedupe: ['react', 'react-dom', 'wicket-islands', '@tanstack/react-query']
 	},
 	server: {
 		port: 5173,

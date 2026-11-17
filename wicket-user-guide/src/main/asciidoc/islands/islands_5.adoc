@@ -16,7 +16,7 @@
 ////
 
 Islands on one page can work together without involving the server, through client stores, and
-they can share data fetched from the server, through the page's query client.
+they can share data fetched from the server, through a query cache of the page.
 
 === Client stores
 
@@ -37,7 +37,7 @@ only: its value reaches the server only when a peer includes it in the payload o
 
 Data that a peer fetches from the server, rather than receives as props, is best fetched with
 _useIslandQuery_. It runs a call through https://tanstack.com/query[TanStack Query], with a query
-client per page that all islands share:
+client per page that all React islands share; _useQueryClient()_ returns it inside an island:
 
 [source,javascript]
 ----
@@ -72,6 +72,11 @@ the focus. Options passed to _useIslandQuery_ override these defaults per query.
 
 _useIslandMutation(name, options)_ wraps a call as a TanStack Query mutation, for its callbacks
 and status.
+
+TanStack Query is part of the React adapter, not of the runtime. The runtime gives each island the
+cache key of a call, with the scope described above, and passes on the names the server marks as
+stale (`onInvalidate` of the island's context). An adapter for another framework builds its own
+cache on these two, with TanStack Query's binding for that framework or anything else.
 
 === Optimistic updates
 

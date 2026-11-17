@@ -44,8 +44,7 @@ export default defineConfig({
 	],
 	resolve: {
 		// the island packages are linked from the Wicket source tree; their imports resolve here
-		dedupe: ['react', 'react-dom', 'wicket-islands', '@tanstack/query-core',
-			'@tanstack/react-query']
+		dedupe: ['react', 'react-dom', 'wicket-islands', '@tanstack/react-query']
 	},
 	server: {
 		port: 5173,

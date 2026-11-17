@@ -190,24 +190,6 @@ describe('IslandRuntime', () => {
 		expect(requests).toHaveLength(0);
 	});
 
-	it('does not refetch page-bound queries when the window gets the focus again', () => {
-		const options = runtime.queryClient.getDefaultOptions().queries!;
-		const refetch = options.refetchOnWindowFocus as unknown as
-			(query: { queryKey: unknown[] }) => boolean;
-
-		expect(refetch({ queryKey: ['scores', 'island:k1'] })).toBe(false);
-		expect(refetch({ queryKey: ['scores', 'endpoint:./scores'] })).toBe(true);
-	});
-
-	it('retries a query only after a network failure', () => {
-		const retry = runtime.queryClient.getDefaultOptions().queries!.retry as
-			(failures: number, error: unknown) => boolean;
-
-		expect(retry(0, new IslandCallError('network', []))).toBe(true);
-		expect(retry(0, new IslandCallError('error', []))).toBe(false);
-		expect(retry(2, new IslandCallError('network', []))).toBe(false);
-	});
-
 	it('rejects a call the server does not answer', async () => {
 		runtime.register('board', recorder.module());
 		const result = recorder.context.call('probe', {});
@@ -479,17 +461,27 @@ describe('IslandRuntime', () => {
 		});
 	});
 
-	it('invalidates the queries of the page under the keys the server names', () => {
+	it('tells the islands which names the server marks as stale', () => {
 		runtime.register('board', recorder.module());
-		const queries = runtime.queryClient.getQueryCache();
-		runtime.queryClient.setQueryData(['scores', { size: 'SMALL' }], [1]);
-		runtime.queryClient.setQueryData(['other'], [2]);
+		const invalidated: string[][] = [];
+		const stop = recorder.context.onInvalidate(names => invalidated.push([...names]));
+		ignore(recorder.context.call('probe', {}));
 		ignore(recorder.context.call('probe', {}));
 
 		respond(requests[0], data({ invalidate: ['scores'] }));
+		stop();
+		respond(requests[1], data({ invalidate: ['other'] }));
 
-		expect(queries.find({ queryKey: ['scores', { size: 'SMALL' }] })?.state.isInvalidated).toBe(true);
-		expect(queries.find({ queryKey: ['other'] })?.state.isInvalidated).toBe(false);
+		expect(invalidated).toEqual([['scores']]);
+	});
+
+	it('hands every island of the page the same invalidation subscription', () => {
+		document.body.innerHTML = host('board1', 'board', 'k1', { label: 'one' }) +
+			host('board2', 'board', 'k2', { label: 'two' });
+		runtime.register('board', recorder.module());
+
+		expect(recorder.mounts).toHaveLength(2);
+		expect(recorder.mounts[0].context.onInvalidate).toBe(recorder.mounts[1].context.onInvalidate);
 	});
 
 	it('keeps the cache of a page-bound call to the island', () => {

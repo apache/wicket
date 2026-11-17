@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-import { QueryClient } from '@tanstack/react-query';
 import { act, useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { IslandRuntime, type IslandContext, type IslandInstance } from 'wicket-islands';
@@ -71,7 +70,8 @@ describe('defineIsland', () => {
 	let context: IslandContext<Props>;
 	let instance: IslandInstance<Props>;
 	let stores: IslandRuntime['stores'];
-	let queryClient: QueryClient;
+	let invalidations: Set<(names: readonly string[]) => void>;
+	let onInvalidate: IslandContext<Props>['onInvalidate'];
 
 	function contextFor(props: Props): IslandContext<Props> {
 		return {
@@ -79,7 +79,7 @@ describe('defineIsland', () => {
 			key: props.title,
 			signal: new AbortController().signal,
 			store: name => stores.get(name),
-			queryClient,
+			onInvalidate,
 			queryKey: (name, payload) => payload === undefined
 				? [name, props.title] : [name, props.title, payload],
 			call: vi.fn(() => Promise.resolve(undefined)) as IslandContext<Props>['call']
@@ -90,7 +90,12 @@ describe('defineIsland', () => {
 		root = document.createElement('div');
 		document.body.appendChild(root);
 		stores = new IslandRuntime().stores;
-		queryClient = new QueryClient();
+		const listeners = new Set<(names: readonly string[]) => void>();
+		invalidations = listeners;
+		onInvalidate = listener => {
+			listeners.add(listener);
+			return () => listeners.delete(listener);
+		};
 		context = contextFor({ title: 'first' });
 		act(() => {
 			instance = defineIsland(Counter).mount(root, context);
@@ -199,9 +204,7 @@ describe('defineIsland', () => {
 		await act(() => vi.waitFor(() =>
 			expect(scoresRoot.querySelector('#scores')?.textContent).toBe('score 1')));
 
-		await act(async () => {
-			await queryClient.invalidateQueries({ queryKey: ['scores'] });
-		});
+		act(() => invalidations.forEach(listener => listener(['scores'])));
 
 		await act(() => vi.waitFor(() =>
 			expect(scoresRoot.querySelector('#scores')?.textContent).toBe('score 2')));
@@ -223,6 +226,27 @@ describe('defineIsland', () => {
 			expect(rootA.textContent).toBe('from a');
 			expect(rootB.textContent).toBe('from b');
 		}));
+		rootA.remove();
+		rootB.remove();
+	});
+
+	it('shares the query results of islands on the same page under the same key', async () => {
+		const rootA = document.createElement('div');
+		const rootB = document.createElement('div');
+		document.body.append(rootA, rootB);
+		const call = vi.fn(() => Promise.resolve(['shared'])) as IslandContext<Props>['call'];
+		const shared = (title: string) => ({ ...contextFor({ title }),
+			queryKey: (name: string) => [name, 'endpoint:./scores'], call });
+		await act(async () => {
+			defineIsland(SharedScores).mount(rootA, shared('a'));
+			defineIsland(SharedScores).mount(rootB, shared('b'));
+		});
+
+		await act(() => vi.waitFor(() => {
+			expect(rootA.textContent).toBe('shared');
+			expect(rootB.textContent).toBe('shared');
+		}));
+		expect(call).toHaveBeenCalledTimes(1);
 		rootA.remove();
 		rootB.remove();
 	});

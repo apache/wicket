@@ -14,7 +14,6 @@
     "@mantine/dates": "9.7.3",
     "@mantine/hooks": "9.7.3",
     "@mantine/tiptap": "9.7.3",
-    "@tanstack/query-core": "^5.0.0",
     "@tanstack/react-query": "^5.0.0",
     "@tiptap/extension-link": "3.32.0",
     "@tiptap/pm": "3.32.0",

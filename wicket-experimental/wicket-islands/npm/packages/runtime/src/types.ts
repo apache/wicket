@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-import type { QueryClient } from '@tanstack/query-core';
 import type { FormBinding } from './form';
 import type { ClientStore } from './store';
 
@@ -69,14 +68,19 @@ export interface IslandContext<P> {
 	readonly form?: FormBinding<unknown>;
 
 	/**
-	 * The query client of the page, shared by every island on the page. Query keys the server marks
-	 * as stale are invalidated in it.
+	 * Notifies the listener of the names the server marks as stale, for an adapter to refetch
+	 * what it cached under {@link queryKey} keys starting with one of them. Returns the function
+	 * that stops the notifications. It is the same function for every island of the page, so an
+	 * adapter can keep its page-wide cache keyed by it.
 	 */
-	readonly queryClient: QueryClient;
+	readonly onInvalidate: (listener: (names: readonly string[]) => void) => () => void;
 
 	/**
-	 * The key to cache the results of a call under in the query client: the name first, so the
-	 * server's invalidation of the name reaches it, then who shares the results, then the payload.
+	 * The key to cache the results of a call under: the name first, so the server's invalidation
+	 * of the name reaches it, then who shares the results, then the payload, when there is one.
+	 * Who shares them is `island:<key>` for a page-bound call, whose answer is the island's own;
+	 * for a page-less call it is `handle:<handle>`, or `endpoint:<url>` without a handle, so
+	 * every island calling the same endpoint with the same context shares the results.
 	 */
 	queryKey(name: string, payload?: unknown): readonly unknown[];
 

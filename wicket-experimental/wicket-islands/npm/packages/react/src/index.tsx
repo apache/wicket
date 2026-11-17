@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-import { QueryClientProvider, useMutation, useQuery, type UseMutationOptions,
+import { QueryClientProvider, useMutation, useQuery, type QueryClient, type UseMutationOptions,
 	type UseMutationResult, type UseQueryOptions, type UseQueryResult } from '@tanstack/react-query';
 import { createContext, useContext, useSyncExternalStore, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import type { FormBinding, FormState, IslandCallError, IslandContext,
 	IslandModule } from 'wicket-islands';
+import { queryClientOf } from './query';
 
 export { IslandCallError, cspNonce } from 'wicket-islands';
 export type { FormState, IslandCallErrorKind } from 'wicket-islands';
@@ -50,6 +51,7 @@ function createPropsStore<P>(initial: P): PropsStore<P> {
 interface Binding {
 	context: IslandContext<unknown>;
 	props: PropsStore<unknown>;
+	queryClient: QueryClient;
 }
 
 const BindingContext = createContext<Binding | null>(null);
@@ -57,7 +59,8 @@ const BindingContext = createContext<Binding | null>(null);
 /**
  * Makes a React component the client-side peer of a Wicket island. The component receives the
  * island's props as its own props, and is re-rendered in place, keeping its state, whenever the
- * server sends new ones.
+ * server sends new ones. Every React island on the page shares one TanStack Query client, which
+ * `useQueryClient()` returns inside the component.
  *
  * ```tsx
  * export default defineIsland(TreasureBoard);
@@ -67,7 +70,7 @@ export function defineIsland<P extends object>(Component: ComponentType<P>): Isl
 	function IslandView({ binding }: { binding: Binding }) {
 		const props = useSyncExternalStore(binding.props.subscribe, binding.props.get) as P;
 		return (
-			<QueryClientProvider client={binding.context.queryClient}>
+			<QueryClientProvider client={binding.queryClient}>
 				<BindingContext.Provider value={binding}>
 					<Component {...props} />
 				</BindingContext.Provider>
@@ -79,7 +82,8 @@ export function defineIsland<P extends object>(Component: ComponentType<P>): Isl
 		mount(root, context) {
 			const binding: Binding = {
 				context: context as IslandContext<unknown>,
-				props: createPropsStore<unknown>(context.props)
+				props: createPropsStore<unknown>(context.props),
+				queryClient: queryClientOf(context as IslandContext<unknown>)
 			};
 			const reactRoot = createRoot(root);
 			reactRoot.render(<IslandView binding={binding} />);

@@ -17,7 +17,6 @@
 
 import { IslandCallError, type IslandCallErrorKind, type IslandContext, type IslandInstance,
 	type IslandModule } from './types';
-import { QueryClient } from '@tanstack/query-core';
 import { HostFormBinding, type FormState } from './form';
 import { ClientStores } from './store';
 import { TOPIC_AJAX_CALL_DATA, TOPIC_AJAX_CALL_DONE, TOPIC_DOM_NODE_ADDED, wicket,
@@ -93,24 +92,6 @@ export class IslandRuntime {
 
 	readonly stores = new ClientStores();
 
-	readonly queryClient = new QueryClient({
-		defaultOptions: {
-			queries: {
-				retry: (failures, error) => failures < 2 && error instanceof IslandCallError &&
-					error.kind === 'network',
-				refetchOnWindowFocus: query => !isPageBound(query.queryKey)
-			}
-		}
-	});
-
-	constructor() {
-		this.onInvalidate(keys => {
-			for (const key of keys) {
-				void this.queryClient.invalidateQueries({ queryKey: [key] });
-			}
-		});
-	}
-
 	private api?: WicketApi;
 
 	private callSequence = 0;
@@ -122,12 +103,13 @@ export class IslandRuntime {
 	}
 
 	/**
-	 * Listens to the query keys the server marks as stale.
+	 * Listens to the query keys the server marks as stale. The same function for the life of the
+	 * runtime; every island context hands it out.
 	 */
-	onInvalidate(listener: (keys: readonly string[]) => void): () => void {
+	readonly onInvalidate = (listener: (keys: readonly string[]) => void): (() => void) => {
 		this.invalidationListeners.add(listener);
 		return () => this.invalidationListeners.delete(listener);
-	}
+	};
 
 	private connect(): void {
 		if (this.api) {
@@ -239,7 +221,7 @@ export class IslandRuntime {
 			key: island.key,
 			signal: island.abort.signal,
 			form: island.form,
-			queryClient: this.queryClient,
+			onInvalidate: this.onInvalidate,
 			queryKey: (name, payload) => {
 				const key: unknown[] = [name, this.queryScope(island, name)];
 				return payload === undefined ? key : [...key, payload];
@@ -441,10 +423,6 @@ function failureOf(status: number | undefined): [IslandCallErrorKind, string] {
 
 function unreadable(): [IslandCallErrorKind, string] {
 	return ['error', 'The answer of the server could not be read.'];
-}
-
-function isPageBound(queryKey: readonly unknown[]): boolean {
-	return typeof queryKey[1] === 'string' && queryKey[1].startsWith('island:');
 }
 
 function findRoot(host: HTMLElement): HTMLElement {
