@@ -87,6 +87,16 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 		writeHeaderContribution(response, "evaluate", contents);
 	}
 
+	@Override
+	protected void writeData(Response response, String name, CharSequence value)
+	{
+		response.write("<data name=\"");
+		response.write(Strings.escapeMarkup(name));
+		response.write("\"><![CDATA[");
+		response.write(encode(value));
+		response.write("]]></data>");
+	}
+
 	private void writeHeaderContribution(Response response, String elementName, CharSequence contents)
 	{
 		if (Strings.isEmpty(contents) == false)

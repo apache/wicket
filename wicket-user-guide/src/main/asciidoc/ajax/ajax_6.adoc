@@ -168,6 +168,7 @@ Global AJAX call events are handled with JavaScript. We can register a callback 
 * '/ajax/call/failure': called if the AJAX call has returned with a failure.
 * '/ajax/call/complete': called when the AJAX call has completed.
 * '/ajax/call/done': called when the AJAX call is done.
+* '/ajax/call/data': called for every data entry added on the server with _addData(name, value)_ of _AjaxRequestTarget_, after the components have been replaced and the JavaScript evaluated, and before the success handlers run. Its callback receives jqEvent, attrs, name and value. Wicket delivers the value as text, without interpreting it, so the subscriber must treat it as data and never evaluate it.
 * '/dom/node/removing': called when a component is about to be removed via AJAX. This  happens when component markup is updated via AJAX (i.e. the component itself or one of its containers has been added to _AjaxRequestTarget_)
 * '/dom/node/added': called when a component has been added via AJAX. Just like '/dom/node/removing', this event is triggered when a component is added to _AjaxRequestTarget_.
 

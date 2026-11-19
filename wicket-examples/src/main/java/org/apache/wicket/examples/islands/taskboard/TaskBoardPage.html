@@ -1,0 +1,82 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+	<p>
+		A team board. The board is a React component, mounted as a Wicket island; the summary
+		next to it is plain Wicket. Drag a card to another column: the board moves it at once and
+		asks the server, which may refuse. Double-click a card to edit it.
+	</p>
+
+	<p wicket:id="noBuild" class="board-notice">
+		This example was built without its JavaScript. Build the examples with
+		<code>-Pjs-test</code>, or run a Vite dev server, to use it.
+	</p>
+
+	<p class="board-teammate">
+		<a wicket:id="teammate" href="#">Let a teammate move a card</a>
+		<span wicket:id="teammateNote"></span>
+	</p>
+
+	<div class="board-layout">
+		<div class="board-main">
+			<div wicket:id="filter"></div>
+			<div wicket:id="board"></div>
+		</div>
+		<aside class="board-side">
+			<h3>Summary</h3>
+			<div wicket:id="summary"></div>
+			<h3>Cards done per week</h3>
+			<div wicket:id="throughput"></div>
+			<div wicket:id="preview" class="card-preview"></div>
+		</aside>
+	</div>
+
+	<div wicket:id="dialog"></div>
+
+	<section class="board-notes">
+		<h3>How this page is built</h3>
+		<p>
+			The board is not kept in the page: it lives in an application-wide repository, and the
+			page loads it for every request. Each session gets a board of its own, so two tabs of
+			one browser share it as two users would. The source viewer shows the Java classes and
+			the React modules under <code>frontend/src/taskboard</code>.
+		</p>
+		<ul>
+			<li>
+				<strong>Moving a card</strong> (<code>TaskBoard</code>) is optimistic: React shows
+				the move at once and calls <code>move</code>. The server checks the column's limit
+				and the board's version. When it accepts, the response updates the board island and
+				the summary. When it refuses, the card goes back; a refusal because the board
+				changed also brings the current board, as "Let a teammate move a card" shows.
+			</li>
+			<li>
+				<strong>Double-clicking a card</strong> calls <code>open</code>, which opens a plain
+				Wicket <code>ModalDialog</code>. Its form mixes classic fields with two form islands:
+				a rich-text editor (<code>RichTextField</code>) and a date picker
+				(<code>DueDateField</code>). Both take part in validation and feedback like any form
+				component.
+			</li>
+			<li>
+				<strong>The description</strong> is HTML from the browser, so it is untrusted:
+				<code>RichTextField</code> runs it through an allowlist sanitizer before it reaches
+				the card. The preview renders it unescaped only because of that.
+			</li>
+			<li>
+				<strong>The filter</strong> writes a client store that the board reads, so filtering
+				never reaches the server. The assignee suggestions and the chart come from the
+				page-less endpoints <code>members</code> and <code>throughput</code>, which run
+				without the page lock. The page gives them a handle for the board instead of its
+				id, so the browser cannot ask about another board; the endpoints still check that
+				the session may see it. A move invalidates <code>throughput</code>, and the chart
+				fetches it again.
+			</li>
+		</ul>
+		<p>
+			To change the React components with hot reload, run <code>npm run dev</code> in
+			<code>wicket-examples/src/main/frontend</code> and start the examples in development
+			mode with <code>-Dwicket.islands.devServer=http://localhost:5173</code>.
+		</p>
+	</section>
+</wicket:extend>
+</body>
+</html>

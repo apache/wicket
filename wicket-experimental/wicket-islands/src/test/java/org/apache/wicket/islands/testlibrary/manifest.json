@@ -1,0 +1,21 @@
+{
+  "src/BarChart.tsx": {
+    "file": "assets/charts-bar-111aaa.js",
+    "name": "charts-bar",
+    "src": "src/BarChart.tsx",
+    "isEntry": true,
+    "imports": ["_vendor-222bbb.js"],
+    "css": ["assets/charts-bar-333ccc.css"]
+  },
+  "src/PieChart.tsx": {
+    "file": "assets/charts-pie-444ddd.js",
+    "name": "charts-pie",
+    "src": "src/PieChart.tsx",
+    "isEntry": true,
+    "imports": ["_vendor-222bbb.js"]
+  },
+  "_vendor-222bbb.js": {
+    "file": "assets/vendor-222bbb.js",
+    "name": "vendor"
+  }
+}

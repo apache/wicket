@@ -1,0 +1,145 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+As a first island, let's build a star rating for an article: the peer shows the average rating
+and lets the user vote, and the vote is recorded on the server.
+
+=== The server half
+
+The props are a record made for the client. It holds what the browser may know, and nothing
+else:
+
+[source,java]
+----
+public record RatingProps(int stars, int votes)
+{
+}
+----
+
+The request of the `rate` call is a record too. It holds only what the call may change:
+
+[source,java]
+----
+public record Rate(int stars)
+{
+}
+----
+
+The island maps the article to its props, and registers the call:
+
+[source,java]
+----
+public class StarRating extends Island<RatingProps>
+{
+	public StarRating(String id, IModel<Article> article)
+	{
+		super(id, "star-rating",
+			article.map(a -> new RatingProps(a.getAverageStars(), a.getVotes())));
+
+		onCall("rate", Rate.class, (rate, call) -> {
+			if (rate.stars() < 1 || rate.stars() > 5)
+			{
+				throw call.reject("Choose one to five stars.");
+			}
+			article.getObject().addVote(rate.stars());
+			call.getTarget().add(this);
+		});
+	}
+}
+----
+
+The handler receives the request, converted from the JSON the peer sent, and an _IslandCall_
+with the context of the call. The request comes from the browser, so the handler checks it before
+it uses it. Adding the island to the call's Ajax request target sends the peer its new props.
+
+The page adds the island like any other component:
+
+[source,html]
+----
+<div wicket:id="rating"></div>
+----
+
+[source,java]
+----
+add(new StarRating("rating", articleModel));
+----
+
+=== The client half
+
+The peer is a React component whose props are the island's props. The island module exports it
+as its default export:
+
+[source,javascript]
+----
+import { useState } from 'react';
+import { IslandCallError, useIsland } from 'wicket-islands-react';
+
+interface RatingProps {
+	stars: number;
+	votes: number;
+}
+
+export default function StarRating({ stars, votes }: RatingProps) {
+	const { call } = useIsland<RatingProps>();
+	const [error, setError] = useState<string | null>(null);
+
+	async function rate(value: number) {
+		setError(null);
+		try {
+			await call('rate', { stars: value });
+		} catch (e) {
+			setError(e instanceof IslandCallError ? e.messages.join(' ') : String(e));
+		}
+	}
+
+	return (
+		<div className="star-rating">
+			{[1, 2, 3, 4, 5].map(value => (
+				<button key={value} type="button" aria-label={`${value} stars`}
+					aria-pressed={value <= stars} onClick={() => void rate(value)}>
+					★
+				</button>
+			))}
+			<span>{votes} votes</span>
+			{error && <p role="alert">{error}</p>}
+		</div>
+	);
+}
+----
+
+Registered in the Vite configuration under the type `star-rating`, as shown in the previous
+section, this is all it takes. When `call('rate', ...)` resolves, the response has already been
+applied: Wicket re-rendered the island, the runtime kept the mounted peer and handed it the new
+props, and React re-rendered it with the new average. When the handler rejects the vote, the
+promise is rejected with an _IslandCallError_ whose `messages` are the ones passed to _reject_.
+
+_useIsland_ gives any component inside the island access to it: the current `props`, the `key`,
+a `signal` that is aborted when the island is unmounted, and `call`. The other hooks of the React
+adapter appear in the following sections:
+
+[options="header"]
+|===
+|Hook |Purpose
+|_useIsland()_ |The island's props, key, abort signal and _call_ function.
+|_useStore(name)_ |A value shared by the islands of the page, on the client only.
+|_useIslandQuery(name, payload, options)_ |Data fetched with a call and cached in the page's
+TanStack Query client.
+|_useIslandMutation(name, options)_ |A call that changes data, as a TanStack Query mutation.
+|_useFormValue()_ |The value of a form island, and the function to change it.
+|_useFormState()_ |Whether a form island is required and enabled, its label and its feedback
+messages.
+|===

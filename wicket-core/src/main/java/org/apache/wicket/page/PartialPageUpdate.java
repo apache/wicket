@@ -65,6 +65,7 @@ import org.slf4j.LoggerFactory;
  * <li>header-contribution - all HeaderItems which have been contributed in any{@link Component#renderHead(IHeaderResponse)},
  * {@link Behavior#renderHead(Component, IHeaderResponse)} or JavaScript explicitly added via {@link #appendJavaScript(CharSequence)}
  * or {@link #prependJavaScript(CharSequence)}</li>
+ * <li>data - named values added via {@link #addData(String, CharSequence)}, for client-side subscribers</li>
  * </ul>
  */
 public abstract class PartialPageUpdate
@@ -95,6 +96,11 @@ public abstract class PartialPageUpdate
 	 * Executed immediately after the replacement of the components, and before appendJavaScripts
 	 */
 	protected final List<CharSequence> domReadyJavaScripts = Generics.newArrayList();
+
+	/**
+	 * The data entries to deliver to client-side subscribers, in the order they were added.
+	 */
+	protected final List<DataEntry> dataEntries = Generics.newArrayList();
 
 	/**
 	 * The component instances that will be rendered/replaced.
@@ -160,7 +166,8 @@ public abstract class PartialPageUpdate
 	 */
 	public boolean isEmpty()
 	{
-		return prependJavaScripts.isEmpty() && appendJavaScripts.isEmpty() && domReadyJavaScripts.isEmpty() && markupIdToComponent.isEmpty();
+		return prependJavaScripts.isEmpty() && appendJavaScripts.isEmpty() && domReadyJavaScripts.isEmpty()
+			&& dataEntries.isEmpty() && markupIdToComponent.isEmpty();
 	}
 
 	/**
@@ -195,6 +202,11 @@ public abstract class PartialPageUpdate
 			evaluationScripts.addAll(domReadyJavaScripts);
 			evaluationScripts.addAll(appendJavaScripts);
 			writeEvaluations(response, evaluationScripts);
+
+			for (DataEntry entry : dataEntries)
+			{
+				writeData(response, entry.name(), entry.value());
+			}
 
 			writeFooter(response, encoding);
 		} finally {
@@ -475,6 +487,19 @@ public abstract class PartialPageUpdate
 	 */
 	protected abstract void writeEvaluation(Response response, CharSequence contents);
 
+	/**
+	 * Writes a single data entry.
+	 *
+	 * @param response
+	 *      the response to write to
+	 * @param name
+	 *      the name of the entry
+	 * @param value
+	 *      the value of the entry
+	 * @since 12.0.0
+	 */
+	protected abstract void writeData(Response response, String name, CharSequence value);
+
 	@Override
 	public boolean equals(Object o)
 	{
@@ -485,6 +510,7 @@ public abstract class PartialPageUpdate
 
 		if (!appendJavaScripts.equals(that.appendJavaScripts)) return false;
 		if (!domReadyJavaScripts.equals(that.domReadyJavaScripts)) return false;
+		if (!dataEntries.equals(that.dataEntries)) return false;
 		return prependJavaScripts.equals(that.prependJavaScripts);
 	}
 
@@ -494,6 +520,7 @@ public abstract class PartialPageUpdate
 		int result = prependJavaScripts.hashCode();
 		result = 31 * result + appendJavaScripts.hashCode();
 		result = 31 * result + domReadyJavaScripts.hashCode();
+		result = 31 * result + dataEntries.hashCode();
 		return result;
 	}
 
@@ -531,6 +558,31 @@ public abstract class PartialPageUpdate
 		}
 
 		prependJavaScripts.add(javascript);
+	}
+
+	/**
+	 * Adds a named data entry, delivered to client-side subscribers after the components have been
+	 * replaced and the JavaScripts evaluated.
+	 *
+	 * @param name
+	 *      the name of the entry
+	 * @param value
+	 *      the value of the entry, delivered as is
+	 * @see org.apache.wicket.core.request.handler.IPartialPageRequestHandler#addData(String,
+	 *      CharSequence)
+	 * @since 12.0.0
+	 */
+	public final void addData(final String name, final CharSequence value)
+	{
+		Args.notEmpty(name, "name");
+		Args.notNull(value, "value");
+
+		if (javascriptsFrozen)
+		{
+			throw new IllegalStateException("A partial update of the page is being rendered, data can no longer be added");
+		}
+
+		dataEntries.add(new DataEntry(name, value.toString()));
 	}
 
 	/**
@@ -813,6 +865,19 @@ public abstract class PartialPageUpdate
 		{
 			return RequestCycle.get().getResponse();
 		}
+	}
+
+	/**
+	 * A named data entry.
+	 *
+	 * @param name
+	 *      the name of the entry
+	 * @param value
+	 *      the value of the entry
+	 * @since 12.0.0
+	 */
+	protected record DataEntry(String name, String value)
+	{
 	}
 
 	/**

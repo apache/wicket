@@ -18,11 +18,14 @@ package org.apache.wicket.page;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.mock.MockWebResponse;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -100,5 +103,77 @@ class XmlPartialPageUpdateTest extends WicketTestCase
 		update.writeTo(response, "UTF-8");
 		
 		assertFalse(response.getTextResponse().toString().contains("notInPage"), "notInPage not written");
+	}
+
+	@Test
+	void dataEntriesAreWrittenAfterEvaluationsInOrder()
+	{
+		PageForPartialUpdate page = new PageForPartialUpdate();
+
+		XmlPartialPageUpdate update = new XmlPartialPageUpdate(page);
+		update.addData("first", "{\"a\":1}");
+		update.appendJavaScript("console.log('evaluated');");
+		update.addData("second", "two");
+
+		MockWebResponse response = new MockWebResponse();
+		update.writeTo(response, "UTF-8");
+
+		String text = response.getTextResponse().toString();
+		assertTrue(text.endsWith("</evaluate><data name=\"first\"><![CDATA[{\"a\":1}]]></data>"
+			+ "<data name=\"second\"><![CDATA[two]]></data></ajax-response>"), text);
+	}
+
+	@Test
+	void dataNameIsEscapedAndCdataEndIsEncoded()
+	{
+		PageForPartialUpdate page = new PageForPartialUpdate();
+
+		XmlPartialPageUpdate update = new XmlPartialPageUpdate(page);
+		update.addData("a\"b<c", "x]]>y");
+
+		MockWebResponse response = new MockWebResponse();
+		update.writeTo(response, "UTF-8");
+
+		assertTrue(response.getTextResponse()
+			.toString()
+			.contains("<data name=\"a&quot;b&lt;c\"><![CDATA[x]]]]><![CDATA[>y]]></data>"));
+	}
+
+	@Test
+	void dataMakesTheUpdateNonEmpty()
+	{
+		XmlPartialPageUpdate update = new XmlPartialPageUpdate(new PageForPartialUpdate());
+		assertTrue(update.isEmpty());
+
+		update.addData("name", "");
+
+		assertFalse(update.isEmpty());
+	}
+
+	@Test
+	void dataCannotBeAddedOnceTheResponseIsBeingWritten()
+	{
+		PageForPartialUpdate page = new PageForPartialUpdate();
+
+		XmlPartialPageUpdate update = new XmlPartialPageUpdate(page)
+		{
+			@Override
+			protected void onAfterRespond(Response response)
+			{
+				addData("allowed", "until the components are written");
+			}
+
+			@Override
+			protected void writeFooter(Response response, String encoding)
+			{
+				assertThrows(IllegalStateException.class, () -> addData("late", "too late"));
+				super.writeFooter(response, encoding);
+			}
+		};
+
+		MockWebResponse response = new MockWebResponse();
+		update.writeTo(response, "UTF-8");
+
+		assertTrue(response.getTextResponse().toString().contains("<data name=\"allowed\">"));
 	}
 }

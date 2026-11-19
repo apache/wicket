@@ -988,6 +988,7 @@
 				// ... then add components, process remaining evaluations and a
 				// possible redirect
 				let stepIndexOfLastReplacedComponent = -1;
+				const dataNodes = [];
 				for (let c = 0; c < root.childNodes.length; ++c) {
 					const node = root.childNodes[c];
 
@@ -1001,10 +1002,16 @@
 						this.processHeaderContribution(context, node);
 					} else if (node.tagName === "redirect") {
 						this.processRedirect(context, node);
+					} else if (node.tagName === "data") {
+						dataNodes.push(node);
 					}
 				}
 				if (stepIndexOfLastReplacedComponent !== -1) {
 					this.processFocusedComponentReplaceCheck(steps, stepIndexOfLastReplacedComponent);
+				}
+
+				for (let d = 0; d < dataNodes.length; ++d) {
+					this.processData(context, dataNodes[d]);
 				}
 
 				// add the last step, which should trigger the success call the done method on request
@@ -1087,6 +1094,17 @@
 			Wicket.Log.info("Redirecting to: %s", text);
 			context.isRedirecting = true;
 			Wicket.Ajax.redirect(text);
+		},
+
+		// Adds a closure that publishes a data entry to its subscribers
+		processData: function (context, node) {
+			context.steps.push(function (notify) {
+				const name = node.getAttribute("name");
+				const value = Wicket.DOM.text(node);
+				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_DATA, context.attrs, name, value);
+
+				return FunctionsExecuter.DONE;
+			});
 		},
 
 		// mark the focused component so that we know if it has been replaced by response
@@ -2703,6 +2721,7 @@
 				AJAX_CALL_AFTER        : '/ajax/call/after',
 				AJAX_CALL_FAILURE      : '/ajax/call/failure',
 				AJAX_CALL_DONE         : '/ajax/call/done',
+				AJAX_CALL_DATA         : '/ajax/call/data',
 				AJAX_HANDLERS_BOUND    : '/ajax/handlers/bound'
 			}
 		}

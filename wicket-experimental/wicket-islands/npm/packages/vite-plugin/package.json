@@ -1,0 +1,16 @@
+{
+  "name": "vite-plugin-wicket-islands",
+  "version": "0.0.0",
+  "description": "Vite plugin that builds Wicket Islands and serves them to Wicket in development",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "peerDependencies": {
+    "vite": ">=6.0.0"
+  }
+}

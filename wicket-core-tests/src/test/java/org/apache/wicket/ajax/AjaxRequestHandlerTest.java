@@ -412,6 +412,25 @@ class AjaxRequestHandlerTest extends WicketTestCase
 		assertTrue(tester.getLastResponseAsString().isEmpty());
 	}
 
+	@Test
+	void addData()
+	{
+		final MockPageWithLink page = new MockPageWithLink();
+		page.add(new AjaxLink<Void>(MockPageWithLink.LINK_ID) {
+
+			@Override
+			public void onClick(final AjaxRequestTarget target) {
+				target.addData("result", "{\"value\":42}");
+			}
+		});
+
+		tester.startPage(page);
+		tester.clickLink(MockPageWithLink.LINK_ID);
+
+		assertTrue(tester.getLastResponseAsString()
+			.contains("<data name=\"result\"><![CDATA[{\"value\":42}]]></data></ajax-response>"));
+	}
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6808
 	 */

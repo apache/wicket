@@ -1,0 +1,81 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.board-notice {
+	padding: 0.5em 1em;
+	border: 1px solid #c90;
+	background: #fff6e0;
+}
+
+.board-layout {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2em;
+	align-items: flex-start;
+}
+
+.board-main {
+	flex: 1 1 40em;
+	min-width: 0;
+}
+
+.board-side {
+	flex: 0 1 18em;
+}
+
+.board-summary th {
+	text-align: left;
+	font-weight: normal;
+	padding-right: 1em;
+}
+
+.board-summary tr.full td {
+	color: #b00;
+	font-weight: bold;
+}
+
+.card-preview {
+	margin-top: 1.5em;
+	padding-top: 0.5em;
+	border-top: 1px solid #ddd;
+}
+
+.card-form {
+	min-width: 34em;
+	padding: 0.5em 1.5em 1em;
+}
+
+.card-form input[type=text] {
+	width: 24em;
+}
+
+.card-form-field {
+	margin: 0.75em 0;
+}
+
+.card-form-label {
+	display: block;
+	margin-bottom: 0.25em;
+}
+
+.card-form-buttons a {
+	margin-left: 1em;
+}
+
+.board-notes {
+	margin-top: 2em;
+	max-width: 50em;
+}

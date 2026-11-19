@@ -860,6 +860,46 @@ include::monitoring/monitoring_3.adoc[leveloffset=+1]
 
 include::monitoring/monitoring_4.adoc[leveloffset=+1]
 
+== Wicket Islands (experimental)
+
+include::islands.adoc[]
+
+=== How islands work
+
+include::islands/islands_1.adoc[leveloffset=+1]
+
+=== Setting up a project
+
+include::islands/islands_2.adoc[leveloffset=+1]
+
+=== A first island
+
+include::islands/islands_3.adoc[leveloffset=+1]
+
+=== Calls
+
+include::islands/islands_4.adoc[leveloffset=+1]
+
+=== Islands working together
+
+include::islands/islands_5.adoc[leveloffset=+1]
+
+=== Form islands
+
+include::islands/islands_6.adoc[leveloffset=+1]
+
+=== Page-less endpoints
+
+include::islands/islands_7.adoc[leveloffset=+1]
+
+=== Security
+
+include::islands/islands_8.adoc[leveloffset=+1]
+
+=== Examples and limitations
+
+include::islands/islands_9.adoc[leveloffset=+1]
+
 [appendix]
 == Working with Maven
 
