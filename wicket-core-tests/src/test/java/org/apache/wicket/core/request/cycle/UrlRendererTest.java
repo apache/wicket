@@ -260,6 +260,23 @@ class UrlRendererTest
 	}
 
 	@Test
+	void renderFullUrlPreservesTargetFragment()
+	{
+		Url baseUrl = Url.parse("http://www.example.com:8888/one/two/three#base");
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
+		renderer.setBaseUrl(baseUrl);
+
+		assertEquals("http://www.example.com:8888/one/four?q=1#part%202",
+			renderer.renderFullUrl(Url.parse("../four?q=1#part%202")));
+		assertEquals("http://www.example.com:8888/four#section",
+			renderer.renderFullUrl(Url.parse("/four#section")));
+		assertEquals("https://other.example.com/four#section",
+			renderer.renderFullUrl(Url.parse("https://other.example.com/four#section")));
+		assertEquals("http://www.example.com:8888/one/four",
+			renderer.renderFullUrl(Url.parse("../four")));
+	}
+
+	@Test
 	void renderFullUrlWithRelativeArgument()
 	{
 		Url baseUrl = Url.parse("one/two/three");
