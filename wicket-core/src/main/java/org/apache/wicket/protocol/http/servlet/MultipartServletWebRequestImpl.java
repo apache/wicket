@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -148,15 +149,18 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		// The encoding that will be used to decode the string parameters
 		// It should NOT be null at this point, but it may be
 		// especially if the older Servlet API 2.2 is used
-		String encoding = request.getCharacterEncoding();
+		String declaredEncoding = request.getCharacterEncoding();
 
 		// The encoding can also be null when using multipart/form-data encoded forms.
 		// In that case we use the [application-encoding] which we always demand using
 		// the attribute 'accept-encoding' in wicket forms.
-		if (encoding == null)
+		// A charset name that is not even legal, or that is unknown, must not fail the
+		// parsing either: fall back to the same default.
+		if (declaredEncoding == null || isCharsetSupported(declaredEncoding) == false)
 		{
-			encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
+			declaredEncoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 		}
+		final String encoding = declaredEncoding;
 
 		AbstractFileUpload fileUpload = newFileUpload(encoding);
 
@@ -166,6 +170,14 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		{
 			JakartaServletRequestContext ctx = new JakartaServletRequestContext(request)
 			{
+				@Override
+				public String getCharacterEncoding()
+				{
+					// answer an encoding the platform knows, the request's own is
+					// resolved eagerly while parsing and must not fail it
+					return encoding;
+				}
+
 				@Override
 				public InputStream getInputStream() throws IOException
 				{
@@ -188,7 +200,16 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		{
 			// try to parse the file uploads by using Apache Commons FileUpload APIs
 			// because they are feature richer (e.g. progress updates, cleaner)
-			items = fileUpload.parseRequest(new JakartaServletRequestContext(request));
+			items = fileUpload.parseRequest(new JakartaServletRequestContext(request)
+			{
+				@Override
+				public String getCharacterEncoding()
+				{
+					// answer an encoding the platform knows, the request's own is
+					// resolved eagerly while parsing and must not fail it
+					return encoding;
+				}
+			});
 			if (items.isEmpty())
 			{
 				// fallback to Servlet 3.0 APIs
@@ -315,6 +336,26 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			throw new FileUploadException("An error occurred while reading the upload parts", e);
 		}
 		return itemsFromParts;
+	}
+
+	/**
+	 * Whether the charset with the given name can be resolved. An illegal name makes
+	 * Charset.isSupported() throw, so answer false for it too.
+	 *
+	 * @param charsetName
+	 *            the name of the charset to check
+	 * @return {@code true} when Charset.forName() resolves the name
+	 */
+	private static boolean isCharsetSupported(String charsetName)
+	{
+		try
+		{
+			return Charset.isSupported(charsetName);
+		}
+		catch (IllegalCharsetNameException e)
+		{
+			return false;
+		}
 	}
 
 	/**
