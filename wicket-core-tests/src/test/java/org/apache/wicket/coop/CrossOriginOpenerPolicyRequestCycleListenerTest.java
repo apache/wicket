@@ -19,6 +19,8 @@ package org.apache.wicket.coop;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.resource.CharSequenceResource;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.coop.CrossOriginOpenerPolicyConfiguration.CoopMode;
 import org.junit.jupiter.api.Test;
@@ -72,7 +74,7 @@ class CrossOriginOpenerPolicyRequestCycleListenerTest extends WicketTestCase
 	@Test
 	void testCoopHeadersNotSetExemptedPath()
 	{
-		mode = CoopMode.DISABLED;
+		mode = CoopMode.SAME_ORIGIN;
 		exemptions = "exempt";
 		buildApp();
 		tester.executeUrl("exempt");
@@ -101,6 +103,10 @@ class CrossOriginOpenerPolicyRequestCycleListenerTest extends WicketTestCase
 			{
 				super.init();
 				getSecuritySettings().setCrossOriginOpenerPolicyConfiguration(mode, exemptions);
+				// something must be mounted at the exempted url or no handler gets matched
+				// without a handler no request cycle listeners are executed
+				CharSequenceResource resource = new CharSequenceResource("text/plain", "exempt");
+				mountResource("exempt", ResourceReference.of("exempt", () -> resource));
 			}
 		};
 	}

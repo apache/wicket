@@ -80,26 +80,21 @@ public class CrossOriginEmbedderPolicyRequestCycleListener implements IRequestCy
 
 	protected void protect(RequestCycle cycle, IRequestHandler handler)
 	{
-		final Object containerRequest = cycle.getRequest().getContainerRequest();
-		if (containerRequest instanceof HttpServletRequest)
+		final String path = cycle.getRequest().getUrl().getPath();
+		final String coepHeaderName = coepConfig.getCoepHeader();
+
+		if (coepConfig.getExemptions().contains(path))
 		{
-			HttpServletRequest request = (HttpServletRequest) containerRequest;
-			String path = request.getContextPath();
-			final String coepHeaderName = coepConfig.getCoepHeader();
+			log.debug("Request path {} is exempted from COEP, no '{}' header added", path, coepHeaderName);
+			return;
+		}
 
-			if (coepConfig.getExemptions().contains(path))
+		if (cycle.getResponse() instanceof WebResponse)
+		{
+			WebResponse webResponse = (WebResponse) cycle.getResponse();
+			if (webResponse.isHeaderSupported())
 			{
-				log.debug("Request path {} is exempted from COEP, no '{}' header added", path, coepHeaderName);
-				return;
-			}
-
-			if (cycle.getResponse() instanceof WebResponse)
-			{
-				WebResponse webResponse = (WebResponse) cycle.getResponse();
-				if (webResponse.isHeaderSupported())
-				{
-					webResponse.setHeader(coepHeaderName, REQUIRE_CORP);
-				}
+				webResponse.setHeader(coepHeaderName, REQUIRE_CORP);
 			}
 		}
 	}
