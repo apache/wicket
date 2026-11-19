@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.cdi;
 
+import java.util.function.Predicate;
+
 import jakarta.enterprise.inject.spi.BeanManager;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Configures CDI integration
@@ -53,6 +56,8 @@ public class CdiConfiguration
 	private BeanManager beanManager;
 
 	private BeanManager fallbackBeanManager;
+
+	private Predicate<Class<?>> injectionCandidateFilter = clazz -> true;
 
 	/**
 	 * Constructor
@@ -117,6 +122,47 @@ public class CdiConfiguration
 	}
 
 	/**
+	 * Sets the filter deciding which classes are considered for CDI. It is applied to every
+	 * instantiated Component and Behavior and to every created Session.
+	 * <p>
+	 * An accepted class costs one call of
+	 * {@link jakarta.enterprise.inject.spi.InjectionTarget#inject InjectionTarget#inject} per
+	 * instance, whether or not the class declares anything to inject. On a Jakarta EE
+	 * container that call also runs the container's injection services, which perform the
+	 * resource injection listed below and are not required to cache what they resolve. Rejecting
+	 * the classes that need no injection, which is most of an application's components and all of
+	 * Wicket's own, saves that work on every instantiation.
+	 * <p>
+	 * When the filter rejects a class, no CDI is performed for that class at all: neither
+	 * {@code @Inject}, nor Jakarta EE resource injection ({@code @Resource},
+	 * {@code @PersistenceContext}, {@code @PersistenceUnit}, {@code @EJB},
+	 * {@code @WebServiceRef}), nor {@code @PostConstruct} on a Session. None of these are reported
+	 * by {@link jakarta.enterprise.inject.spi.InjectionTarget#getInjectionPoints()}, so a filter
+	 * that wrongly rejects a class fails silently.
+	 * <p>
+	 * By default every class is accepted.
+	 * 
+	 * @param injectionCandidateFilter
+	 * @return this instance
+	 */
+	public CdiConfiguration setInjectionCandidateFilter(Predicate<Class<?>> injectionCandidateFilter)
+	{
+		this.injectionCandidateFilter = Args.notNull(injectionCandidateFilter,
+			"injectionCandidateFilter");
+		return this;
+	}
+
+	/**
+	 * @param clazz
+	 * @return whether CDI should be performed for instances of the given class
+	 * @see #setInjectionCandidateFilter(Predicate)
+	 */
+	public boolean isInjectionCandidate(Class<?> clazz)
+	{
+		return injectionCandidateFilter.test(clazz);
+	}
+
+	/**
 	 * Configures the specified application
 	 * 
 	 * @param application
@@ -148,9 +194,9 @@ public class CdiConfiguration
 		NonContextual.of(application).postConstruct(application);
 
 		// enable injection of various framework components
-		application.getSessionListeners().add(new SessionInjector());
-		application.getComponentInstantiationListeners().add(new ComponentInjector());
-		application.getBehaviorInstantiationListeners().add(new BehaviorInjector());
+		application.getSessionListeners().add(new SessionInjector(this));
+		application.getComponentInstantiationListeners().add(new ComponentInjector(this));
+		application.getBehaviorInstantiationListeners().add(new BehaviorInjector(this));
 
 		// enable cleanup
 		application.getApplicationListeners().add(new CdiShutdownCleaner());
