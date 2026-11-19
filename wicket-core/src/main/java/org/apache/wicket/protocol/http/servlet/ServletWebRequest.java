@@ -159,7 +159,15 @@ public class ServletWebRequest extends WebRequest
 					"Current ajax request is missing the base url header or parameter");
 			}
 
-			return setParameters(Url.parse(base, getCharset()));
+			try
+			{
+				return setParameters(Url.parse(base, getCharset()));
+			}
+			catch (NumberFormatException e)
+			{
+				throw new AbortWithHttpErrorCodeException(HttpServletResponse.SC_BAD_REQUEST,
+					"Current ajax request has a malformed base url");
+			}
 		}
 	}
 
