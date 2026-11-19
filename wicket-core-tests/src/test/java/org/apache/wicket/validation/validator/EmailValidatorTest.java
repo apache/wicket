@@ -36,7 +36,7 @@ class EmailValidatorTest
 	{
 		EmailAddressValidator test = new EmailAddressValidator();
 		String[] emails = new String[] { "b.blaat@topicus.nl", "blaat@hotmail.com",
-				"1.2.3.4@5.6.7.nl", "m@m.nl", "M@M.NL" };
+				"1.2.3.4@5.6.7.nl", "m@m.nl", "M@M.NL", "b-blaat@top-icus.nl" };
 		for (String email : emails)
 		{
 			assertTrue(test.getPattern().matcher(email).matches(), email + " should be valid");
