@@ -38,19 +38,70 @@ public class FullyBufferedReaderTest
 	@Test
 	public void nestedQuotes() throws ParseException
 	{
-		// testTag is <a href='b \'" > a' theAtr="at'r'\"r">
-		String testTag = "<a href='b \\'\" > a' theAtr=\"at'r'\\\"r\">";
+		String testTag = "<a href='b \" > a' theAtr=\"at'r'r\">";
 		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
 
-		// System.out.println(fullyBufferedReader);
 		int position = fullyBufferedReader.findOutOfQuotes('>', 0);
 
-		// have you found a close bracket?
-		assertEquals('>', testTag.charAt(position));
-		// close bracket must be at the end of the string
-		assertEquals(testTag.length(), position + 1);
+		assertEquals(testTag.length() - 1, position);
 	}
 
+	@Test
+	public void backslashDoesNotEscapeQuote() throws ParseException
+	{
+		String testTag = "<a title=\"C:\\dir\\\" lang='a\\'>";
+		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
+
+		int position = fullyBufferedReader.findOutOfQuotes('>', 0);
+
+		assertEquals(testTag.length() - 1, position);
+	}
+
+	@Test
+	public void adjacentBracketsInsideQuotes() throws ParseException
+	{
+		String testTag = "<a title=\"Next >>\" alt='>>>'>";
+		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
+
+		int position = fullyBufferedReader.findOutOfQuotes('>', 0);
+
+		assertEquals(testTag.length() - 1, position);
+	}
+
+	@Test
+	public void manyBracketsInsideQuotes() throws ParseException
+	{
+		String testTag = "<a title=\"" + ">".repeat(100_000) + "\">";
+		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
+
+		int position = fullyBufferedReader.findOutOfQuotes('>', 0);
+
+		assertEquals(testTag.length() - 1, position);
+	}
+
+	@Test
+	public void searchCanStartInsideQuotes() throws ParseException
+	{
+		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader("a>b\">c");
+
+		assertEquals(4, fullyBufferedReader.findOutOfQuotes('>', 0, '"'));
+	}
+
+	@Test
+	public void quotationCharThatIsNotAQuoteIsIgnored() throws ParseException
+	{
+		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader("a>b\">c");
+
+		assertEquals(1, fullyBufferedReader.findOutOfQuotes('>', 0, 'x'));
+	}
+
+	@Test
+	public void charAtStartPositionIsNotAMatch() throws ParseException
+	{
+		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(">a>");
+
+		assertEquals(2, fullyBufferedReader.findOutOfQuotes('>', 0));
+	}
 
 	/**
 	 * 
