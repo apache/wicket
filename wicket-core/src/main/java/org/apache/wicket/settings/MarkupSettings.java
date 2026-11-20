@@ -154,7 +154,8 @@ public class MarkupSettings
 
 	/**
 	 * @since 1.3
-	 * @return if true, an exception is thrown if the markup file does not contain a xml declaration
+	 * @return if true, an exception is thrown if the markup file declares its encoding neither in a
+	 *         xml declaration nor in a {@code <meta charset>} tag
 	 */
 	public boolean getThrowExceptionOnMissingXmlDeclaration()
 	{
@@ -253,7 +254,8 @@ public class MarkupSettings
 	}
 
 	/**
-	 * If true, an exception is thrown if the markup file does not contain a xml declaration
+	 * If true, an exception is thrown if the markup file declares its encoding neither in a xml
+	 * declaration nor in a {@code <meta charset>} tag
 	 *
 	 * @since 1.3
 	 * @param throwException
