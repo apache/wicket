@@ -686,6 +686,61 @@ class UrlRendererTest
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-7165
+	 */
+	@Test
+	void renderFullUrlWithContextAbsoluteArgumentAndFragment()
+	{
+		Url baseUrl = Url.parse("one/two/three");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("www.example.com");
+		baseUrl.setPort(8888);
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
+		renderer.setBaseUrl(baseUrl);
+
+		String fullUrl = renderer.renderFullUrl(Url.parse("/four#section"));
+		assertEquals("http://www.example.com:8888/four#section", fullUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-7165
+	 */
+	@Test
+	void renderFullUrlWithRelativeArgumentAndFragment()
+	{
+		Url baseUrl = Url.parse("one/two/three");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("www.example.com");
+		baseUrl.setPort(8888);
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
+		renderer.setBaseUrl(baseUrl);
+
+		String fullUrl = renderer.renderFullUrl(Url.parse("../four?a=b#section"));
+		assertEquals("http://www.example.com:8888/one/four?a=b#section", fullUrl);
+	}
+
+	/**
+	 * The fragment of the base url must not end up in a rendered relative url.
+	 * 
+	 * https://issues.apache.org/jira/browse/WICKET-7165
+	 */
+	@Test
+	void renderFullUrlWithRelativeArgumentIgnoresBaseUrlFragment()
+	{
+		Url baseUrl = Url.parse("one/two/three#top");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("www.example.com");
+		baseUrl.setPort(8888);
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(baseUrl));
+		renderer.setBaseUrl(baseUrl);
+
+		assertEquals("http://www.example.com:8888/one/four",
+			renderer.renderFullUrl(Url.parse("../four")));
+		assertEquals("http://www.example.com:8888/one/four#section",
+			renderer.renderFullUrl(Url.parse("../four#section")));
+	}
+
+	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6230
 	 */
 	@Test
