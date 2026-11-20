@@ -24,9 +24,7 @@ module org.apache.wicket.tester.extensions {
     requires org.slf4j;
     requires static jakarta.servlet;
     requires org.junit.jupiter.api;
-    requires org.apache.commons.collections4;
     requires org.danekja.jdk.serializable.functional;
-    requires org.assertj.core;
 
     exports org.apache.wicket.extensions.tester;
 }
