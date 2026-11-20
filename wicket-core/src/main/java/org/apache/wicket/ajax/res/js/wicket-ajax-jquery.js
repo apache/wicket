@@ -2474,11 +2474,4 @@
 	Wicket.Event.add(window, 'focusin', Wicket.Focus.focusin);
 	Wicket.Event.add(window, 'focusout', Wicket.Focus.focusout);
 
-	/**
-	 * Clear any scheduled Ajax timers when leaving the current page
-	 */
-	Wicket.Event.add(window, "unload", function() {
-		Wicket.Timer.clearAll();
-	});
-
 })(jQuery);
