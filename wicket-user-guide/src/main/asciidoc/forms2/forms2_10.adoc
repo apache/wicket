@@ -30,7 +30,7 @@ To avoid these kinds of problems we should build a stateless login page which do
 
 [source,html]
 ----
-<html>
+<html lang="en">
    <head>
       <meta charset="utf-8" />
    </head>

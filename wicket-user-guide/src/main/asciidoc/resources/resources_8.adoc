@@ -20,7 +20,7 @@ Some web developers prefer to put their <script> tags at the end of page body an
 [source,html]
 ----
 
-<html>
+<html lang="en">
 
 <head>
 //no <script> tag here...
@@ -67,7 +67,7 @@ Please note that _HeaderResponseContainer_'s needs also a name for the correspon
 [source,html]
 ----
 
-<html>
+<html lang="en">
 
 <head>
 <!-- no <script> tag here... -->

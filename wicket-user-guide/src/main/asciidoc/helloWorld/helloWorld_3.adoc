@@ -53,7 +53,7 @@ Here is the HTML markup for _HomePage_ (file HomePage.html):
 [source,html]
 ----
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<title>Apache Wicket HelloWorld</title>
