@@ -639,6 +639,9 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Asserts the text of a <code>Label</code> <code>Component</code>.
+	 * <p>
+	 * A path segment of {@code *} matches any numeric component id. If multiple labels match, the
+	 * assertion succeeds when any matching label has the expected text.
 	 *
 	 * @param path
 	 *            path to <code>Label</code> <code>Component</code>
@@ -647,6 +650,29 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public void assertLabel(String path, String expectedLabelText)
 	{
+		if (path.contains("*"))
+		{
+			List<String> labelTexts = new ArrayList<>();
+			for (Component component : getComponentsFromLastRenderedPage(path))
+			{
+				if (component instanceof Label)
+				{
+					labelTexts.add(((Label)component).getDefaultModelObjectAsString());
+				}
+			}
+
+			if (labelTexts.isEmpty())
+			{
+				fail("path: '" + path + "' does not exist for page: "
+					+ getLastRenderedPage().getClass().getSimpleName());
+			}
+
+			assertTrue(labelTexts.contains(expectedLabelText),
+				"Expected label text '" + expectedLabelText + "' for path '" + path + "', but found "
+					+ labelTexts);
+			return;
+		}
+
 		Label label = (Label)getComponentFromLastRenderedPage(path);
 		assertEquals(expectedLabelText, label.getDefaultModelObjectAsString());
 	}
