@@ -65,7 +65,8 @@ module.exports = function(grunt) {
 			"../../wicket-core/src/test/js/timer.js",
 			"../../wicket-core/src/test/js/trusted-types.js",
 			"../../wicket-core/src/test/js/trusted-types-off.js",
-			"../../wicket-core/src/test/js/upload-to-resource.js"
+			"../../wicket-core/src/test/js/upload-to-resource.js",
+			"../../wicket-core/src/test/js/browser-info.js"
 		],
 		extensionsTestsJs = [
 			"../../wicket-extensions/src/test/js/palette-test.js",
