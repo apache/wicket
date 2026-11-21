@@ -1,0 +1,11 @@
+<html xmlns:wicket>
+<body>
+  <img srcset="small.jpg 480w, large.jpg 1080w"/>
+  <img srcset="small.jpg 480w, /absolute.jpg 1080w, https://example.com/external.jpg 2x"/>
+  <picture>
+    <source srcset="narrow.jpg 480w, wide.jpg 1080w"/>
+    <img src="fallback.jpg"/>
+  </picture>
+  <img srcset="retina.jpg 2x"/>
+</body>
+</html>
