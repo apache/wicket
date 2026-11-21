@@ -16,10 +16,13 @@
  */
 package org.apache.wicket.authroles.authorization.strategies.role.annotations;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.apache.wicket.Component;
@@ -211,6 +214,8 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	 * package are {@link java.lang.annotation.Inherited}, the rules declared on the class include
 	 * those it inherits from a superclass in another package, and such an inherited rule therefore
 	 * suppresses the rules of the class' own package.
+	 * Rules declared on the annotation types present on the class are checked in addition
+	 * to these rules, including rules on nested annotation types at any depth.
 	 * 
 	 * @param annotatedClass
 	 *            the component or resource class to resolve the rules for
@@ -233,6 +238,25 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 			}
 		}
 
+		final List<R> metaRules = new ArrayList<>();
+		final List<Annotation> pending = new ArrayList<>();
+		final Set<Class<? extends Annotation>> visited = new HashSet<>();
+		Collections.addAll(pending, annotatedClass.getAnnotations());
+		for (int i = 0; i < pending.size(); i++)
+		{
+			final Class<? extends Annotation> annotationType = pending.get(i).annotationType();
+			if (visited.add(annotationType))
+			{
+				metaRules.addAll(rules.apply(annotationType));
+				Collections.addAll(pending, annotationType.getAnnotations());
+			}
+		}
+		if (!metaRules.isEmpty())
+		{
+			final List<R> combined = new ArrayList<>(resolved);
+			combined.addAll(metaRules);
+			return combined;
+		}
 		return resolved;
 	}
 
