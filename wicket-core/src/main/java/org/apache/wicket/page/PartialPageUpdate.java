@@ -239,10 +239,10 @@ public abstract class PartialPageUpdate
 	 */
 	protected void writePriorityEvaluations(final Response response, Collection<CharSequence> scripts)
 	{
-		if (!scripts.isEmpty())
+		for (CharSequence script : scripts)
 		{
-			CharSequence contents = renderScripts(scripts);
-			
+			CharSequence contents = renderScripts(Collections.singletonList(script));
+
 			writePriorityEvaluation(response, contents);
 		}
 	}
@@ -256,10 +256,10 @@ public abstract class PartialPageUpdate
 	 */
 	protected void writeEvaluations(final Response response, Collection<CharSequence> scripts)
 	{
-		if (!scripts.isEmpty())
+		for (CharSequence script : scripts)
 		{
-			CharSequence contents = renderScripts(scripts);
-			
+			CharSequence contents = renderScripts(Collections.singletonList(script));
+
 			writeEvaluation(response, contents);
 		}
 	}
