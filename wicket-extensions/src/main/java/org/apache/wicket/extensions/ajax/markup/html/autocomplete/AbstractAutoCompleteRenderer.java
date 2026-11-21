@@ -16,15 +16,54 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
-import org.apache.wicket.core.util.string.JavaScriptUtils;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
  * A renderer that abstracts auto-assist specific details and allows subclasses to only render the
  * visual part of the assist instead of having to also render the necessary auto-assist javascript
  * hooks.
- * 
+ * <p>
+ * When a choice is selected the autocompleter dispatches a cancelable, bubbling
+ * {@code wicket-autocomplete-select} event on the input field. Its {@code detail.item} is the
+ * element of the selected choice and its {@code detail.value} the text value that will be copied
+ * into the input field. A listener may replace {@code detail.value}, or call
+ * {@code preventDefault()} to leave the input field unchanged. An empty {@code detail.value}
+ * leaves the input field unchanged as well, like {@code preventDefault()}. Data a listener needs
+ * about the choice can be written onto its element with {@link #getChoiceData(Object)}.
+ * <p>
+ * An Ajax update that re-renders the field replaces its element, and a listener added to the old
+ * element is lost. Register the listener from the {@code renderHead()} of the field, which runs
+ * again on every re-render, with a header item such as {@code OnDomReadyHeaderItem} so that it
+ * carries the nonce of the Content Security Policy:
+ *
+ * <pre>
+ * &#064;Override
+ * public void renderHead(IHeaderResponse response)
+ * {
+ * 	super.renderHead(response);
+ * 	response.render(OnDomReadyHeaderItem.forScript(&quot;Wicket.$('&quot; + getMarkupId() +
+ * 		&quot;').addEventListener('wicket-autocomplete-select', fillAddress);&quot;));
+ * }
+ * </pre>
+ *
+ * with {@code fillAddress} in a JavaScript resource of the application:
+ *
+ * <pre>
+ * function fillAddress(event) {
+ * 	const data = event.detail.item.dataset;
+ * 	document.getElementById('zipcode').value = data.zipCode;
+ * 	document.getElementById('city').value = data.city;
+ * }
+ * </pre>
+ *
+ * As the event bubbles, a single listener on {@code document} that checks {@code event.target}
+ * works too and is not affected by re-rendering.
+ *
  * @param <T>
  * 
  * @since 1.2
@@ -34,6 +73,8 @@ import org.apache.wicket.util.string.Strings;
 public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRenderer<T>
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Pattern DATA_NAME = Pattern.compile("[a-z][a-z0-9-]*");
 
 	@Override
 	public void render(final T object, final Response response, final String criteria)
@@ -52,6 +93,22 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 		if (handler != null)
 		{
 			response.write(" onselect=\"" + Strings.escapeMarkup(handler) + '"');
+		}
+		final Map<String, ?> data = getChoiceData(object);
+		if (data != null)
+		{
+			for (Map.Entry<String, ?> entry : data.entrySet())
+			{
+				final String name = entry.getKey();
+				Args.isTrue(name != null && DATA_NAME.matcher(name).matches(),
+					"Invalid data attribute name '%s': use lowercase letters, digits and dashes",
+					name);
+				if (entry.getValue() != null)
+				{
+					response.write(" data-" + name + "=\"" +
+						Strings.escapeMarkup(entry.getValue().toString()) + '"');
+				}
+			}
 		}
 		response.write(">");
 		renderChoice(object, response, criteria);
@@ -141,8 +198,39 @@ public abstract class AbstractAutoCompleteRenderer<T> implements IAutoCompleteRe
 	 *            the autocomplete item to get a custom javascript expression for
 	 * @return javascript to execute on selection or <code>null</code> if default behavior is
 	 *         intended
+	 * @deprecated The expression is run with {@code eval()}, which the default Content Security
+	 *             Policy of Wicket blocks: it only works when the application allows
+	 *             {@code 'unsafe-eval'}. Building the expression from item data, as in the
+	 *             examples above, is also unsafe: the markup escaping of the attribute does not
+	 *             protect the data once the expression is evaluated, so any such data has to be
+	 *             escaped for a JavaScript string by the application. Listen for the
+	 *             {@code wicket-autocomplete-select} event
+	 *             instead (see the class documentation) and pass the data it needs with
+	 *             {@link #getChoiceData(Object)}.
 	 */
+	@Deprecated(since = "10.12.0", forRemoval = true)
 	protected CharSequence getOnSelectJavaScriptExpression(final T item)
+	{
+		return null;
+	}
+
+	/**
+	 * Returns data to write onto the element of the given choice, for a
+	 * {@code wicket-autocomplete-select} listener to read from {@code event.detail.item.dataset}.
+	 * <p>
+	 * Each entry is written as a {@code data-<name>} attribute. Its value is converted with
+	 * {@code toString()} and escaped with {@link Strings#escapeMarkup(CharSequence)}; an entry with
+	 * a {@code null} value is skipped. Names must consist of lowercase letters, digits and dashes,
+	 * and start with a letter. The browser exposes a dashed name in camelCase in {@code dataset}:
+	 * the entry {@code zip-code} is read as {@code dataset.zipCode}.
+	 *
+	 * @param item
+	 *            the autocomplete choice
+	 * @return the data of the choice, keyed by attribute name without the {@code data-} prefix,
+	 *         or {@code null} for none
+	 * @since 10.12.0
+	 */
+	protected Map<String, ?> getChoiceData(final T item)
 	{
 		return null;
 	}
