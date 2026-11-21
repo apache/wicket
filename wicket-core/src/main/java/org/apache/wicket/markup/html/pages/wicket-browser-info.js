@@ -63,8 +63,12 @@
 					var jsTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 					info.jsTimeZone = jsTimeZone ? jsTimeZone : null;
 				}
-				info.utcOffset = (new Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
-				info.utcDSTOffset = (new Date(new Date().getFullYear(), 6, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
+				// Standard time has the smaller UTC offset, regardless of hemisphere.
+				var year = new Date().getFullYear();
+				var januaryOffset = new Date(year, 0, 1).getTimezoneOffset() / -60;
+				var julyOffset = new Date(year, 6, 1).getTimezoneOffset() / -60;
+				info.utcOffset = Math.min(januaryOffset, julyOffset);
+				info.utcDSTOffset = Math.max(januaryOffset, julyOffset);
 				info.browserWidth =  window.innerWidth || document.body.offsetWidth;
 				info.browserHeight =  window.innerHeight || document.body.offsetHeight;
 				info.hostname =  window.location.hostname;
