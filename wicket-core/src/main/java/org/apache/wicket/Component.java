@@ -32,6 +32,7 @@ import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.util.lang.WicketObjects;
@@ -2129,6 +2130,33 @@ public abstract class Component
 		}
 	}
 
+	private String markupNotFoundMessage(String prefix)
+	{
+		StringBuilder message = new StringBuilder(prefix).append(toString());
+		Page page = findPage();
+		if (page != null)
+		{
+			message.append(", page: ")
+				.append(Classes.name(page.getPageClass()))
+				.append(", path: ")
+				.append(getPageRelativePath());
+		}
+		else
+		{
+			message.append(", path: ").append(getPath());
+		}
+		if (parent != null &&
+			getRequestCycle().find(IPartialPageRequestHandler.class).isPresent())
+		{
+			message.append(". It was added to an Ajax update, but the markup of its parent ")
+				.append(parent.getPageRelativePath())
+				.append(" has no tag with wicket:id=\"")
+				.append(getId())
+				.append("\"");
+		}
+		return message.toString();
+	}
+
 	/**
 	 * Performs a render of this component as part of a Page level render process.
 	 */
@@ -2138,7 +2166,8 @@ public abstract class Component
 		IMarkupFragment markup = getMarkup();
 		if (markup == null)
 		{
-			throw new MarkupNotFoundException("Markup not found for Component: " + toString());
+			throw new MarkupNotFoundException(
+				markupNotFoundMessage("Markup not found for Component: "));
 		}
 
 		// MarkupStream is an Iterator for the markup
@@ -2288,7 +2317,7 @@ public abstract class Component
 		final IMarkupFragment markup = getMarkup();
 		if (markup == null)
 		{
-			throw new MarkupException("Markup not found. Component: " + toString());
+			throw new MarkupException(markupNotFoundMessage("Markup not found. Component: "));
 		}
 
 		final MarkupStream markupStream = new MarkupStream(markup);
