@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.mock.MockApplication;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 
 class BaseWicketTesterTest {
 
@@ -199,6 +202,56 @@ class BaseWicketTesterTest {
 		// Assert
 		SoftAssertions.assertSoftly(sa -> {
 			sa.assertThat(components).isEmpty();
+		});
+	}
+
+	@Test
+	void executeBehavior_whenBehaviorFoundByType_executesIt() {
+		// Arrange
+		var panel = new ExecuteBehaviorTestPanel("id");
+		tester.startComponentInPage(panel);
+
+		// Act
+		tester.executeBehavior(panel.get("link"),
+			ExecuteBehaviorTestPanel.CountingBehavior.class);
+
+		// Assert
+		SoftAssertions.assertSoftly(sa -> {
+			sa.assertThat(panel.getCount()).isEqualTo(1);
+		});
+	}
+
+	@Test
+	void executeBehavior_whenNoBehaviorOfType_failsWithClearMessage() {
+		// Arrange
+		var panel = new ExecuteBehaviorTestPanel("id");
+		tester.startComponentInPage(panel);
+
+		// Act
+		var failure = assertThrows(AssertionFailedError.class, () -> tester
+			.executeBehavior(panel.get("link"), ExecuteBehaviorTestPanel.OtherBehavior.class));
+
+		// Assert
+		SoftAssertions.assertSoftly(sa -> {
+			sa.assertThat(failure.getMessage()).contains("has no behavior of type");
+		});
+	}
+
+	@Test
+	void executeBehavior_whenMultipleBehaviorsOfType_failsWithClearMessage() {
+		// Arrange
+		var panel = new ExecuteBehaviorTestPanel("id");
+		tester.startComponentInPage(panel);
+		panel.get("link").add(new ExecuteBehaviorTestPanel.CountingBehavior());
+
+		// Act
+		var failure = assertThrows(AssertionFailedError.class, () -> tester
+			.executeBehavior(panel.get("link"),
+				ExecuteBehaviorTestPanel.CountingBehavior.class));
+
+		// Assert
+		SoftAssertions.assertSoftly(sa -> {
+			sa.assertThat(failure.getMessage()).contains("has 2 behaviors of type");
 		});
 	}
 
