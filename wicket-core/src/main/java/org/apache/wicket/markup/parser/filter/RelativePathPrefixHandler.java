@@ -74,6 +74,90 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			"action" };
 
 	/**
+	 * Whether a URL is relative and so needs a context-relative rewrite: it is not absolute
+	 * (does not start with {@code /}), has no scheme (contains no {@code :}) and is not a
+	 * fragment (does not start with {@code #}).
+	 *
+	 * @param url
+	 *            the URL to check
+	 * @return {@code true} if the URL is relative
+	 */
+	private static boolean isRelativeUrl(final String url)
+	{
+		return (url != null) && (url.startsWith("/") == false) && (!url.contains(":"))
+			&& !(url.startsWith("#"));
+	}
+
+	/**
+	 * Whether a {@code srcset} value holds at least one relative URL. A srcset value is a
+	 * comma-separated list of {@code url descriptor} pairs, so each candidate URL is checked
+	 * on its own.
+	 *
+	 * @param srcset
+	 *            the srcset attribute value
+	 * @return {@code true} if at least one candidate URL is relative
+	 */
+	private static boolean hasRelativeSrcsetEntry(final String srcset)
+	{
+		for (String candidate : srcset.split(","))
+		{
+			String trimmedCandidate = candidate.trim();
+			if (trimmedCandidate.isEmpty())
+			{
+				continue;
+			}
+			String url = trimmedCandidate.split("\\s+", 2)[0];
+			if (isRelativeUrl(url))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Rewrites the relative URLs in a {@code srcset} attribute value, keeping each
+	 * candidate's descriptor. Absolute URLs, data URIs and fragments are left alone, like
+	 * the single-URL attributes above.
+	 *
+	 * @param srcset
+	 *            the srcset attribute value
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @return the srcset value with relative URLs rewritten
+	 */
+	private static String rewriteSrcset(final String srcset, final RequestCycle requestCycle)
+	{
+		StringBuilder rewritten = new StringBuilder();
+		boolean first = true;
+		for (String candidate : srcset.split(","))
+		{
+			String trimmedCandidate = candidate.trim();
+			if (trimmedCandidate.isEmpty())
+			{
+				continue;
+			}
+			if (first == false)
+			{
+				rewritten.append(", ");
+			}
+			first = false;
+			String[] parts = trimmedCandidate.split("\\s+", 2);
+			String url = parts[0];
+			if (isRelativeUrl(url))
+			{
+				url = UrlUtils.rewriteToContextRelative(url, requestCycle);
+			}
+			rewritten.append(url);
+			if ((parts.length > 1) && (parts[1].isEmpty() == false))
+			{
+				rewritten.append(' ').append(parts[1]);
+			}
+		}
+		return rewritten.toString();
+	}
+
+	/**
 	 * Behavior that adds a prefix to src, href and background attributes to make them
 	 * context-relative
 	 */
@@ -89,11 +173,20 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			{
 				String attrValue = tag.getAttributes().getString(attrName);
 
-				if ((attrValue != null) && (attrValue.startsWith("/") == false)
-					&& (!attrValue.contains(":")) && !(attrValue.startsWith("#")))
+				if (isRelativeUrl(attrValue))
 				{
 					tag.getAttributes().put(attrName,
 						UrlUtils.rewriteToContextRelative(attrValue, RequestCycle.get()));
+				}
+			}
+
+			String srcset = tag.getAttributes().getString("srcset");
+			if (srcset != null)
+			{
+				String rewrittenSrcset = rewriteSrcset(srcset, RequestCycle.get());
+				if (rewrittenSrcset.equals(srcset) == false)
+				{
+					tag.getAttributes().put("srcset", rewrittenSrcset);
 				}
 			}
 		}
@@ -146,24 +239,32 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		
 		// Work out whether we have any attributes that require us to add a
 		// behavior that prepends the relative path.
+		boolean needsBehavior = false;
 		for (String attrName : attributeNames)
 		{
 			String attrValue = tag.getAttributes().getString(attrName);
-			if ((attrValue != null) && (attrValue.startsWith("/") == false)
-				&& (!attrValue.contains(":")) && !(attrValue.startsWith("#")))
+			if (isRelativeUrl(attrValue))
 			{
-				if (tag.getId() == null)
-				{
-					tag.setId(getWicketRelativePathPrefix(null)
-						+ getRequestUniqueId());
-					tag.setAutoComponentTag(true);
-				}
-
-				tag.addBehavior(RELATIVE_PATH_BEHAVIOR);
-				tag.setModified(true);
-				
+				needsBehavior = true;
 				break;
 			}
+		}
+		if (needsBehavior == false)
+		{
+			String srcset = tag.getAttributes().getString("srcset");
+			needsBehavior = (srcset != null) && hasRelativeSrcsetEntry(srcset);
+		}
+		if (needsBehavior)
+		{
+			if (tag.getId() == null)
+			{
+				tag.setId(getWicketRelativePathPrefix(null)
+					+ getRequestUniqueId());
+				tag.setAutoComponentTag(true);
+			}
+
+			tag.addBehavior(RELATIVE_PATH_BEHAVIOR);
+			tag.setModified(true);
 		}
 
 		return tag;
