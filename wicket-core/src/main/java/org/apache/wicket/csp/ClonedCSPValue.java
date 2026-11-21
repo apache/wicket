@@ -59,6 +59,11 @@ public class ClonedCSPValue implements CSPRenderable
 		return values.stream().map(r -> r.render(settings, cycle)).collect(Collectors.joining(" "));
 	}
 
+	boolean isCloneOf(CSPHeaderConfiguration configuration, CSPDirective directive)
+	{
+		return headerConfiguration == configuration && sourceDirective == directive;
+	}
+
 	@Override
 	public String toString()
 	{

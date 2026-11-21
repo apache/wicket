@@ -28,6 +28,7 @@ import static org.apache.wicket.csp.CSPDirectiveSrcValue.NONE;
 import static org.apache.wicket.csp.CSPDirectiveSrcValue.SELF;
 import static org.apache.wicket.csp.CSPDirectiveSrcValue.WILDCARD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.net.URI;
@@ -354,6 +355,107 @@ class ContentSecurityPolicySettingsTest extends WicketTestCase
 		assertEquals(childSrc, frameSrc);
 	}
 
+	@Test
+	void testRemoveChildSrcAlsoRemovesTheFrameSrcCopy()
+	{
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
+		settings.blocking().strict().remove(CHILD_SRC);
+
+		String header = blockingHeader();
+		assertNull(headerDirective(header, "child-src"));
+		assertNull(headerDirective(header, "frame-src"));
+		assertEquals("'self'", headerDirective(header, "img-src"));
+	}
+
+	@Test
+	void testRemoveChildSrcKeepsFrameSrcValuesAddedAfterIt()
+	{
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
+		settings.blocking().strict().add(FRAME_SRC, "https://wicket.apache.org").remove(CHILD_SRC);
+
+		String header = blockingHeader();
+		assertNull(headerDirective(header, "child-src"));
+		assertEquals("https://wicket.apache.org", headerDirective(header, "frame-src"));
+	}
+
+	@Test
+	void testRemoveChildSrcKeepsFrameSrcSetBeforeIt()
+	{
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
+		settings.blocking()
+			.clear()
+			.add(FRAME_SRC, "https://wicket.apache.org")
+			.add(CHILD_SRC, SELF)
+			.remove(CHILD_SRC);
+
+		String header = blockingHeader();
+		assertNull(headerDirective(header, "child-src"));
+		assertEquals("https://wicket.apache.org", headerDirective(header, "frame-src"));
+	}
+
+	@Test
+	void testRemoveChildSrcWithoutFrameSrc()
+	{
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
+		settings.blocking().strict().remove(FRAME_SRC).remove(CHILD_SRC);
+
+		String header = blockingHeader();
+		assertNull(headerDirective(header, "child-src"));
+		assertNull(headerDirective(header, "frame-src"));
+		assertEquals("'self'", headerDirective(header, "img-src"));
+	}
+
+	@Test
+	void testRemoveChildSrcKeepsFrameSrcCopyOfAnotherDirective()
+	{
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
+		CSPHeaderConfiguration blocking = settings.blocking();
+		blocking.strict().add(IMG_SRC, "https://wicket.apache.org");
+		blocking.add(FRAME_SRC, new ClonedCSPValue(blocking, IMG_SRC)).remove(CHILD_SRC);
+
+		String header = blockingHeader();
+		assertNull(headerDirective(header, "child-src"));
+		assertEquals("'self' https://wicket.apache.org", headerDirective(header, "frame-src"));
+	}
+
+	@Test
+	void testRemoveChildSrcKeepsFrameSrcCopyOfChildSrcOfAnotherConfiguration()
+	{
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
+		CSPHeaderConfiguration other = new CSPHeaderConfiguration().add(CHILD_SRC,
+			"https://wicket.apache.org");
+		settings.blocking()
+			.strict()
+			.add(FRAME_SRC, new ClonedCSPValue(other, CHILD_SRC))
+			.remove(CHILD_SRC);
+
+		String header = blockingHeader();
+		assertNull(headerDirective(header, "child-src"));
+		assertEquals("https://wicket.apache.org", headerDirective(header, "frame-src"));
+	}
+
+	@Test
+	void testRemoveFrameSrcLeavesChildSrc()
+	{
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
+		settings.blocking().strict().remove(FRAME_SRC);
+
+		String header = blockingHeader();
+		assertEquals("'self'", headerDirective(header, "child-src"));
+		assertNull(headerDirective(header, "frame-src"));
+	}
+
+	@Test
+	void testChildSrcAddedAfterRemoveIsCopiedIntoFrameSrcAgain()
+	{
+		ContentSecurityPolicySettings settings = tester.getApplication().getCspSettings();
+		settings.blocking().strict().remove(CHILD_SRC).add(CHILD_SRC, "https://wicket.apache.org");
+
+		String header = blockingHeader();
+		assertEquals("https://wicket.apache.org", headerDirective(header, "child-src"));
+		assertEquals("https://wicket.apache.org", headerDirective(header, "frame-src"));
+	}
+
 	@ParameterizedTest
 	@ValueSource(strings = {"blob", "data", "mediastream", "filesystem", "https"})
 	void testConstantValues_whenValidConstant_acceptedByConfigurer(String source)
@@ -381,6 +483,21 @@ class ContentSecurityPolicySettingsTest extends WicketTestCase
 		assertThrows(IllegalArgumentException.class, () -> settings.add(IMG_SRC, source + ":"));
 	}
 
+
+	private String blockingHeader()
+	{
+		tester.executeUrl("/");
+		return tester.getLastResponse().getHeader(CSPHeaderMode.BLOCKING.getHeader());
+	}
+
+	private String headerDirective(String header, String name)
+	{
+		return Stream.of(header.split("; "))
+			.filter(directive -> directive.startsWith(name + " "))
+			.map(directive -> directive.substring(name.length() + 1))
+			.findFirst()
+			.orElse(null);
+	}
 
 	private String renderDirective(List<CSPRenderable> values,
 		ContentSecurityPolicySettings settings, RequestCycle cycle)
