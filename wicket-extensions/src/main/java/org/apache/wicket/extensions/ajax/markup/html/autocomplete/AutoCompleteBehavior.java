@@ -31,7 +31,12 @@ import org.apache.wicket.util.lang.Args;
 /**
  * This behavior builds on top of {@link AbstractAutoCompleteBehavior} by introducing the concept of
  * a {@link IAutoCompleteRenderer} to make response writing easier.
- * 
+ * <p>
+ * When a choice is selected, a {@code wicket-autocomplete-select} event is dispatched on the
+ * component this behavior is attached to. A listener can change the value copied into it or leave
+ * it unchanged, see {@link AbstractAutoCompleteRenderer} for the event and for how to register a
+ * listener that survives re-rendering.
+ *
  * @param <T>
  * 
  * @see IAutoCompleteRenderer

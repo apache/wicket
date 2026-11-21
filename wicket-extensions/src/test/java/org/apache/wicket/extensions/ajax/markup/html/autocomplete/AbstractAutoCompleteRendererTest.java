@@ -16,23 +16,61 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class AbstractAutoCompleteRendererTest extends WicketTestCase
 {
 	@Test
 	void escapeOnselectJSExpression()
 	{
-		var renderer = new Renderer("alert('hello');");
+		var renderer = new Renderer("alert('hello');", null);
 		MockWebResponse response = new MockWebResponse();
 		renderer.render("foo", response, null);
 		assertThat(response.getTextResponse()).contains(
 			"<li textvalue=\"foo\" onselect=\"alert(&#039;hello&#039;);\">foo</li>");
+	}
+
+	@Test
+	void choiceDataIsWrittenAsEscapedDataAttributes()
+	{
+		Map<String, Object> data = new LinkedHashMap<>();
+		data.put("city", "\"' onmouseover='alert(1)");
+		data.put("zip-code", 1234);
+		data.put("street", null);
+		var renderer = new Renderer(null, data);
+		MockWebResponse response = new MockWebResponse();
+		renderer.render("foo", response, null);
+		assertThat(response.getTextResponse()).hasToString(
+			"<li textvalue=\"foo\" data-city=\"&quot;&#039; onmouseover=&#039;alert(1)\" " +
+				"data-zip-code=\"1234\">foo</li>");
+	}
+
+	@Test
+	void choiceWithoutDataHasNoExtraAttributes()
+	{
+		var renderer = new Renderer(null, null);
+		MockWebResponse response = new MockWebResponse();
+		renderer.render("foo", response, null);
+		assertThat(response.getTextResponse()).hasToString("<li textvalue=\"foo\">foo</li>");
+	}
+
+	@Test
+	void choiceDataNameThatIsNotAPlainDataNameIsRejected()
+	{
+		var renderer = new Renderer(null, Map.of("x onclick", "alert(1)"));
+		MockWebResponse response = new MockWebResponse();
+		assertThatThrownBy(() -> renderer.render("foo", response, null))
+			.isInstanceOf(IllegalArgumentException.class);
+		assertThat(response.getTextResponse().toString()).doesNotContain("onclick");
 	}
 
 	static class Renderer extends AbstractAutoCompleteRenderer<String>
@@ -40,15 +78,25 @@ public class AbstractAutoCompleteRendererTest extends WicketTestCase
 
 		final String expression;
 
-		Renderer(String expression)
+		final Map<String, ?> data;
+
+		Renderer(String expression, Map<String, ?> data)
 		{
 			this.expression = expression;
+			this.data = data;
 		}
 
 		@Override
+		@SuppressWarnings("removal")
 		protected CharSequence getOnSelectJavaScriptExpression(String item)
 		{
 			return expression;
+		}
+
+		@Override
+		protected Map<String, ?> getChoiceData(String item)
+		{
+			return data;
 		}
 
 		@Override
