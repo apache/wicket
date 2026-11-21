@@ -147,6 +147,7 @@ public class UrlRenderer
 		{
 			Url base = new Url(baseUrl);
 			base.resolveRelative(url);
+			base.setFragment(url.getFragment());
 			path = new StringBuilder(base.toString());
 		}
 
