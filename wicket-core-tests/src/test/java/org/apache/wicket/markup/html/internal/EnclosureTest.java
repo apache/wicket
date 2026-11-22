@@ -350,7 +350,7 @@ class EnclosureTest extends WicketTestCase
 	@Test
 	void testRenderPage13() throws Exception
 	{
-		tester = new WicketTester(new MockApplication()
+		tester = newWicketTester(new MockApplication()
 		{
 			@Override
 			protected void init()

@@ -30,7 +30,45 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 
 /**
- * A simple "transparent" markup container.
+ * A container whose markup can hold components that were added to its parent instead of to the
+ * container itself. When a tag in the container's markup has a {@code wicket:id} that is not one of
+ * the container's own children, the component is looked up in the container's parent.
+ * <p>
+ * Use it when a tag needs to be a component, for example to change its attributes, while the
+ * components inside the tag stay where they are in the component hierarchy. A common case is a CSS
+ * class on the {@code <body>} tag of a page:
+ * 
+ * <pre>{@code
+ * <body wicket:id="body">
+ *     <h1 wicket:id="title"></h1>
+ * </body>
+ * }</pre>
+ * 
+ * <pre>{@code
+ * add(new TransparentWebMarkupContainer("body").add(AttributeModifier.append("class", "dark")));
+ * add(new Label("title", "Hello"));
+ * }</pre>
+ * 
+ * With a {@link WebMarkupContainer} in its place, rendering fails because the container has no
+ * child {@code "title"}.
+ * <p>
+ * Things to know:
+ * <ul>
+ * <li>A component rendered this way is still a child of the parent. {@code get("title")} on the
+ * container returns {@code null}, and the component's path does not contain the container's id.</li>
+ * <li>A child added to the container itself is used before a component of the parent with the same
+ * id.</li>
+ * <li>Hiding the container hides everything in its markup, including the parent's components.</li>
+ * <li>In an Ajax request, a component inside the container's markup can be added to the
+ * {@code AjaxRequestTarget} on its own. Adding the container re-renders the components in its
+ * markup, with their header contributions.</li>
+ * <li>With markup inheritance, a base page can put the container around {@code <wicket:child/>}.
+ * Components that a subclass adds to the page, with their markup in {@code <wicket:extend>},
+ * render inside the container.</li>
+ * <li>The lookup goes to the container's parent only. Inside the body of a
+ * {@link org.apache.wicket.markup.html.border.Border}, the parent is the border, so the components
+ * must be added to the border, not to the page.</li>
+ * </ul>
  * 
  * @author Juergen Donnerstag
  */

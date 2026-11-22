@@ -58,6 +58,26 @@ image::./img/simple-listview-screenshot.png[]
 
 In this example we have displayed the full name of two Person's instances. The most interesting part of the code is the implementation of method populateItem where parameter item is the current child component created by ListView and its model contains the corresponding element of the list. Please note that inside populateItem we must add nested components to the _item_ object and not directly to the _ListView_.
 
+=== Repeating multiple table rows with wicket:container
+
+Use `<wicket:container>` to bind a single `ListView` to a group of rows. A `<tbody>` can contain `<tr>` elements directly, so the template uses a Wicket tag to group the rows without introducing an HTML wrapper such as `<span>`.
+
+[source,html]
+----
+<table wicket:id="results">
+    <tbody>
+        <wicket:container wicket:id="entries">
+            <tr><td>Summary</td></tr>
+            <tr><td>Details</td></tr>
+        </wicket:container>
+    </tbody>
+</table>
+----
+
+Bind the `ListView` with ID `entries` inside a `WebMarkupContainer` with ID `results`. Wicket renders the two rows for each list item. With the default deployment configuration, Wicket strips the `<wicket:container>` tags and leaves the rows directly inside `<tbody>`.
+
+Ajax needs a rendered HTML element to replace, so a stripped `<wicket:container>` cannot serve as the replacement target. Wicket does not support adding a `ListView` directly to the Ajax request target. To refresh the rows with Ajax, call `setOutputMarkupId(true)` on the `results` component and add it to the `AjaxRequestTarget` to replace the whole table.
+
 === ListView and Form
 
 By default _ListView_ replaces its children components with new instances every time is rendered. Unfortunately this behavior is a problem if _ListView_ is inside a form and it contains form components. The problem is caused by the fact that children components are replaced by new ones before form is rendered, hence they can't keep their input value if validation fails and, furthermore, their feedback messages can not be displayed.

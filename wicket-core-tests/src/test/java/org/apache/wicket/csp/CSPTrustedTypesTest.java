@@ -114,7 +114,7 @@ class CSPTrustedTypesTest extends WicketTestCase
 
 	private String renderWithoutCsp()
 	{
-		WicketTester withoutCsp = new WicketTester(new MockApplication());
+		WicketTester withoutCsp = newWicketTester(new MockApplication());
 		try
 		{
 			withoutCsp.startPage(AjaxPage.class);
