@@ -1,0 +1,49 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.task-board .columns {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(10em, 1fr));
+	gap: 0.75em;
+}
+
+.task-board .column {
+	min-height: 12em;
+	padding: 0.5em;
+	border-radius: var(--mantine-radius-md);
+	background: var(--mantine-color-gray-0);
+	border: 2px solid transparent;
+}
+
+.task-board .column.over {
+	border-color: var(--mantine-color-blue-3);
+}
+
+.task-board .card {
+	cursor: grab;
+	touch-action: none;
+}
+
+.task-board .card.dragging {
+	position: relative;
+	z-index: 10;
+	cursor: grabbing;
+	box-shadow: var(--mantine-shadow-md);
+}
+
+.task-board .notice {
+	margin-bottom: 0.75em;
+}

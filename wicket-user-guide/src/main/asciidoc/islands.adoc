@@ -1,0 +1,44 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+Wicket Islands embeds components of a JavaScript framework in Wicket pages. An island is one
+component in two halves. On the server it is an ordinary Wicket component with a model. In the
+browser it is an ordinary framework component, its _peer_, which renders the island's body and
+handles the interaction. The server half decides what the peer gets to see and which operations
+it may invoke; the peer decides how the island looks and feels.
+
+The Wicket developer adds the island to a page like any component, gives it a model, and
+registers the calls the peer may make. The frontend developer writes a framework component that
+receives typed props and calls the server by name. Neither has to know the other's world: the
+peer never sees page ids, component paths or behavior URLs, and the Java code never touches the
+DOM the peer renders.
+
+Islands are worth their build setup when a part of a page needs rich client-side interaction
+that would be laborious with Wicket Ajax: drag and drop, a rich text editor, an interactive chart,
+an elaborate picker, especially when a good component for it already exists in the JavaScript
+ecosystem. Wrapping a small JavaScript widget around a Wicket component, as described in
+<<jsintegration.adoc#_an_example_of_integration_with_javascript,the chapter on integration with
+JavaScript>>, remains the simpler choice where it suffices.
+
+WARNING: Wicket Islands is experimental. It lives in the `wicket-experimental` modules and its
+API may still change. React is the only framework with an adapter so far, and the npm packages
+of the client side are not published to the npm registry yet: an application links them from a
+Wicket source tree, as the examples do.
+
+Islands are rendered in the browser only. The server writes an empty host element and the props;
+the peer fills the host once its JavaScript module has loaded. Content that must be there without
+JavaScript, for search engines or for the first paint, does not belong in an island.
