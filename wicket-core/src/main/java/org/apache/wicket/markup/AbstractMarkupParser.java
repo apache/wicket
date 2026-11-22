@@ -189,8 +189,10 @@ public abstract class AbstractMarkupParser
 
 		if (xmlParser.getEncoding() == null)
 		{
-			String a = "The markup file does not have a XML declaration prolog with 'encoding' attribute";
-			String b = ". E.g. <?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
+			String a = "The markup file declares its encoding neither in a XML declaration prolog " +
+				"nor in a <meta charset> tag";
+			String b = ". E.g. <?xml version=\"1.0\" encoding=\"UTF-8\" ?> or " +
+				"<meta charset=\"UTF-8\">";
 
 			if (markupSettings.getThrowExceptionOnMissingXmlDeclaration())
 			{
@@ -198,8 +200,8 @@ public abstract class AbstractMarkupParser
 			}
 			else
 			{
-				log.debug(a + ":" + markupResourceStream.getResource() + ". It is safer to use it" +
-					b);
+				log.debug(a + ":" + markupResourceStream.getResource() +
+					". It is safer to declare it" + b);
 			}
 		}
 
