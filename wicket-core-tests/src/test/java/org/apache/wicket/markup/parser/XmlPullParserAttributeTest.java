@@ -92,7 +92,8 @@ class XmlPullParserAttributeTest
 			Arguments.of("<input a / b>", Map.of("a", "", "b", "")),
 			Arguments.of("<a b=>", Map.of("b", "")),
 			Arguments.of("<a b= c=d>", Map.of("b", "c=d")),
-			Arguments.of("<a b = \"c\">", Map.of("b", "c")));
+			Arguments.of("<a b = \"c\">", Map.of("b", "c")),
+			Arguments.of("<a\rb=1\fc=2\td\ne>", Map.of("b", "1", "c", "2", "d", "", "e", "")));
 	}
 
 	@ParameterizedTest

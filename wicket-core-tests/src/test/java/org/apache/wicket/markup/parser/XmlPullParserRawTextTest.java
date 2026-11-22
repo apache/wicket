@@ -17,7 +17,9 @@
 package org.apache.wicket.markup.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +44,8 @@ class XmlPullParserRawTextTest
 			"<script type=\"application/javascript\">", "<script type=\"application/ecmascript\">",
 			"<script type=\"module\">", "<script type=\"importmap\">",
 			"<script type=\"speculationrules\">", "<script type=\"application/json\">",
-			"<script type=\"application/ld+json\">", "<script data-type=\"x\">",
+			"<script type=\"application/ld+json\">", "<script type=\"text/json\">",
+			"<script data-type=\"x\">",
 			"<script src=\"x.js?type=x\">", "<script language=\"JavaScript\">" })
 	void scriptOfAScriptOrDataTypeHasRawTextBody(String openTag) throws Exception
 	{
@@ -95,6 +98,19 @@ class XmlPullParserRawTextTest
 	{
 		assertEquals(List.of("script", "BODY " + CODE, "/SCRIPT"),
 			tokens("<script>" + CODE + "</SCRIPT >"));
+	}
+
+	@Test
+	void scriptWhoseEndTagIsNotClosedIsRejected()
+	{
+		XmlPullParser parser = new XmlPullParser();
+
+		assertThrows(ParseException.class, () -> {
+			parser.parse("<script>" + CODE + "</script");
+			while (parser.next() != HttpTagType.NOT_INITIALIZED)
+			{
+			}
+		});
 	}
 
 	@ParameterizedTest

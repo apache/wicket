@@ -205,18 +205,10 @@ public final class XmlPullParser implements IXmlPullParser
 				break;
 			}
 		}
-		final int lastPos = pos + 2;
 
 		input.setPosition(pos);
 		lastText = input.getSubstring(startIndex, pos);
 		lastType = HttpTagType.BODY;
-
-		// Check that the tag is properly closed
-		if (input.find('>', lastPos + tagNameLen) == -1)
-		{
-			throw new ParseException(skipUntilText + " tag not closed" + getLineAndColumnText(),
-				startIndex);
-		}
 
 		// Reset the state variable
 		skipUntilText = null;

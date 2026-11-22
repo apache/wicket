@@ -88,6 +88,14 @@ public class FullyBufferedReaderTest
 	}
 
 	@Test
+	public void searchCanStartInsideSingleQuotes() throws ParseException
+	{
+		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader("a>b'>c");
+
+		assertEquals(4, fullyBufferedReader.findOutOfQuotes('>', 0, '\''));
+	}
+
+	@Test
 	public void quotationCharThatIsNotAQuoteIsIgnored() throws ParseException
 	{
 		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader("a>b\">c");
