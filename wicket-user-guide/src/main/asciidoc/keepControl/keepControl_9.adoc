@@ -56,3 +56,44 @@ _child_ attribute supports also nested components with a colon-separated path:
 WARNING: _<wicket:enclosure>_ is nice and prevents that users have to add boilerplate to their application. But it is not without problems. The child components are children in the markup, but the auto component generated for the enclosure tag will not magically re-parent the child components. Thus the markup hierarchy and the component hierarchy will be out of sync. The automatically created enclosure container will be created along side its "children" with both attached to the very same parent container. That leads to a tricky situation since e.g. _onBeforeRender()_ will be called for enclosure children even if the enclosure is made invisible by it controlling child.
 On top auto components cannot keep any state. A new instance is created during each render process and automatically deleted at the end. That implies that we cannot prevent _validation()_ from being called, since _validation()_ is called before the actual render process has started.
 Where any of these problems apply, you may replace the tag and manually add a https://nightlies.apache.org/wicket/apidocs/12.x/org.apache.wicket.core/org/apache/wicket/markup/html/basic/EnclosureContainer.html[EnclosureContainer] which basically does the same. But instead of adding the children to the Page, Panel, whatever, you must add the children to this container in order to keep the component hierarchy in sync. 
+
+NOTE: When using the `<wicket:enclosure>` tag, adding only the controlling
+child to an Ajax request target updates that child alone. To refresh the whole
+enclosure, wrap it in a `WebMarkupContainer`, call `setOutputMarkupId(true)` on
+the container, and add the container to the Ajax request target.
+
+=== Inline enclosures with the wicket:enclosure attribute
+
+Add the `wicket:enclosure` attribute to an HTML element that contains child
+elements, such as a `<div>` or `<tr>`. Wicket shows or hides the entire HTML
+element according to the visibility of a controlling Wicket component inside
+it.
+
+If the element contains a single Wicket component, leave the attribute value
+empty to let Wicket find that component.
+
+[source,html]
+----
+<div wicket:enclosure="">
+    <span>Total amount: </span><span wicket:id="totalAmount"></span>
+</div>
+----
+
+If the element contains several Wicket components, specify the ID of the
+component that should control visibility. In the example below, `totalAmount`
+controls the entire `<div>`.
+
+[source,html]
+----
+<div wicket:enclosure="totalAmount">
+    <span>Total amount: </span><span wicket:id="totalAmount"></span><br/>
+    <span>Expected delivery date: </span><span wicket:id="delivDate"></span>
+</div>
+----
+
+For a nested controlling component, use its relative component path, such as
+`totalAmountContainer:totalAmount`.
+
+An inline enclosure can be refreshed through Ajax. When the controlling
+component is added to the Ajax response, Wicket can refresh the entire
+enclosure, including the surrounding HTML element.

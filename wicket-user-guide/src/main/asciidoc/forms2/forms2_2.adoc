@@ -29,6 +29,32 @@ email.add(EmailAddressValidator.getInstance());
 
 Wicket comes with a set of built-in validators that should suit most of our needs. We will see them later in this chapter.
 
+=== Labeling form fields with wicket:for
+
+Use `wicket:for` on an HTML `<label>` to associate it with a Wicket form field.
+Set its value to the field's component ID. In this example, both the label and
+the input refer to the `name` field.
+
+[source,html]
+----
+<label wicket:for="name"><wicket:label>Name</wicket:label>:</label>
+<input wicket:id="name" type="text"/>
+----
+
+Wicket renders an HTML `for` attribute on the label that matches the input's
+HTML `id`. This lets users click the label to focus the input.
+
+The `<wicket:label>` tag displays the field's label text. For example, a label
+model set with `setLabel(Model.of("First Name"))` displays “First Name”. If the
+model provides no text, Wicket looks for a localized label using the field's
+component ID as the resource key. In this example, if neither source provides
+text, Wicket displays “Name” from the body of `<wicket:label>`.
+
+Use a colon-separated component path in `wicket:for` when the field is nested
+in another container. Use `..` to refer to a parent container. Wicket adds
+the CSS classes `required`, `error`, and `disabled` by default when the field
+is required, has failed validation, or is disabled, respectively.
+
 === Feedback messages and localization
 
 Wicket generates a feedback message for each field that doesn't satisfy one of its validation rules. For example the message generated when a required field is left empty is the following
