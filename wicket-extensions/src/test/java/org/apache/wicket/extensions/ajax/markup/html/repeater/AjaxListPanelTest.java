@@ -61,10 +61,10 @@ class AjaxListPanelTest extends WicketTestCase
 		tester.startComponentInPage(list);
 		
 		tester.executeBehavior(behavior);
-		assertTrue(tester.getLastResponseAsString().contains("Wicket.DOM.add(Wicket.DOM.get('container2'), '<div wicket:id=\\\"repeater\\\" id=\\\"id13\\\"/>');"));
+		assertTrue(tester.getLastResponseAsString().contains("Wicket.DOM.add(Wicket.DOM.get('container_2'), '<div wicket:id=\\\"repeater\\\" id=\\\"id1_3\\\"/>');"));
 
 		tester.executeBehavior(behavior);
-		assertTrue(tester.getLastResponseAsString().contains("Wicket.DOM.remove(Wicket.DOM.get('id13'));"));
+		assertTrue(tester.getLastResponseAsString().contains("Wicket.DOM.remove(Wicket.DOM.get('id1_3'));"));
 	}
 
 	/**

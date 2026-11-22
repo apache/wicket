@@ -51,7 +51,7 @@ class MarkupIdGeneratorTest extends WicketTestCase
 		link.setOutputMarkupId(true);
 		page.add(link);
 
-		assertEquals("link1", link.getMarkupId());
+		assertEquals("link_1", link.getMarkupId());
 	}
 
 	@Test
