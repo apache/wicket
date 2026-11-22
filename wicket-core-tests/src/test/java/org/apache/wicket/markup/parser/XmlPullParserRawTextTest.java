@@ -18,6 +18,7 @@ package org.apache.wicket.markup.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -111,6 +112,22 @@ class XmlPullParserRawTextTest
 			{
 			}
 		});
+	}
+
+	@Test
+	void endTagWithTrailingSlashEndsTheRawTextAndIsRejectedWhereItIs()
+	{
+		String markup = "<script>" + CODE + "</script/>";
+		XmlPullParser parser = new XmlPullParser();
+
+		ParseException e = assertThrows(ParseException.class, () -> {
+			parser.parse(markup);
+			while (parser.next() != HttpTagType.NOT_INITIALIZED)
+			{
+			}
+		});
+		assertTrue(e.getMessage().startsWith("Malformed tag"), e.getMessage());
+		assertEquals(markup.indexOf("</script/>"), e.getErrorOffset());
 	}
 
 	@ParameterizedTest

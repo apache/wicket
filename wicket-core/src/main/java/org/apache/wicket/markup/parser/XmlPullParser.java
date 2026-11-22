@@ -49,7 +49,9 @@ import org.apache.wicket.util.value.IValueMap;
  * that does not start with a name, is rejected with a {@link ParseException}. {@code </name>} is a
  * close tag. A tag whose text ends with {@code /} is an open-close tag, also when that slash
  * directly follows an unquoted value: {@code <img src=a.png/>} has the {@code src} {@code a.png},
- * where an HTML parser would read {@code a.png/}.
+ * where an HTML parser would read {@code a.png/}. A close tag that ends with {@code /}, such as
+ * {@code </p/>}, is not well-formed in either XML or HTML and is rejected with a
+ * {@link ParseException}.
  *
  * <h2>Attributes</h2>
  * Attributes are read the way the attribute states of the
