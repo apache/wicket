@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.form.upload;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -110,6 +111,36 @@ class MultiFileUploadFieldTest extends WicketTestCase
 		tester.startPage(page);
 
 		tester.assertContains("disabled=\"disabled\"");
+	}
+
+	/**
+	 * https://github.com/apache/wicket/issues/1954
+	 */
+	@Test
+	void captionIsHiddenWhenNoFilesAreSelected()
+	{
+		tester.startPage(new TestPage(new ListModel<>(new ArrayList<FileUpload>())));
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains("wicket-mfu-caption"), response);
+		assertTrue(response.matches("(?s).*class=\"wicket-mfu-caption\"[^>]*style=\"display:none\".*"), response);
+	}
+
+	/**
+	 * https://github.com/apache/wicket/issues/1954
+	 */
+	@Test
+	void captionIsShownAfterFilesAreSelected()
+	{
+		tester.startPage(new TestPage(new ListModel<>(new ArrayList<FileUpload>())));
+
+		FormTester ft = tester.newFormTester("f");
+		ft.setFile("muf", new File("target/test-classes/org/apache/wicket/markup/html/form/upload/MultiFileUploadFieldTest0.txt"), "plain/text");
+		ft.submit();
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains("wicket-mfu-caption"), response);
+		assertFalse(response.matches("(?s).*class=\"wicket-mfu-caption\"[^>]*style=\"display:none\".*"), response);
 	}
 
 	/**

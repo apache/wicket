@@ -63,6 +63,21 @@ A markup file whose meta tag names a different encoding than the default is now 
 
 A markup file with a meta charset no longer counts as having no encoding declared, so `MarkupSettings#setThrowExceptionOnMissingXmlDeclaration(true)` no longer throws for it.
 
+## Markup is parsed the way HTML parses it
+
+The markup parser now reads attributes, `<script>` and `<style>` the way the HTML tokenizer does ([#1864](https://github.com/apache/wicket/issues/1864)). Markup that parsed before can now give different attributes, and that shows in every tag Wicket writes from its parsed attributes: component tags, tags changed by a markup filter, and the `<html>` tag of a page.
+
+Whitespace inside quotes is now part of an attribute value, including Wicket's own attributes. `wicket:id="label "` refers to a component with the id `label `, so a page whose markup has stray spaces in `wicket:id`, `wicket:message` or `wicket:for` fails with "Unable to find component with id" when it renders, and `<wicket:message key="foo ">` looks up the key `foo `. Remove the spaces from the markup. For other attributes the spaces are now rendered: `class=" a "` used to come out as `class="a"`.
+
+The other changes:
+
+- An unquoted value runs up to the next whitespace. `<a href=foo/bar.html>` used to give `href="foo"` and a stray attribute `bar.html`; it now gives `href="foo/bar.html"`.
+- An attribute name keeps every character HTML allows, so `(click)`, `[value]`, `#ref`, `*ngIf` and `on:click|once` are rendered as written instead of stripped or split.
+- Text in a tag that is not an attribute is kept the way HTML recovers it: `<tag a="1" "junk">` gets an attribute named `"junk"`. A duplicate attribute is still an error.
+- A backslash no longer escapes a quote. `title="C:\dir\"` is the value `C:\dir\`; markup that used `\"` inside a quoted value now has the value end at that quote.
+- The body of a `<script>` with an empty type, a JavaScript MIME type such as `application/javascript`, or a JSON type such as `application/ld+json` is raw text and passed through untouched. Before, such a script was parsed as a template, so a Wicket component inside one is no longer found. Scripts of other types, such as `text/x-handlebars-template`, are still templates.
+- A custom element whose name only starts with `script` or `style`, such as `<script-loader>`, is parsed as markup. Before, its content was skipped up to the next `</script>` or `</style>`, Wicket components included.
+
 ## Dependencies
 
 Wicket's modules no longer bring in libraries they don't use themselves. If your application or its tests use one of these, declare it as a dependency of your own.
