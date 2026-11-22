@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 import java.util.Locale;
@@ -298,15 +297,9 @@ class WicketTesterTest extends WicketTestCase
 
 		tester.getComponentFromLastRenderedPage("ajaxLinkWithSetResponsePageClass")
 			.setEnabled(false);
-		try
-		{
-			tester.assertEnabled("ajaxLinkWithSetResponsePageClass");
-			fail("The link must not be enabled.");
-		}
-		catch (AssertionError ex)
-		{
-
-		}
+		assertThrows(AssertionError.class,
+			() -> tester.assertEnabled("ajaxLinkWithSetResponsePageClass"),
+			"The link must not be enabled.");
 	}
 
 	/**
@@ -322,15 +315,9 @@ class WicketTesterTest extends WicketTestCase
 
 		tester.getComponentFromLastRenderedPage("ajaxLinkWithSetResponsePageClass")
 			.setEnabled(true);
-		try
-		{
-			tester.assertDisabled("ajaxLinkWithSetResponsePageClass");
-			fail("The link must not be disabled.");
-		}
-		catch (AssertionError ex)
-		{
-
-		}
+		assertThrows(AssertionError.class,
+			() -> tester.assertDisabled("ajaxLinkWithSetResponsePageClass"),
+			"The link must not be disabled.");
 	}
 
 	/**
@@ -349,27 +336,13 @@ class WicketTesterTest extends WicketTestCase
 
 		FormComponent<?> bookId = (FormComponent<?>)tester
 			.getComponentFromLastRenderedPage("createForm:id");
-		try
-		{
-			// test #2: set it manually to not required
-			bookId.setRequired(false);
-			tester.assertRequired("createForm:id");
-			fail("Book ID component must not be required anymore!");
-		}
-		catch (AssertionError ex)
-		{
+		// test #2: set it manually to not required
+		bookId.setRequired(false);
+		assertThrows(AssertionError.class, () -> tester.assertRequired("createForm:id"),
+			"Book ID component must not be required anymore!");
 
-		}
-
-		try
-		{
-			// test #3: "createForm" is not a FormComponent
-			tester.assertRequired("createForm");
-		}
-		catch (AssertionError ex)
-		{
-
-		}
+		// test #3: "createForm" is not a FormComponent
+		assertThrows(AssertionError.class, () -> tester.assertRequired("createForm"));
 	}
 
 	/**

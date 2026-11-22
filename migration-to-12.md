@@ -53,6 +53,16 @@ protected void onHtmlTag(ComponentTag tag)
 
 The same method adds other attributes that belong to the whole document, such as a theme class. To render neither `lang` nor `dir`, override it without calling `super`. The `<html>` tag is not rendered again on an Ajax request, so an attribute that has to change during one, such as a theme switched by an `AjaxLink`, has to be changed in the browser with JavaScript as well.
 
+## Markup encoding from `<meta charset>`
+
+Wicket now reads the character encoding of a markup file from an HTML5 `<meta charset="...">` tag, or from `<meta http-equiv="Content-Type" content="text/html; charset=...">`, when the file has no XML declaration ([#1953](https://github.com/apache/wicket/issues/1953)). Before, it only looked at `<?xml version="1.0" encoding="..."?>` and otherwise read the file with `MarkupSettings#getDefaultMarkupEncoding()`, or the JVM default when that is not set.
+
+Like a browser, Wicket looks for the meta tag in the first 1024 bytes of the file, outside of comments, and takes the first one that names a charset the JVM supports. An XML declaration still wins over a meta tag, and a file with neither is still read with the default encoding. The meta tag stays in the rendered page.
+
+A markup file whose meta tag names a different encoding than the default is now read in the encoding of its meta tag. If its characters looked right before, the file is most likely not saved in the encoding its meta tag declares: save it in that encoding, or correct the tag.
+
+A markup file with a meta charset no longer counts as having no encoding declared, so `MarkupSettings#setThrowExceptionOnMissingXmlDeclaration(true)` no longer throws for it.
+
 ## Markup is parsed the way HTML parses it
 
 The markup parser now reads attributes, `<script>` and `<style>` the way the HTML tokenizer does ([#1864](https://github.com/apache/wicket/issues/1864)). Markup that parsed before can now give different attributes, and that shows in every tag Wicket writes from its parsed attributes: component tags, tags changed by a markup filter, and the `<html>` tag of a page.
