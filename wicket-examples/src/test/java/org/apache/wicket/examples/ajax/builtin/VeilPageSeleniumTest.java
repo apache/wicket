@@ -34,19 +34,24 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
- * Drives {@link VeilPage} in a headless Chrome, with either Ajax engine.
+ * Drives {@link VeilPage} in a headless browser, with either Ajax engine.
  * <p>
- * Needs Chrome, so it only runs with {@code -Dwicket.selenium=true}. Selenium Manager resolves
- * the driver, and the browser too when none is installed.
+ * Needs a browser, so it only runs with {@code -Dwicket.selenium=true}. It drives Chrome by
+ * default; {@code -Dwicket.selenium.browser=firefox} picks Firefox, and
+ * {@code -Dwicket.selenium.firefox=<path>} the Firefox binary. Selenium Manager resolves the
+ * driver, and the browser too when none is installed.
  */
 @EnabledIfSystemProperty(named = "wicket.selenium", matches = "true")
 class VeilPageSeleniumTest extends JettyTestCaseDecorator
@@ -153,11 +158,26 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 	{
 		super.before();
 
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless=new", "--window-size=1280,1024");
-		driver = new ChromeDriver(options);
+		driver = createDriver();
 		driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(10));
 		wait = new WebDriverWait(driver, Duration.ofSeconds(10), Duration.ofMillis(20));
+	}
+
+	private static WebDriver createDriver()
+	{
+		if ("firefox".equals(System.getProperty("wicket.selenium.browser")))
+		{
+			FirefoxOptions options = new FirefoxOptions();
+			options.addArguments("-headless", "--width=1280", "--height=1024");
+			String binary = System.getProperty("wicket.selenium.firefox");
+			if (binary != null)
+			{
+				options.setBinary(binary);
+			}
+			return new FirefoxDriver(options);
+		}
+		return new ChromeDriver(
+			new ChromeOptions().addArguments("--headless=new", "--window-size=1280,1024"));
 	}
 
 	@Override
@@ -210,6 +230,48 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 		awaitNoVeil();
 		awaitQuiet();
 		assertEquals("1", pageCounter(), "the click on the veiled page went through");
+	}
+
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void enterPressedTwiceOnAVeiledButtonSavesOnce(Engine engine)
+	{
+		open(engine);
+
+		pressTwiceOnSave(Keys.ENTER);
+	}
+
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void spacePressedTwiceOnAVeiledButtonSavesOnce(Engine engine)
+	{
+		open(engine);
+
+		pressTwiceOnSave(Keys.SPACE);
+	}
+
+	@ParameterizedTest
+	@EnumSource(Engine.class)
+	void aVeiledFieldTakesASpaceButEnterDoesNotSaveAgain(Engine engine)
+	{
+		open(engine);
+
+		WebElement note = driver.findElement(By.cssSelector(".veil-note"));
+		note.click();
+		new Actions(driver).sendKeys(Keys.TAB, Keys.ENTER).perform();
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PAGE_VEIL)));
+		new Actions(driver).keyDown(Keys.SHIFT)
+			.sendKeys(Keys.TAB)
+			.keyUp(Keys.SHIFT)
+			.sendKeys("a b", Keys.ENTER)
+			.perform();
+		assertVeiled();
+
+		awaitSaves("1");
+		awaitNoVeil();
+		awaitQuiet();
+		assertEquals("a b", note.getDomProperty("value"), "the space was not typed");
+		assertEquals("1", saves(), "Enter in the field saved again");
 	}
 
 	@ParameterizedTest
@@ -426,6 +488,44 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 		awaitNoVeil();
 	}
 
+	/**
+	 * Tabs from the note field to Save, then presses the key on Save twice, the second time
+	 * while the first save is running.
+	 */
+	private void pressTwiceOnSave(Keys key)
+	{
+		driver.findElement(By.cssSelector(".veil-note")).click();
+		new Actions(driver).sendKeys(Keys.TAB).perform();
+		assertEquals("veil-save", js().executeScript("return document.activeElement.className;"),
+			"Tab did not focus Save");
+
+		new Actions(driver).sendKeys(key).perform();
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(PAGE_VEIL)));
+		new Actions(driver).sendKeys(key).perform();
+		assertVeiled();
+
+		awaitSaves("1");
+		awaitNoVeil();
+		awaitQuiet();
+		assertEquals("1", saves(), "the key pressed under the veil saved again");
+	}
+
+	private void assertVeiled()
+	{
+		assertFalse(driver.findElements(By.cssSelector(PAGE_VEIL)).isEmpty(),
+			"the veil came down before the keys were pressed");
+	}
+
+	private String saves()
+	{
+		return driver.findElement(By.cssSelector(".save-counter")).getText();
+	}
+
+	private void awaitSaves(String value)
+	{
+		wait.until(ExpectedConditions.textToBe(By.cssSelector(".save-counter"), value));
+	}
+
 	private void assertCoveredByItsVeil(WebElement host)
 	{
 		Object result = js().executeAsyncScript("""
@@ -465,6 +565,7 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 		driver.get(String.format("http://localhost:%d/wicket-examples/ajax/veil", localPort));
 		if (isJQueryLoaded() != (engine == Engine.JQUERY))
 		{
+			awaitQuiet();
 			WebElement toggle = driver.findElement(By.partialLinkText("switch to"));
 			toggle.click();
 			wait.until(ExpectedConditions.stalenessOf(toggle));
