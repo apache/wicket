@@ -29,7 +29,8 @@
 	background: #f7f7f7;
 }
 
-.veil-keyboard {
+.veil-keyboard,
+.veil-updating {
 	max-width: 40em;
 }
 

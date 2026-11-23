@@ -50,6 +50,13 @@ import org.apache.wicket.util.lang.Args;
  * editable content, and any key during an IME composition. Other keys, Tab among them, pass, so
  * the focus can still move under the veil.
  * <p>
+ * A click that starts before the veil appears and ends on it is not lost. That happens when
+ * pressing a button takes the focus from a field whose {@code change} event sends a request: the
+ * veil comes up before the mouse button does, and the browser clicks the page instead of the
+ * button. Once the veil is lowered, the element the click was meant for gets it, unless it has
+ * been hidden or disabled meanwhile, or a new press has started outside the veil. If the response
+ * replaced the element, the one now carrying its markup id gets the click.
+ * <p>
  * The look comes from {@code wicket-veil.css} and can be overridden with the classes
  * {@code wicket-veil}, {@code wicket-veil-busy}, {@code wicket-veil-host} and
  * {@code wicket-veil-host-static}.
