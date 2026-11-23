@@ -1411,8 +1411,12 @@ public final class PropertyResolver
 					{
 						if (aField.getName().equals(expression))
 						{
-							aField.setAccessible(true);
-							return aField;
+							if (aField.trySetAccessible())
+							{
+								return aField;
+							}
+							log.debug("Cannot access field {}.{}", clz, expression);
+							return null;
 						}
 					}
 					tmp = tmp.getSuperclass();
