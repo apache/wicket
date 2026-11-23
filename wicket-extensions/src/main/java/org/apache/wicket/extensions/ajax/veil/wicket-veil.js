@@ -51,6 +51,7 @@
 	const droppedKeys = new Set();
 	let press = null;
 	let replay = null;
+	let releasedOn = null;
 	let subscribed = false;
 
 	// the veil scrolls with the content of its host, so it is moved back over the visible part
@@ -362,7 +363,11 @@
 	}
 
 	function isVeil(element) {
-		return element.classList.contains(VEIL_CLASS);
+		return element instanceof Element && element.classList.contains(VEIL_CLASS);
+	}
+
+	function hasModifier(event) {
+		return event.ctrlKey || event.metaKey || event.shiftKey || event.altKey;
 	}
 
 	function elementUnderVeil(event) {
@@ -381,11 +386,20 @@
 	}
 
 	function onMouseDown(event) {
-		if (event.button !== 0 || isVeil(event.target)) {
+		if (event.button !== 0) {
 			return;
 		}
-		press = event.target;
+		if (isVeil(event.target)) {
+			press = null;
+			return;
+		}
+		press = event.target instanceof Element ? event.target : null;
 		replay = null;
+	}
+
+	// a dragged element gets no mouseup
+	function onDragStart() {
+		press = null;
 	}
 
 	// a release on the veil makes the browser click an ancestor of the veil, not what was pressed
@@ -395,17 +409,33 @@
 		}
 		const pressed = press;
 		press = null;
-		if (pressed === null || !isVeil(event.target)) {
+		if (pressed === null || !isVeil(event.target) || hasModifier(event)) {
 			return;
 		}
+		const veil = event.target;
 		const under = elementUnderVeil(event);
 		const clicked = under !== null ? commonAncestor(pressed, under) : null;
-		if (clicked !== null && !clicked.contains(event.target)) {
+		if (clicked !== null && !clicked.contains(veil)) {
 			const withId = clicked.closest('[id]');
 			replay = {
 				element: clicked,
-				id: withId !== null && !withId.contains(event.target) ? withId.id : null
+				id: withId !== null && !withId.contains(veil) ? withId.id : null
 			};
+			releasedOn = veil;
+			Wicket.Veil._clock.setTimeout(function () {
+				if (releasedOn === veil) {
+					releasedOn = null;
+				}
+			}, 0);
+		}
+	}
+
+	// the replay stands in for the click the browser sends to the ancestor holding the veil
+	function onClick(event) {
+		const veil = releasedOn;
+		releasedOn = null;
+		if (veil !== null && event.target instanceof Node && event.target.contains(veil)) {
+			drop(event);
 		}
 	}
 
@@ -437,6 +467,8 @@
 			window.addEventListener('keyup', onKeyUp, true);
 			window.addEventListener('mousedown', onMouseDown, true);
 			window.addEventListener('mouseup', onMouseUp, true);
+			window.addEventListener('dragstart', onDragStart, true);
+			window.addEventListener('click', onClick, true);
 		}
 	}
 
@@ -524,6 +556,7 @@
 			droppedKeys.clear();
 			press = null;
 			replay = null;
+			releasedOn = null;
 		}
 	};
 })();
