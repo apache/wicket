@@ -191,7 +191,7 @@ public enum AjaxAttributeName {
 	 * queued handler (qh)
 	 *
 	 * @see AjaxCallListener#getQueuedHandler(org.apache.wicket.Component)
-	 * @since 12.0.0
+	 * @since 11.1.0
 	 */
 	QUEUED_HANDLER("qh"),
 
@@ -199,7 +199,7 @@ public enum AjaxAttributeName {
 	 * dropped handler (drh)
 	 *
 	 * @see AjaxCallListener#getDroppedHandler(org.apache.wicket.Component)
-	 * @since 12.0.0
+	 * @since 11.1.0
 	 */
 	DROPPED_HANDLER("drh"),
 

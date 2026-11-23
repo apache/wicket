@@ -228,7 +228,7 @@ public interface IAjaxCallListener
 	 *            the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed when the Ajax call waits in its channel's
 	 *         queue.
-	 * @since 12.0.0
+	 * @since 11.1.0
 	 */
 	default CharSequence getQueuedHandler(Component component)
 	{
@@ -254,7 +254,7 @@ public interface IAjaxCallListener
 	 * @param component
 	 *            the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed when the Ajax call is dropped.
-	 * @since 12.0.0
+	 * @since 11.1.0
 	 */
 	default CharSequence getDroppedHandler(Component component)
 	{
