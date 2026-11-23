@@ -18,6 +18,7 @@ package org.apache.wicket.islands.modules;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.function.Supplier;
 
@@ -25,8 +26,10 @@ import org.apache.wicket.Application;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
+import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.resource.IResourceStream;
 
 /**
  * Serves the files of a Vite production build from the classpath.
@@ -34,10 +37,14 @@ import org.apache.wicket.util.lang.Args;
  * Only files listed in the build's manifest are served; any other path is answered with
  * <code>404</code>, so the resource cannot be used to read other classpath entries. Vite gives
  * built files content-hashed names, so they are cached for as long as possible.
+ * <p>
+ * The files are static, so their URLs carry no session id: a module rendered with one on the first
+ * page of a session would be loaded and run a second time once an Ajax response renders it
+ * without. Wicket's caching strategy is not applied, since the names are versioned already.
  *
  * @since 12.0.0
  */
-public class IslandAssetResource extends AbstractResource
+public class IslandAssetResource extends AbstractResource implements IStaticCacheableResource
 {
 	private static final long serialVersionUID = 1L;
 
@@ -87,6 +94,24 @@ public class IslandAssetResource extends AbstractResource
 			}
 		});
 		return response;
+	}
+
+	@Override
+	public boolean isCachingEnabled()
+	{
+		return false;
+	}
+
+	@Override
+	public Serializable getCacheKey()
+	{
+		return null;
+	}
+
+	@Override
+	public IResourceStream getResourceStream()
+	{
+		return null;
 	}
 
 	private static String toPath(PageParameters parameters)
