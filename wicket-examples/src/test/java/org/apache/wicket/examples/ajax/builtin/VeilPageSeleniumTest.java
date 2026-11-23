@@ -104,13 +104,18 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 		""";
 
 	/**
-	 * Logs the class of the element each {@code mouseup} lands on, into {@code window.releases}.
+	 * Logs the class of the element each {@code mouseup} lands on, into {@code window.releases},
+	 * and that of the target of each click reaching the window, into {@code window.clicks}.
 	 */
 	private static final String RECORD_RELEASES = """
 		window.releases = [];
+		window.clicks = [];
 		window.addEventListener('mouseup', function (event) {
 			window.releases.push(event.target.className);
 		}, true);
+		window.addEventListener('click', function (event) {
+			window.clicks.push(event.target.className);
+		});
 		""";
 
 	/**
@@ -319,7 +324,7 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 
 	@ParameterizedTest
 	@EnumSource(Engine.class)
-	void aPressDraggedOffTheButtonDoesNotSave(Engine engine)
+	void aPressDraggedOffTheButtonClicksOnlyTheForm(Engine engine)
 	{
 		open(engine);
 
@@ -333,6 +338,8 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 		awaitNoVeil();
 		awaitQuiet();
 		assertEquals(List.of("wicket-veil"), releases(), "the release did not land on the veil");
+		assertEquals(List.of("veil-panel veil-updating"), clicks(),
+			"the press was not clicked on the common ancestor of Save and the field alone");
 		assertEquals("0", citySaves(), "a press dragged off Save saved");
 	}
 
@@ -592,6 +599,8 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 		awaitNoVeil();
 		awaitQuiet();
 		assertEquals(List.of("wicket-veil"), releases(), "the release did not land on the veil");
+		assertEquals(List.of("veil-save-city"), clicks(),
+			"the press was not clicked on Save alone");
 		assertEquals("1", citySaves(), "Save ran more than once");
 	}
 
@@ -609,6 +618,12 @@ class VeilPageSeleniumTest extends JettyTestCaseDecorator
 	private List<Object> releases()
 	{
 		return (List<Object>)js().executeScript("return window.releases;");
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Object> clicks()
+	{
+		return (List<Object>)js().executeScript("return window.clicks;");
 	}
 
 	private void assertVeiled()
