@@ -24,7 +24,9 @@ import org.apache.wicket.util.string.Strings;
  * An implementation of IMarkupIdGenerator that uses the Session to generate
  * sequence numbers for the component markup ids.
  * As a prefix for the generated markup id in development mode it uses the component id
- * and in production mode the string <em>id</em>.
+ * and in production mode the string <em>id</em>. In development mode an underscore separates
+ * the component id from the sequence number, so that, for example, component <em>1</em> with
+ * sequence <em>1a</em> and component <em>11</em> with sequence <em>a</em> get different ids.
  */
 public class DefaultMarkupIdGenerator implements IMarkupIdGenerator
 {
@@ -62,7 +64,7 @@ public class DefaultMarkupIdGenerator implements IMarkupIdGenerator
 		{
 			// in non-deployment mode we make the markup id include component id
 			// so it is easier to debug
-			markupIdPrefix = component.getId();
+			markupIdPrefix = escape(component.getId()) + "_";
 		}
 
 		String markupIdPostfix = Integer.toHexString(generatedMarkupId).toLowerCase(Locale.ROOT);
@@ -76,17 +78,20 @@ public class DefaultMarkupIdGenerator implements IMarkupIdGenerator
 			markupId = "id" + markupId;
 		}
 
-		// escape some noncompliant characters
-		markupId = Strings.replaceAll(markupId, "_", "__").toString();
-		markupId = markupId.replace('.', '_');
-		markupId = markupId.replace('-', '_');
-		markupId = markupId.replace(' ', '_');
-		// a component id may contain these, a markup id may not
-		markupId = markupId.replace('(', '_');
-		markupId = markupId.replace(')', '_');
-		markupId = markupId.replace('[', '_');
-		markupId = markupId.replace(']', '_');
-
 		return markupId;
+	}
+
+	private static String escape(String componentId)
+	{
+		String escaped = Strings.replaceAll(componentId, "_", "__").toString();
+		escaped = escaped.replace('.', '_');
+		escaped = escaped.replace('-', '_');
+		escaped = escaped.replace(' ', '_');
+		// a component id may contain these, a markup id may not
+		escaped = escaped.replace('(', '_');
+		escaped = escaped.replace(')', '_');
+		escaped = escaped.replace('[', '_');
+		escaped = escaped.replace(']', '_');
+		return escaped;
 	}
 }

@@ -61,8 +61,8 @@ class StatelessFormUrlTest extends WicketTestCase
 		tester.getRequest().getPostParameters().setParameterValue("text", "newValue");
 		tester.getRequest().getPostParameters().setParameterValue("submitLink", "x");
 		tester.executeUrl("?0-1.-form");
-		assertEquals("newValue", tester.getTagById("text3").getAttribute("value"));
-		assertEquals("./?-1.-form", tester.getTagById("form1").getAttribute("action"));
+		assertEquals("newValue", tester.getTagById("text_3").getAttribute("value"));
+		assertEquals("./?-1.-form", tester.getTagById("form_1").getAttribute("action"));
 	}
 
 	/**
@@ -73,8 +73,8 @@ class StatelessFormUrlTest extends WicketTestCase
 	{
 		tester.getRequest().getPostParameters().setParameterValue("text", "newValue");
 		tester.executeUrl("?0-1.-form");
-		assertEquals("newValue", tester.getTagById("text3").getAttribute("value"));
-		assertEquals("./?-1.-form", tester.getTagById("form1").getAttribute("action"));
+		assertEquals("newValue", tester.getTagById("text_3").getAttribute("value"));
+		assertEquals("./?-1.-form", tester.getTagById("form_1").getAttribute("action"));
 	}
 
 	/** */
