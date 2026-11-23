@@ -20,6 +20,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -396,6 +397,61 @@ public final class PropertyResolver
 	}
 
 	/**
+	 * Returns a method that can be invoked reflectively in place of the given method of the given
+	 * class. That is the method itself when it can be made accessible, otherwise the same public
+	 * method as declared by a public superclass or interface of the class, for example
+	 * {@code Map.Entry.getKey()} for {@code getKey()} of a non-public JDK map entry. When there is
+	 * no such declaration, the given method is returned and invoking it fails with an
+	 * {@link IllegalAccessException}.
+	 *
+	 * @param method
+	 *            method found on the class
+	 * @param clz
+	 *            the class the method was found on
+	 * @return the method to invoke
+	 */
+	private static Method accessibleMethod(final Method method, final Class<?> clz)
+	{
+		if (method.trySetAccessible())
+		{
+			return method;
+		}
+		Method declaration = findAccessibleDeclaration(clz, method);
+		return declaration != null ? declaration : method;
+	}
+
+	private static Method findAccessibleDeclaration(final Class<?> type, final Method method)
+	{
+		if (type == null)
+		{
+			return null;
+		}
+		try
+		{
+			Method declared = type.getDeclaredMethod(method.getName(), method.getParameterTypes());
+			int modifiers = declared.getModifiers();
+			if (Modifier.isPublic(modifiers) && !Modifier.isStatic(modifiers) &&
+				declared.trySetAccessible())
+			{
+				return declared;
+			}
+		}
+		catch (NoSuchMethodException ignored)
+		{
+		}
+		Method declaration = findAccessibleDeclaration(type.getSuperclass(), method);
+		for (Class<?> anInterface : type.getInterfaces())
+		{
+			if (declaration != null)
+			{
+				break;
+			}
+			declaration = findAccessibleDeclaration(anInterface, method);
+		}
+		return declaration;
+	}
+
+	/**
 	 * Utility class: instantiation not allowed.
 	 */
 	private PropertyResolver()
@@ -724,13 +780,15 @@ public final class PropertyResolver
 	{
 		private final Integer index;
 		private final Method getMethod;
-		private Method setMethod;
+		private final Method accessibleGetMethod;
+		private final Method setMethod;
 
-		IndexedPropertyGetAndSet(final Method method, final int index)
+		IndexedPropertyGetAndSet(final Class<?> clz, final Method method, final int index)
 		{
 			this.index = index;
 			getMethod = method;
-			getMethod.setAccessible(true);
+			accessibleGetMethod = accessibleMethod(method, clz);
+			setMethod = findSetter(method, clz);
 		}
 
 		private static Method findSetter(final Method getMethod, final Class<?> clz)
@@ -739,9 +797,10 @@ public final class PropertyResolver
 			name = SET + name.substring(3);
 			try
 			{
-				return clz.getMethod(name, new Class[] { int.class, getMethod.getReturnType() });
+				return accessibleMethod(
+					clz.getMethod(name, new Class[] { int.class, getMethod.getReturnType() }), clz);
 			}
-			catch (Exception e)
+			catch (NoSuchMethodException e)
 			{
 				log.debug("Can't find setter method corresponding to {}", getMethod);
 			}
@@ -754,7 +813,7 @@ public final class PropertyResolver
 			Object ret;
 			try
 			{
-				ret = getMethod.invoke(object, index);
+				ret = accessibleGetMethod.invoke(object, index);
 			}
 			catch (InvocationTargetException ex)
 			{
@@ -773,13 +832,8 @@ public final class PropertyResolver
 		public void setValue(final Object object, final Object value,
 			final PropertyResolverConverter converter)
 		{
-			if (setMethod == null)
-			{
-				setMethod = findSetter(getMethod, object.getClass());
-			}
 			if (setMethod != null)
 			{
-				setMethod.setAccessible(true);
 				Object converted = converter.convert(value, getMethod.getReturnType());
 				if (converted == null && value != null)
 				{
@@ -819,27 +873,27 @@ public final class PropertyResolver
 		{
 			if (setMethod == null)
 			{
-				setMethod = findSetter(getMethod, object.getClass());
-			}
-
-			if (setMethod == null)
-			{
 				log.warn("Null setMethod");
 				return null;
 			}
 
 			Class<?> clz = getMethod.getReturnType();
-			Object value = null;
 			try
 			{
-				value = clz.getDeclaredConstructor().newInstance();
+				Object value = clz.getDeclaredConstructor().newInstance();
 				setMethod.invoke(object, index, value);
+				return value;
+			}
+			catch (InvocationTargetException e)
+			{
+				throw new WicketRuntimeException("Cannot set a new value for " + getMethod +
+					" at index " + index + " on object: " + object, e.getCause());
 			}
 			catch (Exception e)
 			{
-				log.warn("Cannot set new value " + value + " at index " + index, e);
+				throw new WicketRuntimeException("Cannot set a new value for " + getMethod +
+					" at index " + index + " on object: " + object, e);
 			}
-			return value;
 		}
 	}
 
@@ -848,13 +902,16 @@ public final class PropertyResolver
 		private final Method getMethod;
 		private final Method setMethod;
 		private final Field field;
+		private final Method accessibleGetMethod;
+		private final Method accessibleSetMethod;
 
-		MethodGetAndSet(Method getMethod, Method setMethod, Field field)
+		MethodGetAndSet(Class<?> clz, Method getMethod, Field field)
 		{
 			this.getMethod = getMethod;
-			this.getMethod.setAccessible(true);
+			setMethod = findSetter(getMethod, clz);
 			this.field = field;
-			this.setMethod = setMethod;
+			accessibleGetMethod = accessibleMethod(getMethod, clz);
+			accessibleSetMethod = setMethod == null ? null : accessibleMethod(setMethod, clz);
 		}
 
 		@Override
@@ -863,7 +920,7 @@ public final class PropertyResolver
 			Object ret;
 			try
 			{
-				ret = getMethod.invoke(object, (Object[])null);
+				ret = accessibleGetMethod.invoke(object, (Object[])null);
 			}
 			catch (InvocationTargetException ex)
 			{
@@ -917,7 +974,7 @@ public final class PropertyResolver
 			{
 				try
 				{
-					setMethod.invoke(object, converted);
+					accessibleSetMethod.invoke(object, converted);
 				}
 				catch (InvocationTargetException ex)
 				{
@@ -963,12 +1020,7 @@ public final class PropertyResolver
 			}
 			try
 			{
-				Method method = clz.getMethod(name, getMethod.getReturnType());
-				if (method != null)
-				{
-					method.setAccessible(true);
-				}
-				return method;
+				return clz.getMethod(name, getMethod.getReturnType());
 			}
 			catch (NoSuchMethodException e)
 			{
@@ -989,10 +1041,6 @@ public final class PropertyResolver
 				}
 				log.debug("Cannot find setter corresponding to " + getMethod, e);
 			}
-			catch (Exception e)
-			{
-				log.debug("Cannot find setter corresponding to " + getMethod, e);
-			}
 			return null;
 		}
 
@@ -1006,17 +1054,22 @@ public final class PropertyResolver
 			}
 
 			Class<?> clz = getMethod.getReturnType();
-			Object value = null;
 			try
 			{
-				value = clz.getDeclaredConstructor().newInstance();
-				setMethod.invoke(object, value);
+				Object value = clz.getDeclaredConstructor().newInstance();
+				accessibleSetMethod.invoke(object, value);
+				return value;
+			}
+			catch (InvocationTargetException e)
+			{
+				throw new WicketRuntimeException("Cannot set a new value for " + getMethod +
+					" on object: " + object, e.getCause());
 			}
 			catch (Exception e)
 			{
-				log.warn("Cannot set new value " + value, e);
+				throw new WicketRuntimeException("Cannot set a new value for " + getMethod +
+					" on object: " + object, e);
 			}
-			return value;
 		}
 
 		@Override
@@ -1291,8 +1344,7 @@ public final class PropertyResolver
 						method = findMethod(clz, exp);
 						if (method != null)
 						{
-							getAndSet = new MethodGetAndSet(method, MethodGetAndSet.findSetter(
-								method, clz), null);
+							getAndSet = new MethodGetAndSet(clz, method, null);
 						}
 						else
 						{
@@ -1357,7 +1409,8 @@ public final class PropertyResolver
 									String name = Character.toUpperCase(propertyName.charAt(0)) +
 										propertyName.substring(1);
 									method = clz.getMethod(GET + name, int.class);
-									getAndSet = new IndexedPropertyGetAndSet(method, parsedIndex);
+									getAndSet = new IndexedPropertyGetAndSet(clz, method,
+										parsedIndex);
 								}
 								catch (Exception e)
 								{
@@ -1369,8 +1422,7 @@ public final class PropertyResolver
 						}
 						else
 						{
-							getAndSet = new MethodGetAndSet(method, MethodGetAndSet.findSetter(
-								method, clz), null);
+							getAndSet = new MethodGetAndSet(clz, method, null);
 						}
 					}
 					else
@@ -1382,8 +1434,7 @@ public final class PropertyResolver
 			else
 			{
 				field = findField(clz, exp);
-				getAndSet = new MethodGetAndSet(method, MethodGetAndSet.findSetter(method, clz),
-					field);
+				getAndSet = new MethodGetAndSet(clz, method, field);
 			}
 			
 			return getAndSet;
