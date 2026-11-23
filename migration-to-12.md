@@ -77,3 +77,20 @@ The other changes:
 - A backslash no longer escapes a quote. `title="C:\dir\"` is the value `C:\dir\`; markup that used `\"` inside a quoted value now has the value end at that quote.
 - The body of a `<script>` with an empty type, a JavaScript MIME type such as `application/javascript`, or a JSON type such as `application/ld+json` is raw text and passed through untouched. Before, such a script was parsed as a template, so a Wicket component inside one is no longer found. Scripts of other types, such as `text/x-handlebars-template`, are still templates.
 - A custom element whose name only starts with `script` or `style`, such as `<script-loader>`, is parsed as markup. Before, its content was skipped up to the next `</script>` or `</style>`, Wicket components included.
+
+## `ModalDialog` is accessible by default
+
+`ModalDialog` now follows the [WAI-ARIA pattern of a modal dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) ([#1927](https://github.com/apache/wicket/issues/1927)). Before, it was a plain `<div>` that screen readers did not announce as a dialog, and focus handling and Escape only worked after `trapFocus()` and `closeOnEscape()`.
+
+These changes need nothing from you:
+
+- The dialog element, the one with the class `modal-dialog`, renders `role="dialog"`, `aria-modal="true"` and a markup id. A `role` or `aria-modal` that your markup sets, or an `AttributeModifier` that you add in `newDialog`, is kept, so the workaround of setting them yourself keeps working and can go. If your tests compare rendered pages with expected files, the dialog `<div>` of an open dialog has these attributes now.
+- When the dialog opens, the focus moves into it: to an element with `autofocus`, else to its first element that can be focused, else to the dialog itself. When it closes, the focus goes back to the element that had it before. A dialog's content that moves the focus itself, or a `focusComponent` on the `AjaxRequestTarget`, still decides where it goes.
+- `labelledBy(Component)` names the dialog after a component in it, such as the heading of its content, and `label(IModel<String>)` names a dialog without a visible title. Without either, the dialog has no accessible name, as before.
+
+These change what users see, and can be switched off:
+
+- Tab and Shift+Tab cycle through the dialog. Before, Tab moved on from the last element of the dialog to the page behind the overlay, unless you called `trapFocus()`. `trapFocus(false)` gives the old behaviour back. `trapFocus()` still adds a `TrapFocusBehavior`, which in addition pulls the focus back into the dialog when it moves outside, for example into a popup that a widget renders at the end of the page's body.
+- Escape closes the dialog, through `close(AjaxRequestTarget)`. Before, it did only after `closeOnEscape()`, which is now the default and can stay. A dialog that has to stay open until the user makes a choice calls `closeOnEscape(false)`. So does a dialog whose Cancel button does more than `close()`, unless you move that work into an override of `close(AjaxRequestTarget)`.
+- Escape closes only the innermost open dialog, also when no element has the focus, and a dialog no longer stops the propagation of every key pressed in it. The request that Escape sends is no longer bound to a `keydown` event of the overlay: `postProcessCloseBehaviorAjaxAttributes` now gets its attributes for every open dialog that closes on Escape, and `attrs.event` is the keyboard event in the browser.
+- An open dialog that closes on Escape has an Ajax behavior, so a stateless page that renders one open becomes stateful. `closeOnEscape(false)` keeps it stateless.
