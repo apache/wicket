@@ -110,13 +110,13 @@ class ExceptionSettingsNotRenderableErrorStrategyTest extends WicketTestCase {
 
     private void assertWicketTagException(WicketRuntimeException wrx) {
         assertThat(wrx.getCause().getMessage(), is(equalTo("Markup id set on a component that is usually not "
-                                                           + "rendered into markup. Markup id: test1, component id: test, "
+                                                           + "rendered into markup. Markup id: test_1, component id: test, "
                                                            + "component tag: wicket:label.")));
     }
 
     private void assertRenderBodyOnlyException(final WicketRuntimeException wrx) {
         assertThat(wrx.getCause().getMessage(), is(equalTo("Markup id set on a component that renders its body only. " +
-                "Markup id: test1, component id: test, type: class org.apache.wicket.markup.html.basic.Label, " +
+                "Markup id: test_1, component id: test, type: class org.apache.wicket.markup.html.basic.Label, " +
                 "path: class org.apache.wicket.settings.ExceptionSettingsNotRenderableErrorStrategyTest$RenderBodyOnlyTestPage:test")));
     }
 

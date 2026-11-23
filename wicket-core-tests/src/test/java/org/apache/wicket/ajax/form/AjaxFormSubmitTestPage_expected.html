@@ -14,16 +14,16 @@ Wicket.Ajax.baseUrl="wicket/page?0";
 <script type="text/javascript">
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
-Wicket.Ajax.ajax({"u":"./page?0-1.0-form-submit","m":"POST","c":"submit2","f":"form1","sc":"p::submit","e":"click","pd":true});;
+Wicket.Ajax.ajax({"u":"./page?0-1.0-form-submit","m":"POST","c":"submit_2","f":"form_1","sc":"p::submit","e":"click","pd":true});;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
 </script>
 </head><body>
-		<form wicket:id="form" id="form1" method="post" action="./page?0-1.-form"><div id="form1_hf_0" hidden="" class="hidden-fields"></div>
+		<form wicket:id="form" id="form_1" method="post" action="./page?0-1.-form"><div id="form_1_hf_0" hidden="" class="hidden-fields"></div>
 			<input type="text" wicket:id="txt1" value="foo" name="txt1" required="required"/>
 			<input type="text" wicket:id="txt2" value="bar" name="txt2" required="required"/>
-			<input type="submit" value="Submit" wicket:id="submit" name="p::submit" formnovalidate="formnovalidate" id="submit2"/>
+			<input type="submit" value="Submit" wicket:id="submit" name="p::submit" formnovalidate="formnovalidate" id="submit_2"/>
 		</form>	
 	</body>
 </html>

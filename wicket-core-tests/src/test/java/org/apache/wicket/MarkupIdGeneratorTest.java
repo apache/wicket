@@ -17,7 +17,14 @@
 package org.apache.wicket;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
@@ -44,7 +51,7 @@ class MarkupIdGeneratorTest extends WicketTestCase
 		link.setOutputMarkupId(true);
 		page.add(link);
 
-		assertEquals("link1", link.getMarkupId());
+		assertEquals("link_1", link.getMarkupId());
 	}
 
 	@Test
@@ -72,5 +79,56 @@ class MarkupIdGeneratorTest extends WicketTestCase
 		page.add(link);
 
 		assertEquals(customMarkupId, link.getMarkupId());
+	}
+
+	/**
+	 * GitHub issue #1951, WICKET-7114: in development mode the component id and the sequence must
+	 * not run together, or repeater children such as {@code 1} and {@code 11} share an id.
+	 */
+	@Test
+	void developmentModeIdsOfDifferentSequencesDiffer()
+	{
+		assertNotEquals(markupId("1", 0x1a), markupId("11", 0xa));
+		assertNotEquals(markupId("ab", 0xc), markupId("a", 0xbc));
+		assertNotEquals(markupId("1", 0x11), markupId("11", 0x1));
+	}
+
+	@Test
+	void developmentModeIdsAreUniquePerSequence()
+	{
+		List<String> componentIds = List.of("1", "11", "111", "a", "ab", "abc", "b1", "a_", "a__",
+			"_a", "x-1", "x.1", "x_1");
+		Map<String, Integer> sequenceOf = new HashMap<>();
+		for (String componentId : componentIds)
+		{
+			for (int sequence = 1; sequence < 0x300; sequence++)
+			{
+				if (sequence == 0xAD)
+				{
+					continue;
+				}
+				String markupId = markupId(componentId, sequence);
+				Integer other = sequenceOf.putIfAbsent(markupId, sequence);
+				if (other != null && other != sequence)
+				{
+					fail(markupId + " is generated for the sequences 0x" +
+						Integer.toHexString(other) + " and 0x" + Integer.toHexString(sequence));
+				}
+			}
+		}
+	}
+
+	@Test
+	void developmentModeIdStartsWithTheComponentId()
+	{
+		assertEquals("link_1", markupId("link", 0x1));
+		assertEquals("id1_1a", markupId("1", 0x1a));
+	}
+
+	static String markupId(String componentId, int sequence)
+	{
+		WebMarkupContainer component = new WebMarkupContainer(componentId);
+		component.setMarkupIdImpl(sequence);
+		return new DefaultMarkupIdGenerator().generateMarkupId(component, true);
 	}
 }

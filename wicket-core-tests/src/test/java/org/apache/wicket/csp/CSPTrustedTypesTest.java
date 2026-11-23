@@ -225,15 +225,15 @@ class CSPTrustedTypesTest extends WicketTestCase
 		tester.startPage(AjaxPage.class);
 		AjaxPage page = (AjaxPage)tester.getLastRenderedPage();
 
-		assertEquals("var f = document.getElementById('form2');"
-			+ "var h = document.getElementById('form2_hf_0');"
+		assertEquals("var f = document.getElementById('form_2');"
+			+ "var h = document.getElementById('form_2_hf_0');"
 			+ "h.innerHTML = Wicket.TrustedTypes.html("
 			+ "h.innerHTML + '<input type=\"hidden\" name=\"send\" value=\"x\" />');"
 			+ "Wicket.Event.requestSubmit(f);",
 			page.form.getJsForSubmitter(page.submit, true).toString());
-		assertEquals("document.getElementById('form2_hf_0').innerHTML = Wicket.TrustedTypes.html("
+		assertEquals("document.getElementById('form_2_hf_0').innerHTML = Wicket.TrustedTypes.html("
 			+ "'<input type=\"hidden\" name=\"a\" value=\"b\" />');"
-			+ "var f = document.getElementById('form2');f.action='path';"
+			+ "var f = document.getElementById('form_2');f.action='path';"
 			+ "if (Wicket.Event.triggerSubmit(f)) { HTMLFormElement.prototype.submit.call(f); }",
 			page.form.getJsForListenerUrl("path?a=b").toString());
 	}
@@ -246,14 +246,14 @@ class CSPTrustedTypesTest extends WicketTestCase
 		tester.startPage(AjaxPage.class);
 		AjaxPage page = (AjaxPage)tester.getLastRenderedPage();
 
-		assertEquals("var f = document.getElementById('form2');"
-			+ "document.getElementById('form2_hf_0').innerHTML += "
+		assertEquals("var f = document.getElementById('form_2');"
+			+ "document.getElementById('form_2_hf_0').innerHTML += "
 			+ "'<input type=\"hidden\" name=\"send\" value=\"x\" />';"
 			+ "Wicket.Event.requestSubmit(f);",
 			page.form.getJsForSubmitter(page.submit, true).toString());
-		assertEquals("document.getElementById('form2_hf_0').innerHTML = "
+		assertEquals("document.getElementById('form_2_hf_0').innerHTML = "
 			+ "'<input type=\"hidden\" name=\"a\" value=\"b\" />';"
-			+ "var f = document.getElementById('form2');f.action='path';"
+			+ "var f = document.getElementById('form_2');f.action='path';"
 			+ "if (Wicket.Event.triggerSubmit(f)) { HTMLFormElement.prototype.submit.call(f); }",
 			page.form.getJsForListenerUrl("path?a=b").toString());
 	}
