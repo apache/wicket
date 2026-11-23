@@ -54,4 +54,13 @@ class RelativePathPrefixHandlerTest extends WicketTestCase
 		executeTest(Page_3.class, "PageExpectedResult_3.html");
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	@Test
+    void srcset() throws Exception
+	{
+		executeTest(Page_4.class, "PageExpectedResult_4.html");
+	}
+
 }
