@@ -138,6 +138,9 @@
 		if (pageTarget !== null && pageTarget.veil !== null) {
 			return true;
 		}
+		if (!(element instanceof Node)) {
+			return false;
+		}
 		for (const target of localTargets.values()) {
 			if (target.veil !== null && target.host.contains(element)) {
 				return true;
@@ -277,13 +280,26 @@
 		}
 	}
 
+	function isComposing(event) {
+		// Safari sends the Enter committing a composition after compositionend, with keyCode 229
+		return event.isComposing || event.keyCode === 229;
+	}
+
 	function typesText(event) {
-		const element = event.target;
-		if (event.isComposing || element.isContentEditable || element.tagName === 'TEXTAREA') {
+		if (isComposing(event)) {
 			return true;
 		}
-		return event.key === ' ' && (element.tagName === 'SELECT' ||
-			element.tagName === 'INPUT' && TEXT_INPUT_TYPES.indexOf(element.type) >= 0);
+		// a listener on the window sees the host of a shadow root, not the field inside it
+		const element = event.composedPath()[0] || event.target;
+		if (!(element instanceof Element)) {
+			return false;
+		}
+		const tagName = element.tagName.toLowerCase();
+		if (element.isContentEditable || tagName === 'textarea') {
+			return true;
+		}
+		return event.key === ' ' && (tagName === 'select' ||
+			(tagName === 'input' && TEXT_INPUT_TYPES.indexOf(element.type) >= 0));
 	}
 
 	function drop(event) {
@@ -295,11 +311,16 @@
 		if (ACTIVATING_KEYS.indexOf(event.key) < 0) {
 			return;
 		}
-		if (isVeiled(event.target) && !typesText(event)) {
-			droppedKeys.add(event.key);
+		const veiled = isVeiled(event.target) && !typesText(event);
+		if (!event.repeat) {
+			if (veiled) {
+				droppedKeys.add(event.key);
+			} else {
+				droppedKeys.delete(event.key);
+			}
+		}
+		if (veiled || droppedKeys.has(event.key)) {
 			drop(event);
-		} else {
-			droppedKeys.delete(event.key);
 		}
 	}
 

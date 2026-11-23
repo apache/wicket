@@ -100,27 +100,31 @@
 			return parent.lastElementChild;
 		}
 
-		function reaches(element, type, key, init) {
+		function keyEvent(element, type, name, init) {
 			let reached = false;
 			const listener = function() {
 				reached = true;
 			};
 			element.addEventListener(type, listener);
-			const options = Object.assign({ key: key, bubbles: true, cancelable: true }, init);
-			const notCancelled = element.dispatchEvent(new KeyboardEvent(type, options));
+			const options = Object.assign(
+				{ key: name, bubbles: true, cancelable: true, composed: true }, init);
+			const event = new KeyboardEvent(type, options);
+			element.dispatchEvent(event);
 			element.removeEventListener(type, listener);
-			return reached && notCancelled;
+			return { reached: reached, prevented: event.defaultPrevented };
 		}
 
-		function press(element, key, init) {
+		function press(element, name, init) {
 			return {
-				down: reaches(element, 'keydown', key, init),
-				up: reaches(element, 'keyup', key, init)
+				down: keyEvent(element, 'keydown', name, init),
+				up: keyEvent(element, 'keyup', name, init)
 			};
 		}
 
-		const PASSED = { down: true, up: true };
-		const DROPPED = { down: false, up: false };
+		const PASS = { reached: true, prevented: false };
+		const DROP = { reached: false, prevented: true };
+		const PASSED = { down: PASS, up: PASS };
+		const DROPPED = { down: DROP, up: DROP };
 
 		module("Wicket.Veil", {
 			beforeEach: function() {
@@ -626,6 +630,8 @@
 			assert.deepEqual(press(editable, 'Enter'), PASSED, "Enter was dropped in editable content");
 			assert.deepEqual(press(button, 'Enter', { isComposing: true }), PASSED,
 				"Enter was dropped during a composition");
+			assert.deepEqual(press(button, 'Enter', { keyCode: 229 }), PASSED,
+				"Enter was dropped while it committed a composition");
 
 			assert.deepEqual(press(text, 'Enter'), DROPPED, "Enter submitted from a text field");
 			assert.deepEqual(press(select, 'Enter'), DROPPED, "Enter reached a select");
@@ -639,9 +645,11 @@
 			const button = add('qunit-fixture', '<button type="button">save</button>');
 
 			const attrs = send({ c: 'veilPageLink' });
-			assert.notOk(reaches(button, 'keydown', ' '), "Space reached the veiled button");
+			assert.deepEqual(keyEvent(button, 'keydown', ' '), DROP,
+				"Space reached the veiled button");
 			done(attrs);
-			assert.notOk(reaches(button, 'keyup', ' '), "the release of the dropped Space went through");
+			assert.deepEqual(keyEvent(button, 'keyup', ' '), DROP,
+				"the release of the dropped Space went through");
 
 			assert.deepEqual(press(button, ' '), PASSED, "the next Space was dropped");
 		});
@@ -650,9 +658,67 @@
 			Wicket.Veil.page(OPTIONS);
 			const button = add('qunit-fixture', '<button type="button">save</button>');
 
-			assert.ok(reaches(button, 'keydown', ' '), "Space was dropped without a veil");
+			assert.deepEqual(keyEvent(button, 'keydown', ' '), PASS,
+				"Space was dropped without a veil");
 			const attrs = send({ c: 'veilPageLink' });
-			assert.ok(reaches(button, 'keyup', ' '), "the release of a Space pressed before the veil was dropped");
+			assert.deepEqual(keyEvent(button, 'keyup', ' '), PASS,
+				"the release of a Space pressed before the veil was dropped");
+
+			done(attrs);
+		});
+
+		test("a key held as the veil comes up has its repeats dropped, not its release", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const button = add('qunit-fixture', '<button type="button">save</button>');
+
+			assert.deepEqual(keyEvent(button, 'keydown', 'Enter'), PASS,
+				"Enter was dropped without a veil");
+			const attrs = send({ c: 'veilPageLink' });
+			assert.deepEqual(keyEvent(button, 'keydown', 'Enter', { repeat: true }), DROP,
+				"a repeat of Enter reached the veiled button");
+			assert.deepEqual(keyEvent(button, 'keyup', 'Enter'), PASS,
+				"the release of an Enter pressed before the veil was dropped");
+
+			done(attrs);
+		});
+
+		test("a dropped key held as the veil comes down stays dropped until released", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const button = add('qunit-fixture', '<button type="button">save</button>');
+
+			const attrs = send({ c: 'veilPageLink' });
+			assert.deepEqual(keyEvent(button, 'keydown', ' '), DROP,
+				"Space reached the veiled button");
+			done(attrs);
+			assert.deepEqual(keyEvent(button, 'keydown', ' ', { repeat: true }), DROP,
+				"a repeat of the dropped Space went through");
+			assert.deepEqual(keyEvent(button, 'keyup', ' '), DROP,
+				"the release of the dropped Space went through");
+
+			assert.deepEqual(press(button, ' '), PASSED, "the next Space was dropped");
+		});
+
+		test("the keys typing text in a shadow root pass under the veil", assert => {
+			Wicket.Veil.page(OPTIONS);
+			const host = add('qunit-fixture', '<div></div>');
+			const root = host.attachShadow({ mode: 'open' });
+			root.innerHTML = '<input type="text"><button type="button">save</button>';
+
+			const attrs = send({ c: 'veilPageLink' });
+			assert.deepEqual(press(root.querySelector('input'), ' '), PASSED,
+				"Space was dropped in a text field inside a shadow root");
+			assert.deepEqual(press(root.querySelector('button'), ' '), DROPPED,
+				"Space reached a button inside a shadow root");
+
+			done(attrs);
+		});
+
+		test("a key sent to the window passes a local veil", assert => {
+			Wicket.Veil.local('veilOuter', OPTIONS);
+
+			const attrs = send({ c: 'veilOuterLink' });
+			assert.deepEqual(press(window, 'Enter'), PASSED,
+				"Enter sent to the window was dropped");
 
 			done(attrs);
 		});
