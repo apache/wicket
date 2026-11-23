@@ -168,10 +168,14 @@ Global AJAX call events are handled with JavaScript. We can register a callback 
 * '/ajax/call/failure': called if the AJAX call has returned with a failure.
 * '/ajax/call/complete': called when the AJAX call has completed.
 * '/ajax/call/done': called when the AJAX call is done.
+* '/ajax/call/queued': called when the AJAX call has to wait in the queue of its channel because another call in the same channel is still running. The subscribers receive the name of the channel after attrs.
+* '/ajax/call/dropped': called when the AJAX call will never run: a later call replaced it in the queue of a dropping channel ('drop'), an active channel discarded it because another call was running ('active'), or a later call replaced it while it was throttled ('throttle'). The subscribers receive the reason after attrs.
 * '/dom/node/removing': called when a component is about to be removed via AJAX. This  happens when component markup is updated via AJAX (i.e. the component itself or one of its containers has been added to _AjaxRequestTarget_)
 * '/dom/node/added': called when a component has been added via AJAX. Just like '/dom/node/removing', this event is triggered when a component is added to _AjaxRequestTarget_.
 
 The callback function takes in input the following parameters:  attrs, jqXHR, textStatus, jqEvent and errorThrown. The first three parameters are the same seen before with _IAjaxCallListener_ while jqEvent is a lightweight event object internally fired by Wicket to notify subscribers (its shape depends on which `wicket-ajax.js` implementation is configured, see <<_choosing_between_the_jquery_and_the_plain_javascript_ajax_implementation>>). The last parameter errorThrown indicates if an error has occurred during the AJAX call.
+
+Every AJAX call that publishes '/ajax/call/init' or '/ajax/call/queued' ends with exactly one '/ajax/call/done' or '/ajax/call/dropped', which receive the same attrs object. '/ajax/call/init' is published by the calls bound to an event with _Wicket.Ajax.ajax_, which includes those made with _Wicket.Ajax.get_ and _Wicket.Ajax.post_; a call made directly with _new Wicket.Ajax.Call().ajax(attrs)_ does not publish it. A script that, for example, shows a busy indicator for every call can show it at '/ajax/call/init' or '/ajax/call/queued' and hide it at '/ajax/call/done' or '/ajax/call/dropped', keeping track of the calls by their attrs.
 
 To see a basic example of use of a global AJAX call listener, let's go back to our custom datepicker created in
 <<_an_example_of_integration_with_javascript,chapter 19>>. When we built it we didn't think about a possible use of the component with AJAX.  When a complex component like our datepicker is refreshed via AJAX, the following two side effects can occur:

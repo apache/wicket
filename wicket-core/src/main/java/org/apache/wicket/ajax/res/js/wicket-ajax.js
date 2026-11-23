@@ -48,6 +48,20 @@
 	};
 
 	/**
+	 * Calls the listener, if there is one, with the argument. An error thrown by the listener is
+	 * logged, so that it cannot keep the other listeners from being called.
+	 */
+	const notifyListener = function (listener, argument) {
+		if (typeof(listener) === 'function') {
+			try {
+				listener(argument);
+			} catch (exception) {
+				Wicket.Log.error("An error occurred while notifying a listener:", exception);
+			}
+		}
+	};
+
+	/**
 	 * A safe getter for Wicket's Ajax base URL.
 	 * If the value is not defined or is empty string then
 	 * return '.' (current folder) as base URL.
@@ -387,7 +401,17 @@
 			this.busy = false;
 		},
 
-		schedule: function (callback) {
+		/**
+		 * Runs the callback at once if the channel is free, otherwise lets it wait, replaces the
+		 * callbacks waiting with it or ignores it, as the type of the channel says.
+		 *
+		 * @param callback {Function} - the function to run
+		 * @param onQueued {Function} - optional, called with the name of the channel when the
+		 *      callback has to wait
+		 * @param onDropped {Function} - optional, called with the reason ('drop' or 'active')
+		 *      when the callback will never run
+		 */
+		schedule: function (callback, onQueued, onDropped) {
 			if (this.busy === false) {
 				this.busy = true;
 				try {
@@ -398,33 +422,40 @@
 				}
 			} else {
 				const busyChannel = "Channel '"+ this.name+"' is busy";
+				const entry = { callback: callback, onDropped: onDropped };
 				if (this.type === 's') { // stack/queue
 					Wicket.Log.info("%s - scheduling the callback to be executed when the previous request finish.", busyChannel);
-					this.callbacks.push(callback);
+					this.callbacks.push(entry);
+					notifyListener(onQueued, this.name);
 				}
 				else if (this.type === 'd') { // drop
 					Wicket.Log.info("%s - dropping all previous scheduled callbacks and scheduling a new one to be executed when the current request finish.", busyChannel);
-					this.callbacks = [];
-					this.callbacks.push(callback);
+					const replaced = this.callbacks;
+					this.callbacks = [ entry ];
+					notifyListener(onQueued, this.name);
+					for (let i = 0; i < replaced.length; i++) {
+						notifyListener(replaced[i].onDropped, 'drop');
+					}
 				} else if (this.type === 'a') { // active
 					Wicket.Log.info("%s - ignoring the Ajax call because there is a running request.", busyChannel);
+					notifyListener(onDropped, 'active');
 				}
 				return null;
 			}
 		},
 
 		done: function () {
-			let callback = null;
+			let entry = null;
 
 			if (this.callbacks.length > 0) {
-				callback = this.callbacks.shift();
+				entry = this.callbacks.shift();
 			}
 
-			if (callback !== null && typeof(callback) !== "undefined") {
+			if (entry !== null && typeof(entry) !== "undefined") {
 				Wicket.Log.info("Calling postponed function...");
 				// we can't call the callback from this call-stack
 				// therefore we set it on timer event
-				window.setTimeout(callback, 1);
+				window.setTimeout(entry.callback, 1);
 			} else {
 				this.busy = false;
 			}
@@ -441,8 +472,8 @@
 			this.channels = {};
 		},
 
-		// Schedules the callback to channel with given name.
-		schedule: function (channel, callback) {
+		// Schedules the callback to channel with given name, see Wicket.Channel#schedule().
+		schedule: function (channel, callback, onQueued, onDropped) {
 			const parsed = new Wicket.Channel(channel);
 			let c = this.channels[parsed.name];
 			if (isUndef(c)) {
@@ -451,7 +482,7 @@
 			} else {
 				c.type = parsed.type;
 			}
-			return c.schedule(callback);
+			return c.schedule(callback, onQueued, onDropped);
 		},
 
 		// Tells the ChannelManager that the current callback in channel with given name
@@ -839,6 +870,10 @@
 
 			const res = Wicket.channelManager.schedule(attrs.ch, Wicket.bind(function () {
 				this.doAjax(attrs);
+			}, this), Wicket.bind(function (channel) {
+				this.queued(attrs, channel);
+			}, this), Wicket.bind(function (reason) {
+				this.dropped(attrs, reason);
 			}, this));
 			return res !== null ? res: true;
 		},
@@ -1214,6 +1249,18 @@
 			Wicket.channelManager.done(attrs.ch);
 		},
 
+		// Called when the call has to wait in its channel for the calls before it
+		queued: function (attrs, channel) {
+			this._executeHandlers(attrs.qh, attrs, channel);
+			Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_QUEUED, attrs, channel);
+		},
+
+		// Called when the call will never run; the reason is 'drop', 'active' or 'throttle'
+		dropped: function (attrs, reason) {
+			this._executeHandlers(attrs.drh, attrs, reason);
+			Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_DROPPED, attrs, reason);
+		},
+
 		// Adds a closure that replaces a component
 		processComponent: function (context, node) {
 			context.steps.push(function (notify) {
@@ -1280,8 +1327,9 @@
 	Wicket.ThrottlerEntry = Wicket.Class.create();
 
 	Wicket.ThrottlerEntry.prototype = {
-		initialize: function (func) {
+		initialize: function (func, onDropped) {
 			this.func = func;
+			this.onDropped = onDropped;
 			this.timestamp = new Date().getTime();
 			this.timeoutVar = undefined;
 		},
@@ -1294,8 +1342,13 @@
 			return this.func;
 		},
 
-		setFunc: function (func) {
+		setFunc: function (func, onDropped) {
 			this.func = func;
+			this.onDropped = onDropped;
+		},
+
+		getOnDropped: function () {
+			return this.onDropped;
 		},
 
 		getTimeoutVar: function () {
@@ -1322,21 +1375,32 @@
 			this.postponeTimerOnUpdate = postponeTimerOnUpdate;
 		},
 
-		throttle: function (id, millis, func) {
+		/**
+		 * Runs the function once the given time has passed. A function throttled later with the
+		 * same id replaces it, and runs instead.
+		 *
+		 * @param id {String} - the id of the throttled functions
+		 * @param millis {Number} - the time to wait, in milliseconds
+		 * @param func {Function} - the function to run
+		 * @param onDropped {Function} - optional, called when a later function replaces this one
+		 */
+		throttle: function (id, millis, func, onDropped) {
 			const entries = Wicket.Throttler.entries;
 			let entry = entries[id];
 			const me = this;
 			if (typeof(entry) === 'undefined') {
-				entry = new Wicket.ThrottlerEntry(func);
+				entry = new Wicket.ThrottlerEntry(func, onDropped);
 				entry.setTimeoutVar(window.setTimeout(function() { me.execute(id); }, millis));
 				entries[id] = entry;
 			} else {
-				entry.setFunc(func);
+				const replaced = entry.getOnDropped();
+				entry.setFunc(func, onDropped);
 				if (this.postponeTimerOnUpdate)
 				{
 					window.clearTimeout(entry.getTimeoutVar());
 					entry.setTimeoutVar(window.setTimeout(function() { me.execute(id); }, millis));
 				}
+				notifyListener(replaced);
 			}
 		},
 
@@ -1988,7 +2052,9 @@
 						throttler.throttle(throttlingSettings.id, throttlingSettings.d,
 							Wicket.bind(function () {
 								call.ajax(attributes);
-							}, this));
+							}, this), function () {
+								call.dropped(attributes, 'throttle');
+							});
 					}
 					else {
 						call.ajax(attributes);
@@ -2917,6 +2983,8 @@
 			AJAX_CALL_AFTER        : '/ajax/call/after',
 			AJAX_CALL_FAILURE      : '/ajax/call/failure',
 			AJAX_CALL_DONE         : '/ajax/call/done',
+			AJAX_CALL_QUEUED       : '/ajax/call/queued',
+			AJAX_CALL_DROPPED      : '/ajax/call/dropped',
 			AJAX_HANDLERS_BOUND    : '/ajax/handlers/bound'
 		}
 	};
