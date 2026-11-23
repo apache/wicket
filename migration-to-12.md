@@ -102,3 +102,14 @@ These change what users see, and can be switched off:
 - Escape closes the dialog, through `close(AjaxRequestTarget)`. Before, it did only after `closeOnEscape()`, which is now the default and can stay. A dialog that has to stay open until the user makes a choice calls `closeOnEscape(false)`. So does a dialog whose Cancel button does more than `close()`, unless you move that work into an override of `close(AjaxRequestTarget)`.
 - Escape closes only the innermost open dialog, also when no element has the focus, and a dialog no longer stops the propagation of every key pressed in it. The request that Escape sends is no longer bound to a `keydown` event of the overlay: `postProcessCloseBehaviorAjaxAttributes` now gets its attributes for every open dialog that closes on Escape, and `attrs.event` is the keyboard event in the browser.
 - An open dialog that closes on Escape has an Ajax behavior, so a stateless page that renders one open becomes stateful. `closeOnEscape(false)` keeps it stateless.
+
+## Dependencies
+
+Wicket's modules no longer bring in libraries they don't use themselves. If your application or its tests use one of these, declare it as a dependency of your own.
+
+| Module | No longer brings in |
+|---|---|
+| `wicket-tester`, `wicket-extensions-tester`, `wicket-native-websocket-tester` | AssertJ (`org.assertj:assertj-core`), the JUnit Jupiter engine (`org.junit.jupiter:junit-jupiter-engine`) and JUnit Jupiter params (`org.junit.jupiter:junit-jupiter-params`). They bring in only `org.junit.jupiter:junit-jupiter-api`. |
+| `wicket-ioc`, and through it `wicket-spring` and `wicket-guice` | ASM (`org.ow2.asm:asm`) |
+
+Check that your build declares a JUnit engine in test scope, `org.junit.jupiter:junit-jupiter-engine` or `org.junit.jupiter:junit-jupiter`. Without one, Maven Surefire finds no tests to run and the build still passes. Projects created from the quickstart archetype declare the engine.
