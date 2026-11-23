@@ -77,3 +77,14 @@ The other changes:
 - A backslash no longer escapes a quote. `title="C:\dir\"` is the value `C:\dir\`; markup that used `\"` inside a quoted value now has the value end at that quote.
 - The body of a `<script>` with an empty type, a JavaScript MIME type such as `application/javascript`, or a JSON type such as `application/ld+json` is raw text and passed through untouched. Before, such a script was parsed as a template, so a Wicket component inside one is no longer found. Scripts of other types, such as `text/x-handlebars-template`, are still templates.
 - A custom element whose name only starts with `script` or `style`, such as `<script-loader>`, is parsed as markup. Before, its content was skipped up to the next `</script>` or `</style>`, Wicket components included.
+
+## Property expressions on non-public classes
+
+A property expression whose getter or setter is public but declared on a class that is not, such as `size()` on `Collections.unmodifiableList(...)` or `key` on an entry of `Collections.unmodifiableMap(...)`, now works without `--add-opens` ([#1993](https://github.com/apache/wicket/issues/1993)). `PropertyResolver` invokes such a method through a public superclass or interface that declares it, here `Collection.size()` and `Map.Entry.getKey()`. Before, it threw `InaccessibleObjectException`, and a setter on such a class was ignored. `getPropertyGetter()` and `getPropertySetter()` return the method of the class itself, so invoking that `Method` reflectively still fails without `--add-opens`. Where `getPropertySetter()` returned `null` because the setter was ignored, it now returns that setter.
+
+A class with a non-public field named like the property still fails this way, because `PropertyResolver` looks the field up as well ([#1991](https://github.com/apache/wicket/issues/1991)). That includes `key` and `value` on the entries of a `HashMap` or `TreeMap`.
+
+Two failures that used to be silent now throw a `WicketRuntimeException`:
+
+- A setter that can't be invoked because neither its class nor a public supertype declares it publicly fails when it is called. Before, `PropertyResolver` ignored the setter and set the field directly, or failed with "no set method defined".
+- Setting a nested property such as `address.street` when `address` is `null` fails when the setter that stores the new `Address` throws, with that exception as the cause. Before, Wicket logged a warning and set the street on an `Address` that was never stored, so the value was lost.

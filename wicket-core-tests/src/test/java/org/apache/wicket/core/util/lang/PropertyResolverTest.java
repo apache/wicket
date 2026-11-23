@@ -18,6 +18,7 @@ package org.apache.wicket.core.util.lang;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,12 +30,18 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.swing.JList;
+import javax.swing.ListModel;
 
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
@@ -784,6 +791,83 @@ public class PropertyResolverTest extends WicketTestCase
 		PropertyResolver.setValue("instantPayment", bean, null, CONVERTER);
 		Boolean instantPayment = (Boolean) PropertyResolver.getValue("instantPayment", bean);
 		assertFalse(instantPayment);
+	}
+
+	@Test
+	void methodDeclaredOnNonPublicClass()
+	{
+		List<Integer> list = Collections.unmodifiableList(new ArrayList<>(List.of(1, 2)));
+
+		assertEquals(2, PropertyResolver.getValue("size()", list));
+		assertEquals(false, PropertyResolver.getValue("empty", list));
+	}
+
+	@Test
+	void getterDeclaredOnNonPublicClass()
+	{
+		Map.Entry<String, String> entry = Collections.unmodifiableMap(Map.of("k", "v"))
+			.entrySet()
+			.iterator()
+			.next();
+
+		assertEquals("k", PropertyResolver.getValue("key", entry));
+		assertEquals("v", PropertyResolver.getValue("value", entry));
+		assertEquals(entry.getClass(),
+			PropertyResolver.getPropertyGetter("key", entry).getDeclaringClass());
+	}
+
+	@Test
+	void setterDeclaredOnNonPublicClass()
+	{
+		// ConcurrentHashMap.MapEntry keeps the value in a field named val, so findField passes
+		Map<String, String> map = new ConcurrentHashMap<>(Map.of("k", "v"));
+		Map.Entry<String, String> entry = map.entrySet().iterator().next();
+
+		PropertyResolver.setValue("value", entry, "w", CONVERTER);
+
+		assertEquals("w", map.get("k"));
+	}
+
+	@Test
+	void indexedGetterDeclaredOnNonPublicClass()
+	{
+		ListModel<String> model = new JList<>(new String[] { "a", "b" }).getModel();
+
+		assertEquals("b", PropertyResolver.getValue("elementAt.1", model));
+	}
+
+	@Test
+	void methodWithoutPublicDeclaration()
+	{
+		// getMap() is declared only by the package-private ConcurrentHashMap.CollectionView
+		Collection<String> values = new ConcurrentHashMap<String, String>().values();
+
+		WicketRuntimeException e = assertThrows(WicketRuntimeException.class,
+			() -> PropertyResolver.getValue("getMap()", values));
+		assertInstanceOf(IllegalAccessException.class, e.getCause());
+	}
+
+	@Test
+	void setValueFailsWhenNewValueCannotBeSet()
+	{
+		RejectingAddressBean bean = new RejectingAddressBean();
+
+		WicketRuntimeException e = assertThrows(WicketRuntimeException.class,
+			() -> PropertyResolver.setValue("address.street", bean, "Main Street", CONVERTER));
+		assertInstanceOf(UnsupportedOperationException.class, e.getCause());
+	}
+
+	public static class RejectingAddressBean
+	{
+		public Address getAddress()
+		{
+			return null;
+		}
+
+		public void setAddress(Address address)
+		{
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	class CustomGetAndSetLocator implements IPropertyLocator {
