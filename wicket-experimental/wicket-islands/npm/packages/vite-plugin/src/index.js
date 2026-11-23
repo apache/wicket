@@ -30,14 +30,18 @@ const DEV_PATH = '/@wicket-islands/';
  *
  * Each island type becomes an input of the build named after the type, so Wicket finds its
  * entry in the manifest. Its entry module imports the island's module, turns its default export
- * into an island with the adapter's `defineIsland` when an adapter is given, and registers it with
- * the runtime. In development, the entry for a type is served at `/@wicket-islands/<type>`.
+ * into an island with the `defineIsland` of the island's adapter when it has one, and registers it
+ * with the runtime. Islands of several frameworks can be built together, each type naming its own
+ * adapter. In development, the entry for a type is served at `/@wicket-islands/<type>`.
  *
  * @param {import('./index').WicketIslandsOptions} options
  * @returns {import('vite').Plugin}
  */
 export default function wicketIslands(options) {
-	const islands = options.islands;
+	const islands = Object.fromEntries(Object.entries(options.islands)
+		.map(([type, island]) => [type, typeof island === 'string'
+			? { module: island, adapter: options.adapter }
+			: { module: island.module, adapter: island.adapter ?? options.adapter }]));
 	for (const type of Object.keys(islands)) {
 		if (!TYPE_PATTERN.test(type)) {
 			throw new Error(`Invalid island type '${type}': use letters, digits, '-' and '_'.`);
@@ -62,7 +66,7 @@ export default function wicketIslands(options) {
 					}
 				},
 				optimizeDeps: {
-					entries: Object.values(islands)
+					entries: Object.values(islands).map(island => island.module)
 				}
 			};
 			if (!serving && config.base === undefined) {
@@ -94,8 +98,8 @@ export default function wicketIslands(options) {
 				return null;
 			}
 			const type = id.slice(RESOLVED_ENTRY_PREFIX.length);
-			const file = islands[type];
-			if (!file) {
+			const island = islands[type];
+			if (!island) {
 				throw new Error(`Unknown island type '${type}'.`);
 			}
 			const lines = [];
@@ -103,11 +107,11 @@ export default function wicketIslands(options) {
 				lines.push(`import ${JSON.stringify(PREAMBLE_ID)};`);
 			}
 			lines.push(
-				`import island from ${JSON.stringify(toPosixPath(path.resolve(root, file)))};`,
+				`import island from ${JSON.stringify(toPosixPath(path.resolve(root, island.module)))};`,
 				`import { registerIsland } from 'wicket-islands';`);
-			if (options.adapter) {
+			if (island.adapter) {
 				lines.push(
-					`import { defineIsland } from ${JSON.stringify(options.adapter)};`,
+					`import { defineIsland } from ${JSON.stringify(island.adapter)};`,
 					`registerIsland(${JSON.stringify(type)}, defineIsland(island));`);
 			} else {
 				lines.push(`registerIsland(${JSON.stringify(type)}, island);`);

@@ -17,18 +17,36 @@
 
 import type { Plugin } from 'vite';
 
+/**
+ * An island module with the adapter of its framework, for a build with islands of several
+ * frameworks.
+ */
+export interface WicketIsland {
+	/**
+	 * The island module, relative to Vite's root.
+	 */
+	module: string;
+
+	/**
+	 * The framework adapter of the module, e.g. `wicket-islands-svelte`; the plugin's
+	 * {@link WicketIslandsOptions.adapter} when absent.
+	 */
+	adapter?: string;
+}
+
 export interface WicketIslandsOptions {
 	/**
-	 * The island modules by island type, relative to Vite's root. With an adapter, each module's
-	 * default export is a component of the adapter's framework; without one, it is an island
-	 * module made by an adapter's `defineIsland`.
+	 * The island modules by island type, relative to Vite's root, each with the adapter of
+	 * {@link adapter} or one of its own. With an adapter, a module's default export is a component
+	 * of the adapter's framework; without one, it is an island module made by an adapter's
+	 * `defineIsland`.
 	 */
-	islands: Record<string, string>;
+	islands: Record<string, string | WicketIsland>;
 
 	/**
 	 * The framework adapter whose `defineIsland` turns a module's default export into an island,
-	 * e.g. `wicket-islands-react`. Exporting the plain component keeps the module eligible for the
-	 * framework's hot reload.
+	 * e.g. `wicket-islands-react`, for the islands that name none of their own. Exporting the
+	 * plain component keeps the module eligible for the framework's hot reload.
 	 */
 	adapter?: string;
 

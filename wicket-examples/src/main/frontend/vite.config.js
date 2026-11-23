@@ -16,6 +16,7 @@
  */
 
 import { fileURLToPath } from 'node:url';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import wicketIslands from 'vite-plugin-wicket-islands';
@@ -27,10 +28,14 @@ const islandPackages = fileURLToPath(
 export default defineConfig({
 	plugins: [
 		react(),
+		svelte(),
 		wicketIslands({
 			islands: {
 				'treasure-board': 'src/treasurehunt/TreasureBoard.tsx',
-				'probe-history': 'src/treasurehunt/ProbeHistory.tsx',
+				'probe-history': {
+					module: 'src/treasurehunt/ProbeHistory.svelte',
+					adapter: 'wicket-islands-svelte'
+				},
 				'player-entry': 'src/treasurehunt/PlayerEntryForm.tsx',
 				'highscore-list': 'src/treasurehunt/HighScoreList.tsx',
 				'task-board': 'src/taskboard/TaskBoard.tsx',
@@ -44,7 +49,7 @@ export default defineConfig({
 	],
 	resolve: {
 		// the island packages are linked from the Wicket source tree; their imports resolve here
-		dedupe: ['react', 'react-dom', 'wicket-islands', '@tanstack/react-query']
+		dedupe: ['react', 'react-dom', 'svelte', 'wicket-islands', '@tanstack/react-query']
 	},
 	server: {
 		port: 5173,

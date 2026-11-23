@@ -14,11 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { defineConfig } from 'vitest/config';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { configDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	test: {
-		environment: 'jsdom',
-		include: ['packages/*/test/**/*.test.{ts,tsx}']
+		projects: [
+			{
+				test: {
+					name: 'islands',
+					environment: 'jsdom',
+					include: ['packages/*/test/**/*.test.{ts,tsx}'],
+					exclude: [...configDefaults.exclude, 'packages/svelte/**']
+				}
+			},
+			{
+				plugins: [svelte()],
+				resolve: {
+					// Svelte's server build cannot mount components
+					conditions: ['browser']
+				},
+				test: {
+					name: 'svelte',
+					environment: 'jsdom',
+					include: ['packages/svelte/test/**/*.test.ts']
+				}
+			}
+		]
 	}
 });
