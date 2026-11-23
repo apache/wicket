@@ -1203,6 +1203,46 @@ public class BaseWicketTester
 	}
 
 	/**
+	 * Builds and processes a request suitable for executing the single
+	 * <code>AbstractAjaxBehavior</code> of the given type coupled to the given component. This
+	 * is for behaviors added inside the tested component, where the test cannot reach the
+	 * behavior instance itself.
+	 * <p>
+	 * The behavior is looked up on the component, not on the whole page: a page usually has
+	 * many behaviors of the same type on different components, so a page-wide search could
+	 * not pick one. Subtypes of the given type match. The test fails when the component has
+	 * no behavior of the given type, or more than one.
+	 *
+	 * @param component
+	 *            the component the behavior is coupled to
+	 * @param behaviorType
+	 *            the type of the <code>AbstractAjaxBehavior</code> to execute
+	 * @param <B>
+	 *            the behavior type
+	 * @since 12.0.0
+	 */
+	public <B extends AbstractAjaxBehavior> void executeBehavior(final Component component,
+		final Class<B> behaviorType)
+	{
+		Args.notNull(component, "component");
+		Args.notNull(behaviorType, "behaviorType");
+
+		List<B> behaviors = component.getBehaviors(behaviorType);
+		if (behaviors.isEmpty())
+		{
+			fail("Component '" + component.getPageRelativePath()
+				+ "' has no behavior of type '" + behaviorType.getName() + "'.");
+		}
+		if (behaviors.size() > 1)
+		{
+			fail("Component '" + component.getPageRelativePath() + "' has " + behaviors.size()
+				+ " behaviors of type '" + behaviorType.getName() + "'. Execute one of them "
+				+ "directly with executeBehavior(AbstractAjaxBehavior).");
+		}
+		executeBehavior(behaviors.get(0));
+	}
+
+	/**
 	 * Build value to Origin header based on RequestCycle Url
 	 *
 	 * @return Origin header
