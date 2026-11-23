@@ -45,7 +45,7 @@ public interface IPageAndComponentProvider extends IPageProvider
 	 * The default implementation returns {@code false}.
 	 *
 	 * @return {@code true} if {@link #getComponent()} returns the component without side effects
-	 * @since 12.0.0
+	 * @since 10.13.0
 	 */
 	default boolean hasComponent()
 	{
