@@ -89,7 +89,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	 * @param queued
 	 * 			the JavaScript code for the corresponding handler
 	 * @return This
-	 * @since 12.0.0
+	 * @since 11.1.0
 	 */
 	public AjaxCallListener onQueued(final CharSequence queued)
 	{
@@ -111,7 +111,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	 * @param dropped
 	 * 			the JavaScript code for the corresponding handler
 	 * @return This
-	 * @since 12.0.0
+	 * @since 11.1.0
 	 */
 	public AjaxCallListener onDropped(final CharSequence dropped)
 	{
