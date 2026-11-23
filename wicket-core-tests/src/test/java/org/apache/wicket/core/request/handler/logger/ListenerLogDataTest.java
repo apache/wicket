@@ -16,14 +16,143 @@
  */
 package org.apache.wicket.core.request.handler.logger;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.core.request.handler.IPageAndComponentProvider;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
+import org.apache.wicket.core.request.handler.PageAndComponentProvider;
+import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ListenerLogDataTest {
+class ListenerLogDataTest extends WicketTestCase {
+
+	private ListenerRequestHandler executedListenerHandler;
+
+	private int configuredAtEndOfRequest;
+
+	private int beforeRenderedAtEndOfRequest;
+
+	@BeforeEach
+	void recordRequests()
+	{
+		LifecyclePage.reset();
+
+		tester.getApplication().getRequestCycleListeners().add(new IRequestCycleListener()
+		{
+			@Override
+			public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
+			{
+				if (handler instanceof ListenerRequestHandler)
+				{
+					executedListenerHandler = (ListenerRequestHandler)handler;
+				}
+			}
+
+			@Override
+			public void onEndRequest(RequestCycle cycle)
+			{
+				configuredAtEndOfRequest = LifecyclePage.configured;
+				beforeRenderedAtEndOfRequest = LifecyclePage.beforeRendered;
+			}
+		});
+	}
+
+	/**
+	 * GitHub issue #1653: collecting the log data of a listener whose component a stateless page
+	 * lacks must not initialize the page or prepare it for rendering.
+	 */
+	@Test
+	void missingComponentOfStatelessPageRunsNoLifecycleCallbacks()
+	{
+		LifecyclePage page = new LifecyclePage();
+		ListenerRequestHandler handler = new ListenerRequestHandler(
+			new PageAndComponentProvider(page, "missing"));
+
+		handler.detach(tester.getRequestCycle());
+
+		assertEquals(0, LifecyclePage.initialized);
+		assertEquals(0, LifecyclePage.configured);
+		assertEquals(0, LifecyclePage.beforeRendered);
+
+		ListenerLogData logData = handler.getLogData();
+		assertEquals(LifecyclePage.class, logData.getPageClass());
+		assertEquals("missing", logData.getComponentPath());
+		assertNull(logData.getComponentClass());
+
+		assertTrue(page.isPageStateless());
+	}
+
+	/**
+	 * GitHub issue #1653: collecting the log data must not create a page the provider has not
+	 * created yet.
+	 */
+	@Test
+	void pageNotCreatedYetIsNotCreatedForLogData()
+	{
+		ListenerRequestHandler handler = new ListenerRequestHandler(
+			new PageAndComponentProvider(LifecyclePage.class, "link"));
+
+		handler.detach(tester.getRequestCycle());
+
+		assertEquals(0, LifecyclePage.constructed);
+
+		ListenerLogData logData = handler.getLogData();
+		assertEquals(LifecyclePage.class, logData.getPageClass());
+		assertEquals("link", logData.getComponentPath());
+		assertNull(logData.getComponentClass());
+	}
+
+	/**
+	 * GitHub issue #1653: a listener URL to a component a stateless page never adds re-renders the
+	 * page, and no lifecycle callback runs once the request has ended.
+	 */
+	@Test
+	void missingComponentRunsNoLifecycleCallbacksAfterEndOfRequest()
+	{
+		String url = "wicket/bookmarkable/" + LifecyclePage.class.getName() + "?-1.-missing";
+		tester.getRequest().setUrl(Url.parse(url));
+		tester.processRequest();
+
+		tester.assertRenderedPage(LifecyclePage.class);
+		assertEquals(configuredAtEndOfRequest, LifecyclePage.configured);
+		assertEquals(beforeRenderedAtEndOfRequest, LifecyclePage.beforeRendered);
+		assertNull(executedListenerHandler.getLogData().getComponentClass());
+	}
+
+	/**
+	 * A component a stateless page adds in a lifecycle callback is still resolved for its
+	 * listener, and the log data still names it.
+	 */
+	@Test
+	void logDataNamesComponentResolvedForListener()
+	{
+		tester.startPage(LifecyclePage.class);
+		tester.clickLink("link");
+
+		assertTrue(LifecyclePage.clicked);
+
+		ListenerLogData logData = executedListenerHandler.getLogData();
+		assertEquals(LifecyclePage.class, logData.getPageClass());
+		assertEquals("link", logData.getComponentPath());
+		assertEquals(ClickedLink.class, logData.getComponentClass());
+	}
 
 	/**
 	 * Test for WICKET-6908.
@@ -88,5 +217,80 @@ class ListenerLogDataTest {
 		};
 		
 		new ListenerLogData(provider, 1);
+	}
+
+	/**
+	 * A stateless page that adds its link in {@link #onInitialize()} and counts its lifecycle
+	 * callbacks, across the instances created for each request.
+	 */
+	public static class LifecyclePage extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		static int constructed;
+		static int initialized;
+		static int configured;
+		static int beforeRendered;
+		static boolean clicked;
+
+		static void reset()
+		{
+			constructed = 0;
+			initialized = 0;
+			configured = 0;
+			beforeRendered = 0;
+			clicked = false;
+		}
+
+		public LifecyclePage()
+		{
+			constructed++;
+		}
+
+		@Override
+		protected void onInitialize()
+		{
+			super.onInitialize();
+			initialized++;
+			add(new ClickedLink("link"));
+		}
+
+		@Override
+		protected void onConfigure()
+		{
+			super.onConfigure();
+			configured++;
+		}
+
+		@Override
+		protected void onBeforeRender()
+		{
+			super.onBeforeRender();
+			beforeRendered++;
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream(
+				"<html><body><a wicket:id=\"link\">link</a></body></html>");
+		}
+	}
+
+	private static class ClickedLink extends StatelessLink<Void>
+	{
+		private static final long serialVersionUID = 1L;
+
+		ClickedLink(String id)
+		{
+			super(id);
+		}
+
+		@Override
+		public void onClick()
+		{
+			LifecyclePage.clicked = true;
+		}
 	}
 }
