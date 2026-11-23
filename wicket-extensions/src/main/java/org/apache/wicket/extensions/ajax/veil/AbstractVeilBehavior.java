@@ -48,7 +48,9 @@ import org.apache.wicket.util.lang.Args;
  * an element it covers are dropped, and so is their release. Where they type text they are left
  * alone, that is Space in a text field or a {@code select}, both keys in a text area or in
  * editable content, and any key during an IME composition. Other keys, Tab among them, pass, so
- * the focus can still move under the veil.
+ * the focus can still move under the veil. A key held down follows its first press: when that was
+ * dropped, its repeats and its release are dropped too, even once the veil is lowered; when it
+ * passed, its release passes, and only its repeats under the veil are dropped.
  * <p>
  * The look comes from {@code wicket-veil.css} and can be overridden with the classes
  * {@code wicket-veil}, {@code wicket-veil-busy}, {@code wicket-veil-host} and
