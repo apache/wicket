@@ -37,6 +37,8 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	private StringBuilder complete;
 	private StringBuilder precondition;
 	private StringBuilder done;
+	private StringBuilder queued;
+	private StringBuilder dropped;
 
 	/**
 	 * Sets the JavaScript code that will be returned by {@link #getInitHandler(Component)}.
@@ -76,6 +78,50 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 				this.done = new StringBuilder();
 			}
 			this.done.append(done);
+		}
+		return this;
+	}
+
+	/**
+	 * Sets the JavaScript code that will be returned by {@link #getQueuedHandler(Component)}.
+	 * If this code was already set, the new one will be appended to the existing one.
+	 *
+	 * @param queued
+	 * 			the JavaScript code for the corresponding handler
+	 * @return This
+	 * @since 12.0.0
+	 */
+	public AjaxCallListener onQueued(final CharSequence queued)
+	{
+		if (Strings.isEmpty(queued) == false)
+		{
+			if (this.queued == null)
+			{
+				this.queued = new StringBuilder();
+			}
+			this.queued.append(queued);
+		}
+		return this;
+	}
+
+	/**
+	 * Sets the JavaScript code that will be returned by {@link #getDroppedHandler(Component)}.
+	 * If this code was already set, the new one will be appended to the existing one.
+	 *
+	 * @param dropped
+	 * 			the JavaScript code for the corresponding handler
+	 * @return This
+	 * @since 12.0.0
+	 */
+	public AjaxCallListener onDropped(final CharSequence dropped)
+	{
+		if (Strings.isEmpty(dropped) == false)
+		{
+			if (this.dropped == null)
+			{
+				this.dropped = new StringBuilder();
+			}
+			this.dropped.append(dropped);
 		}
 		return this;
 	}
@@ -278,6 +324,18 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	@Override
 	public CharSequence getDoneHandler(Component component) {
 		return done;
+	}
+
+	@Override
+	public CharSequence getQueuedHandler(Component component)
+	{
+		return queued;
+	}
+
+	@Override
+	public CharSequence getDroppedHandler(Component component)
+	{
+		return dropped;
 	}
 
 	@Override

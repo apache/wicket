@@ -66,7 +66,15 @@ _IAjaxCallListener_ defines a set of methods which return the JavaScript code (a
 ** textStatus it's the status returned as text.
 * *getFailureHandler(Component)*: returns the JavaScript code that will be executed if the AJAX call has returned with a failure. The code is executed in a scope where it can use variable attrs, which is the same variable seen for getBeforeHandler. 
 * *getCompleteHandler(Component)*: returns the JavaScript that will be invoked after success or failure handler has been executed. The code is executed in a scope where it can use variables attrs, jqXHR and textStatus which are the same variables seen for getSuccessHandler. 
-* *getDoneHandler(Component)*: returns the JavaScript code that will be executed after the Ajax call is done, regardless whether it was sent or not. The code is executed in a scope where it can use variable attrs, which is an array containing the JSON parameters passed to Wicket.Ajax.ajax.
+* *getDoneHandler(Component)*: returns the JavaScript code that will be executed after the Ajax call is done, regardless whether it was sent or not (for example because a precondition stopped it). The code is executed in a scope where it can use variable attrs, which is an array containing the JSON parameters passed to Wicket.Ajax.ajax.
+* *getQueuedHandler(Component)*: returns the JavaScript code that will be executed when the AJAX call has to wait in the queue of its channel (see _AjaxChannel_), because another call in the same channel is still running. The code is executed in a scope where it can use variables attrs and channel:
+** attrs is the same variable seen for getBeforeHandler.
+** channel is the name of the channel.
+* *getDroppedHandler(Component)*: returns the JavaScript code that will be executed when the AJAX call will never run, so that its done handler is never executed. The code is executed in a scope where it can use variables attrs and reason:
+** attrs is the same variable seen for getBeforeHandler.
+** reason tells why the call was dropped: 'drop' if a later call replaced it in the queue of a dropping channel (_AjaxChannel.Type.DROP_), 'active' if an active channel (_AjaxChannel.Type.ACTIVE_) discarded it because another call was running, or 'throttle' if a later call replaced it while it was throttled (see _ThrottlingSettings_).
+
+Every AJAX call that executes the init handler or the queued handler ends with exactly one of the done handler and the dropped handler.
 
 In the next paragraph we will see an example of custom _IAjaxCallListener_ designed to disable a component during AJAX request processing.
 
