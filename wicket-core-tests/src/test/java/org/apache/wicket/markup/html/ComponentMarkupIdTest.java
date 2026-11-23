@@ -42,7 +42,7 @@ class ComponentMarkupIdTest extends WicketTestCase
 		String markupId = label.getMarkupId();
 
 		// instead 1.4 would just generate the missing markup identifier
-		assertEquals("bla1", markupId);
+		assertEquals("bla_1", markupId);
 	}
 
 	/** */
@@ -57,7 +57,7 @@ class ComponentMarkupIdTest extends WicketTestCase
 		String markupId = panel.getMarkupId();
 
 		// instead 1.4 would just generate the missing markup identifier
-		assertEquals("bla1", markupId);
+		assertEquals("bla_1", markupId);
 	}
 
 	/**
@@ -98,8 +98,8 @@ class ComponentMarkupIdTest extends WicketTestCase
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
 
-		assertEquals("generatedLabel1", page.generatedLabelMarkupId);
-		assertEquals("generatedLabel1", page.generatedLabel.getMarkupId());
+		assertEquals("generatedLabel_1", page.generatedLabelMarkupId);
+		assertEquals("generatedLabel_1", page.generatedLabel.getMarkupId());
 	}
 
 	/**
@@ -112,8 +112,8 @@ class ComponentMarkupIdTest extends WicketTestCase
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
 
-		assertEquals("generatedPanel2", page.generatedPanelMarkupId);
-		assertEquals("generatedPanel2", page.generatedPanel.getMarkupId());
+		assertEquals("generatedPanel_2", page.generatedPanelMarkupId);
+		assertEquals("generatedPanel_2", page.generatedPanel.getMarkupId());
 	}
 
 	/**

@@ -55,6 +55,14 @@ The same method adds other attributes that belong to the whole document, such as
 
 The pages Wicket ships with English text, `PageExpiredErrorPage`, `AccessDeniedPage`, `InternalErrorPage`, `ExceptionErrorPage` and `BrowserInfoPage`, have `lang="en"` in their markup, so they render `lang="en"` and no `dir` in every locale ([#1924](https://github.com/apache/wicket/issues/1924)). Their doctype is now `<!DOCTYPE html>` instead of HTML 4.01 Transitional. A subclass that renders the markup of one of these pages gets the same; a subclass with markup of its own is not affected. To show them in the language of the user, replace them with pages of your own: `PageExpiredErrorPage`, `AccessDeniedPage` and `InternalErrorPage` in `ApplicationSettings`, `BrowserInfoPage` by overriding `WebSession#newBrowserInfoPage()`.
 
+## Development mode markup ids separate the component id from the sequence
+
+In development mode, `DefaultMarkupIdGenerator` now puts an underscore between the component id and the hexadecimal sequence number ([#1951](https://github.com/apache/wicket/issues/1951), WICKET-7114). A link with the id `link` now gets the markup id `link_1` where it got `link1`. Before, nothing separated the two parts, so two components could get the same id: component `1` with sequence `1a` and component `11` with sequence `a` both got `id11a`. Repeater children have numeric ids, so this happened in list views, and the duplicate id made an Ajax update replace the wrong element.
+
+Deployment mode is unchanged: ids are still `id` followed by the sequence, such as `id1a`.
+
+If your tests compare rendered pages with expected files, or look components up by a generated markup id written into the test, update those ids. A markup id you set yourself with `setMarkupId` is not affected.
+
 ## Markup encoding from `<meta charset>`
 
 Wicket now reads the character encoding of a markup file from an HTML5 `<meta charset="...">` tag, or from `<meta http-equiv="Content-Type" content="text/html; charset=...">`, when the file has no XML declaration ([#1953](https://github.com/apache/wicket/issues/1953)). Before, it only looked at `<?xml version="1.0" encoding="..."?>` and otherwise read the file with `MarkupSettings#getDefaultMarkupEncoding()`, or the JVM default when that is not set.
