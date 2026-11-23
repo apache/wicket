@@ -71,7 +71,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 
 	/** List of attribute names considered */
 	private static final String attributeNames[] = new String[] { "href", "src", "background",
-			"action" };
+			"action", "srcset" };
 
 	/**
 	 * Whether a URL is relative and so needs a context-relative rewrite: it is not absolute
@@ -99,6 +99,11 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 	 */
 	private static boolean hasRelativeSrcsetEntry(final String srcset)
 	{
+		if (srcset == null) 
+		{
+			return false;
+		}
+		
 		for (String candidate : srcset.split(","))
 		{
 			String trimmedCandidate = candidate.trim();
@@ -172,21 +177,17 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			for (String attrName : attributeNames)
 			{
 				String attrValue = tag.getAttributes().getString(attrName);
-
-				if (isRelativeUrl(attrValue))
+				boolean isSrcSet = attrName.equals("srcset");
+				
+				if (!isSrcSet && isRelativeUrl(attrValue))
 				{
 					tag.getAttributes().put(attrName,
 						UrlUtils.rewriteToContextRelative(attrValue, RequestCycle.get()));
 				}
-			}
-
-			String srcset = tag.getAttributes().getString("srcset");
-			if (srcset != null)
-			{
-				String rewrittenSrcset = rewriteSrcset(srcset, RequestCycle.get());
-				if (rewrittenSrcset.equals(srcset) == false)
+				
+				if (isSrcSet && hasRelativeSrcsetEntry(attrValue))
 				{
-					tag.getAttributes().put("srcset", rewrittenSrcset);
+					tag.getAttributes().put(attrName, rewriteSrcset(attrValue, RequestCycle.get()));
 				}
 			}
 		}
@@ -243,17 +244,18 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		for (String attrName : attributeNames)
 		{
 			String attrValue = tag.getAttributes().getString(attrName);
-			if (isRelativeUrl(attrValue))
+			boolean isSrcSet = attrName.equals("srcset");
+			
+			boolean attrRelative = (!isSrcSet && isRelativeUrl(attrValue)) ||
+								   (isSrcSet && hasRelativeSrcsetEntry(attrValue));
+			if (attrRelative)
 			{
 				needsBehavior = true;
 				break;
 			}
+			
 		}
-		if (needsBehavior == false)
-		{
-			String srcset = tag.getAttributes().getString("srcset");
-			needsBehavior = (srcset != null) && hasRelativeSrcsetEntry(srcset);
-		}
+		
 		if (needsBehavior)
 		{
 			if (tag.getId() == null)
