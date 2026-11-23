@@ -45,6 +45,19 @@
 	</div>
 </div>
 
+<h2>Keyboard</h2>
+
+<p>
+	The veil drops Enter and Space pressed on the elements it covers, unless they type text. Focus
+	Save with Tab and press Enter or Space twice: it saves once, as it takes two seconds. While it
+	saves, Shift+Tab back to the field: a space can still be typed there, but Enter does not save
+	again. Saves: <span wicket:id="saveCounter" class="save-counter"></span>.
+</p>
+<form wicket:id="keyboardForm" class="veil-panel veil-keyboard">
+	<input type="text" wicket:id="note" class="veil-note" aria-label="Note"/>
+	<button wicket:id="save" class="veil-save">Save</button>
+</form>
+
 <h2>Delegated clicks</h2>
 
 <p>
