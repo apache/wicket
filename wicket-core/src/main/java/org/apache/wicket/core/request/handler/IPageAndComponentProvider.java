@@ -34,6 +34,25 @@ public interface IPageAndComponentProvider extends IPageProvider
 	IRequestableComponent getComponent();
 
 	/**
+	 * Returns whether {@link #getComponent()} can return the component without creating the page
+	 * or running any of its lifecycle callbacks, because the component has been resolved already
+	 * or an existing page instance contains it.
+	 * <p>
+	 * Unlike {@link #getComponent()}, this method never initializes a stateless page or prepares it
+	 * for rendering to let it add a missing component, so it can be called after the response has
+	 * been written, e.g. to collect log data while the request handler is detached.
+	 * <p>
+	 * The default implementation returns {@code false}.
+	 *
+	 * @return {@code true} if {@link #getComponent()} returns the component without side effects
+	 * @since 12.0.0
+	 */
+	default boolean hasComponent()
+	{
+		return false;
+	}
+
+	/**
 	 * Returns the page relative component path.
 	 *
 	 * @return the page relative component path.
