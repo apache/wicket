@@ -97,14 +97,17 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			{
 				String attrValue = tag.getAttributes().getString(attrName);
 
+				
+				if (!needsPrefix(attrName, attrValue))
+				{
+					continue;
+				}
+				
 				if (SRCSET.equals(attrName))
 				{
-					if (attrValue != null)
-					{
-						tag.getAttributes().put(attrName, rewriteSrcset(attrValue));
-					}
+					tag.getAttributes().put(attrName, rewriteSrcset(attrValue));
 				}
-				else if (isRelative(attrValue))
+				else
 				{
 					tag.getAttributes().put(attrName,
 						UrlUtils.rewriteToContextRelative(attrValue, RequestCycle.get()));
