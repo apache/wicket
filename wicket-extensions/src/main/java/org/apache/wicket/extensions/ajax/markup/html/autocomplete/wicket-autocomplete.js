@@ -372,7 +372,10 @@
 
 			attrs.c = undefined;
 
-			attrs.pre = attrs.pre || [];
+			// Copy the arrays: Object.assign above only copies the references, so
+			// pushing here would mutate the shared ajaxAttributes and accumulate
+			// an entry on every keystroke (WICKET-7130).
+			attrs.pre = [...(attrs.pre || [])];
 			attrs.pre.push(function (attributes) {
 				const input = Wicket.$(ajaxAttributes.c);
 				if (!input) {
@@ -392,10 +395,10 @@
 				return result;
 			});
 
-			attrs.sh = attrs.sh || [];
+			attrs.sh = [...(attrs.sh || [])];
 			attrs.sh.push(successHandler);
 
-			attrs.ep = attrs.ep || [];
+			attrs.ep = [...(attrs.ep || [])];
 			attrs.ep.push({'name' : cfg.parameterName, 'value' : currentInput});
 
 			Wicket.Ajax.ajax(attrs);
