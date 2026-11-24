@@ -106,10 +106,24 @@ export interface IslandContext<P> {
  */
 export type IslandCallErrorKind = 'invalid' | 'forbidden' | 'expired' | 'error' | 'network';
 
+const BRAND = Symbol.for('wicket-islands.IslandCallError');
+
 /**
  * The rejection of a failed island call.
+ *
+ * `instanceof IslandCallError` also holds for the errors of another copy of this package: the
+ * islands of separately built bundles share the runtime of the bundle that loaded first, so the
+ * error a call rejects with may come from that bundle's copy.
  */
 export class IslandCallError extends Error {
+	static [Symbol.hasInstance](value: unknown): boolean {
+		if (this !== IslandCallError) {
+			return Function.prototype[Symbol.hasInstance].call(this, value);
+		}
+		return typeof value === 'object' && value !== null
+			&& (value as { [BRAND]?: unknown })[BRAND] === true;
+	}
+
 	readonly kind: IslandCallErrorKind;
 
 	readonly messages: readonly string[];
@@ -119,5 +133,6 @@ export class IslandCallError extends Error {
 		this.name = 'IslandCallError';
 		this.kind = kind;
 		this.messages = messages;
+		Object.defineProperty(this, BRAND, { value: true });
 	}
 }

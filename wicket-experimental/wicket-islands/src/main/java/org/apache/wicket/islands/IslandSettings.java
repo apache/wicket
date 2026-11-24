@@ -352,9 +352,11 @@ public class IslandSettings
 	 * than this module's is refused by the runtime: its islands are not mounted, and the browser
 	 * console says why.
 	 * <p>
-	 * Island types are global, so a library should prefix its types with its name. A library
-	 * adds itself from an {@link org.apache.wicket.IInitializer}, which runs before the
-	 * application's {@code init()}:
+	 * Island types are global, so a library should prefix its types with its name. An island type
+	 * of a library takes precedence over the application's own: when the application's build has
+	 * an entry of the same name, its islands of that type load the library's module, without a
+	 * warning. A library adds itself from an {@link org.apache.wicket.IInitializer}, which runs
+	 * before the application's {@code init()}:
 	 *
 	 * <pre>
 	 * public void init(Application application)

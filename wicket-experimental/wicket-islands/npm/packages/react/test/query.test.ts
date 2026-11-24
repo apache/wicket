@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { IslandCallError, type IslandContext } from 'wicket-islands';
 import { createQueryClient, queryClientOf } from '../src/query';
 
@@ -77,5 +77,15 @@ describe('the query client of a page', () => {
 		expect(retry(0, new IslandCallError('network', []))).toBe(true);
 		expect(retry(0, new IslandCallError('error', []))).toBe(false);
 		expect(retry(2, new IslandCallError('network', []))).toBe(false);
+	});
+
+	it('retries after a network failure reported by the runtime of another build', async () => {
+		const retry = createQueryClient(subscription().onInvalidate).getDefaultOptions().queries!
+			.retry as (failures: number, error: unknown) => boolean;
+		vi.resetModules();
+		const other = await import('wicket-islands');
+		expect(other.IslandCallError).not.toBe(IslandCallError);
+
+		expect(retry(0, new other.IslandCallError('network', []))).toBe(true);
 	});
 });

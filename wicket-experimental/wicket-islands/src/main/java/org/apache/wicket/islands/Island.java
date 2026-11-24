@@ -102,11 +102,15 @@ public class Island<P> extends WebComponent implements IGenericComponent<P, Isla
 
 	/**
 	 * The version of the protocol between this module and the client-side runtime: the markup of
-	 * the host, the island state, the calls and their answers. It changes whenever one side
-	 * changes in a way the other cannot follow. The runtime mounts an island only when it was
-	 * built for the same version, so a module built against another version of the runtime, for
-	 * example one in an outdated {@linkplain IslandSettings#addLibrary(String, String) library},
-	 * is refused rather than run against a server it does not understand.
+	 * the host, the island state, the calls and their answers. The islands of separately built
+	 * bundles share one runtime on a page, so it also covers the contract between the runtime and
+	 * the island modules of the framework adapters, {@code IslandContext} and
+	 * {@code IslandModule}. It changes with every change to any of these, additions included,
+	 * since a module built against a newer contract may rely on what an older runtime does not
+	 * offer. The runtime mounts an island only when it was built for the same version, so a
+	 * module built against another version of the runtime, for example one in an outdated
+	 * {@linkplain IslandSettings#addLibrary(String, String) library}, is refused rather than run
+	 * against a server or a runtime it does not understand.
 	 */
 	public static final int PROTOCOL = 1;
 
