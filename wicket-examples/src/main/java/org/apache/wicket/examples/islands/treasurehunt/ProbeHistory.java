@@ -22,9 +22,9 @@ import org.apache.wicket.islands.Island;
 import org.apache.wicket.model.IModel;
 
 /**
- * The list of probes, rendered by the React component <code>ProbeHistory.tsx</code>. It has no
+ * The list of probes, rendered by the Svelte component <code>ProbeHistory.svelte</code>. It has no
  * calls of its own: the board's probe call sends it new props, and it shares the highlighted cell
- * with the board through a client store, without involving the server.
+ * with the React board through a client store, without involving the server.
  */
 public class ProbeHistory extends Island<ProbeHistory.HistoryProps>
 {

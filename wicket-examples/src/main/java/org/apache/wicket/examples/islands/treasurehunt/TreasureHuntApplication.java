@@ -60,6 +60,9 @@ public class TreasureHuntApplication extends WicketExampleApplication
 	{
 		super.init();
 
+		// the policy Svelte creates for the templates of its compiled components
+		getCspSettings().blocking().add(CSPDirective.TRUSTED_TYPES, "svelte-trusted-html");
+
 		IslandSettings islands = IslandSettings.install(this);
 		islands.getPagelessEndpoints()
 			.register("scores", ScoresEndpoint.ScoreQuery.class, new ScoresEndpoint(highScores),

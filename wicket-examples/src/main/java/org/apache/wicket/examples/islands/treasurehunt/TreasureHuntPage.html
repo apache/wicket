@@ -3,8 +3,8 @@
 <wicket:extend>
 	<p>
 		Find the hidden treasures. Each probe that misses tells you how far away the nearest
-		hidden treasure is. The board is a React component, mounted as a Wicket island; everything
-		around it is plain Wicket.
+		hidden treasure is. The board is a React component and the probe history a Svelte one, both
+		mounted as Wicket islands; everything around them is plain Wicket.
 	</p>
 
 	<p wicket:id="noBuild" class="treasure-notice">
@@ -35,9 +35,9 @@
 	<section class="treasure-notes">
 		<h3>How this page is built</h3>
 		<p>
-			Four React components are mounted as islands. Each has a Java class that places it in
-			the page, and a module under <code>frontend/src/treasurehunt</code> that renders it; the
-			source viewer shows both.
+			Three React components and one Svelte component are mounted as islands. Each has a Java
+			class that places it in the page, and a module under
+			<code>frontend/src/treasurehunt</code> that renders it; the source viewer shows both.
 		</p>
 		<ul>
 			<li>
@@ -48,8 +48,9 @@
 				the Ajax response.
 			</li>
 			<li>
-				<strong>The probe history</strong> (<code>ProbeHistory</code>) shares the hovered cell
-				with the board through a client store. Hovering never reaches the server.
+				<strong>The probe history</strong> (<code>ProbeHistory</code>) is written in Svelte.
+				It shares the hovered cell with the React board through a client store. Hovering
+				never reaches the server.
 			</li>
 			<li>
 				<strong>The name and colour field</strong> (<code>PlayerEntryField</code>) is a

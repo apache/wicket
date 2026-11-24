@@ -1,0 +1,119 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.poll {
+	width: 22em;
+	padding: 0.8em 1em;
+	border: 1px solid #ccc;
+	border-top: 4px solid var(--poll-accent);
+	border-radius: 6px;
+	background: #fff;
+}
+
+.poll[data-framework='react'] {
+	--poll-accent: #087ea4;
+}
+
+.poll[data-framework='svelte'] {
+	--poll-accent: #ff3e00;
+}
+
+.poll-framework {
+	margin: 0;
+	color: var(--poll-accent);
+	font-size: 0.85em;
+	font-weight: bold;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.poll-question {
+	margin: 0.3em 0 0.8em;
+}
+
+.poll-options {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.poll-option {
+	display: grid;
+	grid-template-columns: auto 7em 1fr 2em;
+	gap: 0.5em;
+	align-items: center;
+	padding: 0.25em 0.3em;
+	border-radius: 4px;
+}
+
+.poll-option.highlight {
+	background: #f0f0f0;
+}
+
+.poll-option.leader .poll-label {
+	font-weight: bold;
+}
+
+.poll-vote {
+	min-width: 2.5em;
+	cursor: pointer;
+}
+
+.poll-label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.poll-bar {
+	height: 0.7em;
+	border-radius: 0.35em;
+	background: #e6e6e6;
+	overflow: hidden;
+}
+
+.poll-fill {
+	display: block;
+	height: 100%;
+	background: var(--poll-accent);
+	transition: width 0.3s ease;
+}
+
+.poll-count {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+
+.poll-add {
+	display: flex;
+	gap: 0.5em;
+	margin-top: 0.8em;
+}
+
+.poll-add input {
+	flex: 1;
+}
+
+.poll-message {
+	margin: 0.5em 0 0;
+	color: #b00020;
+}
+
+.poll-footer {
+	margin: 0.8em 0 0;
+	color: #666;
+	font-size: 0.85em;
+}

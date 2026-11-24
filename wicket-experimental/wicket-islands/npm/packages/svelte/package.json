@@ -1,0 +1,18 @@
+{
+  "name": "wicket-islands-svelte",
+  "version": "0.0.0",
+  "description": "Svelte adapter for Wicket Islands",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.svelte.ts",
+    "./vite": {
+      "types": "./src/vite.d.ts",
+      "default": "./src/vite.js"
+    }
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0",
+    "wicket-islands": "0.0.0"
+  }
+}
