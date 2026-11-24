@@ -77,3 +77,11 @@ The other changes:
 - A backslash no longer escapes a quote. `title="C:\dir\"` is the value `C:\dir\`; markup that used `\"` inside a quoted value now has the value end at that quote.
 - The body of a `<script>` with an empty type, a JavaScript MIME type such as `application/javascript`, or a JSON type such as `application/ld+json` is raw text and passed through untouched. Before, such a script was parsed as a template, so a Wicket component inside one is no longer found. Scripts of other types, such as `text/x-handlebars-template`, are still templates.
 - A custom element whose name only starts with `script` or `style`, such as `<script-loader>`, is parsed as markup. Before, its content was skipped up to the next `</script>` or `</style>`, Wicket components included.
+
+## `IPageAndComponentProvider#hasComponent()`
+
+`IPageAndComponentProvider` has a new method without a default implementation, `hasComponent()` ([#1653](https://github.com/apache/wicket/issues/1653)). Wicket's `PageAndComponentProvider` implements it, so a provider that extends that class needs no change. A class of your own that implements the interface directly no longer compiles until it implements the method.
+
+Return `true` only when `getComponent()` can return the component without creating the page or running any of its lifecycle callbacks: because the provider has resolved the component already, or because a page instance it holds already contains it. Return `false` otherwise. Wicket asks while it collects the log data of a listener request, after the response has been written, and only calls `getComponent()` when the answer is `true`; with `false`, the log data has no component class, behavior class or submitting component.
+
+The log data of a listener request no longer runs the lifecycle callbacks of a page to find its component. Before, when a stateless page lacked the listener's component, collecting the log data initialized the page and prepared it for rendering once more, during detach, and a provider without a page created one. Whatever those callbacks did happened after the response had been committed; an application that created an HTTP session there got one whose cookie never reached the browser. Log entries of such requests now have no component class, behavior class or submitting component.

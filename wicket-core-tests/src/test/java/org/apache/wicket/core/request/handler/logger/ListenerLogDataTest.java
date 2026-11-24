@@ -21,11 +21,16 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.request.handler.IPageAndComponentProvider;
 import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IRequestHandler;
@@ -155,68 +160,191 @@ class ListenerLogDataTest extends WicketTestCase {
 	}
 
 	/**
+	 * The log data of a behavior listener names the behavior, which is looked up on the component
+	 * resolved for the listener.
+	 */
+	@Test
+	void logDataNamesBehaviorOfListener()
+	{
+		tester.startPage(ListenerPage.class);
+		tester.executeAjaxEvent("clickable", "click");
+
+		ListenerLogData logData = executedListenerHandler.getLogData();
+		assertEquals("clickable", logData.getComponentPath());
+		assertEquals(WebMarkupContainer.class, logData.getComponentClass());
+		assertEquals(ClickBehavior.class, logData.getBehaviorClass());
+		assertNull(logData.getSubmittingComponentClass());
+		assertNull(logData.getSubmittingComponentPath());
+	}
+
+	/**
+	 * The log data of a form submit names the submitting button, which is looked up on the form
+	 * resolved for the listener.
+	 */
+	@Test
+	void logDataNamesSubmittingComponentOfForm()
+	{
+		tester.startPage(ListenerPage.class);
+		tester.newFormTester("form").submit("submit");
+
+		ListenerLogData logData = executedListenerHandler.getLogData();
+		assertEquals("form", logData.getComponentPath());
+		assertEquals(Form.class, logData.getComponentClass());
+		assertNull(logData.getBehaviorClass());
+		assertEquals(SubmitButton.class, logData.getSubmittingComponentClass());
+		assertEquals("form:submit", logData.getSubmittingComponentPath());
+	}
+
+	/**
 	 * Test for WICKET-6908.
 	 */
 	@Test
-	void neverFails() {
-		IPageAndComponentProvider provider = new IPageAndComponentProvider() {
-			
+	void neverFails()
+	{
+		new ListenerLogData(new FailingProvider(), 1);
+	}
+
+	/**
+	 * Test for WICKET-6908, with a provider that has the component but fails to return it.
+	 */
+	@Test
+	void neverFailsWhenComponentFails()
+	{
+		new ListenerLogData(new FailingProvider()
+		{
 			@Override
-			public boolean wasExpired() {
-				throw new IllegalStateException();
+			public boolean hasComponent()
+			{
+				return true;
 			}
-			
-			@Override
-			public boolean hasPageInstance() {
-				throw new IllegalStateException();
-			}
-			
-			@Override
-			public Integer getRenderCount() {
-				throw new IllegalStateException();
-			}
-			
-			@Override
-			public PageParameters getPageParameters() throws PageExpiredException {
-				throw new IllegalStateException();
-			}
-			
-			@Override
-			public IRequestablePage getPageInstance() throws PageExpiredException {
-				throw new IllegalStateException();
-			}
-			
-			@Override
-			public Integer getPageId() {
-				throw new IllegalStateException();
-			}
-			
-			@Override
-			public Class<? extends IRequestablePage> getPageClass() throws PageExpiredException {
-				throw new IllegalStateException();
-			}
-			
-			@Override
-			public boolean doesProvideNewPage() {
-				throw new IllegalStateException();
-			}
-			
-			@Override
-			public void detach() {
-			}
-			
-			@Override
-			public String getComponentPath() {
-				throw new IllegalStateException();
-			}
-			
-			@Override
-			public IRequestableComponent getComponent() {
-				throw new IllegalStateException();
-			}
-		};
-		
-		new ListenerLogData(provider, 1);
+		}, 1);
+	}
+
+	private static class FailingProvider implements IPageAndComponentProvider
+	{
+		@Override
+		public boolean wasExpired()
+		{
+			throw new IllegalStateException();
+		}
+
+		@Override
+		public boolean hasPageInstance()
+		{
+			throw new IllegalStateException();
+		}
+
+		@Override
+		public Integer getRenderCount()
+		{
+			throw new IllegalStateException();
+		}
+
+		@Override
+		public PageParameters getPageParameters() throws PageExpiredException
+		{
+			throw new IllegalStateException();
+		}
+
+		@Override
+		public IRequestablePage getPageInstance() throws PageExpiredException
+		{
+			throw new IllegalStateException();
+		}
+
+		@Override
+		public Integer getPageId()
+		{
+			throw new IllegalStateException();
+		}
+
+		@Override
+		public Class<? extends IRequestablePage> getPageClass() throws PageExpiredException
+		{
+			throw new IllegalStateException();
+		}
+
+		@Override
+		public boolean doesProvideNewPage()
+		{
+			throw new IllegalStateException();
+		}
+
+		@Override
+		public void detach()
+		{
+		}
+
+		@Override
+		public String getComponentPath()
+		{
+			throw new IllegalStateException();
+		}
+
+		@Override
+		public boolean hasComponent()
+		{
+			throw new IllegalStateException();
+		}
+
+		@Override
+		public IRequestableComponent getComponent()
+		{
+			throw new IllegalStateException();
+		}
+	}
+
+	/**
+	 * A page with a behavior listener and a form.
+	 */
+	public static class ListenerPage extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		public ListenerPage()
+		{
+			WebMarkupContainer clickable = new WebMarkupContainer("clickable");
+			clickable.add(new ClickBehavior());
+			add(clickable);
+
+			Form<Void> form = new Form<>("form");
+			form.add(new SubmitButton("submit"));
+			add(form);
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><body><span wicket:id=\"clickable\"></span>" +
+				"<form wicket:id=\"form\"><input type=\"submit\" wicket:id=\"submit\"/></form>" +
+				"</body></html>");
+		}
+	}
+
+	private static class ClickBehavior extends AjaxEventBehavior
+	{
+		private static final long serialVersionUID = 1L;
+
+		ClickBehavior()
+		{
+			super("click");
+		}
+
+		@Override
+		protected void onEvent(AjaxRequestTarget target)
+		{
+		}
+	}
+
+	private static class SubmitButton extends Button
+	{
+		private static final long serialVersionUID = 1L;
+
+		SubmitButton(String id)
+		{
+			super(id);
+		}
 	}
 
 	/**

@@ -41,16 +41,11 @@ public interface IPageAndComponentProvider extends IPageProvider
 	 * Unlike {@link #getComponent()}, this method never initializes a stateless page or prepares it
 	 * for rendering to let it add a missing component, so it can be called after the response has
 	 * been written, e.g. to collect log data while the request handler is detached.
-	 * <p>
-	 * The default implementation returns {@code false}.
 	 *
 	 * @return {@code true} if {@link #getComponent()} returns the component without side effects
-	 * @since 10.13.0
+	 * @since 12.0.0
 	 */
-	default boolean hasComponent()
-	{
-		return false;
-	}
+	boolean hasComponent();
 
 	/**
 	 * Returns the page relative component path.
