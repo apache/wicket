@@ -151,6 +151,11 @@ _Island_ constructor. `reactIslands` lets an island module export a plain React 
 keeps it eligible for React Fast Refresh during development. `resolve.dedupe` and `server.fs`
 are only needed because the island packages are linked from outside the project.
 
+`reactIslands` sets the adapter for all islands of the build. An island of another framework
+names its own adapter instead of a plain module path,
+`'my-island': { module: 'src/MyIsland.vue', adapter: '<the framework adapter>' }`. With that
+framework's Vite plugin next to React's, the islands of both are built together.
+
 The plugin switches on Vite's manifest and sets `base` to `./` for builds, unless the
 configuration sets one, so the URLs of imported assets and lazily loaded chunks resolve against
 the module, under Wicket's mount.
@@ -289,7 +294,9 @@ load their modules from the library's build, in development mode as well; island
 type load from the application's own build or dev server as before, so islands of both kinds can
 be used on the same page. The files of the library are served under
 `wicket-islands-library/<name>/`. Island types are global, so a library should prefix its types
-with its name; adding a library that provides a type another library provides already fails.
+with its name; adding a library that provides a type another library provides already fails. A
+type of a library also takes precedence over a type of the same name in the application's own
+build, without a warning.
 
 A build contains everything its modules import, the framework and the islands runtime included.
 A page that shows islands from several builds therefore loads a copy of React for each of them.
@@ -297,11 +304,13 @@ The islands still work side by side, because each island is mounted as a React r
 They share the client stores and receive the invalidations of the server, but React context, such
 as a component library's theme, and the query cache do not cross from one build to another.
 
-The server and the runtime speak a versioned protocol (_Island.PROTOCOL_). Each island host
-carries the version it was rendered for, and the runtime mounts it only when its own version is
-the same. A library built against a `wicket-islands` version with another protocol does not
-disturb the other islands of the page: its islands stay empty, and the browser console says which
-island was refused and why. The library has to be rebuilt against the version the application
+The server and the runtime speak a versioned protocol (_Island.PROTOCOL_). Each island host carries
+the version it was rendered for, and the runtime mounts it only when its own version is the same.
+The builds on a page share the runtime of the one that loaded first, so the protocol also covers
+what the runtime hands to the island modules of every build, and changes with any change to it,
+additions included. A library built against a `wicket-islands` version with another protocol does
+not disturb the other islands of the page: its islands stay empty, and the browser console says
+which island was refused and why. The library has to be rebuilt against the version the application
 runs.
 
 === Content Security Policy

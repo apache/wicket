@@ -625,3 +625,21 @@ describe('cspNonce', () => {
 		expect(cspNonce()).toBeUndefined();
 	});
 });
+
+describe('IslandCallError', () => {
+	it('recognises the errors of another copy of the package', async () => {
+		vi.resetModules();
+		const other = await import('../src/types');
+		expect(other.IslandCallError).not.toBe(IslandCallError);
+
+		expect(new other.IslandCallError('network', [])).toBeInstanceOf(IslandCallError);
+		expect(new IslandCallError('network', [])).toBeInstanceOf(other.IslandCallError);
+	});
+
+	it('recognises no other errors', () => {
+		expect(new Error('network')).not.toBeInstanceOf(IslandCallError);
+		expect(Object.assign(new Error(), { name: 'IslandCallError' }))
+			.not.toBeInstanceOf(IslandCallError);
+		expect(null).not.toBeInstanceOf(IslandCallError);
+	});
+});

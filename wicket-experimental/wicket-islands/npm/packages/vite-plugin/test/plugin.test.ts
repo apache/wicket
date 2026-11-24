@@ -69,6 +69,28 @@ describe('wicketIslands', () => {
 		].join('\n'));
 	});
 
+	it('wraps each island with the defineIsland of its own adapter', () => {
+		const instance = wicketIslands({
+			islands: {
+				board: 'src/Board.tsx',
+				hint: { module: 'src/Hint.svelte', adapter: 'wicket-islands-svelte' }
+			},
+			adapter: 'wicket-islands-react'
+		});
+		const config = hook(instance, 'config')({}, { command: 'build' });
+		hook(instance, 'configResolved')({ root: '/app' });
+
+		expect(config).toHaveProperty('optimizeDeps.entries', ['src/Board.tsx', 'src/Hint.svelte']);
+		expect(hook(instance, 'load')('\0wicket-island:board')).toContain(
+			'import { defineIsland } from "wicket-islands-react";');
+		expect(hook(instance, 'load')('\0wicket-island:hint')).toBe([
+			'import island from "/app/src/Hint.svelte";',
+			'import { registerIsland } from \'wicket-islands\';',
+			'import { defineIsland } from "wicket-islands-svelte";',
+			'registerIsland("hint", defineIsland(island));'
+		].join('\n'));
+	});
+
 	it('generates an entry that registers the island module', () => {
 		const { instance } = plugin('build', 'preamble();');
 		const id = hook(instance, 'resolveId')('virtual:wicket-island:treasure-board');
