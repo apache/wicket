@@ -1,0 +1,138 @@
+////
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+////
+
+The Java half of an island does not know which framework renders its peer. Besides React,
+Wicket Islands has an adapter for Svelte 5, `wicket-islands-svelte`, and the same _Island_ class
+can be rendered by either: only the island type, and so the module the Vite build maps it to,
+decides.
+
+=== Setting up Svelte
+
+The adapter is one more package next to the runtime, linked like the others, together with
+`svelte` and Vite's Svelte plugin, `@sveltejs/vite-plugin-svelte`. A build with only Svelte
+islands takes its settings from `wicket-islands-svelte/vite`:
+
+[source,javascript]
+----
+import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { defineConfig } from 'vite';
+import wicketIslands from 'vite-plugin-wicket-islands';
+import { svelteIslands } from 'wicket-islands-svelte/vite';
+
+export default defineConfig({
+	plugins: [
+		svelte(),
+		wicketIslands({
+			islands: {
+				'star-rating': 'src/StarRating.svelte'
+			},
+			...svelteIslands
+		})
+	]
+});
+----
+
+A build with islands of both frameworks keeps React as the default and lets each Svelte island
+name its adapter, with both frameworks' Vite plugins in the list:
+
+[source,javascript]
+----
+plugins: [
+	react(),
+	svelte(),
+	wicketIslands({
+		islands: {
+			'treasure-board': 'src/TreasureBoard.tsx',
+			'probe-history': {
+				module: 'src/ProbeHistory.svelte',
+				adapter: 'wicket-islands-svelte'
+			}
+		},
+		...reactIslands
+	})
+]
+----
+
+Svelte creates a Trusted Types policy named `svelte-trusted-html` for the templates of its
+compiled components. On a page that requires Trusted Types, the application allows it:
+
+[source,java]
+----
+getCspSettings().blocking().add(CSPDirective.TRUSTED_TYPES, "svelte-trusted-html");
+----
+
+=== A Svelte island
+
+The island module is a plain Svelte component; the adapter mounts it with the island's props as
+its props. When the server sends new props, the adapter changes them in place, so the component
+keeps its own state, as a React island does. The star rating of
+<<_a_first_island,A first island>> in Svelte:
+
+[source,html]
+----
+<script lang="ts">
+	import { getIsland, IslandCallError } from 'wicket-islands-svelte';
+
+	let { stars, votes }: { stars: number; votes: number } = $props();
+
+	const { call } = getIsland();
+	let error = $state<string | null>(null);
+
+	async function rate(value: number) {
+		error = null;
+		try {
+			await call('rate', { stars: value });
+		} catch (e) {
+			error = e instanceof IslandCallError ? e.messages.join(' ') : String(e);
+		}
+	}
+</script>
+
+<div class="star-rating">
+	{#each [1, 2, 3, 4, 5] as value}
+		<button type="button" aria-label="{value} stars" aria-pressed={value <= stars}
+			onclick={() => void rate(value)}>★</button>
+	{/each}
+	<span>{votes} votes</span>
+	{#if error}<p role="alert">{error}</p>{/if}
+</div>
+----
+
+The functions of the adapter read the island from Svelte's component context, so they can only
+be called while a component inside the island initializes, in its `<script>` block. Except for
+_getIsland_, they return Svelte stores, read with the `$` prefix:
+
+[options="header"]
+|===
+|Function |Purpose
+|_getIsland()_ |The island's key, abort signal and _call_ function.
+|_islandStore(name)_ |A client store shared by the islands of the page, as a writable store.
+|_islandQuery(name, payload)_ |Data fetched with a call, fetched again when the server
+invalidates the name.
+|_formValue()_ |The value of a form island, as a writable store.
+|_formState()_ |Required, enabled, label and feedback messages of a form island.
+|===
+
+Client stores are the runtime's, not React's or Svelte's, so a Svelte island and a React island
+using the same store name share its value. The Treasure Hunt's probe history is a Svelte island
+that highlights the cell the React board points at in this way.
+
+_islandQuery_ is deliberately small. It calls the island when the store gets its first
+subscriber, and again whenever a response invalidates the name, keeping the previous data while
+the next call runs. Its state has `data`, `error` and `loading`. Unlike the React adapter's
+TanStack Query, it shares no cache between islands, does not retry failed calls, and keeps the
+payload it was created with.

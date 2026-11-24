@@ -16,16 +16,23 @@
 ////
 
 The module `wicket-examples` contains two complete applications with islands, in the package
-_org.apache.wicket.examples.islands_, with their React components in `src/main/frontend`:
+_org.apache.wicket.examples.islands_, with their React and Svelte components in
+`src/main/frontend`:
 
 * *Treasure Hunt* (`/treasurehunt`): a game board as an island, working together with plain
   Wicket components on the page. It shows calls that update other components, errors and expired
   pages, replacing an island, a client store shared by two islands, a form island, and a
-  page-less endpoint whose results are invalidated by a classic Ajax form.
+  page-less endpoint whose results are invalidated by a classic Ajax form. Its probe history is
+  a Svelte island, built together with the React ones, that shares a client store with the React
+  board.
 * *Task board* (`/taskboard`): a board of cards with drag and drop and optimistic updates, a
   Wicket modal dialog opened from the island, form islands with a rich text editor and a date
   picker, and page-less endpoints with handles for an autocomplete and a chart. It uses the
   Mantine component library, with the page's CSP nonce.
+* *Twin islands* (`/twinislands`): one poll, a single Java island class placed twice, rendered once
+  by a React component and once by a Svelte one with the same markup. A vote or a new option in
+  either updates both and a plain Wicket summary, each component keeps its own state across the
+  updates the other causes, and a client store highlights an option in both.
 
 The examples' JavaScript is built under the Maven profile `js-test`; without it, the pages show
 a notice that the JavaScript is missing. For development, run `npm run dev` in
@@ -34,8 +41,10 @@ a notice that the JavaScript is missing. For development, run `npm run dev` in
 
 === Current limitations
 
-* React is the only framework with an adapter. The runtime and its mount contract are
+* React and Svelte are the frameworks with an adapter. The runtime and its mount contract are
   framework-neutral, so adapters for other frameworks, such as Vue and Angular, can follow.
+* The Svelte adapter's _islandQuery_ is a small query store: unlike the React adapter's TanStack
+  Query, it has no cache shared between islands and does not retry failed calls.
 * The npm packages are not published yet.
 * Islands from separate builds, such as the application's and a library's, each bring their own
   copy of the framework; they cannot share one.

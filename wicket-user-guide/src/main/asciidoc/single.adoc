@@ -892,6 +892,10 @@ include::islands/islands_6.adoc[leveloffset=+1]
 
 include::islands/islands_7.adoc[leveloffset=+1]
 
+=== Svelte islands
+
+include::islands/islands_10.adoc[leveloffset=+1]
+
 === Security
 
 include::islands/islands_8.adoc[leveloffset=+1]

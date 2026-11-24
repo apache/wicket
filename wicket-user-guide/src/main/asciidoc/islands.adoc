@@ -35,9 +35,9 @@ ecosystem. Wrapping a small JavaScript widget around a Wicket component, as desc
 JavaScript>>, remains the simpler choice where it suffices.
 
 WARNING: Wicket Islands is experimental. It lives in the `wicket-experimental` modules and its
-API may still change. React is the only framework with an adapter so far, and the npm packages
-of the client side are not published to the npm registry yet: an application links them from a
-Wicket source tree, as the examples do.
+API may still change. React and Svelte are the frameworks with an adapter so far, and the npm
+packages of the client side are not published to the npm registry yet: an application links them
+from a Wicket source tree, as the examples do.
 
 Islands are rendered in the browser only. The server writes an empty host element and the props;
 the peer fills the host once its JavaScript module has loaded. Content that must be there without

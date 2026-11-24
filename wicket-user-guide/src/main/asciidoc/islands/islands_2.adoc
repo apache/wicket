@@ -72,10 +72,12 @@ page header altogether.
 
 === The client side
 
-The client side consists of three npm packages:
+The client side consists of these npm packages:
 
 * `wicket-islands`, the framework-neutral runtime;
 * `wicket-islands-react`, the React adapter;
+* `wicket-islands-svelte`, the Svelte adapter, described in
+  <<_svelte_islands,Svelte islands>>;
 * `vite-plugin-wicket-islands`, the Vite plugin that turns each island type into an entry of the
   build.
 
@@ -153,7 +155,7 @@ are only needed because the island packages are linked from outside the project.
 
 `reactIslands` sets the adapter for all islands of the build. An island of another framework
 names its own adapter instead of a plain module path,
-`'my-island': { module: 'src/MyIsland.vue', adapter: '<the framework adapter>' }`. With that
+`'my-island': { module: 'src/MyIsland.svelte', adapter: 'wicket-islands-svelte' }`. With that
 framework's Vite plugin next to React's, the islands of both are built together.
 
 The plugin switches on Vite's manifest and sets `base` to `./` for builds, unless the
@@ -328,7 +330,9 @@ Islands work on a page that requires Trusted Types, which
 _CSPHeaderConfiguration.requireTrustedTypes()_ enables. The runtime writes no markup itself: it
 reads the island state as JSON, and the answers of page-bound calls arrive in Wicket's Ajax
 response, which Wicket's own policy covers. React only writes markup for `dangerouslySetInnerHTML`.
-The development mode works as well, including hot module replacement.
+Svelte creates a policy of its own, `svelte-trusted-html`, which the application has to allow, as
+shown in <<_svelte_islands,Svelte islands>>. The development mode works as well, including hot
+module replacement.
 
 The JavaScript an island module bundles has to keep to the rule too. A library that assigns a
 string to `innerHTML` or hands one to `DOMParser` fails, usually while React renders, and the island
