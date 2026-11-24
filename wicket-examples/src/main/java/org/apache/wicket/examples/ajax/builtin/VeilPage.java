@@ -24,12 +24,15 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.veil.LocalVeilBehavior;
 import org.apache.wicket.extensions.ajax.veil.PageVeilBehavior;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.Loop;
 import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.model.IModel;
@@ -38,8 +41,8 @@ import org.apache.wicket.request.resource.CssResourceReference;
 
 /**
  * Demonstrates {@link PageVeilBehavior} and {@link LocalVeilBehavior}, including nested local
- * veils with their own timings, and the cases a veil has to hold in: a delegated behavior, and
- * hosts that scroll, are positioned or sit under a sticky header.
+ * veils with their own timings, and the cases a veil has to hold in: the keyboard, a delegated
+ * behavior, and hosts that scroll, are positioned or sit under a sticky header.
  */
 public class VeilPage extends BasePage
 {
@@ -78,11 +81,32 @@ public class VeilPage extends BasePage
 		inner.add(new SleepingLink("innerSlow", Duration.ofSeconds(2), innerCounter, false));
 		inner.add(new SleepingLink("innerShort", Duration.ofMillis(200), innerCounter, false));
 
+		addKeyboardForm();
 		addDelegatedRows();
 		addObjectMemberId();
 		addScroller();
 		addPositionedHost();
 		addStickyHeader();
+	}
+
+	private void addKeyboardForm()
+	{
+		Form<Void> form = new Form<>("keyboardForm");
+		add(form);
+		form.add(new TextField<>("note", Model.of("")));
+
+		Label counter = counter(this, "saveCounter");
+		form.add(new AjaxButton("save")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				sleep(Duration.ofSeconds(2));
+				increment(counter, target);
+			}
+		});
 	}
 
 	private void addDelegatedRows()
@@ -231,14 +255,19 @@ public class VeilPage extends BasePage
 		}
 
 		@Override
-		@SuppressWarnings("unchecked")
 		public void onClick(AjaxRequestTarget target)
 		{
 			sleep(duration);
-			IModel<Integer> clicks = (IModel<Integer>)counter.getDefaultModel();
-			clicks.setObject(clicks.getObject() + 1);
-			target.add(counter);
+			increment(counter, target);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void increment(Label counter, AjaxRequestTarget target)
+	{
+		IModel<Integer> clicks = (IModel<Integer>)counter.getDefaultModel();
+		clicks.setObject(clicks.getObject() + 1);
+		target.add(counter);
 	}
 
 	private static void sleep(Duration duration)
