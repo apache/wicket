@@ -108,9 +108,15 @@ header — copy it when you add one.
   the new one, deprecate it rather than remove it.
 - An API change owes users a migration path. Add an OpenRewrite recipe to
   `wicket-migration/src/main/resources/META-INF/rewrite/wicket.yml` where the change is
-  mechanical. A change that breaks code or changes what a running application does also gets a
-  section in the migration guide, `migration-to-<major>.md` in the root, in the same change. On a
-  maintenance branch it goes in the section for the releases after `<major>.0.0`.
+  mechanical. The migration guide, `migration-to-<major>.md` in the root, tells someone upgrading
+  what they have to do, and gets a section in the same change when the upgrade forces an
+  application to change its code, markup or configuration, or when an intended behaviour changes
+  on purpose — a new default, a removed feature, a different contract — so that an application
+  has to decide whether to adapt. A bug fix does not belong there, even though an application
+  that relied on the broken behaviour will notice: if the old behaviour contradicted the
+  documentation, the contract or plain intent, the commit message covers the consequence and the
+  guide stays out of it. The guide is not release notes. On a maintenance branch it goes in the
+  section for the releases after `<major>.0.0`.
 
 ## Javadoc
 
