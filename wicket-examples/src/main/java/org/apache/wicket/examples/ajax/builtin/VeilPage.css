@@ -29,6 +29,10 @@
 	background: #f7f7f7;
 }
 
+.veil-keyboard {
+	max-width: 40em;
+}
+
 .veil-rows {
 	max-width: 40em;
 	padding: 0;

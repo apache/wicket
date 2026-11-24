@@ -18,9 +18,10 @@
 /*
  * Veils the page, or a single component, while Ajax requests are in flight.
  *
- * The veil is transparent and only blocks the mouse. If a request is still running after the
- * target's spinner delay, the veil gets the 'wicket-veil-busy' class, which shows a spinner;
- * once shown, the spinner stays for at least the target's minimum time, so it does not flicker.
+ * The veil is transparent. It blocks the mouse, and Enter and Space on the elements it covers
+ * unless they type text. If a request is still running after the target's spinner delay, the
+ * veil gets the 'wicket-veil-busy' class, which shows a spinner; once shown, the spinner stays
+ * for at least the target's minimum time, so it does not flicker.
  * A request carrying the extra parameter 'wicket_nb' is never veiled.
  *
  * A local veil can also be raised by the server, for a component it is about to update through a
@@ -41,9 +42,12 @@
 	const STATIC_HOST_CLASS = 'wicket-veil-host-static';
 	const WEBSOCKET_MESSAGE_TOPIC = '/websocket/message';
 	const MESSAGE_PREFIX = '{"wicketVeil"';
+	const ACTIVATING_KEYS = ['Enter', ' '];
+	const TEXT_INPUT_TYPES = ['email', 'password', 'search', 'tel', 'text', 'url'];
 
 	let pageTarget = null;
 	const localTargets = new Map();
+	const droppedKeys = new Set();
 	let subscribed = false;
 
 	// the veil scrolls with the content of its host, so it is moved back over the visible part
@@ -128,6 +132,21 @@
 	function detach(target) {
 		target.host.classList.remove(HOST_CLASS, STATIC_HOST_CLASS);
 		target.host.removeEventListener('scroll', target.onScroll);
+	}
+
+	function isVeiled(element) {
+		if (pageTarget !== null && pageTarget.veil !== null) {
+			return true;
+		}
+		if (!(element instanceof Node)) {
+			return false;
+		}
+		for (const target of localTargets.values()) {
+			if (target.veil !== null && target.host.contains(element)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	function hide(target) {
@@ -261,6 +280,56 @@
 		}
 	}
 
+	function isComposing(event) {
+		// Safari sends the Enter committing a composition after compositionend, with keyCode 229
+		return event.isComposing || event.keyCode === 229;
+	}
+
+	function typesText(event) {
+		if (isComposing(event)) {
+			return true;
+		}
+		// a listener on the window sees the host of a shadow root, not the field inside it
+		const element = event.composedPath()[0] || event.target;
+		if (!(element instanceof Element)) {
+			return false;
+		}
+		const tagName = element.tagName.toLowerCase();
+		if (element.isContentEditable || tagName === 'textarea') {
+			return true;
+		}
+		return event.key === ' ' && (tagName === 'select' ||
+			(tagName === 'input' && TEXT_INPUT_TYPES.indexOf(element.type) >= 0));
+	}
+
+	function drop(event) {
+		event.preventDefault();
+		event.stopImmediatePropagation();
+	}
+
+	function onKeyDown(event) {
+		if (ACTIVATING_KEYS.indexOf(event.key) < 0) {
+			return;
+		}
+		const veiled = isVeiled(event.target) && !typesText(event);
+		if (!event.repeat) {
+			if (veiled) {
+				droppedKeys.add(event.key);
+			} else {
+				droppedKeys.delete(event.key);
+			}
+		}
+		if (veiled || droppedKeys.has(event.key)) {
+			drop(event);
+		}
+	}
+
+	function onKeyUp(event) {
+		if (droppedKeys.delete(event.key)) {
+			drop(event);
+		}
+	}
+
 	function onWebSocketMessage(jqEvent, message) {
 		if (typeof(message) !== "string" || message.indexOf(MESSAGE_PREFIX) !== 0) {
 			return;
@@ -285,6 +354,8 @@
 			Wicket.Event.subscribe(Wicket.Event.Topic.AJAX_CALL_DONE, onDone);
 			Wicket.Event.subscribe(Wicket.Event.Topic.DOM_NODE_ADDED, onDomNodeAdded);
 			Wicket.Event.subscribe(WEBSOCKET_MESSAGE_TOPIC, onWebSocketMessage);
+			window.addEventListener('keydown', onKeyDown, true);
+			window.addEventListener('keyup', onKeyUp, true);
 		}
 	}
 
@@ -369,6 +440,7 @@
 			lowerAll();
 			pageTarget = null;
 			localTargets.clear();
+			droppedKeys.clear();
 		}
 	};
 })();
