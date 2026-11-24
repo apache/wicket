@@ -42,7 +42,12 @@ export default defineConfig({
 				'rich-text': 'src/taskboard/RichTextField.tsx',
 				'date-picker': 'src/taskboard/DueDateField.tsx',
 				'board-filter': 'src/taskboard/BoardFilterBar.tsx',
-				'cards-per-week': 'src/taskboard/CardsPerWeek.tsx'
+				'cards-per-week': 'src/taskboard/CardsPerWeek.tsx',
+				'poll-react': 'src/twins/Poll.tsx',
+				'poll-svelte': {
+					module: 'src/twins/Poll.svelte',
+					adapter: 'wicket-islands-svelte'
+				}
 			},
 			...reactIslands
 		})

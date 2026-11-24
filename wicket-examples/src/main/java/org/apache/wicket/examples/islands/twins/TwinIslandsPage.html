@@ -1,0 +1,61 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+	<p>
+		The same poll twice: on the left it is rendered by a React component, on the right by a
+		Svelte component. Both are the same Wicket island, <code>PollIsland</code>, with the same
+		props and the same calls; only the module that renders it differs. Vote or add an option on
+		either side and watch the other.
+	</p>
+
+	<p wicket:id="noBuild" class="twins-notice">
+		This example was built without its JavaScript. Build the examples with
+		<code>-Pjs-test</code>, or run a Vite dev server, to vote.
+	</p>
+
+	<div class="twins-layout">
+		<div wicket:id="reactPoll"></div>
+		<div wicket:id="sveltePoll"></div>
+	</div>
+
+	<p>
+		<span wicket:id="summary" class="twins-summary"></span>
+		<a wicket:id="reset" href="#">Reset the votes</a>
+	</p>
+
+	<section class="twins-notes">
+		<h3>How this page is built</h3>
+		<ul>
+			<li>
+				<strong>One Java class.</strong> The page adds <code>PollIsland</code> twice, with
+				the island types <code>poll-react</code> and <code>poll-svelte</code>. The Vite
+				build maps them to <code>Poll.tsx</code> and <code>Poll.svelte</code>, each with
+				its framework's adapter, in one build.
+			</li>
+			<li>
+				<strong>The server owns the poll.</strong> A vote or a new option is a call:
+				<code>vote</code> and <code>add</code> run on the server under the page lock, and
+				the response re-renders both islands and the summary. A rejected option comes back
+				as an <code>IslandCallError</code>, shown by the island that made the call.
+			</li>
+			<li>
+				<strong>The components keep their own state.</strong> New props do not mount a
+				component again, so a half typed option and the count of the votes cast in an island
+				survive a vote on the other side. "Reset the votes" is a plain Wicket Ajax link;
+				it re-renders the islands the same way.
+			</li>
+			<li>
+				<strong>The browser shares the highlight.</strong> Pointing at an option highlights
+				it in both islands through the client store <code>poll-highlight</code>, without a
+				request to the server.
+			</li>
+		</ul>
+		<p>
+			To change the components with hot reload, run <code>npm run dev</code> in
+			<code>wicket-examples/src/main/frontend</code> and start the examples in development
+			mode with <code>-Dwicket.islands.devServer=http://localhost:5173</code>.
+		</p>
+	</section>
+</wicket:extend>
+</body>
+</html>

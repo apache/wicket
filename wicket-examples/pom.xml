@@ -261,6 +261,15 @@
 					<include>src/taskboard/*</include>
 				</includes>
 			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>${basedir}/src/main/frontend</directory>
+				<targetPath>org/apache/wicket/examples/islands/twins/frontend</targetPath>
+				<includes>
+					<include>vite.config.js</include>
+					<include>src/twins/*</include>
+				</includes>
+			</resource>
 		</resources>
 		<plugins>
 			<plugin>
