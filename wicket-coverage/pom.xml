@@ -139,6 +139,11 @@
 			<artifactId>wicket-velocity</artifactId>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket12</groupId>
+			<artifactId>wicket-dbsc</artifactId>
+			<scope>compile</scope>
+		</dependency>
 		<!--
 			test scope: execution data only, no classes or sources. These modules have
 			no main sources at all; they hold the tests for the modules above.

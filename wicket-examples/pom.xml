@@ -141,6 +141,10 @@
 			<artifactId>wicket-tester</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket12</groupId>
+			<artifactId>wicket-dbsc</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.codelibs</groupId>
 			<artifactId>jhighlight</artifactId>
 		</dependency>
