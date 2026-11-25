@@ -32,6 +32,7 @@ import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.util.lang.WicketObjects;
@@ -2130,6 +2131,31 @@ public abstract class Component
 	}
 
 	/**
+	 * Builds the message for a component that has no markup. It names the page and the
+	 * page-relative path of the component, because the id alone is ambiguous in a large page.
+	 *
+	 * @param prefix
+	 *            the start of the message
+	 * @return the message
+	 */
+	private String markupNotFoundMessage(String prefix)
+	{
+		StringBuilder message = new StringBuilder(prefix).append(toString());
+		Page page = findPage();
+		if (page != null)
+		{
+			message.append(", page: ").append(page.getClass().getName()).append(", path: ")
+				.append(getPageRelativePath());
+		}
+		if (getRequestCycle().find(IPartialPageRequestHandler.class).isPresent())
+		{
+			message.append(". The component is rendered as part of an Ajax update. Its parent's markup may not"
+				+ " contain it, for example because it was invisible when the page was first rendered.");
+		}
+		return message.toString();
+	}
+
+	/**
 	 * Performs a render of this component as part of a Page level render process.
 	 */
 	private void internalRender()
@@ -2138,7 +2164,7 @@ public abstract class Component
 		IMarkupFragment markup = getMarkup();
 		if (markup == null)
 		{
-			throw new MarkupNotFoundException("Markup not found for Component: " + toString());
+			throw new MarkupNotFoundException(markupNotFoundMessage("Markup not found for Component: "));
 		}
 
 		// MarkupStream is an Iterator for the markup
@@ -2288,7 +2314,7 @@ public abstract class Component
 		final IMarkupFragment markup = getMarkup();
 		if (markup == null)
 		{
-			throw new MarkupException("Markup not found. Component: " + toString());
+			throw new MarkupException(markupNotFoundMessage("Markup not found. Component: "));
 		}
 
 		final MarkupStream markupStream = new MarkupStream(markup);
