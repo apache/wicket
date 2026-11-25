@@ -744,6 +744,46 @@ include::testingspring/testingspring_2.adoc[leveloffset=+1]
 
 include::testingspring/testingspring_3.adoc[leveloffset=+1]
 
+== Accessibility
+
+include::accessibility.adoc[]
+
+=== What Wicket does and what the application does
+
+include::accessibility/accessibility_1.adoc[leveloffset=+1]
+
+=== WCAG 2.2 success criteria in Wicket
+
+include::accessibility/accessibility_2.adoc[leveloffset=+1]
+
+=== An accessible base page
+
+include::accessibility/accessibility_3.adoc[leveloffset=+1]
+
+=== Accessible form errors
+
+include::accessibility/accessibility_4.adoc[leveloffset=+1]
+
+=== Focus and announcements after AJAX updates
+
+include::accessibility/accessibility_5.adoc[leveloffset=+1]
+
+=== Keyboard-operable AJAX controls
+
+include::accessibility/accessibility_6.adoc[leveloffset=+1]
+
+=== Accessible data tables
+
+include::accessibility/accessibility_7.adoc[leveloffset=+1]
+
+=== Validating an application
+
+include::accessibility/accessibility_8.adoc[leveloffset=+1]
+
+=== Summary
+
+include::accessibility/accessibility_9.adoc[leveloffset=+1]
+
 == Wicket best practices
 
 include::bestpractices.adoc[]

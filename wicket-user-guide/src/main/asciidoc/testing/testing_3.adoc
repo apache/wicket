@@ -23,7 +23,7 @@ This test class allows to check if the generated markup contains one or more tag
 
 [source,html]
 ----
-<html xmlns:wicket="http://wicket.apache.org">
+<html lang="en" xmlns:wicket="http://wicket.apache.org">
 	<head>
 		<meta charset="utf-8" />
 		<title></title>

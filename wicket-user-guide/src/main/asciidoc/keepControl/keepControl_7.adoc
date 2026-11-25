@@ -19,7 +19,7 @@ Wicket's _<wicket:remove>_ tag can be very useful when our web designer needs to
 
 [source,html]
 ----
-<html>
+<html lang="en">
 <head>
 
 </head>
