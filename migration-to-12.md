@@ -107,3 +107,9 @@ Wicket's modules no longer bring in libraries they don't use themselves. If your
 | `wicket-ioc`, and through it `wicket-spring` and `wicket-guice` | ASM (`org.ow2.asm:asm`) |
 
 Check that your build declares a JUnit engine in test scope, `org.junit.jupiter:junit-jupiter-engine` or `org.junit.jupiter:junit-jupiter`. Without one, Maven Surefire finds no tests to run and the build still passes. Projects created from the quickstart archetype declare the engine.
+
+## `IPageAndComponentProvider#hasComponent()`
+
+`IPageAndComponentProvider` has a new method without a default implementation, `hasComponent()` ([#1653](https://github.com/apache/wicket/issues/1653)). Wicket's `PageAndComponentProvider` implements it, so a provider that extends that class needs no change. A class of your own that implements the interface directly no longer compiles until it implements the method.
+
+Return `true` only when `getComponent()` can return the component without creating the page or running any of its lifecycle callbacks: because the provider has resolved the component already, or because a page instance it holds already contains it. Return `false` otherwise. Wicket asks while it collects the log data of a listener request, after the response has been written, and only calls `getComponent()` when the answer is `true`; with `false`, the log data has no component class, behavior class or submitting component.
